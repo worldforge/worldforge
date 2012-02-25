@@ -39,22 +39,43 @@ ServerInfo::ServerInfo(const std::string &host) :
 	
 void ServerInfo::processServer(const RootEntity &svr)
 {
-    m_status = VALID;
-    _ruleset = svr->getAttr("ruleset").asString();
+    Atlas::Message::Element element;
+
+    if (!svr->copyAttr("ruleset", element) && element.isString()) {
+        _ruleset = element.asString();
+    } else {
+        return;
+    }
+
     _name = svr->getName();
-    _clients = svr->getAttr("clients").asInt();
-    _server = svr->getAttr("server").asString();
-    _uptime = svr->getAttr("uptime").asFloat();
-    if (svr->hasAttr("entities")) {
-        _entities = svr->getAttr("entities").asInt();
+    if (!svr->copyAttr("clients", element) && element.isInt()) {
+        _clients = element.asInt();
+    } else {
+        return;
+    }
+    if (!svr->copyAttr("server", element) && element.isString()) {
+        _server = element.asString();
+    } else {
+        return;
+    }
+    if (!svr->copyAttr("uptime", element) && element.isFloat()) {
+        _uptime = element.asFloat();
+    } else {
+        return;
+    }
+
+    m_status = VALID;
+
+    if (!svr->copyAttr("entities", element) && element.isInt()) {
+        _entities = element.asInt();
     }
     
-    if (svr->hasAttr("version")) {
-        m_version = svr->getAttr("version").asString();
+    if (!svr->copyAttr("version", element) && element.isString()) {
+        m_version = element.asString();
     }
     
-    if (svr->hasAttr("builddate")) {
-        m_buildDate = svr->getAttr("builddate").asString();
+    if (!svr->copyAttr("builddate", element) && element.isString()) {
+        m_buildDate = element.asString();
     }
 }
 
