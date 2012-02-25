@@ -378,6 +378,112 @@ bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
 template<int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
 
+template <int dim>
+inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  Vector<dim> ans(v1);
+
+  ans += v2;
+
+  return ans;
+}
+
+template <int dim>
+inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  Vector<dim> ans(v1);
+
+  ans -= v2;
+
+  return ans;
+}
+
+template <int dim>
+inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
+{
+  Vector<dim> ans(v);
+
+  ans *= d;
+
+  return ans;
+}
+
+template<int dim>
+inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
+{
+  Vector<dim> ans(v);
+
+  ans *= d;
+
+  return ans;
+}
+
+template <int dim>
+inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
+{
+  Vector<dim> ans(v);
+
+  ans /= d;
+
+  return ans;
+}
+
+template<int dim>
+inline bool Parallel(const Vector<dim>& v1,
+                     const Vector<dim>& v2,
+                     bool& same_dir)
+{
+  CoordType dot = Dot(v1, v2);
+
+  same_dir = (dot > 0);
+
+  return Equal(dot * dot, v1.sqrMag() * v2.sqrMag());
+}
+
+template<int dim>
+inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  bool same_dir;
+
+  return Parallel(v1, v2, same_dir);
+}
+
+template<>
+inline CoordType Vector<1>::sloppyMagMax()
+{
+  return 1.f;
+}
+
+template<>
+inline CoordType Vector<2>::sloppyMagMax()
+{
+  return 1.082392200292393968799446410733f;
+}
+
+template<>
+inline CoordType Vector<3>::sloppyMagMax()
+{
+  return 1.145934719303161490541433900265f;
+}
+
+template<>
+inline CoordType Vector<1>::sloppyMagMaxSqrt()
+{
+  return 1.f;
+}
+
+template<>
+inline CoordType Vector<2>::sloppyMagMaxSqrt()
+{
+  return 1.040380795811030899095785063701f;
+}
+
+template<>
+inline CoordType Vector<3>::sloppyMagMaxSqrt()
+{
+  return 1.070483404496847625250328653179f;
+}
+
 } // namespace WFMath
 
 #endif // WFMATH_VECTOR_H

@@ -136,55 +136,6 @@ Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
   return v;
 }
 
-template <int dim>
-Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
-{
-  Vector<dim> ans(v1);
-
-  ans += v2;
-
-  return ans;
-}
-
-template <int dim>
-Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
-{
-  Vector<dim> ans(v1);
-
-  ans -= v2;
-
-  return ans;
-}
-
-template <int dim>
-Vector<dim> operator*(const Vector<dim>& v, CoordType d)
-{
-  Vector<dim> ans(v);
-
-  ans *= d;
-
-  return ans;
-}
-
-template<int dim>
-Vector<dim> operator*(CoordType d, const Vector<dim>& v)
-{
-  Vector<dim> ans(v);
-
-  ans *= d;
-
-  return ans;
-}
-
-template <int dim>
-Vector<dim> operator/(const Vector<dim>& v, CoordType d)
-{
-  Vector<dim> ans(v);
-
-  ans /= d;
-
-  return ans;
-}
 
 template <int dim>
 Vector<dim> operator-(const Vector<dim>& v)
@@ -296,24 +247,6 @@ CoordType Vector<dim>::sqrMag() const
 }
 
 template<int dim>
-bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
-{
-  CoordType dot = Dot(v1, v2);
-
-  same_dir = (dot > 0);
-
-  return Equal(dot * dot, v1.sqrMag() * v2.sqrMag());
-}
-
-template<int dim>
-bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
-{
-  bool same_dir;
-
-  return Parallel(v1, v2, same_dir);
-}
-
-template<int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   CoordType max1 = 0, max2 = 0;
@@ -334,42 +267,6 @@ bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
   (void) std::frexp(max2, &exp2);
 
   return std::fabs(Dot(v1, v2)) < std::ldexp(WFMATH_EPSILON, exp1 + exp2);
-}
-
-template<>
-CoordType Vector<1>::sloppyMagMax()
-{
-  return (CoordType) 1;
-}
-
-template<>
-CoordType Vector<2>::sloppyMagMax()
-{
-  return (CoordType) 1.082392200292393968799446410733;
-}
-
-template<>
-CoordType Vector<3>::sloppyMagMax()
-{
-  return (CoordType) 1.145934719303161490541433900265;
-}
-
-template<>
-CoordType Vector<1>::sloppyMagMaxSqrt()
-{
-  return (CoordType) 1;
-}
-
-template<>
-CoordType Vector<2>::sloppyMagMaxSqrt()
-{
-  return (CoordType) 1.040380795811030899095785063701;
-}
-
-template<>
-CoordType Vector<3>::sloppyMagMaxSqrt()
-{
-  return (CoordType) 1.070483404496847625250328653179;
 }
 
 // Note for people trying to compute the above numbers
