@@ -1,6 +1,5 @@
-In const.cpp there are weird "using namespace" crap, and calls to library
-functions not in std::. Ron says this is because of broken MSVC, which we
-should be able to work around by now.
+Inline in the foo.h any method in foo_funcs.h that does not require another
+header, and has no loop
 
 Re-write operators so that for a given operator O, operatorO is implemented
 using operatorO= rather than the other way around which is inefficient.
