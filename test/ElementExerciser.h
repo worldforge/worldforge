@@ -22,9 +22,11 @@ class ElementParam
 {
 public:
     Atlas::Message::Element defaultElement;
+    bool testVariants;
 
-    ElementParam(Atlas::Message::Element defaultElement) :
-            defaultElement(defaultElement)
+    ElementParam(Atlas::Message::Element defaultElement, bool testVariants =
+            true) :
+            defaultElement(defaultElement), testVariants(testVariants)
     {
     }
 
@@ -136,14 +138,15 @@ public:
         //throwing an exception or crashing.
         for (std::map<std::string, ElementParam>::const_iterator I =
                 mElementParams.begin(); I != mElementParams.end(); ++I) {
-            for (size_t i = 0; i < (sizeof(types) / sizeof(*types)); ++i) {
-                Atlas::Message::Element::Type type = types[i];
-                EntityType entity;
-                fillAllCorrectParams(entity);
-                fillParam(entity, I->first, type);
-                mExerciseSlot(entity);
+            if (I->second.testVariants) {
+                for (size_t i = 0; i < (sizeof(types) / sizeof(*types)); ++i) {
+                    Atlas::Message::Element::Type type = types[i];
+                    EntityType entity;
+                    fillAllCorrectParams(entity);
+                    fillParam(entity, I->first, type);
+                    mExerciseSlot(entity);
+                }
             }
-
         }
 
     }

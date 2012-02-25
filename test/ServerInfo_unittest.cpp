@@ -59,6 +59,7 @@ int main()
             sigc::mem_fun(info, &Eris::TestServerInfo::injectAtlas));
     ElementExerciser<Atlas::Objects::Entity::RootEntity> exerciser(slot);
     exerciser.addParam("ruleset", ElementParam("mason"));
+    exerciser.addParam("name", ElementParam("a server", false));
     exerciser.addParam("clients", ElementParam(2));
     exerciser.addParam("server", ElementParam("localhost"));
     exerciser.addParam("uptime", ElementParam(1000.0f));
