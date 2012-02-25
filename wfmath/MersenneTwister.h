@@ -195,7 +195,7 @@ inline double MTRand::randNorm( const double& mean, const double& variance )
 {
 	// Return a real number from a normal (Gaussian) distribution with given
 	// mean and variance by Box-Muller method
-	double r = sqrt( -2.0 * log( 1.0-randDblExc()) ) * variance;
+	double r = std::sqrt( -2.0 * std::log( 1.0-randDblExc()) ) * variance;
 	double phi = 2.0 * 3.14159265358979323846264338328 * randExc();
 	return mean + r * std::cos(phi);
 }
