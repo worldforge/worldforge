@@ -31,12 +31,12 @@ AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
     [
         if test "$enableval" = "yes"; then
-            CXXFLAGS="$CXXFLAGS -Wall -DDEBUG"
+            CXXFLAGS="$CXXFLAGS -fno-math-errno -Wall -DDEBUG"
         else
-            CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+            CXXFLAGS="$CXXFLAGS -fno-math-errno -Wall -DNDEBUG"
         fi
     ],[
-        CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+        CXXFLAGS="$CXXFLAGS -fno-math-errno -Wall -DNDEBUG"
     ]
 )
 
