@@ -1,3 +1,6 @@
+Use template metaprogs to provide a general solution for visiting every
+point in a segment that intersects with an area.
+
 Why are HEIGHT, ROUGHNESS and FALLOFF referenced outside Basepoint?
 
 Consider if Segment::m_xRef could become a float and multiply by m_res on
