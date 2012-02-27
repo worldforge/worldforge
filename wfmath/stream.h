@@ -163,7 +163,7 @@ inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
       throw ParseError();
   }
 
-  if(!m._setVals(d, FloatMax(WFMATH_EPSILON, _GetEpsilon(is))))
+  if(!m._setVals(d, FloatMax(numeric_constants<CoordType>::epsilon(), _GetEpsilon(is))))
     throw ParseError();
 
   return is;
@@ -367,7 +367,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   float str_eps = 1;
   while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
-  float epsilon = FloatMax(str_eps, WFMATH_EPSILON);
+  float epsilon = FloatMax(str_eps, numeric_constants<CoordType>::epsilon());
 
   r.m_orient = _Poly2Orient<dim>();
 

@@ -145,7 +145,7 @@ class Vector {
 
   Vector& operator=(const Vector& v);
 
-  bool isEqualTo(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Vector& v, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator==(const Vector& v) const {return isEqualTo(v);}
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
@@ -346,7 +346,7 @@ class Vector {
   const CoordType* elements() const {return m_elem;}
 
  private:
-  double _scaleEpsilon(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const
+  double _scaleEpsilon(const Vector& v, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const
   {return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
 
   CoordType m_elem[dim];

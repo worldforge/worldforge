@@ -238,7 +238,7 @@ inline Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m)
 }
 
 template<int dim>
-inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
+inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], CoordType precision)
 {
   // Scratch space for the backend
   CoordType scratch_vals[dim*dim];
@@ -251,7 +251,7 @@ inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double preci
 }
 
 template<int dim>
-inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
+inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], CoordType precision)
 {
   // Scratch space for the backend
   CoordType scratch_vals[dim*dim];
@@ -263,10 +263,10 @@ inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precis
 }
 
 bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
-			CoordType* buf1, CoordType* buf2, double precision);
+			CoordType* buf1, CoordType* buf2, CoordType precision);
 
 template<int dim>
-inline bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
+inline bool RotMatrix<dim>::_setVals(CoordType *vals, CoordType precision)
 {
   // Cheaper to allocate space on the stack here than with
   // new in _MatrixSetValsImpl()
@@ -404,7 +404,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   Vector<dim> vperp = v2 - v1 * Dot(v1, v2) / v1_sqr_mag;
   CoordType vperp_sqr_mag = vperp.sqrMag();
 
-  if((vperp_sqr_mag / v1_sqr_mag) < (dim * WFMATH_EPSILON * WFMATH_EPSILON)) {
+  if((vperp_sqr_mag / v1_sqr_mag) < (dim * numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon())) {
     assert("need nonzero length vector" && v2.sqrMag() > 0);
     // The original vectors were parallel
     throw ColinearVectors<dim>(v1, v2);
@@ -451,7 +451,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   CoordType magprod = std::sqrt(sqrmagprod);
   CoordType ctheta_plus_1 = dot / magprod + 1;
 
-  if(ctheta_plus_1 < WFMATH_EPSILON) {
+  if(ctheta_plus_1 < numeric_constants<CoordType>::epsilon()) {
     // 180 degree rotation, rotation plane indeterminate
     if(dim == 2) { // special case, only one rotation plane possible
       m_elem[0][0] = m_elem[1][1] = ctheta_plus_1 - 1;

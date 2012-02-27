@@ -101,8 +101,8 @@ void test_vector(const Vector<dim>& v)
 
   CoordType check_mag = v.sloppyMag() / v.mag();
 
-  assert(1 - WFMATH_EPSILON < check_mag);
-  assert(check_mag < Vector<dim>::sloppyMagMax() + WFMATH_EPSILON);
+  assert(1 - numeric_constants<CoordType>::epsilon() < check_mag);
+  assert(check_mag < Vector<dim>::sloppyMagMax() + numeric_constants<CoordType>::epsilon());
 
   // Still need Dot(), Angle(), normalize(), mirror()
 }
@@ -128,7 +128,7 @@ int main()
 
   assert((Vector<3>(1, 0, 0).rotate(Cross(Vector<3>(1, 0, 0), Vector<3>(0, 1, 0)),
 	 numeric_constants<CoordType>::pi() / 2) - Vector<3>(0, 1, 0)).sqrMag()
-	 < WFMATH_EPSILON * WFMATH_EPSILON); 
+	 < numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon()); 
 
   // Need 2D+3D stuff
 

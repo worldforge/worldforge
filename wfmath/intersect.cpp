@@ -280,7 +280,7 @@ bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
           assert(false);
       }
 
-      if(axis.sqrMag() < WFMATH_EPSILON * WFMATH_EPSILON) {
+      if(axis.sqrMag() < numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon()) {
         // Parallel edges, this reduces to the 2d case above. We've already
         // checked the bounding box intersections, so we know they intersect.
         // We don't need to scale WFMATH_EPSILON, det(m_orient) = 1

@@ -68,7 +68,7 @@ inline bool _Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p
   for(int i = 0; i < dim; ++i)
     sqrsum += pd[i] * pd[i];
 
-  return off.sqrMag() < WFMATH_EPSILON * sqrsum;
+  return off.sqrMag() < numeric_constants<CoordType>::epsilon() * sqrsum;
 }
 
 template<>
@@ -187,7 +187,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 
   // Don't need to scale, the m_axes are unit vectors
   sqrmag1 = basis1.sqrMag();
-  if(sqrmag1 > WFMATH_EPSILON * WFMATH_EPSILON)
+  if(sqrmag1 > numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon())
     basis_size = 1;
 
   if(o1.m_axes[1].isValid()) {
@@ -200,7 +200,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
       basis2 -= basis1 * (Dot(basis1, basis2) / sqrmag1);
 
     sqrmag2 = basis2.sqrMag();
-    if(sqrmag2 > WFMATH_EPSILON * WFMATH_EPSILON) {
+    if(sqrmag2 > numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon()) {
       if(basis_size++ == 0) {
         basis1 = basis2;
         sqrmag1 = sqrmag2;
@@ -329,7 +329,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
         data.off[1] = Dot(o2.m_axes[1], off);
         off_copy -= o1.m_axes[1] * data.off[1];
 
-        if(off_copy.sqrMag() > off_sqr_mag * WFMATH_EPSILON)
+        if(off_copy.sqrMag() > off_sqr_mag * numeric_constants<CoordType>::epsilon())
           return -1; // The planes are different
       }
       else

@@ -57,6 +57,9 @@ class Quaternion;
 
 // Constants
 
+/// Determines how close to machine precision the library tries to come.
+#define WFMATH_PRECISION_FUDGE_FACTOR 30
+
 template<typename FloatType>
 struct numeric_constants
 {
@@ -72,6 +75,8 @@ struct numeric_constants
   static FloatType sqrt3();
   /// The natural logarithm of 2
   static FloatType log2();
+  /// This is the attempted precision of the library.
+  static FloatType epsilon();
 };
 
 template<>
@@ -94,6 +99,10 @@ struct numeric_constants<float>
   }
   static float log2() {
     return 0.69314718055994530941723212145817656807550013436025F;
+  }
+  static float epsilon() {
+    return (WFMATH_PRECISION_FUDGE_FACTOR *
+            std::numeric_limits<float>::epsilon());
   }
 };
 
@@ -118,10 +127,12 @@ struct numeric_constants<double>
   static double log2() {
     return 0.69314718055994530941723212145817656807550013436025;
   }
+  static double epsilon() {
+    return (WFMATH_PRECISION_FUDGE_FACTOR *
+            std::numeric_limits<double>::epsilon());
+  }
 };
 
-/// Determines how close to machine precision the library tries to come.
-#define WFMATH_PRECISION_FUDGE_FACTOR 30
 /// How long we can let RotMatrix and Quaternion go before fixing normalization
 #define WFMATH_MAX_NORM_AGE ((WFMATH_PRECISION_FUDGE_FACTOR * 2) / 3)
 
@@ -135,7 +146,7 @@ typedef float CoordType;
 double _ScaleEpsilon(double x1, double x2, double epsilon);
 float _ScaleEpsilon(float x1, float x2, float epsilon);
 CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-		        int length, CoordType epsilon = WFMATH_EPSILON);
+		        int length, CoordType epsilon = numeric_constants<CoordType>::epsilon());
 
 /// Test for equality up to precision epsilon
 /**
@@ -146,12 +157,12 @@ CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
  * compare equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
  **/
 template<class C>
-inline bool Equal(const C& c1, const C& c2, CoordType epsilon = WFMATH_EPSILON)
+inline bool Equal(const C& c1, const C& c2, CoordType epsilon = numeric_constants<CoordType>::epsilon())
 	{return c1.isEqualTo(c2, epsilon);}
 
-bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
+bool Equal(double x1, double x2, double epsilon = numeric_constants<double>::epsilon());
 // Avoid template and expensive casts from float to doubles.
-bool Equal(float x1, float x2, float epsilon = WFMATH_EPSILON);
+bool Equal(float x1, float x2, float epsilon = numeric_constants<float>::epsilon());
 
 // These let us avoid including <algorithm> for the sake of
 // std::max() and std::min().

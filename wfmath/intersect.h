@@ -113,7 +113,7 @@ template<int dim>
 inline bool Intersect(const Ball<dim>& b, const Point<dim>& p, bool proper)
 {
   return _LessEq(SquaredDistance(b.m_center, p), b.m_radius * b.m_radius
-					   * (1 + WFMATH_EPSILON), proper);
+					   * (1 + numeric_constants<CoordType>::epsilon()), proper);
 }
 
 template<int dim>
@@ -152,7 +152,7 @@ inline bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
     sqr_dist += furthest * furthest;
   }
 
-  return _LessEq(sqr_dist, b.m_radius * b.m_radius * (1 + WFMATH_EPSILON), proper);
+  return _LessEq(sqr_dist, b.m_radius * b.m_radius * (1 + numeric_constants<CoordType>::epsilon()), proper);
 }
 
 template<int dim>

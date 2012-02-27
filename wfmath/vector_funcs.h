@@ -266,7 +266,7 @@ bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
   (void) std::frexp(max1, &exp1);
   (void) std::frexp(max2, &exp2);
 
-  return std::fabs(Dot(v1, v2)) < std::ldexp(WFMATH_EPSILON, exp1 + exp2);
+  return std::fabs(Dot(v1, v2)) < std::ldexp(numeric_constants<CoordType>::epsilon(), exp1 + exp2);
 }
 
 // Note for people trying to compute the above numbers

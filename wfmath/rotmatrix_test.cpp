@@ -87,7 +87,7 @@ void test_rotmatrix(const RotMatrix<dim>& m)
     for(int j = 0; j < dim; ++j) {
       CoordType diff = m.elem(i, j) - str_m.elem(i, j);
 //      cout << diff;
-      assert(std::fabs(diff) < FloatMax(WFMATH_EPSILON, 1e-6));
+      assert(std::fabs(diff) < FloatMax(numeric_constants<CoordType>::epsilon(), 1e-6));
 //      if(i < dim - 1 || j < dim - 1)
 //        cout << ", ";
     }

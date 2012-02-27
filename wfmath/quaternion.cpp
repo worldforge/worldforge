@@ -214,7 +214,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
   CoordType axis_mag = axis.mag();
   CoordType half_angle = angle / 2;
 
-  if (axis_mag < WFMATH_EPSILON) {
+  if (axis_mag < numeric_constants<CoordType>::epsilon()) {
     m_valid = false;
     return *this;
   }
@@ -233,7 +233,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
   CoordType axis_mag = axis.mag();
   CoordType half_angle = axis_mag / 2;
 
-  if (axis_mag < WFMATH_EPSILON) {
+  if (axis_mag < numeric_constants<CoordType>::epsilon()) {
     m_valid = false;
     return *this;
   }
@@ -252,13 +252,13 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
   CoordType mag_prod = std::sqrt(from.sqrMag() * to.sqrMag());
   CoordType ctheta_plus_1 = Dot(from, to) / mag_prod + 1;
 
-  if (mag_prod < WFMATH_EPSILON) {
+  if (mag_prod < numeric_constants<CoordType>::epsilon()) {
     m_valid = false;
     return *this;
   }
 
   // antiparallel vectors
-  if(ctheta_plus_1 < WFMATH_EPSILON) // same check as used in the RotMatrix function
+  if(ctheta_plus_1 < numeric_constants<CoordType>::epsilon()) // same check as used in the RotMatrix function
     throw ColinearVectors<3>(from, to);
 
   // cosine of half the angle

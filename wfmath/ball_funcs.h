@@ -82,7 +82,7 @@ Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> >
   double dummy;
 #endif
   assert("Check that bounding sphere is good to library accuracy" &&
-         m.accuracy(dummy) < WFMATH_EPSILON);
+         m.accuracy(dummy) < numeric_constants<CoordType>::epsilon());
 
   w = m.center();
   Point<dim> center;

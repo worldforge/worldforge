@@ -89,7 +89,7 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
 
   for(int i = 0; i < 3; ++i) {
     float foo = std::fabs(normal[i]);
-    if(std::fabs(normal[i]) < normal_mag * WFMATH_EPSILON)
+    if(std::fabs(normal[i]) < normal_mag * numeric_constants<CoordType>::epsilon())
       axis_direction[i] = AXIS_FLAT;
     else if(normal[i] > 0) {
       axis_direction[i] = AXIS_UP;
@@ -109,7 +109,7 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
   CoordType perp_size = Dot(normal, high_corner - low_corner) / normal_mag;
   assert(perp_size >= 0);
 
-  if(perp_size < normal_mag * WFMATH_EPSILON) {
+  if(perp_size < normal_mag * numeric_constants<CoordType>::epsilon()) {
     // We have a very flat box, lying parallel to the plane
     return !proper && checkContained(Midpoint(high_corner, low_corner), p2);
   }

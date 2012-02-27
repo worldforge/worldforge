@@ -75,7 +75,7 @@ class RotBox
 
   RotBox& operator=(const RotBox& s);
 
-  bool isEqualTo(const RotBox& b, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotBox& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
   bool operator==(const RotBox& b) const	{return isEqualTo(b);}
   bool operator!=(const RotBox& b) const	{return !isEqualTo(b);}
