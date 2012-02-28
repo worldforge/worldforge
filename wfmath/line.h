@@ -138,6 +138,14 @@ class Line
   typedef typename std::vector<Point<dim> >::size_type size_type;
 };
 
+template<int dim>
+inline Line<dim>& Line<dim>::operator=(const Line& rhs)
+{
+    m_points = rhs.m_points;
+    return *this;
+}
+
+
 } // namespace WFMath
 
 #endif  // WFMATH_LINE_H

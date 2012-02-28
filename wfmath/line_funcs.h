@@ -31,13 +31,6 @@
 namespace WFMath {
 
 template<int dim>
-inline Line<dim>& Line<dim>::operator=(const Line& rhs)
-{
-    m_points = rhs.m_points;
-    return *this;
-}
-
-template<int dim>
 inline bool Line<dim>::isEqualTo(const Line<dim> & l, float epsilon) const
 {
   size_type size = m_points.size();
