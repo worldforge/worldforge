@@ -83,7 +83,7 @@ class Ball
   Ball& operator=(const Ball& b)
   {m_radius = b.m_radius; m_center = b.m_center; return *this;}
 
-  bool isEqualTo(const Ball& b, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Ball& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
   bool operator==(const Ball& b) const	{return isEqualTo(b);}
   bool operator!=(const Ball& b) const	{return !isEqualTo(b);}

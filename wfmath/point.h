@@ -120,7 +120,7 @@ class Point
 
   Point& operator= (const Point& rhs);
 
-  bool isEqualTo(const Point &p, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Point &p, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 

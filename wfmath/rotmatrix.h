@@ -98,7 +98,7 @@ class RotMatrix {
   // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.
 
-  bool isEqualTo(const RotMatrix& m, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotMatrix& m, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
   bool operator==(const RotMatrix& m) const {return isEqualTo(m);}
   bool operator!=(const RotMatrix& m) const {return !isEqualTo(m);}
@@ -119,7 +119,7 @@ class RotMatrix {
    * passed precision, and orthogonalizes the matrix to within
    * precision WFMATH_EPSILON.
    **/
-  bool setVals(const CoordType vals[dim][dim], double precision = WFMATH_EPSILON);
+  bool setVals(const CoordType vals[dim][dim], CoordType precision = numeric_constants<CoordType>::epsilon());
   /// Set the values of the elements of the matrix
   /**
    * Can't set one element at a time and keep it an O(N) matrix,
@@ -128,7 +128,7 @@ class RotMatrix {
    * passed precision, and orthogonalizes the matrix to within
    * precision WFMATH_EPSILON.
    **/
-  bool setVals(const CoordType vals[dim*dim], double precision = WFMATH_EPSILON);
+  bool setVals(const CoordType vals[dim*dim], CoordType precision = numeric_constants<CoordType>::epsilon());
 
   /// Get a copy of the i'th row as a Vector
   Vector<dim> row(const int i) const;
@@ -255,7 +255,7 @@ class RotMatrix {
   unsigned m_age;
 
   // Backend to setVals() above, also used in fromStream()
-  bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
+  bool _setVals(CoordType *vals, CoordType precision = numeric_constants<CoordType>::epsilon());
   void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
 };
 

@@ -31,7 +31,7 @@ static const unsigned ul_max_digits = (unsigned)
 	(8 * sizeof(unsigned long) // number of bits
 	* log_10_of_2 // base 10 vs. base 2 digits
 	+ 1 // log(1) == 0, have to add one for leading digit
-	+ WFMATH_EPSILON); // err on the safe side of roundoff
+	+ WFMath::numeric_constants<WFMath::CoordType>::epsilon()); // err on the safe side of roundoff
 #else // _MSC_VER
 static const unsigned ul_max_digits = 10;
 #endif // _MSC_VER

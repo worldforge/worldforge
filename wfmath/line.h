@@ -65,7 +65,7 @@ class Line
   Line& operator=(const Line& a);
 
   /// generic: check if two classes are equal, up to a given tolerance
-  bool isEqualTo(const Line& s, float epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Line& s, float epsilon = numeric_constants<CoordType>::epsilon()) const;
   /// generic: check if two classes are equal, up to tolerance WFMATH_EPSILON
   bool operator==(const Line& s) const	{return isEqualTo(s);}
   /// generic: check if two classes are not equal, up to tolerance WFMATH_EPSILON
@@ -89,7 +89,7 @@ class Line
   Point<dim> getCenter() const {return Barycenter(m_points);}
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(size_t i, const Point<dim>& p, float = WFMATH_EPSILON)
+  bool addCorner(size_t i, const Point<dim>& p, float = numeric_constants<CoordType>::epsilon())
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner

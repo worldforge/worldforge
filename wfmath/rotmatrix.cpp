@@ -156,7 +156,7 @@ RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis)
 }
 
 bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
-				CoordType* buf1, CoordType* buf2, double precision)
+			CoordType* buf1, CoordType* buf2, CoordType precision)
 {
   precision = std::fabs(precision);
 
@@ -167,7 +167,7 @@ bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
   // precision to WFMATH_EPSILON
 
   while(true) {
-    double try_prec = 0;
+    CoordType try_prec = 0;
 
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
@@ -187,7 +187,7 @@ bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
     if(try_prec > precision)
       return false;
 
-    if(try_prec <= WFMATH_EPSILON)
+    if(try_prec <= numeric_constants<CoordType>::epsilon())
       break;
 
     // Precision needs improvement, use linear approximation scheme.

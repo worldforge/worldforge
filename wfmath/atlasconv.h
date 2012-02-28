@@ -137,7 +137,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
   CoordType norm = std::sqrt(m_w * m_w + m_vec.sqrMag());
 
-  if (norm <= WFMATH_EPSILON) {
+  if (norm <= numeric_constants<CoordType>::epsilon()) {
     m_valid = false;
     m_vec.setValid(false);
     return;

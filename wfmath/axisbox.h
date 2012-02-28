@@ -84,7 +84,7 @@ class AxisBox
   AxisBox& operator=(const AxisBox& a)
   {m_low = a.m_low; m_high = a.m_high; return *this;}
 
-  bool isEqualTo(const AxisBox& b, CoordType epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const AxisBox& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator==(const AxisBox& a) const	{return isEqualTo(a);}
   bool operator!=(const AxisBox& a) const	{return !isEqualTo(a);}
 

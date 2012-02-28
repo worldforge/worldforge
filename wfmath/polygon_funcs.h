@@ -162,7 +162,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
   }
   int exponent;
   (void) std::frexp(size, &exponent);
-  epsilon = std::ldexp(WFMATH_EPSILON, exponent);
+  epsilon = std::ldexp(numeric_constants<CoordType>::epsilon(), exponent);
 
   i = 0;
   if(skip == 0)
