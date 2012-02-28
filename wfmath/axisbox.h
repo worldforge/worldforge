@@ -179,6 +179,13 @@ class AxisBox
   Point<dim> m_low, m_high;
 };
 
+template<int dim>
+inline bool AxisBox<dim>::isEqualTo(const AxisBox<dim>& b, CoordType epsilon) const
+{
+  return Equal(m_low, b.m_low, epsilon)
+       && Equal(m_high, b.m_high, epsilon);
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_AXIS_BOX_H

@@ -36,13 +36,6 @@
 namespace WFMath {
 
 template<int dim>
-inline bool Ball<dim>::isEqualTo(const Ball<dim>& b, CoordType epsilon) const
-{
-  return Equal(m_center, b.m_center, epsilon)
-      && Equal(m_radius, b.m_radius, epsilon);
-}
-
-template<int dim>
 AxisBox<dim> Ball<dim>::boundingBox() const
 {
   Point<dim> p_low, p_high;

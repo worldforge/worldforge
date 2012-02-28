@@ -113,26 +113,6 @@ inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 }
 
 template<int dim>
-inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
-{
-  Point<dim> out(c);
-
-  out += v;
-
-  return out;
-}
-
-template<int dim>
-inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
-{
-  Point<dim> out(c);
-
-  out += v;
-
-  return out;
-}
-
-template<int dim>
 inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i) {
@@ -142,16 +122,6 @@ inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
     p.m_valid = p.m_valid && rhs.m_valid;
 
     return p;
-}
-
-template<int dim>
-inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
-{
-  Point<dim> out(c);
-
-  out -= v;
-
-  return out;
 }
 
 template<int dim>
@@ -279,19 +249,6 @@ inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType
   out.m_valid = p1.m_valid && p2.m_valid;
 
   return out;
-}
-
-template<> Point<2>::Point(CoordType x, CoordType y) : m_valid(true)
-{
-  m_elem[0] = x;
-  m_elem[1] = y;
-}
-
-template<> Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true)
-{
-  m_elem[0] = x;
-  m_elem[1] = y;
-  m_elem[2] = z;
 }
 
 template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);

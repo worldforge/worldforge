@@ -182,6 +182,13 @@ class Ball
   CoordType m_radius;
 };
 
+template<int dim>
+inline bool Ball<dim>::isEqualTo(const Ball<dim>& b, CoordType epsilon) const
+{
+  return Equal(m_center, b.m_center, epsilon)
+      && Equal(m_radius, b.m_radius, epsilon);
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_BALL_H

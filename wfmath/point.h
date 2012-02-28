@@ -262,6 +262,51 @@ class Point
   bool m_valid;
 };
 
+template<int dim>
+inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
+{
+  Point<dim> out(c);
+
+  out += v;
+
+  return out;
+}
+
+template<int dim>
+inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
+{
+  Point<dim> out(c);
+
+  out += v;
+
+  return out;
+}
+
+template<int dim>
+inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
+{
+  Point<dim> out(c);
+
+  out -= v;
+
+  return out;
+}
+
+template<>
+inline Point<2>::Point(CoordType x, CoordType y) : m_valid(true)
+{
+  m_elem[0] = x;
+  m_elem[1] = y;
+}
+
+template<>
+inline Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true)
+{
+  m_elem[0] = x;
+  m_elem[1] = y;
+  m_elem[2] = z;
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_POINT_H

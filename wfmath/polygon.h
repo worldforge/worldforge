@@ -441,6 +441,41 @@ public:
   Polygon<2> m_poly;
 };
 
+template<int dim>
+inline bool Polygon<dim>::addCorner(size_t i, const Point<dim>& p, CoordType epsilon)
+{
+  Point<2> p2;
+  bool succ = m_orient.expand(p, p2, epsilon);
+  if(succ)
+    m_poly.addCorner(i, p2, epsilon);
+  return succ;
+}
+
+template<int dim>
+inline void Polygon<dim>::removeCorner(size_t i)
+{
+  m_poly.removeCorner(i);
+  _Poly2Reorient r = m_orient.reduce(m_poly);
+  r.reorient(m_poly);
+}
+
+template<int dim>
+inline bool Polygon<dim>::moveCorner(size_t i, const Point<dim>& p, CoordType epsilon)
+{
+  _Poly2Orient<dim> try_orient = m_orient;
+  _Poly2Reorient r = try_orient.reduce(m_poly, i);
+  Point<2> p2;
+
+  if(!try_orient.expand(p, p2, epsilon))
+    return false;
+
+  r.reorient(m_poly, i);
+  m_poly[i] = p2;
+  m_orient = try_orient;
+
+  return true;
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_POLYGON_H

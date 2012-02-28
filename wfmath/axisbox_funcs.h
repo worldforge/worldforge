@@ -37,13 +37,6 @@
 namespace WFMath {
 
 template<int dim>
-inline bool AxisBox<dim>::isEqualTo(const AxisBox<dim>& b, CoordType epsilon) const
-{
-  return Equal(m_low, b.m_low, epsilon)
-       && Equal(m_high, b.m_high, epsilon);
-}
-
-template<int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
 {
   for(int i = 0; i < dim; ++i) {
