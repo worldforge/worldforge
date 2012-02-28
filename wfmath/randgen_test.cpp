@@ -37,7 +37,7 @@ int main()
     MTRand one(23);
 
     printf("%.16f %.16f\n", one.rand(), one.rand());
-    float oneres = one.rand();
+    float oneres = static_cast<float>(one.rand());
 
     MTRand two(23);
 
