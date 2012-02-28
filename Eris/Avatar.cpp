@@ -27,6 +27,9 @@
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
+using WFMath::CoordType;
+using WFMath::TimeStamp;
+using WFMath::numeric_constants;
 using WFMath::TimeStamp;
 using namespace Atlas::Message;
 using Atlas::Objects::smart_dynamic_cast;
@@ -200,14 +203,15 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     arg->setId(m_entityId);
     arg->setAttr("velocity", vel.toAtlas());
 
-    WFMath::CoordType sqr_mag = vel.sqrMag();
+    CoordType sqr_mag = vel.sqrMag();
     if(sqr_mag > MIN_VELOCITY) { // don't set orientation for zero velocity
         WFMath::Quaternion q;
-        WFMath::CoordType z_squared = vel.z() * vel.z();
-        WFMath::CoordType plane_sqr_mag = sqr_mag - z_squared;
-        if(plane_sqr_mag < WFMATH_EPSILON * z_squared) {
+        CoordType z_squared = vel.z() * vel.z();
+        CoordType plane_sqr_mag = sqr_mag - z_squared;
+        if(plane_sqr_mag < numeric_constants<CoordType>::epsilon() * z_squared) {
             // it's on the z axis
-            q.rotation(1, vel[2] > 0 ? -WFMath::numeric_constants<WFMath::CoordType>::pi()/2 : WFMath::numeric_constants<WFMath::CoordType>::pi()/2);
+            q.rotation(1, vel[2] > 0 ? -numeric_constants<CoordType>::pi()/2
+                                     : numeric_constants<CoordType>::pi()/2);
         } else {
             // rotate in the plane first
             q.rotation(2, std::atan2(vel[1], vel[0]));
