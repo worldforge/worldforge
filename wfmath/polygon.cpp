@@ -24,6 +24,7 @@
 // Created: 2002-1-4
 
 #include "polygon_funcs.h"
+#include "rotbox.h"
 
 namespace WFMath {
 

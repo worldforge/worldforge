@@ -25,6 +25,10 @@
 
 #include "line_funcs.h"
 
+#include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
+#include <wfmath/vector.h>
+
 namespace WFMath {
 
 template class Line<2>;

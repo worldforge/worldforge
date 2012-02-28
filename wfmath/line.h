@@ -26,13 +26,8 @@
 #ifndef WFMATH_LINE_H
 #define WFMATH_LINE_H
 
-#include <wfmath/vector.h>
-#include <wfmath/point.h>
 #include <wfmath/const.h>
-#include <wfmath/rotmatrix.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/ball.h>
-#include <wfmath/intersect_decls.h>
+#include <wfmath/point.h>
 
 #include <vector>
 
