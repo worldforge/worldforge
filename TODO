@@ -1,3 +1,6 @@
+Can pulling out the matissa and exponent give us a bit more predictability
+with seeding?
+
 Use template metaprogs to provide a general solution for visiting every
 point in a segment that intersects with an area.
 
