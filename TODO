@@ -1,5 +1,3 @@
-There is a "double dummy" in ball_funcs.h
-
 Inline in the foo.h any method in foo_funcs.h that does not require another
 header, and has no loop
 
