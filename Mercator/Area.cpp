@@ -26,7 +26,7 @@ typedef WFMath::Vector<2> Vector2;
 #ifndef NDEBUG
 static bool isZero(CoordType d)
 {
-    return (std::fabs(d) < WFMATH_EPSILON);
+    return (std::fabs(d) < WFMath::numeric_constants<CoordType>::epsilon());
 }
 #endif
 
