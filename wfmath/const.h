@@ -138,8 +138,6 @@ struct numeric_constants<double>
 
 /// Basic floating point type
 typedef float CoordType;
-/// This is the attempted precision of the library.
-#define WFMATH_EPSILON	(WFMATH_PRECISION_FUDGE_FACTOR * std::numeric_limits<WFMath::CoordType>::epsilon())
 
 // Basic comparisons
 
