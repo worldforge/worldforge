@@ -38,24 +38,6 @@
 namespace WFMath {
 
 template<int dim>
-inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
-{
-  m_corner0 = a.m_corner0;
-  m_size = a.m_size;
-  m_orient = a.m_orient;
-
-  return *this;
-}
-
-template<int dim>
-inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, CoordType epsilon) const
-{
-  return Equal(m_corner0, b.m_corner0, epsilon)
-      && Equal(m_size, b.m_size, epsilon)
-      && Equal(m_orient, b.m_orient, epsilon);
-}
-
-template<int dim>
 inline Point<dim> RotBox<dim>::getCorner(size_t i) const
 {
   assert(i >= 0 && i < (1 << dim));

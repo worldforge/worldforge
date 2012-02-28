@@ -188,6 +188,24 @@ class RotBox
   RotMatrix<dim> m_orient;
 };
 
+template<int dim>
+inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
+{
+  m_corner0 = a.m_corner0;
+  m_size = a.m_size;
+  m_orient = a.m_orient;
+
+  return *this;
+}
+
+template<int dim>
+inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, CoordType epsilon) const
+{
+  return Equal(m_corner0, b.m_corner0, epsilon)
+      && Equal(m_size, b.m_size, epsilon)
+      && Equal(m_orient, b.m_orient, epsilon);
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_ROT_BOX_H
