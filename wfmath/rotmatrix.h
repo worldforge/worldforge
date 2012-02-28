@@ -259,6 +259,17 @@ class RotMatrix {
   void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
 };
 
+template<int dim>
+inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
+{
+  identity();
+  m_elem[i][i] = -1;
+  m_flip = true;
+  // m_valid and m_age already set correctly
+
+  return *this;
+}
+
 } // namespace WFMath
 
 #endif // WFMATH_ROTMATRIX_H

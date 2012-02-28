@@ -506,19 +506,6 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion&);
 
 template<int dim>
-inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
-{
-  assert(i >= 0 && i < dim);
-
-  identity();
-  m_elem[i][i] = -1;
-  m_flip = true;
-  // m_valid and m_age already set correctly
-
-  return *this;
-}
-
-template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 {
   // Get a flip by subtracting twice the projection operator in the

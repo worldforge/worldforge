@@ -33,13 +33,6 @@
 namespace WFMath {
 
 template<int dim>
-inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, CoordType epsilon) const
-{
-  return Equal(m_p1, s.m_p1, epsilon)
-      && Equal(m_p2, s.m_p2, epsilon);
-}
-
-template<int dim>
 inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, size_t corner)
 {
   assert(corner == 0 || corner == 1);

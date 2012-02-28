@@ -158,6 +158,14 @@ class Segment
   Point<dim> m_p1, m_p2;
 };
 
+template<int dim>
+inline bool Segment<dim>::isEqualTo(const Segment<dim>& s,
+                                    CoordType epsilon) const
+{
+  return Equal(m_p1, s.m_p1, epsilon)
+      && Equal(m_p2, s.m_p2, epsilon);
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_SEGMENT_H
