@@ -1,3 +1,9 @@
+The memory pools used in Atlas-C++ are not thread safe, so probably need to
+go. Perhaps the memory management can be a template parameter of SmartPtr,
+and schemes can be added using thread local pools. The memory is not thread
+local, but the pointer to the pool is, so any code can add or remove from
+the pool safely.
+
 Purge objectDefinitions, and probably the defaults loading code.
 
 In all codecs/negotiators:
