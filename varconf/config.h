@@ -57,9 +57,9 @@ public:
 
   virtual ~Config();
 
-  friend std::ostream & operator <<(std::ostream & out, Config & conf);
-  friend std::istream & operator >>(std::istream & in, Config & conf);
-  friend bool operator ==(const Config & one, const Config & two);
+  VARCONF_API friend std::ostream & operator <<(std::ostream & out, Config & conf);
+  VARCONF_API friend std::istream & operator >>(std::istream & in, Config & conf);
+  VARCONF_API friend bool operator ==(const Config & one, const Config & two);
 
   // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
   // ``_''; converts caps in str to lower-case.
