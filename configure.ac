@@ -14,7 +14,7 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests no-d
 AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
-WFMATH_CURRENT=6
+WFMATH_CURRENT=1
 WFMATH_REVISION=0
 WFMATH_AGE=0
 WFMATH_VERSION_INFO=$WFMATH_CURRENT:$WFMATH_REVISION:$WFMATH_AGE
@@ -43,7 +43,7 @@ AC_ARG_ENABLE(debug,
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
 SYSTEM_LIBS="-lm"
-WFMATH_LIB_SUFFIX="-0.3"
+WFMATH_LIB_SUFFIX="-1.0"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
 AC_MSG_NOTICE([Ignore the Atlas checks, they are just used for building test code])
@@ -96,6 +96,6 @@ AC_CONFIG_FILES([Makefile
 	doc/Doxyfile
 	wfmath.spec
 	mingw32-wfmath.spec
-	wfmath-0.3.pc
+	wfmath-1.0.pc
 ])
 AC_OUTPUT

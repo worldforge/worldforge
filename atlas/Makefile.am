@@ -13,7 +13,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/wfmath
 ATLAS_0_6_TESTS = atlas_0_6_test
 
 atlas_0_6_test_SOURCES = atlas_0_6_test.cpp
-atlas_0_6_test_LDADD = ../wfmath/libwfmath-0.3.la @ATLAS_0_6_LIBS@
+atlas_0_6_test_LDADD = ../wfmath/libwfmath-1.0.la @ATLAS_0_6_LIBS@
 
 else
 ATLAS_0_6_TESTS =
