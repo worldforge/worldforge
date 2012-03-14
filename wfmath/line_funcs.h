@@ -31,7 +31,7 @@
 namespace WFMath {
 
 template<int dim>
-inline bool Line<dim>::isEqualTo(const Line<dim> & l, float epsilon) const
+inline bool Line<dim>::isEqualTo(const Line<dim> & l, CoordType epsilon) const
 {
   size_type size = m_points.size();
   if (size != l.m_points.size()) {

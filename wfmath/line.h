@@ -60,7 +60,7 @@ class Line
   Line& operator=(const Line& a);
 
   /// generic: check if two classes are equal, up to a given tolerance
-  bool isEqualTo(const Line& s, float epsilon = numeric_constants<CoordType>::epsilon()) const;
+  bool isEqualTo(const Line& s, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   /// generic: check if two classes are equal, up to tolerance WFMATH_EPSILON
   bool operator==(const Line& s) const	{return isEqualTo(s);}
   /// generic: check if two classes are not equal, up to tolerance WFMATH_EPSILON
