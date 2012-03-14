@@ -75,7 +75,7 @@ class Shape
   Shape& operator=(const Shape& a);
 
   /// generic: check if two classes are equal, up to a given tolerance
-  bool isEqualTo(const Shape& s, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Shape& s, CoordType tolerance = numeric_constants<CoordType>::epsilon()) const;
   /// generic: check if two classes are equal, up to tolerance WFMATH_EPSILON
   bool operator==(const Shape& s) const	{return isEqualTo(s);}
   /// generic: check if two classes are not equal, up to tolerance WFMATH_EPSILON
