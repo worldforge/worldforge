@@ -37,28 +37,36 @@ namespace WFMath {
  * less than val, is given by this function multiplied by delta
  * (for small delta).
  **/
-double GaussianConditional(double mean, double stddev, double val);
+template<typename FloatT>
+FloatT GaussianConditional(FloatT mean, FloatT stddev, FloatT val);
 /// Gives the value of the Gaussian distribution at position val
-double Gaussian(double mean, double stddev, double val);
+template<typename FloatT>
+FloatT Gaussian(FloatT mean, FloatT stddev, FloatT val);
 
 /// Gives the conditional probability of the Poisson distribution at position step
 /**
  * Returns the probability that a Poisson random variable will have value
  * step, given that it is already known not to be less than step.
  **/
-double PoissonConditional(double mean, unsigned int step);
+template<typename FloatT>
+FloatT PoissonConditional(FloatT mean, unsigned int step);
 /// Gives the value of the Poisson distribution at position step
-double Poisson(double mean, unsigned int step);
+template<typename FloatT>
+FloatT Poisson(FloatT mean, unsigned int step);
 
 /// Gives the natural log of n!
-double LogFactorial(unsigned int n);
+template<typename FloatT>
+FloatT LogFactorial(unsigned int n);
 /// Gives n!
-double Factorial(unsigned int n);
+template<typename FloatT>
+FloatT Factorial(unsigned int n);
 
 /// The natural log of Euler's Gamma function
-double LogGamma(double z);
+template<typename FloatT>
+FloatT LogGamma(FloatT z);
 /// Euler's Gamma function
-double Gamma(double z);
+template<typename FloatT>
+FloatT Gamma(FloatT z);
 
 } // namespace WFMath
 
