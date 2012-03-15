@@ -3,6 +3,8 @@
 
 #include <climits>
 
+namespace WFMath {
+
 // This takes a pointer pointing to the character after the end of
 // a buffer, prints the number into the tail of the buffer,
 // and returns a pointer to the first charachter in the number.
@@ -31,12 +33,12 @@ static const unsigned ul_max_digits = (unsigned)
 	(8 * sizeof(unsigned long) // number of bits
 	* log_10_of_2 // base 10 vs. base 2 digits
 	+ 1 // log(1) == 0, have to add one for leading digit
-	+ WFMath::numeric_constants<WFMath::CoordType>::epsilon()); // err on the safe side of roundoff
+	+ numeric_constants<CoordType>::epsilon()); // err on the safe side of roundoff
 #else // _MSC_VER
 static const unsigned ul_max_digits = 10;
 #endif // _MSC_VER
 
-std::string WFMath::IntToString(unsigned long val)
+std::string IntToString(unsigned long val)
 {
   static const unsigned bufsize = ul_max_digits + 1; // add one for \0
   char buffer[bufsize];
@@ -62,7 +64,7 @@ static unsigned long SafeAbs(long val)
 #endif
 }
 
-std::string WFMath::IntToString(long val)
+std::string IntToString(long val)
 {
   static const unsigned bufsize = ul_max_digits + 2; // one for \0, one for minus sign
   char buffer[bufsize];
@@ -74,3 +76,5 @@ std::string WFMath::IntToString(long val)
 
   return bufhead;
 }
+
+} // namespace WFMath

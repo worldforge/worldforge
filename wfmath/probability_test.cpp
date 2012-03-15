@@ -111,7 +111,7 @@ void test_shuffle()
   const int nums[] = {0, 4, 1, -5, 7, 3};
   unsigned num_nums = sizeof(nums)/sizeof(nums[0]);
   std::vector<int> foo(nums, nums + num_nums);
-  WFMath::Shuffle(foo);
+  Shuffle(foo);
 //  for(unsigned i = 0; i < foo.size(); ++i)
 //    std::cerr << foo[i] << ' ';
 //  std::cerr << std::endl;

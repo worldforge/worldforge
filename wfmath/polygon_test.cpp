@@ -84,36 +84,36 @@ void test_intersect()
 
   AxisBox<2> a1(Point<2>(-1, -1), Point<2>(1, -3));
   std::cout << "Testing intersection of " << p << " and " << a1 << std::endl;
-  assert(WFMath::Intersect(p, a1, false));
+  assert(Intersect(p, a1, false));
 
   AxisBox<2> a2(Point<2>(1, -5), Point<2>(2, -3));
   std::cout << "Testing intersection of " << p << " and " << a2 << std::endl;
-  assert(WFMath::Intersect(p, a2, false));
+  assert(Intersect(p, a2, false));
 
   AxisBox<2> a3(Point<2>(5, -1), Point<2>(3, -3));
   std::cout << "Testing intersection of " << p << " and " << a3 << std::endl;
-  assert(WFMath::Intersect(p, a3, false));
+  assert(Intersect(p, a3, false));
 
   AxisBox<2> a4(Point<2>(1, 1), Point<2>(2, -1));
   std::cout << "Testing intersection of " << p << " and " << a4 << std::endl;
-  assert(WFMath::Intersect(p, a4, false));
+  assert(Intersect(p, a4, false));
 
 
   RotBox<2> r1(Point<2>(-1, -1), Vector<2>(2, -2), RotMatrix<2>().identity());
   std::cout << "Testing intersection of " << p << " and " << r1 << std::endl;
-  assert(WFMath::Intersect(p, r1, false));
+  assert(Intersect(p, r1, false));
 
   RotBox<2> r2(Point<2>(1, -5), Vector<2>(1, 2), RotMatrix<2>().identity());
   std::cout << "Testing intersection of " << p << " and " << r2 << std::endl;
-  assert(WFMath::Intersect(p, r2, false));
+  assert(Intersect(p, r2, false));
 
   RotBox<2> r3(Point<2>(5, -1), Vector<2>(-2, -2), RotMatrix<2>().identity());
   std::cout << "Testing intersection of " << p << " and " << r3 << std::endl;
-  assert(WFMath::Intersect(p, r3, false));
+  assert(Intersect(p, r3, false));
 
   RotBox<2> r4(Point<2>(1, 1), Vector<2>(1, -2), RotMatrix<2>().identity());
   std::cout << "Testing intersection of " << p << " and " << r4 << std::endl;
-  assert(WFMath::Intersect(p, r4, false));
+  assert(Intersect(p, r4, false));
 
 
 }
@@ -134,36 +134,36 @@ void test_contains()
 
   AxisBox<2> a1(Point<2>(0.1f, -3.9f), Point<2>(0.2f, -3.8f));
   std::cout << "Testing " << p << " contains " << a1 << std::endl;
-  assert(WFMath::Contains(p, a1, false));
+  assert(Contains(p, a1, false));
 
   AxisBox<2> a2(Point<2>(3.8f, -3.9f), Point<2>(3.9f, -3.8f));
   std::cout << "Testing " << p << " contains " << a2 << std::endl;
-  assert(WFMath::Contains(p, a2, false));
+  assert(Contains(p, a2, false));
 
   AxisBox<2> a3(Point<2>(0.1f, -0.2f), Point<2>(0.2f, -0.1f));
   std::cout << "Testing " << p << " contains " << a3 << std::endl;
-  assert(WFMath::Contains(p, a3, false));
+  assert(Contains(p, a3, false));
 
   AxisBox<2> a4(Point<2>(3.8f, -0.2f), Point<2>(3.9f, -0.1f));
   std::cout << "Testing " << p << " contains " << a4 << std::endl;
-  assert(WFMath::Contains(p, a4, false));
+  assert(Contains(p, a4, false));
 
 
   RotBox<2> r1(Point<2>(0.1f, -3.9f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r1 << std::endl;
-  assert(WFMath::Contains(p, r1, false));
+  assert(Contains(p, r1, false));
 
   RotBox<2> r2(Point<2>(3.8f, -3.9f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r2 << std::endl;
-  assert(WFMath::Contains(p, r2, false));
+  assert(Contains(p, r2, false));
 
   RotBox<2> r3(Point<2>(0.1f, -0.2f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r3 << std::endl;
-  assert(WFMath::Contains(p, r3, false));
+  assert(Contains(p, r3, false));
 
   RotBox<2> r4(Point<2>(3.8f, -0.2f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r4 << std::endl;
-  assert(WFMath::Contains(p, r4, false));
+  assert(Contains(p, r4, false));
 
 }
 

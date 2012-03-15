@@ -98,8 +98,7 @@ int main()
 
   // Check bounding box calculation
   assert(Equal(line2_1.boundingBox(),
-               WFMath::AxisBox<2>(WFMath::Point<2>(0, -4),
-                                  WFMath::Point<2>(4, 0))));
+               AxisBox<2>(Point<2>(0, -4), Point<2>(4, 0))));
 
   Line<2> line2_4(line2_1);
 

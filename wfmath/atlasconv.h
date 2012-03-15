@@ -298,7 +298,7 @@ template<template <int> class ShapeT>
 inline void _AddCorner(ShapeT<3> & shape,
                        const Atlas::Message::ListType & point)
 {
-  WFMath::Point<3> wpt(point[0].asNum(), point[1].asNum(), point[2].asNum());
+  Point<3> wpt(point[0].asNum(), point[1].asNum(), point[2].asNum());
   shape.addCorner(shape.numCorners(), wpt);
 }
 
@@ -306,7 +306,7 @@ template<template <int> class ShapeT>
 inline void _AddCorner(ShapeT<2> & shape,
                        const Atlas::Message::ListType & point)
 {
-  WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
+  Point<2> wpt(point[0].asNum(), point[1].asNum());
   shape.addCorner(shape.numCorners(), wpt);
 }
 
@@ -415,17 +415,17 @@ inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
     Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
     if (shape_I != shapeElement.end()) {
       const Atlas::Message::Element& shapePointElem(shape_I->second);
-      WFMath::Point<dim> shapePoint;
+      Point<dim> shapePoint;
       shapePoint.fromAtlas(shapePointElem);
       // Get rotbox's vector
       shape_I = shapeElement.find("size");
       if (shape_I != shapeElement.end()) {
         const Atlas::Message::Element& shapeVectorElem(shape_I->second);
-        WFMath::Vector<dim> shapeVector;
+        Vector<dim> shapeVector;
         shapeVector.fromAtlas(shapeVectorElem);
         m_corner0 = shapePoint;
         m_size = shapeVector;
-        m_orient = WFMath::RotMatrix<dim>().identity(); //TODO: parse rotation matrix (is it needed?)
+        m_orient = RotMatrix<dim>().identity(); //TODO: parse rotation matrix (is it needed?)
         return;
       }
     }
