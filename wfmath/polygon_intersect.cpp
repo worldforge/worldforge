@@ -88,7 +88,6 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
   int high_corner_num = 0;
 
   for(int i = 0; i < 3; ++i) {
-    float foo = std::fabs(normal[i]);
     if(std::fabs(normal[i]) < normal_mag * numeric_constants<CoordType>::epsilon())
       axis_direction[i] = AXIS_FLAT;
     else if(normal[i] > 0) {
