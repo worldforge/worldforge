@@ -59,7 +59,7 @@ AC_CHECK_FUNCS([fabsf powf floorf ceilf])
 PKG_PROG_PKG_CONFIG
 
 dnl Check for wfmath library
-PKG_CHECK_MODULES(WF, wfmath-1.0 >= 0.3.11,
+PKG_CHECK_MODULES(WF, wfmath-1.0 >= 1.0.0,
     [
         CPPFLAGS="$CPPFLAGS $WF_CFLAGS"
         LIBS="$LIBS $WF_LIBS"
