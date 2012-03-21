@@ -25,10 +25,4 @@
     #define I_ROUND(_x) ((int)(_x)) 
 #endif
 
-#ifdef HAVE_FABSF
-    #define F_ABS(_x) (::fabsf(_x))
-#else
-    #define F_ABS(_x) (::fabs(_x))
-#endif
-
 #endif // ERIS_IROUND_H
