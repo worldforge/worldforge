@@ -90,6 +90,11 @@ class Line
   // Remove the i'th corner
   void removeCorner(size_t i) {m_points.erase(m_points.begin() + i);}
 
+  bool moveCorner(size_t i,
+                  const Point<dim>& p,
+                  CoordType = numeric_constants<CoordType>::epsilon())
+  {m_points[i] = p; return true;}
+
   // Movement functions
 
   /// shape: move the shape by an amount given by the Vector v

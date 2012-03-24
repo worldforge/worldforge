@@ -59,6 +59,18 @@ void test_line(const Line<dim>& p)
   // FIXME more tests
 }
 
+void test_modify()
+{
+  Line<2> line;
+  line.addCorner(0, Point<2>(2, 2));
+  line.addCorner(0, Point<2>(0, 0));
+  
+  assert(line.getCorner(0) == Point<2>(0, 0));
+
+  line.moveCorner(0, Point<2>(1, 1));
+  assert(line.getCorner(0) == Point<2>(1, 1));
+}
+
 int main()
 {
   Line<2> line2_1;
@@ -107,6 +119,8 @@ int main()
   Line<3> line3;
 
   test_line(line3);
+
+  test_modify();
 
   return 0;
 }
