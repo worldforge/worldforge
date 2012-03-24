@@ -246,7 +246,7 @@ class RotMatrix {
   /// set a RotMatrix to a mirror perpendicular to the y axis
   RotMatrix& mirrorY()	{return mirror(1);}
   /// set a RotMatrix to a mirror perpendicular to the z axis
-  RotMatrix& mirrorZ()	{return mirror(2);}
+  RotMatrix& mirrorZ();
 
  private:
   CoordType m_elem[dim][dim];
@@ -258,6 +258,12 @@ class RotMatrix {
   bool _setVals(CoordType *vals, CoordType precision = numeric_constants<CoordType>::epsilon());
   void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
 };
+
+template<>
+inline RotMatrix<3>& RotMatrix<3>::mirrorZ()
+{
+  return mirror(2);
+}
 
 template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)

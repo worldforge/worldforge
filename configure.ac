@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([wfmath], [0.3.12], [alriddoch@googlemail.com])
+AC_INIT([wfmath], [1.0.0], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 

@@ -318,16 +318,16 @@ class Vector {
   /// Access the second component of a vector
   CoordType& y()	{return m_elem[1];}
   /// Access the third component of a vector
-  CoordType z() const	{return m_elem[2];}
+  CoordType z() const;
   /// Access the third component of a vector
-  CoordType& z()	{return m_elem[2];}
+  CoordType& z();
 
   /// Flip the x component of a vector
   Vector& mirrorX()	{return mirror(0);}
   /// Flip the y component of a vector
   Vector& mirrorY()	{return mirror(1);}
   /// Flip the z component of a vector
-  Vector& mirrorZ()	{return mirror(2);}
+  Vector& mirrorZ();
 
   /// 2D only: construct a vector from polar coordinates
   Vector& polar(CoordType r, CoordType theta);
@@ -352,6 +352,24 @@ class Vector {
   CoordType m_elem[dim];
   bool m_valid;
 };
+
+template<>
+inline CoordType Vector<3>::z() const
+{
+  return m_elem[2];
+}
+
+template<>
+inline CoordType& Vector<3>::z()
+{
+  return m_elem[2];
+}
+
+template<>
+inline Vector<3>& Vector<3>::mirrorZ()
+{
+  return mirror(2);
+}
 
 /// 2D only: get the z component of the cross product of two vectors
 CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);

@@ -237,9 +237,9 @@ class Point
   /// access the second component of a point
   CoordType& y()	{return m_elem[1];}
   /// access the third component of a point
-  CoordType z() const	{return m_elem[2];}
+  CoordType z() const;
   /// access the third component of a point
-  CoordType& z()	{return m_elem[2];}
+  CoordType& z();
 
   /// 2D only: construct a vector from polar coordinates
   Point& polar(CoordType r, CoordType theta);
@@ -261,6 +261,18 @@ class Point
   CoordType m_elem[dim];
   bool m_valid;
 };
+
+template<>
+inline CoordType Point<3>::z() const
+{
+  return m_elem[2];
+}
+
+template<>
+inline CoordType& Point<3>::z()
+{
+  return m_elem[2];
+}
 
 template<int dim>
 inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
