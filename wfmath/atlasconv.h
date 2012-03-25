@@ -374,13 +374,13 @@ inline void Line<dim>::fromAtlas(const AtlasInType& a)
     Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
     if ((it != shapeElement.end()) && it->second.isList()) {
       _CornersFromAtlas(*this, it->second);
-      if (numCorners() > 1) {
+      if (numCorners() > 0) {
         return;
       }
     }
   } else if (message.isList()) {
     _CornersFromAtlas(*this, message);
-    if (numCorners() > 1) {
+    if (numCorners() > 0) {
       return;
     }
   }
