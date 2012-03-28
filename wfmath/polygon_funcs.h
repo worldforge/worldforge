@@ -100,7 +100,7 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, CoordType eps
 
   Vector<dim> shift = pd - m_origin, start_shift = shift;
 
-  CoordType bound = (CoordType)(shift.sqrMag() * epsilon);
+  CoordType bound = shift.sqrMag() * epsilon;
 
   int j = 0;
 
