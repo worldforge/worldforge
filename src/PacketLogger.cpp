@@ -46,11 +46,12 @@ PacketLogger::LogPacket(const MetaServerPacket& msp)
 	m_Plist.push_back(msp);
 }
 
-void
+unsigned int
 PacketLogger::flush(unsigned int exp)
 {
 	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
 	boost::posix_time::ptime etime = m_lastRefresh + boost::posix_time::seconds(exp);
+	int cnt = 0;
 
 	/*
 	 * The here and now exceeds threshold
@@ -59,12 +60,14 @@ PacketLogger::flush(unsigned int exp)
 	{
 		while( ! m_Plist.empty() )
 		{
+			++cnt;
 			m_Write << m_Plist.front();
 			m_Plist.pop_front();
 		}
 
 	}
 	m_Write.flush();
+	return cnt;
 }
 
 

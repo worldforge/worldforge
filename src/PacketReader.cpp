@@ -46,7 +46,29 @@ PacketReader::parseBinaryFile( const std::string& file )
 	 */
 	MetaServerPacket pp;
 	while ( m_Read >> pp )
+	{
+
+		/*
+		 * Flag the packet as inbound / outbound.
+		 */
+		NetMsgType mt = pp.getPacketType();
+		switch(mt)
+		{
+			case NMT_HANDSHAKE:
+			case NMT_LISTRESP:
+			case NMT_PROTO_ERANGE:
+			case NMT_LAST:
+			case NMT_ATTRRESP:
+			case NMT_SERVERCLEAR:
+			case NMT_CLIENTCLEAR:
+				pp.setOutBound(true);
+				break;
+			default:
+				pp.setOutBound(false);
+				break;
+		}
 		m_Plist.push_back(pp);
+	}
 
 	m_Read.close();
 

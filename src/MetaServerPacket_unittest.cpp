@@ -57,6 +57,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     CPPUNIT_TEST(test_getSize);
     CPPUNIT_TEST(test_setSequence_getSequence);
     CPPUNIT_TEST(test_setTimeOffset_getTimeOffset);
+    CPPUNIT_TEST(test_setOutBound_getOutBound);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -318,7 +319,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	delete msp;
 
-    	CPPUNIT_ASSERT( ret = 123456 );
+    	CPPUNIT_ASSERT( ret == 123456 );
 
     }
 
@@ -390,6 +391,16 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	CPPUNIT_ASSERT( r == 12345 );
 
+    }
+
+    void test_setOutBound_getOutBound()
+    {
+    	MetaServerPacket* msp = new MetaServerPacket();
+
+    	CPPUNIT_ASSERT( msp->getOutBound() == false );
+
+    	msp->setOutBound(false);
+    	CPPUNIT_ASSERT( msp->getOutBound() == false );
     }
 
     void

@@ -124,5 +124,27 @@ static const NetMsgType NMT_ATTRRESP = 14;
 static const NetMsgType NMT_SERVERCLEAR = 15;
 static const NetMsgType NMT_CLIENTCLEAR = 16;
 
+/**
+ * Convenience Printing
+ */
+static const char* NMT_PRETTY[] = {
+		"NMT_NULL",
+		"NMT_SERVERKEEPALIVE",
+		"NMT_CLIENTKEEPALIVE",
+		"NMT_HANDSHAKE",
+		"NMT_SERVERSHAKE",
+		"NMT_CLIENTSHAKE",
+		"NMT_TERMINATE",
+		"NMT_LISTREQ",
+		"NMT_LISTRESP",
+		"NMT_PROTO_ERANGE",
+		"NMT_LAST",
+		"NMT_SERVERATTR",
+		"NMT_CLIENTATTR",
+		"NMT_CLIENTFILTER",
+		"NMT_ATTRRESP",
+		"NMT_SERVERCLEAR",
+		"NMT_CLIENTCLEAR"
+};
 
 #endif /* METASERVERPROTOCOL_HPP_ */

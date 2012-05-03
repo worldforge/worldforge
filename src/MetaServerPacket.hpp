@@ -65,6 +65,9 @@ public:
 	unsigned int getPort() const { return m_Port; }
 	void setPort(unsigned int p) { m_Port = p; }
 
+	bool getOutBound() { return m_outBound; }
+	void setOutBound(bool s) { m_outBound = s; }
+
 	std::size_t getSize() const { return m_Bytes; }
 
 	unsigned int addPacketData(boost::uint32_t i);
@@ -74,11 +77,9 @@ public:
 	uint32_t getIntData(unsigned int offset) const
 	{
 		uint32_t foo = 99;
-//std::cout << "getIntData-1: " << foo << std::endl;
-		printf("getIntData-1: %u\n", foo );
+//		printf("getIntData-1: %d\n", foo );
 		unpack_uint32(&foo, m_readPtr + offset );
-		printf("getIntData-2: %u\n", foo );
-//std::cout << "getIntData-2: " << foo << std::endl;
+//		printf("getIntData-2: %d\n", foo );
 		return foo;
 	}
 
@@ -120,6 +121,7 @@ private:
 	char * m_readPtr;
 	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
 	bool m_needFree;
+	bool m_outBound;
 	unsigned long long m_Sequence;
 	unsigned long long m_TimeOffset;
 

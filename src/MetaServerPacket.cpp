@@ -30,7 +30,8 @@ MetaServerPacket::MetaServerPacket()
 		  m_AddressInt(0),
 		  m_needFree(true),
 		  m_Sequence(0),
-		  m_TimeOffset(0)
+		  m_TimeOffset(0),
+		  m_outBound(false)
 {
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();

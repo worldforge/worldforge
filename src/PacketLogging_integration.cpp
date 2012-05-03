@@ -62,6 +62,7 @@ class PacketLogging_integration : public CppUnit::TestCase
     PacketLogger* pl;
     MetaServerPacket* mp1;
     MetaServerPacket* mp2;
+    MetaServerPacket* mp3;
     std::string file_name;
 
     /*
@@ -81,6 +82,18 @@ class PacketLogging_integration : public CppUnit::TestCase
     	mp2->addPacketData(22);
     	mp2->setSequence(2);
     	mp2->setTimeOffset(2);
+
+    	mp3 = new MetaServerPacket();
+    	std::string attr_name = "foobar";
+    	std::string attr_val  = "waka waka";
+
+    	mp3->setPacketType(NMT_SERVERATTR);
+    	mp3->setSequence(3);
+    	mp3->setTimeOffset(3);
+		mp3->addPacketData(attr_name.length());
+		mp3->addPacketData(attr_val.length());
+		mp3->addPacketData(attr_name);
+		mp3->addPacketData(attr_val);
 
 		p = new PacketReader();
 		file_name = "/tmp/packet_test.bin";
@@ -157,29 +170,21 @@ class PacketLogging_integration : public CppUnit::TestCase
     void test_PacketReader_parseBinaryFile()
     {
 
-    	MetaServerPacket* mp3 = new MetaServerPacket();
-    	std::string attr_name = "foobar";
-    	std::string attr_val  = "waka waka";
-
-    	mp3->setPacketType(NMT_SERVERATTR);
-    	mp3->setSequence(3);
-    	mp3->setTimeOffset(3);
-		mp3->addPacketData(attr_name.length());
-		mp3->addPacketData(attr_val.length());
-		mp3->addPacketData(attr_name);
-		mp3->addPacketData(attr_val);
-
-
-		MetaServerPacket* mp4 = new MetaServerPacket();
-		mp4->setPacketType(NMT_SERVERSHAKE);
-		mp4->addPacketData(666);
-		mp4->setSequence(4);
-		mp4->setTimeOffset(4);
+//    	MetaServerPacket* mp3 = new MetaServerPacket();
+//    	std::string attr_name = "foobar";
+//    	std::string attr_val  = "waka waka";
+//
+//    	mp3->setPacketType(NMT_SERVERATTR);
+//    	mp3->setSequence(3);
+//    	mp3->setTimeOffset(3);
+//		mp3->addPacketData(attr_name.length());
+//		mp3->addPacketData(attr_val.length());
+//		mp3->addPacketData(attr_name);
+//		mp3->addPacketData(attr_val);
 
     	pl->LogPacket(*mp1);
     	pl->LogPacket(*mp2);
     	pl->LogPacket(*mp3);
-//    	pl->LogPacket(*mp4);
     	pl->flush(0);
 
     	unsigned int i = p->parseBinaryFile(pl->getFile());
@@ -188,7 +193,6 @@ class PacketLogging_integration : public CppUnit::TestCase
     	MetaServerPacket mr1 = p->pop();
     	MetaServerPacket mr2 = p->pop();
     	MetaServerPacket mr3 = p->pop();
-//    	MetaServerPacket mr4 = p->pop();
 
     	/*
     	 * Now we make sure that we've got a good round trip
@@ -208,15 +212,12 @@ class PacketLogging_integration : public CppUnit::TestCase
 
     	/*
     	 * I have no idea why this doesn't work !?
+    	 *
+    	 * I think there is a big bug here somewhere
     	 */
-//    	unsigned int  mr2data = mr2.getIntData(4);
-//    	std::cout << "mr2.getIntData(4): " << mr2data << std::endl;
+    	unsigned int  mr2data = mr2.getIntData(4);
+    	std::cout << "mr2.getIntData(4): " << mr2data << std::endl;
 //    	CPPUNIT_ASSERT( mr2data == 22 );
-//unsigned int  mr4data = mr4.getIntData(4);
-//std::cout << "mr4.getIntData(4): " << mr4data << std::endl;
-//CPPUNIT_ASSERT( mr2data == 22 );
-
-
 
     	std::cout << "mr3.getPacketType(): " << mr3.getPacketType() << " / " << NMT_SERVERATTR << std::endl;
     	std::cout << "mr3.getSize(): " << mr3.getSize() << std::endl;
@@ -233,17 +234,6 @@ class PacketLogging_integration : public CppUnit::TestCase
     	CPPUNIT_ASSERT( mr3.getTimeOffset() == 3 );
     	CPPUNIT_ASSERT( msg.substr(0,n) == "foobar" );
     	CPPUNIT_ASSERT( msg.substr(n) == "waka waka" );
-
-
-//    	unsigned int name_length = in.getIntData(4);
-//    	unsigned int value_length = in.getIntData(8);
-//    	std::string msg = in.getPacketMessage(12);
-//    	std::string name = msg.substr(0,name_length);
-//    	std::string value = msg.substr(name_length);
-//    	std::string ip = in.getAddressStr();
-//    	m_Logger.debug("processSERVERATTR(%s,%s)", name.c_str(), value.c_str() );
-//    	msdo.addServerAttribute(ip,name,value);
-
 
     }
     void test_PacketReader_parseBinaryFile_append()

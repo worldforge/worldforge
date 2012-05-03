@@ -60,7 +60,7 @@ public:
 	void setFile(std::string file) { m_File = file; }
 
 	unsigned int getCount() { return m_Plist.size(); }
-	void flush(unsigned int exp);
+	unsigned int flush(unsigned int exp);
 	void close()
 	{
 			m_Write.close();

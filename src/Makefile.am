@@ -1,10 +1,11 @@
 INCLUDES = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
 
-bin_PROGRAMS = metaserver-ng testserver testclient
+bin_PROGRAMS = metaserver-ng testserver testclient packetplayer
 
 metaserver_ng_SOURCES = main.cpp MetaServer.cpp MetaServerHandler.cpp MetaServerHandlerTCP.cpp MetaServerHandlerUDP.cpp MetaServerPacket.cpp DataObject.cpp PacketLogger.cpp
 testserver_SOURCES = TestServer.cpp MetaServerPacket.cpp PacketLogger.cpp
 testclient_SOURCES = TestClient.cpp MetaServerPacket.cpp PacketLogger.cpp
+packetplayer_SOURCES = PacketPlayer.cpp MetaServerPacket.cpp PacketReader.cpp
 
 noinst_HEADERS = MetaServerHandler.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp MetaServer.hpp MetaServerPacket.hpp MetaServerProtocol.hpp TestServer.hpp DataObject.hpp PacketLogger.hpp
 

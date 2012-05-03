@@ -178,7 +178,9 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	 */
 	if ( m_logPackets )
 	{
-		m_PacketLogger->flush(m_packetLoggingFlushSeconds);
+		int i = m_PacketLogger->flush(m_packetLoggingFlushSeconds);
+		if ( i > 0 )
+			m_Logger.debugStream() << "     PacketLogger Flushed : " << i;
 	}
 
 
@@ -257,7 +259,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		processCLIENTFILTER(msp,rsp);
 		break;
 	default:
-		--m_PacketSequence;
+//		--m_PacketSequence;
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 		break;
 	}
@@ -268,6 +270,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	++m_PacketSequence;
 	rsp.setSequence(m_PacketSequence);
 	rsp.setTimeOffset( getDeltaMillis() );
+	rsp.setOutBound(true);
 
 	/*
 	 * Packet Logging
@@ -281,7 +284,8 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		// we don't want to log if:
 		// 1) sequence is 0 : this means the sequence is not set ... this means something has gone astray elsewhere
 		// 2) packet type is NULL : these responses are never sent to the client
-		if ( rsp.getSequence() != 0 && rsp.getPacketType() != NMT_NULL )
+//		if ( rsp.getSequence() != 0 && rsp.getPacketType() != NMT_NULL )
+		if ( rsp.getSequence() != 0 )
 			m_PacketLogger->LogPacket(rsp);
 	}
 

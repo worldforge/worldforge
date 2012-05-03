@@ -87,7 +87,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		msp.setPort(m_remoteEndpoint.port());
 
 
-		logger.debugStream() << "UDP: Incoming Packet [" << msp.getAddress() << "][" << msp.getPacketType() << "][" << bytes_recvd << "]";
+		logger.debugStream() << "UDP: Incoming Packet [" << msp.getAddress() << "][" << NMT_PRETTY[msp.getPacketType()] << "][" << bytes_recvd << "]";
 
 		/**
 		 *  Define an empty MSP ( the buffer is internally created )
@@ -107,7 +107,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 
 		if ( rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL )
 		{
-		  logger.debugStream() << "UDP: Outgoing Packet [" << rsp.getAddress() << "][" << rsp.getPacketType() << "][" << rsp.getSize() << "]";
+		  logger.debugStream() << "UDP: Outgoing Packet [" << rsp.getAddress() << "][" << NMT_PRETTY[rsp.getPacketType()] << "][" << rsp.getSize() << "]";
 	      m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(),rsp.getSize()), m_remoteEndpoint,
 	          boost::bind(&MetaServerHandlerUDP::handle_send, this, rsp,
 	            boost::asio::placeholders::error,

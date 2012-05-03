@@ -66,4 +66,5 @@ src/*_unittest
 src/*_integration
 src/testserver
 src/testclient
+src/packetplayer
 
