@@ -100,7 +100,7 @@ AC_CHECK_LIB(log4cpp, main, , [
 	AC_MSG_ERROR("Linking against log4cpp library failed.")
 ])
 
-PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12.0 )
+PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12 )
 
 # debugging option
 AC_ARG_ENABLE(debug,[  --enable-debug     creates debugging code [default=no]],
