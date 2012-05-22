@@ -24,7 +24,8 @@
  * Local Includes
  */
 #include "MetaServerHandlerUDP.hpp"
-#include "MetaServer.hpp"; // I tried to get away with just forward declarations but this didn't work
+#include "MetaServer.hpp"; 
+// I tried to get away with just forward declarations but this didn't work
 
 
 /*
