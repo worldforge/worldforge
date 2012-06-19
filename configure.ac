@@ -141,7 +141,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
 		have_glib='yes'
 		],[
 		AC_MSG_RESULT([no])
-		AC_MSG_WARN(Couldn't find glib, not building glib poll)
+		AC_MSG_WARN(Could not find glib, not building glib poll)
 		have_glib='no'
 		]
 	)
