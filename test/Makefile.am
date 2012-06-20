@@ -97,7 +97,7 @@ Redispatch_unittest_SOURCES = Redispatch_unittest.cpp
 Response_unittest_SOURCES = Response_unittest.cpp
 Room_unittest_SOURCES = Room_unittest.cpp
 Router_unittest_SOURCES = Router_unittest.cpp
-ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp
+ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp ElementExerciser.h
 Task_unittest_SOURCES = Task_unittest.cpp
 
 TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
