@@ -51,9 +51,7 @@ ShaderFactories & ShaderFactories::instance()
 /// \brief Delete the instance
 void ShaderFactories::del()
 {
-    if (m_instance != 0) {
-        delete m_instance;
-    }
+    delete m_instance;
 }
 
 /// \brief Create a shader of the specified type.
