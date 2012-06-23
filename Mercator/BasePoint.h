@@ -59,7 +59,8 @@ class BasePoint {
     float & falloff() { return m_falloff; }
 
     /// Calculate the random seed used at this base point.
-    unsigned int seed() const { return (unsigned int)(m_height * 1000.0);}
+    //unsigned int seed() const { return (unsigned int)(m_height * 1000.0);}
+    unsigned int seed() const;
 };
 
 } //namespace Mercator
