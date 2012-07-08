@@ -34,6 +34,9 @@
 
 namespace WFMath {
 
+const MTRand::uint32 MTRand::N;
+const MTRand::uint32 MTRand::SAVE;
+
 MTRand MTRand::instance;
 
 static MTRand::uint32 hash( time_t t, clock_t c )
