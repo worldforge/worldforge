@@ -196,6 +196,7 @@ void BaseConnection::nonblockingConnect()
     if (!_stream->isReady()) {
         if (_stream->connect_pending()) {
             debug() << "Stream not yet ready";
+            _stream->open_next();
         } else {
             handleFailure("Failed to connect to " + _host);
             hardDisconnect(false);
