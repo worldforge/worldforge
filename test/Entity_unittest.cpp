@@ -42,6 +42,17 @@ class TestErisEntity : public Eris::Entity
     virtual void addToMovementPredition() { }
     virtual Eris::Entity* getEntity(const std::string&) { return 0; }
 
+    void testSetLocation(Eris::Entity* location) {
+        setLocation(location);
+    }
+
+    void testSetPosition(const WFMath::Point<3>& position) {
+        m_position = position;
+    }
+
+    void testSetOrientation(const WFMath::Quaternion& orientation) {
+        m_orientation = orientation;
+    }
 };
 
 int main()
@@ -50,6 +61,39 @@ int main()
         Eris::Entity * e = new TestErisEntity("1", 0);
         e->shutdown();
         delete e;
+    }
+
+    {
+        //Test that positioning works correctly
+        TestErisEntity e1("1", 0);
+        TestErisEntity e2("2", 0);
+        TestErisEntity e3("3", 0);
+        e2.testSetLocation(&e1);
+        e2.testSetPosition(WFMath::Point<3>(1, 2, 3));
+        //Rotate the e2 entity halfways around the z-axis, so that the e3 view position gets affected.
+        e2.testSetOrientation(WFMath::Quaternion(WFMath::Vector<3>(0, 0, 1), WFMath::numeric_constants<WFMath::CoordType>::pi()));
+        e3.testSetPosition(WFMath::Point<3>(3, 2, 1));
+        e3.testSetLocation(&e2);
+
+
+        //The root entity won't have any valid position. We still expect the getViewPosition to report correct results, treating the position of the root entity as (0,0,0).
+        assert(!e1.getPosition().isValid());
+        assert(e2.getPosition().isValid());
+
+        assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
+        //Note that e1 don't have any valid position set, so it's position when calling getViewPosition() should be interpreted as (0,0,0).
+        assert(e2.getViewPosition() == WFMath::Point<3>(1, 2, 3));
+
+        e1.testSetPosition(WFMath::Point<3>(10, 20, 30));
+
+        //Test position inheritence
+        assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
+        assert(e2.getViewPosition() == WFMath::Point<3>(11, 22, 33));
+        assert(e3.getViewPosition() == WFMath::Point<3>(8, 20, 34));
+
+        e3.shutdown();
+        e2.shutdown();
+        e1.shutdown();
     }
 
 
