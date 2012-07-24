@@ -171,8 +171,10 @@ sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot&
 WFMath::Point<3> Entity::getViewPosition() const
 {
     WFMath::Point<3> vpos(0.0, 0.0, 0.0);
+    //If the position is invalid, we will consider it to be (0,0,0) and skip applying it.
     for (const Entity* e = this; e; e = e->getLocation())
-        vpos = e->toLocationCoords(vpos);
+        if (e->getPosition().isValid())
+            vpos = e->toLocationCoords(vpos);
         
     return vpos;
 }
