@@ -47,7 +47,7 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 	m_outboundTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
 
-	VLOG(2) << "MetaServerHandlerUDP() Startup : " << m_Address << "," << m_Port;
+	LOG(INFO) << "MetaServerHandlerUDP() Startup : " << m_Address << "," << m_Port;
 
 	start_receive();
 }
