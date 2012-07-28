@@ -32,10 +32,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 
-#include <log4cpp/Category.hh>
-#include <log4cpp/FileAppender.hh>
-#include <log4cpp/OstreamAppender.hh>
-#include <log4cpp/SimpleLayout.hh>
+#include <glog/logging.h>
 
 /*
  * Forward Declarations
@@ -99,8 +96,5 @@ private:
 	MetaServer& m_msRef;
 	const std::string address_;
 	const unsigned int port_;
-	log4cpp::Category& logger;
-
-
 
 };

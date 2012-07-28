@@ -111,7 +111,6 @@ MetaServer::MetaServer(boost::asio::io_service& io)
   m_maxClientSessions(4096),
   m_isDaemon(false),
   m_Logfile(""),
-  m_Logger( log4cpp::Category::getInstance("MetaServerHandlerUDP_unittest") ),
   m_logServerSessions(false),
   m_logClientSessions(false),
   m_logPackets(false),
@@ -126,12 +125,6 @@ void MetaServer::processMetaserverPacket(MetaServerPacket&, MetaServerPacket&)
 {
 
 }
-
-log4cpp::Category& MetaServer::getLogger()
-{
-	return m_Logger;
-}
-
 
 DataObject::DataObject()
 {
@@ -152,6 +145,3 @@ MetaServerHandler::~MetaServerHandler()
 {
 
 }
-
-
-

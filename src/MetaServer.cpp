@@ -42,13 +42,13 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_sessionExpirySeconds(3600),
 	  m_clientExpirySeconds(300),
 	  m_packetLoggingFlushSeconds(10),
+	  m_loggingFlushSeconds(10),
 	  m_keepServerStats(false),
 	  m_keepClientStats(false),
 	  m_maxServerSessions(1024),
 	  m_maxClientSessions(4096),
 	  m_isDaemon(false),
 	  m_Logfile(""),
-	  m_Logger( log4cpp::Category::getInstance("metaserver-ng") ),
 	  m_logServerSessions(false),
 	  m_logClientSessions(false),
 	  m_logPackets(false),
@@ -61,6 +61,7 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 
+	m_loggingFlushTime = msdo.getNow();
 	srand( (unsigned)time(0));
 
 }
@@ -70,8 +71,8 @@ MetaServer::~MetaServer()
 	if ( m_logPackets )
 		m_PacketLogger->flush(0);
 
-	m_Logger.info("Shutting down logging");
-	log4cpp::Category::shutdown();
+	LOG(INFO) << "Shutting down metaserver-ng";
+	google::FlushLogFiles(google::INFO);
 }
 
 void
@@ -88,7 +89,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<unsigned int> expiredHS = msdo.expireHandshakes(m_handshakeExpirySeconds);
 	if ( expiredHS.size() > 0 )
 	{
-		m_Logger.debugStream() << "Expiry Handshakes: " << expiredHS.size();
+		VLOG(2) << "Expiry Handshakes: " << expiredHS.size();
 	}
 
     /*
@@ -97,7 +98,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<std::string> expiredSS = msdo.expireServerSessions(m_sessionExpirySeconds);
 	if ( expiredSS.size() > 0 )
 	{
-		m_Logger.debugStream() << "Expiry ServerSessions: " << expiredSS.size();
+		VLOG(2) << "Expiry ServerSessions: " << expiredSS.size();
 	}
 
     /**
@@ -106,7 +107,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<std::string> expiredCS = msdo.expireClientSessions(m_clientExpirySeconds);
 	if ( expiredCS.size() > 0 )
 	{
-		m_Logger.debugStream() << "Expiry ClientSessions: " << expiredCS.size();
+		VLOG(2) << "Expiry ClientSessions: " << expiredCS.size();
 	}
 
 
@@ -131,14 +132,12 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 			std::string key = slist.front(); slist.pop_front();
 
 			std::map<std::string,std::string> item = msdo.getServerSession(key);
-			m_Logger.debugStream() << " Server Session: " << key;
+			VLOG(2) << " Server Session: " << key;
 			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 			{
-				m_Logger.debugStream() << "    " << itr_inner->first << " == " << itr_inner->second;
+				VLOG(2) << "    " << itr_inner->first << " == " << itr_inner->second;
 			}
 		}
-
-
 	}
 
 	/**
@@ -154,18 +153,18 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 		{
 			std::string key = slist.front(); slist.pop_front();
 			std::map<std::string,std::string> item = msdo.getClientSession(key);
-			m_Logger.debugStream() << " Client Session: " << key;
+			VLOG(2) << " Client Session: " << key;
 			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 			{
-				m_Logger.debugStream() << "    " << itr_inner->first << " == " << itr_inner->second;
+				VLOG(2) << "    " << itr_inner->first << " == " << itr_inner->second;
 			}
 			item = msdo.getClientFilter(key);
 			if ( item.size() > 0 )
 			{
-				m_Logger.debugStream() << "    Filters:";
+				VLOG(2) << "    Filters:";
 				for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 				{
-					m_Logger.debugStream() << "        " << itr_inner->first << " == " << itr_inner->second;
+					VLOG(2) << "        " << itr_inner->first << " == " << itr_inner->second;
 				}
 			}
 
@@ -180,7 +179,20 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	{
 		int i = m_PacketLogger->flush(m_packetLoggingFlushSeconds);
 		if ( i > 0 )
-			m_Logger.debugStream() << "     PacketLogger Flushed : " << i;
+			VLOG(2) << "     PacketLogger Flushed : " << i;
+	}
+
+	/*
+	 * Flush the main logfiles
+	 */
+	etime = m_loggingFlushTime + boost::posix_time::seconds(m_loggingFlushSeconds);
+	VLOG(9) << "   logginfFlushTime: " << m_loggingFlushTime;
+	VLOG(9) << "   etime           : " << etime;
+	if ( etime > now )
+	{
+		m_loggingFlushTime = now;
+		VLOG_EVERY_N(3,10) << "  Flushing Log Messages";
+		google::FlushLogFiles(google::INFO);
 	}
 
 
@@ -260,7 +272,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		break;
 	default:
 //		--m_PacketSequence;
-		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
+		VLOG(1) << "Packet Type [" << msp.getPacketType() << "] not supported.";
 		break;
 	}
 
@@ -307,7 +319,7 @@ MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 
 	if ( i > 0 )
 	{
-		m_Logger.debug("processSERVERKEEPALIVE(%u)", i);
+		VLOG(1) << "processSERVERKEEPALIVE(): " << i;
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -325,7 +337,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	m_Logger.debug("processSERVERSHAKE(%u)", shake);
+	VLOG(1) << "processSERVERSHAKE(): " << shake;
 
 	/**
 	 * If a handshake exists, we can know the following:
@@ -363,12 +375,12 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 	 */
 	if ( in.getSize() > (sizeof(uint32_t)) )
 	{
-		m_Logger.debug("processTERMINATE-client(%s)", in.getAddressStr().c_str() );
+		VLOG(1) << "processTERMINATE-client(): " << in.getAddressStr();
 		msdo.removeClientSession(in.getAddressStr());
 	}
 	else
 	{
-		m_Logger.debug("processTERMINATE-server(%s)", in.getAddressStr().c_str() );
+		VLOG(1) << "processTERMINATE-server(): " << in.getAddressStr();
 		msdo.removeServerSession(in.getAddressStr());
 	}
 
@@ -382,7 +394,7 @@ MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 
 	if ( i > 0 )
 	{
-		m_Logger.debug("processCLIENTKEEPALIVE(%u)", i);
+		VLOG(1) << "processCLIENTKEEPALIVE()" << i;
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -395,7 +407,7 @@ MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	m_Logger.debug("processCLIENTSHAKE(%u)", shake );
+	VLOG(1) << "processCLIENTSHAKE()" << shake;
 
 	if( msdo.handshakeExists(shake) )
 	{
@@ -480,7 +492,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 
     if ( packed != resp_list.size() )
     {
-    	m_Logger.warn("Packed (%u) vs Response(%u) MISMATCH!", packed, resp_list.size() );
+    	LOG(WARNING) << "Packed: " << packed << " vs Response: " << resp_list.size() << "MISMATCH!";
     }
 
 	out.setAddress( in.getAddress() );
@@ -497,7 +509,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 		out.addPacketData( (uint32_t)resp_list.size() );
 		while ( ! resp_list.empty() )
 		{
-			m_Logger.debug("processLISTRESP(%d) - Adding", resp_list.front() );
+			VLOG(2) << "processLISTRESP() - Adding : " << resp_list.front();
 			out.addPacketData(resp_list.front());
 			resp_list.pop_front();
 		}
@@ -507,7 +519,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 		/*
 		 *  For the record, I think this is a stupid protocol construct
 		 */
-		m_Logger.debug("processLISTRESP(0,0) - Empty");
+		VLOG(2) << "processLISTRESP(0,0) - Empty";
 		out.addPacketData( 0 );
 		out.addPacketData( 0 );
 	}
@@ -523,7 +535,7 @@ MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length);
 	std::string ip = in.getAddressStr();
-	m_Logger.debug("processSERVERATTR(%s,%s)", name.c_str(), value.c_str() );
+	VLOG(2) << "processSERVERATTR() : " << name << "," << value;
 	msdo.addServerAttribute(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -538,7 +550,7 @@ MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length);
 	std::string ip = in.getAddressStr();
-	m_Logger.debug("processCLIENTATTR(%s,%s)", name.c_str(), value.c_str() );
+	VLOG(2) << "processCLIENTATTR() : " << name << "," << value;
 	msdo.addClientAttribute(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -553,7 +565,7 @@ MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& ou
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length);
 	std::string ip = in.getAddressStr();
-	m_Logger.debug("processCLIENTFILTER(%s,%s)", name.c_str(), value.c_str() );
+	VLOG(2) << "processCLIENTFILTER() : " << name << "," << value;
 	msdo.addClientFilter(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -669,7 +681,6 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	if( vm.count("logging.packet_logfile") )
 	{
 		m_PacketLogfile = vm["logging.packet_logfile"].as<std::string>();
-std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 		/*
 		 *  Set a hard default if it's not specified
 		 */
@@ -688,6 +699,9 @@ std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 	if ( vm.count("logging.packet_logging_flush_seconds"))
 		m_packetLoggingFlushSeconds = vm["logging.packet_logging_flush_seconds"].as<unsigned int>();
 
+	if ( vm.count("logging.logging_flush_seconds"))
+		m_loggingFlushSeconds = vm["logging.logging_flush_seconds"].as<unsigned int>();
+
 
 	if( vm.count("server.logfile") )
 	{
@@ -703,7 +717,6 @@ std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 		{
 			m_Logfile.replace(0,1, std::getenv("HOME") );
 		}
-
 	}
 
 	/**
@@ -722,16 +735,16 @@ std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 	/**
 	 * Print out the startup values
 	 */
-	m_Logger.info("WorldForge MetaServer Runtime Configuration");
+	LOG(INFO) << "WorldForge MetaServer Runtime Configuration";
 	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
 	{
 		if ( it->second.value().type() == typeid(int) )
 		{
-			m_Logger.info( "%s = %u", it->first.c_str(), it->second.as<int>());
+			LOG(INFO) << "  " << it->first.c_str() << " = " << it->second.as<int>();
 		}
 		else if (it->second.value().type() == typeid(std::string) )
 		{
-			m_Logger.info( "%s = %s", it->first.c_str(), it->second.as<std::string>().c_str() );
+			LOG(INFO) << "  " << it->first.c_str() << " = " << it->second.as<std::string>().c_str();
 		}
 	}
 }
@@ -739,37 +752,20 @@ std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 void
 MetaServer::initLogger()
 {
-	/*
-	if ( m_LogAppender )
-	m_LogAppender->close
-		delete m_LogAppender;
-
-	if ( m_LoggerLayout )
-		delete m_LoggerLayout;
-		*/
-
-	m_Logger.setAdditivity(false);
-	m_LoggerLayout = new log4cpp::BasicLayout();
 
 	/**
-	 * If a logfile is specified, use it, otherwise stdout.
-	 * TODO: change this ... it leaks
+	 * If a logfile is specified, use it
 	 */
 	if ( !m_Logfile.empty() )
 	{
-		m_LogAppender = new log4cpp::FileAppender("FileAppender", m_Logfile.c_str() );
-	}
-	else
-	{
-		m_LogAppender = new log4cpp::OstreamAppender("OstreamAppender", &std::cout);
+		/*
+		 * I hope this actually logs to stdout in the event that no destination is set
+		 */
+		google::SetLogDestination(google::INFO,m_Logfile.c_str());
+		LOG(INFO) << "Metaserver Logfile : " << m_Logfile;
 	}
 
-	m_LogAppender->setLayout(m_LoggerLayout);
-	m_Logger.setAppender(m_LogAppender);
-	m_Logger.setPriority(log4cpp::Priority::DEBUG);
-	m_Logger.info("MetaServer logging initialised [%s][%s]", m_LogAppender->getName().c_str(), m_Logfile.c_str() );
-	std::cout << "MetaServer logging initialised [" << m_LogAppender->getName() << "]["
-              <<  m_Logfile << "]" << std::endl;
+	LOG(INFO) << "MetaServer logging initialized";
 
 }
 
@@ -779,12 +775,6 @@ MetaServer::getDeltaMillis()
     boost::posix_time::ptime ntime = msdo.getNow();
     boost::posix_time::time_duration dur = ntime - m_startTime;
     return dur.total_milliseconds();
-}
-
-log4cpp::Category&
-MetaServer::getLogger()
-{
-	return m_Logger;
 }
 
 bool

@@ -30,7 +30,7 @@
  */
 #include <boost/bind.hpp>
 #include <boost/asio/placeholders.hpp>
-
+#include <glog/logging.h>
 
 MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,
 		              const std::string& address,
@@ -38,11 +38,10 @@ MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_servi
    : m_msRef(ms),
      address_(address),
      port_(port),
-     acceptor_(ios, boost::asio::ip::tcp::tcp::endpoint( boost::asio::ip::tcp::tcp::v6(),port)),
-     logger(ms.getLogger())
+     acceptor_(ios, boost::asio::ip::tcp::tcp::endpoint( boost::asio::ip::tcp::tcp::v6(),port))
 {
 
-	logger.info("MetaServerHandlerTCP(%s,%u) Startup", address.c_str(), port );
+	LOG(INFO) << "MetaServerHandlerTCP Startup : " << address << "," << port;
 
 	acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
 	//acceptor_.set_option(boost::asio::ip::v6_only(false));
@@ -56,7 +55,7 @@ MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_servi
 
 MetaServerHandlerTCP::~MetaServerHandlerTCP()
 {
-	logger.info("MetaServerHandlerTCP(%s,%u) Shutdown", address_.c_str(), port_ );
+	LOG(INFO) << "MetaServerHandlerTCP Shutdown";
 }
 
 void
@@ -79,16 +78,17 @@ MetaServerHandlerTCP::handle_accept(tcp_connection::pointer new_connection,
 
 	if(!error)
 	{
-		logger.debug("TCP-1 : read off packet");
-		logger.debug("TCP-2 : analyse packet");
-		logger.debug("TCP-3 : make call to ms object");
-		logger.debug("TCP-4 : get response from ms and construct packet");
-		logger.debug("TCP-5 : send async response");
-		logger.debug("TCP-6 : loop back to start accept");
+//		logger.debug("TCP-1 : read off packet");
+//		logger.debug("TCP-2 : analyse packet");
+//		logger.debug("TCP-3 : make call to ms object");
+//		logger.debug("TCP-4 : get response from ms and construct packet");
+//		logger.debug("TCP-5 : send async response");
+//		logger.debug("TCP-6 : loop back to start accept");
 
 		start_accept();
 	} else {
-		logger.errorStream() << "ERROR:" << error.message();
+//		logger.errorStream() << "ERROR:" << error.message();
+		LOG(WARNING) << "ERROR: " << error.message();
 	}
 
 }

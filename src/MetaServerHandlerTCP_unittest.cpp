@@ -42,9 +42,6 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-
-#include <log4cpp/Category.hh>
-
 #include <cassert>
 #include <string>
 
@@ -153,7 +150,6 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_maxClientSessions(4096),
 	  m_isDaemon(false),
 	  m_Logfile(""),
-	  m_Logger( log4cpp::Category::getInstance("MetaServerHandlerTCP_unittest") ),
 	  m_logServerSessions(false),
 	  m_logClientSessions(false),
 	  m_logPackets(false),
@@ -167,11 +163,6 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 MetaServer::~MetaServer()
 {
 
-}
-
-log4cpp::Category& MetaServer::getLogger()
-{
-	return m_Logger;
 }
 
 DataObject::DataObject()

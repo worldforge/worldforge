@@ -32,6 +32,7 @@
  */
 #include <unistd.h> /* daemon() */
 #include <fstream>
+#include <glog/logging.h>
 
 /*
 	Entry point
@@ -76,9 +77,15 @@ int main(int argc, char** argv)
 		( "performance.client_session_expiry_seconds", boost::program_options::value<int>(), "Expiry in seconds for client sessions [300-3600].\nDefault: 300" )
 			;
 
+	/*
+	 * Initialize Logging
+	 */
+	google::InitGoogleLogging("");
+
 	/**
 	 * Create our metaserver
 	 */
+	VLOG(5) << "Create MetaServer instance";
 	MetaServer ms(io_service);
 
 	try
@@ -117,14 +124,16 @@ int main(int argc, char** argv)
 		/**
 		 * Register the configuration.
 		 */
+		VLOG(5) << "Attempting to register MetaServer configuration";
 		ms.registerConfig(vm);
+		VLOG(5) << "Configuration Registered";
 
 		/**
 		 * Go daemon if needed
 		 */
 		if ( ms.isDaemon() )
 		{
-			ms.getLogger().info("Running as a daemon");
+			LOG(INFO) << "Running as a daemon";
 			daemon(0,0);
 		}
 
@@ -132,6 +141,7 @@ int main(int argc, char** argv)
 		 * Define Handlers
 		 */
 		//MetaServerHandlerTCP tcp(ms, io_service, ip, port);
+		VLOG(5) << "Start UPD Handler";
 		MetaServerHandlerUDP udp(ms, io_service, ip, port);
 
 		/**
@@ -139,6 +149,7 @@ int main(int argc, char** argv)
 		 */
 		for(;;)
 		{
+			LOG(INFO) << "Enter ASYNC loop";
 			try
 			{
 				/*
@@ -156,6 +167,7 @@ int main(int argc, char** argv)
 				 * effort to resume operation despite the error
 				 */
 				std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
+				LOG(ERROR) << "IOService Loop Exception:" << ex.what();
 			}
 		}
 
@@ -166,7 +178,9 @@ int main(int argc, char** argv)
 		 * This will catch exceptions during the startup etc
 		 */
 		std::cerr << "Exception: " << e.what() << std::endl;
+		google::FlushLogFiles(google::INFO);
 	}
-	std::cout << "All Done!" << std::endl;
+	LOG(INFO) << "All Done!";
+	google::FlushLogFiles(google::INFO);
 	return 0;
 }

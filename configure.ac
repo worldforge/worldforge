@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-AC_INIT(metaserver-ng, 0.0.2, sryan@evercrack.com)
+AC_INIT(metaserver-ng, 0.0.5, sryan@evercrack.com)
 
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_MACRO_DIR([m4])
@@ -89,15 +89,14 @@ AC_CHECK_LIB(boost_program_options, main, , [
 	AC_MSG_ERROR("Linking against boost::program_options library failed.")
 ])
 
-
-# check for LOG4CPP
-AC_CHECK_HEADER([log4cpp/Category.hh])
-AC_CHECK_LIB(pthread, main, , [
+AC_CHECK_LIB(pthread, main, ,[
 	AC_MSG_ERROR("Linking against pthread library failed.")
 ])
 
-AC_CHECK_LIB(log4cpp, main, , [
-	AC_MSG_ERROR("Linking against log4cpp library failed.")
+# check for glog header
+AC_CHECK_HEADERS([glog/logging.h])
+AC_CHECK_LIB(glog, main, , [
+	AC_MSG_ERROR("Linking against google::glog library failed.")
 ])
 
 PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12 )

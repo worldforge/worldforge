@@ -41,21 +41,19 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
      m_Port(port),
      m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
      m_outboundTick(0),
-     m_outboundMaxInterval(100),
-     logger(ms.getLogger())
+     m_outboundMaxInterval(100)
 {
 	m_outboundTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
 
-	logger.info("MetaServerHandlerUDP(%s,%u) Startup", m_Address.c_str(), m_Port );
-
+	VLOG(2) << "MetaServerHandlerUDP() Startup : " << m_Address << "," << m_Port;
 
 	start_receive();
 }
 
 MetaServerHandlerUDP::~MetaServerHandlerUDP()
 {
-	logger.info("MetaServerHandlerUDP(%s,%u) Shutdown", m_Address.c_str(), m_Port );
+	VLOG(2) << "MetaServerHandlerUDP() Shutdown : " << m_Address << "," << m_Port;
 }
 
 void
@@ -86,8 +84,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		msp.setAddress(m_remoteEndpoint.address());
 		msp.setPort(m_remoteEndpoint.port());
 
-
-		logger.debugStream() << "UDP: Incoming Packet [" << msp.getAddress() << "][" << NMT_PRETTY[msp.getPacketType()] << "][" << bytes_recvd << "]";
+		LOG(INFO) << "UDP: Incoming Packet [" << msp.getAddress() << "][" << NMT_PRETTY[msp.getPacketType()] << "][" << bytes_recvd << "]";
 
 		/**
 		 *  Define an empty MSP ( the buffer is internally created )
@@ -107,7 +104,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 
 		if ( rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL )
 		{
-		  logger.debugStream() << "UDP: Outgoing Packet [" << rsp.getAddress() << "][" << NMT_PRETTY[rsp.getPacketType()] << "][" << rsp.getSize() << "]";
+		  LOG(INFO) << "UDP: Outgoing Packet [" << rsp.getAddress() << "][" << NMT_PRETTY[rsp.getPacketType()] << "][" << rsp.getSize() << "]";
 	      m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(),rsp.getSize()), m_remoteEndpoint,
 	          boost::bind(&MetaServerHandlerUDP::handle_send, this, rsp,
 	            boost::asio::placeholders::error,
@@ -120,7 +117,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		start_receive();
 
 	} else {
-		logger.errorStream() << "ERROR:" << error.message();
+		LOG(WARNING) << "ERROR:" << error.message();
 	}
 
 }

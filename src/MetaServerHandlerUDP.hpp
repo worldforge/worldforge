@@ -31,7 +31,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/udp.hpp>
 #include <boost/asio/deadline_timer.hpp>
-#include <log4cpp/Category.hh>
+#include <glog/logging.h>
 
 /*
  * Forward Declarations
@@ -65,8 +65,5 @@ private:
 	const std::string m_Address;
 	const unsigned int m_Port;
 	MetaServer& m_msRef;
-	log4cpp::Category& logger;
-
-
 
 };

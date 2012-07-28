@@ -37,10 +37,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/deadline_timer.hpp>
 
-#include <log4cpp/Category.hh>
-#include <log4cpp/FileAppender.hh>
-#include <log4cpp/OstreamAppender.hh>
-#include <log4cpp/SimpleLayout.hh>
+#include <glog/logging.h>
 
 /*
  * Forward Declarations
@@ -71,8 +68,6 @@ class MetaServer
 
 	unsigned long long getDeltaMillis();
 
-	log4cpp::Category& getLogger();
-
 	bool isDaemon();
 
    private:
@@ -86,6 +81,8 @@ class MetaServer
 	unsigned int m_sessionExpirySeconds;
 	unsigned int m_clientExpirySeconds;
 	unsigned int m_packetLoggingFlushSeconds;
+	unsigned int m_loggingFlushSeconds;
+	boost::posix_time::ptime m_loggingFlushTime;
 	unsigned int m_maxServerSessions;
 	unsigned int m_maxClientSessions;
 	boost::posix_time::ptime m_startTime;
@@ -99,9 +96,6 @@ class MetaServer
 	PacketLogger* m_PacketLogger;
 	std::string m_Logfile;
 	std::string m_PacketLogfile;
-	log4cpp::Category& m_Logger;
-	log4cpp::Appender* m_LogAppender;
-	log4cpp::Layout* m_LoggerLayout;
 
 };
 
