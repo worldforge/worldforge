@@ -39,7 +39,8 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
    : m_msRef(ms),
 	 m_Address(address),
      m_Port(port),
-     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
+//     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
+     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address),port)),
      m_outboundTick(0),
      m_outboundMaxInterval(100)
 {
