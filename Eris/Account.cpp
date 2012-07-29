@@ -491,6 +491,7 @@ void Account::updateFromObject(const AtlasAccount &p)
         const Atlas::Message::Element& spawns(p->getAttr("spawns"));
 
         if (spawns.isList()) {
+            m_spawnPoints.clear();
             const Atlas::Message::ListType & spawnsList(spawns.asList());
             for (Atlas::Message::ListType::const_iterator I = spawnsList.begin(); I != spawnsList.end(); ++I) {
                 if (I->isMap()) {
