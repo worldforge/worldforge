@@ -155,9 +155,9 @@ void TerrainMod::removeFromSegment(Segment & s) const
 {
 }
 
-const float BasePoint::HEIGHT = 8.0;
-const float BasePoint::ROUGHNESS = 1.25;
-const float BasePoint::FALLOFF = 0.25;
+const float BasePoint::HEIGHT;
+const float BasePoint::ROUGHNESS;
+const float BasePoint::FALLOFF;
 
 Effector::Effector()
 {
