@@ -99,7 +99,7 @@ class Terrain {
     }
   public:
     /// \brief Height value used when no data is available.
-    static const float defaultLevel;
+    static const float defaultLevel = 8.f;
 
     explicit Terrain(unsigned int options = DEFAULT,
                      unsigned int resolution = defaultResolution);
