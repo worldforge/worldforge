@@ -84,7 +84,7 @@ class Line
   Point<dim> getCenter() const {return Barycenter(m_points);}
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(size_t i, const Point<dim>& p, float = numeric_constants<CoordType>::epsilon())
+  bool addCorner(size_t i, const Point<dim>& p, CoordType = numeric_constants<CoordType>::epsilon())
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
