@@ -24,8 +24,7 @@ TESTS = \
 	MetaServerHandlerTCP_unittest \
 	MetaServerHandlerUDP_unittest \
 	PacketLogger_unittest \
-	PacketReader_unittest \
-	PacketLogging_integration 
+	PacketReader_unittest 
 
 check_PROGRAMS = $(TESTS)
 

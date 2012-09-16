@@ -86,7 +86,7 @@ public:
 	boost::uint32_t	IpAsciiToNet(const char *buffer);
 	std::string IpNetToAscii(boost::uint32_t address);
 
-	boost::array<char,MAX_PACKET_BYTES>& getBuffer() const { return m_packetPayload; }
+	boost::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
 	void setBuffer( boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )
 	{
 		m_packetPayload = pl;
@@ -119,7 +119,7 @@ private:
 	char * m_headPtr;
 	char * m_writePtr;
 	char * m_readPtr;
-	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
+	boost::array<char,MAX_PACKET_BYTES> m_packetPayload;
 	bool m_needFree;
 	bool m_outBound;
 	unsigned long long m_Sequence;

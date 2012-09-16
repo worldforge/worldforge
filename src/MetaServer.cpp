@@ -135,7 +135,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 			VLOG(2) << " Server Session: " << key;
 			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 			{
-				VLOG(2) << "    " << itr_inner->first << " == " << itr_inner->second;
+				VLOG(3) << "    " << itr_inner->first << " == " << itr_inner->second;
 			}
 		}
 	}

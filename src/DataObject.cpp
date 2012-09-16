@@ -583,8 +583,8 @@ DataObject::getClientSessionCount()
 boost::posix_time::ptime
 DataObject::getNow()
 {
-	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-	return now;
+	//boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	return boost::posix_time::microsec_clock::local_time();
 }
 
 std::string

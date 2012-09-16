@@ -22,8 +22,7 @@
 
 #include "MetaServerPacket.hpp"
 
-MetaServerPacket::MetaServerPacket()
-		: m_packetPayload( *new boost::array<char,MAX_PACKET_BYTES>() ),
+MetaServerPacket::MetaServerPacket() :
 		  m_Bytes(0),
 		  m_packetType(NMT_NULL),
 		  m_Port(0),
@@ -33,10 +32,10 @@ MetaServerPacket::MetaServerPacket()
 		  m_TimeOffset(0),
 		  m_outBound(false)
 {
+	m_packetPayload.assign(0);
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();
 	m_writePtr = m_packetPayload.c_array();
-	m_packetPayload.assign(0);
 }
 
 MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
@@ -67,7 +66,8 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 
 MetaServerPacket::~MetaServerPacket()
 {
-	// delete [] m_packetPayload causes a core
+
+	 //delete m_packetPayload.c_array();
 }
 
 void
