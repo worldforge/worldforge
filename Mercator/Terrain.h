@@ -8,8 +8,8 @@
 #include <Mercator/Mercator.h>
 #include <Mercator/BasePoint.h>
 
-#include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/point.h>
 
 #include <map>
 #include <set>
