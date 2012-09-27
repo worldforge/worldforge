@@ -44,6 +44,8 @@ AC_ARG_ENABLE(debug,
 
 AC_LANG(C++)
 
+AX_CXX_COMPILE_STDCXX_11
+
 OTHER_LIBS=
 
 dnl Test for gzip compression library

@@ -1,3 +1,4 @@
+ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = Atlas tests tools tutorial benchmark
 

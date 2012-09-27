@@ -3,8 +3,6 @@
 #include <iostream>
 #include <cassert>
 
-using namespace std;
-
 class Object {
 public:
   int id;
@@ -143,7 +141,7 @@ int main(int argc, char** argv)
     z = new_pos[2];
   }
   TIME_OFF("NPC movements");
-  cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<endl;
+  std::cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<std::endl;
 
   return 0;
 }
