@@ -25,7 +25,7 @@ namespace Mercator {
 
 const unsigned int Terrain::DEFAULT;
 const unsigned int Terrain::SHADED;
-const float Terrain::defaultLevel;
+constexpr float Terrain::defaultLevel;
 
 /// \brief Construct a new Terrain object with optional options and resolution.
 ///

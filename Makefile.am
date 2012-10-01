@@ -1,5 +1,7 @@
 SUBDIRS = Mercator tests
 
+ACLOCAL_AMFLAGS = -I m4
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = mercator-0.3.pc
 

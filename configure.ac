@@ -51,6 +51,8 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
 AC_LANG(C++)
 
+AX_CXX_COMPILE_STDCXX_11
+
 dnl Check for float to int converters
 
 AC_CHECK_FUNCS([lrintf rintf rint])
