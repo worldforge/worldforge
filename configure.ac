@@ -44,6 +44,8 @@ AC_ARG_ENABLE(debug,
 
 AC_LANG(C++)
 
+AX_CXX_COMPILE_STDCXX_11
+
 supports_visibility=no
 AC_MSG_CHECKING([whether hidden visibility is supported])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([

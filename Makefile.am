@@ -1,5 +1,7 @@
 ## Process this file with automake to generate Makefile.in
 
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = varconf doc tests
 
 pkgconfigdir = $(libdir)/pkgconfig
