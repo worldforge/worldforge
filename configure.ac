@@ -50,6 +50,8 @@ AC_MSG_NOTICE([Ignore the Atlas checks, they are just used for building test cod
 
 AC_LANG(C++)
 
+AX_CXX_COMPILE_STDCXX_11
+
 AC_MSG_CHECKING([whether std::fabs works])
 AC_COMPILE_IFELSE(
 [
