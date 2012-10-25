@@ -11,7 +11,7 @@ AC_CANONICAL_HOST
 
 dnl Information
 
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests no-define silent-rules])
 
 dnl versioning info for libtool
 VARCONF_CURRENT=7
