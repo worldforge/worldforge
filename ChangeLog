@@ -1,3 +1,7 @@
+2012-11-06  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Symbol visibility has been implemented to improve runtime link time.
+
 2009-12-10  Simon Goodall  <simon@worldforge.org>
 
 	* README: Point reader to parse_error.cpp/h rather than ParseError.cc/h
