@@ -1,3 +1,8 @@
+2012-11-08  Al Riddoch  <alriddoch@googlemail.com>
+
+	* A minor performance improvement to the way constants are defined,
+	  and a small fix for more recent compilers.
+
 2011-02-13  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.0, interface version 1
