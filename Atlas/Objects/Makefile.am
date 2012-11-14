@@ -36,11 +36,11 @@ PY_SOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
 $(REAL_GENERATED_CPP) $(GENERATED_H):
 	if [ ! -e $@ ]; \
 	then \
-		python gen_cpp.py ; \
+		cd $(srcdir) && python gen_cpp.py ; \
 	fi
 
 flag.cpp: $(PY_SOURCES)
-	python gen_cpp.py && (echo /\* ; date --rfc-3339=seconds ; echo \*/) > flag.cpp
+	cd $(srcdir) && python gen_cpp.py && (echo /\* ; date --rfc-3339=seconds ; echo \*/) > flag.cpp
 
 libAtlasObjectsincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Objects
 
