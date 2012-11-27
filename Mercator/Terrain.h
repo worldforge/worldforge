@@ -54,9 +54,9 @@ class Terrain {
     typedef std::map<const Effector *, Rect> Effectorstore;
 
     /// \brief value provided for no flags set.
-    static const unsigned int DEFAULT = 0x0000;
+    static const unsigned int DEFAULT;
     /// \brief set if shaders are going to be used on this terrain.
-    static const unsigned int SHADED = 0x0001;
+    static const unsigned int SHADED;
     // More options go here as bit flags, and below should be a private
     // test function
   private:
@@ -99,7 +99,7 @@ class Terrain {
     }
   public:
     /// \brief Height value used when no data is available.
-    static constexpr float defaultLevel = 8.f;
+    static const float defaultLevel;
 
     explicit Terrain(unsigned int options = DEFAULT,
                      unsigned int resolution = defaultResolution);

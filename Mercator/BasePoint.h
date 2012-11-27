@@ -27,11 +27,11 @@ class BasePoint {
 
   public:
     /// Default height at the base point.
-    static constexpr float HEIGHT = 8.0;
+    static const float HEIGHT;
     /// Default roughness at the base point.
-    static constexpr float ROUGHNESS = 1.25;
+    static const float ROUGHNESS;
     /// Default falloff at the base point.
-    static constexpr float FALLOFF = 0.25;
+    static const float FALLOFF;
 
     /// \brief Constructor
     ///
