@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([eris], [1.3.20], [alriddoch@googlemail.com])
+AC_INIT([eris], [1.3.21], [alriddoch@googlemail.com])
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -88,7 +88,7 @@ install the library.])
 )
 
 dnl check for all the WorldForge libs we use
-PKG_CHECK_MODULES(WF, skstream-0.3 >= 0.3.8 atlascpp-0.6 >= 0.5.94 wfmath-1.0 >= 1.0.0 mercator-0.3 >= 0.2.6,
+PKG_CHECK_MODULES(WF, skstream-0.3 >= 0.3.9 atlascpp-0.6 >= 0.5.94 wfmath-1.0 >= 1.0.0 mercator-0.3 >= 0.2.6,
     [
         CPPFLAGS="$CPPFLAGS $WF_CFLAGS"
         ERIS_DEPS="$ERIS_DEPS $WF_LIBS"
