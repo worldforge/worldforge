@@ -62,7 +62,7 @@ echo "Running libtoolize..."
 libtoolize --automake --force --copy
 
 echo "Running aclocal $aclocalinclude ..."
-aclocal $aclocalinclude
+aclocal $aclocalinclude -I m4
 echo "Running autoheader..."
 autoheader
 
