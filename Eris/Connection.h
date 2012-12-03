@@ -163,7 +163,7 @@ protected:
     typedef std::deque<Atlas::Objects::Operation::RootOperation> OpDeque;
     OpDeque m_opDeque; ///< store of all the recived ops waiting to be dispatched
 
-    std::auto_ptr<TypeService> m_typeService;
+    std::unique_ptr<TypeService> m_typeService;
     Router* m_defaultRouter; // need several of these?
 
     typedef std::map<std::string, Router*> IdRouterMap;
@@ -177,7 +177,7 @@ protected:
     std::vector<Redispatch*> m_finishedRedispatches;
     ServerInfo m_info;
 
-    std::auto_ptr<ResponseTracker> m_responder;
+    std::unique_ptr<ResponseTracker> m_responder;
 };
 
 /// operation serial number sequencing

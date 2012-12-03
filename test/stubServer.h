@@ -78,7 +78,7 @@ private:
     AtlasTypeMap m_types;
     
     unix_socket_server m_commandSocket;
-    std::auto_ptr<Commander> m_command;
+    std::unique_ptr<Commander> m_command;
 };
 
 #endif

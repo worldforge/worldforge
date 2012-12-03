@@ -36,7 +36,7 @@ void testSimpleCalendar(Controller& ctl)
         wf.run();
     }
     
-    std::auto_ptr<Eris::Calendar> cal(new Eris::Calendar(av.get()));
+    std::unique_ptr<Eris::Calendar> cal(new Eris::Calendar(av.get()));
     
     // inject a dummy op to establish world time
     Eris::TestInjector i(con.get());

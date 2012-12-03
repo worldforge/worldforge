@@ -6,7 +6,7 @@ void testCalendar(Controller& ctl)
     AutoAccount acc = stdLogin("account_B", "sweede", con.get());
     
     AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
-    std::auto_ptr<Eris::Calendar> cal(new Eris::Calendar(av.get())); 
+    std::unique_ptr<Eris::Calendar> cal(new Eris::Calendar(av.get())); 
     
     Eris::DataTime dt = cal->now();
     assert(dt.valid() == false);

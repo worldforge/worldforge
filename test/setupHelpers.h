@@ -5,9 +5,9 @@
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>
 
-typedef std::auto_ptr<Eris::Connection> AutoConnection;
-typedef std::auto_ptr<Eris::Account> AutoAccount;
-typedef std::auto_ptr<Eris::Avatar> AutoAvatar;
+typedef std::unique_ptr<Eris::Connection> AutoConnection;
+typedef std::unique_ptr<Eris::Account> AutoAccount;
+typedef std::unique_ptr<Eris::Avatar> AutoAvatar;
 
 AutoConnection stdConnect();
 

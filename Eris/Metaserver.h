@@ -206,7 +206,7 @@ private:
 	bool _recvCmd; 		///< true if the next block is a new command
 	uint32_t _gotCmd;	///< the curent command being processed
 	
-    std::auto_ptr<Timeout> m_timeout;	///< Metaserver channel timeout
+    std::unique_ptr<Timeout> m_timeout;	///< Metaserver channel timeout
 	
     void gotData(PollData&);
 };

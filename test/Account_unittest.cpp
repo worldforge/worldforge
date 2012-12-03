@@ -66,6 +66,7 @@ int main()
 #include <Eris/Router.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/Timeout.h>
+#include <Eris/TypeService.h>
 
 #include <Atlas/Objects/RootOperation.h>
 

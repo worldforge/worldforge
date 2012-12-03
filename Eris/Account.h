@@ -283,7 +283,7 @@ protected:
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
 
     ActiveCharacterMap m_activeCharacters;
-    std::auto_ptr<Timeout> m_timeout;
+    std::unique_ptr<Timeout> m_timeout;
 
     /**
      * @brief A map of available spawn points.

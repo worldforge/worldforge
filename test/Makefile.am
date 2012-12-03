@@ -77,6 +77,7 @@ Factory_unittest_SOURCES = Factory_unittest.cpp
 IGRouter_unittest_SOURCES = IGRouter_unittest.cpp SignalFlagger.h
 IGRouter_unittest_LDADD = \
     $(top_builddir)/Eris/IGRouter.lo \
+    $(top_builddir)/Eris/Response.lo \
     $(ERIS_DEPS)
 
 Lobby_unittest_SOURCES = Lobby_unittest.cpp

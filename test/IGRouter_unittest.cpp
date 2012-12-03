@@ -29,6 +29,8 @@
 #include <Eris/Connection.h>
 #include <Eris/IGRouter.h>
 #include <Eris/Operations.h>
+#include <Eris/Timeout.h>
+#include <Eris/Response.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -558,7 +560,7 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     m_defaultRouter(NULL),
     m_lock(0),
     m_info(host),
-    m_responder(0)
+    m_responder(nullptr)
 {
 }
 

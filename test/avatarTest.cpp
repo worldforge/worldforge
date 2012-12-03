@@ -224,7 +224,7 @@ void testLogoutRequest(Controller& ctl)
     assert(acc->isLoggedIn());
     assert(acc->getActiveCharacters().size() == 0);
 
-    //The avatar has been destroyed when logging out, so we shouldn't let the auto_ptr do that too.
+    //The avatar has been destroyed when logging out, so we shouldn't let the unique_ptr do that too.
     av.release();
 
 }
@@ -273,7 +273,7 @@ void testTransferRequest(Controller& ctl)
     assert(acc->isLoggedIn());
     assert(acc->getActiveCharacters().size() == 0);
 
-    //The avatar has been destroyed when logging out, so we shouldn't let the auto_ptr do that too.
+    //The avatar has been destroyed when logging out, so we shouldn't let the unique_ptr do that too.
     av.release();
 
 }
@@ -325,7 +325,7 @@ void testTransferRequestWithInvalidOp(Controller& ctl)
     assert(acc->isLoggedIn());
     assert(acc->getActiveCharacters().size() == 0);
 
-    //The avatar has been destroyed when logging out, so we shouldn't let the auto_ptr do that too.
+    //The avatar has been destroyed when logging out, so we shouldn't let the unique_ptr do that too.
     av.release();
 
 }
