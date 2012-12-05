@@ -29,7 +29,7 @@ rm -f config.cache
 if test -d /usr/local/share/aclocal ; then
 	ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I /usr/local/share/aclocal"
 fi
-aclocal $ACLOCAL_FLAGS
+aclocal $ACLOCAL_FLAGS -I m4
 $LIBTOOLIZE --force --copy
 autoheader
 automake --gnu --add-missing --copy
