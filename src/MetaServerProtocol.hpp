@@ -77,6 +77,50 @@
  * 			4 bytes - a 4 byte block representing EACH IP of the servers.  So if packed was set to 6,
  * 			          this block would be 24 bytes long.
  *
+ *  NMT_DNSREQ
+ *  	Description: Non-authenticated query in order find the queried server
+ *  	Type Size: 4 bytes
+ *  	Value: 32 ( 00 00 00 32 )
+ *  	Payload Size: Variable
+ *  	    4 bytes - int size of the string
+ *  	    n bytes - 4 bytes per n
+ *
+ *		Note: response to this is going to be a dnsresp, almost identical to listresp.
+ *
+ *	NMT_DNSRESP
+ *		Description: packed response to a dnsreq
+ *		Type Size: 4 bytes
+ *		Value: 33 ( 00 00 00 33 )
+ *		Payload Size: Variable
+ *			4 bytes - total server sent
+ *			4 bytes - packed server sent
+ *				4 bytes - length of string, one for each packed server, so 3 servers, has 12 (4*3)
+ *				          int bytes
+ *			n bytes - entire concatenated msg that will be sum of the size of all packed server
+ *			          lengths
+ *
+ *		E.g: 33 05 05 06 04 07 07 04 foobarwaka1.2.3.4a.b.c.dtest
+ *
+ *		33 (4) - for packet type
+ *		05 (4) - int total server count
+ *		05 (4) - int packed server count
+ *		06 (4) - length of resp 1
+ *		04 (4) - length 0f resp 2
+ *		07 (4) - length of resp 3
+ *		07 (4) - length of resp 4
+ *		04 (4) - length of resp 5
+ *		foo(28) - message
+ *				  (6) foobar - server 1
+ *				  (4) waka   - server 2
+ *				  (7) 1.2.3.4 - server 3
+ *				  (7) a.b.c.d - server 4
+ *				  (4) test    - server 5
+ *		Total: 32 + 28 == 60 bytes ( plus about 12 bytes overhead )
+ *
+ *		Reasonably likely to fit 10 responses or so per packet, it's a bit heavier that the listresp
+ *		because it's parsing IPs as strings ... so rather than 1.2.3.4 becoming 4 bytes, it's now
+ *		7 ... and 123.123.123.123 is 15 bytes, instead of 4.
+ *
  *Example Use Cases:
  *
  *	Use Case 1: Server Registration or Keep-alive.  Only servers with sessions can perform additional
@@ -124,6 +168,36 @@ static const NetMsgType NMT_ATTRRESP = 14;
 static const NetMsgType NMT_SERVERCLEAR = 15;
 static const NetMsgType NMT_CLIENTCLEAR = 16;
 
+/*
+ * DNS Hooks
+ */
+static const NetMsgType NMT_DNSREQ = 32;
+static const NetMsgType NMT_DNSRESP = 33;
+
+/*
+ * DNS Query Types
+ *
+ * Leaves options for future expansion by type.
+ *
+ * Future considerations to:
+ *
+ * TXT
+ * AXFR
+ */
+static const NetMsgType DNS_TYPE_ALL = 0;
+static const NetMsgType DNS_TYPE_A = 1;
+static const NetMsgType DNS_TYPE_PTR = 2;
+
+
+/*
+ * Convenience Printing
+ */
+static const char* DNS_PRETTY[] = {
+		"DNS_TYPE_ALL",
+		"DNS_TYPE_A",
+		"DNS_TYPE_PTR"
+};
+
 /**
  * Convenience Printing
  */
@@ -144,7 +218,24 @@ static const char* NMT_PRETTY[] = {
 		"NMT_CLIENTFILTER",
 		"NMT_ATTRRESP",
 		"NMT_SERVERCLEAR",
-		"NMT_CLIENTCLEAR"
+		"NMT_CLIENTCLEAR",
+		"RESERVED17",
+		"RESERVED18",
+		"RESERVED19",
+		"RESERVED20",
+		"RESERVED21",
+		"RESERVED22",
+		"RESERVED23",
+		"RESERVED24",
+		"RESERVED25",
+		"RESERVED26",
+		"RESERVED27",
+		"RESERVED28",
+		"RESERVED29",
+		"RESERVED30",
+		"RESERVED31",
+		"NMT_DNSREQ",
+		"NMT_DNSRESP"
 };
 
 #endif /* METASERVERPROTOCOL_HPP_ */

@@ -403,6 +403,36 @@ DataObject::expireServerSessions( unsigned int expiry )
 
 }
 
+std::list<std::string>
+DataObject::searchServerSessionByAttribute(std::string attr_name,std::string attr_val)
+{
+	std::list<std::string> matched;
+
+	matched.clear();
+    std::list<std::string>::iterator itr;
+    std::string vattr;
+
+    /*
+     * Loop through all sessions
+     */
+    for( itr = m_serverDataList.begin(); itr != m_serverDataList.end(); ++itr )
+    {
+
+    	/*
+    	 * Returns an empty string
+    	 */
+    	std::string vattr = getServerAttribute(*itr,attr_name);
+
+    	/*
+    	 * If the session has the attribute, and the value matches, push it on list
+    	 */
+    	if( boost::iequals(vattr,attr_val))
+    		matched.push_back(*itr);
+
+    }
+    return matched;
+}
+
 std::map<std::string,std::string>
 DataObject::getClientSession( const std::string& sessionid )
 {

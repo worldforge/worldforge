@@ -34,6 +34,7 @@
 #include <list>
 #include <vector>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/algorithm/string.hpp>
 
 class DataObject
 {
@@ -67,6 +68,7 @@ public:
 	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items );
 	std::map<std::string,std::string> getServerSession( const std::string& sessionid );
 	std::vector<std::string> expireServerSessions( unsigned int expiry=0 );
+	std::list<std::string> searchServerSessionByAttribute(std::string attr_name,std::string attr_value);
 
 	bool addClientSession( const std::string& sessionid );
 	void removeClientSession( const std::string& sessionid );

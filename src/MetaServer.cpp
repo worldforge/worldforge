@@ -270,6 +270,9 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	case NMT_CLIENTFILTER:
 		processCLIENTFILTER(msp,rsp);
 		break;
+	case NMT_DNSREQ:
+		processDNSREQ(msp,rsp);
+		break;
 	default:
 //		--m_PacketSequence;
 		VLOG(1) << "Packet Type [" << msp.getPacketType() << "] not supported.";
@@ -569,6 +572,156 @@ MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& ou
 	msdo.addClientFilter(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
+}
+
+
+/**
+ * This is a search and find type of request.
+ * The input is a string that is:
+ * 		1) The IP desired, as in the case of a reverse lookup (1.2.3.4)
+ * 			The results of that would yield the 'name' attribute of the server
+ * 		2) The NAME desired, as corresponding to the 'name' server attribute
+ * 			The results would then be the IP
+ *
+ * 	We can not distinguish between these cases ahead of time, simply because when someone
+ * 	does a dig foo @server and dig 1.2.3.4 @server will functionally look the same and we
+ * 	need to distinguish via searching.  We could make a different packet type for each of those,
+ * 	but then we require the caller to know ahead of time if it's a forward vs reverse lookup.
+ *
+ * 	The response is almost identical to the listresp except we'll encode by string instead of
+ * 	by uint32 ( making it a more heavy request ).
+ *
+ * 	This is an unauthenticated request.  If there needs to be abuse detection, we can
+ * 	always put in a scoreboard for just this type of request and throttle it.
+ *
+ * 	This must NEVER perform any write/change operations
+ * 	on any of the metaserver data.  Unauthenticated data modification is Bad(tm).
+ */
+void
+MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
+{
+	uint32_t dns_type = in.getIntData(4);
+	uint32_t msg_length = in.getIntData(8);
+	std::string msg = in.getPacketMessage(12);
+	std::list<std::string> resp_list,temp_list;
+	std::string outmsg;
+
+	std::string name = msg.substr(0,msg_length);
+
+	VLOG(2) << "processDNSREQ-type: " << dns_type << " : " << name;
+	VLOG(2) << "processDNSREQ-msg_length : " << msg_length;
+	VLOG(2) << "processDNSREQ-msg: " << msg.length() << " : " << msg;
+
+	/**
+	 * Determine packet search type and get results
+	 */
+	switch(dns_type) {
+		case DNS_TYPE_A:
+			/*
+			 * Forward lookup
+			 */
+			resp_list = msdo.searchServerSessionByAttribute( "name", name );
+			VLOG(2) << "processDNSREQ: DNS_TYPE_A request : " << resp_list.size();
+			break;
+		case DNS_TYPE_PTR:
+			/*
+			 * Reverse Lookup
+			 */
+			resp_list = msdo.searchServerSessionByAttribute( "ip", name );
+			VLOG(2) << "processDNSREQ: DNS_TYPE_PTR request : " << resp_list.size();
+			break;
+		case DNS_TYPE_ALL:
+			/*
+			 * sigh
+			 */
+			temp_list = msdo.searchServerSessionByAttribute("name", name);
+			resp_list = msdo.searchServerSessionByAttribute("ip", name);
+			VLOG(2) << "processDNSREQ: DNS_TYPE_ALL request : " << temp_list.size() << ":" << resp_list.size();
+			resp_list.merge(temp_list);
+			break;
+
+		default:
+			// search name by default
+			// resp_list = msdo.searchServerSessionByAttribute("name", name );
+			VLOG(2) << "processDNSREQ: unknown DNS_TYPE sent : " << dns_type;
+			break;
+	}
+
+
+	/**
+	 * Keep it minimal
+	 */
+	resp_list.unique();
+
+	/**
+	 * Initial packet stuffing
+	 */
+	out.setPacketType(NMT_DNSRESP);
+
+	/**
+	 *	Initial expectations is to have only a couple of responses
+	 *	if large/full listings are expected, we'll need to breakup
+	 *	similar to a LISTRESP
+	 */
+	if ( resp_list.size() > 0 )
+	{
+		/*
+		 * pseudo:
+		 * 	    for each resp_list item
+		 * 	    	-break loop if itr size ( 1 byte per string item ) + 4 bytes ( for size uint )
+		 * 	    	is larger than max packet size.
+		 * 	    	-count bytes, put on ship-to list/array
+		 * 	    	- keep index
+		 *
+		 * 	    pack resp_list size
+		 * 	    pack index
+		 * 	  	loop over ship-to list
+		 * 	  		pack size
+		 * 	  		pack msg
+		 */
+		/*
+		 * Max Servers
+		 */
+		out.addPacketData(resp_list.size());
+
+		/*
+		 * Packed Servers
+		 */
+		out.addPacketData(resp_list.size());
+
+		/**
+		 * Pack in lengths
+		 */
+		std::list<std::string>::iterator itr;
+		unsigned int rlength = 0;
+		for ( itr = resp_list.begin(); itr!=resp_list.end(); itr++ )
+		{
+			rlength = itr->length();
+			VLOG(2) << "Stuffing DNSRESP Packet [" << rlength << "] " << *itr;
+			out.addPacketData(rlength);
+			outmsg+=*itr;
+		}
+
+		VLOG(2) << "Stuffing DNSRESP Message [" << outmsg << "]";
+
+		out.addPacketData(outmsg);
+
+	}
+	else
+	{
+
+		VLOG(2) << "processDNSREQ: packing null packet";
+		/*
+		 * Max Servers
+		 */
+		out.addPacketData(0);
+
+		/*
+		 * Packed Servers
+		 */
+		out.addPacketData(0);
+	}
+
 }
 
 void

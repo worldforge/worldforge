@@ -62,6 +62,7 @@ class MetaServer
 	void processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out);
+	void processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out);
 
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();

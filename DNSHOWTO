@@ -1,0 +1,56 @@
+
+Introduction
+------------
+
+This will aim to document how to provide access to the internal data structure of the metaserver via simple dns queries.
+
+The Goal
+--------
+
+Forward Searching (searches by attribute 'name'):
+dig -t A foobar @dns.server
+
+foobar A 1.2.3.4
+
+Reverse Searching (searches by attribute 'ip'):
+dig -t PTR 1.2.3.4 @dns.server
+
+foobar A 1.2.3.4
+
+Where:
+
+m_serverData = {
+     '1.2.3.4' => {
+	'ip' => '1.2.3.4',
+	'expiry' => 'boost datetime string',
+	'port' => '1234',
+	'ip_int' => '123456',
+	'name' => 'foobar'
+      }
+}
+
+Reference
+---------
+
+ The PDNS backend for the metaserver was implemented via the PipeBackend for PDNS.  The full list of references used are:
+
+ http://doc.powerdns.com/backend-writers-guide.html
+ http://doc.powerdns.com/pipebackend-dynamic-resolution.html
+ http://doc.powerdns.com/backends-detail.html#pipebackend
+ http://doc.powerdns.com/backends-detail.html#pipebackend-protocol
+
+
+PDNS Configuration
+------------------
+
+pipebackend-abi-version=1
+pipe-command=/home/sryan/wf/metaserver-ng/src/pdnspipe
+pipe-timeout=2000
+
+NOTES
+-----
+
+- this is known to not function correctly, as pdns is attempting to axfr and recurse in an unexpected fashion.  This needs to be investigated.
+
+
+-- Sean Ryan <sryan@evercrack.com>

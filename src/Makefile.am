@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
 
-bin_PROGRAMS = metaserver-ng testserver testclient packetplayer
+bin_PROGRAMS = metaserver-ng testserver testclient packetplayer pdnspipe
 
 noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerPacket.hpp \
                  PacketReader.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp \
@@ -14,6 +14,8 @@ testserver_SOURCES = TestServer.cpp MetaServerPacket.cpp PacketLogger.cpp
 
 testclient_SOURCES = TestClient.cpp MetaServerPacket.cpp PacketLogger.cpp
 packetplayer_SOURCES = PacketPlayer.cpp MetaServerPacket.cpp PacketReader.cpp
+
+pdnspipe_SOURCES = PDNSPipe.cpp MetaServerPacket.cpp
 
 metaserver_ng_LDFLAGS = -Wl
 
@@ -49,5 +51,5 @@ PacketLogger_unittest_LDADD = PacketLogger.o $(CPPUNIT_LIBS)
 PacketReader_unittest_SOURCES = PacketReader_unittest.cpp
 PacketReader_unittest_LDADD = PacketReader.o $(CPPUNIT_LIBS)
 
-PacketLogging_integration_SOURCES = PacketLogging_integration.cpp
-PacketLogging_integration_LDADD = PacketReader.o PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)
+#PacketLogging_integration_SOURCES = PacketLogging_integration.cpp
+#PacketLogging_integration_LDADD = PacketReader.o PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)

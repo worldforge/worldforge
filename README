@@ -20,7 +20,7 @@
  ------------
 
  The usual:
-	- checkout from github
+	- checkout from github, or download a dist package
 	- autogen.sh && configure && make && make install
 
  MetaServer Overview
@@ -47,7 +47,7 @@
  or bugs ( abhorrent behaviour ) at https://launchpad.net/metaserver-ng
 
  The current list of planned features ( in no specific order ):
-	- binary packet logging
+	- binary packet logging ( partially implemented )
 	- replay binary packet log
 	- delegate authentication
 	- encryption of comms
@@ -61,6 +61,7 @@
 		- kill a session
 		- create a session
 		- query session list
+	- serve up internal data structure as a dns request
  
  MetaServer Configuration
  ------------------------
@@ -78,6 +79,8 @@
  The majority of options are self explanitory.  Some options will be
  given a description as the purpose may be unclear.
 
+ Example:
+
  [server]
  port=8453
  ip=0.0.0.0
@@ -86,22 +89,6 @@
  client_stats=true
  server_stats=true
  
- [logging]
- loglevel=INFO
- server_sessions=true
- client_sessions=true
- packet_logging=false
- packet_logfile=~/.metaserver-ng/packetlog.bin
- packet_logging_flush_seconds=10
- 
- [security]
- auth_scheme=none
- 
- [performance]
- max_server_sessions=1000
- max_client_sessions=4000
- server_session_expiry_seconds=300
- client_session_expiry_seconds=300
  	
  MetaServer Protocol
  -------------------
