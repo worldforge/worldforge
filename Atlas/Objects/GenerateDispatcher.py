@@ -95,7 +95,7 @@ Dispatcher::~Dispatcher()
 
 void Dispatcher::addMethod(int num, objectArrivedPtr method)
 {
-    m_methods.insert(std::make_pair<int, objectArrivedPtr>(num, method));
+    m_methods.insert(std::make_pair(num, method));
 }
 
 void Dispatcher::objectArrived(const Root& o)
