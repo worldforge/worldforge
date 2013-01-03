@@ -61,6 +61,8 @@ src/stamp-h1
 *.kdevelop
 # doxygen generated file
 *.dox
+# parallel tests
+test-driver
 # unit test progs
 src/*_unittest
 src/*_integration
@@ -68,3 +70,5 @@ src/testserver
 src/testclient
 src/packetplayer
 src/pdnspipe
+# trs for test files
+src/*.trs

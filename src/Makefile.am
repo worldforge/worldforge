@@ -17,7 +17,7 @@ packetplayer_SOURCES = PacketPlayer.cpp MetaServerPacket.cpp PacketReader.cpp
 
 pdnspipe_SOURCES = PDNSPipe.cpp MetaServerPacket.cpp
 
-metaserver_ng_LDFLAGS = -Wl
+metaserver_ng_LDFLAGS = 
 
 TESTS = \
     MetaServerPacket_unittest \
