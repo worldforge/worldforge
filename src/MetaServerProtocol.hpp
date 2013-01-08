@@ -192,7 +192,7 @@ static const NetMsgType DNS_TYPE_PTR = 2;
 /*
  * Convenience Printing
  */
-static const char* DNS_PRETTY[] = {
+static const char DNS_PRETTY[][30] = {
 		"DNS_TYPE_ALL",
 		"DNS_TYPE_A",
 		"DNS_TYPE_PTR"
@@ -201,7 +201,7 @@ static const char* DNS_PRETTY[] = {
 /**
  * Convenience Printing
  */
-static const char* NMT_PRETTY[] = {
+static const char NMT_PRETTY[][30] = {
 		"NMT_NULL",
 		"NMT_SERVERKEEPALIVE",
 		"NMT_CLIENTKEEPALIVE",

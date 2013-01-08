@@ -19,6 +19,9 @@
 
  */
 
+#ifndef METASERVERPACKET_HPP_
+#define METASERVERPACKET_HPP_
+
 /*
  * Local Includes
  */
@@ -31,11 +34,6 @@
 #include <boost/asio/ip/address.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/array.hpp>
-
-
-
-#ifndef METASERVERPACKET_HPP_
-#define METASERVERPACKET_HPP_
 
 #define MAX_PACKET_BYTES 1024
 #define MAX_UDP_OUT_BYTES 570

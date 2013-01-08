@@ -96,25 +96,26 @@ int main()
 /*
  * Mock Stubs
  */
-MetaServer::MetaServer(boost::asio::io_service& io)
-: m_expiryDelayMilliseconds(1500),
-  m_updateDelayMilliseconds(4000),
-  m_handshakeExpirySeconds(30),
-  m_sessionExpirySeconds(3600),
-  m_clientExpirySeconds(300),
-  m_packetLoggingFlushSeconds(10),
-  m_keepServerStats(false),
-  m_keepClientStats(false),
-  m_maxServerSessions(1024),
-  m_maxClientSessions(4096),
-  m_isDaemon(false),
-  m_Logfile(""),
-  m_logServerSessions(false),
-  m_logClientSessions(false),
-  m_logPackets(false),
-  m_PacketLogfile(""),
-  m_PacketSequence(0),
-  m_startTime(boost::posix_time::microsec_clock::local_time())
+MetaServer::MetaServer(boost::asio::io_service& ios)
+	: m_handshakeExpirySeconds(30),
+	  m_expiryDelayMilliseconds(1500),
+	  m_updateDelayMilliseconds(4000),
+	  m_sessionExpirySeconds(3600),
+	  m_clientExpirySeconds(300),
+	  m_packetLoggingFlushSeconds(10),
+	  m_loggingFlushSeconds(10),
+	  m_maxServerSessions(1024),
+	  m_maxClientSessions(4096),
+	  m_startTime(boost::posix_time::microsec_clock::local_time()),
+	  m_keepServerStats(false),
+	  m_keepClientStats(false),
+	  m_logServerSessions(false),
+	  m_logClientSessions(false),
+	  m_logPackets(false),
+	  m_isDaemon(false),
+	  m_PacketSequence(0),
+	  m_Logfile(""),
+	  m_PacketLogfile("")
 {
 }
 MetaServer::~MetaServer() {}

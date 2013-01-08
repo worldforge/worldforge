@@ -330,7 +330,7 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 	 * list_itr = m_serverDataList.begin() + server_index in order to offset the starting
 	 * location by the index without losing the list functionality.
 	 */
-	 for ( int i = 0; i < start_idx; i++ )
+	 for ( unsigned int i = 0; i < start_idx; i++ )
 	 {
 	    	++ss_itr;
 	 }

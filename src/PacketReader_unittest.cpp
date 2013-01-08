@@ -174,16 +174,18 @@ int main()
  * Mock Stubs
  */
 MetaServerPacket::~MetaServerPacket() {}
+
 MetaServerPacket::MetaServerPacket() :
-  m_packetPayload( *new boost::array<char,MAX_PACKET_BYTES>() ),
-  m_Bytes(0),
-  m_packetType(NMT_NULL),
-  m_Port(0),
-  m_AddressInt(0),
-  m_needFree(true),
-  m_Sequence(0),
-  m_TimeOffset(0)
+		  m_packetType(NMT_NULL),
+		  m_AddressInt(0),
+		  m_Port(0),
+		  m_Bytes(0),
+		  m_needFree(true),
+		  m_outBound(false),
+		  m_Sequence(0),
+		  m_TimeOffset(0)
 {}
+
 void MetaServerPacket::setPacketType(unsigned int const&) {}
 unsigned int MetaServerPacket::addPacketData(boost::uint32_t i) { return 4; }
 void MetaServerPacket::parsePacketType() {}

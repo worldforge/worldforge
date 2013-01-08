@@ -58,25 +58,6 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_Logfile(""),
 	  m_PacketLogfile("")
 {
-
-	unsigned int m_loggingFlushSeconds;
-	boost::posix_time::ptime m_loggingFlushTime;
-	unsigned int m_maxServerSessions;
-	unsigned int m_maxClientSessions;
-	boost::posix_time::ptime m_startTime;
-	bool m_keepServerStats;
-	bool m_keepClientStats;
-	bool m_logServerSessions;
-	bool m_logClientSessions;
-	bool m_logPackets;
-	bool m_isDaemon;
-	unsigned long long m_PacketSequence;
-	PacketLogger* m_PacketLogger;
-	std::string m_Logfile;
-	std::string m_PacketLogfile;
-
-
-
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
@@ -227,7 +208,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
-	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+//	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 
 	/**
 	 * do update tasks
@@ -557,7 +538,7 @@ MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
 	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length);
+	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
 	VLOG(2) << "processSERVERATTR() : " << name << "," << value;
 	msdo.addServerAttribute(ip,name,value);
@@ -572,7 +553,7 @@ MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
 	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length);
+	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
 	VLOG(2) << "processCLIENTATTR() : " << name << "," << value;
 	msdo.addClientAttribute(ip,name,value);
@@ -587,7 +568,7 @@ MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& ou
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
 	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length);
+	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
 	VLOG(2) << "processCLIENTFILTER() : " << name << "," << value;
 	msdo.addClientFilter(ip,name,value);

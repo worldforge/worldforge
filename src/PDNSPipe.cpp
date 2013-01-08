@@ -278,7 +278,7 @@ int main(int argc, char** argv)
 			 if( resp.getPacketType() == NMT_DNSRESP )
 			 {
 				 uint32_t total_servers = resp.getIntData(4);
-				 uint32_t packed_servers = resp.getIntData(8);
+				 //uint32_t packed_servers = resp.getIntData(8);
 				 std::vector<uint32_t> len_arr;
 
 //				 std::cout << "LOG name=" << name << "::total_servers=" << total_servers
@@ -295,11 +295,13 @@ int main(int argc, char** argv)
 					 continue;
 				 }
 
+
+
 				 /*
 				  * We have one or more responses
 				  */
 				 std::cerr << "Servers Matched: " << total_servers << std::endl;
-				 for ( int i=1; i<=total_servers; ++i )
+				 for ( unsigned int i=1; i<=total_servers; ++i )
 				 {
 					 /*
 					  * We know that there are total_servers, and that as a uint that
@@ -333,7 +335,7 @@ int main(int argc, char** argv)
 				  *      5 = remote ip
 				  */
 				 int offset = 0;
-				 for ( int i=0; i < total_servers; ++i )
+				 for ( unsigned int i=0; i < total_servers; ++i )
 				 {
 					 std::cout << "DATA\t" <<
 							      name << "\t" <<
