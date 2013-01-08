@@ -35,12 +35,11 @@
 MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
-   : m_msRef(ms),
+   : acceptor_(ios, boost::asio::ip::tcp::tcp::endpoint( boost::asio::ip::tcp::tcp::v6(),port)),
+	 m_msRef(ms),
      address_(address),
-     port_(port),
-     acceptor_(ios, boost::asio::ip::tcp::tcp::endpoint( boost::asio::ip::tcp::tcp::v6(),port))
+     port_(port)
 {
-
 	LOG(INFO) << "MetaServerHandlerTCP Startup : " << address << "," << port;
 
 	acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));

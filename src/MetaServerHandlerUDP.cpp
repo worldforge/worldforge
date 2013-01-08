@@ -36,13 +36,13 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 					  boost::asio::io_service& ios,
 		              const std::string address,
 		              const unsigned int port )
-   : m_msRef(ms),
+   : m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address),port)),
+//     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
+     m_outboundMaxInterval(100),
+     m_outboundTick(0),
 	 m_Address(address),
      m_Port(port),
-//     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::udp::udp::v6(),port)),
-     m_Socket(ios, boost::asio::ip::udp::udp::endpoint(boost::asio::ip::address::from_string(address),port)),
-     m_outboundTick(0),
-     m_outboundMaxInterval(100)
+     m_msRef(ms)
 {
 	m_outboundTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));

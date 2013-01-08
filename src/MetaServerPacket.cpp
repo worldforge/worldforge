@@ -23,14 +23,14 @@
 #include "MetaServerPacket.hpp"
 
 MetaServerPacket::MetaServerPacket() :
-		  m_Bytes(0),
 		  m_packetType(NMT_NULL),
-		  m_Port(0),
 		  m_AddressInt(0),
+		  m_Port(0),
+		  m_Bytes(0),
 		  m_needFree(true),
+		  m_outBound(false),
 		  m_Sequence(0),
-		  m_TimeOffset(0),
-		  m_outBound(false)
+		  m_TimeOffset(0)
 {
 	m_packetPayload.assign(0);
 	m_readPtr  = m_packetPayload.data();
@@ -39,12 +39,13 @@ MetaServerPacket::MetaServerPacket() :
 }
 
 MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
-		: m_packetPayload(pl),
-		  m_Bytes(bytes),
-		  m_packetType(NMT_NULL),
-		  m_Port(0),
+		: m_packetType(NMT_NULL),
 		  m_AddressInt(0),
+		  m_Port(0),
+		  m_Bytes(bytes),
+		  m_packetPayload(pl),
 		  m_needFree(false),
+		  m_outBound(false),
 		  m_Sequence(0),
 		  m_TimeOffset(0)
 {

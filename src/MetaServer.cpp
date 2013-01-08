@@ -35,27 +35,48 @@
 #include <boost/algorithm/string.hpp>
 
 
+
+
 MetaServer::MetaServer(boost::asio::io_service& ios)
-	: m_expiryDelayMilliseconds(1500),
+	: m_handshakeExpirySeconds(30),
+	  m_expiryDelayMilliseconds(1500),
 	  m_updateDelayMilliseconds(4000),
-	  m_handshakeExpirySeconds(30),
 	  m_sessionExpirySeconds(3600),
 	  m_clientExpirySeconds(300),
 	  m_packetLoggingFlushSeconds(10),
 	  m_loggingFlushSeconds(10),
-	  m_keepServerStats(false),
-	  m_keepClientStats(false),
 	  m_maxServerSessions(1024),
 	  m_maxClientSessions(4096),
-	  m_isDaemon(false),
-	  m_Logfile(""),
+	  m_startTime(boost::posix_time::microsec_clock::local_time()),
+	  m_keepServerStats(false),
+	  m_keepClientStats(false),
 	  m_logServerSessions(false),
 	  m_logClientSessions(false),
 	  m_logPackets(false),
-	  m_PacketLogfile(""),
+	  m_isDaemon(false),
 	  m_PacketSequence(0),
-	  m_startTime(boost::posix_time::microsec_clock::local_time())
+	  m_Logfile(""),
+	  m_PacketLogfile("")
 {
+
+	unsigned int m_loggingFlushSeconds;
+	boost::posix_time::ptime m_loggingFlushTime;
+	unsigned int m_maxServerSessions;
+	unsigned int m_maxClientSessions;
+	boost::posix_time::ptime m_startTime;
+	bool m_keepServerStats;
+	bool m_keepClientStats;
+	bool m_logServerSessions;
+	bool m_logClientSessions;
+	bool m_logPackets;
+	bool m_isDaemon;
+	unsigned long long m_PacketSequence;
+	PacketLogger* m_PacketLogger;
+	std::string m_Logfile;
+	std::string m_PacketLogfile;
+
+
+
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
