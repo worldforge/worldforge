@@ -147,32 +147,32 @@
 
 typedef uint32_t NetMsgType;
 
-static const NetMsgType NMT_NULL = 0;
-static const NetMsgType NMT_SERVERKEEPALIVE = 1;
-static const NetMsgType NMT_CLIENTKEEPALIVE = 2;
-static const NetMsgType NMT_HANDSHAKE = 3;
-static const NetMsgType NMT_SERVERSHAKE = 4;
-static const NetMsgType NMT_CLIENTSHAKE = 5;
-static const NetMsgType NMT_TERMINATE = 6;
-static const NetMsgType NMT_LISTREQ = 7;
-static const NetMsgType NMT_LISTRESP = 8;
-static const NetMsgType NMT_PROTO_ERANGE = 9;
-static const NetMsgType NMT_LAST = 10;
+const NetMsgType NMT_NULL = 0;
+const NetMsgType NMT_SERVERKEEPALIVE = 1;
+const NetMsgType NMT_CLIENTKEEPALIVE = 2;
+const NetMsgType NMT_HANDSHAKE = 3;
+const NetMsgType NMT_SERVERSHAKE = 4;
+const NetMsgType NMT_CLIENTSHAKE = 5;
+const NetMsgType NMT_TERMINATE = 6;
+const NetMsgType NMT_LISTREQ = 7;
+const NetMsgType NMT_LISTRESP = 8;
+const NetMsgType NMT_PROTO_ERANGE = 9;
+const NetMsgType NMT_LAST = 10;
 /**
  *  Enhancements of the metaserver-ng
  */
-static const NetMsgType NMT_SERVERATTR = 11;
-static const NetMsgType NMT_CLIENTATTR = 12;
-static const NetMsgType NMT_CLIENTFILTER = 13;
-static const NetMsgType NMT_ATTRRESP = 14;
-static const NetMsgType NMT_SERVERCLEAR = 15;
-static const NetMsgType NMT_CLIENTCLEAR = 16;
+const NetMsgType NMT_SERVERATTR = 11;
+const NetMsgType NMT_CLIENTATTR = 12;
+const NetMsgType NMT_CLIENTFILTER = 13;
+const NetMsgType NMT_ATTRRESP = 14;
+const NetMsgType NMT_SERVERCLEAR = 15;
+const NetMsgType NMT_CLIENTCLEAR = 16;
 
 /*
  * DNS Hooks
  */
-static const NetMsgType NMT_DNSREQ = 32;
-static const NetMsgType NMT_DNSRESP = 33;
+const NetMsgType NMT_DNSREQ = 32;
+const NetMsgType NMT_DNSRESP = 33;
 
 /*
  * DNS Query Types
@@ -184,15 +184,15 @@ static const NetMsgType NMT_DNSRESP = 33;
  * TXT
  * AXFR
  */
-static const NetMsgType DNS_TYPE_ALL = 0;
-static const NetMsgType DNS_TYPE_A = 1;
-static const NetMsgType DNS_TYPE_PTR = 2;
+const NetMsgType DNS_TYPE_ALL = 0;
+const NetMsgType DNS_TYPE_A = 1;
+const NetMsgType DNS_TYPE_PTR = 2;
 
 
 /*
  * Convenience Printing
  */
-static const char DNS_PRETTY[][30] = {
+const char DNS_PRETTY[][30] = {
 		"DNS_TYPE_ALL",
 		"DNS_TYPE_A",
 		"DNS_TYPE_PTR"
@@ -201,7 +201,7 @@ static const char DNS_PRETTY[][30] = {
 /**
  * Convenience Printing
  */
-static const char NMT_PRETTY[][30] = {
+const char NMT_PRETTY[][30] = {
 		"NMT_NULL",
 		"NMT_SERVERKEEPALIVE",
 		"NMT_CLIENTKEEPALIVE",
