@@ -77,6 +77,7 @@ AC_CHECK_TYPES([sighandler_t],[],[],[
 
 dnl Check for boost asio header
 AC_CHECK_HEADERS([boost/asio.hpp])
+AC_CHECK_HEADERS([boost/filesystem.hpp])
 
 # check for boost_system
 AC_CHECK_LIB(boost_system, main, , [
@@ -89,6 +90,10 @@ AC_CHECK_LIB(boost_date_time, main, , [
 
 AC_CHECK_LIB(boost_program_options, main, , [
 	AC_MSG_ERROR("Linking against boost::program_options library failed.")
+])
+
+AC_CHECK_LIB(boost_filesystem, main, , [
+	AC_MSG_ERROR("Linking against boost::filesystem library failed.")
 ])
 
 AC_CHECK_LIB(pthread, main, ,[
@@ -151,9 +156,12 @@ if test "$ac_use_effc_code" = "yes"; then
       CXXFLAGS="$CXXFLAGS -Weffc++"
 fi
 
+AS_IF([test x"$logdir" = "x"],[logdir="${prefix}/log"])
+AC_SUBST([logdir])
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox
+		 metaserver-ng.conf
 ])
 
 AC_OUTPUT

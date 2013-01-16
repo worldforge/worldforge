@@ -66,6 +66,7 @@ class MetaServer
 
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
+	std::string getLogFile() { return m_Logfile; }
 
 	unsigned long long getDeltaMillis();
 

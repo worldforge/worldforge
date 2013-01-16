@@ -20,7 +20,7 @@
 port=8453
 ip=0.0.0.0
 daemon=true
-logfile=~/.metaserver-ng/metaserver-ng.log
+logfile=@logdir@/metaserver-ng.log
 client_stats=true
 server_stats=true
 
@@ -30,7 +30,7 @@ logging_flush_seconds=10
 server_sessions=true
 client_sessions=true
 packet_logging=false
-packet_logfile=~/.metaserver-ng/packetlog.bin
+packet_logfile=@logdir@/packetlog.bin
 packet_logging_flush_seconds=10
 
 [security]

@@ -33,6 +33,7 @@
  */
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 
 
@@ -857,11 +858,23 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	if ( vm.count("logging.logging_flush_seconds"))
 		m_loggingFlushSeconds = vm["logging.logging_flush_seconds"].as<unsigned int>();
 
+    //std::cout << "DEBUG: " << vm["server.port"].as<std::string>() << std::endl;
+	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
+	{
+		if ( it->second.value().type() == typeid(int) )
+		{
+			std::cout << "  " << it->first.c_str() << " = " << it->second.as<int>() << std::endl;
+		}
+		else if (it->second.value().type() == typeid(std::string) )
+		{
+			std::cout << "  " << it->first.c_str() << " = " << it->second.as<std::string>().c_str() << std::endl;
+		}
+	}
 
 	if( vm.count("server.logfile") )
 	{
 		m_Logfile = vm["server.logfile"].as<std::string>();
-
+		std::cout << "Assigning m_Logfile : " << m_Logfile << std::endl;
 		/**
 		 * I tried to use boost::filesystem here, but it is so very stupid
 		 * that I have opted for the more brittle way, because at least it works.
@@ -911,14 +924,38 @@ MetaServer::initLogger()
 	/**
 	 * If a logfile is specified, use it
 	 */
+	std::cout << "m_Logfile: " << m_Logfile << std::endl;
 	if ( !m_Logfile.empty() )
 	{
+		/*
+		 * Create the log directory if it does not exist
+		 */
+		boost::filesystem::path p = m_Logfile;
+		LOG(INFO) << "Log File: " << p.filename().string();
+		std::cout << "Log File: " << p.filename().string() << std::endl;
+		std::cout << "Log Directory Root Path: " << p.parent_path().string() << std::endl;
+
+		if ( ! boost::filesystem::is_directory(p.parent_path().string()))
+		{
+			LOG(INFO) << "Creating Log Directory : " << p.parent_path().string();
+			std::cout << "Creating Log Directory : " << p.parent_path().string() << std::endl;
+			boost::filesystem::create_directory(p.parent_path());
+		}
+
 		/*
 		 * I hope this actually logs to stdout in the event that no destination is set
 		 */
 		google::SetLogDestination(google::INFO,m_Logfile.c_str());
 		LOG(INFO) << "Metaserver Logfile : " << m_Logfile;
 	}
+//	else
+//	{
+//		boost::filesystem::path p = boost::filesystem::temp_directory_path();
+//		p /= "/metaserver.log";
+//		google::SetLogDestination(google::INFO,p.c_str());
+//		LOG(INFO) << "Temporary Logfile: " << p;
+//		std::cout << "Temporary Logfile: " << p << std::endl;
+//	}
 
 	LOG(INFO) << "MetaServer logging initialized";
 

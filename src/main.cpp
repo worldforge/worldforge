@@ -31,8 +31,10 @@
  * System Includes
  */
 #include <unistd.h> /* daemon() */
+#include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
 #include <glog/logging.h>
+#include <boost/filesystem.hpp>
 
 /*
 	Entry point
@@ -40,7 +42,6 @@
 int main(int argc, char** argv)
 {
 
-	std::ifstream config_file("metaserver-ng.conf");
 	boost::asio::io_service io_service;
 	boost::program_options::variables_map vm;
 
@@ -82,19 +83,114 @@ int main(int argc, char** argv)
 	 */
 	google::InitGoogleLogging("");
 
+
+	/*
+	 * Environment Wrangling
+	 */
+	const char *wfenv = std::getenv("WFHOME");
+	const char *home  = std::getenv("HOME");
+	bool config_found = false;
+	boost::filesystem::path config_file_path;
+	boost::filesystem::path home_dot_dir;
+
+	/*
+	 * Create a 'special' directory
+	 */
+	if ( home != NULL )
+	{
+
+		home_dot_dir = home;
+		home_dot_dir /= "/.metaserver-ng";
+
+		if ( ! boost::filesystem::exists(home_dot_dir) )
+		{
+			/*
+			 * NB: this throws, may need to fix that later.
+			 * We don't care about the result though, either it made it or it
+			 * didn't.  Any process that depends on the directory will check for it.
+			 */
+			boost::filesystem::create_directory(home_dot_dir);
+		}
+
+	}
+
+	/*
+	 * If WFHOME is setup, try to load config,
+	 * else try to load from ~/.metaserver-ng.conf
+	 * last resort is just to have a "$CWD/metaserver-ng.conf"
+	 */
+	if ( wfenv != NULL )
+	{
+		std::cout << "WFHOME: " << wfenv << std::endl;
+		/*
+		 * PREFIX/etc/metaserver-ng.conf
+		 */
+		config_file_path /= wfenv;
+		config_file_path /= "/etc/metaserver-ng.conf";
+		std::cout << "Searching configuration : " << config_file_path.string();
+
+		if( boost::filesystem::is_regular_file(config_file_path))
+		{
+			std::cout << "Accepted.";
+			config_found = true;
+		}
+		std::cout << std::endl;
+
+	}
+
+	/*
+	 * HOME/.metaserver-ng.conf
+	 *
+	 * Try for fallback
+	 */
+	if ( !config_found && home != NULL )
+	{
+		std::cout << "HOME : " << home << std::endl;
+		config_file_path = home;
+		config_file_path /= "/.metaserver-ng.conf";
+		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
+
+		if( boost::filesystem::is_regular_file(config_file_path))
+		{
+			std::cout << "Accepted.";
+			config_found = true;
+		}
+		std::cout << std::endl;
+	}
+
+	/*
+	 * Last resort
+	 */
+	if( !config_found )
+	{
+		config_file_path = "metaserver-ng.conf";
+		std::cout << "Default configuration : " <<  config_file_path.string() << std::endl;
+		if ( boost::filesystem::is_regular_file(config_file_path) )
+		{
+			std::cout << "Using CWD Path: " << config_file_path.string() << std::endl;
+		}
+		else
+		{
+			std::cout << "No configuration file found!  All critical options are required to be passed via the command-line";
+		}
+	}
+
 	/**
 	 * Create our metaserver
 	 */
-	VLOG(5) << "Create MetaServer instance";
+	std::cout << "Create MetaServer instance" << std::endl;
+	std::cout << "Metaserver Config File: " << config_file_path.string() << std::endl;
 	MetaServer ms(io_service);
 
 	try
 	{
 
+		std::ifstream config_file(config_file_path.string());
 		boost::program_options::store(
 				boost::program_options::parse_command_line(argc, argv, desc),
 				vm
 				);
+
 		boost::program_options::store(
 				boost::program_options::parse_config_file(config_file, desc, true),
 				vm
@@ -124,8 +220,9 @@ int main(int argc, char** argv)
 		/**
 		 * Register the configuration.
 		 */
-		VLOG(5) << "Attempting to register MetaServer configuration";
+		std::cout << "Attempting to register MetaServer configuration ... " << std::endl;
 		ms.registerConfig(vm);
+		std::cout << "Logging to logfile: " << ms.getLogFile() << std::endl;
 		VLOG(5) << "Configuration Registered";
 
 		/**
@@ -133,6 +230,7 @@ int main(int argc, char** argv)
 		 */
 		if ( ms.isDaemon() )
 		{
+			std::cout << "Running as daemon." << std::endl;
 			LOG(INFO) << "Running as a daemon";
 			daemon(0,0);
 		}
