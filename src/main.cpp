@@ -30,7 +30,8 @@
 /*
  * System Includes
  */
-#include <unistd.h> /* daemon() */
+#include <unistd.h> /* daemon(), getpid() */
+#include <signal.h>
 #include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
 #include <glog/logging.h>
@@ -64,7 +65,8 @@ int main(int argc, char** argv)
 		( "server.port,p", boost::program_options::value<int>(), "Server bind port. \nDefault:8543" )
 		( "server.ip", boost::program_options::value<std::string>(), "Server bind IP. \nDefault:0.0.0.0" )
 		( "server.daemon", boost::program_options::value<std::string>(), "Daemonize after startup [true|false].\nDefault: true" )
-		( "server.logfile", boost::program_options::value<std::string>(), "Server logfile location.\nDefault: ~/.metaserver-ng/metaserver-ng.log" )
+		( "server.logfile", boost::program_options::value<std::string>(), "Server logfile location.\nDefault: logdir/metaserver-ng.log" )
+		( "server.pidfile", boost::program_options::value<std::string>(), "Server pidfile location.\nDefault: rundir/metaserver-ng.pid" )
 		( "server.client_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
 		( "server.server_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
 		( "logging.server_sessions", boost::program_options::value<std::string>(), "Output server sessions to logfile [true|false].  \nDefault: false" )
@@ -226,14 +228,99 @@ int main(int argc, char** argv)
 		VLOG(5) << "Configuration Registered";
 
 		/**
+		 *	Create pid file
+		 */
+//		std::cout << "Checking server.pidfile ..." << std::endl;
+		boost::filesystem::path pid_file_path;
+		if ( vm.count("server.pidfile") )
+		{
+
+			/*
+			 * Create rundir as required
+			 */
+			pid_file_path = vm["server.pidfile"].as<std::string>();
+			LOG(INFO) << "Pidfile: " << pid_file_path.string();
+			std::cout << "Pidfile: " << pid_file_path.string() << std::endl;
+
+			if ( ! boost::filesystem::is_directory(pid_file_path.parent_path().string()))
+			{
+				LOG(INFO) << "Creating Run Directory : " << pid_file_path.parent_path().string();
+				std::cout << "Creating Run Directory : " << pid_file_path.parent_path().string() << std::endl;
+				bool pf = boost::filesystem::create_directory(pid_file_path.parent_path());
+				if(!pf)
+					throw std::runtime_error("Can not create run directory");
+			}
+
+			/*
+			 * Drop in pid
+			 */
+			if ( boost::filesystem::is_regular_file(pid_file_path) )
+			{
+				std::cout << "Pidfile Exists: " << pid_file_path.string() << std::endl;
+				LOG(INFO) << "Pidfile Exists: " << pid_file_path.string();
+
+				/*
+				 * PIDFILE is present, check is process is running
+				 * if so, refuse to start, if not, clean up pidfile
+				 */
+				std::ifstream pif(pid_file_path.string());
+				int pid = 0;
+				pif >> pid;
+				std::cout << "Checking pid : " << pid << std::endl;
+				LOG(INFO) << "Checking pid : " << pid;
+
+				if( kill(pid,0) == -1 )
+				{
+					std::cout << "Pidfile is stale, removing." << std::endl;
+					LOG(INFO) << "Pidfile is stale, removing.";
+					boost::filesystem::remove(pid_file_path);
+				}
+				else
+				{
+					LOG(INFO) << "Refusing to start!";
+					throw std::runtime_error("Pidfile exists and process is running, refusing to start");
+				}
+			}
+
+		}
+		else
+		{
+			LOG(INFO) << "Pidfile Not Specified";
+			std::cout << "Pidfile Not Specified " << std::endl;
+		}
+
+		/**
 		 * Go daemon if needed
+		 *
+		 * NOTE: It is critical that the pidfile checking go BEFORE daemon
+		 * because the potential to inform the user via std::cout disappears
+		 * but is is critical that the pid file be filled AFTER the daemon,
+		 * as the daemon is forking a child, and that will be the running
+		 * process, not here.
 		 */
 		if ( ms.isDaemon() )
 		{
 			std::cout << "Running as daemon." << std::endl;
+			std::cout << "NOTE: Be sure to check the logfile for any messages, as console output is now disabled." << std::endl;
 			LOG(INFO) << "Running as a daemon";
 			daemon(0,0);
 		}
+
+
+		/*
+		 * Write the getpid
+		 *
+		 * NOTE: must occur AFTER daemon
+		 */
+		if ( ! boost::filesystem::is_regular_file(pid_file_path) )
+		{
+			std::ofstream pidfile;
+			pidfile.open(pid_file_path.c_str());
+			pidfile.clear();
+			pidfile << getpid();
+			pidfile.close();
+		}
+
 
 		/**
 		 * Define Handlers

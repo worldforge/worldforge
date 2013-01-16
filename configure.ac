@@ -157,7 +157,9 @@ if test "$ac_use_effc_code" = "yes"; then
 fi
 
 AS_IF([test x"$logdir" = "x"],[logdir="${prefix}/log"])
+AS_IF([test x"$rundir" = "x"],[rundir="${prefix}/var"])
 AC_SUBST([logdir])
+AC_SUBST([rundir])
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox

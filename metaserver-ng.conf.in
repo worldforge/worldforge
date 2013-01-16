@@ -21,6 +21,7 @@ port=8453
 ip=0.0.0.0
 daemon=true
 logfile=@logdir@/metaserver-ng.log
+pidfile=@rundir@/metaserver-ng.pid
 client_stats=true
 server_stats=true
 
