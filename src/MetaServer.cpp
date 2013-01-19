@@ -57,7 +57,8 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_isDaemon(false),
 	  m_PacketSequence(0),
 	  m_Logfile(""),
-	  m_PacketLogfile("")
+	  m_PacketLogfile(""),
+	  m_isShutdown(false)
 {
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
@@ -211,6 +212,13 @@ MetaServer::update_timer(const boost::system::error_code& error)
 {
 //	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 
+
+	if ( !boost::filesystem::exists(m_pidFile) ||
+		 !boost::filesystem::is_regular_file(m_pidFile) )
+	{
+		m_isShutdown = true;
+		throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
+	}
 	/**
 	 * do update tasks
 	 * possibly add a time of last update and do a delta and sleep less if we're running behind
@@ -885,6 +893,12 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		{
 			m_Logfile.replace(0,1, std::getenv("HOME") );
 		}
+	}
+
+	if( vm.count("server.pidfile") )
+	{
+		m_pidFile = vm["server.pidfile"].as<std::string>();
+		std::cout << "Assigning m_pidFile : " << m_pidFile.string() << std::endl;
 	}
 
 	/**

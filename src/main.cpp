@@ -332,7 +332,7 @@ int main(int argc, char** argv)
 		/**
 		 * This is the async loop
 		 */
-		for(;;)
+		while(! ms.isShutdown() )
 		{
 			LOG(INFO) << "Enter ASYNC loop";
 			try
@@ -351,10 +351,28 @@ int main(int argc, char** argv)
 				 * If we have a handler exception this should account as a reasonable
 				 * effort to resume operation despite the error
 				 */
-				std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
-				LOG(ERROR) << "IOService Loop Exception:" << ex.what();
+
+				/*
+				 * TODO: just being lazy here, should probably subclass a shutdown
+				 *       exception and catch it separately.  This will be totally
+				 *       bogus in the event that a real exception occurs during
+				 *       the shutdown process, but the risk is minimal as it's
+				 *       going down anyway.
+				 */
+				if ( ms.isShutdown() )
+				{
+					std::cout << "Shutdown sequence initiated." << std::endl;
+					LOG(INFO) << "Shutdown sequence initiated.";
+
+				}
+				else
+				{
+					std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
+					LOG(ERROR) << "IOService Loop Exception:" << ex.what();
+				}
 			}
 		}
+		LOG(INFO) << "Shutting Down Metaserver";
 
 	}
 	catch (std::exception& e)

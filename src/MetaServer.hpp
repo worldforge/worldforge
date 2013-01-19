@@ -36,6 +36,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/deadline_timer.hpp>
+#include <boost/filesystem.hpp>
 
 #include <glog/logging.h>
 
@@ -67,6 +68,7 @@ class MetaServer
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
 	std::string getLogFile() { return m_Logfile; }
+	bool isShutdown() { return m_isShutdown; }
 
 	unsigned long long getDeltaMillis();
 
@@ -98,6 +100,8 @@ class MetaServer
 	PacketLogger* m_PacketLogger;
 	std::string m_Logfile;
 	std::string m_PacketLogfile;
+	bool m_isShutdown;
+	boost::filesystem::path m_pidFile;
 
 };
 
