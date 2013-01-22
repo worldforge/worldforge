@@ -156,6 +156,24 @@ if test "$ac_use_effc_code" = "yes"; then
       CXXFLAGS="$CXXFLAGS -Weffc++"
 fi
 
+# conditional server arg to allow --disable-server in the
+# case of an API only build
+#AC_ARG_ENABLE([server],[AS_HELP_STRING([--disable-server],[Make as an API install only])],
+ #[AS_CASE([$ac_enable_server],[yes|no],[true],
+ #[AC_MSG_ERROR([Use --enable-server or --disable-server])])],
+ #[ac_enable_server=yes])
+
+AC_ARG_ENABLE([server],
+[  --enable-server     Make an API only build],
+[case "${enableval}" in
+  yes) server=true;;
+  no)  server=false;;
+  *) AC_MSG_ERROR([bad value ${enableval} for --enable-server]);;
+esac], [server=false]
+[server=yes])
+
+AM_CONDITIONAL([BUILD_SERVER],[test x$server = xtrue])
+
 AS_IF([test x"$logdir" = "x"],[logdir="${prefix}/log"])
 AS_IF([test x"$rundir" = "x"],[rundir="${prefix}/var"])
 AC_SUBST([logdir])

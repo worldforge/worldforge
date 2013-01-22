@@ -1,6 +1,13 @@
 INCLUDES = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
 
-bin_PROGRAMS = metaserver-ng testserver testclient packetplayer pdnspipe
+bin_PROGRAMS = testserver testclient packetplayer pdnspipe
+if BUILD_SERVER
+bin_PROGRAMS += metaserver-ng
+endif
+
+lib_LTLIBRARIES = libmsapi.la
+libmsapi_la_SOURCES = MetaServerPacket.hpp MetaServerPacket.hpp MetaServerAPI.hpp
+include_HEADERS = MetaServerPacket.hpp MetaServerAPI.hpp
 
 noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerPacket.hpp \
                  PacketReader.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp \
