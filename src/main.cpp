@@ -117,11 +117,29 @@ int main(int argc, char** argv)
 	}
 
 	/*
-	 * If WFHOME is setup, try to load config,
-	 * else try to load from ~/.metaserver-ng.conf
-	 * last resort is just to have a "$CWD/metaserver-ng.conf"
+	 * HOME/.metaserver-ng.conf
+	 *
+	 * Try for local configuration first
 	 */
-	if ( wfenv != NULL )
+	if ( home != NULL )
+	{
+		std::cout << "HOME : " << home << std::endl;
+		config_file_path = home;
+		config_file_path /= "/.metaserver-ng.conf";
+		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
+
+		if( boost::filesystem::is_regular_file(config_file_path))
+		{
+			std::cout << " Accepted.";
+			config_found = true;
+		}
+		std::cout << std::endl;
+	}
+
+	/*
+	 * If WFHOME is setup, try to load distribution configuration
+	 */
+	if ( !config_found && wfenv != NULL )
 	{
 		std::cout << "WFHOME: " << wfenv << std::endl;
 		/*
@@ -133,31 +151,11 @@ int main(int argc, char** argv)
 
 		if( boost::filesystem::is_regular_file(config_file_path))
 		{
-			std::cout << "Accepted.";
+			std::cout << " Accepted.";
 			config_found = true;
 		}
 		std::cout << std::endl;
 
-	}
-
-	/*
-	 * HOME/.metaserver-ng.conf
-	 *
-	 * Try for fallback
-	 */
-	if ( !config_found && home != NULL )
-	{
-		std::cout << "HOME : " << home << std::endl;
-		config_file_path = home;
-		config_file_path /= "/.metaserver-ng.conf";
-		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
-
-		if( boost::filesystem::is_regular_file(config_file_path))
-		{
-			std::cout << "Accepted.";
-			config_found = true;
-		}
-		std::cout << std::endl;
 	}
 
 	/*
