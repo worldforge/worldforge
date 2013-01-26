@@ -98,7 +98,7 @@ int main()
     }
 
     terrain.setBasePoint(0, 0, 2.8);
-    terrain.setBasePoint(1, 0, 7.1);
+    terrain.setBasePoint(1, 0, -7.1);
     terrain.setBasePoint(0, 1, 0.2);
     terrain.setBasePoint(1, 1, 14.7);
 
@@ -110,6 +110,32 @@ int main()
 
     if (tSegments.empty()) {
         std::cerr << "Segment store for populated terrain is empty"
+                  << std::endl << std::flush;
+        return 1;
+    }
+
+    Mercator::BasePoint bp;
+    terrain.getBasePoint(0, 0, bp);
+    if (bp.seed() != 2800) {
+        std::cerr << "BasePoint seed calculation is incorrect."
+                  << std::endl << std::flush;
+        return 1;
+    }
+    terrain.getBasePoint(1, 0, bp);
+    if (bp.seed() != -7100) {
+        std::cerr << "BasePoint seed calculation is incorrect."
+                  << std::endl << std::flush;
+        return 1;
+    }
+    terrain.getBasePoint(0, 1, bp);
+    if (bp.seed() != 200) {
+        std::cerr << "BasePoint seed calculation is incorrect."
+                  << std::endl << std::flush;
+        return 1;
+    }
+    terrain.getBasePoint(1, 1, bp);
+    if (bp.seed() != 14700) {
+        std::cerr << "BasePoint seed calculation is incorrect."
                   << std::endl << std::flush;
         return 1;
     }
