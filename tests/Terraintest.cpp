@@ -6,8 +6,9 @@
 #include <Mercator/Segment.h>
 #include <Mercator/FillShader.h>
 
-#include <iostream>
+#include <wfmath/const.h>
 
+#include <iostream>
 #include <cstdlib>
 
 int main()
@@ -34,7 +35,7 @@ int main()
         }
     }
 
-    Mercator::Terrain terrain(Mercator::Terrain::SHADED);
+    Mercator::Terrain terrain(Mercator::Terrain::SHADED, 64);
 
     unsigned int res = terrain.getResolution();
 
@@ -125,6 +126,32 @@ int main()
     
     if (surfaces.size() != tShaders.size()) {
         std::cerr << "Number of surfaces in the Segment does not match number of shaders on the terrain"
+                  << std::endl << std::flush;
+        return 1;
+    }
+
+    //Now let's check that the underlying algorithm used for calculating heights is intact.
+    //We've previously determined three height values from sampling random points in the terrain.
+    //Given the previous input to the terrain system these heights should always return the same value.
+    //If not, something has changed regarding the algorithm used for generating the terrain.
+    segment->populate();
+    float height = 0;
+    WFMath::Vector<3> normal;
+    terrain.getHeightAndNormal(5.5f, 6.5f, height, normal);
+    if (!WFMath::Equal(height, 2.00456953f)) {
+        std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
+                  << std::endl << std::flush;
+        return 1;
+    }
+    terrain.getHeightAndNormal(15.5f, 12.6f, height, normal);
+    if (!WFMath::Equal(height, 2.221810579f)) {
+        std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
+                  << std::endl << std::flush;
+        return 1;
+    }
+    terrain.getHeightAndNormal(20.2f, 17.4f, height, normal);
+    if (!WFMath::Equal(height, 0.9405912161f)) {
+        std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
                   << std::endl << std::flush;
         return 1;
     }
