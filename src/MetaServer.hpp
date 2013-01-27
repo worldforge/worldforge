@@ -27,6 +27,7 @@
  * Local Includes
  */
 #include "MetaServerPacket.hpp"
+#include "MetaServerVersion.hpp"
 #include "DataObject.hpp"
 
 /*

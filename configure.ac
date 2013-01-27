@@ -16,7 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-AC_INIT(metaserver-ng, 1.0, sryan@evercrack.com)
+AC_INIT([metaserver-ng],[1.0.1],[sryan@evercrack.com])
+LT_INIT
 
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_MACRO_DIR([m4])
@@ -30,7 +31,8 @@ AM_CONFIG_HEADER(src/config.h)
 AC_PREREQ(2.62)
 AC_COPYRIGHT([This script is under the GPL and is owned by the people in AUTHORS])
 
-AC_DISABLE_SHARED
+AC_ENABLE_SHARED
+AC_ENABLE_STATIC
 
 # Checks for Programs
 AC_PROG_CXX
@@ -158,30 +160,38 @@ fi
 
 # conditional server arg to allow --disable-server in the
 # case of an API only build
-#AC_ARG_ENABLE([server],[AS_HELP_STRING([--disable-server],[Make as an API install only])],
- #[AS_CASE([$ac_enable_server],[yes|no],[true],
- #[AC_MSG_ERROR([Use --enable-server or --disable-server])])],
- #[ac_enable_server=yes])
-
 AC_ARG_ENABLE([server],
-[  --enable-server     Make an API only build],
-[case "${enableval}" in
-  yes) server=true;;
-  no)  server=false;;
-  *) AC_MSG_ERROR([bad value ${enableval} for --enable-server]);;
-esac], [server=false]
-[server=yes])
+  [
+    AS_HELP_STRING([--disable-server],[Make as an API install only])
+  ],
+  [
+    # Needs more chicken waving ... can't find
+    # autoconf docs on AC_CASE anywhere
+    #AS_CASE([$ac_enable_server],[yes|no],[true],
+    #[
+    #AC_MSG_ERROR([Use --enable-server or --disable-server])
+    #])
+    case "${enableval}" in
+	yes) ac_enable_server=true;;
+	no) ac_enable_server=false;;
+	*) AC_MSG_ERROR([--enable-server|--disable-server must be toggles or have 'yes' or 'no' as parameters.]);;
+    esac
+  ],
+  [ac_enable_server=true]
+)
 
-AM_CONDITIONAL([BUILD_SERVER],[test x$server = xtrue])
+AM_CONDITIONAL([BUILD_SERVER],[test "x$ac_enable_server" = "xtrue"])
 
 AS_IF([test x"$logdir" = "x"],[logdir="${prefix}/log"])
 AS_IF([test x"$rundir" = "x"],[rundir="${prefix}/var"])
 AC_SUBST([logdir])
 AC_SUBST([rundir])
+AC_SUBST([APIVER],[1:0:0])
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox
 		 metaserver-ng.conf
+		 src/MetaServerVersion.hpp
 ])
 
 AC_OUTPUT

@@ -918,6 +918,8 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	 * Print out the startup values
 	 */
 	LOG(INFO) << "WorldForge MetaServer Runtime Configuration";
+	LOG(INFO) << "Server Version: " << SERVER_VERSION;
+	LOG(INFO) << "API    Version: " << API_VERSION;
 	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
 	{
 		if ( it->second.value().type() == typeid(int) )

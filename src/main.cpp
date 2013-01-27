@@ -179,6 +179,8 @@ int main(int argc, char** argv)
 	 * Create our metaserver
 	 */
 	std::cout << "Create MetaServer instance" << std::endl;
+	std::cout << "Server Version: " << SERVER_VERSION << std::endl;
+	std::cout << "API    Version: " << API_VERSION << std::endl;
 	std::cout << "Metaserver Config File: " << config_file_path.string() << std::endl;
 	MetaServer ms(io_service);
 

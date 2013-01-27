@@ -1,7 +1,7 @@
 /**
  Worldforge Next Generation MetaServer
 
- Copyright (C) 2012 Sean Ryan <sryan@evercrack.com>
+ Copyright (C) 2013 Sean Ryan <sryan@evercrack.com>
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,19 +19,10 @@
 
  */
 
-#ifndef METASERVERAPI_HPP_
-#define METASERVERAPI_HPP_
+#ifndef METASERVERVERSION_HPP
+#define METASERVERVERSION_HPP
 
-/*
- * Packet is the core of the API, allowing for any local transport 
- * mechanisms.
- */
-#include "MetaServerPacket.hpp"
+const char SERVER_VERSION[] = "1.0.1";
+const char API_VERSION[] =  "1:0:0";
 
-/*
- * TODO: Add in a default transport mechanism using boost
- * sendPacket
- * receivePacket
- */
-
-#endif /* METASERVERAPI_HPP_ */
+#endif /* METASERVERVERSION_HPP_ */
