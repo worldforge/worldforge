@@ -1,2 +1,2 @@
 
-SUBDIRS = Objects
+SUBDIRS = Objects Codecs

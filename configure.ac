@@ -118,6 +118,7 @@ AC_CONFIG_FILES([
 	Atlas/Objects/Makefile
 	tests/Makefile
 	tests/Objects/Makefile
+	tests/Codecs/Makefile
 	tools/Makefile
 	benchmark/Makefile
 	tutorial/Makefile
