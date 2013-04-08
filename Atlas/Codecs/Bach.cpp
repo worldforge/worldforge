@@ -444,7 +444,7 @@ void Bach::poll(bool can_read)
 
     std::streamsize count;
 
-    if ((count = m_socket.rdbuf()->in_avail()) > 0) {
+    while ((count = m_socket.rdbuf()->in_avail()) > 0) {
 
         for (int i = 0; i < count; ++i) {
 
