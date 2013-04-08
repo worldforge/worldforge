@@ -38,6 +38,8 @@ void testCodec() {
     map["foo2"] = 1;
     map["foo3"] = 2.5;
     map["foo4"] = list;
+    map["foo5"] = "<";
+    map["foo6"] = ">";
 
     std::stringstream ss;
 
@@ -73,6 +75,9 @@ void testCodec() {
     assert(map2["foo4"].asList()[0].asString() == "foo");
     assert(map2["foo4"].asList()[1].asFloat() == 1.5);
     assert(map2["foo4"].asList()[2].asInt() == 5);
+    assert(map2["foo4"].asList()[2].asInt() == 5);
+    assert(map2["foo5"].asString() == "<");
+    assert(map2["foo6"].asString() == ">");
 
 }
 
