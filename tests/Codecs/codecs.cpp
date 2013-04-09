@@ -29,6 +29,36 @@
 
 using namespace Atlas::Message;
 
+void testXMLEscapingOneString(const std::string& string) {
+    assert(Atlas::Codecs::XML::unescape(Atlas::Codecs::XML::escape(string)) == string);
+    assert(Atlas::Codecs::XML::unescape(Atlas::Codecs::XML::escape(" " + string)) == (" " + string));
+    assert(Atlas::Codecs::XML::unescape(Atlas::Codecs::XML::escape(string + " ")) == (string + " "));
+    assert(Atlas::Codecs::XML::unescape(Atlas::Codecs::XML::escape(" " + string + " ")) == (" " + string + " "));
+}
+
+void testXMLEscaping() {
+    testXMLEscapingOneString("&");
+    testXMLEscapingOneString("<");
+    testXMLEscapingOneString(">");
+    testXMLEscapingOneString("'");
+    testXMLEscapingOneString("\"");
+    testXMLEscapingOneString("&&");
+    testXMLEscapingOneString("<<");
+    testXMLEscapingOneString(">> ");
+    testXMLEscapingOneString("''");
+    testXMLEscapingOneString("\"\"");
+    assert(Atlas::Codecs::XML::unescape("&amp") == "&amp");
+    assert(Atlas::Codecs::XML::unescape("&amp ") == "&amp ");
+    assert(Atlas::Codecs::XML::unescape("&quot") == "&quot");
+    assert(Atlas::Codecs::XML::unescape("&quot ") == "&quot ");
+    assert(Atlas::Codecs::XML::unescape("&apos") == "&apos");
+    assert(Atlas::Codecs::XML::unescape("&apos ") == "&apos ");
+    assert(Atlas::Codecs::XML::unescape("&lt") == "&lt");
+    assert(Atlas::Codecs::XML::unescape("&lt ") == "&lt ");
+    assert(Atlas::Codecs::XML::unescape("&gt") == "&gt");
+    assert(Atlas::Codecs::XML::unescape("&gt ") == "&gt ");
+}
+
 template <typename T>
 void testCodec() {
     MapType map;
@@ -38,8 +68,16 @@ void testCodec() {
     map["foo2"] = 1;
     map["foo3"] = 2.5;
     map["foo4"] = list;
-    map["foo5"] = "<";
-    map["foo6"] = ">";
+    map["<"] = "<";
+    map[">"] = ">";
+    map["foo6&"] = "&;";
+    map["foo6:"] = ":";
+    map["\""] = "\"";
+    map["{"] = "{";
+    map["}"] = "}";
+    map["["] = "[";
+    map["]"] = "]";
+
 
     std::stringstream ss;
 
@@ -76,18 +114,30 @@ void testCodec() {
     assert(map2["foo4"].asList()[1].asFloat() == 1.5);
     assert(map2["foo4"].asList()[2].asInt() == 5);
     assert(map2["foo4"].asList()[2].asInt() == 5);
-    assert(map2["foo5"].asString() == "<");
-    assert(map2["foo6"].asString() == ">");
+    assert(map2["<"].asString() == "<");
+    assert(map2[">"].asString() == ">");
+    assert(map2["foo6&"].asString() == "&;");
+
+    assert(map2["foo6:"].asString() == ":");
+    assert(map2["\""].asString() == "\"");
+    assert(map2["{"].asString() == "{");
+    assert(map2["}"].asString() == "}");
+    assert(map2["["].asString() == "[");
+    assert(map2["]"].asString() == "]");
+
 
 }
 
 
 int main(int argc, char** argv)
 {
+    testXMLEscaping();
+
     testCodec<Atlas::Codecs::XML>();
-    testCodec<Atlas::Codecs::Bach>();
+//    testCodec<Atlas::Codecs::Bach>();
     //Packed currently segfaults here. It's not actively used though, but we really need to fix it.
 //    testCodec<Atlas::Codecs::Packed>();
+
 
 }
 
