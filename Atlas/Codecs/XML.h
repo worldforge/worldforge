@@ -62,6 +62,20 @@ class XML : public Codec
     virtual void listStringItem(const std::string&);
     virtual void listEnd();
 
+    /**
+     * Escapes a string for HTML.
+     * @param The original string.
+     * @return An escaped string.
+     */
+    static std::string escape(const std::string&);
+
+    /**
+     * Un-escapes a previously "escaped" string for HTML.
+     * @param The original string.
+     * @return An unescaped string.
+     */
+    static std::string unescape(const std::string&);
+
     protected:
 
     std::iostream & m_socket;
@@ -101,6 +115,7 @@ class XML : public Codec
 
     inline void parseStartTag();
     inline void parseEndTag();
+
 };
 
 } } // namespace Atlas::Codecs

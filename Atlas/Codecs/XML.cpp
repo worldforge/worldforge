@@ -111,7 +111,7 @@ void XML::parseStartTag()
     
     if (name_start < name_end)
     {
-	m_name = std::string(m_tag, (unsigned long) name_start, (unsigned long) (name_end - name_start));
+	m_name = unescape(std::string(m_tag, (unsigned long) name_start, (unsigned long) (name_end - name_start)));
     }
     else
     {
@@ -311,11 +311,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge.mapStringItem(m_name, m_data.top());
+		    m_bridge.mapStringItem(m_name, unescape(m_data.top()));
 		}
 		else
 		{
-		    m_bridge.listStringItem(m_data.top());
+		    m_bridge.listStringItem(unescape(m_data.top()));
 		}
 	    }
 	    else
@@ -369,27 +369,27 @@ void XML::streamMessage()
 
 void XML::mapMapItem(const std::string& name)
 {
-    m_socket << "<map name=\"" << name << "\">";
+    m_socket << "<map name=\"" << escape(name) << "\">";
 }
 
 void XML::mapListItem(const std::string& name)
 {
-    m_socket << "<list name=\"" << name << "\">";
+    m_socket << "<list name=\"" << escape(name) << "\">";
 }
 
 void XML::mapIntItem(const std::string& name, long data)
 {
-    m_socket << "<int name=\"" << name << "\">" << data << "</int>";
+    m_socket << "<int name=\"" << escape(name) << "\">" << data << "</int>";
 }
 
 void XML::mapFloatItem(const std::string& name, double data)
 {
-    m_socket << "<float name=\"" << name << "\">" << data << "</float>";
+    m_socket << "<float name=\"" << escape(name) << "\">" << data << "</float>";
 }
 
 void XML::mapStringItem(const std::string& name, const std::string& data)
 {
-    m_socket << "<string name=\"" << name << "\">" << data << "</string>";
+    m_socket << "<string name=\"" << escape(name) << "\">" << escape(data) << "</string>";
 }
 
 void XML::mapEnd()
@@ -419,12 +419,83 @@ void XML::listFloatItem(double data)
 
 void XML::listStringItem(const std::string& data)
 {
-    m_socket << "<string>" << data << "</string>";
+    m_socket << "<string>" << escape(data) << "</string>";
 }
 
 void XML::listEnd()
 {
     m_socket << "</list>";
 }
+
+std::string XML::escape(const std::string& original)
+{
+    std::string buffer;
+    buffer.reserve(original.size());
+    for (size_t pos = 0; pos != original.size(); ++pos) {
+        switch (original[pos]) {
+        case '&':
+            buffer.append("&amp;");
+            break;
+        case '\"':
+            buffer.append("&quot;");
+            break;
+        case '\'':
+            buffer.append("&apos;");
+            break;
+        case '<':
+            buffer.append("&lt;");
+            break;
+        case '>':
+            buffer.append("&gt;");
+            break;
+        default:
+            buffer.append(1, original[pos]);
+            break;
+        }
+    }
+    return buffer;
+}
+
+std::string XML::unescape(const std::string& original)
+{
+    std::string buffer;
+    buffer.reserve(original.size());
+    for (size_t pos = 0; pos != original.size(); ++pos) {
+        if (original[pos] == '&') {
+            if (original.size() - pos >= 3) {
+                if (original[pos+1] == 'l' && original[pos+2] == 't' && original[pos+3] == ';') {
+                    buffer.append(1, '<');
+                    pos += 3;
+                    continue;
+                } else if (original[pos+1] == 'g' && original[pos+2] == 't' && original[pos+3] == ';') {
+                    buffer.append(1, '>');
+                    pos += 3;
+                    continue;
+                }
+            }
+            if (original.size() - pos >= 4) {
+                if (original[pos+1] == 'a' && original[pos+2] == 'm' && original[pos+3] == 'p' && original[pos+4] == ';') {
+                    buffer.append(1, '&');
+                    pos += 4;
+                    continue;
+                }
+            }
+            if (original.size() - pos >= 5) {
+                if (original[pos+1] == 'q' && original[pos+2] == 'u' && original[pos+3] == 'o' && original[pos+4] == 't' && original[pos+5] == ';') {
+                    buffer.append(1, '"');
+                    pos += 5;
+                    continue;
+                } else if (original[pos+1] == 'a' && original[pos+2] == 'p' && original[pos+3] == 'o' && original[pos+4] == 's' && original[pos+5] == ';') {
+                    buffer.append(1, '\'');
+                    pos += 5;
+                    continue;
+                }
+            }
+        }
+        buffer.append(1, original[pos]);
+    }
+    return buffer;
+}
+
 
 } } //namespace Atlas::Codecs
