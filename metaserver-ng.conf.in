@@ -33,9 +33,43 @@ client_sessions=true
 packet_logging=false
 packet_logfile=@logdir@/packetlog.bin
 packet_logging_flush_seconds=10
+packet_allow=true
+packet_deny=true
 
 [security]
 auth_scheme=none
+
+# any|none|allow list
+# if set to anything other than 'any', will evaluate each packet source IP
+# based on this string value.  If not a match, ms will drop packet
+# is a csv list, e.g:
+# global_firewall_allow=127.0.0.1
+# global_firewall_allow=192.168.0.0/24
+# global_firewall_allow=127.0.0.1,192.168.0.0/24
+global_firewall_allow=any
+
+# none|any|deny list
+# if set to anything other than 'none', will evaluate each packet source IP
+# based on this value.  If MATCHED, ms will drop packet
+# is a csv list.  A value of 'any' will result in all packets other than
+# administrative packets will be dropped.
+# is a csv list, e.g:
+# global_firewall_deny=any
+# global_firewall_deny=127.0.0.1
+# global_firewall_deny=127.0.0.1,192.168.0.0/24
+global_firewall_deny=none
+
+# admin packets based on whitelist policy (aka default deny).
+# any non-matching are dropped
+# any|none|allow list
+# any - allow from anywhere
+# none - do not allow for any admin packets
+# allow list - list to allow admin packets
+admin_firewall_allow=any
+
+# monitor packets based on whitelist policy (aka default deny)
+# any|none|allow list
+monitor_firewall_allow=any
 
 [performance]
 max_server_sessions=1000

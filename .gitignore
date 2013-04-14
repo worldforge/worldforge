@@ -72,3 +72,5 @@ src/packetplayer
 src/pdnspipe
 # trs for test files
 src/*.trs
+# conf - we want .in
+metaserver-ng.conf

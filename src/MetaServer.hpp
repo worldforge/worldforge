@@ -103,6 +103,8 @@ class MetaServer
 	std::string m_PacketLogfile;
 	bool m_isShutdown;
 	boost::filesystem::path m_pidFile;
+	bool m_logPacketAllow;
+	bool m_logPacketDeny;
 
 };
 

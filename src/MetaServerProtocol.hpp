@@ -147,6 +147,9 @@
 
 typedef uint32_t NetMsgType;
 
+/*
+ * Original metaserver protocol
+ */
 const NetMsgType NMT_NULL = 0;
 const NetMsgType NMT_SERVERKEEPALIVE = 1;
 const NetMsgType NMT_CLIENTKEEPALIVE = 2;
@@ -158,6 +161,7 @@ const NetMsgType NMT_LISTREQ = 7;
 const NetMsgType NMT_LISTRESP = 8;
 const NetMsgType NMT_PROTO_ERANGE = 9;
 const NetMsgType NMT_LAST = 10;
+
 /**
  *  Enhancements of the metaserver-ng
  */
@@ -167,6 +171,34 @@ const NetMsgType NMT_CLIENTFILTER = 13;
 const NetMsgType NMT_ATTRRESP = 14;
 const NetMsgType NMT_SERVERCLEAR = 15;
 const NetMsgType NMT_CLIENTCLEAR = 16;
+
+/*
+ * Monitor Controls
+ *
+ * Intended as a read-only peek at the internals
+ * of the metaserver
+ *
+ * 0 VERSION
+ * 1 APIVERSION
+ * 2 PACKETS
+ * 3 STARTED
+ * 4 SERVERS
+ * 5 CLIENTS
+ * 6 MAXSERVERS
+ *
+ */
+const NetMsgType NMT_MONITOR = 21;
+
+/*
+ * Administrator Controls
+ *
+ * Intended to provide the ability to affect the
+ * data inside the metaserver
+ *
+ * @TODO thing about whether we want just yes/no type responses from
+ * admin packets
+ */
+const NetMsgType NMT_ADMIN = 25;
 
 /*
  * DNS Hooks

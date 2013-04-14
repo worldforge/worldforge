@@ -34,6 +34,7 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <istream>
 
 
 
@@ -58,7 +59,9 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_PacketSequence(0),
 	  m_Logfile(""),
 	  m_PacketLogfile(""),
-	  m_isShutdown(false)
+	  m_isShutdown(false),
+	  m_logPacketAllow(false),
+	  m_logPacketDeny(false)
 {
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
@@ -456,6 +459,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	uint32_t total = msdo.getServerSessionCount();
 	uint32_t packed_max = total;
 	uint32_t packed = 0;
+	uint32_t temp_int = 0;
 	std::list<uint32_t> resp_list;
 
 	/*
@@ -498,7 +502,15 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
     		/*
     		 * Note: see if there is a way to do this without atoi
     		 */
-    		resp_list.push_back( atoi( msdo.getServerSession(*list_itr)["ip_int"].c_str() ) );
+    		std::istringstream( msdo.getServerSession(*list_itr)["ip_int"] ) >> temp_int;
+
+    		VLOG(5) << "Packing Session Itr[" << *list_itr << "] Session Int["
+    				<< msdo.getServerSession(*list_itr)["ip_int"] << "] Session IP["
+    				<< msdo.getServerSession(*list_itr)["ip"] << "] SS Int["
+    				<< temp_int << "]";
+    		resp_list.push_back( temp_int );
+
+    		//resp_list.push_back( atoi( msdo.getServerSession(*list_itr)["ip_int"].c_str() ) );
     		++packed;
     	}
 
@@ -841,6 +853,35 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		}
 
 	}
+
+	if ( vm.count("logging.packet_allow") )
+	{
+		std::string s = vm["logging.packet_allow"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_logPacketAllow = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_logPacketAllow = false;
+		}
+
+	}
+
+	if ( vm.count("logging.packet_deny") )
+	{
+		std::string s = vm["logging.packet_deny"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_logPacketDeny = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_logPacketDeny = false;
+		}
+
+	}
+
 
 	if( vm.count("logging.packet_logfile") )
 	{
