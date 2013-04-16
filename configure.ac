@@ -191,6 +191,7 @@ AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox
 		 metaserver-ng.conf
+		 mswatchdog.sh
 		 src/MetaServerVersion.hpp
 ])
 

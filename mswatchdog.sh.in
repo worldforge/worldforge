@@ -1,0 +1,72 @@
+#!/bin/env bash
+##
+# Worldforge Next Generation MetaServer
+#
+# Copyright (C) 2013 Sean Ryan <sryan@evercrack.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+##
+# Author: Sean Ryan <sryan@evercrack.com>
+# Synopsis: Checks if the MS is running.  If not it attempts to start.
+#
+
+TIME=$(date)
+MSHOME=@prefix@
+CONF=@prefix@/etc/metaserver-ng.conf
+
+if [[ -f ~/.metaserver-ng.conf ]]; then
+	CONF=~/.metaserver-ng.conf;
+        echo "Local configuration detected";
+fi
+
+PIDF=$(grep pidfile $CONF | awk -F= '{ print $2 }');
+
+echo "-----------------------------";
+echo "Configuration: $CONF";
+echo "MSHOME: $MSHOME";
+echo "PID: $PIDF";
+echo "-----------------------------";
+
+##
+# Check 1 - does pid exist.
+#           Missing pid means not running because the MS will shutdown
+#           if the pidfile disappears
+##
+if [[ ! -f $PIDF ]]; then
+        echo "RESTART: Missing pidfile";
+	$MSHOME/bin/metaserver-ng
+	exit 0;
+fi
+
+##
+# Check 2 - check if pid contained in pidfile is running
+#
+##
+PP=$(cat $PIDF);
+kill -0 $PP
+if [[ $? -ne 0 ]]; then
+	echo "RESTART: pid ($PP) listed in file ($PIDF) is not running";
+	$MSHOME/bin/metaserver-ng
+	exit 0;
+fi
+
+##
+# We must be fine
+#
+echo "OK: $PP metaserver-ng running";
+echo "-----------------------------";
+exit 0;
