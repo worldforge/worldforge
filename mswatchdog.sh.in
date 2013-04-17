@@ -39,6 +39,7 @@ echo "-----------------------------";
 echo "Configuration: $CONF";
 echo "MSHOME: $MSHOME";
 echo "PID: $PIDF";
+echo "Date: $TIME";
 echo "-----------------------------";
 
 ##
