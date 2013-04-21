@@ -4,6 +4,7 @@ AC_INIT([mercator], [0.3.2], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_MACRO_DIR([m4])
 dnl Detect the canonical host and target environment
 
 AC_CANONICAL_HOST
