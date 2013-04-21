@@ -20,7 +20,7 @@ AC_CHECK_FUNC(cos,,[AC_CHECK_LIB(m,cos)])
 
 dnl Test for WorldForge Atlas Libraries
 
-PKG_CHECK_MODULES(ATLAS, atlascpp-0.6 skstream-0.3,
+PKG_CHECK_MODULES(ATLAS, atlascpp-0.7 skstream-0.3,
     [
         CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
         LIBS="$COMMON_LIBS $ATLAS_LIBS"

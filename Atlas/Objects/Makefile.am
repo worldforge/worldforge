@@ -1,13 +1,13 @@
 
 AM_CPPFLAGS = -I$(top_srcdir)
 
-lib_LTLIBRARIES = libAtlasObjects-0.6.la
+lib_LTLIBRARIES = libAtlasObjects-0.7.la
 
-libAtlasObjects_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
+libAtlasObjects_0_7_la_LDFLAGS = $(INTERFACE_VERSION)
 
-libAtlasObjects_0_6_la_LIBADD = $(top_builddir)/Atlas/libAtlas-0.6.la \
-    $(top_builddir)/Atlas/Message/libAtlasMessage-0.6.la \
-    $(top_builddir)/Atlas/Codecs/libAtlasCodecs-0.6.la
+libAtlasObjects_0_7_la_LIBADD = $(top_builddir)/Atlas/libAtlas-0.7.la \
+    $(top_builddir)/Atlas/Message/libAtlasMessage-0.7.la \
+    $(top_builddir)/Atlas/Codecs/libAtlasCodecs-0.7.la
 
 REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp objectFactory.cpp \
 	RootEntity.cpp RootEntityChildren.cpp \
@@ -23,7 +23,7 @@ GENERATED_H = Root.h Decoder.h Dispatcher.h ObjectsFwd.h \
 	RootOperation.h Operation.h \
 	Anonymous.h Generic.h
 
-libAtlasObjects_0_6_la_SOURCES = \
+libAtlasObjects_0_7_la_SOURCES = \
 	gen_cpp.py BaseObject.cpp SmartPtr.cpp Encoder.cpp \
 	loadDefaults.cpp \
 	$(GENERATED_CPP)
@@ -42,7 +42,7 @@ $(REAL_GENERATED_CPP) $(GENERATED_H):
 flag.cpp: $(PYSOURCES)
 	cd $(srcdir) && python gen_cpp.py && (echo /\* ; date --rfc-3339=seconds ; echo \*/) > flag.cpp
 
-libAtlasObjectsincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Objects
+libAtlasObjectsincludedir = $(includedir)/Atlas-C++-0.7/Atlas/Objects
 
 libAtlasObjectsinclude_HEADERS = \
 	BaseObject.h SmartPtr.h Encoder.h objectFactory.h loadDefaults.h \

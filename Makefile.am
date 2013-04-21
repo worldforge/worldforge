@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = Atlas tests tools tutorial benchmark
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = atlascpp-0.6.pc
+pkgconfig_DATA = atlascpp-0.7.pc
 
 EXTRA_DIST = HACKING ROADMAP Doxyfile footer.html index.dox protocol support/ChangeLog-CVS support/generate-ChangeLog.sh
 

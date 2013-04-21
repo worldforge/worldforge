@@ -6,8 +6,8 @@ LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
          -L$(top_builddir)/Atlas/Message/ -L$(top_builddir)/Atlas/Net/ \
          -L$(top_builddir)/Atlas/Objects/
 
-LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
-       -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 $(OTHER_LIBS)
+LIBS = -lAtlasObjects-0.7 -lAtlasNet-0.7 -lAtlas-0.7 -lAtlasCodecs-0.7 \
+       -lAtlasFilters-0.7 -lAtlasMessage-0.7 -lAtlas-0.7 $(OTHER_LIBS)
 
 check_PROGRAMS = custom_ops objects1 objects2 encoder1 decoder1 objects_fwd attributes flags
 
