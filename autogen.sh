@@ -2,41 +2,54 @@
 
 rm -f config.cache
 
-echo aclocal...
-(aclocal --version) < /dev/null > /dev/null 2>&1 || {
-    echo aclocal not found
-    exit 1
-}
-aclocal $ACLOCAL_FLAGS -I m4
+#Check if the autoreconf command is available, and use that if so.
+if command -v autoreconf >/dev/null 2>&1 ; then
+  echo autoreconf...
+  autoreconf --install
+else
+  if test -d /usr/local/share/aclocal ; then
+    ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I /usr/local/share/aclocal"
+  fi
 
-echo autoheader...
-(autoheader --version) < /dev/null > /dev/null 2>&1 || {
-    echo autoheader not found
-    exit 1
-}    
-autoheader
+  (command -v aclocal) < /dev/null > /dev/null 2>&1 || {
+      echo aclocal not found
+      exit 1
+  }
+  echo aclocal...
+  aclocal -I m4 $ACLOCAL_FLAGS
 
-echo libtoolize...
-(libtoolize --version) < /dev/null > /dev/null 2>&1 || {
-    echo libtoolize not found
-    exit 1
-}
-libtoolize --automake --copy --force
+  #The GNU libtoolize is called 'glibtoolize' on Darwin.
+  if [ "`echo $OSTYPE | grep darwin`" != "" ] ; then
+    LIBTOOLIZE="glibtoolize"
+  else
+    LIBTOOLIZE="libtoolize"
+  fi
 
-echo automake...
-(automake --version) < /dev/null > /dev/null 2>&1 || {
-    echo automake not found
-    exit 1
-}
-automake --add-missing --copy --gnu
+  (command -v $LIBTOOLIZE) < /dev/null > /dev/null 2>&1 || {
+      echo $LIBTOOLIZE not found
+      exit 1
+  }
+  echo $LIBTOOLIZE...
+  $LIBTOOLIZE --force --copy
 
-echo autoconf...
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
-    echo autoconf not found
-    exit 1
-}
-autoconf
+  (command -v autoheader) < /dev/null > /dev/null 2>&1 || {
+      echo autoheader not found
+      exit 1
+  }
+  echo autoheader...
+  autoheader
 
-echo Ready to configure
+  (command -v automake) < /dev/null > /dev/null 2>&1 || {
+      echo automake not found
+      exit 1
+  }
+  echo automake...
+  automake --gnu --add-missing --copy
 
-exit 0
+  (command -v autoconf) < /dev/null > /dev/null 2>&1 || {
+      echo autoconf not found
+      exit 1
+  }
+  echo autoconf...
+  autoconf
+fi

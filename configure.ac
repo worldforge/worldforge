@@ -5,6 +5,8 @@ AC_INIT([varconf], [1.0.0], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_MACRO_DIR([m4])
+
 dnl Detect the canonical host environment
 
 AC_CANONICAL_HOST
