@@ -4,6 +4,8 @@ AC_INIT([wfmath], [1.0.1], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_MACRO_DIR([m4])
+
 dnl Detect the canonical host environment
 
 AC_CANONICAL_HOST
