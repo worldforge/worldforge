@@ -30,7 +30,7 @@ libAtlasObjects_0_6_la_SOURCES = \
 
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)
 
-PY_SOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
+PYSOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
 	GenerateDecoder.py GenerateDispatcher.py GenerateForward.py
 
 $(REAL_GENERATED_CPP) $(GENERATED_H):
@@ -39,7 +39,7 @@ $(REAL_GENERATED_CPP) $(GENERATED_H):
 		cd $(srcdir) && python gen_cpp.py ; \
 	fi
 
-flag.cpp: $(PY_SOURCES)
+flag.cpp: $(PYSOURCES)
 	cd $(srcdir) && python gen_cpp.py && (echo /\* ; date --rfc-3339=seconds ; echo \*/) > flag.cpp
 
 libAtlasObjectsincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Objects
@@ -48,4 +48,4 @@ libAtlasObjectsinclude_HEADERS = \
 	BaseObject.h SmartPtr.h Encoder.h objectFactory.h loadDefaults.h \
 	$(GENERATED_H)
 
-EXTRA_DIST = $(PY_SOURCES) README DESIGN TODO
+EXTRA_DIST = $(PYSOURCES) README DESIGN TODO
