@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([mercator], [0.3.2], [alriddoch@googlemail.com])
+AC_INIT([mercator], [0.3.3], [erik@ogenvik.org])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
