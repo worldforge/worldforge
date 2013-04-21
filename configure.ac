@@ -5,6 +5,8 @@ AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CONFIG_MACRO_DIR([m4])
+
 dnl Detect the canonical host environment
 
 AC_CANONICAL_HOST

@@ -1,80 +1,55 @@
-#!/bin/sh
-# Run this to generate all the initial makefiles, etc.
-#
-# NOTE: This autogen.sh copied from GNOME and modified for Eris.
-#       Original autogen.sh was licensed under LGPL.
+#! /bin/sh
 
-DIE=0
+rm -f config.cache
 
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
-  echo
-  echo "**Error**: You must have \`autoconf' installed to compile Eris."
-  echo "Download the appropriate package for your distribution,"
-  echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
-  DIE=1
-}
+#Check if the autoreconf command is available, and use that if so.
+if command -v autoreconf >/dev/null 2>&1 ; then
+  echo autoreconf...
+  autoreconf --install
+else
+  if test -d /usr/local/share/aclocal ; then
+    ACLOCAL_FLAGS="$ACLOCAL_FLAGS -I /usr/local/share/aclocal"
+  fi
 
-(grep "^AM_PROG_LIBTOOL" ./configure.ac >/dev/null) && {
-  (libtoolize --version) < /dev/null > /dev/null 2>&1 || {
-    echo
-    echo "**Error**: You must have \`libtool' installed to compile Eris."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"
-    echo "(or a newer version if it is available)"
-    DIE=1
+  (command -v aclocal) < /dev/null > /dev/null 2>&1 || {
+      echo aclocal not found
+      exit 1
   }
-}
+  echo aclocal...
+  aclocal -I m4 $ACLOCAL_FLAGS
 
-(automake --version) < /dev/null > /dev/null 2>&1 || {
-  echo
-  echo "**Error**: You must have \`automake' installed to compile Eris."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
-  echo "(or a newer version if it is available)"
-  DIE=1
-  NO_AUTOMAKE=yes
-}
+  #The GNU libtoolize is called 'glibtoolize' on Darwin.
+  if [ "`echo $OSTYPE | grep darwin`" != "" ] ; then
+    LIBTOOLIZE="glibtoolize"
+  else
+    LIBTOOLIZE="libtoolize"
+  fi
 
+  (command -v $LIBTOOLIZE) < /dev/null > /dev/null 2>&1 || {
+      echo $LIBTOOLIZE not found
+      exit 1
+  }
+  echo $LIBTOOLIZE...
+  $LIBTOOLIZE --force --copy
 
-# if no automake, don't bother testing for aclocal
-test -n "$NO_AUTOMAKE" || (aclocal --version) < /dev/null > /dev/null 2>&1 || {
-  echo
-  echo "**Error**: Missing \`aclocal'.  The version of \`automake'"
-  echo "installed doesn't appear recent enough."
-  echo "Get ftp://ftp.gnu.org/pub/gnu/automake-1.3.tar.gz"
-  echo "(or a newer version if it is available)"
-  DIE=1
-}
+  (command -v autoheader) < /dev/null > /dev/null 2>&1 || {
+      echo autoheader not found
+      exit 1
+  }
+  echo autoheader...
+  autoheader
 
-if test "$DIE" -eq 1; then
-  exit 1
-fi
+  (command -v automake) < /dev/null > /dev/null 2>&1 || {
+      echo automake not found
+      exit 1
+  }
+  echo automake...
+  automake --gnu --add-missing --copy
 
-if test -z "$*"; then
-  echo "**Warning**: I am going to run \`configure' with no arguments."
-  echo "If you wish to pass any to it, please specify them on the"
-  echo \`$0\'" command line."
-  echo
-fi
-
-# this happens often enough that I'm sticking it in here...
-aclocalinclude="$ACLOCAL_FLAGS"
-
-echo "Running libtoolize..."
-libtoolize --automake --force --copy
-
-echo "Running aclocal $aclocalinclude ..."
-aclocal $aclocalinclude -I m4
-echo "Running autoheader..."
-autoheader
-
-echo "Running automake --gnu $am_opt ..."
-automake --add-missing --gnu $am_opt
-
-echo "Running autoconf ..."
-autoconf
-
-
-if test "x$NOCONFIGURE" = "x" ; then
-    conf_flags="--enable-debug" #--enable-iso-c
-    echo Running ./configure $conf_flags "$@" ...
-    ./configure $conf_flags "$@" && echo Now type \`make\' to compile Eris
+  (command -v autoconf) < /dev/null > /dev/null 2>&1 || {
+      echo autoconf not found
+      exit 1
+  }
+  echo autoconf...
+  autoconf
 fi

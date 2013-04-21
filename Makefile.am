@@ -1,5 +1,7 @@
 SUBDIRS = Eris bindings test
 
+ACLOCAL_AMFLAGS = -I m4
+
 EXTRA_DIST = autogen.sh Eris.pbproj/project.pbxproj eris.spec CHANGES-1.4 ChangeLog-CVS generate-ChangeLog.sh
 
 pkgconfigdir = $(libdir)/pkgconfig
