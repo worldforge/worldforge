@@ -41,7 +41,7 @@ public:
 
   virtual ~ParseError();
 
-  friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
+  VARCONF_API friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
   operator std::string();
 

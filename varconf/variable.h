@@ -54,9 +54,9 @@ public:
 
   virtual ~VarBase();
 
-  friend std::ostream& operator<<(std::ostream& out, const VarBase& v);
-  friend bool operator ==(const VarBase& one, const VarBase& two);
-  friend bool operator !=(const VarBase& one, const VarBase& two)
+  VARCONF_API friend std::ostream& operator<<(std::ostream& out, const VarBase& v);
+  VARCONF_API friend bool operator ==(const VarBase& one, const VarBase& two);
+  VARCONF_API friend bool operator !=(const VarBase& one, const VarBase& two)
         {return !(one == two);}
 
   virtual VarBase& operator=(const VarBase& c);
