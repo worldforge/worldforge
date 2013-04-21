@@ -66,7 +66,7 @@ AC_CHECK_LIB(z, inflate,
         OTHER_LIBS="$OTHER_LIBS -lz"
     ])
 
-AC_CHECK_HEADERS(zlib.h)
+AC_CHECK_HEADER(zlib.h)
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
@@ -89,7 +89,7 @@ AC_CHECK_LIB(bz2, BZ2_bzDecompressInit,
         OTHER_LIBS="$OTHER_LIBS -lbz2"
     ])
 
-AC_CHECK_HEADERS(bzlib.h)
+AC_CHECK_HEADER(bzlib.h)
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
