@@ -54,7 +54,11 @@ class MetaServerHandlerTCP_unittest : public CppUnit::TestCase
     CPPUNIT_TEST(test_sendPacket);
     CPPUNIT_TEST_SUITE_END();
   public:
-    MetaServerHandlerTCP_unittest() { }
+    MetaServerHandlerTCP_unittest()
+    {
+    	ms = NULL;
+    	ms_tcp = NULL;
+    }
 
     boost::asio::io_service io;
     std::string host ;
@@ -156,9 +160,14 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_isDaemon(false),
 	  m_PacketSequence(0),
 	  m_Logfile(""),
-	  m_PacketLogfile("")
+	  m_PacketLogfile(""),
+	  m_isShutdown(false),
+	  m_logPacketAllow(false),
+	  m_logPacketDeny(false)
 {
-
+	m_updateTimer = NULL;
+	m_expiryTimer = NULL;
+	m_PacketLogger = NULL;
 }
 
 MetaServer::~MetaServer()

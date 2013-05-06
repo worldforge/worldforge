@@ -48,7 +48,11 @@ class MetaServerHandlerUDP_unittest : public CppUnit::TestCase
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST_SUITE_END();
   public:
-    MetaServerHandlerUDP_unittest() { }
+    MetaServerHandlerUDP_unittest()
+    {
+    	ms = NULL;
+    	ms_udp = NULL;
+    }
 
     boost::asio::io_service io;
     std::string host ;
@@ -115,8 +119,14 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_isDaemon(false),
 	  m_PacketSequence(0),
 	  m_Logfile(""),
-	  m_PacketLogfile("")
+	  m_PacketLogfile(""),
+	  m_isShutdown(false),
+	  m_logPacketAllow(false),
+	  m_logPacketDeny(false)
 {
+	m_PacketLogger = NULL;
+	m_updateTimer = NULL;
+	m_expiryTimer = NULL;
 }
 MetaServer::~MetaServer() {}
 
