@@ -75,3 +75,5 @@ src/*.trs
 # conf - we want .in
 metaserver-ng.conf
 mswatchdog.sh
+src/MetaServerAPI.hpp
+src/MetaServerVersion.hpp

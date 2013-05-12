@@ -10,7 +10,10 @@ lib_LTLIBRARIES = libmsapi.la
 libmsapi_la_SOURCES = MetaServerPacket.hpp MetaServerPacket.hpp MetaServerAPI.hpp
 libmsapi_la_LDFLAGS = -version-info @APIVER@
 
-include_HEADERS = MetaServerPacket.hpp MetaServerAPI.hpp
+include_HEADERS = MetaServerPacket.hpp MetaServerProtocol.hpp MetaServerAPI.hpp
+
+msapidir = $(prefix)/api/metaserver
+msapi_DATA = MetaServerVersion.hpp MetaServerPacket.hpp MetaServerPacket.cpp MetaServerProtocol.hpp MetaServerAPI.hpp
 
 noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerPacket.hpp \
                  PacketReader.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp \

@@ -184,15 +184,24 @@ AM_CONDITIONAL([BUILD_SERVER],[test "x$ac_enable_server" = "xtrue"])
 
 AS_IF([test x"$logdir" = "x"],[logdir="${prefix}/log"])
 AS_IF([test x"$rundir" = "x"],[rundir="${prefix}/var"])
+AS_IF([test x"$BUILDID" = "x"], [BUILDID=`git show-ref HEAD | awk '{ print $1 }'`])
+AS_IF([test x"$BUILDUSER" = "x"], [BUILDUSER=`whoami`])
+AS_IF([test x"$BUILDHOST" = "x"], [BUILDHOST=`uname -n`])
+AS_IF([test x"$BUILDSIG" = "x"], [BUILDSIG=`uname -a`])
 AC_SUBST([logdir])
 AC_SUBST([rundir])
 AC_SUBST([APIVER],[1:0:0])
+AC_SUBST([BUILDID])
+AC_SUBST([BUILDUSER])
+AC_SUBST([BUILDHOST])
+AC_SUBST([BUILDSIG])
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox
 		 metaserver-ng.conf
 		 mswatchdog.sh
 		 src/MetaServerVersion.hpp
+		 src/MetaServerAPI.hpp
 ])
 
 AC_OUTPUT

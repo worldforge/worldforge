@@ -27,6 +27,7 @@
 #include "MetaServer.hpp"
 #include <boost/asio/ip/udp.hpp>
 #include <boost/algorithm/string.hpp>
+#include <glog/logging.h>
 
 int main(int argc, char** argv)
 {
@@ -42,6 +43,7 @@ int main(int argc, char** argv)
 	boost::asio::ip::udp::endpoint sender_endpoint;
 	size_t bytes_recvd;
 	std::string domain,banner;
+	bool debug = true;
 
 	/**
 	 * Note: options inside the configuration file that are NOT listed here
@@ -53,6 +55,7 @@ int main(int argc, char** argv)
 		( "port", boost::program_options::value<int>()->default_value(8453), "MetaServer port. \nDefault:8453" )
 		( "domain", boost::program_options::value<std::string>()->default_value("ms.worldforge.org"), "Domain for processing queries. \nDefault:ms.worldforge.org" )
 		( "banner", boost::program_options::value<std::string>()->default_value("WorldForge Metaserver PDNS Pipe"), "Domain for processing queries. \nDefault:WorldForge Metaserver PDNS Pipe" )
+		( "debug", boost::program_options::value<std::string>()->implicit_value("true"), "Create Logfile for debug in /tmp/")
 		;
 
 	try
@@ -72,6 +75,12 @@ int main(int argc, char** argv)
 			std::cout << desc << std::endl;
 			return 0;
 		}
+
+		/*
+		 * Debug
+		 */
+		google::InitGoogleLogging("");
+		google::SetLogDestination(google::INFO,"/tmp/pdnspipe.log");
 
 		/**
 		 * domain and banner
@@ -107,6 +116,7 @@ int main(int argc, char** argv)
 		 std::cin >> helo >> proto;
 
 		 std::cerr << "Received: " << helo << "\t" << proto << std::endl;
+		 LOG(INFO) << "Received Helo: " << helo << "\t" << proto;
 
 		 if ( !(boost::equals(helo,"HELO")) || proto != 1 )
 		 {
@@ -149,6 +159,7 @@ int main(int argc, char** argv)
 				 continue;
 
 			 std::cerr << "Received: " << line << std::endl;
+			 LOG(INFO) << "Received Line: " << line;
 
 			 iss << line;
 
@@ -290,7 +301,7 @@ int main(int argc, char** argv)
 					 /*
 					  * If we're zero or less than that means we have bubkis
 					  */
-					 std::cout << "LOG no match found for [" << name << "]" << std::endl;
+//					 std::cout << "LOG no match found for [" << name << "]" << std::endl;
 					 std::cout << "FAIL" << std::endl;
 					 continue;
 				 }

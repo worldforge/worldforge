@@ -812,6 +812,13 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 
 	}
 
+	if ( vm.count("server.domain"))
+	{
+		m_Domain = vm["server.domain"].as<std::string>();
+		if ( m_Domain.length() == 0 )
+			m_Domain = "ms.worldforge.org";
+	}
+
 	if( vm.count("logging.server_sessions") )
 	{
 		std::string s = vm["logging.server_sessions"].as<std::string>();

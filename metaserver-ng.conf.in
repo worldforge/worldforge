@@ -24,6 +24,9 @@ logfile=@logdir@/metaserver-ng.log
 pidfile=@rundir@/metaserver-ng.pid
 client_stats=true
 server_stats=true
+# Domain under which all metaserver information is published
+# E.g. serverfoo.servers.ms.worldforge.org 
+domain=ms.worldforge.org
 
 [logging]
 loglevel=INFO

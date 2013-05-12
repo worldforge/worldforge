@@ -105,6 +105,7 @@ class MetaServer
 	boost::filesystem::path m_pidFile;
 	bool m_logPacketAllow;
 	bool m_logPacketDeny;
+	std::string m_Domain;
 
 };
 
