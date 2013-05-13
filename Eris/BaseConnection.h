@@ -7,8 +7,9 @@
 #include <sigc++/signal.h>
 
 #include <string>
+#include <memory>
 
-class tcp_socket_stream;
+class stream_socket_stream;
 
 namespace Atlas
 {
@@ -36,6 +37,11 @@ public:
     /** open a connection to the specified host/port; invokes the failure handler if
     the connection could not be opened. */
     virtual int connect(const std::string &host, short port);
+
+    /**
+     * Try to connect to a local socket.
+     */
+    virtual int connectLocal(const std::string &socket);
 
     /// possible states for the connection
     typedef enum {
@@ -123,7 +129,10 @@ protected:
     Status _status;			///< current status of the connection
     const std::string _id;	///< a unique identifier for this connection
     
-    tcp_socket_stream* _stream;		///< the underlying iostream channel
+    stream_socket_stream* _stream;		///< the underlying iostream channel
+    std::function<int(void)> _open_next_func; ///< a method for calling "open_next" on the stream, if such functionality is available
+    std::function<bool(void)> _is_ready_func; ///< a method for calling "is_ready" on the stream, if such functionality is available
+
     std::string _clientName;		///< the client identified used during connection
     
     /** the connection bridge (i.e something implementing objectArrived()) : this can be the derived

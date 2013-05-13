@@ -1,4 +1,5 @@
 #include <skstream/skstream.h>
+#include <skstream/skstream_unix.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -86,7 +87,10 @@ int BaseConnection::connect(const std::string &host, short port)
     
     // start timeout
     
-    _stream = new tcp_socket_stream(host, port, true);
+    tcp_socket_stream* tcp_stream = new tcp_socket_stream(host, port, true);
+    _stream = tcp_stream;
+    _is_ready_func = [tcp_stream](){return tcp_stream->isReady();};
+    _open_next_func = [tcp_stream](){return tcp_stream->open_next();};
 
     if (_stream->connect_pending()) {
         _timeout = new Timeout(CONNECT_TIMEOUT);
@@ -106,6 +110,43 @@ int BaseConnection::connect(const std::string &host, short port)
 
     return 0;
 }
+
+int BaseConnection::connectLocal(const std::string &socket)
+{
+    if (_stream != NULL) {
+        warning() << "in base connection :: connect, had existing stream, discarding it";
+        hardDisconnect(true);
+    }
+
+    _host = "local";
+    _port = 0;
+
+
+    //We can't use a non-blocking socket, so we need to fudge the way it works with negotiation later on.
+    unix_socket_stream* unix_stream = new unix_socket_stream(socket);
+    _stream = unix_stream;
+    _is_ready_func = [unix_stream](){return unix_stream->isReady();};
+    _open_next_func = [](){return true;};
+
+    if (_stream->is_open()) {
+        //Since "nonblockingConnect()" asserts that a _timeout exists we need to create one here.
+        _timeout = new Timeout(NEGOTIATE_TIMEOUT);
+        _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
+        Poll::instance().addStream(_stream, Poll::READ);
+        nonblockingConnect();
+        if (_status == NEGOTIATE) {
+            //We're not using a non-blocking socket, so we'll poll negotiation right here and now.
+            pollNegotiation();
+        }
+    } else {
+        setStatus(DISCONNECTED);
+        delete _stream;
+        _stream = 0;
+    }
+
+    return 0;
+}
+
 
 void BaseConnection::hardDisconnect(bool emit)
 {
@@ -193,10 +234,10 @@ void BaseConnection::recv()
 void BaseConnection::nonblockingConnect()
 {
     assert(_stream);
-    if (!_stream->isReady()) {
+    if (!_is_ready_func()) {
         if (_stream->connect_pending()) {
             debug() << "Stream not yet ready";
-            _stream->open_next();
+            _open_next_func();
         } else {
             handleFailure("Failed to connect to " + _host);
             hardDisconnect(false);

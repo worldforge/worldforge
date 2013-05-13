@@ -50,6 +50,21 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     Poll::instance().Ready.connect(sigc::mem_fun(this, &Connection::gotData));
 }
 
+Connection::Connection(const std::string &cnm, const std::string& socket, bool dbg) :
+    BaseConnection(cnm, "game_", this),
+    _host("local"),
+    _port(0),
+    _socket(socket),
+    m_typeService(new TypeService(this)),
+    m_defaultRouter(NULL),
+    m_lock(0),
+    m_info(_host),
+    m_responder(new ResponseTracker)
+{
+    Poll::instance().Ready.connect(sigc::mem_fun(this, &Connection::gotData));
+}
+
+
 Connection::~Connection()
 {
     // ensure we emit this before our vtable goes down, since we are the
@@ -60,7 +75,11 @@ Connection::~Connection()
 
 int Connection::connect()
 {
-    return BaseConnection::connect(_host, _port);
+    if (_socket != "") {
+        return BaseConnection::connectLocal(_socket);
+    } else {
+        return BaseConnection::connect(_host, _port);
+    }
 }
 
 int Connection::disconnect()

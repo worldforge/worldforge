@@ -236,6 +236,11 @@ int BaseConnection::connect(const std::string &host, short port)
     return 0;
 }
 
+int BaseConnection::connectLocal(const std::string &socket)
+{
+    return 0;
+}
+
 void BaseConnection::onConnect()
 {
 }

@@ -46,6 +46,12 @@ public:
     */
     Connection(const std::string &cnm, const std::string& host, short port, bool debug);
 
+    /** Create a new connection, with the client-name  string specified. The client-name
+    is sent during Atlas negotiation of the connection.
+    @param debug Perform extra (slower) validation on the connection
+    */
+    Connection(const std::string &cnm, const std::string& socket, bool debug);
+
     virtual ~Connection();
 
     /** If the underlying socket cannot be opened,  connect will return an
@@ -143,6 +149,7 @@ protected:
     const std::string _host;
     const short _port;      ///< port of the server
     bool _debug;
+    const std::string _socket;
 
     friend class Redispatch;
     friend class TestInjector;

@@ -84,6 +84,15 @@ int main()
         assert(ret == 0);
     }
 
+    // Test connect() with socket
+    {
+        Eris::Connection c("eristest", "local_socket", true);
+
+        int ret = c.connect();
+
+        assert(ret == 0);
+    }
+
     // Test disconnect() when disconnected
     {
         TestConnection c("eristest", "localhost", 6767, true);
