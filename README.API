@@ -1,6 +1,10 @@
 MetaServerAPI
 =============
 
+Notice
+------
+This API should not be modified.  The canonical source is:
+https://github.com/worldforge/metaserver-ng
 
 Files
 -----
