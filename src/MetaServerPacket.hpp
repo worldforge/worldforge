@@ -38,12 +38,63 @@
 #define MAX_PACKET_BYTES 1024
 #define MAX_UDP_OUT_BYTES 570
 
+/**
+ * The purpose of the MetaServerPacket is so simplify the process of
+ * sending and receiving data from the metaserver.
+ *
+ * As defined specifically in the MetaServerProtocol header, the
+ * different supported packet types are listed and detailed.
+ *
+ * There are 2 main use cases:
+ *
+ * 1: Sending a metaserver information
+ *    In this case you need to define a MSP, populate the type, and
+ *    then add data as required for that specific packet type.
+ *
+ *    Example: sending a KEEPALIVE
+ *
+ *    MetaServerPacket msp;
+ *    msp.setPacketType(NMT_SERVERKEEPALIVE);
+ *    byteStreamSender << msp.getBuffer().c_array()
+ *
+ *    NOTE: there are many other additional pieces of information that
+ *    you CAN set, like address, and port, etc.  These constructs are
+ *    available, because the metaserver makes use of them internally as
+ *    it passes the data around ( and any process you make could too ),
+ *    but there is no requirement to fill them (or to have them set) just
+ *    for transportation.  The only mandatory element is the packet type (
+ *    the size is mandatory too, but it is calculated from the buffer ).
+ *
+ * 2: Receiving Information
+ *
+ * 	  boost::array<char,MAX_PACKET_BYTES> dataIn;
+ * 	  ... assume that byte stream is read into, and that the transport
+ * 	  mechanism provies the number of bytes received.
+ *
+ * 	  MetaServerPacket msp( dataIn, bytes_received );
+ * 	  int handshake = 0;
+ * 	  if ( msp.getPacketType() == NMT_HANDSHAKE )
+ * 	     handshake = msp.getIntData(4);
+ *
+ * 	  NOTE: Data is stored either as Int [uint32_t specifically]
+ * 	  ( ala getIntData/addIntData ) or a string.
+ *
+ * 	     i) msp.getPacketType() == msp.getIntData(0).  The first uint32_t is
+ * 	     always reserved for the packet type.
+ * 	     ii) All additional data is determined based on the protocol.  For
+ * 	     example, the NMT_HANDSHAKE has a second int that represents the random
+ * 	     number, and this represents the next uint32_t ( which is 4 bytes long )
+ *
+ *	   For a complete example, refer to the TestClient.cpp and TestServer.cpp
+ *	   that cover both aspects.
+ *
+ */
 class MetaServerPacket
 {
 
 public:
 	MetaServerPacket();
-	MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
+	MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
 	const NetMsgType getPacketType() const { return m_packetType; }
@@ -72,14 +123,7 @@ public:
 	unsigned int addPacketData(const std::string& s);
 
 	const std::string getPacketMessage(unsigned int offset) const;
-	uint32_t getIntData(unsigned int offset) const
-	{
-		uint32_t foo = 99;
-//		printf("getIntData-1: %d\n", foo );
-		unpack_uint32(&foo, m_readPtr + offset );
-//		printf("getIntData-2: %d\n", foo );
-		return foo;
-	}
+	uint32_t getIntData(unsigned int offset) const;
 
 	boost::uint32_t	IpAsciiToNet(const char *buffer);
 	std::string IpNetToAscii(boost::uint32_t address);

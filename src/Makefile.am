@@ -13,7 +13,7 @@ libmsapi_la_LDFLAGS = -version-info @APIVER@
 include_HEADERS = MetaServerPacket.hpp MetaServerProtocol.hpp MetaServerAPI.hpp
 
 msapidir = $(prefix)/api/metaserver
-msapi_DATA = MetaServerVersion.hpp MetaServerPacket.hpp MetaServerPacket.cpp MetaServerProtocol.hpp MetaServerAPI.hpp
+msapi_DATA = MetaServerVersion.hpp MetaServerPacket.hpp MetaServerPacket.cpp MetaServerProtocol.hpp MetaServerAPI.hpp ../README.API
 
 noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerPacket.hpp \
                  PacketReader.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp \
@@ -44,7 +44,7 @@ TESTS = \
 check_PROGRAMS = $(TESTS)
 
 MetaServer_unittest_SOURCES = MetaServer_unittest.cpp
-MetaServer_unittest_LDADD = MetaServer.o DataObject.o PacketLogger.o $(CPPUNIT_LIBS)
+MetaServer_unittest_LDADD = MetaServer.o MetaServerPacket.o DataObject.o PacketLogger.o $(CPPUNIT_LIBS)
 
 MetaServerPacket_unittest_SOURCES = MetaServerPacket_unittest.cpp
 MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)

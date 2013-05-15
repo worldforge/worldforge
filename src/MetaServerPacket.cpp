@@ -38,7 +38,7 @@ MetaServerPacket::MetaServerPacket() :
 	m_writePtr = m_packetPayload.c_array();
 }
 
-MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
+MetaServerPacket::MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
 		: m_packetType(NMT_NULL),
 		  m_AddressInt(0),
 		  m_Port(0),
@@ -145,9 +145,19 @@ MetaServerPacket::addPacketData(const std::string& s)
 const std::string
 MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
-	std::string foo = "";
-	unpack_string(&foo, m_headPtr + offset , (m_Bytes - offset) );
-	return foo;
+	// Just initialise local variable for debug purposes
+	std::string tmpstr = "0xDEADBEEF";
+	unpack_string(&tmpstr, m_headPtr + offset , (m_Bytes - offset) );
+	return tmpstr;
+}
+
+uint32_t
+MetaServerPacket::getIntData(unsigned int offset) const
+{
+	// initial int to arbitrary value for potential debugging purposes
+	uint32_t tmpint = 222;
+	unpack_uint32(&tmpint, m_readPtr + offset );
+	return tmpint;
 }
 
 /*

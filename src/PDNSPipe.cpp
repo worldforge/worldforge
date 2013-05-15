@@ -43,7 +43,6 @@ int main(int argc, char** argv)
 	boost::asio::ip::udp::endpoint sender_endpoint;
 	size_t bytes_recvd;
 	std::string domain,banner;
-	bool debug = true;
 
 	/**
 	 * Note: options inside the configuration file that are NOT listed here
@@ -80,7 +79,7 @@ int main(int argc, char** argv)
 		 * Debug
 		 */
 		google::InitGoogleLogging("");
-		google::SetLogDestination(google::INFO,"/tmp/pdnspipe.log");
+		//google::SetLogDestination(google::INFO,"/tmp/pdnspipe.log");
 
 		/**
 		 * domain and banner

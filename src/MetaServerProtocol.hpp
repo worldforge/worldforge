@@ -143,7 +143,7 @@
 #ifndef METASERVERPROTOCOL_HPP_
 #define METASERVERPROTOCOL_HPP_
 
-#include <stdint.h> // uint32_t
+#include <cstdint> // uint32_t
 
 typedef uint32_t NetMsgType;
 
