@@ -27,7 +27,7 @@
 #ifndef VARCONF_VARIABLE_H
 #define VARCONF_VARIABLE_H
 
-#include "varconf/varconf_defs.h"
+#include "varconf_defs.h"
 
 #include <sigc++/trackable.h>
 
