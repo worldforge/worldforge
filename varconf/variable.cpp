@@ -126,6 +126,11 @@ bool operator ==( const VarBase& one, const VarBase& two)
   return false;
 }
 
+bool operator !=(const VarBase& one, const VarBase& two)
+{
+  return !(one == two);
+}
+
 VarBase& VarBase::operator=( const VarBase& c)
 {
   if (&c == this) return (*this);
