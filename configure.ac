@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to generate configure
 
 dnl Autoconf Initialization
-AC_INIT([varconf], [1.0.0], [alriddoch@googlemail.com])
+AC_INIT([varconf], [1.0.1], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
