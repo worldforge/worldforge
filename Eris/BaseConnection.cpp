@@ -18,6 +18,7 @@
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/objectFactory.h>
+#include "CustomEntities.h"
 
 #include <sigc++/slot.h>
 
@@ -64,6 +65,10 @@ BaseConnection::BaseConnection(const std::string &cnm,
     {
         Atlas::Objects::Operation::UNSEEN_NO = f->addFactory("unseen", &Atlas::Objects::generic_factory);
         Atlas::Objects::Operation::ATTACK_NO = f->addFactory("attack", &Atlas::Objects::generic_factory);
+    }
+    if (!f->hasFactory("sys"))
+    {
+       Atlas::Objects::Entity::SYS_NO = f->addFactory("sys", &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>);
     }
 }
     
