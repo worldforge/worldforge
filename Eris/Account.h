@@ -81,6 +81,19 @@ public:
         const std::string &fullName,
         const std::string &pwd);
 
+    /* Create a new account on the server, if possible.
+    Server-side failures, such as an account already existing with the specified
+    username, will cause the 'LoginFailure' signal to be emitted with an error message
+    and a code. As for 'login', LoginSuccess wil be emitted if everything goes as plan.
+
+    This variant allows you to specify your own Account op, which is useful when you
+    want to create an account different from the standard one.
+
+    @param accountOp The account operation, which will be wrapped in a "Create" op.
+    */
+    Result createAccount(Atlas::Objects::Entity::Account accountOp);
+
+
     /// Request logout from the server.
     /** Initiate a clean disconnection from the server. The LogoutComplete
     signal will be emitted when the process completes. Calling this on an Account

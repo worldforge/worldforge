@@ -125,27 +125,32 @@ Result Account::createAccount(const std::string &uname,
     const std::string &fullName,
     const std::string &pwd)
 {
-    if (!m_con->isConnected()) return NOT_CONNECTED;
-    if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
+    // store for re-logins
+    m_username = uname;
+    m_pass = pwd;
 
-    m_status = LOGGING_IN;
 
-// okay, build and send the create(account) op
     AtlasAccount account;
     account->setPassword(pwd);
     account->setName(fullName);
     account->setUsername(uname);
 
+    return createAccount(account);
+}
+
+Result Account::createAccount(Atlas::Objects::Entity::Account accountOp)
+{
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
+
+    m_status = LOGGING_IN;
+
     Create c;
     c->setSerialno(getNewSerialno());
-    c->setArgs1(account);
+    c->setArgs1(accountOp);
 
     m_con->getResponder()->await(c->getSerialno(), this, &Account::loginResponse);
     m_con->send(c);
-
-// store for re-logins
-    m_username = uname;
-    m_pass = pwd;
 
     m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
