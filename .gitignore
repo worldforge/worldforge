@@ -77,3 +77,4 @@ metaserver-ng.conf
 mswatchdog.sh
 src/MetaServerAPI.hpp
 src/MetaServerVersion.hpp
+src/MetaServer.hpp
