@@ -90,7 +90,7 @@ MetaServerPacket::setPacketType(const NetMsgType& nmt)
 }
 
 void
-MetaServerPacket::setAddress(const boost::asio::ip::address& address)
+MetaServerPacket::setAddress(const std::string& address)
 {
 
 	/*
@@ -102,27 +102,9 @@ MetaServerPacket::setAddress(const boost::asio::ip::address& address)
 	 *   For this reason ... the internal address here should be considered
 	 *   cosmetic.
 	 */
-	if ( address.is_v4() )
-	{
-		m_Address = address;
-		m_AddressStr = m_Address.to_string();
+
+		m_AddressStr = address;
 		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
-
-	}
-	else
-	{
-		/*
-		 *  NOTE: this will ONLY work on a mapped address, a real
-		 *  ipv6 address will return a hex quad rather than a
-		 *  dotted quad.
-		 */
-
-		std::string s = address.to_string();
-
-		m_Address = address;
-		m_AddressStr = s.substr(s.find_last_of(':') + 1) ;
-		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
-	}
 
 }
 

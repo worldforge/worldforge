@@ -31,7 +31,8 @@
  * System Includes
  */
 #include <iosfwd>
-#include <boost/asio/ip/address.hpp>
+#include <cstring>      // memcpy
+#include <netinet/in.h> // htonl
 #include <boost/cstdint.hpp>
 #include <boost/array.hpp>
 
@@ -102,8 +103,8 @@ public:
 
 	const std::string getAddressStr() const { return m_AddressStr; }
 	const boost::uint32_t getAddressInt() const { return m_AddressInt; }
-	const boost::asio::ip::address getAddress() const { return m_Address; }
-	void setAddress(const boost::asio::ip::address& address);
+	const std::string getAddress() const { return m_AddressStr; }
+	void setAddress(const std::string& address);
 
 	void setSequence(const unsigned long long seq = 0) { m_Sequence = seq; }
 	unsigned long long getSequence() const { return m_Sequence; }
@@ -153,7 +154,6 @@ private:
 	char *unpack_string(std::string *dest, char* buffer, unsigned int length ) const;
 
 	NetMsgType m_packetType;
-	boost::asio::ip::address m_Address;
 	boost::uint32_t m_AddressInt;
 	std::string m_AddressStr;
 	unsigned int m_Port;

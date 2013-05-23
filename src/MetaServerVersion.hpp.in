@@ -24,9 +24,6 @@
 
 const char SERVER_VERSION[] = "@VERSION@";
 const char API_VERSION[] =  "@APIVER@";
-const char BUILD_ID[] = "@BUILDID@";
-const char BUILD_USER[] = "@BUILDUSER@";
-const char BUILD_HOST[] = "@BUILDHOST@";
-const char BUILD_SIG[] = "@BUILDSIG@";
+
 
 #endif /* METASERVERVERSION_HPP_ */

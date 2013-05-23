@@ -202,6 +202,7 @@ AC_CONFIG_FILES([Makefile
 		 mswatchdog.sh
 		 src/MetaServerVersion.hpp
 		 src/MetaServerAPI.hpp
+		 src/MetaServer.hpp
 ])
 
 AC_OUTPUT

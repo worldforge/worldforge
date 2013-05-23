@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 		bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 		MetaServerPacket shake( recvBuffer, bytes_recvd );
-		shake.setAddress(sender_endpoint.address());
+		shake.setAddress(sender_endpoint.address().to_string());
 		shake.setPort(sender_endpoint.port());
 
 		unsigned int shake_key = shake.getIntData(4);

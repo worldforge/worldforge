@@ -82,7 +82,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		 */
 		MetaServerPacket msp( m_recvBuffer , bytes_recvd );
 
-		msp.setAddress(m_remoteEndpoint.address());
+		msp.setAddress(m_remoteEndpoint.address().to_string() );
 		msp.setPort(m_remoteEndpoint.port());
 
 		LOG(INFO) << "UDP: Incoming Packet [" << msp.getAddress() << "][" << NMT_PRETTY[msp.getPacketType()] << "][" << bytes_recvd << "]";

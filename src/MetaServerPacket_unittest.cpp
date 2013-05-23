@@ -261,7 +261,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      */
     void test_setAddress_getAddress()
     {
-    	boost::asio::ip::address a = boost::asio::ip::address::from_string("127.0.2.1");
+    	std::string a = "127.0.2.1";
 
     	MetaServerPacket * msp = new MetaServerPacket();
 
@@ -281,7 +281,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	MetaServerPacket * msp = new MetaServerPacket();
 
-    	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
+    	msp->setAddress( "127.0.2.1" );
 
     	CPPUNIT_ASSERT( msp->getAddressStr() == "127.0.2.1" );
 
@@ -296,7 +296,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     {
     	MetaServerPacket * msp = new MetaServerPacket();
 
-    	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
+    	msp->setAddress( "127.0.2.1" );
 
     	CPPUNIT_ASSERT( msp->getAddressInt() == 16908415 );
 

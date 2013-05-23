@@ -125,7 +125,7 @@ int main(int argc, char** argv)
 			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 			MetaServerPacket shake( recvBuffer, bytes_recvd );
-			shake.setAddress(sender_endpoint.address());
+			shake.setAddress(sender_endpoint.address().to_string());
 			shake.setPort(sender_endpoint.port());
 			std::cout << "Got handshake ... ";
 
@@ -228,14 +228,14 @@ int main(int argc, char** argv)
 
 			req.setPacketType(NMT_LISTREQ);
 			req.addPacketData(from);
-			req.setAddress( sender_endpoint.address() );
+			req.setAddress( sender_endpoint.address().to_string() );
 			req.setPort( sender_endpoint.port() );
 			s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator );
 
 			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 			MetaServerPacket resp( recvBuffer, bytes_recvd );
-			resp.setAddress(sender_endpoint.address());
+			resp.setAddress(sender_endpoint.address().to_string());
 			resp.setPort(sender_endpoint.port());
 
 			if ( resp.getPacketType() != NMT_LISTRESP || resp.getPacketType() == NMT_PROTO_ERANGE )
@@ -264,7 +264,7 @@ int main(int argc, char** argv)
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
 		term.addPacketData(0); // increase size of term packet to indicate client
-		term.setAddress( sender_endpoint.address() );
+		term.setAddress( sender_endpoint.address().to_string() );
 		term.setPort( sender_endpoint.port() );
 		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
 
