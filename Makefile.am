@@ -5,7 +5,7 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = autogen.sh metaserver-ng.conf.in
 
 docdir = $(prefix)/doc/metaserver-ng
-dist_doc_DATA = README COPYING AUTHORS NEWS
+dist_doc_DATA = README COPYING AUTHORS NEWS README.API
 
 bin_SCRIPTS = mswatchdog.sh
 
