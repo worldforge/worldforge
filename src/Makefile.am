@@ -1,7 +1,7 @@
 INCLUDES = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
 
 #bin_PROGRAMS = metaserver-ng testserver testclient packetplayer pdnspipe
-bin_PROGRAMS = testserver testclient packetplayer pdnspipe
+bin_PROGRAMS = testserver testclient pdnspipe
 if BUILD_SERVER
 bin_PROGRAMS += metaserver-ng
 endif
@@ -21,12 +21,11 @@ noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerP
 
 metaserver_ng_SOURCES = main.cpp MetaServer.cpp MetaServerHandler.cpp \
                         MetaServerHandlerTCP.cpp MetaServerHandlerUDP.cpp \
-                        MetaServerPacket.cpp DataObject.cpp PacketLogger.cpp
+                        MetaServerPacket.cpp DataObject.cpp
                                          
-testserver_SOURCES = TestServer.cpp MetaServerPacket.cpp PacketLogger.cpp
+testserver_SOURCES = TestServer.cpp MetaServerPacket.cpp
 
-testclient_SOURCES = TestClient.cpp MetaServerPacket.cpp PacketLogger.cpp
-packetplayer_SOURCES = PacketPlayer.cpp MetaServerPacket.cpp PacketReader.cpp
+testclient_SOURCES = TestClient.cpp MetaServerPacket.cpp
 
 pdnspipe_SOURCES = PDNSPipe.cpp MetaServerPacket.cpp
 
@@ -37,14 +36,12 @@ TESTS = \
     MetaServer_unittest \
     DataObject_unittest \
 	MetaServerHandlerTCP_unittest \
-	MetaServerHandlerUDP_unittest \
-	PacketLogger_unittest \
-	PacketReader_unittest 
+	MetaServerHandlerUDP_unittest 
 
 check_PROGRAMS = $(TESTS)
 
 MetaServer_unittest_SOURCES = MetaServer_unittest.cpp
-MetaServer_unittest_LDADD = MetaServer.o MetaServerPacket.o DataObject.o PacketLogger.o $(CPPUNIT_LIBS)
+MetaServer_unittest_LDADD = MetaServer.o MetaServerPacket.o DataObject.o $(CPPUNIT_LIBS)
 
 MetaServerPacket_unittest_SOURCES = MetaServerPacket_unittest.cpp
 MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)
@@ -58,11 +55,11 @@ MetaServerHandlerTCP_unittest_LDADD = MetaServerHandlerTCP.o $(CPPUNIT_LIBS)
 MetaServerHandlerUDP_unittest_SOURCES = MetaServerHandlerUDP_unittest.cpp
 MetaServerHandlerUDP_unittest_LDADD = MetaServerHandlerUDP.o MetaServerPacket.o $(CPPUNIT_LIBS)
 
-PacketLogger_unittest_SOURCES = PacketLogger_unittest.cpp
-PacketLogger_unittest_LDADD = PacketLogger.o $(CPPUNIT_LIBS)
+#PacketLogger_unittest_SOURCES = PacketLogger_unittest.cpp
+#PacketLogger_unittest_LDADD = PacketLogger.o $(CPPUNIT_LIBS)
 
-PacketReader_unittest_SOURCES = PacketReader_unittest.cpp
-PacketReader_unittest_LDADD = PacketReader.o $(CPPUNIT_LIBS)
+#PacketReader_unittest_SOURCES = PacketReader_unittest.cpp
+#PacketReader_unittest_LDADD = PacketReader.o $(CPPUNIT_LIBS)
 
 #PacketLogging_integration_SOURCES = PacketLogging_integration.cpp
 #PacketLogging_integration_LDADD = PacketReader.o PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)

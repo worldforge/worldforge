@@ -32,13 +32,13 @@ MetaServerPacket::MetaServerPacket() :
 		  m_Sequence(0),
 		  m_TimeOffset(0)
 {
-	m_packetPayload.assign(0);
+	m_packetPayload.fill(0);
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();
-	m_writePtr = m_packetPayload.c_array();
+	m_writePtr = m_packetPayload.data();
 }
 
-MetaServerPacket::MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
+MetaServerPacket::MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
 		: m_packetType(NMT_NULL),
 		  m_AddressInt(0),
 		  m_Port(0),
@@ -51,7 +51,7 @@ MetaServerPacket::MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl
 {
 		m_readPtr  = m_packetPayload.data();
 		m_headPtr  = m_packetPayload.data();
-		m_writePtr = m_packetPayload.c_array();
+		m_writePtr = m_packetPayload.data();
 
 		if ( bytes > 0 )
 		{
@@ -61,7 +61,7 @@ MetaServerPacket::MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl
 		else
 		{
 			// otherwise assume a construction and zero it out
-			m_packetPayload.assign(0);
+			m_packetPayload.fill(0);
 		}
 }
 
@@ -78,9 +78,9 @@ MetaServerPacket::setPacketType(const NetMsgType& nmt)
 	/**
 	 *
 	 */
-	m_packetPayload.assign(0);
+	m_packetPayload.fill(0);
 	m_readPtr = m_packetPayload.data();
-	m_writePtr = m_packetPayload.c_array();
+	m_writePtr = m_packetPayload.data();
 	m_Bytes = 0;
 
 	// write must occur prior to read
@@ -109,7 +109,7 @@ MetaServerPacket::setAddress(const std::string& address)
 }
 
 unsigned int
-MetaServerPacket::addPacketData(boost::uint32_t i)
+MetaServerPacket::addPacketData(uint32_t i)
 {
 	unsigned int ret_off = m_writePtr - m_headPtr;
 	m_writePtr = pack_uint32(i,m_writePtr);
@@ -151,16 +151,16 @@ MetaServerPacket::getIntData(unsigned int offset) const
    Binary	00000001 . 00000010 . 00000000 . 01111111
    Integer	16908415
  */
-boost::uint32_t
+uint32_t
 MetaServerPacket::IpAsciiToNet(const char *buffer) {
 
-  boost::uint32_t ret = 0;
+  uint32_t ret = 0;
   int shift = 0;  //  fill out the MSB first
   bool startQuad = true;
   while ((shift <= 24) && (*buffer)) {
     if (startQuad) {
       unsigned char quad = (unsigned char) atoi(buffer);
-      ret |= (((boost::uint32_t)quad) << shift);
+      ret |= (((uint32_t)quad) << shift);
       shift += 8;
     }
     startQuad = (*buffer == '.');
@@ -174,16 +174,16 @@ MetaServerPacket::IpAsciiToNet(const char *buffer) {
  *  String value	127.0.2.1
 	Binary	01111111 . 00000000 . 00000010 . 00000001
 	Integer	2130706945
-boost::uint32_t
+uint32_t
 MetaServerPacket::IpAsciiToNet(const char *buffer) {
 
-  boost::uint32_t ret = 0;
+  uint32_t ret = 0;
   int shift = 24;  //  fill out the MSB first
   bool startQuad = true;
   while ((shift >= 0) && (*buffer)) {
     if (startQuad) {
       unsigned char quad = (unsigned char) atoi(buffer);
-      ret |= (((boost::uint32_t)quad) << shift);
+      ret |= (((uint32_t)quad) << shift);
       shift -= 8;
     }
     startQuad = (*buffer == '.');
@@ -195,7 +195,7 @@ MetaServerPacket::IpAsciiToNet(const char *buffer) {
 
 
 std::string
-MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
+MetaServerPacket::IpNetToAscii(uint32_t address) {
   const int sizer = 15;
   char ip_buffer[20];
 
@@ -214,105 +214,6 @@ MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
 
    return ( std::string(ip_buffer));
 }
-
-
-/**
- *  Stream Insertion Operator
- *  Purpose: mostly for binary packet logging ... but in theory should work for textual
- *           output of the packet
- */
-std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
-{
-	/*
-	 * Output Format:
-	 *
-	 * Sequence:TimeOffset:Bytes of Data:Full RawBuffer
-	 *
-	 * NOTE: It is tempting to write more information, but this is not required.
-	 * 	Packet Type: not required as it is parsed from the RawBuffer
-	 * 	IP Address(s): not required, because they can't be used anyway.  Any replay
-	 * 	               will contain the current IP address pairs.
-	 *
-	 * When Reading back the packet, sequence of read is:
-	 *      - read packet sequence
-	 *      - read time offset
-	 *      - read buffer size
-	 *      - read buffer
-	 *      - create msp(buffer,size) [ this triggers a parsePacket, which is critical ]
-	 *      - set dest address
-	 *      - set dest port
-	 *      - packet can now be sent.
-	 *
-	 *		     sequence             offset              size             raw_buffer
-	 *       (unsigned long long) (unsigned long long) (std::size_t)  (boost::array<char,MAX_PACKET_BYTES>)
-	 *
-	 *		NOTE: size refers to the number of bytes received ( m_Bytes )
-	 */
-
-	 /*
-	  * Sequence
-	  */
-     unsigned long long s = mp.getSequence();
-	 os.write( (char*)&s, sizeof(unsigned long long) );
-
-	 /*
-	  * Time Offset
-	  */
-	 unsigned long long o = mp.getTimeOffset();
-	 os.write( (char *)&o , sizeof(unsigned long long) );
-
-	 /*
-	  * Size of RECV buffer
-	  */
-	 std::size_t t = mp.getSize();
-	 os.write( (char *)&t, sizeof(std::size_t) );
-
-
-	/*
-	 * Write the full MAX_PACKET_BYTES buffer size
-	 */
-	os.write( mp.getBuffer().c_array(), sizeof(char)*(MAX_PACKET_BYTES) );
-	return os;
-}
-
-std::istream & operator>>( std::istream& is, MetaServerPacket &mp )
-{
-
-	unsigned long long seq;
-	unsigned long long off;
-	std::size_t size;
-	boost::array<char,MAX_PACKET_BYTES> buf;
-
-	/*
-	 * Sequence
-	 * Note: Read pointers are advanced automatically by is.read()
-	 */
-	is.read( (char *)&seq, sizeof(unsigned long long) );
-
-	/*
-	 * Time Offset
-	 */
-	is.read( (char *)&off, sizeof(unsigned long long) );
-
-	/*
-	 * Size
-	 */
-	is.read( (char *)&size, sizeof(std::size_t) );
-
-	/*
-	 * Raw Buffer
-	 */
-	is.read( buf.c_array(), sizeof(char)*(MAX_PACKET_BYTES) );
-
-	mp.setBuffer(buf,size);
-	mp.setSequence(seq);
-	mp.setTimeOffset(off);
-	mp.parsePacketType();
-
-	return is;
-
-}
-
 
 /**
  * Pulls out the first byte of a packet, which universally indicates the packet type.

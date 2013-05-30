@@ -67,7 +67,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     void tearDown() {}
 
     void testConstructor() {
-        boost::array<char, TEST_MAX_BYTES> test_buffer;
+        std::array<char, TEST_MAX_BYTES> test_buffer;
 
         MetaServerPacket * msp = new MetaServerPacket(test_buffer);
         CPPUNIT_ASSERT(msp);
@@ -78,7 +78,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      * Check that an empty construction has zero size
      */
     void testConstructor_zeroSize() {
-    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	std::array<char, TEST_MAX_BYTES> test_buffer;
 
     	MetaServerPacket * msp = new MetaServerPacket(test_buffer);
     	unsigned int s = msp->getSize();
@@ -91,7 +91,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      * Check that a non-empty construction has size
      */
     void testConstructor_nonzeroSize() {
-    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	std::array<char, TEST_MAX_BYTES> test_buffer;
 
     	test_buffer[0] = 0;
     	test_buffer[1] = 1;
@@ -106,7 +106,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      * Negative packet size test
      */
     void testConstructor_negativeSize() {
-    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	std::array<char, TEST_MAX_BYTES> test_buffer;
 
     	test_buffer[0] = 0;
     	test_buffer[1] = 1;
@@ -122,7 +122,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      * Data Integrity Test
      */
     void test_getPacketType_constructor() {
-       	boost::array<char, TEST_MAX_BYTES> test_buffer;
+       	std::array<char, TEST_MAX_BYTES> test_buffer;
        	NetMsgType nmt;
 
        	// this sets the first 4 bytes to 1 ... which
@@ -147,7 +147,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     void test_getPacketType_setPacketType() {
 
 //    	std::cerr << std::endl << "test_getPacketType_setPacketType(): start" << std::endl;
-       	boost::array<char, TEST_MAX_BYTES> test_buffer;
+       	std::array<char, TEST_MAX_BYTES> test_buffer;
        	NetMsgType nmt;
 
         MetaServerPacket * msp = new MetaServerPacket(test_buffer);
@@ -164,7 +164,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
 
     void test_setPacketType_returnmatch() {
-    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	std::array<char, TEST_MAX_BYTES> test_buffer;
     	NetMsgType nmt;
 
     	MetaServerPacket * msp = new MetaServerPacket(test_buffer);
@@ -181,12 +181,12 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     void test_getIntData_constructor() {
 
 //        std::cout << std::endl << "test_getIntData_constructor: start" << std::endl;
-    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	std::array<char, TEST_MAX_BYTES> test_buffer;
 
     	NetMsgType nmt,nmt2;
     	uint32_t data;
 
-    	char * p = test_buffer.c_array();
+    	char * p = test_buffer.data();
 
     	// artificially fill buffer with a handshake packet
     	test_pack_uint32(NMT_HANDSHAKE,p);
@@ -232,7 +232,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      */
     void test_IpAsciiToNet_returnmatch()
     {
-    	boost::uint32_t r;
+    	uint32_t r;
     	MetaServerPacket * msp = new MetaServerPacket();
 
     	r = msp->IpAsciiToNet("127.0.2.1");

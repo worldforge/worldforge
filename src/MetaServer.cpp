@@ -26,7 +26,6 @@
 #include "MetaServerPacket.hpp"
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
-#include "PacketLogger.hpp"
 
 /*
  * System Includes
@@ -35,8 +34,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <istream>
-
-
+#include <fstream>
+#include <boost/asio/placeholders.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/date_time/gregorian/gregorian_types.hpp>
 
 
 MetaServer::MetaServer(boost::asio::io_service& ios)
@@ -75,9 +77,6 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 
 MetaServer::~MetaServer()
 {
-	if ( m_logPackets )
-		m_PacketLogger->flush(0);
-
 	LOG(INFO) << "Shutting down metaserver-ng";
 	google::FlushLogFiles(google::INFO);
 }
@@ -182,9 +181,9 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	/*
 	 * Flush the packet logger
 	 */
+	int i=1;
 	if ( m_logPackets )
 	{
-		int i = m_PacketLogger->flush(m_packetLoggingFlushSeconds);
 		if ( i > 0 )
 			VLOG(2) << "     PacketLogger Flushed : " << i;
 	}
@@ -306,16 +305,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	 */
 	if ( m_logPackets )
 	{
-		// always log the incoming packets, even if they are bad ( as a bad incoming packet could be the cause
-		// of an issue )
-		m_PacketLogger->LogPacket(msp);
-
-		// we don't want to log if:
-		// 1) sequence is 0 : this means the sequence is not set ... this means something has gone astray elsewhere
-		// 2) packet type is NULL : these responses are never sent to the client
-//		if ( rsp.getSequence() != 0 && rsp.getPacketType() != NMT_NULL )
-		if ( rsp.getSequence() != 0 )
-			m_PacketLogger->LogPacket(rsp);
+		// log some packets
 	}
 
 }
@@ -959,7 +949,7 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	 */
 	if ( m_logPackets )
 	{
-		m_PacketLogger = new PacketLogger(m_PacketLogfile);
+		// init packet
 	}
 
 	/**

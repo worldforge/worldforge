@@ -33,8 +33,7 @@
 #include <iosfwd>
 #include <cstring>      // memcpy
 #include <netinet/in.h> // htonl
-#include <boost/cstdint.hpp>
-#include <boost/array.hpp>
+#include <array>
 
 #define MAX_PACKET_BYTES 1024
 #define MAX_UDP_OUT_BYTES 570
@@ -68,7 +67,7 @@
  *
  * 2: Receiving Information
  *
- * 	  boost::array<char,MAX_PACKET_BYTES> dataIn;
+ * 	  std::array<char,MAX_PACKET_BYTES> dataIn;
  * 	  ... assume that byte stream is read into, and that the transport
  * 	  mechanism provies the number of bytes received.
  *
@@ -95,14 +94,14 @@ class MetaServerPacket
 
 public:
 	MetaServerPacket();
-	MetaServerPacket(const boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
+	MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
 	const NetMsgType getPacketType() const { return m_packetType; }
 	void setPacketType(const NetMsgType& nmt);
 
 	const std::string getAddressStr() const { return m_AddressStr; }
-	const boost::uint32_t getAddressInt() const { return m_AddressInt; }
+	const uint32_t getAddressInt() const { return m_AddressInt; }
 	const std::string getAddress() const { return m_AddressStr; }
 	void setAddress(const std::string& address);
 
@@ -120,30 +119,23 @@ public:
 
 	std::size_t getSize() const { return m_Bytes; }
 
-	unsigned int addPacketData(boost::uint32_t i);
+	unsigned int addPacketData(uint32_t i);
 	unsigned int addPacketData(const std::string& s);
 
 	const std::string getPacketMessage(unsigned int offset) const;
 	uint32_t getIntData(unsigned int offset) const;
 
-	boost::uint32_t	IpAsciiToNet(const char *buffer);
-	std::string IpNetToAscii(boost::uint32_t address);
+	uint32_t	IpAsciiToNet(const char *buffer);
+	std::string IpNetToAscii(uint32_t address);
 
-	boost::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
-	void setBuffer( boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )
+	std::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
+	void setBuffer( std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )
 	{
 		m_packetPayload = pl;
 		m_Bytes = bytes;
 	}
 
-	/*
-	 * Stream Overloads
-	 */
-	friend std::ostream & operator<<( std::ostream& os, const MetaServerPacket &mp);
-	friend std::istream & operator>>( std::istream& is, MetaServerPacket &mp );
-
 	void parsePacketType();
-
 
 private:
 
@@ -154,24 +146,19 @@ private:
 	char *unpack_string(std::string *dest, char* buffer, unsigned int length ) const;
 
 	NetMsgType m_packetType;
-	boost::uint32_t m_AddressInt;
+	uint32_t m_AddressInt;
 	std::string m_AddressStr;
 	unsigned int m_Port;
 	std::size_t m_Bytes;
 	char * m_headPtr;
 	char * m_writePtr;
 	char * m_readPtr;
-	boost::array<char,MAX_PACKET_BYTES> m_packetPayload;
+	std::array<char,MAX_PACKET_BYTES> m_packetPayload;
 	bool m_needFree;
 	bool m_outBound;
 	unsigned long long m_Sequence;
 	unsigned long long m_TimeOffset;
 
 };
-
-/*
- *
- */
-std::ostream & operator<<(std::ostream &os, const MetaServerPacket &mp);
 
 #endif /* METASERVERPACKET_HPP_ */

@@ -56,7 +56,7 @@ private:
 
 	boost::asio::ip::udp::socket m_Socket;
 	boost::asio::ip::udp::endpoint m_remoteEndpoint;
-	boost::array<char, MAX_PACKET_BYTES> m_recvBuffer;
+	std::array<char, MAX_PACKET_BYTES> m_recvBuffer;
 
 	boost::asio::deadline_timer* m_outboundTimer;
 	unsigned int m_outboundMaxInterval;

@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 		/**
 		 *    1.2 - receive handshake
 		 */
-		boost::array<char, MAX_PACKET_BYTES> recvBuffer;
+		std::array<char, MAX_PACKET_BYTES> recvBuffer;
 		boost::asio::ip::udp::endpoint sender_endpoint;
 		size_t bytes_recvd;
 
