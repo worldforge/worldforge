@@ -34,6 +34,7 @@
 #include <cstring>      // memcpy
 #include <netinet/in.h> // htonl
 #include <array>
+#include <string>
 
 #define MAX_PACKET_BYTES 1024
 #define MAX_UDP_OUT_BYTES 570
