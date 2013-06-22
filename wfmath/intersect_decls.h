@@ -34,7 +34,7 @@ namespace WFMath {
 
 inline bool _Less(CoordType x1, CoordType x2, bool proper)
 {
-  return !proper ? x1 < x2 : x1 <= x2;
+  return proper ? x1 <= x2 : (x2 - x1) > numeric_constants<CoordType>::epsilon();
 }
 
 inline bool _LessEq(CoordType x1, CoordType x2, bool proper)
@@ -44,7 +44,7 @@ inline bool _LessEq(CoordType x1, CoordType x2, bool proper)
 
 inline bool _Greater(CoordType x1, CoordType x2, bool proper)
 {
-  return !proper ? x1 > x2 : x1 >= x2;
+  return proper ? x1 >= x2 : (x1 - x2) > numeric_constants<CoordType>::epsilon();
 }
 
 inline bool _GreaterEq(CoordType x1, CoordType x2, bool proper)
