@@ -128,9 +128,13 @@ int BaseConnection::connectLocal(const std::string &socket)
 
 
     //We can't use a non-blocking socket, so we need to fudge the way it works with negotiation later on.
-    unix_socket_stream* unix_stream = new unix_socket_stream(socket);
-    _stream = unix_stream;
-    _is_ready_func = [unix_stream](){return unix_stream->isReady();};
+#ifndef _MSC_VER
+	unix_socket_stream* socketStream = new unix_socket_stream(socket);
+#else
+	tcp_socket_stream* socketStream = new tcp_socket_stream(socket,6767,false);
+#endif
+    _stream = socketStream;
+    _is_ready_func = [socketStream](){return socketStream->isReady();};
     _open_next_func = [](){return true;};
 
     if (_stream->is_open()) {
