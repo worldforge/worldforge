@@ -8,6 +8,7 @@
 
 #include <string>
 #include <memory>
+#include <functional>
 
 class stream_socket_stream;
 
