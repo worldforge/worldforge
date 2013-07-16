@@ -51,6 +51,7 @@ autopackage/default.apspec
 src/config.h
 src/stamp-h1
 # ignore Eclipse project files
+.autotools
 .project
 .cproject
 .settings
