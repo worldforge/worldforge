@@ -376,6 +376,11 @@ int main(int argc, char** argv)
 				{
 					std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
 					LOG(ERROR) << "IOService Loop Exception:" << ex.what();
+					LOG(ERROR) << "-------------------------------" << std::endl;
+					LOG(ERROR) << "If restarting is required, please check the PREFIX/bin/mswatchdog.sh in order to trigger a restart" << std::endl;
+					LOG(ERROR) << "MetaServer will now be shutdown." << std::endl;
+					LOG(ERROR) << "-------------------------------" << std::endl;
+					ms.shutDown();
 				}
 			}
 		}
