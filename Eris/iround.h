@@ -5,24 +5,15 @@
 #ifndef ERIS_IROUND_H
 #define ERIS_IROUND_H
 
-#ifndef PACKAGE_NAME
-#error iround.h must be included after config.h
-#endif
-
-#ifdef HAVE_LLRINT
-    #define L_ROUND(_x) (::llrint(_x)) 
+//MSVC 11.0 doesn't support std::lround so we'll use boost. When MSVC gains support for std::lround this could be removed.
+#ifdef _MSC_VER
+#include <boost/math/special_functions/round.hpp>
+#define I_ROUND(_x) (boost::math::lround(_x))
+#define L_ROUND(_x) (boost::math::llround(_x))
 #else
-    #define L_ROUND(_x) ((long long)(_x)) 
-#endif
-
-#ifdef HAVE_LRINTF
-    #define I_ROUND(_x) (::lrintf(_x)) 
-#elif defined(HAVE_RINTF)
-    #define I_ROUND(_x) ((int)::rintf(_x)) 
-#elif defined(HAVE_RINT)
-    #define I_ROUND(_x) ((int)::rint(_x)) 
-#else
-    #define I_ROUND(_x) ((int)(_x)) 
+#include <cmath>
+#define I_ROUND(_x) (std::lround(_x))
+#define L_ROUND(_x) (std::llround(_x))
 #endif
 
 #endif // ERIS_IROUND_H
