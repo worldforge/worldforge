@@ -315,6 +315,11 @@ void View::deleteEntity(const std::string& eid)
         EntityDeleted.emit(ent);
         ent->shutdown();
         delete ent; // actually kill it off
+
+        //Check if the deleted entity is the avatar one.
+        if (ent == m_owner->getEntity()) {
+            AvatarEntityDeleted.emit();
+        }
     } else {
         if (isPending(eid)) {
             //debug() << "got delete for pending entity, argh";

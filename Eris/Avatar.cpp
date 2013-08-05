@@ -46,6 +46,7 @@ Avatar::Avatar(Account& pl, const std::string& entId) :
     m_isAdmin(false)
 {
     m_view = new View(this);
+    m_view->AvatarEntityDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
 
     m_router = new IGRouter(this);
@@ -359,6 +360,12 @@ void Avatar::onEntityAppear(Entity* ent)
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
     }
+}
+
+void Avatar::onAvatarEntityDeleted()
+{
+    //When the avatar entity is destroyed we should also deactivate the character.
+    m_account.deactivateCharacter(this);
 }
 
 void Avatar::onCharacterChildAdded(Entity* child)

@@ -210,6 +210,11 @@ protected:
     void onEntityAppear(Entity* ent);
     void onCharacterChildAdded(Entity* child);
     void onCharacterChildRemoved(Entity* child);
+    /**
+     * @brief Called when the avatar entity is deleted.
+     */
+    void onAvatarEntityDeleted();
+
 
     void onCharacterWield(const Atlas::Message::Element&);
     void onWieldedChanged();
