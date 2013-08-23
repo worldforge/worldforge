@@ -5,9 +5,13 @@ SUBDIRS = Atlas tests tools tutorial benchmark
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = atlascpp-0.6.pc
 
-EXTRA_DIST = HACKING ROADMAP Doxyfile footer.html index.dox protocol
+EXTRA_DIST = HACKING ROADMAP Doxyfile footer.html index.dox protocol support/ChangeLog-CVS support/generate-ChangeLog.sh
 
 docs:
 	@echo "running doxygen..."
 	@doxygen Doxyfile
 	@echo "documentation is in doc/."
+
+dist-hook:
+	sh $(top_srcdir)/support/generate-ChangeLog.sh $(top_srcdir) $(distdir) 8bd480b053190ffde2afe33af66f484953036f5a
+	
