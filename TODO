@@ -1,3 +1,6 @@
+Use std::shared_ptr with a custom allocator for our SmartPtr. This will ensure
+thread safety.
+
 The memory pools used in Atlas-C++ are not thread safe, so probably need to
 go. Perhaps the memory management can be a template parameter of SmartPtr,
 and schemes can be added using thread local pools. The memory is not thread
@@ -110,8 +113,6 @@ TODO in the 0.5 devel series
  - ensure that the Objects code uses member construction efficiently, as
      was done in 0.4.2
 
- - Make sure exceptions inherit from std::exception
-
  - Stop passing Objects when Object::MapType is the only option
 
 TODO items for anybody who wants to do them:
@@ -132,4 +133,5 @@ Notes:
 
 Stefanus Du Toit is no longer participating largely.
 Michael Day is no longer participating largely.
-Al Riddoch has now taken over ownership this code.
+Al Riddoch is no longer participating largely.
+Erik Ogenvik has now taken over ownership this code.
