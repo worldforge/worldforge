@@ -93,6 +93,13 @@ public:
     /// emitted when the TLVE changes
     sigc::signal<void> TopLevelEntityChanged;
 
+    /**
+     * Emitted after a new Entity has been created and initialized.
+     *
+     * This signal is mainly meant for debugging or authoring; normal entity
+     * presentation logic should use EntitySeen or EntityCreated instead.
+     */
+    sigc::signal<void, Entity*> InitialSightEntity;
 
     void dumpLookQueue();
 
@@ -171,8 +178,6 @@ private:
     Entity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
     
-    sigc::signal<void, Entity*> InitialSightEntity;
-
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or
     deletes cleanly. */
