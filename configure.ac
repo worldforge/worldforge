@@ -16,7 +16,7 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl Initialise automake
 
-ATLAS_CURRENT=1
+ATLAS_CURRENT=2
 INTERFACE_VERSION="-version-info $ATLAS_CURRENT:0:0"
 
 AC_SUBST(ATLAS_CURRENT)
