@@ -1,0 +1,486 @@
+2012-11-06  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Symbol visibility has been implemented to improve runtime link time.
+
+2009-12-10  Simon Goodall  <simon@worldforge.org>
+
+	* README: Point reader to parse_error.cpp/h rather than ParseError.cc/h
+
+2009-12-10  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/Config.h: Remove deprecated header file.
+
+2009-12-09  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/config.h, varconf/Config.h, varconf/config.cpp,
+	  varconf/variable.cpp, varconf/variable.h: Make various methods const.
+
+2009-12-07  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/Config.h: Update doc for readFromFile and writeToFile.
+
+2009-09-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* varconf/config.cpp: Add support for the way environ is declared in
+	  mingw.
+
+2009-09-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Makefile.am: Don't install doc files. Just not needed.
+
+	* mingw32-varconf.spec.in, configure.ac: Add a spec file for windows
+	  build using mingw.
+
+2009-03-23  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Update the version to 0.6.6.
+
+	* NEWS: Update for release.
+
+	* varconf.spec.in: Fix the packager email address.
+
+	* Release 0.6.6. Interface version 6.0.0.
+
+2008-11-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Use LIBS as it should be, not LDFLAGS.
+
+2008-11-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.cpp: Clean up parentheses. Change the type of an
+	  iterator to int, otherwise it causes warnings.
+
+2008-11-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.cpp: Fix really horribly broken code which was
+	  checking whether a char * was equal to "".
+
+2008-11-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.h: Merge the old content of Config.h into the lower
+	  case file to get rid of the case clash on MacOS.
+
+	* varconf/config.cpp, varconf/dyntypes.cpp, varconf/varconf.h:
+	  Include config.h with the lower case filename.
+
+2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Fixing library to compile under GCC 4.3.
+
+2007-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.5. Interface version 6.0.0.
+
+2007-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf.spec.in: Tweak the rpm spec a little.
+
+2007-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/conftest.cpp: Add assert include missing from the test that
+	  uses assert.
+
+2007-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number. Remove conflicts, as
+	  we don't really have a conflict.
+
+	* varconf-1.0.pc.in: Don't conflict with earlier versions of sigc++.
+
+2006-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/Config.h, varconf/config.cpp, varconf/dynbase.cpp,
+	  varconf/dynbase.h, varconf/dyncmp.cpp, varconf/dyncmp.h,
+	  varconf/dyntypes.cpp, varconf/dyntypes.h, varconf/parse_error.cpp,
+	  varconf/parse_error.h, varconf/variable.cpp, varconf/variable.h:
+	  Update the copyright statements with current maintainer.
+
+2006-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/variable.cpp: Simplify equality check.
+
+2006-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.cpp: Avoid resetting an item if it is already set
+	  to the value given.
+
+2006-04-11  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* varconf/variable.cpp: Escape backslash characters.
+
+2006-02-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/Config.h, varconf/variable.h, tests/conftest.cpp:
+	  Update usage of sigc++ to the native 2.0 API rather than the
+	  deprecated compatability API. Eleminate the manual disconnection
+	  code for deleted objects, as this is now handled automatically by
+	  sigc::trackable.
+
+2006-01-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.4. Interface version 6.0.0.
+
+2006-01-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Remove support for obsolete sigc++-1.2.
+
+	* varconf.spec.in: Add libsigc++20-devel to devel rpm.
+
+2006-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/Config.h: Make the default scope of setItem be INSTANCE,
+	  for API compatibility.
+
+2005-12-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/variable.h, varconf/variable.cpp,
+	  varconf/dyntypes.h, varconf/dyntypes.cpp,
+	  varconf/Config.h, varconf/config.cpp: Add scope to settings to
+	  make it easier to manage user and commandline settings
+	  separatly from each other.
+
+	* tests/conftest.cpp: Add testing for the scoping mods.
+
+	* varconf/config.h: New header which just include Config.h.
+	  Config.h will be deprecaed soon.
+
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Include a bug report address, set cross-compile host
+	  correctly and clean up.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.3. Interface version 4.0.0, or 5.0.0 with sigc++ 2.0.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* AUTHORS: Update AUTHORS file to reflect the current maintainers.
+
+	* NEWS: Add new item for 0.6.3 release.
+
+	* varconf.spec.in: Remove BuildRequires as it doesn't have any real
+	  requirements. Some cleanups.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac, varconf-1.0.pc.in, varconf.spec.in: Remove
+	  VARCONF_PACKAGE and VARCONF_VERSION and use the standard
+	  PACAKGE and VERSION variables. Switch to bz2 compression for
+	  the rpm source package.
+
+2005-04-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Clean up and modernise autoconf usage. Remove
+	  maintainer mode. Increment version in interface numbers ready
+	  for 0.6.3 release.
+
+	* varconf.spec.in: Remove requirements for sigc++ packages, as the
+	  package names vary and break the requirements in a really annoying
+	  way.
+
+2005-01-10  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* varconf/config.cpp, varconf/Config.h: Make findItem, findSection and 
+	  find const.
+
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
+2004-11-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/conftest.cpp: Fix a couple of places to work with sigc++2.
+	  Cleanup namespace use generally.
+
+2004-11-11  Ron Steinke <rsteinke@w-link.net>
+
+	* varconf/config.cpp: Initialize Config::m_instance to 0, instead
+	  of leaving it uninitialized.
+
+2004-10-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.2. Interface version 2.0.0, or 3.0.0 with sigc++ 2.0.
+
+2004-10-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/variable.h: Add an accessor function explicitly making
+	  a variable available as string, to get round nasty impicit
+	  conversion rules in modern C++ compilers.
+
+2004-10-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Reverse the order of configure checks, so sigc++ 2.0 is detected
+	  first. Better in the long run.
+
+	* varconf/Config.h, varconf/config.cpp, varconf/dynbase.cpp,
+	  varconf/dynbase.h, varconf/dyncmp.cpp, varconf/dyncmp.h,
+	  varconf/dyntypes.cpp, varconf/dyntypes.h, varconf/parse_error.cpp,
+	  varconf/parse_error.h, varconf/variable.cpp, varconf/variable.h:
+	  Clean up the code moving virtual function definitions out of
+	  the headers, making the style more consistent.
+
+2004-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Add configure check for sigc++ 2.0, make the pkgconfig file
+	  conflict with packages which require the other version of
+	  sigc++, and update rpm spec so it works with either.
+
+2004-09-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* Move to configure.ac, adding in checks for sigc++-2.0 if
+	  1.2 is not available.
+
+	* varconf/Config.h, varconf/config.cpp: Return the index
+	  of the first cmdline argument which is not an option.
+
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix invocation of configure in rpm spec.
+
+	* Fix devel dependencies in rpm spec.
+
+Tuesday, 10th December, 2004, Kai Blin <blin@gmx.net>
+	* fixed documentation in Makefile.am, it was installing the docs
+	  without asking where to put them.
+
+Friday, 19th December, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Use AC_CANONICAL_SYSTEM macro
+	* Remove Serial from rpm spec as it is not required, and messes up
+	  deps.
+	* Increment version to 0.6.1, interface version 2.0.0 and release.
+
+Saturday, 22nd November, 2003, Al Riddoch <alriddoch@zepler.org>
+	* varconf/variable.h, varconf/variable.cpp: Make operator std::string()
+	  const, so it can be used on a const object.
+
+Friday, 21st November, 2003, Al Riddoch <alriddoch@zepler.org>
+	* varconf/config.cpp, varconf/Config.h: Clean up accessing
+	  config to use std::map::find() when apropriate. Add functions
+	  to query and retrieve sections.
+
+Sunday, 19th October, 2003, James Turner <james@worldforge.org>
+	* Add ProjectBuilder project, which current relies on a
+	  SigC++ 1.2 framework which I'll make available on
+	  FTP if people poke me (it requires some source modifications)
+	* Add __APPLE__ specific code to config.cpp, to deal with the
+	  fact the C runtime doesn't export the 'environ' symbol to
+	  dylibs (i.e, a framework build). The fix comes from Tcl, by
+	  way of guile, and Google.
+
+Saturday, 20th September, 2003, Ron Steinke <rsteinke@w-link.net>
+	* Workaround for buggy win32 atof().
+
+Thursday, 3rd July, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
+Friday, 25th June, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Make test program a check_PROGRAMS, so its not compiled by default.
+
+Monday, 2nd June, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Move to requiring sigc++ 1.2.
+	* Move to pkgconfig completely.
+	* varconf/config.cpp, varconf/variable.cpp: Fix a couple of warnings.
+	* Increment version to 0.6.0, interface version 1.0.0 and release.
+
+Friday, 17th April, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Fix up headers for clean handling, and portability.
+
+Friday, 30th January, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Added mechanism to differentiate between varconf built
+	  against sigc++ 1.0 and 1.2, and use pkg-config to
+	  detect the 1.2 version.
+
+Friday, 13th December, 2002, Michael Koch <konqueror@gmx.de>
+	* Added manpage for varconf-config.
+
+Monday, 2nd September, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Increment version to 0.5.4
+	* Release 0.5.4
+
+Sunday, 11th August, 2002, Ron Steinke <rsteinke@w-link.net>
+	* Fixed Variable's copy constructor to work properly
+	  with the changes in the ref counting code
+
+Sunday, 11th August, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Integrated patch by Ron Steinke to remove dependancy on
+	  sigc++ 1.0.x internals. Modified configure script and includes
+	  to be compatable with sigc++ 1.2.
+
+Tuesday, 6th August, 2002, Simon Goodall <simon@simongoodall.co.uk>
+	* fixed varconf/config.cpp so parseStream now allows - and _ characters in a section name instead of throwing an exception.
+
+Saturday, 20th June, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Add --enable-debug to configure.in
+	* Use rpm supplied compiler flags in spec.
+	* Increment version, and release
+
+Saturday, 20th June, 2002, Michael Koch <konqueror@gmx.de>
+	* Depend on sigc++ >= 1.0.2
+	* cleaned up Makefile.am
+
+Monday, 10th June, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Fixed rpm spec into two different packages, and corrected generation
+	  of interface version.
+
+Wednesday, May 21 2002, Michael Koch (man-di)
+	* tests/Makefile.am: make tests link
+	
+Wednesday, May 21 2002, Michael Koch (man-di)
+	* Updated AUTHORS file
+	* Made some text files more readable
+	* removed generated file from CVS
+
+Saturday, May 11 2002, Joel Schander (nullstar)
+	* Added comments after member functions in Config.h.  Wasn't clear
+	  on purpose of setParameterLookup() so didn't add anything.
+
+Friday, March 19 2002, Martin Pollard
+
+	* Fixed one of variable.cpp's operator<<'s  doesn't
+	  seem to be in use right now anyway.
+	
+Friday, March 08 2002, James Turner
+
+	* Added varconf-config and varconf.m4, plus configure
+	  changes.
+	* Bumped the version up
+	* Set the .so version correctly, thanks to WFMath /
+	  Ron Steinke for the help/
+ 	* Tweaked makefiles (using builddir when then they
+	  should have been using srcdir) and .cpp files (using
+	  < > includes when they should have been using "..").
+	* make distcheck works cleanly.
+
+Wednesday, Decemer 18, 2001 -- Al Riddoch <alriddoch@zepler.org>
+  * C++ compliance fixes, for compiling under gcc v3.
+
+Sunday, November 11, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * variable.h, variable.cpp, dynbase.h: Added the capacity for
+    Variable to hold an array of Variable (really vector<Variable>)
+  * variable.h, variable.cpp: Added operator=(const char*),
+    previously had both char* and std::string as constructors
+    but only std::string as an assignment operator
+
+Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * dynvar.h: Forgot the "inline" keyword. Oops.
+
+Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * Changed the Variable class to a smart pointer to its old implementation,
+    essentially %s/Variable/VarBase/g, then wrote a new Variable class
+    based on SigC::Handle with the Variable API added.
+  + added dynbase.h, dynbase.cpp, dyntypes.h, dyntypes.cpp,
+    dyncmp.h, dyncmp.cpp, dynvar.h; these provide derived types
+    of VarBase which dynamically depend on the configuration
+    variables in Config::inst(), the user interface (for most
+    purposes) consists of the functions in dynvar.h which
+    deal only with class Variable
+  + added doc/.cvsignore, doc/old/.cvsignore to ignore Makefile, Makefile.in
+  * modified tests/.cvsignore to ignore .libs directory
+  * modified varconf/.cvsignore to ignore new .lo objects
+  * modified varconf.spec.in to add new header files
+
+Saturday, August 4, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
+  * fixed outdated information, formatting and wording in README.
+  * minor fixes to config.cpp
+
+Sunday, May 27, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
+  + added varconf.spec.in
+  * fixed some problems with varconf.spec
+  + added doc/Makefile.am
+  + added doc/old/Makefile.am
+  - configure.am
+  * updated AM_PATH_SIGC macro to latest version (sigc++ 1.0.3)
+  * overhauled configuration.in and all Makefile.am
+  * updated varconf version to 0.5.0
+
+Saturday, May 19, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
+  * Changed license of varconf to LGPL.
+
+Tuesday, December 12, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+  * Config.h: Added "super-verbose" callback.
+  * Config.h: Added << operator.
+  * Config.h: Added >> operator.
+  * Config.h: Added == operator.
+  * Config.h: Made constructors non-protected.
+  * Config.h: Added error signal.
+  * config.cpp: Redirected all error messages through error signal.
+  * parse_error.h: Added string() operator.
+  * variable.h: Added == operator.
+  * conftest.cpp: Rewrote to take advantage of Config objects.
+
+Sunday, December 10, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+  + added varconf.h
+
+Thursday, November 2, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+  * Config.h: Added generalized accessor methods
+  * Config.cc: Implemented generalized accessor methods
+  * Config.cc: Finished getEnv clean-up.
+  * Config.cc: Finished getCmdline clean-up.
+
+Monday, October 23, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+ * Config.cc: Removed Observer code.
+ * Config.cc: Converted callbacks to libsigc++.
+ * Config.h: Added declarations for libsigc++ callbacks.
+ * Config.h: Removed old callback methods. 
+ - deleted Observer.cc
+ - deleted Observer.h
+ - deleted varconf.h
+ - deleted conf_format
+
+Friday, October 20, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+ * Config.cc: Added section support to command-line arguments.
+
+Wednesday, October 18, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+ * Config.cc: Cleaned env variable code; added support for prefixes 
+
+Tuesday, October 17, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+ * Config.cc: Implemented handling of environment variables.
+
+
+ChangeLog for conftest
+
+Fri Dec 24 09:30:32 UTC 1999 -- sdt <sdt@gmx.net>
+ * Variable.h, Variable.cc: Added conversion constructor for char*
+ * Config.h: Added register and unregister functions for callbacks
+ * Config.cc: Implemented register and unregister functions for callbacks
+ * Config.cc: Implemented notification of changes via callbacks
+ * main.cc: Added demonstration of callbacks
+
+Fri Dec 24 04:13:37 UTC 1999 -- sdt <sdt@gmx.net>
+ + added AUTHORS
+ * Config.cc: Fixed some minor parser errors
+ * main.cc: Modified the configuration test again
+ * conf.cfg: Modified example file
+ * Observer.h, Observer.cc: Changed return value of getValue() to be non-const
+
+Fri Dec 24 02:58:24 UTC 1999 -- sdt <sdt@gmx.net>
+ + added Observer.h
+ + added Observer.cc
+ * Observer.h: Added class interface for configuration observer
+ * Observer.cc: Added class implementation for configuration observer
+ * Config.h: Added register and unregister functions for observer
+ * Config.cc: Implemented register and unregister functions
+ * Config.cc: Modified setItem() to use observers
+ * main.cc: Added Observer demonstration
+ * Variable.h: Added operator<<(ostream&, Variable&) as friend
+ * Variable.cc: Implemented output operator for Variables through ostreams
+ * Config.cc: Removed temporary output operator for Variables
+
+Fri Nov 26 12:55:38 UTC 1999 -- sdt <sdt@gmx.net>
+ * ChangeLog: Fixed up the entry below a bit (cough)
+ * Config.cc: Fixed unquoted value parsing a bit
+ * Config.cc: Fixed quoting in Config::writeToFile()
+
+Wed Nov 24 13:11:40 UTC 1999 -- sdt <sdt@gmx.net>
+ + added THANKS
+ + added README
+ + added TODO
+ + added ChangeLog
+ * Variable.cc: implemented Variable::is_double()
+ * Variable.h: Fixed a few warnings
+ * Variable.cc: added return statements to operator=()'s (oops)
+ * Config.cc: implemented Config::writeToFile()
+ * main.cc: uses Config::writeToFile() now
