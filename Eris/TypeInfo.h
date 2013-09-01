@@ -139,7 +139,7 @@ protected:
      * @param attributeName The name of the attribute which is being changed.
      * @param element The new attribute value.
      */
-    virtual void onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
+    void onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
     
 private:
     void addParent(TypeInfoPtr tp);
