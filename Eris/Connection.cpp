@@ -233,6 +233,7 @@ void Connection::unlock()
 
         default:
             warning() << "Connection unlocked in spurious state : this may cause a failure later";
+            break;
         }
     }
 }

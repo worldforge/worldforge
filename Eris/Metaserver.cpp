@@ -323,6 +323,7 @@ void Meta::recvCmd(uint32_t op)
     
     default:
         doFailure("Unknown Meta server command");
+        break;
     }
 }
 
@@ -415,6 +416,7 @@ void Meta::processCmd()
         std::stringstream ss;
         ss << "Unknown Meta server command: " << _gotCmd;
         doFailure(ss.str());
+        break;
     }
 }
 

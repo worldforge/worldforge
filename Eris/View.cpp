@@ -412,6 +412,7 @@ void View::sendLookAt(const std::string& eid)
             default:
                 // broken state handling logic
                 assert(false);
+                break;
             }
         } else {
             // no previous entry, default to APPEAR
