@@ -70,8 +70,22 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 
+	/*
+	 * Enumerate the ADMINISTRATIVE command set
+	 * Note: this is intentionally specific to force agreement with the unittest
+	 */
+	m_adminCommandSet = { "NMT_ADMINREQ_ENUMERATE", "NMT_ADMINREQ_ADDSERVER" };
+
 	m_loggingFlushTime = msdo.getNow();
 	srand( (unsigned)time(0));
+
+	/*
+	 * Construct Stats map
+	 */
+	m_metaStats.emplace("packet.sequence","0");
+	m_metaStats.emplace("server.sessions","0");
+	m_metaStats.emplace("client.sessions","0");
+	m_metaStats.emplace("current.handshakes","0");
 
 }
 
@@ -212,8 +226,6 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
-//	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-
 
 	if ( !boost::filesystem::exists(m_pidFile) ||
 		 !boost::filesystem::is_regular_file(m_pidFile) )
@@ -221,9 +233,34 @@ MetaServer::update_timer(const boost::system::error_code& error)
 		m_isShutdown = true;
 		throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
 	}
+
+
 	/**
-	 * do update tasks
-	 * possibly add a time of last update and do a delta and sleep less if we're running behind
+	 *  Update Stats
+	 *  This is intentionally stored as strings to avoid having to deal with
+	 *  the different integer types.  Almost everything via stringstream can
+	 *  convert to/from a number
+	 */
+	std::ostringstream ss;
+
+	ss.str("");
+	ss << m_PacketSequence;
+	m_metaStats["packet.sequence"] = ss.str();
+
+	ss.str("");
+	ss << msdo.getServerSessionCount();
+	m_metaStats["server.sessions"] = ss.str();
+
+	ss.str("");
+	ss << msdo.getClientSessionCount();
+	m_metaStats["client.sessions"] = ss.str();
+
+	ss.str("");
+	ss << msdo.getHandshakeCount();
+	m_metaStats["current.handshakes"] = ss.str();
+
+	/*
+	 * Reset Timer
 	 */
     m_updateTimer->expires_from_now(boost::posix_time::milliseconds(m_updateDelayMilliseconds));
     m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
@@ -286,6 +323,8 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	case NMT_DNSREQ:
 		processDNSREQ(msp,rsp);
 		break;
+	case NMT_ADMINREQ:
+		processADMINREQ(msp,rsp);
 	default:
 //		--m_PacketSequence;
 		VLOG(1) << "Packet Type [" << msp.getPacketType() << "] not supported.";
@@ -738,6 +777,68 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
+MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
+{
+
+	uint32_t sub_type  = in.getIntData(4);
+	uint32_t in_addr;
+	unsigned int in_port;
+	std::stringstream ss;
+	std::string out_msg = "";
+	char ip_buffer[20];
+
+	VLOG(2) << "processADMINREQ(" << sub_type << ")";
+
+	/*
+	 * TODO: add in acl check, deny immediately if appropriate
+	 */
+	// msdo.aclAdminCheck(ip) || return ERR
+
+	out.setPacketType(NMT_ADMINRESP);
+
+	switch(sub_type) {
+		case NMT_ADMINREQ_ENUMERATE:
+			VLOG(3) << "NMT_ADMINREQ_ENUMERATE : " << m_adminCommandSet.size();
+			out.addPacketData(NMT_ADMINRESP_ENUMERATE);
+			out.addPacketData(m_adminCommandSet.size());
+			for(auto& p: m_adminCommandSet)
+			{
+				out.addPacketData(p.length());
+				out_msg.append(p);
+			}
+			out.addPacketData(out_msg);
+			break;
+		case NMT_ADMINREQ_ADDSERVER:
+			in_addr   = in.getIntData(8);
+			in_port   = in.getIntData(12);
+
+			/*
+			 * cargo culted from MSP::IpNetToAscii
+			 */
+			snprintf(ip_buffer, 15, "%u.%u.%u.%u", (in_addr>>0)&0xFF,
+			       (in_addr>>8)&0xFF, (in_addr>>16)&0xFF, (in_addr>>24)&0xFF);
+
+			out.setAddress(std::string(ip_buffer));
+			out.setPort(in_port);
+			msdo.addServerSession(out.getAddress());
+
+			ss << in_port;
+			msdo.addServerAttribute(out.getAddress(),"port", ss.str() );
+			ss.str("");
+			ss << in_addr;
+			msdo.addServerAttribute(out.getAddress(),"ip_int", ss.str() );
+			out.addPacketData(NMT_ADMINRESP_ADDSERVER);
+			out.addPacketData(in_addr);
+			out.addPacketData(in_port);
+			break;
+		default:
+			VLOG(2) << "NMT_ADMINRESP_ERR";
+			out.addPacketData(NMT_ADMINRESP_ERR);
+	}
+
+}
+
+void
 MetaServer::registerConfig( boost::program_options::variables_map & vm )
 {
 
@@ -1029,3 +1130,47 @@ MetaServer::isDaemon()
 	return m_isDaemon;
 }
 
+void
+MetaServer::getMSStats( std::map<std::string,std::string>& req_stats )
+{
+	if( req_stats.size() == 0 )
+	{
+		/*
+		 * If you've specified nothing, you get everything
+		 */
+		VLOG(3) << "Full Stats Request";
+		for(auto& x: m_metaStats)
+		{
+			req_stats[x.first] = x.second;
+			VLOG(4) << "   Set " + x.first + " to " + x.second;
+		}
+	}
+	else
+	{
+		/*
+		 * Check all elements of the requesting map
+		 */
+		VLOG(3) << "Partial Stats Request";
+		for(auto& x: req_stats)
+		{
+
+			/*
+			 * If it exists, fill it with the value
+			 */
+			if ( m_metaStats.count(x.first) > 0 )
+			{
+				req_stats[x.first] = m_metaStats[x.first];
+				VLOG(4) << "   Set " + x.first + " to " + m_metaStats[x.first];
+			}
+			else
+			{
+				/*
+				 * If not present, remove the entry
+				 * NOTE: can I remove WITH the iterator i'm using?
+				 */
+				req_stats.erase(x.first);
+				VLOG(4) << "   Removing " + x.first;
+			}
+		}
+	}
+}

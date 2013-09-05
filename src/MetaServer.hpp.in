@@ -39,6 +39,8 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/filesystem.hpp>
 
+#include <set>
+
 #include <glog/logging.h>
 
 /*
@@ -73,6 +75,7 @@ class MetaServer
 	void processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out);
 	void processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out);
+	void processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out);
 
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
@@ -84,6 +87,9 @@ class MetaServer
 	bool isDaemon();
 
 	void shutDown() { m_isShutdown = true; }
+
+	void getMSStats( std::map<std::string,std::string>& req_stats );
+
 
    private:
 
@@ -116,6 +122,8 @@ class MetaServer
 	bool m_logPacketAllow;
 	bool m_logPacketDeny;
 	std::string m_Domain;
+	std::set<std::string> m_adminCommandSet;
+	std::unordered_map<std::string,std::string> m_metaStats;
 
 };
 

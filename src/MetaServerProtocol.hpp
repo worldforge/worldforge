@@ -40,6 +40,7 @@
  * 		             Contains a random number.
  * 		Type Size: 4 bytes
  * 		Value: 3 ( 00 00 00 03 )
+ *
  * 		Payload Size: 4 bytes ( a random int )
  *
  * 	NMT_SERVERSHAKE
@@ -178,6 +179,7 @@ const NetMsgType NMT_CLIENTCLEAR = 16;
  * Intended as a read-only peek at the internals
  * of the metaserver
  *
+ * NMT_MONITOR
  * 0 VERSION
  * 1 APIVERSION
  * 2 PACKETS
@@ -186,8 +188,29 @@ const NetMsgType NMT_CLIENTCLEAR = 16;
  * 5 CLIENTS
  * 6 MAXSERVERS
  *
+ *NMT_MONITOR_RESP
+ * - same subtypes as req packet
+ *   Information is Filled:
+ *
+ *
+ *	0 VERSION
+ *		4 - type (NMT_MONITOR_RESP)
+ *		4 - sub type (VERSION)
+ *		x - string version
+ *	1 APIVERSION
+ *		4 - type (NMT_MONITOR_RESP)
+ *		4 - sub type (APIVERSION)
+ *		x - string version
+ *	2 PACKETS
+ *		4 - type NMT_MONITOR_RESP
+ *		4 - sub type PACKETS
+ *		4 - uint32 high bytes
+ *		4 - uint32 low bytes
+ *			The
+ *
  */
 const NetMsgType NMT_MONITOR = 21;
+const NetMsgType NMT_MONITOR_RESP = 22;
 
 /*
  * Administrator Controls
@@ -195,10 +218,82 @@ const NetMsgType NMT_MONITOR = 21;
  * Intended to provide the ability to affect the
  * data inside the metaserver
  *
- * @TODO thing about whether we want just yes/no type responses from
+ * @TODO think about whether we want just yes/no type responses from
  * admin packets
+ *
+ * NMT_ADMINREQ
+ * 0 _ENUMERATE (the response that comes back will be an attribute showing command set)
+ * 		4 bytes type ( 00 00 00 19 )
+ * 		4 bytes sub type ( 00 00 00 00 )
+ *
+ * 1 _ADDSERVER - add a server session (bypassing handshake)
+ * 		4 bytes type ( 00 00 00 19 )
+ * 		4 bytes sub type ( 00 00 00 01 )
+ * 		4 bytes address
+ * 		4 bytes port
+ *
+ * 2 _DELSERVER - remove a server session (immediate delete)
+ * 4 _PURGESERVERS - remove ALL server sessions
+ * 5 _DUMPSERVERS - write servers to logs
+ * 5 _ADDCLIENT - add a client session (bypassing handshake)
+ * 6 _DELCLIENT - remove client session (immediate removal)
+ * 7 _PURGECLIENT - remove ALL client sessions
+ * 8 _DUMPCLIENTS - write clients to logs
+ *
+ * NMT_ADMINRESP
+ * 0 _ENUMERATE
+ * 		4 bytes packet type ( 00 00 00 1A )
+ * 		4 bytes sub type ( 00 00 00 00 )
+ * 		4 bytes number of commands
+ * 		  4 bytes for each number of commands ( 4 commands means 4*sizeof(uint32_t) == 16 )
+ * 		x bytes for message.  Should be the sum total of the command lengths
+ * 		E.g.
+ * 		  CMD1(4) and COMMAND2 (8) [12 bytes]
+ * 		  26 (4) - for packet type NMT_ADMINRESP
+ * 		  2  (4) - number of commands
+ * 		  4  (4) - length of command 1
+ * 		  8  (4) - length of command 2
+ * 		  12 (4) - message (CMD1COMMAND2)
+ * 1 _ADDSERVER
+ * 		4 bytes packet type ( 00 00 00 1A )
+ * 		4 bytes sub type ( 00 00 00 00 )
+ * 		4 bytes address added (same as in req)
+ * 		4 bytes port (same as in req)
+ *  DENIED
+ *  ERR
+ *  REQUEST PROCESSED
+ *  ACK
+ *  NACK
+ *
  */
-const NetMsgType NMT_ADMIN = 25;
+const NetMsgType NMT_ADMINREQ = 25;
+const NetMsgType NMT_ADMINREQ_ENUMERATE = 0;
+const NetMsgType NMT_ADMINREQ_ADDSERVER = 1;
+const NetMsgType NMT_ADMINREQ_DELSERVER = 2;
+const NetMsgType NMT_ADMINREQ_PURGESERVER = 3;
+const NetMsgType NMT_ADMINREQ_DUMPSERVER = 4;
+const NetMsgType NMT_ADMINREQ_ADDCLIENT = 5;
+const NetMsgType NMT_ADMINREQ_DELCLIENT = 6;
+const NetMsgType NMT_ADMINREQ_PURGECLIENT = 7;
+const NetMsgType NMT_ADMINREQ_DUMPCLIENT=8;
+const NetMsgType NMT_ADMINREQ_VERIFY = 9;
+
+const NetMsgType NMT_ADMINRESP = 26;
+const NetMsgType NMT_ADMINRESP_ENUMERATE = 0;
+const NetMsgType NMT_ADMINRESP_ADDSERVER = 1;
+const NetMsgType NMT_ADMINRESP_DELSERVER = 2;
+const NetMsgType NMT_ADMINRESP_PURGESERVER = 3;
+const NetMsgType NMT_ADMINRESP_DUMPSERVER = 4;
+const NetMsgType NMT_ADMINRESP_ADDCLIENT = 5;
+const NetMsgType NMT_ADMINRESP_DELCLIENT = 6;
+const NetMsgType NMT_ADMINRESP_PURGECLIENT = 7;
+const NetMsgType NMT_ADMINRESP_DUMPCLIENT = 8;
+const NetMsgType NMT_ADMINRESP_VERIFY = 9;
+
+const NetMsgType NMT_ADMINRESP_ACK = 32; // serves as 'yes', indicates request is done
+const NetMsgType NMT_ADMINRESP_NACK = 33; // serves as 'no', indicates request is NOT done
+const NetMsgType NMT_ADMINRESP_DENIED = 34;
+const NetMsgType NMT_ADMINRESP_ERR = 35;
 
 /*
  * DNS Hooks
@@ -255,12 +350,12 @@ const char NMT_PRETTY[][30] = {
 		"RESERVED18",
 		"RESERVED19",
 		"RESERVED20",
-		"RESERVED21",
+		"NMT_MONITOR",
 		"RESERVED22",
 		"RESERVED23",
 		"RESERVED24",
-		"RESERVED25",
-		"RESERVED26",
+		"NMT_ADMINREQ",
+		"NMT_ADMINRESP",
 		"RESERVED27",
 		"RESERVED28",
 		"RESERVED29",
