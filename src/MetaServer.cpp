@@ -81,10 +81,10 @@ MetaServer::MetaServer()
 	/*
 	 * Construct Stats map
 	 */
-	m_metaStats.emplace("packet.sequence","0");
-	m_metaStats.emplace("server.sessions","0");
-	m_metaStats.emplace("client.sessions","0");
-	m_metaStats.emplace("current.handshakes","0");
+	m_metaStats["packet.sequence"] = "0";
+	m_metaStats["server.sessions"] = "0";
+	m_metaStats["client.sessions"] = "0";
+	m_metaStats["current.handshakes"] = "0";
 
 }
 

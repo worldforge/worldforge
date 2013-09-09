@@ -124,7 +124,7 @@ class MetaServer
 	bool m_logPacketDeny;
 	std::string m_Domain;
 	std::set<std::string> m_adminCommandSet;
-	std::unordered_map<std::string,std::string> m_metaStats;
+	std::map<std::string,std::string> m_metaStats;
 
 };
 
