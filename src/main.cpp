@@ -36,6 +36,7 @@
 #include <fstream>
 #include <glog/logging.h>
 #include <boost/filesystem.hpp>
+#include <boost/exception/all.hpp>
 
 /*
 	Entry point
@@ -189,7 +190,8 @@ int main(int argc, char** argv)
 	std::cout << "Server Version: " << SERVER_VERSION << std::endl;
 	std::cout << "API    Version: " << API_VERSION << std::endl;
 	std::cout << "Metaserver Config File: " << config_file_path.string() << std::endl;
-	MetaServer ms(io_service);
+
+	MetaServer ms;
 
 	try
 	{
@@ -336,6 +338,12 @@ int main(int argc, char** argv)
 		VLOG(5) << "Start UPD Handler";
 		MetaServerHandlerUDP udp(ms, io_service, ip, port);
 
+		/*
+		 * Register Timers
+		 */
+		std::cout << "Register Deadline Timers ..." << std::endl;
+		ms.initTimers(io_service);
+
 		/**
 		 * This is the async loop
 		 */
@@ -350,7 +358,14 @@ int main(int argc, char** argv)
 				io_service.run();
 				break;
 			}
-			catch(std::exception ex)
+			catch(boost::exception& bex )
+			{
+				std::cerr << "Boost Exception : attempting recovery" << std::endl;
+				LOG(ERROR) << "Boost Exception : attempting recovery";
+				LOG(ERROR) << "Calling reinitialisation of the timers";
+				ms.initTimers(io_service);
+			}
+			catch(std::exception& ex)
 			{
 				/*
 				 * This will catch exceptions inside the io_service loop/handler.
@@ -368,19 +383,16 @@ int main(int argc, char** argv)
 				 */
 				if ( ms.isShutdown() )
 				{
-					std::cout << "Shutdown sequence initiated." << std::endl;
-					LOG(INFO) << "Shutdown sequence initiated.";
+					std::cout << "Shutdown sequence initiated : " << ex.what() << std::endl;
+					LOG(INFO) << "Shutdown sequence initiated : " << ex.what() ;
 
 				}
 				else
 				{
 					std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
 					LOG(ERROR) << "IOService Loop Exception:" << ex.what();
-					LOG(ERROR) << "-------------------------------" << std::endl;
-					LOG(ERROR) << "If restarting is required, please check the PREFIX/bin/mswatchdog.sh in order to trigger a restart" << std::endl;
-					LOG(ERROR) << "MetaServer will now be shutdown." << std::endl;
-					LOG(ERROR) << "-------------------------------" << std::endl;
-					ms.shutDown();
+					LOG(ERROR) << "Calling reinitialisation of the timers";
+					ms.initTimers(io_service);
 				}
 			}
 		}
@@ -392,7 +404,7 @@ int main(int argc, char** argv)
 		/*
 		 * This will catch exceptions during the startup etc
 		 */
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Unknown Exception: " << e.what() << std::endl;
 		google::FlushLogFiles(google::INFO);
 	}
 	LOG(INFO) << "All Done!";

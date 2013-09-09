@@ -20,16 +20,6 @@
 
 #include "DataObject.hpp"
 
-//#include <string>
-//#include <map>
-//#include <queue>
-//#include <list>
-//#include <algorithm>
-//#include <boost/date_time/posix_time/posix_time.hpp>
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-//#include <boost/date_time/gregorian/gregorian_types.hpp>
-
-
 DataObject::DataObject()
 {
 	m_serverData.clear();
@@ -208,20 +198,36 @@ DataObject::addServerSession( const std::string& sessionid )
 {
 
 	bool ret = false;
+	bool found = false;
 	/*
 	 *  If the server session does not exist, create it, and add+uniq the listresp
 	 */
 	if ( ! keyExists<std::string>(m_serverData, sessionid) )
 	{
 		addServerAttribute(sessionid,"ip",sessionid);
-		m_serverDataList.push_back(sessionid);
 
 		/*
-		 *  This is a precautionnary action in case there is a slip in logic
-		 *  that allows any duplicates.  Having duplicates will mean extra
-		 *  LISPRESP responses for the same server entry, and is sub optimal
+		 * Check if the key already exists, so we know about it
 		 */
-		m_serverDataList.unique();
+		for ( auto &f: m_serverDataList )
+		{
+			if ( f == sessionid )
+			{
+				found = true;
+				break;
+			}
+		}
+
+		/*
+		 *  If we haven't found our session, we need to add it
+		 *  skip if we already have it.  This should in theory
+		 *  ensure unique list (unless threading)
+		 */
+		if ( !found )
+		{
+			m_serverDataList.push_back(sessionid);
+		}
+
 		ret = true;
 	}
 
@@ -238,10 +244,24 @@ DataObject::addServerSession( const std::string& sessionid )
 void
 DataObject::removeServerSession( const std::string& sessionid )
 {
-	m_serverDataList.remove(sessionid);
-	if(  m_serverData.erase(sessionid) == 1 )
+
+	for ( auto& k: m_serverDataList )
 	{
-		// logging if any
+		if ( k == sessionid )
+		{
+			/*
+			 * Erase from main data
+			 */
+			m_serverData.erase(k);
+
+			/*
+			 * Erase from the ordered list
+			 */
+			m_serverDataList.erase(
+					std::remove(m_serverDataList.begin(),m_serverDataList.end(),k),
+					m_serverDataList.end()
+					);
+		}
 	}
 }
 
@@ -320,22 +340,21 @@ std::list<std::string>
 DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 {
 	std::list<std::string> ss_slice;
-	std::list<std::string>::iterator ss_itr = m_serverDataList.begin();
+	std::vector<std::string>::iterator ss_itr;
 
 	ss_slice.clear();
 
 	/*
-	 * HACK ALERT : I have to re-think this ... i need the random iterator of a vector
-	 * but also the unique() of a list ... what I really want to do is:
-	 * list_itr = m_serverDataList.begin() + server_index in order to offset the starting
-	 * location by the index without losing the list functionality.
+	 *  Precheck to ensure that the iterator is
+	 *  not going to run off the end
 	 */
-	 for ( unsigned int i = 0; i < start_idx; i++ )
+	 if ( start_idx >= m_serverDataList.size() )
 	 {
-	    	++ss_itr;
+		 start_idx = m_serverDataList.size();
 	 }
 
-	 for ( ; ss_itr != m_serverDataList.end() ; ss_itr++ )
+
+	 for ( ss_itr=m_serverDataList.begin()+start_idx; ss_itr != m_serverDataList.end() ; ss_itr++ )
 	 {
 
 		 /*
@@ -409,25 +428,25 @@ DataObject::searchServerSessionByAttribute(std::string attr_name,std::string att
 	std::list<std::string> matched;
 
 	matched.clear();
-    std::list<std::string>::iterator itr;
+    std::vector<std::string>::iterator itr;
     std::string vattr;
 
     /*
      * Loop through all sessions
      */
-    for( itr = m_serverDataList.begin(); itr != m_serverDataList.end(); ++itr )
+    for( auto& vv : m_serverDataList )
     {
 
     	/*
     	 * Returns an empty string
     	 */
-    	std::string vattr = getServerAttribute(*itr,attr_name);
+    	std::string vattr = getServerAttribute(vv,attr_name);
 
     	/*
     	 * If the session has the attribute, and the value matches, push it on list
     	 */
     	if( boost::iequals(vattr,attr_val))
-    		matched.push_back(*itr);
+    		matched.push_back(vv);
 
     }
     return matched;

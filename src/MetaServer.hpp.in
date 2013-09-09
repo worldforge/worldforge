@@ -59,7 +59,7 @@ class PacketLogger;
 class MetaServer
 {
    public:
-	MetaServer(boost::asio::io_service& ios);
+	MetaServer();
 	~MetaServer();
 	void expiry_timer(const boost::system::error_code& error);
 	void update_timer(const boost::system::error_code& error);
@@ -79,6 +79,7 @@ class MetaServer
 
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
+	void initTimers( boost::asio::io_service& ios);
 	std::string getLogFile() { return m_Logfile; }
 	bool isShutdown() { return m_isShutdown; }
 

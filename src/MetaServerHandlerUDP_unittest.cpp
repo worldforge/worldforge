@@ -62,7 +62,7 @@ class MetaServerHandlerUDP_unittest : public CppUnit::TestCase
     void setUp()
     {
     	host = "127.0.0.1";
-    	ms = new MetaServer(io);
+    	ms = new MetaServer();
     	ms_udp = new MetaServerHandlerUDP(*ms, io, host, 50000 );
     }
 
@@ -100,7 +100,7 @@ int main()
 /*
  * Mock Stubs
  */
-MetaServer::MetaServer(boost::asio::io_service& ios)
+MetaServer::MetaServer()
 	: m_handshakeExpirySeconds(30),
 	  m_expiryDelayMilliseconds(1500),
 	  m_updateDelayMilliseconds(4000),

@@ -41,8 +41,10 @@
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 
 
-MetaServer::MetaServer(boost::asio::io_service& ios)
+MetaServer::MetaServer()
 	: m_handshakeExpirySeconds(30),
+	  m_expiryTimer(0),
+	  m_updateTimer(0),
 	  m_expiryDelayMilliseconds(1500),
 	  m_updateDelayMilliseconds(4000),
 	  m_sessionExpirySeconds(3600),
@@ -59,16 +61,13 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_logPackets(false),
 	  m_isDaemon(false),
 	  m_PacketSequence(0),
+	  m_PacketLogger(0),
 	  m_Logfile(""),
 	  m_PacketLogfile(""),
 	  m_isShutdown(false),
 	  m_logPacketAllow(false),
 	  m_logPacketDeny(false)
 {
-	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
-	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
-	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
-	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 
 	/*
 	 * Enumerate the ADMINISTRATIVE command set
@@ -1113,6 +1112,33 @@ MetaServer::initLogger()
 //	}
 
 	LOG(INFO) << "MetaServer logging initialized";
+
+}
+
+void
+MetaServer::initTimers(boost::asio::io_service& ios)
+{
+	LOG(INFO) << "Timer initiation";
+
+	if(m_expiryTimer)
+	{
+		LOG(WARNING) << "Purging m_expiryTimer";
+		delete m_expiryTimer;
+		m_expiryTimer = 0;
+	}
+
+	if(m_updateTimer)
+	{
+		LOG(WARNING) << "Purging m_updateTimer";
+		delete m_updateTimer;
+	}
+
+	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+
+	LOG(INFO) << "Timer initiation completed";
 
 }
 

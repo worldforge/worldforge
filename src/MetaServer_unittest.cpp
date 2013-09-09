@@ -42,28 +42,47 @@ class MetaServer_unittest : public CppUnit::TestCase
 {
     CPPUNIT_TEST_SUITE(MetaServer_unittest);
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testInitTimers);
     CPPUNIT_TEST(testMonitorStats);
-    CPPUNIT_TEST(testAdminAddServer);
-    CPPUNIT_TEST(testAdminDelServer);
+//    CPPUNIT_TEST(testAdminAddServer);
+//    CPPUNIT_TEST(testAdminDelServer);
     CPPUNIT_TEST(testProcessAdminReq_ENUMERATE);
     CPPUNIT_TEST(testProcessAdminReq_ADDSERVER);
-    CPPUNIT_TEST(testProcessAdminReq_DELSERVER);
+//    CPPUNIT_TEST(testProcessAdminReq_DELSERVER);
     CPPUNIT_TEST_SUITE_END();
   public:
 
-    boost::asio::io_service ios;
-
     MetaServer_unittest() { }
 
-
     void testConstructor() {
-        MetaServer * ms = new MetaServer(ios);
+        MetaServer * ms = new MetaServer();
         CPPUNIT_ASSERT(ms);
         delete ms;
     }
 
+    void testInitTimers()
+    {
+    	boost::asio::io_service ios;
+    	MetaServer* ms = new MetaServer();
+
+    	ms->initTimers(ios);
+
+    	/*
+    	 * To catch any untoward happenings on init
+    	 */
+    	CPPUNIT_ASSERT(ms);
+
+    	/*
+    	 * Re-initialize timer (to cover failure and reinit)
+    	 */
+    	ms->initTimers(ios);
+    	CPPUNIT_ASSERT(ms);
+
+    	delete ms;
+    }
+
     void testMonitorStats() {
-    	MetaServer* ms = new MetaServer(ios);
+    	MetaServer* ms = new MetaServer();
     	std::map<std::string,std::string> m;
     	m.clear();
 
@@ -110,12 +129,12 @@ class MetaServer_unittest : public CppUnit::TestCase
 
     	delete ms;
     }
-    void testAdminAddServer() {
-    	CPPUNIT_FAIL("to be implemented");
-    }
-    void testAdminDelServer() {
-    	CPPUNIT_FAIL("to be implemented");
-    }
+//    void testAdminAddServer() {
+//    	CPPUNIT_FAIL("to be implemented");
+//    }
+//    void testAdminDelServer() {
+//    	CPPUNIT_FAIL("to be implemented");
+//    }
 
     void testProcessAdminReq_ENUMERATE() {
 
@@ -132,7 +151,7 @@ class MetaServer_unittest : public CppUnit::TestCase
     	/*
     	 * Create instance
     	 */
-    	MetaServer* ms = new MetaServer(ios);
+    	MetaServer* ms = new MetaServer();
 
     	/*
     	 * Process with metaserver
@@ -246,7 +265,7 @@ class MetaServer_unittest : public CppUnit::TestCase
         in.setAddress("123.123.123.123");
         in.setPort(11111);
 
-        MetaServer* ms = new MetaServer(ios);
+        MetaServer* ms = new MetaServer();
 
         ms->processADMINREQ(in,out);
 
@@ -279,11 +298,11 @@ class MetaServer_unittest : public CppUnit::TestCase
 
     }
 
-    void testProcessAdminReq_DELSERVER() {
-
-    	CPPUNIT_FAIL("to be implemented");
-
-    }
+//    void testProcessAdminReq_DELSERVER() {
+//
+//    	CPPUNIT_FAIL("to be implemented");
+//
+//    }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MetaServer_unittest);

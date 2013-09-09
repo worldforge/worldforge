@@ -36,6 +36,7 @@
 #include <unordered_map>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 class DataObject
 {
@@ -112,7 +113,7 @@ private:
 		return false;
 	}
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
-	std::list<std::string> m_serverDataList;
+	std::vector<std::string> m_serverDataList;
 
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<std::string, std::map<std::string,std::string> > m_clientFilterData;
