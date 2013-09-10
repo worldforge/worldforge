@@ -42,7 +42,7 @@ AC_PROG_LIBTOOL
 # set default lang
 AC_LANG([C++])
 AC_REQUIRE_CPP
-AX_CXX_COMPILE_STDCXX_11
+AX_CXX_COMPILE_STDCXX_11(noext)
 
 
 # Check for C libraries:
