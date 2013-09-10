@@ -19,6 +19,7 @@
  */
 
 #include "DataObject.hpp"
+#include <glog/logging.h> // thing about this
 
 DataObject::DataObject()
 {
@@ -344,18 +345,30 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 
 	ss_slice.clear();
 
+	VLOG(5) << "pre - start_idx: " << start_idx
+			<< " -- max_items:" << max_items
+			<< " -- ss_slice:" << ss_slice.size()
+			<< " -- dataList: " << m_serverDataList.size();
+
 	/*
 	 *  Just gate it so that it won't breach the iterator bounds
 	 */
 	 if ( start_idx > m_serverDataList.size() )
 	 {
 		 start_idx = m_serverDataList.size();
+		 VLOG(5) << "start_idx adjustment: " << start_idx;
 	 }
 
 
 	 /*
 	  * It's a zero index list, ergo we want to move to n-1
 	  */
+	 VLOG(7) << "FULL m_serverDataList : " << m_serverDataList.size();
+	 VLOG(7) << "FULL m_serverData     : " << m_serverData.size();
+	 for( auto& f: m_serverDataList )
+	 {
+		 VLOG(7) << "  LI: " << f;
+	 }
 	 for ( ss_itr=m_serverDataList.begin()+start_idx; ss_itr != m_serverDataList.end() ; ss_itr++ )
 	 {
 
@@ -366,9 +379,13 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 			 break;
 
 	     ss_slice.push_back(*ss_itr);
+		 VLOG(7) << "   I(" << ss_slice.size() << "): " << *ss_itr;
+
 	 }
 
+	 VLOG(7) << "   M: " << ss_slice.size();
 	 ss_slice.unique();
+	 VLOG(7) << "   N: " << ss_slice.size();
 	 return ss_slice;
 }
 
