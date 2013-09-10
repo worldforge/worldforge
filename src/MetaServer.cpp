@@ -146,6 +146,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
 		 */
 		std::list<std::string> slist = msdo.getServerSessionList(0,msdo.getServerSessionCount());
+		VLOG(2) << " Total Server Sessions: " << slist.size();
 		while ( ! slist.empty() )
 		{
 			std::string key = slist.front(); slist.pop_front();
@@ -382,6 +383,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
+	uint32_t packed_ip = 0;
 	VLOG(1) << "processSERVERSHAKE(): " << shake;
 
 	/**
@@ -395,17 +397,40 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 	 */
 	if( msdo.handshakeExists(shake) )
 	{
-		std::stringstream ss;
+		/*
+		 * Grab the in packet default values
+		 */
+		std::stringstream ss,ss2;
 		ss << in.getPort();
+		ss2 << in.getAddressInt();
 
+		/*
+		 * If it's larger than 8 bytes, it's got an IP
+		 */
+		if ( in.getSize() > 8 )
+		{
+			packed_ip = in.getIntData(8);
+			ip = MetaServerPacket::IpNetToAscii(packed_ip);
+
+			ss2.str("");
+			ss2 << packed_ip;
+		}
+
+		/*
+		 * If it's larger than 12 bytes, it also includes port
+		 */
+		if ( in.getSize() > 12 )
+		{
+			ss.str("");
+			ss << in.getIntData(12);
+		}
+
+		/*
+		 * Put it into state
+		 */
 		msdo.addServerSession(ip);
 		msdo.addServerAttribute(ip,"port", ss.str() );
-
-		// clear stream first
-		ss.str("");
-		ss << in.getAddressInt();
-
-		msdo.addServerAttribute(ip,"ip_int", ss.str() );
+		msdo.addServerAttribute(ip,"ip_int", ss2.str() );
 	}
 
 }
@@ -508,6 +533,11 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	 */
 	std::list<std::string> sess_list = msdo.getServerSessionList(server_index,packed_max);
     std::list<std::string>::iterator list_itr;
+
+	VLOG(5) << "server_index:" << server_index
+			<< " ** total: " << total
+			<< " ** packed_max: " << packed_max
+			<< " ** sess_list: " << sess_list.size();
 
     for ( list_itr = sess_list.begin(); list_itr != sess_list.end() ; list_itr++ )
     {

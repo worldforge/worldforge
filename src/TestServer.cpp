@@ -47,6 +47,8 @@ int main(int argc, char** argv)
 		( "attribute", boost::program_options::value<attribute_list>(), "Set server attribute.\nDefault: none" )
 		( "keepalive-interval", boost::program_options::value<int>()->default_value(5), "Interval between keepalives\nDefault: 5s" )
 		( "keepalives", boost::program_options::value<int>()->default_value(5), "Number of keeplives before exit.\nDefault: 5" )
+		( "pserver", boost::program_options::value<std::string>(), "Packed Server.  Used to override default network values.  Must be an IP.")
+		( "pport", boost::program_options::value<int>(), "Packed Port.  Used to override default network values")
 			;
 
 	try
@@ -133,6 +135,16 @@ int main(int argc, char** argv)
 		MetaServerPacket servershake;
 		servershake.setPacketType(NMT_SERVERSHAKE);
 		servershake.addPacketData(shake_key);
+		if ( vm.count("pserver") )
+		{
+			std::string s = vm["pserver"].as<std::string>();
+			servershake.addPacketData( MetaServerPacket::IpAsciiToNet(s.c_str()) );
+
+			if ( vm.count("pport") )
+			{
+				servershake.addPacketData(vm["pport"].as<int>());
+			}
+		}
 		servershake.setAddress( shake.getAddress() );
 		s.send_to(boost::asio::buffer(servershake.getBuffer(), servershake.getSize()), *iterator );
 

@@ -345,15 +345,17 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 	ss_slice.clear();
 
 	/*
-	 *  Precheck to ensure that the iterator is
-	 *  not going to run off the end
+	 *  Just gate it so that it won't breach the iterator bounds
 	 */
-	 if ( start_idx >= m_serverDataList.size() )
+	 if ( start_idx > m_serverDataList.size() )
 	 {
 		 start_idx = m_serverDataList.size();
 	 }
 
 
+	 /*
+	  * It's a zero index list, ergo we want to move to n-1
+	  */
 	 for ( ss_itr=m_serverDataList.begin()+start_idx; ss_itr != m_serverDataList.end() ; ss_itr++ )
 	 {
 

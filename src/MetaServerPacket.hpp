@@ -126,8 +126,8 @@ public:
 	const std::string getPacketMessage(unsigned int offset) const;
 	uint32_t getIntData(unsigned int offset) const;
 
-	uint32_t	IpAsciiToNet(const char *buffer);
-	std::string IpNetToAscii(uint32_t address);
+	static uint32_t	IpAsciiToNet(const char *buffer);
+	static std::string IpNetToAscii(uint32_t address);
 
 	std::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
 	void setBuffer( std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )

@@ -58,6 +58,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     CPPUNIT_TEST(test_setSequence_getSequence);
     CPPUNIT_TEST(test_setTimeOffset_getTimeOffset);
     CPPUNIT_TEST(test_setOutBound_getOutBound);
+    CPPUNIT_TEST(test_ipConvert);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -401,6 +402,22 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	msp->setOutBound(false);
     	CPPUNIT_ASSERT( msp->getOutBound() == false );
+    }
+
+    void test_ipConvert()
+    {
+    	/*
+    	 * 127.0.2.1 == 16908415
+    	 */
+    	uint32_t ip_n = 0;
+    	std::string ip_s = "";
+
+    	ip_n = MetaServerPacket::IpAsciiToNet("127.0.2.1");
+    	ip_s = MetaServerPacket::IpNetToAscii(16908415);
+
+    	CPPUNIT_ASSERT(ip_s == "127.0.2.1" );
+    	CPPUNIT_ASSERT(ip_n == 16908415 );
+
     }
 
     void
