@@ -199,7 +199,6 @@ DataObject::addServerSession( const std::string& sessionid )
 {
 
 	bool ret = false;
-	bool found = false;
 	/*
 	 *  If the server session does not exist, create it, and add+uniq the listresp
 	 */
@@ -208,26 +207,11 @@ DataObject::addServerSession( const std::string& sessionid )
 		addServerAttribute(sessionid,"ip",sessionid);
 
 		/*
-		 * Check if the key already exists, so we know about it
+		 * If this is the only way items get onto the list
+		 * then it should always be unique, as we're only adding it
+		 * when there is NO server session
 		 */
-		for ( auto &f: m_serverDataList )
-		{
-			if ( f == sessionid )
-			{
-				found = true;
-				break;
-			}
-		}
-
-		/*
-		 *  If we haven't found our session, we need to add it
-		 *  skip if we already have it.  This should in theory
-		 *  ensure unique list (unless threading)
-		 */
-		if ( !found )
-		{
-			m_serverDataList.push_back(sessionid);
-		}
+		m_serverDataList.push_back(sessionid);
 
 		ret = true;
 	}
@@ -246,24 +230,18 @@ void
 DataObject::removeServerSession( const std::string& sessionid )
 {
 
-	for ( auto& k: m_serverDataList )
-	{
-		if ( k == sessionid )
-		{
-			/*
-			 * Erase from main data
-			 */
-			m_serverData.erase(k);
+	/*
+	 * Erase from main data
+	 */
+	m_serverData.erase(sessionid);
 
-			/*
-			 * Erase from the ordered list
-			 */
-			m_serverDataList.erase(
-					std::remove(m_serverDataList.begin(),m_serverDataList.end(),k),
-					m_serverDataList.end()
-					);
-		}
-	}
+	/*
+	 * Erase from the ordered list
+	 */
+	m_serverDataList.erase(
+			std::remove(m_serverDataList.begin(),m_serverDataList.end(),sessionid),
+			m_serverDataList.end()
+			);
 }
 
 bool
@@ -365,10 +343,17 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 	  */
 	 VLOG(7) << "FULL m_serverDataList : " << m_serverDataList.size();
 	 VLOG(7) << "FULL m_serverData     : " << m_serverData.size();
-	 for( auto& f: m_serverDataList )
+
+	 if ( start_idx==0 && m_serverDataList.size() != m_serverData.size() )
 	 {
-		 VLOG(7) << "  LI: " << f;
+		 VLOG(5) << "LISTREQ Correction";
+		 m_serverDataList.clear();
+		 for ( auto& f: m_serverData )
+		 {
+			 m_serverDataList.push_back(f.first);
+		 }
 	 }
+
 	 for ( ss_itr=m_serverDataList.begin()+start_idx; ss_itr != m_serverDataList.end() ; ss_itr++ )
 	 {
 
