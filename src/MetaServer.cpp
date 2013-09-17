@@ -400,7 +400,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		/*
 		 * Grab the in packet default values
 		 */
-		std::stringstream ss,ss2;
+		std::stringstream ss,ss2,ss3;
 		ss << in.getPort();
 		ss2 << in.getAddressInt();
 
@@ -426,11 +426,28 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		}
 
 		/*
+		 * Wrangle the time between when the keepalive and servershake were sent
+		 * to determine communication latency
+		 */
+		boost::posix_time::ptime t1 = msdo.getHandshakeExpiry(shake);
+		VLOG(5) << ip << "-handShakeExpiry(" << shake << "):" << t1;
+
+		boost::posix_time::ptime t2 = msdo.getNow();
+		VLOG(5) << ip << "-handShakeExpiry(now): " << t2;
+
+		unsigned int latency = msdo.getLatency(t1,t2);
+		VLOG(5) << "  " << ip << "-latency : " << latency;
+
+		ss3 << latency;
+
+		/*
 		 * Put it into state
 		 */
 		msdo.addServerSession(ip);
 		msdo.addServerAttribute(ip,"port", ss.str() );
 		msdo.addServerAttribute(ip,"ip_int", ss2.str() );
+		msdo.addServerAttribute(ip,"latency",ss3.str() );
+
 	}
 
 }
@@ -814,7 +831,6 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 	unsigned int in_port;
 	std::stringstream ss;
 	std::string out_msg = "";
-	char ip_buffer[20];
 
 	VLOG(2) << "processADMINREQ(" << sub_type << ")";
 
@@ -842,12 +858,9 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			in_port   = in.getIntData(12);
 
 			/*
-			 * cargo culted from MSP::IpNetToAscii
+			 * Convert IP
 			 */
-			snprintf(ip_buffer, 15, "%u.%u.%u.%u", (in_addr>>0)&0xFF,
-			       (in_addr>>8)&0xFF, (in_addr>>16)&0xFF, (in_addr>>24)&0xFF);
-
-			out.setAddress(std::string(ip_buffer));
+			out.setAddress(MetaServerPacket::IpNetToAscii(in_addr));
 			out.setPort(in_port);
 			msdo.addServerSession(out.getAddress());
 

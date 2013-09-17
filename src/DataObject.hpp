@@ -33,7 +33,6 @@
 #include <map>
 #include <list>
 #include <vector>
-//#include <unordered_map>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/algorithm/string.hpp>
 #include <algorithm>
@@ -49,6 +48,7 @@ public:
 	uint32_t removeHandshake( unsigned int hs );
 	bool handshakeExists( unsigned int hs );
 	std::vector<unsigned int> expireHandshakes( unsigned int expiry=0 );
+	boost::posix_time::ptime getHandshakeExpiry( unsigned int hs );
 
 	bool addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value );
 	void removeServerAttribute(const std::string& sessionid, const std::string& name );
@@ -86,6 +86,8 @@ public:
 	boost::posix_time::ptime getNow();
 	std::string getNowStr();
 
+	unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
+
 private:
 	/**
 	 *  Example Data Structure ( m_serverData )
@@ -94,7 +96,8 @@ private:
 	 *  	"serverType" => "cyphesis",
 	 *  	"serverUsers" => "100",
 	 *  	"attribute1" => "value1",
-	 *  	"attribute2" => "value2"
+	 *  	"attribute2" => "value2",
+	 *  	"latency" => "200"
 	 *  }
 	 *
 	 *  m_serverDataList contains an ordered representation of

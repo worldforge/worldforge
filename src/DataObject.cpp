@@ -222,6 +222,12 @@ DataObject::addServerSession( const std::string& sessionid )
 	 */
 	addServerAttribute(sessionid,"expiry", getNowStr() );
 
+	/*
+	 *  Add latency calculation
+	 *
+	 *  Default value is to add 1000ms [todo put in config]
+	 */
+
 	return ret;
 
 }
@@ -615,6 +621,26 @@ DataObject::expireHandshakes( unsigned int expiry )
     return removedHS;
 }
 
+boost::posix_time::ptime
+DataObject::getHandshakeExpiry( unsigned int hs )
+{
+	/*
+	 *
+	 */
+	if( handshakeExists(hs) )
+	{
+		return boost::posix_time::from_iso_string( m_handshakeQueue[hs]["expiry"] );
+	}
+	else
+	{
+		/*
+		 * Handicap it if we can't find it ... 5000ms should be
+		 * sufficient
+		 */
+		return (getNow() - boost::posix_time::milliseconds(5000));
+	}
+}
+
 uint32_t
 DataObject::getHandshakeCount()
 {
@@ -644,4 +670,17 @@ std::string
 DataObject::getNowStr()
 {
 	return boost::posix_time::to_iso_string( getNow() );
+}
+
+unsigned int
+DataObject::getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2 )
+{
+	boost::posix_time::time_duration td;
+	td = t2 - t1;
+	if ( td.is_negative() )
+	{
+		return 999;
+	}
+
+	return td.total_milliseconds();
 }

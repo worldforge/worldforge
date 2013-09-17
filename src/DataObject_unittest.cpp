@@ -49,7 +49,9 @@ class DataObject_unittest : public CppUnit::TestFixture
 private:
     DataObject *msdo;
 public:
-    DataObject_unittest() { }
+    DataObject_unittest() {
+    	msdo = 0;
+    }
 
     void setUp()
     {
@@ -159,6 +161,19 @@ public:
 
     	// add our test handshake
     	CPPUNIT_ASSERT( msdo->addHandshake(123456) == 123456 );
+
+    	// check that the expiry and the now are within a couple of seconds
+    	// indicating that the handshake expiry is good (approximately)
+    	// We can't match it exactly, hence a little slack
+    	boost::posix_time::ptime hse = msdo->getHandshakeExpiry(123456);
+    	boost::posix_time::ptime lse = hse + boost::posix_time::milliseconds(1234);
+
+    	// should be zero
+    	CPPUNIT_ASSERT( msdo->getLatency(hse, hse) == 0 );
+
+    	// lets make sure that the contrived latency is good
+    	std::cout << "getLatency(hse,lse): " << msdo->getLatency(hse,lse) << std::endl;
+    	CPPUNIT_ASSERT( msdo->getLatency(hse, lse) == 1234 );
 
     	// does it exist
     	CPPUNIT_ASSERT( msdo->handshakeExists(123456) == true );
