@@ -66,7 +66,8 @@ MetaServer::MetaServer()
 	  m_PacketLogfile(""),
 	  m_isShutdown(false),
 	  m_logPacketAllow(false),
-	  m_logPacketDeny(false)
+	  m_logPacketDeny(false),
+	  m_serverClientCacheExpirySeconds(60)
 {
 
 	/*
@@ -127,6 +128,15 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	if ( expiredCS.size() > 0 )
 	{
 		VLOG(2) << "Expiry ClientSessions: " << expiredCS.size();
+	}
+
+	/*
+	 * We want to purge any cache items that are missing
+	 */
+	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
+	if ( expiredCS.size() > 0 )
+	{
+		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
 	}
 
 
@@ -462,8 +472,23 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 	 */
 	if ( in.getSize() > (sizeof(uint32_t)) )
 	{
-		VLOG(1) << "processTERMINATE-client(): " << in.getAddressStr();
-		msdo.removeClientSession(in.getAddressStr());
+		/*
+		 * Grab the "extra" bit.
+		 * Use Case 1: 0 value padding indicates client terminate
+		 * Use Case 2: non-zero value padding is an IP by proxy
+		 */
+		uint32_t key = in.getIntData(4);
+		if ( key == 0 )
+		{
+			VLOG(1) << "processTERMINATE-client(): " << in.getAddressStr();
+			msdo.removeClientSession(in.getAddressStr());
+		}
+		else
+		{
+			std::string skey = MetaServerPacket::IpNetToAscii(key);
+			VLOG(1) << "processTERMINATE-server(" << key << ")(" << skey << ")";
+			msdo.removeServerSession(skey);
+		}
 	}
 	else
 	{
@@ -526,11 +551,24 @@ void
 MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 {
 	uint32_t server_index = in.getIntData(4);
-	uint32_t total = msdo.getServerSessionCount();
-	uint32_t packed_max = total;
 	uint32_t packed = 0;
 	uint32_t temp_int = 0;
 	std::list<uint32_t> resp_list;
+	std::string ip_str = in.getAddressStr();
+	uint32_t total = msdo.getServerSessionCount(ip_str);
+	uint32_t packed_max = total;
+
+
+	/*
+	 * Trigger the creation of a listreq cache creation
+	 */
+	if ( server_index == 0 )
+	{
+		VLOG(4) << "Initial LISTREQ Request, creating lookup cache (" << ip_str << ")";
+		total = msdo.createServerSessionListresp(ip_str);
+		VLOG(5) << "  Total: " << total;
+		packed_max = total;
+	}
 
 	/*
 	 * If we are unable to pack the entire list into 1 packet
@@ -548,7 +586,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	 * We hide the craziness of what goes on here inside the single method.
 	 * The goal, is to get the list of servers constrained by packed_max
 	 */
-	std::list<std::string> sess_list = msdo.getServerSessionList(server_index,packed_max);
+	std::list<std::string> sess_list = msdo.getServerSessionList(server_index,packed_max,ip_str);
     std::list<std::string>::iterator list_itr;
 
 	VLOG(5) << "server_index:" << server_index
@@ -902,6 +940,8 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	if ( vm.count("performance.max_server_sessions") )
 		m_maxServerSessions = vm["performance.max_server_sessions"].as<int>();
 
+	if ( vm.count("performance.server_client_cache_expiry_seconds") )
+		m_serverClientCacheExpirySeconds = vm["server_client_cache_expiry_seconds"].as<int>();
 
 	if( vm.count("server.client_stats") )
 	{

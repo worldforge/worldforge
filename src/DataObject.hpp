@@ -67,7 +67,7 @@ public:
 	bool addServerSession( const std::string& sessionid );
 	void removeServerSession( const std::string& sessionid );
 	bool serverSessionExists( const std::string& sessionid );
-	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items );
+	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid="default");
 	std::map<std::string,std::string> getServerSession( const std::string& sessionid );
 	std::vector<std::string> expireServerSessions( unsigned int expiry=0 );
 	std::list<std::string> searchServerSessionByAttribute(std::string attr_name,std::string attr_value);
@@ -78,15 +78,17 @@ public:
 	std::list<std::string> getClientSessionList();
 	std::map<std::string,std::string> getClientSession( const std::string& sessionid );
 	std::vector<std::string> expireClientSessions( unsigned int expiry=0 );
+	std::vector<std::string> expireClientSessionCache( unsigned int expiry=0 );
 
 	uint32_t getHandshakeCount();
-	uint32_t getServerSessionCount();
+	uint32_t getServerSessionCount(std::string s = "default");
 	uint32_t getClientSessionCount();
 
 	boost::posix_time::ptime getNow();
 	std::string getNowStr();
 
 	unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
+	uint32_t createServerSessionListresp(std::string ip = "default");
 
 private:
 	/**
@@ -116,7 +118,7 @@ private:
 		return false;
 	}
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
-	std::vector<std::string> m_serverDataList;
+	std::map<std::string, std::vector<std::string> > m_serverListreq;
 
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<std::string, std::map<std::string,std::string> > m_clientFilterData;

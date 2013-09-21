@@ -30,6 +30,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <cassert>
+#include <iostream>
 
 class DataObject_unittest : public CppUnit::TestFixture
 {
@@ -79,11 +80,23 @@ public:
 
     void test_ServerAttribute() {
 
+    	// Assert the default (which should be none), can not have attributes without session
+    	CPPUNIT_ASSERT( msdo->getServerSessionCount() == 0 );
+
     	// Add an attribute
     	CPPUNIT_ASSERT( msdo->addServerAttribute("test-session","test1", "test1" ) == true );
 
-    	// Assert we have a single attribute
+    	// There is no "client" listreq associated with this, so only the main data
+    	// structure.
+    	std::cout << std::endl << "getServerSessionCount()-0: " << msdo->getServerSessionCount() << std::endl;
     	CPPUNIT_ASSERT( msdo->getServerSessionCount() == 1 );
+    	CPPUNIT_ASSERT( msdo->getServerSessionCount("test-session") == 0 );
+
+    	// Create ourselves a fake listreq and make sure it's good
+    	std::cout << std::endl << "getServerSessionCount(test-session)-1: " << msdo->getServerSessionCount("test-session") << std::endl;
+    	msdo->createServerSessionListresp("test-session");
+    	std::cout << std::endl << "getServerSessionCount(test-session)-2: " << msdo->getServerSessionCount("test-session") << std::endl;
+    	CPPUNIT_ASSERT( msdo->getServerSessionCount("test-session") == 1 );
 
     	// Assert that the value we just inserted is good
     	CPPUNIT_ASSERT( msdo->getServerAttribute("test-session", "test1" ) == "test1"  );

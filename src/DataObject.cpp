@@ -26,9 +26,8 @@ DataObject::DataObject()
 	m_serverData.clear();
 	m_clientData.clear();
 	m_clientFilterData.clear();
-	m_serverDataList.clear();
 	m_handshakeQueue.clear();
-
+	m_serverListreq.clear();
 	srand( (unsigned)time(0));
 
 }
@@ -48,6 +47,7 @@ DataObject::addServerAttribute(const std::string& sessionid, const std::string& 
 	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
 	{
 		m_serverData[sessionid][name] = value;
+		VLOG(9) << "  AddServerAttribute: " << sessionid << ":" << name << ":" << value;
 		return true;
 	}
 	return false;
@@ -200,19 +200,11 @@ DataObject::addServerSession( const std::string& sessionid )
 
 	bool ret = false;
 	/*
-	 *  If the server session does not exist, create it, and add+uniq the listresp
+	 *  If the server session does not exist, create it
 	 */
 	if ( ! keyExists<std::string>(m_serverData, sessionid) )
 	{
 		addServerAttribute(sessionid,"ip",sessionid);
-
-		/*
-		 * If this is the only way items get onto the list
-		 * then it should always be unique, as we're only adding it
-		 * when there is NO server session
-		 */
-		m_serverDataList.push_back(sessionid);
-
 		ret = true;
 	}
 
@@ -222,11 +214,6 @@ DataObject::addServerSession( const std::string& sessionid )
 	 */
 	addServerAttribute(sessionid,"expiry", getNowStr() );
 
-	/*
-	 *  Add latency calculation
-	 *
-	 *  Default value is to add 1000ms [todo put in config]
-	 */
 
 	return ret;
 
@@ -242,12 +229,18 @@ DataObject::removeServerSession( const std::string& sessionid )
 	m_serverData.erase(sessionid);
 
 	/*
-	 * Erase from the ordered list
+	 * If we have an listresp cache, remove it as well
 	 */
-	m_serverDataList.erase(
-			std::remove(m_serverDataList.begin(),m_serverDataList.end(),sessionid),
-			m_serverDataList.end()
-			);
+	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
+	{
+		m_serverListreq.erase(sessionid);
+	}
+
+	/*
+	 * If we remove a session, blast out the default cache and let it
+	 * be recreated
+	 */
+	m_serverListreq.erase("default");
 }
 
 bool
@@ -297,6 +290,19 @@ DataObject::removeClientSession( const std::string& sessionid )
 	{
 		// logging if any
 	}
+	/*
+	 * If we have an listresp cache, remove it as well
+	 */
+	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
+	{
+		m_serverListreq.erase(sessionid);
+	}
+
+	/*
+	 * Blast out the default cache and let it be
+	 * recreated
+	 */
+	m_serverListreq.erase("default");
 }
 
 bool
@@ -322,7 +328,7 @@ DataObject::getClientSessionList()
 }
 
 std::list<std::string>
-DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
+DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid )
 {
 	std::list<std::string> ss_slice;
 	std::vector<std::string>::iterator ss_itr;
@@ -332,43 +338,39 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 	VLOG(5) << "pre - start_idx: " << start_idx
 			<< " -- max_items:" << max_items
 			<< " -- ss_slice:" << ss_slice.size()
-			<< " -- dataList: " << m_serverDataList.size();
+			<< " -- serverData: " << m_serverData.size();
+
 
 	/*
-	 *  Just gate it so that it won't breach the iterator bounds
+	 * in the event of no session specified, just use the "default" list
 	 */
-	 if ( start_idx > m_serverDataList.size() )
-	 {
-		 start_idx = m_serverDataList.size();
-		 VLOG(5) << "start_idx adjustment: " << start_idx;
-	 }
-
+	VLOG(5) << "getServerSessionList(" << sessionid << ")";
 
 	 /*
-	  * It's a zero index list, ergo we want to move to n-1
+	  * Lets see how things are looking
 	  */
-	 VLOG(7) << "FULL m_serverDataList : " << m_serverDataList.size();
-	 VLOG(7) << "FULL m_serverData     : " << m_serverData.size();
+	VLOG(7) << "FULL m_serverData     : " << m_serverData.size();
+	VLOG(7) << "m_serverDataList[" << sessionid << "] : " << getServerSessionCount(sessionid);
 
-	 if ( start_idx==0 && m_serverDataList.size() != m_serverData.size() )
-	 {
-		 VLOG(5) << "LISTREQ Correction";
-		 m_serverDataList.clear();
-		 for ( auto& f: m_serverData )
-		 {
-			 m_serverDataList.push_back(f.first);
-		 }
-	 }
+	/*
+	 * If we're empty or going out of bounds, just return the big bubkis
+	 */
+	if ( getServerSessionCount(sessionid) == 0 || start_idx>=getServerSessionCount(sessionid))
+	{
+		return ss_slice;
+	}
 
-	 for ( ss_itr=m_serverDataList.begin()+start_idx; ss_itr != m_serverDataList.end() ; ss_itr++ )
+	 for ( ss_itr=m_serverListreq[sessionid].begin()+start_idx; ss_itr != m_serverListreq[sessionid].end() ; ++ss_itr )
 	 {
 
 		 /*
 		  * Early bail out
 		  */
 		 if ( ss_slice.size() >= max_items )
+		 {
+			 VLOG(7) << "ss_slice size(" << ss_slice.size() << ") is greater than max_items (" << max_items << ")";
 			 break;
-
+		 }
 	     ss_slice.push_back(*ss_itr);
 		 VLOG(7) << "   I(" << ss_slice.size() << "): " << *ss_itr;
 
@@ -414,6 +416,10 @@ DataObject::expireServerSessions( unsigned int expiry )
     	{
     		std::map<std::string,std::map<std::string,std::string> >::iterator itr_copy = itr;
     		++itr_copy;
+
+    		/*
+    		 * This also remove listreq cache items as well as the default cache
+    		 */
     		removeServerSession(key);
     		itr = itr_copy;
     		expiredSS.push_back(key);
@@ -438,25 +444,24 @@ DataObject::searchServerSessionByAttribute(std::string attr_name,std::string att
 	std::list<std::string> matched;
 
 	matched.clear();
-    std::vector<std::string>::iterator itr;
     std::string vattr;
 
     /*
-     * Loop through all sessions
+     * Loop through all servers
      */
-    for( auto& vv : m_serverDataList )
+    for( auto& vv : m_serverData )
     {
 
     	/*
     	 * Returns an empty string
     	 */
-    	std::string vattr = getServerAttribute(vv,attr_name);
+    	std::string vattr = getServerAttribute(vv.first,attr_name);
 
     	/*
     	 * If the session has the attribute, and the value matches, push it on list
     	 */
     	if( boost::iequals(vattr,attr_val))
-    		matched.push_back(vv);
+    		matched.push_back(vv.first);
 
     }
     return matched;
@@ -520,6 +525,31 @@ DataObject::expireClientSessions( unsigned int expiry )
     }
     return expiredCS;
 
+}
+
+std::vector<std::string>
+DataObject::expireClientSessionCache( unsigned int expiry )
+{
+	std::vector<std::string> expiredCSC;
+	expiredCSC.clear();
+	/*
+	 * Iterate over all the client caches, and if there is no corresponding
+	 * client session, remove the cache
+	 */
+	for(auto& f : m_serverListreq )
+	{
+		if ( m_clientData.find(f.first) == m_clientData.end() && f.first != "default" )
+		{
+			/*
+			 * Iteration to the end means element was not found, so we remove
+			 * the cache item
+			 */
+			VLOG(5) << "clientCache(" << f.first << ") expired";
+			m_serverListreq.erase(f.first);
+			expiredCSC.push_back(f.first);
+		}
+	}
+	return expiredCSC;
 }
 
 
@@ -648,9 +678,43 @@ DataObject::getHandshakeCount()
 }
 
 uint32_t
-DataObject::getServerSessionCount()
+DataObject::getServerSessionCount(std::string s)
 {
-	return m_serverData.size();
+	/*
+	 * If we have a session list cache, push from there
+	 * or fallback on the main data structure  If something
+	 * is passed, but a listreq cache is not created return
+	 * 0 to indicate that the requested cache is not present
+	 */
+	VLOG(8) << "getServerSessionCount(" << s << ")";
+	if ( s == "default" )
+	{
+		/*
+		 * Called with the default argument
+		 */
+		VLOG(9) << "  default m_serverData.size() count";
+		return m_serverData.size();
+
+	}
+	else
+	{
+
+		if ( m_serverListreq.find(s) != m_serverListreq.end() )
+		{
+			/*
+			 * We've got a custom list defined already, give a count
+			 */
+			VLOG(9) << "  m_serverListreq[" << s << "] found of size : " << m_serverListreq[s].size();
+			return m_serverListreq[s].size();
+		}
+
+		/*
+		 * We have no custom list
+		 */
+		VLOG(9) <<   "no m_serverListreq[" << s << "] Found.  Return 0.";
+		return 0;
+	}
+
 }
 
 uint32_t
@@ -684,3 +748,51 @@ DataObject::getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t
 
 	return td.total_milliseconds();
 }
+
+uint32_t
+DataObject::createServerSessionListresp(std::string ip)
+{
+	std::list<std::string> ip_list;
+	std::vector<std::string> ip_vec;
+
+	/*
+	 * zero out list
+	 */
+	ip_list.clear();
+	ip_vec.clear();
+
+	/*
+	 * Check if cache exists ... if so erase it
+	 */
+	if ( m_serverListreq.find(ip) != m_serverListreq.end() )
+	{
+		m_serverListreq.erase(ip);
+	}
+
+	/*
+	 * TODO: this is where we can apply custom per-client sorting and
+	 * filtering.  Perhaps maybe create a sort lambda ?
+	 */
+	for( auto& foo : m_serverData )
+	{
+		ip_list.push_back(foo.first);
+	}
+
+	/*
+	 * Just put in the list to make preventing duplicates easier
+	 */
+	ip_list.unique();
+
+	for( auto& bar: ip_list )
+	{
+		ip_vec.push_back(bar);
+	}
+
+	/*
+	 *  Place list into cache
+	 */
+	m_serverListreq[ip] = ip_vec;
+
+	return ip_vec.size();
+}
+

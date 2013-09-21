@@ -213,6 +213,18 @@ int main(int argc, char** argv)
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
 		term.setAddress( shake.getAddress());
+
+		/*
+		 * If a packed server has been specified (ie registration of a server
+		 * that is NOT the IP that we are), we need to pack the address
+		 * so that the MS can terminate the right session otherwise it will be left to timeout
+		 */
+		if ( vm.count("pserver") )
+		{
+			std::string s = vm["pserver"].as<std::string>();
+			term.addPacketData( MetaServerPacket::IpAsciiToNet(s.c_str()) );
+		}
+
 		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
 
 

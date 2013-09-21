@@ -78,4 +78,6 @@ monitor_firewall_allow=any
 max_server_sessions=1000
 max_client_sessions=4000
 server_session_expiry_seconds=360
+server_client_cache_expiry_seconds=30
 client_session_expiry_seconds=360
+

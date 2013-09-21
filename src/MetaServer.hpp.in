@@ -125,6 +125,7 @@ class MetaServer
 	std::string m_Domain;
 	std::set<std::string> m_adminCommandSet;
 	std::map<std::string,std::string> m_metaStats;
+	unsigned int m_serverClientCacheExpirySeconds;
 
 };
 
