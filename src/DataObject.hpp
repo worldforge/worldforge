@@ -67,7 +67,7 @@ public:
 	bool addServerSession( const std::string& sessionid );
 	void removeServerSession( const std::string& sessionid );
 	bool serverSessionExists( const std::string& sessionid );
-	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid="default");
+	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid = "default");
 	std::map<std::string,std::string> getServerSession( const std::string& sessionid );
 	std::vector<std::string> expireServerSessions( unsigned int expiry=0 );
 	std::list<std::string> searchServerSessionByAttribute(std::string attr_name,std::string attr_value);
@@ -89,6 +89,7 @@ public:
 
 	unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
 	uint32_t createServerSessionListresp(std::string ip = "default");
+	std::list<std::string> getServerSessionCacheList();
 
 private:
 	/**

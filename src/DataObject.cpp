@@ -229,14 +229,6 @@ DataObject::removeServerSession( const std::string& sessionid )
 	m_serverData.erase(sessionid);
 
 	/*
-	 * If we have an listresp cache, remove it as well
-	 */
-	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
-	{
-		m_serverListreq.erase(sessionid);
-	}
-
-	/*
 	 * If we remove a session, blast out the default cache and let it
 	 * be recreated
 	 */
@@ -293,16 +285,17 @@ DataObject::removeClientSession( const std::string& sessionid )
 	/*
 	 * If we have an listresp cache, remove it as well
 	 */
-	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
-	{
-		m_serverListreq.erase(sessionid);
-	}
-
-	/*
-	 * Blast out the default cache and let it be
-	 * recreated
-	 */
-	m_serverListreq.erase("default");
+	m_serverListreq.erase(sessionid);
+//	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
+//	{
+//		m_serverListreq.erase(sessionid);
+//	}
+//
+//	/*
+//	 * Blast out the default cache and let it be
+//	 * recreated
+//	 */
+//	m_serverListreq.erase("default");
 }
 
 bool
@@ -345,6 +338,16 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::st
 	 * in the event of no session specified, just use the "default" list
 	 */
 	VLOG(5) << "getServerSessionList(" << sessionid << ")";
+
+	/*
+	 * If we're doing the default list and it doesn't match with the current data
+	 * create it
+	 */
+	if ( start_idx == 0 && sessionid == "default" )
+	{
+		VLOG(5) << "Refreshing (default) server list";
+		createServerSessionListresp("default");
+	}
 
 	 /*
 	  * Lets see how things are looking
@@ -545,7 +548,7 @@ DataObject::expireClientSessionCache( unsigned int expiry )
 			 * the cache item
 			 */
 			VLOG(5) << "clientCache(" << f.first << ") expired";
-			m_serverListreq.erase(f.first);
+//			m_serverListreq.erase(f.first);
 			expiredCSC.push_back(f.first);
 		}
 	}
@@ -761,12 +764,16 @@ DataObject::createServerSessionListresp(std::string ip)
 	ip_list.clear();
 	ip_vec.clear();
 
+	VLOG(9) << "createServerSessionListresp(" << ip << ")";
+    VLOG(9) << "m_serverData(" << m_serverData.size() << ")";
 	/*
 	 * Check if cache exists ... if so erase it
 	 */
 	if ( m_serverListreq.find(ip) != m_serverListreq.end() )
 	{
+		VLOG(9) << "  m_serverListreq[" << ip << "] exists, erasing";
 		m_serverListreq.erase(ip);
+//		m_serverListreq[ip].clear();
 	}
 
 	/*
@@ -775,6 +782,7 @@ DataObject::createServerSessionListresp(std::string ip)
 	 */
 	for( auto& foo : m_serverData )
 	{
+		VLOG(9) << "    Temp Cache[" << ip << "] = " << foo.first;
 		ip_list.push_back(foo.first);
 	}
 
@@ -785,6 +793,7 @@ DataObject::createServerSessionListresp(std::string ip)
 
 	for( auto& bar: ip_list )
 	{
+		VLOG(9) << "    Packing vector (" << bar << ")";
 		ip_vec.push_back(bar);
 	}
 
@@ -795,4 +804,19 @@ DataObject::createServerSessionListresp(std::string ip)
 
 	return ip_vec.size();
 }
+
+std::list<std::string>
+DataObject::getServerSessionCacheList()
+{
+	std::list<std::string> slist;
+	slist.clear();
+	VLOG(9) << "getServerSessionCacheList(): total=" << m_serverListreq.size();
+	for( auto& m : m_serverListreq )
+	{
+		VLOG(9) << "  cache-" << m.first;
+		slist.push_back(m.first);
+	}
+	return slist;
+}
+
 

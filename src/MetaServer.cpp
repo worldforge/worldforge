@@ -45,8 +45,10 @@ MetaServer::MetaServer()
 	: m_handshakeExpirySeconds(30),
 	  m_expiryTimer(0),
 	  m_updateTimer(0),
-	  m_expiryDelayMilliseconds(1500),
-	  m_updateDelayMilliseconds(4000),
+	  m_scoreTimer(0),
+	  m_expiryDelayMilliseconds(3000),
+	  m_updateDelayMilliseconds(5000),
+	  m_scoreDelayMilliseconds(60000),
 	  m_sessionExpirySeconds(3600),
 	  m_clientExpirySeconds(300),
 	  m_packetLoggingFlushSeconds(10),
@@ -85,7 +87,9 @@ MetaServer::MetaServer()
 	m_metaStats["packet.sequence"] = "0";
 	m_metaStats["server.sessions"] = "0";
 	m_metaStats["client.sessions"] = "0";
+	m_metaStats["client.cache"] = "0";
 	m_metaStats["current.handshakes"] = "0";
+	m_metaStats["server.uptime"] = "0";
 
 }
 
@@ -98,6 +102,9 @@ MetaServer::~MetaServer()
 void
 MetaServer::expiry_timer(const boost::system::error_code& error)
 {
+
+	VLOG(5) << "Tick expiry_timer";
+
 	boost::posix_time::ptime now = msdo.getNow();
 	boost::posix_time::ptime etime;
 	std::map<std::string,std::string>::iterator attr_iter;
@@ -133,17 +140,11 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	/*
 	 * We want to purge any cache items that are missing
 	 */
-	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
-	if ( expiredCS.size() > 0 )
-	{
-		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
-	}
-
-
-    /**
-     * Remove client filters if there is no longer a client session.
-     * NOTE: this happens now in msdo->removeClientSession
-     */
+//	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
+//	if ( expiredCS.size() > 0 )
+//	{
+//		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
+//	}
 
 	/**
      * Display Server Sessions and Attributes
@@ -237,13 +238,7 @@ void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
 
-	if ( !boost::filesystem::exists(m_pidFile) ||
-		 !boost::filesystem::is_regular_file(m_pidFile) )
-	{
-		m_isShutdown = true;
-		throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
-	}
-
+	VLOG(5) << "Tick update_timer";
 
 	/**
 	 *  Update Stats
@@ -269,6 +264,17 @@ MetaServer::update_timer(const boost::system::error_code& error)
 	ss << msdo.getHandshakeCount();
 	m_metaStats["current.handshakes"] = ss.str();
 
+	ss.str("");
+	ss << msdo.getServerSessionCacheList().size();
+	m_metaStats["client.cache"] = ss.str();
+
+	/*
+	 * Calculate uptime
+	 */
+	ss.str("");
+	ss << getDeltaMillis();
+	m_metaStats["server.uptime"] = ss.str();
+
 	/*
 	 * Reset Timer
 	 */
@@ -276,6 +282,175 @@ MetaServer::update_timer(const boost::system::error_code& error)
     m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 }
 
+void
+MetaServer::score_timer(const boost::system::error_code& error)
+{
+	VLOG(5) << "Tick score_timer(" << m_scoreDelayMilliseconds << ")";
+
+	/*
+	 * Check for the pidfile, shutdown if it's missing
+	 */
+	if ( !boost::filesystem::exists(m_pidFile) ||
+		 !boost::filesystem::is_regular_file(m_pidFile) )
+	{
+		m_isShutdown = true;
+		throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
+	}
+
+	/*
+	 * We want to write the m_serverData scoreboard
+	 */
+	std::ofstream clubber;
+	std::list<std::string> slist;
+	std::map<std::string,std::string> sess;
+
+	if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
+	{
+		/*
+		 * The parent directory of the specified score file does not exist
+		 * and we want to just skip nicely over it, making a warning in the logs
+		 * and continuing on anyway
+		 */
+		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreServer.string() << ")";
+	}
+	else
+	{
+		/*
+		 * Directory is present, we're go for the clobber and fill
+		 */
+		boost::filesystem::remove(m_scoreServer);
+		clubber.open(m_scoreServer.c_str());
+		clubber.clear();
+
+		/*
+		 * Blast out servers
+		 */
+		slist = msdo.getServerSessionList(0,m_maxServerSessions);
+		VLOG(5) << "Servers: " << slist.size();
+		for(auto& m : slist )
+		{
+			VLOG(9) << "scoreboard(" << m_scoreServer.string() << "):" << m;
+			sess = msdo.getServerSession(m);
+			clubber << m << "={";
+			for( auto& n : sess )
+			{
+				clubber << n.first << "=" << n.second << ",";
+			}
+			clubber << "}" << std::endl;
+		}
+		clubber.close();
+
+	}
+
+	/*
+	 * Client Sessions
+	 */
+	if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
+	{
+		/*
+		 * The parent directory of the specified score file does not exist
+		 * and we want to just skip nicely over it, making a warning in the logs
+		 * and continuing on anyway
+		 */
+		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreClient.string() << ")";
+	}
+	else
+	{
+		/*
+		 * Directory is present, we're go for the clobber and fill
+		 */
+		boost::filesystem::remove(m_scoreClient);
+		clubber.open(m_scoreClient.c_str());
+		clubber.clear();
+
+		/*
+		 * Blast out clients
+		 */
+		slist = msdo.getClientSessionList();
+		VLOG(5) << "Clients: " << slist.size();
+		for(auto& m : slist )
+		{
+			VLOG(9) << "scoreboard(" << m_scoreClient.string() << "):" << m;
+			sess = msdo.getClientSession(m);
+			clubber << m << "={";
+			for( auto& n : sess )
+			{
+				clubber << n.first << "=" << n.second << ",";
+			}
+			clubber << "}" << std::endl;
+		}
+		clubber.close();
+
+	}
+
+	/*
+	 * Stats Scoreboard
+	 */
+	if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
+	{
+		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreStats.string() << ")";
+	}
+	else
+	{
+		boost::filesystem::remove(m_scoreStats);
+		clubber.open(m_scoreStats.c_str());
+		clubber.clear();
+
+		/*
+		 * Put in the stats
+		 */
+		for( auto& r: m_metaStats )
+		{
+			clubber << r.first << "=" << r.second << std::endl;
+		}
+		clubber.close();
+	}
+
+	/*
+	 * Cache Scoreboard
+	 */
+	if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
+	{
+		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreCCache.string() << ")";
+	}
+	else
+	{
+		std::list<std::string> v;
+		boost::filesystem::remove(m_scoreCCache);
+		clubber.open(m_scoreCCache.c_str());
+		clubber.clear();
+		v.clear();
+		slist = msdo.getServerSessionCacheList();
+		for( auto& m : slist )
+		{
+			clubber << m << "(" << msdo.getServerSessionCount(m) << ")";
+
+			v = msdo.getServerSessionList(0,m_maxServerSessions,m);
+
+			clubber << "(" << v.size() << ")";
+			if ( v.size() > 0 )
+			{
+				clubber << "={ ";
+				for(auto& n : v)
+				{
+					clubber << n << ",";
+				}
+				clubber << " };" << std::endl;
+			}
+			else
+			{
+				clubber << "={ };" << std::endl;
+			}
+		}
+		clubber.close();
+	}
+
+	/*
+	 * Reset Timer
+	 */
+    m_scoreTimer->expires_from_now(boost::posix_time::millisec(m_scoreDelayMilliseconds));
+    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
+}
 
 /**
  * Convenience method that evaluates what type of packet and call appropriate handle method
@@ -481,7 +656,11 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 		if ( key == 0 )
 		{
 			VLOG(1) << "processTERMINATE-client(): " << in.getAddressStr();
-			msdo.removeClientSession(in.getAddressStr());
+			/*
+			 * Normally want to terminate sessions and may turn this back
+			 * on, but generally speaking we want client sessions to expire out
+			 */
+//			msdo.removeClientSession(in.getAddressStr());
 		}
 		else
 		{
@@ -613,7 +792,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
     	if ( msdo.serverSessionExists( *list_itr ))
     	{
     		/*
-    		 * Note: see if there is a way to do this without atoi
+    		 * Pack the int IP
     		 */
     		std::istringstream( msdo.getServerSession(*list_itr)["ip_int"] ) >> temp_int;
 
@@ -941,7 +1120,17 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		m_maxServerSessions = vm["performance.max_server_sessions"].as<int>();
 
 	if ( vm.count("performance.server_client_cache_expiry_seconds") )
-		m_serverClientCacheExpirySeconds = vm["server_client_cache_expiry_seconds"].as<int>();
+		m_serverClientCacheExpirySeconds = vm["performance.server_client_cache_expiry_seconds"].as<int>();
+
+	if ( vm.count("performance.tick_expiry_milliseconds") )
+		m_expiryDelayMilliseconds = vm["performance.tick_expiry_milliseconds"].as<int>();
+
+	if ( vm.count("performance.tick_update_milliseconds") )
+		m_updateDelayMilliseconds = vm["performance.tick_update_milliseconds"].as<int>();
+
+	if ( vm.count("performance.tick_score_milliseconds") )
+		m_scoreDelayMilliseconds = vm["performance.tick_score_milliseconds"].as<int>();
+
 
 	if( vm.count("server.client_stats") )
 	{
@@ -1122,6 +1311,34 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		std::cout << "Assigning m_pidFile : " << m_pidFile.string() << std::endl;
 	}
 
+	/*
+	 * Scoreboard files
+	 */
+	if ( vm.count("scoreboard.server") )
+	{
+		m_scoreServer = vm["scoreboard.server"].as<std::string>();
+		std::cout << "Assigning m_scoreServer : " << m_scoreServer.string() << std::endl;
+	}
+
+	if ( vm.count("scoreboard.client") )
+	{
+		m_scoreClient = vm["scoreboard.client"].as<std::string>();
+		std::cout << "Assigning m_scoreClient : " << m_scoreClient.string() << std::endl;
+	}
+
+
+	if ( vm.count("scoreboard.stats") )
+	{
+		m_scoreStats = vm["scoreboard.stats"].as<std::string>();
+		std::cout << "Assigning m_scoreStats : " << m_scoreStats.string() << std::endl;
+	}
+
+	if ( vm.count("scoreboard.ccache") )
+	{
+		m_scoreCCache = vm["scoreboard.ccache"].as<std::string>();
+		std::cout << "Assigning m_scoreCCache : " << m_scoreCCache.string() << std::endl;
+	}
+
 	/**
 	 * Initialise the logger to appropriately
 	 */
@@ -1216,10 +1433,18 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 		delete m_updateTimer;
 	}
 
+	if(m_scoreTimer)
+	{
+		LOG(WARNING) << "Purging m_scoreTimer";
+		delete m_scoreTimer;
+	}
+
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+    m_scoreTimer  = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
 
 	LOG(INFO) << "Timer initiation completed";
 

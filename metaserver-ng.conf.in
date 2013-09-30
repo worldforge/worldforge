@@ -28,6 +28,16 @@ server_stats=true
 # E.g. serverfoo.servers.ms.worldforge.org 
 domain=ms.worldforge.org
 
+[scoreboard]
+# m_serverData
+server=@rundir@/server.score
+# m_clientData
+client=@rundir@/client.score
+# Collected various sources, e.g. number of total packets processed and uptime
+stats=@rundir@/stats.score
+# m_serverListreq (server list per client)
+ccache=@rundir@/ccache.score
+
 [logging]
 loglevel=INFO
 logging_flush_seconds=10
@@ -80,4 +90,7 @@ max_client_sessions=4000
 server_session_expiry_seconds=360
 server_client_cache_expiry_seconds=30
 client_session_expiry_seconds=360
+tick_expiry_milliseconds=3000
+tick_update_milliseconds=5000
+tick_score_milliseconds=60000
 

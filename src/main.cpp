@@ -71,6 +71,10 @@ int main(int argc, char** argv)
 		( "server.client_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
 		( "server.server_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
 		( "server.domain", boost::program_options::value<std::string>()->default_value("ms.worldforge.org"),"DNS Publishing Domain.\nDefault: ms.worldforge.org" )
+		( "scoreboard.server", boost::program_options::value<std::string>(), "Scoreboard for the registered servers." )
+		( "scoreboard.client", boost::program_options::value<std::string>(), "Scoreboard for the registered clients." )
+		( "scoreboard.stats", boost::program_options::value<std::string>(), "Scoreboard for metaserver stats." )
+		( "scoreboard.ccache", boost::program_options::value<std::string>(), "Scoreboard for client cache" )
 		( "logging.server_sessions", boost::program_options::value<std::string>(), "Output server sessions to logfile [true|false].  \nDefault: false" )
 		( "logging.client_sessions", boost::program_options::value<std::string>(), "Output client sessions to logfile [true|false].  \nDefault: false" )
 		( "logging.packet_logging", boost::program_options::value<std::string>(), "Output all packets to logfile [true|false].  \nDefault: false" )
@@ -86,6 +90,9 @@ int main(int argc, char** argv)
 		( "performance.max_client_sessions", boost::program_options::value<int>(), "Max number of client sessions [1-32768].\nDefault: 4096")
 		( "performance.server_session_expiry_seconds", boost::program_options::value<int>(), "Expiry in seconds for server sessions [300-3600].\nDefault: 300" )
 		( "performance.client_session_expiry_seconds", boost::program_options::value<int>(), "Expiry in seconds for client sessions [300-3600].\nDefault: 300" )
+		( "performance.tick_expiry_milliseconds", boost::program_options::value<int>()->default_value(3000), "Expiry Timer Interval.\nDefault: 3000")
+		( "performance.tick_update_milliseconds", boost::program_options::value<int>()->default_value(5000), "Update Timer Interval.\nDefault: 5000")
+		( "performance.tick_score_milliseconds", boost::program_options::value<int>()->default_value(60000), "Scoreboard Timer Interval.\nDefault: 60000")
 			;
 
 	/*
@@ -360,8 +367,10 @@ int main(int argc, char** argv)
 			}
 			catch(boost::exception& bex )
 			{
-				std::cerr << "Boost Exception : attempting recovery" << std::endl;
-				LOG(ERROR) << "Boost Exception : attempting recovery";
+				std::cerr << "Boost Exception :" << std::endl;
+				std::cerr << boost::diagnostic_information(bex) << std::endl;
+				LOG(ERROR) << "Boost Exception :";
+				LOG(ERROR) << boost::diagnostic_information(bex);
 				LOG(ERROR) << "Calling reinitialisation of the timers";
 				ms.initTimers(io_service);
 			}
@@ -390,7 +399,9 @@ int main(int argc, char** argv)
 				else
 				{
 					std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
+					std::cerr << boost::diagnostic_information(ex) << std::endl;
 					LOG(ERROR) << "IOService Loop Exception:" << ex.what();
+					LOG(ERROR) << boost::diagnostic_information(ex);
 					LOG(ERROR) << "Calling reinitialisation of the timers";
 					ms.initTimers(io_service);
 				}

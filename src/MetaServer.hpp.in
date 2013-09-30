@@ -63,6 +63,7 @@ class MetaServer
 	~MetaServer();
 	void expiry_timer(const boost::system::error_code& error);
 	void update_timer(const boost::system::error_code& error);
+	void score_timer(const boost::system::error_code& error);
 
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
 	void processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out);
@@ -98,8 +99,10 @@ class MetaServer
 	unsigned int m_handshakeExpirySeconds;
 	boost::asio::deadline_timer* m_expiryTimer;
 	boost::asio::deadline_timer* m_updateTimer;
+	boost::asio::deadline_timer* m_scoreTimer;
 	unsigned int m_expiryDelayMilliseconds;
 	unsigned int m_updateDelayMilliseconds;
+	unsigned int m_scoreDelayMilliseconds;
 	unsigned int m_sessionExpirySeconds;
 	unsigned int m_clientExpirySeconds;
 	unsigned int m_packetLoggingFlushSeconds;
@@ -120,6 +123,10 @@ class MetaServer
 	std::string m_PacketLogfile;
 	bool m_isShutdown;
 	boost::filesystem::path m_pidFile;
+	boost::filesystem::path m_scoreServer;
+	boost::filesystem::path m_scoreClient;
+	boost::filesystem::path m_scoreStats;
+	boost::filesystem::path m_scoreCCache;	
 	bool m_logPacketAllow;
 	bool m_logPacketDeny;
 	std::string m_Domain;
