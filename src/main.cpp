@@ -365,7 +365,7 @@ int main(int argc, char** argv)
 				io_service.run();
 				break;
 			}
-			catch(boost::exception& bex )
+			catch(const boost::exception& bex )
 			{
 				std::cerr << "Boost Exception :" << std::endl;
 				std::cerr << boost::diagnostic_information(bex) << std::endl;
@@ -374,7 +374,7 @@ int main(int argc, char** argv)
 				LOG(ERROR) << "Calling reinitialisation of the timers";
 				ms.initTimers(io_service);
 			}
-			catch(std::exception& ex)
+			catch(const std::exception& ex)
 			{
 				/*
 				 * This will catch exceptions inside the io_service loop/handler.
@@ -410,7 +410,7 @@ int main(int argc, char** argv)
 		LOG(INFO) << "Shutting Down Metaserver";
 
 	}
-	catch (std::exception& e)
+	catch (const std::exception& e)
 	{
 		/*
 		 * This will catch exceptions during the startup etc
