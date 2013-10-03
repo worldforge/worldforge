@@ -120,6 +120,7 @@ private:
 	}
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
 	std::map<std::string, std::vector<std::string> > m_serverListreq;
+	std::map<std::string, std::string> m_listreqExpiry;
 
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<std::string, std::map<std::string,std::string> > m_clientFilterData;

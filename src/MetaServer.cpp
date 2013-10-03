@@ -140,11 +140,11 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	/*
 	 * We want to purge any cache items that are missing
 	 */
-//	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
-//	if ( expiredCS.size() > 0 )
-//	{
-//		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
-//	}
+	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
+	if ( expiredCS.size() > 0 )
+	{
+		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
+	}
 
 	/**
      * Display Server Sessions and Attributes

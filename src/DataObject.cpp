@@ -28,6 +28,7 @@ DataObject::DataObject()
 	m_clientFilterData.clear();
 	m_handshakeQueue.clear();
 	m_serverListreq.clear();
+	m_listreqExpiry.clear();
 	srand( (unsigned)time(0));
 
 }
@@ -285,7 +286,7 @@ DataObject::removeClientSession( const std::string& sessionid )
 	/*
 	 * If we have an listresp cache, remove it as well
 	 */
-	m_serverListreq.erase(sessionid);
+//	m_serverListreq.erase(sessionid);
 //	if( m_serverListreq.find(sessionid) != m_serverListreq.end() )
 //	{
 //		m_serverListreq.erase(sessionid);
@@ -539,18 +540,33 @@ DataObject::expireClientSessionCache( unsigned int expiry )
 	 * Iterate over all the client caches, and if there is no corresponding
 	 * client session, remove the cache
 	 */
-	for(auto& f : m_serverListreq )
+	boost::posix_time::ptime now = getNow();
+	boost::posix_time::ptime etime;
+
+	/*
+	 * Grab our list of expired cache items
+	 */
+	for( auto& f : m_listreqExpiry )
 	{
-		if ( m_clientData.find(f.first) == m_clientData.end() && f.first != "default" )
+		VLOG(8) << "  iterate m_listreqExpiry : " << f.first << "=" << f.second;
+		etime = boost::posix_time::from_iso_string(f.second)
+		      + boost::posix_time::seconds(expiry);
+
+		VLOG(9) << "  evaluate etime : " << etime;
+		VLOG(9) << "  evaluate   now : " << now;
+		if ( now > etime )
 		{
-			/*
-			 * Iteration to the end means element was not found, so we remove
-			 * the cache item
-			 */
-			VLOG(5) << "clientCache(" << f.first << ") expired";
-//			m_serverListreq.erase(f.first);
+			VLOG(8) << "  expire m_listreqExpiry : " << f.first;
 			expiredCSC.push_back(f.first);
 		}
+	}
+
+	VLOG(8) << "  collected expiredCSC(" << expiredCSC.size() << ")";
+	for( auto& f : expiredCSC )
+	{
+		VLOG(7) << "  purge expired(" << f << ")";
+		m_listreqExpiry.erase(f);
+		m_serverListreq.erase(f);
 	}
 	return expiredCSC;
 }
@@ -801,6 +817,7 @@ DataObject::createServerSessionListresp(std::string ip)
 	 *  Place list into cache
 	 */
 	m_serverListreq[ip] = ip_vec;
+	m_listreqExpiry[ip] = getNowStr();
 
 	return ip_vec.size();
 }
