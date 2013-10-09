@@ -1,6 +1,6 @@
 ## Process this file with automake to generate Makefile.in
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 lib_LTLIBRARIES = libvarconf-1.0.la
 

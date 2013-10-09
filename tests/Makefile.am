@@ -10,7 +10,7 @@ DISTCLEANFILES = conf2.cfg
 
 RECHECK_LOGS =
 
-INCLUDES = -I$(top_srcdir) -DSRCDIR=\"$(srcdir)\"
+AM_CPPFLAGS = -I$(top_srcdir) -DSRCDIR=\"$(srcdir)\"
 LDADD = $(top_builddir)/varconf/libvarconf-1.0.la
 
 conftest_SOURCES = conftest.cpp
