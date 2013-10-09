@@ -1,6 +1,6 @@
 SUBDIRS = . Message Codecs Filters Net Objects Funky
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 lib_LTLIBRARIES = libAtlas-0.6.la
 

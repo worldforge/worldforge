@@ -1,5 +1,5 @@
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 lib_LTLIBRARIES = libAtlasMessage-0.6.la
 

@@ -6,7 +6,7 @@ EXTRA_PROGRAMS = SmartPtr_Move
 
 TESTS = $(check_PROGRAMS)
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
          -L$(top_builddir)/Atlas/Filters/ -L$(top_builddir)/Atlas/Message/ \
