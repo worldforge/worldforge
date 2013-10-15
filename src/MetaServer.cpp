@@ -287,162 +287,171 @@ MetaServer::score_timer(const boost::system::error_code& error)
 {
 	VLOG(5) << "Tick score_timer(" << m_scoreDelayMilliseconds << ")";
 
-	/*
-	 * Check for the pidfile, shutdown if it's missing
-	 */
-	if ( !boost::filesystem::exists(m_pidFile) ||
-		 !boost::filesystem::is_regular_file(m_pidFile) )
+	if(!error)
 	{
-		m_isShutdown = true;
-		throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
-	}
-
-	/*
-	 * We want to write the m_serverData scoreboard
-	 */
-	std::ofstream clubber;
-	std::list<std::string> slist;
-	std::map<std::string,std::string> sess;
-
-	if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
-	{
-		/*
-		 * The parent directory of the specified score file does not exist
-		 * and we want to just skip nicely over it, making a warning in the logs
-		 * and continuing on anyway
-		 */
-		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreServer.string() << ")";
-	}
-	else
-	{
-		/*
-		 * Directory is present, we're go for the clobber and fill
-		 */
-		boost::filesystem::remove(m_scoreServer);
-		clubber.open(m_scoreServer.c_str());
-		clubber.clear();
 
 		/*
-		 * Blast out servers
+		 * Check for the pidfile, shutdown if it's missing
 		 */
-		slist = msdo.getServerSessionList(0,m_maxServerSessions);
-		VLOG(5) << "Servers: " << slist.size();
-		for(auto& m : slist )
+		if ( !boost::filesystem::exists(m_pidFile) ||
+			 !boost::filesystem::is_regular_file(m_pidFile) )
 		{
-			VLOG(9) << "scoreboard(" << m_scoreServer.string() << "):" << m;
-			sess = msdo.getServerSession(m);
-			clubber << m << "={";
-			for( auto& n : sess )
-			{
-				clubber << n.first << "=" << n.second << ",";
-			}
-			clubber << "}" << std::endl;
+			m_isShutdown = true;
+			throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
 		}
-		clubber.close();
-
-	}
-
-	/*
-	 * Client Sessions
-	 */
-	if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
-	{
-		/*
-		 * The parent directory of the specified score file does not exist
-		 * and we want to just skip nicely over it, making a warning in the logs
-		 * and continuing on anyway
-		 */
-		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreClient.string() << ")";
-	}
-	else
-	{
-		/*
-		 * Directory is present, we're go for the clobber and fill
-		 */
-		boost::filesystem::remove(m_scoreClient);
-		clubber.open(m_scoreClient.c_str());
-		clubber.clear();
 
 		/*
-		 * Blast out clients
+		 * We want to write the m_serverData scoreboard
 		 */
-		slist = msdo.getClientSessionList();
-		VLOG(5) << "Clients: " << slist.size();
-		for(auto& m : slist )
+		std::ofstream clubber;
+		std::list<std::string> slist;
+		std::map<std::string,std::string> sess;
+
+		if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
 		{
-			VLOG(9) << "scoreboard(" << m_scoreClient.string() << "):" << m;
-			sess = msdo.getClientSession(m);
-			clubber << m << "={";
-			for( auto& n : sess )
-			{
-				clubber << n.first << "=" << n.second << ",";
-			}
-			clubber << "}" << std::endl;
+			/*
+			 * The parent directory of the specified score file does not exist
+			 * and we want to just skip nicely over it, making a warning in the logs
+			 * and continuing on anyway
+			 */
+			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreServer.string() << ")";
 		}
-		clubber.close();
-
-	}
-
-	/*
-	 * Stats Scoreboard
-	 */
-	if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
-	{
-		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreStats.string() << ")";
-	}
-	else
-	{
-		boost::filesystem::remove(m_scoreStats);
-		clubber.open(m_scoreStats.c_str());
-		clubber.clear();
-
-		/*
-		 * Put in the stats
-		 */
-		for( auto& r: m_metaStats )
+		else
 		{
-			clubber << r.first << "=" << r.second << std::endl;
-		}
-		clubber.close();
-	}
+			/*
+			 * Directory is present, we're go for the clobber and fill
+			 */
+			boost::filesystem::remove(m_scoreServer);
+			clubber.open(m_scoreServer.c_str());
+			clubber.clear();
 
-	/*
-	 * Cache Scoreboard
-	 */
-	if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
-	{
-		LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreCCache.string() << ")";
-	}
-	else
-	{
-		std::list<std::string> v;
-		boost::filesystem::remove(m_scoreCCache);
-		clubber.open(m_scoreCCache.c_str());
-		clubber.clear();
-		v.clear();
-		slist = msdo.getServerSessionCacheList();
-		for( auto& m : slist )
-		{
-			clubber << m << "(" << msdo.getServerSessionCount(m) << ")";
-
-			v = msdo.getServerSessionList(0,m_maxServerSessions,m);
-
-			clubber << "(" << v.size() << ")";
-			if ( v.size() > 0 )
+			/*
+			 * Blast out servers
+			 */
+			slist = msdo.getServerSessionList(0,m_maxServerSessions);
+			VLOG(5) << "Servers: " << slist.size();
+			for(auto& m : slist )
 			{
-				clubber << "={ ";
-				for(auto& n : v)
+				VLOG(9) << "scoreboard(" << m_scoreServer.string() << "):" << m;
+				sess = msdo.getServerSession(m);
+				clubber << m << "={";
+				for( auto& n : sess )
 				{
-					clubber << n << ",";
+					clubber << n.first << "=" << n.second << ",";
 				}
-				clubber << " };" << std::endl;
+				clubber << "}" << std::endl;
 			}
-			else
-			{
-				clubber << "={ };" << std::endl;
-			}
+			clubber.close();
+
 		}
-		clubber.close();
+
+		/*
+		 * Client Sessions
+		 */
+		if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
+		{
+			/*
+			 * The parent directory of the specified score file does not exist
+			 * and we want to just skip nicely over it, making a warning in the logs
+			 * and continuing on anyway
+			 */
+			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreClient.string() << ")";
+		}
+		else
+		{
+			/*
+			 * Directory is present, we're go for the clobber and fill
+			 */
+			boost::filesystem::remove(m_scoreClient);
+			clubber.open(m_scoreClient.c_str());
+			clubber.clear();
+
+			/*
+			 * Blast out clients
+			 */
+			slist = msdo.getClientSessionList();
+			VLOG(5) << "Clients: " << slist.size();
+			for(auto& m : slist )
+			{
+				VLOG(9) << "scoreboard(" << m_scoreClient.string() << "):" << m;
+				sess = msdo.getClientSession(m);
+				clubber << m << "={";
+				for( auto& n : sess )
+				{
+					clubber << n.first << "=" << n.second << ",";
+				}
+				clubber << "}" << std::endl;
+			}
+			clubber.close();
+
+		}
+
+		/*
+		 * Stats Scoreboard
+		 */
+		if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
+		{
+			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreStats.string() << ")";
+		}
+		else
+		{
+			boost::filesystem::remove(m_scoreStats);
+			clubber.open(m_scoreStats.c_str());
+			clubber.clear();
+
+			/*
+			 * Put in the stats
+			 */
+			for( auto& r: m_metaStats )
+			{
+				clubber << r.first << "=" << r.second << std::endl;
+			}
+			clubber.close();
+		}
+
+		/*
+		 * Cache Scoreboard
+		 */
+		if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
+		{
+			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreCCache.string() << ")";
+		}
+		else
+		{
+			std::list<std::string> v;
+			boost::filesystem::remove(m_scoreCCache);
+			clubber.open(m_scoreCCache.c_str());
+			clubber.clear();
+			v.clear();
+			slist = msdo.getServerSessionCacheList();
+			for( auto& m : slist )
+			{
+				clubber << m << "(" << msdo.getServerSessionCount(m) << ")";
+
+				v = msdo.getServerSessionList(0,m_maxServerSessions,m);
+
+				clubber << "(" << v.size() << ")";
+				if ( v.size() > 0 )
+				{
+					clubber << "={ ";
+					for(auto& n : v)
+					{
+						clubber << n << ",";
+					}
+					clubber << " };" << std::endl;
+				}
+				else
+				{
+					clubber << "={ };" << std::endl;
+				}
+			}
+			clubber.close();
+		}
+
+	}
+	else
+	{
+		VLOG(4) << "Timer Skipped : " << error.message();
 	}
 
 	/*
@@ -853,7 +862,7 @@ MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
-	VLOG(2) << "processSERVERATTR() : " << name << "," << value;
+	LOG(INFO) << "processSERVERATTR() : " << name << "," << value;
 	msdo.addServerAttribute(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -1423,6 +1432,7 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 	if(m_expiryTimer)
 	{
 		LOG(WARNING) << "Purging m_expiryTimer";
+		m_expiryTimer->cancel();
 		delete m_expiryTimer;
 		m_expiryTimer = 0;
 	}
@@ -1430,21 +1440,36 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 	if(m_updateTimer)
 	{
 		LOG(WARNING) << "Purging m_updateTimer";
+		m_updateTimer->cancel();
 		delete m_updateTimer;
 	}
 
 	if(m_scoreTimer)
 	{
 		LOG(WARNING) << "Purging m_scoreTimer";
+		m_scoreTimer->cancel();
 		delete m_scoreTimer;
 	}
 
-	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_expiryTimer = new boost::asio::deadline_timer(ios);
+	m_expiryTimer->expires_from_now(boost::posix_time::seconds(5));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
-	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+
+	m_updateTimer = new boost::asio::deadline_timer(ios);
+	m_updateTimer->expires_from_now(boost::posix_time::seconds(6));
 	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
-    m_scoreTimer  = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+
+	m_scoreTimer  = new boost::asio::deadline_timer(ios);
+	m_scoreTimer->expires_from_now(boost::posix_time::seconds(8));
     m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
+
+
+//	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+//	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+//	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+//	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+//    m_scoreTimer  = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+//    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
 
 	LOG(INFO) << "Timer initiation completed";
 

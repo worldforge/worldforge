@@ -409,6 +409,7 @@ DataObject::expireServerSessions( unsigned int expiry )
     {
     	std::string key = itr->first;
 
+		VLOG(9) << "  from_iso_string: " << itr->second["expiry"];
     	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
     			 boost::posix_time::seconds(expiry);
 
@@ -503,6 +504,7 @@ DataObject::expireClientSessions( unsigned int expiry )
     {
     	std::string key = itr->first;
 
+		VLOG(9) << "  from_iso_string: " << itr->second["expiry"];
     	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
     			 boost::posix_time::seconds(expiry);
 
@@ -589,7 +591,8 @@ DataObject::addHandshake(unsigned int def_hs )
 	}
 
 	// set expiry in data structure, if it exists already it is updated
-	m_handshakeQueue[handshake]["expiry"] = boost::posix_time::to_iso_string( getNow() );
+	VLOG(9) << "  from_iso_string: " << getNowStr();
+	m_handshakeQueue[handshake]["expiry"] = getNowStr();
 
 	// if we find said element again, return handshake, otherwise 0
 	if ( m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end() )
@@ -643,6 +646,7 @@ DataObject::expireHandshakes( unsigned int expiry )
     {
     	unsigned int key = itr->first;
 
+    	VLOG(4) << "  from_iso_string: " << itr->second["expiry"];
     	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
     			 boost::posix_time::seconds(expiry);
 
@@ -678,6 +682,7 @@ DataObject::getHandshakeExpiry( unsigned int hs )
 	 */
 	if( handshakeExists(hs) )
 	{
+		VLOG(9) << "  from_iso_string: " << m_handshakeQueue[hs]["expiry"];
 		return boost::posix_time::from_iso_string( m_handshakeQueue[hs]["expiry"] );
 	}
 	else
