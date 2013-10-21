@@ -90,6 +90,7 @@ public:
 	unsigned int getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2);
 	uint32_t createServerSessionListresp(std::string ip = "default");
 	std::list<std::string> getServerSessionCacheList();
+	std::string getServerExpiryIso(std::string& sessionid );
 
 private:
 	/**

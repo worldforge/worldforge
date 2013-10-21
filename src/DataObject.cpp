@@ -409,8 +409,8 @@ DataObject::expireServerSessions( unsigned int expiry )
     {
     	std::string key = itr->first;
 
-		VLOG(9) << "  from_iso_string: " << itr->second["expiry"];
-    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+		VLOG(9) << "  from_iso_string (" << key << ": " << getServerExpiryIso(key);
+    	etime =  boost::posix_time::from_iso_string(getServerExpiryIso(key)) +
     			 boost::posix_time::seconds(expiry);
 
     	/**
@@ -503,9 +503,19 @@ DataObject::expireClientSessions( unsigned int expiry )
     for( itr = m_clientData.begin(); itr != m_clientData.end(); )
     {
     	std::string key = itr->first;
+    	std::string et = itr->second["expiry"];
 
-		VLOG(9) << "  from_iso_string: " << itr->second["expiry"];
-    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    	if ( et == "" || et.length() == 0 )
+    	{
+    		/*
+    		 * arbitrary iso string for conversion
+    		 */
+    		et = "20000101T010000.000000";
+    	}
+
+
+		VLOG(9) << "  from_iso_string: " << et;
+    	etime =  boost::posix_time::from_iso_string(et) +
     			 boost::posix_time::seconds(expiry);
 
     	/**
@@ -645,9 +655,18 @@ DataObject::expireHandshakes( unsigned int expiry )
     for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); )
     {
     	unsigned int key = itr->first;
+    	std::string et = itr->second["expiry"];
 
-    	VLOG(4) << "  from_iso_string: " << itr->second["expiry"];
-    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    	if ( et == "" || et.length() == 0 )
+    	{
+    		/*
+    		 * arbitrary iso string for conversion
+    		 */
+    		et = "20000101T010000.000000";
+    	}
+
+    	VLOG(4) << "  from_iso_string: " << et;
+    	etime =  boost::posix_time::from_iso_string(et) +
     			 boost::posix_time::seconds(expiry);
 
     	/**
@@ -839,6 +858,80 @@ DataObject::getServerSessionCacheList()
 		slist.push_back(m.first);
 	}
 	return slist;
+}
+
+std::string
+DataObject::getServerExpiryIso(std::string& sessionid)
+{
+
+	const std::string etdef = "20000101T010000.000000";
+	std::string et;
+	if( m_serverData.find(sessionid) == m_serverData.end() )
+	{
+		/*
+		 * We don't have a session
+		 * Option 1: some list somewhere is iterating over the list and it's
+		 *           removed ... very bad
+		 * Option 2: expiry sub-map is empty ... which is not allowed
+		 */
+		VLOG(3) << "session(" << sessionid << ") does not exist for expiry request";
+		et = getNowStr();
+	}
+	else
+	{
+		/*
+		 * found session, check expiry
+		 *
+		 */
+		if ( m_serverData[sessionid].find("expiry") != m_serverData[sessionid].end() )
+		{
+			et = m_serverData[sessionid]["expiry"];
+		}
+		else
+		{
+			VLOG(3) << "session(" << sessionid << ") does not contain expiry attribute";
+			et = getNowStr();
+		}
+	}
+
+	/*
+	 * And just in case because we know for sure we can't have anything that
+	 * is empty
+	 */
+	if ( et.length() == 0 || et == "" )
+	{
+		VLOG(3) << "session(" << sessionid << ") expiry time empty, defaulting:" << etdef;
+		et = etdef;
+	}
+
+	/*
+	 * Since it's so important to get the time, we can do a from_iso_string and
+	 * if there is an issue here, there will definitely be an issue elsewhere,
+	 * thus we can override that.
+	 */
+	try
+	{
+		boost::posix_time::ptime p = boost::posix_time::from_iso_string(et);
+	}
+	catch(const boost::exception& bex )
+	{
+		/*
+		 * Whoops, date is malformed, we want to reset, unless
+		 * the session is maybe on the way out in which case just
+		 * let it be as it will disappear itself
+		 */
+		LOG(WARNING) << "expiry time for session(" << sessionid << ") seems bad, resetting: " << etdef;
+		if ( m_serverData.find(sessionid) != m_serverData.end() )
+		{
+			/*
+			 * TODO: rethink this
+			 */
+			m_serverData[sessionid]["expiry"] = etdef;
+		}
+
+	}
+
+	return et;
 }
 
 
