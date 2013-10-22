@@ -115,12 +115,16 @@ void PollDefault::poll(unsigned long timeout)
   // of poll, and that's a good thing.
   PollDefault &inst = dynamic_cast<PollDefault&>(Poll::instance());
 
+#ifndef NDEBUG
   // Prevent reentrancy
   static bool already_polling = false;
   assert(!already_polling);
   already_polling = true;
 
+
   try {
+#endif
+
     unsigned long wait_time = 0;
     inst.new_timeout_ = false;
 
@@ -141,6 +145,7 @@ void PollDefault::poll(unsigned long timeout)
     TimedEventService::instance()->tick(true);
     execDeleteLaters();
 
+#ifndef NDEBUG
     // We're done, turn off the reentrancy prevention flag
     assert(already_polling);
     already_polling = false;
@@ -149,6 +154,7 @@ void PollDefault::poll(unsigned long timeout)
     already_polling = false;
     throw;
   }
+#endif
 }
 
 int PollDefault::maxStreams() const
