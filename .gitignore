@@ -57,3 +57,6 @@ test/test-suite.log
 .cdtconfig*
 # KDevelop files
 *.kdev*
+#ignore generated reports
+abi_report
+
