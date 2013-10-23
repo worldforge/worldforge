@@ -17,7 +17,7 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests no-define silen
 AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
-ERIS_CURRENT=20
+ERIS_CURRENT=21
 ERIS_REVISION=0
 ERIS_AGE=0
 
