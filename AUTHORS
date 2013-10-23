@@ -1,5 +1,6 @@
-Original author and current maintainer is James Turner 
-(james@worldforge.org)
+Original author is James Turner (james@worldforge.org)
+
+Current maintainer is Erik Ogenvik (erik@ogenvik.org)
 
 Numerous contributions by Ron Steinke including the Perl bindings, WFmath 
 conversion and bug reports by the dozen.
@@ -18,4 +19,4 @@ Contributors :
 	Ron Steinke
 	Michael Koch
 	Simon Goodall
-	Erik Hjortsberg
+	Erik Ogenvik (née Hjortsberg)
