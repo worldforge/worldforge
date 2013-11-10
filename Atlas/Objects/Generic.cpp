@@ -59,7 +59,6 @@ void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::str
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-    RootOperationData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

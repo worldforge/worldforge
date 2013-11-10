@@ -59,7 +59,6 @@ void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "admin_entity");
-    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 const std::string USERNAME_ATTR = "username";
@@ -243,7 +242,6 @@ void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::str
     attr_data[USERNAME_ATTR] = USERNAME_FLAG;
     attr_data[PASSWORD_ATTR] = PASSWORD_FLAG;
     attr_data[CHARACTERS_ATTR] = CHARACTERS_FLAG;
-    AdminEntityData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<PlayerData> PlayerData::allocator;
@@ -294,7 +292,6 @@ void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::strin
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "player");
-    AccountData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<AdminData> AdminData::allocator;
@@ -345,7 +342,6 @@ void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string,
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "admin");
-    AccountData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<GameData> GameData::allocator;
@@ -396,7 +392,6 @@ void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, i
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "game");
-    AdminEntityData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<GameEntityData> GameEntityData::allocator;
@@ -447,7 +442,6 @@ void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<st
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "game_entity");
-    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

@@ -254,7 +254,6 @@ void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::
     attr_data[SECONDS_ATTR] = SECONDS_FLAG;
     attr_data[FUTURE_SECONDS_ATTR] = FUTURE_SECONDS_FLAG;
     attr_data[ARGS_ATTR] = ARGS_FLAG;
-    RootData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -63,7 +63,7 @@ protected:
     /**
      * The default instance, acting as a prototype for all other instances.
      */
-    T* m_defaults_Data;
+    T m_defaults_Data;
 
     /**
      * The first available instance, not currently in use.
@@ -126,24 +126,20 @@ public:
 };
 
 template <typename T>
-Allocator<T>::Allocator() : m_defaults_Data(0), m_begin_Data(0)
+Allocator<T>::Allocator() : m_begin_Data(0)
 {
+    T::fillDefaultObjectInstance(m_defaults_Data, attr_flags_Data);
 }
 
 template <typename T>
 Allocator<T>::~Allocator() {
     release();
-    delete m_defaults_Data;
 }
 
 template <typename T>
 inline T *Allocator<T>::getDefaultObjectInstance()
 {
-    if (m_defaults_Data == 0) {
-        m_defaults_Data = new T;
-        T::fillDefaultObjectInstance(*m_defaults_Data, attr_flags_Data);
-    }
-    return m_defaults_Data;
+    return &m_defaults_Data;
 }
 
 template <typename T>
@@ -157,7 +153,7 @@ inline T *Allocator<T>::alloc()
         m_begin_Data = static_cast<T*>(m_begin_Data->m_next);
         return res;
     }
-    return new T(getDefaultObjectInstance());
+    return new T(&m_defaults_Data);
 }
 
 template <typename T>

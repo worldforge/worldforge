@@ -409,8 +409,6 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.static_default_assigns(obj, default_attrs)
         if len(static_attrs) > 0:
             self.static_attr_flag_inserts(obj, static_attrs)
-        if len(obj.parents) > 0:
-            self.write("    %s::allocator.getDefaultObjectInstance();\n" % (classize(obj.parents[0], data=1)))
         self.write("""}
 
 """ % vars()) #"for xemacs syntax highlighting

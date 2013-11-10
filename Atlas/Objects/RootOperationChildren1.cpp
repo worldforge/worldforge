@@ -54,7 +54,6 @@ void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "action");
-    RootOperationData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<CreateData> CreateData::allocator;
@@ -100,7 +99,6 @@ void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "create");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<CombineData> CombineData::allocator;
@@ -146,7 +144,6 @@ void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::str
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "combine");
-    CreateData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<DivideData> DivideData::allocator;
@@ -192,7 +189,6 @@ void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "divide");
-    CreateData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<CommunicateData> CommunicateData::allocator;
@@ -238,7 +234,6 @@ void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "communicate");
-    CreateData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<TalkData> TalkData::allocator;
@@ -284,7 +279,6 @@ void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, i
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "talk");
-    CommunicateData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

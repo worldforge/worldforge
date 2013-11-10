@@ -54,7 +54,6 @@ void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "logout");
-    LoginData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<ImaginaryData> ImaginaryData::allocator;
@@ -100,7 +99,6 @@ void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std:
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "imaginary");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<UseData> UseData::allocator;
@@ -146,7 +144,6 @@ void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "use");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<InfoData> InfoData::allocator;
@@ -192,7 +189,6 @@ void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, i
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "info");
-    RootOperationData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<PerceptionData> PerceptionData::allocator;
@@ -238,7 +234,6 @@ void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<st
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "perception");
-    InfoData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<SightData> SightData::allocator;
@@ -284,7 +279,6 @@ void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "sight");
-    PerceptionData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

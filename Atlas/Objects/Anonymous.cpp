@@ -63,7 +63,6 @@ void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std:
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

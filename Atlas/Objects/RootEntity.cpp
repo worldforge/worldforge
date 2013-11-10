@@ -236,7 +236,6 @@ void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<st
     attr_data[VELOCITY_ATTR] = VELOCITY_FLAG;
     attr_data[CONTAINS_ATTR] = CONTAINS_FLAG;
     attr_data[STAMP_CONTAINS_ATTR] = STAMP_CONTAINS_FLAG;
-    RootData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

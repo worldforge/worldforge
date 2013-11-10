@@ -54,7 +54,6 @@ void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "delete");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<SetData> SetData::allocator;
@@ -100,7 +99,6 @@ void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, int
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "set");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<AffectData> AffectData::allocator;
@@ -146,7 +144,6 @@ void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "affect");
-    SetData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<MoveData> MoveData::allocator;
@@ -192,7 +189,6 @@ void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, i
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "move");
-    SetData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<WieldData> WieldData::allocator;
@@ -238,7 +234,6 @@ void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "wield");
-    SetData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<GetData> GetData::allocator;
@@ -284,7 +279,6 @@ void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, int
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "get");
-    ActionData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

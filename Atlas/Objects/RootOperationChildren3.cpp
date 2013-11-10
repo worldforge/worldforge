@@ -54,7 +54,6 @@ void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::s
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "perceive");
-    GetData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<LookData> LookData::allocator;
@@ -100,7 +99,6 @@ void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, i
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "look");
-    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<ListenData> ListenData::allocator;
@@ -146,7 +144,6 @@ void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "listen");
-    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<SniffData> SniffData::allocator;
@@ -192,7 +189,6 @@ void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "sniff");
-    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<TouchData> TouchData::allocator;
@@ -238,7 +234,6 @@ void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "touch");
-    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
 Allocator<LoginData> LoginData::allocator;
@@ -284,7 +279,6 @@ void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parents = std::list<std::string>(1, "login");
-    GetData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation
