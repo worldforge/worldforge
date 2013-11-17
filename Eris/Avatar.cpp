@@ -380,12 +380,13 @@ void Avatar::onCharacterChildRemoved(Entity* child)
 
 void Avatar::onCharacterWield(const Atlas::Message::Element& val)
 {
-    if (!val.isString()) {
+    std::string id;
+    if (!Entity::extractEntityId(val, id)) {
         warning() << "got malformed wield value";
         return;
     }
 
-    m_wielded = EntityRef(m_view, val.asString());
+    m_wielded = EntityRef(m_view, id);
 }
 
 void Avatar::onTransferRequested(const TransferInfo &transfer)

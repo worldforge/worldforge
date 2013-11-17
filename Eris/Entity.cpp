@@ -822,4 +822,21 @@ void Entity::createAlarmExpired()
     m_recentlyCreated = false;
 }
 
+bool Entity::extractEntityId(const Atlas::Message::Element& element, std::string& id)
+{
+    if (element.isString()) {
+        id = element.asString();
+        return true;
+    } else if (element.isMap()) {
+        auto I = element.asMap().find("$eid");
+        if (I != element.asMap().end() && I->second.isString()) {
+            id = I->second.asString();
+            return true;
+        }
+    }
+    return false;
+
+}
+
+
 } // of namespace 
