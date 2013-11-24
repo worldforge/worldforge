@@ -438,7 +438,7 @@ void View::setTopLevelEntity(Entity* newTopLevel)
             error() << "old top-level entity is visible, but has no location";
     }
 
-    assert(newTopLevel->getLocation() == NULL);
+    assert(newTopLevel && newTopLevel->getLocation() == NULL);
     m_topLevel = newTopLevel;
     TopLevelEntityChanged.emit(); // fire the signal
 }
