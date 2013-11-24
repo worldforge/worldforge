@@ -145,6 +145,7 @@ void TypeInfo::addParent(TypeInfoPtr tp)
 
 void TypeInfo::addChild(TypeInfoPtr tp)
 {
+	assert(tp);
     if (tp == this) {
         error() << "Attempt to add " << getName() << " as a child if itself";
         return;
