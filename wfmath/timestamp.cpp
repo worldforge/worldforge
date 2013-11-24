@@ -134,7 +134,7 @@ TimeStamp TimeStamp::now()
     gettimeofday(&ret._val, NULL);
 #else
   SYSTEMTIME sysTime;
-  FILETIME fileTime;  /* 100ns == 1 */
+  FILETIME fileTime = {0};  /* 100ns == 1 */
   LARGE_INTEGER i;
 
   GetSystemTime(&sysTime);
