@@ -208,6 +208,8 @@ void Segment::invalidateSurfaces()
 void Segment::populateNormals()
 {
     assert(m_points != NULL);
+	assert(m_size != 0);
+	assert(m_res == m_size - 1);
 
     if (m_normals == 0) {
         m_normals = new float[m_size * m_size * 3];
