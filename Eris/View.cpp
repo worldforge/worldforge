@@ -314,10 +314,10 @@ void View::deleteEntity(const std::string& eid)
         ent->setVisible(false); // redundant?
         EntityDeleted.emit(ent);
         ent->shutdown();
+		//Check if the deleted entity is the avatar one.
+        bool avatarDeleted = ent == m_owner->getEntity();
         delete ent; // actually kill it off
-
-        //Check if the deleted entity is the avatar one.
-        if (ent == m_owner->getEntity()) {
+        if (avatarDeleted) {
             AvatarEntityDeleted.emit();
         }
     } else {
