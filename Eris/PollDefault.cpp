@@ -164,24 +164,7 @@ int PollDefault::maxStreams() const
 
 int PollDefault::maxConnectingStreams() const
 {
-#ifdef __WIN32__
-
-    OSVERSIONINFO osvi;
-    BOOL bIsWindowsXPorLater;
-
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-
-    GetVersionEx(&osvi);
-
-    if (osvi.dwMajorVersion <= 5 && osvi.dwMajorVersion <= 5) {
-        return 6;
-    } else {
-        return maxStreams();
-    }
-#else // __WIN32__
     return maxStreams();
-#endif // __WIN32__
 }
 
 void PollDefault::addStream(const basic_socket* str, Check c)
