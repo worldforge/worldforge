@@ -26,14 +26,13 @@
 #include <cassert>
 #include <cstdio>
 
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #ifndef snprintf
-#pragma warning(disable: 4996)
 #define snprintf _snprintf
 #endif
 
-#endif // __WIN32__
+#endif // _WIN32
 
 static const int CONNECT_TIMEOUT = 5 * 1000;
 static const int NEGOTIATE_TIMEOUT = 5 * 1000;
@@ -232,7 +231,7 @@ void BaseConnection::recv()
     }
     
     // another paranoid check
-    if (_stream && (err = _stream->getLastError()) != 0) {
+    if ((err = _stream->getLastError()) != 0) {
         char msgBuf[128];
         ::snprintf(msgBuf, 128, "recv() got stream failure, error %d", _stream->getLastError());
         handleFailure(msgBuf);

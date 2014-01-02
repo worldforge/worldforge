@@ -23,15 +23,13 @@
 #include <cstdio>
 #include <cstring>
 
-#pragma warning(disable: 4068)  //unknown pragma
-
-#ifdef __WIN32__
+#ifdef _WIN32
 
 #ifndef snprintf
 #define snprintf _snprintf
 #endif
 
-#endif // __WIN32__
+#endif // _WIN32
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::smart_dynamic_cast;
@@ -387,7 +385,7 @@ void Meta::processCmd()
             _dataPtr = unpack_uint32(ip, _dataPtr);
             
             char buf[32];
-            snprintf(buf, 32, "%i.%i.%i.%i", 
+            snprintf(buf, 32, "%u.%u.%u.%u", 
                     (ip & 0x000000FF),
                     (ip & 0x0000FF00) >> 8,
                     (ip & 0x00FF0000) >> 16,

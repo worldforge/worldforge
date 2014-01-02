@@ -12,21 +12,7 @@
 #include <sigc++/signal.h>
 #include <memory>
 
-#ifndef __WIN32__
-// pull in uint32_t on POSIX - is this generic?!
 #include <stdint.h>
-#else
-// Apparently not. [MW]
-#ifndef _STDINT_H_
-#define _STDINT_H_
-
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-
-#endif  // _STDINT_H_
-
-#endif // __WIN32__
 
 // Forward decls
 class udp_socket_stream;
@@ -39,21 +25,6 @@ class MetaQuery;
 class BaseConnection;
 class Timeout;
 class PollData;
-	
-#ifndef uint32_t
-	/* WIN32 hack ...
-   	this is only true for 32bit machines but WIN64 is far ahead !! */
-
-	#ifdef WINDOWS	
-	typedef unsigned int uint32_t;
-	#endif
-	
-	#ifdef MACOS
-	#include <Types.h>
-	// MacOS defines these anyway
-	typedef Uint32	uint32_t;
-	#endif
-#endif
 
 const int DATA_BUFFER_SIZE = 4096;
 
