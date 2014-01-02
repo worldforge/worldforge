@@ -263,8 +263,6 @@ void StreamAccept::poll(bool can_read)
 {
     Debug( std::cout << "** Server(" << m_state << ") : " << std::endl; );
 
-    std::string out;
-
     if (m_state == SERVER_GREETING) 
     {
         // send server greeting
