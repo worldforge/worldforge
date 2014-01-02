@@ -42,6 +42,7 @@ void TileShader::shade(Surface & surface) const
             continue;
         }
         Surface * subs = I->second->newSurface(surface.getSegment());
+		assert(subs);
         subs->populate();
         ColorT * subsdata = subs->getData();
         int channels = subs->getChannels();
