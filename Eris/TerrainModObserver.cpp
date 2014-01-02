@@ -82,17 +82,12 @@ bool TerrainModObserver::parseMod()
     const MapType & modMap = modifier.asMap();
 
     mInnerMod = new TerrainModTranslator;
-    if (mInnerMod) {
-        if (mInnerMod->parseData(mEntity->getPosition(), mEntity->getOrientation(), modMap)) {
-            return true;
-        } else {
-            delete mInnerMod;
-            return false;
-        }
+    if (mInnerMod->parseData(mEntity->getPosition(), mEntity->getOrientation(), modMap)) {
+        return true;
+    } else {
+        delete mInnerMod;
+        return false;
     }
-
-
-    return false;
 }
 
 void TerrainModObserver::reparseMod()
