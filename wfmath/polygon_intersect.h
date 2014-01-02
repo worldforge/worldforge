@@ -157,7 +157,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
     if(!o2.checkContained(o1.m_origin, data.p2))
       return -1; // no intersect
 
-    _Poly2OrientIntersectData data;
+    //_Poly2OrientIntersectData data;
 
     data.p1[0] = data.p1[1] = 0;
 
