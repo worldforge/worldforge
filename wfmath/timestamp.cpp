@@ -23,7 +23,7 @@
 // Author: Ron Steinke
 // Created: 2002-5-23
 
-#if defined _MSC_VER || defined __MINGW32__
+#if defined _WIN32
 #include <sys/timeb.h>
 #else
 #include <unistd.h>	
@@ -32,7 +32,7 @@
 
 #include "timestamp.h"
 
-#ifdef __WIN32__
+#ifdef _WIN32
 #include <winsock2.h> 
 #endif
 
@@ -130,7 +130,7 @@ bool operator==(const TimeDiff &a, const TimeDiff &b)
 TimeStamp TimeStamp::now()
 {
     TimeStamp ret;
-#ifndef __WIN32__
+#ifndef _WIN32
     gettimeofday(&ret._val, NULL);
 #else
   SYSTEMTIME sysTime;

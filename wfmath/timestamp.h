@@ -116,7 +116,7 @@ inline bool operator!=(const TimeDiff &a, const TimeDiff &b) {return !(b == a);}
  **/
 class TimeStamp {
  private:
-#ifdef __WIN32__ 
+#ifdef _WIN32 
   // We roll our own timeval... may only need to be done for mingw32.
   struct {
     long tv_sec;	/* seconds */
