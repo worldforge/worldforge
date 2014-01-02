@@ -29,8 +29,7 @@
 #include <cstdio>
 #include <iostream>
 
-#ifdef __WIN32__
-#include <tchar.h>
+#ifdef _WIN32
 #define snprintf _snprintf
 #endif    
 

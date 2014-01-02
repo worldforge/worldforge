@@ -30,19 +30,9 @@
 #include <cstdio>
 #include <cstdlib>
 
-#ifdef __WIN32__
-#include <tchar.h>
+#ifdef _WIN32
 #define snprintf _snprintf
-// apparently, win32 atof() is somewhat broken
-static double
-win32_atof_substitute(const char* in)
-{
-  double out;
-  sscanf(in, "%lf", &out);
-  return out;
-}
-#define atof win32_atof_substitute
-#endif  
+#endif
 
 namespace varconf {
 
@@ -257,7 +247,7 @@ bool VarBase::is_double() const
   // strtod() points p to the first character
   // in the string that doesn't look like
   // part of a double
-  strtod(m_val.c_str(), &p);
+  strtod(m_val.c_str(), &p); //-V530
 
   return p == m_val.c_str() + m_val.size();
 }

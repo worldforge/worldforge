@@ -31,11 +31,9 @@
 #include <fstream>
 #include <string>
 
-#ifdef __WIN32__
-#include <tchar.h>
+#ifdef _WIN32
 #define snprintf _snprintf
-#include <cstdlib>
-#else // __WIN32__
+#else // _WIN32
 
 extern char** environ;
 
@@ -48,7 +46,7 @@ extern char** environ;
     char **environ = NULL;
 #endif
 
-#endif // __WIN32__
+#endif // _WIN32
 
 namespace {
   enum state_t {
@@ -241,7 +239,7 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
         }
       }
 
-      if (!fnd_nam && (arg.size() - mark) > 0)  {
+      if (!fnd_nam && arg.size() != mark)  {
         name = arg.substr(mark, (arg.size() - mark));
       }
 
