@@ -6,6 +6,7 @@
 #define MERCATOR_RANDCACHE_H
 
 #include <vector>
+#include <algorithm>
 #include <cstdlib>
 #include <wfmath/MersenneTwister.h>
 

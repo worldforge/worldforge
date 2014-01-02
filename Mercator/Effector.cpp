@@ -4,6 +4,8 @@
 
 #include <Mercator/Effector.h>
 
+#include <algorithm>
+
 namespace Mercator
 {
 

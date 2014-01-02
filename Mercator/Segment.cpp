@@ -20,6 +20,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <algorithm>
 
 namespace Mercator {
 

@@ -9,6 +9,8 @@
 #include <Mercator/Intersect.h>
 #include <Mercator/Segment.h>
 
+#include <algorithm>
+
 namespace Mercator {
 //floor and ceil functions that return d-1 and d+1
 //respectively if d is integral

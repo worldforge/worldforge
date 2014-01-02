@@ -18,6 +18,7 @@
 #include <Mercator/Surface.h>
 
 #include <iostream>
+#include <algorithm>
 
 #include <cstdio>
 
