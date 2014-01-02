@@ -108,7 +108,7 @@ bool Element::operator==(const Element& o) const
     switch(t) {
         case TYPE_NONE: return true;
         case TYPE_INT: return i == o.i;
-        case TYPE_FLOAT: return f == o.f;
+		case TYPE_FLOAT: return std::fabs(f - o.f) <= f * 0.0001;
         case TYPE_PTR: return p == o.p;
         case TYPE_STRING: return *s == *o.s;
         case TYPE_MAP: return *m == *o.m;

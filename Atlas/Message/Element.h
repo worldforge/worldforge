@@ -300,7 +300,7 @@ public:
     /// Check for equality with a double.
     bool operator==(FloatType v) const
     {
-      return t == TYPE_FLOAT && f == v;
+      return t == TYPE_FLOAT && std::fabs(f - v) <= f * 0.0001;
     }
 
     /// Check for equality with a pointer.
