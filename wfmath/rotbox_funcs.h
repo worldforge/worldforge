@@ -40,7 +40,7 @@ namespace WFMath {
 template<int dim>
 inline Point<dim> RotBox<dim>::getCorner(size_t i) const
 {
-  assert(i >= 0 && i < (1 << dim));
+  assert(i < (1 << dim));
 
   Vector<dim> dist;
 
