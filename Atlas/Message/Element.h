@@ -8,6 +8,7 @@
 #define ATLAS_MESSAGE_ELEMENT_H
 
 #include <Atlas/Exception.h>
+#include <Atlas/float.h>
 
 #include <string>
 #include <map>
@@ -300,7 +301,7 @@ public:
     /// Check for equality with a double.
     bool operator==(FloatType v) const
     {
-      return t == TYPE_FLOAT && std::fabs(f - v) <= f * 0.0001;
+      return t == TYPE_FLOAT && Equal(f, v);
     }
 
     /// Check for equality with a pointer.
