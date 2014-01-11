@@ -230,8 +230,8 @@ void BaseConnection::recv()
         }    
     }
     
-    // another paranoid check
-    if ((err = _stream->getLastError()) != 0) {
+    // another paranoid check (note that _stream might have been deleted through hardDisconnect())
+    if (_stream && (err = _stream->getLastError()) != 0) {
         char msgBuf[128];
         ::snprintf(msgBuf, 128, "recv() got stream failure, error %d", _stream->getLastError());
         handleFailure(msgBuf);
