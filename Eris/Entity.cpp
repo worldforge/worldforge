@@ -336,8 +336,9 @@ void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
 {
-    if (arg->hasAttr("description")) {
-        Emote.emit(arg->getAttr("description").asString());
+    Atlas::Message::Element attr;
+    if (act->copyAttr("description", attr) == 0 && attr.isString()) {
+        Emote.emit(attr.asString());
     }
 }
 
@@ -566,11 +567,19 @@ void Entity::updateTasks(const Element& e)
     
     for (unsigned int i=0; i<taskList.size(); ++i)
     {
+        if (!taskList[i].isMap()) {
+            continue;
+        }
         const MapType& tkmap(taskList[i].asMap());
         MapType::const_iterator it = tkmap.find("name");
         if (it == tkmap.end())
         {
             error() << "task without name";
+            continue;
+        }
+        if (!it.second.isString())
+        {
+            error() << "task with invalid name";
             continue;
         }
         
