@@ -337,7 +337,7 @@ void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
 {
     Atlas::Message::Element attr;
-    if (act->copyAttr("description", attr) == 0 && attr.isString()) {
+    if (arg->copyAttr("description", attr) == 0 && attr.isString()) {
         Emote.emit(attr.asString());
     }
 }
@@ -577,7 +577,7 @@ void Entity::updateTasks(const Element& e)
             error() << "task without name";
             continue;
         }
-        if (!it.second.isString())
+        if (!it->second.isString())
         {
             error() << "task with invalid name";
             continue;
