@@ -100,11 +100,11 @@ install the library.])
     ]
 )
 dnl check for all the WorldForge libs we use
-PKG_CHECK_MODULES(WF, skstream-0.3 >= 0.3.9 atlascpp-0.6 >= 0.6.3 wfmath-1.0 >= 1.0.0 mercator-0.3 >= 0.3.3,
+PKG_CHECK_MODULES(WF, atlascpp-0.6 >= 0.6.3 wfmath-1.0 >= 1.0.0 mercator-0.3 >= 0.3.3,
     [
         CPPFLAGS="$CPPFLAGS $WF_CFLAGS"
         ERIS_DEPS="$ERIS_DEPS $WF_LIBS"
-        ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.3 atlascpp-0.6 wfmath-1.0 mercator-0.3"
+        ERIS_REQUIRES="$ERIS_REQUIRES atlascpp-0.6 wfmath-1.0 mercator-0.3"
     ],[
         AC_MSG_RESULT([no])
         AC_MSG_ERROR([
