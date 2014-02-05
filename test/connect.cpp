@@ -92,14 +92,15 @@ int main(int argc, char ** argv)
         return 1;
     }
 
+    boost::asio::io_service io_service;
+
     Eris::Logged.connect(sigc::ptr_fun(erisLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
     for (int i = optind; i < argc; ++i) {
-        Eris::Connection * c = new Eris::Connection("test",
+        Eris::Connection * c = new Eris::Connection(io_service, "test",
                                                     argv[i],
-                                                    option_port,
-                                                    false);
+                                                    option_port);
 
         c->Connected.connect(sigc::bind(sigc::ptr_fun(onConnected), c));
         c->Failure.connect(sigc::ptr_fun(onConnectionFail));

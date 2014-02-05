@@ -44,13 +44,13 @@ public:
     is sent during Atlas negotiation of the connection.
     @param debug Perform extra (slower) validation on the connection
     */
-    Connection(const std::string &cnm, const std::string& host, short port, bool debug);
+    Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port);
 
     /** Create a new connection, with the client-name  string specified. The client-name
     is sent during Atlas negotiation of the connection.
     @param debug Perform extra (slower) validation on the connection
     */
-    Connection(const std::string &cnm, const std::string& socket, bool debug);
+    Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& socket);
 
     virtual ~Connection();
 
@@ -149,7 +149,7 @@ protected:
     const std::string _host;
     const short _port;      ///< port of the server
     bool _debug;
-    const std::string _socket;
+    const std::string _localSocket;
 
     friend class Redispatch;
     friend class TestInjector;
@@ -160,7 +160,7 @@ protected:
 
     void cleanupRedispatch(Redispatch* r);
 
-    void gotData(PollData&);
+    void dispatch();
 
     void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
     void handleServerInfo(const Atlas::Objects::Operation::RootOperation& op);

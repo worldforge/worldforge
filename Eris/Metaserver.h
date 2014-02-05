@@ -10,14 +10,14 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
+
+#include <boost/asio.hpp>
+
 #include <memory>
 
 #include <stdint.h>
 
 // Forward decls
-class udp_socket_stream;
-class basic_socket_stream;
-	
 namespace Eris {
 	
 // Forward Declerations
@@ -56,7 +56,7 @@ public:
     active at any one time. 10 is a sensible value, too low and querying will
     take a long time, too high and .... I'm not sure.
     */
-    Meta(const std::string &msv, unsigned int maxQueries);
+    Meta(boost::asio::io_service& io_service, const std::string &msv, unsigned int maxQueries);
     virtual ~Meta();
     
     /** Return the total number of game servers the meta server knows about. */
@@ -83,6 +83,8 @@ public:
     that 'CompletedServerList' is not emitted following cancellation. 
     */
     void cancel();
+
+    void dispatch();
 
 // accessors
     MetaStatus getStatus() const {
@@ -128,7 +130,13 @@ protected:
     void disconnect();
 	
 private:
-/// process raw UDP packets from the meta-server
+
+    void connect(boost::asio::ip::udp::endpoint endpoint);
+
+    void write();
+    void do_read();
+
+    /// process raw UDP packets from the meta-server
     void recv();
     
     /// Invoked when _bytesToRecv = 0 and expecting a command (_recvCmd = true)
@@ -147,6 +155,10 @@ private:
     void deleteQuery(MetaQuery* query);
         
     void internalQuery(unsigned int index);
+
+    void startTimeout();
+
+    boost::asio::io_service& m_io_service;
         
     const std::string m_clientName;	///< the name to use when negotiating
     
@@ -164,9 +176,15 @@ private:
     ServerInfoArray m_gameServers,
         m_lastValidList;
 
+    boost::asio::ip::udp::resolver m_resolver;
+
     // storage for the Metaserver protocol
-    udp_socket_stream* m_stream;
+    boost::asio::ip::udp::socket m_socket;
     
+    boost::asio::deadline_timer m_metaTimer;
+    boost::asio::streambuf m_buffer;
+    std::iostream m_stream;
+
 	char _data[DATA_BUFFER_SIZE];
 	char* _dataPtr;	///< The current insert/extract pointer in the buffer
 
@@ -177,9 +195,7 @@ private:
 	bool _recvCmd; 		///< true if the next block is a new command
 	uint32_t _gotCmd;	///< the curent command being processed
 	
-    std::unique_ptr<Timeout> m_timeout;	///< Metaserver channel timeout
-	
-    void gotData(PollData&);
+    void gotData();
 };
 	
 } // of namespace Eris

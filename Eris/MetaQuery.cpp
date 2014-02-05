@@ -23,16 +23,15 @@ using WFMath::TimeStamp;
 namespace Eris
 {
 	
-MetaQuery::MetaQuery(Meta *ms, const std::string &host, unsigned int sindex) :
-    BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
+MetaQuery::MetaQuery(boost::asio::io_service& io_service, Meta& ms, const std::string &host, unsigned int sindex) :
+    BaseConnection(io_service, "eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),
     _queryNo(0),
     m_serverIndex(sindex),
-    m_complete(false)
+    m_complete(false),
+    m_completeTimer(io_service)
 {
-    assert(ms);
-    
     connect(host, 6767);
 }
 	
@@ -49,21 +48,34 @@ void MetaQuery::onConnect()
     gt->setSerialno(getNewSerialno());
     
     // send code from Connection
-    _encode->streamObjectsMessage(gt);
-    (*_stream) << std::flush;
+    _socket->getEncoder().streamObjectsMessage(gt);
+    _socket->write();
     
     _stamp = TimeStamp::now();
     
     // save our serial-no (so we can identify replies)
     _queryNo = gt->getSerialno();
     
-    if (_timeout)
+    m_completeTimer.expires_from_now(boost::posix_time::seconds(10));
+    m_completeTimer.async_wait([&](boost::system::error_code ec)
     {
-        error() << "meta-query already has a timeout set";
-    }
-    
-    _timeout = new Timeout(10000);
-    _timeout->Expired.connect(sigc::mem_fun(this, &MetaQuery::onQueryTimeout));
+        if (!ec) {
+            this->onQueryTimeout();
+        }
+    });
+
+//    if (_timeout)
+//    {
+//        error() << "meta-query already has a timeout set";
+//    }
+//
+//    _timeout = new Timeout(10000);
+//    _timeout->Expired.connect(sigc::mem_fun(this, &MetaQuery::onQueryTimeout));
+}
+
+void MetaQuery::dispatch()
+{
+    _meta.dispatch();
 }
 
 long MetaQuery::getElapsed()
@@ -73,24 +85,24 @@ long MetaQuery::getElapsed()
 
 void MetaQuery::handleFailure(const std::string &msg)
 {
-    _meta->queryFailure(this, msg);
+    _meta.queryFailure(this, msg);
 }
 
 void MetaQuery::handleTimeout(const std::string&)
 {
-    _meta->queryTimeout(this);
+    _meta.queryTimeout(this);
 }
 
 void MetaQuery::onQueryTimeout()
 {
-    _meta->queryTimeout(this);
+    _meta.queryTimeout(this);
 }
 
 void MetaQuery::setComplete()
 {
     assert(m_complete == false);
     m_complete = true;
-    _timeout->cancel();
+    m_completeTimer.cancel();
 }
 
 } // of namsespace

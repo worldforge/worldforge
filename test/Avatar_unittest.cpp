@@ -43,9 +43,9 @@
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(const std::string & name, const std::string & host,
-                   short port, bool debug) :
-                   Eris::Connection(name, host, port, debug) { }
+    TestConnection(boost::asio::io_service& io_service, const std::string & name, const std::string & host,
+                   short port) :
+                   Eris::Connection(io_service, name, host, port) { }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParents().front()
@@ -129,8 +129,9 @@ int main()
 
     // Test constructor
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -139,8 +140,9 @@ int main()
 
     // Test destructor
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -155,8 +157,9 @@ int main()
 
     // Test deactivate()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -167,8 +170,9 @@ int main()
 
     // Test drop() of something not in inventory
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -183,8 +187,9 @@ int main()
     
     // Test drop() of something in inventory by position
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -200,8 +205,9 @@ int main()
 
     // Test drop() of something in inventory by position and orientation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -217,8 +223,9 @@ int main()
     
     // Test drop() of something in inventory by offset
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -236,8 +243,9 @@ int main()
 
     // Test drop() of something in inventory by offset and orientation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -255,8 +263,9 @@ int main()
 
     // Test take() of something
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -274,8 +283,9 @@ int main()
     
     // Test touch() of something
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -293,8 +303,9 @@ int main()
     
     // Test say() of a message
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -308,8 +319,9 @@ int main()
     
     // Test sayTo() of a message, with one addressed
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1"), fake_npc_id("2");
@@ -326,8 +338,9 @@ int main()
 
     // Test sayTo() of a message, with two addressed
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1"), fake_npc_id("2"), fake_npc2_id("3");
@@ -346,8 +359,9 @@ int main()
 
     // Test sayTo() of a message, with none addressed (still valid)
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -362,8 +376,9 @@ int main()
 
     // Test emote() of a message
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -377,8 +392,9 @@ int main()
     
     // Test moveToPoint()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -394,8 +410,9 @@ int main()
     
     // Test moveInDirection() with zero velocity
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -411,8 +428,9 @@ int main()
     
     // Test moveInDirection() with vertical velocity
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -428,8 +446,9 @@ int main()
     
     // Test moveInDirection() with high velocity
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -447,8 +466,9 @@ int main()
 
     // Test moveInDirection()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -464,8 +484,9 @@ int main()
     
     // Test place() of something
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -483,8 +504,9 @@ int main()
     
     // Test place() of something as admin
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -503,8 +525,9 @@ int main()
     
     // Test place() of something with no pos
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -522,8 +545,9 @@ int main()
     
     // Test place() of something with orientation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -542,8 +566,9 @@ int main()
     
     // Test wield() of something not in inventory
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -561,8 +586,9 @@ int main()
     
     // Test wield() of something in inventory
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -580,8 +606,9 @@ int main()
     
     // Test useOn() of something in inventory
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -599,8 +626,9 @@ int main()
     
     // Test useOn() of something in inventory
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -618,8 +646,9 @@ int main()
     
     // Test useOn() with a position
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -637,8 +666,9 @@ int main()
     
     // Test useOn() with a pos and target
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -656,8 +686,9 @@ int main()
     
     // Test attack()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -675,8 +706,9 @@ int main()
     
     // Test useStop()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -692,8 +724,9 @@ int main()
     
     // Test onEntityAppear() for avatar entity
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -711,8 +744,9 @@ int main()
     
     // Test onEntityAppear() for a different entity
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
@@ -730,8 +764,9 @@ int main()
     
     // Test onCharacterChildAdded()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -748,8 +783,9 @@ int main()
     
     // Test onCharacterChildRemoved()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -766,8 +802,9 @@ int main()
     
     // Test onCharacterWield() with a non string ID.
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -779,8 +816,9 @@ int main()
     // Test onCharacterWield() with a non string ID.
     // It is currently very hard to simulate the entity being in the view.
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -792,8 +830,9 @@ int main()
     
     // Test getConnection()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -804,8 +843,9 @@ int main()
 
     // Test getWorldTime()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -816,8 +856,9 @@ int main()
 
     // Test updateWorldTime()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -828,8 +869,9 @@ int main()
 
     // Test logoutResponse() with a non-info operation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -846,8 +888,9 @@ int main()
 
     // Test logoutResponse() with an empty info operation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -864,8 +907,9 @@ int main()
 
     // Test logoutResponse() with an info operation with bad arg
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -884,8 +928,9 @@ int main()
 
     // Test logoutResponse() with an empty info logout operation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -904,8 +949,9 @@ int main()
 
     // Test logoutResponse() with a non-empty info logout operation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -926,8 +972,9 @@ int main()
 
     // Test logoutResponse() with a non-empty info logout operation
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -949,8 +996,9 @@ int main()
 
     // Test logoutRequested() without any transfer info
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");
@@ -970,8 +1018,9 @@ int main()
 
     // Test logoutRequested() with a transfer info
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection * con = new TestConnection(io_service, "name",
+                "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");

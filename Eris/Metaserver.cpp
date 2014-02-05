@@ -41,7 +41,7 @@ namespace Eris {
 char* pack_uint32(uint32_t data, char* buffer, unsigned int &size);
 char* unpack_uint32(uint32_t &dest, char* buffer);
 
-const int META_SERVER_PORT = 8453;
+const char* META_SERVER_PORT = "8453";
 
 // meta-server protocol commands	
 const uint32_t CKEEP_ALIVE = 2,
@@ -57,14 +57,17 @@ const uint32_t LIST_RESP2 = 999;
 	
 #pragma mark -
 
-Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
+Meta::Meta(boost::asio::io_service& io_service, const std::string& metaServer, unsigned int maxQueries) :
+    m_io_service(io_service),
     m_status(INVALID),
     m_metaHost(metaServer),
     m_maxActiveQueries(maxQueries),
     m_nextQuery(0),
-    m_stream(NULL)
+    m_resolver(io_service),
+    m_socket(io_service),
+    m_metaTimer(io_service),
+    m_stream(&m_buffer)
 {
-    Poll::instance().Ready.connect(sigc::mem_fun(this, &Meta::gotData));
     TimedEventService::instance()->Idle.connect(sigc::mem_fun(this, &Meta::query));
 
     unsigned int max_half_open = Poll::instance().maxConnectingStreams();
@@ -179,71 +182,100 @@ unsigned int Meta::getGameServerCount() const
 
 void Meta::connect()
 {
+    boost::asio::ip::udp::resolver::query query(m_metaHost, META_SERVER_PORT);
+    m_resolver.async_resolve(query,
+            [&](const boost::system::error_code& ec, boost::asio::ip::udp::resolver::iterator iterator) {
+                if (!ec && iterator != boost::asio::ip::udp::resolver::iterator()) {
+                    this->connect(*iterator);
+                } else {
+                    this->disconnect();
+                }
+            });
+}
+
+void Meta::connect(boost::asio::ip::udp::endpoint endpoint)
+{
     disconnect();
-	
-    // don't set m_stream valid till after it opens succesfully, otherwise the
-    // doFailure -> disconnect path gets knotted up
-    
-    udp_socket_stream* s = new udp_socket_stream();  
-    s->setTimeout(30);	
-    s->setTarget(m_metaHost, META_SERVER_PORT);
-    
-    // open connection to meta server
-    if (!s->is_open()) {
-        doFailure("Couldn't open connection to metaserver " + m_metaHost);
-        delete s;
-        return;
-    }
-    
-    m_stream = s;
-    Poll::instance().addStream(m_stream);
-	
-    // build the initial 'ping' and send
-    unsigned int dsz = 0;
-    pack_uint32(CKEEP_ALIVE, _data, dsz);
-    (*m_stream) << std::string(_data, dsz) << std::flush;
-    setupRecvCmd();
-    
-    m_status = GETTING_LIST;
-    
-    // check for meta-server timeouts; this is going to be
-    // fairly common as long as the protocol is UDP, I think
-    m_timeout.reset( new Timeout(8000) );
-    m_timeout->Expired.connect(sigc::mem_fun(this, &Meta::metaTimeout));
+    m_socket.async_connect(endpoint, [&](boost::system::error_code ec){
+        if (!ec) {
+            do_read();
+
+            // build the initial 'ping' and send
+            unsigned int dsz = 0;
+            pack_uint32(CKEEP_ALIVE, _data, dsz);
+            this->m_stream << std::string(_data, dsz) << std::flush;
+            this->write();
+            this->setupRecvCmd();
+
+            this->m_status = GETTING_LIST;
+            this->startTimeout();
+        } else {
+            this->doFailure("Couldn't open connection to metaserver " + this->m_metaHost);
+        }
+    });
 }
 
 void Meta::disconnect()
 {
-    if(m_stream)
-    {
-        Poll::instance().removeStream(m_stream);
-        delete m_stream;
-        m_stream = NULL;
-    }
-    
-    m_timeout.reset();
+    m_socket.close();
+    m_metaTimer.cancel();
 }
 
-void Meta::gotData(PollData &data)
-{    
-    if (m_stream)
-    {
-        if (!m_stream->is_open()) {
-            // it died, delete it
-            doFailure("Connection to the meta-server failed");
-        } else {
-            if (data.isReady(m_stream))
-            {
-                recv();
-            }
+void Meta::startTimeout()
+{
+    m_metaTimer.cancel();
+    m_metaTimer.expires_from_now(boost::posix_time::seconds(8));
+    m_metaTimer.async_wait([&](boost::system::error_code ec){
+        if (!ec) {
+            this->metaTimeout();
         }
-    } // of _stream being valid
+    });
+}
+
+
+void Meta::do_read()
+{
+    m_socket.async_receive(m_buffer.prepare(DATA_BUFFER_SIZE),
+            [this](boost::system::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    m_buffer.commit(length);
+                    if (length > 0) {
+                        this->gotData();
+                    }
+                    this->write();
+                    this->do_read();
+                } else {
+                    this->doFailure("Connection to the meta-server failed");
+                }
+            });
+}
+
+void Meta::write()
+{
+    if (m_buffer.size() != 0) {
+        m_socket.async_send(m_buffer.data(),
+                [&](boost::system::error_code ec, std::size_t length)
+                {
+                    if (!ec)
+                    {
+                        m_buffer.consume(length);
+                    } else {
+                        this->doFailure("Connection to the meta-server failed");
+                    }
+                });
+    }
+}
+
+void Meta::gotData()
+{    
+    recv();
     
     std::vector<MetaQuery*> complete;
     
     for (QuerySet::iterator Q=m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
     {
-        if ((*Q)->isReady(data)) (*Q)->recv();
         if ((*Q)->isComplete()) complete.push_back(*Q);
     }
 
@@ -272,8 +304,8 @@ void Meta::recv()
         return;
     }
 	
-    m_stream->peek();
-    std::streambuf * iobuf = m_stream->rdbuf();
+    m_stream.peek();
+    std::streambuf * iobuf = m_stream.rdbuf();
     std::streamsize len = std::min(_bytesToRecv, iobuf->in_avail());
     if (len > 0) {
     	iobuf->sgetn(_dataPtr, len);
@@ -281,7 +313,7 @@ void Meta::recv()
     	_dataPtr += len;
     }
 //	do {
-//		int d = m_stream->get();
+//		int d = m_stream.get();
 //		*(_dataPtr++) = static_cast<char>(d);
 //		_bytesToRecv--;
 //	} while (iobuf->in_avail() && _bytesToRecv);
@@ -300,7 +332,7 @@ void Meta::recv()
     }
 		
     // try and read more
-    if (_bytesToRecv && m_stream->rdbuf()->in_avail())
+    if (_bytesToRecv && m_stream.rdbuf()->in_avail())
         recv();
 }
 
@@ -342,9 +374,10 @@ void Meta::processCmd()
         _dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
         pack_uint32(stamp, _dataPtr, dsz);
         
-        (*m_stream) << std::string(_data, dsz) << std::flush;
+        m_stream << std::string(_data, dsz) << std::flush;
+        write();
         
-        m_timeout.reset();
+        m_metaTimer.cancel();
         // send the initial list request
         listReq(0);
     } break;
@@ -424,16 +457,11 @@ void Meta::listReq(int base)
     char* _dataPtr = pack_uint32(LIST_REQ, _data, dsz);
     pack_uint32(base, _dataPtr, dsz);
     
-    (*m_stream) << std::string(_data, dsz) << std::flush;
+    m_stream << std::string(_data, dsz) << std::flush;
+    write();
     setupRecvCmd();
     
-    if (m_timeout.get())
-        m_timeout->reset(5000);
-    else
-    {
-        m_timeout.reset( new Timeout(8000) );
-        m_timeout->Expired.connect(sigc::mem_fun(this, &Meta::metaTimeout));
-    }
+    startTimeout();
 }
 
 void Meta::setupRecvCmd()
@@ -482,7 +510,7 @@ void Meta::internalQuery(unsigned int index)
     assert(index < m_gameServers.size());
     
     ServerInfo& sv = m_gameServers[index];
-    MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
+    MetaQuery *q =  new MetaQuery(m_io_service, *this, sv.getHostname(), index);
     if (q->getStatus() != BaseConnection::CONNECTING &&
         q->getStatus() != BaseConnection::NEGOTIATE) {
         // indicates a failure occurred, so we'll kill it now and say no more
@@ -542,10 +570,15 @@ void Meta::doFailure(const std::string &msg)
     cancel();
 }
 
+void Meta::dispatch()
+{
+
+}
+
 void Meta::metaTimeout()
 {
     // cancel calls disconnect, which will kill upfront without this
-    deleteLater(m_timeout.release());
+    m_metaTimer.cancel();
     
     // might want different behaviour in the future, I suppose
     doFailure("Connection to the meta-server timed out");

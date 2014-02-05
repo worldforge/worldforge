@@ -3,19 +3,7 @@
 
 #include <sigc++/signal.h>
 
-// Forward declaration from skstream
-class basic_socket;
-
 namespace Eris {
-
-class PollData
-{
-public:
-	PollData() {}
-	virtual ~PollData() {}
-
-	virtual bool isReady(const basic_socket*) = 0;
-};
 
 class Poll
 {
@@ -33,16 +21,11 @@ public:
 	virtual int maxStreams() const = 0;
 	virtual int maxConnectingStreams() const = 0;
 
-	virtual void addStream(const basic_socket*, Check = READ) = 0;
-	virtual void changeStream(const basic_socket*, Check) = 0;
-	virtual void removeStream(const basic_socket*) = 0;
-
 	static Poll& instance();
 	static void setInstance(Poll*);
 
 	static void newTimedEvent() {new_timeout_ = true;}
 
-    sigc::signal<void, PollData&> Ready;
 private:
 	Poll(const Poll&);
 	static Poll *_inst;

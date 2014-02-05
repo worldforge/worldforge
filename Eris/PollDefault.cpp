@@ -6,8 +6,6 @@
 #include <Eris/Log.h>
 #include <Eris/TimedEventService.h>
 
-#include <skstream/skstream.h>
-
 bool Eris::Poll::new_timeout_ = false;
 
 Eris::Poll& Eris::Poll::instance()
@@ -30,83 +28,8 @@ Eris::Poll* Eris::Poll::_inst = 0;
 
 namespace Eris {
 
-class PollDataDefault : public PollData
-{
-public:
-	PollDataDefault(const PollDefault::MapType&, bool&, unsigned long);
-
-	virtual bool isReady(const basic_socket*);
-private:
-	typedef PollDefault::MapType::const_iterator _iter;
-	fd_set reading, writing, exceptions;
-	SOCKET_TYPE maxfd;
-};
-
-} // namespace Eris
-
-using namespace Eris;
-
-PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
-    bool &got_data, unsigned long msec_timeout) : maxfd(0)
-{
-	FD_ZERO(&reading);
-	FD_ZERO(&writing);
-	FD_ZERO(&exceptions);
-	got_data = false;
-
-#ifndef _NOT_MSC_VER
-	for(PollDefault::MapType::const_iterator I = str.begin(); I != str.end(); ++I) {
-#else
-//MSVC stupidity fix
-	std::map<const basic_socket_stream*, Check> *str2 = const_cast<std::map<const basic_socket_stream*, Check>* >(&str);
-	for(_iter I = str2->begin(); I != str2->end(); ++I) {
-#endif
-		SOCKET_TYPE fd = I->first->getSocket();
-		if(fd == INVALID_SOCKET) continue;
-        
-		got_data = true;
-		if(I->second & Poll::READ)
-			FD_SET(fd, &reading);
-		if(I->second & Poll::WRITE)
-			FD_SET(fd, &writing);
-		if(I->second & Poll::EXCEPT)
-			FD_SET(fd, &exceptions);
-		if(fd > maxfd)
-			maxfd = fd;
-	}
-
-	if (!got_data) return;
-
-	struct timeval timeout = {msec_timeout / 1000, (msec_timeout % 1000) * 1000};
-	int retval = select(maxfd+1, &reading, &writing, &exceptions, &timeout);
-	if (retval < 0) {
-        warning() << "select() returned error: " << retval;
-        got_data = false;
-    }
-
-	got_data = (retval != 0);
-}
-
-bool PollDataDefault::isReady(const basic_socket* str)
-{
-	SOCKET_TYPE fd = str->getSocket();
-
-	return (fd != INVALID_SOCKET) && (fd <= maxfd)
-		&& (FD_ISSET(fd, &reading) ||
-                    FD_ISSET(fd, &writing) ||
-                    FD_ISSET(fd, &exceptions));
-}
-
 void PollDefault::doPoll(unsigned long timeout)
 {
-    if(_streams.size() == 0)
-	return;
-
-    bool got_data;
-    PollDataDefault data(_streams, got_data, timeout);
-
-    if(got_data)
-	Ready.emit(data);
 }
 
 void PollDefault::poll(unsigned long timeout)
@@ -166,29 +89,4 @@ int PollDefault::maxConnectingStreams() const
 {
     return maxStreams();
 }
-
-void PollDefault::addStream(const basic_socket* str, Check c)
-{
-    assert(c && Poll::MASK);
-
-    if(!_streams.insert(std::make_pair(str, c)).second)
-	throw Eris::InvalidOperation("Duplicate streams in PollDefault"); 
-}
-
-void PollDefault::changeStream(const basic_socket* str, Check c)
-{
-    assert(c && Poll::MASK);
-
-    _iter i = _streams.find(str);
-
-    if(i == _streams.end())
-	throw Eris::InvalidOperation("Can't find stream in PollDefault");
-
-    i->second = c;
-}
-
-void PollDefault::removeStream(const basic_socket* str)
-{
-    if(_streams.erase(str) == 0)
-	throw Eris::InvalidOperation("Can't find stream in PollDefault");
 }

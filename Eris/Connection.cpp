@@ -1,5 +1,3 @@
-#include <skstream/skstream.h>
-
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -35,8 +33,8 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
-    BaseConnection(cnm, "game_", this),
+Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
+    BaseConnection(io_service, cnm, "game_", *this),
     _host(host),
     _port(port),
     m_typeService(new TypeService(this)),
@@ -45,21 +43,19 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     m_info(host),
     m_responder(new ResponseTracker)
 {
-    Poll::instance().Ready.connect(sigc::mem_fun(this, &Connection::gotData));
 }
 
-Connection::Connection(const std::string &cnm, const std::string& socket, bool dbg) :
-    BaseConnection(cnm, "game_", this),
+Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& socket) :
+    BaseConnection(io_service, cnm, "game_", *this),
     _host("local"),
     _port(0),
-    _socket(socket),
+    _localSocket(socket),
     m_typeService(new TypeService(this)),
     m_defaultRouter(NULL),
     m_lock(0),
     m_info(_host),
     m_responder(new ResponseTracker)
 {
-    Poll::instance().Ready.connect(sigc::mem_fun(this, &Connection::gotData));
 }
 
 
@@ -73,8 +69,8 @@ Connection::~Connection()
 
 int Connection::connect()
 {
-    if (_socket != "") {
-        return BaseConnection::connectLocal(_socket);
+    if (_localSocket != "") {
+        return BaseConnection::connectLocal(_localSocket);
     } else {
         return BaseConnection::connect(_host, _port);
     }
@@ -112,24 +108,13 @@ int Connection::disconnect()
 
     // fell through, so someone has locked =>
     // start a disconnect timeout
-    _timeout = new Timeout(5000);
-    _timeout->Expired.connect(sigc::mem_fun(this, &Connection::onDisconnectTimeout));
+//    _timeout = new Timeout(5000);
+//    _timeout->Expired.connect(sigc::mem_fun(this, &Connection::onDisconnectTimeout));
     return 0;
 }
 
-void Connection::gotData(PollData &data)
+void Connection::dispatch()
 {
-    if (!_stream || !data.isReady(_stream)) {
-        return;
-    }
-
-    if (_status == DISCONNECTED) {
-        error() << "Got data on a disconnected stream";
-        return;
-    }
-
-    BaseConnection::recv();
-
 // now dispatch received ops
     while (!m_opDeque.empty()) {
         RootOperation op = m_opDeque.front();
@@ -151,7 +136,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
         return;
     }
 
-    if (_stream->eof() || _stream->fail()) {
+    if (!_socket) {
         handleFailure("Connection::send: stream failed");
         hardDisconnect(false);
         return;
@@ -168,8 +153,8 @@ void Connection::send(const Atlas::Objects::Root &obj)
     std::cout << "sending:" << debugStream.str() << std::endl;
 #endif
 
-    _encode->streamObjectsMessage(obj);
-    (*_stream) << std::flush;
+    _socket->getEncoder().streamObjectsMessage(obj);
+    _socket->write();
 }
 
 void Connection::registerRouterForTo(Router* router, const std::string toId)

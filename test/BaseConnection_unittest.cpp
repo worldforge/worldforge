@@ -36,18 +36,27 @@
 #include <Atlas/Objects/objectFactory.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <skstream/skstream.h>
-
 #include <cstdlib>
 
 #include <cassert>
+
+class TestStreamClientSocketBase : public Eris::StreamClientSocketBase {
+public:
+    TestStreamClientSocketBase(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks)
+: Eris::StreamClientSocketBase(io_service, client_name, bridge, callbacks)
+{}
+    virtual void write(){}
+protected:
+    virtual void do_read(){}
+    virtual void negotiate_read(){}
+};
 
 class TestBaseConnection : public Eris::BaseConnection {
   public:
     bool failure;
     bool timeout;
 
-    TestBaseConnection(Atlas::Bridge * b) : Eris::BaseConnection("test", "1", b), failure(false), timeout(false) { }
+    TestBaseConnection(boost::asio::io_service& io_service, Atlas::Bridge * b) : Eris::BaseConnection(io_service, "test", "1", *b), failure(false), timeout(false) { }
 
     virtual void handleFailure(const std::string & msg) {
         failure = true;
@@ -55,6 +64,10 @@ class TestBaseConnection : public Eris::BaseConnection {
 
     virtual void handleTimeout(const std::string & msg) {
         timeout = true;
+    }
+
+    void dispatch()
+    {
     }
 
     void test_setStatus(Eris::BaseConnection::Status sc) {
@@ -77,21 +90,11 @@ class TestBaseConnection : public Eris::BaseConnection {
         onNegotiateTimeout();
     }
 
-    void setup_stream() {
-        _stream = new tcp_socket_stream;
+    void setup_socket() {
+        Eris::StreamClientSocketBase::Callbacks callbacks;
+        _socket = new TestStreamClientSocketBase(_io_service, "", _bridge, callbacks);
     }
 
-    void setup_codec() {
-        m_codec = new Atlas::Codecs::XML(*_stream, *_bridge);
-    }
-
-    void setup_encode() {
-        _encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
-    }
-
-    void setup_sc() {
-        _sc = new Atlas::Net::StreamConnect(_clientName, *_stream);
-    }
 };
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
@@ -101,13 +104,15 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 
 int main()
 {
+
+    boost::asio::io_service io_service;
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
 
     Atlas::Objects::Factories * f = Atlas::Objects::Factories::instance();
     assert(!f->hasFactory("unseen"));
 
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
     }
 
     // Make sure the op classes have been installed, and the initial
@@ -117,40 +122,26 @@ int main()
 
     // Test the other code path when a second connection is created.
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
     }
 
     // Test isConnected.
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         assert(!tbc.isConnected());
     }
 
-    // Test getFileDescriptor.
-    {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
-
-        try {
-            tbc.getFileDescriptor();
-
-            std::cerr << "FAIL: BaseConnection::getFileDescriptor() should throw Eris::InvalidOperation" << std::endl << "FAIL: when not coonected." << std::endl << std::flush;
-            abort();
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-    }
-
     // Test getStatus().
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
     }
 
     // Test setStatus().
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
 
@@ -161,29 +152,9 @@ int main()
         tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
     }
 
-    // Test alternate path through desctructor using setStatus()
-    {
-        TestBaseConnection * tbc = new TestBaseConnection(new Atlas::Message::QueuedDecoder);
-
-        assert(tbc->getStatus() == Eris::BaseConnection::DISCONNECTED);
-
-        tbc->setup_stream();
-        tbc->setup_codec();
-        tbc->setup_encode();
-        tbc->test_setStatus(Eris::BaseConnection::CONNECTED);
-
-        // The destructor will throw in hardDisconnect();
-        try {
-            delete tbc;
-            abort();
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-    }
-
     // Test connect() and verify getStatus() changes.
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
 
@@ -196,7 +167,7 @@ int main()
 
     // Test onConnect() does nothing.
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         tbc.test_onConnect();
     }
@@ -207,7 +178,7 @@ int main()
 
         assert(!onConnect_checker.flagged());
 
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         tbc.Connected.connect(sigc::mem_fun(onConnect_checker,
                                             &SignalFlagger::set));
@@ -221,98 +192,98 @@ int main()
 
     // Test hardDisconnect() does nothing.
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         tbc.test_hardDisconnect(true);
     }
 
-    // Test hardDisconnect() throws in polldefault when connected
-    {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
-
-        // Add members to be consistent with connected state.
-        tbc.setup_stream();
-        tbc.setup_codec();
-        tbc.setup_encode();
-        // Make the state different
-        tbc.test_setStatus(Eris::BaseConnection::CONNECTED);
-
-        try {
-            tbc.test_hardDisconnect(true);
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-
-        // Make it disconnected again, or we crash on destructor
-        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
-    }
-
-    // Test hardDisconnect() throws in polldefault when disconnecting
-    {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
-
-        // Add members to be consistent with disconnecting state.
-        tbc.setup_stream();
-        tbc.setup_codec();
-        tbc.setup_encode();
-        // Make the state different
-        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTING);
-
-        try {
-            tbc.test_hardDisconnect(true);
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-
-        // Make it disconnected again, or we crash on destructor
-        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
-    }
+//    // Test hardDisconnect() throws in polldefault when connected
+//    {
+//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//
+//        // Add members to be consistent with connected state.
+//        tbc.setup_stream();
+//        tbc.setup_codec();
+//        tbc.setup_encode();
+//        // Make the state different
+//        tbc.test_setStatus(Eris::BaseConnection::CONNECTED);
+//
+//        try {
+//            tbc.test_hardDisconnect(true);
+//        }
+//        catch (Eris::InvalidOperation & eio) {
+//        }
+//
+//        // Make it disconnected again, or we crash on destructor
+//        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
+//    }
+//
+//    // Test hardDisconnect() throws in polldefault when disconnecting
+//    {
+//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//
+//        // Add members to be consistent with disconnecting state.
+//        tbc.setup_stream();
+//        tbc.setup_codec();
+//        tbc.setup_encode();
+//        // Make the state different
+//        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTING);
+//
+//        try {
+//            tbc.test_hardDisconnect(true);
+//        }
+//        catch (Eris::InvalidOperation & eio) {
+//        }
+//
+//        // Make it disconnected again, or we crash on destructor
+//        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
+//    }
+//
+//    // Test hardDisconnect() throws in polldefault when negotiating
+//    {
+//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//
+//        // Add members to be consistent with negotiating state.
+//        tbc.setup_stream();
+//        tbc.setup_sc();
+//        // Make the state different
+//        tbc.test_setStatus(Eris::BaseConnection::NEGOTIATE);
+//
+//        try {
+//            tbc.test_hardDisconnect(true);
+//        }
+//        catch (Eris::InvalidOperation & eio) {
+//        }
+//
+//        // Make it disconnected again, or we crash on destructor
+//        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
+//    }
+//
+//    // Test hardDisconnect() throws in polldefault when negotiating
+//    {
+//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//
+//        // Add members to be consistent with connecting state.
+//        tbc.setup_stream();
+//        // Make the state different
+//        tbc.test_setStatus(Eris::BaseConnection::CONNECTING);
+//
+//        try {
+//            tbc.test_hardDisconnect(true);
+//        }
+//        catch (Eris::InvalidOperation & eio) {
+//        }
+//
+//        // Make it disconnected again, or we crash on destructor
+//        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
+//    }
 
     // Test hardDisconnect() throws in polldefault when negotiating
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
-
-        // Add members to be consistent with negotiating state.
-        tbc.setup_stream();
-        tbc.setup_sc();
-        // Make the state different
-        tbc.test_setStatus(Eris::BaseConnection::NEGOTIATE);
-
-        try {
-            tbc.test_hardDisconnect(true);
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-
-        // Make it disconnected again, or we crash on destructor
-        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
-    }
-
-    // Test hardDisconnect() throws in polldefault when negotiating
-    {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         // Add members to be consistent with connecting state.
-        tbc.setup_stream();
-        // Make the state different
-        tbc.test_setStatus(Eris::BaseConnection::CONNECTING);
-
-        try {
-            tbc.test_hardDisconnect(true);
-        }
-        catch (Eris::InvalidOperation & eio) {
-        }
-
-        // Make it disconnected again, or we crash on destructor
-        tbc.test_setStatus(Eris::BaseConnection::DISCONNECTED);
-    }
-
-    // Test hardDisconnect() throws in polldefault when negotiating
-    {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
-
-        // Add members to be consistent with connecting state.
-        tbc.setup_stream();
+        tbc.setup_socket();
         // Make the state different
         tbc.test_setStatus(Eris::BaseConnection::INVALID_STATUS);
 
@@ -328,7 +299,7 @@ int main()
 
     // Test onConnectTimeout()
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         tbc.test_onConnectTimeout();
 
@@ -337,7 +308,7 @@ int main()
 
     // Test onNegotiateTimeout()
     {
-        TestBaseConnection tbc(new Atlas::Message::QueuedDecoder);
+        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
 
         tbc.test_onNegotiateTimeout();
 

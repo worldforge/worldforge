@@ -42,13 +42,15 @@ int main()
 
     // Constructor
     {
-        Eris::Connection * c = new Eris::Connection("", "", 0, false);
+        boost::asio::io_service io_service;
+        Eris::Connection * c = new Eris::Connection(io_service, "", "", 0);
         new Eris::Account(c);
     }
 
     // Destructor
     {
-        Eris::Connection * c = new Eris::Connection("", "", 0, false);
+        boost::asio::io_service io_service;
+        Eris::Connection * c = new Eris::Connection(io_service, "", "", 0);
         Eris::Account * ac = new Eris::Account(c);
         delete ac;
     }
@@ -137,9 +139,9 @@ void Avatar::onTransferRequested(const TransferInfo &transfer)
 {
 }
 
-BaseConnection::BaseConnection(const std::string &cnm, 
+BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
     const std::string &id,
-    Atlas::Bridge *br)
+    Atlas::Bridge& br) : _io_service(io_service), _tcpResolver(io_service), _bridge(br)
 {
 }
 
@@ -165,13 +167,18 @@ void BaseConnection::onConnect()
 {
 }
 
-Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
-    BaseConnection(cnm, "game_", this), _port(port)
+Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
+    BaseConnection(io_service, cnm, "game_", *this), _port(port)
 {
 }
 
 Connection::~Connection()
 {
+}
+
+void Connection::dispatch()
+{
+
 }
 
 void Connection::setStatus(Status ns)

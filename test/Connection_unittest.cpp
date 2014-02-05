@@ -41,16 +41,12 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(const std::string &cnm, const std::string& host, short port, bool dbg) : Eris::Connection(cnm, host, port, dbg) {
+    TestConnection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) : Eris::Connection(io_service, cnm, host, port) {
     }
 
     void testSetStatus(Status sc) { setStatus(sc); }
 
-    void testGotData(Eris::PollData & data) { gotData(data); }
-};
-
-class TestPollData : public Eris::PollData {
-    virtual bool isReady(const basic_socket*) { return false; }
+    void testDispatch() { dispatch(); }
 };
 
 int main()
@@ -58,26 +54,24 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
-    // Test constructor
+    // Test constructor and destructor
     {
-        new Eris::Connection("eristest", "localhost", 6767, true);
-    }
-
-    // Test destructor
-    {
-        delete new Eris::Connection("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection con(io_service, "name", "localhost", 6767);
     }
 
     // Test getTypeService()
     {
-        Eris::Connection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection c(io_service, "name", "localhost", 6767);
 
         assert(c.getTypeService() != 0);
     }
 
     // Test connect()
     {
-        Eris::Connection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection c(io_service, "name", "localhost", 6767);
         
         int ret = c.connect();
 
@@ -86,7 +80,8 @@ int main()
 
     // Test connect() with socket
     {
-        Eris::Connection c("eristest", "local_socket", true);
+        boost::asio::io_service io_service;
+        Eris::Connection c(io_service, "name", "localhost", 6767);
 
         int ret = c.connect();
 
@@ -95,14 +90,16 @@ int main()
 
     // Test disconnect() when disconnected
     {
-        TestConnection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection c(io_service, "name", "localhost", 6767);
 
         c.disconnect();
     }
 
     // Test disconnect() when disconnecting
     {
-        TestConnection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        TestConnection c(io_service, "name", "localhost", 6767);
 
         c.testSetStatus(Eris::BaseConnection::DISCONNECTING);
 
@@ -113,7 +110,8 @@ int main()
 
     // Test disconnect() when connecting
     {
-        TestConnection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        TestConnection c(io_service, "name", "localhost", 6767);
 
         c.connect();
 
@@ -124,20 +122,20 @@ int main()
         c.testSetStatus(Eris::BaseConnection::DISCONNECTED);
     }
 
-    // Test gotData()
+    // Test dispatch()
     {
-        TestConnection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        TestConnection c(io_service, "name", "localhost", 6767);
 
-        TestPollData data;
-
-        c.testGotData(data);
+        c.testDispatch();
     }
 
     // FIXME Not testing all the code paths through gotData()
 
     // Test send()
     {
-        TestConnection c("eristest", "localhost", 6767, true);
+        boost::asio::io_service io_service;
+        Eris::Connection c(io_service, "name", "localhost", 6767);
 
         Atlas::Objects::Root obj;
 

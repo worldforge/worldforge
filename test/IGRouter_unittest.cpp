@@ -49,8 +49,8 @@ static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
 class TestAvatar : public Eris::Avatar
 {
   public:
-    TestAvatar() :
-          Eris::Avatar(*new Eris::Account(new Eris::Connection("", "", 0, false)), "") { }
+    TestAvatar(boost::asio::io_service& io_service) :
+          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, "", "", 0)), "") { }
 };
 
 class TestIGRouter : public Eris::IGRouter
@@ -65,19 +65,20 @@ class TestIGRouter : public Eris::IGRouter
 
 int main()
 {
+    boost::asio::io_service io_service;
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         new Eris::IGRouter(av);
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         Eris::IGRouter * ir = new Eris::IGRouter(av);
         delete ir;
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         RootOperation op;
@@ -86,7 +87,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         RootOperation op;
@@ -96,7 +97,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -105,7 +106,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -115,7 +116,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -125,7 +126,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         stub_type_bound = true;
@@ -139,7 +140,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -149,7 +150,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Appearance op;
@@ -158,7 +159,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Disappearance op;
@@ -167,7 +168,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Unseen op;
@@ -176,7 +177,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Unseen op;
@@ -186,7 +187,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -202,7 +203,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -219,7 +220,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -237,7 +238,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -258,7 +259,7 @@ int main()
    }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -279,7 +280,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -301,7 +302,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -323,7 +324,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -346,7 +347,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -369,7 +370,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -393,7 +394,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -417,7 +418,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar();
+        TestAvatar * av = new TestAvatar(io_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -518,18 +519,14 @@ void Avatar::updateWorldTime(double seconds)
 {
 }
 
-BaseConnection::BaseConnection(const std::string &cnm, 
+BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
     const std::string &id,
-    Atlas::Bridge *br) :
-    _encode(NULL),
-    _sc(NULL),
-    m_codec(NULL),
+    Atlas::Bridge &br) :
+            _io_service(io_service),_tcpResolver(io_service),
     _status(DISCONNECTED),
     _id(id),
-    _stream(NULL),
     _clientName(cnm),
     _bridge(br),
-    _timeout(NULL),
     _host(""),
     _port(0)
 {
@@ -557,8 +554,8 @@ void BaseConnection::setStatus(Status sc)
 {
 }
 
-Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
-    BaseConnection(cnm, "game_", this),
+Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
+    BaseConnection(io_service, cnm, "game_", *this),
     _host(host),
     _port(port),
     m_typeService(new TypeService(this)),
@@ -590,6 +587,10 @@ void Connection::handleFailure(const std::string &msg)
 }
 
 void Connection::handleTimeout(const std::string& msg)
+{
+}
+
+void Connection::dispatch()
 {
 }
 

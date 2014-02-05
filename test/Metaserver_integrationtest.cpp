@@ -36,18 +36,14 @@ int main()
 namespace Eris
 {
 
-BaseConnection::BaseConnection(const std::string &cnm,
+BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
     const std::string &id,
-    Atlas::Bridge *br) :
-    _encode(NULL),
-    _sc(NULL),
-    m_codec(NULL),
+    Atlas::Bridge &br) :
+            _io_service(io_service),_tcpResolver(io_service),
     _status(DISCONNECTED),
     _id(id),
-    _stream(NULL),
     _clientName(cnm),
     _bridge(br),
-    _timeout(NULL),
     _host(""),
     _port(0)
 {
@@ -75,8 +71,9 @@ void BaseConnection::setStatus(Status sc)
 {
 }
 
-void BaseConnection::recv()
+Atlas::Objects::ObjectsEncoder& Eris::StreamClientSocketBase::getEncoder()
 {
+    return *(Atlas::Objects::ObjectsEncoder*)(0);
 }
 
 Eris::Poll* Eris::Poll::_inst = 0;
@@ -99,18 +96,6 @@ int PollDefault::maxConnectingStreams() const
 {
     // Low number for testing
     return 8;
-}
-
-void PollDefault::addStream(const basic_socket* str, Check c)
-{
-}
-
-void PollDefault::changeStream(const basic_socket* str, Check c)
-{
-}
-
-void PollDefault::removeStream(const basic_socket* str)
-{
 }
 
 ServerInfo::ServerInfo(const std::string &host) :

@@ -51,12 +51,13 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
     std::cerr << msg << std::endl << std::flush;
 }
 
+boost::asio::io_service io_service;
 
 class TestConnection : public Eris::Connection {
   public:
     TestConnection(const std::string & name, const std::string & host,
                    short port, bool debug) :
-                   Eris::Connection(name, host, port, debug) { }
+                   Eris::Connection(io_service, name, host, port) { }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParents().front()

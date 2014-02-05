@@ -43,11 +43,13 @@
 
 #include <iostream>
 
+boost::asio::io_service io_service;
+
 class TestConnection : public Eris::Connection {
   public:
     TestConnection(const std::string & name, const std::string & host,
-                   short port, bool debug) :
-                   Eris::Connection(name, host, port, debug) { }
+                   short port) :
+                   Eris::Connection(io_service, name, host, port) { }
 
     void test_setStatus(Eris::BaseConnection::Status sc) {
         setStatus(sc);
@@ -170,11 +172,12 @@ int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
+    boost::asio::io_service io_service;
 
     // Test constructor
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+                                                      6767);
 
         Eris::Account acc(con);
     }
@@ -189,8 +192,8 @@ int main()
     }
     // Test getActiveCharacters()
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+                                                      6767);
 
         Eris::Account acc(con);
 
@@ -200,8 +203,8 @@ int main()
     }
     // Test getId()
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+                                                      6767);
 
         Eris::Account acc(con);
 
@@ -211,8 +214,8 @@ int main()
     }
     // Test getUsername()
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+                                                      6767);
 
         Eris::Account acc(con);
 
@@ -223,8 +226,8 @@ int main()
 
     // Test getConnection()
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+                                                      6767);
 
         Eris::Account acc(con);
 
@@ -236,7 +239,7 @@ int main()
     // Test login() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         Eris::Account acc(con);
 
@@ -247,7 +250,7 @@ int main()
     // Test login() fails if we fake connected and logged in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -261,7 +264,7 @@ int main()
     // Test login() works if we fake connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -274,7 +277,7 @@ int main()
     // Test createAccount() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         Eris::Account acc(con);
 
@@ -285,7 +288,7 @@ int main()
     // Test createAccount() works if we fake connected.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -298,7 +301,7 @@ int main()
     // Test logout() fails if not connected.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -309,7 +312,7 @@ int main()
     // Test logout() does nothing if we fake connected, and logging out.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -322,7 +325,7 @@ int main()
     // Test logout() fails if we are fake connected but not logged in.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -334,7 +337,7 @@ int main()
     // Test logout() works if we are fake connected and logged in.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -347,7 +350,7 @@ int main()
     // Test getCharacters()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -359,7 +362,7 @@ int main()
     // Test refreshCharacterInfo() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         Eris::Account acc(con);
 
@@ -370,7 +373,7 @@ int main()
     // Test refreshCharacterInfo() fails if we fake connected and logging in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -385,7 +388,7 @@ int main()
     // and pretend a query is already occuring.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -405,7 +408,7 @@ int main()
     // and have no characters IDs.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger gotAllCharacters_checker;
@@ -429,7 +432,7 @@ int main()
     // and have characters IDs.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger gotAllCharacters_checker;
@@ -455,7 +458,7 @@ int main()
     // Test createCharacter() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         Eris::Account acc(con);
         Atlas::Objects::Entity::Anonymous ent;
@@ -467,7 +470,7 @@ int main()
     // Test createCharacter() fails if we fake connected and creating char
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Anonymous ent;
@@ -486,7 +489,7 @@ int main()
     // Test createCharacter() fails if we fake connected and taking char
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Anonymous ent;
@@ -505,7 +508,7 @@ int main()
     // Test createCharacter() fails if we fake connected but not logged in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Anonymous ent;
@@ -520,7 +523,7 @@ int main()
     // Test createCharacter() works if we fake connected and logged in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Anonymous ent;
@@ -535,7 +538,7 @@ int main()
     // Test takeCharacter() fails if ID is not a real character
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         Eris::Account acc(con);
         std::string fake_char_id("1");
@@ -547,7 +550,7 @@ int main()
     // Test takeCharacter() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -561,7 +564,7 @@ int main()
     // Test takeCharacter() fails if we fake connected and logging in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -577,7 +580,7 @@ int main()
     // Test takeCharacter() fails if we fake connected and logging in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -597,7 +600,7 @@ int main()
     // Test takeCharacter() fails if we fake connected and logging in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -617,7 +620,7 @@ int main()
     // Test takeCharacter() works if we fake connected and logged in
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -637,7 +640,7 @@ int main()
     // Test deactivateCharacter()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -650,7 +653,7 @@ int main()
     // Test isLoggedIn()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -660,7 +663,7 @@ int main()
     // Test isLoggedIn()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -672,7 +675,7 @@ int main()
     // Test isLoggedIn()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -684,7 +687,7 @@ int main()
     // Test isLoggedIn()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -696,7 +699,7 @@ int main()
     // Test internalLogin()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -710,7 +713,7 @@ int main()
     // Test logoutResponse() does nothing when given the wrong op.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -724,7 +727,7 @@ int main()
     // Test loginComplete() does nothing when not logged in.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Account p;
@@ -737,7 +740,7 @@ int main()
     // Test loginComplete()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Account p;
@@ -757,7 +760,7 @@ int main()
     // Test updateFromObject() with a bad character list
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Account p;
@@ -770,7 +773,7 @@ int main()
     // Test updateFromObject() with a character list with something bad in it
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Account p;
@@ -789,7 +792,7 @@ int main()
 
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Entity::Account p;
@@ -815,7 +818,7 @@ int main()
     // Test loginError() with no arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error err;
@@ -826,7 +829,7 @@ int main()
     // Test loginError() with empty arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error err;
@@ -839,7 +842,7 @@ int main()
     // Test loginError() with arg that has non-string message
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error err;
@@ -853,7 +856,7 @@ int main()
     // Test loginError() with arg that has non-string message
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error err;
@@ -873,7 +876,7 @@ int main()
     // Test handleLoginTimeout()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger loginFailure_checker;
@@ -889,7 +892,7 @@ int main()
     // Test avatarResponse() Error op
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error op;
@@ -908,7 +911,7 @@ int main()
     // Test avatarResponse() Info op with no arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Info op;
@@ -925,7 +928,7 @@ int main()
     // Test avatarResponse() Info op with non-entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Info op;
@@ -944,7 +947,7 @@ int main()
     // Test avatarResponse() Info op with entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Info op;
@@ -965,7 +968,7 @@ int main()
     // Test avatarResponse() Get (not info or error) op with entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Get op; // Arbitrary not Info or Error
@@ -984,7 +987,7 @@ int main()
     // Test internalDeactivateCharacter() indirectly
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -1004,7 +1007,7 @@ int main()
     // Test internalDeactivateCharacter() directly
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         std::string fake_char_id("1");
@@ -1022,7 +1025,7 @@ int main()
     // Test sightCharacter() with empty sight
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Sight sight;
@@ -1040,7 +1043,7 @@ int main()
     // Test sightCharacter() with Sight with bad args
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Sight sight;
@@ -1060,7 +1063,7 @@ int main()
     // Test sightCharacter() with Sight with valid args
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Sight sight;
@@ -1084,7 +1087,7 @@ int main()
     // Test sightCharacter() with Sight with valid args, but one character reamining
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Sight sight;
@@ -1109,7 +1112,7 @@ int main()
     // Test netConnected() Does nothing with an empty password
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1120,7 +1123,7 @@ int main()
     // but not DISCONNECTED
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1134,7 +1137,7 @@ int main()
     // Test netConnected() works with valid username and password,
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1147,7 +1150,7 @@ int main()
     // Test netDisconnecting() when account is not logged in.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1160,7 +1163,7 @@ int main()
     // disconnected.
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1178,7 +1181,7 @@ int main()
     // Test netFailure()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
 
@@ -1188,7 +1191,7 @@ int main()
     // Test handleLogoutTimeout()
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger logoutComplete_checker;
@@ -1205,7 +1208,7 @@ int main()
     // Test avatarLogoutResponse() with non Info operation
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1221,7 +1224,7 @@ int main()
     // Test avatarLogoutResponse() with Info operation
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1237,7 +1240,7 @@ int main()
     // Test avatarLogoutResponse() with Info operation with bad args
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1256,7 +1259,7 @@ int main()
     // have no args
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1276,7 +1279,7 @@ int main()
     // formed args for an ID which does not exist
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1301,7 +1304,7 @@ int main()
     // active
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
@@ -1326,7 +1329,7 @@ int main()
     // active
     {
         TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767, true);
+                                                  6767);
 
         TestAccount acc(con);
         SignalFlagger avatarDeactivated_checker;
