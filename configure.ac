@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([eris], [1.3.23], [erik@ogenvik.org])
+AC_INIT([eris], [1.4.0], [erik@ogenvik.org])
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -17,7 +17,7 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests no-define silen
 AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
-ERIS_CURRENT=21
+ERIS_CURRENT=0
 ERIS_REVISION=0
 ERIS_AGE=0
 
@@ -160,7 +160,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
-ERIS_LIB_SUFFIX="-1.3"
+ERIS_LIB_SUFFIX="-1.4"
 ERIS_LIBS="-leris$ERIS_LIB_SUFFIX"
 ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
 
@@ -182,6 +182,6 @@ test/Makefile
 eris.dox
 eris.spec
 mingw32-eris.spec
-eris-1.3.pc
+eris-1.4.pc
 ])
 AC_OUTPUT

@@ -15,7 +15,7 @@ Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: atlascpp-devel >= 0.5.98 wfmath-devel >= 0.3.2 skstream-devel >= 0.3.5
+BuildRequires: atlascpp-devel >= 0.5.98 wfmath-devel >= 0.3.2
 Obsoletes: eris-poll-glib
 
 %description

@@ -39,7 +39,7 @@ testEris_SOURCES = tests.cpp \
     avatarTest.cpp avatarTest.h \
     calendarTest.cpp calendarTest.h
 
-LDADD = $(top_builddir)/Eris/liberis-1.3.la $(ERIS_DEPS)
+LDADD = $(top_builddir)/Eris/liberis-1.4.la $(ERIS_DEPS)
 
 metaquery_SOURCES = metaQuery.cpp
 
