@@ -19,7 +19,7 @@ namespace Eris
 class Connection;
 class Avatar;
 class AccountRouter;
-class Timeout;
+class TimedEvent;
 class SpawnPoint;
 
 /** Type used to return available characters */
@@ -296,7 +296,7 @@ protected:
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
 
     ActiveCharacterMap m_activeCharacters;
-    std::unique_ptr<Timeout> m_timeout;
+    std::unique_ptr<TimedEvent> m_timeout;
 
     /**
      * @brief A map of available spawn points.

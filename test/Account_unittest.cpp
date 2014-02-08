@@ -67,8 +67,8 @@ int main()
 #include <Eris/Response.h>
 #include <Eris/Router.h>
 #include <Eris/SpawnPoint.h>
-#include <Eris/Timeout.h>
 #include <Eris/TypeService.h>
+#include <Eris/TimedEventService.h>
 
 #include <Atlas/Objects/RootOperation.h>
 
@@ -260,16 +260,11 @@ const std::string& SpawnPoint::getName() const
     return m_name;
 }
 
-Timeout::Timeout(unsigned long milli) :
-        _fired(false)
+TimedEvent::TimedEvent(const boost::posix_time::time_duration& duration, const std::function<void()>& callback)
 {
 }
 
-Timeout::~Timeout()
-{
-}
-
-void Timeout::expired()
+TimedEvent::~TimedEvent()
 {
 }
 

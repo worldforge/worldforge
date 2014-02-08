@@ -17,7 +17,6 @@ liberis_1_4_la_SOURCES = \
 	Metaserver.cpp \
 	MetaQuery.cpp \
 	ServerInfo.cpp \
-	Timeout.cpp \
 	TypeInfo.cpp \
 	PollDefault.cpp \
 	Log.cpp \
@@ -71,7 +70,6 @@ liberis_HEADERS = \
 	Person.h \
 	Metaserver.h \
 	ServerInfo.h \
-	Timeout.h \
 	TypeInfo.h \
 	Poll.h \
 	PollDefault.h \

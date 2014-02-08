@@ -156,7 +156,7 @@ int main()
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
 #include <Eris/PollDefault.h>
-#include <Eris/Timeout.h>
+#include <Eris/TimedEventService.h>
 
 namespace Eris
 {
@@ -273,37 +273,24 @@ void ServerInfo::setPing(int p)
 {
 }
 
-void Timeout::reset(unsigned long milli)
-{
-}
-
-Timeout::Timeout(unsigned long milli) :
-        _fired(false)
-{
-}
-
-Timeout::~Timeout()
-{
-}
-
-void Timeout::expired()
-{
-}
 
 TimedEventService* TimedEventService::static_instance = NULL;
 
-TimedEventService::TimedEventService()
+TimedEventService::TimedEventService(boost::asio::io_service& io_service): m_io_service(io_service)
 {
+    assert(!static_instance);
+    static_instance = this;
 }
 
-TimedEventService* TimedEventService::instance()
+TimedEventService::~TimedEventService()
 {
-    if (!static_instance)
-    {
-        static_instance = new TimedEventService;
-    }
-    
-    return static_instance;
+    static_instance = nullptr;
+}
+
+TimedEventService& TimedEventService::instance()
+{
+    assert(static_instance);
+    return *static_instance;
 }
 
 BaseException::~BaseException() throw()

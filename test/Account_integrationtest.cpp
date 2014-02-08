@@ -32,6 +32,7 @@
 #include <Eris/Log.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/CharacterType.h>
+#include <Eris/TimedEventService.h>
 
 #include "SignalFlagger.h"
 
@@ -173,6 +174,7 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
     boost::asio::io_service io_service;
+    Eris::TimedEventService tes(io_service);
 
     // Test constructor
     {

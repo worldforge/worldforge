@@ -1,81 +1,48 @@
 #ifndef ERIS_TIMED_EVENT_SERVICE_H
 #define ERIS_TIMED_EVENT_SERVICE_H
 
-#include <wfmath/timestamp.h>
-
 #include <sigc++/signal.h>
 
-#include <set>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/deadline_timer.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
 
 namespace Eris
 {
 
 /**
-@brief Abstract interface for things which occur after a period of time.
+@brief Class for things which occur after a period of time.
 */
 class TimedEvent
 {
 public:
-    virtual ~TimedEvent()
-    {
-    }
     
-    /**
-    @brief Implement the expiry behaviour of this object.
-    The TimedEvent is automatically removed from the service before this
-    method is called, so deleting the object, or re-registering it are
-    permitted.
-    */
-    virtual void expired() = 0;
-    
-    /**
-    The time value when this event is due
-    */
-    virtual const WFMath::TimeStamp& due() const = 0;
-};
+    TimedEvent(const boost::posix_time::time_duration& duration, const std::function<void()>& callback);
+    ~TimedEvent();
 
-class EventsByDueOrdering
-{
-public:
-    bool operator()(const TimedEvent* a, const TimedEvent* b) const
-    {
-        return a->due() < b->due();
-    }
+private:
+    boost::asio::deadline_timer* m_timer;
 };
 
 class TimedEventService
 {
 public:
 
-    static TimedEventService* instance();
+    TimedEventService(boost::asio::io_service& io_service);
+    ~TimedEventService();
 
-    static void del();
+    static TimedEventService& instance();
 
-    /**
-    @brief Tick all the timed events registered with the service instance.
-    @ret The period in milliseconds until the next event is due
-    */
-    unsigned long tick(bool idle = false);
-
-    /**
-    */
-    void registerEvent(TimedEvent* te);
-
-    /**
-    */
-    void unregisterEvent(TimedEvent* te);
-
-    /**
-    @brief Signal emitted when tick is idle
-    */
-    sigc::signal<void> Idle;
 private:
-    TimedEventService();
+
+    friend class TimedEvent;
     
+    boost::asio::deadline_timer* createTimer();
+
     static TimedEventService* static_instance;
     
-    typedef std::set<TimedEvent*, EventsByDueOrdering> TimedEventsByDue;
-    TimedEventsByDue m_events;
+    boost::asio::io_service& m_io_service;
+
 };
 
 } // of namespace Eris

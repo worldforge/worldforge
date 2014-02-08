@@ -30,87 +30,32 @@
 
 #include <cassert>
 
-class TestSignalTracker 
-{
-  protected:
-    bool m_called;
-  public:
-    TestSignalTracker() : m_called(false) { }
-
-    bool called() const { return m_called; }
-
-    void call() { m_called = true; }
-};
-
 int main()
 {
+    boost::asio::io_service io_service;
+
     {
-        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+        Eris::TimedEventService ted(io_service);
 
-        assert(ted != 0);
+        Eris::TimedEventService * ted2 = &Eris::TimedEventService::instance();
 
-        Eris::TimedEventService::del();
+        assert(ted2 != 0);
+
     }
 
     {
-        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
-
-        assert(ted != 0);
-        ted->Idle.emit();
-
-        Eris::TimedEventService::del();
+        Eris::TimedEventService ted(io_service);
+        bool called = false;
+        Eris::TimedEvent te(boost::posix_time::seconds(-10), [&](){called = true;});
+        io_service.run_one();
+        io_service.reset();
+        assert(called);
     }
 
-    {
-        TestSignalTracker tst;
-        assert(!tst.called());
-
-        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
-        assert(ted != 0);
-
-        ted->Idle.emit();
-        assert(!tst.called());
-
-        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
-        assert(!tst.called());
-
-        ted->Idle.emit();
-        assert(tst.called());
-
-        Eris::TimedEventService::del();
-    }
-
-    {
-        TestSignalTracker tst;
-
-        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
-
-        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
-
-        ted->tick();
-        assert(!tst.called());
-
-        Eris::TimedEventService::del();
-    }
-
-    {
-        TestSignalTracker tst;
-
-        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
-
-        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
-
-        ted->tick(true);
-        assert(tst.called());
-
-        Eris::TimedEventService::del();
-    }
 
     return 0;
 }
 
 // stubs
 
-#include <Eris/Poll.h>
 
-bool Eris::Poll::new_timeout_ = false;

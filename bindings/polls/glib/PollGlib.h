@@ -9,7 +9,6 @@
 #include <Eris/PollGlibFD.h>
 #include <Eris/PollGlibSource.h>
 #include <Eris/Types.h>
-#include <Eris/Timeout.h>
 
 namespace Eris
 {

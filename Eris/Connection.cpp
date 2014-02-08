@@ -4,7 +4,6 @@
 
 #include <Eris/Connection.h>
 
-#include <Eris/Timeout.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>

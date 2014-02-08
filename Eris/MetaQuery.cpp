@@ -8,7 +8,6 @@
 #include <Eris/Metaserver.h>
 #include <Eris/LogStream.h>
 #include <Eris/Connection.h>
-#include <Eris/Timeout.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>

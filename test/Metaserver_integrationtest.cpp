@@ -31,7 +31,7 @@ int main()
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
 #include <Eris/PollDefault.h>
-#include <Eris/Timeout.h>
+#include <Eris/TimedEventService.h>
 
 namespace Eris
 {
@@ -110,43 +110,6 @@ void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity &svr)
 
 void ServerInfo::setPing(int p)
 {
-}
-
-void Timeout::reset(unsigned long milli)
-{
-}
-
-Timeout::Timeout(unsigned long milli) :
-        _fired(false)
-{
-}
-
-Timeout::~Timeout()
-{
-}
-
-void Timeout::expired()
-{
-}
-
-void Timeout::cancel()
-{
-}
-
-TimedEventService* TimedEventService::static_instance = NULL;
-
-TimedEventService::TimedEventService()
-{
-}
-
-TimedEventService* TimedEventService::instance()
-{
-    if (!static_instance)
-    {
-        static_instance = new TimedEventService;
-    }
-    
-    return static_instance;
 }
 
 BaseException::~BaseException() throw()

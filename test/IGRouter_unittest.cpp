@@ -29,8 +29,8 @@
 #include <Eris/Connection.h>
 #include <Eris/IGRouter.h>
 #include <Eris/Operations.h>
-#include <Eris/Timeout.h>
 #include <Eris/Response.h>
+#include <Eris/TimedEventService.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -736,6 +736,10 @@ Router::RouterResult Router::handleOperation(const RootOperation& )
 Router::RouterResult Router::handleEntity(const RootEntity& )
 {
     return IGNORED;
+}
+
+TimedEvent::~TimedEvent()
+{
 }
 
 void doLog(LogLevel lvl, const std::string& msg)

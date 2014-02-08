@@ -12,7 +12,7 @@ check_PROGRAMS = Entity_unittest Account_unittest \
                  Poll_unittest PollDefault_unittest Redispatch_unittest \
                  Response_unittest Room_unittest Router_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
-                 Timeout_unittest TypeBoundRedispatch_unittest \
+                 TypeBoundRedispatch_unittest \
                  TransferInfo_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
                  UIFactory_unittest View_unittest TerrainMod_unittest \
@@ -104,10 +104,6 @@ TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
 TimedEventService_unittest_LDADD = \
     ${top_builddir}/Eris/TimedEventService.lo \
     $(ERIS_DEPS)
-
-Timeout_unittest_SOURCES = Timeout_unittest.cpp
-Timeout_unittest_LDADD = \
-    ${top_builddir}/Eris/Timeout.lo
 
 TransferInfo_unittest_SOURCES = TransferInfo_unittest.cpp
 TransferInfo_unittest_LDADD = \

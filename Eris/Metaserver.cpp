@@ -7,7 +7,6 @@
 #include <Eris/Metaserver.h>
 
 #include <Eris/ServerInfo.h>
-#include <Eris/Timeout.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/DeleteLater.h>
@@ -68,8 +67,6 @@ Meta::Meta(boost::asio::io_service& io_service, const std::string& metaServer, u
     m_metaTimer(io_service),
     m_stream(&m_buffer)
 {
-    TimedEventService::instance()->Idle.connect(sigc::mem_fun(this, &Meta::query));
-
     unsigned int max_half_open = Poll::instance().maxConnectingStreams();
     if (m_maxActiveQueries > (max_half_open - 2)) {
         m_maxActiveQueries = max_half_open - 2;
@@ -235,6 +232,7 @@ void Meta::startTimeout()
 
 void Meta::do_read()
 {
+    query();
     m_socket.async_receive(m_buffer.prepare(DATA_BUFFER_SIZE),
             [this](boost::system::error_code ec, std::size_t length)
             {

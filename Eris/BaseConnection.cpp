@@ -5,7 +5,6 @@
 #include <Eris/BaseConnection.h>
 
 #include <Eris/Exceptions.h>
-#include <Eris/Timeout.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/DeleteLater.h>
