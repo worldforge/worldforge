@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) -I$(top_srcdir)/bindings/polls
 
 noinst_PROGRAMS  = metaquery eris-connect
 
-check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
+check_PROGRAMS = Entity_unittest Account_unittest \
                  Avatar_unittest BaseConnection_unittest Calendar_unittest \
                  Connection_unittest DeleteLater_unittest Entity_unittest \
                  EntityRef_unittest EntityRouter_unittest Exceptions_unittest \
@@ -51,7 +51,6 @@ Account_unittest_LDADD = \
     $(top_builddir)/Eris/Exceptions.lo \
     $(ERIS_DEPS)
 
-Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
 Avatar_unittest_SOURCES = Avatar_unittest.cpp SignalFlagger.h
 BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp SignalFlagger.h
 

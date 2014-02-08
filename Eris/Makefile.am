@@ -37,7 +37,6 @@ liberis_1_4_la_SOURCES = \
 	Operations.cpp \
 	Calendar.cpp \
 	TimedEventService.cpp \
-	Alarm.cpp \
 	Task.cpp \
 	TerrainModTranslator.cpp \
 	TerrainModObserver.cpp \
@@ -87,7 +86,6 @@ liberis_HEADERS = \
 	Operations.h \
 	Calendar.h \
 	TimedEventService.h \
-	Alarm.h \
 	Task.h \
 	TerrainModTranslator.h \
 	TerrainModObserver.h \

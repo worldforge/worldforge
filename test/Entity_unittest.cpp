@@ -26,7 +26,6 @@
 
 #include <Eris/Entity.h>
 
-#include <Eris/Alarm.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Log.h>
 #include <Eris/Task.h>
@@ -103,14 +102,6 @@ int main()
 // stubs
 
 namespace Eris {
-
-Alarm::Alarm(unsigned long msec, const sigc::slot<void>& done)
-{
-}
-
-void Alarm::expired()
-{
-}
 
 const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
 {

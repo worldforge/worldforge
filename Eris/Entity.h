@@ -511,8 +511,6 @@ protected:
     
     void updatePredictedState(const WFMath::TimeStamp& t);
     
-    void createAlarmExpired();
-    
     /**
      * @brief Gets the typeservice used throughout the Eris system.
      * @returns A type service instance.

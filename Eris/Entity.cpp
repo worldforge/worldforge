@@ -8,7 +8,6 @@
 #include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
-#include <Eris/Alarm.h>
 #include <Eris/Task.h>
 
 #include <wfmath/atlasconv.h>
@@ -95,7 +94,6 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
     if (fromCreateOp)
     {
         m_recentlyCreated = true;
-        new Alarm(5000, sigc::mem_fun(this, &Entity::createAlarmExpired));
     }
 }
 
@@ -822,11 +820,6 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
 void Entity::onVisibilityChanged(bool vis)
 {
     VisibilityChanged.emit(vis);
-}
-
-void Entity::createAlarmExpired()
-{
-    m_recentlyCreated = false;
 }
 
 bool Entity::extractEntityId(const Atlas::Message::Element& element, std::string& id)
