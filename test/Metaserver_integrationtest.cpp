@@ -71,7 +71,7 @@ void BaseConnection::setStatus(Status sc)
 {
 }
 
-Atlas::Objects::ObjectsEncoder& Eris::StreamClientSocketBase::getEncoder()
+Atlas::Objects::ObjectsEncoder& Eris::StreamSocket::getEncoder()
 {
     return *(Atlas::Objects::ObjectsEncoder*)(0);
 }

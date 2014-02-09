@@ -40,10 +40,10 @@
 
 #include <cassert>
 
-class TestStreamClientSocketBase : public Eris::StreamClientSocketBase {
+class TestStreamClientSocketBase : public Eris::StreamSocket {
 public:
     TestStreamClientSocketBase(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks)
-: Eris::StreamClientSocketBase(io_service, client_name, bridge, callbacks)
+: Eris::StreamSocket(io_service, client_name, bridge, callbacks)
 {}
     virtual void write(){}
 protected:
@@ -91,7 +91,7 @@ class TestBaseConnection : public Eris::BaseConnection {
     }
 
     void setup_socket() {
-        Eris::StreamClientSocketBase::Callbacks callbacks;
+        Eris::StreamSocket::Callbacks callbacks;
         _socket = new TestStreamClientSocketBase(_io_service, "", _bridge, callbacks);
     }
 
