@@ -137,7 +137,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
 
     if (!_socket) {
         handleFailure("Connection::send: stream failed");
-        hardDisconnect(false);
+        hardDisconnect(true);
         return;
     }
 

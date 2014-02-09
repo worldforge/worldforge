@@ -588,13 +588,13 @@ void BaseConnection::onConnectTimeout()
     std::ostringstream os;
     os << "Connect to " << _host << ':' << _port << " timed out";
     handleTimeout(os.str());
-    hardDisconnect(false);
+    hardDisconnect(true);
 }
 
 void BaseConnection::onNegotiateTimeout()
 {
     handleTimeout("Atlas negotiation timed out");
-    hardDisconnect(false);
+    hardDisconnect(true);
 }
 
 void BaseConnection::setStatus(Status sc)
