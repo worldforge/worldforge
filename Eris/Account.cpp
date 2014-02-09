@@ -10,7 +10,7 @@
 #include <Eris/Router.h>
 #include <Eris/Response.h>
 #include <Eris/DeleteLater.h>
-#include <Eris/TimedEventService.h>
+#include <Eris/EventService.h>
 #include "SpawnPoint.h"
 #include "CharacterType.h"
 
@@ -152,7 +152,7 @@ Result Account::createAccount(Atlas::Objects::Entity::Account accountOp)
     m_con->getResponder()->await(c->getSerialno(), this, &Account::loginResponse);
     m_con->send(c);
 
-    m_timeout.reset(new TimedEvent(boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
+    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
 
     return NO_ERR;
 }
@@ -182,7 +182,7 @@ Result Account::logout()
     m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
     m_con->send(l);
 
-    m_timeout.reset(new TimedEvent(boost::posix_time::seconds(5), [&](){this->handleLogoutTimeout();}));
+    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLogoutTimeout();}));
 
     return NO_ERR;
 }
@@ -373,7 +373,7 @@ Result Account::internalLogin(const std::string &uname, const std::string &pwd)
     m_con->getResponder()->await(l->getSerialno(), this, &Account::loginResponse);
     m_con->send(l);
 
-    m_timeout.reset(new TimedEvent(boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
+    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
 
     return NO_ERR;
 }

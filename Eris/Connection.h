@@ -29,6 +29,7 @@ class Router;
 class Redispatch;
 class ResponseTracker;
 class TestInjector;
+class EventService;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -44,13 +45,13 @@ public:
     is sent during Atlas negotiation of the connection.
     @param debug Perform extra (slower) validation on the connection
     */
-    Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port);
+    Connection(boost::asio::io_service& io_service, EventService& eventService, const std::string &cnm, const std::string& host, short port);
 
     /** Create a new connection, with the client-name  string specified. The client-name
     is sent during Atlas negotiation of the connection.
     @param debug Perform extra (slower) validation on the connection
     */
-    Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& socket);
+    Connection(boost::asio::io_service& io_service, EventService& eventService, const std::string &cnm, const std::string& socket);
 
     virtual ~Connection();
 
@@ -67,6 +68,8 @@ public:
 
     ResponseTracker* getResponder() const
     { return m_responder.get(); }
+
+    EventService& getEventService();
 
     /// Transmit an Atlas::Objects instance to the server
     /** If the connection is not fully connected, an exception will
@@ -145,6 +148,8 @@ protected:
     virtual void onConnect();
 
     void objectArrived(const Atlas::Objects::Root& obj);
+
+    EventService& _eventService;
 
     const std::string _host;
     const short _port;      ///< port of the server

@@ -34,7 +34,7 @@ liberis_1_4_la_SOURCES = \
 	EntityRef.cpp \
 	Operations.cpp \
 	Calendar.cpp \
-	TimedEventService.cpp \
+	EventService.cpp \
 	Task.cpp \
 	TerrainModTranslator.cpp \
 	TerrainModObserver.cpp \
@@ -44,7 +44,8 @@ liberis_1_4_la_SOURCES = \
 	iround.h \
 	TransferInfo.cpp \
 	CustomEntities.cpp \
-	StreamSocket.cpp
+	StreamSocket.cpp \
+	Session.cpp
 
 liberis_1_4_la_LIBADD = $(ERIS_DEPS)
 
@@ -82,7 +83,7 @@ liberis_HEADERS = \
 	EntityRef.h \
 	Operations.h \
 	Calendar.h \
-	TimedEventService.h \
+	EventService.h \
 	Task.h \
 	TerrainModTranslator.h \
 	TerrainModObserver.h \
@@ -93,4 +94,5 @@ liberis_HEADERS = \
 	TransferInfo.h  \
 	CustomEntities.h \
 	StreamSocket.h \
-	StreamSocket_impl.h
+	StreamSocket_impl.h \
+	Session.h

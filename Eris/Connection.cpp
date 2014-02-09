@@ -32,8 +32,9 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
+Connection::Connection(boost::asio::io_service& io_service, EventService& eventService, const std::string &cnm, const std::string& host, short port) :
     BaseConnection(io_service, cnm, "game_", *this),
+    _eventService(eventService),
     _host(host),
     _port(port),
     m_typeService(new TypeService(this)),
@@ -44,8 +45,9 @@ Connection::Connection(boost::asio::io_service& io_service, const std::string &c
 {
 }
 
-Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& socket) :
+Connection::Connection(boost::asio::io_service& io_service, EventService& eventService, const std::string &cnm, const std::string& socket) :
     BaseConnection(io_service, cnm, "game_", *this),
+    _eventService(eventService),
     _host("local"),
     _port(0),
     _localSocket(socket),
@@ -64,6 +66,11 @@ Connection::~Connection()
     // Bridge on the underlying Atlas codec, and otherwise we might get
     // a pure virtual method call
     hardDisconnect(true);
+}
+
+EventService& Connection::getEventService()
+{
+    return _eventService;
 }
 
 int Connection::connect()

@@ -1,5 +1,5 @@
-#ifndef ERIS_TIMED_EVENT_SERVICE_H
-#define ERIS_TIMED_EVENT_SERVICE_H
+#ifndef ERIS_EVENT_SERVICE_H
+#define ERIS_EVENT_SERVICE_H
 
 #include <sigc++/signal.h>
 
@@ -10,6 +10,7 @@
 namespace Eris
 {
 
+class EventService;
 /**
 @brief Class for things which occur after a period of time.
 */
@@ -17,21 +18,19 @@ class TimedEvent
 {
 public:
     
-    TimedEvent(const boost::posix_time::time_duration& duration, const std::function<void()>& callback);
+    TimedEvent(EventService& eventService, const boost::posix_time::time_duration& duration, const std::function<void()>& callback);
     ~TimedEvent();
 
 private:
     boost::asio::deadline_timer* m_timer;
 };
 
-class TimedEventService
+class EventService
 {
 public:
 
-    TimedEventService(boost::asio::io_service& io_service);
-    ~TimedEventService();
-
-    static TimedEventService& instance();
+    EventService(boost::asio::io_service& io_service);
+    ~EventService();
 
     void post(const std::function<void()>& handler);
 
@@ -41,12 +40,10 @@ private:
     
     boost::asio::deadline_timer* createTimer();
 
-    static TimedEventService* static_instance;
-    
     boost::asio::io_service& m_io_service;
 
 };
 
 } // of namespace Eris
 
-#endif // of ERIS_TIMED_EVENT_SERVICE_H
+#endif // of ERIS_EVENT_SERVICE_H

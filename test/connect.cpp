@@ -17,6 +17,7 @@
 
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
+#include <Eris/Session.h>
 
 #include <sigc++/adaptors/bind.h>
 
@@ -91,13 +92,14 @@ int main(int argc, char ** argv)
         return 1;
     }
 
-    boost::asio::io_service io_service;
+    Eris::Session session;
+    boost::asio::io_service& io_service = session.getIoService();
 
     Eris::Logged.connect(sigc::ptr_fun(erisLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
     for (int i = optind; i < argc; ++i) {
-        Eris::Connection * c = new Eris::Connection(io_service, "test",
+        Eris::Connection * c = new Eris::Connection(io_service, session.getEventService(), "test",
                                                     argv[i],
                                                     option_port);
 
