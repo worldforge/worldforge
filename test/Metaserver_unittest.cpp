@@ -155,7 +155,6 @@ int main()
 #include <Eris/Exceptions.h>
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
-#include <Eris/PollDefault.h>
 #include <Eris/TimedEventService.h>
 
 namespace Eris
@@ -235,28 +234,6 @@ void BaseConnection::onConnect()
 
 void BaseConnection::setStatus(Status sc)
 {
-}
-
-Eris::Poll* Eris::Poll::_inst = 0;
-
-Eris::Poll& Eris::Poll::instance()
-{
-  if(!_inst)
-    _inst = new PollDefault();
-
-  return *_inst;
-}
-
-int PollDefault::maxStreams() const
-{
-    // Low number for testing
-    return 8;
-}
-
-int PollDefault::maxConnectingStreams() const
-{
-    // Low number for testing
-    return 8;
 }
 
 ServerInfo::ServerInfo(const std::string &host) :

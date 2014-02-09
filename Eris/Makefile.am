@@ -18,7 +18,6 @@ liberis_1_4_la_SOURCES = \
 	MetaQuery.cpp \
 	ServerInfo.cpp \
 	TypeInfo.cpp \
-	PollDefault.cpp \
 	Log.cpp \
 	LogStream.h \
 	Avatar.cpp \
@@ -73,7 +72,6 @@ liberis_HEADERS = \
 	ServerInfo.h \
 	TypeInfo.h \
 	Poll.h \
-	PollDefault.h \
 	Log.h \
 	Avatar.h \
 	TypeService.h \

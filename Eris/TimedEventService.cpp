@@ -48,10 +48,15 @@ TimedEventService& TimedEventService::instance()
     return *static_instance;
 }
 
-
 boost::asio::deadline_timer* TimedEventService::createTimer()
 {
     return new boost::asio::deadline_timer(m_io_service);
 }
+
+void TimedEventService::post(const std::function<void()>& handler)
+{
+    m_io_service.post(handler);
+}
+
 
 } // of namespace Eris

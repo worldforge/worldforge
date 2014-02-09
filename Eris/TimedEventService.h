@@ -33,6 +33,8 @@ public:
 
     static TimedEventService& instance();
 
+    void post(const std::function<void()>& handler);
+
 private:
 
     friend class TimedEvent;

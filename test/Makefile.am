@@ -9,7 +9,7 @@ check_PROGRAMS = Entity_unittest Account_unittest \
                  Factory_unittest IGRouter_unittest Lobby_unittest \
                  Log_unittest LogStream_unittest MetaQuery_unittest \
                  Metaserver_unittest Operations_unittest Person_unittest \
-                 Poll_unittest PollDefault_unittest Redispatch_unittest \
+                 Poll_unittest Redispatch_unittest \
                  Response_unittest Room_unittest Router_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
                  TypeBoundRedispatch_unittest \
@@ -91,7 +91,6 @@ Metaserver_unittest_LDADD = \
 
 Operations_unittest_SOURCES = Operations_unittest.cpp
 Person_unittest_SOURCES = Person_unittest.cpp
-PollDefault_unittest_SOURCES = PollDefault_unittest.cpp
 Poll_unittest_SOURCES = Poll_unittest.cpp
 Redispatch_unittest_SOURCES = Redispatch_unittest.cpp
 Response_unittest_SOURCES = Response_unittest.cpp

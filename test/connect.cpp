@@ -17,7 +17,6 @@
 
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
-#include <Eris/PollDefault.h>
 
 #include <sigc++/adaptors/bind.h>
 
@@ -112,7 +111,7 @@ int main(int argc, char ** argv)
 
     while (!done) {
         std::cout << "Calling poll" << std::endl;
-        Eris::PollDefault::poll(100);
+//        Eris::PollDefault::poll(100);
         std::cout << "Called poll" << std::endl;
     }
 

@@ -67,7 +67,7 @@ Meta::Meta(boost::asio::io_service& io_service, const std::string& metaServer, u
     m_metaTimer(io_service),
     m_stream(&m_buffer)
 {
-    unsigned int max_half_open = Poll::instance().maxConnectingStreams();
+    unsigned int max_half_open = FD_SETSIZE;
     if (m_maxActiveQueries > (max_half_open - 2)) {
         m_maxActiveQueries = max_half_open - 2;
     }

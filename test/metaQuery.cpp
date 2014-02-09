@@ -1,6 +1,5 @@
 #include <Eris/Metaserver.h>
 #include <Eris/Log.h>
-#include <Eris/PollDefault.h>
 #include <Eris/ServerInfo.h>
 
 #include <iomanip>
@@ -249,7 +248,7 @@ int main(int argc, char* argv[])
     
     while (!queryDone && !failure)
     {
-        Eris::PollDefault::poll(100);
+//        Eris::PollDefault::poll(100);
     }
     
     if (failure) {
