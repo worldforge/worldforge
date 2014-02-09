@@ -9,6 +9,7 @@
 #include <Eris/Log.h>
 #include <Eris/DeleteLater.h>
 #include <Eris/Operations.h>
+#include "StreamSocket_impl.h"
 
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
@@ -32,234 +33,11 @@
 #endif
 
 #endif // _WIN32
-static const int CONNECT_TIMEOUT_SECONDS = 5;
-static const int NEGOTIATE_TIMEOUT_SECONDS = 5;
 
 using namespace boost::asio;
 
 namespace Eris
 {
-
-StreamClientSocketBase::StreamClientSocketBase(io_service& io_service,
-        const std::string& client_name, Atlas::Bridge& bridge,
-        Callbacks& callbacks) :
-        m_io_service(io_service), _bridge(bridge), _callbacks(callbacks), m_ios(
-                &mBuffer), _sc(
-                new Atlas::Net::StreamConnect(client_name, m_ios)), _negotiateTimer(
-                io_service), _connectTimer(io_service), m_codec(nullptr), m_encoder(
-                nullptr), m_is_connected(false)
-{
-}
-StreamClientSocketBase::~StreamClientSocketBase()
-{
-    delete _sc;
-    delete m_encoder;
-    delete m_codec;
-}
-
-std::iostream& StreamClientSocketBase::getIos()
-{
-    return m_ios;
-}
-
-void StreamClientSocketBase::startNegotiation()
-{
-    _negotiateTimer.expires_from_now(
-            boost::posix_time::seconds(NEGOTIATE_TIMEOUT_SECONDS));
-    _negotiateTimer.async_wait([this](const boost::system::error_code& ec)
-    {
-        //If the negotiator still exists after the deadline it means that the negotation hasn't
-        //completed yet; we'll consider that a "timeout".
-            if (_sc != nullptr) {
-//                log(NOTICE, "Client disconnected because of negotiation timeout.");
-                _callbacks.stateChanged(DISCONNECTING);
-//                mSocket.close();
-            }
-        });
-    _callbacks.stateChanged(NEGOTIATE);
-
-    _sc->poll(false);
-
-    write();
-    negotiate_read();
-}
-
-Atlas::Negotiate::State StreamClientSocketBase::negotiate()
-{
-    // poll and check if negotiation is complete
-    _sc->poll();
-
-    if (_sc->getState() == Atlas::Negotiate::IN_PROGRESS) {
-        return _sc->getState();
-    }
-
-    // Check if negotiation failed
-    if (_sc->getState() == Atlas::Negotiate::FAILED) {
-        return _sc->getState();
-    }
-    // Negotiation was successful
-
-    _negotiateTimer.cancel();
-
-    // Get the codec that negotiation established
-    m_codec = _sc->getCodec(_bridge);
-
-    // Acceptor is now finished with
-    delete _sc;
-    _sc = 0;
-
-    if (m_codec == nullptr) {
-        error() << "Could not create codec during negotiation.";
-        return Atlas::Negotiate::FAILED;
-    }
-    // Create a new encoder to send high level objects to the codec
-    m_encoder = new Atlas::Objects::ObjectsEncoder(*m_codec);
-
-    // This should always be sent at the beginning of a session
-    m_codec->streamBegin();
-
-    _callbacks.stateChanged(CONNECTED);
-
-    return Atlas::Negotiate::SUCCEEDED;
-}
-
-Atlas::Codec& StreamClientSocketBase::getCodec()
-{
-    return *m_codec;
-}
-
-Atlas::Objects::ObjectsEncoder& StreamClientSocketBase::getEncoder()
-{
-    return *m_encoder;
-}
-
-template<typename ProtocolT>
-AsioStreamClientSocket<ProtocolT>::AsioStreamClientSocket(
-        boost::asio::io_service& io_service, const std::string& client_name,
-        Atlas::Bridge& bridge, Callbacks& callbacks) :
-        StreamClientSocketBase(io_service, client_name, bridge, callbacks), m_socket(io_service)
-{
-}
-
-template<typename ProtocolT>
-AsioStreamClientSocket<ProtocolT>::~AsioStreamClientSocket()
-{
-    try {
-        m_socket.shutdown(ProtocolT::socket::shutdown_both);
-    } catch (const std::exception& e) {
-        warning() << "Error when shutting down socket.";
-    }
-    if (m_socket.is_open()) {
-        try {
-            m_socket.close();
-        } catch (const std::exception& e) {
-            warning() << "Error when closing socket.";
-        }
-    }
-}
-
-
-template<typename ProtocolT>
-void AsioStreamClientSocket<ProtocolT>::connect(const typename ProtocolT::endpoint& endpoint)
-{
-    _connectTimer.expires_from_now(
-            boost::posix_time::seconds(CONNECT_TIMEOUT_SECONDS));
-    _connectTimer.async_wait([&](boost::system::error_code ec) {
-        if (!ec) {
-            _callbacks.stateChanged(CONNECTING_TIMEOUT);
-        }
-    });
-
-    m_socket.async_connect(endpoint, [this](boost::system::error_code ec) {
-        if (!ec) {
-            this->_connectTimer.cancel();
-            m_is_connected = true;
-            this->startNegotiation();
-        } else {
-            _callbacks.stateChanged(CONNECTING_FAILED);
-        }
-    });
-}
-
-
-template<typename ProtocolT>
-void AsioStreamClientSocket<ProtocolT>::negotiate_read()
-{
-    m_socket.async_read_some(mBuffer.prepare(read_buffer_size),
-            [this](boost::system::error_code ec, std::size_t length)
-            {
-                if (!ec)
-                {
-                    mBuffer.commit(length);
-                    if (length > 0) {
-                        auto negotiateResult = this->negotiate();
-                        if (negotiateResult == Atlas::Negotiate::FAILED) {
-                            m_socket.close();
-                            _callbacks.stateChanged(NEGOTIATE_FAILED);
-                            return;
-                        }
-                    }
-
-                    //If the _sc instance is removed we're done with negotiation and should start the main loop.
-                    if (_sc == nullptr) {
-                        this->write();
-                        this->do_read();
-                    } else {
-                        this->write();
-                        this->negotiate_read();
-                    }
-                } else {
-                    if (ec != boost::asio::error::operation_aborted) {
-                        _callbacks.stateChanged(CONNECTION_FAILED);
-                    }
-                }
-            });
-}
-
-template<typename ProtocolT>
-void AsioStreamClientSocket<ProtocolT>::do_read()
-{
-    m_socket.async_read_some(mReadBuffer.prepare(read_buffer_size),
-            [this](boost::system::error_code ec, std::size_t length)
-            {
-                if (!ec)
-                {
-                    mReadBuffer.commit(length);
-                    this->m_ios.rdbuf(&mReadBuffer);
-                    m_codec->poll();
-                    this->m_ios.rdbuf(&mBuffer);
-                    _callbacks.dispatch();
-                    this->do_read();
-                } else {
-                    if (ec != boost::asio::error::operation_aborted) {
-                        if (!this->m_socket.is_open()) {
-                            _callbacks.stateChanged(CONNECTION_FAILED);
-                        }
-                    }
-                }
-            });
-}
-
-template<typename ProtocolT>
-void AsioStreamClientSocket<ProtocolT>::write()
-{
-    if (mBuffer.size() != 0) {
-        async_write(m_socket, mBuffer.data(),
-                [this](boost::system::error_code ec, std::size_t length)
-                {
-                    if (!ec)
-                    {
-                        mBuffer.consume(length);
-                    } else {
-                        if (ec != boost::asio::error::operation_aborted) {
-                            if (!this->m_socket.is_open()) {
-                                _callbacks.stateChanged(CONNECTION_FAILED);
-                            }
-                        }
-                    }
-                });
-    }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
@@ -295,11 +73,11 @@ int BaseConnection::connect(const std::string & host, short port)
     delete _socket;
     _socket = nullptr;
     try {
-        StreamClientSocketBase::Callbacks callbacks;
+        StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
         callbacks.stateChanged =
-                [&](StreamClientSocketBase::Status state) {this->stateChanged(state);};
-        auto socket = new AsioStreamClientSocket<ip::tcp>(_io_service, _clientName,
+                [&](StreamSocket::Status state) {this->stateChanged(state);};
+        auto socket = new AsioStreamSocket<ip::tcp>(_io_service, _clientName,
                 _bridge, callbacks);
         _socket = socket;
         std::stringstream ss;
@@ -328,11 +106,11 @@ int BaseConnection::connectLocal(const std::string & filename)
     delete _socket;
     _socket = nullptr;
     try {
-        StreamClientSocketBase::Callbacks callbacks;
+        StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
         callbacks.stateChanged =
-                [&](StreamClientSocketBase::Status state) {this->stateChanged(state);};
-        auto socket = new AsioStreamClientSocket<local::stream_protocol>(
+                [&](StreamSocket::Status state) {this->stateChanged(state);};
+        auto socket = new AsioStreamSocket<local::stream_protocol>(
                 _io_service, _clientName, _bridge, callbacks);
         _socket = socket;
         setStatus(CONNECTING);
@@ -344,36 +122,36 @@ int BaseConnection::connectLocal(const std::string & filename)
     return 0;
 }
 
-void BaseConnection::stateChanged(StreamClientSocketBase::Status status)
+void BaseConnection::stateChanged(StreamSocket::Status status)
 {
     switch (status) {
-    case StreamClientSocketBase::CONNECTING:
+    case StreamSocket::CONNECTING:
         setStatus(CONNECTING);
         break;
-    case StreamClientSocketBase::CONNECTING_TIMEOUT:
+    case StreamSocket::CONNECTING_TIMEOUT:
         onConnectTimeout();
         break;
-    case StreamClientSocketBase::CONNECTING_FAILED:
+    case StreamSocket::CONNECTING_FAILED:
         handleFailure("Failed to connect to " + _host);
         hardDisconnect(true);
         break;
-    case StreamClientSocketBase::NEGOTIATE:
+    case StreamSocket::NEGOTIATE:
         setStatus(NEGOTIATE);
         break;
-    case StreamClientSocketBase::NEGOTIATE_FAILED:
+    case StreamSocket::NEGOTIATE_FAILED:
         hardDisconnect(true);
         break;
-    case StreamClientSocketBase::NEGOTIATE_TIMEOUT:
+    case StreamSocket::NEGOTIATE_TIMEOUT:
         onNegotiateTimeout();
         break;
-    case StreamClientSocketBase::CONNECTED:
+    case StreamSocket::CONNECTED:
         setStatus(CONNECTED);
         onConnect();
         break;
-    case StreamClientSocketBase::CONNECTION_FAILED:
+    case StreamSocket::CONNECTION_FAILED:
         hardDisconnect(true);
         break;
-    case StreamClientSocketBase::DISCONNECTING:
+    case StreamSocket::DISCONNECTING:
         setStatus(DISCONNECTING);
         break;
     default:

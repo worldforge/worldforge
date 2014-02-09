@@ -44,7 +44,8 @@ liberis_1_4_la_SOURCES = \
 	ViewEntity.cpp \
 	iround.h \
 	TransferInfo.cpp \
-	CustomEntities.cpp
+	CustomEntities.cpp \
+	StreamSocket.cpp
 
 liberis_1_4_la_LIBADD = $(ERIS_DEPS)
 
@@ -92,4 +93,6 @@ liberis_HEADERS = \
 	ViewEntity.h \
 	iround.h \
 	TransferInfo.h  \
-	CustomEntities.h
+	CustomEntities.h \
+	StreamSocket.h \
+	StreamSocket_impl.h

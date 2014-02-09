@@ -1,19 +1,27 @@
 #ifndef ERIS_BASE_CONNECTION_H
 #define ERIS_BASE_CONNECTION_H
 
+#include "StreamSocket.h"
+
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Negotiate.h>
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
 
 #include <string>
 #include <memory>
 #include <functional>
 
-class stream_socket_stream;
+namespace boost
+{
+namespace asio
+{
+class io_service;
+}
+}
 
 namespace Atlas
 {
@@ -29,83 +37,8 @@ namespace Eris
 {
 
 // Forward declarations 
-class Timeout;	
 
-class StreamClientSocketBase
-{
-    public:
-
-    typedef enum {
-        INVALID_STATUS = 0, ///< indicates an illegal state
-        CONNECTING,     ///< stream / socket connection in progress
-        CONNECTING_TIMEOUT,
-        CONNECTING_FAILED,
-        NEGOTIATE,      ///< Atlas negotiation in progress
-        NEGOTIATE_TIMEOUT,
-        NEGOTIATE_FAILED,
-        CONNECTED,      ///< connection fully established
-        CONNECTION_FAILED,
-        DISCONNECTED,       ///< finished disconnection
-        DISCONNECTING      ///< clean disconnection in progress
-    } Status;
-
-        struct Callbacks
-        {
-            std::function<void()> dispatch;
-            std::function<void(Status)> stateChanged;
-        };
-
-        StreamClientSocketBase(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks);
-        virtual ~StreamClientSocketBase();
-
-        std::iostream& getIos();
-
-        Atlas::Codec& getCodec();
-        Atlas::Objects::ObjectsEncoder& getEncoder();
-
-        virtual void write() = 0;
-    protected:
-        enum
-        {
-            read_buffer_size = 16384
-        };
-        boost::asio::io_service& m_io_service;
-        Atlas::Bridge& _bridge;
-        Callbacks _callbacks;
-
-        boost::asio::streambuf mBuffer;
-        boost::asio::streambuf mReadBuffer;
-        std::iostream m_ios;
-        Atlas::Net::StreamConnect* _sc;     ///< negotiation object (NULL after connection!)
-        boost::asio::deadline_timer _negotiateTimer;
-        boost::asio::deadline_timer _connectTimer;
-        Atlas::Codec* m_codec;
-        Atlas::Objects::ObjectsEncoder * m_encoder;
-        bool m_is_connected;
-
-        virtual void do_read() = 0;
-        virtual void negotiate_read() = 0;
-        void startNegotiation();
-        Atlas::Negotiate::State negotiate();
-
-};
-
-
-template<typename ProtocolT>
-class AsioStreamClientSocket : public StreamClientSocketBase
-{
-    public:
-        AsioStreamClientSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks);
-        virtual ~AsioStreamClientSocket();
-        void connect(const typename ProtocolT::endpoint& endpoint);
-        virtual void write();
-   protected:
-        typename ProtocolT::socket m_socket;
-        virtual void negotiate_read();
-        virtual void do_read();
-};
-
-
+class StreamSocket;
 	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 class BaseConnection : virtual public sigc::trackable
@@ -171,7 +104,7 @@ protected:
     timeouts created by the connection (and potentially errors in the future) */
     BaseConnection(boost::asio::io_service& io_service, const std::string &cnm, const std::string &id, Atlas::Bridge& br);
 
-    void stateChanged(StreamClientSocketBase::Status status);
+    void stateChanged(StreamSocket::Status status);
 
     /// update the connection status and generate signals
     virtual void setStatus(Status sc);
@@ -195,7 +128,7 @@ protected:
 
     boost::asio::io_service& _io_service;
     boost::asio::ip::tcp::resolver _tcpResolver;
-    StreamClientSocketBase* _socket;
+    StreamSocket* _socket;
 
     Status _status;			///< current status of the connection
     const std::string _id;	///< a unique identifier for this connection
