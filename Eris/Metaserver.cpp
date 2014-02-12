@@ -7,7 +7,6 @@
 #include <Eris/Metaserver.h>
 
 #include <Eris/ServerInfo.h>
-#include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include "EventService.h"
 #include "Exceptions.h"

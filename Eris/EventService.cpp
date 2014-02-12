@@ -35,8 +35,10 @@ EventService::EventService(boost::asio::io_service& io_service): m_io_service(io
 
 EventService::~EventService()
 {
-    processAllHandlers();
     delete m_work;
+    //Poll to make sure that all pending asio handlers are processed, since these might create handlers which needs to be processed.
+    m_io_service.poll();
+    processAllHandlers();
 }
 
 boost::asio::deadline_timer* EventService::createTimer()

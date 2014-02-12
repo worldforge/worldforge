@@ -26,7 +26,6 @@
 
 #include <Eris/Metaserver.h>
 #include <Eris/EventService.h>
-#include <Eris/Poll.h>
 
 #include <sigc++/functors/ptr_fun.h>
 

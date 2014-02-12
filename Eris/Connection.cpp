@@ -5,7 +5,6 @@
 #include <Eris/Connection.h>
 
 #include <Eris/TypeInfo.h>
-#include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Router.h>

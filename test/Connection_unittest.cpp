@@ -27,7 +27,6 @@
 #include <Eris/Connection.h>
 
 #include <Eris/Log.h>
-#include <Eris/Poll.h>
 #include <Eris/EventService.h>
 
 #include <Atlas/Objects/Root.h>

@@ -71,7 +71,6 @@ liberis_HEADERS = \
 	Metaserver.h \
 	ServerInfo.h \
 	TypeInfo.h \
-	Poll.h \
 	Log.h \
 	Avatar.h \
 	TypeService.h \

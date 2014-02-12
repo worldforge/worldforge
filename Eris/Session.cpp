@@ -35,9 +35,8 @@ Session::Session()
 
 Session::~Session()
 {
-    //delete io_service first since it will trigger any pending handlers (which might hook into the eventservice)
-    delete m_io_service;
     delete m_event_service;
+    delete m_io_service;
 }
 
 boost::asio::io_service& Session::getIoService()

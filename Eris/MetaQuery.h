@@ -2,7 +2,6 @@
 #define ERIS_META_QUERY_H
 
 #include <Eris/BaseConnection.h>
-#include <Eris/Poll.h>
 
 #include <wfmath/timestamp.h>
 
