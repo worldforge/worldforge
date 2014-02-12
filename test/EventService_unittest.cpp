@@ -45,7 +45,7 @@ int main()
         Eris::EventService ted(io_service);
         bool called = false;
         Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&](){called = true;});
-        ted.runEvents(boost::posix_time::seconds(1), called);
+        ted.processEvents(boost::posix_time::seconds(1), called);
         assert(called);
     }
 

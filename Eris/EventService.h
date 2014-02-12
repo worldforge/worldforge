@@ -67,7 +67,7 @@ public:
      * @param runUntil A future time, obtained through boost::asio::time_traits<boost::posix_time::ptime>.
      * @param exitFlag A reference to a flag, which when set will exit the wait.
      */
-    void runEvents(const boost::posix_time::ptime& runUntil, bool& exitFlag);
+    void processEvents(const boost::posix_time::ptime& runUntil, bool& exitFlag);
 
     /**
      * Polls and runs IO events as well as handlers for the specified duration.
@@ -76,7 +76,16 @@ public:
      * @param runFor A duration.
      * @param exitFlag A reference to a flag, which when set will exit the wait.
      */
-    void runEvents(const boost::posix_time::time_duration& runFor, bool& exitFlag);
+    void processEvents(const boost::posix_time::time_duration& runFor, bool& exitFlag);
+
+    /**
+     * @brief Processes all registered handlers.
+     *
+     * @see runOnMainThread
+     *
+     * @return The number of handles that were run.
+     */
+    size_t processAllHandlers();
 
 private:
 

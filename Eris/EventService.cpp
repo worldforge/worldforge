@@ -35,16 +35,7 @@ EventService::EventService(boost::asio::io_service& io_service): m_io_service(io
 
 EventService::~EventService()
 {
-    while (!m_handlers.empty())
-    {
-        auto handler = this->m_handlers.front();
-        m_handlers.pop_front();
-        try {
-            handler();
-        } catch (const std::exception& ex) {
-            error() << "Error when executing handler: " << ex.what();
-        }
-    }
+    processAllHandlers();
     delete m_work;
 }
 
@@ -60,7 +51,7 @@ void EventService::runOnMainThread(const std::function<void()>& handler)
     });
 }
 
-void EventService::runEvents(const boost::posix_time::ptime& runUntil, bool& exitFlag)
+void EventService::processEvents(const boost::posix_time::ptime& runUntil, bool& exitFlag)
 {
     bool exitLoop = false;
     boost::asio::deadline_timer deadlineTimer(m_io_service);
@@ -94,9 +85,27 @@ void EventService::runEvents(const boost::posix_time::ptime& runUntil, bool& exi
     deadlineTimer.cancel();
 }
 
-void EventService::runEvents(const boost::posix_time::time_duration& runFor, bool& exitFlag)
+void EventService::processEvents(const boost::posix_time::time_duration& runFor, bool& exitFlag)
 {
-    runEvents(boost::asio::time_traits<boost::posix_time::ptime>::now() + runFor, exitFlag);
+    processEvents(boost::asio::time_traits<boost::posix_time::ptime>::now() + runFor, exitFlag);
 }
+
+size_t EventService::processAllHandlers()
+{
+    size_t count = 0;
+    while (!m_handlers.empty())
+    {
+        auto handler = this->m_handlers.front();
+        m_handlers.pop_front();
+        count++;
+        try {
+            handler();
+        } catch (const std::exception& ex) {
+            error() << "Error when executing handler: " << ex.what();
+        }
+    }
+    return count;
+}
+
 
 } // of namespace Eris
