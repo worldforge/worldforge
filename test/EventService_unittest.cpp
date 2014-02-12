@@ -24,7 +24,8 @@
 #define DEBUG
 #endif
 
-#include <Eris/TimedEventService.h>
+#include <Eris/EventService.h>
+#include <Eris/Log.h>
 
 #include <sigc++/functors/mem_fun.h>
 
@@ -35,20 +36,16 @@ int main()
     boost::asio::io_service io_service;
 
     {
-        Eris::TimedEventService ted(io_service);
-
-        Eris::TimedEventService * ted2 = &Eris::TimedEventService::instance();
-
-        assert(ted2 != 0);
+        Eris::EventService ted(io_service);
 
     }
 
     {
-        Eris::TimedEventService ted(io_service);
-        bool called = false;
-        Eris::TimedEvent te(boost::posix_time::seconds(-10), [&](){called = true;});
-        io_service.run_one();
         io_service.reset();
+        Eris::EventService ted(io_service);
+        bool called = false;
+        Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&](){called = true;});
+        ted.runEvents(boost::posix_time::seconds(1), called);
         assert(called);
     }
 
@@ -58,4 +55,6 @@ int main()
 
 // stubs
 
-
+void Eris::doLog(Eris::LogLevel lvl, const std::string& msg)
+{
+}

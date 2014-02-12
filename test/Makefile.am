@@ -11,7 +11,7 @@ check_PROGRAMS = Entity_unittest Account_unittest \
                  Metaserver_unittest Operations_unittest Person_unittest \
                  Poll_unittest Redispatch_unittest \
                  Response_unittest Room_unittest Router_unittest \
-                 ServerInfo_unittest Task_unittest TimedEventService_unittest \
+                 ServerInfo_unittest Task_unittest EventService_unittest \
                  TypeBoundRedispatch_unittest \
                  TransferInfo_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
@@ -99,9 +99,9 @@ Router_unittest_SOURCES = Router_unittest.cpp
 ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp ElementExerciser.h
 Task_unittest_SOURCES = Task_unittest.cpp
 
-TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
-TimedEventService_unittest_LDADD = \
-    ${top_builddir}/Eris/TimedEventService.lo \
+EventService_unittest_SOURCES = EventService_unittest.cpp
+EventService_unittest_LDADD = \
+    ${top_builddir}/Eris/EventService.lo \
     $(ERIS_DEPS)
 
 TransferInfo_unittest_SOURCES = TransferInfo_unittest.cpp

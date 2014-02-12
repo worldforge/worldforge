@@ -31,6 +31,7 @@
 #include <Eris/ViewEntity.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
+#include <Eris/EventService.h>
 
 #include "SignalFlagger.h"
 
@@ -43,9 +44,10 @@
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service, const std::string & name, const std::string & host,
-                   short port) :
-                   Eris::Connection(io_service, name, host, port) { }
+    TestConnection(boost::asio::io_service& io_service, Eris::EventService& eventService,
+            const std::string &cnm, const std::string& host, short port) :
+                Eris::Connection(io_service, eventService, cnm, host, port) {
+    }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParents().front()
@@ -130,7 +132,8 @@ int main()
     // Test constructor
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -141,7 +144,8 @@ int main()
     // Test destructor
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
@@ -158,7 +162,8 @@ int main()
     // Test deactivate()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -171,7 +176,8 @@ int main()
     // Test drop() of something not in inventory
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -188,7 +194,8 @@ int main()
     // Test drop() of something in inventory by position
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -206,7 +213,8 @@ int main()
     // Test drop() of something in inventory by position and orientation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -224,7 +232,8 @@ int main()
     // Test drop() of something in inventory by offset
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -244,7 +253,8 @@ int main()
     // Test drop() of something in inventory by offset and orientation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -264,7 +274,8 @@ int main()
     // Test take() of something
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -284,7 +295,8 @@ int main()
     // Test touch() of something
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -304,7 +316,8 @@ int main()
     // Test say() of a message
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -320,7 +333,8 @@ int main()
     // Test sayTo() of a message, with one addressed
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -339,7 +353,8 @@ int main()
     // Test sayTo() of a message, with two addressed
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -360,7 +375,8 @@ int main()
     // Test sayTo() of a message, with none addressed (still valid)
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -377,7 +393,8 @@ int main()
     // Test emote() of a message
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -393,7 +410,8 @@ int main()
     // Test moveToPoint()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -411,7 +429,8 @@ int main()
     // Test moveInDirection() with zero velocity
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -429,7 +448,8 @@ int main()
     // Test moveInDirection() with vertical velocity
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -447,7 +467,8 @@ int main()
     // Test moveInDirection() with high velocity
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -467,7 +488,8 @@ int main()
     // Test moveInDirection()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -485,7 +507,8 @@ int main()
     // Test place() of something
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -505,7 +528,8 @@ int main()
     // Test place() of something as admin
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -526,7 +550,8 @@ int main()
     // Test place() of something with no pos
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -546,7 +571,8 @@ int main()
     // Test place() of something with orientation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -567,7 +593,8 @@ int main()
     // Test wield() of something not in inventory
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -587,7 +614,8 @@ int main()
     // Test wield() of something in inventory
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -607,7 +635,8 @@ int main()
     // Test useOn() of something in inventory
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -627,7 +656,8 @@ int main()
     // Test useOn() of something in inventory
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -647,7 +677,8 @@ int main()
     // Test useOn() with a position
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -667,7 +698,8 @@ int main()
     // Test useOn() with a pos and target
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -687,7 +719,8 @@ int main()
     // Test attack()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -707,7 +740,8 @@ int main()
     // Test useStop()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -725,7 +759,8 @@ int main()
     // Test onEntityAppear() for avatar entity
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -745,7 +780,8 @@ int main()
     // Test onEntityAppear() for a different entity
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -765,7 +801,8 @@ int main()
     // Test onCharacterChildAdded()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -784,7 +821,8 @@ int main()
     // Test onCharacterChildRemoved()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -803,7 +841,8 @@ int main()
     // Test onCharacterWield() with a non string ID.
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -817,7 +856,8 @@ int main()
     // It is currently very hard to simulate the entity being in the view.
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -831,7 +871,8 @@ int main()
     // Test getConnection()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -844,7 +885,8 @@ int main()
     // Test getWorldTime()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -857,7 +899,8 @@ int main()
     // Test updateWorldTime()
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -870,7 +913,8 @@ int main()
     // Test logoutResponse() with a non-info operation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -889,7 +933,8 @@ int main()
     // Test logoutResponse() with an empty info operation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -908,7 +953,8 @@ int main()
     // Test logoutResponse() with an info operation with bad arg
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -929,7 +975,8 @@ int main()
     // Test logoutResponse() with an empty info logout operation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -950,7 +997,8 @@ int main()
     // Test logoutResponse() with a non-empty info logout operation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -973,7 +1021,8 @@ int main()
     // Test logoutResponse() with a non-empty info logout operation
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -997,7 +1046,8 @@ int main()
     // Test logoutRequested() without any transfer info
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
@@ -1019,7 +1069,8 @@ int main()
     // Test logoutRequested() with a transfer info
     {
         boost::asio::io_service io_service;
-        Eris::Connection * con = new TestConnection(io_service, "name",
+        Eris::EventService event_service(io_service);
+        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);

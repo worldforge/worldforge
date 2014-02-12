@@ -33,6 +33,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeService.h>
+#include <Eris/EventService.h>
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Entity.h>
@@ -52,12 +53,13 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 }
 
 boost::asio::io_service io_service;
+Eris::EventService event_service(io_service);
 
 class TestConnection : public Eris::Connection {
   public:
     TestConnection(const std::string & name, const std::string & host,
                    short port, bool debug) :
-                   Eris::Connection(io_service, name, host, port) { }
+                   Eris::Connection(io_service, event_service, name, host, port) { }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParents().front()

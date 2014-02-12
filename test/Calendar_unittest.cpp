@@ -81,9 +81,10 @@ class TestCalendar : public Eris::Calendar {
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service, const std::string & name, const std::string & host,
-                   short port, bool debug) :
-                   Eris::Connection(io_service, name, host, port) { }
+    TestConnection(boost::asio::io_service& io_service, Eris::EventService& eventService,
+            const std::string &cnm, const std::string& host, short port) :
+                Eris::Connection(io_service, eventService, cnm, host, port) {
+    }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParents().front()

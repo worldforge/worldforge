@@ -27,6 +27,7 @@
 #include <Eris/Account.h>
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
+#include <Eris/EventService.h>
 
 int main()
 {
@@ -43,14 +44,16 @@ int main()
     // Constructor
     {
         boost::asio::io_service io_service;
-        Eris::Connection * c = new Eris::Connection(io_service, "", "", 0);
+        Eris::EventService eventService(io_service);
+        Eris::Connection * c = new Eris::Connection(io_service, eventService, "", "", 0);
         new Eris::Account(c);
     }
 
     // Destructor
     {
         boost::asio::io_service io_service;
-        Eris::Connection * c = new Eris::Connection(io_service, "", "", 0);
+        Eris::EventService eventService(io_service);
+        Eris::Connection * c = new Eris::Connection(io_service, eventService, "", "", 0);
         Eris::Account * ac = new Eris::Account(c);
         delete ac;
     }
@@ -62,13 +65,11 @@ int main()
 
 #include <Eris/Avatar.h>
 #include <Eris/CharacterType.h>
-#include <Eris/DeleteLater.h>
 #include <Eris/Log.h>
 #include <Eris/Response.h>
 #include <Eris/Router.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/TypeService.h>
-#include <Eris/TimedEventService.h>
 
 #include <Atlas/Objects/RootOperation.h>
 
@@ -88,14 +89,6 @@ ResponseBase::~ResponseBase()
 }
 
 ResponseTracker::~ResponseTracker()
-{
-}
-
-BaseDeleteLater::~BaseDeleteLater()
-{
-}
-
-void pushDeleteLater(BaseDeleteLater* bl)
 {
 }
 
@@ -167,8 +160,8 @@ void BaseConnection::onConnect()
 {
 }
 
-Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
-    BaseConnection(io_service, cnm, "game_", *this), _port(port)
+Connection::Connection(boost::asio::io_service& io_service, Eris::EventService& event_service, const std::string &cnm, const std::string& host, short port) :
+    BaseConnection(io_service, cnm, "game_", *this), _eventService(event_service), _port(port)
 {
 }
 
@@ -225,6 +218,11 @@ void Connection::unlock()
 {
 }
 
+EventService& Connection::getEventService()
+{
+    return _eventService;
+}
+
 void Connection::send(const Atlas::Objects::Root &obj)
 {
 }
@@ -260,11 +258,19 @@ const std::string& SpawnPoint::getName() const
     return m_name;
 }
 
-TimedEvent::TimedEvent(const boost::posix_time::time_duration& duration, const std::function<void()>& callback)
+TimedEvent::TimedEvent(EventService& eventService, const boost::posix_time::time_duration& duration, const std::function<void()>& callback)
 {
 }
 
 TimedEvent::~TimedEvent()
+{
+}
+
+EventService::EventService(boost::asio::io_service& io_service)
+: m_io_service(io_service)
+{}
+
+EventService::~EventService()
 {
 }
 

@@ -30,7 +30,7 @@
 #include <Eris/IGRouter.h>
 #include <Eris/Operations.h>
 #include <Eris/Response.h>
-#include <Eris/TimedEventService.h>
+#include <Eris/EventService.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -49,8 +49,8 @@ static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
 class TestAvatar : public Eris::Avatar
 {
   public:
-    TestAvatar(boost::asio::io_service& io_service) :
-          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, "", "", 0)), "") { }
+    TestAvatar(boost::asio::io_service& io_service, Eris::EventService& eventService) :
+          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, eventService, "", "", 0)), "") { }
 };
 
 class TestIGRouter : public Eris::IGRouter
@@ -66,19 +66,20 @@ class TestIGRouter : public Eris::IGRouter
 int main()
 {
     boost::asio::io_service io_service;
+    Eris::EventService event_service(io_service);
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         new Eris::IGRouter(av);
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         Eris::IGRouter * ir = new Eris::IGRouter(av);
         delete ir;
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         RootOperation op;
@@ -87,7 +88,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         RootOperation op;
@@ -97,7 +98,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -106,7 +107,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -116,7 +117,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -126,7 +127,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         stub_type_bound = true;
@@ -140,7 +141,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Sight op;
@@ -150,7 +151,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Appearance op;
@@ -159,7 +160,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Disappearance op;
@@ -168,7 +169,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Unseen op;
@@ -177,7 +178,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         Atlas::Objects::Operation::Unseen op;
@@ -187,7 +188,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -203,7 +204,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -220,7 +221,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -238,7 +239,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -259,7 +260,7 @@ int main()
    }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -280,7 +281,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -302,7 +303,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -324,7 +325,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -347,7 +348,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -370,7 +371,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -394,7 +395,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -418,7 +419,7 @@ int main()
     }
 
     {
-        TestAvatar * av = new TestAvatar(io_service);
+        TestAvatar * av = new TestAvatar(io_service, event_service);
         TestIGRouter * ir = new TestIGRouter(av);
 
         SignalFlagger transferRequested;
@@ -554,8 +555,9 @@ void BaseConnection::setStatus(Status sc)
 {
 }
 
-Connection::Connection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) :
+Connection::Connection(boost::asio::io_service& io_service, Eris::EventService& event_service, const std::string &cnm, const std::string& host, short port) :
     BaseConnection(io_service, cnm, "game_", *this),
+    _eventService(event_service),
     _host(host),
     _port(port),
     m_typeService(new TypeService(this)),
@@ -712,6 +714,18 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
 ServerInfo::ServerInfo(const std::string &host) :
     m_status(INVALID),
     _host(host)
+{
+}
+
+EventService::EventService(boost::asio::io_service& io_service)
+: m_io_service(io_service)
+{}
+
+EventService::~EventService()
+{
+}
+
+void EventService::runOnMainThread(std::function<void ()> const&)
 {
 }
 

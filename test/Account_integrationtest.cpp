@@ -32,7 +32,7 @@
 #include <Eris/Log.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/CharacterType.h>
-#include <Eris/TimedEventService.h>
+#include <Eris/EventService.h>
 
 #include "SignalFlagger.h"
 
@@ -45,12 +45,13 @@
 #include <iostream>
 
 boost::asio::io_service io_service;
+Eris::EventService event_service(io_service);
 
 class TestConnection : public Eris::Connection {
   public:
     TestConnection(const std::string & name, const std::string & host,
                    short port) :
-                   Eris::Connection(io_service, name, host, port) { }
+                   Eris::Connection(io_service, event_service, name, host, port) { }
 
     void test_setStatus(Eris::BaseConnection::Status sc) {
         setStatus(sc);
@@ -174,11 +175,11 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
     boost::asio::io_service io_service;
-    Eris::TimedEventService tes(io_service);
+    Eris::EventService tes(io_service);
 
     // Test constructor
     {
-        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+        Eris::Connection * con = new Eris::Connection(io_service, tes, "name", "localhost",
                                                       6767);
 
         Eris::Account acc(con);
@@ -194,7 +195,7 @@ int main()
     }
     // Test getActiveCharacters()
     {
-        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+        Eris::Connection * con = new Eris::Connection(io_service, tes, "name", "localhost",
                                                       6767);
 
         Eris::Account acc(con);
@@ -205,7 +206,7 @@ int main()
     }
     // Test getId()
     {
-        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+        Eris::Connection * con = new Eris::Connection(io_service, tes, "name", "localhost",
                                                       6767);
 
         Eris::Account acc(con);
@@ -216,7 +217,7 @@ int main()
     }
     // Test getUsername()
     {
-        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+        Eris::Connection * con = new Eris::Connection(io_service, tes, "name", "localhost",
                                                       6767);
 
         Eris::Account acc(con);
@@ -228,7 +229,7 @@ int main()
 
     // Test getConnection()
     {
-        Eris::Connection * con = new Eris::Connection(io_service, "name", "localhost",
+        Eris::Connection * con = new Eris::Connection(io_service, tes, "name", "localhost",
                                                       6767);
 
         Eris::Account acc(con);

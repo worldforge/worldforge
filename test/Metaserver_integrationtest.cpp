@@ -26,11 +26,10 @@ int main()
 
 // stubs
 
-#include <Eris/DeleteLater.h>
 #include <Eris/Exceptions.h>
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
-#include <Eris/TimedEventService.h>
+#include <Eris/EventService.h>
 
 namespace Eris
 {
@@ -93,11 +92,15 @@ BaseException::~BaseException() throw()
 {
 }
 
-void pushDeleteLater(BaseDeleteLater* bl)
+EventService::EventService(boost::asio::io_service& io_service)
+: m_io_service(io_service)
+{}
+
+EventService::~EventService()
 {
 }
 
-BaseDeleteLater::~BaseDeleteLater()
+void EventService::runOnMainThread(std::function<void ()> const&)
 {
 }
 

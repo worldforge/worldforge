@@ -25,6 +25,7 @@
 #endif
 
 #include <Eris/Metaserver.h>
+#include <Eris/EventService.h>
 #include <Eris/Poll.h>
 
 #include <sigc++/functors/ptr_fun.h>
@@ -49,8 +50,9 @@ static void test_fail(const std::string & msg)
 int main()
 {
     boost::asio::io_service io_service;
+    Eris::EventService event_service(io_service);
     {
-        Meta * m = new Meta(io_service, TEST_METASERVER, 20);
+        Meta * m = new Meta(io_service, event_service, TEST_METASERVER, 20);
 
         assert(m->getGameServerCount() == 0);
 
@@ -128,7 +130,7 @@ int main()
 #if 0
     // Test poll works
     {
-        Meta * m = new Meta(io_service, TEST_METASERVER, 20);
+        Meta * m = new Meta(io_service, event_service, TEST_METASERVER, 20);
 
         test_failure_flag = false;
 
@@ -151,11 +153,9 @@ int main()
 
 // stubs
 
-#include <Eris/DeleteLater.h>
 #include <Eris/Exceptions.h>
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
-#include <Eris/TimedEventService.h>
 
 namespace Eris
 {
@@ -250,35 +250,19 @@ void ServerInfo::setPing(int p)
 {
 }
 
+EventService::EventService(boost::asio::io_service& io_service)
+: m_io_service(io_service)
+{}
 
-TimedEventService* TimedEventService::static_instance = NULL;
-
-TimedEventService::TimedEventService(boost::asio::io_service& io_service): m_io_service(io_service)
+EventService::~EventService()
 {
-    assert(!static_instance);
-    static_instance = this;
 }
 
-TimedEventService::~TimedEventService()
+void EventService::runOnMainThread(std::function<void ()> const&)
 {
-    static_instance = nullptr;
-}
-
-TimedEventService& TimedEventService::instance()
-{
-    assert(static_instance);
-    return *static_instance;
 }
 
 BaseException::~BaseException() throw()
-{
-}
-
-void pushDeleteLater(BaseDeleteLater* bl)
-{
-}
-
-BaseDeleteLater::~BaseDeleteLater()
 {
 }
 

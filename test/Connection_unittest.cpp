@@ -28,6 +28,7 @@
 
 #include <Eris/Log.h>
 #include <Eris/Poll.h>
+#include <Eris/EventService.h>
 
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -41,7 +42,7 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service, const std::string &cnm, const std::string& host, short port) : Eris::Connection(io_service, cnm, host, port) {
+    TestConnection(boost::asio::io_service& io_service, Eris::EventService& eventService, const std::string &cnm, const std::string& host, short port) : Eris::Connection(io_service, eventService, cnm, host, port) {
     }
 
     void testSetStatus(Status sc) { setStatus(sc); }
@@ -57,13 +58,15 @@ int main()
     // Test constructor and destructor
     {
         boost::asio::io_service io_service;
-        Eris::Connection con(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
     }
 
     // Test getTypeService()
     {
         boost::asio::io_service io_service;
-        Eris::Connection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
 
         assert(c.getTypeService() != 0);
     }
@@ -71,7 +74,8 @@ int main()
     // Test connect()
     {
         boost::asio::io_service io_service;
-        Eris::Connection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
         
         int ret = c.connect();
 
@@ -81,7 +85,8 @@ int main()
     // Test connect() with socket
     {
         boost::asio::io_service io_service;
-        Eris::Connection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
 
         int ret = c.connect();
 
@@ -91,7 +96,8 @@ int main()
     // Test disconnect() when disconnected
     {
         boost::asio::io_service io_service;
-        Eris::Connection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
 
         c.disconnect();
     }
@@ -99,7 +105,8 @@ int main()
     // Test disconnect() when disconnecting
     {
         boost::asio::io_service io_service;
-        TestConnection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        TestConnection c(io_service, event_service, "name", "localhost", 6767);
 
         c.testSetStatus(Eris::BaseConnection::DISCONNECTING);
 
@@ -111,7 +118,8 @@ int main()
     // Test disconnect() when connecting
     {
         boost::asio::io_service io_service;
-        TestConnection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        TestConnection c(io_service, event_service, "name", "localhost", 6767);
 
         c.connect();
 
@@ -125,7 +133,8 @@ int main()
     // Test dispatch()
     {
         boost::asio::io_service io_service;
-        TestConnection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        TestConnection c(io_service, event_service, "name", "localhost", 6767);
 
         c.testDispatch();
     }
@@ -135,7 +144,8 @@ int main()
     // Test send()
     {
         boost::asio::io_service io_service;
-        Eris::Connection c(io_service, "name", "localhost", 6767);
+        Eris::EventService event_service(io_service);
+        Eris::Connection c(io_service, event_service, "name", "localhost", 6767);
 
         Atlas::Objects::Root obj;
 
