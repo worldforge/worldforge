@@ -35,6 +35,16 @@ EventService::EventService(boost::asio::io_service& io_service): m_io_service(io
 
 EventService::~EventService()
 {
+    while (!m_handlers.empty())
+    {
+        auto handler = this->m_handlers.front();
+        m_handlers.pop_front();
+        try {
+            handler();
+        } catch (const std::exception& ex) {
+            error() << "Error when executing handler: " << ex.what();
+        }
+    }
     delete m_work;
 }
 

@@ -29,7 +29,6 @@ liberis_1_4_la_SOURCES = \
 	Redispatch.cpp \
 	Factory.cpp \
 	TypeBoundRedispatch.cpp \
-	DeleteLater.cpp \
 	Response.cpp \
 	EntityRef.cpp \
 	Operations.cpp \
@@ -78,7 +77,6 @@ liberis_HEADERS = \
 	TypeService.h \
 	View.h \
 	TypeBoundRedispatch.h \
-	DeleteLater.h \
 	Response.h \
 	EntityRef.h \
 	Operations.h \

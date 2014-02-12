@@ -3,7 +3,6 @@
 #endif
 
 #include <Eris/Task.h>
-#include <Eris/DeleteLater.h>
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 

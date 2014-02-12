@@ -1,6 +1,7 @@
 #include <Eris/Metaserver.h>
 #include <Eris/Log.h>
 #include <Eris/ServerInfo.h>
+#include <Eris/EventService.h>
 
 #include <iomanip>
 #include <iostream>
@@ -235,9 +236,10 @@ int main(int argc, char* argv[])
     }
     
     boost::asio::io_service io_service;
+    Eris::EventService eventService(io_service);
 
     // maximum of 5 simultaneous queries
-    Eris::Meta meta(io_service, metaServer, 100);
+    Eris::Meta meta(io_service, eventService, metaServer, 100);
     meta.CompletedServerList.connect(sigc::ptr_fun(&gotServerList));
     meta.AllQueriesDone.connect(sigc::ptr_fun(&queriesDone));
     meta.ReceivedServerInfo.connect(sigc::ptr_fun(&gotServer));

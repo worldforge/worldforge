@@ -9,7 +9,6 @@
 #include <Eris/Avatar.h>
 #include <Eris/Router.h>
 #include <Eris/Response.h>
-#include <Eris/DeleteLater.h>
 #include <Eris/EventService.h>
 #include "SpawnPoint.h"
 #include "CharacterType.h"
@@ -581,7 +580,7 @@ void Account::loginError(const Error& err)
 void Account::handleLoginTimeout()
 {
     m_status = DISCONNECTED;
-    deleteLater(m_timeout.release());
+    m_timeout.release();
 
     LoginFailure.emit("timed out waiting for server response");
 }
@@ -696,7 +695,7 @@ void Account::handleLogoutTimeout()
     error() << "LOGOUT timed out waiting for response";
 
     m_status = DISCONNECTED;
-    deleteLater(m_timeout.release());
+    m_timeout.release();
 
     LogoutComplete.emit(false);
 }

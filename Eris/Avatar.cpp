@@ -13,7 +13,7 @@
 #include <Eris/TypeService.h>
 #include <Eris/Operations.h>
 #include <Eris/Response.h>
-#include <Eris/DeleteLater.h>
+#include <Eris/EventService.h>
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/slot.h>
@@ -439,7 +439,9 @@ void Avatar::logoutResponse(const RootOperation& op)
     }
 
     m_account.AvatarDeactivated.emit(this);
-    deleteLater(this);
+    m_account.getConnection()->getEventService().runOnMainThread([&](){
+        delete this;
+    });
 }
 
 void Avatar::logoutRequested()

@@ -24,7 +24,7 @@ namespace Eris {
 class MetaQuery;
 class BaseConnection;
 class Timeout;
-class PollData;
+class EventService;
 
 const int DATA_BUFFER_SIZE = 4096;
 
@@ -56,7 +56,7 @@ public:
     active at any one time. 10 is a sensible value, too low and querying will
     take a long time, too high and .... I'm not sure.
     */
-    Meta(boost::asio::io_service& io_service, const std::string &msv, unsigned int maxQueries);
+    Meta(boost::asio::io_service& io_service, EventService& eventService, const std::string &msv, unsigned int maxQueries);
     virtual ~Meta();
     
     /** Return the total number of game servers the meta server knows about. */
@@ -159,6 +159,8 @@ private:
     void startTimeout();
 
     boost::asio::io_service& m_io_service;
+
+    EventService& m_event_service;
         
     const std::string m_clientName;	///< the name to use when negotiating
     

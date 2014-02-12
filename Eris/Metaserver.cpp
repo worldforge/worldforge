@@ -9,7 +9,7 @@
 #include <Eris/ServerInfo.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
-#include <Eris/DeleteLater.h>
+#include "EventService.h"
 #include "Exceptions.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -56,8 +56,9 @@ const uint32_t LIST_RESP2 = 999;
 	
 #pragma mark -
 
-Meta::Meta(boost::asio::io_service& io_service, const std::string& metaServer, unsigned int maxQueries) :
+Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, const std::string& metaServer, unsigned int maxQueries) :
     m_io_service(io_service),
+    m_event_service(eventService),
     m_status(INVALID),
     m_metaHost(metaServer),
     m_maxActiveQueries(maxQueries),
@@ -285,7 +286,10 @@ void Meta::deleteQuery(MetaQuery* query)
 {
     assert(m_activeQueries.count(query));
     m_activeQueries.erase(query);
-    deleteLater(query);
+
+    m_event_service.runOnMainThread([query](){
+        delete query;
+    });
     
     if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size())
     {

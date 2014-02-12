@@ -7,7 +7,6 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
-#include <Eris/DeleteLater.h>
 #include <Eris/Operations.h>
 #include "StreamSocket_impl.h"
 
