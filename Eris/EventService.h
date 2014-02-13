@@ -7,8 +7,8 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 
-#include <mutex>
 #include <queue>
+#include <functional>
 
 namespace Eris
 {
@@ -28,6 +28,9 @@ public:
 private:
     boost::asio::deadline_timer* m_timer;
 };
+
+template<typename T>
+class WaitFreeQueue;
 
 /**
  * @brief Handles polling of the IO system as well as making sure that registered handlers are run on the main thread.
@@ -95,14 +98,28 @@ private:
 
     /**
      * @brief A queue of handlers which are to be run on the main thread.
+     * These are collected on the main thread from the m_background_handlers_queue field.
      */
     std::deque<std::function<void()>> m_handlers;
+
+    /**
+     * @brief A queue of handlers, meant only to have values pushed on to it.
+     *
+     * These values are then popped through the collectHandlersQueue() method
+     * and put onto the m_handlers queue.
+     */
+    WaitFreeQueue<std::function<void()>>* m_background_handlers_queue;
 
     /**
      * @brief Creates a timer, mainly used by TimedEvent
      * @return A deadline timer.
      */
     boost::asio::deadline_timer* createTimer();
+
+    /**
+     * @brief Transfers all handlers from the m_background_handlers_queue to the m_handlers queue.
+     */
+    void collectHandlersQueue();
 
 };
 

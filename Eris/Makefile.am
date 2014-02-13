@@ -92,4 +92,5 @@ liberis_HEADERS = \
 	CustomEntities.h \
 	StreamSocket.h \
 	StreamSocket_impl.h \
-	Session.h
+	Session.h \
+	WaitFreeQueue.h
