@@ -16,6 +16,7 @@
 #include <deque>
 #include <map>
 #include <set>
+#include <unordered_map>
 
 namespace Eris
 {
@@ -171,7 +172,7 @@ private:
 
     void eraseFromLookQueue(const std::string& eid);
 
-    typedef std::map<std::string, Entity*> IdEntityMap;
+    typedef std::unordered_map<std::string, Entity*> IdEntityMap;
 
     Avatar* m_owner;
     IdEntityMap m_contents;
@@ -190,7 +191,7 @@ private:
         SACTION_QUEUED
     } SightAction;
 
-    typedef std::map<std::string, SightAction> PendingSightMap;
+    typedef std::unordered_map<std::string, SightAction> PendingSightMap;
     PendingSightMap m_pending;
     
     /**
@@ -206,7 +207,7 @@ private:
           
     typedef sigc::signal<void, Entity*> EntitySightSignal;
         
-    typedef std::map<std::string, EntitySightSignal> NotifySightMap;
+    typedef std::unordered_map<std::string, EntitySightSignal> NotifySightMap;
     NotifySightMap m_notifySights;
     
     typedef std::set<Entity*> EntitySet;

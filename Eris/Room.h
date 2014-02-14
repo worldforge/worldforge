@@ -7,7 +7,7 @@
 #include <sigc++/signal.h>
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <string>
 
 namespace Eris
@@ -96,7 +96,7 @@ public:
 protected:
     friend class Lobby;
 
-    typedef std::map<std::string, Person*> IdPersonMap;
+    typedef std::unordered_map<std::string, Person*> IdPersonMap;
     
     /** standard constructor. Issues a LOOK against the specified ID, and sets up
     the necessary signals to drive the Room if id arg is provided */

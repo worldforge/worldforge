@@ -2,7 +2,7 @@
 #define ERIS_RESPONSE_H
 
 #include <Atlas/Objects/ObjectsFwd.h>
-#include <map>
+#include <unordered_map>
 
 namespace Eris
 {
@@ -78,7 +78,7 @@ public:
     bool handleOp(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
-    typedef std::map<int, ResponseBase*> RefnoResponseMap;
+    typedef std::unordered_map<int, ResponseBase*> RefnoResponseMap;
     RefnoResponseMap m_pending;
 };
 

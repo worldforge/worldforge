@@ -18,6 +18,7 @@
 
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 namespace Atlas {
     namespace Message {
@@ -486,7 +487,7 @@ protected:
     */
     void filterMoveAttrs(Atlas::Message::MapType& attrs) const;
 
-    typedef std::map<std::string, Entity*> IdEntityMap;
+    typedef std::unordered_map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);
     
     void addChild(Entity* e);
@@ -573,7 +574,7 @@ protected:
         
     typedef sigc::signal<void, const Atlas::Message::Element&> AttrChangedSignal;
         
-    typedef std::map<std::string, AttrChangedSignal> ObserverMap;
+    typedef std::unordered_map<std::string, AttrChangedSignal> ObserverMap;
     ObserverMap m_observers;
 
     /** This flag should be set when the server notifies that this entity

@@ -87,7 +87,7 @@ private:
     Account* m_account;    
     IdPersonMap m_people;
 	
-    typedef std::map<std::string, Room*> IdRoomMap;
+    typedef std::unordered_map<std::string, Room*> IdRoomMap;
     IdRoomMap m_rooms;
 
     OOGRouter* m_router;

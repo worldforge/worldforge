@@ -84,7 +84,6 @@ void EventService::processEvents(const boost::posix_time::ptime& runUntil,
             } catch (const std::exception& ex) {
                 error() << "Error when executing handler: " << ex.what();
             }
-            m_io_service.poll();
         } else {
             m_io_service.run_one();
         }

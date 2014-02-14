@@ -6,7 +6,7 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <string>
 
@@ -61,7 +61,7 @@ public:
 
     TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
 
-    typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
+    typedef std::unordered_map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the
     future, if efficeny consdierations indicate it would be worthwhile */

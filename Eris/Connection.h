@@ -10,6 +10,7 @@
 
 #include <deque>
 #include <map>
+#include <unordered_map>
 #include <memory>
 
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
@@ -178,7 +179,7 @@ protected:
     std::unique_ptr<TypeService> m_typeService;
     Router* m_defaultRouter; // need several of these?
 
-    typedef std::map<std::string, Router*> IdRouterMap;
+    typedef std::unordered_map<std::string, Router*> IdRouterMap;
     IdRouterMap m_toRouters;
     IdRouterMap m_fromRouters;
 
