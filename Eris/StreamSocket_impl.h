@@ -107,7 +107,7 @@ void AsioStreamSocket<ProtocolT>::negotiate_read()
                         this->write();
                         this->do_read();
                     } else {
-                        this->write();
+                        this->negotiate_write();
                         this->negotiate_read();
                     }
                 } else {
@@ -162,6 +162,23 @@ void AsioStreamSocket<ProtocolT>::write()
                 });
     }
 }
+
+template<typename ProtocolT>
+void AsioStreamSocket<ProtocolT>::negotiate_write()
+{
+
+    if (mBuffer->buffer->size() != 0) {
+        boost::asio::async_write(m_socket, mBuffer->buffer->data(),
+                [this](boost::system::error_code ec, std::size_t length)
+                {
+                    if (!ec)
+                    {
+                        this->mBuffer->buffer->consume(length);
+                    }
+                });
+    }
+}
+
 }
 
 #endif /* STREAMSOCKET_IMPL_H_ */

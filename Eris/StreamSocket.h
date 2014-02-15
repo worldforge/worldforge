@@ -113,6 +113,7 @@ class AsioStreamSocket : public StreamSocket
    protected:
         typename ProtocolT::socket m_socket;
         virtual void negotiate_read();
+        void negotiate_write();
         virtual void do_read();
 };
 
