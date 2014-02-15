@@ -92,7 +92,7 @@ class TestBaseConnection : public Eris::BaseConnection {
 
     void setup_socket() {
         Eris::StreamSocket::Callbacks callbacks;
-        _socket = new TestStreamClientSocketBase(_io_service, "", _bridge, callbacks);
+        _socket.reset(new TestStreamClientSocketBase(_io_service, "", _bridge, callbacks));
     }
 
 };

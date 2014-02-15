@@ -24,6 +24,8 @@
 
 #include <boost/asio.hpp>
 
+#include <memory>
+
 namespace Atlas
 {
     class Bridge;
@@ -42,7 +44,7 @@ namespace Atlas
 namespace Eris
 {
 
-class StreamSocket
+class StreamSocket : public std::enable_shared_from_this<StreamSocket>
 {
     public:
 
@@ -69,6 +71,8 @@ class StreamSocket
         StreamSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks);
         virtual ~StreamSocket();
 
+        void detach();
+
         std::iostream& getIos();
 
         Atlas::Codec& getCodec();
@@ -78,13 +82,13 @@ class StreamSocket
     protected:
         enum
         {
-            read_buffer_size = 16384
+            read_buffer_size = 4096
         };
         boost::asio::io_service& m_io_service;
         Atlas::Bridge& _bridge;
         Callbacks _callbacks;
 
-        boost::asio::streambuf mBuffer;
+        boost::asio::streambuf* mBuffer;
         boost::asio::streambuf mReadBuffer;
         std::iostream m_ios;
         Atlas::Net::StreamConnect* _sc;     ///< negotiation object (NULL after connection!)

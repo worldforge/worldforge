@@ -41,7 +41,7 @@ namespace Eris
 
 BaseConnection::BaseConnection(io_service& io_service, const std::string &cnm,
         const std::string &id, Atlas::Bridge& br) :
-        _io_service(io_service), _tcpResolver(io_service), _socket(nullptr), _status(DISCONNECTED), _id(
+        _io_service(io_service), _tcpResolver(io_service), _status(DISCONNECTED), _id(
                 id), _clientName(cnm), _bridge(br), _port(0)
 {
     Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
@@ -59,17 +59,21 @@ BaseConnection::BaseConnection(io_service& io_service, const std::string &cnm,
 
 BaseConnection::~BaseConnection()
 {
-    delete _socket;
-    _socket = nullptr;
     if (_status != DISCONNECTED) {
         hardDisconnect(true);
+    }
+    if (_socket) {
+        _socket->detach();
+        _socket.reset();
     }
 }
 
 int BaseConnection::connect(const std::string & host, short port)
 {
-    delete _socket;
-    _socket = nullptr;
+    if (_socket) {
+        _socket->detach();
+        _socket.reset();
+    }
     try {
         StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
@@ -77,7 +81,7 @@ int BaseConnection::connect(const std::string & host, short port)
                 [&](StreamSocket::Status state) {this->stateChanged(state);};
         auto socket = new AsioStreamSocket<ip::tcp>(_io_service, _clientName,
                 _bridge, callbacks);
-        _socket = socket;
+        _socket.reset(socket);
         std::stringstream ss;
         ss << port;
         ip::tcp::resolver::query query(host, ss.str());
@@ -101,8 +105,10 @@ int BaseConnection::connect(const std::string & host, short port)
 
 int BaseConnection::connectLocal(const std::string & filename)
 {
-    delete _socket;
-    _socket = nullptr;
+    if (_socket) {
+        _socket->detach();
+        _socket.reset();
+    }
     try {
         StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
@@ -110,7 +116,7 @@ int BaseConnection::connectLocal(const std::string & filename)
                 [&](StreamSocket::Status state) {this->stateChanged(state);};
         auto socket = new AsioStreamSocket<local::stream_protocol>(
                 _io_service, _clientName, _bridge, callbacks);
-        _socket = socket;
+        _socket.reset(socket);
         setStatus(CONNECTING);
         socket->connect(local::stream_protocol::endpoint(filename));
     } catch (const std::exception& e) {
@@ -239,8 +245,10 @@ void BaseConnection::hardDisconnect(bool emit)
     if (_status == DISCONNECTED)
         return;
 
-    delete _socket;
-    _socket = nullptr;
+    if (_socket) {
+        _socket->detach();
+        _socket.reset();
+    }
 
     setStatus(DISCONNECTED);
     if (emit) {

@@ -128,7 +128,7 @@ protected:
 
     boost::asio::io_service& _io_service;
     boost::asio::ip::tcp::resolver _tcpResolver;
-    StreamSocket* _socket;
+    std::shared_ptr<StreamSocket> _socket;
 
     Status _status;			///< current status of the connection
     const std::string _id;	///< a unique identifier for this connection

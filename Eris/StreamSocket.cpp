@@ -38,8 +38,8 @@ namespace Eris
 StreamSocket::StreamSocket(io_service& io_service,
         const std::string& client_name, Atlas::Bridge& bridge,
         Callbacks& callbacks) :
-        m_io_service(io_service), _bridge(bridge), _callbacks(callbacks), m_ios(
-                &mBuffer), _sc(
+        m_io_service(io_service), _bridge(bridge), _callbacks(callbacks), mBuffer(
+                new boost::asio::streambuf()), m_ios(mBuffer), _sc(
                 new Atlas::Net::StreamConnect(client_name, m_ios)), _negotiateTimer(
                 io_service), _connectTimer(io_service), m_codec(nullptr), m_encoder(
                 nullptr), m_is_connected(false)
@@ -48,8 +48,14 @@ StreamSocket::StreamSocket(io_service& io_service,
 StreamSocket::~StreamSocket()
 {
     delete _sc;
+    delete mBuffer;
     delete m_encoder;
     delete m_codec;
+}
+
+void StreamSocket::detach()
+{
+    _callbacks = Callbacks();
 }
 
 std::iostream& StreamSocket::getIos()
@@ -59,16 +65,19 @@ std::iostream& StreamSocket::getIos()
 
 void StreamSocket::startNegotiation()
 {
+    auto self(this->shared_from_this());
     _negotiateTimer.expires_from_now(
             boost::posix_time::seconds(NEGOTIATE_TIMEOUT_SECONDS));
-    _negotiateTimer.async_wait([this](const boost::system::error_code& ec)
+    _negotiateTimer.async_wait([this, self](const boost::system::error_code& ec)
     {
         //If the negotiator still exists after the deadline it means that the negotation hasn't
         //completed yet; we'll consider that a "timeout".
             if (_sc != nullptr) {
+                if (_callbacks.stateChanged) {
 //                log(NOTICE, "Client disconnected because of negotiation timeout.");
                 _callbacks.stateChanged(DISCONNECTING);
 //                mSocket.close();
+                }
             }
         });
     _callbacks.stateChanged(NEGOTIATE);

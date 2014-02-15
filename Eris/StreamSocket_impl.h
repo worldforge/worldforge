@@ -19,7 +19,6 @@
 #ifndef STREAMSOCKET_IMPL_H_
 #define STREAMSOCKET_IMPL_H_
 
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -39,7 +38,8 @@ template<typename ProtocolT>
 AsioStreamSocket<ProtocolT>::AsioStreamSocket(
         boost::asio::io_service& io_service, const std::string& client_name,
         Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks) :
-        StreamSocket(io_service, client_name, bridge, callbacks), m_socket(io_service)
+        StreamSocket(io_service, client_name, bridge, callbacks), m_socket(
+                io_service)
 {
 }
 
@@ -60,59 +60,67 @@ AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
     }
 }
 
-
 template<typename ProtocolT>
-void AsioStreamSocket<ProtocolT>::connect(const typename ProtocolT::endpoint& endpoint)
+void AsioStreamSocket<ProtocolT>::connect(
+        const typename ProtocolT::endpoint& endpoint)
 {
     _connectTimer.expires_from_now(
             boost::posix_time::seconds(CONNECT_TIMEOUT_SECONDS));
-    _connectTimer.async_wait([&](boost::system::error_code ec) {
+    auto self(this->shared_from_this());
+    _connectTimer.async_wait([&, self](boost::system::error_code ec) {
         if (!ec) {
-            _callbacks.stateChanged(CONNECTING_TIMEOUT);
+            if (_callbacks.stateChanged) {
+                _callbacks.stateChanged(CONNECTING_TIMEOUT);
+            }
         }
     });
 
-    m_socket.async_connect(endpoint, [this](boost::system::error_code ec) {
-        if (!ec) {
-            this->_connectTimer.cancel();
-            m_is_connected = true;
-            this->startNegotiation();
-        } else {
-            _callbacks.stateChanged(CONNECTING_FAILED);
-        }
-    });
+    m_socket.async_connect(endpoint,
+            [this, self](boost::system::error_code ec) {
+                if (_callbacks.stateChanged) {
+                    if (!ec) {
+                        this->_connectTimer.cancel();
+                        m_is_connected = true;
+                        this->startNegotiation();
+                    } else {
+                        _callbacks.stateChanged(CONNECTING_FAILED);
+                    }
+                }
+            });
 }
-
 
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::negotiate_read()
 {
-    m_socket.async_read_some(mBuffer.prepare(read_buffer_size),
-            [this](boost::system::error_code ec, std::size_t length)
+    auto self(this->shared_from_this());
+    m_socket.async_read_some(mBuffer->prepare(read_buffer_size),
+            [this, self](boost::system::error_code ec, std::size_t length)
             {
-                if (!ec)
-                {
-                    mBuffer.commit(length);
-                    if (length > 0) {
-                        auto negotiateResult = this->negotiate();
-                        if (negotiateResult == Atlas::Negotiate::FAILED) {
-                            m_socket.close();
-                            _callbacks.stateChanged(NEGOTIATE_FAILED);
-                            return;
+                if (_callbacks.stateChanged) {
+                    if (!ec)
+                    {
+                        mBuffer->commit(length);
+                        if (length > 0) {
+                            auto negotiateResult = this->negotiate();
+                            if (negotiateResult == Atlas::Negotiate::FAILED) {
+                                m_socket.close();
+                                _callbacks.stateChanged(NEGOTIATE_FAILED);
+                                return;
+                            }
                         }
-                    }
 
-                    //If the _sc instance is removed we're done with negotiation and should start the main loop.
-                    if (_sc == nullptr) {
-                        this->write();
-                        this->do_read();
+                        //If the _sc instance is removed we're done with negotiation and should start the main loop.
+                        if (_sc == nullptr) {
+                            this->write();
+                            this->do_read();
+                        } else {
+                            this->negotiate_write();
+                            this->negotiate_read();
+                        }
                     } else {
-                        this->negotiate_write();
-                        this->negotiate_read();
-                    }
-                } else {
-                    if (ec != boost::asio::error::operation_aborted) {
-                        _callbacks.stateChanged(CONNECTION_FAILED);
+                        if (ec != boost::asio::error::operation_aborted) {
+                            _callbacks.stateChanged(CONNECTION_FAILED);
+                        }
                     }
                 }
             });
@@ -121,21 +129,24 @@ void AsioStreamSocket<ProtocolT>::negotiate_read()
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::do_read()
 {
+    auto self(this->shared_from_this());
     m_socket.async_read_some(mReadBuffer.prepare(read_buffer_size),
-            [this](boost::system::error_code ec, std::size_t length)
+            [this, self](boost::system::error_code ec, std::size_t length)
             {
-                if (!ec)
-                {
-                    mReadBuffer.commit(length);
-                    this->m_ios.rdbuf(&mReadBuffer);
-                    m_codec->poll();
-                    this->m_ios.rdbuf(&mBuffer);
-                    _callbacks.dispatch();
-                    this->do_read();
-                } else {
-                    if (ec != boost::asio::error::operation_aborted) {
-                        if (!this->m_socket.is_open()) {
-                            _callbacks.stateChanged(CONNECTION_FAILED);
+                if (_callbacks.stateChanged) {
+                    if (!ec)
+                    {
+                        mReadBuffer.commit(length);
+                        this->m_ios.rdbuf(&mReadBuffer);
+                        m_codec->poll();
+                        this->m_ios.rdbuf(mBuffer);
+                        _callbacks.dispatch();
+                        this->do_read();
+                    } else {
+                        if (ec != boost::asio::error::operation_aborted) {
+                            if (!this->m_socket.is_open()) {
+                                _callbacks.stateChanged(CONNECTION_FAILED);
+                            }
                         }
                     }
                 }
@@ -145,17 +156,46 @@ void AsioStreamSocket<ProtocolT>::do_read()
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::write()
 {
-    if (mBuffer.size() != 0) {
-        async_write(m_socket, mBuffer.data(),
-                [this](boost::system::error_code ec, std::size_t length)
-                {
-                    if (!ec)
-                    {
-                        mBuffer.consume(length);
+
+    if (mBuffer->size() != 0) {
+        //When sending data we need to make sure that nothing else writes to the streambuf (mBuffer).
+        //We do this by creating a new streambuf instance. The one containing the data to be sent is
+        //then contained in a shared_ptr. When the async write operation is done the shared_ptr will
+        //be deleted. However, in order to make this a bit more efficient we'll use a custom deleter
+        //in which we'll check if the new buffer has had anything written to it. If not, we'll reuse
+        //the buffer just used for writing, as this will already have had memory allocated.
+        auto self(this->shared_from_this());
+        std::function<void(boost::asio::streambuf*)> bufferDeleter =
+                [&, self](boost::asio::streambuf* p) {
+                    //Check if the existing writebuffer has had anything written to it.
+                    if (this->mBuffer->size() > 0) {
+                        delete p;
                     } else {
-                        if (ec != boost::asio::error::operation_aborted) {
-                            if (!this->m_socket.is_open()) {
-                                _callbacks.stateChanged(CONNECTION_FAILED);
+                        //If the existing writebuffer hasn't had anything written to it we'll reuse the previous
+                        //one instead since it already have had memory allocated. This prevents unnecessary release
+                        //and re-allocation of memory.
+                        delete this->mBuffer;
+                        this->mBuffer = p;
+                        this->m_ios.rdbuf(this->mBuffer);
+
+                    }
+                };
+        std::shared_ptr<boost::asio::streambuf> buffer(mBuffer, bufferDeleter);
+        mBuffer = new boost::asio::streambuf();
+        m_ios.rdbuf(mBuffer);
+
+        async_write(m_socket, buffer->data(),
+                [this, buffer, self](boost::system::error_code ec, std::size_t length)
+                {
+                    if (_callbacks.stateChanged) {
+                        if (!ec)
+                        {
+                            buffer->consume(length);
+                        } else {
+                            if (ec != boost::asio::error::operation_aborted) {
+                                if (!this->m_socket.is_open()) {
+                                    _callbacks.stateChanged(CONNECTION_FAILED);
+                                }
                             }
                         }
                     }
@@ -167,13 +207,14 @@ template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::negotiate_write()
 {
 
-    if (mBuffer->buffer->size() != 0) {
-        boost::asio::async_write(m_socket, mBuffer->buffer->data(),
-                [this](boost::system::error_code ec, std::size_t length)
+    if (mBuffer->size() != 0) {
+        auto self(this->shared_from_this());
+        boost::asio::async_write(m_socket, mBuffer->data(),
+                [this, self](boost::system::error_code ec, std::size_t length)
                 {
                     if (!ec)
                     {
-                        this->mBuffer->buffer->consume(length);
+                        this->mBuffer->consume(length);
                     }
                 });
     }
