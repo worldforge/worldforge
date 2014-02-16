@@ -140,6 +140,7 @@ void Meta::refresh()
 
     m_gameServers.clear();
     m_nextQuery = 0;
+    disconnect();
     connect();
 }
 
@@ -196,7 +197,7 @@ void Meta::connect()
 
 void Meta::connect(boost::asio::ip::udp::endpoint endpoint)
 {
-    disconnect();
+    m_socket.open(boost::asio::ip::udp::v4());
     m_socket.async_connect(endpoint, [&](boost::system::error_code ec){
         if (!ec) {
             do_read();
@@ -220,7 +221,6 @@ void Meta::disconnect()
 {
     if (m_socket.is_open()) {
         m_socket.close();
-        m_socket.open(boost::asio::ip::udp::v4());
     }
     m_metaTimer.cancel();
 }
@@ -239,9 +239,7 @@ void Meta::startTimeout()
 
 void Meta::do_read()
 {
-    if (!m_socket.is_open()) {
-        this->doFailure("Socket is closed.");
-    } else {
+    if (m_socket.is_open()) {
         m_socket.async_receive(m_receive_buffer.prepare(DATA_BUFFER_SIZE),
                 [this](boost::system::error_code ec, std::size_t length)
                 {
@@ -264,9 +262,7 @@ void Meta::do_read()
 
 void Meta::write()
 {
-    if (!m_socket.is_open()) {
-        this->doFailure("Socket is closed.");
-    } else {
+    if (m_socket.is_open()) {
         if (m_send_buffer->size() != 0) {
             std::shared_ptr<boost::asio::streambuf> send_buffer(m_send_buffer);
             m_send_buffer = new boost::asio::streambuf();

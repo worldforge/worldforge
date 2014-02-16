@@ -47,10 +47,12 @@ template<typename ProtocolT>
 AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
 {
     if (m_socket.is_open()) {
-        try {
-            m_socket.shutdown(ProtocolT::socket::shutdown_both);
-        } catch (const std::exception& e) {
-            warning() << "Error when shutting down socket: " << e.what();
+        if (m_is_connected) {
+            try {
+                m_socket.shutdown(ProtocolT::socket::shutdown_both);
+            } catch (const std::exception& e) {
+                warning() << "Error when shutting down socket: " << e.what();
+            }
         }
         try {
             m_socket.close();
