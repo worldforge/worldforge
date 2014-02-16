@@ -171,8 +171,8 @@ private:
     typedef std::set<MetaQuery*> QuerySet;
     QuerySet m_activeQueries;
                 
-    unsigned int m_maxActiveQueries;
-    unsigned int m_nextQuery;
+    size_t m_maxActiveQueries;
+    size_t m_nextQuery;
 
     typedef std::vector<ServerInfo> ServerInfoArray;
     ServerInfoArray m_gameServers,
@@ -184,8 +184,12 @@ private:
     boost::asio::ip::udp::socket m_socket;
     
     boost::asio::deadline_timer m_metaTimer;
-    boost::asio::streambuf m_buffer;
-    std::iostream m_stream;
+
+    boost::asio::streambuf m_receive_buffer;
+    std::iostream m_receive_stream;
+
+    boost::asio::streambuf* m_send_buffer;
+    std::iostream m_send_stream;
 
 	char _data[DATA_BUFFER_SIZE];
 	char* _dataPtr;	///< The current insert/extract pointer in the buffer

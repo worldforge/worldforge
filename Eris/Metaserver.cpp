@@ -20,6 +20,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
+#include <memory>
 
 #ifdef _WIN32
 
@@ -65,7 +66,9 @@ Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, cons
     m_resolver(io_service),
     m_socket(io_service),
     m_metaTimer(io_service),
-    m_stream(&m_buffer)
+    m_receive_stream(&m_receive_buffer),
+    m_send_buffer(new boost::asio::streambuf()),
+    m_send_stream(m_send_buffer)
 {
     unsigned int max_half_open = FD_SETSIZE;
     if (m_maxActiveQueries > (max_half_open - 2)) {
@@ -81,6 +84,7 @@ Meta::~Meta()
     for (QuerySet::const_iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q) {
         delete *Q;
     }
+    delete m_send_buffer;
 }
 
 /*
@@ -200,7 +204,7 @@ void Meta::connect(boost::asio::ip::udp::endpoint endpoint)
             // build the initial 'ping' and send
             unsigned int dsz = 0;
             pack_uint32(CKEEP_ALIVE, _data, dsz);
-            this->m_stream << std::string(_data, dsz) << std::flush;
+            this->m_send_stream << std::string(_data, dsz) << std::flush;
             this->write();
             this->setupRecvCmd();
 
@@ -214,7 +218,10 @@ void Meta::connect(boost::asio::ip::udp::endpoint endpoint)
 
 void Meta::disconnect()
 {
-    m_socket.close();
+    if (m_socket.is_open()) {
+        m_socket.close();
+        m_socket.open(boost::asio::ip::udp::v4());
+    }
     m_metaTimer.cancel();
 }
 
@@ -232,53 +239,57 @@ void Meta::startTimeout()
 
 void Meta::do_read()
 {
-    query();
-    m_socket.async_receive(m_buffer.prepare(DATA_BUFFER_SIZE),
-            [this](boost::system::error_code ec, std::size_t length)
-            {
-                if (!ec)
+    if (!m_socket.is_open()) {
+        this->doFailure("Socket is closed.");
+    } else {
+        m_socket.async_receive(m_receive_buffer.prepare(DATA_BUFFER_SIZE),
+                [this](boost::system::error_code ec, std::size_t length)
                 {
-                    m_buffer.commit(length);
-                    if (length > 0) {
-                        this->gotData();
+                    if (!ec)
+                    {
+                        m_receive_buffer.commit(length);
+                        if (length > 0) {
+                            this->gotData();
+                        }
+                        this->write();
+                        this->do_read();
+                    } else {
+                        if (ec != boost::asio::error::operation_aborted) {
+                            this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
+                        }
                     }
-                    this->write();
-                    this->do_read();
-                } else {
-                    this->doFailure("Connection to the meta-server failed");
-                }
-            });
+                });
+    }
 }
 
 void Meta::write()
 {
-    if (m_buffer.size() != 0) {
-        m_socket.async_send(m_buffer.data(),
-                [&](boost::system::error_code ec, std::size_t length)
-                {
-                    if (!ec)
+    if (!m_socket.is_open()) {
+        this->doFailure("Socket is closed.");
+    } else {
+        if (m_send_buffer->size() != 0) {
+            std::shared_ptr<boost::asio::streambuf> send_buffer(m_send_buffer);
+            m_send_buffer = new boost::asio::streambuf();
+            m_send_stream.rdbuf(m_send_buffer);
+            m_socket.async_send(send_buffer->data(),
+                    [&, send_buffer](boost::system::error_code ec, std::size_t length)
                     {
-                        m_buffer.consume(length);
-                    } else {
-                        this->doFailure("Connection to the meta-server failed");
-                    }
-                });
+                        if (!ec)
+                        {
+                            send_buffer->consume(length);
+                        } else {
+                            if (ec != boost::asio::error::operation_aborted) {
+                                this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
+                            }
+                        }
+                    });
+        }
     }
 }
 
 void Meta::gotData()
 {    
     recv();
-    
-    std::vector<MetaQuery*> complete;
-    
-    for (QuerySet::iterator Q=m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
-    {
-        if ((*Q)->isComplete()) complete.push_back(*Q);
-    }
-
-    for (unsigned int i=0; i < complete.size(); ++i)
-        deleteQuery(complete[i]);
 }
 
 void Meta::deleteQuery(MetaQuery* query)
@@ -305,8 +316,8 @@ void Meta::recv()
         return;
     }
 	
-    m_stream.peek();
-    std::streambuf * iobuf = m_stream.rdbuf();
+    m_receive_stream.peek();
+    std::streambuf * iobuf = m_receive_stream.rdbuf();
     std::streamsize len = std::min(_bytesToRecv, iobuf->in_avail());
     if (len > 0) {
     	iobuf->sgetn(_dataPtr, len);
@@ -333,7 +344,7 @@ void Meta::recv()
     }
 		
     // try and read more
-    if (_bytesToRecv && m_stream.rdbuf()->in_avail())
+    if (_bytesToRecv && m_receive_stream.rdbuf()->in_avail())
         recv();
 }
 
@@ -375,7 +386,7 @@ void Meta::processCmd()
         _dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
         pack_uint32(stamp, _dataPtr, dsz);
         
-        m_stream << std::string(_data, dsz) << std::flush;
+        m_send_stream << std::string(_data, dsz) << std::flush;
         write();
         
         m_metaTimer.cancel();
@@ -441,6 +452,7 @@ void Meta::processCmd()
             // all done, clean up
             disconnect();
         }
+        query();
 		
     } break;
 		
@@ -458,7 +470,7 @@ void Meta::listReq(int base)
     char* _dataPtr = pack_uint32(LIST_REQ, _data, dsz);
     pack_uint32(base, _dataPtr, dsz);
     
-    m_stream << std::string(_data, dsz) << std::flush;
+    m_send_stream << std::string(_data, dsz) << std::flush;
     write();
     setupRecvCmd();
     
@@ -511,7 +523,7 @@ void Meta::internalQuery(unsigned int index)
     assert(index < m_gameServers.size());
     
     ServerInfo& sv = m_gameServers[index];
-    MetaQuery *q =  new MetaQuery(m_io_service, *this, sv.getHostname(), index);
+    MetaQuery *q = new MetaQuery(m_io_service, *this, sv.getHostname(), index);
     if (q->getStatus() != BaseConnection::CONNECTING &&
         q->getStatus() != BaseConnection::NEGOTIATE) {
         // indicates a failure occurred, so we'll kill it now and say no more
@@ -541,28 +553,28 @@ void Meta::objectArrived(const Root& obj)
 	
     if (Q == m_activeQueries.end()) {
         error() << "Couldn't locate query for meta-query reply";
-        return;
-    }
-    
-    (*Q)->setComplete();
-    
-    RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());	
-    if (!svr.isValid()) {
-        error() << "Query INFO argument object is broken";
-        return;
-    }
-    
-    if ((*Q)->getServerIndex() >= m_gameServers.size()) {
-        error() << "Got server info with out of bounds index.";
     } else {
-        ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
+        (*Q)->setComplete();
 
-        sv.processServer(svr);
-        sv.setPing((*Q)->getElapsed());
+        RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());
+        if (!svr.isValid()) {
+            error() << "Query INFO argument object is broken";
+        } else {
+            if ((*Q)->getServerIndex() >= m_gameServers.size()) {
+                error() << "Got server info with out of bounds index.";
+            } else {
+                ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
+    
+                sv.processServer(svr);
+                sv.setPing((*Q)->getElapsed());
 
-        // emit the signal
-        ReceivedServerInfo.emit(sv);
+                // emit the signal
+                ReceivedServerInfo.emit(sv);
+            }
+        }
+        deleteQuery(*Q);
     }
+    query();
 }
 
 void Meta::doFailure(const std::string &msg)
@@ -587,33 +599,27 @@ void Meta::metaTimeout()
 
 void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 {
-    // we do NOT emit a failure signal here (becuase that would probably cause the 
+    // we do NOT emit a failure signal here (because that would probably cause the
     // host app to pop up a dialog or something) since query failures are likely to
     // be very frequent.
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
     q->setComplete();
+    deleteQuery(q);
+    query();
 }
 
 void Meta::query()
 {
-    if (m_activeQueries.size() >= m_maxActiveQueries)
-    {
-        return;
+    while ((m_activeQueries.size() < m_maxActiveQueries) && (m_nextQuery < m_gameServers.size())) {
+        internalQuery(m_nextQuery++);
     }
-
-    if (m_nextQuery >= m_gameServers.size())
-    {
-        assert(m_nextQuery == m_gameServers.size());
-        return;
-    }
-
-    internalQuery(m_nextQuery++);
 }
 
 void Meta::queryTimeout(MetaQuery *q)
 {
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::TIMEOUT;
     deleteQuery(q);
+    query();
 }
 
 } // of Eris namespace
