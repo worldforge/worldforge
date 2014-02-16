@@ -63,13 +63,6 @@ void MetaQuery::onConnect()
         }
     });
 
-//    if (_timeout)
-//    {
-//        error() << "meta-query already has a timeout set";
-//    }
-//
-//    _timeout = new Timeout(10000);
-//    _timeout->Expired.connect(sigc::mem_fun(this, &MetaQuery::onQueryTimeout));
 }
 
 void MetaQuery::dispatch()

@@ -28,109 +28,158 @@
 
 namespace Atlas
 {
-    class Bridge;
-    class Codec;
-    namespace Net
-    {
-        class StreamConnect;
-    }
-    namespace Objects
-    {
-        class ObjectsEncoder;
-    }
+class Bridge;
+class Codec;
+namespace Net
+{
+class StreamConnect;
 }
-
+namespace Objects
+{
+class ObjectsEncoder;
+}
+}
 
 namespace Eris
 {
 
-class StreamSocket : public std::enable_shared_from_this<StreamSocket>
+/**
+ * @brief Handles the internal socket instance, interacting with the asynchronous io_service calls.
+ *
+ * Since this will be used to make asynchronous calls it must be wrapped in a shared_ptr.
+ * When the owner instance is destroyed it must call "detach" to make sure the connection is severed.
+ */
+class StreamSocket: public std::enable_shared_from_this<StreamSocket>
 {
-    public:
+public:
 
-    typedef enum {
+    typedef enum
+    {
         INVALID_STATUS = 0, ///< indicates an illegal state
-        CONNECTING,     ///< stream / socket connection in progress
-        CONNECTING_TIMEOUT,
-        CONNECTING_FAILED,
-        NEGOTIATE,      ///< Atlas negotiation in progress
-        NEGOTIATE_TIMEOUT,
-        NEGOTIATE_FAILED,
-        CONNECTED,      ///< connection fully established
-        CONNECTION_FAILED,
-        DISCONNECTED,       ///< finished disconnection
-        DISCONNECTING      ///< clean disconnection in progress
+        CONNECTING, ///< stream / socket connection in progress
+        CONNECTING_TIMEOUT, ///< timeout when trying to establish a connection
+        CONNECTING_FAILED, ///< failure when trying to establish a connection
+        NEGOTIATE, ///< Atlas negotiation in progress
+        NEGOTIATE_TIMEOUT, ///< timeout when negotiating
+        NEGOTIATE_FAILED, ///< failure when negotiating
+        CONNECTED, ///< connection fully established
+        CONNECTION_FAILED, ///< connection failed
+        DISCONNECTED, ///< finished disconnection
+        DISCONNECTING ///< clean disconnection in progress
     } Status;
 
-        struct Callbacks
-        {
-            std::function<void()> dispatch;
-            std::function<void(Status)> stateChanged;
-        };
+    /**
+     * @brief Methods that are used as callbacks.
+     */
+    struct Callbacks
+    {
+        /**
+         * @brief Called when operations have arrived and needs dispatching.
+         */
+        std::function<void()> dispatch;
 
-        StreamSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, Callbacks& callbacks);
-        virtual ~StreamSocket();
+        /**
+         * @brief Called when the internal state has changed.
+         */
+        std::function<void(Status)> stateChanged;
+    };
 
-        void detach();
+    StreamSocket(boost::asio::io_service& io_service,
+            const std::string& client_name, Atlas::Bridge& bridge,
+            Callbacks& callbacks);
+    virtual ~StreamSocket();
 
-        std::iostream& getIos();
+    /**
+     * @brief Detaches the callbacks.
+     *
+     * Call this when the owner instance is destroyed, or you otherwise don't want any callbacks.
+     */
+    void detach();
 
-        Atlas::Codec& getCodec();
-        Atlas::Objects::ObjectsEncoder& getEncoder();
+    /**
+     * @brief Gets the iostream object.
+     * @return
+     */
+    std::iostream& getIos();
 
-        virtual void write() = 0;
-    protected:
-        enum
-        {
-            read_buffer_size = 4096
-        };
-        boost::asio::io_service& m_io_service;
-        Atlas::Bridge& _bridge;
-        Callbacks _callbacks;
+    /**
+     * @brief Gets the codec object.
+     * @note Only call this after the socket has successfully negotiated.
+     * @return
+     */
+    Atlas::Codec& getCodec();
 
-        boost::asio::streambuf* mBuffer;
-        boost::asio::streambuf mReadBuffer;
-        std::iostream m_ios;
-        Atlas::Net::StreamConnect* _sc;     ///< negotiation object (NULL after connection!)
-        boost::asio::deadline_timer _negotiateTimer;
-        boost::asio::deadline_timer _connectTimer;
-        Atlas::Codec* m_codec;
-        Atlas::Objects::ObjectsEncoder * m_encoder;
-        bool m_is_connected;
+    /**
+     * @brief Gets the encoder object.
+     * @note Only call this after the socket has successfully negotiated.
+     * @return
+     */
+    Atlas::Objects::ObjectsEncoder& getEncoder();
 
-        virtual void do_read() = 0;
-        virtual void negotiate_read() = 0;
-        void startNegotiation();
-        Atlas::Negotiate::State negotiate();
+    /**
+     * @brief Send any unsent data.
+     */
+    virtual void write() = 0;
+protected:
+    enum
+    {
+        read_buffer_size = 4096
+    };
+    boost::asio::io_service& m_io_service;
+    Atlas::Bridge& _bridge;
+    Callbacks _callbacks;
+
+    boost::asio::streambuf* mBuffer;
+    boost::asio::streambuf mReadBuffer;
+    std::iostream m_ios;
+    Atlas::Net::StreamConnect* _sc; ///< negotiation object (NULL after connection!)
+    boost::asio::deadline_timer _negotiateTimer;
+    boost::asio::deadline_timer _connectTimer;
+    Atlas::Codec* m_codec;
+    Atlas::Objects::ObjectsEncoder * m_encoder;
+    bool m_is_connected;
+
+    virtual void do_read() = 0;
+    virtual void negotiate_read() = 0;
+    void startNegotiation();
+    Atlas::Negotiate::State negotiate();
 
 };
 
-
+/**
+ * @brief Template specialization which uses boost::asio sockets.
+ */
 template<typename ProtocolT>
-class AsioStreamSocket : public StreamSocket
+class AsioStreamSocket: public StreamSocket
 {
-    public:
-        AsioStreamSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks);
-        virtual ~AsioStreamSocket();
-        void connect(const typename ProtocolT::endpoint& endpoint);
-        virtual void write();
-   protected:
-        typename ProtocolT::socket m_socket;
-        virtual void negotiate_read();
-        void negotiate_write();
-        virtual void do_read();
+public:
+    AsioStreamSocket(boost::asio::io_service& io_service,
+            const std::string& client_name, Atlas::Bridge& bridge,
+            StreamSocket::Callbacks& callbacks);
+    virtual ~AsioStreamSocket();
+    void connect(const typename ProtocolT::endpoint& endpoint);
+    virtual void write();
+protected:
+    typename ProtocolT::socket m_socket;
+    virtual void negotiate_read();
+    void negotiate_write();
+    virtual void do_read();
 };
 
+/**
+ * @brief Template specialization which uses boost::asio sockets with resolvers (i.e. TCP and UDP, but not domain sockets).
+ */
 template<typename ProtocolT>
-class ResolvableAsioStreamSocket : public AsioStreamSocket<ProtocolT>
+class ResolvableAsioStreamSocket: public AsioStreamSocket<ProtocolT>
 {
-    public:
-        ResolvableAsioStreamSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks);
-        void connectWithQuery(const typename ProtocolT::resolver::query& query);
-    protected:
-        typename ProtocolT::resolver m_resolver;
+public:
+    ResolvableAsioStreamSocket(boost::asio::io_service& io_service,
+            const std::string& client_name, Atlas::Bridge& bridge,
+            StreamSocket::Callbacks& callbacks);
+    void connectWithQuery(const typename ProtocolT::resolver::query& query);
+protected:
+    typename ProtocolT::resolver m_resolver;
 };
-
 
 }
 #endif /* STREAMSOCKET_H_ */

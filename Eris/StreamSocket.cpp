@@ -129,11 +129,13 @@ Atlas::Negotiate::State StreamSocket::negotiate()
 
 Atlas::Codec& StreamSocket::getCodec()
 {
+    assert(m_codec);
     return *m_codec;
 }
 
 Atlas::Objects::ObjectsEncoder& StreamSocket::getEncoder()
 {
+    assert(m_encoder);
     return *m_encoder;
 }
 
