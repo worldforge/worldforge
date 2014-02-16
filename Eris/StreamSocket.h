@@ -121,5 +121,16 @@ class AsioStreamSocket : public StreamSocket
         virtual void do_read();
 };
 
+template<typename ProtocolT>
+class ResolvableAsioStreamSocket : public AsioStreamSocket<ProtocolT>
+{
+    public:
+        ResolvableAsioStreamSocket(boost::asio::io_service& io_service, const std::string& client_name, Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks);
+        void connectWithQuery(const typename ProtocolT::resolver::query& query);
+    protected:
+        typename ProtocolT::resolver m_resolver;
+};
+
+
 }
 #endif /* STREAMSOCKET_H_ */

@@ -523,7 +523,7 @@ void Avatar::updateWorldTime(double seconds)
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
     const std::string &id,
     Atlas::Bridge &br) :
-            _io_service(io_service),_tcpResolver(io_service),
+            _io_service(io_service),
     _status(DISCONNECTED),
     _id(id),
     _clientName(cnm),

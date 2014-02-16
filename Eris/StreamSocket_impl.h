@@ -46,18 +46,46 @@ AsioStreamSocket<ProtocolT>::AsioStreamSocket(
 template<typename ProtocolT>
 AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
 {
-    try {
-        m_socket.shutdown(ProtocolT::socket::shutdown_both);
-    } catch (const std::exception& e) {
-        warning() << "Error when shutting down socket.";
-    }
     if (m_socket.is_open()) {
+        try {
+            m_socket.shutdown(ProtocolT::socket::shutdown_both);
+        } catch (const std::exception& e) {
+            warning() << "Error when shutting down socket: " << e.what();
+        }
         try {
             m_socket.close();
         } catch (const std::exception& e) {
             warning() << "Error when closing socket.";
         }
     }
+}
+
+template<typename ProtocolT>
+ResolvableAsioStreamSocket<ProtocolT>::ResolvableAsioStreamSocket(
+        boost::asio::io_service& io_service, const std::string& client_name,
+        Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks) :
+        AsioStreamSocket<ProtocolT>(io_service, client_name, bridge, callbacks),
+        m_resolver(io_service)
+{
+}
+
+
+
+template<typename ProtocolT>
+void ResolvableAsioStreamSocket<ProtocolT>::connectWithQuery(
+        const typename ProtocolT::resolver::query& query)
+{
+    auto self(this->shared_from_this());
+    m_resolver.async_resolve(query,
+            [&, self](const boost::system::error_code& ec, typename ProtocolT::resolver::iterator iterator) {
+                if (this->_callbacks.stateChanged) {
+                    if (!ec && iterator != typename ProtocolT::resolver::iterator()) {
+                        this->connect(*iterator);
+                    } else {
+                        this->_callbacks.stateChanged(StreamSocket::CONNECTING_FAILED);
+                    }
+                }
+            });
 }
 
 template<typename ProtocolT>

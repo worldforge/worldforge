@@ -134,7 +134,7 @@ void Avatar::onTransferRequested(const TransferInfo &transfer)
 
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
     const std::string &id,
-    Atlas::Bridge& br) : _io_service(io_service), _tcpResolver(io_service), _bridge(br)
+    Atlas::Bridge& br) : _io_service(io_service), _bridge(br)
 {
 }
 

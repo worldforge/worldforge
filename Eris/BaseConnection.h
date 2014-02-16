@@ -9,7 +9,7 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio/io_service.hpp>
 
 #include <string>
 #include <memory>
@@ -127,7 +127,6 @@ protected:
     void hardDisconnect(bool emit);
 
     boost::asio::io_service& _io_service;
-    boost::asio::ip::tcp::resolver _tcpResolver;
     std::shared_ptr<StreamSocket> _socket;
 
     Status _status;			///< current status of the connection

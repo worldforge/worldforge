@@ -41,7 +41,7 @@ namespace Eris
 
 BaseConnection::BaseConnection(io_service& io_service, const std::string &cnm,
         const std::string &id, Atlas::Bridge& br) :
-        _io_service(io_service), _tcpResolver(io_service), _status(DISCONNECTED), _id(
+        _io_service(io_service), _status(DISCONNECTED), _id(
                 id), _clientName(cnm), _bridge(br), _port(0)
 {
     Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
@@ -79,21 +79,14 @@ int BaseConnection::connect(const std::string & host, short port)
         callbacks.dispatch = [&] {this->dispatch();};
         callbacks.stateChanged =
                 [&](StreamSocket::Status state) {this->stateChanged(state);};
-        auto socket = new AsioStreamSocket<ip::tcp>(_io_service, _clientName,
+        auto socket = new ResolvableAsioStreamSocket<ip::tcp>(_io_service, _clientName,
                 _bridge, callbacks);
         _socket.reset(socket);
         std::stringstream ss;
         ss << port;
         ip::tcp::resolver::query query(host, ss.str());
         setStatus(CONNECTING);
-        _tcpResolver.async_resolve(query,
-                [&, socket](const boost::system::error_code& ec, ip::tcp::resolver::iterator iterator) {
-                    if (!ec && iterator != ip::tcp::resolver::iterator()) {
-                        socket->connect(*iterator);
-                    } else {
-                        this->hardDisconnect(true);
-                    }
-                });
+        socket->connectWithQuery(query);
     } catch (const boost::exception& e) {
         error() << "Error when trying to connect to " << host << " on port "
                 << port << ": " << boost::diagnostic_information(e);
