@@ -10,25 +10,18 @@ subscribed to post) or IRC at irc.worldforge.org, in channels #coders and
 
 Linux / Unix
 
-You need to have Atlas-C++, skstream, wfmath  and libsigc++ to build Eris. In
+You need to have Atlas-C++, boost::asio, wfmath, mercator and libsigc++ to build Eris. In
 addition it is assumed you have an up-to-date C++ compiler and STL
-implementation. If you find other compilers that work or fail, please let me
-(James) know.
+implementation. If you find other compilers that work or fail, please let us
+know.
 
-Atlas-C++, skstream and WFMath are available as tarballs (and possibly
-compiled packages, depending on your system) from ftp.worldforge.org. The Eris
-configure script will test for the appropriate minimum versions. Note that
-officially released tarballs will only require released versions of the
-dependant libraries, but at times the CVS version will depend on unstable (i.e
-from CVS) libraries.
+The Worldforge libs are most easily built using the Hammer tool. It can be found
+at http://wiki.worldforge.org/wiki/Hammer_Script .
 
-libSigC++ is available for almost all distributions, though possibly in the
-set of additional or extra packages. As a convenience, we provide source and
-binary rpms from various current distributions in the 'third-party' directory
-on ftp.worldforge.org. Otherwise get the library in your preferred format
-from:
+libSigC++ and boost::asio are available for almost all distributions.
 
 http://libsigc.sourceforge.net/
+http://www.boost.org/
 
 Due to variations in the C++ ABI, do NOT use a binary version compiled for a
 distribution other than your own; you may be able to compile code but then
@@ -44,10 +37,6 @@ the sigc package is unknown, you are probably missing the development package,
 or if you installed from source, installed to some location that pkg-config
 doesn't know about (you may need to set the PKGCONFIG_PATH environment
 variable)
-
-If Gtk-2.x is detected, Eris will build a Poll implementation that integrated
-directly with the Gtk mainloop, so if you are planning to work on a Gtk-2
-based client, make sure Gtk-2 is installed before you build Eris.
 
 Once these pre-requisites are satisfied, you can proceed with compiling Eris.
 This should be a standard 'configure; make; make install'. At present there
@@ -67,7 +56,7 @@ get compilation errors, please get in touch with the maintainers.
 If you have Doxygen installed, executing 'make doc' will build the
 documentation; at present only HTML is built. Edit eris.dox to change the
 output formats / styles. If you find errors or omissions in the documentation,
-please let me (James) know.
+please let us know.
 
 MSVC
 

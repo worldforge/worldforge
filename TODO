@@ -1,10 +1,5 @@
 alriddoch's quick list:
 
-  try abolishing concept of max inflight, and instead have a limit of how many to kick off per tick
-
-  See dbus/dbus-sysdeps-win.c for good windows poll stuff, but not that when using select it always uses exception set.
-Eris TODO
-
 Optimisations
 
  - replace a call to map::count followed by map::operation[] with a call to
@@ -35,8 +30,6 @@ Test Cases
   map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
   yech.
 
-- Go over the Poll api, see if work can be delegated to skstream or not
-     
  - custom routers
  	- run first, but can't consume ops
  	- attached on Connection, or on the 'owning' router?
@@ -44,8 +37,3 @@ Test Cases
  	  possibly?
 
 - Avatar unsubscribe!
-
-Longer Term TODO
-
-- UI backend stuff
-
