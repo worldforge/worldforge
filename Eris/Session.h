@@ -32,6 +32,16 @@ namespace Eris
 
 class EventService;
 
+/**
+ * @brief Acts as a single entrypoint to Eris.
+ *
+ * This class wraps up both an instance of boost::asio::io_service as well as
+ * an instance of EventService. These two classes are the two required classes for
+ * the Eris system to work.
+ *
+ * Your application should create an instance of this to use throughout the application's
+ * life.
+ */
 class Session
 {
 public:
