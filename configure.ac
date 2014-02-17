@@ -13,7 +13,7 @@ AC_CANONICAL_HOST
 
 dnl Automake setup
 
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests no-define silent-rules])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests no-define silent-rules foreign])
 AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
