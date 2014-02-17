@@ -26,6 +26,7 @@ class IGRouter;
 class View;
 class Connection;
 class TransferInfo;
+class TimedEvent;
 
 /** The player's avatar representation. **/
 class Avatar : virtual public sigc::trackable
@@ -253,6 +254,8 @@ protected:
     sigc::connection m_entityAppearanceCon;
 
     bool m_isAdmin;
+
+    TimedEvent* m_logoutTimer;
 };
 
 inline const std::string & Avatar::getId() const

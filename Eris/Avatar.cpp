@@ -41,7 +41,8 @@ Avatar::Avatar(Account& pl, const std::string& entId) :
     m_entity(NULL),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0),
-    m_isAdmin(false)
+    m_isAdmin(false),
+    m_logoutTimer(nullptr)
 {
     m_view = new View(this);
     m_view->AvatarEntityDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
@@ -57,6 +58,7 @@ Avatar::~Avatar()
 {
     m_account.internalDeactivateCharacter(this);
 
+    delete m_logoutTimer;
     delete m_router;
     delete m_view;
 }
@@ -71,6 +73,14 @@ void Avatar::deactivate()
 
     getConnection()->getResponder()->await(l->getSerialno(), this, &Avatar::logoutResponse);
     getConnection()->send(l);
+    delete m_logoutTimer;
+    m_logoutTimer = new TimedEvent(getConnection()->getEventService(), boost::posix_time::seconds(5), [&](){
+    	warning() << "Did not receive logout response after five seconds; forcing Avatar logout.";
+        m_account.AvatarDeactivated.emit(this);
+        m_account.getConnection()->getEventService().runOnMainThread([&](){
+            delete this;
+        });
+    });
 }
 
 #pragma mark -
