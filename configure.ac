@@ -56,21 +56,6 @@ dnl Check for float to int converters
 AC_CHECK_FUNCS([llrint lrintf rintf rint])
 AC_CHECK_FUNCS([fabsf])
 
-AC_MSG_CHECKING(for mingw32)
-AC_TRY_COMPILE(,[
-#ifdef __MINGW32__
-#error MingW32 detected, adding -lws2_32 and -lwsock32 to LIBS
-#endif
-],[
-    AC_MSG_RESULT(no)
-    have_winsock='no'
-],[
-    AC_MSG_RESULT(yes)
-    have_winsock='yes'
-])
-AM_CONDITIONAL(HAVE_WINSOCK, test "x$have_winsock" = "xyes")
-
-
 PKG_PROG_PKG_CONFIG
 
 BOOST_REQUIRE([1.46.0])
@@ -129,36 +114,20 @@ dnl perl and sucks in its CFLAGS and LIBS
 		AC_MSG_CHECKING(for Perl module SigC)
 		if (`perl -e "use SigC;"`)
 		then
-			AC_MSG_RESULT(yes)
+			AC_MSG_RESULT([yes])
 			enable_perl='yes'
 		else
-			AC_MSG_RESULT(no)
-			AC_MSG_WARN(SigC module not found, not building perl bindings)
+			AC_MSG_RESULT([no])
+			AC_MSG_WARN([SigC module not found, not building perl bindings])
 			enable_perl='no'
 		fi
 	],[
-		AC_MSG_RESULT(no)
-		AC_MSG_WARN(libsigcperl not found, not building perl bindings)
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([libsigcperl not found, not building perl bindings])
 		enable_perl='no'
 	])
 ])
 AM_CONDITIONAL(PERL_BINDINGS, test "x$enable_perl" = "xyes")
-
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
-    [
-	have_glib='yes'
-    ],
-    [
-	AM_PATH_GLIB(1.2.0,[
-		have_glib='yes'
-		],[
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN(Could not find glib, not building glib poll)
-		have_glib='no'
-		]
-	)
-    ])
-AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
 ERIS_LIB_SUFFIX="-1.4"
 ERIS_LIBS="-leris$ERIS_LIB_SUFFIX"
@@ -174,9 +143,6 @@ AC_CONFIG_FILES([
 Makefile
 Eris/Makefile
 bindings/Makefile
-bindings/polls/Makefile
-bindings/polls/glib/Makefile
-bindings/polls/winsock/Makefile
 bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox
