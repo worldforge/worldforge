@@ -65,7 +65,6 @@ liberis_HEADERS = \
 	MetaQuery.h \
 	Redispatch.h \
 	Router.h \
-	UIFactory.h \
 	Room.h \
 	Person.h \
 	Metaserver.h \
