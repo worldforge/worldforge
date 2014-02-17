@@ -174,9 +174,7 @@ void AsioStreamSocket<ProtocolT>::do_read()
                         this->do_read();
                     } else {
                         if (ec != boost::asio::error::operation_aborted) {
-                            if (!this->m_socket.is_open()) {
-                                _callbacks.stateChanged(CONNECTION_FAILED);
-                            }
+                            _callbacks.stateChanged(CONNECTION_FAILED);
                         }
                     }
                 }
@@ -223,9 +221,7 @@ void AsioStreamSocket<ProtocolT>::write()
                             buffer->consume(length);
                         } else {
                             if (ec != boost::asio::error::operation_aborted) {
-                                if (!this->m_socket.is_open()) {
-                                    _callbacks.stateChanged(CONNECTION_FAILED);
-                                }
+                                _callbacks.stateChanged(CONNECTION_FAILED);
                             }
                         }
                     }
