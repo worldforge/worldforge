@@ -1025,9 +1025,12 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");
         TestAvatar * ea = new TestAvatar(acc, fake_id);
+        // The account must know about this Avatar, as avatar removes itself
+        // from account on destruction.
+        acc->setup_insertActiveCharacters(ea);
         Atlas::Objects::Operation::Info op;
         Atlas::Objects::Operation::Logout logout;
         Atlas::Objects::Root logout_arg;
