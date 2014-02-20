@@ -150,11 +150,7 @@ int main()
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
-
-        // The account must know about this Avatar, as avatar removes itself
-        // from account on destruction.
-        acc->setup_insertActiveCharacters(ea);
+        TestAvatar* ea = new TestAvatar(acc, fake_char_id);
 
         delete ea;
     }

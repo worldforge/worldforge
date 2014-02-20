@@ -56,8 +56,6 @@ Avatar::Avatar(Account& pl, const std::string& entId) :
 
 Avatar::~Avatar()
 {
-    m_account.internalDeactivateCharacter(this);
-
     delete m_logoutTimer;
     delete m_router;
     delete m_view;
@@ -76,10 +74,7 @@ void Avatar::deactivate()
     delete m_logoutTimer;
     m_logoutTimer = new TimedEvent(getConnection()->getEventService(), boost::posix_time::seconds(5), [&](){
     	warning() << "Did not receive logout response after five seconds; forcing Avatar logout.";
-        m_account.AvatarDeactivated.emit(this);
-        m_account.getConnection()->getEventService().runOnMainThread([&](){
-            delete this;
-        });
+    	m_account.destroyAvatar(getId());
     });
 }
 
@@ -448,21 +443,18 @@ void Avatar::logoutResponse(const RootOperation& op)
         return;
     }
 
-    m_account.AvatarDeactivated.emit(this);
-    m_account.getConnection()->getEventService().runOnMainThread([&](){
-        delete this;
-    });
+    m_account.destroyAvatar(getId());
 }
 
 void Avatar::logoutRequested()
 {
-    m_account.avatarLogoutRequested(this);
+    m_account.destroyAvatar(getId());
 }
 
 void Avatar::logoutRequested(const TransferInfo& transferInfo)
 {
     onTransferRequested(transferInfo);
-    m_account.avatarLogoutRequested(this);
+    m_account.destroyAvatar(getId());
 }
 
 void Avatar::setIsAdmin(bool isAdmin)

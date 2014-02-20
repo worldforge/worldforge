@@ -453,6 +453,17 @@ void Account::avatarLogoutRequested(Avatar* avatar)
     delete avatar;
 }
 
+void Account::destroyAvatar(const std::string& avatarId)
+{
+    auto I = m_activeCharacters.find(avatarId);
+    //The avatar might have already have been deleted by another response; this is a normal case.
+    if (I != m_activeCharacters.end()) {
+        AvatarDeactivated(I->second);
+        delete I->second;
+        m_activeCharacters.erase(I);
+    }
+}
+
 void Account::updateFromObject(const AtlasAccount &p)
 {
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
@@ -734,8 +745,7 @@ void Account::avatarLogoutResponse(const RootOperation& op)
         return;
     }
 
-    AvatarDeactivated.emit(it->second);
-    delete it->second; // will call back into internalDeactivateCharacter
+    destroyAvatar(charId);
 }
 
 } // of namespace Eris

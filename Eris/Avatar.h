@@ -32,7 +32,6 @@ class TimedEvent;
 class Avatar : virtual public sigc::trackable
 {
 public:
-    virtual ~Avatar();
 
     /// Get the Entity id of this Avatar
     const std::string & getId() const;
@@ -199,6 +198,7 @@ protected:
     @param pl The player that owns the Avatar
     */
     Avatar(Account& pl, const std::string& entId);
+    virtual ~Avatar();
 
     friend class AccountRouter;
     friend class IGRouter;

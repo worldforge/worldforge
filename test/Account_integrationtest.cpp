@@ -987,26 +987,6 @@ int main()
         assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
     }
 
-    // Test internalDeactivateCharacter() indirectly
-    {
-        TestConnection * con = new TestConnection("name", "localhost",
-                                                  6767);
-
-        TestAccount acc(con);
-        std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
-
-        acc.setup_insertActiveCharacters(ea);
-
-        assert(!acc.getActiveCharacters().empty());
-
-        // Eris::Avatar destructor calls
-        // Eris::Account::internalDeactivateCharacter
-        delete ea;
-
-        assert(acc.getActiveCharacters().empty());
-    }
-
     // Test internalDeactivateCharacter() directly
     {
         TestConnection * con = new TestConnection("name", "localhost",

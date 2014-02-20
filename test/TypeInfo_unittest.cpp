@@ -74,12 +74,20 @@ class TestAccount : public Eris::Account {
     void setup_insertActiveCharacters(Eris::Avatar * ea) {
         m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
     }
+
+    void teardown_removeAvatar(Eris::Avatar* a) {
+        internalDeactivateCharacter(a);
+    }
 };
 
 class TestAvatar : public Eris::Avatar {
   public:
     TestAvatar(Eris::Account * ac, const std::string & ent_id) :
                Eris::Avatar(*ac, ent_id) { }
+
+    ~TestAvatar() {
+        ((TestAccount&)m_account).teardown_removeAvatar(this);
+    }
 
     void setup_setEntity(Eris::Entity * ent) {
         m_entity = ent;

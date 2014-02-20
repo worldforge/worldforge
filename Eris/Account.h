@@ -262,6 +262,16 @@ protected:
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
 
+    /**
+     * @brief Destroys the avatar with the specified id, if available.
+     *
+     * A check is made if the avatar is registered with the account.
+     *
+     * Also emits AvatarDeactivated.
+     * @param avatarId The avatar id.
+     */
+    void destroyAvatar(const std::string& avatarId);
+
     void handleLogoutTimeout();
 //  void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
