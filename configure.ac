@@ -51,11 +51,6 @@ AC_LANG_PUSH(C++)
 
 AX_CXX_COMPILE_STDCXX_11
 
-dnl Check for float to int converters
-
-AC_CHECK_FUNCS([llrint lrintf rintf rint])
-AC_CHECK_FUNCS([fabsf])
-
 PKG_PROG_PKG_CONFIG
 
 BOOST_REQUIRE([1.46.0])
