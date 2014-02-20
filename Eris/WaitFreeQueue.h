@@ -75,7 +75,7 @@ public:
 
     node * pop_all_reverse(void)
     {
-        return _head.exchange(0, std::memory_order_consume);
+        return _head.exchange(nullptr, std::memory_order_acquire);
     }
 
 private:
