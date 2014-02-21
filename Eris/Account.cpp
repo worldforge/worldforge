@@ -2,14 +2,14 @@
     #include "config.h"
 #endif
 
-#include <Eris/Account.h>
-#include <Eris/Connection.h>
-#include <Eris/LogStream.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Avatar.h>
-#include <Eris/Router.h>
-#include <Eris/Response.h>
-#include <Eris/EventService.h>
+#include "Account.h"
+#include "Connection.h"
+#include "LogStream.h"
+#include "Exceptions.h"
+#include "Avatar.h"
+#include "Router.h"
+#include "Response.h"
+#include "EventService.h"
 #include "SpawnPoint.h"
 #include "CharacterType.h"
 
