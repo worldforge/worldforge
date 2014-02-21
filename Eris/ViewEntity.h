@@ -1,7 +1,7 @@
 #ifndef ERIS_VIEW_ENTITY_H_
 #define ERIS_VIEW_ENTITY_H_
 
-#include <Eris/Entity.h>
+#include "Entity.h"
 
 namespace Eris {
 

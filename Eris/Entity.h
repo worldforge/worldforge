@@ -1,7 +1,7 @@
 #ifndef ERIS_ENTITY_H
 #define ERIS_ENTITY_H
 
-#include <Eris/Types.h>
+#include "Types.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 

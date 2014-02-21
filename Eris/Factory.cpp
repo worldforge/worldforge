@@ -2,7 +2,7 @@
     #include "config.h"
 #endif
 
-#include <Eris/Factory.h>
+#include "Factory.h"
 
 namespace Eris {
 

@@ -2,13 +2,13 @@
     #include "config.h"
 #endif
 
-#include <Eris/Entity.h>
-#include <Eris/Connection.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/LogStream.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Avatar.h>
-#include <Eris/Task.h>
+#include "Entity.h"
+#include "Connection.h"
+#include "TypeInfo.h"
+#include "LogStream.h"
+#include "Exceptions.h"
+#include "Avatar.h"
+#include "Task.h"
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>

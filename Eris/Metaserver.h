@@ -3,8 +3,8 @@
 #ifndef ERIS_METASERVER_H
 #define ERIS_METASERVER_H
 
-#include <Eris/Types.h>
-#include <Eris/ServerInfo.h>
+#include "Types.h"
+#include "ServerInfo.h"
 
 #include <Atlas/Objects/Decoder.h>
 

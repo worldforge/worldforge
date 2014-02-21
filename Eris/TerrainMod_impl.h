@@ -23,7 +23,7 @@
 #ifndef WORLDFORGE_TERRAIN_MOD_IMPL_H
 #define WORLDFORGE_TERRAIN_MOD_IMPL_H
 
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <Mercator/TerrainMod.h>
 

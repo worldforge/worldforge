@@ -2,9 +2,9 @@
     #include "config.h"
 #endif
 
-#include <Eris/Router.h>
-#include <Eris/Exceptions.h>
-#include <Eris/LogStream.h>
+#include "Router.h"
+#include "Exceptions.h"
+#include "LogStream.h"
 
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/RootOperation.h>

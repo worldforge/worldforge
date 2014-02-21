@@ -1,7 +1,7 @@
 #ifndef ERIS_TYPE_BOUND_REDISPATCH_H
 #define ERIS_TYPE_BOUND_REDISPATCH_H
 
-#include <Eris/Redispatch.h>
+#include "Redispatch.h"
 #include <set>
 
 namespace Eris

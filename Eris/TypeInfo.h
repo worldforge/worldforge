@@ -1,8 +1,8 @@
 #ifndef ERIS_TYPE_INFO_H
 #define ERIS_TYPE_INFO_H
 
-#include <Eris/Types.h>
-#include <Eris/TypeService.h>
+#include "Types.h"
+#include "TypeService.h"
 
 #include <sigc++/trackable.h>
 

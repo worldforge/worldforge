@@ -2,12 +2,12 @@
     #include "config.h"
 #endif
 
-#include <Eris/Calendar.h>
-#include <Eris/Avatar.h>
-#include <Eris/Exceptions.h>
-#include <Eris/View.h>
-#include <Eris/Entity.h>
-#include <Eris/Log.h>
+#include "Calendar.h"
+#include "Avatar.h"
+#include "Exceptions.h"
+#include "View.h"
+#include "Entity.h"
+#include "Log.h"
 #include "iround.h"
 
 #include <cmath>

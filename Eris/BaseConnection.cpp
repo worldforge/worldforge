@@ -2,11 +2,11 @@
 #include "config.h"
 #endif
 
-#include <Eris/BaseConnection.h>
+#include "BaseConnection.h"
 
-#include <Eris/Exceptions.h>
-#include <Eris/Log.h>
-#include <Eris/Operations.h>
+#include "Exceptions.h"
+#include "Log.h"
+#include "Operations.h"
 #include "StreamSocket_impl.h"
 
 #include <Atlas/Codec.h>

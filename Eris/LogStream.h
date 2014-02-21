@@ -1,7 +1,7 @@
 #ifndef ERIS_LOGSTREAM_H
 #define ERIS_LOGSTREAM_H
 
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 

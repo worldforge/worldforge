@@ -1,13 +1,13 @@
-#include <Eris/MetaQuery.h>
+#include "MetaQuery.h"
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
-#include <Eris/Metaserver.h>
+#include "Metaserver.h"
 
-#include <Eris/ServerInfo.h>
-#include <Eris/Log.h>
+#include "ServerInfo.h"
+#include "Log.h"
 #include "EventService.h"
 #include "Exceptions.h"
 

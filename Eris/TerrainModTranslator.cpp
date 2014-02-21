@@ -25,8 +25,8 @@
 #include "config.h"
 #endif
 
-#include <Eris/TerrainModTranslator.h>
-#include <Eris/Log.h>
+#include "TerrainModTranslator.h"
+#include "Log.h"
 
 #include <Mercator/TerrainMod.h>
 

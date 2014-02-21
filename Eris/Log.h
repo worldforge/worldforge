@@ -34,6 +34,6 @@ LogLevel getLogLevel();
 
 }
 
-#include <Eris/LogStream.h>
+#include "LogStream.h"
 
 #endif

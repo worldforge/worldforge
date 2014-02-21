@@ -1,8 +1,8 @@
 #ifndef ERIS_AVATAR_H
 #define ERIS_AVATAR_H
 
-#include <Eris/Types.h>
-#include <Eris/EntityRef.h>
+#include "Types.h"
+#include "EntityRef.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 

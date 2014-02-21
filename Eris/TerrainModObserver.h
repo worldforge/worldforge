@@ -31,7 +31,7 @@
 #define ERIS_TERRAINMODOBSERVER_H
 
 #include <sigc++/signal.h>
-#include <Eris/Entity.h>
+#include "Entity.h"
 
 namespace Mercator {
     class TerrainMod;

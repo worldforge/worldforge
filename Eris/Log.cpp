@@ -2,7 +2,7 @@
     #include "config.h"
 #endif
 
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <cassert>
 #include <stdio.h>

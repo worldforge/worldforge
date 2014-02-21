@@ -2,9 +2,9 @@
     #include "config.h"
 #endif
 
-#include <Eris/ServerInfo.h>
+#include "ServerInfo.h"
 
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <Atlas/Objects/Entity.h>
 

@@ -2,9 +2,9 @@
     #include "config.h"
 #endif
 
-#include <Eris/Task.h>
-#include <Eris/View.h>
-#include <Eris/Entity.h>
+#include "Task.h"
+#include "View.h"
+#include "Entity.h"
 
 #include <Atlas/Message/Element.h>
 

@@ -2,11 +2,11 @@
     #include "config.h"
 #endif
 
-#include <Eris/TypeBoundRedispatch.h>
-#include <Eris/Connection.h>
-#include <Eris/TypeService.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/LogStream.h>
+#include "TypeBoundRedispatch.h"
+#include "Connection.h"
+#include "TypeService.h"
+#include "TypeInfo.h"
+#include "LogStream.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <sigc++/slot.h>

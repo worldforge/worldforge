@@ -2,16 +2,16 @@
     #include "config.h"
 #endif
 
-#include <Eris/IGRouter.h>
-#include <Eris/Avatar.h>
-#include <Eris/Connection.h>
-#include <Eris/View.h>
-#include <Eris/Entity.h>
-#include <Eris/LogStream.h>
-#include <Eris/TypeService.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/TypeBoundRedispatch.h>
-#include <Eris/Operations.h>
+#include "IGRouter.h"
+#include "Avatar.h"
+#include "Connection.h"
+#include "View.h"
+#include "Entity.h"
+#include "LogStream.h"
+#include "TypeService.h"
+#include "TypeInfo.h"
+#include "TypeBoundRedispatch.h"
+#include "Operations.h"
 #include "TransferInfo.h"
 
 #include <Atlas/Objects/Operation.h>

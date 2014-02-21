@@ -2,9 +2,9 @@
     #include "config.h"
 #endif
 
-#include <Eris/TypeInfo.h>
-#include <Eris/Log.h>
-#include <Eris/Exceptions.h>
+#include "TypeInfo.h"
+#include "Log.h"
+#include "Exceptions.h"
 
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>

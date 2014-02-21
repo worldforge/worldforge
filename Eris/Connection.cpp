@@ -2,14 +2,14 @@
     #include "config.h"
 #endif
 
-#include <Eris/Connection.h>
+#include "Connection.h"
 
-#include <Eris/TypeInfo.h>
-#include <Eris/Log.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Router.h>
-#include <Eris/Redispatch.h>
-#include <Eris/Response.h>
+#include "TypeInfo.h"
+#include "Log.h"
+#include "Exceptions.h"
+#include "Router.h"
+#include "Redispatch.h"
+#include "Response.h"
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>

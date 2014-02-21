@@ -2,7 +2,7 @@
 	#include "config.h"
 #endif
 
-#include <Eris/Types.h>
+#include "Types.h"
 #include <Atlas/Message/Element.h>
 
 using namespace Atlas::Message;

@@ -2,7 +2,7 @@
 #define ERIS_VIEW_H
 
 // WF
-#include <Eris/Factory.h>
+#include "Factory.h"
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <wfmath/timestamp.h>
 

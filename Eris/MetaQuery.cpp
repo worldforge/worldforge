@@ -1,13 +1,13 @@
-#include <Eris/MetaQuery.h>
+#include "MetaQuery.h"
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
-#include <Eris/Exceptions.h>
-#include <Eris/Metaserver.h>
-#include <Eris/LogStream.h>
-#include <Eris/Connection.h>
+#include "Exceptions.h"
+#include "Metaserver.h"
+#include "LogStream.h"
+#include "Connection.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>

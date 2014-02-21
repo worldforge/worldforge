@@ -2,10 +2,10 @@
     #include "config.h"
 #endif
 
-#include <Eris/EntityRef.h>
-#include <Eris/Entity.h>
-#include <Eris/View.h>
-#include <Eris/Log.h>
+#include "EntityRef.h"
+#include "Entity.h"
+#include "View.h"
+#include "Log.h"
 
 #include <sigc++/slot.h>
 

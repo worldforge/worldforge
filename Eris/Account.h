@@ -1,7 +1,7 @@
 #ifndef ERIS_PLAYER_H
 #define ERIS_PLAYER_H
 
-#include <Eris/Types.h>
+#include "Types.h"
 
 #include "TransferInfo.h"
 

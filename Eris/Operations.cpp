@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2004 Alistair Riddoch
 
-#include <Eris/Operations.h>
+#include "Operations.h"
 
 namespace Atlas { namespace Objects { namespace Operation {
 

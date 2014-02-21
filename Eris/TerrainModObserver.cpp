@@ -25,11 +25,11 @@
 #include "config.h"
 #endif
 
-#include <Eris/TerrainModObserver.h>
-#include <Eris/TerrainModTranslator.h>
+#include "TerrainModObserver.h"
+#include "TerrainModTranslator.h"
 
 #include <Mercator/TerrainMod.h>
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <cassert>
 

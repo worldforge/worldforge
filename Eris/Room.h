@@ -1,7 +1,7 @@
 #ifndef ERIS_ROOM_H
 #define ERIS_ROOM_H
 
-#include <Eris/Router.h>
+#include "Router.h"
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>

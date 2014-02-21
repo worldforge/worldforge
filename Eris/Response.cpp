@@ -1,6 +1,6 @@
-#include <Eris/Response.h>
+#include "Response.h"
 #include <Atlas/Objects/Operation.h>
-#include <Eris/LogStream.h>
+#include "LogStream.h"
 
 using namespace Atlas::Objects::Operation;
 

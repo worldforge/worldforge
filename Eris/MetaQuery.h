@@ -1,7 +1,7 @@
 #ifndef ERIS_META_QUERY_H
 #define ERIS_META_QUERY_H
 
-#include <Eris/BaseConnection.h>
+#include "BaseConnection.h"
 
 #include <wfmath/timestamp.h>
 

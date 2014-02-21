@@ -2,13 +2,13 @@
     #include "config.h"
 #endif
 
-#include <Eris/TypeService.h>
+#include "TypeService.h"
 
-#include <Eris/TypeInfo.h>
-#include <Eris/Log.h>
-#include <Eris/Connection.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Response.h>
+#include "TypeInfo.h"
+#include "Log.h"
+#include "Connection.h"
+#include "Exceptions.h"
+#include "Response.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>

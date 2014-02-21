@@ -2,12 +2,12 @@
     #include "config.h"
 #endif
 
-#include <Eris/Person.h>
-#include <Eris/LogStream.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Lobby.h>
-#include <Eris/Connection.h>
-#include <Eris/Account.h>
+#include "Person.h"
+#include "LogStream.h"
+#include "Exceptions.h"
+#include "Lobby.h"
+#include "Connection.h"
+#include "Account.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Anonymous.h>

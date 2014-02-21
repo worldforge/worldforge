@@ -1,8 +1,8 @@
 #ifndef ERIS_CONNECTION_H
 #define ERIS_CONNECTION_H
 
-#include <Eris/BaseConnection.h>
-#include <Eris/ServerInfo.h>
+#include "BaseConnection.h"
+#include "ServerInfo.h"
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/ObjectsFwd.h>

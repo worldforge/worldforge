@@ -2,18 +2,18 @@
     #include "config.h"
 #endif
 
-#include <Eris/Avatar.h>
-#include <Eris/Entity.h>
-#include <Eris/Connection.h>
-#include <Eris/Log.h>
-#include <Eris/View.h>
-#include <Eris/IGRouter.h>
-#include <Eris/Account.h>
-#include <Eris/Exceptions.h>
-#include <Eris/TypeService.h>
-#include <Eris/Operations.h>
-#include <Eris/Response.h>
-#include <Eris/EventService.h>
+#include "Avatar.h"
+#include "Entity.h"
+#include "Connection.h"
+#include "Log.h"
+#include "View.h"
+#include "IGRouter.h"
+#include "Account.h"
+#include "Exceptions.h"
+#include "TypeService.h"
+#include "Operations.h"
+#include "Response.h"
+#include "EventService.h"
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/slot.h>

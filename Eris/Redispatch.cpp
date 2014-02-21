@@ -2,9 +2,9 @@
     #include "config.h"
 #endif
 
-#include <Eris/Redispatch.h>
-#include <Eris/Connection.h>
-#include <Eris/LogStream.h>
+#include "Redispatch.h"
+#include "Connection.h"
+#include "LogStream.h"
 
 namespace Eris
 {

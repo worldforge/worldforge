@@ -1,7 +1,7 @@
 #ifndef ERIS_LOBBY_H
 #define ERIS_LOBBY_H
 
-#include <Eris/Room.h>
+#include "Room.h"
 
 namespace Eris
 {

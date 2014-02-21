@@ -2,13 +2,13 @@
 	#include "config.h"
 #endif
 
-#include <Eris/Room.h>
-#include <Eris/Lobby.h>
-#include <Eris/Connection.h>
-#include <Eris/Person.h>
-#include <Eris/Log.h>
-#include <Eris/Exceptions.h>
-#include <Eris/Account.h>
+#include "Room.h"
+#include "Lobby.h"
+#include "Connection.h"
+#include "Person.h"
+#include "Log.h"
+#include "Exceptions.h"
+#include "Account.h"
 
 #include <sigc++/slot.h>
 
