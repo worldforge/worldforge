@@ -168,9 +168,11 @@ WFMath::Point<3> Entity::getViewPosition() const
 {
     WFMath::Point<3> vpos(0.0, 0.0, 0.0);
     //If the position is invalid, we will consider it to be (0,0,0) and skip applying it.
-    for (const Entity* e = this; e; e = e->getLocation())
-        if (e->getPosition().isValid())
+    for (const Entity* e = this; e; e = e->getLocation()) {
+        if (e->getPosition().isValid()) {
             vpos = e->toLocationCoords(vpos);
+        }
+    }
         
     return vpos;
 }
@@ -180,8 +182,9 @@ WFMath::Quaternion Entity::getViewOrientation() const
     WFMath::Quaternion vor;
 	
 	vor.identity();
-    for (const Entity* e = this; e; e = e->getLocation())
+    for (const Entity* e = this; e; e = e->getLocation()) {
         vor *= e->getOrientation();
+    }
         
     return vor;
 }
