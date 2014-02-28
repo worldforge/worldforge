@@ -10,6 +10,7 @@ AC_CONFIG_MACRO_DIR([m4])
 dnl Detect the canonical host environment
 
 AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
 
 dnl Automake setup
 
@@ -62,6 +63,14 @@ BOOST_SYSTEM
 LDFLAGS="$LDFLAGS $BOOST_THREAD_LDFLAGS $BOOST_DATE_TIME_LDFLAGS $BOOST_SYSTEM_LDFLAGS"
 ERIS_DEPS="$ERIS_DEPS $BOOST_THREAD_LIBS $BOOST_DATE_TIME_LIBS $BOOST_SYSTEM_LIBS"
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
+
+dnl Libtool will add the "-nostdlib" flag, which on some systems will disable the "-pthread" functionality
+dnl We therefore need to add "-lpthread" ourselves. This should be removed if libtool is updated to not
+dnl add the "-nostdlib" option. 
+case "$target" in
+	*linux*)
+		LDFLAGS="$LDFLAGS -lpthread" ;;
+esac
 
 
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
