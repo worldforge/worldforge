@@ -35,7 +35,7 @@ public:
 
 
     virtual void iterate(int& current_class, std::string& attr) const
-        {if(current_class == SYS_NO) current_class = -1; SysData::iterate(current_class, attr);}
+        {if(current_class == SYS_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
     //freelist related things
 public:
