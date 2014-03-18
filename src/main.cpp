@@ -319,7 +319,10 @@ int main(int argc, char** argv)
 			std::cout << "Running as daemon." << std::endl;
 			std::cout << "NOTE: Be sure to check the logfile for any messages, as console output is now disabled." << std::endl;
 			LOG(INFO) << "Running as a daemon";
-			daemon(0,0);
+			if ( daemon(0,0) != 0 )
+			{
+				LOG(ERROR) << "Problem executing as a deamon.";
+			}
 		}
 
 
