@@ -174,6 +174,25 @@ int main(int argc, char** argv)
 	}
 
 	/*
+	 * Check in the $sysconfdir location (usually prefix/etc)
+	 * This would be the "system" install.
+	 */
+	if ( !config_found && boost::filesystem::exists(DEFAULT_CONF))
+	{
+		std::cout << "SYSTEM: " << DEFAULT_CONF << std::endl;
+
+		config_file_path = DEFAULT_CONF;
+		config_file_path /= "metaserver-ng.conf";
+		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
+		if( boost::filesystem::is_regular_file(config_file_path))
+		{
+			std::cout << " Accepted.";
+			config_found = true;
+		}
+		std::cout << std::endl;
+	}
+
+	/*
 	 * Last resort
 	 */
 	if( !config_found )

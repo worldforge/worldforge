@@ -51,6 +51,8 @@ const char BUILD_USER[] = "@BUILDUSER@";
 const char BUILD_HOST[] = "@BUILDHOST@";
 const char BUILD_SIG[] = "@BUILDSIG@";
 
+const char DEFAULT_CONF[] = "@sysconfdir@";
+
 /*
  * Forward Declarations
  */
