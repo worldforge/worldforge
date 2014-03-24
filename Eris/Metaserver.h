@@ -16,6 +16,7 @@
 #include <memory>
 
 #include <stdint.h>
+#include <ios>
 
 // Forward decls
 namespace Eris {

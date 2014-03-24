@@ -13,6 +13,7 @@
 #include <sigc++/connection.h>
 
 // std
+#include <string>
 #include <deque>
 #include <map>
 #include <set>
