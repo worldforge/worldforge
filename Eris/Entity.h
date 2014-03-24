@@ -280,7 +280,7 @@ public:
     sigc::signal<void> Moved;
 
     /** Emitted when an entity starts or stops moving (as determined by the
-    'inMotion' method. */
+    'setMoving' method. */
     sigc::signal<void, bool> Moving;
 
     /**
