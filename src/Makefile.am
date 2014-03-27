@@ -16,11 +16,11 @@ msapidir = $(prefix)/api/metaserver
 msapi_DATA = MetaServerVersion.hpp MetaServerPacket.hpp MetaServerPacket.cpp MetaServerProtocol.hpp MetaServerAPI.hpp ../README.API
 
 noinst_HEADERS = DataObject.hpp MetaServer.hpp MetaServerHandler.hpp MetaServerPacket.hpp \
-                 PacketReader.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp \
+                 PacketReader.hpp MetaServerHandlerUDP.hpp \
                  MetaServerProtocol.hpp PacketLogger.hpp TestServer.hpp
 
 metaserver_ng_SOURCES = main.cpp MetaServer.cpp MetaServerHandler.cpp \
-                        MetaServerHandlerTCP.cpp MetaServerHandlerUDP.cpp \
+                        MetaServerHandlerUDP.cpp \
                         MetaServerPacket.cpp DataObject.cpp
                                          
 testserver_SOURCES = TestServer.cpp MetaServerPacket.cpp
@@ -35,8 +35,7 @@ TESTS = \
     MetaServerPacket_unittest \
     MetaServer_unittest \
     DataObject_unittest \
-	MetaServerHandlerTCP_unittest \
-	MetaServerHandlerUDP_unittest 
+    MetaServerHandlerUDP_unittest 
 
 check_PROGRAMS = $(TESTS)
 
@@ -48,9 +47,6 @@ MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)
 
 DataObject_unittest_SOURCES = DataObject_unittest.cpp
 DataObject_unittest_LDADD = DataObject.o $(CPPUNIT_LIBS)
-
-MetaServerHandlerTCP_unittest_SOURCES = MetaServerHandlerTCP_unittest.cpp
-MetaServerHandlerTCP_unittest_LDADD = MetaServerHandlerTCP.o $(CPPUNIT_LIBS)
 
 MetaServerHandlerUDP_unittest_SOURCES = MetaServerHandlerUDP_unittest.cpp
 MetaServerHandlerUDP_unittest_LDADD = MetaServerHandlerUDP.o MetaServerPacket.o $(CPPUNIT_LIBS)

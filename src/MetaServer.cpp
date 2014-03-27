@@ -24,7 +24,6 @@
  */
 #include "MetaServer.hpp"
 #include "MetaServerPacket.hpp"
-#include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
 
 /*

@@ -24,7 +24,6 @@
  */
 #include "MetaServerProtocol.hpp"
 #include "MetaServer.hpp"
-#include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
 
 /*
@@ -363,7 +362,7 @@ int main(int argc, char** argv)
 		/**
 		 * Define Handlers
 		 */
-		//MetaServerHandlerTCP tcp(ms, io_service, ip, port);
+		//MetaServerHandlerUDP tcp(ms, io_service, ip, port);
 		VLOG(5) << "Start UPD Handler";
 		MetaServerHandlerUDP udp(ms, io_service, ip, port);
 
