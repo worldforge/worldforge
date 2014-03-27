@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
+AM_CPPFLAGS = -I$(top_srcdir)/src  -I$(top_builddir)/src -DPREFIX=\"@prefix@\"
 
 #bin_PROGRAMS = metaserver-ng testserver testclient packetplayer pdnspipe
 bin_PROGRAMS = testserver testclient pdnspipe
