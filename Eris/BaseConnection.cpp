@@ -76,7 +76,12 @@ int BaseConnection::connect(const std::string & host, short port)
         StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
         callbacks.stateChanged =
-                [&](StreamSocket::Status state) {this->stateChanged(state);};
+                [&](StreamSocket::Status state) {
+            if (state == StreamSocket::NEGOTIATE) {
+                //Turn off Nagle's algorithm to increase responsiveness.
+                ((ResolvableAsioStreamSocket<ip::tcp>*)_socket.get())->getAsioSocket().set_option(ip::tcp::no_delay(true));
+            }
+            this->stateChanged(state);};
         auto socket = new ResolvableAsioStreamSocket<ip::tcp>(_io_service, _clientName,
                 _bridge, callbacks);
         _socket.reset(socket);

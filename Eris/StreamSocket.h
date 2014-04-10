@@ -159,6 +159,7 @@ public:
     virtual ~AsioStreamSocket();
     void connect(const typename ProtocolT::endpoint& endpoint);
     virtual void write();
+    typename ProtocolT::socket& getAsioSocket();
 protected:
     typename ProtocolT::socket m_socket;
     virtual void negotiate_read();

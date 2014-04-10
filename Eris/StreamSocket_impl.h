@@ -63,6 +63,12 @@ AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
 }
 
 template<typename ProtocolT>
+typename ProtocolT::socket& AsioStreamSocket<ProtocolT>::getAsioSocket()
+{
+    return m_socket;
+}
+
+template<typename ProtocolT>
 ResolvableAsioStreamSocket<ProtocolT>::ResolvableAsioStreamSocket(
         boost::asio::io_service& io_service, const std::string& client_name,
         Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks) :
