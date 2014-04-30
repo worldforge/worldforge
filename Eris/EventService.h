@@ -64,6 +64,17 @@ public:
     void runOnMainThread(const std::function<void()>& handler);
 
     /**
+     * @brief Adds a handler which will be run on the main thread.
+     *
+     * This method should mainly be called from background threads.
+     * The execution of the handler will be interleaved with the IO polling, making sure
+     * that at least one handler is executed each frame.
+     * @param handler A function.
+     * @param activeMarker A shared boolean which is used for cancellation of tasks. If the marker evaluates to "false" the handler won't be invoked.
+     */
+    void runOnMainThread(const std::function<void()>& handler, const std::shared_ptr<bool>& activeMarker);
+
+    /**
      * Polls and runs IO events as well as handlers until the deadline.
      *
      * Call this in your main loop.

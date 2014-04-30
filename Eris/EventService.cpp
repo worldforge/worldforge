@@ -55,6 +55,16 @@ void EventService::runOnMainThread(const std::function<void()>& handler)
     m_background_handlers_queue->push(handler);
 }
 
+void EventService::runOnMainThread(const std::function<void()>& handler,
+        const std::shared_ptr<bool>& activeMarker)
+{
+    m_background_handlers_queue->push([handler, activeMarker]() {
+        if (*activeMarker) {
+            handler();
+        }
+    });
+}
+
 void EventService::processEvents(const boost::posix_time::ptime& runUntil,
         bool& exitFlag)
 {
@@ -63,7 +73,6 @@ void EventService::processEvents(const boost::posix_time::ptime& runUntil,
     deadlineTimer.expires_at(runUntil);
     //First poll all IO handlers.
     m_io_service.poll();
-
 
     deadlineTimer.async_wait([&](boost::system::error_code ec) {
         if (!ec) {
@@ -116,7 +125,7 @@ size_t EventService::processAllHandlers()
             error() << "Error when executing handler: " << ex.what();
         }
         collectHandlersQueue();
-   }
+    }
     return count;
 }
 
