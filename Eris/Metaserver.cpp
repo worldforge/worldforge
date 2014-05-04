@@ -290,19 +290,26 @@ void Meta::gotData()
 
 void Meta::deleteQuery(MetaQuery* query)
 {
-    assert(m_activeQueries.count(query));
-    m_activeQueries.erase(query);
+	auto I = m_activeQueries.find(query);
 
-    m_event_service.runOnMainThread([query](){
-        delete query;
-    });
+	if (I != m_activeQueries.end()) {
+        m_activeQueries.erase(I);
     
-    if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size())
-    {
-        m_status = VALID;
-        // we're all done, emit the signal
-        AllQueriesDone.emit();
-    }
+        m_event_service.runOnMainThread([query](){
+            delete query;
+        });
+
+        if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size())
+        {
+            m_status = VALID;
+            // we're all done, emit the signal
+            AllQueriesDone.emit();
+        }
+	} else {
+		error() << "Tried to delete meta server query which wasn't "
+				"among the active queries. This indicates an error "
+				"with the flow in Metaserver.";
+	}
 }
 
 void Meta::recv()
