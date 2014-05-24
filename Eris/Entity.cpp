@@ -322,6 +322,10 @@ void Entity::onLocationChanged(Entity* oldLoc)
 
 void Entity::onMoved()
 {
+    if (m_moving) {
+        //We should update the predicted pos and velocity.
+        updatePredictedState(m_lastMoveTime);
+    }
     Moved.emit();
 }
 

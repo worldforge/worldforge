@@ -47,6 +47,7 @@ class TestErisEntity : public Eris::Entity
 
     void testSetPosition(const WFMath::Point<3>& position) {
         m_position = position;
+        onMoved();
     }
 
     void testSetVelocity(const WFMath::Vector<3>& velocity) {
@@ -105,6 +106,15 @@ int main()
         assert(e4.getViewPosition() == WFMath::Point<3>(1, 0, 0));
         e4.testUpdatePositionWithDelta(WFMath::TimeDiff(1000));
         assert(e4.getViewPosition() == WFMath::Point<3>(2, 0, 0));
+
+        //Check that the position is updated instantly when onMoved is called.
+        WFMath::Point<3> newPos(10, 20, 30);
+        e4.Moved.connect([&](){
+            assert(e4.getPosition() == newPos);
+            assert(e4.getViewPosition() == newPos);
+            assert(e4.getPredictedPos() == newPos);
+        });
+        e4.testSetPosition(newPos);
 
         e4.shutdown();
         e3.shutdown();
