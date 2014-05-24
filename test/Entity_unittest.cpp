@@ -49,8 +49,17 @@ class TestErisEntity : public Eris::Entity
         m_position = position;
     }
 
+    void testSetVelocity(const WFMath::Vector<3>& velocity) {
+        m_velocity = velocity;
+    }
+
     void testSetOrientation(const WFMath::Quaternion& orientation) {
         m_orientation = orientation;
+    }
+
+    void testUpdatePositionWithDelta(const WFMath::TimeDiff& diff) {
+        m_moving = true;
+        updatePredictedState(m_lastMoveTime + diff);
     }
 };
 
@@ -67,8 +76,11 @@ int main()
         TestErisEntity e1("1", 0);
         TestErisEntity e2("2", 0);
         TestErisEntity e3("3", 0);
+        TestErisEntity e4("4", 0);
         e2.testSetLocation(&e1);
         e2.testSetPosition(WFMath::Point<3>(1, 2, 3));
+        e4.testSetPosition(WFMath::Point<3>(1, 0, 0));
+        e4.testSetVelocity(WFMath::Vector<3>(1, 0, 0));
         //Rotate the e2 entity halfways around the z-axis, so that the e3 view position gets affected.
         e2.testSetOrientation(WFMath::Quaternion(WFMath::Vector<3>(0, 0, 1), WFMath::numeric_constants<WFMath::CoordType>::pi()));
         e3.testSetPosition(WFMath::Point<3>(3, 2, 1));
@@ -90,6 +102,11 @@ int main()
         assert(e2.getViewPosition() == WFMath::Point<3>(11, 22, 33));
         assert(e3.getViewPosition() == WFMath::Point<3>(8, 20, 34));
 
+        assert(e4.getViewPosition() == WFMath::Point<3>(1, 0, 0));
+        e4.testUpdatePositionWithDelta(WFMath::TimeDiff(1000));
+        assert(e4.getViewPosition() == WFMath::Point<3>(2, 0, 0));
+
+        e4.shutdown();
         e3.shutdown();
         e2.shutdown();
         e1.shutdown();
