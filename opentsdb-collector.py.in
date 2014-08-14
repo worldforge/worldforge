@@ -1,0 +1,150 @@
+#!/usr/bin/env python
+##
+# Worldforge Next Generation MetaServer
+#
+# Copyright (C) 2014 Sean Ryan <sryan@evercrack.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+##
+# Author: Sean Ryan <sryan@evercrack.com>
+# Synopsis: Checks running state of metaserver and sends this data to an
+#           OpenTSDB instance for aggregation
+# --------------
+# IMPORTANT NOTE
+# --------------
+# Please note, that the metric points that are being pushed to the
+# opentsdb instance MUST be setup prior.  What this means is that
+# metaserver.loadavg.5m will not be an accepted datapoint if OTSDB
+# isn't prepared to accept data from that point.
+
+import json
+import calendar
+import time
+import os
+import socket
+import sys
+
+class StateParser():
+    def __init__(self, attr=None):
+        if attr is None:
+            attr = []
+        self.attr = attr
+
+	# corresponds to scoreboard.score
+        self.score = '@rundir@/server.score'
+	# corresponds to scoreboard.stats
+        self.stats = '@rundir@/stats.score'
+	# corresponds to batch.tsdb
+        self.batch = '@rundir@/batch.tsdb'
+        self.excludes = ['ip_int', 'expiry', 'port']
+        self.host = 'localhost'
+        self.port = 4242
+        self.time = calendar.timegm(time.gmtime())
+        self.outmsg = []
+        self.load1m = os.getloadavg()[0]
+        self.load5m = os.getloadavg()[1]
+        self.identity = "metaserver.worldforge.org"
+
+    # add to attributes
+    def dumpattributes(self):
+        for k, v in self.attr.items():
+            print k, ' has value ', v
+
+    # Synopsis: grab the json file that contains the data output
+    #           parse it, and create an opentsdb format style message
+    def parsescore(self):
+        try:
+            input_dict = json.load(open(self.score))
+            print "i: ", input_dict
+            for k, v in input_dict.iteritems():
+                #print 'k:', k
+                for i, j in v.iteritems():
+                    if i not in self.excludes:
+                        self.outmsg.append("put server."+str(i)+" "+str(self.time) + " " + str(j) + " host=" + str(k))
+
+        except Exception, e:
+            print "E: ", e
+
+    # Synopsis: append the self (this assumes operation ON the same server as the metaserver process)
+    #           load stats
+    def parsestats(self):
+        self.outmsg.append("put metaserver.load1m " + str(self.time) +
+                           " " + str(self.load1m) + " host=" + str(self.identity))
+        self.outmsg.append("put metaserver.load5m " + str(self.time) +
+                           " " + str(self.load5m) + " host=" + str(self.identity))
+
+        pass
+
+    # Synopsis: expose ourselves into the logs
+    def dump(self):
+
+        try:
+            a = vars(self)
+            print "========"
+            print '\n'.join("%s : %s" % item for item in a.items())
+            print "========"
+
+        except Exception, e:
+            print "E: ", e
+
+    def sendToOpenTSDB(self, data):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((self.host, self.port))
+        s.sendall(data)
+        s.shutdown(socket.SHUT_WR)
+        s.close()
+
+    def push(self):
+        with open(self.batch, "a") as myfile:
+            for m in self.outmsg:
+                myfile.write(m+'\n')
+                print "PUSH: ", m
+                self.sendToOpenTSDB(m)
+
+
+# we skipping out on "main" and just sticking it in the body outside the class
+try:
+
+    # create ref
+    parser = StateParser()
+
+    # wrangle args
+    # 0 = self
+    if len(sys.argv) == 2:
+        print "1 arg:", str(sys.argv[1])
+        parser.host = sys.argv[1]
+    elif len(sys.argv) == 3:
+        print "2 args:", str(sys.argv[1]), ":::", str(sys.argv[2])
+        parser.host = sys.argv[1]
+        parser.port = sys.argv[2]
+    else:
+        raise Exception("Argument Parsing failed : incorrect number of args : ", str(len(sys.argv))) 
+
+    # parse scoreboard
+    parser.parsescore()
+
+    # parse the stats of metaserver itself
+    parser.parsestats()
+
+    # push the values to the tsdb file, and send to the opentsdb at the self.host
+    parser.push()
+
+    # dump self for debugging
+    parser.dump()
+
+except Exception, e:
+    print "ERROR: ", e 

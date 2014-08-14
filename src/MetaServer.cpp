@@ -38,6 +38,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+#include <json/writer.h>
 
 
 MetaServer::MetaServer()
@@ -305,6 +306,8 @@ MetaServer::score_timer(const boost::system::error_code& error)
 		std::ofstream clubber;
 		std::list<std::string> slist;
 		std::map<std::string,std::string> sess;
+		Json::Value root;
+		Json::FastWriter fw;
 
 		if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
 		{
@@ -333,12 +336,21 @@ MetaServer::score_timer(const boost::system::error_code& error)
 			{
 				VLOG(9) << "scoreboard(" << m_scoreServer.string() << "):" << m;
 				sess = msdo.getServerSession(m);
-				clubber << m << "={";
+				//clubber << m << "={";
 				for( auto& n : sess )
 				{
-					clubber << n.first << "=" << n.second << ",";
+				    //clubber << n.first << "=" << n.second << ",";
+				    VLOG(9) << "review session item (" << n.first << "=" << n.second << ")";
+				    root[m][n.first] = n.second;
 				}
-				clubber << "}" << std::endl;
+				//clubber << "}" << std::endl;
+			}
+			if ( ! root.isNull() )
+			{
+			   // we only want to output the document if it is not
+			   // null
+			   VLOG(7) << "persist session scoreboard";
+			   clubber << fw.write(root);
 			}
 			clubber.close();
 

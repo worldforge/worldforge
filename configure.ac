@@ -108,7 +108,16 @@ AC_CHECK_LIB(glog, main, , [
 	AC_MSG_ERROR("Linking against google::glog library failed.")
 ])
 
+AC_CHECK_LIB(jsoncpp, main, , [
+	AC_MSG_ERROR("Linking against jsoncpp library failed.")
+])
+
+PKG_CHECK_MODULES( JSONCPP, jsoncpp )
 PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12 )
+
+# it's in an odd dir, so need to add it manually
+CPPFLAGS="$CPPFLAGS $JSONCPP_CFLAGS"
+
 
 # debugging option
 AC_ARG_ENABLE(debug,[  --enable-debug     creates debugging code [default=no]],
@@ -202,6 +211,7 @@ AC_CONFIG_FILES([Makefile
 		 metaserver-ng.dox
 		 metaserver-ng.conf
 		 mswatchdog.sh
+		 opentsdb-collector.py
 		 src/MetaServerVersion.hpp
 		 src/MetaServerAPI.hpp
 		 src/MetaServer.hpp

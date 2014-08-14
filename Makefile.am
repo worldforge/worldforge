@@ -7,7 +7,7 @@ EXTRA_DIST = autogen.sh metaserver-ng.conf.in
 docdir = $(prefix)/doc/metaserver-ng
 dist_doc_DATA = README COPYING AUTHORS NEWS README.API
 
-bin_SCRIPTS = mswatchdog.sh
+bin_SCRIPTS = mswatchdog.sh opentsdb-collector.py
 
 etcdir = $(sysconfdir)
 dist_etc_DATA = metaserver-ng.conf
