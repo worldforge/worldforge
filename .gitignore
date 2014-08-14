@@ -76,6 +76,7 @@ src/*.trs
 # conf - we want .in
 metaserver-ng.conf
 mswatchdog.sh
+opentsdb-collector.py
 src/MetaServerAPI.hpp
 src/MetaServerVersion.hpp
 src/MetaServer.hpp
