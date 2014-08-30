@@ -85,6 +85,23 @@ sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const Entity
     return c;
 }
 
+TypeService& View::getTypeService() {
+    return *m_owner->getConnection()->getTypeService();
+}
+
+TypeService& View::getTypeService() const {
+    return *m_owner->getConnection()->getTypeService();
+}
+
+EventService& View::getEventService() {
+    return m_owner->getConnection()->getEventService();
+}
+
+EventService& View::getEventService() const {
+    return m_owner->getConnection()->getEventService();
+}
+
+
 #pragma mark -
 
 void View::update()

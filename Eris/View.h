@@ -27,6 +27,8 @@ class ViewEntity;
 class Entity;
 class Connection;
 class Task;
+class TypeService;
+class EventService;
 
 /** View encapsulates the set of entities currently visible to an Avatar,
  as well as those that have recently been seen. It receives visibility-affecting
@@ -56,6 +58,30 @@ public:
         return m_topLevel;
     }
     
+    /**
+     * @brief Gets the TypeService attached to the view.
+     * @return A typeservice instance.
+     */
+    TypeService& getTypeService();
+
+    /**
+     * @brief Gets the TypeService attached to the view.
+     * @return A typeservice instance.
+     */
+    TypeService& getTypeService() const;
+
+    /**
+     * @brief Gets the EventService used by the view.
+     * @return The main EventService instance.
+     */
+    EventService& getEventService();
+
+    /**
+     * @brief Gets the EventService used by the view.
+     * @return The main EventService instance.
+     */
+    EventService& getEventService() const;
+
     /** once-per-frame update of the View - clients should call this method
     once per game loop (or similar), to allow the View to update Entity
     state. This includes motion prediction for moving entities, and confidence
