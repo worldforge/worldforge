@@ -465,6 +465,12 @@ void Terrain::removeMod(const TerrainMod * mod)
     removeEffector(mod);
 }
 
+bool Terrain::hasMod(const TerrainMod* mod) const
+{
+    return m_effectors.find(mod) != m_effectors.end();
+}
+
+
 /// \brief Add an area modifier to the terrain.
 ///
 /// Add a new Area object to the terrain, which defines a modification
@@ -495,5 +501,11 @@ void Terrain::removeArea(const Area * area)
 {
     removeEffector(area);
 }
+
+bool Terrain::hasArea(const Area* a) const
+{
+    return m_effectors.find(a) != m_effectors.end();
+}
+
 
 } // namespace Mercator

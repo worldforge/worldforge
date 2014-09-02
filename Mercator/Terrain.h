@@ -169,6 +169,12 @@ class Terrain {
     Rect updateMod(const TerrainMod * mod);
     void removeMod(const TerrainMod * mod);
     
+    /// \brief Checks if the supplied terrain mod has been registered with the terrain.
+    ///
+    /// @param a The mod to check for.
+    /// @return True if the mod is added to the terrain.
+    bool hasMod(const TerrainMod* a) const;
+
     void addArea(const Area* a);
 
     /// \brief Updates the terrain affected by an area.
@@ -179,6 +185,12 @@ class Terrain {
     /// @return The area affected by the terrain area before it was updated.
     Rect updateArea(const Area* a);
     void removeArea(const Area* a);
+
+    /// \brief Checks if the supplied area has been registered with the terrain.
+    ///
+    /// @param a The area to check for.
+    /// @return True if the area is added to the terrain.
+    bool hasArea(const Area* a) const;
 };
 
 } // namespace Mercator
