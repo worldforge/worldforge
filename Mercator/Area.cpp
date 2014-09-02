@@ -298,8 +298,8 @@ WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
 
 bool Area::checkIntersects(const Segment& s) const
 {
-    return WFMath::Intersect(m_shape, s.getRect(), false) ||
-        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
+    return m_shape.numCorners() && (WFMath::Intersect(m_shape, s.getRect(), false) ||
+        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false));
 }
 
 } // of namespace
