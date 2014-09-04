@@ -106,8 +106,8 @@ const Element& Entity::valueOfAttr(const std::string& attr) const
     if (A == m_attrs.end())
     {
         if (m_type) {
-            ///it wasn't locally defines, now check with typeinfo
-            const Element* element(m_type->getAttribute(attr));
+            ///it wasn't locally defined, now check with typeinfo
+            const Element* element = m_type->getAttribute(attr);
             if (element) {
                 return *element;
             }
@@ -125,13 +125,33 @@ bool Entity::hasAttr(const std::string& attr) const
     if (m_attrs.count(attr) > 0) {
         return true;
     } else if (m_type) {
-        ///it wasn't locally defines, now check with typeinfo
+        ///it wasn't locally defined, now check with typeinfo
         if (m_type->getAttribute(attr) != 0) {
             return true;
         }
     }
     return false;
 }
+
+const Element* Entity::ptrOfAttr(const std::string& attr) const
+{
+    ///first check with the instance attributes
+    AttrMap::const_iterator A = m_attrs.find(attr);
+    if (A == m_attrs.end())
+    {
+        if (m_type) {
+            ///it wasn't locally defined, now check with typeinfo
+            const Element* element = m_type->getAttribute(attr);
+            if (element) {
+                return element;
+            }
+        }
+        return nullptr;
+    } else {
+        return &A->second;
+    }
+}
+
 
 const Entity::AttrMap Entity::getAttributes() const
 {

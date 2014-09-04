@@ -101,6 +101,15 @@ public:
      */
     bool hasAttr(const std::string &p) const;
 
+
+    /**
+     * @brief Gets the value of a named attribute, or null if none exists.
+     * If no attribute by the specified name can be found null will be returned. This is thus a more efficient method than calling both "hasAttr(...)" and "valueOfAttr(...)" in sequence.
+     * @param attr The attribute name.
+     * @return A pointer to the attribute by the specified name, or null if none could be found.
+     */
+    const Atlas::Message::Element* ptrOfAttr(const std::string& attr) const;
+
     /**
      * @brief A slot which can be used for receiving attribute update signals.
      */
