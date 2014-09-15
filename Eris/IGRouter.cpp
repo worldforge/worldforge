@@ -194,7 +194,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
         return HANDLED;
     }
     
-    // becuase a SET op can potentially (legally) update multiple entities,
+    // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {
         for (unsigned int A=0; A < args.size(); ++A) {
@@ -214,6 +214,23 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
         return HANDLED;
     }
     
+    // If we get an Move op for an entity that's not yet created on the client, it means
+    // that a previously unknown entity now has moved into our field of view. We should handle this just
+    // like if an Appear ops was sent (which is the other main way a new entity can announce itself to the client).
+    if (op->getClassNo() == MOVE_NO) {
+        for (unsigned int A=0; A < args.size(); ++A) {
+            float stamp = -1;
+            if (args[A]->hasAttr("stamp")) {
+                stamp = args[A]->getAttr("stamp").asFloat();
+            }
+
+            m_view->appear(args[A]->getId(), stamp);
+        }
+        return HANDLED;
+    }
+
+
+
     // we have to handle generic 'actions' late, to avoid trapping interesting
     // such as create or divide
     TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);

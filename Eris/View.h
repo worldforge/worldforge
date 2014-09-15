@@ -139,6 +139,14 @@ public:
     {
         return m_lookQueue.size();
     }
+
+    /**
+    Issue a LOOK operation for the specified entity ID. The id may be
+    empty for an anonymous look. The pending sight map will be updated
+    with the appropriate information.
+    */
+    void sendLookAt(const std::string& eid);
+
 protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
@@ -184,13 +192,6 @@ private:
 
     Entity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
-    /**
-    Issue a LOOK operation for the specified entity ID. The id may be
-    empty for an anonymous look. The pending sight map will be updated
-    with the appropriate information.
-    */
-    void sendLookAt(const std::string& eid);
-    
     /**
     If the look queue is not empty, pop the first item and send a request
     for it to the server.
