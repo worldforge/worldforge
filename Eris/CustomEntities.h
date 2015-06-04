@@ -37,25 +37,20 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == SYS_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static SysData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static ::Atlas::Objects::Allocator<SysData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual SysData *getDefaultObject();
+    static void fillDefaultObjectInstance(SysData& data, std::map<std::string, int>& attr_data);
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static SysData *getDefaultObjectInstance();
-private:
-    static SysData *defaults_SysData;
-    static SysData *begin_SysData;
 };
 
 } } }
