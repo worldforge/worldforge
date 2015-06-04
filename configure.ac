@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([wfmath], [1.0.2], [erik@ogenvik.org])
+AC_INIT([wfmath], [1.0.3], [erik@ogenvik.org])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -74,14 +74,14 @@ AC_COMPILE_IFELSE(
 
 PKG_PROG_PKG_CONFIG
 
-PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.6.0, 
-	[ found_atlas_0_6=yes
+PKG_CHECK_MODULES(ATLAS_0_7, atlascpp-0.7 >= 0.7.0, 
+	[ found_atlas_0_7=yes
 	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
 	dnl conversion functions to Atlas::Message::Object. Anyone using
 	dnl those should already be using Atlas explicitly.
-	], found_atlas_0_6=no)
+	], found_atlas_0_7=no)
 
-AM_CONDITIONAL(HAVE_ATLAS_0_6, test $found_atlas_0_6 == yes)
+AM_CONDITIONAL(HAVE_ATLAS_0_7, test $found_atlas_0_7 == yes)
 
 AC_CHECK_HEADERS(sstream strstream, [ found_string_stream=yes break ],
 				    [ found_string_stream=no ])
