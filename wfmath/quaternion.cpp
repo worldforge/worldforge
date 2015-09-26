@@ -68,6 +68,11 @@ bool Quaternion::isEqualTo(const Quaternion &q, float epsilon) const
 
   assert(epsilon > 0);
 
+  //If anyone is invalid they are never equal
+  if (!q.m_valid || !m_valid) {
+    return false;
+  }
+
   if(std::fabs(m_w - q.m_w) <= epsilon) {
     int i;
     for(i = 0; i < 3; ++i)

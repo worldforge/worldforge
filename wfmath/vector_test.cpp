@@ -30,6 +30,10 @@
 #define DEBUG
 #endif
 
+//This is done in order to be able to access Vector::m_elem
+#define private public
+
+
 #include "const.h"
 #include "vector.h"
 #include "rotmatrix.h"
@@ -103,6 +107,18 @@ void test_vector(const Vector<dim>& v)
 
   assert(1 - numeric_constants<CoordType>::epsilon() < check_mag);
   assert(check_mag < Vector<dim>::sloppyMagMax() + numeric_constants<CoordType>::epsilon());
+
+  //Check that an invalid vector isn't equal to a valid vector, even if the values are equal
+  Vector<dim> invalid_1;
+  Vector<dim> invalid_2;
+  for (size_t i = 0; i < dim; ++i) {
+      invalid_1.m_elem[i] = 0.0;
+      invalid_2.m_elem[i] = 0.0;
+  }
+  assert(invalid_1 != Vector<dim>::ZERO());
+
+  //Two invalid points are never equal
+  assert(invalid_1 != invalid_2);
 
   // Still need Dot(), Angle(), normalize(), mirror()
 }

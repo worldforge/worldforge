@@ -132,6 +132,15 @@ void test_quaternion(const Quaternion& q)
   v2.rotate(q * q_other);
 
   assert(v == v2);
+
+  //Check that an invalid quaternion isn't equal to a valid quaternion
+  Quaternion invalid_1;
+  Quaternion invalid_2;
+  assert(invalid_1 != Quaternion::Identity());
+
+  //Two invalid points are never equal
+  assert(invalid_1 != invalid_2);
+
 }
 
 int main()

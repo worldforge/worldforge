@@ -72,6 +72,12 @@ inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, CoordType epsilon
 
   assert(epsilon > 0);
 
+  //If anyone is invalid they are never equal
+  if (!m.m_valid || !m_valid) {
+    return false;
+  }
+
+
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
       if(std::fabs(m_elem[i][j] - m.m_elem[i][j]) > epsilon)

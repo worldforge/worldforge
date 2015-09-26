@@ -30,6 +30,9 @@
 #define DEBUG
 #endif
 
+//This is done in order to be able to access Point::m_elem
+#define private public
+
 #include "const.h"
 #include "vector.h"
 #include "point.h"
@@ -73,6 +76,18 @@ void test_point(const Point<dim>& p)
 
   assert(p == p + (p - p));
 
+  //Check that an invalid point isn't equal to a valid point, even if the values are equal
+  Point<dim> invalid_point_1;
+  Point<dim> invalid_point_2;
+  for (size_t i = 0; i < dim; ++i) {
+      invalid_point_1.m_elem[i] = 0.0;
+      invalid_point_2.m_elem[i] = 0.0;
+  }
+  assert(invalid_point_1 != Point<dim>::ZERO());
+
+  //Two invalid points are never equal
+  assert(invalid_point_1 != invalid_point_2);
+
   // FIXME more tests
 }
 
@@ -85,7 +100,6 @@ int main()
   assert(zero2.x() == 0 && zero2.y() == 0);
   Point<3> zero3 = Point<3>::ZERO();
   assert(zero3.x() == 0 && zero3.y() == 0 && zero3.z() == 0);
-
 
   return 0;
 }
