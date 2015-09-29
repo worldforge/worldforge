@@ -40,11 +40,18 @@ struct ColinearVectors : virtual public std::exception {
   virtual ~ColinearVectors() throw () { }
 
   Vector<dim> v1, v2;
+
+  virtual const char* what() const throw() {
+      return "WFMath::ColinearVectors exception. Supplied vectors are parallel.";
+  }
 };
 
 /// An error thrown by operator>>() when it fails to parse wfmath types
 struct ParseError : virtual public std::exception {
   virtual ~ParseError() throw () { }
+  virtual const char* what() const throw() {
+      return "WFMath::ParseError exception.";
+  }
 };
 
 } // namespace WFMath
