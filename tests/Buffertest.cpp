@@ -29,8 +29,8 @@ Segment::~Segment()
 {
 }
 
-const float BasePoint::HEIGHT = 8.0;
-const float BasePoint::ROUGHNESS = 1.25;
-const float BasePoint::FALLOFF = 0.25;
+constexpr float BasePoint::HEIGHT;
+constexpr float BasePoint::ROUGHNESS;
+constexpr float BasePoint::FALLOFF;
 
 }
