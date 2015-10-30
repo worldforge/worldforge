@@ -280,6 +280,34 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
   return *this;
 }
 
+Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to, const Vector<3>& fallbackAxis)
+{
+  CoordType mag_prod = std::sqrt(from.sqrMag() * to.sqrMag());
+  CoordType ctheta_plus_1 = Dot(from, to) / mag_prod + 1;
+
+  if (mag_prod < numeric_constants<CoordType>::epsilon()) {
+    m_valid = false;
+    return *this;
+  }
+
+  // antiparallel vectors
+  if(ctheta_plus_1 < numeric_constants<CoordType>::epsilon()) { // same check as used in the RotMatrix function
+      rotation(fallbackAxis, numeric_constants<CoordType>::pi());
+  } else {
+    // cosine of half the angle
+    m_w = std::sqrt(ctheta_plus_1 / 2.f);
+
+    // vector in direction of axis, magnitude of cross product is proportional to
+    // the sin of the angle, divide to make the magnitude the sin of half the angle,
+    // sin(x) = 2sin(x/2)cos(x/2), so sin(x/2) = sin(x)/(2cos(x/2))
+    m_vec = Cross(from, to) / (2 * mag_prod * m_w);
+    m_valid = from.isValid() && to.isValid();
+    m_age = 1;
+  }
+
+  return *this;
+}
+
 void Quaternion::normalize()
 {
   // Assume that we're not too far off, and compute the norm

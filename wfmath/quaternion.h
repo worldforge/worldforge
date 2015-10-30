@@ -149,8 +149,27 @@ class Quaternion
    **/
   Quaternion& rotation(const Vector<3>& axis); // angle == axis.mag()
 
-  /// sets the Quaternion to rotate 'from' to be parallel to 'to'
+  /**
+   * @brief Sets the Quaternion to rotate 'from' to be parallel to 'to'.
+   *
+   * @param from The vector to rotate from.
+   * @param to The vector to rotate to.
+   *
+   * If the vectors are colinear a ColinearVectors exception is thrown.
+   * If this is undesirable see rotation(const Vector<3>&, const Vector<3>&, const Vector<3>&)
+   * instead
+   */
   Quaternion& rotation(const Vector<3>& from, const Vector<3>& to);
+
+  /**
+   * @brief Sets the Quaternion to rotate 'from' to be parallel to 'to'.
+   *
+   * @param from The vector to rotate from.
+   * @param to The vector to rotate to.
+   * @param fallbackAxis If the vectors are colinear, rotate around this axis instead.
+   *
+   */
+  Quaternion& rotation(const Vector<3>& from, const Vector<3>& to, const Vector<3>& fallbackAxis);
 
   /// returns the scalar (w) part of the Quaternion
   CoordType scalar() const		{return m_w;}
