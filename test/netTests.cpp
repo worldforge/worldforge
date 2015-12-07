@@ -5,7 +5,6 @@
 #include "signalHelpers.h"
 
 #include <Eris/PollDefault.h>
-#include <sigc++/object_slot.h>
 
 void testServerSocketShutdown(Controller& ctl)
 {
