@@ -32,6 +32,20 @@ dnl Test for C++ compiler
 
 AC_PROG_CXX
 
+dnl Test for Python 2; our scripts don't yet work with Python 3 (perhaps they should?)
+m4_define_default([_AM_PYTHON_INTERPRETER_LIST], [python2 python2.7 python2.6 python]) 
+AM_PATH_PYTHON(2.6) 
+if $PYTHON -c "import sys 
+if (sys.hexversion >> 24) < 3: 
+  sys.exit(1) 
+else: 
+  sys.exit(0) 
+"; then 
+  AC_MSG_FAILURE([You need to use Python 2; we don't support Python 3 yet.]) 
+fi 
+
+AC_SUBST(PYTHON)
+
 AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
     [
