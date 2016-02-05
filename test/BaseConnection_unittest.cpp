@@ -36,7 +36,7 @@
 #include <Atlas/Objects/objectFactory.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <cstdlib>
+#include <iostream>
 
 #include <cassert>
 

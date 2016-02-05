@@ -8,7 +8,6 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/Root.h>
 
-#include <skstream/skstream.h>
 #include <deque>
 
 class StubServer;

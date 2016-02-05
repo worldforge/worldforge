@@ -1,4 +1,3 @@
-#include <skstream/skserver.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -11,7 +10,6 @@
 #include <Eris/Exceptions.h>
 #include <Eris/LogStream.h>
 #include <Atlas/Objects/Operation.h>
-#include <skstream/skpoll.h>
 #include "commander.h"
 #include <wfmath/point.h>
 #include <Atlas/Objects/objectFactory.h>

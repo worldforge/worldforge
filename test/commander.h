@@ -1,8 +1,6 @@
 #ifndef TEST_COMMANDER_H
 #define TEST_COMMANDER_H
 
-#include <skstream/skstream.h>
-
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Codec.h>
 #include <Atlas/Objects/Decoder.h>

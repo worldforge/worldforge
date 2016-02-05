@@ -1,7 +1,6 @@
 #ifndef TEST_CONTROLLER_H
 #define TEST_CONTROLLER_H
 
-#include <skstream/skstream_unix.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/Decoder.h>
 #include <wfmath/point.h>

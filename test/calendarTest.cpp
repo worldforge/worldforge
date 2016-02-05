@@ -11,8 +11,6 @@
 #include <Eris/Avatar.h>
 #include <Eris/Calendar.h>
 
-#include <sigc++/object.h>
-
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Entity.h>

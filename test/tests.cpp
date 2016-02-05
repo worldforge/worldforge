@@ -1,4 +1,3 @@
-#include <skstream/skstream.h>
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -20,7 +19,6 @@
 #include <Eris/Avatar.h>
 #include <Eris/Entity.h>
 #include <Eris/View.h>
-#include <Eris/PollDefault.h>
 #include <sigc++/functors/mem_fun.h>
 #include <sigc++/adaptors/bind.h>
 #include <Eris/LogStream.h>

@@ -6,9 +6,6 @@
 #include <set>
 #include <memory>
 
-#include <skstream/skserver.h>
-#include <skstream/skserver_unix.h>
-
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/Entity.h>
