@@ -12,6 +12,8 @@ atlas-cpp.spec
 atlascpp-0.6.pc
 autom4te.cache
 configure
+compile
+test-driver
 depcomp
 install-sh
 libtool
@@ -51,3 +53,5 @@ m4/lt~obsolete.m4
 abi_report
 #ignore Python cached compilation files
 *.pyc
+
+.directory
