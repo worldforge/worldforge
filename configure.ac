@@ -13,6 +13,7 @@ AC_CANONICAL_HOST
 dnl Initialise automake
 
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
+AM_SILENT_RULES([yes])
 
 dnl Initialise automake
 
