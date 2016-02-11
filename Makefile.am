@@ -9,7 +9,7 @@ EXTRA_DIST = HACKING ROADMAP Doxyfile footer.html index.dox protocol support/Cha
 
 docs:
 	@echo "running doxygen..."
-	@doxygen Doxyfile
+	@doxygen $(top_srcdir)/Doxyfile
 	@echo "documentation is in doc/."
 
 dist-hook:
