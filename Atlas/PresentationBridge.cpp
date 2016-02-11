@@ -24,6 +24,7 @@ namespace Atlas
 PresentationBridge::PresentationBridge(std::stringstream& stream) :
 		mStream(stream)
 {
+    mStream.precision(6);
 }
 
 PresentationBridge::~PresentationBridge()
@@ -60,7 +61,7 @@ void PresentationBridge::mapIntItem(const std::string& name, long i)
 }
 void PresentationBridge::mapFloatItem(const std::string& name, double d)
 {
-	mStream << mPadding << name << ": " << d << std::endl;
+	mStream << mPadding << name << ": " << std::fixed << d << std::endl;
 }
 void PresentationBridge::mapStringItem(const std::string& name, const std::string& s)
 {
