@@ -68,7 +68,13 @@ Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, cons
     m_metaTimer(io_service),
     m_receive_stream(&m_receive_buffer),
     m_send_buffer(new boost::asio::streambuf()),
-    m_send_stream(m_send_buffer)
+    m_send_stream(m_send_buffer),
+    _dataPtr(nullptr),
+    _bytesToRecv(0),
+    _totalServers(0),
+    _packed(0),
+    _recvCmd(false),
+    _gotCmd(0)
 {
     unsigned int max_half_open = FD_SETSIZE;
     if (m_maxActiveQueries > (max_half_open - 2)) {

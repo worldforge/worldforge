@@ -154,7 +154,6 @@ protected:
 
     const std::string _host;
     const short _port;      ///< port of the server
-    bool _debug;
     const std::string _localSocket;
 
     friend class Redispatch;
@@ -184,8 +183,6 @@ protected:
     IdRouterMap m_fromRouters;
 
     int m_lock;
-
-    Atlas::Objects::ObjectsEncoder* m_debugRecvEncoder;
 
     std::vector<Redispatch*> m_finishedRedispatches;
     ServerInfo m_info;
