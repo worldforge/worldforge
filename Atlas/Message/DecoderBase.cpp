@@ -35,7 +35,7 @@ void DecoderBase::streamBegin()
 void DecoderBase::streamMessage()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::streamMessage" << std::endl)
-    m_maps.push(MapType());
+    m_maps.emplace();
     m_state.push(STATE_MAP);
 }
 
@@ -50,7 +50,7 @@ void DecoderBase::mapMapItem(const std::string& name)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapMapItem Map" << std::endl)
     m_names.push(name);
-    m_maps.push(MapType());
+    m_maps.emplace();
     m_state.push(STATE_MAP);
 }
 
@@ -58,7 +58,7 @@ void DecoderBase::mapListItem(const std::string& name)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapListItem List" << std::endl)
     m_names.push(name);
-    m_lists.push(ListType());
+    m_lists.emplace();
     m_state.push(STATE_LIST);
 }
 
@@ -103,14 +103,13 @@ void DecoderBase::mapEnd()
         case STATE_LIST:
             {
                 assert(!m_lists.empty());
-                m_lists.top().insert(m_lists.top().end(), std::move(m_maps.top()));
+                m_lists.top().push_back(std::move(m_maps.top()));
                 m_maps.pop();
             }
             break;
         case STATE_STREAM:
             {
-                MapType & map = m_maps.top();
-                messageArrived(map);
+                messageArrived(m_maps.top());
                 m_maps.pop();
             }
             break;
@@ -126,16 +125,14 @@ void DecoderBase::mapEnd()
 void DecoderBase::listMapItem()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listMapItem" << std::endl)
-    MapType map;
-    m_maps.push(map);
+    m_maps.emplace();
     m_state.push(STATE_MAP);
 }
 
 void DecoderBase::listListItem()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listListItem" << std::endl)
-    ListType list;
-    m_lists.push(list);
+    m_lists.emplace();
     m_state.push(STATE_LIST);
 }
 
@@ -164,22 +161,26 @@ void DecoderBase::listEnd()
     ATLAS_DEBUG(std::cout << "DecoderBase::listEnd" << std::endl)
     assert(!m_lists.empty());
     assert(!m_state.empty());
-    ListType list = std::move(m_lists.top());
-    m_lists.pop();
     m_state.pop();
     switch (m_state.top()) {
         case STATE_MAP:
             assert(!m_maps.empty());
             assert(!m_names.empty());
-            m_maps.top().emplace(m_names.top(), std::move(list));
+            m_maps.top().emplace(m_names.top(), std::move(m_lists.top()));
             m_names.pop();
+            m_lists.pop();
             break;
         case STATE_LIST:
-            assert(!m_lists.empty());
-            m_lists.top().push_back(std::move(list));
+            {
+                ListType list = std::move(m_lists.top());
+                m_lists.pop();
+                assert(!m_lists.empty());
+                m_lists.top().push_back(std::move(list));
+            }
             break;
         case STATE_STREAM:
             std::cerr << "DecoderBase::listEnd: Error" << std::endl;
+            m_lists.pop();
             // XXX - report error?
             break;
     }
