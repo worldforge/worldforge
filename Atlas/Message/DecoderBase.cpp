@@ -66,21 +66,21 @@ void DecoderBase::mapIntItem(const std::string& name, long i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapIntItem" << std::endl)
     assert(!m_maps.empty());        
-    m_maps.top().insert(std::make_pair(name, i));
+    m_maps.top().emplace(name, i);
 }
 
 void DecoderBase::mapFloatItem(const std::string& name, double d)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapFloatItem" << std::endl)
     assert(!m_maps.empty());       
-    m_maps.top().insert(std::make_pair(name, d));
+    m_maps.top().emplace(name, d);
 }
 
 void DecoderBase::mapStringItem(const std::string& name, const std::string& s)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapStringItem" << std::endl)
     assert(!m_maps.empty());
-    m_maps.top().insert(std::make_pair(name, s));
+    m_maps.top().emplace(name, s);
 }
 
 void DecoderBase::mapEnd()
@@ -96,16 +96,15 @@ void DecoderBase::mapEnd()
                 m_maps.pop();
                 assert(!m_maps.empty());
                 assert(!m_names.empty());
-                m_maps.top().insert(std::make_pair(std::move(m_names.top()), std::move(map)));
+                m_maps.top().emplace(std::move(m_names.top()), std::move(map));
                 m_names.pop();
             }
             break;
         case STATE_LIST:
             {
-                MapType map = std::move(m_maps.top());
-                m_maps.pop();
                 assert(!m_lists.empty());
-                m_lists.top().insert(m_lists.top().end(), std::move(map));
+                m_lists.top().insert(m_lists.top().end(), std::move(m_maps.top()));
+                m_maps.pop();
             }
             break;
         case STATE_STREAM:
@@ -172,7 +171,7 @@ void DecoderBase::listEnd()
         case STATE_MAP:
             assert(!m_maps.empty());
             assert(!m_names.empty());
-            m_maps.top().insert(std::make_pair(m_names.top(), std::move(list)));
+            m_maps.top().emplace(m_names.top(), std::move(list));
             m_names.pop();
             break;
         case STATE_LIST:
