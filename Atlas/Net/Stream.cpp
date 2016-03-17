@@ -197,9 +197,9 @@ Atlas::Negotiate::State StreamConnect::getState()
 /// FIXME We should pass in the Bridge here, not at construction time.
 Atlas::Codec * StreamConnect::getCodec(Atlas::Bridge & bridge)
 {
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, bridge); }
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_socket, bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_socket, bridge); }
     return NULL;
 }
 
@@ -364,9 +364,9 @@ Atlas::Codec * StreamAccept::getCodec(Atlas::Bridge & bridge)
       // would deallocate? erk. -- sdt 2001-01-05
         //return (*outCodecs.begin())-> 
                 //New(Codec<std::iostream>::Parameters(m_socket,bridge));
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, bridge); }
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_socket, bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_socket, bridge); }
     return NULL;
 }
 

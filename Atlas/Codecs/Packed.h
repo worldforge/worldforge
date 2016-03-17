@@ -40,7 +40,7 @@ class Packed : public Codec
 {
 public:
     
-    Packed(std::iostream& s, Atlas::Bridge & b);
+    Packed(std::istream& in, std::ostream& out, Atlas::Bridge & b);
 
     virtual void poll(bool can_read = true);
 
@@ -64,7 +64,8 @@ public:
 
 protected:
     
-    std::iostream& m_socket;
+    std::istream& m_istream;
+    std::ostream& m_ostream;
     Bridge & m_bridge;
 
     enum State

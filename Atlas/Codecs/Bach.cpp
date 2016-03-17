@@ -16,8 +16,9 @@ static const bool debug_flag = false;
 
 namespace Atlas { namespace Codecs {
 
-Bach::Bach(std::iostream& s, Atlas::Bridge & b)
-    : m_socket(s)
+Bach::Bach(std::istream& in, std::ostream& out, Atlas::Bridge & b)
+    : m_istream(in)
+    , m_ostream(out)
     , m_bridge(b)
     , m_comma(false)
     , m_linenum(0)
@@ -81,7 +82,7 @@ void Bach::parseMap(char next)
         if (((next>='a')&&(next<='z'))||
             ((next>='A')&&(next<='Z')))
         {
-            m_socket.putback(next);
+            m_istream.putback(next);
             m_state.push(PARSE_DATA);
             m_state.push(PARSE_NAME);
         }
@@ -131,7 +132,7 @@ void Bach::parseList(char next)
     case '0':
     case '-':
         m_state.push(PARSE_INT);
-        m_socket.putback(next);
+        m_istream.putback(next);
         break;
 
     case '\"':
@@ -155,7 +156,7 @@ void Bach::parseInt(char next)
     case '{':
     case '}':
     case ',':
-        m_socket.putback(next);
+        m_istream.putback(next);
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
@@ -217,7 +218,7 @@ void Bach::parseFloat(char next)
     case '{':
     case '}':
     case ',':
-        m_socket.putback(next);
+        m_istream.putback(next);
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
@@ -324,7 +325,7 @@ void Bach::parseData(char next)
     case '8':
     case '9':
     case '0':
-        m_socket.putback(next);
+        m_istream.putback(next);
         m_state.pop();
         m_state.push(PARSE_INT);
         break;
@@ -440,15 +441,15 @@ void Bach::poll(bool can_read)
 {
     if (!can_read) return;
 
-    m_socket.peek();
+    m_istream.peek();
 
     std::streamsize count;
 
-    while ((count = m_socket.rdbuf()->in_avail()) > 0) {
+    while ((count = m_istream.rdbuf()->in_avail()) > 0) {
 
         for (int i = 0; i < count; ++i) {
 
-	    int next = m_socket.rdbuf()->sbumpc();
+	    int next = m_istream.rdbuf()->sbumpc();
 
             // check for comment character here, so we don't have
             // to do it in every section
@@ -529,42 +530,42 @@ const std::string Bach::encodeString(const std::string & toEncode)
 void Bach::writeIntItem(const std::string & name, long data)
 {
     if( m_comma )
-	m_socket << ",";
+	m_ostream << ",";
 
     if( name != "" )
-	m_socket << name << ":";
+	m_ostream << name << ":";
 
-    m_socket << data;
+    m_ostream << data;
 }
 
 void Bach::writeFloatItem(const std::string & name, double data)
 {
     if( m_comma )
-	m_socket << ",";
+	m_ostream << ",";
 
     if( name != "" )
-	m_socket << name << ":";
+	m_ostream << name << ":";
 
-    m_socket << data;
+    m_ostream << data;
 }
 
 void Bach::writeStringItem(const std::string & name, const std::string & data)
 {
     if( m_comma )
-	m_socket << ",";
+	m_ostream << ",";
 
     if( name != "" )
-	m_socket << name << ":";
+	m_ostream << name << ":";
 
-    m_socket << "\"" << encodeString( data ) << "\"";
+    m_ostream << "\"" << encodeString( data ) << "\"";
 }
 
 void Bach::writeLine(const std::string & line, bool endline, bool endtag)
 {
     if (m_comma && !endtag)
-	m_socket << ",";
+	m_ostream << ",";
 
-    m_socket << line;
+    m_ostream << line;
 }
 
 void Bach::streamBegin()

@@ -44,7 +44,7 @@ std::string object2String(const Root& obj)
     DebugBridge bridge;
     std::stringstream stream;
     Atlas::Codec *codec;
-    codec = new Atlas::Codecs::XML(stream, bridge);
+    codec = new Atlas::Codecs::XML(stream, stream, bridge);
     assert(codec);
     codec->streamBegin();
     Atlas::Objects::ObjectsEncoder eno(*codec);
@@ -162,9 +162,9 @@ void testXML()
 
     Atlas::Codec *codec;
 #if USE_XML
-    codec = new Atlas::Codecs::XML((std::iostream&)stream, bridge);
+    codec = new Atlas::Codecs::XML(stream, stream, bridge);
 #else
-    codec = new Atlas::Codecs::Packed(stream, bridge);
+    codec = new Atlas::Codecs::Packed(stream, stream, bridge);
 #endif
     assert(codec);
 

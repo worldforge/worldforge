@@ -12,8 +12,10 @@
 
 namespace Atlas { namespace Codecs {
     
-XML::XML(std::iostream& s, Atlas::Bridge & b)
-    : m_socket(s), m_bridge(b)
+XML::XML(std::istream& in, std::ostream& out, Atlas::Bridge & b)
+    : m_istream(in)
+    , m_ostream(out)
+    , m_bridge(b)
 {
     m_token = TOKEN_DATA;
     m_state.push(PARSE_NOTHING);
@@ -331,15 +333,15 @@ void XML::poll(bool can_read)
 {
     if (!can_read) return;
 
-    m_socket.peek();
+    m_istream.peek();
 
     std::streamsize count;
 
-    while ((count = m_socket.rdbuf()->in_avail()) > 0) {
+    while ((count = m_istream.rdbuf()->in_avail()) > 0) {
 
         for (int i = 0; i < count; ++i) {
 
-	    int next = m_socket.rdbuf()->sbumpc();
+	    int next = m_istream.rdbuf()->sbumpc();
 
 	    switch (m_token)
 	    {
@@ -354,77 +356,77 @@ void XML::poll(bool can_read)
 
 void XML::streamBegin()
 {
-    m_socket << "<atlas>";
+    m_ostream << "<atlas>";
 }
 
 void XML::streamEnd()
 {
-    m_socket << "</atlas>";
+    m_ostream << "</atlas>";
 }
 
 void XML::streamMessage()
 {
-    m_socket << "<map>";
+    m_ostream << "<map>";
 }
 
 void XML::mapMapItem(const std::string& name)
 {
-    m_socket << "<map name=\"" << escape(name) << "\">";
+    m_ostream << "<map name=\"" << escape(name) << "\">";
 }
 
 void XML::mapListItem(const std::string& name)
 {
-    m_socket << "<list name=\"" << escape(name) << "\">";
+    m_ostream << "<list name=\"" << escape(name) << "\">";
 }
 
 void XML::mapIntItem(const std::string& name, long data)
 {
-    m_socket << "<int name=\"" << escape(name) << "\">" << data << "</int>";
+    m_ostream << "<int name=\"" << escape(name) << "\">" << data << "</int>";
 }
 
 void XML::mapFloatItem(const std::string& name, double data)
 {
-    m_socket << "<float name=\"" << escape(name) << "\">" << data << "</float>";
+    m_ostream << "<float name=\"" << escape(name) << "\">" << data << "</float>";
 }
 
 void XML::mapStringItem(const std::string& name, const std::string& data)
 {
-    m_socket << "<string name=\"" << escape(name) << "\">" << escape(data) << "</string>";
+    m_ostream << "<string name=\"" << escape(name) << "\">" << escape(data) << "</string>";
 }
 
 void XML::mapEnd()
 {
-    m_socket << "</map>";
+    m_ostream << "</map>";
 }
 
 void XML::listMapItem()
 {
-    m_socket << "<map>";
+    m_ostream << "<map>";
 }
 
 void XML::listListItem()
 {
-    m_socket << "<list>";
+    m_ostream << "<list>";
 }
 
 void XML::listIntItem(long data)
 {
-    m_socket << "<int>" << data << "</int>";
+    m_ostream << "<int>" << data << "</int>";
 }
 
 void XML::listFloatItem(double data)
 {
-    m_socket << "<float>" << data << "</float>";
+    m_ostream << "<float>" << data << "</float>";
 }
 
 void XML::listStringItem(const std::string& data)
 {
-    m_socket << "<string>" << escape(data) << "</string>";
+    m_ostream << "<string>" << escape(data) << "</string>";
 }
 
 void XML::listEnd()
 {
-    m_socket << "</list>";
+    m_ostream << "</list>";
 }
 
 std::string XML::escape(const std::string& original)

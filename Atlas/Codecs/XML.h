@@ -40,7 +40,7 @@ class XML : public Codec
 {
     public:
 
-    XML(std::iostream& s, Atlas::Bridge & b);
+    XML(std::istream& in, std::ostream& out, Atlas::Bridge & b);
 
     virtual void poll(bool can_read = true);
 
@@ -78,7 +78,8 @@ class XML : public Codec
 
     protected:
 
-    std::iostream & m_socket;
+    std::istream& m_istream;
+    std::ostream& m_ostream;
     Bridge & m_bridge;
     
     enum Token

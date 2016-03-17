@@ -60,7 +60,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     //if((*i)->getName() == "XML")
       //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
   //end of replace
-    Atlas::Codec *codec = new Atlas::Codecs::XML(stream, *this);
+    Atlas::Codec *codec = new Atlas::Codecs::XML(stream, stream, *this);
 
     while(stream) {
         codec->poll();

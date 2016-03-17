@@ -92,7 +92,7 @@ void testCodec()
     {
         Atlas::Message::QueuedDecoder decoder;
 
-        T codec(ss, decoder);
+        T codec(ss, ss, decoder);
         Atlas::Message::Encoder encoder(codec);
         encoder.streamBegin();
         encoder.streamMessageElement(map);
@@ -106,7 +106,7 @@ void testCodec()
     Atlas::Message::QueuedDecoder decoder;
     {
 
-        T codec(ss2, decoder);
+        T codec(ss2, ss2, decoder);
         Atlas::Message::Encoder enc(codec);
 
         decoder.streamBegin();

@@ -23,11 +23,11 @@ int option_spacing = -1;
 Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase& decoder)
 {
     if (type == "XML")
-        return new Atlas::Codecs::XML(stream, decoder);
+        return new Atlas::Codecs::XML(stream, stream, decoder);
     else if (type == "Bach")
-        return new Atlas::Codecs::Bach(stream, decoder);
+        return new Atlas::Codecs::Bach(stream, stream, decoder);
     else if (type == "Packed")
-        return new Atlas::Codecs::Packed(stream, decoder);
+        return new Atlas::Codecs::Packed(stream, stream, decoder);
 /*
     else if (type == "Binary")
         return new Atlas::Codecs::Binary(stream, decoder);

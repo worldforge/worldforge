@@ -12,8 +12,8 @@
 
 namespace Atlas { namespace Codecs {
 
-Packed::Packed(std::iostream& s, Atlas::Bridge & b)
-  : m_socket(s), m_bridge(b)
+Packed::Packed(std::istream& in, std::ostream& out, Atlas::Bridge & b)
+  : m_istream(in), m_ostream(out), m_bridge(b)
 {
     m_state.push(PARSE_STREAM);
 }
@@ -118,7 +118,7 @@ void Packed::parseList(char next)
 void Packed::parseMapBegin(char next)
 {
     m_bridge.mapMapItem(hexDecode(m_name));
-    m_socket.putback(next);
+    m_istream.putback(next);
     m_state.pop();
     m_name.erase();
 }
@@ -126,7 +126,7 @@ void Packed::parseMapBegin(char next)
 void Packed::parseListBegin(char next)
 {
     m_bridge.mapListItem(hexDecode(m_name));
-    m_socket.putback(next);
+    m_istream.putback(next);
     m_state.pop();
     m_name.erase();
 }
@@ -142,7 +142,7 @@ void Packed::parseInt(char next)
 	case '$':
 	case '@':
 	case '#':
-	    m_socket.putback(next);
+	    m_istream.putback(next);
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
@@ -193,7 +193,7 @@ void Packed::parseFloat(char next)
 	case '$':
 	case '@':
 	case '#':
-	    m_socket.putback(next);
+	    m_istream.putback(next);
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
@@ -247,7 +247,7 @@ void Packed::parseString(char next)
 	case '$':
 	case '@':
 	case '#':
-	    m_socket.putback(next);
+	    m_istream.putback(next);
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
@@ -305,15 +305,15 @@ void Packed::poll(bool can_read)
 {
     if (!can_read) return;
 
-    m_socket.peek();
+    m_istream.peek();
 
     std::streamsize count;
 
-    while ((count = m_socket.rdbuf()->in_avail()) > 0) {
+    while ((count = m_istream.rdbuf()->in_avail()) > 0) {
 
         for (int i = 0; i < count; ++i) {
 
-	    int next = m_socket.rdbuf()->sbumpc();
+	    int next = m_istream.rdbuf()->sbumpc();
 
 	    switch (m_state.top())
 	    {
@@ -338,7 +338,7 @@ void Packed::streamBegin()
 
 void Packed::streamMessage()
 {
-    m_socket << '[';
+    m_ostream << '[';
 }
 
 void Packed::streamEnd()
@@ -348,62 +348,62 @@ void Packed::streamEnd()
 
 void Packed::mapMapItem(const std::string& name)
 {
-    m_socket << '[' << hexEncode(name) << '=';
+    m_ostream << '[' << hexEncode(name) << '=';
 }
 
 void Packed::mapListItem(const std::string& name)
 {
-    m_socket << '(' << hexEncode(name) << '=';
+    m_ostream << '(' << hexEncode(name) << '=';
 }
 
 void Packed::mapIntItem(const std::string& name, long data)
 {
-    m_socket << '@' << hexEncode(name) << '=' << data;
+    m_ostream << '@' << hexEncode(name) << '=' << data;
 }
 
 void Packed::mapFloatItem(const std::string& name, double data)
 {
-    m_socket << '#' << hexEncode(name) << '=' << data;
+    m_ostream << '#' << hexEncode(name) << '=' << data;
 }
 
 void Packed::mapStringItem(const std::string& name, const std::string& data)
 {
-    m_socket << '$' << hexEncode(name) << '=' << hexEncode(data);
+    m_ostream << '$' << hexEncode(name) << '=' << hexEncode(data);
 }
 
 void Packed::mapEnd()
 {
-    m_socket << ']';
+    m_ostream << ']';
 }
 
 void Packed::listMapItem()
 {
-    m_socket << '[';
+    m_ostream << '[';
 }
 
 void Packed::listListItem()
 {
-    m_socket << '(';
+    m_ostream << '(';
 }
 
 void Packed::listIntItem(long data)
 {
-    m_socket << '@' << data;
+    m_ostream << '@' << data;
 }
 
 void Packed::listFloatItem(double data)
 {
-    m_socket << '#' << data;
+    m_ostream << '#' << data;
 }
 
 void Packed::listStringItem(const std::string& data)
 {
-    m_socket << '$' << hexEncode(data);
+    m_ostream << '$' << hexEncode(data);
 }
 
 void Packed::listEnd()
 {
-    m_socket << ')';
+    m_ostream << ')';
 }
 
 } } // namespace Atlas::Codecs
