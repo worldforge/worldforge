@@ -35,22 +35,15 @@ inline const std::string charToHex(char c)
 }
 
 /// Convert a string with a hexadecimal value (2 characters) to an ASCII char
-inline char hexToChar(const std::string& hex)
+inline char hexToChar(const char* hex)
 {
     int c;
-    if (sscanf(hex.c_str(), "%x", &c) == 1) {
+    if (sscanf(hex, "%x", &c) == 1) {
         return (char) c;
     } else {
         return (char) 0;
     }
 }
-
-const std::string hexEncodeWithPrefix(const std::string& prefix,
-                                      const std::string& special,
-                                      const std::string& message);
-
-const std::string hexDecodeWithPrefix(const std::string& prefix,
-                                      const std::string& message);
 
 } } // namespace Atlas::Codecs
 

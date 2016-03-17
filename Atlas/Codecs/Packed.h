@@ -86,6 +86,19 @@ protected:
     std::string m_name;
     std::string m_data;
 
+    /**
+     * Preallocated to increase performance.
+     */
+    std::string m_encoded;
+    /**
+     * Preallocated to increase performance.
+     */
+    std::string m_decoded;
+    /**
+     * Preallocated to increase performance.
+     */
+    char m_hex[3];
+
     inline void parseStream(char);
     inline void parseMap(char);
     inline void parseList(char);
@@ -98,12 +111,49 @@ protected:
 
     inline const std::string hexEncode(const std::string& data)
     {
-	return hexEncodeWithPrefix("+", "+[]()@#$=", data);
+        m_encoded.clear();
+
+        for (size_t i = 0; i < data.size(); i++) {
+            char currentChar = data[i];
+
+            switch(currentChar) {
+                case '+':
+                case '[':
+                case ']':
+                case '(':
+                case ')':
+                case '@':
+                case '#':
+                case '$':
+                case '=':
+                    m_encoded += '+';
+                    m_encoded += charToHex(currentChar);
+                    break;
+                default:
+                    m_encoded += currentChar;
+            }
+        }
+
+        return m_encoded;
     }
 
     inline const std::string hexDecode(const std::string& data)
     {
-	return hexDecodeWithPrefix("+", data);
+        m_decoded.clear();
+
+        for (size_t i = 0; i < data.size(); i++) {
+            char currentChar = data[i];
+            if (currentChar == '+') {
+                m_hex[0] = data[++i];
+                m_hex[1] = data[++i];
+                m_hex[2] = 0;
+                m_decoded += hexToChar(m_hex);
+            } else {
+                m_decoded += currentChar;
+            }
+        }
+
+        return m_decoded;
     }
 };
 
