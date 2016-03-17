@@ -35,8 +35,7 @@ void DecoderBase::streamBegin()
 void DecoderBase::streamMessage()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::streamMessage" << std::endl)
-    MapType m;
-    m_maps.push(m);
+    m_maps.push(MapType());
     m_state.push(STATE_MAP);
 }
 
@@ -50,18 +49,16 @@ void DecoderBase::streamEnd()
 void DecoderBase::mapMapItem(const std::string& name)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapMapItem Map" << std::endl)
-    MapType m;
     m_names.push(name);
-    m_maps.push(m);
+    m_maps.push(MapType());
     m_state.push(STATE_MAP);
 }
 
 void DecoderBase::mapListItem(const std::string& name)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapListItem List" << std::endl)
-    ListType l;
     m_names.push(name);
-    m_lists.push(l);
+    m_lists.push(ListType());
     m_state.push(STATE_LIST);
 }
 
@@ -69,21 +66,21 @@ void DecoderBase::mapIntItem(const std::string& name, long i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapIntItem" << std::endl)
     assert(!m_maps.empty());        
-    m_maps.top()[name] = i;
+    m_maps.top().insert(std::make_pair(name, i));
 }
 
 void DecoderBase::mapFloatItem(const std::string& name, double d)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapFloatItem" << std::endl)
     assert(!m_maps.empty());       
-    m_maps.top()[name] = d;
+    m_maps.top().insert(std::make_pair(name, d));
 }
 
 void DecoderBase::mapStringItem(const std::string& name, const std::string& s)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapStringItem" << std::endl)
     assert(!m_maps.empty());
-    m_maps.top()[name] = s;
+    m_maps.top().insert(std::make_pair(name, s));
 }
 
 void DecoderBase::mapEnd()
@@ -95,20 +92,20 @@ void DecoderBase::mapEnd()
     switch (m_state.top()) {
         case STATE_MAP:
             {
-                MapType map = m_maps.top();
+                MapType map = std::move(m_maps.top());
                 m_maps.pop();
                 assert(!m_maps.empty());
                 assert(!m_names.empty());
-                m_maps.top()[m_names.top()] = map;
+                m_maps.top().insert(std::make_pair(std::move(m_names.top()), std::move(map)));
                 m_names.pop();
             }
             break;
         case STATE_LIST:
             {
-                MapType map = m_maps.top();
+                MapType map = std::move(m_maps.top());
                 m_maps.pop();
                 assert(!m_lists.empty());
-                m_lists.top().insert(m_lists.top().end(), map);
+                m_lists.top().insert(m_lists.top().end(), std::move(map));
             }
             break;
         case STATE_STREAM:
@@ -168,19 +165,19 @@ void DecoderBase::listEnd()
     ATLAS_DEBUG(std::cout << "DecoderBase::listEnd" << std::endl)
     assert(!m_lists.empty());
     assert(!m_state.empty());
-    ListType list = m_lists.top();
+    ListType list = std::move(m_lists.top());
     m_lists.pop();
     m_state.pop();
     switch (m_state.top()) {
         case STATE_MAP:
             assert(!m_maps.empty());
             assert(!m_names.empty());
-            m_maps.top()[m_names.top()] = list;
+            m_maps.top().insert(std::make_pair(m_names.top(), std::move(list)));
             m_names.pop();
             break;
         case STATE_LIST:
             assert(!m_lists.empty());
-            m_lists.top().push_back(list);
+            m_lists.top().push_back(std::move(list));
             break;
         case STATE_STREAM:
             std::cerr << "DecoderBase::listEnd: Error" << std::endl;
