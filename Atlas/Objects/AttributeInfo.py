@@ -35,32 +35,32 @@ class AttributeInfo:
 
     def set_if(self):
         res = doc(4, 'Set the "%s" attribute.' % self.name)+\
-              "    inline void set%(cname)s(%(cpp_param_type)s val);\n" % \
+              "    void set%(cname)s(%(cpp_param_type)s val);\n" % \
               self.__dict__
         if self.as_object:
             res = res + doc(4, 'Set the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
-               "    inline void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val);\n" % self.__dict__
+               "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val);\n" % self.__dict__
         return res
 
     def get_if(self):
         res = doc(4, 'Retrieve the "%s" attribute.' % self.name)+\
-              "    inline %(cpp_param_type)s get%(cname)s() const;\n" % self.__dict__ +\
+              "    %(cpp_param_type)s get%(cname)s() const;\n" % self.__dict__ +\
               doc(4, 'Retrieve the "%s" attribute as a non-const reference.' % self.name)+\
-              "    inline %(cpp_param_type2)s modify%(cname)s();\n" % self.__dict__
+              "    %(cpp_param_type2)s modify%(cname)s();\n" % self.__dict__
         if self.as_object:
             res = res + doc(4, 'Retrieve the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
-               "    inline %(cpp_param_type_as_object)s get%(cname)s%(as_object)s() const;\n" % self.__dict__
+               "    %(cpp_param_type_as_object)s get%(cname)s%(as_object)s() const;\n" % self.__dict__
         return res
 
     def is_default_if(self):
         return doc(4, 'Is "%s" value default?' % self.name)+\
-               "    inline bool isDefault%(cname)s() const;\n" % self.__dict__
+               "    bool isDefault%(cname)s() const;\n" % self.__dict__
 
     def inline_set(self, classname):
         self.classname = classname
-        return """void %(classname)s::set%(cname)s(%(cpp_param_type)s val)
+        return """inline void %(classname)s::set%(cname)s(%(cpp_param_type)s val)
 {
     attr_%(name)s = val;
     m_attrFlags |= %(flag_name)s;
@@ -70,7 +70,7 @@ class AttributeInfo:
 
     def inline_get(self, classname):
         self.classname = classname
-        return """%(cpp_param_type)s %(classname)s::get%(cname)s() const
+        return """inline %(cpp_param_type)s %(classname)s::get%(cname)s() const
 {
     if(m_attrFlags & %(flag_name)s)
         return attr_%(name)s;
@@ -78,7 +78,7 @@ class AttributeInfo:
         return ((%(classname)s*)m_defaults)->attr_%(name)s;
 }
 
-%(cpp_param_type2)s %(classname)s::modify%(cname)s()
+inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
 {
     if(!(m_attrFlags & %(flag_name)s))
         set%(cname)s(((%(classname)s*)m_defaults)->attr_%(name)s);
@@ -89,7 +89,7 @@ class AttributeInfo:
 
     def inline_is_default(self, classname):
         self.classname = classname
-        return """bool %(classname)s::isDefault%(cname)s() const
+        return """inline bool %(classname)s::isDefault%(cname)s() const
 {
     return (m_attrFlags & %(flag_name)s) == 0;
 }
@@ -338,11 +338,11 @@ class ArgsRootList(AttributeInfo):
     def set_if(self):
         return AttributeInfo.set_if(self) + \
                doc(4, 'Set the first member of "%s"' % self.name) + \
-               "    template <class ObjectData>\n    inline void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
+               "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
-               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
+               """inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
@@ -357,7 +357,7 @@ class ArgsRootList(AttributeInfo):
 }
 
 template <class ObjectData>
-void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
+inline void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
 {
     m_attrFlags |= %(flag_name)s;
     if(attr_%(name)s.size()!=1) attr_%(name)s.resize(1);
@@ -368,7 +368,7 @@ void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
 
     def inline_get(self, classname):
         return AttributeInfo.inline_get(self, classname) + \
-               """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
+               """inline %(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s args_in = get%(cname)s();
     Atlas::Message::ListType args_out;
@@ -413,7 +413,7 @@ class TypedList(AttributeInfo):
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
-               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
+               """inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
@@ -431,7 +431,7 @@ class TypedList(AttributeInfo):
 
     def inline_get(self, classname):
         return AttributeInfo.inline_get(self, classname) + \
-               """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
+               """inline %(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s lst_in = get%(cname)s();
     Atlas::Message::ListType lst_out;

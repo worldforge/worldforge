@@ -62,59 +62,59 @@ public:
     virtual void addToMessage(Atlas::Message::MapType &) const;
 
     /// Set the "loc" attribute.
-    inline void setLoc(const std::string& val);
+    void setLoc(const std::string& val);
     /// Set the "pos" attribute.
-    inline void setPos(const std::vector<double>& val);
+    void setPos(const std::vector<double>& val);
     /// Set the "pos" attribute AsList.
-    inline void setPosAsList(const Atlas::Message::ListType& val);
+    void setPosAsList(const Atlas::Message::ListType& val);
     /// Set the "velocity" attribute.
-    inline void setVelocity(const std::vector<double>& val);
+    void setVelocity(const std::vector<double>& val);
     /// Set the "velocity" attribute AsList.
-    inline void setVelocityAsList(const Atlas::Message::ListType& val);
+    void setVelocityAsList(const Atlas::Message::ListType& val);
     /// Set the "contains" attribute.
-    inline void setContains(const std::list<std::string>& val);
+    void setContains(const std::list<std::string>& val);
     /// Set the "contains" attribute AsList.
-    inline void setContainsAsList(const Atlas::Message::ListType& val);
+    void setContainsAsList(const Atlas::Message::ListType& val);
     /// Set the "stamp_contains" attribute.
-    inline void setStampContains(double val);
+    void setStampContains(double val);
 
     /// Retrieve the "loc" attribute.
-    inline const std::string& getLoc() const;
+    const std::string& getLoc() const;
     /// Retrieve the "loc" attribute as a non-const reference.
-    inline std::string& modifyLoc();
+    std::string& modifyLoc();
     /// Retrieve the "pos" attribute.
-    inline const std::vector<double>& getPos() const;
+    const std::vector<double>& getPos() const;
     /// Retrieve the "pos" attribute as a non-const reference.
-    inline std::vector<double>& modifyPos();
+    std::vector<double>& modifyPos();
     /// Retrieve the "pos" attribute AsList.
-    inline const Atlas::Message::ListType getPosAsList() const;
+    const Atlas::Message::ListType getPosAsList() const;
     /// Retrieve the "velocity" attribute.
-    inline const std::vector<double>& getVelocity() const;
+    const std::vector<double>& getVelocity() const;
     /// Retrieve the "velocity" attribute as a non-const reference.
-    inline std::vector<double>& modifyVelocity();
+    std::vector<double>& modifyVelocity();
     /// Retrieve the "velocity" attribute AsList.
-    inline const Atlas::Message::ListType getVelocityAsList() const;
+    const Atlas::Message::ListType getVelocityAsList() const;
     /// Retrieve the "contains" attribute.
-    inline const std::list<std::string>& getContains() const;
+    const std::list<std::string>& getContains() const;
     /// Retrieve the "contains" attribute as a non-const reference.
-    inline std::list<std::string>& modifyContains();
+    std::list<std::string>& modifyContains();
     /// Retrieve the "contains" attribute AsList.
-    inline const Atlas::Message::ListType getContainsAsList() const;
+    const Atlas::Message::ListType getContainsAsList() const;
     /// Retrieve the "stamp_contains" attribute.
-    inline double getStampContains() const;
+    double getStampContains() const;
     /// Retrieve the "stamp_contains" attribute as a non-const reference.
-    inline double& modifyStampContains();
+    double& modifyStampContains();
 
     /// Is "loc" value default?
-    inline bool isDefaultLoc() const;
+    bool isDefaultLoc() const;
     /// Is "pos" value default?
-    inline bool isDefaultPos() const;
+    bool isDefaultPos() const;
     /// Is "velocity" value default?
-    inline bool isDefaultVelocity() const;
+    bool isDefaultVelocity() const;
     /// Is "contains" value default?
-    inline bool isDefaultContains() const;
+    bool isDefaultContains() const;
     /// Is "stamp_contains" value default?
-    inline bool isDefaultStampContains() const;
+    bool isDefaultStampContains() const;
 
 protected:
     /// Find the class which contains the attribute "name".
@@ -176,7 +176,7 @@ extern const std::string STAMP_CONTAINS_ATTR;
 
 const int LOC_FLAG = 1 << 6;
 
-void RootEntityData::setLoc(const std::string& val)
+inline void RootEntityData::setLoc(const std::string& val)
 {
     attr_loc = val;
     m_attrFlags |= LOC_FLAG;
@@ -184,13 +184,13 @@ void RootEntityData::setLoc(const std::string& val)
 
 const int POS_FLAG = 1 << 7;
 
-void RootEntityData::setPos(const std::vector<double>& val)
+inline void RootEntityData::setPos(const std::vector<double>& val)
 {
     attr_pos = val;
     m_attrFlags |= POS_FLAG;
 }
 
-void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
+inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= POS_FLAG;
     attr_pos.resize(0);
@@ -206,13 +206,13 @@ void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
 
 const int VELOCITY_FLAG = 1 << 8;
 
-void RootEntityData::setVelocity(const std::vector<double>& val)
+inline void RootEntityData::setVelocity(const std::vector<double>& val)
 {
     attr_velocity = val;
     m_attrFlags |= VELOCITY_FLAG;
 }
 
-void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& val)
+inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= VELOCITY_FLAG;
     attr_velocity.resize(0);
@@ -228,13 +228,13 @@ void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& val)
 
 const int CONTAINS_FLAG = 1 << 9;
 
-void RootEntityData::setContains(const std::list<std::string>& val)
+inline void RootEntityData::setContains(const std::list<std::string>& val)
 {
     attr_contains = val;
     m_attrFlags |= CONTAINS_FLAG;
 }
 
-void RootEntityData::setContainsAsList(const Atlas::Message::ListType& val)
+inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= CONTAINS_FLAG;
     attr_contains.resize(0);
@@ -250,13 +250,13 @@ void RootEntityData::setContainsAsList(const Atlas::Message::ListType& val)
 
 const int STAMP_CONTAINS_FLAG = 1 << 10;
 
-void RootEntityData::setStampContains(double val)
+inline void RootEntityData::setStampContains(double val)
 {
     attr_stamp_contains = val;
     m_attrFlags |= STAMP_CONTAINS_FLAG;
 }
 
-const std::string& RootEntityData::getLoc() const
+inline const std::string& RootEntityData::getLoc() const
 {
     if(m_attrFlags & LOC_FLAG)
         return attr_loc;
@@ -264,14 +264,14 @@ const std::string& RootEntityData::getLoc() const
         return ((RootEntityData*)m_defaults)->attr_loc;
 }
 
-std::string& RootEntityData::modifyLoc()
+inline std::string& RootEntityData::modifyLoc()
 {
     if(!(m_attrFlags & LOC_FLAG))
         setLoc(((RootEntityData*)m_defaults)->attr_loc);
     return attr_loc;
 }
 
-const std::vector<double>& RootEntityData::getPos() const
+inline const std::vector<double>& RootEntityData::getPos() const
 {
     if(m_attrFlags & POS_FLAG)
         return attr_pos;
@@ -279,14 +279,14 @@ const std::vector<double>& RootEntityData::getPos() const
         return ((RootEntityData*)m_defaults)->attr_pos;
 }
 
-std::vector<double>& RootEntityData::modifyPos()
+inline std::vector<double>& RootEntityData::modifyPos()
 {
     if(!(m_attrFlags & POS_FLAG))
         setPos(((RootEntityData*)m_defaults)->attr_pos);
     return attr_pos;
 }
 
-const Atlas::Message::ListType RootEntityData::getPosAsList() const
+inline const Atlas::Message::ListType RootEntityData::getPosAsList() const
 {
     const std::vector<double>& lst_in = getPos();
     Atlas::Message::ListType lst_out;
@@ -299,7 +299,7 @@ const Atlas::Message::ListType RootEntityData::getPosAsList() const
     return lst_out;
 }
 
-const std::vector<double>& RootEntityData::getVelocity() const
+inline const std::vector<double>& RootEntityData::getVelocity() const
 {
     if(m_attrFlags & VELOCITY_FLAG)
         return attr_velocity;
@@ -307,14 +307,14 @@ const std::vector<double>& RootEntityData::getVelocity() const
         return ((RootEntityData*)m_defaults)->attr_velocity;
 }
 
-std::vector<double>& RootEntityData::modifyVelocity()
+inline std::vector<double>& RootEntityData::modifyVelocity()
 {
     if(!(m_attrFlags & VELOCITY_FLAG))
         setVelocity(((RootEntityData*)m_defaults)->attr_velocity);
     return attr_velocity;
 }
 
-const Atlas::Message::ListType RootEntityData::getVelocityAsList() const
+inline const Atlas::Message::ListType RootEntityData::getVelocityAsList() const
 {
     const std::vector<double>& lst_in = getVelocity();
     Atlas::Message::ListType lst_out;
@@ -327,7 +327,7 @@ const Atlas::Message::ListType RootEntityData::getVelocityAsList() const
     return lst_out;
 }
 
-const std::list<std::string>& RootEntityData::getContains() const
+inline const std::list<std::string>& RootEntityData::getContains() const
 {
     if(m_attrFlags & CONTAINS_FLAG)
         return attr_contains;
@@ -335,14 +335,14 @@ const std::list<std::string>& RootEntityData::getContains() const
         return ((RootEntityData*)m_defaults)->attr_contains;
 }
 
-std::list<std::string>& RootEntityData::modifyContains()
+inline std::list<std::string>& RootEntityData::modifyContains()
 {
     if(!(m_attrFlags & CONTAINS_FLAG))
         setContains(((RootEntityData*)m_defaults)->attr_contains);
     return attr_contains;
 }
 
-const Atlas::Message::ListType RootEntityData::getContainsAsList() const
+inline const Atlas::Message::ListType RootEntityData::getContainsAsList() const
 {
     const std::list<std::string>& lst_in = getContains();
     Atlas::Message::ListType lst_out;
@@ -355,7 +355,7 @@ const Atlas::Message::ListType RootEntityData::getContainsAsList() const
     return lst_out;
 }
 
-double RootEntityData::getStampContains() const
+inline double RootEntityData::getStampContains() const
 {
     if(m_attrFlags & STAMP_CONTAINS_FLAG)
         return attr_stamp_contains;
@@ -363,34 +363,34 @@ double RootEntityData::getStampContains() const
         return ((RootEntityData*)m_defaults)->attr_stamp_contains;
 }
 
-double& RootEntityData::modifyStampContains()
+inline double& RootEntityData::modifyStampContains()
 {
     if(!(m_attrFlags & STAMP_CONTAINS_FLAG))
         setStampContains(((RootEntityData*)m_defaults)->attr_stamp_contains);
     return attr_stamp_contains;
 }
 
-bool RootEntityData::isDefaultLoc() const
+inline bool RootEntityData::isDefaultLoc() const
 {
     return (m_attrFlags & LOC_FLAG) == 0;
 }
 
-bool RootEntityData::isDefaultPos() const
+inline bool RootEntityData::isDefaultPos() const
 {
     return (m_attrFlags & POS_FLAG) == 0;
 }
 
-bool RootEntityData::isDefaultVelocity() const
+inline bool RootEntityData::isDefaultVelocity() const
 {
     return (m_attrFlags & VELOCITY_FLAG) == 0;
 }
 
-bool RootEntityData::isDefaultContains() const
+inline bool RootEntityData::isDefaultContains() const
 {
     return (m_attrFlags & CONTAINS_FLAG) == 0;
 }
 
-bool RootEntityData::isDefaultStampContains() const
+inline bool RootEntityData::isDefaultStampContains() const
 {
     return (m_attrFlags & STAMP_CONTAINS_FLAG) == 0;
 }

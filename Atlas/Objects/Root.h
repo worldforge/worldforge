@@ -67,51 +67,51 @@ public:
     virtual void addToMessage(Atlas::Message::MapType &) const;
 
     /// Set the "id" attribute.
-    inline void setId(const std::string& val);
+    void setId(const std::string& val);
     /// Set the "parents" attribute.
-    inline void setParents(const std::list<std::string>& val);
+    void setParents(const std::list<std::string>& val);
     /// Set the "parents" attribute AsList.
-    inline void setParentsAsList(const Atlas::Message::ListType& val);
+    void setParentsAsList(const Atlas::Message::ListType& val);
     /// Set the "stamp" attribute.
-    inline void setStamp(double val);
+    void setStamp(double val);
     /// Set the "objtype" attribute.
-    inline void setObjtype(const std::string& val);
+    void setObjtype(const std::string& val);
     /// Set the "name" attribute.
-    inline void setName(const std::string& val);
+    void setName(const std::string& val);
 
     /// Retrieve the "id" attribute.
-    inline const std::string& getId() const;
+    const std::string& getId() const;
     /// Retrieve the "id" attribute as a non-const reference.
-    inline std::string& modifyId();
+    std::string& modifyId();
     /// Retrieve the "parents" attribute.
-    inline const std::list<std::string>& getParents() const;
+    const std::list<std::string>& getParents() const;
     /// Retrieve the "parents" attribute as a non-const reference.
-    inline std::list<std::string>& modifyParents();
+    std::list<std::string>& modifyParents();
     /// Retrieve the "parents" attribute AsList.
-    inline const Atlas::Message::ListType getParentsAsList() const;
+    const Atlas::Message::ListType getParentsAsList() const;
     /// Retrieve the "stamp" attribute.
-    inline double getStamp() const;
+    double getStamp() const;
     /// Retrieve the "stamp" attribute as a non-const reference.
-    inline double& modifyStamp();
+    double& modifyStamp();
     /// Retrieve the "objtype" attribute.
-    inline const std::string& getObjtype() const;
+    const std::string& getObjtype() const;
     /// Retrieve the "objtype" attribute as a non-const reference.
-    inline std::string& modifyObjtype();
+    std::string& modifyObjtype();
     /// Retrieve the "name" attribute.
-    inline const std::string& getName() const;
+    const std::string& getName() const;
     /// Retrieve the "name" attribute as a non-const reference.
-    inline std::string& modifyName();
+    std::string& modifyName();
 
     /// Is "id" value default?
-    inline bool isDefaultId() const;
+    bool isDefaultId() const;
     /// Is "parents" value default?
-    inline bool isDefaultParents() const;
+    bool isDefaultParents() const;
     /// Is "stamp" value default?
-    inline bool isDefaultStamp() const;
+    bool isDefaultStamp() const;
     /// Is "objtype" value default?
-    inline bool isDefaultObjtype() const;
+    bool isDefaultObjtype() const;
     /// Is "name" value default?
-    inline bool isDefaultName() const;
+    bool isDefaultName() const;
 
 protected:
     /// Find the class which contains the attribute "name".
@@ -173,7 +173,7 @@ extern const std::string NAME_ATTR;
 
 const int ID_FLAG = 1 << 1;
 
-void RootData::setId(const std::string& val)
+inline void RootData::setId(const std::string& val)
 {
     attr_id = val;
     m_attrFlags |= ID_FLAG;
@@ -181,13 +181,13 @@ void RootData::setId(const std::string& val)
 
 const int PARENTS_FLAG = 1 << 2;
 
-void RootData::setParents(const std::list<std::string>& val)
+inline void RootData::setParents(const std::list<std::string>& val)
 {
     attr_parents = val;
     m_attrFlags |= PARENTS_FLAG;
 }
 
-void RootData::setParentsAsList(const Atlas::Message::ListType& val)
+inline void RootData::setParentsAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= PARENTS_FLAG;
     attr_parents.resize(0);
@@ -203,7 +203,7 @@ void RootData::setParentsAsList(const Atlas::Message::ListType& val)
 
 const int STAMP_FLAG = 1 << 3;
 
-void RootData::setStamp(double val)
+inline void RootData::setStamp(double val)
 {
     attr_stamp = val;
     m_attrFlags |= STAMP_FLAG;
@@ -211,7 +211,7 @@ void RootData::setStamp(double val)
 
 const int OBJTYPE_FLAG = 1 << 4;
 
-void RootData::setObjtype(const std::string& val)
+inline void RootData::setObjtype(const std::string& val)
 {
     attr_objtype = val;
     m_attrFlags |= OBJTYPE_FLAG;
@@ -219,13 +219,13 @@ void RootData::setObjtype(const std::string& val)
 
 const int NAME_FLAG = 1 << 5;
 
-void RootData::setName(const std::string& val)
+inline void RootData::setName(const std::string& val)
 {
     attr_name = val;
     m_attrFlags |= NAME_FLAG;
 }
 
-const std::string& RootData::getId() const
+inline const std::string& RootData::getId() const
 {
     if(m_attrFlags & ID_FLAG)
         return attr_id;
@@ -233,14 +233,14 @@ const std::string& RootData::getId() const
         return ((RootData*)m_defaults)->attr_id;
 }
 
-std::string& RootData::modifyId()
+inline std::string& RootData::modifyId()
 {
     if(!(m_attrFlags & ID_FLAG))
         setId(((RootData*)m_defaults)->attr_id);
     return attr_id;
 }
 
-const std::list<std::string>& RootData::getParents() const
+inline const std::list<std::string>& RootData::getParents() const
 {
     if(m_attrFlags & PARENTS_FLAG)
         return attr_parents;
@@ -248,14 +248,14 @@ const std::list<std::string>& RootData::getParents() const
         return ((RootData*)m_defaults)->attr_parents;
 }
 
-std::list<std::string>& RootData::modifyParents()
+inline std::list<std::string>& RootData::modifyParents()
 {
     if(!(m_attrFlags & PARENTS_FLAG))
         setParents(((RootData*)m_defaults)->attr_parents);
     return attr_parents;
 }
 
-const Atlas::Message::ListType RootData::getParentsAsList() const
+inline const Atlas::Message::ListType RootData::getParentsAsList() const
 {
     const std::list<std::string>& lst_in = getParents();
     Atlas::Message::ListType lst_out;
@@ -268,7 +268,7 @@ const Atlas::Message::ListType RootData::getParentsAsList() const
     return lst_out;
 }
 
-double RootData::getStamp() const
+inline double RootData::getStamp() const
 {
     if(m_attrFlags & STAMP_FLAG)
         return attr_stamp;
@@ -276,14 +276,14 @@ double RootData::getStamp() const
         return ((RootData*)m_defaults)->attr_stamp;
 }
 
-double& RootData::modifyStamp()
+inline double& RootData::modifyStamp()
 {
     if(!(m_attrFlags & STAMP_FLAG))
         setStamp(((RootData*)m_defaults)->attr_stamp);
     return attr_stamp;
 }
 
-const std::string& RootData::getObjtype() const
+inline const std::string& RootData::getObjtype() const
 {
     if(m_attrFlags & OBJTYPE_FLAG)
         return attr_objtype;
@@ -291,14 +291,14 @@ const std::string& RootData::getObjtype() const
         return ((RootData*)m_defaults)->attr_objtype;
 }
 
-std::string& RootData::modifyObjtype()
+inline std::string& RootData::modifyObjtype()
 {
     if(!(m_attrFlags & OBJTYPE_FLAG))
         setObjtype(((RootData*)m_defaults)->attr_objtype);
     return attr_objtype;
 }
 
-const std::string& RootData::getName() const
+inline const std::string& RootData::getName() const
 {
     if(m_attrFlags & NAME_FLAG)
         return attr_name;
@@ -306,34 +306,34 @@ const std::string& RootData::getName() const
         return ((RootData*)m_defaults)->attr_name;
 }
 
-std::string& RootData::modifyName()
+inline std::string& RootData::modifyName()
 {
     if(!(m_attrFlags & NAME_FLAG))
         setName(((RootData*)m_defaults)->attr_name);
     return attr_name;
 }
 
-bool RootData::isDefaultId() const
+inline bool RootData::isDefaultId() const
 {
     return (m_attrFlags & ID_FLAG) == 0;
 }
 
-bool RootData::isDefaultParents() const
+inline bool RootData::isDefaultParents() const
 {
     return (m_attrFlags & PARENTS_FLAG) == 0;
 }
 
-bool RootData::isDefaultStamp() const
+inline bool RootData::isDefaultStamp() const
 {
     return (m_attrFlags & STAMP_FLAG) == 0;
 }
 
-bool RootData::isDefaultObjtype() const
+inline bool RootData::isDefaultObjtype() const
 {
     return (m_attrFlags & OBJTYPE_FLAG) == 0;
 }
 
-bool RootData::isDefaultName() const
+inline bool RootData::isDefaultName() const
 {
     return (m_attrFlags & NAME_FLAG) == 0;
 }

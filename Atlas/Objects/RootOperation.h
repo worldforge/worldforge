@@ -72,70 +72,70 @@ public:
     virtual void addToMessage(Atlas::Message::MapType &) const;
 
     /// Set the "serialno" attribute.
-    inline void setSerialno(long val);
+    void setSerialno(long val);
     /// Set the "refno" attribute.
-    inline void setRefno(long val);
+    void setRefno(long val);
     /// Set the "from" attribute.
-    inline void setFrom(const std::string& val);
+    void setFrom(const std::string& val);
     /// Set the "to" attribute.
-    inline void setTo(const std::string& val);
+    void setTo(const std::string& val);
     /// Set the "seconds" attribute.
-    inline void setSeconds(double val);
+    void setSeconds(double val);
     /// Set the "future_seconds" attribute.
-    inline void setFutureSeconds(double val);
+    void setFutureSeconds(double val);
     /// Set the "args" attribute.
-    inline void setArgs(const std::vector<Root>& val);
+    void setArgs(const std::vector<Root>& val);
     /// Set the "args" attribute AsList.
-    inline void setArgsAsList(const Atlas::Message::ListType& val);
+    void setArgsAsList(const Atlas::Message::ListType& val);
     /// Set the first member of "args"
     template <class ObjectData>
-    inline void setArgs1(const SmartPtr<ObjectData> & val);
+    void setArgs1(const SmartPtr<ObjectData> & val);
 
     /// Retrieve the "serialno" attribute.
-    inline long getSerialno() const;
+    long getSerialno() const;
     /// Retrieve the "serialno" attribute as a non-const reference.
-    inline long& modifySerialno();
+    long& modifySerialno();
     /// Retrieve the "refno" attribute.
-    inline long getRefno() const;
+    long getRefno() const;
     /// Retrieve the "refno" attribute as a non-const reference.
-    inline long& modifyRefno();
+    long& modifyRefno();
     /// Retrieve the "from" attribute.
-    inline const std::string& getFrom() const;
+    const std::string& getFrom() const;
     /// Retrieve the "from" attribute as a non-const reference.
-    inline std::string& modifyFrom();
+    std::string& modifyFrom();
     /// Retrieve the "to" attribute.
-    inline const std::string& getTo() const;
+    const std::string& getTo() const;
     /// Retrieve the "to" attribute as a non-const reference.
-    inline std::string& modifyTo();
+    std::string& modifyTo();
     /// Retrieve the "seconds" attribute.
-    inline double getSeconds() const;
+    double getSeconds() const;
     /// Retrieve the "seconds" attribute as a non-const reference.
-    inline double& modifySeconds();
+    double& modifySeconds();
     /// Retrieve the "future_seconds" attribute.
-    inline double getFutureSeconds() const;
+    double getFutureSeconds() const;
     /// Retrieve the "future_seconds" attribute as a non-const reference.
-    inline double& modifyFutureSeconds();
+    double& modifyFutureSeconds();
     /// Retrieve the "args" attribute.
-    inline const std::vector<Root>& getArgs() const;
+    const std::vector<Root>& getArgs() const;
     /// Retrieve the "args" attribute as a non-const reference.
-    inline std::vector<Root>& modifyArgs();
+    std::vector<Root>& modifyArgs();
     /// Retrieve the "args" attribute AsList.
-    inline Atlas::Message::ListType getArgsAsList() const;
+    const Atlas::Message::ListType getArgsAsList() const;
 
     /// Is "serialno" value default?
-    inline bool isDefaultSerialno() const;
+    bool isDefaultSerialno() const;
     /// Is "refno" value default?
-    inline bool isDefaultRefno() const;
+    bool isDefaultRefno() const;
     /// Is "from" value default?
-    inline bool isDefaultFrom() const;
+    bool isDefaultFrom() const;
     /// Is "to" value default?
-    inline bool isDefaultTo() const;
+    bool isDefaultTo() const;
     /// Is "seconds" value default?
-    inline bool isDefaultSeconds() const;
+    bool isDefaultSeconds() const;
     /// Is "future_seconds" value default?
-    inline bool isDefaultFutureSeconds() const;
+    bool isDefaultFutureSeconds() const;
     /// Is "args" value default?
-    inline bool isDefaultArgs() const;
+    bool isDefaultArgs() const;
 
 protected:
     /// Find the class which contains the attribute "name".
@@ -207,7 +207,7 @@ extern const std::string ARGS_ATTR;
 
 const int SERIALNO_FLAG = 1 << 14;
 
-void RootOperationData::setSerialno(long val)
+inline void RootOperationData::setSerialno(long val)
 {
     attr_serialno = val;
     m_attrFlags |= SERIALNO_FLAG;
@@ -215,7 +215,7 @@ void RootOperationData::setSerialno(long val)
 
 const int REFNO_FLAG = 1 << 15;
 
-void RootOperationData::setRefno(long val)
+inline void RootOperationData::setRefno(long val)
 {
     attr_refno = val;
     m_attrFlags |= REFNO_FLAG;
@@ -223,7 +223,7 @@ void RootOperationData::setRefno(long val)
 
 const int FROM_FLAG = 1 << 16;
 
-void RootOperationData::setFrom(const std::string& val)
+inline void RootOperationData::setFrom(const std::string& val)
 {
     attr_from = val;
     m_attrFlags |= FROM_FLAG;
@@ -231,7 +231,7 @@ void RootOperationData::setFrom(const std::string& val)
 
 const int TO_FLAG = 1 << 17;
 
-void RootOperationData::setTo(const std::string& val)
+inline void RootOperationData::setTo(const std::string& val)
 {
     attr_to = val;
     m_attrFlags |= TO_FLAG;
@@ -239,7 +239,7 @@ void RootOperationData::setTo(const std::string& val)
 
 const int SECONDS_FLAG = 1 << 18;
 
-void RootOperationData::setSeconds(double val)
+inline void RootOperationData::setSeconds(double val)
 {
     attr_seconds = val;
     m_attrFlags |= SECONDS_FLAG;
@@ -247,7 +247,7 @@ void RootOperationData::setSeconds(double val)
 
 const int FUTURE_SECONDS_FLAG = 1 << 19;
 
-void RootOperationData::setFutureSeconds(double val)
+inline void RootOperationData::setFutureSeconds(double val)
 {
     attr_future_seconds = val;
     m_attrFlags |= FUTURE_SECONDS_FLAG;
@@ -255,13 +255,13 @@ void RootOperationData::setFutureSeconds(double val)
 
 const int ARGS_FLAG = 1 << 20;
 
-void RootOperationData::setArgs(const std::vector<Root>& val)
+inline void RootOperationData::setArgs(const std::vector<Root>& val)
 {
     attr_args = val;
     m_attrFlags |= ARGS_FLAG;
 }
 
-void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
+inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= ARGS_FLAG;
     attr_args.resize(0);
@@ -276,14 +276,14 @@ void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
 }
 
 template <class ObjectData>
-void RootOperationData::setArgs1(const SmartPtr<ObjectData>& val)
+inline void RootOperationData::setArgs1(const SmartPtr<ObjectData>& val)
 {
     m_attrFlags |= ARGS_FLAG;
     if(attr_args.size()!=1) attr_args.resize(1);
     attr_args[0] = val;
 }
 
-long RootOperationData::getSerialno() const
+inline long RootOperationData::getSerialno() const
 {
     if(m_attrFlags & SERIALNO_FLAG)
         return attr_serialno;
@@ -291,14 +291,14 @@ long RootOperationData::getSerialno() const
         return ((RootOperationData*)m_defaults)->attr_serialno;
 }
 
-long& RootOperationData::modifySerialno()
+inline long& RootOperationData::modifySerialno()
 {
     if(!(m_attrFlags & SERIALNO_FLAG))
         setSerialno(((RootOperationData*)m_defaults)->attr_serialno);
     return attr_serialno;
 }
 
-long RootOperationData::getRefno() const
+inline long RootOperationData::getRefno() const
 {
     if(m_attrFlags & REFNO_FLAG)
         return attr_refno;
@@ -306,14 +306,14 @@ long RootOperationData::getRefno() const
         return ((RootOperationData*)m_defaults)->attr_refno;
 }
 
-long& RootOperationData::modifyRefno()
+inline long& RootOperationData::modifyRefno()
 {
     if(!(m_attrFlags & REFNO_FLAG))
         setRefno(((RootOperationData*)m_defaults)->attr_refno);
     return attr_refno;
 }
 
-const std::string& RootOperationData::getFrom() const
+inline const std::string& RootOperationData::getFrom() const
 {
     if(m_attrFlags & FROM_FLAG)
         return attr_from;
@@ -321,14 +321,14 @@ const std::string& RootOperationData::getFrom() const
         return ((RootOperationData*)m_defaults)->attr_from;
 }
 
-std::string& RootOperationData::modifyFrom()
+inline std::string& RootOperationData::modifyFrom()
 {
     if(!(m_attrFlags & FROM_FLAG))
         setFrom(((RootOperationData*)m_defaults)->attr_from);
     return attr_from;
 }
 
-const std::string& RootOperationData::getTo() const
+inline const std::string& RootOperationData::getTo() const
 {
     if(m_attrFlags & TO_FLAG)
         return attr_to;
@@ -336,14 +336,14 @@ const std::string& RootOperationData::getTo() const
         return ((RootOperationData*)m_defaults)->attr_to;
 }
 
-std::string& RootOperationData::modifyTo()
+inline std::string& RootOperationData::modifyTo()
 {
     if(!(m_attrFlags & TO_FLAG))
         setTo(((RootOperationData*)m_defaults)->attr_to);
     return attr_to;
 }
 
-double RootOperationData::getSeconds() const
+inline double RootOperationData::getSeconds() const
 {
     if(m_attrFlags & SECONDS_FLAG)
         return attr_seconds;
@@ -351,14 +351,14 @@ double RootOperationData::getSeconds() const
         return ((RootOperationData*)m_defaults)->attr_seconds;
 }
 
-double& RootOperationData::modifySeconds()
+inline double& RootOperationData::modifySeconds()
 {
     if(!(m_attrFlags & SECONDS_FLAG))
         setSeconds(((RootOperationData*)m_defaults)->attr_seconds);
     return attr_seconds;
 }
 
-double RootOperationData::getFutureSeconds() const
+inline double RootOperationData::getFutureSeconds() const
 {
     if(m_attrFlags & FUTURE_SECONDS_FLAG)
         return attr_future_seconds;
@@ -366,14 +366,14 @@ double RootOperationData::getFutureSeconds() const
         return ((RootOperationData*)m_defaults)->attr_future_seconds;
 }
 
-double& RootOperationData::modifyFutureSeconds()
+inline double& RootOperationData::modifyFutureSeconds()
 {
     if(!(m_attrFlags & FUTURE_SECONDS_FLAG))
         setFutureSeconds(((RootOperationData*)m_defaults)->attr_future_seconds);
     return attr_future_seconds;
 }
 
-const std::vector<Root>& RootOperationData::getArgs() const
+inline const std::vector<Root>& RootOperationData::getArgs() const
 {
     if(m_attrFlags & ARGS_FLAG)
         return attr_args;
@@ -381,14 +381,14 @@ const std::vector<Root>& RootOperationData::getArgs() const
         return ((RootOperationData*)m_defaults)->attr_args;
 }
 
-std::vector<Root>& RootOperationData::modifyArgs()
+inline std::vector<Root>& RootOperationData::modifyArgs()
 {
     if(!(m_attrFlags & ARGS_FLAG))
         setArgs(((RootOperationData*)m_defaults)->attr_args);
     return attr_args;
 }
 
-Atlas::Message::ListType RootOperationData::getArgsAsList() const
+inline const Atlas::Message::ListType RootOperationData::getArgsAsList() const
 {
     const std::vector<Root>& args_in = getArgs();
     Atlas::Message::ListType args_out;
@@ -402,37 +402,37 @@ Atlas::Message::ListType RootOperationData::getArgsAsList() const
     return args_out;
 }
 
-bool RootOperationData::isDefaultSerialno() const
+inline bool RootOperationData::isDefaultSerialno() const
 {
     return (m_attrFlags & SERIALNO_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultRefno() const
+inline bool RootOperationData::isDefaultRefno() const
 {
     return (m_attrFlags & REFNO_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultFrom() const
+inline bool RootOperationData::isDefaultFrom() const
 {
     return (m_attrFlags & FROM_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultTo() const
+inline bool RootOperationData::isDefaultTo() const
 {
     return (m_attrFlags & TO_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultSeconds() const
+inline bool RootOperationData::isDefaultSeconds() const
 {
     return (m_attrFlags & SECONDS_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultFutureSeconds() const
+inline bool RootOperationData::isDefaultFutureSeconds() const
 {
     return (m_attrFlags & FUTURE_SECONDS_FLAG) == 0;
 }
 
-bool RootOperationData::isDefaultArgs() const
+inline bool RootOperationData::isDefaultArgs() const
 {
     return (m_attrFlags & ARGS_FLAG) == 0;
 }

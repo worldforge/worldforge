@@ -117,35 +117,35 @@ public:
     virtual void addToMessage(Atlas::Message::MapType &) const;
 
     /// Set the "username" attribute.
-    inline void setUsername(const std::string& val);
+    void setUsername(const std::string& val);
     /// Set the "password" attribute.
-    inline void setPassword(const std::string& val);
+    void setPassword(const std::string& val);
     /// Set the "characters" attribute.
-    inline void setCharacters(const std::list<std::string>& val);
+    void setCharacters(const std::list<std::string>& val);
     /// Set the "characters" attribute AsList.
-    inline void setCharactersAsList(const Atlas::Message::ListType& val);
+    void setCharactersAsList(const Atlas::Message::ListType& val);
 
     /// Retrieve the "username" attribute.
-    inline const std::string& getUsername() const;
+    const std::string& getUsername() const;
     /// Retrieve the "username" attribute as a non-const reference.
-    inline std::string& modifyUsername();
+    std::string& modifyUsername();
     /// Retrieve the "password" attribute.
-    inline const std::string& getPassword() const;
+    const std::string& getPassword() const;
     /// Retrieve the "password" attribute as a non-const reference.
-    inline std::string& modifyPassword();
+    std::string& modifyPassword();
     /// Retrieve the "characters" attribute.
-    inline const std::list<std::string>& getCharacters() const;
+    const std::list<std::string>& getCharacters() const;
     /// Retrieve the "characters" attribute as a non-const reference.
-    inline std::list<std::string>& modifyCharacters();
+    std::list<std::string>& modifyCharacters();
     /// Retrieve the "characters" attribute AsList.
-    inline const Atlas::Message::ListType getCharactersAsList() const;
+    const Atlas::Message::ListType getCharactersAsList() const;
 
     /// Is "username" value default?
-    inline bool isDefaultUsername() const;
+    bool isDefaultUsername() const;
     /// Is "password" value default?
-    inline bool isDefaultPassword() const;
+    bool isDefaultPassword() const;
     /// Is "characters" value default?
-    inline bool isDefaultCharacters() const;
+    bool isDefaultCharacters() const;
 
 protected:
     /// Find the class which contains the attribute "name".
@@ -197,7 +197,7 @@ extern const std::string CHARACTERS_ATTR;
 
 const int USERNAME_FLAG = 1 << 11;
 
-void AccountData::setUsername(const std::string& val)
+inline void AccountData::setUsername(const std::string& val)
 {
     attr_username = val;
     m_attrFlags |= USERNAME_FLAG;
@@ -205,7 +205,7 @@ void AccountData::setUsername(const std::string& val)
 
 const int PASSWORD_FLAG = 1 << 12;
 
-void AccountData::setPassword(const std::string& val)
+inline void AccountData::setPassword(const std::string& val)
 {
     attr_password = val;
     m_attrFlags |= PASSWORD_FLAG;
@@ -213,13 +213,13 @@ void AccountData::setPassword(const std::string& val)
 
 const int CHARACTERS_FLAG = 1 << 13;
 
-void AccountData::setCharacters(const std::list<std::string>& val)
+inline void AccountData::setCharacters(const std::list<std::string>& val)
 {
     attr_characters = val;
     m_attrFlags |= CHARACTERS_FLAG;
 }
 
-void AccountData::setCharactersAsList(const Atlas::Message::ListType& val)
+inline void AccountData::setCharactersAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= CHARACTERS_FLAG;
     attr_characters.resize(0);
@@ -233,7 +233,7 @@ void AccountData::setCharactersAsList(const Atlas::Message::ListType& val)
     }
 }
 
-const std::string& AccountData::getUsername() const
+inline const std::string& AccountData::getUsername() const
 {
     if(m_attrFlags & USERNAME_FLAG)
         return attr_username;
@@ -241,14 +241,14 @@ const std::string& AccountData::getUsername() const
         return ((AccountData*)m_defaults)->attr_username;
 }
 
-std::string& AccountData::modifyUsername()
+inline std::string& AccountData::modifyUsername()
 {
     if(!(m_attrFlags & USERNAME_FLAG))
         setUsername(((AccountData*)m_defaults)->attr_username);
     return attr_username;
 }
 
-const std::string& AccountData::getPassword() const
+inline const std::string& AccountData::getPassword() const
 {
     if(m_attrFlags & PASSWORD_FLAG)
         return attr_password;
@@ -256,14 +256,14 @@ const std::string& AccountData::getPassword() const
         return ((AccountData*)m_defaults)->attr_password;
 }
 
-std::string& AccountData::modifyPassword()
+inline std::string& AccountData::modifyPassword()
 {
     if(!(m_attrFlags & PASSWORD_FLAG))
         setPassword(((AccountData*)m_defaults)->attr_password);
     return attr_password;
 }
 
-const std::list<std::string>& AccountData::getCharacters() const
+inline const std::list<std::string>& AccountData::getCharacters() const
 {
     if(m_attrFlags & CHARACTERS_FLAG)
         return attr_characters;
@@ -271,14 +271,14 @@ const std::list<std::string>& AccountData::getCharacters() const
         return ((AccountData*)m_defaults)->attr_characters;
 }
 
-std::list<std::string>& AccountData::modifyCharacters()
+inline std::list<std::string>& AccountData::modifyCharacters()
 {
     if(!(m_attrFlags & CHARACTERS_FLAG))
         setCharacters(((AccountData*)m_defaults)->attr_characters);
     return attr_characters;
 }
 
-const Atlas::Message::ListType AccountData::getCharactersAsList() const
+inline const Atlas::Message::ListType AccountData::getCharactersAsList() const
 {
     const std::list<std::string>& lst_in = getCharacters();
     Atlas::Message::ListType lst_out;
@@ -291,17 +291,17 @@ const Atlas::Message::ListType AccountData::getCharactersAsList() const
     return lst_out;
 }
 
-bool AccountData::isDefaultUsername() const
+inline bool AccountData::isDefaultUsername() const
 {
     return (m_attrFlags & USERNAME_FLAG) == 0;
 }
 
-bool AccountData::isDefaultPassword() const
+inline bool AccountData::isDefaultPassword() const
 {
     return (m_attrFlags & PASSWORD_FLAG) == 0;
 }
 
-bool AccountData::isDefaultCharacters() const
+inline bool AccountData::isDefaultCharacters() const
 {
     return (m_attrFlags & CHARACTERS_FLAG) == 0;
 }
