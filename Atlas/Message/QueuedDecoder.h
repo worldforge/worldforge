@@ -57,7 +57,7 @@ public:
 protected:
 
     /// This adds a message to the queue.
-    void messageArrived(const MapType& obj);
+    void messageArrived(MapType obj);
     
 private:
     

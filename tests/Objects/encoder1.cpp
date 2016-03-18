@@ -11,7 +11,7 @@
 class RootDecoder : public Atlas::Message::DecoderBase
 {
 protected:
-    virtual void messageArrived(const Atlas::Message::MapType& o)
+    virtual void messageArrived(Atlas::Message::MapType o)
     {
         assert(o.find(std::string("parents")) != o.end());
         assert((*o.find("parents")).second.asList().size() == 1);

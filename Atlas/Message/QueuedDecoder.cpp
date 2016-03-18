@@ -12,9 +12,9 @@ QueuedDecoder::QueuedDecoder()
 {
 }
 
-void QueuedDecoder::messageArrived(const MapType& obj)
+void QueuedDecoder::messageArrived(MapType obj)
 {
-    m_objectQueue.push(obj);
+    m_objectQueue.push(std::move(obj));
 }
 
 } } // namespace Atlas::Message

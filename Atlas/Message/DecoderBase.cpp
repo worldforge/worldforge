@@ -109,7 +109,7 @@ void DecoderBase::mapEnd()
             break;
         case STATE_STREAM:
             {
-                messageArrived(m_maps.top());
+                messageArrived(std::move(m_maps.top()));
                 m_maps.pop();
             }
             break;

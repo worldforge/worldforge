@@ -23,7 +23,7 @@ ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
+void ObjectsDecoder::messageArrived(Atlas::Message::MapType o)
 {
     Root obj = m_factories->createObject(o);
     objectArrived(obj);

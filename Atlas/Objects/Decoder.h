@@ -42,7 +42,7 @@ public:
     }
 protected:
     /// Overridden by to retrieve the message from DecoderBase.
-    virtual void messageArrived(const Atlas::Message::MapType&);
+    virtual void messageArrived(Atlas::Message::MapType);
 
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;
