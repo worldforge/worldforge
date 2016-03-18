@@ -89,7 +89,7 @@ void BaseObjectData::removeAttrFlag(int flag)
     m_attrFlags &= ~flag;
 }
 
-const MapType BaseObjectData::asMessage() const
+MapType BaseObjectData::asMessage() const
 {
     MapType m;
     addToMessage(m);

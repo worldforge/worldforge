@@ -294,19 +294,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.write("    %s::sendContents(b);\n" % parent)
         self.write("}\n\n")
 
-    def asobject_im(self, obj, statics):
-        classname = classize(obj.id, data=1)
-        self.write("const MapType %s::asMessage() const\n" % classname)
-        self.write("{\n")
-        parent = self.get_cpp_parent(obj)
-        self.write("    MapType m = %s::asMessage();\n" % parent)
-        for attr in statics:
-            self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
-            self.write('        m["%s"] = get%s%s();\n' % \
-                    (attr.name, attr.cname, attr.as_object))
-        self.write('    return m;\n')
-        self.write("}\n\n")
-
     def addtoobject_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("void %s::addToMessage(MapType & m) const\n" % classname)
@@ -693,7 +680,6 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.remattr_im(obj, static_attrs)
             self.static_inline_sends(obj, static_attrs)
             self.sendcontents_im(obj, static_attrs)
-            #self.asobject_im(obj, static_attrs)
             self.addtoobject_im(obj, static_attrs)
             self.iterate_im(obj, static_attrs)
         self.allocator_im(obj)

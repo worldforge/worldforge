@@ -120,7 +120,7 @@ public:
     /// Retrieve the "args" attribute as a non-const reference.
     inline std::vector<Root>& modifyArgs();
     /// Retrieve the "args" attribute AsList.
-    inline const Atlas::Message::ListType getArgsAsList() const;
+    inline Atlas::Message::ListType getArgsAsList() const;
 
     /// Is "serialno" value default?
     inline bool isDefaultSerialno() const;
@@ -388,7 +388,7 @@ std::vector<Root>& RootOperationData::modifyArgs()
     return attr_args;
 }
 
-const Atlas::Message::ListType RootOperationData::getArgsAsList() const
+Atlas::Message::ListType RootOperationData::getArgsAsList() const
 {
     const std::vector<Root>& args_in = getArgs();
     Atlas::Message::ListType args_out;

@@ -264,7 +264,7 @@ public:
 
     /// Convert this object to a Object. This is now legacy, and implemented
     /// using addToMessage.
-    const Atlas::Message::MapType asMessage() const;
+    Atlas::Message::MapType asMessage() const;
 
     /// Write this object to an existing Element
     virtual void addToMessage(Atlas::Message::MapType &) const;
