@@ -11,10 +11,10 @@
 namespace Atlas {
 
 
-Formatter::Formatter(std::iostream & s, Atlas::Bridge & b) : m_stream(s),
-                                                             m_bridge(b),
-                                                             m_indent(0),
-                                                             m_spacing(2)
+Formatter::Formatter(std::ostream & s, Atlas::Bridge & b) : m_stream(s),
+                                                            m_bridge(b),
+                                                            m_indent(0),
+                                                            m_spacing(2)
 {
 }
 

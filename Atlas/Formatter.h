@@ -24,7 +24,7 @@ class Formatter : public Bridge
 {
   public:
     
-    Formatter(std::iostream & s, Atlas::Bridge & b);
+    Formatter(std::ostream & s, Atlas::Bridge & b);
 
     virtual void streamBegin();
     virtual void streamMessage();
@@ -50,7 +50,7 @@ class Formatter : public Bridge
 
   protected:
 
-    std::iostream & m_stream;
+    std::ostream & m_stream;
     Bridge & m_bridge;
     int m_indent;
     int m_spacing;
