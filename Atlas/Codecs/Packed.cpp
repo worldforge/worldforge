@@ -120,7 +120,7 @@ void Packed::parseMapBegin(char next)
     m_bridge.mapMapItem(hexDecode(m_name));
     m_istream.putback(next);
     m_state.pop();
-    m_name.erase();
+    m_name.clear();
 }
 
 void Packed::parseListBegin(char next)
@@ -128,7 +128,7 @@ void Packed::parseListBegin(char next)
     m_bridge.mapListItem(hexDecode(m_name));
     m_istream.putback(next);
     m_state.pop();
-    m_name.erase();
+    m_name.clear();
 }
 
 void Packed::parseInt(char next)
@@ -147,7 +147,7 @@ void Packed::parseInt(char next)
 	    if (m_state.top() == PARSE_MAP)
 	    {
 		m_bridge.mapIntItem(hexDecode(m_name), atol(m_data.c_str()));
-		m_name.erase();
+		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
@@ -157,7 +157,7 @@ void Packed::parseInt(char next)
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    m_data.erase();
+	    m_data.clear();
 	break;
 
 	case '0':
@@ -198,7 +198,7 @@ void Packed::parseFloat(char next)
 	    if (m_state.top() == PARSE_MAP)
 	    {
 		m_bridge.mapFloatItem(hexDecode(m_name), atof(m_data.c_str()));
-		m_name.erase();
+		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
@@ -208,7 +208,7 @@ void Packed::parseFloat(char next)
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    m_data.erase();
+	    m_data.clear();
 	break;
 
 	case '0':
@@ -252,7 +252,7 @@ void Packed::parseString(char next)
 	    if (m_state.top() == PARSE_MAP)
 	    {
 		m_bridge.mapStringItem(hexDecode(m_name), hexDecode(m_data));
-		m_name.erase();
+		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
@@ -262,7 +262,7 @@ void Packed::parseString(char next)
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    m_data.erase();
+	    m_data.clear();
 	break;
 
 	case '=':
