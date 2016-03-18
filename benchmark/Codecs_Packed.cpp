@@ -18,6 +18,7 @@ using Atlas::Message::ListType;
 
 int main(int argc, char** argv)
 {
+    long long i;
 
     Atlas::Objects::Entity::Anonymous anon;
     anon->setLoc("12345");
@@ -47,11 +48,14 @@ int main(int argc, char** argv)
     sight->setId("123456");
     sight->setArgs1(move);
 
-    MapType map = sight->asMessage();
+    const MapType map = sight->asMessage();
 
-    long long i;
+    //Warm up process first
+    for (i = 0; i < 100000000; i += 1) {
+        Atlas::Message::Element element;
+    }
+
     std::string message;
-
     {
         std::stringstream sstream;
         Atlas::Message::QueuedDecoder decoder;
