@@ -56,6 +56,21 @@ int main(int argc, char** argv)
     for (i = 0; i < 100000000; i += 1) {
         Atlas::Message::Element element;
     }
+    {
+        TIME_ON
+        for (i = 0; i < 200000; i += 1) {
+            MapType map = sight->asMessage();
+        }
+        TIME_OFF("BaseObject::asMessage");
+    }
+    {
+        TIME_ON
+        for (i = 0; i < 200000; i += 1) {
+            MapType map;
+            sight->addToMessage(map);
+        }
+        TIME_OFF("BaseObject::addToMessage");
+    }
 
     {
         TIME_ON
