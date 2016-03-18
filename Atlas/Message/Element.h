@@ -51,7 +51,7 @@ typedef std::vector<Element> ListType;
  *                Object as parameter or when copying it.
  *                Because copying of unused members is omitted.  
  *                All pointers are stored as a union, so we save memory !
- *                Changed IntType to long and added convinience Constructors
+ *                Changed IntType to long and added convenience Constructors
  *                for float, int and bool
  *                
 
@@ -151,17 +151,37 @@ public:
     {
       s = new DataType<StringType>(v);
     }
+    /// Set type to std::string, and move v.
+    Element(StringType&& v)
+      : t(TYPE_STRING)
+    {
+        s = new DataType<StringType>(std::move(v));
+    }
+
     /// Set type to MapType, and value to v.
     Element(const MapType& v)
       : t(TYPE_MAP)
     {
       m = new DataType<MapType>(v);
     }
+    /// Set type to MapType, and move v.
+    Element(MapType&& v)
+      : t(TYPE_MAP)
+    {
+      m = new DataType<MapType>(std::move(v));
+    }
+
     /// Set type to ListType, and value to v.
     Element(const ListType& v)
       : t(TYPE_LIST)
     {
       l = new DataType<ListType>(v);
+    }
+    /// Set type to ListType, and move v.
+    Element(ListType&& v)
+      : t(TYPE_LIST)
+    {
+      l = new DataType<ListType>(std::move(v));
     }
 
     /// overload assignment operator !
@@ -251,6 +271,18 @@ public:
       return *this;
     }
 
+    Element& operator=(StringType && v)
+    {
+      if (TYPE_STRING != t || !s->unique())
+      {
+        clear(TYPE_STRING);
+        s = new DataType<StringType>(std::move(v));
+      } else {
+        *s = std::move(v);
+      }
+      return *this;
+    }
+
     Element& operator=(const MapType & v) 
     {
       if (TYPE_MAP != t || !m->unique())
@@ -263,6 +295,18 @@ public:
       return *this;
     }
 
+    Element& operator=(MapType && v)
+    {
+      if (TYPE_MAP != t || !m->unique())
+      {
+        clear(TYPE_MAP);
+        m = new DataType<MapType>(std::move(v));
+      } else {
+        *m = std::move(v);
+      }
+      return *this;
+    }
+
     Element& operator=(const ListType & v) 
     {
       if (TYPE_LIST != t || !l->unique())
@@ -271,6 +315,18 @@ public:
         l = new DataType<ListType>(v);
       } else {
         *l = v;
+      }
+      return *this;
+    }
+
+    Element& operator=(ListType && v)
+    {
+      if (TYPE_LIST != t || !l->unique())
+      {
+        clear(TYPE_LIST);
+        l = new DataType<ListType>(std::move(v));
+      } else {
+        *l = std::move(v);
       }
       return *this;
     }
@@ -469,8 +525,10 @@ protected:
     public:
         DataType() : _refcount(1), _data(0) {}
         DataType(const C& c) : _refcount(1), _data(c) {}
+        DataType(C&& c) : _refcount(1), _data(std::move(c)) {}
 
         DataType& operator=(const C& c) {_data = c; return *this;}
+        DataType& operator=(const C&& c) {_data = std::move(c); return *this;}
 
         bool operator==(const C& c) const {return _data == c;}
 
