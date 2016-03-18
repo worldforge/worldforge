@@ -12,6 +12,10 @@ using Atlas::Objects::Entity::Account;
 using Atlas::Objects::smart_dynamic_cast;
 using Atlas::Objects::objectDefinitions;
 
+using Atlas::Message::Element;
+using Atlas::Message::MapType;
+using Atlas::Message::ListType;
+
 int main(int argc, char** argv)
 {
     std::string atlas_xml_path;
@@ -60,4 +64,51 @@ int main(int argc, char** argv)
     assert(acct_inst->getAttr("parents").asList().size() == 1);
     assert((*acct_inst->getAttr("parents").asList().begin()).asString() ==
             "account");
+
+
+
+    {
+
+        Atlas::Objects::Entity::Anonymous anon;
+        anon->setLoc("12345");
+        ListType velocity;
+        velocity.push_back(1.4);
+        velocity.push_back(2.4);
+        velocity.push_back(3.4);
+        anon->setVelocityAsList(velocity);
+        ListType bbox;
+        bbox.push_back(1.4);
+        bbox.push_back(2.4);
+        bbox.push_back(3.4);
+        bbox.push_back(2.4);
+        anon->setAttr("bbox", bbox);
+
+        Atlas::Objects::Operation::Move move;
+        move->setFrom("123456");
+        move->setTo("123456");
+        move->setSeconds(12345678);
+        move->setId("123456");
+        move->setArgs1(anon);
+
+        Atlas::Objects::Operation::Sight sight;
+        sight->setFrom("123456");
+        sight->setTo("123456");
+        sight->setSeconds(12345678);
+        sight->setId("123456");
+        sight->setArgs1(move);
+
+        Atlas::Message::MapType map;
+        sight->addToMessage(map);
+        std::cout << map.size() << std::flush;
+        assert(map.size() == 7);
+        assert(map["objtype"].String() == "op");
+        assert(map["from"].String() == "123456");
+        assert(map["to"].String() == "123456");
+        assert(map["seconds"].Float() == 12345678);
+        assert(map["id"].String() == "123456");
+        assert(map["args"].List().size() == 1);
+
+
+    }
+
 }
