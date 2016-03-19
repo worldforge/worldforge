@@ -71,14 +71,6 @@ public:
     };
 
 private:
-    // These are now legacy typedefs. New code should use the
-    // Atlas::Message::*Type versions.
-    typedef Atlas::Message::IntType IntType;
-    typedef Atlas::Message::FloatType FloatType;
-    typedef Atlas::Message::PtrType PtrType;
-    typedef Atlas::Message::StringType StringType;
-    typedef Atlas::Message::MapType MapType;
-    typedef Atlas::Message::ListType ListType;
 
     /// Clear all values.
     void clear(Type new_type = TYPE_NONE);
