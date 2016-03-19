@@ -99,6 +99,10 @@ public:
     /// Copy an existing object.
     Element(const Element& obj);
 
+    /// Move an existing object.
+    /// The existing Element will have its type set to "None".
+    Element(Element&& obj);
+
     /// Set type to int, and value to v.
     Element(int v)
       : t(TYPE_INT), i(v)
@@ -186,6 +190,13 @@ public:
 
     /// overload assignment operator !
     Element& operator=(const Element& obj);
+
+    /**
+     * The object being moved from will have its type set to "None".
+     * @param obj
+     * @return
+     */
+    Element& operator=(Element&& obj);
 
     Element& operator=(int v) 
     {
@@ -474,6 +485,19 @@ public:
     {
         return *(s = s->makeUnique());
     }
+
+    /**
+     * Moves the string out of the Element.
+     *
+     * This will leave an empty string in the Element.
+     * @return
+     */
+    StringType moveString() {
+        if (t != TYPE_STRING) throw WrongTypeException();
+        s = s->makeUnique();
+        return std::move(s->move());
+    }
+
     /// Retrieve the current value as a const MapType reference.
     const MapType& asMap() const throw (WrongTypeException)
     {
@@ -494,6 +518,19 @@ public:
     {
         return *(m = m->makeUnique());
     }
+
+    /**
+     * Moves the map out of the Element.
+     *
+     * This will leave an empty map in the Element.
+     * @return
+     */
+    MapType moveMap() {
+        if (t != TYPE_MAP) throw WrongTypeException();
+        m = m->makeUnique();
+        return std::move(m->move());
+    }
+
     /// Retrieve the current value as a const ListType reference.
     const ListType& asList() const throw (WrongTypeException)
     {
@@ -513,6 +550,18 @@ public:
     ListType& List()
     {
         return *(l = l->makeUnique());
+    }
+
+    /**
+     * Moves the list out of the Element.
+     *
+     * This will leave an empty list in the Element.
+     * @return
+     */
+    ListType moveList() {
+        if (t != TYPE_LIST) throw WrongTypeException();
+        l = l->makeUnique();
+        return std::move(l->move());
     }
 
     static const char * typeName(Type);
@@ -545,6 +594,15 @@ protected:
         }
 
         operator C&() {return _data;}
+        /**
+         * Moves the data out of the container.
+         *
+         * This will destroy the existing data.
+         * @return
+         */
+        C move() {
+            return std::move(_data);
+        }
 //        operator const C&() const {return _data;}
 
     private:

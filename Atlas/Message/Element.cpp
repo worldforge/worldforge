@@ -62,6 +62,37 @@ Element::Element(const Element& obj) : t(obj.t)
         
 }
 
+Element::Element(Element&& obj) : t(obj.t)
+{
+    //Move data from the incoming object, and set the type of it to none, which
+    //results in the incoming object "forgetting" all about the data.
+  switch(t)
+    {
+      case TYPE_NONE:
+        break;
+      case TYPE_INT:
+        i = obj.i;
+        break;
+      case TYPE_FLOAT:
+        f = obj.f;
+        break;
+      case TYPE_PTR:
+        p = obj.p;
+        break;
+      case TYPE_STRING:
+        s = obj.s;
+        break;
+      case TYPE_MAP:
+        m = obj.m;
+        break;
+      case TYPE_LIST:
+        l = obj.l;
+        break;
+    }
+    obj.t = TYPE_NONE;
+
+}
+
 Element& Element::operator=(const Element& obj) 
 {
   //check for self assignment
@@ -98,6 +129,46 @@ Element& Element::operator=(const Element& obj)
       l->ref();
       break;
     }
+
+  return *this;
+}
+
+Element& Element::operator=(Element&& obj)
+{
+  //check for self assignment
+  if(&obj == this)
+    return *this;
+
+  //first clear
+  clear(obj.t);
+
+  //Move data from the incoming object, and set the type of it to none, which
+  //results in the incoming object "forgetting" all about the data.
+  switch(t)
+  {
+    case TYPE_NONE:
+      break;
+    case TYPE_INT:
+      i = obj.i;
+      break;
+    case TYPE_FLOAT:
+      f = obj.f;
+      break;
+    case TYPE_PTR:
+      p = obj.p;
+      break;
+    case TYPE_STRING:
+      s = obj.s;
+      break;
+    case TYPE_MAP:
+      m = obj.m;
+      break;
+    case TYPE_LIST:
+      l = obj.l;
+      break;
+  }
+  obj.t = TYPE_NONE;
+
 
   return *this;
 }
