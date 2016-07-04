@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = Atlas tests tools tutorial benchmark
+SUBDIRS = Atlas tests tools tutorial benchmark man
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = atlascpp-0.7.pc
