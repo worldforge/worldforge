@@ -138,6 +138,8 @@ AC_CONFIG_FILES([
 	tests/Objects/Makefile
 	tests/Codecs/Makefile
 	tools/Makefile
+	man/Makefile
+	man/man1/Makefile
 	benchmark/Makefile
 	tutorial/Makefile
 	atlas-cpp.spec

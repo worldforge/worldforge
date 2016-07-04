@@ -1,0 +1,42 @@
+.TH atlas_convert 1 "January 11, 2012" "" "atlas_convert"
+
+.SH NAME
+atlas_convert \- convert Atlas data files
+
+.SH SYNOPSIS
+.B atlas_convert [
+.B -f ]
+.B [ \-s
+.I spacing
+.B ]
+.B [ \-i
+.I input_codec
+.B ]
+.B [ \-o
+.I output_codec
+.B ]
+
+.SH DESCRIPTION
+This tool converts Atlas data files between formats using
+.IR codecs .
+
+Supported codecs include
+.IR XML ,
+.IR Bach ,
+and
+.IR Packed .
+
+.SH OPTIONS
+.IP \-f
+Enables formatted output.
+
+.IP \-s
+Sets the spacing.
+
+.IP \-i
+Selects the input
+.I codec.
+
+.IP \-o
+Selects the output
+.I codec.
