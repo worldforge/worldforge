@@ -23,8 +23,10 @@
 // Author: Alistair Riddoch
 // Created: 2011-2-14
 
+#include <assert.h>
 #include "randgen.h"
 #include <cstdio>
+#include <iostream>
 
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
@@ -32,7 +34,40 @@
 
 using WFMath::MTRand;
 
-int main()
+bool test_known_sequence()
+{
+    static WFMath::MTRand::uint32 expected_results[] = {
+      2221777491u,
+      2873750246u,
+      4067173416u,
+      794519497u,
+      3287624630u,
+      3357287912u,
+      1212880927u,
+      2464917741u,
+      949382604u,
+      1898004827u
+    };
+    WFMath::MTRand rng;
+    bool result = true;
+
+    rng.seed(23);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        WFMath::MTRand::uint32 rnd = rng.randInt();
+        if (rnd != expected_results[i])
+        {
+            std::cerr << "Mismatch between MTRand and known result sequuence\n"
+                      << rnd << " != " << expected_results[i] << std::endl;
+            result = false;
+        }
+        assert(rnd == expected_results[i]);
+    }
+    return result;
+}
+
+bool test_generator_instances()
 {
     MTRand one(23);
 
@@ -41,13 +76,14 @@ int main()
 
     MTRand two(23);
 
-    printf("%.16f %.16f\n", two.randf(), two.randf());
-    float twores = two.randf();
+    printf("%.16f %.16f\n", two.rand<float>(), two.rand<float>());
+    float twores = two.rand<float>();
 
-    MTRand thr(23);
+    printf("%.16f %.16f\n", oneres, twores);
+    return oneres == twores;
+}
 
-    printf("%.16f %.16f\n", thr.rand<float>(), thr.rand<float>());
-    float thrres = thr.rand<float>();
-
-    printf("%.16f %.16f %.16f\n", oneres, twores, thrres);
+int main()
+{
+    return !(test_known_sequence() && test_generator_instances());
 }
