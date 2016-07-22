@@ -185,30 +185,30 @@ public:
      * @return True if the entity has a non-zero velocity.
      */
     bool isMoving() const;
-        
+
     /**
      * @brief Retrieve the predicted position of this entity, based on it's velocity and acceleration.
      * If the entity is not moving, this is the same as calling getPosition().
      * @return The predicted position of the entity.
      */
-    WFMath::Point<3> getPredictedPos() const;
+    const WFMath::Point<3>& getPredictedPos() const;
     
     /**
-     * @brief Retrieve the current predicted velocity of an entity. If the entity is not moving, this is an <em>invalid</em> Vector.
+     * @brief Retrieve the current predicted velocity of an entity.
      * @return The predicted velocity of the entity.
      */
-    WFMath::Vector<3> getPredictedVelocity() const;
+    const WFMath::Vector<3>& getPredictedVelocity() const;
     
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
-    /** retreive this Entity's orientation in view coordinates. */
+    /** Retrieve this Entity's orientation in view coordinates. */
     WFMath::Quaternion getViewOrientation() const;
     
-    /** Returns the entity's velocity as last set explicitely. **/
+    /** Returns the entity's velocity as last set explicitly. **/
     const WFMath::Vector< 3 > & getVelocity(void) const;
     
-    /** Returns the entity's orientation as last set explicitely. **/
+    /** Returns the entity's orientation as last set explicitly. **/
     const WFMath::Quaternion & getOrientation(void) const;
     
     /** Returns the entity's bounding box in the entity's local system coordinates. **/

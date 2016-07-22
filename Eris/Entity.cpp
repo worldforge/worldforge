@@ -209,19 +209,14 @@ WFMath::Quaternion Entity::getViewOrientation() const
     return vor;
 }
 
-WFMath::Point<3> Entity::getPredictedPos() const
+const WFMath::Point<3>& Entity::getPredictedPos() const
 {
-    WFMath::Point<3> res = (m_moving ? m_predicted.position : m_position);
- //   if (!res.isValid())
- //   {
- //       debug() << "invalid pos for entity " << m_id << ":" << m_name;
- //   }
-    return res;
+    return (m_moving ? m_predicted.position : m_position);
 }
 
-WFMath::Vector<3> Entity::getPredictedVelocity() const
+const WFMath::Vector<3>& Entity::getPredictedVelocity() const
 {
-    return (m_moving ? m_predicted.velocity : WFMath::Vector<3>());
+    return (m_moving ? m_predicted.velocity : WFMath::Vector<3>::ZERO());
 }
 
 bool Entity::isMoving() const
