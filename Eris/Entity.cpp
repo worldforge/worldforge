@@ -216,7 +216,12 @@ const WFMath::Point<3>& Entity::getPredictedPos() const
 
 const WFMath::Vector<3>& Entity::getPredictedVelocity() const
 {
-    return (m_moving ? m_predicted.velocity : WFMath::Vector<3>::ZERO());
+    return (m_moving ? m_predicted.velocity : m_velocity);
+}
+
+const WFMath::Quaternion& Entity::getPredictedOrientation() const
+{
+    return (m_moving ? m_predicted.orientation : m_orientation);
 }
 
 bool Entity::isMoving() const
@@ -236,6 +241,11 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
     } else {
         m_predicted.velocity = m_velocity;
         m_predicted.position = m_position + (m_velocity * dt);
+    }
+    if (m_angularVelocity.isValid() && m_angularMag != .0f) {
+        m_predicted.orientation = m_orientation * WFMath::Quaternion(m_angularVelocity, m_angularMag * dt);
+    } else {
+        m_predicted.orientation = m_orientation;
     }
 }
 
@@ -316,6 +326,7 @@ void Entity::filterMoveAttrs(Atlas::Message::MapType& attrs) const
     attrs.erase("velocity");
     attrs.erase("orientation");
     attrs.erase("accel");
+    attrs.erase("angular");
 }
 
 void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
@@ -374,6 +385,7 @@ void Entity::setMoving(bool inMotion)
     if (m_moving) {
         m_predicted.position = m_position;
         m_predicted.velocity = m_velocity;
+        m_predicted.orientation = m_orientation;
         addToMovementPredition();
     }
     
@@ -461,6 +473,10 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     } else if (attr == "velocity") {
         m_velocity.fromAtlas(v);
         return true;
+    } else if (attr == "angular") {
+        m_angularVelocity.fromAtlas(v);
+        m_angularMag = m_angularVelocity.mag();
+        return true;
     } else if (attr == "accel") {
         m_acc.fromAtlas(v);
         return true;
@@ -541,12 +557,13 @@ void Entity::endUpdate()
         
         if (m_modifiedAttrs.count("pos") || 
             m_modifiedAttrs.count("velocity") ||
-            m_modifiedAttrs.count("orientation"))
+            m_modifiedAttrs.count("orientation") ||
+            m_modifiedAttrs.count("angular"))
         {
             m_lastMoveTime = TimeStamp::now();
             
             const WFMath::Vector<3> & velocity = getVelocity();
-            bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3));
+            bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3)) || (m_angularVelocity.isValid() && m_angularVelocity != WFMath::Vector<3>::ZERO());
             if (nowMoving != m_moving) setMoving(nowMoving);
             
             onMoved();

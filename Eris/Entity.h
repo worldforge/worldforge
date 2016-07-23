@@ -195,11 +195,18 @@ public:
     
     /**
      * @brief Retrieve the current predicted velocity of an entity.
+     * If the entity have no acceleration, this is the same as calling getVelocity().
      * @return The predicted velocity of the entity.
      */
     const WFMath::Vector<3>& getPredictedVelocity() const;
     
-    /** retreive this Entity's position in view coordinates. */
+    /**
+     * @brief Retrieve the current predicted orientation of an entity.
+     * @return The predicted orientation of the entity.
+     */
+    const WFMath::Quaternion& getPredictedOrientation() const;
+
+    /** Retrieve this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
     /** Retrieve this Entity's orientation in view coordinates. */
@@ -207,6 +214,9 @@ public:
     
     /** Returns the entity's velocity as last set explicitly. **/
     const WFMath::Vector< 3 > & getVelocity(void) const;
+
+    /** Returns the entity's angular velocity as last set explicitly. **/
+    const WFMath::Vector< 3 > & getAngularVelocity(void) const;
     
     /** Returns the entity's orientation as last set explicitly. **/
     const WFMath::Quaternion & getOrientation(void) const;
@@ -517,6 +527,7 @@ protected:
     public:
         WFMath::Point<3> position;
         WFMath::Vector<3> velocity;
+        WFMath::Quaternion orientation;
     };
     
     void updatePredictedState(const WFMath::TimeStamp& t);
@@ -566,11 +577,20 @@ protected:
     WFMath::Vector<3> m_velocity;
     WFMath::Quaternion m_orientation;    
     WFMath::Vector<3> m_acc;
+    /**
+     * Angular velocity. The magnitude of the vector represents the angle. For performance reasons
+     * a copy of the magnitude is stored in m_angularMag.
+     */
+    WFMath::Vector<3> m_angularVelocity;
+    /**
+     * The magnitude of the angular velocity. Kept separately for performance.
+     */
+    float m_angularMag;
     
     DynamicState m_predicted;
     
 // extra state and state tracking things
-    /** If greater than zero, we are doing a batched update. This supresses emission
+    /** If greater than zero, we are doing a batched update. This suppresses emission
     of the Changed signal until endUpdate is called, so that a number of
     attributes may be updated en-masse, generating just one signal. */
     int m_updateLevel;
@@ -644,6 +664,11 @@ inline WFMath::Point<3> Entity::getPosition() const
 inline const WFMath::Vector< 3 > & Entity::getVelocity(void) const
 {
     return m_velocity;
+}
+
+inline const WFMath::Vector< 3 > & Entity::getAngularVelocity(void) const
+{
+    return m_angularVelocity;
 }
 
 /** Returns the entity's orientation as last set explicitely. **/
