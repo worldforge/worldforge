@@ -78,24 +78,24 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
 
   Vector<3> normal = Cross(m_axes[0], m_axes[1]); // normal to the plane
 
-  enum {
-    AXIS_UP,
-    AXIS_DOWN,
-    AXIS_FLAT
-  } axis_direction[3];
+//  enum {
+//    AXIS_UP,
+//    AXIS_DOWN,
+//    AXIS_FLAT
+//  } axis_direction[3];
 
   CoordType normal_mag = normal.sloppyMag();
   int high_corner_num = 0;
 
   for(int i = 0; i < 3; ++i) {
-    if(std::fabs(normal[i]) < normal_mag * numeric_constants<CoordType>::epsilon())
-      axis_direction[i] = AXIS_FLAT;
-    else if(normal[i] > 0) {
-      axis_direction[i] = AXIS_UP;
+    if(std::fabs(normal[i]) < normal_mag * numeric_constants<CoordType>::epsilon()) {
+//      axis_direction[i] = AXIS_FLAT;
+    } else if(normal[i] > 0) {
+//      axis_direction[i] = AXIS_UP;
       high_corner_num |= (1 << i);
     }
-    else
-      axis_direction[i] = AXIS_DOWN;
+//    else
+//      axis_direction[i] = AXIS_DOWN;
   }
 
   int low_corner_num = high_corner_num ^ 7;
