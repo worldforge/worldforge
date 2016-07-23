@@ -57,6 +57,13 @@ Quaternion::Quaternion (CoordType w_in,
   m_vec.setValid();
 }
 
+const Quaternion& Quaternion::IDENTITY()
+{
+  static Quaternion ident = Quaternion(Identity());
+  return ident;
+}
+
+
 // The equality functions regard q and -q as equal, since they
 // correspond to the same rotation matrix. We consider the form
 // of the quaternion with w > 0 canonical.

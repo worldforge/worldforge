@@ -31,16 +31,24 @@
 
 namespace WFMath {
 
-/// A normalized quaterion
+/// A normalized quaternion
 class Quaternion
 {
  public:
+
+  /**
+   * Gets a static identity quaternion.
+   *
+   * @return A static identity quaternion.
+   */
+  static const Quaternion& IDENTITY();
+
   class Identity {};
   ///
   Quaternion(const Identity &) : m_w(1), m_vec(), m_valid(true), m_age(0) {
     m_vec.zero();
   }
-  /// Construct a Quatertion
+  /// Construct a Quaternion
   Quaternion () : m_w(0), m_vec(), m_valid(false), m_age(0) {}
   /// Construct a Quaternion from (w, x, y, z) components
   /**

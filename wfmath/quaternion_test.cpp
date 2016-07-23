@@ -141,6 +141,10 @@ void test_quaternion(const Quaternion& q)
   //Two invalid points are never equal
   assert(invalid_1 != invalid_2);
 
+  const Quaternion& identity = Quaternion::IDENTITY();
+  assert(identity.isValid());
+  assert(identity.scalar() == 1.0f);
+  assert(identity.vector() == WFMath::Vector<3>::ZERO());
 }
 
 int main()
