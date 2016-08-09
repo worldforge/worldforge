@@ -43,7 +43,6 @@ AC_ARG_ENABLE(debug,
 )
 
 dnl Checks for libraries.
-dnl Replace `main' with a function in -libs:
 SYSTEM_LIBS="-lm"
 WFMATH_LIB_SUFFIX="-1.0"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
