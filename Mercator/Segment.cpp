@@ -158,10 +158,8 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
     fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0), 
            m_controlPoints(1, 1), m_controlPoints(0, 1));
 
-    ModList::iterator I = m_modList.begin();
-    ModList::iterator Iend = m_modList.end();
-    for (; I != Iend; ++I) {
-        applyMod(*I);
+    for (auto& entry : m_terrainMods) {
+        applyMod(entry.second);
     }
 }
 
@@ -602,45 +600,14 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
     return true;
 }
 
-/// \brief Add a TerrainMod to this Segment.
-///
-/// Called from Terrain::addMod(). If this point data is already valid,
-/// the modification will be applied directly.
-int Segment::addMod(const TerrainMod *t) 
+void Segment::updateMod(long id, const TerrainMod *t)
 {
-    m_modList.insert(t);
+    if (t) {
+        m_terrainMods[id] = t;
+    } else {
+        m_terrainMods.erase(id);
+    }
     invalidate();
-    return 0;
-}
-
-/// \brief Update a TerrainMod in this Segment.
-///
-/// Called from Terrain::removeMod().
-int Segment::updateMod(const TerrainMod * tm)
-{
-    // FIXME Are we really removing it?
-    ModList::const_iterator I = m_modList.find(tm);
-    if (I != m_modList.end()) {
-        invalidate();
-        return 0;
-    }
-    return -1;
-}
-
-
-/// \brief Remove a TerrainMod from this Segment.
-///
-/// Called from Terrain::removeMod().
-int Segment::removeMod(const TerrainMod * tm)
-{
-    // FIXME Are we really removing it?
-    ModList::iterator I = m_modList.find(tm);
-    if (I != m_modList.end()) {
-        m_modList.erase(I);
-        invalidate();
-        return 0;
-    }
-    return -1;
 }
 
 /// \brief Delete all the modifications applied to this Segment.
@@ -649,8 +616,8 @@ int Segment::removeMod(const TerrainMod * tm)
 /// this function from the application.
 void Segment::clearMods() 
 {
-    if (m_modList.size() != 0) {
-        m_modList.clear();
+    if (!m_terrainMods.empty()) {
+        m_terrainMods.clear();
         invalidate();
     }
 }

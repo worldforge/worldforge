@@ -255,32 +255,6 @@ bool Area::contains(CoordType x, CoordType y) const
     return WFMath::Contains(m_shape, Point2(x,y), false);
 }
 
-int Area::addToSegment(Segment & s) const
-{
-    if (!checkIntersects(s)) {
-        return -1;
-    }
-    return s.addArea(this);
-}
-
-void Area::updateToSegment(Segment & s) const
-{
-    if (!checkIntersects(s)) {
-        s.removeArea(this);
-        return;
-    }
-    if (s.updateArea(this) != 0) {
-        s.addArea(this);
-    }
-}
-
-void Area::removeFromSegment(Segment & s) const
-{
-    if (checkIntersects(s)) {
-        s.removeArea(this);
-    }
-}
-
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
 {
     // box reject

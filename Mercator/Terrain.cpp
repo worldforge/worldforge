@@ -8,14 +8,14 @@
 
 #include "iround.h"
 
-#include <Mercator/Terrain.h>
+#include "Terrain.h"
 
-#include <Mercator/Matrix.h>
-#include <Mercator/Segment.h>
-#include <Mercator/TerrainMod.h>
-#include <Mercator/Shader.h>
-#include <Mercator/Area.h>
-#include <Mercator/Surface.h>
+#include "Matrix.h"
+#include "Segment.h"
+#include "TerrainMod.h"
+#include "Shader.h"
+#include "Area.h"
+#include "Surface.h"
 
 #include <iostream>
 #include <algorithm>
@@ -41,7 +41,7 @@ Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(opti
 
 }
 
-/// \brief Desctruct Terrain object, deleting contained objects.
+/// \brief Destroy Terrain object, deleting contained objects.
 ///
 /// All Segment objects are deleted, but Shader objects are not yet deleted.
 /// Probably need to be fixed.
@@ -280,11 +280,12 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     }
                 }
                 s->setMinMax(min, max);
-                
-                Effectorstore::iterator I = m_effectors.begin();
-                Effectorstore::iterator Iend = m_effectors.end();
-                for (; I != Iend; ++I) {
-                    I->first->addToSegment(*s);
+
+                for (auto& entry : m_terrainMods) {
+                    const TerrainMod* terrainMod = std::get<0>(entry.second);
+                    if (terrainMod->checkIntersects(*s)) {
+                        s->updateMod(entry.first, terrainMod);
+                    }
                 }
 
                 // apply shaders last, after all other data is in place
@@ -322,152 +323,93 @@ Segment * Terrain::getSegment(int x, int y) const
     return J->second;
 }
 
-/// \brief Add an effector to the terrain
-void Terrain::addEffector(const Effector * eff)
+Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 {
-    //work out which segments are overlapped by this effector
-    //note that the bbox is expanded by one grid unit because
-    //segments share edges. this ensures a mod along an edge
-    //will affect both segments.
-
-    m_effectors.insert(Effectorstore::value_type(eff, eff->bbox()));
-
-    int lx=I_ROUND(std::floor((eff->bbox().lowCorner()[0] - 1.f) / m_spacing));
-    int ly=I_ROUND(std::floor((eff->bbox().lowCorner()[1] - 1.f) / m_spacing));
-    int hx=I_ROUND(std::ceil((eff->bbox().highCorner()[0] + 1.f) / m_spacing));
-    int hy=I_ROUND(std::ceil((eff->bbox().highCorner()[1] + 1.f) / m_spacing));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                eff->addToSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
-}
-
-Terrain::Rect Terrain::updateEffector(const Effector * eff)
-{
-    Effectorstore::iterator I = m_effectors.find(eff);
-
-    if (I == m_effectors.end()) {
-        return Rect();
-    }
-
-    const Rect old_box = I->second;
-
-
     std::set<Segment*> removed, added, updated;
 
-    int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
-    int ly=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
-    int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
-    int hy=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
+    auto I = m_terrainMods.find(id);
 
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
+    Rect old_box;
+    if (I != m_terrainMods.end()) {
+        std::tuple<const TerrainMod *, Rect>& entry = I->second;
 
-            removed.insert(s);
+        old_box = std::get<1>(entry);
 
-        } // of y loop
-    } // of x loop
 
-    lx=I_ROUND(std::floor((eff->bbox().lowCorner()[0] - 1.f) / m_spacing));
-    ly=I_ROUND(std::floor((eff->bbox().lowCorner()[1] - 1.f) / m_spacing));
-    hx=I_ROUND(std::ceil((eff->bbox().highCorner()[0] + 1.f) / m_spacing));
-    hy=I_ROUND(std::ceil((eff->bbox().highCorner()[1] + 1.f) / m_spacing));
 
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
+        int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
+        int ly=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
+        int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
+        int hy=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
 
-            std::set<Segment*>::iterator J = removed.find(s);
-            if (J == removed.end()) {
-                added.insert(s);
-            } else {
-                updated.insert(s);
-                removed.erase(J);
-            }
-        } // of y loop
-    } // of x loop
+        for (int i=lx;i<hx;++i) {
+           for (int j=ly;j<hy;++j) {
+               Segment *s=getSegment(i,j);
+               if (!s) {
+                   continue;
+               }
 
-    std::set<Segment*>::iterator J = removed.begin();
-    std::set<Segment*>::iterator Jend = removed.end();
-    for (; J != Jend; ++J) {
-        eff->removeFromSegment(**J);
+               removed.insert(s);
+
+           } // of y loop
+        } // of x loop
+
+        if (mod) {
+            std::get<0>(entry) = mod;
+            std::get<1>(entry) = mod->bbox();
+        } else {
+            m_terrainMods.erase(id);
+        }
+    } else if (mod) {
+        m_terrainMods.emplace(id, std::make_tuple(mod, mod->bbox()));
     }
 
-    J = added.begin();
-    Jend = added.end();
-    for (; J != Jend; ++J) {
-        eff->addToSegment(**J);
+    if (mod) {
+        int lx=I_ROUND(std::floor((mod->bbox().lowCorner()[0] - 1.f) / m_spacing));
+        int ly=I_ROUND(std::floor((mod->bbox().lowCorner()[1] - 1.f) / m_spacing));
+        int hx=I_ROUND(std::ceil((mod->bbox().highCorner()[0] + 1.f) / m_spacing));
+        int hy=I_ROUND(std::ceil((mod->bbox().highCorner()[1] + 1.f) / m_spacing));
+
+        for (int i=lx;i<hx;++i) {
+            for (int j=ly;j<hy;++j) {
+                Segment *s=getSegment(i,j);
+                if (!s) {
+                    continue;
+                }
+
+                std::set<Segment*>::iterator J = removed.find(s);
+                if (J == removed.end()) {
+                    added.insert(s);
+                } else {
+                    updated.insert(s);
+                    removed.erase(J);
+                }
+            } // of y loop
+        } // of x loop
     }
 
-    J = updated.begin();
-    Jend = updated.end();
-    for (; J != Jend; ++J) {
-        eff->updateToSegment(**J);
+    for (auto& segment : removed) {
+        segment->updateMod(id, nullptr);
+    }
+    for (auto& segment : added) {
+        if (mod->checkIntersects(*segment)) {
+            segment->updateMod(id, mod);
+        }
+    }
+    for (auto& segment : updated) {
+        if (mod->checkIntersects(*segment)) {
+            segment->updateMod(id, mod);
+        } else {
+            segment->updateMod(id, nullptr);
+        }
     }
 
-    I->second = eff->bbox();
     return old_box;
 }
 
-/// \brief Remove an effector from the terrain
-void Terrain::removeEffector(const Effector * eff)
+bool Terrain::hasMod(long id) const
 {
-    m_effectors.erase(eff);
-
-    const Rect & eff_box = eff->bbox();
-
-    int lx=I_ROUND(std::floor((eff_box.lowCorner()[0] - 1.f) / m_spacing));
-    int ly=I_ROUND(std::floor((eff_box.lowCorner()[1] - 1.f) / m_spacing));
-    int hx=I_ROUND(std::ceil((eff_box.highCorner()[0] + 1.f) / m_spacing));
-    int hy=I_ROUND(std::ceil((eff_box.highCorner()[1] + 1.f) / m_spacing));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                eff->removeFromSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
-}
-
-/// \brief Add a modifier to the terrain.
-///
-/// Add a new TerrainMod object to the terrain, which defines a modification
-/// to the terrain heightfield or surface data. The segments are responsible
-/// for storing the TerrainMod objects, so the apropriate Segment objects
-/// are found and the TerrainMode is passed to each in turn.
-/// @param t reference to the TerrainMod object to be applied.
-void Terrain::addMod(const TerrainMod * mod)
-{
-    addEffector(mod);
-}
-
-Terrain::Rect Terrain::updateMod(const TerrainMod * mod)
-{
-    return updateEffector(mod);
-}
-
-void Terrain::removeMod(const TerrainMod * mod)
-{
-    removeEffector(mod);
-}
-
-bool Terrain::hasMod(const TerrainMod* mod) const
-{
-    return m_effectors.find(mod) != m_effectors.end();
+    return m_terrainMods.find(id) != m_terrainMods.end();
 }
 
 
@@ -484,13 +426,108 @@ void Terrain::addArea(const Area * area)
         area->setShader(I->second);
     }
     
-    addEffector(area);
+    //work out which segments are overlapped by this effector
+    //note that the bbox is expanded by one grid unit because
+    //segments share edges. this ensures a mod along an edge
+    //will affect both segments.
+
+    m_terrainAreas.emplace(area, area->bbox());
+
+    int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
+    int ly=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
+    int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
+    int hy=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                if (area->checkIntersects(*s)) {
+                    s->addArea(area);
+                }
+            }
+        } // of y loop
+    } // of x loop
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
 Terrain::Rect Terrain::updateArea(const Area * area)
 {
-    return updateEffector(area);
+    std::set<Segment*> removed, added, updated;
+
+     auto I = m_terrainAreas.find(area);
+
+     Rect old_box;
+     if (I != m_terrainAreas.end()) {
+
+         old_box = I->second;
+
+         int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
+         int ly=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
+         int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
+         int hy=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
+
+         for (int i=lx;i<hx;++i) {
+            for (int j=ly;j<hy;++j) {
+                Segment *s=getSegment(i,j);
+                if (!s) {
+                    continue;
+                }
+
+                removed.insert(s);
+
+            } // of y loop
+         } // of x loop
+
+         I->second = area->bbox();
+
+     } else {
+         m_terrainAreas.emplace(area, area->bbox());
+     }
+
+
+
+     int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
+     int ly=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
+     int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
+     int hy=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
+
+     for (int i=lx;i<hx;++i) {
+         for (int j=ly;j<hy;++j) {
+             Segment *s=getSegment(i,j);
+             if (!s) {
+                 continue;
+             }
+
+             std::set<Segment*>::iterator J = removed.find(s);
+             if (J == removed.end()) {
+                 added.insert(s);
+             } else {
+                 updated.insert(s);
+                 removed.erase(J);
+             }
+         } // of y loop
+     } // of x loop
+
+     for (auto& segment : removed) {
+         segment->removeArea(area);
+     }
+     for (auto& segment : added) {
+         if (area->checkIntersects(*segment)) {
+             segment->addArea(area);
+         }
+     }
+     for (auto& segment : updated) {
+         if (area->checkIntersects(*segment)) {
+             if (segment->updateArea(area) != 0) {
+                 segment->addArea(area);
+             }
+         } else {
+             segment->removeArea(area);
+         }
+     }
+
+     return old_box;
 }
 
 /// \brief Remove an area modifier from the terrain.
@@ -499,12 +536,28 @@ Terrain::Rect Terrain::updateArea(const Area * area)
 /// affected terrain surfaces as invalid.
 void Terrain::removeArea(const Area * area)
 {
-    removeEffector(area);
+    m_terrainAreas.erase(area);
+
+    const Rect & eff_box = area->bbox();
+
+    int lx=I_ROUND(std::floor((eff_box.lowCorner()[0] - 1.f) / m_spacing));
+    int ly=I_ROUND(std::floor((eff_box.lowCorner()[1] - 1.f) / m_spacing));
+    int hx=I_ROUND(std::ceil((eff_box.highCorner()[0] + 1.f) / m_spacing));
+    int hy=I_ROUND(std::ceil((eff_box.highCorner()[1] + 1.f) / m_spacing));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                s->removeArea(area);
+            }
+        } // of y loop
+    } // of x loop
 }
 
 bool Terrain::hasArea(const Area* a) const
 {
-    return m_effectors.find(a) != m_effectors.end();
+    return m_terrainAreas.find(a) != m_terrainAreas.end();
 }
 
 

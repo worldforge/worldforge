@@ -153,15 +153,6 @@ void Surface::populate()
 {
 }
 
-int TerrainMod::addToSegment(Segment & s) const
-{
-    return -1;
-}
-
-void TerrainMod::removeFromSegment(Segment & s) const
-{
-}
-
 constexpr float BasePoint::HEIGHT;
 constexpr float BasePoint::ROUGHNESS;
 constexpr float BasePoint::FALLOFF;

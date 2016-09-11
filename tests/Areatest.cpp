@@ -93,7 +93,7 @@ void testAreaShader()
 
 static const unsigned int seg_size = 8;
     
-void testAddToSegment()
+void testCheckIntersect()
 {
     Mercator::Area* a1 = new Mercator::Area(1, false);
     
@@ -107,13 +107,13 @@ void testAddToSegment()
     
     Mercator::Segment * seg1 = new Mercator::Segment(0,0,seg_size);
 
-    int success = a1->addToSegment(*seg1);
-    assert(success == 0);
+    bool success = a1->checkIntersects(*seg1);
+    assert(success);
 
     Mercator::Segment * seg2 = new Mercator::Segment(1 * seg_size,0,seg_size);
 
-    success = a1->addToSegment(*seg2);
-    assert(success != 0);
+    success = a1->checkIntersects(*seg2);
+    assert(!success);
 }
 
 int main(int argc, char* argv[])
@@ -259,7 +259,7 @@ int main(int argc, char* argv[])
 
     testAreaShader();
 
-    testAddToSegment();
+    testCheckIntersect();
     
     return EXIT_SUCCESS;
 }

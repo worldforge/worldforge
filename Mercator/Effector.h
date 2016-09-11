@@ -52,10 +52,6 @@ class Effector
 
     virtual bool checkIntersects(const Segment& s) const = 0;
 
-    virtual int addToSegment(Segment &) const = 0;
-    virtual void updateToSegment(Segment &) const = 0;
-    virtual void removeFromSegment(Segment &) const = 0;
-    
   protected:
     /// \brief Constructor
     Effector();

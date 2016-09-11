@@ -24,7 +24,6 @@ namespace Mercator {
 class Terrain;
 class Surface;
 class TerrainMod;
-typedef std::set<const TerrainMod *> ModList;
 class Area;
 
 // This class will need to be reference counted if we want the code to
@@ -37,7 +36,7 @@ class Segment {
   public:
     /// STL map of pointers to Surface objects.
     typedef std::map<int, Surface *> Surfacestore;
-    
+
     /// STL multimap of pointers to Area objects affecting this segment.
     typedef std::multimap<int, const Area *> Areastore;
   private:
@@ -66,8 +65,8 @@ class Segment {
     /// Areas which intersect this segment
     Areastore m_areas;
 
-    /// \brief List of TerrainMod objects that are applied to this Segment.
-    ModList m_modList;
+    /// \brief Map of TerrainMod objects that are applied to this Segment.
+    std::map<long, const TerrainMod*> m_terrainMods;
   public:
     explicit Segment(int x, int y, unsigned int resolution);
     ~Segment();
@@ -186,17 +185,16 @@ class Segment {
     /// \brief The 3d box covered by this segment
     WFMath::AxisBox<3> getBox() const;
 
-    int addMod(const TerrainMod *t);
-    int updateMod(const TerrainMod *t);
-    int removeMod(const TerrainMod *t);
+    void updateMod(long id, const TerrainMod *t);
+
     void clearMods();
     
     /// \brief Accessor for multimap of Area objects.
     const Areastore& getAreas() const
     { return m_areas; }
 
-    const ModList& getMods() const
-    { return m_modList; }
+    const std::map<long, const TerrainMod*>& getMods() const
+    { return m_terrainMods; }
     
     int addArea(const Area* a);
     int updateArea(const Area* a);

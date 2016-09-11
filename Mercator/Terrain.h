@@ -5,8 +5,8 @@
 #ifndef MERCATOR_TERRAIN_H
 #define MERCATOR_TERRAIN_H
 
-#include <Mercator/Mercator.h>
-#include <Mercator/BasePoint.h>
+#include "Mercator.h"
+#include "BasePoint.h"
 
 #include <wfmath/axisbox.h>
 #include <wfmath/point.h>
@@ -15,6 +15,8 @@
 #include <set>
 #include <list>
 #include <cmath>
+#include <unordered_map>
+#include <tuple>
 
 namespace Mercator {
 
@@ -50,9 +52,6 @@ class Terrain {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, const Shader *> Shaderstore;
 
-    /// \brief STL map to store terrain effectors.
-    typedef std::map<const Effector *, Rect> Effectorstore;
-
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
     /// \brief set if shaders are going to be used on this terrain.
@@ -74,23 +73,26 @@ class Terrain {
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
   
-    /// \brief List of effectors be applied to the terrain.
-    Effectorstore m_effectors;
+    /**
+     * \brief Stores all terrain mods, identified using a long identifier.
+     *
+     * The reason for using an identifier is that we must have a stable sorting
+     * mechanism for terrain mods, so that they are applied in the same order to
+     * Segments.
+     */
+    std::unordered_map<long, std::tuple<const TerrainMod *, Rect>> m_terrainMods;
+
+    /**
+     * Stores all terrain areas, along with a Rect of the last area they affected.
+     *
+     * The Rect is used to keep track of what area was previously affected
+     * whenever the areas are changed.
+     */
+    std::unordered_map<const Area *, Rect> m_terrainAreas;
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);
 
-    void addEffector(const Effector * effector);
-
-    /// \brief Updates the terrain affected by an Effector.
-    ///
-    /// Call this when an already added terrain effector has changed.
-    ///
-    /// @param effector The terrain effector which has changed.
-    /// @return The area affected by the terrain effector before it was updated.
-    Rect updateEffector(const Effector * effector);
-    void removeEffector(const Effector * effector);
-    
     /// \brief Determine whether this terrain object has shading enabled.
     ///
     /// @return true if shading is enabled, false otherwise.
@@ -158,22 +160,18 @@ class Terrain {
     void addShader(const Shader * t, int id);
     void removeShader(const Shader * t, int id);
     
-    void addMod(const TerrainMod * mod);
-
-    /// \brief Updates the terrain affected by a mod.
+    /// \brief Updates the terrain with a mod.
     ///
-    /// Call this when an already added terrain mod has changed.
-    ///
-    /// @param mod The terrain mod which has changed.
+    /// @param id The id of the mod, which is also used for ordering.
+    /// @param mod The terrain mod, or null if the entry for the id should be removed.
     /// @return The area affected by the terrain mod before it was updated.
-    Rect updateMod(const TerrainMod * mod);
-    void removeMod(const TerrainMod * mod);
+    Rect updateMod(long id, const TerrainMod * mod);
     
-    /// \brief Checks if the supplied terrain mod has been registered with the terrain.
+    /// \brief Checks if a mod with the supplied id has been registered with the terrain.
     ///
-    /// @param a The mod to check for.
+    /// @param id The id of the mod to check for.
     /// @return True if the mod is added to the terrain.
-    bool hasMod(const TerrainMod* a) const;
+    bool hasMod(long id) const;
 
     void addArea(const Area* a);
 
