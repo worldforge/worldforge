@@ -5,6 +5,13 @@
 #include <Mercator/AreaShader.h>
 #include <Mercator/FillShader.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <cstdlib>
 #include <cassert>
 #include <iostream>

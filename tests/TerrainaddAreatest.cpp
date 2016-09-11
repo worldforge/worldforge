@@ -11,6 +11,13 @@
 
 #include <wfmath/point.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <cassert>
 
 // This is a relatively specific tests which ensures Terrain::addArea

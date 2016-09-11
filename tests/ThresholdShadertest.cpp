@@ -6,6 +6,13 @@
 #include <Mercator/ThresholdShader.h>
 #include <Mercator/Segment.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <cassert>
 
 typedef WFMath::Point<2> Point2;

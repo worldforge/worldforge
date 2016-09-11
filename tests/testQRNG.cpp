@@ -6,6 +6,13 @@
 
 #include <iostream>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <cassert>
 
 int main()
