@@ -1,10 +1,10 @@
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 
-lib_LTLIBRARIES = libmercator-0.3.la
+lib_LTLIBRARIES = libmercator-0.4.la
 
-libmercator_0_3_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
+libmercator_0_4_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
 
-libmercator_0_3_la_SOURCES = \
+libmercator_0_4_la_SOURCES = \
 	iround.h \
 	Mercator.cpp \
 	Matrix.cpp \
@@ -28,7 +28,7 @@ libmercator_0_3_la_SOURCES = \
 	Area.cpp \
 	AreaShader.cpp
 
-libmercatordir = $(includedir)/Mercator-0.3/Mercator
+libmercatordir = $(includedir)/Mercator-0.4/Mercator
 
 libmercator_HEADERS = \
 	Mercator.h \

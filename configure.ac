@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([mercator], [0.3.3], [erik@ogenvik.org])
+AC_INIT([mercator], [0.4.0], [erik@ogenvik.org])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -15,12 +15,12 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests no-d
 AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
-MERCATOR_CURRENT=4
+MERCATOR_CURRENT=0
 MERCATOR_REVISION=0
 MERCATOR_AGE=0
 MERCATOR_VERSION_INFO=$MERCATOR_CURRENT:$MERCATOR_REVISION:$MERCATOR_AGE
 
-MERCATOR_LIB_SUFFIX="-0.3"
+MERCATOR_LIB_SUFFIX="-0.4"
 MERCATOR_LIBS="-lmercator$MERCATOR_LIB_SUFFIX"
 MERCATOR_REQUIRES=""
 
@@ -45,7 +45,7 @@ AC_ARG_ENABLE(debug,
     ]
 )
 
-dnl Make sure we've got sensible versions of the sources (eg to get lrintf)
+dnl Make sure we have got sensible versions of the sources (eg to get lrintf)
 
 AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
 AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
@@ -92,6 +92,6 @@ AC_CONFIG_FILES([
 	tests/Makefile
 	mercator.spec
 	mingw32-mercator.spec
-	mercator-0.3.pc
+	mercator-0.4.pc
 ])
 AC_OUTPUT
