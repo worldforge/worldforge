@@ -122,7 +122,7 @@ int main()
         return 1;
     }
     terrain.getBasePoint(1, 0, bp);
-    if (bp.seed() != -7100) {
+    if (bp.seed() != -7100U) {
         std::cerr << "BasePoint seed calculation is incorrect."
                   << std::endl << std::flush;
         return 1;
