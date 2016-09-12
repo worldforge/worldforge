@@ -26,7 +26,8 @@ libmercator_0_4_la_SOURCES = \
 	Plant.cpp \
 	Forest.cpp \
 	Area.cpp \
-	AreaShader.cpp
+	AreaShader.cpp \
+	HeightMap.cpp
 
 libmercatordir = $(includedir)/Mercator-0.4/Mercator
 
@@ -54,5 +55,6 @@ libmercator_HEADERS = \
 	Forest.h \
 	RandCache.h \
 	Area.h \
-	AreaShader.h
+	AreaShader.h \
+	HeightMap.h
 	

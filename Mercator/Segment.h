@@ -5,9 +5,10 @@
 #ifndef MERCATOR_SEGMENT_H
 #define MERCATOR_SEGMENT_H
 
-#include <Mercator/Mercator.h>
-#include <Mercator/Matrix.h>
-#include <Mercator/BasePoint.h>
+#include "Mercator.h"
+#include "Matrix.h"
+#include "BasePoint.h"
+#include "HeightMap.h"
 
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
@@ -51,7 +52,7 @@ class Segment {
     /// 2x2 matrix of points which control this segment
     Matrix<2, 2, BasePoint> m_controlPoints;
     /// Pointer to buffer containing height points
-    float * m_points;
+    HeightMap* m_heightMap;
     /// Pointer to buffer containing normals for height points
     float * m_normals;
     /// Maximum height of any point in this segment
@@ -95,7 +96,7 @@ class Segment {
     ///
     /// @return true if this Segment is valid, false otherwise.
     const bool isValid() const {
-        return (m_points != 0);
+        return (m_heightMap != nullptr);
     }
 
     /// \brief Set min and max height values for this Segment.
@@ -142,12 +143,28 @@ class Segment {
 
     /// \brief Accessor for buffer containing height points.
     const float * getPoints() const {
-        return m_points;
+        if (m_heightMap) {
+            return m_heightMap->getPoints();
+        }
+        return nullptr;
     }
 
     /// \brief Accessor for write access to buffer containing height points.
     float * getPoints() {
-        return m_points;
+        if (m_heightMap) {
+            return m_heightMap->getPoints();
+        }
+        return nullptr;
+    }
+
+    /// \brief Accessor for height map.
+    const HeightMap* getHeightMap() const {
+        return m_heightMap;
+    }
+
+    /// \brief Accessor for write access to height map.
+    HeightMap* getHeightMap() {
+        return m_heightMap;
     }
 
     /// \brief Accessor for buffer containing surface normals.
@@ -162,7 +179,7 @@ class Segment {
 
     /// \brief Get the height at a relative integer position in the Segment.
     float get(int x, int y) const {
-        return m_points[y * (m_res + 1) + x];
+        return m_heightMap->get(x, y);
     }
 
     void getHeightAndNormal(float x, float y, float &h, 
@@ -173,6 +190,7 @@ class Segment {
     void populate();
     void populateNormals();
     void populateSurfaces();
+    void populateHeightMap(HeightMap& heightMap);
 
     /// \brief Accessor for the maximum height value in this Segment.
     float getMax() const { return m_max; }
@@ -200,15 +218,6 @@ class Segment {
     int updateArea(const Area* a);
     int removeArea(const Area* a);
   private:
-    void checkMaxMin(float h);
-
-    void fill1d(const BasePoint& l, const BasePoint &h, float *array) const;
-
-    void fill2d(const BasePoint& p1, const BasePoint& p2, 
-                const BasePoint& p3, const BasePoint& p4);
-
-    float qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
-               float roughness, float falloff, float depth) const;
 
     void applyMod(const TerrainMod *t);
 

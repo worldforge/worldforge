@@ -42,10 +42,6 @@ int main(int argc, char ** argv)
 
 namespace Mercator {
 
-constexpr float BasePoint::HEIGHT;
-constexpr float BasePoint::ROUGHNESS;
-constexpr float BasePoint::FALLOFF;
-
 void Surface::populate()
 {
 }

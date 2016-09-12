@@ -153,10 +153,6 @@ void Surface::populate()
 {
 }
 
-constexpr float BasePoint::HEIGHT;
-constexpr float BasePoint::ROUGHNESS;
-constexpr float BasePoint::FALLOFF;
-
 Effector::Effector()
 {
 }

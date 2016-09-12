@@ -24,80 +24,6 @@
 
 namespace Mercator {
 
-/// \brief Helper to interpolate on a line.
-///
-/// The line specified is of integer length, and the position specified
-/// as an integer. A check is included to avoid calculation if the value
-/// at each end is the same.
-class LinInterp {
-  private:
-    /// The length of the line.
-    float m_size;
-    /// Flag indicating that both points have the same value.
-    bool noCalc;
-  public:
-    /// Values at the two ends.
-    float ep1, ep2;
-    /// \brief Determine the interpolated value along the line.
-    inline float calc(float loc) 
-    {
-        return ((noCalc) ? ep1 :
-                ((m_size-loc) * ep1 + loc * ep2));
-    }
-    /// \brief Constructor
-    ///
-    /// @param size length of the line.
-    /// @param l value at one end of the line.
-    /// @param h value at one end of the line.
-    LinInterp(float size,float l, float h) : m_size(size), noCalc(false), 
-              ep1(l/size), ep2(h/size) 
-    {
-        if (l==h) {
-            ep1 = l;
-            noCalc=true;
-        }
-    } 
-};
-
-/// \brief Helper to interpolate in a quad.
-///
-/// The quad specified is assumed to be square of integer size, and
-/// the position specified for interpolation is specified in integer
-/// form. A check is included to avoid calculation if the value of each
-/// corner is the same.
-class QuadInterp {
-  private:
-    /// The length of one side of the square quad.
-    float m_size;
-    /// Flag indicating that all points have the same value.
-    bool noCalc;
-  public:
-    /// Values at the four corners.
-    float ep1, ep2, ep3, ep4;
-    /// \brief Determine the interpolated value within the quad.
-    inline float calc(float locX, float locY) 
-    {
-        return  ((noCalc) ? ep1 :
-                 (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
-                 ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size );
-    }
-    /// \brief Constructor
-    ///
-    /// @param size length of one side of the square quad.
-    /// @param e1 value at one corner of the square quad.
-    /// @param e2 value at one corner of the square quad.
-    /// @param e3 value at one corner of the square quad.
-    /// @param e4 value at one corner of the square quad.
-    QuadInterp(float size,float e1, float e2, float e3, float e4)
-        : m_size(size), noCalc(false),
-          ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) 
-    {
-        if ((e1==e2) && (e3==e4) && (e2==e3)) {
-            ep1 = e1;
-            noCalc=true;
-        }
-    } 
-};      
 
 /// \brief Construct an empty segment with the given resolution.
 ///
@@ -111,7 +37,7 @@ class QuadInterp {
 Segment::Segment(int x, int y, unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_xRef(x), m_yRef(y),
-                            m_points(0), m_normals(0),
+                            m_heightMap(nullptr), m_normals(nullptr),
                             m_max(-1000000.f), m_min(1000000.0f)
 {
 }
@@ -125,12 +51,8 @@ Segment::Segment(int x, int y, unsigned int resolution) :
 Segment::~Segment()
 {
     clearMods();
-    if (m_points != 0) {
-        delete [] m_points;
-    }
-    if (m_normals != 0) {
-        delete [] m_normals;
-    }
+    delete m_heightMap;
+    delete [] m_normals;
     
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
     Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
@@ -147,16 +69,22 @@ Segment::~Segment()
 /// required modifications are applied.
 void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
-    if (m_points == 0) {
-        m_points = new float[m_size * m_size];
+    if (!m_heightMap) {
+        m_heightMap = new HeightMap(m_res, m_min, m_max);
     }
-    fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0), 
-           m_controlPoints(1, 1), m_controlPoints(0, 1));
+    populateHeightMap(*m_heightMap);
 
     for (auto& entry : m_terrainMods) {
         applyMod(entry.second);
     }
 }
+
+void Segment::populateHeightMap(HeightMap& heightMap)
+{
+    heightMap.fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0),
+           m_controlPoints(1, 1), m_controlPoints(0, 1));
+}
+
 
 /// \brief Mark the contents of this Segment as stale.
 ///
@@ -166,13 +94,13 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 /// is true the heightfield storage is also deallocated.
 void Segment::invalidate(bool points)
 {
-    if (points && m_points != 0) {
-        delete [] m_points;
-        m_points = 0;
+    if (points && m_heightMap) {
+        delete m_heightMap;
+        m_heightMap = nullptr;
     }
-    if (m_normals != 0) {
+    if (m_normals) {
         delete [] m_normals;
-        m_normals = 0;
+        m_normals = nullptr;
     }
 
     invalidateSurfaces();
@@ -200,7 +128,7 @@ void Segment::invalidateSurfaces()
 /// 2 dimensions to ensure that there is no visible seam between segments.
 void Segment::populateNormals()
 {
-    assert(m_points != NULL);
+    assert(m_heightMap != NULL);
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
@@ -230,15 +158,15 @@ void Segment::populateNormals()
     
     //top and bottom boundary
     for (int i=1; i < m_res; ++i) {
-        h1 = get(i - 1, 0);
-        h2 = get(i + 1, 0);
+        h1 = m_heightMap->get(i - 1, 0);
+        h2 = m_heightMap->get(i + 1, 0);
         
         np[i * 3]     = (h1 - h2) / 2.f;
         np[i * 3 + 1] = 0.0;
         np[i * 3 + 2] = 1.0;
  
-        h1 = get(i - 1, m_res);
-        h2 = get(i + 1, m_res);
+        h1 = m_heightMap->get(i - 1, m_res);
+        h2 = m_heightMap->get(i + 1, m_res);
         
         np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
         np[m_res * m_size * 3 + i * 3 + 1] = 0.0f;
@@ -247,15 +175,15 @@ void Segment::populateNormals()
     
     //left and right boundary
     for (int j=1; j < m_res; ++j) {
-        h1 = get(0, j - 1);
-        h2 = get(0, j + 1);
+        h1 = m_heightMap->get(0, j - 1);
+        h2 = m_heightMap->get(0, j + 1);
         
         np[j * m_size * 3]     = 0;
         np[j * m_size * 3 + 1] = (h1 - h2) / 2.f;
         np[j * m_size * 3 + 2] = 1.f;
  
-        h1 = get(m_res, j - 1);
-        h2 = get(m_res, j + 1);
+        h1 = m_heightMap->get(m_res, j - 1);
+        h2 = m_heightMap->get(m_res, j + 1);
 
         np[j * m_size * 3 + m_res * 3]     = 0.f;
         np[j * m_size * 3 + m_res * 3 + 1] = (h1 - h2) / 2.f;
@@ -295,220 +223,6 @@ void Segment::populateSurfaces()
 }
 
 
-// generate a rand num between -0.5...0.5
-inline float randHalf(WFMath::MTRand& rng)
-{
-    //return (float) rand() / RAND_MAX - 0.5f;
-    return rng.rand<float>() - 0.5f;
-}
-
-
-/// \brief quasi-Random Midpoint Displacement (qRMD) algorithm.
-float Segment::qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
-                    float roughness, float falloff, float depth) const
-{
-    float max = std::max(std::max(nn, fn), std::max(nf, ff)),
-          min = std::min(std::min(nn, fn), std::min(nf, ff)),
-          heightDifference = max - min;
- 
-    return ((nn+fn+ff+nf)/4.f) + randHalf(rng) * roughness * heightDifference / (1.f+std::pow(depth,falloff));
-}
-
-/// \brief Check a value against m_min and m_max and set one of them
-/// if appropriate.
-///
-/// Called by internal functions whenever a new data point is generated.
-inline void Segment::checkMaxMin(float h)
-{
-    if (h<m_min) {
-        m_min=h;
-    }
-    if (h>m_max) {
-        m_max=h;
-    }
-}
-
-/// \brief One dimensional midpoint displacement fractal.
-///
-/// Size must be a power of 2.
-/// Falloff is the decay of displacement as the fractal is refined.
-/// Array is size + 1 long. array[0] and array[size] are filled
-/// with the control points for the fractal.
-void Segment::fill1d(const BasePoint& l, const BasePoint &h, 
-                     float *array) const
-{
-    array[0] = l.height();
-    array[m_res] = h.height();
-    LinInterp li(m_res, l.roughness(), h.roughness());
-   
-    // seed the RNG.
-    // The RNG is seeded only once for the line and the seed is based on the
-    // two endpoints -because they are the common parameters for two adjoining
-    // tiles
-    //srand((l.seed() * 1000 + h.seed()));
-    WFMath::MTRand::uint32 seed[2]={ l.seed(), h.seed() };
-    WFMath::MTRand rng(seed, 2);
-
-    // stride is used to step across the array in a deterministic fashion
-    // effectively we do the 1/2  point, then the 1/4 points, then the 1/8th
-    // points etc. this has to be the same order every time because we call
-    // on the RNG at every point 
-    int stride = m_res/2;
-
-    // depth is used to indicate what level we are on. the displacement is
-    // reduced each time we traverse the array.
-    float depth=1;
- 
-    while (stride) {
-        for (int i=stride;i<m_res;i+=stride*2) {
-            float hh = array[i-stride];
-            float lh = array[i+stride];
-            float hd = std::fabs(hh-lh);
-            float roughness = li.calc(i);
-
-            //eliminate the problem where hd is nearly zero, leaving a flat section.
-            if ((hd*100.f) < roughness) {
-                hd+=0.05f * roughness;       
-            }
-          
-            array[i] = ((hh+lh)/2.f) + randHalf(rng) * roughness  * hd / (1.f+std::pow(depth,BasePoint::FALLOFF));
-        }
-        stride >>= 1;
-        depth++;
-    }
-}
-
-/// \brief Two dimensional midpoint displacement fractal.
-///
-/// For a tile where edges are to be filled by 1d fractals.
-/// Size must be a power of 2, array is (size + 1) * (size + 1) with the
-/// corners the control points.
-void Segment::fill2d(const BasePoint& p1, const BasePoint& p2, 
-                     const BasePoint& p3, const BasePoint& p4)
-{
-    assert(m_points!=0);
-    
-    // int line = m_res+1;
-    
-    // calculate the edges first. This is necessary so that segments tile
-    // seamlessly note the order in which the edges are calculated and the
-    // direction. opposite edges are calculated the same way (eg left->right)
-    // so that the top of one tile matches the bottom of another, likewise
-    // with sides.
-    
-    // temporary array used to hold each edge
-    float * edge = new float[m_size];
-    
-    // calc top edge and copy into m_points
-    fill1d(p1,p2,edge);
-    for (int i=0;i<=m_res;i++) {
-        m_points[0*m_size + i] = edge[i];
-        checkMaxMin(edge[i]);
-    }
-
-    // calc left edge and copy into m_points
-    fill1d(p1,p4,edge);
-    for (int i=0;i<=m_res;i++) {
-        m_points[i*m_size + 0] = edge[i];
-        checkMaxMin(edge[i]);
-    }
-   
-    // calc right edge and copy into m_points
-    fill1d(p2,p3,edge);
-    for (int i=0;i<=m_res;i++) {
-        m_points[i*m_size + m_res] = edge[i];
-        checkMaxMin(edge[i]);
-    }
-
-    // calc bottom edge and copy into m_points
-    fill1d(p4,p3,edge);
-    for (int i=0;i<=m_res;i++) {
-        m_points[m_res*m_size + i] = edge[i];
-        checkMaxMin(edge[i]);
-    }
-    
-    // seed the RNG - this is the 5th and last seeding for the tile.
-    // it was seeded once for each edge, now once for the tile.
-    //srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
-    WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
-    WFMath::MTRand rng(seed, 4);
-
-    QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
-
-    float f = BasePoint::FALLOFF;
-    float depth=0;
-    
-    // center of m_points is done separately
-    int stride = m_res/2;
-
-    //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
-    float roughness = qi.calc(stride, stride);
-    m_points[stride*m_size + stride] = qRMD(rng, m_points[0 * m_size + stride],
-                                        m_points[stride*m_size + 0],
-                                        m_points[stride*m_size + m_res],
-                                        m_points[m_res*m_size + stride],
-                                        roughness,
-                                        f, depth);
-                    
-
-    checkMaxMin(m_points[stride*m_size + stride]);
-
-    stride >>= 1;
-
-    // skip across the m_points and fill in the points
-    // alternate cross and plus shapes.
-    // this is a diamond-square algorithm.
-    while (stride) {
-      //Cross shape - + contributes to value at X
-      //+ . +
-      //. X .
-      //+ . +
-      for (int i=stride;i<m_res;i+=stride*2) {
-          for (int j=stride;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j+stride) * (m_size)],
-                                       m_points[(i+stride) + (j-stride) * (m_size)],
-                                       m_points[(i+stride) + (j+stride) * (m_size)],
-                                       m_points[(i-stride) + (j-stride) * (m_size)],
-                                       roughness, f, depth);
-              checkMaxMin(m_points[j*m_size + i]);
-          }
-      }
- 
-      depth++;
-      //Plus shape - + contributes to value at X
-      //. + .
-      //+ X +
-      //. + .
-      for (int i=stride*2;i<m_res;i+=stride*2) {
-          for (int j=stride;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j) * (m_size)],
-                                       m_points[(i+stride) + (j) * (m_size)],
-                                       m_points[(i) + (j+stride) * (m_size)],
-                                       m_points[(i) + (j-stride) * (m_size)], 
-                                       roughness, f , depth);
-              checkMaxMin(m_points[j*m_size + i]);
-          }
-      }
-               
-      for (int i=stride;i<m_res;i+=stride*2) {
-          for (int j=stride*2;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j) * (m_size)],
-                                       m_points[(i+stride) + (j) * (m_size)],
-                                       m_points[(i) + (j+stride) * (m_size)],
-                                       m_points[(i) + (j-stride) * (m_size)],
-                                       roughness, f, depth);
-              checkMaxMin(m_points[j*m_size + i]);
-          }
-      }
-
-      stride>>=1;
-      depth++;
-    }
-    delete [] edge;
-}
 
 /// \brief Get an accurate height and normal vector at a given coordinate
 /// relative to this segment.
@@ -530,7 +244,7 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
     assert(x >= 0.0f);
     assert(y <= m_res);
     assert(y >= 0.0f);
-    
+
     // get index of the actual tile in the segment
     int tile_x = I_ROUND(std::floor(x));
     int tile_y = I_ROUND(std::floor(y));
@@ -625,12 +339,13 @@ void Segment::clearMods()
 void Segment::applyMod(const TerrainMod *t) 
 {
     int lx,hx,ly,hy;
+    float* points = m_heightMap->getPoints();
     WFMath::AxisBox<2> bbox=t->bbox();
     bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
         for (int i=ly; i<=hy; i++) {
             for (int j=lx; j<=hx; j++) {
-                t->apply(m_points[i * m_size + j], j + m_xRef, i + m_yRef);
+                t->apply(points[i * m_size + j], j + m_xRef, i + m_yRef);
             }
         }
     }
