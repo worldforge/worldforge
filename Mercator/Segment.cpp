@@ -24,11 +24,6 @@
 
 namespace Mercator {
 
-unsigned int BasePoint::seed() const
-{
-    return I_ROUND(m_height * 1000.0);
-}
-
 /// \brief Helper to interpolate on a line.
 ///
 /// The line specified is of integer length, and the position specified
