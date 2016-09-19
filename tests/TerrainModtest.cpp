@@ -51,6 +51,16 @@ int main()
     Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.updateMod(1, mp1);
 
+    Mercator::Segment * segment = terrain.getSegment(0, 0);
+
+    assert(segment->getMods().size() == 1);
+
+    Mercator::TerrainMod * mp1_1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
+    terrain.updateMod(1, mp1_1);
+    assert(segment->getMods().size() == 1);
+    assert(segment->getMods().find(1)->second == mp1_1);
+    delete mp1;
+
     const WFMath::RotBox<2> rot(
           WFMath::Point<2>(-80.,-130.) ,
           WFMath::Vector<2>(150.0,120.0),
@@ -62,7 +72,6 @@ int main()
     Mercator::CraterTerrainMod<WFMath::Ball> * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
     terrain.updateMod(3, mp3);
 
-    Mercator::Segment * segment = terrain.getSegment(0, 0);
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"
@@ -100,7 +109,7 @@ int main()
 
     terrain.updateMod(1, nullptr);
 
-    delete mp1;
+    delete mp1_1;
 
     terrain.updateMod(2, nullptr);
 
