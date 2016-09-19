@@ -108,6 +108,7 @@ class Terrain {
     ~Terrain();
 
     float get(float x, float y) const;
+    bool getHeight(float x, float y, float&) const;
     bool getHeightAndNormal(float x, float y, float&, WFMath::Vector<3>&) const;
 
     bool getBasePoint(int x, int y, BasePoint& z) const;
@@ -172,6 +173,8 @@ class Terrain {
     /// @param id The id of the mod to check for.
     /// @return True if the mod is added to the terrain.
     bool hasMod(long id) const;
+
+    const TerrainMod* getMod(long id) const;
 
     void addArea(const Area* a);
 

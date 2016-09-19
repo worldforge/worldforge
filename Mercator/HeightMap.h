@@ -67,6 +67,7 @@ class HeightMap {
 
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
+    void getHeight(float x, float y, float &h) const;
 
     /// \brief Accessor for the maximum height value in this Segment.
     float getMax() const { return m_max; }

@@ -179,6 +179,20 @@ float Terrain::get(float x, float y) const
     return s->get(I_ROUND(x) - (ix * m_res), I_ROUND(y) - (iy * m_res));
 }
 
+bool Terrain::getHeight(float x, float y, float& h) const
+{
+    int ix = I_ROUND(std::floor(x / m_spacing));
+    int iy = I_ROUND(std::floor(y / m_spacing));
+
+    Segment * s = getSegment(ix, iy);
+    if ((s == 0) || (!s->isValid())) {
+        return false;
+    }
+    s->getHeight(x - (ix * m_res), y - (iy * m_res), h);
+    return true;
+}
+
+
 /// \brief Get an accurate height and normal vector at a given coordinate
 /// x,y.
 ///
@@ -410,6 +424,15 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 bool Terrain::hasMod(long id) const
 {
     return m_terrainMods.find(id) != m_terrainMods.end();
+}
+
+const TerrainMod* Terrain::getMod(long id) const
+{
+    auto I = m_terrainMods.find(id);
+    if (I != m_terrainMods.end()) {
+        return std::get<0>(I->second);
+    }
+    return nullptr;
 }
 
 

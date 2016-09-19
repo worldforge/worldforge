@@ -182,6 +182,7 @@ class Segment {
         return m_heightMap->get(x, y);
     }
 
+    void getHeight(float x, float y, float &h) const;
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
     bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy) const;

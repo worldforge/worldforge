@@ -222,7 +222,12 @@ void Segment::populateSurfaces()
     }
 }
 
-
+void Segment::getHeight(float x, float y, float &h) const
+{
+    if (m_heightMap) {
+        m_heightMap->getHeight(x, y, h);
+    }
+}
 
 /// \brief Get an accurate height and normal vector at a given coordinate
 /// relative to this segment.
@@ -239,42 +244,8 @@ void Segment::populateSurfaces()
 void Segment::getHeightAndNormal(float x, float y, float& h,
                                  WFMath::Vector<3> &normal) const
 {
-    // FIXME this ignores edges and corners
-    assert(x <= m_res);
-    assert(x >= 0.0f);
-    assert(y <= m_res);
-    assert(y >= 0.0f);
-
-    // get index of the actual tile in the segment
-    int tile_x = I_ROUND(std::floor(x));
-    int tile_y = I_ROUND(std::floor(y));
-
-    // work out the offset into that tile
-    float off_x = x - tile_x;
-    float off_y = y - tile_y;
- 
-    float h1=get(tile_x, tile_y);
-    float h2=get(tile_x, tile_y+1);
-    float h3=get(tile_x+1, tile_y+1);
-    float h4=get(tile_x+1, tile_y);
-
-    // square is broken into two triangles
-    // top triangle |/
-    if ((off_x - off_y) <= 0.f) {
-        normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0f);
-
-        //normal for intersection of both triangles
-        if (off_x == off_y) {
-            normal += WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
-        }
-        normal.normalize();
-        h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
-    } 
-    // bottom triangle /|
-    else {
-        normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
-        normal.normalize();
-        h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
+    if (m_heightMap) {
+        m_heightMap->getHeightAndNormal(x, y, h, normal);
     }
 }
 
