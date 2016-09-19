@@ -35,8 +35,6 @@ liberis_1_4_la_SOURCES = \
 	Calendar.cpp \
 	EventService.cpp \
 	Task.cpp \
-	TerrainModTranslator.cpp \
-	TerrainModObserver.cpp \
 	SpawnPoint.cpp \
 	CharacterType.cpp \
 	ViewEntity.cpp \
@@ -81,8 +79,6 @@ liberis_HEADERS = \
 	Calendar.h \
 	EventService.h \
 	Task.h \
-	TerrainModTranslator.h \
-	TerrainModObserver.h \
 	SpawnPoint.h \
 	CharacterType.h \
 	ViewEntity.h \
