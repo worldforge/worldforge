@@ -8,8 +8,20 @@
 
 #include <wfmath/const.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <iostream>
 #include <cstdlib>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <cassert>
+#include <algorithm>
 
 int main()
 {
@@ -181,6 +193,45 @@ int main()
                   << std::endl << std::flush;
         return 1;
     }
+
+
+    std::vector<std::string> segments;
+    auto pushSegmentsFn = [&](Mercator::Segment& s) {
+        std::stringstream ss;
+        ss << (s.getXRef() / terrain.getResolution()) << "x" << (s.getYRef() / terrain.getResolution());
+        segments.push_back(ss.str());
+    };
+    terrain.processSegments(WFMath::AxisBox<2>(WFMath::Point<2>(1,1), WFMath::Point<2>(2,2)), pushSegmentsFn);
+
+    assert(segments.size() == 1);
+    assert(segments[0] == "0x0");
+
+    segments.clear();
+    //We only have four base points, so we should still get only one segment
+    terrain.processSegments(WFMath::AxisBox<2>(WFMath::Point<2>(1,1), WFMath::Point<2>(65,65)), pushSegmentsFn);
+
+    assert(segments.size() == 1);
+    assert(segments[0] == "0x0");
+
+    //Now let's add more basepoints, for four segments
+
+    terrain.setBasePoint(0, 2, 10);
+    terrain.setBasePoint(1, 2, 10);
+    terrain.setBasePoint(2, 2, 10);
+    terrain.setBasePoint(2, 1, 10);
+    terrain.setBasePoint(2, 0, 10);
+
+    segments.clear();
+
+    terrain.processSegments(WFMath::AxisBox<2>(WFMath::Point<2>(1,1), WFMath::Point<2>(65,65)), pushSegmentsFn);
+    assert(segments.size() == 4);
+    assert(std::count(segments.begin(), segments.end(), "0x0"));
+    assert(std::count(segments.begin(), segments.end(), "0x1"));
+    assert(std::count(segments.begin(), segments.end(), "1x0"));
+    assert(std::count(segments.begin(), segments.end(), "1x1"));
+
+
+
 
     return 0;
 }

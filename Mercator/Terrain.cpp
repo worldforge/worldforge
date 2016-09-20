@@ -328,6 +328,26 @@ Segment * Terrain::getSegmentAtIndex(int x, int y) const
     return J->second;
 }
 
+void Terrain::processSegments(const WFMath::AxisBox<2>& area,
+        const std::function<void(Segment&)>& func) const
+{
+    int lx = I_ROUND(std::floor((area.lowCorner()[0]) / m_spacing));
+    int ly = I_ROUND(std::floor((area.lowCorner()[1]) / m_spacing));
+    int hx = I_ROUND(std::ceil((area.highCorner()[0]) / m_spacing));
+    int hy = I_ROUND(std::ceil((area.highCorner()[1]) / m_spacing));
+
+    for (int i = lx; i < hx; ++i) {
+        for (int j = ly; j < hy; ++j) {
+            Segment *s = getSegmentAtIndex(i, j);
+            if (!s) {
+                continue;
+            }
+            func(*s);
+        }
+    }
+}
+
+
 Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 {
     std::set<Segment*> removed, added, updated;

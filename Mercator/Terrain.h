@@ -199,6 +199,13 @@ class Terrain {
      * @return The index
      */
     int posToIndex(float pos) const;
+
+    /**
+     * Processes all segments within the supplied area.
+     * @param area An area.
+     * @param func Function called for each segment.
+     */
+    void processSegments(const WFMath::AxisBox<2>& area, const std::function<void(Segment&)>& func) const;
 };
 
 inline int Terrain::posToIndex(float pos) const {
