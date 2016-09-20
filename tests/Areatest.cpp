@@ -79,14 +79,14 @@ void testAreaShader()
     terrain.addArea(a1);
    // terrain.addArea(a2);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     assert(a1->checkIntersects(*seg));
     
     seg->populateSurfaces();
     writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[1]);
     
     
-    seg = terrain.getSegment(1,0);    
+    seg = terrain.getSegmentAtIndex(1,0);
     seg->populateSurfaces();
     writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[1]);
 }
@@ -161,12 +161,12 @@ int main(int argc, char* argv[])
     
     terrain.addArea(a1);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
@@ -174,7 +174,7 @@ int main(int argc, char* argv[])
     WFMath::Polygon<2> clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
     
-    seg = terrain.getSegment(-1,0);
+    seg = terrain.getSegmentAtIndex(-1,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
     clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
     
-    seg = terrain.getSegment(0,1);
+    seg = terrain.getSegmentAtIndex(0,1);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
     clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
 
-    seg = terrain.getSegment(2,0);
+    seg = terrain.getSegmentAtIndex(2,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
@@ -205,12 +205,12 @@ int main(int argc, char* argv[])
 
     terrain.updateArea(a1);
 
-    seg = terrain.getSegment(0,0);
+    seg = terrain.getSegmentAtIndex(0,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
@@ -218,12 +218,12 @@ int main(int argc, char* argv[])
     clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
     
-    seg = terrain.getSegment(-1,0);
+    seg = terrain.getSegmentAtIndex(-1,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
     
-    seg = terrain.getSegment(0,1);
+    seg = terrain.getSegmentAtIndex(0,1);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
@@ -231,7 +231,7 @@ int main(int argc, char* argv[])
     clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
 
-    seg = terrain.getSegment(2,0);
+    seg = terrain.getSegmentAtIndex(2,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
@@ -241,19 +241,19 @@ int main(int argc, char* argv[])
 
     terrain.removeArea(a1);
 
-    seg = terrain.getSegment(0,0);
+    seg = terrain.getSegmentAtIndex(0,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
 
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
 
-    seg = terrain.getSegment(-1,0);
+    seg = terrain.getSegmentAtIndex(-1,0);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
 
-    seg = terrain.getSegment(0,1);
+    seg = terrain.getSegmentAtIndex(0,1);
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
 

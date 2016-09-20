@@ -40,14 +40,14 @@ void testGrassShader()
     terrain.setBasePoint(2, 0, 2);
     terrain.setBasePoint(2, 1, 0.5);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     
     seg->populateSurfaces();
     seg->populate();
     seg->populateSurfaces();
 
     // This segment is too low to shade
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     dshade->checkIntersect(*seg);
 }
 

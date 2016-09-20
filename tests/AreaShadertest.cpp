@@ -46,7 +46,7 @@ void testAreaShader()
     
     terrain.addArea(a1);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     assert(a1->checkIntersects(*seg));
     
     seg->populateSurfaces();

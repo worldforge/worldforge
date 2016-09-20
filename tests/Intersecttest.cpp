@@ -17,7 +17,7 @@ int main()
     terrain.setBasePoint(0, 1, 0.2);
     terrain.setBasePoint(1, 1, 14.7);
 
-    Mercator::Segment * segment = terrain.getSegment(0, 0);
+    Mercator::Segment * segment = terrain.getSegmentAtIndex(0, 0);
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"
@@ -70,7 +70,7 @@ int main()
     terrain.setBasePoint(0, 2, 4.8);
     terrain.setBasePoint(1, 2, 3.7);
 
-    Mercator::Segment *segment2 = terrain.getSegment(0, 1);
+    Mercator::Segment *segment2 = terrain.getSegmentAtIndex(0, 1);
     segment2->populate();
 
     float segmax=std::max(segment->getMax(), segment2->getMax());

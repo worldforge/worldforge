@@ -45,9 +45,9 @@ i*/    //for (int i=0; i<=size; ++i) {
     t.setBasePoint(0,1,12.0);
     t.setBasePoint(1,0,14.0);
     t.setBasePoint(1,1,16.0);
-    std::cout << t.getSegment(0,0);
+    std::cout << t.getSegmentAtIndex(0,0);
     t.setBasePoint(1,1,12.0);
-    std::cout << t.getSegment(0,0);
+    std::cout << t.getSegmentAtIndex(0,0);
     std::cout << std::endl;
     
     return 0;

@@ -68,7 +68,7 @@ int main()
     t.setBasePoint(1, 1, 11);
 
     // Get the Segment at 0,0
-    Mercator::Segment * seg = t.getSegment(0,0);
+    Mercator::Segment * seg = t.getSegmentAtIndex(0,0);
 
     assert(seg != 0);
 

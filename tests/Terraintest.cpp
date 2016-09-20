@@ -60,7 +60,7 @@ int main()
         }
     }
 
-    Mercator::Segment * seg = terrain.getSegment(rand(), rand());
+    Mercator::Segment * seg = terrain.getSegmentAtIndex(rand(), rand());
     if (seg != 0) {
         std::cerr << "Randomly selected segment position did not return NULL segment pointer on empty terrain"
                   << std::endl << std::flush;
@@ -140,7 +140,7 @@ int main()
         return 1;
     }
 
-    Mercator::Segment * segment = terrain.getSegment(0, 0);
+    Mercator::Segment * segment = terrain.getSegmentAtIndex(0, 0);
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"

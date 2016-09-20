@@ -51,7 +51,7 @@ int main()
     Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.updateMod(1, mp1);
 
-    Mercator::Segment * segment = terrain.getSegment(0, 0);
+    Mercator::Segment * segment = terrain.getSegmentAtIndex(0, 0);
 
     assert(segment->getMods().size() == 1);
 
@@ -81,7 +81,7 @@ int main()
 
     segment->populate();
 
-    segment = terrain.getSegment(1, 1);
+    segment = terrain.getSegmentAtIndex(1, 1);
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"

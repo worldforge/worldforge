@@ -172,7 +172,7 @@ float Terrain::get(float x, float y) const
     int ix = I_ROUND(std::floor(x / m_spacing));
     int iy = I_ROUND(std::floor(y / m_spacing));
 
-    Segment * s = getSegment(ix, iy);
+    Segment * s = getSegmentAtIndex(ix, iy);
     if ((s == 0) || (!s->isValid())) {
         return Terrain::defaultLevel;
     }
@@ -184,7 +184,7 @@ bool Terrain::getHeight(float x, float y, float& h) const
     int ix = I_ROUND(std::floor(x / m_spacing));
     int iy = I_ROUND(std::floor(y / m_spacing));
 
-    Segment * s = getSegment(ix, iy);
+    Segment * s = getSegmentAtIndex(ix, iy);
     if ((s == 0) || (!s->isValid())) {
         return false;
     }
@@ -217,7 +217,7 @@ bool Terrain::getHeightAndNormal(float x, float y, float & h,
     int ix = I_ROUND(std::floor(x / m_spacing));
     int iy = I_ROUND(std::floor(y / m_spacing));
 
-    Segment * s = getSegment(ix, iy);
+    Segment * s = getSegmentAtIndex(ix, iy);
     if ((s == 0) || (!s->isValid())) {
         return false;
     }
@@ -273,7 +273,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
     }
     for(int i = x - 1, ri = 0; i < x + 1; ++i, ++ri) {
         for(int j = y - 1, rj = 0; j < y + 1; ++j, ++rj) {
-            Segment * s = getSegment(i, j);
+            Segment * s = getSegmentAtIndex(i, j);
             if (s == 0) { 
                 bool complete = pointIsSet[ri][rj] &&
                                 pointIsSet[ri + 1][rj + 1] &&
@@ -315,7 +315,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
     }
 }
 
-/// \brief Get the Segment at a given base point coordinate.
+/// \brief Get the Segment at a given index.
 ///
 /// Get the Segment pointer for the given coordinate on the base
 /// point grid. The Segment in question may not have been populated
@@ -324,7 +324,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
 /// @param y coordinate on the base point grid.
 /// @return a valid pointer if a Segment is defined at the given coordinate,
 /// zero otherwise.
-Segment * Terrain::getSegment(int x, int y) const
+Segment * Terrain::getSegmentAtIndex(int x, int y) const
 {
     Segmentstore::const_iterator I = m_segments.find(x);
     if (I == m_segments.end()) {
@@ -358,7 +358,7 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 
         for (int i=lx;i<hx;++i) {
            for (int j=ly;j<hy;++j) {
-               Segment *s=getSegment(i,j);
+               Segment *s=getSegmentAtIndex(i,j);
                if (!s) {
                    continue;
                }
@@ -386,7 +386,7 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 
         for (int i=lx;i<hx;++i) {
             for (int j=ly;j<hy;++j) {
-                Segment *s=getSegment(i,j);
+                Segment *s=getSegmentAtIndex(i,j);
                 if (!s) {
                     continue;
                 }
@@ -463,7 +463,7 @@ void Terrain::addArea(const Area * area)
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
+            Segment *s=getSegmentAtIndex(i,j);
             if (s) {
                 if (area->checkIntersects(*s)) {
                     s->addArea(area);
@@ -492,7 +492,7 @@ Terrain::Rect Terrain::updateArea(const Area * area)
 
          for (int i=lx;i<hx;++i) {
             for (int j=ly;j<hy;++j) {
-                Segment *s=getSegment(i,j);
+                Segment *s=getSegmentAtIndex(i,j);
                 if (!s) {
                     continue;
                 }
@@ -517,7 +517,7 @@ Terrain::Rect Terrain::updateArea(const Area * area)
 
      for (int i=lx;i<hx;++i) {
          for (int j=ly;j<hy;++j) {
-             Segment *s=getSegment(i,j);
+             Segment *s=getSegmentAtIndex(i,j);
              if (!s) {
                  continue;
              }
@@ -570,7 +570,7 @@ void Terrain::removeArea(const Area * area)
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
+            Segment *s=getSegmentAtIndex(i,j);
             if (s) {
                 s->removeArea(area);
             }

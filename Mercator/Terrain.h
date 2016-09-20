@@ -122,15 +122,15 @@ class Terrain {
 
     /// \brief Get a pointer to the segment which contains the coord x,y
     ///
-    /// @return zero if no segment is defined at that location, or a pointer
+    /// @return Null if no segment is defined at that location, or a pointer
     /// to a Segment otherwise.
-    Segment * getSegment(float x, float y) const {
-        int ix = (int)floor(x / m_spacing);
-        int iy = (int)floor(y / m_spacing);
-        return getSegment(ix, iy);
-    }
+    Segment * getSegmentAtPos(float x, float y) const;
 
-    Segment * getSegment(int x, int y) const;
+    /// \brief Get a pointer to the segment at index x,y
+    ///
+    /// @return Null if no segment is defined at that location, or a pointer
+    /// to a Segment otherwise.
+    Segment * getSegmentAtIndex(int x, int y) const;
 
     /// \brief Accessor for base point resolution.
     int getResolution() const {
@@ -192,7 +192,24 @@ class Terrain {
     /// @param a The area to check for.
     /// @return True if the area is added to the terrain.
     bool hasArea(const Area* a) const;
+
+    /**
+     * \brief Converts the supplied position into a segment index.
+     * @param pos A position, either x or y.
+     * @return The index
+     */
+    int posToIndex(float pos) const;
 };
+
+inline int Terrain::posToIndex(float pos) const {
+    return std::lround(std::floor(pos / m_spacing));
+}
+
+inline Segment * Terrain::getSegmentAtPos(float x, float y) const
+{
+    return getSegmentAtIndex(posToIndex(x), posToIndex(y));
+}
+
 
 } // namespace Mercator
 

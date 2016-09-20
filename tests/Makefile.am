@@ -7,7 +7,7 @@ TESTS = mercatortest Terraintest Shadertest TerrainModtest Intersecttest \
 
 AM_CPPFLAGS = -I$(top_srcdir)
 
-LDADD = $(top_builddir)/Mercator/libmercator-0.3.la
+LDADD = $(top_builddir)/Mercator/libmercator-0.4.la
 
 DISTCLEANFILES = test1.pgm test2.pgm
 

@@ -45,7 +45,7 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
         for (int y = ylow; y < yhigh; y++) {
             //check the bbox against the extent of each tile
             //as an early rejection
-            Segment *thisSeg=t.getSegment(x,y);
+            Segment *thisSeg=t.getSegmentAtIndex(x,y);
 
             if (thisSeg)
                 max=thisSeg->getMax();

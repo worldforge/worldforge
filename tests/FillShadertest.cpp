@@ -34,7 +34,7 @@ void testFillShader()
     terrain.setBasePoint(1, 0, 2);
     terrain.setBasePoint(1, 1, 0.5);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     
     seg->populate();
     seg->populateSurfaces();

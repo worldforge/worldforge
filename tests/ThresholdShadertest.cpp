@@ -36,13 +36,13 @@ void testHighShader()
     terrain.setBasePoint(2, 0, 2);
     terrain.setBasePoint(2, 1, 0.5);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     
     seg->populateSurfaces();
     seg->populate();
     seg->populateSurfaces();
 
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     dshade->checkIntersect(*seg);
 }
 
@@ -65,13 +65,13 @@ void testLowShader()
     terrain.setBasePoint(2, 0, 15);
     terrain.setBasePoint(2, 1, 19);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     
     seg->populateSurfaces();
     seg->populate();
     seg->populateSurfaces();
 
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     dshade->checkIntersect(*seg);
 }
 
@@ -95,13 +95,13 @@ void testBandShader()
     terrain.setBasePoint(2, 0, 15);
     terrain.setBasePoint(2, 1, 19);
     
-    Mercator::Segment* seg = terrain.getSegment(0,0);
+    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     
     seg->populateSurfaces();
     seg->populate();
     seg->populateSurfaces();
 
-    seg = terrain.getSegment(1,0);
+    seg = terrain.getSegmentAtIndex(1,0);
     dshade->checkIntersect(*seg);
 }
 
