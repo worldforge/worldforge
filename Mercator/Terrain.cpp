@@ -169,26 +169,20 @@ void Terrain::shadeSurfaces(Segment & seg)
 /// accurate results see Terrain::getHeightAndNormal.
 float Terrain::get(float x, float y) const
 {
-    int ix = I_ROUND(std::floor(x / m_spacing));
-    int iy = I_ROUND(std::floor(y / m_spacing));
-
-    Segment * s = getSegmentAtIndex(ix, iy);
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
     if ((s == 0) || (!s->isValid())) {
         return Terrain::defaultLevel;
     }
-    return s->get(I_ROUND(x) - (ix * m_res), I_ROUND(y) - (iy * m_res));
+    return s->get(I_ROUND(x) - s->getXRef(), I_ROUND(y) - s->getYRef());
 }
 
 bool Terrain::getHeight(float x, float y, float& h) const
 {
-    int ix = I_ROUND(std::floor(x / m_spacing));
-    int iy = I_ROUND(std::floor(y / m_spacing));
-
-    Segment * s = getSegmentAtIndex(ix, iy);
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
     if ((s == 0) || (!s->isValid())) {
         return false;
     }
-    s->getHeight(x - (ix * m_res), y - (iy * m_res), h);
+    s->getHeight(x - s->getXRef(), y - s->getYRef(), h);
     return true;
 }
 
@@ -214,14 +208,11 @@ bool Terrain::getHeight(float x, float y, float& h) const
 bool Terrain::getHeightAndNormal(float x, float y, float & h,
                                   WFMath::Vector<3> & n) const
 {
-    int ix = I_ROUND(std::floor(x / m_spacing));
-    int iy = I_ROUND(std::floor(y / m_spacing));
-
-    Segment * s = getSegmentAtIndex(ix, iy);
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
     if ((s == 0) || (!s->isValid())) {
         return false;
     }
-    s->getHeightAndNormal(x - (ix * m_res), y - (iy * m_res), h, n);
+    s->getHeightAndNormal(x - s->getXRef(), y - s->getYRef(), h, n);
     return true;
 }
 
