@@ -141,11 +141,7 @@ Surface * Shader::newSurface(const Segment &) const
 }
 
 Surface::Surface(const Segment & seg, const Shader & sh, bool color, bool alpha)
-  : Buffer<ColorT>(seg, (color ? 3 : 0) + (alpha ? 1 : 0)), m_shader(sh)
-{
-}
-
-Surface::~Surface()
+  : Buffer<ColorT>((color ? 3 : 0) + (alpha ? 1 : 0), seg.getSize()), m_shader(sh), m_segment(seg)
 {
 }
 

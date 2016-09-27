@@ -5,7 +5,8 @@
 #ifndef MERCATOR_SURFACE_H
 #define MERCATOR_SURFACE_H
 
-#include <Mercator/Buffer.h>
+#include "Buffer.h"
+#include "Segment.h"
 
 #include <climits>
 
@@ -23,12 +24,19 @@ class Surface : public Buffer<ColorT> {
   public:
     /// \brief The shader that populates this surface.
     const Shader & m_shader;
+    /// The terrain height segment this buffer is associated with.
+    const Segment & m_segment;
 
     explicit Surface(const Segment & segment, const Shader & shader,
                      bool colors = true, bool alpha = true);
-    virtual ~Surface();
+    virtual ~Surface() = default;
 
     void populate();
+
+    /// Accessor for the terrain height segment this surface is associated with.
+    const Segment & getSegment() const {
+        return m_segment;
+    }
     // Do we need an accessor presenting the array in colour form?
 };
 

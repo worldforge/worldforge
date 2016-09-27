@@ -61,6 +61,7 @@ Buffertest_LDADD = $(top_builddir)/Mercator/Buffer.lo
 Segmenttest_SOURCES = Segmenttest.cpp
 Segmenttest_LDADD = $(top_builddir)/Mercator/Segment.lo \
 	$(top_builddir)/Mercator/BasePoint.lo \
+	$(top_builddir)/Mercator/Buffer.lo \
 	$(top_builddir)/Mercator/HeightMap.lo
 
 AreaShadertest_SOURCES = AreaShadertest.cpp
@@ -82,6 +83,7 @@ Matrixtest_LDADD = $(top_builddir)/Mercator/Matrix.lo
 TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
 TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \
                            $(top_builddir)/Mercator/Segment.lo \
+                           $(top_builddir)/Mercator/Buffer.lo \
                            $(top_builddir)/Mercator/Area.lo \
                            $(top_builddir)/Mercator/BasePoint.lo \
                            $(top_builddir)/Mercator/HeightMap.lo
@@ -89,6 +91,8 @@ TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \
 Segmentperf_SOURCES = Segmentperf.cpp
 Segmentperf_LDADD = $(top_builddir)/Mercator/Segment.lo \
 							$(top_builddir)/Mercator/BasePoint.lo \
-                           	$(top_builddir)/Mercator/HeightMap.lo
+                           	$(top_builddir)/Mercator/HeightMap.lo \
+                           	$(top_builddir)/Mercator/Buffer.lo
+                           	
 
 

@@ -6,6 +6,7 @@
 #define MERCATOR_HEIGHTMAP_H
 
 #include "BasePoint.h"
+#include "Buffer.h"
 
 #include <wfmath/vector.h>
 
@@ -17,14 +18,10 @@ namespace Mercator {
 
 /// \brief Class storing heightfield and other data for a single fixed size
 /// square area of terrain defined by four adjacent BasePoint objects.
-class HeightMap {
+class HeightMap : public Buffer<float> {
   private:
     /// Distance between segments
     const int m_res;
-    /// Size of segment, m_res + 1
-    const int m_size;
-    /// Pointer to buffer containing height points
-    float * m_points;
     /// Maximum height of any point in this segment
     float m_max;
     /// Minimum height of any point in this segment
@@ -32,31 +29,16 @@ class HeightMap {
 
   public:
     explicit HeightMap(unsigned int resolution);
-    ~HeightMap();
+    virtual ~HeightMap() = default;
 
     /// \brief Accessor for resolution of this segment.
     const int getResolution() const {
         return m_res;
     }
 
-    /// \brief Accessor for array size of this segment.
-    const int getSize() const {
-        return m_size;
-    }
-
-    /// \brief Accessor for buffer containing height points.
-    const float * getPoints() const {
-        return m_points;
-    }
-
-    /// \brief Accessor for write access to buffer containing height points.
-    float * getPoints() {
-        return m_points;
-    }
-
     /// \brief Get the height at a relative integer position in the Segment.
     float get(int x, int y) const {
-        return m_points[y * (m_res + 1) + x];
+        return m_data[y * (m_res + 1) + x];
     }
 
     void getHeightAndNormal(float x, float y, float &h, 
@@ -73,12 +55,6 @@ class HeightMap {
 
     void checkMaxMin(float h);
 
-    bool isValid() const;
-
-    void invalidate();
-
-    void allocate();
-
   private:
 
     void fill1d(const BasePoint& l, const BasePoint &h, float *array) const;
@@ -88,9 +64,6 @@ class HeightMap {
 
 };
 
-inline bool HeightMap::isValid() const {
-    return m_points != nullptr;
-}
 
 } // namespace Mercator
 

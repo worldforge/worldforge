@@ -2,23 +2,20 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/Buffer.h>
-
-#include <Mercator/Segment.h>
+#include "Buffer.h"
 
 namespace Mercator {
 
 template <typename DataType>
-Buffer<DataType>::Buffer(const Segment & segment, unsigned int channels) :
-         m_segment(segment), m_channels(channels), m_size(segment.getSize()),
-         m_data(0)
+Buffer<DataType>::Buffer(unsigned int size, unsigned int channels) :
+         m_channels(channels), m_size(size), m_data(nullptr)
 {
 }
 
 template <typename DataType>
 Buffer<DataType>::~Buffer()
 {
-    if (m_data != 0) {
+    if (m_data != nullptr) {
         delete [] m_data;
     }
 }

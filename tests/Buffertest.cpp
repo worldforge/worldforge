@@ -8,7 +8,7 @@
 int main()
 {
     Mercator::Segment s(0,0,64);
-    Mercator::Buffer<float> b(s);
+    Mercator::Buffer<float> b(64, 4);
 
     return 0;
 }
@@ -30,11 +30,7 @@ Segment::~Segment()
 {
 }
 
-HeightMap::HeightMap(unsigned int resolution) : m_res(resolution), m_size(m_res+1)
-{
-}
-
-HeightMap::~HeightMap()
+HeightMap::HeightMap(unsigned int resolution) : Buffer<float>::Buffer(resolution + 1, 1), m_res(resolution)
 {
 }
 

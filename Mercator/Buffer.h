@@ -7,15 +7,10 @@
 
 namespace Mercator {
 
-class Segment;
-
 /// \brief Template for managing buffers of data for a segment.
 template<typename DataType>
 class Buffer {
-  public:
-    /// The terrain height segment this buffer is associated with.
-    const Segment & m_segment;
-  private:
+  protected:
     /// The number of data values per height point.
     const unsigned int m_channels;
     /// The size of segment, m_res + 1.
@@ -28,7 +23,7 @@ class Buffer {
     ///
     /// @param segment terrain height segment this buffer is associated with.
     /// @param channels number of data values per height point.
-    explicit Buffer(const Segment & segment, unsigned int channels = 4);
+    explicit Buffer(unsigned int size, unsigned int channels);
     virtual ~Buffer();
 
     /// \brief Retrieve the data value at a given point.
@@ -50,11 +45,7 @@ class Buffer {
                                 unsigned int channel) const {
         return m_data[(y * m_size + x) * m_channels + channel];
     }
-    
-    /// Accessor for the terrain height segment this buffer is associated with.
-    const Segment & getSegment() const {
-        return m_segment;
-    }
+
 
     /// Accessor for the size of segment, m_res + 1.
     unsigned int getSize() const {
@@ -71,6 +62,11 @@ class Buffer {
         return m_data;
     }
 
+    /// Accessor for a pointer to buffer containing data values.
+    const DataType * getData() const {
+        return m_data;
+    }
+
     /// \brief Allocate the storage required by the buffer.
     ///
     /// Allocate memory based on the size and number of channels required
@@ -83,7 +79,7 @@ class Buffer {
     ///
     /// @return true if storage is allocated.
     bool isValid() const {
-        return (m_data != 0);
+        return (m_data != nullptr);
     }
 
     /// \brief De-allocate the storage for this buffer.
@@ -91,7 +87,7 @@ class Buffer {
     /// Free the storage allocate for this buffer.
     void invalidate() {
         delete [] m_data;
-        m_data = 0;
+        m_data = nullptr;
     }
 
 };

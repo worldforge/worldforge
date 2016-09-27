@@ -100,32 +100,15 @@ class QuadInterp {
 };
 
 
-/// \brief Construct an empty segment with the given resolution.
-///
-/// Generally it is not necessary to call this from outside the Mercator
-/// library Segment objects are created as required. The Segment is
-/// constructed without allocating any storage for heightfield or surface
-/// normal data. The m_min and m_max members are initialised to extreme
-/// values, and should be set to appropriate using setMinMax() as soon as
-/// possible after construction. Similarly the control points should be
-/// set soon after construction.
+/// \brief Construct an empty height map with the given resolution.
 HeightMap::HeightMap(unsigned int resolution) :
-                            m_res(resolution), m_size(m_res+1),
-                            m_points(nullptr),
-                            m_max(std::numeric_limits<float>::min()), m_min(std::numeric_limits<float>::max())
+        Buffer<float>::Buffer(resolution + 1, 1),
+                            m_res(resolution),
+                            m_max(std::numeric_limits<float>::min()),
+                            m_min(std::numeric_limits<float>::max())
 {
 }
 
-/// \brief Destruct the Segment.
-///
-/// Generally it is not necessary to delete Segment objects from application
-/// code, as Segment instances are owned by the Terrain object.
-/// Storage allocated for heightfield and surface normals is implicitly
-/// deleted as well as all surfaces.
-HeightMap::~HeightMap()
-{
-    delete [] m_points;
-}
 
 /// \brief Check a value against m_min and m_max and set one of them
 /// if appropriate.
@@ -138,17 +121,6 @@ void HeightMap::checkMaxMin(float h)
     }
     if (h>m_max) {
         m_max=h;
-    }
-}
-
-void HeightMap::invalidate() {
-    delete [] m_points;
-    m_points = nullptr;
-}
-
-void HeightMap::allocate() {
-    if (!m_points) {
-        m_points = new float[m_size * m_size];
     }
 }
 
@@ -240,7 +212,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     // temporary array used to hold each edge
     float * edge = new float[m_size];
 
-    float* points = m_points;
+    float* points = m_data;
 
     // calc top edge and copy into m_heightMap
     fill1d(p1,p2,edge);

@@ -12,7 +12,7 @@ namespace Mercator {
 /// \brief Protected constructor for classes which inherit from this
 /// one.
 ///
-/// Permanently sents the color and alpha flags.
+/// Permanently sets the color and alpha flags.
 Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
 {
 }

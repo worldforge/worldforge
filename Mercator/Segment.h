@@ -130,12 +130,12 @@ class Segment {
 
     /// \brief Accessor for buffer containing height points.
     const float * getPoints() const {
-        return m_heightMap.getPoints();
+        return m_heightMap.getData();
     }
 
     /// \brief Accessor for write access to buffer containing height points.
     float * getPoints() {
-        return m_heightMap.getPoints();
+        return m_heightMap.getData();
     }
 
     /// \brief Accessor for height map.

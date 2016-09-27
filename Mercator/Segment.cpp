@@ -301,7 +301,7 @@ void Segment::clearMods()
 void Segment::applyMod(const TerrainMod *t) 
 {
     int lx,hx,ly,hy;
-    float* points = m_heightMap.getPoints();
+    float* points = m_heightMap.getData();
     WFMath::AxisBox<2> bbox=t->bbox();
     bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
