@@ -104,7 +104,7 @@ class QuadInterp {
 HeightMap::HeightMap(unsigned int resolution) :
         Buffer<float>::Buffer(resolution + 1, 1),
                             m_res(resolution),
-                            m_max(std::numeric_limits<float>::min()),
+                            m_max(std::numeric_limits<float>::lowest()),
                             m_min(std::numeric_limits<float>::max())
 {
 }
@@ -201,7 +201,9 @@ void HeightMap::fill1d(const BasePoint& l, const BasePoint &h,
 void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
                      const BasePoint& p3, const BasePoint& p4)
 {
-    // int line = m_res+1;
+    //First reset the min and max values, since they will be updated.
+    m_max = std::numeric_limits<float>::lowest();
+    m_min = std::numeric_limits<float>::max();
 
     // calculate the edges first. This is necessary so that segments tile
     // seamlessly note the order in which the edges are calculated and the
