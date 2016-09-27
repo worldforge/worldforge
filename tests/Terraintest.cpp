@@ -196,9 +196,9 @@ int main()
 
 
     std::vector<std::string> segments;
-    auto pushSegmentsFn = [&](Mercator::Segment& s) {
+    auto pushSegmentsFn = [&](Mercator::Segment& s, int x, int y) {
         std::stringstream ss;
-        ss << (s.getXRef() / terrain.getResolution()) << "x" << (s.getYRef() / terrain.getResolution());
+        ss << x << "x" << y;
         segments.push_back(ss.str());
     };
     terrain.processSegments(WFMath::AxisBox<2>(WFMath::Point<2>(1,1), WFMath::Point<2>(2,2)), pushSegmentsFn);

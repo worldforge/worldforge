@@ -78,9 +78,6 @@ void Terrain::addShader(const Shader * t, int id)
         Segmentcolumn::const_iterator Jend = I->second.end(); 
         for (; J != Jend; ++J) {
             Segment *seg=J->second;
-            if (!t->checkIntersect(*seg)) {
-                continue;
-            }
 
             Segment::Surfacestore & sss = seg->getSurfaces();
             sss[id] = t->newSurface(*seg);
@@ -324,7 +321,7 @@ Segment * Terrain::getSegmentAtIndex(int x, int y) const
 }
 
 void Terrain::processSegments(const WFMath::AxisBox<2>& area,
-        const std::function<void(Segment&)>& func) const
+        const std::function<void(Segment&, int, int)>& func) const
 {
     int lx = I_ROUND(std::floor((area.lowCorner()[0]) / m_spacing));
     int ly = I_ROUND(std::floor((area.lowCorner()[1]) / m_spacing));
@@ -337,7 +334,7 @@ void Terrain::processSegments(const WFMath::AxisBox<2>& area,
             if (!s) {
                 continue;
             }
-            func(*s);
+            func(*s, i, j);
         }
     }
 }

@@ -209,11 +209,10 @@ void Segment::populateNormals()
 /// Call Surface::populate() for each Surface in turn.
 void Segment::populateSurfaces()
 {
-    Surfacestore::const_iterator I = m_surfaces.begin();
-    Surfacestore::const_iterator Iend = m_surfaces.end();
-
-    for (; I != Iend; ++I) {
-        I->second->populate();
+    for (const auto& entry : m_surfaces) {
+        if (entry.second->m_shader.checkIntersect(*this)) {
+            entry.second->populate();
+        }
     }
 }
 

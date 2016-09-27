@@ -203,9 +203,9 @@ class Terrain {
     /**
      * Processes all segments within the supplied area.
      * @param area An area.
-     * @param func Function called for each segment.
+     * @param func Function called for each segment. X and Y index are submitted as second and third arguments.
      */
-    void processSegments(const WFMath::AxisBox<2>& area, const std::function<void(Segment&)>& func) const;
+    void processSegments(const WFMath::AxisBox<2>& area, const std::function<void(Segment&, int, int)>& func) const;
 };
 
 inline int Terrain::posToIndex(float pos) const {
