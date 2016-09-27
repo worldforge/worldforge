@@ -52,13 +52,9 @@ class Segment {
     /// 2x2 matrix of points which control this segment
     Matrix<2, 2, BasePoint> m_controlPoints;
     /// Pointer to buffer containing height points
-    HeightMap* m_heightMap;
+    HeightMap m_heightMap;
     /// Pointer to buffer containing normals for height points
     float * m_normals;
-    /// Maximum height of any point in this segment
-    float m_max;
-    /// Minimum height of any point in this segment
-    float m_min;
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
@@ -96,16 +92,7 @@ class Segment {
     ///
     /// @return true if this Segment is valid, false otherwise.
     const bool isValid() const {
-        return (m_heightMap != nullptr);
-    }
-
-    /// \brief Set min and max height values for this Segment.
-    ///
-    /// This is used after construction to set the initial values, and
-    /// should not be used after populate has been called.
-    void setMinMax(float min, float max) {
-        m_min = min;
-        m_max = max;
+        return m_heightMap.isValid();
     }
 
     void invalidate(bool points = true);
@@ -143,27 +130,21 @@ class Segment {
 
     /// \brief Accessor for buffer containing height points.
     const float * getPoints() const {
-        if (m_heightMap) {
-            return m_heightMap->getPoints();
-        }
-        return nullptr;
+        return m_heightMap.getPoints();
     }
 
     /// \brief Accessor for write access to buffer containing height points.
     float * getPoints() {
-        if (m_heightMap) {
-            return m_heightMap->getPoints();
-        }
-        return nullptr;
+        return m_heightMap.getPoints();
     }
 
     /// \brief Accessor for height map.
-    const HeightMap* getHeightMap() const {
+    const HeightMap& getHeightMap() const {
         return m_heightMap;
     }
 
     /// \brief Accessor for write access to height map.
-    HeightMap* getHeightMap() {
+    HeightMap& getHeightMap() {
         return m_heightMap;
     }
 
@@ -179,7 +160,7 @@ class Segment {
 
     /// \brief Get the height at a relative integer position in the Segment.
     float get(int x, int y) const {
-        return m_heightMap->get(x, y);
+        return m_heightMap.get(x, y);
     }
 
     void getHeight(float x, float y, float &h) const;
@@ -194,15 +175,12 @@ class Segment {
     void populateHeightMap(HeightMap& heightMap);
 
     /// \brief Accessor for the maximum height value in this Segment.
-    float getMax() const { return m_max; }
+    float getMax() const { return m_heightMap.getMax(); }
     /// \brief Accessor for the minimum height value in this Segment.
-    float getMin() const { return m_min; }
+    float getMin() const { return m_heightMap.getMin(); }
 
     /// \brief The 2d area covered by this segment
     WFMath::AxisBox<2> getRect() const;
-
-    /// \brief The 3d box covered by this segment
-    WFMath::AxisBox<3> getBox() const;
 
     void updateMod(long id, const TerrainMod *t);
 

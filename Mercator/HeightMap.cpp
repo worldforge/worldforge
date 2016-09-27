@@ -109,10 +109,10 @@ class QuadInterp {
 /// values, and should be set to appropriate using setMinMax() as soon as
 /// possible after construction. Similarly the control points should be
 /// set soon after construction.
-HeightMap::HeightMap(unsigned int resolution, float min, float max) :
+HeightMap::HeightMap(unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
-                            m_points(new float[m_size * m_size]),
-                            m_max(max), m_min(min)
+                            m_points(nullptr),
+                            m_max(std::numeric_limits<float>::min()), m_min(std::numeric_limits<float>::max())
 {
 }
 
@@ -138,6 +138,17 @@ void HeightMap::checkMaxMin(float h)
     }
     if (h>m_max) {
         m_max=h;
+    }
+}
+
+void HeightMap::invalidate() {
+    delete [] m_points;
+    m_points = nullptr;
+}
+
+void HeightMap::allocate() {
+    if (!m_points) {
+        m_points = new float[m_size * m_size];
     }
 }
 

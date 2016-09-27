@@ -21,13 +21,23 @@ Segment::Segment(int x, int y, unsigned int resolution) :
                  m_res(resolution),
                  m_size(m_res+1),
                  m_xRef(x),
-                 m_yRef(y)
+                 m_yRef(y),
+                 m_heightMap(resolution)
 {
 }
 
 Segment::~Segment()
 {
 }
+
+HeightMap::HeightMap(unsigned int resolution) : m_res(resolution), m_size(m_res+1)
+{
+}
+
+HeightMap::~HeightMap()
+{
+}
+
 
 constexpr float BasePoint::HEIGHT;
 constexpr float BasePoint::ROUGHNESS;

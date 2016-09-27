@@ -37,8 +37,7 @@ namespace Mercator {
 Segment::Segment(int x, int y, unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_xRef(x), m_yRef(y),
-                            m_heightMap(nullptr), m_normals(nullptr),
-                            m_max(-1000000.f), m_min(1000000.0f)
+                            m_heightMap(resolution), m_normals(nullptr)
 {
 }
 
@@ -51,7 +50,6 @@ Segment::Segment(int x, int y, unsigned int resolution) :
 Segment::~Segment()
 {
     clearMods();
-    delete m_heightMap;
     delete [] m_normals;
     
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
@@ -69,10 +67,8 @@ Segment::~Segment()
 /// required modifications are applied.
 void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
-    if (!m_heightMap) {
-        m_heightMap = new HeightMap(m_res, m_min, m_max);
-    }
-    populateHeightMap(*m_heightMap);
+    m_heightMap.allocate();
+    populateHeightMap(m_heightMap);
 
     for (auto& entry : m_terrainMods) {
         applyMod(entry.second);
@@ -94,9 +90,8 @@ void Segment::populateHeightMap(HeightMap& heightMap)
 /// is true the heightfield storage is also deallocated.
 void Segment::invalidate(bool points)
 {
-    if (points && m_heightMap) {
-        delete m_heightMap;
-        m_heightMap = nullptr;
+    if (points) {
+        m_heightMap.invalidate();
     }
     if (m_normals) {
         delete [] m_normals;
@@ -128,7 +123,7 @@ void Segment::invalidateSurfaces()
 /// 2 dimensions to ensure that there is no visible seam between segments.
 void Segment::populateNormals()
 {
-    assert(m_heightMap != NULL);
+    assert(m_heightMap.isValid());
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
@@ -158,15 +153,15 @@ void Segment::populateNormals()
     
     //top and bottom boundary
     for (int i=1; i < m_res; ++i) {
-        h1 = m_heightMap->get(i - 1, 0);
-        h2 = m_heightMap->get(i + 1, 0);
+        h1 = m_heightMap.get(i - 1, 0);
+        h2 = m_heightMap.get(i + 1, 0);
         
         np[i * 3]     = (h1 - h2) / 2.f;
         np[i * 3 + 1] = 0.0;
         np[i * 3 + 2] = 1.0;
  
-        h1 = m_heightMap->get(i - 1, m_res);
-        h2 = m_heightMap->get(i + 1, m_res);
+        h1 = m_heightMap.get(i - 1, m_res);
+        h2 = m_heightMap.get(i + 1, m_res);
         
         np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
         np[m_res * m_size * 3 + i * 3 + 1] = 0.0f;
@@ -175,15 +170,15 @@ void Segment::populateNormals()
     
     //left and right boundary
     for (int j=1; j < m_res; ++j) {
-        h1 = m_heightMap->get(0, j - 1);
-        h2 = m_heightMap->get(0, j + 1);
+        h1 = m_heightMap.get(0, j - 1);
+        h2 = m_heightMap.get(0, j + 1);
         
         np[j * m_size * 3]     = 0;
         np[j * m_size * 3 + 1] = (h1 - h2) / 2.f;
         np[j * m_size * 3 + 2] = 1.f;
  
-        h1 = m_heightMap->get(m_res, j - 1);
-        h2 = m_heightMap->get(m_res, j + 1);
+        h1 = m_heightMap.get(m_res, j - 1);
+        h2 = m_heightMap.get(m_res, j + 1);
 
         np[j * m_size * 3 + m_res * 3]     = 0.f;
         np[j * m_size * 3 + m_res * 3 + 1] = (h1 - h2) / 2.f;
@@ -224,9 +219,7 @@ void Segment::populateSurfaces()
 
 void Segment::getHeight(float x, float y, float &h) const
 {
-    if (m_heightMap) {
-        m_heightMap->getHeight(x, y, h);
-    }
+    m_heightMap.getHeight(x, y, h);
 }
 
 /// \brief Get an accurate height and normal vector at a given coordinate
@@ -244,9 +237,7 @@ void Segment::getHeight(float x, float y, float &h) const
 void Segment::getHeightAndNormal(float x, float y, float& h,
                                  WFMath::Vector<3> &normal) const
 {
-    if (m_heightMap) {
-        m_heightMap->getHeightAndNormal(x, y, h, normal);
-    }
+    m_heightMap.getHeightAndNormal(x, y, h, normal);
 }
 
 /// \brief Determine the intersection between an axis aligned box and
@@ -310,13 +301,15 @@ void Segment::clearMods()
 void Segment::applyMod(const TerrainMod *t) 
 {
     int lx,hx,ly,hy;
-    float* points = m_heightMap->getPoints();
+    float* points = m_heightMap.getPoints();
     WFMath::AxisBox<2> bbox=t->bbox();
     bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
         for (int i=ly; i<=hy; i++) {
             for (int j=lx; j<=hx; j++) {
-                t->apply(points[i * m_size + j], j + m_xRef, i + m_yRef);
+                float& h = points[i * m_size + j];
+                t->apply(h, j + m_xRef, i + m_yRef);
+                m_heightMap.checkMaxMin(h);
             }
         }
     }
@@ -405,13 +398,6 @@ WFMath::AxisBox<2> Segment::getRect() const
     WFMath::Point<2> lp(m_xRef, m_yRef), 
         hp(lp.x() + m_res, lp.y() + m_res);
     return WFMath::AxisBox<2>(lp, hp);
-}
-
-WFMath::AxisBox<3> Segment::getBox() const
-{
-    WFMath::Point<3> lp(m_xRef, m_yRef, m_min), 
-        hp(lp.x() + m_res, lp.y() + m_res, m_max);
-    return WFMath::AxisBox<3>(lp, hp);
 }
 
 } // namespace Mercator
