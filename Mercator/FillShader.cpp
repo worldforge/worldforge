@@ -2,10 +2,10 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/FillShader.h>
+#include "FillShader.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Surface.h>
+#include "Segment.h"
+#include "Surface.h"
 
 namespace Mercator {
 

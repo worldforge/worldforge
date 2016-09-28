@@ -6,8 +6,8 @@
 #include "config.h"
 #endif
 
-#include <Mercator/Intersect.h>
-#include <Mercator/Segment.h>
+#include "Intersect.h"
+#include "Segment.h"
 
 #include <algorithm>
 

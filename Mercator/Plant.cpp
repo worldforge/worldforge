@@ -2,7 +2,7 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2004 Alistair Riddoch
 
-#include <Mercator/Plant.h>
+#include "Plant.h"
 
 namespace Mercator {
 

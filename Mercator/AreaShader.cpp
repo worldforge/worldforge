@@ -6,11 +6,11 @@
 #include "config.h"
 #endif
 
-#include "Mercator/AreaShader.h"
-#include "Mercator/Area.h"
-#include "Mercator/iround.h"
-#include "Mercator/Segment.h"
-#include "Mercator/Surface.h"
+#include "AreaShader.h"
+#include "Area.h"
+#include "iround.h"
+#include "Segment.h"
+#include "Surface.h"
 
 #include <list>
 #include <set>

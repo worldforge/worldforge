@@ -5,7 +5,7 @@
 #ifndef MERCATOR_TILE_SHADER_H
 #define MERCATOR_TILE_SHADER_H
 
-#include <Mercator/Shader.h>
+#include "Shader.h"
 
 #include <map>
 

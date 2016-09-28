@@ -6,10 +6,10 @@
 #include "config.h"
 #endif
 
-#include <Mercator/GrassShader.h>
+#include "GrassShader.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Surface.h>
+#include "Segment.h"
+#include "Surface.h"
 
 #include <cmath>
 

@@ -2,7 +2,7 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/Matrix.h>
+#include "Matrix.h"
 
 namespace Mercator {
 

@@ -5,7 +5,7 @@
 #ifndef MERCATOR_FOREST_H
 #define MERCATOR_FOREST_H
 
-#include <Mercator/RandCache.h>
+#include "RandCache.h"
 
 #include <wfmath/axisbox.h>
 #include <wfmath/polygon.h>

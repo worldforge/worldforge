@@ -8,9 +8,9 @@
 
 #include "iround.h"
 
-#include <Mercator/Forest.h>
-#include <Mercator/Plant.h>
-#include <Mercator/Area.h>
+#include "Forest.h"
+#include "Plant.h"
+#include "Area.h"
 
 #include <wfmath/MersenneTwister.h>
 #include <wfmath/intersect.h>

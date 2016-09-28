@@ -8,7 +8,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <Mercator/Terrain.h>
+#include "Terrain.h"
 
 namespace Mercator {
 

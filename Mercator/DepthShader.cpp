@@ -8,10 +8,10 @@
 
 #include "iround.h"
 
-#include <Mercator/DepthShader.h>
+#include "DepthShader.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Surface.h>
+#include "Segment.h"
+#include "Surface.h"
 
 #include <cmath>
 

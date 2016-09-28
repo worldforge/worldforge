@@ -5,7 +5,7 @@
 #ifndef MERCATOR_AREA_H
 #define MERCATOR_AREA_H
 
-#include <Mercator/Effector.h>
+#include "Effector.h"
 
 #include <wfmath/axisbox.h>
 #include <wfmath/polygon.h>

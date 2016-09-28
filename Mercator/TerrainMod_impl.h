@@ -5,9 +5,9 @@
 #ifndef MERCATOR_TERRAIN_MOD_IMPL_H
 #define MERCATOR_TERRAIN_MOD_IMPL_H
 
-#include <Mercator/TerrainMod.h>
+#include "TerrainMod.h"
 
-#include <Mercator/Segment.h>
+#include "Segment.h"
 
 namespace Mercator {
 

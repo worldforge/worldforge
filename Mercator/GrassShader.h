@@ -5,8 +5,8 @@
 #ifndef MERCATOR_FILL_GRASS_SHADER_H
 #define MERCATOR_FILL_GRASS_SHADER_H
 
-#include <Mercator/Shader.h>
-#include <Mercator/Surface.h>
+#include "Shader.h"
+#include "Surface.h"
 
 /* alpha ^
  *       |

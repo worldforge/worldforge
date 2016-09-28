@@ -5,7 +5,7 @@
 #ifndef MERCATOR_SHADER_FACTORY_H
 #define MERCATOR_SHADER_FACTORY_H
 
-#include <Mercator/Shader.h>
+#include "Shader.h"
 
 namespace Mercator {
 

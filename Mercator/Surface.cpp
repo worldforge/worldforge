@@ -2,9 +2,9 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/Surface.h>
+#include "Surface.h"
 
-#include <Mercator/Shader.h>
+#include "Shader.h"
 #include <cassert>
 
 namespace Mercator {

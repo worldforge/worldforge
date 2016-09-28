@@ -5,7 +5,7 @@
 #ifndef MERCATOR_TERRAIN_MOD_H
 #define MERCATOR_TERRAIN_MOD_H
 
-#include <Mercator/Effector.h>
+#include "Effector.h"
 
 #include <wfmath/intersect.h>
 #include <wfmath/ball.h>

@@ -6,8 +6,8 @@
 #include "config.h"
 #endif
 
-#include <Mercator/Area.h>
-#include "Mercator/Segment.h"
+#include "Area.h"
+#include "Segment.h"
 
 #include <wfmath/intersect.h>
 #include <iostream>

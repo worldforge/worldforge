@@ -2,9 +2,9 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch, Damien McGinnes
 
-#include <Mercator/TerrainMod_impl.h>
+#include "TerrainMod_impl.h"
 
-#include <Mercator/Segment.h>
+#include "Segment.h"
 
 namespace Mercator {
 

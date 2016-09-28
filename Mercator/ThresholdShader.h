@@ -5,7 +5,7 @@
 #ifndef MERCATOR_FILL_THRESHOLD_SHADER_H
 #define MERCATOR_FILL_THRESHOLD_SHADER_H
 
-#include <Mercator/Shader.h>
+#include "Shader.h"
 
 namespace Mercator {
 

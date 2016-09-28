@@ -8,13 +8,13 @@
 
 #include "iround.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Terrain.h>
-#include <Mercator/TerrainMod.h>
-#include <Mercator/Surface.h>
-#include <Mercator/BasePoint.h>
-#include <Mercator/Area.h>
-#include <Mercator/Shader.h>
+#include "Segment.h"
+#include "Terrain.h"
+#include "TerrainMod.h"
+#include "Surface.h"
+#include "BasePoint.h"
+#include "Area.h"
+#include "Shader.h"
 
 #include <wfmath/MersenneTwister.h>
 

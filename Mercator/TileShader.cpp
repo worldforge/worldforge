@@ -2,10 +2,10 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
-#include <Mercator/TileShader.h>
+#include "TileShader.h"
 
-#include <Mercator/Segment.h>
-#include <Mercator/Surface.h>
+#include "Segment.h"
+#include "Surface.h"
 
 #include <cassert>
 

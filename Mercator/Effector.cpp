@@ -2,7 +2,7 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2010 Alistair Riddoch
 
-#include <Mercator/Effector.h>
+#include "Effector.h"
 
 #include <algorithm>
 

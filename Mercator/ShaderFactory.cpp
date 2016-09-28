@@ -2,12 +2,12 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
-#include <Mercator/ShaderFactory_impl.h>
+#include "ShaderFactory_impl.h"
 
-#include <Mercator/DepthShader.h>
-#include <Mercator/FillShader.h>
-#include <Mercator/GrassShader.h>
-#include <Mercator/ThresholdShader.h>
+#include "DepthShader.h"
+#include "FillShader.h"
+#include "GrassShader.h"
+#include "ThresholdShader.h"
 
 #include <cassert>
 
