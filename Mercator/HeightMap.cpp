@@ -251,8 +251,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     WFMath::MTRand rng(seed, 4);
 
     QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
+    QuadInterp falloffQi(m_res, p1.falloff(), p2.falloff(), p3.falloff(), p4.falloff());
 
-    float f = BasePoint::FALLOFF;
     float depth=0;
 
     // center of points is done separately
@@ -260,6 +260,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
 
     //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
     float roughness = qi.calc(stride, stride);
+    float f = falloffQi.calc(stride, stride);
     points[stride*m_size + stride] = qRMD(rng, points[0 * m_size + stride],
                                         points[stride*m_size + 0],
                                         points[stride*m_size + m_res],
@@ -283,6 +284,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
+              f = falloffQi.calc(i, j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j+stride) * (m_size)],
                                        points[(i+stride) + (j-stride) * (m_size)],
                                        points[(i+stride) + (j+stride) * (m_size)],
@@ -300,6 +302,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride*2;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
+              f = falloffQi.calc(i, j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j) * (m_size)],
                                        points[(i+stride) + (j) * (m_size)],
                                        points[(i) + (j+stride) * (m_size)],
@@ -312,6 +315,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride*2;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
+              f = falloffQi.calc(i, j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j) * (m_size)],
                                        points[(i+stride) + (j) * (m_size)],
                                        points[(i) + (j+stride) * (m_size)],
