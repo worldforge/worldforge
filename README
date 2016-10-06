@@ -1,9 +1,6 @@
 Mercator: a procedural terrain library
 ======================================
 
-This is a development release. The API is currently not frozen. Stable
-releases of other packages should not be made against this software.
-
 Mercator is primarily aimed at terrain for multiplayer online games and
 forms one of the WorldForge (http://www.worldforge.org) core libraries.
 It is intended to be used as a terrain library on both the client, and the
@@ -41,19 +38,6 @@ Shading
 * new types of shaders can be added quite easily
 * used on the client side
 
-Atlas Integration
------------------
-The aim is to pass all data between server and client using atlas.
-Cyphesis and Stage provide a parameter to the world entity that defines
-the global terrain (this is a bit of a hack). Shading and Modifiers are
-only implemented on the client right now.
-
-   TODO:
-   properly define atlas messages between client and server for
-   * terrain base points
-   * geometric modifiers
-   * shading controls
-
 Collision
 ---------
 basic terrain intersection/collision functions are implemented for
@@ -71,26 +55,5 @@ Currently incomplete and has hardcoded parameters
 Current Limitations
 -------------------
 * multiple resolutions in the one terrain are unsupported
-
-Implementations
----------------
-As of September 2003, Mercator is used in:
-Equator - allows editing of base points
-Apogee - implements shaders
-Stage
-Cyphesis
-
-Screenshots 
------------
-(bear in mind that some of these shots may have terrain with somewhat
-unrealistic parameters for more interesting demos)
-
-* Equator showing part of a terrain
-http://members.austarmetro.com.au/~mcginnes/snapshot8.png
-* Apogee showing shaders in action
-http://www.ecs.soton.ac.uk/~ajr/WF/apogee_terrain_shaders.png
-* Equator showing some modifiers applied
-http://members.austarmetro.com.au/~mcginnes/snapshot8.png
-http://members.austarmetro.com.au/~mcginnes/mercatorMesa.jpg
 
                    
