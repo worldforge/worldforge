@@ -2,8 +2,9 @@ Mercator: a procedural terrain library
 ======================================
 
 Mercator is primarily aimed at terrain for multiplayer online games and
-forms one of the WorldForge (http://www.worldforge.org) core libraries.
-It is intended to be used as a terrain library on both the client, and the
+forms one of the [WorldForge](http://worldforge.org/ "The main Worldforge site")
+core libraries.
+It is intended to be used as a terrain library on both the client and the
 server.
 
 Mercator is designed in such a way that individual tiles can be
