@@ -15,8 +15,8 @@ Version: %{version}
 Release: %{release}
 License: GPL
 Group: System Environment/Libraries
-URL: http://www.worldforge.org/dev/eng/libraries/mercator
-Packager: Al Riddoch <alriddoch@googlemail.com>
+URL: http://www.worldforge.org/index.php/components/mercator/
+Packager: 
 Vendor: WorldForge
 Distribution: Mason
 Source: mercator-%{version}.tar.bz2
@@ -25,7 +25,7 @@ BuildArch: noarch
 BuildRequires:  mingw32-filesystem >= 49
 BuildRequires:  mingw32-gcc
 BuildRequires:  mingw32-binutils
-BuildRequires: mingw32-wfmath >= 0.3.2
+BuildRequires: mingw32-wfmath >= 1.0.0
 
 %description
 Mercator is designed to handle terrain data.

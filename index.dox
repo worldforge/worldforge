@@ -8,12 +8,14 @@ Welcome to the Mercator documentation.
 
 <UL>
 <LI><a href="http://www.worldforge.org/">The WorldForge Project</a></LI>
-<LI><a hreF="http://www.worldforge.org/dev/eng/libs/mercator">Mercator</a></LI>
+<LI><a href="https://github.com/worldforge/mercator/">Source</a></LI>
+<LI><a href="http://www.worldforge.org/index.php/components/mercator/">Mercator</a></LI>
+
 </UL>
 
 <H2>Contact</H2>
 
-The current maintainer and main author for Mercator is Al Riddoch
-<alriddoch@zepler.org>.
+The current maintainer and main author for Mercator is Erik Ogenvik
+<erik@ogenvik.org>.
 
 */
