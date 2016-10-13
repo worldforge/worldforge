@@ -15,7 +15,7 @@
 
 #You should have received a copy of the GNU Lesser General Public
 #License along with this library; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 use_mipmap = 1
 draw_triangle_outline = 0
@@ -798,10 +798,10 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
 ##        border_ratio = 20.0
 ##        map_minx -= size_x / border_ratio
 ##        map_maxx += size_x / border_ratio
-##        size_x += size_x / border_ratio * 2.0
+##        size_x += size_x / border_ratio *ï¿½2.0
 ##        map_miny -= size_y / border_ratio
 ##        map_maxy += size_y / border_ratio
-##        size_y += size_y / border_ratio * 2.0
+##        size_y += size_y / border_ratio *ï¿½2.0
         #if size.width > size.height:
         print xlimits, ylimits #map_minx, map_miny, map_maxx, map_maxy
         print xlimits.size(), ylimits.size()
