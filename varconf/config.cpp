@@ -132,7 +132,7 @@ std::istream & operator >>(std::istream & in, Config & conf)
   try {
     conf.parseStream(in, USER);
   }
-  catch (ParseError p) {
+  catch (const ParseError& p) {
     char buf[1024];
     std::string p_str = p;
     snprintf(buf, 1024, "\nVarconf Error: parser exception throw while "
@@ -538,7 +538,7 @@ bool Config::readFromFile(const std::string & filename, Scope scope)
   try {
     parseStream(fin, scope);
   }
-  catch (ParseError p) {
+  catch (const ParseError& p) {
     char buf[1024];
     std::string p_str = p;
     snprintf(buf, 1024, "\nVarconf Error: parsing exception thrown while "
