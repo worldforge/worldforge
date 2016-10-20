@@ -67,4 +67,12 @@ ParseError::operator std::string()
   return std::string( buf);
 }
  
+ParseError::operator std::string() const
+{
+  char buf[1024];
+  snprintf( buf, 1024, "ParseError: Expected %s at line %d, column %d.",
+            m_exp.c_str(), m_line, m_col);
+  return std::string( buf);
+}
+
 } // namespace varconf

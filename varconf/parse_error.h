@@ -44,6 +44,7 @@ public:
   VARCONF_API friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
   operator std::string();
+  operator std::string() const;
 
 private:
   std::string m_exp;
