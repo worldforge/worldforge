@@ -97,12 +97,6 @@ public:
     void detach();
 
     /**
-     * @brief Gets the iostream object.
-     * @return
-     */
-    std::iostream& getIos();
-
-    /**
      * @brief Gets the codec object.
      * @note Only call this after the socket has successfully negotiated.
      * @return
@@ -129,9 +123,43 @@ protected:
     Atlas::Bridge& _bridge;
     Callbacks _callbacks;
 
-    boost::asio::streambuf* mBuffer;
+    /**
+     * Buffer used to write data to be sent.
+     * Swapped with mSendBuffer once data is being sent.
+     */
+    boost::asio::streambuf* mWriteBuffer;
+
+    /**
+     * Buffer of data which is being sent. This should not be touched until
+     * the async_write call completes.
+     */
+    boost::asio::streambuf* mSendBuffer;
+
+    /**
+     * Buffer for data being read from the socket.
+     */
     boost::asio::streambuf mReadBuffer;
-    std::iostream m_ios;
+
+    /**
+     * Stream for data being received.
+     */
+    std::istream mInStream;
+
+    /**
+     * Stream for data being sent out.
+     */
+    std::ostream mOutStream;
+
+    /**
+     * True if we should send again as soon as an ongoing async_write operation completes.
+     */
+    bool mShouldSend;
+
+    /**
+     * True if we're currently sending through an async_write (and thus shouldn't touch mSendBuffer).
+     */
+    bool mIsSending;
+
     Atlas::Net::StreamConnect* _sc; ///< negotiation object (NULL after connection!)
     boost::asio::deadline_timer _negotiateTimer;
     boost::asio::deadline_timer _connectTimer;

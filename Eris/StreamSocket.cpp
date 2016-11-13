@@ -38,17 +38,18 @@ namespace Eris
 StreamSocket::StreamSocket(io_service& io_service,
         const std::string& client_name, Atlas::Bridge& bridge,
         Callbacks& callbacks) :
-        m_io_service(io_service), _bridge(bridge), _callbacks(callbacks), mBuffer(
-                new boost::asio::streambuf()), m_ios(mBuffer), _sc(
-                new Atlas::Net::StreamConnect(client_name, m_ios)), _negotiateTimer(
-                io_service), _connectTimer(io_service), m_codec(nullptr), m_encoder(
-                nullptr), m_is_connected(false)
+        m_io_service(io_service), _bridge(bridge), _callbacks(callbacks),
+        mWriteBuffer(new boost::asio::streambuf()), mSendBuffer(new boost::asio::streambuf()),
+        mInStream(&mReadBuffer), mOutStream(mWriteBuffer), mShouldSend(false), mIsSending(false),
+        _sc(new Atlas::Net::StreamConnect(client_name, mInStream, mOutStream)),
+        _negotiateTimer(io_service), _connectTimer(io_service), m_codec(nullptr), m_encoder(nullptr), m_is_connected(false)
 {
 }
 StreamSocket::~StreamSocket()
 {
     delete _sc;
-    delete mBuffer;
+    delete mWriteBuffer;
+    delete mSendBuffer;
     delete m_encoder;
     delete m_codec;
 }
@@ -56,11 +57,6 @@ StreamSocket::~StreamSocket()
 void StreamSocket::detach()
 {
     _callbacks = Callbacks();
-}
-
-std::iostream& StreamSocket::getIos()
-{
-    return m_ios;
 }
 
 void StreamSocket::startNegotiation()
@@ -74,6 +70,7 @@ void StreamSocket::startNegotiation()
         //completed yet; we'll consider that a "timeout".
             if (_sc != nullptr) {
                 if (_callbacks.stateChanged) {
+                    debug() << "Client disconnected because of negotiation timeout.";
 //                log(NOTICE, "Client disconnected because of negotiation timeout.");
                 _callbacks.stateChanged(DISCONNECTING);
 //                mSocket.close();

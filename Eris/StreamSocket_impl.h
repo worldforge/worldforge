@@ -129,13 +129,13 @@ template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::negotiate_read()
 {
     auto self(this->shared_from_this());
-    m_socket.async_read_some(mBuffer->prepare(read_buffer_size),
+    m_socket.async_read_some(mReadBuffer.prepare(read_buffer_size),
             [this, self](boost::system::error_code ec, std::size_t length)
             {
                 if (_callbacks.stateChanged) {
                     if (!ec)
                     {
-                        mBuffer->commit(length);
+                        mReadBuffer.commit(length);
                         if (length > 0) {
                             auto negotiateResult = this->negotiate();
                             if (negotiateResult == Atlas::Negotiate::FAILED) {
@@ -156,6 +156,8 @@ void AsioStreamSocket<ProtocolT>::negotiate_read()
                     } else {
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
+                        } else {
+                            warning() << "Error when reading from socket while negotiating: " << ec;
                         }
                     }
                 }
@@ -173,14 +175,14 @@ void AsioStreamSocket<ProtocolT>::do_read()
                     if (!ec)
                     {
                         mReadBuffer.commit(length);
-                        this->m_ios.rdbuf(&mReadBuffer);
                         m_codec->poll();
-                        this->m_ios.rdbuf(mBuffer);
                         _callbacks.dispatch();
                         this->do_read();
                     } else {
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
+                        } else {
+                            warning() << "Error when reading from socket: " << ec;
                         }
                     }
                 }
@@ -190,63 +192,61 @@ void AsioStreamSocket<ProtocolT>::do_read()
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::write()
 {
+    if (mWriteBuffer->size() != 0) {
+        if (mIsSending) {
+            //We're already sending in the background.
+            //Make that we should send again once we've completed sending.
+            mShouldSend = true;
+            return;
+        }
 
-    if (mBuffer->size() != 0) {
-        //When sending data we need to make sure that nothing else writes to the streambuf (mBuffer).
-        //We do this by creating a new streambuf instance. The one containing the data to be sent is
-        //then contained in a shared_ptr. When the async write operation is done the shared_ptr will
-        //be deleted. However, in order to make this a bit more efficient we'll use a custom deleter
-        //in which we'll check if the new buffer has had anything written to it. If not, we'll reuse
-        //the buffer just used for writing, as this will already have had memory allocated.
+        mShouldSend = false;
+
+        //We'll use a self reference to make sure that the client isn't deleted while sending.
         auto self(this->shared_from_this());
-        std::function<void(boost::asio::streambuf*)> bufferDeleter =
-                [&, self](boost::asio::streambuf* p) {
-                    //Check if the existing writebuffer has had anything written to it.
-                    if (this->mBuffer->size() > 0) {
-                        delete p;
-                    } else {
-                        //If the existing writebuffer hasn't had anything written to it we'll reuse the previous
-                        //one instead since it already have had memory allocated. This prevents unnecessary release
-                        //and re-allocation of memory.
-                        delete this->mBuffer;
-                        this->mBuffer = p;
-                        this->m_ios.rdbuf(this->mBuffer);
+        //Swap places between writing buffer and sending buffer, and attach new write buffer to the out stream.
+        std::swap(mWriteBuffer, mSendBuffer);
+        mOutStream.rdbuf(mWriteBuffer);
+        mIsSending = true;
 
+        async_write(m_socket, mSendBuffer->data(),
+            [this, self](boost::system::error_code ec, std::size_t length)
+            {
+                mIsSending = false;
+                if (!ec) {
+                    mSendBuffer->consume(length);
+                    //Is there data queued for transmission which we should send right away?
+                    if (mShouldSend) {
+                        this->write();
                     }
-                };
-        std::shared_ptr<boost::asio::streambuf> buffer(mBuffer, bufferDeleter);
-        mBuffer = new boost::asio::streambuf();
-        m_ios.rdbuf(mBuffer);
-
-        async_write(m_socket, buffer->data(),
-                [this, buffer, self](boost::system::error_code ec, std::size_t length)
-                {
-                    if (_callbacks.stateChanged) {
-                        if (!ec)
-                        {
-                            buffer->consume(length);
-                        } else {
-                            if (ec != boost::asio::error::operation_aborted) {
-                                _callbacks.stateChanged(CONNECTION_FAILED);
-                            }
+                } else {
+                    if (ec != boost::asio::error::operation_aborted) {
+                        if (_callbacks.stateChanged) {
+                            _callbacks.stateChanged(CONNECTION_FAILED);
                         }
+                    } else {
+                        warning() << "Error when writing to socket: " << ec;
                     }
-                });
+                }
+            });
     }
+
 }
 
 template<typename ProtocolT>
 void AsioStreamSocket<ProtocolT>::negotiate_write()
 {
 
-    if (mBuffer->size() != 0) {
+    if (mWriteBuffer->size() != 0) {
         auto self(this->shared_from_this());
-        boost::asio::async_write(m_socket, mBuffer->data(),
+        boost::asio::async_write(m_socket, mWriteBuffer->data(),
                 [this, self](boost::system::error_code ec, std::size_t length)
                 {
                     if (!ec)
                     {
-                        this->mBuffer->consume(length);
+                        this->mWriteBuffer->consume(length);
+                    } else {
+                        warning() << "Error when writing to socket while negotiating: " << ec;
                     }
                 });
     }
