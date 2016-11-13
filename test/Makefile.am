@@ -15,7 +15,7 @@ check_PROGRAMS = Entity_unittest Account_unittest \
                  TypeBoundRedispatch_unittest \
                  TransferInfo_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
-                 View_unittest TerrainMod_unittest \
+                 View_unittest \
                  Metaserver_integrationtest PollWinsock_unittest \
                  Account_integrationtest
 TESTS = $(check_PROGRAMS)
@@ -113,7 +113,6 @@ TypeInfo_unittest_SOURCES = TypeInfo_unittest.cpp
 TypeService_unittest_SOURCES = TypeService_unittest.cpp
 Types_unittest_SOURCES = Types_unittest.cpp
 View_unittest_SOURCES = View_unittest.cpp
-TerrainMod_unittest_SOURCES = TerrainMod_unittest.cpp
 
 Metaserver_integrationtest_SOURCES = Metaserver_integrationtest.cpp
 Metaserver_integrationtest_LDADD = \
