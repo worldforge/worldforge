@@ -160,7 +160,7 @@ protected:
     friend class TestInjector;
 
     /** Inject a local operation into the dispatch queue. Used by the
-    redispatch mechansim. */
+    redispatch mechanism. */
     void postForDispatch(const Atlas::Objects::Root& obj);
 
     void cleanupRedispatch(Redispatch* r);
@@ -173,7 +173,7 @@ protected:
     void onDisconnectTimeout();
 
     typedef std::deque<Atlas::Objects::Operation::RootOperation> OpDeque;
-    OpDeque m_opDeque; ///< store of all the recived ops waiting to be dispatched
+    OpDeque m_opDeque; ///< store of all the received ops waiting to be dispatched
 
     std::unique_ptr<TypeService> m_typeService;
     Router* m_defaultRouter; // need several of these?

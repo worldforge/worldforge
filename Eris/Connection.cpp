@@ -22,7 +22,7 @@
 #include <cassert>
 #include <algorithm>
 
-// #define ATLAS_LOG 1
+#define ATLAS_LOG 0
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -150,12 +150,12 @@ void Connection::send(const Atlas::Objects::Root &obj)
 #ifdef ATLAS_LOG
     std::stringstream debugStream;
 
-    Atlas::Codecs::Bach debugCodec(debugStream, *this /*dummy*/);
+    Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /*dummy*/);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "sending:" << debugStream.str() << std::endl;
+    debug() << "sending:" << debugStream.str() << std::endl;
 #endif
 
     _socket->getEncoder().streamObjectsMessage(obj);
@@ -250,12 +250,12 @@ void Connection::objectArrived(const Root& obj)
 {
 #ifdef ATLAS_LOG
     std::stringstream debugStream;
-    Atlas::Codecs::Bach debugCodec(debugStream, *this /* dummy */);
+    Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /* dummy */);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "received:" << debugStream.str() << std::endl;
+    debug() << "received:" << debugStream.str() << std::endl;
 #endif
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
@@ -359,12 +359,12 @@ void Connection::postForDispatch(const Root& obj)
 
 #ifdef ATLAS_LOG
     std::stringstream debugStream;
-    Atlas::Codecs::Bach debugCodec(debugStream, *this /* dummy */);
+    Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /* dummy */);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "posted for re-dispatch:" << debugStream.str() << std::endl;
+    debug() << "posted for re-dispatch:" << debugStream.str() << std::endl;
 #endif
 }
 
