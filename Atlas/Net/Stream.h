@@ -59,7 +59,7 @@ class StreamConnect : public Atlas::Negotiate
 {
     public:
 
-    StreamConnect(const std::string& name, std::iostream&);
+    StreamConnect(const std::string& name, std::istream& inStream, std::ostream& outStream);
 
     virtual ~StreamConnect();
 
@@ -85,7 +85,8 @@ class StreamConnect : public Atlas::Negotiate
 
     std::string m_outName;
     std::string m_inName;
-    std::iostream& m_socket;
+    std::istream& m_inStream;
+    std::ostream& m_outStream;
     std::list<std::string> m_inCodecs;
     std::list<std::string> m_inFilters;
   
@@ -119,7 +120,7 @@ class StreamAccept : public Atlas::Negotiate
 {
     public:
 
-    StreamAccept(const std::string& name, std::iostream&);
+    StreamAccept(const std::string& name, std::istream& inStream, std::ostream& outStream);
 
     virtual ~StreamAccept();
 
@@ -145,7 +146,8 @@ class StreamAccept : public Atlas::Negotiate
 
     std::string m_outName;
     std::string m_inName;
-    std::iostream& m_socket;
+    std::istream& m_inStream;
+    std::ostream& m_outStream;
     std::list<std::string> m_inCodecs;
     std::list<std::string> m_inFilters;
   
