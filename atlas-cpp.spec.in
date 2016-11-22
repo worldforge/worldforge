@@ -1,7 +1,7 @@
 %define name atlascpp
 %define version @VERSION@
 %define release 1
-%define libsuffix @ATLAS_LIB_SUFFIX@
+%define libsuffix @SUFFIX@
 
 Summary: The Atlas protocol C++ implementation
 Name: %{name}

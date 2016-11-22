@@ -19,14 +19,8 @@ using Atlas::Message::ListType;
 int main(int argc, char** argv)
 {
     std::string atlas_xml_path;
-    char * srcdir_env = getenv("srcdir");
-    if (srcdir_env != 0) {
-        atlas_xml_path = srcdir_env;
-        atlas_xml_path += "/";
-    }
-    atlas_xml_path += "../../protocol/spec/atlas.xml";
     try {
-	Atlas::Objects::loadDefaults(atlas_xml_path);
+	    Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH);
     } catch(Atlas::Objects::DefaultLoadingException e) {
 	std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
