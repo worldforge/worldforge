@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 project(Atlas-C++)
+set(CMAKE_CXX_STANDARD 14)
 include(GNUInstallDirs)
 
 # Version setup
@@ -18,7 +19,7 @@ math(EXPR ATLAS_SOVERSION ${ATLAS_ABI_CURRENT}-${ATLAS_ABI_AGE})
 set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -217,34 +218,56 @@ endif (ZLIB_FOUND)
 # Add test
 enable_testing()
 
-macro(wf_add_test _TEST_NAME)
+# Add a "check" target, which builds and runs the tests.
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
 
-    add_executable(${_TEST_NAME}_test ${ARGN})
-    target_link_libraries(${_TEST_NAME}_test Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasFunky${SUFFIX})
-    add_test(NAME ${_TEST_NAME} COMMAND ${_TEST_NAME}_test)
+# Add a "benchmark" target, which builds and runs the benchmarks.
+add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
 
+#Macro for adding a test. The test name will be extracted from the name of the first submitted file.
+#Additional files can be submitted as varargs.
+macro(wf_add_test TEST_FILE)
+
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+
+    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasFunky${SUFFIX})
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+
+    add_dependencies(check ${TEST_NAME})
 endmacro()
 
-wf_add_test(Codecs tests/Codecs/codecs.cpp)
-wf_add_test(CustomOps tests/Objects/custom_ops.cpp)
-wf_add_test(Objects1 tests/Objects/objects1.cpp)
-wf_add_test(Objects2 tests/Objects/objects2.cpp)
-wf_add_test(Encoder1 tests/Objects/encoder1.cpp)
-wf_add_test(Decoder1 tests/Objects/decoder1.cpp)
-wf_add_test(ObjectsFwd tests/Objects/objects_fwd.cpp)
-wf_add_test(Attributes tests/Objects/attributes.cpp)
-wf_add_test(Flags tests/Objects/flags.cpp)
+macro(wf_add_benchmark TEST_FILE)
+
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+
+    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasFunky${SUFFIX})
+    add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
+
+    add_dependencies(benchmark ${TEST_NAME})
+endmacro()
+
+wf_add_test(tests/Codecs/codecs.cpp)
+wf_add_test(tests/Objects/custom_ops.cpp)
+wf_add_test(tests/Objects/objects1.cpp)
+wf_add_test(tests/Objects/objects2.cpp)
+wf_add_test(tests/Objects/encoder1.cpp)
+wf_add_test(tests/Objects/decoder1.cpp)
+wf_add_test(tests/Objects/objects_fwd.cpp)
+wf_add_test(tests/Objects/attributes.cpp)
+wf_add_test(tests/Objects/flags.cpp)
 add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/protocol/spec/atlas.xml")
 
-wf_add_test(Objects_asMessage benchmark/Objects_asMessage.cpp)
-wf_add_test(Objects3_Move benchmark/Objects3_Move.cpp)
-wf_add_test(Call_Move benchmark/Call_Move.cpp)
-wf_add_test(Message_Move benchmark/Message_Move.cpp)
-wf_add_test(Static_Move benchmark/Static_Move.cpp)
-wf_add_test(Objects_iterator benchmark/Objects_iterator.cpp)
-wf_add_test(Codecs_Packed benchmark/Codecs_Packed.cpp)
-wf_add_test(Message_Element benchmark/Message_Element.cpp)
-wf_add_test(Objects_setAttr benchmark/Objects_setAttr.cpp)
+wf_add_benchmark(benchmark/Objects_asMessage.cpp)
+wf_add_benchmark(benchmark/Objects3_Move.cpp)
+wf_add_benchmark(benchmark/Call_Move.cpp)
+wf_add_benchmark(benchmark/Message_Move.cpp)
+wf_add_benchmark(benchmark/Static_Move.cpp)
+wf_add_benchmark(benchmark/Objects_iterator.cpp)
+wf_add_benchmark(benchmark/Codecs_Packed.cpp)
+wf_add_benchmark(benchmark/Message_Element.cpp)
+wf_add_benchmark(benchmark/Objects_setAttr.cpp)
 
 
 # Doxygen support, exports a "docs" target.
