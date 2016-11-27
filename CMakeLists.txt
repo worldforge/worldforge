@@ -46,7 +46,6 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/Decoder.cpp
         Atlas/Objects/Dispatcher.cpp
         Atlas/Objects/Encoder.cpp
-        Atlas/Objects/flag.cpp
         Atlas/Objects/Generic.cpp
         Atlas/Objects/loadDefaults.cpp
         Atlas/Objects/objectFactory.cpp
@@ -139,6 +138,47 @@ set(HEADER_FILES
         Atlas/PresentationBridge.h
         Atlas/Task.h
         Atlas/Version.h)
+
+include(FindPythonInterp)
+
+if (PYTHONINTERP_FOUND)
+    set(OBJECTS_GENERATE_OUTPUT
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Root.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Decoder.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Dispatcher.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/objectFactory.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootEntity.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootEntityChildren.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperation.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren1.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren2.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren3.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren4.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren5.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Anonymous.cpp
+            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Generic.cpp
+            )
+
+    set(PY_SOURCES
+            Atlas/Objects/gen_cpp.py
+            Atlas/Objects/common.py
+            Atlas/Objects/AttributeInfo.py
+            Atlas/Objects/GenerateObjectFactory.py
+            Atlas/Objects/GenerateDecoder.py
+            Atlas/Objects/GenerateDispatcher.py
+            Atlas/Objects/GenerateForward.py)
+
+
+    #TODO: make this only rebuild when the python sources have changed
+    add_custom_command(
+            OUTPUT ${OBJECTS_GENERATE_OUTPUT}
+            COMMAND ${PYTHON_EXECUTABLE} gen_cpp.py
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/Atlas/Objects
+            DEPENDS ${PY_SOURCES}
+            VERBATIM
+    )
+
+endif (PYTHONINTERP_FOUND)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
