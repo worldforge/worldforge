@@ -113,7 +113,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
-    
+
 endmacro()
 
 wf_add_library(mercator${SUFFIX} SOURCE_FILES HEADER_FILES)
