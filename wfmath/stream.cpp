@@ -31,51 +31,25 @@
 #include "quaternion.h"
 #include "MersenneTwister.h"
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#elif defined(_MSC_VER)
-#define HAVE_SSTREAM
-#endif
-
-#ifdef HAVE_SSTREAM
 #include <sstream>
-#elif defined(HAVE_STRSTREAM)
-#include <strstream>
-#else
-#error "Neither sstream or strstream is present, configure should have failed"
-#endif
 
 namespace WFMath {
 
 std::string _IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
 					     std::streamsize precision)
 {
-#ifdef HAVE_SSTREAM
   std::ostringstream ost;
-#else
-  std::ostrstream ost;
-#endif
 
  ost.precision(precision);
  b.write(ost);
 
-#ifdef HAVE_SSTREAM
  return ost.str();
-#else
- std::string s = ost.str();
- ost.freeze(false);
- return s;
-#endif
 }
 
 void _IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
 					const std::string& s, std::streamsize precision)
 {
-#ifdef HAVE_SSTREAM
   std::istringstream ist(s);
-#else
-  std::istrstream ist(s.c_str());
-#endif
 
  ist.precision(precision);
  b.read(ist);

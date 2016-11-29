@@ -24,8 +24,8 @@
 // Created: 2001-12-12
 
 #include<Atlas/Message/Element.h>
-#include "atlasconv.h"
-#include "stream.h"
+#include "wfmath/atlasconv.h"
+#include "wfmath/stream.h"
 
 using namespace WFMath;
 
