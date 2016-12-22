@@ -40,11 +40,11 @@ static const std::string TEST_INVALID_IP("327.0.0.1");
 
 static bool test_failure_flag;
 
-static void test_fail(const std::string & msg)
-{
-    std::cerr << "Got failure: " << msg << std::endl;
-    test_failure_flag = true;
-}
+//static void test_fail(const std::string & msg)
+//{
+//    std::cerr << "Got failure: " << msg << std::endl;
+//    test_failure_flag = true;
+//}
 
 int main()
 {
@@ -159,7 +159,7 @@ int main()
 namespace Eris
 {
 
-MetaQuery::MetaQuery(boost::asio::io_service& io_service,  Meta& ms, const std::string &host, unsigned int sindex) :
+MetaQuery::MetaQuery(boost::asio::io_service& io_service,  Meta& ms, const std::string &host, size_t sindex) :
     BaseConnection(io_service, "eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),

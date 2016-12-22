@@ -36,7 +36,7 @@ public:
         m_anonymousLookSerialno(0)
     {;}
         
-    void setAnonymousLookSerialno(int serial)
+    void setAnonymousLookSerialno(long serial)
     {
         m_anonymousLookSerialno = serial;
     }
@@ -101,7 +101,7 @@ private:
     }
 
     Lobby* m_lobby;
-    int m_anonymousLookSerialno;
+    long m_anonymousLookSerialno;
 };
 
 

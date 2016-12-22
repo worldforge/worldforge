@@ -49,7 +49,7 @@ void ServerInfo::processServer(const RootEntity &svr)
 
     _name = svr->getName();
     if (!svr->copyAttr("clients", element) && element.isInt()) {
-        _clients = element.asInt();
+        _clients = (int)element.asInt();
     } else {
         return;
     }

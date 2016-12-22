@@ -64,23 +64,23 @@ void Calendar::initFromCalendarAttr(const MapType& cal)
 {
     MapType::const_iterator it = cal.find("days_per_month");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
-    m_daysPerMonth = it->second.asInt();
+    m_daysPerMonth = (unsigned int)it->second.asInt();
 
     it = cal.find("hours_per_day");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
-    m_hoursPerDay = it->second.asInt();
+    m_hoursPerDay = (unsigned int)it->second.asInt();
 
     it = cal.find("minutes_per_hour");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
-    m_minutesPerHour = it->second.asInt();
+    m_minutesPerHour = (unsigned int)it->second.asInt();
 
     it = cal.find("months_per_year");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
-    m_monthsPerYear = it->second.asInt();
+    m_monthsPerYear = (unsigned int)it->second.asInt();
 
     it = cal.find("seconds_per_minute");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
-    m_secondsPerMinute = it->second.asInt();
+    m_secondsPerMinute = (unsigned int)it->second.asInt();
 
     Updated.emit();
 }

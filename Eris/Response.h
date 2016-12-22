@@ -62,15 +62,15 @@ public:
 
     ~ResponseTracker();
 
-    void await(int serialno, ResponseBase*);
+    void await(long serialno, ResponseBase*);
     
     template <class T>
-    void await(int serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
+    void await(long serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
     {
         await(serial, new MemberResponse<T>(ins, method));
     }
     
-    void ignore(int serial)
+    void ignore(long serial)
     {
         await(serial, new NullResponse());
     }
@@ -78,7 +78,7 @@ public:
     bool handleOp(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
-    typedef std::unordered_map<int, ResponseBase*> RefnoResponseMap;
+    typedef std::unordered_map<long, ResponseBase*> RefnoResponseMap;
     RefnoResponseMap m_pending;
 };
 

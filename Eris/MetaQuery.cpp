@@ -22,7 +22,7 @@ using WFMath::TimeStamp;
 namespace Eris
 {
 	
-MetaQuery::MetaQuery(boost::asio::io_service& io_service, Meta& ms, const std::string &host, unsigned int sindex) :
+MetaQuery::MetaQuery(boost::asio::io_service& io_service, Meta& ms, const std::string &host, size_t sindex) :
     BaseConnection(io_service, "eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),

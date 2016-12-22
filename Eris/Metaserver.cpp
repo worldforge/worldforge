@@ -109,7 +109,7 @@ void Meta::queryServer(const std::string &ip)
 }
 */
 
-void Meta::queryServerByIndex(unsigned int index)
+void Meta::queryServerByIndex(size_t index)
 {
     if (m_status == INVALID) {
         error() << "called queryServerByIndex with invalid server list";
@@ -168,7 +168,7 @@ void Meta::cancel()
     m_nextQuery = m_gameServers.size();
 }
 
-const ServerInfo& Meta::getInfoForServer(unsigned int index) const
+const ServerInfo& Meta::getInfoForServer(size_t index) const
 {
     if (index >= m_gameServers.size()) {
         error() << "passed out-of-range index " << index <<
@@ -179,7 +179,7 @@ const ServerInfo& Meta::getInfoForServer(unsigned int index) const
     }
 }
                 
-unsigned int Meta::getGameServerCount() const
+size_t Meta::getGameServerCount() const
 {
     return m_gameServers.size();
 }
@@ -449,7 +449,7 @@ void Meta::processCmd()
         if (m_gameServers.size() < _totalServers)
         {
             // request some more
-            listReq(m_gameServers.size());
+            listReq((unsigned int)m_gameServers.size());
         } else {
             // allow progress bars to setup, etc, etc
             CompletedServerList.emit(_totalServers);
@@ -469,7 +469,7 @@ void Meta::processCmd()
     }
 }
 
-void Meta::listReq(int base)
+void Meta::listReq(unsigned int base)
 {
     unsigned int dsz=0;
     char* _dataPtr = pack_uint32(LIST_REQ, _data, dsz);
@@ -521,7 +521,7 @@ char* unpack_uint32(uint32_t &dest, char* buffer)
 	return buffer+sizeof(uint32_t);
 } 
 
-void Meta::internalQuery(unsigned int index)
+void Meta::internalQuery(size_t index)
 {
     assert(index < m_gameServers.size());
     
@@ -569,7 +569,7 @@ void Meta::objectArrived(const Root& obj)
                 ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
     
                 sv.processServer(svr);
-                sv.setPing((*Q)->getElapsed());
+                sv.setPing((int)(*Q)->getElapsed());
 
                 // emit the signal
                 ReceivedServerInfo.emit(sv);

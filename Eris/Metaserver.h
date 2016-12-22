@@ -61,15 +61,15 @@ public:
     virtual ~Meta();
     
     /** Return the total number of game servers the meta server knows about. */
-    unsigned int getGameServerCount() const;
+    size_t getGameServerCount() const;
 
     /** Retrive one of the servers. Note the ServerInfo object may be invalid
     if the server has not yet been queried, or has timedout or otherwise
     failed to answer the query. */
-    const ServerInfo& getInfoForServer(unsigned int index) const;
+    const ServerInfo& getInfoForServer(size_t index) const;
 
     /// Query a specific game server; emits a signal when complete
-    void queryServerByIndex(unsigned int index);
+    void queryServerByIndex(size_t index);
 
     /** Refresh the entire server list. This will clear the current list,
     ask the meta-server for each game server, and then issue a query
@@ -148,14 +148,14 @@ private:
 
     /// Request a portion of the server list from the meta-server
     /// @param offset The first index to retrieve
-    void listReq(int offset = 0);
+    void listReq(unsigned int offset = 0);
 
     void setupRecvCmd();
     void setupRecvData(int words, uint32_t got);
         
     void deleteQuery(MetaQuery* query);
         
-    void internalQuery(unsigned int index);
+    void internalQuery(size_t index);
 
     void startTimeout();
 

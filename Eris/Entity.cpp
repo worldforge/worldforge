@@ -38,7 +38,7 @@ Entity::Entity(const std::string& id, TypeInfo* ty) :
     m_type(ty),
     m_location(NULL),
     m_id(id),
-    m_stamp(-1.0),
+    m_stamp(-1.0f),
     m_visible(false),
     m_limbo(false),
     m_updateLevel(0),
@@ -459,7 +459,7 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         m_name = v.asString();
         return true;
     } else if (attr == "stamp") {
-        m_stamp = v.asFloat();
+        m_stamp = (float)v.asFloat();
         return true;
     } else if (attr == "pos") {
         m_position.fromAtlas(v);

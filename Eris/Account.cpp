@@ -465,11 +465,11 @@ void Account::updateFromObject(const AtlasAccount &p)
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
     m_parents = p->getParents();
 
-    if(p->hasAttr("character_types") == true)
+    if(p->hasAttr("character_types"))
     {
         const Atlas::Message::Element& CharacterTypes(p->getAttr("character_types"));
 
-        if(CharacterTypes.isList() == true)
+        if(CharacterTypes.isList())
         {
             const Atlas::Message::ListType & CharacterTypesList(CharacterTypes.asList());
             Atlas::Message::ListType::const_iterator iCharacterType(CharacterTypesList.begin());
@@ -478,7 +478,7 @@ void Account::updateFromObject(const AtlasAccount &p)
             m_characterTypes.reserve(CharacterTypesList.size());
             while(iCharacterType != iEnd)
             {
-                if(iCharacterType->isString() == true)
+                if(iCharacterType->isString())
                 {
                     m_characterTypes.push_back(iCharacterType->asString());
                 }

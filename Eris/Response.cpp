@@ -19,7 +19,7 @@ ResponseTracker::~ResponseTracker()
     }
 }
 
-void ResponseTracker::await(int serialno, ResponseBase* resp)
+void ResponseTracker::await(long serialno, ResponseBase* resp)
 {
     assert(m_pending.count(serialno) == 0);
     m_pending[serialno] = resp;

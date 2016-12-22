@@ -233,7 +233,7 @@ CharacterType::CharacterType(const std::string& name,
 {
 }
 
-void ResponseTracker::await(int serialno, ResponseBase* resp)
+void ResponseTracker::await(long serialno, ResponseBase* resp)
 {
 }
 

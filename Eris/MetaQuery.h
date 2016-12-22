@@ -20,7 +20,7 @@ includes server latency. */
 class MetaQuery : public BaseConnection
 {
 public:	
-	MetaQuery(boost::asio::io_service& io_service, Meta& svr, const std::string &host, unsigned int index);
+	MetaQuery(boost::asio::io_service& io_service, Meta& svr, const std::string &host, size_t index);
 	virtual ~MetaQuery();
 	
 	/// return the serial-number of the query GET operation [for identification of replies]
@@ -28,8 +28,8 @@ public:
 
 	/// return the host string this query is using
 	const std::string& getHost() const;
-	
-    unsigned int getServerIndex() const;
+
+	size_t getServerIndex() const;
         
 	/// Access the elapsed time (in millseconds) since the query was issued
 	long getElapsed();
@@ -54,7 +54,7 @@ protected:
     
 	long _queryNo;		///< The serial number of the query GET
     WFMath::TimeStamp _stamp;	///< Time stamp of the request, to estimate ping to server
-    unsigned int m_serverIndex;
+	size_t m_serverIndex;
     bool m_complete;
     boost::asio::deadline_timer m_completeTimer;
 };
@@ -71,7 +71,7 @@ inline const std::string& MetaQuery::getHost() const
     return _host;
 }
 
-inline unsigned int MetaQuery::getServerIndex() const
+inline size_t MetaQuery::getServerIndex() const
 {
     return m_serverIndex;
 }

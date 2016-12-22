@@ -49,7 +49,7 @@ bool TypeInfo::isA(TypeInfoPtr tp)
     // uber fast short-circuit for type equality
     if (tp == this) return true;
 	
-    return m_ancestors.count(tp); // non-authorative if not bound
+    return m_ancestors.count(tp) != 0; // non-authorative if not bound
 }
 
 bool TypeInfo::hasUnresolvedChildren() const

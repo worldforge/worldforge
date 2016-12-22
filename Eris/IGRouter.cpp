@@ -73,7 +73,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         for (unsigned int A=0; A < args.size(); ++A) {
             float stamp = -1;
             if (args[A]->hasAttr("stamp")) {
-                stamp = args[A]->getAttr("stamp").asFloat();
+                stamp = (float)args[A]->getAttr("stamp").asFloat();
             }
             
             m_view->appear(args[A]->getId(), stamp);
@@ -103,7 +103,6 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     // logout
     if (op->getClassNo() == LOGOUT_NO) {
         debug() << "Avatar received forced logout from server";
-        const std::vector<Root>& args = op->getArgs();
 
         if(args.size() >= 2) {
             bool gotArgs = true;
@@ -219,7 +218,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
         for (unsigned int A=0; A < args.size(); ++A) {
             float stamp = -1;
             if (args[A]->hasAttr("stamp")) {
-                stamp = args[A]->getAttr("stamp").asFloat();
+                stamp = (float)args[A]->getAttr("stamp").asFloat();
             }
 
             m_view->appear(args[A]->getId(), stamp);
