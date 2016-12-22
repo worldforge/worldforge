@@ -367,7 +367,7 @@ void View::unseen(const std::string& eid)
     
 bool View::isPending(const std::string& eid) const
 {
-    return m_pending.count(eid);
+    return m_pending.count(eid) != 0;
 }
 
 Connection* View::getConnection() const
