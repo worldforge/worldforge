@@ -81,6 +81,7 @@ include_directories(${WF_INCLUDE_DIRS})
 set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
 
 
+
 find_package(Boost
         1.46.0
         REQUIRED
@@ -89,6 +90,14 @@ find_package(Boost
 link_directories(${Boost_LIBRARY_DIRS})
 link_libraries(${Boost_LIBRARIES})
 include_directories(${Boost_INCLUDE_DIRS})
+
+#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
+if (UNIX)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    link_libraries(Threads::Threads)
+endif (UNIX)
+
 
 # Define source files for libraries
 
