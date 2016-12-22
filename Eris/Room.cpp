@@ -41,7 +41,6 @@ Room::~Room()
         m_lobby->getConnection()->unregisterRouterForFrom(this, m_roomId);
 }
 
-#pragma mark -
 // public command-issue wrappers
 
 void Room::say(const std::string &tk)
@@ -150,8 +149,6 @@ std::vector<Person*> Room::getPeople() const
     return people;
 }
 
-#pragma mark -
-
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
     if (op->getTo() != m_lobby->getAccount()->getId()) {
@@ -242,7 +239,6 @@ void Room::handleEmote(Person* p, const std::string& description)
     Emote.emit(this, p, description);
 }
 
-#pragma mark -
 // room membership updates
 
 void Room::appearance(const std::string& personId)

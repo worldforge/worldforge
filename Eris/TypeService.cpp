@@ -86,8 +86,6 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
     return getTypeByName(parents.front());
 }
 
-#pragma mark -
-
 void TypeService::handleOperation(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {

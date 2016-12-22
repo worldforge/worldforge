@@ -38,8 +38,6 @@ IGRouter::~IGRouter()
     m_avatar->getConnection()->unregisterRouterForTo(this, m_avatar->getId());
 }
 
-#pragma mark -
-
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 {
     if (!op->isDefaultSeconds()) {

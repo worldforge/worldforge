@@ -244,8 +244,6 @@ void Connection::refreshServerInfo()
     send(gt);
 }
 
-#pragma mark -
-
 void Connection::objectArrived(const Root& obj)
 {
 #ifdef ATLAS_LOG
@@ -372,8 +370,6 @@ void Connection::cleanupRedispatch(Redispatch* r)
 {
     m_finishedRedispatches.push_back(r);
 }
-
-#pragma mark -
 
 long getNewSerialno()
 {

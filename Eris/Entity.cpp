@@ -97,8 +97,6 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
     }
 }
 
-#pragma mark -
-
 const Element& Entity::valueOfAttr(const std::string& attr) const
 {
     ///first check with the instance attributes
@@ -279,8 +277,6 @@ TypeInfoArray Entity::getUseOperations() const
     return useOps;
 }
 
-#pragma mark -
-
 void Entity::sight(const RootEntity &ge)
 {    
     if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());
@@ -407,8 +403,6 @@ void Entity::onTaskAdded(Task* task)
 	TaskAdded(task);
 }
 
-
-#pragma mark -
 
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
@@ -659,8 +653,6 @@ void Entity::removeTask(Task* t)
     TaskRemoved(t);
 }
 
-#pragma mark -
-
 void Entity::setLocationFromAtlas(const std::string& locId) {
 	if (locId.empty()) {
 		return;
@@ -717,8 +709,6 @@ void Entity::removeFromLocation()
     assert(m_location->hasChild(m_id));
     m_location->removeChild(this);
 }
-
-#pragma mark -
 
 void Entity::buildEntityDictFromContents(IdEntityMap& dict)
 {
@@ -805,7 +795,6 @@ void Entity::removeChild(Entity* e)
    error() << "child " << e->getId() << " of entity " << m_id << " not found doing remove";
 }
 
-#pragma mark -
 // visiblity related methods
 
 void Entity::setVisible(bool vis)

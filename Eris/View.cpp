@@ -102,8 +102,6 @@ EventService& View::getEventService() const {
 }
 
 
-#pragma mark -
-
 void View::update()
 {
     WFMath::TimeStamp t(WFMath::TimeStamp::now());
@@ -150,7 +148,6 @@ void View::taskRateChanged(Task* t)
     }
 }
 
-#pragma mark -
 // Atlas operation handlers
 
 void View::appear(const std::string& eid, float stamp)
@@ -368,8 +365,6 @@ void View::unseen(const std::string& eid)
     delete ent; // is that all?
 }
     
-#pragma mark -
-
 bool View::isPending(const std::string& eid) const
 {
     return m_pending.count(eid);

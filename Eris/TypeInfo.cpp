@@ -72,8 +72,6 @@ void TypeInfo::resolveChildren()
     assert(m_unresolvedChildren.empty());
 }
 
-#pragma mark - 
-
 void TypeInfo::processTypeData(const Root &atype)
 {
 

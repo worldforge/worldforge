@@ -75,8 +75,6 @@ private:
     Account* m_account;
 };
 
-#pragma mark -
-
 Account::Account(Connection *con) :
     m_con(con),
     m_status(DISCONNECTED),
@@ -352,8 +350,6 @@ bool Account::isLoggedIn() const
     return ((m_status == LOGGED_IN) ||
         (m_status == TAKING_CHAR) || (m_status == CREATING_CHAR));
 }
-
-#pragma mark -
 
 Result Account::internalLogin(const std::string &uname, const std::string &pwd)
 {

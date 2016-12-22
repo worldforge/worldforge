@@ -105,8 +105,6 @@ private:
 };
 
 
-#pragma mark -
-
 Lobby::Lobby(Account* a) :
     Room(this, std::string()),
     m_account(a)
@@ -213,8 +211,6 @@ Room* Lobby::getRoom(const std::string &id)
 	
     return R->second;
 }
-
-#pragma mark -
 
 void Lobby::sightPerson(const AtlasAccount &ac)
 {
@@ -416,7 +412,6 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 }
 */
 
-#pragma mark -
 // signal handlers for various things
 
 void Lobby::onLoggedIn()

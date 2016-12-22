@@ -78,8 +78,6 @@ void Avatar::deactivate()
     });
 }
 
-#pragma mark -
-
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation, const std::string& loc)
 {
     if(e->getLocation() != m_entity)
@@ -346,8 +344,6 @@ void Avatar::useStop()
     use->setFrom(m_entityId);
     getConnection()->send(use);
 }
-
-#pragma mark -
 
 void Avatar::onEntityAppear(Entity* ent)
 {

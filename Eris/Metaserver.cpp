@@ -54,8 +54,6 @@ const uint32_t CKEEP_ALIVE = 2,
 // special  command value to track LIST_RESP processing
 const uint32_t LIST_RESP2 = 999;		
 	
-#pragma mark -
-
 Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, const std::string& metaServer, unsigned int maxQueries) :
     m_io_service(io_service),
     m_event_service(eventService),
@@ -185,8 +183,6 @@ unsigned int Meta::getGameServerCount() const
 {
     return m_gameServers.size();
 }
-
-#pragma mark -
 
 void Meta::connect()
 {
@@ -524,8 +520,6 @@ char* unpack_uint32(uint32_t &dest, char* buffer)
 	dest = ntohl(netorder);
 	return buffer+sizeof(uint32_t);
 } 
-
-#pragma mark -
 
 void Meta::internalQuery(unsigned int index)
 {
