@@ -22,6 +22,7 @@
 #include <sstream>
 #include <string>
 #include <stack>
+#include <deque>
 #include "Bridge.h"
 
 namespace Atlas
@@ -55,11 +56,33 @@ public:
 	virtual void listStringItem(const std::string&);
 	virtual void listEnd();
 
+	/**
+	 * Sets the max number of items to print per level.
+	 *
+	 * This is useful to prevent too much output.
+	 *
+	 * @param maxItems The max number of items. 0 disables this feature (which is the default).
+	 */
+	void setMaxItemsPerLevel(size_t maxItems);
+
+	/**
+	 * Sets the level at which filtering, if setMaxItemsPerLevel() has been called, should occur.
+	 * Default is 1 (i.e. print everything for the top level).
+	 * @param startFilteringLevel At which level filtering should start.
+	 */
+	void setStartFilteringLevel(size_t startFilteringLevel);
+
 private:
 
 	void addPadding();
 
 	void removePadding();
+
+	/**
+	 * Checks if the current item should be printed or not, depending on if mMaxItemsPerLevel is set.
+	 * @return True if the current item should be printed.
+	 */
+	bool checkAndUpdateMaxItemCounter();
 
 	std::string mPadding;
 
@@ -71,6 +94,27 @@ private:
 	 * This is used to determine if we should print a separator to make it easier to see where a new map starts.
 	 */
 	std::stack<int> mMapsInList;
+
+	/**
+	 * If set to > 0 denotes the max number of items to print (per level).
+	 */
+	size_t mMaxItemsPerLevel;
+
+	/**
+	 * Set to true when entries should be skipped because the max number of items for a level has been reached.
+	 */
+	bool mIsSkipEntry;
+
+	/**
+	 * Denotes the level at which filtering through the mMaxItemsPerLevel field should occur.
+	 * Set by default to 1 (i.e. always print all entries on the first level).
+	 */
+	size_t mStartFilterLevel;
+
+	/**
+	 * Keeps track of the number of entries in each level. Used when mMaxItemsPerLevel is > 0.
+	 */
+	std::deque<size_t> mEntriesPerLevelCounter;
 };
 
 }
