@@ -157,7 +157,7 @@ void AsioStreamSocket<ProtocolT>::negotiate_read()
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         } else {
-                            warning() << "Error when reading from socket while negotiating: " << ec;
+                            warning() << "Error when reading from socket while negotiating: (" << ec << ") " << ec.message();
                         }
                     }
                 }
@@ -182,7 +182,7 @@ void AsioStreamSocket<ProtocolT>::do_read()
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         } else {
-                            warning() << "Error when reading from socket: " << ec;
+                            warning() << "Error when reading from socket: (" << ec << ") " << ec.message();
                         }
                     }
                 }
@@ -225,7 +225,7 @@ void AsioStreamSocket<ProtocolT>::write()
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         }
                     } else {
-                        warning() << "Error when writing to socket: " << ec;
+                        warning() << "Error when writing to socket: (" << ec << ") " << ec.message();
                     }
                 }
             });
@@ -246,7 +246,7 @@ void AsioStreamSocket<ProtocolT>::negotiate_write()
                     {
                         this->mWriteBuffer->consume(length);
                     } else {
-                        warning() << "Error when writing to socket while negotiating: " << ec;
+                        warning() << "Error when writing to socket while negotiating: (" << ec << ") " << ec.message();
                     }
                 });
     }
