@@ -219,8 +219,6 @@ target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${S
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
 target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
 
-wf_add_library(AtlasFunky${SUFFIX} FUNKY_SOURCE_FILES FUNKY_HEADER_FILES)
-
 # The "atlas_convert" tool
 add_executable(atlas_convert tools/atlas_convert.cpp)
 target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
