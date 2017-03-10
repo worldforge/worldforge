@@ -269,7 +269,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasFunky${SUFFIX})
+    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX})
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
@@ -280,7 +280,7 @@ macro(wf_add_benchmark TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasFunky${SUFFIX})
+    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX})
     add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
 
     add_dependencies(benchmark ${TEST_NAME})
