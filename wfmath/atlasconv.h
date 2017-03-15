@@ -109,6 +109,12 @@ template<int dim>
 inline void Vector<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
+  for (int i = 0; i < dim; ++i) {
+    if (!std::isfinite(m_elem[i])) {
+      m_valid = false;
+      return;
+    }
+  }
   m_valid = true;
 }
 
@@ -133,7 +139,19 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
   for(int i = 0; i < 3; ++i)
     m_vec[i] = list[i].asNum();
 
+  for (int i = 0; i < 3; ++i) {
+    if (!std::isfinite(m_vec[i])) {
+      m_valid = false;
+      m_vec.setValid(false);
+      return;
+    }
+  }
+
   m_w = list[3].asNum();
+  if (!std::isfinite(m_w)) {
+    m_valid = false;
+    return;
+  }
 
   CoordType norm = std::sqrt(m_w * m_w + m_vec.sqrMag());
 
@@ -172,6 +190,12 @@ template<int dim>
 inline void Point<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
+  for (int i = 0; i < dim; ++i) {
+    if (!std::isfinite(m_elem[i])) {
+      m_valid = false;
+      return;
+    }
+  }
   m_valid = true;
 }
 
@@ -203,7 +227,15 @@ inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
     case (2 * dim):
       for(int i = 0; i < dim; ++i) {
         m_low[i] = list[i].asNum();
+        if (!std::isfinite((m_low[i]))) {
+          m_low.setValid(false);
+          return;
+        }
         m_high[i] = list[i+dim].asNum();
+        if (!std::isfinite((m_high[i]))) {
+          m_high.setValid(false);
+          return;
+        }
       }
       m_low.setValid();
       m_high.setValid();
@@ -256,6 +288,11 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
       const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
       if (shapeRadiusElem.isNum()) {
         m_radius = shapeRadiusElem.asNum();
+        //Perhaps we should add a check to Ball::isValid for non-nan radius? Until that we'll just invalidate the center instead.
+        if (!std::isfinite(m_radius)) {
+          m_center.setValid(false);
+          return;
+        }
       }
     }
     Atlas::Message::MapType::const_iterator pos_I = shapeElement.find("position");
@@ -299,6 +336,9 @@ inline void _AddCorner(ShapeT<3> & shape,
                        const Atlas::Message::ListType & point)
 {
   Point<3> wpt(point[0].asNum(), point[1].asNum(), point[2].asNum());
+  if (!std::isfinite(wpt.x()) || !std::isfinite(wpt.y()) || !std::isfinite(wpt.z())) {
+    return;
+  }
   shape.addCorner(shape.numCorners(), wpt);
 }
 
@@ -307,6 +347,9 @@ inline void _AddCorner(ShapeT<2> & shape,
                        const Atlas::Message::ListType & point)
 {
   Point<2> wpt(point[0].asNum(), point[1].asNum());
+  if (!std::isfinite(wpt.x()) || !std::isfinite(wpt.y())) {
+    return;
+  }
   shape.addCorner(shape.numCorners(), wpt);
 }
 
