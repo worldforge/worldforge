@@ -335,7 +335,7 @@ const conf_map& Config::getSections() const
 }
 
 
-void Config::parseStream(std::istream & in, Scope scope) throw (ParseError)
+void Config::parseStream(std::istream & in, Scope scope)
 {
   char c; 
   bool escaped = false;

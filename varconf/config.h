@@ -94,7 +94,7 @@ public:
 
   // Ensures specified filestream is properly formatted.
   // Why isn't this protected?
-  void parseStream(std::istream & in, Scope scope) throw (ParseError);
+  void parseStream(std::istream & in, Scope scope);
 
   // Wrapper for find(section)
   bool findSection(const std::string & section) const;
