@@ -17,6 +17,7 @@
 #include <cmath>
 #include <unordered_map>
 #include <tuple>
+#include <functional>
 
 namespace Mercator {
 
