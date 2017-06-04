@@ -198,7 +198,7 @@ public:
   }
   // FreeList<ObjectData>* -> SmartPtr<EntityData>
   SmartPtr(const FreeList<ObjectData>*a_ptr)
-    throw (IncompatibleDataTypeException) {
+    {
 #if DEBUG
     cout << "SmartPtr(const FreeList<ObjectData>*a_ptr): this: " << this
          << "a_ptr: " << a_ptr 

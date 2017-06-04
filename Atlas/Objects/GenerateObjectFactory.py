@@ -31,7 +31,7 @@ using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
-NoSuchFactoryException::~NoSuchFactoryException() throw ()
+NoSuchFactoryException::~NoSuchFactoryException()
 {
 }
 

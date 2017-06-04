@@ -10,7 +10,7 @@
 
 namespace Atlas { namespace Objects {
 
-NullSmartPtrDereference::~NullSmartPtrDereference() throw ()
+NullSmartPtrDereference::~NullSmartPtrDereference()
 {
 }
 

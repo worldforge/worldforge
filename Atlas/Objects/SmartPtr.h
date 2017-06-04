@@ -16,7 +16,7 @@ class NullSmartPtrDereference : public Atlas::Exception
 {
   public:
     NullSmartPtrDereference() : Atlas::Exception("Null SmartPtr dereferenced") {}
-    virtual ~NullSmartPtrDereference() throw ();
+    virtual ~NullSmartPtrDereference();
 };
 
 template <class T> 

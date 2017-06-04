@@ -421,7 +421,7 @@ public:
     bool isList() const { return (t == TYPE_LIST); }
 
     /// Retrieve the current value as a int.
-    IntType asInt() const throw (WrongTypeException)
+    IntType asInt() const
     {
         if (t == TYPE_INT) return i;
         throw WrongTypeException();
@@ -431,7 +431,7 @@ public:
         return i;
     }
     /// Retrieve the current value as a double.
-    FloatType asFloat() const throw (WrongTypeException)
+    FloatType asFloat() const
     {
         if (t == TYPE_FLOAT) return f;
         throw WrongTypeException();
@@ -441,7 +441,7 @@ public:
         return f;
     }
     /// Retrieve the current value as a pointer.
-    PtrType asPtr() const throw (WrongTypeException)
+    PtrType asPtr() const
     {
         if (t == TYPE_PTR) return p;
         throw WrongTypeException();
@@ -451,20 +451,20 @@ public:
         return p;
     }
     /// Retrieve the current value as a number.
-    FloatType asNum() const throw (WrongTypeException)
+    FloatType asNum() const
     {
         if (t == TYPE_FLOAT) return f;
         if (t == TYPE_INT) return FloatType(i);
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const std::string reference.
-    const std::string& asString() const throw (WrongTypeException)
+    const std::string& asString() const
     {
         if (t == TYPE_STRING) return *s;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const std::string reference.
-    std::string& asString() throw (WrongTypeException)
+    std::string& asString()
     {
         if (t == TYPE_STRING) return *(s = s->makeUnique());
         throw WrongTypeException();
@@ -491,13 +491,13 @@ public:
     }
 
     /// Retrieve the current value as a const MapType reference.
-    const MapType& asMap() const throw (WrongTypeException)
+    const MapType& asMap() const
     {
         if (t == TYPE_MAP) return *m;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const MapType reference.
-    MapType& asMap() throw (WrongTypeException)
+    MapType& asMap()
     {
         if (t == TYPE_MAP) return *(m = m->makeUnique());
         throw WrongTypeException();
@@ -524,13 +524,13 @@ public:
     }
 
     /// Retrieve the current value as a const ListType reference.
-    const ListType& asList() const throw (WrongTypeException)
+    const ListType& asList() const
     {
         if (t == TYPE_LIST) return *l;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const ListType reference.
-    ListType& asList() throw (WrongTypeException)
+    ListType& asList()
     {
         if (t == TYPE_LIST) return *(l = l->makeUnique());
         throw WrongTypeException();

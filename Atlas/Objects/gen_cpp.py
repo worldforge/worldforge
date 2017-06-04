@@ -245,7 +245,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         # calls getAttr(name, attr)
         #self.write("const Element %s::getAttr" % classname)
         #self.write("(const std::string& name) const\n")
-        #self.write("    throw (NoSuchAttrException)\n")
         #self.write("{\n")
         #for attr in statics:
             #self.write(attr.getattr_im())
@@ -563,7 +562,6 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             # self.doc(4, 'not exist.')
             # self.write("    virtual const Atlas::Message::Element getAttr(")
             # self.write("const std::string& name)\n")
-            # self.write("            const throw (NoSuchAttrException);\n")
             self.doc(4, 'Retrieve the attribute "name". Return ' \
                       + 'non-zero if it does')
             self.doc(4, 'not exist.')

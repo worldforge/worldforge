@@ -36,7 +36,7 @@ class NoSuchAttrException : public Atlas::Exception
   public:
     NoSuchAttrException(const std::string& name) :
              Atlas::Exception("No such attribute"), m_name(name) {}
-    virtual ~NoSuchAttrException() throw ();
+    virtual ~NoSuchAttrException();
     /// Get the name of the attribute which does not exist.
     const std::string & getName() const {
         return m_name;
@@ -249,7 +249,7 @@ public:
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
     const Atlas::Message::Element getAttr(const std::string& name)
-        const throw (NoSuchAttrException);
+        const;
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
     virtual int copyAttr(const std::string& name,

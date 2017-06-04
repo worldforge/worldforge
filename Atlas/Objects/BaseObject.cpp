@@ -11,7 +11,7 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects {
 
-NoSuchAttrException::~NoSuchAttrException() throw ()
+NoSuchAttrException::~NoSuchAttrException()
 {
 }
 
@@ -50,7 +50,7 @@ bool BaseObjectData::hasAttrFlag(int flag) const
 }
 
 const Element BaseObjectData::getAttr(const std::string& name) const
-    throw (NoSuchAttrException) 
+
 {
     Element attr;
     if (copyAttr(name, attr) != 0) {
