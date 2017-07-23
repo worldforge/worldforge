@@ -48,7 +48,7 @@ void SysData::fillDefaultObjectInstance(SysData& data, std::map<std::string, int
     data.attr_velocity.push_back(0.0);
     data.attr_stamp_contains = 0.0;
     data.attr_stamp = 0.0;
-    data.attr_parents = std::list<std::string>(1, "sys");
+    data.attr_parent = "sys";
 
 }
 

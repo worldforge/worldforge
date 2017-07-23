@@ -87,7 +87,7 @@ class TestConnection : public Eris::Connection {
     }
 
     virtual void send(const Atlas::Objects::Root &obj) {
-        std::cout << "Sending " << obj->getParents().front()
+        std::cout << "Sending " << obj->getParent()
                   << std::endl << std::flush;
     }
 };

@@ -21,6 +21,7 @@ namespace Eris {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
+    m_parent(nullptr),
     m_bound(false),
     m_name(id),
     m_atlasClassNo(0),
@@ -32,6 +33,7 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
 }
 
 TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
+    m_parent(nullptr),
     m_bound(false),
     m_name(atype->getId()),
     m_moveCount(0),
@@ -79,11 +81,10 @@ void TypeInfo::processTypeData(const Root &atype)
         error() << "mis-targeted INFO operation for " << atype->getId() << " arrived at " << m_name;
         return;
     }
-        
-    const StringList& parents(atype->getParents());
-    for (StringList::const_iterator P = parents.begin(); P != parents.end(); ++P)
-        addParent(m_typeService->getTypeByName(*P));
-	
+
+
+    setParent(m_typeService->getTypeByName(atype->getParent()));
+
     if (atype->hasAttr("children"))
     {
         const Atlas::Message::Element childElem(atype->getAttr("children"));
@@ -120,22 +121,23 @@ bool TypeInfo::operator<(const TypeInfo &x) const
     return m_name < x.m_name;
 }
 
-void TypeInfo::addParent(TypeInfoPtr tp)
+void TypeInfo::setParent(TypeInfoPtr tp)
 {
-    if (m_parents.count(tp))
+    if (m_parent)
     {
-        // it's critcial we bail fast here to avoid infitite mutual recursion with addChild
+        // it's critical we bail fast here to avoid infinite mutual recursion with addChild
         return;
     }
 	
-    if (m_ancestors.count(tp))
-	error() << "Adding " << tp->m_name << " as parent of " << m_name << ", but already marked as ancestor";
-    
+    if (m_ancestors.count(tp)) {
+        error() << "Adding " << tp->m_name << " as parent of " << m_name << ", but already marked as ancestor";
+    }
+
     // update the gear
-    m_parents.insert(tp);
+    m_parent = tp;
     addAncestor(tp);
 	
-    // note this will never recurse deep becuase of the fast exiting up top
+    // note this will never recurse deep because of the fast exiting up top
     tp->addChild(this);
 }
 
@@ -156,7 +158,7 @@ void TypeInfo::addChild(TypeInfoPtr tp)
     
     m_children.insert(tp);
     // again this will not recurse due to the termination code
-    tp->addParent(this);
+    tp->setParent(this);
 }
 
 void TypeInfo::addAncestor(TypeInfoPtr tp)
@@ -220,9 +222,9 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
     if (A != m_attributes.end()) {
         return &(A->second);
     } else {
-        ///it wasn't locally defined check with the parents
-        for (TypeInfoSet::const_iterator I = getParents().begin(); I != getParents().end(); ++I) {
-            const Atlas::Message::Element* element((*I)->getAttribute(attributeName));
+        ///it wasn't locally defined check with the parent
+        if (getParent()) {
+            const Atlas::Message::Element* element(getParent()->getAttribute(attributeName));
             if (element) {
                 return element;
             }
@@ -260,10 +262,10 @@ void TypeInfo::validateBind()
     if (m_bound) return;
 	
     // check all our parents
-    for (TypeInfoSet::const_iterator P=m_parents.begin(); P!=m_parents.end();++P) {
-        if (!(*P)->isBound()) return;
-	}
-    
+    if (m_parent) {
+        if (!m_parent->isBound()) return;
+    }
+
     m_bound = true;
          
     Bound.emit();

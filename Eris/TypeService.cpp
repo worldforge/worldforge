@@ -75,15 +75,13 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 
 TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 {
-    const StringList& parents = obj->getParents();
-    
     /* special case code to handle the root object which has no parents. */
-    if (parents.empty()) {
+    if (obj->getParent() == "") {
         // check that obj->isA(ROOT_NO);
         return getTypeByName("root");
     }
 
-    return getTypeByName(parents.front());
+    return getTypeByName(obj->getParent());
 }
 
 void TypeService::handleOperation(const RootOperation& op)
@@ -166,7 +164,9 @@ TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent
     TypeInfo* type = new TypeInfo(name, this);
     m_types[name] = type;
     
-    if (parent) type->addParent(parent);
+    if (parent) {
+        type->setParent(parent);
+    }
     type->validateBind();
     
     assert(type->isBound());

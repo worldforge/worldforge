@@ -173,12 +173,9 @@ public:
     const std::string& getUsername() const;
 
     /**
-     * @brief Gets the parent types of the account.
-     * In normal operation this should be a list containing one element,
-     * which in most cases is either "player" or "admin".
-     * @returns A vector of the parent types of the account.
+     * @brief Gets the parent type of the account.
      */
-    const std::list<std::string>& getParents() const;
+    const std::string& getParent() const;
 
     /// Access the underlying Connection for this account
     Connection* getConnection() const;
@@ -299,7 +296,7 @@ protected:
     std::string m_username; ///< The player's username ( != account object's ID)
     std::string m_pass;
 
-    std::list< std::string > m_parents;
+    std::string m_parent;
     std::vector< std::string > m_characterTypes;
     CharacterMap _characters;   ///< characters belonging to this player
     StringSet m_characterIds;
@@ -335,9 +332,9 @@ inline const std::string& Account::getUsername() const
     return m_username;
 }
 
-inline const std::list<std::string>& Account::getParents() const
+inline const std::string& Account::getParent() const
 {
-    return m_parents;
+    return m_parent;
 }
 
 

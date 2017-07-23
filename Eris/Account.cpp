@@ -463,7 +463,7 @@ void Account::destroyAvatar(const std::string& avatarId)
 void Account::updateFromObject(const AtlasAccount &p)
 {
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
-    m_parents = p->getParents();
+    m_parent = p->getParent();
 
     if(p->hasAttr("character_types"))
     {

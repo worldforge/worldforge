@@ -79,7 +79,7 @@ public:
      * @brief Gets the currently resolved parent TypeInfo instances.
      * @return A set of parent TypeInfo instances.
      */
-    const TypeInfoSet & getParents() const;
+    const TypeInfoPtr & getParent() const;
     
     /**
     @brief Gets the default attributes for this entity type.
@@ -142,7 +142,7 @@ protected:
     void onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
     
 private:
-    void addParent(TypeInfoPtr tp);
+    void setParent(TypeInfoPtr tp);
     void addChild(TypeInfoPtr tp);
 
     /** Recursive add to this node and every descendant the specified ancestor */
@@ -155,8 +155,8 @@ private:
      */
     void extractDefaultAttributes(const Atlas::Objects::Root& atype);
         
-    /** The TypeInfo nodes for types we inherit from directly */
-    TypeInfoSet m_parents;
+    /** The TypeInfo node we inherit from directly */
+    TypeInfoPtr m_parent;
     /** TypeInfo nodes that inherit from us directly */
     TypeInfoSet m_children;
 
@@ -203,9 +203,9 @@ inline const TypeInfoSet & TypeInfo::getChildren() const
     return m_children;
 }
 
-inline const TypeInfoSet & TypeInfo::getParents() const 
+inline const TypeInfoPtr & TypeInfo::getParent() const
 {
-        return m_parents;
+    return m_parent;
 }
 
 

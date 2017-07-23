@@ -62,7 +62,7 @@ class TestConnection : public Eris::Connection {
                    Eris::Connection(io_service, event_service, name, host, port) { }
 
     virtual void send(const Atlas::Objects::Root &obj) {
-        std::cout << "Sending " << obj->getParents().front()
+        std::cout << "Sending " << obj->getParent()
                   << std::endl << std::flush;
     }
 };
@@ -163,9 +163,7 @@ int main()
     {
         Info typeInfo;
         typeInfo->setId("level1Type");
-        std::list<std::string> parents;
-        parents.push_back("root");
-        typeInfo->setParents(parents);
+        typeInfo->setParent("root");
         Atlas::Message::MapType attributes;
         Atlas::Message::MapType level;
         level["default"] = 1.0f;
@@ -193,9 +191,7 @@ int main()
     {
         Info typeInfo;
         typeInfo->setId("level2Type");
-        std::list<std::string> parents;
-        parents.push_back("level1Type");
-        typeInfo->setParents(parents);
+        typeInfo->setParent("level1Type");
         Atlas::Message::MapType attributes;
         Atlas::Message::MapType level;
         level["default"] = 2.0f;
@@ -213,8 +209,8 @@ int main()
         typeService.setup_recvTypeInfo(typeInfo);
     }
     assert(level2Type->isBound());
-    assert(level2Type->getParents().size() > 0);
-    assert(*(level2Type->getParents().begin()) == level1Type);
+    assert(level2Type->getParent());
+    assert(level2Type->getParent() == level1Type);
     
     assert(level2Type->getAttributes().find("level") != level2Type->getAttributes().end());
     assert(level2Type->getAttributes().find("level")->second.isNum());

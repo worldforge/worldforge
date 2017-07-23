@@ -313,9 +313,7 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const s
         use->setArgs1(arguments);
     } else {
         RootOperation op;
-        StringList prs;
-        prs.push_back(opType);
-        op->setParents(prs);
+        op->setParent(opType);
         op->setArgs1(arguments);
         op->setFrom(m_entityId);
 

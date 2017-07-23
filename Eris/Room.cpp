@@ -123,7 +123,7 @@ Room* Room::createRoom(const std::string &name)
     
     RootEntity room;
     room->setName(name);
-    room->setParents(StringList(1, "room"));
+    room->setParent("room");
     
     cr->setArgs1(room);
     m_lobby->getConnection()->send(cr);

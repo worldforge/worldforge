@@ -171,9 +171,10 @@ void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeI
 {
     attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
     ///Make sure to fill from the closest attributes first, as insert won't replace an existing value
-    for (TypeInfoSet::const_iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
-        fillAttributesFromType(attributes, *I);
-    }
+
+	if (typeInfo->getParent()) {
+		fillAttributesFromType(attributes, typeInfo->getParent());
+	}
 }
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
