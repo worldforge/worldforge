@@ -142,22 +142,6 @@ set(HEADER_FILES
 include(FindPythonInterp)
 
 if (PYTHONINTERP_FOUND)
-    set(OBJECTS_GENERATE_OUTPUT
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Root.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Decoder.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Dispatcher.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/objectFactory.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootEntity.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootEntityChildren.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperation.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren1.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren2.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren3.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren4.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/RootOperationChildren5.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Anonymous.cpp
-            ${CMAKE_SOURCE_DIR}/Atlas/Objects/Generic.cpp
-            )
 
     set(PY_SOURCES
             Atlas/Objects/gen_cpp.py
@@ -166,12 +150,12 @@ if (PYTHONINTERP_FOUND)
             Atlas/Objects/GenerateObjectFactory.py
             Atlas/Objects/GenerateDecoder.py
             Atlas/Objects/GenerateDispatcher.py
-            Atlas/Objects/GenerateForward.py)
+            Atlas/Objects/GenerateForward.py
+            protocol/spec/atlas.xml)
 
 
-    #TODO: make this only rebuild when the python sources have changed
-    add_custom_command(
-            OUTPUT ${OBJECTS_GENERATE_OUTPUT}
+    add_custom_target(GenerateAtlasObjects
+            COMMAND ${CMAKE_COMMAND} -E echo_append "Generating Atlas Object sources."
             COMMAND ${PYTHON_EXECUTABLE} gen_cpp.py
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/Atlas/Objects
             DEPENDS ${PY_SOURCES}
@@ -184,6 +168,7 @@ endif (PYTHONINTERP_FOUND)
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ATLAS_ABI_VERSION}
             SOVERSION ${ATLAS_SOVERSION}
@@ -215,6 +200,7 @@ target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
 target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
+add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasObjects)
 
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
 target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
@@ -269,7 +255,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX})
+    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX}_STATIC AtlasFilters${SUFFIX}_STATIC AtlasCodecs${SUFFIX}_STATIC AtlasMessage${SUFFIX}_STATIC Atlas${SUFFIX}_STATIC)
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
@@ -280,7 +266,7 @@ macro(wf_add_benchmark TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} Atlas${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX})
+    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX}_STATIC AtlasFilters${SUFFIX}_STATIC AtlasCodecs${SUFFIX}_STATIC AtlasMessage${SUFFIX}_STATIC Atlas${SUFFIX}_STATIC)
     add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
 
     add_dependencies(benchmark ${TEST_NAME})
