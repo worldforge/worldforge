@@ -53,7 +53,7 @@ void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::s
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "perceive");
+        data.attr_parent = "perceive";
 }
 
 Allocator<LookData> LookData::allocator;
@@ -98,7 +98,7 @@ void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, i
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "look");
+        data.attr_parent = "look";
 }
 
 Allocator<ListenData> ListenData::allocator;
@@ -143,7 +143,7 @@ void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "listen");
+        data.attr_parent = "listen";
 }
 
 Allocator<SniffData> SniffData::allocator;
@@ -188,7 +188,7 @@ void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "sniff");
+        data.attr_parent = "sniff";
 }
 
 Allocator<TouchData> TouchData::allocator;
@@ -233,7 +233,7 @@ void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "touch");
+        data.attr_parent = "touch";
 }
 
 Allocator<LoginData> LoginData::allocator;
@@ -278,7 +278,7 @@ void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "login");
+        data.attr_parent = "login";
 }
 
 } } } // namespace Atlas::Objects::Operation

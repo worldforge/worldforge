@@ -83,6 +83,8 @@ def capitalize_only(str):
 
 # Turns some_thing into SomeThing
 def classize(id, data=0):
+    if id is None:
+        return "BaseObject"
     if type(id)!=StringType: id = id.id
     cid = string.join( map(capitalize_only, string.split(id, '_') ), "")
     if data: return cid + "Data"
@@ -92,8 +94,7 @@ def doc(indent, text):
     return " " * indent + "/// %s\n" % text
 
 def find_in_parents(obj, attr_name):
-    for parent in obj.parents:
-        if hasattr(parent, attr_name):
-            return parent
+    if hasattr(obj, "parent") and hasattr(obj.parent, attr_name):
+        return obj.parent
     return None
 

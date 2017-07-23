@@ -53,7 +53,7 @@ void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "delete");
+        data.attr_parent = "delete";
 }
 
 Allocator<SetData> SetData::allocator;
@@ -98,7 +98,7 @@ void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, int
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "set");
+        data.attr_parent = "set";
 }
 
 Allocator<AffectData> AffectData::allocator;
@@ -143,7 +143,7 @@ void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "affect");
+        data.attr_parent = "affect";
 }
 
 Allocator<MoveData> MoveData::allocator;
@@ -188,7 +188,7 @@ void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, i
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "move");
+        data.attr_parent = "move";
 }
 
 Allocator<WieldData> WieldData::allocator;
@@ -233,7 +233,7 @@ void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "wield");
+        data.attr_parent = "wield";
 }
 
 Allocator<GetData> GetData::allocator;
@@ -278,7 +278,7 @@ void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, int
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "get");
+        data.attr_parent = "get";
 }
 
 } } } // namespace Atlas::Objects::Operation

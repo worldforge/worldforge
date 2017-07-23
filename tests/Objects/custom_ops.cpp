@@ -70,7 +70,7 @@ void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string,
     data.attr_seconds = 0.0;
     data.attr_future_seconds = 0.0;
     data.attr_stamp = 0.0;
-    data.attr_parents = std::list<std::string>(1, "wield");
+    data.attr_parent = "wield";
 }
 
 

@@ -100,7 +100,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
         res = 'inline void %s::send%s' % (classname, self.cname)
         res = res + '(Atlas::Bridge & b) const\n'
         res = res + '{\n'
-        if self.name not in ["parents", "objtype"]:
+        if self.name not in ["parent", "objtype"]:
             res = res + '    if(m_attrFlags & %s) {\n' % self.flag_name
             indent = "    "
         else:
@@ -115,7 +115,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
             res = res + indent + '    b.mapFloatItem(%s, attr_%s);\n' \
                   % (self.attr_name, self.name)
         elif self.type == "string":
-            if self.name == "objtype":
+            if self.name in ["objtype", "parent"]:
                 res = res + indent + '    b.mapStringItem(%s, get%s());\n' \
                       % (self.attr_name, self.cname)
             else:
@@ -131,12 +131,8 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                   % (self.attr_name, self.name)
         elif self.type == "string_list":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            if self.name == "parents":
-                res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
-                      % (self.cname)
-            else:
-                res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
-                      % (self.name)
+            res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
             res = res + indent + '    for(; I != l.end(); ++I) {\n'
             res = res + indent + '        b.listStringItem(*I);\n'
@@ -214,13 +210,13 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
         elif self.type == "string":
             if classname in ['AnonymousData'] and self.name == 'objtype':
                 return ''
+            if classname in ['AnonymousData', 'GenericData'] and self.name == 'parent':
+                return ''
             if len(self.value) == 0:
                 return ''
             return '        %s = "%s";\n' \
                     % (var, self.value)
         elif self.type == "string_list_length" or self.type == "string_list":
-            if classname in ['AnonymousData', 'GenericData'] and self.name == 'parents':
-                return ''
             if len(self.value) == 0:
                 return ''
             elif len(self.value) == 1:

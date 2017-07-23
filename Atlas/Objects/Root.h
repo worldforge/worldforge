@@ -68,10 +68,8 @@ public:
 
     /// Set the "id" attribute.
     void setId(const std::string& val);
-    /// Set the "parents" attribute.
-    void setParents(const std::list<std::string>& val);
-    /// Set the "parents" attribute AsList.
-    void setParentsAsList(const Atlas::Message::ListType& val);
+    /// Set the "parent" attribute.
+    void setParent(const std::string& val);
     /// Set the "stamp" attribute.
     void setStamp(double val);
     /// Set the "objtype" attribute.
@@ -83,12 +81,10 @@ public:
     const std::string& getId() const;
     /// Retrieve the "id" attribute as a non-const reference.
     std::string& modifyId();
-    /// Retrieve the "parents" attribute.
-    const std::list<std::string>& getParents() const;
-    /// Retrieve the "parents" attribute as a non-const reference.
-    std::list<std::string>& modifyParents();
-    /// Retrieve the "parents" attribute AsList.
-    const Atlas::Message::ListType getParentsAsList() const;
+    /// Retrieve the "parent" attribute.
+    const std::string& getParent() const;
+    /// Retrieve the "parent" attribute as a non-const reference.
+    std::string& modifyParent();
     /// Retrieve the "stamp" attribute.
     double getStamp() const;
     /// Retrieve the "stamp" attribute as a non-const reference.
@@ -104,8 +100,8 @@ public:
 
     /// Is "id" value default?
     bool isDefaultId() const;
-    /// Is "parents" value default?
-    bool isDefaultParents() const;
+    /// Is "parent" value default?
+    bool isDefaultParent() const;
     /// Is "stamp" value default?
     bool isDefaultStamp() const;
     /// Is "objtype" value default?
@@ -120,8 +116,8 @@ protected:
     virtual int getAttrFlag(const std::string& name)const;
     /// Id of object
     std::string attr_id;
-    /// List of objects this inherits attributes from.
-    std::list<std::string> attr_parents;
+    /// The object this inherits attributes from.
+    std::string attr_parent;
     /// Last time this object was modified.
     double attr_stamp;
     /// What kind of object this is.
@@ -131,8 +127,8 @@ protected:
 
     /// Send the "id" attribute to an Atlas::Bridge.
     void sendId(Atlas::Bridge&) const;
-    /// Send the "parents" attribute to an Atlas::Bridge.
-    void sendParents(Atlas::Bridge&) const;
+    /// Send the "parent" attribute to an Atlas::Bridge.
+    void sendParent(Atlas::Bridge&) const;
     /// Send the "stamp" attribute to an Atlas::Bridge.
     void sendStamp(Atlas::Bridge&) const;
     /// Send the "objtype" attribute to an Atlas::Bridge.
@@ -162,7 +158,7 @@ private:
 //
 
 extern const std::string ID_ATTR;
-extern const std::string PARENTS_ATTR;
+extern const std::string PARENT_ATTR;
 extern const std::string STAMP_ATTR;
 extern const std::string OBJTYPE_ATTR;
 extern const std::string NAME_ATTR;
@@ -179,26 +175,12 @@ inline void RootData::setId(const std::string& val)
     m_attrFlags |= ID_FLAG;
 }
 
-const int PARENTS_FLAG = 1 << 2;
+const int PARENT_FLAG = 1 << 2;
 
-inline void RootData::setParents(const std::list<std::string>& val)
+inline void RootData::setParent(const std::string& val)
 {
-    attr_parents = val;
-    m_attrFlags |= PARENTS_FLAG;
-}
-
-inline void RootData::setParentsAsList(const Atlas::Message::ListType& val)
-{
-    m_attrFlags |= PARENTS_FLAG;
-    attr_parents.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).isString()) {
-            attr_parents.push_back((*I).asString());
-        }
-    }
+    attr_parent = val;
+    m_attrFlags |= PARENT_FLAG;
 }
 
 const int STAMP_FLAG = 1 << 3;
@@ -240,32 +222,19 @@ inline std::string& RootData::modifyId()
     return attr_id;
 }
 
-inline const std::list<std::string>& RootData::getParents() const
+inline const std::string& RootData::getParent() const
 {
-    if(m_attrFlags & PARENTS_FLAG)
-        return attr_parents;
+    if(m_attrFlags & PARENT_FLAG)
+        return attr_parent;
     else
-        return ((RootData*)m_defaults)->attr_parents;
+        return ((RootData*)m_defaults)->attr_parent;
 }
 
-inline std::list<std::string>& RootData::modifyParents()
+inline std::string& RootData::modifyParent()
 {
-    if(!(m_attrFlags & PARENTS_FLAG))
-        setParents(((RootData*)m_defaults)->attr_parents);
-    return attr_parents;
-}
-
-inline const Atlas::Message::ListType RootData::getParentsAsList() const
-{
-    const std::list<std::string>& lst_in = getParents();
-    Atlas::Message::ListType lst_out;
-    for(std::list<std::string>::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(std::string(*I));
-    }
-    return lst_out;
+    if(!(m_attrFlags & PARENT_FLAG))
+        setParent(((RootData*)m_defaults)->attr_parent);
+    return attr_parent;
 }
 
 inline double RootData::getStamp() const
@@ -318,9 +287,9 @@ inline bool RootData::isDefaultId() const
     return (m_attrFlags & ID_FLAG) == 0;
 }
 
-inline bool RootData::isDefaultParents() const
+inline bool RootData::isDefaultParent() const
 {
-    return (m_attrFlags & PARENTS_FLAG) == 0;
+    return (m_attrFlags & PARENT_FLAG) == 0;
 }
 
 inline bool RootData::isDefaultStamp() const

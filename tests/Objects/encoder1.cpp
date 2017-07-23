@@ -13,9 +13,8 @@ class RootDecoder : public Atlas::Message::DecoderBase
 protected:
     virtual void messageArrived(Atlas::Message::MapType o)
     {
-        assert(o.find(std::string("parents")) != o.end());
-        assert((*o.find("parents")).second.asList().size() == 1);
-        assert(*(*o.find("parents")).second.asList().begin() ==
+        assert(o.find(std::string("parent")) != o.end());
+        assert((*o.find("parent")).second.asString() ==
                 std::string("root"));
     }
 };

@@ -30,34 +30,24 @@ int main(int argc, char** argv)
     root_inst->setAttr("id", std::string("root_instantiation"));
     assert(root->getAttr("id").asString() == "root");
     assert(root_inst->getAttr("id").asString() == "root_instantiation");
-    assert(root->getAttr("parents").asList().size() == 0);
-    assert(root_inst->getAttr("parents").asList().size() == 1);
-    assert((*root_inst->getAttr("parents").asList().begin()).asString() ==
-            "root");
+    assert(root->getAttr("parent") == "root");
+    assert(root_inst->getAttr("parent") == "root");
 
     Look look = smart_dynamic_cast<Look>(objectDefinitions.find("look")->second);
     Look look_inst;
     look_inst->setAttr("id", std::string("look_instantiation"));
     assert(look->getAttr("id").asString() == "look");
     assert(look_inst->getAttr("id").asString() == "look_instantiation");
-    assert(look->getAttr("parents").asList().size() == 1);
-    assert((*look->getAttr("parents").asList().begin()).asString() ==
-            "perceive");
-    assert(look_inst->getAttr("parents").asList().size() == 1);
-    assert((*look_inst->getAttr("parents").asList().begin()).asString() ==
-            "look");
+    assert(look->getAttr("parent") == "perceive");
+    assert(look_inst->getAttr("parent") == "look");
 
     Account acct = smart_dynamic_cast<Account>(objectDefinitions.find("account")->second);
     Account acct_inst;
     acct_inst->setAttr("id", std::string("account_instantiation"));
     assert(acct->getAttr("id").asString() == "account");
     assert(acct_inst->getAttr("id").asString() == "account_instantiation");
-    assert(acct->getAttr("parents").asList().size() == 1);
-    assert((*acct->getAttr("parents").asList().begin()).asString() ==
-            "admin_entity");
-    assert(acct_inst->getAttr("parents").asList().size() == 1);
-    assert((*acct_inst->getAttr("parents").asList().begin()).asString() ==
-            "account");
+    assert(acct->getAttr("parent") == "admin_entity");
+    assert(acct_inst->getAttr("parent") == "account");
 
 
 

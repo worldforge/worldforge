@@ -218,16 +218,14 @@ void testValues()
     // assert(l->getArgs()[0]->getLongDescription()=="Later in hierarchy tree objtype changes to 'object' when actual game objects are made.");
     // assert(l->getArgs()[0]->getDescription()=="Base class for accounts");
     assert(l->getId()=="");
-    assert(l->getParents().front()=="login");
+    assert(l->getParent()=="login");
     assert(l->getObjtype()=="op");
     // std::cout<<std::endl<<"account.long_description: "
         // <<l->getArgs()[0]->getLongDescription()<<std::endl;
     
     {
     Atlas::Message::MapType mobj;
-    Atlas::Message::ListType parents;
-    parents.push_back(std::string("account"));
-    mobj["parents"] = parents;
+    mobj["parent"] = "account";
     mobj["name"] = std::string("foo");
     mobj["objtype"] = std::string("op");
     Root obj = Atlas::Objects::Factories::instance()->createObject(mobj);
@@ -236,9 +234,9 @@ void testValues()
     assert(obj->isDefaultId() == true);
     assert(obj->getName() == "foo");
     assert(obj->isDefaultName() == false);
-    assert(obj->getParents().front() == "account");
+    assert(obj->getParent() == "account");
     //should this be true? modify MessageObject2ClassObject if yes
-    assert(obj->isDefaultParents() == false);
+    assert(obj->isDefaultParent() == false);
     assert(obj->getObjtype() == "op");
     assert(obj->isDefaultObjtype() == false); //should this be true? 
     // assert(obj->getDescription() == "Base class for accounts");
@@ -253,8 +251,8 @@ void testValues()
     assert(obj->isDefaultId() == false);
     assert(obj->getName() == "");
     assert(obj->isDefaultName() == true);
-    assert(obj->getParents().front() == "admin_entity");
-    assert(obj->isDefaultParents() == false);
+    assert(obj->getParent() == "admin_entity");
+    assert(obj->isDefaultParent() == false);
     assert(obj->getObjtype() == "class");
     assert(obj->isDefaultObjtype() == false);
     // assert(obj->getDescription() == "Base class for accounts");
@@ -267,7 +265,7 @@ void testValues()
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
-    assert(obj->getParents().size() == 0);
+    assert(obj->isDefaultParent());
     assert(obj->getObjtype() == "obj");
     // assert(obj->getDescription() == "");
     }
@@ -276,14 +274,12 @@ void testValues()
     Atlas::Message::MapType mobj;
     mobj["id"] = std::string("bar");
     mobj["name"] = std::string("foo");
-    Atlas::Message::ListType parents;
-    parents.push_back(std::string("account"));
-    mobj["parents"] = parents;
+    mobj["parent"] = "account";
     Root obj = Atlas::Objects::Factories::instance()->createObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
-    assert(obj->getParents().front() == "account");
+    assert(obj->getParent() == "account");
     assert(obj->getObjtype() == "obj");
     // assert(obj->getDescription() == "");
     }
@@ -292,16 +288,12 @@ void testValues()
     Atlas::Message::MapType maccount;
     maccount["id"] = std::string("bar");
     maccount["name"] = std::string("foo");
-    Atlas::Message::ListType parents;
-    parents.push_back(std::string("player"));
-    maccount["parents"] = parents;
+    maccount["parent"] = "player";
     maccount["objtype"] = "obj";
 
     Atlas::Message::MapType mcreate;
     mcreate["from"] = std::string("bar");
-    Atlas::Message::ListType parents2;
-    parents2.push_back(std::string("create"));
-    mcreate["parents"] = parents2;
+    mcreate["parent"] = "create";
     Atlas::Message::ListType args;
     args.push_back(maccount);
     mcreate["args"] = args;
@@ -315,8 +307,8 @@ void testValues()
     assert(!op->instanceOf(Atlas::Objects::Operation::COMBINE_NO));
     assert(!op->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
     assert(op->getFrom() == "bar");
-    assert(op->getParents().size() == 1);
-    assert(op->getParents().front() == "create");
+    assert(op->isDefaultParent() == false);
+    assert(op->getParent() == "create");
     assert(op->getObjtype() == "op");
     // assert(op->getDescription() == 
            // "Create new things from nothing using this operator.");
@@ -331,8 +323,8 @@ void testValues()
     assert(op_arg->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
     assert(op_arg->instanceOf(Atlas::Objects::Entity::PLAYER_NO));
     assert(op_arg->getId() == "bar");
-    assert(op_arg->getParents().size() == 1);
-    assert(op_arg->getParents().front() == "player");
+    assert(op_arg->isDefaultParent() == false);
+    assert(op_arg->getParent() == "player");
     assert(op_arg->getObjtype() == "obj");
     // assert(op_arg->getDescription() == "Player accounts");
     assert(op_arg->getName() == "foo");

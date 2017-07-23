@@ -33,7 +33,7 @@ GenericData::~GenericData()
 
 void GenericData::setType(const std::string & name, int no)
 {
-    setParents(std::list<std::string>(1, name));
+    setParent(name);
     m_class_no = no;
 }
 

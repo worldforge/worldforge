@@ -53,7 +53,7 @@ void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "action");
+        data.attr_parent = "action";
 }
 
 Allocator<CreateData> CreateData::allocator;
@@ -98,7 +98,7 @@ void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "create");
+        data.attr_parent = "create";
 }
 
 Allocator<CombineData> CombineData::allocator;
@@ -143,7 +143,7 @@ void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::str
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "combine");
+        data.attr_parent = "combine";
 }
 
 Allocator<DivideData> DivideData::allocator;
@@ -188,7 +188,7 @@ void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "divide");
+        data.attr_parent = "divide";
 }
 
 Allocator<CommunicateData> CommunicateData::allocator;
@@ -233,7 +233,7 @@ void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "communicate");
+        data.attr_parent = "communicate";
 }
 
 Allocator<TalkData> TalkData::allocator;
@@ -278,7 +278,7 @@ void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, i
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "talk");
+        data.attr_parent = "talk";
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -15,9 +15,9 @@ int main(int argc, char** argv)
     Look rop;
     Account ac;
 
-    assert(!rop->hasAttr("parents"));
-    rop->setParents(std::list<std::string>(1, "foop"));
-    assert(rop->hasAttr("parents"));
+    assert(!rop->hasAttr("parent"));
+    rop->setParent("foop");
+    assert(rop->hasAttr("parent"));
     
     assert(!rop->hasAttr("args"));
     rop->setArgs(std::vector<Root>(1, ac));
@@ -25,9 +25,9 @@ int main(int argc, char** argv)
 
     Root r;
 
-    assert(!r->hasAttr("parents"));
-    r->setParents(std::list<std::string>(1, "foo"));
-    assert(r->hasAttr("parents"));
+    assert(!r->hasAttr("parent"));
+    r->setParent("foo");
+    assert(r->hasAttr("parent"));
 
     assert(!r->hasAttr("name"));
     r->setName("bob");

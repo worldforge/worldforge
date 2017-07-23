@@ -246,7 +246,7 @@ void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "root_operation");
+        data.attr_parent = "root_operation";
     attr_data[SERIALNO_ATTR] = SERIALNO_FLAG;
     attr_data[REFNO_ATTR] = REFNO_FLAG;
     attr_data[FROM_ATTR] = FROM_FLAG;

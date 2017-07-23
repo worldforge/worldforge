@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
 
     // Fill the object with non-default values
     op->setId("foo");
-    op->setParents(std::list<std::string>(1, "bar"));
+    op->setParent("bar");
     op->setStamp(23.42);
     op->setObjtype("non_standard");
     op->setName("fred");

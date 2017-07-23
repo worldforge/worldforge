@@ -105,25 +105,22 @@ Root Factories::createObject(const MapType & msg_map)
         const std::string & objtype = I->second.String();
         if(objtype == "op" || objtype == "obj" || objtype == "object") {
             // get parent
-            I = msg_map.find(Atlas::Objects::PARENTS_ATTR);
-            if(I != Iend && I->second.isList()) {
-                const ListType & parents_lst = I->second.List();
-                if(parents_lst.size()>=1 && parents_lst.front().isString()) {
-                    const std::string & parent = parents_lst.front().String();
-                    // objtype and parent ok, try to create it:
-                    FactoryMap::const_iterator I = m_factories.find(parent);
-                    if (I != m_factories.end()) {
-                        obj = I->second.factory_method(parent, I->second.classno);
+            I = msg_map.find(Atlas::Objects::PARENT_ATTR);
+            if(I != Iend && I->second.isString()) {
+                const std::string & parent = I->second.String();
+                // objtype and parent ok, try to create it:
+                FactoryMap::const_iterator J = m_factories.find(parent);
+                if (J != m_factories.end()) {
+                    obj = J->second.factory_method(parent, J->second.classno);
+                } else {
+                    if (objtype == "op") {
+                        obj = Atlas::Objects::Operation::Generic();
                     } else {
-                        if (objtype == "op") {
-                            obj = Atlas::Objects::Operation::Generic();
-                        } else {
-                            obj = Atlas::Objects::Entity::Anonymous();
-                        }
+                        obj = Atlas::Objects::Entity::Anonymous();
                     }
-                    is_instance = true;
-                    // FIXME We might want to do something different here.
-                } // parent list ok?
+                }
+                is_instance = true;
+                // FIXME We might want to do something different here.
             } // has parent attr?
         } // has known objtype
     } // has objtype attr

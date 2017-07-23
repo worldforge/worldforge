@@ -66,25 +66,23 @@ class Object(UserDict):
         #print "before __class__.__dict__:", self.__class__, name
         if self.__class__.__dict__.has_key(name):
             return self.__class__.__dict__[name]
-        #print "before parents:", self.__class__, name
-        if self.__dict__.has_key("parents"):
+        #print "before parent:", self.__class__, name
+        parent = None
+        if self.__dict__.has_key("parent"):
         #    print "getting parent_list from __dict__"
-            parent_list = self.__dict__["parents"]
-        elif self.__class__.__dict__.has_key("parents"):
+            parent = self.__dict__["parent"]
+        elif self.__class__.__dict__.has_key("parent"):
         #    print "getting parent_list from __class__.__dict__"
-            parent_list = self.__class__.__dict__["parents"]
-        else:
-        #    print "no parents found, empty parent_list"
-            parent_list = []
-        for parent in parent_list:
+            parent = self.__class__.__dict__["parent"]
+
         #    try:
         #        cl = parent.__class__
         #        print "before parent:", cl
         #    except AttributeError:
         #        print "before parent:", parent
-            if (isinstance(parent, Object) or class_inherited_from_Object(parent)) \
-               and hasattr(parent, name):
-                return getattr(parent, name)
+        if (isinstance(parent, Object) or class_inherited_from_Object(parent)) \
+           and hasattr(parent, name):
+            return getattr(parent, name)
         #print "raise AttributeError:", self.__class__, name
         raise AttributeError, name
 
@@ -153,11 +151,9 @@ class Object(UserDict):
            returns dictionary: use get_all_attributes().items() for list"""
         if result_dict==None:
             result_dict = {}
-        parents = self.__dict__.get("parents", [])[:]
-        parents.reverse()
-        for parent in parents:
-            if isinstance(parent, Object):
-                parent.get_all_attributes(result_dict)
+        parent = self.__dict__.get("parent")
+        if isinstance(parent, Object):
+            parent.get_all_attributes(result_dict)
         result_dict.update(self.get_attributes(convert2plain_flag))
         return result_dict
 
@@ -165,18 +161,18 @@ class Object(UserDict):
         """give object that defines given attribute"""
         if self.__dict__.has_key(name):
             return self
-        for parent in self.__dict__.get("parents", []):
-            if isinstance(parent, Object) and hasattr(parent, name):
-                return parent.attribute_definition(name)
+        parent = self.__dict__.get("parent")
+        if isinstance(parent, Object) and hasattr(parent, name):
+            return parent.attribute_definition(name)
         raise AttributeError, name
 
     def has_parent(self, parent):
         if type(parent)!=StringType: parent = parent.id
         if self.id == parent: return 1
-        for parent_obj in self.__dict__.get("parents", []):
-            if isinstance(parent_obj, Object) and \
-               parent_obj.has_parent(parent):
-                return 1
+        parent = self.__dict__.get("parent")
+        if isinstance(parent_obj, Object) and \
+           parent_obj.has_parent(parent):
+            return 1
         return 0
 
     def get_objtype(self):
@@ -195,8 +191,8 @@ class Object(UserDict):
     def __str__(self):
         return gen_bach(self)
 
-def Operation(parents0, arg=Object(), **kw):
-    kw["parents"] = [parents0]
+def Operation(parent, arg=Object(), **kw):
+    kw["parent"] = parent
     kw["objtype"] = "op"
     kw["arg"] = arg
     return apply(Object, (), kw)
@@ -225,7 +221,7 @@ def class_inherited_from_Object(cl):
 
 
 uri_type = {"from":1, "to":1}
-uri_list_type = {"parents":1, "children":1}
+uri_list_type = {"parent":1, "children":1}
 def attribute_is_type(name, type):
     """is attribute of certain type somewhere in type hierarchy?"""
     if type=="uri" and uri_type.has_key(name):
@@ -264,9 +260,12 @@ def find_ids_in_list(id_list, objects):
             
 
 def find_parents_children_objects(objects):
-    """replace parents and children id strings with actual objects"""
+    """replace parent and children id strings with actual objects"""
     for obj in objects.values():
-        find_ids_in_list(obj.parents, objects)
+        if hasattr(obj, "parent") and type(obj.parent)==StringType and obj.parent != "":
+            obj.parent = objects[obj.parent]
+        else:
+            obj.parent = None
         find_ids_in_list(obj.children, objects)
 
 def has_parent(obj, parent, objects = {}):
@@ -313,8 +312,8 @@ def get_last_part(id):
 def print_parents(obj):
     print obj.id,
     o2 = obj
-    while hasattr(o2, "parents") and len(o2.parents)==1:
-        o2 = o2.parents[0]
+    if hasattr(o2, "parent"):
+        o2 = o2.parent
         if hasattr(o2, "id"):
             print "->", o2.id,
         else:

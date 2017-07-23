@@ -53,7 +53,7 @@ void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::strin
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "logout");
+        data.attr_parent = "logout";
 }
 
 Allocator<ImaginaryData> ImaginaryData::allocator;
@@ -98,7 +98,7 @@ void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std:
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "imaginary");
+        data.attr_parent = "imaginary";
 }
 
 Allocator<UseData> UseData::allocator;
@@ -143,7 +143,7 @@ void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "use");
+        data.attr_parent = "use";
 }
 
 Allocator<InfoData> InfoData::allocator;
@@ -188,7 +188,7 @@ void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, i
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "info");
+        data.attr_parent = "info";
 }
 
 Allocator<PerceptionData> PerceptionData::allocator;
@@ -233,7 +233,7 @@ void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<st
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "perception");
+        data.attr_parent = "perception";
 }
 
 Allocator<SightData> SightData::allocator;
@@ -278,7 +278,7 @@ void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "sight");
+        data.attr_parent = "sight";
 }
 
 } } } // namespace Atlas::Objects::Operation

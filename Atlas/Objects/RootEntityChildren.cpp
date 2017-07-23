@@ -58,7 +58,7 @@ void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "admin_entity");
+        data.attr_parent = "admin_entity";
 }
 
 const std::string USERNAME_ATTR = "username";
@@ -238,7 +238,7 @@ void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::str
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "account");
+        data.attr_parent = "account";
     attr_data[USERNAME_ATTR] = USERNAME_FLAG;
     attr_data[PASSWORD_ATTR] = PASSWORD_FLAG;
     attr_data[CHARACTERS_ATTR] = CHARACTERS_FLAG;
@@ -291,7 +291,7 @@ void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::strin
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "player");
+        data.attr_parent = "player";
 }
 
 Allocator<AdminData> AdminData::allocator;
@@ -341,7 +341,7 @@ void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string,
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "admin");
+        data.attr_parent = "admin";
 }
 
 Allocator<GameData> GameData::allocator;
@@ -391,7 +391,7 @@ void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, i
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "game");
+        data.attr_parent = "game";
 }
 
 Allocator<GameEntityData> GameEntityData::allocator;
@@ -441,7 +441,7 @@ void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<st
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "game_entity");
+        data.attr_parent = "game_entity";
 }
 
 } } } // namespace Atlas::Objects::Entity

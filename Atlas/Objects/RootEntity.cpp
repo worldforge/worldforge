@@ -230,7 +230,7 @@ void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<st
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "root_entity");
+        data.attr_parent = "root_entity";
     attr_data[LOC_ATTR] = LOC_FLAG;
     attr_data[POS_ATTR] = POS_FLAG;
     attr_data[VELOCITY_ATTR] = VELOCITY_FLAG;

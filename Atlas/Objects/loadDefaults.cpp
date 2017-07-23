@@ -111,14 +111,11 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         }
         used_attributes.insert(I->first);
     }
-    I = melem.asMap().find(Atlas::Objects::PARENTS_ATTR);
+    I = melem.asMap().find(Atlas::Objects::PARENT_ATTR);
     if (I != melem.asMap().end()) {
-        for (ListType::const_iterator J = I->second.asList().begin();
-             J != I->second.asList().end(); J++) {
-            //cout<<"  >"<<J->asString()<<endl;
-            const Element & parent_melem = getMessageElement(J->asString());
-            setAttributes(obj, /*obj_inst,*/ parent_melem, used_attributes);
-        }
+        const std::string& parent = I->second.asString();
+        const Element & parent_melem = getMessageElement(parent);
+        setAttributes(obj, /*obj_inst,*/ parent_melem, used_attributes);
     }
 }
 
@@ -148,9 +145,7 @@ void LoadDefaultsDecoder::fillDefaults()
         objectDefinitions[obj_def->getId()] = obj_def;
 
         //modify attributes in instance that differ from definitions
-        std::list<std::string> parents;
-        parents.push_back(std::string(*I));
-        obj/*_inst*/->setParents(parents);
+        obj/*_inst*/->setParent(std::string(*I));
         obj/*_inst*/->setId("");
         if(obj/*_inst*/->getObjtype()=="op_definition")
             obj/*_inst*/->setObjtype("op");
@@ -166,8 +161,6 @@ void loadDefaults(const std::string& filename)
      std::vector<double> coords(3, 0.0);
      e->setPos(coords);
      e->setVelocity(coords);
-     std::list<std::string> parents;
-     e->setParents(parents);
 }
 
 } } // namespace Atlas::Objects

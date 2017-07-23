@@ -53,7 +53,7 @@ void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<st
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "appearance");
+        data.attr_parent = "appearance";
 }
 
 Allocator<DisappearanceData> DisappearanceData::allocator;
@@ -98,7 +98,7 @@ void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "disappearance");
+        data.attr_parent = "disappearance";
 }
 
 Allocator<SoundData> SoundData::allocator;
@@ -143,7 +143,7 @@ void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "sound");
+        data.attr_parent = "sound";
 }
 
 Allocator<SmellData> SmellData::allocator;
@@ -188,7 +188,7 @@ void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "smell");
+        data.attr_parent = "smell";
 }
 
 Allocator<FeelData> FeelData::allocator;
@@ -233,7 +233,7 @@ void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, i
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "feel");
+        data.attr_parent = "feel";
 }
 
 Allocator<ErrorData> ErrorData::allocator;
@@ -278,7 +278,7 @@ void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parents = std::list<std::string>(1, "error");
+        data.attr_parent = "error";
 }
 
 } } } // namespace Atlas::Objects::Operation

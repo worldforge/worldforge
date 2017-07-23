@@ -47,9 +47,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         name = obj.id
         if attr_name2class.has_key(name):
             return name, attr_name2class[name]
-        for parent in obj.parents:
-            res = self.find_attr_class(parent)
-            if res: return res
+
+        res = self.find_attr_class(obj.parent)
+        if res: return res
 
     def get_name_value_type(self, obj, first_definition = 0,
                             real_attr_only = 0, include_desc_attrs = 0):
@@ -77,7 +77,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         for name, value in obj.items():
             if not include_desc_attrs and name in descr_attrs:
                 continue
-            if name in ['id', 'parents']:
+            if name in ['id', 'parent']:
                 continue
             if name == 'objtype':
                 if value == 'op_definition':
@@ -89,8 +89,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                 lst.append(apply(attr_class_lst[0],
                                  (name, value, otype)))
                 used_attributes.append(name)
-        for parent in obj.parents:
-            self.set_attributes(parent, include_desc_attrs, lst, used_attributes)
+
+        if hasattr(obj, "parent") and obj.parent is not None:
+            self.set_attributes(obj.parent, include_desc_attrs, lst, used_attributes)
 
     def get_default_name_value_type(self, obj, include_desc_attrs = 0):
         lst = []
@@ -98,18 +99,15 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.set_attributes(obj, include_desc_attrs, lst, used_attributes)
         if obj.has_key('id'):
             parent = obj['id']
-            otype,attr_class_lst = self.find_attr_class(self.objects['parents'])
-            lst.append(apply(attr_class_lst[0],
-                             ('parents', [parent], 'string_list')))
+            otype,attr_class_lst = self.find_attr_class(self.objects['parent'])
+            lst.append(apply(attr_class_lst[0], ('parent', parent, 'string')))
         return lst
 
     def get_cpp_parent(self, obj):
-        if len(obj.parents) == 0:
+        if obj.parent is None:
             parent = "BaseObject"
-        elif len(obj.parents) == 1:
-            parent = obj.parents[0].id
         else:
-            raise ValueError, "Multiple parents needs supporting code"
+            parent = obj.parent
         return classize(parent, data=1)
 
     def write(self, str):
@@ -300,7 +298,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         parent = self.get_cpp_parent(obj)
         self.write("    %s::addToMessage(m);\n" % parent)
         for attr in statics:
-            if attr.name not in ["parents", "objtype"]:
+            if attr.name not in ["parent", "objtype"]:
                 self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
                 # If we can get the attribute without having to check the
                 # flag twice, do it.
@@ -311,7 +309,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                     self.write('        m[%s] = attr_%s;\n' % \
                            (attr.attr_name, attr.name))
             else:
-                # This code only handles "parents" and "objtype", both
+                # This code only handles "parent" and "objtype", both
                 # of which can be checked with .empty().
                 if attr.as_object:
                     self.write('    %s l_attr_%s = get%s%s();\n' % \
@@ -379,9 +377,9 @@ void %(classname)s::reset()
             if attr.type == "RootList":
                 self.write("""    attr_%s.clear();
 """ % (attr.name))
-        for parent in obj.parents:
+        if obj.parent is not None:
             self.write("""    %s::reset();
-""" % (classize(parent, data=1)))            
+""" % (classize(obj.parent, data=1)))
         self.write("""}
 
 """) #"for xemacs syntax highlighting
@@ -417,7 +415,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         classname = self.classname
         self.write("""void %(classname)s::setType(const std::string & name, int no)
 {
-    setParents(std::list<std::string>(1, name));
+    setParent(name);
     m_class_no = no;
 }
 
@@ -493,20 +491,21 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.classname_pointer, "H"])
-        for parent in obj.parents:
-            parent = parent.id
-            self.write('#include <Atlas/Objects/')
-            #if parent == "root": self.write('../')
-            self.write(classize(parent) + '.h>\n')
-        if not obj.parents:
+
+        if obj.parent is None:
             self.write('#include <Atlas/Objects/BaseObject.h>\n\n')
             self.write('#include <Atlas/Message/Element.h>\n\n')
         else:
+            parent = obj.parent.id
+            self.write('#include <Atlas/Objects/')
+            #if parent == "root": self.write('../')
+            self.write(classize(parent) + '.h>\n')
+
             self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
         if obj.id=="root_operation":
             self.write('#include <Atlas/Objects/objectFactory.h>\n\n')
         self.ns_open(self.base_list)
-        if not obj.parents:
+        if obj.parent is None:
             self.write('\ntemplate <class T> class SmartPtr;\n')
         static_attrs = self.get_name_value_type(obj, first_definition=1)
         self.interface(obj, static_attrs)
@@ -530,13 +529,12 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         if hasattr(obj, 'long_description'):
             self.write("///\n/** " + obj.long_description + "\n */\n")
         self.write("class " + self.classname)
-        parentlist = obj.parents
-        if not parentlist: parentlist = ["BaseObject"]
-        parentlist = map(lambda parent:"public " + classize(parent, data=1), \
-                         parentlist)
-        if len(parentlist) > 0:
-            self.write(" : ")
-            self.write(string.join(parentlist, ", "))
+        self.write(" : ")
+        if obj.parent is None:
+            self.write("public BaseObjectData")
+        else:
+            self.write("public %s" % classize(obj.parent, data=1))
+
         self.write("\n{\n")
 
         self.write("protected:\n")
@@ -818,8 +816,8 @@ if __name__=="__main__":
     for obj in parseXML(spec_xml_string):
         objects[obj.id] = obj
     find_parents_children_objects(objects)
-    objects["anonymous"] = Object(id="anonymous", parents=[objects["root_entity"]])
-    objects["generic"] = Object(id="generic", parents=[objects["root_operation"]])
+    objects["anonymous"] = Object(id="anonymous", parent=objects["root_entity"])
+    objects["generic"] = Object(id="generic", parent=objects["root_operation"])
 
     print "Loaded atlas.xml"
 
