@@ -300,8 +300,8 @@ void Connection::dispatchOp(const RootOperation& op)
         if (m_defaultRouter) rr = m_defaultRouter->handleOperation(op);
         if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
     } catch (Atlas::Exception& ae) {
-        error() << "caught Atlas exception: " << ae.getDescription() <<
-            " while dispatching op:\n" << op;
+        error() << "caught Atlas exception: '" << ae.getDescription() <<
+            "' while dispatching op:\n" << op;
     }
 }
 
