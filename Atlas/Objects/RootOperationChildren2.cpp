@@ -27,10 +27,6 @@ void DeleteData::reset()
     ActionData::reset();
 }
 
-DeleteData::~DeleteData()
-{
-}
-
 DeleteData * DeleteData::copy() const
 {
     DeleteData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool DeleteData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int>& attr_data)
+void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -72,10 +68,6 @@ void SetData::reset()
     ActionData::reset();
 }
 
-SetData::~SetData()
-{
-}
-
 SetData * SetData::copy() const
 {
     SetData * copied = allocator.alloc();
@@ -90,7 +82,7 @@ bool SetData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, int>& attr_data)
+void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -117,10 +109,6 @@ void AffectData::reset()
     SetData::reset();
 }
 
-AffectData::~AffectData()
-{
-}
-
 AffectData * AffectData::copy() const
 {
     AffectData * copied = allocator.alloc();
@@ -135,7 +123,7 @@ bool AffectData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, int>& attr_data)
+void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -162,10 +150,6 @@ void MoveData::reset()
     SetData::reset();
 }
 
-MoveData::~MoveData()
-{
-}
-
 MoveData * MoveData::copy() const
 {
     MoveData * copied = allocator.alloc();
@@ -180,7 +164,7 @@ bool MoveData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, int>& attr_data)
+void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -207,10 +191,6 @@ void WieldData::reset()
     SetData::reset();
 }
 
-WieldData::~WieldData()
-{
-}
-
 WieldData * WieldData::copy() const
 {
     WieldData * copied = allocator.alloc();
@@ -225,7 +205,7 @@ bool WieldData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data)
+void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -252,10 +232,6 @@ void GetData::reset()
     ActionData::reset();
 }
 
-GetData::~GetData()
-{
-}
-
 GetData * GetData::copy() const
 {
     GetData * copied = allocator.alloc();
@@ -270,7 +246,7 @@ bool GetData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, int>& attr_data)
+void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

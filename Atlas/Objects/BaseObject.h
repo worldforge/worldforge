@@ -77,7 +77,7 @@ public:
     /**
      * A map of attributes and their flags.
      */
-    std::map<std::string, int> attr_flags_Data;
+    std::map<std::string, int32_t> attr_flags_Data;
 
     /**
      * Ctor.
@@ -232,7 +232,7 @@ public:
         return m_class_no;
     }
 
-    int getAttrFlags() const
+    int32_t getAttrFlags() const
     {
         return m_attrFlags;
     }
@@ -271,12 +271,6 @@ public:
 
     /// Send the contents of this object to a Bridge.
     virtual void sendContents(Atlas::Bridge & b) const;
-
-    /// \brief Free an instance of this class, returning it to the memory
-    /// pool.
-    ///
-    /// This function in combination with alloc() handle the memory pool.
-    virtual void free() = 0;
 
     class const_iterator;
 
@@ -417,6 +411,12 @@ public:
 
 protected:
 
+    /// \brief Free an instance of this class, returning it to the memory
+    /// pool.
+    ///
+    /// This function in combination with alloc() handle the memory pool.
+    virtual void free() = 0;
+    virtual void reset() = 0;
     void incRef();
     void decRef();
 
@@ -443,7 +443,7 @@ protected:
     BaseObjectData *m_next;
     std::map<std::string, Atlas::Message::Element> m_attributes;
     // is attribute in this object or in default object?
-    int m_attrFlags;
+    int32_t m_attrFlags;
 };
 
 inline void BaseObjectData::incRef() {

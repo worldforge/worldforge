@@ -27,10 +27,6 @@ void PerceiveData::reset()
     GetData::reset();
 }
 
-PerceiveData::~PerceiveData()
-{
-}
-
 PerceiveData * PerceiveData::copy() const
 {
     PerceiveData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool PerceiveData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int>& attr_data)
+void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -72,10 +68,6 @@ void LookData::reset()
     PerceiveData::reset();
 }
 
-LookData::~LookData()
-{
-}
-
 LookData * LookData::copy() const
 {
     LookData * copied = allocator.alloc();
@@ -90,7 +82,7 @@ bool LookData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, int>& attr_data)
+void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -117,10 +109,6 @@ void ListenData::reset()
     PerceiveData::reset();
 }
 
-ListenData::~ListenData()
-{
-}
-
 ListenData * ListenData::copy() const
 {
     ListenData * copied = allocator.alloc();
@@ -135,7 +123,7 @@ bool ListenData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, int>& attr_data)
+void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -162,10 +150,6 @@ void SniffData::reset()
     PerceiveData::reset();
 }
 
-SniffData::~SniffData()
-{
-}
-
 SniffData * SniffData::copy() const
 {
     SniffData * copied = allocator.alloc();
@@ -180,7 +164,7 @@ bool SniffData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, int>& attr_data)
+void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -207,10 +191,6 @@ void TouchData::reset()
     PerceiveData::reset();
 }
 
-TouchData::~TouchData()
-{
-}
-
 TouchData * TouchData::copy() const
 {
     TouchData * copied = allocator.alloc();
@@ -225,7 +205,7 @@ bool TouchData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, int>& attr_data)
+void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -252,10 +232,6 @@ void LoginData::reset()
     GetData::reset();
 }
 
-LoginData::~LoginData()
-{
-}
-
 LoginData * LoginData::copy() const
 {
     LoginData * copied = allocator.alloc();
@@ -270,7 +246,7 @@ bool LoginData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, int>& attr_data)
+void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

@@ -47,29 +47,29 @@ protected:
         m_class_no = ROOT_OPERATION_NO;
     }
     /// Default destructor.
-    virtual ~RootOperationData();
+    virtual ~RootOperationData() = default;
 
 public:
     /// Copy this object.
-    virtual RootOperationData * copy() const;
+    RootOperationData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
-    virtual int copyAttr(const std::string& name, Atlas::Message::Element & attr) const;
+    int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
-    virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Element& attr);
+    void setAttr(const std::string& name,
+                         const Atlas::Message::Element& attr) override;
     /// Remove the attribute "name". This will not work for static attributes.
-    virtual void removeAttr(const std::string& name);
+    void removeAttr(const std::string& name) override;
 
     /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge & b) const;
+    void sendContents(Atlas::Bridge & b) const override;
 
     /// Write this object to an existing Element.
-    virtual void addToMessage(Atlas::Message::MapType &) const;
+    void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "serialno" attribute.
     void setSerialno(long val);
@@ -139,9 +139,9 @@ public:
 
 protected:
     /// Find the class which contains the attribute "name".
-    virtual int getAttrClass(const std::string& name)const;
+    int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    virtual int getAttrFlag(const std::string& name)const;
+    int32_t getAttrFlag(const std::string& name)const override;
     /// Serial number.
     long attr_serialno;
     /// Reference to serial number.
@@ -172,7 +172,7 @@ protected:
     /// Send the "args" attribute to an Atlas::Bridge.
     void sendArgs(Atlas::Bridge&) const;
 
-    virtual void iterate(int& current_class, std::string& attr) const;
+    void iterate(int& current_class, std::string& attr) const override;
 
 public:
     template <typename>
@@ -181,12 +181,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 //
@@ -205,7 +205,7 @@ extern const std::string ARGS_ATTR;
 // Inlined member functions follow.
 //
 
-const int SERIALNO_FLAG = 1 << 14;
+const int32_t SERIALNO_FLAG = 1 << 14;
 
 inline void RootOperationData::setSerialno(long val)
 {
@@ -213,7 +213,7 @@ inline void RootOperationData::setSerialno(long val)
     m_attrFlags |= SERIALNO_FLAG;
 }
 
-const int REFNO_FLAG = 1 << 15;
+const int32_t REFNO_FLAG = 1 << 15;
 
 inline void RootOperationData::setRefno(long val)
 {
@@ -221,7 +221,7 @@ inline void RootOperationData::setRefno(long val)
     m_attrFlags |= REFNO_FLAG;
 }
 
-const int FROM_FLAG = 1 << 16;
+const int32_t FROM_FLAG = 1 << 16;
 
 inline void RootOperationData::setFrom(const std::string& val)
 {
@@ -229,7 +229,7 @@ inline void RootOperationData::setFrom(const std::string& val)
     m_attrFlags |= FROM_FLAG;
 }
 
-const int TO_FLAG = 1 << 17;
+const int32_t TO_FLAG = 1 << 17;
 
 inline void RootOperationData::setTo(const std::string& val)
 {
@@ -237,7 +237,7 @@ inline void RootOperationData::setTo(const std::string& val)
     m_attrFlags |= TO_FLAG;
 }
 
-const int SECONDS_FLAG = 1 << 18;
+const int32_t SECONDS_FLAG = 1 << 18;
 
 inline void RootOperationData::setSeconds(double val)
 {
@@ -245,7 +245,7 @@ inline void RootOperationData::setSeconds(double val)
     m_attrFlags |= SECONDS_FLAG;
 }
 
-const int FUTURE_SECONDS_FLAG = 1 << 19;
+const int32_t FUTURE_SECONDS_FLAG = 1 << 19;
 
 inline void RootOperationData::setFutureSeconds(double val)
 {
@@ -253,7 +253,7 @@ inline void RootOperationData::setFutureSeconds(double val)
     m_attrFlags |= FUTURE_SECONDS_FLAG;
 }
 
-const int ARGS_FLAG = 1 << 20;
+const int32_t ARGS_FLAG = 1 << 20;
 
 inline void RootOperationData::setArgs(const std::vector<Root>& val)
 {
@@ -265,12 +265,9 @@ inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val
 {
     m_attrFlags |= ARGS_FLAG;
     attr_args.resize(0);
-    for(Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if (I->isMap()) {
-            attr_args.push_back(Factories::instance()->createObject(I->asMap()));
+    for (const auto& entry : val) {
+        if (entry.isMap()) {
+            attr_args.push_back(Factories::instance()->createObject(entry.Map()));
         }
     }
 }
@@ -392,12 +389,9 @@ inline const Atlas::Message::ListType RootOperationData::getArgsAsList() const
 {
     const std::vector<Root>& args_in = getArgs();
     Atlas::Message::ListType args_out;
-    for(std::vector<Root>::const_iterator I = args_in.begin();
-        I != args_in.end();
-        I++)
-    {
+    for (const auto& entry : args_in) {
         args_out.push_back(Atlas::Message::MapType());
-        (*I)->addToMessage(args_out.back().asMap());
+        entry->addToMessage(args_out.back().Map());
     }
     return args_out;
 }

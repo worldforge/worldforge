@@ -46,17 +46,17 @@ protected:
         m_class_no = ACTION_NO;
     }
     /// Default destructor.
-    virtual ~ActionData();
+    virtual ~ActionData() = default;
 
 public:
     /// Copy this object.
-    virtual ActionData * copy() const;
+    ActionData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == ACTION_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
 
 public:
@@ -66,12 +66,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(ActionData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(ActionData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -100,17 +100,17 @@ protected:
         m_class_no = CREATE_NO;
     }
     /// Default destructor.
-    virtual ~CreateData();
+    virtual ~CreateData() = default;
 
 public:
     /// Copy this object.
-    virtual CreateData * copy() const;
+    CreateData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == CREATE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -120,12 +120,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(CreateData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(CreateData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -154,17 +154,17 @@ protected:
         m_class_no = COMBINE_NO;
     }
     /// Default destructor.
-    virtual ~CombineData();
+    virtual ~CombineData() = default;
 
 public:
     /// Copy this object.
-    virtual CombineData * copy() const;
+    CombineData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == COMBINE_NO) current_class = -1; CreateData::iterate(current_class, attr);}
 
 public:
@@ -174,12 +174,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(CombineData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(CombineData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -208,17 +208,17 @@ protected:
         m_class_no = DIVIDE_NO;
     }
     /// Default destructor.
-    virtual ~DivideData();
+    virtual ~DivideData() = default;
 
 public:
     /// Copy this object.
-    virtual DivideData * copy() const;
+    DivideData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == DIVIDE_NO) current_class = -1; CreateData::iterate(current_class, attr);}
 
 public:
@@ -228,12 +228,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(DivideData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(DivideData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -262,17 +262,17 @@ protected:
         m_class_no = COMMUNICATE_NO;
     }
     /// Default destructor.
-    virtual ~CommunicateData();
+    virtual ~CommunicateData() = default;
 
 public:
     /// Copy this object.
-    virtual CommunicateData * copy() const;
+    CommunicateData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == COMMUNICATE_NO) current_class = -1; CreateData::iterate(current_class, attr);}
 
 public:
@@ -282,12 +282,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -316,17 +316,17 @@ protected:
         m_class_no = TALK_NO;
     }
     /// Default destructor.
-    virtual ~TalkData();
+    virtual ~TalkData() = default;
 
 public:
     /// Copy this object.
-    virtual TalkData * copy() const;
+    TalkData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == TALK_NO) current_class = -1; CommunicateData::iterate(current_class, attr);}
 
 public:
@@ -336,12 +336,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -378,17 +378,17 @@ protected:
         m_class_no = DELETE_NO;
     }
     /// Default destructor.
-    virtual ~DeleteData();
+    virtual ~DeleteData() = default;
 
 public:
     /// Copy this object.
-    virtual DeleteData * copy() const;
+    DeleteData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == DELETE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -398,12 +398,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -440,17 +440,17 @@ protected:
         m_class_no = SET_NO;
     }
     /// Default destructor.
-    virtual ~SetData();
+    virtual ~SetData() = default;
 
 public:
     /// Copy this object.
-    virtual SetData * copy() const;
+    SetData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SET_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -460,12 +460,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(SetData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SetData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -502,17 +502,17 @@ protected:
         m_class_no = AFFECT_NO;
     }
     /// Default destructor.
-    virtual ~AffectData();
+    virtual ~AffectData() = default;
 
 public:
     /// Copy this object.
-    virtual AffectData * copy() const;
+    AffectData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == AFFECT_NO) current_class = -1; SetData::iterate(current_class, attr);}
 
 public:
@@ -522,12 +522,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(AffectData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(AffectData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -556,17 +556,17 @@ protected:
         m_class_no = MOVE_NO;
     }
     /// Default destructor.
-    virtual ~MoveData();
+    virtual ~MoveData() = default;
 
 public:
     /// Copy this object.
-    virtual MoveData * copy() const;
+    MoveData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == MOVE_NO) current_class = -1; SetData::iterate(current_class, attr);}
 
 public:
@@ -576,12 +576,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(MoveData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(MoveData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -618,17 +618,17 @@ protected:
         m_class_no = WIELD_NO;
     }
     /// Default destructor.
-    virtual ~WieldData();
+    virtual ~WieldData() = default;
 
 public:
     /// Copy this object.
-    virtual WieldData * copy() const;
+    WieldData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == WIELD_NO) current_class = -1; SetData::iterate(current_class, attr);}
 
 public:
@@ -638,12 +638,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -680,17 +680,17 @@ protected:
         m_class_no = GET_NO;
     }
     /// Default destructor.
-    virtual ~GetData();
+    virtual ~GetData() = default;
 
 public:
     /// Copy this object.
-    virtual GetData * copy() const;
+    GetData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == GET_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -700,12 +700,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(GetData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(GetData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -742,17 +742,17 @@ protected:
         m_class_no = PERCEIVE_NO;
     }
     /// Default destructor.
-    virtual ~PerceiveData();
+    virtual ~PerceiveData() = default;
 
 public:
     /// Copy this object.
-    virtual PerceiveData * copy() const;
+    PerceiveData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == PERCEIVE_NO) current_class = -1; GetData::iterate(current_class, attr);}
 
 public:
@@ -762,12 +762,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -804,17 +804,17 @@ protected:
         m_class_no = LOOK_NO;
     }
     /// Default destructor.
-    virtual ~LookData();
+    virtual ~LookData() = default;
 
 public:
     /// Copy this object.
-    virtual LookData * copy() const;
+    LookData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == LOOK_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
@@ -824,12 +824,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(LookData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(LookData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -866,17 +866,17 @@ protected:
         m_class_no = LISTEN_NO;
     }
     /// Default destructor.
-    virtual ~ListenData();
+    virtual ~ListenData() = default;
 
 public:
     /// Copy this object.
-    virtual ListenData * copy() const;
+    ListenData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == LISTEN_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
@@ -886,12 +886,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(ListenData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(ListenData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -928,17 +928,17 @@ protected:
         m_class_no = SNIFF_NO;
     }
     /// Default destructor.
-    virtual ~SniffData();
+    virtual ~SniffData() = default;
 
 public:
     /// Copy this object.
-    virtual SniffData * copy() const;
+    SniffData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SNIFF_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
@@ -948,12 +948,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(SniffData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SniffData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -990,17 +990,17 @@ protected:
         m_class_no = TOUCH_NO;
     }
     /// Default destructor.
-    virtual ~TouchData();
+    virtual ~TouchData() = default;
 
 public:
     /// Copy this object.
-    virtual TouchData * copy() const;
+    TouchData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == TOUCH_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
@@ -1010,12 +1010,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(TouchData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(TouchData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1044,17 +1044,17 @@ protected:
         m_class_no = LOGIN_NO;
     }
     /// Default destructor.
-    virtual ~LoginData();
+    virtual ~LoginData() = default;
 
 public:
     /// Copy this object.
-    virtual LoginData * copy() const;
+    LoginData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == LOGIN_NO) current_class = -1; GetData::iterate(current_class, attr);}
 
 public:
@@ -1064,12 +1064,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(LoginData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(LoginData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1098,17 +1098,17 @@ protected:
         m_class_no = LOGOUT_NO;
     }
     /// Default destructor.
-    virtual ~LogoutData();
+    virtual ~LogoutData() = default;
 
 public:
     /// Copy this object.
-    virtual LogoutData * copy() const;
+    LogoutData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == LOGOUT_NO) current_class = -1; LoginData::iterate(current_class, attr);}
 
 public:
@@ -1118,12 +1118,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1160,17 +1160,17 @@ protected:
         m_class_no = IMAGINARY_NO;
     }
     /// Default destructor.
-    virtual ~ImaginaryData();
+    virtual ~ImaginaryData() = default;
 
 public:
     /// Copy this object.
-    virtual ImaginaryData * copy() const;
+    ImaginaryData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == IMAGINARY_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -1180,12 +1180,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1222,17 +1222,17 @@ protected:
         m_class_no = USE_NO;
     }
     /// Default destructor.
-    virtual ~UseData();
+    virtual ~UseData() = default;
 
 public:
     /// Copy this object.
-    virtual UseData * copy() const;
+    UseData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == USE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
@@ -1242,12 +1242,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(UseData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(UseData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1284,17 +1284,17 @@ protected:
         m_class_no = INFO_NO;
     }
     /// Default destructor.
-    virtual ~InfoData();
+    virtual ~InfoData() = default;
 
 public:
     /// Copy this object.
-    virtual InfoData * copy() const;
+    InfoData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == INFO_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
 
 public:
@@ -1304,12 +1304,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(InfoData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(InfoData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1338,17 +1338,17 @@ protected:
         m_class_no = PERCEPTION_NO;
     }
     /// Default destructor.
-    virtual ~PerceptionData();
+    virtual ~PerceptionData() = default;
 
 public:
     /// Copy this object.
-    virtual PerceptionData * copy() const;
+    PerceptionData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == PERCEPTION_NO) current_class = -1; InfoData::iterate(current_class, attr);}
 
 public:
@@ -1358,12 +1358,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1392,17 +1392,17 @@ protected:
         m_class_no = SIGHT_NO;
     }
     /// Default destructor.
-    virtual ~SightData();
+    virtual ~SightData() = default;
 
 public:
     /// Copy this object.
-    virtual SightData * copy() const;
+    SightData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SIGHT_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
@@ -1412,12 +1412,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(SightData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SightData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1446,17 +1446,17 @@ protected:
         m_class_no = APPEARANCE_NO;
     }
     /// Default destructor.
-    virtual ~AppearanceData();
+    virtual ~AppearanceData() = default;
 
 public:
     /// Copy this object.
-    virtual AppearanceData * copy() const;
+    AppearanceData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == APPEARANCE_NO) current_class = -1; SightData::iterate(current_class, attr);}
 
 public:
@@ -1466,12 +1466,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1500,17 +1500,17 @@ protected:
         m_class_no = DISAPPEARANCE_NO;
     }
     /// Default destructor.
-    virtual ~DisappearanceData();
+    virtual ~DisappearanceData() = default;
 
 public:
     /// Copy this object.
-    virtual DisappearanceData * copy() const;
+    DisappearanceData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == DISAPPEARANCE_NO) current_class = -1; SightData::iterate(current_class, attr);}
 
 public:
@@ -1520,12 +1520,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1554,17 +1554,17 @@ protected:
         m_class_no = SOUND_NO;
     }
     /// Default destructor.
-    virtual ~SoundData();
+    virtual ~SoundData() = default;
 
 public:
     /// Copy this object.
-    virtual SoundData * copy() const;
+    SoundData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SOUND_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
@@ -1574,12 +1574,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(SoundData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SoundData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1608,17 +1608,17 @@ protected:
         m_class_no = SMELL_NO;
     }
     /// Default destructor.
-    virtual ~SmellData();
+    virtual ~SmellData() = default;
 
 public:
     /// Copy this object.
-    virtual SmellData * copy() const;
+    SmellData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SMELL_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
@@ -1628,12 +1628,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(SmellData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SmellData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1662,17 +1662,17 @@ protected:
         m_class_no = FEEL_NO;
     }
     /// Default destructor.
-    virtual ~FeelData();
+    virtual ~FeelData() = default;
 
 public:
     /// Copy this object.
-    virtual FeelData * copy() const;
+    FeelData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == FEEL_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
@@ -1682,12 +1682,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(FeelData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(FeelData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -1724,17 +1724,17 @@ protected:
         m_class_no = ERROR_NO;
     }
     /// Default destructor.
-    virtual ~ErrorData();
+    virtual ~ErrorData() = default;
 
 public:
     /// Copy this object.
-    virtual ErrorData * copy() const;
+    ErrorData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == ERROR_NO) current_class = -1; InfoData::iterate(current_class, attr);}
 
 public:
@@ -1744,12 +1744,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -170,7 +170,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
     def static_inline_sets(self, obj, statics):
         classname = classize(obj.id, data=1)
         for attr in statics:
-            self.write("const int %s = 1 << %i;\n" %
+            self.write("const int32_t %s = 1 << %i;\n" %
                        (attr.flag_name, attr.enum))
             self.write("\n")
             self.write(attr.inline_set(classname))
@@ -225,10 +225,10 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def getattrflag_im(self, obj):
         classname = classize(obj.id, data=1)
-        self.write("int %s::getAttrFlag(const std::string& name) const\n"
+        self.write("int32_t %s::getAttrFlag(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
-        self.write("""    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+        self.write("""    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
@@ -325,7 +325,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                         (attr.name))
                     self.write('        m[%s] = l_attr_%s;\n' % \
                         (attr.attr_name, attr.name))
-        self.write('    return;\n')
         self.write("}\n\n")
 
     def smart_ptr_if(self, name_addition=""):
@@ -345,12 +344,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int32_t>& attr_data);
 """ % vars()) #"for xemacs syntax highlighting
 
     def free_im(self, obj):
@@ -387,21 +386,13 @@ void %(classname)s::reset()
     def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
-void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int>& attr_data)
+void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int32_t>& attr_data)
 {
 """ % vars()) #"for xemacs syntax highlighting
         self.static_default_assigns(obj, default_attrs)
         if len(static_attrs) > 0:
             self.static_attr_flag_inserts(obj, static_attrs)
         self.write("""}
-
-""" % vars()) #"for xemacs syntax highlighting
-
-    def destructor_im(self, obj):
-        classname = self.classname
-        self.write("""%(classname)s::~%(classname)s()
-{
-}
 
 """ % vars()) #"for xemacs syntax highlighting
 
@@ -540,17 +531,17 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("protected:\n")
         self.constructors_if(obj, static_attrs)
         self.doc(4, "Default destructor.")
-        self.write("    virtual ~" + self.classname + "();\n")
+        self.write("    virtual ~" + self.classname + "() = default;\n")
         self.write("\n")
         self.write("public:\n")
         if obj.id in ['anonymous', 'generic']:
             self.doc(4, 'Set the type of this object.')
             self.write("    void setType(const std::string &, int);\n\n")
         self.doc(4, 'Copy this object.')
-        self.write("    virtual %s * copy() const;\n" % (self.classname))
+        self.write("    %s * copy() const override;\n" % (self.classname))
         self.write("\n")
         self.doc(4, 'Is this instance of some class?')
-        self.write("    virtual bool instanceOf(int classNo) const;\n")
+        self.write("    bool instanceOf(int classNo) const override;\n")
         self.write("\n")
 
         if len(static_attrs) > 0:
@@ -563,27 +554,27 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.doc(4, 'Retrieve the attribute "name". Return ' \
                       + 'non-zero if it does')
             self.doc(4, 'not exist.')
-            self.write("    virtual int copyAttr(")
+            self.write("    int copyAttr(")
             self.write("const std::string& name, ")
-            self.write("Atlas::Message::Element & attr) const;\n")
+            self.write("Atlas::Message::Element & attr) const override;\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
                       + '"attr"')
-            self.write("    virtual void setAttr(const std::string& name,\n")
+            self.write("    void setAttr(const std::string& name,\n")
             self.write("                         ")
-            self.write("const Atlas::Message::Element& attr);\n")
+            self.write("const Atlas::Message::Element& attr) override;\n")
             self.doc(4, 'Remove the attribute "name". This will not work for '\
                       + 'static attributes.')
-            self.write("    virtual void removeAttr(")
-            self.write("const std::string& name);\n")
+            self.write("    void removeAttr(")
+            self.write("const std::string& name) override;\n")
             self.write("\n")
             self.doc(4, 'Send the contents of this object to a Bridge.')
-            self.write("    virtual void sendContents(Atlas::Bridge & b) const;\n")
+            self.write("    void sendContents(Atlas::Bridge & b) const override;\n")
             self.write("\n")
             # self.doc(4, 'Convert this object to a Element.')
             # self.write("    virtual const Atlas::Message::MapType asMessage() const;\n")
             # self.write("\n")
             self.doc(4, 'Write this object to an existing Element.')
-            self.write("    virtual void addToMessage(Atlas::Message::MapType &) const;\n")
+            self.write("    void addToMessage(Atlas::Message::MapType &) const override;\n")
             self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())
@@ -598,12 +589,12 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.write("protected:\n")
 
             self.doc(4, 'Find the class which contains the attribute "name".')
-            self.write("    virtual int getAttrClass(const std::string& name)"\
-                           + "const;\n")
+            self.write("    int getAttrClass(const std::string& name)"\
+                           + "const override;\n")
 
             self.doc(4, 'Find the flag for the attribute "name".')
-            self.write("    virtual int getAttrFlag(const std::string& name)"\
-                           + "const;\n")
+            self.write("    int32_t getAttrFlag(const std::string& name)"\
+                           + "const override;\n")
 
             for attr in static_attrs:
                 if self.objects.has_key(attr.name):
@@ -619,7 +610,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
                 self.write("    void send" + attr.cname)
                 self.write('(Atlas::Bridge&) const;\n')
 
-        self.write("\n    virtual void iterate(int& current_class, std::string& attr) const")
+        self.write("\n    void iterate(int& current_class, std::string& attr) const override")
         if len(static_attrs) == 0:
             self.write("\n        {if(current_class == " + string.upper(obj.id) + "_NO) current_class = -1; " + self.get_cpp_parent(obj) + "::iterate(current_class, attr);}\n")
         else:
@@ -681,7 +672,6 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.allocator_im(obj)
         self.free_im(obj)
         self.reset_im(obj, static_attrs)
-        self.destructor_im(obj)
         if obj.id in ['anonymous', 'generic']:
             self.settype_im(obj)
         self.copy_im(obj)

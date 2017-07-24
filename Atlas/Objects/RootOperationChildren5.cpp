@@ -27,10 +27,6 @@ void AppearanceData::reset()
     SightData::reset();
 }
 
-AppearanceData::~AppearanceData()
-{
-}
-
 AppearanceData * AppearanceData::copy() const
 {
     AppearanceData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool AppearanceData::instanceOf(int classNo) const
     return SightData::instanceOf(classNo);
 }
 
-void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int>& attr_data)
+void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -72,10 +68,6 @@ void DisappearanceData::reset()
     SightData::reset();
 }
 
-DisappearanceData::~DisappearanceData()
-{
-}
-
 DisappearanceData * DisappearanceData::copy() const
 {
     DisappearanceData * copied = allocator.alloc();
@@ -90,7 +82,7 @@ bool DisappearanceData::instanceOf(int classNo) const
     return SightData::instanceOf(classNo);
 }
 
-void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int>& attr_data)
+void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -117,10 +109,6 @@ void SoundData::reset()
     PerceptionData::reset();
 }
 
-SoundData::~SoundData()
-{
-}
-
 SoundData * SoundData::copy() const
 {
     SoundData * copied = allocator.alloc();
@@ -135,7 +123,7 @@ bool SoundData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string, int>& attr_data)
+void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -162,10 +150,6 @@ void SmellData::reset()
     PerceptionData::reset();
 }
 
-SmellData::~SmellData()
-{
-}
-
 SmellData * SmellData::copy() const
 {
     SmellData * copied = allocator.alloc();
@@ -180,7 +164,7 @@ bool SmellData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string, int>& attr_data)
+void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -207,10 +191,6 @@ void FeelData::reset()
     PerceptionData::reset();
 }
 
-FeelData::~FeelData()
-{
-}
-
 FeelData * FeelData::copy() const
 {
     FeelData * copied = allocator.alloc();
@@ -225,7 +205,7 @@ bool FeelData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, int>& attr_data)
+void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -252,10 +232,6 @@ void ErrorData::reset()
     InfoData::reset();
 }
 
-ErrorData::~ErrorData()
-{
-}
-
 ErrorData * ErrorData::copy() const
 {
     ErrorData * copied = allocator.alloc();
@@ -270,7 +246,7 @@ bool ErrorData::instanceOf(int classNo) const
     return InfoData::instanceOf(classNo);
 }
 
-void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int>& attr_data)
+void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

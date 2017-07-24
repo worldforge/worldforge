@@ -27,10 +27,6 @@ void LogoutData::reset()
     LoginData::reset();
 }
 
-LogoutData::~LogoutData()
-{
-}
-
 LogoutData * LogoutData::copy() const
 {
     LogoutData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool LogoutData::instanceOf(int classNo) const
     return LoginData::instanceOf(classNo);
 }
 
-void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int>& attr_data)
+void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -72,10 +68,6 @@ void ImaginaryData::reset()
     ActionData::reset();
 }
 
-ImaginaryData::~ImaginaryData()
-{
-}
-
 ImaginaryData * ImaginaryData::copy() const
 {
     ImaginaryData * copied = allocator.alloc();
@@ -90,7 +82,7 @@ bool ImaginaryData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int>& attr_data)
+void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -117,10 +109,6 @@ void UseData::reset()
     ActionData::reset();
 }
 
-UseData::~UseData()
-{
-}
-
 UseData * UseData::copy() const
 {
     UseData * copied = allocator.alloc();
@@ -135,7 +123,7 @@ bool UseData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int>& attr_data)
+void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -162,10 +150,6 @@ void InfoData::reset()
     RootOperationData::reset();
 }
 
-InfoData::~InfoData()
-{
-}
-
 InfoData * InfoData::copy() const
 {
     InfoData * copied = allocator.alloc();
@@ -180,7 +164,7 @@ bool InfoData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, int>& attr_data)
+void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -207,10 +191,6 @@ void PerceptionData::reset()
     InfoData::reset();
 }
 
-PerceptionData::~PerceptionData()
-{
-}
-
 PerceptionData * PerceptionData::copy() const
 {
     PerceptionData * copied = allocator.alloc();
@@ -225,7 +205,7 @@ bool PerceptionData::instanceOf(int classNo) const
     return InfoData::instanceOf(classNo);
 }
 
-void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int>& attr_data)
+void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -252,10 +232,6 @@ void SightData::reset()
     PerceptionData::reset();
 }
 
-SightData::~SightData()
-{
-}
-
 SightData * SightData::copy() const
 {
     SightData * copied = allocator.alloc();
@@ -270,7 +246,7 @@ bool SightData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, int>& attr_data)
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

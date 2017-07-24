@@ -27,10 +27,6 @@ void AdminEntityData::reset()
     RootEntityData::reset();
 }
 
-AdminEntityData::~AdminEntityData()
-{
-}
-
 AdminEntityData * AdminEntityData::copy() const
 {
     AdminEntityData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool AdminEntityData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int>& attr_data)
+void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();
@@ -73,9 +69,9 @@ int AccountData::getAttrClass(const std::string& name) const
     return AdminEntityData::getAttrClass(name);
 }
 
-int AccountData::getAttrFlag(const std::string& name) const
+int32_t AccountData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
@@ -127,10 +123,8 @@ inline void AccountData::sendCharacters(Atlas::Bridge & b) const
 {
     if(m_attrFlags & CHARACTERS_FLAG) {
         b.mapListItem(CHARACTERS_ATTR);
-        const std::list<std::string> & l = attr_characters;
-        std::list<std::string>::const_iterator I = l.begin();
-        for(; I != l.end(); ++I) {
-            b.listStringItem(*I);
+        for(const auto& item : attr_characters) {
+            b.listStringItem(item);
         }
         b.listEnd();
     }
@@ -153,7 +147,6 @@ void AccountData::addToMessage(MapType & m) const
         m[PASSWORD_ATTR] = attr_password;
     if(m_attrFlags & CHARACTERS_FLAG)
         m[CHARACTERS_ATTR] = getCharactersAsList();
-    return;
 }
 
 void AccountData::iterate(int& current_class, std::string& attr) const
@@ -207,10 +200,6 @@ void AccountData::reset()
     AdminEntityData::reset();
 }
 
-AccountData::~AccountData()
-{
-}
-
 AccountData * AccountData::copy() const
 {
     AccountData * copied = allocator.alloc();
@@ -225,7 +214,7 @@ bool AccountData::instanceOf(int classNo) const
     return AdminEntityData::instanceOf(classNo);
 }
 
-void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::string, int>& attr_data)
+void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();
@@ -260,10 +249,6 @@ void PlayerData::reset()
     AccountData::reset();
 }
 
-PlayerData::~PlayerData()
-{
-}
-
 PlayerData * PlayerData::copy() const
 {
     PlayerData * copied = allocator.alloc();
@@ -278,7 +263,7 @@ bool PlayerData::instanceOf(int classNo) const
     return AccountData::instanceOf(classNo);
 }
 
-void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int>& attr_data)
+void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();
@@ -310,10 +295,6 @@ void AdminData::reset()
     AccountData::reset();
 }
 
-AdminData::~AdminData()
-{
-}
-
 AdminData * AdminData::copy() const
 {
     AdminData * copied = allocator.alloc();
@@ -328,7 +309,7 @@ bool AdminData::instanceOf(int classNo) const
     return AccountData::instanceOf(classNo);
 }
 
-void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string, int>& attr_data)
+void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();
@@ -360,10 +341,6 @@ void GameData::reset()
     AdminEntityData::reset();
 }
 
-GameData::~GameData()
-{
-}
-
 GameData * GameData::copy() const
 {
     GameData * copied = allocator.alloc();
@@ -378,7 +355,7 @@ bool GameData::instanceOf(int classNo) const
     return AdminEntityData::instanceOf(classNo);
 }
 
-void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, int>& attr_data)
+void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();
@@ -410,10 +387,6 @@ void GameEntityData::reset()
     RootEntityData::reset();
 }
 
-GameEntityData::~GameEntityData()
-{
-}
-
 GameEntityData * GameEntityData::copy() const
 {
     GameEntityData * copied = allocator.alloc();
@@ -428,7 +401,7 @@ bool GameEntityData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int>& attr_data)
+void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();

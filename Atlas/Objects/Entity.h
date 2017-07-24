@@ -38,17 +38,17 @@ protected:
         m_class_no = ADMIN_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~AdminEntityData();
+    virtual ~AdminEntityData() = default;
 
 public:
     /// Copy this object.
-    virtual AdminEntityData * copy() const;
+    AdminEntityData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == ADMIN_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
 public:
@@ -58,12 +58,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -92,29 +92,29 @@ protected:
         m_class_no = ACCOUNT_NO;
     }
     /// Default destructor.
-    virtual ~AccountData();
+    virtual ~AccountData() = default;
 
 public:
     /// Copy this object.
-    virtual AccountData * copy() const;
+    AccountData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
-    virtual int copyAttr(const std::string& name, Atlas::Message::Element & attr) const;
+    int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
-    virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Element& attr);
+    void setAttr(const std::string& name,
+                         const Atlas::Message::Element& attr) override;
     /// Remove the attribute "name". This will not work for static attributes.
-    virtual void removeAttr(const std::string& name);
+    void removeAttr(const std::string& name) override;
 
     /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge & b) const;
+    void sendContents(Atlas::Bridge & b) const override;
 
     /// Write this object to an existing Element.
-    virtual void addToMessage(Atlas::Message::MapType &) const;
+    void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "username" attribute.
     void setUsername(const std::string& val);
@@ -149,9 +149,9 @@ public:
 
 protected:
     /// Find the class which contains the attribute "name".
-    virtual int getAttrClass(const std::string& name)const;
+    int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    virtual int getAttrFlag(const std::string& name)const;
+    int32_t getAttrFlag(const std::string& name)const override;
     /// Username for account usually
     std::string attr_username;
     /// Password for account usually
@@ -166,7 +166,7 @@ protected:
     /// Send the "characters" attribute to an Atlas::Bridge.
     void sendCharacters(Atlas::Bridge&) const;
 
-    virtual void iterate(int& current_class, std::string& attr) const;
+    void iterate(int& current_class, std::string& attr) const override;
 
 public:
     template <typename>
@@ -175,12 +175,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(AccountData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(AccountData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 //
@@ -195,7 +195,7 @@ extern const std::string CHARACTERS_ATTR;
 // Inlined member functions follow.
 //
 
-const int USERNAME_FLAG = 1 << 11;
+const int32_t USERNAME_FLAG = 1 << 11;
 
 inline void AccountData::setUsername(const std::string& val)
 {
@@ -203,7 +203,7 @@ inline void AccountData::setUsername(const std::string& val)
     m_attrFlags |= USERNAME_FLAG;
 }
 
-const int PASSWORD_FLAG = 1 << 12;
+const int32_t PASSWORD_FLAG = 1 << 12;
 
 inline void AccountData::setPassword(const std::string& val)
 {
@@ -211,7 +211,7 @@ inline void AccountData::setPassword(const std::string& val)
     m_attrFlags |= PASSWORD_FLAG;
 }
 
-const int CHARACTERS_FLAG = 1 << 13;
+const int32_t CHARACTERS_FLAG = 1 << 13;
 
 inline void AccountData::setCharacters(const std::list<std::string>& val)
 {
@@ -223,12 +223,9 @@ inline void AccountData::setCharactersAsList(const Atlas::Message::ListType& val
 {
     m_attrFlags |= CHARACTERS_FLAG;
     attr_characters.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).isString()) {
-            attr_characters.push_back((*I).asString());
+    for (const auto& entry : val) {
+        if(entry.isString()) {
+            attr_characters.push_back(entry.asString());
         }
     }
 }
@@ -282,11 +279,8 @@ inline const Atlas::Message::ListType AccountData::getCharactersAsList() const
 {
     const std::list<std::string>& lst_in = getCharacters();
     Atlas::Message::ListType lst_out;
-    for(std::list<std::string>::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(std::string(*I));
+    for (const auto& entry : lst_in) {
+        lst_out.push_back(std::string(entry));
     }
     return lst_out;
 }
@@ -333,17 +327,17 @@ protected:
         m_class_no = PLAYER_NO;
     }
     /// Default destructor.
-    virtual ~PlayerData();
+    virtual ~PlayerData() = default;
 
 public:
     /// Copy this object.
-    virtual PlayerData * copy() const;
+    PlayerData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == PLAYER_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
 public:
@@ -353,12 +347,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -387,17 +381,17 @@ protected:
         m_class_no = ADMIN_NO;
     }
     /// Default destructor.
-    virtual ~AdminData();
+    virtual ~AdminData() = default;
 
 public:
     /// Copy this object.
-    virtual AdminData * copy() const;
+    AdminData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == ADMIN_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
 public:
@@ -407,12 +401,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(AdminData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(AdminData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -441,17 +435,17 @@ protected:
         m_class_no = GAME_NO;
     }
     /// Default destructor.
-    virtual ~GameData();
+    virtual ~GameData() = default;
 
 public:
     /// Copy this object.
-    virtual GameData * copy() const;
+    GameData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == GAME_NO) current_class = -1; AdminEntityData::iterate(current_class, attr);}
 
 public:
@@ -461,12 +455,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(GameData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(GameData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 
@@ -495,17 +489,17 @@ protected:
         m_class_no = GAME_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~GameEntityData();
+    virtual ~GameEntityData() = default;
 
 public:
     /// Copy this object.
-    virtual GameEntityData * copy() const;
+    GameEntityData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == GAME_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
 public:
@@ -515,12 +509,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Entity

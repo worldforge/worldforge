@@ -45,20 +45,20 @@ protected:
         m_class_no = GENERIC_NO;
     }
     /// Default destructor.
-    virtual ~GenericData();
+    virtual ~GenericData() = default;
 
 public:
     /// Set the type of this object.
     void setType(const std::string &, int);
 
     /// Copy this object.
-    virtual GenericData * copy() const;
+    GenericData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == GENERIC_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
 
 public:
@@ -68,12 +68,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(GenericData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(GenericData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Operation

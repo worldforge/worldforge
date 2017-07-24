@@ -37,29 +37,29 @@ protected:
         m_class_no = ROOT_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~RootEntityData();
+    virtual ~RootEntityData() = default;
 
 public:
     /// Copy this object.
-    virtual RootEntityData * copy() const;
+    RootEntityData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
-    virtual int copyAttr(const std::string& name, Atlas::Message::Element & attr) const;
+    int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
-    virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Element& attr);
+    void setAttr(const std::string& name,
+                         const Atlas::Message::Element& attr) override;
     /// Remove the attribute "name". This will not work for static attributes.
-    virtual void removeAttr(const std::string& name);
+    void removeAttr(const std::string& name) override;
 
     /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge & b) const;
+    void sendContents(Atlas::Bridge & b) const override;
 
     /// Write this object to an existing Element.
-    virtual void addToMessage(Atlas::Message::MapType &) const;
+    void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "loc" attribute.
     void setLoc(const std::string& val);
@@ -118,9 +118,9 @@ public:
 
 protected:
     /// Find the class which contains the attribute "name".
-    virtual int getAttrClass(const std::string& name)const;
+    int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    virtual int getAttrFlag(const std::string& name)const;
+    int32_t getAttrFlag(const std::string& name)const override;
     /// Reference object for coordinates (location).
     std::string attr_loc;
     /// Position coordinates, usually world is 3D
@@ -143,7 +143,7 @@ protected:
     /// Send the "stamp_contains" attribute to an Atlas::Bridge.
     void sendStampContains(Atlas::Bridge&) const;
 
-    virtual void iterate(int& current_class, std::string& attr) const;
+    void iterate(int& current_class, std::string& attr) const override;
 
 public:
     template <typename>
@@ -152,12 +152,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 //
@@ -174,7 +174,7 @@ extern const std::string STAMP_CONTAINS_ATTR;
 // Inlined member functions follow.
 //
 
-const int LOC_FLAG = 1 << 6;
+const int32_t LOC_FLAG = 1 << 6;
 
 inline void RootEntityData::setLoc(const std::string& val)
 {
@@ -182,7 +182,7 @@ inline void RootEntityData::setLoc(const std::string& val)
     m_attrFlags |= LOC_FLAG;
 }
 
-const int POS_FLAG = 1 << 7;
+const int32_t POS_FLAG = 1 << 7;
 
 inline void RootEntityData::setPos(const std::vector<double>& val)
 {
@@ -194,17 +194,14 @@ inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= POS_FLAG;
     attr_pos.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).isNum()) {
-            attr_pos.push_back((*I).asNum());
+    for (const auto& entry : val) {
+        if(entry.isNum()) {
+            attr_pos.push_back(entry.asNum());
         }
     }
 }
 
-const int VELOCITY_FLAG = 1 << 8;
+const int32_t VELOCITY_FLAG = 1 << 8;
 
 inline void RootEntityData::setVelocity(const std::vector<double>& val)
 {
@@ -216,17 +213,14 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
 {
     m_attrFlags |= VELOCITY_FLAG;
     attr_velocity.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).isNum()) {
-            attr_velocity.push_back((*I).asNum());
+    for (const auto& entry : val) {
+        if(entry.isNum()) {
+            attr_velocity.push_back(entry.asNum());
         }
     }
 }
 
-const int CONTAINS_FLAG = 1 << 9;
+const int32_t CONTAINS_FLAG = 1 << 9;
 
 inline void RootEntityData::setContains(const std::list<std::string>& val)
 {
@@ -238,17 +232,14 @@ inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& va
 {
     m_attrFlags |= CONTAINS_FLAG;
     attr_contains.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).isString()) {
-            attr_contains.push_back((*I).asString());
+    for (const auto& entry : val) {
+        if(entry.isString()) {
+            attr_contains.push_back(entry.asString());
         }
     }
 }
 
-const int STAMP_CONTAINS_FLAG = 1 << 10;
+const int32_t STAMP_CONTAINS_FLAG = 1 << 10;
 
 inline void RootEntityData::setStampContains(double val)
 {
@@ -290,11 +281,8 @@ inline const Atlas::Message::ListType RootEntityData::getPosAsList() const
 {
     const std::vector<double>& lst_in = getPos();
     Atlas::Message::ListType lst_out;
-    for(std::vector<double>::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(*I);
+    for (const auto& entry : lst_in) {
+        lst_out.push_back(entry);
     }
     return lst_out;
 }
@@ -318,11 +306,8 @@ inline const Atlas::Message::ListType RootEntityData::getVelocityAsList() const
 {
     const std::vector<double>& lst_in = getVelocity();
     Atlas::Message::ListType lst_out;
-    for(std::vector<double>::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(*I);
+    for (const auto& entry : lst_in) {
+        lst_out.push_back(entry);
     }
     return lst_out;
 }
@@ -346,11 +331,8 @@ inline const Atlas::Message::ListType RootEntityData::getContainsAsList() const
 {
     const std::list<std::string>& lst_in = getContains();
     Atlas::Message::ListType lst_out;
-    for(std::list<std::string>::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(std::string(*I));
+    for (const auto& entry : lst_in) {
+        lst_out.push_back(std::string(entry));
     }
     return lst_out;
 }

@@ -131,66 +131,45 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                   % (self.attr_name, self.name)
         elif self.type == "string_list":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
-            res = res + indent + '    for(; I != l.end(); ++I) {\n'
-            res = res + indent + '        b.listStringItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listStringItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "int_list":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
-            res = res + indent + '    for(; I != l.end(); ++I) {\n'
-            res = res + indent + '        b.listIntItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listIntItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "float_list":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::list<double> & l = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::list<double>::const_iterator I = l.begin();\n'
-            res = res + indent + '    for(; I != l.end(); ++I) {\n'
-            res = res + indent + '        b.listFloatItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listFloatItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "string_list_length":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::vector<std::string> & v = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
-            res = res + indent + '    for(; I != v.end(); ++I) {\n'
-            res = res + indent + '        b.listStringItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listStringItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "int_list_length":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::vector<std::string> & v = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
-            res = res + indent + '    for(; I != v.end(); ++I) {\n'
-            res = res + indent + '        b.listIntItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listIntItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "float_list_length":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::vector<double> & v = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::vector<double>::const_iterator I = v.begin();\n'
-            res = res + indent + '    for(; I != v.end(); ++I) {\n'
-            res = res + indent + '        b.listFloatItem(*I);\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
+            res = res + indent + '        b.listFloatItem(item);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "RootList":
             res = res + indent + '    b.mapListItem(%s);\n' % (self.attr_name)
-            res = res + indent + '    const std::vector<Root> & v = attr_%s;\n' \
-                  % (self.name)
-            res = res + indent + '    std::vector<Root>::const_iterator I = v.begin();\n'
-            res = res + indent + '    for (; I != v.end(); ++I) {\n'
+            res = res + indent + '    for(const auto& item : attr_%s) {\n' % (self.name)
             res = res + indent + '       b.listMapItem();\n'
-            res = res + indent + '       (*I)->sendContents(b);\n'
+            res = res + indent + '       item->sendContents(b);\n'
             res = res + indent + '       b.mapEnd();\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
@@ -342,12 +321,9 @@ class ArgsRootList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if (I->isMap()) {
-            attr_%(name)s.push_back(Factories::instance()->createObject(I->asMap()));
+    for (const auto& entry : val) {
+        if (entry.isMap()) {
+            attr_%(name)s.push_back(Factories::instance()->createObject(entry.Map()));
         }
     }
 }
@@ -368,12 +344,9 @@ inline void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
 {
     %(cpp_param_type)s args_in = get%(cname)s();
     Atlas::Message::ListType args_out;
-    for(%(cpp_type)s::const_iterator I = args_in.begin();
-        I != args_in.end();
-        I++)
-    {
+    for (const auto& entry : args_in) {
         args_out.push_back(Atlas::Message::MapType());
-        (*I)->addToMessage(args_out.back().asMap());
+        entry->addToMessage(args_out.back().Map());
     }
     return args_out;
 }
@@ -413,12 +386,9 @@ class TypedList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::ListType::const_iterator I = val.begin();
-        I != val.end();
-        I++)
-    {
-        if((*I).is%(element_type_as_object)s()) {
-            attr_%(name)s.push_back((*I).as%(element_type_as_object)s());
+    for (const auto& entry : val) {
+        if(entry.is%(element_type_as_object)s()) {
+            attr_%(name)s.push_back(entry.as%(element_type_as_object)s());
         }
     }
 }
@@ -431,11 +401,8 @@ class TypedList(AttributeInfo):
 {
     %(cpp_param_type)s lst_in = get%(cname)s();
     Atlas::Message::ListType lst_out;
-    for(%(cpp_type)s::const_iterator I = lst_in.begin();
-        I != lst_in.end();
-        I++)
-    {
-        lst_out.push_back(%(cpp_element_type_begin)s*I%(cpp_element_type_end)s);
+    for (const auto& entry : lst_in) {
+        lst_out.push_back(%(cpp_element_type_begin)sentry%(cpp_element_type_end)s);
     }
     return lst_out;
 }

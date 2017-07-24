@@ -25,9 +25,9 @@ int RootEntityData::getAttrClass(const std::string& name) const
     return RootData::getAttrClass(name);
 }
 
-int RootEntityData::getAttrFlag(const std::string& name) const
+int32_t RootEntityData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
@@ -80,10 +80,8 @@ inline void RootEntityData::sendPos(Atlas::Bridge & b) const
 {
     if(m_attrFlags & POS_FLAG) {
         b.mapListItem(POS_ATTR);
-        const std::vector<double> & v = attr_pos;
-        std::vector<double>::const_iterator I = v.begin();
-        for(; I != v.end(); ++I) {
-            b.listFloatItem(*I);
+        for(const auto& item : attr_pos) {
+            b.listFloatItem(item);
         }
         b.listEnd();
     }
@@ -93,10 +91,8 @@ inline void RootEntityData::sendVelocity(Atlas::Bridge & b) const
 {
     if(m_attrFlags & VELOCITY_FLAG) {
         b.mapListItem(VELOCITY_ATTR);
-        const std::vector<double> & v = attr_velocity;
-        std::vector<double>::const_iterator I = v.begin();
-        for(; I != v.end(); ++I) {
-            b.listFloatItem(*I);
+        for(const auto& item : attr_velocity) {
+            b.listFloatItem(item);
         }
         b.listEnd();
     }
@@ -106,10 +102,8 @@ inline void RootEntityData::sendContains(Atlas::Bridge & b) const
 {
     if(m_attrFlags & CONTAINS_FLAG) {
         b.mapListItem(CONTAINS_ATTR);
-        const std::list<std::string> & l = attr_contains;
-        std::list<std::string>::const_iterator I = l.begin();
-        for(; I != l.end(); ++I) {
-            b.listStringItem(*I);
+        for(const auto& item : attr_contains) {
+            b.listStringItem(item);
         }
         b.listEnd();
     }
@@ -145,7 +139,6 @@ void RootEntityData::addToMessage(MapType & m) const
         m[CONTAINS_ATTR] = getContainsAsList();
     if(m_attrFlags & STAMP_CONTAINS_FLAG)
         m[STAMP_CONTAINS_ATTR] = attr_stamp_contains;
-    return;
 }
 
 void RootEntityData::iterate(int& current_class, std::string& attr) const
@@ -199,10 +192,6 @@ void RootEntityData::reset()
     RootData::reset();
 }
 
-RootEntityData::~RootEntityData()
-{
-}
-
 RootEntityData * RootEntityData::copy() const
 {
     RootEntityData * copied = allocator.alloc();
@@ -217,7 +206,7 @@ bool RootEntityData::instanceOf(int classNo) const
     return RootData::instanceOf(classNo);
 }
 
-void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int>& attr_data)
+void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();

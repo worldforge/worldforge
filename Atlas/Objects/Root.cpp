@@ -25,9 +25,9 @@ int RootData::getAttrClass(const std::string& name) const
     return BaseObjectData::getAttrClass(name);
 }
 
-int RootData::getAttrFlag(const std::string& name) const
+int32_t RootData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
@@ -129,7 +129,6 @@ void RootData::addToMessage(MapType & m) const
         m[OBJTYPE_ATTR] = l_attr_objtype;
     if(m_attrFlags & NAME_FLAG)
         m[NAME_ATTR] = attr_name;
-    return;
 }
 
 void RootData::iterate(int& current_class, std::string& attr) const
@@ -182,10 +181,6 @@ void RootData::reset()
 {
 }
 
-RootData::~RootData()
-{
-}
-
 RootData * RootData::copy() const
 {
     RootData * copied = allocator.alloc();
@@ -200,7 +195,7 @@ bool RootData::instanceOf(int classNo) const
     return BaseObjectData::instanceOf(classNo);
 }
 
-void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, int>& attr_data)
+void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_stamp = 0.0;
         data.attr_objtype = "obj";

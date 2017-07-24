@@ -27,10 +27,6 @@ void ActionData::reset()
     RootOperationData::reset();
 }
 
-ActionData::~ActionData()
-{
-}
-
 ActionData * ActionData::copy() const
 {
     ActionData * copied = allocator.alloc();
@@ -45,7 +41,7 @@ bool ActionData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::string, int>& attr_data)
+void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -72,10 +68,6 @@ void CreateData::reset()
     ActionData::reset();
 }
 
-CreateData::~CreateData()
-{
-}
-
 CreateData * CreateData::copy() const
 {
     CreateData * copied = allocator.alloc();
@@ -90,7 +82,7 @@ bool CreateData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::string, int>& attr_data)
+void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -117,10 +109,6 @@ void CombineData::reset()
     CreateData::reset();
 }
 
-CombineData::~CombineData()
-{
-}
-
 CombineData * CombineData::copy() const
 {
     CombineData * copied = allocator.alloc();
@@ -135,7 +123,7 @@ bool CombineData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::string, int>& attr_data)
+void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -162,10 +150,6 @@ void DivideData::reset()
     CreateData::reset();
 }
 
-DivideData::~DivideData()
-{
-}
-
 DivideData * DivideData::copy() const
 {
     DivideData * copied = allocator.alloc();
@@ -180,7 +164,7 @@ bool DivideData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::string, int>& attr_data)
+void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -207,10 +191,6 @@ void CommunicateData::reset()
     CreateData::reset();
 }
 
-CommunicateData::~CommunicateData()
-{
-}
-
 CommunicateData * CommunicateData::copy() const
 {
     CommunicateData * copied = allocator.alloc();
@@ -225,7 +205,7 @@ bool CommunicateData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int>& attr_data)
+void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -252,10 +232,6 @@ void TalkData::reset()
     CommunicateData::reset();
 }
 
-TalkData::~TalkData()
-{
-}
-
 TalkData * TalkData::copy() const
 {
     TalkData * copied = allocator.alloc();
@@ -270,7 +246,7 @@ bool TalkData::instanceOf(int classNo) const
     return CommunicateData::instanceOf(classNo);
 }
 
-void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, int>& attr_data)
+void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

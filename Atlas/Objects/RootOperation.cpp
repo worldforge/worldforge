@@ -27,9 +27,9 @@ int RootOperationData::getAttrClass(const std::string& name) const
     return RootData::getAttrClass(name);
 }
 
-int RootOperationData::getAttrFlag(const std::string& name) const
+int32_t RootOperationData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
@@ -125,11 +125,9 @@ inline void RootOperationData::sendArgs(Atlas::Bridge & b) const
 {
     if(m_attrFlags & ARGS_FLAG) {
         b.mapListItem(ARGS_ATTR);
-        const std::vector<Root> & v = attr_args;
-        std::vector<Root>::const_iterator I = v.begin();
-        for (; I != v.end(); ++I) {
+        for(const auto& item : attr_args) {
            b.listMapItem();
-           (*I)->sendContents(b);
+           item->sendContents(b);
            b.mapEnd();
         }
         b.listEnd();
@@ -165,7 +163,6 @@ void RootOperationData::addToMessage(MapType & m) const
         m[FUTURE_SECONDS_ATTR] = attr_future_seconds;
     if(m_attrFlags & ARGS_FLAG)
         m[ARGS_ATTR] = getArgsAsList();
-    return;
 }
 
 void RootOperationData::iterate(int& current_class, std::string& attr) const
@@ -220,10 +217,6 @@ void RootOperationData::reset()
     RootData::reset();
 }
 
-RootOperationData::~RootOperationData()
-{
-}
-
 RootOperationData * RootOperationData::copy() const
 {
     RootOperationData * copied = allocator.alloc();
@@ -238,7 +231,7 @@ bool RootOperationData::instanceOf(int classNo) const
     return RootData::instanceOf(classNo);
 }
 
-void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int>& attr_data)
+void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

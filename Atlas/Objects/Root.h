@@ -42,29 +42,29 @@ protected:
         m_class_no = ROOT_NO;
     }
     /// Default destructor.
-    virtual ~RootData();
+    virtual ~RootData() = default;
 
 public:
     /// Copy this object.
-    virtual RootData * copy() const;
+    RootData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
-    virtual int copyAttr(const std::string& name, Atlas::Message::Element & attr) const;
+    int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
-    virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Element& attr);
+    void setAttr(const std::string& name,
+                         const Atlas::Message::Element& attr) override;
     /// Remove the attribute "name". This will not work for static attributes.
-    virtual void removeAttr(const std::string& name);
+    void removeAttr(const std::string& name) override;
 
     /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge & b) const;
+    void sendContents(Atlas::Bridge & b) const override;
 
     /// Write this object to an existing Element.
-    virtual void addToMessage(Atlas::Message::MapType &) const;
+    void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "id" attribute.
     void setId(const std::string& val);
@@ -111,9 +111,9 @@ public:
 
 protected:
     /// Find the class which contains the attribute "name".
-    virtual int getAttrClass(const std::string& name)const;
+    int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    virtual int getAttrFlag(const std::string& name)const;
+    int32_t getAttrFlag(const std::string& name)const override;
     /// Id of object
     std::string attr_id;
     /// The object this inherits attributes from.
@@ -136,7 +136,7 @@ protected:
     /// Send the "name" attribute to an Atlas::Bridge.
     void sendName(Atlas::Bridge&) const;
 
-    virtual void iterate(int& current_class, std::string& attr) const;
+    void iterate(int& current_class, std::string& attr) const override;
 
 public:
     template <typename>
@@ -145,12 +145,12 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
+    void free() override;
 
 private:
-    virtual void free();
 
-    static void fillDefaultObjectInstance(RootData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(RootData& data, std::map<std::string, int32_t>& attr_data);
 };
 
 //
@@ -167,7 +167,7 @@ extern const std::string NAME_ATTR;
 // Inlined member functions follow.
 //
 
-const int ID_FLAG = 1 << 1;
+const int32_t ID_FLAG = 1 << 1;
 
 inline void RootData::setId(const std::string& val)
 {
@@ -175,7 +175,7 @@ inline void RootData::setId(const std::string& val)
     m_attrFlags |= ID_FLAG;
 }
 
-const int PARENT_FLAG = 1 << 2;
+const int32_t PARENT_FLAG = 1 << 2;
 
 inline void RootData::setParent(const std::string& val)
 {
@@ -183,7 +183,7 @@ inline void RootData::setParent(const std::string& val)
     m_attrFlags |= PARENT_FLAG;
 }
 
-const int STAMP_FLAG = 1 << 3;
+const int32_t STAMP_FLAG = 1 << 3;
 
 inline void RootData::setStamp(double val)
 {
@@ -191,7 +191,7 @@ inline void RootData::setStamp(double val)
     m_attrFlags |= STAMP_FLAG;
 }
 
-const int OBJTYPE_FLAG = 1 << 4;
+const int32_t OBJTYPE_FLAG = 1 << 4;
 
 inline void RootData::setObjtype(const std::string& val)
 {
@@ -199,7 +199,7 @@ inline void RootData::setObjtype(const std::string& val)
     m_attrFlags |= OBJTYPE_FLAG;
 }
 
-const int NAME_FLAG = 1 << 5;
+const int32_t NAME_FLAG = 1 << 5;
 
 inline void RootData::setName(const std::string& val)
 {
