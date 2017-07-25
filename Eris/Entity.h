@@ -76,14 +76,14 @@ public:
      * The number returned is only for direct children, so the number of nested entities can be larger.
      * @return 
      */
-    unsigned int numContained() const;
+    size_t numContained() const;
     
     /**
      * @brief Gets the child entity at the specified index.
      * @param index An index for the collection of child entities. This must be a valid index as no bounds checking will happen.
      * @return A pointer to a child entity.
      */
-    Entity* getContained(unsigned int index) const;
+    Entity* getContained(size_t index) const;
 
     /**
      * @brief Gets the value of a named attribute.
@@ -213,16 +213,16 @@ public:
     WFMath::Quaternion getViewOrientation() const;
     
     /** Returns the entity's velocity as last set explicitly. **/
-    const WFMath::Vector< 3 > & getVelocity(void) const;
+    const WFMath::Vector< 3 > & getVelocity() const;
 
     /** Returns the entity's angular velocity as last set explicitly. **/
-    const WFMath::Vector< 3 > & getAngularVelocity(void) const;
+    const WFMath::Vector< 3 > & getAngularVelocity() const;
     
     /** Returns the entity's orientation as last set explicitly. **/
-    const WFMath::Quaternion & getOrientation(void) const;
+    const WFMath::Quaternion & getOrientation() const;
     
     /** Returns the entity's bounding box in the entity's local system coordinates. **/
-    const WFMath::AxisBox< 3 > & getBBox(void) const;
+    const WFMath::AxisBox< 3 > & getBBox() const;
 
     /**
      * @brief Returns true if the entity has a bounding box.
@@ -621,11 +621,11 @@ protected:
     bool m_initialised;
 };
 
-inline unsigned int Entity::numContained() const {
+inline size_t Entity::numContained() const {
     return m_contents.size();
 }
 
-inline Entity* Entity::getContained(unsigned int index) const {
+inline Entity* Entity::getContained(size_t index) const {
     return m_contents[index];
 }
 
@@ -661,24 +661,24 @@ inline WFMath::Point<3> Entity::getPosition() const
     return m_position;
 }
 /** Returns the entity's velocity as last set explicitely. **/
-inline const WFMath::Vector< 3 > & Entity::getVelocity(void) const
+inline const WFMath::Vector< 3 > & Entity::getVelocity() const
 {
     return m_velocity;
 }
 
-inline const WFMath::Vector< 3 > & Entity::getAngularVelocity(void) const
+inline const WFMath::Vector< 3 > & Entity::getAngularVelocity() const
 {
     return m_angularVelocity;
 }
 
 /** Returns the entity's orientation as last set explicitely. **/
-inline const WFMath::Quaternion & Entity::getOrientation(void) const
+inline const WFMath::Quaternion & Entity::getOrientation() const
 {
     return m_orientation;
 }
 
 /** Returns the entity's bounding box in the entity's local system coordinates. **/
-inline const WFMath::AxisBox< 3 > & Entity::getBBox(void) const
+inline const WFMath::AxisBox< 3 > & Entity::getBBox() const
 {
     return m_bbox;
 }

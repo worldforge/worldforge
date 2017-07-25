@@ -36,7 +36,7 @@ namespace Eris {
 
 Entity::Entity(const std::string& id, TypeInfo* ty) :
     m_type(ty),
-    m_location(NULL),
+    m_location(nullptr),
     m_id(id),
     m_stamp(-1.0f),
     m_visible(false),
@@ -80,7 +80,7 @@ void Entity::shutdown()
       e->shutdown();
       delete e;
     }
-    setLocation(NULL);
+    setLocation(nullptr);
     
 
     m_initialised = false;
@@ -100,7 +100,7 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
 const Element& Entity::valueOfAttr(const std::string& attr) const
 {
     ///first check with the instance attributes
-    AttrMap::const_iterator A = m_attrs.find(attr);
+	auto A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
         if (m_type) {
@@ -134,7 +134,7 @@ bool Entity::hasAttr(const std::string& attr) const
 const Element* Entity::ptrOfAttr(const std::string& attr) const
 {
     ///first check with the instance attributes
-    AttrMap::const_iterator A = m_attrs.find(attr);
+	auto A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
         if (m_type) {
@@ -419,9 +419,9 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     }
     
     
-    const Element* newElement(0);
+    const Element* newElement(nullptr);
     ///There was no preexisting attribute either in this instance or in the TypeInfo, just insert it.
-    if (A == m_attrs.end() && typeElement == 0) {
+    if (A == m_attrs.end() && typeElement == nullptr) {
         std::pair<AttrMap::const_iterator, bool> I = m_attrs.insert(AttrMap::value_type(attr, val));
         newElement = &(I.first->second);
     } else {
@@ -429,12 +429,8 @@ void Entity::setAttr(const std::string &attr, const Element &val)
         Element& target = m_attrs[attr];
         ///If there already existed an instance attribute copy from that
         newElement = &target;
-        if (A == m_attrs.end()) {
-            ///Copy from the type info attribute
-            target = *typeElement;
-        }
-        mergeOrCopyElement(val, target);
-        
+        target = val;
+
     }
     nativeAttrChanged(attr, *newElement);
     onAttrChanged(attr, *newElement);
@@ -604,7 +600,7 @@ void Entity::updateTasks(const Element& e)
             continue;
         }
         const MapType& tkmap(taskList[i].asMap());
-        MapType::const_iterator it = tkmap.find("name");
+		auto it = tkmap.find("name");
         if (it == tkmap.end())
         {
             error() << "task without name";
@@ -632,18 +628,17 @@ void Entity::updateTasks(const Element& e)
         task->updateFromAtlas(tkmap);
     } // of Atlas-specified tasks iteration
     
-    for (unsigned int d=0; d<previousTasks.size(); ++d)
-    {
-        if (!previousTasks[d]) continue;
+    for (auto& previousTask : previousTasks) {
+        if (!previousTask) continue;
         
-        TaskRemoved(previousTasks[d]);
-        delete previousTasks[d];
+        TaskRemoved(previousTask);
+        delete previousTask;
     } // of previous-task cleanup iteration
 }
 
 void Entity::removeTask(Task* t)
 {
-    TaskArray::iterator it = std::find(m_tasks.begin(), m_tasks.end(), t);
+	auto it = std::find(m_tasks.begin(), m_tasks.end(), t);
     if (it == m_tasks.end())
     {
         error() << "unknown task " << t->name() << " on entity " << this;
@@ -668,7 +663,7 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 		if (m_location) {
 			removeFromLocation();
 		}
-		m_location = NULL;
+		m_location = nullptr;
 		assert(m_visible == false);
 		return;
 	}
@@ -713,9 +708,8 @@ void Entity::removeFromLocation()
 
 void Entity::buildEntityDictFromContents(IdEntityMap& dict)
 {
-    for (unsigned int C=0; C < m_contents.size(); ++C) {
-        Entity* child = m_contents[C];
-        dict[child->getId()] = child;
+    for (auto& child : m_contents) {
+		dict[child->getId()] = child;
     }
 }
 
@@ -726,10 +720,10 @@ void Entity::setContentsFromAtlas(const StringList& contents)
     buildEntityDictFromContents(oldContents);
     
 // iterate over new contents
-    for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I) {
-        Entity* child = NULL;
-        
-        IdEntityMap::iterator J = oldContents.find(*I);
+    for (auto I=contents.begin(); I != contents.end(); ++I) {
+        Entity* child = nullptr;
+
+		auto J = oldContents.find(*I);
         if (J != oldContents.end()) {
             child = J->second;
             assert(child->getLocation() == this);
@@ -765,8 +759,8 @@ void Entity::setContentsFromAtlas(const StringList& contents)
 
 bool Entity::hasChild(const std::string& eid) const
 {
-    for (EntityArray::const_iterator C=m_contents.begin(); C != m_contents.end(); ++C) {
-        if ((*C)->getId() == eid) return true;
+    for (auto& m_content : m_contents) {
+        if (m_content->getId() == eid) return true;
     }
     
     return false;
@@ -783,7 +777,7 @@ void Entity::removeChild(Entity* e)
 {
     assert(e->getLocation() == this);
     
-    for (EntityArray::iterator C=m_contents.begin(); C != m_contents.end(); ++C)
+    for (auto C=m_contents.begin(); C != m_contents.end(); ++C)
     {
         if (*C == e)
         {
@@ -814,10 +808,11 @@ bool Entity::isVisible() const
 {
     if (m_limbo) return false;
     
-    if (m_location)
-        return m_visible && m_location->isVisible();
-    else
-        return m_visible; // only for the root entity
+    if (m_location) {
+		return m_visible && m_location->isVisible();
+	} else {
+		return m_visible; // only for the root entity
+	}
 }
 
 void Entity::updateCalculatedVisibility(bool wasVisible)
@@ -833,13 +828,12 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
         onVisibilityChanged(true);
     }
     
-    for (unsigned int C=0; C < m_contents.size(); ++C)
-    {
+    for (auto& item : m_contents) {
         /* in case this isn't clear; if we were visible, then child visibility
         was simply it's locally set value; if we were invisible, that the
         child must also have been invisible too. */
-        bool childWasVisible = wasVisible ? m_contents[C]->m_visible : false;
-        m_contents[C]->updateCalculatedVisibility(childWasVisible);
+        bool childWasVisible = wasVisible ? item->m_visible : false;
+		item->updateCalculatedVisibility(childWasVisible);
     }
     
     if (wasVisible) {
