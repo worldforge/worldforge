@@ -27,34 +27,46 @@
 #include <Eris/EventService.h>
 #include <Eris/Log.h>
 
-#include <sigc++/functors/mem_fun.h>
+int main() {
+	boost::asio::io_service io_service;
 
-#include <cassert>
+	{
+		Eris::EventService ted(io_service);
 
-int main()
-{
-    boost::asio::io_service io_service;
+	}
 
-    {
-        Eris::EventService ted(io_service);
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&]() { called = true; });
+		ted.processEvents(boost::posix_time::seconds(1), called);
+		assert(called);
+	}
 
-    }
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		ted.runOnMainThread([&]() { called = true; });
+		ted.processAllHandlers();
+		assert(called);
+	}
 
-    {
-        io_service.reset();
-        Eris::EventService ted(io_service);
-        bool called = false;
-        Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&](){called = true;});
-        ted.processEvents(boost::posix_time::seconds(1), called);
-        assert(called);
-    }
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		ted.runOnMainThread([&]() { called = true; });
+		ted.processEvents(boost::posix_time::seconds(1), called);
+		assert(called);
+	}
 
 
-    return 0;
+	return 0;
 }
 
 // stubs
 
-void Eris::doLog(Eris::LogLevel lvl, const std::string& msg)
-{
+void Eris::doLog(Eris::LogLevel lvl, const std::string& msg) {
 }

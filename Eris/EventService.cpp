@@ -86,13 +86,13 @@ void EventService::processEvents(const boost::posix_time::ptime& runUntil,
         collectHandlersQueue();
         //If there are handlers registered, execute one of them now
         if (!m_handlers.empty()) {
-            auto handler = this->m_handlers.front();
-            m_handlers.pop_front();
+            std::function<void()>& handler = this->m_handlers.front();
             try {
                 handler();
             } catch (const std::exception& ex) {
                 error() << "Error when executing handler: " << ex.what();
             }
+            m_handlers.pop_front();
         } else {
             m_io_service.run_one();
         }
@@ -116,14 +116,14 @@ size_t EventService::processAllHandlers()
 
     size_t count = 0;
     while (!m_handlers.empty()) {
-        auto handler = this->m_handlers.front();
-        m_handlers.pop_front();
+        std::function<void()>& handler = this->m_handlers.front();
         count++;
         try {
             handler();
         } catch (const std::exception& ex) {
             error() << "Error when executing handler: " << ex.what();
         }
+        m_handlers.pop_front();
         collectHandlersQueue();
     }
     return count;
@@ -131,11 +131,11 @@ size_t EventService::processAllHandlers()
 
 void EventService::collectHandlersQueue()
 {
-    auto * x = m_background_handlers_queue->pop_all();
+    WaitFreeQueue<std::function<void()>>::node * x = m_background_handlers_queue->pop_all();
     while (x) {
-        auto tmp = x;
+        WaitFreeQueue<std::function<void()>>::node* tmp = x;
         x = x->next;
-        m_handlers.push_back(tmp->data);
+        m_handlers.push_back(std::move(tmp->data));
         delete tmp;
     }
 }
