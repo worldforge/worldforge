@@ -429,7 +429,11 @@ void Entity::setAttr(const std::string &attr, const Element &val)
         Element& target = m_attrs[attr];
         ///If there already existed an instance attribute copy from that
         newElement = &target;
-        target = val;
+		if (A == m_attrs.end()) {
+			///Copy from the type info attribute
+			target = *typeElement;
+		}
+		mergeOrCopyElement(val, target);
 
     }
     nativeAttrChanged(attr, *newElement);
