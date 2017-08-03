@@ -175,10 +175,11 @@ wf_add_test(wfmath/vector_test.cpp)
 # Doxygen support, exports a "docs" target.
 
 find_package(Doxygen)
+configure_file(doc/Doxyfile.in Doxyfile @ONLY)
 
 if (DOXYGEN_FOUND)
 
-    set(DOXYGEN_INPUT Doxyfile)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
     set(DOXYGEN_OUTPUT doc)
 
     add_custom_command(
