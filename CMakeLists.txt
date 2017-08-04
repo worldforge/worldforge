@@ -124,11 +124,13 @@ add_definitions(-DSRCDIR="${PROJECT_SOURCE_DIR}/tests")
 # Doxygen support, exports a "docs" target.
 
 find_package(Doxygen)
+set(DOXYGEN_INPUT varconf)
+configure_file(Doxyfile.in Doxyfile @ONLY)
 
 if (DOXYGEN_FOUND)
 
-    set(DOXYGEN_INPUT Doxyfile)
-    set(DOXYGEN_OUTPUT doc)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc)
 
     add_custom_command(
             OUTPUT ${DOXYGEN_OUTPUT}
