@@ -257,11 +257,13 @@ target_link_libraries(eris_connect ${LIBNAME})
 
 # Doxygen support, exports a "docs" target.
 
+configure_file(eris.dox.in eris.dox @ONLY)
+
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
 
-    set(DOXYGEN_INPUT Doxyfile)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/eris.dox)
     set(DOXYGEN_OUTPUT doc)
 
     add_custom_command(
