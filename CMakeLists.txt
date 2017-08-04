@@ -264,7 +264,7 @@ find_package(Doxygen)
 if (DOXYGEN_FOUND)
 
     set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/eris.dox)
-    set(DOXYGEN_OUTPUT doc)
+    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc)
 
     add_custom_command(
             OUTPUT ${DOXYGEN_OUTPUT}
