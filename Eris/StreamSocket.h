@@ -49,7 +49,7 @@ namespace Eris
  * Since this will be used to make asynchronous calls it must be wrapped in a shared_ptr.
  * When the owner instance is destroyed it must call "detach" to make sure the connection is severed.
  */
-class StreamSocket: public std::enable_shared_from_this<StreamSocket>
+class StreamSocket: public std::enable_shared_from_this<StreamSocket>, private boost::noncopyable
 {
 public:
 
@@ -117,7 +117,7 @@ public:
 protected:
     enum
     {
-        read_buffer_size = 4096
+        read_buffer_size = 2048
     };
     boost::asio::io_service& m_io_service;
     Atlas::Bridge& _bridge;
