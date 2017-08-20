@@ -40,7 +40,7 @@ int main() {
 		Eris::EventService ted(io_service);
 		bool called = false;
 		Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&]() { called = true; });
-		ted.processEvents(boost::posix_time::seconds(1), called);
+		io_service.poll_one();
 		assert(called);
 	}
 
@@ -49,8 +49,9 @@ int main() {
 		Eris::EventService ted(io_service);
 		bool called = false;
 		ted.runOnMainThread([&]() { called = true; });
-		ted.processAllHandlers();
+		size_t result = ted.processAllHandlers();
 		assert(called);
+		assert(result == 1);
 	}
 
 	{
@@ -58,8 +59,9 @@ int main() {
 		Eris::EventService ted(io_service);
 		bool called = false;
 		ted.runOnMainThread([&]() { called = true; });
-		ted.processEvents(boost::posix_time::seconds(1), called);
+		size_t result = ted.processOneHandler();
 		assert(called);
+		assert(result == 1);
 	}
 
 

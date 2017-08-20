@@ -65,79 +65,45 @@ void EventService::runOnMainThread(const std::function<void()>& handler,
     });
 }
 
-void EventService::processEvents(const boost::posix_time::ptime& runUntil,
-        bool& exitFlag)
-{
-    bool exitLoop = false;
-    boost::asio::deadline_timer deadlineTimer(m_io_service);
-    deadlineTimer.expires_at(runUntil);
-    //First poll all IO handlers.
-    m_io_service.poll();
-
-    deadlineTimer.async_wait([&](boost::system::error_code ec) {
-        if (!ec) {
-            exitLoop = true;
-        }
-    });
-    //Keep on running IO handlers until we need to render again. By using a "do" loop
-    //we guarantee that we'll execute at least one handler per frame even if the process
-    //can't keep up with the requested FPS.
-    do {
-        collectHandlersQueue();
-        //If there are handlers registered, execute one of them now
-        if (!m_handlers.empty()) {
-            std::function<void()>& handler = this->m_handlers.front();
-            try {
-                handler();
-            } catch (const std::exception& ex) {
-                error() << "Error when executing handler: " << ex.what();
-            }
-            m_handlers.pop_front();
-        } else {
-            m_io_service.run_one();
-        }
-    } while (!exitLoop && !exitFlag
-            && (boost::asio::time_traits<boost::posix_time::ptime>::now()
-                    < runUntil));
-    deadlineTimer.cancel();
-}
-
-void EventService::processEvents(const boost::posix_time::time_duration& runFor,
-        bool& exitFlag)
-{
-    processEvents(
-            boost::asio::time_traits<boost::posix_time::ptime>::now() + runFor,
-            exitFlag);
-}
-
 size_t EventService::processAllHandlers()
 {
-    collectHandlersQueue();
+	collectHandlersQueue();
 
     size_t count = 0;
     while (!m_handlers.empty()) {
-        std::function<void()>& handler = this->m_handlers.front();
+        std::function<void()> handler = std::move(this->m_handlers.front());
+		m_handlers.pop_front();
         count++;
-        try {
-            handler();
-        } catch (const std::exception& ex) {
-            error() << "Error when executing handler: " << ex.what();
-        }
-        m_handlers.pop_front();
-        collectHandlersQueue();
+        handler();
+		collectHandlersQueue();
     }
     return count;
 }
 
-void EventService::collectHandlersQueue()
+size_t EventService::collectHandlersQueue()
 {
+    size_t count = 0;
     WaitFreeQueue<std::function<void()>>::node * x = m_background_handlers_queue->pop_all();
     while (x) {
         WaitFreeQueue<std::function<void()>>::node* tmp = x;
         x = x->next;
         m_handlers.push_back(std::move(tmp->data));
         delete tmp;
+        count++;
     }
+    return count;
+}
+
+size_t EventService::processOneHandler() {
+	collectHandlersQueue();
+    //If there are handlers registered, execute one of them now
+    if (!m_handlers.empty()) {
+        std::function<void()> handler = std::move(this->m_handlers.front());
+		m_handlers.pop_front();
+		handler();
+        return 1;
+    }
+    return 0;
 }
 
 } // of namespace Eris

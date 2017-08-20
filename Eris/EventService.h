@@ -6,6 +6,7 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/core/noncopyable.hpp>
 
 #include <queue>
 #include <functional>
@@ -38,7 +39,7 @@ class WaitFreeQueue;
  * Call runEvents in your main loop.
  * Use runOnMainThread to posts function from background threads.
  */
-class EventService
+class EventService : private boost::noncopyable
 {
 public:
 
@@ -75,24 +76,6 @@ public:
     void runOnMainThread(const std::function<void()>& handler, const std::shared_ptr<bool>& activeMarker);
 
     /**
-     * Polls and runs IO events as well as handlers until the deadline.
-     *
-     * Call this in your main loop.
-     * @param runUntil A future time, obtained through boost::asio::time_traits<boost::posix_time::ptime>.
-     * @param exitFlag A reference to a flag, which when set will exit the wait.
-     */
-    void processEvents(const boost::posix_time::ptime& runUntil, bool& exitFlag);
-
-    /**
-     * Polls and runs IO events as well as handlers for the specified duration.
-     *
-     * Call this in your main loop.
-     * @param runFor A duration.
-     * @param exitFlag A reference to a flag, which when set will exit the wait.
-     */
-    void processEvents(const boost::posix_time::time_duration& runFor, bool& exitFlag);
-
-    /**
      * @brief Processes all registered handlers.
      *
      * @see runOnMainThread
@@ -100,6 +83,15 @@ public:
      * @return The number of handles that were run.
      */
     size_t processAllHandlers();
+
+    /**
+     * @brief Processes one handler, if possible
+     *
+     * @see runOnMainThread
+     *
+     * @return The number of handles that were run.
+     */
+    size_t processOneHandler();
 
 private:
 
@@ -130,7 +122,8 @@ private:
     /**
      * @brief Transfers all handlers from the m_background_handlers_queue to the m_handlers queue.
      */
-    void collectHandlersQueue();
+    size_t collectHandlersQueue();
+
 
 };
 
