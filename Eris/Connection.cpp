@@ -10,6 +10,7 @@
 #include "Router.h"
 #include "Redispatch.h"
 #include "Response.h"
+#include "EventService.h"
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
@@ -37,7 +38,7 @@ Connection::Connection(boost::asio::io_service& io_service, EventService& eventS
     _host(host),
     _port(port),
     m_typeService(new TypeService(this)),
-    m_defaultRouter(NULL),
+    m_defaultRouter(nullptr),
     m_lock(0),
     m_info(host),
     m_responder(new ResponseTracker)
@@ -51,7 +52,7 @@ Connection::Connection(boost::asio::io_service& io_service, EventService& eventS
     _port(0),
     _localSocket(socket),
     m_typeService(new TypeService(this)),
-    m_defaultRouter(NULL),
+    m_defaultRouter(nullptr),
     m_lock(0),
     m_info(_host),
     m_responder(new ResponseTracker)
@@ -74,11 +75,12 @@ EventService& Connection::getEventService()
 
 int Connection::connect()
 {
-    if (_localSocket != "") {
+    if (!_localSocket.empty()) {
         return BaseConnection::connectLocal(_localSocket);
-    } else {
-        return BaseConnection::connect(_host, _port);
     }
+
+    return BaseConnection::connect(_host, _port);
+
 }
 
 int Connection::disconnect()
@@ -120,18 +122,20 @@ int Connection::disconnect()
 
 void Connection::dispatch()
 {
-// now dispatch received ops
+
+    // now dispatch received ops
     while (!m_opDeque.empty()) {
         RootOperation op = m_opDeque.front();
         m_opDeque.pop_front();
         dispatchOp(op);
     }
 
-// finally, clean up any redispatches that fired (aka 'deleteLater')
-    for (unsigned int D=0; D < m_finishedRedispatches.size(); ++D)
-        delete m_finishedRedispatches[D];
+    // finally, clean up any redispatches that fired (aka 'deleteLater')
+	for (auto& finishedRedispatch : m_finishedRedispatches) {
+		delete finishedRedispatch;
+	}
 
-    m_finishedRedispatches.clear();
+	m_finishedRedispatches.clear();
 }
 
 void Connection::send(const Atlas::Objects::Root &obj)
@@ -147,7 +151,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
         return;
     }
 
-#ifdef ATLAS_LOG
+#if ATLAS_LOG == 1
     std::stringstream debugStream;
 
     Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /*dummy*/);
@@ -196,7 +200,7 @@ void Connection::setDefaultRouter(Router* router)
 
 void Connection::clearDefaultRouter()
 {
-    m_defaultRouter = NULL;
+    m_defaultRouter = nullptr;
 }
 
 void Connection::lock()
@@ -206,8 +210,9 @@ void Connection::lock()
 
 void Connection::unlock()
 {
-    if (m_lock < 1)
+    if (m_lock < 1) {
         throw InvalidOperation("Imbalanced lock/unlock calls on Connection");
+    }
 
     if (--m_lock == 0) {
         switch (_status)
@@ -246,7 +251,7 @@ void Connection::refreshServerInfo()
 
 void Connection::objectArrived(const Root& obj)
 {
-#ifdef ATLAS_LOG
+#if ATLAS_LOG == 1
     std::stringstream debugStream;
     Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /* dummy */);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
@@ -254,12 +259,15 @@ void Connection::objectArrived(const Root& obj)
     debugStream << std::flush;
 
     debug() << "received:" << debugStream.str() << std::endl;
+#else
+	debug() << "received op:" << obj->getParent() << std::endl;
 #endif
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
         m_opDeque.push_back(op);
-    } else
+    } else {
         error() << "Con::objectArrived got non-op";
+    }
 }
 
 void Connection::dispatchOp(const RootOperation& op)
@@ -355,7 +363,7 @@ void Connection::postForDispatch(const Root& obj)
     assert(op.isValid());
     m_opDeque.push_back(op);
 
-#ifdef ATLAS_LOG
+#if ATLAS_LOG == 1
     std::stringstream debugStream;
     Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /* dummy */);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
@@ -374,7 +382,7 @@ void Connection::cleanupRedispatch(Redispatch* r)
 long getNewSerialno()
 {
     static long _nextSerial = 1001;
-    // note this will eventually loop (in theorey), but that's okay
+    // note this will eventually loop (in theory), but that's okay
     // FIXME - using the same intial starting offset is problematic
     // if the client dies, and quickly reconnects
     return _nextSerial++;
