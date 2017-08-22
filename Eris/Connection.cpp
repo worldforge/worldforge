@@ -159,7 +159,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    debug() << "sending:" << debugStream.str() << std::endl;
+    debug() << "sending:" << debugStream.str();
 #endif
 
     _socket->getEncoder().streamObjectsMessage(obj);
@@ -258,9 +258,9 @@ void Connection::objectArrived(const Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    debug() << "received:" << debugStream.str() << std::endl;
+    debug() << "received:" << debugStream.str();
 #else
-	debug() << "received op:" << obj->getParent() << std::endl;
+	debug() << "received op:" << obj->getParent();
 #endif
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
@@ -370,7 +370,7 @@ void Connection::postForDispatch(const Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    debug() << "posted for re-dispatch:" << debugStream.str() << std::endl;
+    debug() << "posted for re-dispatch:" << debugStream.str();
 #endif
 }
 
