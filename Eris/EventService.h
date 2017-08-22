@@ -15,6 +15,7 @@ namespace Eris
 {
 
 class EventService;
+class ActiveMarker;
 
 /**
 @brief Class for things which occur after a period of time.
@@ -74,6 +75,17 @@ public:
      * @param activeMarker A shared boolean which is used for cancellation of tasks. If the marker evaluates to "false" the handler won't be invoked.
      */
     void runOnMainThread(const std::function<void()>& handler, const std::shared_ptr<bool>& activeMarker);
+
+    /**
+     * @brief Adds a handler which will be run on the main thread.
+     *
+     * This method should mainly be called from background threads.
+     * The execution of the handler will be interleaved with the IO polling, making sure
+     * that at least one handler is executed each frame.
+     * @param handler A function.
+     * @param activeMarker An active marker which is used for cancellation of tasks. If the shared pointer held by the marker evaluates to "false" the handler won't be invoked.
+     */
+    void runOnMainThread(const std::function<void()>& handler, const ActiveMarker& activeMarker);
 
     /**
      * @brief Processes all registered handlers.

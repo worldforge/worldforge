@@ -1,6 +1,7 @@
 #include "EventService.h"
 #include "Log.h"
 #include "WaitFreeQueue.h"
+#include "ActiveMarker.h"
 
 #include <boost/asio.hpp>
 
@@ -63,6 +64,12 @@ void EventService::runOnMainThread(const std::function<void()>& handler,
             handler();
         }
     });
+}
+
+void EventService::runOnMainThread(const std::function<void()>& handler,
+                                   const ActiveMarker& activeMarker)
+{
+    runOnMainThread(handler, activeMarker.getMarker());
 }
 
 size_t EventService::processAllHandlers()

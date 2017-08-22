@@ -139,7 +139,8 @@ set(SOURCE_FILES
         Eris/Types.cpp
         Eris/TypeService.cpp
         Eris/View.cpp
-        Eris/ViewEntity.cpp)
+        Eris/ViewEntity.cpp
+        Eris/ActiveMarker.cpp)
 
 set(HEADER_FILES
         Eris/Account.h
@@ -181,7 +182,8 @@ set(HEADER_FILES
         Eris/TypeService.h
         Eris/View.h
         Eris/ViewEntity.h
-        Eris/WaitFreeQueue.h)
+        Eris/WaitFreeQueue.h
+        Eris/ActiveMarker.h)
 
 wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
 
@@ -233,6 +235,7 @@ wf_add_test(test/TypeInfo_unittest.cpp)
 wf_add_test(test/Types_unittest.cpp)
 wf_add_test(test/TypeService_unittest.cpp)
 wf_add_test(test/View_unittest.cpp)
+wf_add_test(test/ActiveMarker_UnitTest.cpp)
 
 #wf_add_test(testEris test/tests.cpp
 #        test/stubServer.h test/stubServer.cpp
