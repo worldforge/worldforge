@@ -31,9 +31,9 @@ TimedEvent::~TimedEvent()
 }
 
 EventService::EventService(boost::asio::io_service& io_service) :
-        m_io_service(io_service), m_work(
-                new boost::asio::io_service::work(io_service)), m_background_handlers_queue(
-                new WaitFreeQueue<std::function<void()>>())
+        m_io_service(io_service),
+        m_work(new boost::asio::io_service::work(io_service)),
+        m_background_handlers_queue(new WaitFreeQueue<std::function<void()>>())
 {
 }
 

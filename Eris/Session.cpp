@@ -29,7 +29,7 @@ namespace Eris
 {
 
 Session::Session()
-: m_io_service(new boost::asio::io_service), m_event_service(new EventService(*m_io_service))
+: m_io_service(new boost::asio::io_service()), m_event_service(new EventService(*m_io_service))
 {
 }
 

@@ -212,9 +212,9 @@ void AsioStreamSocket<ProtocolT>::write()
         async_write(m_socket, mSendBuffer->data(),
             [this, self](boost::system::error_code ec, std::size_t length)
             {
+                mSendBuffer->consume(length);
                 mIsSending = false;
                 if (!ec) {
-                    mSendBuffer->consume(length);
                     //Is there data queued for transmission which we should send right away?
                     if (mShouldSend) {
                         this->write();
