@@ -32,6 +32,10 @@ string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(LIBNAME "${PROJECT_NAME_LOWER}${SUFFIX}")
 set(DESCRIPTION "A WorldForge client library.")
 
+# We've been getting issues with memory corruption in boost when building with GCC -O2 flags, and it
+# seems to be related to the asio small memory block recycling code. We'll thus disable it to avoid the
+# crashes
+add_definitions(-DBOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
