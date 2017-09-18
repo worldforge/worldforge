@@ -139,9 +139,9 @@ set(HEADER_FILES
         Atlas/Task.h
         Atlas/Version.h)
 
-include(FindPythonInterp)
+find_package(PythonInterp 2.7)
 
-if (PYTHONINTERP_FOUND)
+if (PYTHON_EXECUTABLE)
 
     set(PY_SOURCES
             Atlas/Objects/gen_cpp.py
@@ -162,7 +162,7 @@ if (PYTHONINTERP_FOUND)
             VERBATIM
     )
 
-endif (PYTHONINTERP_FOUND)
+endif (PYTHON_EXECUTABLE)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
