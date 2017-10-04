@@ -22,9 +22,10 @@ class NoSuchFactoryException : public Atlas::Exception
   protected:
     std::string name;
   public:
-    NoSuchFactoryException(const std::string& name) :
-               Atlas::Exception("No factory for Objects type"), name(name) { }
-    virtual ~NoSuchFactoryException();
+    explicit NoSuchFactoryException(const std::string& factoryName) :
+               Atlas::Exception("No factory for Objects type"), name(factoryName) { }
+
+    ~NoSuchFactoryException() override;
     const std::string & getName() {
         return name;
     }
