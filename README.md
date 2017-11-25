@@ -1,48 +1,44 @@
-Varconf - STAGE Configuration System (c)1999-2003
+# Varconf - Worldforge Configuration System 
 
+[![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
 
-1. Overview
------------
-Varconf is a configuration system designed for the STAGE server.
+Varconf is a configuration system designed for the [WorldForge](http://worldforge.org/ "The main Worldforge site") system.
 Varconf can parse configuration files, command-line arguments and environment
 variables.  It supports callbacks and can store its configuration information
 in separate Config objects or in one global configuration instance.
 
+## Installation
 
-2. Disclaimer
--------------
-None of the authors of this package nor anyone involved with the World Forge
-project is liable for any damages caused by the use of varconf.  If your
-computer, you, or anyone around you self-combusts as a result of running this
-program, locate the nearest fire-extinguisher and don't call us. :)
+If you intend to build this as a prerequisite for the Ember client or the Cyphesis server we strongly suggest that you 
+use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile Ember.
+This is script provided by the Worldforge project which will download and install all of the required libraries and 
+components used by Worldforge.
 
-
-3. Installation
----------------
-The libsigc++ callback library needs to be compiled and installed before
-compiling varconf. The library can be aquired at
-
-http://sourceforge.net/projects/libsigc/.
-
-This version requires SigC++ 1.2 series and pkgconfig. If you want to use 
-SigC++ 1.0 series, or the legacy varconf-config script, please try a
-version of varconf from the 0.5 series.
-
-
-3.1 Basic Installation
-----------------------
-cd forge/libs/varconf
-sh autogen.sh 
-./configure
+Otherwise the library can most easily be built through the following commands.
+```
+mkdir build_`arch` && cd build_`arch`
+cmake ..
 make
 make install
+```
 
-This will place the libraries in /usr/local/lib/varconf
-and the header files in /usr/local/include/varconf
+### Tests
 
+The test suite can be built and run using the ```check``` target. For example:
 
-4. Definitions
---------------
+```
+make check
+```
+
+### API documentation
+
+If Doxygen is available API documentation can be generated using the ```docs``` target. For example:
+
+```
+make docs
+```
+
+## Definitions
 Configuration data refers to varconf's internal handling of section names,
 item names and item values.  Each of these components has the same meaning
 as they would in any standard configuration file.  Each of these components
@@ -50,8 +46,7 @@ comes from configuration files, environment variables or command-line
 arguments.
 
 
-4.1 Configuration Data 
------------------------
+### Configuration Data 
 The configuration is a database that consists of sections.
 
 Sections contain configuration items and each section has a section identifier.
@@ -76,8 +71,7 @@ The configuration types include
    the ASCII character set from characters 32-255
 
 
-4.2 Configuration File Format
------------------------------
+### Configuration File Format
 A line in a configuration file can either be the start of a section, a
 configuration item or a comment.
 
@@ -110,8 +104,7 @@ Empty lines (lines with 0 or more whitespaces and no other characters) are
 ignored.
 
 
-4.3 - Command-Line Arguments
-----------------------------
+### Command-Line Arguments
 A single command-line argument can be a short-form argument or short-form
 argument value, a long-form argument or ignored data.
 
@@ -136,8 +129,7 @@ Syntax for long-form argument:
 --{nm}:{nm}="{ac}"
 
 
-4.4 - Environment Variables
----------------------------
+### Environment Variables
 To allow varconf to input an environmental variable as configuration data,
 precede its name with a prefix and then specify that prefix when calling
 the function. ie:
@@ -151,8 +143,7 @@ Use prefix 'WF_' to retrieve the three variables as configuration data.
 They will be stored as items 'one', 'two' and 'three' respectively.
 
 
-5. Library Usage
-----------------
+## Library Usage
 Varconf is not very verbose about errors. Typically, malformed config data
 is either completely ignored or converted into a compatible form.
 A typo won't crash the library but it might lead to some very odd
@@ -169,8 +160,7 @@ this might be the addition of warnings when the configuration data set method
 receives erroneous data. 
 
 
-5.1 Configuration Instance
---------------------------
+### Configuration Instance
 Configuration data can be stored in separate configuration objects or in a
 single global instance.  
 
@@ -186,8 +176,7 @@ Note that the method Config::inst() will automatically initialize the
 global data if not already created.
 
 
-5.2 libsigc++ 
--------------
+### libsigc++ 
 Varconf uses libsigc++ for its callback routines and error reporting.
 Please see the libsigc++ documentation for specific details on interacting
 with libsigc++ signals. 
@@ -208,8 +197,7 @@ Four libsigc++ signals are provided by varconf.
   .sige - reports error messages in a single string. 
 
 
-5.3 Configuration Files
------------------------
+### Configuration Files
 Varconf can read file-formed config data either directly from a file or from
 any input stream. It can also write configuration data directly to a file
 or to an output stream.
@@ -235,8 +223,7 @@ To write to a stream:
   config_object.writeToStream( ostream&);
 
 
-5.4 Command-line Arguments
---------------------------
+### Command-line Arguments
 To parse a set of command-line arguments call the following method with the
 number of arguments and multi-dimension array of command-line arguments.
 
@@ -256,8 +243,7 @@ Note that if a shortform argument is found but does not exist in the table,
 it will be ignored without warning.
 
 
-5.5 Environment Variables
--------------------------
+### Environment Variables
 To read in all environment variables with a specific prefix, call the
 following function with that prefix:
 
@@ -265,3 +251,11 @@ following function with that prefix:
 
   ie: config_object.getEnv( "WF_");    reads in all environment variables
                                        starting with "WF_"
+## How to help
+
+If you're interested in helping out with development you should check out these resources:
+
+* [The main Worldforge site](http://worldforge.org/ "The main Worldforge site")
+* [Bugs and feature planning on Launchpad](https://launchpad.net/varconf "Varconf Launchpad entry")
+* [Gitter conversation](https://gitter.im/Worldforge/Lobby "Gitter conversation")
+* [Mailing lists](http://mail.worldforge.org/lists/listinfo/ "Mailing lists")
