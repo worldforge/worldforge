@@ -52,8 +52,6 @@ Make sure objects deep copy really copies arguments of ops.
 hasAttr currently returns true if a hardcoded attribute is not really set.
 Needs fixing - very counterintuitive.
 
-Add setParents1()
-
 Don't use explicit Element constructor when assigning to another Element.
 
 Note that Atlas::Message::Element segfaults of a map is set to be a member
