@@ -19,7 +19,7 @@
 #ifndef ERIS_ACTIVEMARKER_H
 #define ERIS_ACTIVEMARKER_H
 
-#include <boost/core/noncopyable.hpp>
+#include <boost/noncopyable.hpp>
 #include <memory>
 
 namespace  Eris {
