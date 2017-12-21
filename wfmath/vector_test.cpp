@@ -30,10 +30,6 @@
 #define DEBUG
 #endif
 
-//This is done in order to be able to access Vector::m_elem
-#define private public
-
-
 #include "const.h"
 #include "vector.h"
 #include "rotmatrix.h"
@@ -112,8 +108,8 @@ void test_vector(const Vector<dim>& v)
   Vector<dim> invalid_1;
   Vector<dim> invalid_2;
   for (size_t i = 0; i < dim; ++i) {
-      invalid_1.m_elem[i] = 0.0;
-      invalid_2.m_elem[i] = 0.0;
+      invalid_1[i] = 0.0;
+      invalid_2[i] = 0.0;
   }
   assert(invalid_1 != Vector<dim>::ZERO());
 

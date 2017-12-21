@@ -30,9 +30,6 @@
 #define DEBUG
 #endif
 
-//This is done in order to be able to access Point::m_elem
-#define private public
-
 #include "const.h"
 #include "vector.h"
 #include "point.h"
@@ -80,8 +77,8 @@ void test_point(const Point<dim>& p)
   Point<dim> invalid_point_1;
   Point<dim> invalid_point_2;
   for (size_t i = 0; i < dim; ++i) {
-      invalid_point_1.m_elem[i] = 0.0;
-      invalid_point_2.m_elem[i] = 0.0;
+      invalid_point_1[i] = 0.0;
+      invalid_point_2[i] = 0.0;
   }
   assert(invalid_point_1 != Point<dim>::ZERO());
 
