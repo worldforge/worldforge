@@ -34,7 +34,7 @@ set(DESCRIPTION "A math library for the Worldforge system.")
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${WFMATH_ABI_VERSION}
             SOVERSION ${WFMATH_SOVERSION}
