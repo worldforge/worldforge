@@ -19,13 +19,7 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
+#include <boost/asio/io_service.hpp>
 
 namespace Eris
 {

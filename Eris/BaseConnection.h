@@ -15,14 +15,6 @@
 #include <memory>
 #include <functional>
 
-namespace boost
-{
-namespace asio
-{
-class io_service;
-}
-}
-
 namespace Atlas
 {
     class Bridge;
