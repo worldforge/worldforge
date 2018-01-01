@@ -68,7 +68,7 @@ void ClientConnection::poll()
         {
             RootOperation op = smart_dynamic_cast<RootOperation>(m_objDeque.front());
             if (!op.isValid())
-                throw InvalidOperation("ClientConnection recived something that isn't an op");
+                throw InvalidOperation("ClientConnection received something that isn't an op");
             
             dispatch(op);
             m_objDeque.pop_front();

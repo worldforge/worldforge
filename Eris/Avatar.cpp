@@ -425,7 +425,7 @@ void Avatar::logoutResponse(const RootOperation& op)
     RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
     const std::vector<Root>& args2(logout->getArgs());
     if (args2.empty()) {
-        warning() << "argment of avatar INFO(LOGOUT) is empty";
+        warning() << "argument of avatar INFO(LOGOUT) is empty";
         return;
     }
 

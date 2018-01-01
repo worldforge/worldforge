@@ -53,7 +53,7 @@ void Commander::recv()
         {
             RootOperation op = smart_dynamic_cast<RootOperation>(m_objDeque.front());
             if (!op.isValid())
-                throw InvalidOperation("Commander recived something that isn't an op");
+                throw InvalidOperation("Commander received something that isn't an op");
             
             dispatch(op);
             

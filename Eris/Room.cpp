@@ -152,7 +152,7 @@ std::vector<Person*> Room::getPeople() const
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
     if (op->getTo() != m_lobby->getAccount()->getId()) {
-        error() << "Room recived op TO account " << op->getTo() << ", not the account ID";
+        error() << "Room received op TO account " << op->getTo() << ", not the account ID";
         return IGNORED;
     }
 

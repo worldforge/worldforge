@@ -294,7 +294,7 @@ void Connection::dispatchOp(const RootOperation& op)
                 rr = R->second->handleOperation(op);
                 if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
             } else if (!m_toRouters.empty()) {
-                warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
+                warning() << "received op with TO=" << op->getTo() << ", but no router is registered for that id";
             }
         }
 

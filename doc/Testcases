@@ -10,7 +10,7 @@ test cases
  check that SightPerson signal fires when the new people log in,
  and also when they go away
  
- check chat is recived okay
+ check chat is received okay
  ditto for emotes
  
  private chat, check it's okay
