@@ -45,6 +45,7 @@ set(SOURCE_FILES
         Mercator/AreaShader.cpp
         Mercator/BasePoint.cpp
         Mercator/Buffer.cpp
+        Mercator/Buffer_impl.h
         Mercator/DepthShader.cpp
         Mercator/Effector.cpp
         Mercator/FillShader.cpp
@@ -58,11 +59,14 @@ set(SOURCE_FILES
         Mercator/Segment.cpp
         Mercator/Shader.cpp
         Mercator/ShaderFactory.cpp
+        Mercator/ShaderFactory_impl.h
         Mercator/Surface.cpp
         Mercator/Terrain.cpp
         Mercator/TerrainMod.cpp
+        Mercator/TerrainMod_impl.h
         Mercator/ThresholdShader.cpp
-        Mercator/TileShader.cpp)
+        Mercator/TileShader.cpp
+        Mercator/iround.h)
 
 set(HEADER_FILES
         Mercator/Area.h
@@ -97,6 +101,7 @@ set(HEADER_FILES
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${MERCATOR_ABI_VERSION}
             SOVERSION ${MERCATOR_SOVERSION}
@@ -113,6 +118,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
+    target_link_libraries(${_LIB_NAME}_STATIC ${WF_LIBRARIES})
 
 endmacro()
 
@@ -142,7 +148,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX}_STATIC)
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
