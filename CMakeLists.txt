@@ -35,6 +35,7 @@ set(DESCRIPTION "A math library for the Worldforge system.")
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${WFMATH_ABI_VERSION}
             SOVERSION ${WFMATH_SOVERSION}
@@ -62,7 +63,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME}${SUFFIX})
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME}${SUFFIX}_STATIC)
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
