@@ -154,9 +154,9 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     m_w = (s / 2.0f);
     s = (0.5f / s);
 
-    m_vec[0] = -(m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
-    m_vec[1] = -(m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
-    m_vec[2] = -(m_ref.elem(1, 0) - m_ref.elem(0, 1)) * s;
+    m_vec[0] = (m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
+    m_vec[1] = (m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
+    m_vec[2] = (m_ref.elem(1, 0) - m_ref.elem(0, 1)) * s;
   } else {
     // diagonal is negative
     int i = 0;
@@ -173,8 +173,8 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     s = (0.5f / s);
 
     m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
-    m_vec[j] = -(m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
-    m_vec[k] = -(m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
+    m_vec[j] = (m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
+    m_vec[k] = (m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
   }
 
   m_age = m.age();

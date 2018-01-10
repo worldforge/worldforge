@@ -116,7 +116,7 @@ void test_quaternion(const Quaternion& q)
 //  std::cout << v << std::endl << v2 << std::endl;
 
   v.rotate(q);
-  v2 = Prod(v2, m);
+  v2 = ProdInv(v2, m);
 
 //  std::cout << v << std::endl << v2 << std::endl;
 

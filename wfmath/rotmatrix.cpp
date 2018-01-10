@@ -55,12 +55,14 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
   m_elem[1][1] = 1 - 2 * (xx + zz);
   m_elem[2][2] = 1 - 2 * (xx + yy);
 
-  m_elem[0][1] = 2 * (xy + wvec[2]);
-  m_elem[0][2] = 2 * (xz - wvec[1]);
-  m_elem[1][0] = 2 * (xy - wvec[2]);
-  m_elem[1][2] = 2 * (yz + wvec[0]);
-  m_elem[2][0] = 2 * (xz + wvec[1]);
-  m_elem[2][1] = 2 * (yz - wvec[0]);
+  m_elem[0][1] = 2 * (xy - wvec[2]);
+  m_elem[0][2] = 2 * (xz + wvec[1]);
+
+  m_elem[1][0] = 2 * (xy + wvec[2]);
+  m_elem[1][2] = 2 * (yz - wvec[0]);
+
+  m_elem[2][0] = 2 * (xz - wvec[1]);
+  m_elem[2][1] = 2 * (yz + wvec[0]);
 
   m_flip = !not_flip;
   m_age = q.age();
