@@ -47,8 +47,8 @@ class Segment {
     const int m_size;
     /// Global x reference of this segment
     const int m_xRef;
-    /// Global y reference of this segment
-    const int m_yRef;
+    /// Global z reference of this segment
+    const int m_zRef;
     /// 2x2 matrix of points which control this segment
     Matrix<2, 2, BasePoint> m_controlPoints;
     /// Pointer to buffer containing height points
@@ -65,7 +65,7 @@ class Segment {
     /// \brief Map of TerrainMod objects that are applied to this Segment.
     std::map<long, const TerrainMod*> m_terrainMods;
   public:
-    explicit Segment(int x, int y, unsigned int resolution);
+    explicit Segment(int x, int z, unsigned int resolution);
     ~Segment();
 
     /// \brief Accessor for resolution of this segment.
@@ -79,13 +79,13 @@ class Segment {
     }
 
     /// \brief Accessor for Global x reference of this segment
-    const int getXRef() const {
+    int getXRef() const {
         return m_xRef;
     }
 
     /// \brief Accessor for Global y reference of this segment
-    const int getYRef() const {
-        return m_yRef;
+    int getZRef() const {
+        return m_zRef;
     }
 
     /// \brief Check whether this Segment contains valid point data.
@@ -101,10 +101,10 @@ class Segment {
     /// Segment.
     ///
     /// @param x relative x coord of base point. Must be 0 or 1.
-    /// @param y relative y coord of base point. Must be 0 or 1.
+    /// @param z relative z coord of base point. Must be 0 or 1.
     /// @param bp BasePoint data to be used.
-    void setCornerPoint(unsigned int x, unsigned int y, const BasePoint & bp) {
-        m_controlPoints(x, y) = bp;
+    void setCornerPoint(unsigned int x, unsigned int z, const BasePoint & bp) {
+        m_controlPoints(x, z) = bp;
         invalidate();
     }
     
@@ -159,14 +159,14 @@ class Segment {
     }
 
     /// \brief Get the height at a relative integer position in the Segment.
-    float get(int x, int y) const {
-        return m_heightMap.get(x, y);
+    float get(int x, int z) const {
+        return m_heightMap.get(x, z);
     }
 
     void getHeight(float x, float y, float &h) const;
-    void getHeightAndNormal(float x, float y, float &h, 
+    void getHeightAndNormal(float x, float z, float &h,
                     WFMath::Vector<3> &normal) const;
-    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy) const;
+    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &lz, int &hz) const;
 
 
     void populate();

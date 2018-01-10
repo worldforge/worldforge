@@ -27,15 +27,17 @@ class TileShader : public Shader {
     Shaderstore m_subShaders;
   public:
     explicit TileShader();
-    virtual ~TileShader();
+
+    ~TileShader() override;
 
     /// \brief Add a shader to those agregated by the tile shader.
     void addShader(Shader * t, int id) {
         m_subShaders[id] = t;
     }
 
-    virtual bool checkIntersect(const Segment &) const;
-    virtual void shade(Surface &) const;
+    bool checkIntersect(const Segment &) const override;
+
+    void shade(Surface &) const override;
 };
 
 } // namespace Mercator

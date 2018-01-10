@@ -63,11 +63,11 @@ public:
     ///
     /// Calculate the x coordinate on the edge line where the y coordinate
     /// is the value specified.
-    /// @param y the y coordinate where the calculation is required.
-    WFMath::CoordType xValueAtY(WFMath::CoordType y) const
+    /// @param z the y coordinate where the calculation is required.
+    WFMath::CoordType xValueAtZ(WFMath::CoordType z) const
     {
-        WFMath::CoordType x = m_start.x() + ((y - m_start.y()) * m_inverseGradient);
-     //   std::cout << "edge (" << m_start << ", " << m_start + m_seg << ") at y=" << y << " has x=" << x << std::endl; 
+        WFMath::CoordType x = m_start.x() + ((z - m_start.y()) * m_inverseGradient);
+     //   std::cout << "edge (" << m_start << ", " << m_start + m_seg << ") at z=" << z << " has x=" << x << std::endl;
         return x;
     }
     
@@ -89,18 +89,18 @@ private:
 };
 
 /// \brief The edge of an area parallel to the x axis.
-class EdgeAtY
+class EdgeAtZ
 {
 public:
     /// Constructor
     ///
     /// @param y coordinate on the y axis of the edge.
-    EdgeAtY(WFMath::CoordType y) : m_y(y) {}
+    EdgeAtZ(WFMath::CoordType y) : m_y(y) {}
     
     /// Determine which edge crosses this edge at a lower x coordinate.
     bool operator()(const Edge& u, const Edge& v) const
     {
-        return u.xValueAtY(m_y) < v.xValueAtY(m_y);
+        return u.xValueAtZ(m_y) < v.xValueAtZ(m_y);
     }
 private:
     /// The coordinate on the y axis of the edge.
@@ -108,32 +108,32 @@ private:
 };
 
 static void contribute(Surface& s,
-                       unsigned int x, unsigned int y,
+                       unsigned int x, unsigned int z,
                        WFMath::CoordType amount)
 {    
     unsigned int sz = s.getSize() - 1;
     if ((x == 0) || (x == sz))
         amount *= 2;
         
-    if ((y == 0) || (y == sz))
+    if ((z == 0) || (z == sz))
         amount *= 2;
         
-    s(x, y, 0) = std::min(static_cast<ColorT>(I_ROUND(amount * 255)) + s(x,y,0), 255);
+    s(x, z, 0) = std::min(static_cast<ColorT>(I_ROUND(amount * 255)) + s(x,z,0), 255);
 }
 
 static void span(Surface& s,
-                 WFMath::CoordType y,
+                 WFMath::CoordType z,
                  WFMath::CoordType xStart,
                  WFMath::CoordType xEnd)
 {
     assert(xStart <= xEnd); 
 
     // quantize and accumulate into the buffer data
-    unsigned int row = I_ROUND(y),
+    unsigned int row = I_ROUND(z),
         ixStart = I_ROUND(xStart),
         ixEnd = I_ROUND(xEnd);
  
-    //std::cout << "span @ y=" << row << ", " << ixStart << " -> " << ixEnd << std::endl;
+    //std::cout << "span @ z=" << row << ", " << ixStart << " -> " << ixEnd << std::endl;
     
     if (ixStart == ixEnd) {
         contribute(s, ixStart, row, ROW_HEIGHT * (xEnd - xStart));
@@ -160,37 +160,37 @@ static void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
         
         // skip horizontal edges
         if (curPt.y() != lastPt.y())
-            pending.push_back(Edge(lastPt, curPt));
+            pending.emplace_back(lastPt, curPt);
         
         lastPt = curPt;
     }
     
     if (pending.empty()) return;
     
-    // sort edges by starting (lowest) y value
+    // sort edges by starting (lowest) z value
     pending.sort();
     active.push_back(pending.front());
     pending.pop_front();
     
-    // advance to the row of the first y value, and ensure y sits in the
+    // advance to the row of the first z value, and ensure z sits in the
     // middle of sample rows - we do this by offseting by 1/2 a row height
     // if you don't do this, you'll find alternating rows are over/under
     // sampled, producing a charming striped effect.
-    WFMath::CoordType y = std::floor(active.front().start().y()) + ROW_HEIGHT * 0.5f;
+    WFMath::CoordType z = std::floor(active.front().start().y()) + ROW_HEIGHT * 0.5f;
     
-    for (; !pending.empty() || !active.empty();  y += ROW_HEIGHT)
+    for (; !pending.empty() || !active.empty();  z += ROW_HEIGHT)
     {
-        while (!pending.empty() && (pending.front().start().y() <= y)) {
+        while (!pending.empty() && (pending.front().start().y() <= z)) {
             active.push_back(pending.front());
             pending.pop_front();
         }
         
         // sort by x value - note active will be close to sorted anyway
-        std::sort(active.begin(), active.end(), EdgeAtY(y));
+        std::sort(active.begin(), active.end(), EdgeAtZ(z));
         
         // delete finished edges
         for (unsigned int i=0; i< active.size(); ) {
-            if (active[i].end().y() <= y)
+            if (active[i].end().y() <= z)
                 active.erase(active.begin() + i);
             else
                 ++i;
@@ -198,7 +198,7 @@ static void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
         
         // draw pairs of active edges
         for (unsigned int i=1; i < active.size(); i += 2)
-            span(sf, y, active[i-1].xValueAtY(y), active[i].xValueAtY(y));
+            span(sf, z, active[i - 1].xValueAtZ(z), active[i].xValueAtZ(z));
     } // of active edges loop
 }
 
@@ -224,8 +224,8 @@ void AreaShader::shade(Surface &s) const
     for (unsigned int i = 0; i < buflen; ++i) data[i] = 0;
 
     const Segment::Areastore& areas(s.m_segment.getAreas());
-    Segment::Areastore::const_iterator it = areas.lower_bound(m_layer);
-    Segment::Areastore::const_iterator itend = areas.upper_bound(m_layer);
+    auto it = areas.lower_bound(m_layer);
+    auto itend = areas.upper_bound(m_layer);
     
     for (;it != itend; ++it) {
         // apply to surface in turn
@@ -236,7 +236,7 @@ void AreaShader::shade(Surface &s) const
     } // of areas in layer
 }
 
-void AreaShader::shadeArea(Surface& s, const Area* const ar) const
+void AreaShader::shadeArea(Surface& s, const Area* ar) const
 {
     WFMath::Polygon<2> clipped = ar->clipToSegment(s.m_segment);
     assert(clipped.isValid());

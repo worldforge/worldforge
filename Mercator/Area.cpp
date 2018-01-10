@@ -37,7 +37,7 @@ public:
     /// Constructor
     ///
     /// @param t top of y range
-    TopClip(CoordType t) : topY(t) { }
+    TopClip(CoordType t) : topZ(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -45,7 +45,7 @@ public:
     /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
-        return p.y() >= topY;
+        return p.y() >= topZ;
     }
 
     /// \brief Determine the point where a line crosses this clip.
@@ -63,12 +63,12 @@ public:
         // outside. In either case, we should not call clip()
         assert(!isZero(dy));
         
-        CoordType t = (topY - u.y()) / dy;
-        return Point2(u.x() + t * dx, topY);
+        CoordType t = (topZ - u.y()) / dy;
+        return Point2(u.x() + t * dx, topZ);
     }
 private:
-    /// \brief Top of y range.
-    CoordType topY;
+    /// \brief Top of z range.
+    CoordType topZ;
 };
 
 /// \brief Helper to clip points to a given range.
@@ -78,7 +78,7 @@ public:
     /// Constructor
     ///
     /// @param t bottom of y range
-    BottomClip(CoordType t) : bottomY(t) { }
+    BottomClip(CoordType t) : bottomZ(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -86,7 +86,7 @@ public:
     /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
-        return p.y() < bottomY;
+        return p.y() < bottomZ;
     }
 
     /// \brief Determine the point where a line crosses this clip.
@@ -100,12 +100,12 @@ public:
         CoordType dx = v.x() - u.x();
         assert(!isZero(dy));
         
-        CoordType t = (u.y() - bottomY) / -dy;
-        return Point2(u.x() + t * dx, bottomY);
+        CoordType t = (u.y() - bottomZ) / -dy;
+        return Point2(u.x() + t * dx, bottomZ);
     }
 private:
-    /// \brief Bottom of y range.
-    CoordType bottomY;
+    /// \brief Bottom of z range.
+    CoordType bottomZ;
 };
 
 /// \brief Helper to clip points to a given range.
@@ -232,7 +232,7 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
 Area::Area(int layer, bool hole) :
     m_layer(layer),
     m_hole(hole),
-    m_shader(0)
+    m_shader(nullptr)
 {
 }
 
@@ -248,11 +248,11 @@ void Area::setShader(const Shader * shader) const
     m_shader = shader;
 }
 
-bool Area::contains(CoordType x, CoordType y) const
+bool Area::contains(CoordType x, CoordType z) const
 {
-    if (!WFMath::Contains(m_box, Point2(x,y), false)) return false;
+    if (!WFMath::Contains(m_box, Point2(x,z), false)) return false;
     
-    return WFMath::Contains(m_shape, Point2(x,y), false);
+    return WFMath::Contains(m_shape, Point2(x,z), false);
 }
 
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const

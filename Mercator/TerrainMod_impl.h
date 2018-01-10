@@ -41,9 +41,9 @@ template <template <int> class Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
 }
     
 template <template <int> class Shape>
-void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
+void LevelTerrainMod<Shape>::apply(float &point, int x, int z) const
 {
-    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,z),true)) {
         point = this->m_function(point, m_level);
     }
 }
@@ -60,9 +60,9 @@ template <template <int> class Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod
 }
     
 template <template <int> class Shape>
-void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
+void AdjustTerrainMod<Shape>::apply(float &point, int x, int z) const
 {
-    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,z),true)) {
         point += m_dist;
     }
 }
@@ -79,33 +79,33 @@ template <template <int> class Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
 }
     
 template <template <int> class Shape>
-void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
+void SlopeTerrainMod<Shape>::apply(float &point, int x, int z) const
 {
-    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,z),true)) {
         float level = m_level + (this->m_shape.getCenter()[0] - x) * m_dx 
-                              + (this->m_shape.getCenter()[1] - y) * m_dy;
+                              + (this->m_shape.getCenter()[1] - z) * m_dz;
         point = this->m_function(point, level);
     }
 }
     
 template <template <int> class Shape>
-void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dy, const Shape<2> & s)
+void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dz, const Shape<2> & s)
 {
     ShapeTerrainMod<Shape>::setShape(s);
     m_level = level;
     m_dx = dx;
-    m_dy = dy;
+    m_dz = dz;
 }
 
 
 template <template <int> class Shape> CraterTerrainMod<Shape>::~CraterTerrainMod()
 {
 }
-    
+
 template <template <int> class Shape>
-void CraterTerrainMod<Shape>::apply(float &point, int x, int y) const
+void CraterTerrainMod<Shape>::apply(float &point, int x, int z) const
 {
-    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,z),true)) {
         point += m_level;
     }
 }

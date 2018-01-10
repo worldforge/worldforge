@@ -34,9 +34,9 @@ namespace Mercator {
 /// values, and should be set to appropriate using setMinMax() as soon as
 /// possible after construction. Similarly the control points should be
 /// set soon after construction.
-Segment::Segment(int x, int y, unsigned int resolution) :
+Segment::Segment(int x, int z, unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
-                            m_xRef(x), m_yRef(y),
+                            m_xRef(x), m_zRef(z),
                             m_heightMap(resolution), m_normals(nullptr)
 {
 }
@@ -127,7 +127,7 @@ void Segment::populateNormals()
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
-    if (m_normals == 0) {
+    if (m_normals == nullptr) {
         m_normals = new float[m_size * m_size * 3];
     }
 
@@ -144,8 +144,8 @@ void Segment::populateNormals()
            
            // Caclulate the normal vector.
            np[j * m_size * 3 + i * 3]     = (h1 - h3) / 2.f;
-           np[j * m_size * 3 + i * 3 + 1] = (h4 - h2) / 2.f;
-           np[j * m_size * 3 + i * 3 + 2] = 1.0;
+           np[j * m_size * 3 + i * 3 + 1] = 1.0;
+           np[j * m_size * 3 + i * 3 + 2] = (h4 - h2) / 2.f;
         }
     }
 
@@ -157,15 +157,15 @@ void Segment::populateNormals()
         h2 = m_heightMap.get(i + 1, 0);
         
         np[i * 3]     = (h1 - h2) / 2.f;
-        np[i * 3 + 1] = 0.0;
-        np[i * 3 + 2] = 1.0;
+        np[i * 3 + 1] = 1.0;
+        np[i * 3 + 2] = 0.0;
  
         h1 = m_heightMap.get(i - 1, m_res);
         h2 = m_heightMap.get(i + 1, m_res);
         
         np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
-        np[m_res * m_size * 3 + i * 3 + 1] = 0.0f;
-        np[m_res * m_size * 3 + i * 3 + 2] = 1.0f;
+        np[m_res * m_size * 3 + i * 3 + 1] = 1.0f;
+        np[m_res * m_size * 3 + i * 3 + 2] = 0.0f;
     }
     
     //left and right boundary
@@ -174,34 +174,34 @@ void Segment::populateNormals()
         h2 = m_heightMap.get(0, j + 1);
         
         np[j * m_size * 3]     = 0;
-        np[j * m_size * 3 + 1] = (h1 - h2) / 2.f;
-        np[j * m_size * 3 + 2] = 1.f;
+        np[j * m_size * 3 + 1] = 1.f;
+        np[j * m_size * 3 + 2] = (h1 - h2) / 2.f;
  
         h1 = m_heightMap.get(m_res, j - 1);
         h2 = m_heightMap.get(m_res, j + 1);
 
         np[j * m_size * 3 + m_res * 3]     = 0.f;
-        np[j * m_size * 3 + m_res * 3 + 1] = (h1 - h2) / 2.f;
-        np[j * m_size * 3 + m_res * 3 + 2] = 1.f;
+        np[j * m_size * 3 + m_res * 3 + 1] = 1.f;
+        np[j * m_size * 3 + m_res * 3 + 2] = (h1 - h2) / 2.f;
     }
 
     //corners - these are all treated as flat
     //so the normal points straight up
     np[0] = 0.f;
-    np[1] = 0.f;
-    np[2] = 1.f;
+    np[1] = 1.f;
+    np[2] = 0.f;
 
     np[m_res * m_size * 3]     = 0.f;
-    np[m_res * m_size * 3 + 1] = 0.f;
-    np[m_res * m_size * 3 + 2] = 1.f;
+    np[m_res * m_size * 3 + 1] = 1.f;
+    np[m_res * m_size * 3 + 2] = 0.f;
 
     np[m_res * 3]     = 0.f;
-    np[m_res * 3 + 1] = 0.f;
-    np[m_res * 3 + 2] = 1.f;
+    np[m_res * 3 + 1] = 1.f;
+    np[m_res * 3 + 2] = 0.f;
     
     np[m_res * m_size * 3 + m_res * 3]     = 0.f;
-    np[m_res * m_size * 3 + m_res * 3 + 1] = 0.f;
-    np[m_res * m_size * 3 + m_res * 3 + 2] = 1.f;
+    np[m_res * m_size * 3 + m_res * 3 + 1] = 1.f;
+    np[m_res * m_size * 3 + m_res * 3 + 2] = 0.f;
 }
 
 /// \brief Populate the surfaces associated with this Segment.
@@ -233,10 +233,10 @@ void Segment::getHeight(float x, float y, float &h) const
 /// divide the area is defined by the gradient y = x, so the first
 /// triangle has relative vertex coordinates (0,0) (1,0) (1,1) and
 /// the second triangle has vertex coordinates (0,0) (0,1) (1,1).
-void Segment::getHeightAndNormal(float x, float y, float& h,
+void Segment::getHeightAndNormal(float x, float z, float& h,
                                  WFMath::Vector<3> &normal) const
 {
-    m_heightMap.getHeightAndNormal(x, y, h, normal);
+    m_heightMap.getHeightAndNormal(x, z, h, normal);
 }
 
 /// \brief Determine the intersection between an axis aligned box and
@@ -245,11 +245,11 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 /// @param bbox axis aligned box to be tested.
 /// @param lx lower x coordinate of intersection area.
 /// @param hx upper x coordinate of intersection area.
-/// @param ly lower y coordinate of intersection area.
-/// @param hy upper y coordinate of intersection area.
+/// @param lz lower z coordinate of intersection area.
+/// @param hz upper z coordinate of intersection area.
 /// @return true if the box intersects with this Segment, false otherwise.
 bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
-                            int &lx, int &hx, int &ly, int &hy) const
+                            int &lx, int &hx, int &lz, int &hz) const
 {
     lx = I_ROUND(bbox.lowCorner()[0]); 
     if (lx > m_res) return false;
@@ -259,13 +259,13 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
     if (hx < 0) return false;
     if (hx > m_res) hx = m_res;
     
-    ly = I_ROUND(bbox.lowCorner()[1]); 
-    if (ly > m_res) return false;
-    if (ly < 0) ly = 0;
+    lz = I_ROUND(bbox.lowCorner()[1]);
+    if (lz > m_res) return false;
+    if (lz < 0) lz = 0;
     
-    hy = I_ROUND(bbox.highCorner()[1]); 
-    if (hy < 0) return false;
-    if (hy > m_res) hy = m_res;
+    hz = I_ROUND(bbox.highCorner()[1]);
+    if (hz < 0) return false;
+    if (hz > m_res) hz = m_res;
 
     return true;
 }
@@ -299,15 +299,15 @@ void Segment::clearMods()
 /// call this function from the application.
 void Segment::applyMod(const TerrainMod *t) 
 {
-    int lx,hx,ly,hy;
+    int lx,hx,lz,hz;
     float* points = m_heightMap.getData();
     WFMath::AxisBox<2> bbox=t->bbox();
-    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
-    if (clipToSegment(bbox, lx, hx, ly, hy)) {
-        for (int i=ly; i<=hy; i++) {
+    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_zRef));
+    if (clipToSegment(bbox, lx, hx, lz, hz)) {
+        for (int i=lz; i<=hz; i++) {
             for (int j=lx; j<=hx; j++) {
                 float& h = points[i * m_size + j];
-                t->apply(h, j + m_xRef, i + m_yRef);
+                t->apply(h, j + m_xRef, i + m_zRef);
                 m_heightMap.checkMaxMin(h);
             }
         }
@@ -353,8 +353,8 @@ int Segment::addArea(const Area* ar)
 
 int Segment::updateArea(const Area* area)
 {
-    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
-    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    auto I = m_areas.lower_bound(area->getLayer());
+    auto Iend = m_areas.upper_bound(area->getLayer());
     for (; I != Iend; ++I) {
         if (I->second == area) {
             invalidateSurfaces();
@@ -367,8 +367,8 @@ int Segment::updateArea(const Area* area)
 /// \brief Remove an area from those that affect this segment.
 int Segment::removeArea(const Area* area)
 {
-    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
-    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    auto I = m_areas.lower_bound(area->getLayer());
+    auto Iend = m_areas.upper_bound(area->getLayer());
     for (; I != Iend; ++I) {
         if (I->second == area) {
             m_areas.erase(I);
@@ -394,7 +394,7 @@ int Segment::removeArea(const Area* area)
 
 WFMath::AxisBox<2> Segment::getRect() const
 {
-    WFMath::Point<2> lp(m_xRef, m_yRef), 
+    WFMath::Point<2> lp(m_xRef, m_zRef),
         hp(lp.x() + m_res, lp.y() + m_res);
     return WFMath::AxisBox<2>(lp, hp);
 }

@@ -30,7 +30,7 @@ protected:
 public:
     TerrainMod();
 
-    virtual ~TerrainMod();
+    ~TerrainMod() override;
 
     /// \brief Change the function used to apply this mod to existing points
     void setFunction(effector_func f) {
@@ -41,7 +41,7 @@ public:
     ///
     /// The segment is at x,y in local coordinates.
     /// Output is placed into point.
-    virtual void apply(float &point, int x, int y) const = 0;
+    virtual void apply(float &point, int x, int z) const = 0;
 };
 
 /// \brief Terrain modifier which is defined by a shape variable.
@@ -55,10 +55,11 @@ public:
     /// \brief Constructor
     ///
     /// @param s shape of the modifier.
-    ShapeTerrainMod(const Shape<2> &s);
-    virtual ~ShapeTerrainMod(); // {}
+    explicit ShapeTerrainMod(const Shape<2> &s);
 
-    virtual bool checkIntersects(const Segment& s) const;
+    ~ShapeTerrainMod() override;
+
+    bool checkIntersects(const Segment& s) const override;
 
     void setShape(const Shape<2> & s);
 protected:
@@ -81,14 +82,14 @@ public:
     LevelTerrainMod(float level, const Shape<2> &s)
         : ShapeTerrainMod<Shape>(s), m_level(level) {}
 
+    /// \brief Copy constructor.
+    LevelTerrainMod(LevelTerrainMod&) = delete;
+
     virtual ~LevelTerrainMod();
 
-    virtual void apply(float &point, int x, int y) const;
+    virtual void apply(float &point, int x, int z) const;
 
     void setShape(float level, const Shape<2> & s);
-private:
-    /// \brief Copy constructor.
-    LevelTerrainMod(LevelTerrainMod&); // {}
 
 protected:
     /// \brief The height level of all points affected.
@@ -111,14 +112,14 @@ public:
     AdjustTerrainMod(float dist, const Shape<2> &s)
         : ShapeTerrainMod<Shape>(s), m_dist(dist) {}
 
+    /// \brief Copy constructor.
+    AdjustTerrainMod(AdjustTerrainMod&) = delete;
+
     virtual ~AdjustTerrainMod();
 
-    virtual void apply(float &point, int x, int y) const;
+    virtual void apply(float &point, int x, int z) const;
 
     void setShape(float dist, const Shape<2> & s);
-private:
-    /// \brief Copy constructor.
-    AdjustTerrainMod(AdjustTerrainMod&); // {}
 
 protected:
     /// \brief Adjustment to the height of all points affected.
@@ -138,27 +139,27 @@ public:
     ///
     /// @param level the height of the centre point.
     /// @param dx the rate of change of the height along X.
-    /// @param dy the rate of change of the height along Y.
+    /// @param dz the rate of change of the height along Z.
     /// @param s shape of the modifier.
-    SlopeTerrainMod(float level, float dx, float dy, const Shape<2> &s)
-        : ShapeTerrainMod<Shape>(s), m_level(level), m_dx(dx), m_dy(dy) {}
+    SlopeTerrainMod(float level, float dx, float dz, const Shape<2> &s)
+        : ShapeTerrainMod<Shape>(s), m_level(level), m_dx(dx), m_dz(dz) {}
+
+    /// \brief Copy constructor.
+    SlopeTerrainMod(SlopeTerrainMod&) = delete;
 
     virtual ~SlopeTerrainMod();
 
-    virtual void apply(float &point, int x, int y) const;
+    virtual void apply(float &point, int x, int z) const;
 
-    void setShape(float level, float dx, float dy, const Shape<2> & s);
-private:
-    /// \brief Copy constructor.
-    SlopeTerrainMod(SlopeTerrainMod&); // {}
+    void setShape(float level, float dx, float dz, const Shape<2> & s);
 
 protected:
     /// \brief The height of the centre point.
     float m_level;
     /// \brief The rate of change of the height along X.
     float m_dx;
-    /// \brief The rate of change of the height along Y.
-    float m_dy;
+    /// \brief The rate of change of the height along Z.
+    float m_dz;
 };
 
 /// \brief Terrain modifier that defines a crater.
@@ -175,14 +176,14 @@ public:
     CraterTerrainMod(float level, const Shape<2> &s)
         : ShapeTerrainMod<Shape>(s), m_level(level) {}
 
+    /// \brief Copy constructor.
+    CraterTerrainMod(CraterTerrainMod&) = delete;
+
     virtual ~CraterTerrainMod();
 
-    virtual void apply(float &point, int x, int y) const;
+    virtual void apply(float &point, int x, int z) const;
 
     void setShape(float level, const Shape<2> & s);
-private:
-    /// \brief Copy constructor.
-    CraterTerrainMod(CraterTerrainMod&); // {}
 
 protected:
     /// \brief The height level of the crater center

@@ -21,8 +21,8 @@ HighShader::HighShader(float threshold) : m_threshold(threshold)
 
 HighShader::HighShader(const Parameters & params) : m_threshold(default_threshold)
 {
-    Parameters::const_iterator I = params.find(key_threshold);
-    Parameters::const_iterator Iend = params.end();
+    auto I = params.find(key_threshold);
+    auto Iend = params.end();
     if (I != Iend) {
         m_threshold = I->second;
     }
@@ -75,8 +75,8 @@ LowShader::LowShader(float threshold) : m_threshold(threshold)
 
 LowShader::LowShader(const Parameters & params) : m_threshold(default_threshold)
 {
-    Parameters::const_iterator I = params.find(key_threshold);
-    Parameters::const_iterator Iend = params.end();
+    auto I = params.find(key_threshold);
+    auto Iend = params.end();
     if (I != Iend) {
         m_threshold = I->second;
     }
@@ -133,8 +133,8 @@ BandShader::BandShader(float low_threshold, float high_threshold) :
 BandShader::BandShader(const Parameters & params) :
     m_lowThreshold(default_lowThreshold), m_highThreshold(default_highThreshold)
 {
-    Parameters::const_iterator I = params.find(key_lowThreshold);
-    Parameters::const_iterator Iend = params.end();
+    auto I = params.find(key_lowThreshold);
+    auto Iend = params.end();
     if (I != Iend) {
         m_lowThreshold = I->second;
     }
@@ -165,7 +165,7 @@ void BandShader::shade(Surface & s) const
     unsigned int colors = channels - 1;
     ColorT * data = s.getData();
     const float * height_data = s.getSegment().getPoints();
-    if (height_data == 0) {
+    if (height_data == nullptr) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
                   << std::endl << std::flush;
         return;

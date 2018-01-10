@@ -63,7 +63,7 @@ class Terrain {
     /// \brief Bitset of option flags controlling various aspects of terrain.
     const unsigned int m_options;
     /// \brief BasePoint resolution, or distance between adjacent points.
-    const int m_res;
+    const unsigned int m_res;
     /// \brief BasePoints spacing, same as m_res in float form for efficiency
     const float m_spacing;
 
@@ -108,12 +108,12 @@ class Terrain {
                      unsigned int resolution = defaultResolution);
     ~Terrain();
 
-    float get(float x, float y) const;
-    bool getHeight(float x, float y, float&) const;
-    bool getHeightAndNormal(float x, float y, float&, WFMath::Vector<3>&) const;
+    float get(float x, float z) const;
+    bool getHeight(float x, float z, float&) const;
+    bool getHeightAndNormal(float x, float z, float&, WFMath::Vector<3>&) const;
 
-    bool getBasePoint(int x, int y, BasePoint& z) const;
-    void setBasePoint(int x, int y, const BasePoint& z);
+    bool getBasePoint(int x, int z, BasePoint& y) const;
+    void setBasePoint(int x, int z, const BasePoint& y);
 
     /// \brief Set the height of the basepoint at x,y to z.
     void setBasePoint(int x, int y, float z) {
@@ -125,13 +125,13 @@ class Terrain {
     ///
     /// @return Null if no segment is defined at that location, or a pointer
     /// to a Segment otherwise.
-    Segment * getSegmentAtPos(float x, float y) const;
+    Segment * getSegmentAtPos(float x, float z) const;
 
     /// \brief Get a pointer to the segment at index x,y
     ///
     /// @return Null if no segment is defined at that location, or a pointer
     /// to a Segment otherwise.
-    Segment * getSegmentAtIndex(int x, int y) const;
+    Segment * getSegmentAtIndex(int x, int z) const;
 
     /// \brief Accessor for base point resolution.
     int getResolution() const {
@@ -213,9 +213,9 @@ inline int Terrain::posToIndex(float pos) const {
     return std::lround(std::floor(pos / m_spacing));
 }
 
-inline Segment * Terrain::getSegmentAtPos(float x, float y) const
+inline Segment * Terrain::getSegmentAtPos(float x, float z) const
 {
-    return getSegmentAtIndex(posToIndex(x), posToIndex(y));
+    return getSegmentAtIndex(posToIndex(x), posToIndex(z));
 }
 
 

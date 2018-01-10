@@ -46,7 +46,7 @@ public:
     void setShader(const Shader * shader) const;
 
     /// Determine if a point is contained by the shape of this area.
-    bool contains(WFMath::CoordType x, WFMath::CoordType y) const;
+    bool contains(WFMath::CoordType x, WFMath::CoordType z) const;
 
     /// Accessor for the layer number.
     int getLayer() const

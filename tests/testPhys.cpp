@@ -29,9 +29,9 @@ int main()
 
     segment->populate();
     
-    WFMath::Point<3> pos(30.0,30.0,100.0); //starting position
-    WFMath::Vector<3> vel(0.0,1.0,0.0); //starting velocity
-    WFMath::Vector<3> grav(0.0,0.0,-9.8); //gravity
+    WFMath::Point<3> pos(30.0,100.0,30.0); //starting position
+    WFMath::Vector<3> vel(0.0,0.0,1.0); //starting velocity
+    WFMath::Vector<3> grav(0.0,-9.8,0.0); //gravity
 
     WFMath::Point<3> intersection;
     WFMath::Vector<3> intnormal;

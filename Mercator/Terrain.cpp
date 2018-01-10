@@ -50,11 +50,11 @@ Terrain::~Terrain()
     Segmentstore::const_iterator I = m_segments.begin(); 
     Segmentstore::const_iterator Iend = m_segments.end();
     for (; I != Iend; ++I) {
-        Segmentcolumn::const_iterator J = I->second.begin(); 
-        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        auto J = I->second.begin();
+        auto Jend = I->second.end();
         for (; J != Jend; ++J) {
             Segment * s = J->second;
-            if (s) delete s;
+            delete s;
         }
     }
 }
@@ -74,8 +74,8 @@ void Terrain::addShader(const Shader * t, int id)
     Segmentstore::const_iterator I = m_segments.begin(); 
     Segmentstore::const_iterator Iend = m_segments.end(); 
     for (; I != Iend; ++I) {
-        Segmentcolumn::const_iterator J = I->second.begin(); 
-        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        auto J = I->second.begin();
+        auto Jend = I->second.end();
         for (; J != Jend; ++J) {
             Segment *seg=J->second;
 
@@ -97,13 +97,13 @@ void Terrain::removeShader(const Shader * t, int id)
     Segmentstore::const_iterator I = m_segments.begin();
     Segmentstore::const_iterator Iend = m_segments.end();
     for (; I != Iend; ++I) {
-        Segmentcolumn::const_iterator J = I->second.begin();
-        Segmentcolumn::const_iterator Jend = I->second.end();
+        auto J = I->second.begin();
+        auto Jend = I->second.end();
         for (; J != Jend; ++J) {
             Segment *seg=J->second;
 
             Segment::Surfacestore & sss = seg->getSurfaces();
-            Segment::Surfacestore::iterator K = sss.find(id);
+            auto K = sss.find(id);
             if (K != sss.end()) {
                 delete K->second;
                 sss.erase(K);
@@ -154,7 +154,7 @@ void Terrain::shadeSurfaces(Segment & seg)
     seg.populateSurfaces();
 }
 
-/// \brief Get the height value at a given coordinate x,y.
+/// \brief Get the height value at a given coordinate x,z.
 ///
 /// This is a convenience function provided to quickly get a height
 /// value at a given point. It always succeeds, as if no height data
@@ -164,28 +164,28 @@ void Terrain::shadeSurfaces(Segment & seg)
 /// does not cause any data to be populated, and does not attempt to
 /// do any interpolation to get an accurate height figure. For more
 /// accurate results see Terrain::getHeightAndNormal.
-float Terrain::get(float x, float y) const
+float Terrain::get(float x, float z) const
 {
-    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
-    if ((s == 0) || (!s->isValid())) {
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(z));
+    if ((s == nullptr) || (!s->isValid())) {
         return Terrain::defaultLevel;
     }
-    return s->get(I_ROUND(x) - s->getXRef(), I_ROUND(y) - s->getYRef());
+    return s->get(I_ROUND(x) - s->getXRef(), I_ROUND(z) - s->getZRef());
 }
 
-bool Terrain::getHeight(float x, float y, float& h) const
+bool Terrain::getHeight(float x, float z, float& h) const
 {
-    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
-    if ((s == 0) || (!s->isValid())) {
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(z));
+    if ((s == nullptr) || (!s->isValid())) {
         return false;
     }
-    s->getHeight(x - s->getXRef(), y - s->getYRef(), h);
+    s->getHeight(x - s->getXRef(), z - s->getZRef(), h);
     return true;
 }
 
 
 /// \brief Get an accurate height and normal vector at a given coordinate
-/// x,y.
+/// x,z.
 ///
 /// This is a more expensive function that Terrain::get() for getting an
 /// accurate height value and surface normal at a given point. The main
@@ -196,20 +196,20 @@ bool Terrain::getHeight(float x, float y, float& h) const
 /// is available for the given location, this function returns false, and
 /// no data is returned.
 /// @param x coordinate of point to be returned.
-/// @param y coordinate of point to be returned.
+/// @param z coordinate of point to be returned.
 /// @param h reference to variable which will be used to store the resulting
 /// height value.
 /// @param n reference to variable which will be used to store the resulting
 /// normal value.
 /// @return true if heightdata was available, false otherwise.
-bool Terrain::getHeightAndNormal(float x, float y, float & h,
+bool Terrain::getHeightAndNormal(float x, float z, float & h,
                                   WFMath::Vector<3> & n) const
 {
-    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(y));
-    if ((s == 0) || (!s->isValid())) {
+    Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(z));
+    if ((s == nullptr) || (!s->isValid())) {
         return false;
     }
-    s->getHeightAndNormal(x - s->getXRef(), y - s->getYRef(), h, n);
+    s->getHeightAndNormal(x - s->getXRef(), z - s->getZRef(), h, n);
     return true;
 }
 
@@ -218,22 +218,22 @@ bool Terrain::getHeightAndNormal(float x, float y, float & h,
 /// Get the BasePoint value for the given coordinate on the base
 /// point grid.
 /// @param x coordinate on the base point grid.
-/// @param y coordinate on the base point grid.
-/// @param z reference to varaible which will be used to store the
+/// @param z coordinate on the base point grid.
+/// @param y reference to variable which will be used to store the
 /// BasePoint data.
 /// @return true if a BasePoint is defined at the given coordinate, false
 /// otherwise.
-bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
+bool Terrain::getBasePoint(int x, int z, BasePoint& y) const
 {
-    Pointstore::const_iterator I = m_basePoints.find(x);
+    auto I = m_basePoints.find(x);
     if (I == m_basePoints.end()) {
         return false;
     }
-    Pointcolumn::const_iterator J = I->second.find(y);
+    auto J = I->second.find(z);
     if (J == I->second.end()) {
         return false;
     }
-    z = J->second;
+    y = J->second;
     return true;
 }
 
@@ -247,20 +247,20 @@ bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
 /// or more Segment objects that were already defined, the contents of
 /// those Segment objects are invalidated.
 /// @param x coordinate on the base point grid.
-/// @param y coordinate on the base point grid.
-/// @param z BasePoint value to be used at the given coordinate.
-void Terrain::setBasePoint(int x, int y, const BasePoint& z)
+/// @param z coordinate on the base point grid.
+/// @param y BasePoint value to be used at the given coordinate.
+void Terrain::setBasePoint(int x, int z, const BasePoint& y)
 {
-    m_basePoints[x][y] = z;
+    m_basePoints[x][z] = y;
     bool pointIsSet[3][3];
     BasePoint existingPoint[3][3];
     for(int i = x - 1, ri = 0; i < x + 2; ++i, ++ri) {
-        for(int j = y - 1, rj = 0; j < y + 2; ++j, ++rj) {
+        for(int j = z - 1, rj = 0; j < z + 2; ++j, ++rj) {
             pointIsSet[ri][rj] = getBasePoint(i, j, existingPoint[ri][rj]);
         }
     }
     for(int i = x - 1, ri = 0; i < x + 1; ++i, ++ri) {
-        for(int j = y - 1, rj = 0; j < y + 1; ++j, ++rj) {
+        for(int j = z - 1, rj = 0; j < z + 1; ++j, ++rj) {
             Segment * s = getSegmentAtIndex(i, j);
             if (s == 0) { 
                 bool complete = pointIsSet[ri][rj] &&
@@ -293,7 +293,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 m_segments[i][j] = s;
                 continue;
             }
-            s->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, z);
+            s->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, y);
         }
     }
 }
@@ -304,18 +304,18 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
 /// point grid. The Segment in question may not have been populated
 /// with heightfield or surface data.
 /// @param x coordinate on the base point grid.
-/// @param y coordinate on the base point grid.
+/// @param z coordinate on the base point grid.
 /// @return a valid pointer if a Segment is defined at the given coordinate,
 /// zero otherwise.
-Segment * Terrain::getSegmentAtIndex(int x, int y) const
+Segment * Terrain::getSegmentAtIndex(int x, int z) const
 {
-    Segmentstore::const_iterator I = m_segments.find(x);
+    auto I = m_segments.find(x);
     if (I == m_segments.end()) {
-        return 0;
+        return nullptr;
     }
-    Segmentcolumn::const_iterator J = I->second.find(y);
+    auto J = I->second.find(z);
     if (J == I->second.end()) {
-        return 0;
+        return nullptr;
     }
     return J->second;
 }
@@ -324,12 +324,12 @@ void Terrain::processSegments(const WFMath::AxisBox<2>& area,
         const std::function<void(Segment&, int, int)>& func) const
 {
     int lx = I_ROUND(std::floor((area.lowCorner()[0]) / m_spacing));
-    int ly = I_ROUND(std::floor((area.lowCorner()[1]) / m_spacing));
+    int lz = I_ROUND(std::floor((area.lowCorner()[1]) / m_spacing));
     int hx = I_ROUND(std::ceil((area.highCorner()[0]) / m_spacing));
-    int hy = I_ROUND(std::ceil((area.highCorner()[1]) / m_spacing));
+    int hz = I_ROUND(std::ceil((area.highCorner()[1]) / m_spacing));
 
     for (int i = lx; i < hx; ++i) {
-        for (int j = ly; j < hy; ++j) {
+        for (int j = lz; j < hz; ++j) {
             Segment *s = getSegmentAtIndex(i, j);
             if (!s) {
                 continue;
@@ -355,12 +355,12 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 
 
         int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
-        int ly=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
+        int lz=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
         int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
-        int hy=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
+        int hz=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
 
         for (int i=lx;i<hx;++i) {
-           for (int j=ly;j<hy;++j) {
+           for (int j=lz;j<hz;++j) {
                Segment *s=getSegmentAtIndex(i,j);
                if (!s) {
                    continue;
@@ -383,18 +383,18 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 
     if (mod) {
         int lx=I_ROUND(std::floor((mod->bbox().lowCorner()[0] - 1.f) / m_spacing));
-        int ly=I_ROUND(std::floor((mod->bbox().lowCorner()[1] - 1.f) / m_spacing));
+        int lz=I_ROUND(std::floor((mod->bbox().lowCorner()[1] - 1.f) / m_spacing));
         int hx=I_ROUND(std::ceil((mod->bbox().highCorner()[0] + 1.f) / m_spacing));
-        int hy=I_ROUND(std::ceil((mod->bbox().highCorner()[1] + 1.f) / m_spacing));
+        int hz=I_ROUND(std::ceil((mod->bbox().highCorner()[1] + 1.f) / m_spacing));
 
         for (int i=lx;i<hx;++i) {
-            for (int j=ly;j<hy;++j) {
+            for (int j=lz;j<hz;++j) {
                 Segment *s=getSegmentAtIndex(i,j);
                 if (!s) {
                     continue;
                 }
 
-                std::set<Segment*>::iterator J = removed.find(s);
+                auto J = removed.find(s);
                 if (J == removed.end()) {
                     added.insert(s);
                 } else {
@@ -460,12 +460,12 @@ void Terrain::addArea(const Area * area)
     m_terrainAreas.emplace(area, area->bbox());
 
     int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
-    int ly=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
+    int lz=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
     int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
-    int hy=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
+    int hz=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
 
     for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
+        for (int j=lz;j<hz;++j) {
             Segment *s=getSegmentAtIndex(i,j);
             if (s) {
                 if (area->checkIntersects(*s)) {
@@ -489,12 +489,12 @@ Terrain::Rect Terrain::updateArea(const Area * area)
          old_box = I->second;
 
          int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
-         int ly=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
+         int lz=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
          int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
-         int hy=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
+         int hz=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
 
          for (int i=lx;i<hx;++i) {
-            for (int j=ly;j<hy;++j) {
+            for (int j=lz;j<hz;++j) {
                 Segment *s=getSegmentAtIndex(i,j);
                 if (!s) {
                     continue;
@@ -514,18 +514,18 @@ Terrain::Rect Terrain::updateArea(const Area * area)
 
 
      int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
-     int ly=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
+     int lz=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
      int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
-     int hy=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
+     int hz=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
 
      for (int i=lx;i<hx;++i) {
-         for (int j=ly;j<hy;++j) {
+         for (int j=lz;j<hz;++j) {
              Segment *s=getSegmentAtIndex(i,j);
              if (!s) {
                  continue;
              }
 
-             std::set<Segment*>::iterator J = removed.find(s);
+             auto J = removed.find(s);
              if (J == removed.end()) {
                  added.insert(s);
              } else {
@@ -567,12 +567,12 @@ void Terrain::removeArea(const Area * area)
     const Rect & eff_box = area->bbox();
 
     int lx=I_ROUND(std::floor((eff_box.lowCorner()[0] - 1.f) / m_spacing));
-    int ly=I_ROUND(std::floor((eff_box.lowCorner()[1] - 1.f) / m_spacing));
+    int lz=I_ROUND(std::floor((eff_box.lowCorner()[1] - 1.f) / m_spacing));
     int hx=I_ROUND(std::ceil((eff_box.highCorner()[0] + 1.f) / m_spacing));
-    int hy=I_ROUND(std::ceil((eff_box.highCorner()[1] + 1.f) / m_spacing));
+    int hz=I_ROUND(std::ceil((eff_box.highCorner()[1] + 1.f) / m_spacing));
 
     for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
+        for (int j=lz;j<hz;++j) {
             Segment *s=getSegmentAtIndex(i,j);
             if (s) {
                 s->removeArea(area);

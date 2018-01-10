@@ -212,7 +212,9 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     // with sides.
 
     // temporary array used to hold each edge
-    float * edge = new float[m_size];
+    std::vector<float> edgeData;
+    edgeData.reserve(m_size);
+    float* edge = edgeData.data();
 
     float* points = m_data;
 
@@ -328,38 +330,37 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       stride>>=1;
       depth++;
     }
-    delete [] edge;
 }
 
-void HeightMap::getHeight(float x, float y, float &h) const
+void HeightMap::getHeight(float x, float z, float &h) const
 {
     // FIXME this ignores edges and corners
     assert(x <= m_res);
     assert(x >= 0.0f);
-    assert(y <= m_res);
-    assert(y >= 0.0f);
+    assert(z <= m_res);
+    assert(z >= 0.0f);
 
     // get index of the actual tile in the segment
     int tile_x = I_ROUND(std::floor(x));
-    int tile_y = I_ROUND(std::floor(y));
+    int tile_z = I_ROUND(std::floor(z));
 
     // work out the offset into that tile
     float off_x = x - tile_x;
-    float off_y = y - tile_y;
+    float off_z = z - tile_z;
 
-    float h1=get(tile_x, tile_y);
-    float h2=get(tile_x, tile_y+1);
-    float h3=get(tile_x+1, tile_y+1);
-    float h4=get(tile_x+1, tile_y);
+    float h1=get(tile_x, tile_z);
+    float h2=get(tile_x, tile_z+1);
+    float h3=get(tile_x+1, tile_z+1);
+    float h4=get(tile_x+1, tile_z);
 
     // square is broken into two triangles
     // top triangle |/
-    if ((off_x - off_y) <= 0.f) {
-        h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
+    if ((off_x - off_z) <= 0.f) {
+        h = h1 + (h3-h2) * off_x + (h2-h1) * off_z;
     }
     // bottom triangle /|
     else {
-        h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
+        h = h1 + (h4-h1) * off_x + (h3-h4) * off_z;
     }
 }
 
@@ -373,48 +374,48 @@ void HeightMap::getHeight(float x, float y, float &h) const
 /// considered as two triangles for the purposes of interpolation to ensure
 /// that the calculated height falls on the surface rendered by a 3D
 /// graphics engine from the same heightfield data. The line used to
-/// divide the area is defined by the gradient y = x, so the first
+/// divide the area is defined by the gradient z = x, so the first
 /// triangle has relative vertex coordinates (0,0) (1,0) (1,1) and
 /// the second triangle has vertex coordinates (0,0) (0,1) (1,1).
-void HeightMap::getHeightAndNormal(float x, float y, float& h,
+void HeightMap::getHeightAndNormal(float x, float z, float& h,
                                  WFMath::Vector<3> &normal) const
 {
     // FIXME this ignores edges and corners
     assert(x <= m_res);
     assert(x >= 0.0f);
-    assert(y <= m_res);
-    assert(y >= 0.0f);
+    assert(z <= m_res);
+    assert(z >= 0.0f);
     
     // get index of the actual tile in the segment
     int tile_x = I_ROUND(std::floor(x));
-    int tile_y = I_ROUND(std::floor(y));
+    int tile_z = I_ROUND(std::floor(z));
 
     // work out the offset into that tile
     float off_x = x - tile_x;
-    float off_y = y - tile_y;
+    float off_z = z - tile_z;
  
-    float h1=get(tile_x, tile_y);
-    float h2=get(tile_x, tile_y+1);
-    float h3=get(tile_x+1, tile_y+1);
-    float h4=get(tile_x+1, tile_y);
+    float h1=get(tile_x, tile_z);
+    float h2=get(tile_x, tile_z+1);
+    float h3=get(tile_x+1, tile_z+1);
+    float h4=get(tile_x+1, tile_z);
 
     // square is broken into two triangles
     // top triangle |/
-    if ((off_x - off_y) <= 0.f) {
-        normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0f);
+    if ((off_x - off_z) <= 0.f) {
+        normal = WFMath::Vector<3>(h2-h3, 1.0f, h1-h2);
 
         //normal for intersection of both triangles
-        if (off_x == off_y) {
-            normal += WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
+        if (off_x == off_z) {
+            normal += WFMath::Vector<3>(h1-h4, 1.0f, h4-h3);
         }
         normal.normalize();
-        h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
+        h = h1 + (h3-h2) * off_x + (h2-h1) * off_z;
     } 
     // bottom triangle /|
     else {
-        normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
+        normal = WFMath::Vector<3>(h1-h4, 1.0f, h4-h3);
         normal.normalize();
-        h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
+        h = h1 + (h4-h1) * off_x + (h3-h4) * off_z;
     }
 }
 

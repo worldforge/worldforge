@@ -21,7 +21,7 @@ Segment::Segment(int x, int y, unsigned int resolution) :
                  m_res(resolution),
                  m_size(m_res+1),
                  m_xRef(x),
-                 m_yRef(y),
+                 m_zRef(y),
                  m_heightMap(resolution)
 {
 }

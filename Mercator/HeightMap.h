@@ -37,13 +37,13 @@ class HeightMap : public Buffer<float> {
     }
 
     /// \brief Get the height at a relative integer position in the Segment.
-    float get(int x, int y) const {
-        return m_data[y * (m_res + 1) + x];
+    float get(int x, int z) const {
+        return m_data[z * (m_res + 1) + x];
     }
 
-    void getHeightAndNormal(float x, float y, float &h, 
+    void getHeightAndNormal(float x, float z, float &h,
                     WFMath::Vector<3> &normal) const;
-    void getHeight(float x, float y, float &h) const;
+    void getHeight(float x, float z, float &h) const;
 
     /// \brief Accessor for the maximum height value in this Segment.
     float getMax() const { return m_max; }

@@ -29,7 +29,7 @@ static inline float gridfloor(float d)
 //check intersection of an axis-aligned box with the terrain
 bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
 {
-    float max, min=bbox.lowCorner()[2];
+    float max, min=bbox.lowCorner()[1];
     const int res = t.getResolution();
     const float spacing = t.getSpacing();
 
@@ -37,15 +37,15 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
     //usually will just be one
     int xlow  = (int) floor(bbox.lowCorner()[0] / spacing);
     int xhigh = (int) gridceil(bbox.highCorner()[0] / spacing);
-    int ylow  = (int) floor(bbox.lowCorner()[1] / spacing);
-    int yhigh = (int) gridceil(bbox.highCorner()[1] / spacing);
+    int zlow  = (int) floor(bbox.lowCorner()[2] / spacing);
+    int zhigh = (int) gridceil(bbox.highCorner()[2] / spacing);
 
     //loop across all tiles covered by this bbox
     for (int x = xlow; x < xhigh; x++) {
-        for (int y = ylow; y < yhigh; y++) {
+        for (int z = zlow; z < zhigh; z++) {
             //check the bbox against the extent of each tile
             //as an early rejection
-            Segment *thisSeg=t.getSegmentAtIndex(x,y);
+            Segment *thisSeg=t.getSegmentAtIndex(x,z);
 
             if (thisSeg)
                 max=thisSeg->getMax();
@@ -63,22 +63,25 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
                 int max_x = (int) gridceil(bbox.highCorner()[0] - (x * spacing));
                 if (max_x > res) min_x = res;
                 
-                int min_y = (int) floor(bbox.lowCorner()[1] - (y * spacing));
-                if (min_y < 0) min_y = 0;
+                int min_z = (int) floor(bbox.lowCorner()[2] - (z * spacing));
+                if (min_z < 0) min_z = 0;
 
-                int max_y = (int) gridceil(bbox.highCorner()[1] - (y * spacing));
-                if (max_y > res) min_y = res;
+                int max_z = (int) gridceil(bbox.highCorner()[2] - (z * spacing));
+                if (max_z > res) min_z = res;
 
                 //loop over each point and see if it is greater than the minimum
                 //of the bbox. If all points are below, the the bbox does NOT
                 //intersect. If a single point is above, then the bbox MIGHT 
                 //intersect.
                 for (int xpt = min_x; xpt <= max_x; xpt++) {
-		    for (int ypt = min_y; ypt <= max_y; ypt++) {
-			if (thisSeg) { 
-        	            if (thisSeg->get(xpt,ypt) > min) return true;
-			}
-			else if (Terrain::defaultLevel > min) return true;
+                    for (int zpt = min_z; zpt <= max_z; zpt++) {
+                        if (thisSeg) {
+                            if (thisSeg->get(xpt,zpt) > min) {
+                                return true;
+                            }
+                        } else if (Terrain::defaultLevel > min) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -91,11 +94,11 @@ static float HOT(const Terrain &t, const WFMath::Point<3> &pt, float & h)
 {
     WFMath::Vector<3> normal; 
     float terrHeight;
-    if (!t.getHeightAndNormal(pt[0], pt[1], terrHeight, normal)) {
+    if (!t.getHeightAndNormal(pt[0], pt[2], terrHeight, normal)) {
         return false;
     }
 
-    h = (pt[2] - terrHeight);
+    h = (pt[1] - terrHeight);
     return true;
 }
 
@@ -106,7 +109,7 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &pt)
 }
 
 //helper function for ray terrain intersection
-static bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y, 
+static bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Z,
                    const WFMath::Vector<3> &nDir, float dirLen,
                    const WFMath::Point<3> &sPt, WFMath::Point<3> &intersection,
                    WFMath::Vector<3> &normal, float &par)
@@ -131,44 +134,44 @@ static bool cellIntersect(float h1, float h2, float h3, float h4, float X, float
     WFMath::Point<3> topInt, botInt;
     
     //point to use in plane equation for both triangles
-    WFMath::Vector<3> p0 = WFMath::Vector<3>(X, Y, h1);
+    WFMath::Vector<3> p0 = WFMath::Vector<3>(X, h1, Z);
 
     // square is broken into two triangles
     // top triangle |/
     bool topIntersected = false;
-    WFMath::Vector<3> topNormal(h2-h3, h1-h2, 1.0);
+    WFMath::Vector<3> topNormal(h2-h3, 1.0, h1-h2);
     topNormal.normalize();
     float t = Dot(nDir, topNormal);
 
     float topP=0.0;
 
     if ((t > 1e-7) || (t < -1e-7)) {
-        topP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), topNormal) 
+        topP = - (Dot((sPt-WFMath::Point<3>(0.f,0.f,0.f)), topNormal)
                - Dot(topNormal, p0)) / t; 
         topInt = sPt + nDir*topP;
         //check the intersection is inside the triangle, and within the ray extents
         if ((topP <= dirLen) && (topP > 0.0) &&
-            (topInt[0] >= X ) && (topInt[1] <= Y + 1 ) &&
-            ((topInt[0] - topInt[1]) <= (X - Y)) ) {
+            (topInt[0] >= X ) && (topInt[2] <= Z + 1 ) &&
+            ((topInt[0] - topInt[2]) <= (X - Z)) ) {
                 topIntersected=true;
         }
     }
 
     // bottom triangle /|
     bool botIntersected = false;
-    WFMath::Vector<3> botNormal(h1-h4, h4-h3, 1.0);
+    WFMath::Vector<3> botNormal(h1-h4, 1.0f, h4-h3);
     botNormal.normalize();
     float b = Dot(nDir, botNormal);
     float botP=0.0;
 
     if ((b > 1e-7) || (b < -1e-7)) {
-        botP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), botNormal) 
+        botP = - (Dot((sPt-WFMath::Point<3>(0.f,0.f,0.f)), botNormal)
                - Dot(botNormal, p0)) / b; 
         botInt = sPt + nDir*botP;
         //check the intersection is inside the triangle, and within the ray extents
         if ((botP <= dirLen) && (botP > 0.0) &&
-            (botInt[0] <= X + 1 ) && (botInt[1] >= Y ) && 
-            ((botInt[0] - botInt[1]) >= (X - Y)) ) {
+            (botInt[0] <= X + 1 ) && (botInt[2] >= Z ) &&
+            ((botInt[0] - botInt[2]) >= (X - Z)) ) {
                 botIntersected = true;
         }
     }
@@ -229,8 +232,8 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     float hot;
     if (HOT(t, sPt, hot) && hot < 0.0) return true;
     
-    float paraX=0.0, paraY=0.0; //used to store the parametric gap between grid crossings 
-    float pX, pY; //the accumulators for the parametrics as we traverse the ray
+    float paraX=0.0, paraZ=0.0; //used to store the parametric gap between grid crossings
+    float pX, pZ; //the accumulators for the parametrics as we traverse the ray
     float h1,h2,h3,h4,height;
 
     WFMath::Point<3> last(sPt), next(sPt);
@@ -250,55 +253,55 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     }
 
     //work out where the ray first crosses a Y grid line
-    if (dir[1] != 0.0f) {
-        paraY = 1.0f/dir[1];
-        float crossY = (dir[1] > 0.0f) ? gridceil(last[1]) : gridfloor(last[1]);
-        pY = (crossY - sPt[1]) * paraY;
-        pY = std::min(pY, 1.0f);
+    if (dir[2] != 0.0f) {
+        paraZ = 1.0f/dir[2];
+        float crossZ = (dir[2] > 0.0f) ? gridceil(last[2]) : gridfloor(last[2]);
+        pZ = (crossZ - sPt[2]) * paraZ;
+        pZ = std::min(pZ, 1.0f);
     }
     else { //parallel: never crosses
-        pY = 1.0f;
+        pZ = 1.0f;
     }
 
     //ensure we traverse the ray forwards 
     paraX = std::abs(paraX);
-    paraY = std::abs(paraY);
+    paraZ = std::abs(paraZ);
 
     bool endpoint = false;
     //check each candidate tile for an intersection
     while (1) {
         last = next;
-        if (pX < pY) { // cross x grid line first
+        if (pX < pZ) { // cross x grid line first
             next = sPt + (pX * dir);
             pX += paraX; // set x accumulator to current p
         }
-        else { //cross y grid line first
-            next = sPt + (pY * dir);
-            if (pX == pY) {
+        else { //cross z grid line first
+            next = sPt + (pZ * dir);
+            if (pX == pZ) {
                 pX += paraX; //unusual case where ray crosses corner
             }
-            pY += paraY; // set y accumulator to current p
+            pZ += paraZ; // set z accumulator to current p
         }
 
         //FIXME these gets could be optimized a bit
         float x= (dir[0] > 0) ? std::floor(last[0]) : std::floor(next[0]);
-        float y= (dir[1] > 0) ? std::floor(last[1]) : std::floor(next[1]);
-        h1 = t.get(x, y);
-        h2 = t.get(x, y+1);
-        h3 = t.get(x+1, y+1);
-        h4 = t.get(x+1, y);
+        float z= (dir[2] > 0) ? std::floor(last[2]) : std::floor(next[2]);
+        h1 = t.get(x, z);
+        h2 = t.get(x, z+1);
+        h3 = t.get(x+1, z+1);
+        h4 = t.get(x+1, z);
         height = std::max( std::max(h1, h2), 
                            std::max(h3, h4)); 
         
-        if ( (last[2] < height) || (next[2] < height) ) {
+        if ( (last[1] < height) || (next[1] < height) ) {
             // possible intersect with this tile
-            if (cellIntersect(h1, h2, h3, h4, x, y, nDir, dirLen, sPt,
+            if (cellIntersect(h1, h2, h3, h4, x, z, nDir, dirLen, sPt,
                               intersection, normal, par)) {
                 return true;
             }
         }
 
-        if ((pX >= 1.0f) && (pY >= 1.0f)) {
+        if ((pX >= 1.0f) && (pZ >= 1.0f)) {
             if (endpoint) {
                 break;
             }
