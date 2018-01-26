@@ -30,6 +30,7 @@
 #define WFMATH_AXIS_BOX_H
 
 #include <wfmath/intersect_decls.h>
+#include <wfmath/point.h>
 
 #include <iosfwd>
 
