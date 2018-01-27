@@ -27,10 +27,6 @@ PresentationBridge::PresentationBridge(std::stringstream& stream) :
     mStream.precision(6);
 }
 
-PresentationBridge::~PresentationBridge()
-{
-}
-
 void PresentationBridge::streamBegin()
 {
 	addPadding();
@@ -44,14 +40,14 @@ void PresentationBridge::streamEnd()
 	removePadding();
 }
 
-void PresentationBridge::mapMapItem(const std::string& name)
+void PresentationBridge::mapMapItem(std::string name)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << name << std::endl;
 	}
 	addPadding();
 }
-void PresentationBridge::mapListItem(const std::string& name)
+void PresentationBridge::mapListItem(std::string name)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << name << std::endl;
@@ -59,19 +55,19 @@ void PresentationBridge::mapListItem(const std::string& name)
 	mMapsInList.push(0);
 	addPadding();
 }
-void PresentationBridge::mapIntItem(const std::string& name, long i)
+void PresentationBridge::mapIntItem(std::string name, long i)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << name << ": " << i << std::endl;
 	}
 }
-void PresentationBridge::mapFloatItem(const std::string& name, double d)
+void PresentationBridge::mapFloatItem(std::string name, double d)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << name << ": " << std::fixed << d << std::endl;
 	}
 }
-void PresentationBridge::mapStringItem(const std::string& name, const std::string& s)
+void PresentationBridge::mapStringItem(std::string name, std::string s)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << name << ": " << s << std::endl;
@@ -113,7 +109,7 @@ void PresentationBridge::listFloatItem(double d)
         mStream << mPadding << ": " << d << std::endl;
 	}
 }
-void PresentationBridge::listStringItem(const std::string& s)
+void PresentationBridge::listStringItem(std::string s)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << ": " << s << std::endl;

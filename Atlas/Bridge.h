@@ -57,23 +57,23 @@ class Bridge
     /**
      *  Starts a map object to the currently streamed map.
      */
-    virtual void mapMapItem(const std::string& name) = 0;
+    virtual void mapMapItem(std::string name) = 0;
     /**
      *  Starts a list object to the currently streamed map.
      */
-    virtual void mapListItem(const std::string& name) = 0;
+    virtual void mapListItem(std::string name) = 0;
     /**
      *  Adds an integer to the currently streames map.
      */
-    virtual void mapIntItem(const std::string& name, long) = 0;
+    virtual void mapIntItem(std::string name, long) = 0;
     /**
      *  Adds a float to the currently streamed map.
      */
-    virtual void mapFloatItem(const std::string& name, double) = 0;
+    virtual void mapFloatItem(std::string name, double) = 0;
     /**
      *  Adds a string to the currently streamed map.
      */
-    virtual void mapStringItem(const std::string& name, const std::string&) = 0;
+    virtual void mapStringItem(std::string name, std::string) = 0;
     /**
      *  Ends the currently streamed map.
      */
@@ -100,7 +100,7 @@ class Bridge
     /**
      *  Adds a string to the currently streamed list.
      */
-    virtual void listStringItem(const std::string&) = 0;
+    virtual void listStringItem(std::string) = 0;
     /**
      *  Ends the currently streamed list.
      */

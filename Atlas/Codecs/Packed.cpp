@@ -117,7 +117,7 @@ void Packed::parseList(char next)
 
 void Packed::parseMapBegin(char next)
 {
-    m_bridge.mapMapItem(hexDecode(m_name));
+    m_bridge.mapMapItem(hexDecode(std::move(m_name)));
     m_istream.putback(next);
     m_state.pop();
     m_name.clear();
@@ -125,7 +125,7 @@ void Packed::parseMapBegin(char next)
 
 void Packed::parseListBegin(char next)
 {
-    m_bridge.mapListItem(hexDecode(m_name));
+    m_bridge.mapListItem(hexDecode(std::move(m_name)));
     m_istream.putback(next);
     m_state.pop();
     m_name.clear();
@@ -146,12 +146,12 @@ void Packed::parseInt(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge.mapIntItem(hexDecode(m_name), atol(m_data.c_str()));
+		m_bridge.mapIntItem(hexDecode(std::move(m_name)), std::stol(m_data));
 		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge.listIntItem(atol(m_data.c_str()));
+		m_bridge.listIntItem(std::stol(m_data));
 	    }
 	    else
 	    {
@@ -197,12 +197,12 @@ void Packed::parseFloat(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge.mapFloatItem(hexDecode(m_name), atof(m_data.c_str()));
+		m_bridge.mapFloatItem(hexDecode(std::move(m_name)), std::stof(m_data));
 		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge.listFloatItem(atof(m_data.c_str()));
+		m_bridge.listFloatItem(std::stof(m_data));
 	    }
 	    else
 	    {
@@ -251,12 +251,12 @@ void Packed::parseString(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge.mapStringItem(hexDecode(m_name), hexDecode(m_data));
+		m_bridge.mapStringItem(hexDecode(std::move(m_name)), hexDecode(std::move(m_data)));
 		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge.listStringItem(hexDecode(m_data));
+		m_bridge.listStringItem(hexDecode(std::move(m_data)));
 	    }
 	    else
 	    {
@@ -346,29 +346,29 @@ void Packed::streamEnd()
     m_bridge.streamEnd();
 }
 
-void Packed::mapMapItem(const std::string& name)
+void Packed::mapMapItem(std::string name)
 {
-    m_ostream << '[' << hexEncode(name) << '=';
+    m_ostream << '[' << hexEncode(std::move(name)) << '=';
 }
 
-void Packed::mapListItem(const std::string& name)
+void Packed::mapListItem(std::string name)
 {
-    m_ostream << '(' << hexEncode(name) << '=';
+    m_ostream << '(' << hexEncode(std::move(name)) << '=';
 }
 
-void Packed::mapIntItem(const std::string& name, long data)
+void Packed::mapIntItem(std::string name, long data)
 {
-    m_ostream << '@' << hexEncode(name) << '=' << data;
+    m_ostream << '@' << hexEncode(std::move(name)) << '=' << data;
 }
 
-void Packed::mapFloatItem(const std::string& name, double data)
+void Packed::mapFloatItem(std::string name, double data)
 {
-    m_ostream << '#' << hexEncode(name) << '=' << data;
+    m_ostream << '#' << hexEncode(std::move(name)) << '=' << data;
 }
 
-void Packed::mapStringItem(const std::string& name, const std::string& data)
+void Packed::mapStringItem(std::string name, std::string data)
 {
-    m_ostream << '$' << hexEncode(name) << '=' << hexEncode(data);
+    m_ostream << '$' << hexEncode(std::move(name)) << '=' << hexEncode(std::move(data));
 }
 
 void Packed::mapEnd()
@@ -396,9 +396,9 @@ void Packed::listFloatItem(double data)
     m_ostream << '#' << data;
 }
 
-void Packed::listStringItem(const std::string& data)
+void Packed::listStringItem(std::string data)
 {
-    m_ostream << '$' << hexEncode(data);
+    m_ostream << '$' << hexEncode(std::move(data));
 }
 
 void Packed::listEnd()

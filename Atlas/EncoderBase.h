@@ -31,10 +31,10 @@ class EncoderBase { // : public Atlas::Bridge {
 public:
 
     /// You will need to implement this in subclasses
-    EncoderBase(Atlas::Bridge & b) : m_b(b) { }
+    explicit EncoderBase(Atlas::Bridge & b) : m_b(b) { }
 
-    virtual ~EncoderBase() { }
-    
+    virtual ~EncoderBase() = default;
+
     void streamBegin() { m_b.streamBegin(); }
     void streamMessage() { m_b.streamMessage(); }
     void streamEnd() { m_b.streamEnd(); }

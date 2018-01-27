@@ -110,7 +110,7 @@ void testCodec()
         Atlas::Message::Encoder enc(codec);
 
         decoder.streamBegin();
-        codec.poll();
+        codec.poll(true);
         decoder.streamEnd();
 
     }

@@ -12,84 +12,86 @@ public:
         padding = "";
     }
 
-    virtual ~DebugBridge() { }
+    ~DebugBridge() override = default;
 
-    virtual void streamBegin() {
+    void streamBegin() override {
         std::cout << padding << "streamBegin" << std::endl;
         addPadding();
     }
-    virtual void streamMessage() {
+
+    void streamMessage() override {
         std::cout << padding << "New Map" << std::endl;
         addPadding();
     }
-    virtual void streamEnd() {
+
+    void streamEnd() override {
         removePadding();
         std::cout << padding << "streamEnd" << std::endl;
     }
     
-    virtual void mapMapItem(const std::string& name)
+    void mapMapItem(std::string name) override
     {
         std::cout << padding << name << " -> New Map" << std::endl;
         addPadding();
     }
-    virtual void mapListItem(const std::string& name)
+    void mapListItem(std::string name) override
     {
         std::cout << padding << name << " -> New List" << std::endl;
         addPadding();
     }
-    virtual void mapIntItem(const std::string& name, long i)
+    void mapIntItem(std::string name, long i) override
     {
         std::cout << padding << name << " -> Int: " << i << std::endl;
     }
-    virtual void mapFloatItem(const std::string& name, double d)
+    void mapFloatItem(std::string name, double d) override
     {
         std::cout << padding << name << " -> Float: " << d << std::endl;
     }
-    virtual void mapStringItem(const std::string& name, const std::string& s)
+    void mapStringItem(std::string name, std::string s) override
     {
         std::cout << padding << name << " -> String: " << s << std::endl;
     }
-    virtual void mapEnd()
+    void mapEnd() override
     {
         removePadding();
         std::cout << padding << "mapEnd" << std::endl;
     }
     
-    virtual void listMapItem()
+    void listMapItem() override
     {
         std::cout << padding << "New Map" << std::endl;
         addPadding();
     }
-    virtual void listListItem()
+    void listListItem() override
     {
         std::cout << padding << "New List" << std::endl;
         addPadding();
     }
-    virtual void listIntItem(long i)
+    void listIntItem(long i) override
     {
         std::cout << padding << "Int: " << i << std::endl;
     }
-    virtual void listFloatItem(double d)
+    void listFloatItem(double d) override
     {
         std::cout << padding << "Float: " << d << std::endl;
     }
-    virtual void listStringItem(const std::string& s)
+    void listStringItem(std::string s) override
     {
         std::cout << padding << "String: " << s << std::endl;
     }
-    virtual void listEnd()
+    void listEnd() override
     {
         removePadding();
         std::cout << padding << "listEnd" << std::endl;
     }
 
 protected:
-    virtual void addPadding()
+    void addPadding()
     {
         padding += "  ";
     }
 
-    virtual void removePadding()
+    void removePadding()
     {
         padding.erase(padding.end() - 2, padding.end());
     }

@@ -162,13 +162,13 @@ void Bach::parseInt(char next)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge.mapIntItem(decodeString(m_name), atol(m_data.c_str()));
+            m_bridge.mapIntItem(decodeString(std::move(m_name)), std::stol(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_data << std::endl;)
 
-            m_bridge.listIntItem(atol(m_data.c_str()));
+            m_bridge.listIntItem(std::stol(m_data));
         }
         else
         {
@@ -224,20 +224,20 @@ void Bach::parseFloat(char next)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge.mapFloatItem(decodeString(m_name), atof(m_data.c_str()));
+            m_bridge.mapFloatItem(decodeString(std::move(m_name)), std::stof(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_data << std::endl;)
 
-            m_bridge.listFloatItem(atof(m_data.c_str()));
+            m_bridge.listFloatItem(std::stof(m_data));
         }
         else
         {
             std::cerr << "Bach::parseFloat: Error" << std::endl;
         }
-        m_name.erase();
-        m_data.erase();
+        m_name.clear();
+        m_data.clear();
 	break;
 
     case '0':
@@ -276,20 +276,20 @@ void Bach::parseString(char next)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge.mapStringItem(decodeString(m_name), decodeString(m_data));
+            m_bridge.mapStringItem(decodeString(std::move(m_name)), decodeString(std::move(m_data)));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_data << std::endl;)
 
-            m_bridge.listStringItem(decodeString(m_data));
+            m_bridge.listStringItem(decodeString(std::move(m_data)));
         }
         else
         {
             std::cerr << "Bach::parseString: Error" << std::endl;
         }
-        m_name.erase();
-        m_data.erase();
+        m_name.clear();
+        m_data.clear();
         break;
 
     case '\\':
@@ -493,74 +493,81 @@ void Bach::poll(bool can_read)
     }
 }
 
-const std::string Bach::decodeString(const std::string & toDecode)
+std::string Bach::decodeString(std::string toDecode)
 {
     std::string::size_type pos = 0;
-    std::string to_decode(toDecode);
 
-    while((pos = to_decode.find( "\\\"", pos )) != std::string::npos)
-          to_decode.replace(pos, 2, 1, '\"');
+    while((pos = toDecode.find( "\\\"", pos )) != std::string::npos)
+        toDecode.replace(pos, 2, 1, '\"');
 
     pos = 0;
 
-    while((pos = to_decode.find( "\\\\", pos)) != std::string::npos)
-          to_decode.replace(pos, 2, 1, '\\');
+    while((pos = toDecode.find( "\\\\", pos)) != std::string::npos)
+        toDecode.replace(pos, 2, 1, '\\');
 
-    return to_decode;
+    return toDecode;
 }
 
-const std::string Bach::encodeString(const std::string & toEncode)
+std::string Bach::encodeString(std::string toEncode)
 {
-    std::string encoded;
-    std::string::const_iterator it;
 
-    for (it = toEncode.begin(); it != toEncode.end(); it++)
-    {
-        if (*it=='\\')
-            encoded += "\\\\";
-        else if (*it=='\"')
-            encoded += "\\\"";
-        else
-            encoded += *it;
+    for (size_t i = 0; i < toEncode.size(); ++i) {
+        if (toEncode[i] == '\\' || toEncode[i] == '\"') {
+            //First special character, use an encoded string instead
+            std::string encoded;
+            encoded.reserve(toEncode.size() + (toEncode.size() / 4));
+            encoded.assign(toEncode, 0, i);
+
+            for (; i < toEncode.size(); ++i) {
+                if (toEncode[i] == '\\') {
+                    encoded += "\\\\";
+                } else if (toEncode[i] == '\"') {
+                    encoded += "\\\"";
+                } else {
+                    encoded += toEncode[i];
+                }
+            }
+            return encoded;
+        }
     }
-
-    return encoded;
+    //If no special character, just return the original string, avoiding any allocations.
+    return toEncode;
 }
 
-void Bach::writeIntItem(const std::string & name, long data)
+void Bach::writeIntItem(const std::string& name, long data)
 {
     if( m_comma )
 	m_ostream << ",";
 
-    if( name != "" )
+    if(!name.empty())
 	m_ostream << name << ":";
 
     m_ostream << data;
 }
 
-void Bach::writeFloatItem(const std::string & name, double data)
+void Bach::writeFloatItem(const std::string& name, double data)
 {
     if( m_comma )
 	m_ostream << ",";
 
-    if( name != "" )
+    if(!name.empty())
 	m_ostream << name << ":";
 
     m_ostream << data;
 }
 
-void Bach::writeStringItem(const std::string & name, const std::string & data)
+void Bach::writeStringItem(const std::string& name, std::string data)
 {
     if( m_comma )
 	m_ostream << ",";
 
-    if( name != "" )
+    if(!name.empty())
 	m_ostream << name << ":";
 
-    m_ostream << "\"" << encodeString( data ) << "\"";
+    m_ostream << "\"" << encodeString( std::move(data) ) << "\"";
 }
 
-void Bach::writeLine(const std::string & line, bool endline, bool endtag)
+void Bach::writeLine(const std::string& line, bool endline, bool endtag)
 {
     if (m_comma && !endtag)
 	m_ostream << ",";
@@ -585,33 +592,33 @@ void Bach::streamMessage()
     m_comma = false;
 }
 
-void Bach::mapMapItem(const std::string& name)
+void Bach::mapMapItem(std::string name)
 {
     writeLine( name + ":{" );
     m_comma = false;
 }
 
-void Bach::mapListItem(const std::string& name)
+void Bach::mapListItem(std::string name)
 {
     writeLine( name + ":[" );
     m_comma = false;
 }
 
-void Bach::mapIntItem(const std::string& name, long data)
+void Bach::mapIntItem(std::string name, long data)
 {
     writeIntItem( name, data );
     m_comma = true;
 }
 
-void Bach::mapFloatItem(const std::string& name, double data)
+void Bach::mapFloatItem(std::string name, double data)
 {
     writeFloatItem( name, data );
     m_comma = true;
 }
 
-void Bach::mapStringItem(const std::string& name, const std::string& data)
+void Bach::mapStringItem(std::string name, std::string data)
 {
-    writeStringItem( name, data );
+    writeStringItem( name, std::move(data) );
     m_comma = true;
 }
 
@@ -645,9 +652,9 @@ void Bach::listFloatItem(double data)
     m_comma = true;
 }
 
-void Bach::listStringItem(const std::string& data)
+void Bach::listStringItem(std::string data)
 {
-    writeStringItem( "", data );
+    writeStringItem( "", std::move(data) );
     m_comma = true;
 }
 

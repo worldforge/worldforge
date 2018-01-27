@@ -24,25 +24,25 @@ class Bach : public Codec
 
     Bach(std::istream& in, std::ostream& out, Atlas::Bridge & b);
 
-    virtual void poll(bool can_read = true);
+	void poll(bool can_read) override;
 
-    virtual void streamBegin();
-    virtual void streamMessage();
-    virtual void streamEnd();
+	void streamBegin() override;
+	void streamMessage() override;
+	void streamEnd() override;
 
-    virtual void mapMapItem(const std::string& name);
-    virtual void mapListItem(const std::string& name);
-    virtual void mapIntItem(const std::string& name, long);
-    virtual void mapFloatItem(const std::string& name, double);
-    virtual void mapStringItem(const std::string& name, const std::string&);
-    virtual void mapEnd();
+	void mapMapItem(std::string name) override;
+	void mapListItem(std::string name) override;
+	void mapIntItem(std::string name, long) override;
+	void mapFloatItem(std::string name, double) override;
+	void mapStringItem(std::string name, std::string) override;
+	void mapEnd() override;
 
-    virtual void listMapItem();
-    virtual void listListItem();
-    virtual void listIntItem(long);
-    virtual void listFloatItem(double);
-    virtual void listStringItem(const std::string&);
-    virtual void listEnd();
+	void listMapItem() override;
+	void listListItem() override;
+	void listIntItem(long) override;
+	void listFloatItem(double) override;
+	void listStringItem(std::string) override;
+	void listEnd() override;
 
     unsigned linenum() const {return m_linenum;}
 
@@ -86,12 +86,12 @@ class Bach : public Codec
     inline void parseName(char);
     inline void parseComment(char);
 
-    inline const std::string encodeString(const std::string &);
-    inline const std::string decodeString(const std::string &);
+    inline std::string encodeString(std::string);
+    inline std::string decodeString(std::string);
 
     void writeIntItem(const std::string &,long);
     void writeFloatItem(const std::string &,double);
-    void writeStringItem(const std::string &,const std::string &);
+    void writeStringItem(const std::string &,std::string);
     void writeLine(const std::string &,bool=true,bool=false);
 };
 

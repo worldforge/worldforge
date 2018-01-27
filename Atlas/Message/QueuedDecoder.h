@@ -45,7 +45,7 @@ public:
     MapType popMessage() {
         MapType r = std::move(m_objectQueue.front());
         m_objectQueue.pop();
-        return std::move(r);
+        return r;
     }
     /// Peek at the object at the front of the queue.
     const MapType& frontMessage() {

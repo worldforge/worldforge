@@ -63,7 +63,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     Atlas::Codec *codec = new Atlas::Codecs::XML(stream, stream, *this);
 
     while(stream) {
-        codec->poll();
+        codec->poll(true);
     }
 
     delete codec;

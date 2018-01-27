@@ -12,79 +12,79 @@ class LoopBridge : public Bridge
 {
     public:
 
-    LoopBridge(Bridge* bridge) : m_bridge(bridge) { }
-    
-    virtual void streamBegin()
+	explicit LoopBridge(Bridge* bridge) : m_bridge(bridge) { }
+
+    void streamBegin() override
     {
 	m_bridge->streamBegin();
     }
     
-    virtual void streamMessage()
+    void streamMessage() override
     {
 	m_bridge->streamMessage();
     }
     
-    virtual void streamEnd()
+    void streamEnd() override
     {
 	m_bridge->streamEnd();
     }
 
-    virtual void mapMapItem(const std::string& name)
+    void mapMapItem(std::string name) override
     {
-	m_bridge->mapMapItem(name);
+	m_bridge->mapMapItem(std::move(name));
     }
     
-    virtual void mapListItem(const std::string& name)
+    void mapListItem(std::string name) override
     {
-	m_bridge->mapListItem(name);
+	m_bridge->mapListItem(std::move(name));
     }
     
-    virtual void mapIntItem(const std::string& name, long data)
+    void mapIntItem(std::string name, long data) override
     {
-	m_bridge->mapIntItem(name, data);
+	m_bridge->mapIntItem(std::move(name), data);
     }
     
-    virtual void mapFloatItem(const std::string& name, double data)
+    void mapFloatItem(std::string name, double data) override
     {
-	m_bridge->mapFloatItem(name, data);
+	m_bridge->mapFloatItem(std::move(name), data);
     }
 
-    virtual void mapStringItem(const std::string& name, const std::string& data)
+    void mapStringItem(std::string name, std::string data) override
     {
-	m_bridge->mapStringItem(name, data);
+	m_bridge->mapStringItem(std::move(name), std::move(data));
     }
     
-    virtual void mapEnd()
+    void mapEnd() override
     {
 	m_bridge->mapEnd();
     }
     
-    virtual void listMapItem()
+    void listMapItem() override
     {
 	m_bridge->listMapItem();
     }
     
-    virtual void listListItem()
+    void listListItem() override
     {
 	m_bridge->listListItem();
     }
     
-    virtual void listIntItem(long data)
+    void listIntItem(long data) override
     {
 	m_bridge->listIntItem(data);
     }
     
-    virtual void listFloatItem(double data)
+    void listFloatItem(double data) override
     {
 	m_bridge->listFloatItem(data);
     }
     
-    virtual void listStringItem(const std::string& data)
+    void listStringItem(std::string data) override
     {
-	m_bridge->listStringItem(data);
+	m_bridge->listStringItem(std::move(data));
     }
     
-    virtual void listEnd()
+    void listEnd() override
     {
 	m_bridge->listEnd();
     }

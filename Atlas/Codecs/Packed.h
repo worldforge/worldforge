@@ -42,25 +42,25 @@ public:
     
     Packed(std::istream& in, std::ostream& out, Atlas::Bridge & b);
 
-    virtual void poll(bool can_read = true);
+    void poll(bool can_read) override;
 
-    virtual void streamBegin();
-    virtual void streamMessage();
-    virtual void streamEnd();
+    void streamBegin() override;
+    void streamMessage() override;
+    void streamEnd() override;
 
-    virtual void mapMapItem(const std::string& name);
-    virtual void mapListItem(const std::string& name);
-    virtual void mapIntItem(const std::string& name, long);
-    virtual void mapFloatItem(const std::string& name, double);
-    virtual void mapStringItem(const std::string& name, const std::string&);
-    virtual void mapEnd();
-    
-    virtual void listMapItem();
-    virtual void listListItem();
-    virtual void listIntItem(long);
-    virtual void listFloatItem(double);
-    virtual void listStringItem(const std::string&);
-    virtual void listEnd();
+    void mapMapItem(std::string name) override;
+    void mapListItem(std::string name) override;
+    void mapIntItem(std::string name, long) override;
+    void mapFloatItem(std::string name, double) override;
+    void mapStringItem(std::string name, std::string) override;
+    void mapEnd() override;
+
+    void listMapItem() override;
+    void listListItem() override;
+    void listIntItem(long) override;
+    void listFloatItem(double) override;
+    void listStringItem(std::string) override;
+    void listEnd() override;
 
 protected:
     
@@ -109,9 +109,8 @@ protected:
     inline void parseString(char);
     inline void parseName(char);
 
-    inline const std::string hexEncode(const std::string& data)
+    inline std::string hexEncode(std::string data)
     {
-        m_encoded.clear();
 
         for (size_t i = 0; i < data.size(); i++) {
             char currentChar = data[i];
@@ -126,34 +125,72 @@ protected:
                 case '#':
                 case '$':
                 case '=':
-                    m_encoded += '+';
-                    m_encoded += charToHex(currentChar);
-                    break;
+                    //First special character, use an encoded string instead
+                    m_encoded.clear();
+                    m_encoded.reserve(data.size() + (data.size() / 4));
+                    m_encoded.assign(data, 0, i);
+                    for (; i < data.size(); i++) {
+                        currentChar = data[i];
+
+                        switch(currentChar) {
+                            case '+':
+                            case '[':
+                            case ']':
+                            case '(':
+                            case ')':
+                            case '@':
+                            case '#':
+                            case '$':
+                            case '=':
+                                //First special character, use an encoded string instead
+                                m_encoded += '+';
+                                m_encoded += charToHex(currentChar);
+                                break;
+                            default:
+                                m_encoded += currentChar;
+                                break;
+                        }
+                    }
+
+                    return std::move(m_encoded);
                 default:
-                    m_encoded += currentChar;
+                    break;
             }
         }
 
-        return m_encoded;
+        //If no special character, just return the original string, avoiding any allocations.
+        return data;
     }
 
-    inline const std::string hexDecode(const std::string& data)
+    inline const std::string hexDecode(std::string data)
     {
-        m_decoded.clear();
 
         for (size_t i = 0; i < data.size(); i++) {
             char currentChar = data[i];
             if (currentChar == '+') {
-                m_hex[0] = data[++i];
-                m_hex[1] = data[++i];
-                m_hex[2] = 0;
-                m_decoded += hexToChar(m_hex);
-            } else {
-                m_decoded += currentChar;
+                //First special character, use a decoded string instead
+                m_decoded.clear();
+                m_decoded.reserve(data.size());
+                m_decoded.assign(data, 0, i);
+
+                for (; i < data.size(); i++) {
+                    currentChar = data[i];
+                    if (currentChar == '+') {
+                        m_hex[0] = data[++i];
+                        m_hex[1] = data[++i];
+                        m_hex[2] = 0;
+                        m_decoded += hexToChar(m_hex);
+                    } else {
+                        m_decoded += currentChar;
+                    }
+                }
+
+                return std::move(m_decoded);
             }
         }
 
-        return m_decoded;
+        //If no special character, just return the original string, avoiding any allocations.
+        return data;
     }
 };
 

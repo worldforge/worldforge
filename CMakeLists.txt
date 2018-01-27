@@ -113,7 +113,7 @@ set(NET_HEADER_FILES
 
 set(SOURCE_FILES
         Atlas/Bridge.cpp
-        Atlas/Codec.cpp
+        Atlas/Codec.h
         Atlas/Codec_impl.h
         Atlas/EncoderBase.cpp
         Atlas/Exception.cpp
@@ -275,7 +275,7 @@ endmacro()
 wf_add_test(tests/Codecs/codecs.cpp)
 wf_add_test(tests/Objects/custom_ops.cpp)
 wf_add_test(tests/Objects/objects1.cpp)
-wf_add_test(tests/Objects/objects2.cpp)
+wf_add_test(tests/Objects/objects2.cpp tests/Objects/DebugBridge.h)
 wf_add_test(tests/Objects/encoder1.cpp)
 wf_add_test(tests/Objects/decoder1.cpp)
 wf_add_test(tests/Objects/objects_fwd.cpp)

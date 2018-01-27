@@ -42,38 +42,38 @@ void Formatter::streamEnd()
 }
 
     
-void Formatter::mapMapItem(const std::string & name)
+void Formatter::mapMapItem(std::string name)
 {
     m_stream << std::string(m_indent, ' ');
-    m_bridge.mapMapItem(name);
+    m_bridge.mapMapItem(std::move(name));
     m_indent += m_spacing;
     m_stream << std::endl;
 }
 
-void Formatter::mapListItem(const std::string & name)
+void Formatter::mapListItem(std::string name)
 {
     m_stream << std::string(m_indent, ' ');
-    m_bridge.mapListItem(name);
+    m_bridge.mapListItem(std::move(name));
 }
 
-void Formatter::mapIntItem(const std::string & name, long l)
+void Formatter::mapIntItem(std::string name, long l)
 {
     m_stream << std::string(m_indent, ' ');
-    m_bridge.mapIntItem(name, l);
+    m_bridge.mapIntItem(std::move(name), l);
     m_stream << std::endl;
 }
 
-void Formatter::mapFloatItem(const std::string & name, double d)
+void Formatter::mapFloatItem(std::string name, double d)
 {
     m_stream << std::string(m_indent, ' ');
-    m_bridge.mapFloatItem(name, d);
+    m_bridge.mapFloatItem(std::move(name), d);
     m_stream << std::endl;
 }
 
-void Formatter::mapStringItem(const std::string & name, const std::string & s)
+void Formatter::mapStringItem(std::string name, std::string s)
 {
     m_stream << std::string(m_indent, ' ');
-    m_bridge.mapStringItem(name, s);
+    m_bridge.mapStringItem(std::move(name), std::move(s));
     m_stream << std::endl;
 }
 
@@ -109,9 +109,9 @@ void Formatter::listFloatItem(double d)
     m_bridge.listFloatItem(d);
 }
 
-void Formatter::listStringItem(const std::string & s)
+void Formatter::listStringItem(std::string s)
 {
-    m_bridge.listStringItem(s);
+    m_bridge.listStringItem(std::move(s));
 }
 
 void Formatter::listEnd()

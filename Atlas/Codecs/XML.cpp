@@ -109,7 +109,7 @@ void XML::parseStartTag()
 {
     int tag_end = (int) m_tag.find(' ');
     int name_start = (int) m_tag.find("name=\"") + 6;
-    int name_end = (int) m_tag.rfind("\"");
+    int name_end = (int) m_tag.rfind('\"');
     
     if (name_start < name_end)
     {
@@ -273,11 +273,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge.mapIntItem(m_name, atol(m_data.top().c_str()));
+		    m_bridge.mapIntItem(m_name, std::stol(m_data.top()));
 		}
 		else
 		{
-		    m_bridge.listIntItem(atol(m_data.top().c_str()));
+		    m_bridge.listIntItem(std::stol(m_data.top()));
 		}
 	    }
 	    else
@@ -293,11 +293,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge.mapFloatItem(m_name, atof(m_data.top().c_str()));
+		    m_bridge.mapFloatItem(m_name, std::stof(m_data.top()));
 		}
 		else
 		{
-		    m_bridge.listFloatItem(atof(m_data.top().c_str()));
+		    m_bridge.listFloatItem(std::stof(m_data.top()));
 		}
 	    }
 	    else
@@ -369,27 +369,27 @@ void XML::streamMessage()
     m_ostream << "<map>";
 }
 
-void XML::mapMapItem(const std::string& name)
+void XML::mapMapItem(std::string name)
 {
     m_ostream << "<map name=\"" << escape(name) << "\">";
 }
 
-void XML::mapListItem(const std::string& name)
+void XML::mapListItem(std::string name)
 {
     m_ostream << "<list name=\"" << escape(name) << "\">";
 }
 
-void XML::mapIntItem(const std::string& name, long data)
+void XML::mapIntItem(std::string name, long data)
 {
     m_ostream << "<int name=\"" << escape(name) << "\">" << data << "</int>";
 }
 
-void XML::mapFloatItem(const std::string& name, double data)
+void XML::mapFloatItem(std::string name, double data)
 {
     m_ostream << "<float name=\"" << escape(name) << "\">" << data << "</float>";
 }
 
-void XML::mapStringItem(const std::string& name, const std::string& data)
+void XML::mapStringItem(std::string name, std::string data)
 {
     m_ostream << "<string name=\"" << escape(name) << "\">" << escape(data) << "</string>";
 }
@@ -419,7 +419,7 @@ void XML::listFloatItem(double data)
     m_ostream << "<float>" << data << "</float>";
 }
 
-void XML::listStringItem(const std::string& data)
+void XML::listStringItem(std::string data)
 {
     m_ostream << "<string>" << escape(data) << "</string>";
 }
@@ -432,7 +432,7 @@ void XML::listEnd()
 std::string XML::escape(const std::string& original)
 {
     std::string buffer;
-    buffer.reserve(original.size());
+    buffer.reserve(original.size() + (original.size() / 2));
     for (size_t pos = 0; pos != original.size(); ++pos) {
         switch (original[pos]) {
         case '&':
