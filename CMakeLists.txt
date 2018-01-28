@@ -40,7 +40,7 @@ add_definitions(-DBOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING)
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ERIS_ABI_VERSION}
