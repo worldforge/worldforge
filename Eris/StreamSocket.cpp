@@ -88,7 +88,7 @@ void StreamSocket::startNegotiation()
 Atlas::Negotiate::State StreamSocket::negotiate()
 {
     // poll and check if negotiation is complete
-    _sc->poll();
+    _sc->poll(true);
 
     if (_sc->getState() == Atlas::Negotiate::IN_PROGRESS) {
         return _sc->getState();
