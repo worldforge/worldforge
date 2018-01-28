@@ -62,7 +62,7 @@ Element::Element(const Element& obj) : t(obj.t)
         
 }
 
-Element::Element(Element&& obj) : t(obj.t)
+Element::Element(Element&& obj) noexcept : t(obj.t)
 {
     //Move data from the incoming object, and set the type of it to none, which
     //results in the incoming object "forgetting" all about the data.
@@ -133,7 +133,7 @@ Element& Element::operator=(const Element& obj)
   return *this;
 }
 
-Element& Element::operator=(Element&& obj)
+Element& Element::operator=(Element&& obj) noexcept
 {
   //check for self assignment
   if(&obj == this)

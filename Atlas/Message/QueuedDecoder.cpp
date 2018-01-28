@@ -8,10 +8,6 @@
 
 namespace Atlas { namespace Message {
 
-QueuedDecoder::QueuedDecoder()
-{
-}
-
 void QueuedDecoder::messageArrived(MapType obj)
 {
     m_objectQueue.push(std::move(obj));

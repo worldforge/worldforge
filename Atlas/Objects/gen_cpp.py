@@ -155,7 +155,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
         serialno_name = string.upper(obj.id) + "_NO"
-        self.write("""    %(classname)s(%(classname)s *defaults = NULL) : 
+        self.write("""    %(classname)s(%(classname)s *defaults = nullptr) : 
         %(classname_base)s((%(classname_base)s*)defaults)
     {
         m_class_no = %(serialno_name)s;
@@ -531,7 +531,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("protected:\n")
         self.constructors_if(obj, static_attrs)
         self.doc(4, "Default destructor.")
-        self.write("    virtual ~" + self.classname + "() = default;\n")
+        self.write("    ~" + self.classname + "() override = default;\n")
         self.write("\n")
         self.write("public:\n")
         if obj.id in ['anonymous', 'generic']:
@@ -693,7 +693,7 @@ const int %(serialno_name)s = %(cs_no)s;
 class %(classname)s : public %(classname_base)s
 {
 public:
-    %(classname)s(%(classname)s *defaults = NULL) : 
+    %(classname)s(%(classname)s *defaults = nullptr) : 
         %(classname_base)s((%(classname_base)s*)defaults)
     {
         m_class_no = %(serialno_name)s;

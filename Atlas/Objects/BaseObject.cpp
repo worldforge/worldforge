@@ -11,15 +11,11 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects {
 
-NoSuchAttrException::~NoSuchAttrException()
-{
-}
-
 BaseObjectData::BaseObjectData(BaseObjectData *defaults) :
     m_class_no(BASE_OBJECT_NO), m_refCount(0), m_defaults(defaults),
     m_attrFlags(0)
 {
-    if(defaults == NULL) {
+    if(defaults == nullptr) {
         m_attrFlags = -1; //this is default object: all attributes here
     }
 }

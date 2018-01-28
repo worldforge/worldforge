@@ -45,7 +45,6 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/BaseObject.cpp
         Atlas/Objects/Decoder.cpp
         Atlas/Objects/Dispatcher.cpp
-        Atlas/Objects/Encoder.cpp
         Atlas/Objects/Generic.cpp
         Atlas/Objects/loadDefaults.cpp
         Atlas/Objects/objectFactory.cpp
@@ -57,8 +56,7 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/RootOperationChildren2.cpp
         Atlas/Objects/RootOperationChildren3.cpp
         Atlas/Objects/RootOperationChildren4.cpp
-        Atlas/Objects/RootOperationChildren5.cpp
-        Atlas/Objects/SmartPtr.cpp)
+        Atlas/Objects/RootOperationChildren5.cpp)
 
 set(OBJECTS_HEADER_FILES
         Atlas/Objects/Anonymous.h
@@ -112,16 +110,12 @@ set(NET_HEADER_FILES
         Atlas/Net/Stream.h)
 
 set(SOURCE_FILES
-        Atlas/Bridge.cpp
         Atlas/Codec.h
-        Atlas/Codec_impl.h
         Atlas/EncoderBase.cpp
-        Atlas/Exception.cpp
         Atlas/Filter.cpp
         Atlas/float.cpp
         Atlas/Formatter.cpp
         Atlas/MultiLineListFormatter.cpp
-        Atlas/Negotiate.cpp
         Atlas/PresentationBridge.cpp)
 
 set(HEADER_FILES

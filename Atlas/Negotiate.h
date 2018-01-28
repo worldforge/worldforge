@@ -26,7 +26,7 @@ along with the name of sender and a Socket
 class Negotiate
 {
     public:
-    virtual ~Negotiate();
+    virtual ~Negotiate() = default;
 
     enum State
     {
@@ -37,7 +37,7 @@ class Negotiate
 
     virtual State getState() = 0;
     virtual Codec * getCodec(Bridge &) = 0;
-    virtual void poll(bool can_get = true) = 0;
+    virtual void poll(bool can_get) = 0;
 };
 
 } // Atlas namespace

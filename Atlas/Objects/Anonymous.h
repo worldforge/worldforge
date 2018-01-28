@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_ENTITY_ANONYMOUS_H
@@ -31,13 +32,13 @@ class AnonymousData : public RootEntityData
 {
 protected:
     /// Construct a AnonymousData class definition.
-    AnonymousData(AnonymousData *defaults = NULL) : 
+    AnonymousData(AnonymousData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = ANONYMOUS_NO;
     }
     /// Default destructor.
-    virtual ~AnonymousData() = default;
+    ~AnonymousData() override = default;
 
 public:
     /// Set the type of this object.

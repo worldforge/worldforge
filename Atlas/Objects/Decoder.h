@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_DECODER_H
@@ -32,7 +33,7 @@ class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
 public:
     /// Constructor.
-    explicit ObjectsDecoder(Factories * f = 0);
+    explicit ObjectsDecoder(Factories * f = nullptr);
     /// Default destructor.
     virtual ~ObjectsDecoder();
 

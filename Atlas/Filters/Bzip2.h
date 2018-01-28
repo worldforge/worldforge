@@ -26,11 +26,11 @@ class Bzip2 : public Filter
 
     public:
 
-    virtual void begin();
-    virtual void end();
+    void begin() override;
+    void end() override;
     
-    virtual std::string encode(const std::string&);
-    virtual std::string decode(const std::string&);
+    std::string encode(const std::string&) override;
+    std::string decode(const std::string&) override;
 };
 
 } } // namespace Atlas::Filters

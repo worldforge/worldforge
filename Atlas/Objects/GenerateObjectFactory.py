@@ -2,6 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000-2001 Aloril
 #Copyright (C) 2001-2005 Alistair Riddoch
+#Copyright (C) 2011 Erik Ogenvik
 
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class
@@ -30,10 +31,6 @@ class GenerateObjectFactory:
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
-
-NoSuchFactoryException::~NoSuchFactoryException()
-{
-}
 
 SmartPtr<RootData> generic_factory(const std::string & name, int no)
 {
@@ -69,14 +66,6 @@ AddFactories::AddFactories()
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 
-Factories::Factories()
-{
-}
-
-Factories::Factories(const Factories & other) : m_factories(other.m_factories)
-{
-}
-
 bool Factories::hasFactory(const std::string& name)
 {
     FactoryMap::const_iterator I = m_factories.find(name);
@@ -87,7 +76,7 @@ Root Factories::createObject(const std::string& name)
 {
     FactoryMap::const_iterator I = m_factories.find(name);
     if (I == m_factories.end()) {
-        return Root(0);
+        return Root(nullptr);
     } else {
         return (*I).second.factory_method(name, (*I).second.classno);
     }
@@ -95,7 +84,7 @@ Root Factories::createObject(const std::string& name)
     
 Root Factories::createObject(const MapType & msg_map)
 {
-    Root obj(0);
+    Root obj(nullptr);
 
     // is this instance of entity or operation?
     MapType::const_iterator I = msg_map.find(Atlas::Objects::OBJTYPE_ATTR);
@@ -139,7 +128,7 @@ Root Factories::getDefaultInstance(const std::string& name)
     FactoryMap::const_iterator I = m_factories.find(name);
     if (I == m_factories.end()) {
         //perhaps throw something instead?
-        return Root(0);
+        return Root(nullptr);
     } else {
         return (*I).second.default_instance_method(name, (*I).second.classno);
     }

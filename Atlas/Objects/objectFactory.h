@@ -14,6 +14,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <utility>
 
 namespace Atlas { namespace Objects {
 
@@ -22,10 +23,11 @@ class NoSuchFactoryException : public Atlas::Exception
   protected:
     std::string name;
   public:
-    explicit NoSuchFactoryException(const std::string& factoryName) :
-               Atlas::Exception("No factory for Objects type"), name(factoryName) { }
+    explicit NoSuchFactoryException(std::string factoryName) noexcept :
+               Atlas::Exception("No factory for Objects type"),
+               name(std::move(factoryName)) { }
 
-    ~NoSuchFactoryException() override;
+    ~NoSuchFactoryException() noexcept override = default;
     const std::string & getName() {
         return name;
     }
@@ -78,8 +80,8 @@ class Factories
 public:
     friend class AddFactories;
 
-    Factories();
-    explicit Factories(const Factories &);
+    Factories() = default;
+    Factories(const Factories &) = default;
 
     bool hasFactory(const std::string& name);
     Root createObject(const std::string& name);

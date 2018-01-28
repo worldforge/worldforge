@@ -37,7 +37,7 @@ along with the name of sender and a Socket
 
   public:
 
-    NegotiateHelper(std::list<std::string> & names);
+	explicit NegotiateHelper(std::list<std::string> & names);
 
     bool get(std::string &buf, const std::string & header);
     void put(std::string &buf, const std::string & header);
@@ -61,12 +61,13 @@ class StreamConnect : public Atlas::Negotiate
 
     StreamConnect(const std::string& name, std::istream& inStream, std::ostream& outStream);
 
-    virtual ~StreamConnect();
+	~StreamConnect() override = default;
 
-    virtual void poll(bool can_read = true);
+	void poll(bool can_read) override;
 
-    virtual State getState();
-    virtual Atlas::Codec * getCodec(Atlas::Bridge&);
+	State getState() override;
+
+	Atlas::Codec * getCodec(Atlas::Bridge&) override;
 
     private:
 
@@ -122,12 +123,13 @@ class StreamAccept : public Atlas::Negotiate
 
     StreamAccept(const std::string& name, std::istream& inStream, std::ostream& outStream);
 
-    virtual ~StreamAccept();
+	~StreamAccept() override = default;
 
-    virtual void poll(bool can_read = true);
+	void poll(bool can_read) override;
 
-    virtual State getState();
-    virtual Atlas::Codec * getCodec(Atlas::Bridge&);
+	State getState() override;
+
+	Atlas::Codec * getCodec(Atlas::Bridge&) override;
 
     private:
 

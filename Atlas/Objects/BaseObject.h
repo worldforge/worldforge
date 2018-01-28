@@ -34,9 +34,11 @@ class NoSuchAttrException : public Atlas::Exception
     /// The name of the attribute that does not exist.
     std::string m_name;
   public:
-    NoSuchAttrException(const std::string& name) :
-             Atlas::Exception("No such attribute"), m_name(name) {}
-    virtual ~NoSuchAttrException();
+    explicit NoSuchAttrException(const std::string& name) noexcept :
+             Atlas::Exception("No such attribute '" + name + "'."),
+			 m_name(name) {}
+
+    ~NoSuchAttrException() noexcept override = default;
     /// Get the name of the attribute which does not exist.
     const std::string & getName() const {
         return m_name;
@@ -221,7 +223,7 @@ public:
     /// Initializes flags to zero, and stores a pointer to the reference
     /// object that provides default values for all attributes. Subclasses
     /// must pass in a pointer to their class specific reference object.
-    BaseObjectData(BaseObjectData *defaults);
+    explicit BaseObjectData(BaseObjectData *defaults);
 
     virtual ~BaseObjectData();
 
@@ -297,7 +299,7 @@ public:
         friend class BaseObjectData;
         friend class const_iterator;
 
-        iterator() : m_obj(0), m_val("", *this) {}
+        iterator() : m_obj(nullptr), m_val("", *this) {}
         iterator(const iterator& I) : m_obj(I.m_obj),
             m_current_class(I.m_current_class),
             m_I(I.m_I), m_val(I.m_val.first, *this) {}

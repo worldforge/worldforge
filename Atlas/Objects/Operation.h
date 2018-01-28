@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_OPERATION_OPERATION_H
@@ -40,13 +41,13 @@ class ActionData : public RootOperationData
 {
 protected:
     /// Construct a ActionData class definition.
-    ActionData(ActionData *defaults = NULL) : 
+    ActionData(ActionData *defaults = nullptr) : 
         RootOperationData((RootOperationData*)defaults)
     {
         m_class_no = ACTION_NO;
     }
     /// Default destructor.
-    virtual ~ActionData() = default;
+    ~ActionData() override = default;
 
 public:
     /// Copy this object.
@@ -94,13 +95,13 @@ class CreateData : public ActionData
 {
 protected:
     /// Construct a CreateData class definition.
-    CreateData(CreateData *defaults = NULL) : 
+    CreateData(CreateData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = CREATE_NO;
     }
     /// Default destructor.
-    virtual ~CreateData() = default;
+    ~CreateData() override = default;
 
 public:
     /// Copy this object.
@@ -148,13 +149,13 @@ class CombineData : public CreateData
 {
 protected:
     /// Construct a CombineData class definition.
-    CombineData(CombineData *defaults = NULL) : 
+    CombineData(CombineData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = COMBINE_NO;
     }
     /// Default destructor.
-    virtual ~CombineData() = default;
+    ~CombineData() override = default;
 
 public:
     /// Copy this object.
@@ -202,13 +203,13 @@ class DivideData : public CreateData
 {
 protected:
     /// Construct a DivideData class definition.
-    DivideData(DivideData *defaults = NULL) : 
+    DivideData(DivideData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = DIVIDE_NO;
     }
     /// Default destructor.
-    virtual ~DivideData() = default;
+    ~DivideData() override = default;
 
 public:
     /// Copy this object.
@@ -256,13 +257,13 @@ class CommunicateData : public CreateData
 {
 protected:
     /// Construct a CommunicateData class definition.
-    CommunicateData(CommunicateData *defaults = NULL) : 
+    CommunicateData(CommunicateData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = COMMUNICATE_NO;
     }
     /// Default destructor.
-    virtual ~CommunicateData() = default;
+    ~CommunicateData() override = default;
 
 public:
     /// Copy this object.
@@ -310,13 +311,13 @@ class TalkData : public CommunicateData
 {
 protected:
     /// Construct a TalkData class definition.
-    TalkData(TalkData *defaults = NULL) : 
+    TalkData(TalkData *defaults = nullptr) : 
         CommunicateData((CommunicateData*)defaults)
     {
         m_class_no = TALK_NO;
     }
     /// Default destructor.
-    virtual ~TalkData() = default;
+    ~TalkData() override = default;
 
 public:
     /// Copy this object.
@@ -372,13 +373,13 @@ class DeleteData : public ActionData
 {
 protected:
     /// Construct a DeleteData class definition.
-    DeleteData(DeleteData *defaults = NULL) : 
+    DeleteData(DeleteData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = DELETE_NO;
     }
     /// Default destructor.
-    virtual ~DeleteData() = default;
+    ~DeleteData() override = default;
 
 public:
     /// Copy this object.
@@ -434,13 +435,13 @@ class SetData : public ActionData
 {
 protected:
     /// Construct a SetData class definition.
-    SetData(SetData *defaults = NULL) : 
+    SetData(SetData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = SET_NO;
     }
     /// Default destructor.
-    virtual ~SetData() = default;
+    ~SetData() override = default;
 
 public:
     /// Copy this object.
@@ -496,13 +497,13 @@ class AffectData : public SetData
 {
 protected:
     /// Construct a AffectData class definition.
-    AffectData(AffectData *defaults = NULL) : 
+    AffectData(AffectData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = AFFECT_NO;
     }
     /// Default destructor.
-    virtual ~AffectData() = default;
+    ~AffectData() override = default;
 
 public:
     /// Copy this object.
@@ -550,13 +551,13 @@ class MoveData : public SetData
 {
 protected:
     /// Construct a MoveData class definition.
-    MoveData(MoveData *defaults = NULL) : 
+    MoveData(MoveData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = MOVE_NO;
     }
     /// Default destructor.
-    virtual ~MoveData() = default;
+    ~MoveData() override = default;
 
 public:
     /// Copy this object.
@@ -612,13 +613,13 @@ class WieldData : public SetData
 {
 protected:
     /// Construct a WieldData class definition.
-    WieldData(WieldData *defaults = NULL) : 
+    WieldData(WieldData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = WIELD_NO;
     }
     /// Default destructor.
-    virtual ~WieldData() = default;
+    ~WieldData() override = default;
 
 public:
     /// Copy this object.
@@ -674,13 +675,13 @@ class GetData : public ActionData
 {
 protected:
     /// Construct a GetData class definition.
-    GetData(GetData *defaults = NULL) : 
+    GetData(GetData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = GET_NO;
     }
     /// Default destructor.
-    virtual ~GetData() = default;
+    ~GetData() override = default;
 
 public:
     /// Copy this object.
@@ -736,13 +737,13 @@ class PerceiveData : public GetData
 {
 protected:
     /// Construct a PerceiveData class definition.
-    PerceiveData(PerceiveData *defaults = NULL) : 
+    PerceiveData(PerceiveData *defaults = nullptr) : 
         GetData((GetData*)defaults)
     {
         m_class_no = PERCEIVE_NO;
     }
     /// Default destructor.
-    virtual ~PerceiveData() = default;
+    ~PerceiveData() override = default;
 
 public:
     /// Copy this object.
@@ -798,13 +799,13 @@ class LookData : public PerceiveData
 {
 protected:
     /// Construct a LookData class definition.
-    LookData(LookData *defaults = NULL) : 
+    LookData(LookData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = LOOK_NO;
     }
     /// Default destructor.
-    virtual ~LookData() = default;
+    ~LookData() override = default;
 
 public:
     /// Copy this object.
@@ -860,13 +861,13 @@ class ListenData : public PerceiveData
 {
 protected:
     /// Construct a ListenData class definition.
-    ListenData(ListenData *defaults = NULL) : 
+    ListenData(ListenData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = LISTEN_NO;
     }
     /// Default destructor.
-    virtual ~ListenData() = default;
+    ~ListenData() override = default;
 
 public:
     /// Copy this object.
@@ -922,13 +923,13 @@ class SniffData : public PerceiveData
 {
 protected:
     /// Construct a SniffData class definition.
-    SniffData(SniffData *defaults = NULL) : 
+    SniffData(SniffData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = SNIFF_NO;
     }
     /// Default destructor.
-    virtual ~SniffData() = default;
+    ~SniffData() override = default;
 
 public:
     /// Copy this object.
@@ -984,13 +985,13 @@ class TouchData : public PerceiveData
 {
 protected:
     /// Construct a TouchData class definition.
-    TouchData(TouchData *defaults = NULL) : 
+    TouchData(TouchData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = TOUCH_NO;
     }
     /// Default destructor.
-    virtual ~TouchData() = default;
+    ~TouchData() override = default;
 
 public:
     /// Copy this object.
@@ -1038,13 +1039,13 @@ class LoginData : public GetData
 {
 protected:
     /// Construct a LoginData class definition.
-    LoginData(LoginData *defaults = NULL) : 
+    LoginData(LoginData *defaults = nullptr) : 
         GetData((GetData*)defaults)
     {
         m_class_no = LOGIN_NO;
     }
     /// Default destructor.
-    virtual ~LoginData() = default;
+    ~LoginData() override = default;
 
 public:
     /// Copy this object.
@@ -1092,13 +1093,13 @@ class LogoutData : public LoginData
 {
 protected:
     /// Construct a LogoutData class definition.
-    LogoutData(LogoutData *defaults = NULL) : 
+    LogoutData(LogoutData *defaults = nullptr) : 
         LoginData((LoginData*)defaults)
     {
         m_class_no = LOGOUT_NO;
     }
     /// Default destructor.
-    virtual ~LogoutData() = default;
+    ~LogoutData() override = default;
 
 public:
     /// Copy this object.
@@ -1154,13 +1155,13 @@ class ImaginaryData : public ActionData
 {
 protected:
     /// Construct a ImaginaryData class definition.
-    ImaginaryData(ImaginaryData *defaults = NULL) : 
+    ImaginaryData(ImaginaryData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = IMAGINARY_NO;
     }
     /// Default destructor.
-    virtual ~ImaginaryData() = default;
+    ~ImaginaryData() override = default;
 
 public:
     /// Copy this object.
@@ -1216,13 +1217,13 @@ class UseData : public ActionData
 {
 protected:
     /// Construct a UseData class definition.
-    UseData(UseData *defaults = NULL) : 
+    UseData(UseData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = USE_NO;
     }
     /// Default destructor.
-    virtual ~UseData() = default;
+    ~UseData() override = default;
 
 public:
     /// Copy this object.
@@ -1278,13 +1279,13 @@ class InfoData : public RootOperationData
 {
 protected:
     /// Construct a InfoData class definition.
-    InfoData(InfoData *defaults = NULL) : 
+    InfoData(InfoData *defaults = nullptr) : 
         RootOperationData((RootOperationData*)defaults)
     {
         m_class_no = INFO_NO;
     }
     /// Default destructor.
-    virtual ~InfoData() = default;
+    ~InfoData() override = default;
 
 public:
     /// Copy this object.
@@ -1332,13 +1333,13 @@ class PerceptionData : public InfoData
 {
 protected:
     /// Construct a PerceptionData class definition.
-    PerceptionData(PerceptionData *defaults = NULL) : 
+    PerceptionData(PerceptionData *defaults = nullptr) : 
         InfoData((InfoData*)defaults)
     {
         m_class_no = PERCEPTION_NO;
     }
     /// Default destructor.
-    virtual ~PerceptionData() = default;
+    ~PerceptionData() override = default;
 
 public:
     /// Copy this object.
@@ -1386,13 +1387,13 @@ class SightData : public PerceptionData
 {
 protected:
     /// Construct a SightData class definition.
-    SightData(SightData *defaults = NULL) : 
+    SightData(SightData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SIGHT_NO;
     }
     /// Default destructor.
-    virtual ~SightData() = default;
+    ~SightData() override = default;
 
 public:
     /// Copy this object.
@@ -1440,13 +1441,13 @@ class AppearanceData : public SightData
 {
 protected:
     /// Construct a AppearanceData class definition.
-    AppearanceData(AppearanceData *defaults = NULL) : 
+    AppearanceData(AppearanceData *defaults = nullptr) : 
         SightData((SightData*)defaults)
     {
         m_class_no = APPEARANCE_NO;
     }
     /// Default destructor.
-    virtual ~AppearanceData() = default;
+    ~AppearanceData() override = default;
 
 public:
     /// Copy this object.
@@ -1494,13 +1495,13 @@ class DisappearanceData : public SightData
 {
 protected:
     /// Construct a DisappearanceData class definition.
-    DisappearanceData(DisappearanceData *defaults = NULL) : 
+    DisappearanceData(DisappearanceData *defaults = nullptr) : 
         SightData((SightData*)defaults)
     {
         m_class_no = DISAPPEARANCE_NO;
     }
     /// Default destructor.
-    virtual ~DisappearanceData() = default;
+    ~DisappearanceData() override = default;
 
 public:
     /// Copy this object.
@@ -1548,13 +1549,13 @@ class SoundData : public PerceptionData
 {
 protected:
     /// Construct a SoundData class definition.
-    SoundData(SoundData *defaults = NULL) : 
+    SoundData(SoundData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SOUND_NO;
     }
     /// Default destructor.
-    virtual ~SoundData() = default;
+    ~SoundData() override = default;
 
 public:
     /// Copy this object.
@@ -1602,13 +1603,13 @@ class SmellData : public PerceptionData
 {
 protected:
     /// Construct a SmellData class definition.
-    SmellData(SmellData *defaults = NULL) : 
+    SmellData(SmellData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SMELL_NO;
     }
     /// Default destructor.
-    virtual ~SmellData() = default;
+    ~SmellData() override = default;
 
 public:
     /// Copy this object.
@@ -1656,13 +1657,13 @@ class FeelData : public PerceptionData
 {
 protected:
     /// Construct a FeelData class definition.
-    FeelData(FeelData *defaults = NULL) : 
+    FeelData(FeelData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = FEEL_NO;
     }
     /// Default destructor.
-    virtual ~FeelData() = default;
+    ~FeelData() override = default;
 
 public:
     /// Copy this object.
@@ -1718,13 +1719,13 @@ class ErrorData : public InfoData
 {
 protected:
     /// Construct a ErrorData class definition.
-    ErrorData(ErrorData *defaults = NULL) : 
+    ErrorData(ErrorData *defaults = nullptr) : 
         InfoData((InfoData*)defaults)
     {
         m_class_no = ERROR_NO;
     }
     /// Default destructor.
-    virtual ~ErrorData() = default;
+    ~ErrorData() override = default;
 
 public:
     /// Copy this object.

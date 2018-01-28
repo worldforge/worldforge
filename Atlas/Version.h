@@ -8,7 +8,7 @@
 #define ATLAS_VERSION_H
 
 #define ATLAS_API_MAJOR_VERSION 0
-#define ATLAS_API_MINOR_VERSION 6
+#define ATLAS_API_MINOR_VERSION 7
 
 namespace Atlas {
 

@@ -20,7 +20,7 @@ namespace Atlas { namespace Message {
 class WrongTypeException : public Atlas::Exception
 {
   public:
-    WrongTypeException() : Atlas::Exception("Wrong Message::Element type") { }
+    WrongTypeException() noexcept : Atlas::Exception("Wrong Message::Element type") { }
 };
 
 class Element;
@@ -93,7 +93,7 @@ public:
 
     /// Move an existing object.
     /// The existing Element will have its type set to "None".
-    Element(Element&& obj);
+    Element(Element&& obj) noexcept;
 
     /// Set type to int, and value to v.
     Element(int v)
@@ -188,7 +188,7 @@ public:
      * @param obj
      * @return
      */
-    Element& operator=(Element&& obj);
+    Element& operator=(Element&& obj) noexcept;
 
     Element& operator=(int v) 
     {
@@ -281,7 +281,7 @@ public:
         clear(TYPE_STRING);
         s = new DataType<StringType>(std::move(v));
       } else {
-        *s = std::move(v);
+        *s = v;
       }
       return *this;
     }
@@ -305,7 +305,7 @@ public:
         clear(TYPE_MAP);
         m = new DataType<MapType>(std::move(v));
       } else {
-        *m = std::move(v);
+        *m = v;
       }
       return *this;
     }
@@ -329,7 +329,7 @@ public:
         clear(TYPE_LIST);
         l = new DataType<ListType>(std::move(v));
       } else {
-        *l = std::move(v);
+        *l = v;
       }
       return *this;
     }
@@ -565,11 +565,14 @@ protected:
     {
     public:
         DataType() : _refcount(1), _data(0) {}
-        DataType(const C& c) : _refcount(1), _data(c) {}
-        DataType(C&& c) : _refcount(1), _data(std::move(c)) {}
+
+		explicit DataType(const C& c) : _refcount(1), _data(c) {}
+		explicit DataType(C&& c) : _refcount(1), _data(std::move(c)) {}
+        DataType(const DataType&) = delete;
 
         DataType& operator=(const C& c) {_data = c; return *this;}
         DataType& operator=(const C&& c) {_data = std::move(c); return *this;}
+        DataType& operator=(const DataType&) = delete;
 
         bool operator==(const C& c) const {return _data == c;}
 
@@ -598,8 +601,6 @@ protected:
 //        operator const C&() const {return _data;}
 
     private:
-        DataType(const DataType&); // unimplemented
-        DataType& operator=(const DataType&); // unimplemented
 
         unsigned long _refcount;
         C _data;

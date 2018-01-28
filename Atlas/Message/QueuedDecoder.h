@@ -35,7 +35,7 @@ class QueuedDecoder : public DecoderBase
 {
 public:
 
-    QueuedDecoder();
+    QueuedDecoder() = default;
 
     /// Retrieve the current size of the message queue.    
     size_t queueSize() {
@@ -51,13 +51,11 @@ public:
     const MapType& frontMessage() {
         return m_objectQueue.front();
     }
-    /// Clear the message queue.
-    void clearQueue();
-    
+
 protected:
 
     /// This adds a message to the queue.
-    void messageArrived(MapType obj);
+    void messageArrived(MapType obj) override;
     
 private:
     

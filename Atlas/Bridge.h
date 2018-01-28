@@ -35,7 +35,7 @@ which accepts an Atlas stream for encoding and transmission.
 class Bridge
 {
   public:
-    virtual ~Bridge();
+    virtual ~Bridge() = default;
 
     // Interface for stream context
 

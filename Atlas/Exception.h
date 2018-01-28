@@ -8,24 +8,24 @@
 #define ATLAS_EXCEPTION_H
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
 namespace Atlas {
 
 /// Base class for all exceptions thrown by Atlas-C++. All subclasses
 /// should pass in a description of the exceptional circumstance encountered.
-class Exception : public std::exception
+class Exception : public std::runtime_error
 {
-  protected:
-    std::string m_description;
-    
+
   public:
-    Exception(const std::string & d = "UNKNOWN ERROR") : m_description(d) { }
-    virtual ~Exception();
-    const std::string & getDescription() const {
-        return m_description;
+    explicit Exception(const std::string & d = "UNKNOWN ERROR") noexcept
+			: std::runtime_error(d) { }
+
+    ~Exception() noexcept override = default;
+
+    std::string getDescription() const {
+        return what();
     }
-    virtual const char * what() const throw();
 };
 
 } // namespace Atlas

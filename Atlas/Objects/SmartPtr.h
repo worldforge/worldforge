@@ -15,8 +15,9 @@ namespace Atlas { namespace Objects {
 class NullSmartPtrDereference : public Atlas::Exception
 {
   public:
-    NullSmartPtrDereference() : Atlas::Exception("Null SmartPtr dereferenced") {}
-    virtual ~NullSmartPtrDereference();
+    NullSmartPtrDereference() noexcept : Atlas::Exception("Null SmartPtr dereferenced") {}
+
+    ~NullSmartPtrDereference() noexcept override = default;
 };
 
 template <class T> 

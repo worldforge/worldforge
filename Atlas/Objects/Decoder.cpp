@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #include <Atlas/Objects/Decoder.h>
@@ -14,7 +15,7 @@ namespace Atlas { namespace Objects {
 
 ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
 {
-    if (m_factories == 0) {
+    if (m_factories == nullptr) {
         m_factories = Factories::instance();
     }
 }

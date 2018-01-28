@@ -30,7 +30,7 @@ public:
     /// @param b The Bridge to which objects are to be sent.
     explicit ObjectsEncoder(Atlas::Bridge & b) : EncoderBase(b) { }
     /// The default destructor.
-    ~ObjectsEncoder();
+    ~ObjectsEncoder() override = default;
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.

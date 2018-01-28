@@ -55,7 +55,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
   //typedef list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
   //FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
   //FactoryCodecs::iterator i;
-  //Atlas::Codec<std::iostream> *codec = NULL;
+  //Atlas::Codec<std::iostream> *codec = nullptr;
   //for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     //if((*i)->getName() == "XML")
       //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
@@ -77,7 +77,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
 
 const Element & LoadDefaultsDecoder::getMessageElement(const std::string& id) const
 {
-    MessageElementMap::const_iterator I = m_objects.find(id);
+    auto I = m_objects.find(id);
     if (I == m_objects.end()) {
         throw DefaultLoadingException(id + " not found in XML file");
     } else {
@@ -102,8 +102,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
 {
     MapType::const_iterator I;
     for (I = melem.asMap().begin(); I != melem.asMap().end(); I++) {
-        std::set<std::string>::const_iterator attr_found = 
-                               used_attributes.find(I->first);
+        auto attr_found = used_attributes.find(I->first);
         if (attr_found == used_attributes.end()) {
             //cout<<"    -->"<<I->first<<endl;
             obj->setAttr(I->first, I->second);

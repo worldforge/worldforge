@@ -2,6 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Aloril
 #Copyright (C) 2001-2005 Alistair Riddoch
+#Copyright (C) 2011 Erik Ogenvik
 
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class
@@ -48,7 +49,7 @@ class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
 public:
     /// Constructor.
-    explicit ObjectsDecoder(Factories * f = 0);
+    explicit ObjectsDecoder(Factories * f = nullptr);
     /// Default destructor.
     virtual ~ObjectsDecoder();
 
@@ -86,7 +87,7 @@ protected:
         self.write("""
 ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
 {
-    if (m_factories == 0) {
+    if (m_factories == nullptr) {
         m_factories = Factories::instance();
     }
 }

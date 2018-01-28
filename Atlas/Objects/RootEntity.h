@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_ENTITY_ROOTENTITY_H
@@ -31,13 +32,13 @@ class RootEntityData : public RootData
 {
 protected:
     /// Construct a RootEntityData class definition.
-    RootEntityData(RootEntityData *defaults = NULL) : 
+    RootEntityData(RootEntityData *defaults = nullptr) : 
         RootData((RootData*)defaults)
     {
         m_class_no = ROOT_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~RootEntityData() = default;
+    ~RootEntityData() override = default;
 
 public:
     /// Copy this object.

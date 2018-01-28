@@ -21,16 +21,16 @@ AtlasWrapperObject *newAtlasWrapperObject(Atlas::Object arg)
 {
   AtlasWrapperObject *self;
   self = PyObject_NEW(AtlasWrapperObject, &AtlasWrapper_Type);
-  if (self == NULL)
-    return NULL;
+  if (self == nullptr)
+    return nullptr;
   //some playing here: need to get extra reference somehow and this should do the trick
   //(needed because malloc in above PyObject_NEW doesn initialize it properly)
   self->obj = new Atlas::Object(arg);
-  if(self->obj == NULL) {
+  if(self->obj == nullptr) {
     PyMem_DEL(self);
     PyErr_SetString(PyExc_MemoryError,
                     "can set attribute only for Atlas maps");
-    return NULL;
+    return nullptr;
   }
   return self;
 }
@@ -60,7 +60,7 @@ AtlasWrapper_get_otype(AtlasWrapperObject *self,
                        PyObject *args)
 {
 	if (!PyArg_ParseTuple(args, ""))
-		return NULL;
+		return nullptr;
 	return PyString_FromString("object");
 }
 
@@ -71,10 +71,10 @@ AtlasWrapper_keys(AtlasWrapperObject *self,
   if(!self->obj->isMap()) {
     PyErr_SetString(PyExc_TypeError,
                     "currently keys() only legal for Atlas maps");
-    return NULL;
+    return nullptr;
   }
   if (!PyArg_ParseTuple(args, ""))
-    return NULL;
+    return nullptr;
   
   Atlas::Object keys = self->obj->keys();
   return AtlasObject2PythonObject(keys);
@@ -85,7 +85,7 @@ AtlasWrapper_is_map(AtlasWrapperObject *self,
                        PyObject *args)
 {
   if (!PyArg_ParseTuple(args, ""))
-    return NULL;
+    return nullptr;
   return PyInt_FromLong(self->obj->isMap());
 }
 
@@ -94,7 +94,7 @@ AtlasWrapper_is_list(AtlasWrapperObject *self,
                        PyObject *args)
 {
   if (!PyArg_ParseTuple(args, ""))
-    return NULL;
+    return nullptr;
   return PyInt_FromLong(self->obj->isList());
 }
 
@@ -103,10 +103,10 @@ static PyMethodDef AtlasWrapper_methods[] = {
 	{"keys",	(PyCFunction)AtlasWrapper_keys,	1},
         {"is_map",       (PyCFunction)AtlasWrapper_is_map,	1},
         {"is_list",      (PyCFunction)AtlasWrapper_is_list,	1},
-	{NULL,		NULL}		/* sentinel */
+	{nullptr,		nullptr}		/* sentinel */
 };
 
-//PyObject *testObj=NULL;
+//PyObject *testObj=nullptr;
 static PyObject *
 AtlasWrapper_getattr(AtlasWrapperObject *self,
                      char *name)
@@ -190,7 +190,7 @@ AtlasWrapper_setattr(AtlasWrapperObject *self,
     int i;
     for(i=0;i<len;i++) {
       PyObject *v2 = PySequence_GetItem(v,i);
-      if(v2 == NULL) return -1;
+      if(v2 == nullptr) return -1;
       if(PyString_Check(v2)) {
         //CHEAT!: use length too: wait for Atlas::Object to have 
         //        set(string &name, char *str, int length=-1)
@@ -229,7 +229,7 @@ wrapper_item(AtlasWrapperObject *list, int i)
   ATLAS_DEBUG(printf("ATLAS_DEBUG:%s:%i\n",__FUNCTION__,i));
 	if (i < 0 || i >= list->obj->length()) {
 		PyErr_SetString(PyExc_IndexError, "Atlas list index out of range");
-		return NULL;
+		return nullptr;
 	}
         bool res;
         Atlas::Object item;
@@ -289,7 +289,7 @@ wrapper_as_str(AtlasWrapperObject *obj)
 /*statichere*/ PyTypeObject AtlasWrapper_Type = {
 	/* The ob_type field must be initialized in the module init function
 	 * to be portable to Windows without using C++. */
-	PyObject_HEAD_INIT(NULL)
+	PyObject_HEAD_INIT(nullptr)
 	0,			/*ob_size*/
 	"ccAtlasObject",	/*tp_name*/
 	sizeof(AtlasWrapperObject),	/*tp_basicsize*/
@@ -324,7 +324,7 @@ ccAtlasObject_foo(PyObject *self, /* Not used */
 	long i, j;
 	long res;
 	if (!PyArg_ParseTuple(args, "ll", &i, &j))
-		return NULL;
+		return nullptr;
 	res = i+j; /* XXX Do something here */
 	return PyInt_FromLong(res);
 }
@@ -339,11 +339,11 @@ ccAtlasObject_new(PyObject *self, /* Not used */
 	AtlasWrapperObject *rv;
 	
 	if (!PyArg_ParseTuple(args, ""))
-		return NULL;
+		return nullptr;
         Atlas::Object obj;
 	rv = newAtlasWrapperObject(obj);
-	if ( rv == NULL )
-	    return NULL;
+	if ( rv == nullptr )
+	    return nullptr;
 	return (PyObject *)rv;
 }
 
@@ -356,7 +356,7 @@ ccAtlasObject_bug(PyObject *self,
 	PyObject *list, *item;
 	
 	if (!PyArg_ParseTuple(args, "O", &list))
-		return NULL;
+		return nullptr;
 	
 	item = PyList_GetItem(list, 0);
 	/* Py_INCREF(item); */
@@ -378,7 +378,7 @@ ccAtlasObject_roj(PyObject *self, /* Not used */
 	PyObject *a;
 	long b;
 	if (!PyArg_ParseTuple(args, "O#", &a, &b))
-		return NULL;
+		return nullptr;
 	Py_INCREF(Py_None);
 	return Py_None;
 }
@@ -391,7 +391,7 @@ static PyMethodDef ccAtlasObject_methods[] = {
 	{"foo",		ccAtlasObject_foo,		1},
 	{"Object",	ccAtlasObject_new,		1},
 	{"bug",		ccAtlasObject_bug,		1},
-	{NULL,		NULL}		/* sentinel */
+	{nullptr,		nullptr}		/* sentinel */
 };
 
 
@@ -417,6 +417,6 @@ initccAtlasObject()
 
 	/* Add some symbolic constants to the module */
 	d = PyModule_GetDict(m);
-	ErrorObject = PyErr_NewException("ccAtlasObject.error", NULL, NULL);
+	ErrorObject = PyErr_NewException("ccAtlasObject.error", nullptr, nullptr);
 	PyDict_SetItemString(d, "error", ErrorObject);
 }

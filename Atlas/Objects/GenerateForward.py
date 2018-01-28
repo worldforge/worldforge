@@ -1,6 +1,7 @@
 #This file is distributed under the terms of 
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2003 Alistair Riddoch
+#Copyright (C) 2011 Erik Ogenvik
 
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class

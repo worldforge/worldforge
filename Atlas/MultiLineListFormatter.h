@@ -29,14 +29,14 @@ class MultiLineListFormatter : public Atlas::Formatter
 public:
 	MultiLineListFormatter(std::ostream& s, Atlas::Bridge& b);
 
-	virtual void mapListItem(const std::string& name);
+	void mapListItem(std::string name) override;
 
-	virtual void listMapItem();
-	virtual void listListItem();
-	virtual void listIntItem(long l);
-	virtual void listFloatItem(double d);
-	virtual void listStringItem(const std::string& s);
-	virtual void listEnd();
+	void listMapItem() override;
+	void listListItem() override;
+	void listIntItem(long l) override;
+	void listFloatItem(double d) override;
+	void listStringItem(std::string s) override;
+	void listEnd() override;
 
 };
 

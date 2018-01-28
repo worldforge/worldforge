@@ -15,7 +15,7 @@ using namespace Atlas;
 %typemap(python,in) const std::string&(string string_temp) {
   if(!PyString_Check($source)) {
       PyErr_SetString(PyExc_TypeError, "Need a string object!");
-      return NULL;
+      return nullptr;
   }
   string_temp=string(PyString_AsString($source));
   $target=&string_temp;
@@ -28,7 +28,7 @@ using namespace Atlas;
 %typemap(python,in) const Object&(Atlas::Object obj_temp) {
   if(!AtlasWrapperObject_Check($source)) {
       PyErr_SetString(PyExc_TypeError, "Need a wrapper for Atlas::Object!");
-      return NULL;
+      return nullptr;
   }
   obj_temp=*((AtlasWrapperObject*)$source)->obj;
   $target=&obj_temp;

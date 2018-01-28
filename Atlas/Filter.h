@@ -32,8 +32,8 @@ class Filter
     Filter(const Filter &); // unimplemented
     Filter & operator=(const Filter &); // unimplemented
     public:
-   
-    Filter(Filter* = 0);
+
+    explicit Filter(Filter* = nullptr);
     virtual ~Filter();
 
     virtual void begin() = 0;

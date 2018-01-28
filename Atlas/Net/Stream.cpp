@@ -100,10 +100,6 @@ StreamConnect::StreamConnect(const std::string& name, std::istream& inStream, st
 {
 }
 
-StreamConnect::~StreamConnect()
-{
-}
-
 void StreamConnect::poll(bool can_read)
 {
     Debug( std::cout << "** Client(" << m_state << ") : " << m_inStream.rdbuf()->in_avail() << std::endl; );
@@ -200,7 +196,7 @@ Atlas::Codec * StreamConnect::getCodec(Atlas::Bridge & bridge)
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_inStream, m_outStream, bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(m_inStream, m_outStream, bridge); }
     if (m_canBach) { return new Atlas::Codecs::Bach(m_inStream, m_outStream, bridge); }
-    return NULL;
+    return nullptr;
 }
 
 void StreamConnect::processServerCodecs()
@@ -248,9 +244,6 @@ void StreamConnect::processClientFilters()
 }
 #endif
 
-StreamAccept::~StreamAccept()
-{
-}
 
 StreamAccept::StreamAccept(const std::string& name, std::istream& inStream, std::ostream& outStream) :
   m_state(SERVER_GREETING), m_outName(name), m_inStream(inStream), m_outStream(outStream),
@@ -367,7 +360,7 @@ Atlas::Codec * StreamAccept::getCodec(Atlas::Bridge & bridge)
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_inStream, m_outStream, bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(m_inStream, m_outStream, bridge); }
     if (m_canBach) { return new Atlas::Codecs::Bach(m_inStream, m_outStream, bridge); }
-    return NULL;
+    return nullptr;
 }
 
 #if 0

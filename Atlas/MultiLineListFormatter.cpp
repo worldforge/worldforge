@@ -26,7 +26,7 @@ MultiLineListFormatter::MultiLineListFormatter(std::ostream & s, Bridge & b) :
 {
 }
 
-void MultiLineListFormatter::mapListItem(const std::string & name)
+void MultiLineListFormatter::mapListItem(std::string name)
 {
 	Formatter::mapListItem(name);
 	m_indent += m_spacing;
@@ -60,7 +60,7 @@ void MultiLineListFormatter::listFloatItem(double d)
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listStringItem(const std::string&s)
+void MultiLineListFormatter::listStringItem(std::string s)
 {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listStringItem(s);

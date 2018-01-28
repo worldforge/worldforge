@@ -2,6 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 #Copyright (C) 2001-2005 Alistair Riddoch
+#Copyright (C) 2011 Erik Ogenvik
 
 __revision__ = '$Id$'
 

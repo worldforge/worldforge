@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_ENTITY_ENTITY_H
@@ -32,13 +33,13 @@ class AdminEntityData : public RootEntityData
 {
 protected:
     /// Construct a AdminEntityData class definition.
-    AdminEntityData(AdminEntityData *defaults = NULL) : 
+    AdminEntityData(AdminEntityData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = ADMIN_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~AdminEntityData() = default;
+    ~AdminEntityData() override = default;
 
 public:
     /// Copy this object.
@@ -86,13 +87,13 @@ class AccountData : public AdminEntityData
 {
 protected:
     /// Construct a AccountData class definition.
-    AccountData(AccountData *defaults = NULL) : 
+    AccountData(AccountData *defaults = nullptr) : 
         AdminEntityData((AdminEntityData*)defaults)
     {
         m_class_no = ACCOUNT_NO;
     }
     /// Default destructor.
-    virtual ~AccountData() = default;
+    ~AccountData() override = default;
 
 public:
     /// Copy this object.
@@ -321,13 +322,13 @@ class PlayerData : public AccountData
 {
 protected:
     /// Construct a PlayerData class definition.
-    PlayerData(PlayerData *defaults = NULL) : 
+    PlayerData(PlayerData *defaults = nullptr) : 
         AccountData((AccountData*)defaults)
     {
         m_class_no = PLAYER_NO;
     }
     /// Default destructor.
-    virtual ~PlayerData() = default;
+    ~PlayerData() override = default;
 
 public:
     /// Copy this object.
@@ -375,13 +376,13 @@ class AdminData : public AccountData
 {
 protected:
     /// Construct a AdminData class definition.
-    AdminData(AdminData *defaults = NULL) : 
+    AdminData(AdminData *defaults = nullptr) : 
         AccountData((AccountData*)defaults)
     {
         m_class_no = ADMIN_NO;
     }
     /// Default destructor.
-    virtual ~AdminData() = default;
+    ~AdminData() override = default;
 
 public:
     /// Copy this object.
@@ -429,13 +430,13 @@ class GameData : public AdminEntityData
 {
 protected:
     /// Construct a GameData class definition.
-    GameData(GameData *defaults = NULL) : 
+    GameData(GameData *defaults = nullptr) : 
         AdminEntityData((AdminEntityData*)defaults)
     {
         m_class_no = GAME_NO;
     }
     /// Default destructor.
-    virtual ~GameData() = default;
+    ~GameData() override = default;
 
 public:
     /// Copy this object.
@@ -483,13 +484,13 @@ class GameEntityData : public RootEntityData
 {
 protected:
     /// Construct a GameEntityData class definition.
-    GameEntityData(GameEntityData *defaults = NULL) : 
+    GameEntityData(GameEntityData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = GAME_ENTITY_NO;
     }
     /// Default destructor.
-    virtual ~GameEntityData() = default;
+    ~GameEntityData() override = default;
 
 public:
     /// Copy this object.

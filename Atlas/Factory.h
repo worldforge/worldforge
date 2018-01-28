@@ -63,8 +63,8 @@ class Factory
    
     static std::list<Factory*> * factories()
     {
-	static std::list<Factory*> * m_factories = NULL;
-        if (m_factories == NULL) {
+	static std::list<Factory*> * m_factories = nullptr;
+        if (m_factories == nullptr) {
             m_factories = new std::list<Factory*>;
             getFactories();
         }

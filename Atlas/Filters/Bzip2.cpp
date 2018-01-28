@@ -24,15 +24,15 @@ const int WORKFACTOR = 30;
 
 void Bzip2::begin()
 {
-    incoming.next_in = NULL;
+    incoming.next_in = nullptr;
     incoming.avail_in = 0;
-    incoming.bzalloc = NULL;
-    incoming.bzfree = NULL;
-    incoming.opaque = NULL;
+    incoming.bzalloc = nullptr;
+    incoming.bzfree = nullptr;
+    incoming.opaque = nullptr;
   
-    outgoing.bzalloc = NULL;
-    outgoing.bzfree = NULL;
-    outgoing.opaque = NULL;
+    outgoing.bzalloc = nullptr;
+    outgoing.bzfree = nullptr;
+    outgoing.opaque = nullptr;
   
     BZ2_bzCompressInit(&outgoing, BS100K, 0, WORKFACTOR);
     BZ2_bzDecompressInit(&incoming, 0, 0);

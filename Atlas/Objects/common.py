@@ -2,6 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 #Copyright (C) 2001-2004 Alistair Riddoch
+#Copyright (C) 2011 Erik Ogenvik
 
 __revision__ = '$Id$'
 
@@ -23,6 +24,7 @@ copyright_template = \
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 %s.
 // Copyright 2001-2005 %s.
+// Copyright 2011 Erik Ogenvik.
 // Automatically generated using gen_cpp.py.
 """
 
@@ -32,8 +34,8 @@ copyright = copyright_template % ("Stefanus Du Toit and Aloril", "Alistair Riddo
 static_objects = ["root", "root_entity", "root_operation"]
 
 # These are only used for description.
-descr_attrs = ['children', 'description', 'args_description', 'example', \
-               'long_description', 'specification', 'specification_file', \
+descr_attrs = ['children', 'description', 'args_description', 'example',
+               'long_description', 'specification', 'specification_file',
                'stamp_inherit', 'interface', 'time_string']
 
 # C++ equivalents of atlas types              
