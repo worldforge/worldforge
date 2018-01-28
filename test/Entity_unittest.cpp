@@ -161,14 +161,6 @@ void Task::updateFromAtlas(const Atlas::Message::MapType & d)
 {
 }
 
-BaseException::~BaseException() throw()
-{
-}
-
-InvalidOperation::~InvalidOperation() throw()
-{
-}
-
 void doLog(LogLevel lvl, const std::string& msg)
 {
 }

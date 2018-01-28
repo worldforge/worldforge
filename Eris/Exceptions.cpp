@@ -2,30 +2,14 @@
 
 namespace Eris {
 
-BaseException::~BaseException() throw()
-{
-}
-
-InvalidOperation::~InvalidOperation() throw()
-{
-}
-
-NetworkFailure::~NetworkFailure() throw()
-{
-}
-
-InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj) :
+InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj) noexcept:
     BaseException(msg),
     m_obj(obj)
 {
 }
 
-InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Message::Element&) :
+InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Message::Element&) noexcept:
     BaseException(msg)
-{
-}
-
-InvalidAtlas::~InvalidAtlas() throw()
 {
 }
 

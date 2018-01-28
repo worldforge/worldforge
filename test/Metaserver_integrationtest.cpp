@@ -88,10 +88,6 @@ void ServerInfo::setPing(int p)
 {
 }
 
-BaseException::~BaseException() throw()
-{
-}
-
 EventService::EventService(boost::asio::io_service& io_service)
 : m_io_service(io_service)
 {}

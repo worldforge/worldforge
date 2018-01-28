@@ -261,10 +261,6 @@ void EventService::runOnMainThread(std::function<void ()> const&)
 {
 }
 
-BaseException::~BaseException() throw()
-{
-}
-
 void doLog(LogLevel lvl, const std::string& msg)
 {
 }

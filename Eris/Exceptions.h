@@ -19,28 +19,31 @@ hardly seems worth it.
 class BaseException : public std::runtime_error
 {
 public:
-	BaseException(const std::string &m) : 
+	explicit BaseException(const std::string &m) noexcept:
 		std::runtime_error(m), _msg(m) {;}
-        virtual ~BaseException() throw();
+
+	~BaseException() noexcept override = default;
 	const std::string _msg;
 };	
 	
 class InvalidOperation : public BaseException
 {
 public:
-	InvalidOperation(const std::string &m) : BaseException(m) {;}
-        virtual ~InvalidOperation() throw();
+	explicit InvalidOperation(const std::string &m) noexcept:
+			BaseException(m) {;}
+
+	~InvalidOperation() noexcept override = default;
 };
 
 /// Exception used to indicated malformed or unexpected Atlas from the server
 class InvalidAtlas : public BaseException
 {
 public:
-    InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj);
+    InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj) noexcept;
     
-    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& el);
-    
-    virtual ~InvalidAtlas() throw();
+    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& el) noexcept;
+
+	~InvalidAtlas() noexcept override = default;
 private:
     Atlas::Objects::Root m_obj;
 };
@@ -48,9 +51,10 @@ private:
 class NetworkFailure : public BaseException
 {
 public:
-	NetworkFailure(const std::string &s) :
+	explicit NetworkFailure(const std::string &s) noexcept:
 		BaseException(s) {;}
-        virtual ~NetworkFailure() throw();
+
+	~NetworkFailure() noexcept override = default;
 };
 
 }
