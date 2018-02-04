@@ -38,7 +38,7 @@ namespace Eris
 Avatar::Avatar(Account& pl, const std::string& entId) :
     m_account(pl),
     m_entityId(entId),
-    m_entity(NULL),
+    m_entity(nullptr),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0),
     m_isAdmin(false),
@@ -149,15 +149,15 @@ void Avatar::say(const std::string& msg)
     getConnection()->send(t);
 }
 
-void Avatar::sayTo(const std::string& message, const std::vector<const Entity*>& entities)
+void Avatar::sayTo(const std::string& message, const std::vector<std::string>& entities)
 {
     Talk t;
 
     Anonymous what;
     what->setAttr("say", message);
     Atlas::Message::ListType addressList;
-    for (std::vector<const Entity*>::const_iterator I = entities.begin(); I != entities.end(); ++I) {
-        addressList.push_back((*I)->getId());
+    for (auto entity : entities) {
+        addressList.emplace_back(entity);
     }
     what->setAttr("address", addressList);
     t->setArgs1(what);

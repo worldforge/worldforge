@@ -338,8 +338,8 @@ int main()
         TestAvatar * ea = new TestAvatar(acc, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * npc_ent = new TestEntity(fake_npc_id, 0, ea->getView());
-        std::vector<const Eris::Entity *> entityIds;
-        entityIds.push_back(npc_ent);
+        std::vector<std::string> entityIds;
+        entityIds.push_back(npc_ent->getId());
 
         ea->setup_setEntity(char_ent);
 
@@ -359,9 +359,9 @@ int main()
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * npc_ent = new TestEntity(fake_npc_id, 0, ea->getView());
         TestEntity * npc2_ent = new TestEntity(fake_npc2_id, 0, ea->getView());
-        std::vector<const Eris::Entity *> entityIds;
-        entityIds.push_back(npc_ent);
-        entityIds.push_back(npc2_ent);
+        std::vector<std::string> entityIds;
+        entityIds.push_back(npc_ent->getId());
+        entityIds.push_back(npc2_ent->getId());
 
         ea->setup_setEntity(char_ent);
 
@@ -379,7 +379,7 @@ int main()
         std::string fake_char_id("1");
         TestAvatar * ea = new TestAvatar(acc, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        std::vector<const Eris::Entity *> entityIds;
+        std::vector<std::string> entityIds;
 
         ea->setup_setEntity(char_ent);
 

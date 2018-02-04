@@ -78,8 +78,8 @@ public:
 
     /// Say something (in-game), addressing one or many entities
     /// @param message The message, i.e. what is being said.
-    /// @param entities A list of entities being addressed.
-    void sayTo(const std::string& message, const std::vector<const Entity*>& entities);
+    /// @param entities A list of ids of entities being addressed.
+    void sayTo(const std::string& message, const std::vector<std::string>& entities);
 
     /// Emote something (in-game)
     void emote(const std::string&);
@@ -218,7 +218,6 @@ protected:
 
 
     void onCharacterWield(const Atlas::Message::Element&);
-    void onWieldedChanged();
 
     virtual void onTransferRequested(const TransferInfo &transfer);
 
