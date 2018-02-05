@@ -4,6 +4,7 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 
 #include <string>
+#include <vector>
 
 namespace Eris {
 	
@@ -79,13 +80,17 @@ public:
     /// the number of entities on the server
     long getEntities() const
     { return _entities; }
+
+    const std::vector<std::string>& getAssets() const {
+        return m_assets;
+    }
 	
 protected:
     friend class Meta;
     friend class Connection;
     
     /// construct with the host IP only; other values will be set to defaults
-    ServerInfo(const std::string &host);
+	explicit ServerInfo(const std::string &host);
     
     /** called by Meta when info is received from the server, sets
     status to valid. */
@@ -109,8 +114,13 @@ private:
     
     double _uptime;		///< Server uptime in seconds
     
-    std::string m_version,
-        m_buildDate;
+    std::string m_version;
+    std::string m_buildDate;
+
+    /**
+     * A list of assets URLs, from which assets can be downloaded using WFUT.
+     */
+    std::vector<std::string> m_assets;
 };
 
 } // of namespace Eris

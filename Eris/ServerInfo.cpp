@@ -42,24 +42,24 @@ void ServerInfo::processServer(const RootEntity &svr)
     Atlas::Message::Element element;
 
     if (!svr->copyAttr("ruleset", element) && element.isString()) {
-        _ruleset = element.asString();
+        _ruleset = element.String();
     } else {
         return;
     }
 
     _name = svr->getName();
     if (!svr->copyAttr("clients", element) && element.isInt()) {
-        _clients = (int)element.asInt();
+        _clients = (int)element.Int();
     } else {
         return;
     }
     if (!svr->copyAttr("server", element) && element.isString()) {
-        _server = element.asString();
+        _server = element.String();
     } else {
         return;
     }
     if (!svr->copyAttr("uptime", element) && element.isFloat()) {
-        _uptime = element.asFloat();
+        _uptime = element.Float();
     } else {
         return;
     }
@@ -67,16 +67,25 @@ void ServerInfo::processServer(const RootEntity &svr)
     m_status = VALID;
 
     if (!svr->copyAttr("entities", element) && element.isInt()) {
-        _entities = element.asInt();
+        _entities = element.Int();
     }
     
     if (!svr->copyAttr("version", element) && element.isString()) {
-        m_version = element.asString();
+        m_version = element.String();
     }
     
     if (!svr->copyAttr("builddate", element) && element.isString()) {
-        m_buildDate = element.asString();
+        m_buildDate = element.String();
     }
+
+	if (!svr->copyAttr("assets", element) && element.isList()) {
+		for (auto& url : element.List()) {
+			if (url.isString()) {
+				m_assets.emplace_back(url.String());
+			}
+		}
+	}
+
 }
 
 void ServerInfo::setPing(int p)
