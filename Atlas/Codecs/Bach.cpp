@@ -224,13 +224,13 @@ void Bach::parseFloat(char next)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge.mapFloatItem(decodeString(std::move(m_name)), std::stof(m_data));
+            m_bridge.mapFloatItem(decodeString(std::move(m_name)), std::stod(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_data << std::endl;)
 
-            m_bridge.listFloatItem(std::stof(m_data));
+            m_bridge.listFloatItem(std::stod(m_data));
         }
         else
         {

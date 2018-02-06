@@ -197,12 +197,12 @@ void Packed::parseFloat(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge.mapFloatItem(hexDecode(std::move(m_name)), std::stof(m_data));
+		m_bridge.mapFloatItem(hexDecode(std::move(m_name)), std::stod(m_data));
 		m_name.clear();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge.listFloatItem(std::stof(m_data));
+		m_bridge.listFloatItem(std::stod(m_data));
 	    }
 	    else
 	    {

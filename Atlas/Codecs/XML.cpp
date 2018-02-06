@@ -293,11 +293,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge.mapFloatItem(m_name, std::stof(m_data.top()));
+		    m_bridge.mapFloatItem(m_name, std::stod(m_data.top()));
 		}
 		else
 		{
-		    m_bridge.listFloatItem(std::stof(m_data.top()));
+		    m_bridge.listFloatItem(std::stod(m_data.top()));
 		}
 	    }
 	    else
