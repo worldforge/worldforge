@@ -111,7 +111,7 @@ set(NET_HEADER_FILES
 
 set(SOURCE_FILES
         Atlas/Codec.h
-        Atlas/EncoderBase.cpp
+        Atlas/EncoderBase.h
         Atlas/Filter.cpp
         Atlas/float.cpp
         Atlas/Formatter.cpp

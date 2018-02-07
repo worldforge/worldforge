@@ -35,7 +35,7 @@ class Encoder : public Atlas::EncoderBase
 public:
     explicit Encoder(Atlas::Bridge &);
 
-    ~Encoder() override;
+    ~Encoder() override = default;
 
     /// Send a message (must be a map!) in stream state.
     void streamMessageElement(const MapType & obj);
