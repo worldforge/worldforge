@@ -139,12 +139,59 @@ void testCodec()
 
 }
 
+void testXMLSanity() {
+	std::string tooLargeNumber = std::to_string(std::numeric_limits<long>::max()) + "00";
+	std::string atlas_data = R"(<atlas><map><float name="toolargefloat">1.79769e+408</float><int name="toolargeint">)" + tooLargeNumber+ R"(</int><int name="validint">5</int><float name="validfloat">6.0</float></map></atlas>)";
+	std::stringstream ss2(atlas_data, std::ios::in);
+
+	Atlas::Message::QueuedDecoder decoder;
+	{
+
+		Atlas::Codecs::XML codec(ss2, ss2, decoder);
+		Atlas::Message::Encoder enc(codec);
+
+		decoder.streamBegin();
+		codec.poll(true);
+		decoder.streamEnd();
+
+	}
+	MapType map2 = decoder.popMessage();
+    assert(map2.size() == 2);
+    assert(map2["validint"].Int() == 5);
+    assert(map2["validfloat"].Float() == 6.0);
+}
+
+void testPackedSanity() {
+    std::string tooLargeNumber = std::to_string(std::numeric_limits<long>::max()) + "00";
+    std::string atlas_data = R"([#toolargefloat=1.79769e+408@toolargeint=)"+ tooLargeNumber + R"(#validfloat=6.0@validint=5])";
+    std::stringstream ss2(atlas_data, std::ios::in);
+
+    Atlas::Message::QueuedDecoder decoder;
+    {
+
+        Atlas::Codecs::Packed codec(ss2, ss2, decoder);
+        Atlas::Message::Encoder enc(codec);
+
+        decoder.streamBegin();
+        codec.poll(true);
+        decoder.streamEnd();
+
+    }
+    MapType map2 = decoder.popMessage();
+    assert(map2.size() == 2);
+    assert(map2["validint"].Int() == 5);
+    assert(map2["validfloat"].Float() == 6.0);
+}
+
+
 int main(int argc, char** argv)
 {
     testXMLEscaping();
 
     testCodec<Atlas::Codecs::Packed>();
     testCodec<Atlas::Codecs::XML>();
+    testPackedSanity();
+	testXMLSanity();
     //Bach is problematic and disabled for now. We should look into using JSON instead.
 //    testCodec<Atlas::Codecs::Bach>();
 

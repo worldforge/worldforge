@@ -144,19 +144,21 @@ void Packed::parseInt(char next)
 	case '#':
 	    m_istream.putback(next);
 	    m_state.pop();
-	    if (m_state.top() == PARSE_MAP)
-	    {
-		m_bridge.mapIntItem(hexDecode(std::move(m_name)), std::stol(m_data));
-		m_name.clear();
-	    }
-	    else if (m_state.top() == PARSE_LIST)
-	    {
-		m_bridge.listIntItem(std::stol(m_data));
-	    }
-	    else
-	    {
-		// FIXME some kind of sanity checking assertion here
-	    }
+			try {
+				if (m_state.top() == PARSE_MAP) {
+					m_bridge.mapIntItem(hexDecode(std::move(m_name)), std::stol(m_data));
+					m_name.clear();
+				} else if (m_state.top() == PARSE_LIST) {
+					m_bridge.listIntItem(std::stol(m_data));
+				} else {
+					// FIXME some kind of sanity checking assertion here
+				}
+			} catch (...) {
+				//Could not parse long; just ignore
+				if (m_state.top() == PARSE_MAP) {
+					m_name.clear();
+				}
+			}
 	    m_data.clear();
 	break;
 
@@ -195,19 +197,27 @@ void Packed::parseFloat(char next)
 	case '#':
 	    m_istream.putback(next);
 	    m_state.pop();
-	    if (m_state.top() == PARSE_MAP)
-	    {
-		m_bridge.mapFloatItem(hexDecode(std::move(m_name)), std::stod(m_data));
-		m_name.clear();
-	    }
-	    else if (m_state.top() == PARSE_LIST)
-	    {
-		m_bridge.listFloatItem(std::stod(m_data));
-	    }
-	    else
-	    {
-		// FIXME some kind of sanity checking assertion here
-	    }
+			try {
+
+				if (m_state.top() == PARSE_MAP)
+				{
+					m_bridge.mapFloatItem(hexDecode(std::move(m_name)), std::stod(m_data));
+					m_name.clear();
+				}
+				else if (m_state.top() == PARSE_LIST)
+				{
+					m_bridge.listFloatItem(std::stod(m_data));
+				}
+				else
+				{
+				// FIXME some kind of sanity checking assertion here
+				}
+			} catch (...) {
+				//Could not parse float; just ignore
+				if (m_state.top() == PARSE_MAP) {
+					m_name.clear();
+				}
+			}
 	    m_data.clear();
 	break;
 

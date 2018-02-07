@@ -270,15 +270,19 @@ void XML::parseEndTag()
 	case PARSE_INT:
 	    if (m_tag == "int")
 	    {
-		m_state.pop();
-		if (m_state.top() == PARSE_MAP)
-		{
-		    m_bridge.mapIntItem(m_name, std::stol(m_data.top()));
-		}
-		else
-		{
-		    m_bridge.listIntItem(std::stol(m_data.top()));
-		}
+			m_state.pop();
+			try {
+				if (m_state.top() == PARSE_MAP)
+				{
+					m_bridge.mapIntItem(m_name, std::stol(m_data.top()));
+				}
+				else
+				{
+					m_bridge.listIntItem(std::stol(m_data.top()));
+				}
+			} catch (...) {
+				//Could not parse long; just ignore
+			}
 	    }
 	    else
 	    {
@@ -290,15 +294,19 @@ void XML::parseEndTag()
 	case PARSE_FLOAT:
 	    if (m_tag == "float")
 	    {
-		m_state.pop();
-		if (m_state.top() == PARSE_MAP)
-		{
-		    m_bridge.mapFloatItem(m_name, std::stod(m_data.top()));
-		}
-		else
-		{
-		    m_bridge.listFloatItem(std::stod(m_data.top()));
-		}
+			m_state.pop();
+			try {
+				if (m_state.top() == PARSE_MAP)
+				{
+					m_bridge.mapFloatItem(m_name, std::stod(m_data.top()));
+				}
+				else
+				{
+					m_bridge.listFloatItem(std::stod(m_data.top()));
+				}
+			} catch (...) {
+				//Could not parse double; just ignore.
+			}
 	    }
 	    else
 	    {
