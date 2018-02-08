@@ -126,8 +126,8 @@ Result Account::createAccount(const std::string &uname,
     m_username = uname;
     m_pass = pwd;
 
-
-    AtlasAccount account;
+    //We should clarify that we want a player account.
+    Atlas::Objects::Entity::Player account;
     account->setPassword(pwd);
     account->setName(fullName);
     account->setUsername(uname);
