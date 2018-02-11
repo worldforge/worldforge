@@ -182,12 +182,17 @@ void Avatar::emote(const std::string &em)
     getConnection()->send(im);
 }
 
-void Avatar::moveToPoint(const WFMath::Point<3>& pos)
+void Avatar::moveToPoint(const WFMath::Point<3>& pos, const WFMath::Quaternion& orient)
 {
     Anonymous what;
     what->setLoc(m_entity->getLocation()->getId());
     what->setId(m_entityId);
-    what->setAttr("pos", pos.toAtlas());
+	if (pos.isValid()) {
+		what->setAttr("pos", pos.toAtlas());
+	}
+	if (orient.isValid()) {
+		what->setAttr("orientation", orient.toAtlas());
+	}
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
@@ -196,47 +201,16 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
     getConnection()->send(moveOp);
 }
 
-void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
-{
-    const double MIN_VELOCITY = 1e-3;
-
-    Anonymous arg;
-    //arg->setAttr("location", m_entity->getLocation()->getId());
-    arg->setId(m_entityId);
-    arg->setAttr("velocity", vel.toAtlas());
-
-    CoordType sqr_mag = vel.sqrMag();
-    if(sqr_mag > MIN_VELOCITY) { // don't set orientation for zero velocity
-        WFMath::Quaternion q;
-        CoordType z_squared = vel.z() * vel.z();
-        CoordType plane_sqr_mag = sqr_mag - z_squared;
-        if(plane_sqr_mag < numeric_constants<CoordType>::epsilon() * z_squared) {
-            // it's on the z axis
-            q.rotation(1, vel[2] > 0 ? -numeric_constants<CoordType>::pi()/2
-                                     : numeric_constants<CoordType>::pi()/2);
-        } else {
-            // rotate in the plane first
-            q.rotation(2, std::atan2(vel[1], vel[0]));
-            // then get the angle away from the plane
-            q = WFMath::Quaternion(1, -std::asin(vel[2] / std::sqrt(plane_sqr_mag))) * q;
-        }
-
-        arg->setAttr("orientation", q.toAtlas());
-    }
-
-    Move moveOp;
-    moveOp->setFrom(m_entityId);
-    moveOp->setArgs1(arg);
-
-    getConnection()->send(moveOp);
-}
 
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
 {
     Anonymous arg;
-   // arg->setAttr("location", m_entity->getLocation()->getId());
-    arg->setAttr("velocity", vel.toAtlas());
-    arg->setAttr("orientation", orient.toAtlas());
+	if (vel.isValid()) {
+		arg->setAttr("propel", vel.toAtlas());
+	}
+	if (orient.isValid()) {
+		arg->setAttr("orientation", orient.toAtlas());
+	}
     arg->setId(m_entityId);
 
     Move moveOp;

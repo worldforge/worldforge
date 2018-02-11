@@ -84,13 +84,10 @@ public:
     /// Emote something (in-game)
     void emote(const std::string&);
 
-    /// Have the character move towards a position
-    void moveToPoint(const WFMath::Point<3>&);
+    /// Have the character move towards a position. Any non-valid data will not be sent.
+    void moveToPoint(const WFMath::Point<3>&, const WFMath::Quaternion& orient);
 
-    /// Set the character's velocity
-    void moveInDirection(const WFMath::Vector<3>&);
-
-    /// Set the character's velocity and orientation
+    /// Set the character's velocity and orientation. Any non-valid data will not be sent.
     void moveInDirection(const WFMath::Vector<3>&, const WFMath::Quaternion&);
 
     /**

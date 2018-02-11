@@ -419,7 +419,7 @@ int main()
         ea->setup_setEntity(char_ent);
         char_ent->setup_setLocation(wrld_ent);
 
-        ea->moveToPoint(WFMath::Point<3>(3,4,5));
+        ea->moveToPoint(WFMath::Point<3>(3,4,5), WFMath::Quaternion());
     }
     
     // Test moveInDirection() with zero velocity
@@ -438,7 +438,7 @@ int main()
         ea->setup_setEntity(char_ent);
         char_ent->setup_setLocation(wrld_ent);
 
-        ea->moveInDirection(WFMath::Vector<3>(0,0,0));
+        ea->moveInDirection(WFMath::Vector<3>(0,0,0), WFMath::Quaternion());
     }
     
     // Test moveInDirection() with vertical velocity
@@ -457,7 +457,7 @@ int main()
         ea->setup_setEntity(char_ent);
         char_ent->setup_setLocation(wrld_ent);
 
-        ea->moveInDirection(WFMath::Vector<3>(0,0,5));
+        ea->moveInDirection(WFMath::Vector<3>(0,0,5), WFMath::Quaternion());
     }
     
     // Test moveInDirection() with high velocity
@@ -476,7 +476,7 @@ int main()
         ea->setup_setEntity(char_ent);
         char_ent->setup_setLocation(wrld_ent);
 
-        ea->moveInDirection(WFMath::Vector<3>(3,4,5));
+        ea->moveInDirection(WFMath::Vector<3>(3,4,5), WFMath::Quaternion());
     }
     
     // FIXME test the conditionals in moveInDirection()
