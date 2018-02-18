@@ -687,8 +687,6 @@ TransferInfo::TransferInfo(const std::string &host, int port,
 TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
     m_bound(false),
     m_name(id),
-    m_atlasClassNo(0),
-    m_moveCount(0),
     m_typeService(ts)
 {
 }

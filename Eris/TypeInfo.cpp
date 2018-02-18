@@ -24,8 +24,6 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
     m_parent(nullptr),
     m_bound(false),
     m_name(id),
-    m_atlasClassNo(0),
-    m_moveCount(0),
     m_typeService(ts)
 {
     if (m_name == "root")
@@ -36,20 +34,25 @@ TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
     m_parent(nullptr),
     m_bound(false),
     m_name(atype->getId()),
-    m_moveCount(0),
     m_typeService(ts)
 {
-    if (m_name == "root") m_bound = true; // root node is always bound
+    if (m_name == "root") {
+        m_bound = true; // root node is always bound
+    }
 
     processTypeData(atype);
 }
 
 bool TypeInfo::isA(TypeInfoPtr tp)
 {
-    if (!m_bound) warning() << "calling isA on unbound type " << m_name;
+    if (!m_bound) {
+        warning() << "calling isA on unbound type " << m_name;
+    }
     
     // uber fast short-circuit for type equality
-    if (tp == this) return true;
+    if (tp == this) {
+        return true;
+    }
 	
     return m_ancestors.count(tp) != 0; // non-authorative if not bound
 }
@@ -97,7 +100,9 @@ void TypeInfo::processTypeData(const Root &atype)
             for (const auto& childElement : children) {
                 TypeInfo* child = m_typeService->findTypeByName(childElement.asString());
                 // if the child was already known, don't add to unresolved
-                if (child && m_children.count(child)) continue;
+                if (child && m_children.count(child)) {
+                    continue;
+                }
 
                 m_unresolvedChildren.insert(childElement.asString());
             }
@@ -161,7 +166,9 @@ void TypeInfo::addChild(TypeInfoPtr tp)
         return;
     }
     
-    if (m_children.count(tp)) return; 	
+    if (m_children.count(tp)) {
+        return;
+    }
     m_unresolvedChildren.erase(tp->getName());
     
     m_children.insert(tp);

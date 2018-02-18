@@ -70,6 +70,7 @@ public:
     /// the unique type name (matches the Atlas type)
     const std::string& getName() const;
 
+    /// the object type of this Type or Archetype
 	const std::string& getObjType() const;
     
     /**
@@ -114,6 +115,10 @@ public:
      */
     void setAttribute(const std::string& attributeName, const Atlas::Message::Element& element);
 
+    /**
+     * @brief Gets a list of entities, if the type is an Archetype.
+     * @return
+     */
 	const Atlas::Message::ListType& getEntities() const;
 
 
@@ -171,15 +176,8 @@ private:
     bool m_bound;               ///< cache the 'bound-ness' of the node, see the isBound() implementation
     const std::string m_name;	///< the Atlas unique typename
 	std::string m_objType;		///< the object type, mainly "type" or "archetype"
-    int m_atlasClassNo;         ///< if we registered an atlas factory, this is it's class
-    
+
     StringSet m_unresolvedChildren;
-    
-    /** confidence-tracking - to facilitate clients displaying disappeared
-    entities, we estimate a confidence that they have not changed since they
-    disappeared. For the moment, that confidence is inversely proportional to
-    how frequently entities of that type move, which we count here. */
-    unsigned int m_moveCount;
     
     TypeService* m_typeService;
     
