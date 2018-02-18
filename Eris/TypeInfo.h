@@ -3,6 +3,7 @@
 
 #include "Types.h"
 #include "TypeService.h"
+#include "../../../../opt/x86_64_release/include/Atlas-C++-0.7/Atlas/Message/Element.h"
 
 #include <sigc++/trackable.h>
 
@@ -68,6 +69,8 @@ public:
 // accessors
     /// the unique type name (matches the Atlas type)
     const std::string& getName() const;
+
+	const std::string& getObjType() const;
     
     /**
      * @brief Gets the currently resolved child TypeInfo instances.
@@ -110,7 +113,9 @@ public:
      * @param element The new value of the attribute.
      */
     void setAttribute(const std::string& attributeName, const Atlas::Message::Element& element);
-    
+
+	const Atlas::Message::ListType& getEntities() const;
+
 
 protected:
     friend class TypeService;
@@ -165,6 +170,7 @@ private:
 
     bool m_bound;               ///< cache the 'bound-ness' of the node, see the isBound() implementation
     const std::string m_name;	///< the Atlas unique typename
+	std::string m_objType;		///< the object type, mainly "type" or "archetype"
     int m_atlasClassNo;         ///< if we registered an atlas factory, this is it's class
     
     StringSet m_unresolvedChildren;
@@ -181,6 +187,12 @@ private:
      * @brief The default attributes specified for this entity type.
      */
     Atlas::Message::MapType m_attributes;
+
+	/*
+	 * @brief If the type is an archetype, the entities will be defined here.
+	 */
+	Atlas::Message::ListType m_entities;
+
 };
 
 inline const Atlas::Message::MapType& TypeInfo::getAttributes() const
@@ -198,6 +210,10 @@ inline const std::string& TypeInfo::getName() const
     return m_name;
 }
 
+inline const std::string& TypeInfo::getObjType() const {
+	return m_objType;
+}
+
 inline const TypeInfoSet & TypeInfo::getChildren() const
 {
     return m_children;
@@ -206,6 +222,11 @@ inline const TypeInfoSet & TypeInfo::getChildren() const
 inline const TypeInfoPtr & TypeInfo::getParent() const
 {
     return m_parent;
+}
+
+inline const Atlas::Message::ListType& TypeInfo::getEntities() const
+{
+    return m_entities;
 }
 
 

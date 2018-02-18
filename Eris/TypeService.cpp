@@ -28,7 +28,7 @@ TypeService::TypeService(Connection *con) :
     m_con(con),
     m_inited(false)
 {
-    defineBuiltin("root", NULL);
+    defineBuiltin("root", nullptr);
 }
 
 TypeService::~TypeService()
@@ -46,22 +46,22 @@ void TypeService::init()
     // every type already in the map delayed it's sendInfoRequest because we weren't inited;
     // go through and fix them now. This allows static construction (or early construction) of
     // things like ClassDispatchers in a moderately controlled fashion.
-    for (TypeInfoMap::iterator T=m_types.begin(); T!=m_types.end(); ++T) {
-        if (!T->second->isBound()) sendRequest(T->second->getName());
+    for (auto& type : m_types) {
+        if (!type.second->isBound()) sendRequest(type.second->getName());
     }
 }
 
 TypeInfoPtr TypeService::findTypeByName(const std::string &id)
 {
-    TypeInfoMap::iterator T = m_types.find(id);
+	auto T = m_types.find(id);
     if (T != m_types.end()) return T->second;
 	
-    return NULL;
+    return nullptr;
 }
 
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
-    TypeInfoMap::iterator T = m_types.find(id);
+	auto T = m_types.find(id);
     if (T != m_types.end()) return T->second;
        
 // not found, do some work
@@ -76,7 +76,7 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 {
     /* special case code to handle the root object which has no parents. */
-    if (obj->getParent() == "") {
+    if (obj->getParent().empty()) {
         // check that obj->isA(ROOT_NO);
         return getTypeByName("root");
     }
@@ -89,7 +89,9 @@ void TypeService::handleOperation(const RootOperation& op)
     if (op->instanceOf(ERROR_NO)) {
         const std::vector<Root>& args(op->getArgs());
         Get request = smart_dynamic_cast<Get>(args[1]);
-        if (!request.isValid()) throw InvalidOperation("TypeService got ERROR whose arg is not GET");
+        if (!request.isValid()) {
+			throw InvalidOperation("TypeService got ERROR whose arg is not GET");
+		}
         
         recvError(request);
     } else if (op->instanceOf(INFO_NO)) {
@@ -98,7 +100,8 @@ void TypeService::handleOperation(const RootOperation& op)
         
         if ((objType == "meta") || 
             (objType == "class") ||
-            (objType == "op_definition")) 
+            (objType == "op_definition") ||
+			(objType == "archetype"))
         {
             recvTypeInfo(args.front());
         }
@@ -109,7 +112,7 @@ void TypeService::handleOperation(const RootOperation& op)
 
 void TypeService::recvTypeInfo(const Root &atype)
 {
-    TypeInfoMap::iterator T = m_types.find(atype->getId());
+	auto T = m_types.find(atype->getId());
     if (T == m_types.end()) {
         error() << "received type object with unknown ID " << atype->getId();
         return;
@@ -144,7 +147,7 @@ void TypeService::recvError(const Get& get)
     const std::vector<Root>& args = get->getArgs();
     const Root & request = args.front();
 
-    TypeInfoMap::iterator T = m_types.find(request->getId());
+	auto T = m_types.find(request->getId());
     if (T == m_types.end()) {
         // what the fuck? getting out of here...
         throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + request->getId());

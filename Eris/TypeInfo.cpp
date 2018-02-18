@@ -67,8 +67,8 @@ void TypeInfo::resolveChildren()
     }
     
     StringSet uchildren(m_unresolvedChildren);
-    for (StringSet::const_iterator it = uchildren.begin(); it != uchildren.end(); ++it) {
-        addChild(m_typeService->getTypeByName(*it));
+    for (const auto& child : uchildren) {
+        addChild(m_typeService->getTypeByName(child));
     }
     
     assert(m_unresolvedChildren.empty());
@@ -84,6 +84,7 @@ void TypeInfo::processTypeData(const Root &atype)
 
 
     setParent(m_typeService->getTypeByName(atype->getParent()));
+    m_objType = atype->getObjtype();
 
     if (atype->hasAttr("children"))
     {
@@ -93,16 +94,23 @@ void TypeInfo::processTypeData(const Root &atype)
         } else {
             const Atlas::Message::ListType & children(childElem.asList());
 
-            for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C) {
-                TypeInfo* child = m_typeService->findTypeByName(C->asString());
+            for (const auto& childElement : children) {
+                TypeInfo* child = m_typeService->findTypeByName(childElement.asString());
                 // if the child was already known, don't add to unresolved
                 if (child && m_children.count(child)) continue;
 
-                m_unresolvedChildren.insert(C->asString());
+                m_unresolvedChildren.insert(childElement.asString());
             }
         }
     }
-    
+
+    Atlas::Message::Element entitiesElement;
+    if (atype->copyAttr("entities", entitiesElement) == 0) {
+        if (entitiesElement.isList()) {
+            m_entities = std::move(entitiesElement.List());
+        }
+    }
+
     extractDefaultAttributes(atype);
       
     validateBind();
@@ -175,8 +183,8 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
     // tell all our childen!
-    for (TypeInfoSet::const_iterator C=m_children.begin(); C!=m_children.end();++C) {
-        (*C)->addAncestor(tp);
+    for (auto child : m_children) {
+		child->addAncestor(tp);
     }
 }
 
@@ -189,15 +197,14 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
             warning() << "'attributes' element is not of map type when processing entity type " << m_name << ".";
         } else {
             const Atlas::Message::MapType& attrsMap(attrsElement.asMap());
-            for (Atlas::Message::MapType::const_iterator I = attrsMap.begin(); I != attrsMap.end(); ++I)
-            {
-                std::string attributeName(I->first);
-                if (I->second.isMap()) {
-                    const Atlas::Message::MapType& innerAttributeMap(I->second.asMap());
-                    Atlas::Message::MapType::const_iterator J = innerAttributeMap.find("default");
+            for (const auto& attributeElement : attrsMap) {
+                std::string attributeName(attributeElement.first);
+                if (attributeElement.second.isMap()) {
+                    const Atlas::Message::MapType& innerAttributeMap(attributeElement.second.asMap());
+                    auto J = innerAttributeMap.find("default");
                     if (J != innerAttributeMap.end()) {
                         ///Only add the attribute if it's marked as publicly visible (will there ever be private attributes sent over the wire?).
-                        Atlas::Message::MapType::const_iterator visibilityI = innerAttributeMap.find("visibility");
+                        auto visibilityI = innerAttributeMap.find("visibility");
                         if (visibilityI != innerAttributeMap.end()) {
                             if (visibilityI->second.isString()) {
                                 if (visibilityI->second.asString() == "public") {
@@ -215,10 +222,10 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
 
 const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
 {
-    static Atlas::Message::Element* emptyElement(0);
+    static Atlas::Message::Element* emptyElement(nullptr);
     
     ///first check with the local attributes
-    Atlas::Message::MapType::const_iterator A = m_attributes.find(attributeName);
+    auto A = m_attributes.find(attributeName);
     if (A != m_attributes.end()) {
         return &(A->second);
     } else {
@@ -236,7 +243,7 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
 void TypeInfo::setAttribute(const std::string& attributeName, const Atlas::Message::Element& element)
 {
     onAttributeChanges(attributeName, element);
-    Atlas::Message::MapType::iterator I = m_attributes.find(attributeName);
+    auto I = m_attributes.find(attributeName);
     if (I == m_attributes.end()) {
         m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, element));
     } else {
@@ -249,10 +256,10 @@ void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas:
 {
     AttributeChanges.emit(attributeName, element);
     ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
-    for (TypeInfoSet::const_iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
-        Atlas::Message::MapType::const_iterator J = (*I)->m_attributes.find(attributeName);
-        if (J == (*I)->m_attributes.end()) {
-            (*I)->onAttributeChanges(attributeName, element);
+    for (auto child : getChildren()) {
+        Atlas::Message::MapType::const_iterator J = child->m_attributes.find(attributeName);
+        if (J == child->m_attributes.end()) {
+            child->onAttributeChanges(attributeName, element);
         }
     }
 }
@@ -271,8 +278,8 @@ void TypeInfo::validateBind()
     Bound.emit();
     m_typeService->BoundType.emit(this);
     
-    for (TypeInfoSet::const_iterator C=m_children.begin(); C!=m_children.end();++C) {
-        (*C)->validateBind();
+    for (auto child : m_children) {
+        child->validateBind();
     }
 }
 

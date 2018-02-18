@@ -24,7 +24,7 @@ typedef std::set<TypeInfoPtr> TypeInfoSet;
 class TypeService : virtual public sigc::trackable
 {
 public:
-    TypeService(Connection *con);
+    explicit TypeService(Connection *con);
     virtual ~TypeService();
 
     void init();
