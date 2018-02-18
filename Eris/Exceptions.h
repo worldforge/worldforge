@@ -11,20 +11,16 @@ namespace Eris
 {
 
 /**
-This is the Eris base for all exceptions; note it inherits from std::except,
-which isn't ideal. One option would be to refactor the various final
-exceptions so they inherit from the 'closest' ISO C++ exception, but it
-hardly seems worth it.
+This is the Eris base for all exceptions.
 */
 class BaseException : public std::runtime_error
 {
 public:
-	explicit BaseException(const std::string &m) noexcept:
-		std::runtime_error(m), _msg(m) {;}
+	explicit BaseException(const std::string& m) noexcept:
+		std::runtime_error(m) {;}
 
 	~BaseException() noexcept override = default;
-	const std::string _msg;
-};	
+};
 	
 class InvalidOperation : public BaseException
 {
@@ -39,13 +35,11 @@ public:
 class InvalidAtlas : public BaseException
 {
 public:
-    InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj) noexcept;
+    InvalidAtlas(const std::string& msg) noexcept :
+		BaseException(msg){}
     
-    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& el) noexcept;
 
 	~InvalidAtlas() noexcept override = default;
-private:
-    Atlas::Objects::Root m_obj;
 };
 
 class NetworkFailure : public BaseException

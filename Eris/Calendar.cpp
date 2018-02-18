@@ -27,7 +27,7 @@ Calendar::Calendar(Avatar* av) :
     m_minutesPerHour(0),
     m_secondsPerMinute(0)
 {
-    assert(av->getView() != NULL);
+    assert(av->getView() != nullptr);
 
     av->getView()->TopLevelEntityChanged.connect(
         sigc::mem_fun(this, &Calendar::topLevelEntityChanged));
@@ -62,24 +62,24 @@ void Calendar::calendarAttrChanged(const Element& value)
 
 void Calendar::initFromCalendarAttr(const MapType& cal)
 {
-    MapType::const_iterator it = cal.find("days_per_month");
-    if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
+    auto it = cal.find("days_per_month");
+    if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
     m_daysPerMonth = (unsigned int)it->second.asInt();
 
     it = cal.find("hours_per_day");
-    if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
+    if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
     m_hoursPerDay = (unsigned int)it->second.asInt();
 
     it = cal.find("minutes_per_hour");
-    if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
+    if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
     m_minutesPerHour = (unsigned int)it->second.asInt();
 
     it = cal.find("months_per_year");
-    if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
+    if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
     m_monthsPerYear = (unsigned int)it->second.asInt();
 
     it = cal.find("seconds_per_minute");
-    if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
+    if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
     m_secondsPerMinute = (unsigned int)it->second.asInt();
 
     Updated.emit();

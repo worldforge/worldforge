@@ -119,7 +119,6 @@ set(SOURCE_FILES
         Eris/EntityRef.cpp
         Eris/EntityRouter.cpp
         Eris/EventService.cpp
-        Eris/Exceptions.cpp
         Eris/Factory.cpp
         Eris/IGRouter.cpp
         Eris/Lobby.cpp
