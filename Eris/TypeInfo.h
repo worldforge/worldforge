@@ -3,19 +3,12 @@
 
 #include "Types.h"
 #include "TypeService.h"
-#include "../../../../opt/x86_64_release/include/Atlas-C++-0.7/Atlas/Message/Element.h"
+#include <Atlas/Message/Element.h>
 
 #include <sigc++/trackable.h>
 
 #include <map>
 #include <string>
-
-namespace Atlas {
-    namespace Message {
-        class Element;
-        typedef std::map<std::string, Element> MapType;
-    }
-}
 
 namespace Eris {
 
