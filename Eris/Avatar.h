@@ -15,6 +15,8 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
+#include <boost/optional.hpp>
+
 #include <vector>
 
 namespace Eris
@@ -103,7 +105,8 @@ public:
      * @param orientation An optional orientation of the entity.
      */
     void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
-            const WFMath::Quaternion& orientation = WFMath::Quaternion());
+               const WFMath::Quaternion& orientation = WFMath::Quaternion(),
+               boost::optional<float> offset = boost::none);
 
     /// Wield an entity which is inside the Avatar's inventory
     void wield(Entity * entity);

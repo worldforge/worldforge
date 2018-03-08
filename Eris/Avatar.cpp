@@ -221,7 +221,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
 }
 
 void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
-        const WFMath::Quaternion& orientation)
+                   const WFMath::Quaternion& orientation, boost::optional<float> offset)
 {
     Anonymous what;
     what->setLoc(container->getId());
@@ -232,6 +232,9 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
     }
     if (orientation.isValid()) {
         what->setAttr("orientation", orientation.toAtlas());
+    }
+    if (offset) {
+        what->setAttr("planted-offset", offset.get());
     }
 
     what->setId(entity->getId());
