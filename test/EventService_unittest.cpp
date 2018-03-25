@@ -24,8 +24,11 @@
 #define DEBUG
 #endif
 
-#include <Eris/EventService.h>
-#include <Eris/Log.h>
+#include "Eris/EventService.h"
+#include "Eris/ActiveMarker.h"
+#include "Eris/Log.h"
+
+using namespace Eris;
 
 int main() {
 	boost::asio::io_service io_service;
@@ -64,6 +67,51 @@ int main() {
 		assert(result == 1);
 	}
 
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		std::unique_ptr<ActiveMarker> activeMarker(new ActiveMarker());
+		ted.runOnMainThread([&]() { called = true; }, *activeMarker);
+		activeMarker.reset();
+		size_t result = ted.processOneHandler();
+		assert(!called);
+		assert(result == 1);
+	}
+
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		std::unique_ptr<ActiveMarker> activeMarker(new ActiveMarker());
+		ted.runOnMainThread([&]() { called = true; }, *activeMarker);
+		size_t result = ted.processOneHandler();
+		assert(called);
+		assert(result == 1);
+	}
+
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		auto sharedMarker = std::make_shared<bool>(true);
+		ted.runOnMainThread([&]() { called = true; }, sharedMarker);
+		size_t result = ted.processOneHandler();
+		assert(called);
+		assert(result == 1);
+	}
+
+	{
+		io_service.reset();
+		Eris::EventService ted(io_service);
+		bool called = false;
+		auto sharedMarker = std::make_shared<bool>(true);
+		ted.runOnMainThread([&]() { called = true; }, sharedMarker);
+		*sharedMarker = false;
+		size_t result = ted.processOneHandler();
+		assert(!called);
+		assert(result == 1);
+	}
 
 	return 0;
 }

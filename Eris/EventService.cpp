@@ -51,13 +51,8 @@ boost::asio::deadline_timer* EventService::createTimer()
     return new boost::asio::deadline_timer(m_io_service);
 }
 
-void EventService::runOnMainThread(const std::function<void()>& handler)
-{
-    m_background_handlers_queue->push(handler);
-}
-
 void EventService::runOnMainThread(const std::function<void()>& handler,
-        const std::shared_ptr<bool>& activeMarker)
+                                   std::shared_ptr<bool> activeMarker)
 {
     m_background_handlers_queue->push([handler, activeMarker]() {
         if (*activeMarker) {
@@ -66,10 +61,17 @@ void EventService::runOnMainThread(const std::function<void()>& handler,
     });
 }
 
-void EventService::runOnMainThread(const std::function<void()>& handler,
-                                   const ActiveMarker& activeMarker)
-{
-    runOnMainThread(handler, activeMarker.getMarker());
+void EventService::runOnMainThreadDelayed(const std::function<void()>& handler,
+                                          const boost::posix_time::time_duration& duration,
+                                          std::shared_ptr<bool> activeMarker) {
+    auto timer = std::make_shared<boost::asio::deadline_timer>(m_io_service);
+    timer->expires_from_now(duration);
+    timer->async_wait([&, handler, activeMarker, timer](const boost::system::error_code& ec) {
+        if (!ec) {
+            runOnMainThread(handler, activeMarker);
+        }
+    });
+
 }
 
 size_t EventService::processAllHandlers()

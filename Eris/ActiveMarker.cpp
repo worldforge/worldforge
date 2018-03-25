@@ -26,10 +26,15 @@ ActiveMarker::ActiveMarker()
 
 ActiveMarker::~ActiveMarker() {
 	*m_marker = false;
-
 }
 
 const std::shared_ptr<bool> ActiveMarker::getMarker() const {
 	return m_marker;
 }
+
+ActiveMarker::operator std::shared_ptr<bool>() {
+	return m_marker;
+}
+
+
 }

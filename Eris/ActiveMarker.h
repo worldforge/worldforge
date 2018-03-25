@@ -42,6 +42,12 @@ public:
 	 */
 	~ActiveMarker();
 
+	/**
+	 * Implicit conversion operator for shared_ptr<bool>.
+	 * @return
+	 */
+	operator std::shared_ptr<bool>();
+
 	const std::shared_ptr<bool> getMarker() const;
 
 private:

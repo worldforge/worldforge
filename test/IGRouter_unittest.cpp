@@ -723,7 +723,8 @@ EventService::~EventService()
 {
 }
 
-void EventService::runOnMainThread(std::function<void ()> const&)
+void EventService::runOnMainThread(std::function<void ()> const&,
+                                   std::shared_ptr<bool> activeMarker)
 {
 }
 

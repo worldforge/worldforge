@@ -48,7 +48,7 @@ public:
      * @brief Ctor.
      * @param io_service The main io_service of the system.
      */
-    EventService(boost::asio::io_service& io_service);
+    explicit EventService(boost::asio::io_service& io_service);
 
     /**
      * @brief Dtor.
@@ -62,30 +62,21 @@ public:
      * The execution of the handler will be interleaved with the IO polling, making sure
      * that at least one handler is executed each frame.
      * @param handler A function.
+     * @param activeMarker An active marker which is used for cancellation of tasks. If it evaluates to "false" the handler won't be invoked. Use ActiveMarker for convenience.
      */
-    void runOnMainThread(const std::function<void()>& handler);
+    void runOnMainThread(const std::function<void()>& handler,
+                         std::shared_ptr<bool> activeMarker = std::make_shared<bool>(true));
+
 
     /**
-     * @brief Adds a handler which will be run on the main thread.
-     *
-     * This method should mainly be called from background threads.
-     * The execution of the handler will be interleaved with the IO polling, making sure
-     * that at least one handler is executed each frame.
+     * Runs a handler on the main thread after a certain delay.
      * @param handler A function.
-     * @param activeMarker A shared boolean which is used for cancellation of tasks. If the marker evaluates to "false" the handler won't be invoked.
+     * @param duration The duration to wait.
+     * @param activeMarker An active marker which is used for cancellation of tasks. If it evaluates to "false" the handler won't be invoked. Use ActiveMarker for convenience.
      */
-    void runOnMainThread(const std::function<void()>& handler, const std::shared_ptr<bool>& activeMarker);
-
-    /**
-     * @brief Adds a handler which will be run on the main thread.
-     *
-     * This method should mainly be called from background threads.
-     * The execution of the handler will be interleaved with the IO polling, making sure
-     * that at least one handler is executed each frame.
-     * @param handler A function.
-     * @param activeMarker An active marker which is used for cancellation of tasks. If the shared pointer held by the marker evaluates to "false" the handler won't be invoked.
-     */
-    void runOnMainThread(const std::function<void()>& handler, const ActiveMarker& activeMarker);
+    void runOnMainThreadDelayed(const std::function<void()>& handler,
+                                const boost::posix_time::time_duration& duration,
+                                std::shared_ptr<bool> activeMarker = std::make_shared<bool>(true));
 
     /**
      * @brief Processes all registered handlers.
