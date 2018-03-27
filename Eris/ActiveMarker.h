@@ -50,6 +50,8 @@ public:
 
 	const std::shared_ptr<bool> getMarker() const;
 
+	ActiveMarker& operator=(ActiveMarker&& rhs);
+
 private:
 	std::shared_ptr<bool> m_marker;
 };

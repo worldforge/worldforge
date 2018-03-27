@@ -21,7 +21,7 @@
 namespace  Eris {
 
 ActiveMarker::ActiveMarker()
-		: m_marker(new bool(true)) {
+		: m_marker(std::make_shared<bool>(true)) {
 }
 
 ActiveMarker::~ActiveMarker() {
@@ -34,6 +34,12 @@ const std::shared_ptr<bool> ActiveMarker::getMarker() const {
 
 ActiveMarker::operator std::shared_ptr<bool>() {
 	return m_marker;
+}
+
+ActiveMarker& ActiveMarker::operator=(ActiveMarker&& rhs) {
+	m_marker = rhs.m_marker;
+	rhs.m_marker = std::make_shared<bool>(true);
+	return *this;
 }
 
 
