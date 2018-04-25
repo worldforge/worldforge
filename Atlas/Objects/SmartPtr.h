@@ -34,6 +34,9 @@ class SmartPtr
     SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
         incRef();
     }
+    SmartPtr(SmartPtr<T>&& a) : ptr(a.get()) {
+        a.ptr = nullptr;
+    }
     SmartPtr(T *a_ptr) : ptr(a_ptr)
     {
         incRef();
@@ -61,16 +64,25 @@ class SmartPtr
         return SmartPtr<const newType>(ptr);
     }
     bool isValid() const {
-        return ptr != 0;
+        return ptr != nullptr;
     }
+    bool operator!() const noexcept {
+        return this->ptr == nullptr;
+    }
+
+    explicit operator bool () const noexcept
+    {
+        return !this->operator!();
+    }
+
     T& operator*() const { 
-        if (ptr == 0) {
+        if (ptr == nullptr) {
             throw NullSmartPtrDereference();
         }
         return *ptr;
     }
     T* operator->() const {
-        if (ptr == 0) {
+        if (ptr == nullptr) {
             throw NullSmartPtrDereference();
         }
         return ptr;
@@ -85,16 +97,16 @@ class SmartPtr
         return ret;
     }
     // If you want to make these protected, please ensure that the
-    // destructor is made virtual to ensure your new class bahaves
+    // destructor is made virtual to ensure your new class behaves
     // correctly.
   private:
     void decRef() const {
-        if (ptr != 0) {
+        if (ptr != nullptr) {
             ptr->decRef();
         }
     }
     void incRef() const {
-        if (ptr != 0) {
+        if (ptr != nullptr) {
             ptr->incRef();
         }
     }
