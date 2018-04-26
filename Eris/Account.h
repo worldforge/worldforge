@@ -50,7 +50,7 @@ public:
     Accounts might be supported in the future
     @param con A valid (but not necessarily connected) Connection instance
     */
-    Account(Connection *con);
+    explicit Account(Connection *con);
 
     virtual ~Account();
 
@@ -91,7 +91,7 @@ public:
 
     @param accountOp The account operation, which will be wrapped in a "Create" op.
     */
-    Result createAccount(Atlas::Objects::Entity::Account accountOp);
+    Result createAccount(const Atlas::Objects::Entity::Account& accountOp);
 
 
     /// Request logout from the server.
@@ -105,7 +105,7 @@ public:
     bool isLoggedIn() const;
 
     /// Returns a container of character types that the client is allowed to create.
-    const std::vector< std::string > & getCharacterTypes(void) const;
+    const std::vector<std::string> & getCharacterTypes() const;
 
     /// Get the characters owned by this account.
     /**

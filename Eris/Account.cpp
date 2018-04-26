@@ -12,6 +12,7 @@
 #include "EventService.h"
 #include "SpawnPoint.h"
 #include "CharacterType.h"
+#include "TypeService.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -36,19 +37,17 @@ namespace Eris {
 class AccountRouter : public Router
 {
 public:
-    AccountRouter(Account* pl) :
+    explicit AccountRouter(Account* pl) :
         m_account(pl)
     {
         m_account->getConnection()->setDefaultRouter(this);
     }
 
-    virtual ~AccountRouter()
-    {
+    ~AccountRouter() override {
         m_account->getConnection()->clearDefaultRouter();
     }
 
-    virtual RouterResult handleOperation(const RootOperation& op)
-    {
+    RouterResult handleOperation(const RootOperation& op) override {
         // logout
         if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account received forced logout from server";
@@ -65,6 +64,11 @@ public:
             // refresh character data if it changed
             if (!acc->isDefaultCharacters()) m_account->refreshCharacterInfo();
 
+            return HANDLED;
+        }
+
+        if (op->getParent() == "change") {
+            m_account->getConnection()->getTypeService()->handleOperation(op);
             return HANDLED;
         }
 
@@ -93,7 +97,7 @@ Account::~Account()
     ActiveCharacterMap::iterator it;
     for (it = m_activeCharacters.begin(); it != m_activeCharacters.end(); )
     {
-        ActiveCharacterMap::iterator cur = it++;
+        auto cur = it++;
         deactivateCharacter(cur->second); // send logout op
         // cur gets invalidated by innerDeactivateCharacter
         delete cur->second;
@@ -135,7 +139,7 @@ Result Account::createAccount(const std::string &uname,
     return createAccount(account);
 }
 
-Result Account::createAccount(Atlas::Objects::Entity::Account accountOp)
+Result Account::createAccount(const Atlas::Objects::Entity::Account& accountOp)
 {
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
@@ -184,7 +188,7 @@ Result Account::logout()
     return NO_ERR;
 }
 
-const std::vector< std::string > & Account::getCharacterTypes(void) const
+const std::vector< std::string > & Account::getCharacterTypes() const
 {
     return m_characterTypes;
 }
@@ -220,9 +224,8 @@ Result Account::refreshCharacterInfo()
     Anonymous obj;
     lk->setFrom(m_accountId);
 
-    for (StringSet::iterator I=m_characterIds.begin(); I!=m_characterIds.end(); ++I)
-    {
-        obj->setId(*I);
+    for (const auto& id : m_characterIds) {
+        obj->setId(id);
         lk->setArgs1(obj);
         lk->setSerialno(getNewSerialno());
         m_con->getResponder()->await(lk->getSerialno(), this, &Account::sightCharacter);
@@ -472,8 +475,8 @@ void Account::updateFromObject(const AtlasAccount &p)
         if(CharacterTypes.isList())
         {
             const Atlas::Message::ListType & CharacterTypesList(CharacterTypes.asList());
-            Atlas::Message::ListType::const_iterator iCharacterType(CharacterTypesList.begin());
-            Atlas::Message::ListType::const_iterator iEnd(CharacterTypesList.end());
+            auto iCharacterType(CharacterTypesList.begin());
+            auto iEnd(CharacterTypesList.end());
 
             m_characterTypes.reserve(CharacterTypesList.size());
             while(iCharacterType != iEnd)
@@ -501,24 +504,23 @@ void Account::updateFromObject(const AtlasAccount &p)
         if (spawns.isList()) {
             m_spawnPoints.clear();
             const Atlas::Message::ListType & spawnsList(spawns.asList());
-            for (Atlas::Message::ListType::const_iterator I = spawnsList.begin(); I != spawnsList.end(); ++I) {
-                if (I->isMap()) {
-                    const Atlas::Message::MapType& spawnMap = I->asMap();
-                    Atlas::Message::MapType::const_iterator spawnNameI = spawnMap.find("name");
+            for (const auto& spawnElement : spawnsList) {
+                if (spawnElement.isMap()) {
+                    const Atlas::Message::MapType& spawnMap = spawnElement.asMap();
+                    auto spawnNameI = spawnMap.find("name");
                     if (spawnNameI != spawnMap.end()) {
                         const Atlas::Message::Element& name(spawnNameI->second);
                         if (name.isString()) {
                             CharacterTypeStore characterTypes;
-                            Atlas::Message::MapType::const_iterator characterTypesI = spawnMap.find("character_types");
+                            auto characterTypesI = spawnMap.find("character_types");
 
                             if (characterTypesI != spawnMap.end()) {
                                 const Atlas::Message::Element& characterTypesElement(characterTypesI->second);
                                 if (characterTypesElement.isList()) {
                                     const Atlas::Message::ListType & characterTypesList(characterTypesElement.asList());
-                                    for (Atlas::Message::ListType::const_iterator J = characterTypesList.begin(); J != characterTypesList.end(); ++J)
-                                    {
-                                        if (J->isString()) {
-                                            characterTypes.push_back(CharacterType(J->asString(), ""));
+                                    for (const auto& characterElement : characterTypesList) {
+                                        if (characterElement.isString()) {
+                                            characterTypes.push_back(CharacterType(characterElement.asString(), ""));
                                         } else {
                                             error() << "Character type is not of type string.";
                                         }
@@ -651,7 +653,7 @@ void Account::sightCharacter(const RootOperation& op)
         return;
     }
 
-    CharacterMap::iterator C = _characters.find(ge->getId());
+    auto C = _characters.find(ge->getId());
     if (C != _characters.end()) {
         error() << "duplicate sight of character " << ge->getId();
         return;
@@ -735,7 +737,7 @@ void Account::avatarLogoutResponse(const RootOperation& op)
         warning() << "character ID " << charId << " is unknown on account " << m_accountId;
     }
 
-    ActiveCharacterMap::iterator it = m_activeCharacters.find(charId);
+    auto it = m_activeCharacters.find(charId);
     if (it == m_activeCharacters.end()) {
         warning() << "character ID " << charId << " does not correspond to an active avatar.";
         return;

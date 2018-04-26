@@ -47,7 +47,7 @@ Entity::Entity(const std::string& id, TypeInfo* ty) :
     m_recentlyCreated(false),
     m_initialised(true)
 {
-    assert(m_id.size() > 0);
+    assert(!m_id.empty());
     m_orientation.identity();
     
     
@@ -175,6 +175,7 @@ void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeI
 	if (typeInfo->getParent()) {
 		fillAttributesFromType(attributes, typeInfo->getParent());
 	}
+
 }
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
@@ -294,11 +295,6 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAt
     obj->addToMessage(attrs);
     Atlas::Message::MapType::const_iterator A;
     
-    ///Fill with the default values from the type info
-    if (includeTypeInfoAttributes && m_type) {
-        fillAttributesFromType(attrs, m_type);
-    }
-    
     attrs.erase("loc");
     attrs.erase("id");
     attrs.erase("contains");
@@ -314,6 +310,16 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAt
     }
     
     endUpdate();
+
+    //Add any values found in the type, if they aren't defined in the entity already.
+    if (includeTypeInfoAttributes && m_type) {
+        Atlas::Message::MapType typeAttributes;
+        fillAttributesFromType(typeAttributes, m_type);
+        for (auto& entry : typeAttributes) {
+            attrChangedFromTypeInfo(entry.first, entry.second);
+        }
+    }
+
 }
 
 void Entity::filterMoveAttrs(Atlas::Message::MapType& attrs) const
@@ -598,12 +604,11 @@ void Entity::updateTasks(const Element& e)
     TaskArray previousTasks(m_tasks);
     m_tasks.clear();
     
-    for (unsigned int i=0; i<taskList.size(); ++i)
-    {
-        if (!taskList[i].isMap()) {
+    for (auto& taskElement : taskList) {
+        if (!taskElement.isMap()) {
             continue;
         }
-        const MapType& tkmap(taskList[i].asMap());
+        const MapType& tkmap(taskElement.Map());
 		auto it = tkmap.find("name");
         if (it == tkmap.end())
         {
@@ -625,7 +630,7 @@ void Entity::updateTasks(const Element& e)
             onTaskAdded(task);
         } else {
             task = previousTasks[index];
-            previousTasks[index] = NULL;
+            previousTasks[index] = nullptr;
         }
         
         m_tasks.push_back(task);
@@ -668,7 +673,7 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 			removeFromLocation();
 		}
 		m_location = nullptr;
-		assert(m_visible == false);
+		assert(!m_visible);
 		return;
 	}
 
@@ -724,22 +729,22 @@ void Entity::setContentsFromAtlas(const StringList& contents)
     buildEntityDictFromContents(oldContents);
     
 // iterate over new contents
-    for (auto I=contents.begin(); I != contents.end(); ++I) {
+    for (auto& content : contents) {
         Entity* child = nullptr;
 
-		auto J = oldContents.find(*I);
+		auto J = oldContents.find(content);
         if (J != oldContents.end()) {
             child = J->second;
             assert(child->getLocation() == this);
             oldContents.erase(J);
         } else {
-            child = getEntity(*I);
+            child = getEntity(content);
             if (!child) {
             	continue;
             }
             
             if (child->m_limbo) {
-                assert(child->m_visible == false);
+                assert(!child->m_visible);
                 child->m_limbo = false;
             } else if (child->isVisible()) {
                 // server has gone mad, it has a location, and it's visible
@@ -756,8 +761,8 @@ void Entity::setContentsFromAtlas(const StringList& contents)
     } // of contents list iteration
     
 // mark previous contents which are not in new contents as invisible
-    for (IdEntityMap::const_iterator J = oldContents.begin(); J != oldContents.end(); ++J) {
-        J->second->setVisible(false);
+    for (auto& entry : oldContents) {
+        entry.second->setVisible(false);
     }
 }
 
@@ -825,7 +830,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     if (nowVisible == wasVisible) return;
     
     /* the following code looks odd, so remember that only one of nowVisible and
-    wasVisible can ever be true. The structure is necesary so that we fire
+    wasVisible can ever be true. The structure is necessary so that we fire
     Appearances top-down, but Disappearances bottom-up. */
     
     if (nowVisible) {

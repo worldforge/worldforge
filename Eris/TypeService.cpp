@@ -66,7 +66,7 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
        
 // not found, do some work
     /// @todo Verify the id is not in the authoritative invalid ID list
-    TypeInfoPtr node = new TypeInfo(id, this);
+    auto node = new TypeInfo(id, this);
     m_types[id] = node;
     
     sendRequest(id);
@@ -88,22 +88,35 @@ void TypeService::handleOperation(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {
         const std::vector<Root>& args(op->getArgs());
-        Get request = smart_dynamic_cast<Get>(args[1]);
-        if (!request.isValid()) {
-			throw InvalidOperation("TypeService got ERROR whose arg is not GET");
-		}
-        
-        recvError(request);
+        if (!args.empty()) {
+            Get request = smart_dynamic_cast<Get>(args.front());
+            if (!request) {
+                throw InvalidOperation("TypeService got ERROR whose arg is not GET");
+            }
+            recvError(request);
+        }
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
-        std::string objType = args.front()->getObjtype();
-        
-        if ((objType == "meta") || 
-            (objType == "class") ||
-            (objType == "op_definition") ||
-			(objType == "archetype"))
-        {
-            recvTypeInfo(args.front());
+        if (!args.empty()) {
+            auto& objType = args.front()->getObjtype();
+
+            if ((objType == "meta") ||
+                (objType == "class") ||
+                (objType == "op_definition") ||
+                (objType == "archetype")) {
+                recvTypeInfo(args.front());
+            }
+        }
+    } else if (op->getParent() == "change") {
+        const std::vector<Root>& args(op->getArgs());
+        if (!args.empty()) {
+            auto& objType = args.front()->getObjtype();
+            if ((objType == "meta") ||
+                (objType == "class") ||
+                (objType == "op_definition") ||
+                (objType == "archetype")) {
+                recvTypeUpdate(args.front());
+            }
         }
     } else {
         error() << "type service got op that wasn't info or error";
@@ -118,11 +131,19 @@ void TypeService::recvTypeInfo(const Root &atype)
         return;
     }
 	
-    // handle duplicates : this can be caused by waitFors pilling up, for example
-    if (T->second->isBound() && (atype->getId() != "root"))
-        return;
-	
     T->second->processTypeData(atype);
+}
+
+void TypeService::recvTypeUpdate(const Root &atype)
+{
+    //A type has been updated on the server. Check if we have it. If so we need to refresh.
+    //If we don't have it we should do nothing.
+    auto T = m_types.find(atype->getId());
+    if (T == m_types.end()) {
+        return;
+    }
+
+    sendRequest(atype->getId());
 }
 
 void TypeService::sendRequest(const std::string &id)
@@ -163,8 +184,8 @@ void TypeService::recvError(const Get& get)
 TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
 {
     assert(m_types.count(name) == 0);
-    
-    TypeInfo* type = new TypeInfo(name, this);
+
+    auto type = new TypeInfo(name, this);
     m_types[name] = type;
     
     if (parent) {

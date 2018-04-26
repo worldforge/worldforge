@@ -47,8 +47,6 @@ public:
     /** emitted when a type is confirmed as being undefined */
     sigc::signal<void, TypeInfoPtr> BadType;
 
-    void listUnbound();
-
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
  protected:
@@ -58,6 +56,7 @@ public:
     void sendRequest(const std::string& id);
     void recvTypeInfo(const Atlas::Objects::Root &atype);
     void recvError(const Atlas::Objects::Operation::Get& get);
+    void recvTypeUpdate(const Atlas::Objects::Root &atype);
 
     TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
 

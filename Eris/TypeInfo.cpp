@@ -86,9 +86,6 @@ void TypeInfo::processTypeData(const Root &atype)
     }
 
 
-    setParent(m_typeService->getTypeByName(atype->getParent()));
-    m_objType = atype->getObjtype();
-
     if (atype->hasAttr("children"))
     {
         const Atlas::Message::Element childElem(atype->getAttr("children"));
@@ -109,6 +106,8 @@ void TypeInfo::processTypeData(const Root &atype)
         }
     }
 
+
+    //No need to signal changes for "entities" since it's only used for creation of new entities
     Atlas::Message::Element entitiesElement;
     if (atype->copyAttr("entities", entitiesElement) == 0) {
         if (entitiesElement.isList()) {
@@ -116,9 +115,39 @@ void TypeInfo::processTypeData(const Root &atype)
         }
     }
 
-    extractDefaultAttributes(atype);
-      
-    validateBind();
+
+    //Don't allow parent and obj type to be changed for already bound types.
+    if (!m_bound) {
+        setParent(m_typeService->getTypeByName(atype->getParent()));
+        m_objType = atype->getObjtype();
+
+        extractDefaultAttributes(atype);
+
+        validateBind();
+    } else {
+        //For already bound types we'll extract the attributes and check if any changed.
+
+        auto oldAttributes = std::move(m_attributes);
+
+        extractDefaultAttributes(atype);
+
+        for (auto& entry : m_attributes) {
+            auto oldEntryI = oldAttributes.find(entry.first);
+            if (oldEntryI == oldAttributes.end() || oldEntryI->second != entry.second) {
+                AttributeChanges.emit(entry.first, entry.second);
+            }
+
+            if (oldEntryI != oldAttributes.end()) {
+                oldAttributes.erase(oldEntryI);
+            }
+        }
+
+        //If there are any old attributes left they have been removed from the type, we should signal with an empty element.
+        for (auto& entry : oldAttributes) {
+            AttributeChanges.emit(entry.first, Atlas::Message::Element());
+        }
+
+    }
 }
 
 bool TypeInfo::operator==(const TypeInfo &x) const
