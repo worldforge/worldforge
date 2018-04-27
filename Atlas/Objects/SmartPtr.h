@@ -43,6 +43,7 @@ class SmartPtr
     }
     template<class oldType>
     explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(a.get()) {
+        incRef();
     }
     ~SmartPtr() { 
         decRef();
