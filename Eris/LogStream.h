@@ -32,6 +32,16 @@ protected:
     std::ostringstream m_stream;
 };
 
+class notice : public logStreamBase
+{
+public:
+    ~notice()
+    {
+        m_stream << std::flush;
+        doLog(LOG_NOTICE, m_stream.str());
+    }
+};
+
 class debug : public logStreamBase
 {
 public:
