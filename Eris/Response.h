@@ -7,6 +7,9 @@
 namespace Eris
 {
 
+std::string getErrorMessage(const Atlas::Objects::Operation::RootOperation & err);
+
+
 class ResponseBase
 {
 public:

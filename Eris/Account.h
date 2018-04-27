@@ -235,6 +235,11 @@ public:
     */
     sigc::signal<void, Avatar*> AvatarDeactivated;
 
+    /**
+     * Emitted when an error message is received.
+     */
+    sigc::signal<void, const std::string&> ErrorMessage;
+
 protected:
     friend class AccountRouter;
     friend class Avatar; // so avatar can call deactivateCharacter

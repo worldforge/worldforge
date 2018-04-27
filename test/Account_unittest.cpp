@@ -79,19 +79,6 @@ using Atlas::Objects::Root;
 
 namespace Eris {
 
-bool NullResponse::responseReceived(const RootOperation&)
-{
-    return false;
-}
-
-ResponseBase::~ResponseBase()
-{
-}
-
-ResponseTracker::~ResponseTracker()
-{
-}
-
 Router::~Router()
 {
 }
@@ -233,10 +220,6 @@ CharacterType::CharacterType(const std::string& name,
 {
 }
 
-void ResponseTracker::await(long serialno, ResponseBase* resp)
-{
-}
-
 ServerInfo::ServerInfo()
 {
 }
@@ -278,10 +261,6 @@ void doLog(LogLevel lvl, const std::string& msg)
 {
 }
 
-void* clearMemberResponse(void* d)
-{
-    return 0;
-}
 
 long getNewSerialno()
 {

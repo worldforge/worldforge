@@ -7,6 +7,31 @@ using namespace Atlas::Objects::Operation;
 namespace Eris
 {
 
+std::string getErrorMessage(const RootOperation & err)
+{
+    std::string msg;
+    const std::vector<Atlas::Objects::Root>& args = err->getArgs();
+    if (args.empty()) {
+        error() << "got Error error op from server without args";
+        msg = "Unknown error.";
+    } else {
+        const Atlas::Objects::Root & arg = args.front();
+        Atlas::Message::Element message;
+        if (arg->copyAttr("message", message) != 0) {
+            error() << "got Error error op from server without message";
+            msg = "Unknown error.";
+        } else {
+            if (!message.isString()) {
+                error() << "got Error error op from server with bad message";
+                msg = "Unknown error.";
+            } else {
+                msg = message.String();
+            }
+        }
+    }
+    return msg;
+}
+
 ResponseBase::~ResponseBase()
 {
 }

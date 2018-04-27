@@ -87,13 +87,15 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 void TypeService::handleOperation(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {
-        const std::vector<Root>& args(op->getArgs());
-        if (!args.empty()) {
-            Get request = smart_dynamic_cast<Get>(args.front());
-            if (!request) {
-                throw InvalidOperation("TypeService got ERROR whose arg is not GET");
-            }
-            recvError(request);
+    	auto message = getErrorMessage(op);
+    	notice() << "Error from server when requesting type: " << message;
+        auto& args = op->getArgs();
+        //First arg is the error message
+        if (args.size() > 1) {
+            Get request = smart_dynamic_cast<Get>(args[1]);
+            if (request) {
+				recvError(request);
+			}
         }
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
@@ -170,8 +172,9 @@ void TypeService::recvError(const Get& get)
 
 	auto T = m_types.find(request->getId());
     if (T == m_types.end()) {
-        // what the fuck? getting out of here...
-        throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + request->getId());
+        // This type isn't known, which is strange
+		error() << "got ERROR(GET()) with request for unknown type: " + request->getId();
+		return;
     }
     
     warning() << "type " << request->getId() << " undefined on server";

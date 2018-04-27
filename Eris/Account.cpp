@@ -72,6 +72,16 @@ public:
             return HANDLED;
         }
 
+        if (op->getClassNo() == ERROR_NO) {
+            auto message = getErrorMessage(op);
+            if (!message.empty()) {
+                notice() << "Got error message from server: " << message;
+                m_account->ErrorMessage.emit(message);
+            }
+
+            return HANDLED;
+        }
+
         return IGNORED;
     }
 
@@ -543,31 +553,6 @@ void Account::updateFromObject(const AtlasAccount &p)
             error() << "Account has attribute \"spawns\" which is not of type List.";
         }
     }
-}
-
-std::string getErrorMessage(const RootOperation & err)
-{
-    std::string msg;
-    const std::vector<Root>& args = err->getArgs();
-    if (args.empty()) {
-        error() << "got Error error op from server without args";
-        msg = "Unknown error.";
-    } else {
-        const Root & arg = args.front();
-        Atlas::Message::Element message;
-        if (arg->copyAttr("message", message) != 0) {
-            error() << "got Error error op from server without message";
-            msg = "Unknown error.";
-        } else {
-            if (!message.isString()) {
-                error() << "got Error error op from server with bad message";
-                msg = "Unknown error.";
-            } else {
-                msg = message.String();
-            }
-        }
-    }
-    return msg;
 }
 
 void Account::loginError(const Error& err)
