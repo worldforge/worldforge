@@ -111,13 +111,13 @@ void TypeService::handleOperation(const RootOperation& op)
         }
     } else if (op->getParent() == "change") {
         const std::vector<Root>& args(op->getArgs());
-        if (!args.empty()) {
-            auto& objType = args.front()->getObjtype();
+        for (auto& arg : args) {
+            auto& objType = arg->getObjtype();
             if ((objType == "meta") ||
                 (objType == "class") ||
                 (objType == "op_definition") ||
                 (objType == "archetype")) {
-                recvTypeUpdate(args.front());
+                recvTypeUpdate(arg);
             }
         }
     } else {
