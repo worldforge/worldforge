@@ -41,11 +41,15 @@ class SmartPtr
     {
         incRef();
     }
-    template<class oldType>
-    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(a.get()) {
-        incRef();
-    }
-    ~SmartPtr() { 
+	template<class oldType>
+	explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(a.get()) {
+		incRef();
+	}
+	template<class oldType>
+	explicit SmartPtr(SmartPtr<oldType>&& a) : ptr(a.get()) {
+		a.ptr = nullptr;
+	}
+    ~SmartPtr() {
         decRef();
     }
     SmartPtr& operator=(const SmartPtr<T>& a) {
