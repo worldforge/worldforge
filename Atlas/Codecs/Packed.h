@@ -70,11 +70,12 @@ protected:
 
     enum State
     {
-	PARSE_STREAM,
+        PARSE_NOTHING,
+        PARSE_STREAM,
         PARSE_MAP,
         PARSE_LIST,
-	PARSE_MAP_BEGIN,
-	PARSE_LIST_BEGIN,
+	    PARSE_MAP_BEGIN,
+	    PARSE_LIST_BEGIN,
         PARSE_INT,
         PARSE_FLOAT,
         PARSE_STRING,
@@ -99,15 +100,16 @@ protected:
      */
     char m_hex[3];
 
-    inline void parseStream(char);
-    inline void parseMap(char);
-    inline void parseList(char);
-    inline void parseMapBegin(char);
-    inline void parseListBegin(char);
-    inline void parseInt(char);
-    inline void parseFloat(char);
-    inline void parseString(char);
-    inline void parseName(char);
+    void parsingBegins(char);
+    void parseStream(char);
+    void parseMap(char);
+    void parseList(char);
+    void parseMapBegin(char);
+    void parseListBegin(char);
+    void parseInt(char);
+    void parseFloat(char);
+    void parseString(char);
+    void parseName(char);
 
     inline std::string hexEncode(std::string data)
     {

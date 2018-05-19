@@ -150,9 +150,7 @@ void testXMLSanity() {
 		Atlas::Codecs::XML codec(ss2, ss2, decoder);
 		Atlas::Message::Encoder enc(codec);
 
-		decoder.streamBegin();
 		codec.poll(true);
-		decoder.streamEnd();
 
 	}
 	MapType map2 = decoder.popMessage();
@@ -172,9 +170,7 @@ void testPackedSanity() {
         Atlas::Codecs::Packed codec(ss2, ss2, decoder);
         Atlas::Message::Encoder enc(codec);
 
-        decoder.streamBegin();
         codec.poll(true);
-        decoder.streamEnd();
 
     }
     MapType map2 = decoder.popMessage();

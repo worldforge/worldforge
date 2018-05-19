@@ -15,8 +15,16 @@ namespace Atlas { namespace Codecs {
 Packed::Packed(std::istream& in, std::ostream& out, Atlas::Bridge & b)
   : m_istream(in), m_ostream(out), m_bridge(b)
 {
-    m_state.push(PARSE_STREAM);
+    m_state.push(PARSE_NOTHING);
 }
+
+void Packed::parsingBegins(char next)
+{
+	m_state.push(PARSE_STREAM);
+	m_bridge.streamBegin();
+	parseStream(next);
+}
+
 
 void Packed::parseStream(char next)
 {
@@ -327,6 +335,7 @@ void Packed::poll(bool can_read)
 
 	    switch (m_state.top())
 	    {
+			case PARSE_NOTHING:     parsingBegins(next); break;
 	        case PARSE_STREAM:	    parseStream(next); break;
 	        case PARSE_MAP:		    parseMap(next); break;
 	        case PARSE_LIST:	    parseList(next); break;
@@ -343,7 +352,7 @@ void Packed::poll(bool can_read)
 
 void Packed::streamBegin()
 {
-    m_bridge.streamBegin();
+    //Do nothing to denote that a stream begins.
 }
 
 void Packed::streamMessage()
@@ -353,7 +362,7 @@ void Packed::streamMessage()
 
 void Packed::streamEnd()
 {
-    m_bridge.streamEnd();
+	//Do nothing to denote that a stream ends.
 }
 
 void Packed::mapMapItem(std::string name)
