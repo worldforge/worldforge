@@ -488,13 +488,43 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         m_description = v.asString();
         return true;
     } else if (attr == "bbox") {
-        m_bbox.fromAtlas(v);
+        m_bboxUnscaled.fromAtlas(v);
+        m_bbox = m_bboxUnscaled;
+        if (m_scale.isValid()) {
+            m_bbox.lowCorner().x() *= m_scale.x();
+            m_bbox.lowCorner().y() *= m_scale.y();
+            m_bbox.lowCorner().z() *= m_scale.z();
+            m_bbox.highCorner().x() *= m_scale.x();
+            m_bbox.highCorner().y() *= m_scale.y();
+            m_bbox.highCorner().z() *= m_scale.z();
+        }
         m_hasBBox = true;
         return true;
     } else if ((attr == "loc") ||(attr == "contains")) {
         throw InvalidOperation("tried to set loc or contains via setProperty");
     } else if (attr == "tasks") {
         updateTasks(v);
+        return true;
+    } else if (attr == "scale") {
+        if (v.isList()) {
+            if (v.List().size() == 1) {
+                if (v.List().front().isNum()) {
+                    float num = v.List().front().asNum();
+                    m_scale = WFMath::Vector<3>(num, num, num);
+                }
+            } else {
+                m_scale.fromAtlas(v.List());
+            }
+        }
+        if (m_scale.isValid() && m_bboxUnscaled.isValid()) {
+            m_bbox = m_bboxUnscaled;
+            m_bbox.lowCorner().x() *= m_scale.x();
+            m_bbox.lowCorner().y() *= m_scale.y();
+            m_bbox.lowCorner().z() *= m_scale.z();
+            m_bbox.highCorner().x() *= m_scale.x();
+            m_bbox.highCorner().y() *= m_scale.y();
+            m_bbox.highCorner().z() *= m_scale.z();
+        }
         return true;
     }
 

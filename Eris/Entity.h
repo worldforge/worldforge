@@ -571,8 +571,10 @@ protected:
     std::string m_description;
     bool m_visible;
     bool m_limbo;   ///< waiting for parent bind
-    
+
+    WFMath::Vector<3> m_scale;
     WFMath::AxisBox<3> m_bbox;
+    WFMath::AxisBox<3> m_bboxUnscaled;
     WFMath::Point<3> m_position;
     WFMath::Vector<3> m_velocity;
     WFMath::Quaternion m_orientation;    
