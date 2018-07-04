@@ -125,13 +125,16 @@ void Avatar::take(Entity* e)
     getConnection()->send(moveOp);
 }
 
-void Avatar::touch(Entity* e)
+void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
 {
     Touch touchOp;
     touchOp->setFrom(m_entityId);
 
     Anonymous what;
     what->setId(e->getId());
+    if (pos.isValid()) {
+        what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
+    }
     touchOp->setArgs1(what);
 
     getConnection()->send(touchOp);

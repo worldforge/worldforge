@@ -73,7 +73,7 @@ public:
     void take(Entity*);
 
     /// Touch an entity
-    void touch(Entity*);
+    void touch(Entity*, const WFMath::Point<3>& pos);
 
     /// Say something (in-game)
     void say(const std::string&);

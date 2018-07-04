@@ -306,7 +306,7 @@ int main()
         char_ent->setup_setLocation(wrld_ent);
         inv_ent->setup_setLocation(wrld_ent);
 
-        ea->touch(inv_ent);
+        ea->touch(inv_ent, WFMath::Point<3>());
     }
     
     // Test say() of a message
