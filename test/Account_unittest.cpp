@@ -37,7 +37,7 @@ int main()
             new Eris::Account(0);
             return 1;
         }
-        catch (Eris::InvalidOperation io) {
+        catch (const Eris::InvalidOperation& io) {
         }
     }
 

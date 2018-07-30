@@ -167,11 +167,9 @@ int main()
         Atlas::Message::MapType attributes;
         Atlas::Message::MapType level;
         level["default"] = 1.0f;
-        level["visibility"] = "public";
         attributes["level"] = level;
         Atlas::Message::MapType level1;
         level1["default"] = true;
-        level1["visibility"] = "public";
         attributes["level1"] = level1;
 
         typeInfo->setAttr("attributes", attributes);
@@ -195,15 +193,12 @@ int main()
         Atlas::Message::MapType attributes;
         Atlas::Message::MapType level;
         level["default"] = 2.0f;
-        level["visibility"] = "public";
         attributes["level"] = level;
         Atlas::Message::MapType level2;
         level2["default"] = true;
-        level2["visibility"] = "public";
         attributes["level2"] = level2;
         Atlas::Message::MapType velocity;
         velocity["default"] = WFMath::Vector<3>(3,2,1).toAtlas();
-        velocity["visibility"] = "public";
         attributes["velocity"] = velocity;
         typeInfo->setAttr("attributes", attributes);
         typeService.setup_recvTypeInfo(typeInfo);

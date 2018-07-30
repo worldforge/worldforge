@@ -232,22 +232,14 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
         if (!attrsElement.isMap()) {
             warning() << "'attributes' element is not of map type when processing entity type " << m_name << ".";
         } else {
-            const Atlas::Message::MapType& attrsMap(attrsElement.asMap());
+            const Atlas::Message::MapType& attrsMap(attrsElement.Map());
             for (const auto& attributeElement : attrsMap) {
                 std::string attributeName(attributeElement.first);
                 if (attributeElement.second.isMap()) {
-                    const Atlas::Message::MapType& innerAttributeMap(attributeElement.second.asMap());
+                    const Atlas::Message::MapType& innerAttributeMap(attributeElement.second.Map());
                     auto J = innerAttributeMap.find("default");
                     if (J != innerAttributeMap.end()) {
-                        ///Only add the attribute if it's marked as publicly visible (will there ever be private attributes sent over the wire?).
-                        auto visibilityI = innerAttributeMap.find("visibility");
-                        if (visibilityI != innerAttributeMap.end()) {
-                            if (visibilityI->second.isString()) {
-                                if (visibilityI->second.asString() == "public") {
-                                    m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, J->second));
-                                }
-                            }
-                        }
+                        m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, J->second));
                     }
                 }
             }
