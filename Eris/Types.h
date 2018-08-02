@@ -43,7 +43,6 @@ typedef enum
     BAD_CHARACTER_ID
 } Result;
 
-void mergeOrCopyElement(const Atlas::Message::Element& src, Atlas::Message::Element& dst);
 
 }
 

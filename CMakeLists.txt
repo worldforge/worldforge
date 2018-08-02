@@ -139,7 +139,6 @@ set(SOURCE_FILES
         Eris/TransferInfo.cpp
         Eris/TypeBoundRedispatch.cpp
         Eris/TypeInfo.cpp
-        Eris/Types.cpp
         Eris/TypeService.cpp
         Eris/View.cpp
         Eris/ViewEntity.cpp

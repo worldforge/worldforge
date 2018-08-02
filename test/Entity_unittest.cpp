@@ -165,8 +165,5 @@ void doLog(LogLevel lvl, const std::string& msg)
 {
 }
 
-void mergeOrCopyElement(const Atlas::Message::Element& src, Atlas::Message::Element& dst)
-{
-}
 
 }

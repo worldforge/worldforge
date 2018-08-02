@@ -250,8 +250,7 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
 
 const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
 {
-    static Atlas::Message::Element* emptyElement(nullptr);
-    
+
     ///first check with the local attributes
     auto A = m_attributes.find(attributeName);
     if (A != m_attributes.end()) {
@@ -265,7 +264,7 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
             }
         }
     }
-    return emptyElement;
+    return nullptr;
 }
 
 void TypeInfo::setAttribute(const std::string& attributeName, const Atlas::Message::Element& element)
