@@ -66,9 +66,9 @@ void Entity::shutdown()
     BeingDeleted.emit();
 
     //Delete any lingering tasks.
-    for (TaskArray::const_iterator it = m_tasks.begin(); it != m_tasks.end(); ++it) {
-        TaskRemoved(*it);
-        delete *it;
+    for (auto& entry : m_tasks) {
+        TaskRemoved(entry.second);
+        delete entry.second;
     }
 
     if (m_moving) {
@@ -579,37 +579,26 @@ void Entity::endUpdate()
     }
 }
 
-static int findTaskByName(const TaskArray& a, const std::string& nm)
-{
-    for (unsigned int t=0; t < a.size(); ++t)
-    {
-        if (a[t]->name() == nm) return t;
-    }
-    
-    return -1;
-}
 
 void Entity::updateTasks(const Element& e)
 {
-    if (!e.isList()) return; // malformed
-    const ListType& taskList(e.asList());
+    if (e.isNone()) {
+        for (auto& entry : m_tasks) {
+            TaskRemoved(entry.second);
+            delete entry.second;
+        }
+        return;
+    }
+    if (!e.isMap()) {
+        return; // malformed
+    }
+    auto& taskMap = e.Map();
     
-    /*
-    Explanation:
-    
-    We take a copy of the current pointer-to-task array, clear out the 'real'
-    task array, and then walk the array defined by Atlas. For each pre-existing
-    task still specified in the Atlas data, we find the old task in the copied
-    array, re-add it to the main list, and NULL the entry in the copied list.
-    
-    At the end of iterating the Atlas data, any pointers still valid in the
-    copied list are dead, and can be deleted.
-    */
-    
-    TaskArray previousTasks(m_tasks);
+    auto previousTasks = std::move(m_tasks);
     m_tasks.clear();
     
-    for (auto& taskElement : taskList) {
+    for (auto& entry : taskMap) {
+        auto& taskElement = entry.second;
         if (!taskElement.isMap()) {
             continue;
         }
@@ -625,42 +614,30 @@ void Entity::updateTasks(const Element& e)
             error() << "task with invalid name";
             continue;
         }
-        
-        int index = findTaskByName(previousTasks, it->second.asString());
+
+        auto tasksI = previousTasks.find(entry.first);
         Task *task;
         
-        if (index < 0)
+        if (tasksI == previousTasks.end())
         {   // not found, create a new one
             task = new Task(this, it->second.asString());
             onTaskAdded(task);
         } else {
-            task = previousTasks[index];
-            previousTasks[index] = nullptr;
+            task = tasksI->second;
+            previousTasks.erase(entry.first);
         }
         
-        m_tasks.push_back(task);
+        m_tasks.emplace(entry.first, task);
         task->updateFromAtlas(tkmap);
     } // of Atlas-specified tasks iteration
     
-    for (auto& previousTask : previousTasks) {
-        if (!previousTask) continue;
-        
-        TaskRemoved(previousTask);
-        delete previousTask;
-    } // of previous-task cleanup iteration
-}
+    for (auto& entry : previousTasks) {
 
-void Entity::removeTask(Task* t)
-{
-	auto it = std::find(m_tasks.begin(), m_tasks.end(), t);
-    if (it == m_tasks.end())
-    {
-        error() << "unknown task " << t->name() << " on entity " << this;
-        return;
-    }
-    
-    m_tasks.erase(it);
-    TaskRemoved(t);
+        if (entry.second) {
+            TaskRemoved(entry.second);
+            delete entry.second;
+        }
+    } // of previous-task cleanup iteration
 }
 
 void Entity::setLocationFromAtlas(const std::string& locId) {

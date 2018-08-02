@@ -37,7 +37,6 @@ class EntityRouter;
 class Task;
 
 typedef std::vector<Entity*> EntityArray;
-typedef std::vector<Task*> TaskArray;
 typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
 /** 
@@ -235,7 +234,7 @@ public:
      * @brief Gets the tasks associated with this entity.
      * @return The tasks associated with this entity.
      */
-    const TaskArray& getTasks() const;
+    const std::map<std::string, Task*>& getTasks() const;
     
     /**
     @brief Get a list of operations supported by this entity (tool)
@@ -516,7 +515,6 @@ protected:
     void removeFromLocation();
 
     void updateTasks(const Atlas::Message::Element& e);
-    void removeTask(Task* t);
 
     /** recursively update the real visiblity of this entity, and fire
     appropriate signals. */
@@ -618,7 +616,7 @@ protected:
     
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
     
-    TaskArray m_tasks;
+    std::map<std::string, Task*> m_tasks;
 
     bool m_initialised;
 };
@@ -690,7 +688,7 @@ inline bool Entity::hasBBox() const
     return m_hasBBox;
 }
 
-inline const TaskArray& Entity::getTasks() const
+inline const std::map<std::string, Task*>& Entity::getTasks() const
 {
     return m_tasks; 
 }
