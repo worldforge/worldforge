@@ -29,13 +29,13 @@ IGRouter::IGRouter(Avatar* av) :
     m_avatar(av),
     m_view(av->getView())
 {
-    m_avatar->getConnection()->registerRouterForTo(this, m_avatar->getId());
+    m_avatar->getConnection()->registerRouterForTo(this, m_avatar->getEntityId());
     m_actionType = m_avatar->getConnection()->getTypeService()->getTypeByName("action");
 }
 
 IGRouter::~IGRouter()
 {
-    m_avatar->getConnection()->unregisterRouterForTo(this, m_avatar->getId());
+    m_avatar->getConnection()->unregisterRouterForTo(this, m_avatar->getEntityId());
 }
 
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op)

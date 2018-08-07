@@ -261,6 +261,7 @@ protected:
 
     void loginResponse(const Atlas::Objects::Operation::RootOperation& op);
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
+    void possessResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
 

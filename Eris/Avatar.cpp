@@ -35,9 +35,10 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris
 {
 
-Avatar::Avatar(Account& pl, const std::string& entId) :
+Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_account(pl),
-    m_entityId(entId),
+    m_mindId(std::move(mindId)),
+    m_entityId(std::move(entityId)),
     m_entity(nullptr),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0),
@@ -88,7 +89,7 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaterni
     }
 
     Move moveOp;
-    moveOp->setFrom(m_entityId);
+    moveOp->setFrom(m_mindId);
 
     Anonymous what;
     what->setLoc(loc);
@@ -111,7 +112,7 @@ void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quat
 void Avatar::take(Entity* e)
 {
     Move moveOp;
-    moveOp->setFrom(m_entityId);
+    moveOp->setFrom(m_mindId);
 
     Anonymous what;
     what->setLoc(m_entityId);
@@ -128,7 +129,7 @@ void Avatar::take(Entity* e)
 void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
 {
     Touch touchOp;
-    touchOp->setFrom(m_entityId);
+    touchOp->setFrom(m_mindId);
 
     Anonymous what;
     what->setId(e->getId());
@@ -147,7 +148,7 @@ void Avatar::say(const std::string& msg)
     Anonymous what;
     what->setAttr("say", msg);
     t->setArgs1(what);
-    t->setFrom(m_entityId);
+    t->setFrom(m_mindId);
 
     getConnection()->send(t);
 }
@@ -164,7 +165,7 @@ void Avatar::sayTo(const std::string& message, const std::vector<std::string>& e
     }
     what->setAttr("address", addressList);
     t->setArgs1(what);
-    t->setFrom(m_entityId);
+    t->setFrom(m_mindId);
 
     getConnection()->send(t);
 }
@@ -179,7 +180,7 @@ void Avatar::emote(const std::string &em)
     emote->setAttr("description", em);
 
     im->setArgs1(emote);
-    im->setFrom(m_entityId);
+    im->setFrom(m_mindId);
     im->setSerialno(getNewSerialno());
 
     getConnection()->send(im);
@@ -198,7 +199,7 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos, const WFMath::Quaternion& 
 	}
 
     Move moveOp;
-    moveOp->setFrom(m_entityId);
+    moveOp->setFrom(m_mindId);
     moveOp->setArgs1(what);
 
     getConnection()->send(moveOp);
@@ -217,7 +218,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
     arg->setId(m_entityId);
 
     Move moveOp;
-    moveOp->setFrom(m_entityId);
+    moveOp->setFrom(m_mindId);
     moveOp->setArgs1(arg);
 
     getConnection()->send(moveOp);
@@ -243,7 +244,7 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
     what->setId(entity->getId());
 
     Move moveOp;
-    moveOp->setFrom(m_entityId);
+    moveOp->setFrom(m_mindId);
     moveOp->setArgs1(what);
 
     //if the avatar is an admin, we will set the TO property
@@ -270,7 +271,7 @@ void Avatar::wield(Entity * entity)
     arguments->setId(entity->getId());
 
     Wield wield;
-    wield->setFrom(m_entityId);
+    wield->setFrom(m_mindId);
     wield->setArgs1(arguments);
 
     getConnection()->send(wield);
@@ -285,7 +286,7 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const s
     if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
 
     Use use;
-    use->setFrom(m_entityId);
+    use->setFrom(m_mindId);
 
 
     if (opType.empty())
@@ -295,7 +296,7 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const s
         RootOperation op;
         op->setParent(opType);
         op->setArgs1(arguments);
-        op->setFrom(m_entityId);
+        op->setFrom(m_mindId);
 
         use->setArgs1(op);
     }
@@ -307,7 +308,7 @@ void Avatar::attack(Entity* entity)
 {
     assert(entity);
     Attack attackOp;
-    attackOp->setFrom(m_entityId);
+    attackOp->setFrom(m_mindId);
 
     Anonymous what;
     what->setId(entity->getId());
@@ -319,7 +320,7 @@ void Avatar::attack(Entity* entity)
 void Avatar::useStop()
 {
     Use use;
-    use->setFrom(m_entityId);
+    use->setFrom(m_mindId);
     getConnection()->send(use);
 }
 

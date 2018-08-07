@@ -35,8 +35,12 @@ class Avatar : virtual public sigc::trackable
 {
 public:
 
-    /// Get the Entity id of this Avatar
+    /// Get the Mind id of this Avatar. All interaction with the entity goes through the Mind.
     const std::string & getId() const;
+
+    // Get the Entity if of this Avatar. This can't be directly interacted with; all interaction must go through the Mind.
+    const std::string & getEntityId() const;
+
 
     /// Get the Entity this Avatar refers to
     EntityPtr getEntity() const;
@@ -197,7 +201,7 @@ protected:
     /** Create a new Avatar object.
     @param pl The player that owns the Avatar
     */
-    Avatar(Account& pl, const std::string& entId);
+    Avatar(Account& pl, std::string mindId, std::string entityId);
     virtual ~Avatar();
 
     friend class AccountRouter;
@@ -239,6 +243,7 @@ protected:
 
     Account& m_account;
 
+    std::string m_mindId;
     std::string m_entityId;
     EntityPtr m_entity;
 
@@ -259,8 +264,14 @@ protected:
 
 inline const std::string & Avatar::getId() const
 {
+    return m_mindId;
+}
+
+inline const std::string & Avatar::getEntityId() const
+{
     return m_entityId;
 }
+
 
 inline EntityPtr Avatar::getEntity() const
 {

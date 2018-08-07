@@ -17,6 +17,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/objectFactory.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -341,13 +342,14 @@ Result Account::takeCharacter(const std::string &id)
     Anonymous what;
     what->setId(id);
 
-    Look l;
-    l->setFrom(id);  // should this be m_accountId?
-    l->setArgs1(what);
-    l->setSerialno(getNewSerialno());
-    m_con->send(l);
+    Atlas::Objects::Operation::Generic possessOp;
+    possessOp->setParent("possess");
+    possessOp->setFrom(m_accountId);
+    possessOp->setArgs1(what);
+    possessOp->setSerialno(getNewSerialno());
+    m_con->send(possessOp);
 
-    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarResponse);
+    m_con->getResponder()->await(possessOp->getSerialno(), this, &Account::possessResponse);
     m_status = TAKING_CHAR;
     return NO_ERR;
 }
@@ -579,6 +581,57 @@ void Account::handleLoginTimeout()
     LoginFailure.emit("timed out waiting for server response");
 }
 
+void Account::possessResponse(const RootOperation& op)
+{
+    if (op->instanceOf(ERROR_NO)) {
+        std::string msg = getErrorMessage(op);
+
+        // creating or taking a character failed for some reason
+        AvatarFailure(msg);
+        m_status = Account::LOGGED_IN;
+    } else if (op->instanceOf(INFO_NO)) {
+        const std::vector<Root>& args = op->getArgs();
+        if (args.empty()) {
+            warning() << "no args character possess response";
+            return;
+        }
+
+        auto ent = smart_dynamic_cast<RootEntity>(args.front());
+        if (!ent.isValid()) {
+            warning() << "malformed character possess response";
+            return;
+        }
+
+        if (!ent->hasAttr("entity")) {
+            warning() << "malformed character possess response";
+            return;
+        }
+
+        auto entityMessage = ent->getAttr("entity");
+
+        if (!entityMessage.isMap()) {
+            warning() << "malformed character possess response";
+            return;
+        }
+        auto entityObj = smart_dynamic_cast<RootEntity>(Atlas::Objects::Factories::instance()->createObject(entityMessage.Map()));
+
+        if (!entityObj || entityObj->isDefaultId()) {
+            warning() << "malformed character possess response";
+            return;
+        }
+
+        auto av = new Avatar(*this, ent->getId(), entityObj->getId());
+        AvatarSuccess.emit(av);
+        m_status = Account::LOGGED_IN;
+
+        assert(m_activeCharacters.count(av->getId()) == 0);
+        m_activeCharacters[av->getId()] = av;
+
+    } else
+        warning() << "received incorrect avatar create/take response";
+}
+
+
 void Account::avatarResponse(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {
@@ -600,7 +653,7 @@ void Account::avatarResponse(const RootOperation& op)
             return;
         }
 
-        Avatar* av = new Avatar(*this, ent->getId());
+        Avatar* av = new Avatar(*this, ent->getId(), ent->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
 
