@@ -259,13 +259,16 @@ Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
         }
     }
 
+    //Make sure we also possess the newly created character; we don't want to support non-possessed characters in the client for now.
+    ent->setAttr("possess", 1);
     Create c;
     c->setArgs1(ent);
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
     m_con->send(c);
 
-    m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarResponse);
+    //First response should be a Sight of the newly created character, followed by an Info of the Mind created.
+    m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarCreateResponse);
     m_status = CREATING_CHAR;
     return NO_ERR;
 }
@@ -306,17 +309,19 @@ Result Account::takeTransferredCharacter(const std::string &id, const std::strin
         }
     }
 
+
     Anonymous what;
     what->setId(id);
     what->setAttr("possess_key", key);
 
-    Look l;
-    l->setFrom(getId());
-    l->setArgs1(what);
-    l->setSerialno(getNewSerialno());
-    m_con->send(l);
+    Atlas::Objects::Operation::Generic possessOp;
+    possessOp->setParent("possess");
+    possessOp->setFrom(m_accountId);
+    possessOp->setArgs1(what);
+    possessOp->setSerialno(getNewSerialno());
+    m_con->send(possessOp);
 
-    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarResponse);
+    m_con->getResponder()->await(possessOp->getSerialno(), this, &Account::possessResponse);
     m_status = TAKING_CHAR;
     return NO_ERR;
 }
@@ -631,39 +636,39 @@ void Account::possessResponse(const RootOperation& op)
         warning() << "received incorrect avatar create/take response";
 }
 
-
-void Account::avatarResponse(const RootOperation& op)
+void Account::avatarCreateResponse(const RootOperation& op)
 {
+    //When creating a character the first op is a Sight of the new entity,
+    //followed by an INFO about the Mind setup to control the entity.
     if (op->instanceOf(ERROR_NO)) {
         std::string msg = getErrorMessage(op);
 
         // creating or taking a character failed for some reason
         AvatarFailure(msg);
         m_status = Account::LOGGED_IN;
-    } else if (op->instanceOf(INFO_NO)) {
+    } else if (op->instanceOf(SIGHT_NO)) {
         const std::vector<Root>& args = op->getArgs();
         if (args.empty()) {
-            warning() << "no args character create/take response";
+            error() << "got sight of character with no args";
             return;
         }
 
-        RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
-        if (!ent.isValid()) {
-            warning() << "malformed character create/take response";
+        RootEntity ge = smart_dynamic_cast<RootEntity>(args.front());
+        if (!ge.isValid()) {
+            error() << "got sight of character with malformed args";
             return;
         }
 
-        Avatar* av = new Avatar(*this, ent->getId(), ent->getId());
-        AvatarSuccess.emit(av);
-        m_status = Account::LOGGED_IN;
 
-        assert(m_activeCharacters.count(av->getId()) == 0);
-        m_activeCharacters[av->getId()] = av;
-
+        _characters.emplace(ge->getId(), ge);
+        GotCharacterInfo.emit(ge);
         // expect another op with the same refno
         m_con->getResponder()->ignore(op->getRefno());
-    } else
+    } else if (op->instanceOf(INFO_NO)) {
+        possessResponse(op);
+    } else {
         warning() << "received incorrect avatar create/take response";
+    }
 }
 
 void Account::internalDeactivateCharacter(Avatar* av)

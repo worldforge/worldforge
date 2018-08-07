@@ -116,7 +116,7 @@ class TestAccount : public Eris::Account {
     }
 
     void test_avatarResponse(const Atlas::Objects::Operation::RootOperation& op) {
-        avatarResponse(op);
+		avatarPossessResponse(op);
     }
 
     void test_internalDeactivateCharacter(Eris::Avatar * ea) {
@@ -892,7 +892,7 @@ int main()
         assert(loginFailure_checker.flagged());
     }
 
-    // Test avatarResponse() Error op
+    // Test avatarPossessResponse() Error op
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767);
@@ -911,7 +911,7 @@ int main()
         acc.setup_setStatus(TestAccount::DISCONNECTED);
     }
 
-    // Test avatarResponse() Info op with no arg
+    // Test avatarPossessResponse() Info op with no arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767);
@@ -928,7 +928,7 @@ int main()
         assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
     }
 
-    // Test avatarResponse() Info op with non-entity arg
+    // Test avatarPossessResponse() Info op with non-entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767);
@@ -947,7 +947,7 @@ int main()
         assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
     }
 
-    // Test avatarResponse() Info op with entity arg
+    // Test avatarPossessResponse() Info op with entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767);
@@ -968,7 +968,7 @@ int main()
         acc.setup_setStatus(TestAccount::DISCONNECTED);
     }
 
-    // Test avatarResponse() Get (not info or error) op with entity arg
+    // Test avatarPossessResponse() Get (not info or error) op with entity arg
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767);
