@@ -101,6 +101,12 @@ int Connection::disconnect()
     // FIXME Look into this.
     assert(m_lock == 0);
 
+    if (_socket && _status == CONNECTED) {
+        //Be nice and send a Logout op to the connection when disconnecting down.
+        _socket->getEncoder().streamObjectsMessage(Logout());
+        _socket->write();
+    }
+
     // this is a soft disconnect; it will give people a chance to do tear down and so on
     // in response, people who need to hold the disconnect will lock() the
     // connection, and unlock when their work is done. A timeout stops
