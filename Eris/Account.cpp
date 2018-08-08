@@ -185,6 +185,7 @@ Result Account::logout()
 
     m_status = LOGGING_OUT;
 
+    //Send a Logout to the connection, with the Account as entity reference.
     Logout l;
     Anonymous arg;
     arg->setId(m_accountId);

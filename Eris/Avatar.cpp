@@ -64,11 +64,13 @@ Avatar::~Avatar()
 
 void Avatar::deactivate()
 {
+	//Send a Logout op from the Account, with the avatar mind as entity reference.
     Logout l;
     Anonymous arg;
-    arg->setId(m_entityId);
+    arg->setId(m_mindId);
     l->setArgs1(arg);
     l->setSerialno(getNewSerialno());
+    l->setFrom(m_account.getId());
 
     getConnection()->getResponder()->await(l->getSerialno(), this, &Avatar::logoutResponse);
     getConnection()->send(l);
@@ -412,9 +414,9 @@ void Avatar::logoutResponse(const RootOperation& op)
 
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
-    if (charId != m_entityId) {
+    if (charId != m_mindId) {
         error() << "got logout for character " << charId
-                << " that is not this avatar " << m_entityId;
+                << " that is not this avatar " << m_mindId;
         return;
     }
 
