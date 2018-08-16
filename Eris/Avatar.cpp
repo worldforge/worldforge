@@ -260,51 +260,51 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
 
 }
 
-void Avatar::wield(Entity * entity)
-{
-    if(entity->getLocation() != m_entity)
-    {
-        error() << "Can't wield an Entity which is not located in the avatar.";
+//void Avatar::wield(Entity * entity)
+//{
+//    if(entity->getLocation() != m_entity)
+//    {
+//        error() << "Can't wield an Entity which is not located in the avatar.";
+//
+//        return;
+//    }
+//
+//    Anonymous arguments;
+//    arguments->setId(entity->getId());
+//
+//    Wield wield;
+//    wield->setFrom(m_mindId);
+//    wield->setArgs1(arguments);
+//
+//    getConnection()->send(wield);
+//}
 
-        return;
-    }
-
-    Anonymous arguments;
-    arguments->setId(entity->getId());
-
-    Wield wield;
-    wield->setFrom(m_mindId);
-    wield->setArgs1(arguments);
-
-    getConnection()->send(wield);
-}
-
-void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
-{
-    Anonymous arguments;
-
-    arguments->setId(entity->getId());
-    arguments->setObjtype("obj");
-    if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
-
-    Use use;
-    use->setFrom(m_mindId);
-
-
-    if (opType.empty())
-    {
-        use->setArgs1(arguments);
-    } else {
-        RootOperation op;
-        op->setParent(opType);
-        op->setArgs1(arguments);
-        op->setFrom(m_mindId);
-
-        use->setArgs1(op);
-    }
-
-    getConnection()->send(use);
-}
+//void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
+//{
+//    Anonymous arguments;
+//
+//    arguments->setId(entity->getId());
+//    arguments->setObjtype("obj");
+//    if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
+//
+//    Use use;
+//    use->setFrom(m_mindId);
+//
+//
+//    if (opType.empty())
+//    {
+//        use->setArgs1(arguments);
+//    } else {
+//        RootOperation op;
+//        op->setParent(opType);
+//        op->setArgs1(arguments);
+//        op->setFrom(m_mindId);
+//
+//        use->setArgs1(op);
+//    }
+//
+//    getConnection()->send(use);
+//}
 
 void Avatar::attack(Entity* entity)
 {
@@ -335,7 +335,8 @@ void Avatar::onEntityAppear(Entity* ent)
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
         ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
 
-        ent->observe("right_hand_wield", sigc::mem_fun(this, &Avatar::onCharacterWield));
+        //Handle the "attachments" property to set up observations of attached entities.
+        //ent->observe("right_hand_wield", sigc::mem_fun(this, &Avatar::onCharacterWield));
 
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
@@ -360,13 +361,7 @@ void Avatar::onCharacterChildRemoved(Entity* child)
 
 void Avatar::onCharacterWield(const Atlas::Message::Element& val)
 {
-    std::string id;
-    if (!Entity::extractEntityId(val, id)) {
-        warning() << "got malformed wield value";
-        return;
-    }
-
-    m_wielded = EntityRef(m_view, id);
+    //TODO: handle attachments
 }
 
 void Avatar::onTransferRequested(const TransferInfo &transfer)

@@ -837,19 +837,17 @@ void Entity::onVisibilityChanged(bool vis)
     VisibilityChanged.emit(vis);
 }
 
-bool Entity::extractEntityId(const Atlas::Message::Element& element, std::string& id)
+boost::optional<std::string> Entity::extractEntityId(const Atlas::Message::Element& element)
 {
     if (element.isString()) {
-        id = element.asString();
-        return true;
+        return element.String();
     } else if (element.isMap()) {
         auto I = element.asMap().find("$eid");
         if (I != element.asMap().end() && I->second.isString()) {
-            id = I->second.asString();
-            return true;
+            return I->second.String();
         }
     }
-    return false;
+    return boost::none;
 
 }
 

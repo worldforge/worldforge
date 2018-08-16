@@ -52,8 +52,6 @@ public:
     /** get the current local approximation of world time. */
     double getWorldTime();
 
-    const EntityRef& getWielded() const;
-
     /**
      * @brief Drop an entity in the Avatar's inventory at the given location.
      * @param entity The entity to drop.
@@ -112,20 +110,17 @@ public:
                const WFMath::Quaternion& orientation = WFMath::Quaternion(),
                boost::optional<float> offset = boost::none);
 
-    /// Wield an entity which is inside the Avatar's inventory
-    void wield(Entity * entity);
-
-    /**
-     * @brief Use the currently wielded entity (tool) on another entity.
-     * @param entity A pointer to the entity you wish to use your tool on.
-     * @param position A position where you perform the operation.
-     * @param op The operation of the tool to perform, or an empty string to use the default.
-     *
-     * If @a position is invalid the "pos" parameter will not be set on the USE operation.
-     *
-     * @sa WFMath::Point< 3 >::Point(), WFMath::Point< 3 >::setValid(), WFMath::Point< 3 >::isValid()
-     **/
-    void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
+//    /**
+//     * @brief Use the currently wielded entity (tool) on another entity.
+//     * @param entity A pointer to the entity you wish to use your tool on.
+//     * @param position A position where you perform the operation.
+//     * @param op The operation of the tool to perform, or an empty string to use the default.
+//     *
+//     * If @a position is invalid the "pos" parameter will not be set on the USE operation.
+//     *
+//     * @sa WFMath::Point< 3 >::Point(), WFMath::Point< 3 >::setValid(), WFMath::Point< 3 >::isValid()
+//     **/
+//    void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
 
     /**
     @brief Attach the specified entity
@@ -169,7 +164,7 @@ public:
      * @brief Sends an operation from this Avatar.
      *
      * This will set the "to" property to be from this avatar's mind.
-     * @param op 
+     * @param op
      */
     void send(const Atlas::Objects::Operation::RootOperation& op);
 
@@ -261,8 +256,6 @@ protected:
     IGRouter* m_router;
     View* m_view;
 
-    EntityRef m_wielded;
-
     sigc::connection m_entityAppearanceCon;
 
     bool m_isAdmin;
@@ -291,10 +284,6 @@ inline View* Avatar::getView() const
     return m_view;
 }
 
-inline const EntityRef& Avatar::getWielded() const
-{
-    return m_wielded;
-}
 } // of namespace Eris
 
 #endif
