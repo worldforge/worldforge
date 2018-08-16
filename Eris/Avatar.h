@@ -166,6 +166,14 @@ public:
     bool getIsAdmin();
 
     /**
+     * @brief Sends an operation from this Avatar.
+     *
+     * This will set the "to" property to be from this avatar's mind.
+     * @param op 
+     */
+    void send(const Atlas::Objects::Operation::RootOperation& op);
+
+    /**
     Emitted when the character entity of this Avatar is valid (and presumably,
     visible). This will happen some time after the InGame signal is emitted.
     A client might wish to show some kind of 'busy' animation, eg an hour-glass,

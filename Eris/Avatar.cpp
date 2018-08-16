@@ -329,7 +329,7 @@ void Avatar::useStop()
 void Avatar::onEntityAppear(Entity* ent)
 {
     if (ent->getId() == m_entityId) {
-        assert(m_entity == NULL);
+        assert(m_entity == nullptr);
         m_entity = ent;
 
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
@@ -442,6 +442,11 @@ void Avatar::setIsAdmin(bool isAdmin)
 bool Avatar::getIsAdmin()
 {
     return m_isAdmin;
+}
+
+void Avatar::send(const Atlas::Objects::Operation::RootOperation& op) {
+	op->setFrom(m_mindId);
+	m_account.getConnection()->send(op);
 }
 
 
