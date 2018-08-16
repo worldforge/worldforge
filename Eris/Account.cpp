@@ -663,8 +663,8 @@ void Account::avatarCreateResponse(const RootOperation& op)
 
         _characters.emplace(ge->getId(), ge);
         GotCharacterInfo.emit(ge);
-        // expect another op with the same refno
-        m_con->getResponder()->ignore(op->getRefno());
+		// expect another op with the same refno
+		m_con->getResponder()->await(op->getRefno(), this, &Account::avatarCreateResponse);
     } else if (op->instanceOf(INFO_NO)) {
         possessResponse(op);
     } else {
