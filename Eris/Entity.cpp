@@ -249,36 +249,6 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
     }
 }
 
-TypeInfoArray Entity::getUseOperations() const
-{
-    const Element* attr = ptrOfAttr("operations");
-
-    if (!attr) {
-        return TypeInfoArray();
-    }
-
-    if (!attr->isList()) {
-        warning() << "entity " << m_id << " has operations attr which is not a list";
-        return TypeInfoArray();
-    } 
-    
-    const ListType& opsl(attr->List());
-    TypeInfoArray useOps;
-    useOps.reserve(opsl.size());
-    TypeService* ts = getTypeService();
-    
-    for (auto& op : opsl) {
-        if (!op.isString()) {
-            warning() << "ignoring malformed operations list item";
-            continue;
-        }
-    
-        useOps.push_back(ts->getTypeByName(op.String()));
-    }
-    
-    return useOps;
-}
-
 void Entity::sight(const RootEntity &ge)
 {    
     if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());

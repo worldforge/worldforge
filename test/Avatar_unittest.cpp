@@ -66,8 +66,8 @@ class TestAccount : public Eris::Account {
 
 class TestAvatar : public Eris::Avatar {
   public:
-    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
-               Eris::Avatar(*ac, ent_id) { }
+    TestAvatar(Eris::Account * ac, std::string mind_id, const std::string & ent_id) :
+               Eris::Avatar(*ac, mind_id, ent_id) { }
 
     void setup_setEntity(Eris::Entity * ent) {
         m_entity = ent;
@@ -138,7 +138,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        new TestAvatar(acc, fake_mind_id, fake_char_id);
     }
 
     // Test destructor
@@ -150,7 +151,8 @@ int main()
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar* ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar* ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
 
         delete ea;
     }
@@ -164,7 +166,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
 
         ea->deactivate();
     }
@@ -178,7 +181,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
 
@@ -196,7 +200,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
 
@@ -215,7 +220,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
 
@@ -234,7 +240,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -255,7 +262,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -276,7 +284,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -297,7 +306,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -318,7 +328,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
         ea->setup_setEntity(char_ent);
@@ -335,7 +346,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1"), fake_npc_id("2");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        std::string fake_mind_id = "12";
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * npc_ent = new TestEntity(fake_npc_id, 0, ea->getView());
         std::vector<std::string> entityIds;
@@ -355,7 +367,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1"), fake_npc_id("2"), fake_npc2_id("3");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        std::string fake_mind_id = "12";
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * npc_ent = new TestEntity(fake_npc_id, 0, ea->getView());
         TestEntity * npc2_ent = new TestEntity(fake_npc2_id, 0, ea->getView());
@@ -377,7 +390,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         std::vector<std::string> entityIds;
 
@@ -395,7 +409,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
         ea->setup_setEntity(char_ent);
@@ -412,7 +427,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -431,7 +447,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -450,7 +467,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -469,7 +487,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -490,7 +509,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -509,7 +529,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -530,7 +551,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -552,7 +574,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -573,7 +596,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
@@ -586,132 +610,7 @@ int main()
                   WFMath::Quaternion(1.f, 0.f, 0.f, 0.f));
     }
     
-    // Test wield() of something not in inventory
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(wrld_ent);
-
-        ea->wield(inv_ent);
-    }
-    
-    // Test wield() of something in inventory
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(char_ent);
-
-        ea->wield(inv_ent);
-    }
-    
-    // Test useOn() of something in inventory
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(char_ent);
-
-        ea->useOn(inv_ent, WFMath::Point<3>(), std::string());
-    }
-    
-    // Test useOn() of something in inventory
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(char_ent);
-
-        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), std::string());
-    }
-    
-    // Test useOn() with a position
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(char_ent);
-
-        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), std::string());
-    }
-    
-    // Test useOn() with a pos and target
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        inv_ent->setup_setLocation(char_ent);
-
-        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), "0");
-    }
-    
     // Test attack()
     {
         boost::asio::io_service io_service;
@@ -721,7 +620,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         TestEntity * other_ent = new TestEntity("2", 0, ea->getView());
@@ -742,7 +642,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
 
@@ -761,7 +662,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
         SignalFlagger gotCharacterEntity;
 
@@ -782,7 +684,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
         TestEntity * char_ent = new TestEntity("2", 0, ea->getView());
         SignalFlagger gotCharacterEntity;
 
@@ -803,7 +706,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         TestEntity * ent = new TestEntity("2", 0, ea->getView());
         SignalFlagger invAdded;
 
@@ -823,7 +727,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         TestEntity * ent = new TestEntity("2", 0, ea->getView());
         SignalFlagger invRemoved;
 
@@ -843,7 +748,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
 
         ea->test_onCharacterWield(1);
     }
@@ -858,7 +764,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         new TestEntity("2", 0, ea->getView());
 
         ea->test_onCharacterWield("2");
@@ -873,7 +780,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
 
         assert(ea->getConnection() == con);
     }
@@ -887,7 +795,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
 
         ea->getWorldTime();
     }
@@ -901,7 +810,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
 
         ea->test_updateWorldTime(100.0);
     }
@@ -915,7 +825,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         Atlas::Objects::Operation::Get op;
         SignalFlagger avatarDeactivated;
 
@@ -935,7 +846,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         Atlas::Objects::Operation::Info op;
         SignalFlagger avatarDeactivated;
 
@@ -955,7 +867,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         Atlas::Objects::Operation::Info op;
         Atlas::Objects::Root bad_arg;
         SignalFlagger avatarDeactivated;
@@ -977,7 +890,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         Atlas::Objects::Operation::Info op;
         Atlas::Objects::Operation::Logout logout;
         SignalFlagger avatarDeactivated;
@@ -999,7 +913,8 @@ int main()
 
         Eris::Account * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         Atlas::Objects::Operation::Info op;
         Atlas::Objects::Operation::Logout logout;
         Atlas::Objects::Root logout_arg;
@@ -1023,7 +938,8 @@ int main()
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         // The account must know about this Avatar, as avatar removes itself
         // from account on destruction.
         acc->setup_insertActiveCharacters(ea);
@@ -1051,7 +967,8 @@ int main()
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         acc->setup_insertActiveCharacters(ea);
 
         SignalFlagger avatarTransferRequested;
@@ -1074,7 +991,8 @@ int main()
 
         TestAccount * acc = new TestAccount(con);
         std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
+		std::string fake_mind_id("12");
+        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
         acc->setup_insertActiveCharacters(ea);
 
         SignalFlagger avatarTransferRequested;

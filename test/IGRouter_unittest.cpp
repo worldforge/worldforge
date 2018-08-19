@@ -50,7 +50,7 @@ class TestAvatar : public Eris::Avatar
 {
   public:
     TestAvatar(boost::asio::io_service& io_service, Eris::EventService& eventService) :
-          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, eventService, "", "", 0)), "") { }
+          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, eventService, "", "", 0)), "", "") { }
 };
 
 class TestIGRouter : public Eris::IGRouter
@@ -484,8 +484,9 @@ void Account::updateFromObject(const Atlas::Objects::Entity::Account &p)
 {
 }
 
-Avatar::Avatar(Account& pl, const std::string& entId) :
+Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_account(pl),
+    m_mindId(mindId),
     m_entityId(entId),
     m_entity(NULL),
     m_lastOpTime(0.0),

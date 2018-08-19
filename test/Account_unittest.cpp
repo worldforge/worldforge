@@ -98,9 +98,10 @@ Router::RouterResult Router::handleEntity(const RootEntity& )
     return IGNORED;
 }
 
-Avatar::Avatar(Account& pl, const std::string& entId) :
+Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_account(pl),
-    m_entityId(entId),
+    m_mindId(mindId),
+    m_entityId(entityId),
     m_entity(NULL),
     m_lastOpTime(0.0),
     m_isAdmin(false)

@@ -82,8 +82,8 @@ class TestAccount : public Eris::Account {
 
 class TestAvatar : public Eris::Avatar {
   public:
-    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
-               Eris::Avatar(*ac, ent_id) { }
+    TestAvatar(Eris::Account * ac, std::string mind_id, std::string ent_id) :
+               Eris::Avatar(*ac, mind_id, ent_id) { }
 
     ~TestAvatar() {
         ((TestAccount&)m_account).teardown_removeAvatar(this);
@@ -145,9 +145,10 @@ int main()
     TestConnection con("name", "localhost", 6767, true);
 
     TestAccount acc(&con);
-    
+
     std::string fake_char_id("1");
-    TestAvatar ea(&acc, fake_char_id);
+    std::string fake_mind_id("12");
+    TestAvatar ea(&acc, fake_mind_id, fake_char_id);
     acc.setup_insertActiveCharacters(&ea);
     TestEntity* char_ent = new TestEntity(fake_char_id, 0, ea.getView());
     ea.setup_setEntity(char_ent);

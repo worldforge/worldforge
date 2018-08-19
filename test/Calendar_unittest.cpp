@@ -44,8 +44,8 @@
 
 class TestAvatar : public Eris::Avatar {
   public:
-    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
-               Eris::Avatar(*ac, ent_id) { }
+    TestAvatar(Eris::Account * ac, std::string mindId, std::string entityId) :
+               Eris::Avatar(*ac, mindId, entityId) { }
 
 };
 
@@ -171,7 +171,8 @@ int main()
     // Test constructor
     {
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
         Eris::Calendar ec(ea);
     }
 
@@ -181,7 +182,8 @@ int main()
     // Test topLevelEntityChanged()
     {
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
         TestCalendar ec(ea);
 
@@ -193,7 +195,8 @@ int main()
     // Test calendar process time at the origin of time
     {
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
         TestCalendar ec(ea);
 
@@ -214,7 +217,8 @@ int main()
     // Test calendar process time at the origin of time plus some time
     {
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
         TestCalendar ec(ea);
 
@@ -246,7 +250,8 @@ int main()
     // Test calendar process time at the limit of an unsigned 32bit int seconds
     {
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
         TestCalendar ec(ea);
 
@@ -265,7 +270,8 @@ int main()
     {
         SignalFlagger flagger;
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+		std::string fake_mind_id("12");
+        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
         TestCalendar ec(ea);
         ec.Updated.connect(sigc::mem_fun(flagger,
@@ -298,8 +304,9 @@ void doLog(LogLevel lvl, const std::string& msg)
 }
 
 
-Avatar::Avatar(Account& pl, const std::string& entId) :
+Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_account(pl),
+    m_mindId(mindId),
     m_entityId(entId),
     m_entity(NULL),
     m_stampAtLastOp(WFMath::TimeStamp::now()),

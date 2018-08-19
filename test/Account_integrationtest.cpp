@@ -116,7 +116,7 @@ class TestAccount : public Eris::Account {
     }
 
     void test_avatarResponse(const Atlas::Objects::Operation::RootOperation& op) {
-		avatarPossessResponse(op);
+        possessResponse(op);
     }
 
     void test_internalDeactivateCharacter(Eris::Avatar * ea) {
@@ -161,8 +161,8 @@ class TestAccount : public Eris::Account {
 
 class TestAvatar : public Eris::Avatar {
   public:
-    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
-               Eris::Avatar(*ac, ent_id) { }
+    TestAvatar(Eris::Account * ac, std::string mindId, const std::string & ent_id) :
+               Eris::Avatar(*ac, mindId, ent_id) { }
 };
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
@@ -647,7 +647,8 @@ int main()
 
         TestAccount acc(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+        std::string fake_mind_id("2");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
 
         Eris::Result res = acc.deactivateCharacter(ea);
         assert(res == Eris::NO_ERR);
@@ -994,7 +995,8 @@ int main()
 
         TestAccount acc(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+        std::string fake_mind_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
 
         acc.setup_insertActiveCharacters(ea);
 
@@ -1320,7 +1322,8 @@ int main()
         Atlas::Objects::Operation::Logout info_arg;
         Atlas::Objects::Entity::Anonymous logout_arg;
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+        std::string fake_mind_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
 
         op->setArgs1(info_arg);
         info_arg->setArgs1(logout_arg);
