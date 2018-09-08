@@ -160,6 +160,9 @@ void TypeService::sendRequest(const std::string &id)
     Get get;
     get->setArgs1(what);
     get->setSerialno(getNewSerialno());
+    if (!m_type_provider_id.empty()) {
+        get->setFrom(m_type_provider_id);
+    }
     
     m_con->getResponder()->await(get->getSerialno(), this, &TypeService::handleOperation);
     m_con->send(get);
@@ -198,6 +201,10 @@ TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent
     
     assert(type->isBound());
     return type;
+}
+
+void TypeService::setTypeProviderId(std::string id) {
+    m_type_provider_id = id;
 }
 
 } // of namespace Eris

@@ -223,9 +223,6 @@ protected:
      */
     void onAvatarEntityDeleted();
 
-
-    void onCharacterWield(const Atlas::Message::Element&);
-
     virtual void onTransferRequested(const TransferInfo &transfer);
 
     void logoutResponse(const Atlas::Objects::Operation::RootOperation&);

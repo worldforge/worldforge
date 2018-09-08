@@ -291,6 +291,11 @@ void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas:
     }
 }
 
+void TypeInfo::refresh() {
+    m_typeService->sendRequest(m_name);
+}
+
+
 void TypeInfo::validateBind()
 {
     if (m_bound) return;

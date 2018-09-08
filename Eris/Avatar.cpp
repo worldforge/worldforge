@@ -14,6 +14,7 @@
 #include "Operations.h"
 #include "Response.h"
 #include "EventService.h"
+#include "TypeInfo.h"
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/slot.h>
@@ -45,6 +46,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_isAdmin(false),
     m_logoutTimer(nullptr)
 {
+    m_account.getConnection()->getTypeService()->setTypeProviderId(m_mindId);
     m_view = new View(this);
     m_view->AvatarEntityDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
@@ -57,6 +59,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 
 Avatar::~Avatar()
 {
+    m_account.getConnection()->getTypeService()->setTypeProviderId("");
     delete m_logoutTimer;
     delete m_router;
     delete m_view;
@@ -335,11 +338,15 @@ void Avatar::onEntityAppear(Entity* ent)
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
         ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
 
-        //Handle the "attachments" property to set up observations of attached entities.
-        //ent->observe("right_hand_wield", sigc::mem_fun(this, &Avatar::onCharacterWield));
-
         GotCharacterEntity.emit(ent);
-        m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
+        m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance
+
+        //Refresh type info, since we now have the possibility to get protected attributes.
+        auto parentType = ent->getType();
+        while (parentType) {
+            parentType->refresh();
+            parentType = parentType->getParent();
+        }
     }
 }
 
@@ -357,11 +364,6 @@ void Avatar::onCharacterChildAdded(Entity* child)
 void Avatar::onCharacterChildRemoved(Entity* child)
 {
     InvRemoved.emit(child);
-}
-
-void Avatar::onCharacterWield(const Atlas::Message::Element& val)
-{
-    //TODO: handle attachments
 }
 
 void Avatar::onTransferRequested(const TransferInfo &transfer)

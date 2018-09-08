@@ -17,11 +17,11 @@ namespace Eris {
 This class supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types
 have a unique ID, and types can be retrieved using this value. Where an Atlas::Objects instance,
 or an Atlas::Message::Element representing an Atlas object is being examined, it is much more
-efficent to use the 'getSafe' methods rather than extracting PARENTS[0] and calling findSafe.
+efficient to use the 'getSafe' methods rather than extracting PARENTS[0] and calling findSafe.
 This is because the getSafe methods may take advantage of integer type codes stored in the
 object, which avoids a map lookup to locate the type.
 
-Note that the core Atlas::Objects heirarchy (as defined in the protocols/atlas/spec section of
+Note that the core Atlas::Objects hierarchy (as defined in the protocols/atlas/spec section of
 CVS) is loaded from the 'atlas.xml' file at startup, and that other types are queried from the
 server. In general, Eris will automatically delay processing operations and entities until the
 necessary type data has become available, without intervention by the client. However, certain
@@ -40,6 +40,11 @@ public:
      * @brief Check the bound flag for this node; if false then recursivley check parents until an authorative is found 
      */
     inline bool isBound() const;
+
+    /**
+     * @brief Request update to the type info from the server.
+     */
+    void refresh();
 
     /**
      * @brief Test if there are child types of the type, which have not yet been retrieved from the server.

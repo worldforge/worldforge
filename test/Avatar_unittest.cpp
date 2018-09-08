@@ -86,10 +86,6 @@ class TestAvatar : public Eris::Avatar {
         onCharacterChildRemoved(ent);
     }
 
-    void test_onCharacterWield(const Atlas::Message::Element & val) {
-        onCharacterWield(val);
-    }
-
     void test_updateWorldTime(double seconds) {
         updateWorldTime(seconds);
     }
@@ -738,39 +734,7 @@ int main()
 
         assert(invRemoved.flagged());
     }
-    
-    // Test onCharacterWield() with a non string ID.
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_id("1");
-		std::string fake_mind_id("12");
-        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
-
-        ea->test_onCharacterWield(1);
-    }
-    
-    // Test onCharacterWield() with a non string ID.
-    // It is currently very hard to simulate the entity being in the view.
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_id("1");
-		std::string fake_mind_id("12");
-        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
-        new TestEntity("2", 0, ea->getView());
-
-        ea->test_onCharacterWield("2");
-    }
-    
     // Test getConnection()
     {
         boost::asio::io_service io_service;

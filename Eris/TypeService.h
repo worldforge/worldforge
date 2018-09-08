@@ -49,11 +49,23 @@ public:
 
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
- protected:
     /** request the information about a type from the server.
     @param id The ID of the type to lookup
     */
     void sendRequest(const std::string& id);
+
+    /**
+     * @brief Set another provider of type data than the connection.
+     *
+     * This should be set to the external mind once an entity has been possessed, since
+     * the external mind has access to more type data (for example the type of the entity itself).
+     *
+     * @param id
+     */
+    void setTypeProviderId(std::string id);
+
+protected:
+
     void recvTypeInfo(const Atlas::Objects::Root &atype);
     void recvError(const Atlas::Objects::Operation::Get& get);
     void recvTypeUpdate(const Atlas::Objects::Root &atype);
@@ -63,11 +75,16 @@ public:
     typedef std::unordered_map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the
-    future, if efficeny consdierations indicate it would be worthwhile */
+    future, if efficiency considerations indicate it would be worthwhile */
     TypeInfoMap m_types;
 
     Connection* m_con;
     bool m_inited;
+
+    /**
+     * An optional type provider, to which requests for types are sent.
+     */
+    std::string m_type_provider_id;
 };
 
 } // of namespace Eris
