@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     atlas_xml_path += "../../protocol/spec/atlas.xml";
     try {
         Atlas::Objects::loadDefaults(atlas_xml_path);
-    } catch(Atlas::Objects::DefaultLoadingException e) {
+    } catch(const Atlas::Objects::DefaultLoadingException& e) {
         std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
     }

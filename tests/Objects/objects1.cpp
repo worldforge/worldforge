@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     std::string atlas_xml_path;
     try {
 	    Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH);
-    } catch(Atlas::Objects::DefaultLoadingException e) {
+    } catch(const Atlas::Objects::DefaultLoadingException& e) {
 	std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
     }
