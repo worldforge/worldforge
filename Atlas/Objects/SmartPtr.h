@@ -24,6 +24,9 @@ template <class T>
 class SmartPtr
 {
   public:
+    template<class U> friend
+    class SmartPtr;
+
     typedef T DataT;
 
     typedef typename T::iterator iterator;
