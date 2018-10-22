@@ -194,7 +194,9 @@ target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
 target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
-add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasObjects)
+if (PYTHON_EXECUTABLE)
+    add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasObjects)
+endif (PYTHON_EXECUTABLE)
 
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
 target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
