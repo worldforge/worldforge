@@ -54,7 +54,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_router = new IGRouter(this);
 
     m_view->getEntityFromServer("");
-    m_view->getEntity(m_entityId);
+    m_view->getEntityFromServer(m_entityId);
 }
 
 Avatar::~Avatar()
