@@ -6,9 +6,7 @@
 
 namespace Eris {
 
-Factory::~Factory()
-{
-}
+Factory::~Factory() = default;
 
 int Factory::priority()
 {

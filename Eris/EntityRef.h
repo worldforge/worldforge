@@ -14,7 +14,7 @@ class View;
 class EntityRef : public sigc::trackable
 {
 public:
-	EntityRef() : m_inner(NULL)
+	EntityRef() : m_inner(nullptr)
 	{
 	}
 
@@ -22,10 +22,8 @@ public:
 	
     EntityRef(Entity*);
     
-	~EntityRef()
-	{
-	}
-	
+	~EntityRef() = default;
+
 	EntityRef(const EntityRef& ref);
     	
 	EntityRef& operator=(const EntityRef& ref);
@@ -57,12 +55,12 @@ public:
     
     operator bool() const
 	{
-		return (m_inner != NULL);
+		return (m_inner != nullptr);
 	}
 	
 	bool operator!() const
 	{
-		return (m_inner == NULL);
+		return (m_inner == nullptr);
 	}
 
     bool operator==(const EntityRef& e) const

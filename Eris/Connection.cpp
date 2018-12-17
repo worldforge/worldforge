@@ -79,7 +79,7 @@ int Connection::connect()
         return BaseConnection::connectLocal(_localSocket);
     }
 
-    return BaseConnection::connect(_host, _port);
+    return BaseConnection::connectRemote(_host, _port);
 
 }
 
@@ -172,23 +172,23 @@ void Connection::send(const Atlas::Objects::Root &obj)
     _socket->write();
 }
 
-void Connection::registerRouterForTo(Router* router, const std::string toId)
+void Connection::registerRouterForTo(Router* router, const std::string& toId)
 {
     m_toRouters[toId] = router;
 }
 
-void Connection::unregisterRouterForTo(Router* router, const std::string toId)
+void Connection::unregisterRouterForTo(Router* router, const std::string& toId)
 {
     assert(m_toRouters[toId] == router);
     m_toRouters.erase(toId);
 }
 
-void Connection::registerRouterForFrom(Router* router, const std::string fromId)
+void Connection::registerRouterForFrom(Router* router, const std::string& fromId)
 {
     m_fromRouters[fromId] = router;
 }
 
-void Connection::unregisterRouterForFrom(Router* router, const std::string fromId)
+void Connection::unregisterRouterForFrom(Router* router, const std::string& fromId)
 {
     assert(m_fromRouters[fromId] == router);
     m_fromRouters.erase(fromId);
@@ -279,10 +279,10 @@ void Connection::objectArrived(const Root& obj)
 void Connection::dispatchOp(const RootOperation& op)
 {
     try {
-        Router::RouterResult rr = Router::IGNORED;
         bool anonymous = op->isDefaultTo();
 
-        if (m_responder->handleOp(op)) return;
+		Router::RouterResult rr = m_responder->handleOp(op);
+		if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
 
     // locate a router based on from
         if (!op->isDefaultFrom()) {

@@ -66,7 +66,7 @@ BaseConnection::~BaseConnection()
     }
 }
 
-int BaseConnection::connect(const std::string & host, short port)
+int BaseConnection::connectRemote(const std::string & host, short port)
 {
     if (_socket) {
         _socket->detach();

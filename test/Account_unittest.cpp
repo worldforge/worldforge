@@ -130,7 +130,7 @@ BaseConnection::~BaseConnection()
 {
 }
 
-int BaseConnection::connect(const std::string &host, short port)
+int BaseConnection::connectRemote(const std::string &host, short port)
 {
     return 0;
 }
@@ -190,11 +190,11 @@ void Connection::clearDefaultRouter()
 {
 }
 
-void Connection::registerRouterForTo(Router* router, const std::string toId)
+void Connection::registerRouterForTo(Router* router, const std::string& toId)
 {
 }
 
-void Connection::unregisterRouterForTo(Router* router, const std::string toId)
+void Connection::unregisterRouterForTo(Router* router, const std::string& toId)
 {
 }
 

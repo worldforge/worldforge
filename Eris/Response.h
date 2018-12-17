@@ -3,6 +3,8 @@
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <unordered_map>
+#include "Router.h"
+#include <functional>
 
 namespace Eris
 {
@@ -16,16 +18,15 @@ public:
     virtual ~ResponseBase();
     
     /**
-    Process a response. Return true if the operation was handled, and false
-    if it should be processed by the router system as normal.
+    Process a response.
     */
-    virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op) = 0;
+    virtual Router::RouterResult responseReceived(const Atlas::Objects::Operation::RootOperation& op) = 0;
 };
 
 class NullResponse : public ResponseBase
 {
 public:
-    virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation&);
+	Router::RouterResult responseReceived(const Atlas::Objects::Operation::RootOperation&) override;
 };
 
 void* clearMemberResponse(void*);
@@ -43,15 +44,13 @@ public:
         obj->add_destroy_notify_callback(&m_object, &clearMemberResponse);
 	}
 	
-    ~MemberResponse()
-    {
+    ~MemberResponse() override {
         if (m_object) m_object->remove_destroy_notify_callback(&m_object);
     }
-    
-	virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op)
-	{
+
+	Router::RouterResult responseReceived(const Atlas::Objects::Operation::RootOperation& op) override {
         if (m_object) (m_object->*m_func)(op);
-        return true;
+        return Router::HANDLED;
 	}
 
 private:
@@ -63,9 +62,13 @@ class ResponseTracker
 {
 public:
 
+	typedef std::function<Router::RouterResult(const Atlas::Objects::Operation::RootOperation& op)> Callback;
+
     ~ResponseTracker();
 
     void await(long serialno, ResponseBase*);
+
+    void await(long serial, Callback callback);
     
     template <class T>
     void await(long serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
@@ -78,11 +81,12 @@ public:
         await(serial, new NullResponse());
     }
     
-    bool handleOp(const Atlas::Objects::Operation::RootOperation& op);
+    Router::RouterResult handleOp(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
     typedef std::unordered_map<long, ResponseBase*> RefnoResponseMap;
-    RefnoResponseMap m_pending;
+//    RefnoResponseMap m_pending;
+    std::unordered_map<long, Callback> m_pending;
 };
 
 } // of namespace

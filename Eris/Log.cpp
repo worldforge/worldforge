@@ -41,7 +41,7 @@ void doLog(LogLevel lvl, const std::string& msg)
 std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
 {
     std::stringstream s;
-    Atlas::Codecs::Bach debugCodec(s, s, *(Atlas::Bridge*)0);
+    Atlas::Codecs::Bach debugCodec(s, s, *(Atlas::Bridge*) nullptr);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     return os << s.str();
@@ -50,7 +50,7 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
 std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
 {
     std::stringstream s;
-    Atlas::Codecs::Bach debugCodec(s, s, *(Atlas::Bridge*)0);
+    Atlas::Codecs::Bach debugCodec(s, s, *(Atlas::Bridge*) nullptr);
     Atlas::Message::Encoder debugEncoder(debugCodec);
     debugEncoder.streamMessageElement(msg.asMap());
     return os << s.str();

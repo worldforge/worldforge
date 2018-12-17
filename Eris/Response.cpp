@@ -1,5 +1,6 @@
 #include "Response.h"
 #include <Atlas/Objects/Operation.h>
+#include <memory>
 #include "LogStream.h"
 
 using namespace Atlas::Objects::Operation;
@@ -32,49 +33,50 @@ std::string getErrorMessage(const RootOperation & err)
     return msg;
 }
 
-ResponseBase::~ResponseBase()
+ResponseBase::~ResponseBase() = default;
+
+ResponseTracker::~ResponseTracker() = default;
+
+void ResponseTracker::await(long serial, Callback callback)
 {
+    m_pending.emplace(serial, callback);
 }
 
-ResponseTracker::~ResponseTracker()
-{
-    //clean up any lingering responses
-    for (RefnoResponseMap::iterator it = m_pending.begin(); it != m_pending.end(); ++it) {
-        delete it->second;
-    }
-}
 
 void ResponseTracker::await(long serialno, ResponseBase* resp)
 {
     assert(m_pending.count(serialno) == 0);
-    m_pending[serialno] = resp;
+    std::shared_ptr<ResponseBase> holder(resp);
+    await(serialno, [holder](const Atlas::Objects::Operation::RootOperation& op)->Router::RouterResult{
+        auto result = holder->responseReceived(op);
+        return result ? Router::HANDLED : Router::IGNORED;
+    });
 }
 
-bool ResponseTracker::handleOp(const RootOperation& op)
+Router::RouterResult ResponseTracker::handleOp(const RootOperation& op)
 {
-    if (op->isDefaultRefno()) return false; // invalid refno, not a response op
-    
-    RefnoResponseMap::iterator it = m_pending.find(op->getRefno());
+    if (op->isDefaultRefno()) return Router::IGNORED; // invalid refno, not a response op
+
+    auto it = m_pending.find(op->getRefno());
     if (it == m_pending.end()) {
         warning() << "received op with valid refno (" << op->getRefno() << 
             ") but no response is registered";
-        return false;
+        return Router::IGNORED;
     }
 
 // order here is important, so the responseReceived can re-await the op
-    ResponseBase* resp = it->second;
+    auto resp = it->second;
     m_pending.erase(it);
 
-    bool result = resp->responseReceived(op);
-    delete resp;
+    auto result = resp(op);
 
     return result;
 }
 
-bool NullResponse::responseReceived(const Atlas::Objects::Operation::RootOperation&)
+Router::RouterResult NullResponse::responseReceived(const Atlas::Objects::Operation::RootOperation&)
 {
     //debug() << "nullresponse, ignoring op with refno " << op->getRefno();
-    return false;
+    return Router::RouterResult::IGNORED;
 }
 
 void* clearMemberResponse(void* d)
@@ -82,8 +84,8 @@ void* clearMemberResponse(void* d)
     debug() << "clearing out member response object";
     
     void** objectPointer = (void**) d;
-    *objectPointer = NULL;
-    return NULL;
+    *objectPointer = nullptr;
+    return nullptr;
 }
 
 } // of namespace

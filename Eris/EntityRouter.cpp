@@ -27,10 +27,7 @@ EntityRouter::EntityRouter(ViewEntity* ent) :
     assert(ent);
 }
 
-EntityRouter::~EntityRouter()
-{
-
-}
+EntityRouter::~EntityRouter() = default;
 
 Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 {

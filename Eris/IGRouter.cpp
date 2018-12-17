@@ -70,21 +70,21 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     }
     
     if (op->getClassNo() == APPEARANCE_NO) {
-        for (unsigned int A=0; A < args.size(); ++A) {
+        for (const auto& arg : args) {
             float stamp = -1;
-            if (args[A]->hasAttr("stamp")) {
-                stamp = (float)args[A]->getAttr("stamp").asFloat();
+            if (arg->hasAttr("stamp")) {
+                stamp = (float) arg->getAttr("stamp").asFloat();
             }
             
-            m_view->appear(args[A]->getId(), stamp);
+            m_view->appear(arg->getId(), stamp);
         }
         
         return HANDLED;
     }
     
     if (op->getClassNo() == DISAPPEARANCE_NO) {
-        for (unsigned int A=0; A < args.size(); ++A) {
-            m_view->disappear(args[A]->getId());
+        for (const auto& arg : args) {
+            m_view->disappear(arg->getId());
         }
         
         return HANDLED;
@@ -138,7 +138,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             // succeed in extracting them all
             if (gotArgs) {
                 std::string teleport_host = tp_host_attr.String();
-                int teleport_port = tp_port_attr.Int();
+                int teleport_port = static_cast<int>(tp_port_attr.Int());
                 std::string possess_key = pkey_attr.String();
                 std::string possess_entity_id = pentity_id_attr.String();
                 debug() << "Server transfer data: Host: " << teleport_host
@@ -194,19 +194,19 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {
-        for (unsigned int A=0; A < args.size(); ++A) {
-            Entity* ent = m_view->getEntity(args[A]->getId());
+        for (const auto& arg : args) {
+            Entity* ent = m_view->getEntity(arg->getId());
             if (!ent) {
-                if (m_view->isPending(args[A]->getId())) {
+                if (m_view->isPending(arg->getId())) {
                     /* no-op, we'll get the state later */
                 } else {
-                    warning() << " got SET for completely unknown entity " << args[A]->getId();
+                    warning() << " got SET for completely unknown entity " << arg->getId();
                 }
                     
                 continue; // we don't have it, ignore
             }
             
-            ent->setFromRoot(args[A], false);
+            ent->setFromRoot(arg, false);
         }
         return HANDLED;
     }
@@ -215,13 +215,13 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     // that a previously unknown entity now has moved into our field of view. We should handle this just
     // like if an Appear ops was sent (which is the other main way a new entity can announce itself to the client).
     if (op->getClassNo() == MOVE_NO) {
-        for (unsigned int A=0; A < args.size(); ++A) {
+        for (const auto& arg : args) {
             float stamp = -1;
-            if (args[A]->hasAttr("stamp")) {
-                stamp = (float)args[A]->getAttr("stamp").asFloat();
+            if (arg->hasAttr("stamp")) {
+                stamp = (float) arg->getAttr("stamp").asFloat();
             }
 
-            m_view->appear(args[A]->getId(), stamp);
+            m_view->appear(arg->getId(), stamp);
         }
         return HANDLED;
     }

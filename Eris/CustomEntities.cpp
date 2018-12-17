@@ -4,9 +4,7 @@ namespace Atlas { namespace Objects { namespace Entity {
 
 int SYS_NO = -1;
 
-SysData::~SysData()
-{
-}
+SysData::~SysData() = default;
 
 SysData * SysData::copy() const
 {

@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifndef ERIS_REDISPATCH_H
 #define ERIS_REDISPATCH_H
 
@@ -15,8 +17,8 @@ class Connection;
 class Redispatch : public sigc::trackable
 {
 protected:
-    Redispatch(Connection* con, const Atlas::Objects::Root& obj) :
-        m_obj(obj),
+    Redispatch(Connection* con, Atlas::Objects::Root obj) :
+        m_obj(std::move(obj)),
         m_con(con)
     {
 

@@ -9,11 +9,12 @@ class TypeService;
 class EntityRouter : public Router
 {
 public:
-    EntityRouter(ViewEntity* ent);
-    virtual ~EntityRouter();
+	explicit EntityRouter(ViewEntity* ent);
+
+	~EntityRouter() override;
     
 protected:
-    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&);
+	RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&) override;
     
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation&);

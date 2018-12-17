@@ -17,9 +17,7 @@ using Atlas::Objects::Entity::RootEntity;
 namespace Eris
 {
 
-Router::~Router()
-{
-}
+Router::~Router() = default;
 
 Router::RouterResult Router::handleObject(const Root& obj)
 {

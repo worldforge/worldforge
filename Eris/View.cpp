@@ -26,7 +26,7 @@ namespace Eris
 
 View::View(Avatar* av) :
     m_owner(av),
-    m_topLevel(NULL),
+    m_topLevel(nullptr),
     m_maxPendingCount(10)
 {
     
@@ -45,15 +45,15 @@ View::~View()
     // cause a view to be deleted with no top-level entity; in that case we
     // leak a few entities here.
     
-    for (FactoryStore::iterator F=m_factories.begin(); F != m_factories.end(); ++F) {
-        delete *F;
+    for (auto factory : m_factories) {
+        delete factory;
     }
 }
 
 Entity* View::getEntity(const std::string& eid) const
 {
-    IdEntityMap::const_iterator E = m_contents.find(eid);
-    if (E == m_contents.end()) return NULL;
+	auto E = m_contents.find(eid);
+    if (E == m_contents.end()) return nullptr;
 
     return E->second;
 }
@@ -107,8 +107,9 @@ void View::update()
     WFMath::TimeStamp t(WFMath::TimeStamp::now());
     
     // run motion prediction for each moving entity
-    for (EntitySet::iterator it=m_moving.begin(); it != m_moving.end(); ++it)
-        (*it)->updatePredictedState(t);
+    for (auto it : m_moving) {
+		it->updatePredictedState(t);
+	}
     
     typedef std::set<Task*> TaskSet;
     
@@ -116,9 +117,8 @@ void View::update()
     if (!m_lastUpdateTime.isValid()) m_lastUpdateTime = t;
     WFMath::TimeDiff dt = t - m_lastUpdateTime;
     
-    for (TaskSet::iterator it=m_progressingTasks.begin(); it != m_progressingTasks.end(); ++it)
-    {
-        (*it)->updatePredictedProgress(dt);
+    for (auto m_progressingTask : m_progressingTasks) {
+		m_progressingTask->updatePredictedProgress(dt);
     }
     
     m_lastUpdateTime = t;
@@ -196,7 +196,7 @@ void View::sight(const RootEntity& gent)
 {
     bool visible = true;
     std::string eid = gent->getId();
-    PendingSightMap::iterator pending = m_pending.find(eid);
+	auto pending = m_pending.find(eid);
     
 // examine the pending map, to see what we should do with this entity
     if (pending != m_pending.end()) {
@@ -254,8 +254,8 @@ Entity* View::initialSight(const RootEntity& gent)
     ent->init(gent, false);
     
     InitialSightEntity.emit(ent);
- 
-    NotifySightMap::iterator it = m_notifySights.find(gent->getId());
+
+	auto it = m_notifySights.find(gent->getId());
     if (it != m_notifySights.end()) {
         it->second.emit(ent);
         m_notifySights.erase(it);
@@ -275,7 +275,7 @@ void View::create(const RootEntity& gent)
     }
     
     bool alreadyAppeared = false;
-    PendingSightMap::iterator pending = m_pending.find(eid);
+	auto pending = m_pending.find(eid);
     if (pending != m_pending.end())
     {
         // already being retrieved, but we have the data now
@@ -345,8 +345,8 @@ Entity* View::createEntity(const RootEntity& gent)
 {
     TypeInfo* type = getConnection()->getTypeService()->getTypeForAtlas(gent);
     assert(type->isBound());
-    
-    FactoryStore::const_iterator F = m_factories.begin();
+
+	auto F = m_factories.begin();
     for (; F != m_factories.end(); ++F) {
         if ((*F)->accept(gent, type)) {
             return (*F)->instantiate(gent, type, this);
@@ -393,7 +393,7 @@ void View::sendLookAt(const std::string& eid)
 {
     Look look;
     if (!eid.empty()) {
-        PendingSightMap::iterator pending = m_pending.find(eid);
+		auto pending = m_pending.find(eid);
         if (pending != m_pending.end()) {
             switch (pending->second)
             {
@@ -444,11 +444,11 @@ void View::setTopLevelEntity(Entity* newTopLevel)
     if (m_topLevel) {
         if (newTopLevel == m_topLevel) return; // no change!
         
-        if (m_topLevel->isVisible() && (m_topLevel->getLocation() == NULL))
+        if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr))
             error() << "old top-level entity is visible, but has no location";
     }
 
-    assert(newTopLevel && newTopLevel->getLocation() == NULL);
+    assert(newTopLevel && newTopLevel->getLocation() == nullptr);
     m_topLevel = newTopLevel;
     TopLevelEntityChanged.emit(); // fire the signal
 }
@@ -470,8 +470,8 @@ void View::issueQueuedLook()
 void View::dumpLookQueue()
 {
     debug() << "look queue:";
-    for (unsigned int i=0; i < m_lookQueue.size(); ++i) {
-        debug() << "\t" << m_lookQueue[i];
+    for (const auto& lookOp : m_lookQueue) {
+        debug() << "\t" << lookOp;
     }
 }
 

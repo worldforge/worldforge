@@ -15,7 +15,7 @@ namespace Eris
 {
 
 EntityRef::EntityRef(View* v, const std::string& eid) :
-	m_inner(NULL)
+	m_inner(nullptr)
 {
 	if (eid.empty()) return;
 	
@@ -64,7 +64,7 @@ EntityRef& EntityRef::operator=(const EntityRef& ref)
     
 void EntityRef::onEntityDeleted()
 {
-	m_inner = NULL;
+	m_inner = nullptr;
 	Changed();
 }
 

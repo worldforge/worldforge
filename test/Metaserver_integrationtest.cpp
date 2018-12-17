@@ -51,7 +51,7 @@ BaseConnection::~BaseConnection()
 {
 }
 
-int BaseConnection::connect(const std::string &host, short port)
+int BaseConnection::connectRemote(const std::string &host, short port)
 {
     return 0;
 }

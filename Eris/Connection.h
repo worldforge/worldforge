@@ -54,7 +54,7 @@ public:
     */
     Connection(boost::asio::io_service& io_service, EventService& eventService, const std::string &cnm, const std::string& socket);
 
-    virtual ~Connection();
+    ~Connection() override;
 
     /** If the underlying socket cannot be opened,  connect will return an
     error number immediately. Providing the basic connection is established,
@@ -82,11 +82,11 @@ public:
 
     void clearDefaultRouter();
 
-    void registerRouterForTo(Router* router, const std::string toId);
-    void unregisterRouterForTo(Router* router, const std::string toId);
+    void registerRouterForTo(Router* router, const std::string& toId);
+    void unregisterRouterForTo(Router* router, const std::string& toId);
 
-    void registerRouterForFrom(Router* router, const std::string fromId);
-    void unregisterRouterForFrom(Router* router, const std::string fromId);
+    void registerRouterForFrom(Router* router, const std::string& fromId);
+    void unregisterRouterForFrom(Router* router, const std::string& fromId);
 
     /** Lock then connection's state. This prevents the connection changing status
     until a corresponding unlock() call is issued. The only use at present is to hold
@@ -139,16 +139,16 @@ public:
 protected:
     /// update the connection status (and emit the appropriate signal)
     /// @param sc The new status of the connection
-    virtual void setStatus(Status sc);
+    void setStatus(Status sc) override;
 
     /// Process failures (to track when reconnection should be permitted)
-    virtual void handleFailure(const std::string &msg);
+    void handleFailure(const std::string &msg) override;
 
-    virtual void handleTimeout(const std::string& msg);
+    void handleTimeout(const std::string& msg) override;
 
-    virtual void onConnect();
+    void onConnect() override;
 
-    void objectArrived(const Atlas::Objects::Root& obj);
+    void objectArrived(const Atlas::Objects::Root& obj) override;
 
     EventService& _eventService;
 
@@ -165,7 +165,7 @@ protected:
 
     void cleanupRedispatch(Redispatch* r);
 
-    void dispatch();
+    void dispatch() override;
 
     void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
     void handleServerInfo(const Atlas::Objects::Operation::RootOperation& op);

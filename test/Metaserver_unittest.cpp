@@ -160,8 +160,7 @@ namespace Eris
 {
 
 MetaQuery::MetaQuery(boost::asio::io_service& io_service,  Meta& ms, const std::string &host, size_t sindex) :
-    BaseConnection(io_service, "eris-metaquery", "mq_" + host + "-", ms),
-    _host(host),
+    BaseConnection(io_service, "eris-metaquery", host, ms),
     _meta(ms),
     _queryNo(0),
     m_serverIndex(sindex),
@@ -217,7 +216,7 @@ BaseConnection::~BaseConnection()
 {
 }
 
-int BaseConnection::connect(const std::string &host, short port)
+int BaseConnection::connectRemote(const std::string &host, short port)
 {
     return 0;
 }

@@ -158,7 +158,7 @@ int main()
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
 
-        int ret = tbc.connect("localhost", 6723);
+        int ret = tbc.connectRemote("localhost", 6723);
 
         assert(ret == 0);
 

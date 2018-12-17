@@ -13,11 +13,12 @@ class TypeInfo;
 class IGRouter : public Router
 {
 public:
-    IGRouter(Avatar* av);
-    virtual ~IGRouter();
+	explicit IGRouter(Avatar* av);
+
+	~IGRouter() override;
 
 protected:
-    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
+	RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) override;
 
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation& op);

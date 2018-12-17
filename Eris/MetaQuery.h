@@ -21,13 +21,11 @@ class MetaQuery : public BaseConnection
 {
 public:	
 	MetaQuery(boost::asio::io_service& io_service, Meta& svr, const std::string &host, size_t index);
-	virtual ~MetaQuery();
+
+	~MetaQuery() override;
 	
 	/// return the serial-number of the query GET operation [for identification of replies]
 	long getQueryNo() const;
-
-	/// return the host string this query is using
-	const std::string& getHost() const;
 
 	size_t getServerIndex() const;
         
@@ -41,15 +39,16 @@ protected:
     void setComplete();
     
 	/// Over-ride the default connection behaviour to issue the query
-	virtual void onConnect();
-	virtual void handleFailure(const std::string &msg);
-    virtual void handleTimeout(const std::string& msg);
+	void onConnect() override;
+
+	void handleFailure(const std::string &msg) override;
+
+	void handleTimeout(const std::string& msg) override;
     
     void onQueryTimeout();
 
-    void dispatch();
+    void dispatch() override;
 
-	const std::string _host;	///< The host being querried
 	Meta& _meta;			///< The Meta-server object which owns the query
     
 	long _queryNo;		///< The serial number of the query GET
@@ -63,12 +62,6 @@ protected:
 inline long MetaQuery::getQueryNo() const
 {
     return _queryNo;
-}
-
-/// return the host string this query is using
-inline const std::string& MetaQuery::getHost() const
-{
-    return _host;
 }
 
 inline size_t MetaQuery::getServerIndex() const

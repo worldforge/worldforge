@@ -41,7 +41,7 @@ public:
 
     /** open a connection to the specified host/port; invokes the failure handler if
     the connection could not be opened. */
-    virtual int connect(const std::string &host, short port);
+    virtual int connectRemote(const std::string &host, short port);
 
     /**
      * Try to connect to a local socket.

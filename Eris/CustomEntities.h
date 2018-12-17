@@ -18,23 +18,23 @@ class SysData : public AccountData
 {
 protected:
     /// Construct a AdminData class definition.
-    SysData(SysData *defaults = NULL) :
+    explicit SysData(SysData *defaults = nullptr) :
         AccountData((AccountData*)defaults)
     {
         m_class_no = SYS_NO;
     }
     /// Default destructor.
-    virtual ~SysData();
+    ~SysData() override;
 
 public:
     /// Copy this object.
-    virtual SysData * copy() const;
+    SysData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
+    bool instanceOf(int classNo) const override;
 
 
-    virtual void iterate(int& current_class, std::string& attr) const
+    void iterate(int& current_class, std::string& attr) const override
         {if(current_class == SYS_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
 public:
@@ -44,10 +44,10 @@ public:
 
 protected:
     ///Resets the object as it's returned to the pool.
-    virtual void reset();
+    void reset() override;
 
 private:
-    virtual void free();
+    void free() override;
 
     static void fillDefaultObjectInstance(SysData& data, std::map<std::string, int>& attr_data);
 
