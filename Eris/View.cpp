@@ -111,8 +111,6 @@ void View::update()
 		it->updatePredictedState(t);
 	}
     
-    typedef std::set<Task*> TaskSet;
-    
     // for first call to update, dt will be zero.
     if (!m_lastUpdateTime.isValid()) m_lastUpdateTime = t;
     WFMath::TimeDiff dt = t - m_lastUpdateTime;
