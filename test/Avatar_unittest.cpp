@@ -915,7 +915,7 @@ int main()
         acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
         op->setArgs1(logout);
         logout->setArgs1(logout_arg);
-        logout_arg->setId(fake_id);
+        logout_arg->setId(fake_mind_id);
 
         ea->test_logoutResponse(op);
 

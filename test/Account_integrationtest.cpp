@@ -956,6 +956,9 @@ int main()
         TestAccount acc(con);
         Atlas::Objects::Operation::Info op;
         Atlas::Objects::Entity::Anonymous info_arg;
+        Atlas::Objects::Entity::Anonymous entity_arg;
+        entity_arg->setId("1");
+        info_arg->setAttr("entity",entity_arg->asMessage());
         SignalFlagger avatarSuccess_checker;
 
         op->setArgs1(info_arg);
