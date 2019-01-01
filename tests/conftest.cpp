@@ -55,7 +55,7 @@ int main( int argc, char ** argv)
   try {
     config.parseStream( ss, varconf::USER);
   }
-  catch ( varconf::ParseError p) {
+  catch (const varconf::ParseError& p) {
     std::cout << "\nError while parsing from input stream.\n";
     std::cout << p;
   }
