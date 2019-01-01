@@ -38,7 +38,7 @@ using Eris::Meta;
 static const std::string TEST_METASERVER("127.0.0.1");
 static const std::string TEST_INVALID_IP("327.0.0.1");
 
-static bool test_failure_flag;
+//static bool test_failure_flag;
 
 //static void test_fail(const std::string & msg)
 //{
