@@ -451,7 +451,7 @@ bool _PolyContainsBox(const _Poly2Orient<dim> &orient, const Polygon<2> &poly,
   try {
     m.rotation(Vector<2>(1, 0), vec1);
   }
-  catch(ColinearVectors<2>) { // vec1 is parallel to (-1, 0), so we're fine
+  catch(const ColinearVectors<2>&) { // vec1 is parallel to (-1, 0), so we're fine
     m.identity();
   }
 

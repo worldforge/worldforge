@@ -51,7 +51,7 @@ void test_general(const C& c)
   try {
     FromString(c3, s); // Uses operator>>() implicitly
   }
-  catch(ParseError) {
+  catch(const ParseError&) {
     std::cerr << "Couldn't parse generated string: " << s << std::endl;
     abort();
   }
