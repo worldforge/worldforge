@@ -46,9 +46,9 @@ class DepthShader : public Shader {
     virtual ~DepthShader();
 
     /// Accessor for the level of the surface of the water.
-    const float waterLevel() const { return m_waterLevel; }
+    float waterLevel() const { return m_waterLevel; }
     /// Accessor for the depth at which the bottom becomes completely obscured.
-    const float murkyDepth() const { return m_murkyDepth; }
+    float murkyDepth() const { return m_murkyDepth; }
 
     virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;

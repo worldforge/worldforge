@@ -101,13 +101,13 @@ class GrassShader : public Shader {
     virtual ~GrassShader();
 
     /// Accessor for level above which the shader renders.
-    const float lowThreshold() const { return m_lowThreshold; }
+    float lowThreshold() const { return m_lowThreshold; }
     /// Accessor for level below which the shader renders.
-    const float highThreshold() const { return m_highThreshold; }
+    float highThreshold() const { return m_highThreshold; }
     /// Accessor for slope below which grass is opaque.
-    const float cutoff() const { return m_cutoff; }
+    float cutoff() const { return m_cutoff; }
     /// Accessor for slope steeper than which no grass grows.
-    const float intercept() const { return m_intercept; }
+    float intercept() const { return m_intercept; }
 
     virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;

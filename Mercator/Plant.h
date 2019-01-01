@@ -51,7 +51,7 @@ class Plant {
     }
 
     /// Accessor for height.
-    const float getHeight() const {
+    float getHeight() const {
         return m_height;
     }
 

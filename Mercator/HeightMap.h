@@ -32,7 +32,7 @@ class HeightMap : public Buffer<float> {
     virtual ~HeightMap() = default;
 
     /// \brief Accessor for resolution of this segment.
-    const int getResolution() const {
+    int getResolution() const {
         return m_res;
     }
 

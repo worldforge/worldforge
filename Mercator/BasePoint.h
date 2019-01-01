@@ -44,17 +44,17 @@ class BasePoint {
              m_height(h), m_roughness(r), m_falloff(f) {}
 
     /// Accessor for the height at the base point.
-    const float height() const { return m_height; }
+    float height() const { return m_height; }
     /// Accessor for the height at the base point.
     float & height() { return m_height; }
 
     /// Accessor for the roughness at the base point.
-    const float roughness() const { return m_roughness; }
+    float roughness() const { return m_roughness; }
     /// Accessor for the roughness at the base point.
     float & roughness() { return m_roughness; }
 
     /// Accessor for the falloff at the base point.
-    const float falloff() const { return m_falloff; }
+    float falloff() const { return m_falloff; }
     /// Accessor for the falloff at the base point.
     float & falloff() { return m_falloff; }
 

@@ -33,7 +33,7 @@ class HighShader : public Shader {
     ~HighShader() override;
 
     /// Accessor for level above which the shader renders.
-    const float threshold() const { return m_threshold; }
+    float threshold() const { return m_threshold; }
 
     bool checkIntersect(const Segment &) const override;
 
@@ -64,7 +64,7 @@ class LowShader : public Shader {
     ~LowShader() override;
 
     /// Accessor for level below which the shader renders.
-    const float threshold() const { return m_threshold; }
+    float threshold() const { return m_threshold; }
 
     bool checkIntersect(const Segment &) const override;
 
@@ -103,9 +103,9 @@ class BandShader : public Shader {
     ~BandShader() override;
 
     /// Accessor for the level above which the shader renders.
-    const float lowThreshold() const { return m_lowThreshold; }
+    float lowThreshold() const { return m_lowThreshold; }
     /// Accessor for the level below which the shader renders.
-    const float highThreshold() const { return m_highThreshold; }
+    float highThreshold() const { return m_highThreshold; }
 
     bool checkIntersect(const Segment &) const override;
 

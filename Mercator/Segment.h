@@ -69,12 +69,12 @@ class Segment {
     ~Segment();
 
     /// \brief Accessor for resolution of this segment.
-    const int getResolution() const {
+    int getResolution() const {
         return m_res;
     }
 
     /// \brief Accessor for array size of this segment.
-    const int getSize() const {
+    int getSize() const {
         return m_size;
     }
 
@@ -91,7 +91,7 @@ class Segment {
     /// \brief Check whether this Segment contains valid point data.
     ///
     /// @return true if this Segment is valid, false otherwise.
-    const bool isValid() const {
+    bool isValid() const {
         return m_heightMap.isValid();
     }
 
