@@ -27,8 +27,6 @@
 
 #include <Atlas/Codec.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 static const int CONNECT_TIMEOUT_SECONDS = 5;
 
 namespace Eris

@@ -91,7 +91,7 @@ set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
 find_package(Boost
         1.46.0
         REQUIRED
-        COMPONENTS thread date_time system)
+        COMPONENTS system)
 
 link_directories(${Boost_LIBRARY_DIRS})
 link_libraries(${Boost_LIBRARIES})

@@ -19,8 +19,6 @@
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/objectFactory.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-
 #include <algorithm>
 #include <cassert>
 #include <iostream>
