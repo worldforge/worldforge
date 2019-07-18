@@ -114,7 +114,7 @@ protected:
     /// Find the class which contains the attribute "name".
     int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    int32_t getAttrFlag(const std::string& name)const override;
+    bool getAttrFlag(const std::string& name, uint32_t& flag)const override;
     /// Id of object
     std::string attr_id;
     /// The object this inherits attributes from.
@@ -151,7 +151,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(RootData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(RootData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 //
@@ -168,7 +168,7 @@ extern const std::string NAME_ATTR;
 // Inlined member functions follow.
 //
 
-const int32_t ID_FLAG = 1 << 1;
+const uint32_t ID_FLAG = 1 << 1;
 
 inline void RootData::setId(const std::string& val)
 {
@@ -176,7 +176,7 @@ inline void RootData::setId(const std::string& val)
     m_attrFlags |= ID_FLAG;
 }
 
-const int32_t PARENT_FLAG = 1 << 2;
+const uint32_t PARENT_FLAG = 1 << 2;
 
 inline void RootData::setParent(const std::string& val)
 {
@@ -184,7 +184,7 @@ inline void RootData::setParent(const std::string& val)
     m_attrFlags |= PARENT_FLAG;
 }
 
-const int32_t STAMP_FLAG = 1 << 3;
+const uint32_t STAMP_FLAG = 1 << 3;
 
 inline void RootData::setStamp(double val)
 {
@@ -192,7 +192,7 @@ inline void RootData::setStamp(double val)
     m_attrFlags |= STAMP_FLAG;
 }
 
-const int32_t OBJTYPE_FLAG = 1 << 4;
+const uint32_t OBJTYPE_FLAG = 1 << 4;
 
 inline void RootData::setObjtype(const std::string& val)
 {
@@ -200,7 +200,7 @@ inline void RootData::setObjtype(const std::string& val)
     m_attrFlags |= OBJTYPE_FLAG;
 }
 
-const int32_t NAME_FLAG = 1 << 5;
+const uint32_t NAME_FLAG = 1 << 5;
 
 inline void RootData::setName(const std::string& val)
 {

@@ -42,7 +42,7 @@ bool AppearanceData::instanceOf(int classNo) const
     return SightData::instanceOf(classNo);
 }
 
-void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int32_t>& attr_data)
+void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -83,7 +83,7 @@ bool DisappearanceData::instanceOf(int classNo) const
     return SightData::instanceOf(classNo);
 }
 
-void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int32_t>& attr_data)
+void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -124,7 +124,7 @@ bool SoundData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string, int32_t>& attr_data)
+void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -165,7 +165,7 @@ bool SmellData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string, int32_t>& attr_data)
+void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -206,7 +206,7 @@ bool FeelData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, int32_t>& attr_data)
+void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -247,7 +247,7 @@ bool ErrorData::instanceOf(int classNo) const
     return InfoData::instanceOf(classNo);
 }
 
-void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int32_t>& attr_data)
+void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

@@ -142,7 +142,7 @@ protected:
     /// Find the class which contains the attribute "name".
     int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    int32_t getAttrFlag(const std::string& name)const override;
+    bool getAttrFlag(const std::string& name, uint32_t& flag)const override;
     /// Serial number.
     long attr_serialno;
     /// Reference to serial number.
@@ -187,7 +187,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 //
@@ -206,7 +206,7 @@ extern const std::string ARGS_ATTR;
 // Inlined member functions follow.
 //
 
-const int32_t SERIALNO_FLAG = 1 << 14;
+const uint32_t SERIALNO_FLAG = 1 << 14;
 
 inline void RootOperationData::setSerialno(long val)
 {
@@ -214,7 +214,7 @@ inline void RootOperationData::setSerialno(long val)
     m_attrFlags |= SERIALNO_FLAG;
 }
 
-const int32_t REFNO_FLAG = 1 << 15;
+const uint32_t REFNO_FLAG = 1 << 15;
 
 inline void RootOperationData::setRefno(long val)
 {
@@ -222,7 +222,7 @@ inline void RootOperationData::setRefno(long val)
     m_attrFlags |= REFNO_FLAG;
 }
 
-const int32_t FROM_FLAG = 1 << 16;
+const uint32_t FROM_FLAG = 1 << 16;
 
 inline void RootOperationData::setFrom(const std::string& val)
 {
@@ -230,7 +230,7 @@ inline void RootOperationData::setFrom(const std::string& val)
     m_attrFlags |= FROM_FLAG;
 }
 
-const int32_t TO_FLAG = 1 << 17;
+const uint32_t TO_FLAG = 1 << 17;
 
 inline void RootOperationData::setTo(const std::string& val)
 {
@@ -238,7 +238,7 @@ inline void RootOperationData::setTo(const std::string& val)
     m_attrFlags |= TO_FLAG;
 }
 
-const int32_t SECONDS_FLAG = 1 << 18;
+const uint32_t SECONDS_FLAG = 1 << 18;
 
 inline void RootOperationData::setSeconds(double val)
 {
@@ -246,7 +246,7 @@ inline void RootOperationData::setSeconds(double val)
     m_attrFlags |= SECONDS_FLAG;
 }
 
-const int32_t FUTURE_SECONDS_FLAG = 1 << 19;
+const uint32_t FUTURE_SECONDS_FLAG = 1 << 19;
 
 inline void RootOperationData::setFutureSeconds(double val)
 {
@@ -254,7 +254,7 @@ inline void RootOperationData::setFutureSeconds(double val)
     m_attrFlags |= FUTURE_SECONDS_FLAG;
 }
 
-const int32_t ARGS_FLAG = 1 << 20;
+const uint32_t ARGS_FLAG = 1 << 20;
 
 inline void RootOperationData::setArgs(const std::vector<Root>& val)
 {

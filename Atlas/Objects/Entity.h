@@ -64,7 +64,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -152,7 +152,7 @@ protected:
     /// Find the class which contains the attribute "name".
     int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    int32_t getAttrFlag(const std::string& name)const override;
+    bool getAttrFlag(const std::string& name, uint32_t& flag)const override;
     /// Username for account usually
     std::string attr_username;
     /// Password for account usually
@@ -181,7 +181,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AccountData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AccountData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 //
@@ -196,7 +196,7 @@ extern const std::string CHARACTERS_ATTR;
 // Inlined member functions follow.
 //
 
-const int32_t USERNAME_FLAG = 1 << 11;
+const uint32_t USERNAME_FLAG = 1 << 11;
 
 inline void AccountData::setUsername(const std::string& val)
 {
@@ -204,7 +204,7 @@ inline void AccountData::setUsername(const std::string& val)
     m_attrFlags |= USERNAME_FLAG;
 }
 
-const int32_t PASSWORD_FLAG = 1 << 12;
+const uint32_t PASSWORD_FLAG = 1 << 12;
 
 inline void AccountData::setPassword(const std::string& val)
 {
@@ -212,7 +212,7 @@ inline void AccountData::setPassword(const std::string& val)
     m_attrFlags |= PASSWORD_FLAG;
 }
 
-const int32_t CHARACTERS_FLAG = 1 << 13;
+const uint32_t CHARACTERS_FLAG = 1 << 13;
 
 inline void AccountData::setCharacters(const std::list<std::string>& val)
 {
@@ -353,7 +353,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(PlayerData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -407,7 +407,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AdminData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AdminData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -461,7 +461,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(GameData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(GameData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -515,7 +515,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Entity

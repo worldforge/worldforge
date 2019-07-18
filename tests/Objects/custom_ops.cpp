@@ -39,7 +39,7 @@ public:
     static ::Atlas::Objects::Allocator<WieldData> allocator;
 
 private:
-    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -62,7 +62,7 @@ bool WieldData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data)
+void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data)
 {
     data.attr_objtype = "op";
     data.attr_serialno = 0;

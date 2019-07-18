@@ -42,7 +42,7 @@ bool PerceiveData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int32_t>& attr_data)
+void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -83,7 +83,7 @@ bool LookData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, int32_t>& attr_data)
+void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -124,7 +124,7 @@ bool ListenData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, int32_t>& attr_data)
+void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -165,7 +165,7 @@ bool SniffData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, int32_t>& attr_data)
+void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -206,7 +206,7 @@ bool TouchData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, int32_t>& attr_data)
+void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -247,7 +247,7 @@ bool LoginData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, int32_t>& attr_data)
+void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

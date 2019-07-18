@@ -48,7 +48,7 @@ bool AnonymousData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, int32_t>& attr_data)
+void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);

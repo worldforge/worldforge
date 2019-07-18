@@ -42,7 +42,7 @@ bool LogoutData::instanceOf(int classNo) const
     return LoginData::instanceOf(classNo);
 }
 
-void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int32_t>& attr_data)
+void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -83,7 +83,7 @@ bool ImaginaryData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int32_t>& attr_data)
+void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -124,7 +124,7 @@ bool UseData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int32_t>& attr_data)
+void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -165,7 +165,7 @@ bool InfoData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, int32_t>& attr_data)
+void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -206,7 +206,7 @@ bool PerceptionData::instanceOf(int classNo) const
     return InfoData::instanceOf(classNo);
 }
 
-void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int32_t>& attr_data)
+void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -247,7 +247,7 @@ bool SightData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, int32_t>& attr_data)
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

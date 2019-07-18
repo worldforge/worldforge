@@ -26,13 +26,14 @@ int RootData::getAttrClass(const std::string& name) const
     return BaseObjectData::getAttrClass(name);
 }
 
-int32_t RootData::getAttrFlag(const std::string& name) const
+bool RootData::getAttrFlag(const std::string& name, uint32_t& flag) const
 {
     auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
-        return I->second;
+        flag = I->second;
+        return true;
     }
-    return BaseObjectData::getAttrFlag(name);
+    return BaseObjectData::getAttrFlag(name, flag);
 }
 
 int RootData::copyAttr(const std::string& name, Element & attr) const
@@ -196,7 +197,7 @@ bool RootData::instanceOf(int classNo) const
     return BaseObjectData::instanceOf(classNo);
 }
 
-void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, int32_t>& attr_data)
+void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_stamp = 0.0;
         data.attr_objtype = "obj";

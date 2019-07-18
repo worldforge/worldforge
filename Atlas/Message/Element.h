@@ -1,3 +1,5 @@
+#include <utility>
+
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit, Karsten-O. Laux and Al Riddoch
@@ -135,8 +137,9 @@ public:
     Element(const char* v)
       : t(TYPE_STRING)
     {
-      if(v)
-        s = new DataType<StringType>(v);
+      if(v) {
+		s = new DataType<StringType>(v);
+	  }
       else
         s = new DataType<StringType>();
     }
@@ -151,7 +154,7 @@ public:
     Element(StringType&& v)
       : t(TYPE_STRING)
     {
-        s = new DataType<StringType>(std::move(v));
+        s = new DataType<StringType>(v);
     }
 
     /// Set type to MapType, and value to v.
@@ -164,7 +167,7 @@ public:
     Element(MapType&& v)
       : t(TYPE_MAP)
     {
-      m = new DataType<MapType>(std::move(v));
+      m = new DataType<MapType>(v);
     }
 
     /// Set type to ListType, and value to v.
@@ -177,7 +180,7 @@ public:
     Element(ListType&& v)
       : t(TYPE_LIST)
     {
-      l = new DataType<ListType>(std::move(v));
+      l = new DataType<ListType>(v);
     }
 
     /// overload assignment operator !
@@ -255,7 +258,7 @@ public:
       if (TYPE_STRING != t || !s->unique())
       {
         clear(TYPE_STRING);
-        s = new DataType<StringType>(v);
+        s = new DataType<StringType>(std::string(v));
       } else {
         *s = StringType(v);
       }
@@ -279,7 +282,7 @@ public:
       if (TYPE_STRING != t || !s->unique())
       {
         clear(TYPE_STRING);
-        s = new DataType<StringType>(std::move(v));
+        s = new DataType<StringType>(v);
       } else {
         *s = v;
       }
@@ -303,7 +306,7 @@ public:
       if (TYPE_MAP != t || !m->unique())
       {
         clear(TYPE_MAP);
-        m = new DataType<MapType>(std::move(v));
+        m = new DataType<MapType>(v);
       } else {
         *m = v;
       }
@@ -327,7 +330,7 @@ public:
       if (TYPE_LIST != t || !l->unique())
       {
         clear(TYPE_LIST);
-        l = new DataType<ListType>(std::move(v));
+        l = new DataType<ListType>(v);
       } else {
         *l = v;
       }
@@ -484,10 +487,10 @@ public:
      * This will leave an empty string in the Element.
      * @return
      */
-    StringType moveString() {
+    StringType&& moveString() {
         if (t != TYPE_STRING) throw WrongTypeException();
         s = s->makeUnique();
-        return std::move(s->move());
+        return s->move();
     }
 
     /// Retrieve the current value as a const MapType reference.
@@ -517,10 +520,10 @@ public:
      * This will leave an empty map in the Element.
      * @return
      */
-    MapType moveMap() {
+    MapType&& moveMap() {
         if (t != TYPE_MAP) throw WrongTypeException();
         m = m->makeUnique();
-        return std::move(m->move());
+        return m->move();
     }
 
     /// Retrieve the current value as a const ListType reference.
@@ -550,10 +553,10 @@ public:
      * This will leave an empty list in the Element.
      * @return
      */
-    ListType moveList() {
+    ListType&& moveList() {
         if (t != TYPE_LIST) throw WrongTypeException();
         l = l->makeUnique();
-        return std::move(l->move());
+        return l->move();
     }
 
     static const char * typeName(Type);
@@ -564,10 +567,10 @@ protected:
     class DataType
     {
     public:
-        DataType() : _refcount(1), _data(0) {}
+        DataType() : _refcount(1), _data(nullptr) {}
 
 		explicit DataType(const C& c) : _refcount(1), _data(c) {}
-		explicit DataType(C&& c) : _refcount(1), _data(std::move(c)) {}
+		explicit DataType(C&& c) : _refcount(1), _data(c) {}
         DataType(const DataType&) = delete;
 
         DataType& operator=(const C& c) {_data = c; return *this;}
@@ -595,7 +598,7 @@ protected:
          * This will destroy the existing data.
          * @return
          */
-        C move() {
+        C&& move() {
             return std::move(_data);
         }
 //        operator const C&() const {return _data;}

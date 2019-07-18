@@ -26,13 +26,14 @@ int RootEntityData::getAttrClass(const std::string& name) const
     return RootData::getAttrClass(name);
 }
 
-int32_t RootEntityData::getAttrFlag(const std::string& name) const
+bool RootEntityData::getAttrFlag(const std::string& name, uint32_t& flag) const
 {
     auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
-        return I->second;
+        flag = I->second;
+        return true;
     }
-    return RootData::getAttrFlag(name);
+    return RootData::getAttrFlag(name, flag);
 }
 
 int RootEntityData::copyAttr(const std::string& name, Element & attr) const
@@ -207,7 +208,7 @@ bool RootEntityData::instanceOf(int classNo) const
     return RootData::instanceOf(classNo);
 }
 
-void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int32_t>& attr_data)
+void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "obj";
         data.attr_pos.clear();

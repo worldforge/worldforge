@@ -69,7 +69,7 @@ public:
          m_inBuffer + m_inPutback);
   }
   
-  virtual ~filterbuf();
+  ~filterbuf() override;
   
 protected:
   static const int m_outBufferSize = 10;
@@ -88,9 +88,9 @@ protected:
     return num;
   }  
   
-  virtual int_type overflow(int_type c);
-  virtual int_type underflow();
-  virtual int sync();
+  int_type overflow(int_type c) override;
+  int_type underflow() override;
+  int sync() override;
   
 private:
 

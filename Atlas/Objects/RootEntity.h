@@ -121,7 +121,7 @@ protected:
     /// Find the class which contains the attribute "name".
     int getAttrClass(const std::string& name)const override;
     /// Find the flag for the attribute "name".
-    int32_t getAttrFlag(const std::string& name)const override;
+    bool getAttrFlag(const std::string& name, uint32_t& flag)const override;
     /// Reference object for coordinates (location).
     std::string attr_loc;
     /// Position coordinates, usually world is 3D
@@ -158,7 +158,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 //
@@ -175,7 +175,7 @@ extern const std::string STAMP_CONTAINS_ATTR;
 // Inlined member functions follow.
 //
 
-const int32_t LOC_FLAG = 1 << 6;
+const uint32_t LOC_FLAG = 1 << 6;
 
 inline void RootEntityData::setLoc(const std::string& val)
 {
@@ -183,7 +183,7 @@ inline void RootEntityData::setLoc(const std::string& val)
     m_attrFlags |= LOC_FLAG;
 }
 
-const int32_t POS_FLAG = 1 << 7;
+const uint32_t POS_FLAG = 1 << 7;
 
 inline void RootEntityData::setPos(const std::vector<double>& val)
 {
@@ -202,7 +202,7 @@ inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
     }
 }
 
-const int32_t VELOCITY_FLAG = 1 << 8;
+const uint32_t VELOCITY_FLAG = 1 << 8;
 
 inline void RootEntityData::setVelocity(const std::vector<double>& val)
 {
@@ -221,7 +221,7 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
     }
 }
 
-const int32_t CONTAINS_FLAG = 1 << 9;
+const uint32_t CONTAINS_FLAG = 1 << 9;
 
 inline void RootEntityData::setContains(const std::list<std::string>& val)
 {
@@ -240,7 +240,7 @@ inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& va
     }
 }
 
-const int32_t STAMP_CONTAINS_FLAG = 1 << 10;
+const uint32_t STAMP_CONTAINS_FLAG = 1 << 10;
 
 inline void RootEntityData::setStampContains(double val)
 {

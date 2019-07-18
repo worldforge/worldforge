@@ -72,7 +72,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(ActionData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(ActionData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -126,7 +126,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(CreateData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(CreateData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -180,7 +180,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(CombineData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(CombineData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -234,7 +234,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(DivideData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(DivideData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -288,7 +288,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -342,7 +342,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -404,7 +404,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(DeleteData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -466,7 +466,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(SetData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -528,7 +528,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AffectData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AffectData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -582,7 +582,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(MoveData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(MoveData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -644,7 +644,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -706,7 +706,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(GetData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(GetData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -768,7 +768,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -830,7 +830,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(LookData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -892,7 +892,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(ListenData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(ListenData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -954,7 +954,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(SniffData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(SniffData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1016,7 +1016,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(TouchData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(TouchData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1070,7 +1070,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(LoginData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(LoginData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1124,7 +1124,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1186,7 +1186,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1248,7 +1248,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(UseData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(UseData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1310,7 +1310,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(InfoData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(InfoData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1364,7 +1364,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1418,7 +1418,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(SightData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1472,7 +1472,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1526,7 +1526,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1580,7 +1580,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(SoundData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(SoundData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1634,7 +1634,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(SmellData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(SmellData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1688,7 +1688,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(FeelData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(FeelData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -1750,7 +1750,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(ErrorData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Operation

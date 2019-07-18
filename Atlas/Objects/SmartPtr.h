@@ -37,7 +37,7 @@ class SmartPtr
     SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
         incRef();
     }
-    SmartPtr(SmartPtr<T>&& a) : ptr(a.get()) {
+    SmartPtr(SmartPtr<T>&& a) noexcept : ptr(a.get()) {
         a.ptr = nullptr;
     }
     SmartPtr(T *a_ptr) : ptr(a_ptr)

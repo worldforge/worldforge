@@ -48,7 +48,7 @@ bool GenericData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::string, int32_t>& attr_data)
+void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

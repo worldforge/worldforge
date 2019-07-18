@@ -42,7 +42,7 @@ bool ActionData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::string, int32_t>& attr_data)
+void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -83,7 +83,7 @@ bool CreateData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::string, int32_t>& attr_data)
+void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -124,7 +124,7 @@ bool CombineData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::string, int32_t>& attr_data)
+void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -165,7 +165,7 @@ bool DivideData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::string, int32_t>& attr_data)
+void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -206,7 +206,7 @@ bool CommunicateData::instanceOf(int classNo) const
     return CreateData::instanceOf(classNo);
 }
 
-void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, int32_t>& attr_data)
+void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -247,7 +247,7 @@ bool TalkData::instanceOf(int classNo) const
     return CommunicateData::instanceOf(classNo);
 }
 
-void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, int32_t>& attr_data)
+void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

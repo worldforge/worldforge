@@ -42,7 +42,7 @@ bool DeleteData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, int32_t>& attr_data)
+void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -83,7 +83,7 @@ bool SetData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, int32_t>& attr_data)
+void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -124,7 +124,7 @@ bool AffectData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, int32_t>& attr_data)
+void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -165,7 +165,7 @@ bool MoveData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, int32_t>& attr_data)
+void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -206,7 +206,7 @@ bool WieldData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, int32_t>& attr_data)
+void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -247,7 +247,7 @@ bool GetData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, int32_t>& attr_data)
+void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;

@@ -170,7 +170,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
     def static_inline_sets(self, obj, statics):
         classname = classize(obj.id, data=1)
         for attr in statics:
-            self.write("const int32_t %s = 1 << %i;\n" %
+            self.write("const uint32_t %s = 1 << %i;\n" %
                        (attr.flag_name, attr.enum))
             self.write("\n")
             self.write(attr.inline_set(classname))
@@ -225,16 +225,17 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def getattrflag_im(self, obj):
         classname = classize(obj.id, data=1)
-        self.write("int32_t %s::getAttrFlag(const std::string& name) const\n"
+        self.write("bool %s::getAttrFlag(const std::string& name, uint32_t& flag) const\n"
                         % classname)
         self.write("{\n")
         self.write("""    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
-        return I->second;
+        flag = I->second;
+        return true;
     }
 """)
         parent = self.get_cpp_parent(obj)
-        self.write("    return %s::getAttrFlag(name);\n" % parent)
+        self.write("    return %s::getAttrFlag(name, flag);\n" % parent)
         self.write("}\n\n")
 
     def getattr_im(self, obj, statics):
@@ -349,7 +350,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, uint32_t>& attr_data);
 """ % vars()) #"for xemacs syntax highlighting
 
     def free_im(self, obj):
@@ -386,7 +387,7 @@ void %(classname)s::reset()
     def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
-void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int32_t>& attr_data)
+void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, uint32_t>& attr_data)
 {
 """ % vars()) #"for xemacs syntax highlighting
         self.static_default_assigns(obj, default_attrs)
@@ -593,7 +594,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
                            + "const override;\n")
 
             self.doc(4, 'Find the flag for the attribute "name".')
-            self.write("    int32_t getAttrFlag(const std::string& name)"\
+            self.write("    bool getAttrFlag(const std::string& name, uint32_t& flag)"\
                            + "const override;\n")
 
             for attr in static_attrs:

@@ -38,6 +38,18 @@ class NoSuchAttrException : public Atlas::Exception
              Atlas::Exception("No such attribute '" + name + "'."),
 			 m_name(name) {}
 
+	NoSuchAttrException(NoSuchAttrException&& rhs) noexcept :
+			Atlas::Exception(rhs),
+			m_name(rhs.m_name)
+	{ }
+
+	NoSuchAttrException& operator=(NoSuchAttrException&& rhs) noexcept
+	{
+		m_name = std::move(rhs.m_name);
+		Atlas::Exception::operator=(rhs);
+		return *this;
+	}
+
     ~NoSuchAttrException() noexcept override = default;
     /// Get the name of the attribute which does not exist.
     const std::string & getName() const {
@@ -79,7 +91,7 @@ public:
     /**
      * A map of attributes and their flags.
      */
-    std::map<std::string, int32_t> attr_flags_Data;
+    std::map<std::string, uint32_t> attr_flags_Data;
 
     /**
      * Ctor.
@@ -234,7 +246,7 @@ public:
         return m_class_no;
     }
 
-    int32_t getAttrFlags() const
+    uint32_t getAttrFlags() const
     {
         return m_attrFlags;
     }
@@ -247,7 +259,7 @@ public:
     /// Check whether the attribute "name" exists.
     bool hasAttr(const std::string& name) const;
     /// Check whether the attribute "name" exists.
-    bool hasAttrFlag(int flag) const;
+    bool hasAttrFlag(uint32_t flag) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
     const Atlas::Message::Element getAttr(const std::string& name)
@@ -262,7 +274,7 @@ public:
     /// Remove the attribute "name".
     virtual void removeAttr(const std::string& name);
     /// Remove the attribute "name".
-    virtual void removeAttrFlag(int flag);
+    virtual void removeAttrFlag(uint32_t flag);
 
     /// Convert this object to a Object. This is now legacy, and implemented
     /// using addToMessage.
@@ -311,7 +323,7 @@ public:
 
         iterator& operator++(); // preincrement
 
-        iterator operator++(int); // postincrement
+        const iterator operator++(int); // postincrement
 
         bool operator==(const iterator& I) const;
 
@@ -370,7 +382,7 @@ public:
 
         const_iterator& operator++(); // preincrement
 
-        const_iterator operator++(int); // postincrement
+        const const_iterator operator++(int); // postincrement
 
         bool operator==(const const_iterator& I) const;
 
@@ -426,7 +438,7 @@ protected:
     virtual int getAttrClass(const std::string& name) const;
 
     /// Find the flag for the attribute "name".
-    virtual int getAttrFlag(const std::string& name) const;
+    virtual bool getAttrFlag(const std::string& name, uint32_t& flag) const;
 
     /// Iterate over the attributes of this instance.
     virtual void iterate(int& current_class, std::string& attr) const;
@@ -445,7 +457,7 @@ protected:
     BaseObjectData *m_next;
     std::map<std::string, Atlas::Message::Element> m_attributes;
     // is attribute in this object or in default object?
-    int32_t m_attrFlags;
+    uint32_t m_attrFlags;
 };
 
 inline void BaseObjectData::incRef() {
@@ -462,14 +474,14 @@ inline void BaseObjectData::decRef() {
     m_refCount--;
 }
 
-inline BaseObjectData::iterator BaseObjectData::iterator::operator++(int) // postincrement
+inline const BaseObjectData::iterator BaseObjectData::iterator::operator++(int) // postincrement
 {
     iterator tmp = *this;
     operator++();
     return tmp;
 }
 
-inline BaseObjectData::const_iterator BaseObjectData::const_iterator::operator++(int) // postincrement
+inline const BaseObjectData::const_iterator BaseObjectData::const_iterator::operator++(int) // postincrement
 {
     const_iterator tmp = *this;
     operator++();

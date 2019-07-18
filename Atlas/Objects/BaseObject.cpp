@@ -12,7 +12,9 @@ using Atlas::Message::MapType;
 namespace Atlas { namespace Objects {
 
 BaseObjectData::BaseObjectData(BaseObjectData *defaults) :
-    m_class_no(BASE_OBJECT_NO), m_refCount(0), m_defaults(defaults),
+    m_class_no(BASE_OBJECT_NO),
+    m_refCount(0),
+    m_defaults(defaults),
     m_attrFlags(0)
 {
     if(defaults == nullptr) {
@@ -32,15 +34,17 @@ bool BaseObjectData::instanceOf(int classNo) const
 
 bool BaseObjectData::hasAttr(const std::string& name) const
 {
-    int flag = getAttrFlag(name);
-    if (flag >= 0) {
+	uint32_t flag;
+
+	//Use std::optional when we're using C++17
+    if (getAttrFlag(name, flag)) {
         return m_attrFlags & flag;
     } else {
         return (m_attributes.find(name) != m_attributes.end());
     }
 }
 
-bool BaseObjectData::hasAttrFlag(int flag) const
+bool BaseObjectData::hasAttrFlag(uint32_t flag) const
 {
     return m_attrFlags & flag;
 }
@@ -57,10 +61,10 @@ const Element BaseObjectData::getAttr(const std::string& name) const
 
 int BaseObjectData::copyAttr(const std::string& name, Element & attr) const
 {
-    MapType::const_iterator I = m_attributes.find(name);
+    auto I = m_attributes.find(name);
     if (I == m_attributes.end()) {
         return -1;
-    };
+    }
     attr = I->second;
     return 0;
 }
@@ -72,15 +76,15 @@ void BaseObjectData::setAttr(const std::string& name, const Element& attr)
 
 void BaseObjectData::removeAttr(const std::string& name)
 {
-    int flag = getAttrFlag(name);
-    if (flag >= 0) {
+    uint32_t flag;
+    if (getAttrFlag(name, flag)) {
         removeAttrFlag(flag);
     } else {
         m_attributes.erase(name);
     }
 }
 
-void BaseObjectData::removeAttrFlag(int flag)
+void BaseObjectData::removeAttrFlag(uint32_t flag)
 {
     m_attrFlags &= ~flag;
 }
@@ -94,18 +98,16 @@ MapType BaseObjectData::asMessage() const
 
 void BaseObjectData::addToMessage(MapType & m) const
 {
-    typedef MapType::const_iterator Iter;
-    for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
-        m[I->first] = I->second;
+    for (const auto & attribute : m_attributes) {
+        m[attribute.first] = attribute.second;
     }
 }
 
 void BaseObjectData::sendContents(Bridge & b) const
 {
     Message::Encoder e(b);
-    typedef MapType::const_iterator Iter;
-    for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
-        e.mapElementItem((*I).first, (*I).second);
+    for (const auto & attribute : m_attributes) {
+        e.mapElementItem(attribute.first, attribute.second);
     }
 }
 
@@ -114,9 +116,9 @@ int BaseObjectData::getAttrClass(const std::string& name) const
     return -1;
 }
 
-int BaseObjectData::getAttrFlag(const std::string& name) const
+bool BaseObjectData::getAttrFlag(const std::string& name, uint32_t& flag) const
 {
-    return -1;
+    return false;
 }
 
 void BaseObjectData::iterate(int& current_class, std::string& attr) const
@@ -187,7 +189,7 @@ bool BaseObjectData::iterator::operator==(const iterator& I) const
 {
     if(m_obj != I.m_obj)
         return false;
-    if(m_obj == 0) // ignore other arguments
+    if(m_obj == nullptr) // ignore other arguments
         return true;
 
     if(m_I != I.m_I)
@@ -278,7 +280,7 @@ bool BaseObjectData::const_iterator::operator==(const const_iterator& I) const
 {
     if(m_obj != I.m_obj)
         return false;
-    if(m_obj == 0) // ignore other arguments
+    if(m_obj == nullptr) // ignore other arguments
         return true;
 
     if(m_I != I.m_I)

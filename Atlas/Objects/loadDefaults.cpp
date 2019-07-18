@@ -32,7 +32,7 @@ class LoadDefaultsDecoder : public Atlas::Message::DecoderBase
     LoadDefaultsDecoder(const std::string& filename);
     const Element & getMessageElement(const std::string& id) const;
   protected:
-    virtual void messageArrived(MapType);
+    void messageArrived(MapType) override;
   private:
     void setAttributes(Root &obj, //Root &obj_inst, 
                        const Element& melem, 

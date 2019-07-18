@@ -66,7 +66,7 @@ protected:
 
 private:
 
-    static void fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, int32_t>& attr_data);
+    static void fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Entity

@@ -18,21 +18,6 @@
 
 namespace Atlas { namespace Objects {
 
-class NoSuchFactoryException : public Atlas::Exception
-{
-  protected:
-    std::string name;
-  public:
-    explicit NoSuchFactoryException(std::string factoryName) noexcept :
-               Atlas::Exception("No factory for Objects type"),
-               name(std::move(factoryName)) { }
-
-    ~NoSuchFactoryException() noexcept override = default;
-    const std::string & getName() {
-        return name;
-    }
-};
-
 template <class T>
 static SmartPtr<RootData> factory(const std::string &, int)
 {
