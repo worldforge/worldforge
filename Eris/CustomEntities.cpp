@@ -33,7 +33,7 @@ void SysData::reset()
     AccountData::reset();
 }
 
-void SysData::fillDefaultObjectInstance(SysData& data, std::map<std::string, int>& attr_data)
+void SysData::fillDefaultObjectInstance(SysData& data, std::map<std::string, uint32_t>& attr_data)
 {
     data.attr_objtype = "obj";
     data.attr_pos.clear();

@@ -49,7 +49,7 @@ protected:
 private:
     void free() override;
 
-    static void fillDefaultObjectInstance(SysData& data, std::map<std::string, int>& attr_data);
+    static void fillDefaultObjectInstance(SysData& data, std::map<std::string, uint32_t>& attr_data);
 
 };
 

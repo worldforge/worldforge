@@ -17,7 +17,7 @@ class BaseException : public std::runtime_error
 {
 public:
 	explicit BaseException(const std::string& m) noexcept:
-		std::runtime_error(m) {;}
+		std::runtime_error(m) {}
 
 	~BaseException() noexcept override = default;
 };
@@ -26,7 +26,7 @@ class InvalidOperation : public BaseException
 {
 public:
 	explicit InvalidOperation(const std::string &m) noexcept:
-			BaseException(m) {;}
+			BaseException(m) {}
 
 	~InvalidOperation() noexcept override = default;
 };
@@ -35,7 +35,7 @@ public:
 class InvalidAtlas : public BaseException
 {
 public:
-    InvalidAtlas(const std::string& msg) noexcept :
+	explicit InvalidAtlas(const std::string& msg) noexcept :
 		BaseException(msg){}
     
 
@@ -46,7 +46,7 @@ class NetworkFailure : public BaseException
 {
 public:
 	explicit NetworkFailure(const std::string &s) noexcept:
-		BaseException(s) {;}
+		BaseException(s) {}
 
 	~NetworkFailure() noexcept override = default;
 };
