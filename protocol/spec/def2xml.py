@@ -7,7 +7,7 @@ from atlas.codecs.parse_def import read_all_defs
 from atlas.codecs.gen_xml import gen_xml
 
 if __name__=="__main__":
-    filelist = ["root","entity","operation","type","interface","map","agrilan_map"]
+    filelist = ["root","entity","operation","type"]
     defs = read_all_defs(map(lambda file:file+".def", filelist))
     fp = open("atlas.xml","w")
     fp.write("<atlas>\n")

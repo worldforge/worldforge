@@ -139,7 +139,7 @@ class atlas_spec_parser(baseParser):
 
 
 if __name__=="__main__":
-    filelist=["root","entity","operation","type","interface"]
+    filelist=["root","entity","operation","type"]
     objects = read_file_as_dict("atlas.atlas")
     find_parents_children_objects(objects)
     p=atlas_spec_parser(objects)

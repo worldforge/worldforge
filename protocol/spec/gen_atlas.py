@@ -24,7 +24,7 @@ from atlas.analyse import fill_attributes
 from atlas.transport.file import read_file, write_file
 
 if __name__=="__main__":
-    filelist = ["root", "entity", "operation", "type", "interface"]
+    filelist = ["root", "entity", "operation", "type"]
     filelist = map(lambda file:file+".atlas", filelist)
     objects = reduce(operator.add, map(read_file, filelist))
     fill_attributes(objects)
