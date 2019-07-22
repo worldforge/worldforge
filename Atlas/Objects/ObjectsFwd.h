@@ -216,6 +216,11 @@ namespace Operation {
     typedef SmartPtr<ErrorData> Error;
 }
 
+namespace Operation {
+    class ChangeData;
+    typedef SmartPtr<ChangeData> Change;
+}
+
 namespace Entity {
     class AnonymousData;
     typedef SmartPtr<AnonymousData> Anonymous;

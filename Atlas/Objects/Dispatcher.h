@@ -130,6 +130,8 @@ protected:
     virtual void objectUnseenArrived(const Operation::Unseen&) { }
     /// Override this to get called when a Error object arrives.
     virtual void objectErrorArrived(const Operation::Error&) { }
+    /// Override this to get called when a Change object arrives.
+    virtual void objectChangeArrived(const Operation::Change&) { }
     /// Override this to get called when a Anonymous object arrives.
     virtual void objectAnonymousArrived(const Entity::Anonymous&) { }
     /// Override this to get called when a Generic object arrives.

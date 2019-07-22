@@ -1807,6 +1807,68 @@ private:
     static void fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
+
+/** An operation used to signal to clients when things such as types have changed.
+
+This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+
+*/
+
+class ChangeData;
+typedef SmartPtr<ChangeData> Change;
+
+static const int CHANGE_NO = 41;
+
+/// \brief An operation used to signal to clients when things such as types have changed..
+///
+/** This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+ */
+class ChangeData : public InfoData
+{
+protected:
+    /// Construct a ChangeData class definition.
+    ChangeData(ChangeData *defaults = nullptr) : 
+        InfoData((InfoData*)defaults)
+    {
+        m_class_no = CHANGE_NO;
+    }
+    /// Default destructor.
+    ~ChangeData() override = default;
+
+public:
+    /// Copy this object.
+    ChangeData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == CHANGE_NO) current_class = -1; InfoData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<ChangeData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(ChangeData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
 } } } // namespace Atlas::Objects::Operation
 
 #endif // ATLAS_OBJECTS_OPERATION_OPERATION_H

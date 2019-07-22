@@ -146,6 +146,9 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Operation::ERROR_NO:
         objectErrorArrived(smart_dynamic_cast<Operation::Error>(obj));
         break;
+    case Operation::CHANGE_NO:
+        objectChangeArrived(smart_dynamic_cast<Operation::Change>(obj));
+        break;
     case Entity::ANONYMOUS_NO:
         objectAnonymousArrived(smart_dynamic_cast<Entity::Anonymous>(obj));
         break;

@@ -145,7 +145,7 @@ descending into childrens.</string>
 <map>
 	<string name="id">info</string>
 	<string name="parent">root_operation</string>
-	<list name="children"><string>perception</string><string>error</string></list>
+	<list name="children"><string>perception</string><string>error</string><string>change</string></list>
 	<string name="description">This is base operator for operations that tell you info about objects or events.</string>
 	<list name="example">
 		<map>
@@ -530,6 +530,13 @@ Second argument is operation which is wrong (not given if not relevant).</string
 		<string name="filename">operation.def</string>
 		<int name="lineno">180</int>
 	</map>
+</map>
+<map>
+	<string name="id">change</string>
+	<string name="parent">info</string>
+	<list name="children"></list>
+	<string name="description">An operation used to signal to clients when things such as types have changed.</string>
+	<string name="args_description">A list of types which have changed.</string>
 </map>
 <map>
 	<string name="id">combine</string>

@@ -14,7 +14,7 @@
 
 namespace Atlas { namespace Objects { 
 
-int enumMax = 43;
+int enumMax = 44;
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -124,6 +124,8 @@ AddFactories::AddFactories()
     objectFactory->addFactory<Operation::UnseenData>("unseen", Operation::UNSEEN_NO);
 
     objectFactory->addFactory<Operation::ErrorData>("error", Operation::ERROR_NO);
+
+    objectFactory->addFactory<Operation::ChangeData>("change", Operation::CHANGE_NO);
 
     objectFactory->addFactory<Entity::AnonymousData>("anonymous", Entity::ANONYMOUS_NO);
 
