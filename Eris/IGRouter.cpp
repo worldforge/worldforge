@@ -170,25 +170,33 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     const std::vector<Root>& args = op->getArgs();
 
     if (op->getClassNo() == CREATE_NO) {
-        assert(!args.empty());
-        RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
-        if (gent.isValid()) {
-            // View needs a bound TypeInfo for the entity
-            TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-            if (!ty->isBound()) {
-                new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
-                return WILL_REDISPATCH;
-            }
-    
-            m_view->create(gent);
-            return HANDLED;
-        }
+    	if (!args.empty()) {
+			RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
+			if (gent.isValid()) {
+				// View needs a bound TypeInfo for the entity
+				TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+				if (!ty->isBound()) {
+					new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
+					return WILL_REDISPATCH;
+				}
+
+				m_view->create(gent);
+				return HANDLED;
+			}
+		} else {
+    		warning() << "Got sight of CREATE op with no args.";
+			return IGNORED;
+		}
     }
     
     if (op->getClassNo() == DELETE_NO) {
-        assert(!args.empty());
-        m_view->deleteEntity(args.front()->getId());
-        return HANDLED;
+    	if (!args.empty()) {
+			m_view->deleteEntity(args.front()->getId());
+			return HANDLED;
+    	} else {
+			warning() << "Got sight of DELETE op with no args.";
+			return IGNORED;
+		}
     }
     
     // because a SET op can potentially (legally) update multiple entities,
