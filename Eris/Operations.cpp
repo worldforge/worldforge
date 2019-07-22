@@ -6,7 +6,5 @@
 
 namespace Atlas { namespace Objects { namespace Operation {
 
-int ATTACK_NO = -1;
-int UNSEEN_NO = -1;
 
 } } }

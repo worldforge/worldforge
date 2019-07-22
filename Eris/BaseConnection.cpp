@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -37,22 +39,20 @@ namespace Eris
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
-BaseConnection::BaseConnection(io_service& io_service, const std::string &cnm,
-        const std::string &id, Atlas::Bridge& br) :
-        _io_service(io_service), _status(DISCONNECTED), _id(
-                id), _clientName(cnm), _bridge(br), _port(0)
-{
-    Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
-    if (!f->hasFactory("unseen")) {
-        Atlas::Objects::Operation::UNSEEN_NO = f->addFactory("unseen",
-                &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
-        Atlas::Objects::Operation::ATTACK_NO = f->addFactory("attack",
-                &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
-    }
-    if (!f->hasFactory("sys")) {
-        Atlas::Objects::Entity::SYS_NO = f->addFactory("sys",
-                &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
-    }
+BaseConnection::BaseConnection(io_service& io_service,
+							   std::string cnm,
+							   std::string id,
+							   Atlas::Bridge& br) :
+		_io_service(io_service),
+		_status(DISCONNECTED),
+		_id(std::move(id)),
+		_clientName(std::move(cnm)),
+		_bridge(br), _port(0) {
+	Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
+	if (!f->hasFactory("sys")) {
+		Atlas::Objects::Entity::SYS_NO = f->addFactory("sys",
+													   &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
+	}
 }
 
 BaseConnection::~BaseConnection()

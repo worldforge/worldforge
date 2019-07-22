@@ -94,7 +94,7 @@ protected:
     /** Create a new connection, with the client-name  string specified. The client-name
     is sent during Atlas negotiation of the connection. Id is a unique string to identify
     timeouts created by the connection (and potentially errors in the future) */
-    BaseConnection(boost::asio::io_service& io_service, const std::string &cnm, const std::string &id, Atlas::Bridge& br);
+    BaseConnection(boost::asio::io_service& io_service, std::string cnm, std::string id, Atlas::Bridge& br);
 
     void stateChanged(StreamSocket::Status status);
 

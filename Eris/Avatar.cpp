@@ -309,19 +309,6 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
 //    getConnection()->send(use);
 //}
 
-void Avatar::attack(Entity* entity)
-{
-    assert(entity);
-    Attack attackOp;
-    attackOp->setFrom(m_mindId);
-
-    Anonymous what;
-    what->setId(entity->getId());
-    attackOp->setArgs1(what);
-
-    getConnection()->send(attackOp);
-}
-
 void Avatar::useStop()
 {
     Use use;

@@ -461,11 +461,6 @@ int main()
 #include <Eris/TypeService.h>
 #include <Eris/View.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
-
-int UNSEEN_NO = -1;
-
-} } }
 
 namespace Eris {
 
@@ -521,8 +516,8 @@ void Avatar::updateWorldTime(double seconds)
 {
 }
 
-BaseConnection::BaseConnection(boost::asio::io_service& io_service, const std::string &cnm,
-    const std::string &id,
+BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
+    std::string id,
     Atlas::Bridge &br) :
             _io_service(io_service),
     _status(DISCONNECTED),

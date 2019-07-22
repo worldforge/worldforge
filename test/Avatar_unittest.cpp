@@ -607,28 +607,6 @@ int main()
     }
     
 
-    // Test attack()
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
-        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
-        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-        TestEntity * other_ent = new TestEntity("2", 0, ea->getView());
-
-        ea->setup_setEntity(char_ent);
-        char_ent->setup_setLocation(wrld_ent);
-        other_ent->setup_setLocation(wrld_ent);
-
-        ea->attack(other_ent);
-    }
-    
     // Test useStop()
     {
         boost::asio::io_service io_service;

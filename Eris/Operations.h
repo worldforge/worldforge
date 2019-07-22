@@ -11,25 +11,6 @@
 
 namespace Atlas { namespace Objects { namespace Operation {
 
-extern int ATTACK_NO;
-
-class Attack : public Generic
-{
-  public:
-    Attack() {
-        (*this)->setType("attack", ATTACK_NO);
-    }
-};
-
-extern int UNSEEN_NO;
-
-class Unseen : public Generic
-{
-  public:
-    Unseen() {
-        (*this)->setType("unseen", UNSEEN_NO);
-    }
-};
 
 } } }
 

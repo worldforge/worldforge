@@ -108,17 +108,10 @@ int main()
     boost::asio::io_service io_service;
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
 
-    Atlas::Objects::Factories * f = Atlas::Objects::Factories::instance();
-    assert(!f->hasFactory("unseen"));
-
     {
         TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
     }
 
-    // Make sure the op classes have been installed, and the initial
-    // constructor code path has been tested.
-    assert(f->hasFactory("unseen"));
-    assert(f->hasFactory("attack"));
 
     // Test the other code path when a second connection is created.
     {

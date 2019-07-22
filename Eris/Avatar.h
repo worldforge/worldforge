@@ -122,15 +122,9 @@ public:
 //     **/
 //    void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
 
-    /**
-    @brief Attach the specified entity
-    @param entity The entity to be attacked
-    */
-    void attack(Entity* entity);
 
     /**
     @brief Stop the current task, if one is in progress.
-    This could be either a useOn or attack.
     */
     void useStop();
 
