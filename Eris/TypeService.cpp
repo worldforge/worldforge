@@ -99,6 +99,17 @@ void TypeService::handleOperation(const RootOperation& op)
 				recvError(request);
 			}
         }
+	} else if (op->instanceOf(CHANGE_NO)) {
+		const std::vector<Root>& args(op->getArgs());
+		for (auto& arg : args) {
+			auto& objType = arg->getObjtype();
+			if ((objType == "meta") ||
+				(objType == "class") ||
+				(objType == "op_definition") ||
+				(objType == "archetype")) {
+				recvTypeUpdate(arg);
+			}
+		}
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
         if (!args.empty()) {
@@ -109,17 +120,6 @@ void TypeService::handleOperation(const RootOperation& op)
                 (objType == "op_definition") ||
                 (objType == "archetype")) {
                 recvTypeInfo(args.front());
-            }
-        }
-    } else if (op->getParent() == "change") {
-        const std::vector<Root>& args(op->getArgs());
-        for (auto& arg : args) {
-            auto& objType = arg->getObjtype();
-            if ((objType == "meta") ||
-                (objType == "class") ||
-                (objType == "op_definition") ||
-                (objType == "archetype")) {
-                recvTypeUpdate(arg);
             }
         }
     } else {

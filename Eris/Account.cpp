@@ -66,7 +66,7 @@ public:
             return HANDLED;
         }
 
-        if (op->getParent() == "change") {
+        if (op->getClassNo() == CHANGE_NO) {
             m_account->getConnection()->getTypeService()->handleOperation(op);
             return HANDLED;
         }
