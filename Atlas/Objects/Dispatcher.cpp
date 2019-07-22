@@ -140,6 +140,9 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Operation::FEEL_NO:
         objectFeelArrived(smart_dynamic_cast<Operation::Feel>(obj));
         break;
+    case Operation::UNSEEN_NO:
+        objectUnseenArrived(smart_dynamic_cast<Operation::Unseen>(obj));
+        break;
     case Operation::ERROR_NO:
         objectErrorArrived(smart_dynamic_cast<Operation::Error>(obj));
         break;

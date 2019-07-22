@@ -1692,6 +1692,60 @@ private:
 };
 
 
+/** Character failed to interact with another entity because it does not exist.
+
+Base operator for all kind of perceptions
+
+*/
+
+class UnseenData;
+typedef SmartPtr<UnseenData> Unseen;
+
+static const int UNSEEN_NO = 39;
+
+/// \brief Character failed to interact with another entity because it does not exist..
+///
+/** Base operator for all kind of perceptions
+ */
+class UnseenData : public PerceptionData
+{
+protected:
+    /// Construct a UnseenData class definition.
+    UnseenData(UnseenData *defaults = nullptr) : 
+        PerceptionData((PerceptionData*)defaults)
+    {
+        m_class_no = UNSEEN_NO;
+    }
+    /// Default destructor.
+    ~UnseenData() override = default;
+
+public:
+    /// Copy this object.
+    UnseenData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == UNSEEN_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<UnseenData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
 /** Something went wrong
 
 This is base operation for all other
@@ -1705,7 +1759,7 @@ This is base operation for all other
 class ErrorData;
 typedef SmartPtr<ErrorData> Error;
 
-static const int ERROR_NO = 39;
+static const int ERROR_NO = 40;
 
 /// \brief Something went wrong.
 ///

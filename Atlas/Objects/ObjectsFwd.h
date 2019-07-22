@@ -207,6 +207,11 @@ namespace Operation {
 }
 
 namespace Operation {
+    class UnseenData;
+    typedef SmartPtr<UnseenData> Unseen;
+}
+
+namespace Operation {
     class ErrorData;
     typedef SmartPtr<ErrorData> Error;
 }

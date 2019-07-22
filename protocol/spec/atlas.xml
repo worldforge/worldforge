@@ -411,7 +411,7 @@ First start from operator hierarchy root (root_operation):</string>
 <map>
 	<string name="id">perception</string>
 	<string name="parent">info</string>
-	<list name="children"><string>sight</string><string>sound</string><string>smell</string><string>feel</string></list>
+	<list name="children"><string>sight</string><string>sound</string><string>smell</string><string>feel</string><string>unseen</string></list>
 	<string name="specification">atlas_game</string>
 	<string name="description">Character perceives something.</string>
 	<string name="long_description">Base operator for all kind of perceptions</string>
@@ -1069,6 +1069,13 @@ Second argument is operation which is wrong (not given if not relevant).</string
 		<string name="filename">operation.def</string>
 		<int name="lineno">410</int>
 	</map>
+</map>
+<map>
+	<string name="id">unseen</string>
+	<string name="parent">perception</string>
+	<string name="description">Character failed to interact with another entity because it does not exist.</string>
+	<string name="args_description">entity that doesn't exit</string>
+	<list name="children"></list>
 </map>
 <map>
 	<string name="id">sound</string>

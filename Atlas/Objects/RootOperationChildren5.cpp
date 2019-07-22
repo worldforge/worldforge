@@ -217,37 +217,37 @@ void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, u
         data.attr_parent = "feel";
 }
 
-Allocator<ErrorData> ErrorData::allocator;
+Allocator<UnseenData> UnseenData::allocator;
         
 
 
-void ErrorData::free()
+void UnseenData::free()
 {
     allocator.free(this);
 }
 
 
 
-void ErrorData::reset()
+void UnseenData::reset()
 {
-    InfoData::reset();
+    PerceptionData::reset();
 }
 
-ErrorData * ErrorData::copy() const
+UnseenData * UnseenData::copy() const
 {
-    ErrorData * copied = allocator.alloc();
+    UnseenData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
 }
 
-bool ErrorData::instanceOf(int classNo) const
+bool UnseenData::instanceOf(int classNo) const
 {
-    if(ERROR_NO == classNo) return true;
-    return InfoData::instanceOf(classNo);
+    if(UNSEEN_NO == classNo) return true;
+    return PerceptionData::instanceOf(classNo);
 }
 
-void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data)
+void UnseenData::fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -255,7 +255,7 @@ void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "error";
+        data.attr_parent = "unseen";
 }
 
 } } } // namespace Atlas::Objects::Operation

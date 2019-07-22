@@ -126,6 +126,8 @@ protected:
     virtual void objectSmellArrived(const Operation::Smell&) { }
     /// Override this to get called when a Feel object arrives.
     virtual void objectFeelArrived(const Operation::Feel&) { }
+    /// Override this to get called when a Unseen object arrives.
+    virtual void objectUnseenArrived(const Operation::Unseen&) { }
     /// Override this to get called when a Error object arrives.
     virtual void objectErrorArrived(const Operation::Error&) { }
     /// Override this to get called when a Anonymous object arrives.
