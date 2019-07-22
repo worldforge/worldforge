@@ -1,34 +1,34 @@
 #Modeline for XEmacs: -*-Python-*-
 :map:
     id:"root_type"
-    parents:["root"]
+    parent:"root"
     objtype:"meta"
     description:"Type hierarchy starts from here."
 
 :map:
     id:"string"
-    parents:["root_type"]
+    parent:"root_type"
     objtype:"data_type"
     description:"UTF-8 encoded string."
     long_description:"Any character is allowed, including 8 bit control characters and '\\0', C equivalent: {int len; char *data;}, C++: string"
 
 :map:
     id:"int"
-    parents:["root_type"]
+    parent:"root_type"
     objtype:"data_type"
     description:"Integer."
     long_description:"C equivalent: 32bit int"
 
 :map:
     id:"float"
-    parents:["root_type"]
+    parent:"root_type"
     objtype:"data_type"
     description:"Floating point number."
     long_description:"C equivalent roughly: double"
 
 :map:
     id:"uri"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"URI (URL) of object"
     long_description:"""C equivalent roughly: for storing id name: char *, as pointer: void *<br>
@@ -98,14 +98,14 @@ For more about URI see
 
 :map:
     id:"string_list"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     element_type:"string"
     description:"List of strings"
 
 :map:
     id:"int_list"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     element_type:"int"
     description:"List of integers"
@@ -113,7 +113,7 @@ For more about URI see
 
 :map:
     id:"float_list"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     element_type:"float"
     description:"List of floats"
@@ -121,14 +121,14 @@ For more about URI see
 
 :map:
     id:"uri_list"
-    parents:["string_list"]
+    parent:"string_list"
     element_type:"uri"
     description:"URI list"
     long_description:"C equivalent: char *[], void *[]"
 
 :map:
     id:"list"
-    parents:["root_type"]
+    parent:"root_type"
     objtype:"data_type"
     description:"List of objects"
     long_description:"C equivalent: void *[]"
@@ -137,7 +137,7 @@ For more about URI see
 :map:
     id:"map"
     name:"mapping"
-    parents:["root_type"]
+    parent:"root_type"
     objtype:"data_type"
     description:"Mapping between string key and value object"
     long_description:"C equivalent: struct map {char *;void *}; map*"
@@ -145,7 +145,7 @@ For more about URI see
 
 :map:
     id:"int_list_length"
-    parents:["int_list"]
+    parent:"int_list"
     objtype:"meta"
     list_length:0
     description:"List of ints with constant length"
@@ -153,7 +153,7 @@ For more about URI see
 
 :map:
     id:"float_list_length"
-    parents:["float_list"]
+    parent:"float_list"
     objtype:"meta"
     list_length:0
     description:"List of floats with constant length"
@@ -162,80 +162,80 @@ For more about URI see
 :map:
     id:"pos"
     name:"position"
-    parents:["float_list_length"]
+    parent:"float_list_length"
     objtype:"type"
     list_length:3
     description:"Position coordinates, usually world is 3D"
 
 :map:
     id:"velocity"
-    parents:["float_list_length"]
+    parent:"float_list_length"
     objtype:"type"
     list_length:3
     description:"Velocity object is moving, usually world is 3D"
 
 :map:
     id:"list_length"
-    parents:["int"]
+    parent:"int"
     objtype:"type"
     description:"Length for lists"
 
 :map:
     id:"element_type"
-    parents:["id"]
+    parent:"id"
     description:"Element type for typed lists/mappings"
 
 :map:
     id:"id"
-    parents:["uri"]
+    parent:"uri"
     description:"Id of object"
     long_description:"C equivalent roughly: for storing id name: char *, as pointer: void *"
 
 :map:
     id:"id_list"
-    parents:["uri_list"]
+    parent:"uri_list"
     description:"List of ids"
 
 :map:
-    id:"parents"
-    parents:["id_list"]
-    description:"List of objects this inherits attributes from."
+    id:"parent"
+    parent:"string"
+    description:"The object this inherits attributes from."
 
 :map:
     id:"children"
-    parents:["id_list"]
+    parent:"id_list"
     description:"List of objects that inherit from this object."
 
 :map:
     id:"contains"
-    parents:["id_list"]
+    parent:"id_list"
     description:"List of objects that use this object as reference system (usually same as what this object contains)."
 
 :map:
     id:"added_attributes"
-    parents:["contains"]
+    parent:"contains"
     description:"List of attributes that has been added to this object"
 
 :map:
     id:"characters"
-    parents:["contains"]
+    parent:"contains"
     description:"List of characters account can control"
 
 :map:
     id:"args"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     description:"List of arguments this operation has"
 
 :map:
     id:"operations"
-    parents:["id_list"]
+    parent:"id_list"
     description:"List of alloved operations"
     long_description:"Content ids can be either another interface or operation ids or both."
 
 :map:
     id:"stamp"
-    parents:["float"]
+    parent:"float"
     objtype:"type"
     description:"Last time this object was modified."
     long_description:"""Value should be reflect when something was
@@ -245,7 +245,7 @@ For more about URI see
 
 :map:
     id:"stamp_inherit"
-    parents:["stamp"]
+    parent:"stamp"
     objtype:"type"
     description:"Last time any object that inherits from this has been modified"
     long_description:"Value should be reflect when something was changed in some object that inherits from this."
@@ -259,7 +259,7 @@ For more about URI see
 
 :map:
     id:"stamp_contains"
-    parents:["stamp"]
+    parent:"stamp"
     objtype:"type"
     description:"Last time any object that uses this as reference recursively has been modified"
     long_description:"Value should be reflect when something was changed in some object that is contained by this object."
@@ -442,7 +442,7 @@ For more about URI see
 :map:
     id:"objtype"
     name:"object type"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"What kind of object this is."
     long_description:"""Examples of values: "op", "class", "type"."""
@@ -454,91 +454,91 @@ For more about URI see
 
 :map:
     id:"interface"
-    parents:["id"]
+    parent:"id"
     description:"What kind of operations are legal for this object."
 
 :map:
     id:"specification"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"What specification this object is part of?"
 
 :map:
     id:"name"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Name of object."
 
 :map:
     id:"message"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Some message (for example error message)"
 
 :map:
     id:"say"
-    parents:["message"]
+    parent:"message"
     description:"What something has said."
 
 :map:
     id:"html"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"String that is actually html."
 
 :map:
     id:"username"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Username for account usually"
 
 :map:
     id:"password"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Password for account usually"
 
 :map:
     id:"description"
-    parents:["html"]
+    parent:"html"
     description:"This gives short description of object."
 
 :map:
     id:"args_description"
-    parents:["description"]
+    parent:"description"
     description:"This gives description about arguments."
 
 :map:
     id:"long_description"
-    parents:["description"]
+    parent:"description"
     description:"This gives long description of object."
 
 :map:
     id:"loc"
     name:"location"
-    parents:["id"]
+    parent:"id"
     objtype:"type"
     description:"Reference object for coordinates (location)."
 
 :map:
     id:"serialno"
-    parents:["int"]
+    parent:"int"
     objtype:"type"
     description:"Serial number."
 
 :map:
     id:"refno"
-    parents:["serialno"]
+    parent:"serialno"
     description:"Reference to serial number."
 
 :map:
     id:"from"
-    parents:["id"]
+    parent:"id"
     description:"Source of message/operation."
 
 :map:
     id:"to"
-    parents:["id"]
+    parent:"id"
     description:"Target of message/operation."
     long_description:"""When client sends operation to it's character
     in server, then you can omit this because server can assume
@@ -546,174 +546,174 @@ For more about URI see
 
 :map:
     id:"seconds"
-    parents:["float"]
+    parent:"float"
     objtype:"type"
     description:"Time in seconds"
 
 :map:
     id:"future_seconds"
-    parents:["seconds"]
+    parent:"seconds"
     description:"Time in seconds to add current time"
 
 :map:
     id:"time_string"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Time in string format: YYYY-MM-DD HH:MM:SS.ss"
     long_description:"There can be variation in length of different fields if using some weird calendar"
 
 :map:
     id:"example"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     description:"Gives some examples usage"
 
 #attributes for map
 :map:
     id:"width"
-    parents:["float"]
+    parent:"float"
     objtype:"type"
     description:"width of something"
 
 :map:
     id:"grid_data"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     description:"grid data"
 
 :map:
     id:"grid_size"
-    parents:["int_list_length"]
+    parent:"int_list_length"
     objtype:"type"
     list_length:2
     description:"size of grid area: width and height (and for space depth too) in grid units"
 
 :map:
     id:"cell_size"
-    parents:["float_list_length"]
+    parent:"float_list_length"
     objtype:"type"
     list_length:2
     description:"cell size of grid area"
 
 :map:
     id:"height"
-    parents:["float"]
+    parent:"float"
     objtype:"type"
     description:"height of something"
 
 :map:
     id:"line_data"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     description:"line object"
 
 :map:
     id:"media"
-    parents:["uri"]
+    parent:"uri"
     description:"media id reference"
 
 #attributes for debugging
 :map:
     id:"specification_file"
-    parents:["map"]
+    parent:"map"
     objtype:"type"
     description:"various info about object and its specification file"
 
 :map:
     id:"filename"
-    parents:["uri"]
+    parent:"uri"
     description:"name of file (example: where object was specified)"
 
 :map:
     id:"lineno"
-    parents:["serialno"]
+    parent:"serialno"
     description:"linenumber where something is"
 
 :map:
     id:"attribute_order"
-    parents:["uri_list"]
+    parent:"uri_list"
     description:"order attributes was specified"
 
 #attributes for examples
 :map:
     id:"e_int"
-    parents:["int"]
+    parent:"int"
     objtype:"type"
     description:"Root type for all int type example attributes"
 
 :map:
     id:"e_float"
-    parents:["float"]
+    parent:"float"
     objtype:"type"
     description:"Root type for all float type example attributes"
 
 :map:
     id:"e_string"
-    parents:["string"]
+    parent:"string"
     objtype:"type"
     description:"Root type for all string type example attributes"
 
 :map:
     id:"e_uri"
-    parents:["uri"]
+    parent:"uri"
     description:"Root type for all uri type example attributes"
 
 :map:
     id:"e_list"
-    parents:["list"]
+    parent:"list"
     objtype:"type"
     description:"Root type for all list type example attributes"
 
 
 :map:
     id:"e_HP"
-    parents:["e_int"]
+    parent:"e_int"
 
 :map:
     id:"e_height"
-    parents:["e_float"]
+    parent:"e_float"
 
 :map:
     id:"e_width"
-    parents:["e_float"]
+    parent:"e_float"
 
 :map:
     id:"e_msg"
-    parents:["e_string"]
+    parent:"e_string"
 
 :map:
     id:"e_polygon"
-    parents:["e_list"]
+    parent:"e_list"
 
 :map:
     id:"e_attack"
-    parents:["e_int"]
+    parent:"e_int"
 
 :map:
     id:"e_amount"
-    parents:["e_int"]
+    parent:"e_int"
 
 :map:
     id:"e_smell"
-    parents:["e_string"]
+    parent:"e_string"
 
 :map:
     id:"e_surface_type"
-    parents:["e_string"]
+    parent:"e_string"
 
 :map:
     id:"e_bar"
-    parents:["e_string"]
+    parent:"e_string"
 
 :map:
     id:"e_sex"
-    parents:["e_string"]
+    parent:"e_string"
 
 :map:
     id:"e_drunkness"
-    parents:["e_float"]
+    parent:"e_float"
 
 :map:
     id:"e_status"
-    parents:["e_float"]
+    parent:"e_float"
 

@@ -1368,6 +1368,60 @@ private:
 };
 
 
+/** Character failed to interact with another entity because it does not exist.
+
+Base operator for all kind of perceptions
+
+*/
+
+class UnseenData;
+typedef SmartPtr<UnseenData> Unseen;
+
+static const int UNSEEN_NO = 33;
+
+/// \brief Character failed to interact with another entity because it does not exist..
+///
+/** Base operator for all kind of perceptions
+ */
+class UnseenData : public PerceptionData
+{
+protected:
+    /// Construct a UnseenData class definition.
+    UnseenData(UnseenData *defaults = nullptr) : 
+        PerceptionData((PerceptionData*)defaults)
+    {
+        m_class_no = UNSEEN_NO;
+    }
+    /// Default destructor.
+    ~UnseenData() override = default;
+
+public:
+    /// Copy this object.
+    UnseenData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == UNSEEN_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<UnseenData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
 /** Character sees something
 
 Base operator for all kind of perceptions
@@ -1377,7 +1431,7 @@ Base operator for all kind of perceptions
 class SightData;
 typedef SmartPtr<SightData> Sight;
 
-static const int SIGHT_NO = 33;
+static const int SIGHT_NO = 34;
 
 /// \brief Character sees something.
 ///
@@ -1431,7 +1485,7 @@ Base operator for all kind of perceptions
 class AppearanceData;
 typedef SmartPtr<AppearanceData> Appearance;
 
-static const int APPEARANCE_NO = 34;
+static const int APPEARANCE_NO = 35;
 
 /// \brief Character sees something appearing: it literally appears or has it come in visible range.
 ///
@@ -1485,7 +1539,7 @@ Base operator for all kind of perceptions
 class DisappearanceData;
 typedef SmartPtr<DisappearanceData> Disappearance;
 
-static const int DISAPPEARANCE_NO = 35;
+static const int DISAPPEARANCE_NO = 36;
 
 /// \brief Character sees something disappearing: it literally disappears or has it gone too far to be visible.
 ///
@@ -1539,7 +1593,7 @@ Base operator for all kind of perceptions
 class SoundData;
 typedef SmartPtr<SoundData> Sound;
 
-static const int SOUND_NO = 36;
+static const int SOUND_NO = 37;
 
 /// \brief Character hears something.
 ///
@@ -1593,7 +1647,7 @@ Base operator for all kind of perceptions
 class SmellData;
 typedef SmartPtr<SmellData> Smell;
 
-static const int SMELL_NO = 37;
+static const int SMELL_NO = 38;
 
 /// \brief Character smells something.
 ///
@@ -1647,7 +1701,7 @@ Base operator for all kind of perceptions
 class FeelData;
 typedef SmartPtr<FeelData> Feel;
 
-static const int FEEL_NO = 38;
+static const int FEEL_NO = 39;
 
 /// \brief Character feels something (with fingers usually).
 ///
@@ -1689,60 +1743,6 @@ protected:
 private:
 
     static void fillDefaultObjectInstance(FeelData& data, std::map<std::string, uint32_t>& attr_data);
-};
-
-
-/** Character failed to interact with another entity because it does not exist.
-
-Base operator for all kind of perceptions
-
-*/
-
-class UnseenData;
-typedef SmartPtr<UnseenData> Unseen;
-
-static const int UNSEEN_NO = 39;
-
-/// \brief Character failed to interact with another entity because it does not exist..
-///
-/** Base operator for all kind of perceptions
- */
-class UnseenData : public PerceptionData
-{
-protected:
-    /// Construct a UnseenData class definition.
-    UnseenData(UnseenData *defaults = nullptr) : 
-        PerceptionData((PerceptionData*)defaults)
-    {
-        m_class_no = UNSEEN_NO;
-    }
-    /// Default destructor.
-    ~UnseenData() override = default;
-
-public:
-    /// Copy this object.
-    UnseenData * copy() const override;
-
-    /// Is this instance of some class?
-    bool instanceOf(int classNo) const override;
-
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == UNSEEN_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
-
-public:
-    template <typename>
-    friend class ::Atlas::Objects::Allocator;
-    static Allocator<UnseenData> allocator;
-
-protected:
-    ///Resets the object as it's returned to the pool.
-    void reset() override;
-    void free() override;
-
-private:
-
-    static void fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 

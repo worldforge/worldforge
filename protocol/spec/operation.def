@@ -1,7 +1,7 @@
 #Modeline for XEmacs: -*-Python-*-
 :map:
     id:"root_operation"
-    parents:["root"]
+    parent:"root"
     objtype:"op_definition"
     serialno:0
     refno:0
@@ -20,24 +20,24 @@
 
 :map:
     id:"action"
-    parents:["root_operation"]
+    parent:"root_operation"
     description:"This is base operator for operations that might have effects."
 
 :map:
     id:"info"
-    parents:["root_operation"]
+    parent:"root_operation"
     description:"This is base operator for operations that tell you info about objects or events."
     example:
         :map:
             objtype:"op"
-            parents:["info"]
+            parent:"info"
             args:
                 :map:
                     e_msg:"Here is some info"
 
 :map:
     id:"create"
-    parents:["action"]
+    parent:"action"
     description:"Create new things from nothing using this operator."
     long_description:"Map editor is main user for this in client side. Server uses this inside \"info\" operation to tell client about new things."
     args_description:"entity describing object that is being created"
@@ -45,36 +45,36 @@
         :string:"Creating axe instance"
         :map:
             objtype:"op"
-            parents:["create"]
+            parent:"create"
             from:"map-editor"
             args:
                 :map:
-                    parents:["axe"]
+                    parent:"axe"
                     name:"Ordinary axe"
                     e_attack:3
 
 :map:
     id:"delete"
-    parents:["action"]
+    parent:"action"
     description:"Delete something."
     args_description:"id of entity to be deleted"
     example:
         :map:
             objtype:"op"
-            parents:["delete"]
+            parent:"delete"
             args:
                 :map:
                     id:"foo_bar_344"
 
 :map:
     id:"set"
-    parents:["action"]
+    parent:"action"
     description:"Sets attributes for existing entity."
     example:
         :string:"This one sets HP=50, height=1.8, width=0.3 for object \"9899\""
         :map:
             objtype:"op"
-            parents:["set"]
+            parent:"set"
             args:
                 :map:
                     id:"9899"
@@ -84,17 +84,17 @@
 
 :map:
     id:"affect"
-    parents:["set"]
+    parent:"set"
 
 :map:
     id:"get"
-    parents:["action"]
+    parent:"action"
     description:"Generic operation for getting info about things."
     args_description:"id of target entity"
     example:
         :map:
             objtype:"op"
-            parents:["get"]
+            parent:"get"
             args:
                 :map:
                     id:"elf_type_id_45"
@@ -103,14 +103,14 @@
 First start from operator hierarchy root (root_operation):"""
         :map:
             objtype:"op"
-            parents:["get"]
+            parent:"get"
             args:
                 :map:
                     id:"root_operation"
         :string:"Answer might be:"
         :map:
             objtype:"op"
-            parents:["info"]
+            parent:"info"
             args:
                 :map:
                     id:"root_operation"
@@ -119,13 +119,13 @@ First start from operator hierarchy root (root_operation):"""
         :string:"Then you can ask about action and info:"
         :map:
             objtype:"op"
-            parents:["get"]
+            parent:"get"
             args:
                 :map:
                     id:"action"
         :map:
             objtype:"op"
-            parents:["get"]
+            parent:"get"
             args:
                 :map:
                     id:"info"
@@ -133,7 +133,7 @@ First start from operator hierarchy root (root_operation):"""
 
 :map:
     id:"perception"
-    parents:["info"]
+    parent:"info"
     specification:"atlas_game"
     description:"Character perceives something."
     long_description:"Base operator for all kind of perceptions"
@@ -172,14 +172,20 @@ First start from operator hierarchy root (root_operation):"""
                 """ # """ (for xemacs python mode)
         :map:
             objtype:"op"
-            parents:["perception"]
+            parent:"perception"
             args:
                 :map:
                     id:"tree_8374"
 
 :map:
+    id:"unseen"
+    parent:"perception"
+    description:"Character failed to interact with another entity because it does not exist."
+    args_description:"entity that doesn't exist"
+
+:map:
     id:"error"
-    parents:["info"]
+    parent:"info"
     description:"Something went wrong"
     args_description:"""objects describing what went wrong<br>
 First argument is error entity which describes error.
@@ -188,22 +194,28 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"Client sent \"foo\" -operation which server rejects"
         :map:
             objtype:"op"
-            parents:["error"]
+            parent:"error"
             refno:123
             args:
                 :map:
                     message:"Uknown operation foo"
                 :map:
                     objtype:"op"
-                    parents:["foo"]
+                    parent:"foo"
                     serialno:123
                     args:
                         :map:
                             e_bar:"do some foo thing by using bar"
 
 :map:
+    id:"change"
+    parent:"info"
+    description:"An operation used to signal to clients when things such as types have changed."
+    args_description:"""A list of types which have changed."""
+
+:map:
     id:"combine"
-    parents:["create"]
+    parent:"create"
     specification:"atlas_game"
     description:"Combine existing objects into new objects."
     long_description:"This is how normal characters create objects."
@@ -212,10 +224,10 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"Creating axe from wood and iron"
         :map:
             objtype:"op"
-            parents:["combine"]
+            parent:"combine"
             args:
                 :map:
-                    parents:["axe"]
+                    parent:"axe"
                     name:"Bjorn's axe"
                 :map:
                     id:"Wood_8898"
@@ -224,7 +236,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"divide"
-    parents:["create"]
+    parent:"create"
     specification:"atlas_game"
     description:"Divide existing object into pieces."
     long_description:"One of the pieces might be original object modified."
@@ -233,7 +245,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"taking money from pile"
         :map:
             objtype:"op"
-            parents:["divide"]
+            parent:"divide"
             args:
                 :map:
                     id:"money12345"
@@ -245,7 +257,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"communicate"
-    parents:["create"]
+    parent:"create"
     specification:"atlas_game"
     description:"Base operator for all kind of communication."
     args_description:"communication entity"
@@ -254,7 +266,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"move"
-    parents:["set"]
+    parent:"set"
     specification:"atlas_game"
     description:"Change position"
     long_description:"More about <a href=\"move.html\">movement here</a>"
@@ -263,7 +275,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"""Movement conversation example:"""
         :map:
             objtype:"op"
-            parents:["move"]
+            parent:"move"
             serialno:123
             from:"9899"
             args:
@@ -274,7 +286,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"""Reply from server"""
         :map:
             objtype:"op"
-            parents:["info","sight"]
+            parent:"info"
             serialno:1231
             refno:123
             from:"9899"
@@ -284,7 +296,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
             args:
                 :map:
                     objtype:"op"
-                    parents:["set","move"]
+                    parent:"set"
                     serialno:1230
                     refno:123
                     from:"9899"
@@ -298,28 +310,28 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"perceive"
-    parents:["get"]
+    parent:"get"
     specification:"atlas_game"
     description:"Generic base operation for perceiving things by eyes, ears, etc..."
     args_description:"object to be perceived"
     example:
         :map:
             objtype:"op"
-            parents:["perceive"]
+            parent:"perceive"
             args:
                 :map:
                     id:"elf_3545"
 
 :map:
     id:"login"
-    parents:["get"]
+    parent:"get"
     description:"Operation for logging into server"
     long_description:"For more about <a href=\"login.html\">out of game atlas here</a>"
     args_description:"entity with player name and password attribute"
     example:
         :map:
             objtype:"op"
-            parents:["login"]
+            parent:"login"
             args:
                 :map:
                     id:"JoeBlatz"
@@ -329,19 +341,19 @@ Second argument is operation which is wrong (not given if not relevant)."""
         one. Here is "start by creating account" -example:"""
         :map:
             objtype:"op"
-            parents:["create"]
+            parent:"create"
             serialno:1
             args:
                 :map:
                     id:"player74"
-                    parents:["player"]
+                    parent:"player"
                     password:"player_password"
         :string:"""What if you already had account by that name? Then
         reply from server could be something like this (1 argument:
         message, 2 argument: original operation):"""
         :map:
             objtype:"op"
-            parents:["error"]
+            parent:"error"
             serialno:4
             refno:1
             seconds:19036033149.3
@@ -351,12 +363,12 @@ Second argument is operation which is wrong (not given if not relevant)."""
                     message:"Account id already exist"
                 :map:
                     objtype:"op"
-                    parents:["create"]
+                    parent:"create"
                     serialno:1
                     args:
                         :map:
                             id:"player74"
-                            parents:["player"]
+                            parent:"player"
                             password:"player_password"
         :string:"""For more about error operation see 
         <a href="#error">error operation definition</a>.
@@ -365,7 +377,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
         like:""" #""" duh XEmacs Python mode needs this 
         :map:
             objtype:"op"
-            parents:["info"]
+            parent:"info"
             serialno:2
             refno:1
             seconds:19036033149.3
@@ -373,7 +385,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
             args:
                 :map:
                     id:"player74"
-                    parents:["player"]
+                    parent:"player"
                     password:"player_password"
                     characters:["Bjorn_1"]
         :string:"""If you do not have character, then you need to
@@ -381,11 +393,11 @@ Second argument is operation which is wrong (not given if not relevant)."""
         account."""
         :map:
             objtype:"op"
-            parents:["create"]
+            parent:"create"
             serialno:2
             args:
                 :map:
-                    parents:["farmer"]
+                    parent:"farmer"
                     name:"Nisuf"
                     description:"ordinary farmer"
                     e_sex:"male"
@@ -394,13 +406,13 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"logout"
-    parents:["login"]
+    parent:"login"
     description:"Operation for logging out"
     args_description:"entity with player name"
     example:
         :map:
             objtype:"op"
-            parents:["logout"]
+            parent:"logout"
             args:
                 :map:
                     id:"JoeBlatz"
@@ -409,7 +421,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"sight"
-    parents:["perception"]
+    parent:"perception"
     description:"Character sees something"
     args_description:"object or event character sees"
     example:
@@ -417,7 +429,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
                 Common example:""" #""" (for xeamcs python mode)
         :map:
             objtype:"op"
-            parents:["sight"]
+            parent:"sight"
             args:
                 :map:
                     id:"grass1"
@@ -425,11 +437,11 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"Reply for looking at 'grass1':"
         :map:
             objtype:"op"
-            parents:["sight"]
+            parent:"sight"
             args:
                 :map:
                     id:"grass1"
-                    parents:["terrain"]
+                    parent:"terrain"
                     contains:["path1","tree1"]
                     description:"Grass plains"
                     e_polygon:
@@ -441,11 +453,11 @@ Second argument is operation which is wrong (not given if not relevant)."""
         :string:"Event example:"
         :map:
             objtype:"op"
-            parents:["sight"]
+            parent:"sight"
             args:
                 :map:
                     objtype:"op"
-                    parents:["move"]
+                    parent:"move"
                     args:
                         :map:
                             id:"orc_23498"
@@ -454,7 +466,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"sound"
-    parents:["perception"]
+    parent:"perception"
     description:"Character hears something"
     args_description:"thing character heard"
     example:
@@ -463,12 +475,12 @@ Second argument is operation which is wrong (not given if not relevant)."""
 to and time tags, not only this operation):""" #""" (for xeamcs python mode)
         :map:
             objtype:"op"
-            parents:["sound"]
+            parent:"sound"
             from:"sentry_34"
             args:
                 :map:
                     objtype:"op"
-                    parents:["talk"]
+                    parent:"talk"
                     args:
                         :map:
                             say:"What has happened there?"
@@ -636,7 +648,7 @@ to and time tags, not only this operation):""" #""" (for xeamcs python mode)
 
 :map:
     id:"smell"
-    parents:["perception"]
+    parent:"perception"
     description:"Character smells something"
     args_description:"thing character smells"
     example:
@@ -644,7 +656,7 @@ to and time tags, not only this operation):""" #""" (for xeamcs python mode)
 to and time tags, not only this operation):"""
         :map:
             objtype:"op"
-            parents:["smell"]
+            parent:"smell"
             from:"flower_34"
             args:
                 :map:
@@ -652,13 +664,13 @@ to and time tags, not only this operation):"""
 
 :map:
     id:"feel"
-    parents:["perception"]
+    parent:"perception"
     description:"Character feels something (with fingers usually)"
     args_description:"thing character touches"
     example:
         :map:
             objtype:"op"
-            parents:["feel"]
+            parent:"feel"
             args:
                 :map:
                     id:"cloth_34"
@@ -666,27 +678,27 @@ to and time tags, not only this operation):"""
 
 :map:
     id:"imaginary"
-    parents:["action"]
+    parent:"action"
     description:"When something is not yet implemented in server, then character can pretend to do something ;-)"
     args_description:"event that is supposed to happen"
     example:
         :map:
             objtype:"op"
-            parents:["imaginary"]
+            parent:"imaginary"
             args:
                 :map:
                     id:"some_unimplemented_action"
 
 :map:
     id:"talk"
-    parents:["communicate"]
+    parent:"communicate"
     description:"used for talking"
     long_description:"need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log"
     args_description:"sentence(s) entity"
     example:
         :map:
             objtype:"op"
-            parents:["talk"]
+            parent:"talk"
             args:
                 :map:
                     say:"What has happened there?"
@@ -696,13 +708,13 @@ except you use player id instead of character id."""
 
 :map:
     id:"look"
-    parents:["perceive"]
+    parent:"perceive"
     description:"Looking at something"
     args_description:"target entity"
     example:
         :map:
             objtype:"op"
-            parents:["look"]
+            parent:"look"
             args:
                 :map:
                     id:"elf_3545"
@@ -717,14 +729,14 @@ except you use player id instead of character id."""
         appropriate top level object for current scheme."""
         :map:
             objtype:"op"
-            parents:["look"]
+            parent:"look"
             serialno:5
             from:"Bjorn_10"
             args:
         :string:"Server reply:"
         :map:
             objtype:"op"
-            parents:["set","sight"]
+            parent:"set"
             serialno:100
             refno:5
             from:"Bjorn_10"
@@ -734,7 +746,7 @@ except you use player id instead of character id."""
             args:
                 :map:
                     id:"world_0"
-                    parents:["world"]
+                    parent:"world"
                     contains:["tavern_2","market_3","home_4","axe_5","Nisuf_6","Miyora_7","home_8","smithy_9","Bjorn_10"]
                     stamp:19035660000.0
                     pos:[0.0,0.0,0.0]
@@ -742,7 +754,7 @@ except you use player id instead of character id."""
         and then looks for those objects in turn:"""
         :map:
             objtype:"op"
-            parents:["look"]
+            parent:"look"
             serialno:6
             from:"Bjorn_10"
             args:
@@ -751,7 +763,7 @@ except you use player id instead of character id."""
         :string:"And then server tells you more about it:"
         :map:
             objtype:"op"
-            parents:["set","sight"]
+            parent:"set"
             serialno:105
             refno:6
             from:"Nisuf_6"
@@ -761,7 +773,7 @@ except you use player id instead of character id."""
             args:
                 :map:
                     id:"Nisuf_6"
-                    parents:["farmer"]
+                    parent:"farmer"
                     e_drunkness:0.0
                     stamp:19035650000.0
                     loc:"world_0"
@@ -772,52 +784,52 @@ except you use player id instead of character id."""
 
 :map:
     id:"listen"
-    parents:["perceive"]
+    parent:"perceive"
     description:"Listen (something)"
     args_description:"target entity"
     example:
         :map:
             objtype:"op"
-            parents:["listen"]
+            parent:"listen"
             args:
                 :map:
                     id:"elf_3545"
 
 :map:
     id:"sniff"
-    parents:["perceive"]
+    parent:"perceive"
     description:"Sniff something"
     args_description:"target entity"
     example:
         :map:
             objtype:"op"
-            parents:["sniff"]
+            parent:"sniff"
             args:
                 :map:
                     id:"flower_3545"
 
 :map:
     id:"touch"
-    parents:["perceive"]
+    parent:"perceive"
     description:"Touch something"
     args_description:"target entity"
     example:
         :map:
             objtype:"op"
-            parents:["touch"]
+            parent:"touch"
             args:
                 :map:
                     id:"cloth_3545"
 
 :map:
     id:"appearance"
-    parents:["sight"]
+    parent:"sight"
     description:"Character sees something appearing: it literally appears or has it come in visible range"
     args_description:"object or event character sees"
     example:
         :map:
             objtype:"op"
-            parents:["appearance"]
+            parent:"appearance"
             args:
                 :map:
                     id:"grass1"
@@ -825,13 +837,13 @@ except you use player id instead of character id."""
 
 :map:
     id:"disappearance"
-    parents:["sight"]
+    parent:"sight"
     description:"Character sees something disappearing: it literally disappears or has it gone too far to be visible"
     args_description:"object or event character sees"
     example:
         :map:
             objtype:"op"
-            parents:["disappearance"]
+            parent:"disappearance"
             args:
                 :map:
                     id:"grass1"
@@ -839,12 +851,12 @@ except you use player id instead of character id."""
 
 :map:
     id:"wield"
-    parents:["set"]
+    parent:"set"
     description:"Attach a tool to the character entity at a pre-defined location so that the character can use it."
     args_description:"Tool or item to be wielded"
 
 :map:
     id:"use"
-    parents:["action"]
+    parent:"action"
     description:"Use a currently wielded tool."
     args_description:"Target tool is used on, or operation chosen from those available for this tool, with target given as its argument."

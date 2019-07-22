@@ -169,7 +169,7 @@ class Object(UserDict):
     def has_parent(self, parent):
         if type(parent)!=StringType: parent = parent.id
         if self.id == parent: return 1
-        parent = self.__dict__.get("parent")
+        parent_obj = self.__dict__.get("parent")
         if isinstance(parent_obj, Object) and \
            parent_obj.has_parent(parent):
             return 1

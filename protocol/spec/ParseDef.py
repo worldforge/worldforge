@@ -20,8 +20,8 @@ class Object:
         if value.name:
             self.attr[value.name]=value
             self.attr_list.append(value)
-        if (value.name=="id" and self.attr.has_key("parents")) or \
-           (value.name=="parents" and self.attr.has_key("id")):
+        if (value.name=="id" and self.attr.has_key("parent")) or \
+           (value.name=="parent" and self.attr.has_key("id")):
             self.append(Object(name="children",value=[]))
     def append_inherited(self, value):
         self.attr[value.name]=value
@@ -43,10 +43,9 @@ class Object:
             type_obj=dict[self.name]
             return type_obj.has_parent(dict,id)
         if id_obj.value==id: return 1
-        for parent in self.attr['parents'].value:
-            par_obj=dict[parent]
-            if par_obj.has_parent(dict,id):
-                return 1
+        par_obj=self.attr['parent'].value
+        if par_obj.has_parent(dict,id):
+            return 1
         return 0
             
     def __repr__(self):
@@ -162,12 +161,12 @@ class ParseDef:
         """find type for this name"""
         if name in data_type: return name
         obj=self.id_dict[name]
-        if not obj.attr.has_key('parents'):
-            raise SyntaxError, ("Parents attribute is not specified for object",obj.debug)
-        parent_list=obj.attr['parents'].value
-        if not parent_list:
+        if not obj.attr.has_key('parent'):
+            raise SyntaxError, ("Parent attribute is not specified for object",obj.debug)
+        parent=obj.attr['parent'].value
+        if not parent:
             raise SyntaxError, ("Didn't found data_type for object",obj.debug)
-        return self.search_type(parent_list[0])
+        return self.search_type(parent)
     def fill_type_object(self, obj):
         """recursively find types for all objects"""
         if type(obj)!=InstanceType: return
@@ -183,8 +182,8 @@ class ParseDef:
     def fill_inherited_attributes_object(self, obj, p_obj,depth):
         """recursively find attributes that are inherited from parents"""
         if type(obj)!=InstanceType: return
-        if not p_obj.attr.has_key('parents'):
-            raise SyntaxError, ("Parents attribute is not specified for object",
+        if not p_obj.attr.has_key('parent'):
+            raise SyntaxError, ("Parent attribute is not specified for object",
                                 p_obj.debug)
         if depth==1:
             p_obj.add_children(obj)
@@ -194,11 +193,11 @@ class ParseDef:
             #print "-->",p_sub_obj.name
             if not obj.attr.has_key(p_sub_obj.name):
                 obj.append_inherited(p_sub_obj)
-        for parent in p_obj.attr['parents'].value:
-            if not self.id_dict.has_key(parent):
-                raise SyntaxError, ("Parent \""+parent+"\" doesn't exist.",
-                                    obj.attr['parents'].debug)
-            self.fill_inherited_attributes_object(obj,self.id_dict[parent],depth+1)
+        parent = p_obj.attr['parent'].value
+        if not self.id_dict.has_key(parent):
+            raise SyntaxError, ("Parent \""+parent+"\" doesn't exist.",
+                                obj.attr['parent'].debug)
+        self.fill_inherited_attributes_object(obj,self.id_dict[parent],depth+1)
     def fill_inherited_attributes(self):
         for obj in self.objects.value:
             self.fill_inherited_attributes_object(obj,obj,0)

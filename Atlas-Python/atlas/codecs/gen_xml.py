@@ -77,19 +77,27 @@ class GenerateXML:
         str_list = []
         add_line = str_list.append
         for name, value in obj.items():
-            str_type = get_atlas_type(value)
-            add_nl = 0
-            if str_type=="map":
-                str_value = self.obj2xml(value, indent+"\t")
-                if str_value: add_nl = 1
-            elif str_type=="list":
-                str_value = self.list2xml(value, indent+"\t")
-                if string.find(str_value, "\t")>=0: add_nl = 1
-            else:
-                #int/float/string
-                str_value = self.to_string(value)
-            if add_nl: str_value = "\n%s\n%s" % (str_value, indent)
-            add_line(self.encode_attribute(indent, name, str_type, str_value))
+            if value is not None:
+                if name == "parent":
+                    str_type = "string"
+                    if type(value) == StringType:
+                        str_value = self.to_string(value)
+                    else:
+                        str_value = self.to_string(value.id)
+                else:
+                    str_type = get_atlas_type(value)
+                    add_nl = 0
+                    if str_type=="map":
+                        str_value = self.obj2xml(value, indent+"\t")
+                        if str_value: add_nl = 1
+                    elif str_type=="list":
+                        str_value = self.list2xml(value, indent+"\t")
+                        if string.find(str_value, "\t")>=0: add_nl = 1
+                    else:
+                        #int/float/string
+                        str_value = self.to_string(value)
+                    if add_nl: str_value = "\n%s\n%s" % (str_value, indent)
+                add_line(self.encode_attribute(indent, name, str_type, str_value))
         return string.join(str_list, "\n")
 
     def list2xml(self, lst, indent):

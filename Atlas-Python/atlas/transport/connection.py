@@ -83,7 +83,7 @@ class BaseConnection:
         try:
             if op.objtype!="op":
                 return None
-            method_name = op.parents[0] + "_op"
+            method_name = op.parent + "_op"
             return getattr(self, method_name)
         except AttributeError:
             return None

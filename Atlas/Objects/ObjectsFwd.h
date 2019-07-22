@@ -177,6 +177,11 @@ namespace Operation {
 }
 
 namespace Operation {
+    class UnseenData;
+    typedef SmartPtr<UnseenData> Unseen;
+}
+
+namespace Operation {
     class SightData;
     typedef SmartPtr<SightData> Sight;
 }
@@ -204,11 +209,6 @@ namespace Operation {
 namespace Operation {
     class FeelData;
     typedef SmartPtr<FeelData> Feel;
-}
-
-namespace Operation {
-    class UnseenData;
-    typedef SmartPtr<UnseenData> Unseen;
 }
 
 namespace Operation {

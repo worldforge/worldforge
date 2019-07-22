@@ -268,7 +268,7 @@ class Client(TcpClient):
             if not self.objects.has_key(obj.id): continue
             if id(obj)!=id(self.objects[obj.id]):
                 print msg, "check_consistency: not same object:", obj.id
-            for attr in ["parents", "contains", "media_roots"]:
+            for attr in ["contains", "media_roots"]:
                 if hasattr(obj, attr):
                     for value in getattr(obj, attr):
                         if type(value)==StringType:
@@ -281,7 +281,7 @@ class Client(TcpClient):
         #atlas.uri_list_type["neighbour"] = 1
         atlas.uri_list_type["contains"] = atlas.uri_list_type["media_roots"] = 1
         unresolved = []
-        for attr in ["contains", "parents", "media_roots"]:
+        for attr in ["contains", "parent", "media_roots"]:
             unresolved = unresolved + self.resolver.resolve_attribute(obj, attr)
         #self.resolver.resolve_attribute(ent, "neighbour") #????
         #print "????", obj.id, self.resolver.depencies

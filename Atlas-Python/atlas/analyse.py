@@ -56,24 +56,24 @@ class Analyse:
 
     def fill_children(self):
         for obj in self.objects:
-            if not hasattr(obj, "parents"):
+            if not hasattr(obj, "parent"):
 ##            attr_order = obj.specification_file.attribute_order
 ##            try:
 ##                parent_loc = attr_order.index("parents")
 ##            except ValueError:
-                self.syntax_error("Parents attribute missing", obj)
+                self.syntax_error("Parent attribute missing", obj)
 ##            attr_order.insert(parent_loc+1, "children")
             obj.children=[]
         for obj in self.objects:
-            for pid in obj.parents:
-                if type(pid)==StringType:
-                    try:
-                        parent_obj = self.id_dict[pid]
-                    except KeyError:
-                        self.syntax_error('Parent "%s" is missing' % pid, obj)
-                else:
-                    parent_obj = pid
-                parent_obj.children.append(obj.id)
+            pid = obj.parent
+            if type(pid)==StringType:
+                try:
+                    parent_obj = self.id_dict[pid]
+                except KeyError:
+                    self.syntax_error('Parent "%s" is missing' % pid, obj)
+            else:
+                parent_obj = pid
+            parent_obj.children.append(obj.id)
 
     def check_type_object(self, obj):
         """recursively check types for all objects"""
@@ -183,7 +183,7 @@ class Link:
 
 
 class Resolver:
-    bidirectional_attributes = {"loc":"contains", "parents":"children"} #currently only "loc" works
+    bidirectional_attributes = {"loc":"contains", "parent":"children"} #currently only "loc" works
     def __init__(self, objects):
         self.verbose = 0
         self.objects = objects #pointer to main dictionary of objects (not maintained by us)

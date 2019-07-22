@@ -1,7 +1,7 @@
 <atlas>
 <map>
 	<string name="id">root</string>
-	<list name="children"><string>root_entity</string><string>root_operation</string><string>root_type</string><string>root_interface</string></list>
+	<list name="children"><string>root_entity</string><string>root_operation</string><string>root_type</string></list>
 	<float name="stamp">0.0</float>
 	<float name="stamp_inherit">0.0</float>
 	<string name="objtype">meta</string>
@@ -96,7 +96,7 @@ descending into childrens.</string>
 <map>
 	<string name="id">game_entity</string>
 	<string name="parent">root_entity</string>
-	<list name="children"><string>geometry</string></list>
+	<list name="children"></list>
 	<string name="specification">atlas_game</string>
 	<string name="interface">game_interface</string>
 	<string name="description">All In Game classes and objects</string>
@@ -411,7 +411,7 @@ First start from operator hierarchy root (root_operation):</string>
 <map>
 	<string name="id">perception</string>
 	<string name="parent">info</string>
-	<list name="children"><string>sight</string><string>sound</string><string>smell</string><string>feel</string><string>unseen</string></list>
+	<list name="children"><string>unseen</string><string>sight</string><string>sound</string><string>smell</string><string>feel</string></list>
 	<string name="specification">atlas_game</string>
 	<string name="description">Character perceives something.</string>
 	<string name="long_description">Base operator for all kind of perceptions</string>
@@ -475,6 +475,18 @@ First start from operator hierarchy root (root_operation):</string>
 	</map>
 </map>
 <map>
+	<string name="id">unseen</string>
+	<string name="parent">perception</string>
+	<list name="children"></list>
+	<string name="description">Character failed to interact with another entity because it does not exist.</string>
+	<string name="args_description">entity that doesn't exist</string>
+	<map name="specification_file">
+		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
+		<string name="filename">operation.def</string>
+		<int name="lineno">180</int>
+	</map>
+</map>
+<map>
 	<string name="id">error</string>
 	<string name="parent">info</string>
 	<list name="children"></list>
@@ -494,7 +506,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">194</int>
+						<int name="lineno">200</int>
 					</map>
 				</map>
 				<map>
@@ -507,28 +519,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>e_bar</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">201</int>
+								<int name="lineno">207</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">196</int>
+						<int name="lineno">202</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>refno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">189</int>
+				<int name="lineno">195</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">180</int>
+		<int name="lineno">186</int>
 	</map>
 </map>
 <map>
@@ -537,6 +549,11 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<list name="children"></list>
 	<string name="description">An operation used to signal to clients when things such as types have changed.</string>
 	<string name="args_description">A list of types which have changed.</string>
+	<map name="specification_file">
+		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
+		<string name="filename">operation.def</string>
+		<int name="lineno">210</int>
+	</map>
 </map>
 <map>
 	<string name="id">combine</string>
@@ -558,7 +575,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">217</int>
+						<int name="lineno">229</int>
 					</map>
 				</map>
 				<map>
@@ -566,7 +583,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">220</int>
+						<int name="lineno">232</int>
 					</map>
 				</map>
 				<map>
@@ -574,21 +591,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">222</int>
+						<int name="lineno">234</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">213</int>
+				<int name="lineno">225</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">204</int>
+		<int name="lineno">216</int>
 	</map>
 </map>
 <map>
@@ -610,7 +627,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">238</int>
+						<int name="lineno">250</int>
 					</map>
 				</map>
 				<map>
@@ -619,7 +636,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_amount</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">240</int>
+						<int name="lineno">252</int>
 					</map>
 				</map>
 				<map>
@@ -627,21 +644,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_amount</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">243</int>
+						<int name="lineno">255</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">234</int>
+				<int name="lineno">246</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">225</int>
+		<int name="lineno">237</int>
 	</map>
 </map>
 <map>
@@ -655,7 +672,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">246</int>
+		<int name="lineno">258</int>
 	</map>
 </map>
 <map>
@@ -681,20 +698,20 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">270</int>
+						<int name="lineno">282</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">264</int>
+				<int name="lineno">276</int>
 			</map>
 		</map>
 		<string>Reply from server</string>
 		<map>
 			<string name="objtype">op</string>
-			<list name="parents"><string>info</string><string>sight</string></list>
+			<string name="parent">info</string>
 			<int name="serialno">1231</int>
 			<int name="refno">123</int>
 			<string name="from">9899</string>
@@ -704,7 +721,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 			<list name="args">
 				<map>
 					<string name="objtype">op</string>
-					<list name="parents"><string>set</string><string>move</string></list>
+					<string name="parent">set</string>
 					<int name="serialno">1230</int>
 					<int name="refno">123</int>
 					<string name="from">9899</string>
@@ -718,28 +735,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">294</int>
+								<int name="lineno">306</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>seconds</string><string>time_string</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">285</int>
+						<int name="lineno">297</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">275</int>
+				<int name="lineno">287</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">255</int>
+		<int name="lineno">267</int>
 	</map>
 </map>
 <map>
@@ -759,21 +776,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">310</int>
+						<int name="lineno">322</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">306</int>
+				<int name="lineno">318</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">299</int>
+		<int name="lineno">311</int>
 	</map>
 </map>
 <map>
@@ -794,14 +811,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>password</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">324</int>
+						<int name="lineno">336</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">320</int>
+				<int name="lineno">332</int>
 			</map>
 		</map>
 		<string>Conversation examples:&lt;br&gt; When you connect to
@@ -819,14 +836,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">335</int>
+						<int name="lineno">347</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">330</int>
+				<int name="lineno">342</int>
 			</map>
 		</map>
 		<string>What if you already had account by that name? Then
@@ -845,7 +862,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">350</int>
+						<int name="lineno">362</int>
 					</map>
 				</map>
 				<map>
@@ -860,21 +877,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">357</int>
+								<int name="lineno">369</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">352</int>
+						<int name="lineno">364</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">342</int>
+				<int name="lineno">354</int>
 			</map>
 		</map>
 		<string>For more about error operation see 
@@ -898,14 +915,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string><string>characters</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">374</int>
+						<int name="lineno">386</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">366</int>
+				<int name="lineno">378</int>
 			</map>
 		</map>
 		<string>If you do not have character, then you need to
@@ -924,14 +941,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string><string>description</string><string>e_sex</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">387</int>
+						<int name="lineno">399</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">382</int>
+				<int name="lineno">394</int>
 			</map>
 		</map>
 		<string>Result of character creation is same as with account
@@ -940,7 +957,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">313</int>
+		<int name="lineno">325</int>
 	</map>
 </map>
 <map>
@@ -959,14 +976,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">405</int>
+						<int name="lineno">417</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">401</int>
+				<int name="lineno">413</int>
 			</map>
 		</map>
 		<string>Most useful with server&lt;-&gt;server communication
@@ -975,7 +992,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">395</int>
+		<int name="lineno">407</int>
 	</map>
 </map>
 <map>
@@ -997,14 +1014,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">422</int>
+						<int name="lineno">434</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">418</int>
+				<int name="lineno">430</int>
 			</map>
 		</map>
 		<string>Reply for looking at 'grass1':</string>
@@ -1027,14 +1044,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>description</string><string>e_polygon</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">430</int>
+						<int name="lineno">442</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">426</int>
+				<int name="lineno">438</int>
 			</map>
 		</map>
 		<string>Event example:</string>
@@ -1053,36 +1070,29 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">450</int>
+								<int name="lineno">462</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">446</int>
+						<int name="lineno">458</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">442</int>
+				<int name="lineno">454</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">410</int>
+		<int name="lineno">422</int>
 	</map>
-</map>
-<map>
-	<string name="id">unseen</string>
-	<string name="parent">perception</string>
-	<string name="description">Character failed to interact with another entity because it does not exist.</string>
-	<string name="args_description">entity that doesn't exit</string>
-	<list name="children"></list>
 </map>
 <map>
 	<string name="id">sound</string>
@@ -1108,28 +1118,28 @@ to and time tags, not only this operation):</string>
 							<map name="specification_file">
 								<list name="attribute_order"><string>say</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">473</int>
+								<int name="lineno">485</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">469</int>
+						<int name="lineno">481</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">464</int>
+				<int name="lineno">476</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">455</int>
+		<int name="lineno">467</int>
 	</map>
 </map>
 <map>
@@ -1151,21 +1161,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_smell</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">650</int>
+						<int name="lineno">662</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">645</int>
+				<int name="lineno">657</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">637</int>
+		<int name="lineno">649</int>
 	</map>
 </map>
 <map>
@@ -1185,21 +1195,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_surface_type</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">663</int>
+						<int name="lineno">675</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">659</int>
+				<int name="lineno">671</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">653</int>
+		<int name="lineno">665</int>
 	</map>
 </map>
 <map>
@@ -1218,21 +1228,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">677</int>
+						<int name="lineno">689</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">673</int>
+				<int name="lineno">685</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">667</int>
+		<int name="lineno">679</int>
 	</map>
 </map>
 <map>
@@ -1252,14 +1262,14 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>say</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">691</int>
+						<int name="lineno">703</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">687</int>
+				<int name="lineno">699</int>
 			</map>
 		</map>
 		<string>Talking out of game is same, 
@@ -1268,7 +1278,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">680</int>
+		<int name="lineno">692</int>
 	</map>
 </map>
 <map>
@@ -1287,14 +1297,14 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">707</int>
+						<int name="lineno">719</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">703</int>
+				<int name="lineno">715</int>
 			</map>
 		</map>
 		<string>Conversation examples:&lt;br&gt; When you connect to
@@ -1315,13 +1325,13 @@ except you use player id instead of character id.</string>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">718</int>
+				<int name="lineno">730</int>
 			</map>
 		</map>
 		<string>Server reply:</string>
 		<map>
 			<string name="objtype">op</string>
-			<list name="parents"><string>set</string><string>sight</string></list>
+			<string name="parent">set</string>
 			<int name="serialno">100</int>
 			<int name="refno">5</int>
 			<string name="from">Bjorn_10</string>
@@ -1338,14 +1348,14 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>stamp</string><string>pos</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">735</int>
+						<int name="lineno">747</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">725</int>
+				<int name="lineno">737</int>
 			</map>
 		</map>
 		<string>Client looks at contains attribute of above object
@@ -1361,20 +1371,20 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">749</int>
+						<int name="lineno">761</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">743</int>
+				<int name="lineno">755</int>
 			</map>
 		</map>
 		<string>And then server tells you more about it:</string>
 		<map>
 			<string name="objtype">op</string>
-			<list name="parents"><string>set</string><string>sight</string></list>
+			<string name="parent">set</string>
 			<int name="serialno">105</int>
 			<int name="refno">6</int>
 			<string name="from">Nisuf_6</string>
@@ -1395,21 +1405,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>e_drunkness</string><string>stamp</string><string>loc</string><string>pos</string><string>description</string><string>name</string><string>e_status</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">762</int>
+						<int name="lineno">774</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">752</int>
+				<int name="lineno">764</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">697</int>
+		<int name="lineno">709</int>
 	</map>
 </map>
 <map>
@@ -1428,21 +1438,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">783</int>
+						<int name="lineno">795</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">779</int>
+				<int name="lineno">791</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">773</int>
+		<int name="lineno">785</int>
 	</map>
 </map>
 <map>
@@ -1461,21 +1471,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">796</int>
+						<int name="lineno">808</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">792</int>
+				<int name="lineno">804</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">786</int>
+		<int name="lineno">798</int>
 	</map>
 </map>
 <map>
@@ -1494,21 +1504,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">809</int>
+						<int name="lineno">821</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">805</int>
+				<int name="lineno">817</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">799</int>
+		<int name="lineno">811</int>
 	</map>
 </map>
 <map>
@@ -1528,21 +1538,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">822</int>
+						<int name="lineno">834</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">818</int>
+				<int name="lineno">830</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">812</int>
+		<int name="lineno">824</int>
 	</map>
 </map>
 <map>
@@ -1562,21 +1572,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">836</int>
+						<int name="lineno">848</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">832</int>
+				<int name="lineno">844</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">826</int>
+		<int name="lineno">838</int>
 	</map>
 </map>
 <map>
@@ -1588,7 +1598,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">840</int>
+		<int name="lineno">852</int>
 	</map>
 </map>
 <map>
@@ -1600,7 +1610,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">846</int>
+		<int name="lineno">858</int>
 	</map>
 </map>
 <map>
@@ -1618,7 +1628,7 @@ except you use player id instead of character id.</string>
 <map>
 	<string name="id">string</string>
 	<string name="parent">root_type</string>
-	<list name="children"><string>uri</string><string>objtype</string><string>specification</string><string>name</string><string>message</string><string>html</string><string>username</string><string>password</string><string>time_string</string><string>e_string</string></list>
+	<list name="children"><string>uri</string><string>parent</string><string>objtype</string><string>specification</string><string>name</string><string>message</string><string>html</string><string>username</string><string>password</string><string>time_string</string><string>e_string</string></list>
 	<string name="objtype">data_type</string>
 	<string name="description">UTF-8 encoded string.</string>
 	<string name="long_description">Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string</string>
@@ -1846,7 +1856,7 @@ For more about URI see
 <map>
 	<string name="id">id_list</string>
 	<string name="parent">uri_list</string>
-	<list name="children"><string>parent</string><string>children</string><string>contains</string><string>operations</string></list>
+	<list name="children"><string>children</string><string>contains</string><string>operations</string></list>
 	<string name="description">List of ids</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
@@ -2542,1138 +2552,6 @@ For more about URI see
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
 		<string name="filename">type.def</string>
 		<int name="lineno">716</int>
-	</map>
-</map>
-<map>
-	<string name="id">root_interface</string>
-	<string name="parent">root</string>
-	<list name="children"><string>base_interface</string><string>game_interface</string></list>
-	<string name="objtype">meta</string>
-	<string name="description">starting point for interface browsing, not used otherwise</string>
-	<list name="operations"></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>operations</string></list>
-		<string name="filename">interface.def</string>
-		<int name="lineno">2</int>
-	</map>
-</map>
-<map>
-	<string name="id">base_interface</string>
-	<string name="parent">root_interface</string>
-	<list name="children"></list>
-	<string name="objtype">interface</string>
-	<string name="description">raw interface</string>
-	<string name="long_description">admin can use this interface for setting
-    abstract hierarchy and actual game objects too</string>
-	<list name="operations"><string>create</string><string>delete</string><string>set</string><string>get</string></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string><string>operations</string></list>
-		<string name="filename">interface.def</string>
-		<int name="lineno">9</int>
-	</map>
-</map>
-<map>
-	<string name="id">game_interface</string>
-	<string name="parent">root_interface</string>
-	<list name="children"></list>
-	<string name="specification">atlas_game</string>
-	<string name="objtype">interface</string>
-	<string name="description">client interface for controlling character etc..</string>
-	<list name="operations"><string>create</string><string>combine</string><string>divide</string><string>communicate</string><string>move</string><string>perceive</string><string>talk</string><string>look</string><string>listen</string><string>sniff</string><string>touch</string></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>objtype</string><string>description</string><string>operations</string></list>
-		<string name="filename">interface.def</string>
-		<int name="lineno">18</int>
-	</map>
-</map>
-<map>
-	<string name="id">geometry</string>
-	<string name="parent">game_entity</string>
-	<list name="children"><string>area</string><string>line</string></list>
-	<string name="description">Base for all geometry related map elements</string>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">map.def</string>
-		<int name="lineno">2</int>
-	</map>
-</map>
-<map>
-	<string name="id">area</string>
-	<string name="parent">geometry</string>
-	<list name="children"><string>2D_grid</string><string>agrilan</string><string>agrilan_waters</string><string>agrilan_lands</string></list>
-	<string name="description">Some kind 2D area</string>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">map.def</string>
-		<int name="lineno">7</int>
-	</map>
-</map>
-<map>
-	<string name="id">line</string>
-	<string name="parent">geometry</string>
-	<list name="children"><string>river</string><string>road_block</string><string>road</string></list>
-	<string name="description">Some kind line</string>
-	<float name="width">0.0</float>
-	<list name="line_data"></list>
-	<list name="example">
-		<map>
-			<string name="id">123</string>
-			<string name="parent">line</string>
-			<float name="width">0.1</float>
-			<list name="line_data">
-				<list><float>0.0</float><float>0.0</float><float>0.0</float></list>
-				<list><float>1.0</float><float>0.0</float><float>0.0</float></list>
-				<list><float>1.0</float><float>1.0</float><float>0.0</float></list>
-			</list>
-			<map name="specification_file">
-				<list name="attribute_order"><string>id</string><string>parent</string><string>width</string><string>line_data</string></list>
-				<string name="filename">map.def</string>
-				<int name="lineno">19</int>
-			</map>
-		</map>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>width</string><string>line_data</string><string>example</string></list>
-		<string name="filename">map.def</string>
-		<int name="lineno">12</int>
-	</map>
-</map>
-<map>
-	<string name="id">2D_grid</string>
-	<string name="parent">area</string>
-	<list name="children"><string>hilly</string><string>plain</string><string>lake</string><string>river</string><string>road_block</string></list>
-	<string name="name">some area</string>
-	<string name="description">Basically container for "Terrain Exception Data in AMIS".</string>
-	<list name="cell_size"><float>1.0</float><float>1.0</float></list>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data"></list>
-	<list name="example"><string>Example usage: see agrilan_map.*</string></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>name</string><string>description</string><string>cell_size</string><string>grid_size</string><string>grid_data</string><string>example</string></list>
-		<string name="filename">map.def</string>
-		<int name="lineno">28</int>
-	</map>
-</map>
-<map>
-	<string name="id">agrilan</string>
-	<string name="parent">area</string>
-	<list name="children"></list>
-	<string name="specification">example</string>
-	<string name="description">This is whole agrilan map: at coords only hight is guessed
-                   and because this is toplevel now, there is no ref attribute 
-                   in location</string>
-	<string name="long_description">Hand made example map based on 
-           http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg
-           No media id's here though, except few example...
-
-           First ascii map:
-origin: -80,-40
-&lt;PRE&gt;
-HHLHRPAP
-HLLRRRPA
-HHLHHRPA
-PPPPPRPA 
-PPPPPPRA
-FFFPPAAA
-&lt;/PRE&gt;
-Legend:&lt;br&gt;
-H=Hilly&lt;br&gt;
-L=Lake&lt;br&gt;
-R=River&lt;br&gt;
-A=roAd&lt;br&gt;
-P=Plains&lt;br&gt;
-F=Forest&lt;br&gt;
-                </string>
-	<list name="pos"><float>0.0</float><float>0.0</float><float>300.0</float></list>
-	<list name="contains"><string>agrilan_lands</string><string>agrilan_waters</string></list>
-	<string name="media">refer to media entity that refers to http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg</string>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>pos</string><string>contains</string><string>media</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">2</int>
-	</map>
-</map>
-<map>
-	<string name="id">hilly</string>
-	<string name="specification">example</string>
-	<string name="name">Hilly part around Eluryh lake</string>
-	<string name="description">Defining hilly type first 
-                   (here could be for example movement_speed 
-                    attribute too for example)</string>
-	<string name="parent">2D_grid</string>
-	<list name="children"><string>hilly1</string><string>hilly2</string><string>hilly3</string></list>
-	<string name="media">media id for generic hilly type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">35</int>
-	</map>
-</map>
-<map>
-	<string name="id">hilly1</string>
-	<string name="description">Specific hilly instances: note missing place
-                   where there is lake</string>
-	<string name="parent">hilly</string>
-	<list name="children"></list>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>-80.0</float><float>-40.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>2</int><int>3</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">10.0</float>
-				<string name="media">special media id for this tile (not shown for all)</string>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string><string>media</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">58</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">5.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">61</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">4.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">63</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">3.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">66</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">68</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">2.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">69</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">46</int>
-	</map>
-</map>
-<map>
-	<string name="id">hilly2</string>
-	<string name="parent">hilly</string>
-	<list name="children"></list>
-	<string name="description"></string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>40.0</float><float>-40.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">10.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">83</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">72</int>
-	</map>
-</map>
-<map>
-	<string name="id">hilly3</string>
-	<string name="parent">hilly</string>
-	<list name="children"></list>
-	<string name="description"></string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>40.0</float><float>40.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>2</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">10.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">97</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">10.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">100</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">86</int>
-	</map>
-</map>
-<map>
-	<string name="id">plain</string>
-	<string name="specification">example</string>
-	<string name="name">Plains</string>
-	<string name="description">Defining plain type</string>
-	<string name="parent">2D_grid</string>
-	<list name="children"><string>plain1</string><string>plain2</string><string>plain3</string><string>plain4</string></list>
-	<string name="media">media id for generic plain type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">103</int>
-	</map>
-</map>
-<map>
-	<string name="id">plain1</string>
-	<string name="parent">plain</string>
-	<list name="children"></list>
-	<string name="description">Specific plains</string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>-80.0</float><float>80.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>6</int><int>3</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">2.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">123</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">2.2</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">125</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">127</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.8</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">129</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">2.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">131</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">133</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.6</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">135</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.8</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">137</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">139</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.4</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">141</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.6</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">143</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.6</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">145</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.2</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">148</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.4</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">150</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.4</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">152</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">155</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.2</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">156</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">158</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">112</int>
-	</map>
-</map>
-<map>
-	<string name="id">plain2</string>
-	<string name="parent">plain</string>
-	<list name="children"></list>
-	<string name="description"></string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>120.0</float><float>80.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.3</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">171</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">160</int>
-	</map>
-</map>
-<map>
-	<string name="id">plain3</string>
-	<string name="parent">plain</string>
-	<list name="children"></list>
-	<string name="description"></string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>200.0</float><float>80.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.3</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">185</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">174</int>
-	</map>
-</map>
-<map>
-	<string name="id">plain4</string>
-	<string name="parent">plain</string>
-	<list name="children"></list>
-	<string name="description"></string>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>160.0</float><float>80.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>1</int><int>4</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.25</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">199</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.2</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">202</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.15</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">205</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.1</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">208</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">188</int>
-	</map>
-</map>
-<map>
-	<string name="id">lake</string>
-	<string name="specification">example</string>
-	<string name="name">Lake</string>
-	<string name="description">Defining lake type</string>
-	<string name="parent">2D_grid</string>
-	<list name="children"><string>lake1</string></list>
-	<string name="media">media id for generic lake type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">211</int>
-	</map>
-</map>
-<map>
-	<string name="id">lake1</string>
-	<string name="name">Eluryh</string>
-	<string name="description">One lake</string>
-	<string name="parent">lake</string>
-	<list name="children"></list>
-	<string name="loc">agrilan_waters</string>
-	<list name="pos"><float>-80.0</float><float>80.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="grid_size"><int>2</int><int>3</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">232</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.15</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">233</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">235</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.15</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">237</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.15</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">239</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.15</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">241</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">220</int>
-	</map>
-</map>
-<map>
-	<string name="id">river</string>
-	<string name="specification">example</string>
-	<string name="name">River</string>
-	<string name="description">Defining river type</string>
-	<list name="parents"><string>2D_grid</string><string>line</string></list>
-	<list name="children"><string>river1</string><string>river2</string></list>
-	<string name="media">media id for generic river type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">244</int>
-	</map>
-</map>
-<map>
-	<string name="id">river1</string>
-	<string name="name">Hardonar river</string>
-	<string name="description">Few rivers</string>
-	<string name="parent">river</string>
-	<list name="children"></list>
-	<string name="loc">agrilan_waters</string>
-	<list name="pos"><float>80.0</float><float>-40.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<float name="width">25.0</float>
-	<list name="line_data">
-		<list><float>100.0</float><float>-40.0</float><float>1.1</float></list>
-		<list><float>140.0</float><float>20.0</float><float>1.08</float></list>
-		<list><float>140.0</float><float>100.0</float><float>1.05</float></list>
-		<list><float>160.0</float><float>140.0</float><float>1.03</float></list>
-		<list><float>160.0</float><float>200.0</float><float>1.0</float></list>
-	</list>
-	<list name="grid_size"><int>3</int><int>6</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.09</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">272</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">274</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">275</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">276</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">277</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">278</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">279</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">281</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.08</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">282</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.07</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">284</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.06</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">286</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.05</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">288</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">290</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">291</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">293</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">294</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">295</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">296</int>
-				</map>
-			</map>
-			<map>
-				<map name="specification_file">
-					<list name="attribute_order"></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">297</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.03</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">298</int>
-				</map>
-			</map>
-			<map>
-				<float name="height">1.01</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">300</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>width</string><string>line_data</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">253</int>
-	</map>
-</map>
-<map>
-	<string name="id">river2</string>
-	<string name="parent">river</string>
-	<list name="children"></list>
-	<string name="description">connects to lake</string>
-	<string name="loc">agrilan_waters</string>
-	<list name="pos"><float>40.0</float><float>0.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<float name="width">5.0</float>
-	<list name="line_data">
-		<list><float>140.0</float><float>20.0</float><float>1.08</float></list>
-		<list><float>40.0</float><float>20.0</float><float>1.15</float></list>
-	</list>
-	<list name="grid_size"><int>2</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.13</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">318</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.1</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">321</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>loc</string><string>pos</string><string>media</string><string>width</string><string>line_data</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">303</int>
-	</map>
-</map>
-<map>
-	<string name="id">agrilan_waters</string>
-	<string name="specification">example</string>
-	<string name="description">All Agrilan waters container</string>
-	<string name="parent">area</string>
-	<list name="children"></list>
-	<string name="loc">agrilan</string>
-	<list name="pos"><float>0.0</float><float>0.0</float><float>0.0</float></list>
-	<list name="contains"><string>lake1</string><string>river1</string><string>river2</string></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>contains</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">324</int>
-	</map>
-</map>
-<map>
-	<string name="id">road_block</string>
-	<string name="specification">example</string>
-	<string name="name">Road block</string>
-	<string name="description">Defining road types</string>
-	<list name="parents"><string>2D_grid</string><string>line</string></list>
-	<list name="children"><string>bridge</string><string>road1</string><string>road2</string><string>road3</string></list>
-	<string name="media">media id for generic road type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<float name="width">5.0</float>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string><string>width</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">333</int>
-	</map>
-</map>
-<map>
-	<string name="id">bridge</string>
-	<string name="name">Bridge</string>
-	<string name="description">Defining bridge type</string>
-	<string name="parent">road_block</string>
-	<list name="children"><string>bridge1</string></list>
-	<string name="media">media id for generic bridge type</string>
-	<list name="cell_size"><float>40.0</float><float>40.0</float></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string><string>cell_size</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">343</int>
-	</map>
-</map>
-<map>
-	<string name="id">road</string>
-	<string name="specification">example</string>
-	<string name="name">Road</string>
-	<string name="description">Collection of road blocks</string>
-	<string name="parent">line</string>
-	<list name="children"><string>murray_r1</string></list>
-	<string name="media">media id for generic road type</string>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>media</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">351</int>
-	</map>
-</map>
-<map>
-	<string name="id">road1</string>
-	<string name="description">Actual road</string>
-	<string name="parent">road_block</string>
-	<list name="children"></list>
-	<string name="loc">murray_r1</string>
-	<list name="pos"><float>160.0</float><float>-40.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="line_data">
-		<list><float>180.0</float><float>-40.0</float><float>1.4</float></list>
-		<list><float>220.0</float><float>0.0</float><float>1.4</float></list>
-	</list>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.4</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">373</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>line_data</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">359</int>
-	</map>
-</map>
-<map>
-	<string name="id">road2</string>
-	<string name="description">Actual road</string>
-	<string name="parent">road_block</string>
-	<list name="children"></list>
-	<string name="loc">murray_r1</string>
-	<list name="pos"><float>200.0</float><float>0.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="line_data">
-		<list><float>220.0</float><float>0.0</float><float>1.4</float></list>
-		<list><float>220.0</float><float>180.0</float><float>1.3</float></list>
-	</list>
-	<list name="grid_size"><int>1</int><int>5</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.38</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">390</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.36</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">393</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.34</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">396</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.32</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">399</int>
-				</map>
-			</map></list>
-		<list>			<map>
-				<float name="height">1.3</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">402</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>line_data</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">376</int>
-	</map>
-</map>
-<map>
-	<string name="id">bridge1</string>
-	<string name="description">Actual bridge</string>
-	<string name="parent">bridge</string>
-	<list name="children"></list>
-	<string name="name">Murray bridge</string>
-	<string name="loc">murray_r1</string>
-	<list name="pos"><float>160.0</float><float>160.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="line_data">
-		<list><float>220.0</float><float>180.0</float><float>1.3</float></list>
-		<list><float>140.0</float><float>180.0</float><float>1.3</float></list>
-	</list>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">2.0</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">420</int>
-				</map>
-			</map></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>description</string><string>parent</string><string>children</string><string>name</string><string>loc</string><string>pos</string><string>media</string><string>line_data</string><string>grid_size</string><string>grid_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">405</int>
-	</map>
-</map>
-<map>
-	<string name="id">road3</string>
-	<string name="description">Actual road</string>
-	<string name="parent">road_block</string>
-	<list name="children"></list>
-	<string name="loc">murray_r1</string>
-	<list name="pos"><float>120.0</float><float>160.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="line_data">
-		<list><float>140.0</float><float>180.0</float><float>1.3</float></list>
-		<list><float>100.0</float><float>180.0</float><float>1.2</float></list>
-	</list>
-	<list name="grid_size"><int>1</int><int>1</int></list>
-	<list name="grid_data">
-		<list>			<map>
-				<float name="height">1.3</float>
-				<map name="specification_file">
-					<list name="attribute_order"><string>height</string></list>
-					<string name="filename">agrilan_map.def</string>
-					<int name="lineno">437</int>
-				</map>
-			</map></list>
-	</list>
-	<string name="name">Murdar road</string>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>line_data</string><string>grid_size</string><string>grid_data</string><string>name</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">423</int>
-	</map>
-</map>
-<map>
-	<string name="id">murray_r1</string>
-	<string name="name">Murray Road</string>
-	<string name="description">This brings all roads blocks together 
-                   (line data more generic than on lower levels)</string>
-	<string name="parent">road</string>
-	<list name="children"></list>
-	<string name="loc">agrilan_lands</string>
-	<list name="pos"><float>0.0</float><float>0.0</float><float>0.0</float></list>
-	<string name="media">media id for whole area (text media may want to use it or 
-             overview 2D media too)</string>
-	<list name="contains"><string>road1</string><string>road2</string><string>bridge1</string><string>road3</string></list>
-	<list name="line_data">
-		<list><float>180.0</float><float>-40.0</float><float>1.4</float></list>
-		<list><float>220.0</float><float>180.0</float><float>1.3</float></list>
-		<list><float>100.0</float><float>180.0</float><float>1.2</float></list>
-	</list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>name</string><string>description</string><string>parent</string><string>children</string><string>loc</string><string>pos</string><string>media</string><string>contains</string><string>line_data</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">441</int>
-	</map>
-</map>
-<map>
-	<string name="id">agrilan_lands</string>
-	<string name="specification">example</string>
-	<string name="description">All agrilan lands</string>
-	<string name="parent">area</string>
-	<list name="children"></list>
-	<list name="pos"><float>0.0</float><float>0.0</float><float>0.0</float></list>
-	<list name="contains"><string>hilly1</string><string>hilly2</string><string>hilly3</string><string>plain1</string><string>plain2</string><string>plain3</string><string>plain4</string><string>murray_r1</string></list>
-	<map name="specification_file">
-		<list name="attribute_order"><string>id</string><string>specification</string><string>description</string><string>parent</string><string>children</string><string>pos</string><string>contains</string></list>
-		<string name="filename">agrilan_map.def</string>
-		<int name="lineno">457</int>
 	</map>
 </map>
 </atlas>

@@ -12,6 +12,47 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<SightData> SightData::allocator;
+        
+
+
+void SightData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void SightData::reset()
+{
+    PerceptionData::reset();
+}
+
+SightData * SightData::copy() const
+{
+    SightData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool SightData::instanceOf(int classNo) const
+{
+    if(SIGHT_NO == classNo) return true;
+    return PerceptionData::instanceOf(classNo);
+}
+
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "sight";
+}
+
 Allocator<AppearanceData> AppearanceData::allocator;
         
 
@@ -215,47 +256,6 @@ void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, u
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "feel";
-}
-
-Allocator<UnseenData> UnseenData::allocator;
-        
-
-
-void UnseenData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void UnseenData::reset()
-{
-    PerceptionData::reset();
-}
-
-UnseenData * UnseenData::copy() const
-{
-    UnseenData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool UnseenData::instanceOf(int classNo) const
-{
-    if(UNSEEN_NO == classNo) return true;
-    return PerceptionData::instanceOf(classNo);
-}
-
-void UnseenData::fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "unseen";
 }
 
 } } } // namespace Atlas::Objects::Operation

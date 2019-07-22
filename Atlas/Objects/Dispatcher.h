@@ -114,6 +114,8 @@ protected:
     virtual void objectInfoArrived(const Operation::Info&) { }
     /// Override this to get called when a Perception object arrives.
     virtual void objectPerceptionArrived(const Operation::Perception&) { }
+    /// Override this to get called when a Unseen object arrives.
+    virtual void objectUnseenArrived(const Operation::Unseen&) { }
     /// Override this to get called when a Sight object arrives.
     virtual void objectSightArrived(const Operation::Sight&) { }
     /// Override this to get called when a Appearance object arrives.
@@ -126,8 +128,6 @@ protected:
     virtual void objectSmellArrived(const Operation::Smell&) { }
     /// Override this to get called when a Feel object arrives.
     virtual void objectFeelArrived(const Operation::Feel&) { }
-    /// Override this to get called when a Unseen object arrives.
-    virtual void objectUnseenArrived(const Operation::Unseen&) { }
     /// Override this to get called when a Error object arrives.
     virtual void objectErrorArrived(const Operation::Error&) { }
     /// Override this to get called when a Change object arrives.

@@ -109,6 +109,8 @@ AddFactories::AddFactories()
 
     objectFactory->addFactory<Operation::PerceptionData>("perception", Operation::PERCEPTION_NO);
 
+    objectFactory->addFactory<Operation::UnseenData>("unseen", Operation::UNSEEN_NO);
+
     objectFactory->addFactory<Operation::SightData>("sight", Operation::SIGHT_NO);
 
     objectFactory->addFactory<Operation::AppearanceData>("appearance", Operation::APPEARANCE_NO);
@@ -120,8 +122,6 @@ AddFactories::AddFactories()
     objectFactory->addFactory<Operation::SmellData>("smell", Operation::SMELL_NO);
 
     objectFactory->addFactory<Operation::FeelData>("feel", Operation::FEEL_NO);
-
-    objectFactory->addFactory<Operation::UnseenData>("unseen", Operation::UNSEEN_NO);
 
     objectFactory->addFactory<Operation::ErrorData>("error", Operation::ERROR_NO);
 

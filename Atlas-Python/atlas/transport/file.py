@@ -94,7 +94,7 @@ class File:
             objects[obj.id] = obj
         self.check_negotiation_ok()
         atlas.find_parents_children_objects(objects)
-	return objects
+        return objects
 
     def close(self):
         self.bridge.close()

@@ -32,7 +32,7 @@ def translate_0_2_to_0_3(op):
         del op.refno
     if hasattr(op, "args"):
         if len(op.args): op.arg = op.args[0]
-        if hasattr(op, "parents") and op.parents == ["error"] and len(op.args)>=2:
+        if hasattr(op, "parent") and op.parent == "error" and len(op.args)>=2:
             op.arg.op = op.args[1]
         del op.args
     if hasattr(op, "arg") and hasattr(op.arg, "objtype") and op.arg.objtype=="op":

@@ -217,37 +217,37 @@ void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<st
         data.attr_parent = "perception";
 }
 
-Allocator<SightData> SightData::allocator;
+Allocator<UnseenData> UnseenData::allocator;
         
 
 
-void SightData::free()
+void UnseenData::free()
 {
     allocator.free(this);
 }
 
 
 
-void SightData::reset()
+void UnseenData::reset()
 {
     PerceptionData::reset();
 }
 
-SightData * SightData::copy() const
+UnseenData * UnseenData::copy() const
 {
-    SightData * copied = allocator.alloc();
+    UnseenData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
 }
 
-bool SightData::instanceOf(int classNo) const
+bool UnseenData::instanceOf(int classNo) const
 {
-    if(SIGHT_NO == classNo) return true;
+    if(UNSEEN_NO == classNo) return true;
     return PerceptionData::instanceOf(classNo);
 }
 
-void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
+void UnseenData::fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = "op";
         data.attr_serialno = 0;
@@ -255,7 +255,7 @@ void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string,
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "sight";
+        data.attr_parent = "unseen";
 }
 
 } } } // namespace Atlas::Objects::Operation

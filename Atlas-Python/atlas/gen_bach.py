@@ -73,16 +73,17 @@ def encode_map(obj, indent=""):
     str_list = []
     indent = indent + "\t"
     for name, value in obj.items():
-        str_type = get_atlas_type(value)
-        add_nl = 0
-        str_name = encode_name(name)
-        str_value = encode(value, indent)
-        if str_type=="map":
-            if value: add_nl = 1
-        elif str_type=="list":
-            if string.find(str_value, "\t")>=0: add_nl = 1
-        #if add_nl: str_value = "\n<a>%s<b>\n<c>%s<d>" % (str_value, indent)
-        str_list.append("%s%s: %s" % (indent, str_name, str_value))
+        if value is not None:
+            str_type = get_atlas_type(value)
+            add_nl = 0
+            str_name = encode_name(name)
+            str_value = encode(value, indent)
+            if str_type=="map":
+                if value: add_nl = 1
+            elif str_type=="list":
+                if string.find(str_value, "\t")>=0: add_nl = 1
+            #if add_nl: str_value = "\n<a>%s<b>\n<c>%s<d>" % (str_value, indent)
+            str_list.append("%s%s: %s" % (indent, str_name, str_value))
     return "{\n%s\n%s}" % (string.join(str_list, ",\n"), indent[:-1])
 
 def encode_list(lst, indent=""):

@@ -1,7 +1,7 @@
 #Modeline for XEmacs: -*-Python-*-
 :map:
     id:"root"
-    parents:[]
+    parent:""
     stamp:0.0
     stamp_inherit:0.0
     objtype:"meta"

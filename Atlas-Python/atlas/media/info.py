@@ -112,8 +112,9 @@ class MediaInfo(UserDict):
             return best
         
         else:
-            for parent in obj.parents:
-                if type(parent)==StringType:
-                    parent = atlas.Object(id=parent, parents=[])
-                res = self.lookup_score(parent, media_type, original_obj)
-                if res: return res
+            parent = obj.parent
+            if type(parent)==StringType:
+                parent = atlas.Object(id=parent, parent=[])
+            res = self.lookup_score(parent, media_type, original_obj)
+            if res:
+                return res

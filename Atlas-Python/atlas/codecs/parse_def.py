@@ -18,7 +18,6 @@
 
 
 import string, re
-import init
 from atlas import *
 from atlas.typemap import get_atlas_type
 
@@ -116,7 +115,7 @@ class DefParser:
         lines.append("\n") #to avoid checking for end
         self.parse_lines(lines, 0, self.objects)
         fp.close()
-    
+
     def syntax_error(self, msg, obj):
         info = obj.specification_file
         raise SyntaxError, "%s at %s:%s" % (msg, info.filename, info.lineno)
@@ -145,17 +144,18 @@ class DefParser:
         for obj in self.objects:
             attr_order = obj.specification_file.attribute_order
             try:
-                parent_loc = attr_order.index("parents")
+                parent_loc = attr_order.index("parent")
             except ValueError:
-                self.syntax_error("Parents attribute missing", obj)
+                self.syntax_error("Parent attribute missing in %s" % obj.id, obj)
             attr_order.insert(parent_loc+1, "children")
             obj.children=[]
         for obj in self.objects:
-            for pid in obj.parents:
+            pid = obj.parent
+            if pid is not None and pid != "":
                 try:
                     parent_obj = self.id_dict[pid]
                 except KeyError:
-                    self.syntax_error('Parent "%s" is missing' % pid, obj)
+                    self.syntax_error('Parent "%s" is missing in %s' % (pid, obj.id), obj)
                 parent_obj.children.append(obj.id)
 
     def check_type_object(self, obj):
@@ -165,15 +165,23 @@ class DefParser:
                 self.check_type_object(sub_obj)
         elif type(obj)==InstanceType:
             for name, value in obj.items():
-                try:
-                    type_obj = self.id_dict[name]
-                except KeyError:
-                    self.syntax_error('Name "'+name+'" is not specified',obj)
-                should_be_type = get_atlas_type(value)
-                if not type_obj.has_parent(should_be_type):
-                    self.syntax_error(
-                        'Type doesn\'t match or is not found: "'+name+'"',obj)
-                self.check_type_object(value)
+                if name != "parent":
+                    if value:
+                        print "name: " + name
+                        print "type: " + str(type(value))
+                        try:
+                            type_obj = self.id_dict[name]
+                        except KeyError:
+                            if "id" in obj:
+                                self.syntax_error('Name "'+name+'" is not specified for type %s' % obj.id, obj)
+                            else:
+                                self.syntax_error('Name "'+name+'" is not specified', obj)
+                        should_be_type = get_atlas_type(value)
+                        print should_be_type
+                        if not type_obj.has_parent(should_be_type):
+                            self.syntax_error(
+                                'Type doesn\'t match or is not found: "'+name+'"',obj)
+                        self.check_type_object(value)
     def check_type(self):
         self.check_type_object(self.objects)
 
@@ -189,5 +197,5 @@ def read_all_defs(filelist):
     return parser
 
 if __name__=="__main__":
-    filelist=["root","entity","operation","type","interface","map","agrilan_map"]
+    filelist=["root","entity","operation","type"]
     defs=read_all_defs(map(lambda file:file+".def", filelist))
