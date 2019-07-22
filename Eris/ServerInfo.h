@@ -90,7 +90,7 @@ protected:
     friend class Connection;
     
     /// construct with the host IP only; other values will be set to defaults
-	explicit ServerInfo(const std::string &host);
+	explicit ServerInfo(std::string host);
     
     /** called by Meta when info is received from the server, sets
     status to valid. */

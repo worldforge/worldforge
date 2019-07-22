@@ -14,7 +14,7 @@ class TypeBoundRedispatch : public Redispatch
 {
 public:
     TypeBoundRedispatch(Connection* con, const Atlas::Objects::Root& obj, TypeInfo* unbound);    
-    TypeBoundRedispatch(Connection* con, const Atlas::Objects::Root& obj, const TypeInfoSet& unbound);    
+    TypeBoundRedispatch(Connection* con, const Atlas::Objects::Root& obj, TypeInfoSet unbound);
     void onBound(TypeInfo* bound);    
     void onBadType(TypeInfo* bad);    
 private:

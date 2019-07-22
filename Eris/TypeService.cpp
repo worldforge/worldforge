@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -204,7 +206,7 @@ TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent
 }
 
 void TypeService::setTypeProviderId(std::string id) {
-    m_type_provider_id = id;
+    m_type_provider_id = std::move(id);
 }
 
 } // of namespace Eris

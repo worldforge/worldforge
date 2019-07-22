@@ -185,15 +185,15 @@ public:
     AsioStreamSocket(boost::asio::io_service& io_service,
             const std::string& client_name, Atlas::Bridge& bridge,
             StreamSocket::Callbacks& callbacks);
-    virtual ~AsioStreamSocket();
+    ~AsioStreamSocket() override;
     void connect(const typename ProtocolT::endpoint& endpoint);
-    virtual void write();
+    void write() override;
     typename ProtocolT::socket& getAsioSocket();
 protected:
     typename ProtocolT::socket m_socket;
-    virtual void negotiate_read();
+    void negotiate_read() override;
     void negotiate_write();
-    virtual void do_read();
+    void do_read() override;
 };
 
 /**

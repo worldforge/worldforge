@@ -62,7 +62,7 @@ private:
     /**
     Create a new task owned by the specified entity
     */
-    Task(Entity* owner, const std::string& nm);
+    Task(Entity* owner, std::string name);
     
     void updateFromAtlas(const Atlas::Message::MapType& d);
     

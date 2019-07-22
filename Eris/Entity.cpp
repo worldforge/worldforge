@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -34,10 +36,10 @@ using WFMath::TimeDiff;
 
 namespace Eris {
 
-Entity::Entity(const std::string& id, TypeInfo* ty) :
+Entity::Entity(std::string id, TypeInfo* ty) :
     m_type(ty),
     m_location(nullptr),
-    m_id(id),
+    m_id(std::move(id)),
     m_stamp(-1.0f),
     m_visible(false),
     m_limbo(false),

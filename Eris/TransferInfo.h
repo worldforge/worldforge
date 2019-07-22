@@ -23,7 +23,7 @@ public:
      * @param key Randomized key used to claim ownership over transferred character
      * @param id Entity ID of transferred character on destination server
      */
-    TransferInfo(const std::string &host, int port, const std::string &key, const std::string &id);
+    TransferInfo(std::string host, int port, std::string key, std::string id);
 
     /**
      * @brief Get the hostname of the transfer destination server

@@ -225,9 +225,9 @@ ServerInfo::ServerInfo()
 {
 }
 
-SpawnPoint::SpawnPoint(const std::string& name,
-        const CharacterTypeStore& availableCharacterTypes,
-        const std::string& description) :
+SpawnPoint::SpawnPoint(std::string name,
+        CharacterTypeStore availableCharacterTypes,
+        std::string description) :
     m_name(name), m_availableCharacterTypes(availableCharacterTypes),
             m_description(description)
 {

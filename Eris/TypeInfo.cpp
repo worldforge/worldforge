@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -20,10 +22,10 @@ namespace Eris {
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
+TypeInfo::TypeInfo(std::string id, TypeService *ts) :
     m_parent(nullptr),
     m_bound(false),
-    m_name(id),
+    m_name(std::move(id)),
     m_typeService(ts)
 {
     if (m_name == "root")

@@ -676,8 +676,8 @@ void View::unseen(const std::string& eid)
 {
 }
 
-TransferInfo::TransferInfo(const std::string &host, int port, 
-                            const std::string &key, const std::string &id)
+TransferInfo::TransferInfo(std::string host, int port,
+                            std::string key, std::string id)
                                : m_host(host),
                                 m_port(port),
                                 m_possess_key(key),
@@ -685,7 +685,7 @@ TransferInfo::TransferInfo(const std::string &host, int port,
 {
 }
 
-TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
+TypeInfo::TypeInfo(std::string id, TypeService *ts) :
     m_bound(false),
     m_name(id),
     m_typeService(ts)
@@ -710,7 +710,7 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
 {
 }
 
-ServerInfo::ServerInfo(const std::string &host) :
+ServerInfo::ServerInfo(std::string host) :
     m_status(INVALID),
     _host(host)
 {

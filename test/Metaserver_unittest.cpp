@@ -234,7 +234,7 @@ void BaseConnection::setStatus(Status sc)
 {
 }
 
-ServerInfo::ServerInfo(const std::string &host) :
+ServerInfo::ServerInfo(std::string host) :
     m_status(INVALID),
     _host(host)
 {

@@ -112,7 +112,7 @@ Room* Room::createRoom(const std::string &name)
     if (!m_lobby->getConnection()->isConnected())
     {
         error() << "creating room in room  " << m_roomId << ", but connection is down";
-        return NULL;
+        return nullptr;
     }
 
     
@@ -128,7 +128,7 @@ Room* Room::createRoom(const std::string &name)
     cr->setArgs1(room);
     m_lobby->getConnection()->send(cr);
     
-    return NULL;
+    return nullptr;
 }
 
 Person* Room::getPersonByUID(const std::string& uid)
@@ -140,10 +140,10 @@ std::vector<Person*> Room::getPeople() const
 {
     std::vector<Person*> people;
     
-    for (IdPersonMap::const_iterator P=m_members.begin(); P != m_members.end(); ++P)
+    for (const auto & member : m_members)
     {    
-        if (P->second)
-            people.push_back(P->second);
+        if (member.second)
+            people.push_back(member.second);
     }
     
     return people;
@@ -159,15 +159,17 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
     const std::vector<Root>& args = op->getArgs();
     
     if (op->instanceOf(APPEARANCE_NO)) {
-        for (unsigned int A=0; A < args.size(); ++A)
-            appearance(args[A]->getId());
+        for (const auto & arg : args) {
+			appearance(arg->getId());
+		}
 
         return HANDLED;
     }
 
     if (op->instanceOf(DISAPPEARANCE_NO)) {
-        for (unsigned int A=0; A < args.size(); ++A)
-            disappearance(args[A]->getId());
+        for (const auto & arg : args) {
+			disappearance(arg->getId());
+		}
         
         return HANDLED;
     }
@@ -199,8 +201,9 @@ void Room::sight(const RootEntity &room)
     if (room->hasAttr("people"))
     {
         const Atlas::Message::ListType& people = room->getAttr("people").asList();
-        for (Atlas::Message::ListType::const_iterator P=people.begin(); P!=people.end(); ++P)
-            appearance(P->asString());
+        for (const auto & person : people) {
+			appearance(person.asString());
+        }
     }
     
     checkEntry();
@@ -208,9 +211,9 @@ void Room::sight(const RootEntity &room)
     if (room->hasAttr("rooms"))
     {
         const Atlas::Message::ListType& rooms = room->getAttr("rooms").asList();
-        for (Atlas::Message::ListType::const_iterator R=rooms.begin(); R!=rooms.end(); ++R)
+        for (const auto & item : rooms)
         {
-            m_subrooms.push_back(new Room(m_lobby, R->asString()));
+            m_subrooms.push_back(new Room(m_lobby, item.asString()));
         }
     }
 }
@@ -243,7 +246,7 @@ void Room::handleEmote(Person* p, const std::string& description)
 
 void Room::appearance(const std::string& personId)
 {
-    IdPersonMap::iterator P = m_members.find(personId);
+    auto P = m_members.find(personId);
     if (P != m_members.end()) {
         error() << "duplicate appearance of person " << personId << " in room " << m_roomId;
         return;
@@ -256,14 +259,14 @@ void Room::appearance(const std::string& personId)
         if (m_entered)
             Appearance.emit(this, person);
     } else {
-        m_members[personId] = NULL; // we know the person is here, but that's all
+        m_members[personId] = nullptr; // we know the person is here, but that's all
         // we'll find out more when we get the SightPerson signal from Lobby
     }
 }
 
 void Room::disappearance(const std::string& personId)
 {
-    IdPersonMap::iterator P = m_members.find(personId);
+    auto P = m_members.find(personId);
     if (P == m_members.end())
     {
         error() << "during disappearance, person " << personId << " not found in room " << m_roomId;
@@ -279,7 +282,7 @@ void Room::disappearance(const std::string& personId)
 void Room::notifyPersonSight(Person *p)
 {
     assert(p);
-    IdPersonMap::iterator P = m_members.find(p->getAccount());
+    auto P = m_members.find(p->getAccount());
     // for the moment, all rooms get spammed with sights of people, to avoid
     // the need for a counting / disconnect from SightPerson scheme
     if (P == m_members.end()) return;
@@ -300,7 +303,7 @@ void Room::notifyPersonSight(Person *p)
 
 void Room::checkEntry()
 {
-    assert(m_entered == false);
+    assert(!m_entered);
     
     bool anyPending = false;
     for (IdPersonMap::const_iterator P = m_members.begin(); P != m_members.end(); ++P)

@@ -11,15 +11,14 @@
 
 
 namespace Eris {
-ViewEntity::ViewEntity(const std::string& id, TypeInfo* ty, View* view) :
-	Entity(id, ty), m_view(view) {
+ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View* view) :
+	Entity(std::move(id), ty), m_view(view) {
 	m_router = new EntityRouter(this);
-	m_view->getConnection()->registerRouterForFrom(m_router, id);
+	m_view->getConnection()->registerRouterForFrom(m_router, getId());
 
 }
 
-ViewEntity::~ViewEntity() {
-}
+ViewEntity::~ViewEntity() = default;
 
 void ViewEntity::shutdown() {
 	m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);

@@ -28,11 +28,11 @@ public:
 	 * @param ty Type info for the entity.
 	 * @param view The view to which the entity belongs.
 	 */
-	ViewEntity(const std::string& id, TypeInfo* ty, View* view);
+	ViewEntity(std::string id, TypeInfo* ty, View* view);
 
-	virtual ~ViewEntity();
+	~ViewEntity() override;
 
-    virtual void shutdown();
+    void shutdown() override;
 
     /**
      * @brief Gets the view to which this entity belongs, if any.
@@ -54,22 +54,22 @@ protected:
      */
     EntityRouter* m_router;
 
-    virtual void onTalk(const Atlas::Objects::Operation::RootOperation& talk);
+    void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
 
-    virtual void onSoundAction(
-    		const Atlas::Objects::Operation::RootOperation& op);
+    void onSoundAction(
+    		const Atlas::Objects::Operation::RootOperation& op) override;
 
-    virtual void onVisibilityChanged(bool vis);
+    void onVisibilityChanged(bool vis) override;
 
-    virtual void onTaskAdded(Task* task);
+    void onTaskAdded(Task* task) override;
 
-    virtual void removeFromMovementPrediction();
+    void removeFromMovementPrediction() override;
 
-    virtual void addToMovementPredition();
+    void addToMovementPredition() override;
 
-    virtual Entity* getEntity(const std::string& id);
+    Entity* getEntity(const std::string& id) override;
 
-    virtual TypeService* getTypeService() const;
+    TypeService* getTypeService() const override;
 
     /**
      * @brief Listen to task progress rates updates and send to the view.

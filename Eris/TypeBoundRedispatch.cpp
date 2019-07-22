@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -29,7 +31,7 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
 {
     m_unbound.insert(unbound);
     
-    assert(unbound->isBound() == false);
+    assert(!unbound->isBound());
     unbound->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), unbound));
     
     con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
@@ -37,14 +39,14 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
 
 TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
         const Root& obj, 
-        const TypeInfoSet& unbound) :
+        TypeInfoSet unbound) :
     Redispatch(con, obj),
     m_con(con),
-    m_unbound(unbound)
+    m_unbound(std::move(unbound))
 {
-    for (TypeInfoSet::const_iterator U=m_unbound.begin(); U != m_unbound.end(); ++U) {
-        assert((*U)->isBound() == false);
-        (*U)->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), *U));
+    for (auto& item : m_unbound) {
+        assert(!item->isBound());
+        item->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), item));
     }
     
     con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));

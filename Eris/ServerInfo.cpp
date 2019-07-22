@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -25,9 +27,9 @@ ServerInfo::ServerInfo() :
 {
 }
 
-ServerInfo::ServerInfo(const std::string &host) :
+ServerInfo::ServerInfo(std::string host) :
     m_status(INVALID),
-    _host(host),
+    _host(std::move(host)),
     _name("-"),
     _ruleset("-"),
     _clients(0),

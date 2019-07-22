@@ -563,7 +563,10 @@ void Account::updateFromObject(const AtlasAccount &p)
 
 void Account::loginError(const Error& err)
 {
-    assert(err.isValid());
+	if (!err) {
+		warning() << "Got invalid error";
+		return;
+	}
     if (m_status != LOGGING_IN) {
         error() << "got loginError while not logging in";
     }
@@ -624,11 +627,15 @@ void Account::possessResponse(const RootOperation& op)
             return;
         }
 
+        if (m_activeCharacters.count(ent->getId()) != 0) {
+			warning() << "got possession response for character already created";
+			return;
+        }
+
         auto av = new Avatar(*this, ent->getId(), entityObj->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
 
-        assert(m_activeCharacters.count(av->getId()) == 0);
         m_activeCharacters[av->getId()] = av;
 
     } else
@@ -672,7 +679,9 @@ void Account::avatarCreateResponse(const RootOperation& op)
 
 void Account::internalDeactivateCharacter(Avatar* av)
 {
-    assert(m_activeCharacters.count(av->getId()) == 1);
+	if (m_activeCharacters.count(av->getId()) != 1) {
+		warning() << "trying to deactivate non active character";
+	}
     m_activeCharacters.erase(av->getId());
 }
 

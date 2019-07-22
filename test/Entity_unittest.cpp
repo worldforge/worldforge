@@ -145,7 +145,7 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
     return 0;
 }
 
-Task::Task(Entity* owner, const std::string& nm) :
+Task::Task(Entity* owner, std::string nm) :
     m_name(nm),
     m_owner(owner),
     m_progress(0.0),

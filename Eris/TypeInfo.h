@@ -125,7 +125,7 @@ protected:
     friend class TypeBoundRedispatch;
     
     /// forward constructor, when data is not available
-    TypeInfo(const std::string &id, TypeService*);
+    TypeInfo(std::string id, TypeService*);
 
     /// full constructor, if an INFO has been received
     TypeInfo(const Atlas::Objects::Root &atype, TypeService*);

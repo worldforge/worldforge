@@ -1,3 +1,5 @@
+#include <utility>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -15,8 +17,8 @@ typedef Atlas::Message::MapType AtlasMapType;
 namespace Eris
 {
 
-Task::Task(Entity* owner, const std::string& nm) :
-    m_name(nm),
+Task::Task(Entity* owner, std::string name) :
+    m_name(std::move(name)),
     m_owner(owner),
     m_progress(0.0),
     m_progressRate(-1.0)
@@ -38,7 +40,7 @@ bool Task::isComplete() const
 
 void Task::updateFromAtlas(const AtlasMapType& d)
 {
-    AtlasMapType::const_iterator it = d.find("progress");
+    auto it = d.find("progress");
     if (it != d.end())
     {
         m_progress = it->second.asFloat();

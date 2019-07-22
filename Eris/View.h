@@ -37,7 +37,7 @@ class EventService;
 class View : public sigc::trackable
 {
 public:
-    View(Avatar* av);
+    explicit View(Avatar* av);
     ~View();
 
     /**

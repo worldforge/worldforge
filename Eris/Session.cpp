@@ -25,28 +25,24 @@
 
 #include <boost/asio/io_service.hpp>
 
-namespace Eris
-{
+namespace Eris {
 
 Session::Session()
-: m_io_service(new boost::asio::io_service()), m_event_service(new EventService(*m_io_service))
-{
+		: m_io_service(new boost::asio::io_service()),
+		  m_event_service(new EventService(*m_io_service)) {
 }
 
-Session::~Session()
-{
-    delete m_event_service;
-    delete m_io_service;
+Session::~Session() {
+	delete m_event_service;
+	delete m_io_service;
 }
 
-boost::asio::io_service& Session::getIoService()
-{
-    return *m_io_service;
+boost::asio::io_service& Session::getIoService() {
+	return *m_io_service;
 }
 
-EventService& Session::getEventService()
-{
-    return *m_event_service;
+EventService& Session::getEventService() {
+	return *m_event_service;
 }
 
 

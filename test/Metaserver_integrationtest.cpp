@@ -74,7 +74,7 @@ Atlas::Objects::ObjectsEncoder& Eris::StreamSocket::getEncoder()
     return *(Atlas::Objects::ObjectsEncoder*)(0);
 }
 
-ServerInfo::ServerInfo(const std::string &host) :
+ServerInfo::ServerInfo(std::string host) :
     m_status(INVALID),
     _host(host)
 {

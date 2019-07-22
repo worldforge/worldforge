@@ -60,7 +60,7 @@ class Entity : virtual public sigc::trackable
 public:	
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     
-    explicit Entity(const std::string& id, TypeInfo* ty);
+    explicit Entity(std::string id, TypeInfo* ty);
     virtual ~Entity();
 
     /**

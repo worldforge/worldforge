@@ -1,20 +1,22 @@
+#include <utility>
+
+#include <utility>
+
 #include "SpawnPoint.h"
 #include "CharacterType.h"
 
 namespace Eris
 {
 
-SpawnPoint::SpawnPoint(const std::string& name,
-        const CharacterTypeStore& availableCharacterTypes,
-        const std::string& description) :
-    m_name(name), m_availableCharacterTypes(availableCharacterTypes),
-            m_description(description)
+SpawnPoint::SpawnPoint(std::string  name,
+        CharacterTypeStore  availableCharacterTypes,
+        std::string  description) :
+    m_name(std::move(name)), m_availableCharacterTypes(std::move(availableCharacterTypes)),
+            m_description(std::move(description))
 {
 }
 
-SpawnPoint::~SpawnPoint()
-{
-}
+SpawnPoint::~SpawnPoint() = default;
 
 const CharacterTypeStore& SpawnPoint::getAvailableCharacterTypes() const
 {
