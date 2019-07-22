@@ -7,7 +7,7 @@ namespace WFMath {
 
 // This takes a pointer pointing to the character after the end of
 // a buffer, prints the number into the tail of the buffer,
-// and returns a pointer to the first charachter in the number.
+// and returns a pointer to the first character in the number.
 // Make sure your buffer's big enough, this doesn't check.
 static char* DoIntToString(unsigned long val, char* bufhead)
 {

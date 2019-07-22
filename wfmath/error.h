@@ -35,23 +35,26 @@ namespace WFMath {
 /// An error thrown by certain functions when passed parallel vectors.
 template<int dim>
 struct ColinearVectors : virtual public std::exception {
-  ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
-    : v1(v1_in), v2(v2_in) {}
-  virtual ~ColinearVectors() throw () { }
+	ColinearVectors(const Vector <dim>& v1_in, const Vector <dim>& v2_in)
+			: v1(v1_in), v2(v2_in) {}
 
-  Vector<dim> v1, v2;
+	ColinearVectors(const ColinearVectors& rhs) noexcept
+			: v1(rhs.v1), v2(rhs.v2) {}
 
-  virtual const char* what() const throw() {
-      return "WFMath::ColinearVectors exception. Supplied vectors are parallel.";
-  }
+	~ColinearVectors() noexcept override = default;
+
+	Vector <dim> v1, v2;
+
+	const char* what() const noexcept override {
+		return "WFMath::ColinearVectors exception. Supplied vectors are parallel.";
+	}
 };
 
 /// An error thrown by operator>>() when it fails to parse wfmath types
-struct ParseError : virtual public std::exception {
-  virtual ~ParseError() throw () { }
-  virtual const char* what() const throw() {
-      return "WFMath::ParseError exception.";
-  }
+struct ParseError : virtual public std::runtime_error {
+	ParseError() : std::runtime_error("WFMath::ParseError exception.") {}
+
+	~ParseError() noexcept override = default;
 };
 
 } // namespace WFMath

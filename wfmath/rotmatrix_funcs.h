@@ -268,7 +268,7 @@ inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], CoordType pre
   return _setVals(scratch_vals, precision);
 }
 
-bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
+bool _MatrixSetValsImpl(int size, CoordType* vals, bool& flip,
 			CoordType* buf1, CoordType* buf2, CoordType precision);
 
 template<int dim>
@@ -555,7 +555,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror()
   return *this;
 }
 
-bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
+bool _MatrixInverseImpl(int size, CoordType* in, CoordType* out);
 
 template<int dim>
 inline void RotMatrix<dim>::normalize()

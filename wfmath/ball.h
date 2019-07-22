@@ -70,7 +70,7 @@ class Ball
   /// Construct a ball from an object passed by Atlas
   explicit Ball(const AtlasInType& a);
 
-  ~Ball() {}
+  ~Ball() = default;
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Ball& b);
   friend std::istream& operator>> <dim>(std::istream& is, Ball& b);

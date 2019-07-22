@@ -283,7 +283,7 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     // Get sphere's radius
-    Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
+    auto shape_I = shapeElement.find("radius");
     if (shape_I != shapeElement.end()) {
       const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
       if (shapeRadiusElem.isNum()) {
@@ -295,7 +295,7 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
         }
       }
     }
-    Atlas::Message::MapType::const_iterator pos_I = shapeElement.find("position");
+    auto pos_I = shapeElement.find("position");
     if (pos_I != shapeElement.end()) {
       const Atlas::Message::Element& posElem(pos_I->second);
       if (posElem.isList()) {
@@ -360,12 +360,12 @@ inline void _CornersFromAtlas(ShapeT<dim> & shape,
   if (message.isList()) {
     const Atlas::Message::ListType& pointsData(message.asList());
     
-    for (size_t p = 0; p < pointsData.size(); ++p) {
-      if (!pointsData[p].isList()) {
+    for (const auto & p : pointsData) {
+      if (!p.isList()) {
         continue;
       }
       
-      const Atlas::Message::ListType& point(pointsData[p].asList());
+      const Atlas::Message::ListType& point(p.asList());
       if ((point.size() < dim) || !_ListNumCheck(point, dim)) {
         continue;
       }
@@ -380,7 +380,7 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
   const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
-    Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
+    auto it = shapeElement.find("points");
     if ((it != shapeElement.end()) && it->second.isList()) {
       _CornersFromAtlas(*this, it->second);
       if (numCorners() > 2) {
@@ -399,9 +399,9 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 inline AtlasOutType Polygon<2>::toAtlas() const
 {
   Atlas::Message::ListType points;
-  for (theConstIter I = m_points.begin(); I != m_points.end(); ++I) 
+  for (const auto & point : m_points)
   {
-    points.push_back(I->toAtlas());
+    points.push_back(point.toAtlas());
   }
   Atlas::Message::MapType map;
   map.insert(Atlas::Message::MapType::value_type("points", points));
@@ -414,7 +414,7 @@ inline void Line<dim>::fromAtlas(const AtlasInType& a)
   const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
-    Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
+    auto it = shapeElement.find("points");
     if ((it != shapeElement.end()) && it->second.isList()) {
       _CornersFromAtlas(*this, it->second);
       if (numCorners() > 0) {
@@ -455,7 +455,7 @@ inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     // Get rotbox's position
-    Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
+    auto shape_I = shapeElement.find("point");
     if (shape_I != shapeElement.end()) {
       const Atlas::Message::Element& shapePointElem(shape_I->second);
       Point<dim> shapePoint;

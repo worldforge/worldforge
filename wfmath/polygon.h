@@ -48,11 +48,11 @@ class Polygon<2>
 {
  public:
   Polygon() : m_points() {}
-  Polygon(const Polygon& p) : m_points(p.m_points) {}
+  Polygon(const Polygon& p) = default;
   /// Construct a polygon from an object passed by Atlas
   explicit Polygon(const AtlasInType& a) : m_points() {fromAtlas(a);}
 
-  ~Polygon() {}
+  ~Polygon() = default;
 
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
@@ -63,8 +63,7 @@ class Polygon<2>
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
   
-  Polygon& operator=(const Polygon& p)
-  {m_points = p.m_points; return *this;}
+  Polygon& operator=(const Polygon& p) = default;
 
   bool isEqualTo(const Polygon& p, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
@@ -183,7 +182,7 @@ class _Poly2Reorient
 public:
   _Poly2Reorient(_Poly2ReorientType type, CoordType scale = 0.0)
   : m_type(type), m_scale(scale) {}
-  ~_Poly2Reorient() {}
+  ~_Poly2Reorient() = default;
 
   void reorient(Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max()) const;
 
@@ -216,7 +215,7 @@ class _Poly2Orient
 public:
   _Poly2Orient() : m_origin() {}
   _Poly2Orient(const _Poly2Orient& p) : m_origin() {operator=(p);}
-  ~_Poly2Orient() {}
+  ~_Poly2Orient() = default;
 
   _Poly2Orient& operator=(const _Poly2Orient& p);
 
@@ -309,7 +308,7 @@ public:
   Polygon() : m_orient(), m_poly() {}
   Polygon(const Polygon& p) : m_orient(p.m_orient), m_poly(p.m_poly) {}
 
-  ~Polygon() {}
+  ~Polygon() = default;
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <dim>(std::istream& is, Polygon& p);

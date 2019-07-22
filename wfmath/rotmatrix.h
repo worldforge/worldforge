@@ -131,9 +131,9 @@ class RotMatrix {
   bool setVals(const CoordType vals[dim*dim], CoordType precision = numeric_constants<CoordType>::epsilon());
 
   /// Get a copy of the i'th row as a Vector
-  Vector<dim> row(const int i) const;
+  Vector<dim> row(int i) const;
   /// Get a copy of the i'th column as a Vector
-  Vector<dim> column(const int i) const;
+  Vector<dim> column(int i) const;
 
   /// Get the trace of the matrix
   CoordType trace() const;
@@ -165,7 +165,7 @@ class RotMatrix {
   // Set the value to a given rotation
 
   /// set the matrix to a rotation by the angle theta in the (i, j) plane
-  RotMatrix& rotation	(const int i, const int j, CoordType theta);
+  RotMatrix& rotation	(int i, int j, CoordType theta);
   /// set the matrix to a rotation by the angle theta in the v1, v2 plane
   /**
    * Throws CollinearVectors if v1 and v2 are parallel
@@ -183,7 +183,7 @@ class RotMatrix {
   // Set the value to mirror image about a certain axis
 
   /// set the matrix to a mirror perpendicular to the i'th axis
-  RotMatrix& mirror(const int i);
+  RotMatrix& mirror(int i);
   /// set the matrix to a mirror perpendicular to the Vector v
   RotMatrix& mirror(const Vector<dim>& v);
   /// set the matrix to mirror all axes
@@ -209,7 +209,7 @@ class RotMatrix {
    * Quaternion::fromRotMatrix() as not_flip to
    * recover the full RotMatrix
    **/
-  RotMatrix(const Quaternion& q, const bool not_flip = true);
+  RotMatrix(const Quaternion& q, bool not_flip = true);
 
   /// 2D only: Construct a RotMatrix from an angle theta
   RotMatrix& rotation(CoordType theta)
@@ -236,7 +236,7 @@ class RotMatrix {
    * Quaternion::fromRotMatrix() as not_flip to
    * recover the full RotMatrix
    **/
-  RotMatrix& fromQuaternion(const Quaternion& q, const bool not_flip = true);
+  RotMatrix& fromQuaternion(const Quaternion& q, bool not_flip = true);
 
   /// rotate the matrix using the quaternion
   RotMatrix& rotate(const Quaternion&);

@@ -63,7 +63,7 @@ class RotBox
   /// Construct a rotbox from an object passed by Atlas
   explicit RotBox(const AtlasInType& a);
 
-  ~RotBox() {}
+  ~RotBox() = default;
 
   /// Create an Atlas object from the box
   AtlasOutType toAtlas() const;
@@ -189,11 +189,11 @@ class RotBox
 };
 
 template<int dim>
-inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
+inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& s)
 {
-  m_corner0 = a.m_corner0;
-  m_size = a.m_size;
-  m_orient = a.m_orient;
+  m_corner0 = s.m_corner0;
+  m_size = s.m_size;
+  m_orient = s.m_orient;
 
   return *this;
 }

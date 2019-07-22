@@ -72,14 +72,13 @@ class Quaternion
                                                 m_valid(false), m_age(0)
     {rotation(axis);} // angle == axis.mag()
   /// Construct a copy of a Quaternion
-  Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec),
-				     m_valid(p.m_valid), m_age(p.m_age) {}
+  Quaternion (const Quaternion& p) = default;
   /// Construct a Quaternion from an Atlas::Message::Object
   explicit Quaternion (const AtlasInType& a) : m_w(0), m_vec(),
                                                m_valid(false), m_age(0)
     {fromAtlas(a);}
 
-  ~Quaternion() {}
+  ~Quaternion() = default;
 
   friend std::ostream& operator<<(std::ostream& os, const Quaternion& p);
   friend std::istream& operator>>(std::istream& is, Quaternion& p);
@@ -89,8 +88,7 @@ class Quaternion
   /// Set the Quaternion's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
 
-  Quaternion& operator= (const Quaternion& rhs)
-	{m_w = rhs.m_w; m_vec = rhs.m_vec; m_valid = rhs.m_valid; m_age = rhs.m_age; return *this;}
+  Quaternion& operator= (const Quaternion& rhs)	= default;
 
   // This regards q and -1*q as equal, since they give the
   // same RotMatrix<3>

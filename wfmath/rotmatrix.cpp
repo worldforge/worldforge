@@ -34,7 +34,7 @@
 
 namespace WFMath {
 
-static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
+static CoordType _MatrixDeterminantImpl(int size, CoordType* m);
 
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip)
@@ -82,12 +82,12 @@ template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
 
   // rotate both sides by q
 
-  for(int vec_num = 0; vec_num < 3; ++vec_num) {
+  for(auto & vec_num : m_elem) {
     for(int elem_num = 0; elem_num < 3; ++elem_num)
-      vec[elem_num] = m_elem[vec_num][elem_num];
+      vec[elem_num] = vec_num[elem_num];
     vec.rotate(q);
     for(int elem_num = 0; elem_num < 3; ++elem_num)
-      m_elem[vec_num][elem_num] = vec[elem_num];
+      vec_num[elem_num] = vec[elem_num];
   }
 
   checkNormalization();
@@ -226,8 +226,9 @@ bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
     bool ans = _MatrixInverseImpl(size, buf1, buf2);
 
-    if(ans == false) // Degenerate matrix, something badly wrong
-      return false;
+    if(!ans) { // Degenerate matrix, something badly wrong
+		return false;
+	}
 
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
@@ -337,12 +338,12 @@ bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 
     // Do row subtraction to make in[j*size+i] zero for j > i
     for(int j = i + 1; j < size; ++j) {
-      CoordType tmp = in[j*size+i];
+      CoordType tmp2 = in[j*size+i];
       in[j*size+i] = 0;
-      if(tmp != 0) {
+      if(tmp2 != 0) {
         for(int k = 0; k < size; ++k) {
-          out[j*size+k] -= out[i*size+k] * tmp;
-          in[j*size+k] -= in[i*size+k] * tmp;
+          out[j*size+k] -= out[i*size+k] * tmp2;
+          in[j*size+k] -= in[i*size+k] * tmp2;
         }
       }
     }
