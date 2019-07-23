@@ -167,8 +167,6 @@ class DefParser:
             for name, value in obj.items():
                 if name != "parent":
                     if value:
-                        print "name: " + name
-                        print "type: " + str(type(value))
                         try:
                             type_obj = self.id_dict[name]
                         except KeyError:
@@ -177,7 +175,6 @@ class DefParser:
                             else:
                                 self.syntax_error('Name "'+name+'" is not specified', obj)
                         should_be_type = get_atlas_type(value)
-                        print should_be_type
                         if not type_obj.has_parent(should_be_type):
                             self.syntax_error(
                                 'Type doesn\'t match or is not found: "'+name+'"',obj)

@@ -146,12 +146,27 @@ if (PYTHON_EXECUTABLE)
             Atlas/Objects/GenerateDecoder.py
             Atlas/Objects/GenerateDispatcher.py
             Atlas/Objects/GenerateForward.py
-            protocol/spec/atlas.xml)
+            protocol/spec/xml/atlas.xml)
 
+    set(ATLAS_XML_SOURCES
+            protocol/spec/entity.def
+            protocol/spec/root.def
+            protocol/spec/operation.def
+            protocol/spec/type.def
+            protocol/spec/tools/def2xml.py
+            )
+
+    add_custom_target(GenerateAtlasXml
+            COMMAND ${CMAKE_COMMAND} -E echo "Generating atlas.xml file from .def files."
+            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/Atlas-Python ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/protocol/spec/tools/def2xml.py ${CMAKE_SOURCE_DIR}/protocol/spec/root.def ${CMAKE_SOURCE_DIR}/protocol/spec/entity.def ${CMAKE_SOURCE_DIR}/protocol/spec/operation.def ${CMAKE_SOURCE_DIR}/protocol/spec/type.def ${CMAKE_SOURCE_DIR}/protocol/spec/xml/atlas.xml
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/protocol/spec
+            DEPENDS ${ATLAS_XML_SOURCES}
+            VERBATIM
+            )
 
     add_custom_target(GenerateAtlasObjects
-            COMMAND ${CMAKE_COMMAND} -E echo_append "Generating Atlas Object sources."
-            COMMAND ${PYTHON_EXECUTABLE} gen_cpp.py
+            COMMAND ${CMAKE_COMMAND} -E echo "Generating Atlas Object sources."
+            COMMAND ${PYTHON_EXECUTABLE} gen_cpp.py ${CMAKE_SOURCE_DIR}/protocol/spec/xml/atlas.xml
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/Atlas/Objects
             DEPENDS ${PY_SOURCES}
             VERBATIM
@@ -196,7 +211,8 @@ target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
 wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
 target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
 if (PYTHON_EXECUTABLE)
-    add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasObjects)
+    add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasXml GenerateAtlasObjects)
+    add_dependencies(GenerateAtlasObjects GenerateAtlasXml)
 endif (PYTHON_EXECUTABLE)
 
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)

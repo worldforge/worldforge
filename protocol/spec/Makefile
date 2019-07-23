@@ -6,7 +6,7 @@ HTML_OUTPUT=root.html entity.html operation.html type.html
 
 all: atlas.atlas atlas.xml ${HTML_OUTPUT}
 
-atlas.atlas: ${CODE} ${INPUT} ${DEFS}
+atlas.atlas: ${CODE} ${DEFS}
 	python gen_atlas.py
 
 atlas.xml: ${CODE} ${INPUT} ${OLD_DEFS}

@@ -51,6 +51,24 @@ This will use doxygen to generate the documentation, which will then reside in d
 
 Please read the file HACKING.md carefully before working on Atlas-C++.
 
+## The specification
+
+The actual Atlas specification can be found under ```protocol/spec``` as a series of filed ending in the ".def" suffix. These files represent the canonical Atlas definition.
+
+In order to generate the C++ code these files are translated into a ```protocol/spec/xml/atlas.xml``` file through the use of the ```protocol/spec/tools/def2xml.py``` file, which requires Python 2. Normally this would be performed by the CMake build script.
+
+This file (```protocol/spec/xml/atlas.xml```) in turn gets translated into C++ files through the use of the ```Atlas/Objects/gen_cpp.py``` Python script (which requires Python 2).This would also normally be performed by the CMake build script. 
+
+Thus, in order to change the protocol one would perform these steps:
+ * Update any of the files in ```protocol/spec```
+ * Rebuild the project (through the builder used with CMake)
+ 
+You shouldn't touch the ```protocol/spec/xml/atlas.xml``` file, nor any of the C++ files generated (these are identified by having "Automatically generated using gen_cpp.py." added to the top of them).
+ 
+There are some areas of improvements here. Chief amongst them would be
+ * Don't use two different formats: either standardize on only using "atlas.xml", or standardize on only using the .def files
+ * Convert all code to Python 3 
+
 ## Licensing
 
 Atlas-C++ is licensed under the GNU Lesser General Public License. Please see

@@ -729,7 +729,7 @@ public:
             self.find_progeny_recursive(child, class_only_files)
 
     def find_progeny_recursive(self, obj, class_only_files):
-        if obj.specification_file.filename not in class_only_files:
+        if os.path.basename(obj.specification_file.filename) not in class_only_files:
             return
         self.progeny.append(obj)
         for child in obj.children:
@@ -738,7 +738,6 @@ public:
     def children_interface_file(self, obj):
         #print "Output of interface for:",
         outfile = self.outdir + '/' + self.generic_class_name + ".h"
-        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.generic_class_name, "H"])
         self.write('#include <Atlas/Objects/%s.h>\n' % self.classname_pointer)
@@ -791,17 +790,11 @@ public:
 
 # Main program
 if __name__=="__main__":
-##     if len(sys.argv) < 2:
-##         print "Syntax:"
-##         print sys.argv[0] + " root [outdir]"
-##         sys.argv.append("root")
-##         sys.exit()
-
     #read XML spec
     parseXML=parse_xml.get_decoder()
     parseXML.set_stream_mode()
-    spec_xml_string = open("../../protocol/spec/atlas.xml").read()
-#    spec_xml_string = open("../../../../protocols/atlas/spec/core_atlas.xml").read()
+    atlas_file=sys.argv[1]
+    spec_xml_string = open(atlas_file).read()
     #convert list into dictionary
     objects = {}
     for obj in parseXML(spec_xml_string):
@@ -810,7 +803,7 @@ if __name__=="__main__":
     objects["anonymous"] = Object(id="anonymous", parent=objects["root_entity"])
     objects["generic"] = Object(id="generic", parent=objects["root_operation"])
 
-    print "Loaded atlas.xml"
+    print "Loaded %s" % atlas_file
 
 ##     if len(sys.argv) >= 3:
 ##         outdir = sys.argv[2]
