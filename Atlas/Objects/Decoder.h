@@ -2,8 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011 Erik Ogenvik.
-// Automatically generated using gen_cpp.py.
+// Copyright 2019 Erik Ogenvik.
 
 #ifndef ATLAS_OBJECTS_DECODER_H
 #define ATLAS_OBJECTS_DECODER_H
@@ -35,7 +34,7 @@ public:
     /// Constructor.
     explicit ObjectsDecoder(Factories * f = nullptr);
     /// Default destructor.
-    virtual ~ObjectsDecoder();
+    ~ObjectsDecoder() override;
 
     /// Factories accessor
     Factories * factories() const {
@@ -43,7 +42,7 @@ public:
     }
 protected:
     /// Overridden by to retrieve the message from DecoderBase.
-    virtual void messageArrived(Atlas::Message::MapType);
+    void messageArrived(Atlas::Message::MapType) override;
 
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;

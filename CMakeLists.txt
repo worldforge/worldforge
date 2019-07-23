@@ -143,8 +143,6 @@ if (PYTHON_EXECUTABLE)
             Atlas/Objects/common.py
             Atlas/Objects/AttributeInfo.py
             Atlas/Objects/GenerateObjectFactory.py
-            Atlas/Objects/GenerateDecoder.py
-            Atlas/Objects/GenerateDispatcher.py
             Atlas/Objects/GenerateForward.py
             protocol/spec/xml/atlas.xml)
 
@@ -294,7 +292,7 @@ wf_add_test(tests/Objects/decoder1.cpp)
 wf_add_test(tests/Objects/objects_fwd.cpp)
 wf_add_test(tests/Objects/attributes.cpp)
 wf_add_test(tests/Objects/flags.cpp)
-add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/protocol/spec/atlas.xml")
+add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/protocol/spec/xml/atlas.xml")
 
 wf_add_benchmark(benchmark/Objects_asMessage.cpp)
 wf_add_benchmark(benchmark/Objects3_Move.cpp)

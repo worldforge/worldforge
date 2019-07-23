@@ -9,7 +9,6 @@
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Decoder.h>
-#include <Atlas/Objects/Dispatcher.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>

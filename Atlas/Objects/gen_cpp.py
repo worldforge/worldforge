@@ -9,13 +9,11 @@ __revision__ = '$Id$'
 from common import *
 from AttributeInfo import *
 from GenerateObjectFactory import GenerateObjectFactory
-from GenerateDecoder import GenerateDecoder
-from GenerateDispatcher import GenerateDispatcher
 from GenerateForward import GenerateForward
 
 class_serial_no = 1
 
-class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, GenerateForward):
+class GenerateCC(GenerateObjectFactory, GenerateForward):
     def __init__(self, objects, outdir):
         self.objects = objects
         #self.outdir = outdir
@@ -824,6 +822,4 @@ if __name__=="__main__":
     #generate code common to all objects
     gen_code = GenerateCC(objects, ".") #, object_enum)
     gen_code.generate_object_factory(all_objects,class_serial_no)
-    gen_code.generate_decoder(all_objects)
-    gen_code.generate_dispatcher(all_objects)
     gen_code.generate_forward(all_objects)

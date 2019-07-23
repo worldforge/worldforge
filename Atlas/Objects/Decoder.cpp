@@ -2,8 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011 Erik Ogenvik.
-// Automatically generated using gen_cpp.py.
+// Copyright 2019 Erik Ogenvik.
 
 #include <Atlas/Objects/Decoder.h>
 
@@ -20,9 +19,7 @@ ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
     }
 }
 
-ObjectsDecoder::~ObjectsDecoder()
-{
-}
+ObjectsDecoder::~ObjectsDecoder() = default;
 
 void ObjectsDecoder::messageArrived(Atlas::Message::MapType o)
 {

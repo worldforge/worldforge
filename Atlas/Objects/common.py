@@ -24,8 +24,8 @@ copyright_template = \
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 %s.
 // Copyright 2001-2005 %s.
-// Copyright 2011 Erik Ogenvik.
-// Automatically generated using gen_cpp.py.
+// Copyright 2011-2019 Erik Ogenvik.
+// Automatically generated using gen_cpp.py. Don't edit directly.
 """
 
 copyright = copyright_template % ("Stefanus Du Toit and Aloril", "Alistair Riddoch")

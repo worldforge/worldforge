@@ -87,8 +87,8 @@ Root Factories::createObject(const MapType & msg_map)
     Root obj(nullptr);
 
     // is this instance of entity or operation?
-    MapType::const_iterator I = msg_map.find(Atlas::Objects::OBJTYPE_ATTR);
-    MapType::const_iterator Iend = msg_map.end();
+    auto I = msg_map.find(Atlas::Objects::OBJTYPE_ATTR);
+    auto Iend = msg_map.end();
     bool is_instance = false;
     if(I != Iend && I->second.isString()) {
         const std::string & objtype = I->second.String();
@@ -146,7 +146,7 @@ std::list<std::string> Factories::getKeys()
     
 void Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod, int classno)
 {
-    Factory factory;
+    Factory factory{};
     factory.classno = classno;
     factory.default_instance_method = defaultInstanceMethod;
     factory.factory_method = method;
@@ -156,7 +156,7 @@ void Factories::addFactory(const std::string& name, FactoryMethod method, Defaul
 int Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod)
 {
     int classno = ++enumMax;
-    Factory factory;
+    Factory factory{};
     factory.classno = classno;
     factory.default_instance_method = defaultInstanceMethod;
     factory.factory_method = method;

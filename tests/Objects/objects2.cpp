@@ -1,7 +1,6 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Objects/Dispatcher.h>
 #include <Atlas/Objects/loadDefaults.h>
 //#include "../../src/Net/Stream.h"
 #include "DebugBridge.h"
@@ -54,32 +53,33 @@ std::string object2String(const Root& obj)
     return stream.str();
 }
 
-class TestDecoder : public Atlas::Objects::Dispatcher
+class TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 protected:
-    virtual void objectRootArrived(const Root& r)
-    {
+
+	void objectArrived(const Atlas::Objects::Root& obj) override {
+
+		if (obj) {
+			switch (obj->getClassNo()) {
+				case Atlas::Objects::ROOT_NO:
+					std::cout << "got Root! " << object2String(obj) << std::endl;
+					break;
+				case Atlas::Objects::Operation::LOGIN_NO:
+					std::cout << "got Login!" << std::endl;
 //        assert(r->getAttr("id").asString() == "root_instance");
-      std::cout << "got Root! " << object2String(r) << std::endl;
-    }
+					break;
+				case Atlas::Objects::Operation::LOOK_NO:
+					std::cout << "got Look!" << std::endl;
+					break;
+				case Atlas::Objects::Entity::ACCOUNT_NO:
+					std::cout << "got Account!" << std::endl;
+					break;
+			}
+		}
+	}
 
-    virtual void objectLoginArrived(const Login& r)
-    {
-        std::cout << "got Account!" << std::endl;
-//        assert(r->getAttr("id").asString() == "root_instance");
-    }
-
-    virtual void objectLookArrived(const Look& l)
-    {
-//        assert(l->getAttr("id").asString() == "look_instance");
-        std::cout << "got Look!" << std::endl;
-    }
-
-    virtual void objectAccountArrived(const Account &a)
-    {
-        std::cout << "got Account!" << std::endl;
-    }
 };
+
 
 void testXML()
 {

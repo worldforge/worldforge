@@ -27,8 +27,6 @@ class ObjectsDecoder;
 
 class ObjectsEncoder;
 
-class Dispatcher;
-
 """)
         for (obj, namespace) in objects:
             if len(namespace) != 0:

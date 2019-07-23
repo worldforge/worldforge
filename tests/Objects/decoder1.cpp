@@ -1,4 +1,7 @@
-#include <Atlas/Objects/Dispatcher.h>
+#include <Atlas/Objects/Decoder.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/loadDefaults.h>
 
 #include <iostream>
@@ -10,33 +13,34 @@ bool acct_arrived = false;
 bool anonymous_arrived = false;
 bool unknown_arrived = false;
 
-class TestDecoder : public Atlas::Objects::Dispatcher
+class TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 protected:
-    virtual void objectRootArrived(const Atlas::Objects::Root& r)
-    {
-        assert(r->getAttr("id").asString() == "root_instance");
-        root_arrived = true;
-    }
 
-    virtual void objectLookArrived(const Atlas::Objects::Operation::Look& l)
-    {
-        assert(l->getAttr("id").asString() == "look_instance");
-        look_arrived = true;
-    }
+	void objectArrived(const Atlas::Objects::Root& obj) override {
 
-    virtual void objectAccountArrived(const Atlas::Objects::Entity::Account &a)
-    {
-        acct_arrived = true;
-    }
+    	if (obj) {
+    		switch (obj->getClassNo()) {
+				case Atlas::Objects::ROOT_NO:
+					assert(obj->getAttr("id").asString() == "root_instance");
+					root_arrived = true;
+					break;
+				case Atlas::Objects::Operation::LOOK_NO:
+					assert(obj->getAttr("id").asString() == "look_instance");
+					look_arrived = true;
+					break;
+				case Atlas::Objects::Entity::ACCOUNT_NO:
+					acct_arrived = true;
+					break;
+				case Atlas::Objects::Entity::ANONYMOUS_NO:
+					anonymous_arrived = true;
+					break;
+				default:
+					unknown_arrived = true;
+			}
+    	}
+	}
 
-    virtual void objectAnonymousArrived(const Atlas::Objects::Entity::Anonymous&) {
-        anonymous_arrived = true;
-    }
-
-    virtual void unknownObjectArrived(const Atlas::Message::Element&) {
-        unknown_arrived = true;
-    }
 };
 
 int main(int argc, char** argv)
