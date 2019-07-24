@@ -13,7 +13,7 @@ descending into childrens.</string>
 	<string name="specification">atlas</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>stamp</string><string>stamp_inherit</string><string>objtype</string><string>interface</string><string>name</string><string>description</string><string>long_description</string><string>specification</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/root.def</string>
+		<string name="filename">root.def</string>
 		<int name="lineno">2</int>
 	</map>
 </map>
@@ -31,7 +31,7 @@ descending into childrens.</string>
 	<float name="stamp_contains">0.0</float>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string><string>loc</string><string>pos</string><string>velocity</string><string>contains</string><string>stamp_contains</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">2</int>
 	</map>
 </map>
@@ -42,7 +42,7 @@ descending into childrens.</string>
 	<string name="description">All classes and objects used for adminitrativive purposes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">95</int>
 	</map>
 </map>
@@ -56,7 +56,7 @@ descending into childrens.</string>
 	<list name="characters"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>username</string><string>password</string><string>characters</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">100</int>
 	</map>
 </map>
@@ -67,7 +67,7 @@ descending into childrens.</string>
 	<string name="description">Player accounts</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">108</int>
 	</map>
 </map>
@@ -78,7 +78,7 @@ descending into childrens.</string>
 	<string name="description">Privileged accounts</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">113</int>
 	</map>
 </map>
@@ -89,7 +89,7 @@ descending into childrens.</string>
 	<string name="description">Games this server hosts</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">118</int>
 	</map>
 </map>
@@ -102,7 +102,7 @@ descending into childrens.</string>
 	<string name="description">All In Game classes and objects</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>interface</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/entity.def</string>
+		<string name="filename">entity.def</string>
 		<int name="lineno">123</int>
 	</map>
 </map>
@@ -127,7 +127,7 @@ descending into childrens.</string>
 	<list name="args"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>serialno</string><string>refno</string><string>description</string><string>long_description</string><string>from</string><string>to</string><string>seconds</string><string>future_seconds</string><string>time_string</string><string>args</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">2</int>
 	</map>
 </map>
@@ -138,7 +138,7 @@ descending into childrens.</string>
 	<string name="description">This is base operator for operations that might have effects.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">21</int>
 	</map>
 </map>
@@ -156,21 +156,21 @@ descending into childrens.</string>
 					<string name="e_msg">Here is some info</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_msg</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">35</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">31</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">26</int>
 	</map>
 </map>
@@ -194,21 +194,21 @@ descending into childrens.</string>
 					<int name="e_attack">3</int>
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string><string>e_attack</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">51</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">46</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">38</int>
 	</map>
 </map>
@@ -227,21 +227,21 @@ descending into childrens.</string>
 					<string name="id">foo_bar_344</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">66</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">62</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">56</int>
 	</map>
 </map>
@@ -263,21 +263,21 @@ descending into childrens.</string>
 					<float name="e_width">0.3</float>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_HP</string><string>e_height</string><string>e_width</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">79</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">75</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">69</int>
 	</map>
 </map>
@@ -287,7 +287,7 @@ descending into childrens.</string>
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">85</int>
 	</map>
 </map>
@@ -306,14 +306,14 @@ descending into childrens.</string>
 					<string name="id">elf_type_id_45</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">99</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">95</int>
 			</map>
 		</map>
@@ -328,14 +328,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<string name="id">root_operation</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">108</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">104</int>
 			</map>
 		</map>
@@ -350,14 +350,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<string name="description">Base operator for all operatios</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>children</string><string>description</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">115</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">111</int>
 			</map>
 		</map>
@@ -370,14 +370,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<string name="id">action</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">124</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">120</int>
 			</map>
 		</map>
@@ -389,14 +389,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<string name="id">info</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">130</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">126</int>
 			</map>
 		</map>
@@ -404,7 +404,7 @@ First start from operator hierarchy root (root_operation):</string>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">89</int>
 	</map>
 </map>
@@ -456,21 +456,21 @@ First start from operator hierarchy root (root_operation):</string>
 					<string name="id">tree_8374</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">177</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">173</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">134</int>
 	</map>
 </map>
@@ -482,7 +482,7 @@ First start from operator hierarchy root (root_operation):</string>
 	<string name="args_description">entity that doesn't exist</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">180</int>
 	</map>
 </map>
@@ -505,7 +505,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="message">Uknown operation foo</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">200</int>
 					</map>
 				</map>
@@ -518,28 +518,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<string name="e_bar">do some foo thing by using bar</string>
 							<map name="specification_file">
 								<list name="attribute_order"><string>e_bar</string></list>
-								<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+								<string name="filename">operation.def</string>
 								<int name="lineno">207</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">202</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>refno</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">195</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">186</int>
 	</map>
 </map>
@@ -551,7 +551,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<string name="args_description">A list of types which have changed.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">210</int>
 	</map>
 </map>
@@ -574,7 +574,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="name">Bjorn's axe</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">229</int>
 					</map>
 				</map>
@@ -582,7 +582,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="id">Wood_8898</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">232</int>
 					</map>
 				</map>
@@ -590,21 +590,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="id">Iron_6578</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">234</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">225</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">216</int>
 	</map>
 </map>
@@ -626,7 +626,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="id">money12345</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">250</int>
 					</map>
 				</map>
@@ -635,7 +635,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<int name="e_amount">10</int>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_amount</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">252</int>
 					</map>
 				</map>
@@ -643,21 +643,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<int name="e_amount">110</int>
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_amount</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">255</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">246</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">237</int>
 	</map>
 </map>
@@ -671,7 +671,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<list name="example"><string>see talk</string></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">258</int>
 	</map>
 </map>
@@ -697,14 +697,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<list name="pos"><float>12.3</float><float>3.0</float><float>0.0</float></list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">282</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">276</int>
 			</map>
 		</map>
@@ -734,28 +734,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<list name="pos"><float>12.3</float><float>3.0</float><float>0.0</float></list>
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
-								<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+								<string name="filename">operation.def</string>
 								<int name="lineno">306</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>seconds</string><string>time_string</string><string>args</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">297</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">287</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">267</int>
 	</map>
 </map>
@@ -775,21 +775,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="id">elf_3545</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">322</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">318</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">311</int>
 	</map>
 </map>
@@ -810,14 +810,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="password">Rqv67.%</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>password</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">336</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">332</int>
 			</map>
 		</map>
@@ -835,14 +835,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="password">player_password</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">347</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">342</int>
 			</map>
 		</map>
@@ -861,7 +861,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="message">Account id already exist</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">362</int>
 					</map>
 				</map>
@@ -876,21 +876,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<string name="password">player_password</string>
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
-								<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+								<string name="filename">operation.def</string>
 								<int name="lineno">369</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">364</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">354</int>
 			</map>
 		</map>
@@ -914,14 +914,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<list name="characters"><string>Bjorn_1</string></list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string><string>characters</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">386</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">378</int>
 			</map>
 		</map>
@@ -940,14 +940,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="e_sex">male</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string><string>description</string><string>e_sex</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">399</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">394</int>
 			</map>
 		</map>
@@ -956,7 +956,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">325</int>
 	</map>
 </map>
@@ -975,14 +975,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<string name="id">JoeBlatz</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">417</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">413</int>
 			</map>
 		</map>
@@ -991,7 +991,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">407</int>
 	</map>
 </map>
@@ -1013,14 +1013,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<float name="stamp">989.24</float>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">434</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">430</int>
 			</map>
 		</map>
@@ -1043,14 +1043,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>description</string><string>e_polygon</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">442</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">438</int>
 			</map>
 		</map>
@@ -1069,28 +1069,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<list name="pos"><float>0.5</float><float>3.0</float><float>0.0</float></list>
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
-								<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+								<string name="filename">operation.def</string>
 								<int name="lineno">462</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">458</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">454</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">422</int>
 	</map>
 </map>
@@ -1117,28 +1117,28 @@ to and time tags, not only this operation):</string>
 							<string name="say">What has happened there?</string>
 							<map name="specification_file">
 								<list name="attribute_order"><string>say</string></list>
-								<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+								<string name="filename">operation.def</string>
 								<int name="lineno">485</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">481</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">476</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">467</int>
 	</map>
 </map>
@@ -1160,21 +1160,21 @@ to and time tags, not only this operation):</string>
 					<string name="e_smell">sweet</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_smell</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">662</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">657</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">649</int>
 	</map>
 </map>
@@ -1194,21 +1194,21 @@ to and time tags, not only this operation):</string>
 					<string name="e_surface_type">rough</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_surface_type</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">675</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">671</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">665</int>
 	</map>
 </map>
@@ -1227,21 +1227,21 @@ to and time tags, not only this operation):</string>
 					<string name="id">some_unimplemented_action</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">689</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">685</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">679</int>
 	</map>
 </map>
@@ -1261,14 +1261,14 @@ to and time tags, not only this operation):</string>
 					<string name="say">What has happened there?</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>say</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">703</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">699</int>
 			</map>
 		</map>
@@ -1277,7 +1277,7 @@ except you use player id instead of character id.</string>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">692</int>
 	</map>
 </map>
@@ -1296,14 +1296,14 @@ except you use player id instead of character id.</string>
 					<string name="id">elf_3545</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">719</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">715</int>
 			</map>
 		</map>
@@ -1324,7 +1324,7 @@ except you use player id instead of character id.</string>
 			<list name="args"></list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">730</int>
 			</map>
 		</map>
@@ -1347,14 +1347,14 @@ except you use player id instead of character id.</string>
 					<list name="pos"><float>0.0</float><float>0.0</float><float>0.0</float></list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>stamp</string><string>pos</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">747</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">737</int>
 			</map>
 		</map>
@@ -1370,14 +1370,14 @@ except you use player id instead of character id.</string>
 					<string name="id">Nisuf_6</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">761</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">755</int>
 			</map>
 		</map>
@@ -1404,21 +1404,21 @@ except you use player id instead of character id.</string>
 					<float name="e_status">1.0</float>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>e_drunkness</string><string>stamp</string><string>loc</string><string>pos</string><string>description</string><string>name</string><string>e_status</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">774</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">764</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">709</int>
 	</map>
 </map>
@@ -1437,21 +1437,21 @@ except you use player id instead of character id.</string>
 					<string name="id">elf_3545</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">795</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">791</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">785</int>
 	</map>
 </map>
@@ -1470,21 +1470,21 @@ except you use player id instead of character id.</string>
 					<string name="id">flower_3545</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">808</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">804</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">798</int>
 	</map>
 </map>
@@ -1503,21 +1503,21 @@ except you use player id instead of character id.</string>
 					<string name="id">cloth_3545</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">821</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">817</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">811</int>
 	</map>
 </map>
@@ -1537,21 +1537,21 @@ except you use player id instead of character id.</string>
 					<float name="stamp">989.24</float>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">834</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">830</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">824</int>
 	</map>
 </map>
@@ -1571,21 +1571,21 @@ except you use player id instead of character id.</string>
 					<float name="stamp">989.24</float>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
-						<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+						<string name="filename">operation.def</string>
 						<int name="lineno">848</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
-				<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+				<string name="filename">operation.def</string>
 				<int name="lineno">844</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">838</int>
 	</map>
 </map>
@@ -1597,7 +1597,7 @@ except you use player id instead of character id.</string>
 	<string name="args_description">Tool or item to be wielded</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">852</int>
 	</map>
 </map>
@@ -1609,7 +1609,7 @@ except you use player id instead of character id.</string>
 	<string name="args_description">Target tool is used on, or operation chosen from those available for this tool, with target given as its argument.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/operation.def</string>
+		<string name="filename">operation.def</string>
 		<int name="lineno">858</int>
 	</map>
 </map>
@@ -1621,7 +1621,7 @@ except you use player id instead of character id.</string>
 	<string name="description">Type hierarchy starts from here.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">2</int>
 	</map>
 </map>
@@ -1634,7 +1634,7 @@ except you use player id instead of character id.</string>
 	<string name="long_description">Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">8</int>
 	</map>
 </map>
@@ -1647,7 +1647,7 @@ except you use player id instead of character id.</string>
 	<string name="long_description">C equivalent: 32bit int</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">15</int>
 	</map>
 </map>
@@ -1660,7 +1660,7 @@ except you use player id instead of character id.</string>
 	<string name="long_description">C equivalent roughly: double</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">22</int>
 	</map>
 </map>
@@ -1676,7 +1676,7 @@ For more about URI see
 &lt;a href="http://www.ics.uci.edu/pub/ietf/uri/"&gt;http://www.ics.uci.edu/pub/ietf/uri/&lt;/a&gt;</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">29</int>
 	</map>
 </map>
@@ -1689,7 +1689,7 @@ For more about URI see
 	<string name="description">List of strings</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>element_type</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">99</int>
 	</map>
 </map>
@@ -1703,7 +1703,7 @@ For more about URI see
 	<string name="long_description">C equivalent: int []</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>element_type</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">106</int>
 	</map>
 </map>
@@ -1717,7 +1717,7 @@ For more about URI see
 	<string name="long_description">C equivalent: double []</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>element_type</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">114</int>
 	</map>
 </map>
@@ -1730,7 +1730,7 @@ For more about URI see
 	<string name="long_description">C equivalent: char *[], void *[]</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>element_type</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">122</int>
 	</map>
 </map>
@@ -1744,7 +1744,7 @@ For more about URI see
 	<list name="added_attributes"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string><string>added_attributes</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">129</int>
 	</map>
 </map>
@@ -1759,7 +1759,7 @@ For more about URI see
 	<list name="added_attributes"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>name</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string><string>added_attributes</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">137</int>
 	</map>
 </map>
@@ -1773,7 +1773,7 @@ For more about URI see
 	<string name="long_description">Inherit required object from this and set length attribute to suitable value.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">146</int>
 	</map>
 </map>
@@ -1787,7 +1787,7 @@ For more about URI see
 	<string name="long_description">Inherit required object from this and set length attribute to suitable value.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">154</int>
 	</map>
 </map>
@@ -1801,7 +1801,7 @@ For more about URI see
 	<string name="description">Position coordinates, usually world is 3D</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>name</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">162</int>
 	</map>
 </map>
@@ -1814,7 +1814,7 @@ For more about URI see
 	<string name="description">Velocity object is moving, usually world is 3D</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">170</int>
 	</map>
 </map>
@@ -1826,7 +1826,7 @@ For more about URI see
 	<string name="description">Length for lists</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">177</int>
 	</map>
 </map>
@@ -1837,7 +1837,7 @@ For more about URI see
 	<string name="description">Element type for typed lists/mappings</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">183</int>
 	</map>
 </map>
@@ -1849,7 +1849,7 @@ For more about URI see
 	<string name="long_description">C equivalent roughly: for storing id name: char *, as pointer: void *</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">188</int>
 	</map>
 </map>
@@ -1860,7 +1860,7 @@ For more about URI see
 	<string name="description">List of ids</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">194</int>
 	</map>
 </map>
@@ -1871,7 +1871,7 @@ For more about URI see
 	<string name="description">The object this inherits attributes from.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">199</int>
 	</map>
 </map>
@@ -1882,7 +1882,7 @@ For more about URI see
 	<string name="description">List of objects that inherit from this object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">204</int>
 	</map>
 </map>
@@ -1893,7 +1893,7 @@ For more about URI see
 	<string name="description">List of objects that use this object as reference system (usually same as what this object contains).</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">209</int>
 	</map>
 </map>
@@ -1904,7 +1904,7 @@ For more about URI see
 	<string name="description">List of attributes that has been added to this object</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">214</int>
 	</map>
 </map>
@@ -1915,7 +1915,7 @@ For more about URI see
 	<string name="description">List of characters account can control</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">219</int>
 	</map>
 </map>
@@ -1927,7 +1927,7 @@ For more about URI see
 	<string name="description">List of arguments this operation has</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">224</int>
 	</map>
 </map>
@@ -1939,7 +1939,7 @@ For more about URI see
 	<string name="long_description">Content ids can be either another interface or operation ids or both.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">230</int>
 	</map>
 </map>
@@ -1955,7 +1955,7 @@ For more about URI see
     1970 or total game cycles would both be valid.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">236</int>
 	</map>
 </map>
@@ -1968,7 +1968,7 @@ For more about URI see
 	<string name="long_description">Value should be reflect when something was changed in some object that inherits from this.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">246</int>
 	</map>
 </map>
@@ -1981,7 +1981,7 @@ For more about URI see
 	<string name="long_description">Value should be reflect when something was changed in some object that is contained by this object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">260</int>
 	</map>
 </map>
@@ -1995,7 +1995,7 @@ For more about URI see
 	<string name="long_description">Examples of values: "op", "class", "type".</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>name</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">442</int>
 	</map>
 </map>
@@ -2006,7 +2006,7 @@ For more about URI see
 	<string name="description">What kind of operations are legal for this object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">455</int>
 	</map>
 </map>
@@ -2018,7 +2018,7 @@ For more about URI see
 	<string name="description">What specification this object is part of?</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">460</int>
 	</map>
 </map>
@@ -2030,7 +2030,7 @@ For more about URI see
 	<string name="description">Name of object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">466</int>
 	</map>
 </map>
@@ -2042,7 +2042,7 @@ For more about URI see
 	<string name="description">Some message (for example error message)</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">472</int>
 	</map>
 </map>
@@ -2053,7 +2053,7 @@ For more about URI see
 	<string name="description">What something has said.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">478</int>
 	</map>
 </map>
@@ -2065,7 +2065,7 @@ For more about URI see
 	<string name="description">String that is actually html.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">483</int>
 	</map>
 </map>
@@ -2077,7 +2077,7 @@ For more about URI see
 	<string name="description">Username for account usually</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">489</int>
 	</map>
 </map>
@@ -2089,7 +2089,7 @@ For more about URI see
 	<string name="description">Password for account usually</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">495</int>
 	</map>
 </map>
@@ -2100,7 +2100,7 @@ For more about URI see
 	<string name="description">This gives short description of object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">501</int>
 	</map>
 </map>
@@ -2111,7 +2111,7 @@ For more about URI see
 	<string name="description">This gives description about arguments.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">506</int>
 	</map>
 </map>
@@ -2122,7 +2122,7 @@ For more about URI see
 	<string name="description">This gives long description of object.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">511</int>
 	</map>
 </map>
@@ -2135,7 +2135,7 @@ For more about URI see
 	<string name="description">Reference object for coordinates (location).</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>name</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">516</int>
 	</map>
 </map>
@@ -2147,7 +2147,7 @@ For more about URI see
 	<string name="description">Serial number.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">523</int>
 	</map>
 </map>
@@ -2158,7 +2158,7 @@ For more about URI see
 	<string name="description">Reference to serial number.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">529</int>
 	</map>
 </map>
@@ -2169,7 +2169,7 @@ For more about URI see
 	<string name="description">Source of message/operation.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">534</int>
 	</map>
 </map>
@@ -2183,7 +2183,7 @@ For more about URI see
     character can only control directly it's body.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">539</int>
 	</map>
 </map>
@@ -2195,7 +2195,7 @@ For more about URI see
 	<string name="description">Time in seconds</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">547</int>
 	</map>
 </map>
@@ -2206,7 +2206,7 @@ For more about URI see
 	<string name="description">Time in seconds to add current time</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">553</int>
 	</map>
 </map>
@@ -2219,7 +2219,7 @@ For more about URI see
 	<string name="long_description">There can be variation in length of different fields if using some weird calendar</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string><string>long_description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">558</int>
 	</map>
 </map>
@@ -2231,7 +2231,7 @@ For more about URI see
 	<string name="description">Gives some examples usage</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">565</int>
 	</map>
 </map>
@@ -2243,7 +2243,7 @@ For more about URI see
 	<string name="description">width of something</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">572</int>
 	</map>
 </map>
@@ -2255,7 +2255,7 @@ For more about URI see
 	<string name="description">grid data</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">578</int>
 	</map>
 </map>
@@ -2268,7 +2268,7 @@ For more about URI see
 	<string name="description">size of grid area: width and height (and for space depth too) in grid units</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">584</int>
 	</map>
 </map>
@@ -2281,7 +2281,7 @@ For more about URI see
 	<string name="description">cell size of grid area</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>list_length</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">591</int>
 	</map>
 </map>
@@ -2293,7 +2293,7 @@ For more about URI see
 	<string name="description">height of something</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">598</int>
 	</map>
 </map>
@@ -2305,7 +2305,7 @@ For more about URI see
 	<string name="description">line object</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">604</int>
 	</map>
 </map>
@@ -2316,7 +2316,7 @@ For more about URI see
 	<string name="description">media id reference</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">610</int>
 	</map>
 </map>
@@ -2328,7 +2328,7 @@ For more about URI see
 	<string name="description">various info about object and its specification file</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">616</int>
 	</map>
 </map>
@@ -2339,7 +2339,7 @@ For more about URI see
 	<string name="description">name of file (example: where object was specified)</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">622</int>
 	</map>
 </map>
@@ -2350,7 +2350,7 @@ For more about URI see
 	<string name="description">linenumber where something is</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">627</int>
 	</map>
 </map>
@@ -2361,7 +2361,7 @@ For more about URI see
 	<string name="description">order attributes was specified</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">632</int>
 	</map>
 </map>
@@ -2373,7 +2373,7 @@ For more about URI see
 	<string name="description">Root type for all int type example attributes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">638</int>
 	</map>
 </map>
@@ -2385,7 +2385,7 @@ For more about URI see
 	<string name="description">Root type for all float type example attributes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">644</int>
 	</map>
 </map>
@@ -2397,7 +2397,7 @@ For more about URI see
 	<string name="description">Root type for all string type example attributes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">650</int>
 	</map>
 </map>
@@ -2408,7 +2408,7 @@ For more about URI see
 	<string name="description">Root type for all uri type example attributes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">656</int>
 	</map>
 </map>
@@ -2420,7 +2420,7 @@ For more about URI see
 	<string name="description">Root type for all list type example attributes</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>objtype</string><string>description</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">661</int>
 	</map>
 </map>
@@ -2430,7 +2430,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">668</int>
 	</map>
 </map>
@@ -2440,7 +2440,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">672</int>
 	</map>
 </map>
@@ -2450,7 +2450,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">676</int>
 	</map>
 </map>
@@ -2460,7 +2460,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">680</int>
 	</map>
 </map>
@@ -2470,7 +2470,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">684</int>
 	</map>
 </map>
@@ -2480,7 +2480,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">688</int>
 	</map>
 </map>
@@ -2490,7 +2490,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">692</int>
 	</map>
 </map>
@@ -2500,7 +2500,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">696</int>
 	</map>
 </map>
@@ -2510,7 +2510,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">700</int>
 	</map>
 </map>
@@ -2520,7 +2520,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">704</int>
 	</map>
 </map>
@@ -2530,7 +2530,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">708</int>
 	</map>
 </map>
@@ -2540,7 +2540,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">712</int>
 	</map>
 </map>
@@ -2550,7 +2550,7 @@ For more about URI see
 	<list name="children"></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
-		<string name="filename">/home/erik/code/worldforge-git/atlas-c++/protocol/spec/type.def</string>
+		<string name="filename">type.def</string>
 		<int name="lineno">716</int>
 	</map>
 </map>

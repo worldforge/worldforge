@@ -727,7 +727,7 @@ public:
             self.find_progeny_recursive(child, class_only_files)
 
     def find_progeny_recursive(self, obj, class_only_files):
-        if os.path.basename(obj.specification_file.filename) not in class_only_files:
+        if obj.specification_file.filename not in class_only_files:
             return
         self.progeny.append(obj)
         for child in obj.children:

@@ -15,9 +15,9 @@
 #You should have received a copy of the GNU Lesser General Public
 #License along with this library; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-
-
+import os
 import string, re
+
 from atlas import *
 from atlas.typemap import get_atlas_type
 
@@ -80,7 +80,7 @@ class DefParser:
                 last_obj = value
             elif type=="map": #new mapping subobject
                 value = last_obj = Object()
-                last_obj.specification_file = Object(filename = self.filename,
+                last_obj.specification_file = Object(filename = os.path.basename(self.filename),
                                                      lineno = self.lineno+1,
                                                      attribute_order = [])
             else:
