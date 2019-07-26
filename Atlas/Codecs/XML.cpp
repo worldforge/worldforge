@@ -283,9 +283,7 @@ namespace Atlas {
             }
         }
 
-        void XML::poll(bool can_read) {
-            if (!can_read) return;
-
+        void XML::poll() {
             m_istream.peek();
 
             std::streamsize count;

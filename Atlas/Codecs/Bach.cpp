@@ -388,8 +388,7 @@ namespace Atlas {
             }
         }
 
-        void Bach::poll(bool can_read) {
-            if (!can_read) return;
+        void Bach::poll() {
 
             m_istream.peek();
 

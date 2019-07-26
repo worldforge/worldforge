@@ -67,7 +67,7 @@ int convert(const std::string & file_in, const std::string & codec_in,
     Atlas::Message::QueuedDecoder decoder;
     Atlas::Codec *inCodec = getCodec(codec_in, in, decoder);
     while (!in.eof()) {
-        inCodec->poll(true);
+        inCodec->poll();
     }
 
     std::cout << "done." << std::endl;

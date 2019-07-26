@@ -30,7 +30,7 @@ class Codec : public Bridge
 
 	~Codec() override = default;
 
-    virtual void poll(bool can_get) = 0;
+    virtual void poll() = 0;
 };
 
 } // Atlas namespace

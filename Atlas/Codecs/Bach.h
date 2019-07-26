@@ -24,7 +24,7 @@ namespace Atlas {
 
             Bach(std::istream &in, std::ostream &out, Atlas::Bridge &b);
 
-            void poll(bool can_read) override;
+            void poll() override;
 
             void streamBegin() override;
 

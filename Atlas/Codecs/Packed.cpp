@@ -292,9 +292,7 @@ namespace Atlas {
             }
         }
 
-        void Packed::poll(bool can_read) {
-            if (!can_read) return;
-
+        void Packed::poll() {
             m_istream.peek();
 
             std::streamsize count;

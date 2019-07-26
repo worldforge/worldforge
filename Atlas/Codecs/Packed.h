@@ -42,7 +42,7 @@ The complete specification is located in cvs at:
 
             Packed(std::istream &in, std::ostream &out, Atlas::Bridge &b);
 
-            void poll(bool can_read) override;
+            void poll() override;
 
             void streamBegin() override;
 
