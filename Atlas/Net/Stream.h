@@ -59,11 +59,11 @@ class StreamConnect : public Atlas::Negotiate
 {
     public:
 
-    StreamConnect(const std::string& name, std::istream& inStream, std::ostream& outStream);
+    StreamConnect(std::string  name, std::istream& inStream, std::ostream& outStream);
 
 	~StreamConnect() override = default;
 
-	void poll(bool can_read) override;
+	void poll() override;
 
 	State getState() override;
 
@@ -121,11 +121,11 @@ class StreamAccept : public Atlas::Negotiate
 {
     public:
 
-    StreamAccept(const std::string& name, std::istream& inStream, std::ostream& outStream);
+    StreamAccept(std::string  name, std::istream& inStream, std::ostream& outStream);
 
 	~StreamAccept() override = default;
 
-	void poll(bool can_read) override;
+	void poll() override;
 
 	State getState() override;
 

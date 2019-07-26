@@ -37,7 +37,7 @@ class Negotiate
 
     virtual State getState() = 0;
     virtual Codec * getCodec(Bridge &) = 0;
-    virtual void poll(bool can_get) = 0;
+    virtual void poll() = 0;
 };
 
 } // Atlas namespace

@@ -131,7 +131,6 @@ set(HEADER_FILES
         Atlas/MultiLineListFormatter.h
         Atlas/Negotiate.h
         Atlas/PresentationBridge.h
-        Atlas/Task.h
         Atlas/Version.h)
 
 find_package(PythonInterp 2.7)

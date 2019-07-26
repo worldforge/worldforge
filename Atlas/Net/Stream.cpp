@@ -11,6 +11,7 @@
 #include <Atlas/Codecs/Bach.h>
 
 #include <iostream>
+#include <utility>
 
 #define Debug(prg) { if (debug_flag) { prg } }
 
@@ -93,23 +94,18 @@ void NegotiateHelper::put(std::string &buf, const std::string & header)
   buf += "\n";
 }
 
-StreamConnect::StreamConnect(const std::string& name, std::istream& inStream, std::ostream& outStream) :
-  m_state(SERVER_GREETING), m_outName(name), m_inStream(inStream), m_outStream(outStream),
+StreamConnect::StreamConnect(std::string name, std::istream& inStream, std::ostream& outStream) :
+  m_state(SERVER_GREETING), m_outName(std::move(name)), m_inStream(inStream), m_outStream(outStream),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(true), m_canXML(true), m_canBach(true),m_canGzip(true), m_canBzip2(true)
 {
 }
 
-void StreamConnect::poll(bool can_read)
+void StreamConnect::poll()
 {
     Debug( std::cout << "** Client(" << m_state << ") : " << m_inStream.rdbuf()->in_avail() << std::endl; );
 
     std::string out;
-
-    if (can_read) {
-        // Cause the stream to read from its socket
-        m_inStream.peek();
-    }
 
     std::streamsize count;
     while ((count = m_inStream.rdbuf()->in_avail()) > 0) {
@@ -122,7 +118,7 @@ void StreamConnect::poll(bool can_read)
     {
         // get server greeting
 
-        if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
+        if (!m_buf.empty() && get_line(m_buf, '\n', m_inName) != "")
         {
             Debug( std::cout << "server: " << m_inName << std::endl; );
             m_state = CLIENT_GREETING;
@@ -245,14 +241,14 @@ void StreamConnect::processClientFilters()
 #endif
 
 
-StreamAccept::StreamAccept(const std::string& name, std::istream& inStream, std::ostream& outStream) :
-  m_state(SERVER_GREETING), m_outName(name), m_inStream(inStream), m_outStream(outStream),
+StreamAccept::StreamAccept(std::string name, std::istream& inStream, std::ostream& outStream) :
+  m_state(SERVER_GREETING), m_outName(std::move(name)), m_inStream(inStream), m_outStream(outStream),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(false), m_canXML(false), m_canBach(false), m_canGzip(false), m_canBzip2(false)
 {
 }
 
-void StreamAccept::poll(bool can_read)
+void StreamAccept::poll()
 {
     Debug( std::cout << "** Server(" << m_state << ") : " << std::endl; );
 
@@ -265,11 +261,6 @@ void StreamAccept::poll(bool can_read)
         Debug( std::cout << "server now in state " << m_state << std::endl; );
     }
 
-    if (can_read) {
-        // Cause the stream to read from its socket
-        m_inStream.peek();
-    }
-
     std::streamsize count;
     while ((count = m_inStream.rdbuf()->in_avail()) > 0) {
         for (int i = 0 ; i < count; ++i) {
@@ -280,7 +271,7 @@ void StreamAccept::poll(bool can_read)
     if (m_state == CLIENT_GREETING)
     {
         // get client greeting            
-        if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
+        if (!m_buf.empty() && get_line(m_buf, '\n', m_inName) != "")
         {
             Debug(std::cout << "client: " << m_inName << std::endl; );
             m_state = CLIENT_CODECS;

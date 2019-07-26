@@ -23,7 +23,7 @@ class XMLish : public Codec<std::iostream>
 
     XMLish(const Codec<std::iostream>::Parameters&);
 
-    virtual void poll(bool can_read = true);
+    virtual void poll();
 
     virtual void streamBegin();
     virtual void streamMessage();
@@ -67,7 +67,7 @@ XMLish::XMLish(const Codec<std::iostream>::Parameters& p)
 {
 }
 
-void XMLish::poll(bool can_read = true)
+void XMLish::poll()
 {
     if (!can_read) return;
     do
