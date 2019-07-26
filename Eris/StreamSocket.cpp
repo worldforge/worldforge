@@ -84,7 +84,7 @@ void StreamSocket::startNegotiation() {
 	});
 	_callbacks.stateChanged(NEGOTIATE);
 
-	_sc->poll(false);
+	_sc->poll();
 
 	write();
 	negotiate_read();
@@ -92,7 +92,7 @@ void StreamSocket::startNegotiation() {
 
 Atlas::Negotiate::State StreamSocket::negotiate() {
 	// poll and check if negotiation is complete
-	_sc->poll(true);
+	_sc->poll();
 
 	if (_sc->getState() == Atlas::Negotiate::IN_PROGRESS) {
 		return _sc->getState();

@@ -173,7 +173,7 @@ void AsioStreamSocket<ProtocolT>::do_read()
                     if (!ec)
                     {
                         mReadBuffer.commit(length);
-                        m_codec->poll(true);
+                        m_codec->poll();
                         _callbacks.dispatch();
                         this->do_read();
                     } else {
