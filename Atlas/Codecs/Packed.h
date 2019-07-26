@@ -164,7 +164,7 @@ protected:
         return data;
     }
 
-    inline const std::string hexDecode(std::string data)
+    inline std::string hexDecode(std::string data)
     {
 
         for (size_t i = 0; i < data.size(); i++) {

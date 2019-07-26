@@ -141,7 +141,19 @@ void testCodec()
 
 void testXMLSanity() {
 	std::string tooLargeNumber = std::to_string(std::numeric_limits<long>::max()) + "00";
-	std::string atlas_data = R"(<atlas><map><float name="toolargefloat">1.79769e+408</float><int name="toolargeint">)" + tooLargeNumber+ R"(</int><int name="validint">5</int><float name="validfloat">6.0</float></map></atlas>)";
+	std::string atlas_data = R"(<atlas>
+    <map>
+        <map name="empty_map" />
+        <list name="empty_list" />
+        <int name="empty_int" />
+        <float name="empty_float" />
+        <string name="empty_string" />
+        <float name="toolargefloat">1.79769e+408</float>
+        <int name="toolargeint">)" + tooLargeNumber+ R"(</int>
+        <int name="validint">5</int>
+        <float name="validfloat">6.0</float>
+    </map>
+</atlas>)";
 	std::stringstream ss2(atlas_data, std::ios::in);
 
 	Atlas::Message::QueuedDecoder decoder;
@@ -154,9 +166,14 @@ void testXMLSanity() {
 
 	}
 	MapType map2 = decoder.popMessage();
-    assert(map2.size() == 2);
+    assert(map2.size() == 7);
     assert(map2["validint"].Int() == 5);
     assert(map2["validfloat"].Float() == 6.0);
+    assert(map2["empty_map"].isMap());
+    assert(map2["empty_list"].isList());
+    assert(map2["empty_string"].isString());
+    assert(map2["empty_int"].isInt());
+    assert(map2["empty_float"].isFloat());
 }
 
 void testPackedSanity() {

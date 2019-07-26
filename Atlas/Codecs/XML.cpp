@@ -4,14 +4,15 @@
 
 // $Id$
 
-#include <Atlas/Codecs/XML.h>
+#include "Atlas/Codecs/XML.h"
+#include "Atlas/Message/Element.h"
 
 #include <iostream>
 
 #include <cstdlib>
 
 namespace Atlas { namespace Codecs {
-    
+
 XML::XML(std::istream& in, std::ostream& out, Atlas::Bridge & b)
     : m_istream(in)
     , m_ostream(out)
@@ -25,18 +26,18 @@ XML::XML(std::istream& in, std::ostream& out, Atlas::Bridge & b)
 void XML::tokenTag(char next)
 {
     m_tag.erase();
-    
+
     switch (next)
     {
 	case '/':
 	    m_token = TOKEN_END_TAG;
 	break;
-	
+
 	case '>':
 	    // FIXME signal error here
 	    // unexpected character
 	break;
-	
+
 	default:
 	    m_token = TOKEN_START_TAG;
 	    m_tag += next;
@@ -58,6 +59,12 @@ void XML::tokenStartTag(char next)
 	    m_token = TOKEN_DATA;
 	    m_data.push("");
 	break;
+
+    case '/':
+        parseStartTag();
+        m_token = TOKEN_END_TAG;
+        m_data.push("");
+        break;
 
 	default:
 	    m_tag += next;
@@ -110,7 +117,7 @@ void XML::parseStartTag()
     int tag_end = (int) m_tag.find(' ');
     int name_start = (int) m_tag.find("name=\"") + 6;
     int name_end = (int) m_tag.rfind('\"');
-    
+
     if (name_start < name_end)
     {
 	m_name = unescape(std::string(m_tag, (unsigned long) name_start, (unsigned long) (name_end - name_start)));
@@ -119,7 +126,7 @@ void XML::parseStartTag()
     {
 	m_name.erase();
     }
-    
+
     m_tag = std::string(m_tag, 0, (unsigned long) tag_end);
 
     switch (m_state.top())
@@ -136,7 +143,7 @@ void XML::parseStartTag()
 		// unexpected tag
 	    }
 	break;
-	
+
 	case PARSE_STREAM:
 	    if (m_tag == "map")
 	    {
@@ -149,7 +156,7 @@ void XML::parseStartTag()
 		// unexpected tag
 	    }
 	break;
-	
+
         case PARSE_MAP:
 	    if (m_tag == "map")
 	    {
@@ -179,7 +186,7 @@ void XML::parseStartTag()
 		// unexpected tag
 	    }
 	break;
-	
+
         case PARSE_LIST:
 	    if (m_tag == "map")
 	    {
@@ -227,7 +234,7 @@ void XML::parseEndTag()
 	    // FIXME signal error here
 	    // unexpected tag
 	break;
-	
+
 	case PARSE_STREAM:
 	    if (m_tag == "atlas")
 	    {
@@ -240,7 +247,7 @@ void XML::parseEndTag()
 		// unexpected tag
 	    }
 	break;
-	
+
         case PARSE_MAP:
 	    if (m_tag == "map")
 	    {
@@ -253,7 +260,7 @@ void XML::parseEndTag()
 		// unexpected tag
 	    }
 	break;
-	
+
         case PARSE_LIST:
 	    if (m_tag == "list")
 	    {
@@ -272,13 +279,18 @@ void XML::parseEndTag()
 	    {
 			m_state.pop();
 			try {
+			    Atlas::Message::IntType value = 0;
+			    auto data = m_data.top();
+			    if (!data.empty()) {
+			        value = std::stol(data);
+			    }
 				if (m_state.top() == PARSE_MAP)
 				{
-					m_bridge.mapIntItem(m_name, std::stol(m_data.top()));
+					m_bridge.mapIntItem(m_name, value);
 				}
 				else
 				{
-					m_bridge.listIntItem(std::stol(m_data.top()));
+					m_bridge.listIntItem(value);
 				}
 			} catch (...) {
 				//Could not parse long; just ignore
@@ -296,13 +308,18 @@ void XML::parseEndTag()
 	    {
 			m_state.pop();
 			try {
+                Atlas::Message::FloatType value = 0;
+                auto data = m_data.top();
+                if (!data.empty()) {
+                    value = std::stod(data);
+                }
 				if (m_state.top() == PARSE_MAP)
 				{
-					m_bridge.mapFloatItem(m_name, std::stod(m_data.top()));
+					m_bridge.mapFloatItem(m_name, value);
 				}
 				else
 				{
-					m_bridge.listFloatItem(std::stod(m_data.top()));
+					m_bridge.listFloatItem(value);
 				}
 			} catch (...) {
 				//Could not parse double; just ignore.
@@ -347,9 +364,9 @@ void XML::poll(bool can_read)
 
     while ((count = m_istream.rdbuf()->in_avail()) > 0) {
 
-        for (int i = 0; i < count; ++i) {
+        for (std::streamsize i = 0; i < count; ++i) {
 
-	    int next = m_istream.rdbuf()->sbumpc();
+	    char next = m_istream.rdbuf()->sbumpc();
 
 	    switch (m_token)
 	    {

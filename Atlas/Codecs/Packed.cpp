@@ -329,9 +329,9 @@ void Packed::poll(bool can_read)
 
     while ((count = m_istream.rdbuf()->in_avail()) > 0) {
 
-        for (int i = 0; i < count; ++i) {
+        for (std::streamsize i = 0; i < count; ++i) {
 
-	    int next = m_istream.rdbuf()->sbumpc();
+	    char next = m_istream.rdbuf()->sbumpc();
 
 	    switch (m_state.top())
 	    {
