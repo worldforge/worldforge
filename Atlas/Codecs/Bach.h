@@ -12,89 +12,115 @@
 #include <iosfwd>
 #include <stack>
 
-namespace Atlas { namespace Codecs {
+namespace Atlas {
+    namespace Codecs {
 
 /** @file Codecs/Bach.h
  * This class implements Bach Codec
  */
 
-class Bach : public Codec
-{
-  public:
+        class Bach : public Codec {
+        public:
 
-    Bach(std::istream& in, std::ostream& out, Atlas::Bridge & b);
+            Bach(std::istream &in, std::ostream &out, Atlas::Bridge &b);
 
-	void poll(bool can_read) override;
+            void poll(bool can_read) override;
 
-	void streamBegin() override;
-	void streamMessage() override;
-	void streamEnd() override;
+            void streamBegin() override;
 
-	void mapMapItem(std::string name) override;
-	void mapListItem(std::string name) override;
-	void mapIntItem(std::string name, long) override;
-	void mapFloatItem(std::string name, double) override;
-	void mapStringItem(std::string name, std::string) override;
-	void mapEnd() override;
+            void streamMessage() override;
 
-	void listMapItem() override;
-	void listListItem() override;
-	void listIntItem(long) override;
-	void listFloatItem(double) override;
-	void listStringItem(std::string) override;
-	void listEnd() override;
+            void streamEnd() override;
 
-    unsigned linenum() const {return m_linenum;}
+            void mapMapItem(std::string name) override;
 
-  protected:
+            void mapListItem(std::string name) override;
 
-    std::istream& m_istream;
-    std::ostream& m_ostream;
-    Bridge & m_bridge;
-    bool m_comma;
-    unsigned m_linenum;
+            void mapIntItem(std::string name, long) override;
 
-    enum State
-    {
-        PARSE_INIT,
-	PARSE_STREAM,
-        PARSE_MAP,
-        PARSE_LIST,
-        PARSE_NAME,
-        PARSE_DATA,
-        PARSE_INT,
-        PARSE_FLOAT,
-        PARSE_STRING,
-	PARSE_LITERAL, // for literal character escaped with backslash
-	PARSE_COMMENT // for when we're in the middle of a comment field
-    };
+            void mapFloatItem(std::string name, double) override;
 
-    bool stringmode() const;
+            void mapStringItem(std::string name, std::string) override;
 
-    std::string m_name, m_data;
-    std::stack<State> m_state;
+            void mapEnd() override;
 
-    inline void parseInit(char);
-    inline void parseStream(char);
-    inline void parseMap(char);
-    inline void parseList(char);
-    inline void parseData(char);
-    inline void parseInt(char);
-    inline void parseFloat(char);
-    inline void parseString(char);
-    inline void parseLiteral(char);
-    inline void parseName(char);
-    inline void parseComment(char);
+            void listMapItem() override;
 
-    inline std::string encodeString(std::string);
-    inline std::string decodeString(std::string);
+            void listListItem() override;
 
-    void writeIntItem(const std::string &,long);
-    void writeFloatItem(const std::string &,double);
-    void writeStringItem(const std::string &,std::string);
-    void writeLine(const std::string &,bool=true,bool=false);
-};
+            void listIntItem(long) override;
 
-} } // namespace Atlas::Codecs
+            void listFloatItem(double) override;
+
+            void listStringItem(std::string) override;
+
+            void listEnd() override;
+
+            unsigned linenum() const { return m_linenum; }
+
+        protected:
+
+            std::istream &m_istream;
+            std::ostream &m_ostream;
+            Bridge &m_bridge;
+            bool m_comma;
+            unsigned m_linenum;
+
+            enum State {
+                PARSE_INIT,
+                PARSE_STREAM,
+                PARSE_MAP,
+                PARSE_LIST,
+                PARSE_NAME,
+                PARSE_DATA,
+                PARSE_INT,
+                PARSE_FLOAT,
+                PARSE_STRING,
+                PARSE_LITERAL, // for literal character escaped with backslash
+                PARSE_COMMENT // for when we're in the middle of a comment field
+            };
+
+            bool stringmode() const;
+
+            std::string m_name, m_data;
+            std::stack<State> m_state;
+
+            inline void parseInit(char);
+
+            inline void parseStream(char);
+
+            inline void parseMap(char);
+
+            inline void parseList(char);
+
+            inline void parseData(char);
+
+            inline void parseInt(char);
+
+            inline void parseFloat(char);
+
+            inline void parseString(char);
+
+            inline void parseLiteral(char);
+
+            inline void parseName(char);
+
+            inline void parseComment(char);
+
+            static inline std::string encodeString(std::string);
+
+            static inline std::string decodeString(std::string);
+
+            void writeIntItem(const std::string &, long);
+
+            void writeFloatItem(const std::string &, double);
+
+            void writeStringItem(const std::string &, std::string);
+
+            void writeLine(const std::string &, bool= true, bool= false);
+        };
+
+    }
+} // namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_BACH_H

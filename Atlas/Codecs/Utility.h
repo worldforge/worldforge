@@ -20,31 +20,31 @@
 #include <cstdio>
 #include <string>
 
-namespace Atlas { namespace Codecs {
+namespace Atlas {
+    namespace Codecs {
 
 /// Convert an ASCII char to its hexadecimal value
-inline const std::string charToHex(char c)
-{
-    char hex[3];
+        inline std::string charToHex(char c) {
+            char hex[3];
 #ifdef _WIN32
-    _snprintf(hex, 3, "%x", c);
+            _snprintf(hex, 3, "%x", c);
 #else
-    snprintf(hex, 3, "%x", c);
+            snprintf(hex, 3, "%x", c);
 #endif
-    return hex;
-}
+            return hex;
+        }
 
 /// Convert a string with a hexadecimal value (2 characters) to an ASCII char
-inline char hexToChar(const char* hex)
-{
-    int c;
-    if (sscanf(hex, "%x", &c) == 1) {
-        return (char) c;
-    } else {
-        return (char) 0;
-    }
-}
+        inline char hexToChar(const char *hex) {
+            int c;
+            if (sscanf(hex, "%x", &c) == 1) {
+                return (char) c;
+            } else {
+                return (char) 0;
+            }
+        }
 
-} } // namespace Atlas::Codecs
+    }
+} // namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_UTILITY_H
