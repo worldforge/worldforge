@@ -175,7 +175,7 @@ extern const std::string STAMP_CONTAINS_ATTR;
 // Inlined member functions follow.
 //
 
-const uint32_t LOC_FLAG = 1 << 6;
+const uint32_t LOC_FLAG = 1u << 6u;
 
 inline void RootEntityData::setLoc(const std::string& val)
 {
@@ -183,7 +183,7 @@ inline void RootEntityData::setLoc(const std::string& val)
     m_attrFlags |= LOC_FLAG;
 }
 
-const uint32_t POS_FLAG = 1 << 7;
+const uint32_t POS_FLAG = 1u << 7u;
 
 inline void RootEntityData::setPos(const std::vector<double>& val)
 {
@@ -202,7 +202,7 @@ inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
     }
 }
 
-const uint32_t VELOCITY_FLAG = 1 << 8;
+const uint32_t VELOCITY_FLAG = 1u << 8u;
 
 inline void RootEntityData::setVelocity(const std::vector<double>& val)
 {
@@ -221,7 +221,7 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
     }
 }
 
-const uint32_t CONTAINS_FLAG = 1 << 9;
+const uint32_t CONTAINS_FLAG = 1u << 9u;
 
 inline void RootEntityData::setContains(const std::list<std::string>& val)
 {
@@ -240,7 +240,7 @@ inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& va
     }
 }
 
-const uint32_t STAMP_CONTAINS_FLAG = 1 << 10;
+const uint32_t STAMP_CONTAINS_FLAG = 1u << 10u;
 
 inline void RootEntityData::setStampContains(double val)
 {

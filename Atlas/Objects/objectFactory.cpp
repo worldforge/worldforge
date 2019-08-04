@@ -233,7 +233,7 @@ int Factories::addFactory(const std::string& name, FactoryMethod method, Default
 std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& val)
 {
     std::vector<Root> objects;
-    objects.reserve(val.size());
+    objects.resize(val.size());
     for (const auto& entry : val) {
         if (entry.isMap()) {
             objects.push_back(Factories::instance()->createObject(entry.Map()));

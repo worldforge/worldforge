@@ -168,7 +168,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def static_inline_sets(self, obj, statics):
         classname = classize(obj.id, data=1)
         for attr in statics:
-            self.write("const uint32_t %s = 1 << %i;\n" %
+            self.write("const uint32_t %s = 1u << %iu;\n" %
                        (attr.flag_name, attr.enum))
             self.write("\n")
             self.write(attr.inline_set(classname))

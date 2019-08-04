@@ -168,7 +168,7 @@ extern const std::string NAME_ATTR;
 // Inlined member functions follow.
 //
 
-const uint32_t ID_FLAG = 1 << 1;
+const uint32_t ID_FLAG = 1u << 1u;
 
 inline void RootData::setId(const std::string& val)
 {
@@ -176,7 +176,7 @@ inline void RootData::setId(const std::string& val)
     m_attrFlags |= ID_FLAG;
 }
 
-const uint32_t PARENT_FLAG = 1 << 2;
+const uint32_t PARENT_FLAG = 1u << 2u;
 
 inline void RootData::setParent(const std::string& val)
 {
@@ -184,7 +184,7 @@ inline void RootData::setParent(const std::string& val)
     m_attrFlags |= PARENT_FLAG;
 }
 
-const uint32_t STAMP_FLAG = 1 << 3;
+const uint32_t STAMP_FLAG = 1u << 3u;
 
 inline void RootData::setStamp(double val)
 {
@@ -192,7 +192,7 @@ inline void RootData::setStamp(double val)
     m_attrFlags |= STAMP_FLAG;
 }
 
-const uint32_t OBJTYPE_FLAG = 1 << 4;
+const uint32_t OBJTYPE_FLAG = 1u << 4u;
 
 inline void RootData::setObjtype(const std::string& val)
 {
@@ -200,7 +200,7 @@ inline void RootData::setObjtype(const std::string& val)
     m_attrFlags |= OBJTYPE_FLAG;
 }
 
-const uint32_t NAME_FLAG = 1 << 5;
+const uint32_t NAME_FLAG = 1u << 5u;
 
 inline void RootData::setName(const std::string& val)
 {

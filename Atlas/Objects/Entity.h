@@ -196,7 +196,7 @@ extern const std::string CHARACTERS_ATTR;
 // Inlined member functions follow.
 //
 
-const uint32_t USERNAME_FLAG = 1 << 11;
+const uint32_t USERNAME_FLAG = 1u << 11u;
 
 inline void AccountData::setUsername(const std::string& val)
 {
@@ -204,7 +204,7 @@ inline void AccountData::setUsername(const std::string& val)
     m_attrFlags |= USERNAME_FLAG;
 }
 
-const uint32_t PASSWORD_FLAG = 1 << 12;
+const uint32_t PASSWORD_FLAG = 1u << 12u;
 
 inline void AccountData::setPassword(const std::string& val)
 {
@@ -212,7 +212,7 @@ inline void AccountData::setPassword(const std::string& val)
     m_attrFlags |= PASSWORD_FLAG;
 }
 
-const uint32_t CHARACTERS_FLAG = 1 << 13;
+const uint32_t CHARACTERS_FLAG = 1u << 13u;
 
 inline void AccountData::setCharacters(const std::list<std::string>& val)
 {
