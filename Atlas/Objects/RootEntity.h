@@ -32,7 +32,7 @@ class RootEntityData : public RootData
 {
 protected:
     /// Construct a RootEntityData class definition.
-    RootEntityData(RootEntityData *defaults = nullptr) : 
+    explicit RootEntityData(RootEntityData *defaults = nullptr) : 
         RootData((RootData*)defaults)
     {
         m_class_no = ROOT_ENTITY_NO;
@@ -88,19 +88,19 @@ public:
     /// Retrieve the "pos" attribute as a non-const reference.
     std::vector<double>& modifyPos();
     /// Retrieve the "pos" attribute AsList.
-    const Atlas::Message::ListType getPosAsList() const;
+    Atlas::Message::ListType getPosAsList() const;
     /// Retrieve the "velocity" attribute.
     const std::vector<double>& getVelocity() const;
     /// Retrieve the "velocity" attribute as a non-const reference.
     std::vector<double>& modifyVelocity();
     /// Retrieve the "velocity" attribute AsList.
-    const Atlas::Message::ListType getVelocityAsList() const;
+    Atlas::Message::ListType getVelocityAsList() const;
     /// Retrieve the "contains" attribute.
     const std::list<std::string>& getContains() const;
     /// Retrieve the "contains" attribute as a non-const reference.
     std::list<std::string>& modifyContains();
     /// Retrieve the "contains" attribute AsList.
-    const Atlas::Message::ListType getContainsAsList() const;
+    Atlas::Message::ListType getContainsAsList() const;
     /// Retrieve the "stamp_contains" attribute.
     double getStampContains() const;
     /// Retrieve the "stamp_contains" attribute as a non-const reference.
@@ -278,7 +278,7 @@ inline std::vector<double>& RootEntityData::modifyPos()
     return attr_pos;
 }
 
-inline const Atlas::Message::ListType RootEntityData::getPosAsList() const
+inline Atlas::Message::ListType RootEntityData::getPosAsList() const
 {
     const std::vector<double>& lst_in = getPos();
     Atlas::Message::ListType lst_out;
@@ -303,7 +303,7 @@ inline std::vector<double>& RootEntityData::modifyVelocity()
     return attr_velocity;
 }
 
-inline const Atlas::Message::ListType RootEntityData::getVelocityAsList() const
+inline Atlas::Message::ListType RootEntityData::getVelocityAsList() const
 {
     const std::vector<double>& lst_in = getVelocity();
     Atlas::Message::ListType lst_out;
@@ -328,7 +328,7 @@ inline std::list<std::string>& RootEntityData::modifyContains()
     return attr_contains;
 }
 
-inline const Atlas::Message::ListType RootEntityData::getContainsAsList() const
+inline Atlas::Message::ListType RootEntityData::getContainsAsList() const
 {
     const std::list<std::string>& lst_in = getContains();
     Atlas::Message::ListType lst_out;

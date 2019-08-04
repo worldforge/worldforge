@@ -37,7 +37,7 @@ class RootData : public BaseObjectData
 {
 protected:
     /// Construct a RootData class definition.
-    RootData(RootData *defaults = nullptr) : 
+    explicit RootData(RootData *defaults = nullptr) : 
         BaseObjectData((BaseObjectData*)defaults)
     {
         m_class_no = ROOT_NO;

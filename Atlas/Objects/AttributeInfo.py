@@ -361,7 +361,8 @@ class TypedList(AttributeInfo):
     def __init__(self, name, value, type):
         AttributeInfo.__init__(self, name, value, type)
         self.as_object = "AsList"
-        self.cpp_param_type_as_object = cpp_param_type["list"][:-1]
+        # Need to remove both the "&" and the "const" qualifier.
+        self.cpp_param_type_as_object = cpp_param_type["list"][len("const "):-1]
         self.cpp_param_type_as_object_ref = cpp_param_type["list"]
         self.ctype_as_object = "List"
         element_type = string.split(type,"_")[0]

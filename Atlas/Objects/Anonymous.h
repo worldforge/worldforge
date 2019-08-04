@@ -32,7 +32,7 @@ class AnonymousData : public RootEntityData
 {
 protected:
     /// Construct a AnonymousData class definition.
-    AnonymousData(AnonymousData *defaults = nullptr) : 
+    explicit AnonymousData(AnonymousData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = ANONYMOUS_NO;

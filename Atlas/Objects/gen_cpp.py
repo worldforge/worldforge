@@ -153,7 +153,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
         serialno_name = string.upper(obj.id) + "_NO"
-        self.write("""    %(classname)s(%(classname)s *defaults = nullptr) : 
+        self.write("""    explicit %(classname)s(%(classname)s *defaults = nullptr) : 
         %(classname_base)s((%(classname_base)s*)defaults)
     {
         m_class_no = %(serialno_name)s;

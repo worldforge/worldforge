@@ -42,7 +42,7 @@ class RootOperationData : public RootData
 {
 protected:
     /// Construct a RootOperationData class definition.
-    RootOperationData(RootOperationData *defaults = nullptr) : 
+    explicit RootOperationData(RootOperationData *defaults = nullptr) : 
         RootData((RootData*)defaults)
     {
         m_class_no = ROOT_OPERATION_NO;

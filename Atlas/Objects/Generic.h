@@ -40,7 +40,7 @@ class GenericData : public RootOperationData
 {
 protected:
     /// Construct a GenericData class definition.
-    GenericData(GenericData *defaults = nullptr) : 
+    explicit GenericData(GenericData *defaults = nullptr) : 
         RootOperationData((RootOperationData*)defaults)
     {
         m_class_no = GENERIC_NO;

@@ -33,7 +33,7 @@ class AdminEntityData : public RootEntityData
 {
 protected:
     /// Construct a AdminEntityData class definition.
-    AdminEntityData(AdminEntityData *defaults = nullptr) : 
+    explicit AdminEntityData(AdminEntityData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = ADMIN_ENTITY_NO;
@@ -87,7 +87,7 @@ class AccountData : public AdminEntityData
 {
 protected:
     /// Construct a AccountData class definition.
-    AccountData(AccountData *defaults = nullptr) : 
+    explicit AccountData(AccountData *defaults = nullptr) : 
         AdminEntityData((AdminEntityData*)defaults)
     {
         m_class_no = ACCOUNT_NO;
@@ -139,7 +139,7 @@ public:
     /// Retrieve the "characters" attribute as a non-const reference.
     std::list<std::string>& modifyCharacters();
     /// Retrieve the "characters" attribute AsList.
-    const Atlas::Message::ListType getCharactersAsList() const;
+    Atlas::Message::ListType getCharactersAsList() const;
 
     /// Is "username" value default?
     bool isDefaultUsername() const;
@@ -276,7 +276,7 @@ inline std::list<std::string>& AccountData::modifyCharacters()
     return attr_characters;
 }
 
-inline const Atlas::Message::ListType AccountData::getCharactersAsList() const
+inline Atlas::Message::ListType AccountData::getCharactersAsList() const
 {
     const std::list<std::string>& lst_in = getCharacters();
     Atlas::Message::ListType lst_out;
@@ -322,7 +322,7 @@ class PlayerData : public AccountData
 {
 protected:
     /// Construct a PlayerData class definition.
-    PlayerData(PlayerData *defaults = nullptr) : 
+    explicit PlayerData(PlayerData *defaults = nullptr) : 
         AccountData((AccountData*)defaults)
     {
         m_class_no = PLAYER_NO;
@@ -376,7 +376,7 @@ class AdminData : public AccountData
 {
 protected:
     /// Construct a AdminData class definition.
-    AdminData(AdminData *defaults = nullptr) : 
+    explicit AdminData(AdminData *defaults = nullptr) : 
         AccountData((AccountData*)defaults)
     {
         m_class_no = ADMIN_NO;
@@ -430,7 +430,7 @@ class GameData : public AdminEntityData
 {
 protected:
     /// Construct a GameData class definition.
-    GameData(GameData *defaults = nullptr) : 
+    explicit GameData(GameData *defaults = nullptr) : 
         AdminEntityData((AdminEntityData*)defaults)
     {
         m_class_no = GAME_NO;
@@ -484,7 +484,7 @@ class GameEntityData : public RootEntityData
 {
 protected:
     /// Construct a GameEntityData class definition.
-    GameEntityData(GameEntityData *defaults = nullptr) : 
+    explicit GameEntityData(GameEntityData *defaults = nullptr) : 
         RootEntityData((RootEntityData*)defaults)
     {
         m_class_no = GAME_ENTITY_NO;

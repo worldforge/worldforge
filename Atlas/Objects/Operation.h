@@ -41,7 +41,7 @@ class ActionData : public RootOperationData
 {
 protected:
     /// Construct a ActionData class definition.
-    ActionData(ActionData *defaults = nullptr) : 
+    explicit ActionData(ActionData *defaults = nullptr) : 
         RootOperationData((RootOperationData*)defaults)
     {
         m_class_no = ACTION_NO;
@@ -95,7 +95,7 @@ class CreateData : public ActionData
 {
 protected:
     /// Construct a CreateData class definition.
-    CreateData(CreateData *defaults = nullptr) : 
+    explicit CreateData(CreateData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = CREATE_NO;
@@ -149,7 +149,7 @@ class CombineData : public CreateData
 {
 protected:
     /// Construct a CombineData class definition.
-    CombineData(CombineData *defaults = nullptr) : 
+    explicit CombineData(CombineData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = COMBINE_NO;
@@ -203,7 +203,7 @@ class DivideData : public CreateData
 {
 protected:
     /// Construct a DivideData class definition.
-    DivideData(DivideData *defaults = nullptr) : 
+    explicit DivideData(DivideData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = DIVIDE_NO;
@@ -257,7 +257,7 @@ class CommunicateData : public CreateData
 {
 protected:
     /// Construct a CommunicateData class definition.
-    CommunicateData(CommunicateData *defaults = nullptr) : 
+    explicit CommunicateData(CommunicateData *defaults = nullptr) : 
         CreateData((CreateData*)defaults)
     {
         m_class_no = COMMUNICATE_NO;
@@ -311,7 +311,7 @@ class TalkData : public CommunicateData
 {
 protected:
     /// Construct a TalkData class definition.
-    TalkData(TalkData *defaults = nullptr) : 
+    explicit TalkData(TalkData *defaults = nullptr) : 
         CommunicateData((CommunicateData*)defaults)
     {
         m_class_no = TALK_NO;
@@ -373,7 +373,7 @@ class DeleteData : public ActionData
 {
 protected:
     /// Construct a DeleteData class definition.
-    DeleteData(DeleteData *defaults = nullptr) : 
+    explicit DeleteData(DeleteData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = DELETE_NO;
@@ -435,7 +435,7 @@ class SetData : public ActionData
 {
 protected:
     /// Construct a SetData class definition.
-    SetData(SetData *defaults = nullptr) : 
+    explicit SetData(SetData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = SET_NO;
@@ -497,7 +497,7 @@ class AffectData : public SetData
 {
 protected:
     /// Construct a AffectData class definition.
-    AffectData(AffectData *defaults = nullptr) : 
+    explicit AffectData(AffectData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = AFFECT_NO;
@@ -551,7 +551,7 @@ class MoveData : public SetData
 {
 protected:
     /// Construct a MoveData class definition.
-    MoveData(MoveData *defaults = nullptr) : 
+    explicit MoveData(MoveData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = MOVE_NO;
@@ -613,7 +613,7 @@ class WieldData : public SetData
 {
 protected:
     /// Construct a WieldData class definition.
-    WieldData(WieldData *defaults = nullptr) : 
+    explicit WieldData(WieldData *defaults = nullptr) : 
         SetData((SetData*)defaults)
     {
         m_class_no = WIELD_NO;
@@ -675,7 +675,7 @@ class GetData : public ActionData
 {
 protected:
     /// Construct a GetData class definition.
-    GetData(GetData *defaults = nullptr) : 
+    explicit GetData(GetData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = GET_NO;
@@ -737,7 +737,7 @@ class PerceiveData : public GetData
 {
 protected:
     /// Construct a PerceiveData class definition.
-    PerceiveData(PerceiveData *defaults = nullptr) : 
+    explicit PerceiveData(PerceiveData *defaults = nullptr) : 
         GetData((GetData*)defaults)
     {
         m_class_no = PERCEIVE_NO;
@@ -799,7 +799,7 @@ class LookData : public PerceiveData
 {
 protected:
     /// Construct a LookData class definition.
-    LookData(LookData *defaults = nullptr) : 
+    explicit LookData(LookData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = LOOK_NO;
@@ -861,7 +861,7 @@ class ListenData : public PerceiveData
 {
 protected:
     /// Construct a ListenData class definition.
-    ListenData(ListenData *defaults = nullptr) : 
+    explicit ListenData(ListenData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = LISTEN_NO;
@@ -923,7 +923,7 @@ class SniffData : public PerceiveData
 {
 protected:
     /// Construct a SniffData class definition.
-    SniffData(SniffData *defaults = nullptr) : 
+    explicit SniffData(SniffData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = SNIFF_NO;
@@ -985,7 +985,7 @@ class TouchData : public PerceiveData
 {
 protected:
     /// Construct a TouchData class definition.
-    TouchData(TouchData *defaults = nullptr) : 
+    explicit TouchData(TouchData *defaults = nullptr) : 
         PerceiveData((PerceiveData*)defaults)
     {
         m_class_no = TOUCH_NO;
@@ -1039,7 +1039,7 @@ class LoginData : public GetData
 {
 protected:
     /// Construct a LoginData class definition.
-    LoginData(LoginData *defaults = nullptr) : 
+    explicit LoginData(LoginData *defaults = nullptr) : 
         GetData((GetData*)defaults)
     {
         m_class_no = LOGIN_NO;
@@ -1093,7 +1093,7 @@ class LogoutData : public LoginData
 {
 protected:
     /// Construct a LogoutData class definition.
-    LogoutData(LogoutData *defaults = nullptr) : 
+    explicit LogoutData(LogoutData *defaults = nullptr) : 
         LoginData((LoginData*)defaults)
     {
         m_class_no = LOGOUT_NO;
@@ -1155,7 +1155,7 @@ class ImaginaryData : public ActionData
 {
 protected:
     /// Construct a ImaginaryData class definition.
-    ImaginaryData(ImaginaryData *defaults = nullptr) : 
+    explicit ImaginaryData(ImaginaryData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = IMAGINARY_NO;
@@ -1217,7 +1217,7 @@ class UseData : public ActionData
 {
 protected:
     /// Construct a UseData class definition.
-    UseData(UseData *defaults = nullptr) : 
+    explicit UseData(UseData *defaults = nullptr) : 
         ActionData((ActionData*)defaults)
     {
         m_class_no = USE_NO;
@@ -1279,7 +1279,7 @@ class InfoData : public RootOperationData
 {
 protected:
     /// Construct a InfoData class definition.
-    InfoData(InfoData *defaults = nullptr) : 
+    explicit InfoData(InfoData *defaults = nullptr) : 
         RootOperationData((RootOperationData*)defaults)
     {
         m_class_no = INFO_NO;
@@ -1333,7 +1333,7 @@ class PerceptionData : public InfoData
 {
 protected:
     /// Construct a PerceptionData class definition.
-    PerceptionData(PerceptionData *defaults = nullptr) : 
+    explicit PerceptionData(PerceptionData *defaults = nullptr) : 
         InfoData((InfoData*)defaults)
     {
         m_class_no = PERCEPTION_NO;
@@ -1387,7 +1387,7 @@ class UnseenData : public PerceptionData
 {
 protected:
     /// Construct a UnseenData class definition.
-    UnseenData(UnseenData *defaults = nullptr) : 
+    explicit UnseenData(UnseenData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = UNSEEN_NO;
@@ -1441,7 +1441,7 @@ class SightData : public PerceptionData
 {
 protected:
     /// Construct a SightData class definition.
-    SightData(SightData *defaults = nullptr) : 
+    explicit SightData(SightData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SIGHT_NO;
@@ -1495,7 +1495,7 @@ class AppearanceData : public SightData
 {
 protected:
     /// Construct a AppearanceData class definition.
-    AppearanceData(AppearanceData *defaults = nullptr) : 
+    explicit AppearanceData(AppearanceData *defaults = nullptr) : 
         SightData((SightData*)defaults)
     {
         m_class_no = APPEARANCE_NO;
@@ -1549,7 +1549,7 @@ class DisappearanceData : public SightData
 {
 protected:
     /// Construct a DisappearanceData class definition.
-    DisappearanceData(DisappearanceData *defaults = nullptr) : 
+    explicit DisappearanceData(DisappearanceData *defaults = nullptr) : 
         SightData((SightData*)defaults)
     {
         m_class_no = DISAPPEARANCE_NO;
@@ -1603,7 +1603,7 @@ class SoundData : public PerceptionData
 {
 protected:
     /// Construct a SoundData class definition.
-    SoundData(SoundData *defaults = nullptr) : 
+    explicit SoundData(SoundData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SOUND_NO;
@@ -1657,7 +1657,7 @@ class SmellData : public PerceptionData
 {
 protected:
     /// Construct a SmellData class definition.
-    SmellData(SmellData *defaults = nullptr) : 
+    explicit SmellData(SmellData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = SMELL_NO;
@@ -1711,7 +1711,7 @@ class FeelData : public PerceptionData
 {
 protected:
     /// Construct a FeelData class definition.
-    FeelData(FeelData *defaults = nullptr) : 
+    explicit FeelData(FeelData *defaults = nullptr) : 
         PerceptionData((PerceptionData*)defaults)
     {
         m_class_no = FEEL_NO;
@@ -1773,7 +1773,7 @@ class ErrorData : public InfoData
 {
 protected:
     /// Construct a ErrorData class definition.
-    ErrorData(ErrorData *defaults = nullptr) : 
+    explicit ErrorData(ErrorData *defaults = nullptr) : 
         InfoData((InfoData*)defaults)
     {
         m_class_no = ERROR_NO;
@@ -1835,7 +1835,7 @@ class ChangeData : public InfoData
 {
 protected:
     /// Construct a ChangeData class definition.
-    ChangeData(ChangeData *defaults = nullptr) : 
+    explicit ChangeData(ChangeData *defaults = nullptr) : 
         InfoData((InfoData*)defaults)
     {
         m_class_no = CHANGE_NO;
