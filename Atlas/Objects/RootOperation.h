@@ -265,12 +265,7 @@ inline void RootOperationData::setArgs(const std::vector<Root>& val)
 inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
 {
     m_attrFlags |= ARGS_FLAG;
-    attr_args.resize(0);
-    for (const auto& entry : val) {
-        if (entry.isMap()) {
-            attr_args.push_back(Factories::instance()->createObject(entry.Map()));
-        }
-    }
+    attr_args = Factories::parseListOfObjects(val);
 }
 
 template <class ObjectData>

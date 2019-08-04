@@ -321,12 +321,7 @@ class ArgsRootList(AttributeInfo):
                """inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
 {
     m_attrFlags |= %(flag_name)s;
-    attr_%(name)s.resize(0);
-    for (const auto& entry : val) {
-        if (entry.isMap()) {
-            attr_%(name)s.push_back(Factories::instance()->createObject(entry.Map()));
-        }
-    }
+    attr_%(name)s = Factories::parseListOfObjects(val);
 }
 
 template <class ObjectData>

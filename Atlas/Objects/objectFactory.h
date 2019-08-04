@@ -75,6 +75,14 @@ public:
     std::list<std::string> getKeys();
     int addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod);
 
+
+    /**
+     * Parses the supplied list into a vector of Root objects.
+     * @param val
+     * @return
+     */
+	static std::vector<Root> parseListOfObjects(const Atlas::Message::ListType& val);
+
     static Factories * instance();
 private:
     FactoryMap m_factories;
