@@ -68,10 +68,11 @@ Entity* ViewEntity::getEntity(const std::string& id) {
 	return child;
 }
 
-void ViewEntity::onTaskAdded(Task* task)
+void ViewEntity::onTaskAdded(const std::string& id, Task* task)
 {
 	task->ProgressRateChanged.connect(sigc::bind(sigc::mem_fun(*this, &ViewEntity::task_ProgressRateChanged), task));
-	Entity::onTaskAdded(task);
+	Entity::onTaskAdded(id, task);
+	m_view->taskRateChanged(task);
 }
 
 void ViewEntity::task_ProgressRateChanged(Task* task)

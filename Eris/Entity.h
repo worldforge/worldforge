@@ -169,7 +169,7 @@ public:
      * @see getInstanceAttributes() for a similiar method which only returns those attributes that are local to this entity.
      * @return A map of the combined attributes of both this entity and all of it's TypeInfo parents.
      */
-    const AttrMap getAttributes() const;
+    AttrMap getAttributes() const;
     
     /**
      * @brief Gets all locally defined attributes.
@@ -348,11 +348,11 @@ public:
     /**
     Emitted when a task has been added to the entity. Argument is the task.
     */
-    sigc::signal<void, Task*> TaskAdded;
+    sigc::signal<void, const std::string&, Task*> TaskAdded;
     /**
     Emitted when a task has been removed from the entity. Argument is the task.
     */
-    sigc::signal<void, Task*> TaskRemoved;
+    sigc::signal<void, const std::string&, Task*> TaskRemoved;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
@@ -416,9 +416,10 @@ protected:
 
     /**
      * @brief Over-rideable hook for when tasks are added.
+     * @param id Id of the task.
      * @param task The new task.
      */
-    virtual void onTaskAdded(Task* task);
+    virtual void onTaskAdded(const std::string& id, Task* task);
 
     friend class IGRouter;
     friend class View;

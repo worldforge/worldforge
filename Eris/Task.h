@@ -46,9 +46,7 @@ public:
     bool isComplete() const;
     
     sigc::signal<void> Completed;
-    
-    sigc::signal<void> Cancelled;
-    
+
     sigc::signal<void> Progressed;
 
     sigc::signal<void> ProgressRateChanged;

@@ -43,6 +43,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
     m_stamp(-1.0f),
     m_visible(false),
     m_limbo(false),
+	m_angularMag(0),
     m_updateLevel(0),
     m_hasBBox(false),
     m_moving(false),
@@ -60,7 +61,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity()
 {
-    assert(m_initialised == false);   
+    assert(!m_initialised);
 }
 
 void Entity::shutdown()
@@ -69,7 +70,7 @@ void Entity::shutdown()
 
     //Delete any lingering tasks.
     for (auto& entry : m_tasks) {
-        TaskRemoved(entry.second);
+        TaskRemoved(entry.first, entry.second);
         delete entry.second;
     }
 
@@ -126,7 +127,7 @@ bool Entity::hasAttr(const std::string& attr) const
         return true;
     } else if (m_type) {
         ///it wasn't locally defined, now check with typeinfo
-        if (m_type->getAttribute(attr) != 0) {
+        if (m_type->getAttribute(attr) != nullptr) {
             return true;
         }
     }
@@ -153,7 +154,7 @@ const Element* Entity::ptrOfAttr(const std::string& attr) const
 }
 
 
-const Entity::AttrMap Entity::getAttributes() const
+Entity::AttrMap Entity::getAttributes() const
 {
     ///Merge both the local attributes and the type default attributes.
     AttrMap attributes;
@@ -377,9 +378,9 @@ void Entity::onChildRemoved(Entity* child)
     ChildRemoved(child);
 }
 
-void Entity::onTaskAdded(Task* task)
+void Entity::onTaskAdded(const std::string& id, Task* task)
 {
-	TaskAdded(task);
+	TaskAdded(id, task);
 }
 
 
@@ -556,7 +557,7 @@ void Entity::updateTasks(const Element& e)
 {
     if (e.isNone()) {
         for (auto& entry : m_tasks) {
-            TaskRemoved(entry.second);
+            TaskRemoved(entry.first, entry.second);
             delete entry.second;
         }
         return;
@@ -589,11 +590,12 @@ void Entity::updateTasks(const Element& e)
 
         auto tasksI = previousTasks.find(entry.first);
         Task *task;
-        
+
+        bool newTask = false;
         if (tasksI == previousTasks.end())
         {   // not found, create a new one
             task = new Task(this, it->second.asString());
-            onTaskAdded(task);
+            newTask = true;
         } else {
             task = tasksI->second;
             previousTasks.erase(entry.first);
@@ -601,12 +603,15 @@ void Entity::updateTasks(const Element& e)
         
         m_tasks.emplace(entry.first, task);
         task->updateFromAtlas(tkmap);
+        if (newTask) {
+        	onTaskAdded(entry.first, task);
+        }
     } // of Atlas-specified tasks iteration
     
     for (auto& entry : previousTasks) {
 
         if (entry.second) {
-            TaskRemoved(entry.second);
+            TaskRemoved(entry.first, entry.second);
             delete entry.second;
         }
     } // of previous-task cleanup iteration

@@ -34,7 +34,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
     assert(op->getFrom() == m_entity->getId());    
     const std::vector<Root>& args = op->getArgs();
     
-    // note it's important we match exactly on sight here, and not deried ops
+    // note it's important we match exactly on sight here, and not derived ops
     // like appearance and disappearance
     if (op->getClassNo() == SIGHT_NO) {
         assert(!args.empty());

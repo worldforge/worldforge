@@ -61,7 +61,7 @@ protected:
 
     void onVisibilityChanged(bool vis) override;
 
-    void onTaskAdded(Task* task) override;
+    void onTaskAdded(const std::string& id, Task* task) override;
 
     void removeFromMovementPrediction() override;
 
