@@ -52,6 +52,20 @@ cpp_type = {'map' : 'Atlas::Message::MapType',
             'int_list_length' : 'std::vector<long>',
             'float_list_length' : 'std::vector<double>'}
 
+cpp_param_movable = {'map' : True,
+                  'list' : True,
+                  'string' : True,
+                  'int' : False,
+                  'float' : False,
+                  'RootList' : True,
+                  'string_list' : True,
+                  'int_list' : True,
+                  'float_list' : True,
+                  'string_list_length' : True,
+                  'int_list_length' : True,
+                  'float_list_length' : True}
+
+
 # Const references
 cpp_param_type = {'map' : 'const ' + cpp_type['map'] + '&',
                   'list' : 'const ' + cpp_type['list'] + '&',
@@ -65,6 +79,19 @@ cpp_param_type = {'map' : 'const ' + cpp_type['map'] + '&',
                   'string_list_length' : 'const ' + cpp_type['string_list_length'] + '&',
                   'int_list_length' : 'const ' + cpp_type['int_list_length'] + '&',
                   'float_list_length' : 'const ' + cpp_type['float_list_length'] + '&'}
+
+cpp_param_in_type = {'map' : cpp_type['map'] ,
+                  'list' : cpp_type['list'],
+                  'string' : cpp_type['string'],
+                  'int' : cpp_type['int'],
+                  'float' : cpp_type['float'],
+                  'RootList' : cpp_type['RootList'],
+                  'string_list' : cpp_type['string_list'],
+                  'int_list' : cpp_type['int_list'],
+                  'float_list' : cpp_type['float_list'],
+                  'string_list_length' : cpp_type['string_list_length'],
+                  'int_list_length' : cpp_type['int_list_length'],
+                  'float_list_length' : cpp_type['float_list_length']}
 
 # Non-const references
 cpp_param_type2 = {'map' : cpp_type['map'] + '&',

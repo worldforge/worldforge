@@ -77,15 +77,15 @@ public:
     /// Set the "refno" attribute.
     void setRefno(long val);
     /// Set the "from" attribute.
-    void setFrom(const std::string& val);
+    void setFrom(std::string val);
     /// Set the "to" attribute.
-    void setTo(const std::string& val);
+    void setTo(std::string val);
     /// Set the "seconds" attribute.
     void setSeconds(double val);
     /// Set the "future_seconds" attribute.
     void setFutureSeconds(double val);
     /// Set the "args" attribute.
-    void setArgs(const std::vector<Root>& val);
+    void setArgs(std::vector<Root> val);
     /// Set the "args" attribute AsList.
     void setArgsAsList(const Atlas::Message::ListType& val);
     /// Set the first member of "args"
@@ -224,17 +224,17 @@ inline void RootOperationData::setRefno(long val)
 
 const uint32_t FROM_FLAG = 1u << 16u;
 
-inline void RootOperationData::setFrom(const std::string& val)
+inline void RootOperationData::setFrom(std::string val)
 {
-    attr_from = val;
+    attr_from = std::move(val);
     m_attrFlags |= FROM_FLAG;
 }
 
 const uint32_t TO_FLAG = 1u << 17u;
 
-inline void RootOperationData::setTo(const std::string& val)
+inline void RootOperationData::setTo(std::string val)
 {
-    attr_to = val;
+    attr_to = std::move(val);
     m_attrFlags |= TO_FLAG;
 }
 
@@ -256,9 +256,9 @@ inline void RootOperationData::setFutureSeconds(double val)
 
 const uint32_t ARGS_FLAG = 1u << 20u;
 
-inline void RootOperationData::setArgs(const std::vector<Root>& val)
+inline void RootOperationData::setArgs(std::vector<Root> val)
 {
-    attr_args = val;
+    attr_args = std::move(val);
     m_attrFlags |= ARGS_FLAG;
 }
 

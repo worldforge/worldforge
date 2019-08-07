@@ -23,6 +23,7 @@ class AttributeInfo:
         self.cpp_type = cpp_type[type]
         self.cpp_param_type = cpp_param_type[type]
         self.cpp_param_type2 = cpp_param_type2[type]
+        self.cpp_param_in_type = cpp_param_in_type[type]
         self.as_object = ""
         self.ctype_as_object = self.ctype
 
@@ -36,7 +37,7 @@ class AttributeInfo:
 
     def set_if(self):
         res = doc(4, 'Set the "%s" attribute.' % self.name)+\
-              "    void set%(cname)s(%(cpp_param_type)s val);\n" % \
+              "    void set%(cname)s(%(cpp_param_in_type)s val);\n" % \
               self.__dict__
         if self.as_object:
             res = res + doc(4, 'Set the "%s" attribute %s.' % \
@@ -61,7 +62,16 @@ class AttributeInfo:
 
     def inline_set(self, classname):
         self.classname = classname
-        return """inline void %(classname)s::set%(cname)s(%(cpp_param_type)s val)
+        if cpp_param_movable[self.type]:
+            return """inline void %(classname)s::set%(cname)s(%(cpp_param_in_type)s val)
+{
+    attr_%(name)s = std::move(val);
+    m_attrFlags |= %(flag_name)s;
+}
+
+""" % self.__dict__ #"for xemacs syntax highlighting
+        else:
+            return """inline void %(classname)s::set%(cname)s(%(cpp_param_in_type)s val)
 {
     attr_%(name)s = val;
     m_attrFlags |= %(flag_name)s;

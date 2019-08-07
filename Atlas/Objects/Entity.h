@@ -118,11 +118,11 @@ public:
     void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "username" attribute.
-    void setUsername(const std::string& val);
+    void setUsername(std::string val);
     /// Set the "password" attribute.
-    void setPassword(const std::string& val);
+    void setPassword(std::string val);
     /// Set the "characters" attribute.
-    void setCharacters(const std::list<std::string>& val);
+    void setCharacters(std::list<std::string> val);
     /// Set the "characters" attribute AsList.
     void setCharactersAsList(const Atlas::Message::ListType& val);
 
@@ -198,25 +198,25 @@ extern const std::string CHARACTERS_ATTR;
 
 const uint32_t USERNAME_FLAG = 1u << 11u;
 
-inline void AccountData::setUsername(const std::string& val)
+inline void AccountData::setUsername(std::string val)
 {
-    attr_username = val;
+    attr_username = std::move(val);
     m_attrFlags |= USERNAME_FLAG;
 }
 
 const uint32_t PASSWORD_FLAG = 1u << 12u;
 
-inline void AccountData::setPassword(const std::string& val)
+inline void AccountData::setPassword(std::string val)
 {
-    attr_password = val;
+    attr_password = std::move(val);
     m_attrFlags |= PASSWORD_FLAG;
 }
 
 const uint32_t CHARACTERS_FLAG = 1u << 13u;
 
-inline void AccountData::setCharacters(const std::list<std::string>& val)
+inline void AccountData::setCharacters(std::list<std::string> val)
 {
-    attr_characters = val;
+    attr_characters = std::move(val);
     m_attrFlags |= CHARACTERS_FLAG;
 }
 

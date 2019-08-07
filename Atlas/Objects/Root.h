@@ -68,15 +68,15 @@ public:
     void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "id" attribute.
-    void setId(const std::string& val);
+    void setId(std::string val);
     /// Set the "parent" attribute.
-    void setParent(const std::string& val);
+    void setParent(std::string val);
     /// Set the "stamp" attribute.
     void setStamp(double val);
     /// Set the "objtype" attribute.
-    void setObjtype(const std::string& val);
+    void setObjtype(std::string val);
     /// Set the "name" attribute.
-    void setName(const std::string& val);
+    void setName(std::string val);
 
     /// Retrieve the "id" attribute.
     const std::string& getId() const;
@@ -170,17 +170,17 @@ extern const std::string NAME_ATTR;
 
 const uint32_t ID_FLAG = 1u << 1u;
 
-inline void RootData::setId(const std::string& val)
+inline void RootData::setId(std::string val)
 {
-    attr_id = val;
+    attr_id = std::move(val);
     m_attrFlags |= ID_FLAG;
 }
 
 const uint32_t PARENT_FLAG = 1u << 2u;
 
-inline void RootData::setParent(const std::string& val)
+inline void RootData::setParent(std::string val)
 {
-    attr_parent = val;
+    attr_parent = std::move(val);
     m_attrFlags |= PARENT_FLAG;
 }
 
@@ -194,17 +194,17 @@ inline void RootData::setStamp(double val)
 
 const uint32_t OBJTYPE_FLAG = 1u << 4u;
 
-inline void RootData::setObjtype(const std::string& val)
+inline void RootData::setObjtype(std::string val)
 {
-    attr_objtype = val;
+    attr_objtype = std::move(val);
     m_attrFlags |= OBJTYPE_FLAG;
 }
 
 const uint32_t NAME_FLAG = 1u << 5u;
 
-inline void RootData::setName(const std::string& val)
+inline void RootData::setName(std::string val)
 {
-    attr_name = val;
+    attr_name = std::move(val);
     m_attrFlags |= NAME_FLAG;
 }
 

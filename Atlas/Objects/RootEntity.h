@@ -63,17 +63,17 @@ public:
     void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "loc" attribute.
-    void setLoc(const std::string& val);
+    void setLoc(std::string val);
     /// Set the "pos" attribute.
-    void setPos(const std::vector<double>& val);
+    void setPos(std::vector<double> val);
     /// Set the "pos" attribute AsList.
     void setPosAsList(const Atlas::Message::ListType& val);
     /// Set the "velocity" attribute.
-    void setVelocity(const std::vector<double>& val);
+    void setVelocity(std::vector<double> val);
     /// Set the "velocity" attribute AsList.
     void setVelocityAsList(const Atlas::Message::ListType& val);
     /// Set the "contains" attribute.
-    void setContains(const std::list<std::string>& val);
+    void setContains(std::list<std::string> val);
     /// Set the "contains" attribute AsList.
     void setContainsAsList(const Atlas::Message::ListType& val);
     /// Set the "stamp_contains" attribute.
@@ -177,17 +177,17 @@ extern const std::string STAMP_CONTAINS_ATTR;
 
 const uint32_t LOC_FLAG = 1u << 6u;
 
-inline void RootEntityData::setLoc(const std::string& val)
+inline void RootEntityData::setLoc(std::string val)
 {
-    attr_loc = val;
+    attr_loc = std::move(val);
     m_attrFlags |= LOC_FLAG;
 }
 
 const uint32_t POS_FLAG = 1u << 7u;
 
-inline void RootEntityData::setPos(const std::vector<double>& val)
+inline void RootEntityData::setPos(std::vector<double> val)
 {
-    attr_pos = val;
+    attr_pos = std::move(val);
     m_attrFlags |= POS_FLAG;
 }
 
@@ -204,9 +204,9 @@ inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
 
 const uint32_t VELOCITY_FLAG = 1u << 8u;
 
-inline void RootEntityData::setVelocity(const std::vector<double>& val)
+inline void RootEntityData::setVelocity(std::vector<double> val)
 {
-    attr_velocity = val;
+    attr_velocity = std::move(val);
     m_attrFlags |= VELOCITY_FLAG;
 }
 
@@ -223,9 +223,9 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
 
 const uint32_t CONTAINS_FLAG = 1u << 9u;
 
-inline void RootEntityData::setContains(const std::list<std::string>& val)
+inline void RootEntityData::setContains(std::list<std::string> val)
 {
-    attr_contains = val;
+    attr_contains = std::move(val);
     m_attrFlags |= CONTAINS_FLAG;
 }
 
