@@ -40,19 +40,43 @@ bool Task::isComplete() const
 
 void Task::updateFromAtlas(const AtlasMapType& d)
 {
+	auto progress = m_progress;
+	auto progressRate = m_progressRate;
     auto it = d.find("progress");
-    if (it != d.end())
+    if (it != d.end() && it->second.Float())
     {
         m_progress = it->second.asFloat();
-        progressChanged();
+        if (m_progress != progress) {
+			progressChanged();
+        }
     }
     
     it = d.find("rate");
-    if (it != d.end())
+    if (it != d.end() && it->second.isFloat())
     {
-        m_progressRate = it->second.asFloat();
-        ProgressRateChanged.emit();
+        m_progressRate = it->second.Float();
+        if (m_progressRate != progressRate) {
+			ProgressRateChanged.emit();
+        }
     }
+
+    std::vector<TaskUsage> usages;
+    it = d.find("usages");
+	if (it != d.end() && it->second.isList())
+	{
+		for (auto& entry : it->second.List()) {
+			if (entry.isMap()) {
+				auto nameI = entry.Map().find("name");
+				if (nameI != entry.Map().end() && nameI->second.isString()){
+					usages.emplace_back(TaskUsage{nameI->second.String()});
+				}
+			}
+		}
+		if (usages != m_usages) {
+			m_usages = std::move(usages);
+			UsagesChanged.emit();
+		}
+	}
 }
 
 void Task::progressChanged()
