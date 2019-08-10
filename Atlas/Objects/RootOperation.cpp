@@ -50,16 +50,16 @@ int RootOperationData::copyAttr(const std::string& name, Element & attr) const
     return RootData::copyAttr(name, attr);
 }
 
-void RootOperationData::setAttr(const std::string& name, const Element& attr)
+void RootOperationData::setAttr(const std::string& name, Element attr)
 {
     if (name == SERIALNO_ATTR) { setSerialno(attr.asInt()); return; }
     if (name == REFNO_ATTR) { setRefno(attr.asInt()); return; }
-    if (name == FROM_ATTR) { setFrom(attr.asString()); return; }
-    if (name == TO_ATTR) { setTo(attr.asString()); return; }
+    if (name == FROM_ATTR) { setFrom(attr.moveString()); return; }
+    if (name == TO_ATTR) { setTo(attr.moveString()); return; }
     if (name == SECONDS_ATTR) { setSeconds(attr.asFloat()); return; }
     if (name == FUTURE_SECONDS_ATTR) { setFutureSeconds(attr.asFloat()); return; }
-    if (name == ARGS_ATTR) { setArgsAsList(attr.asList()); return; }
-    RootData::setAttr(name, attr);
+    if (name == ARGS_ATTR) { setArgsAsList(attr.moveList()); return; }
+    RootData::setAttr(name, std::move(attr));
 }
 
 void RootOperationData::removeAttr(const std::string& name)

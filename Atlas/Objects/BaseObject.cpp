@@ -69,9 +69,9 @@ int BaseObjectData::copyAttr(const std::string& name, Element & attr) const
     return 0;
 }
 
-void BaseObjectData::setAttr(const std::string& name, const Element& attr)
+void BaseObjectData::setAttr(const std::string& name, Element attr)
 {
-    m_attributes[name] = attr;
+    m_attributes[name] = std::move(attr);
 }
 
 void BaseObjectData::removeAttr(const std::string& name)

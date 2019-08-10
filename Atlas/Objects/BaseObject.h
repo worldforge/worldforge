@@ -269,7 +269,7 @@ public:
                          Atlas::Message::Element & attr) const;
     /// Set the attribute "name" to the value given by "attr".
     virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Element& attr);
+                         Atlas::Message::Element attr);
     /// Remove the attribute "name".
     virtual void removeAttr(const std::string& name);
     /// Remove the attribute "name".

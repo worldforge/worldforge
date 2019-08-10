@@ -46,14 +46,14 @@ int RootEntityData::copyAttr(const std::string& name, Element & attr) const
     return RootData::copyAttr(name, attr);
 }
 
-void RootEntityData::setAttr(const std::string& name, const Element& attr)
+void RootEntityData::setAttr(const std::string& name, Element attr)
 {
-    if (name == LOC_ATTR) { setLoc(attr.asString()); return; }
-    if (name == POS_ATTR) { setPosAsList(attr.asList()); return; }
-    if (name == VELOCITY_ATTR) { setVelocityAsList(attr.asList()); return; }
-    if (name == CONTAINS_ATTR) { setContainsAsList(attr.asList()); return; }
+    if (name == LOC_ATTR) { setLoc(attr.moveString()); return; }
+    if (name == POS_ATTR) { setPosAsList(attr.moveList()); return; }
+    if (name == VELOCITY_ATTR) { setVelocityAsList(attr.moveList()); return; }
+    if (name == CONTAINS_ATTR) { setContainsAsList(attr.moveList()); return; }
     if (name == STAMP_CONTAINS_ATTR) { setStampContains(attr.asFloat()); return; }
-    RootData::setAttr(name, attr);
+    RootData::setAttr(name, std::move(attr));
 }
 
 void RootEntityData::removeAttr(const std::string& name)

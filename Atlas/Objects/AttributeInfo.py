@@ -24,6 +24,7 @@ class AttributeInfo:
         self.cpp_param_type = cpp_param_type[type]
         self.cpp_param_type2 = cpp_param_type2[type]
         self.cpp_param_in_type = cpp_param_in_type[type]
+        self.is_movable = cpp_param_movable[type]
         self.as_object = ""
         self.ctype_as_object = self.ctype
 
@@ -62,7 +63,7 @@ class AttributeInfo:
 
     def inline_set(self, classname):
         self.classname = classname
-        if cpp_param_movable[self.type]:
+        if self.is_movable:
             return """inline void %(classname)s::set%(cname)s(%(cpp_param_in_type)s val)
 {
     attr_%(name)s = std::move(val);
@@ -305,7 +306,10 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                % self.__dict__
 
     def setattr_im(self):
-        return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.as%(ctype_as_object)s()); return; }\n' % self.__dict__
+        if self.is_movable:
+            return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.move%(ctype_as_object)s()); return; }\n' % self.__dict__
+        else:
+            return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.as%(ctype_as_object)s()); return; }\n' % self.__dict__
 
 
 

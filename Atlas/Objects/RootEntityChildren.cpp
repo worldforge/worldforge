@@ -88,12 +88,12 @@ int AccountData::copyAttr(const std::string& name, Element & attr) const
     return AdminEntityData::copyAttr(name, attr);
 }
 
-void AccountData::setAttr(const std::string& name, const Element& attr)
+void AccountData::setAttr(const std::string& name, Element attr)
 {
-    if (name == USERNAME_ATTR) { setUsername(attr.asString()); return; }
-    if (name == PASSWORD_ATTR) { setPassword(attr.asString()); return; }
-    if (name == CHARACTERS_ATTR) { setCharactersAsList(attr.asList()); return; }
-    AdminEntityData::setAttr(name, attr);
+    if (name == USERNAME_ATTR) { setUsername(attr.moveString()); return; }
+    if (name == PASSWORD_ATTR) { setPassword(attr.moveString()); return; }
+    if (name == CHARACTERS_ATTR) { setCharactersAsList(attr.moveList()); return; }
+    AdminEntityData::setAttr(name, std::move(attr));
 }
 
 void AccountData::removeAttr(const std::string& name)

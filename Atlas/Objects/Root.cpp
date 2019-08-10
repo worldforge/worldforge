@@ -46,14 +46,14 @@ int RootData::copyAttr(const std::string& name, Element & attr) const
     return BaseObjectData::copyAttr(name, attr);
 }
 
-void RootData::setAttr(const std::string& name, const Element& attr)
+void RootData::setAttr(const std::string& name, Element attr)
 {
-    if (name == ID_ATTR) { setId(attr.asString()); return; }
-    if (name == PARENT_ATTR) { setParent(attr.asString()); return; }
+    if (name == ID_ATTR) { setId(attr.moveString()); return; }
+    if (name == PARENT_ATTR) { setParent(attr.moveString()); return; }
     if (name == STAMP_ATTR) { setStamp(attr.asFloat()); return; }
-    if (name == OBJTYPE_ATTR) { setObjtype(attr.asString()); return; }
-    if (name == NAME_ATTR) { setName(attr.asString()); return; }
-    BaseObjectData::setAttr(name, attr);
+    if (name == OBJTYPE_ATTR) { setObjtype(attr.moveString()); return; }
+    if (name == NAME_ATTR) { setName(attr.moveString()); return; }
+    BaseObjectData::setAttr(name, std::move(attr));
 }
 
 void RootData::removeAttr(const std::string& name)
