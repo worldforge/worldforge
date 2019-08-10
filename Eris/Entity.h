@@ -58,7 +58,7 @@ or creating peer clases and attaching them to the signals.
 class Entity : virtual public sigc::trackable
 {
 public:	
-    typedef std::map<std::string, Atlas::Message::Element> AttrMap;
+    typedef std::map<std::string, Atlas::Message::Element> PropertyMap;
     
     explicit Entity(std::string id, TypeInfo* ty);
     virtual ~Entity();
@@ -86,43 +86,43 @@ public:
     Entity* getContained(size_t index) const;
 
     /**
-     * @brief Gets the value of a named attribute.
-     * If no attribute by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasAttr to make sure that the attribute exists.
-     * @param attr The attribute name.
-     * @return A reference to the attribute by the specified name.
-     * @throws InvalidOperation If no attribute by the specified name can be found.
+     * @brief Gets the value of a named property.
+     * If no property by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasProperty to make sure that the property exists.
+     * @param name The property name.
+     * @return A reference to the property by the specified name.
+     * @throws InvalidOperation If no property by the specified name can be found.
      */
-    const Atlas::Message::Element& valueOfAttr(const std::string& attr) const;
+    const Atlas::Message::Element& valueOfProperty(const std::string& name) const;
         
     /**
-     * @brief Checks whether an attribute exists.
-     * @param p The name of the attribute.
-     * @return True if the attribute exists.
+     * @brief Checks whether an property exists.
+     * @param p The name of the property.
+     * @return True if the property exists.
      */
-    bool hasAttr(const std::string &p) const;
+    bool hasProperty(const std::string &p) const;
 
 
     /**
-     * @brief Gets the value of a named attribute, or null if none exists.
-     * If no attribute by the specified name can be found null will be returned. This is thus a more efficient method than calling both "hasAttr(...)" and "valueOfAttr(...)" in sequence.
-     * @param attr The attribute name.
-     * @return A pointer to the attribute by the specified name, or null if none could be found.
+     * @brief Gets the value of a named property, or null if none exists.
+     * If no property by the specified name can be found null will be returned. This is thus a more efficient method than calling both "hasProperty(...)" and "valueOfProperty(...)" in sequence.
+     * @param name The property name.
+     * @return A pointer to the property by the specified name, or null if none could be found.
      */
-    const Atlas::Message::Element* ptrOfAttr(const std::string& attr) const;
+    const Atlas::Message::Element* ptrOfProperty(const std::string& name) const;
 
     /**
-     * @brief A slot which can be used for receiving attribute update signals.
+     * @brief A slot which can be used for receiving property update signals.
      */
-    typedef sigc::slot<void, const Atlas::Message::Element&> AttrChangedSlot;
+    typedef sigc::slot<void, const Atlas::Message::Element&> PropertyChangedSlot;
 
     /**
-     * @brief Setup an observer so that the specified slot is fired when the named attribue's value changes 
+     * @brief Setup an observer so that the specified slot is fired when the named property's value changes
      * 
-     * @param attr The name of the attribute to observe.
-     * @param aslot The slot which will be fired when the attribute changes.
+     * @param propertyName The name of the property to observe.
+     * @param aslot The slot which will be fired when the property changes.
      * @return The connection created.
      */
-    sigc::connection observe(const std::string& attr, const AttrChangedSlot& aslot);
+    sigc::connection observe(const std::string& propertyName, const PropertyChangedSlot& aslot);
 
 // accessors
     /**
@@ -163,22 +163,30 @@ public:
     WFMath::Point<3> getPosition() const;
     
     /**
-     * @brief Gets all attributes defined for this entity.
-     * The collection of entities returned will include both local attributes as well as the defaults set in the TypeInfo (and all of its parents) of this entity.
-     * @note This is a rather expensive operation since it needs to iterate over all parent TypeInfo instances and build up a map, which is then returned by value. If you only want to get a single attribute you should instead use the valueOfAttr method.
-     * @see getInstanceAttributes() for a similiar method which only returns those attributes that are local to this entity.
-     * @return A map of the combined attributes of both this entity and all of it's TypeInfo parents.
+     * @brief Gets all properties defined for this entity.
+     * The collection of entities returned will include both local properties as well
+     * as the defaults set in the TypeInfo (and all of its parents) of this entity.
+     * @note This is a rather expensive operation since it needs to iterate over all parent
+     * TypeInfo instances and build up a map, which is then returned by value.
+     * If you only want to get a single property you should instead use the valueOfProperty method.
+     * @see getInstanceProperties() for a similar method which only returns
+     * those properties that are local to this entity.
+     * @return A map of the combined properties of both this entity and all of it's TypeInfo parents.
      */
-    AttrMap getAttributes() const;
+    PropertyMap getProperties() const;
     
     /**
-     * @brief Gets all locally defined attributes.
-     * This will only return those attributes that are locally defined for this entity. In practice it will in most cases mean those attributes that have been changed by the defaults as defined in the TypeInfo instance.
-     * @note This will only return a subset of all attributes. If you need to iterate over all attributes you should instead use the getAttributes() method. If you only want the value of a specific attribute you should use the valueOfAttr method.
-     * @see getAttributes
-     * @return The locally defined attributes for the entity.
+     * @brief Gets all locally defined properties.
+     * This will only return those properties that are locally defined for this entity.
+     * In practice it will in most cases mean those properties that have been changed
+     * by the defaults as defined in the TypeInfo instance.
+     * @note This will only return a subset of all properties.
+     * If you need to iterate over all properties you should instead use the getProperties() method.
+     * If you only want the value of a specific property you should use the valueOfProperty method.
+     * @see getProperties
+     * @return The locally defined properties for the entity.
      */
-    const AttrMap& getInstanceAttributes() const;
+    const PropertyMap& getInstanceProperties() const;
     
     /**
      * @brief Test if this entity has a non-zero velocity vector.
@@ -284,8 +292,8 @@ public:
     */
     sigc::signal<void, Entity*> LocationChanged;
 
-    /** Emitted when one or more attributes change. The arguments is a set
-    of attribute IDs which were modified. */
+    /** Emitted when one or more properties change. The arguments is a set
+    of property IDs which were modified. */
     sigc::signal<void, const StringSet&> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.*/
@@ -364,7 +372,7 @@ protected:
     */
     virtual void onTalk(const Atlas::Objects::Operation::RootOperation& talk);
 
-    virtual void onAttrChanged(const std::string& attr, const Atlas::Message::Element &v);
+    virtual void onPropertyChanged(const std::string& propertyName, const Atlas::Message::Element &v);
 	
     virtual void onLocationChanged(Entity* oldLoc);
     
@@ -433,52 +441,53 @@ protected:
     
 
     /**
-     * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all attributes related to motion.
+     * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all properties related to motion.
      * @param obj The atlas object containing the data.
      * @param allowMotion If false, motion elements (position, velocity etc.) will be filtered out.
-     * @param includeTypeInfoAttributes If true, the default attributes of the type info will be used too. This is normally only desired when the entity is initially set up.
+     * @param includeTypeInfoProperties If true, the default properties of the type info will be used too. This is normally only desired when the entity is initially set up.
      */
-    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion, bool includeTypeInfoAttributes = false);
+    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion, bool includeTypeInfoProperties = false);
     
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
     void setVisible(bool vis);
     
-    void setAttr(const std::string &p, const Atlas::Message::Element &v);	
+    void setProperty(const std::string &p, const Atlas::Message::Element &v);
         
     /** 
-    Map Atlas attributes to natively stored properties. Should be changed to
+    Map Atlas properties to natively stored properties. Should be changed to
     use an integer hash in the future, since this called frequently.
     */
-    bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
+    bool nativePropertyChanged(const std::string &p, const Atlas::Message::Element &v);
     
     /**
-     * @brief Connected to the TypeInfo::AttributeChanges event.
-     * This will in turn call the attrChangedFromTypeInfo, which is overridable in a subclass if so desired.
-     * @param attributeName The name of the attribute which is to be changed.
+     * @brief Connected to the TypeInfo::PropertyeChanges event.
+     * This will in turn call the propertyChangedFromTypeInfo, which is overridable in a subclass if so desired.
+     * @param propertyName The name of the property which is to be changed.
      * @param element The new element data.
      */
-    void typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
+    void typeInfo_PropertyChanges(const std::string& propertyName, const Atlas::Message::Element& element);
     
     /**
-     * @brief Called when an attribute has been changed in the TypeInfo for this entity.
-     * If the attribute doesn't have an instance value local to this entity the event will be processed just like a call to setAttr but without the attribute being saved in the map of instance attributes.
-     * @param attributeName The name of the attribute which is to be changed.
+     * @brief Called when an property has been changed in the TypeInfo for this entity.
+     * If the property doesn't have an instance value local to this entity the event will be processed
+     * just like a call to setProperty but without the property being saved in the map of instance properties.
+     * @param propertyName The name of the property which is to be changed.
      * @param element The new element data.
      */
-    virtual void attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element);
+    virtual void propertyChangedFromTypeInfo(const std::string& propertyName, const Atlas::Message::Element& element);
     
     
     /**
-     * @brief Utility method for recursively filling a map of attributes from a TypeInfo instance.
-     * The method will recursively call itself to make sure that the topmost TypeInfo is used first. This makes sure that attributes are overwritten by newer values, if duplicates exists.
-     * @param attributes The map of attributes to fill.
+     * @brief Utility method for recursively filling a map of properties from a TypeInfo instance.
+     * The method will recursively call itself to make sure that the topmost TypeInfo is used first. This makes sure that properties are overwritten by newer values, if duplicates exists.
+     * @param properties The map of properties to fill.
      * @param typeInfo The type info from which we will copy values, as well as its parents.
      */
-    void fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const;
+    void fillPropertiesFromType(Entity::PropertyMap& properties, TypeInfo* typeInfo) const;
     
     void beginUpdate();
-    void addToUpdate(const std::string& attr);
+    void addToUpdate(const std::string& propertyName);
     void endUpdate();
 
     /** update the entity's location based on Atlas data. This is used by
@@ -495,10 +504,10 @@ protected:
     void setContentsFromAtlas(const StringList& contents);
     
     /**
-    Remove from a map all items whose key is a movement related attribute,
+    Remove from a map all items whose key is a movement related properties,
     eg position or velocity
     */
-    void filterMoveAttrs(Atlas::Message::MapType& attrs) const;
+    void filterMoveProperties(Atlas::Message::MapType& properties) const;
 
     typedef std::unordered_map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);
@@ -550,7 +559,7 @@ protected:
     virtual Entity* getEntity(const std::string& id) = 0;
 
 
-    AttrMap m_attrs;
+    PropertyMap m_properties;
     
     TypeInfo* m_type;
     
@@ -587,23 +596,23 @@ protected:
 // extra state and state tracking things
     /** If greater than zero, we are doing a batched update. This suppresses emission
     of the Changed signal until endUpdate is called, so that a number of
-    attributes may be updated en-masse, generating just one signal. */
+    properties may be updated en-masse, generating just one signal. */
     int m_updateLevel;
 
     /** When a batched property update is in progress, the set tracks the names
     of each modified property. This set is passed as a parameter of the Changed
     callback when endUpdate is called, to allow clients to determine what
     was changed. */
-    StringSet m_modifiedAttrs;
+    StringSet m_modifiedProperties;
         
-    typedef sigc::signal<void, const Atlas::Message::Element&> AttrChangedSignal;
+    typedef sigc::signal<void, const Atlas::Message::Element&> PropertyChangedSignal;
         
-    typedef std::unordered_map<std::string, AttrChangedSignal> ObserverMap;
+    typedef std::unordered_map<std::string, PropertyChangedSignal> ObserverMap;
     ObserverMap m_observers;
 
     /** This flag should be set when the server notifies that this entity
     has a bounding box. If this flag is not true, the contents of the
-    BBox attribute are undefined.  */
+    BBox property are undefined.  */
     bool m_hasBBox;
     
     WFMath::TimeStamp m_lastMoveTime;

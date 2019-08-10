@@ -341,18 +341,18 @@ View::~View()
 {
 }
 
-bool Entity::hasAttr(const std::string&) const
+bool Entity::hasProperty(const std::string& p) const
 {
     return false;
 }
 
-const Atlas::Message::Element& Entity::valueOfAttr(const std::string& attr) const
+const Atlas::Message::Element& Entity::valueOfProperty(const std::string& name) const
 {
     static Atlas::Message::Element res;
     return res;
 }
 
-sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
+sigc::connection Entity::observe(const std::string& attr, const PropertyChangedSlot& slot)
 {
     return m_observers[attr].connect(slot);
 }

@@ -105,7 +105,7 @@ class TestEntity : public Eris::ViewEntity {
     }
     void setup_setAttr(const std::string &p, const Atlas::Message::Element &v)
     {
-        setAttr(p, v);
+		setProperty(p, v);
     }
     void setup_init(const Atlas::Objects::Entity::RootEntity &ge, bool fromCreateOp)
     {
@@ -166,22 +166,18 @@ int main()
         typeInfo->setId("level1Type");
         typeInfo->setParent("root");
         Atlas::Message::MapType attributes;
-        Atlas::Message::MapType level;
-        level["default"] = 1.0f;
-        attributes["level"] = level;
-        Atlas::Message::MapType level1;
-        level1["default"] = true;
-        attributes["level1"] = level1;
+        attributes["level"] = 1.0f;
+        attributes["level1"] = true;
 
-        typeInfo->setAttr("attributes", attributes);
+        typeInfo->setAttr("properties", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
     assert(level1Type->isBound());
-    assert(level1Type->getAttributes().find("level") != level1Type->getAttributes().end());
-    assert(level1Type->getAttributes().find("level")->second.isNum());
-    assert(level1Type->getAttributes().find("level")->second.asNum() == 1.0f);
+    assert(level1Type->getProperties().find("level") != level1Type->getProperties().end());
+    assert(level1Type->getProperties().find("level")->second.isNum());
+    assert(level1Type->getProperties().find("level")->second.asNum() == 1.0f);
     
-    assert(level1Type->getAttribute("level1") && *(level1Type->getAttribute("level1")) == Atlas::Message::Element(true));
+    assert(level1Type->getProperty("level1") && *(level1Type->getProperty("level1")) == Atlas::Message::Element(true));
     
     
     TypeInfoPtr level2Type = typeService.getTypeByName("level2Type");
@@ -193,47 +189,42 @@ int main()
         typeInfo->setParent("level1Type");
         Atlas::Message::MapType attributes;
         Atlas::Message::MapType level;
-        level["default"] = 2.0f;
-        attributes["level"] = level;
-        Atlas::Message::MapType level2;
-        level2["default"] = true;
-        attributes["level2"] = level2;
-        Atlas::Message::MapType velocity;
-        velocity["default"] = WFMath::Vector<3>(3,2,1).toAtlas();
-        attributes["velocity"] = velocity;
-        typeInfo->setAttr("attributes", attributes);
+        attributes["level"] = 2.0f;
+        attributes["level2"] = true;
+        attributes["velocity"] = WFMath::Vector<3>(3,2,1).toAtlas();;
+        typeInfo->setAttr("properties", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
     assert(level2Type->isBound());
     assert(level2Type->getParent());
     assert(level2Type->getParent() == level1Type);
     
-    assert(level2Type->getAttributes().find("level") != level2Type->getAttributes().end());
-    assert(level2Type->getAttributes().find("level")->second.isNum());
-    assert(level2Type->getAttributes().find("level")->second.asNum() == 2.0f);
+    assert(level2Type->getProperties().find("level") != level2Type->getProperties().end());
+    assert(level2Type->getProperties().find("level")->second.isNum());
+    assert(level2Type->getProperties().find("level")->second.asNum() == 2.0f);
     
-    assert(level2Type->getAttribute("level1") && *level2Type->getAttribute("level1") == Atlas::Message::Element(true));
-    assert(level2Type->getAttribute("level2") && *level2Type->getAttribute("level2") == Atlas::Message::Element(true));
+    assert(level2Type->getProperty("level1") && *level2Type->getProperty("level1") == Atlas::Message::Element(true));
+    assert(level2Type->getProperty("level2") && *level2Type->getProperty("level2") == Atlas::Message::Element(true));
     
     {
         TestEntity* ent = new TestEntity("2", level1Type, ea.getView());
         ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
-        assert(ent->hasAttr("level"));
-        assert(ent->valueOfAttr("level") == 1.0f);
+        assert(ent->hasProperty("level"));
+        assert(ent->valueOfProperty("level") == 1.0f);
     }
     
     {
         TestEntity* ent = new TestEntity("2", level2Type, ea.getView());
         ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
-        assert(ent->hasAttr("level"));
-        assert(ent->valueOfAttr("level") == 2.0f);
+        assert(ent->hasProperty("level"));
+        assert(ent->valueOfProperty("level") == 2.0f);
         
         ent->setup_setAttr("level", "entity");
-        assert(ent->valueOfAttr("level") == "entity");
+        assert(ent->valueOfProperty("level") == "entity");
         
         assert(!ent->getPosition().isValid());
-        
-        level1Type->setAttribute("pos", WFMath::Point<3>(1,2,3).toAtlas());
+
+		level1Type->setProperty("pos", WFMath::Point<3>(1, 2, 3).toAtlas());
         assert(ent->getPosition().isValid());
         
         assert(ent->getVelocity().isValid());
@@ -259,19 +250,19 @@ int main()
     
     
      SignalCounter2<const std::string&, const Atlas::Message::Element&> level_1_Counter;
-     level1Type->AttributeChanges.connect(sigc::mem_fun(level_1_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
+     level1Type->PropertyChanges.connect(sigc::mem_fun(level_1_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
      SignalCounter2<const std::string&, const Atlas::Message::Element&> level_2_Counter;
-     level2Type->AttributeChanges.connect(sigc::mem_fun(level_2_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
+     level2Type->PropertyChanges.connect(sigc::mem_fun(level_2_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
      
      ///In our first test, only the level 1 type should emit the attribute changes signal (since the level attribute is defined in the level 2 type also)
-     level1Type->setAttribute("level", 10);
+	level1Type->setProperty("level", 10);
      assert(level_1_Counter.fireCount() == 1);
      assert(level_2_Counter.fireCount() == 0);
      
      level_1_Counter.reset();
      level_2_Counter.reset();
      ///In our second test, both ot the types should emit the signal
-     level1Type->setAttribute("level1", 10);
+	level1Type->setProperty("level1", 10);
      assert(level_1_Counter.fireCount() == 1);
      assert(level_2_Counter.fireCount() == 1);
     

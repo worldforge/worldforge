@@ -84,34 +84,33 @@ public:
     const TypeInfoPtr & getParent() const;
     
     /**
-    @brief Gets the default attributes for this entity type.
-    Note that the map returned does not include inherited attributes.
-    @returns An element map of the default attributes for this type.
+    @brief Gets the default properties for this entity type.
+    Note that the map returned does not include inherited properties.
+    @returns An element map of the default properties for this type.
     */
-    const Atlas::Message::MapType& getAttributes() const;
+    const Atlas::Message::MapType& getProperties() const;
 
     /**
-     * @brief Gets the value of the named attribute.
-     * This method will search through both this instance and all of its parents for the attribute by the specified name. If no attribute can be found a null pointer will be returned.
-     * @param attributeName The name of the attribute to search for.
-     * @note This method won't throw an exception if the attribute isn't found.
-     * @return A pointer to an Element instance, or a null pointer if no attribute could be found.
+     * @brief Gets the value of the named property.
+     * This method will search through both this instance and all of its parents for the property by the specified name. If no property can be found a null pointer will be returned.
+     * @param propertyName The name of the property to search for.
+     * @note This method won't throw an exception if the property isn't found.
+     * @return A pointer to an Element instance, or a null pointer if no property could be found.
      */
-    const Atlas::Message::Element* getAttribute(const std::string& attributeName) const;
+    const Atlas::Message::Element* getProperty(const std::string& propertyName) const;
     
     /**
-     * @brief Emitted before an attribute changes.
-     * The first parameter is the name of the attribute, and the second is the actual attribute.
+     * @brief Emitted before an property changes.
+     * The first parameter is the name of the property, and the second is the actual property.
      */
-    sigc::signal<void, const std::string&, const Atlas::Message::Element&> AttributeChanges;
-    
-    
-    /**
-     * @brief Sets an attribute.
-     * @param attributeName The name of the attribute.
-     * @param element The new value of the attribute.
+    sigc::signal<void, const std::string&, const Atlas::Message::Element&> PropertyChanges;
+
+	/**
+     * @brief Sets a property.
+     * @param propertyName The name of the property.
+     * @param element The new value of the property.
      */
-    void setAttribute(const std::string& attributeName, const Atlas::Message::Element& element);
+	void setProperty(const std::string& propertyName, const Atlas::Message::Element& element);
 
     /**
      * @brief Gets a list of entities, if the type is an Archetype.
@@ -142,12 +141,14 @@ protected:
     
     
     /**
-     * @brief Called before the AttributeChanges signal is emitted.
-     * This call is made before an attribute is changed. It will emit the AttributeChanges event first, and then go through all of the children, calling itself on them as long as the children themselves doesn't have an attribute by the same name defined.
-     * @param attributeName The name of the attribute which is being changed.
-     * @param element The new attribute value.
+     * @brief Called before the PropertyChanges signal is emitted.
+     * This call is made before an property is changed. It will emit the PropertyChanges event first,
+     * and then go through all of the children, calling itself on them as long as the
+     * children themselves doesn't have an property by the same name defined.
+     * @param propertyName The name of the property which is being changed.
+     * @param element The new property value.
      */
-    void onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
+    void onPropertyChanges(const std::string& propertyName, const Atlas::Message::Element& element);
     
 private:
     void setParent(TypeInfoPtr tp);
@@ -157,11 +158,11 @@ private:
     void addAncestor(TypeInfoPtr tp);
     
     /** 
-     * @brief Extracts default attributes from the supplied root object, and adds them to the m_attributes field.
-     * Note that inherited (i..e those that belong to the parent entity type) attributes won't be extracted.
+     * @brief Extracts default properties from the supplied root object, and adds them to the m_properties field.
+     * Note that inherited (i..e those that belong to the parent entity type) properties won't be extracted.
      * @param atype Root data for this entity type.
      */
-    void extractDefaultAttributes(const Atlas::Objects::Root& atype);
+    void extractDefaultProperties(const Atlas::Objects::Root& atype);
         
     /** The TypeInfo node we inherit from directly */
     TypeInfoPtr m_parent;
@@ -180,9 +181,9 @@ private:
     TypeService* m_typeService;
     
     /** 
-     * @brief The default attributes specified for this entity type.
+     * @brief The default properties specified for this entity type.
      */
-    Atlas::Message::MapType m_attributes;
+    Atlas::Message::MapType m_properties;
 
 	/*
 	 * @brief If the type is an archetype, the entities will be defined here.
@@ -191,9 +192,9 @@ private:
 
 };
 
-inline const Atlas::Message::MapType& TypeInfo::getAttributes() const
+inline const Atlas::Message::MapType& TypeInfo::getProperties() const
 {
-    return m_attributes;
+    return m_properties;
 }
 
 inline bool TypeInfo::isBound() const

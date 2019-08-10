@@ -692,8 +692,8 @@ bool TypeInfo::isA(TypeInfoPtr tp)
     return false;
 }
 
-void TypeInfo::onAttributeChanges(const std::string& attributeName,
-                                  const Atlas::Message::Element& element)
+void TypeInfo::onPropertyChanges(const std::string& attributeName,
+								 const Atlas::Message::Element& element)
 {
 }
 

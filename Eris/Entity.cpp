@@ -55,7 +55,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
     
     
     if (m_type) {
-        m_type->AttributeChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_AttributeChanges));
+        m_type->PropertyChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_PropertyChanges));
     }
 }
 
@@ -100,49 +100,49 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
     }
 }
 
-const Element& Entity::valueOfAttr(const std::string& attr) const
+const Element& Entity::valueOfProperty(const std::string& name) const
 {
-    ///first check with the instance attributes
-	auto A = m_attrs.find(attr);
-    if (A == m_attrs.end())
+    ///first check with the instance properties
+	auto A = m_properties.find(name);
+    if (A == m_properties.end())
     {
         if (m_type) {
             ///it wasn't locally defined, now check with typeinfo
-            const Element* element = m_type->getAttribute(attr);
+            const Element* element = m_type->getProperty(name);
             if (element) {
                 return *element;
             }
         }
-        error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
-        throw InvalidOperation("no such attribute " + attr);
+        error() << "did valueOfProperty(" << name << ") on entity " << m_id << " which has no such name";
+        throw InvalidOperation("no such property " + name);
     } else {
         return A->second;
     }
 }
 
-bool Entity::hasAttr(const std::string& attr) const
+bool Entity::hasProperty(const std::string& p) const
 {
-    ///first check with the instance attributes
-    if (m_attrs.count(attr) > 0) {
+    ///first check with the instance properties
+    if (m_properties.count(p) > 0) {
         return true;
     } else if (m_type) {
         ///it wasn't locally defined, now check with typeinfo
-        if (m_type->getAttribute(attr) != nullptr) {
+        if (m_type->getProperty(p) != nullptr) {
             return true;
         }
     }
     return false;
 }
 
-const Element* Entity::ptrOfAttr(const std::string& attr) const
+const Element* Entity::ptrOfProperty(const std::string& name) const
 {
-    ///first check with the instance attributes
-	auto A = m_attrs.find(attr);
-    if (A == m_attrs.end())
+    ///first check with the instance properties
+	auto A = m_properties.find(name);
+    if (A == m_properties.end())
     {
         if (m_type) {
             ///it wasn't locally defined, now check with typeinfo
-            const Element* element = m_type->getAttribute(attr);
+            const Element* element = m_type->getProperty(name);
             if (element) {
                 return element;
             }
@@ -154,37 +154,37 @@ const Element* Entity::ptrOfAttr(const std::string& attr) const
 }
 
 
-Entity::AttrMap Entity::getAttributes() const
+Entity::PropertyMap Entity::getProperties() const
 {
-    ///Merge both the local attributes and the type default attributes.
-    AttrMap attributes;
-    attributes.insert(m_attrs.begin(), m_attrs.end());
+    ///Merge both the local properties and the type default properties.
+    PropertyMap properties;
+    properties.insert(m_properties.begin(), m_properties.end());
     if (m_type) {
-        fillAttributesFromType(attributes, m_type);
+		fillPropertiesFromType(properties, m_type);
     }
-    return attributes;
+    return properties;
 }
 
-const Entity::AttrMap& Entity::getInstanceAttributes() const
+const Entity::PropertyMap& Entity::getInstanceProperties() const
 {
-    return m_attrs;
+    return m_properties;
 }
 
-void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const
+void Entity::fillPropertiesFromType(Entity::PropertyMap& properties, TypeInfo* typeInfo) const
 {
-    attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
-    ///Make sure to fill from the closest attributes first, as insert won't replace an existing value
+    properties.insert(typeInfo->getProperties().begin(), typeInfo->getProperties().end());
+    ///Make sure to fill from the closest properties first, as insert won't replace an existing value
 
 	if (typeInfo->getParent()) {
-		fillAttributesFromType(attributes, typeInfo->getParent());
+		fillPropertiesFromType(properties, typeInfo->getParent());
 	}
 
 }
 
-sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
+sigc::connection Entity::observe(const std::string& propertyName, const PropertyChangedSlot& slot)
 {
     // sometimes, I realize how great SigC++ is
-    return m_observers[attr].connect(slot);
+    return m_observers[propertyName].connect(slot);
 }
 
 WFMath::Point<3> Entity::getViewPosition() const
@@ -260,49 +260,49 @@ void Entity::sight(const RootEntity &ge)
     setFromRoot(ge, true, true);
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes)
+void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoProperties)
 {	
     beginUpdate();
     
-    Atlas::Message::MapType attrs;
-    obj->addToMessage(attrs);
+    Atlas::Message::MapType properties;
+    obj->addToMessage(properties);
     Atlas::Message::MapType::const_iterator A;
     
-    attrs.erase("loc");
-    attrs.erase("id");
-    attrs.erase("contains");
+    properties.erase("loc");
+    properties.erase("id");
+    properties.erase("contains");
     
-    if (!allowMove) filterMoveAttrs(attrs);
+    if (!allowMove) filterMoveProperties(properties);
     
-    for (A = attrs.begin(); A != attrs.end(); ++A) {
+    for (A = properties.begin(); A != properties.end(); ++A) {
         // see if the value in the sight matches the exsiting value
-        AttrMap::const_iterator I = m_attrs.find(A->first);
-        if ((I != m_attrs.end()) && (I->second == A->second)) continue;
+        PropertyMap::const_iterator I = m_properties.find(A->first);
+        if ((I != m_properties.end()) && (I->second == A->second)) continue;
 
-        setAttr(A->first, A->second);
+		setProperty(A->first, A->second);
     }
     
     endUpdate();
 
     //Add any values found in the type, if they aren't defined in the entity already.
-    if (includeTypeInfoAttributes && m_type) {
-        Atlas::Message::MapType typeAttributes;
-        fillAttributesFromType(typeAttributes, m_type);
-        for (auto& entry : typeAttributes) {
-            attrChangedFromTypeInfo(entry.first, entry.second);
+    if (includeTypeInfoProperties && m_type) {
+        Atlas::Message::MapType typeProperties;
+		fillPropertiesFromType(typeProperties, m_type);
+        for (auto& entry : typeProperties) {
+			propertyChangedFromTypeInfo(entry.first, entry.second);
         }
     }
 
 }
 
-void Entity::filterMoveAttrs(Atlas::Message::MapType& attrs) const
+void Entity::filterMoveProperties(Atlas::Message::MapType& properties) const
 {
-    attrs.erase("pos");
-    attrs.erase("mode");
-    attrs.erase("velocity");
-    attrs.erase("orientation");
-    attrs.erase("accel");
-    attrs.erase("angular");
+    properties.erase("pos");
+    properties.erase("mode");
+    properties.erase("velocity");
+    properties.erase("orientation");
+    properties.erase("accel");
+    properties.erase("angular");
 }
 
 void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
@@ -384,58 +384,58 @@ void Entity::onTaskAdded(const std::string& id, Task* task)
 }
 
 
-void Entity::setAttr(const std::string &attr, const Element &val)
+void Entity::setProperty(const std::string &p, const Element &v)
 {
     beginUpdate();
-    
-    m_attrs[attr] = val;
 
-    nativeAttrChanged(attr, val);
-    onAttrChanged(attr, val);
+	m_properties[p] = v;
+
+	nativePropertyChanged(p, v);
+	onPropertyChanged(p, v);
 
     // fire observers
     
-    auto obs = m_observers.find(attr);
+    auto obs = m_observers.find(p);
     if (obs != m_observers.end()) {
-        obs->second.emit(val);
+        obs->second.emit(v);
     }
 
-    addToUpdate(attr);
+    addToUpdate(p);
     endUpdate();
 }
 
-bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
+bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
 {
     // in the future, hash these names to a compile-time integer index, and
     // make this a switch statement. The same indice could also be used
     // in endUpdate
     
-    if (attr == "name") {
+    if (p == "name") {
         m_name = v.asString();
         return true;
-    } else if (attr == "stamp") {
+    } else if (p == "stamp") {
         m_stamp = (float)v.asFloat();
         return true;
-    } else if (attr == "pos") {
+    } else if (p == "pos") {
         m_position.fromAtlas(v);
         return true;
-    } else if (attr == "velocity") {
+    } else if (p == "velocity") {
         m_velocity.fromAtlas(v);
         return true;
-    } else if (attr == "angular") {
+    } else if (p == "angular") {
         m_angularVelocity.fromAtlas(v);
         m_angularMag = m_angularVelocity.mag();
         return true;
-    } else if (attr == "accel") {
+    } else if (p == "accel") {
         m_acc.fromAtlas(v);
         return true;
-    } else if (attr == "orientation") {
+    } else if (p == "orientation") {
         m_orientation.fromAtlas(v);
         return true;
-    } else if (attr == "description") {
+    } else if (p == "description") {
         m_description = v.asString();
         return true;
-    } else if (attr == "bbox") {
+    } else if (p == "bbox") {
         m_bboxUnscaled.fromAtlas(v);
         m_bbox = m_bboxUnscaled;
         if (m_scale.isValid()) {
@@ -448,12 +448,12 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         }
         m_hasBBox = true;
         return true;
-    } else if ((attr == "loc") ||(attr == "contains")) {
+    } else if ((p == "loc") || (p == "contains")) {
         throw InvalidOperation("tried to set loc or contains via setProperty");
-    } else if (attr == "tasks") {
+    } else if (p == "tasks") {
         updateTasks(v);
         return true;
-    } else if (attr == "scale") {
+    } else if (p == "scale") {
         if (v.isList()) {
             if (v.List().size() == 1) {
                 if (v.List().front().isNum()) {
@@ -479,33 +479,33 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     return false; // not a native property
 }
 
-void Entity::onAttrChanged(const std::string&, const Element&)
+void Entity::onPropertyChanged(const std::string& propertyName, const Element& v)
 {
     // no-op by default
 }
 
 
-void Entity::typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+void Entity::typeInfo_PropertyChanges(const std::string& propertyName, const Atlas::Message::Element& element)
 {
-    attrChangedFromTypeInfo(attributeName, element);
+	propertyChangedFromTypeInfo(propertyName, element);
 }
 
-void Entity::attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element)
+void Entity::propertyChangedFromTypeInfo(const std::string& propertyName, const Atlas::Message::Element& element)
 {
-    ///Only fire the events if there's no attribute already defined for this entity
-    if (m_attrs.count(attributeName) == 0) {
+    ///Only fire the events if there's no property already defined for this entity
+    if (m_properties.count(propertyName) == 0) {
         beginUpdate();
-        nativeAttrChanged(attributeName, element);
-        onAttrChanged(attributeName, element);
+		nativePropertyChanged(propertyName, element);
+		onPropertyChanged(propertyName, element);
     
         // fire observers
         
-        ObserverMap::const_iterator obs = m_observers.find(attributeName);
+        ObserverMap::const_iterator obs = m_observers.find(propertyName);
         if (obs != m_observers.end()) {
             obs->second.emit(element);
         }
     
-        addToUpdate(attributeName);
+        addToUpdate(propertyName);
         endUpdate();
     }
 }
@@ -516,10 +516,10 @@ void Entity::beginUpdate()
     ++m_updateLevel;
 }
 
-void Entity::addToUpdate(const std::string& attr)
+void Entity::addToUpdate(const std::string& propertyName)
 {
     assert(m_updateLevel > 0);
-    m_modifiedAttrs.insert(attr);
+    m_modifiedProperties.insert(propertyName);
 }
 
 void Entity::endUpdate()
@@ -532,12 +532,12 @@ void Entity::endUpdate()
         
     if (--m_updateLevel == 0) // unlocking updates
     {
-        Changed.emit(m_modifiedAttrs);
+        Changed.emit(m_modifiedProperties);
         
-        if (m_modifiedAttrs.count("pos") || 
-            m_modifiedAttrs.count("velocity") ||
-            m_modifiedAttrs.count("orientation") ||
-            m_modifiedAttrs.count("angular"))
+        if (m_modifiedProperties.count("pos") ||
+			m_modifiedProperties.count("velocity") ||
+			m_modifiedProperties.count("orientation") ||
+			m_modifiedProperties.count("angular"))
         {
             m_lastMoveTime = TimeStamp::now();
             
@@ -548,7 +548,7 @@ void Entity::endUpdate()
             onMoved();
         }
         
-        m_modifiedAttrs.clear();
+        m_modifiedProperties.clear();
     }
 }
 

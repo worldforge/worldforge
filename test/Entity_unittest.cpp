@@ -130,13 +130,13 @@ int main()
 
 namespace Eris {
 
-const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
+const Atlas::Message::Element* TypeInfo::getProperty(const std::string& attributeName) const
 {
     return 0;
 }
 
-void TypeInfo::onAttributeChanges(const std::string&,
-                                  const Atlas::Message::Element& )
+void TypeInfo::onPropertyChanges(const std::string& attributeName,
+								 const Atlas::Message::Element& element)
 {
 }
 

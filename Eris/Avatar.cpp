@@ -288,7 +288,7 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
 //
 //    arguments->setId(entity->getId());
 //    arguments->setObjtype("obj");
-//    if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
+//    if (position.isValid()) arguments->setProperty("pos", position.toAtlas());
 //
 //    Use use;
 //    use->setFrom(m_mindId);

@@ -123,30 +123,30 @@ void TypeInfo::processTypeData(const Root &atype)
         setParent(m_typeService->getTypeByName(atype->getParent()));
         m_objType = atype->getObjtype();
 
-        extractDefaultAttributes(atype);
+		extractDefaultProperties(atype);
 
         validateBind();
     } else {
-        //For already bound types we'll extract the attributes and check if any changed.
+        //For already bound types we'll extract the properties and check if any changed.
 
-        auto oldAttributes = std::move(m_attributes);
+        auto oldProperties = std::move(m_properties);
 
-        extractDefaultAttributes(atype);
+		extractDefaultProperties(atype);
 
-        for (auto& entry : m_attributes) {
-            auto oldEntryI = oldAttributes.find(entry.first);
-            if (oldEntryI == oldAttributes.end() || oldEntryI->second != entry.second) {
-                AttributeChanges.emit(entry.first, entry.second);
+        for (auto& entry : m_properties) {
+            auto oldEntryI = oldProperties.find(entry.first);
+            if (oldEntryI == oldProperties.end() || oldEntryI->second != entry.second) {
+                PropertyChanges.emit(entry.first, entry.second);
             }
 
-            if (oldEntryI != oldAttributes.end()) {
-                oldAttributes.erase(oldEntryI);
+            if (oldEntryI != oldProperties.end()) {
+                oldProperties.erase(oldEntryI);
             }
         }
 
-        //If there are any old attributes left they have been removed from the type, we should signal with an empty element.
-        for (auto& entry : oldAttributes) {
-            AttributeChanges.emit(entry.first, Atlas::Message::Element());
+        //If there are any old properties left they have been removed from the type, we should signal with an empty element.
+        for (auto& entry : oldProperties) {
+            PropertyChanges.emit(entry.first, Atlas::Message::Element());
         }
 
     }
@@ -226,41 +226,30 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     }
 }
 
-void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
+void TypeInfo::extractDefaultProperties(const Atlas::Objects::Root& atype)
 {
-    ///See if there's any default attributes defined, and if so make a copy, accessable through "getAttributes()".
-    if (atype->hasAttr("attributes")) {
-        const Atlas::Message::Element attrsElement(atype->getAttr("attributes"));
-        if (!attrsElement.isMap()) {
-            warning() << "'attributes' element is not of map type when processing entity type " << m_name << ".";
+    ///See if there's any default properties defined, and if so make a copy, accessible through "getProperties()".
+    if (atype->hasAttr("properties")) {
+        const Atlas::Message::Element propertiesElement(atype->getAttr("properties"));
+        if (!propertiesElement.isMap()) {
+            warning() << "'properties' element is not of map type when processing entity type " << m_name << ".";
         } else {
-            const Atlas::Message::MapType& attrsMap(attrsElement.Map());
-            for (const auto& attributeElement : attrsMap) {
-                std::string attributeName(attributeElement.first);
-                if (attributeElement.second.isMap()) {
-                    const Atlas::Message::MapType& innerAttributeMap(attributeElement.second.Map());
-                    auto J = innerAttributeMap.find("default");
-                    if (J != innerAttributeMap.end()) {
-                        m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, J->second));
-                    }
-                }
-            }
+			m_properties = propertiesElement.Map();
         }
     }
 }
 
 
-const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
+const Atlas::Message::Element* TypeInfo::getProperty(const std::string& propertyName) const
 {
-
-    ///first check with the local attributes
-    auto A = m_attributes.find(attributeName);
-    if (A != m_attributes.end()) {
+    ///first check with the local properties
+    auto A = m_properties.find(propertyName);
+    if (A != m_properties.end()) {
         return &(A->second);
     } else {
         ///it wasn't locally defined check with the parent
         if (getParent()) {
-            const Atlas::Message::Element* element(getParent()->getAttribute(attributeName));
+            const Atlas::Message::Element* element(getParent()->getProperty(propertyName));
             if (element) {
                 return element;
             }
@@ -269,26 +258,25 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
     return nullptr;
 }
 
-void TypeInfo::setAttribute(const std::string& attributeName, const Atlas::Message::Element& element)
+void TypeInfo::setProperty(const std::string& propertyName, const Atlas::Message::Element& element)
 {
-    onAttributeChanges(attributeName, element);
-    auto I = m_attributes.find(attributeName);
-    if (I == m_attributes.end()) {
-        m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, element));
+    onPropertyChanges(propertyName, element);
+    auto I = m_properties.find(propertyName);
+    if (I == m_properties.end()) {
+		m_properties.insert(Atlas::Message::MapType::value_type(propertyName, element));
     } else {
         I->second = element;
     }
 }
 
-
-void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+void TypeInfo::onPropertyChanges(const std::string& propertyName, const Atlas::Message::Element& element)
 {
-    AttributeChanges.emit(attributeName, element);
-    ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
+    PropertyChanges.emit(propertyName, element);
+    ///Now go through all children, and only make them emit the event if they themselves doesn't have an property by this name (which thus overrides this).
     for (auto child : getChildren()) {
-        Atlas::Message::MapType::const_iterator J = child->m_attributes.find(attributeName);
-        if (J == child->m_attributes.end()) {
-            child->onAttributeChanges(attributeName, element);
+        Atlas::Message::MapType::const_iterator J = child->m_properties.find(propertyName);
+        if (J == child->m_properties.end()) {
+			child->onPropertyChanges(propertyName, element);
         }
     }
 }

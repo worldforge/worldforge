@@ -5,7 +5,7 @@ Optimisations
  - replace a call to map::count followed by map::operation[] with a call to
    find, as its twice as efficient.
 - in entity attribute handling, hash the attr name to a compile-time index,
- so nativeAttrChanged can use a single switch statement
+ so nativePropertyChanged can use a single switch statement
  
 BUGS
 
