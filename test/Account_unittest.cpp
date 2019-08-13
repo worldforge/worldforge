@@ -102,7 +102,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_account(pl),
     m_mindId(mindId),
     m_entityId(entityId),
-    m_entity(NULL),
+    m_entity(nullptr),
     m_lastOpTime(0.0),
     m_isAdmin(false)
 {
@@ -215,8 +215,8 @@ void Connection::send(const Atlas::Objects::Root &obj)
 {
 }
 
-CharacterType::CharacterType(const std::string& name,
-                             const std::string& description)
+CharacterType::CharacterType(std::string name,
+                             std::string description)
 : m_name(name), m_description(description)
 {
 }

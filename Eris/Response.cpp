@@ -39,7 +39,7 @@ ResponseTracker::~ResponseTracker() = default;
 
 void ResponseTracker::await(long serial, Callback callback)
 {
-    m_pending.emplace(serial, callback);
+    m_pending.emplace(serial, std::move(callback));
 }
 
 

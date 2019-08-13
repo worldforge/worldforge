@@ -151,7 +151,7 @@ void testBadCreate()
     charEnt->setParents(prs);
     
     AutoAvatar av2 = g.create(charEnt);
-    assert(av2.get() == NULL);
+    assert(av2.get() == nullptr);
 }
 
 void testSet(Controller& ctl)

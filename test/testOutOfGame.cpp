@@ -163,7 +163,7 @@ void testBadTake()
     AvatarGetter g(player.get());
     g.expectFailure();
     AutoAvatar av2 = g.take("_fail_");
-    assert(av2.get() == NULL);
+    assert(av2.get() == nullptr);
 }
 
 void testServerInfo()

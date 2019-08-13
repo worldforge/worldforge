@@ -288,7 +288,7 @@ public:
     /// Signal that the entity's container changed
     /** emitted when our location changes. First argument is the old location.
     The new location can be found via getLocation.
-    Note either the old or new location might be NULL.
+    Note either the old or new location might be nullptr.
     */
     sigc::signal<void, Entity*> LocationChanged;
 

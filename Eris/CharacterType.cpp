@@ -22,23 +22,21 @@
 
 #include "CharacterType.h"
 
-namespace Eris
-{
+#include <utility>
 
-CharacterType::CharacterType(const std::string& name, const std::string& description)
-: m_name(name), m_description(description)
-{
+namespace Eris {
+
+CharacterType::CharacterType(std::string name, std::string description)
+		: m_name(std::move(name)), m_description(std::move(description)) {
 }
 
-const std::string& CharacterType::getName() const
-        {
-    return m_name;
-        }
+const std::string& CharacterType::getName() const {
+	return m_name;
+}
 
-const std::string& CharacterType::getDescription() const
-        {
-    return m_description;
-        }
+const std::string& CharacterType::getDescription() const {
+	return m_description;
+}
 
 
 }

@@ -37,10 +37,11 @@ void Person::sight(const AtlasAccount &acc)
         return;
     }
     
-    if (acc->isDefaultName())
-        m_fullName = m_id;
-    else
-        m_fullName = acc->getName();
+    if (acc->isDefaultName()) {
+		m_fullName = m_id;
+	} else {
+		m_fullName = acc->getName();
+	}
 }
 
 void Person::msg(const std::string &msg)

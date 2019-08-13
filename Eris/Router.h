@@ -12,8 +12,7 @@ class Router
 public:
     typedef enum {
         IGNORED = 0,
-        HANDLED,
-        WILL_REDISPATCH
+        HANDLED
     } RouterResult;
     virtual ~Router();
 

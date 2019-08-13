@@ -21,7 +21,7 @@ protected:
 	RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) override;
 
 private:
-    RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
+    RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation& sightOp, const Atlas::Objects::Operation::RootOperation& op);
 
     Avatar* m_avatar;
     View* m_view;

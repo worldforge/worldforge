@@ -61,7 +61,9 @@ public:
             m_account->updateFromObject(acc);
 
             // refresh character data if it changed
-            if (!acc->isDefaultCharacters()) m_account->refreshCharacterInfo();
+            if (!acc->isDefaultCharacters()) {
+            	m_account->refreshCharacterInfo();
+            }
 
             return HANDLED;
         }

@@ -115,7 +115,7 @@ class Hearer : public sigc::trackable
 public:
     Hearer() :
         m_count(0),
-        m_source(NULL)
+        m_source(nullptr)
     {;}
     
     void fired(Eris::Entity* ent, const RootOperation& op)

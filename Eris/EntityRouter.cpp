@@ -37,35 +37,39 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
     // note it's important we match exactly on sight here, and not derived ops
     // like appearance and disappearance
     if (op->getClassNo() == SIGHT_NO) {
-        assert(!args.empty());
-        RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
-        if (sop.isValid()) return handleSightOp(sop);
+    	for (const auto& arg : args) {
+			RootOperation sop = smart_dynamic_cast<RootOperation>(arg);
+			if (sop.isValid()) {
+				return handleSightOp(sop);
+			}
+    	}
     }
     
     if (op->getClassNo() == SOUND_NO) {
-        assert(!args.empty());
-        if (args.front()->getClassNo() == TALK_NO)
-        {
-            RootOperation talk = smart_dynamic_cast<RootOperation>(args.front());
-            m_entity->onTalk(talk);
-            return HANDLED;
-        } 
-        
-        TypeInfo* ty = typeService()->getTypeForAtlas(args.front());
-        if (!ty->isBound()) {
-            new TypeBoundRedispatch(m_entity->getView()->getAvatar()->getConnection(), op, ty);
-            return WILL_REDISPATCH;
-        }
-    
-        if (ty->isA(typeService()->getTypeByName("action")))
-        {
-            // sound of action
-            RootOperation act = smart_dynamic_cast<RootOperation>(args.front());
-            m_entity->onSoundAction(act);
-            return HANDLED;
-        }
-        
-        warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+		for (const auto& arg : args) {
+			if (arg->getClassNo() == TALK_NO)
+			{
+				RootOperation talk = smart_dynamic_cast<RootOperation>(arg);
+				m_entity->onTalk(talk);
+			} else {
+				if (!arg->isDefaultParent()) {
+					TypeInfo* ty = typeService()->getTypeForAtlas(arg);
+					if (!ty->isBound()) {
+						new TypeBoundRedispatch(m_entity->getView()->getAvatar()->getConnection(), op, ty);
+					} else if (ty->isA(typeService()->getTypeByName("action"))) {
+						// sound of action
+						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
+						m_entity->onSoundAction(act);
+					} else {
+						warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+					}
+				} else {
+					warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+				}
+			}
+		}
+
+		return HANDLED;
         // other sounds !
     }
 
@@ -84,24 +88,28 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         if (!m_entity->isVisible()) {
             m_entity->getView()->sendLookAt(m_entity->getId());
         }
-        // sight of move, we handle as a specialization of set.
-        assert(!args.empty());
-        const Root & arg = args.front();
-        
-        // break out LOC, which MOVE ops are allowed to update
-        if (arg->hasAttr("loc")) {
-            m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
-        }
-        
-        m_entity->setFromRoot(arg, true /* movement allowed */);
+
+		for (const auto& arg : args) {
+			// sight of move, we handle as a specialization of set.
+			// break out LOC, which MOVE ops are allowed to update
+			if (arg->hasAttr("loc")) {
+				m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
+			}
+
+			m_entity->setFromRoot(arg, true /* movement allowed */);
+		}
+
         return HANDLED;
     }
     
     if (op->instanceOf(IMAGINARY_NO)) {
-        if (args.empty())
-            error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
-        else
-            m_entity->onImaginary(args.front());
+        if (args.empty()) {
+			error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
+		} else {
+			for (const auto& arg : args) {
+				m_entity->onImaginary(arg);
+			}
+		}
         return HANDLED;        
     }
     

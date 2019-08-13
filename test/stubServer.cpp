@@ -395,7 +395,7 @@ ClientConnection* StubServer::getConnectionForAccount(const std::string& accId)
      for (unsigned int C=0; C < m_clients.size(); ++C)
         if (m_clients[C]->getAccount() == accId) return m_clients[C];
 
-    return NULL;
+    return nullptr;
 }
 
 AccountMap::const_iterator StubServer::findAccountByUsername(const std::string &uname)
@@ -415,7 +415,7 @@ Agent* StubServer::findAgentForEntity(const std::string& eid)
         if (ag) return ag;
     }
     
-    return NULL;
+    return nullptr;
 
 }
 

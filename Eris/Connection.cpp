@@ -131,7 +131,7 @@ void Connection::dispatch()
 
     // now dispatch received ops
     while (!m_opDeque.empty()) {
-        RootOperation op = m_opDeque.front();
+        RootOperation op = std::move(m_opDeque.front());
         m_opDeque.pop_front();
         dispatchOp(op);
     }
@@ -282,23 +282,29 @@ void Connection::dispatchOp(const RootOperation& op)
         bool anonymous = op->isDefaultTo();
 
 		Router::RouterResult rr = m_responder->handleOp(op);
-		if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+		if (rr == Router::HANDLED) {
+			return;
+		}
 
     // locate a router based on from
         if (!op->isDefaultFrom()) {
-            IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
+            auto R = m_fromRouters.find(op->getFrom());
             if (R != m_fromRouters.end()) {
                 rr = R->second->handleOperation(op);
-                if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+                if (rr == Router::HANDLED) {
+                	return;
+                }
             }
         }
 
     // locate a router based on the op's TO value
         if (!anonymous) {
-            IdRouterMap::const_iterator R = m_toRouters.find(op->getTo());
+			auto R = m_toRouters.find(op->getTo());
             if (R != m_toRouters.end()) {
                 rr = R->second->handleOperation(op);
-                if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+                if (rr == Router::HANDLED) {
+                	return;
+                }
             } else if (!m_toRouters.empty()) {
                 warning() << "received op with TO=" << op->getTo() << ", but no router is registered for that id";
             }
@@ -311,9 +317,13 @@ void Connection::dispatchOp(const RootOperation& op)
         }
 
     // go to the default router
-        if (m_defaultRouter) rr = m_defaultRouter->handleOperation(op);
-        if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
-    } catch (Atlas::Exception& ae) {
+        if (m_defaultRouter) {
+        	rr = m_defaultRouter->handleOperation(op);
+        }
+        if (rr != Router::HANDLED) {
+        	warning() << "no-one handled op:" << op;
+        }
+    } catch (const Atlas::Exception& ae) {
         error() << "caught Atlas exception: '" << ae.getDescription() <<
             "' while dispatching op:\n" << op;
     }
@@ -340,14 +350,16 @@ void Connection::handleTimeout(const std::string& msg)
 
 void Connection::handleServerInfo(const RootOperation& op)
 {
-    RootEntity svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
-    if (!svr.isValid()) {
-        error() << "server INFO argument object is broken";
-        return;
-    }
+	if (!op->getArgs().empty()) {
+		RootEntity svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+		if (!svr.isValid()) {
+			error() << "server INFO argument object is broken";
+			return;
+		}
 
-    m_info.processServer(svr);
-    GotServerInfo.emit();
+		m_info.processServer(svr);
+		GotServerInfo.emit();
+	}
 }
 
 void Connection::onConnect()

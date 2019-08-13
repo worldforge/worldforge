@@ -318,7 +318,7 @@ decode and pass the top two items of the stack (and more is possible).
 
 One final point is that dispatchers have a unique name in their parent context, and
 this can be used to address a given dispatcher instance using a path specification. Notably,
-Connection features a {\tt getDispatcherByPath} method (which may return NULL). In order
+Connection features a {\tt getDispatcherByPath} method (which may return nullptr). In order
 to simplify the addressing of dispatchers, there is support for anonymous nodes, which
 are generally handled transparently by the system. Dispatchers are reference counted,
 so once added to the tree they should manage themselves. This referencecounting scheme

@@ -308,7 +308,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_account(pl),
     m_mindId(mindId),
     m_entityId(entId),
-    m_entity(NULL),
+    m_entity(nullptr),
     m_stampAtLastOp(WFMath::TimeStamp::now()),
     m_lastOpTime(0.0),
     m_isAdmin(false)
@@ -331,7 +331,7 @@ void Avatar::onTransferRequested(const TransferInfo &transfer) {
 
 View::View(Avatar* av) :
     m_owner(av),
-    m_topLevel(NULL),
+    m_topLevel(nullptr),
     m_maxPendingCount(10)
 {
     

@@ -41,7 +41,7 @@ public:
     ~View();
 
     /**
-    Retrieve an entity in the view by id. Returns NULL if no such entity exists
+    Retrieve an entity in the view by id. Returns nullptr if no such entity exists
     in the view.
     */
     Entity* getEntity(const std::string& eid) const;
@@ -51,7 +51,7 @@ public:
         return m_owner;
     }
 
-    /** return the current top-level entity. This will return NULL
+    /** return the current top-level entity. This will return nullptr
     until the first emission of the TopLevelEntityChanged signal. */
     Entity* getTopLevel() const
     {

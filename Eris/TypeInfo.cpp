@@ -71,7 +71,7 @@ void TypeInfo::resolveChildren()
         return;
     }
     
-    StringSet uchildren(m_unresolvedChildren);
+    auto uchildren = m_unresolvedChildren;
     for (const auto& child : uchildren) {
         addChild(m_typeService->getTypeByName(child));
     }
@@ -97,13 +97,15 @@ void TypeInfo::processTypeData(const Root &atype)
             const Atlas::Message::ListType & children(childElem.asList());
 
             for (const auto& childElement : children) {
-                TypeInfo* child = m_typeService->findTypeByName(childElement.asString());
-                // if the child was already known, don't add to unresolved
-                if (child && m_children.count(child)) {
-                    continue;
-                }
+            	if (childElement.isString()) {
+					TypeInfo* child = m_typeService->findTypeByName(childElement.String());
+					// if the child was already known, don't add to unresolved
+					if (child && m_children.count(child)) {
+						continue;
+					}
 
-                m_unresolvedChildren.insert(childElement.asString());
+					m_unresolvedChildren.insert(childElement.String());
+				}
             }
         }
     }
@@ -220,7 +222,7 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     const TypeInfoSet& parentAncestors = tp->m_ancestors;
     m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
-    // tell all our childen!
+    // tell all our children!
     for (auto child : m_children) {
 		child->addAncestor(tp);
     }
@@ -230,7 +232,7 @@ void TypeInfo::extractDefaultProperties(const Atlas::Objects::Root& atype)
 {
     ///See if there's any default properties defined, and if so make a copy, accessible through "getProperties()".
     if (atype->hasAttr("properties")) {
-        const Atlas::Message::Element propertiesElement(atype->getAttr("properties"));
+        auto propertiesElement = atype->getAttr("properties");
         if (!propertiesElement.isMap()) {
             warning() << "'properties' element is not of map type when processing entity type " << m_name << ".";
         } else {

@@ -357,7 +357,9 @@ Entity* View::createEntity(const RootEntity& gent)
 void View::unseen(const std::string& eid)
 {
     Entity* ent = getEntity(eid);
-    if (!ent) return; // unseen for non-local, ignore
+    if (!ent) {
+    	return; // unseen for non-local, ignore
+    }
     
     ent->shutdown();
     delete ent; // is that all?
@@ -440,10 +442,13 @@ void View::sendLookAt(const std::string& eid)
 void View::setTopLevelEntity(Entity* newTopLevel)
 {
     if (m_topLevel) {
-        if (newTopLevel == m_topLevel) return; // no change!
+        if (newTopLevel == m_topLevel) {
+        	return; // no change!
+        }
         
-        if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr))
-            error() << "old top-level entity is visible, but has no location";
+        if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr)) {
+			error() << "old top-level entity is visible, but has no location";
+        }
     }
 
     assert(newTopLevel && newTopLevel->getLocation() == nullptr);
@@ -459,8 +464,10 @@ void View::entityDeleted(Entity* ent)
 
 void View::issueQueuedLook()
 {
-    if (m_lookQueue.empty()) return;
-    std::string eid = m_lookQueue.front();
+    if (m_lookQueue.empty()) {
+    	return;
+    }
+    std::string eid = std::move(m_lookQueue.front());
     m_lookQueue.pop_front();
     sendLookAt(eid);
 }

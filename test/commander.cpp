@@ -86,7 +86,7 @@ void Commander::negotiate()
         m_codec->streamBegin();
                 
         delete m_acceptor;
-        m_acceptor = NULL;
+        m_acceptor = nullptr;
         break;
 
     default:

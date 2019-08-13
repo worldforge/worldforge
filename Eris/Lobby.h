@@ -27,20 +27,20 @@ class Lobby : public Room
 public:	
     /** Create a Lobby for the specified account, and retrive the initial
     OOG structure if the Account is logged in and connected. */
-    Lobby(Account *acc); 
+    explicit Lobby(Account *acc);
     
     /** Delete the Lobby, including all it's Rooms and Persons. */
-    virtual ~Lobby();
+    ~Lobby() override;
 
-    /** Join the specified room, or return NULL if an error occurs. Note
+    /** Join the specified room, or return nullptr if an error occurs. Note
     the Room will not be valid until it emits the Entered signal. */
     Room* join(const std::string &roomID);
 
-    /// obtain a person's info, given their account ID; may return NULL
+    /// obtain a person's info, given their account ID; may return nullptr
     Person* getPerson(const std::string &acc);
 		
     /**
-    Obtain a Room object, given the rooms' id. This will return NULL if the
+    Obtain a Room object, given the rooms' id. This will return nullptr if the
     id is invalid.
     */
     Room* getRoom(const std::string &id);

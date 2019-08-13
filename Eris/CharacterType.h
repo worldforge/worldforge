@@ -20,7 +20,7 @@ public:
      * @param name The name of the character type.
      * @param description A description to show the user.
      */
-    CharacterType(const std::string& name, const std::string& description);
+    CharacterType(std::string  name, std::string  description);
 
     /**
      * @brief Accessor for the name of the character type.

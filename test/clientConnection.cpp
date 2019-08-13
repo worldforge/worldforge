@@ -31,8 +31,8 @@ typedef Atlas::Objects::Entity::Account AtlasAccount;
 ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_stream(socket),
     m_server(ss),
-    m_codec(NULL),
-    m_encoder(NULL)
+    m_codec(nullptr),
+    m_encoder(nullptr)
 {
     m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_stream);
     m_acceptor->poll(false);
@@ -85,7 +85,7 @@ Agent* ClientConnection::findAgentForEntity(const std::string& eid) const
 {
     AgentMap::const_iterator it = m_agents.find(eid);
     if (it != m_agents.end()) return it->second;
-    return NULL;
+    return nullptr;
 }
 
 void ClientConnection::shutdown()
@@ -120,7 +120,7 @@ void ClientConnection::negotiate()
         m_codec->streamBegin();
                 
         delete m_acceptor;
-        m_acceptor = NULL;
+        m_acceptor = nullptr;
         break;
 
     default:
@@ -132,7 +132,7 @@ void ClientConnection::objectArrived(const Root& obj)
 {
 /*
     std::stringstream debugStream;
-    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    Atlas::Codecs::Bach debugCodec(debugStream, nullptr);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;

@@ -76,7 +76,7 @@ AutoAvatar AvatarGetter::take(const std::string& charId)
     // we wanted to fail, bail out now
     if (m_failed && m_expectFail) return AutoAvatar();
     
-    assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
+    assert(m_av->getEntity() == nullptr); // shouldn't have the entity yet
     assert(m_av->getId() == charId); // but should have it's ID
 
     if (m_earlyReturn) return m_av;
@@ -110,7 +110,7 @@ AutoAvatar AvatarGetter::create(const Atlas::Objects::Entity::RootEntity& charEn
     // we wanted to fail, bail out now
     if (m_failed && m_expectFail) return AutoAvatar();
     
-    assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
+    assert(m_av->getEntity() == nullptr); // shouldn't have the entity yet
 
     if (m_earlyReturn) return m_av;
 

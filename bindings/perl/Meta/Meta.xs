@@ -17,7 +17,7 @@ namespace SigCPerl {
 
 // These are used in emit() by a signal which should
 // never be user emitted. They convert an SV* into
-// a reference which is really the NULL pointer,
+// a reference which is really the nullptr pointer,
 // and assert(false) in the process.
 template<> inline ArgBox<Eris::ServerInfo*>::ArgBox(SV *val)
   throw(BadConvertVal) : m_val(0) {assert(false);}

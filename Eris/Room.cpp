@@ -287,7 +287,7 @@ void Room::notifyPersonSight(Person *p)
     // the need for a counting / disconnect from SightPerson scheme
     if (P == m_members.end()) return;
     
-    if (P->second == NULL) {
+    if (P->second == nullptr) {
         P->second = p;
         
         if (m_entered)
@@ -307,7 +307,7 @@ void Room::checkEntry()
     
     bool anyPending = false;
     for (IdPersonMap::const_iterator P = m_members.begin(); P != m_members.end(); ++P)
-        if (P->second == NULL) anyPending = true;
+        if (P->second == nullptr) anyPending = true;
        
     if (!anyPending)
     {

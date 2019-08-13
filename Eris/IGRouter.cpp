@@ -49,34 +49,47 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     if (op->getClassNo() == SIGHT_NO) {
         if (args.empty()) {
-            warning() << "Avatar received sight with ampty args";
+            warning() << "Avatar received sight with empty args";
             return IGNORED;
         }
-        if (args.front()->instanceOf(ROOT_OPERATION_NO)) return handleSightOp(op);
-        
-        // initial sight of entities
-        RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
-        if (gent.isValid()) {
-            // View needs a bound TypeInfo for the entity
-            TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-            if (!ty->isBound()) {
-                new TypeBoundRedispatch(m_avatar->getConnection(), op, ty);
-                return WILL_REDISPATCH;
-            }
 
-            m_view->sight(gent);
-            return HANDLED;
-        }
+		for (const auto& arg : args) {
+			if (arg->instanceOf(ROOT_OPERATION_NO)) {
+				handleSightOp(op, smart_dynamic_cast<RootOperation>(arg));
+			} else {
+				// initial sight of entities
+				RootEntity gent = smart_dynamic_cast<RootEntity>(arg);
+				if (gent.isValid()) {
+					// View needs a bound TypeInfo for the entity
+					if (!gent->isDefaultId() && !gent->isDefaultParent()) {
+						TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+						if (!ty->isBound()) {
+							auto opCopy = op.copy();
+							opCopy->setArgs1(arg);
+							new TypeBoundRedispatch(m_avatar->getConnection(), opCopy, ty);
+						} else {
+							m_view->sight(gent);
+						}
+					}
+				}
+			}
+		}
+
+		return HANDLED;
+        
+
     }
     
     if (op->getClassNo() == APPEARANCE_NO) {
         for (const auto& arg : args) {
             float stamp = -1;
-            if (arg->hasAttr("stamp")) {
-                stamp = (float) arg->getAttr("stamp").asFloat();
+            if (!arg->isDefaultStamp()) {
+                stamp = static_cast<float>(arg->getStamp());
             }
-            
-            m_view->appear(arg->getId(), stamp);
+
+			if (!arg->isDefaultId()) {
+				m_view->appear(arg->getId(), stamp);
+			}
         }
         
         return HANDLED;
@@ -84,7 +97,9 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     
     if (op->getClassNo() == DISAPPEARANCE_NO) {
         for (const auto& arg : args) {
-            m_view->disappear(arg->getId());
+        	if (!arg->isDefaultId()) {
+				m_view->disappear(arg->getId());
+			}
         }
         
         return HANDLED;
@@ -96,7 +111,11 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             warning() << "Avatar received unseen with empty args";
             return IGNORED;
         }
-        m_view->unseen(args.front()->getId());
+		for (const auto& arg : args) {
+			if (!arg->isDefaultId()) {
+				m_view->unseen(arg->getId());
+			}
+		}
         return HANDLED;
     }
 
@@ -164,57 +183,67 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     return IGNORED;
 }
 
-Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
+Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const RootOperation& op)
 {
-    RootOperation op = smart_dynamic_cast<RootOperation>(sightOp->getArgs().front());
-    const std::vector<Root>& args = op->getArgs();
+    const auto& args = op->getArgs();
 
     if (op->getClassNo() == CREATE_NO) {
     	if (!args.empty()) {
-			RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
-			if (gent.isValid()) {
-				// View needs a bound TypeInfo for the entity
-				TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-				if (!ty->isBound()) {
-					new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
-					return WILL_REDISPATCH;
-				}
+			for (const auto& arg : args) {
+				RootEntity gent = smart_dynamic_cast<RootEntity>(arg);
+				if (gent.isValid()) {
+					if (!gent->isDefaultId() && !gent->isDefaultParent()) {
+						// View needs a bound TypeInfo for the entity
+						TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+						if (!ty->isBound()) {
+							auto sightCopy = sightOp.copy();
+							auto opCopy = op.copy();
+							opCopy->setArgs1(arg);
+							sightCopy->setArgs1(opCopy);
+							new TypeBoundRedispatch(m_avatar->getConnection(), sightCopy, ty);
+						}
 
-				m_view->create(gent);
-				return HANDLED;
+						m_view->create(gent);
+					}
+				}
 			}
 		} else {
     		warning() << "Got sight of CREATE op with no args.";
-			return IGNORED;
 		}
-    }
+		return HANDLED;
+	}
     
     if (op->getClassNo() == DELETE_NO) {
     	if (!args.empty()) {
-			m_view->deleteEntity(args.front()->getId());
-			return HANDLED;
+			for (const auto& arg : args) {
+				if (!arg->isDefaultId()) {
+					m_view->deleteEntity(arg->getId());
+				}
+			}
     	} else {
 			warning() << "Got sight of DELETE op with no args.";
-			return IGNORED;
 		}
-    }
+		return HANDLED;
+	}
     
     // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {
         for (const auto& arg : args) {
-            Entity* ent = m_view->getEntity(arg->getId());
-            if (!ent) {
-                if (m_view->isPending(arg->getId())) {
-                    /* no-op, we'll get the state later */
-                } else {
-                    warning() << " got SET for completely unknown entity " << arg->getId();
-                }
-                    
-                continue; // we don't have it, ignore
-            }
-            
-            ent->setFromRoot(arg, false);
+        	if (!arg->isDefaultId()) {
+				Entity* ent = m_view->getEntity(arg->getId());
+				if (!ent) {
+					if (m_view->isPending(arg->getId())) {
+						/* no-op, we'll get the state later */
+					} else {
+						warning() << " got SET for completely unknown entity " << arg->getId();
+					}
+
+					continue; // we don't have it, ignore
+				}
+
+				ent->setFromRoot(arg, false);
+			}
         }
         return HANDLED;
     }
@@ -224,38 +253,44 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     // like if an Appear ops was sent (which is the other main way a new entity can announce itself to the client).
     if (op->getClassNo() == MOVE_NO) {
         for (const auto& arg : args) {
-            float stamp = -1;
-            if (arg->hasAttr("stamp")) {
-                stamp = (float) arg->getAttr("stamp").asFloat();
-            }
+			if (!arg->isDefaultId()) {
+				float stamp = -1;
+				if (!arg->isDefaultStamp()) {
+					stamp = static_cast<float>(arg->getStamp());
+				}
 
-            m_view->appear(arg->getId(), stamp);
+				m_view->appear(arg->getId(), stamp);
+			}
         }
         return HANDLED;
     }
 
 
 
-    // we have to handle generic 'actions' late, to avoid trapping interesting
-    // such as create or divide
-    TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);
-    if (!ty->isBound()) {
-        new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
-        return WILL_REDISPATCH;
-    }
-    
-    if (ty->isA(m_actionType)) {
-        if (op->isDefaultFrom()) {
-            warning() << "received op " << ty->getName() << " with FROM unset";
-            return IGNORED;
-        }
-        
-        Entity* ent = m_view->getEntity(op->getFrom());
-        if (ent) ent->onAction(op);
-        
-        return HANDLED;
-    }
-    
+    if (!op->isDefaultParent()) {
+		// we have to handle generic 'actions' late, to avoid trapping interesting
+		// such as create or divide
+		TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);
+		if (!ty->isBound()) {
+			new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
+			return HANDLED;
+		}
+
+		if (ty->isA(m_actionType)) {
+			if (op->isDefaultFrom()) {
+				warning() << "received op " << ty->getName() << " with FROM unset";
+				return HANDLED;
+			}
+
+			Entity* ent = m_view->getEntity(op->getFrom());
+			if (ent) {
+				ent->onAction(op);
+			}
+
+			return HANDLED;
+		}
+	}
+
     return IGNORED;
 }
 

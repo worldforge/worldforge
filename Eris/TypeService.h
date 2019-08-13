@@ -38,7 +38,7 @@ public:
     can take advantage of integer typeids */
     TypeInfoPtr getTypeForAtlas(const Atlas::Objects::Root &obj);
 
-    /** Lookup the requested type, by name, and return NULL if it's unknown. */
+    /** Lookup the requested type, by name, and return nullptr if it's unknown. */
     TypeInfoPtr findTypeByName(const std::string &tynm);
 
     /** emitted when a new type is available and bound to it's parents */

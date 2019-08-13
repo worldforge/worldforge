@@ -92,36 +92,39 @@ void TypeService::handleOperation(const RootOperation& op)
     	auto message = getErrorMessage(op);
     	notice() << "Error from server when requesting type: " << message;
         auto& args = op->getArgs();
-        //First arg is the error message
-        if (args.size() > 1) {
-            Get request = smart_dynamic_cast<Get>(args[1]);
-            if (request) {
+		for (const auto& arg : args) {
+			Get request = smart_dynamic_cast<Get>(arg);
+			if (request) {
 				recvError(request);
 			}
-        }
+		}
 	} else if (op->instanceOf(CHANGE_NO)) {
 		const std::vector<Root>& args(op->getArgs());
-		for (auto& arg : args) {
-			auto& objType = arg->getObjtype();
-			if ((objType == "meta") ||
-				(objType == "class") ||
-				(objType == "op_definition") ||
-				(objType == "archetype")) {
-				recvTypeUpdate(arg);
+		for (const auto& arg : args) {
+			if (!arg->isDefaultObjtype()) {
+				auto& objType = arg->getObjtype();
+				if ((objType == "meta") ||
+					(objType == "class") ||
+					(objType == "op_definition") ||
+					(objType == "archetype")) {
+					recvTypeUpdate(arg);
+				}
 			}
 		}
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
-        if (!args.empty()) {
-            auto& objType = args.front()->getObjtype();
+		for (const auto& arg : args) {
+			if (!arg->isDefaultObjtype()) {
+				auto& objType = arg->getObjtype();
 
-            if ((objType == "meta") ||
-                (objType == "class") ||
-                (objType == "op_definition") ||
-                (objType == "archetype")) {
-                recvTypeInfo(args.front());
-            }
-        }
+				if ((objType == "meta") ||
+					(objType == "class") ||
+					(objType == "op_definition") ||
+					(objType == "archetype")) {
+					recvTypeInfo(arg);
+				}
+			}
+		}
     } else {
         error() << "type service got op that wasn't info or error";
     }
@@ -173,20 +176,24 @@ void TypeService::sendRequest(const std::string &id)
 void TypeService::recvError(const Get& get)
 {
     const std::vector<Root>& args = get->getArgs();
-    const Root & request = args.front();
 
-	auto T = m_types.find(request->getId());
-    if (T == m_types.end()) {
-        // This type isn't known, which is strange
-		error() << "got ERROR(GET()) with request for unknown type: " + request->getId();
-		return;
+    for (const auto& request: args) {
+    	if (!request->isDefaultId()) {
+			auto T = m_types.find(request->getId());
+			if (T == m_types.end()) {
+				// This type isn't known, which is strange
+				error() << "got ERROR(GET()) with request for unknown type: " + request->getId();
+				continue;
+			}
+
+			warning() << "type " << request->getId() << " undefined on server";
+			BadType.emit(T->second);
+
+			delete T->second;
+			m_types.erase(T);
+
+    	}
     }
-    
-    warning() << "type " << request->getId() << " undefined on server";
-    BadType.emit(T->second);
-
-    delete T->second;
-    m_types.erase(T);
 }
 
 TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)

@@ -161,7 +161,7 @@ protected:
      */
     bool mIsSending;
 
-    Atlas::Net::StreamConnect* _sc; ///< negotiation object (NULL after connection!)
+    Atlas::Net::StreamConnect* _sc; ///< negotiation object (nullptr after connection!)
     boost::asio::deadline_timer _negotiateTimer;
     boost::asio::deadline_timer _connectTimer;
     Atlas::Codec* m_codec;

@@ -314,7 +314,9 @@ void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
         return;
     }
 
-    Say.emit(talkArgs.front());
+    for (const auto& arg: talkArgs) {
+		Say.emit(arg);
+    }
     Noise.emit(talk);
 }
 
