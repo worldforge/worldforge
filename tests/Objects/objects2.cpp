@@ -304,7 +304,6 @@ void testValues()
     assert(op->instanceOf(Atlas::Objects::Operation::CREATE_NO));
     assert(op->instanceOf(Atlas::Objects::Operation::ACTION_NO));
     assert(op->instanceOf(Atlas::Objects::ROOT_NO));
-    assert(!op->instanceOf(Atlas::Objects::Operation::COMBINE_NO));
     assert(!op->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
     assert(op->getFrom() == "bar");
     assert(op->isDefaultParent() == false);
@@ -319,7 +318,6 @@ void testValues()
     assert(!op_arg->instanceOf(Atlas::Objects::Operation::CREATE_NO));
     assert(!op_arg->instanceOf(Atlas::Objects::Operation::ACTION_NO));
     assert(op_arg->instanceOf(Atlas::Objects::ROOT_NO));
-    assert(!op_arg->instanceOf(Atlas::Objects::Operation::COMBINE_NO));
     assert(op_arg->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
     assert(op_arg->instanceOf(Atlas::Objects::Entity::PLAYER_NO));
     assert(op_arg->getId() == "bar");

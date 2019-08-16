@@ -12,88 +12,6 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
-Allocator<DeleteData> DeleteData::allocator;
-        
-
-
-void DeleteData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void DeleteData::reset()
-{
-    ActionData::reset();
-}
-
-DeleteData * DeleteData::copy() const
-{
-    DeleteData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool DeleteData::instanceOf(int classNo) const
-{
-    if(DELETE_NO == classNo) return true;
-    return ActionData::instanceOf(classNo);
-}
-
-void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "delete";
-}
-
-Allocator<SetData> SetData::allocator;
-        
-
-
-void SetData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void SetData::reset()
-{
-    ActionData::reset();
-}
-
-SetData * SetData::copy() const
-{
-    SetData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool SetData::instanceOf(int classNo) const
-{
-    if(SET_NO == classNo) return true;
-    return ActionData::instanceOf(classNo);
-}
-
-void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "set";
-}
-
 Allocator<AffectData> AffectData::allocator;
         
 
@@ -256,6 +174,88 @@ void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, uin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "get";
+}
+
+Allocator<PerceiveData> PerceiveData::allocator;
+        
+
+
+void PerceiveData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void PerceiveData::reset()
+{
+    GetData::reset();
+}
+
+PerceiveData * PerceiveData::copy() const
+{
+    PerceiveData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool PerceiveData::instanceOf(int classNo) const
+{
+    if(PERCEIVE_NO == classNo) return true;
+    return GetData::instanceOf(classNo);
+}
+
+void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "perceive";
+}
+
+Allocator<LookData> LookData::allocator;
+        
+
+
+void LookData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void LookData::reset()
+{
+    PerceiveData::reset();
+}
+
+LookData * LookData::copy() const
+{
+    LookData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool LookData::instanceOf(int classNo) const
+{
+    if(LOOK_NO == classNo) return true;
+    return PerceiveData::instanceOf(classNo);
+}
+
+void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "look";
 }
 
 } } } // namespace Atlas::Objects::Operation

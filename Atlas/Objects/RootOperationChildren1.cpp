@@ -94,88 +94,6 @@ void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::strin
         data.attr_parent = "create";
 }
 
-Allocator<CombineData> CombineData::allocator;
-        
-
-
-void CombineData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void CombineData::reset()
-{
-    CreateData::reset();
-}
-
-CombineData * CombineData::copy() const
-{
-    CombineData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool CombineData::instanceOf(int classNo) const
-{
-    if(COMBINE_NO == classNo) return true;
-    return CreateData::instanceOf(classNo);
-}
-
-void CombineData::fillDefaultObjectInstance(CombineData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "combine";
-}
-
-Allocator<DivideData> DivideData::allocator;
-        
-
-
-void DivideData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void DivideData::reset()
-{
-    CreateData::reset();
-}
-
-DivideData * DivideData::copy() const
-{
-    DivideData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool DivideData::instanceOf(int classNo) const
-{
-    if(DIVIDE_NO == classNo) return true;
-    return CreateData::instanceOf(classNo);
-}
-
-void DivideData::fillDefaultObjectInstance(DivideData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "divide";
-}
-
 Allocator<CommunicateData> CommunicateData::allocator;
         
 
@@ -256,6 +174,88 @@ void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, u
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "talk";
+}
+
+Allocator<DeleteData> DeleteData::allocator;
+        
+
+
+void DeleteData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void DeleteData::reset()
+{
+    ActionData::reset();
+}
+
+DeleteData * DeleteData::copy() const
+{
+    DeleteData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool DeleteData::instanceOf(int classNo) const
+{
+    if(DELETE_NO == classNo) return true;
+    return ActionData::instanceOf(classNo);
+}
+
+void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "delete";
+}
+
+Allocator<SetData> SetData::allocator;
+        
+
+
+void SetData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void SetData::reset()
+{
+    ActionData::reset();
+}
+
+SetData * SetData::copy() const
+{
+    SetData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool SetData::instanceOf(int classNo) const
+{
+    if(SET_NO == classNo) return true;
+    return ActionData::instanceOf(classNo);
+}
+
+void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "set";
 }
 
 } } } // namespace Atlas::Objects::Operation

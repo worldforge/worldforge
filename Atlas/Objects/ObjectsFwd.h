@@ -70,16 +70,6 @@ namespace Operation {
 }
 
 namespace Operation {
-    class CombineData;
-    typedef SmartPtr<CombineData> Combine;
-}
-
-namespace Operation {
-    class DivideData;
-    typedef SmartPtr<DivideData> Divide;
-}
-
-namespace Operation {
     class CommunicateData;
     typedef SmartPtr<CommunicateData> Communicate;
 }

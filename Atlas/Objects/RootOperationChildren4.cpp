@@ -12,88 +12,6 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
-Allocator<LogoutData> LogoutData::allocator;
-        
-
-
-void LogoutData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void LogoutData::reset()
-{
-    LoginData::reset();
-}
-
-LogoutData * LogoutData::copy() const
-{
-    LogoutData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool LogoutData::instanceOf(int classNo) const
-{
-    if(LOGOUT_NO == classNo) return true;
-    return LoginData::instanceOf(classNo);
-}
-
-void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "logout";
-}
-
-Allocator<ImaginaryData> ImaginaryData::allocator;
-        
-
-
-void ImaginaryData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void ImaginaryData::reset()
-{
-    ActionData::reset();
-}
-
-ImaginaryData * ImaginaryData::copy() const
-{
-    ImaginaryData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool ImaginaryData::instanceOf(int classNo) const
-{
-    if(IMAGINARY_NO == classNo) return true;
-    return ActionData::instanceOf(classNo);
-}
-
-void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "imaginary";
-}
-
 Allocator<UseData> UseData::allocator;
         
 
@@ -256,6 +174,88 @@ void UnseenData::fillDefaultObjectInstance(UnseenData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "unseen";
+}
+
+Allocator<SightData> SightData::allocator;
+        
+
+
+void SightData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void SightData::reset()
+{
+    PerceptionData::reset();
+}
+
+SightData * SightData::copy() const
+{
+    SightData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool SightData::instanceOf(int classNo) const
+{
+    if(SIGHT_NO == classNo) return true;
+    return PerceptionData::instanceOf(classNo);
+}
+
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "sight";
+}
+
+Allocator<AppearanceData> AppearanceData::allocator;
+        
+
+
+void AppearanceData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void AppearanceData::reset()
+{
+    SightData::reset();
+}
+
+AppearanceData * AppearanceData::copy() const
+{
+    AppearanceData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool AppearanceData::instanceOf(int classNo) const
+{
+    if(APPEARANCE_NO == classNo) return true;
+    return SightData::instanceOf(classNo);
+}
+
+void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "appearance";
 }
 
 } } } // namespace Atlas::Objects::Operation

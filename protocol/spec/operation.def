@@ -214,48 +214,6 @@ Second argument is operation which is wrong (not given if not relevant)."""
     args_description:"""A list of types which have changed."""
 
 :map:
-    id:"combine"
-    parent:"create"
-    specification:"atlas_game"
-    description:"Combine existing objects into new objects."
-    long_description:"This is how normal characters create objects."
-    args_description:"first argument is entity describing object that is being created and rest argument(s) are entities that are used as raw material."
-    example:
-        :string:"Creating axe from wood and iron"
-        :map:
-            objtype:"op"
-            parent:"combine"
-            args:
-                :map:
-                    parent:"axe"
-                    name:"Bjorn's axe"
-                :map:
-                    id:"Wood_8898"
-                :map:
-                    id:"Iron_6578"
-
-:map:
-    id:"divide"
-    parent:"create"
-    specification:"atlas_game"
-    description:"Divide existing object into pieces."
-    long_description:"One of the pieces might be original object modified."
-    args_description:"id of original object and entities describing pieces."
-    example:
-        :string:"taking money from pile"
-        :map:
-            objtype:"op"
-            parent:"divide"
-            args:
-                :map:
-                    id:"money12345"
-                :map:
-                    id:"money12345"
-                    e_amount:10
-                :map:
-                    e_amount:110
-
-:map:
     id:"communicate"
     parent:"create"
     specification:"atlas_game"

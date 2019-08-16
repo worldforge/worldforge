@@ -72,10 +72,6 @@ protected:
     virtual void objectActionArrived(const Operation::Action&) { }
     /// Override this to get called when a Create object arrives.
     virtual void objectCreateArrived(const Operation::Create&) { }
-    /// Override this to get called when a Combine object arrives.
-    virtual void objectCombineArrived(const Operation::Combine&) { }
-    /// Override this to get called when a Divide object arrives.
-    virtual void objectDivideArrived(const Operation::Divide&) { }
     /// Override this to get called when a Communicate object arrives.
     virtual void objectCommunicateArrived(const Operation::Communicate&) { }
     /// Override this to get called when a Talk object arrives.

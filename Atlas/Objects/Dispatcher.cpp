@@ -59,12 +59,6 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Operation::CREATE_NO:
         objectCreateArrived(smart_dynamic_cast<Operation::Create>(obj));
         break;
-    case Operation::COMBINE_NO:
-        objectCombineArrived(smart_dynamic_cast<Operation::Combine>(obj));
-        break;
-    case Operation::DIVIDE_NO:
-        objectDivideArrived(smart_dynamic_cast<Operation::Divide>(obj));
-        break;
     case Operation::COMMUNICATE_NO:
         objectCommunicateArrived(smart_dynamic_cast<Operation::Communicate>(obj));
         break;
