@@ -44,7 +44,6 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/Anonymous.cpp
         Atlas/Objects/BaseObject.cpp
         Atlas/Objects/Decoder.cpp
-        Atlas/Objects/Dispatcher.cpp
         Atlas/Objects/Generic.cpp
         Atlas/Objects/loadDefaults.cpp
         Atlas/Objects/objectFactory.cpp
@@ -63,7 +62,6 @@ set(OBJECTS_HEADER_FILES
         Atlas/Objects/Anonymous.h
         Atlas/Objects/BaseObject.h
         Atlas/Objects/Decoder.h
-        Atlas/Objects/Dispatcher.h
         Atlas/Objects/Encoder.h
         Atlas/Objects/Entity.h
         Atlas/Objects/Generic.h
