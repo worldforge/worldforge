@@ -201,6 +201,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 							opCopy->setArgs1(arg);
 							sightCopy->setArgs1(opCopy);
 							new TypeBoundRedispatch(m_avatar->getConnection(), sightCopy, ty);
+							continue;
 						}
 
 						m_view->create(gent);
