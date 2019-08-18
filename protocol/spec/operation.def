@@ -87,6 +87,11 @@
     parent:"set"
 
 :map:
+    id:"hit"
+    parent:"affect"
+    description:"Operation for when one entity hits another."
+
+:map:
     id:"get"
     parent:"action"
     description:"Generic operation for getting info about things."

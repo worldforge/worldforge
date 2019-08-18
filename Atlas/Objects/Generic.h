@@ -26,7 +26,7 @@ This is base operation for all other
 class GenericData;
 typedef SmartPtr<GenericData> Generic;
 
-static const int GENERIC_NO = 41;
+static const int GENERIC_NO = 42;
 
 /// \brief Base operation for all operators.
 ///

@@ -12,6 +12,47 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<AppearanceData> AppearanceData::allocator;
+        
+
+
+void AppearanceData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void AppearanceData::reset()
+{
+    SightData::reset();
+}
+
+AppearanceData * AppearanceData::copy() const
+{
+    AppearanceData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool AppearanceData::instanceOf(int classNo) const
+{
+    if(APPEARANCE_NO == classNo) return true;
+    return SightData::instanceOf(classNo);
+}
+
+void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "appearance";
+}
+
 Allocator<DisappearanceData> DisappearanceData::allocator;
         
 
@@ -215,47 +256,6 @@ void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "error";
-}
-
-Allocator<ChangeData> ChangeData::allocator;
-        
-
-
-void ChangeData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void ChangeData::reset()
-{
-    InfoData::reset();
-}
-
-ChangeData * ChangeData::copy() const
-{
-    ChangeData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool ChangeData::instanceOf(int classNo) const
-{
-    if(CHANGE_NO == classNo) return true;
-    return InfoData::instanceOf(classNo);
-}
-
-void ChangeData::fillDefaultObjectInstance(ChangeData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "change";
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -12,6 +12,47 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<LookData> LookData::allocator;
+        
+
+
+void LookData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void LookData::reset()
+{
+    PerceiveData::reset();
+}
+
+LookData * LookData::copy() const
+{
+    LookData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool LookData::instanceOf(int classNo) const
+{
+    if(LOOK_NO == classNo) return true;
+    return PerceiveData::instanceOf(classNo);
+}
+
+void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "look";
+}
+
 Allocator<ListenData> ListenData::allocator;
         
 
@@ -215,47 +256,6 @@ void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::strin
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "logout";
-}
-
-Allocator<ImaginaryData> ImaginaryData::allocator;
-        
-
-
-void ImaginaryData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void ImaginaryData::reset()
-{
-    ActionData::reset();
-}
-
-ImaginaryData * ImaginaryData::copy() const
-{
-    ImaginaryData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool ImaginaryData::instanceOf(int classNo) const
-{
-    if(IMAGINARY_NO == classNo) return true;
-    return ActionData::instanceOf(classNo);
-}
-
-void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "imaginary";
 }
 
 } } } // namespace Atlas::Objects::Operation

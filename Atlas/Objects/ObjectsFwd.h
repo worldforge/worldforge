@@ -95,6 +95,11 @@ namespace Operation {
 }
 
 namespace Operation {
+    class HitData;
+    typedef SmartPtr<HitData> Hit;
+}
+
+namespace Operation {
     class MoveData;
     typedef SmartPtr<MoveData> Move;
 }

@@ -12,6 +12,47 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<ImaginaryData> ImaginaryData::allocator;
+        
+
+
+void ImaginaryData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void ImaginaryData::reset()
+{
+    ActionData::reset();
+}
+
+ImaginaryData * ImaginaryData::copy() const
+{
+    ImaginaryData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool ImaginaryData::instanceOf(int classNo) const
+{
+    if(IMAGINARY_NO == classNo) return true;
+    return ActionData::instanceOf(classNo);
+}
+
+void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "imaginary";
+}
+
 Allocator<UseData> UseData::allocator;
         
 
@@ -215,47 +256,6 @@ void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string,
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "sight";
-}
-
-Allocator<AppearanceData> AppearanceData::allocator;
-        
-
-
-void AppearanceData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void AppearanceData::reset()
-{
-    SightData::reset();
-}
-
-AppearanceData * AppearanceData::copy() const
-{
-    AppearanceData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool AppearanceData::instanceOf(int classNo) const
-{
-    if(APPEARANCE_NO == classNo) return true;
-    return SightData::instanceOf(classNo);
-}
-
-void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "appearance";
 }
 
 } } } // namespace Atlas::Objects::Operation

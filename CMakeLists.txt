@@ -56,6 +56,7 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/RootOperationChildren3.cpp
         Atlas/Objects/RootOperationChildren4.cpp
         Atlas/Objects/RootOperationChildren5.cpp
+        Atlas/Objects/RootOperationChildren6.cpp
         )
 
 set(OBJECTS_HEADER_FILES

@@ -53,6 +53,47 @@ void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::strin
         data.attr_parent = "affect";
 }
 
+Allocator<HitData> HitData::allocator;
+        
+
+
+void HitData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void HitData::reset()
+{
+    AffectData::reset();
+}
+
+HitData * HitData::copy() const
+{
+    HitData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool HitData::instanceOf(int classNo) const
+{
+    if(HIT_NO == classNo) return true;
+    return AffectData::instanceOf(classNo);
+}
+
+void HitData::fillDefaultObjectInstance(HitData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = "hit";
+}
+
 Allocator<MoveData> MoveData::allocator;
         
 
@@ -215,47 +256,6 @@ void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::s
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = "perceive";
-}
-
-Allocator<LookData> LookData::allocator;
-        
-
-
-void LookData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void LookData::reset()
-{
-    PerceiveData::reset();
-}
-
-LookData * LookData::copy() const
-{
-    LookData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool LookData::instanceOf(int classNo) const
-{
-    if(LOOK_NO == classNo) return true;
-    return PerceiveData::instanceOf(classNo);
-}
-
-void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = "op";
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = "look";
 }
 
 } } } // namespace Atlas::Objects::Operation

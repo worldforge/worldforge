@@ -284,11 +284,22 @@ descending into childrens.</string>
 <map>
 	<string name="id">affect</string>
 	<string name="parent">set</string>
-	<list name="children"></list>
+	<list name="children"><string>hit</string></list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string></list>
 		<string name="filename">operation.def</string>
 		<int name="lineno">85</int>
+	</map>
+</map>
+<map>
+	<string name="id">hit</string>
+	<string name="parent">affect</string>
+	<list name="children"></list>
+	<string name="description">Operation for when one entity hits another.</string>
+	<map name="specification_file">
+		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
+		<string name="filename">operation.def</string>
+		<int name="lineno">89</int>
 	</map>
 </map>
 <map>
@@ -307,14 +318,14 @@ descending into childrens.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">99</int>
+						<int name="lineno">104</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">95</int>
+				<int name="lineno">100</int>
 			</map>
 		</map>
 		<string>&lt;h4&gt;Browsing operator hierarchy example:&lt;/h4&gt;
@@ -329,14 +340,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">108</int>
+						<int name="lineno">113</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">104</int>
+				<int name="lineno">109</int>
 			</map>
 		</map>
 		<string>Answer might be:</string>
@@ -351,14 +362,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>children</string><string>description</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">115</int>
+						<int name="lineno">120</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">111</int>
+				<int name="lineno">116</int>
 			</map>
 		</map>
 		<string>Then you can ask about action and info:</string>
@@ -371,14 +382,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">124</int>
+						<int name="lineno">129</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">120</int>
+				<int name="lineno">125</int>
 			</map>
 		</map>
 		<map>
@@ -390,14 +401,14 @@ First start from operator hierarchy root (root_operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">130</int>
+						<int name="lineno">135</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">126</int>
+				<int name="lineno">131</int>
 			</map>
 		</map>
 		<string>Etc...</string>
@@ -405,7 +416,7 @@ First start from operator hierarchy root (root_operation):</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">89</int>
+		<int name="lineno">94</int>
 	</map>
 </map>
 <map>
@@ -457,21 +468,21 @@ First start from operator hierarchy root (root_operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">177</int>
+						<int name="lineno">182</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">173</int>
+				<int name="lineno">178</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">134</int>
+		<int name="lineno">139</int>
 	</map>
 </map>
 <map>
@@ -483,7 +494,7 @@ First start from operator hierarchy root (root_operation):</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">180</int>
+		<int name="lineno">185</int>
 	</map>
 </map>
 <map>
@@ -506,7 +517,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">200</int>
+						<int name="lineno">205</int>
 					</map>
 				</map>
 				<map>
@@ -519,28 +530,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>e_bar</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">207</int>
+								<int name="lineno">212</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">202</int>
+						<int name="lineno">207</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>refno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">195</int>
+				<int name="lineno">200</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">186</int>
+		<int name="lineno">191</int>
 	</map>
 </map>
 <map>
@@ -552,7 +563,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">210</int>
+		<int name="lineno">215</int>
 	</map>
 </map>
 <map>
@@ -566,7 +577,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">216</int>
+		<int name="lineno">221</int>
 	</map>
 </map>
 <map>
@@ -592,14 +603,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">240</int>
+						<int name="lineno">245</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">234</int>
+				<int name="lineno">239</int>
 			</map>
 		</map>
 		<string>Reply from server</string>
@@ -629,28 +640,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">264</int>
+								<int name="lineno">269</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>seconds</string><string>time_string</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">255</int>
+						<int name="lineno">260</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">245</int>
+				<int name="lineno">250</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">225</int>
+		<int name="lineno">230</int>
 	</map>
 </map>
 <map>
@@ -670,21 +681,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">280</int>
+						<int name="lineno">285</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">276</int>
+				<int name="lineno">281</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>specification</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">269</int>
+		<int name="lineno">274</int>
 	</map>
 </map>
 <map>
@@ -705,14 +716,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>password</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">294</int>
+						<int name="lineno">299</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">290</int>
+				<int name="lineno">295</int>
 			</map>
 		</map>
 		<string>Conversation examples:&lt;br&gt; When you connect to
@@ -730,14 +741,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">305</int>
+						<int name="lineno">310</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">300</int>
+				<int name="lineno">305</int>
 			</map>
 		</map>
 		<string>What if you already had account by that name? Then
@@ -756,7 +767,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>message</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">320</int>
+						<int name="lineno">325</int>
 					</map>
 				</map>
 				<map>
@@ -771,21 +782,21 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>parent</string><string>password</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">327</int>
+								<int name="lineno">332</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">322</int>
+						<int name="lineno">327</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">312</int>
+				<int name="lineno">317</int>
 			</map>
 		</map>
 		<string>For more about error operation see 
@@ -809,14 +820,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>password</string><string>characters</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">344</int>
+						<int name="lineno">349</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">336</int>
+				<int name="lineno">341</int>
 			</map>
 		</map>
 		<string>If you do not have character, then you need to
@@ -835,14 +846,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>parent</string><string>name</string><string>description</string><string>e_sex</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">357</int>
+						<int name="lineno">362</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">352</int>
+				<int name="lineno">357</int>
 			</map>
 		</map>
 		<string>Result of character creation is same as with account
@@ -851,7 +862,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">283</int>
+		<int name="lineno">288</int>
 	</map>
 </map>
 <map>
@@ -870,14 +881,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">375</int>
+						<int name="lineno">380</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">371</int>
+				<int name="lineno">376</int>
 			</map>
 		</map>
 		<string>Most useful with server&lt;-&gt;server communication
@@ -886,7 +897,7 @@ Second argument is operation which is wrong (not given if not relevant).</string
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">365</int>
+		<int name="lineno">370</int>
 	</map>
 </map>
 <map>
@@ -908,14 +919,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">392</int>
+						<int name="lineno">397</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">388</int>
+				<int name="lineno">393</int>
 			</map>
 		</map>
 		<string>Reply for looking at 'grass1':</string>
@@ -938,14 +949,14 @@ Second argument is operation which is wrong (not given if not relevant).</string
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>description</string><string>e_polygon</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">400</int>
+						<int name="lineno">405</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">396</int>
+				<int name="lineno">401</int>
 			</map>
 		</map>
 		<string>Event example:</string>
@@ -964,28 +975,28 @@ Second argument is operation which is wrong (not given if not relevant).</string
 							<map name="specification_file">
 								<list name="attribute_order"><string>id</string><string>loc</string><string>pos</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">420</int>
+								<int name="lineno">425</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">416</int>
+						<int name="lineno">421</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">412</int>
+				<int name="lineno">417</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">380</int>
+		<int name="lineno">385</int>
 	</map>
 </map>
 <map>
@@ -1012,28 +1023,28 @@ to and time tags, not only this operation):</string>
 							<map name="specification_file">
 								<list name="attribute_order"><string>say</string></list>
 								<string name="filename">operation.def</string>
-								<int name="lineno">443</int>
+								<int name="lineno">448</int>
 							</map>
 						</map>
 					</list>
 					<map name="specification_file">
 						<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">439</int>
+						<int name="lineno">444</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">434</int>
+				<int name="lineno">439</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">425</int>
+		<int name="lineno">430</int>
 	</map>
 </map>
 <map>
@@ -1055,21 +1066,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>e_smell</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">620</int>
+						<int name="lineno">625</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">615</int>
+				<int name="lineno">620</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">607</int>
+		<int name="lineno">612</int>
 	</map>
 </map>
 <map>
@@ -1089,21 +1100,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>e_surface_type</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">633</int>
+						<int name="lineno">638</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">629</int>
+				<int name="lineno">634</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">623</int>
+		<int name="lineno">628</int>
 	</map>
 </map>
 <map>
@@ -1122,21 +1133,21 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">647</int>
+						<int name="lineno">652</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">643</int>
+				<int name="lineno">648</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">637</int>
+		<int name="lineno">642</int>
 	</map>
 </map>
 <map>
@@ -1156,14 +1167,14 @@ to and time tags, not only this operation):</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>say</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">661</int>
+						<int name="lineno">666</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">657</int>
+				<int name="lineno">662</int>
 			</map>
 		</map>
 		<string>Talking out of game is same, 
@@ -1172,7 +1183,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>long_description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">650</int>
+		<int name="lineno">655</int>
 	</map>
 </map>
 <map>
@@ -1191,14 +1202,14 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">677</int>
+						<int name="lineno">682</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">673</int>
+				<int name="lineno">678</int>
 			</map>
 		</map>
 		<string>Conversation examples:&lt;br&gt; When you connect to
@@ -1219,7 +1230,7 @@ except you use player id instead of character id.</string>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">688</int>
+				<int name="lineno">693</int>
 			</map>
 		</map>
 		<string>Server reply:</string>
@@ -1242,14 +1253,14 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>contains</string><string>stamp</string><string>pos</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">705</int>
+						<int name="lineno">710</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">695</int>
+				<int name="lineno">700</int>
 			</map>
 		</map>
 		<string>Client looks at contains attribute of above object
@@ -1265,14 +1276,14 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">719</int>
+						<int name="lineno">724</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>from</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">713</int>
+				<int name="lineno">718</int>
 			</map>
 		</map>
 		<string>And then server tells you more about it:</string>
@@ -1299,21 +1310,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>parent</string><string>e_drunkness</string><string>stamp</string><string>loc</string><string>pos</string><string>description</string><string>name</string><string>e_status</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">732</int>
+						<int name="lineno">737</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>serialno</string><string>refno</string><string>from</string><string>to</string><string>seconds</string><string>time_string</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">722</int>
+				<int name="lineno">727</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">667</int>
+		<int name="lineno">672</int>
 	</map>
 </map>
 <map>
@@ -1332,21 +1343,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">753</int>
+						<int name="lineno">758</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">749</int>
+				<int name="lineno">754</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">743</int>
+		<int name="lineno">748</int>
 	</map>
 </map>
 <map>
@@ -1365,21 +1376,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">766</int>
+						<int name="lineno">771</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">762</int>
+				<int name="lineno">767</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">756</int>
+		<int name="lineno">761</int>
 	</map>
 </map>
 <map>
@@ -1398,21 +1409,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">779</int>
+						<int name="lineno">784</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">775</int>
+				<int name="lineno">780</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">769</int>
+		<int name="lineno">774</int>
 	</map>
 </map>
 <map>
@@ -1432,21 +1443,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">792</int>
+						<int name="lineno">797</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">788</int>
+				<int name="lineno">793</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">782</int>
+		<int name="lineno">787</int>
 	</map>
 </map>
 <map>
@@ -1466,21 +1477,21 @@ except you use player id instead of character id.</string>
 					<map name="specification_file">
 						<list name="attribute_order"><string>id</string><string>stamp</string></list>
 						<string name="filename">operation.def</string>
-						<int name="lineno">806</int>
+						<int name="lineno">811</int>
 					</map>
 				</map>
 			</list>
 			<map name="specification_file">
 				<list name="attribute_order"><string>objtype</string><string>parent</string><string>args</string></list>
 				<string name="filename">operation.def</string>
-				<int name="lineno">802</int>
+				<int name="lineno">807</int>
 			</map>
 		</map>
 	</list>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string><string>example</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">796</int>
+		<int name="lineno">801</int>
 	</map>
 </map>
 <map>
@@ -1492,7 +1503,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">810</int>
+		<int name="lineno">815</int>
 	</map>
 </map>
 <map>
@@ -1504,7 +1515,7 @@ except you use player id instead of character id.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
-		<int name="lineno">816</int>
+		<int name="lineno">821</int>
 	</map>
 </map>
 <map>
