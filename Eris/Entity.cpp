@@ -364,7 +364,7 @@ void Entity::setMoving(bool inMotion)
         m_predicted.position = m_position;
         m_predicted.velocity = m_velocity;
         m_predicted.orientation = m_orientation;
-        addToMovementPredition();
+		addToMovementPrediction();
     }
     
     Moving.emit(inMotion);

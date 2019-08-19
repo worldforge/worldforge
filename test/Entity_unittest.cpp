@@ -38,7 +38,7 @@ class TestErisEntity : public Eris::Entity
 
     virtual Eris::TypeService* getTypeService() const { return 0; }
     virtual void removeFromMovementPrediction() { }
-    virtual void addToMovementPredition() { }
+    virtual void addToMovementPrediction() { }
     virtual Eris::Entity* getEntity(const std::string&) { return 0; }
 
     void testSetLocation(Eris::Entity* location) {

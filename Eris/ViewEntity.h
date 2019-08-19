@@ -65,7 +65,7 @@ protected:
 
     void removeFromMovementPrediction() override;
 
-    void addToMovementPredition() override;
+    void addToMovementPrediction() override;
 
     Entity* getEntity(const std::string& id) override;
 

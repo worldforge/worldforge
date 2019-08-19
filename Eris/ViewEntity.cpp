@@ -53,7 +53,7 @@ void ViewEntity::removeFromMovementPrediction() {
 	m_view->removeFromPrediction(this);
 }
 
-void ViewEntity::addToMovementPredition() {
+void ViewEntity::addToMovementPrediction() {
 	m_view->addToPrediction(this);
 }
 
