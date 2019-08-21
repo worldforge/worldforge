@@ -84,7 +84,7 @@ void Avatar::deactivate()
     });
 }
 
-void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation, const std::string& loc)
+void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation, const std::string& loc) const
 {
     if(e->getLocation() != m_entity)
     {
@@ -109,12 +109,12 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaterni
     getConnection()->send(moveOp);
 }
 
-void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quaternion& orientation)
+void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quaternion& orientation) const
 {
     drop(e, m_entity->getPosition() + offset, orientation, m_entity->getLocation()->getId());
 }
 
-void Avatar::take(Entity* e)
+void Avatar::take(Entity* e) const
 {
     Move moveOp;
     moveOp->setFrom(m_mindId);
@@ -144,6 +144,22 @@ void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
     touchOp->setArgs1(what);
 
     getConnection()->send(touchOp);
+}
+
+void Avatar::wield(Eris::Entity* entity, std::string attachPoint) const {
+
+
+	Atlas::Objects::Entity::Anonymous arguments;
+	if (entity) {
+		arguments->setId(entity->getId());
+	}
+	arguments->setAttr("attachment", std::move(attachPoint));
+	Atlas::Objects::Operation::Wield wield;
+	wield->setFrom(getId());
+	wield->setArgs1(arguments);
+
+	getConnection()->send(wield);
+
 }
 
 void Avatar::say(const std::string& msg)

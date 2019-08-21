@@ -60,7 +60,7 @@ public:
      * @param loc The new location, as an entity id.
      */
     void drop(Entity* entity, const WFMath::Point<3>& pos,
-            const WFMath::Quaternion& orientation, const std::string& loc);
+            const WFMath::Quaternion& orientation, const std::string& loc) const;
 
     /**
      * @brief Drop an entity in the Avatar's inventory at the Avatar's feet (or actually in the parent entity of the Avatar).
@@ -69,13 +69,22 @@ public:
      * @param orientation The orientation of the new entity. This will only be used if the quaternion sent is valid.
      */
     void drop(Entity* entity, const WFMath::Vector<3>& offset = WFMath::Vector<3>(0, 0, 0),
-            const WFMath::Quaternion& orientation = WFMath::Quaternion());
+            const WFMath::Quaternion& orientation = WFMath::Quaternion()) const;
 
     /// Move an entity into the Avatar's inventory
-    void take(Entity*);
+    void take(Entity*) const;
 
     /// Touch an entity
     void touch(Entity*, const WFMath::Point<3>& pos);
+
+    /*
+     * Wields an entity at an attach point, or removes the currently attached entity from
+     * the attach point.
+     *
+     * @param entity An entity, or null.
+     * @param attachPoint A named attach point.
+     */
+    void wield(Eris::Entity* entity, std::string attachPoint) const;
 
     /// Say something (in-game)
     void say(const std::string&);
@@ -109,18 +118,6 @@ public:
     void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
                const WFMath::Quaternion& orientation = WFMath::Quaternion(),
                boost::optional<float> offset = boost::none);
-
-//    /**
-//     * @brief Use the currently wielded entity (tool) on another entity.
-//     * @param entity A pointer to the entity you wish to use your tool on.
-//     * @param position A position where you perform the operation.
-//     * @param op The operation of the tool to perform, or an empty string to use the default.
-//     *
-//     * If @a position is invalid the "pos" parameter will not be set on the USE operation.
-//     *
-//     * @sa WFMath::Point< 3 >::Point(), WFMath::Point< 3 >::setValid(), WFMath::Point< 3 >::isValid()
-//     **/
-//    void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
 
 
     /**
