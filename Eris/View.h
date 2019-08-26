@@ -18,6 +18,7 @@
 #include <map>
 #include <set>
 #include <unordered_map>
+#include <Atlas/Message/Element.h>
 
 namespace Eris
 {
@@ -97,7 +98,7 @@ public:
     typedef sigc::slot<void, Entity*> EntitySightSlot;
 
     /**
-    Conenct up a slot to be fired when an Entity with the specified ID is seen.
+    Connect up a slot to be fired when an Entity with the specified ID is seen.
     If the entity is already visible, this is a no-op (and will log an error)
     */
     sigc::connection notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot);
@@ -192,6 +193,8 @@ private:
 
     Entity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
+    void parseSimulationSpeed(const Atlas::Message::Element& element);
+
     /**
     If the look queue is not empty, pop the first item and send a request
     for it to the server.
@@ -206,6 +209,11 @@ private:
     IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
+
+    /**
+     * The simulation speed, as determined by the "simulation_speed" property of the top level entity.
+     */
+    float m_simulationSpeed;
     
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or
@@ -230,6 +238,8 @@ private:
     @sa m_maxPendingCount
     */
     std::deque<std::string> m_lookQueue;
+
+    sigc::connection m_simulationSpeedConnection;
           
     unsigned int m_maxPendingCount;
           

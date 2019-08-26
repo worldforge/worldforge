@@ -60,7 +60,7 @@ class TestErisEntity : public Eris::Entity
 
     void testUpdatePositionWithDelta(const WFMath::TimeDiff& diff) {
         m_moving = true;
-        updatePredictedState(m_lastMoveTime + diff);
+        updatePredictedState(m_lastMoveTime + diff, 1.0f);
     }
 };
 

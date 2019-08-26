@@ -532,7 +532,7 @@ protected:
         WFMath::Quaternion orientation;
     };
     
-    void updatePredictedState(const WFMath::TimeStamp& t);
+    void updatePredictedState(const WFMath::TimeStamp& t, float simulationSpeed);
     
     /**
      * @brief Gets the typeservice used throughout the Eris system.
