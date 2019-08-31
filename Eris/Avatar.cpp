@@ -56,6 +56,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 
 Avatar::~Avatar()
 {
+	m_avatarEntityDeletedConnection.disconnect();
     m_account.getConnection()->getTypeService()->setTypeProviderId("");
     delete m_logoutTimer;
     delete m_router;
@@ -337,7 +338,7 @@ void Avatar::onEntityAppear(Entity* ent)
 
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
 		ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
-		ent->BeingDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
+		m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
 
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance

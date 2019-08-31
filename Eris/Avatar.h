@@ -258,6 +258,7 @@ protected:
 	IGRouter* m_router;
 
 	sigc::connection m_entityAppearanceCon;
+	sigc::connection m_avatarEntityDeletedConnection;
 
 	bool m_isAdmin;
 

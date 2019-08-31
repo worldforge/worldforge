@@ -38,7 +38,7 @@ View::~View() {
 			warning() << "top level entity is not empty on view destruction";
 		}
 	}
-	// note that errors that occurr very early during world entry, may
+	// note that errors that occurs very early during world entry, may
 	// cause a view to be deleted with no top-level entity; in that case we
 	// leak a few entities here.
 
@@ -49,7 +49,9 @@ View::~View() {
 
 Entity* View::getEntity(const std::string& eid) const {
 	auto E = m_contents.find(eid);
-	if (E == m_contents.end()) return nullptr;
+	if (E == m_contents.end()) {
+		return nullptr;
+	}
 
 	return E->second;
 }
@@ -286,34 +288,28 @@ void View::create(const RootEntity& gent) {
 void View::deleteEntity(const std::string& eid) {
 	Entity* ent = getEntity(eid);
 	if (ent) {
-		// copy the child array, since setLocation will modify it
-		EntityArray contents;
-		for (size_t c = 0; c < ent->numContained(); ++c) {
-			contents.push_back(ent->getContained(c));
-		}
-
-		while (!contents.empty()) {
-			Entity* child = contents.back();
-			child->setLocation(ent->getLocation());
-
-			WFMath::Point<3> newPos = ent->toLocationCoords(child->getPosition());
-			WFMath::Quaternion newOrient = ent->getOrientation() * child->getOrientation();
-			child->m_position = newPos;
-			child->m_orientation = newOrient;
-
-			contents.pop_back();
-		}
+//		// copy the child array, since setLocation will modify it
+//		EntityArray contents;
+//		for (size_t c = 0; c < ent->numContained(); ++c) {
+//			contents.push_back(ent->getContained(c));
+//		}
+//
+//		while (!contents.empty()) {
+//			Entity* child = contents.back();
+//			child->setLocation(ent->getLocation());
+//
+//			WFMath::Point<3> newPos = ent->toLocationCoords(child->getPosition());
+//			WFMath::Quaternion newOrient = ent->getOrientation() * child->getOrientation();
+//			child->m_position = newPos;
+//			child->m_orientation = newOrient;
+//
+//			contents.pop_back();
+//		}
 
 		// force a disappear if one hasn't already happened
-		ent->setVisible(false); // redundant?
 		EntityDeleted.emit(ent);
 		ent->shutdown();
-		//Check if the deleted entity is the avatar one.
-		bool avatarDeleted = ent == m_owner->getEntity();
 		delete ent; // actually kill it off
-		if (avatarDeleted) {
-			AvatarEntityDeleted.emit();
-		}
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got delete for pending entity, argh";
@@ -343,12 +339,7 @@ void View::unseen(const std::string& eid) {
 	if (ent) {
 		EntityDeleted.emit(ent);
 		ent->shutdown();
-		//Check if the deleted entity is the avatar one.
-		bool avatarDeleted = ent == m_owner->getEntity();
 		delete ent; // actually kill it off
-		if (avatarDeleted) {
-			AvatarEntityDeleted.emit();
-		}
 	} else {
 		auto I = m_pending.find(eid);
 		if (I != m_pending.end()) {

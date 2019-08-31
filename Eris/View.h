@@ -115,9 +115,6 @@ public:
     /** emitted when a SIGHT(DELETE) op is received for an entity */
     sigc::signal<void, Entity*> EntityDeleted;
 
-    /** emitted AFTER the avatar entity was deleted due to a SIGHT(DELETE) op is received */
-    sigc::signal<void> AvatarEntityDeleted;
-
     sigc::signal<void, Entity*> Appearance;
     sigc::signal<void, Entity*> Disappearance;
 
