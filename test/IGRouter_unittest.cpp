@@ -56,7 +56,7 @@ class TestAvatar : public Eris::Avatar
 class TestIGRouter : public Eris::IGRouter
 {
   public:
-    TestIGRouter(Eris::Avatar * av) : Eris::IGRouter(av) { }
+    TestIGRouter(Eris::Avatar * av) : Eris::IGRouter(av, av->getView()) { }
 
     RouterResult test_handleOperation(const RootOperation& op) {
         return this->handleOperation(op);
@@ -69,12 +69,12 @@ int main()
     Eris::EventService event_service(io_service);
     {
         TestAvatar * av = new TestAvatar(io_service, event_service);
-        new Eris::IGRouter(av);
+        new Eris::IGRouter(av, av->getView());
     }
 
     {
         TestAvatar * av = new TestAvatar(io_service, event_service);
-        Eris::IGRouter * ir = new Eris::IGRouter(av);
+        Eris::IGRouter * ir = new Eris::IGRouter(av, av->getView());
         delete ir;
     }
 

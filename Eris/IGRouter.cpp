@@ -25,9 +25,9 @@ using Atlas::Message::Element;
 
 namespace Eris {
 
-IGRouter::IGRouter(Avatar* av) :
+IGRouter::IGRouter(Avatar* av, View* view) :
     m_avatar(av),
-    m_view(av->getView())
+    m_view(view)
 {
     m_avatar->getConnection()->registerRouterForTo(this, m_avatar->getEntityId());
     m_actionType = m_avatar->getConnection()->getTypeService()->getTypeByName("action");

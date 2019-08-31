@@ -94,8 +94,7 @@ EventService& View::getEventService() const {
 	return m_owner->getConnection()->getEventService();
 }
 
-float View::getSimulationSpeed() const
-{
+float View::getSimulationSpeed() const {
 	return m_simulationSpeed;
 }
 
@@ -341,12 +340,23 @@ Entity* View::createEntity(const RootEntity& gent) {
 
 void View::unseen(const std::string& eid) {
 	Entity* ent = getEntity(eid);
-	if (!ent) {
-		return; // unseen for non-local, ignore
+	if (ent) {
+		EntityDeleted.emit(ent);
+		ent->shutdown();
+		//Check if the deleted entity is the avatar one.
+		bool avatarDeleted = ent == m_owner->getEntity();
+		delete ent; // actually kill it off
+		if (avatarDeleted) {
+			AvatarEntityDeleted.emit();
+		}
+	} else {
+		auto I = m_pending.find(eid);
+		if (I != m_pending.end()) {
+			m_pending.erase(I);
+		} else {
+			warning() << "got unseen for unknown entity " << eid;
+		}
 	}
-
-	ent->shutdown();
-	delete ent; // is that all?
 }
 
 bool View::isPending(const std::string& eid) const {
@@ -358,9 +368,11 @@ Connection* View::getConnection() const {
 }
 
 void View::getEntityFromServer(const std::string& eid) {
-	if (isPending(eid)) return;
+	if (isPending(eid)) {
+		return;
+	}
 
-	// don't apply pending queue cap for anoynmous LOOKs
+	// don't apply pending queue cap for anoynymous LOOKs
 	if (!eid.empty() && (m_pending.size() >= m_maxPendingCount)) {
 		m_lookQueue.push_back(eid);
 		m_pending[eid] = SACTION_QUEUED;

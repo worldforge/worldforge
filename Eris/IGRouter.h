@@ -13,7 +13,7 @@ class TypeInfo;
 class IGRouter : public Router
 {
 public:
-	explicit IGRouter(Avatar* av);
+	IGRouter(Avatar* av, View* view);
 
 	~IGRouter() override;
 

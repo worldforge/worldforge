@@ -11,7 +11,6 @@
 #include "Account.h"
 #include "Exceptions.h"
 #include "TypeService.h"
-#include "Operations.h"
 #include "Response.h"
 #include "EventService.h"
 #include "TypeInfo.h"
@@ -43,15 +42,13 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_entity(nullptr),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0),
-    m_isAdmin(false),
+	m_view(new View(this)),
+    m_router(new IGRouter(this, m_view)),
+	m_isAdmin(false),
     m_logoutTimer(nullptr)
 {
     m_account.getConnection()->getTypeService()->setTypeProviderId(m_mindId);
-    m_view = new View(this);
-    m_view->AvatarEntityDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
-
-    m_router = new IGRouter(this);
 
     m_view->getEntityFromServer("");
     m_view->getEntityFromServer(m_entityId);
@@ -181,7 +178,7 @@ void Avatar::sayTo(const std::string& message, const std::vector<std::string>& e
     Anonymous what;
     what->setAttr("say", message);
     Atlas::Message::ListType addressList;
-    for (auto entity : entities) {
+    for (const auto& entity : entities) {
         addressList.emplace_back(entity);
     }
     what->setAttr("address", addressList);
@@ -339,7 +336,8 @@ void Avatar::onEntityAppear(Entity* ent)
         m_entity = ent;
 
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
-        ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
+		ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
+		ent->BeingDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
 
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance
@@ -355,6 +353,7 @@ void Avatar::onEntityAppear(Entity* ent)
 
 void Avatar::onAvatarEntityDeleted()
 {
+	CharacterEntityDeleted();
     //When the avatar entity is destroyed we should also deactivate the character.
     m_account.deactivateCharacter(this);
 }

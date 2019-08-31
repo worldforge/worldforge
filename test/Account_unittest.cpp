@@ -29,6 +29,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/EventService.h>
 
+
 int main()
 {
     // Constructor with bad args throws
