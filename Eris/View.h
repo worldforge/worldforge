@@ -95,7 +95,9 @@ public:
     */
     void registerFactory(Factory*);
 
-    typedef sigc::slot<void, Entity*> EntitySightSlot;
+	float getSimulationSpeed() const;
+
+	typedef sigc::slot<void, Entity*> EntitySightSlot;
 
     /**
     Connect up a slot to be fired when an Entity with the specified ID is seen.

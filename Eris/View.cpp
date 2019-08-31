@@ -94,6 +94,10 @@ EventService& View::getEventService() const {
 	return m_owner->getConnection()->getEventService();
 }
 
+float View::getSimulationSpeed() const
+{
+	return m_simulationSpeed;
+}
 
 void View::update() {
 	WFMath::TimeStamp t(WFMath::TimeStamp::now());
