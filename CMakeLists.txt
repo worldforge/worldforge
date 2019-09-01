@@ -185,7 +185,8 @@ set(HEADER_FILES
         Eris/View.h
         Eris/ViewEntity.h
         Eris/WaitFreeQueue.h
-        Eris/ActiveMarker.h)
+        Eris/ActiveMarker.h
+        Eris/Usage.h)
 
 wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
 

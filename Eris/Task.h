@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "Usage.h"
 
 namespace Atlas {
 namespace Message {
@@ -23,15 +24,6 @@ namespace Eris {
 class Entity;
 
 class View;
-
-struct TaskUsage {
-	std::string name;
-
-	bool operator==(const TaskUsage& x) const {
-		return name == x.name;
-	}
-
-};
 
 class Task : public sigc::trackable {
 public:
