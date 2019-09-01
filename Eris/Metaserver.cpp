@@ -1,7 +1,7 @@
 #include "MetaQuery.h"
 
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "Metaserver.h"
@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <cstring>
 #include <memory>
+#include <utility>
 
 #ifdef _WIN32
 
@@ -37,58 +38,57 @@ using Atlas::Objects::Entity::RootEntity;
 
 namespace Eris {
 
-char* pack_uint32(uint32_t data, char* buffer, unsigned int &size);
-char* unpack_uint32(uint32_t &dest, char* buffer);
+char* pack_uint32(uint32_t data, char* buffer, unsigned int& size);
+
+char* unpack_uint32(uint32_t& dest, char* buffer);
 
 const char* META_SERVER_PORT = "8453";
 
 // meta-server protocol commands	
 const uint32_t CKEEP_ALIVE = 2,
-	HANDSHAKE = 3,
-	CLIENTSHAKE = 5,
-	LIST_REQ = 7,
-	LIST_RESP = 8,
-	PROTO_ERANGE = 9,
-	LAST = 10;
+		HANDSHAKE = 3,
+		CLIENTSHAKE = 5,
+		LIST_REQ = 7,
+		LIST_RESP = 8,
+		PROTO_ERANGE = 9,
+		LAST = 10;
 
 // special  command value to track LIST_RESP processing
-const uint32_t LIST_RESP2 = 999;		
-	
-Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, const std::string& metaServer, unsigned int maxQueries) :
-    m_io_service(io_service),
-    m_event_service(eventService),
-    m_status(INVALID),
-    m_metaHost(metaServer),
-    m_maxActiveQueries(maxQueries),
-    m_nextQuery(0),
-    m_resolver(io_service),
-    m_socket(io_service),
-    m_metaTimer(io_service),
-    m_receive_stream(&m_receive_buffer),
-    m_send_buffer(new boost::asio::streambuf()),
-    m_send_stream(m_send_buffer),
-    _dataPtr(nullptr),
-    _bytesToRecv(0),
-    _totalServers(0),
-    _packed(0),
-    _recvCmd(false),
-    _gotCmd(0)
-{
-    unsigned int max_half_open = FD_SETSIZE;
-    if (m_maxActiveQueries > (max_half_open - 2)) {
-        m_maxActiveQueries = max_half_open - 2;
-    }
+const uint32_t LIST_RESP2 = 999;
+
+Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, std::string metaServer, unsigned int maxQueries) :
+		m_io_service(io_service),
+		m_event_service(eventService),
+		m_status(INVALID),
+		m_metaHost(std::move(metaServer)),
+		m_maxActiveQueries(maxQueries),
+		m_nextQuery(0),
+		m_resolver(io_service),
+		m_socket(io_service),
+		m_metaTimer(io_service),
+		m_receive_stream(&m_receive_buffer),
+		m_send_buffer(new boost::asio::streambuf()),
+		m_send_stream(m_send_buffer),
+		m_dataPtr(nullptr),
+		m_bytesToRecv(0),
+		m_totalServers(0),
+		m_packed(0),
+		m_recvCmd(false),
+		m_gotCmd(0) {
+	unsigned int max_half_open = FD_SETSIZE;
+	if (m_maxActiveQueries > (max_half_open - 2)) {
+		m_maxActiveQueries = max_half_open - 2;
+	}
 }
 
-Meta::~Meta()
-{
-    disconnect();
-      
-    // delete any outstanding queries
-    for (QuerySet::const_iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q) {
-        delete *Q;
-    }
-    delete m_send_buffer;
+Meta::~Meta() {
+	disconnect();
+
+	// delete any outstanding queries
+	for (auto activeQuery : m_activeQueries) {
+		delete activeQuery;
+	}
+	delete m_send_buffer;
 }
 
 /*
@@ -109,520 +109,484 @@ void Meta::queryServer(const std::string &ip)
 }
 */
 
-void Meta::queryServerByIndex(size_t index)
-{
-    if (m_status == INVALID) {
-        error() << "called queryServerByIndex with invalid server list";
-        return;
-    }
-    
-    if (index >= m_gameServers.size()) {
-        error() << "called queryServerByIndex with bad server index " << index;
-        return;
-    }
-    
-    if (m_gameServers[index].getStatus() == ServerInfo::QUERYING) {
-        warning() << "called queryServerByIndex on server already being queried";
-        return;
-    }
+void Meta::queryServerByIndex(size_t index) {
+	if (m_status == INVALID) {
+		error() << "called queryServerByIndex with invalid server list";
+		return;
+	}
 
-    internalQuery(index);
+	if (index >= m_gameServers.size()) {
+		error() << "called queryServerByIndex with bad server index " << index;
+		return;
+	}
+
+	if (m_gameServers[index].getStatus() == ServerInfo::QUERYING) {
+		warning() << "called queryServerByIndex on server already being queried";
+		return;
+	}
+
+	internalQuery(index);
 }
 
-void Meta::refresh()
-{
-    if (!m_activeQueries.empty()) {
-        warning() << "called meta::refresh() while doing another query, ignoring";
-        return;
-    }
+void Meta::refresh() {
+	if (!m_activeQueries.empty()) {
+		warning() << "called meta::refresh() while doing another query, ignoring";
+		return;
+	}
 
-    if (m_status == VALID)
-    {
-    	// save the current list in case we fail
-        m_lastValidList = m_gameServers;
-    }
+	if (m_status == VALID) {
+		// save the current list in case we fail
+		m_lastValidList = m_gameServers;
+	}
 
-    m_gameServers.clear();
-    m_nextQuery = 0;
-    disconnect();
-    connect();
+	m_gameServers.clear();
+	m_nextQuery = 0;
+	disconnect();
+	connect();
 }
 
-void Meta::cancel()
-{
-    for (QuerySet::iterator Q=m_activeQueries.begin(); Q!=m_activeQueries.end();++Q)
-        delete *Q;
-    m_activeQueries.clear();
-	
-    disconnect();
+void Meta::cancel() {
+	for (auto activeQuery : m_activeQueries) {
+		delete activeQuery;
+	}
+	m_activeQueries.clear();
 
-    // revert to the last valid list if possible	
-    if (!m_lastValidList.empty())
-    {
-        m_gameServers = m_lastValidList;
-        m_status = VALID;
-    } else {
-        m_status = INVALID;
-        m_gameServers.clear();
-    }
-    m_nextQuery = m_gameServers.size();
-}
+	disconnect();
 
-const ServerInfo& Meta::getInfoForServer(size_t index) const
-{
-    if (index >= m_gameServers.size()) {
-        error() << "passed out-of-range index " << index <<
-            " to getInfoForServer";
-        throw BaseException("Out of bounds exception when getting server info.");
-    } else {
-        return m_gameServers[index];
-    }
-}
-                
-size_t Meta::getGameServerCount() const
-{
-    return m_gameServers.size();
-}
-
-void Meta::connect()
-{
-    boost::asio::ip::udp::resolver::query query(m_metaHost, META_SERVER_PORT);
-    m_resolver.async_resolve(query,
-            [&](const boost::system::error_code& ec, boost::asio::ip::udp::resolver::iterator iterator) {
-                if (!ec && iterator != boost::asio::ip::udp::resolver::iterator()) {
-                    this->connect(*iterator);
-                } else {
-                    this->disconnect();
-                }
-            });
-}
-
-void Meta::connect(boost::asio::ip::udp::endpoint endpoint)
-{
-    m_socket.open(boost::asio::ip::udp::v4());
-    m_socket.async_connect(endpoint, [&](boost::system::error_code ec){
-        if (!ec) {
-            do_read();
-
-            // build the initial 'ping' and send
-            unsigned int dsz = 0;
-            pack_uint32(CKEEP_ALIVE, _data, dsz);
-            this->m_send_stream << std::string(_data, dsz) << std::flush;
-            this->write();
-            this->setupRecvCmd();
-
-            this->m_status = GETTING_LIST;
-            this->startTimeout();
-        } else {
-            this->doFailure("Couldn't open connection to metaserver " + this->m_metaHost);
-        }
-    });
-}
-
-void Meta::disconnect()
-{
-    if (m_socket.is_open()) {
-        m_socket.close();
-    }
-    m_metaTimer.cancel();
-}
-
-void Meta::startTimeout()
-{
-    m_metaTimer.cancel();
-    m_metaTimer.expires_from_now(boost::posix_time::seconds(8));
-    m_metaTimer.async_wait([&](boost::system::error_code ec){
-        if (!ec) {
-            this->metaTimeout();
-        }
-    });
-}
-
-
-void Meta::do_read()
-{
-    if (m_socket.is_open()) {
-        m_socket.async_receive(m_receive_buffer.prepare(DATA_BUFFER_SIZE),
-                [this](boost::system::error_code ec, std::size_t length)
-                {
-                    if (!ec)
-                    {
-                        m_receive_buffer.commit(length);
-                        if (length > 0) {
-                            this->gotData();
-                        }
-                        this->write();
-                        this->do_read();
-                    } else {
-                        if (ec != boost::asio::error::operation_aborted) {
-                            this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
-                        }
-                    }
-                });
-    }
-}
-
-void Meta::write()
-{
-    if (m_socket.is_open()) {
-        if (m_send_buffer->size() != 0) {
-            std::shared_ptr<boost::asio::streambuf> send_buffer(m_send_buffer);
-            m_send_buffer = new boost::asio::streambuf();
-            m_send_stream.rdbuf(m_send_buffer);
-            m_socket.async_send(send_buffer->data(),
-                    [&, send_buffer](boost::system::error_code ec, std::size_t length)
-                    {
-                        if (!ec)
-                        {
-                            send_buffer->consume(length);
-                        } else {
-                            if (ec != boost::asio::error::operation_aborted) {
-                                this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
-                            }
-                        }
-                    });
-        }
-    }
-}
-
-void Meta::gotData()
-{    
-    recv();
-}
-
-void Meta::deleteQuery(MetaQuery* query)
-{
-	auto I = m_activeQueries.find(query);
-
-	if (I != m_activeQueries.end()) {
-        m_activeQueries.erase(I);
-    
-        m_event_service.runOnMainThread([query](){
-            delete query;
-        });
-
-        if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size())
-        {
-            m_status = VALID;
-            // we're all done, emit the signal
-            AllQueriesDone.emit();
-        }
+	// revert to the last valid list if possible
+	if (!m_lastValidList.empty()) {
+		m_gameServers = m_lastValidList;
+		m_status = VALID;
 	} else {
-		error() << "Tried to delete meta server query which wasn't "
-				"among the active queries. This indicates an error "
-				"with the flow in Metaserver.";
+		m_status = INVALID;
+		m_gameServers.clear();
+	}
+	m_nextQuery = m_gameServers.size();
+}
+
+const ServerInfo& Meta::getInfoForServer(size_t index) const {
+	if (index >= m_gameServers.size()) {
+		error() << "passed out-of-range index " << index <<
+				" to getInfoForServer";
+		throw BaseException("Out of bounds exception when getting server info.");
+	} else {
+		return m_gameServers[index];
 	}
 }
 
-void Meta::recv()
-{
-    if (_bytesToRecv == 0) {
-        error() << "No bytes to receive when calling recv().";
-        return;
-    }
-	
-    m_receive_stream.peek();
-    std::streambuf * iobuf = m_receive_stream.rdbuf();
-    std::streamsize len = std::min(_bytesToRecv, iobuf->in_avail());
-    if (len > 0) {
-    	iobuf->sgetn(_dataPtr, len);
-    	_bytesToRecv -= len;
-    	_dataPtr += len;
-    }
+size_t Meta::getGameServerCount() const {
+	return m_gameServers.size();
+}
+
+void Meta::connect() {
+	boost::asio::ip::udp::resolver::query query(m_metaHost, META_SERVER_PORT);
+	m_resolver.async_resolve(query,
+							 [&](const boost::system::error_code& ec, boost::asio::ip::udp::resolver::iterator iterator) {
+								 if (!ec && iterator != boost::asio::ip::udp::resolver::iterator()) {
+									 this->connect(*iterator);
+								 } else {
+									 this->disconnect();
+								 }
+							 });
+}
+
+void Meta::connect(const boost::asio::ip::udp::endpoint& endpoint) {
+	m_socket.open(boost::asio::ip::udp::v4());
+	m_socket.async_connect(endpoint, [&](boost::system::error_code ec) {
+		if (!ec) {
+			do_read();
+
+			// build the initial 'ping' and send
+			unsigned int dsz = 0;
+			pack_uint32(CKEEP_ALIVE, m_data.data(), dsz);
+			this->m_send_stream << std::string(m_data.data(), dsz) << std::flush;
+			this->write();
+			this->setupRecvCmd();
+
+			this->m_status = GETTING_LIST;
+			this->startTimeout();
+		} else {
+			this->doFailure("Couldn't open connection to metaserver " + this->m_metaHost);
+		}
+	});
+}
+
+void Meta::disconnect() {
+	if (m_socket.is_open()) {
+		m_socket.close();
+	}
+	m_metaTimer.cancel();
+}
+
+void Meta::startTimeout() {
+	m_metaTimer.cancel();
+	m_metaTimer.expires_from_now(boost::posix_time::seconds(8));
+	m_metaTimer.async_wait([&](boost::system::error_code ec) {
+		if (!ec) {
+			this->metaTimeout();
+		}
+	});
+}
+
+
+void Meta::do_read() {
+	if (m_socket.is_open()) {
+		m_socket.async_receive(m_receive_buffer.prepare(DATA_BUFFER_SIZE),
+							   [this](boost::system::error_code ec, std::size_t length) {
+								   if (!ec) {
+									   m_receive_buffer.commit(length);
+									   if (length > 0) {
+										   this->gotData();
+									   }
+									   this->write();
+									   this->do_read();
+								   } else {
+									   if (ec != boost::asio::error::operation_aborted) {
+										   this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
+									   }
+								   }
+							   });
+	}
+}
+
+void Meta::write() {
+	if (m_socket.is_open()) {
+		if (m_send_buffer->size() != 0) {
+			std::shared_ptr<boost::asio::streambuf> send_buffer(m_send_buffer);
+			m_send_buffer = new boost::asio::streambuf();
+			m_send_stream.rdbuf(m_send_buffer);
+			m_socket.async_send(send_buffer->data(),
+								[&, send_buffer](boost::system::error_code ec, std::size_t length) {
+									if (!ec) {
+										send_buffer->consume(length);
+									} else {
+										if (ec != boost::asio::error::operation_aborted) {
+											this->doFailure(std::string("Connection to the meta-server failed: ") + ec.message());
+										}
+									}
+								});
+		}
+	}
+}
+
+void Meta::gotData() {
+	recv();
+}
+
+void Meta::deleteQuery(MetaQuery* query) {
+	auto I = m_activeQueries.find(query);
+
+	if (I != m_activeQueries.end()) {
+		m_activeQueries.erase(I);
+
+		m_event_service.runOnMainThread([query]() {
+			delete query;
+		});
+
+		if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size()) {
+			m_status = VALID;
+			// we're all done, emit the signal
+			AllQueriesDone.emit();
+		}
+	} else {
+		error() << "Tried to delete meta server query which wasn't "
+				   "among the active queries. This indicates an error "
+				   "with the flow in Metaserver.";
+	}
+}
+
+void Meta::recv() {
+	if (m_bytesToRecv == 0) {
+		error() << "No bytes to receive when calling recv().";
+		return;
+	}
+
+	m_receive_stream.peek();
+	std::streambuf* iobuf = m_receive_stream.rdbuf();
+	std::streamsize len = std::min(m_bytesToRecv, iobuf->in_avail());
+	if (len > 0) {
+		iobuf->sgetn(m_dataPtr, len);
+		m_bytesToRecv -= len;
+		m_dataPtr += len;
+	}
 //	do {
 //		int d = m_stream.get();
-//		*(_dataPtr++) = static_cast<char>(d);
-//		_bytesToRecv--;
-//	} while (iobuf->in_avail() && _bytesToRecv);
-	
-    if (_bytesToRecv > 0) {
-        error() << "Fragment data received by Meta::recv";
-        return; // can't do anything till we get more data
-    }
-    
-    if (_recvCmd) {
-        uint32_t op;
-        unpack_uint32(op, _data);
-        recvCmd(op);
-    } else {
-        processCmd();
-    }
-		
-    // try and read more
-    if (_bytesToRecv && m_receive_stream.rdbuf()->in_avail())
-        recv();
+//		*(m_dataPtr++) = static_cast<char>(d);
+//		m_bytesToRecv--;
+//	} while (iobuf->in_avail() && m_bytesToRecv);
+
+	if (m_bytesToRecv > 0) {
+		error() << "Fragment data received by Meta::recv";
+		return; // can't do anything till we get more data
+	}
+
+	if (m_recvCmd) {
+		uint32_t op;
+		unpack_uint32(op, m_data.data());
+		recvCmd(op);
+	} else {
+		processCmd();
+	}
+
+	// try and read more
+	if (m_bytesToRecv && m_receive_stream.rdbuf()->in_avail())
+		recv();
 }
 
-void Meta::recvCmd(uint32_t op)
-{    
-    switch (op) {
-    case HANDSHAKE:
-        setupRecvData(1, HANDSHAKE);
-        break;
-    
-    case PROTO_ERANGE:
-        doFailure("Got list range error from Metaserver");
-        break;
-    
-    case LIST_RESP:
-        setupRecvData(2, LIST_RESP);
-        break;
-    
-    default:
-        doFailure("Unknown Meta server command");
-        break;
-    }
+void Meta::recvCmd(uint32_t op) {
+	switch (op) {
+		case HANDSHAKE:
+			setupRecvData(1, HANDSHAKE);
+			break;
+
+		case PROTO_ERANGE:
+			doFailure("Got list range error from Metaserver");
+			break;
+
+		case LIST_RESP:
+			setupRecvData(2, LIST_RESP);
+			break;
+
+		default:
+			doFailure("Unknown Meta server command");
+			break;
+	}
 }
 
-void Meta::processCmd()
-{
-    if (m_status != GETTING_LIST) {
-        error() << "Command received when not expecting any. It will be ignored. The command was: " << _gotCmd;
-        return;
-    }
+void Meta::processCmd() {
+	if (m_status != GETTING_LIST) {
+		error() << "Command received when not expecting any. It will be ignored. The command was: " << m_gotCmd;
+		return;
+	}
 
-    switch (_gotCmd)
-    {
-    case HANDSHAKE: {	
-        uint32_t stamp;
-        unpack_uint32(stamp, _data);
-                
-        unsigned int dsz = 0;
-        _dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
-        pack_uint32(stamp, _dataPtr, dsz);
-        
-        m_send_stream << std::string(_data, dsz) << std::flush;
-        write();
-        
-        m_metaTimer.cancel();
-        // send the initial list request
-        listReq(0);
-    } break;
-	
-    case LIST_RESP:	{
-        //uint32_t _totalServers, _packed;
-        uint32_t total_servers;
-        _dataPtr = unpack_uint32(total_servers, _data);
-        if (!m_gameServers.empty()) {
-        	if (total_servers != _totalServers) {
-                warning() << "Server total in new packet has changed. " << total_servers << ":" << _totalServers;
-        	}
-        } else {
-        	_totalServers = total_servers;
-        }
-        unpack_uint32(_packed, _dataPtr);
-        // FIXME This assumes that the data received so far is all the servers, which
-        // in the case of fragmented server list it is not. Currently this code is generally
-        // of the size of packet receieved. As there should only ever be one packet incoming
-        // we should be able to make assumptions based on the amount of data in the buffer.
-        // The buffer should also contain a complete packet if it contains any, so retrieving
-        // data one byte at a time is less efficient than it might be.
-        setupRecvData(_packed, LIST_RESP2);
-		
-        // If this is the first response, allocate the space
-        if (m_gameServers.empty()) {
+	switch (m_gotCmd) {
+		case HANDSHAKE: {
+			uint32_t stamp;
+			unpack_uint32(stamp, m_data.data());
 
-            assert(m_nextQuery == 0);
-            m_gameServers.reserve(_totalServers);
-        }
-    } break;
-	
-    case LIST_RESP2: {
-        _dataPtr = _data;
-        while (_packed--)
-        {
-            uint32_t ip;
-            _dataPtr = unpack_uint32(ip, _dataPtr);
-            
-            char buf[32];
-            snprintf(buf, 32, "%u.%u.%u.%u", 
-                    (ip & 0x000000FF),
-                    (ip & 0x0000FF00) >> 8,
-                    (ip & 0x00FF0000) >> 16,
-                    (ip & 0xFF000000) >> 24
-            );
-            
-            // FIXME  - decide whether a reverse name lookup is necessary here or not
-            m_gameServers.push_back(ServerInfo(buf));
-        }
-			
-        if (m_gameServers.size() < _totalServers)
-        {
-            // request some more
-            listReq((unsigned int)m_gameServers.size());
-        } else {
-            // allow progress bars to setup, etc, etc
-            CompletedServerList.emit(_totalServers);
-            m_status = QUERYING;
-            // all done, clean up
-            disconnect();
-        }
-        query();
-		
-    } break;
-		
-    default:
-        std::stringstream ss;
-        ss << "Unknown Meta server command: " << _gotCmd;
-        doFailure(ss.str());
-        break;
-    }
+			unsigned int dsz = 0;
+			m_dataPtr = pack_uint32(CLIENTSHAKE, m_data.data(), dsz);
+			pack_uint32(stamp, m_dataPtr, dsz);
+
+			m_send_stream << std::string(m_data.data(), dsz) << std::flush;
+			write();
+
+			m_metaTimer.cancel();
+			// send the initial list request
+			listReq(0);
+		}
+			break;
+
+		case LIST_RESP: {
+			//uint32_t m_totalServers, m_packed;
+			uint32_t total_servers;
+			m_dataPtr = unpack_uint32(total_servers, m_data.data());
+			if (!m_gameServers.empty()) {
+				if (total_servers != m_totalServers) {
+					warning() << "Server total in new packet has changed. " << total_servers << ":" << m_totalServers;
+				}
+			} else {
+				m_totalServers = total_servers;
+			}
+			unpack_uint32(m_packed, m_dataPtr);
+			// FIXME This assumes that the data received so far is all the servers, which
+			// in the case of fragmented server list it is not. Currently this code is generally
+			// of the size of packet receieved. As there should only ever be one packet incoming
+			// we should be able to make assumptions based on the amount of data in the buffer.
+			// The buffer should also contain a complete packet if it contains any, so retrieving
+			// data one byte at a time is less efficient than it might be.
+			setupRecvData(m_packed, LIST_RESP2);
+
+			// If this is the first response, allocate the space
+			if (m_gameServers.empty()) {
+
+				assert(m_nextQuery == 0);
+				m_gameServers.reserve(m_totalServers);
+			}
+		}
+			break;
+
+		case LIST_RESP2: {
+			m_dataPtr = m_data.data();
+			while (m_packed--) {
+				uint32_t ip;
+				m_dataPtr = unpack_uint32(ip, m_dataPtr);
+
+				char buf[32];
+				snprintf(buf, 32, "%u.%u.%u.%u",
+						 (ip & 0x000000FF),
+						 (ip & 0x0000FF00) >> 8,
+						 (ip & 0x00FF0000) >> 16,
+						 (ip & 0xFF000000) >> 24
+				);
+
+				// FIXME  - decide whether a reverse name lookup is necessary here or not
+				m_gameServers.push_back(ServerInfo(buf));
+			}
+
+			if (m_gameServers.size() < m_totalServers) {
+				// request some more
+				listReq((unsigned int) m_gameServers.size());
+			} else {
+				// allow progress bars to setup, etc, etc
+				CompletedServerList.emit(m_totalServers);
+				m_status = QUERYING;
+				// all done, clean up
+				disconnect();
+			}
+			query();
+
+		}
+			break;
+
+		default:
+			std::stringstream ss;
+			ss << "Unknown Meta server command: " << m_gotCmd;
+			doFailure(ss.str());
+			break;
+	}
 }
 
-void Meta::listReq(unsigned int base)
-{
-    unsigned int dsz=0;
-    char* _dataPtr = pack_uint32(LIST_REQ, _data, dsz);
-    pack_uint32(base, _dataPtr, dsz);
-    
-    m_send_stream << std::string(_data, dsz) << std::flush;
-    write();
-    setupRecvCmd();
-    
-    startTimeout();
+void Meta::listReq(unsigned int base) {
+	unsigned int dsz = 0;
+	char* _dataPtr = pack_uint32(LIST_REQ, m_data.data(), dsz);
+	pack_uint32(base, _dataPtr, dsz);
+
+	m_send_stream << std::string(m_data.data(), dsz) << std::flush;
+	write();
+	setupRecvCmd();
+
+	startTimeout();
 }
 
-void Meta::setupRecvCmd()
-{
-	_recvCmd = true;
-	_bytesToRecv = sizeof(uint32_t);
-	_dataPtr = (char*) _data;
+void Meta::setupRecvCmd() {
+	m_recvCmd = true;
+	m_bytesToRecv = sizeof(uint32_t);
+	m_dataPtr = m_data.data();
 }
 
-void Meta::setupRecvData(int words, uint32_t got)
-{
-	_recvCmd = false;
-	_bytesToRecv = words * sizeof(uint32_t);
-	_dataPtr = (char*) _data;
-	_gotCmd = got;
+void Meta::setupRecvData(int words, uint32_t got) {
+	m_recvCmd = false;
+	m_bytesToRecv = words * sizeof(uint32_t);
+	m_dataPtr = m_data.data();
+	m_gotCmd = got;
 }
 
 /* pack the data into the specified buffer, update the buffer size, and return
 the new buffer insert pointer */
 
-char* pack_uint32(uint32_t data, char* buffer, unsigned int &size)
-{
+char* pack_uint32(uint32_t data, char* buffer, unsigned int& size) {
 	uint32_t netorder;
- 
+
 	netorder = htonl(data);
 	memcpy(buffer, &netorder, sizeof(uint32_t));
 	size += sizeof(uint32_t);
- 	return buffer+sizeof(uint32_t);
+	return buffer + sizeof(uint32_t);
 }
 
 /* unpack one data from the buffer, and return the next extract pointer */
 
-char* unpack_uint32(uint32_t &dest, char* buffer)
-{
+char* unpack_uint32(uint32_t& dest, char* buffer) {
 	uint32_t netorder;
- 
+
 	memcpy(&netorder, buffer, sizeof(uint32_t));
 	dest = ntohl(netorder);
-	return buffer+sizeof(uint32_t);
-} 
-
-void Meta::internalQuery(size_t index)
-{
-    assert(index < m_gameServers.size());
-    
-    ServerInfo& sv = m_gameServers[index];
-    MetaQuery *q = new MetaQuery(m_io_service, *this, sv.getHostname(), index);
-    if (q->getStatus() != BaseConnection::CONNECTING &&
-        q->getStatus() != BaseConnection::NEGOTIATE) {
-        // indicates a failure occurred, so we'll kill it now and say no more
-        delete q;
-        sv.m_status = ServerInfo::INVALID;
-    } else {
-        m_activeQueries.insert(q);
-        sv.m_status = ServerInfo::QUERYING;
-    }
+	return buffer + sizeof(uint32_t);
 }
 
-void Meta::objectArrived(const Root& obj)
-{	
-    Info info = smart_dynamic_cast<Info>(obj);
-    if (!info.isValid())
-    {
-        error() << "Meta::objectArrived, failed to convert object to INFO op";
-        return;
-    }
-	
+void Meta::internalQuery(size_t index) {
+	assert(index < m_gameServers.size());
+
+	ServerInfo& sv = m_gameServers[index];
+	auto* q = new MetaQuery(m_io_service, *this, sv.getHostname(), index);
+	if (q->getStatus() != BaseConnection::CONNECTING &&
+		q->getStatus() != BaseConnection::NEGOTIATE) {
+		// indicates a failure occurred, so we'll kill it now and say no more
+		delete q;
+		sv.m_status = ServerInfo::INVALID;
+	} else {
+		m_activeQueries.insert(q);
+		sv.m_status = ServerInfo::QUERYING;
+	}
+}
+
+void Meta::objectArrived(const Root& obj) {
+	Info info = smart_dynamic_cast<Info>(obj);
+	if (!info.isValid()) {
+		error() << "Meta::objectArrived, failed to convert object to INFO op";
+		return;
+	}
+
 // work out which query this is
-    long refno = info->getRefno();
-    QuerySet::iterator Q;
-	
-    for (Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
-        if ((*Q)->getQueryNo() == refno) break;
-	
-    if (Q == m_activeQueries.end()) {
-        error() << "Couldn't locate query for meta-query reply";
-    } else {
-        (*Q)->setComplete();
+	long refno = info->getRefno();
+	QuerySet::iterator Q;
 
-        RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());
-        if (!svr.isValid()) {
-            error() << "Query INFO argument object is broken";
-        } else {
-            if ((*Q)->getServerIndex() >= m_gameServers.size()) {
-                error() << "Got server info with out of bounds index.";
-            } else {
-                ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
-    
-                sv.processServer(svr);
-                sv.setPing((int)(*Q)->getElapsed());
+	for (Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
+		if ((*Q)->getQueryNo() == refno) break;
 
-                // emit the signal
-                ReceivedServerInfo.emit(sv);
-            }
-        }
-        deleteQuery(*Q);
-    }
-    query();
+	if (Q == m_activeQueries.end()) {
+		error() << "Couldn't locate query for meta-query reply";
+	} else {
+		(*Q)->setComplete();
+
+		RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());
+		if (!svr.isValid()) {
+			error() << "Query INFO argument object is broken";
+		} else {
+			if ((*Q)->getServerIndex() >= m_gameServers.size()) {
+				error() << "Got server info with out of bounds index.";
+			} else {
+				ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
+
+				sv.processServer(svr);
+				sv.setPing((int) (*Q)->getElapsed());
+
+				// emit the signal
+				ReceivedServerInfo.emit(sv);
+			}
+		}
+		deleteQuery(*Q);
+	}
+	query();
 }
 
-void Meta::doFailure(const std::string &msg)
-{
-    Failure.emit(msg);
-    cancel();
+void Meta::doFailure(const std::string& msg) {
+	Failure.emit(msg);
+	cancel();
 }
 
-void Meta::dispatch()
-{
+void Meta::dispatch() {
 
 }
 
-void Meta::metaTimeout()
-{
-    // cancel calls disconnect, which will kill upfront without this
-    m_metaTimer.cancel();
-    
-    // might want different behaviour in the future, I suppose
-    doFailure("Connection to the meta-server timed out");
+void Meta::metaTimeout() {
+	// cancel calls disconnect, which will kill upfront without this
+	m_metaTimer.cancel();
+
+	// might want different behaviour in the future, I suppose
+	doFailure("Connection to the meta-server timed out");
 }
 
-void Meta::queryFailure(MetaQuery *q, const std::string &msg)
-{
-    // we do NOT emit a failure signal here (because that would probably cause the
-    // host app to pop up a dialog or something) since query failures are likely to
-    // be very frequent.
-    m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
-    q->setComplete();
-    deleteQuery(q);
-    query();
+void Meta::queryFailure(MetaQuery* q, const std::string& msg) {
+	// we do NOT emit a failure signal here (because that would probably cause the
+	// host app to pop up a dialog or something) since query failures are likely to
+	// be very frequent.
+	m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
+	q->setComplete();
+	deleteQuery(q);
+	query();
 }
 
-void Meta::query()
-{
-    while ((m_activeQueries.size() < m_maxActiveQueries) && (m_nextQuery < m_gameServers.size())) {
-        internalQuery(m_nextQuery++);
-    }
+void Meta::query() {
+	while ((m_activeQueries.size() < m_maxActiveQueries) && (m_nextQuery < m_gameServers.size())) {
+		internalQuery(m_nextQuery++);
+	}
 }
 
-void Meta::queryTimeout(MetaQuery *q)
-{
-    m_gameServers[q->getServerIndex()].m_status = ServerInfo::TIMEOUT;
-    deleteQuery(q);
-    query();
+void Meta::queryTimeout(MetaQuery* q) {
+	m_gameServers[q->getServerIndex()].m_status = ServerInfo::TIMEOUT;
+	deleteQuery(q);
+	query();
 }
 
 } // of Eris namespace

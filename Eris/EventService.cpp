@@ -1,9 +1,6 @@
 #include "EventService.h"
-#include "Log.h"
 #include "WaitFreeQueue.h"
 #include "ActiveMarker.h"
-
-#include <boost/asio.hpp>
 
 #include <cassert>
 #include <iostream>
