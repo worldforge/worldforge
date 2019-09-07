@@ -51,6 +51,12 @@ protected:
     ~RootOperationData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "root_operation";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     RootOperationData * copy() const override;
 

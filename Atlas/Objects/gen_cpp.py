@@ -533,6 +533,13 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("    ~" + self.classname + "() override = default;\n")
         self.write("\n")
         self.write("public:\n")
+        if obj.parent:
+            self.write("    // The parent type for this object's superclass\n")
+            self.write("    static constexpr const char* super_parent = \"%s\";\n" % obj.parent.id)
+        self.write("    // The default parent type for this object\n")
+        self.write("    static constexpr const char* default_parent = \"%s\";\n" % obj.id)
+        self.write("    // The default objtype for this object\n")
+        self.write("    static constexpr const char* default_objtype = \"%s\";\n" % obj.objtype)
         if obj.id in ['anonymous', 'generic']:
             self.doc(4, 'Set the type of this object.')
             self.write("    void setType(const std::string &, int);\n\n")

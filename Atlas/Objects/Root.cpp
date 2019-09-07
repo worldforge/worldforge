@@ -200,8 +200,8 @@ bool RootData::instanceOf(int classNo) const
 void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_stamp = 0.0;
-        data.attr_objtype = "obj";
-        data.attr_parent = "root";
+        data.attr_objtype = default_objtype;
+        data.attr_parent = default_parent;
     attr_data[ID_ATTR] = ID_FLAG;
     attr_data[PARENT_ATTR] = PARENT_FLAG;
     attr_data[STAMP_ATTR] = STAMP_FLAG;

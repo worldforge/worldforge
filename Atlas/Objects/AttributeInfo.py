@@ -205,6 +205,9 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                 return ''
             if len(self.value) == 0:
                 return ''
+            if self.name == "parent" or self.name == "objtype":
+                return '        %s = default_%s;\n' \
+                       % (var, self.name)
             return '        %s = "%s";\n' \
                     % (var, self.value)
         elif self.type == "string_list_length" or self.type == "string_list":

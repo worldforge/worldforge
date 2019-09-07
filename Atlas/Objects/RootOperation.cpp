@@ -235,13 +235,13 @@ bool RootOperationData::instanceOf(int classNo) const
 
 void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "root_operation";
+        data.attr_parent = default_parent;
     attr_data[SERIALNO_ATTR] = SERIALNO_FLAG;
     attr_data[REFNO_ATTR] = REFNO_FLAG;
     attr_data[FROM_ATTR] = FROM_FLAG;

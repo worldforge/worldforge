@@ -50,7 +50,7 @@ bool GenericData::instanceOf(int classNo) const
 
 void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;

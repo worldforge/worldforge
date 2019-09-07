@@ -44,13 +44,13 @@ bool AffectData::instanceOf(int classNo) const
 
 void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "affect";
+        data.attr_parent = default_parent;
 }
 
 Allocator<HitData> HitData::allocator;
@@ -85,13 +85,13 @@ bool HitData::instanceOf(int classNo) const
 
 void HitData::fillDefaultObjectInstance(HitData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "hit";
+        data.attr_parent = default_parent;
 }
 
 Allocator<MoveData> MoveData::allocator;
@@ -126,13 +126,13 @@ bool MoveData::instanceOf(int classNo) const
 
 void MoveData::fillDefaultObjectInstance(MoveData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "move";
+        data.attr_parent = default_parent;
 }
 
 Allocator<WieldData> WieldData::allocator;
@@ -167,13 +167,13 @@ bool WieldData::instanceOf(int classNo) const
 
 void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "wield";
+        data.attr_parent = default_parent;
 }
 
 Allocator<GetData> GetData::allocator;
@@ -208,13 +208,13 @@ bool GetData::instanceOf(int classNo) const
 
 void GetData::fillDefaultObjectInstance(GetData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "get";
+        data.attr_parent = default_parent;
 }
 
 Allocator<PerceiveData> PerceiveData::allocator;
@@ -249,13 +249,13 @@ bool PerceiveData::instanceOf(int classNo) const
 
 void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "perceive";
+        data.attr_parent = default_parent;
 }
 
 } } } // namespace Atlas::Objects::Operation

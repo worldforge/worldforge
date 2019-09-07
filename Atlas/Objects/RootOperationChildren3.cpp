@@ -44,13 +44,13 @@ bool LookData::instanceOf(int classNo) const
 
 void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "look";
+        data.attr_parent = default_parent;
 }
 
 Allocator<ListenData> ListenData::allocator;
@@ -85,13 +85,13 @@ bool ListenData::instanceOf(int classNo) const
 
 void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "listen";
+        data.attr_parent = default_parent;
 }
 
 Allocator<SniffData> SniffData::allocator;
@@ -126,13 +126,13 @@ bool SniffData::instanceOf(int classNo) const
 
 void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "sniff";
+        data.attr_parent = default_parent;
 }
 
 Allocator<TouchData> TouchData::allocator;
@@ -167,13 +167,13 @@ bool TouchData::instanceOf(int classNo) const
 
 void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "touch";
+        data.attr_parent = default_parent;
 }
 
 Allocator<LoginData> LoginData::allocator;
@@ -208,13 +208,13 @@ bool LoginData::instanceOf(int classNo) const
 
 void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "login";
+        data.attr_parent = default_parent;
 }
 
 Allocator<LogoutData> LogoutData::allocator;
@@ -249,13 +249,13 @@ bool LogoutData::instanceOf(int classNo) const
 
 void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "logout";
+        data.attr_parent = default_parent;
 }
 
 } } } // namespace Atlas::Objects::Operation

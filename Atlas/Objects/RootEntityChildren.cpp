@@ -44,7 +44,7 @@ bool AdminEntityData::instanceOf(int classNo) const
 
 void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -55,7 +55,7 @@ void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "admin_entity";
+        data.attr_parent = default_parent;
 }
 
 const std::string USERNAME_ATTR = "username";
@@ -218,7 +218,7 @@ bool AccountData::instanceOf(int classNo) const
 
 void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -229,7 +229,7 @@ void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::str
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "account";
+        data.attr_parent = default_parent;
     attr_data[USERNAME_ATTR] = USERNAME_FLAG;
     attr_data[PASSWORD_ATTR] = PASSWORD_FLAG;
     attr_data[CHARACTERS_ATTR] = CHARACTERS_FLAG;
@@ -267,7 +267,7 @@ bool PlayerData::instanceOf(int classNo) const
 
 void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -278,7 +278,7 @@ void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::strin
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "player";
+        data.attr_parent = default_parent;
 }
 
 Allocator<AdminData> AdminData::allocator;
@@ -313,7 +313,7 @@ bool AdminData::instanceOf(int classNo) const
 
 void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -324,7 +324,7 @@ void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string,
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "admin";
+        data.attr_parent = default_parent;
 }
 
 Allocator<GameData> GameData::allocator;
@@ -359,7 +359,7 @@ bool GameData::instanceOf(int classNo) const
 
 void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -370,7 +370,7 @@ void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, u
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "game";
+        data.attr_parent = default_parent;
 }
 
 Allocator<GameEntityData> GameEntityData::allocator;
@@ -405,7 +405,7 @@ bool GameEntityData::instanceOf(int classNo) const
 
 void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -416,7 +416,7 @@ void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<st
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "game_entity";
+        data.attr_parent = default_parent;
 }
 
 } } } // namespace Atlas::Objects::Entity

@@ -41,6 +41,12 @@ protected:
     ~RootEntityData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "root_entity";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     RootEntityData * copy() const override;
 

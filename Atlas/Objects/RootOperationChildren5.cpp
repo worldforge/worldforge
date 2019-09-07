@@ -44,13 +44,13 @@ bool AppearanceData::instanceOf(int classNo) const
 
 void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "appearance";
+        data.attr_parent = default_parent;
 }
 
 Allocator<DisappearanceData> DisappearanceData::allocator;
@@ -85,13 +85,13 @@ bool DisappearanceData::instanceOf(int classNo) const
 
 void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "disappearance";
+        data.attr_parent = default_parent;
 }
 
 Allocator<SoundData> SoundData::allocator;
@@ -126,13 +126,13 @@ bool SoundData::instanceOf(int classNo) const
 
 void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "sound";
+        data.attr_parent = default_parent;
 }
 
 Allocator<SmellData> SmellData::allocator;
@@ -167,13 +167,13 @@ bool SmellData::instanceOf(int classNo) const
 
 void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "smell";
+        data.attr_parent = default_parent;
 }
 
 Allocator<FeelData> FeelData::allocator;
@@ -208,13 +208,13 @@ bool FeelData::instanceOf(int classNo) const
 
 void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "feel";
+        data.attr_parent = default_parent;
 }
 
 Allocator<ErrorData> ErrorData::allocator;
@@ -249,13 +249,13 @@ bool ErrorData::instanceOf(int classNo) const
 
 void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "error";
+        data.attr_parent = default_parent;
 }
 
 } } } // namespace Atlas::Objects::Operation

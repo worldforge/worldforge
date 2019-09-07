@@ -49,6 +49,12 @@ protected:
     ~GenericData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root_operation";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "generic";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Set the type of this object.
     void setType(const std::string &, int);
 

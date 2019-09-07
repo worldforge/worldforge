@@ -210,7 +210,7 @@ bool RootEntityData::instanceOf(int classNo) const
 
 void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "obj";
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.push_back(0.0);
         data.attr_pos.push_back(0.0);
@@ -221,7 +221,7 @@ void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<st
         data.attr_velocity.push_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "root_entity";
+        data.attr_parent = default_parent;
     attr_data[LOC_ATTR] = LOC_FLAG;
     attr_data[POS_ATTR] = POS_FLAG;
     attr_data[VELOCITY_ATTR] = VELOCITY_FLAG;

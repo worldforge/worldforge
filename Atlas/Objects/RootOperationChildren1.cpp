@@ -44,13 +44,13 @@ bool ActionData::instanceOf(int classNo) const
 
 void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "action";
+        data.attr_parent = default_parent;
 }
 
 Allocator<CreateData> CreateData::allocator;
@@ -85,13 +85,13 @@ bool CreateData::instanceOf(int classNo) const
 
 void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "create";
+        data.attr_parent = default_parent;
 }
 
 Allocator<CommunicateData> CommunicateData::allocator;
@@ -126,13 +126,13 @@ bool CommunicateData::instanceOf(int classNo) const
 
 void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "communicate";
+        data.attr_parent = default_parent;
 }
 
 Allocator<TalkData> TalkData::allocator;
@@ -167,13 +167,13 @@ bool TalkData::instanceOf(int classNo) const
 
 void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "talk";
+        data.attr_parent = default_parent;
 }
 
 Allocator<DeleteData> DeleteData::allocator;
@@ -208,13 +208,13 @@ bool DeleteData::instanceOf(int classNo) const
 
 void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "delete";
+        data.attr_parent = default_parent;
 }
 
 Allocator<SetData> SetData::allocator;
@@ -249,13 +249,13 @@ bool SetData::instanceOf(int classNo) const
 
 void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_objtype = "op";
+        data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
         data.attr_seconds = 0.0;
         data.attr_future_seconds = 0.0;
         data.attr_stamp = 0.0;
-        data.attr_parent = "set";
+        data.attr_parent = default_parent;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -42,6 +42,12 @@ protected:
     ~AdminEntityData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root_entity";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "admin_entity";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     AdminEntityData * copy() const override;
 
@@ -96,6 +102,12 @@ protected:
     ~AccountData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "admin_entity";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "account";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     AccountData * copy() const override;
 
@@ -331,6 +343,12 @@ protected:
     ~PlayerData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "account";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "player";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     PlayerData * copy() const override;
 
@@ -385,6 +403,12 @@ protected:
     ~AdminData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "account";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "admin";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     AdminData * copy() const override;
 
@@ -439,6 +463,12 @@ protected:
     ~GameData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "admin_entity";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "game";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     GameData * copy() const override;
 
@@ -493,6 +523,12 @@ protected:
     ~GameEntityData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root_entity";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "game_entity";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "class";
     /// Copy this object.
     GameEntityData * copy() const override;
 

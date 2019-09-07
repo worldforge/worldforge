@@ -50,6 +50,12 @@ protected:
     ~ActionData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root_operation";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "action";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     ActionData * copy() const override;
 
@@ -104,6 +110,12 @@ protected:
     ~CreateData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "create";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     CreateData * copy() const override;
 
@@ -158,6 +170,12 @@ protected:
     ~CommunicateData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "create";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "communicate";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     CommunicateData * copy() const override;
 
@@ -212,6 +230,12 @@ protected:
     ~TalkData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "communicate";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "talk";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     TalkData * copy() const override;
 
@@ -274,6 +298,12 @@ protected:
     ~DeleteData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "delete";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     DeleteData * copy() const override;
 
@@ -336,6 +366,12 @@ protected:
     ~SetData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "set";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     SetData * copy() const override;
 
@@ -398,6 +434,12 @@ protected:
     ~AffectData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "set";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "affect";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     AffectData * copy() const override;
 
@@ -460,6 +502,12 @@ protected:
     ~HitData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "affect";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "hit";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     HitData * copy() const override;
 
@@ -514,6 +562,12 @@ protected:
     ~MoveData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "set";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "move";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     MoveData * copy() const override;
 
@@ -576,6 +630,12 @@ protected:
     ~WieldData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "set";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "wield";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     WieldData * copy() const override;
 
@@ -638,6 +698,12 @@ protected:
     ~GetData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "get";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     GetData * copy() const override;
 
@@ -700,6 +766,12 @@ protected:
     ~PerceiveData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "get";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "perceive";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     PerceiveData * copy() const override;
 
@@ -762,6 +834,12 @@ protected:
     ~LookData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perceive";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "look";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     LookData * copy() const override;
 
@@ -824,6 +902,12 @@ protected:
     ~ListenData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perceive";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "listen";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     ListenData * copy() const override;
 
@@ -886,6 +970,12 @@ protected:
     ~SniffData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perceive";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "sniff";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     SniffData * copy() const override;
 
@@ -948,6 +1038,12 @@ protected:
     ~TouchData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perceive";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "touch";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     TouchData * copy() const override;
 
@@ -1002,6 +1098,12 @@ protected:
     ~LoginData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "get";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "login";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     LoginData * copy() const override;
 
@@ -1056,6 +1158,12 @@ protected:
     ~LogoutData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "login";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "logout";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     LogoutData * copy() const override;
 
@@ -1118,6 +1226,12 @@ protected:
     ~ImaginaryData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "imaginary";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     ImaginaryData * copy() const override;
 
@@ -1180,6 +1294,12 @@ protected:
     ~UseData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "use";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     UseData * copy() const override;
 
@@ -1242,6 +1362,12 @@ protected:
     ~InfoData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "root_operation";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "info";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     InfoData * copy() const override;
 
@@ -1296,6 +1422,12 @@ protected:
     ~PerceptionData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "info";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "perception";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     PerceptionData * copy() const override;
 
@@ -1350,6 +1482,12 @@ protected:
     ~UnseenData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perception";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "unseen";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     UnseenData * copy() const override;
 
@@ -1404,6 +1542,12 @@ protected:
     ~SightData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perception";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "sight";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     SightData * copy() const override;
 
@@ -1458,6 +1602,12 @@ protected:
     ~AppearanceData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "sight";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "appearance";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     AppearanceData * copy() const override;
 
@@ -1512,6 +1662,12 @@ protected:
     ~DisappearanceData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "sight";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "disappearance";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     DisappearanceData * copy() const override;
 
@@ -1566,6 +1722,12 @@ protected:
     ~SoundData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perception";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "sound";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     SoundData * copy() const override;
 
@@ -1620,6 +1782,12 @@ protected:
     ~SmellData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perception";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "smell";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     SmellData * copy() const override;
 
@@ -1674,6 +1842,12 @@ protected:
     ~FeelData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "perception";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "feel";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     FeelData * copy() const override;
 
@@ -1736,6 +1910,12 @@ protected:
     ~ErrorData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "info";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "error";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     ErrorData * copy() const override;
 
@@ -1798,6 +1978,12 @@ protected:
     ~ChangeData() override = default;
 
 public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "info";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "change";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op_definition";
     /// Copy this object.
     ChangeData * copy() const override;
 
