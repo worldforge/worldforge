@@ -493,7 +493,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
 
             self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
         if obj.id=="root_operation":
-            self.write('#include <Atlas/Objects/objectFactory.h>\n\n')
+            self.write('#include <Atlas/Objects/Factories.h>\n\n')
         self.ns_open(self.base_list)
         if obj.parent is None:
             self.write('\ntemplate <class T> class SmartPtr;\n')

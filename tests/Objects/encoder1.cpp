@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include <Atlas/Objects/Factories.h>
 
 class RootDecoder : public Atlas::Message::DecoderBase
 {
@@ -21,6 +22,7 @@ protected:
 
 int main(int argc, char** argv)
 {
+	Atlas::Objects::Factories factories;
     std::string atlas_xml_path;
     char * srcdir_env = getenv("srcdir");
     if (srcdir_env != 0) {
@@ -29,7 +31,7 @@ int main(int argc, char** argv)
     }
     atlas_xml_path += "../../protocol/spec/atlas.xml";
     try {
-        Atlas::Objects::loadDefaults(atlas_xml_path);
+        Atlas::Objects::loadDefaults(atlas_xml_path, factories);
     } catch(const Atlas::Objects::DefaultLoadingException& e) {
         std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;

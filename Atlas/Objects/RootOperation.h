@@ -11,7 +11,7 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 
 namespace Atlas { namespace Objects { namespace Operation { 
 

@@ -46,7 +46,8 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/Decoder.cpp
         Atlas/Objects/Generic.cpp
         Atlas/Objects/loadDefaults.cpp
-        Atlas/Objects/objectFactory.cpp
+        Atlas/Objects/Factories_generated.cpp
+        Atlas/Objects/Factories.cpp
         Atlas/Objects/Root.cpp
         Atlas/Objects/RootEntity.cpp
         Atlas/Objects/RootEntityChildren.cpp
@@ -67,7 +68,7 @@ set(OBJECTS_HEADER_FILES
         Atlas/Objects/Entity.h
         Atlas/Objects/Generic.h
         Atlas/Objects/loadDefaults.h
-        Atlas/Objects/objectFactory.h
+        Atlas/Objects/Factories.h
         Atlas/Objects/ObjectsFwd.h
         Atlas/Objects/Operation.h
         Atlas/Objects/Root.h

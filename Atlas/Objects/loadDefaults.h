@@ -10,16 +10,17 @@
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Exception.h>
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
+namespace Objects {
 
-class DefaultLoadingException : public Atlas::Exception
-{
-  public:
+class DefaultLoadingException : public Atlas::Exception {
+public:
 	explicit DefaultLoadingException(const std::string& a_msg) noexcept :
-                Atlas::Exception(a_msg) {}
+			Atlas::Exception(a_msg) {}
 };
 
-void loadDefaults(const std::string& filename);
+void loadDefaults(const std::string& filename, const Factories& factories);
 
-} } // namespace Atlas::Objects
+}
+} // namespace Atlas::Objects
 #endif

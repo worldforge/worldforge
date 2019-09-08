@@ -49,7 +49,7 @@ bool BaseObjectData::hasAttrFlag(uint32_t flag) const
     return m_attrFlags & flag;
 }
 
-const Element BaseObjectData::getAttr(const std::string& name) const
+Element BaseObjectData::getAttr(const std::string& name) const
 
 {
     Element attr;

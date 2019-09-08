@@ -261,8 +261,7 @@ public:
     bool hasAttrFlag(uint32_t flag) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
-    const Atlas::Message::Element getAttr(const std::string& name)
-        const;
+    Atlas::Message::Element getAttr(const std::string& name) const;
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
     virtual int copyAttr(const std::string& name,
@@ -335,7 +334,7 @@ public:
 
                 operator Message::Element() const;
                 // this acts on const PsuedoElement instead of PsuedoElement
-                // so that we can assign to attributes refered to by
+                // so that we can assign to attributes referred to by
                 // a const iterator& (as opposed to a const_iterator, where
                 // we can't, but that's done later)
                 const PsuedoElement& operator=(const Message::Element& val) const;

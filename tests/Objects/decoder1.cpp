@@ -13,10 +13,9 @@ bool acct_arrived = false;
 bool anonymous_arrived = false;
 bool unknown_arrived = false;
 
-class TestDecoder : public Atlas::Objects::ObjectsDecoder
+struct TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
-protected:
-
+	explicit TestDecoder(Atlas::Objects::Factories& factories);
 	void objectArrived(const Atlas::Objects::Root& obj) override {
 
     	if (obj) {
@@ -43,8 +42,13 @@ protected:
 
 };
 
+TestDecoder::TestDecoder(Atlas::Objects::Factories& factories) : ObjectsDecoder(factories) {
+
+}
+
 int main(int argc, char** argv)
 {
+	Atlas::Objects::Factories factories;
     std::string atlas_xml_path;
     char * srcdir_env = getenv("srcdir");
     if (srcdir_env != 0) {
@@ -53,12 +57,12 @@ int main(int argc, char** argv)
     }
     atlas_xml_path += "../../protocol/spec/atlas.xml";
     try {
-        Atlas::Objects::loadDefaults(atlas_xml_path);
+        Atlas::Objects::loadDefaults(atlas_xml_path, factories);
     } catch(const Atlas::Objects::DefaultLoadingException& e) {
         std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
     }
-    TestDecoder t;
+    TestDecoder t(factories);
     t.streamBegin();
     t.streamMessage();
         t.mapStringItem("parent", "");

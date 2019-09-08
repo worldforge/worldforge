@@ -19,6 +19,8 @@ using Atlas::Message::ListType;
 int main(int argc, char** argv)
 {
 
+	Atlas::Objects::Factories factories;
+
     Atlas::Objects::Entity::Anonymous anon;
     anon->setLoc("12345");
     ListType velocity;
@@ -67,7 +69,7 @@ int main(int argc, char** argv)
     TIME_ON
     for (i = 0; i < 200000; i += 1) {
         MapType mapCopy(sight->asMessage());
-        Atlas::Objects::Factories::instance()->createObject(mapCopy);
+		factories.createObject(mapCopy);
     }
     TIME_OFF("createObject");
 

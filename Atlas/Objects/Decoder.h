@@ -10,10 +10,14 @@
 
 #include <Atlas/Message/DecoderBase.h>
 
-namespace Atlas { namespace Objects { 
+namespace Atlas {
+namespace Objects {
 
-template <class T> class SmartPtr;
+template<class T>
+class SmartPtr;
+
 class RootData;
+
 typedef SmartPtr<RootData> Root;
 
 class Factories;
@@ -28,28 +32,30 @@ class Factories;
  * @see Atlas::Objects::Encoder
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class ObjectsDecoder : public Atlas::Message::DecoderBase
-{
+class ObjectsDecoder : public Atlas::Message::DecoderBase {
 public:
-    /// Constructor.
-    explicit ObjectsDecoder(Factories * f = nullptr);
-    /// Default destructor.
-    ~ObjectsDecoder() override;
+	/// Constructor.
+	explicit ObjectsDecoder(const Factories& f);
 
-    /// Factories accessor
-    Factories * factories() const {
-        return m_factories;
-    }
+	/// Default destructor.
+	~ObjectsDecoder() override;
+
+	/// Factories accessor
+	const Factories* factories() const {
+		return &m_factories;
+	}
+
 protected:
-    /// Overridden by to retrieve the message from DecoderBase.
-    void messageArrived(Atlas::Message::MapType) override;
+	/// Overridden by to retrieve the message from DecoderBase.
+	void messageArrived(Atlas::Message::MapType) override;
 
-    /// call right object*Arrived method
-    virtual void objectArrived(const Root& obj) = 0;
+	/// call right object*Arrived method
+	virtual void objectArrived(const Root& obj) = 0;
 
-    Factories * m_factories;
+	const Factories& m_factories;
 };
 
-} } // namespace Atlas::Objects
+}
+} // namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_DECODER_H

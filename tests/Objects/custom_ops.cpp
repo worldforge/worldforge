@@ -76,7 +76,8 @@ void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string,
 
 int main(int argc, char ** argv)
 {
-    WIELD_NO = Atlas::Objects::Factories::instance()->addFactory("wield", &Atlas::Objects::factory<WieldData>, &Atlas::Objects::defaultInstance<WieldData>);
+	Atlas::Objects::Factories factories;
+    WIELD_NO = factories.addFactory("wield", &Atlas::Objects::factory<WieldData>, &Atlas::Objects::defaultInstance<WieldData>);
 
     Wield op;
 }

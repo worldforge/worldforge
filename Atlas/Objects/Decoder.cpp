@@ -6,25 +6,21 @@
 
 #include <Atlas/Objects/Decoder.h>
 
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 
-#include <Atlas/Objects/SmartPtr.h>
+namespace Atlas {
+namespace Objects {
 
-namespace Atlas { namespace Objects { 
-
-ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
-{
-    if (m_factories == nullptr) {
-        m_factories = Factories::instance();
-    }
+ObjectsDecoder::ObjectsDecoder(const Factories& f)
+		: m_factories(f) {
 }
 
 ObjectsDecoder::~ObjectsDecoder() = default;
 
-void ObjectsDecoder::messageArrived(Atlas::Message::MapType o)
-{
-    Root obj = m_factories->createObject(o);
-    objectArrived(obj);
+void ObjectsDecoder::messageArrived(Atlas::Message::MapType o) {
+	Root obj = m_factories.createObject(o);
+	objectArrived(obj);
 }
 
-} } // namespace Atlas::Objects
+}
+} // namespace Atlas::Objects

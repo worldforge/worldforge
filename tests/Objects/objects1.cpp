@@ -18,9 +18,10 @@ using Atlas::Message::ListType;
 
 int main(int argc, char** argv)
 {
+	Atlas::Objects::Factories factories;
     std::string atlas_xml_path;
     try {
-	    Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH);
+	    Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH, factories);
     } catch(const Atlas::Objects::DefaultLoadingException& e) {
 	std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
