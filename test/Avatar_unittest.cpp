@@ -44,9 +44,13 @@
 
 class TestConnection : public Eris::Connection {
   public:
-    TestConnection(boost::asio::io_service& io_service, Eris::EventService& eventService,
-            const std::string &cnm, const std::string& host, short port) :
-                Eris::Connection(io_service, eventService, cnm, host, port) {
+    TestConnection(boost::asio::io_service& io_service, 
+    		Eris::EventService& eventService,
+            const Atlas::Objects::Factories& factories,
+            const std::string &cnm,
+            const std::string& host,
+            short port) :
+                Eris::Connection(io_service, eventService, factories, cnm, host, port) {
     }
 
     virtual void send(const Atlas::Objects::Root &obj) {
@@ -122,6 +126,7 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 
 int main()
 {
+	Atlas::Objects::Factories factories;
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
@@ -129,7 +134,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -142,7 +147,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
@@ -157,7 +162,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -172,7 +177,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -191,7 +196,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -211,7 +216,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -231,7 +236,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -253,7 +258,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -275,7 +280,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -297,7 +302,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -319,7 +324,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -337,7 +342,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -358,7 +363,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -381,7 +386,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -400,7 +405,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -418,7 +423,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -438,7 +443,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -458,7 +463,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -478,7 +483,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -500,7 +505,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -520,7 +525,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -542,7 +547,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -565,7 +570,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -587,7 +592,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -611,7 +616,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -631,7 +636,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -653,7 +658,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -675,7 +680,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -696,7 +701,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -717,7 +722,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -732,7 +737,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -747,7 +752,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -762,7 +767,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -783,7 +788,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -804,7 +809,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -827,7 +832,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -850,7 +855,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         Eris::Account * acc = new TestAccount(con);
@@ -875,7 +880,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
@@ -904,7 +909,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);
@@ -928,7 +933,7 @@ int main()
     {
         boost::asio::io_service io_service;
         Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
+        Eris::Connection * con = new TestConnection(io_service, event_service, factories, "name",
                 "localhost", 6767);
 
         TestAccount * acc = new TestAccount(con);

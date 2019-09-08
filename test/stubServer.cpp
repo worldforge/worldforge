@@ -12,7 +12,7 @@
 #include <Atlas/Objects/Operation.h>
 #include "commander.h"
 #include <wfmath/point.h>
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 
 #include <cstdlib>
 #include <cstdio>

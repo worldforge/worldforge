@@ -26,7 +26,7 @@
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 
 using namespace boost::asio;
 

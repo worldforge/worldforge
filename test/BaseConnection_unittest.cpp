@@ -33,7 +33,7 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Message/QueuedDecoder.h>
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 #include <Atlas/Objects/Encoder.h>
 
 #include <iostream>
@@ -56,7 +56,9 @@ class TestBaseConnection : public Eris::BaseConnection {
     bool failure;
     bool timeout;
 
-    TestBaseConnection(boost::asio::io_service& io_service, Atlas::Bridge * b) : Eris::BaseConnection(io_service, "test", "1", *b), failure(false), timeout(false) { }
+    TestBaseConnection(boost::asio::io_service& io_service, Atlas::Bridge * b) : Eris::BaseConnection(io_service, "test", "1"), failure(false), timeout(false) {
+    	_bridge = b;
+    }
 
     virtual void handleFailure(const std::string & msg) {
         failure = true;
@@ -92,7 +94,7 @@ class TestBaseConnection : public Eris::BaseConnection {
 
     void setup_socket() {
         Eris::StreamSocket::Callbacks callbacks;
-        _socket.reset(new TestStreamClientSocketBase(_io_service, "", _bridge, callbacks));
+        _socket.reset(new TestStreamClientSocketBase(_io_service, "", *_bridge, callbacks));
     }
 
 };

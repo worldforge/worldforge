@@ -31,91 +31,89 @@
 int connection_count = 0;
 bool done = false;
 
-static void usage(const char * prgname)
-{
-    std::cout << "usage: " << prgname << " [-p port ] [-nv] host [port]"
-              << std::endl << std::flush;
+static void usage(const char* prgname) {
+	std::cout << "usage: " << prgname << " [-p port ] [-nv] host [port]"
+			  << std::endl << std::flush;
 }
 
-static void erisLog(Eris::LogLevel level, const std::string & msg)
-{
-    std::cout << "LOG: " << msg << std::endl << std::flush;
+static void erisLog(Eris::LogLevel level, const std::string& msg) {
+	std::cout << "LOG: " << msg << std::endl << std::flush;
 }
 
-static void onConnected(Eris::Connection * c)
-{
-    std::cout << "connected to server" << std::endl;
-    if (--connection_count == 0) {
-        done = true;
-    }
+static void onConnected(Eris::Connection* c) {
+	std::cout << "connected to server" << std::endl;
+	if (--connection_count == 0) {
+		done = true;
+	}
 }
 
-static void onConnectionFail(const std::string& errMsg)
-{
-    std::cout << "failed to connect to server: " << errMsg << std::endl;
-    if (--connection_count == 0) {
-        done = true;
-    }
+static void onConnectionFail(const std::string& errMsg) {
+	std::cout << "failed to connect to server: " << errMsg << std::endl;
+	if (--connection_count == 0) {
+		done = true;
+	}
 }
 
-int main(int argc, char ** argv)
-{
-    bool option_verbose = false;
-    bool option_nonblock = false;
-    int option_port = 6767;
+int main(int argc, char** argv) {
+	Atlas::Objects::Factories factories;
+	bool option_verbose = false;
+	bool option_nonblock = false;
+	int option_port = 6767;
 
-    while (1) {
-        int c = getopt(argc, argv, "np:v");
-        if (c == -1) {
-            break;
-        } else if (c == '?') {
-            usage(argv[0]);
-            return 1;
-        } else if (c == 'v') {
-            option_verbose = true;
-        } else if (c == 'n') {
-            option_nonblock = true;
-        } else if (c == 'p') {
-            option_port = strtol(optarg, 0, 10);
-        }
-    }
+	while (1) {
+		int c = getopt(argc, argv, "np:v");
+		if (c == -1) {
+			break;
+		} else if (c == '?') {
+			usage(argv[0]);
+			return 1;
+		} else if (c == 'v') {
+			option_verbose = true;
+		} else if (c == 'n') {
+			option_nonblock = true;
+		} else if (c == 'p') {
+			option_port = strtol(optarg, 0, 10);
+		}
+	}
 
-    if (option_verbose && option_nonblock) {
-        std::cerr << "Connecting non blocking"
-                  << std::endl << std::flush;
-    }
+	if (option_verbose && option_nonblock) {
+		std::cerr << "Connecting non blocking"
+				  << std::endl << std::flush;
+	}
 
-    int arg_left = argc - optind;
+	int arg_left = argc - optind;
 
-    if (arg_left < 1) {
-        usage(argv[0]);
-        return 1;
-    }
+	if (arg_left < 1) {
+		usage(argv[0]);
+		return 1;
+	}
 
-    Eris::Session session;
-    boost::asio::io_service& io_service = session.getIoService();
+	Eris::Session session;
+	boost::asio::io_service& io_service = session.getIoService();
 
-    Eris::Logged.connect(sigc::ptr_fun(erisLog));
-    Eris::setLogLevel(Eris::LOG_DEBUG);
+	Eris::Logged.connect(sigc::ptr_fun(erisLog));
+	Eris::setLogLevel(Eris::LOG_DEBUG);
 
-    for (int i = optind; i < argc; ++i) {
-        Eris::Connection * c = new Eris::Connection(io_service, session.getEventService(), "test",
-                                                    argv[i],
-                                                    option_port);
+	for (int i = optind; i < argc; ++i) {
+		Eris::Connection* c = new Eris::Connection(io_service, session.getEventService(),
+												   factories,
+												   "test",
+												   argv[i],
+												   option_port);
 
-        c->Connected.connect(sigc::bind(sigc::ptr_fun(onConnected), c));
-        c->Failure.connect(sigc::ptr_fun(onConnectionFail));
+		c->Connected.connect(sigc::bind(sigc::ptr_fun(onConnected), c));
+		c->Failure.connect(sigc::ptr_fun(onConnectionFail));
 
-        std::cout << "Calling connect" << std::endl;
-        c->connect();
-        ++connection_count;
-    }
+		std::cout << "Calling connect" << std::endl;
+		c->connect();
+		++connection_count;
+	}
 
-    while (!done) {
-        std::cout << "Calling poll" << std::endl;
+	while (!done) {
+		std::cout << "Calling poll" << std::endl;
 //        Eris::PollDefault::poll(100);
-        std::cout << "Called poll" << std::endl;
-    }
+		std::cout << "Called poll" << std::endl;
+	}
 
-    return 0;
+	return 0;
 }

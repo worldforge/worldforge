@@ -30,36 +30,37 @@
 #include <Eris/EventService.h>
 
 
-int main()
-{
-    // Constructor with bad args throws
-    {
-        try {
-            new Eris::Account(0);
-            return 1;
-        }
-        catch (const Eris::InvalidOperation& io) {
-        }
-    }
 
-    // Constructor
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService eventService(io_service);
-        Eris::Connection * c = new Eris::Connection(io_service, eventService, "", "", 0);
-        new Eris::Account(c);
-    }
+int main() {
+	Atlas::Objects::Factories factories;
+	// Constructor with bad args throws
+	{
+		try {
+			new Eris::Account(0);
+			return 1;
+		}
+		catch (const Eris::InvalidOperation& io) {
+		}
+	}
 
-    // Destructor
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService eventService(io_service);
-        Eris::Connection * c = new Eris::Connection(io_service, eventService, "", "", 0);
-        Eris::Account * ac = new Eris::Account(c);
-        delete ac;
-    }
+	// Constructor
+	{
+		boost::asio::io_service io_service;
+		Eris::EventService eventService(io_service);
+		Eris::Connection* c = new Eris::Connection(io_service, eventService, factories, "", "", 0);
+		new Eris::Account(c);
+	}
 
-    return 0;
+	// Destructor
+	{
+		boost::asio::io_service io_service;
+		Eris::EventService eventService(io_service);
+		Eris::Connection* c = new Eris::Connection(io_service, eventService, factories, "", "", 0);
+		Eris::Account* ac = new Eris::Account(c);
+		delete ac;
+	}
+
+	return 0;
 }
 
 // stubs
@@ -80,197 +81,80 @@ using Atlas::Objects::Root;
 
 namespace Eris {
 
-Router::~Router()
-{
+struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
+	Connection& m_connection;
+
+	ConnectionDecoder(Connection& connection, const Atlas::Objects::Factories& factories) :
+			ObjectsDecoder(factories), m_connection(connection) {
+	}
+
+	void objectArrived(const Atlas::Objects::Root& obj) override {
+		m_connection.objectArrived(obj);
+	}
+};
+
+Router::~Router() {
 }
 
-Router::RouterResult Router::handleObject(const Root& obj)
-{
-    return IGNORED;
+Router::RouterResult Router::handleObject(const Root& obj) {
+	return IGNORED;
 }
 
-Router::RouterResult Router::handleOperation(const RootOperation& )
-{
-    return IGNORED;
+Router::RouterResult Router::handleOperation(const RootOperation&) {
+	return IGNORED;
 }
 
-Router::RouterResult Router::handleEntity(const RootEntity& )
-{
-    return IGNORED;
+Router::RouterResult Router::handleEntity(const RootEntity&) {
+	return IGNORED;
 }
 
 Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
-    m_account(pl),
-    m_mindId(mindId),
-    m_entityId(entityId),
-    m_entity(nullptr),
-    m_lastOpTime(0.0),
-    m_isAdmin(false)
-{
+		m_account(pl),
+		m_mindId(mindId),
+		m_entityId(entityId),
+		m_entity(nullptr),
+		m_lastOpTime(0.0),
+		m_isAdmin(false) {
 }
 
-Avatar::~Avatar()
-{
+Avatar::~Avatar() {
 }
 
-void Avatar::deactivate()
-{
+void Avatar::deactivate() {
 }
 
-void Avatar::onTransferRequested(const TransferInfo &transfer)
-{
-}
-
-BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
-    std::string id,
-    Atlas::Bridge& br) : _io_service(io_service), _bridge(br)
-{
-}
-
-BaseConnection::~BaseConnection()
-{
-}
-
-int BaseConnection::connectRemote(const std::string &host, short port)
-{
-    return 0;
-}
-
-int BaseConnection::connectLocal(const std::string &socket)
-{
-    return 0;
-}
-
-void BaseConnection::setStatus(Status sc)
-{
-}
-
-void BaseConnection::onConnect()
-{
-}
-
-Connection::Connection(boost::asio::io_service& io_service, Eris::EventService& event_service, const std::string &cnm, const std::string& host, short port) :
-    BaseConnection(io_service, cnm, "game_", *this), _eventService(event_service), _port(port)
-{
-}
-
-Connection::~Connection()
-{
-}
-
-void Connection::dispatch()
-{
-
-}
-
-void Connection::setStatus(Status ns)
-{
-}
-
-void Connection::handleFailure(const std::string &msg)
-{
-}
-
-void Connection::handleTimeout(const std::string& msg)
-{
-}
-
-void Connection::objectArrived(const Root& obj)
-{
-}
-
-void Connection::onConnect()
-{
-}
-
-void Connection::setDefaultRouter(Router* router)
-{
-}
-
-void Connection::clearDefaultRouter()
-{
-}
-
-void Connection::registerRouterForTo(Router* router, const std::string& toId)
-{
-}
-
-void Connection::unregisterRouterForTo(Router* router, const std::string& toId)
-{
-}
-
-void Connection::lock()
-{
-}
-
-void Connection::unlock()
-{
-}
-
-EventService& Connection::getEventService()
-{
-    return _eventService;
-}
-
-void Connection::send(const Atlas::Objects::Root &obj)
-{
+void Avatar::onTransferRequested(const TransferInfo& transfer) {
 }
 
 CharacterType::CharacterType(std::string name,
-                             std::string description)
-: m_name(name), m_description(description)
-{
-}
-
-ServerInfo::ServerInfo()
-{
+							 std::string description)
+		: m_name(name), m_description(description) {
 }
 
 SpawnPoint::SpawnPoint(std::string name,
-        CharacterTypeStore availableCharacterTypes,
-        std::string description) :
-    m_name(name), m_availableCharacterTypes(availableCharacterTypes),
-            m_description(description)
-{
+					   CharacterTypeStore availableCharacterTypes,
+					   std::string description) :
+		m_name(name), m_availableCharacterTypes(availableCharacterTypes),
+		m_description(description) {
 }
 
-SpawnPoint::~SpawnPoint()
-{
+SpawnPoint::~SpawnPoint() {
 }
 
-const std::string& SpawnPoint::getName() const
-{
-    return m_name;
+const std::string& SpawnPoint::getName() const {
+	return m_name;
 }
 
-TimedEvent::TimedEvent(EventService& eventService, const boost::posix_time::time_duration& duration, const std::function<void()>& callback)
-{
+TimedEvent::TimedEvent(EventService& eventService, const boost::posix_time::time_duration& duration, const std::function<void()>& callback) {
 }
 
-TimedEvent::~TimedEvent()
-{
+TimedEvent::~TimedEvent() {
 }
 
 EventService::EventService(boost::asio::io_service& io_service)
-: m_io_service(io_service)
-{}
+		: m_io_service(io_service) {}
 
-EventService::~EventService()
-{
-}
-
-void doLog(LogLevel lvl, const std::string& msg)
-{
-}
-
-
-long getNewSerialno()
-{
-    static long _nextSerial = 1001;
-    // note this will eventually loop (in theorey), but that's okay
-    // FIXME - using the same intial starting offset is problematic
-    // if the client dies, and quickly reconnects
-    return _nextSerial++;
+EventService::~EventService() {
 }
 
 } // namespace Eris

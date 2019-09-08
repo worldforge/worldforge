@@ -19,14 +19,19 @@ using WFMath::TimeStamp;
 
 namespace Eris {
 
-MetaQuery::MetaQuery(boost::asio::io_service& io_service, Meta& ms, const std::string& host, size_t sindex) :
-		BaseConnection(io_service, "eris-metaquery", host, ms),
-		_meta(ms),
+MetaQuery::MetaQuery(boost::asio::io_service& io_service,
+					 Atlas::Bridge& bridge,
+					 Meta& meta,
+					 const std::string& host,
+					 size_t sindex) :
+		BaseConnection(io_service, "eris-metaquery", host),
+		_meta(meta),
 		_queryNo(0),
 		m_serverIndex(sindex),
 		m_complete(false),
 		m_completeTimer(io_service) {
 	connectRemote(host, 6767);
+	_bridge = &bridge;
 }
 
 // clean up is all done by the Base Connection

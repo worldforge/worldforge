@@ -46,17 +46,16 @@ static const std::string TEST_INVALID_IP("327.0.0.1");
 //    test_failure_flag = true;
 //}
 
-int main()
-{
-    boost::asio::io_service io_service;
-    Eris::EventService event_service(io_service);
-    {
-        Meta * m = new Meta(io_service, event_service, TEST_METASERVER, 20);
+int main() {
+	boost::asio::io_service io_service;
+	Eris::EventService event_service(io_service);
+	{
+		Meta* m = new Meta(io_service, event_service, TEST_METASERVER, 20);
 
-        assert(m->getGameServerCount() == 0);
+		assert(m->getGameServerCount() == 0);
 
-        delete m;
-    }
+		delete m;
+	}
 
 //    // Test refreshing with normal configuration
 //    {
@@ -73,7 +72,7 @@ int main()
 //        delete m;
 //    }
 
-    // Test refreshing with non-parsable IP fails
+	// Test refreshing with non-parsable IP fails
 //    {
 //        Meta * m = new Meta(io_service, TEST_INVALID_IP, 20);
 //
@@ -88,7 +87,7 @@ int main()
 //        delete m;
 //    }
 
-    // Test refreshing with normal configuration, refreshing twice
+	// Test refreshing with normal configuration, refreshing twice
 //    {
 //        Meta * m = new Meta(io_service, TEST_METASERVER, 20);
 //
@@ -108,7 +107,7 @@ int main()
 //        delete m;
 //    }
 
-    // Test hitting poll does nothing before refresh
+	// Test hitting poll does nothing before refresh
 //    {
 //        Meta * m = new Meta(io_service, TEST_METASERVER, 20);
 //
@@ -127,27 +126,27 @@ int main()
 //    }
 
 #if 0
-    // Test poll works
-    {
-        Meta * m = new Meta(io_service, event_service, TEST_METASERVER, 20);
+	// Test poll works
+	{
+		Meta * m = new Meta(io_service, event_service, TEST_METASERVER, 20);
 
-        test_failure_flag = false;
+		test_failure_flag = false;
 
-        TestPollData test_data;
-        assert(!test_data.ready_called);
+		TestPollData test_data;
+		assert(!test_data.ready_called);
 
-        m->refresh();
-        Eris::Poll::instance().Ready.emit(test_data);
+		m->refresh();
+		Eris::Poll::instance().Ready.emit(test_data);
 
-        assert(!test_failure_flag);
-        assert(test_data.ready_called);
-        assert(m->getStatus() == Meta::INVALID);
+		assert(!test_failure_flag);
+		assert(test_data.ready_called);
+		assert(m->getStatus() == Meta::INVALID);
 
-        delete m;
-    }
+		delete m;
+	}
 #endif
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -156,113 +155,94 @@ int main()
 #include <Eris/LogStream.h>
 #include <Eris/MetaQuery.h>
 
-namespace Eris
-{
+namespace Eris {
 
-MetaQuery::MetaQuery(boost::asio::io_service& io_service,  Meta& ms, const std::string &host, size_t sindex) :
-    BaseConnection(io_service, "eris-metaquery", host, ms),
-    _meta(ms),
-    _queryNo(0),
-    m_serverIndex(sindex),
-    m_complete(false),
-    m_completeTimer(io_service)
-{
-
+MetaQuery::MetaQuery(boost::asio::io_service& io_service,
+					 Atlas::Bridge& bridge,
+					 Meta& meta,
+					 const std::string& host,
+					 size_t sindex) :
+		BaseConnection(io_service, "eris-metaquery", host),
+		_meta(meta),
+		_queryNo(0),
+		m_serverIndex(sindex),
+		m_complete(false),
+		m_completeTimer(io_service) {
+	_bridge = &bridge;
 }
 
-MetaQuery::~MetaQuery()
-{
+MetaQuery::~MetaQuery() {
 }
 
-void MetaQuery::dispatch()
-{
+void MetaQuery::dispatch() {
 }
 
-void MetaQuery::setComplete()
-{
+void MetaQuery::setComplete() {
 }
 
-void MetaQuery::onConnect()
-{
+void MetaQuery::onConnect() {
 }
 
-void MetaQuery::handleFailure(const std::string &msg)
-{
+void MetaQuery::handleFailure(const std::string& msg) {
 }
 
-void MetaQuery::handleTimeout(const std::string&)
-{
+void MetaQuery::handleTimeout(const std::string&) {
 }
 
-long MetaQuery::getElapsed()
-{
-    return 0L;
+long MetaQuery::getElapsed() {
+	return 0L;
 }
 
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
-    std::string id,
-    Atlas::Bridge &br) :
-            _io_service(io_service),
-    _status(DISCONNECTED),
-    _id(id),
-    _clientName(cnm),
-    _bridge(br),
-    _host(""),
-    _port(0)
-{
+							   std::string id) :
+		_io_service(io_service),
+		_status(DISCONNECTED),
+		_id(id),
+		_clientName(cnm),
+		_bridge(nullptr),
+		_host(""),
+		_port(0) {
 }
 
-BaseConnection::~BaseConnection()
-{
+BaseConnection::~BaseConnection() {
 }
 
-int BaseConnection::connectRemote(const std::string &host, short port)
-{
-    return 0;
+int BaseConnection::connectRemote(const std::string& host, short port) {
+	return 0;
 }
 
-int BaseConnection::connectLocal(const std::string &socket)
-{
-    return 0;
+int BaseConnection::connectLocal(const std::string& socket) {
+	return 0;
 }
 
-void BaseConnection::onConnect()
-{
+void BaseConnection::onConnect() {
 }
 
-void BaseConnection::setStatus(Status sc)
-{
+void BaseConnection::setStatus(Status sc) {
 }
 
 ServerInfo::ServerInfo(std::string host) :
-    m_status(INVALID),
-    _host(host)
-{
+		m_status(INVALID),
+		_host(host) {
 }
 
-void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity &svr)
-{
+void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity& svr) {
 }
 
-void ServerInfo::setPing(int p)
-{
+void ServerInfo::setPing(int p) {
 }
 
 EventService::EventService(boost::asio::io_service& io_service)
-: m_io_service(io_service)
-{}
+		: m_io_service(io_service) {}
 
-EventService::~EventService()
-{
+EventService::~EventService() {
 }
 
-void EventService::runOnMainThread(std::function<void ()> const&,
-                                   std::shared_ptr<bool> activeMarker)
-{
+void EventService::runOnMainThread(std::function<void()> const&,
+								   std::shared_ptr<bool> activeMarker) {
 }
 
-void doLog(LogLevel lvl, const std::string& msg)
-{
+void doLog(LogLevel lvl, const std::string& msg) {
 }
 
 }

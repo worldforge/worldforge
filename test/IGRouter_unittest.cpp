@@ -45,406 +45,414 @@ static bool stub_type_bound = false;
 
 static sigc::signal<void> _test_avatar_logoutRequested;
 static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
+Atlas::Objects::Factories factories;
 
-class TestAvatar : public Eris::Avatar
-{
-  public:
-    TestAvatar(boost::asio::io_service& io_service, Eris::EventService& eventService) :
-          Eris::Avatar(*new Eris::Account(new Eris::Connection(io_service, eventService, "", "", 0)), "", "") { }
+class TestAvatar : public Eris::Avatar {
+public:
+	TestAvatar(boost::asio::io_service& io_service, Eris::EventService& eventService) :
+			Eris::Avatar(
+					*new Eris::Account(
+							new Eris::Connection(io_service,
+												 eventService,
+												 factories,
+												 "",
+												 "",
+												 0)
+					),
+					"",
+					"") {}
 };
 
-class TestIGRouter : public Eris::IGRouter
-{
-  public:
-    TestIGRouter(Eris::Avatar * av) : Eris::IGRouter(av, av->getView()) { }
+class TestIGRouter : public Eris::IGRouter {
+public:
+	TestIGRouter(Eris::Avatar* av) : Eris::IGRouter(av, av->getView()) {}
 
-    RouterResult test_handleOperation(const RootOperation& op) {
-        return this->handleOperation(op);
-    }
+	RouterResult test_handleOperation(const RootOperation& op) {
+		return this->handleOperation(op);
+	}
 };
 
-int main()
-{
-    boost::asio::io_service io_service;
-    Eris::EventService event_service(io_service);
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        new Eris::IGRouter(av, av->getView());
-    }
+int main() {
+	boost::asio::io_service io_service;
+	Eris::EventService event_service(io_service);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		new Eris::IGRouter(av, av->getView());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        Eris::IGRouter * ir = new Eris::IGRouter(av, av->getView());
-        delete ir;
-    }
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		Eris::IGRouter* ir = new Eris::IGRouter(av, av->getView());
+		delete ir;
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        RootOperation op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::IGNORED);
-    }
+		RootOperation op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::IGNORED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        RootOperation op;
-        op->setSeconds(0);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::IGNORED);
-    }
+		RootOperation op;
+		op->setSeconds(0);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::IGNORED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Sight op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::IGNORED);
-    }
+		Atlas::Objects::Operation::Sight op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::IGNORED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Sight op;
-        op->setArgs1(Root());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Sight op;
+		op->setArgs1(Root());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Sight op;
-        op->setArgs1(RootEntity());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Sight op;
+		op->setArgs1(RootEntity());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        stub_type_bound = true;
+		stub_type_bound = true;
 
-        Atlas::Objects::Operation::Sight op;
-        op->setArgs1(RootEntity());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
+		Atlas::Objects::Operation::Sight op;
+		op->setArgs1(RootEntity());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
 
-        stub_type_bound = false;
-    }
+		stub_type_bound = false;
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Sight op;
-        op->setArgs1(RootOperation());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Sight op;
+		op->setArgs1(RootOperation());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Appearance op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Appearance op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Disappearance op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Disappearance op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Unseen op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::IGNORED);
-    }
+		Atlas::Objects::Operation::Unseen op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::IGNORED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        Atlas::Objects::Operation::Unseen op;
-        op->setArgs1(Root());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-    }
+		Atlas::Objects::Operation::Unseen op;
+		op->setArgs1(Root());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        op->setArgs1(Root());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		op->setArgs1(Root());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        op->modifyArgs().push_back(Root());
-        op->modifyArgs().push_back(Root());
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		op->modifyArgs().push_back(Root());
+		op->modifyArgs().push_back(Root());
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", 1);
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-   }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", 1);
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", "");
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", "");
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        arg2->setAttr("possess_key", 0x139);
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		arg2->setAttr("possess_key", 0x139);
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
-        arg2->setAttr("possess_entity_id", 0xa56);
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(!transferRequested.flagged());
-        assert(logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+		arg2->setAttr("possess_entity_id", 0xa56);
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(!transferRequested.flagged());
+		assert(logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
-        arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(transferRequested.flagged());
-        assert(!logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+		arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(transferRequested.flagged());
+		assert(!logoutRequested.flagged());
+	}
 
-    {
-        TestAvatar * av = new TestAvatar(io_service, event_service);
-        TestIGRouter * ir = new TestIGRouter(av);
+	{
+		TestAvatar* av = new TestAvatar(io_service, event_service);
+		TestIGRouter* ir = new TestIGRouter(av);
 
-        SignalFlagger transferRequested;
-        SignalFlagger logoutRequested;
-        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
-        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+		SignalFlagger transferRequested;
+		SignalFlagger logoutRequested;
+		_test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+		_test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
-        Atlas::Objects::Operation::Logout op;
-        Root arg1;
-        Root arg2;
-        Root arg3;
-        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
-        arg2->setAttr("teleport_port", 0xebc);
-        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
-        arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
-        op->modifyArgs().push_back(arg1);
-        op->modifyArgs().push_back(arg2);
-        op->modifyArgs().push_back(arg3);
-        Eris::Router::RouterResult r = ir->test_handleOperation(op);
-        assert(r == Eris::Router::HANDLED);
-        assert(transferRequested.flagged());
-        assert(!logoutRequested.flagged());
-    }
+		Atlas::Objects::Operation::Logout op;
+		Root arg1;
+		Root arg2;
+		Root arg3;
+		arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+		arg2->setAttr("teleport_port", 0xebc);
+		arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+		arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
+		op->modifyArgs().push_back(arg1);
+		op->modifyArgs().push_back(arg2);
+		op->modifyArgs().push_back(arg3);
+		Eris::Router::RouterResult r = ir->test_handleOperation(op);
+		assert(r == Eris::Router::HANDLED);
+		assert(transferRequested.flagged());
+		assert(!logoutRequested.flagged());
+	}
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -464,295 +472,258 @@ int main()
 
 namespace Eris {
 
-Account::Account(Connection *con) :
-    m_con(con),
-    m_status(DISCONNECTED),
-    m_doingCharacterRefresh(false)
-{
+Account::Account(Connection* con) :
+		m_con(con),
+		m_status(DISCONNECTED),
+		m_doingCharacterRefresh(false) {
 }
 
-Account::~Account()
-{
+Account::~Account() {
 }
 
-void Account::updateFromObject(const Atlas::Objects::Entity::Account &p)
-{
+void Account::updateFromObject(const Atlas::Objects::Entity::Account& p) {
 }
 
 Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
-    m_account(pl),
-    m_mindId(mindId),
-    m_entityId(entId),
-    m_entity(nullptr),
-    m_lastOpTime(0.0),
-    m_isAdmin(false)
-{
+		m_account(pl),
+		m_mindId(mindId),
+		m_entityId(entId),
+		m_entity(nullptr),
+		m_lastOpTime(0.0),
+		m_isAdmin(false) {
 }
 
-Avatar::~Avatar()
-{
+Avatar::~Avatar() {
 }
 
-void Avatar::onTransferRequested(const TransferInfo &transfer)
-{
+void Avatar::onTransferRequested(const TransferInfo& transfer) {
 }
 
-Connection* Avatar::getConnection() const
-{
-    return m_account.getConnection();
+Connection* Avatar::getConnection() const {
+	return m_account.getConnection();
 }
 
-void Avatar::logoutRequested()
-{
-    _test_avatar_logoutRequested();
+void Avatar::logoutRequested() {
+	_test_avatar_logoutRequested();
 }
 
-void Avatar::logoutRequested(const TransferInfo& transferInfo)
-{
-    _test_avatar_logoutWithTransferRequested();
+void Avatar::logoutRequested(const TransferInfo& transferInfo) {
+	_test_avatar_logoutWithTransferRequested();
 }
 
-void Avatar::updateWorldTime(double seconds)
-{
+void Avatar::updateWorldTime(double seconds) {
 }
 
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
-    std::string id,
-    Atlas::Bridge &br) :
-            _io_service(io_service),
-    _status(DISCONNECTED),
-    _id(id),
-    _clientName(cnm),
-    _bridge(br),
-    _host(""),
-    _port(0)
-{
+							   std::string id) :
+		_io_service(io_service),
+		_status(DISCONNECTED),
+		_id(id),
+		_clientName(cnm),
+		_bridge(nullptr),
+		_host(""),
+		_port(0) {
 }
 
-BaseConnection::~BaseConnection()
-{
+BaseConnection::~BaseConnection() {
 }
 
-int BaseConnection::connectRemote(const std::string &host, short port)
-{
-    return 0;
+int BaseConnection::connectRemote(const std::string& host, short port) {
+	return 0;
 }
 
-int BaseConnection::connectLocal(const std::string &socket)
-{
-    return 0;
+int BaseConnection::connectLocal(const std::string& socket) {
+	return 0;
 }
 
-void BaseConnection::onConnect()
-{
+void BaseConnection::onConnect() {
 }
 
-void BaseConnection::setStatus(Status sc)
-{
+void BaseConnection::setStatus(Status sc) {
 }
 
-Connection::Connection(boost::asio::io_service& io_service, Eris::EventService& event_service, const std::string &cnm, const std::string& host, short port) :
-    BaseConnection(io_service, cnm, "game_", *this),
-    _eventService(event_service),
-    _host(host),
-    _port(port),
-    m_typeService(new TypeService(this)),
-    m_defaultRouter(nullptr),
-    m_lock(0),
-    m_info(host),
-    m_responder(nullptr)
-{
+struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
+	Connection& m_connection;
+
+	ConnectionDecoder(Connection& connection, const Atlas::Objects::Factories& factories) :
+			ObjectsDecoder(factories), m_connection(connection) {
+	}
+
+	void objectArrived(const Atlas::Objects::Root& obj) override {
+		m_connection.objectArrived(obj);
+	}
+};
+
+
+Connection::Connection(boost::asio::io_service& io_service,
+		Eris::EventService& event_service,
+		const Atlas::Objects::Factories& factories,
+		std::string cnm,
+		const std::string& host,
+		short port) :
+		BaseConnection(io_service, cnm, "game_"),
+		m_decoder(new ConnectionDecoder(*this, factories)),
+		_eventService(event_service),
+		_host(host),
+		_port(port),
+		m_typeService(new TypeService(this)),
+		m_defaultRouter(nullptr),
+		m_lock(0),
+		m_info(host),
+		m_responder(nullptr),
+		m_factories(factories){
+	_bridge = m_decoder.get();
 }
 
-Connection::~Connection()
-{
+Connection::~Connection() {
 }
 
-void Connection::objectArrived(const Root& obj)
-{
+void Connection::objectArrived(const Root& obj) {
 }
 
-void Connection::send(const Atlas::Objects::Root &obj)
-{
+void Connection::send(const Atlas::Objects::Root& obj) {
 }
 
-void Connection::setStatus(Status ns)
-{
+void Connection::setStatus(Status ns) {
 }
 
-void Connection::handleFailure(const std::string &msg)
-{
+void Connection::handleFailure(const std::string& msg) {
 }
 
-void Connection::handleTimeout(const std::string& msg)
-{
+void Connection::handleTimeout(const std::string& msg) {
 }
 
-void Connection::dispatch()
-{
+void Connection::dispatch() {
 }
 
-void Connection::onConnect()
-{
+void Connection::onConnect() {
 }
 
-void Connection::registerRouterForTo(Router* router, const std::string& toId)
-{
+void Connection::registerRouterForTo(Router* router, const std::string& toId) {
 }
 
-void Connection::unregisterRouterForTo(Router* router, const std::string& fromId)
-{
+void Connection::unregisterRouterForTo(Router* router, const std::string& fromId) {
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes)
-{       
+void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes) {
 }
 
-TypeService::TypeService(Connection *con) : 
-    m_con(con),
-    m_inited(false)
-{
+TypeService::TypeService(Connection* con) :
+		m_con(con),
+		m_inited(false) {
 }
 
-TypeService::~TypeService()
-{
+TypeService::~TypeService() {
 }
 
-TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
-{
-    Eris::TypeInfo * ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
-    if (stub_type_bound) {
-        ti->validateBind();
-    }
-    return ti;
+TypeInfoPtr TypeService::getTypeForAtlas(const Root& obj) {
+	Eris::TypeInfo* ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
+	if (stub_type_bound) {
+		ti->validateBind();
+	}
+	return ti;
 }
 
-TypeInfoPtr TypeService::getTypeByName(const std::string &id)
-{
-    return 0;
+TypeInfoPtr TypeService::getTypeByName(const std::string& id) {
+	return 0;
 }
 
-void TypeInfo::validateBind()
-{
-    m_bound = true;
+void TypeInfo::validateBind() {
+	m_bound = true;
 }
 
-void View::create(const RootEntity& gent)
-{
+void View::create(const RootEntity& gent) {
 }
 
-void View::deleteEntity(const std::string& eid)
-{
+void View::deleteEntity(const std::string& eid) {
 }
 
-Entity* View::getEntity(const std::string& eid) const
-{
-    return 0;
+Entity* View::getEntity(const std::string& eid) const {
+	return 0;
 }
 
-bool View::isPending(const std::string& eid) const
-{
-    return false;
+bool View::isPending(const std::string& eid) const {
+	return false;
 }
 
-void View::appear(const std::string& eid, float stamp)
-{
+void View::appear(const std::string& eid, float stamp) {
 }
 
-void View::disappear(const std::string& eid)
-{
+void View::disappear(const std::string& eid) {
 }
 
-void View::sight(const RootEntity& gent)
-{
+void View::sight(const RootEntity& gent) {
 }
 
-void View::unseen(const std::string& eid)
-{
+void View::unseen(const std::string& eid) {
 }
 
 TransferInfo::TransferInfo(std::string host, int port,
-                            std::string key, std::string id)
-                               : m_host(host),
-                                m_port(port),
-                                m_possess_key(key),
-                                m_possess_entity_id(id)
-{
+						   std::string key, std::string id)
+		: m_host(host),
+		  m_port(port),
+		  m_possess_key(key),
+		  m_possess_entity_id(id) {
 }
 
-TypeInfo::TypeInfo(std::string id, TypeService *ts) :
-    m_bound(false),
-    m_name(id),
-    m_typeService(ts)
-{
+TypeInfo::TypeInfo(std::string id, TypeService* ts) :
+		m_bound(false),
+		m_name(id),
+		m_typeService(ts) {
 }
 
-bool TypeInfo::isA(TypeInfoPtr tp)
-{
-    return false;
+bool TypeInfo::isA(TypeInfoPtr tp) {
+	return false;
 }
 
 void TypeInfo::onPropertyChanges(const std::string& attributeName,
-								 const Atlas::Message::Element& element)
-{
+								 const Atlas::Message::Element& element) {
 }
 
-TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
-        const Root& obj, 
-        TypeInfo* unbound) :
-    Redispatch(con, obj),
-    m_con(con)
-{
+TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
+										 const Root& obj,
+										 TypeInfo* unbound) :
+		Redispatch(con, obj),
+		m_con(con) {
 }
 
 ServerInfo::ServerInfo(std::string host) :
-    m_status(INVALID),
-    _host(host)
-{
+		m_status(INVALID),
+		_host(host) {
 }
 
 EventService::EventService(boost::asio::io_service& io_service)
-: m_io_service(io_service)
-{}
+		: m_io_service(io_service) {}
 
-EventService::~EventService()
-{
+EventService::~EventService() {
 }
 
-void EventService::runOnMainThread(std::function<void ()> const&,
-                                   std::shared_ptr<bool> activeMarker)
-{
+void EventService::runOnMainThread(std::function<void()> const&,
+								   std::shared_ptr<bool> activeMarker) {
 }
 
-SpawnPoint::~SpawnPoint()
-{
+SpawnPoint::~SpawnPoint() {
 }
 
-Router::~Router()
-{
+Router::~Router() {
 }
 
-Router::RouterResult Router::handleObject(const Root& obj)
-{
-    return IGNORED;
+Router::RouterResult Router::handleObject(const Root& obj) {
+	return IGNORED;
 }
 
-Router::RouterResult Router::handleOperation(const RootOperation& )
-{
-    return IGNORED;
+Router::RouterResult Router::handleOperation(const RootOperation&) {
+	return IGNORED;
 }
 
-Router::RouterResult Router::handleEntity(const RootEntity& )
-{
-    return IGNORED;
+Router::RouterResult Router::handleEntity(const RootEntity&) {
+	return IGNORED;
 }
 
-TimedEvent::~TimedEvent()
-{
+TimedEvent::~TimedEvent() {
 }
 
-void doLog(LogLevel lvl, const std::string& msg)
-{
+void doLog(LogLevel lvl, const std::string& msg) {
 }
 
 } // namespace Eris

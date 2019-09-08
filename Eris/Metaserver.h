@@ -33,10 +33,10 @@ const int DATA_BUFFER_SIZE = 4096;
 
 /// Storage of server information
 typedef std::list<ServerInfo> ServerList;
-
+struct MetaDecoder;
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
-class Meta : virtual public sigc::trackable,
-			 public Atlas::Objects::ObjectsDecoder {
+class Meta : virtual public sigc::trackable {
+	friend struct MetaDecoder;
 public:
 	typedef enum {
 		INVALID = 0,    ///< The server list is not valid
@@ -57,9 +57,12 @@ public:
 	active at any one time. 10 is a sensible value, too low and querying will
 	take a long time, too high and .... I'm not sure.
 	*/
-	Meta(boost::asio::io_service& io_service, EventService& eventService, std::string msv, unsigned int maxQueries);
+	Meta(boost::asio::io_service& io_service,
+			EventService& eventService,
+			std::string msv,
+			unsigned int maxQueries);
 
-	~Meta() override;
+	~Meta();
 
 	/** Return the total number of game servers the meta server knows about. */
 	size_t getGameServerCount() const;
@@ -115,7 +118,7 @@ public:
 protected:
 	friend class MetaQuery;
 
-	void objectArrived(const Atlas::Objects::Root& obj) override;
+	void objectArrived(const Atlas::Objects::Root& obj);
 
 	void doFailure(const std::string& msg);
 
@@ -136,6 +139,7 @@ protected:
 
 private:
 
+	Atlas::Objects::Factories* m_factories;
 	void connect(const boost::asio::ip::udp::endpoint& endpoint);
 
 	void write();
@@ -168,6 +172,8 @@ private:
 	boost::asio::io_service& m_io_service;
 
 	EventService& m_event_service;
+
+	std::unique_ptr<MetaDecoder> m_decoder;
 
 	const std::string m_clientName;    ///< the name to use when negotiating
 

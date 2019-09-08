@@ -9,6 +9,7 @@
 #include <vector>
 #include <algorithm>
 #include <sigc++/functors/ptr_fun.h>
+#include <Atlas/Objects/Factories.h>
 
 using std::endl;
 using std::cout;

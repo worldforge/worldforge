@@ -56,9 +56,26 @@ const uint32_t CKEEP_ALIVE = 2,
 // special  command value to track LIST_RESP processing
 const uint32_t LIST_RESP2 = 999;
 
-Meta::Meta(boost::asio::io_service& io_service, EventService& eventService, std::string metaServer, unsigned int maxQueries) :
+struct MetaDecoder : Atlas::Objects::ObjectsDecoder {
+	Meta& m_meta;
+
+	MetaDecoder(Meta& meta, const Atlas::Objects::Factories& factories) :
+			ObjectsDecoder(factories), m_meta(meta) {
+	}
+
+	void objectArrived(const Root& obj) override {
+		m_meta.objectArrived(obj);
+	}
+};
+
+Meta::Meta(boost::asio::io_service& io_service,
+		   EventService& eventService,
+		   std::string metaServer,
+		   unsigned int maxQueries) :
+		m_factories(new Atlas::Objects::Factories()),
 		m_io_service(io_service),
 		m_event_service(eventService),
+		m_decoder(new MetaDecoder(*this, *m_factories)),
 		m_status(INVALID),
 		m_metaHost(std::move(metaServer)),
 		m_maxActiveQueries(maxQueries),
@@ -498,7 +515,7 @@ void Meta::internalQuery(size_t index) {
 	assert(index < m_gameServers.size());
 
 	ServerInfo& sv = m_gameServers[index];
-	auto* q = new MetaQuery(m_io_service, *this, sv.getHostname(), index);
+	auto* q = new MetaQuery(m_io_service, *m_decoder, *this, sv.getHostname(), index);
 	if (q->getStatus() != BaseConnection::CONNECTING &&
 		q->getStatus() != BaseConnection::NEGOTIATE) {
 		// indicates a failure occurred, so we'll kill it now and say no more

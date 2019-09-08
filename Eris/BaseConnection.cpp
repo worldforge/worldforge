@@ -8,21 +8,15 @@
 
 #include "Exceptions.h"
 #include "Log.h"
-#include "Operations.h"
 #include "StreamSocket_impl.h"
 
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Objects/objectFactory.h>
-#include "CustomEntities.h"
 
 #include <sigc++/slot.h>
 
 #include <sstream>
-#include <cassert>
-#include <cstdio>
-#include <memory>
 
 #ifdef _WIN32
 
@@ -40,19 +34,19 @@ namespace Eris
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
 
 BaseConnection::BaseConnection(io_service& io_service,
-							   std::string cnm,
-							   std::string id,
-							   Atlas::Bridge& br) :
+							   std::string clientName,
+							   std::string id) :
 		_io_service(io_service),
 		_status(DISCONNECTED),
 		_id(std::move(id)),
-		_clientName(std::move(cnm)),
-		_bridge(br), _port(0) {
-	Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
-	if (!f->hasFactory("sys")) {
-		Atlas::Objects::Entity::SYS_NO = f->addFactory("sys",
-													   &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
-	}
+		_clientName(std::move(clientName)),
+		_bridge(nullptr),
+		_port(0) {
+//	Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
+//	if (!f->hasFactory("sys")) {
+//		Atlas::Objects::Entity::SYS_NO = f->addFactory("sys",
+//													   &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
+//	}
 }
 
 BaseConnection::~BaseConnection()
@@ -83,7 +77,7 @@ int BaseConnection::connectRemote(const std::string & host, short port)
             }
             this->stateChanged(state);};
         auto socket = new ResolvableAsioStreamSocket<ip::tcp>(_io_service, _clientName,
-                _bridge, callbacks);
+                *_bridge, callbacks);
         _socket.reset(socket);
         std::stringstream ss;
         ss << port;
@@ -111,7 +105,7 @@ int BaseConnection::connectLocal(const std::string & filename)
         callbacks.stateChanged =
                 [&](StreamSocket::Status state) {this->stateChanged(state);};
         auto socket = new AsioStreamSocket<local::stream_protocol>(
-                _io_service, _clientName, _bridge, callbacks);
+                _io_service, _clientName, *_bridge, callbacks);
         _socket.reset(socket);
         setStatus(CONNECTING);
         socket->connect(local::stream_protocol::endpoint(filename));

@@ -17,7 +17,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
-#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/Factories.h>
 
 #include <algorithm>
 #include <cassert>
@@ -622,7 +622,7 @@ void Account::possessResponse(const RootOperation& op)
             warning() << "malformed character possess response";
             return;
         }
-        auto entityObj = smart_dynamic_cast<RootEntity>(Atlas::Objects::Factories::instance()->createObject(entityMessage.Map()));
+        auto entityObj = smart_dynamic_cast<RootEntity>(m_con->factories().createObject(entityMessage.Map()));
 
         if (!entityObj || entityObj->isDefaultId()) {
             warning() << "malformed character possess response";

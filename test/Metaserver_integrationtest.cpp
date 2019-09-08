@@ -35,13 +35,12 @@ namespace Eris
 {
 
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
-    std::string id,
-    Atlas::Bridge &br) :
+    std::string id) :
             _io_service(io_service),
     _status(DISCONNECTED),
     _id(id),
     _clientName(cnm),
-    _bridge(br),
+    _bridge(nullptr),
     _host(""),
     _port(0)
 {
