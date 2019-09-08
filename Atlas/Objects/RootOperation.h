@@ -56,7 +56,7 @@ public:
     // The default parent type for this object
     static constexpr const char* default_parent = "root_operation";
     // The default objtype for this object
-    static constexpr const char* default_objtype = "op_definition";
+    static constexpr const char* default_objtype = "op";
     /// Copy this object.
     RootOperationData * copy() const override;
 

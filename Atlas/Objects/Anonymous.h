@@ -46,7 +46,7 @@ public:
     // The default parent type for this object
     static constexpr const char* default_parent = "anonymous";
     // The default objtype for this object
-    static constexpr const char* default_objtype = "class";
+    static constexpr const char* default_objtype = "obj";
     /// Set the type of this object.
     void setType(const std::string &, int);
 

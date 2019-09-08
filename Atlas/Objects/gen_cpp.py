@@ -539,7 +539,11 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("    // The default parent type for this object\n")
         self.write("    static constexpr const char* default_parent = \"%s\";\n" % obj.id)
         self.write("    // The default objtype for this object\n")
-        self.write("    static constexpr const char* default_objtype = \"%s\";\n" % obj.objtype)
+        if obj.objtype == 'op_definition':
+            obj_type = 'op'
+        else:
+            obj_type = 'obj'
+        self.write("    static constexpr const char* default_objtype = \"%s\";\n" % obj_type)
         if obj.id in ['anonymous', 'generic']:
             self.doc(4, 'Set the type of this object.')
             self.write("    void setType(const std::string &, int);\n\n")

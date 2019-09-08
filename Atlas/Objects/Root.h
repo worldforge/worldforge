@@ -49,7 +49,7 @@ public:
     // The default parent type for this object
     static constexpr const char* default_parent = "root";
     // The default objtype for this object
-    static constexpr const char* default_objtype = "meta";
+    static constexpr const char* default_objtype = "obj";
     /// Copy this object.
     RootData * copy() const override;
 

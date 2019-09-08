@@ -46,7 +46,7 @@ public:
     // The default parent type for this object
     static constexpr const char* default_parent = "root_entity";
     // The default objtype for this object
-    static constexpr const char* default_objtype = "class";
+    static constexpr const char* default_objtype = "obj";
     /// Copy this object.
     RootEntityData * copy() const override;
 
