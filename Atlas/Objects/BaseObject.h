@@ -25,6 +25,8 @@ namespace Atlas {
 /// This namespace contains classes used to handle high level Atlas data.
 namespace Objects {
 
+class Factories;
+
 /** An exception indicating the requested attribute does not exist.
  *
  * This is thrown by Root::getAttr() [and derivatives thereof!]
@@ -268,7 +270,7 @@ public:
                          Atlas::Message::Element & attr) const;
     /// Set the attribute "name" to the value given by "attr".
     virtual void setAttr(const std::string& name,
-                         Atlas::Message::Element attr);
+                         Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr);
     /// Remove the attribute "name".
     virtual void removeAttr(const std::string& name);
     /// Remove the attribute "name".

@@ -310,7 +310,10 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
 
     def setattr_im(self):
         if self.is_movable:
-            return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.move%(ctype_as_object)s()); return; }\n' % self.__dict__
+            if self.attr_name == 'ARGS_ATTR':
+                return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.move%(ctype_as_object)s(), factories); return; }\n' % self.__dict__
+            else:
+                return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.move%(ctype_as_object)s()); return; }\n' % self.__dict__
         else:
             return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.as%(ctype_as_object)s()); return; }\n' % self.__dict__
 
@@ -329,16 +332,27 @@ class ArgsRootList(AttributeInfo):
         self.ctype_as_object = "List"
 
     def set_if(self):
-        return AttributeInfo.set_if(self) + \
-               doc(4, 'Set the first member of "%s"' % self.name) + \
-               "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
+        res = doc(4, 'Set the "%s" attribute.' % self.name)+ \
+              "    void set%(cname)s(%(cpp_param_in_type)s val);\n" % \
+              self.__dict__
+        if self.as_object:
+            res = res + doc(4, 'Set the "%s" attribute %s.' % \
+                            (self.name, self.as_object)) + \
+                  "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val, const Atlas::Objects::Factories* factories);\n" % self.__dict__
+        return res + \
+            doc(4, 'Set the first member of "%s"' % self.name) + \
+            "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
+
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
-               """inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
+               """inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val, const Factories* factories)
 {
+    if (!factories) {
+        throw Exception("You must pass in a valid Factories instance when setting 'args'.");
+    }
     m_attrFlags |= %(flag_name)s;
-    attr_%(name)s = Factories::parseListOfObjects(val);
+    attr_%(name)s = factories->parseListOfObjects(val);
 }
 
 template <class ObjectData>

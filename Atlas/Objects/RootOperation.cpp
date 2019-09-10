@@ -50,7 +50,7 @@ int RootOperationData::copyAttr(const std::string& name, Element & attr) const
     return RootData::copyAttr(name, attr);
 }
 
-void RootOperationData::setAttr(const std::string& name, Element attr)
+void RootOperationData::setAttr(const std::string& name, Element attr, const Atlas::Objects::Factories* factories)
 {
     if (name == SERIALNO_ATTR) { setSerialno(attr.asInt()); return; }
     if (name == REFNO_ATTR) { setRefno(attr.asInt()); return; }
@@ -58,8 +58,8 @@ void RootOperationData::setAttr(const std::string& name, Element attr)
     if (name == TO_ATTR) { setTo(attr.moveString()); return; }
     if (name == SECONDS_ATTR) { setSeconds(attr.asFloat()); return; }
     if (name == FUTURE_SECONDS_ATTR) { setFutureSeconds(attr.asFloat()); return; }
-    if (name == ARGS_ATTR) { setArgsAsList(attr.moveList()); return; }
-    RootData::setAttr(name, std::move(attr));
+    if (name == ARGS_ATTR) { setArgsAsList(attr.moveList(), factories); return; }
+    RootData::setAttr(name, std::move(attr), factories);
 }
 
 void RootOperationData::removeAttr(const std::string& name)

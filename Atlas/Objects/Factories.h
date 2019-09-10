@@ -80,7 +80,7 @@ public:
 	friend class AddFactories;
 
 	Factories();
-	Factories(const Factories &) = default;
+	explicit Factories(const Factories &) = default;
 	~Factories();
 
 	bool hasFactory(const std::string& name) const;
@@ -97,12 +97,10 @@ public:
 	 * @param val
 	 * @return
 	 */
-	static std::vector<Root> parseListOfObjects(const Atlas::Message::ListType& val);
+	std::vector<Root> parseListOfObjects(const Atlas::Message::ListType& val) const;
 
-	static Factories * instance();
 private:
 
-	static Factories* s_instance;
 	static int enumMax;
 
 	FactoryMap m_factories;

@@ -104,7 +104,7 @@ void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,
 		auto attr_found = used_attributes.find(I->first);
 		if (attr_found == used_attributes.end()) {
 			//cout<<"    -->"<<I->first<<endl;
-			obj->setAttr(I->first, I->second);
+			obj->setAttr(I->first, I->second, &m_factories);
 			//obj_inst->setAttr(I->first, I->second);
 		}
 		used_attributes.insert(I->first);
@@ -137,7 +137,7 @@ void LoadDefaultsDecoder::fillDefaults() {
 		obj_def->setObjtype(obj->getObjtype());
 		MapType::const_iterator J;
 		for (J = melem.asMap().begin(); J != melem.asMap().end(); J++) {
-			obj_def->setAttr(J->first, J->second);
+			obj_def->setAttr(J->first, J->second, &m_factories);
 		}
 		objectDefinitions[obj_def->getId()] = obj_def;
 

@@ -43,18 +43,12 @@ SmartPtr<RootData> anonymous_factory(const std::string& name, int no) {
 }
 
 std::map<const std::string, Root> objectDefinitions;
-Factories* Factories::s_instance = nullptr;
 
 Factories::Factories() {
 	installStandardTypes();
-	s_instance = this;
 }
 
-Factories::~Factories() {
-	if (s_instance == this) {
-		s_instance = nullptr;
-	}
-}
+Factories::~Factories() = default;
 
 bool Factories::hasFactory(const std::string& name) const {
 	auto I = m_factories.find(name);
@@ -105,7 +99,7 @@ Root Factories::createObject(const MapType& msg_map) const {
 		obj = Atlas::Objects::Entity::Anonymous();
 	} // not instance
 	for (I = msg_map.begin(); I != Iend; I++) {
-		obj->setAttr(I->first, I->second);
+		obj->setAttr(I->first, I->second, this);
 	}
 	return obj;
 }
@@ -146,20 +140,15 @@ int Factories::addFactory(const std::string& name, FactoryMethod method, Default
 	return classno;
 }
 
-std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& val) {
+std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& val) const {
 	std::vector<Root> objects;
 	objects.reserve(val.size());
 	for (const auto& entry : val) {
 		if (entry.isMap()) {
-			objects.push_back(Factories::instance()->createObject(entry.Map()));
+			objects.push_back(createObject(entry.Map()));
 		}
 	}
 	return objects;
-}
-
-Factories * Factories::instance()
-{
-    return s_instance;
 }
 
 }

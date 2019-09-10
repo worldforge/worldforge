@@ -84,7 +84,7 @@ struct TestDecoder : public Atlas::Objects::ObjectsDecoder {
 };
 
 
-void testXML(Atlas::Objects::Factories factories) {
+void testXML(Atlas::Objects::Factories& factories) {
 	RootEntity human;
 	human->setId("foo");
 
@@ -208,7 +208,7 @@ void check_float_list3(const Atlas::Message::ListType& list,
 	i++;
 }
 
-void testValues(Atlas::Objects::Factories factories) {
+void testValues(Atlas::Objects::Factories& factories) {
 	Account account;
 	Login l;
 	account->setId("al");

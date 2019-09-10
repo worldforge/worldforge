@@ -68,7 +68,7 @@ public:
     int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
     void setAttr(const std::string& name,
-                         Atlas::Message::Element attr) override;
+                         Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr) override;
     /// Remove the attribute "name". This will not work for static attributes.
     void removeAttr(const std::string& name) override;
 
@@ -93,7 +93,7 @@ public:
     /// Set the "args" attribute.
     void setArgs(std::vector<Root> val);
     /// Set the "args" attribute AsList.
-    void setArgsAsList(const Atlas::Message::ListType& val);
+    void setArgsAsList(const Atlas::Message::ListType& val, const Atlas::Objects::Factories* factories);
     /// Set the first member of "args"
     template <class ObjectData>
     void setArgs1(const SmartPtr<ObjectData> & val);
@@ -268,10 +268,13 @@ inline void RootOperationData::setArgs(std::vector<Root> val)
     m_attrFlags |= ARGS_FLAG;
 }
 
-inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
+inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val, const Factories* factories)
 {
+    if (!factories) {
+        throw Exception("You must pass in a valid Factories instance when setting 'args'.");
+    }
     m_attrFlags |= ARGS_FLAG;
-    attr_args = Factories::parseListOfObjects(val);
+    attr_args = factories->parseListOfObjects(val);
 }
 
 template <class ObjectData>

@@ -119,7 +119,7 @@ public:
     int copyAttr(const std::string& name, Atlas::Message::Element & attr) const override;
     /// Set the attribute "name" to the value given by"attr"
     void setAttr(const std::string& name,
-                         Atlas::Message::Element attr) override;
+                         Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr) override;
     /// Remove the attribute "name". This will not work for static attributes.
     void removeAttr(const std::string& name) override;
 
