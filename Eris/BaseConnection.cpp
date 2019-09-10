@@ -17,6 +17,8 @@
 #include <sigc++/slot.h>
 
 #include <sstream>
+#include <Atlas/Objects/Factories.h>
+#include "CustomEntities.h"
 
 #ifdef _WIN32
 
@@ -37,16 +39,16 @@ BaseConnection::BaseConnection(io_service& io_service,
 							   std::string clientName,
 							   std::string id) :
 		_io_service(io_service),
+		_factories(new Atlas::Objects::Factories()),
 		_status(DISCONNECTED),
 		_id(std::move(id)),
 		_clientName(std::move(clientName)),
 		_bridge(nullptr),
 		_port(0) {
-//	Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
-//	if (!f->hasFactory("sys")) {
-//		Atlas::Objects::Entity::SYS_NO = f->addFactory("sys",
-//													   &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
-//	}
+	if (!_factories->hasFactory("sys")) {
+		Atlas::Objects::Entity::SYS_NO = _factories->addFactory("sys",
+													   &Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
+	}
 }
 
 BaseConnection::~BaseConnection()
@@ -202,6 +204,14 @@ const std::string& BaseConnection::getHost() const
 short BaseConnection::getPort() const
 {
     return _port;
+}
+
+Atlas::Objects::Factories& BaseConnection::getFactories() {
+	return *_factories;
+}
+
+const Atlas::Objects::Factories& BaseConnection::getFactories() const {
+	return *_factories;
 }
 
 } // of namespace

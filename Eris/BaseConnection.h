@@ -19,6 +19,9 @@ namespace Atlas
 {
     class Bridge;
     class Codec;
+    namespace Objects {
+    	class Factories;
+    }
     namespace Net
     {
         class StreamConnect;
@@ -84,6 +87,10 @@ public:
      */
     short getPort() const;
 
+	Atlas::Objects::Factories& getFactories();
+
+	const Atlas::Objects::Factories& getFactories() const;
+
     /// sent on successful negotiation of a game server connection
     sigc::signal<void> Connected;
     
@@ -119,6 +126,7 @@ protected:
     void hardDisconnect(bool emit);
 
     boost::asio::io_service& _io_service;
+    std::unique_ptr<Atlas::Objects::Factories> _factories;
     std::shared_ptr<StreamSocket> _socket;
 
     Status _status;			///< current status of the connection

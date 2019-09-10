@@ -54,16 +54,14 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 
 boost::asio::io_service io_service;
 Eris::EventService event_service(io_service);
-Atlas::Objects::Factories factories;
 
 class TestConnection : public Eris::Connection {
   public:
     TestConnection(const std::string & name,
     		const std::string & host,
-                   const Atlas::Objects::Factories& factories,
                    short port,
                    bool debug) :
-                   Eris::Connection(io_service, event_service, factories, name, host, port) { }
+                   Eris::Connection(io_service, event_service, name, host, port) { }
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParent()
@@ -146,7 +144,7 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
     
-    TestConnection con("name", "localhost", factories, 6767, true);
+    TestConnection con("name", "localhost", 6767, true);
 
     TestAccount acc(&con);
 

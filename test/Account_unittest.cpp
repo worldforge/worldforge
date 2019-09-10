@@ -32,7 +32,6 @@
 
 
 int main() {
-	Atlas::Objects::Factories factories;
 	// Constructor with bad args throws
 	{
 		try {
@@ -47,7 +46,7 @@ int main() {
 	{
 		boost::asio::io_service io_service;
 		Eris::EventService eventService(io_service);
-		Eris::Connection* c = new Eris::Connection(io_service, eventService, factories, "", "", 0);
+		Eris::Connection* c = new Eris::Connection(io_service, eventService, "", "", 0);
 		new Eris::Account(c);
 	}
 
@@ -55,7 +54,7 @@ int main() {
 	{
 		boost::asio::io_service io_service;
 		Eris::EventService eventService(io_service);
-		Eris::Connection* c = new Eris::Connection(io_service, eventService, factories, "", "", 0);
+		Eris::Connection* c = new Eris::Connection(io_service, eventService, "", "", 0);
 		Eris::Account* ac = new Eris::Account(c);
 		delete ac;
 	}

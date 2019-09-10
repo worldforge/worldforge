@@ -18,6 +18,7 @@
 // $Id$
 
 #include <Eris/Metaserver.h>
+#include <Atlas/Objects/Factories.h>
 
 int main()
 {

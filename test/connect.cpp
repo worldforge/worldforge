@@ -55,7 +55,6 @@ static void onConnectionFail(const std::string& errMsg) {
 }
 
 int main(int argc, char** argv) {
-	Atlas::Objects::Factories factories;
 	bool option_verbose = false;
 	bool option_nonblock = false;
 	int option_port = 6767;
@@ -96,7 +95,6 @@ int main(int argc, char** argv) {
 
 	for (int i = optind; i < argc; ++i) {
 		Eris::Connection* c = new Eris::Connection(io_service, session.getEventService(),
-												   factories,
 												   "test",
 												   argv[i],
 												   option_port);

@@ -52,7 +52,6 @@ public:
 	*/
 	Connection(boost::asio::io_service& io_service,
 			   EventService& eventService,
-			   const Atlas::Objects::Factories& factories,
 			   std::string clientName,
 			   const std::string& host,
 			   short port);
@@ -63,7 +62,6 @@ public:
 	*/
 	Connection(boost::asio::io_service& io_service,
 			   EventService& eventService,
-			   const Atlas::Objects::Factories& factories,
 			   std::string clientName,
 			   std::string socket);
 
@@ -82,8 +80,6 @@ public:
 	ResponseTracker* getResponder() const { return m_responder.get(); }
 
 	EventService& getEventService();
-
-	const Atlas::Objects::Factories& factories() const;
 
 	/// Transmit an Atlas::Objects instance to the server
 	/** If the connection is not fully connected, an exception will
@@ -207,8 +203,6 @@ protected:
 	ServerInfo m_info;
 
 	std::unique_ptr<ResponseTracker> m_responder;
-
-	const Atlas::Objects::Factories& m_factories;
 };
 
 /// operation serial number sequencing

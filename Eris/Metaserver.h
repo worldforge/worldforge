@@ -139,7 +139,7 @@ protected:
 
 private:
 
-	Atlas::Objects::Factories* m_factories;
+	std::unique_ptr<Atlas::Objects::Factories> m_factories;
 	void connect(const boost::asio::ip::udp::endpoint& endpoint);
 
 	void write();

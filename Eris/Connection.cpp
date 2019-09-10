@@ -14,7 +14,6 @@
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects/Factories.h>
 #include <Atlas/Objects/Entity.h>
 #include <sigc++/bind.h>
 
@@ -47,12 +46,11 @@ struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
 
 Connection::Connection(boost::asio::io_service& io_service,
 					   EventService& eventService,
-					   const Atlas::Objects::Factories& factories,
 					   std::string clientName,
 					   const std::string& host,
 					   short port) :
 		BaseConnection(io_service, std::move(clientName), "game_"),
-		m_decoder(new ConnectionDecoder(*this, factories)),
+		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(eventService),
 		_host(host),
 		_port(port),
@@ -60,18 +58,16 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(host),
-		m_responder(new ResponseTracker),
-		m_factories(factories) {
+		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
 }
 
 Connection::Connection(boost::asio::io_service& io_service,
 					   EventService& eventService,
-					   const Atlas::Objects::Factories& factories,
 					   std::string clientName,
 					   std::string socket) :
 		BaseConnection(io_service, std::move(clientName), "game_"),
-		m_decoder(new ConnectionDecoder(*this, factories)),
+		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(eventService),
 		_host("local"),
 		_port(0),
@@ -80,8 +76,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(_host),
-		m_responder(new ResponseTracker),
-		m_factories(factories) {
+		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
 }
 
@@ -91,10 +86,6 @@ Connection::~Connection() {
 	// Bridge on the underlying Atlas codec, and otherwise we might get
 	// a pure virtual method call
 	hardDisconnect(true);
-}
-
-const Atlas::Objects::Factories& Connection::factories() const {
-	return m_factories;
 }
 
 EventService& Connection::getEventService() {

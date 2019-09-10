@@ -27,8 +27,7 @@
 #include <Eris/Metaserver.h>
 #include <Eris/EventService.h>
 
-#include <sigc++/functors/ptr_fun.h>
-
+#include <Atlas/Objects/Factories.h>
 #include <iostream>
 
 #include <cassert>

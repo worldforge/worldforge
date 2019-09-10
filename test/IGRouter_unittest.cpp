@@ -45,7 +45,6 @@ static bool stub_type_bound = false;
 
 static sigc::signal<void> _test_avatar_logoutRequested;
 static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
-Atlas::Objects::Factories factories;
 
 class TestAvatar : public Eris::Avatar {
 public:
@@ -54,7 +53,6 @@ public:
 					*new Eris::Account(
 							new Eris::Connection(io_service,
 												 eventService,
-												 factories,
 												 "",
 												 "",
 												 0)
@@ -557,12 +555,11 @@ struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
 
 Connection::Connection(boost::asio::io_service& io_service,
 		Eris::EventService& event_service,
-		const Atlas::Objects::Factories& factories,
 		std::string cnm,
 		const std::string& host,
 		short port) :
 		BaseConnection(io_service, cnm, "game_"),
-		m_decoder(new ConnectionDecoder(*this, factories)),
+		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(event_service),
 		_host(host),
 		_port(port),
@@ -570,8 +567,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(host),
-		m_responder(nullptr),
-		m_factories(factories){
+		m_responder(nullptr){
 	_bridge = m_decoder.get();
 }
 
