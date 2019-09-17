@@ -268,6 +268,8 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 
 
 
+
+
     if (!op->isDefaultParent()) {
 		// we have to handle generic 'actions' late, to avoid trapping interesting
 		// such as create or divide
@@ -276,6 +278,21 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 			new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
 			return HANDLED;
 		}
+
+		//For hits we want to check the "to" field rather than the "from" field. We're more interested in
+		//the entity that was hit than the one which did the hitting.
+		//Note that we'll let the op fall through, so that we later on handle the Hit action for the "from" entity.
+		if (op->getClassNo() == HIT_NO) {
+			if (!op->isDefaultTo()) {
+				Entity* ent = m_view->getEntity(op->getTo());
+				if (ent) {
+					ent->onHit(smart_dynamic_cast<Hit>(op));
+				}
+			} else {
+				warning() << "received hit with TO unset";
+			}
+		}
+
 
 		if (ty->isA(m_actionType)) {
 			if (op->isDefaultFrom()) {

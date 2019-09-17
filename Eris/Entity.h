@@ -332,7 +332,12 @@ public:
     arguments, see some documentation that probably isn't written yet.
     */
     sigc::signal<void, const Atlas::Objects::Operation::RootOperation&> Acted;
-    
+
+	/**
+	Emitted when this entity performs is hit by something.
+	*/
+	sigc::signal<void, const Atlas::Objects::Operation::Hit&> Hit;
+
     /**
     Emitted when this entity performs an action which causes a noise. This
     may happen alongside the sight of the action, or not, depending on the
@@ -390,6 +395,12 @@ protected:
     Default implementation emits the Action signal.
     */
     virtual void onAction(const Atlas::Objects::Operation::RootOperation& act);
+
+	/**
+	Over-rideable hook when this entity is hit by something.
+	Default implementation emits the Hit signal.
+    */
+	virtual void onHit(const Atlas::Objects::Operation::Hit& hit);
 
     /**
     Over-rideable hook when this entity is heard performing an action.
