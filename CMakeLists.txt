@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(Mercator)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
 include(FindPkgConfig)
 
@@ -21,7 +22,7 @@ math(EXPR MERCATOR_SOVERSION ${MERCATOR_ABI_CURRENT}-${MERCATOR_ABI_AGE})
 set(MERCATOR_ABI_VERSION ${MERCATOR_SOVERSION}.${MERCATOR_ABI_AGE}.${MERCATOR_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -123,6 +124,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 endmacro()
 
 wf_add_library(mercator${SUFFIX} SOURCE_FILES HEADER_FILES)
+target_compile_options(mercator${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 
 
 # pkg-config files
