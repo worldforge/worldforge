@@ -4,13 +4,13 @@
 
 Varconf is a configuration system designed for the [WorldForge](http://worldforge.org/ "The main Worldforge site") system.
 Varconf can parse configuration files, command-line arguments and environment
-variables.  It supports callbacks and can store its configuration information
+variables. It supports callbacks and can store its configuration information
 in separate Config objects or in one global configuration instance.
 
 ## Installation
 
 If you intend to build this as a prerequisite for the Ember client or the Cyphesis server we strongly suggest that you 
-use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile Ember.
+use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool.
 This is script provided by the Worldforge project which will download and install all of the required libraries and 
 components used by Worldforge.
 

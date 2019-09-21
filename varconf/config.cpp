@@ -95,18 +95,18 @@ namespace {
 
 namespace varconf {
 
-Config* Config::m_instance = 0;
+Config* Config::m_instance = nullptr;
 
 Config* Config::inst()
 {
-  if (m_instance == NULL) 
+  if (m_instance == nullptr)
     m_instance = new Config;
   
   return m_instance;
 }
 
 Config::Config(const Config & conf)
-{
+ : trackable(conf) {
   m_conf = conf.m_conf;
   m_par_lookup = conf.m_par_lookup;
 }
@@ -114,7 +114,7 @@ Config::Config(const Config & conf)
 Config::~Config()
 {
   if (m_instance == this)
-    m_instance = NULL;
+    m_instance = nullptr;
 }
 
 std::ostream & operator <<(std::ostream & out, Config & conf)
@@ -145,24 +145,20 @@ std::istream & operator >>(std::istream & in, Config & conf)
 
 bool operator ==(const Config & one, const Config & two)
 {
-  if (one.m_conf == two.m_conf && one.m_par_lookup == two.m_par_lookup) {
-    return true;
-  } else {
-    return false;
-  }
+	return one.m_conf == two.m_conf && one.m_par_lookup == two.m_par_lookup;
 }
 
 void Config::clean(std::string & str)
 {
   ctype_t c;
 
-  for (size_t i = 0; i < str.size(); i++) {
-    c = ctype(str[i]);
+  for (char & i : str) {
+    c = ctype(i);
 
     if (c != C_NUMERIC && c != C_ALPHA && c != C_DASH) {
-      str[i] = '_';
+      i = '_';
     } else {
-      str[i] = (char) tolower(str[i]);
+      i = (char) tolower(i);
     }
   } 
 }
@@ -170,7 +166,7 @@ void Config::clean(std::string & str)
 bool Config::erase(const std::string & section, const std::string & key)
 {
   if (find(section)) {
-    if (key == "") {
+    if (key.empty()) {
       m_conf.erase(section);
       return true;
     } else if (find(section, key)) {
@@ -184,13 +180,13 @@ bool Config::erase(const std::string & section, const std::string & key)
 
 bool Config::find(const std::string & section, const std::string & key) const
 {
-  conf_map::const_iterator I = m_conf.find(section);
+  auto I = m_conf.find(section);
   if (I != m_conf.end()) {
-    if (key == "") {
+    if (key.empty()) {
       return true;
     } 
     const sec_map & sectionRef = I->second;
-    sec_map::const_iterator J = sectionRef.find(key);
+    auto J = sectionRef.find(key);
     if (J != sectionRef.end()) {
       return true;
     }
@@ -245,7 +241,7 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
 
     } else if (argv[i][1] != '-' && argv[i][1] != '\0') {
       // short argument
-      parameter_map::iterator I = m_par_lookup.find(argv[i][1]);
+      auto I = m_par_lookup.find(argv[i][1]);
 
       if (I != m_par_lookup.end()) {
         name = ((*I).second).first;
@@ -282,7 +278,7 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
 
 void Config::getEnv(const std::string & prefix, Scope scope)
 {
-  std::string name = "", value = "", section = "", env = "";
+  std::string name, value, section, env;
   size_t eq_pos = 0;
 
 #if defined(__APPLE__)
@@ -290,7 +286,7 @@ void Config::getEnv(const std::string & prefix, Scope scope)
       environ = *_NSGetEnviron();
 #endif
   
-  for (size_t i = 0; environ[i] != NULL; i++) {
+  for (size_t i = 0; environ[i] != nullptr; i++) {
     env = environ[i];
 
     if (env.substr(0, prefix.size()) == prefix) {
@@ -319,9 +315,9 @@ const sec_map & Config::getSection(const std::string & section)
 
 Variable Config::getItem(const std::string & section, const std::string & key) const
 {
-  conf_map::const_iterator I = m_conf.find(section);
+  auto I = m_conf.find(section);
   if (I != m_conf.end()) {
-    std::map<std::string, Variable>::const_iterator J = I->second.find(key);
+    auto J = I->second.find(key);
     if (J != I->second.end()) {
       return J->second;
     }
@@ -340,7 +336,7 @@ void Config::parseStream(std::istream & in, Scope scope)
   char c; 
   bool escaped = false;
   size_t line = 1, col = 0;
-  std::string name = "", value = "", section = "";
+  std::string name, value, section;
   state_t state = S_EXPECT_NAME;
 
   while (in.get(c)) {
@@ -366,7 +362,6 @@ void Config::parseStream(std::istream & in, Scope scope)
             break;
           default:
             throw ParseError("item name", (int) line, (int) col);
-            break;
         }
         break;
       case S_SECTION :
@@ -381,7 +376,6 @@ void Config::parseStream(std::istream & in, Scope scope)
             break;
           default:
             throw ParseError("']'", (int) line, (int) col);
-            break;
         }
         break;
       case S_NAME :
@@ -399,7 +393,6 @@ void Config::parseStream(std::istream & in, Scope scope)
             break;
           default:
             throw ParseError("'='", (int) line, (int) col);
-            break;
         }
         break;
       case S_COMMENT :
@@ -420,7 +413,6 @@ void Config::parseStream(std::istream & in, Scope scope)
             break;
           default:
             throw ParseError("'='", (int) line, (int) col);
-            break;
         }
         break;
       case S_EXPECT_VALUE:
@@ -444,7 +436,6 @@ void Config::parseStream(std::istream & in, Scope scope)
             break;
           default:
             throw ParseError("value", (int) line, (int) col);
-            break;
         }
         break;
       case S_VALUE:

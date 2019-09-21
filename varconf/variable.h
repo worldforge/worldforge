@@ -46,10 +46,10 @@ class VARCONF_API VarBase : virtual public sigc::trackable {
 public:
   VarBase();
   VarBase(const VarBase& c);
-  VarBase(const bool b);
-  VarBase(const int i);
-  VarBase(const double d);
-  VarBase(const std::string& s);
+  VarBase(bool b);
+  VarBase(int i);
+  VarBase(double d);
+  VarBase(std::string  s);
   VarBase(const char* s);
 
   virtual ~VarBase();
@@ -59,9 +59,9 @@ public:
   VARCONF_API friend bool operator !=(const VarBase& one, const VarBase& two);
 
   virtual VarBase& operator=(const VarBase& c);
-  virtual VarBase& operator=(const bool b);
-  virtual VarBase& operator=(const int i);
-  virtual VarBase& operator=(const double d);
+  virtual VarBase& operator=(bool b);
+  virtual VarBase& operator=(int i);
+  virtual VarBase& operator=(double d);
   virtual VarBase& operator=(const std::string& s);
   virtual VarBase& operator=(const char* s);
 
@@ -196,32 +196,32 @@ public:
   bool is_int()  const          {return (*this)->is_int();}
   bool is_double() const        {return (*this)->is_double();}
   bool is_string() const        {return (*this)->is_string();}
-  bool is_array() const         {return array() != 0;}
+  bool is_array() const         {return array() != nullptr;}
 };
 
 class VARCONF_API VarArray : public VarBase, public VarList {
 public:
-  VarArray() : VarBase(), VarList() {}
-  VarArray(const VarArray& v) : VarBase(), VarList(v) {}
-  VarArray(const int n, const Variable& v = Variable())
+  VarArray() = default;
+  VarArray(const VarArray& v) = default;
+  explicit VarArray(const int n, const Variable& v = Variable())
         : VarBase(), VarList(n, v) {}
-  VarArray(const VarList& v) : VarBase(), VarList(v) {}
-  ~VarArray();
+  explicit VarArray(const VarList& v) : VarBase(), VarList(v) {}
+  ~VarArray() override;
 
   friend std::ostream& operator<<(std::ostream& out, const VarArray& v);
   friend bool operator ==(const VarBase& one, const VarArray& two) {return false;}
   friend bool operator ==(const VarArray& one, const VarBase& two) {return false;}
   friend bool operator ==(const VarArray& one, const VarArray& two);
 
-  virtual operator bool() const;
-  virtual operator int() const;
-  virtual operator double() const;
-  virtual operator std::string() const;
+  operator bool() const override;
+  operator int() const override;
+  operator double() const override;
+  operator std::string() const override;
 
-  virtual bool is_bool() const;
-  virtual bool is_int() const;
-  virtual bool is_double() const;
-  virtual bool is_string() const;
+  bool is_bool() const override;
+  bool is_int() const override;
+  bool is_double() const override;
+  bool is_string() const override;
 };
 
 } // namespace varconf

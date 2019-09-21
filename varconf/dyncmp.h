@@ -39,19 +39,19 @@ class Compare : public Base {
 public:
   Compare() : Base(), m_v1(0), m_v2(0) {}
   Compare(const Variable& v1, const Variable& v2) : Base(), m_v1(v1), m_v2(v2) {}
-  Compare(const Compare& c) : Base(c), m_v1(c.m_v1), m_v2(c.m_v2) {}
+  Compare(const Compare& c) : sigc::trackable(c), Base(c), m_v1(c.m_v1), m_v2(c.m_v2) {}
 
-  virtual ~Compare();
+  ~Compare() override;
 
   Compare& operator=(const Compare& c);
 
 protected:
 
-  virtual void set_val();
+  void set_val() override;
 
-  virtual bool bool_cmp(const bool b1, const bool b2) = 0;
-  virtual bool int_cmp(const int i1, const int i2) = 0;
-  virtual bool double_cmp(const double d1, const double d2) = 0;
+  virtual bool bool_cmp(bool b1, bool b2) = 0;
+  virtual bool int_cmp(int i1, int i2) = 0;
+  virtual bool double_cmp(double d1, double d2) = 0;
   virtual bool string_cmp(const std::string& s1, const std::string& s2) = 0;
 
 private:
@@ -63,96 +63,96 @@ class Equal : public Compare {
 public:
   Equal() : Compare() {}
   Equal(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  Equal(const Equal& e) : Compare(e) {}
+  Equal(const Equal& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~Equal();
+  ~Equal() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string& s1, const std::string& s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string& s1, const std::string& s2) override;
 };
 
 class NotEq : public Compare {
 public:
   NotEq() : Compare() {}
   NotEq(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  NotEq(const NotEq& e) : Compare(e) {}
+  NotEq(const NotEq& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~NotEq();
+  ~NotEq() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string & s1, const std::string & s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string & s1, const std::string & s2) override;
 };
 
 class Greater : public Compare {
 public:
   Greater() : Compare() {}
   Greater(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  Greater(const Greater& e) : Compare(e) {}
+  Greater(const Greater& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~Greater();
+  ~Greater() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string& s1, const std::string& s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string& s1, const std::string& s2) override;
 };
 
 class GreaterEq : public Compare {
 public:
   GreaterEq() : Compare() {}
   GreaterEq(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  GreaterEq(const GreaterEq& e) : Compare(e) {}
+  GreaterEq(const GreaterEq& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~GreaterEq();
+  ~GreaterEq() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string& s1, const std::string& s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string& s1, const std::string& s2) override;
 };
 
 class Less : public Compare {
 public:
   Less() : Compare() {}
   Less(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  Less(const Less& e) : Compare(e) {}
+  Less(const Less& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~Less();
+  ~Less() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string& s1, const std::string& s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string& s1, const std::string& s2) override;
 };
 
 class LessEq : public Compare {
 public:
   LessEq() : Compare() {}
   LessEq(const Variable& v1, const Variable& v2) : Compare(v1, v2) {}
-  LessEq(const LessEq& e) : Compare(e) {}
+  LessEq(const LessEq& e) : sigc::trackable(e), Compare(e) {}
 
-  virtual ~LessEq();
+  ~LessEq() override;
 
 protected:
 
-  virtual bool bool_cmp(const bool b1, const bool b2);
-  virtual bool int_cmp(const int i1, const int i2);
-  virtual bool double_cmp(const double d1, const double d2);
-  virtual bool string_cmp(const std::string& s1, const std::string& s2);
+  bool bool_cmp(bool b1, bool b2) override;
+  bool int_cmp(int i1, int i2) override;
+  bool double_cmp(double d1, double d2) override;
+  bool string_cmp(const std::string& s1, const std::string& s2) override;
 };
 
 }} // namespace varconf::dynvar

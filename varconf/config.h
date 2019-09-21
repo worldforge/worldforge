@@ -49,7 +49,7 @@ public:
   // Allows use as a singleton, if desired.
   static Config* inst();
 
-  Config() { }
+  Config() = default;
 
   // New Config object, but deep-copies the m_conf and m_par_lookup of existing,
   // passed Config object.

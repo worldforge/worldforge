@@ -31,9 +31,7 @@
 namespace varconf {
 namespace dynvar {
 
-Compare::~Compare()
-{
-}
+Compare::~Compare() = default;
 
 Compare& Compare::operator=(const Compare& c)
 {
@@ -59,21 +57,19 @@ void Compare::set_val()
     VarBase::operator=(VarBase()); // Set it invalid
 }
 
-Equal::~Equal()
-{
-}
+Equal::~Equal() = default;
 
-bool Equal::bool_cmp(const bool b1, const bool b2)
+bool Equal::bool_cmp(bool b1, bool b2)
 {
   return b1 == b2;
 }
 
-bool Equal::int_cmp(const int i1, const int i2)
+bool Equal::int_cmp(int i1, int i2)
 {
   return i1 == i2;
 }
 
-bool Equal::double_cmp(const double d1, const double d2)
+bool Equal::double_cmp(double d1, double d2)
 {
   return d1 == d2;
 }
@@ -83,21 +79,19 @@ bool Equal::string_cmp(const std::string& s1, const std::string& s2)
   return s1 == s2;
 }
 
-NotEq::~NotEq()
-{
-}
+NotEq::~NotEq() = default;
 
-bool NotEq::bool_cmp(const bool b1, const bool b2)
+bool NotEq::bool_cmp(bool b1, bool b2)
 {
   return b1 != b2;
 }
 
-bool NotEq::int_cmp(const int i1, const int i2)
+bool NotEq::int_cmp(int i1, int i2)
 {
   return i1 != i2;
 }
 
-bool NotEq::double_cmp(const double d1, const double d2)
+bool NotEq::double_cmp(double d1, double d2)
 {
   return d1 != d2;
 }
@@ -107,21 +101,19 @@ bool NotEq::string_cmp(const std::string& s1, const std::string& s2)
   return s1 != s2;
 }
 
-Greater::~Greater()
-{
-}
+Greater::~Greater() = default;
 
-bool Greater::bool_cmp(const bool b1, const bool b2)
+bool Greater::bool_cmp(bool b1, bool b2)
 {
   return b1 > b2;
 }
 
-bool Greater::int_cmp(const int i1, const int i2)
+bool Greater::int_cmp(int i1, int i2)
 {
   return i1 > i2;
 }
 
-bool Greater::double_cmp(const double d1, const double d2)
+bool Greater::double_cmp(double d1, double d2)
 {
   return d1 > d2;
 }
@@ -131,21 +123,19 @@ bool Greater::string_cmp(const std::string& s1, const std::string& s2)
   return s1 > s2;
 }
 
-GreaterEq::~GreaterEq()
-{
-}
+GreaterEq::~GreaterEq() = default;
 
-bool GreaterEq::bool_cmp(const bool b1, const bool b2)
+bool GreaterEq::bool_cmp(bool b1, bool b2)
 {
   return b1 >= b2;
 }
 
-bool GreaterEq::int_cmp(const int i1, const int i2)
+bool GreaterEq::int_cmp(int i1, int i2)
 {
   return i1 >= i2;
 }
 
-bool GreaterEq::double_cmp(const double d1, const double d2)
+bool GreaterEq::double_cmp(double d1, double d2)
 {
   return d1 >= d2;
 }
@@ -155,21 +145,19 @@ bool GreaterEq::string_cmp(const std::string& s1, const std::string& s2)
   return s1 >= s2;
 }
 
-Less::~Less()
-{
-}
+Less::~Less() = default;
 
-bool Less::bool_cmp(const bool b1, const bool b2)
+bool Less::bool_cmp(bool b1, bool b2)
 {
   return b1 < b2;
 }
 
-bool Less::int_cmp(const int i1, const int i2)
+bool Less::int_cmp(int i1, int i2)
 {
   return i1 < i2;
 }
 
-bool Less::double_cmp(const double d1, const double d2)
+bool Less::double_cmp(double d1, double d2)
 {
   return d1 < d2;
 }
@@ -179,21 +167,19 @@ bool Less::string_cmp(const std::string& s1, const std::string& s2)
   return s1 < s2;
 }
 
-LessEq::~LessEq()
-{
-}
+LessEq::~LessEq() = default;
 
-bool LessEq::bool_cmp(const bool b1, const bool b2)
+bool LessEq::bool_cmp(bool b1, bool b2)
 {
   return b1 <= b2;
 }
 
-bool LessEq::int_cmp(const int i1, const int i2)
+bool LessEq::int_cmp(int i1, int i2)
 {
   return i1 <= i2;
 }
 
-bool LessEq::double_cmp(const double d1, const double d2)
+bool LessEq::double_cmp(double d1, double d2)
 {
   return d1 <= d2;
 }

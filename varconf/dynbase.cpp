@@ -27,14 +27,11 @@
 #include <varconf/dynbase.h>
 
 #include <string>
-#include <iostream>
 
 namespace varconf {
 namespace dynvar {
 
-Base::~Base()
-{
-}
+Base::~Base() = default;
 
 // operator<<, operator== aren't virtual, so we can use
 // static casts to avoid calling copy constructors

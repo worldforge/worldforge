@@ -29,6 +29,7 @@
 #include <string>
 #include <cstdio>
 #include <cstdlib>
+#include <utility>
 
 #ifdef _WIN32
 #define snprintf _snprintf
@@ -44,14 +45,14 @@ VarBase::VarBase()
 }
 
 VarBase::VarBase(const VarBase& c)
- : m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
+ : sigc::trackable(c), m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
    m_have_double(c.m_have_double), m_have_string(c.m_have_string),
    m_val_bool(c.m_val_bool), m_val_int(c.m_val_int),
    m_val_double(c.m_val_double), m_val(c.m_val), m_scope(GLOBAL)
 {
 }
 
-VarBase::VarBase(const bool b)
+VarBase::VarBase(bool b)
  : m_have_bool(true), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0),
    m_scope(GLOBAL)
@@ -59,7 +60,7 @@ VarBase::VarBase(const bool b)
   m_val = (b ? "true" : "false");
 }
 
-VarBase::VarBase(const int i)
+VarBase::VarBase(int i)
  : m_have_bool(false), m_have_int(true), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
    m_scope(GLOBAL)
@@ -69,7 +70,7 @@ VarBase::VarBase(const int i)
   m_val = buf;
 }
 
-VarBase::VarBase(const double d)
+VarBase::VarBase(double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
    m_scope(GLOBAL)
@@ -79,10 +80,10 @@ VarBase::VarBase(const double d)
   m_val = buf;
 }
 
-VarBase::VarBase(const std::string& s)
+VarBase::VarBase(std::string s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(s), m_scope(GLOBAL)
+   m_val(std::move(s)), m_scope(GLOBAL)
 {
 }
 
@@ -93,27 +94,23 @@ VarBase::VarBase(const char* s)
 {
 }
 
-VarBase::~VarBase()
-{
-}
+VarBase::~VarBase() = default;
 
 std::ostream& operator<<( std::ostream& out, const VarBase& v)
 {
-    for (size_t i = 0; i < v.m_val.size(); i++) {
-      if (v.m_val[i] == '"') out << '\\';
-      else if (v.m_val[i] == '\\') out << '\\';
-      out << v.m_val[i];
+    for (char i : v.m_val) {
+      if (i == '"') out << '\\';
+      else if (i == '\\') out << '\\';
+      out << i;
     }
     return out;
 }
 
 bool operator ==( const VarBase& one, const VarBase& two)
 {
-  if (one.m_val == two.m_val)
-    return true;
+	return one.m_val == two.m_val;
   // scope is explicitly excluded as its nothing to do with value comparisons
- 
-  return false;
+
 }
 
 bool operator !=(const VarBase& one, const VarBase& two)
@@ -121,7 +118,7 @@ bool operator !=(const VarBase& one, const VarBase& two)
   return !(one == two);
 }
 
-VarBase& VarBase::operator=( const VarBase& c)
+VarBase& VarBase::operator=(const VarBase& c)
 {
   if (&c == this) return (*this);
   m_have_bool = c.m_have_bool; m_have_int = c.m_have_int;
@@ -132,7 +129,7 @@ VarBase& VarBase::operator=( const VarBase& c)
   return (*this);
 }
 
-VarBase& VarBase::operator=(const bool b)
+VarBase& VarBase::operator=(bool b)
 {
   m_have_bool = true; m_have_int = false;
   m_have_double = false; m_have_string = true;
@@ -142,7 +139,7 @@ VarBase& VarBase::operator=(const bool b)
   return (*this);
 }
 
-VarBase& VarBase::operator=(const int i)
+VarBase& VarBase::operator=(int i)
 {
   m_have_bool = false; m_have_int = true;
   m_have_double = false; m_have_string = true;
@@ -154,7 +151,7 @@ VarBase& VarBase::operator=(const int i)
   return (*this);
 }
 
-VarBase& VarBase::operator=(const double d)
+VarBase& VarBase::operator=(double d)
 {
   m_have_bool = false; m_have_int = false;
   m_have_double = true; m_have_string = true;
@@ -189,8 +186,11 @@ VarBase& VarBase::operator=(const char* s)
 VarBase::operator bool() const
 {
   if (!m_have_bool) {
-    if ((m_val == "on") || (m_val == "1") || (m_val == "true") || (m_val ==
-      "yes") || (m_val == "y")) m_val_bool = true; else m_val_bool = false;
+	m_val_bool = (m_val == "on") ||
+			(m_val == "1") ||
+			(m_val == "true") ||
+			(m_val =="yes") ||
+			(m_val == "y");
     m_have_bool = true;
   }
   return m_val_bool;
@@ -222,18 +222,17 @@ VarBase::operator std::string() const
 bool VarBase::is_bool() const
 {
   if (!is_string()) return false;
-  if ( (m_val == "on") || (m_val == "off")
-     ||(m_val == "1") || (m_val == "0")
-     ||(m_val == "true") || (m_val == "false")
-     ||(m_val == "yes") || (m_val == "no")
-     ||(m_val == "y") || (m_val == "n")
-     ) return true; else return false;
+	return (m_val == "on") || (m_val == "off")
+		   || (m_val == "1") || (m_val == "0")
+		   || (m_val == "true") || (m_val == "false")
+		   || (m_val == "yes") || (m_val == "no")
+		   || (m_val == "y") || (m_val == "n");
 }
 
 bool VarBase::is_int() const
 {
   if (!is_string()) return false;
-  for (size_t i = 0; i < m_val.size(); i++) if (!isdigit(m_val[i]))
+  for (char i : m_val) if (!isdigit(i))
     return false;
   return true;
 }
@@ -274,9 +273,7 @@ Variable::Variable( const VarList& v) : VarPtr(new VarArray(v))
 
 }
 
-Variable::~Variable()
-{
-}
+Variable::~Variable() = default;
 
 Variable& Variable::operator=( const Variable& c)
 {
@@ -336,7 +333,7 @@ Variable& Variable::operator[](const int i)
   std::vector<Variable> *the_array = array();
 
   if(!the_array) {
-    VarArray *new_array = new VarArray(i + 1);
+    auto *new_array = new VarArray(i + 1);
     (*new_array)[0] = *this;
     VarPtr::operator=(new_array);
     the_array = new_array;
@@ -348,14 +345,13 @@ Variable& Variable::operator[](const int i)
 }
 
 
-VarArray::~VarArray()
-{ }
+VarArray::~VarArray() = default;
 
 std::ostream& operator<<( std::ostream& out, const VarArray& v)
 {
   out << "(";
 
-  VarArray::const_iterator i = v.begin();
+  auto i = v.begin();
   while(true) {
     out << *i;
     if(++i == v.end())
@@ -383,7 +379,7 @@ bool operator ==( const VarArray& one, const VarArray& two)
 
 VarArray::operator bool() const
 {
-  return 0;
+  return false;
 }
 
 VarArray::operator int() const

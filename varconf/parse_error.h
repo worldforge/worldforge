@@ -35,7 +35,7 @@ namespace varconf {
 
 class VARCONF_API ParseError {
 public:
-  ParseError() {}
+  ParseError() = default;
   ParseError(const ParseError& p);
   ParseError(const std::string& exp, int line, int col);
 
@@ -48,7 +48,7 @@ public:
 
 private:
   std::string m_exp;
-  int m_line, m_col;
+  int m_line{}, m_col{};
 };
 
 VARCONF_API std::ostream& operator<<(std::ostream& os, const ParseError& p);

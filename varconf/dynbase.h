@@ -38,9 +38,9 @@ class Base : public VarBase {
 public:
   Base() : VarBase(), m_looping(false) {}
   // Don't copy m_looping
-  Base(const Base& d) : VarBase(d), m_looping(false) {}
+  Base(const Base& d) : sigc::trackable(d), VarBase(d), m_looping(false) {}
 
-  virtual ~Base();
+  ~Base() override;
 
   Base& operator= (const Base& b);
 

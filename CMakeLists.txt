@@ -3,24 +3,26 @@ cmake_minimum_required(VERSION 3.2)
 project(varconf)
 include(GNUInstallDirs)
 include(FindPkgConfig)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 # Version setup
 
 set(VARCONF_VERSION_MAJOR 1)
 set(VARCONF_VERSION_MINOR 0)
-set(VARCONF_VERSION_PATCH 2)
+set(VARCONF_VERSION_PATCH 3)
 
 set(VERSION ${VARCONF_VERSION_MAJOR}.${VARCONF_VERSION_MINOR}.${VARCONF_VERSION_PATCH})
 set(SUFFIX -${VARCONF_VERSION_MAJOR}.${VARCONF_VERSION_MINOR})
 
-set(VARCONF_ABI_CURRENT 8)
+set(VARCONF_ABI_CURRENT 9)
 set(VARCONF_ABI_REVISION 0)
 set(VARCONF_ABI_AGE 0)
 math(EXPR VARCONF_SOVERSION ${VARCONF_ABI_CURRENT}-${VARCONF_ABI_AGE})
 set(VARCONF_ABI_VERSION ${VARCONF_SOVERSION}.${VARCONF_ABI_AGE}.${VARCONF_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -101,7 +103,7 @@ set(HEADER_FILES
         varconf/variable.h)
 
 wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
-
+target_compile_options("${PROJECT_NAME}${SUFFIX}" PRIVATE ${WF_WARNING_FLAGS})
 
 # pkg-config files
 configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}${SUFFIX}.pc @ONLY)
