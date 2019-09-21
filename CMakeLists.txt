@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(wfmath)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
 include(FindPkgConfig)
 
@@ -21,7 +22,7 @@ math(EXPR WFMATH_SOVERSION ${WFMATH_ABI_CURRENT}-${WFMATH_ABI_AGE})
 set(WFMATH_ABI_VERSION ${WFMATH_SOVERSION}.${WFMATH_ABI_AGE}.${WFMATH_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -143,6 +144,7 @@ set(HEADER_FILES
         wfmath/zero.h)
 
 wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
+target_compile_options(${PROJECT_NAME}${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 
 
 # pkg-config files
