@@ -46,29 +46,28 @@
 //---------------------------------------------------------------
 
 namespace Atlas {
+namespace {
 
-double _ScaleEpsilon(double x1, double x2, double epsilon)
-{
-    // Get the exponent of the smaller of the two numbers (using the
-    // smaller of the two gives us a tighter epsilon value).
-    int exponent;
-    (void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);   
+double _ScaleEpsilon(double x1, double x2, double epsilon) {
+	// Get the exponent of the smaller of the two numbers (using the
+	// smaller of the two gives us a tighter epsilon value).
+	int exponent;
+	(void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);
 
-    // Scale epsilon by the exponent.
-    return std::ldexp(epsilon, exponent);
+	// Scale epsilon by the exponent.
+	return std::ldexp(epsilon, exponent);
 }
 
-float _ScaleEpsilon(float x1, float x2, float epsilon)
-{
-    // Get the exponent of the smaller of the two numbers (using the
-    // smaller of the two gives us a tighter epsilon value).
-    int exponent;
-    (void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);   
+float _ScaleEpsilon(float x1, float x2, float epsilon) {
+	// Get the exponent of the smaller of the two numbers (using the
+	// smaller of the two gives us a tighter epsilon value).
+	int exponent;
+	(void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);
 
-    // Scale epsilon by the exponent.
-    return std::ldexp(epsilon, exponent);
+	// Scale epsilon by the exponent.
+	return std::ldexp(epsilon, exponent);
 }
-
+}
 bool Equal(double x1, double x2, double epsilon)
 {
     // If the difference between the numbers is smaller than the

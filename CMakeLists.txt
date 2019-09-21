@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 project(Atlas-C++)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
 
 # Version setup
@@ -19,7 +20,7 @@ math(EXPR ATLAS_SOVERSION ${ATLAS_ABI_CURRENT}-${ATLAS_ABI_AGE})
 set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -195,17 +196,22 @@ endmacro()
 
 
 wf_add_library(Atlas${SUFFIX} SOURCE_FILES HEADER_FILES)
+target_compile_options(Atlas${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 
 wf_add_library(AtlasCodecs${SUFFIX} CODECS_SOURCE_FILES CODECS_HEADER_FILES)
+target_compile_options(AtlasCodecs${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasCodecs${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasNet${SUFFIX} NET_SOURCE_FILES NET_HEADER_FILES)
+target_compile_options(AtlasNet${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasNet${SUFFIX} Atlas${SUFFIX} AtlasCodecs${SUFFIX})
 
 wf_add_library(AtlasMessage${SUFFIX} MESSAGE_SOURCE_FILES MESSAGE_HEADER_FILES)
+target_compile_options(AtlasMessage${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
+target_compile_options(AtlasObjects${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
 if (PYTHON_EXECUTABLE)
     add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasXml GenerateAtlasObjects)
@@ -213,10 +219,12 @@ if (PYTHON_EXECUTABLE)
 endif (PYTHON_EXECUTABLE)
 
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
+target_compile_options(AtlasFilters${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
 
 # The "atlas_convert" tool
 add_executable(atlas_convert tools/atlas_convert.cpp)
+target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
 install(TARGETS atlas_convert
         DESTINATION ${CMAKE_INSTALL_BINDIR})

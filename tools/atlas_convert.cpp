@@ -19,112 +19,107 @@
 
 int option_format = 0;
 int option_spacing = -1;
-
-Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase& decoder)
-{
-    if (type == "XML")
-        return new Atlas::Codecs::XML(stream, stream, decoder);
-    else if (type == "Bach")
-        return new Atlas::Codecs::Bach(stream, stream, decoder);
-    else if (type == "Packed")
-        return new Atlas::Codecs::Packed(stream, stream, decoder);
+namespace {
+Atlas::Codec* getCodec(std::string type, std::iostream& stream, Atlas::Message::DecoderBase& decoder) {
+	if (type == "XML")
+		return new Atlas::Codecs::XML(stream, stream, decoder);
+	else if (type == "Bach")
+		return new Atlas::Codecs::Bach(stream, stream, decoder);
+	else if (type == "Packed")
+		return new Atlas::Codecs::Packed(stream, stream, decoder);
 /*
     else if (type == "Binary")
         return new Atlas::Codecs::Binary(stream, decoder);
 */
-    else
-    {
-        std::cout << "Unknown CODEC required!" << std::endl;
-        exit(0);
-    }
+	else {
+		std::cout << "Unknown CODEC required!" << std::endl;
+		exit(0);
+	}
 }
 
-int convert(const std::string & file_in, const std::string & codec_in,
-            const std::string & file_out, const std::string & codec_out)
-{
-    std::cout << "Convert " << codec_in << " to " << codec_out << std::endl;
+int convert(const std::string& file_in, const std::string& codec_in,
+			const std::string& file_out, const std::string& codec_out) {
+	std::cout << "Convert " << codec_in << " to " << codec_out << std::endl;
 
-    std::fstream in, out;
+	std::fstream in, out;
 
-    in.open( file_in.c_str(), std::ios::in );
+	in.open(file_in.c_str(), std::ios::in);
 
-    if (!in.is_open()) {
-        std::cerr << "Unable to open " << file_in << " for input"
-                  << std::endl << std::flush;
-        return 1;
-    }
+	if (!in.is_open()) {
+		std::cerr << "Unable to open " << file_in << " for input"
+				  << std::endl << std::flush;
+		return 1;
+	}
 
-    out.open( file_out.c_str(), std::ios::out );
+	out.open(file_out.c_str(), std::ios::out);
 
-    if (!out.is_open()) {
-        std::cerr << "Unable to open " << file_out << " for output"
-                  << std::endl << std::flush;
-        return 1;
-    }
+	if (!out.is_open()) {
+		std::cerr << "Unable to open " << file_out << " for output"
+				  << std::endl << std::flush;
+		return 1;
+	}
 
-    std::cout << "Reading... ";
+	std::cout << "Reading... ";
 
-    Atlas::Message::QueuedDecoder decoder;
-    Atlas::Codec *inCodec = getCodec(codec_in, in, decoder);
-    while (!in.eof()) {
-        inCodec->poll();
-    }
+	Atlas::Message::QueuedDecoder decoder;
+	Atlas::Codec* inCodec = getCodec(codec_in, in, decoder);
+	while (!in.eof()) {
+		inCodec->poll();
+	}
 
-    std::cout << "done." << std::endl;
-    std::cout << "Writing... ";
+	std::cout << "done." << std::endl;
+	std::cout << "Writing... ";
 
-    Atlas::Codec * outCodec = getCodec(codec_out, out, decoder);
-    Atlas::Bridge * bridge;
+	Atlas::Codec* outCodec = getCodec(codec_out, out, decoder);
+	Atlas::Bridge* bridge;
 
-    if (option_format) {
-        Atlas::Formatter * format;
-        bridge = format = new Atlas::Formatter(out, *outCodec);
-        if (option_spacing != -1) {
-            format->setSpacing(option_spacing);
-        }
-    } else {
-        bridge = outCodec;
-    }
+	if (option_format) {
+		Atlas::Formatter* format;
+		bridge = format = new Atlas::Formatter(out, *outCodec);
+		if (option_spacing != -1) {
+			format->setSpacing(option_spacing);
+		}
+	} else {
+		bridge = outCodec;
+	}
 
-    Atlas::Message::Encoder encoder(*bridge);
-    encoder.streamBegin();
-    while (decoder.queueSize() > 0 ) {
-        Atlas::Message::MapType msg(decoder.popMessage());
-        encoder.streamMessageElement(msg);
-    }
-    encoder.streamEnd();
+	Atlas::Message::Encoder encoder(*bridge);
+	encoder.streamBegin();
+	while (decoder.queueSize() > 0) {
+		Atlas::Message::MapType msg(decoder.popMessage());
+		encoder.streamMessageElement(msg);
+	}
+	encoder.streamEnd();
 
-    std::cout << "done." << std::endl;
+	std::cout << "done." << std::endl;
 
-    out.close();
-    in.close();
+	out.close();
+	in.close();
 
-    return 0;
+	return 0;
 }
 
-void usage(const char * program)
-{
-    std::cout << "usage: " << program
-              << " [-i infile] [-o outfile] <input file> <output file>"
-              << std::endl;
-    std::cout << "Supported Codecs: XML Back Packed"
-              << std::endl << std::flush;
-    return;
+void usage(const char* program) {
+	std::cout << "usage: " << program
+			  << " [-i infile] [-o outfile] <input file> <output file>"
+			  << std::endl;
+	std::cout << "Supported Codecs: XML Back Packed"
+			  << std::endl << std::flush;
 }
-
+}
 int main( int argc, char** argv )
 {
     std::string codec_in("XML"),
                 codec_out("Bach");
 
-    while (1) {
+    while (true) {
         int c = getopt(argc, argv, "fs:i:o:");
         if (c == -1) {
             break;
         } else if (c == 'f') {
             option_format = 1;
         } else if (c == 's') {
-            option_spacing = strtol(optarg, NULL, 0);
+            option_spacing = strtol(optarg, nullptr, 0);
         } else if (c == 'i') {
             codec_in = optarg;
         } else if (c == 'o') {

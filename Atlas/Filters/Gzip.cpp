@@ -9,7 +9,7 @@
 #endif
 
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
-
+#define ZLIB_CONST
 #include <Atlas/Filters/Gzip.h>
 
 #ifndef ASSERT
@@ -48,7 +48,7 @@ std::string Gzip::encode(const std::string& data)
     
     buf[0] = 0;
 
-    outgoing.next_in = (unsigned char *)data.data();
+    outgoing.next_in = (const unsigned char *)data.data();
     outgoing.avail_in = data.size();
 
     do
@@ -75,7 +75,7 @@ std::string Gzip::decode(const std::string& data)
 
     buf[0] = 0;
 
-    incoming.next_in = (unsigned char*)data.data();
+    incoming.next_in = (const unsigned char*)data.data();
     incoming.avail_in = data.size();
 
     do 
