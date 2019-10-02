@@ -341,7 +341,7 @@ class ArgsRootList(AttributeInfo):
                   "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val, const Atlas::Objects::Factories* factories);\n" % self.__dict__
         return res + \
                doc(4, 'Set the first member of "%s"' % self.name) + \
-               "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
+               "    template <class ObjectData>\n    void set%(cname)s1(SmartPtr<ObjectData> val);\n" % self.__dict__
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
@@ -355,11 +355,11 @@ class ArgsRootList(AttributeInfo):
 }
 
 template <class ObjectData>
-inline void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
+inline void %(classname)s::set%(cname)s1(SmartPtr<ObjectData> val)
 {
     m_attrFlags |= %(flag_name)s;
     if(attr_%(name)s.size()!=1) attr_%(name)s.resize(1);
-    attr_%(name)s[0] = val;
+    attr_%(name)s[0] = std::move(val);
 }
 
 """ % self.__dict__  # "for xemacs syntax highlighting

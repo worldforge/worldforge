@@ -96,7 +96,7 @@ public:
     void setArgsAsList(const Atlas::Message::ListType& val, const Atlas::Objects::Factories* factories);
     /// Set the first member of "args"
     template <class ObjectData>
-    void setArgs1(const SmartPtr<ObjectData> & val);
+    void setArgs1(SmartPtr<ObjectData> val);
 
     /// Retrieve the "serialno" attribute.
     long getSerialno() const;
@@ -278,11 +278,11 @@ inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val
 }
 
 template <class ObjectData>
-inline void RootOperationData::setArgs1(const SmartPtr<ObjectData>& val)
+inline void RootOperationData::setArgs1(SmartPtr<ObjectData> val)
 {
     m_attrFlags |= ARGS_FLAG;
     if(attr_args.size()!=1) attr_args.resize(1);
-    attr_args[0] = val;
+    attr_args[0] = std::move(val);
 }
 
 inline long RootOperationData::getSerialno() const
