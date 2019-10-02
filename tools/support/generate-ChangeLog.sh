@@ -4,13 +4,13 @@
 top_srcdir=$1
 distdir=$2
 commitid=$3
-if [ x${distdir} = "x" ] || [ x${top_srcdir} = "x" ] || [ x${commitid} = "x" ]; then
+if [[ x${distdir} = "x" ]] || [[ x${top_srcdir} = "x" ]] || [[ x${commitid} = "x" ]]; then
 	echo "This script will generate an aggregated ChangeLog by combining the legacy ChangeLog-CVS file with the output from git log. It therefore needs to be run in a git source directory."
 	echo "Params: <source directory path> <distribution directory path> <SHA1 of first git commit>"	
 	exit 1
 fi
 #Only do the aggregation if the ChangeLog file is exactly one line. If not the aggregation has already been done.
-if [ `cat ${distdir}/ChangeLog | wc -l` = "0" ]; then
+if [[ `cat ${distdir}/ChangeLog | wc -l` = "0" ]]; then
 	echo "Generating ChangeLog by appending the old CVS ChangeLog to the one generated from git. This requires that you create the dist in the git repository."
 
     cd ${top_srcdir}
