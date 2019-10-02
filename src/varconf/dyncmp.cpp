@@ -24,7 +24,7 @@
  *            Old Forge, PA 18518
  */
  
-#include <varconf/dyncmp.h>
+#include "dyncmp.h"
 
 #include <string>
 

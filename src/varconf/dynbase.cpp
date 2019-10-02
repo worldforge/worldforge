@@ -24,7 +24,7 @@
  *            Old Forge, PA 18518
  */
  
-#include <varconf/dynbase.h>
+#include "dynbase.h"
 
 #include <string>
 

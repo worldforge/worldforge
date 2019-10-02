@@ -27,9 +27,9 @@
 #ifndef VARCONF_CONFIG_H
 #define VARCONF_CONFIG_H
 
-#include <varconf/varconf_defs.h>
-#include <varconf/parse_error.h>
-#include <varconf/variable.h>
+#include "varconf_defs.h"
+#include "parse_error.h"
+#include "variable.h"
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>

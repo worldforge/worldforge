@@ -24,8 +24,8 @@
  *            Old Forge, PA 18518
  */
  
-#include <varconf/dyntypes.h>
-#include <varconf/config.h>
+#include "dyntypes.h"
+#include "config.h"
 
 #include <string>
 

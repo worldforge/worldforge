@@ -24,7 +24,7 @@ set(VARCONF_ABI_VERSION ${VARCONF_SOVERSION}.${VARCONF_ABI_AGE}.${VARCONF_ABI_RE
 # Set compiler flags
 set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
@@ -40,6 +40,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             VERSION ${VARCONF_ABI_VERSION}
             SOVERSION ${VARCONF_SOVERSION}
             )
+    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -48,8 +49,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
         get_filename_component(dir ${file} DIRECTORY)
         install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
-
-    set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
 
@@ -80,54 +79,24 @@ include_directories(${WF_INCLUDE_DIRS})
 # Populate for pkg-config
 set(REQUIRES "sigc++-2.0")
 
-# Define source files for libraries
-
-set(SOURCE_FILES
-        varconf/config.cpp
-        varconf/dynbase.cpp
-        varconf/dyncmp.cpp
-        varconf/dyntypes.cpp
-        varconf/parse_error.cpp
-        varconf/varconf.h
-        varconf/variable.cpp)
-
-set(HEADER_FILES
-        varconf/config.h
-        varconf/dynbase.h
-        varconf/dyncmp.h
-        varconf/dyntypes.h
-        varconf/dynvar.h
-        varconf/parse_error.h
-        varconf/varconf.h
-        varconf/varconf_defs.h
-        varconf/variable.h)
-
-wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
-target_compile_options("${PROJECT_NAME}${SUFFIX}" PRIVATE ${WF_WARNING_FLAGS})
+add_subdirectory(src)
+add_subdirectory(tests)
 
 # pkg-config files
-configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}${SUFFIX}.pc @ONLY)
+configure_file(tools/${PROJECT_NAME}.pc.in ${PROJECT_NAME}${SUFFIX}.pc @ONLY)
 install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # RPM spec files
 #TODO: fix these
-configure_file(${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
+configure_file(tools/${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
 #TODO: fix these
-configure_file(mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
-
-# Add test
-enable_testing()
-
-
-
-wf_add_test(tests/conftest.cpp)
-add_definitions(-DSRCDIR="${PROJECT_SOURCE_DIR}/tests")
+configure_file(tools/mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
 
 # Doxygen support, exports a "docs" target.
 
 find_package(Doxygen)
-set(DOXYGEN_INPUT varconf)
-configure_file(Doxyfile.in Doxyfile @ONLY)
+set(DOXYGEN_INPUT src/varconf)
+configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 
 if (DOXYGEN_FOUND)
 

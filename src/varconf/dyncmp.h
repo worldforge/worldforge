@@ -27,8 +27,8 @@
 #ifndef VARCONF_DYNCMP_H
 #define VARCONF_DYNCMP_H
 
-#include <varconf/variable.h>
-#include <varconf/dynbase.h>
+#include "variable.h"
+#include "dynbase.h"
 
 #include <string>
 

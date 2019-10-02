@@ -26,10 +26,10 @@
 #ifndef VARCONF_DYNVAR_H
 #define VARCONF_DYNVAR_H
 
-#include <varconf/variable.h>
-#include <varconf/dynbase.h>
-#include <varconf/dyntypes.h>
-#include <varconf/dyncmp.h>
+#include "variable.h"
+#include "dynbase.h"
+#include "dyntypes.h"
+#include "dyncmp.h"
 
 namespace varconf {
 namespace dynvar {

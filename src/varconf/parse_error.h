@@ -27,7 +27,7 @@
 #ifndef VARCONF_PARSEERROR_H
 #define VARCONF_PARSEERROR_H
 
-#include <varconf/varconf_defs.h>
+#include "varconf_defs.h"
 #include <iostream>
 #include <string>
 

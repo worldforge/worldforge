@@ -24,7 +24,7 @@
  *            Old Forge, PA 18518
  */
  
-#include <varconf/variable.h>
+#include "variable.h"
 
 #include <string>
 #include <cstdio>
