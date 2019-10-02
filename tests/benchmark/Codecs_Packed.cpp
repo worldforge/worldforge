@@ -98,7 +98,7 @@ int main(int argc, char** argv)
             istream.str(message);
 
             packed.streamBegin();
-            packed.poll(true);
+            packed.poll();
             packed.streamEnd();
             decoder.popMessage();
         }

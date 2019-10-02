@@ -72,9 +72,10 @@ Sight NPC::move(Move &op)
 
 int main(int argc, char** argv)
 {
+	Atlas::Objects::Factories factories;
     try {
-        Atlas::Objects::loadDefaults("../../../protocols/atlas/spec/atlas.xml");
-    } catch(Atlas::Objects::DefaultLoadingException e) {
+        Atlas::Objects::loadDefaults("../../data/protocols/atlas/spec/atlas.xml", factories);
+    } catch(const Atlas::Objects::DefaultLoadingException& e) {
         std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
     }

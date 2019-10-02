@@ -15,7 +15,6 @@ talk to somebody who knows more about templates.
 
  - C++ implementation filenames will end in .cpp
  - headers will end in .h
- - files may be lower cased. This is up to debate.
 
 # On member names:
 
