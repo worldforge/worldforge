@@ -41,6 +41,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             VERSION ${ATLAS_ABI_VERSION}
             SOVERSION ${ATLAS_SOVERSION}
             )
+    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -49,8 +50,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
         get_filename_component(dir ${file} DIRECTORY)
         install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
-
-    set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
 endmacro()
 

@@ -107,22 +107,17 @@ set(HEADER_FILES
 
 
 wf_add_library(Atlas${SUFFIX} SOURCE_FILES HEADER_FILES)
-target_compile_options(Atlas${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 
 wf_add_library(AtlasCodecs${SUFFIX} CODECS_SOURCE_FILES CODECS_HEADER_FILES)
-target_compile_options(AtlasCodecs${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasCodecs${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasNet${SUFFIX} NET_SOURCE_FILES NET_HEADER_FILES)
-target_compile_options(AtlasNet${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasNet${SUFFIX} Atlas${SUFFIX} AtlasCodecs${SUFFIX})
 
 wf_add_library(AtlasMessage${SUFFIX} MESSAGE_SOURCE_FILES MESSAGE_HEADER_FILES)
-target_compile_options(AtlasMessage${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
 
 wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
-target_compile_options(AtlasObjects${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
 if (PYTHON_EXECUTABLE)
     add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasXml GenerateAtlasObjects)
@@ -130,7 +125,6 @@ if (PYTHON_EXECUTABLE)
 endif (PYTHON_EXECUTABLE)
 
 wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
-target_compile_options(AtlasFilters${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
 target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
 
 if (BZIP2_FOUND)

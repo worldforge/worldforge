@@ -6,5 +6,5 @@ includedir=${prefix}/include
 Name: @PROJECT_NAME@
 Description: @DESCRIPTION@
 Version: @VERSION@
-Libs: -L${libdir} @PKG_CONFIG_LIBS@
+Libs: -L${libdir} -lAtlas@SUFFIX@ -lAtlasFilters@SUFFIX@ -lAtlasCodecs@SUFFIX@ -lAtlasNet@SUFFIX@ -lAtlasMessage@SUFFIX@ -lAtlasObjects@SUFFIX@
 Cflags: -I${includedir}/@PROJECT_NAME@@SUFFIX@
