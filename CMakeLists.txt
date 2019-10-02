@@ -92,25 +92,18 @@ endif (PYTHON_EXECUTABLE)
 
 add_subdirectory(src)
 
-# The "atlas_convert" tool
-add_executable(atlas_convert tools/atlas_convert.cpp)
-target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
-target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
-target_include_directories(atlas_convert PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
-install(TARGETS atlas_convert
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # pkg-config files
-configure_file(atlascpp.pc.in atlascpp${SUFFIX}.pc @ONLY)
+configure_file(tools/atlascpp.pc.in atlascpp${SUFFIX}.pc @ONLY)
 install(FILES ${PROJECT_BINARY_DIR}/atlascpp${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # man files
 install(FILES docs/man/man1/atlas_convert.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # RPM spec files
-configure_file(atlas-cpp.spec.in atlas-cpp.spec @ONLY)
-configure_file(mingw32-atlas-cpp.spec.in mingw32-atlas-cpp.spec @ONLY)
+configure_file(tools/atlas-cpp.spec.in atlas-cpp.spec @ONLY)
+configure_file(tools/mingw32-atlas-cpp.spec.in mingw32-atlas-cpp.spec @ONLY)
 
 # Add test
 enable_testing()
@@ -173,7 +166,7 @@ wf_add_benchmark(tests/benchmark/Objects_setAttr.cpp)
 
 find_package(Doxygen)
 
-configure_file(Doxyfile.in Doxyfile @ONLY)
+configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 
 if (DOXYGEN_FOUND)
 

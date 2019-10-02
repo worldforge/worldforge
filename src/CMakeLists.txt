@@ -144,3 +144,11 @@ if (ZLIB_FOUND)
     target_link_libraries(AtlasFilters${SUFFIX} ${ZLIB_LIBRARIES})
     add_definitions(-DHAVE_ZLIB_H -DHAVE_LIBZ)
 endif (ZLIB_FOUND)
+
+# The "atlas_convert" tool
+add_executable(atlas_convert atlas_convert.cpp)
+target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
+target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
+
+install(TARGETS atlas_convert
+        DESTINATION ${CMAKE_INSTALL_BINDIR})
