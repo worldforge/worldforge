@@ -1,0 +1,22 @@
+# Add test
+enable_testing()
+
+wf_add_test(ball_test.cpp)
+wf_add_test(const_test.cpp)
+wf_add_test(intstring_test.cpp)
+wf_add_test(line_test.cpp)
+wf_add_test(point_test.cpp)
+wf_add_test(polygon_test.cpp)
+wf_add_test(probability_test.cpp)
+wf_add_test(quaternion_test.cpp)
+wf_add_test(randgen_test.cpp)
+wf_add_test(rotmatrix_test.cpp)
+wf_add_test(shape_test.cpp)
+wf_add_test(timestamp_test.cpp)
+wf_add_test(vector_test.cpp)
+
+if (WF_FOUND)
+    wf_add_test(atlas/atlas_0_7_test.cpp)
+    target_link_libraries(atlas_0_7_test ${WF_LDFLAGS})
+    target_include_directories(atlas_0_7_test PUBLIC ${WF_INCLUDE_DIRS})
+endif (WF_FOUND)

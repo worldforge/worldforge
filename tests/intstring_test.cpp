@@ -30,8 +30,8 @@
 #define DEBUG
 #endif
 
-#include "int_to_string.h"
-#include "randgen.h"
+#include "wfmath/int_to_string.h"
+#include "wfmath/randgen.h"
 
 #include <climits>
 #include <cstdlib>

@@ -30,12 +30,12 @@
 #define DEBUG
 #endif
 
-#include "const.h"
-#include "vector.h"
-#include "point.h"
-#include "axisbox.h"
-#include "ball.h"
-#include "stream.h"
+#include "wfmath/const.h"
+#include "wfmath/vector.h"
+#include "wfmath/point.h"
+#include "wfmath/axisbox.h"
+#include "wfmath/ball.h"
+#include "wfmath/stream.h"
 
 #include "general_test.h"
 #include "shape_test.h"

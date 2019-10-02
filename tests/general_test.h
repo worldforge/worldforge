@@ -1,4 +1,4 @@
-// vector_test.cpp (Vector<> test functions)
+// general_test.h (generic class interface test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -20,31 +20,46 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 
-// Author: Alistair Riddoch
-// Created: 2011-01-26
+// Author: Ron Steinke
+// Created: 2001-1-6
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-#ifndef DEBUG
-#define DEBUG
-#endif
+#ifndef WFMATH_GENERAL_TEST_H
+#define WFMATH_GENERAL_TEST_H
 
-#include "ball.h"
+#include "wfmath/const.h"
+#include "wfmath/stream.h"
+#include <string>
+#include <iostream>
 
-#include <cassert>
+#include <cstdlib>
 
-using namespace WFMath;
+namespace WFMath {
 
-int main()
+template<class C>
+void test_general(const C& c)
 {
-  Ball<2> b1(Point<2>(0,0), 1);
+  C c1, c2(c); // Generic and copy constructors
 
-  assert(b1.isValid());
+  c1 = c; // operator=()
 
-  Ball<2> b2(Point<2>(0,0), -1);
+  assert(Equal(c1, c2));
+  assert(c1 == c2);
+  assert(!(c1 != c2));
 
-  assert(!b2.isValid());
+  std::string s = ToString(c); // Uses operator<<() implicitly
+  C c3;
+  try {
+    FromString(c3, s); // Uses operator>>() implicitly
+  }
+  catch(const ParseError&) {
+    std::cerr << "Couldn't parse generated string: " << s << std::endl;
+    abort();
+  }
 
-  return 0;
+  // We lose precision in string conversion
+  assert(Equal(c3, c, FloatMax(numeric_constants<CoordType>::epsilon(), 1e-5F)));
 }
+
+} // namespace WFMath
+
+#endif // WFMATH_GENERAL_TEST_H

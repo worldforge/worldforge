@@ -30,7 +30,7 @@
 #define DEBUG
 #endif
 
-#include "const.h"
+#include "wfmath/const.h"
 
 #include <cassert>
 

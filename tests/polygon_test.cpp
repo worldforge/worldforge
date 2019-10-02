@@ -30,13 +30,13 @@
 #define DEBUG
 #endif
 
-#include "const.h"
-#include "vector.h"
-#include "rotmatrix.h"
-#include "point.h"
-#include "polygon.h"
-#include "polygon_intersect.h"
-#include "stream.h"
+#include "wfmath/const.h"
+#include "wfmath/vector.h"
+#include "wfmath/rotmatrix.h"
+#include "wfmath/point.h"
+#include "wfmath/polygon.h"
+#include "wfmath/polygon_intersect.h"
+#include "wfmath/stream.h"
 #include <vector>
 
 #include "general_test.h"

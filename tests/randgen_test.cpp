@@ -24,7 +24,7 @@
 // Created: 2011-2-14
 
 #include <assert.h>
-#include "randgen.h"
+#include "wfmath/randgen.h"
 #include <cstdio>
 #include <iostream>
 

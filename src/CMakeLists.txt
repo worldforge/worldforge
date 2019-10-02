@@ -1,0 +1,61 @@
+set(SOURCE_FILES
+        wfmath/axisbox.cpp
+        wfmath/ball.cpp
+        wfmath/const.cpp
+        wfmath/int_to_string.cpp
+        wfmath/intersect.cpp
+        wfmath/line.cpp
+        wfmath/point.cpp
+        wfmath/polygon.cpp
+        wfmath/polygon_intersect.cpp
+        wfmath/probability.cpp
+        wfmath/quaternion.cpp
+        wfmath/randgen.cpp
+        wfmath/rotbox.cpp
+        wfmath/rotmatrix.cpp
+        wfmath/segment.cpp
+        wfmath/stream.cpp
+        wfmath/timestamp.cpp
+        wfmath/vector.cpp)
+
+set(HEADER_FILES
+        wfmath/atlasconv.h
+        wfmath/axisbox.h
+        wfmath/axisbox_funcs.h
+        wfmath/ball.h
+        wfmath/ball_funcs.h
+        wfmath/basis.h
+        wfmath/const.h
+        wfmath/error.h
+        wfmath/int_to_string.h
+        wfmath/intersect.h
+        wfmath/intersect_decls.h
+        wfmath/line.h
+        wfmath/line_funcs.h
+        wfmath/MersenneTwister.h
+        wfmath/miniball.h
+        wfmath/miniball_funcs.h
+        wfmath/point.h
+        wfmath/point_funcs.h
+        wfmath/polygon.h
+        wfmath/polygon_funcs.h
+        wfmath/polygon_intersect.h
+        wfmath/probability.h
+        wfmath/quaternion.h
+        wfmath/randgen.h
+        wfmath/rotbox.h
+        wfmath/rotbox_funcs.h
+        wfmath/rotmatrix.h
+        wfmath/rotmatrix_funcs.h
+        wfmath/segment.h
+        wfmath/segment_funcs.h
+        wfmath/shuffle.h
+        wfmath/stream.h
+        wfmath/timestamp.h
+        wfmath/vector.h
+        wfmath/vector_funcs.h
+        wfmath/wfmath.h
+        wfmath/wrapped_array.h
+        wfmath/zero.h)
+
+wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)

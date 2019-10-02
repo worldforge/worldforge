@@ -30,11 +30,11 @@
 #define DEBUG
 #endif
 
-#include "const.h"
-#include "vector.h"
-#include "rotmatrix_funcs.h"
-#include "quaternion.h"
-#include "stream.h"
+#include "wfmath/const.h"
+#include "wfmath/vector.h"
+#include "wfmath/rotmatrix_funcs.h"
+#include "wfmath/quaternion.h"
+#include "wfmath/stream.h"
 #include <vector>
 
 #include "general_test.h"

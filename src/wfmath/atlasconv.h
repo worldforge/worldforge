@@ -31,14 +31,14 @@
 #ifndef WFMATH_ATLAS_CONV_H
 #define WFMATH_ATLAS_CONV_H
 
-#include <wfmath/point.h>
-#include <wfmath/vector.h>
-#include <wfmath/quaternion.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/polygon.h>
-#include <wfmath/ball.h>
-#include <wfmath/rotbox.h>
-#include <wfmath/line.h>
+#include "point.h"
+#include "vector.h"
+#include "quaternion.h"
+#include "axisbox.h"
+#include "polygon.h"
+#include "ball.h"
+#include "rotbox.h"
+#include "line.h"
 
 #include <cmath>
 

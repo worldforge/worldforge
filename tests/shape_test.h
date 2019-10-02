@@ -26,14 +26,14 @@
 #ifndef WFMATH_SHAPE_TEST_H
 #define WFMATH_SHAPE_TEST_H
 
-#include "const.h"
-#include "vector.h"
-#include "rotmatrix.h"
-#include "point.h"
-#include "axisbox.h"
-#include "ball.h"
-#include "intersect.h"
-#include "stream.h"
+#include "wfmath/const.h"
+#include "wfmath/vector.h"
+#include "wfmath/rotmatrix.h"
+#include "wfmath/point.h"
+#include "wfmath/axisbox.h"
+#include "wfmath/ball.h"
+#include "wfmath/intersect.h"
+#include "wfmath/stream.h"
 
 namespace WFMath {
 

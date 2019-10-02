@@ -30,9 +30,9 @@
 #define DEBUG
 #endif
 
-#include "const.h"
-#include "probability.h"
-#include "shuffle.h"
+#include "wfmath/const.h"
+#include "wfmath/probability.h"
+#include "wfmath/shuffle.h"
 #include <iostream>
 #include <vector>
 

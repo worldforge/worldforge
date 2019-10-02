@@ -24,13 +24,11 @@ set(WFMATH_ABI_VERSION ${WFMATH_SOVERSION}.${WFMATH_ABI_AGE}.${WFMATH_ABI_REVISI
 # Set compiler flags
 set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
 set(DESCRIPTION "A math library for the Worldforge system.")
-
-
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
@@ -41,6 +39,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             VERSION ${WFMATH_ABI_VERSION}
             SOVERSION ${WFMATH_SOVERSION}
             )
+    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -49,8 +48,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
         get_filename_component(dir ${file} DIRECTORY)
         install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
-
-    set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
 endmacro()
 
@@ -70,115 +67,26 @@ macro(wf_add_test TEST_FILE)
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
-
 # We only need Atlas for tests
 pkg_check_modules(WF atlascpp-0.7>=0.7)
 
-if (WF_FOUND)
-    wf_add_test(atlas/atlas_0_7_test.cpp)
-    target_link_libraries(atlas_0_7_test ${WF_LDFLAGS})
-    target_include_directories(atlas_0_7_test PUBLIC ${WF_INCLUDE_DIRS})
-endif (WF_FOUND)
-
-# Define source files for libraries
-
-set(SOURCE_FILES
-        wfmath/axisbox.cpp
-        wfmath/ball.cpp
-        wfmath/const.cpp
-        wfmath/int_to_string.cpp
-        wfmath/intersect.cpp
-        wfmath/line.cpp
-        wfmath/point.cpp
-        wfmath/polygon.cpp
-        wfmath/polygon_intersect.cpp
-        wfmath/probability.cpp
-        wfmath/quaternion.cpp
-        wfmath/randgen.cpp
-        wfmath/rotbox.cpp
-        wfmath/rotmatrix.cpp
-        wfmath/segment.cpp
-        wfmath/stream.cpp
-        wfmath/timestamp.cpp
-        wfmath/vector.cpp)
-
-set(HEADER_FILES
-        wfmath/atlasconv.h
-        wfmath/axisbox.h
-        wfmath/axisbox_funcs.h
-        wfmath/ball.h
-        wfmath/ball_funcs.h
-        wfmath/basis.h
-        wfmath/const.h
-        wfmath/error.h
-        wfmath/general_test.h
-        wfmath/int_to_string.h
-        wfmath/intersect.h
-        wfmath/intersect_decls.h
-        wfmath/line.h
-        wfmath/line_funcs.h
-        wfmath/MersenneTwister.h
-        wfmath/miniball.h
-        wfmath/miniball_funcs.h
-        wfmath/point.h
-        wfmath/point_funcs.h
-        wfmath/polygon.h
-        wfmath/polygon_funcs.h
-        wfmath/polygon_intersect.h
-        wfmath/probability.h
-        wfmath/quaternion.h
-        wfmath/randgen.h
-        wfmath/rotbox.h
-        wfmath/rotbox_funcs.h
-        wfmath/rotmatrix.h
-        wfmath/rotmatrix_funcs.h
-        wfmath/segment.h
-        wfmath/segment_funcs.h
-        wfmath/shuffle.h
-        wfmath/stream.h
-        wfmath/timestamp.h
-        wfmath/vector.h
-        wfmath/vector_funcs.h
-        wfmath/wfmath.h
-        wfmath/wrapped_array.h
-        wfmath/zero.h)
-
-wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
-target_compile_options(${PROJECT_NAME}${SUFFIX} PRIVATE ${WF_WARNING_FLAGS})
-
+add_subdirectory(src)
+add_subdirectory(tests)
 
 # pkg-config files
-configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}${SUFFIX}.pc @ONLY)
+configure_file(tools/${PROJECT_NAME}.pc.in ${PROJECT_NAME}${SUFFIX}.pc @ONLY)
 install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # RPM spec files
 #TODO: fix these
-configure_file(${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
+configure_file(tools/${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
 #TODO: fix these
-configure_file(mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
-
-# Add test
-enable_testing()
-
-wf_add_test(wfmath/ball_test.cpp)
-wf_add_test(wfmath/const_test.cpp)
-wf_add_test(wfmath/intstring_test.cpp)
-wf_add_test(wfmath/line_test.cpp)
-wf_add_test(wfmath/point_test.cpp)
-wf_add_test(wfmath/polygon_test.cpp)
-wf_add_test(wfmath/probability_test.cpp)
-wf_add_test(wfmath/quaternion_test.cpp)
-wf_add_test(wfmath/randgen_test.cpp)
-wf_add_test(wfmath/rotmatrix_test.cpp)
-wf_add_test(wfmath/shape_test.cpp)
-wf_add_test(wfmath/timestamp_test.cpp)
-wf_add_test(wfmath/vector_test.cpp)
-
+configure_file(tools/mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
 
 # Doxygen support, exports a "docs" target.
 
 find_package(Doxygen)
-configure_file(doc/Doxyfile.in Doxyfile @ONLY)
+configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 
 if (DOXYGEN_FOUND)
 
