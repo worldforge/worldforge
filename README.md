@@ -13,7 +13,7 @@ and attribute updates.
 ## Installation
 
 If you intend to build this as a prerequisite for the Ember client or the Cyphesis server we strongly suggest that you 
-use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile Ember.
+use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile it.
 This is script provided by the Worldforge project which will download and install all of the required libraries and 
 components used by Worldforge.
 

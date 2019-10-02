@@ -1,7 +1,7 @@
 *.gcda
 *.gcov
 *.gcno
-bindings/perl/compile_flags.pl
+extras/bindings/perl/compile_flags.pl
 eris-1.3.pc
 eris.dox
 eris.spec
@@ -32,4 +32,5 @@ test/test-suite.log
 *.kdev*
 #ignore generated reports
 abi_report
-
+.idea
+cmake-build-*

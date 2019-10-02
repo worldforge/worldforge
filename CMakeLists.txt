@@ -22,9 +22,9 @@ math(EXPR ERIS_SOVERSION ${ERIS_ABI_CURRENT}-${ERIS_ABI_AGE})
 set(ERIS_ABI_VERSION ${ERIS_SOVERSION}.${ERIS_ABI_AGE}.${ERIS_ABI_REVISION})
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
@@ -46,6 +46,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             VERSION ${ERIS_ABI_VERSION}
             SOVERSION ${ERIS_SOVERSION}
             )
+    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -54,8 +55,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
         get_filename_component(dir ${file} DIRECTORY)
         install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
-
-    set(PKG_CONFIG_LIBS "-l${_LIB_NAME} ${PKG_CONFIG_LIBS}")
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
     target_link_libraries(${_LIB_NAME}_STATIC ${WF_LIBRARIES})
@@ -86,8 +85,6 @@ include_directories(${WF_INCLUDE_DIRS})
 # Populate for pkg-config
 set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
 
-
-
 find_package(Boost
         1.46.0
         REQUIRED
@@ -104,173 +101,29 @@ if (UNIX)
     link_libraries(Threads::Threads)
 endif (UNIX)
 
-
-# Define source files for libraries
-
-set(SOURCE_FILES
-        Eris/Account.cpp
-        Eris/Avatar.cpp
-        Eris/BaseConnection.cpp
-        Eris/Calendar.cpp
-        Eris/CharacterType.cpp
-        Eris/Connection.cpp
-        Eris/CustomEntities.cpp
-        Eris/Entity.cpp
-        Eris/EntityRef.cpp
-        Eris/EntityRouter.cpp
-        Eris/EventService.cpp
-        Eris/Factory.cpp
-        Eris/IGRouter.cpp
-        Eris/Lobby.cpp
-        Eris/Log.cpp
-        Eris/MetaQuery.cpp
-        Eris/Metaserver.cpp
-        Eris/Operations.cpp
-        Eris/Person.cpp
-        Eris/Redispatch.cpp
-        Eris/Response.cpp
-        Eris/Room.cpp
-        Eris/Router.cpp
-        Eris/ServerInfo.cpp
-        Eris/Session.cpp
-        Eris/SpawnPoint.cpp
-        Eris/StreamSocket.cpp
-        Eris/Task.cpp
-        Eris/TransferInfo.cpp
-        Eris/TypeBoundRedispatch.cpp
-        Eris/TypeInfo.cpp
-        Eris/TypeService.cpp
-        Eris/View.cpp
-        Eris/ViewEntity.cpp
-        Eris/ActiveMarker.cpp)
-
-set(HEADER_FILES
-        Eris/Account.h
-        Eris/Avatar.h
-        Eris/BaseConnection.h
-        Eris/Calendar.h
-        Eris/CharacterType.h
-        Eris/Connection.h
-        Eris/CustomEntities.h
-        Eris/Entity.h
-        Eris/EntityRef.h
-        Eris/EntityRouter.h
-        Eris/EventService.h
-        Eris/Exceptions.h
-        Eris/Factory.h
-        Eris/IGRouter.h
-        Eris/iround.h
-        Eris/Lobby.h
-        Eris/Log.h
-        Eris/LogStream.h
-        Eris/MetaQuery.h
-        Eris/Metaserver.h
-        Eris/Operations.h
-        Eris/Person.h
-        Eris/Redispatch.h
-        Eris/Response.h
-        Eris/Room.h
-        Eris/Router.h
-        Eris/ServerInfo.h
-        Eris/Session.h
-        Eris/SpawnPoint.h
-        Eris/StreamSocket.h
-        Eris/StreamSocket_impl.h
-        Eris/Task.h
-        Eris/TransferInfo.h
-        Eris/TypeBoundRedispatch.h
-        Eris/TypeInfo.h
-        Eris/Types.h
-        Eris/TypeService.h
-        Eris/View.h
-        Eris/ViewEntity.h
-        Eris/WaitFreeQueue.h
-        Eris/ActiveMarker.h
-        Eris/Usage.h)
-
-wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
+add_subdirectory(src)
+add_subdirectory(tests)
 
 # pkg-config files
-configure_file(${PROJECT_NAME_LOWER}.pc.in ${PROJECT_NAME_LOWER}${SUFFIX}.pc @ONLY)
+configure_file(tools/${PROJECT_NAME_LOWER}.pc.in ${PROJECT_NAME_LOWER}${SUFFIX}.pc @ONLY)
 install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # RPM spec files
 #TODO: fix these
-configure_file(${PROJECT_NAME_LOWER}.spec.in ${PROJECT_NAME_LOWER}.spec @ONLY)
+configure_file(tools/${PROJECT_NAME_LOWER}.spec.in ${PROJECT_NAME_LOWER}.spec @ONLY)
 #TODO: fix these
-configure_file(mingw32-${PROJECT_NAME_LOWER}.spec.in mingw32-${PROJECT_NAME_LOWER}.spec @ONLY)
-
-enable_testing()
-
-wf_add_test(test/Account_integrationtest.cpp)
-wf_add_test(test/Account_unittest.cpp)
-wf_add_test(test/Avatar_unittest.cpp)
-wf_add_test(test/BaseConnection_unittest.cpp)
-wf_add_test(test/Calendar_unittest.cpp)
-wf_add_test(test/Connection_unittest.cpp)
-wf_add_test(test/DeleteLater_unittest.cpp)
-wf_add_test(test/Entity_unittest.cpp)
-wf_add_test(test/EntityRef_unittest.cpp)
-wf_add_test(test/EntityRouter_unittest.cpp)
-wf_add_test(test/EventService_unittest.cpp)
-wf_add_test(test/Exceptions_unittest.cpp)
-wf_add_test(test/Factory_unittest.cpp)
-wf_add_test(test/IGRouter_unittest.cpp)
-wf_add_test(test/Lobby_unittest.cpp)
-wf_add_test(test/Log_unittest.cpp)
-wf_add_test(test/LogStream_unittest.cpp)
-wf_add_test(test/MetaQuery_unittest.cpp)
-wf_add_test(test/Metaserver_integrationtest.cpp)
-wf_add_test(test/Metaserver_unittest.cpp)
-wf_add_test(test/Operations_unittest.cpp)
-wf_add_test(test/Person_unittest.cpp)
-wf_add_test(test/Poll_unittest.cpp)
-wf_add_test(test/PollWinsock_unittest.cpp)
-wf_add_test(test/Redispatch_unittest.cpp)
-wf_add_test(test/Response_unittest.cpp)
-wf_add_test(test/Room_unittest.cpp)
-wf_add_test(test/Router_unittest.cpp)
-wf_add_test(test/ServerInfo_unittest.cpp)
-wf_add_test(test/Task_unittest.cpp)
-wf_add_test(test/TransferInfo_unittest.cpp)
-wf_add_test(test/TypeBoundRedispatch_unittest.cpp)
-wf_add_test(test/TypeInfo_unittest.cpp)
-wf_add_test(test/Types_unittest.cpp)
-wf_add_test(test/TypeService_unittest.cpp)
-wf_add_test(test/View_unittest.cpp)
-wf_add_test(test/ActiveMarker_UnitTest.cpp)
-
-#wf_add_test(testEris test/tests.cpp
-#        test/stubServer.h test/stubServer.cpp
-#        test/clientConnection.cpp test/clientConnection.h
-#        test/agent.cpp test/agent.h
-#        test/commander.cpp test/commander.h
-#        test/controller.cpp test/controller.h
-#        test/testUtils.h test/testUtils.cpp
-#        test/objectSummary.h
-#        test/netTests.cpp test/netTests.h
-#        test/setupHelpers.cpp test/setupHelpers.h
-#        test/signalHelpers.h
-#        test/testOutOfGame.cpp test/testOutOfGame.h
-#        test/viewTest.cpp test/viewTest.h
-#        test/avatarTest.cpp test/avatarTest.h
-#        test/calendarTest.cpp test/calendarTest.h)
-
-add_executable(metaQuery test/metaQuery.cpp)
-target_link_libraries(metaQuery ${LIBNAME})
-add_executable(eris_connect test/connect.cpp)
-target_link_libraries(eris_connect ${LIBNAME})
+configure_file(tools/mingw32-${PROJECT_NAME_LOWER}.spec.in mingw32-${PROJECT_NAME_LOWER}.spec @ONLY)
 
 # Doxygen support, exports a "docs" target.
 
-configure_file(eris.dox.in eris.dox @ONLY)
+configure_file(docs/eris.dox.in eris.dox @ONLY)
 
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
 
     set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/eris.dox)
-    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc)
+    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs)
 
     add_custom_command(
             OUTPUT ${DOXYGEN_OUTPUT}
