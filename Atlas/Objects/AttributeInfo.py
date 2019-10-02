@@ -1,15 +1,17 @@
-#This file is distributed under the terms of 
-#the GNU Lesser General Public license (See the file COPYING for details).
-#Copyright (C) 2000 Stefanus Du Toit and Aloril
-#Copyright (C) 2001-2005 Alistair Riddoch
-#Copyright (C) 2011 Erik Ogenvik
+# This file is distributed under the terms of
+# the GNU Lesser General Public license (See the file COPYING for details).
+# Copyright (C) 2000 Stefanus Du Toit and Aloril
+# Copyright (C) 2001-2005 Alistair Riddoch
+# Copyright (C) 2011 Erik Ogenvik
 
 __revision__ = '$Id$'
 
 from common import *
 
+
 class AttributeInfo:
-    attr_enum = {"_free":1 }
+    attr_enum = {"_free": 1}
+
     def __init__(self, name, value, type=None):
         if not type: type = get_atlas_type(value)
         self.name = name
@@ -37,28 +39,28 @@ class AttributeInfo:
         return num
 
     def set_if(self):
-        res = doc(4, 'Set the "%s" attribute.' % self.name)+\
+        res = doc(4, 'Set the "%s" attribute.' % self.name) + \
               "    void set%(cname)s(%(cpp_param_in_type)s val);\n" % \
               self.__dict__
         if self.as_object:
             res = res + doc(4, 'Set the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
-               "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val);\n" % self.__dict__
+                  "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val);\n" % self.__dict__
         return res
 
     def get_if(self):
-        res = doc(4, 'Retrieve the "%s" attribute.' % self.name)+\
-              "    %(cpp_param_type)s get%(cname)s() const;\n" % self.__dict__ +\
-              doc(4, 'Retrieve the "%s" attribute as a non-const reference.' % self.name)+\
+        res = doc(4, 'Retrieve the "%s" attribute.' % self.name) + \
+              "    %(cpp_param_type)s get%(cname)s() const;\n" % self.__dict__ + \
+              doc(4, 'Retrieve the "%s" attribute as a non-const reference.' % self.name) + \
               "    %(cpp_param_type2)s modify%(cname)s();\n" % self.__dict__
         if self.as_object:
             res = res + doc(4, 'Retrieve the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
-               "    %(cpp_param_type_as_object)s get%(cname)s%(as_object)s() const;\n" % self.__dict__
+                  "    %(cpp_param_type_as_object)s get%(cname)s%(as_object)s() const;\n" % self.__dict__
         return res
 
     def is_default_if(self):
-        return doc(4, 'Is "%s" value default?' % self.name)+\
+        return doc(4, 'Is "%s" value default?' % self.name) + \
                "    bool isDefault%(cname)s() const;\n" % self.__dict__
 
     def inline_set(self, classname):
@@ -70,7 +72,7 @@ class AttributeInfo:
     m_attrFlags |= %(flag_name)s;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
         else:
             return """inline void %(classname)s::set%(cname)s(%(cpp_param_in_type)s val)
 {
@@ -78,7 +80,7 @@ class AttributeInfo:
     m_attrFlags |= %(flag_name)s;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def inline_get(self, classname):
         self.classname = classname
@@ -97,7 +99,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
     return attr_%(name)s;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def inline_is_default(self, classname):
         self.classname = classname
@@ -106,7 +108,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
     return (m_attrFlags & %(flag_name)s) == 0;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def inline_send(self, classname):
         res = 'inline void %s::send%s' % (classname, self.cname)
@@ -191,13 +193,12 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                   % (self.attr_name, self.cname, self.as_object)
         res = res + '    }\n'
         return res + '}\n\n'
-        
 
     def default_assign(self, classname):
         var = 'data.attr_%s' % (self.name)
         if self.type == "int" or self.type == "float":
             return '        %s = %s;\n' \
-                    % (var, self.value)
+                   % (var, self.value)
         elif self.type == "string":
             if classname in ['AnonymousData'] and self.name == 'objtype':
                 return ''
@@ -209,7 +210,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                 return '        %s = default_%s;\n' \
                        % (var, self.name)
             return '        %s = "%s";\n' \
-                    % (var, self.value)
+                   % (var, self.value)
         elif self.type == "string_list_length" or self.type == "string_list":
             if len(self.value) == 0:
                 return ''
@@ -223,7 +224,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                           % (var, val)
                 return res
         elif self.type == "int_list_length" or self.type == "int_list" or \
-             self.type == "float_list_length" or self.type == "float_list":
+                self.type == "float_list_length" or self.type == "float_list":
             if len(self.value) == 0:
                 return ''
             elif len(self.value) == 1:
@@ -238,7 +239,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
         else:
             return ''
 
-#[gs]etattr_im: convert to use get/set'Attrname'
+    # [gs]etattr_im: convert to use get/set'Attrname'
 
     def check_obj(self, name, obj):
         if not isinstance(obj, AttributeInfo):
@@ -271,7 +272,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
         for sub in obj.value:
             sub_type = type2str[type(sub)]
             if sub_type == "list":
-                res  = res + self.default_list("%s_%d" % (name, ++i), sub)
+                res = res + self.default_list("%s_%d" % (name, ++i), sub)
             elif sub_type == "map":
                 res = res + self.default_map("%s_%d" % (name, ++i), sub)
             res = res + "        %s.push_back(" % name
@@ -318,10 +319,9 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
             return '    if (name == %(attr_name)s) { set%(cname)s%(as_object)s(attr.as%(ctype_as_object)s()); return; }\n' % self.__dict__
 
 
-
-#ListType vs vector<BaseObject>
-#vector<BaseObject> -> ListType: use asElement to convert
-#ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
+# ListType vs vector<BaseObject>
+# vector<BaseObject> -> ListType: use asElement to convert
+# ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
 
 class ArgsRootList(AttributeInfo):
     def __init__(self, name, value, type):
@@ -332,7 +332,7 @@ class ArgsRootList(AttributeInfo):
         self.ctype_as_object = "List"
 
     def set_if(self):
-        res = doc(4, 'Set the "%s" attribute.' % self.name)+ \
+        res = doc(4, 'Set the "%s" attribute.' % self.name) + \
               "    void set%(cname)s(%(cpp_param_in_type)s val);\n" % \
               self.__dict__
         if self.as_object:
@@ -340,9 +340,8 @@ class ArgsRootList(AttributeInfo):
                             (self.name, self.as_object)) + \
                   "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val, const Atlas::Objects::Factories* factories);\n" % self.__dict__
         return res + \
-            doc(4, 'Set the first member of "%s"' % self.name) + \
-            "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
-
+               doc(4, 'Set the first member of "%s"' % self.name) + \
+               "    template <class ObjectData>\n    void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
@@ -363,7 +362,7 @@ inline void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
     attr_%(name)s[0] = val;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def inline_get(self, classname):
         return AttributeInfo.inline_get(self, classname) + \
@@ -378,15 +377,16 @@ inline void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
     return args_out;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def constructors_im(self):
         return ""
 
-#typed list: string_list, int_list, float_list
-#ListType vs list<foo>
-#list<foo> -> ListType: just add
-#ListType -> list<foo>: check type and ignore not matching types
+
+# typed list: string_list, int_list, float_list
+# ListType vs list<foo>
+# list<foo> -> ListType: just add
+# ListType -> list<foo>: check type and ignore not matching types
 
 class TypedList(AttributeInfo):
     def __init__(self, name, value, type):
@@ -396,7 +396,7 @@ class TypedList(AttributeInfo):
         self.cpp_param_type_as_object = cpp_param_type["list"][len("const "):-1]
         self.cpp_param_type_as_object_ref = cpp_param_type["list"]
         self.ctype_as_object = "List"
-        element_type = string.split(type,"_")[0]
+        element_type = string.split(type, "_")[0]
         self.cpp_element_type = cpp_type[element_type]
         if element_type == "string":
             self.cpp_element_type_begin = "std::string("
@@ -421,7 +421,7 @@ class TypedList(AttributeInfo):
     }
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def inline_get(self, classname):
         return AttributeInfo.inline_get(self, classname) + \
@@ -435,22 +435,25 @@ class TypedList(AttributeInfo):
     return lst_out;
 }
 
-""" % self.__dict__ #"for xemacs syntax highlighting
+""" % self.__dict__  # "for xemacs syntax highlighting
 
     def constructors_im(self):
         return ""
 
-#typed list with fixed length: 
-#string_list_length, int_list_length, float_list_length
-#ListType vs vector<foo>
-#vector<foo> -> ListType: just add
-#ListType -> vector<foo>: check type and ignore not matching types
+
+# typed list with fixed length:
+# string_list_length, int_list_length, float_list_length
+# ListType vs vector<foo>
+# vector<foo> -> ListType: just add
+# ListType -> vector<foo>: check type and ignore not matching types
 #                    also check length and ignore all extra elements and 
 #                    fill missing elements with defaults
 
 class TypedVector(TypedList): pass
-#add length check later
-#(and take into account possibility of settting default values using AsList versions)
+
+
+# add length check later
+# (and take into account possibility of settting default values using AsList versions)
 
 attr_name2class = {'map': [AttributeInfo],
                    'list': [AttributeInfo],

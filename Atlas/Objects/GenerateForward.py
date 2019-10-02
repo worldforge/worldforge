@@ -1,14 +1,15 @@
-#This file is distributed under the terms of 
-#the GNU Lesser General Public license (See the file COPYING for details).
-#Copyright (C) 2003 Alistair Riddoch
-#Copyright (C) 2011 Erik Ogenvik
+# This file is distributed under the terms of
+# the GNU Lesser General Public license (See the file COPYING for details).
+# Copyright (C) 2003 Alistair Riddoch
+# Copyright (C) 2011 Erik Ogenvik
 
-#just used to partition gen_cpp.py into files, 
-#not usable without GenerateCC class
+# just used to partition gen_cpp.py into files,
+# not usable without GenerateCC class
 
 __revision__ = '$Id$'
 
 from common import *
+
 
 class GenerateForward:
     def generate_forward(self, objects):
@@ -32,11 +33,11 @@ class ObjectsEncoder;
             if len(namespace) != 0:
                 self.write("namespace %s {\n    " % (namespace[0:-2]))
             self.write("class %s;\n" %
-                  (classize(obj.id, 1)))
+                       (classize(obj.id, 1)))
             if len(namespace) != 0:
                 self.write("    ")
             self.write("typedef SmartPtr<%s> %s;\n" %
-                  (classize(obj.id, 1), classize(obj.id)))
+                       (classize(obj.id, 1), classize(obj.id)))
             if len(namespace) != 0:
                 self.write("}\n")
             self.write("\n")

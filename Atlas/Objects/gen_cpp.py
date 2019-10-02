@@ -1,22 +1,23 @@
 #!/usr/local/bin/python
-#This file is distributed under the terms of 
-#the GNU Lesser General Public license (See the file COPYING for details).
-#Copyright (C) 2000 Stefanus Du Toit and Aloril
-#Copyright (C) 2001-2005 Alistair Riddoch
+# This file is distributed under the terms of
+# the GNU Lesser General Public license (See the file COPYING for details).
+# Copyright (C) 2000 Stefanus Du Toit and Aloril
+# Copyright (C) 2001-2005 Alistair Riddoch
 
 __revision__ = '$Id$'
 
 from common import *
 from AttributeInfo import *
-from GenerateObjectFactory import GenerateObjectFactory
 from GenerateForward import GenerateForward
+from GenerateObjectFactory import GenerateObjectFactory
 
 class_serial_no = 1
+
 
 class GenerateCC(GenerateObjectFactory, GenerateForward):
     def __init__(self, objects, outdir):
         self.objects = objects
-        #self.outdir = outdir
+        # self.outdir = outdir
         self.outdir = "."
         if outdir != ".":
             self.base_list = ['Atlas', 'Objects', outdir]
@@ -36,11 +37,11 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
             self.children_interface_file(obj)
             self.children_implementation_file(obj)
             res = [obj] + self.progeny
-            #self.decoder()
+            # self.decoder()
         else:
             res = [obj]
-        return map(lambda o,n=self.name_space:(o,n), res)
-    
+        return map(lambda o, n=self.name_space: (o, n), res)
+
     def find_attr_class(self, obj):
         name = obj.id
         if attr_name2class.has_key(name):
@@ -49,17 +50,17 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
         res = self.find_attr_class(obj.parent)
         if res: return res
 
-    def get_name_value_type(self, obj, first_definition = 0,
-                            real_attr_only = 0, include_desc_attrs = 0):
+    def get_name_value_type(self, obj, first_definition=0,
+                            real_attr_only=0, include_desc_attrs=0):
         lst = []
         for name, value in obj.items():
             if not include_desc_attrs and name in descr_attrs:
                 continue
-            #required that no parent has this attribute?
+            # required that no parent has this attribute?
             if first_definition:
                 if find_in_parents(obj, name):
                     continue
-            #basic type
+            # basic type
             otype, attr_class_lst = self.find_attr_class(self.objects[name])
             # print 'Attr ', attr_class_lst, name, value, otype
             if real_attr_only:
@@ -91,13 +92,13 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
         if hasattr(obj, "parent") and obj.parent is not None:
             self.set_attributes(obj.parent, include_desc_attrs, lst, used_attributes)
 
-    def get_default_name_value_type(self, obj, include_desc_attrs = 0):
+    def get_default_name_value_type(self, obj, include_desc_attrs=0):
         lst = []
         used_attributes = []
         self.set_attributes(obj, include_desc_attrs, lst, used_attributes)
         if obj.has_key('id'):
             parent = obj['id']
-            otype,attr_class_lst = self.find_attr_class(self.objects['parent'])
+            otype, attr_class_lst = self.find_attr_class(self.objects['parent'])
             lst.append(apply(attr_class_lst[0], ('parent', parent, 'string')))
         return lst
 
@@ -111,21 +112,23 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def write(self, str):
         self.out.write(str)
 
-    def header(self, list, copyright = copyright):
+    def header(self, list, copyright=copyright):
         self.write(copyright)
         self.write("\n")
         guard = string.join(map(string.upper, list), "_")
         self.write("#ifndef " + guard + "\n")
         self.write("#define " + guard + "\n\n")
+
     def footer(self, list):
         guard = string.join(map(string.upper, list), "_")
         self.write("\n#endif // " + guard + "\n")
 
-    #namespace
+    # namespace
     def ns_open(self, ns_list):
         for namespace in ns_list:
             self.write("namespace " + namespace + " { ")
         self.write("\n")
+
     def ns_close(self, ns_list):
         for i in range(0, len(ns_list)):
             self.write("} ")
@@ -142,7 +145,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
                 os.rename(outfile + ".tmp", outfile)
                 print "Generated:", outfile
             else:
-                #print "Output file same as existing one, not updating"
+                # print "Output file same as existing one, not updating"
                 os.remove(outfile + ".tmp")
         else:
             os.rename(outfile + ".tmp", outfile)
@@ -158,7 +161,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     {
         m_class_no = %(serialno_name)s;
     }
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def attribute_names_if(self, obj, statics):
         for attr in statics:
@@ -196,7 +199,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def static_attr_flag_inserts(self, obj, static_attrs):
         classname = classize(obj.id, data=1)
         for attr in static_attrs:
-            self.write("    attr_data[%s] = %s;\n" % (attr.attr_name, attr.flag_name)) #"for xamacs syntax highlighting
+            self.write("    attr_data[%s] = %s;\n" % (attr.attr_name, attr.flag_name))  # "for xamacs syntax highlighting
 
     def attribute_names_im(self, obj, statics):
         for attr in statics:
@@ -208,7 +211,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
         classname = classize(obj.id, data=1)
         serialno_name = string.upper(obj.id) + "_NO"
         self.write("int %s::getAttrClass(const std::string& name) const\n"
-                        % classname)
+                   % classname)
         self.write("{\n")
         # for attr in statics:
         #     self.write('    if (name == "%s")' % attr.name)
@@ -224,7 +227,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def getattrflag_im(self, obj):
         classname = classize(obj.id, data=1)
         self.write("bool %s::getAttrFlag(const std::string& name, uint32_t& flag) const\n"
-                        % classname)
+                   % classname)
         self.write("{\n")
         self.write("""    auto I = allocator.attr_flags_Data.find(name);
     if (I != allocator.attr_flags_Data.end()) {
@@ -240,14 +243,14 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
         classname = classize(obj.id, data=1)
         # This is no longer required, as its base is no virtual, and just
         # calls getAttr(name, attr)
-        #self.write("const Element %s::getAttr" % classname)
-        #self.write("(const std::string& name) const\n")
-        #self.write("{\n")
-        #for attr in statics:
-            #self.write(attr.getattr_im())
-        #parent = self.get_cpp_parent(obj)
-        #self.write("    return %s::getAttr(name);\n" % parent)
-        #self.write("}\n\n")
+        # self.write("const Element %s::getAttr" % classname)
+        # self.write("(const std::string& name) const\n")
+        # self.write("{\n")
+        # for attr in statics:
+        # self.write(attr.getattr_im())
+        # parent = self.get_cpp_parent(obj)
+        # self.write("    return %s::getAttr(name);\n" % parent)
+        # self.write("}\n\n")
         self.write("int %s::copyAttr" % classname)
         self.write("(const std::string& name, Element & attr) const\n")
         self.write("{\n")
@@ -271,7 +274,7 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def remattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("void %s::removeAttr(const std::string& name)\n"
-                        % classname)
+                   % classname)
         self.write("{\n")
         for attr in statics:
             self.write('    if (name == %s)\n' % attr.attr_name)
@@ -303,27 +306,27 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
                 # flag twice, do it.
                 if attr.as_object:
                     self.write('        m[%s] = get%s%s();\n' % \
-                           (attr.attr_name, attr.cname, attr.as_object))
+                               (attr.attr_name, attr.cname, attr.as_object))
                 else:
                     self.write('        m[%s] = attr_%s;\n' % \
-                           (attr.attr_name, attr.name))
+                               (attr.attr_name, attr.name))
             else:
                 # This code only handles "parent" and "objtype", both
                 # of which can be checked with .empty().
                 if attr.as_object:
                     self.write('    %s l_attr_%s = get%s%s();\n' % \
-                        (attr.cpp_param_type_as_object, attr.name, attr.cname, attr.as_object))
+                               (attr.cpp_param_type_as_object, attr.name, attr.cname, attr.as_object))
                     self.write('    if (!l_attr_%s.empty())\n' % \
-                        (attr.name))
+                               (attr.name))
                     self.write('        m[%s] = l_attr_%s;\n' % \
-                        (attr.attr_name, attr.name))
+                               (attr.attr_name, attr.name))
                 else:
                     self.write('    %s l_attr_%s = get%s();\n' % \
-                        (attr.cpp_param_type, attr.name, attr.cname))
+                               (attr.cpp_param_type, attr.name, attr.cname))
                     self.write('    if (!l_attr_%s.empty())\n' % \
-                        (attr.name))
+                               (attr.name))
                     self.write('        m[%s] = l_attr_%s;\n' % \
-                        (attr.attr_name, attr.name))
+                               (attr.attr_name, attr.name))
         self.write("}\n\n")
 
     def smart_ptr_if(self, name_addition=""):
@@ -349,7 +352,7 @@ protected:
 private:
 
     static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, uint32_t>& attr_data);
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def free_im(self, obj):
         classname = self.classname
@@ -360,7 +363,7 @@ void %(classname)s::free()
     allocator.free(this);
 }
 
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def reset_im(self, obj, static_attrs):
         classname = self.classname
@@ -369,8 +372,8 @@ void %(classname)s::free()
 void %(classname)s::reset()
 {
 """ % vars())
-        #Clear any collection of Root objects, so they are returned
-        #to the pool.
+        # Clear any collection of Root objects, so they are returned
+        # to the pool.
         for attr in static_attrs:
             if attr.type == "RootList":
                 self.write("""    attr_%s.clear();
@@ -380,26 +383,26 @@ void %(classname)s::reset()
 """ % (classize(obj.parent, data=1)))
         self.write("""}
 
-""") #"for xemacs syntax highlighting
-        
+""")  # "for xemacs syntax highlighting
+
     def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
 void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, uint32_t>& attr_data)
 {
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
         self.static_default_assigns(obj, default_attrs)
         if len(static_attrs) > 0:
             self.static_attr_flag_inserts(obj, static_attrs)
         self.write("""}
 
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def allocator_im(self, obj):
         classname = self.classname
         self.write("""Allocator<%(classname)s> %(classname)s::allocator;
         
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def settype_im(self, obj):
         classname = self.classname
@@ -409,7 +412,8 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
     m_class_no = no;
 }
 
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
+
     def copy_im(self, obj):
         self.write("""%s * %s::copy() const
 {
@@ -420,6 +424,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
 }
 
 """ % (self.classname, self.classname, self.classname))
+
     def instanceof_im(self, obj):
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
@@ -429,7 +434,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
     if(%(serialno_name)s == classNo) return true;
     return %(classname_base)s::instanceOf(classNo);
 }
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
 
     def iterate_im(self, obj, statics):
         classname_base = self.get_cpp_parent(obj)
@@ -443,7 +448,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         return;
     }
 
-    static const char *attr_list[] = {""" % vars()) #"for xemacs syntax highlighting
+    static const char *attr_list[] = {""" % vars())  # "for xemacs syntax highlighting
         for attr in statics:
             self.write('"%s",' % attr.name)
         self.write("""};
@@ -473,12 +478,12 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
     }
 }
 
-""" % vars()) #"for xemacs syntax highlighting 
+""" % vars())  # "for xemacs syntax highlighting
 
     def interface_file(self, obj):
-        #print "Output of interface for:",
+        # print "Output of interface for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".h"
-        #print outfile
+        # print outfile
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.classname_pointer, "H"])
 
@@ -488,11 +493,11 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         else:
             parent = obj.parent.id
             self.write('#include <Atlas/Objects/')
-            #if parent == "root": self.write('../')
+            # if parent == "root": self.write('../')
             self.write(classize(parent) + '.h>\n')
 
             self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
-        if obj.id=="root_operation":
+        if obj.id == "root_operation":
             self.write('#include <Atlas/Objects/Factories.h>\n\n')
         self.ns_open(self.base_list)
         if obj.parent is None:
@@ -515,7 +520,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("static const int %s_NO = %i;\n\n" % (
             string.upper(obj.id), class_serial_no))
         class_serial_no = class_serial_no + 1
-        self.write("/// \\brief " + obj.description  + ".\n")
+        self.write("/// \\brief " + obj.description + ".\n")
         if hasattr(obj, 'long_description'):
             self.write("///\n/** " + obj.long_description + "\n */\n")
         self.write("class " + self.classname)
@@ -555,25 +560,25 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.write("\n")
 
         if len(static_attrs) > 0:
-            #generic access/etc.. methods
+            # generic access/etc.. methods
             # self.doc(4, 'Retrieve the attribute "name". Throws ' \
             #          + 'NoSuchAttrException if it does')
             # self.doc(4, 'not exist.')
             # self.write("    virtual const Atlas::Message::Element getAttr(")
             # self.write("const std::string& name)\n")
             self.doc(4, 'Retrieve the attribute "name". Return ' \
-                      + 'non-zero if it does')
+                     + 'non-zero if it does')
             self.doc(4, 'not exist.')
             self.write("    int copyAttr(")
             self.write("const std::string& name, ")
             self.write("Atlas::Message::Element & attr) const override;\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
-                      + '"attr"')
+                     + '"attr"')
             self.write("    void setAttr(const std::string& name,\n")
             self.write("                         ")
             self.write("Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr) override;\n")
-            self.doc(4, 'Remove the attribute "name". This will not work for '\
-                      + 'static attributes.')
+            self.doc(4, 'Remove the attribute "name". This will not work for ' \
+                     + 'static attributes.')
             self.write("    void removeAttr(")
             self.write("const std::string& name) override;\n")
             self.write("\n")
@@ -599,12 +604,12 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.write("protected:\n")
 
             self.doc(4, 'Find the class which contains the attribute "name".')
-            self.write("    int getAttrClass(const std::string& name)"\
-                           + "const override;\n")
+            self.write("    int getAttrClass(const std::string& name)" \
+                       + "const override;\n")
 
             self.doc(4, 'Find the flag for the attribute "name".')
-            self.write("    bool getAttrFlag(const std::string& name, uint32_t& flag)"\
-                           + "const override;\n")
+            self.write("    bool getAttrFlag(const std::string& name, uint32_t& flag)" \
+                       + "const override;\n")
 
             for attr in static_attrs:
                 if self.objects.has_key(attr.name):
@@ -612,11 +617,11 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
                     if hasattr(attr_object, 'description'):
                         self.doc(4, attr_object.description)
                 self.write('    %s attr_%s;\n' %
-                               (cpp_type[attr.type], attr.name))
+                           (cpp_type[attr.type], attr.name))
             self.write('\n')
             for attr in static_attrs:
                 self.doc(4, 'Send the "%s" attribute to an Atlas::Bridge.' %
-                            (attr.name))
+                         (attr.name))
                 self.write("    void send" + attr.cname)
                 self.write('(Atlas::Bridge&) const;\n')
 
@@ -628,8 +633,8 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
 
         self.freelist_if()
         self.write("};\n\n")
-        
-        #inst# self.instance_if(obj)
+
+        # inst# self.instance_if(obj)
 
         if len(static_attrs) > 0:
             self.write('//\n// Attribute name strings follow.\n//\n\n')
@@ -641,18 +646,18 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             # self.static_inline_sends(obj, static_attrs)
             self.write('\n')
 
-    def implementation_file (self, obj):
-        #print "Output of implementation for:",
+    def implementation_file(self, obj):
+        # print "Output of implementation for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".cpp"
-        #print outfile
+        # print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write("\n")
         self.write('#include <Atlas/Objects/' + self.classname_pointer + '.h>\n')
         self.write("\n")
-        #self.write("using namespace std;\n")
-        #self.write("using namespace Atlas;\n")
-        #self.write("using namespace Atlas::Message;\n")
+        # self.write("using namespace std;\n")
+        # self.write("using namespace Atlas;\n")
+        # self.write("using namespace Atlas::Message;\n")
         self.write("using Atlas::Message::Element;\n")
         self.write("using Atlas::Message::MapType;\n")
         self.write("\n")
@@ -669,7 +674,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
     def implementation(self, obj, static_attrs=[], default_attrs=[]):
         if len(static_attrs) > 0:
             self.attribute_names_im(obj, static_attrs)
-            #self.constructors_im(obj)
+            # self.constructors_im(obj)
             self.getattrclass_im(obj, static_attrs)
             self.getattrflag_im(obj)
             self.getattr_im(obj, static_attrs)
@@ -688,8 +693,8 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
         self.instanceof_im(obj)
         self.default_object_im(obj, default_attrs, static_attrs)
 
-        #inst# self.instance_im()
-        
+        # inst# self.instance_im()
+
     def instance_if(self, obj):
         self.smart_ptr_if("Instance")
         classname_base = self.classname
@@ -708,12 +713,11 @@ public:
     {
         m_class_no = %(serialno_name)s;
     }
-""" % vars()) #"for xemacs syntax highlighting
+""" % vars())  # "for xemacs syntax highlighting
         class_serial_no = class_serial_no + 1
         self.freelist_if("Instance")
         self.write("};\n\n")
         self.free_im()
-
 
     def instance_im(self):
         self.freelist_im("Instance")
@@ -725,7 +729,7 @@ public:
             self.classname = classize(child.id, data=1)
             self.classname_pointer = classize(child.id)
             static_attrs = self.get_name_value_type(child, first_definition=1,
-                                                         real_attr_only=1)
+                                                    real_attr_only=1)
             default_attrs = self.get_default_name_value_type(child)
 
             func(child, static_attrs, default_attrs)
@@ -745,7 +749,7 @@ public:
             self.find_progeny_recursive(child, class_only_files)
 
     def children_interface_file(self, obj):
-        #print "Output of interface for:",
+        # print "Output of interface for:",
         outfile = self.outdir + '/' + self.generic_class_name + ".h"
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.generic_class_name, "H"])
@@ -764,26 +768,26 @@ public:
 
     def children_implementation_file(self, obj):
         size_limit = 6
-        if len(self.progeny)<=size_limit:
+        if len(self.progeny) <= size_limit:
             self.children_implementation_one_file(obj, "", self.progeny)
         else:
             for i in range(0, len(self.progeny), size_limit):
                 self.children_implementation_one_file(
-                    obj, i/size_limit+1, self.progeny[i:i+size_limit])
+                    obj, i / size_limit + 1, self.progeny[i:i + size_limit])
 
     def children_implementation_one_file(self, obj, serial, progeny):
-        #print "Output of implementation for:",
+        # print "Output of implementation for:",
         outfile = self.outdir + '/' + self.classname_pointer + \
                   "Children%s.cpp" % serial
-        #print outfile
+        # print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write("\n")
         self.write('#include <Atlas/Objects/' + self.generic_class_name + '.h>\n')
         self.write("\n")
-        #self.write("using namespace std;\n")
-        #self.write("using namespace Atlas;\n")
-        #self.write("using namespace Atlas::Message;\n")
+        # self.write("using namespace std;\n")
+        # self.write("using namespace Atlas;\n")
+        # self.write("using namespace Atlas::Message;\n")
         self.write("using Atlas::Message::Element;\n")
         self.write("using Atlas::Message::MapType;\n")
         self.write("\n")
@@ -794,17 +798,15 @@ public:
         self.out.close()
         self.update_outfile(outfile)
 
-        
-
 
 # Main program
-if __name__=="__main__":
-    #read XML spec
-    parseXML=parse_xml.get_decoder()
+if __name__ == "__main__":
+    # read XML spec
+    parseXML = parse_xml.get_decoder()
     parseXML.set_stream_mode()
-    atlas_file=sys.argv[1]
+    atlas_file = sys.argv[1]
     spec_xml_string = open(atlas_file).read()
-    #convert list into dictionary
+    # convert list into dictionary
     objects = {}
     for obj in parseXML(spec_xml_string):
         objects[obj.id] = obj
@@ -814,23 +816,23 @@ if __name__=="__main__":
 
     print "Loaded %s" % atlas_file
 
-##     if len(sys.argv) >= 3:
-##         outdir = sys.argv[2]
-##     else:
-##         outdir = "."
+    ##     if len(sys.argv) >= 3:
+    ##         outdir = sys.argv[2]
+    ##     else:
+    ##         outdir = "."
     object_enum = 0
     all_objects = []
     # print objects["pos"].description
     for name, outdir, class_only_files in (
-                ("root", ".", []),
-                ("root_entity", "Entity", ["entity.def"]),
-                ("root_operation", "Operation", ["operation.def"]),
-                ("anonymous", "Entity", []),
-                ("generic", "Operation", [])):
+            ("root", ".", []),
+            ("root_entity", "Entity", ["entity.def"]),
+            ("root_operation", "Operation", ["operation.def"]),
+            ("anonymous", "Entity", []),
+            ("generic", "Operation", [])):
         object_enum = object_enum + 1
-        gen_code = GenerateCC(objects, outdir) #, object_enum)
+        gen_code = GenerateCC(objects, outdir)  # , object_enum)
         all_objects = all_objects + gen_code(objects[name], class_only_files)
-    #generate code common to all objects
-    gen_code = GenerateCC(objects, ".") #, object_enum)
-    gen_code.generate_object_factory(all_objects,class_serial_no)
+    # generate code common to all objects
+    gen_code = GenerateCC(objects, ".")  # , object_enum)
+    gen_code.generate_object_factory(all_objects, class_serial_no)
     gen_code.generate_forward(all_objects)
