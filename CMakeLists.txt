@@ -29,7 +29,7 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 # Meta data
 
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
-set(DESCRIPTION "A config handling library for the Worldforge system.")
+set(DESCRIPTION "A terrain generation library for the Worldforge system.")
 
 # Check for libraries
 pkg_check_modules(WF REQUIRED wfmath-1.0>=1.0.0)
@@ -124,6 +124,22 @@ add_custom_command(
         COMMAND ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
 )
 add_custom_target(changelog DEPENDS ChangeLog)
+
+
+# CMake config files
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+write_basic_package_version_file(
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${VERSION}
+        COMPATIBILITY ExactVersion)
+install(FILES
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 
 # Packaging (for source tarballs
