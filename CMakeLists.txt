@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(Atlas-C++)
+project(Atlas)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
@@ -48,7 +48,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     foreach (file ${${_HEADER_FILES_VAR}})
         get_filename_component(dir ${file} DIRECTORY)
-        install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
+        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
 
 endmacro()
@@ -90,7 +90,6 @@ if (PYTHON_EXECUTABLE)
 endif (PYTHON_EXECUTABLE)
 
 add_subdirectory(src)
-
 
 
 # pkg-config files
@@ -191,6 +190,21 @@ add_custom_command(
         COMMAND ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
 )
 add_custom_target(changelog DEPENDS ChangeLog)
+
+# CMake config files
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+write_basic_package_version_file(
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${VERSION}
+        COMPATIBILITY ExactVersion)
+install(FILES
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 
 # Packaging (for source tarballs
