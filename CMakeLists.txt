@@ -95,7 +95,7 @@ endmacro()
 add_subdirectory(src)
 add_subdirectory(tests)
 
-# Doxygen support, exports a "docs" target.
+# Doxygen support, exports a "dox" target.
 
 find_package(Doxygen)
 set(DOXYGEN_INPUT src/Mercator)
@@ -104,7 +104,7 @@ configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 if (DOXYGEN_FOUND)
 
     set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc)
+    set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs)
 
     add_custom_command(
             OUTPUT ${DOXYGEN_OUTPUT}
@@ -115,7 +115,7 @@ if (DOXYGEN_FOUND)
             DEPENDS ${DOXYGEN_INPUT}
     )
 
-    add_custom_target(docs DEPENDS ${DOXYGEN_OUTPUT})
+    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
 
 endif (DOXYGEN_FOUND)
 
