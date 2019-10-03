@@ -114,15 +114,15 @@ configure_file(tools/${PROJECT_NAME_LOWER}.spec.in ${PROJECT_NAME_LOWER}.spec @O
 #TODO: fix these
 configure_file(tools/mingw32-${PROJECT_NAME_LOWER}.spec.in mingw32-${PROJECT_NAME_LOWER}.spec @ONLY)
 
-# Doxygen support, exports a "docs" target.
+# Doxygen support, exports a "dox" target.
 
-configure_file(docs/eris.dox.in eris.dox @ONLY)
+configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
 
-    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/eris.dox)
+    set(DOXYGEN_INPUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
     set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/docs)
 
     add_custom_command(
@@ -134,7 +134,7 @@ if (DOXYGEN_FOUND)
             DEPENDS ${DOXYGEN_INPUT}
     )
 
-    add_custom_target(docs DEPENDS ${DOXYGEN_OUTPUT})
+    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
 
 endif (DOXYGEN_FOUND)
 
