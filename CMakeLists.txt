@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(Eris)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 include(GNUInstallDirs)
 include(FindPkgConfig)
 include(FindBoost)
@@ -31,6 +32,11 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(LIBNAME "${PROJECT_NAME_LOWER}${SUFFIX}")
 set(DESCRIPTION "A WorldForge client library.")
+
+set(WF_LIBRARY_DIRS)
+set(WF_INCLUDE_DIRS)
+set(WF_LIBRARIES)
+
 
 # We've been getting issues with memory corruption in boost when building with GCC -O2 flags, and it
 # seems to be related to the asio small memory block recycling code. We'll thus disable it to avoid the
@@ -77,8 +83,26 @@ macro(wf_add_test TEST_FILE)
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
+find_package(SigC++
+        2.0
+        REQUIRED)
+list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
+list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
 
-pkg_check_modules(WF REQUIRED sigc++-2.0>=2.0.0 atlascpp-0.7>=0.7.0 wfmath-1.0>=1.0.0)
+find_package(Atlas
+        0.7.0
+        REQUIRED)
+list(APPEND WF_LIBRARIES ${Atlas_LIBRARIES})
+list(APPEND WF_INCLUDE_DIRS ${Atlas_INCLUDE_DIR})
+list(APPEND WF_LIBRARY_DIRS ${Atlas_LIBRARY_DIR})
+
+find_package(wfmath
+        1.0.3
+        REQUIRED)
+list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
+list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
+list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
+
 
 link_directories(${WF_LIBRARY_DIRS})
 include_directories(${WF_INCLUDE_DIRS})
@@ -143,6 +167,22 @@ add_custom_command(
         COMMAND ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 6951ccbc623ff06dc9598bef83c3d820f9b51aec
 )
 add_custom_target(changelog DEPENDS ChangeLog)
+
+
+# CMake config files
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+        PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+write_basic_package_version_file(
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${VERSION}
+        COMPATIBILITY ExactVersion)
+install(FILES
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 
 # Packaging (for source tarballs
