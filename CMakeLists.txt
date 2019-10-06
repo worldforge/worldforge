@@ -41,6 +41,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     foreach (file ${${_HEADER_FILES_VAR}})
