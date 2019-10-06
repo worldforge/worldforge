@@ -5,6 +5,7 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 
 # Version setup
 
@@ -35,7 +36,7 @@ set(DESCRIPTION "Configuration library for the Worldforge system.")
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${VARCONF_ABI_VERSION}
             SOVERSION ${VARCONF_SOVERSION}
@@ -70,9 +71,24 @@ macro(wf_add_test TEST_FILE)
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
-
 # Check for deps
-pkg_check_modules(WF REQUIRED sigc++-2.0>=2.0.0)
+
+set(WF_LIBRARY_DIRS)
+set(WF_INCLUDE_DIRS)
+set(WF_LIBRARIES)
+
+if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    MESSAGE("Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif()
+
+find_package(SigC++
+        2.0
+        REQUIRED)
+list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
+list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
+list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
 
 link_directories(${WF_LIBRARY_DIRS})
 include_directories(${WF_INCLUDE_DIRS})
