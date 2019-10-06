@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(Mercator)
+project(mercator)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
@@ -31,19 +31,34 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(DESCRIPTION "A terrain generation library for the Worldforge system.")
 
-# Check for libraries
-pkg_check_modules(WF REQUIRED wfmath-1.0>=1.0.0)
+set(WF_LIBRARY_DIRS)
+set(WF_INCLUDE_DIRS)
+set(WF_LIBRARIES)
+
+if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    MESSAGE("Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif()
+
+find_package(wfmath
+        1.0.3
+        REQUIRED)
+list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
+list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
+list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
 
 link_directories(${WF_LIBRARY_DIRS})
 include_directories(${WF_INCLUDE_DIRS})
+link_libraries(${WF_LIBRARIES})
+
 # Populate for pkg-config
 set(REQUIRES "wfmath-1.0")
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}})
-    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${MERCATOR_ABI_VERSION}
             SOVERSION ${MERCATOR_SOVERSION}
@@ -58,7 +73,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     endforeach ()
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
-    target_link_libraries(${_LIB_NAME}_STATIC ${WF_LIBRARIES})
     target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
 endmacro()
@@ -86,7 +100,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX}_STATIC)
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
