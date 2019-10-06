@@ -28,15 +28,21 @@ set(DESCRIPTION "Networking protocol for the Worldforge system.")
 
 # Check for libraries
 
-find_package(BZip2)
-find_package(ZLIB)
+if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    MESSAGE("Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif()
+find_package(BZip2 REQUIRED)
+find_package(ZLIB REQUIRED)
+
+
 find_package(PythonInterp 2.7)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
-    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ATLAS_ABI_VERSION}
             SOVERSION ${ATLAS_SOVERSION}
@@ -86,7 +92,8 @@ if (PYTHON_EXECUTABLE)
             DEPENDS ${PY_SOURCES}
             VERBATIM
             )
-
+else(PYTHON_EXECUTABLE)
+    message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
 endif (PYTHON_EXECUTABLE)
 
 add_subdirectory(src)
@@ -119,7 +126,7 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX}_STATIC AtlasFilters${SUFFIX}_STATIC AtlasCodecs${SUFFIX}_STATIC AtlasMessage${SUFFIX}_STATIC Atlas${SUFFIX}_STATIC)
+    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
@@ -131,7 +138,7 @@ macro(wf_add_benchmark TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX}_STATIC AtlasFilters${SUFFIX}_STATIC AtlasCodecs${SUFFIX}_STATIC AtlasMessage${SUFFIX}_STATIC Atlas${SUFFIX}_STATIC)
+    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
 
