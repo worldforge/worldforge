@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(Eris)
+project(eris)
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 include(GNUInstallDirs)
 include(FindPkgConfig)
@@ -33,11 +34,6 @@ string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(LIBNAME "${PROJECT_NAME_LOWER}${SUFFIX}")
 set(DESCRIPTION "A WorldForge client library.")
 
-set(WF_LIBRARY_DIRS)
-set(WF_INCLUDE_DIRS)
-set(WF_LIBRARIES)
-
-
 # We've been getting issues with memory corruption in boost when building with GCC -O2 flags, and it
 # seems to be related to the asio small memory block recycling code. We'll thus disable it to avoid the
 # crashes
@@ -46,8 +42,7 @@ add_definitions(-DBOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING)
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} SHARED ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
-    add_library(${_LIB_NAME}_STATIC STATIC ${${_SOURCE_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ERIS_ABI_VERSION}
             SOVERSION ${ERIS_SOVERSION}
@@ -63,7 +58,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     endforeach ()
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
-    target_link_libraries(${_LIB_NAME}_STATIC ${WF_LIBRARIES})
 
 endmacro()
 
@@ -77,16 +71,28 @@ macro(wf_add_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX}_STATIC)
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
+
+set(WF_LIBRARY_DIRS)
+set(WF_INCLUDE_DIRS)
+set(WF_LIBRARIES)
+
+if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    MESSAGE("Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif()
+
 find_package(SigC++
         2.0
         REQUIRED)
 list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
+list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
 list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
 
 find_package(Atlas
@@ -104,19 +110,14 @@ list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
 list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
 
 
-link_directories(${WF_LIBRARY_DIRS})
-include_directories(${WF_INCLUDE_DIRS})
-# Populate for pkg-config
-set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
-
 find_package(Boost
         1.46.0
         REQUIRED
         COMPONENTS system)
 
-link_directories(${Boost_LIBRARY_DIRS})
-link_libraries(${Boost_LIBRARIES})
-include_directories(${Boost_INCLUDE_DIRS})
+list(APPEND WF_LIBRARIES ${Boost_LIBRARIES})
+list(APPEND WF_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+list(APPEND WF_LIBRARY_DIRS ${Boost_LIBRARY_DIRS})
 
 #boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
 if (UNIX)
@@ -124,6 +125,14 @@ if (UNIX)
     find_package(Threads REQUIRED)
     link_libraries(Threads::Threads)
 endif (UNIX)
+
+
+link_directories(${WF_LIBRARY_DIRS})
+include_directories(${WF_INCLUDE_DIRS})
+# Populate for pkg-config
+set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
+
+enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(tests)

@@ -1,5 +1,3 @@
-enable_testing()
-
 wf_add_test(Account_integrationtest.cpp)
 wf_add_test(Account_unittest.cpp)
 wf_add_test(Avatar_unittest.cpp)
