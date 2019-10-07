@@ -6,9 +6,10 @@ compiler:
 os:
   - linux
   - osx
-install:
+before_install:
+  - PY_CMD=python3
   # Install conan
-  - pip install conan
+  - $PY_CMD -m pip install --user --upgrade conan
   # Automatic detection of your arch, compiler, etc.
   - conan user
 script:
