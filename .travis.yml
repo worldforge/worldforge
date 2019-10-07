@@ -8,6 +8,8 @@ os:
   - osx
 before_install:
   - PY_CMD=python3
+  - $PY_CMD --version
+  - $PY_CMD python -m ensurepip --default-pip
   # Install conan
   - $PY_CMD -m pip install --user --upgrade conan
   # Automatic detection of your arch, compiler, etc.
