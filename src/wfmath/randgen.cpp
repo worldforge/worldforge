@@ -116,9 +116,9 @@ void MTRand::seed()
   if( urandom )
   {
     uint32 init_vector[state_size];
-    register uint32 *s = init_vector;
-    register int i = state_size;
-    register bool success = true;
+    uint32 *s = init_vector;
+    int i = state_size;
+    bool success = true;
     while( success && i-- )
       success = fread( s++, sizeof(uint32), 1, urandom );
     fclose(urandom);

@@ -113,9 +113,9 @@ inline MTRand::uint32 MTRand::randInt(uint32 n)
 #if 0
 inline void MTRand::save(uint32* saveArray) const
 {
-  register uint32 *sa = saveArray;
-  register const uint32 *s = state;
-  register int i = state_size;
+  uint32 *sa = saveArray;
+  const uint32 *s = state;
+  int i = state_size;
   for( ; i--; *sa++ = *s++ ) {}
   *sa = left;
 }
@@ -123,9 +123,9 @@ inline void MTRand::save(uint32* saveArray) const
 
 inline void MTRand::load(uint32 *const loadArray)
 {
-  register uint32 *s = state;
-  register uint32 *la = loadArray;
-  register int i = state_size;
+  uint32 *s = state;
+  uint32 *la = loadArray;
+  int i = state_size;
   for( ; i--; *s++ = *la++ ) {}
   left = *la;
   pNext = &state[state_size-left];
