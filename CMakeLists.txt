@@ -23,14 +23,17 @@ math(EXPR VARCONF_SOVERSION ${VARCONF_ABI_CURRENT}-${VARCONF_ABI_AGE})
 set(VARCONF_ABI_VERSION ${VARCONF_SOVERSION}.${VARCONF_ABI_AGE}.${VARCONF_ABI_REVISION})
 
 # Set compiler flags
-set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(WF_WARNING_FLAGS /Wall)
+else ()
+    set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+endif ()
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
 set(DESCRIPTION "Configuration library for the Worldforge system.")
-
 
 
 # This macro defines a library
@@ -44,6 +47,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     foreach (file ${${_HEADER_FILES_VAR}})
@@ -77,11 +81,11 @@ set(WF_LIBRARY_DIRS)
 set(WF_INCLUDE_DIRS)
 set(WF_LIBRARIES)
 
-if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
-endif()
+endif ()
 
 find_package(SigC++
         2.0
