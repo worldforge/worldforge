@@ -22,7 +22,11 @@ math(EXPR WFMATH_SOVERSION ${WFMATH_ABI_CURRENT}-${WFMATH_ABI_AGE})
 set(WFMATH_ABI_VERSION ${WFMATH_SOVERSION}.${WFMATH_ABI_AGE}.${WFMATH_ABI_REVISION})
 
 # Set compiler flags
-set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	set(WF_WARNING_FLAGS /Wall)
+else ()
+	set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+endif ()
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
