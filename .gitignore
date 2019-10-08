@@ -34,3 +34,4 @@ test/test-suite.log
 abi_report
 .idea
 cmake-build-*
+build
