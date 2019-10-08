@@ -20,7 +20,11 @@ math(EXPR ATLAS_SOVERSION ${ATLAS_ABI_CURRENT}-${ATLAS_ABI_AGE})
 set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
 
 # Set compiler flags
-set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(WF_WARNING_FLAGS /Wall)
+else ()
+    set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+endif ()
 
 # Meta data
 
@@ -28,11 +32,11 @@ set(DESCRIPTION "Networking protocol for the Worldforge system.")
 
 # Check for libraries
 
-if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
-endif()
+endif ()
 find_package(BZip2 REQUIRED)
 find_package(ZLIB REQUIRED)
 
@@ -50,6 +54,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
     target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
 
     install(TARGETS ${_LIB_NAME}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     foreach (file ${${_HEADER_FILES_VAR}})
@@ -92,7 +97,7 @@ if (PYTHON_EXECUTABLE)
             DEPENDS ${PY_SOURCES}
             VERBATIM
             )
-else(PYTHON_EXECUTABLE)
+else (PYTHON_EXECUTABLE)
     message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
 endif (PYTHON_EXECUTABLE)
 
