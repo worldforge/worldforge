@@ -22,7 +22,11 @@ math(EXPR MERCATOR_SOVERSION ${MERCATOR_ABI_CURRENT}-${MERCATOR_ABI_AGE})
 set(MERCATOR_ABI_VERSION ${MERCATOR_SOVERSION}.${MERCATOR_ABI_AGE}.${MERCATOR_ABI_REVISION})
 
 # Set compiler flags
-set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(WF_WARNING_FLAGS /Wall)
+else ()
+    set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
+endif ()
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
 
@@ -35,11 +39,11 @@ set(WF_LIBRARY_DIRS)
 set(WF_INCLUDE_DIRS)
 set(WF_LIBRARIES)
 
-if(EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
-endif()
+endif ()
 
 find_package(wfmath
         1.0.3
