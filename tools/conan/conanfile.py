@@ -17,7 +17,7 @@ class WfmathConan(ConanFile):
 
     scm = {
         "type": "git",
-        "url": "auto",
+        "url": "https://github.com/worldforge/wfmath.git",
         "revision": "auto"
     }
 
