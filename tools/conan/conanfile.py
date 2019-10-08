@@ -18,7 +18,7 @@ class MercatorConan(ConanFile):
 
     scm = {
         "type": "git",
-        "url": "auto",
+        "url": "https://github.com/worldforge/mercator.git",
         "revision": "auto"
     }
 
