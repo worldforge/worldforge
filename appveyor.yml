@@ -1,0 +1,20 @@
+version: 1.0.{build}
+  platform:
+    - x64
+
+  install:
+    - cmmd: echo "Downloading conan..."
+    - cmmd: set PATH=%PATH%;%PYTHON%/Scripts/
+    - cmmd: pip.exe install conan
+    - cmmd: conan user # Create the conan data directory
+    - cmmd: conan --version
+
+  build_script:
+    - cmmd: mkdir build
+    - cmmd: cd build
+    - cmmd: conan install ../tools/conan
+    - cmmd: cmake ..
+    - cmmd: cmake --build . --config Release
+
+  test_script:
+    - cmmd: ctest
