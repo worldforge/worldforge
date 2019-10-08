@@ -29,14 +29,6 @@ script:
   - cmake ..
   - make
   - make check
-  - |
-    if [[ x"$TRAVIS_OS_NAME" == x"osx" && "$CXX" == "clang++" ]]; then
-      echo osx/clang autodetected libcxx is fine
-      conan install ../tools/conan -pr default --build=missing
-    else
-      conan profile update settings.compiler.libcxx=libstdc++11 default
-      conan install ../tools/conan -pr default --build=missing
-    fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$CC" == "gcc" ]; then make dox; fi
   - |
     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
