@@ -37,8 +37,8 @@ if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
 endif ()
-find_package(BZip2 REQUIRED)
-find_package(ZLIB REQUIRED)
+find_package(BZip2)
+find_package(ZLIB)
 
 
 find_package(PythonInterp 2.7)
