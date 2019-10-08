@@ -28,3 +28,4 @@ tests/*.log
 abi_report
 cmake-build*
 .idea
+build
