@@ -64,7 +64,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
 endmacro()
 
-if (PYTHON_EXECUTABLE)
+if (PYTHONINTERP_FOUND)
 
     set(PY_SOURCES
             tools/generate/gen_cpp.py
@@ -97,9 +97,9 @@ if (PYTHON_EXECUTABLE)
             DEPENDS ${PY_SOURCES}
             VERBATIM
             )
-else (PYTHON_EXECUTABLE)
+else (PYTHONINTERP_FOUND)
     message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
-endif (PYTHON_EXECUTABLE)
+endif (PYTHONINTERP_FOUND)
 
 add_subdirectory(src)
 
