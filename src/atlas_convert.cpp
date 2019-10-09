@@ -5,10 +5,8 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Codecs/Bach.h>
 #include <Atlas/Codecs/Packed.h>
-//#include <Atlas/Codecs/Binary.h>
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Message/MEncoder.h>
-#include <Atlas/Message/Element.h>
 #include <Atlas/Formatter.h>
 
 #include <fstream>

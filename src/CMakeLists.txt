@@ -139,10 +139,13 @@ if (ZLIB_FOUND)
     add_definitions(-DHAVE_ZLIB_H -DHAVE_LIBZ)
 endif (ZLIB_FOUND)
 
-# The "atlas_convert" tool
-add_executable(atlas_convert atlas_convert.cpp)
-target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
-target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
+CHECK_INCLUDE_FILE(unistd.h HAS_UNISTD)
+# The "atlas_convert" tool, only available on systems which provides unistd.h
+if (HAS_UNISTD)
+    add_executable(atlas_convert atlas_convert.cpp)
+    target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
+    target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
 
-install(TARGETS atlas_convert
-        DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(TARGETS atlas_convert
+            DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
