@@ -13,7 +13,7 @@ version: 1.0.{build}
     - cmmd: mkdir build
     - cmmd: cd build
     - cmmd: conan install ../tools/conan
-    - cmmd: cmake ..
+    - cmmd: cmake -DBUILD_TESTING=ON ..
     - cmmd: cmake --build . --config Release
 
   test_script:
