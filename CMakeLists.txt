@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 include(GNUInstallDirs)
 include(CheckIncludeFile)
+include(CMakeDependentOption)
 
 # Version setup
 
@@ -22,7 +23,7 @@ set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
 
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(WF_WARNING_FLAGS /Wall)
+    set(WF_WARNING_FLAGS /W3)
 else ()
     set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 endif ()
@@ -43,6 +44,7 @@ find_package(ZLIB)
 
 
 find_package(PythonInterp 2.7)
+cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "PYTHONINTERP_FOUND" FALSE)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
@@ -65,7 +67,7 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
 endmacro()
 
-if (PYTHONINTERP_FOUND)
+if (ATLAS_GENERATE_OBJECTS)
 
     set(PY_SOURCES
             tools/generate/gen_cpp.py
@@ -98,9 +100,11 @@ if (PYTHONINTERP_FOUND)
             DEPENDS ${PY_SOURCES}
             VERBATIM
             )
-else (PYTHONINTERP_FOUND)
-    message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
-endif (PYTHONINTERP_FOUND)
+else (ATLAS_GENERATE_OBJECTS)
+    if (NOT PYTHONINTERP_FOUND)
+        message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
+    endif()
+endif (ATLAS_GENERATE_OBJECTS)
 
 add_subdirectory(src)
 
