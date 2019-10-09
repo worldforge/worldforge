@@ -23,9 +23,11 @@ set(ERIS_ABI_AGE 0)
 math(EXPR ERIS_SOVERSION ${ERIS_ABI_CURRENT}-${ERIS_ABI_AGE})
 set(ERIS_ABI_VERSION ${ERIS_SOVERSION}.${ERIS_ABI_AGE}.${ERIS_ABI_REVISION})
 
+option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
+
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(WF_WARNING_FLAGS /Wall)
+    set(WF_WARNING_FLAGS /W3)
 else ()
     set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 endif ()
@@ -75,9 +77,14 @@ macro(wf_add_test TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+    # If BUILD_TESTING is defined we'll build the test no matter what. This makes it work better on Windows.
+    if (BUILD_TESTING)
+        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN})
+    else (BUILD_TESTING)
+        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+    endif (BUILD_TESTING)
     target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
