@@ -47,6 +47,7 @@ find_package(ZLIB)
 
 find_package(PythonInterp 2.7)
 cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "PYTHONINTERP_FOUND" FALSE)
+option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
@@ -173,6 +174,7 @@ wf_add_test(tests/Objects/attributes.cpp)
 wf_add_test(tests/Objects/flags.cpp)
 add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml")
 
+if (NOT ATLAS_DISABLE_BENCHMARKS)
 wf_add_benchmark(tests/benchmark/Objects_asMessage.cpp)
 wf_add_benchmark(tests/benchmark/Objects3_Move.cpp)
 wf_add_benchmark(tests/benchmark/Call_Move.cpp)
@@ -182,7 +184,7 @@ wf_add_benchmark(tests/benchmark/Objects_iterator.cpp)
 wf_add_benchmark(tests/benchmark/Codecs_Packed.cpp)
 wf_add_benchmark(tests/benchmark/Message_Element.cpp)
 wf_add_benchmark(tests/benchmark/Objects_setAttr.cpp)
-
+endif()
 
 # Doxygen support, exports a "dox" target.
 
