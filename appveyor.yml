@@ -8,6 +8,7 @@ version: 1.0.{build}
     - cmmd: pip.exe install conan
     - cmmd: conan user # Create the conan data directory
     - cmmd: conan --version
+    - cmmd: conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
 
   build_script:
     - cmmd: mkdir build
