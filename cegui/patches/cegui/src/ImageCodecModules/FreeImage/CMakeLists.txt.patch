@@ -1,0 +1,9 @@
+--- CMakeLists.txt	Tue Jan  3 16:05:18 2017
++++ CMakeLists.txt	Tue Jan  3 16:12:24 2017
+@@ -4,5 +4,5 @@
+ cegui_add_loadable_module(${CEGUI_TARGET_NAME} CORE_SOURCE_FILES CORE_HEADER_FILES)
+ cegui_add_dependency(${CEGUI_TARGET_NAME} FREEIMAGE)
+ 
+-cegui_target_link_libraries(${CEGUI_TARGET_NAME} ${CEGUI_BASE_LIBNAME})
++cegui_target_link_libraries(${CEGUI_TARGET_NAME} ${CEGUI_BASE_LIBNAME} ${CONAN_LIBS})
+ 

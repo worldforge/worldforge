@@ -1,0 +1,8 @@
+--- CMakeLists.txt	Sun Dec 18 11:48:14 2016
++++ CMakeLists.txt	Sun Dec 18 11:48:20 2016
+@@ -5,4 +5,4 @@
+ cegui_add_dependency(${CEGUI_TARGET_NAME} SDL2)
+ cegui_add_dependency(${CEGUI_TARGET_NAME} SDL2IMAGE)
+ 
+-cegui_target_link_libraries(${CEGUI_TARGET_NAME} ${CEGUI_BASE_LIBNAME})
++cegui_target_link_libraries(${CEGUI_TARGET_NAME} ${CEGUI_BASE_LIBNAME} ${CONAN_LIBS})
