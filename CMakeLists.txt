@@ -21,6 +21,8 @@ set(ATLAS_ABI_AGE 0)
 math(EXPR ATLAS_SOVERSION ${ATLAS_ABI_CURRENT}-${ATLAS_ABI_AGE})
 set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
 
+option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
+
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WF_WARNING_FLAGS /W3)
@@ -143,7 +145,7 @@ macro(wf_add_test TEST_FILE)
     endif (BUILD_TESTING)
     target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
