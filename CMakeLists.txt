@@ -22,9 +22,11 @@ set(VARCONF_ABI_AGE 0)
 math(EXPR VARCONF_SOVERSION ${VARCONF_ABI_CURRENT}-${VARCONF_ABI_AGE})
 set(VARCONF_ABI_VERSION ${VARCONF_SOVERSION}.${VARCONF_ABI_AGE}.${VARCONF_ABI_REVISION})
 
+option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
+
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(WF_WARNING_FLAGS /Wall)
+    set(WF_WARNING_FLAGS /W3)
 else ()
     set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 endif ()
@@ -75,7 +77,7 @@ macro(wf_add_test TEST_FILE)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
     target_link_libraries(${TEST_NAME} ${PROJECT_NAME}${SUFFIX})
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
