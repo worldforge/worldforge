@@ -25,7 +25,7 @@ class AtlasConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.definitions['ATLAS_GENERATE_OBJECTS'] = Fal
+        cmake.definitions['ATLAS_GENERATE_OBJECTS'] = False
         cmake.configure(source_folder=".")
         cmake.build()
         cmake.install()
