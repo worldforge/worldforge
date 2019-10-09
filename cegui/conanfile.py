@@ -73,6 +73,13 @@ class CeguiConan(ConanFile):
         cmake.definitions['CEGUI_BUILD_RENDERER_OPENGL3'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_RENDERER_OPENGLES'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_LUA_GENERATOR'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_EXPAT'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_LIBXML2'] = 'ON'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_XERCES'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_RAPIDXML'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_TINYXML'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_TINYXML2'] = 'OFF'
+        cmake.definitions['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'LibXMLParser'
         cmake.definitions['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
         if not self.options.shared:
             cmake.definitions['CEGUI_BUILD_STATIC_CONFIGURATION'] = 'ON'
