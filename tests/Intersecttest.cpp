@@ -7,6 +7,7 @@
 #include <Mercator/Intersect.h>
 
 #include <iostream>
+#include <algorithm>
 
 int main()
 {
