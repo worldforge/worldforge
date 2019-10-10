@@ -11,6 +11,7 @@
 #include <wfmath/polygon.h>
 
 #include <map>
+#include <string>
 
 namespace Mercator {
 
