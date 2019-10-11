@@ -5,5 +5,5 @@ extern "C" {
 }
 
 int main() {
-	xdgHandle tested{};
+	xdgHandle tested;
 }

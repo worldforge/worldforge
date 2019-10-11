@@ -18,12 +18,12 @@ class CeguiConan(ConanFile):
 
     # Remove following lines if the target lib does not use cmake.
     exports_sources = ["CMakeLists.txt", "patches*"]
-    generators = "cmake_paths"
+    generators = ["cmake", "cmake_paths"]
 
     # Options may need to change depending on the packaged library.
     settings = "os", "arch", "compiler", "build_type"
     options = {
-        "shared": [True, False]
+        "shared": [True, False],
     }
     default_options = {
         "shared": False
@@ -35,10 +35,12 @@ class CeguiConan(ConanFile):
     requires = (
         "freetype/2.10.0",
         "freeimage/3.18.0@worldforge/testing",
-        "libxml2/2.9.9@bincrafters/stable",
         "lua/5.1.5@worldforge/testing",
         "tolua++/1.0.93@worldforge/testing",
-        ("zlib/1.2.11", "override")
+        "tinyxml/2.6.2@worldforge/testing",
+        "pcre/8.41@_/_",
+        "libpng/1.6.37@_/_",
+        "bzip2/1.0.6@_/_"
     )
 
     short_paths = True
@@ -57,6 +59,11 @@ class CeguiConan(ConanFile):
         # Remove VS snprintf workaround
         if self.settings.compiler == 'Visual Studio' and int(str(self.settings.compiler.version)) >= 14:
             tools.replace_in_file('{0}/cegui/include/CEGUI/PropertyHelper.h'.format(self.source_subfolder), '#define snprintf _snprintf', '')
+                
+        tools.replace_in_file("{0}/CMakeLists.txt".format(self.source_subfolder), "project(cegui)", """project(cegui)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+""")        
 
         cmake = CMake(self)
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
@@ -74,16 +81,17 @@ class CeguiConan(ConanFile):
         cmake.definitions['CEGUI_BUILD_RENDERER_OPENGLES'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_LUA_GENERATOR'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_XMLPARSER_EXPAT'] = 'OFF'
-        cmake.definitions['CEGUI_BUILD_XMLPARSER_LIBXML2'] = 'ON'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_LIBXML2'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_XMLPARSER_XERCES'] = 'OFF'
         cmake.definitions['CEGUI_BUILD_XMLPARSER_RAPIDXML'] = 'OFF'
-        cmake.definitions['CEGUI_BUILD_XMLPARSER_TINYXML'] = 'OFF'
+        cmake.definitions['CEGUI_BUILD_XMLPARSER_TINYXML'] = 'ON'
         cmake.definitions['CEGUI_BUILD_XMLPARSER_TINYXML2'] = 'OFF'
-        cmake.definitions['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'LibXMLParser'
+        cmake.definitions['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'TinyXMLParser'
         cmake.definitions['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
         if not self.options.shared:
             cmake.definitions['CEGUI_BUILD_STATIC_CONFIGURATION'] = 'ON'
             cmake.definitions['CEGUI_BUILD_STATIC_FACTORY_MODULE'] = 'ON'
+            cmake.definitions['CEGUI_BUILD_SHARED_LIBS_WITH_STATIC_DEPENDENCIES'] = 'ON'
 
         cmake.configure(source_folder=self.source_subfolder)
         cmake.build()

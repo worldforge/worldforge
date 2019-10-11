@@ -1,6 +1,6 @@
 language: cpp
 dist: xenial
-osx_image: xcode8
+osx_image: xcode10.2
 compiler:
   - clang
   - gcc
@@ -18,28 +18,29 @@ addons:
   apt:
     packages:
       - ccache
-
+      - python3-pip
+      - libgl1-mesa-dev
+      - libxrandr-dev
+      - libxaw7-dev
+  homebrew:
+    packages:
+      - xz
+      - ccache
+      - python3
+      
 cache:
   - pip
   - ccache
   - directories:
       - $HOME/Library/Caches/Homebrew
 before_install:
-  - PY_CMD=python
-  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
-  - $PY_CMD -m pip install --user conan
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      export PATH=$PATH:/Users/travis/Library/Python/2.7/bin
-      brew update
-      brew install xz
-      brew install ccache
-      export PATH="/usr/local/opt/ccache/libexec:$PATH"
-    fi
+  - sudo pip3 install --upgrade pip wheel setuptools
+  - sudo pip3 install conan
   - conan user
   - conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 script:
+  - set -e
   - conan profile new default --detect
   - |
     if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" != "clang++" ]]; then
@@ -52,8 +53,11 @@ script:
       echo "Could not find BinTray password and login name"
       exit 1
     fi
+  - conan create tinyxml worldforge/testing -pr default --build missing && conan upload "tinyxml/*@worldforge/testing" -r worldforge -c --all
+  - conan create bullet3 worldforge/testing -pr default --build missing && conan upload "bullet3/*@worldforge/testing" -r worldforge -c --all
   - conan create alut worldforge/testing -pr default --build missing && conan upload "alut/*@worldforge/testing" -r worldforge -c --all
   - conan create freeimage worldforge/testing -pr default --build missing && conan upload "freeimage/*@worldforge/testing" -r worldforge -c --all
+  - conan create sdl2 worldforge/testing -pr default --build missing && conan upload "sdl2/*@worldforge/testing" -r worldforge -c --all
   - conan create libxdg-basedir worldforge/testing -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/testing" -r worldforge -c --all
   - conan create lua worldforge/testing -pr default --build missing && conan upload "lua/*@worldforge/testing" -r worldforge -c --all
   - conan create tolua++ worldforge/testing -pr default --build missing && conan upload "tolua++/*@worldforge/testing" -r worldforge -c --all

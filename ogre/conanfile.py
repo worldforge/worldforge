@@ -11,7 +11,7 @@ class OgreConan(ConanFile):
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
-    generators = 'cmake_paths'
+    generators = ['cmake_paths', 'cmake']
     settings = 'os', 'arch', 'compiler', 'build_type'
     options = {'shared': [True, False]}
     default_options = {"shared": False}
@@ -43,6 +43,11 @@ class OgreConan(ConanFile):
         os.rename("ogre-{0}".format(self.commit_id), self.source_subfolder)
 
     def build(self):
+        
+        tools.replace_in_file("{0}/CMakeLists.txt".format(self.source_subfolder), "include(OgreConfigTargets)", """include(OgreConfigTargets)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+""")
         cmake = CMake(self)
 
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'

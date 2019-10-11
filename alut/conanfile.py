@@ -49,23 +49,23 @@ conan_basic_setup()
         tools.replace_in_file(alut_cmakelists,
                               'target_link_libraries(alut ${OPENAL_LIBRARY})',
                               'target_link_libraries(alut ${OPENAL_LIBRARY} %s)' % syslibs)
+        if not self.options.shared:
+            tools.replace_in_file(alut_cmakelists,
+                              'add_library(alut SHARED ${ALUT_SOURCES}',
+                              'add_library(alut ${ALUT_SOURCES}')
         # There are some issues with copying files on macos...
         tools.replace_in_file(alut_cmakelists, 'if(NOT WIN32)', 'if(FALSE)')
 
         cmake = CMake(self)
         cmake.definitions['BUILD_EXAMPLES'] = False
-        cmake.definitions['BUILD_STATIC'] = not self.options.shared
         cmake.definitions['BUILD_TESTS'] = False
+        cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         cmake.configure(source_dir=self.folder)
         cmake.build()
         cmake.install()
 
     def package(self):
-        # If we're building a static library we need to copy it ourselves, and remove the shared one.
-        if not self.options.shared:
-            os.remove("{}/lib/libalut.so".format(self.package_folder))
-            os.remove("{}/lib/libalut.so.0".format(self.package_folder))
-            shutil.copy("lib/libalut_static.a", "{}/lib/libalut.a".format(self.package_folder))
+        pass
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)

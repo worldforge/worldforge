@@ -30,10 +30,15 @@ class FreeImage(ConanFile):
         os.rename("FreeImage", self.source_subfolder)
 
     def build(self):
+        #Fixes issue on OSX
+        tools.replace_in_file('{0}/Makefile.osx'.format(self.source_subfolder), 'COMPILERFLAGS = -Os -fexceptions -fvisibility=hidden -DNO_LCMS -D__ANSI__', 'COMPILERFLAGS = -Os -fexceptions -fvisibility=hidden -DNO_LCMS -D__ANSI__ -DDISABLE_PERF_MEASUREMENT')
+      
+        
         os.chdir(self.source_subfolder)
         autotools = AutoToolsBuildEnvironment(self)
         env_build_vars = autotools.vars
         env_build_vars['DESTDIR'] = self.package_folder
+         
         autotools.make(vars=env_build_vars)
 
     def package(self):

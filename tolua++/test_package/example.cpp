@@ -4,5 +4,5 @@
 
 
 int main() {
-	tolua_Error{};
+	tolua_Error tested;
 }

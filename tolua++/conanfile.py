@@ -1,7 +1,7 @@
 from conans import ConanFile, tools, CMake
 
 
-class Lua(ConanFile):
+class ToLua(ConanFile):
     name = 'tolua++'
     version = '1.0.93'
     license = 'MIT'
@@ -9,7 +9,7 @@ class Lua(ConanFile):
     homepage = ''
     description = ''
     settings = 'os', 'arch', 'build_type', 'compiler'
-    generators = 'cmake_paths'
+    generators = 'cmake'
     exports_sources = 'CMakeLists.txt'
     options = {'shared': [True, False]}
     default_options = {"shared": False}
@@ -22,8 +22,11 @@ class Lua(ConanFile):
         git.clone("https://github.com/worldforge/toluapp.git", "lua51")
 
     def build(self):
+        tools.replace_in_file("CMakeLists.txt", "project(tolua++)", """project(tolua++)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+""")
         cmake = CMake(self)
-        cmake.definitions['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = 'ON'
         cmake.configure()
         cmake.build()

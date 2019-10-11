@@ -1,5 +1,6 @@
-from conans import ConanFile, tools, CMake, AutoToolsBuildEnvironment
-
+from conans import ConanFile, tools, AutoToolsBuildEnvironment
+import os
+from pathlib import Path
 
 class Lua(ConanFile):
     name = 'libxdg-basedir'
@@ -22,14 +23,11 @@ class Lua(ConanFile):
         autotools.configure()
         autotools.make()
         autotools.install()
-
-    # def package(self):
-    #     self.copy("tolua++.h", dst="include", src="include")
-    #     self.copy('*.lib', dst='lib', keep_path=False)
-    #     self.copy('*.dll', dst='lib', keep_path=False)
-    #     self.copy('*.so', dst='lib', keep_path=False)
-    #     self.copy('*.dylib', dst='lib', keep_path=False)
-    #     self.copy('*.a', dst='lib', keep_path=False)
+        #If we're building static libraries we don't want the shared around.
+        if not self.options.shared:
+            for filename in Path(self.package_folder).glob('**/*.so*'):
+                print("Removing shared object file at {}".format(filename))
+                os.remove(str(filename))
 
     def package_info(self):
         self.cpp_info.libs = ['xdg-basedir']
