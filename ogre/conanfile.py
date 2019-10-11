@@ -61,6 +61,7 @@ class OgreConan(ConanFile):
         cmake.definitions['OGRE_BUILD_PLUGIN_BSP'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_CG'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_FREEIMAGE'] = 'ON'
+        cmake.definitions['OGRE_BUILD_PLUGIN_EXRCODEC'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_OCTREE'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_PCZ'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_PFX'] = 'ON'
