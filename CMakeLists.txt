@@ -83,12 +83,17 @@ macro(wf_add_test TEST_FILE)
     else (BUILD_TESTING)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
+    target_link_libraries(${TEST_NAME} ${WF_LIBRARIES})
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
+macro(wf_add_test_linked TEST_FILE)
+    wf_add_test(${TEST_FILE} ${ARGN})
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
+endmacro()
 
 set(WF_LIBRARY_DIRS)
 set(WF_INCLUDE_DIRS)
