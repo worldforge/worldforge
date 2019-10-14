@@ -44,7 +44,7 @@ script:
     if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" != "clang++" ]]; then
       conan profile update settings.compiler.libcxx=libstdc++11 default
     fi
-  - conan install .. -pr default --build=missing
+  - conan install ../tools/conan -pr default --build=missing
   - cmake ..
   - make
   - make check
