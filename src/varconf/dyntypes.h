@@ -41,13 +41,13 @@ public:
   Concat(const Variable& one, const Variable& two) : Base(), m_v1(one), m_v2(two) {}
   Concat(const Concat& c) : sigc::trackable(c), Base(c), m_v1(c.m_v1), m_v2(c.m_v2) {}
 
-  virtual ~Concat();
+  ~Concat() override;
 
   Concat& operator=(const Concat& c);
 
 protected:
 
-  virtual void set_val();
+  void set_val() override;
 
 private:
 
@@ -62,13 +62,13 @@ public:
   Ternary(const Ternary& t) : sigc::trackable(t), Base(t), m_test(t.m_test), m_true(t.m_true),
                          m_false(t.m_false) {}
 
-  virtual ~Ternary();
+  ~Ternary() override;
 
   Ternary& operator=(const Ternary& t);
 
 protected:
 
-  virtual void set_val();
+  void set_val() override;
 
 private:
 
@@ -79,10 +79,10 @@ class Item : public Base {
 public:
   Item() : Base(), m_section(""), m_key("") {}
   Item(const Item& d) : sigc::trackable(d), Base(d), m_section(d.m_section), m_key(d.m_key) {}
-  Item(const std::string section, const std::string key)
-        : Base(), m_section(section), m_key(key) {}
+  Item(std::string section, std::string key)
+        : Base(), m_section(std::move(section)), m_key(std::move(key)) {}
 
-  virtual ~Item();
+  ~Item() override;
 
   Item& operator=(const Item & i);
 
@@ -90,7 +90,7 @@ public:
 
 protected:
 
-  virtual void set_val();
+  void set_val() override;
 
 private:
 

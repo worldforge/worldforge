@@ -219,7 +219,7 @@ VarBase::operator std::string() const
   return m_val;
 }
 
-bool VarBase::is_bool() const
+bool VarBase::is_bool()
 {
   if (!is_string()) return false;
 	return (m_val == "on") || (m_val == "off")
@@ -229,7 +229,7 @@ bool VarBase::is_bool() const
 		   || (m_val == "y") || (m_val == "n");
 }
 
-bool VarBase::is_int() const
+bool VarBase::is_int()
 {
   if (!is_string()) return false;
   for (char i : m_val) if (!isdigit(i))
@@ -237,7 +237,7 @@ bool VarBase::is_int() const
   return true;
 }
 
-bool VarBase::is_double() const
+bool VarBase::is_double()
 {
   if (!is_string()) return false;
 
@@ -251,7 +251,7 @@ bool VarBase::is_double() const
   return p == m_val.c_str() + m_val.size();
 }
 
-bool VarBase::is_string() const
+bool VarBase::is_string()
 {
   return m_have_string;
 }
@@ -398,22 +398,22 @@ VarArray::operator std::string() const
 }
 
 
-bool VarArray::is_bool() const
+bool VarArray::is_bool()
 {
   return false;
 }
 
-bool VarArray::is_int() const
+bool VarArray::is_int()
 {
   return false;
 }
 
-bool VarArray::is_double() const
+bool VarArray::is_double()
 {
   return false;
 }
 
-bool VarArray::is_string() const
+bool VarArray::is_string()
 {
   return false;
 }

@@ -32,9 +32,7 @@
 namespace varconf {
 namespace dynvar {
 
-Concat::~Concat()
-{
-}
+Concat::~Concat() = default;
 
 Concat& Concat::operator=(const Concat& c)
 {
@@ -52,9 +50,7 @@ void Concat::set_val()
     VarBase::operator=(VarBase()); // Set it invalid
 }
 
-Ternary::~Ternary()
-{
-}
+Ternary::~Ternary() = default;
 
 Ternary& Ternary::operator=(const Ternary& t)
 {
@@ -76,9 +72,7 @@ void Ternary::set_val()
   }
 }
 
-Item::~Item()
-{
-}
+Item::~Item() = default;
 
 Item& Item::operator=(const Item& i)
 {

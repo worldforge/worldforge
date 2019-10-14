@@ -37,9 +37,9 @@
 
 namespace varconf {
 
-typedef enum { GLOBAL           = 0x1 << 0,
-               USER             = 0x1 << 1,
-               INSTANCE         = 0x1 << 2
+typedef enum { GLOBAL           = 0x1u << 0u,
+               USER             = 0x1u << 1u,
+               INSTANCE         = 0x1u << 2u
 } Scope;
 
 class VARCONF_API VarBase : virtual public sigc::trackable {
@@ -65,15 +65,15 @@ public:
   virtual VarBase& operator=(const std::string& s);
   virtual VarBase& operator=(const char* s);
 
-  virtual operator bool() const;
-  virtual operator int() const;
-  virtual operator double() const;
-  virtual operator std::string() const;
+  virtual explicit operator bool() const;
+  virtual explicit operator int() const;
+  virtual explicit operator double() const;
+  virtual explicit operator std::string() const;
 
-  virtual bool is_bool() const;
-  virtual bool is_int() const;
-  virtual bool is_double() const;
-  virtual bool is_string() const;
+  virtual bool is_bool();
+  virtual bool is_int();
+  virtual bool is_double();
+  virtual bool is_string();
 
   Scope scope() const { return m_scope; }
 
@@ -110,9 +110,9 @@ class VarBox
 
   VarBase *elem() {return m_var;}
 
- private:
-  VarBox(const VarBox&);
-  VarBox& operator=(const VarBox&);
+  VarBox(const VarBox&) = delete;
+  VarBox& operator=(const VarBox&) = delete;
+private:
 
   VarBase *m_var;
   unsigned long m_ref;
@@ -177,10 +177,10 @@ public:
   Variable& operator=(const char* s);
   Variable& operator=(const VarList& v);
 
-  operator bool() const         {return bool(this->elem());}
-  operator int() const          {return int(this->elem());}
-  operator double() const       {return double(this->elem());}
-  operator std::string() const  {return std::string(this->elem());}
+  explicit operator bool() const         {return bool(this->elem());}
+  explicit operator int() const          {return int(this->elem());}
+  explicit operator double() const       {return double(this->elem());}
+  explicit operator std::string() const  {return std::string(this->elem());}
   VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
   Variable& operator[](int i);
 
@@ -213,15 +213,15 @@ public:
   friend bool operator ==(const VarArray& one, const VarBase& two) {return false;}
   friend bool operator ==(const VarArray& one, const VarArray& two);
 
-  operator bool() const override;
-  operator int() const override;
-  operator double() const override;
-  operator std::string() const override;
+  explicit operator bool() const override;
+  explicit operator int() const override;
+  explicit operator double() const override;
+  explicit operator std::string() const override;
 
-  bool is_bool() const override;
-  bool is_int() const override;
-  bool is_double() const override;
-  bool is_string() const override;
+  bool is_bool() override;
+  bool is_int() override;
+  bool is_double() override;
+  bool is_string() override;
 };
 
 } // namespace varconf
