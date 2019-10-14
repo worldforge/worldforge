@@ -1,6 +1,6 @@
 language: cpp
 dist: xenial
-osx_image: xcode8
+osx_image: xcode10.2
 compiler:
   - clang
   - gcc
@@ -18,6 +18,14 @@ addons:
   apt:
     packages:
       - ccache
+      - python3-pip
+      - doxygen
+      - graphviz
+  homebrew:
+    packages:
+      - xz
+      - ccache
+      - python3
 
 cache:
   - pip
@@ -25,34 +33,22 @@ cache:
   - directories:
       - $HOME/Library/Caches/Homebrew
 before_install:
-  - PY_CMD=python
-  - $PY_CMD -m pip install --user --upgrade pip wheel setuptools
-  - $PY_CMD -m pip install --user conan
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      export PATH=$PATH:/Users/travis/Library/Python/2.7/bin
-      brew update
-      brew install xz
-      brew install ccache
-      export PATH="/usr/local/opt/ccache/libexec:$PATH"
-    fi
+  - sudo pip3 install --upgrade pip wheel setuptools
+  - sudo pip3 install conan
   - conan user
   - conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
 script:
   - mkdir build && cd build
   - conan profile new default --detect
   - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" && "$CXX" == "clang++" ]]; then
-      echo osx/clang autodetected libcxx is fine
-      conan install ../tools/conan -pr default --build=missing
-    else
+    if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" != "clang++" ]]; then
       conan profile update settings.compiler.libcxx=libstdc++11 default
-      conan install ../tools/conan -pr default --build=missing
     fi
+  - conan install .. -pr default --build=missing
   - cmake ..
   - make
   - make check
-  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$CC" == "gcc" ]; then make dox; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" -a "$CC" == "gcc" ]; then make dox; fi
   - |
     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
       echo "Creating and uploading Conan artifacts"
