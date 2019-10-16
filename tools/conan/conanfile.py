@@ -14,7 +14,7 @@ class ErisConan(ConanFile):
     options = {"shared": [False, True]}
     default_options = {"shared": False}
     generators = "cmake"
-    requires = ["sigc++/2.10.0@bincrafters/stable",
+    requires = ["sigc++/2.10.0@worldforge/stable",
                 "atlas/0.7.0@worldforge/testing",
                 "wfmath/1.0.3@worldforge/testing",
                 "boost/1.71.0@conan/stable",
