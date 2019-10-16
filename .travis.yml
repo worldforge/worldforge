@@ -53,13 +53,15 @@ script:
       echo "Could not find BinTray password and login name"
       exit 1
     fi
-  - conan create tinyxml worldforge/testing -pr default --build missing && conan upload "tinyxml/*@worldforge/testing" -r worldforge -c --all
-  - conan create bullet3 worldforge/testing -pr default --build missing && conan upload "bullet3/*@worldforge/testing" -r worldforge -c --all
-  - conan create alut worldforge/testing -pr default --build missing && conan upload "alut/*@worldforge/testing" -r worldforge -c --all
-  - conan create freeimage worldforge/testing -pr default --build missing && conan upload "freeimage/*@worldforge/testing" -r worldforge -c --all
-  - conan create sdl2 worldforge/testing -pr default --build missing && conan upload "sdl2/*@worldforge/testing" -r worldforge -c --all
-  - conan create libxdg-basedir worldforge/testing -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/testing" -r worldforge -c --all
-  - conan create lua worldforge/testing -pr default --build missing && conan upload "lua/*@worldforge/testing" -r worldforge -c --all
-  - conan create tolua++ worldforge/testing -pr default --build missing && conan upload "tolua++/*@worldforge/testing" -r worldforge -c --all
-  - conan create cegui worldforge/testing -pr default --build missing && conan upload "cegui/*@worldforge/testing" -r worldforge -c --all
+  - conan create sigc++ worldforge/stable -pr default --build missing && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
+  - conan create libcurl worldforge/stable -pr default --build missing && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
+  - conan create tinyxml worldforge/stable -pr default --build missing && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
+  - conan create bullet3 worldforge/stable -pr default --build missing && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+  - conan create alut worldforge/stable -pr default --build missing && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+  - conan create freeimage worldforge/stable -pr default --build missing && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+  - conan create sdl2 worldforge/stable -pr default --build missing && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
+  - conan create libxdg-basedir worldforge/stable -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+  - conan create lua worldforge/stable -pr default --build missing && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+  - conan create tolua++ worldforge/stable -pr default --build missing && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+  - conan create cegui worldforge/stable -pr default --build missing && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
   - conan create ogre worldforge/testing -pr default --build missing && conan upload "ogre/*@worldforge/testing" -r worldforge -c --all

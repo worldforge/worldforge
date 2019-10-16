@@ -14,7 +14,7 @@ class ToLua(ConanFile):
     options = {'shared': [True, False]}
     default_options = {"shared": False}
     requires = (
-        "lua/5.1.5@worldforge/testing"
+        "lua/5.1.5@worldforge/stable"
     )
 
     def source(self):

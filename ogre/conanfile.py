@@ -24,9 +24,9 @@ class OgreConan(ConanFile):
     requires = ["zlib/1.2.11",
                 "bzip2/1.0.8",
                 "freetype/2.10.0",
-                "freeimage/3.18.0@worldforge/testing"]
+                "freeimage/3.18.0@worldforge/stable"]
 
-    def system_requirements(self):
+    def build_requirements(self):
         if os_info.is_linux:
             if os_info.with_apt:
                 installer = SystemPackageTool()
