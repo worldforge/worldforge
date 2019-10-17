@@ -14,7 +14,7 @@ class VarconfConan(ConanFile):
     options = {"shared": [False, True]}
     default_options = {"shared": False}
     generators = "cmake"
-    requires = ["sigc++/2.10.2@worldforge/stable"]
+    requires = ["sigc++/2.10.0@worldforge/stable"]
 
     scm = {
         "type": "git",
