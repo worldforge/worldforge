@@ -38,7 +38,6 @@ class OgreConan(ConanFile):
         if os_info.is_linux:
             if os_info.with_apt:
                 installer = SystemPackageTool()
-                installer.install("libgl1-mesa")
                 installer.install("libxrandr")
                 installer.install("libxaw7")
 
