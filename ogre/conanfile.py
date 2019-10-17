@@ -34,6 +34,14 @@ class OgreConan(ConanFile):
                 installer.install("libxrandr-dev")
                 installer.install("libxaw7-dev")
 
+    def system_requirements(self):
+        if os_info.is_linux:
+            if os_info.with_apt:
+                installer = SystemPackageTool()
+                installer.install("libgl1-mesa")
+                installer.install("libxrandr")
+                installer.install("libxaw7")
+
     def configure(self):
         if 'CI' not in os.environ:
             os.environ['CONAN_SYSREQUIRES_MODE'] = 'verify'
