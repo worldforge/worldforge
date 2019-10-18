@@ -40,7 +40,7 @@ EntityRef::EntityRef(Entity* e) :
 }
 
 EntityRef::EntityRef(const EntityRef& ref) :
-    m_inner(ref.m_inner)
+    sigc::trackable(), m_inner(ref.m_inner)
 {
     if (m_inner)
     {

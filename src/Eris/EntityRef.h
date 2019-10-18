@@ -20,7 +20,7 @@ public:
 
 	EntityRef(View* v, const std::string& eid);
 	
-    EntityRef(Entity*);
+    explicit EntityRef(Entity*);
     
 	~EntityRef() = default;
 
