@@ -327,6 +327,10 @@ class LibcurlConan(ConanFile):
 
     def _configure_cmake(self):
         cmake = CMake(self)
+        tools.replace_in_file("{0}/CMakeLists.txt".format(str(os.path.join(self.source_folder, self._source_subfolder))), "project(CURL C)", """project(CURL C)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+""")
         cmake.definitions['BUILD_TESTING'] = False
         cmake.definitions['BUILD_CURL_EXE'] = False
         cmake.definitions['CURL_DISABLE_LDAP'] = not self.options.with_ldap
@@ -339,7 +343,7 @@ class LibcurlConan(ConanFile):
         # mac builds do not use cmake so don't even bother about darwin_ssl
         cmake.definitions['CMAKE_USE_WINSSL'] = 'with_winssl' in self.options and self.options.with_winssl
         cmake.definitions['CMAKE_USE_OPENSSL'] = 'with_openssl' in self.options and self.options.with_openssl
-        cmake.configure(build_folder=self._build_subfolder)
+        cmake.configure(source_folder=self._source_subfolder)
         return cmake
 
     def build_with_cmake(self):
