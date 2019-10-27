@@ -22,6 +22,7 @@ math(EXPR WFMATH_SOVERSION ${WFMATH_ABI_CURRENT}-${WFMATH_ABI_AGE})
 set(WFMATH_ABI_VERSION ${WFMATH_SOVERSION}.${WFMATH_ABI_AGE}.${WFMATH_ABI_REVISION})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
 
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
