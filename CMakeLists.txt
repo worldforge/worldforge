@@ -24,6 +24,7 @@ math(EXPR ERIS_SOVERSION ${ERIS_ABI_CURRENT}-${ERIS_ABI_AGE})
 set(ERIS_ABI_VERSION ${ERIS_SOVERSION}.${ERIS_ABI_AGE}.${ERIS_ABI_REVISION})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
 
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
