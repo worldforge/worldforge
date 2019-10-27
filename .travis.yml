@@ -45,7 +45,7 @@ script:
       conan profile update settings.compiler.libcxx=libstdc++11 default
     fi
   - conan install ../tools/conan -pr default --build=missing
-  - cmake ..
+  - cmake -DBUILD_SHARED_LIBS=OFF ..
   - make
   - make check
   - if [ "$TRAVIS_OS_NAME" != "osx" -a "$CC" == "gcc" ]; then make dox; fi
