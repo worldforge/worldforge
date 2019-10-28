@@ -68,6 +68,8 @@ conan_basic_setup()
         pass
 
     def package_info(self):
+        if not self.options.shared:
+            self.cpp_info.defines = ["ALUT_BUILD_LIBRARY=1"]
         self.cpp_info.libs = tools.collect_libs(self)
         if self.settings.os == 'Linux':
             self.cpp_info.libs.extend(['dl', 'pthread', 'm'])
