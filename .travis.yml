@@ -57,6 +57,7 @@ script:
   - conan create libcurl worldforge/stable -pr default --build missing && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
   - conan create tinyxml worldforge/stable -pr default --build missing && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
   - conan create bullet3 worldforge/stable -pr default --build missing && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+  - conan create openal worldforge/stable -pr default --build missing && conan upload "openal/*@worldforge/stable" -r worldforge -c --all
   - conan create alut worldforge/stable -pr default --build missing && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
   - conan create freeimage worldforge/stable -pr default --build missing && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
   - conan create sdl2 worldforge/stable -pr default --build missing && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all

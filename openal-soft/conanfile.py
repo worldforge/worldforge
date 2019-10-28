@@ -8,6 +8,10 @@ class openal(ConanFile):
     FOLDER_NAME = "openal-soft-openal-soft-1.19.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
+    options = {
+        "shared": [True, False]
+    }
+    default_options = {"shared": False}
     url = ""
     author = "Bartlomiej Parowicz (bparowicz@gmail.com)"
     exports = ["FindOpenAl.cmake"]
@@ -27,6 +31,8 @@ conan_basic_setup()
 
     def build(self):
         cmake = CMake(self)
+        cmake.definitions["ALSOFT_UTILS"] = False
+        cmake.definitions["ALSOFT_EXAMPLES"] = False
         cmake.configure(source_folder=self.FOLDER_NAME)
         cmake.build()
         cmake.install()
