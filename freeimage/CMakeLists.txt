@@ -71,7 +71,7 @@ else()
 	target_compile_definitions(FreeImage PUBLIC FREEIMAGE_LIB)
 endif()
 
-target_link_libraries(FreeImage PRIVATE CONAN_PKG::libjpeg CONAN_PKG::libpng CONAN_PKG::TIFF CONAN_PKG::libwebp CONAN_PKG::openexr CONAN_PKG::zlib)
+target_link_libraries(FreeImage PRIVATE CONAN_LIBS)
 
 if (APPLE)
 	set_target_properties(FreeImage PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
