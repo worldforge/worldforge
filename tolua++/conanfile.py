@@ -33,7 +33,7 @@ conan_basic_setup()
 
     def package(self):
         self.copy("tolua++.h", dst="include", src="include")
-        self.copy("tolua++", dst="bin", src="bin")
+        self.copy("*", dst="bin", src="bin")
         self.copy('*.lib', dst='lib', keep_path=False)
         self.copy('*.dll', dst='lib', keep_path=False)
         self.copy('*.so', dst='lib', keep_path=False)
