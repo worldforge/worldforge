@@ -8,63 +8,26 @@ conan_basic_setup(TARGETS)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-file(GLOB FREEIMAGE_SOURCES Source/FreeImage/*.cpp Source/FreeImage/*.c)
-file(GLOB FREEIMAGETOOLKIT_SOURCES Source/FreeImageToolkit/*.cpp Source/FreeImageToolkit/*.c)
-file(GLOB LIBOPENJPEG_SOURCES Source/LibOpenJPEG/*.cpp Source/LibOpenJPEG/*.c)
-file(GLOB_RECURSE LIBJXR_SOURCES Source/LibJXR/*.cpp Source/LibJXR/*.c)
-#file(GLOB_RECURSE LIBRAWLITE_SOURCES Source/LibRawLite/*.cpp Source/LibRawLite/*.c)
-set(LIBRAWLITE_SOURCES
-	Source/LibRawLite/internal/dcraw_common.cpp
-	Source/LibRawLite/internal/dcraw_fileio.cpp
-	Source/LibRawLite/internal/demosaic_packs.cpp
-	Source/LibRawLite/src/libraw_c_api.cpp
-	Source/LibRawLite/src/libraw_cxx.cpp
-	Source/LibRawLite/src/libraw_datastream.cpp
-)
-file(GLOB METADATA_SOURCES Source/Metadata/*.cpp Source/Metadata/*.c)
+#Get the sources from Makefile.srcs
+file(STRINGS Makefile.srcs FREEIMAGE_SOURCES REGEX "SRCS = .*")
+file(STRINGS Makefile.srcs FREEIMAGE_INCLUDE_DIR REGEX "INCLUDE = .*")
 
-foreach(src ${FREEIMAGE_SOURCES})
-	if(src MATCHES PluginJXR.cpp)
-		list(REMOVE_ITEM FREEIMAGE_SOURCES "${src}")
-	endif()
-endforeach()
+string(REPLACE "SRCS = " "" FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES})
+string(REPLACE "./" "" FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES})
+string(REPLACE " " ";" FREEIMAGE_SOURCES ${FREEIMAGE_SOURCES})
+string(REPLACE "INCLUDE = " "" FREEIMAGE_INCLUDE_DIR ${FREEIMAGE_INCLUDE_DIR})
+string(REPLACE "-I" "" FREEIMAGE_INCLUDE_DIR ${FREEIMAGE_INCLUDE_DIR})
+string(REPLACE " " ";" FREEIMAGE_INCLUDE_DIR ${FREEIMAGE_INCLUDE_DIR})
 
 add_library(FreeImage
 	${FREEIMAGE_SOURCES}
-	${FREEIMAGETOOLKIT_SOURCES}
-	${LIBOPENJPEG_SOURCES}
-	#${LIBJXR_SOURCES}
-	${LIBRAWLITE_SOURCES}
-	${METADATA_SOURCES}
-	Source/LibJPEG/transupp.c
-	Source/CacheFile.h
-	Source/FreeImage.h
-	Source/FreeImageIO.h
-	Source/Plugin.h
-	Source/Quantizers.h
-	Source/ToneMapping.h
-	Source/Utilities.h
 )
 
-# need include directories for FreeImage and all the sub libs
 target_include_directories(FreeImage PRIVATE
-	.
-	Source
-	Source/FreeImageToolkit
-	Source/LibOpenJPEG
-	Source/LibRawLite
-	Source/LibJXR/common/include
-	Source/LibJXR/jxrgluelib
-	Source/LibJXR/image/sys
-#	Source/OpenEXR
-#	Source/OpenEXR/Half
-#	Source/OpenEXR/Iex
-#	Source/OpenEXR/IlmImf
-#	Source/OpenEXR/IlmThread
-#	Source/OpenEXR/Imath
+	${FREEIMAGE_INCLUDE_DIR}
 )
 
-target_compile_definitions(FreeImage PRIVATE OPJ_STATIC LIBRAW_NODLL LIBRAW_LIBRARY_BUILD NO_LCMS USE_JPIP)
+target_compile_definitions(FreeImage PRIVATE OPJ_STATIC LIBRAW_NODLL LIBRAW_LIBRARY_BUILD NO_LCMS USE_JPIP DISABLE_PERF_MEASUREMENT __ANSI__)
 if(BUILD_SHARED_LIBS)
 	target_compile_definitions(FreeImage PUBLIC FREEIMAGE_EXPORTS)
 else()
@@ -83,7 +46,7 @@ endif()
 
 # With -std=c++11 (default from GCC 6.1) or higher, GCC fails to compile due to an invalid narrowing conversion
 if (CMAKE_COMPILER_IS_GNUCXX)
-	target_compile_options(FreeImage PUBLIC -Wno-narrowing)
+	target_compile_options(FreeImage PUBLIC -Wno-narrowing -fexceptions -fvisibility=hidden)
 
 	# Ignore deprecated warnings in gcc 7+ regarding throw(...)
 	if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)

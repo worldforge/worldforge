@@ -10,7 +10,7 @@ from os import path
 class FreeImageConan(ConanFile):
     name = "freeimage"
     version = "3.18.0"
-    url = "https://github.com/sixten-hilborn/conan-freeimage"
+    url = ""
     description = "Open source image loading library"
     
     # Indicates License type of the packaged library
@@ -32,11 +32,11 @@ class FreeImageConan(ConanFile):
         # if set, build library without "version number" (eg.: not generate libfreeimage-3-17.0.so)
         "no_soname"       : [True, False]
     }
-    default_options = (
-        "shared=False",
-        "use_cxx_wrapper=True",
-        "no_soname=False"
-    )
+    default_options = {
+        "shared": False,
+        "use_cxx_wrapper": True,
+        "no_soname": False
+    }
 
     # Custom attributes for Bincrafters recipe conventions
     source_subfolder = "source_subfolder"
@@ -44,13 +44,7 @@ class FreeImageConan(ConanFile):
 
     # Use version ranges for dependencies unless there's a reason not to
     requires = (
-        "zlib/1.2.11",
-        "libjpeg/9c",
-        "libpng/1.6.37",
-        "libtiff/4.0.9",
-        "libwebp/1.0.3",
-        "openexr/2.3.0@worldforge/stable",
-    )
+        "zlib/1.2.11")
 
     short_paths = True
 
@@ -59,7 +53,6 @@ class FreeImageConan(ConanFile):
         if self.settings.os == "Android":
             self.options.no_soname = True
 
-        # TODO: Implement & enable this for CMake (Wrapper/FreeImagePlus)
         self.options.use_cxx_wrapper = False
 
 
@@ -103,63 +96,10 @@ class FreeImageConan(ConanFile):
     def apply_patches(self):
         self.output.info("Applying patches")
 
-        #Copy "patch" files
         shutil.copy('CMakeLists.txt', self.source_subfolder)
-        #self.copy_tree("patches", self.source_subfolder)
 
-        #self.patch_gcc7()
-        self.patch_zlib()
-        self.patch_jpeg(['Source/FreeImage/PluginJPEG.cpp', 'Source/FreeImageToolkit/JPEGTransform.cpp'])
-
-        #self.patch_android_swab_issues()
-
-        self.patch_cmake()
         if self.settings.compiler == "Visual Studio":
             self.patch_visual_studio()
-
-    def patch_gcc7(self):
-        tools.patch(base_path=self.source_subfolder, patch_file='patches/gcc7.patch')
-
-    def patch_zlib(self):
-        # Remove ZLib directory since we're using conan for zlib
-        #shutil.rmtree(path.join(self.source_subfolder, 'Source/ZLib'))
-        #shutil.rmtree(path.join(self.source_subfolder, 'Source/LibJPEG'))
-        shutil.rmtree(path.join(self.source_subfolder, 'Source/LibPNG'))
-        #shutil.rmtree(path.join(self.source_subfolder, 'Source/LibTIFF4'))
-        shutil.rmtree(path.join(self.source_subfolder, 'Source/LibWebP'))
-        shutil.rmtree(path.join(self.source_subfolder, 'Source/OpenEXR'))
-
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/ZLibInterface.cpp'), '#include "../ZLib/zlib.h"', '#include <zlib.h>')
-        #tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/ZLibInterface.cpp'), '#include "../ZLib/zutil.h"', '#include <zutil.h>')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginPNG.cpp'), '#include "../ZLib/zlib.h"', '#include <zlib.h>')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginPNG.cpp'), '#include "../LibPNG/png.h"', '#include <png.h>')
-
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginEXR.cpp'), '../OpenEXR/IlmImf/', '')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginEXR.cpp'), '../OpenEXR/Iex/', '')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginEXR.cpp'), '../OpenEXR/Half/', '')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginTIFF.cpp'), '../OpenEXR/Half/', '')
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/PluginWebP.cpp'), '../LibWebP/src/', '')
-
-    def patch_jpeg(self, files):
-        for f in files:
-            tools.replace_in_file(path.join(self.source_subfolder, f), '#include "../LibJPEG/jpeglib.h"', '#include <jpeglib.h>')
-            tools.replace_in_file(path.join(self.source_subfolder, f), '#include "../LibJPEG/jerror.h"', '#include <jerror.h>')
-
-    def patch_android_swab_issues(self):
-        librawlite = path.join(self.source_subfolder, "Source", "LibRawLite")
-        missing_swab_files = [
-            path.join(librawlite, "dcraw", "dcraw.c"),
-            path.join(librawlite, "internal", "defines.h")
-        ]
-        replaced_include = '\n'.join(('#include <unistd.h>', '#include "swab.h"'))
-
-        for f in missing_swab_files:
-            self.output.info("patching file '%s'" % f)
-            tools.replace_in_file(f, "#include <unistd.h>", replaced_include)
-
-
-    def patch_cmake(self):
-        tools.replace_in_file(path.join(self.source_subfolder, 'Source/FreeImage/Plugin.cpp'), 's_plugins->AddNode(InitJXR);', '')
 
     def patch_visual_studio(self):
         # snprintf was added in VS2015
