@@ -22,12 +22,7 @@
 
 #ifndef VARCONF_API
 #if defined _WIN32 || defined __CYGWIN__
-  #ifdef BUILDING_VARCONF_DSO
-    #define VARCONF_API __declspec(dllexport)
-  #else
-    #define VARCONF_API __declspec(dllimport)
-  #endif
-  #define DLL_LOCAL
+  #define VARCONF_API
 #else
   #if __GNUC__ >= 4
     #define VARCONF_API __attribute__ ((visibility ("default")))
