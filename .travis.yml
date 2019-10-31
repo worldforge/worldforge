@@ -52,6 +52,7 @@ script:
       echo "Could not find BinTray password and login name"
       exit 1
     fi
+  - conan create cmake_findboost_modular worldforge/stable -pr default --build missing && conan upload "cmake_findboost_modular/*@worldforge/stable" -r worldforge -c --all
   - conan create sigc++ worldforge/stable -pr default --build missing && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
   - conan create libcurl worldforge/stable -pr default --build missing && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
   - conan create tinyxml worldforge/stable -pr default --build missing && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
