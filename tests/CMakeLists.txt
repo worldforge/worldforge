@@ -52,8 +52,9 @@ wf_add_test_linked(ActiveMarker_UnitTest.cpp ../src/Eris/ActiveMarker.cpp)
 #        viewTest.cpp viewTest.h
 #        avatarTest.cpp avatarTest.h
 #        calendarTest.cpp calendarTest.h)
-
-add_executable(metaQuery metaQuery.cpp)
-target_link_libraries(metaQuery ${LIBNAME})
-add_executable(eris_connect connect.cpp)
-target_link_libraries(eris_connect ${LIBNAME})
+if (NOT WIN32)
+	add_executable(metaQuery metaQuery.cpp)
+	target_link_libraries(metaQuery ${LIBNAME})
+	add_executable(eris_connect connect.cpp)
+	target_link_libraries(eris_connect ${LIBNAME})
+endif()
