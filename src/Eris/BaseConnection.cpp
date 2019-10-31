@@ -101,6 +101,9 @@ int BaseConnection::connectLocal(const std::string & filename)
         _socket->detach();
         _socket.reset();
     }
+#if _WIN32
+	return 0;
+#else
     try {
         StreamSocket::Callbacks callbacks;
         callbacks.dispatch = [&] {this->dispatch();};
@@ -116,6 +119,7 @@ int BaseConnection::connectLocal(const std::string & filename)
         return -1;
     }
     return 0;
+#endif
 }
 
 void BaseConnection::stateChanged(StreamSocket::Status status)
