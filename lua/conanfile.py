@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from conans import ConanFile, tools, AutoToolsBuildEnvironment
+from conans import ConanFile, tools, CMake
 
 
 class Lua(ConanFile):
@@ -15,11 +15,11 @@ class Lua(ConanFile):
     generators = 'cmake'
     exports_sources = 'CMakeLists.txt'
     options = {
-        'forModule': [True, False],
+        'shared': [True, False],
     }
-    default_options = (
-        'forModule=False',
-    )
+    default_options = {
+        'shared': False
+    }
 
     def source(self):
         url = 'https://www.lua.org/ftp/lua-5.1.5.tar.gz'
@@ -30,20 +30,9 @@ class Lua(ConanFile):
             shutil.move(os.path.join(luafolder, f), f)
 
     def build(self):
-        print(self.package_folder)
-        tools.replace_in_file("Makefile", "INSTALL_TOP= /usr/local", "INSTALL_TOP= {}".format(self.package_folder))
-        tools.replace_in_file("src/Makefile", "CFLAGS= -O2 -Wall $(MYCFLAGS)", "CFLAGS= -O2 -Wall -fPIC $(MYCFLAGS)")
-
-        autotools = AutoToolsBuildEnvironment(self)
-        system = "linux"
-        if tools.os_info.is_windows:
-            system = "windows"
-        elif tools.os_info.is_macos:
-            system = "macosx"
-        autotools.make(args=[system])
-        os.rename("src/liblua.a", 'src/liblua5.1.a')
-
-    # autotools.install()
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
 
     def package(self):
         self.copy('*lua.lib', dst='lib', keep_path=False)
