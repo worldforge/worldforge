@@ -1,7 +1,7 @@
 from conans import ConanFile, tools, MSBuild, AutoToolsBuildEnvironment
 from conans.tools import Version
 from conans.errors import ConanException
-import os.path
+import os
 import sys
 
 
@@ -97,6 +97,10 @@ class SigcppConan(ConanFile):
     def package(self):
         if self.settings.compiler == "Visual Studio":
             self.copy("*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]))
+            os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
+            #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.dll'), os.path.join(self.package_folder, 'bin/sigc-2.0.dll'))
+            #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.pdb'), os.path.join(self.package_folder, 'bin/sigc-2.0.pdb'))
+            
         self.copy("COPYING", dst="license", src=self.sourcename, keep_path=False)
 
     def package_info(self):
