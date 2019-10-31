@@ -18,6 +18,9 @@ class Lua(ConanFile):
         git.clone("https://github.com/devnev/libxdg-basedir.git", "libxdg-basedir-1.2.0")
 
     def build(self):
+        if self.settings.compiler == "Visual Studio":
+            #Just skip on win32
+            return
         self.run("./autogen.sh")
         autotools = AutoToolsBuildEnvironment(self)
         autotools.configure()
