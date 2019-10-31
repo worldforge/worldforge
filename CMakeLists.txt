@@ -104,49 +104,51 @@ if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
+else()
+	find_package(SigC++
+			2.0
+			REQUIRED)
+	list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
+	list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
+	list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
+
+	find_package(Atlas
+			0.7.0
+			REQUIRED)
+	list(APPEND WF_LIBRARIES ${Atlas_LIBRARIES})
+	list(APPEND WF_INCLUDE_DIRS ${Atlas_INCLUDE_DIR})
+	list(APPEND WF_LIBRARY_DIRS ${Atlas_LIBRARY_DIR})
+
+	find_package(wfmath
+			1.0.3
+			REQUIRED)
+	list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
+	list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
+	list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
+
+
+	find_package(Boost
+			1.46.0
+			REQUIRED
+			COMPONENTS system)
+
+	list(APPEND WF_LIBRARIES ${Boost_LIBRARIES})
+	list(APPEND WF_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
+	list(APPEND WF_LIBRARY_DIRS ${Boost_LIBRARY_DIRS})
+
+	#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
+	if (UNIX)
+		set(THREADS_PREFER_PTHREAD_FLAG ON)
+		find_package(Threads REQUIRED)
+		link_libraries(Threads::Threads)
+	endif (UNIX)
+
+
+	link_directories(${WF_LIBRARY_DIRS})
+	include_directories(${WF_INCLUDE_DIRS})
 endif ()
 
-find_package(SigC++
-        2.0
-        REQUIRED)
-list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
-list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
-list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
 
-find_package(Atlas
-        0.7.0
-        REQUIRED)
-list(APPEND WF_LIBRARIES ${Atlas_LIBRARIES})
-list(APPEND WF_INCLUDE_DIRS ${Atlas_INCLUDE_DIR})
-list(APPEND WF_LIBRARY_DIRS ${Atlas_LIBRARY_DIR})
-
-find_package(wfmath
-        1.0.3
-        REQUIRED)
-list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
-list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
-list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
-
-
-find_package(Boost
-        1.46.0
-        REQUIRED
-        COMPONENTS system)
-
-list(APPEND WF_LIBRARIES ${Boost_LIBRARIES})
-list(APPEND WF_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-list(APPEND WF_LIBRARY_DIRS ${Boost_LIBRARY_DIRS})
-
-#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
-if (UNIX)
-    set(THREADS_PREFER_PTHREAD_FLAG ON)
-    find_package(Threads REQUIRED)
-    link_libraries(Threads::Threads)
-endif (UNIX)
-
-
-link_directories(${WF_LIBRARY_DIRS})
-include_directories(${WF_INCLUDE_DIRS})
 # Populate for pkg-config
 set(REQUIRES "sigc++-2.0 atlascpp-0.7 wfmath-1.0")
 
