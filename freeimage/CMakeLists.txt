@@ -27,7 +27,12 @@ target_include_directories(FreeImage PRIVATE
 	${FREEIMAGE_INCLUDE_DIR}
 )
 
-target_compile_definitions(FreeImage PRIVATE OPJ_STATIC LIBRAW_NODLL LIBRAW_LIBRARY_BUILD NO_LCMS USE_JPIP DISABLE_PERF_MEASUREMENT __ANSI__)
+target_compile_definitions(FreeImage PRIVATE OPJ_STATIC LIBRAW_NODLL LIBRAW_LIBRARY_BUILD NO_LCMS USE_JPIP DISABLE_PERF_MEASUREMENT)
+# Define __ANSI__ on non-win32 platforms to get JXR to compile.
+IF (NOT WIN32)
+	target_compile_definitions(FreeImage __ANSI__)
+endif()
+
 if(BUILD_SHARED_LIBS)
 	target_compile_definitions(FreeImage PUBLIC FREEIMAGE_EXPORTS)
 else()
