@@ -18,8 +18,9 @@ set ( SRC_LUAC src/luac.c src/print.c )
 
 add_library ( liblua ${SRC_CORE} ${SRC_LIB} )
 set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua5.1 )
-target_link_libraries ( liblua m )
-
+if (NOT WIN32)
+	target_link_libraries ( liblua m )
+endif()
 
 if(BUILD_SHARED_LIBS)
     target_compile_definitions ( liblua PRIVATE _CRT_SECURE_NO_WARNINGS LUA_BUILD_AS_DLL )
