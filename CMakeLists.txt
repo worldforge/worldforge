@@ -104,6 +104,9 @@ if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
+	set(WF_LIBRARY_DIRS ${CONAN_LIB_DIRS})
+	set(WF_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS})
+	set(WF_LIBRARIES ${CONAN_LIBS})
 else()
 	find_package(SigC++
 			2.0
@@ -143,10 +146,9 @@ else()
 		link_libraries(Threads::Threads)
 	endif (UNIX)
 
-
-	link_directories(${WF_LIBRARY_DIRS})
-	include_directories(${WF_INCLUDE_DIRS})
 endif ()
+link_directories(${WF_LIBRARY_DIRS})
+include_directories(${WF_INCLUDE_DIRS})
 
 
 # Populate for pkg-config
