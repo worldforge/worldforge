@@ -16,9 +16,11 @@ class Lua(ConanFile):
     exports_sources = 'CMakeLists.txt'
     options = {
         'shared': [True, False],
+        'fPIC': [True, False]
     }
     default_options = {
-        'shared': False
+        'shared': False,
+        'fPIC': True
     }
 
     def source(self):
