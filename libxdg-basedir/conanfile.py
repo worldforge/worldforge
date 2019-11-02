@@ -33,4 +33,5 @@ class Lua(ConanFile):
                 os.remove(str(filename))
 
     def package_info(self):
-        self.cpp_info.libs = ['xdg-basedir']
+        if self.settings.compiler != "Visual Studio":
+            self.cpp_info.libs = ['xdg-basedir']
