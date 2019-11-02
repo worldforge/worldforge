@@ -104,6 +104,7 @@ conan_basic_setup()
         self.cpp_info.libs = tools.collect_libs(self)
         if not self.options.shared:
             self.cpp_info.libs = list(filter(lambda lib: str(lib).endswith("_Static"), self.cpp_info.libs))
+            self.cpp_info.defines = ["CEGUI_STATIC"]
         self.cpp_info.includedirs = ["include/cegui-0"]
 
     @staticmethod
