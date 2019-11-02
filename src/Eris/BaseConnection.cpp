@@ -101,7 +101,7 @@ int BaseConnection::connectLocal(const std::string & filename)
         _socket->detach();
         _socket.reset();
     }
-#if _WIN32
+#ifdef _WIN32
 	return 0;
 #else
     try {
