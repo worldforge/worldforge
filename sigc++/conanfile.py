@@ -97,7 +97,10 @@ class SigcppConan(ConanFile):
     def package(self):
         if self.settings.compiler == "Visual Studio":
             self.copy("*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]))
-            os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
+            if self.settings.build_type == "Debug":
+                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-d-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
+            else:
+                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
             #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.dll'), os.path.join(self.package_folder, 'bin/sigc-2.0.dll'))
             #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.pdb'), os.path.join(self.package_folder, 'bin/sigc-2.0.pdb'))
             
