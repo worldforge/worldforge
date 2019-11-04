@@ -26,7 +26,8 @@ class CeguiConan(ConanFile):
         "shared": [True, False],
     }
     default_options = {
-        "shared": False
+        "shared": False,
+        "pcre:with_unicode_properties": True
     }
 
     # Custom attributes for Bincrafters recipe conventions
