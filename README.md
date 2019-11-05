@@ -2,6 +2,8 @@ Mercator: a procedural terrain library
 ======================================
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
+[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/mercator?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/mercator)
+[![Travis build Status](https://travis-ci.com/worldforge/mercator.svg?branch=master)](https://travis-ci.com/worldforge/mercator)
 
 Mercator is primarily aimed at terrain for multiplayer online games and
 forms one of the [WorldForge](http://worldforge.org/ "The main Worldforge site")
@@ -12,23 +14,31 @@ server.
 ## Installation
 
 If you intend to build this as a prerequisite for the Ember client or the Cyphesis server we strongly suggest that you 
-use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile Ember.
+use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile it.
 This is script provided by the Worldforge project which will download and install all of the required libraries and 
 components used by Worldforge.
 
-Otherwise the library can most easily be built through the following commands.
-```
-mkdir build_`arch` && cd build_`arch`
+Alternatively you can use [Conan](https://www.conan.io) to install all dependencies. 
+```bash
+conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+mkdir build && cd build
+conan install ../tools/conan --build missing
 cmake ..
-make
-make install
+make -j all install
+```
+
+Otherwise the library can most easily be built through the following commands.
+```bash
+mkdir build && cd build
+cmake ..
+make -j all install
 ```
 
 ### Tests
 
 The test suite can be built and run using the ```check``` target. For example:
 
-```
+```bash
 make check
 ```
 
@@ -36,7 +46,7 @@ make check
 
 If Doxygen is available API documentation can be generated using the ```dox``` target. For example:
 
-```
+```bash
 make dox
 ```
 
