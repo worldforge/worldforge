@@ -63,5 +63,6 @@ script:
   - conan create libxdg-basedir worldforge/stable -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
   - conan create lua worldforge/stable -pr default --build missing && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
   - conan create tolua++ worldforge/stable -pr default --build missing && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+  - conan install pcre/8.41@_/_ --options "pcre:with_unicode_properties=True" --build pcre && conan upload "pcre/8.41" -r worldforge -c --all
   - conan create cegui worldforge/stable -pr default --build missing && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
   - conan create ogre worldforge/testing -pr default --build missing && conan upload "ogre/*@worldforge/testing" -r worldforge -c --all
