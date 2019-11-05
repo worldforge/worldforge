@@ -40,6 +40,7 @@ class SDL2Conan(ConanFile):
         "directfb": [True, False],
         "iconv": [True, False],
         "video_rpi": [True, False],
+        "sndio": [True, False],
         "sdl2main": [True, False]
     }
     default_options = {
@@ -64,6 +65,7 @@ class SDL2Conan(ConanFile):
         "directfb": False,
         "iconv": False,
         "video_rpi": False,
+        "sndio": False,
         "sdl2main": True
     }
 
@@ -184,6 +186,7 @@ class SDL2Conan(ConanFile):
             self.options.remove('wayland')
             self.options.remove('directfb')
             self.options.remove('video_rpi')
+            self.options.remove('sndio')
         if self.settings.os != "Windows":
             self.options.remove("directx")
 
@@ -269,6 +272,7 @@ class SDL2Conan(ConanFile):
             cmake.definitions['VIDEO_WAYLAND'] = self.options.wayland
             cmake.definitions['VIDEO_DIRECTFB'] = self.options.directfb
             cmake.definitions['VIDEO_RPI'] = self.options.video_rpi
+            cmake.definitions['SNDIO'] = self.options.sndio
         elif self.settings.os == "Windows":
             cmake.definitions["DIRECTX"] = self.options.directx
 
