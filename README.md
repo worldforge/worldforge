@@ -1,6 +1,8 @@
 # Eris, the WorldForge client entity library
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
+[![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/eris?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/eris)
+[![Travis build Status](https://travis-ci.com/worldforge/eris.svg?branch=master)](https://travis-ci.com/worldforge/eris)
 
 Eris is a client library for the [WorldForge](http://worldforge.org/ "The main Worldforge site") system. It's meant to
 be used by any client which wishes to easily interact with a Worldforge server.
@@ -17,12 +19,21 @@ use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer scrip
 This is script provided by the Worldforge project which will download and install all of the required libraries and 
 components used by Worldforge.
 
-Otherwise the library can most easily be built through the following commands.
-```
-mkdir build_`arch` && cd build_`arch`
+Alternatively you can use [Conan](https://www.conan.io) to install all dependencies. 
+```bash
+conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+mkdir build && cd build
+conan install ../tools/conan --build missing
 cmake ..
-make
-make install
+make -j all install
+```
+
+
+Otherwise the library can most easily be built through the following commands.
+```bash
+mkdir build && cd build
+cmake ..
+make -j all install
 ```
 
 ### Tests
