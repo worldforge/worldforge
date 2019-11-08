@@ -83,7 +83,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY'] = 'ON'
-        cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY_IMGUI'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_THREAD_PROVIDER'] = 'std'
         cmake.definitions['OGRE_BUILD_LIBS_AS_FRAMEWORKS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
