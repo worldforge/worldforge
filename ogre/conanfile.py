@@ -7,7 +7,6 @@ from conans.tools import os_info, SystemPackageTool
 class OgreConan(ConanFile):
     name = 'ogre'
     upstream_version = "1.12.3"
-    commit_id = "c08a91e70a9bbd3fe257faccf27e1c7eac388946"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -39,8 +38,8 @@ class OgreConan(ConanFile):
             os.environ['CONAN_SYSREQUIRES_MODE'] = 'verify'
 
     def source(self):
-        tools.get("https://github.com/OGRECave/ogre/archive/{0}.tar.gz".format(self.commit_id))
-        os.rename("ogre-{0}".format(self.commit_id), self.source_subfolder)
+        tools.get("https://github.com/OGRECave/ogre/archive/v{0}.tar.gz".format(self.upstream_version))
+        os.rename("ogre-{0}".format(self.upstream_version), self.source_subfolder)
 
     def build(self):
         
@@ -84,6 +83,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY'] = 'ON'
+        cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_THREAD_PROVIDER'] = 'std'
         cmake.definitions['OGRE_BUILD_LIBS_AS_FRAMEWORKS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
