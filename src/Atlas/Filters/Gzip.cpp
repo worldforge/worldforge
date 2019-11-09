@@ -48,7 +48,12 @@ std::string Gzip::encode(const std::string& data)
     
     buf[0] = 0;
 
-    outgoing.next_in = (z_const Bytef*)data.data();
+//Handle early zlib versions
+#if ZLIB_VERNUM < 0x1252
+	outgoing.next_in = (unsigned char *)data.data();
+#else
+	outgoing.next_in = (z_const Bytef*)data.data();
+#endif
     outgoing.avail_in = data.size();
 
     do
@@ -75,7 +80,12 @@ std::string Gzip::decode(const std::string& data)
 
     buf[0] = 0;
 
-    incoming.next_in = (const unsigned char*)data.data();
+//Handle early zlib versions
+#if ZLIB_VERNUM < 0x1252
+	incoming.next_in = (unsigned char *)data.data();
+#else
+	incoming.next_in = (z_const Bytef*)data.data();
+#endif
     incoming.avail_in = data.size();
 
     do 
