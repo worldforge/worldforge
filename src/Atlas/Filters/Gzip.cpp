@@ -48,7 +48,7 @@ std::string Gzip::encode(const std::string& data)
     
     buf[0] = 0;
 
-    outgoing.next_in = (const unsigned char *)data.data();
+    outgoing.next_in = (z_const Bytef*)data.data();
     outgoing.avail_in = data.size();
 
     do
