@@ -28,7 +28,6 @@ cmake ..
 make -j all install
 ```
 
-
 Otherwise the library can most easily be built through the following commands.
 ```bash
 mkdir build && cd build
