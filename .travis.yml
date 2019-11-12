@@ -1,18 +1,18 @@
 language: cpp
-dist: xenial
-osx_image: xcode10.2
-compiler:
-  - clang
-  - gcc
-
-os:
-  - linux
-  - osx
-
-matrix:
-  exclude:
-    - os: osx
+jobs:
+  include:
+    - os: linux
+      dist: xenial
+      compiler: clang
+    - os: linux
+      dist: xenial
       compiler: gcc
+    - os: linux
+      dist: bionic
+      compiler: gcc
+    - os: osx
+      osx_image: xcode10.2
+      compiler: clang
 
 addons:
   apt:
