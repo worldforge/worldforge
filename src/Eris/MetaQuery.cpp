@@ -30,8 +30,8 @@ MetaQuery::MetaQuery(boost::asio::io_service& io_service,
 		m_serverIndex(sindex),
 		m_complete(false),
 		m_completeTimer(io_service) {
-	connectRemote(host, 6767);
 	_bridge = &bridge;
+	connectRemote(host, 6767);
 }
 
 // clean up is all done by the Base Connection
