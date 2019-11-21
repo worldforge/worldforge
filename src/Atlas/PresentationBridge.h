@@ -35,7 +35,7 @@ namespace Atlas
 class PresentationBridge: public Atlas::Bridge
 {
 public:
-	explicit PresentationBridge(std::stringstream& stream);
+	explicit PresentationBridge(std::ostream& stream);
 	~PresentationBridge() override = default;
 
 	void streamBegin() override;
@@ -86,7 +86,7 @@ private:
 
 	std::string mPadding;
 
-	std::stringstream& mStream;
+	std::ostream& mStream;
 
 	/**
 	 * @brief Keeps track of the number of maps in lists.

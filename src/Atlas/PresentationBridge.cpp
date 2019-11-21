@@ -21,7 +21,7 @@
 namespace Atlas
 {
 
-PresentationBridge::PresentationBridge(std::stringstream& stream) :
+PresentationBridge::PresentationBridge(std::ostream& stream) :
 		mStream(stream), mMaxItemsPerLevel(0), mIsSkipEntry(false), mStartFilterLevel(1)
 {
     mStream.precision(6);
