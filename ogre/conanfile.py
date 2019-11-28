@@ -75,6 +75,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_INSTALL_DEPENDENCIES'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_ENABLE_ZIP'] = "OFF"
         cmake.definitions['OGRE_BUILD_PLATFORM_APPLE_IOS'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_HLMS'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_TERRAIN'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_RTSHADERSYSTEM'] = 'ON'
