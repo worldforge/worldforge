@@ -67,7 +67,7 @@ class StreamConnect : public Atlas::Negotiate
 
 	State getState() override;
 
-	Atlas::Codec * getCodec(Atlas::Bridge&) override;
+	std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge&) override;
 
     private:
 
@@ -129,7 +129,7 @@ class StreamAccept : public Atlas::Negotiate
 
 	State getState() override;
 
-	Atlas::Codec * getCodec(Atlas::Bridge&) override;
+	std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge&) override;
 
     private:
 

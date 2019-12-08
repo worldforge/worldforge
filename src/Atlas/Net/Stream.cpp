@@ -187,12 +187,12 @@ Atlas::Negotiate::State StreamConnect::getState()
 }
 
 /// FIXME We should pass in the Bridge here, not at construction time.
-Atlas::Codec * StreamConnect::getCodec(Atlas::Bridge & bridge)
+std::unique_ptr<Atlas::Codec> StreamConnect::getCodec(Atlas::Bridge & bridge)
 {
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_inStream, m_outStream, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_inStream, m_outStream, bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_inStream, m_outStream, bridge); }
-    return nullptr;
+    if (m_canPacked) { return std::make_unique<Atlas::Codecs::Packed>(m_inStream, m_outStream, bridge); }
+    if (m_canXML) { return std::make_unique<Atlas::Codecs::XML>(m_inStream, m_outStream, bridge); }
+    if (m_canBach) { return std::make_unique<Atlas::Codecs::Bach>(m_inStream, m_outStream, bridge); }
+    return {};
 }
 
 void StreamConnect::processServerCodecs()
@@ -338,7 +338,7 @@ Atlas::Negotiate::State StreamAccept::getState()
 }
 
 /// FIXME We should pass in the Bridge here, not at construction time.
-Atlas::Codec * StreamAccept::getCodec(Atlas::Bridge & bridge)
+std::unique_ptr<Atlas::Codec> StreamAccept::getCodec(Atlas::Bridge & bridge)
 {
       // XXX XXX XXX XXX
       // should pass an appropriate filterbuf here instead of socket,
@@ -348,9 +348,9 @@ Atlas::Codec * StreamAccept::getCodec(Atlas::Bridge & bridge)
       // would deallocate? erk. -- sdt 2001-01-05
         //return (*outCodecs.begin())-> 
                 //New(Codec<std::iostream>::Parameters(m_socket,bridge));
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_inStream, m_outStream, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_inStream, m_outStream, bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_inStream, m_outStream, bridge); }
+    if (m_canPacked) { return std::make_unique<Atlas::Codecs::Packed>(m_inStream, m_outStream, bridge); }
+    if (m_canXML) { return std::make_unique<Atlas::Codecs::XML>(m_inStream, m_outStream, bridge); }
+    if (m_canBach) { return std::make_unique<Atlas::Codecs::Bach>(m_inStream, m_outStream, bridge); }
     return nullptr;
 }
 

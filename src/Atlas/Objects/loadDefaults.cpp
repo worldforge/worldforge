@@ -62,13 +62,13 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename, const Fact
 	//if((*i)->getName() == "XML")
 	//codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
 	//end of replace
-	Atlas::Codec* codec = new Atlas::Codecs::XML(stream, stream, *this);
+	{
+		Atlas::Codecs::XML codec(stream, stream, *this);
 
-	while (stream) {
-		codec->poll();
+		while (stream) {
+			codec.poll();
+		}
 	}
-
-	delete codec;
 
 	MapType anonymous_obj;
 	m_objects["anonymous"] = anonymous_obj;

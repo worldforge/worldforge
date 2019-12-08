@@ -7,6 +7,8 @@
 #ifndef ATLAS_NEGOTIATE_H
 #define ATLAS_NEGOTIATE_H
 
+#include <memory>
+
 namespace Atlas {
 
 class Bridge;
@@ -36,7 +38,7 @@ class Negotiate
     };
 
     virtual State getState() = 0;
-    virtual Codec * getCodec(Bridge &) = 0;
+    virtual std::unique_ptr<Codec> getCodec(Bridge &) = 0;
     virtual void poll() = 0;
 };
 

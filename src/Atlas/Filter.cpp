@@ -9,15 +9,12 @@
 
 namespace Atlas {
 
-Filter::Filter(Filter* next)
-	: m_next(next)
+Filter::Filter(std::unique_ptr<Filter> next)
+	: m_next(std::move(next))
 {
 }
 
-Filter::~Filter()
-{
-    delete m_next;
-}
+Filter::~Filter() = default;
 
 filterbuf::~filterbuf()
 {

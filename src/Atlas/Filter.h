@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 namespace Atlas {
 
@@ -28,12 +29,11 @@ ways such as compressing and then encrypting.
 
 class Filter
 {
-    private:
-    Filter(const Filter &); // unimplemented
-    Filter & operator=(const Filter &); // unimplemented
     public:
 
-    explicit Filter(Filter* = nullptr);
+    explicit Filter(std::unique_ptr<Filter> = nullptr);
+	Filter(const Filter &) = delete;
+	Filter & operator=(const Filter &) = delete;
     virtual ~Filter();
 
     virtual void begin() = 0;
@@ -51,7 +51,7 @@ class Filter
 
     protected:
 
-    Filter* m_next;
+    std::unique_ptr<Filter> m_next;
 };
 
 typedef int int_type;
