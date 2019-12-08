@@ -36,7 +36,7 @@ public:
      * @param availableCharacterTypes A list of available character types.
      * @param description A description of the spawn point.
      */
-    SpawnPoint(std::string  name, CharacterTypeStore  availableCharacterTypes, std::string  description);
+    SpawnPoint(std::string name, CharacterTypeStore availableCharacterTypes, std::string description);
 
     /**
      * @brief Dtor.

@@ -85,7 +85,7 @@ Meta::Meta(boost::asio::io_service& io_service,
 		m_metaTimer(io_service),
 		m_receive_stream(&m_receive_buffer),
 		m_send_buffer(new boost::asio::streambuf()),
-		m_send_stream(m_send_buffer),
+		m_send_stream(m_send_buffer.get()),
 		m_dataPtr(nullptr),
 		m_bytesToRecv(0),
 		m_totalServers(0),
@@ -100,12 +100,6 @@ Meta::Meta(boost::asio::io_service& io_service,
 
 Meta::~Meta() {
 	disconnect();
-
-	// delete any outstanding queries
-	for (auto activeQuery : m_activeQueries) {
-		delete activeQuery;
-	}
-	delete m_send_buffer;
 }
 
 /*
@@ -163,9 +157,6 @@ void Meta::refresh() {
 }
 
 void Meta::cancel() {
-	for (auto activeQuery : m_activeQueries) {
-		delete activeQuery;
-	}
 	m_activeQueries.clear();
 
 	disconnect();
@@ -269,9 +260,9 @@ void Meta::do_read() {
 void Meta::write() {
 	if (m_socket.is_open()) {
 		if (m_send_buffer->size() != 0) {
-			std::shared_ptr<boost::asio::streambuf> send_buffer(m_send_buffer);
-			m_send_buffer = new boost::asio::streambuf();
-			m_send_stream.rdbuf(m_send_buffer);
+			std::shared_ptr<boost::asio::streambuf> send_buffer(std::move(m_send_buffer));
+			m_send_buffer = std::make_unique<boost::asio::streambuf>();
+			m_send_stream.rdbuf(m_send_buffer.get());
 			m_socket.async_send(send_buffer->data(),
 								[&, send_buffer](boost::system::error_code ec, std::size_t length) {
 									if (!ec) {
@@ -291,13 +282,15 @@ void Meta::gotData() {
 }
 
 void Meta::deleteQuery(MetaQuery* query) {
-	auto I = m_activeQueries.find(query);
+	auto I = std::find_if(m_activeQueries.begin(), m_activeQueries.end(), [&](const std::unique_ptr<MetaQuery>& entry){return entry.get() == query;});
 
 	if (I != m_activeQueries.end()) {
+		auto containedQuery = I->release();
 		m_activeQueries.erase(I);
 
-		m_event_service.runOnMainThread([query]() {
-			delete query;
+		//Delay destruction.
+		m_event_service.runOnMainThread([containedQuery]() {
+			delete containedQuery;
 		});
 
 		if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size()) {
@@ -515,14 +508,13 @@ void Meta::internalQuery(size_t index) {
 	assert(index < m_gameServers.size());
 
 	ServerInfo& sv = m_gameServers[index];
-	auto* q = new MetaQuery(m_io_service, *m_decoder, *this, sv.getHostname(), index);
+	auto q = std::make_unique<MetaQuery>(m_io_service, *m_decoder, *this, sv.getHostname(), index);
 	if (q->getStatus() != BaseConnection::CONNECTING &&
 		q->getStatus() != BaseConnection::NEGOTIATE) {
 		// indicates a failure occurred, so we'll kill it now and say no more
-		delete q;
 		sv.m_status = ServerInfo::INVALID;
 	} else {
-		m_activeQueries.insert(q);
+		m_activeQueries.emplace_back(std::move(q));
 		sv.m_status = ServerInfo::QUERYING;
 	}
 }
@@ -562,7 +554,7 @@ void Meta::objectArrived(const Root& obj) {
 				ReceivedServerInfo.emit(sv);
 			}
 		}
-		deleteQuery(*Q);
+		deleteQuery(Q->get());
 	}
 	query();
 }

@@ -13,7 +13,7 @@ class TypeInfo;
 class IGRouter : public Router
 {
 public:
-	IGRouter(Avatar* av, View* view);
+	IGRouter(Avatar& av, View& view);
 
 	~IGRouter() override;
 
@@ -23,8 +23,8 @@ protected:
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation& sightOp, const Atlas::Objects::Operation::RootOperation& op);
 
-    Avatar* m_avatar;
-    View* m_view;
+    Avatar& m_avatar;
+    View& m_view;
     TypeInfo* m_actionType;
 };
 

@@ -7,8 +7,8 @@
 #include "TypeInfo.h"
 #include "Log.h"
 #include "Exceptions.h"
+#include "TypeService.h"
 
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>
 
 #include <cassert>
@@ -26,8 +26,9 @@ TypeInfo::TypeInfo(std::string id, TypeService *ts) :
     m_name(std::move(id)),
     m_typeService(ts)
 {
-    if (m_name == "root")
-        m_bound = true; // root node is always bound
+    if (m_name == "root") {
+		m_bound = true; // root node is always bound
+	}
 }
 
 TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
@@ -43,7 +44,7 @@ TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
     processTypeData(atype);
 }
 
-bool TypeInfo::isA(TypeInfoPtr tp)
+bool TypeInfo::isA(TypeInfo* tp)
 {
     if (!m_bound) {
         warning() << "calling isA on unbound type " << m_name;
@@ -68,7 +69,7 @@ void TypeInfo::resolveChildren()
         error() << "Type " << m_name << " has no unresolved children";
         return;
     }
-    
+
     auto uchildren = m_unresolvedChildren;
     for (const auto& child : uchildren) {
         addChild(m_typeService->getTypeByName(child));
@@ -165,7 +166,7 @@ bool TypeInfo::operator<(const TypeInfo &x) const
     return m_name < x.m_name;
 }
 
-void TypeInfo::setParent(TypeInfoPtr tp)
+void TypeInfo::setParent(TypeInfo* tp)
 {
     if (m_parent)
     {
@@ -185,7 +186,7 @@ void TypeInfo::setParent(TypeInfoPtr tp)
     tp->addChild(this);
 }
 
-void TypeInfo::addChild(TypeInfoPtr tp)
+void TypeInfo::addChild(TypeInfo* tp)
 {
 	assert(tp);
     if (tp == this) {
@@ -207,7 +208,7 @@ void TypeInfo::addChild(TypeInfoPtr tp)
     tp->setParent(this);
 }
 
-void TypeInfo::addAncestor(TypeInfoPtr tp)
+void TypeInfo::addAncestor(TypeInfo* tp)
 {
     // someone has reported getting into a loop here (i.e a circular inheritance
     // graph). To try and catch that, I'm putting this assert in. If / when you
@@ -217,7 +218,7 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     
     m_ancestors.insert(tp);
 	
-    const TypeInfoSet& parentAncestors = tp->m_ancestors;
+    auto& parentAncestors = tp->m_ancestors;
     m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
     // tell all our children!

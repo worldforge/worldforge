@@ -76,7 +76,7 @@ int main()
         Eris::EventService event_service(io_service);
         Eris::Connection c(io_service, event_service, " name", "localhost", 6767);
 
-        assert(c.getTypeService() != 0);
+        c.getTypeService();
     }
 
     // Test connect()

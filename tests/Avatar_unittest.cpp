@@ -24,14 +24,14 @@
 #define DEBUG
 #endif
 
-#include <Eris/Avatar.h>
+#include "Eris/Avatar.h"
 
-#include <Eris/Connection.h>
-#include <Eris/Account.h>
-#include <Eris/ViewEntity.h>
-#include <Eris/View.h>
-#include <Eris/Log.h>
-#include <Eris/EventService.h>
+#include "Eris/Connection.h"
+#include "Eris/Account.h"
+#include "Eris/ViewEntity.h"
+#include "Eris/View.h"
+#include "Eris/Log.h"
+#include "Eris/EventService.h"
 
 #include "SignalFlagger.h"
 
@@ -60,10 +60,10 @@ class TestConnection : public Eris::Connection {
 
 class TestAccount : public Eris::Account {
   public:
-    TestAccount(Eris::Connection * con) : Eris::Account(con) { }
+    TestAccount(Eris::Connection & con) : Eris::Account(con) { }
 
     void setup_insertActiveCharacters(Eris::Avatar * ea) {
-        m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+        m_activeAvatars.insert(std::make_pair(ea->getId(), ea));
     }
 };
 
@@ -110,7 +110,7 @@ class TestAvatar : public Eris::Avatar {
 
 class TestEntity : public Eris::ViewEntity {
   public:
-    TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View* vw) :
+    TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View& vw) :
                Eris::ViewEntity(id, ty, vw) { }
 
     void setup_setLocation(Eris::Entity * e) {
@@ -136,7 +136,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -149,7 +149,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        TestAccount * acc = new TestAccount(con);
+        TestAccount * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar* ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -164,7 +164,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -179,7 +179,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -198,7 +198,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -218,7 +218,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -238,7 +238,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -260,7 +260,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -282,7 +282,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -304,7 +304,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -326,7 +326,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -344,7 +344,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1"), fake_npc_id("2");
         std::string fake_mind_id = "12";
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -365,7 +365,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1"), fake_npc_id("2"), fake_npc2_id("3");
         std::string fake_mind_id = "12";
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -388,7 +388,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -407,7 +407,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -425,7 +425,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -445,7 +445,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -465,7 +465,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -485,7 +485,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -507,7 +507,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -527,7 +527,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -549,7 +549,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -572,7 +572,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -594,7 +594,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -618,7 +618,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -638,7 +638,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -660,7 +660,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_char_id);
@@ -682,7 +682,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -703,7 +703,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -724,12 +724,12 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
 
-        assert(ea->getConnection() == con);
+        assert(&ea->getConnection() == con);
     }
 
     // Test getWorldTime()
@@ -739,7 +739,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -754,7 +754,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -769,7 +769,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -790,7 +790,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -811,7 +811,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -834,7 +834,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -857,7 +857,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        Eris::Account * acc = new TestAccount(con);
+        Eris::Account * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -882,7 +882,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        TestAccount * acc = new TestAccount(con);
+        TestAccount * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -911,7 +911,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        TestAccount * acc = new TestAccount(con);
+        TestAccount * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
@@ -935,7 +935,7 @@ int main()
         Eris::Connection * con = new TestConnection(io_service, event_service, "name",
                 "localhost", 6767);
 
-        TestAccount * acc = new TestAccount(con);
+        TestAccount * acc = new TestAccount(*con);
         std::string fake_id("1");
 		std::string fake_mind_id("12");
         TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);

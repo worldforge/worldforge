@@ -35,9 +35,9 @@ namespace Eris
 template<typename ProtocolT>
 AsioStreamSocket<ProtocolT>::AsioStreamSocket(
         boost::asio::io_service& io_service, const std::string& client_name,
-        Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks) :
-        StreamSocket(io_service, client_name, bridge, callbacks), m_socket(
-                io_service)
+        Atlas::Bridge& bridge, StreamSocket::Callbacks callbacks) :
+        StreamSocket(io_service, client_name, bridge, std::move(callbacks)),
+        m_socket(io_service)
 {
 }
 
@@ -69,8 +69,8 @@ typename ProtocolT::socket& AsioStreamSocket<ProtocolT>::getAsioSocket()
 template<typename ProtocolT>
 ResolvableAsioStreamSocket<ProtocolT>::ResolvableAsioStreamSocket(
         boost::asio::io_service& io_service, const std::string& client_name,
-        Atlas::Bridge& bridge, StreamSocket::Callbacks& callbacks) :
-        AsioStreamSocket<ProtocolT>(io_service, client_name, bridge, callbacks),
+        Atlas::Bridge& bridge, StreamSocket::Callbacks callbacks) :
+        AsioStreamSocket<ProtocolT>(io_service, client_name, bridge, std::move(callbacks)),
         m_resolver(io_service)
 {
 }
@@ -204,7 +204,7 @@ void AsioStreamSocket<ProtocolT>::write()
         auto self(this->shared_from_this());
         //Swap places between writing buffer and sending buffer, and attach new write buffer to the out stream.
         std::swap(mWriteBuffer, mSendBuffer);
-        mOutStream.rdbuf(mWriteBuffer);
+        mOutStream.rdbuf(mWriteBuffer.get());
         mIsSending = true;
 
         async_write(m_socket, mSendBuffer->data(),

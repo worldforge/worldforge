@@ -22,10 +22,7 @@ TimedEvent::TimedEvent(EventService& eventService,
     });
 }
 
-TimedEvent::~TimedEvent()
-{
-    delete m_timer;
-}
+TimedEvent::~TimedEvent() = default;
 
 EventService::EventService(boost::asio::io_service& io_service) :
         m_io_service(io_service),
@@ -36,16 +33,15 @@ EventService::EventService(boost::asio::io_service& io_service) :
 
 EventService::~EventService()
 {
-    delete m_work;
+	m_work.reset();
     //Poll to make sure that all pending asio handlers are processed, since these might create handlers which needs to be processed.
     m_io_service.poll();
     processAllHandlers();
-    delete m_background_handlers_queue;
 }
 
-boost::asio::deadline_timer* EventService::createTimer()
+std::unique_ptr<boost::asio::deadline_timer> EventService::createTimer()
 {
-    return new boost::asio::deadline_timer(m_io_service);
+    return std::make_unique<boost::asio::deadline_timer>(m_io_service);
 }
 
 void EventService::runOnMainThread(const std::function<void()>& handler,

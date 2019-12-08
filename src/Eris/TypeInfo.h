@@ -2,10 +2,11 @@
 #define ERIS_TYPE_INFO_H
 
 #include "Types.h"
-#include "TypeService.h"
 #include <Atlas/Message/Element.h>
+#include <Atlas/Objects/Root.h>
 
 #include <sigc++/trackable.h>
+#include <sigc++/signal.h>
 
 #include <map>
 #include <string>
@@ -34,7 +35,7 @@ public:
     /** 
      * @brief Test whether this type inherits (directly or indirectly) from the specific class. If this type is not bound, this may return false-negatives. 
      */
-    bool isA(TypeInfoPtr ti);
+    bool isA(TypeInfo* ti);
 
     /**
      * @brief Check the bound flag for this node; if false then recursivley check parents until an authorative is found 
@@ -75,14 +76,15 @@ public:
      * @brief Gets the currently resolved child TypeInfo instances.
      * @return A set of child TypeInfo instances.
      */
-    const TypeInfoSet & getChildren() const;
+    const std::set<TypeInfo*> & getChildren() const;
 
     /**
      * @brief Gets the currently resolved parent TypeInfo instances.
      * @return A set of parent TypeInfo instances.
      */
-    const TypeInfoPtr & getParent() const;
-    
+	const TypeInfo* getParent() const;
+	TypeInfo* getParent();
+
     /**
     @brief Gets the default properties for this entity type.
     Note that the map returned does not include inherited properties.
@@ -151,11 +153,11 @@ protected:
     void onPropertyChanges(const std::string& propertyName, const Atlas::Message::Element& element);
     
 private:
-    void setParent(TypeInfoPtr tp);
-    void addChild(TypeInfoPtr tp);
+    void setParent(TypeInfo* tp);
+    void addChild(TypeInfo* tp);
 
     /** Recursive add to this node and every descendant the specified ancestor */
-    void addAncestor(TypeInfoPtr tp);
+    void addAncestor(TypeInfo* tp);
     
     /** 
      * @brief Extracts default properties from the supplied root object, and adds them to the m_properties field.
@@ -165,18 +167,18 @@ private:
     void extractDefaultProperties(const Atlas::Objects::Root& atype);
         
     /** The TypeInfo node we inherit from directly */
-    TypeInfoPtr m_parent;
+	TypeInfo* m_parent;
     /** TypeInfo nodes that inherit from us directly */
-    TypeInfoSet m_children;
+	std::set<TypeInfo*> m_children;
 
     /** Every TypeInfo node we inherit from at all (must contain the root node, obviously) */
-    TypeInfoSet m_ancestors;
+    std::set<TypeInfo*> m_ancestors;
 
     bool m_bound;               ///< cache the 'bound-ness' of the node, see the isBound() implementation
     const std::string m_name;	///< the Atlas unique typename
 	std::string m_objType;		///< the object type, mainly "type" or "archetype"
 
-    StringSet m_unresolvedChildren;
+	std::set<std::string> m_unresolvedChildren;
     
     TypeService* m_typeService;
     
@@ -211,14 +213,19 @@ inline const std::string& TypeInfo::getObjType() const {
 	return m_objType;
 }
 
-inline const TypeInfoSet & TypeInfo::getChildren() const
+inline const std::set<TypeInfo*> & TypeInfo::getChildren() const
 {
     return m_children;
 }
 
-inline const TypeInfoPtr & TypeInfo::getParent() const
+inline const TypeInfo* TypeInfo::getParent() const
 {
-    return m_parent;
+	return m_parent;
+}
+
+inline TypeInfo* TypeInfo::getParent()
+{
+	return m_parent;
 }
 
 inline const Atlas::Message::ListType& TypeInfo::getEntities() const

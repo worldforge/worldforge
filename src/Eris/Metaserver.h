@@ -181,7 +181,7 @@ private:
 	/// the metaserver query, eg metaserver.worldforge.org
 	const std::string m_metaHost;
 
-	typedef std::set<MetaQuery*> QuerySet;
+	typedef std::vector<std::unique_ptr<MetaQuery>> QuerySet;
 	QuerySet m_activeQueries;
 
 	size_t m_maxActiveQueries;
@@ -201,7 +201,7 @@ private:
 	boost::asio::streambuf m_receive_buffer;
 	std::iostream m_receive_stream;
 
-	boost::asio::streambuf* m_send_buffer;
+	std::unique_ptr<boost::asio::streambuf> m_send_buffer;
 	std::iostream m_send_stream;
 
 	std::array<char, DATA_BUFFER_SIZE> m_data;

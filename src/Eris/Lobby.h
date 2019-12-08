@@ -1,6 +1,7 @@
 #ifndef ERIS_LOBBY_H
 #define ERIS_LOBBY_H
 
+#include <memory>
 #include "Room.h"
 
 namespace Eris
@@ -25,9 +26,9 @@ structure will work perfectly well without one.
 class Lobby : public Room
 {
 public:	
-    /** Create a Lobby for the specified account, and retrive the initial
+    /** Create a Lobby for the specified account, and retrieve the initial
     OOG structure if the Account is logged in and connected. */
-    explicit Lobby(Account *acc);
+    explicit Lobby(Account &acc);
     
     /** Delete the Lobby, including all it's Rooms and Persons. */
     ~Lobby() override;
@@ -46,13 +47,13 @@ public:
     Room* getRoom(const std::string &id);
 
     /// Retrive the Account which this lobbby is bound to
-    Account* getAccount() const
+    Account& getAccount() const
     {
         return m_account;
     }
     
     /// Helper method to access the underlying Connection from the Account
-    Connection* getConnection() const;
+    Connection& getConnection() const;
 
 // callbacks
     /// Emitted when sight of a person is received
@@ -84,13 +85,13 @@ private:
     void onLoggedIn();
     void onLogout(bool clean);
     
-    Account* m_account;    
+    Account& m_account;
     IdPersonMap m_people;
 	
-    typedef std::unordered_map<std::string, Room*> IdRoomMap;
+    typedef std::unordered_map<std::string, std::unique_ptr<Room>> IdRoomMap;
     IdRoomMap m_rooms;
 
-    OOGRouter* m_router;
+    std::unique_ptr<OOGRouter> m_router;
 };
 	
 } // of namespace Eris

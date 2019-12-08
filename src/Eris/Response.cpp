@@ -43,10 +43,10 @@ void ResponseTracker::await(long serial, Callback callback)
 }
 
 
-void ResponseTracker::await(long serialno, ResponseBase* resp)
+void ResponseTracker::await(long serialno, std::unique_ptr<ResponseBase> resp)
 {
     assert(m_pending.count(serialno) == 0);
-    std::shared_ptr<ResponseBase> holder(resp);
+    std::shared_ptr<ResponseBase> holder = std::move(resp);
     await(serialno, [holder](const Atlas::Objects::Operation::RootOperation& op)->Router::RouterResult{
         auto result = holder->responseReceived(op);
         return result ? Router::HANDLED : Router::IGNORED;

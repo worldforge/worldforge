@@ -19,7 +19,7 @@ using namespace Atlas::Message;
 namespace Eris
 {
 
-Calendar::Calendar(Avatar* av) :
+Calendar::Calendar(Avatar& av) :
     m_avatar(av),
     m_daysPerMonth(0),
     m_monthsPerYear(0),
@@ -27,18 +27,16 @@ Calendar::Calendar(Avatar* av) :
     m_minutesPerHour(0),
     m_secondsPerMinute(0)
 {
-    assert(av->getView() != nullptr);
-
-    av->getView()->TopLevelEntityChanged.connect(
+    av.getView().TopLevelEntityChanged.connect(
         sigc::mem_fun(this, &Calendar::topLevelEntityChanged));
     // hook up right now if currently valid
-    if (av->getView()->getTopLevel()) topLevelEntityChanged();
+    if (av.getView().getTopLevel()) topLevelEntityChanged();
 }
 
 void Calendar::topLevelEntityChanged()
 {
     m_calendarObserver.disconnect();
-    Entity* tl = m_avatar->getView()->getTopLevel();
+    Entity* tl = m_avatar.getView().getTopLevel();
     if (!tl || !tl->hasProperty("calendar")) return;
 
     m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged));
@@ -91,7 +89,7 @@ DateTime Calendar::now() const
     // we don't have valid calendar data yet
     if (m_daysPerMonth == 0) return n;
 
-    long long world_time = L_ROUND(m_avatar->getWorldTime());
+    long long world_time = L_ROUND(m_avatar.getWorldTime());
 
     n.m_seconds = world_time % m_secondsPerMinute;
     world_time /= m_secondsPerMinute;

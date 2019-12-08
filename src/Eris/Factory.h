@@ -22,7 +22,7 @@ public:
     virtual bool accept(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type) = 0;
 
     /// create whatever entity the client desires
-    virtual Entity* instantiate(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type, View* v) = 0;
+    virtual Entity* instantiate(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type, View& v) = 0;
     
     /** retrieve this factory's priority level; higher priority factories
     get first chance to process a received Atlas entity. The default implementation

@@ -1,10 +1,12 @@
 #ifndef ERIS_RESPONSE_H
 #define ERIS_RESPONSE_H
 
+#include "Router.h"
+
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <unordered_map>
-#include "Router.h"
 #include <functional>
+#include <memory>
 
 namespace Eris
 {
@@ -66,19 +68,19 @@ public:
 
     ~ResponseTracker();
 
-    void await(long serialno, ResponseBase*);
+    void await(long serialno, std::unique_ptr<ResponseBase>);
 
     void await(long serial, Callback callback);
     
     template <class T>
     void await(long serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
     {
-        await(serial, new MemberResponse<T>(ins, method));
+        await(serial, std::make_unique<MemberResponse<T>>(ins, method));
     }
     
     void ignore(long serial)
     {
-        await(serial, new NullResponse());
+        await(serial, std::make_unique<NullResponse>());
     }
     
     Router::RouterResult handleOp(const Atlas::Objects::Operation::RootOperation& op);

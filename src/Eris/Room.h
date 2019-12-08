@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 namespace Eris
 {
@@ -24,7 +25,7 @@ be clear if you are familiar with that medium.
 class Room : public sigc::trackable, public Router
 {
 public:	
-    virtual ~Room();
+    ~Room() override;
 
     /// Send a piece of text to this room
     void say(const std::string &tk);
@@ -96,13 +97,13 @@ public:
 protected:
     friend class Lobby;
 
-    typedef std::unordered_map<std::string, Person*> IdPersonMap;
+    typedef std::unordered_map<std::string, std::unique_ptr<Person>> IdPersonMap;
     
     /** standard constructor. Issues a LOOK against the specified ID, and sets up
     the necessary signals to drive the Room if id arg is provided */
     explicit Room(Lobby *l, const std::string& id);
 	
-    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
+    RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) override;
     void handleSoundTalk(Person* p, const std::string& speech);
     void handleEmote(Person* p, const std::string& desc);
         
@@ -124,8 +125,8 @@ private:
     std::string m_topic;
     bool m_entered;     ///< set once we enter the room, i.e have info on all the members
     Lobby* m_lobby;
-    
-    IdPersonMap m_members;
+
+    std::unordered_map<std::string, Person*> m_members;
     
     std::vector<Room*> m_subrooms;
 };

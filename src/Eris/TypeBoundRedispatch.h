@@ -13,12 +13,12 @@ typedef std::set<TypeInfo*> TypeInfoSet;
 class TypeBoundRedispatch : public Redispatch
 {
 public:
-    TypeBoundRedispatch(Connection* con, const Atlas::Objects::Root& obj, TypeInfo* unbound);    
-    TypeBoundRedispatch(Connection* con, const Atlas::Objects::Root& obj, TypeInfoSet unbound);
+    TypeBoundRedispatch(Connection& con, const Atlas::Objects::Root& obj, TypeInfo* unbound);
+    TypeBoundRedispatch(Connection& con, const Atlas::Objects::Root& obj, TypeInfoSet unbound);
     void onBound(TypeInfo* bound);    
     void onBadType(TypeInfo* bad);    
 private:
-    Connection* m_con;
+    Connection& m_con;
     TypeInfoSet m_unbound;
 };
 

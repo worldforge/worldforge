@@ -9,14 +9,13 @@
 #include <unordered_map>
 #include <set>
 #include <string>
+#include <memory>
 
 namespace Eris {
 
 class Connection;
 class TypeInfo;
 
-typedef TypeInfo* TypeInfoPtr;
-typedef std::set<TypeInfoPtr> TypeInfoSet;
 
 /**
  * A service class querying and caching types.
@@ -24,7 +23,7 @@ typedef std::set<TypeInfoPtr> TypeInfoSet;
 class TypeService : virtual public sigc::trackable
 {
 public:
-    explicit TypeService(Connection *con);
+    explicit TypeService(Connection &con);
     virtual ~TypeService();
 
     void init();
@@ -32,20 +31,20 @@ public:
     /** find the TypeInfo for the named type; this may involve a search, or a map lookup.
      The returned TypeInfo node may not be bound, and the caller should verify this
      before using the type. */
-    TypeInfoPtr getTypeByName(const std::string &tynm);
+    TypeInfo* getTypeByName(const std::string &tynm);
 
     /** retrive the TypeInfo for an object; this should be faster (hopefully constant time) since it
     can take advantage of integer typeids */
-    TypeInfoPtr getTypeForAtlas(const Atlas::Objects::Root &obj);
+    TypeInfo* getTypeForAtlas(const Atlas::Objects::Root &obj);
 
     /** Lookup the requested type, by name, and return nullptr if it's unknown. */
-    TypeInfoPtr findTypeByName(const std::string &tynm);
+    TypeInfo* findTypeByName(const std::string &tynm);
 
     /** emitted when a new type is available and bound to it's parents */
-    sigc::signal<void, TypeInfoPtr> BoundType;
+    sigc::signal<void, TypeInfo*> BoundType;
 
     /** emitted when a type is confirmed as being undefined */
-    sigc::signal<void, TypeInfoPtr> BadType;
+    sigc::signal<void, TypeInfo*> BadType;
 
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
@@ -70,15 +69,14 @@ protected:
     void recvError(const Atlas::Objects::Operation::Get& get);
     void recvTypeUpdate(const Atlas::Objects::Root &atype);
 
-    TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
+    TypeInfo* defineBuiltin(const std::string& name, TypeInfo* parent);
 
-    typedef std::unordered_map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the
     future, if efficiency considerations indicate it would be worthwhile */
-    TypeInfoMap m_types;
+	std::unordered_map<std::string, std::unique_ptr<TypeInfo>> m_types;
 
-    Connection* m_con;
+    Connection& m_con;
     bool m_inited;
 
     /**

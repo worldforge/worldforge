@@ -6,27 +6,15 @@
 #include <list>
 #include <set>
 
-namespace Atlas { namespace Message { class Element; } }
-
 namespace Eris
 {
 
-typedef std::list<std::string> StringList;
-typedef std::set<std::string> StringSet;
-
-typedef std::list<Atlas::Message::Element> MessageList;
-
 // Forward Decls
 class Entity;
-typedef Entity* EntityPtr;
-
-// lots of forward decleratrions	
 class TypeInfo;
 class TypeService;
 class Connection;
 class Avatar;
-
-typedef TypeInfo* TypeInfoPtr;
 
 /**
 Result codes returned from various methods.

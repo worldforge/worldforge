@@ -66,7 +66,7 @@ public:
 
 class TestAccount : public Eris::Account {
 public:
-	TestAccount(Eris::Connection* con) : Eris::Account(con) {}
+	TestAccount(Eris::Connection& con) : Eris::Account(con) {}
 
 	void setup_setStatus(Eris::Account::Status s) {
 		m_status = s;
@@ -81,7 +81,7 @@ public:
 	}
 
 	void setup_insertActiveCharacters(Eris::Avatar* ea) {
-		m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+		m_activeAvatars.insert(std::make_pair(ea->getId(), ea));
 	}
 
 	void setup_setUsername(const std::string& u) {
@@ -184,23 +184,14 @@ int main() {
 													 "localhost",
 													 6767);
 
-		Eris::Account acc(con);
-	}
-	// Test constructor throws on a null connection.
-	{
-		try {
-			Eris::Account acc(0);
-			abort();
-		}
-		catch (Eris::InvalidOperation& eio) {
-		}
+		Eris::Account acc(*con);
 	}
 	// Test getActiveCharacters()
 	{
 		Eris::Connection* con = new Eris::Connection(io_service, tes, "name", "localhost",
 													 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		const Eris::ActiveCharacterMap& acm = acc.getActiveCharacters();
 
@@ -211,7 +202,7 @@ int main() {
 		Eris::Connection* con = new Eris::Connection(io_service, tes, "name", "localhost",
 													 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		const std::string& id = acc.getId();
 
@@ -222,7 +213,7 @@ int main() {
 		Eris::Connection* con = new Eris::Connection(io_service, tes, "name", "localhost",
 													 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		const std::string& username = acc.getUsername();
 
@@ -234,11 +225,11 @@ int main() {
 		Eris::Connection* con = new Eris::Connection(io_service, tes, "name", "localhost",
 													 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
-		Eris::Connection* got_con = acc.getConnection();
+		Eris::Connection& got_con = acc.getConnection();
 
-		assert(got_con == con);
+		assert(&got_con == con);
 	}
 
 	// Test login() fails if not connected
@@ -246,7 +237,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		Eris::Result res = acc.login("foo", "bar");
 		assert(res == Eris::NOT_CONNECTED);
@@ -257,7 +248,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGING_IN);
@@ -271,7 +262,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 
@@ -284,7 +275,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		Eris::Result res = acc.createAccount("foo", "bar", "baz");
 		assert(res == Eris::NOT_CONNECTED);
@@ -295,7 +286,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 
@@ -308,7 +299,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		Eris::Result res = acc.logout();
 		assert(res == Eris::NOT_CONNECTED);
@@ -319,7 +310,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGING_OUT);
 
@@ -332,7 +323,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 
 		Eris::Result res = acc.logout();
@@ -344,7 +335,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
 
@@ -357,7 +348,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		const Eris::CharacterMap& ecm = acc.getCharacters();
 
@@ -369,7 +360,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 
 		Eris::Result res = acc.refreshCharacterInfo();
 		assert(res == Eris::NOT_CONNECTED);
@@ -380,7 +371,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGING_IN);
@@ -395,7 +386,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
@@ -415,7 +406,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger gotAllCharacters_checker;
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -439,7 +430,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger gotAllCharacters_checker;
 		std::string fake_char_id("1");
 
@@ -465,7 +456,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
 		Eris::Result res = acc.createCharacter(ent);
@@ -477,7 +468,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -496,7 +487,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -515,7 +506,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -530,7 +521,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -545,7 +536,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		Eris::Account acc(con);
+		Eris::Account acc(*con);
 		std::string fake_char_id("1");
 
 		Eris::Result res = acc.takeCharacter(fake_char_id);
@@ -557,7 +548,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 
 		acc.setup_fakeCharacter(fake_char_id);
@@ -571,7 +562,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -587,7 +578,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -607,7 +598,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -627,7 +618,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
@@ -647,7 +638,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 		std::string fake_mind_id("2");
 		Eris::Avatar* ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
@@ -661,7 +652,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		assert(!acc.isLoggedIn());
 	}
@@ -671,7 +662,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
 
@@ -683,7 +674,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setStatus(TestAccount::TAKING_CHAR);
 
@@ -695,7 +686,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setStatus(TestAccount::CREATING_CHAR);
 
@@ -707,7 +698,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		Eris::Result res = acc.test_internalLogin("foo", "bar");
 
@@ -721,7 +712,7 @@ int main() {
 		TestConnection * con = new TestConnection("name", "localhost",
 												  6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		Atlas::Objects::Operation::RootOperation op;
 		acc.test_logoutResponse(op);
@@ -735,7 +726,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Account p;
 
 		p->setUsername("bob");
@@ -748,7 +739,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Account p;
 		SignalFlagger loginSuccess_checker;
 
@@ -768,7 +759,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Account p;
 
 		p->setAttr("character_types", "non-list");
@@ -781,7 +772,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Account p;
 
 		Atlas::Message::ListType character_types;
@@ -800,7 +791,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Entity::Account p;
 
 		Atlas::Message::ListType spawnPoints;
@@ -826,7 +817,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Error err;
 
 		acc.test_loginError(err);
@@ -837,7 +828,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Error err;
 		Atlas::Objects::Root err_arg;
 		err->setArgs1(err_arg);
@@ -850,7 +841,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Error err;
 		Atlas::Objects::Root err_arg;
 		err_arg->setAttr("message", 1);
@@ -864,7 +855,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Error err;
 		Atlas::Objects::Root err_arg;
 		SignalFlagger loginFailure_checker;
@@ -884,7 +875,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger loginFailure_checker;
 
 		acc.LoginFailure.connect(sigc::hide(sigc::mem_fun(loginFailure_checker,
@@ -900,7 +891,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Error op;
 		SignalFlagger avatarFailure_checker;
 
@@ -919,7 +910,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Info op;
 		SignalFlagger avatarSuccess_checker;
 
@@ -936,7 +927,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Root bad_arg;
 		SignalFlagger avatarSuccess_checker;
@@ -955,7 +946,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Entity::Anonymous info_arg;
 		Atlas::Objects::Entity::Anonymous entity_arg;
@@ -979,7 +970,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Get op; // Arbitrary not Info or Error
 		Atlas::Objects::Entity::Anonymous info_arg;
 		SignalFlagger avatarSuccess_checker;
@@ -998,7 +989,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		std::string fake_char_id("1");
 		std::string fake_mind_id("1");
 		Eris::Avatar* ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
@@ -1017,7 +1008,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Sight sight;
 		SignalFlagger gotCharacterInfo_checker;
 
@@ -1035,7 +1026,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Sight sight;
 		Atlas::Objects::Root bad_arg;
 		SignalFlagger gotCharacterInfo_checker;
@@ -1055,7 +1046,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Sight sight;
 		Atlas::Objects::Entity::Anonymous sight_arg;
 		SignalFlagger gotCharacterInfo_checker, gotAllCharacters_checker;
@@ -1079,7 +1070,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		Atlas::Objects::Operation::Sight sight;
 		Atlas::Objects::Entity::Anonymous sight_arg;
 		SignalFlagger gotCharacterInfo_checker, gotAllCharacters_checker;
@@ -1104,7 +1095,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.test_netConnected();
 	}
@@ -1115,7 +1106,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setUsername("foo");
 		acc.setup_setPassword("foo");
@@ -1129,7 +1120,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setUsername("foo");
 		acc.setup_setPassword("foo");
@@ -1142,7 +1133,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		bool res = acc.test_netDisconnecting();
 
@@ -1155,7 +1146,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
 
@@ -1173,7 +1164,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 
 		acc.test_netFailure("foo");
 	}
@@ -1183,7 +1174,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger logoutComplete_checker;
 
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
@@ -1200,7 +1191,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Get op;
 
@@ -1216,7 +1207,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 
@@ -1232,7 +1223,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Root bad_arg;
@@ -1251,7 +1242,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Operation::Logout info_arg;
@@ -1271,7 +1262,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Operation::Logout info_arg;
@@ -1296,7 +1287,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Operation::Logout info_arg;
@@ -1321,7 +1312,7 @@ int main() {
 		TestConnection* con = new TestConnection("name", "localhost",
 												 6767);
 
-		TestAccount acc(con);
+		TestAccount acc(*con);
 		SignalFlagger avatarDeactivated_checker;
 		Atlas::Objects::Operation::Info op;
 		Atlas::Objects::Operation::Logout info_arg;

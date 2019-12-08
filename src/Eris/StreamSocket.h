@@ -86,8 +86,9 @@ public:
     };
 
     StreamSocket(boost::asio::io_service& io_service,
-            const std::string& client_name, Atlas::Bridge& bridge,
-            Callbacks& callbacks);
+            const std::string& client_name,
+            Atlas::Bridge& bridge,
+            Callbacks callbacks);
     virtual ~StreamSocket();
 
     /**
@@ -128,13 +129,13 @@ protected:
      * Buffer used to write data to be sent.
      * Swapped with mSendBuffer once data is being sent.
      */
-    boost::asio::streambuf* mWriteBuffer;
+    std::unique_ptr<boost::asio::streambuf> mWriteBuffer;
 
     /**
      * Buffer of data which is being sent. This should not be touched until
      * the async_write call completes.
      */
-    boost::asio::streambuf* mSendBuffer;
+    std::unique_ptr<boost::asio::streambuf> mSendBuffer;
 
     /**
      * Buffer for data being read from the socket.
@@ -161,11 +162,11 @@ protected:
      */
     bool mIsSending;
 
-    Atlas::Net::StreamConnect* _sc; ///< negotiation object (nullptr after connection!)
+    std::unique_ptr<Atlas::Net::StreamConnect> _sc; ///< negotiation object (nullptr after connection!)
     boost::asio::deadline_timer _negotiateTimer;
     boost::asio::deadline_timer _connectTimer;
-    Atlas::Codec* m_codec;
-    Atlas::Objects::ObjectsEncoder * m_encoder;
+    std::unique_ptr<Atlas::Codec> m_codec;
+    std::unique_ptr<Atlas::Objects::ObjectsEncoder> m_encoder;
     bool m_is_connected;
 
     virtual void do_read() = 0;
@@ -184,7 +185,7 @@ class AsioStreamSocket: public StreamSocket
 public:
     AsioStreamSocket(boost::asio::io_service& io_service,
             const std::string& client_name, Atlas::Bridge& bridge,
-            StreamSocket::Callbacks& callbacks);
+            StreamSocket::Callbacks callbacks);
     ~AsioStreamSocket() override;
     void connect(const typename ProtocolT::endpoint& endpoint);
     void write() override;
@@ -205,7 +206,7 @@ class ResolvableAsioStreamSocket: public AsioStreamSocket<ProtocolT>
 public:
     ResolvableAsioStreamSocket(boost::asio::io_service& io_service,
             const std::string& client_name, Atlas::Bridge& bridge,
-            StreamSocket::Callbacks& callbacks);
+            StreamSocket::Callbacks callbacks);
     void connectWithQuery(const typename ProtocolT::resolver::query& query);
 protected:
     typename ProtocolT::resolver m_resolver;

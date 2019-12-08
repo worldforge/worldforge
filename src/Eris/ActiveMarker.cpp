@@ -28,7 +28,7 @@ ActiveMarker::~ActiveMarker() {
 	*m_marker = false;
 }
 
-const std::shared_ptr<bool> ActiveMarker::getMarker() const {
+const std::shared_ptr<bool>& ActiveMarker::getMarker() const {
 	return m_marker;
 }
 
@@ -36,7 +36,7 @@ ActiveMarker::operator std::shared_ptr<bool>() {
 	return m_marker;
 }
 
-ActiveMarker& ActiveMarker::operator=(ActiveMarker&& rhs) {
+ActiveMarker& ActiveMarker::operator=(ActiveMarker&& rhs) noexcept {
 	m_marker = rhs.m_marker;
 	rhs.m_marker = std::make_shared<bool>(true);
 	return *this;

@@ -31,21 +31,23 @@ Room::Room(Lobby *l, const std::string& id) :
     m_entered(false),
     m_lobby(l)
 {
-    if (!id.empty())
-        m_lobby->getConnection()->registerRouterForFrom(this, id);
+    if (!id.empty()) {
+        m_lobby->getConnection().registerRouterForFrom(this, id);
+    }
 }
 
 Room::~Room()
 {
-    if (!m_roomId.empty())
-        m_lobby->getConnection()->unregisterRouterForFrom(this, m_roomId);
+    if (!m_roomId.empty()) {
+        m_lobby->getConnection().unregisterRouterForFrom(this, m_roomId);
+    }
 }
 
 // public command-issue wrappers
 
 void Room::say(const std::string &tk)
 {
-    if (!m_lobby->getConnection()->isConnected())
+    if (!m_lobby->getConnection().isConnected())
     {
         error() << "talking in room " << m_roomId << ", but connection is down";
         return;
@@ -58,15 +60,15 @@ void Room::say(const std::string &tk)
     Talk t;
     t->setArgs1(speech);
     t->setTo(m_roomId);
-    t->setFrom(m_lobby->getAccount()->getId());
+    t->setFrom(m_lobby->getAccount().getId());
     t->setSerialno(getNewSerialno());
 	
-    m_lobby->getConnection()->send(t);
+    m_lobby->getConnection().send(t);
 }
 
 void Room::emote(const std::string &em)
 {
-    if (!m_lobby->getConnection()->isConnected())
+    if (!m_lobby->getConnection().isConnected())
     {
         error() << "emoting in room " << m_roomId << ", but connection is down";
         return;
@@ -81,22 +83,22 @@ void Room::emote(const std::string &em)
     
     im->setArgs1(emote);
     im->setTo(m_roomId);
-    im->setFrom(m_lobby->getAccount()->getId());
+    im->setFrom(m_lobby->getAccount().getId());
     im->setSerialno(getNewSerialno());
 	
-    m_lobby->getConnection()->send(im);
+    m_lobby->getConnection().send(im);
 }
 
 void Room::leave()
 {
-    if (!m_lobby->getConnection()->isConnected())
+    if (!m_lobby->getConnection().isConnected())
     {
         error() << "leaving room " << m_roomId << ", but connection is down";
         return;
     }
 
     Move part;
-    part->setFrom(m_lobby->getAccount()->getId());
+    part->setFrom(m_lobby->getAccount().getId());
     part->setSerialno(getNewSerialno());
     
     Anonymous args;
@@ -104,12 +106,12 @@ void Room::leave()
     args->setAttr("mode", "part");
     part->setArgs1(args);
 
-    m_lobby->getConnection()->send(part);
+    m_lobby->getConnection().send(part);
 }
 
 Room* Room::createRoom(const std::string &name)
 {
-    if (!m_lobby->getConnection()->isConnected())
+    if (!m_lobby->getConnection().isConnected())
     {
         error() << "creating room in room  " << m_roomId << ", but connection is down";
         return nullptr;
@@ -117,7 +119,7 @@ Room* Room::createRoom(const std::string &name)
 
     
     Create cr;
-    cr->setFrom(m_lobby->getAccount()->getId());
+    cr->setFrom(m_lobby->getAccount().getId());
     cr->setTo(m_roomId);
     cr->setSerialno(getNewSerialno());
     
@@ -126,7 +128,7 @@ Room* Room::createRoom(const std::string &name)
     room->setParent("room");
     
     cr->setArgs1(room);
-    m_lobby->getConnection()->send(cr);
+    m_lobby->getConnection().send(cr);
     
     return nullptr;
 }
@@ -142,8 +144,9 @@ std::vector<Person*> Room::getPeople() const
     
     for (const auto & member : m_members)
     {    
-        if (member.second)
+        if (member.second) {
             people.push_back(member.second);
+        }
     }
     
     return people;
@@ -151,7 +154,7 @@ std::vector<Person*> Room::getPeople() const
 
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
-    if (op->getTo() != m_lobby->getAccount()->getId()) {
+    if (op->getTo() != m_lobby->getAccount().getId()) {
         error() << "Room received op TO account " << op->getTo() << ", not the account ID";
         return IGNORED;
     }
@@ -285,15 +288,18 @@ void Room::notifyPersonSight(Person *p)
     auto P = m_members.find(p->getAccount());
     // for the moment, all rooms get spammed with sights of people, to avoid
     // the need for a counting / disconnect from SightPerson scheme
-    if (P == m_members.end()) return;
+    if (P == m_members.end()) {
+        return;
+    }
     
     if (P->second == nullptr) {
-        P->second = p;
-        
-        if (m_entered)
+        m_members[p->getAccount()] = p;
+
+        if (m_entered) {
             Appearance.emit(this, p);
-        else
+        } else {
             checkEntry();
+        }
     } else {
         // fairly meaningless case, but I'm paranoid
         // could fire a 'changed' signal here, eg if they renamed?
@@ -306,9 +312,12 @@ void Room::checkEntry()
     assert(!m_entered);
     
     bool anyPending = false;
-    for (IdPersonMap::const_iterator P = m_members.begin(); P != m_members.end(); ++P)
-        if (P->second == nullptr) anyPending = true;
-       
+    for (auto& entry : m_members) {
+        if (entry.second == nullptr) {
+            anyPending = true;
+        }
+    }
+
     if (!anyPending)
     {
         Entered.emit(this);

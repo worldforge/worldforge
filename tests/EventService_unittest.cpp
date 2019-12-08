@@ -117,6 +117,3 @@ int main() {
 }
 
 // stubs
-
-void Eris::doLog(Eris::LogLevel lvl, const std::string& msg) {
-}

@@ -36,14 +36,14 @@ namespace Eris {
 StreamSocket::StreamSocket(io_service& io_service,
 						   const std::string& client_name,
 						   Atlas::Bridge& bridge,
-						   Callbacks& callbacks) :
+						   Callbacks callbacks) :
 		m_io_service(io_service),
 		_bridge(bridge),
-		_callbacks(callbacks),
+		_callbacks(std::move(callbacks)),
 		mWriteBuffer(new boost::asio::streambuf()),
 		mSendBuffer(new boost::asio::streambuf()),
 		mInStream(&mReadBuffer),
-		mOutStream(mWriteBuffer),
+		mOutStream(mWriteBuffer.get()),
 		mShouldSend(false),
 		mIsSending(false),
 		_sc(new Atlas::Net::StreamConnect(client_name, mInStream, mOutStream)),
@@ -53,13 +53,7 @@ StreamSocket::StreamSocket(io_service& io_service,
 		m_is_connected(false) {
 }
 
-StreamSocket::~StreamSocket() {
-	delete _sc;
-	delete mWriteBuffer;
-	delete mSendBuffer;
-	delete m_encoder;
-	delete m_codec;
-}
+StreamSocket::~StreamSocket() = default;
 
 void StreamSocket::detach() {
 	_callbacks = Callbacks();
@@ -109,15 +103,14 @@ Atlas::Negotiate::State StreamSocket::negotiate() {
 	m_codec = _sc->getCodec(_bridge);
 
 	// Acceptor is now finished with
-	delete _sc;
-	_sc = 0;
+	_sc.reset();
 
 	if (m_codec == nullptr) {
 		error() << "Could not create codec during negotiation.";
 		return Atlas::Negotiate::FAILED;
 	}
 	// Create a new encoder to send high level objects to the codec
-	m_encoder = new Atlas::Objects::ObjectsEncoder(*m_codec);
+	m_encoder = std::make_unique<Atlas::Objects::ObjectsEncoder>(*m_codec);
 
 	// This should always be sent at the beginning of a session
 	m_codec->streamBegin();

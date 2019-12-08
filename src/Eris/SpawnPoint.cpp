@@ -11,7 +11,8 @@ namespace Eris
 SpawnPoint::SpawnPoint(std::string  name,
         CharacterTypeStore  availableCharacterTypes,
         std::string  description) :
-    m_name(std::move(name)), m_availableCharacterTypes(std::move(availableCharacterTypes)),
+    m_name(std::move(name)),
+    m_availableCharacterTypes(std::move(availableCharacterTypes)),
             m_description(std::move(description))
 {
 }

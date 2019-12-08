@@ -16,7 +16,7 @@ class Person
 {
 public:
     /// create a person from sight
-    Person(Lobby *l, const Atlas::Objects::Entity::Account &acc);
+    Person(Lobby &l, const Atlas::Objects::Entity::Account &acc);
 
     /// update a person based on sight
     void sight(const Atlas::Objects::Entity::Account &acc);
@@ -34,7 +34,7 @@ protected:
     const std::string m_id;	///< the account ID 
     std::string m_fullName;         ///< the name, i.e account.GetName()
 
-    Lobby* m_lobby;	///< the lobby owning this Person
+    Lobby& m_lobby;	///< the lobby owning this Person
 };
 
 }

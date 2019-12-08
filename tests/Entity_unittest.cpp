@@ -30,13 +30,14 @@
 #include <Eris/Log.h>
 #include <Eris/Task.h>
 #include <Eris/TypeInfo.h>
+#include <Eris/TypeService.h>
 
 class TestErisEntity : public Eris::Entity
 {
   public:
     TestErisEntity(const std::string & id, Eris::TypeInfo * tp) : Eris::Entity(id, tp) { }
 
-    virtual Eris::TypeService* getTypeService() const { return 0; }
+    virtual Eris::TypeService& getTypeService() const { return *(Eris::TypeService*)0; }
     virtual void removeFromMovementPrediction() { }
     virtual void addToMovementPrediction() { }
     virtual Eris::Entity* getEntity(const std::string&) { return 0; }
@@ -140,12 +141,12 @@ void TypeInfo::onPropertyChanges(const std::string& attributeName,
 {
 }
 
-TypeInfoPtr TypeService::getTypeByName(const std::string &id)
+TypeInfo* TypeService::getTypeByName(const std::string &id)
 {
     return 0;
 }
 
-Task::Task(Entity* owner, std::string nm) :
+Task::Task(Entity& owner, std::string nm) :
     m_name(nm),
     m_owner(owner),
     m_progress(0.0),

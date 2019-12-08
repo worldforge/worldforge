@@ -57,7 +57,7 @@ private:
 class Calendar : public sigc::trackable
 {
 public:
-    Calendar(Avatar*);
+    Calendar(Avatar&);
 
     DateTime now() const;
 
@@ -74,7 +74,7 @@ protected:
 
     void initFromCalendarAttr(const Atlas::Message::MapType& cal);
 
-    Avatar* m_avatar;
+    Avatar& m_avatar;
 
     unsigned int m_daysPerMonth,
                  m_monthsPerYear,

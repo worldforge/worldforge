@@ -26,19 +26,14 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris
 {
 
-TypeService::TypeService(Connection *con) : 
+TypeService::TypeService(Connection &con) :
     m_con(con),
     m_inited(false)
 {
     defineBuiltin("root", nullptr);
 }
 
-TypeService::~TypeService()
-{
-    for (TypeInfoMap::const_iterator I = m_types.begin(); I != m_types.end(); ++I) {
-        delete I->second;
-    }
-}
+TypeService::~TypeService() = default;
 
 void TypeService::init()
 {
@@ -53,29 +48,33 @@ void TypeService::init()
     }
 }
 
-TypeInfoPtr TypeService::findTypeByName(const std::string &id)
+TypeInfo* TypeService::findTypeByName(const std::string &id)
 {
 	auto T = m_types.find(id);
-    if (T != m_types.end()) return T->second;
+    if (T != m_types.end()) {
+		return T->second.get();
+    }
 	
     return nullptr;
 }
 
-TypeInfoPtr TypeService::getTypeByName(const std::string &id)
+TypeInfo* TypeService::getTypeByName(const std::string &id)
 {
 	auto T = m_types.find(id);
-    if (T != m_types.end()) return T->second;
+    if (T != m_types.end()) {
+    	return T->second.get();
+    }
        
 // not found, do some work
     /// @todo Verify the id is not in the authoritative invalid ID list
     auto node = new TypeInfo(id, this);
-    m_types[id] = node;
+    m_types[id] = std::unique_ptr<TypeInfo>(node);
     
     sendRequest(id);
     return node;
 }
 
-TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
+TypeInfo* TypeService::getTypeForAtlas(const Root &obj)
 {
     /* special case code to handle the root object which has no parents. */
     if (obj->getParent().empty()) {
@@ -169,8 +168,8 @@ void TypeService::sendRequest(const std::string &id)
         get->setFrom(m_type_provider_id);
     }
     
-    m_con->getResponder()->await(get->getSerialno(), this, &TypeService::handleOperation);
-    m_con->send(get);
+    m_con.getResponder().await(get->getSerialno(), this, &TypeService::handleOperation);
+    m_con.send(get);
 }
 
 void TypeService::recvError(const Get& get)
@@ -187,21 +186,20 @@ void TypeService::recvError(const Get& get)
 			}
 
 			warning() << "type " << request->getId() << " undefined on server";
-			BadType.emit(T->second);
+			BadType.emit(T->second.get());
 
-			delete T->second;
 			m_types.erase(T);
 
     	}
     }
 }
 
-TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
+TypeInfo* TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
 {
     assert(m_types.count(name) == 0);
 
     auto type = new TypeInfo(name, this);
-    m_types[name] = type;
+    m_types[name] = std::unique_ptr<TypeInfo>(type);
     
     if (parent) {
         type->setParent(parent);

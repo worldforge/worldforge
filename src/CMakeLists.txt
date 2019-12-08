@@ -16,7 +16,6 @@ set(SOURCE_FILES
         Eris/Log.cpp
         Eris/MetaQuery.cpp
         Eris/Metaserver.cpp
-        Eris/Operations.cpp
         Eris/Person.cpp
         Eris/Redispatch.cpp
         Eris/Response.cpp
@@ -56,7 +55,6 @@ set(HEADER_FILES
         Eris/LogStream.h
         Eris/MetaQuery.h
         Eris/Metaserver.h
-        Eris/Operations.h
         Eris/Person.h
         Eris/Redispatch.h
         Eris/Response.h

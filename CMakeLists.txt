@@ -50,6 +50,7 @@ add_definitions(-DBOOST_ASIO_DISABLE_SMALL_BLOCK_RECYCLING)
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+	add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ERIS_ABI_VERSION}
             SOVERSION ${ERIS_SOVERSION}
@@ -93,7 +94,7 @@ endmacro()
 macro(wf_add_test_linked TEST_FILE)
     wf_add_test(${TEST_FILE} ${ARGN})
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX})
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX}_object)
 endmacro()
 
 set(WF_LIBRARY_DIRS)

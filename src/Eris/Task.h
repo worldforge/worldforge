@@ -27,6 +27,11 @@ class View;
 
 class Task : public sigc::trackable {
 public:
+	/**
+	Create a new task owned by the specified entity
+	*/
+	Task(Entity& owner, std::string name);
+
 	virtual ~Task();
 
 	/**
@@ -69,11 +74,6 @@ private:
 	friend class View; // so it can call updateProgress
 	friend class Entity; // for constructor and updateFromAtlas
 
-	/**
-	Create a new task owned by the specified entity
-	*/
-	Task(Entity* owner, std::string name);
-
 	void updateFromAtlas(const Atlas::Message::MapType& d);
 
 	/**
@@ -82,7 +82,7 @@ private:
 	void updatePredictedProgress(const WFMath::TimeDiff& dt);
 
 	const std::string m_name;
-	Entity* m_owner;
+	Entity& m_owner;
 	double m_progress;
 
 	/// progress per second, or 0.0 if progress is non-linear

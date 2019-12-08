@@ -48,9 +48,9 @@ public:
 	 */
 	operator std::shared_ptr<bool>();
 
-	const std::shared_ptr<bool> getMarker() const;
+	const std::shared_ptr<bool>& getMarker() const;
 
-	ActiveMarker& operator=(ActiveMarker&& rhs);
+	ActiveMarker& operator=(ActiveMarker&& rhs) noexcept;
 
 private:
 	std::shared_ptr<bool> m_marker;

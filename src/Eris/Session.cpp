@@ -32,10 +32,7 @@ Session::Session()
 		  m_event_service(new EventService(*m_io_service)) {
 }
 
-Session::~Session() {
-	delete m_event_service;
-	delete m_io_service;
-}
+Session::~Session() = default;
 
 boost::asio::io_service& Session::getIoService() {
 	return *m_io_service;

@@ -28,9 +28,10 @@
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
 #include <Eris/IGRouter.h>
-#include <Eris/Operations.h>
 #include <Eris/Response.h>
 #include <Eris/EventService.h>
+#include <Eris/WaitFreeQueue.h>
+#include <Eris/View.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -51,7 +52,7 @@ public:
 	TestAvatar(boost::asio::io_service& io_service, Eris::EventService& eventService) :
 			Eris::Avatar(
 					*new Eris::Account(
-							new Eris::Connection(io_service,
+							*new Eris::Connection(io_service,
 												 eventService,
 												 "",
 												 "",
@@ -63,7 +64,7 @@ public:
 
 class TestIGRouter : public Eris::IGRouter {
 public:
-	TestIGRouter(Eris::Avatar* av) : Eris::IGRouter(av, av->getView()) {}
+	TestIGRouter(Eris::Avatar* av) : Eris::IGRouter(*av, av->getView()) {}
 
 	RouterResult test_handleOperation(const RootOperation& op) {
 		return this->handleOperation(op);
@@ -75,12 +76,12 @@ int main() {
 	Eris::EventService event_service(io_service);
 	{
 		TestAvatar* av = new TestAvatar(io_service, event_service);
-		new Eris::IGRouter(av, av->getView());
+		new Eris::IGRouter(*av, av->getView());
 	}
 
 	{
 		TestAvatar* av = new TestAvatar(io_service, event_service);
-		Eris::IGRouter* ir = new Eris::IGRouter(av, av->getView());
+		Eris::IGRouter* ir = new Eris::IGRouter(*av, av->getView());
 		delete ir;
 	}
 
@@ -470,7 +471,7 @@ int main() {
 
 namespace Eris {
 
-Account::Account(Connection* con) :
+Account::Account(Connection& con) :
 		m_con(con),
 		m_status(DISCONNECTED),
 		m_doingCharacterRefresh(false) {
@@ -481,6 +482,18 @@ Account::~Account() {
 
 void Account::updateFromObject(const Atlas::Objects::Entity::Account& p) {
 }
+
+class AccountRouter : public Router
+{
+public:
+	explicit AccountRouter(Account* pl)
+	{
+	}
+
+	~AccountRouter() override {
+	}
+};
+
 
 Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
 		m_account(pl),
@@ -497,7 +510,7 @@ Avatar::~Avatar() {
 void Avatar::onTransferRequested(const TransferInfo& transfer) {
 }
 
-Connection* Avatar::getConnection() const {
+Connection& Avatar::getConnection() const {
 	return m_account.getConnection();
 }
 
@@ -564,7 +577,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		_eventService(event_service),
 		_host(host),
 		_port(port),
-		m_typeService(new TypeService(this)),
+		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(host),
@@ -605,7 +618,7 @@ void Connection::unregisterRouterForTo(Router* router, const std::string& fromId
 void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes) {
 }
 
-TypeService::TypeService(Connection* con) :
+TypeService::TypeService(Connection& con) :
 		m_con(con),
 		m_inited(false) {
 }
@@ -613,7 +626,7 @@ TypeService::TypeService(Connection* con) :
 TypeService::~TypeService() {
 }
 
-TypeInfoPtr TypeService::getTypeForAtlas(const Root& obj) {
+TypeInfo* TypeService::getTypeForAtlas(const Root& obj) {
 	Eris::TypeInfo* ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
 	if (stub_type_bound) {
 		ti->validateBind();
@@ -621,13 +634,17 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root& obj) {
 	return ti;
 }
 
-TypeInfoPtr TypeService::getTypeByName(const std::string& id) {
+TypeInfo* TypeService::getTypeByName(const std::string& id) {
 	return 0;
 }
 
 void TypeInfo::validateBind() {
 	m_bound = true;
 }
+
+View::~View() {
+}
+
 
 void View::create(const RootEntity& gent) {
 }
@@ -669,7 +686,7 @@ TypeInfo::TypeInfo(std::string id, TypeService* ts) :
 		m_typeService(ts) {
 }
 
-bool TypeInfo::isA(TypeInfoPtr tp) {
+bool TypeInfo::isA(TypeInfo* tp) {
 	return false;
 }
 
@@ -677,7 +694,7 @@ void TypeInfo::onPropertyChanges(const std::string& attributeName,
 								 const Atlas::Message::Element& element) {
 }
 
-TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
+TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
 										 const Root& obj,
 										 TypeInfo* unbound) :
 		Redispatch(con, obj),

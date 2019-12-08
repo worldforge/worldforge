@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <memory>
 
 using Atlas::Objects::Root;
 using Atlas::Message::Element;
@@ -38,11 +39,11 @@ public:
     explicit AccountRouter(Account* pl) :
         m_account(pl)
     {
-        m_account->getConnection()->setDefaultRouter(this);
+        m_account->getConnection().setDefaultRouter(this);
     }
 
     ~AccountRouter() override {
-        m_account->getConnection()->clearDefaultRouter();
+        m_account->getConnection().clearDefaultRouter();
     }
 
     RouterResult handleOperation(const RootOperation& op) override {
@@ -68,7 +69,7 @@ public:
         }
 
         if (op->getClassNo() == CHANGE_NO) {
-            m_account->getConnection()->getTypeService()->handleOperation(op);
+            m_account->getConnection().getTypeService().handleOperation(op);
             return HANDLED;
         }
 
@@ -89,37 +90,33 @@ private:
     Account* m_account;
 };
 
-Account::Account(Connection *con) :
+Account::Account(Connection& con) :
     m_con(con),
     m_status(DISCONNECTED),
+    m_router(std::make_unique<AccountRouter>(this)),
     m_doingCharacterRefresh(false)
 {
-    if (!m_con) throw InvalidOperation("invalid Connection passed to Account");
-
-    m_router = new AccountRouter(this);
-
-    m_con->Connected.connect(sigc::mem_fun(this, &Account::netConnected));
-    m_con->Failure.connect(sigc::mem_fun(this, &Account::netFailure));
+    m_con.Connected.connect(sigc::mem_fun(this, &Account::netConnected));
+    m_con.Failure.connect(sigc::mem_fun(this, &Account::netFailure));
 }
 
 Account::~Account()
 {
     ActiveCharacterMap::iterator it;
-    for (it = m_activeCharacters.begin(); it != m_activeCharacters.end(); )
+    for (it = m_activeAvatars.begin(); it != m_activeAvatars.end(); )
     {
         auto cur = it++;
-        deactivateCharacter(cur->second); // send logout op
+        deactivateCharacter(cur->second.get()); // send logout op
         // cur gets invalidated by innerDeactivateCharacter
-        delete cur->second;
     }
+    m_activeAvatars.clear();
 
     if (isLoggedIn()) logout();
-    delete m_router;
 }
 
 Result Account::login(const std::string &uname, const std::string &password)
 {
-    if (!m_con->isConnected()) {
+    if (!m_con.isConnected()) {
         error() << "called login on unconnected Connection";
         return NOT_CONNECTED;
     }
@@ -151,7 +148,7 @@ Result Account::createAccount(const std::string &uname,
 
 Result Account::createAccount(const Atlas::Objects::Entity::Account& accountOp)
 {
-    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (!m_con.isConnected()) return NOT_CONNECTED;
     if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
 
     m_status = LOGGING_IN;
@@ -160,17 +157,17 @@ Result Account::createAccount(const Atlas::Objects::Entity::Account& accountOp)
     c->setSerialno(getNewSerialno());
     c->setArgs1(accountOp);
 
-    m_con->getResponder()->await(c->getSerialno(), this, &Account::loginResponse);
-    m_con->send(c);
+    m_con.getResponder().await(c->getSerialno(), this, &Account::loginResponse);
+    m_con.send(c);
 
-    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
+    m_timeout = std::make_unique<TimedEvent>(m_con.getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();});
 
     return NO_ERR;
 }
 
 Result Account::logout()
 {
-    if (!m_con->isConnected()) {
+    if (!m_con.isConnected()) {
         error() << "called logout on bad connection ignoring";
         return NOT_CONNECTED;
     }
@@ -191,10 +188,10 @@ Result Account::logout()
     l->setArgs1(arg);
     l->setSerialno(getNewSerialno());
 
-    m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
-    m_con->send(l);
+    m_con.getResponder().await(l->getSerialno(), this, &Account::logoutResponse);
+    m_con.send(l);
 
-    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLogoutTimeout();}));
+    m_timeout = std::make_unique<TimedEvent>(m_con.getEventService(), boost::posix_time::seconds(5), [&](){this->handleLogoutTimeout();});
 
     return NO_ERR;
 }
@@ -214,7 +211,7 @@ const CharacterMap& Account::getCharacters()
 
 Result Account::refreshCharacterInfo()
 {
-    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (!m_con.isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) return NOT_LOGGED_IN;
 
     // silently ignore overlapping refreshes
@@ -239,8 +236,8 @@ Result Account::refreshCharacterInfo()
         obj->setId(id);
         lk->setArgs1(obj);
         lk->setSerialno(getNewSerialno());
-        m_con->getResponder()->await(lk->getSerialno(), this, &Account::sightCharacter);
-        m_con->send(lk);
+        m_con.getResponder().await(lk->getSerialno(), this, &Account::sightCharacter);
+        m_con.send(lk);
     }
 
     return NO_ERR;
@@ -248,7 +245,7 @@ Result Account::refreshCharacterInfo()
 
 Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
 {
-    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (!m_con.isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
@@ -265,10 +262,10 @@ Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
     c->setArgs1(ent);
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
-    m_con->send(c);
+    m_con.send(c);
 
     //First response should be a Sight of the newly created character, followed by an Info of the Mind created.
-    m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarCreateResponse);
+    m_con.getResponder().await(c->getSerialno(), this, &Account::avatarCreateResponse);
     m_status = CREATING_CHAR;
     return NO_ERR;
 }
@@ -298,7 +295,7 @@ void Account::createCharacterHandler(long serialno)
 
 Result Account::takeTransferredCharacter(const std::string &id, const std::string &key)
 {
-    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (!m_con.isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
@@ -319,9 +316,9 @@ Result Account::takeTransferredCharacter(const std::string &id, const std::strin
     possessOp->setFrom(m_accountId);
     possessOp->setArgs1(what);
     possessOp->setSerialno(getNewSerialno());
-    m_con->send(possessOp);
+    m_con.send(possessOp);
 
-    m_con->getResponder()->await(possessOp->getSerialno(), this, &Account::possessResponse);
+    m_con.getResponder().await(possessOp->getSerialno(), this, &Account::possessResponse);
     m_status = TAKING_CHAR;
     return NO_ERR;
 }
@@ -333,7 +330,7 @@ Result Account::takeCharacter(const std::string &id)
         return BAD_CHARACTER_ID;
     }
 
-    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (!m_con.isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
@@ -352,9 +349,9 @@ Result Account::takeCharacter(const std::string &id)
     possessOp->setFrom(m_accountId);
     possessOp->setArgs1(what);
     possessOp->setSerialno(getNewSerialno());
-    m_con->send(possessOp);
+    m_con.send(possessOp);
 
-    m_con->getResponder()->await(possessOp->getSerialno(), this, &Account::possessResponse);
+    m_con.getResponder().await(possessOp->getSerialno(), this, &Account::possessResponse);
     m_status = TAKING_CHAR;
     return NO_ERR;
 }
@@ -385,10 +382,10 @@ Result Account::internalLogin(const std::string &uname, const std::string &pwd)
     Login l;
     l->setArgs1(account);
     l->setSerialno(getNewSerialno());
-    m_con->getResponder()->await(l->getSerialno(), this, &Account::loginResponse);
-    m_con->send(l);
+    m_con.getResponder().await(l->getSerialno(), this, &Account::loginResponse);
+    m_con.send(l);
 
-    m_timeout.reset(new TimedEvent(m_con->getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();}));
+    m_timeout = std::make_unique<TimedEvent>(m_con.getEventService(), boost::posix_time::seconds(5), [&](){this->handleLoginTimeout();});
 
     return NO_ERR;
 }
@@ -411,12 +408,12 @@ void Account::internalLogout(bool clean)
             error() << "got forced logout, but not currently logged in";
     }
 
-    m_con->unregisterRouterForTo(m_router, m_accountId);
+    m_con.unregisterRouterForTo(m_router.get(), m_accountId);
     m_status = DISCONNECTED;
     m_timeout.reset();
 
-    if (m_con->getStatus() == BaseConnection::DISCONNECTING) {
-        m_con->unlock();
+    if (m_con.getStatus() == BaseConnection::DISCONNECTING) {
+        m_con.unlock();
     } else {
         LogoutComplete.emit(clean);
     }
@@ -453,36 +450,34 @@ void Account::loginComplete(const AtlasAccount &p)
     m_status = LOGGED_IN;
     m_accountId = p->getId();
 
-    m_con->registerRouterForTo(m_router, m_accountId);
+    m_con.registerRouterForTo(m_router.get(), m_accountId);
     updateFromObject(p);
 
     // notify an people watching us
     LoginSuccess.emit();
 
-    m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
+    m_con.Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
     m_timeout.reset();
 }
 
 void Account::avatarLogoutRequested(Avatar* avatar)
 {
-    AvatarDeactivated.emit(avatar);
-    delete avatar;
+	destroyAvatar(avatar->getId());
 }
 
 void Account::destroyAvatar(const std::string& avatarId)
 {
-    auto I = m_activeCharacters.find(avatarId);
+    auto I = m_activeAvatars.find(avatarId);
     //The avatar might have already have been deleted by another response; this is a normal case.
-    if (I != m_activeCharacters.end()) {
-        AvatarDeactivated(I->second);
-        delete I->second;
-        m_activeCharacters.erase(I);
+    if (I != m_activeAvatars.end()) {
+        m_activeAvatars.erase(I);
+		AvatarDeactivated(avatarId);
     }
 }
 
 void Account::updateFromObject(const AtlasAccount &p)
 {
-    m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
+    m_characterIds = std::set<std::string>(p->getCharacters().begin(), p->getCharacters().end());
     m_parent = p->getParent();
 
     if(p->hasAttr("character_types"))
@@ -584,7 +579,7 @@ void Account::loginError(const Error& err)
 void Account::handleLoginTimeout()
 {
     m_status = DISCONNECTED;
-    m_timeout.release();
+    m_timeout.reset();
 
     LoginFailure.emit("timed out waiting for server response");
 }
@@ -621,23 +616,23 @@ void Account::possessResponse(const RootOperation& op)
             warning() << "malformed character possess response";
             return;
         }
-        auto entityObj = smart_dynamic_cast<RootEntity>(m_con->getFactories().createObject(entityMessage.Map()));
+        auto entityObj = smart_dynamic_cast<RootEntity>(m_con.getFactories().createObject(entityMessage.Map()));
 
         if (!entityObj || entityObj->isDefaultId()) {
             warning() << "malformed character possess response";
             return;
         }
 
-        if (m_activeCharacters.count(ent->getId()) != 0) {
+        if (m_activeAvatars.count(ent->getId()) != 0) {
 			warning() << "got possession response for character already created";
 			return;
         }
 
-        auto av = new Avatar(*this, ent->getId(), entityObj->getId());
-        AvatarSuccess.emit(av);
+        auto av = std::make_unique<Avatar>(*this, ent->getId(), entityObj->getId());
+        AvatarSuccess.emit(av.get());
         m_status = Account::LOGGED_IN;
 
-        m_activeCharacters[av->getId()] = av;
+		m_activeAvatars[av->getId()] = std::move(av);
 
     } else
         warning() << "received incorrect avatar create/take response";
@@ -670,7 +665,7 @@ void Account::avatarCreateResponse(const RootOperation& op)
         _characters.emplace(ge->getId(), ge);
         GotCharacterInfo.emit(ge);
 		// expect another op with the same refno
-		m_con->getResponder()->await(op->getRefno(), this, &Account::avatarCreateResponse);
+		m_con.getResponder().await(op->getRefno(), this, &Account::avatarCreateResponse);
     } else if (op->instanceOf(INFO_NO)) {
         possessResponse(op);
     } else {
@@ -680,10 +675,10 @@ void Account::avatarCreateResponse(const RootOperation& op)
 
 void Account::internalDeactivateCharacter(Avatar* av)
 {
-	if (m_activeCharacters.count(av->getId()) != 1) {
+	if (m_activeAvatars.count(av->getId()) != 1) {
 		warning() << "trying to deactivate non active character";
 	}
-    m_activeCharacters.erase(av->getId());
+    m_activeAvatars.erase(av->getId());
 }
 
 void Account::sightCharacter(const RootOperation& op)
@@ -739,7 +734,7 @@ void Account::netConnected()
 bool Account::netDisconnecting()
 {
     if (m_status == LOGGED_IN) {
-        m_con->lock();
+        m_con.lock();
         logout();
         return false;
     } else
@@ -756,7 +751,7 @@ void Account::handleLogoutTimeout()
     error() << "LOGOUT timed out waiting for response";
 
     m_status = DISCONNECTED;
-    m_timeout.release();
+    m_timeout.reset();
 
     LogoutComplete.emit(false);
 }
@@ -789,8 +784,8 @@ void Account::avatarLogoutResponse(const RootOperation& op)
         warning() << "character ID " << charId << " is unknown on account " << m_accountId;
     }
 
-    auto it = m_activeCharacters.find(charId);
-    if (it == m_activeCharacters.end()) {
+    auto it = m_activeAvatars.find(charId);
+    if (it == m_activeAvatars.end()) {
         warning() << "character ID " << charId << " does not correspond to an active avatar.";
         return;
     }

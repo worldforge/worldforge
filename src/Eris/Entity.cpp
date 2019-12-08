@@ -70,19 +70,20 @@ void Entity::shutdown()
 
     //Delete any lingering tasks.
     for (auto& entry : m_tasks) {
-        TaskRemoved(entry.first, entry.second);
-        delete entry.second;
+        TaskRemoved(entry.first, entry.second.get());
     }
+    m_tasks.clear();
 
     if (m_moving) {
     	removeFromMovementPrediction();
     }
     
     while (!m_contents.empty()) {
-      Entity *e = m_contents.back();
+      auto *e = m_contents.back();
       e->shutdown();
       delete e;
     }
+    m_contents.clear();
     setLocation(nullptr);
     
 
@@ -564,9 +565,9 @@ void Entity::updateTasks(const Element& e)
 {
     if (e.isNone()) {
         for (auto& entry : m_tasks) {
-            TaskRemoved(entry.first, entry.second);
-            delete entry.second;
+            TaskRemoved(entry.first, entry.second.get());
         }
+        m_tasks.clear();
         return;
     }
     if (!e.isMap()) {
@@ -596,30 +597,29 @@ void Entity::updateTasks(const Element& e)
         }
 
         auto tasksI = previousTasks.find(entry.first);
-        Task *task;
+        std::unique_ptr<Task> task;
 
         bool newTask = false;
         if (tasksI == previousTasks.end())
         {   // not found, create a new one
-            task = new Task(this, it->second.asString());
+            task = std::make_unique<Task>(*this, it->second.asString());
             newTask = true;
         } else {
-            task = tasksI->second;
+            task = std::move(tasksI->second);
             previousTasks.erase(entry.first);
         }
-        
-        m_tasks.emplace(entry.first, task);
-        task->updateFromAtlas(tkmap);
-        if (newTask) {
-        	onTaskAdded(entry.first, task);
-        }
+
+		task->updateFromAtlas(tkmap);
+		if (newTask) {
+			onTaskAdded(entry.first, task.get());
+		}
+        m_tasks.emplace(entry.first, std::move(task));
     } // of Atlas-specified tasks iteration
     
     for (auto& entry : previousTasks) {
 
         if (entry.second) {
-            TaskRemoved(entry.first, entry.second);
-            delete entry.second;
+            TaskRemoved(entry.first, entry.second.get());
         }
     } // of previous-task cleanup iteration
 }
@@ -688,7 +688,7 @@ void Entity::buildEntityDictFromContents(IdEntityMap& dict)
     }
 }
 
-void Entity::setContentsFromAtlas(const StringList& contents)
+void Entity::setContentsFromAtlas(const std::list<std::string>& contents)
 {
 // convert existing contents into a map, for fast membership tests
     IdEntityMap oldContents;
@@ -751,18 +751,14 @@ void Entity::addChild(Entity* e)
 void Entity::removeChild(Entity* e)
 {
     assert(e->getLocation() == this);
-    
-    for (auto C=m_contents.begin(); C != m_contents.end(); ++C)
-    {
-        if (*C == e)
-        {
-            m_contents.erase(C);
-            onChildRemoved(e);
-            return;
-        }
+
+    auto I = std::find(m_contents.begin(), m_contents.end(), e);
+    if (I != m_contents.end()) {
+		m_contents.erase(I);
+		onChildRemoved(e);
+		return;
     }
-        
-   error() << "child " << e->getId() << " of entity " << m_id << " not found doing remove";
+	error() << "child " << e->getId() << " of entity " << m_id << " not found doing remove";
 }
 
 // visiblity related methods

@@ -71,10 +71,10 @@ class TestConnection : public Eris::Connection {
 
 class TestAccount : public Eris::Account {
   public:
-    TestAccount(Eris::Connection * con) : Eris::Account(con) { }
+    TestAccount(Eris::Connection & con) : Eris::Account(con) { }
 
     void setup_insertActiveCharacters(Eris::Avatar * ea) {
-        m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+        m_activeAvatars.insert(std::make_pair(ea->getId(), ea));
     }
 
     void teardown_removeAvatar(Eris::Avatar* a) {
@@ -87,10 +87,6 @@ class TestAvatar : public Eris::Avatar {
     TestAvatar(Eris::Account * ac, std::string mind_id, std::string ent_id) :
                Eris::Avatar(*ac, mind_id, ent_id) { }
 
-    ~TestAvatar() {
-        ((TestAccount&)m_account).teardown_removeAvatar(this);
-    }
-
     void setup_setEntity(Eris::Entity * ent) {
         m_entity = ent;
         m_entityId = ent->getId();
@@ -99,7 +95,7 @@ class TestAvatar : public Eris::Avatar {
 
 class TestEntity : public Eris::ViewEntity {
   public:
-    TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View* vw) :
+    TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View& vw) :
                Eris::ViewEntity(id, ty, vw) { }
 
     void setup_setLocation(Eris::Entity * e) {
@@ -124,11 +120,11 @@ class TestEntity : public Eris::ViewEntity {
 
 class TestTypeService : public Eris::TypeService{
 public:
-    TestTypeService(Eris::Connection *con) : Eris::TypeService(con)
+    TestTypeService(Eris::Connection& con) : Eris::TypeService(con)
     {
     }
 
-    Eris::TypeInfoPtr setup_DefineBuiltin(const std::string& name, TypeInfo* parent){
+    Eris::TypeInfo* setup_DefineBuiltin(const std::string& name, TypeInfo* parent){
         return Eris::TypeService::defineBuiltin(name, parent);
     }
     
@@ -146,21 +142,21 @@ int main()
     
     TestConnection con("name", "localhost", 6767, true);
 
-    TestAccount acc(&con);
+    TestAccount acc(con);
 
     std::string fake_char_id("1");
     std::string fake_mind_id("12");
-    TestAvatar ea(&acc, fake_mind_id, fake_char_id);
-    acc.setup_insertActiveCharacters(&ea);
-    TestEntity* char_ent = new TestEntity(fake_char_id, 0, ea.getView());
-    ea.setup_setEntity(char_ent);
+    TestAvatar* ea = new TestAvatar(&acc, fake_mind_id, fake_char_id);
+    acc.setup_insertActiveCharacters(ea);
+    TestEntity* char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+    ea->setup_setEntity(char_ent);
     
-    TestTypeService typeService(&con);
+    TestTypeService typeService(con);
     
-    TypeInfoPtr rootType = typeService.getTypeByName("root");
+    auto rootType = typeService.getTypeByName("root");
     assert(rootType);
     
-    TypeInfoPtr level1Type = typeService.getTypeByName("level1Type");
+    auto level1Type = typeService.getTypeByName("level1Type");
     assert(level1Type);
     assert(!level1Type->isBound());
     {
@@ -182,7 +178,7 @@ int main()
     assert(level1Type->getProperty("level1") && *(level1Type->getProperty("level1")) == Atlas::Message::Element(true));
     
     
-    TypeInfoPtr level2Type = typeService.getTypeByName("level2Type");
+    auto level2Type = typeService.getTypeByName("level2Type");
     assert(level2Type);
     assert(!level2Type->isBound());
     {
@@ -209,14 +205,14 @@ int main()
     assert(level2Type->getProperty("level2") && *level2Type->getProperty("level2") == Atlas::Message::Element(true));
     
     {
-        TestEntity* ent = new TestEntity("2", level1Type, ea.getView());
+        TestEntity* ent = new TestEntity("2", level1Type, ea->getView());
         ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
         assert(ent->hasProperty("level"));
         assert(ent->valueOfProperty("level") == 1.0f);
     }
     
     {
-        TestEntity* ent = new TestEntity("2", level2Type, ea.getView());
+        TestEntity* ent = new TestEntity("2", level2Type, ea->getView());
         ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
         assert(ent->hasProperty("level"));
         assert(ent->valueOfProperty("level") == 2.0f);

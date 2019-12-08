@@ -28,7 +28,7 @@ public:
     ~TimedEvent();
 
 private:
-    boost::asio::deadline_timer* m_timer;
+    std::unique_ptr<boost::asio::deadline_timer> m_timer;
 };
 
 template<typename T>
@@ -100,7 +100,7 @@ private:
 
     friend class TimedEvent;
     boost::asio::io_service& m_io_service;
-    boost::asio::io_service::work* m_work;
+    std::unique_ptr<boost::asio::io_service::work> m_work;
 
     /**
      * @brief A queue of handlers which are to be run on the main thread.
@@ -114,13 +114,13 @@ private:
      * These values are then popped through the collectHandlersQueue() method
      * and put onto the m_handlers queue.
      */
-    WaitFreeQueue<std::function<void()>>* m_background_handlers_queue;
+    std::unique_ptr<WaitFreeQueue<std::function<void()>>> m_background_handlers_queue;
 
     /**
      * @brief Creates a timer, mainly used by TimedEvent
      * @return A deadline timer.
      */
-    boost::asio::deadline_timer* createTimer();
+    std::unique_ptr<boost::asio::deadline_timer> createTimer();
 
     /**
      * @brief Transfers all handlers from the m_background_handlers_queue to the m_handlers queue.

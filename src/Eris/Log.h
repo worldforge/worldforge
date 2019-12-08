@@ -7,7 +7,7 @@
 
 namespace Eris {
 
-/** Logging level : setting a higher level will automaticaly pull in the lower
+/** Logging level : setting a higher level will automatically pull in the lower
  levels (i.e NOTICE implies ERROR and WARNING) */
 typedef enum {
 	LOG_ERROR = 0,  ///< serious failure indications

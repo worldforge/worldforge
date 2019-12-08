@@ -38,7 +38,6 @@ class EntityRouter;
 class Task;
 
 typedef std::vector<Entity*> EntityArray;
-typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
 /** 
 @brief Entity is a concrete (instantiable) class representing one game entity
@@ -243,7 +242,7 @@ public:
      * @brief Gets the tasks associated with this entity.
      * @return The tasks associated with this entity.
      */
-    const std::map<std::string, Task*>& getTasks() const;
+    const std::map<std::string, std::unique_ptr<Task>>& getTasks() const;
     
     bool hasChild(const std::string& eid) const;
     
@@ -294,7 +293,7 @@ public:
 
     /** Emitted when one or more properties change. The arguments is a set
     of property IDs which were modified. */
-    sigc::signal<void, const StringSet&> Changed;
+    sigc::signal<void, const std::set<std::string>&> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.*/
     sigc::signal<void> Moved;
@@ -512,7 +511,7 @@ protected:
     
     /// wrapper for setLocation with additional code the retrive the
     /// location if it's not available right now
-    void setContentsFromAtlas(const StringList& contents);
+    void setContentsFromAtlas(const std::list<std::string>& contents);
     
     /**
     Remove from a map all items whose key is a movement related properties,
@@ -549,7 +548,7 @@ protected:
      * @brief Gets the typeservice used throughout the Eris system.
      * @returns A type service instance.
      */
-    virtual TypeService* getTypeService() const = 0;
+    virtual TypeService& getTypeService() const = 0;
 
     /**
      * @brief Removes the entity from any movement prediction service.
@@ -614,7 +613,7 @@ protected:
     of each modified property. This set is passed as a parameter of the Changed
     callback when endUpdate is called, to allow clients to determine what
     was changed. */
-    StringSet m_modifiedProperties;
+	std::set<std::string> m_modifiedProperties;
         
     typedef sigc::signal<void, const Atlas::Message::Element&> PropertyChangedSignal;
         
@@ -631,7 +630,7 @@ protected:
     
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
     
-    std::map<std::string, Task*> m_tasks;
+    std::map<std::string, std::unique_ptr<Task>> m_tasks;
 
     bool m_initialised;
 };
@@ -703,7 +702,7 @@ inline bool Entity::hasBBox() const
     return m_hasBBox;
 }
 
-inline const std::map<std::string, Task*>& Entity::getTasks() const
+inline const std::map<std::string, std::unique_ptr<Task>>& Entity::getTasks() const
 {
     return m_tasks; 
 }

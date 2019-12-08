@@ -42,12 +42,12 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
     m_entity(nullptr),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0),
-	m_view(new View(this)),
-    m_router(new IGRouter(this, m_view)),
+	m_view(new View(*this)),
+    m_router(new IGRouter(*this, *m_view)),
 	m_isAdmin(false),
     m_logoutTimer(nullptr)
 {
-    m_account.getConnection()->getTypeService()->setTypeProviderId(m_mindId);
+    m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
 
     m_view->getEntityFromServer("");
@@ -57,10 +57,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 Avatar::~Avatar()
 {
 	m_avatarEntityDeletedConnection.disconnect();
-    m_account.getConnection()->getTypeService()->setTypeProviderId("");
-    delete m_logoutTimer;
-    delete m_router;
-    delete m_view;
+    m_account.getConnection().getTypeService().setTypeProviderId("");
 }
 
 void Avatar::deactivate()
@@ -73,10 +70,9 @@ void Avatar::deactivate()
     l->setSerialno(getNewSerialno());
     l->setFrom(m_account.getId());
 
-    getConnection()->getResponder()->await(l->getSerialno(), this, &Avatar::logoutResponse);
-    getConnection()->send(l);
-    delete m_logoutTimer;
-    m_logoutTimer = new TimedEvent(getConnection()->getEventService(), boost::posix_time::seconds(5), [&](){
+    getConnection().getResponder().await(l->getSerialno(), this, &Avatar::logoutResponse);
+    getConnection().send(l);
+    m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), boost::posix_time::seconds(5), [&](){
     	warning() << "Did not receive logout response after five seconds; forcing Avatar logout.";
     	m_account.destroyAvatar(getId());
     });
@@ -104,7 +100,7 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaterni
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
-    getConnection()->send(moveOp);
+    getConnection().send(moveOp);
 }
 
 void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quaternion& orientation) const
@@ -126,7 +122,7 @@ void Avatar::take(Entity* e) const
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
-    getConnection()->send(moveOp);
+    getConnection().send(moveOp);
 }
 
 void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
@@ -141,7 +137,7 @@ void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
     }
     touchOp->setArgs1(what);
 
-    getConnection()->send(touchOp);
+    getConnection().send(touchOp);
 }
 
 void Avatar::wield(Eris::Entity* entity, std::string attachPoint) const {
@@ -156,7 +152,7 @@ void Avatar::wield(Eris::Entity* entity, std::string attachPoint) const {
 	wield->setFrom(getId());
 	wield->setArgs1(arguments);
 
-	getConnection()->send(wield);
+	getConnection().send(wield);
 
 }
 
@@ -169,7 +165,7 @@ void Avatar::say(const std::string& msg)
     t->setArgs1(what);
     t->setFrom(m_mindId);
 
-    getConnection()->send(t);
+    getConnection().send(t);
 }
 
 void Avatar::sayTo(const std::string& message, const std::vector<std::string>& entities)
@@ -186,7 +182,7 @@ void Avatar::sayTo(const std::string& message, const std::vector<std::string>& e
     t->setArgs1(what);
     t->setFrom(m_mindId);
 
-    getConnection()->send(t);
+    getConnection().send(t);
 }
 
 
@@ -202,7 +198,7 @@ void Avatar::emote(const std::string &em)
     im->setFrom(m_mindId);
     im->setSerialno(getNewSerialno());
 
-    getConnection()->send(im);
+    getConnection().send(im);
 }
 
 void Avatar::moveToPoint(const WFMath::Point<3>& pos, const WFMath::Quaternion& orient)
@@ -221,7 +217,7 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos, const WFMath::Quaternion& 
     moveOp->setFrom(m_mindId);
     moveOp->setArgs1(what);
 
-    getConnection()->send(moveOp);
+    getConnection().send(moveOp);
 }
 
 
@@ -240,7 +236,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
     moveOp->setFrom(m_mindId);
     moveOp->setArgs1(arg);
 
-    getConnection()->send(moveOp);
+    getConnection().send(moveOp);
 }
 
 void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
@@ -273,7 +269,7 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
         moveOp->setTo(entity->getId());
     }
 
-    getConnection()->send(moveOp);
+    getConnection().send(moveOp);
 
 }
 
@@ -293,7 +289,7 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
 //    wield->setFrom(m_mindId);
 //    wield->setArgs1(arguments);
 //
-//    getConnection()->send(wield);
+//    getConnection().send(wield);
 //}
 
 //void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
@@ -320,14 +316,14 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
 //        use->setArgs1(op);
 //    }
 //
-//    getConnection()->send(use);
+//    getConnection().send(use);
 //}
 
 void Avatar::useStop()
 {
     Use use;
     use->setFrom(m_mindId);
-    getConnection()->send(use);
+    getConnection().send(use);
 }
 
 void Avatar::onEntityAppear(Entity* ent)
@@ -374,7 +370,7 @@ void Avatar::onTransferRequested(const TransferInfo &transfer)
     TransferRequested.emit(transfer);
 }
 
-Connection* Avatar::getConnection() const
+Connection& Avatar::getConnection() const
 {
     return m_account.getConnection();
 }
@@ -446,7 +442,7 @@ bool Avatar::getIsAdmin()
 
 void Avatar::send(const Atlas::Objects::Operation::RootOperation& op) {
 	op->setFrom(m_mindId);
-	m_account.getConnection()->send(op);
+	m_account.getConnection().send(op);
 }
 
 

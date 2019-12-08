@@ -25,7 +25,7 @@ class SpawnPoint;
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> CharacterMap;
 
-typedef std::map<std::string, Avatar*> ActiveCharacterMap;
+typedef std::map<std::string, std::unique_ptr<Avatar>> ActiveCharacterMap;
 
 /**
  * @brief A store of spawn points.
@@ -50,7 +50,7 @@ public:
     Accounts might be supported in the future
     @param con A valid (but not necessarily connected) Connection instance
     */
-    explicit Account(Connection *con);
+    explicit Account(Connection &con);
 
     virtual ~Account();
 
@@ -178,7 +178,7 @@ public:
     const std::string& getParent() const;
 
     /// Access the underlying Connection for this account
-    Connection* getConnection() const;
+    Connection& getConnection() const;
 
     /**
      * @brief Called when a logout of the avatar has been requested by the
@@ -229,11 +229,9 @@ public:
     sigc::signal<void, const std::string &> AvatarFailure;
 
     /**
-    Emitted when an active avatar is deactivated. Clients <em>must not</em>
-    refer to the Avatar or View objects after this signal is emitted (it is
-    safe to access them in a slot connected to this signal)
+    Emitted when an active avatar has been deactivated.
     */
-    sigc::signal<void, Avatar*> AvatarDeactivated;
+    sigc::signal<void, const std::string&> AvatarDeactivated;
 
     /**
      * Emitted when an error message is received.
@@ -294,9 +292,9 @@ protected:
     void internalDeactivateCharacter(Avatar* av);
     virtual void updateFromObject(const Atlas::Objects::Entity::Account &p);
 
-    Connection* m_con;  ///< underlying connection instance
+    Connection& m_con;  ///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing
-    AccountRouter* m_router;
+    std::unique_ptr<AccountRouter> m_router;
 
     std::string m_accountId;    ///< the account ID
     std::string m_username; ///< The player's username ( != account object's ID)
@@ -305,10 +303,10 @@ protected:
     std::string m_parent;
     std::vector< std::string > m_characterTypes;
     CharacterMap _characters;   ///< characters belonging to this player
-    StringSet m_characterIds;
+    std::set<std::string> m_characterIds;
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
 
-    ActiveCharacterMap m_activeCharacters;
+    ActiveCharacterMap m_activeAvatars;
     std::unique_ptr<TimedEvent> m_timeout;
 
     /**
@@ -325,7 +323,7 @@ inline bool Account::canCreateCharacter()
 
 inline const ActiveCharacterMap& Account::getActiveCharacters() const
 {
-    return m_activeCharacters;
+    return m_activeAvatars;
 }
 
 inline const std::string& Account::getId() const
@@ -344,7 +342,7 @@ inline const std::string& Account::getParent() const
 }
 
 
-inline Connection* Account::getConnection() const
+inline Connection& Account::getConnection() const
 {
     return m_con;
 }

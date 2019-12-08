@@ -26,6 +26,7 @@
 
 #include <Eris/Metaserver.h>
 #include <Eris/EventService.h>
+#include <Eris/WaitFreeQueue.h>
 
 #include <Atlas/Objects/Factories.h>
 #include <iostream>

@@ -8,11 +8,10 @@
 #include "View.h"
 #include "Entity.h"
 #include "LogStream.h"
-#include "TypeService.h"
 #include "TypeInfo.h"
 #include "TypeBoundRedispatch.h"
-#include "Operations.h"
 #include "TransferInfo.h"
+#include "TypeService.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -25,24 +24,24 @@ using Atlas::Message::Element;
 
 namespace Eris {
 
-IGRouter::IGRouter(Avatar* av, View* view) :
+IGRouter::IGRouter(Avatar& av, View& view) :
     m_avatar(av),
     m_view(view)
 {
-    m_avatar->getConnection()->registerRouterForTo(this, m_avatar->getEntityId());
-    m_actionType = m_avatar->getConnection()->getTypeService()->getTypeByName("action");
+    m_avatar.getConnection().registerRouterForTo(this, m_avatar.getEntityId());
+    m_actionType = m_avatar.getConnection().getTypeService().getTypeByName("action");
 }
 
 IGRouter::~IGRouter()
 {
-    m_avatar->getConnection()->unregisterRouterForTo(this, m_avatar->getEntityId());
+    m_avatar.getConnection().unregisterRouterForTo(this, m_avatar.getEntityId());
 }
 
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 {
     if (!op->isDefaultSeconds()) {
         // grab out world time
-        m_avatar->updateWorldTime(op->getSeconds());
+        m_avatar.updateWorldTime(op->getSeconds());
     }
     
     const std::vector<Root>& args = op->getArgs();
@@ -62,13 +61,13 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 				if (gent.isValid()) {
 					// View needs a bound TypeInfo for the entity
 					if (!gent->isDefaultId() && !gent->isDefaultParent()) {
-						TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+						TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(gent);
 						if (!ty->isBound()) {
 							auto opCopy = op.copy();
 							opCopy->setArgs1(arg);
-							new TypeBoundRedispatch(m_avatar->getConnection(), opCopy, ty);
+							new TypeBoundRedispatch(m_avatar.getConnection(), opCopy, ty);
 						} else {
-							m_view->sight(gent);
+							m_view.sight(gent);
 						}
 					}
 				}
@@ -88,7 +87,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             }
 
 			if (!arg->isDefaultId()) {
-				m_view->appear(arg->getId(), stamp);
+				m_view.appear(arg->getId(), stamp);
 			}
         }
         
@@ -98,7 +97,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     if (op->getClassNo() == DISAPPEARANCE_NO) {
         for (const auto& arg : args) {
         	if (!arg->isDefaultId()) {
-				m_view->disappear(arg->getId());
+				m_view.disappear(arg->getId());
 			}
         }
         
@@ -113,7 +112,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         }
 		for (const auto& arg : args) {
 			if (!arg->isDefaultId()) {
-				m_view->unseen(arg->getId());
+				m_view.unseen(arg->getId());
 			}
 		}
         return HANDLED;
@@ -167,14 +166,14 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
                 // Now do a transfer request
                 TransferInfo transfer(teleport_host, teleport_port, possess_key
                         , possess_entity_id);
-                m_avatar->logoutRequested(transfer);
+                m_avatar.logoutRequested(transfer);
             } else {
-                m_avatar->logoutRequested();
+                m_avatar.logoutRequested();
             }
 
         } else {
             // Regular force logout op
-            m_avatar->logoutRequested();
+            m_avatar.logoutRequested();
         }
 
         return HANDLED;
@@ -194,17 +193,17 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 				if (gent.isValid()) {
 					if (!gent->isDefaultId() && !gent->isDefaultParent()) {
 						// View needs a bound TypeInfo for the entity
-						TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+						TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(gent);
 						if (!ty->isBound()) {
 							auto sightCopy = sightOp.copy();
 							auto opCopy = op.copy();
 							opCopy->setArgs1(arg);
 							sightCopy->setArgs1(opCopy);
-							new TypeBoundRedispatch(m_avatar->getConnection(), sightCopy, ty);
+							new TypeBoundRedispatch(m_avatar.getConnection(), sightCopy, ty);
 							continue;
 						}
 
-						m_view->create(gent);
+						m_view.create(gent);
 					}
 				}
 			}
@@ -218,7 +217,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
     	if (!args.empty()) {
 			for (const auto& arg : args) {
 				if (!arg->isDefaultId()) {
-					m_view->deleteEntity(arg->getId());
+					m_view.deleteEntity(arg->getId());
 				}
 			}
     	} else {
@@ -232,9 +231,9 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
     if (op->getClassNo() == SET_NO) {
         for (const auto& arg : args) {
         	if (!arg->isDefaultId()) {
-				Entity* ent = m_view->getEntity(arg->getId());
+				Entity* ent = m_view.getEntity(arg->getId());
 				if (!ent) {
-					if (m_view->isPending(arg->getId())) {
+					if (m_view.isPending(arg->getId())) {
 						/* no-op, we'll get the state later */
 					} else {
 						warning() << " got SET for completely unknown entity " << arg->getId();
@@ -260,7 +259,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 					stamp = static_cast<float>(arg->getStamp());
 				}
 
-				m_view->appear(arg->getId(), stamp);
+				m_view.appear(arg->getId(), stamp);
 			}
         }
         return HANDLED;
@@ -273,9 +272,9 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
     if (!op->isDefaultParent()) {
 		// we have to handle generic 'actions' late, to avoid trapping interesting
 		// such as create or divide
-		TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);
+		TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(op);
 		if (!ty->isBound()) {
-			new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
+			new TypeBoundRedispatch(m_avatar.getConnection(), sightOp, ty);
 			return HANDLED;
 		}
 
@@ -284,7 +283,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 		//Note that we'll let the op fall through, so that we later on handle the Hit action for the "from" entity.
 		if (op->getClassNo() == HIT_NO) {
 			if (!op->isDefaultTo()) {
-				Entity* ent = m_view->getEntity(op->getTo());
+				Entity* ent = m_view.getEntity(op->getTo());
 				if (ent) {
 					ent->onHit(smart_dynamic_cast<Hit>(op));
 				}
@@ -300,7 +299,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 				return HANDLED;
 			}
 
-			Entity* ent = m_view->getEntity(op->getFrom());
+			Entity* ent = m_view.getEntity(op->getFrom());
 			if (ent) {
 				ent->onAction(op);
 			}

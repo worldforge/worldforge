@@ -16,7 +16,7 @@ typedef Atlas::Message::MapType AtlasMapType;
 
 namespace Eris {
 
-Task::Task(Entity* owner, std::string name) :
+Task::Task(Entity& owner, std::string name) :
 		m_name(std::move(name)),
 		m_owner(owner),
 		m_progress(0.0),

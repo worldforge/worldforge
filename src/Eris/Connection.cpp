@@ -11,6 +11,7 @@
 #include "Redispatch.h"
 #include "Response.h"
 #include "EventService.h"
+#include "TypeService.h"
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
@@ -54,7 +55,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		_eventService(eventService),
 		_host(host),
 		_port(port),
-		m_typeService(new TypeService(this)),
+		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(host),
@@ -72,7 +73,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		_host("local"),
 		_port(0),
 		_localSocket(std::move(socket)),
-		m_typeService(new TypeService(this)),
+		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info(_host),
@@ -153,10 +154,6 @@ void Connection::dispatch() {
 	}
 
 	// finally, clean up any redispatches that fired (aka 'deleteLater')
-	for (auto& finishedRedispatch : m_finishedRedispatches) {
-		delete finishedRedispatch;
-	}
-
 	m_finishedRedispatches.clear();
 }
 
@@ -388,7 +385,7 @@ void Connection::postForDispatch(const Root& obj) {
 }
 
 void Connection::cleanupRedispatch(Redispatch* r) {
-	m_finishedRedispatches.push_back(r);
+	m_finishedRedispatches.push_back(std::unique_ptr<Redispatch>(r));
 }
 
 long getNewSerialno() {

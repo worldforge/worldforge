@@ -53,10 +53,10 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 				m_entity->onTalk(talk);
 			} else {
 				if (!arg->isDefaultParent()) {
-					TypeInfo* ty = typeService()->getTypeForAtlas(arg);
+					auto ty = typeService().getTypeForAtlas(arg);
 					if (!ty->isBound()) {
-						new TypeBoundRedispatch(m_entity->getView()->getAvatar()->getConnection(), op, ty);
-					} else if (ty->isA(typeService()->getTypeByName("action"))) {
+						new TypeBoundRedispatch(m_entity->getView()->getAvatar().getConnection(), op, ty);
+					} else if (ty->isA(typeService().getTypeByName("action"))) {
 						// sound of action
 						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
 						m_entity->onSoundAction(act);
@@ -119,9 +119,9 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     return IGNORED;
 }
 
-TypeService* EntityRouter::typeService()
+TypeService& EntityRouter::typeService()
 {
-    return m_entity->getView()->getAvatar()->getConnection()->getTypeService();
+    return m_entity->getView()->getAvatar().getConnection().getTypeService();
 }
 
 

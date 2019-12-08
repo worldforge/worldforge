@@ -28,7 +28,7 @@ public:
 	 * @param ty Type info for the entity.
 	 * @param view The view to which the entity belongs.
 	 */
-	ViewEntity(std::string id, TypeInfo* ty, View* view);
+	ViewEntity(std::string id, TypeInfo* ty, View& view);
 
 	~ViewEntity() override;
 
@@ -46,7 +46,7 @@ protected:
     /**
      * @brief The View which owns this Entity.
      */
-    View* m_view;
+    View& m_view;
 
     /**
      * @brief A router instance which routes messages from the view
@@ -69,7 +69,7 @@ protected:
 
     Entity* getEntity(const std::string& id) override;
 
-    TypeService* getTypeService() const override;
+    TypeService& getTypeService() const override;
 
     /**
      * @brief Listen to task progress rates updates and send to the view.
@@ -82,7 +82,7 @@ protected:
 
 inline View* ViewEntity::getView() const
 {
-    return m_view;
+    return &m_view;
 }
 }
 

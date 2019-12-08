@@ -17,7 +17,7 @@ class Connection;
 class Redispatch : public sigc::trackable
 {
 protected:
-    Redispatch(Connection* con, Atlas::Objects::Root obj) :
+    Redispatch(Connection& con, Atlas::Objects::Root obj) :
         m_obj(std::move(obj)),
         m_con(con)
     {
@@ -33,7 +33,7 @@ protected:
     const Atlas::Objects::Root m_obj;
     
 private:
-    Connection* m_con;
+    Connection& m_con;
 };
 
 } // of namespace Eris

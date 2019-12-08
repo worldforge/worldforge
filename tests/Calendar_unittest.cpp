@@ -33,6 +33,8 @@
 #include <Eris/Avatar.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
+#include <Eris/IGRouter.h>
+#include <Eris/EventService.h>
 
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -57,7 +59,7 @@ static const int SPM = 60;
 
 class TestCalendar : public Eris::Calendar {
   public:
-    TestCalendar(Eris::Avatar * av) : Eris::Calendar(av) { }
+    TestCalendar(Eris::Avatar & av) : Eris::Calendar(av) { }
 
     void test_setSaneDefault() {
         Atlas::Message::MapType data;
@@ -176,7 +178,7 @@ int main()
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
-        Eris::Calendar ec(ea);
+        Eris::Calendar ec(*ea);
     }
 
     // FIXME Can't set the toplevel on the view, which is required to
@@ -188,7 +190,7 @@ int main()
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec(*ea);
 
         ec.test_topLevelEntityChanged();
     }
@@ -201,7 +203,7 @@ int main()
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec(*ea);
 
         ec.test_setSaneDefault();
 
@@ -223,7 +225,7 @@ int main()
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec(*ea);
 
         ec.test_setSaneDefault();
 
@@ -256,7 +258,7 @@ int main()
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec(*ea);
 
         ec.test_setSaneDefault();
 
@@ -276,7 +278,7 @@ int main()
 		std::string fake_mind_id("12");
         Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(ea);
+        TestCalendar ec(*ea);
         ec.Updated.connect(sigc::mem_fun(flagger,
                 &SignalFlagger::set));
 
@@ -316,7 +318,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_lastOpTime(0.0),
     m_isAdmin(false)
 {
-    m_view = new View(this);
+    m_view = std::make_unique<View>(*this);
 }
 
 Avatar::~Avatar()
@@ -332,7 +334,7 @@ void Avatar::onTransferRequested(const TransferInfo &transfer) {
 
 }
 
-View::View(Avatar* av) :
+View::View(Avatar& av) :
     m_owner(av),
     m_topLevel(nullptr),
     m_maxPendingCount(10)

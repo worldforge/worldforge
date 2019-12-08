@@ -38,6 +38,14 @@ class TimedEvent;
 class Avatar : virtual public sigc::trackable {
 public:
 
+	/** Create a new Avatar object.
+	@param pl The player that owns the Avatar
+	*/
+	Avatar(Account& pl, std::string mindId, std::string entityId);
+
+	virtual ~Avatar();
+
+
 	/// Get the Mind id of this Avatar. All interaction with the entity goes through the Mind.
 	const std::string& getId() const;
 
@@ -46,11 +54,13 @@ public:
 
 
 	/// Get the Entity this Avatar refers to
-	EntityPtr getEntity() const;
+	Entity* getEntity() const;
 
-	View* getView() const;
+	View& getView() const;
 
-	Connection* getConnection() const;
+	Connection& getConnection() const;
+
+	Account& getAccount() const;
 
 	/** get the current local approximation of world time. */
 	double getWorldTime();
@@ -200,13 +210,6 @@ public:
 protected:
 	friend class Account;
 
-	/** Create a new Avatar object.
-	@param pl The player that owns the Avatar
-	*/
-	Avatar(Account& pl, std::string mindId, std::string entityId);
-
-	virtual ~Avatar();
-
 	friend class AccountRouter;
 
 	friend class IGRouter;
@@ -249,20 +252,20 @@ protected:
 
 	std::string m_mindId;
 	std::string m_entityId;
-	EntityPtr m_entity;
+	Entity* m_entity;
 
 	WFMath::TimeStamp m_stampAtLastOp;
 	double m_lastOpTime;
 
-	View* m_view;
-	IGRouter* m_router;
+	std::unique_ptr<View> m_view;
+	std::unique_ptr<IGRouter> m_router;
 
 	sigc::connection m_entityAppearanceCon;
 	sigc::connection m_avatarEntityDeletedConnection;
 
 	bool m_isAdmin;
 
-	TimedEvent* m_logoutTimer;
+	std::unique_ptr<TimedEvent> m_logoutTimer;
 };
 
 inline const std::string& Avatar::getId() const {
@@ -274,13 +277,18 @@ inline const std::string& Avatar::getEntityId() const {
 }
 
 
-inline EntityPtr Avatar::getEntity() const {
+inline Entity* Avatar::getEntity() const {
 	return m_entity;
 }
 
-inline View* Avatar::getView() const {
-	return m_view;
+inline View& Avatar::getView() const {
+	return *m_view;
 }
+
+inline Account& Avatar::getAccount() const {
+	return m_account;
+}
+
 
 } // of namespace Eris
 

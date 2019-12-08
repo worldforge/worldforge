@@ -23,7 +23,7 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-View::View(Avatar* av) :
+View::View(Avatar& av) :
 		m_owner(av),
 		m_topLevel(nullptr),
 		m_simulationSpeed(1.0f),
@@ -41,10 +41,6 @@ View::~View() {
 	// note that errors that occurs very early during world entry, may
 	// cause a view to be deleted with no top-level entity; in that case we
 	// leak a few entities here.
-
-	for (auto factory : m_factories) {
-		delete factory;
-	}
 }
 
 Entity* View::getEntity(const std::string& eid) const {
@@ -65,8 +61,8 @@ void View::setEntityVisible(Entity* ent, bool vis) {
 	}
 }
 
-void View::registerFactory(Factory* f) {
-	m_factories.insert(f);
+void View::registerFactory(std::unique_ptr<Factory> f) {
+	m_factories.insert(std::move(f));
 }
 
 sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot) {
@@ -81,19 +77,19 @@ sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const Entity
 }
 
 TypeService& View::getTypeService() {
-	return *m_owner->getConnection()->getTypeService();
+	return m_owner.getConnection().getTypeService();
 }
 
 TypeService& View::getTypeService() const {
-	return *m_owner->getConnection()->getTypeService();
+	return m_owner.getConnection().getTypeService();
 }
 
 EventService& View::getEventService() {
-	return m_owner->getConnection()->getEventService();
+	return m_owner.getConnection().getEventService();
 }
 
 EventService& View::getEventService() const {
-	return m_owner->getConnection()->getEventService();
+	return m_owner.getConnection().getEventService();
 }
 
 float View::getSimulationSpeed() const {
@@ -159,7 +155,7 @@ void View::appear(const std::string& eid, float stamp) {
 
 	if ((stamp == 0) || (stamp > ent->getStamp())) {
 		if (isPending(eid)) {
-			m_pending[eid] = SACTION_APPEAR;
+			m_pending[eid] = SightAction::APPEAR;
 		} else {
 			// local data is out of data, re-look
 			getEntityFromServer(eid);
@@ -176,7 +172,7 @@ void View::disappear(const std::string& eid) {
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got disappearance for pending " << eid;
-			m_pending[eid] = SACTION_HIDE;
+			m_pending[eid] = SightAction::HIDE;
 		} else
 			warning() << "got disappear for unknown entity " << eid;
 	}
@@ -190,20 +186,20 @@ void View::sight(const RootEntity& gent) {
 // examine the pending map, to see what we should do with this entity
 	if (pending != m_pending.end()) {
 		switch (pending->second) {
-			case SACTION_APPEAR:
+			case SightAction::APPEAR:
 				visible = true;
 				break;
 
-			case SACTION_DISCARD:
+			case SightAction::DISCARD:
 				m_pending.erase(pending);
 				issueQueuedLook();
 				return;
 
-			case SACTION_HIDE:
+			case SightAction::HIDE:
 				visible = false;
 				break;
 
-			case SACTION_QUEUED:
+			case SightAction::QUEUED:
 				error() << "got sight of queued entity " << eid << " somehow";
 				eraseFromLookQueue(eid);
 				break;
@@ -263,9 +259,9 @@ void View::create(const RootEntity& gent) {
 	auto pending = m_pending.find(eid);
 	if (pending != m_pending.end()) {
 		// already being retrieved, but we have the data now
-		alreadyAppeared = (pending->second == SACTION_QUEUED) ||
-						  (pending->second == SACTION_APPEAR);
-		pending->second = SACTION_DISCARD; // when the SIGHT turns up
+		alreadyAppeared = (pending->second == SightAction::QUEUED) ||
+						  (pending->second == SightAction::APPEAR);
+		pending->second = SightAction::DISCARD; // when the SIGHT turns up
 	}
 
 	Entity* ent = createEntity(gent);
@@ -313,7 +309,7 @@ void View::deleteEntity(const std::string& eid) {
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got delete for pending entity, argh";
-			m_pending[eid] = SACTION_DISCARD;
+			m_pending[eid] = SightAction::DISCARD;
 		} else {
 			warning() << "got delete for unknown entity " << eid;
 		}
@@ -321,17 +317,18 @@ void View::deleteEntity(const std::string& eid) {
 }
 
 Entity* View::createEntity(const RootEntity& gent) {
-	TypeInfo* type = getConnection()->getTypeService()->getTypeForAtlas(gent);
+	TypeInfo* type = getConnection().getTypeService().getTypeForAtlas(gent);
 	assert(type->isBound());
 
 	auto F = m_factories.begin();
 	for (; F != m_factories.end(); ++F) {
 		if ((*F)->accept(gent, type)) {
-			return (*F)->instantiate(gent, type, this);
+			return (*F)->instantiate(gent, type, *this);
 		}
 	}
 
-	return new ViewEntity(gent->getId(), type, this);
+	//TODO: return std::unique_ptr instead
+	return new ViewEntity(gent->getId(), type, *this);
 }
 
 void View::unseen(const std::string& eid) {
@@ -354,8 +351,8 @@ bool View::isPending(const std::string& eid) const {
 	return m_pending.find(eid) != m_pending.end();
 }
 
-Connection* View::getConnection() const {
-	return m_owner->getConnection();
+Connection& View::getConnection() const {
+	return m_owner.getConnection();
 }
 
 void View::getEntityFromServer(const std::string& eid) {
@@ -366,7 +363,7 @@ void View::getEntityFromServer(const std::string& eid) {
 	// don't apply pending queue cap for anoynymous LOOKs
 	if (!eid.empty() && (m_pending.size() >= m_maxPendingCount)) {
 		m_lookQueue.push_back(eid);
-		m_pending[eid] = SACTION_QUEUED;
+		m_pending[eid] = SightAction::QUEUED;
 		return;
 	}
 
@@ -379,13 +376,13 @@ void View::sendLookAt(const std::string& eid) {
 		auto pending = m_pending.find(eid);
 		if (pending != m_pending.end()) {
 			switch (pending->second) {
-				case SACTION_QUEUED:
+				case SightAction::QUEUED:
 					// flip over to default (APPEAR) as normal
-					pending->second = SACTION_APPEAR;
+					pending->second = SightAction::APPEAR;
 					break;
 
-				case SACTION_DISCARD:
-				case SACTION_HIDE:
+				case SightAction::DISCARD:
+				case SightAction::HIDE:
 					if (m_notifySights.count(eid) == 0) {
 						// no-one cares, don't bother to look
 						m_pending.erase(pending);
@@ -396,7 +393,7 @@ void View::sendLookAt(const std::string& eid) {
 					// expected.
 					break;
 
-				case SACTION_APPEAR:
+				case SightAction::APPEAR:
 					// this can happen if a queued entity disappears and then
 					// re-appears, all while in the look queue. we can safely fall
 					// through.
@@ -409,7 +406,7 @@ void View::sendLookAt(const std::string& eid) {
 			}
 		} else {
 			// no previous entry, default to APPEAR
-			m_pending.insert(pending, std::make_pair(eid, SACTION_APPEAR));
+			m_pending.insert(pending, std::make_pair(eid, SightAction::APPEAR));
 		}
 
 		// pending map is in the right state, build up the args now
@@ -418,8 +415,8 @@ void View::sendLookAt(const std::string& eid) {
 		look->setArgs1(what);
 	}
 
-	look->setFrom(m_owner->getId());
-	getConnection()->send(look);
+	look->setFrom(m_owner.getId());
+	getConnection().send(look);
 }
 
 void View::setTopLevelEntity(Entity* newTopLevel) {

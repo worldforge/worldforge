@@ -21,7 +21,7 @@ using Atlas::Objects::Root;
 namespace Eris
 {
 	
-Person::Person(Lobby *l, const AtlasAccount &acc) :
+Person::Person(Lobby &l, const AtlasAccount &acc) :
     m_id(acc->getId()),
     m_fullName(acc->getName()),
     m_lobby(l)
@@ -46,7 +46,7 @@ void Person::sight(const AtlasAccount &acc)
 
 void Person::msg(const std::string &msg)
 {
-    if (!m_lobby->getConnection()->isConnected())
+    if (!m_lobby.getConnection().isConnected())
     {
         error() << "sending private chat, but connection is down";
         return;
@@ -58,10 +58,10 @@ void Person::msg(const std::string &msg)
     Talk t;
     t->setArgs1(speech);
     t->setTo(m_id);
-    t->setFrom(m_lobby->getAccount()->getId());
+    t->setFrom(m_lobby.getAccount().getId());
     t->setSerialno(getNewSerialno());
 	
-    m_lobby->getConnection()->send(t);
+    m_lobby.getConnection().send(t);
 }
 
 } // of namespace Eris

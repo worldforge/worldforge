@@ -75,9 +75,9 @@ public:
 	/// Initiate disconnection from the server
 	int disconnect();
 
-	TypeService* getTypeService() const { return m_typeService.get(); }
+	TypeService& getTypeService() const { return *m_typeService; }
 
-	ResponseTracker* getResponder() const { return m_responder.get(); }
+	ResponseTracker& getResponder() const { return *m_responder; }
 
 	EventService& getEventService();
 
@@ -199,7 +199,7 @@ protected:
 
 	int m_lock;
 
-	std::vector<Redispatch*> m_finishedRedispatches;
+	std::vector<std::unique_ptr<Redispatch>> m_finishedRedispatches;
 	ServerInfo m_info;
 
 	std::unique_ptr<ResponseTracker> m_responder;

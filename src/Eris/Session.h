@@ -36,18 +36,16 @@ class EventService;
  * Your application should create an instance of this to use throughout the application's
  * life.
  */
-class Session
+struct Session
 {
-public:
     Session();
-    virtual ~Session();
+    ~Session();
 
     boost::asio::io_service& getIoService();
     EventService& getEventService();
 
-protected:
-    boost::asio::io_service* m_io_service;
-    EventService* m_event_service;
+    std::unique_ptr<boost::asio::io_service> m_io_service;
+	std::unique_ptr<EventService> m_event_service;
 };
 
 }

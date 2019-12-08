@@ -23,7 +23,7 @@ namespace Eris
 {
 
 
-TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
+TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
         const Root& obj, 
         TypeInfo* unbound) :
     Redispatch(con, obj),
@@ -34,10 +34,10 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
     assert(!unbound->isBound());
     unbound->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), unbound));
     
-    con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
+    con.getTypeService().BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
 }
 
-TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
+TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
         const Root& obj, 
         TypeInfoSet unbound) :
     Redispatch(con, obj),
@@ -49,7 +49,7 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
         item->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), item));
     }
     
-    con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
+    con.getTypeService().BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
 }
     
 void TypeBoundRedispatch::onBound(TypeInfo* bound)
@@ -57,7 +57,9 @@ void TypeBoundRedispatch::onBound(TypeInfo* bound)
     assert(m_unbound.count(bound));
     m_unbound.erase(bound);
     
-    if (m_unbound.empty()) post();
+    if (m_unbound.empty()) {
+		post();
+	}
 }
 
 void TypeBoundRedispatch::onBadType(TypeInfo* bad)

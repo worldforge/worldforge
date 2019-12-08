@@ -19,7 +19,7 @@ protected:
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation&);
     
-    TypeService* typeService();
+    TypeService& typeService();
     
     ViewEntity* m_entity;
 };

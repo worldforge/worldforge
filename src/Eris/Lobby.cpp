@@ -15,11 +15,12 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Anonymous.h>
 
-#include <algorithm> 
+#include <algorithm>
 #include <cassert>
+#include <memory>
 #include <utility>
 
-typedef Atlas::Objects::Entity::Account AtlasAccount; 
+typedef Atlas::Objects::Entity::Account AtlasAccount;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_static_cast;
@@ -36,12 +37,12 @@ public:
         m_lobby(l),
         m_anonymousLookSerialno(0)
     {;}
-        
+
     void setAnonymousLookSerialno(long serial)
     {
         m_anonymousLookSerialno = serial;
     }
-    
+
 protected:
     RouterResult handleOperation(const RootOperation& op) override
     {
@@ -59,7 +60,7 @@ protected:
             for (const auto & arg : args) {
 				m_lobby->recvDisappearance(arg);
 			}
-            
+
             return HANDLED;
         }
 
@@ -87,7 +88,7 @@ protected:
 			}
 			return HANDLED;
 		} // of sight op
-        
+
         Sound sound = smart_dynamic_cast<Sound>(op);
         if (sound.isValid())
         {
@@ -100,15 +101,15 @@ protected:
 			return HANDLED;
 
 		}
-        
+
         return IGNORED;
     }
-    
+
 private:
-    TypeService* typeService()
+    TypeService& typeService()
     {
         // none of these can ever be nullptr, honest
-        return m_lobby->getConnection()->getTypeService();
+        return m_lobby->getConnection().getTypeService();
     }
 
     Lobby* m_lobby;
@@ -116,92 +117,81 @@ private:
 };
 
 
-Lobby::Lobby(Account* a) :
+Lobby::Lobby(Account& a) :
     Room(this, std::string()),
     m_account(a)
 {
-    m_router = new OOGRouter(this);
-    assert(a);
-    
-    if (m_account->isLoggedIn()) {
+    m_router = std::make_unique<OOGRouter>(this);
+
+    if (m_account.isLoggedIn()) {
 		onLoggedIn();
 	} else {
-		m_account->LoginSuccess.connect(sigc::mem_fun(this, &Lobby::onLoggedIn));
+		m_account.LoginSuccess.connect(sigc::mem_fun(this, &Lobby::onLoggedIn));
 	}
-        
-    m_account->LogoutComplete.connect(sigc::mem_fun(this, &Lobby::onLogout));
+
+    m_account.LogoutComplete.connect(sigc::mem_fun(this, &Lobby::onLogout));
 }
-	
+
 Lobby::~Lobby()
 {
-    for (auto & room : m_rooms) {
-        if (room.second == this) {
-			continue; // that would really be bad
-		}
-        delete room.second;
-    }
-    
-    for (auto & person : m_people) {
-		delete person.second;
-	}
-        
-    delete m_router;
+	//We store ourself in the rooms, so lets first remove that.
+	m_rooms[getId()].release();
 }
 
 void Lobby::look(const std::string &id)
 {
-    if (!m_account->isLoggedIn()) {
+    if (!m_account.isLoggedIn()) {
         error() << "Lobby trying look while not logged in";
         return;
     }
-    
+
     Look look;
-    look->setFrom(m_account->getId());
+    look->setFrom(m_account.getId());
     look->setSerialno(getNewSerialno());
-    
+
     if (!id.empty()) {
         Anonymous what;
         what->setId(id);
         look->setArgs1(what);
     }
-    
+
     if (id.empty()) {
 		m_router->setAnonymousLookSerialno(look->getSerialno());
 	}
-    
-    getConnection()->send(look);
+
+    getConnection().send(look);
 }
 
 Room* Lobby::join(const std::string& roomId)
 {
-    if (!m_account->isLoggedIn())
+    if (!m_account.isLoggedIn())
     {
         error() << "Lobby trying join while not logged in";
         return nullptr;
     }
-	
+
     Anonymous what;
     what->setAttr("loc", roomId);
     what->setAttr("mode", "join");
 
     Move join;
-    join->setFrom(m_account->getId());
+    join->setFrom(m_account.getId());
     join->setSerialno(getNewSerialno());
     join->setArgs1(what);
-    getConnection()->send(join);
-	
+    getConnection().send(join);
+
     auto R = m_rooms.find(roomId);
     if (R == m_rooms.end()) {
         Room *nr = new Room(this, roomId);
         R = m_rooms.insert(R, IdRoomMap::value_type(roomId, nr));
     }
-	
-    return R->second;
+
+    return R->second.get();
 }
 
-Connection* Lobby::getConnection() const
+Connection& Lobby::getConnection() const
 {
-    return m_account->getConnection();
+    return m_account.getConnection();
 }
 
 Person* Lobby::getPerson(const std::string &acc)
@@ -213,8 +203,8 @@ Person* Lobby::getPerson(const std::string &acc)
         // create a nullptr entry (indicates we are doing the look)
         P = m_people.insert(P, IdPersonMap::value_type(acc, nullptr));
     }
-    
-    return P->second;
+
+    return P->second.get();
 }
 
 Room* Lobby::getRoom(const std::string &id)
@@ -224,8 +214,8 @@ Room* Lobby::getRoom(const std::string &id)
         error() << "called getRoom with unknown ID " << id;
         return nullptr;
     }
-	
-    return R->second;
+
+    return R->second.get();
 }
 
 void Lobby::sightPerson(const AtlasAccount &ac)
@@ -241,11 +231,11 @@ void Lobby::sightPerson(const AtlasAccount &ac)
 			P->second->sight(ac);
 		else {
 			// install the new Person object
-			P->second = new Person(this, ac);
+			P->second = std::make_unique<Person>(*this, ac);
 		}
 
 		// emit the signal; this lets rooms waiting on this player's info update
-		SightPerson.emit(P->second);
+		SightPerson.emit(P->second.get());
 	}
 }
 
@@ -258,8 +248,8 @@ void Lobby::recvInitialSight(const RootEntity& ent)
     }
 
     m_roomId = ent->getId();
-    m_rooms[m_roomId] = this;
-    m_account->getConnection()->registerRouterForFrom(this, m_roomId);
+    m_rooms[m_roomId] = std::unique_ptr<Lobby>(this); //We'll later on remove ourself from the m_rooms list in our destructor.
+    m_account.getConnection().registerRouterForFrom(this, m_roomId);
     Room::sight(ent);
 }
 
@@ -269,11 +259,11 @@ class SightPersonRedispatch : public Redispatch
 
 {
 public:
-    SightPersonRedispatch(Connection* con, std::string pid, const Root& obj) :
+    SightPersonRedispatch(Connection& con, std::string pid, const Root& obj) :
         Redispatch(con, obj),
         m_person(std::move(pid))
     {}
-    
+
     void onSightPerson(Person* p)
     {
         if ( p->getAccount() == m_person) post();
@@ -291,17 +281,17 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
     if ((P == m_people.end()) || (P->second == nullptr)) {
         getPerson(tk->getFrom()); // force a LOOK if necessary
         debug() << "creating sight-person-redispatch for " << tk->getFrom();
-        
+
         Sight sight;
         sight->setArgs1(tk);
-        sight->setTo(getAccount()->getId());
-        
+        sight->setTo(getAccount().getId());
+
         auto *spr = new SightPersonRedispatch(getConnection(), tk->getFrom(), sight);
         SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
-        
+
         return HANDLED;
     }
-    
+
     const std::vector<Root>& args = tk->getArgs();
     if (args.empty()) {
         error() << "received sound(talk) with no args";
@@ -317,16 +307,16 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
 
 		if (arg->hasAttr("loc")) {
 			std::string loc = arg->getAttr("loc").asString();
-			IdRoomMap::const_iterator room = m_rooms.find(loc);
+			auto room = m_rooms.find(loc);
 
 			if (room != m_rooms.end()) {
-				room->second->handleSoundTalk(P->second, speech);
+				room->second->handleSoundTalk(P->second.get(), speech);
 			} else {
 				warning() << "lobby got sound(talk) with unknown loc: " << loc;
 			}
 		} else {
 			// no location, hence assume it's one-to-one chat
-			PrivateTalk.emit(P->second, speech);
+			PrivateTalk.emit(P->second.get(), speech);
 		}
     }
 
@@ -341,10 +331,10 @@ void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
         error() << "lobby got appearance arg without loc: " << obj;
         return;
     }
-    
+
     std::string loc = obj->getAttr("loc").asString();
     auto room = m_rooms.find(loc);
-        
+
     if (room != m_rooms.end()) {
         room->second->appearance(obj->getId());
     } else
@@ -376,7 +366,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 
 			Sight sight;
 			sight->setArgs1(im);
-			sight->setTo(getAccount()->getId());
+			sight->setTo(getAccount().getId());
 
 			auto *spr = new SightPersonRedispatch(getConnection(), im->getFrom(), sight);
 			SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
@@ -389,7 +379,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 			IdRoomMap::const_iterator room = m_rooms.find(loc);
 
 			if (room != m_rooms.end()) {
-				room->second->handleEmote(P->second, description);
+				room->second->handleEmote(P->second.get(), description);
 			} else {
 				error() << "lobby got sight(imaginary) with unknown loc: " << loc;
 			}
@@ -399,7 +389,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
     }
 
 
-        
+
     return HANDLED;
 }
 
@@ -459,14 +449,14 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 
 void Lobby::onLoggedIn()
 {
-    assert(m_account->isLoggedIn());
-    getConnection()->registerRouterForTo(m_router, m_account->getId());
+    assert(m_account.isLoggedIn());
+    getConnection().registerRouterForTo(m_router.get(), m_account.getId());
     look(""); // do initial anonymous look
 }
 
 void Lobby::onLogout(bool clean)
 {
-    getConnection()->unregisterRouterForTo(m_router, m_account->getId());
+    getConnection().unregisterRouterForTo(m_router.get(), m_account.getId());
 }
 
 } // of namespace

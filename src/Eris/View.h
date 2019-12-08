@@ -19,6 +19,7 @@
 #include <set>
 #include <unordered_map>
 #include <Atlas/Message/Element.h>
+#include <memory>
 
 namespace Eris
 {
@@ -38,7 +39,7 @@ class EventService;
 class View : public sigc::trackable
 {
 public:
-    explicit View(Avatar* av);
+    explicit View(Avatar& av);
     ~View();
 
     /**
@@ -47,7 +48,7 @@ public:
     */
     Entity* getEntity(const std::string& eid) const;
 
-    Avatar* getAvatar() const
+    Avatar& getAvatar() const
     {
         return m_owner;
     }
@@ -93,7 +94,7 @@ public:
     /**
     Register an Entity Factory with this view
     */
-    void registerFactory(Factory*);
+    void registerFactory(std::unique_ptr<Factory> factory);
 
 	float getSimulationSpeed() const;
 
@@ -184,7 +185,7 @@ protected:
 private:
     Entity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
-    Connection* getConnection() const;
+    Connection& getConnection() const;
     void getEntityFromServer(const std::string& eid);
 
     /** helper to update the top-level entity, fire signals, etc */
@@ -204,7 +205,7 @@ private:
 
     typedef std::unordered_map<std::string, Entity*> IdEntityMap;
 
-    Avatar* m_owner;
+    Avatar& m_owner;
     IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
@@ -217,17 +218,16 @@ private:
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or
     deletes cleanly. */
-    typedef enum
+    enum class SightAction
     {
-        SACTION_INVALID,
-        SACTION_APPEAR,
-        SACTION_HIDE,
-        SACTION_DISCARD,
-        SACTION_QUEUED
-    } SightAction;
+        INVALID,
+        APPEAR,
+        HIDE,
+        DISCARD,
+        QUEUED
+    };
 
-    typedef std::unordered_map<std::string, SightAction> PendingSightMap;
-    PendingSightMap m_pending;
+	std::unordered_map<std::string, SightAction> m_pending;
     
     /**
     A queue of entities to be looked at, which have not yet be requested
@@ -253,16 +253,15 @@ private:
     motion predicted. */
     EntitySet m_moving;
     
-    class FactoryOrdering
+    struct FactoryOrdering
     {
-    public:
-        bool operator()(Factory* a, Factory* b) const
+        bool operator()(const std::unique_ptr<Factory>& a, const std::unique_ptr<Factory>& b) const
         {   // higher priority factories are placed nearer the start
             return a->priority() > b->priority();
         }
     };
     
-    typedef std::multiset<Factory*, FactoryOrdering> FactoryStore;
+    typedef std::multiset<std::unique_ptr<Factory>, FactoryOrdering> FactoryStore;
     FactoryStore m_factories;
     
     std::set<Task*> m_progressingTasks;
