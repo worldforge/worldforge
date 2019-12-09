@@ -81,7 +81,7 @@ public:
 	}
 
 	void setup_insertActiveCharacters(Eris::Avatar* ea) {
-		m_activeAvatars.insert(std::make_pair(ea->getId(), ea));
+		m_activeAvatars.emplace(ea->getId(), std::unique_ptr<Eris::Avatar>(ea));
 	}
 
 	void setup_setUsername(const std::string& u) {
