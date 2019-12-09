@@ -24,8 +24,13 @@ be clear if you are familiar with that medium.
 */
 class Room : public sigc::trackable, public Router
 {
-public:	
-    ~Room() override;
+public:
+
+	/** standard constructor. Issues a LOOK against the specified ID, and sets up
+	the necessary signals to drive the Room if id arg is provided */
+	explicit Room(Lobby *l, const std::string& id);
+
+	~Room() override;
 
     /// Send a piece of text to this room
     void say(const std::string &tk);
@@ -98,10 +103,7 @@ protected:
     friend class Lobby;
 
     typedef std::unordered_map<std::string, std::unique_ptr<Person>> IdPersonMap;
-    
-    /** standard constructor. Issues a LOOK against the specified ID, and sets up
-    the necessary signals to drive the Room if id arg is provided */
-    explicit Room(Lobby *l, const std::string& id);
+
 	
     RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) override;
     void handleSoundTalk(Person* p, const std::string& speech);

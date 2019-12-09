@@ -182,8 +182,8 @@ Room* Lobby::join(const std::string& roomId)
 
     auto R = m_rooms.find(roomId);
     if (R == m_rooms.end()) {
-        Room *nr = new Room(this, roomId);
-        R = m_rooms.insert(R, IdRoomMap::value_type(roomId, nr));
+        m_rooms.emplace(roomId, std::make_unique<Room>(this, roomId));
+		R = m_rooms.find(roomId);
     }
 
     return R->second.get();
@@ -376,7 +376,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 
 		if (arg->hasAttr("loc")) {
 			std::string loc = arg->getAttr("loc").asString();
-			IdRoomMap::const_iterator room = m_rooms.find(loc);
+			auto room = m_rooms.find(loc);
 
 			if (room != m_rooms.end()) {
 				room->second->handleEmote(P->second.get(), description);

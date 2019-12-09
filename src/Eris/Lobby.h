@@ -88,8 +88,7 @@ private:
     Account& m_account;
     IdPersonMap m_people;
 	
-    typedef std::unordered_map<std::string, std::unique_ptr<Room>> IdRoomMap;
-    IdRoomMap m_rooms;
+	std::unordered_map<std::string, std::unique_ptr<Room>> m_rooms;
 
     std::unique_ptr<OOGRouter> m_router;
 };
