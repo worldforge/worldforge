@@ -74,7 +74,7 @@ class TestAccount : public Eris::Account {
     TestAccount(Eris::Connection & con) : Eris::Account(con) { }
 
     void setup_insertActiveCharacters(Eris::Avatar * ea) {
-        m_activeAvatars.insert(std::make_pair(ea->getId(), ea));
+        m_activeAvatars.emplace(ea->getId(), std::unique_ptr<Eris::Avatar>(ea));
     }
 
     void teardown_removeAvatar(Eris::Avatar* a) {
