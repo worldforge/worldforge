@@ -27,6 +27,7 @@ option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WF_WARNING_FLAGS /W3)
+    add_definitions(-D_WIN32_WINNT=0x0601) #target Windows 7
 else ()
     set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 endif ()
