@@ -96,7 +96,7 @@ inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a
     throw _AtlasBadParse();
 
   for(unsigned i = 0; i < len; ++i)
-    array[i] = list[i].asNum();
+    array[i] = static_cast<CoordType>(list[i].asNum());
 }
 
 template<int dim>
@@ -137,7 +137,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
 
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = list[i].asNum();
+    m_vec[i] = static_cast<CoordType>(list[i].asNum());
 
   for (int i = 0; i < 3; ++i) {
     if (!std::isfinite(m_vec[i])) {
@@ -147,7 +147,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
     }
   }
 
-  m_w = list[3].asNum();
+  m_w = static_cast<CoordType>(list[3].asNum());
   if (!std::isfinite(m_w)) {
     m_valid = false;
     return;
