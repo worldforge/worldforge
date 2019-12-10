@@ -447,7 +447,7 @@ void View::setTopLevelEntity(Entity* newTopLevel) {
 
 void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 	if (element.isFloat()) {
-		m_simulationSpeed = element.Float();
+		m_simulationSpeed = static_cast<float>(element.Float());
 	}
 }
 

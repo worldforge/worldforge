@@ -54,7 +54,7 @@ AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
         }
         try {
             m_socket.close();
-        } catch (const std::exception& e) {
+        } catch (const std::exception&) {
             warning() << "Error when closing socket.";
         }
     }

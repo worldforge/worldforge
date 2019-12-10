@@ -465,7 +465,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
         if (v.isList()) {
             if (v.List().size() == 1) {
                 if (v.List().front().isNum()) {
-                    float num = v.List().front().asNum();
+                    auto num = static_cast<WFMath::CoordType>(v.List().front().asNum());
                     m_scale = WFMath::Vector<3>(num, num, num);
                 }
             } else {

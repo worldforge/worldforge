@@ -106,7 +106,7 @@ DateTime Calendar::now() const
     n.m_month = world_time % m_monthsPerYear;
     world_time /= m_monthsPerYear;
 
-    n.m_year = world_time;
+    n.m_year = static_cast<unsigned int>(world_time);
 
     n.m_valid = true;
     return n;

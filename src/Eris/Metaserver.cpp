@@ -425,9 +425,9 @@ void Meta::processCmd() {
 				char buf[32];
 				snprintf(buf, 32, "%u.%u.%u.%u",
 						 (ip & 0x000000FF),
-						 (ip & 0x0000FF00) >> 8,
-						 (ip & 0x00FF0000) >> 16,
-						 (ip & 0xFF000000) >> 24
+						 (ip & 0x0000FF00) >> 8u,
+						 (ip & 0x00FF0000) >> 16u,
+						 (ip & 0xFF000000) >> 24u
 				);
 
 				// FIXME  - decide whether a reverse name lookup is necessary here or not
