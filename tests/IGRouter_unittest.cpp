@@ -501,6 +501,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
 		m_entityId(entId),
 		m_entity(nullptr),
 		m_lastOpTime(0.0),
+		m_view(new View(*this)),
 		m_isAdmin(false) {
 }
 
@@ -640,6 +641,11 @@ TypeInfo* TypeService::getTypeByName(const std::string& id) {
 
 void TypeInfo::validateBind() {
 	m_bound = true;
+}
+
+View::View(Avatar& avatar)
+:m_owner(avatar){
+
 }
 
 View::~View() {
