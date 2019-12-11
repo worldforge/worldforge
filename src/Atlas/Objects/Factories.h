@@ -28,7 +28,6 @@
 #include <string>
 #include <list>
 #include <map>
-#include <utility>
 
 namespace Atlas { namespace Objects {
 

@@ -11,7 +11,7 @@
 #include <Atlas/Codecs/Bach.h>
 
 #include <iostream>
-#include <utility>
+#include <memory>
 
 #define Debug(prg) { if (debug_flag) { prg } }
 
