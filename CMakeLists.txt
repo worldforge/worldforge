@@ -93,9 +93,8 @@ macro(wf_add_test TEST_FILE)
 endmacro()
 
 macro(wf_add_test_linked TEST_FILE)
-    wf_add_test(${TEST_FILE} ${ARGN})
+    wf_add_test(${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME_LOWER}${SUFFIX}_object>")
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME_LOWER}${SUFFIX}_object)
 endmacro()
 
 set(WF_LIBRARY_DIRS)
