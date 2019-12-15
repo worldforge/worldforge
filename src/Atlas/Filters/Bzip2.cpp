@@ -75,7 +75,6 @@ std::string Bzip2::encode(const std::string& data)
 std::string Bzip2::decode(const std::string& data)
 {
     std::string out_string;
-    int status;
 
     buf[0] = 0;
 
@@ -87,7 +86,7 @@ std::string Bzip2::decode(const std::string& data)
         incoming.next_out = buf;
         incoming.avail_out = sizeof(buf);
 
-        status = BZ2_bzDecompress(&incoming);
+        int status = BZ2_bzDecompress(&incoming);
 
         ASSERT(status == BZ_OK);
 

@@ -99,17 +99,16 @@ void LoadDefaultsDecoder::messageArrived(MapType o) {
 void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,
 										const Element& melem,
 										std::set<std::string> used_attributes) {
-	MapType::const_iterator I;
-	for (I = melem.asMap().begin(); I != melem.asMap().end(); I++) {
-		auto attr_found = used_attributes.find(I->first);
+	for (auto& entry : melem.asMap()) {
+		auto attr_found = used_attributes.find(entry.first);
 		if (attr_found == used_attributes.end()) {
 			//cout<<"    -->"<<I->first<<endl;
-			obj->setAttr(I->first, I->second, &m_factories);
+			obj->setAttr(entry.first, entry.second, &m_factories);
 			//obj_inst->setAttr(I->first, I->second);
 		}
-		used_attributes.insert(I->first);
+		used_attributes.insert(entry.first);
 	}
-	I = melem.asMap().find(Atlas::Objects::PARENT_ATTR);
+	auto I = melem.asMap().find(Atlas::Objects::PARENT_ATTR);
 	if (I != melem.asMap().end()) {
 		const std::string& parent = I->second.asString();
 		const Element& parent_melem = getMessageElement(parent);
@@ -119,30 +118,27 @@ void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,
 
 void LoadDefaultsDecoder::fillDefaults() {
 	std::list<std::string> keys = m_factories.getKeys();
-	for (std::list<std::string>::const_iterator I = keys.begin();
-		 I != keys.end();
-		 I++) {
+	for (auto& key : keys) {
 		//cout<<(*I)<<endl;
 		//get atlas.xml object
-		const Element& melem = getMessageElement(*I);
+		const Element& melem = getMessageElement(key);
 		//get class instances
-		Root obj = m_factories.getDefaultInstance(*I);
+		Root obj = m_factories.getDefaultInstance(key);
 		//Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
 		//add attributes recursively
 		std::set<std::string> used_attributes;
 		setAttributes(obj, /*obj_inst,*/ melem, used_attributes);
 
 		//add object definition
-		Root obj_def = m_factories.createObject(*I);
+		Root obj_def = m_factories.createObject(key);
 		obj_def->setObjtype(obj->getObjtype());
-		MapType::const_iterator J;
-		for (J = melem.asMap().begin(); J != melem.asMap().end(); J++) {
-			obj_def->setAttr(J->first, J->second, &m_factories);
+		for (auto& entry: melem.asMap()) {
+			obj_def->setAttr(entry.first, entry.second, &m_factories);
 		}
 		objectDefinitions[obj_def->getId()] = obj_def;
 
 		//modify attributes in instance that differ from definitions
-		obj/*_inst*/->setParent(std::string(*I));
+		obj/*_inst*/->setParent(key);
 		obj/*_inst*/->setId("");
 		if (obj/*_inst*/->getObjtype() == "op_definition")
 			obj/*_inst*/->setObjtype("op");

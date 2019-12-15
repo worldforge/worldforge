@@ -367,7 +367,7 @@ public:
     public:
         friend class BaseObjectData;
 
-        const_iterator() : m_obj(nullptr), m_val("", *this) {}
+        const_iterator() : m_obj(nullptr), m_current_class(-1), m_val("", *this) {}
         const_iterator(const const_iterator& I) : m_obj(I.m_obj),
             m_current_class(I.m_current_class),
             m_I(I.m_I), m_val(I.m_val.first, *this) {}

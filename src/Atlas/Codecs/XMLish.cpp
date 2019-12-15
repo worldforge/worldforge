@@ -21,7 +21,7 @@ class XMLish : public Codec<std::iostream>
 {
     public:
 
-    XMLish(const Codec<std::iostream>::Parameters&);
+    explicit XMLish(const Codec<std::iostream>::Parameters&);
 
     virtual void poll();
 

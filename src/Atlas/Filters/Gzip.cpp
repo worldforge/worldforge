@@ -76,7 +76,6 @@ std::string Gzip::encode(const std::string& data)
 std::string Gzip::decode(const std::string& data)
 {
     std::string out_string;
-    int status;
 
     buf[0] = 0;
 
@@ -93,7 +92,7 @@ std::string Gzip::decode(const std::string& data)
         incoming.next_out = buf;
         incoming.avail_out = sizeof(buf);
 
-        status = inflate(&incoming, Z_SYNC_FLUSH);
+        int status = inflate(&incoming, Z_SYNC_FLUSH);
 
         ASSERT(status == Z_OK);
 

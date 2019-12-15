@@ -323,7 +323,7 @@ BaseObjectData::iterator BaseObjectData::find(const std::string& name)
 
 BaseObjectData::const_iterator BaseObjectData::find(const std::string& name) const
 {
-  const_iterator I;
+  const_iterator I{};
   I.m_obj = this;
   I.m_val.first = name;
 

@@ -121,7 +121,7 @@ class StreamAccept : public Atlas::Negotiate
 {
     public:
 
-    StreamAccept(std::string  name, std::istream& inStream, std::ostream& outStream);
+    StreamAccept(std::string name, std::istream& inStream, std::ostream& outStream);
 
 	~StreamAccept() override = default;
 

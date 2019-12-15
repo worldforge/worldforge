@@ -57,17 +57,17 @@ bool NegotiateHelper::get(std::string &buf, const std::string & header)
           return true;
         }
         
-      if(get_line(buf, '\n', s) == "")
+      if(get_line(buf, '\n', s).empty())
         break;
         
       if(get_line(s, ' ', h) == header)
         {
           m_names.push_back(s);
             
-          Debug( std::cout << " got: " << s << std::endl; );
+          Debug( std::cout << " got: " << s << std::endl; )
         }
       else
-        Debug( std::cerr << "Unknown pattern " << h << std::endl; );
+        Debug( std::cerr << "Unknown pattern " << h << std::endl; )
     }
   return false;
 }
@@ -103,7 +103,7 @@ StreamConnect::StreamConnect(std::string name, std::istream& inStream, std::ostr
 
 void StreamConnect::poll()
 {
-    Debug( std::cout << "** Client(" << m_state << ") : " << m_inStream.rdbuf()->in_avail() << std::endl; );
+    Debug( std::cout << "** Client(" << m_state << ") : " << m_inStream.rdbuf()->in_avail() << std::endl; )
 
     std::string out;
 
@@ -118,9 +118,9 @@ void StreamConnect::poll()
     {
         // get server greeting
 
-        if (!m_buf.empty() && get_line(m_buf, '\n', m_inName) != "")
+        if (!m_buf.empty() && !get_line(m_buf, '\n', m_inName).empty())
         {
-            Debug( std::cout << "server: " << m_inName << std::endl; );
+            Debug( std::cout << "server: " << m_inName << std::endl; )
             m_state = CLIENT_GREETING;
         }
     }
@@ -197,24 +197,20 @@ std::unique_ptr<Atlas::Codec> StreamConnect::getCodec(Atlas::Bridge & bridge)
 
 void StreamConnect::processServerCodecs()
 {
-    std::list<std::string>::iterator j;
-    
-    for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
+    for (auto& codec : m_inCodecs)
     {
-        if (*j == "XML") { m_canXML = true; }
-        if (*j == "Packed") { m_canPacked = true; }
-        if (*j == "Bach") { m_canBach = true; }
+        if (codec == "XML") { m_canXML = true; }
+        if (codec == "Packed") { m_canPacked = true; }
+        if (codec == "Bach") { m_canBach = true; }
     }
 }
   
 void StreamConnect::processServerFilters()
 {
-    std::list<std::string>::iterator j;
-    
-    for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
+    for (auto& filter : m_inFilters)
     {
-        if (*j == "Gzip") { m_canGzip = true; }
-        if (*j == "Bzip2") { m_canBzip2 = true; }
+        if (filter == "Gzip") { m_canGzip = true; }
+        if (filter == "Bzip2") { m_canBzip2 = true; }
     }
 }
 
@@ -223,7 +219,7 @@ void StreamConnect::processClientCodecs()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = m_inCodecs.begin(); j != m_inCodecs.end(); j++)
+    for (j = m_inCodecs.begin(); j != m_inCodecs.end(); ++j)
     {
         // Do what?
     }
@@ -233,7 +229,7 @@ void StreamConnect::processClientFilters()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = m_inFilters.begin(); j != m_inFilters.end(); j++)
+    for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
     {
         // Do what?
     }
@@ -242,15 +238,23 @@ void StreamConnect::processClientFilters()
 
 
 StreamAccept::StreamAccept(std::string name, std::istream& inStream, std::ostream& outStream) :
-  m_state(SERVER_GREETING), m_outName(std::move(name)), m_inStream(inStream), m_outStream(outStream),
-  m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
-  m_canPacked(false), m_canXML(false), m_canBach(false), m_canGzip(false), m_canBzip2(false)
+  m_state(SERVER_GREETING),
+  m_outName(std::move(name)),
+  m_inStream(inStream),
+  m_outStream(outStream),
+  m_codecHelper(m_inCodecs),
+  m_filterHelper(m_inFilters),
+  m_canPacked(false),
+  m_canXML(false),
+  m_canBach(false),
+  m_canGzip(false),
+  m_canBzip2(false)
 {
 }
 
 void StreamAccept::poll()
 {
-    Debug( std::cout << "** Server(" << m_state << ") : " << std::endl; );
+    Debug( std::cout << "** Server(" << m_state << ") : " << std::endl; )
 
     if (m_state == SERVER_GREETING) 
     {
@@ -258,7 +262,7 @@ void StreamAccept::poll()
 
         m_outStream << "ATLAS " << m_outName << std::endl;
         m_state = CLIENT_GREETING;
-        Debug( std::cout << "server now in state " << m_state << std::endl; );
+        Debug( std::cout << "server now in state " << m_state << std::endl; )
     }
 
     std::streamsize count;
@@ -271,9 +275,9 @@ void StreamAccept::poll()
     if (m_state == CLIENT_GREETING)
     {
         // get client greeting            
-        if (!m_buf.empty() && get_line(m_buf, '\n', m_inName) != "")
+        if (!m_buf.empty() && !get_line(m_buf, '\n', m_inName).empty())
         {
-            Debug(std::cout << "client: " << m_inName << std::endl; );
+            Debug(std::cout << "client: " << m_inName << std::endl; )
             m_state = CLIENT_CODECS;
         }
     }
@@ -283,7 +287,7 @@ void StreamAccept::poll()
         if (m_codecHelper.get(m_buf, "ICAN"))
         {
             m_state = SERVER_CODECS;
-            Debug(std::cout << "server now in state " << m_state << std::endl;);
+            Debug(std::cout << "server now in state " << m_state << std::endl;)
         }
         processClientCodecs();
     }
@@ -397,24 +401,20 @@ void StreamAccept::processServerFilters()
 
 void StreamAccept::processClientCodecs()
 {
-    std::list<std::string>::const_iterator j;
-    
-    for (j = m_inCodecs.begin(); j != m_inCodecs.end(); j++)
+    for (auto& codec : m_inCodecs)
     {    
-        if (*j == "XML") { m_canXML = true; }
-        if (*j == "Packed") { m_canPacked = true; }
-        if (*j == "Bach") { m_canBach = true; }
+        if (codec == "XML") { m_canXML = true; }
+        if (codec == "Packed") { m_canPacked = true; }
+        if (codec == "Bach") { m_canBach = true; }
     }
 }
   
 void StreamAccept::processClientFilters()
 {
-    std::list<std::string>::const_iterator j;
-
-    for (j = m_inFilters.begin(); j != m_inFilters.end(); j++)
+	for (auto& filter : m_inFilters)
     {
-        if (*j == "Gzip") { m_canGzip = true; }
-        if (*j == "Bzip2") { m_canBzip2 = true; }
+        if (filter == "Gzip") { m_canGzip = true; }
+        if (filter == "Bzip2") { m_canBzip2 = true; }
     }
 }
 
