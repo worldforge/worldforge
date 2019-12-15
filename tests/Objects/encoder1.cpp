@@ -2,7 +2,7 @@
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/DecoderBase.h>
-#include <Atlas/Objects/loadDefaults.h>
+#include "loadDefaults.h"
 
 #include <string>
 #include <iostream>

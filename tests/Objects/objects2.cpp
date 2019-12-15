@@ -1,7 +1,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Objects/loadDefaults.h>
+#include "loadDefaults.h"
 //#include "../../src/Net/Stream.h"
 #include "DebugBridge.h"
 

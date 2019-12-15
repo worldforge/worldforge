@@ -7,9 +7,9 @@
 
 #include "loadDefaults.h"
 
-#include "SmartPtr.h"
-#include "Anonymous.h"
-#include "Factories.h"
+#include "Atlas/Objects/SmartPtr.h"
+#include "Atlas/Objects/Anonymous.h"
+#include "Atlas/Objects/Factories.h"
 #include "Atlas/Message/DecoderBase.h"
 
 #include "Atlas/Codecs/XML.h"

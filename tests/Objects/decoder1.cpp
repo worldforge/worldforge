@@ -2,7 +2,7 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/loadDefaults.h>
+#include "loadDefaults.h"
 
 #include <iostream>
 #include <cstdlib>

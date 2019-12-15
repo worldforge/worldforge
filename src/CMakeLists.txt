@@ -17,7 +17,6 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/BaseObject.cpp
         Atlas/Objects/Decoder.cpp
         Atlas/Objects/Generic.cpp
-        Atlas/Objects/loadDefaults.cpp
         Atlas/Objects/Factories_generated.cpp
         Atlas/Objects/Factories.cpp
         Atlas/Objects/Root.cpp
@@ -39,7 +38,6 @@ set(OBJECTS_HEADER_FILES
         Atlas/Objects/Encoder.h
         Atlas/Objects/Entity.h
         Atlas/Objects/Generic.h
-        Atlas/Objects/loadDefaults.h
         Atlas/Objects/Factories.h
         Atlas/Objects/ObjectsFwd.h
         Atlas/Objects/Operation.h
