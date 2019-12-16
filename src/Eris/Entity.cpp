@@ -649,6 +649,10 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 void Entity::setLocation(Entity* newLocation)
 {
     if (newLocation == m_location) return;
+
+    if (newLocation) {
+		m_limbo = newLocation->m_limbo;
+	}
         
 // do the actual member updating
     bool wasVisible = isVisible();
@@ -768,7 +772,7 @@ void Entity::setVisible(bool vis)
     // force visibility to false if in limbo; necessary for the character entity,
     // which otherwise gets double appearances on activation
     if (m_limbo) vis = false;
-    
+
     bool wasVisible = isVisible(); // store before we update m_visible
     m_visible = vis;
 
@@ -778,7 +782,7 @@ void Entity::setVisible(bool vis)
 bool Entity::isVisible() const
 {
     if (m_limbo) return false;
-    
+
     if (m_location) {
 		return m_visible && m_location->isVisible();
 	} else {

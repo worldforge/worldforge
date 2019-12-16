@@ -3,6 +3,7 @@
 
 // WF
 #include "Factory.h"
+#include "ViewEntity.h"
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <wfmath/timestamp.h>
 
@@ -25,7 +26,6 @@ namespace Eris
 {
 
 class Avatar;
-class ViewEntity;
 class Entity;
 class Connection;
 class Task;
@@ -46,7 +46,7 @@ public:
     Retrieve an entity in the view by id. Returns nullptr if no such entity exists
     in the view.
     */
-    Entity* getEntity(const std::string& eid) const;
+    ViewEntity* getEntity(const std::string& eid) const;
 
     Avatar& getAvatar() const
     {
@@ -191,7 +191,7 @@ private:
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
 
-    Entity* createEntity(const Atlas::Objects::Entity::RootEntity&);
+	ViewEntity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
     void parseSimulationSpeed(const Atlas::Message::Element& element);
 
@@ -203,7 +203,7 @@ private:
 
     void eraseFromLookQueue(const std::string& eid);
 
-    typedef std::unordered_map<std::string, Entity*> IdEntityMap;
+    typedef std::unordered_map<std::string, ViewEntity*> IdEntityMap;
 
     Avatar& m_owner;
     IdEntityMap m_contents;

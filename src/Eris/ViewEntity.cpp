@@ -58,8 +58,8 @@ void ViewEntity::addToMovementPrediction() {
 }
 
 Entity* ViewEntity::getEntity(const std::string& id) {
-	Entity* child = m_view.getEntity(id);
-	if (!child) {
+	auto child = m_view.getEntity(id);
+	if (!child || !child->m_visible) {
 		// we don't have the entity at all, so request it and skip
 		// processing it here; everything will come right when it
 		// arrives.

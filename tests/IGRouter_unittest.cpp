@@ -658,7 +658,7 @@ void View::create(const RootEntity& gent) {
 void View::deleteEntity(const std::string& eid) {
 }
 
-Entity* View::getEntity(const std::string& eid) const {
+ViewEntity* View::getEntity(const std::string& eid) const {
 	return 0;
 }
 

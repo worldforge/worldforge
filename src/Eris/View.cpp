@@ -43,7 +43,7 @@ View::~View() {
 	// leak a few entities here.
 }
 
-Entity* View::getEntity(const std::string& eid) const {
+ViewEntity* View::getEntity(const std::string& eid) const {
 	auto E = m_contents.find(eid);
 	if (E == m_contents.end()) {
 		return nullptr;
@@ -230,7 +230,7 @@ void View::sight(const RootEntity& gent) {
 }
 
 Entity* View::initialSight(const RootEntity& gent) {
-	Entity* ent = createEntity(gent);
+	auto ent = createEntity(gent);
 
 	assert(m_contents.count(gent->getId()) == 0);
 	m_contents[gent->getId()] = ent;
@@ -264,7 +264,7 @@ void View::create(const RootEntity& gent) {
 		pending->second = SightAction::DISCARD; // when the SIGHT turns up
 	}
 
-	Entity* ent = createEntity(gent);
+	auto* ent = createEntity(gent);
 	m_contents[eid] = ent;
 	ent->init(gent, true);
 
@@ -316,7 +316,7 @@ void View::deleteEntity(const std::string& eid) {
 	}
 }
 
-Entity* View::createEntity(const RootEntity& gent) {
+ViewEntity* View::createEntity(const RootEntity& gent) {
 	TypeInfo* type = getConnection().getTypeService().getTypeForAtlas(gent);
 	assert(type->isBound());
 
