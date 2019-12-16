@@ -97,7 +97,7 @@ void PresentationBridge::listListItem()
 	mMapsInList.push(0);
 	addPadding();
 }
-void PresentationBridge::listIntItem(long i)
+void PresentationBridge::listIntItem(std::int64_t i)
 {
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << ": " << i << std::endl;
