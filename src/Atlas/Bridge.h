@@ -63,9 +63,9 @@ class Bridge
      */
     virtual void mapListItem(std::string name) = 0;
     /**
-     *  Adds an integer to the currently streames map.
+     *  Adds an integer to the currently streamed map.
      */
-    virtual void mapIntItem(std::string name, long) = 0;
+    virtual void mapIntItem(std::string name, std::int64_t) = 0;
     /**
      *  Adds a float to the currently streamed map.
      */
@@ -90,9 +90,9 @@ class Bridge
      */
     virtual void listListItem() = 0;
     /**
-     *  Adds an integer to the currently streames list.
+     *  Adds an integer to the currently streamed list.
      */
-    virtual void listIntItem(long) = 0;
+    virtual void listIntItem(std::int64_t) = 0;
     /**
      *  Adds a float to the currently streamed list.
      */

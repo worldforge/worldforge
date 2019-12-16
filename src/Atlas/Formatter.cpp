@@ -56,7 +56,7 @@ void Formatter::mapListItem(std::string name)
     m_bridge.mapListItem(std::move(name));
 }
 
-void Formatter::mapIntItem(std::string name, long l)
+void Formatter::mapIntItem(std::string name, std::int64_t l)
 {
     m_stream << std::string(m_indent, ' ');
     m_bridge.mapIntItem(std::move(name), l);
@@ -99,7 +99,7 @@ void Formatter::listListItem()
     m_bridge.listListItem();
 }
 
-void Formatter::listIntItem(long l)
+void Formatter::listIntItem(std::int64_t l)
 {
     m_bridge.listIntItem(l);
 }

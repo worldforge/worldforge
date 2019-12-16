@@ -500,7 +500,7 @@ namespace Atlas {
             return toEncode;
         }
 
-        void Bach::writeIntItem(const std::string &name, long data) {
+        void Bach::writeIntItem(const std::string &name, std::int64_t data) {
             if (m_comma)
                 m_ostream << ",";
 
@@ -561,7 +561,7 @@ namespace Atlas {
             m_comma = false;
         }
 
-        void Bach::mapIntItem(std::string name, long data) {
+        void Bach::mapIntItem(std::string name, std::int64_t data) {
             writeIntItem(name, data);
             m_comma = true;
         }
@@ -591,7 +591,7 @@ namespace Atlas {
             m_comma = false;
         }
 
-        void Bach::listIntItem(long data) {
+        void Bach::listIntItem(std::int64_t data) {
             writeIntItem("", data);
             m_comma = true;
         }

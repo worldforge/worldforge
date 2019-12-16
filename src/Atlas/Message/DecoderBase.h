@@ -51,14 +51,14 @@ public:
 
     void mapMapItem(std::string name) override;
     void mapListItem(std::string name) override;
-    void mapIntItem(std::string name, long) override;
+    void mapIntItem(std::string name, std::int64_t) override;
     void mapFloatItem(std::string name, double) override;
     void mapStringItem(std::string name, std::string) override;
     void mapEnd() override;
     
     void listMapItem() override;
     void listListItem() override;
-    void listIntItem(long) override;
+    void listIntItem(std::int64_t) override;
     void listFloatItem(double) override;
     void listStringItem(std::string) override;
     void listEnd() override;

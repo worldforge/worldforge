@@ -36,7 +36,7 @@ namespace Atlas {
 
             void mapListItem(std::string name) override;
 
-            void mapIntItem(std::string name, long) override;
+            void mapIntItem(std::string name, std::int64_t) override;
 
             void mapFloatItem(std::string name, double) override;
 
@@ -48,7 +48,7 @@ namespace Atlas {
 
             void listListItem() override;
 
-            void listIntItem(long) override;
+            void listIntItem(std::int64_t) override;
 
             void listFloatItem(double) override;
 
@@ -111,7 +111,7 @@ namespace Atlas {
 
             static inline std::string decodeString(std::string);
 
-            void writeIntItem(const std::string &, long);
+            void writeIntItem(const std::string &, std::int64_t);
 
             void writeFloatItem(const std::string &, double);
 

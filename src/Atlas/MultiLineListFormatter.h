@@ -33,7 +33,7 @@ public:
 
 	void listMapItem() override;
 	void listListItem() override;
-	void listIntItem(long l) override;
+	void listIntItem(std::int64_t l) override;
 	void listFloatItem(double d) override;
 	void listStringItem(std::string s) override;
 	void listEnd() override;

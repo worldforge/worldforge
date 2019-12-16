@@ -79,9 +79,9 @@ public:
     void addToMessage(Atlas::Message::MapType &) const override;
 
     /// Set the "serialno" attribute.
-    void setSerialno(long val);
+    void setSerialno(std::int64_t val);
     /// Set the "refno" attribute.
-    void setRefno(long val);
+    void setRefno(std::int64_t val);
     /// Set the "from" attribute.
     void setFrom(std::string val);
     /// Set the "to" attribute.
@@ -99,13 +99,13 @@ public:
     void setArgs1(SmartPtr<ObjectData> val);
 
     /// Retrieve the "serialno" attribute.
-    long getSerialno() const;
+    std::int64_t getSerialno() const;
     /// Retrieve the "serialno" attribute as a non-const reference.
-    long& modifySerialno();
+    std::int64_t& modifySerialno();
     /// Retrieve the "refno" attribute.
-    long getRefno() const;
+    std::int64_t getRefno() const;
     /// Retrieve the "refno" attribute as a non-const reference.
-    long& modifyRefno();
+    std::int64_t& modifyRefno();
     /// Retrieve the "from" attribute.
     const std::string& getFrom() const;
     /// Retrieve the "from" attribute as a non-const reference.
@@ -150,9 +150,9 @@ protected:
     /// Find the flag for the attribute "name".
     bool getAttrFlag(const std::string& name, uint32_t& flag)const override;
     /// Serial number.
-    long attr_serialno;
+    std::int64_t attr_serialno;
     /// Reference to serial number.
-    long attr_refno;
+    std::int64_t attr_refno;
     /// Source of message/operation.
     std::string attr_from;
     /// Target of message/operation.
@@ -214,7 +214,7 @@ extern const std::string ARGS_ATTR;
 
 const uint32_t SERIALNO_FLAG = 1u << 14u;
 
-inline void RootOperationData::setSerialno(long val)
+inline void RootOperationData::setSerialno(std::int64_t val)
 {
     attr_serialno = val;
     m_attrFlags |= SERIALNO_FLAG;
@@ -222,7 +222,7 @@ inline void RootOperationData::setSerialno(long val)
 
 const uint32_t REFNO_FLAG = 1u << 15u;
 
-inline void RootOperationData::setRefno(long val)
+inline void RootOperationData::setRefno(std::int64_t val)
 {
     attr_refno = val;
     m_attrFlags |= REFNO_FLAG;
@@ -285,7 +285,7 @@ inline void RootOperationData::setArgs1(SmartPtr<ObjectData> val)
     attr_args[0] = std::move(val);
 }
 
-inline long RootOperationData::getSerialno() const
+inline std::int64_t RootOperationData::getSerialno() const
 {
     if(m_attrFlags & SERIALNO_FLAG)
         return attr_serialno;
@@ -293,14 +293,14 @@ inline long RootOperationData::getSerialno() const
         return ((RootOperationData*)m_defaults)->attr_serialno;
 }
 
-inline long& RootOperationData::modifySerialno()
+inline std::int64_t& RootOperationData::modifySerialno()
 {
     if(!(m_attrFlags & SERIALNO_FLAG))
         setSerialno(((RootOperationData*)m_defaults)->attr_serialno);
     return attr_serialno;
 }
 
-inline long RootOperationData::getRefno() const
+inline std::int64_t RootOperationData::getRefno() const
 {
     if(m_attrFlags & REFNO_FLAG)
         return attr_refno;
@@ -308,7 +308,7 @@ inline long RootOperationData::getRefno() const
         return ((RootOperationData*)m_defaults)->attr_refno;
 }
 
-inline long& RootOperationData::modifyRefno()
+inline std::int64_t& RootOperationData::modifyRefno()
 {
     if(!(m_attrFlags & REFNO_FLAG))
         setRefno(((RootOperationData*)m_defaults)->attr_refno);

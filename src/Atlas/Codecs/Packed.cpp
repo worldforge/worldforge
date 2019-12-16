@@ -359,7 +359,7 @@ namespace Atlas {
             m_ostream << '(' << hexEncode(std::move(name)) << '=';
         }
 
-        void Packed::mapIntItem(std::string name, long data) {
+        void Packed::mapIntItem(std::string name, std::int64_t data) {
             m_ostream << '@' << hexEncode(std::move(name)) << '=' << data;
         }
 
@@ -383,7 +383,7 @@ namespace Atlas {
             m_ostream << '(';
         }
 
-        void Packed::listIntItem(long data) {
+        void Packed::listIntItem(std::int64_t data) {
             m_ostream << '@' << data;
         }
 

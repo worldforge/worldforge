@@ -332,7 +332,7 @@ namespace Atlas {
             m_ostream << "<list name=\"" << escape(name) << "\">";
         }
 
-        void XML::mapIntItem(std::string name, long data) {
+        void XML::mapIntItem(std::string name, std::int64_t data) {
             m_ostream << "<int name=\"" << escape(name) << "\">" << data << "</int>";
         }
 
@@ -356,7 +356,7 @@ namespace Atlas {
             m_ostream << "<list>";
         }
 
-        void XML::listIntItem(long data) {
+        void XML::listIntItem(std::int64_t data) {
             m_ostream << "<int>" << data << "</int>";
         }
 

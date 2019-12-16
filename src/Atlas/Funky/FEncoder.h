@@ -112,7 +112,7 @@ public:
     }
 
     /// Send an integer value.
-    T operator<<(long i)
+    T operator<<(std::int64_t i)
     {
         b.mapIntItem(name, i);
         return T(b);
@@ -200,7 +200,7 @@ public:
     }
 
     /// Send an integer value.
-    EncList<B, T> operator<<(long i)
+    EncList<B, T> operator<<(std::int64_t i)
     {
         b.listIntItem(i);
         return *this;

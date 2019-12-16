@@ -58,7 +58,7 @@ void DecoderBase::mapListItem(std::string name)
     m_state.push(STATE_LIST);
 }
 
-void DecoderBase::mapIntItem(std::string name, long i)
+void DecoderBase::mapIntItem(std::string name, std::int64_t i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapIntItem" << std::endl)
     assert(!m_maps.empty());        
@@ -132,7 +132,7 @@ void DecoderBase::listListItem()
     m_state.push(STATE_LIST);
 }
 
-void DecoderBase::listIntItem(long i)
+void DecoderBase::listIntItem(std::int64_t i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listIntItem" << std::endl)
     assert(!m_lists.empty());       

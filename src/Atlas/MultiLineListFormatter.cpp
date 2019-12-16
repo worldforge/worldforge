@@ -46,7 +46,7 @@ void MultiLineListFormatter::listListItem()
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listIntItem(long l)
+void MultiLineListFormatter::listIntItem(std::int64_t l)
 {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listIntItem(l);

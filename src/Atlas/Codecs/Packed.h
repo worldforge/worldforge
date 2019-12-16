@@ -54,7 +54,7 @@ The complete specification is located in cvs at:
 
             void mapListItem(std::string name) override;
 
-            void mapIntItem(std::string name, long) override;
+            void mapIntItem(std::string name, std::int64_t) override;
 
             void mapFloatItem(std::string name, double) override;
 
@@ -66,7 +66,7 @@ The complete specification is located in cvs at:
 
             void listListItem() override;
 
-            void listIntItem(long) override;
+            void listIntItem(std::int64_t) override;
 
             void listFloatItem(double) override;
 

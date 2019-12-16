@@ -31,14 +31,14 @@ class XMLish : public Codec<std::iostream>
 
     virtual void mapItem(const std::string& name, const Map&);
     virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, long);
+    virtual void mapItem(const std::string& name, std::int64_t);
     virtual void mapItem(const std::string& name, double);
     virtual void mapItem(const std::string& name, const std::string&);
     virtual void mapEnd();
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(long);
+    virtual void listItem(std::int64_t);
     virtual void listItem(double);
     virtual void listItem(const std::string&);
     virtual void listEnd();
@@ -104,7 +104,7 @@ void XMLish::mapItem(const std::string& name, const List&)
     socket << "<list name=\"" << name << "\">";
 }
 
-void XMLish::mapItem(const std::string& name, long data)
+void XMLish::mapItem(const std::string& name, std::int64_t data)
 {
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
@@ -134,7 +134,7 @@ void XMLish::listItem(const List&)
     socket << "<list>";
 }
 
-void XMLish::listItem(long data)
+void XMLish::listItem(std::int64_t data)
 {
     socket << "<int>" << data << "</int>";
 }

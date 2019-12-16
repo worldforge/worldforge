@@ -43,7 +43,7 @@ public:
     { m_b.mapMapItem(name); }
     void mapListItem(const std::string& name)
     { m_b.mapListItem(name); }
-    void mapIntItem(const std::string& name, long i)
+    void mapIntItem(const std::string& name, std::int64_t i)
     { m_b.mapIntItem(name, i); }
     void mapFloatItem(const std::string& name, double d)
     { m_b.mapFloatItem(name, d); }
@@ -54,7 +54,7 @@ public:
     
     void listMapItem() { m_b.listMapItem(); }
     void listListItem() { m_b.listListItem(); }
-    void listIntItem(long i) { m_b.listIntItem(i); }
+    void listIntItem(std::int64_t i) { m_b.listIntItem(i); }
     void listFloatItem(double d) { m_b.listFloatItem(d); }
     void listStringItem(const std::string& s) { m_b.listStringItem(s); }
     void listEnd() { m_b.listEnd(); }

@@ -39,7 +39,7 @@ class LoopBridge : public Bridge
 	m_bridge->mapListItem(std::move(name));
     }
     
-    void mapIntItem(std::string name, long data) override
+    void mapIntItem(std::string name, std::int64_t data) override
     {
 	m_bridge->mapIntItem(std::move(name), data);
     }
@@ -69,7 +69,7 @@ class LoopBridge : public Bridge
 	m_bridge->listListItem();
     }
     
-    void listIntItem(long data) override
+    void listIntItem(std::int64_t data) override
     {
 	m_bridge->listIntItem(data);
     }
