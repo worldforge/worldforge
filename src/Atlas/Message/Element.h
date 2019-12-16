@@ -25,7 +25,7 @@ class WrongTypeException : public Atlas::Exception
 
 class Element;
 
-typedef long IntType;
+typedef std::int64_t IntType;
 typedef double FloatType;
 typedef void * PtrType;
 typedef std::string StringType;
