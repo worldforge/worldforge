@@ -15,28 +15,3 @@ int main()
 
 // stubs
 
-namespace Mercator {
-
-Segment::Segment(int x, int y, unsigned int resolution) :
-                 m_res(resolution),
-                 m_size(m_res+1),
-                 m_xRef(x),
-                 m_zRef(y),
-                 m_heightMap(resolution)
-{
-}
-
-Segment::~Segment()
-{
-}
-
-HeightMap::HeightMap(unsigned int resolution) : Buffer<float>::Buffer(resolution + 1, 1), m_res(resolution)
-{
-}
-
-
-constexpr float BasePoint::HEIGHT;
-constexpr float BasePoint::ROUGHNESS;
-constexpr float BasePoint::FALLOFF;
-
-}

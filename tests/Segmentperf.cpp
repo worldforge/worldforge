@@ -40,15 +40,4 @@ int main(int argc, char ** argv)
 #include <Mercator/Shader.h>
 #include <Mercator/Surface.h>
 
-namespace Mercator {
 
-void Surface::populate()
-{
-}
-
-Surface * Shader::newSurface(const Segment & segment) const
-{
-    return 0;
-}
-
-}

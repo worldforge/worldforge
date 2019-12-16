@@ -23,7 +23,7 @@ int terrain_mod_context_test(Mercator::Terrain & terrain)
     Mercator::TerrainMod * mp = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.updateMod(1, mp);
 
-    mp->setContext(new Mercator::TerrainMod::Context);
+    mp->setContext(std::make_unique<Mercator::TerrainMod::Context>());
     mp->context()->setId("foo");
 
     terrain.updateMod(1, nullptr);

@@ -125,36 +125,3 @@ int main()
 #include <Mercator/Shader.h>
 #include <Mercator/TerrainMod.h>
 
-namespace Mercator {
-
-Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
-{
-}
-
-Shader::~Shader()
-{
-}
-
-Surface * Shader::newSurface(const Segment &) const
-{
-    return 0;
-}
-
-Surface::Surface(const Segment & seg, const Shader & sh, bool color, bool alpha)
-  : Buffer<ColorT>((color ? 3 : 0) + (alpha ? 1 : 0), seg.getSize()), m_shader(sh), m_segment(seg)
-{
-}
-
-void Surface::populate()
-{
-}
-
-Effector::Effector()
-{
-}
-
-Effector::~Effector()
-{
-}
-
-}

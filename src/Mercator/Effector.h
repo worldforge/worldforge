@@ -38,9 +38,9 @@ class Effector
         std::string m_id;
     };
 
-    Context * context() const { return m_context; }
+    Context * context() const { return m_context.get(); }
 
-    void setContext(Context *);
+    void setContext(std::unique_ptr<Context> context);
 
     /// Accessor for the bounding box of the geometric shape.
     const WFMath::AxisBox<2> & bbox() const
@@ -66,7 +66,7 @@ class Effector
     WFMath::AxisBox<2> m_box;
     
     /// The application context of this effector
-    Context * m_context;
+	std::unique_ptr<Context> m_context;
 };
 
 /// \brief Function used to apply an effector to an existing height point

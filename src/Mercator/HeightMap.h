@@ -29,7 +29,7 @@ class HeightMap : public Buffer<float> {
 
   public:
     explicit HeightMap(unsigned int resolution);
-    virtual ~HeightMap() = default;
+    ~HeightMap() override = default;
 
     /// \brief Accessor for resolution of this segment.
     int getResolution() const {

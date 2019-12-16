@@ -232,8 +232,8 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     float hot;
     if (HOT(t, sPt, hot) && hot < 0.0) return true;
     
-    float paraX=0.0, paraZ=0.0; //used to store the parametric gap between grid crossings
-    float pX, pZ; //the accumulators for the parametrics as we traverse the ray
+    double paraX=0.0, paraZ=0.0; //used to store the parametric gap between grid crossings
+    double pX, pZ; //the accumulators for the parametrics as we traverse the ray
     float h1,h2,h3,h4,height;
 
     WFMath::Point<3> last(sPt), next(sPt);
@@ -246,7 +246,7 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
         paraX = 1.0f/dir[0];
         float crossX = (dir[0] > 0.0f) ? gridceil(last[0]) : gridfloor(last[0]);
         pX = (crossX - last[0]) * paraX;
-        pX = std::min(pX, 1.0f);
+        pX = std::min(pX, 1.0);
     }
     else { //parallel: never crosses
         pX = 1.0f;
@@ -257,7 +257,7 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
         paraZ = 1.0f/dir[2];
         float crossZ = (dir[2] > 0.0f) ? gridceil(last[2]) : gridfloor(last[2]);
         pZ = (crossZ - sPt[2]) * paraZ;
-        pZ = std::min(pZ, 1.0f);
+        pZ = std::min(pZ, 1.0);
     }
     else { //parallel: never crosses
         pZ = 1.0f;

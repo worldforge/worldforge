@@ -9,30 +9,24 @@
 namespace Mercator
 {
 
-Effector::Context::Context()
-{
-}
+Effector::Context::Context() = default;
 
-Effector::Context::~Context()
-{
-}
+Effector::Context::~Context() = default;
 
 void Effector::Context::setId(const std::string& id)
 {
     m_id = id;
 }
 
-void Effector::setContext(Effector::Context * c)
+void Effector::setContext(std::unique_ptr<Effector::Context> c)
 {
-    m_context = c;
+    m_context = std::move(c);
 }
 
-Effector::Effector() : m_context(0)
-{
-}
+Effector::Effector() = default;
 
 // Ensure that m_context is not copied only one object can own the context
-Effector::Effector(const Effector & o) : m_box(o.m_box), m_context(0)
+Effector::Effector(const Effector & o) : m_box(o.m_box)
 {
 }
 
@@ -40,15 +34,11 @@ Effector::Effector(const Effector & o) : m_box(o.m_box), m_context(0)
 Effector & Effector::operator=(const Effector & rhs)
 {
     m_box = rhs.m_box;
-    delete m_context;
-    m_context = 0;
+    m_context.reset();
     return *this;
 }
 
-Effector::~Effector()
-{
-    delete m_context;
-}
+Effector::~Effector() = default;
 
 /// \brief Set the height point to the mod value
 float set(float orig, float mod)
