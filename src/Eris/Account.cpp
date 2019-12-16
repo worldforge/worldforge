@@ -107,11 +107,15 @@ Account::~Account()
     {
         auto cur = it++;
         deactivateCharacter(cur->second.get()); // send logout op
-        // cur gets invalidated by innerDeactivateCharacter
     }
-    m_activeAvatars.clear();
+    //Don't wait for logout response, delete all avatars now.
+    while (!m_activeAvatars.empty()) {
+    	destroyAvatar(m_activeAvatars.begin()->first);
+    }
 
-    if (isLoggedIn()) logout();
+    if (isLoggedIn()) {
+    	logout();
+    }
 }
 
 Result Account::login(const std::string &uname, const std::string &password)
