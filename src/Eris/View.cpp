@@ -52,7 +52,7 @@ ViewEntity* View::getEntity(const std::string& eid) const {
 	return E->second;
 }
 
-void View::setEntityVisible(Entity* ent, bool vis) {
+void View::setEntityVisible(ViewEntity* ent, bool vis) {
 	assert(ent);
 	if (vis) {
 		Appearance.emit(ent);
@@ -100,7 +100,7 @@ void View::update() {
 	WFMath::TimeStamp t(WFMath::TimeStamp::now());
 
 	// run motion prediction for each moving entity
-	for (auto it : m_moving) {
+	for (auto& it : m_moving) {
 		it->updatePredictedState(t, m_simulationSpeed);
 	}
 
@@ -110,20 +110,20 @@ void View::update() {
 	}
 	WFMath::TimeDiff dt = t - m_lastUpdateTime;
 
-	for (auto m_progressingTask : m_progressingTasks) {
+	for (auto& m_progressingTask : m_progressingTasks) {
 		m_progressingTask->updatePredictedProgress(dt);
 	}
 
 	m_lastUpdateTime = t;
 }
 
-void View::addToPrediction(Entity* ent) {
+void View::addToPrediction(ViewEntity* ent) {
 	assert(ent->isMoving());
 	assert(m_moving.count(ent) == 0);
 	m_moving.insert(ent);
 }
 
-void View::removeFromPrediction(Entity* ent) {
+void View::removeFromPrediction(ViewEntity* ent) {
 	assert(ent->isMoving());
 	assert(m_moving.count(ent) == 1);
 	m_moving.erase(ent);
@@ -140,7 +140,7 @@ void View::taskRateChanged(Task* t) {
 // Atlas operation handlers
 
 void View::appear(const std::string& eid, float stamp) {
-	Entity* ent = getEntity(eid);
+	auto* ent = getEntity(eid);
 	if (!ent) {
 		getEntityFromServer(eid);
 		return; // everything else will be done once the SIGHT arrives
@@ -166,9 +166,9 @@ void View::appear(const std::string& eid, float stamp) {
 }
 
 void View::disappear(const std::string& eid) {
-	Entity* ent = getEntity(eid);
+	auto* ent = getEntity(eid);
 	if (ent) {
-		ent->setVisible(false); // will ultimately cause disapeparances
+		ent->setVisible(false); // will ultimately cause disappearances
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got disappearance for pending " << eid;
@@ -212,7 +212,7 @@ void View::sight(const RootEntity& gent) {
 	}
 
 // if we got this far, go ahead and build / update it
-	Entity* ent = getEntity(eid);
+	auto* ent = getEntity(eid);
 	if (ent) {
 		// existing entity, update in place
 		ent->sight(gent);
@@ -229,7 +229,7 @@ void View::sight(const RootEntity& gent) {
 	issueQueuedLook();
 }
 
-Entity* View::initialSight(const RootEntity& gent) {
+ViewEntity* View::initialSight(const RootEntity& gent) {
 	auto ent = createEntity(gent);
 
 	assert(m_contents.count(gent->getId()) == 0);
@@ -282,7 +282,7 @@ void View::create(const RootEntity& gent) {
 }
 
 void View::deleteEntity(const std::string& eid) {
-	Entity* ent = getEntity(eid);
+	auto* ent = getEntity(eid);
 	if (ent) {
 //		// copy the child array, since setLocation will modify it
 //		EntityArray contents;
@@ -332,7 +332,7 @@ ViewEntity* View::createEntity(const RootEntity& gent) {
 }
 
 void View::unseen(const std::string& eid) {
-	Entity* ent = getEntity(eid);
+	auto ent = getEntity(eid);
 	if (ent) {
 		EntityDeleted.emit(ent);
 		ent->shutdown();
@@ -419,7 +419,7 @@ void View::sendLookAt(const std::string& eid) {
 	getConnection().send(look);
 }
 
-void View::setTopLevelEntity(Entity* newTopLevel) {
+void View::setTopLevelEntity(ViewEntity* newTopLevel) {
 	if (m_topLevel) {
 		if (newTopLevel == m_topLevel) {
 			return; // no change!
@@ -451,7 +451,7 @@ void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 	}
 }
 
-void View::entityDeleted(Entity* ent) {
+void View::entityDeleted(ViewEntity* ent) {
 	assert(m_contents.count(ent->getId()));
 	m_contents.erase(ent->getId());
 }

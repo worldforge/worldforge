@@ -98,7 +98,7 @@ public:
 
 	float getSimulationSpeed() const;
 
-	typedef sigc::slot<void, Entity*> EntitySightSlot;
+	typedef sigc::slot<void, ViewEntity*> EntitySightSlot;
 
     /**
     Connect up a slot to be fired when an Entity with the specified ID is seen.
@@ -108,16 +108,16 @@ public:
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
-    sigc::signal<void, Entity*> EntitySeen;
+    sigc::signal<void, ViewEntity*> EntitySeen;
 
     /** emitted when a SIGHT(CREATE) op is received for an entity */
-    sigc::signal<void, Entity*> EntityCreated;
+    sigc::signal<void, ViewEntity*> EntityCreated;
     
     /** emitted when a SIGHT(DELETE) op is received for an entity */
-    sigc::signal<void, Entity*> EntityDeleted;
+    sigc::signal<void, ViewEntity*> EntityDeleted;
 
-    sigc::signal<void, Entity*> Appearance;
-    sigc::signal<void, Entity*> Disappearance;
+    sigc::signal<void, ViewEntity*> Appearance;
+    sigc::signal<void, ViewEntity*> Disappearance;
 
     /// emitted when the TLVE changes
     sigc::signal<void> TopLevelEntityChanged;
@@ -128,7 +128,7 @@ public:
      * This signal is mainly meant for debugging or authoring; normal entity
      * presentation logic should use EntitySeen or EntityCreated instead.
      */
-    sigc::signal<void, Entity*> InitialSightEntity;
+    sigc::signal<void, ViewEntity*> InitialSightEntity;
 
     void dumpLookQueue();
 
@@ -162,18 +162,18 @@ protected:
     void deleteEntity(const std::string& eid);
     void unseen(const std::string& eid);
     
-    void setEntityVisible(Entity* ent, bool vis);
+    void setEntityVisible(ViewEntity* ent, bool vis);
 
     /// test if the specified entity ID is pending initial sight on the View
     bool isPending(const std::string& eid) const;
 
-    void addToPrediction(Entity* ent);
-    void removeFromPrediction(Entity* ent);
+    void addToPrediction(ViewEntity* ent);
+    void removeFromPrediction(ViewEntity* ent);
     
     /** this is a hook that Entity's destructor calls to remove itself from
     the View's content map. The name is unfortantely similar to the public
     'EntityDeleted' signal - alternative naming suggestions appreciated. */
-    void entityDeleted(Entity* ent);
+    void entityDeleted(ViewEntity* ent);
 
     /**
     Method to register and unregister tasks with with view, so they can
@@ -183,13 +183,13 @@ protected:
     */
     void taskRateChanged(Task*);
 private:
-    Entity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
+    ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
     Connection& getConnection() const;
     void getEntityFromServer(const std::string& eid);
 
     /** helper to update the top-level entity, fire signals, etc */
-    void setTopLevelEntity(Entity* newTopLevel);
+    void setTopLevelEntity(ViewEntity* newTopLevel);
 
 	ViewEntity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
@@ -207,7 +207,7 @@ private:
 
     Avatar& m_owner;
     IdEntityMap m_contents;
-    Entity* m_topLevel; ///< the top-level visible entity for this view
+	ViewEntity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
 
     /**
@@ -242,12 +242,12 @@ private:
           
     unsigned int m_maxPendingCount;
           
-    typedef sigc::signal<void, Entity*> EntitySightSignal;
+    typedef sigc::signal<void, ViewEntity*> EntitySightSignal;
         
     typedef std::unordered_map<std::string, EntitySightSignal> NotifySightMap;
     NotifySightMap m_notifySights;
     
-    typedef std::set<Entity*> EntitySet;
+    typedef std::set<ViewEntity*> EntitySet;
     
     /** all the entities in the view which are moving, so they can be
     motion predicted. */
