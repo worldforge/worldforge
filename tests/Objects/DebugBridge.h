@@ -39,7 +39,7 @@ public:
         std::cout << padding << name << " -> New List" << std::endl;
         addPadding();
     }
-    void mapIntItem(std::string name, long i) override
+    void mapIntItem(std::string name, std::int64_t i) override
     {
         std::cout << padding << name << " -> Int: " << i << std::endl;
     }
@@ -67,7 +67,7 @@ public:
         std::cout << padding << "New List" << std::endl;
         addPadding();
     }
-    void listIntItem(long i) override
+    void listIntItem(std::int64_t i) override
     {
         std::cout << padding << "Int: " << i << std::endl;
     }
