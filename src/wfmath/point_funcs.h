@@ -220,7 +220,7 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   }
 
   Point<dim> out = *i;
-  float num_points = 1;
+  CoordType num_points = 1;
 
   bool valid = i->isValid();
 

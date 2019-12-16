@@ -137,7 +137,7 @@ struct numeric_constants<double>
 #define WFMATH_MAX_NORM_AGE ((WFMATH_PRECISION_FUDGE_FACTOR * 2) / 3)
 
 /// Basic floating point type
-typedef float CoordType;
+typedef double CoordType;
 
 // Basic comparisons
 

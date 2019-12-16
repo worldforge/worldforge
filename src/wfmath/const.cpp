@@ -95,10 +95,10 @@ CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
 {
   assert(length > 0);
 
-  float max1 = 0, max2 = 0;
+  CoordType max1 = 0, max2 = 0;
 
   for(int i = 0; i < length; ++i) {
-    float val1 = std::fabs(x1[i]), val2 = std::fabs(x2[i]);
+    auto val1 = std::fabs(x1[i]), val2 = std::fabs(x2[i]);
     if(val1 > max1)
       max1 = val1;
     if(val2 > max2)

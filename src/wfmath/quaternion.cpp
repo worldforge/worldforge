@@ -68,7 +68,7 @@ const Quaternion& Quaternion::IDENTITY()
 // correspond to the same rotation matrix. We consider the form
 // of the quaternion with w > 0 canonical.
 
-bool Quaternion::isEqualTo(const Quaternion &q, float epsilon) const
+bool Quaternion::isEqualTo(const Quaternion &q, CoordType epsilon) const
 {
   // Since the sum of squares is 1, the magnitude of the largest
   // element must be between 1 and 0.5, so we don't need to scale epsilon.

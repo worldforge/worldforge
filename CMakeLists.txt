@@ -42,6 +42,7 @@ set(DESCRIPTION "A math library for the Worldforge system.")
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${WFMATH_ABI_VERSION}
             SOVERSION ${WFMATH_SOVERSION}
@@ -71,11 +72,10 @@ macro(wf_add_test TEST_FILE)
 
     # If BUILD_TESTING is defined we'll build the test no matter what. This makes it work better on Windows.
     if (BUILD_TESTING)
-        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN})
+        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME}${SUFFIX}_object>")
     else (BUILD_TESTING)
-        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME}${SUFFIX}_object>")
     endif (BUILD_TESTING)
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME}${SUFFIX})
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
