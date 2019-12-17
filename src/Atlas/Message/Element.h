@@ -32,30 +32,8 @@ typedef std::string StringType;
 typedef std::map<std::string, Element> MapType;
 typedef std::vector<Element> ListType;
 
-/** Multi-type container
- *
- * FIXME: Document this
- *
- * @author Stefanus Du Toit <sdt@gmx.net>
- *
- * Changes:
- *
- *   2003/04/02   Al Riddcoh <alriddoch@zepler.org>
- *                Add in some assignment operators for efficiency
- *   2002/11/07   Al Riddcoh <alriddoch@zepler.org>
- *                Changed the name to Element as Object is a stupid name
- *                for a class.
- *   2000/08/05   Karsten-O. Laux <klaux@rhrk.uni-kl.de>
- *                Changed the members to pointers which only get created when
- *                really needed. This is a major speedup for passing
- *                Object as parameter or when copying it.
- *                Because copying of unused members is omitted.  
- *                All pointers are stored as a union, so we save memory !
- *                Changed IntType to long and added convenience Constructors
- *                for float, int and bool
- *                
-
-
+/**
+ * Multi-type container
  */
 class Element
 {
@@ -96,7 +74,7 @@ public:
     Element(Element&& obj) noexcept;
 
     /// Set type to int, and value to v.
-    Element(int v)
+    Element(std::int32_t v)
       : t(TYPE_INT), i(v)
     {
     }
@@ -191,7 +169,7 @@ public:
      */
     Element& operator=(Element&& obj) noexcept;
 
-    Element& operator=(int v) 
+    Element& operator=(std::int32_t v)
     {
       if (TYPE_INT != t)
       {

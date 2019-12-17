@@ -165,6 +165,7 @@ macro(wf_add_benchmark TEST_FILE)
     add_dependencies(benchmark ${TEST_NAME})
 endmacro()
 
+wf_add_test(tests/Message/ElementTest.cpp)
 wf_add_test(tests/Codecs/codecs.cpp)
 wf_add_test(tests/Objects/custom_ops.cpp)
 wf_add_test(tests/Objects/objects1.cpp tests/Objects/loadDefaults.cpp)
