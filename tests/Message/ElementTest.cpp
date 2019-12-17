@@ -36,6 +36,10 @@ int main(int argc, char **argv) {
         assert(e.Int() == 1);
         assert(e.asInt() == 1);
         assert(e.getType() == Element::TYPE_INT);
+        Element e1 = e.Int();
+        assert(e1.Int() == 1);
+		Element e2 = e;
+		assert(e2.Int() == 1);
     }
 
     {

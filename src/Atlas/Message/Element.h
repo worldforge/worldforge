@@ -74,7 +74,12 @@ public:
     Element(Element&& obj) noexcept;
 
     /// Set type to int, and value to v.
-    Element(std::int32_t v)
+	Element(int v)
+			: t(TYPE_INT), i(v)
+	{
+	}
+
+    Element(long v)
       : t(TYPE_INT), i(v)
     {
     }
@@ -86,7 +91,7 @@ public:
     }
 
     /// Set type to int, and value to v.
-    Element(IntType v)
+    Element(long long v)
       : t(TYPE_INT), i(v)
     {
     }
@@ -169,7 +174,17 @@ public:
      */
     Element& operator=(Element&& obj) noexcept;
 
-    Element& operator=(std::int32_t v)
+	Element& operator=(int v)
+	{
+		if (TYPE_INT != t)
+		{
+			clear(TYPE_INT);
+		}
+		i = v;
+		return *this;
+	}
+
+    Element& operator=(long v)
     {
       if (TYPE_INT != t)
       {
@@ -189,7 +204,7 @@ public:
       return *this;
     }
 
-    Element& operator=(IntType v) 
+    Element& operator=(long long v)
     {
       if (TYPE_INT != t)
       {
