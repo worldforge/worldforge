@@ -542,10 +542,10 @@ void Entity::endUpdate()
     {
         Changed.emit(m_modifiedProperties);
         
-        if (m_modifiedProperties.count("pos") ||
-			m_modifiedProperties.count("velocity") ||
-			m_modifiedProperties.count("orientation") ||
-			m_modifiedProperties.count("angular"))
+        if (m_modifiedProperties.find("pos") != m_modifiedProperties.end() ||
+			m_modifiedProperties.find("velocity") != m_modifiedProperties.end() ||
+			m_modifiedProperties.find("orientation") != m_modifiedProperties.end() ||
+			m_modifiedProperties.find("angular") != m_modifiedProperties.end())
         {
             m_lastMoveTime = TimeStamp::now();
             
