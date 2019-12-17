@@ -45,7 +45,7 @@ script:
     if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" != "clang++" ]]; then
       conan profile update settings.compiler.libcxx=libstdc++11 default
     fi
-  - conan install ../tools/conan -pr default --build=missing
+  - conan install ../tools/conan -pr default --build=missing --update
   - cmake -DBUILD_SHARED_LIBS=OFF ..
   - make
   - make check
@@ -54,7 +54,6 @@ script:
     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
       echo "Creating and uploading Conan artifacts"
       conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
-      conan remove -f mercator/*
-      conan create ../tools/conan worldforge/testing -pr default --build outdated
+      conan create ../tools/conan worldforge/testing -pr default
       conan upload "mercator/*@worldforge/testing" -r worldforge -c --all
     fi
