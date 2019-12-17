@@ -33,7 +33,9 @@ int main(int argc, char **argv) {
         Element e = 1;
         assert(e.isInt());
         assert(e.isNum());
-        assert(e.Int() == 1);
+		assert(e.Int() == 1);
+		assert(e.Int() == 1L);
+		assert(e.Int() == 1LL);
         assert(e.asInt() == 1);
         assert(e.getType() == Element::TYPE_INT);
         Element e1 = e.Int();

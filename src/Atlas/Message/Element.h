@@ -345,13 +345,25 @@ public:
         return !(*this == c);
     }
 
-    /// Check for equality with a int.
-    bool operator==(IntType v) const
-    {
-      return (t == TYPE_INT && i == v);
-    }
+	/// Check for equality with a int.
+	bool operator==(int v) const
+	{
+		return (t == TYPE_INT && i == v);
+	}
 
-    /// Check for equality with a double.
+	/// Check for equality with a int.
+	bool operator==(long v) const
+	{
+		return (t == TYPE_INT && i == v);
+	}
+
+	/// Check for equality with a int.
+	bool operator==(long long v) const
+	{
+		return (t == TYPE_INT && i == v);
+	}
+
+	/// Check for equality with a double.
     bool operator==(FloatType v) const
     {
       return t == TYPE_FLOAT && Equal(f, v);
