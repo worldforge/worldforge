@@ -54,7 +54,6 @@ script:
     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
       echo "Creating and uploading Conan artifacts"
       conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
-      conan remove -f eris/*
-      conan create ../tools/conan worldforge/testing -pr default --build outdated
+      conan create ../tools/conan worldforge/testing -pr default
       conan upload "eris/*@worldforge/testing" -r worldforge -c --all
     fi
