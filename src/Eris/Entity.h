@@ -453,10 +453,9 @@ protected:
     /**
      * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all properties related to motion.
      * @param obj The atlas object containing the data.
-     * @param allowMotion If false, motion elements (position, velocity etc.) will be filtered out.
      * @param includeTypeInfoProperties If true, the default properties of the type info will be used too. This is normally only desired when the entity is initially set up.
      */
-    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion, bool includeTypeInfoProperties = false);
+    void setFromRoot(const Atlas::Objects::Root& obj, bool includeTypeInfoProperties = false);
     
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
@@ -509,15 +508,9 @@ protected:
     correspondingly simple. */
     void setLocation(Entity* newLocation);
     
-    /// wrapper for setLocation with additional code the retrive the
+    /// wrapper for setLocation with additional code the retrieve the
     /// location if it's not available right now
     void setContentsFromAtlas(const std::list<std::string>& contents);
-    
-    /**
-    Remove from a map all items whose key is a movement related properties,
-    eg position or velocity
-    */
-    void filterMoveProperties(Atlas::Message::MapType& properties) const;
 
     typedef std::unordered_map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);

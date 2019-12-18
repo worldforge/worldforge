@@ -616,7 +616,7 @@ void Connection::registerRouterForTo(Router* router, const std::string& toId) {
 void Connection::unregisterRouterForTo(Router* router, const std::string& fromId) {
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes) {
+void Entity::setFromRoot(const Root& obj, bool includeTypeInfoAttributes) {
 }
 
 TypeService::TypeService(Connection& con) :
@@ -676,6 +676,17 @@ void View::sight(const RootEntity& gent) {
 }
 
 void View::unseen(const std::string& eid) {
+}
+
+void View::sendLookAt(const std::string& eid) {
+}
+
+void View::getEntityFromServer(const std::string& eid) {
+}
+
+bool Entity::isVisible() const
+{
+	return false;
 }
 
 TransferInfo::TransferInfo(std::string host, int port,

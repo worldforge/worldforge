@@ -80,27 +80,25 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
     
-    if (op->getClassNo() == MOVE_NO) {
-
-        //If we get a MOVE op for an entity that's not visible, it means that the entity has moved
-        //within our field of vision without sending an Appear op first. We should treat this as a
-        //regular Appear op and issue a Look op back, to get more info.
-        if (!m_entity->isVisible()) {
-            m_entity->getView()->sendLookAt(m_entity->getId());
-        }
-
-		for (const auto& arg : args) {
-			// sight of move, we handle as a specialization of set.
-			// break out LOC, which MOVE ops are allowed to update
-			if (arg->hasAttr("loc")) {
-				m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
-			}
-
-			m_entity->setFromRoot(arg, true /* movement allowed */);
-		}
-
-        return HANDLED;
-    }
+//    if (op->getClassNo() == SET_NO) {
+//
+//        //If we get a SET op for an entity that's not visible, it means that the entity has moved
+//        //within our field of vision without sending an Appear op first. We should treat this as a
+//        //regular Appear op and issue a Look op back, to get more info.
+//        if (!m_entity->isVisible()) {
+//            m_entity->getView()->sendLookAt(m_entity->getId());
+//        }
+//
+//		for (const auto& arg : args) {
+//			if (arg->hasAttr("loc")) {
+//				m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
+//			}
+//
+//			m_entity->setFromRoot(arg, true /* movement allowed */);
+//		}
+//
+//        return HANDLED;
+//    }
     
     if (op->instanceOf(IMAGINARY_NO)) {
         if (args.empty()) {

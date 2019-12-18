@@ -43,7 +43,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         // grab out world time
         m_avatar.updateWorldTime(op->getSeconds());
     }
-    
+
     const std::vector<Root>& args = op->getArgs();
 
     if (op->getClassNo() == SIGHT_NO) {
@@ -75,10 +75,10 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 		}
 
 		return HANDLED;
-        
+
 
     }
-    
+
     if (op->getClassNo() == APPEARANCE_NO) {
         for (const auto& arg : args) {
             float stamp = -1;
@@ -90,20 +90,20 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 				m_view.appear(arg->getId(), stamp);
 			}
         }
-        
+
         return HANDLED;
     }
-    
+
     if (op->getClassNo() == DISAPPEARANCE_NO) {
         for (const auto& arg : args) {
         	if (!arg->isDefaultId()) {
 				m_view.disappear(arg->getId());
 			}
         }
-        
+
         return HANDLED;
     }
-    
+
     if (op->getClassNo() == UNSEEN_NO)
     {
         if (args.empty()) {
@@ -178,7 +178,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
         return HANDLED;
     }
-    
+
     return IGNORED;
 }
 
@@ -212,7 +212,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 		}
 		return HANDLED;
 	}
-    
+
     if (op->getClassNo() == DELETE_NO) {
     	if (!args.empty()) {
 			for (const auto& arg : args) {
@@ -225,49 +225,41 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 		}
 		return HANDLED;
 	}
-    
+
     // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {
         for (const auto& arg : args) {
         	if (!arg->isDefaultId()) {
-				Entity* ent = m_view.getEntity(arg->getId());
+				auto ent = m_view.getEntity(arg->getId());
 				if (!ent) {
 					if (m_view.isPending(arg->getId())) {
 						/* no-op, we'll get the state later */
 					} else {
-						warning() << " got SET for completely unknown entity " << arg->getId();
+						m_view.sendLookAt(arg->getId());
 					}
 
 					continue; // we don't have it, ignore
 				}
 
-				ent->setFromRoot(arg, false);
-			}
-        }
-        return HANDLED;
-    }
-    
-    // If we get an Move op for an entity that's not yet created on the client, it means
-    // that a previously unknown entity now has moved into our field of view. We should handle this just
-    // like if an Appear ops was sent (which is the other main way a new entity can announce itself to the client).
-    if (op->getClassNo() == MOVE_NO) {
-        for (const auto& arg : args) {
-			if (!arg->isDefaultId()) {
-				float stamp = -1;
-				if (!arg->isDefaultStamp()) {
-					stamp = static_cast<float>(arg->getStamp());
+				//If we get a SET op for an entity that's not visible, it means that the entity has moved
+				//within our field of vision without sending an Appear op first. We should treat this as a
+				//regular Appear op and issue a Look op back, to get more info.
+				if (!ent->isVisible()) {
+//					float stamp = -1;
+//					if (!arg->isDefaultStamp()) {
+//						stamp = static_cast<float>(arg->getStamp());
+//					}
+//
+//					m_view.appear(arg->getId(), stamp);
+					m_view.getEntityFromServer(arg->getId());
+				} else {
+					ent->setFromRoot(arg, true);
 				}
-
-				m_view.appear(arg->getId(), stamp);
 			}
         }
         return HANDLED;
     }
-
-
-
-
 
     if (!op->isDefaultParent()) {
 		// we have to handle generic 'actions' late, to avoid trapping interesting

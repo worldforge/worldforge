@@ -255,13 +255,15 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t, float simulationSp
 
 void Entity::sight(const RootEntity &ge)
 {    
-    if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());
+    if (!ge->isDefaultLoc()) {
+    	setLocationFromAtlas(ge->getLoc());
+    }
     
     setContentsFromAtlas(ge->getContains());    
-    setFromRoot(ge, true, true);
+    setFromRoot(ge, true);
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoProperties)
+void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
 {	
     beginUpdate();
     
@@ -273,12 +275,12 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoPr
     properties.erase("id");
     properties.erase("contains");
     
-    if (!allowMove) filterMoveProperties(properties);
-    
     for (A = properties.begin(); A != properties.end(); ++A) {
-        // see if the value in the sight matches the exsiting value
-        PropertyMap::const_iterator I = m_properties.find(A->first);
-        if ((I != m_properties.end()) && (I->second == A->second)) continue;
+        // see if the value in the sight matches the existing value
+        auto I = m_properties.find(A->first);
+        if ((I != m_properties.end()) && (I->second == A->second)) {
+			continue;
+		}
 
 		setProperty(A->first, A->second);
     }
@@ -294,16 +296,6 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoPr
         }
     }
 
-}
-
-void Entity::filterMoveProperties(Atlas::Message::MapType& properties) const
-{
-    properties.erase("pos");
-    properties.erase("mode");
-    properties.erase("velocity");
-    properties.erase("orientation");
-    properties.erase("accel");
-    properties.erase("angular");
 }
 
 void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)

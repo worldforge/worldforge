@@ -160,8 +160,9 @@ void View::appear(const std::string& eid, float stamp) {
 			// local data is out of data, re-look
 			getEntityFromServer(eid);
 		}
-	} else
+	} else {
 		ent->setVisible(true);
+	}
 
 }
 
@@ -173,8 +174,9 @@ void View::disappear(const std::string& eid) {
 		if (isPending(eid)) {
 			//debug() << "got disappearance for pending " << eid;
 			m_pending[eid] = SightAction::HIDE;
-		} else
+		} else {
 			warning() << "got disappear for unknown entity " << eid;
+		}
 	}
 }
 
