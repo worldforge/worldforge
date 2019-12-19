@@ -160,9 +160,12 @@ macro(wf_add_benchmark TEST_FILE)
     add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
-    add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
 
-    add_dependencies(benchmark ${TEST_NAME})
+    #Always build, but activate only if actively running benchmarks.
+    if (NOT ATLAS_DISABLE_BENCHMARKS)
+        add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
+        add_dependencies(benchmark ${TEST_NAME})
+    endif()
 endmacro()
 
 wf_add_test(tests/Message/ElementTest.cpp)
@@ -177,9 +180,8 @@ wf_add_test(tests/Objects/attributes.cpp)
 wf_add_test(tests/Objects/flags.cpp)
 add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml")
 
-if (NOT ATLAS_DISABLE_BENCHMARKS)
 wf_add_benchmark(tests/benchmark/Objects_asMessage.cpp)
-wf_add_benchmark(tests/benchmark/Objects3_Move.cpp)
+wf_add_benchmark(tests/benchmark/Objects3_Move.cpp tests/Objects/loadDefaults.cpp)
 wf_add_benchmark(tests/benchmark/Call_Move.cpp)
 wf_add_benchmark(tests/benchmark/Message_Move.cpp)
 wf_add_benchmark(tests/benchmark/Static_Move.cpp)
@@ -187,7 +189,6 @@ wf_add_benchmark(tests/benchmark/Objects_iterator.cpp)
 wf_add_benchmark(tests/benchmark/Codecs_Packed.cpp)
 wf_add_benchmark(tests/benchmark/Message_Element.cpp)
 wf_add_benchmark(tests/benchmark/Objects_setAttr.cpp)
-endif()
 
 # Doxygen support, exports a "dox" target.
 
