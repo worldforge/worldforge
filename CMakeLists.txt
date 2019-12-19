@@ -55,6 +55,7 @@ option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
             VERSION ${ATLAS_ABI_VERSION}
             SOVERSION ${ATLAS_SOVERSION}
@@ -140,13 +141,27 @@ macro(wf_add_test TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
+    set(TEST_OBJECT_LIBS
+            $<TARGET_OBJECTS:AtlasObjects${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasFilters${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasCodecs${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasMessage${SUFFIX}_object>
+            $<TARGET_OBJECTS:Atlas${SUFFIX}_object>)
+
     # If BUILD_TESTING is defined we'll build the test no matter what. This makes it work better on Windows.
     if (BUILD_TESTING)
-        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN})
+        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
     else (BUILD_TESTING)
-        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
+        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
     endif (BUILD_TESTING)
-    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
+
+    if (BZIP2_FOUND)
+        target_link_libraries(${TEST_NAME} ${BZIP2_LIBRARIES})
+    endif (BZIP2_FOUND)
+    if (ZLIB_FOUND)
+        target_link_libraries(${TEST_NAME} ${ZLIB_LIBRARIES})
+    endif (ZLIB_FOUND)
+
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
@@ -157,9 +172,22 @@ macro(wf_add_benchmark TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
-    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
-    target_link_libraries(${TEST_NAME} AtlasObjects${SUFFIX} AtlasFilters${SUFFIX} AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
+    set(TEST_OBJECT_LIBS
+            $<TARGET_OBJECTS:AtlasObjects${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasFilters${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasCodecs${SUFFIX}_object>
+            $<TARGET_OBJECTS:AtlasMessage${SUFFIX}_object>
+            $<TARGET_OBJECTS:Atlas${SUFFIX}_object>)
+
+    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
+
+    if (BZIP2_FOUND)
+        target_link_libraries(${TEST_NAME} ${BZIP2_LIBRARIES})
+    endif (BZIP2_FOUND)
+    if (ZLIB_FOUND)
+        target_link_libraries(${TEST_NAME} ${ZLIB_LIBRARIES})
+    endif (ZLIB_FOUND)
 
     #Always build, but activate only if actively running benchmarks.
     if (NOT ATLAS_DISABLE_BENCHMARKS)
