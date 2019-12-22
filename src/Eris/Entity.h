@@ -85,6 +85,13 @@ public:
     Entity* getContained(size_t index) const;
 
     /**
+     * @brief Gets the top level entity for this entity, i.e. the parent location which has no parent.
+     * Will return null if any parent isn't resolved yet.
+     * @return
+     */
+    Entity* getTopEntity();
+
+    /**
      * @brief Gets the value of a named property.
      * If no property by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasProperty to make sure that the property exists.
      * @param name The property name.

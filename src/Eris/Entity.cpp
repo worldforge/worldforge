@@ -101,6 +101,18 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
     }
 }
 
+
+Entity* Entity::getTopEntity()
+{
+	if (m_limbo) {
+		return nullptr;
+	}
+	if (!m_location) {
+		return this;
+	}
+	return m_location->getTopEntity();
+}
+
 const Element& Entity::valueOfProperty(const std::string& name) const
 {
     ///first check with the instance properties
@@ -257,6 +269,8 @@ void Entity::sight(const RootEntity &ge)
 {    
     if (!ge->isDefaultLoc()) {
     	setLocationFromAtlas(ge->getLoc());
+    } else {
+    	setLocation(nullptr);
     }
     
     setContentsFromAtlas(ge->getContains());    
