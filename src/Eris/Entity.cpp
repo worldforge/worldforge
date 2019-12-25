@@ -722,11 +722,6 @@ void Entity::setContentsFromAtlas(const std::list<std::string>& contents)
             if (child->m_limbo) {
                 assert(!child->m_visible);
                 child->m_limbo = false;
-            } else if (child->isVisible()) {
-                // server has gone mad, it has a location, and it's visible
-                error() << "got set of contents, specifying child " << child
-                    << " which is currently visible in another location";
-                continue;
             }
             
             /* we have found the child, update it's location */
