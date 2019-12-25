@@ -115,6 +115,13 @@ void View::update() {
 	}
 
 	m_lastUpdateTime = t;
+
+	if (m_owner.getEntity()) {
+        auto topEntity = m_owner.getEntity()->getTopEntity();
+        setTopLevelEntity(topEntity);
+	} else {
+	    setTopLevelEntity(nullptr);
+	}
 }
 
 void View::addToPrediction(ViewEntity* ent) {
@@ -223,10 +230,6 @@ void View::sight(const RootEntity& gent) {
 		EntitySeen.emit(ent);
 	}
 
-	if (gent->isDefaultLoc()) { // new top level entity
-		setTopLevelEntity(ent);
-	}
-
 	ent->setVisible(visible);
 	issueQueuedLook();
 }
@@ -269,10 +272,6 @@ void View::create(const RootEntity& gent) {
 	auto* ent = createEntity(gent);
 	m_contents[eid] = ent;
 	ent->init(gent, true);
-
-	if (gent->isDefaultLoc()) {
-		setTopLevelEntity(ent);
-	}
 
 	InitialSightEntity.emit(ent);
 
@@ -421,12 +420,12 @@ void View::sendLookAt(const std::string& eid) {
 	getConnection().send(look);
 }
 
-void View::setTopLevelEntity(ViewEntity* newTopLevel) {
-	if (m_topLevel) {
-		if (newTopLevel == m_topLevel) {
-			return; // no change!
-		}
+void View::setTopLevelEntity(Entity* newTopLevel) {
+    if (newTopLevel == m_topLevel) {
+        return; // no change!
+    }
 
+	if (m_topLevel) {
 		if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr)) {
 			error() << "old top-level entity is visible, but has no location";
 		}

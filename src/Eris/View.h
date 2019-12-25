@@ -189,7 +189,7 @@ private:
     void getEntityFromServer(const std::string& eid);
 
     /** helper to update the top-level entity, fire signals, etc */
-    void setTopLevelEntity(ViewEntity* newTopLevel);
+    void setTopLevelEntity(Entity* newTopLevel);
 
 	ViewEntity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
@@ -207,7 +207,7 @@ private:
 
     Avatar& m_owner;
     IdEntityMap m_contents;
-	ViewEntity* m_topLevel; ///< the top-level visible entity for this view
+	Entity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
 
     /**
