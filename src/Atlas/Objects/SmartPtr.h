@@ -9,18 +9,11 @@
 #define ATLAS_OBJECTS_SMARTPTR_H
 
 #include <Atlas/Exception.h>
+#include <cassert>
 
 namespace Atlas { namespace Objects {
 
-class NullSmartPtrDereference : public Atlas::Exception
-{
-  public:
-    NullSmartPtrDereference() noexcept : Atlas::Exception("Null SmartPtr dereferenced") {}
-
-    ~NullSmartPtrDereference() noexcept override = default;
-};
-
-template <class T> 
+template <class T>
 class SmartPtr
 {
   public:
@@ -32,30 +25,30 @@ class SmartPtr
     typedef typename T::iterator iterator;
     typedef typename T::const_iterator const_iterator;
 
-    SmartPtr() : ptr(T::allocator.alloc()) {
+    SmartPtr() noexcept : ptr(T::allocator.alloc()) {
     }
-    SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
+    SmartPtr(const SmartPtr<T>& a) noexcept : ptr(a.get()) {
         incRef();
     }
     SmartPtr(SmartPtr<T>&& a) noexcept : ptr(a.get()) {
         a.ptr = nullptr;
     }
-    SmartPtr(T *a_ptr) : ptr(a_ptr)
+    SmartPtr(T *a_ptr) noexcept : ptr(a_ptr)
     {
         incRef();
     }
 	template<class oldType>
-	explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(a.get()) {
+	explicit SmartPtr(const SmartPtr<oldType>& a) noexcept : ptr(a.get()) {
 		incRef();
 	}
 	template<class oldType>
-	explicit SmartPtr(SmartPtr<oldType>&& a) : ptr(a.get()) {
+	explicit SmartPtr(SmartPtr<oldType>&& a) noexcept : ptr(a.get()) {
 		a.ptr = nullptr;
 	}
     ~SmartPtr() {
         decRef();
     }
-    SmartPtr& operator=(const SmartPtr<T>& a) {
+    SmartPtr& operator=(const SmartPtr<T>& a) noexcept {
         if (a.get() != this->get()) {
             decRef();
             ptr = a.get();
@@ -64,41 +57,37 @@ class SmartPtr
         return *this;
     }
     template<class newType>
-    operator SmartPtr<newType>() const {
+    operator SmartPtr<newType>() const noexcept {
         return SmartPtr<newType>(ptr);
     }
     template<class newType>
-    operator SmartPtr<const newType>() const {
+    operator SmartPtr<const newType>() const noexcept {
         return SmartPtr<const newType>(ptr);
     }
-    bool isValid() const {
+    constexpr bool isValid() const noexcept {
         return ptr != nullptr;
     }
-    bool operator!() const noexcept {
+    constexpr bool operator!() const noexcept {
         return this->ptr == nullptr;
     }
 
-    explicit operator bool () const noexcept
+    explicit constexpr operator bool () const noexcept
     {
         return !this->operator!();
     }
 
-    T& operator*() const { 
-        if (ptr == nullptr) {
-            throw NullSmartPtrDereference();
-        }
+    constexpr T& operator*() const noexcept {
+        assert(ptr);
         return *ptr;
     }
-    T* operator->() const {
-        if (ptr == nullptr) {
-            throw NullSmartPtrDereference();
-        }
+    constexpr T* operator->() const noexcept {
+        assert(ptr);
         return ptr;
     }
-    T* get() const {
+    constexpr T* get() const noexcept {
         return ptr;
     }
-    SmartPtr<T> copy() const
+    SmartPtr<T> copy() const noexcept
     {
         SmartPtr<T> ret = SmartPtr(ptr->copy());
         ret.decRef();
@@ -108,12 +97,12 @@ class SmartPtr
     // destructor is made virtual to ensure your new class behaves
     // correctly.
   private:
-    void decRef() const {
+    void decRef() const noexcept {
         if (ptr != nullptr) {
             ptr->decRef();
         }
     }
-    void incRef() const {
+    void incRef() const noexcept {
         if (ptr != nullptr) {
             ptr->incRef();
         }
