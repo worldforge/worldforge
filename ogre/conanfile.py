@@ -6,7 +6,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "1.12.3"
+    upstream_version = "1.12.4"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -31,7 +31,6 @@ class OgreConan(ConanFile):
                 installer = SystemPackageTool()
                 installer.install("libgl1-mesa-dev")
                 installer.install("libxrandr-dev")
-                installer.install("libxaw7-dev")
 
     def configure(self):
         if 'CI' not in os.environ:
@@ -89,6 +88,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_LIBS_AS_FRAMEWORKS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
         cmake.definitions['OGRE_NODE_STORAGE_LEGACY'] = 'false'
+        cmake.definitions['OGRE_NODELESS_POSITIONING'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_THREADS'] = '2'
         cmake.definitions['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
         cmake.definitions['OGRE_STATIC'] = not self.options.shared
