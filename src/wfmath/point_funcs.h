@@ -75,13 +75,12 @@ inline Point<dim>& Point<dim>::setToOrigin()
 template<int dim>
 inline bool Point<dim>::isEqualTo(const Point<dim> &p, CoordType epsilon) const
 {
-  CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
-
   //If anyone is invalid they are never equal
   if (!p.m_valid || !m_valid) {
     return false;
   }
 
+  CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
   for(int i = 0; i < dim; ++i) {
     if(std::fabs(m_elem[i] - p.m_elem[i]) > delta) {
       return false;

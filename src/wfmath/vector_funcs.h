@@ -81,13 +81,12 @@ Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 template<int dim>
 bool Vector<dim>::isEqualTo(const Vector<dim>& v, CoordType epsilon) const
 {
-  double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
-
   //If anyone is invalid they are never equal
   if (!v.m_valid || !m_valid) {
     return false;
   }
 
+  CoordType delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
   for(int i = 0; i < dim; ++i) {
     if(std::fabs(m_elem[i] - v.m_elem[i]) > delta) {
       return false;

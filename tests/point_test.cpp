@@ -98,5 +98,11 @@ int main()
   Point<3> zero3 = Point<3>::ZERO();
   assert(zero3.x() == 0 && zero3.y() == 0 && zero3.z() == 0);
 
+    assert(Point<3>(1,2,3).isEqualTo(Point<3>(1,2,3)));
+    assert(!Point<3>(1,2,3).isEqualTo(Point<3>(3,2,1)));
+    assert(!Point<3>(1,2,3).isEqualTo(Point<3>()));
+    assert(!Point<3>().isEqualTo(Point<3>(3,2,1)));
+    assert(!Point<3>().isEqualTo(Point<3>())); //invalid points are never equal
+
   return 0;
 }
