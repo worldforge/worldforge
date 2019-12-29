@@ -249,7 +249,7 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t, float simulationSp
 {
     assert(isMoving());
     
-    float dt = (t - m_lastMoveTime).milliseconds() / 1000.0f; 
+    float dt = static_cast<float>((t - m_lastMoveTime).milliseconds()) / 1000.0f;
     
     if (m_acc.isValid()) {
         m_predicted.velocity = m_velocity + (m_acc * dt * simulationSpeed);
@@ -283,20 +283,21 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
     
     Atlas::Message::MapType properties;
     obj->addToMessage(properties);
-    Atlas::Message::MapType::const_iterator A;
-    
-    properties.erase("loc");
-    properties.erase("id");
-    properties.erase("contains");
-    
-    for (A = properties.begin(); A != properties.end(); ++A) {
+
+    properties.erase("id"); //Id can't be changed once it's initially set, which it's at Entity creation time.
+    properties.erase("contains"); //Contains are handled by the setContentsFromAtlas method which should be called separately.
+
+    for (auto& entry : properties) {
         // see if the value in the sight matches the existing value
-        auto I = m_properties.find(A->first);
-        if ((I != m_properties.end()) && (I->second == A->second)) {
+        auto I = m_properties.find(entry.first);
+        if ((I != m_properties.end()) && (I->second == entry.second)) {
 			continue;
 		}
-
-		setProperty(A->first, A->second);
+        try {
+            setProperty(entry.first, entry.second);
+        } catch (const std::exception& ex) {
+            warning() << "Error when setting property '" << entry.first << "'. Message: " << ex.what();
+        }
     }
     
     endUpdate();
@@ -421,7 +422,7 @@ void Entity::setProperty(const std::string &p, const Element &v)
 bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
 {
     // in the future, hash these names to a compile-time integer index, and
-    // make this a switch statement. The same indice could also be used
+    // make this a switch statement. The same index could also be used
     // in endUpdate
     
     if (p == "name") {
@@ -462,8 +463,11 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
         }
         m_hasBBox = true;
         return true;
-    } else if ((p == "loc") || (p == "contains")) {
-        throw InvalidOperation("tried to set loc or contains via setProperty");
+    } else if (p == "loc") {
+        setLocationFromAtlas(v.asString());
+        return true;
+    } else if (p == "contains") {
+        throw InvalidOperation("tried to set contains via setProperty");
     } else if (p == "tasks") {
         updateTasks(v);
         return true;
