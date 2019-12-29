@@ -627,7 +627,7 @@ void Account::possessResponse(const RootOperation& op)
             return;
         }
 
-        if (m_activeAvatars.count(ent->getId()) != 0) {
+        if (m_activeAvatars.find(ent->getId()) != m_activeAvatars.end()) {
 			warning() << "got possession response for character already created";
 			return;
         }
@@ -679,7 +679,7 @@ void Account::avatarCreateResponse(const RootOperation& op)
 
 void Account::internalDeactivateCharacter(Avatar* av)
 {
-	if (m_activeAvatars.count(av->getId()) != 1) {
+	if (m_activeAvatars.find(av->getId()) == m_activeAvatars.end()) {
 		warning() << "trying to deactivate non active character";
 	}
     m_activeAvatars.erase(av->getId());
@@ -784,7 +784,7 @@ void Account::avatarLogoutResponse(const RootOperation& op)
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
 
-    if (!m_characterIds.count(charId)) {
+    if (m_characterIds.find(charId) == m_characterIds.end()) {
         warning() << "character ID " << charId << " is unknown on account " << m_accountId;
     }
 

@@ -136,7 +136,7 @@ const Element& Entity::valueOfProperty(const std::string& name) const
 bool Entity::hasProperty(const std::string& p) const
 {
     ///first check with the instance properties
-    if (m_properties.count(p) > 0) {
+    if (m_properties.find(p) != m_properties.end()) {
         return true;
     } else if (m_type) {
         ///it wasn't locally defined, now check with typeinfo
@@ -507,7 +507,7 @@ void Entity::typeInfo_PropertyChanges(const std::string& propertyName, const Atl
 void Entity::propertyChangedFromTypeInfo(const std::string& propertyName, const Atlas::Message::Element& element)
 {
     ///Only fire the events if there's no property already defined for this entity
-    if (m_properties.count(propertyName) == 0) {
+    if (m_properties.find(propertyName) == m_properties.end()) {
         beginUpdate();
 		nativePropertyChanged(propertyName, element);
 		onPropertyChanged(propertyName, element);

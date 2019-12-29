@@ -55,7 +55,7 @@ bool TypeInfo::isA(TypeInfo* tp)
         return true;
     }
 	
-    return m_ancestors.count(tp) != 0; // non-authorative if not bound
+    return m_ancestors.find(tp) != m_ancestors.end(); // non-authorative if not bound
 }
 
 bool TypeInfo::hasUnresolvedChildren() const
@@ -99,7 +99,7 @@ void TypeInfo::processTypeData(const Root &atype)
             	if (childElement.isString()) {
 					TypeInfo* child = m_typeService->findTypeByName(childElement.String());
 					// if the child was already known, don't add to unresolved
-					if (child && m_children.count(child)) {
+					if (child && m_children.find(child) != m_children.end()) {
 						continue;
 					}
 
