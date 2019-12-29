@@ -666,7 +666,7 @@ bool View::isPending(const std::string& eid) const {
 	return false;
 }
 
-void View::appear(const std::string& eid, float stamp) {
+void View::appear(const std::string& eid, double stamp) {
 }
 
 void View::disappear(const std::string& eid) {

@@ -148,7 +148,7 @@ public:
      * @brief Access the current time-stamp of the entity.
      * @return The current time stamp.
      */
-    float getStamp() const;
+    double getStamp() const;
 
     /**
      * @brief Gets the type of this entity.
@@ -542,7 +542,7 @@ protected:
         WFMath::Quaternion orientation;
     };
     
-    void updatePredictedState(const WFMath::TimeStamp& t, float simulationSpeed);
+    void updatePredictedState(const WFMath::TimeStamp& t, double simulationSpeed);
     
     /**
      * @brief Gets the typeservice used throughout the Eris system.
@@ -579,7 +579,7 @@ protected:
     
     const std::string m_id;	///< the Atlas object ID
     std::string m_name;		///< a human readable name
-    float m_stamp;		///< last modification time (in seconds) 
+    double m_stamp;		///< last modification time (in seconds)
     std::string m_description;
     bool m_visible;
     bool m_limbo;   ///< waiting for parent bind
@@ -599,7 +599,7 @@ protected:
     /**
      * The magnitude of the angular velocity. Kept separately for performance.
      */
-    float m_angularMag;
+    double m_angularMag;
     
     DynamicState m_predicted;
     
@@ -653,7 +653,7 @@ inline const std::string& Entity::getName() const
     return m_name;
 }
 
-inline float Entity::getStamp() const
+inline double Entity::getStamp() const
 {
     return m_stamp;
 }

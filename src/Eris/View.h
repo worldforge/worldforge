@@ -96,7 +96,7 @@ public:
     */
     void registerFactory(std::unique_ptr<Factory> factory);
 
-	float getSimulationSpeed() const;
+    double getSimulationSpeed() const;
 
 	typedef sigc::slot<void, ViewEntity*> EntitySightSlot;
 
@@ -155,7 +155,7 @@ protected:
     friend class Avatar;
     friend class Task;
     
-    void appear(const std::string& eid, float stamp);
+    void appear(const std::string& eid, double stamp);
     void disappear(const std::string& eid);
     void sight(const Atlas::Objects::Entity::RootEntity& ge);
     void create(const Atlas::Objects::Entity::RootEntity& ge);
@@ -213,7 +213,7 @@ private:
     /**
      * The simulation speed, as determined by the "simulation_speed" property of the top level entity.
      */
-    float m_simulationSpeed;
+    double m_simulationSpeed;
     
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or

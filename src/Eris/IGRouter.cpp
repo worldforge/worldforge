@@ -81,9 +81,9 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     if (op->getClassNo() == APPEARANCE_NO) {
         for (const auto& arg : args) {
-            float stamp = -1;
+            double stamp = -1;
             if (!arg->isDefaultStamp()) {
-                stamp = static_cast<float>(arg->getStamp());
+                stamp = arg->getStamp();
             }
 
 			if (!arg->isDefaultId()) {

@@ -26,7 +26,7 @@ namespace Eris {
 View::View(Avatar& av) :
 		m_owner(av),
 		m_topLevel(nullptr),
-		m_simulationSpeed(1.0f),
+		m_simulationSpeed(1.0),
 		m_maxPendingCount(10) {
 }
 
@@ -92,7 +92,7 @@ EventService& View::getEventService() const {
 	return m_owner.getConnection().getEventService();
 }
 
-float View::getSimulationSpeed() const {
+double View::getSimulationSpeed() const {
 	return m_simulationSpeed;
 }
 
@@ -146,7 +146,7 @@ void View::taskRateChanged(Task* t) {
 
 // Atlas operation handlers
 
-void View::appear(const std::string& eid, float stamp) {
+void View::appear(const std::string& eid, double stamp) {
 	auto* ent = getEntity(eid);
 	if (!ent) {
 		getEntityFromServer(eid);
@@ -448,7 +448,7 @@ void View::setTopLevelEntity(Entity* newTopLevel) {
 
 void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 	if (element.isFloat()) {
-		m_simulationSpeed = static_cast<float>(element.Float());
+		m_simulationSpeed = element.Float();
 	}
 }
 

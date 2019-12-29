@@ -245,20 +245,20 @@ bool Entity::isMoving() const
     return m_moving;
 }
 
-void Entity::updatePredictedState(const WFMath::TimeStamp& t, float simulationSpeed)
+void Entity::updatePredictedState(const WFMath::TimeStamp& t, double simulationSpeed)
 {
     assert(isMoving());
-    
-    float dt = static_cast<float>((t - m_lastMoveTime).milliseconds()) / 1000.0f;
+
+    double dt = static_cast<double>((t - m_lastMoveTime).milliseconds()) / 1000.0;
     
     if (m_acc.isValid()) {
         m_predicted.velocity = m_velocity + (m_acc * dt * simulationSpeed);
-        m_predicted.position = m_position + (m_velocity * dt * simulationSpeed) + (m_acc * 0.5f * dt * dt * simulationSpeed);
+        m_predicted.position = m_position + (m_velocity * dt * simulationSpeed) + (m_acc * 0.5 * dt * dt * simulationSpeed);
     } else {
         m_predicted.velocity = m_velocity;
         m_predicted.position = m_position + (m_velocity * dt * simulationSpeed);
     }
-    if (m_angularVelocity.isValid() && m_angularMag != .0f) {
+    if (m_angularVelocity.isValid() && m_angularMag != .0) {
         m_predicted.orientation = m_orientation * WFMath::Quaternion(m_angularVelocity, m_angularMag * dt * simulationSpeed);
     } else {
         m_predicted.orientation = m_orientation;
@@ -337,7 +337,7 @@ void Entity::onMoved()
 {
     if (m_moving) {
         //We should update the predicted pos and velocity.
-        updatePredictedState(m_lastMoveTime, 1.0f);
+        updatePredictedState(m_lastMoveTime, 1.0);
     }
     Moved.emit();
 }
@@ -429,7 +429,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
         m_name = v.asString();
         return true;
     } else if (p == "stamp") {
-        m_stamp = (float)v.asFloat();
+        m_stamp = v.asFloat();
         return true;
     } else if (p == "pos") {
         m_position.fromAtlas(v);
