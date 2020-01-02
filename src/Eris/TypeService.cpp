@@ -67,7 +67,7 @@ TypeInfo* TypeService::getTypeByName(const std::string &id)
        
 // not found, do some work
     /// @todo Verify the id is not in the authoritative invalid ID list
-    auto node = new TypeInfo(id, this);
+    auto node = new TypeInfo(id, *this);
     m_types[id] = std::unique_ptr<TypeInfo>(node);
     
     sendRequest(id);
@@ -198,7 +198,7 @@ TypeInfo* TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
 {
     assert(m_types.count(name) == 0);
 
-    auto type = new TypeInfo(name, this);
+    auto type = new TypeInfo(name, *this);
     m_types[name] = std::unique_ptr<TypeInfo>(type);
     
     if (parent) {

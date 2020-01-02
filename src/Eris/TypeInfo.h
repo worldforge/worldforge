@@ -120,16 +120,20 @@ public:
      */
 	const Atlas::Message::ListType& getEntities() const;
 
+    TypeService& getTypeService();
+
+    const TypeService& getTypeService() const;
+
 
 protected:
     friend class TypeService;
     friend class TypeBoundRedispatch;
     
     /// forward constructor, when data is not available
-    TypeInfo(std::string id, TypeService*);
+    TypeInfo(std::string id, TypeService&);
 
     /// full constructor, if an INFO has been received
-    TypeInfo(const Atlas::Objects::Root &atype, TypeService*);
+    TypeInfo(const Atlas::Objects::Root &atype, TypeService&);
 
     void validateBind();
 
@@ -180,7 +184,7 @@ private:
 
 	std::set<std::string> m_unresolvedChildren;
     
-    TypeService* m_typeService;
+    TypeService& m_typeService;
     
     /** 
      * @brief The default properties specified for this entity type.
@@ -231,6 +235,16 @@ inline TypeInfo* TypeInfo::getParent()
 inline const Atlas::Message::ListType& TypeInfo::getEntities() const
 {
     return m_entities;
+}
+
+inline TypeService& TypeInfo::getTypeService()
+{
+    return m_typeService;
+}
+
+inline const TypeService& TypeInfo::getTypeService() const
+{
+    return m_typeService;
 }
 
 

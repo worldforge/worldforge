@@ -628,7 +628,7 @@ TypeService::~TypeService() {
 }
 
 TypeInfo* TypeService::getTypeForAtlas(const Root& obj) {
-	Eris::TypeInfo* ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
+	Eris::TypeInfo* ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", *this);
 	if (stub_type_bound) {
 		ti->validateBind();
 	}
@@ -697,7 +697,7 @@ TransferInfo::TransferInfo(std::string host, int port,
 		  m_possess_entity_id(id) {
 }
 
-TypeInfo::TypeInfo(std::string id, TypeService* ts) :
+TypeInfo::TypeInfo(std::string id, TypeService& ts) :
 		m_bound(false),
 		m_name(id),
 		m_typeService(ts) {

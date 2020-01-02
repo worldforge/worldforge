@@ -20,7 +20,7 @@ namespace Eris {
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-TypeInfo::TypeInfo(std::string id, TypeService *ts) :
+TypeInfo::TypeInfo(std::string id, TypeService &ts) :
     m_parent(nullptr),
     m_bound(false),
     m_name(std::move(id)),
@@ -31,7 +31,7 @@ TypeInfo::TypeInfo(std::string id, TypeService *ts) :
 	}
 }
 
-TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
+TypeInfo::TypeInfo(const Root &atype, TypeService &ts) :
     m_parent(nullptr),
     m_bound(false),
     m_name(atype->getId()),
@@ -72,7 +72,7 @@ void TypeInfo::resolveChildren()
 
     auto uchildren = m_unresolvedChildren;
     for (const auto& child : uchildren) {
-        addChild(m_typeService->getTypeByName(child));
+        addChild(m_typeService.getTypeByName(child));
     }
     
     assert(m_unresolvedChildren.empty());
@@ -97,7 +97,7 @@ void TypeInfo::processTypeData(const Root &atype)
 
             for (const auto& childElement : children) {
             	if (childElement.isString()) {
-					TypeInfo* child = m_typeService->findTypeByName(childElement.String());
+					TypeInfo* child = m_typeService.findTypeByName(childElement.String());
 					// if the child was already known, don't add to unresolved
 					if (child && m_children.find(child) != m_children.end()) {
 						continue;
@@ -121,7 +121,7 @@ void TypeInfo::processTypeData(const Root &atype)
 
     //Don't allow parent and obj type to be changed for already bound types.
     if (!m_bound) {
-        setParent(m_typeService->getTypeByName(atype->getParent()));
+        setParent(m_typeService.getTypeByName(atype->getParent()));
         m_objType = atype->getObjtype();
 
 		extractDefaultProperties(atype);
@@ -155,7 +155,7 @@ void TypeInfo::processTypeData(const Root &atype)
 
 bool TypeInfo::operator==(const TypeInfo &x) const
 {
-    if (m_typeService != x.m_typeService)
+    if (&m_typeService != &x.m_typeService)
         warning() << "comparing TypeInfos from different type services, bad";
         
     return (m_name == x.m_name);
@@ -283,7 +283,7 @@ void TypeInfo::onPropertyChanges(const std::string& propertyName, const Atlas::M
 }
 
 void TypeInfo::refresh() {
-    m_typeService->sendRequest(m_name);
+    m_typeService.sendRequest(m_name);
 }
 
 
@@ -299,7 +299,7 @@ void TypeInfo::validateBind()
     m_bound = true;
          
     Bound.emit();
-    m_typeService->BoundType.emit(this);
+    m_typeService.BoundType.emit(this);
     
     for (auto child : m_children) {
         child->validateBind();
