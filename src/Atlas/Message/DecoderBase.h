@@ -54,6 +54,7 @@ public:
     void mapIntItem(std::string name, std::int64_t) override;
     void mapFloatItem(std::string name, double) override;
     void mapStringItem(std::string name, std::string) override;
+    void mapNoneItem(std::string name) override;
     void mapEnd() override;
     
     void listMapItem() override;
@@ -61,6 +62,7 @@ public:
     void listIntItem(std::int64_t) override;
     void listFloatItem(double) override;
     void listStringItem(std::string) override;
+    void listNoneItem() override;
     void listEnd() override;
     
 protected:

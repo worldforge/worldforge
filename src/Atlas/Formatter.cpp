@@ -77,6 +77,12 @@ void Formatter::mapStringItem(std::string name, std::string s)
     m_stream << std::endl;
 }
 
+void Formatter::mapNoneItem(std::string name) {
+    m_stream << std::string(m_indent, ' ');
+    m_bridge.mapNoneItem(std::move(name));
+    m_stream << std::endl;
+}
+
 void Formatter::mapEnd()
 {
     m_indent -= m_spacing;
@@ -112,6 +118,10 @@ void Formatter::listFloatItem(double d)
 void Formatter::listStringItem(std::string s)
 {
     m_bridge.listStringItem(std::move(s));
+}
+
+void Formatter::listNoneItem() {
+    m_bridge.listNoneItem();
 }
 
 void Formatter::listEnd()

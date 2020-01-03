@@ -26,6 +26,7 @@
 #include <sstream>
 #include <string>
 #include <cassert>
+#include <iostream>
 
 using namespace Atlas::Message;
 
@@ -70,7 +71,7 @@ void testCodec()
 {
     MapType map;
 
-    ListType list = { "foo", 1.5, 5 };
+    ListType list = { "foo", 1.5, 5 , Atlas::Message::Element()};
     map["foo1"] = "foo";
     map["foo2"] = 1;
     map["foo3"] = 2.5;
@@ -86,6 +87,9 @@ void testCodec()
     map["]"] = "]";
     map["@"] = "@";
     map["$"] = "$";
+    map["none"] = Atlas::Message::Element();
+
+    assert(map == map);
 
     std::stringstream ss;
 
@@ -100,6 +104,8 @@ void testCodec()
     }
 
     std::string atlas_data = ss.str();
+
+    std::cout << atlas_data << std::endl;
 
     std::stringstream ss2(atlas_data, std::ios::in);
 
@@ -123,7 +129,6 @@ void testCodec()
     assert(map2["foo4"].asList()[0].asString() == "foo");
     assert(map2["foo4"].asList()[1].asFloat() == 1.5);
     assert(map2["foo4"].asList()[2].asInt() == 5);
-    assert(map2["foo4"].asList()[2].asInt() == 5);
     assert(map2["<"].asString() == "<");
     assert(map2[">"].asString() == ">");
     assert(map2["foo6&"].asString() == "&;");
@@ -136,6 +141,13 @@ void testCodec()
     assert(map2["]"].asString() == "]");
     assert(map2["@"].asString() == "@");
     assert(map2["$"].asString() == "$");
+    auto I = map2.find("none");
+    assert(I != map2.end());
+    assert(I->second.isNone());
+
+    assert(map2 == map);
+    assert(map == map2);
+
 
 }
 
@@ -201,6 +213,7 @@ int main(int argc, char** argv)
 {
     testXMLEscaping();
 
+//    testCodec<Atlas::Codecs::Bach>();
     testCodec<Atlas::Codecs::Packed>();
     testCodec<Atlas::Codecs::XML>();
     testPackedSanity();

@@ -143,10 +143,18 @@ namespace Atlas {
                     m_state.pop();
                     try {
                         if (m_state.top() == PARSE_MAP) {
-                            m_bridge.mapIntItem(hexDecode(std::move(m_name)), std::stol(m_data));
+                            if (m_data.empty()) {
+                                m_bridge.mapNoneItem(hexDecode(std::move(m_name)));
+                            } else {
+                                m_bridge.mapIntItem(hexDecode(std::move(m_name)), std::stol(m_data));
+                            }
                             m_name.clear();
                         } else if (m_state.top() == PARSE_LIST) {
-                            m_bridge.listIntItem(std::stol(m_data));
+                            if (m_data.empty()) {
+                                m_bridge.listNoneItem();
+                            } else {
+                                m_bridge.listIntItem(std::stol(m_data));
+                            }
                         } else {
                             // FIXME some kind of sanity checking assertion here
                         }
@@ -371,6 +379,10 @@ namespace Atlas {
             m_ostream << '$' << hexEncode(std::move(name)) << '=' << hexEncode(std::move(data));
         }
 
+        void Packed::mapNoneItem(std::string name) {
+            m_ostream << '@' << hexEncode(std::move(name)) << '='; //Use the same marker as for int, but without anything trailing it.
+        }
+
         void Packed::mapEnd() {
             m_ostream << ']';
         }
@@ -394,6 +406,11 @@ namespace Atlas {
         void Packed::listStringItem(std::string data) {
             m_ostream << '$' << hexEncode(std::move(data));
         }
+
+        void Packed::listNoneItem() {
+            m_ostream << '@'; //Use the same marker as for int, but without anything trailing it.
+        }
+
 
         void Packed::listEnd() {
             m_ostream << ')';

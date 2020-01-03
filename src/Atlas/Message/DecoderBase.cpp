@@ -79,6 +79,12 @@ void DecoderBase::mapStringItem(std::string name, std::string s)
     m_maps.top().emplace(std::move(name), std::move(s));
 }
 
+void DecoderBase::mapNoneItem(std::string name) {
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapNoneItem" << std::endl)
+    assert(!m_maps.empty());
+    m_maps.top().emplace(std::move(name), Atlas::Message::Element());
+}
+
 void DecoderBase::mapEnd()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapEnd" << std::endl)
@@ -150,6 +156,12 @@ void DecoderBase::listStringItem(std::string s)
     ATLAS_DEBUG(std::cout << "DecoderBase::listStringItem" << std::endl)
     assert(!m_lists.empty());       
     m_lists.top().emplace_back(std::move(s));
+}
+
+void DecoderBase::listNoneItem() {
+    ATLAS_DEBUG(std::cout << "DecoderBase::listNoneItem" << std::endl)
+    assert(!m_lists.empty());
+    m_lists.top().emplace_back(Atlas::Message::Element());
 }
 
 void DecoderBase::listEnd()

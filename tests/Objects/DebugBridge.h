@@ -51,6 +51,11 @@ public:
     {
         std::cout << padding << name << " -> String: " << s << std::endl;
     }
+    void mapNoneItem(std::string name) override
+    {
+        std::cout << padding << name << " -> None" << std::endl;
+    }
+
     void mapEnd() override
     {
         removePadding();
@@ -78,6 +83,10 @@ public:
     void listStringItem(std::string s) override
     {
         std::cout << padding << "String: " << s << std::endl;
+    }
+    void listNoneItem() override
+    {
+        std::cout << padding << "None" << std::endl;
     }
     void listEnd() override
     {

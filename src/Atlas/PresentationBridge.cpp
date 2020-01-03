@@ -73,6 +73,12 @@ void PresentationBridge::mapStringItem(std::string name, std::string s)
         mStream << mPadding << name << ": " << s << std::endl;
 	}
 }
+void PresentationBridge::mapNoneItem(std::string name) {
+    if (checkAndUpdateMaxItemCounter()) {
+        mStream << mPadding << name << ": " << std::endl;
+    }
+}
+
 void PresentationBridge::mapEnd()
 {
 	removePadding();
@@ -114,6 +120,11 @@ void PresentationBridge::listStringItem(std::string s)
 	if (checkAndUpdateMaxItemCounter()) {
         mStream << mPadding << ": " << s << std::endl;
 	}
+}
+void PresentationBridge::listNoneItem() {
+    if (checkAndUpdateMaxItemCounter()) {
+        mStream << mPadding << ": " << std::endl;
+    }
 }
 void PresentationBridge::listEnd()
 {

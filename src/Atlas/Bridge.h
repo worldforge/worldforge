@@ -75,6 +75,10 @@ class Bridge
      */
     virtual void mapStringItem(std::string name, std::string) = 0;
     /**
+     * Adds a none item to the currently streamed map.
+     */
+    virtual void mapNoneItem(std::string name) = 0;
+    /**
      *  Ends the currently streamed map.
      */
     virtual void mapEnd() = 0;
@@ -101,6 +105,10 @@ class Bridge
      *  Adds a string to the currently streamed list.
      */
     virtual void listStringItem(std::string) = 0;
+    /**
+     * Adds an empty item to the currently streamed list.
+     */
+    virtual void listNoneItem() = 0;
     /**
      *  Ends the currently streamed list.
      */

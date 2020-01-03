@@ -60,6 +60,8 @@ The complete specification is located in cvs at:
 
             void mapStringItem(std::string name, std::string) override;
 
+            void mapNoneItem(std::string name) override;
+
             void mapEnd() override;
 
             void listMapItem() override;
@@ -71,6 +73,8 @@ The complete specification is located in cvs at:
             void listFloatItem(double) override;
 
             void listStringItem(std::string) override;
+
+            void listNoneItem() override;
 
             void listEnd() override;
 
@@ -110,7 +114,8 @@ The complete specification is located in cvs at:
                 PARSE_LIST,
                 PARSE_INT,
                 PARSE_FLOAT,
-                PARSE_STRING
+                PARSE_STRING,
+                PARSE_NONE
             };
 
             std::stack<State> m_state;

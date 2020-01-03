@@ -67,6 +67,13 @@ void MultiLineListFormatter::listStringItem(std::string s)
 	m_stream << std::endl;
 }
 
+void MultiLineListFormatter::listNoneItem()
+{
+    m_stream << std::string(m_indent, ' ');
+    Formatter::listNoneItem();
+    m_stream << std::endl;
+}
+
 void MultiLineListFormatter::listEnd()
 {
 	m_indent -= m_spacing;

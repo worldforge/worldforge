@@ -150,6 +150,8 @@ namespace Atlas {
                         m_state.push(PARSE_FLOAT);
                     } else if (m_tag == "string") {
                         m_state.push(PARSE_STRING);
+                    } else if (m_tag == "none") {
+                        m_state.push(PARSE_NONE);
                     } else {
                         // FIXME signal error here
                         // unexpected tag
@@ -169,6 +171,8 @@ namespace Atlas {
                         m_state.push(PARSE_FLOAT);
                     } else if (m_tag == "string") {
                         m_state.push(PARSE_STRING);
+                    } else if (m_tag == "none") {
+                        m_state.push(PARSE_NONE);
                     } else {
                         // FIXME signal error here
                         // unexpected tag
@@ -178,6 +182,7 @@ namespace Atlas {
                 case PARSE_INT:
                 case PARSE_FLOAT:
                 case PARSE_STRING:
+                case PARSE_NONE:
                     // FIXME signal error here
                     // unexpected tag
                     break;
@@ -280,6 +285,19 @@ namespace Atlas {
                         // unexpected tag
                     }
                     break;
+                case PARSE_NONE:
+                    if (m_tag == "none") {
+                        m_state.pop();
+                        if (m_state.top() == PARSE_MAP) {
+                            m_bridge.mapNoneItem(m_name);
+                        } else {
+                            m_bridge.listNoneItem();
+                        }
+                    } else {
+                        // FIXME signal error here
+                        // unexpected tag
+                    }
+                    break;
             }
         }
 
@@ -344,6 +362,10 @@ namespace Atlas {
             m_ostream << "<string name=\"" << escape(name) << "\">" << escape(data) << "</string>";
         }
 
+        void XML::mapNoneItem(std::string name) {
+            m_ostream << "<none name=\"" << escape(name) << "\"></none>";
+        }
+
         void XML::mapEnd() {
             m_ostream << "</map>";
         }
@@ -366,6 +388,10 @@ namespace Atlas {
 
         void XML::listStringItem(std::string data) {
             m_ostream << "<string>" << escape(data) << "</string>";
+        }
+
+        void XML::listNoneItem() {
+            m_ostream << "<none></none>";
         }
 
         void XML::listEnd() {

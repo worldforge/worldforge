@@ -38,6 +38,9 @@ void Encoder::listElementItem(const Element& obj)
             m_b.listEnd();
             }
             break;
+        case Element::TYPE_NONE:
+            m_b.listNoneItem();
+            break;
         default: break;
     }
 }
@@ -81,6 +84,9 @@ void Encoder::mapElementItem(const std::string& name, const Element& obj)
             }
             m_b.listEnd();
             }
+            break;
+        case Element::TYPE_NONE:
+            m_b.mapNoneItem(name);
             break;
         default:
             break;

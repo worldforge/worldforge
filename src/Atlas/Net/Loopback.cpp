@@ -53,7 +53,12 @@ class LoopBridge : public Bridge
     {
 	m_bridge->mapStringItem(std::move(name), std::move(data));
     }
-    
+
+    virtual void mapNoneItem(std::string name) override
+    {
+	    m_bridge->mapNoneItem(std::move(name));
+    }
+
     void mapEnd() override
     {
 	m_bridge->mapEnd();
@@ -83,7 +88,13 @@ class LoopBridge : public Bridge
     {
 	m_bridge->listStringItem(std::move(data));
     }
-    
+
+    void listNoneItem() override
+    {
+	    m_bridge->listNoneItem();
+    }
+
+
     void listEnd() override
     {
 	m_bridge->listEnd();

@@ -42,6 +42,8 @@ namespace Atlas {
 
             void mapStringItem(std::string name, std::string) override;
 
+            void mapNoneItem(std::string name) override;
+
             void mapEnd() override;
 
             void listMapItem() override;
@@ -53,6 +55,8 @@ namespace Atlas {
             void listFloatItem(double) override;
 
             void listStringItem(std::string) override;
+
+            void listNoneItem() override;
 
             void listEnd() override;
 

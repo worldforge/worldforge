@@ -576,6 +576,13 @@ namespace Atlas {
             m_comma = true;
         }
 
+        void Bach::mapNoneItem(std::string name) {
+            if (m_comma)
+                m_ostream << ",";
+
+            m_ostream << name << ":";
+        }
+
         void Bach::mapEnd() {
             writeLine("}", true, true);
             m_comma = true;
@@ -603,6 +610,12 @@ namespace Atlas {
 
         void Bach::listStringItem(std::string data) {
             writeStringItem("", std::move(data));
+            m_comma = true;
+        }
+
+        void Bach::listNoneItem() {
+            if (m_comma)
+                m_ostream << ",";
             m_comma = true;
         }
 
