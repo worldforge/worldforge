@@ -453,7 +453,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
     } else if (p == "bbox") {
         m_bboxUnscaled.fromAtlas(v);
         m_bbox = m_bboxUnscaled;
-        if (m_scale.isValid()) {
+        if (m_scale.isValid() && m_bbox.isValid()) {
             m_bbox.lowCorner().x() *= m_scale.x();
             m_bbox.lowCorner().y() *= m_scale.y();
             m_bbox.lowCorner().z() *= m_scale.z();
@@ -461,7 +461,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
             m_bbox.highCorner().y() *= m_scale.y();
             m_bbox.highCorner().z() *= m_scale.z();
         }
-        m_hasBBox = true;
+        m_hasBBox = m_bbox.isValid();
         return true;
     } else if (p == "loc") {
         setLocationFromAtlas(v.asString());
@@ -481,9 +481,11 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
             } else {
                 m_scale.fromAtlas(v.List());
             }
+        } else {
+            m_scale = WFMath::Vector<3>();
         }
-        if (m_scale.isValid() && m_bboxUnscaled.isValid()) {
-            m_bbox = m_bboxUnscaled;
+        m_bbox = m_bboxUnscaled;
+        if (m_scale.isValid() && m_bbox.isValid()) {
             m_bbox.lowCorner().x() *= m_scale.x();
             m_bbox.lowCorner().y() *= m_scale.y();
             m_bbox.lowCorner().z() *= m_scale.z();
