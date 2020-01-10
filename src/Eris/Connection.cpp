@@ -310,7 +310,7 @@ void Connection::dispatchOp(const RootOperation& op) {
 		}
 
 		// special-case, server info refreshes are handled here directly
-		if (op->instanceOf(INFO_NO) && anonymous) {
+		if (op->getClassNo() == INFO_NO && anonymous) {
 			handleServerInfo(op);
 			return;
 		}
