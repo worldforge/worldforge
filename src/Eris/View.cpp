@@ -176,11 +176,11 @@ void View::appear(const std::string& eid, double stamp) {
 void View::disappear(const std::string& eid) {
 	auto* ent = getEntity(eid);
 	if (ent) {
-		ent->setVisible(false); // will ultimately cause disappearances
+		deleteEntity(eid);
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got disappearance for pending " << eid;
-			m_pending[eid] = SightAction::HIDE;
+			m_pending[eid] = SightAction::DISCARD;
 		} else {
 			warning() << "got disappear for unknown entity " << eid;
 		}
