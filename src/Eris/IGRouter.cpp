@@ -213,19 +213,6 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 		return HANDLED;
 	}
 
-    if (op->getClassNo() == DELETE_NO) {
-    	if (!args.empty()) {
-			for (const auto& arg : args) {
-				if (!arg->isDefaultId()) {
-					m_view.deleteEntity(arg->getId());
-				}
-			}
-    	} else {
-			warning() << "Got sight of DELETE op with no args.";
-		}
-		return HANDLED;
-	}
-
     // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {
