@@ -263,12 +263,12 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
     def setattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("void %s::setAttr" % classname)
-        self.write("(const std::string& name, Element attr, const Atlas::Objects::Factories* factories)\n")
+        self.write("(std::string name, Element attr, const Atlas::Objects::Factories* factories)\n")
         self.write("{\n")
         for attr in statics:
             self.write(attr.setattr_im())
         parent = self.get_cpp_parent(obj)
-        self.write("    %s::setAttr(name, std::move(attr), factories);\n" % parent)
+        self.write("    %s::setAttr(std::move(name), std::move(attr), factories);\n" % parent)
         self.write("}\n\n")
 
     def remattr_im(self, obj, statics):
@@ -574,7 +574,8 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.write("Atlas::Message::Element & attr) const override;\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
                      + '"attr"')
-            self.write("    void setAttr(const std::string& name,\n")
+
+            self.write("    void setAttr(std::string name,\n")
             self.write("                         ")
             self.write("Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr) override;\n")
             self.doc(4, 'Remove the attribute "name". This will not work for ' \

@@ -69,9 +69,9 @@ int BaseObjectData::copyAttr(const std::string& name, Element & attr) const
     return 0;
 }
 
-void BaseObjectData::setAttr(const std::string& name, Element attr, const Atlas::Objects::Factories* factories)
+void BaseObjectData::setAttr(std::string name, Element attr, const Atlas::Objects::Factories* factories)
 {
-    m_attributes[name] = std::move(attr);
+    m_attributes[std::move(name)] = std::move(attr);
 }
 
 void BaseObjectData::removeAttr(const std::string& name)

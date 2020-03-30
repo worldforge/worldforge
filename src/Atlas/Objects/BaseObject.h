@@ -269,7 +269,7 @@ public:
     virtual int copyAttr(const std::string& name,
                          Atlas::Message::Element & attr) const;
     /// Set the attribute "name" to the value given by "attr".
-    virtual void setAttr(const std::string& name,
+    virtual void setAttr(std::string name,
                          Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr);
     /// Remove the attribute "name".
     virtual void removeAttr(const std::string& name);
