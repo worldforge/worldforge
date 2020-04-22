@@ -20,6 +20,7 @@
 #define SESSION_H_
 
 #include <boost/asio/io_service.hpp>
+#include <memory>
 
 namespace Eris
 {
@@ -45,7 +46,7 @@ struct Session
     EventService& getEventService();
 
     std::unique_ptr<boost::asio::io_service> m_io_service;
-	std::unique_ptr<EventService> m_event_service;
+    std::unique_ptr<EventService> m_event_service;
 };
 
 }
