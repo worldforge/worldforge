@@ -433,8 +433,8 @@ void View::setTopLevelEntity(Entity* newTopLevel) {
 
 	m_simulationSpeedConnection.disconnect();
 
-	assert(newTopLevel && newTopLevel->getLocation() == nullptr);
 	if (newTopLevel) {
+		assert(newTopLevel->getLocation() == nullptr);
 		auto simulationSpeedElement = newTopLevel->ptrOfProperty("simulation_speed");
 		if (simulationSpeedElement) {
 			parseSimulationSpeed(*simulationSpeedElement);
