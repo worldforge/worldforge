@@ -447,9 +447,6 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
     } else if (p == "orientation") {
         m_orientation.fromAtlas(v);
         return true;
-    } else if (p == "description") {
-        m_description = v.asString();
-        return true;
     } else if (p == "bbox") {
         m_bboxUnscaled.fromAtlas(v);
         m_bbox = m_bboxUnscaled;
