@@ -37,18 +37,18 @@ using WFMath::TimeDiff;
 namespace Eris {
 
 Entity::Entity(std::string id, TypeInfo* ty) :
-    m_type(ty),
-    m_location(nullptr),
-    m_id(std::move(id)),
-    m_stamp(-1.0f),
-    m_visible(false),
-    m_limbo(false),
-	m_angularMag(0),
-    m_updateLevel(0),
-    m_hasBBox(false),
-    m_moving(false),
-    m_recentlyCreated(false),
-    m_initialised(true)
+		m_type(ty),
+		m_location(nullptr),
+		m_id(std::move(id)),
+		m_stamp(-1.0f),
+		m_visible(false),
+		m_waitingForParentBind(false),
+		m_angularMag(0),
+		m_updateLevel(0),
+		m_hasBBox(false),
+		m_moving(false),
+		m_recentlyCreated(false),
+		m_initialised(true)
 {
     assert(!m_id.empty());
     m_orientation.identity();
@@ -104,7 +104,7 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
 
 Entity* Entity::getTopEntity()
 {
-	if (m_limbo) {
+	if (m_waitingForParentBind) {
 		return nullptr;
 	}
 	if (!m_location) {
@@ -644,7 +644,7 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 	Entity* newLocation = getEntity(locId);
 	if (!newLocation) {
 
-		m_limbo = true;
+		m_waitingForParentBind = true;
 		setVisible(false); // fire disappearance, VisChanged if necessary
 
 		if (m_location) {
@@ -663,7 +663,7 @@ void Entity::setLocation(Entity* newLocation)
     if (newLocation == m_location) return;
 
     if (newLocation) {
-		m_limbo = newLocation->m_limbo;
+		m_waitingForParentBind = newLocation->m_waitingForParentBind;
 	}
         
 // do the actual member updating
@@ -725,9 +725,9 @@ void Entity::setContentsFromAtlas(const std::list<std::string>& contents)
             	continue;
             }
             
-            if (child->m_limbo) {
+            if (child->m_waitingForParentBind) {
                 assert(!child->m_visible);
-                child->m_limbo = false;
+                child->m_waitingForParentBind = false;
             }
             
             /* we have found the child, update it's location */
@@ -778,7 +778,7 @@ void Entity::setVisible(bool vis)
 {
     // force visibility to false if in limbo; necessary for the character entity,
     // which otherwise gets double appearances on activation
-    if (m_limbo) vis = false;
+    if (m_waitingForParentBind) vis = false;
 
     bool wasVisible = isVisible(); // store before we update m_visible
     m_visible = vis;
@@ -788,7 +788,7 @@ void Entity::setVisible(bool vis)
 
 bool Entity::isVisible() const
 {
-    if (m_limbo) return false;
+    if (m_waitingForParentBind) return false;
 
     if (m_location) {
 		return m_visible && m_location->isVisible();

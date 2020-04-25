@@ -49,7 +49,7 @@ and so on.
 This class may be sub-classed by users (and those sub-classes built via
 a Factory), to allow specific functionality. This means there are two
 integration strategies; either subclassing and over-riding virtual functions,
-or creating peer clases and attaching them to the signals.
+or creating peer classes and attaching them to the signals.
 
 @note If you handle entities manually, you must make sure to call shutdown() before the instance is deleted.
 */
@@ -574,15 +574,14 @@ protected:
     TypeInfo* m_type;
     
 // primary state, in native form
-    Entity* m_location;	
+    Entity* m_location;
     EntityArray m_contents;
     
     const std::string m_id;	///< the Atlas object ID
     std::string m_name;		///< a human readable name
     double m_stamp;		///< last modification time (in seconds)
-    std::string m_description;
     bool m_visible;
-    bool m_limbo;   ///< waiting for parent bind
+    bool m_waitingForParentBind;   ///< waiting for parent bind
 
     WFMath::Vector<3> m_scale;
     WFMath::AxisBox<3> m_bbox;
