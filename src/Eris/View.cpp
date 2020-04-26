@@ -32,8 +32,7 @@ View::View(Avatar& av) :
 
 View::~View() {
 	if (m_topLevel) {
-		m_topLevel->shutdown();
-		delete m_topLevel;
+		m_topLevel->shutdown(); //This will call back into View::entityDeleted
 		if (!m_contents.empty()) {
 			warning() << "top level entity is not empty on view destruction";
 		}
@@ -49,7 +48,7 @@ ViewEntity* View::getEntity(const std::string& eid) const {
 		return nullptr;
 	}
 
-	return E->second;
+	return E->second.get();
 }
 
 void View::setEntityVisible(ViewEntity* ent, bool vis) {
@@ -117,10 +116,10 @@ void View::update() {
 	m_lastUpdateTime = t;
 
 	if (m_owner.getEntity()) {
-        auto topEntity = m_owner.getEntity()->getTopEntity();
-        setTopLevelEntity(topEntity);
+		auto topEntity = m_owner.getEntity()->getTopEntity();
+		setTopLevelEntity(topEntity);
 	} else {
-	    setTopLevelEntity(nullptr);
+		setTopLevelEntity(nullptr);
 	}
 }
 
@@ -235,28 +234,29 @@ void View::sight(const RootEntity& gent) {
 }
 
 ViewEntity* View::initialSight(const RootEntity& gent) {
-	auto ent = createEntity(gent);
-
 	assert(m_contents.count(gent->getId()) == 0);
-	m_contents[gent->getId()] = ent;
-	ent->init(gent, false);
 
-	InitialSightEntity.emit(ent);
+	auto I = m_contents.emplace(gent->getId(), createEntity(gent));
+	auto& insertedEntity = I.first->second;
+	insertedEntity->init(gent, false);
+
+	InitialSightEntity.emit(insertedEntity.get());
 
 	auto it = m_notifySights.find(gent->getId());
 	if (it != m_notifySights.end()) {
-		it->second.emit(ent);
+		it->second.emit(insertedEntity.get());
 		m_notifySights.erase(it);
 	}
 
-	return ent;
+	return insertedEntity.get();
 }
 
 void View::create(const RootEntity& gent) {
 	std::string eid(gent->getId());
-	if (m_contents.count(eid)) {
+	auto I = m_contents.find(eid);
+	if (I != m_contents.end()) {
 		// already known locally, just emit the signal
-		EntityCreated.emit(m_contents[eid]);
+		EntityCreated.emit(I->second.get());
 		return;
 	}
 
@@ -269,16 +269,17 @@ void View::create(const RootEntity& gent) {
 		pending->second = SightAction::DISCARD; // when the SIGHT turns up
 	}
 
-	auto* ent = createEntity(gent);
-	m_contents[eid] = ent;
+	auto J = m_contents.emplace(eid, createEntity(gent));
+	auto& ent = J.first->second;
+	m_contents[eid].reset(ent.get());
 	ent->init(gent, true);
 
-	InitialSightEntity.emit(ent);
+	InitialSightEntity.emit(ent.get());
 
 	// depends on relative order that sight(create) and appear are received in
 	if (alreadyAppeared) {
 		ent->setVisible(true);
-		EntityCreated.emit(ent);
+		EntityCreated.emit(ent.get());
 	}
 }
 
@@ -305,8 +306,7 @@ void View::deleteEntity(const std::string& eid) {
 
 		// force a disappear if one hasn't already happened
 		EntityDeleted.emit(ent);
-		ent->shutdown();
-		delete ent; // actually kill it off
+		ent->shutdown(); //This will call back to View::entityDeleted and remove the entity.
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got delete for pending entity, argh";
@@ -317,7 +317,7 @@ void View::deleteEntity(const std::string& eid) {
 	}
 }
 
-ViewEntity* View::createEntity(const RootEntity& gent) {
+std::unique_ptr<ViewEntity> View::createEntity(const RootEntity& gent) {
 	TypeInfo* type = getConnection().getTypeService().getTypeForAtlas(gent);
 	assert(type->isBound());
 
@@ -329,15 +329,14 @@ ViewEntity* View::createEntity(const RootEntity& gent) {
 	}
 
 	//TODO: return std::unique_ptr instead
-	return new ViewEntity(gent->getId(), type, *this);
+	return std::make_unique<ViewEntity>(gent->getId(), type, *this);
 }
 
 void View::unseen(const std::string& eid) {
 	auto ent = getEntity(eid);
 	if (ent) {
 		EntityDeleted.emit(ent);
-		ent->shutdown();
-		delete ent; // actually kill it off
+		ent->shutdown(); //This will call back into View::entityDeleted
 	} else {
 		auto I = m_pending.find(eid);
 		if (I != m_pending.end()) {
@@ -421,9 +420,9 @@ void View::sendLookAt(const std::string& eid) {
 }
 
 void View::setTopLevelEntity(Entity* newTopLevel) {
-    if (newTopLevel == m_topLevel) {
-        return; // no change!
-    }
+	if (newTopLevel == m_topLevel) {
+		return; // no change!
+	}
 
 	if (m_topLevel) {
 		if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr)) {

@@ -191,7 +191,7 @@ private:
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
 
-	ViewEntity* createEntity(const Atlas::Objects::Entity::RootEntity&);
+	std::unique_ptr<ViewEntity> createEntity(const Atlas::Objects::Entity::RootEntity&);
 
     void parseSimulationSpeed(const Atlas::Message::Element& element);
 
@@ -203,7 +203,7 @@ private:
 
     void eraseFromLookQueue(const std::string& eid);
 
-    typedef std::unordered_map<std::string, ViewEntity*> IdEntityMap;
+    typedef std::unordered_map<std::string, std::unique_ptr<ViewEntity>> IdEntityMap;
 
     Avatar& m_owner;
     IdEntityMap m_contents;

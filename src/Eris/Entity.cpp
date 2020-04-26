@@ -62,26 +62,24 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 Entity::~Entity()
 {
     assert(!m_initialised);
+	//Delete any lingering tasks.
+	for (auto& entry : m_tasks) {
+		TaskRemoved(entry.first, entry.second.get());
+	}
+	setLocation(nullptr);
 }
 
 void Entity::shutdown()
 {
     BeingDeleted.emit();
 
-    //Delete any lingering tasks.
-    for (auto& entry : m_tasks) {
-        TaskRemoved(entry.first, entry.second.get());
-    }
-    m_tasks.clear();
-
     if (m_moving) {
     	removeFromMovementPrediction();
     }
-    
-    while (!m_contents.empty()) {
-      auto *e = m_contents.back();
-      e->shutdown();
-      delete e;
+
+    auto content = m_contents;
+    for (auto I : content) {
+    	I->shutdown();
     }
     m_contents.clear();
     setLocation(nullptr);

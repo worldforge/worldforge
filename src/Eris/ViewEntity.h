@@ -52,7 +52,7 @@ protected:
      * @brief A router instance which routes messages from the view
      * into this entity.
      */
-    EntityRouter* m_router;
+    std::unique_ptr<EntityRouter> m_router;
 
     void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
 

@@ -349,6 +349,7 @@ void Avatar::onEntityAppear(Entity* ent)
 void Avatar::onAvatarEntityDeleted()
 {
 	CharacterEntityDeleted();
+	m_entity = nullptr;
     //When the avatar entity is destroyed we should also deactivate the character.
     m_account.deactivateCharacter(this);
 }
