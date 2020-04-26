@@ -246,8 +246,6 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
     what->setLoc(container->getId());
     if (pos.isValid()) {
         what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
-    } else {
-        what->setAttr("pos", WFMath::Point<3>::ZERO().toAtlas());
     }
     if (orientation.isValid()) {
         what->setAttr("orientation", orientation.toAtlas());

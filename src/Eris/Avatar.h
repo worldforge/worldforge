@@ -128,7 +128,8 @@ public:
 	 * @param pos The position of the entity within the container.
 	 * @param orientation An optional orientation of the entity.
 	 */
-	void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
+	void place(Entity* entity, Entity* container,
+			   const WFMath::Point<3>& pos = WFMath::Point<3>(),
 			   const WFMath::Quaternion& orientation = WFMath::Quaternion(),
 			   boost::optional<float> offset = boost::none);
 
