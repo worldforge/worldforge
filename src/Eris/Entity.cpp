@@ -61,7 +61,6 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity()
 {
-    assert(!m_initialised);
 	//Delete any lingering tasks.
 	for (auto& entry : m_tasks) {
 		TaskRemoved(entry.first, entry.second.get());
