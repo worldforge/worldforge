@@ -276,7 +276,12 @@ public:
     
     template<class C>
     C fromLocationCoords(const C& c) const;
-    
+
+
+	const std::vector<Entity*>& getContent() const {
+		return m_contents;
+	}
+
     // A vector (e.g., the distance between two points, or
     // a velocity) gets rotated by a coordinate transformation,
     // but doesn't get shifted by the change in the position
