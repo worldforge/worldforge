@@ -271,7 +271,6 @@ void View::create(const RootEntity& gent) {
 
 	auto J = m_contents.emplace(eid, createEntity(gent));
 	auto& ent = J.first->second;
-	m_contents[eid].reset(ent.get());
 	ent->init(gent, true);
 
 	InitialSightEntity.emit(ent.get());
