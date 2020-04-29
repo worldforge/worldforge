@@ -186,33 +186,6 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 {
     const auto& args = op->getArgs();
 
-    if (op->getClassNo() == CREATE_NO) {
-    	if (!args.empty()) {
-			for (const auto& arg : args) {
-				RootEntity gent = smart_dynamic_cast<RootEntity>(arg);
-				if (gent.isValid()) {
-					if (!gent->isDefaultId() && !gent->isDefaultParent()) {
-						// View needs a bound TypeInfo for the entity
-						TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(gent);
-						if (!ty->isBound()) {
-							auto sightCopy = sightOp.copy();
-							auto opCopy = op.copy();
-							opCopy->setArgs1(arg);
-							sightCopy->setArgs1(opCopy);
-							new TypeBoundRedispatch(m_avatar.getConnection(), sightCopy, ty);
-							continue;
-						}
-
-						m_view.create(gent);
-					}
-				}
-			}
-		} else {
-    		warning() << "Got sight of CREATE op with no args.";
-		}
-		return HANDLED;
-	}
-
     // because a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
     if (op->getClassNo() == SET_NO) {

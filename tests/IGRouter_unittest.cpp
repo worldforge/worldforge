@@ -652,9 +652,6 @@ View::~View() {
 }
 
 
-void View::create(const RootEntity& gent) {
-}
-
 void View::deleteEntity(const std::string& eid) {
 }
 

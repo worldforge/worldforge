@@ -158,7 +158,6 @@ protected:
     void appear(const std::string& eid, double stamp);
     void disappear(const std::string& eid);
     void sight(const Atlas::Objects::Entity::RootEntity& ge);
-    void create(const Atlas::Objects::Entity::RootEntity& ge);
     void deleteEntity(const std::string& eid);
     void unseen(const std::string& eid);
     

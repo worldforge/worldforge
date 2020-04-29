@@ -251,37 +251,6 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 	return insertedEntity.get();
 }
 
-void View::create(const RootEntity& gent) {
-	std::string eid(gent->getId());
-	auto I = m_contents.find(eid);
-	if (I != m_contents.end()) {
-		// already known locally, just emit the signal
-		EntityCreated.emit(I->second.get());
-		return;
-	}
-
-	bool alreadyAppeared = false;
-	auto pending = m_pending.find(eid);
-	if (pending != m_pending.end()) {
-		// already being retrieved, but we have the data now
-		alreadyAppeared = (pending->second == SightAction::QUEUED) ||
-						  (pending->second == SightAction::APPEAR);
-		pending->second = SightAction::DISCARD; // when the SIGHT turns up
-	}
-
-	auto J = m_contents.emplace(eid, createEntity(gent));
-	auto& ent = J.first->second;
-	ent->init(gent, true);
-
-	InitialSightEntity.emit(ent.get());
-
-	// depends on relative order that sight(create) and appear are received in
-	if (alreadyAppeared) {
-		ent->setVisible(true);
-		EntityCreated.emit(ent.get());
-	}
-}
-
 void View::deleteEntity(const std::string& eid) {
 	auto* ent = getEntity(eid);
 	if (ent) {
