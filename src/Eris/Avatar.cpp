@@ -78,53 +78,6 @@ void Avatar::deactivate()
     });
 }
 
-void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation, const std::string& loc) const
-{
-    if(e->getLocation() != m_entity)
-    {
-        error() << "Can't drop an Entity which is not held by the character";
-
-        return;
-    }
-
-    Move moveOp;
-    moveOp->setFrom(m_mindId);
-
-    Anonymous what;
-    what->setLoc(loc);
-    Atlas::Message::Element apos(pos.toAtlas());
-    what->setPosAsList(apos.asList());
-    if (orientation.isValid()) {
-        what->setAttr("orientation", orientation.toAtlas());
-    }
-    what->setId(e->getId());
-    moveOp->setArgs1(what);
-
-    getConnection().send(moveOp);
-}
-
-void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quaternion& orientation) const
-{
-    drop(e, m_entity->getPosition() + offset, orientation, m_entity->getLocation()->getId());
-}
-
-void Avatar::take(Entity* e) const
-{
-    Move moveOp;
-    moveOp->setFrom(m_mindId);
-
-    Anonymous what;
-    what->setLoc(m_entityId);
-
-    std::vector<double> p(3, 0.0);
-    what->setPos(p); // cyphesis is rejecting move ops with no pos set
-
-    what->setId(e->getId());
-    moveOp->setArgs1(what);
-
-    getConnection().send(moveOp);
-}
-
 void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
 {
     Touch touchOp;
@@ -239,9 +192,12 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
     getConnection().send(moveOp);
 }
 
-void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
-                   const WFMath::Quaternion& orientation, boost::optional<float> offset)
-{
+void Avatar::place(const Entity* entity,
+				   const Entity* container,
+				   const WFMath::Point<3>& pos,
+				   const WFMath::Quaternion& orientation,
+				   boost::optional<float> offset,
+				   int amount) {
     Anonymous what;
     what->setLoc(container->getId());
     if (pos.isValid()) {
@@ -252,6 +208,9 @@ void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& po
     }
     if (offset) {
         what->setAttr("planted-offset", offset.get());
+    }
+    if (amount != 1) {
+		what->setAttr("amount", amount);
     }
 
     what->setId(entity->getId());
