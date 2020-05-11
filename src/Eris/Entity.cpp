@@ -191,10 +191,17 @@ void Entity::fillPropertiesFromType(Entity::PropertyMap& properties, TypeInfo* t
 
 }
 
-sigc::connection Entity::observe(const std::string& propertyName, const PropertyChangedSlot& slot)
+sigc::connection Entity::observe(const std::string& propertyName, const PropertyChangedSlot& slot, bool evaluateNow)
 {
     // sometimes, I realize how great SigC++ is
-    return m_observers[propertyName].connect(slot);
+    auto connection = m_observers[propertyName].connect(slot);
+    if (evaluateNow) {
+        auto prop = ptrOfProperty(propertyName);
+        if (prop) {
+            slot(*prop);
+        }
+    }
+    return connection;
 }
 
 WFMath::Point<3> Entity::getViewPosition() const

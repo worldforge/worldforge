@@ -230,52 +230,6 @@ void Avatar::place(const Entity* entity,
 
 }
 
-//void Avatar::wield(Entity * entity)
-//{
-//    if(entity->getLocation() != m_entity)
-//    {
-//        error() << "Can't wield an Entity which is not located in the avatar.";
-//
-//        return;
-//    }
-//
-//    Anonymous arguments;
-//    arguments->setId(entity->getId());
-//
-//    Wield wield;
-//    wield->setFrom(m_mindId);
-//    wield->setArgs1(arguments);
-//
-//    getConnection().send(wield);
-//}
-
-//void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
-//{
-//    Anonymous arguments;
-//
-//    arguments->setId(entity->getId());
-//    arguments->setObjtype("obj");
-//    if (position.isValid()) arguments->setProperty("pos", position.toAtlas());
-//
-//    Use use;
-//    use->setFrom(m_mindId);
-//
-//
-//    if (opType.empty())
-//    {
-//        use->setArgs1(arguments);
-//    } else {
-//        RootOperation op;
-//        op->setParent(opType);
-//        op->setArgs1(arguments);
-//        op->setFrom(m_mindId);
-//
-//        use->setArgs1(op);
-//    }
-//
-//    getConnection().send(use);
-//}
-
 void Avatar::useStop()
 {
     Use use;
@@ -289,8 +243,6 @@ void Avatar::onEntityAppear(Entity* ent)
         assert(m_entity == nullptr);
         m_entity = ent;
 
-        ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
-		ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
 		m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
 
         GotCharacterEntity.emit(ent);
@@ -302,6 +254,11 @@ void Avatar::onEntityAppear(Entity* ent)
             parentType->refresh();
             parentType = parentType->getParent();
         }
+
+        ent->observe("_containers_active",
+                     [this](const Atlas::Message::Element &elem) { containerActiveChanged(elem); },
+                     true);
+
     }
 }
 
@@ -311,16 +268,6 @@ void Avatar::onAvatarEntityDeleted()
 	m_entity = nullptr;
     //When the avatar entity is destroyed we should also deactivate the character.
     m_account.deactivateCharacter(this);
-}
-
-void Avatar::onCharacterChildAdded(Entity* child)
-{
-    InvAdded.emit(child);
-}
-
-void Avatar::onCharacterChildRemoved(Entity* child)
-{
-    InvRemoved.emit(child);
 }
 
 void Avatar::onTransferRequested(const TransferInfo &transfer)
@@ -377,6 +324,47 @@ void Avatar::logoutResponse(const RootOperation& op)
     m_account.destroyAvatar(getId());
 }
 
+void Avatar::containerActiveChanged(const Atlas::Message::Element &element) {
+    if (element.isList()) {
+        auto &entityList = element.List();
+        std::set<std::string> entityIdSet;
+        for (auto &entry: entityList) {
+            if (entry.isString()) {
+                entityIdSet.insert(entry.String());
+            }
+        }
+
+        for (auto I = m_activeContainers.begin(); I != m_activeContainers.end();) {
+            auto& entry = *I;
+            if (entityIdSet.find(entry.first) == entityIdSet.end()) {
+                if (I->second) {
+                    ContainerClosed(**I->second);
+                }
+                I = m_activeContainers.erase(I);
+            } else {
+                entityIdSet.erase(I->first);
+                ++I;
+            }
+        }
+
+        for (auto &id : entityIdSet) {
+            auto ref = std::make_unique<EntityRef>(*m_view, id);
+            auto refInstance = ref.get();
+            if (*refInstance) {
+                ContainerOpened(**refInstance);
+            } else {
+                ref->Changed.connect([this](Entity *entity) {
+                    if (entity) {
+                        ContainerOpened(*entity);
+                    }
+                });
+            }
+            m_activeContainers.emplace(id, std::move(ref));
+        }
+    }
+}
+
+
 void Avatar::logoutRequested()
 {
     m_account.destroyAvatar(getId());
@@ -393,7 +381,7 @@ void Avatar::setIsAdmin(bool isAdmin)
     m_isAdmin = isAdmin;
 }
 
-bool Avatar::getIsAdmin()
+bool Avatar::getIsAdmin() const
 {
     return m_isAdmin;
 }

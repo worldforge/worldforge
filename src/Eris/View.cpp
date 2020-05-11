@@ -296,7 +296,6 @@ std::unique_ptr<ViewEntity> View::createEntity(const RootEntity& gent) {
 		}
 	}
 
-	//TODO: return std::unique_ptr instead
 	return std::make_unique<ViewEntity>(gent->getId(), type, *this);
 }
 
@@ -402,11 +401,7 @@ void View::setTopLevelEntity(Entity* newTopLevel) {
 
 	if (newTopLevel) {
 		assert(newTopLevel->getLocation() == nullptr);
-		auto simulationSpeedElement = newTopLevel->ptrOfProperty("simulation_speed");
-		if (simulationSpeedElement) {
-			parseSimulationSpeed(*simulationSpeedElement);
-		}
-		m_simulationSpeedConnection = newTopLevel->observe("simulation_speed", sigc::mem_fun(this, &View::parseSimulationSpeed));
+		m_simulationSpeedConnection = newTopLevel->observe("simulation_speed", sigc::mem_fun(this, &View::parseSimulationSpeed), true);
 	}
 	m_topLevel = newTopLevel;
 	TopLevelEntityChanged.emit(); // fire the signal

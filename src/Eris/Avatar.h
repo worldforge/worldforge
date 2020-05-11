@@ -5,6 +5,7 @@
 #include "EntityRef.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Message/Element.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -143,7 +144,7 @@ public:
 	 * It's up to the client to determine which avatars are admin, and call setIsAdmin
 	 * as soon as possible after the Avatar has been created.
 	 */
-	bool getIsAdmin();
+	bool getIsAdmin() const;
 
 	/**
 	 * @brief Sends an operation from this Avatar.
@@ -166,16 +167,8 @@ public:
 	 */
 	sigc::signal<void> CharacterEntityDeleted;
 
-	// These two signals just transmit the Entity's
-	// AddedMember and RemovedMember signals, but
-	// you're allowed to connect to them as soon as
-	// the Avatar has been created, instead of having to wait
-	// for the Entity to be created.
-
-	/// An object was added to the inventory
-	sigc::signal<void, Entity*> InvAdded;
-	/// An object was removed from the inventory
-	sigc::signal<void, Entity*> InvRemoved;
+	sigc::signal<void, Entity&> ContainerOpened;
+	sigc::signal<void, Entity&> ContainerClosed;
 
 	/** emitted when this Avatar hears something. Passes the source of
 	the sound, and the operation that was heard, for example a Talk. */
@@ -202,10 +195,6 @@ protected:
 protected:
 	void onEntityAppear(Entity* ent);
 
-	void onCharacterChildAdded(Entity* child);
-
-	void onCharacterChildRemoved(Entity* child);
-
 	/**
 	 * @brief Called when the avatar entity is deleted.
 	 */
@@ -229,6 +218,8 @@ protected:
 	 */
 	void logoutRequested(const TransferInfo& transferInfo);
 
+	void containerActiveChanged(const Atlas::Message::Element& element);
+
 	Account& m_account;
 
 	std::string m_mindId;
@@ -247,6 +238,8 @@ protected:
 	bool m_isAdmin;
 
 	std::unique_ptr<TimedEvent> m_logoutTimer;
+
+	std::map<std::string, std::unique_ptr<EntityRef>> m_activeContainers;
 };
 
 inline const std::string& Avatar::getId() const {

@@ -126,9 +126,10 @@ public:
      * 
      * @param propertyName The name of the property to observe.
      * @param aslot The slot which will be fired when the property changes.
+     * @param evaluateNow Whether the
      * @return The connection created.
      */
-    sigc::connection observe(const std::string& propertyName, const PropertyChangedSlot& aslot);
+    sigc::connection observe(const std::string& propertyName, const PropertyChangedSlot& aslot, bool evaluateNow);
 
 // accessors
     /**

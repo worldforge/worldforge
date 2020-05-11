@@ -18,14 +18,16 @@ public:
 	{
 	}
 
-	EntityRef(View* v, const std::string& eid);
+	EntityRef(View& v, const std::string& eid);
 	
     explicit EntityRef(Entity*);
     
 	~EntityRef() = default;
 
 	EntityRef(const EntityRef& ref);
-    	
+
+	EntityRef(EntityRef&& ref) noexcept;
+
 	EntityRef& operator=(const EntityRef& ref);
     
 	const Entity& operator*() const
@@ -78,7 +80,7 @@ public:
         return (m_inner < e.m_inner);
     }
 
-	sigc::signal0<void> Changed;
+	sigc::signal<void, Entity*> Changed;
 private:
 	void onEntityDeleted();
 	void onEntitySeen(Entity* e);

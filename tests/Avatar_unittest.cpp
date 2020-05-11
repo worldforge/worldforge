@@ -81,14 +81,6 @@ class TestAvatar : public Eris::Avatar {
         onEntityAppear(ent);
     }
 
-    void test_onCharacterChildAdded(Eris::Entity * ent) {
-        onCharacterChildAdded(ent);
-    }
-
-    void test_onCharacterChildRemoved(Eris::Entity * ent) {
-        onCharacterChildRemoved(ent);
-    }
-
     void test_updateWorldTime(double seconds) {
         updateWorldTime(seconds);
     }
@@ -548,48 +540,6 @@ int main()
 
         assert(ea->getEntity() != char_ent);
         assert(!gotCharacterEntity.flagged());
-    }
-    
-    // Test onCharacterChildAdded()
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(*con);
-        std::string fake_id("1");
-		std::string fake_mind_id("12");
-        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
-        TestEntity * ent = new TestEntity("2", 0, ea->getView());
-        SignalFlagger invAdded;
-
-        ea->InvAdded.connect(sigc::hide(sigc::mem_fun(invAdded, &SignalFlagger::set)));
-
-        ea->test_onCharacterChildAdded(ent);
-
-        assert(invAdded.flagged());
-    }
-    
-    // Test onCharacterChildRemoved()
-    {
-        boost::asio::io_service io_service;
-        Eris::EventService event_service(io_service);
-        Eris::Connection * con = new TestConnection(io_service, event_service, "name",
-                "localhost", 6767);
-
-        Eris::Account * acc = new TestAccount(*con);
-        std::string fake_id("1");
-		std::string fake_mind_id("12");
-        TestAvatar * ea = new TestAvatar(acc, fake_mind_id, fake_id);
-        TestEntity * ent = new TestEntity("2", 0, ea->getView());
-        SignalFlagger invRemoved;
-
-        ea->InvRemoved.connect(sigc::hide(sigc::mem_fun(invRemoved, &SignalFlagger::set)));
-
-        ea->test_onCharacterChildRemoved(ent);
-
-        assert(invRemoved.flagged());
     }
 
     // Test getConnection()

@@ -39,9 +39,7 @@ void Calendar::topLevelEntityChanged()
     Entity* tl = m_avatar.getView().getTopLevel();
     if (!tl || !tl->hasProperty("calendar")) return;
 
-    m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged));
-
-    calendarAttrChanged(tl->valueOfProperty("calendar"));
+    m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged), true);
 }
 
 void Calendar::calendarAttrChanged(const Element& value)
