@@ -346,7 +346,10 @@ void Avatar::containerActiveChanged(const Atlas::Message::Element &element) {
             auto& entry = *I;
             if (entityIdSet.find(entry.first) == entityIdSet.end()) {
                 if (I->second) {
-                    ContainerClosed(**I->second);
+                    auto& entityRef = *I->second;
+                    if (entityRef) {
+                        ContainerClosed(*entityRef);
+                    }
                 }
                 I = m_activeContainers.erase(I);
             } else {
