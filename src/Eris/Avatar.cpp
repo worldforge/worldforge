@@ -333,45 +333,44 @@ void Avatar::logoutResponse(const RootOperation& op)
 }
 
 void Avatar::containerActiveChanged(const Atlas::Message::Element &element) {
+    std::set<std::string> entityIdSet;
     if (element.isList()) {
         auto &entityList = element.List();
-        std::set<std::string> entityIdSet;
         for (auto &entry: entityList) {
             if (entry.isString()) {
                 entityIdSet.insert(entry.String());
             }
         }
-
-        for (auto I = m_activeContainers.begin(); I != m_activeContainers.end();) {
-            auto& entry = *I;
-            if (entityIdSet.find(entry.first) == entityIdSet.end()) {
-                if (I->second) {
-                    auto& entityRef = *I->second;
-                    if (entityRef) {
-                        ContainerClosed(*entityRef);
-                    }
+    }
+    for (auto I = m_activeContainers.begin(); I != m_activeContainers.end();) {
+        auto& entry = *I;
+        if (entityIdSet.find(entry.first) == entityIdSet.end()) {
+            if (I->second) {
+                auto& entityRef = *I->second;
+                if (entityRef) {
+                    ContainerClosed(*entityRef);
                 }
-                I = m_activeContainers.erase(I);
-            } else {
-                entityIdSet.erase(I->first);
-                ++I;
             }
+            I = m_activeContainers.erase(I);
+        } else {
+            entityIdSet.erase(I->first);
+            ++I;
         }
+    }
 
-        for (auto &id : entityIdSet) {
-            auto ref = std::make_unique<EntityRef>(*m_view, id);
-            auto refInstance = ref.get();
-            if (*refInstance) {
-                ContainerOpened(**refInstance);
-            } else {
-                ref->Changed.connect([this](Entity *entity) {
-                    if (entity) {
-                        ContainerOpened(*entity);
-                    }
-                });
-            }
-            m_activeContainers.emplace(id, std::move(ref));
+    for (auto &id : entityIdSet) {
+        auto ref = std::make_unique<EntityRef>(*m_view, id);
+        auto refInstance = ref.get();
+        if (*refInstance) {
+            ContainerOpened(**refInstance);
+        } else {
+            ref->Changed.connect([this](Entity *entity) {
+                if (entity) {
+                    ContainerOpened(*entity);
+                }
+            });
         }
+        m_activeContainers.emplace(id, std::move(ref));
     }
 }
 
