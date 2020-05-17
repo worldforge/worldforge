@@ -56,6 +56,7 @@ EntityRef::EntityRef(EntityRef&& ref) noexcept :
 EntityRef& EntityRef::operator=(const EntityRef& ref)
 {	
     bool changed = (m_inner != ref.m_inner);
+    auto oldInner = m_inner;
     m_inner = ref.m_inner;
     
     if (m_inner)
@@ -63,22 +64,26 @@ EntityRef& EntityRef::operator=(const EntityRef& ref)
         m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));
     }
     
-    if (changed) Changed.emit(m_inner);
+    if (changed) {
+        Changed.emit(m_inner, oldInner);
+    }
     return *this;
 }
     
 void EntityRef::onEntityDeleted()
 {
+    auto oldInner = m_inner;
 	m_inner = nullptr;
-	Changed(m_inner);
+	Changed(m_inner, oldInner);
 }
 
 void EntityRef::onEntitySeen(Entity* e)
 {
     assert(e);
+    auto oldInner = m_inner;
     m_inner = e;
     m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));	
-	Changed(m_inner);
+	Changed(m_inner, oldInner);
 }
 	
 } // of namespace Eris

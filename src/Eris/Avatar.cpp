@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "Avatar.h"
@@ -32,374 +32,364 @@ using WFMath::TimeStamp;
 using namespace Atlas::Message;
 using Atlas::Objects::smart_dynamic_cast;
 
-namespace Eris
-{
+namespace Eris {
 
-Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
-    m_account(pl),
-    m_mindId(std::move(mindId)),
-    m_entityId(std::move(entityId)),
-    m_entity(nullptr),
-    m_stampAtLastOp(TimeStamp::now()),
-    m_lastOpTime(0.0),
-	m_view(new View(*this)),
-    m_router(new IGRouter(*this, *m_view)),
-	m_isAdmin(false),
-    m_logoutTimer(nullptr)
-{
-    m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
-    m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
+    Avatar::Avatar(Account &pl, std::string mindId, std::string entityId) :
+            m_account(pl),
+            m_mindId(std::move(mindId)),
+            m_entityId(std::move(entityId)),
+            m_entity(nullptr),
+            m_stampAtLastOp(TimeStamp::now()),
+            m_lastOpTime(0.0),
+            m_view(new View(*this)),
+            m_router(new IGRouter(*this, *m_view)),
+            m_isAdmin(false),
+            m_logoutTimer(nullptr) {
+        m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
+        m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
 
-    m_view->getEntityFromServer("");
-    m_view->getEntityFromServer(m_entityId);
-}
-
-Avatar::~Avatar()
-{
-	m_avatarEntityDeletedConnection.disconnect();
-    m_account.getConnection().getTypeService().setTypeProviderId("");
-    for (auto& entry : m_activeContainers) {
-        if (entry.second) {
-            auto entityRef = *entry.second;
-            if (entityRef) {
-                ContainerClosed(*entityRef);
-            }
-        }
-    }
-}
-
-void Avatar::deactivate()
-{
-	//Send a Logout op from the Account, with the avatar mind as entity reference.
-    Logout l;
-    Anonymous arg;
-    arg->setId(m_mindId);
-    l->setArgs1(arg);
-    l->setSerialno(getNewSerialno());
-    l->setFrom(m_account.getId());
-
-    getConnection().getResponder().await(l->getSerialno(), this, &Avatar::logoutResponse);
-    getConnection().send(l);
-    m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), boost::posix_time::seconds(5), [&](){
-    	warning() << "Did not receive logout response after five seconds; forcing Avatar logout.";
-    	m_account.destroyAvatar(getId());
-    });
-}
-
-void Avatar::touch(Entity* e, const WFMath::Point<3>& pos)
-{
-    Touch touchOp;
-    touchOp->setFrom(m_mindId);
-
-    Anonymous what;
-    what->setId(e->getId());
-    if (pos.isValid()) {
-        what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
-    }
-    touchOp->setArgs1(what);
-
-    getConnection().send(touchOp);
-}
-
-void Avatar::wield(Eris::Entity* entity, std::string attachPoint) const {
-
-
-	Atlas::Objects::Entity::Anonymous arguments;
-	if (entity) {
-		arguments->setId(entity->getId());
-	}
-	arguments->setAttr("attachment", std::move(attachPoint));
-	Atlas::Objects::Operation::Wield wield;
-	wield->setFrom(getId());
-	wield->setArgs1(arguments);
-
-	getConnection().send(wield);
-
-}
-
-void Avatar::say(const std::string& msg)
-{
-    Talk t;
-
-    Anonymous what;
-    what->setAttr("say", msg);
-    t->setArgs1(what);
-    t->setFrom(m_mindId);
-
-    getConnection().send(t);
-}
-
-void Avatar::sayTo(const std::string& message, const std::vector<std::string>& entities)
-{
-    Talk t;
-
-    Anonymous what;
-    what->setAttr("say", message);
-    Atlas::Message::ListType addressList;
-    for (const auto& entity : entities) {
-        addressList.emplace_back(entity);
-    }
-    what->setAttr("address", addressList);
-    t->setArgs1(what);
-    t->setFrom(m_mindId);
-
-    getConnection().send(t);
-}
-
-
-void Avatar::emote(const std::string &em)
-{
-    Imaginary im;
-
-    Anonymous emote;
-    emote->setId("emote");
-    emote->setAttr("description", em);
-
-    im->setArgs1(emote);
-    im->setFrom(m_mindId);
-    im->setSerialno(getNewSerialno());
-
-    getConnection().send(im);
-}
-
-void Avatar::moveToPoint(const WFMath::Point<3>& pos, const WFMath::Quaternion& orient)
-{
-    Anonymous what;
-    what->setLoc(m_entity->getLocation()->getId());
-    what->setId(m_entityId);
-	if (pos.isValid()) {
-		what->setAttr("pos", pos.toAtlas());
-	}
-	if (orient.isValid()) {
-		what->setAttr("orientation", orient.toAtlas());
-	}
-
-    Move moveOp;
-    moveOp->setFrom(m_mindId);
-    moveOp->setArgs1(what);
-
-    getConnection().send(moveOp);
-}
-
-
-void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
-{
-    Anonymous arg;
-	if (vel.isValid()) {
-		arg->setAttr("propel", vel.toAtlas());
-	}
-	if (orient.isValid()) {
-		arg->setAttr("orientation", orient.toAtlas());
-	}
-    arg->setId(m_entityId);
-
-    Move moveOp;
-    moveOp->setFrom(m_mindId);
-    moveOp->setArgs1(arg);
-
-    getConnection().send(moveOp);
-}
-
-void Avatar::place(const Entity* entity,
-				   const Entity* container,
-				   const WFMath::Point<3>& pos,
-				   const WFMath::Quaternion& orientation,
-				   boost::optional<float> offset,
-				   int amount) {
-    Anonymous what;
-    what->setLoc(container->getId());
-    if (pos.isValid()) {
-        what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
-    }
-    if (orientation.isValid()) {
-        what->setAttr("orientation", orientation.toAtlas());
-    }
-    if (offset) {
-        what->setAttr("planted-offset", offset.get());
-    }
-    if (amount != 1) {
-		what->setAttr("amount", amount);
+        m_view->getEntityFromServer("");
+        m_view->getEntityFromServer(m_entityId);
     }
 
-    what->setId(entity->getId());
-
-    Move moveOp;
-    moveOp->setFrom(m_mindId);
-    moveOp->setArgs1(what);
-
-    //if the avatar is an admin, we will set the TO property
-    //this will bypass all of the server's filtering, allowing us to place any
-    //entity, unrelated to if it's too heavy or belong to someone else
-    if (getIsAdmin()) {
-        moveOp->setTo(entity->getId());
-    }
-
-    getConnection().send(moveOp);
-
-}
-
-void Avatar::useStop()
-{
-    Use use;
-    use->setFrom(m_mindId);
-    getConnection().send(use);
-}
-
-void Avatar::onEntityAppear(Entity* ent)
-{
-    if (ent->getId() == m_entityId) {
-        assert(m_entity == nullptr);
-        m_entity = ent;
-
-		m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
-
-        GotCharacterEntity.emit(ent);
-        m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance
-
-        //Refresh type info, since we now have the possibility to get protected attributes.
-        auto parentType = ent->getType();
-        while (parentType) {
-            parentType->refresh();
-            parentType = parentType->getParent();
-        }
-
-        ent->observe("_containers_active",
-                     [this](const Atlas::Message::Element &elem) { containerActiveChanged(elem); },
-                     true);
-
-    }
-}
-
-void Avatar::onAvatarEntityDeleted()
-{
-	CharacterEntityDeleted();
-	m_entity = nullptr;
-    //When the avatar entity is destroyed we should also deactivate the character.
-    m_account.deactivateCharacter(this);
-}
-
-void Avatar::onTransferRequested(const TransferInfo &transfer)
-{
-    TransferRequested.emit(transfer);
-}
-
-Connection& Avatar::getConnection() const
-{
-    return m_account.getConnection();
-}
-
-double Avatar::getWorldTime()
-{
-    WFMath::TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
-    return m_lastOpTime + (deltaT.milliseconds() / 1000.0);
-}
-
-void Avatar::updateWorldTime(double seconds)
-{
-    m_stampAtLastOp = TimeStamp::now();
-    m_lastOpTime = seconds;
-}
-
-void Avatar::logoutResponse(const RootOperation& op)
-{
-    if (!op->instanceOf(INFO_NO)) {
-        warning() << "received an avatar logout response that is not an INFO";
-        return;
-    }
-
-    const std::vector<Root>& args(op->getArgs());
-
-    if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
-        warning() << "argument of avatar logout INFO is not a logout op";
-        return;
-    }
-
-    RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
-    const std::vector<Root>& args2(logout->getArgs());
-    if (args2.empty()) {
-        warning() << "argument of avatar INFO(LOGOUT) is empty";
-        return;
-    }
-
-    std::string charId = args2.front()->getId();
-    debug() << "got logout for character " << charId;
-    if (charId != m_mindId) {
-        error() << "got logout for character " << charId
-                << " that is not this avatar " << m_mindId;
-        return;
-    }
-
-    m_account.destroyAvatar(getId());
-}
-
-void Avatar::containerActiveChanged(const Atlas::Message::Element &element) {
-    std::set<std::string> entityIdSet;
-    if (element.isList()) {
-        auto &entityList = element.List();
-        for (auto &entry: entityList) {
-            if (entry.isString()) {
-                entityIdSet.insert(entry.String());
-            }
-        }
-    }
-    for (auto I = m_activeContainers.begin(); I != m_activeContainers.end();) {
-        auto& entry = *I;
-        if (entityIdSet.find(entry.first) == entityIdSet.end()) {
-            if (I->second) {
-                auto& entityRef = *I->second;
+    Avatar::~Avatar() {
+        m_avatarEntityDeletedConnection.disconnect();
+        m_account.getConnection().getTypeService().setTypeProviderId("");
+        for (auto &entry : m_activeContainers) {
+            if (entry.second) {
+                auto entityRef = *entry.second;
                 if (entityRef) {
                     ContainerClosed(*entityRef);
                 }
             }
-            I = m_activeContainers.erase(I);
-        } else {
-            entityIdSet.erase(I->first);
-            ++I;
         }
     }
 
-    for (auto &id : entityIdSet) {
-        auto ref = std::make_unique<EntityRef>(*m_view, id);
-        auto refInstance = ref.get();
-        if (*refInstance) {
-            ContainerOpened(**refInstance);
-        } else {
-            ref->Changed.connect([this](Entity *entity) {
-                if (entity) {
-                    ContainerOpened(*entity);
+    void Avatar::deactivate() {
+        //Send a Logout op from the Account, with the avatar mind as entity reference.
+        Logout l;
+        Anonymous arg;
+        arg->setId(m_mindId);
+        l->setArgs1(arg);
+        l->setSerialno(getNewSerialno());
+        l->setFrom(m_account.getId());
+
+        getConnection().getResponder().await(l->getSerialno(), this, &Avatar::logoutResponse);
+        getConnection().send(l);
+        m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), boost::posix_time::seconds(5),
+                                                     [&]() {
+                                                         warning()
+                                                                 << "Did not receive logout response after five seconds; forcing Avatar logout.";
+                                                         m_account.destroyAvatar(getId());
+                                                     });
+    }
+
+    void Avatar::touch(Entity *e, const WFMath::Point<3> &pos) {
+        Touch touchOp;
+        touchOp->setFrom(m_mindId);
+
+        Anonymous what;
+        what->setId(e->getId());
+        if (pos.isValid()) {
+            what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
+        }
+        touchOp->setArgs1(what);
+
+        getConnection().send(touchOp);
+    }
+
+    void Avatar::wield(Eris::Entity *entity, std::string attachPoint) const {
+
+
+        Atlas::Objects::Entity::Anonymous arguments;
+        if (entity) {
+            arguments->setId(entity->getId());
+        }
+        arguments->setAttr("attachment", std::move(attachPoint));
+        Atlas::Objects::Operation::Wield wield;
+        wield->setFrom(getId());
+        wield->setArgs1(arguments);
+
+        getConnection().send(wield);
+
+    }
+
+    void Avatar::say(const std::string &msg) {
+        Talk t;
+
+        Anonymous what;
+        what->setAttr("say", msg);
+        t->setArgs1(what);
+        t->setFrom(m_mindId);
+
+        getConnection().send(t);
+    }
+
+    void Avatar::sayTo(const std::string &message, const std::vector<std::string> &entities) {
+        Talk t;
+
+        Anonymous what;
+        what->setAttr("say", message);
+        Atlas::Message::ListType addressList;
+        for (const auto &entity : entities) {
+            addressList.emplace_back(entity);
+        }
+        what->setAttr("address", addressList);
+        t->setArgs1(what);
+        t->setFrom(m_mindId);
+
+        getConnection().send(t);
+    }
+
+
+    void Avatar::emote(const std::string &em) {
+        Imaginary im;
+
+        Anonymous emote;
+        emote->setId("emote");
+        emote->setAttr("description", em);
+
+        im->setArgs1(emote);
+        im->setFrom(m_mindId);
+        im->setSerialno(getNewSerialno());
+
+        getConnection().send(im);
+    }
+
+    void Avatar::moveToPoint(const WFMath::Point<3> &pos, const WFMath::Quaternion &orient) {
+        Anonymous what;
+        what->setLoc(m_entity->getLocation()->getId());
+        what->setId(m_entityId);
+        if (pos.isValid()) {
+            what->setAttr("pos", pos.toAtlas());
+        }
+        if (orient.isValid()) {
+            what->setAttr("orientation", orient.toAtlas());
+        }
+
+        Move moveOp;
+        moveOp->setFrom(m_mindId);
+        moveOp->setArgs1(what);
+
+        getConnection().send(moveOp);
+    }
+
+
+    void Avatar::moveInDirection(const WFMath::Vector<3> &vel, const WFMath::Quaternion &orient) {
+        Anonymous arg;
+        if (vel.isValid()) {
+            arg->setAttr("propel", vel.toAtlas());
+        }
+        if (orient.isValid()) {
+            arg->setAttr("orientation", orient.toAtlas());
+        }
+        arg->setId(m_entityId);
+
+        Move moveOp;
+        moveOp->setFrom(m_mindId);
+        moveOp->setArgs1(arg);
+
+        getConnection().send(moveOp);
+    }
+
+    void Avatar::place(const Entity *entity,
+                       const Entity *container,
+                       const WFMath::Point<3> &pos,
+                       const WFMath::Quaternion &orientation,
+                       boost::optional<float> offset,
+                       int amount) {
+        Anonymous what;
+        what->setLoc(container->getId());
+        if (pos.isValid()) {
+            what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
+        }
+        if (orientation.isValid()) {
+            what->setAttr("orientation", orientation.toAtlas());
+        }
+        if (offset) {
+            what->setAttr("planted-offset", offset.get());
+        }
+        if (amount != 1) {
+            what->setAttr("amount", amount);
+        }
+
+        what->setId(entity->getId());
+
+        Move moveOp;
+        moveOp->setFrom(m_mindId);
+        moveOp->setArgs1(what);
+
+        //if the avatar is an admin, we will set the TO property
+        //this will bypass all of the server's filtering, allowing us to place any
+        //entity, unrelated to if it's too heavy or belong to someone else
+        if (getIsAdmin()) {
+            moveOp->setTo(entity->getId());
+        }
+
+        getConnection().send(moveOp);
+
+    }
+
+    void Avatar::useStop() {
+        Use use;
+        use->setFrom(m_mindId);
+        getConnection().send(use);
+    }
+
+    void Avatar::onEntityAppear(Entity *ent) {
+        if (ent->getId() == m_entityId) {
+            assert(m_entity == nullptr);
+            m_entity = ent;
+
+            m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(
+                    sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
+
+            GotCharacterEntity.emit(ent);
+            m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance
+
+            //Refresh type info, since we now have the possibility to get protected attributes.
+            auto parentType = ent->getType();
+            while (parentType) {
+                parentType->refresh();
+                parentType = parentType->getParent();
+            }
+
+            ent->observe("_containers_active",
+                         [this](const Atlas::Message::Element &elem) { containerActiveChanged(elem); },
+                         true);
+
+        }
+    }
+
+    void Avatar::onAvatarEntityDeleted() {
+        CharacterEntityDeleted();
+        m_entity = nullptr;
+        //When the avatar entity is destroyed we should also deactivate the character.
+        m_account.deactivateCharacter(this);
+    }
+
+    void Avatar::onTransferRequested(const TransferInfo &transfer) {
+        TransferRequested.emit(transfer);
+    }
+
+    Connection &Avatar::getConnection() const {
+        return m_account.getConnection();
+    }
+
+    double Avatar::getWorldTime() {
+        WFMath::TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
+        return m_lastOpTime + (deltaT.milliseconds() / 1000.0);
+    }
+
+    void Avatar::updateWorldTime(double seconds) {
+        m_stampAtLastOp = TimeStamp::now();
+        m_lastOpTime = seconds;
+    }
+
+    void Avatar::logoutResponse(const RootOperation &op) {
+        if (!op->instanceOf(INFO_NO)) {
+            warning() << "received an avatar logout response that is not an INFO";
+            return;
+        }
+
+        const std::vector<Root> &args(op->getArgs());
+
+        if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
+            warning() << "argument of avatar logout INFO is not a logout op";
+            return;
+        }
+
+        RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
+        const std::vector<Root> &args2(logout->getArgs());
+        if (args2.empty()) {
+            warning() << "argument of avatar INFO(LOGOUT) is empty";
+            return;
+        }
+
+        std::string charId = args2.front()->getId();
+        debug() << "got logout for character " << charId;
+        if (charId != m_mindId) {
+            error() << "got logout for character " << charId
+                    << " that is not this avatar " << m_mindId;
+            return;
+        }
+
+        m_account.destroyAvatar(getId());
+    }
+
+    void Avatar::containerActiveChanged(const Atlas::Message::Element &element) {
+        std::set<std::string> entityIdSet;
+        if (element.isList()) {
+            auto &entityList = element.List();
+            for (auto &entry: entityList) {
+                if (entry.isString()) {
+                    entityIdSet.insert(entry.String());
                 }
-            });
+            }
         }
-        m_activeContainers.emplace(id, std::move(ref));
+        for (auto I = m_activeContainers.begin(); I != m_activeContainers.end();) {
+            auto &entry = *I;
+            if (entityIdSet.find(entry.first) == entityIdSet.end()) {
+                if (I->second) {
+                    auto &entityRef = *I->second;
+                    if (entityRef) {
+                        ContainerClosed(*entityRef);
+                    }
+                }
+                I = m_activeContainers.erase(I);
+            } else {
+                entityIdSet.erase(I->first);
+                ++I;
+            }
+        }
+
+        for (auto &id : entityIdSet) {
+            auto ref = std::make_unique<EntityRef>(*m_view, id);
+            auto refInstance = ref.get();
+            if (*refInstance) {
+                ContainerOpened(**refInstance);
+                ref->Changed.connect([this](Entity *newEntity, Entity *oldEntity) {
+                    if (!newEntity) {
+                        //Guaranteed to be an instance.
+                        ContainerClosed(*oldEntity);
+                    }
+                });
+            } else {
+                ref->Changed.connect([this](Entity *newEntity, Entity *oldEntity) {
+                    if (newEntity) {
+                        ContainerOpened(*newEntity);
+                    } else {
+                        //Guaranteed to be an instance.
+                        ContainerClosed(*oldEntity);
+                    }
+                });
+            }
+            m_activeContainers.emplace(id, std::move(ref));
+        }
     }
-}
 
 
-void Avatar::logoutRequested()
-{
-    m_account.destroyAvatar(getId());
-}
+    void Avatar::logoutRequested() {
+        m_account.destroyAvatar(getId());
+    }
 
-void Avatar::logoutRequested(const TransferInfo& transferInfo)
-{
-    onTransferRequested(transferInfo);
-    m_account.destroyAvatar(getId());
-}
+    void Avatar::logoutRequested(const TransferInfo &transferInfo) {
+        onTransferRequested(transferInfo);
+        m_account.destroyAvatar(getId());
+    }
 
-void Avatar::setIsAdmin(bool isAdmin)
-{
-    m_isAdmin = isAdmin;
-}
+    void Avatar::setIsAdmin(bool isAdmin) {
+        m_isAdmin = isAdmin;
+    }
 
-bool Avatar::getIsAdmin() const
-{
-    return m_isAdmin;
-}
+    bool Avatar::getIsAdmin() const {
+        return m_isAdmin;
+    }
 
-void Avatar::send(const Atlas::Objects::Operation::RootOperation& op) {
-	op->setFrom(m_mindId);
-	m_account.getConnection().send(op);
-}
+    void Avatar::send(const Atlas::Objects::Operation::RootOperation &op) {
+        op->setFrom(m_mindId);
+        m_account.getConnection().send(op);
+    }
 
 
 } // of namespace Eris

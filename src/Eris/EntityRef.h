@@ -80,7 +80,11 @@ public:
         return (m_inner < e.m_inner);
     }
 
-	sigc::signal<void, Entity*> Changed;
+    /**
+     * Emitted when value changes.
+     * First parameter is new value, second is old value.
+     */
+	sigc::signal<void, Entity*, Entity*> Changed;
 private:
 	void onEntityDeleted();
 	void onEntitySeen(Entity* e);
