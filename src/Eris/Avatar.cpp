@@ -58,6 +58,14 @@ Avatar::~Avatar()
 {
 	m_avatarEntityDeletedConnection.disconnect();
     m_account.getConnection().getTypeService().setTypeProviderId("");
+    for (auto& entry : m_activeContainers) {
+        if (entry.second) {
+            auto entityRef = *entry.second;
+            if (entityRef) {
+                ContainerClosed(*entityRef);
+            }
+        }
+    }
 }
 
 void Avatar::deactivate()
