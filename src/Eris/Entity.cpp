@@ -61,30 +61,16 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity()
 {
+    BeingDeleted.emit();
+
+    m_contents.clear();
+    setLocation(nullptr);
+
 	//Delete any lingering tasks.
 	for (auto& entry : m_tasks) {
 		TaskRemoved(entry.first, entry.second.get());
 	}
 	setLocation(nullptr);
-}
-
-void Entity::shutdown()
-{
-    BeingDeleted.emit();
-
-    if (m_moving) {
-    	removeFromMovementPrediction();
-    }
-
-    auto content = m_contents;
-    for (auto I : content) {
-    	I->shutdown();
-    }
-    m_contents.clear();
-    setLocation(nullptr);
-    
-
-    m_initialised = false;
 }
 
 void Entity::init(const RootEntity& ge, bool fromCreateOp)

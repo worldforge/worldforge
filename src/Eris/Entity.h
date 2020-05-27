@@ -30,7 +30,7 @@ namespace Atlas {
 
 namespace Eris {
 
-// Forward Declerations	
+// Forward Declarations
 class Entity;
 class TypeInfo;
 class View;
@@ -50,8 +50,6 @@ This class may be sub-classed by users (and those sub-classes built via
 a Factory), to allow specific functionality. This means there are two
 integration strategies; either subclassing and over-riding virtual functions,
 or creating peer classes and attaching them to the signals.
-
-@note If you handle entities manually, you must make sure to call shutdown() before the instance is deleted.
 */
 
 class Entity : virtual public sigc::trackable
@@ -62,14 +60,7 @@ public:
     explicit Entity(std::string id, TypeInfo* ty);
     virtual ~Entity();
 
-    /**
-     * @brief Shuts down the entity. A call to this must be made before the entity is deleted.
-     * In normal operations, where Eris itself takes care of the entities, it will be called automatically.
-     * If you however manually handle instance of this in your code you must call it yourself.
-     */
-    virtual void shutdown();
-
-// heirarchy interface    
+// hierarchy interface
     /**
      * @brief Gets the number of contained entities, i.e. entities that are direct children of this.
      * The number returned is only for direct children, so the number of nested entities can be larger.
@@ -455,6 +446,7 @@ protected:
     friend class IGRouter;
     friend class View;
     friend class Task;
+    friend class Avatar;
 
     /**
     Fully initialise all entity state based on a RootEntity, including

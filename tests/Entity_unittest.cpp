@@ -69,7 +69,6 @@ int main()
 {
     {
         Eris::Entity * e = new TestErisEntity("1", 0);
-        e->shutdown();
         delete e;
     }
 
@@ -117,10 +116,6 @@ int main()
         });
         e4.testSetPosition(newPos);
 
-        e4.shutdown();
-        e3.shutdown();
-        e2.shutdown();
-        e1.shutdown();
     }
 
 

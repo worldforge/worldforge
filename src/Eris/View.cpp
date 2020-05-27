@@ -31,12 +31,9 @@ View::View(Avatar& av) :
 }
 
 View::~View() {
-	if (m_topLevel) {
-		m_topLevel->shutdown(); //This will call back into View::entityDeleted
-		if (!m_contents.empty()) {
-			warning() << "top level entity is not empty on view destruction";
-		}
-	}
+    if (!m_contents.empty()) {
+        warning() << "top level entity is not empty on view destruction";
+    }
 	// note that errors that occurs very early during world entry, may
 	// cause a view to be deleted with no top-level entity; in that case we
 	// leak a few entities here.
@@ -252,8 +249,8 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 }
 
 void View::deleteEntity(const std::string& eid) {
-	auto* ent = getEntity(eid);
-	if (ent) {
+    auto I = m_contents.find(eid);
+	if (I != m_contents.end()) {
 //		// copy the child array, since setLocation will modify it
 //		EntityArray contents;
 //		for (size_t c = 0; c < ent->numContained(); ++c) {
@@ -273,11 +270,12 @@ void View::deleteEntity(const std::string& eid) {
 //		}
 
 		// force a disappear if one hasn't already happened
-		EntityDeleted.emit(ent);
-		ent->shutdown(); //This will call back to View::entityDeleted and remove the entity.
+		EntityDeleted.emit(I->second.get());
+		m_contents.erase(I);
+
 	} else {
+	    //We might get a delete for an entity which we are awaiting info about; this is normal.
 		if (isPending(eid)) {
-			//debug() << "got delete for pending entity, argh";
 			m_pending[eid] = SightAction::DISCARD;
 		} else {
 			warning() << "got delete for unknown entity " << eid;
@@ -300,18 +298,9 @@ std::unique_ptr<ViewEntity> View::createEntity(const RootEntity& gent) {
 }
 
 void View::unseen(const std::string& eid) {
-	auto ent = getEntity(eid);
-	if (ent) {
-		EntityDeleted.emit(ent);
-		ent->shutdown(); //This will call back into View::entityDeleted
-	} else {
-		auto I = m_pending.find(eid);
-		if (I != m_pending.end()) {
-			m_pending.erase(I);
-		} else {
-			warning() << "got unseen for unknown entity " << eid;
-		}
-	}
+    //This op is received when we tried to interact with something we can't observe anymore (either because it's deleted
+    // or because it's out of sight).
+    deleteEntity(eid);
 }
 
 bool View::isPending(const std::string& eid) const {
@@ -415,7 +404,6 @@ void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 }
 
 void View::entityDeleted(ViewEntity* ent) {
-	assert(m_contents.count(ent->getId()));
 	m_contents.erase(ent->getId());
 }
 

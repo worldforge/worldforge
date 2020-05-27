@@ -32,8 +32,6 @@ public:
 
 	~ViewEntity() override;
 
-    void shutdown() override;
-
     /**
      * @brief Gets the view to which this entity belongs, if any.
      * @return The view to which this entity belongs, or null if

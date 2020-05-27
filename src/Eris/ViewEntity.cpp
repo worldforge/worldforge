@@ -20,12 +20,11 @@ ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 }
 
 ViewEntity::~ViewEntity() {
-	m_view.getConnection().unregisterRouterForFrom(m_router.get(), m_id);
-}
-
-void ViewEntity::shutdown() {
-	Entity::shutdown();
-	m_view.entityDeleted(this); // remove ourselves from the View's content map. This will delete the entity.
+    if (m_moving) {
+        m_view.removeFromPrediction(this);
+    }
+    m_view.getConnection().unregisterRouterForFrom(m_router.get(), m_id);
+    m_view.entityDeleted(this); // remove ourselves from the View's content map. This will delete the entity.
 }
 
 TypeService& ViewEntity::getTypeService() const {
