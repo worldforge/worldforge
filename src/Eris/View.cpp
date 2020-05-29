@@ -249,27 +249,13 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 void View::deleteEntity(const std::string& eid) {
     auto I = m_contents.find(eid);
 	if (I != m_contents.end()) {
-//		// copy the child array, since setLocation will modify it
-//		EntityArray contents;
-//		for (size_t c = 0; c < ent->numContained(); ++c) {
-//			contents.push_back(ent->getContained(c));
-//		}
-//
-//		while (!contents.empty()) {
-//			Entity* child = contents.back();
-//			child->setLocation(ent->getLocation());
-//
-//			WFMath::Point<3> newPos = ent->toLocationCoords(child->getPosition());
-//			WFMath::Quaternion newOrient = ent->getOrientation() * child->getOrientation();
-//			child->m_position = newPos;
-//			child->m_orientation = newOrient;
-//
-//			contents.pop_back();
-//		}
 
-		// force a disappear if one hasn't already happened
-		EntityDeleted.emit(I->second.get());
+	    EntityDeleted.emit(I->second.get());
+		auto children = I->second->getContent();
 		m_contents.erase(I);
+		for (auto& child : children) {
+		    deleteEntity(child->getId());
+		}
 
 	} else {
 	    //We might get a delete for an entity which we are awaiting info about; this is normal.

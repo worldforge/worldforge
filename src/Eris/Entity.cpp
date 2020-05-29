@@ -65,7 +65,7 @@ Entity::~Entity()
     setLocation(nullptr);
 
     for (auto& child: m_contents) {
-        //Set location of all children to null to avoid callbacks when they are destroyed.
+        //Release all children.
         child->m_location = nullptr;
     }
     m_contents.clear();
