@@ -62,15 +62,18 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 Entity::~Entity()
 {
     BeingDeleted.emit();
-
-    m_contents.clear();
     setLocation(nullptr);
+
+    for (auto& child: m_contents) {
+        //Set location of all children to null to avoid callbacks when they are destroyed.
+        child->m_location = nullptr;
+    }
+    m_contents.clear();
 
 	//Delete any lingering tasks.
 	for (auto& entry : m_tasks) {
 		TaskRemoved(entry.first, entry.second.get());
 	}
-	setLocation(nullptr);
 }
 
 void Entity::init(const RootEntity& ge, bool fromCreateOp)

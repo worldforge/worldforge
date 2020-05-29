@@ -31,12 +31,10 @@ View::View(Avatar& av) :
 }
 
 View::~View() {
-    if (!m_contents.empty()) {
-        warning() << "top level entity is not empty on view destruction";
-    }
-	// note that errors that occurs very early during world entry, may
-	// cause a view to be deleted with no top-level entity; in that case we
-	// leak a few entities here.
+    //To avoid having callbacks into the View when deleting children we first move all of them to a temporary copy
+    //and then destroy that.
+    auto contents = std::move(m_contents);
+    contents.clear();
 }
 
 ViewEntity* View::getEntity(const std::string& eid) const {
