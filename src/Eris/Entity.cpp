@@ -61,7 +61,6 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity()
 {
-    BeingDeleted.emit();
     setLocation(nullptr);
 
     for (auto& child: m_contents) {

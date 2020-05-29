@@ -250,8 +250,12 @@ void View::deleteEntity(const std::string& eid) {
     auto I = m_contents.find(eid);
 	if (I != m_contents.end()) {
 
-	    EntityDeleted.emit(I->second.get());
-		auto children = I->second->getContent();
+	    auto entity = I->second.get();
+	    //Emit signals about the entity being deleted.
+	    EntityDeleted.emit(entity);
+        entity->BeingDeleted.emit();
+        //We need to delete all children too.
+        auto children = I->second->getContent();
 		m_contents.erase(I);
 		for (auto& child : children) {
 		    deleteEntity(child->getId());

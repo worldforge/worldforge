@@ -240,6 +240,8 @@ protected:
 	std::unique_ptr<TimedEvent> m_logoutTimer;
 
 	std::map<std::string, std::unique_ptr<EntityRef>> m_activeContainers;
+
+	sigc::connection m_entityParentDeletedConnection;
 };
 
 inline const std::string& Avatar::getId() const {

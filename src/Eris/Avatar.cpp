@@ -53,6 +53,7 @@ namespace Eris {
     }
 
     Avatar::~Avatar() {
+        m_entityParentDeletedConnection.disconnect();
         m_avatarEntityDeletedConnection.disconnect();
         m_account.getConnection().getTypeService().setTypeProviderId("");
         for (auto &entry : m_activeContainers) {
@@ -241,6 +242,27 @@ namespace Eris {
             assert(m_entity == nullptr);
             m_entity = ent;
 
+            //Since the avatar entity is special we need to protect it from being deleted.
+            //Normally when the parent entity is deleted, all child entities will be deleted (in cascading order).
+            //However, for the avatar entity we'll listen for when our parent is deleted and detach ourselves from it.
+            //This works by relying on the server later on sending information about the avatar entity's new
+            //surroundings.
+            auto entityParentDeletedFn = [this, ent](){
+                //remove ourselves from the parent before it's deleted
+                ent->setLocation(nullptr);
+                m_entityParentDeletedConnection.disconnect();
+            };
+
+            ent->LocationChanged.connect([this, ent, entityParentDeletedFn](Entity* oldParent){
+                m_entityParentDeletedConnection.disconnect();
+                if (ent->getLocation()) {
+                    m_entityParentDeletedConnection = ent->getLocation()->BeingDeleted.connect(entityParentDeletedFn);
+                }
+            });
+            if (ent->getLocation()) {
+                m_entityParentDeletedConnection = ent->getLocation()->BeingDeleted.connect(entityParentDeletedFn);
+            }
+
             m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(
                     sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
 
@@ -254,6 +276,8 @@ namespace Eris {
                 parentType = parentType->getParent();
             }
 
+            //The container system relies on the "_containers_active" property to define what containers the
+            //avatar entity currenty is interacting with.
             ent->observe("_containers_active",
                          [this](const Atlas::Message::Element &elem) { containerActiveChanged(elem); },
                          true);
@@ -278,7 +302,7 @@ namespace Eris {
 
     double Avatar::getWorldTime() {
         WFMath::TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
-        return m_lastOpTime + (deltaT.milliseconds() / 1000.0);
+        return m_lastOpTime + ((double)deltaT.milliseconds() / 1000.0);
     }
 
     void Avatar::updateWorldTime(double seconds) {
