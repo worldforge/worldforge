@@ -59,7 +59,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 					} else if (ty->isA(typeService().getTypeByName("action"))) {
 						// sound of action
 						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
-						m_entity->onSoundAction(act);
+						m_entity->onSoundAction(act, *ty);
 					} else {
 						warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
 					}

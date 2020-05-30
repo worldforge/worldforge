@@ -35,7 +35,13 @@ public:
     /** 
      * @brief Test whether this type inherits (directly or indirectly) from the specific class. If this type is not bound, this may return false-negatives. 
      */
-    bool isA(TypeInfo* ti);
+    bool isA(TypeInfo* ti) const;
+
+    /**
+     * @brief Test whether this type inherits (directly or indirectly) from the specific class. If this type is not bound, this may return false-negatives.
+     * This test is a bit slower than checking against a TypeInfo instance.
+     */
+    bool isA(const std::string& typeName) const;
 
     /**
      * @brief Check the bound flag for this node; if false then recursivley check parents until an authorative is found 

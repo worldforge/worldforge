@@ -55,7 +55,7 @@ protected:
     void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
 
     void onSoundAction(
-    		const Atlas::Objects::Operation::RootOperation& op) override;
+    		const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo) override;
 
     void onVisibilityChanged(bool vis) override;
 

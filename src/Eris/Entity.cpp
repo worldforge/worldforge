@@ -317,7 +317,7 @@ void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
     for (const auto& arg: talkArgs) {
 		Say.emit(arg);
     }
-    Noise.emit(talk);
+    //Noise.emit(talk);
 }
 
 void Entity::onLocationChanged(Entity* oldLoc)
@@ -334,19 +334,19 @@ void Entity::onMoved()
     Moved.emit();
 }
 
-void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg)
+void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg, const TypeInfo& typeInfo)
 {
-	Acted.emit(arg);
+	Acted.emit(arg, typeInfo);
 }
 
-void Entity::onHit(const Atlas::Objects::Operation::Hit& arg)
+void Entity::onHit(const Atlas::Objects::Operation::Hit& arg, const TypeInfo& typeInfo)
 {
-	Hit.emit(arg);
+	Hit.emit(arg, typeInfo);
 }
 
-void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
+void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo)
 {
-    Noise.emit(op);
+    Noise.emit(op, typeInfo);
 }
 
 void Entity::onImaginary(const Atlas::Objects::Root& arg)

@@ -37,8 +37,8 @@ void ViewEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talk) {
 }
 
 void ViewEntity::onSoundAction(
-		const Atlas::Objects::Operation::RootOperation& op) {
-	Entity::onSoundAction(op);
+		const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo) {
+	Entity::onSoundAction(op, typeInfo);
 	m_view.getAvatar().Hear.emit(this, op);
 }
 

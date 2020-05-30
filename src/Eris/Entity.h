@@ -334,19 +334,19 @@ public:
     action is passed as the signal argument. For examples of action
     arguments, see some documentation that probably isn't written yet.
     */
-    sigc::signal<void, const Atlas::Objects::Operation::RootOperation&> Acted;
+    sigc::signal<void, const Atlas::Objects::Operation::RootOperation&, const TypeInfo&> Acted;
 
 	/**
 	Emitted when this entity performs is hit by something.
 	*/
-	sigc::signal<void, const Atlas::Objects::Operation::Hit&> Hit;
+	sigc::signal<void, const Atlas::Objects::Operation::Hit&, const TypeInfo&> Hit;
 
     /**
     Emitted when this entity performs an action which causes a noise. This
     may happen alongside the sight of the action, or not, depending on the
     distance to the entity and so on.
     */
-    sigc::signal<void, const Atlas::Objects::Root&> Noise;
+    sigc::signal<void, const Atlas::Objects::Root&, const TypeInfo&> Noise;
 
     /**
     Emitted when the visibility of the entity changes. Often this happens
@@ -397,19 +397,19 @@ protected:
     Over-rideable hook when this entity is seen to perform an action.
     Default implementation emits the Action signal.
     */
-    virtual void onAction(const Atlas::Objects::Operation::RootOperation& act);
+    virtual void onAction(const Atlas::Objects::Operation::RootOperation& act, const TypeInfo& typeInfo);
 
 	/**
 	Over-rideable hook when this entity is hit by something.
 	Default implementation emits the Hit signal.
     */
-	virtual void onHit(const Atlas::Objects::Operation::Hit& hit);
+	virtual void onHit(const Atlas::Objects::Operation::Hit& hit, const TypeInfo& typeInfo);
 
     /**
     Over-rideable hook when this entity is heard performing an action.
     Default implementation emits the Noise signal.
     */
-    virtual void onSoundAction(const Atlas::Objects::Operation::RootOperation& op);
+    virtual void onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo);
 
     /**
     Over-rideable hook when this entity is seen to emit an imginary op.

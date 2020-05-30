@@ -12,6 +12,7 @@
 #include <Atlas/Objects/Operation.h>
 
 #include <cassert>
+#include <algorithm>
 
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
@@ -44,7 +45,7 @@ TypeInfo::TypeInfo(const Root &atype, TypeService &ts) :
     processTypeData(atype);
 }
 
-bool TypeInfo::isA(TypeInfo* tp)
+bool TypeInfo::isA(TypeInfo* tp) const
 {
     if (!m_bound) {
         warning() << "calling isA on unbound type " << m_name;
@@ -57,6 +58,20 @@ bool TypeInfo::isA(TypeInfo* tp)
 	
     return m_ancestors.find(tp) != m_ancestors.end(); // non-authorative if not bound
 }
+
+bool TypeInfo::isA(const std::string& typeName) const
+{
+    if (!m_bound) {
+        warning() << "calling isA on unbound type " << m_name;
+    }
+    if (m_name == typeName) {
+        return true;
+    }
+
+    auto I = std::find_if(m_ancestors.begin(), m_ancestors.end(), [&](const TypeInfo* typeInfo){ return typeInfo->m_name == typeName;});
+    return I != m_ancestors.end();
+}
+
 
 bool TypeInfo::hasUnresolvedChildren() const
 {

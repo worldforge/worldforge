@@ -237,7 +237,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 			if (!op->isDefaultTo()) {
 				Entity* ent = m_view.getEntity(op->getTo());
 				if (ent) {
-					ent->onHit(smart_dynamic_cast<Hit>(op));
+					ent->onHit(smart_dynamic_cast<Hit>(op), *ty);
 				}
 			} else {
 				warning() << "received hit with TO unset";
@@ -253,7 +253,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 
 			Entity* ent = m_view.getEntity(op->getFrom());
 			if (ent) {
-				ent->onAction(op);
+				ent->onAction(op, *ty);
 			}
 
 			return HANDLED;
