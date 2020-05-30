@@ -700,7 +700,7 @@ TypeInfo::TypeInfo(std::string id, TypeService& ts) :
 		m_typeService(ts) {
 }
 
-bool TypeInfo::isA(TypeInfo* tp) {
+bool TypeInfo::isA(TypeInfo* tp) const {
 	return false;
 }
 
