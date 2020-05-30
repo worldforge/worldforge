@@ -36,10 +36,7 @@ void GenericData::setType(const std::string & name, int no)
 
 GenericData * GenericData::copy() const
 {
-    GenericData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<GenericData>(*this);
 }
 
 bool GenericData::instanceOf(int classNo) const

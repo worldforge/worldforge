@@ -30,10 +30,7 @@ void ImaginaryData::reset()
 
 ImaginaryData * ImaginaryData::copy() const
 {
-    ImaginaryData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ImaginaryData>(*this);
 }
 
 bool ImaginaryData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void UseData::reset()
 
 UseData * UseData::copy() const
 {
-    UseData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<UseData>(*this);
 }
 
 bool UseData::instanceOf(int classNo) const
@@ -112,10 +106,7 @@ void ActivityData::reset()
 
 ActivityData * ActivityData::copy() const
 {
-    ActivityData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ActivityData>(*this);
 }
 
 bool ActivityData::instanceOf(int classNo) const
@@ -153,10 +144,7 @@ void InfoData::reset()
 
 InfoData * InfoData::copy() const
 {
-    InfoData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<InfoData>(*this);
 }
 
 bool InfoData::instanceOf(int classNo) const
@@ -194,10 +182,7 @@ void PerceptionData::reset()
 
 PerceptionData * PerceptionData::copy() const
 {
-    PerceptionData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<PerceptionData>(*this);
 }
 
 bool PerceptionData::instanceOf(int classNo) const
@@ -235,10 +220,7 @@ void UnseenData::reset()
 
 UnseenData * UnseenData::copy() const
 {
-    UnseenData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<UnseenData>(*this);
 }
 
 bool UnseenData::instanceOf(int classNo) const

@@ -30,10 +30,7 @@ void AdminEntityData::reset()
 
 AdminEntityData * AdminEntityData::copy() const
 {
-    AdminEntityData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AdminEntityData>(*this);
 }
 
 bool AdminEntityData::instanceOf(int classNo) const
@@ -204,10 +201,7 @@ void AccountData::reset()
 
 AccountData * AccountData::copy() const
 {
-    AccountData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AccountData>(*this);
 }
 
 bool AccountData::instanceOf(int classNo) const
@@ -253,10 +247,7 @@ void PlayerData::reset()
 
 PlayerData * PlayerData::copy() const
 {
-    PlayerData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<PlayerData>(*this);
 }
 
 bool PlayerData::instanceOf(int classNo) const
@@ -299,10 +290,7 @@ void AdminData::reset()
 
 AdminData * AdminData::copy() const
 {
-    AdminData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AdminData>(*this);
 }
 
 bool AdminData::instanceOf(int classNo) const
@@ -345,10 +333,7 @@ void GameData::reset()
 
 GameData * GameData::copy() const
 {
-    GameData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<GameData>(*this);
 }
 
 bool GameData::instanceOf(int classNo) const
@@ -391,10 +376,7 @@ void GameEntityData::reset()
 
 GameEntityData * GameEntityData::copy() const
 {
-    GameEntityData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<GameEntityData>(*this);
 }
 
 bool GameEntityData::instanceOf(int classNo) const

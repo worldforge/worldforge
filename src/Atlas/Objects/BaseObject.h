@@ -193,7 +193,6 @@ void Allocator<T>::release()
     m_begin_Data = 0;
 }
 
-
 static const int BASE_OBJECT_NO = 0;
 
 /** Atlas base object class.
@@ -443,6 +442,9 @@ protected:
     /// Iterate over the attributes of this instance.
     virtual void iterate(int& current_class, std::string& attr) const;
 
+    template<typename T>
+	static T * copyInstance(const T& instance);
+
     int m_class_no; //each class has different enum
     int m_refCount; //how many instances
 
@@ -486,6 +488,14 @@ inline const BaseObjectData::const_iterator BaseObjectData::const_iterator::oper
     const_iterator tmp = *this;
     operator++();
     return tmp;
+}
+
+template<typename T>
+T * BaseObjectData::copyInstance(const T& instance) {
+	T * copied = T::allocator.alloc();
+	*copied = instance;
+	copied->m_refCount = 0;
+	return copied;
 }
 
 } } // namespace Atlas::Objects

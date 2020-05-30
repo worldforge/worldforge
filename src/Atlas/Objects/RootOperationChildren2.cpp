@@ -30,10 +30,7 @@ void AffectData::reset()
 
 AffectData * AffectData::copy() const
 {
-    AffectData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AffectData>(*this);
 }
 
 bool AffectData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void HitData::reset()
 
 HitData * HitData::copy() const
 {
-    HitData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<HitData>(*this);
 }
 
 bool HitData::instanceOf(int classNo) const
@@ -112,10 +106,7 @@ void MoveData::reset()
 
 MoveData * MoveData::copy() const
 {
-    MoveData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<MoveData>(*this);
 }
 
 bool MoveData::instanceOf(int classNo) const
@@ -153,10 +144,7 @@ void WieldData::reset()
 
 WieldData * WieldData::copy() const
 {
-    WieldData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<WieldData>(*this);
 }
 
 bool WieldData::instanceOf(int classNo) const
@@ -194,10 +182,7 @@ void GetData::reset()
 
 GetData * GetData::copy() const
 {
-    GetData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<GetData>(*this);
 }
 
 bool GetData::instanceOf(int classNo) const
@@ -235,10 +220,7 @@ void PerceiveData::reset()
 
 PerceiveData * PerceiveData::copy() const
 {
-    PerceiveData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<PerceiveData>(*this);
 }
 
 bool PerceiveData::instanceOf(int classNo) const

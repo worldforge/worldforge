@@ -30,10 +30,7 @@ void SightData::reset()
 
 SightData * SightData::copy() const
 {
-    SightData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<SightData>(*this);
 }
 
 bool SightData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void AppearanceData::reset()
 
 AppearanceData * AppearanceData::copy() const
 {
-    AppearanceData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AppearanceData>(*this);
 }
 
 bool AppearanceData::instanceOf(int classNo) const
@@ -112,10 +106,7 @@ void DisappearanceData::reset()
 
 DisappearanceData * DisappearanceData::copy() const
 {
-    DisappearanceData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<DisappearanceData>(*this);
 }
 
 bool DisappearanceData::instanceOf(int classNo) const
@@ -153,10 +144,7 @@ void SoundData::reset()
 
 SoundData * SoundData::copy() const
 {
-    SoundData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<SoundData>(*this);
 }
 
 bool SoundData::instanceOf(int classNo) const
@@ -194,10 +182,7 @@ void SmellData::reset()
 
 SmellData * SmellData::copy() const
 {
-    SmellData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<SmellData>(*this);
 }
 
 bool SmellData::instanceOf(int classNo) const
@@ -235,10 +220,7 @@ void FeelData::reset()
 
 FeelData * FeelData::copy() const
 {
-    FeelData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<FeelData>(*this);
 }
 
 bool FeelData::instanceOf(int classNo) const

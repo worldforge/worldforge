@@ -30,10 +30,7 @@ void ErrorData::reset()
 
 ErrorData * ErrorData::copy() const
 {
-    ErrorData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ErrorData>(*this);
 }
 
 bool ErrorData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void ChangeData::reset()
 
 ChangeData * ChangeData::copy() const
 {
-    ChangeData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ChangeData>(*this);
 }
 
 bool ChangeData::instanceOf(int classNo) const

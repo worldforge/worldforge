@@ -221,10 +221,7 @@ void RootOperationData::reset()
 
 RootOperationData * RootOperationData::copy() const
 {
-    RootOperationData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<RootOperationData>(*this);
 }
 
 bool RootOperationData::instanceOf(int classNo) const

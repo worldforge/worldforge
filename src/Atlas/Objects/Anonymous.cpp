@@ -36,10 +36,7 @@ void AnonymousData::setType(const std::string & name, int no)
 
 AnonymousData * AnonymousData::copy() const
 {
-    AnonymousData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<AnonymousData>(*this);
 }
 
 bool AnonymousData::instanceOf(int classNo) const

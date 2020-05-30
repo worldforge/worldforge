@@ -417,10 +417,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
     def copy_im(self, obj):
         self.write("""%s * %s::copy() const
 {
-    %s * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<%s>(*this);
 }
 
 """ % (self.classname, self.classname, self.classname))

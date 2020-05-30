@@ -30,10 +30,7 @@ void LookData::reset()
 
 LookData * LookData::copy() const
 {
-    LookData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<LookData>(*this);
 }
 
 bool LookData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void ListenData::reset()
 
 ListenData * ListenData::copy() const
 {
-    ListenData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ListenData>(*this);
 }
 
 bool ListenData::instanceOf(int classNo) const
@@ -112,10 +106,7 @@ void SniffData::reset()
 
 SniffData * SniffData::copy() const
 {
-    SniffData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<SniffData>(*this);
 }
 
 bool SniffData::instanceOf(int classNo) const
@@ -153,10 +144,7 @@ void TouchData::reset()
 
 TouchData * TouchData::copy() const
 {
-    TouchData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<TouchData>(*this);
 }
 
 bool TouchData::instanceOf(int classNo) const
@@ -194,10 +182,7 @@ void LoginData::reset()
 
 LoginData * LoginData::copy() const
 {
-    LoginData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<LoginData>(*this);
 }
 
 bool LoginData::instanceOf(int classNo) const
@@ -235,10 +220,7 @@ void LogoutData::reset()
 
 LogoutData * LogoutData::copy() const
 {
-    LogoutData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<LogoutData>(*this);
 }
 
 bool LogoutData::instanceOf(int classNo) const

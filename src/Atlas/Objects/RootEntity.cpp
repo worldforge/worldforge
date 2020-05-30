@@ -196,10 +196,7 @@ void RootEntityData::reset()
 
 RootEntityData * RootEntityData::copy() const
 {
-    RootEntityData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<RootEntityData>(*this);
 }
 
 bool RootEntityData::instanceOf(int classNo) const

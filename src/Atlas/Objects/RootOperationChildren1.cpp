@@ -30,10 +30,7 @@ void ActionData::reset()
 
 ActionData * ActionData::copy() const
 {
-    ActionData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<ActionData>(*this);
 }
 
 bool ActionData::instanceOf(int classNo) const
@@ -71,10 +68,7 @@ void CreateData::reset()
 
 CreateData * CreateData::copy() const
 {
-    CreateData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<CreateData>(*this);
 }
 
 bool CreateData::instanceOf(int classNo) const
@@ -112,10 +106,7 @@ void CommunicateData::reset()
 
 CommunicateData * CommunicateData::copy() const
 {
-    CommunicateData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<CommunicateData>(*this);
 }
 
 bool CommunicateData::instanceOf(int classNo) const
@@ -153,10 +144,7 @@ void TalkData::reset()
 
 TalkData * TalkData::copy() const
 {
-    TalkData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<TalkData>(*this);
 }
 
 bool TalkData::instanceOf(int classNo) const
@@ -194,10 +182,7 @@ void DeleteData::reset()
 
 DeleteData * DeleteData::copy() const
 {
-    DeleteData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<DeleteData>(*this);
 }
 
 bool DeleteData::instanceOf(int classNo) const
@@ -235,10 +220,7 @@ void SetData::reset()
 
 SetData * SetData::copy() const
 {
-    SetData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<SetData>(*this);
 }
 
 bool SetData::instanceOf(int classNo) const

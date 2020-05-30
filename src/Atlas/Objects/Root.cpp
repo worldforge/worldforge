@@ -185,10 +185,7 @@ void RootData::reset()
 
 RootData * RootData::copy() const
 {
-    RootData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
+    return copyInstance<RootData>(*this);
 }
 
 bool RootData::instanceOf(int classNo) const
