@@ -13,7 +13,7 @@
 
 namespace Atlas { namespace Objects { 
 
-int Factories::enumMax = 43;
+int Factories::enumMax = 44;
 
 void Factories::installStandardTypes()
 {
@@ -75,6 +75,8 @@ void Factories::installStandardTypes()
     addFactory<Operation::ImaginaryData>("imaginary", Operation::IMAGINARY_NO);
 
     addFactory<Operation::UseData>("use", Operation::USE_NO);
+
+    addFactory<Operation::ActivityData>("activity", Operation::ACTIVITY_NO);
 
     addFactory<Operation::InfoData>("info", Operation::INFO_NO);
 

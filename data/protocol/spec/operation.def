@@ -823,3 +823,8 @@ except you use player id instead of character id."""
     parent:"action"
     description:"Use a currently wielded tool."
     args_description:"Target tool is used on, or operation chosen from those available for this tool, with target given as its argument."
+
+:map:
+    id:"activity"
+    parent:"action"
+    description:"Activities performed by entities. This is mainly meant for actions that should be communicated to other entities (like 'digging' or 'twirling')"

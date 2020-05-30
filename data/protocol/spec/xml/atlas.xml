@@ -134,7 +134,7 @@ descending into childrens.</string>
 <map>
 	<string name="id">action</string>
 	<string name="parent">root_operation</string>
-	<list name="children"><string>create</string><string>delete</string><string>set</string><string>get</string><string>imaginary</string><string>use</string></list>
+	<list name="children"><string>create</string><string>delete</string><string>set</string><string>get</string><string>imaginary</string><string>use</string><string>activity</string></list>
 	<string name="description">This is base operator for operations that might have effects.</string>
 	<map name="specification_file">
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
@@ -1516,6 +1516,17 @@ except you use player id instead of character id.</string>
 		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string><string>args_description</string></list>
 		<string name="filename">operation.def</string>
 		<int name="lineno">821</int>
+	</map>
+</map>
+<map>
+	<string name="id">activity</string>
+	<string name="parent">action</string>
+	<list name="children"></list>
+	<string name="description">Activities performed by entities. This is mainly meant for actions that should be communicated to other entities (like 'digging' or 'twirling')</string>
+	<map name="specification_file">
+		<list name="attribute_order"><string>id</string><string>parent</string><string>children</string><string>description</string></list>
+		<string name="filename">operation.def</string>
+		<int name="lineno">827</int>
 	</map>
 </map>
 <map>

@@ -12,6 +12,47 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<SightData> SightData::allocator;
+        
+
+
+void SightData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void SightData::reset()
+{
+    PerceptionData::reset();
+}
+
+SightData * SightData::copy() const
+{
+    SightData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool SightData::instanceOf(int classNo) const
+{
+    if(SIGHT_NO == classNo) return true;
+    return PerceptionData::instanceOf(classNo);
+}
+
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
 Allocator<AppearanceData> AppearanceData::allocator;
         
 
@@ -207,47 +248,6 @@ bool FeelData::instanceOf(int classNo) const
 }
 
 void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
-Allocator<ErrorData> ErrorData::allocator;
-        
-
-
-void ErrorData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void ErrorData::reset()
-{
-    InfoData::reset();
-}
-
-ErrorData * ErrorData::copy() const
-{
-    ErrorData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool ErrorData::instanceOf(int classNo) const
-{
-    if(ERROR_NO == classNo) return true;
-    return InfoData::instanceOf(classNo);
-}
-
-void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;

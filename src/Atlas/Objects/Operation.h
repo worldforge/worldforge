@@ -1326,6 +1326,74 @@ private:
 };
 
 
+/** Activities performed by entities. This is mainly meant for actions that should be communicated to other entities (like 'digging' or 'twirling')
+
+This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+
+*/
+
+class ActivityData;
+typedef SmartPtr<ActivityData> Activity;
+
+static const int ACTIVITY_NO = 30;
+
+/// \brief Activities performed by entities. This is mainly meant for actions that should be communicated to other entities (like 'digging' or 'twirling').
+///
+/** This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+ */
+class ActivityData : public ActionData
+{
+protected:
+    /// Construct a ActivityData class definition.
+    explicit ActivityData(ActivityData *defaults = nullptr) : 
+        ActionData((ActionData*)defaults)
+    {
+        m_class_no = ACTIVITY_NO;
+    }
+    /// Default destructor.
+    ~ActivityData() override = default;
+
+public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "activity";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op";
+    /// Copy this object.
+    ActivityData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == ACTIVITY_NO) current_class = -1; ActionData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<ActivityData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(ActivityData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
 /** This is base operator for operations that tell you info about objects or events.
 
 This is base operation for all other
@@ -1339,7 +1407,7 @@ This is base operation for all other
 class InfoData;
 typedef SmartPtr<InfoData> Info;
 
-static const int INFO_NO = 30;
+static const int INFO_NO = 31;
 
 /// \brief This is base operator for operations that tell you info about objects or events..
 ///
@@ -1403,7 +1471,7 @@ Base operator for all kind of perceptions
 class PerceptionData;
 typedef SmartPtr<PerceptionData> Perception;
 
-static const int PERCEPTION_NO = 31;
+static const int PERCEPTION_NO = 32;
 
 /// \brief Character perceives something..
 ///
@@ -1463,7 +1531,7 @@ Base operator for all kind of perceptions
 class UnseenData;
 typedef SmartPtr<UnseenData> Unseen;
 
-static const int UNSEEN_NO = 32;
+static const int UNSEEN_NO = 33;
 
 /// \brief Character failed to interact with another entity because it does not exist..
 ///
@@ -1523,7 +1591,7 @@ Base operator for all kind of perceptions
 class SightData;
 typedef SmartPtr<SightData> Sight;
 
-static const int SIGHT_NO = 33;
+static const int SIGHT_NO = 34;
 
 /// \brief Character sees something.
 ///
@@ -1583,7 +1651,7 @@ Base operator for all kind of perceptions
 class AppearanceData;
 typedef SmartPtr<AppearanceData> Appearance;
 
-static const int APPEARANCE_NO = 34;
+static const int APPEARANCE_NO = 35;
 
 /// \brief Character sees something appearing: it literally appears or has it come in visible range.
 ///
@@ -1643,7 +1711,7 @@ Base operator for all kind of perceptions
 class DisappearanceData;
 typedef SmartPtr<DisappearanceData> Disappearance;
 
-static const int DISAPPEARANCE_NO = 35;
+static const int DISAPPEARANCE_NO = 36;
 
 /// \brief Character sees something disappearing: it literally disappears or has it gone too far to be visible.
 ///
@@ -1703,7 +1771,7 @@ Base operator for all kind of perceptions
 class SoundData;
 typedef SmartPtr<SoundData> Sound;
 
-static const int SOUND_NO = 36;
+static const int SOUND_NO = 37;
 
 /// \brief Character hears something.
 ///
@@ -1763,7 +1831,7 @@ Base operator for all kind of perceptions
 class SmellData;
 typedef SmartPtr<SmellData> Smell;
 
-static const int SMELL_NO = 37;
+static const int SMELL_NO = 38;
 
 /// \brief Character smells something.
 ///
@@ -1823,7 +1891,7 @@ Base operator for all kind of perceptions
 class FeelData;
 typedef SmartPtr<FeelData> Feel;
 
-static const int FEEL_NO = 38;
+static const int FEEL_NO = 39;
 
 /// \brief Character feels something (with fingers usually).
 ///
@@ -1887,7 +1955,7 @@ This is base operation for all other
 class ErrorData;
 typedef SmartPtr<ErrorData> Error;
 
-static const int ERROR_NO = 39;
+static const int ERROR_NO = 40;
 
 /// \brief Something went wrong.
 ///
@@ -1955,7 +2023,7 @@ This is base operation for all other
 class ChangeData;
 typedef SmartPtr<ChangeData> Change;
 
-static const int CHANGE_NO = 40;
+static const int CHANGE_NO = 41;
 
 /// \brief An operation used to signal to clients when things such as types have changed..
 ///

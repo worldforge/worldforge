@@ -160,6 +160,11 @@ namespace Operation {
 }
 
 namespace Operation {
+    class ActivityData;
+    typedef SmartPtr<ActivityData> Activity;
+}
+
+namespace Operation {
     class InfoData;
     typedef SmartPtr<InfoData> Info;
 }

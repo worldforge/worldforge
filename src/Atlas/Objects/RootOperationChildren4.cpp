@@ -94,6 +94,47 @@ void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, uin
         data.attr_parent = default_parent;
 }
 
+Allocator<ActivityData> ActivityData::allocator;
+        
+
+
+void ActivityData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void ActivityData::reset()
+{
+    ActionData::reset();
+}
+
+ActivityData * ActivityData::copy() const
+{
+    ActivityData * copied = allocator.alloc();
+    *copied = *this;
+    copied->m_refCount = 0;
+    return copied;
+}
+
+bool ActivityData::instanceOf(int classNo) const
+{
+    if(ACTIVITY_NO == classNo) return true;
+    return ActionData::instanceOf(classNo);
+}
+
+void ActivityData::fillDefaultObjectInstance(ActivityData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
 Allocator<InfoData> InfoData::allocator;
         
 
@@ -207,47 +248,6 @@ bool UnseenData::instanceOf(int classNo) const
 }
 
 void UnseenData::fillDefaultObjectInstance(UnseenData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
-Allocator<SightData> SightData::allocator;
-        
-
-
-void SightData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void SightData::reset()
-{
-    PerceptionData::reset();
-}
-
-SightData * SightData::copy() const
-{
-    SightData * copied = allocator.alloc();
-    *copied = *this;
-    copied->m_refCount = 0;
-    return copied;
-}
-
-bool SightData::instanceOf(int classNo) const
-{
-    if(SIGHT_NO == classNo) return true;
-    return PerceptionData::instanceOf(classNo);
-}
-
-void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
