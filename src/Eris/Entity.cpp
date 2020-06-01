@@ -98,6 +98,18 @@ Entity* Entity::getTopEntity()
 	return m_location->getTopEntity();
 }
 
+bool Entity::isAncestorTo(Eris::Entity& entity) const
+{
+    if (!entity.getLocation()) {
+        return false;
+    }
+    if (static_cast<const Eris::Entity*>(this) == entity.getLocation()) {
+        return true;
+    }
+    return isAncestorTo(*entity.getLocation());
+
+}
+
 const Element& Entity::valueOfProperty(const std::string& name) const
 {
     ///first check with the instance properties

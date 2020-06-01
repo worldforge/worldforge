@@ -83,6 +83,15 @@ public:
     Entity* getTopEntity();
 
     /**
+     * Returns true if this entity is an ancestor to the supplied entity.
+     * I.e. that it's either a direct or indirect parent.
+     * Note that this might be incorrect if parents aren't bound yet.
+     * @param entity
+     * @return
+     */
+    bool isAncestorTo(Eris::Entity& entity) const;
+
+    /**
      * @brief Gets the value of a named property.
      * If no property by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasProperty to make sure that the property exists.
      * @param name The property name.
