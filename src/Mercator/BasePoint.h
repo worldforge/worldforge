@@ -43,6 +43,10 @@ class BasePoint {
                        float f = FALLOFF) :
              m_height(h), m_roughness(r), m_falloff(f) {}
 
+
+	bool operator==(const BasePoint& rhs) const;
+	bool operator!=(const BasePoint& rhs) const;
+
     /// Accessor for the height at the base point.
     float height() const { return m_height; }
     /// Accessor for the height at the base point.
