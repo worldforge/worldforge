@@ -31,8 +31,8 @@ void gotServerList(int count)
 
 void gotServer(const Eris::ServerInfo& info)
 {
-    cerr << "got info for server: " << info.getServername() << '/'
-        << info.getHostname() << endl;
+    cerr << "got info for server: " << info.name << '/'
+        << info.host << endl;
 }
 
 void queriesDone()
@@ -107,16 +107,16 @@ void dumpToScreen(const Eris::Meta& meta)
     for (unsigned int S=0; S < meta.getGameServerCount(); ++S)
     {
         const Eris::ServerInfo& sv = meta.getInfoForServer(S);
-        cout << S << ": " << sv.getServername() << '/'<< sv.getHostname() << endl;
+        cout << S << ": " << sv.name << '/'<< sv.host << endl;
         
-        switch (sv.getStatus())
+        switch (sv.status)
         {
         case Eris::ServerInfo::VALID:
-            cout << "\tserver: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")" << endl;
-            cout << "\truleset:" << sv.getRuleset() << endl;
-            cout << "\tuptime:" << timeFormat(sv.getUptime()) << endl;
-            cout << "\tping:" << sv.getPing() << endl;
-            cout << "\tconnected clients:" << sv.getNumClients() << endl;
+            cout << "\tserver: " << sv.server << " " << sv.version << " (builddate " << sv.buildDate << ")" << endl;
+            cout << "\truleset:" << sv.ruleset << endl;
+            cout << "\tuptime:" << timeFormat(sv.uptime) << endl;
+            cout << "\tping:" << sv.ping << endl;
+            cout << "\tconnected clients:" << sv.clients << endl;
             break;
             
         case Eris::ServerInfo::TIMEOUT:
@@ -141,7 +141,7 @@ void dumpToXML(const Eris::Meta & meta)
         const Eris::ServerInfo& sv = meta.getInfoForServer(S);
         
         cout << "<server status=\"";
-        switch (sv.getStatus())
+        switch (sv.status)
         {
         case Eris::ServerInfo::VALID: cout << "valid"; break;
         case Eris::ServerInfo::TIMEOUT: cout << "timeout"; break;
@@ -149,18 +149,18 @@ void dumpToXML(const Eris::Meta & meta)
         default: cout << "failed";
         }
         cout << "\">" << endl;
-        cout << "<address>" << sv.getHostname() << "</address>" << endl;
-        if(sv.getStatus() == Eris::ServerInfo::VALID)
+        cout << "<address>" << sv.host << "</address>" << endl;
+        if(sv.status == Eris::ServerInfo::VALID)
         {
             cout << "<status>valid</status>" << endl;
-            cout << "<name>" << sv.getServername() << "</name>" << endl;
-            cout << "<servertype>" << sv.getServer() << "</servertype>" << endl;
-            cout << "<ruleset>" << sv.getRuleset() << "</ruleset>" << endl;
-            cout << "<uptime>" << timeFormat(sv.getUptime()) << "</uptime>" << endl;
-            cout << "<ping>" << sv.getPing() << "</ping>" << endl;
-            cout << "<clients>" << sv.getNumClients() << "</clients>" << endl;
-			cout << "<builddate>" << sv.getBuildDate() << "</builddate>" << endl;
-			cout << "<version>" << sv.getVersion() << "</version>" << endl;
+            cout << "<name>" << sv.name << "</name>" << endl;
+            cout << "<servertype>" << sv.server << "</servertype>" << endl;
+            cout << "<ruleset>" << sv.ruleset << "</ruleset>" << endl;
+            cout << "<uptime>" << timeFormat(sv.uptime) << "</uptime>" << endl;
+            cout << "<ping>" << sv.ping << "</ping>" << endl;
+            cout << "<clients>" << sv.clients << "</clients>" << endl;
+			cout << "<builddate>" << sv.buildDate << "</builddate>" << endl;
+			cout << "<version>" << sv.version << "</version>" << endl;
         }
         cout << "</server>" << endl;
     } // of server iteration
@@ -176,16 +176,16 @@ void dumpToHTML(const Eris::Meta& meta)
     {
         const Eris::ServerInfo& sv = meta.getInfoForServer(S);
 
-        cout << "    <dt>" << sv.getHostname() << " :: " << sv.getServername() << "</dt>" << endl;
+        cout << "    <dt>" << sv.host << " :: " << sv.name << "</dt>" << endl;
         cout << "    <dd>" << endl;
         
-        switch (sv.getStatus())
+        switch (sv.status)
         {
         case Eris::ServerInfo::VALID:
-            cout << "Server: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")<br/>" << endl;
-            cout << "Ruleset: " << sv.getRuleset() << "<br/>" << endl;
-            cout << "Up: " << timeFormat(sv.getUptime()) << " ("  << sv.getPing() << " ping)<br/>" << endl;
-            cout << "Clients: " << sv.getNumClients() << endl;
+            cout << "Server: " << sv.server << " " << sv.version << " (builddate " << sv.buildDate << ")<br/>" << endl;
+            cout << "Ruleset: " << sv.ruleset << "<br/>" << endl;
+            cout << "Up: " << timeFormat(sv.uptime) << " ("  << sv.ping << " ping)<br/>" << endl;
+            cout << "Clients: " << sv.clients << endl;
             break;
             
         case Eris::ServerInfo::TIMEOUT:

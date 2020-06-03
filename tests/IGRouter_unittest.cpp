@@ -581,7 +581,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
-		m_info(host),
+		m_info{host},
 		m_responder(nullptr){
 	_bridge = m_decoder.get();
 }
@@ -713,11 +713,6 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
 										 TypeInfo* unbound) :
 		Redispatch(con, obj),
 		m_con(con) {
-}
-
-ServerInfo::ServerInfo(std::string host) :
-		m_status(INVALID),
-		_host(host) {
 }
 
 EventService::EventService(boost::asio::io_service& io_service)

@@ -19,11 +19,9 @@ and that a single server might run multiple games. Thus, hostname / IP is a very
 value.
 \task Some sort of unique game-instance ID may need to be developed here.
 */
-class ServerInfo
+struct ServerInfo
 {
-public:
-    ServerInfo();
-    
+
     typedef enum {
         INVALID,
         QUERYING,
@@ -33,94 +31,48 @@ public:
     
 	// bookmark / favourites functionality 	
 
-// accessors
-    Status getStatus() const
-    { return m_status; }
-    
-    /** retrive the hostname (or dotted-decimal IP) of the server. For multi-server worlds, this will be
-    a name that resolves to a machine capable of accepting the initial LOGIN, and hence should not need
-    special handling. */
-    const std::string& getHostname() const
-    { return _host; }
 
-    /// retrieve the human-readable name of the server (e.g 'Bob's Mason Server')
-    const std::string& getServername() const
-    { return _name; }
-    
-    /// retrieve a human-readable name of the ruleset (e.g. 'mason' or 'circe')
-    const std::string& getRuleset() const
-    { return _ruleset; }
-    
-    /// the server program name, i.e 'stage' or 'cyphesis'
-    const std::string& getServer() const
-    { return _server; }
-
-    /// the server program version, as a free text string
-    const std::string& getVersion() const
-    { return m_version; }
-
-    /// the server program build-date, as a free text string
-    const std::string& getBuildDate() const
-    { return m_buildDate; }
-    
-    /// the number of clients currently connected to the server
-    int getNumClients() const
-    { return _clients; }
-
-    /** the round-trip time to the server. The meaning of this when multi-server worlds exist needs to
-    be considered.
-    \task Verify the accuracy of the ping estimation, since it is currently very poor */
-    int getPing() const
-    { return _ping; }
-
-    /// the server's uptime in seconds
-    double getUptime() const
-    { return _uptime; }
-
-    /// the number of entities on the server
-    long getEntities() const
-    { return _entities; }
-
-    const std::vector<std::string>& getAssets() const {
-        return m_assets;
-    }
-	
-protected:
-    friend class Meta;
-    friend class Connection;
-    
-    /// construct with the host IP only; other values will be set to defaults
-	explicit ServerInfo(std::string host);
-    
     /** called by Meta when info is received from the server, sets
     status to valid. */
     void processServer(const Atlas::Objects::Entity::RootEntity &svr);
 
-    void setPing(int p);
-	void setStatus(Status s);
-    
-private:
-    Status m_status;
-    
-    std::string _host;		///< Hostname or dotted-decimal IP of the server
+    /** the hostname (or dotted-decimal IP) of the server. For multi-server worlds, this will be
+      a name that resolves to a machine capable of accepting the initial LOGIN, and hence should not need
+      special handling. */
+    std::string host;
 
-    std::string _name,		///< Human readable name of the server (set by the operator)
-            _ruleset,	///< The game system this server is running (e.g. 'Acorn')
-            _server;	///< Server program (e.g. 'Cyphesis' or 'Stage')	
-    
-    int _clients;		///< Number of clients connected to the server
-    int _ping;			///< Estimated round-trip-time (ping) in milliseconds
-    long _entities;      ///< Number of entities on the server.
-    
-    double _uptime;		///< Server uptime in seconds
-    
-    std::string m_version;
-    std::string m_buildDate;
+    Status status = INVALID;
+
+    /// retrieve the human-readable name of the server (e.g 'Bob's Mason Server')
+    std::string name;
+    /// retrieve a human-readable name of the ruleset (e.g. 'mason' or 'circe')
+    std::string ruleset;
+    /// the server program name, i.e 'stage' or 'cyphesis'
+    std::string server;
+    /// version of the protocol used
+    long protocol_version;
+
+    /// the number of clients currently connected to the server
+    int clients;
+    /** the round-trip time to the server. The meaning of this when multi-server worlds exist needs to
+    be considered.
+    \task Verify the accuracy of the ping estimation, since it is currently very poor */
+    int ping = -1;
+    /// the number of entities on the server
+    long entities;
+
+    /// the server's uptime in seconds
+    double uptime;
+
+    /// the server program version, as a free text string
+    std::string version;
+    /// the server program build-date, as a free text string
+    std::string buildDate;
 
     /**
      * A list of assets URLs, from which assets can be downloaded using WFUT.
      */
-    std::vector<std::string> m_assets;
+    std::vector<std::string> assets;
 };
 
 } // of namespace Eris

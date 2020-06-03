@@ -221,16 +221,9 @@ void BaseConnection::onConnect() {
 void BaseConnection::setStatus(Status sc) {
 }
 
-ServerInfo::ServerInfo(std::string host) :
-		m_status(INVALID),
-		_host(host) {
-}
-
 void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity& svr) {
 }
 
-void ServerInfo::setPing(int p) {
-}
 
 EventService::EventService(boost::asio::io_service& io_service)
 		: m_io_service(io_service) {}

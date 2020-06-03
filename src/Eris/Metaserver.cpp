@@ -131,7 +131,7 @@ void Meta::queryServerByIndex(size_t index) {
 		return;
 	}
 
-	if (m_gameServers[index].getStatus() == ServerInfo::QUERYING) {
+	if (m_gameServers[index].status == ServerInfo::QUERYING) {
 		warning() << "called queryServerByIndex on server already being queried";
 		return;
 	}
@@ -431,7 +431,7 @@ void Meta::processCmd() {
 				);
 
 				// FIXME  - decide whether a reverse name lookup is necessary here or not
-				m_gameServers.push_back(ServerInfo(buf));
+				m_gameServers.push_back(ServerInfo{buf});
 			}
 
 			if (m_gameServers.size() < m_totalServers) {
@@ -508,14 +508,14 @@ void Meta::internalQuery(size_t index) {
 	assert(index < m_gameServers.size());
 
 	ServerInfo& sv = m_gameServers[index];
-	auto q = std::make_unique<MetaQuery>(m_io_service, *m_decoder, *this, sv.getHostname(), index);
+	auto q = std::make_unique<MetaQuery>(m_io_service, *m_decoder, *this, sv.host, index);
 	if (q->getStatus() != BaseConnection::CONNECTING &&
 		q->getStatus() != BaseConnection::NEGOTIATE) {
 		// indicates a failure occurred, so we'll kill it now and say no more
-		sv.m_status = ServerInfo::INVALID;
+		sv.status = ServerInfo::INVALID;
 	} else {
 		m_activeQueries.emplace_back(std::move(q));
-		sv.m_status = ServerInfo::QUERYING;
+		sv.status = ServerInfo::QUERYING;
 	}
 }
 
@@ -548,7 +548,7 @@ void Meta::objectArrived(const Root& obj) {
 				ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
 
 				sv.processServer(svr);
-				sv.setPing((int) (*Q)->getElapsed());
+				sv.ping = (int) (*Q)->getElapsed();
 
 				// emit the signal
 				ReceivedServerInfo.emit(sv);
@@ -580,7 +580,7 @@ void Meta::queryFailure(MetaQuery* q, const std::string& msg) {
 	// we do NOT emit a failure signal here (because that would probably cause the
 	// host app to pop up a dialog or something) since query failures are likely to
 	// be very frequent.
-	m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
+	m_gameServers[q->getServerIndex()].status = ServerInfo::INVALID;
 	q->setComplete();
 	deleteQuery(q);
 	query();
@@ -593,7 +593,7 @@ void Meta::query() {
 }
 
 void Meta::queryTimeout(MetaQuery* q) {
-	m_gameServers[q->getServerIndex()].m_status = ServerInfo::TIMEOUT;
+	m_gameServers[q->getServerIndex()].status = ServerInfo::TIMEOUT;
 	deleteQuery(q);
 	query();
 }

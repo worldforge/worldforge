@@ -185,7 +185,7 @@ void testServerInfo()
     
     con->getServerInfo(sinfo);
     assert(sinfo.getStatus() == Eris::ServerInfo::VALID);
-    assert(sinfo.getHostname() == "localhost");
-    assert(sinfo.getServername() == "Bob's StubServer");
-    assert(sinfo.getRuleset() == "stub-world");
+    assert(sinfo.host == "localhost");
+    assert(sinfo.server == "Bob's StubServer");
+    assert(sinfo.ruleset == "stub-world");
 }

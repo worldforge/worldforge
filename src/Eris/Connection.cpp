@@ -58,7 +58,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
-		m_info(host),
+		m_info{host},
 		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
 }
@@ -76,7 +76,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
-		m_info(_host),
+		m_info{_host},
 		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
 }
@@ -250,7 +250,7 @@ void Connection::refreshServerInfo() {
 		return;
 	}
 
-	m_info.setStatus(ServerInfo::QUERYING);
+	m_info.status = ServerInfo::QUERYING;
 	Get gt;
 	gt->setSerialno(getNewSerialno());
 	send(gt);
@@ -360,7 +360,7 @@ void Connection::handleServerInfo(const RootOperation& op) {
 void Connection::onConnect() {
 	BaseConnection::onConnect();
 	m_typeService->init();
-	m_info = ServerInfo(_host);
+	m_info = ServerInfo{_host};
 }
 
 void Connection::onDisconnectTimeout() {

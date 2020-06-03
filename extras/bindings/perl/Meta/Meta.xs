@@ -51,19 +51,19 @@ static SV* GetSV(const Eris::ServerInfo &info)
   HV *val = newHV();
 
   hv_store(val, hostname_key, sizeof(hostname_key) - 1,
-	string_to_sv(info.getHostname()),0);
+	string_to_sv(info.host),0);
   hv_store(val, servername_key, sizeof(servername_key) - 1,
-	string_to_sv(info.getServername()),0);
+	string_to_sv(info.name),0);
   hv_store(val, ruleset_key, sizeof(ruleset_key) - 1,
-	string_to_sv(info.getRuleset()),0);
+	string_to_sv(info.ruleset),0);
   hv_store(val, server_key, sizeof(server_key) - 1,
 	string_to_sv(info.getServer()),0);
   hv_store(val, clients_key, sizeof(clients_key) - 1,
-	newSViv(info.getNumClients()),0);
+	newSViv(info.clients),0);
   hv_store(val, ping_key, sizeof(ping_key) - 1,
-	newSViv(info.getPing()),0);
+	newSViv(info.ping),0);
   hv_store(val, uptime_key, sizeof(uptime_key) - 1,
-	newSVnv(info.getUptime()),0);
+	newSVnv(info.uptime),0);
 
   return newRV_noinc((SV*) val);
 }
