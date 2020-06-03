@@ -155,6 +155,13 @@ public:
 	void send(const Atlas::Objects::Operation::RootOperation& op);
 
 	/**
+	 * Gets the current list of opened containers.
+	 * EntityRefs that aren't valid yet will issue the ContainerOpened signal when they are resolved.
+	 * @return
+	 */
+	const std::map<std::string, std::unique_ptr<EntityRef>>& getActiveContainers() const;
+
+	/**
 	Emitted when the character entity of this Avatar is valid (and presumably,
 	visible). This will happen some time after the InGame signal is emitted.
 	A client might wish to show some kind of 'busy' animation, eg an hour-glass,
@@ -264,6 +271,11 @@ inline View& Avatar::getView() const {
 inline Account& Avatar::getAccount() const {
 	return m_account;
 }
+
+inline const std::map<std::string, std::unique_ptr<EntityRef>>& Avatar::getActiveContainers() const {
+    return m_activeContainers;
+}
+
 
 
 } // of namespace Eris
