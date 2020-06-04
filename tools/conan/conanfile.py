@@ -11,8 +11,8 @@ class MercatorConan(ConanFile):
     description = "A terrain generation library for the Worldforge system."
     topics = ("mmorpg", "worldforge")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [False, True]}
-    default_options = {"shared": False}
+    options = {"shared": [False, True], "fPIC": [True, False]}
+    default_options = {"shared": False, "fPIC": True}
     generators = "cmake"
     requires = "wfmath/1.0.3@worldforge/testing"
 
