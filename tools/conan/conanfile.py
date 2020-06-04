@@ -11,8 +11,8 @@ class AtlasConan(ConanFile):
     description = "Networking protocol for the Worldforge system."
     topics = ("mmorpg", "worldforge")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [False, True]}
-    default_options = {"shared": False}
+    options = {"shared": [False, True], "fPIC": [True, False]}
+    default_options = {"shared": False, "fPIC": True}
     requires = ["bzip2/1.0.8@_/_",
                 "zlib/1.2.11@_/_"]
     generators = "cmake"
