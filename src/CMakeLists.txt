@@ -1,29 +1,38 @@
 set(SOURCE_FILES
         wfmath/axisbox.cpp
+        wfmath/axisbox_funcs.h
         wfmath/ball.cpp
+        wfmath/ball_funcs.h
         wfmath/const.cpp
         wfmath/int_to_string.cpp
         wfmath/intersect.cpp
         wfmath/line.cpp
+        wfmath/line_funcs.h
         wfmath/point.cpp
+        wfmath/point_funcs.h
         wfmath/polygon.cpp
         wfmath/polygon_intersect.cpp
+        wfmath/polygon_funcs.h
         wfmath/probability.cpp
         wfmath/quaternion.cpp
         wfmath/randgen.cpp
         wfmath/rotbox.cpp
+        wfmath/rotbox_funcs.h
         wfmath/rotmatrix.cpp
+        wfmath/rotmatrix_funcs.h
         wfmath/segment.cpp
+        wfmath/segment_funcs.h
         wfmath/stream.cpp
         wfmath/timestamp.cpp
-        wfmath/vector.cpp)
+        wfmath/vector.cpp
+        wfmath/vector_funcs.h
+        wfmath/miniball_funcs.h
+        )
 
 set(HEADER_FILES
         wfmath/atlasconv.h
         wfmath/axisbox.h
-        wfmath/axisbox_funcs.h
         wfmath/ball.h
-        wfmath/ball_funcs.h
         wfmath/basis.h
         wfmath/const.h
         wfmath/error.h
@@ -31,29 +40,21 @@ set(HEADER_FILES
         wfmath/intersect.h
         wfmath/intersect_decls.h
         wfmath/line.h
-        wfmath/line_funcs.h
         wfmath/MersenneTwister.h
         wfmath/miniball.h
-        wfmath/miniball_funcs.h
         wfmath/point.h
-        wfmath/point_funcs.h
         wfmath/polygon.h
-        wfmath/polygon_funcs.h
         wfmath/polygon_intersect.h
         wfmath/probability.h
         wfmath/quaternion.h
         wfmath/randgen.h
         wfmath/rotbox.h
-        wfmath/rotbox_funcs.h
         wfmath/rotmatrix.h
-        wfmath/rotmatrix_funcs.h
         wfmath/segment.h
-        wfmath/segment_funcs.h
         wfmath/shuffle.h
         wfmath/stream.h
         wfmath/timestamp.h
         wfmath/vector.h
-        wfmath/vector_funcs.h
         wfmath/wfmath.h
         wfmath/wrapped_array.h
         wfmath/zero.h)
