@@ -36,7 +36,15 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
+string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(DESCRIPTION "A math library for the Worldforge system.")
+
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    MESSAGE("Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif ()
+
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
