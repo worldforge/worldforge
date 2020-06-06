@@ -89,7 +89,7 @@ class LibcurlConan(ConanFile):
         if self.options.with_openssl:
             # enforce shared linking due to openssl dependency
             if self.settings.os != "Macos" or not self.options.darwin_ssl:
-                self.options["OpenSSL"].shared = self.options.shared
+                self.options["openssl"].shared = self.options.shared
         if self.options.with_libssh2:
             if self.settings.compiler != "Visual Studio":
                 self.options["libssh2"].shared = self.options.shared
@@ -119,14 +119,14 @@ class LibcurlConan(ConanFile):
             elif self.settings.os == "Windows" and self.options.with_winssl:
                 pass
             else:
-                self.requires.add("OpenSSL/1.1.1c@conan/stable")
+                self.requires.add("openssl/1.1.1c")
         if self.options.with_libssh2:
             if self.settings.compiler != "Visual Studio":
-                self.requires.add("libssh2/1.8.0@bincrafters/stable")
+                self.requires.add("libssh2/1.8.0")
         if self.options.with_nghttp2:
-            self.requires.add("nghttp2/1.38.0@bincrafters/stable")
+            self.requires.add("nghttp2/1.39.2")
 
-        self.requires.add("zlib/1.2.11@conan/stable")
+        self.requires.add("zlib/1.2.11")
 
     def source(self):
         source_url = "https://curl.haxx.se/download/"
@@ -170,7 +170,7 @@ class LibcurlConan(ConanFile):
             params.append("--with-winssl")
             params.append("--without-ssl")
         elif self.options.with_openssl:
-            openssl_path = self.deps_cpp_info["OpenSSL"].rootpath.replace('\\', '/')
+            openssl_path = self.deps_cpp_info["openssl"].rootpath.replace('\\', '/')
             params.append("--with-ssl=%s" % openssl_path)
         else:
             params.append("--without-ssl")

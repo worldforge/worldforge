@@ -39,9 +39,9 @@ class CeguiConan(ConanFile):
         "lua/5.1.5@worldforge/stable",
         "tolua++/1.0.93@worldforge/stable",
         "tinyxml/2.6.2@worldforge/stable",
-        "pcre/8.41@_/_",
-        "libpng/1.6.37@_/_",
-        "bzip2/1.0.6@_/_"
+        "pcre/8.41",
+        "libpng/1.6.37",
+        "bzip2/1.0.8"
     )
 
     short_paths = True
