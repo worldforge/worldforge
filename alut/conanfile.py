@@ -21,9 +21,10 @@ class AlutConan(ConanFile):
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {
-        "shared": [True, False]
+        "shared": [True, False],
+        "fPIC": [True, False],
     }
-    default_options = {"shared": False}
+    default_options = {"shared": False, "fPIC": True}
     exports = ["CMakeLists.txt", "patches*"]
     requires = (
         "openal/1.19.1@worldforge/stable"
@@ -34,6 +35,10 @@ class AlutConan(ConanFile):
     def source(self):
         tools.get("https://github.com/vancegroup/freealut/archive/fc814e316c2bfa6e05b723b8cc9cb276da141aae.zip")
         apply_patches('patches', self.folder)
+
+    def configure(self):
+        if self.settings.compiler == 'Visual Studio':
+            del self.options.fPIC
 
     def build(self):
         syslibs = ''

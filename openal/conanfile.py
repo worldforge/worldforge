@@ -45,6 +45,9 @@ class OpenALConan(ConanFile):
         cmake.definitions['ALSOFT_EXAMPLES'] = False
         cmake.definitions['ALSOFT_TESTS'] = False
         cmake.definitions['ALSOFT_BACKEND_SNDIO'] = False
+        if self.options.fPIC:
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
+            
         cmake.configure(build_folder=self._build_subfolder, source_folder=self._source_subfolder)
         return cmake
 

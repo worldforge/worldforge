@@ -10,8 +10,11 @@ class Lua(ConanFile):
     homepage = ''
     description = ''
     settings = 'os', 'arch', 'build_type', 'compiler'
-    options = {'shared': [True, False]}
-    default_options = {"shared": False}
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+    }
+    default_options = {"shared": False, "fPIC": True}
 
     def source(self):
         git = tools.Git()
@@ -23,6 +26,8 @@ class Lua(ConanFile):
             return
         self.run("./autogen.sh")
         autotools = AutoToolsBuildEnvironment(self)
+        if self.options.fPIC:
+            autotools.fpic = True
         autotools.configure()
         autotools.make()
         autotools.install()
