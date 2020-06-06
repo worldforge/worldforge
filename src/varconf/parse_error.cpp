@@ -26,51 +26,26 @@
  
 #include "parse_error.h"
 
-#include <cstdio>
 #include <iostream>
+#include <sstream>
 
-#ifdef _WIN32
-#define snprintf _snprintf
-#endif    
+namespace {
+std::string compose(const std::string& exp, int line, int col) {
+	std::stringstream ss;
+	ss << "ParseError: Expected " << exp << " at line " << line
+		  << ", column " << col << ".";
+	return ss.str();
+}
+}
 
 namespace varconf {
 
-ParseError::ParseError( const ParseError& p)
-{
-  m_exp  = p.m_exp;
-  m_line = p.m_line;
-  m_col  = p.m_col;
-}
-
 ParseError::ParseError( const std::string& exp, int line, int col)
+: std::runtime_error(compose(exp, line, col))
 {
-  m_exp  = exp;
-  m_line = line;
-  m_col  = col;
 }
 
 ParseError::~ParseError() = default;
 
-std::ostream& operator<<( std::ostream& os, const ParseError& p)
-{
-  return ( os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line
-              << ", column " << p.m_col << "." << std::endl);
-}
-
-ParseError::operator std::string() 
-{
-  char buf[1024];
-  snprintf( buf, 1024, "ParseError: Expected %s at line %d, column %d.",
-            m_exp.c_str(), m_line, m_col);
-  return std::string( buf);
-}
- 
-ParseError::operator std::string() const
-{
-  char buf[1024];
-  snprintf( buf, 1024, "ParseError: Expected %s at line %d, column %d.",
-            m_exp.c_str(), m_line, m_col);
-  return std::string( buf);
-}
 
 } // namespace varconf

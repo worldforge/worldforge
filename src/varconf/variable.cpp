@@ -27,13 +27,8 @@
 #include "variable.h"
 
 #include <string>
-#include <cstdio>
 #include <cstdlib>
 #include <utility>
-
-#ifdef _WIN32
-#define snprintf _snprintf
-#endif
 
 namespace varconf {
 
@@ -65,9 +60,7 @@ VarBase::VarBase(int i)
    m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
    m_scope(GLOBAL)
 {
-  char buf[1024];
-  snprintf(buf, 1024, "%d", i);
-  m_val = buf;
+  m_val = std::to_string(i);
 }
 
 VarBase::VarBase(double d)
@@ -75,9 +68,7 @@ VarBase::VarBase(double d)
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
    m_scope(GLOBAL)
 {
-  char buf[1024];
-  snprintf(buf, 1024, "%lf", d);
-  m_val = buf;
+	m_val = std::to_string(d);
 }
 
 VarBase::VarBase(std::string s)
@@ -145,8 +136,7 @@ VarBase& VarBase::operator=(int i)
   m_have_double = false; m_have_string = true;
   m_val_bool = false; m_val_int = i;
   m_val_double = 0.0;
-  char buf[1024]; snprintf(buf, 1024, "%d", i);
-  m_val = buf;
+  m_val = std::to_string(i);
   m_scope = INSTANCE;
   return (*this);
 }
@@ -157,8 +147,7 @@ VarBase& VarBase::operator=(double d)
   m_have_double = true; m_have_string = true;
   m_val_bool = false; m_val_int = 0;
   m_val_double = d;
-  char buf[1024]; snprintf(buf, 1024, "%lf", d);
-  m_val = buf;
+  m_val = std::to_string(d);
   m_scope = INSTANCE;
   return (*this);
 }

@@ -30,10 +30,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
-#ifdef _WIN32
-#define snprintf _snprintf
-#else // _WIN32
+#ifndef _WIN32
 
 extern char** environ;
 
@@ -133,11 +132,9 @@ std::istream & operator >>(std::istream & in, Config & conf)
     conf.parseStream(in, USER);
   }
   catch (const ParseError& p) {
-    char buf[1024];
-    std::string p_str = p;
-    snprintf(buf, 1024, "\nVarconf Error: parser exception throw while "
-                         "parsing input stream.\n%s", p_str.c_str());   
-    conf.sige.emit(buf);
+  	std::stringstream ss;
+  	ss << "Varconf Error: parser exception throw while parsing input stream.\n" << p.what();
+    conf.sige.emit(ss.str().c_str());
   }
 
   return in;
@@ -252,19 +249,19 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
           value = argv[++i];
         } 
         else {
-          char buf[1024];
-          snprintf(buf, 1024, "\nVarconf Warning: short argument \"%s\""
-                               " given on command-line expects a value"
-                               " but none was given.\n", argv[i]); 
-          sige.emit(buf);
+			std::stringstream ss;
+	 		ss << "Varconf Warning: short argument \""<< argv[i] <<"\""
+				  " given on command-line expects a value"
+				  " but none was given.";
+          sige.emit(ss.str().c_str());
         }
       }
       else {
-        char buf[1024];
-        snprintf(buf, 1024, "\nVarconf Warning: short argument \"%s\""
-                             " given on command-line does not exist in"
-                             " the lookup table.\n", argv[i]);
-        sige.emit(buf);
+		  std::stringstream ss;
+		  ss << "Varconf Warning: short argument \""<<argv[i]<<"\""
+				" given on command-line does not exist in"
+				" the lookup table.";
+        sige.emit(ss.str().c_str());
       }
     }
 
@@ -518,10 +515,10 @@ bool Config::readFromFile(const std::string & filename, Scope scope)
   std::ifstream fin(filename.c_str());
   
   if (fin.fail()) {
-    char buf[1024];
-    snprintf(buf, 1024, "\nVarconf Error: could not open configuration file"
-                         " \"%s\" for input.\n", filename.c_str());    
-    sige.emit(buf);
+	  std::stringstream ss;
+	  ss << "Varconf Error: could not open configuration file"
+                         " \""<<filename<<"\" for input.";
+    sige.emit(ss.str().c_str());
     
     return false;
   }
@@ -530,11 +527,10 @@ bool Config::readFromFile(const std::string & filename, Scope scope)
     parseStream(fin, scope);
   }
   catch (const ParseError& p) {
-    char buf[1024];
-    std::string p_str = p;
-    snprintf(buf, 1024, "\nVarconf Error: parsing exception thrown while "
-                       "parsing \"%s\".\n%s", filename.c_str(), p_str.c_str());
-    sige.emit(buf);
+	  std::stringstream ss;
+	  ss << "Varconf Error: parsing exception thrown while "
+			"parsing \""<<filename<<"\".\n"<< p.what();
+    sige.emit(ss.str().c_str());
     return false;
   }
   
@@ -547,10 +543,10 @@ void Config::setItem(const std::string & section,
                      Scope scope)
 {
   if (key.empty()) {
-    char buf[1024];
-    snprintf(buf, 1024, "\nVarconf Warning: blank key under section \"%s\""
-                         " sent to setItem() method.\n", section.c_str());
-    sige.emit(buf);
+  	std::stringstream ss;
+  	ss << "Varconf Warning: blank key under section \""<<section<<"\""
+                         " sent to setItem() method.";
+    sige.emit(ss.str().c_str());
   }
   else {
     std::string sec_clean = section; 
@@ -582,10 +578,10 @@ bool Config::writeToFile(const std::string & filename, Scope scope_mask) const
   std::ofstream fout(filename.c_str());
 
   if (fout.fail()) {
-    char buf[1024];
-    snprintf(buf, 1024, "\nVarconf Error: could not open configuration file"
-                         " \"%s\" for output.\n", filename.c_str());
-    sige.emit(buf);
+	  std::stringstream ss;
+	  ss << "Varconf Error: could not open configuration file"
+			" \""<< filename <<"\" for output.";
+    sige.emit(ss.str().c_str());
 
     return false;
   }

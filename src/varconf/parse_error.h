@@ -33,25 +33,15 @@
 
 namespace varconf {
 
-class VARCONF_API ParseError {
+class VARCONF_API ParseError : public std::runtime_error {
 public:
-  ParseError() = default;
-  ParseError(const ParseError& p);
+  ParseError(const ParseError& p) = default;
   ParseError(const std::string& exp, int line, int col);
 
-  virtual ~ParseError();
+  ~ParseError() override;
 
-  VARCONF_API friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
-
-  operator std::string();
-  operator std::string() const;
-
-private:
-  std::string m_exp;
-  int m_line{}, m_col{};
 };
 
-VARCONF_API std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
 } // namespace varconf
 

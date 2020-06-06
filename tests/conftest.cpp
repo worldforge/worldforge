@@ -57,7 +57,7 @@ int main( int argc, char ** argv)
   }
   catch (const varconf::ParseError& p) {
     std::cout << "\nError while parsing from input stream.\n";
-    std::cout << p;
+    std::cout << p.what();
   }
 
   assert(config.find("general", "setting"));
