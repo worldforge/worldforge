@@ -30,6 +30,7 @@
 #include "varconf_defs.h"
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 namespace varconf {
 
