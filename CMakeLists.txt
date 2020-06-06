@@ -63,6 +63,9 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
 endmacro()
 
+# Add test
+enable_testing()
+
 # Add a "check" target, which builds and runs the tests.
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
