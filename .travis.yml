@@ -34,7 +34,7 @@ cache:
   - directories:
       - $HOME/Library/Caches/Homebrew
 before_install:
-  - sudo pip3 install --upgrade pip wheel setuptools
+  - sudo pip3 install --upgrade pip wheel setuptools jinja2
   - sudo pip3 install conan
   - conan user
   - conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
