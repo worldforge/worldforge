@@ -61,6 +61,9 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
 
+    if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+        conan_target_link_libraries(${_LIB_NAME})
+    endif ()
 endmacro()
 
 # Add test
@@ -85,6 +88,9 @@ macro(wf_add_test TEST_FILE)
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
     add_dependencies(check ${TEST_NAME})
+    if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+        conan_target_link_libraries(${TEST_NAME})
+    endif ()
 endmacro()
 
 # Check for deps
@@ -97,19 +103,21 @@ if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
     MESSAGE("Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
+else ()
+    find_package(SigC++
+            2.0
+            REQUIRED)
+    list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
+    list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
+    list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
+
+    link_directories(${WF_LIBRARY_DIRS})
+    include_directories(${WF_INCLUDE_DIRS})
+    # Populate for pkg-config
+    set(REQUIRES "sigc++-2.0")
+
 endif ()
 
-find_package(SigC++
-        2.0
-        REQUIRED)
-list(APPEND WF_LIBRARIES ${SIGC++_LIBRARY})
-list(APPEND WF_LIBRARY_DIRS ${SIGC++_LIBRARY_DIRS})
-list(APPEND WF_INCLUDE_DIRS ${SIGC++_INCLUDE_DIR})
-
-link_directories(${WF_LIBRARY_DIRS})
-include_directories(${WF_INCLUDE_DIRS})
-# Populate for pkg-config
-set(REQUIRES "sigc++-2.0")
 
 add_subdirectory(src)
 add_subdirectory(tests)
