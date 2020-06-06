@@ -7,6 +7,8 @@
 #include <Mercator/TerrainMod.h>
 
 #include <iostream>
+#include <cassert>
+#include <memory>
 
 #ifdef NDEBUG
 #undef NDEBUG
@@ -15,8 +17,6 @@
 #define DEBUG
 #endif
 
-#include <cassert>
-#include <memory>
 
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
