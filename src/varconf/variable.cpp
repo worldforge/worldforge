@@ -58,17 +58,15 @@ VarBase::VarBase(bool b)
 VarBase::VarBase(int i)
  : m_have_bool(false), m_have_int(true), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
-   m_scope(GLOBAL)
+   m_val(std::to_string(i)), m_scope(GLOBAL)
 {
-  m_val = std::to_string(i);
 }
 
 VarBase::VarBase(double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
-   m_scope(GLOBAL)
+   m_val(std::to_string(d)), m_scope(GLOBAL)
 {
-	m_val = std::to_string(d);
 }
 
 VarBase::VarBase(std::string s)
@@ -90,8 +88,9 @@ VarBase::~VarBase() = default;
 std::ostream& operator<<( std::ostream& out, const VarBase& v)
 {
     for (char i : v.m_val) {
-      if (i == '"') out << '\\';
-      else if (i == '\\') out << '\\';
+      if (i == '"' || i == '\\') {
+		  out << '\\';
+	  }
       out << i;
     }
     return out;
