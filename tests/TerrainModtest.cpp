@@ -16,6 +16,7 @@
 #endif
 
 #include <cassert>
+#include <memory>
 
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
