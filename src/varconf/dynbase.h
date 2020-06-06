@@ -69,10 +69,10 @@ public:
   virtual operator double();
   virtual operator std::string();
 
-  virtual bool is_bool();
-  virtual bool is_int();
-  virtual bool is_double();
-  virtual bool is_string();
+  bool is_bool() override;
+  bool is_int() override;
+  bool is_double() override;
+  bool is_string() override;
 
 protected:
 

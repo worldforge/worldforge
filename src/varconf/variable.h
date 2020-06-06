@@ -58,7 +58,7 @@ public:
   VARCONF_API friend bool operator ==(const VarBase& one, const VarBase& two);
   VARCONF_API friend bool operator !=(const VarBase& one, const VarBase& two);
 
-  virtual VarBase& operator=(const VarBase& c);
+  VarBase& operator=(const VarBase& c);
   virtual VarBase& operator=(bool b);
   virtual VarBase& operator=(int i);
   virtual VarBase& operator=(double d);
