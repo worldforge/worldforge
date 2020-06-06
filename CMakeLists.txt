@@ -100,7 +100,7 @@ set(WF_INCLUDE_DIRS)
 set(WF_LIBRARIES)
 
 if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    MESSAGE("Using Conan for dependency resolution.")
+    MESSAGE(STATUS "Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     conan_basic_setup()
 else ()
