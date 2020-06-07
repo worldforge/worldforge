@@ -71,7 +71,6 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_PLUGIN_STBI'] = 'OFF'
         cmake.definitions['OGRE_BUILD_PLUGIN_DOT_SCENE'] = 'OFF'
         cmake.definitions['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
-        cmake.definitions['OGRE_INSTALL_DEPENDENCIES'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_ENABLE_ZIP'] = "OFF"
         cmake.definitions['OGRE_BUILD_PLATFORM_APPLE_IOS'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'
@@ -81,13 +80,13 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_COMPONENT_VOLUME'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_PROPERTY'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_OVERLAY_IMGUI'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_THREAD_PROVIDER'] = 'std'
         cmake.definitions['OGRE_BUILD_LIBS_AS_FRAMEWORKS'] = 'OFF'
         cmake.definitions['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
-        cmake.definitions['OGRE_NODE_STORAGE_LEGACY'] = 'false'
         cmake.definitions['OGRE_NODELESS_POSITIONING'] = 'OFF'
         cmake.definitions['OGRE_CONFIG_THREADS'] = '2'
         cmake.definitions['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
@@ -103,8 +102,30 @@ conan_basic_setup()
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
-        self.cpp_info.includedirs = ["include/OGRE"]
+        self.cpp_info.libdirs = ["lib", "lib/OGRE"]
+        self.cpp_info.libs = ["Codec_FreeImageStatic", 
+                              "OgreMeshLodGeneratorStatic",
+                              "OgreOverlayStatic",
+                              "OgreTerrainStatic",
+                              "OgrePagingStatic",
+                              "OgreRTShaderSystemStatic",
+                              "Plugin_ParticleFXStatic", 
+                              "RenderSystem_GL3PlusStatic",
+                              "OgreGLSupportStatic",
+                              "OgreMainStatic"]
+        if tools.os_info.is_windows:
+            self.cpp_info.system_libs = ["Opengl32"]
+        elif tools.os_info.is_linux:
+            self.cpp_info.system_libs = ["GL", "X11", "Xrandr"]
+        elif tools.os_info.is_macos:
+            self.cpp_info.system_libs = ["GL"]
+        
+        self.cpp_info.includedirs = ["include/OGRE",
+                                     "include/OGRE/Overlay", 
+                                     "include/OGRE/Terrain",
+                                     "include/OGRE/Paging",
+                                     "include/OGRE/MeshLodGenerator",
+                                     "include/OGRE/RTShaderSystem"]
 
     def package(self):
         pass
