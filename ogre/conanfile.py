@@ -118,7 +118,7 @@ conan_basic_setup()
         elif tools.os_info.is_linux:
             self.cpp_info.system_libs = ["GL", "X11", "Xrandr"]
         elif tools.os_info.is_macos:
-            self.cpp_info.system_libs = ["GL"]
+            self.cpp_info.system_libs = []
         
         self.cpp_info.includedirs = ["include/OGRE",
                                      "include/OGRE/Overlay", 
