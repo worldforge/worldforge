@@ -52,17 +52,31 @@ script:
       echo "Could not find BinTray password and login name"
       exit 1
     fi
+  - conan remove sigc++/* --force
   - conan create sigc++ worldforge/stable -pr default --build missing && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
+  - conan remove libcurl/* --force
   - conan create libcurl worldforge/stable -pr default --build missing && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
+  - conan remove tinyxml/* --force
   - conan create tinyxml worldforge/stable -pr default --build missing && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
+  - conan remove bullet3/* --force
   - conan create bullet3 worldforge/stable -pr default --build missing && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+  - conan remove openal/* --force
   - conan create openal worldforge/stable -pr default --build missing && conan upload "openal/*@worldforge/stable" -r worldforge -c --all
+  - conan remove alut/* --force
   - conan create alut worldforge/stable -pr default --build missing && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+  - conan remove freeimage/* --force
   - conan create freeimage worldforge/stable -pr default --build missing && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+  - conan remove sdl2/* --force
   - conan create sdl2 worldforge/stable -pr default --build missing && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
+  - conan remove libxdg-basedir/* --force
   - conan create libxdg-basedir worldforge/stable -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+  - conan remove lua/* --force
   - conan create lua worldforge/stable -pr default --build missing && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+  - conan remove tolua++/* --force
   - conan create tolua++ worldforge/stable -pr default --build missing && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+  - conan remove pcre/* --force
   - conan install pcre/8.41@_/_ --options "pcre:with_unicode_properties=True" --build pcre && conan upload "pcre/8.41" -r worldforge -c --all
+  - conan remove cegui/* --force
   - conan create cegui worldforge/stable -pr default --build missing && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
+  - conan remove ogre/* --force
   - conan create ogre worldforge/stable -pr default --build missing && conan upload "ogre/*@worldforge/stable" -r worldforge -c --all
