@@ -167,7 +167,7 @@ public:
      * @brief Returns the Entity's position inside it's parent in the parent's local system coordinates.
      * @return The position of the entity in parent relative coords.
      */
-    WFMath::Point<3> getPosition() const;
+    const WFMath::Point<3>& getPosition() const;
     
     /**
      * @brief Gets all properties defined for this entity.
@@ -675,12 +675,12 @@ inline Entity* Entity::getLocation() const
     return m_location;
 }
 
-/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
-inline WFMath::Point<3> Entity::getPosition() const
+/** Returns the Entity's position inside its parent in the parent's local system coordinates. **/
+inline const WFMath::Point<3>& Entity::getPosition() const
 {
     return m_position;
 }
-/** Returns the entity's velocity as last set explicitely. **/
+/** Returns the entity's velocity as last set explicitly. **/
 inline const WFMath::Vector< 3 > & Entity::getVelocity() const
 {
     return m_velocity;
