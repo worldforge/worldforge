@@ -1,5 +1,6 @@
 from conans import CMake, ConanFile, tools
 import os
+import fnmatch
 
 
 class OpenALConan(ConanFile):
@@ -11,7 +12,7 @@ class OpenALConan(ConanFile):
     homepage = "https://www.openal.org"
     author = "Bincrafters <bincrafters@gmail.com>"
     license = "MIT"
-    exports = ["LICENSE.md"]
+    exports = ["LICENSE.md", "patches*"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
 
@@ -37,6 +38,7 @@ class OpenALConan(ConanFile):
         tools.get("{0}/archive/openal-soft-{1}.tar.gz".format(source_url, self.version), sha256=sha256)
         extracted_dir = "openal-soft-openal-soft-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
+        self._apply_patches('patches', self._source_subfolder)
 
     def _configure_cmake(self):
         cmake = CMake(self)
@@ -76,3 +78,15 @@ class OpenALConan(ConanFile):
         self.cpp_info.includedirs = ["include", "include/AL"]
         if not self.options.shared:
             self.cpp_info.defines.append('AL_LIBTYPE_STATIC')
+            
+    @staticmethod
+    def _apply_patches(source, dest):
+        for root, _dirnames, filenames in os.walk(source):
+            for filename in fnmatch.filter(filenames, '*.patch'):
+                patch_file = os.path.join(root, filename)
+                print("Applying path {}.".format(patch_file))
+
+                dest_path = os.path.join(dest, os.path.relpath(root, source))
+                print(dest_path)
+                print(patch_file)
+                tools.patch(base_path=dest_path, patch_file=patch_file)            
