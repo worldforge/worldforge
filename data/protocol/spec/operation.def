@@ -220,7 +220,7 @@ Second argument is operation which is wrong (not given if not relevant)."""
 
 :map:
     id:"communicate"
-    parent:"create"
+    parent:"action"
     specification:"atlas_game"
     description:"Base operator for all kind of communication."
     args_description:"communication entity"

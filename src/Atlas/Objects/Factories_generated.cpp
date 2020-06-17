@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #include <Atlas/Objects/Entity.h>
@@ -40,10 +40,6 @@ void Factories::installStandardTypes()
 
     addFactory<Operation::CreateData>("create", Operation::CREATE_NO);
 
-    addFactory<Operation::CommunicateData>("communicate", Operation::COMMUNICATE_NO);
-
-    addFactory<Operation::TalkData>("talk", Operation::TALK_NO);
-
     addFactory<Operation::DeleteData>("delete", Operation::DELETE_NO);
 
     addFactory<Operation::SetData>("set", Operation::SET_NO);
@@ -71,6 +67,10 @@ void Factories::installStandardTypes()
     addFactory<Operation::LoginData>("login", Operation::LOGIN_NO);
 
     addFactory<Operation::LogoutData>("logout", Operation::LOGOUT_NO);
+
+    addFactory<Operation::CommunicateData>("communicate", Operation::COMMUNICATE_NO);
+
+    addFactory<Operation::TalkData>("talk", Operation::TALK_NO);
 
     addFactory<Operation::ImaginaryData>("imaginary", Operation::IMAGINARY_NO);
 

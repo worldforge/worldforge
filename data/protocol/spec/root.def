@@ -9,13 +9,5 @@
     name:""
     description:"All objects inherit from this."
     long_description:"""You can browse all definitions starting from here and 
-descending into childrens."""
+descending into children."""
     specification:"atlas"
-
-
-## <aloril> implementation doesn't need to do that
-## <aloril> and if you look at def files, they don't have that at all: it's generated (and maybe with real server too)
-## <aloril> it just saves as yet additional operation
-## *** cyanide (~ojw@reggae-08-36.nv.iinet.net.au) has joined #forge
-## <Eridon> hey ya cyan
-## <aloril> and for leaf classes: only admins are privliged to get list of all instances of humans for example

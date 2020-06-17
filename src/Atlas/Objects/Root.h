@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #ifndef ATLAS_OBJECTS_ROOT_H
@@ -19,7 +19,7 @@ template <class T> class SmartPtr;
 /** All objects inherit from this.
 
 You can browse all definitions starting from here and 
-descending into childrens.
+descending into children.
 
 */
 
@@ -31,7 +31,7 @@ static const int ROOT_NO = 1;
 /// \brief All objects inherit from this..
 ///
 /** You can browse all definitions starting from here and 
-descending into childrens.
+descending into children.
  */
 class RootData : public BaseObjectData
 {

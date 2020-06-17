@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #ifndef ATLAS_OBJECTS_ENTITY_ENTITY_H
@@ -14,7 +14,7 @@
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
-/** All classes and objects used for adminitrativive purposes
+/** All classes and objects used for administrative purposes
 
 Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
 
@@ -25,7 +25,7 @@ typedef SmartPtr<AdminEntityData> AdminEntity;
 
 static const int ADMIN_ENTITY_NO = 3;
 
-/// \brief All classes and objects used for adminitrativive purposes.
+/// \brief All classes and objects used for administrative purposes.
 ///
 /** Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
  */

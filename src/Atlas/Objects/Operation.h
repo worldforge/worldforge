@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #ifndef ATLAS_OBJECTS_OPERATION_OPERATION_H
@@ -142,126 +142,6 @@ private:
 };
 
 
-/** Base operator for all kind of communication.
-
-Map editor is main user for this in client side. Server uses this inside "info" operation to tell client about new things.
-
-*/
-
-class CommunicateData;
-typedef SmartPtr<CommunicateData> Communicate;
-
-static const int COMMUNICATE_NO = 12;
-
-/// \brief Base operator for all kind of communication..
-///
-/** Map editor is main user for this in client side. Server uses this inside "info" operation to tell client about new things.
- */
-class CommunicateData : public CreateData
-{
-protected:
-    /// Construct a CommunicateData class definition.
-    explicit CommunicateData(CommunicateData *defaults = nullptr) : 
-        CreateData((CreateData*)defaults)
-    {
-        m_class_no = COMMUNICATE_NO;
-    }
-    /// Default destructor.
-    ~CommunicateData() override = default;
-
-public:
-    // The parent type for this object's superclass
-    static constexpr const char* super_parent = "create";
-    // The default parent type for this object
-    static constexpr const char* default_parent = "communicate";
-    // The default objtype for this object
-    static constexpr const char* default_objtype = "op";
-    /// Copy this object.
-    CommunicateData * copy() const override;
-
-    /// Is this instance of some class?
-    bool instanceOf(int classNo) const override;
-
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == COMMUNICATE_NO) current_class = -1; CreateData::iterate(current_class, attr);}
-
-public:
-    template <typename>
-    friend class ::Atlas::Objects::Allocator;
-    static Allocator<CommunicateData> allocator;
-
-protected:
-    ///Resets the object as it's returned to the pool.
-    void reset() override;
-    void free() override;
-
-private:
-
-    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data);
-};
-
-
-/** used for talking
-
-need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log
-
-*/
-
-class TalkData;
-typedef SmartPtr<TalkData> Talk;
-
-static const int TALK_NO = 13;
-
-/// \brief used for talking.
-///
-/** need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log
- */
-class TalkData : public CommunicateData
-{
-protected:
-    /// Construct a TalkData class definition.
-    explicit TalkData(TalkData *defaults = nullptr) : 
-        CommunicateData((CommunicateData*)defaults)
-    {
-        m_class_no = TALK_NO;
-    }
-    /// Default destructor.
-    ~TalkData() override = default;
-
-public:
-    // The parent type for this object's superclass
-    static constexpr const char* super_parent = "communicate";
-    // The default parent type for this object
-    static constexpr const char* default_parent = "talk";
-    // The default objtype for this object
-    static constexpr const char* default_objtype = "op";
-    /// Copy this object.
-    TalkData * copy() const override;
-
-    /// Is this instance of some class?
-    bool instanceOf(int classNo) const override;
-
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == TALK_NO) current_class = -1; CommunicateData::iterate(current_class, attr);}
-
-public:
-    template <typename>
-    friend class ::Atlas::Objects::Allocator;
-    static Allocator<TalkData> allocator;
-
-protected:
-    ///Resets the object as it's returned to the pool.
-    void reset() override;
-    void free() override;
-
-private:
-
-    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data);
-};
-
-
 /** Delete something.
 
 This is base operation for all other
@@ -275,7 +155,7 @@ This is base operation for all other
 class DeleteData;
 typedef SmartPtr<DeleteData> Delete;
 
-static const int DELETE_NO = 14;
+static const int DELETE_NO = 12;
 
 /// \brief Delete something..
 ///
@@ -343,7 +223,7 @@ This is base operation for all other
 class SetData;
 typedef SmartPtr<SetData> Set;
 
-static const int SET_NO = 15;
+static const int SET_NO = 13;
 
 /// \brief Sets attributes for existing entity..
 ///
@@ -411,7 +291,7 @@ This is base operation for all other
 class AffectData;
 typedef SmartPtr<AffectData> Affect;
 
-static const int AFFECT_NO = 16;
+static const int AFFECT_NO = 14;
 
 /// \brief Sets attributes for existing entity..
 ///
@@ -479,7 +359,7 @@ This is base operation for all other
 class HitData;
 typedef SmartPtr<HitData> Hit;
 
-static const int HIT_NO = 17;
+static const int HIT_NO = 15;
 
 /// \brief Operation for when one entity hits another..
 ///
@@ -543,7 +423,7 @@ More about <a href="move.html">movement here</a>
 class MoveData;
 typedef SmartPtr<MoveData> Move;
 
-static const int MOVE_NO = 18;
+static const int MOVE_NO = 16;
 
 /// \brief Change position.
 ///
@@ -607,7 +487,7 @@ This is base operation for all other
 class WieldData;
 typedef SmartPtr<WieldData> Wield;
 
-static const int WIELD_NO = 19;
+static const int WIELD_NO = 17;
 
 /// \brief Attach a tool to the character entity at a pre-defined location so that the character can use it..
 ///
@@ -675,7 +555,7 @@ This is base operation for all other
 class GetData;
 typedef SmartPtr<GetData> Get;
 
-static const int GET_NO = 20;
+static const int GET_NO = 18;
 
 /// \brief Generic operation for getting info about things..
 ///
@@ -743,7 +623,7 @@ This is base operation for all other
 class PerceiveData;
 typedef SmartPtr<PerceiveData> Perceive;
 
-static const int PERCEIVE_NO = 21;
+static const int PERCEIVE_NO = 19;
 
 /// \brief Generic base operation for perceiving things by eyes, ears, etc....
 ///
@@ -811,7 +691,7 @@ This is base operation for all other
 class LookData;
 typedef SmartPtr<LookData> Look;
 
-static const int LOOK_NO = 22;
+static const int LOOK_NO = 20;
 
 /// \brief Looking at something.
 ///
@@ -879,7 +759,7 @@ This is base operation for all other
 class ListenData;
 typedef SmartPtr<ListenData> Listen;
 
-static const int LISTEN_NO = 23;
+static const int LISTEN_NO = 21;
 
 /// \brief Listen (something).
 ///
@@ -947,7 +827,7 @@ This is base operation for all other
 class SniffData;
 typedef SmartPtr<SniffData> Sniff;
 
-static const int SNIFF_NO = 24;
+static const int SNIFF_NO = 22;
 
 /// \brief Sniff something.
 ///
@@ -1015,7 +895,7 @@ This is base operation for all other
 class TouchData;
 typedef SmartPtr<TouchData> Touch;
 
-static const int TOUCH_NO = 25;
+static const int TOUCH_NO = 23;
 
 /// \brief Touch something.
 ///
@@ -1079,7 +959,7 @@ For more about <a href="login.html">out of game atlas here</a>
 class LoginData;
 typedef SmartPtr<LoginData> Login;
 
-static const int LOGIN_NO = 26;
+static const int LOGIN_NO = 24;
 
 /// \brief Operation for logging into server.
 ///
@@ -1139,7 +1019,7 @@ For more about <a href="login.html">out of game atlas here</a>
 class LogoutData;
 typedef SmartPtr<LogoutData> Logout;
 
-static const int LOGOUT_NO = 27;
+static const int LOGOUT_NO = 25;
 
 /// \brief Operation for logging out.
 ///
@@ -1187,6 +1067,134 @@ protected:
 private:
 
     static void fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
+/** Base operator for all kind of communication.
+
+This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+
+*/
+
+class CommunicateData;
+typedef SmartPtr<CommunicateData> Communicate;
+
+static const int COMMUNICATE_NO = 26;
+
+/// \brief Base operator for all kind of communication..
+///
+/** This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+ */
+class CommunicateData : public ActionData
+{
+protected:
+    /// Construct a CommunicateData class definition.
+    explicit CommunicateData(CommunicateData *defaults = nullptr) : 
+        ActionData((ActionData*)defaults)
+    {
+        m_class_no = COMMUNICATE_NO;
+    }
+    /// Default destructor.
+    ~CommunicateData() override = default;
+
+public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "action";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "communicate";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op";
+    /// Copy this object.
+    CommunicateData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == COMMUNICATE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<CommunicateData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
+/** used for talking
+
+need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log
+
+*/
+
+class TalkData;
+typedef SmartPtr<TalkData> Talk;
+
+static const int TALK_NO = 27;
+
+/// \brief used for talking.
+///
+/** need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log
+ */
+class TalkData : public CommunicateData
+{
+protected:
+    /// Construct a TalkData class definition.
+    explicit TalkData(TalkData *defaults = nullptr) : 
+        CommunicateData((CommunicateData*)defaults)
+    {
+        m_class_no = TALK_NO;
+    }
+    /// Default destructor.
+    ~TalkData() override = default;
+
+public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "communicate";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "talk";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "op";
+    /// Copy this object.
+    TalkData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+    void iterate(int& current_class, std::string& attr) const override
+        {if(current_class == TALK_NO) current_class = -1; CommunicateData::iterate(current_class, attr);}
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<TalkData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 

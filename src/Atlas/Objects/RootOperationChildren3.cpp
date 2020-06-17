@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #include <Atlas/Objects/Operation.h>
@@ -11,82 +11,6 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
-
-Allocator<LookData> LookData::allocator;
-        
-
-
-void LookData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void LookData::reset()
-{
-    PerceiveData::reset();
-}
-
-LookData * LookData::copy() const
-{
-    return copyInstance<LookData>(*this);
-}
-
-bool LookData::instanceOf(int classNo) const
-{
-    if(LOOK_NO == classNo) return true;
-    return PerceiveData::instanceOf(classNo);
-}
-
-void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
-Allocator<ListenData> ListenData::allocator;
-        
-
-
-void ListenData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void ListenData::reset()
-{
-    PerceiveData::reset();
-}
-
-ListenData * ListenData::copy() const
-{
-    return copyInstance<ListenData>(*this);
-}
-
-bool ListenData::instanceOf(int classNo) const
-{
-    if(LISTEN_NO == classNo) return true;
-    return PerceiveData::instanceOf(classNo);
-}
-
-void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
 
 Allocator<SniffData> SniffData::allocator;
         
@@ -230,6 +154,82 @@ bool LogoutData::instanceOf(int classNo) const
 }
 
 void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
+Allocator<CommunicateData> CommunicateData::allocator;
+        
+
+
+void CommunicateData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void CommunicateData::reset()
+{
+    ActionData::reset();
+}
+
+CommunicateData * CommunicateData::copy() const
+{
+    return copyInstance<CommunicateData>(*this);
+}
+
+bool CommunicateData::instanceOf(int classNo) const
+{
+    if(COMMUNICATE_NO == classNo) return true;
+    return ActionData::instanceOf(classNo);
+}
+
+void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
+Allocator<TalkData> TalkData::allocator;
+        
+
+
+void TalkData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void TalkData::reset()
+{
+    CommunicateData::reset();
+}
+
+TalkData * TalkData::copy() const
+{
+    return copyInstance<TalkData>(*this);
+}
+
+bool TalkData::instanceOf(int classNo) const
+{
+    if(TALK_NO == classNo) return true;
+    return CommunicateData::instanceOf(classNo);
+}
+
+void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;

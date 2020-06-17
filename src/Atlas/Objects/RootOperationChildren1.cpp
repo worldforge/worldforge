@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
 // Copyright 2001-2005 Alistair Riddoch.
-// Copyright 2011-2019 Erik Ogenvik.
+// Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
 #include <Atlas/Objects/Operation.h>
@@ -88,82 +88,6 @@ void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::strin
         data.attr_parent = default_parent;
 }
 
-Allocator<CommunicateData> CommunicateData::allocator;
-        
-
-
-void CommunicateData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void CommunicateData::reset()
-{
-    CreateData::reset();
-}
-
-CommunicateData * CommunicateData::copy() const
-{
-    return copyInstance<CommunicateData>(*this);
-}
-
-bool CommunicateData::instanceOf(int classNo) const
-{
-    if(COMMUNICATE_NO == classNo) return true;
-    return CreateData::instanceOf(classNo);
-}
-
-void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
-Allocator<TalkData> TalkData::allocator;
-        
-
-
-void TalkData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void TalkData::reset()
-{
-    CommunicateData::reset();
-}
-
-TalkData * TalkData::copy() const
-{
-    return copyInstance<TalkData>(*this);
-}
-
-bool TalkData::instanceOf(int classNo) const
-{
-    if(TALK_NO == classNo) return true;
-    return CommunicateData::instanceOf(classNo);
-}
-
-void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_serialno = 0;
-        data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
 Allocator<DeleteData> DeleteData::allocator;
         
 
@@ -230,6 +154,82 @@ bool SetData::instanceOf(int classNo) const
 }
 
 void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
+Allocator<AffectData> AffectData::allocator;
+        
+
+
+void AffectData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void AffectData::reset()
+{
+    SetData::reset();
+}
+
+AffectData * AffectData::copy() const
+{
+    return copyInstance<AffectData>(*this);
+}
+
+bool AffectData::instanceOf(int classNo) const
+{
+    if(AFFECT_NO == classNo) return true;
+    return SetData::instanceOf(classNo);
+}
+
+void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parent = default_parent;
+}
+
+Allocator<HitData> HitData::allocator;
+        
+
+
+void HitData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void HitData::reset()
+{
+    AffectData::reset();
+}
+
+HitData * HitData::copy() const
+{
+    return copyInstance<HitData>(*this);
+}
+
+bool HitData::instanceOf(int classNo) const
+{
+    if(HIT_NO == classNo) return true;
+    return AffectData::instanceOf(classNo);
+}
+
+void HitData::fillDefaultObjectInstance(HitData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
