@@ -4,14 +4,40 @@
 #include <vector>
 #include <string>
 
-namespace Eris
-{
+namespace Eris {
 
-class CharacterType;
+/**
+ * @brief An available character type which a client can create a character from on the server.
+ * This is presented to the client when first connected to the server and allows a user to select what kind of character to create in the world.
+ *
+ * @author Erik Hjortsberg <erik.hjortsberg@gmail.com>
+ */
+struct CharacterType {
 
-/** Type used to return available character types */
-typedef std::vector<CharacterType> CharacterTypeStore;
+	/**
+	 * @brief The name of the character type.
+	 */
+	std::string name;
 
+	/**
+	 * @brief A description of the character type.
+	 */
+	std::string description;
+};
+
+struct SpawnProperty {
+	enum class Type {
+		STRING
+	};
+	std::string name;
+	/**
+	 * Show to the user
+	 */
+	const std::string label;
+	std::string description;
+	Type type;
+	std::vector<Atlas::Message::Element> options;
+};
 /**
  * @author Erik Hjortsberg <erik.hjortsberg@gmail.com>
  * @brief Represents a possible spawn point as described by the server.
@@ -27,56 +53,22 @@ typedef std::vector<CharacterType> CharacterTypeStore;
  * spawn point to spawn in, and then present the available character.
  * Or any other method.
  */
-class SpawnPoint
-{
-public:
-    /**
-     * @brief Ctor.
-     * @param name The name of the spawn point.
-     * @param availableCharacterTypes A list of available character types.
-     * @param description A description of the spawn point.
-     */
-    SpawnPoint(std::string name, CharacterTypeStore availableCharacterTypes, std::string description);
+struct SpawnPoint {
 
-    /**
-     * @brief Dtor.
-     */
-    ~SpawnPoint();
+	std::string id;
 
-    /**
-     * @brief Gets a list of available character types for this spawn point.
-     * @return A list of available character types.
-     */
-    const CharacterTypeStore& getAvailableCharacterTypes() const;
+	/**
+	 * @brief The name of this spawn point.
+	 */
+	const std::string name;
 
-    /**
-     * @brief Gets the name of this spawn point.
-     * @returns The name of this spawn point.
-     */
-    const std::string& getName() const;
+	/**
+	 * @brief A description of this spawn point.
+	 */
+	const std::string description;
 
-    /**
-     * @brief Gets a description of this spawn point.
-     * @returns A description of this spawn point.
-     */
-    const std::string& getDescription() const;
+	std::vector<SpawnProperty> properties;
 
-private:
-
-    /**
-     * @brief The name of this spawn point.
-     */
-    const std::string m_name;
-
-    /**
-     * @brief A list of available character types.
-     */
-    CharacterTypeStore m_availableCharacterTypes;
-
-    /**
-     * @brief A description of this spawn point.
-     */
-    const std::string m_description;
 };
 
 }

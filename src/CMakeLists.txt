@@ -3,7 +3,6 @@ set(SOURCE_FILES
         Eris/Avatar.cpp
         Eris/BaseConnection.cpp
         Eris/Calendar.cpp
-        Eris/CharacterType.cpp
         Eris/Connection.cpp
         Eris/CustomEntities.cpp
         Eris/Entity.cpp
@@ -23,7 +22,6 @@ set(SOURCE_FILES
         Eris/Router.cpp
         Eris/ServerInfo.cpp
         Eris/Session.cpp
-        Eris/SpawnPoint.cpp
         Eris/StreamSocket.cpp
         Eris/Task.cpp
         Eris/TransferInfo.cpp
@@ -39,7 +37,6 @@ set(HEADER_FILES
         Eris/Avatar.h
         Eris/BaseConnection.h
         Eris/Calendar.h
-        Eris/CharacterType.h
         Eris/Connection.h
         Eris/CustomEntities.h
         Eris/Entity.h

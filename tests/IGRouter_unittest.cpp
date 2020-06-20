@@ -457,7 +457,6 @@ int main() {
 // stubs
 
 #include <Eris/Avatar.h>
-#include <Eris/CharacterType.h>
 #include <Eris/Connection.h>
 #include <Eris/Entity.h>
 #include <Eris/Log.h>
@@ -473,7 +472,7 @@ namespace Eris {
 
 Account::Account(Connection& con) :
 		m_con(con),
-		m_status(DISCONNECTED),
+		m_status(Status::DISCONNECTED),
 		m_doingCharacterRefresh(false) {
 }
 
@@ -723,9 +722,6 @@ EventService::~EventService() {
 
 void EventService::runOnMainThread(std::function<void()> const&,
 								   std::shared_ptr<bool> activeMarker) {
-}
-
-SpawnPoint::~SpawnPoint() {
 }
 
 Router::~Router() {

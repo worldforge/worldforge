@@ -31,13 +31,13 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Log.h>
 #include <Eris/SpawnPoint.h>
-#include <Eris/CharacterType.h>
 #include <Eris/EventService.h>
 
 #include "SignalFlagger.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/Operation.h>
 
 #include <sigc++/adaptors/hide.h>
@@ -152,12 +152,12 @@ public:
 		return internalLogin(u, p);
 	}
 
-	static const Eris::Account::Status DISCONNECTED = Eris::Account::DISCONNECTED;
-	static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
-	static const Eris::Account::Status LOGGED_IN = Eris::Account::LOGGED_IN;
-	static const Eris::Account::Status LOGGING_OUT = Eris::Account::LOGGING_OUT;
-	static const Eris::Account::Status CREATING_CHAR = Eris::Account::CREATING_CHAR;
-	static const Eris::Account::Status TAKING_CHAR = Eris::Account::TAKING_CHAR;
+	static const Eris::Account::Status DISCONNECTED = Eris::Account::Status::DISCONNECTED;
+	static const Eris::Account::Status LOGGING_IN = Eris::Account::Status::LOGGING_IN;
+	static const Eris::Account::Status LOGGED_IN = Eris::Account::Status::LOGGED_IN;
+	static const Eris::Account::Status LOGGING_OUT = Eris::Account::Status::LOGGING_OUT;
+	static const Eris::Account::Status CREATING_CHAR = Eris::Account::Status::CREATING_CHAR;
+	static const Eris::Account::Status TAKING_CHAR = Eris::Account::Status::TAKING_CHAR;
 };
 
 class TestAvatar : public Eris::Avatar {
@@ -459,7 +459,7 @@ int main() {
 		Eris::Account acc(*con);
 		Atlas::Objects::Entity::Anonymous ent;
 
-		Eris::Result res = acc.createCharacter(ent);
+		Eris::Result res = acc.createCharacterThroughEntity(ent);
 		assert(res == Eris::NOT_CONNECTED);
 	}
 
@@ -474,7 +474,7 @@ int main() {
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::CREATING_CHAR);
 
-		Eris::Result res = acc.createCharacter(ent);
+		Eris::Result res = acc.createCharacterThroughEntity(ent);
 		assert(res == Eris::DUPLICATE_CHAR_ACTIVE);
 
 		// Make sure it no longer thinks it is connected, so it does not try
@@ -493,7 +493,7 @@ int main() {
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::TAKING_CHAR);
 
-		Eris::Result res = acc.createCharacter(ent);
+		Eris::Result res = acc.createCharacterThroughEntity(ent);
 		assert(res == Eris::DUPLICATE_CHAR_ACTIVE);
 
 		// Make sure it no longer thinks it is connected, so it does not try
@@ -512,7 +512,7 @@ int main() {
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGING_IN);
 
-		Eris::Result res = acc.createCharacter(ent);
+		Eris::Result res = acc.createCharacterThroughEntity(ent);
 		assert(res == Eris::NOT_LOGGED_IN);
 	}
 
@@ -527,20 +527,8 @@ int main() {
 		con->test_setStatus(Eris::BaseConnection::CONNECTED);
 		acc.setup_setStatus(TestAccount::LOGGED_IN);
 
-		Eris::Result res = acc.createCharacter(ent);
+		Eris::Result res = acc.createCharacterThroughEntity(ent);
 		assert(res == Eris::NO_ERR);
-	}
-
-	// Test takeCharacter() fails if ID is not a real character
-	{
-		TestConnection* con = new TestConnection("name", "localhost",
-												 6767);
-
-		Eris::Account acc(*con);
-		std::string fake_char_id("1");
-
-		Eris::Result res = acc.takeCharacter(fake_char_id);
-		assert(res == Eris::BAD_CHARACTER_ID);
 	}
 
 	// Test takeCharacter() fails if not connected
@@ -808,8 +796,8 @@ int main() {
 		acc.test_updateFromObject(p);
 		assert(acc.getCharacterTypes().size() == 0);
 		assert(acc.getSpawnPoints().size() == 1);
-		assert(acc.getSpawnPoints().find("spawn1")->second.getAvailableCharacterTypes().size() == 1);
-		assert(acc.getSpawnPoints().find("spawn1")->second.getAvailableCharacterTypes().front().getName() == "string");
+		assert(acc.getSpawnPoints().front().availableCharacterTypes.size() == 1);
+		assert(acc.getSpawnPoints().front().availableCharacterTypes.front().name == "string");
 
 	}
 	// Test loginError() with no arg
