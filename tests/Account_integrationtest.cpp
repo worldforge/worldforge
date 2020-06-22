@@ -755,51 +755,7 @@ int main() {
 		acc.test_updateFromObject(p);
 	}
 
-	// Test updateFromObject() with a character list with something bad in it
-	{
-		TestConnection* con = new TestConnection("name", "localhost",
-												 6767);
 
-		TestAccount acc(*con);
-		Atlas::Objects::Entity::Account p;
-
-		Atlas::Message::ListType character_types;
-		character_types.push_back(1);
-		character_types.push_back("string");
-
-		p->setAttr("character_types", character_types);
-
-		acc.test_updateFromObject(p);
-		assert(acc.getCharacterTypes().size() == 1);
-		assert(acc.getCharacterTypes().front() == "string");
-
-	}
-
-	{
-		TestConnection* con = new TestConnection("name", "localhost",
-												 6767);
-
-		TestAccount acc(*con);
-		Atlas::Objects::Entity::Account p;
-
-		Atlas::Message::ListType spawnPoints;
-		Atlas::Message::MapType spawnPoint1;
-		spawnPoint1["name"] = "spawn1";
-		Atlas::Message::ListType charTypes1;
-		charTypes1.push_back(1);
-		charTypes1.push_back("string");
-		spawnPoint1["character_types"] = charTypes1;
-		spawnPoints.push_back(spawnPoint1);
-		spawnPoints.push_back(Atlas::Message::ListType());
-		p->setAttr("spawns", spawnPoints);
-
-		acc.test_updateFromObject(p);
-		assert(acc.getCharacterTypes().size() == 0);
-		assert(acc.getSpawnPoints().size() == 1);
-		assert(acc.getSpawnPoints().front().availableCharacterTypes.size() == 1);
-		assert(acc.getSpawnPoints().front().availableCharacterTypes.front().name == "string");
-
-	}
 	// Test loginError() with no arg
 	{
 		TestConnection* con = new TestConnection("name", "localhost",
