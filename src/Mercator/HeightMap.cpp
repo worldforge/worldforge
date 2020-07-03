@@ -216,7 +216,7 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     edgeData.reserve(m_size);
     float* edge = edgeData.data();
 
-    float* points = m_data;
+    float* points = m_data.data();
 
     // calc top edge and copy into m_heightMap
     fill1d(p1,p2,edge);

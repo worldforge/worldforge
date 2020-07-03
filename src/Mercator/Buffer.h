@@ -5,6 +5,8 @@
 #ifndef MERCATOR_BUFFER_H
 #define MERCATOR_BUFFER_H
 
+#include <vector>
+
 namespace Mercator {
 
 /// \brief Template for managing buffers of data for a segment.
@@ -16,7 +18,7 @@ class Buffer {
     /// The size of segment, m_res + 1.
     const unsigned int m_size;
     /// Pointer to buffer containing data values.
-    DataType * m_data;
+    std::vector<DataType> m_data;
 
   public:
     /// \brief Constructor.
@@ -59,12 +61,12 @@ class Buffer {
 
     /// Accessor for a pointer to buffer containing data values.
     DataType * getData() {
-        return m_data;
+        return m_data.data();
     }
 
     /// Accessor for a pointer to buffer containing data values.
     const DataType * getData() const {
-        return m_data;
+        return m_data.data();
     }
 
     /// \brief Allocate the storage required by the buffer.
@@ -72,22 +74,21 @@ class Buffer {
     /// Allocate memory based on the size and number of channels required
     /// by the buffer.
     void allocate() {
-        m_data = new DataType[m_size * m_size * m_channels];
+        m_data.resize(m_size * m_size * m_channels);
     }
 
     /// \brief Determine if this buffer has valid allocated storage.
     ///
     /// @return true if storage is allocated.
     bool isValid() const {
-        return (m_data != nullptr);
+        return (!m_data.empty());
     }
 
     /// \brief De-allocate the storage for this buffer.
     ///
     /// Free the storage allocate for this buffer.
     void invalidate() {
-        delete [] m_data;
-        m_data = nullptr;
+        m_data.resize(0);
     }
 
 };

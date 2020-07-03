@@ -8,16 +8,11 @@ namespace Mercator {
 
 template <typename DataType>
 Buffer<DataType>::Buffer(unsigned int size, unsigned int channels) :
-         m_channels(channels), m_size(size), m_data(nullptr)
+         m_channels(channels), m_size(size)
 {
 }
 
 template <typename DataType>
-Buffer<DataType>::~Buffer()
-{
-    if (m_data != nullptr) {
-        delete [] m_data;
-    }
-}
+Buffer<DataType>::~Buffer() = default;
 
 } // namespace Mercator
