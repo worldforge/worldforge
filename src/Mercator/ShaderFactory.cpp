@@ -13,15 +13,11 @@
 
 namespace Mercator {
 
-ShaderKit::ShaderKit()
-{
-}
+ShaderKit::ShaderKit() = default;
 
-ShaderKit::~ShaderKit()
-{
-}
+ShaderKit::~ShaderKit() = default;
 
-ShaderFactories * ShaderFactories::m_instance = 0;
+ShaderFactories * ShaderFactories::m_instance = nullptr;
 
 ShaderFactories::ShaderFactories()
 {
@@ -33,16 +29,14 @@ ShaderFactories::ShaderFactories()
     m_factories["band"] = new ShaderFactory<BandShader>;
 }
 
-ShaderFactories::~ShaderFactories()
-{
-}
+ShaderFactories::~ShaderFactories() = default;
 
 /// \brief Construct a singleton instance if required.
 ///
 /// @returns a reference to the instance.
 ShaderFactories & ShaderFactories::instance()
 {
-    if (m_instance == 0) {
+    if (!m_instance) {
         m_instance = new ShaderFactories();
     }
     return *m_instance;
@@ -62,9 +56,9 @@ void ShaderFactories::del()
 Shader * ShaderFactories::newShader(const std::string & type,
                                     const Shader::Parameters & params) const
 {
-    FactoryMap::const_iterator I = m_factories.find(type);
+    auto I = m_factories.find(type);
     if (I == m_factories.end()) {
-        return 0;
+        return nullptr;
     }
     assert(I->second != 0);
     return I->second->newShader(params);

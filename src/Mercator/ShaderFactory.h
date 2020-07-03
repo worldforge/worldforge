@@ -27,9 +27,9 @@ template <class T>
 class ShaderFactory : public ShaderKit {
   public:
     ShaderFactory();
-    ~ShaderFactory();
+    ~ShaderFactory() override;
 
-    virtual Shader * newShader(const Shader::Parameters &) const;
+    Shader * newShader(const Shader::Parameters &) const override;
 };
 
 /// \brief Class which manages all the shader factories available.

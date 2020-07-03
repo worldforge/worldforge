@@ -10,14 +10,10 @@
 namespace Mercator {
 
 template <class T>
-ShaderFactory<T>::ShaderFactory()
-{
-}
+ShaderFactory<T>::ShaderFactory() = default;
 
 template <class T>
-ShaderFactory<T>::~ShaderFactory()
-{
-}
+ShaderFactory<T>::~ShaderFactory() = default;
 
 template <class T>
 Shader * ShaderFactory<T>::newShader(const Shader::Parameters & params) const
