@@ -21,7 +21,6 @@ set(SOURCE_FILES
         Eris/Room.cpp
         Eris/Router.cpp
         Eris/ServerInfo.cpp
-        Eris/Session.cpp
         Eris/StreamSocket.cpp
         Eris/Task.cpp
         Eris/TransferInfo.cpp

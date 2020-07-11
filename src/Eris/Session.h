@@ -19,13 +19,12 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
+#include "EventService.h"
 #include <boost/asio/io_service.hpp>
+#include <boost/noncopyable.hpp>
 #include <memory>
 
-namespace Eris
-{
-
-class EventService;
+namespace Eris {
 
 /**
  * @brief Acts as a single entrypoint to Eris.
@@ -37,16 +36,21 @@ class EventService;
  * Your application should create an instance of this to use throughout the application's
  * life.
  */
-struct Session
-{
-    Session();
-    ~Session();
+struct Session : boost::noncopyable {
+	Session() : m_event_service(m_io_service) {
+	}
 
-    boost::asio::io_service& getIoService();
-    EventService& getEventService();
+	boost::asio::io_service m_io_service;
+	EventService m_event_service;
 
-    std::unique_ptr<boost::asio::io_service> m_io_service;
-    std::unique_ptr<EventService> m_event_service;
+	boost::asio::io_service& getIoService() {
+		return m_io_service;
+	}
+
+	EventService& getEventService() {
+		return m_event_service;
+	}
+
 };
 
 }
