@@ -55,9 +55,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == ADMIN_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -178,8 +175,6 @@ protected:
     void sendPassword(Atlas::Bridge&) const;
     /// Send the "characters" attribute to an Atlas::Bridge.
     void sendCharacters(Atlas::Bridge&) const;
-
-    void iterate(int& current_class, std::string& attr) const override;
 
 public:
     template <typename>
@@ -356,9 +351,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == PLAYER_NO) current_class = -1; AccountData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -415,9 +407,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == ADMIN_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -476,9 +465,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == GAME_NO) current_class = -1; AdminEntityData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -535,9 +521,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == GAME_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
 public:
     template <typename>

@@ -150,8 +150,6 @@ protected:
     /// Send the "stamp_contains" attribute to an Atlas::Bridge.
     void sendStampContains(Atlas::Bridge&) const;
 
-    void iterate(int& current_class, std::string& attr) const override;
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;

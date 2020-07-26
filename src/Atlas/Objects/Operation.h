@@ -63,9 +63,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == ACTION_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -122,9 +119,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == CREATE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -191,9 +185,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == DELETE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -258,9 +249,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SET_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -327,9 +315,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == AFFECT_NO) current_class = -1; SetData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -395,9 +380,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == HIT_NO) current_class = -1; AffectData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -454,9 +436,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == MOVE_NO) current_class = -1; SetData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -523,9 +502,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == WIELD_NO) current_class = -1; SetData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -590,9 +566,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == GET_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -659,9 +632,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == PERCEIVE_NO) current_class = -1; GetData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -726,9 +696,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == LOOK_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -795,9 +762,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == LISTEN_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -862,9 +826,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SNIFF_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -931,9 +892,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == TOUCH_NO) current_class = -1; PerceiveData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -991,9 +949,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == LOGIN_NO) current_class = -1; GetData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1050,9 +1005,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == LOGOUT_NO) current_class = -1; LoginData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1119,9 +1071,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == COMMUNICATE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1178,9 +1127,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == TALK_NO) current_class = -1; CommunicateData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1247,9 +1193,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == IMAGINARY_NO) current_class = -1; ActionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1314,9 +1257,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == USE_NO) current_class = -1; ActionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1383,9 +1323,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == ACTIVITY_NO) current_class = -1; ActionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1451,9 +1388,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == INFO_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1510,9 +1444,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == PERCEPTION_NO) current_class = -1; InfoData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1571,9 +1502,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == UNSEEN_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1630,9 +1558,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SIGHT_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1691,9 +1616,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == APPEARANCE_NO) current_class = -1; SightData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1750,9 +1672,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == DISAPPEARANCE_NO) current_class = -1; SightData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1811,9 +1730,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SOUND_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1871,9 +1787,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SMELL_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -1930,9 +1843,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == FEEL_NO) current_class = -1; PerceptionData::iterate(current_class, attr);}
 
 public:
     template <typename>
@@ -1999,9 +1909,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == ERROR_NO) current_class = -1; InfoData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
@@ -2066,9 +1973,6 @@ public:
     /// Is this instance of some class?
     bool instanceOf(int classNo) const override;
 
-
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == CHANGE_NO) current_class = -1; InfoData::iterate(current_class, attr);}
 
 public:
     template <typename>

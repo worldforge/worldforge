@@ -22,9 +22,6 @@ class SmartPtr
 
     typedef T DataT;
 
-    typedef typename T::iterator iterator;
-    typedef typename T::const_iterator const_iterator;
-
     SmartPtr() noexcept : ptr(T::allocator.alloc()) {
     }
     SmartPtr(const SmartPtr<T>& a) noexcept : ptr(a.get()) {

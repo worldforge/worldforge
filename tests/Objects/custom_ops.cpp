@@ -15,23 +15,19 @@ class WieldData : public SetData
 {
 protected:
     /// Construct a WieldData class definition.
-    WieldData(WieldData *defaults = NULL) : SetData((SetData*)defaults)
+    explicit WieldData(WieldData *defaults = nullptr) : SetData((SetData*)defaults)
     {
         m_class_no = WIELD_NO;
     }
     /// Default destructor.
-    virtual ~WieldData();
+    ~WieldData() override;
 
 public:
     /// Copy this object.
-    virtual WieldData * copy() const;
+    WieldData * copy() const override;
 
     /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
-
-
-    virtual void iterate(int& current_class, std::string& attr) const
-        {if(current_class == WIELD_NO) current_class = -1; SetData::iterate(current_class, attr);}
+    bool instanceOf(int classNo) const override;
 
 public:
     template <typename>
@@ -45,9 +41,7 @@ private:
 
 ::Atlas::Objects::Allocator<WieldData> WieldData::allocator;
 
-WieldData::~WieldData()
-{
-}
+WieldData::~WieldData() = default;
 
 WieldData * WieldData::copy() const
 {

@@ -141,8 +141,6 @@ protected:
     /// Send the "name" attribute to an Atlas::Bridge.
     void sendName(Atlas::Bridge&) const;
 
-    void iterate(int& current_class, std::string& attr) const override;
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;

@@ -167,41 +167,6 @@ void RootOperationData::addToMessage(MapType & m) const
         m[ARGS_ATTR] = getArgsAsList();
 }
 
-void RootOperationData::iterate(int& current_class, std::string& attr) const
-{
-    // If we've already finished this class, chain to the parent
-    if(current_class >= 0 && current_class != ROOT_OPERATION_NO) {
-        RootData::iterate(current_class, attr);
-        return;
-    }
-
-    static const char *attr_list[] = {"serialno","refno","from","to","seconds","future_seconds","args",};
-    static const unsigned n_attr = sizeof(attr_list) / sizeof(const char*);
-
-    unsigned next_attr = n_attr; // so we chain to the parent if we don't find attr
-
-    if(attr.empty()) // just staring on this class
-        next_attr = 0;
-    else {
-      for(unsigned i = 0; i < n_attr; ++i) {
-         if(attr == attr_list[i]) {
-             next_attr = i + 1;
-             break;
-         }
-      }
-    }
-
-    if(next_attr == n_attr) { // last one on the list
-        current_class = -1;
-        attr = "";
-        RootData::iterate(current_class, attr); // chain to parent
-    }
-    else {
-        current_class = ROOT_OPERATION_NO;
-        attr = attr_list[next_attr];
-    }
-}
-
 Allocator<RootOperationData> RootOperationData::allocator;
         
 

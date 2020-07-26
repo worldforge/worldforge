@@ -179,8 +179,6 @@ protected:
     /// Send the "args" attribute to an Atlas::Bridge.
     void sendArgs(Atlas::Bridge&) const;
 
-    void iterate(int& current_class, std::string& attr) const override;
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
