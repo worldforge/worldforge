@@ -34,9 +34,6 @@ public:
     bool instanceOf(int classNo) const override;
 
 
-    void iterate(int& current_class, std::string& attr) const override
-        {if(current_class == SYS_NO) current_class = -1; AccountData::iterate(current_class, attr);}
-
 public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
