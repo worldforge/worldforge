@@ -21,6 +21,7 @@
 #include <unordered_map>
 #include <Atlas/Message/Element.h>
 #include <memory>
+#include <chrono>
 
 namespace Eris
 {
@@ -148,6 +149,8 @@ public:
     */
     void sendLookAt(const std::string& eid);
 
+    size_t pruneAbandonedPendingEntities();
+
 protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
@@ -226,7 +229,12 @@ private:
         QUEUED
     };
 
-	std::unordered_map<std::string, SightAction> m_pending;
+    struct PendingStatus {
+    	SightAction sightAction;
+    	std::chrono::steady_clock::time_point registrationTime = std::chrono::steady_clock::now();
+    };
+
+	std::map<std::string, PendingStatus> m_pending;
     
     /**
     A queue of entities to be looked at, which have not yet be requested

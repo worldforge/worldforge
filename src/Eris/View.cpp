@@ -91,6 +91,12 @@ double View::getSimulationSpeed() const {
 }
 
 void View::update() {
+
+	auto pruned = pruneAbandonedPendingEntities();
+	for (size_t i = 0; i < pruned; ++i) {
+		issueQueuedLook();
+	}
+
 	WFMath::TimeStamp t(WFMath::TimeStamp::now());
 
 	// run motion prediction for each moving entity
@@ -156,7 +162,7 @@ void View::appear(const std::string& eid, double stamp) {
 
 	if ((stamp == 0) || (stamp > ent->getStamp())) {
 		if (isPending(eid)) {
-			m_pending[eid] = SightAction::APPEAR;
+			m_pending[eid].sightAction = SightAction::APPEAR;
 		} else {
 			// local data is out of data, re-look
 			getEntityFromServer(eid);
@@ -174,7 +180,7 @@ void View::disappear(const std::string& eid) {
 	} else {
 		if (isPending(eid)) {
 			//debug() << "got disappearance for pending " << eid;
-			m_pending[eid] = SightAction::DISCARD;
+			m_pending[eid].sightAction = SightAction::DISCARD;
 		} else {
 			warning() << "got disappear for unknown entity " << eid;
 		}
@@ -188,7 +194,7 @@ void View::sight(const RootEntity& gent) {
 
 // examine the pending map, to see what we should do with this entity
 	if (pending != m_pending.end()) {
-		switch (pending->second) {
+		switch (pending->second.sightAction) {
 			case SightAction::APPEAR:
 				visible = true;
 				break;
@@ -264,7 +270,7 @@ void View::deleteEntity(const std::string& eid) {
 	} else {
 	    //We might get a delete for an entity which we are awaiting info about; this is normal.
 		if (isPending(eid)) {
-			m_pending[eid] = SightAction::DISCARD;
+			m_pending[eid].sightAction = SightAction::DISCARD;
 		} else {
 			warning() << "got delete for unknown entity " << eid;
 		}
@@ -289,6 +295,8 @@ void View::unseen(const std::string& eid) {
     //This op is received when we tried to interact with something we can't observe anymore (either because it's deleted
     // or because it's out of sight).
     deleteEntity(eid);
+    //Remove any pending status.
+    m_pending.erase(eid);
 }
 
 bool View::isPending(const std::string& eid) const {
@@ -304,25 +312,41 @@ void View::getEntityFromServer(const std::string& eid) {
 		return;
 	}
 
-	// don't apply pending queue cap for anoynymous LOOKs
+	// don't apply pending queue cap for anonymous LOOKs
 	if (!eid.empty() && (m_pending.size() >= m_maxPendingCount)) {
 		m_lookQueue.push_back(eid);
-		m_pending[eid] = SightAction::QUEUED;
+		m_pending[eid].sightAction = SightAction::QUEUED;
 		return;
 	}
 
 	sendLookAt(eid);
 }
 
+size_t View::pruneAbandonedPendingEntities() {
+	size_t pruned = 0;
+	auto now = std::chrono::steady_clock::now();
+	for (auto I = m_pending.begin(); I != m_pending.end();) {
+		if (I->second.sightAction != SightAction::QUEUED && (now - I->second.registrationTime) > std::chrono::seconds(20)) {
+			warning() << "Didn't receive any response for entity " << I->first << " within 20 seconds, will remove it from pending list.";
+			I = m_pending.erase(I);
+			pruned++;
+		} else {
+			++I;
+		}
+	}
+	return pruned;
+}
+
+
 void View::sendLookAt(const std::string& eid) {
 	Look look;
 	if (!eid.empty()) {
 		auto pending = m_pending.find(eid);
 		if (pending != m_pending.end()) {
-			switch (pending->second) {
+			switch (pending->second.sightAction) {
 				case SightAction::QUEUED:
 					// flip over to default (APPEAR) as normal
-					pending->second = SightAction::APPEAR;
+					pending->second.sightAction = SightAction::APPEAR;
 					break;
 
 				case SightAction::DISCARD:
@@ -350,7 +374,7 @@ void View::sendLookAt(const std::string& eid) {
 			}
 		} else {
 			// no previous entry, default to APPEAR
-			m_pending.insert(pending, std::make_pair(eid, SightAction::APPEAR));
+			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR,std::chrono::steady_clock::now()});
 		}
 
 		// pending map is in the right state, build up the args now
