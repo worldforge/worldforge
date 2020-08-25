@@ -19,7 +19,6 @@
 
 #include <algorithm>
 #include <set> 
-#include <cmath>
 #include <cassert>
 
 using namespace Atlas::Objects::Operation;
@@ -253,17 +252,22 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t, double simulationS
 {
     assert(isMoving());
 
-    double dt = static_cast<double>((t - m_lastMoveTime).milliseconds()) / 1000.0;
-    
-    if (m_acc.isValid()) {
-        m_predicted.velocity = m_velocity + (m_acc * dt * simulationSpeed);
-        m_predicted.position = m_position + (m_velocity * dt * simulationSpeed) + (m_acc * 0.5 * dt * dt * simulationSpeed);
+    if (m_acc.isValid() && m_acc != WFMath::Vector<3>::ZERO()) {
+		double posDeltaTime = static_cast<double>((t - m_lastPosTime).milliseconds()) / 1000.0;
+        m_predicted.velocity = m_velocity + (m_acc * posDeltaTime * simulationSpeed);
+		m_predicted.position = m_position + (m_velocity * posDeltaTime * simulationSpeed) + (m_acc * 0.5 * posDeltaTime * posDeltaTime * simulationSpeed);
     } else {
         m_predicted.velocity = m_velocity;
-        m_predicted.position = m_position + (m_velocity * dt * simulationSpeed);
+		if (m_predicted.velocity != WFMath::Vector<3>::ZERO()) {
+			double posDeltaTime = static_cast<double>((t - m_lastPosTime).milliseconds()) / 1000.0;
+			m_predicted.position = m_position + (m_velocity * posDeltaTime * simulationSpeed);
+		} else {
+			m_predicted.position = m_position;
+		}
     }
     if (m_angularVelocity.isValid() && m_angularMag != .0) {
-        m_predicted.orientation = m_orientation * WFMath::Quaternion(m_angularVelocity, m_angularMag * dt * simulationSpeed);
+		double orientationDeltaTime = static_cast<double>((t - m_lastOrientationTime).milliseconds()) / 1000.0;
+        m_predicted.orientation = m_orientation * WFMath::Quaternion(m_angularVelocity, m_angularMag * orientationDeltaTime * simulationSpeed);
     } else {
         m_predicted.orientation = m_orientation;
     }
@@ -337,11 +341,11 @@ void Entity::onLocationChanged(Entity* oldLoc)
     LocationChanged.emit(oldLoc);
 }
 
-void Entity::onMoved()
+void Entity::onMoved(const WFMath::TimeStamp& timeStamp)
 {
     if (m_moving) {
         //We should update the predicted pos and velocity.
-        updatePredictedState(m_lastMoveTime, 1.0);
+        updatePredictedState(timeStamp, 1.0);
     }
     Moved.emit();
 }
@@ -378,9 +382,6 @@ void Entity::setMoving(bool inMotion)
     }
     m_moving = inMotion;
     if (m_moving) {
-        m_predicted.position = m_position;
-        m_predicted.velocity = m_velocity;
-        m_predicted.orientation = m_orientation;
 		addToMovementPrediction();
     }
     
@@ -450,7 +451,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v)
         return true;
     } else if (p == "orientation") {
         m_orientation.fromAtlas(v);
-        return true;
+		return true;
     } else if (p == "bbox") {
         m_bboxUnscaled.fromAtlas(v);
         m_bbox = m_bboxUnscaled;
@@ -560,13 +561,21 @@ void Entity::endUpdate()
 			m_modifiedProperties.find("orientation") != m_modifiedProperties.end() ||
 			m_modifiedProperties.find("angular") != m_modifiedProperties.end())
         {
-            m_lastMoveTime = TimeStamp::now();
-            
+        	auto now = TimeStamp::now();
+			if (m_modifiedProperties.find("pos") != m_modifiedProperties.end()) {
+				m_lastPosTime = now;
+			}
+			if (m_modifiedProperties.find("orientation") != m_modifiedProperties.end()) {
+				m_lastOrientationTime = now;
+			}
+
             const WFMath::Vector<3> & velocity = getVelocity();
             bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3)) || (m_angularVelocity.isValid() && m_angularVelocity != WFMath::Vector<3>::ZERO());
-            if (nowMoving != m_moving) setMoving(nowMoving);
+            if (nowMoving != m_moving) {
+            	setMoving(nowMoving);
+            }
             
-            onMoved();
+            onMoved(now);
         }
         
         m_modifiedProperties.clear();

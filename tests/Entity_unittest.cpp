@@ -48,7 +48,7 @@ class TestErisEntity : public Eris::Entity
 
     void testSetPosition(const WFMath::Point<3>& position) {
         m_position = position;
-        onMoved();
+        onMoved(m_lastPosTime);
     }
 
     void testSetVelocity(const WFMath::Vector<3>& velocity) {
@@ -61,7 +61,9 @@ class TestErisEntity : public Eris::Entity
 
     void testUpdatePositionWithDelta(const WFMath::TimeDiff& diff) {
         m_moving = true;
-        updatePredictedState(m_lastMoveTime + diff, 1.0f);
+		m_lastPosTime = WFMath::TimeStamp::epochStart();
+		m_lastOrientationTime = WFMath::TimeStamp::epochStart();
+        updatePredictedState(WFMath::TimeStamp::epochStart() + diff, 1.0f);
     }
 };
 
@@ -98,7 +100,7 @@ int main()
 
         e1.testSetPosition(WFMath::Point<3>(10, 20, 30));
 
-        //Test position inheritence
+        //Test position inheritance
         assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
         assert(e2.getViewPosition() == WFMath::Point<3>(11, 22, 33));
         assert(e3.getViewPosition() == WFMath::Point<3>(8, 20, 34));

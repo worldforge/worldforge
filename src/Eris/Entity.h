@@ -395,7 +395,7 @@ protected:
     
     /** over-rideable hook method when then Entity position, orientation or
     velocity change. The default implementation emits the Moved signal. */
-    virtual void onMoved();
+    virtual void onMoved(const WFMath::TimeStamp& timeStamp);
     
     /** over-rideable hook when the actual (computed) visiblity of this
     entity changed. The default implementation emits the VisiblityChanged
@@ -631,7 +631,8 @@ protected:
     BBox property are undefined.  */
     bool m_hasBBox;
     
-    WFMath::TimeStamp m_lastMoveTime;
+	WFMath::TimeStamp m_lastPosTime;
+	WFMath::TimeStamp m_lastOrientationTime;
     bool m_moving; ///< flag recording if this entity is current considered in-motion
     
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
