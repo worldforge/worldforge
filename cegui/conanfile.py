@@ -47,9 +47,10 @@ class CeguiConan(ConanFile):
     short_paths = True
 
     def source(self):
-        extracted_dir = self.name + "-" + self.version
-        source_url = "https://bitbucket.org/cegui/cegui"
-        tools.get("{0}/downloads/{1}.zip".format(source_url, extracted_dir))
+        version_hyphenated = self.version.replace(".", "-")
+        extracted_dir = "cegui-" + version_hyphenated
+        source_url = "https://github.com/cegui/cegui/archive"
+        tools.get("{0}/v{1}.zip".format(source_url, version_hyphenated))
 
         # Rename to "source_subfolder" is a convention to simplify later steps
         os.rename(extracted_dir, self.source_subfolder)
