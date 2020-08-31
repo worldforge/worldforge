@@ -214,7 +214,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 //					m_view.appear(arg->getId(), stamp);
 					m_view.getEntityFromServer(arg->getId());
 				} else {
-					ent->setFromRoot(arg, true);
+					ent->setFromRoot(arg, false);
 				}
 			}
         }

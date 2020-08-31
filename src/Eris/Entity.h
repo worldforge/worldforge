@@ -458,10 +458,11 @@ protected:
     friend class Avatar;
 
     /**
-    Fully initialise all entity state based on a RootEntity, including
-    location and contents.
+     * Fully initialise all entity state based on a RootEntity, including
+     * location and contents.
+     * This is only called once when the entity is first seen.
     */
-    void sight(const Atlas::Objects::Entity::RootEntity& gent);
+    void firstSight(const Atlas::Objects::Entity::RootEntity& gent);
     
 
     /**

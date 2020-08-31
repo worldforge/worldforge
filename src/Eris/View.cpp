@@ -224,7 +224,7 @@ void View::sight(const RootEntity& gent) {
 	auto* ent = getEntity(eid);
 	if (ent) {
 		// existing entity, update in place
-		ent->sight(gent);
+		ent->firstSight(gent);
 	} else {
 		ent = initialSight(gent);
 		EntitySeen.emit(ent);

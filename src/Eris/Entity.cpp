@@ -77,7 +77,7 @@ Entity::~Entity()
 void Entity::init(const RootEntity& ge, bool fromCreateOp)
 {
     // setup initial state
-    sight(ge);
+	firstSight(ge);
     
     if (fromCreateOp)
     {
@@ -273,16 +273,17 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t, double simulationS
     }
 }
 
-void Entity::sight(const RootEntity &ge)
+void Entity::firstSight(const RootEntity &gent)
 {    
-    if (!ge->isDefaultLoc()) {
-    	setLocationFromAtlas(ge->getLoc());
+    if (!gent->isDefaultLoc()) {
+    	setLocationFromAtlas(gent->getLoc());
     } else {
     	setLocation(nullptr);
     }
     
-    setContentsFromAtlas(ge->getContains());    
-    setFromRoot(ge, true);
+    setContentsFromAtlas(gent->getContains());
+    //Since this is the first sight of this entity we should include all type props too.
+    setFromRoot(gent, true);
 }
 
 void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
