@@ -383,7 +383,14 @@ protected:
     over-ride this method, take care to call the base implementation, or
     unfortunate things will happen. */
     virtual void init(const Atlas::Objects::Entity::RootEntity &ge, bool fromCreateOp);
-    
+
+    /**
+     * Shuts down the entity. This is called by the destructor, but if you extend this class
+     * you should call it in your subclass' destructor to make sure that vtables haven't been
+     * cleared yet.
+     */
+    void shutdown();
+
     /** process TALK data - default implementation emits the Say signal.
     @param talk The TALK operation
     */

@@ -60,13 +60,17 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity()
 {
-    setLocation(nullptr);
+	shutdown();
+}
 
-    for (auto& child: m_contents) {
-        //Release all children.
-        child->m_location = nullptr;
-    }
-    m_contents.clear();
+void Entity::shutdown() {
+	setLocation(nullptr);
+
+	for (auto& child: m_contents) {
+		//Release all children.
+		child->m_location = nullptr;
+	}
+	m_contents.clear();
 
 	//Delete any lingering tasks.
 	for (auto& entry : m_tasks) {
