@@ -719,7 +719,7 @@ void Entity::buildEntityDictFromContents(IdEntityMap& dict)
     }
 }
 
-void Entity::setContentsFromAtlas(const std::list<std::string>& contents)
+void Entity::setContentsFromAtlas(const std::vector<std::string>& contents)
 {
 // convert existing contents into a map, for fast membership tests
     IdEntityMap oldContents;

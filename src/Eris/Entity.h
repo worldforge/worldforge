@@ -532,7 +532,7 @@ protected:
     
     /// wrapper for setLocation with additional code the retrieve the
     /// location if it's not available right now
-    void setContentsFromAtlas(const std::list<std::string>& contents);
+    void setContentsFromAtlas(const std::vector<std::string>& contents);
 
     typedef std::unordered_map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);
