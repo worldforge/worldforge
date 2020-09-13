@@ -79,7 +79,7 @@ public:
     /// Set the "velocity" attribute AsList.
     void setVelocityAsList(const Atlas::Message::ListType& val);
     /// Set the "contains" attribute.
-    void setContains(std::list<std::string> val);
+    void setContains(std::vector<std::string> val);
     /// Set the "contains" attribute AsList.
     void setContainsAsList(const Atlas::Message::ListType& val);
     /// Set the "stamp_contains" attribute.
@@ -102,9 +102,9 @@ public:
     /// Retrieve the "velocity" attribute AsList.
     Atlas::Message::ListType getVelocityAsList() const;
     /// Retrieve the "contains" attribute.
-    const std::list<std::string>& getContains() const;
+    const std::vector<std::string>& getContains() const;
     /// Retrieve the "contains" attribute as a non-const reference.
-    std::list<std::string>& modifyContains();
+    std::vector<std::string>& modifyContains();
     /// Retrieve the "contains" attribute AsList.
     Atlas::Message::ListType getContainsAsList() const;
     /// Retrieve the "stamp_contains" attribute.
@@ -135,7 +135,7 @@ protected:
     /// Velocity object is moving, usually world is 3D
     std::vector<double> attr_velocity;
     /// List of objects that use this object as reference system (usually same as what this object contains).
-    std::list<std::string> attr_contains;
+    std::vector<std::string> attr_contains;
     /// Last time any object that uses this as reference recursively has been modified
     double attr_stamp_contains;
 
@@ -227,7 +227,7 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
 
 const uint32_t CONTAINS_FLAG = 1u << 9u;
 
-inline void RootEntityData::setContains(std::list<std::string> val)
+inline void RootEntityData::setContains(std::vector<std::string> val)
 {
     attr_contains = std::move(val);
     m_attrFlags |= CONTAINS_FLAG;
@@ -317,7 +317,7 @@ inline Atlas::Message::ListType RootEntityData::getVelocityAsList() const
     return lst_out;
 }
 
-inline const std::list<std::string>& RootEntityData::getContains() const
+inline const std::vector<std::string>& RootEntityData::getContains() const
 {
     if(m_attrFlags & CONTAINS_FLAG)
         return attr_contains;
@@ -325,7 +325,7 @@ inline const std::list<std::string>& RootEntityData::getContains() const
         return ((RootEntityData*)m_defaults)->attr_contains;
 }
 
-inline std::list<std::string>& RootEntityData::modifyContains()
+inline std::vector<std::string>& RootEntityData::modifyContains()
 {
     if(!(m_attrFlags & CONTAINS_FLAG))
         setContains(((RootEntityData*)m_defaults)->attr_contains);
@@ -334,7 +334,7 @@ inline std::list<std::string>& RootEntityData::modifyContains()
 
 inline Atlas::Message::ListType RootEntityData::getContainsAsList() const
 {
-    const std::list<std::string>& lst_in = getContains();
+    const std::vector<std::string>& lst_in = getContains();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
         lst_out.push_back(std::string(entry));

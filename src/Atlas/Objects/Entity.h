@@ -131,7 +131,7 @@ public:
     /// Set the "password" attribute.
     void setPassword(std::string val);
     /// Set the "characters" attribute.
-    void setCharacters(std::list<std::string> val);
+    void setCharacters(std::vector<std::string> val);
     /// Set the "characters" attribute AsList.
     void setCharactersAsList(const Atlas::Message::ListType& val);
 
@@ -144,9 +144,9 @@ public:
     /// Retrieve the "password" attribute as a non-const reference.
     std::string& modifyPassword();
     /// Retrieve the "characters" attribute.
-    const std::list<std::string>& getCharacters() const;
+    const std::vector<std::string>& getCharacters() const;
     /// Retrieve the "characters" attribute as a non-const reference.
-    std::list<std::string>& modifyCharacters();
+    std::vector<std::string>& modifyCharacters();
     /// Retrieve the "characters" attribute AsList.
     Atlas::Message::ListType getCharactersAsList() const;
 
@@ -167,7 +167,7 @@ protected:
     /// Password for account usually
     std::string attr_password;
     /// List of characters account can control
-    std::list<std::string> attr_characters;
+    std::vector<std::string> attr_characters;
 
     /// Send the "username" attribute to an Atlas::Bridge.
     void sendUsername(Atlas::Bridge&) const;
@@ -221,7 +221,7 @@ inline void AccountData::setPassword(std::string val)
 
 const uint32_t CHARACTERS_FLAG = 1u << 13u;
 
-inline void AccountData::setCharacters(std::list<std::string> val)
+inline void AccountData::setCharacters(std::vector<std::string> val)
 {
     attr_characters = std::move(val);
     m_attrFlags |= CHARACTERS_FLAG;
@@ -268,7 +268,7 @@ inline std::string& AccountData::modifyPassword()
     return attr_password;
 }
 
-inline const std::list<std::string>& AccountData::getCharacters() const
+inline const std::vector<std::string>& AccountData::getCharacters() const
 {
     if(m_attrFlags & CHARACTERS_FLAG)
         return attr_characters;
@@ -276,7 +276,7 @@ inline const std::list<std::string>& AccountData::getCharacters() const
         return ((AccountData*)m_defaults)->attr_characters;
 }
 
-inline std::list<std::string>& AccountData::modifyCharacters()
+inline std::vector<std::string>& AccountData::modifyCharacters()
 {
     if(!(m_attrFlags & CHARACTERS_FLAG))
         setCharacters(((AccountData*)m_defaults)->attr_characters);
@@ -285,7 +285,7 @@ inline std::list<std::string>& AccountData::modifyCharacters()
 
 inline Atlas::Message::ListType AccountData::getCharactersAsList() const
 {
-    const std::list<std::string>& lst_in = getCharacters();
+    const std::vector<std::string>& lst_in = getCharacters();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
         lst_out.push_back(std::string(entry));
