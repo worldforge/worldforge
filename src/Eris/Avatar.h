@@ -177,10 +177,6 @@ public:
 	sigc::signal<void, Entity&> ContainerOpened;
 	sigc::signal<void, Entity&> ContainerClosed;
 
-	/** emitted when this Avatar hears something. Passes the source of
-	the sound, and the operation that was heard, for example a Talk. */
-	sigc::signal<void, Entity*, const Atlas::Objects::Operation::RootOperation&> Hear;
-
 	/**
 	Emitted when a character transfer authentication is requested. Clients
 	should use the hostname, port number, possess key and entity ID to claim

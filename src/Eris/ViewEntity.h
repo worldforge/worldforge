@@ -46,11 +46,6 @@ protected:
      */
     View& m_view;
 
-    void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
-
-    void onSoundAction(
-    		const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo) override;
-
     void onVisibilityChanged(bool vis) override;
 
     void onTaskAdded(const std::string& id, Task* task) override;

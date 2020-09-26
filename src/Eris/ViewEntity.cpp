@@ -19,17 +19,6 @@ ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 ViewEntity::~ViewEntity() = default;
 
 
-void ViewEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talk) {
-	Entity::onTalk(talk);
-	m_view.getAvatar().Hear.emit(this, talk);
-}
-
-void ViewEntity::onSoundAction(
-		const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo) {
-	Entity::onSoundAction(op, typeInfo);
-	m_view.getAvatar().Hear.emit(this, op);
-}
-
 void ViewEntity::onVisibilityChanged(bool vis)
 {
     m_view.setEntityVisible(this, vis);
