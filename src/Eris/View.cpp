@@ -263,7 +263,6 @@ void View::deleteEntity(const std::string& eid) {
 	if (I != m_contents.end()) {
 
 		auto entity = I->second.entity.get();
-		auto& entry = I->second;
 		getConnection().unregisterRouterForFrom(entity->getId());
 		if (entity->m_moving) {
 			removeFromPrediction(entity);

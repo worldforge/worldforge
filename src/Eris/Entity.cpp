@@ -207,31 +207,6 @@ sigc::connection Entity::observe(const std::string& propertyName, const Property
     return connection;
 }
 
-WFMath::Point<3> Entity::getViewPosition() const
-{
-    WFMath::Point<3> vpos(0.0, 0.0, 0.0);
-    //If the position is invalid, we will consider it to be (0,0,0) and skip applying it.
-    for (const Entity* e = this; e; e = e->getLocation()) {
-        if (e->getPosition().isValid()) {
-            vpos = e->toLocationCoords(vpos);
-        }
-    }
-        
-    return vpos;
-}
-
-WFMath::Quaternion Entity::getViewOrientation() const
-{
-    WFMath::Quaternion vor;
-	
-	vor.identity();
-    for (const Entity* e = this; e; e = e->getLocation()) {
-        vor *= e->getOrientation();
-    }
-        
-    return vor;
-}
-
 const WFMath::Point<3>& Entity::getPredictedPos() const
 {
     return (m_moving ? m_predicted.position : m_position);
@@ -761,7 +736,9 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents)
 bool Entity::hasChild(const std::string& eid) const
 {
     for (auto& m_content : m_contents) {
-        if (m_content->getId() == eid) return true;
+        if (m_content->getId() == eid) {
+			return true;
+		}
     }
     
     return false;
@@ -829,7 +806,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
         /* in case this isn't clear; if we were visible, then child visibility
         was simply it's locally set value; if we were invisible, that the
         child must also have been invisible too. */
-        bool childWasVisible = wasVisible ? item->m_visible : false;
+        bool childWasVisible = wasVisible && item->m_visible;
 		item->updateCalculatedVisibility(childWasVisible);
     }
     

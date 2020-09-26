@@ -95,25 +95,18 @@ int main()
         assert(e2.getPosition().isValid());
 
         assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
-        //Note that e1 don't have any valid position set, so it's position when calling getViewPosition() should be interpreted as (0,0,0).
-        assert(e2.getViewPosition() == WFMath::Point<3>(1, 2, 3));
 
         e1.testSetPosition(WFMath::Point<3>(10, 20, 30));
 
         //Test position inheritance
         assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
-        assert(e2.getViewPosition() == WFMath::Point<3>(11, 22, 33));
-        assert(e3.getViewPosition() == WFMath::Point<3>(8, 20, 34));
 
-        assert(e4.getViewPosition() == WFMath::Point<3>(1, 0, 0));
         e4.testUpdatePositionWithDelta(WFMath::TimeDiff(1000));
-        assert(e4.getViewPosition() == WFMath::Point<3>(2, 0, 0));
 
         //Check that the position is updated instantly when onMoved is called.
         WFMath::Point<3> newPos(10, 20, 30);
         e4.Moved.connect([&](){
             assert(e4.getPosition() == newPos);
-            assert(e4.getViewPosition() == newPos);
             assert(e4.getPredictedPos() == newPos);
         });
         e4.testSetPosition(newPos);

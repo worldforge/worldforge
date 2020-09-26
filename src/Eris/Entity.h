@@ -222,23 +222,17 @@ public:
      */
     const WFMath::Quaternion& getPredictedOrientation() const;
 
-    /** Retrieve this Entity's position in view coordinates. */
-    WFMath::Point<3> getViewPosition() const;
-
-    /** Retrieve this Entity's orientation in view coordinates. */
-    WFMath::Quaternion getViewOrientation() const;
-    
     /** Returns the entity's velocity as last set explicitly. **/
-    const WFMath::Vector< 3 > & getVelocity() const;
+    const WFMath::Vector<3> & getVelocity() const;
 
     /** Returns the entity's angular velocity as last set explicitly. **/
-    const WFMath::Vector< 3 > & getAngularVelocity() const;
+    const WFMath::Vector<3> & getAngularVelocity() const;
     
     /** Returns the entity's orientation as last set explicitly. **/
     const WFMath::Quaternion & getOrientation() const;
     
     /** Returns the entity's bounding box in the entity's local system coordinates. **/
-    const WFMath::AxisBox< 3 > & getBBox() const;
+    const WFMath::AxisBox<3> & getBBox() const;
 
     /**
      * @brief Returns true if the entity has a bounding box.
