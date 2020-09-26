@@ -510,7 +510,7 @@ protected:
      * @param properties The map of properties to fill.
      * @param typeInfo The type info from which we will copy values, as well as its parents.
      */
-    void fillPropertiesFromType(Entity::PropertyMap& properties, TypeInfo* typeInfo) const;
+    void fillPropertiesFromType(Entity::PropertyMap& properties, const TypeInfo& typeInfo) const;
     
     void beginUpdate();
     void addToUpdate(const std::string& propertyName);

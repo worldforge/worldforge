@@ -173,7 +173,7 @@ Entity::PropertyMap Entity::getProperties() const
     PropertyMap properties;
     properties.insert(m_properties.begin(), m_properties.end());
     if (m_type) {
-		fillPropertiesFromType(properties, m_type);
+		fillPropertiesFromType(properties, *m_type);
     }
     return properties;
 }
@@ -183,13 +183,13 @@ const Entity::PropertyMap& Entity::getInstanceProperties() const
     return m_properties;
 }
 
-void Entity::fillPropertiesFromType(Entity::PropertyMap& properties, TypeInfo* typeInfo) const
+void Entity::fillPropertiesFromType(Entity::PropertyMap& properties, const TypeInfo& typeInfo) const
 {
-    properties.insert(typeInfo->getProperties().begin(), typeInfo->getProperties().end());
+    properties.insert(typeInfo.getProperties().begin(), typeInfo.getProperties().end());
     ///Make sure to fill from the closest properties first, as insert won't replace an existing value
 
-	if (typeInfo->getParent()) {
-		fillPropertiesFromType(properties, typeInfo->getParent());
+	if (typeInfo.getParent()) {
+		fillPropertiesFromType(properties, *typeInfo.getParent());
 	}
 
 }
@@ -293,7 +293,7 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
     //Add any values found in the type, if they aren't defined in the entity already.
     if (includeTypeInfoProperties && m_type) {
         Atlas::Message::MapType typeProperties;
-		fillPropertiesFromType(typeProperties, m_type);
+		fillPropertiesFromType(typeProperties, *m_type);
         for (auto& entry : typeProperties) {
 			propertyChangedFromTypeInfo(entry.first, entry.second);
         }
