@@ -14,7 +14,7 @@ namespace Eris {
 ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 	Entity(std::move(id), ty),
 	m_view(view),
-	m_router(new EntityRouter(this)){
+	m_router(new EntityRouter(*this, view.getTypeService())){
 	m_view.getConnection().registerRouterForFrom(m_router.get(), getId());
 
 }

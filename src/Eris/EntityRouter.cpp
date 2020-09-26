@@ -21,17 +21,17 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-EntityRouter::EntityRouter(ViewEntity* ent) :
-    m_entity(ent)
+EntityRouter::EntityRouter(ViewEntity& ent, TypeService& typeService) :
+    m_entity(ent),
+    m_typeService(typeService)
 {
-    assert(ent);
 }
 
 EntityRouter::~EntityRouter() = default;
 
 Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 {
-    assert(op->getFrom() == m_entity->getId());    
+    assert(op->getFrom() == m_entity.getId());    
     const std::vector<Root>& args = op->getArgs();
     
     // note it's important we match exactly on sight here, and not derived ops
@@ -50,21 +50,21 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 			if (arg->getClassNo() == TALK_NO)
 			{
 				RootOperation talk = smart_dynamic_cast<RootOperation>(arg);
-				m_entity->onTalk(talk);
+				m_entity.onTalk(talk);
 			} else {
 				if (!arg->isDefaultParent()) {
-					auto ty = typeService().getTypeForAtlas(arg);
+					auto ty = m_typeService.getTypeForAtlas(arg);
 					if (!ty->isBound()) {
-						new TypeBoundRedispatch(m_entity->getView()->getAvatar().getConnection(), op, ty);
-					} else if (ty->isA(typeService().getTypeByName("action"))) {
+						new TypeBoundRedispatch(m_entity.getView()->getAvatar().getConnection(), op, ty);
+					} else if (ty->isA(m_typeService.getTypeByName("action"))) {
 						// sound of action
 						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
-						m_entity->onSoundAction(act, *ty);
+						m_entity.onSoundAction(act, *ty);
 					} else {
-						warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+						warning() << "entity " << m_entity.getId() << " emitted sound with strange argument: " << op;
 					}
 				} else {
-					warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+					warning() << "entity " << m_entity.getId() << " emitted sound with strange argument: " << op;
 				}
 			}
 		}
@@ -85,16 +85,16 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 //        //If we get a SET op for an entity that's not visible, it means that the entity has moved
 //        //within our field of vision without sending an Appear op first. We should treat this as a
 //        //regular Appear op and issue a Look op back, to get more info.
-//        if (!m_entity->isVisible()) {
-//            m_entity->getView()->sendLookAt(m_entity->getId());
+//        if (!m_entity.isVisible()) {
+//            m_entity.getView()->sendLookAt(m_entity.getId());
 //        }
 //
 //		for (const auto& arg : args) {
 //			if (arg->hasAttr("loc")) {
-//				m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
+//				m_entity.setLocationFromAtlas(arg->getAttr("loc").asString());
 //			}
 //
-//			m_entity->setFromRoot(arg, true /* movement allowed */);
+//			m_entity.setFromRoot(arg, true /* movement allowed */);
 //		}
 //
 //        return HANDLED;
@@ -102,10 +102,10 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     
     if (op->instanceOf(IMAGINARY_NO)) {
         if (args.empty()) {
-			error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
+			error() << "entity " << m_entity.getId() << " sent imaginary with no args: " << op;
 		} else {
 			for (const auto& arg : args) {
-				m_entity->onImaginary(arg);
+				m_entity.onImaginary(arg);
 			}
 		}
         return HANDLED;        
@@ -115,11 +115,6 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     // validly change multiple entities - handled by the IGRouter
 
     return IGNORED;
-}
-
-TypeService& EntityRouter::typeService()
-{
-    return m_entity->getView()->getAvatar().getConnection().getTypeService();
 }
 
 
