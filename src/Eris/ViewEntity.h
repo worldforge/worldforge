@@ -61,8 +61,6 @@ protected:
 
     Entity* getEntity(const std::string& id) override;
 
-    TypeService& getTypeService() const override;
-
     /**
      * @brief Listen to task progress rates updates and send to the view.
      * @param task The task which is changed.

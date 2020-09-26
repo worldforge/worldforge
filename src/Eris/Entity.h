@@ -555,12 +555,6 @@ protected:
     void updatePredictedState(const WFMath::TimeStamp& t, double simulationSpeed);
     
     /**
-     * @brief Gets the typeservice used throughout the Eris system.
-     * @returns A type service instance.
-     */
-    virtual TypeService& getTypeService() const = 0;
-
-    /**
      * @brief Removes the entity from any movement prediction service.
      * This is called when movement has stopped.
      */

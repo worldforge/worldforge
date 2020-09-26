@@ -18,9 +18,6 @@ ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 
 ViewEntity::~ViewEntity() = default;
 
-TypeService& ViewEntity::getTypeService() const {
-	return m_view.getAvatar().getConnection().getTypeService();
-}
 
 void ViewEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talk) {
 	Entity::onTalk(talk);
