@@ -12,6 +12,7 @@
 #include "TypeService.h"
 #include "TypeInfo.h"
 #include "Task.h"
+#include "EntityRouter.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -43,7 +44,7 @@ ViewEntity* View::getEntity(const std::string& eid) const {
 		return nullptr;
 	}
 
-	return E->second.get();
+	return E->second.entity.get();
 }
 
 void View::setEntityVisible(ViewEntity* ent, bool vis) {
@@ -237,31 +238,41 @@ void View::sight(const RootEntity& gent) {
 ViewEntity* View::initialSight(const RootEntity& gent) {
 	assert(m_contents.count(gent->getId()) == 0);
 
-	auto I = m_contents.emplace(gent->getId(), createEntity(gent));
-	auto& insertedEntity = I.first->second;
+	auto entity = createEntity(gent);
+	auto router = std::make_unique<EntityRouter>(*entity, *this);
+	getConnection().registerRouterForFrom(router.get(),entity->getId());
+
+	auto I = m_contents.emplace(gent->getId(), EntityEntry{std::move(entity), std::move(router)});
+	auto& insertedEntry = I.first->second;
+	auto insertedEntity = insertedEntry.entity.get();
 	insertedEntity->init(gent, false);
 
-	InitialSightEntity.emit(insertedEntity.get());
+	InitialSightEntity.emit(insertedEntity);
 
 	auto it = m_notifySights.find(gent->getId());
 	if (it != m_notifySights.end()) {
-		it->second.emit(insertedEntity.get());
+		it->second.emit(insertedEntity);
 		m_notifySights.erase(it);
 	}
 
-	return insertedEntity.get();
+	return insertedEntity;
 }
 
 void View::deleteEntity(const std::string& eid) {
     auto I = m_contents.find(eid);
 	if (I != m_contents.end()) {
 
-	    auto entity = I->second.get();
+		auto entity = I->second.entity.get();
+		auto& entry = I->second;
+		getConnection().unregisterRouterForFrom(entity->getId());
+		if (entity->m_moving) {
+			removeFromPrediction(entity);
+		}
 	    //Emit signals about the entity being deleted.
 	    EntityDeleted.emit(entity);
         entity->BeingDeleted.emit();
         //We need to delete all children too.
-        auto children = I->second->getContent();
+        auto children = I->second.entity->getContent();
 		m_contents.erase(I);
 		for (auto& child : children) {
 		    deleteEntity(child->getId());
@@ -413,10 +424,6 @@ void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 	if (element.isFloat()) {
 		m_simulationSpeed = element.Float();
 	}
-}
-
-void View::entityDeleted(ViewEntity* ent) {
-	m_contents.erase(ent->getId());
 }
 
 void View::issueQueuedLook() {

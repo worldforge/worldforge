@@ -28,6 +28,7 @@
 
 #include <Eris/Calendar.h>
 
+#include "Eris/EntityRouter.h"
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>

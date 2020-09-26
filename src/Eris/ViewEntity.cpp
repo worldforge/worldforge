@@ -13,19 +13,10 @@
 namespace Eris {
 ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 	Entity(std::move(id), ty),
-	m_view(view),
-	m_router(new EntityRouter(*this, view.getTypeService())){
-	m_view.getConnection().registerRouterForFrom(m_router.get(), getId());
-
+	m_view(view) {
 }
 
-ViewEntity::~ViewEntity() {
-    if (m_moving) {
-        m_view.removeFromPrediction(this);
-    }
-    m_view.getConnection().unregisterRouterForFrom(m_router.get(), m_id);
-    m_view.entityDeleted(this); // remove ourselves from the View's content map. This will delete the entity.
-}
+ViewEntity::~ViewEntity() = default;
 
 TypeService& ViewEntity::getTypeService() const {
 	return m_view.getAvatar().getConnection().getTypeService();

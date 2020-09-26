@@ -46,12 +46,6 @@ protected:
      */
     View& m_view;
 
-    /**
-     * @brief A router instance which routes messages from the view
-     * into this entity.
-     */
-    std::unique_ptr<EntityRouter> m_router;
-
     void onTalk(const Atlas::Objects::Operation::RootOperation& talk) override;
 
     void onSoundAction(

@@ -21,9 +21,9 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-EntityRouter::EntityRouter(ViewEntity& ent, TypeService& typeService) :
+EntityRouter::EntityRouter(Entity& ent, View& view) :
     m_entity(ent),
-    m_typeService(typeService)
+    m_view(view)
 {
 }
 
@@ -53,10 +53,10 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 				m_entity.onTalk(talk);
 			} else {
 				if (!arg->isDefaultParent()) {
-					auto ty = m_typeService.getTypeForAtlas(arg);
+					auto ty = m_view.getTypeService().getTypeForAtlas(arg);
 					if (!ty->isBound()) {
-						new TypeBoundRedispatch(m_entity.getView()->getAvatar().getConnection(), op, ty);
-					} else if (ty->isA(m_typeService.getTypeByName("action"))) {
+						new TypeBoundRedispatch(m_view.getConnection(), op, ty);
+					} else if (ty->isA(m_view.getTypeService().getTypeByName("action"))) {
 						// sound of action
 						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
 						m_entity.onSoundAction(act, *ty);

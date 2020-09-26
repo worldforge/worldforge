@@ -150,6 +150,7 @@ public:
     void sendLookAt(const std::string& eid);
 
     size_t pruneAbandonedPendingEntities();
+	Connection& getConnection() const;
 
 protected:
     // the router passes various relevant things to us directly
@@ -172,11 +173,6 @@ protected:
     void addToPrediction(ViewEntity* ent);
     void removeFromPrediction(ViewEntity* ent);
     
-    /** this is a hook that Entity's destructor calls to remove itself from
-    the View's content map. The name is unfortantely similar to the public
-    'EntityDeleted' signal - alternative naming suggestions appreciated. */
-    void entityDeleted(ViewEntity* ent);
-
     /**
     Method to register and unregister tasks with with view, so they can
     have their progress updated automatically by update(). Only certain
@@ -187,7 +183,6 @@ protected:
 private:
     ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
-    Connection& getConnection() const;
     void getEntityFromServer(const std::string& eid);
 
     /** helper to update the top-level entity, fire signals, etc */
@@ -208,7 +203,12 @@ private:
     typedef std::unordered_map<std::string, std::unique_ptr<ViewEntity>> IdEntityMap;
 
     Avatar& m_owner;
-    IdEntityMap m_contents;
+
+    struct EntityEntry {
+		std::unique_ptr<ViewEntity> entity;
+		std::unique_ptr<EntityRouter> entityRouter;
+    };
+	std::unordered_map<std::string, EntityEntry> m_contents;
 	Entity* m_topLevel; ///< the top-level visible entity for this view
     WFMath::TimeStamp m_lastUpdateTime;
 

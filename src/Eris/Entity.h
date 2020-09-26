@@ -54,7 +54,8 @@ or creating peer classes and attaching them to the signals.
 
 class Entity : virtual public sigc::trackable
 {
-public:	
+	friend class EntityRouter;
+public:
     typedef std::map<std::string, Atlas::Message::Element> PropertyMap;
     
     explicit Entity(std::string id, TypeInfo* ty);

@@ -25,6 +25,7 @@
 #endif
 
 #include <Eris/Account.h>
+#include "Eris/EntityRouter.h"
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
 #include <Eris/IGRouter.h>

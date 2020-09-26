@@ -197,8 +197,7 @@ void Connection::registerRouterForFrom(Router* router, const std::string& fromId
 	m_fromRouters[fromId] = router;
 }
 
-void Connection::unregisterRouterForFrom(Router* router, const std::string& fromId) {
-	assert(m_fromRouters[fromId] == router);
+void Connection::unregisterRouterForFrom(const std::string& fromId) {
 	m_fromRouters.erase(fromId);
 }
 

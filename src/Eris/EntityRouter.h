@@ -3,13 +3,13 @@
 namespace Eris
 {
 
-class ViewEntity;
-class TypeService;
+class Entity;
+class View;
 
 class EntityRouter : public Router
 {
 public:
-	explicit EntityRouter(ViewEntity& ent, TypeService& typeService);
+	explicit EntityRouter(Entity& ent, View& view);
 
 	~EntityRouter() override;
     
@@ -19,8 +19,8 @@ protected:
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation&);
 
-    ViewEntity& m_entity;
-    TypeService& m_typeService;
+    Entity& m_entity;
+    View& m_view;
 };
 
 }

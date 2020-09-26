@@ -39,7 +39,7 @@ Room::Room(Lobby *l, const std::string& id) :
 Room::~Room()
 {
     if (!m_roomId.empty()) {
-        m_lobby->getConnection().unregisterRouterForFrom(this, m_roomId);
+        m_lobby->getConnection().unregisterRouterForFrom(m_roomId);
     }
 }
 

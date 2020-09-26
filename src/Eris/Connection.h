@@ -97,7 +97,7 @@ public:
 
 	void registerRouterForFrom(Router* router, const std::string& fromId);
 
-	void unregisterRouterForFrom(Router* router, const std::string& fromId);
+	void unregisterRouterForFrom(const std::string& fromId);
 
 	/** Lock then connection's state. This prevents the connection changing status
 	until a corresponding unlock() call is issued. The only use at present is to hold
