@@ -287,8 +287,6 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
             warning() << "Error when setting property '" << entry.first << "'. Message: " << ex.what();
         }
     }
-    
-    endUpdate();
 
     //Add any values found in the type, if they aren't defined in the entity already.
     if (includeTypeInfoProperties && m_type) {
@@ -298,6 +296,8 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
 			propertyChangedFromTypeInfo(entry.first, entry.second);
         }
     }
+
+	endUpdate();
 
 }
 
@@ -357,15 +357,9 @@ void Entity::setMoving(bool inMotion)
 {
     assert(m_moving != inMotion);
     
-    if (m_moving) {
-    	removeFromMovementPrediction();
-    }
-    m_moving = inMotion;
-    if (m_moving) {
-		addToMovementPrediction();
-    }
-    
-    Moving.emit(inMotion);
+	m_moving = inMotion;
+	Moving.emit(inMotion);
+
 }
 
 void Entity::onChildAdded(Entity* child)
