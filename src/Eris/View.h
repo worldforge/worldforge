@@ -117,9 +117,6 @@ public:
     /** emitted when a SIGHT(DELETE) op is received for an entity */
     sigc::signal<void, ViewEntity*> EntityDeleted;
 
-    sigc::signal<void, ViewEntity*> Appearance;
-    sigc::signal<void, ViewEntity*> Disappearance;
-
     /// emitted when the TLVE changes
     sigc::signal<void> TopLevelEntityChanged;
 
@@ -164,8 +161,6 @@ protected:
     void sight(const Atlas::Objects::Entity::RootEntity& ge);
     void deleteEntity(const std::string& eid);
     void unseen(const std::string& eid);
-    
-    void setEntityVisible(ViewEntity* ent, bool vis);
 
     /// test if the specified entity ID is pending initial sight on the View
     bool isPending(const std::string& eid) const;

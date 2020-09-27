@@ -46,13 +46,7 @@ protected:
      */
     View& m_view;
 
-    void onVisibilityChanged(bool vis) override;
-
     void onTaskAdded(const std::string& id, Task* task) override;
-
-    void removeFromMovementPrediction() override;
-
-    void addToMovementPrediction() override;
 
     Entity* getEntity(const std::string& id) override;
 

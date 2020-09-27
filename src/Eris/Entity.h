@@ -306,8 +306,7 @@ public:
     /** Emitted when then entity's position, orientation or velocity change.*/
     sigc::signal<void> Moved;
 
-    /** Emitted when an entity starts or stops moving (as determined by the
-    'setMoving' method. */
+    /** Emitted when an entity starts or stops moving. The new movement status will be emitted. */
     sigc::signal<void, bool> Moving;
 
     /**
@@ -554,18 +553,6 @@ protected:
     
     void updatePredictedState(const WFMath::TimeStamp& t, double simulationSpeed);
     
-    /**
-     * @brief Removes the entity from any movement prediction service.
-     * This is called when movement has stopped.
-     */
-    virtual void removeFromMovementPrediction() = 0;
-
-    /**
-     * @brief Adds the entity to any movement prediction service.
-     * This is called when movement has started.
-     */
-    virtual void addToMovementPrediction() = 0;
-
     /**
      * @brief Gets an entity with the supplied id from the system.
      * @param id The id of the entity to get.

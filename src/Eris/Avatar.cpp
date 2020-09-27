@@ -46,9 +46,11 @@ namespace Eris {
             m_isAdmin(false),
             m_logoutTimer(nullptr) {
         m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
-        m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
+		m_entityAppearanceCon= m_view->notifyWhenEntitySeen(m_entityId, sigc::mem_fun(this, &Avatar::onEntityAppear));
 
+		//Start by requesting general entity data from the server.
         m_view->getEntityFromServer("");
+        //And then our specific entity.
         m_view->getEntityFromServer(m_entityId);
     }
 

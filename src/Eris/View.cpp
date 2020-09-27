@@ -32,10 +32,10 @@ View::View(Avatar& av) :
 }
 
 View::~View() {
-    //To avoid having callbacks into the View when deleting children we first move all of them to a temporary copy
-    //and then destroy that.
-    auto contents = std::move(m_contents);
-    contents.clear();
+	//To avoid having callbacks into the View when deleting children we first move all of them to a temporary copy
+	//and then destroy that.
+	auto contents = std::move(m_contents);
+	contents.clear();
 }
 
 ViewEntity* View::getEntity(const std::string& eid) const {
@@ -45,15 +45,6 @@ ViewEntity* View::getEntity(const std::string& eid) const {
 	}
 
 	return E->second.entity.get();
-}
-
-void View::setEntityVisible(ViewEntity* ent, bool vis) {
-	assert(ent);
-	if (vis) {
-		Appearance.emit(ent);
-	} else {
-		Disappearance.emit(ent);
-	}
 }
 
 void View::registerFactory(std::unique_ptr<Factory> f) {
@@ -132,7 +123,6 @@ void View::addToPrediction(ViewEntity* ent) {
 }
 
 void View::removeFromPrediction(ViewEntity* ent) {
-	assert(ent->isMoving());
 	assert(m_moving.count(ent) == 1);
 	m_moving.erase(ent);
 }
@@ -240,7 +230,17 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 
 	auto entity = createEntity(gent);
 	auto router = std::make_unique<EntityRouter>(*entity, *this);
-	getConnection().registerRouterForFrom(router.get(),entity->getId());
+	getConnection().registerRouterForFrom(router.get(), entity->getId());
+
+	auto entityPtr = entity.get();
+	//Don't store connection as life time of entity is bound to the view.
+	entity->Moving.connect([this, entityPtr](bool startedMoving) {
+		if (startedMoving) {
+			addToPrediction(entityPtr);
+		} else {
+			removeFromPrediction(entityPtr);
+		}
+	});
 
 	auto I = m_contents.emplace(gent->getId(), EntityEntry{std::move(entity), std::move(router)});
 	auto& insertedEntry = I.first->second;
@@ -259,7 +259,7 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 }
 
 void View::deleteEntity(const std::string& eid) {
-    auto I = m_contents.find(eid);
+	auto I = m_contents.find(eid);
 	if (I != m_contents.end()) {
 
 		auto entity = I->second.entity.get();
@@ -267,18 +267,18 @@ void View::deleteEntity(const std::string& eid) {
 		if (entity->m_moving) {
 			removeFromPrediction(entity);
 		}
-	    //Emit signals about the entity being deleted.
-	    EntityDeleted.emit(entity);
-        entity->BeingDeleted.emit();
-        //We need to delete all children too.
-        auto children = I->second.entity->getContent();
+		//Emit signals about the entity being deleted.
+		EntityDeleted.emit(entity);
+		entity->BeingDeleted.emit();
+		//We need to delete all children too.
+		auto children = I->second.entity->getContent();
 		m_contents.erase(I);
 		for (auto& child : children) {
-		    deleteEntity(child->getId());
+			deleteEntity(child->getId());
 		}
 
 	} else {
-	    //We might get a delete for an entity which we are awaiting info about; this is normal.
+		//We might get a delete for an entity which we are awaiting info about; this is normal.
 		if (isPending(eid)) {
 			m_pending[eid].sightAction = SightAction::DISCARD;
 		} else {
@@ -298,15 +298,15 @@ std::unique_ptr<ViewEntity> View::createEntity(const RootEntity& gent) {
 		}
 	}
 
-	return std::make_unique<ViewEntity>(gent->getId(), type, *this);
+	throw std::runtime_error("Could not find entity factory suitable for creating new entity.");
 }
 
 void View::unseen(const std::string& eid) {
-    //This op is received when we tried to interact with something we can't observe anymore (either because it's deleted
-    // or because it's out of sight).
-    deleteEntity(eid);
-    //Remove any pending status.
-    m_pending.erase(eid);
+	//This op is received when we tried to interact with something we can't observe anymore (either because it's deleted
+	// or because it's out of sight).
+	deleteEntity(eid);
+	//Remove any pending status.
+	m_pending.erase(eid);
 }
 
 bool View::isPending(const std::string& eid) const {
@@ -384,7 +384,7 @@ void View::sendLookAt(const std::string& eid) {
 			}
 		} else {
 			// no previous entry, default to APPEAR
-			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR,std::chrono::steady_clock::now()});
+			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR, std::chrono::steady_clock::now()});
 		}
 
 		// pending map is in the right state, build up the args now

@@ -18,21 +18,6 @@ ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
 
 ViewEntity::~ViewEntity() = default;
 
-
-void ViewEntity::onVisibilityChanged(bool vis)
-{
-    m_view.setEntityVisible(this, vis);
-	Entity::onVisibilityChanged(vis);
-}
-
-void ViewEntity::removeFromMovementPrediction() {
-	m_view.removeFromPrediction(this);
-}
-
-void ViewEntity::addToMovementPrediction() {
-	m_view.addToPrediction(this);
-}
-
 Entity* ViewEntity::getEntity(const std::string& id) {
 	auto child = m_view.getEntity(id);
 	if (!child || !child->m_visible) {
