@@ -28,24 +28,4 @@
 
 #include <wfmath/MersenneTwister.h>
 
-namespace WFMath {
-
-// backwards compatibility functions
-
-#ifdef WFMATH_USE_OLD_RAND
-
-/// Seed WFMath's random number generators.
-/**
- * The random number generators use a static instance of MTRand.
- **/
-inline void SeedRand(unsigned int val) {MTRand::instance.seed(val);}
-/// Get a random number between 0 and 1
-inline double DRand() {return MTRand::instance.rand();}
-/// Get a random integer ranging from 0 to (val passed) - 1
-inline unsigned int IRand(unsigned int val) {return MTRand::instance.randInt(val - 1);}
-
-#endif
-
-} // namespace WFMath
-
 #endif  // WFMATH_RANDGEN_H

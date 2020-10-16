@@ -26,7 +26,7 @@
 #include <iosfwd>
 #include <climits>
 #include <cmath>
-#include <stdint.h>
+#include <cstdint>
 
 namespace WFMath {
 
@@ -38,8 +38,8 @@ public:
 
 public:
   MTRand();
-  MTRand(uint32 oneSeed);
-  MTRand(uint32* const bigSeed, uint32 const seedLength = state_size);
+  explicit MTRand(uint32 oneSeed);
+  explicit MTRand(const uint32 bigSeed[], uint32 seedLength = state_size);
 
   // real-valued random numbers on [0, 1] or [0, n]
   template<typename FloatT>
@@ -53,7 +53,7 @@ public:
 
   void seed();
   void seed(uint32 oneSeed);
-  void seed(uint32* const init_vector, uint32 init_vector_length = state_size);
+  void seed(const uint32 init_vector[], uint32 init_vector_length = state_size);
 
   std::ostream& save(std::ostream&) const;
   std::istream& load(std::istream&);
@@ -66,11 +66,11 @@ private:
 };
 
 
-inline MTRand::MTRand(uint32 s)
+inline MTRand::MTRand(uint32 oneSeed)
 : index(0)
-{ seed(s); }
+{ seed(oneSeed); }
 
-inline MTRand::MTRand(uint32* const bigSeed, const uint32 seedLength)
+inline MTRand::MTRand(const uint32 bigSeed[], const uint32 seedLength)
 : index(0)
 { seed(bigSeed, seedLength); }
 
@@ -96,11 +96,11 @@ inline double MTRand::rand( const double& n )
 inline MTRand::uint32 MTRand::randInt(uint32 n)
 {
   uint32 used = n;
-  used |= used >> 1;
-  used |= used >> 2;
-  used |= used >> 4;
-  used |= used >> 8;
-  used |= used >> 16;
+  used |= used >> 1u;
+  used |= used >> 2u;
+  used |= used >> 4u;
+  used |= used >> 8u;
+  used |= used >> 16u;
 
   uint32 i;
   do

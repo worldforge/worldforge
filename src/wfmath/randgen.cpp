@@ -58,7 +58,6 @@
 // Created: 2002-5-23
 
 #include "randgen.h"
-#include "timestamp.h"
 #include <ctime>
 #include <cstdio>
 #include <istream>
@@ -92,7 +91,7 @@ static MTRand::uint32 hash( time_t t, clock_t c )
   static uint32 differ = 0;
 
   uint32 h1 = 0;
-  unsigned char *p = (unsigned char *) &t;
+  auto *p = (unsigned char *) &t;
   for( size_t i = 0; i < sizeof(t); ++i )
   {
     h1 *= UCHAR_MAX + 2U;
@@ -126,7 +125,7 @@ void MTRand::seed()
   }
 
   // Was not successful, so use time() and clock() instead
-  seed( hash( time(NULL), clock() ) );
+  seed( hash( time(nullptr), clock() ) );
 }
 
 
@@ -135,12 +134,12 @@ void MTRand::seed(uint32 s)
   state[0] = s;
   for (index = 1; index < state_size; ++index)
   {
-    state[index] = (1812433253UL * (state[index-1] ^ (state[index-1] >> 30)) + index);
+    state[index] = (1812433253UL * (state[index-1] ^ (state[index-1] >> 30u)) + index);
   }
 }
 
 
-void MTRand::seed(uint32* const init_vector, const uint32 init_vector_length)
+void MTRand::seed(const uint32 init_vector[], const uint32 init_vector_length)
 {
   seed(19650218UL);
   uint32 i = 1;
@@ -148,7 +147,7 @@ void MTRand::seed(uint32* const init_vector, const uint32 init_vector_length)
   uint32 k = (state_size > init_vector_length ? state_size : init_vector_length);
   for( ; k; --k )
   {
-    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30)) * 1664525UL);
+    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30u)) * 1664525UL);
     state[i] += (init_vector[j] & 0xffffffffUL) + j;
     ++i;  ++j;
     if (i >= state_size) { state[0] = state[state_size-1];  i = 1; }
@@ -156,7 +155,7 @@ void MTRand::seed(uint32* const init_vector, const uint32 init_vector_length)
   }
   for (k = state_size - 1; k; --k)
   {
-    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30)) * 1566083941UL);
+    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30u)) * 1566083941UL);
     state[i] -= i;
     ++i;
     if (i >= state_size) { state[0] = state[state_size-1];  i = 1; }
@@ -177,15 +176,15 @@ MTRand::uint32 MTRand::randInt()
     for (kk=0; kk < state_size - period; kk++)
     {
       y = (state[kk]&UPPER_MASK) | (state[kk+1]&LOWER_MASK);
-      state[kk] = state[kk + period] ^ (y >> 1) ^ mag01[y & 0x01];
+      state[kk] = state[kk + period] ^ (y >> 1u) ^ mag01[y & 0x01u];
     }
     for (; kk < state_size-1; kk++)
     {
         y = (state[kk]&UPPER_MASK) | (state[kk+1]&LOWER_MASK);
-        state[kk] = state[kk+(period - state_size)] ^ (y >> 1) ^ mag01[y & 0x01];
+        state[kk] = state[kk+(period - state_size)] ^ (y >> 1u) ^ mag01[y & 0x01u];
     }
     y = (state[state_size-1]&UPPER_MASK) | (state[0]&LOWER_MASK);
-    state[state_size-1] = state[period-1] ^ (y >> 1) ^ mag01[y & 0x1UL];
+    state[state_size-1] = state[period-1] ^ (y >> 1u) ^ mag01[y & 0x1UL];
 
     index = 0;
   }
@@ -193,10 +192,10 @@ MTRand::uint32 MTRand::randInt()
   y = state[index++];
 
   /* Tempering */
-  y ^= (y >> 11);
-  y ^= (y << 7) & 0x9d2c5680UL;
-  y ^= (y << 15) & 0xefc60000UL;
-  y ^= (y >> 18);
+  y ^= (y >> 11u);
+  y ^= (y << 7u) & 0x9d2c5680UL;
+  y ^= (y << 15u) & 0xefc60000UL;
+  y ^= (y >> 18u);
 
   return y;
 }
@@ -204,9 +203,9 @@ MTRand::uint32 MTRand::randInt()
 
 std::ostream& MTRand::save(std::ostream& ostr) const
 {
-  for (uint32 i = 0; i < state_size; ++i)
+  for (auto i : state)
   {
-    ostr << state[i] << '\t';
+    ostr << i << '\t';
   }
   return ostr << index;
 }
@@ -214,8 +213,8 @@ std::ostream& MTRand::save(std::ostream& ostr) const
 
 std::istream& MTRand::load(std::istream& istr)
 {
-  for (uint32 i = 0; i < state_size; ++i)
-    istr >> state[i];
+  for (auto & i : state)
+    istr >> i;
   istr >> index;
   return istr;
 }
