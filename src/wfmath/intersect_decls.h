@@ -154,7 +154,7 @@ template<int dim>
 bool Contains(const Ball<dim>& b, const Polygon<dim>& p, bool proper);
 
 template<int dim>
-bool Intersect(const Polygon<dim>& r, const Segment<dim>& s, bool proper);
+bool Intersect(const Polygon<dim>& p, const Segment<dim>& s, bool proper);
 template<int dim>
 bool Contains(const Polygon<dim>& p, const Segment<dim>& s, bool proper);
 template<int dim>

@@ -40,7 +40,7 @@
 namespace WFMath {
 
 template<int dim>
-inline _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
+inline Poly2Orient<dim>& Poly2Orient<dim>::operator=(const Poly2Orient<dim>& a)
 {
   m_origin = a.m_origin;
 
@@ -68,7 +68,7 @@ inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, CoordType epsilon) co
 }
 
 template<int dim>
-inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
+inline Point<dim> Poly2Orient<dim>::convert(const Point<2>& p) const
 {
   assert(m_origin.isValid());
 
@@ -87,7 +87,7 @@ inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
 }
 
 template<int dim>
-bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, CoordType epsilon)
+bool Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, CoordType epsilon)
 {
   p2[0] = p2[1] = 0; // initialize
   p2.setValid();
@@ -127,19 +127,19 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, CoordType eps
 }
 
 template<int dim>
-_Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
+Poly2Reorient Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
 {
   if(poly.numCorners() <= ((skip == 0) ? 1 : 0)) { // No corners left
     m_origin.setValid(false);
     m_axes[0].setValid(false);
     m_axes[1].setValid(false);
-    return _WFMATH_POLY2REORIENT_NONE;
+    return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
   }
 
   assert(m_origin.isValid());
 
   if(!m_axes[0].isValid())
-    return _WFMATH_POLY2REORIENT_NONE;
+    return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
 
   // Check that we still span both axes
 
@@ -179,18 +179,18 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
     if(diff.sqrMag() < epsilon * epsilon) // No addition to span
       continue;
     if(!m_axes[1].isValid()) // We span 1D
-      return _WFMATH_POLY2REORIENT_NONE;
+      return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
     for(int j = 0; j < 2; ++j) {
       if(std::fabs(diff[j]) < epsilon) {
         assert(diff[j ? 0 : 1] >= epsilon); // because diff != 0
         if(still_valid[j ? 0 : 1] || got_ratio) // We span a 2D space
-          return _WFMATH_POLY2REORIENT_NONE;
+          return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
         still_valid[j] = true;
       }
     }
     // The point has both elements nonzero
     if(still_valid[0] || still_valid[1]) // We span a 2D space
-      return _WFMATH_POLY2REORIENT_NONE;
+      return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
     CoordType new_ratio = diff[1] / diff[0];
     if(!got_ratio) {
       ratio = new_ratio;
@@ -198,7 +198,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
       continue;
     }
     if(!Equal(ratio, new_ratio)) // We span a 2D space
-      return _WFMATH_POLY2REORIENT_NONE;
+      return Poly2Reorient(WFMATH_POLY2REORIENT_NONE);
   }
 
   // Okay, we don't span both vectors. What now?
@@ -210,7 +210,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
     // This is easy, m_axes[1] is just invalid
     m_origin += m_axes[1] * first_point[1];
     m_axes[1].setValid(false);
-    return _WFMATH_POLY2REORIENT_CLEAR_AXIS2;
+    return Poly2Reorient(WFMATH_POLY2REORIENT_CLEAR_AXIS2);
   }
 
   if(still_valid[1]) {
@@ -220,7 +220,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
     m_origin += m_axes[0] * first_point[0];
     m_axes[0] = m_axes[1];
     m_axes[1].setValid(false);
-    return _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1;
+    return Poly2Reorient(WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1);
   }
 
   // The !m_axes[1].isValid() case reducing to a point falls into here
@@ -230,7 +230,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
       m_origin += m_axes[1] * first_point[1];
     m_axes[0].setValid(false);
     m_axes[1].setValid(false);
-    return _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES;
+    return Poly2Reorient(WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES);
   }
 
   assert(m_axes[1].isValid());
@@ -253,11 +253,11 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
 
   m_axes[0] = new0;
   m_axes[1].setValid(false);
-  return _Poly2Reorient(_WFMATH_POLY2REORIENT_SCALE1_CLEAR2, norm);
+  return Poly2Reorient(WFMATH_POLY2REORIENT_SCALE1_CLEAR2, norm);
 }
 
 template<int dim>
-inline void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
+inline void Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 {
   m_origin.rotate(m, p);
 
@@ -266,7 +266,7 @@ inline void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>&
 }
 
 template<int dim>
-void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
+void Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
 {
   assert(m_origin.isValid());
 
@@ -289,7 +289,7 @@ void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
 }
 
 template<>
-inline void _Poly2Orient<3>::rotate(const Quaternion& q, const Point<3>& p)
+inline void Poly2Orient<3>::rotate(const Quaternion& q, const Point<3>& p)
 {
   m_origin.rotate(q, p);
 
@@ -298,7 +298,7 @@ inline void _Poly2Orient<3>::rotate(const Quaternion& q, const Point<3>& p)
 }
 
 template<>
-inline void _Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
+inline void Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
 {
   assert(m_origin.isValid());
 

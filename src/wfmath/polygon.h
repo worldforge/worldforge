@@ -146,7 +146,7 @@ class Polygon<2>
   friend bool Contains<2>(const Polygon& p, const Ball<2>& b, bool proper);
   friend bool Contains<2>(const Ball<2>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<2>(const Polygon& r, const Segment<2>& s, bool proper);
+  friend bool Intersect<2>(const Polygon& p, const Segment<2>& s, bool proper);
   friend bool Contains<2>(const Polygon& p, const Segment<2>& s, bool proper);
   friend bool Contains<2>(const Segment<2>& s, const Polygon& p, bool proper);
 
@@ -168,32 +168,32 @@ private:
 // a 2D polygon in dim dimensions
 
 typedef enum {
-  _WFMATH_POLY2REORIENT_NONE,
-  _WFMATH_POLY2REORIENT_CLEAR_AXIS2,
-  _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES,
-  _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1,
-  _WFMATH_POLY2REORIENT_SCALE1_CLEAR2
-} _Poly2ReorientType;
+  WFMATH_POLY2REORIENT_NONE,
+  WFMATH_POLY2REORIENT_CLEAR_AXIS2,
+  WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES,
+  WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1,
+  WFMATH_POLY2REORIENT_SCALE1_CLEAR2
+} Poly2ReorientType;
 
 // Reorient a 2D polygon to match a change in the basis
-// used by _Poly2Orient
-class _Poly2Reorient
+// used by Poly2Orient
+class Poly2Reorient
 {
 public:
-  _Poly2Reorient(_Poly2ReorientType type, CoordType scale = 0.0)
+  explicit Poly2Reorient(Poly2ReorientType type, CoordType scale = 0.0)
   : m_type(type), m_scale(scale) {}
-  ~_Poly2Reorient() = default;
+  ~Poly2Reorient() = default;
 
   void reorient(Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max()) const;
 
 private:
-  _Poly2ReorientType m_type;
+  Poly2ReorientType m_type;
   CoordType m_scale;
 };
 
-template<int dim> class _Poly2Orient;
+template<int dim> class Poly2Orient;
 
-struct _Poly2OrientIntersectData {
+struct Poly2OrientIntersectData {
   int dim;
   Point<2> p1, p2;
   Vector<2> v1, v2, off;
@@ -205,19 +205,19 @@ struct _Poly2OrientIntersectData {
 // are various information returned depending on the dimension of
 // the intersection
 template<int dim>
-int  _Intersect(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
-    _Poly2OrientIntersectData &);
+int  Intersect(const Poly2Orient<dim> &, const Poly2Orient<dim> &,
+				Poly2OrientIntersectData &);
 
 // Keep track of the orientation of a 2D polygon in dim dimensions
 template<int dim>
-class _Poly2Orient
+class Poly2Orient
 {
 public:
-  _Poly2Orient() : m_origin() {}
-  _Poly2Orient(const _Poly2Orient& p) : m_origin() {operator=(p);}
-  ~_Poly2Orient() = default;
+  Poly2Orient() : m_origin() {}
+  Poly2Orient(const Poly2Orient& p) : m_origin() {operator=(p);}
+  ~Poly2Orient() = default;
 
-  _Poly2Orient& operator=(const _Poly2Orient& p);
+  Poly2Orient& operator=(const Poly2Orient& p);
 
   // Convert a point in the 2D polygon to a point in dim dimensional space
   Point<dim> convert(const Point<2>& p) const;
@@ -228,9 +228,9 @@ public:
   bool expand(const Point<dim>& pd, Point<2>& p2, CoordType epsilon = numeric_constants<CoordType>::epsilon());
 
   // Reduce the basis to the minimum necessary to span the points in
-  // poly (with the exception of skip). Returns _Poly2Reorient, which needs
+  // poly (with the exception of skip). Returns Poly2Reorient, which needs
   // to be used to reorient the points to match the new basis.
-  _Poly2Reorient reduce(const Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max());
+  Poly2Reorient reduce(const Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max());
 
   void shift(const Vector<dim>& v) {if(m_origin.isValid()) m_origin += v;}
   void rotate(const RotMatrix<dim>& m, const Point<dim>& p);
@@ -242,14 +242,14 @@ public:
   // Rotates about the point which corresponds to "p" in the oriented plane
   void rotate2(const Quaternion& q, const Point<2>& p);
 
-  _Poly2Orient toParentCoords(const Point<dim>& origin,
-      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+  Poly2Orient toParentCoords(const Point<dim>& origin,
+							 const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
     p.m_axes[0].rotate(rotation); p.m_axes[1].rotate(rotation); return p;}
-  _Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
-  _Poly2Orient toParentCoords(const RotBox<dim>& coords) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
+  Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
+  Poly2Orient toParentCoords(const RotBox<dim>& coords) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
     p.m_axes[0].rotate(coords.orientation());
     p.m_axes[1].rotate(coords.orientation()); return p;}
 
@@ -257,24 +257,24 @@ public:
   // translation and rotation and use the opposite sense of the rotation
   // matrix
 
-  _Poly2Orient toLocalCoords(const Point<dim>& origin,
-      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+  Poly2Orient toLocalCoords(const Point<dim>& origin,
+							const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
     p.m_axes[0] = rotation * p.m_axes[0];
     p.m_axes[1] = rotation * p.m_axes[1]; return p;}
-  _Poly2Orient toLocalCoords(const AxisBox<dim>& coords) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords); return p;}
-  _Poly2Orient toLocalCoords(const RotBox<dim>& coords) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords);
+  Poly2Orient toLocalCoords(const AxisBox<dim>& coords) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords); return p;}
+  Poly2Orient toLocalCoords(const RotBox<dim>& coords) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords);
     p.m_axes[0] = coords.orientation() * p.m_axes[0];
     p.m_axes[1] = coords.orientation() * p.m_axes[1]; return p;}
 
   // 3D only
-  _Poly2Orient<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+  Poly2Orient<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
     p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return p;}
-  _Poly2Orient<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+  Poly2Orient<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+  {Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
     p.m_axes[0].rotate(rotation.inverse());
     p.m_axes[0].rotate(rotation.inverse()); return p;}
 
@@ -289,8 +289,8 @@ public:
   // return a point in the intersection.
   bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
 
-  friend int  _Intersect<dim>(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
-            _Poly2OrientIntersectData &);
+  friend int  Intersect<dim>(const Poly2Orient<dim> &, const Poly2Orient<dim> &,
+							  Poly2OrientIntersectData &);
 
 private:
   // special case of the above when both axes are valid
@@ -346,7 +346,7 @@ public:
   bool moveCorner(size_t i, const Point<dim>& p, CoordType epsilon = numeric_constants<CoordType>::epsilon());
 
   // Remove all points
-  void clear()	{m_poly.clear(); m_orient = _Poly2Orient<dim>();}
+  void clear()	{m_poly.clear(); m_orient = Poly2Orient<dim>();}
 
   // Movement functions
 
@@ -419,7 +419,7 @@ public:
   friend bool Contains<dim>(const Polygon& p, const Ball<dim>& b, bool proper);
   friend bool Contains<dim>(const Ball<dim>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& r, const Segment<dim>& s, bool proper);
+  friend bool Intersect<dim>(const Polygon& p, const Segment<dim>& s, bool proper);
   friend bool Contains<dim>(const Polygon& p, const Segment<dim>& s, bool proper);
   friend bool Contains<dim>(const Segment<dim>& s, const Polygon& p, bool proper);
 
@@ -432,7 +432,7 @@ public:
 
  private:
 
-  _Poly2Orient<dim> m_orient;
+  Poly2Orient<dim> m_orient;
   Polygon<2> m_poly;
 };
 
@@ -450,15 +450,15 @@ template<int dim>
 inline void Polygon<dim>::removeCorner(size_t i)
 {
   m_poly.removeCorner(i);
-  _Poly2Reorient r = m_orient.reduce(m_poly);
+  Poly2Reorient r = m_orient.reduce(m_poly);
   r.reorient(m_poly);
 }
 
 template<int dim>
 inline bool Polygon<dim>::moveCorner(size_t i, const Point<dim>& p, CoordType epsilon)
 {
-  _Poly2Orient<dim> try_orient = m_orient;
-  _Poly2Reorient r = try_orient.reduce(m_poly, i);
+  Poly2Orient<dim> try_orient = m_orient;
+  Poly2Reorient r = try_orient.reduce(m_poly, i);
   Point<2> p2;
 
   if(!try_orient.expand(p, p2, epsilon))

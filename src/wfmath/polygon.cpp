@@ -28,21 +28,21 @@
 
 namespace WFMath {
 
-void _Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
+void Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
 {
   size_t end = poly.numCorners();
 
   switch(m_type) {
-    case _WFMATH_POLY2REORIENT_NONE:
+    case WFMATH_POLY2REORIENT_NONE:
       return;
-    case _WFMATH_POLY2REORIENT_CLEAR_AXIS2:
+    case WFMATH_POLY2REORIENT_CLEAR_AXIS2:
       for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
         (poly[i])[1] = 0;
       }
       return;
-    case _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES:
+    case WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES:
       for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
@@ -50,7 +50,7 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
         (poly[i])[1] = 0;
       }
       return;
-    case _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1:
+    case WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1:
       for(size_t i = 0; i != end; ++i) {
         if(i == skip)
            continue;
@@ -58,7 +58,7 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
         (poly[i])[1] = 0;
       }
       return;
-    case _WFMATH_POLY2REORIENT_SCALE1_CLEAR2:
+    case WFMATH_POLY2REORIENT_SCALE1_CLEAR2:
       for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
@@ -78,7 +78,7 @@ bool Polygon<2>::isEqualTo(const Polygon<2>& p, CoordType epsilon) const
   if(m_points.size() != p.m_points.size())
     return false;
 
-  Polygon<2>::theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(),
+  auto i1 = m_points.begin(), i2 = p.m_points.begin(),
 			   end = m_points.end();
 
   while(i1 != end) {
@@ -93,18 +93,19 @@ bool Polygon<2>::isEqualTo(const Polygon<2>& p, CoordType epsilon) const
 
 bool Polygon<2>::isValid() const
 {
-  for(theConstIter i = m_points.begin(); i != m_points.end(); ++i)
-    if(!i->isValid())
-      return false;
-
+  for(const auto & m_point : m_points) {
+	  if (!m_point.isValid()) {
+		  return false;
+	  }
+  }
   return true;
 }
 
 //template<>
 Polygon<2>& Polygon<2>::shift(const Vector<2>& v)
 {
-  for(theIter i = m_points.begin(); i != m_points.end(); ++i)
-    *i += v;
+  for(auto & point : m_points)
+	  point += v;
 
   return *this;
 }
@@ -112,8 +113,8 @@ Polygon<2>& Polygon<2>::shift(const Vector<2>& v)
 //template<>
 Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
 {
-  for(theIter i = m_points.begin(); i != m_points.end(); ++i)
-    i->rotate(m, p);
+  for(auto & point : m_points)
+    point.rotate(m, p);
 
   return *this;
 }
@@ -181,6 +182,6 @@ Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
 }
 
 template class Polygon<3>;
-template class _Poly2Orient<3>;
+template class Poly2Orient<3>;
 
 }

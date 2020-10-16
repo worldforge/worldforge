@@ -36,7 +36,7 @@ namespace WFMath {
 
 
 template<int dim>
-inline Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
+inline Vector<dim> Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
 {
 	assert(m_origin.isValid()); // Check for empty polygon before calling this
 
@@ -51,7 +51,7 @@ inline Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2)
 }
 
 template<int dim>
-inline bool _Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p2) const
+inline bool Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p2) const
 {
 	Vector<dim> off = offset(pd, p2);
 
@@ -63,12 +63,12 @@ inline bool _Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p
 }
 
 template<>
-bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
-										  bool proper) const;
+bool Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
+										 bool proper) const;
 
 template<int dim>
-bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
-									   bool proper) const
+bool Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
+									  bool proper) const
 {
 	assert(m_origin.isValid());
 
@@ -135,8 +135,8 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
 }
 
 template<int dim>
-int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
-				_Poly2OrientIntersectData &data)
+int  Intersect(const Poly2Orient<dim> &o1, const Poly2Orient<dim> &o2,
+				Poly2OrientIntersectData &data)
 {
 	if(!o1.m_origin.isValid() || !o2.m_origin.isValid()) { // No points
 		return -1;
@@ -148,7 +148,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 		if(!o2.checkContained(o1.m_origin, data.p2))
 			return -1; // no intersect
 
-		//_Poly2OrientIntersectData data;
+		//Poly2OrientIntersectData data;
 
 		data.p1[0] = data.p1[1] = 0;
 
@@ -395,7 +395,7 @@ bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
 }
 
 template<int dim>
-bool _PolyContainsBox(const _Poly2Orient<dim> &orient, const Polygon<2> &poly,
+bool _PolyContainsBox(const Poly2Orient<dim> &orient, const Polygon<2> &poly,
 					  const Point<dim> &corner, const Vector<dim> &size, bool proper)
 {
 	int num_dim = 0, nonzero_dim = -1;
@@ -577,7 +577,7 @@ inline bool Contains(const Segment<dim>& s, const Polygon<dim>& p, bool proper)
 	// degenerate polygons
 
 	Segment<2> s2;
-	_Poly2Orient<dim> orient(p.m_orient);
+	Poly2Orient<dim> orient(p.m_orient);
 
 	for(int i = 0; i < 2; ++i)
 		if(!orient.expand(s.endpoint(i), s2.endpoint(i)))
@@ -594,7 +594,7 @@ bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 	if(corners == 0)
 		return false;
 
-	_Poly2Orient<dim> orient(p.m_orient);
+	Poly2Orient<dim> orient(p.m_orient);
 	// FIXME rotateInverse()
 	orient.rotate(r.m_orient.inverse(), r.m_corner0);
 
@@ -622,7 +622,7 @@ bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 template<int dim>
 inline bool Contains(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 {
-	_Poly2Orient<dim> orient(p.m_orient);
+	Poly2Orient<dim> orient(p.m_orient);
 	orient.rotate(r.m_orient.inverse(), r.m_corner0);
 
 	return _PolyContainsBox(orient, p.m_poly, r.m_corner0, r.m_size, proper);
@@ -636,7 +636,7 @@ inline bool Contains(const RotBox<dim>& r, const Polygon<dim>& p, bool proper)
 
 	AxisBox<dim> b(r.m_corner0, r.m_corner0 + r.m_size);
 
-	_Poly2Orient<dim> orient(p.m_orient);
+	Poly2Orient<dim> orient(p.m_orient);
 	orient.rotate(r.m_orient.inverse(), r.m_corner0);
 
 	for(size_t i = 0; i < p.m_poly.numCorners(); ++i)
@@ -646,23 +646,23 @@ inline bool Contains(const RotBox<dim>& r, const Polygon<dim>& p, bool proper)
 	return true;
 }
 
-bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
-						const int intersect_dim,
-						const _Poly2OrientIntersectData &data, bool proper);
+bool PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
+					   int intersect_dim,
+					   const Poly2OrientIntersectData &data, bool proper);
 
 template<int dim>
 inline bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2, bool proper)
 {
-	_Poly2OrientIntersectData data;
+	Poly2OrientIntersectData data;
 
-	int intersect_dim = _Intersect(p1.m_orient, p2.m_orient, data);
+	int intersect_dim = Intersect(p1.m_orient, p2.m_orient, data);
 
-	return _PolyPolyIntersect(p1.m_poly, p2.m_poly, intersect_dim, data, proper);
+	return PolyPolyIntersect(p1.m_poly, p2.m_poly, intersect_dim, data, proper);
 }
 
-bool _PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
-					   const int intersect_dim,
-					   const _Poly2OrientIntersectData &data, bool proper);
+bool PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
+					  int intersect_dim,
+					  const Poly2OrientIntersectData &data, bool proper);
 
 template<int dim>
 inline bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner, bool proper)
@@ -673,11 +673,11 @@ inline bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner, bool 
 	if(inner.m_poly.numCorners() == 0)
 		return true;
 
-	_Poly2OrientIntersectData data;
+	Poly2OrientIntersectData data;
 
-	int intersect_dim = _Intersect(outer.m_orient, inner.m_orient, data);
+	int intersect_dim = Intersect(outer.m_orient, inner.m_orient, data);
 
-	return _PolyPolyContains(outer.m_poly, inner.m_poly, intersect_dim, data, proper);
+	return PolyPolyContains(outer.m_poly, inner.m_poly, intersect_dim, data, proper);
 }
 
 // instantiations, only need 3d because 2d is a specialization,
@@ -717,8 +717,8 @@ template bool Intersect<3>(const Polygon<3>&, const Polygon<3>&, bool);
 template bool Contains<3>(const Polygon<3>&, const Polygon<3>&, bool);
 
 template<>
-bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
-					  bool proper) const
+bool Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
+										 bool proper) const
 {
   assert("This function should only be called if the orientation represents a plane" &&
          m_origin.isValid() && m_axes[0].isValid() && m_axes[1].isValid());
@@ -777,7 +777,7 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
 }
 
 // This assumes the y coordinates of the points are all zero
-static void _LinePolyGetBounds(const Polygon<2> &poly, CoordType &low, CoordType &high)
+static void LinePolyGetBounds(const Polygon<2> &poly, CoordType &low, CoordType &high)
 {
 	low = high = poly[0][0];
 
@@ -790,7 +790,7 @@ static void _LinePolyGetBounds(const Polygon<2> &poly, CoordType &low, CoordType
         }
 }
 
-// For use in _GetCrossings()
+// For use in GetCrossings()
 struct LinePointData {
   CoordType low, high;
   bool cross;
@@ -799,9 +799,9 @@ struct LinePointData {
 // This finds the intervals where the polygon intersects the line
 // through p parallel to v, and puts the endpoints of those
 // intervals in the vector "cross"
-static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
-			  const Vector<2> &v, std::vector<CoordType> &cross,
-			  bool proper)
+static bool GetCrossings(const Polygon<2> &poly, const Point<2> &p,
+						 const Vector<2> &v, std::vector<CoordType> &cross,
+						 bool proper)
 {
   assert(poly.numCorners() == cross.size()); // Already allocated
   assert(Equal(v.sqrMag(), 1));
@@ -884,7 +884,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
         I->high = (I->high > data.high) ? I->high : data.high;
         I->cross = (I->cross != data.cross);
 
-        std::list<LinePointData>::iterator J = I;
+        auto J = I;
 
         ++J;
 
@@ -929,8 +929,8 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
   std::sort(cross.begin(), cross.end());
 
   if(!line_point_data.empty()) {
-    std::list<LinePointData>::iterator I = line_point_data.begin();
-    std::vector<CoordType>::iterator cross_num = cross.begin();
+    auto I = line_point_data.begin();
+    auto cross_num = cross.begin();
     bool hit = false;
 
     while(cross_num != cross.end() && I != line_point_data.end()) {
@@ -945,7 +945,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
         hit_between = I->cross;
       }
       else {
-        std::vector<CoordType>::iterator high_cross_num = cross_num;
+        auto high_cross_num = cross_num;
 
         do {
           ++high_cross_num;
@@ -985,12 +985,12 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
     assert(!hit); // end outside the polygon
   }
 
-  return cross.size() != 0;
+  return !cross.empty();
 }
 
-bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
-			const int intersect_dim,
-			const _Poly2OrientIntersectData &data, bool proper)
+bool PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
+					   const int intersect_dim,
+					   const Poly2OrientIntersectData &data, bool proper)
 {
   switch(intersect_dim) {
     case -1:
@@ -1006,7 +1006,7 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
         assert(!proper);
 	CoordType low1, low2, high1, high2;
 
-	_LinePolyGetBounds(poly1, low1, high1);
+		  LinePolyGetBounds(poly1, low1, high1);
 
 	low1 -= data.p1[0];
 	high1 -= data.p1[0];
@@ -1017,7 +1017,7 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
           high1 = -tmp;
         }
 
-	_LinePolyGetBounds(poly2, low2, high2);
+		  LinePolyGetBounds(poly2, low2, high2);
 
 	low2 -= data.p2[0];
 	high2 -= data.p2[0];
@@ -1034,7 +1034,7 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
       if(data.o1_is_line) {
 	assert(!proper);
 	CoordType min, max;
-	_LinePolyGetBounds(poly1, min, max);
+		  LinePolyGetBounds(poly1, min, max);
 
 	min -= data.p1[0];
 	max -= data.p1[0];
@@ -1053,7 +1053,7 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
       if(data.o2_is_line) {
 	assert(!proper);
 	CoordType min, max;
-	_LinePolyGetBounds(poly2, min, max);
+		  LinePolyGetBounds(poly2, min, max);
 
 	min -= data.p2[0];
 	max -= data.p2[0];
@@ -1071,14 +1071,14 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
 
       {
 	std::vector<CoordType> cross1(poly1.numCorners());
-	if(!_GetCrossings(poly1, data.p1, data.v1, cross1, proper))
+	if(!GetCrossings(poly1, data.p1, data.v1, cross1, proper))
 	  return false; // line misses polygon
 
 	std::vector<CoordType> cross2(poly2.numCorners());
-	if(!_GetCrossings(poly2, data.p2, data.v2, cross2, proper))
+	if(!GetCrossings(poly2, data.p2, data.v2, cross2, proper))
 	  return false; // line misses polygon
 
-	std::vector<CoordType>::iterator i1 = cross1.begin(), i2 = cross2.begin();
+	auto i1 = cross1.begin(), i2 = cross2.begin();
 	bool hit1 = false, hit2 = false;
 
 	while(i1 != cross1.end() && i2 != cross2.end()) {
@@ -1130,9 +1130,9 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
   }
 }
 
-bool _PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
-		       const int intersect_dim,
-		       const _Poly2OrientIntersectData &data, bool proper)
+bool PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
+					  const int intersect_dim,
+					  const Poly2OrientIntersectData &data, bool proper)
 {
   switch(intersect_dim) {
     case -1:
@@ -1147,7 +1147,7 @@ bool _PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
       // The inner poly lies on a line, so it reduces to a line segment
       {
 	CoordType min, max;
-	_LinePolyGetBounds(inner, min, max);
+		  LinePolyGetBounds(inner, min, max);
 
 	min -= data.p2[0];
 	max -= data.p2[0];
@@ -1225,8 +1225,8 @@ bool Contains<2>(const Point<2>& p, const Polygon<2>& r, bool proper)
   if(proper) // Weird degenerate case
     return r.numCorners() == 0;
 
-  for(unsigned int i = 0; i < r.m_points.size(); ++i)
-    if(p != r.m_points[i])
+  for(const auto & point : r.m_points)
+    if(p != point)
       return false;
 
   return true;
@@ -1393,8 +1393,8 @@ bool Contains<2>(const Polygon<2>& p, const AxisBox<2>& b, bool proper)
 template<>
 bool Contains<2>(const AxisBox<2>& b, const Polygon<2>& p, bool proper)
 {
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
-    if(!Contains(b, *i, proper))
+  for(const auto & point : p.m_points)
+    if(!Contains(b, point, proper))
       return false;
 
   return true;
@@ -1410,8 +1410,8 @@ bool Intersect<2>(const Polygon<2>& p, const Ball<2>& b, bool proper)
   s2.endpoint(0) = p.m_points.back();
   int next_end = 1;
 
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
-    s2.endpoint(next_end) = *i;
+  for(const auto & point : p.m_points) {
+    s2.endpoint(next_end) = point;
     if(Intersect(s2, b, proper))
       return true;
     next_end = next_end ? 0 : 1;
@@ -1430,8 +1430,8 @@ bool Contains<2>(const Polygon<2>& p, const Ball<2>& b, bool proper)
   s2.endpoint(0) = p.m_points.back();
   int next_end = 1;
 
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
-    s2.endpoint(next_end) = *i;
+  for(const auto & point : p.m_points) {
+    s2.endpoint(next_end) = point;
     if(Intersect(s2, b, !proper))
       return false;
     next_end = next_end ? 0 : 1;
@@ -1445,8 +1445,8 @@ bool Contains<2>(const Ball<2>& b, const Polygon<2>& p, bool proper)
 {
   CoordType sqr_dist = b.m_radius * b.m_radius;
 
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
-    if(_Greater(SquaredDistance(b.m_center, *i), sqr_dist, proper))
+  for(const auto & point : p.m_points)
+    if(_Greater(SquaredDistance(b.m_center, point), sqr_dist, proper))
       return false;
 
   return true;
@@ -1558,8 +1558,8 @@ bool Contains<2>(const Polygon<2>& p, const Segment<2>& s, bool proper)
 template<>
 bool Contains<2>(const Segment<2>& s, const Polygon<2>& p, bool proper)
 {
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
-    if(!Contains(s, *i, proper))
+  for(const auto & point : p.m_points)
+    if(!Contains(s, point, proper))
       return false;
 
   return true;
@@ -1774,8 +1774,8 @@ bool Contains<2>(const Polygon<2>& p, const RotBox<2>& r, bool proper)
 template<>
 bool Contains<2>(const RotBox<2>& r, const Polygon<2>& p, bool proper)
 {
-  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
-    if(!Contains(r, *i, proper))
+  for(const auto & point : p.m_points)
+    if(!Contains(r, point, proper))
       return false;
 
   return true;
@@ -1784,19 +1784,19 @@ bool Contains<2>(const RotBox<2>& r, const Polygon<2>& p, bool proper)
 template<>
 bool Intersect<2>(const Polygon<2>& p1, const Polygon<2>& p2, bool proper)
 {
-  Polygon<2>::theConstIter begin1 = p1.m_points.begin(), end1 = p1.m_points.end();
-  Polygon<2>::theConstIter begin2 = p2.m_points.begin(), end2 = p2.m_points.end();
+  auto begin1 = p1.m_points.begin(), end1 = p1.m_points.end();
+  auto begin2 = p2.m_points.begin(), end2 = p2.m_points.end();
   Segment<2> s1, s2;
   int next_end1, next_end2;
 
   s1.endpoint(0) = p1.m_points.back();
   s2.endpoint(0) = p2.m_points.back();
   next_end1 = next_end2 = 1;
-  for(Polygon<2>::theConstIter i1 = begin1; i1 != end1; ++i1) {
+  for(auto i1 = begin1; i1 != end1; ++i1) {
     s1.endpoint(next_end1) = *i1;
     next_end1 = next_end1 ? 0 : 1;
 
-    for(Polygon<2>::theConstIter i2 = begin2; i2 != end2; ++i2) {
+    for(auto i2 = begin2; i2 != end2; ++i2) {
       s2.endpoint(next_end2) = *i2;
       next_end2 = next_end2 ? 0 : 1;
 
@@ -1815,12 +1815,12 @@ bool Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner, bool proper)
   if(proper && !Contains(outer, inner.m_points.front(), true))
     return false;
 
-  Polygon<2>::theConstIter begin = inner.m_points.begin(), end = inner.m_points.end();
+  auto begin = inner.m_points.begin(), end = inner.m_points.end();
   Segment<2> s;
   s.endpoint(0) = inner.m_points.back();
   int next_end = 1;
 
-  for(Polygon<2>::theConstIter i = begin; i != end; ++i) {
+  for(auto i = begin; i != end; ++i) {
     s.endpoint(next_end) = *i;
     next_end = next_end ? 0 : 1;
     if(!proper) {
@@ -1828,12 +1828,12 @@ bool Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner, bool proper)
         return false;
     }
     else {
-      Polygon<2>::theConstIter begin2 = outer.m_points.begin(),
+      auto begin2 = outer.m_points.begin(),
 				end2 = outer.m_points.end();
       Segment<2> s2;
       s2.endpoint(0) = outer.m_points.back();
       int next_end2 = 1;
-      for(Polygon<2>::theConstIter i2 = begin2; i2 != end2; ++i2) {
+      for(auto i2 = begin2; i2 != end2; ++i2) {
         s2.endpoint(next_end2) = *i2;
         next_end2 = next_end2 ? 0 : 1;
   

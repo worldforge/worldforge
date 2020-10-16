@@ -107,7 +107,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 		str_eps /= 10;
 	CoordType epsilon = FloatMax(str_eps, numeric_constants<CoordType>::epsilon());
 
-	r.m_orient = _Poly2Orient<dim>();
+	r.m_orient = Poly2Orient<dim>();
 
 	if(read_list.size() < 3) { // This will always work
 		for(i = read_list.begin(); i != end; ++i) {

@@ -65,7 +65,7 @@ template<>
 bool Contains(const Ball<2>& b, const Polygon<2>& p, bool proper);
 
 template<>
-bool Intersect(const Polygon<2>& r, const Segment<2>& s, bool proper);
+bool Intersect(const Polygon<2>& p, const Segment<2>& s, bool proper);
 template<>
 bool Contains(const Polygon<2>& p, const Segment<2>& s, bool proper);
 template<>
