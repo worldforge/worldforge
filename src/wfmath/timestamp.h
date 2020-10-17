@@ -124,7 +124,7 @@ class TimeStamp {
   } _val;
 #else
   // POSIX, BeOS, ....
-  struct timeval _val;
+  struct timeval _val{};
 #endif
   bool _isvalid;
   TimeStamp(long sec, long usec, bool isvalid);

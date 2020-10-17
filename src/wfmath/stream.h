@@ -113,21 +113,21 @@ inline void FromString(C& c, const std::string& s, std::streamsize = 6)
   _IOWrapper::FromStringImpl(i, s, 6);
 }
 
-void _ReadCoordList(std::istream& is, CoordType* d, const int num);
-void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
-CoordType _GetEpsilon(std::istream& is);
+void ReadCoordList(std::istream& is, CoordType* d, const int num);
+void WriteCoordList(std::ostream& os, const CoordType* d, const int num);
+CoordType GetEpsilon(std::istream& is);
 
 template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 {
-  _WriteCoordList(os, v.m_elem, dim);
+	WriteCoordList(os, v.m_elem, dim);
   return os;
 }
 
 template<int dim>
 inline std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
-  _ReadCoordList(is, v.m_elem, dim);
+	ReadCoordList(is, v.m_elem, dim);
   v.m_valid = true;
   return is;
 }
@@ -138,7 +138,7 @@ inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
   os << '(';
 
   for(int i = 0; i < dim; ++i) {
-    _WriteCoordList(os, m.m_elem[i], dim);
+	  WriteCoordList(os, m.m_elem[i], dim);
     os << (i < (dim - 1) ? ',' : ')');
   }
 
@@ -156,14 +156,14 @@ inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
     throw ParseError();
 
   for(int i = 0; i < dim; ++i) {
-    _ReadCoordList(is, d + i * dim, dim);
+	  ReadCoordList(is, d + i * dim, dim);
     is >> next;
     char want = (i == dim - 1) ? ')' : ',';
     if(next != want)
       throw ParseError();
   }
 
-  if(!m._setVals(d, FloatMax(numeric_constants<CoordType>::epsilon(), _GetEpsilon(is))))
+  if(!m._setVals(d, FloatMax(numeric_constants<CoordType>::epsilon(), GetEpsilon(is))))
     throw ParseError();
 
   return is;
@@ -172,14 +172,14 @@ inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 {
-  _WriteCoordList(os, p.m_elem, dim);
+	WriteCoordList(os, p.m_elem, dim);
   return os;
 }
 
 template<int dim>
 inline std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
-  _ReadCoordList(is, p.m_elem, dim);
+	ReadCoordList(is, p.m_elem, dim);
   p.m_valid = true;
   return is;
 }

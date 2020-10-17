@@ -131,7 +131,7 @@ TimeStamp TimeStamp::now()
 {
     TimeStamp ret;
 #ifndef _WIN32
-    gettimeofday(&ret._val, NULL);
+    gettimeofday(&ret._val, nullptr);
 #else
   SYSTEMTIME sysTime;
   FILETIME fileTime = {0};  /* 100ns == 1 */

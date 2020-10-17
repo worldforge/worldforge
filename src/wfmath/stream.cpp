@@ -58,7 +58,7 @@ void _IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
 
 // Can't stick this in operator>>(std::istream&, Polygon<>&), because
 // we use it as a template argument for list<>. Why isn't that allowed?
-template<int dim> struct _PolyReader
+template<int dim> struct PolyReader
 {
 	Point<dim> pd;
 	Point<2> p2;
@@ -68,8 +68,8 @@ template<int dim>
 std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 {
 	char next;
-	_PolyReader<dim> read;
-	std::list<_PolyReader<dim> > read_list;
+	PolyReader<dim> read;
+	std::list<PolyReader<dim> > read_list;
 
 	// Read in the points
 
@@ -98,7 +98,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 	// round off error can skew the plane, and later points that are further
 	// away may fail.
 
-	typename std::list<_PolyReader<dim> >::iterator i, end = read_list.end();
+	typename std::list<PolyReader<dim> >::iterator i, end = read_list.end();
 	bool succ;
 
 	std::streamsize str_prec = is.precision();
@@ -116,7 +116,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 		}
 	}
 	else { // Find the three furthest apart points
-		typename std::list<_PolyReader<dim> >::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
+		typename std::list<PolyReader<dim> >::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
 		CoordType dist = -1;
 
 		for(i = read_list.begin(); i != end; ++i) {
@@ -235,7 +235,7 @@ template std::istream& operator>> <2>(std::istream& is, RotBox<2>& r);
 template std::ostream& operator<< <3>(std::ostream& os, const Polygon<3>& r);
 template std::istream& operator>> <3>(std::istream& is, Polygon<3>& r);
 
-void _WriteCoordList(std::ostream& os, const CoordType* d, const int num)
+void WriteCoordList(std::ostream& os, const CoordType* d, const int num)
 {
   os << '(';
 
@@ -243,7 +243,7 @@ void _WriteCoordList(std::ostream& os, const CoordType* d, const int num)
     os << d[i] << (i < (num - 1) ? ',' : ')');
 }
 
-void _ReadCoordList(std::istream& is, CoordType* d, const int num)
+void ReadCoordList(std::istream& is, CoordType* d, const int num)
 {
   char next;
 
@@ -260,7 +260,7 @@ void _ReadCoordList(std::istream& is, CoordType* d, const int num)
   }
 }
 
-CoordType _GetEpsilon(std::istream& is)
+CoordType GetEpsilon(std::istream& is)
 {
   std::streamsize str_prec = is.precision();
   CoordType str_eps = 1;
