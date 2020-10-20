@@ -46,8 +46,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 		m_updateLevel(0),
 		m_hasBBox(false),
 		m_moving(false),
-		m_recentlyCreated(false),
-		m_initialised(true)
+		m_recentlyCreated(false)
 {
     assert(!m_id.empty());
     m_orientation.identity();

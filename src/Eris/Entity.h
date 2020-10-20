@@ -622,8 +622,6 @@ protected:
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
     
     std::map<std::string, std::unique_ptr<Task>> m_tasks;
-
-    bool m_initialised;
 };
 
 inline size_t Entity::numContained() const {
