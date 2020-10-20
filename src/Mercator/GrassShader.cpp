@@ -40,8 +40,8 @@ GrassShader::GrassShader(const Parameters & params) :
              m_cutoff(default_cutoff),
              m_intercept(default_intercept)
 {
-    Parameters::const_iterator I = params.find(key_lowThreshold);
-    Parameters::const_iterator Iend = params.end();
+    auto I = params.find(key_lowThreshold);
+    auto Iend = params.end();
     if (I != Iend) {
         m_lowThreshold = I->second;
     }
@@ -60,9 +60,7 @@ GrassShader::GrassShader(const Parameters & params) :
 
 }
 
-GrassShader::~GrassShader()
-{
-}
+GrassShader::~GrassShader() = default;
 
 inline ColorT GrassShader::slopeToAlpha(float height, float slope) const
 {
@@ -95,13 +93,13 @@ void GrassShader::shade(Surface & s) const
     const Segment & seg = s.getSegment();
     ColorT * data = s.getData();
     const float * height_data = seg.getPoints();
-    if (height_data == 0) {
+    if (height_data == nullptr) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
                   << std::endl << std::flush;
         return;
     }
-    unsigned int size = seg.getSize();
-    unsigned int res = seg.getResolution();
+    int size = seg.getSize();
+    int res = seg.getResolution();
 
     unsigned int data_count = size * size * channels;
     for (unsigned int i = 0; i < data_count; ++i) {
@@ -114,7 +112,7 @@ void GrassShader::shade(Surface & s) const
     s(0, res, chanAlpha) = slopeToAlpha(seg.get(0,res), 0.f);
     s(res, res, chanAlpha) = slopeToAlpha(seg.get(res,res), 0.f);
 
-    for (unsigned int i = 1; i < res; ++i) {
+    for (int i = 1; i < res; ++i) {
         float height = seg.get(i, 0);
         float avgSlope = (std::fabs(seg.get(i - 1, 0) - height) +
                           std::fabs(seg.get(i + 1, 0) - height)) / 2.f;
@@ -134,7 +132,7 @@ void GrassShader::shade(Surface & s) const
         avgSlope = (std::fabs(seg.get(res, i - 1) - height) +
                     std::fabs(seg.get(res, i + 1) - height)) / 2.f;
         s(res, i, chanAlpha) = slopeToAlpha(height, avgSlope);
-        for (unsigned int j = 1; j < res; ++j) {
+        for (int j = 1; j < res; ++j) {
             height = seg.get(i, j);
             avgSlope = (std::fabs(seg.get(i + 1, j    ) - height) +
                         std::fabs(seg.get(i    , j + 1) - height) +

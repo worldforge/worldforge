@@ -22,7 +22,7 @@ namespace Mercator {
 
 /// \brief Construct a new forest with the given seed.
 Forest::Forest(unsigned long seed) : 
-    m_area(NULL),
+    m_area(nullptr),
     m_seed(seed), 
     m_randCache(seed, new ZeroSpiralOrdering())
 {
@@ -32,9 +32,7 @@ Forest::Forest(unsigned long seed) :
 ///
 /// All contained vegetation is lost, so references to contained
 /// vegetation must not be maintained if this is likely to occur.
-Forest::~Forest()
-{
-}
+Forest::~Forest() = default;
 
 /// \brief Assign an area to this forest.
 void Forest::setArea(Area* area)
@@ -53,13 +51,13 @@ static const float plant_height_range = 20.f;
 ///   - It is repeatable. It can be repeated on the client and the server,
 ///     and give identical results.
 ///
-///   - It is location independant. It gives the same results even if the
+///   - It is location independent. It gives the same results even if the
 ///     forest is in a different place.
 ///
-///   - It is shape and size independant. A given area of the forest is
+///   - It is shape and size independent. A given area of the forest is
 ///     the same even if the borders of the forest change.
 ///
-///   - It is localisable. It is possible to only partially populate the
+///   - It is localizable. It is possible to only partially populate the
 ///     the forest, and still get the same results in that area.
 ///
 /// This function will have no effect if the area defining the forest remains
@@ -105,15 +103,15 @@ void Forest::populate()
 
                 Plant & plant = m_plants[i][j];
                 // plant.setHeight(rng() * plant_height_range + plant_min_height);
-                plant.setDisplacement(WFMath::Point<2>(
+                plant.m_displacement = WFMath::Point<2>(
                     (rng.rand<WFMath::CoordType>() - 0.5f) * species.m_deviation,
-                    (rng.rand<WFMath::CoordType>() - 0.5f) * species.m_deviation));
-                plant.setOrientation(WFMath::Quaternion(2, rng.rand<WFMath::CoordType>() * 2 * WFMath::numeric_constants<WFMath::CoordType>::pi()));
-                ParameterDict::const_iterator J = species.m_parameters.begin();
-                ParameterDict::const_iterator Jend = species.m_parameters.end();
-                for (; J != Jend; ++J) {
-                    plant.setParameter(J->first, rng.rand<WFMath::CoordType>() * J->second.range + J->second.min);
-                }
+                    (rng.rand<WFMath::CoordType>() - 0.5f) * species.m_deviation);
+                plant.m_orientation = WFMath::Quaternion(2, rng.rand<WFMath::CoordType>() * 2 * WFMath::numeric_constants<WFMath::CoordType>::pi());
+//                auto J = species.m_parameters.begin();
+//                auto Jend = species.m_parameters.end();
+//                for (; J != Jend; ++J) {
+//                    plant.setParameter(J->first, rng.rand<WFMath::CoordType>() * J->second.range + J->second.min);
+//                }
                 break;
             }
         }

@@ -9,15 +9,6 @@
 namespace Mercator
 {
 
-Effector::Context::Context() = default;
-
-Effector::Context::~Context() = default;
-
-void Effector::Context::setId(const std::string& id)
-{
-    m_id = id;
-}
-
 void Effector::setContext(std::unique_ptr<Effector::Context> c)
 {
     m_context = std::move(c);

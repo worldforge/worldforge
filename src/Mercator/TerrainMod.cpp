@@ -12,9 +12,7 @@ TerrainMod::TerrainMod() : m_function(set)
 {
 }
 
-TerrainMod::~TerrainMod()
-{
-}
+TerrainMod::~TerrainMod() = default;
 
 template class ShapeTerrainMod<WFMath::Ball >;
 template class ShapeTerrainMod<WFMath::Polygon >;

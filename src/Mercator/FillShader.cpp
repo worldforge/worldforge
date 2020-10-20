@@ -9,17 +9,13 @@
 
 namespace Mercator {
 
-FillShader::FillShader()
-{
-}
+FillShader::FillShader() = default;
 
 FillShader::FillShader(const Parameters & params)
 {
 }
 
-FillShader::~FillShader()
-{
-}
+FillShader::~FillShader() = default;
 
 bool FillShader::checkIntersect(const Segment &) const
 {

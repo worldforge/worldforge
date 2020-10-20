@@ -95,7 +95,7 @@ public:
     /// Constructor
     ///
     /// @param y coordinate on the y axis of the edge.
-    EdgeAtZ(WFMath::CoordType y) : m_y(y) {}
+    explicit EdgeAtZ(WFMath::CoordType y) : m_y(y) {}
     
     /// Determine which edge crosses this edge at a lower x coordinate.
     bool operator()(const Edge& u, const Edge& v) const

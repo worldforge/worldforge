@@ -28,7 +28,7 @@ class HeightMap : public Buffer<float> {
     float m_min;
 
   public:
-    explicit HeightMap(unsigned int resolution);
+    explicit HeightMap(int resolution);
     ~HeightMap() override = default;
 
     /// \brief Accessor for resolution of this segment.

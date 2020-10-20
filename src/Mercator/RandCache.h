@@ -25,7 +25,7 @@ class RandCache
 
   /// \brief Interface to define the ordering of the random number cache.
   struct Ordering {
-    virtual ~Ordering() {}
+    virtual ~Ordering() = default;
     /// \brief Determine the order.
     virtual size_type operator()(int x, int y) = 0;
   };
@@ -77,7 +77,7 @@ class RandCache
 class ZeroSpiralOrdering : public RandCache::Ordering
 {
 public:
-    RandCache::size_type operator () (int x, int y) 
+    RandCache::size_type operator () (int x, int y) override
     {
         if (x==0 && y==0) return 0;
         
@@ -108,7 +108,7 @@ public:
     /// @param x centre x coordinate of the spiral.
     /// @param y centre y coordinate of the spiral.
     SpiralOrdering(int x, int y) : ZeroSpiralOrdering(), m_x(x), m_y(y) {}
-    RandCache::size_type operator () (int x, int y) 
+    RandCache::size_type operator () (int x, int y) override
     {
         return ZeroSpiralOrdering::operator()(x-m_x, y-m_y);
     }

@@ -18,9 +18,7 @@ Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
 }
 
 /// \brief Destructor does nothing interesting.
-Shader::~Shader()
-{
-}
+Shader::~Shader() = default;
 
 /// \brief Create a new Surface which matches the requirements of this shader.
 ///

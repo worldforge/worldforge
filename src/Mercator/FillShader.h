@@ -21,10 +21,10 @@ class FillShader : public Shader {
     ///
     /// @param params a map of parameters for the shader.
     explicit FillShader(const Parameters & params);
-    virtual ~FillShader();
+    ~FillShader() override;
 
-    virtual bool checkIntersect(const Segment &) const;
-    virtual void shade(Surface &) const;
+    bool checkIntersect(const Segment &) const override;
+    void shade(Surface &) const override;
 };
 
 } // namespace Mercator

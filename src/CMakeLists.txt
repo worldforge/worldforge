@@ -12,8 +12,6 @@ set(SOURCE_FILES
         Mercator/HeightMap.cpp
         Mercator/Intersect.cpp
         Mercator/Matrix.cpp
-        Mercator/Mercator.cpp
-        Mercator/Plant.cpp
         Mercator/Segment.cpp
         Mercator/Shader.cpp
         Mercator/ShaderFactory.cpp

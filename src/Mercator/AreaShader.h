@@ -19,11 +19,11 @@ public:
     /// \brief Constructor
     ///
     /// @param layer layer number.
-    AreaShader(int layer);
+    explicit AreaShader(int layer);
     
-    virtual void shade(Surface &s) const;
+    void shade(Surface &s) const override;
     
-    virtual bool checkIntersect(const Segment &) const;
+    bool checkIntersect(const Segment &) const override;
 private:
     /// helper to shader a single area into the surface
     void shadeArea(Surface& s, const Area* ar) const;

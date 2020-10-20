@@ -16,7 +16,7 @@ namespace Mercator {
     bool Intersect(const Terrain &t, const WFMath::Point<3> &pt);
 
     bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vector<3>& dir,
-            WFMath::Point<3> &intersection, WFMath::Vector<3> &normal, float &par);
+            WFMath::Point<3> &intersection, WFMath::Vector<3> &normal, double &par);
 } // namespace Mercator
 
 #endif

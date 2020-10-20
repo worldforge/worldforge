@@ -21,17 +21,17 @@ typedef WFMath::Point<2> Point2;
 
 void dumpPlants(const Mercator::Forest::PlantStore & plants)
 {
-    Mercator::Forest::PlantStore::const_iterator I = plants.begin();
+    auto I = plants.begin();
     for(; I != plants.end(); ++I) {
-        Mercator::Forest::PlantColumn::const_iterator J = I->second.begin();
+        auto J = I->second.begin();
         for(; J != I->second.end(); ++J) {
             const Mercator::Plant & p = J->second;
             std::cout << "Query found plant at [" << I->first
                       << ", " << J->first << "] with height "
-                      << p.getHeight();
+                      << p.m_height;
             std::cout << " displaced to "
                       << (WFMath::Vector<2>(I->first, J->first) +
-                          p.getDisplacement())
+                          p.m_displacement)
                       << std::endl << std::flush;
         }
     }
@@ -40,7 +40,7 @@ void dumpPlants(const Mercator::Forest::PlantStore & plants)
 int countPlants(const Mercator::Forest::PlantStore & plants)
 {
     int plant_count = 0;
-    Mercator::Forest::PlantStore::const_iterator I = plants.begin();
+    auto I = plants.begin();
     for(; I != plants.end(); ++I) {
         plant_count += I->second.size();
     }

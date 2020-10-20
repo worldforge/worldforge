@@ -29,17 +29,17 @@ const unsigned int Terrain::SHADED;
 constexpr float Terrain::defaultLevel;
 
 
-Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(options),
+Terrain::Terrain(unsigned int options, int resolution) : m_options(options),
                                                                   m_res(resolution),
-                                                                  m_spacing(resolution)
+                                                                  m_spacing((float)resolution)
 {
 
 }
 
 Terrain::~Terrain()
 {
-    Segmentstore::const_iterator I = m_segments.begin(); 
-    Segmentstore::const_iterator Iend = m_segments.end();
+    auto I = m_segments.begin();
+    auto Iend = m_segments.end();
     for (; I != Iend; ++I) {
         auto J = I->second.begin();
         auto Jend = I->second.end();
@@ -58,8 +58,8 @@ void Terrain::addShader(const Shader * t, int id)
     
     m_shaders[id] = t;
     
-    Segmentstore::const_iterator I = m_segments.begin(); 
-    Segmentstore::const_iterator Iend = m_segments.end(); 
+    auto I = m_segments.begin();
+    auto Iend = m_segments.end();
     for (; I != Iend; ++I) {
         auto J = I->second.begin();
         auto Jend = I->second.end();
@@ -78,8 +78,8 @@ void Terrain::removeShader(const Shader * t, int id)
     m_shaders.erase(m_shaders.find(id));
 
     // Delete all surfaces for this shader
-    Segmentstore::const_iterator I = m_segments.begin();
-    Segmentstore::const_iterator Iend = m_segments.end();
+    auto I = m_segments.begin();
+    auto Iend = m_segments.end();
     for (; I != Iend; ++I) {
         auto J = I->second.begin();
         auto Jend = I->second.end();
@@ -107,8 +107,8 @@ void Terrain::addSurfaces(Segment & seg)
         sss.clear();
     }
     
-    Shaderstore::const_iterator I = m_shaders.begin();
-    Shaderstore::const_iterator Iend = m_shaders.end();
+    auto I = m_shaders.begin();
+    auto Iend = m_shaders.end();
     for (; I != Iend; ++I) {
         // shader doesn't touch this segment, skip
         if (!I->second->checkIntersect(seg)) {

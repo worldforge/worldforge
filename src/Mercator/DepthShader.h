@@ -43,15 +43,15 @@ class DepthShader : public Shader {
     ///
     /// @param params a map of parameters for the shader.
     explicit DepthShader(const Parameters & params);
-    virtual ~DepthShader();
+    ~DepthShader() override;
 
     /// Accessor for the level of the surface of the water.
     float waterLevel() const { return m_waterLevel; }
     /// Accessor for the depth at which the bottom becomes completely obscured.
     float murkyDepth() const { return m_murkyDepth; }
 
-    virtual bool checkIntersect(const Segment &) const;
-    virtual void shade(Surface &) const;
+    bool checkIntersect(const Segment &) const override;
+    void shade(Surface &) const override;
 };
 
 } // namespace Mercator

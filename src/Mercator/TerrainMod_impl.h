@@ -18,9 +18,7 @@ ShapeTerrainMod<Shape>::ShapeTerrainMod(const Shape<2> &s) : m_shape(s)
 }
 
 
-template <template <int> class Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod()
-{
-}
+template <template <int> class Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod() = default;
 
 template <template <int> class Shape>
 bool ShapeTerrainMod<Shape>::checkIntersects(const Segment& s) const
@@ -36,9 +34,7 @@ void ShapeTerrainMod<Shape>::setShape(const Shape<2> & s)
     m_box = m_shape.boundingBox();
 }
 
-template <template <int> class Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
-{
-}
+template <template <int> class Shape> LevelTerrainMod<Shape>::~LevelTerrainMod() = default;
     
 template <template <int> class Shape>
 void LevelTerrainMod<Shape>::apply(float &point, int x, int z) const
@@ -55,9 +51,7 @@ void LevelTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
     m_level = level;
 }
 
-template <template <int> class Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
-{
-}
+template <template <int> class Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod() = default;
     
 template <template <int> class Shape>
 void AdjustTerrainMod<Shape>::apply(float &point, int x, int z) const
@@ -74,9 +68,7 @@ void AdjustTerrainMod<Shape>::setShape(float dist, const Shape<2> & s)
     m_dist = dist;
 }
 
-template <template <int> class Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
-{
-}
+template <template <int> class Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod() = default;
     
 template <template <int> class Shape>
 void SlopeTerrainMod<Shape>::apply(float &point, int x, int z) const
@@ -98,9 +90,7 @@ void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dz, const Sha
 }
 
 
-template <template <int> class Shape> CraterTerrainMod<Shape>::~CraterTerrainMod()
-{
-}
+template <template <int> class Shape> CraterTerrainMod<Shape>::~CraterTerrainMod() = default;
 
 template <template <int> class Shape>
 void CraterTerrainMod<Shape>::apply(float &point, int x, int z) const

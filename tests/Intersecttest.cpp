@@ -98,7 +98,7 @@ int main()
 
     WFMath::Point<3> intPoint;
     WFMath::Vector<3> intNorm;
-    float par;
+    double par;
     //test vertical ray
     if (Mercator::Intersect(terrain, WFMath::Point<3>(20.1, segmax + 3, 20.2),
                                WFMath::Vector<3>(0.0,50.0,0.0), intPoint, intNorm, par)) {

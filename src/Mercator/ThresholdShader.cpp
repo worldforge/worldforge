@@ -28,9 +28,7 @@ HighShader::HighShader(const Parameters & params) : m_threshold(default_threshol
     }
 }
 
-HighShader::~HighShader()
-{
-}
+HighShader::~HighShader() = default;
 
 bool HighShader::checkIntersect(const Segment & s) const
 {
@@ -82,9 +80,7 @@ LowShader::LowShader(const Parameters & params) : m_threshold(default_threshold)
     }
 }
 
-LowShader::~LowShader()
-{
-}
+LowShader::~LowShader() = default;
 
 bool LowShader::checkIntersect(const Segment & s) const
 {
@@ -144,9 +140,7 @@ BandShader::BandShader(const Parameters & params) :
     }
 }
 
-BandShader::~BandShader()
-{
-}
+BandShader::~BandShader() = default;
 
 bool BandShader::checkIntersect(const Segment & s) const
 {

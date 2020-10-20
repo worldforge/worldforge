@@ -65,7 +65,7 @@ class Segment {
     /// \brief Map of TerrainMod objects that are applied to this Segment.
     std::map<long, const TerrainMod*> m_terrainMods;
   public:
-    explicit Segment(int x, int z, unsigned int resolution);
+    explicit Segment(int x, int z, int resolution);
     ~Segment();
 
     /// \brief Accessor for resolution of this segment.

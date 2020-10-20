@@ -15,7 +15,7 @@
 
 namespace Mercator {
 
-class Plant;
+struct Plant;
 class Area;
 
 class SpeciesParameter;

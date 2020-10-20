@@ -29,7 +29,7 @@ class Surface : public Buffer<ColorT> {
 
     explicit Surface(const Segment & segment, const Shader & shader,
                      bool colors = true, bool alpha = true);
-    virtual ~Surface() = default;
+    ~Surface() override = default;
 
     void populate();
 

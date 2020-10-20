@@ -63,7 +63,7 @@ class Terrain {
     /// \brief Bitset of option flags controlling various aspects of terrain.
     const unsigned int m_options;
     /// \brief BasePoint resolution, or distance between adjacent points.
-    const unsigned int m_res;
+    const int m_res;
     /// \brief BasePoints spacing, same as m_res in float form for efficiency
     const float m_spacing;
 
@@ -126,7 +126,7 @@ class Terrain {
 	/// - SHADED is set if shaders are going to be used on this terrain.
 	/// @param resolution the spacing between adjacent base points. Defaults to 64.
     explicit Terrain(unsigned int options = DEFAULT,
-                     unsigned int resolution = defaultResolution);
+                     int resolution = defaultResolution);
 
 	/// \brief Destroy Terrain object, deleting contained objects.
 	///
@@ -325,7 +325,7 @@ class Terrain {
 };
 
 inline int Terrain::posToIndex(float pos) const {
-    return std::lround(std::floor(pos / m_spacing));
+    return (int)std::lround(std::floor(pos / m_spacing));
 }
 
 inline Segment * Terrain::getSegmentAtPos(float x, float z) const

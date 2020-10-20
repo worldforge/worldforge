@@ -101,7 +101,7 @@ class QuadInterp {
 
 
 /// \brief Construct an empty height map with the given resolution.
-HeightMap::HeightMap(unsigned int resolution) :
+HeightMap::HeightMap(int resolution) :
         Buffer<float>::Buffer(resolution + 1, 1),
                             m_res(resolution),
                             m_max(std::numeric_limits<float>::lowest()),
@@ -154,7 +154,7 @@ void HeightMap::fill1d(const BasePoint& l, const BasePoint &h,
 {
     array[0] = l.height();
     array[m_res] = h.height();
-    LinInterp li(m_res, l.roughness(), h.roughness());
+    LinInterp li((float)m_res, l.roughness(), h.roughness());
 
     // seed the RNG.
     // The RNG is seeded only once for the line and the seed is based on the
@@ -179,7 +179,7 @@ void HeightMap::fill1d(const BasePoint& l, const BasePoint &h,
             float hh = array[i-stride];
             float lh = array[i+stride];
             float hd = std::fabs(hh-lh);
-            float roughness = li.calc(i);
+            float roughness = li.calc((float)i);
 
             //eliminate the problem where hd is nearly zero, leaving a flat section.
             if ((hd*100.f) < roughness) {
@@ -252,8 +252,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
     WFMath::MTRand rng(seed, 4);
 
-    QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
-    QuadInterp falloffQi(m_res, p1.falloff(), p2.falloff(), p3.falloff(), p4.falloff());
+    QuadInterp qi((float)m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
+    QuadInterp falloffQi((float)m_res, p1.falloff(), p2.falloff(), p3.falloff(), p4.falloff());
 
     float depth=0;
 
@@ -261,8 +261,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
     int stride = m_res/2;
 
     //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
-    float roughness = qi.calc(stride, stride);
-    float f = falloffQi.calc(stride, stride);
+    float roughness = qi.calc((float)stride,(float) stride);
+    float f = falloffQi.calc((float)stride, (float)stride);
     points[stride*m_size + stride] = qRMD(rng, points[0 * m_size + stride],
                                         points[stride*m_size + 0],
                                         points[stride*m_size + m_res],
@@ -285,8 +285,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       //+ . +
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              f = falloffQi.calc(i, j);
+              roughness=qi.calc((float)i,(float)j);
+              f = falloffQi.calc((float)i, (float)j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j+stride) * (m_size)],
                                        points[(i+stride) + (j-stride) * (m_size)],
                                        points[(i+stride) + (j+stride) * (m_size)],
@@ -303,8 +303,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
       //. + .
       for (int i=stride*2;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              f = falloffQi.calc(i, j);
+              roughness=qi.calc((float)i,(float)j);
+              f = falloffQi.calc((float)i, (float)j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j) * (m_size)],
                                        points[(i+stride) + (j) * (m_size)],
                                        points[(i) + (j+stride) * (m_size)],
@@ -316,8 +316,8 @@ void HeightMap::fill2d(const BasePoint& p1, const BasePoint& p2,
 
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride*2;j<m_res;j+=stride*2) {
-              roughness=qi.calc(i,j);
-              f = falloffQi.calc(i, j);
+              roughness=qi.calc((float)i,(float)j);
+              f = falloffQi.calc((float)i, (float)j);
               points[j*m_size + i] = qRMD(rng, points[(i-stride) + (j) * (m_size)],
                                        points[(i+stride) + (j) * (m_size)],
                                        points[(i) + (j+stride) * (m_size)],
@@ -345,8 +345,8 @@ void HeightMap::getHeight(float x, float z, float &h) const
     int tile_z = I_ROUND(std::floor(z));
 
     // work out the offset into that tile
-    float off_x = x - tile_x;
-    float off_z = z - tile_z;
+    float off_x = x - (float)tile_x;
+    float off_z = z - (float)tile_z;
 
     float h1=get(tile_x, tile_z);
     float h2=get(tile_x, tile_z+1);
@@ -391,8 +391,8 @@ void HeightMap::getHeightAndNormal(float x, float z, float& h,
     int tile_z = I_ROUND(std::floor(z));
 
     // work out the offset into that tile
-    float off_x = x - tile_x;
-    float off_z = z - tile_z;
+    float off_x = x - (float)tile_x;
+    float off_z = z - (float)tile_z;
  
     float h1=get(tile_x, tile_z);
     float h2=get(tile_x, tile_z+1);

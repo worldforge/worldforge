@@ -7,7 +7,7 @@
 
 namespace Mercator {
 
-    static const unsigned int defaultResolution = 64;
+    static constexpr int defaultResolution = 64;
 
 } // namespace Mercator
 

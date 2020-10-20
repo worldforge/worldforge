@@ -34,8 +34,8 @@ DepthShader::DepthShader(float waterLevel, float murkyDepth) :
 DepthShader::DepthShader(const Parameters & params) :
              m_waterLevel(default_waterLevel), m_murkyDepth(default_murkyDepth)
 {
-    Parameters::const_iterator I = params.find(key_waterLevel);
-    Parameters::const_iterator Iend = params.end();
+    auto I = params.find(key_waterLevel);
+    auto Iend = params.end();
     if (I != Iend) {
         m_waterLevel = I->second;
     }
@@ -45,9 +45,7 @@ DepthShader::DepthShader(const Parameters & params) :
     }
 }
 
-DepthShader::~DepthShader()
-{
-}
+DepthShader::~DepthShader() = default;
 
 bool DepthShader::checkIntersect(const Segment & s) const
 {

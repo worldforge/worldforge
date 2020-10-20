@@ -34,7 +34,7 @@ namespace Mercator {
 /// values, and should be set to appropriate using setMinMax() as soon as
 /// possible after construction. Similarly the control points should be
 /// set soon after construction.
-Segment::Segment(int x, int z, unsigned int resolution) :
+Segment::Segment(int x, int z, int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_xRef(x), m_zRef(z),
                             m_heightMap(resolution), m_normals(nullptr)
@@ -52,8 +52,8 @@ Segment::~Segment()
     clearMods();
     delete [] m_normals;
     
-    Segment::Surfacestore::const_iterator I = m_surfaces.begin();
-    Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
+    auto I = m_surfaces.begin();
+	auto Iend = m_surfaces.end();
     for(; I != Iend; ++I) {
         delete I->second;
     }

@@ -25,16 +25,7 @@ class Shader;
 class Effector
 {
   public:
-    class Context {
-      public:
-        Context();
-
-        virtual ~Context();
-
-        const std::string & id() { return m_id; }
-
-        void setId(const std::string &);
-      protected:
+    struct Context {
         std::string m_id;
     };
 

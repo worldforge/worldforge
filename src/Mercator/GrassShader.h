@@ -98,7 +98,7 @@ class GrassShader : public Shader {
     ///
     /// @param params a map of parameters for the shader.
     explicit GrassShader(const Parameters & params);
-    virtual ~GrassShader();
+    ~GrassShader() override;
 
     /// Accessor for level above which the shader renders.
     float lowThreshold() const { return m_lowThreshold; }
@@ -109,8 +109,8 @@ class GrassShader : public Shader {
     /// Accessor for slope steeper than which no grass grows.
     float intercept() const { return m_intercept; }
 
-    virtual bool checkIntersect(const Segment &) const;
-    virtual void shade(Surface &) const;
+    bool checkIntersect(const Segment &) const override;
+    void shade(Surface &) const override;
 };
 
 } // namespace Mercator

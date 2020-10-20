@@ -39,7 +39,7 @@ int main()
     float timestep = 0.1;
     float e = 0.2; //elasticity of collision
     float totalT = 20.0; //time limit 
-    float par = 0.0;
+    double par = 0.0;
     float t = timestep;
 
     while (totalT > timestep) {

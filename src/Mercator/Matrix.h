@@ -17,7 +17,7 @@ class Matrix {
     FloatType m_data[COLS * ROWS];
   public:
     /// \brief Constructor for the Matrix.
-    Matrix() { }
+    Matrix() = default;
 
     /// \brief Accessor for modifying the array.
     FloatType & operator()(unsigned int col, unsigned int row) {

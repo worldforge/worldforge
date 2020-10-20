@@ -11,9 +11,7 @@
 
 namespace Mercator {
 
-TileShader::TileShader()
-{
-}
+TileShader::TileShader() = default;
 
 TileShader::~TileShader()
 {
@@ -33,7 +31,7 @@ bool TileShader::checkIntersect(const Segment & s) const
 void TileShader::shade(Surface & surface) const
 {
     ColorT * sdata = surface.getData();
-    int sdata_len = surface.getSize() * surface.getSize();
+    auto sdata_len = surface.getSize() * surface.getSize();
 
     auto I = m_subShaders.begin();
     auto Iend = m_subShaders.end();
@@ -45,9 +43,9 @@ void TileShader::shade(Surface & surface) const
 		assert(subs);
         subs->populate();
         ColorT * subsdata = subs->getData();
-        int channels = subs->getChannels();
+        auto channels = subs->getChannels();
         
-        for (int i = 0; i < sdata_len; ++i) {
+        for (unsigned int i = 0; i < sdata_len; ++i) {
             if (subsdata[i * channels + channels - 1] > 127) {
                 sdata[i] = I->first;
             }

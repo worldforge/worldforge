@@ -25,7 +25,7 @@ int terrain_mod_context_test(Mercator::Terrain & terrain)
     terrain.updateMod(1, mp);
 
     mp->setContext(std::make_unique<Mercator::TerrainMod::Context>());
-    mp->context()->setId("foo");
+    mp->context()->m_id = "foo";
 
     terrain.updateMod(1, nullptr);
 
