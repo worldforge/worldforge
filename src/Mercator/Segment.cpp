@@ -37,7 +37,7 @@ namespace Mercator {
 Segment::Segment(int x, int z, int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_xRef(x), m_zRef(z),
-                            m_heightMap(resolution), m_normals(nullptr)
+                            m_heightMap(resolution)
 {
 }
 
@@ -50,14 +50,6 @@ Segment::Segment(int x, int z, int resolution) :
 Segment::~Segment()
 {
     clearMods();
-    delete [] m_normals;
-    
-    auto I = m_surfaces.begin();
-	auto Iend = m_surfaces.end();
-    for(; I != Iend; ++I) {
-        delete I->second;
-    }
-    
 }
 
 /// \brief Populate the Segment with heightfield data.
@@ -93,10 +85,7 @@ void Segment::invalidate(bool points)
     if (points) {
         m_heightMap.invalidate();
     }
-    if (m_normals) {
-        delete [] m_normals;
-        m_normals = nullptr;
-    }
+    m_normals.reset();
 
     invalidateSurfaces();
 }
@@ -127,11 +116,11 @@ void Segment::populateNormals()
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
-    if (m_normals == nullptr) {
-        m_normals = new float[m_size * m_size * 3];
+    if (!m_normals) {
+        m_normals = std::make_unique<std::vector<float>>(m_size * m_size * 3);
     }
 
-    float * np = m_normals;
+    float * np = m_normals->data();
     
     // Fill in the damn normals
     float h1,h2,h3,h4;

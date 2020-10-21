@@ -85,7 +85,7 @@ int main()
     assert(sfce->isValid());
 
     // Add the surface to the store for this segment
-    sss[0] = sfce;
+    sss[0].reset(sfce);
 
     // Add the area which should cause relevant surface date to be invalidated
     t.addArea(a1);

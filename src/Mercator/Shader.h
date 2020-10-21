@@ -7,6 +7,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 namespace Mercator {
 
@@ -42,7 +43,7 @@ class Shader {
         return m_alpha;
     }
 
-    Surface * newSurface(const Segment &) const;
+	std::unique_ptr<Surface> newSurface(const Segment &) const;
 
     /// \brief Check whether this Shader has any effect on the given Segment.
     ///

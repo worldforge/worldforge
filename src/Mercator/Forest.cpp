@@ -24,7 +24,7 @@ namespace Mercator {
 Forest::Forest(unsigned long seed) : 
     m_area(nullptr),
     m_seed(seed), 
-    m_randCache(seed, new ZeroSpiralOrdering())
+    m_randCache(seed, std::make_unique<ZeroSpiralOrdering>())
 {
 }
 

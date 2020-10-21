@@ -24,9 +24,9 @@ Shader::~Shader() = default;
 ///
 /// Called by terrain when creating a new Segment to add the necessary
 /// Surface objects to that Segment.
-Surface * Shader::newSurface(const Segment & segment) const
+std::unique_ptr<Surface> Shader::newSurface(const Segment & segment) const
 {
-    return new Surface(segment, *this, m_color, m_alpha);
+    return std::make_unique<Surface>(segment, *this, m_color, m_alpha);
 }
 
 } // namespace Mercator

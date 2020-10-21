@@ -36,7 +36,7 @@ class Area;
 class Segment {
   public:
     /// STL map of pointers to Surface objects.
-    typedef std::map<int, Surface *> Surfacestore;
+    typedef std::map<int, std::unique_ptr<Surface>> Surfacestore;
 
     /// STL multimap of pointers to Area objects affecting this segment.
     typedef std::multimap<int, const Area *> Areastore;
@@ -54,7 +54,7 @@ class Segment {
     /// Pointer to buffer containing height points
     HeightMap m_heightMap;
     /// Pointer to buffer containing normals for height points
-    float * m_normals;
+    std::unique_ptr<std::vector<float>> m_normals;
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
@@ -150,12 +150,12 @@ class Segment {
 
     /// \brief Accessor for buffer containing surface normals.
     const float * getNormals() const {
-        return m_normals;
+        return m_normals->data();
     }
 
     /// \brief Accessor for write access to buffer containing surface normals.
     float * getNormals() {
-        return m_normals;
+        return m_normals->data();
     }
 
     /// \brief Get the height at a relative integer position in the Segment.

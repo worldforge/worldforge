@@ -83,12 +83,12 @@ void testAreaShader()
     assert(a1->checkIntersects(*seg));
     
     seg->populateSurfaces();
-    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[1]);
+    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[1].get());
     
     
     seg = terrain.getSegmentAtIndex(1,0);
     seg->populateSurfaces();
-    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[1]);
+    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[1].get());
 }
 
 static const unsigned int seg_size = 8;

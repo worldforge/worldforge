@@ -16,9 +16,9 @@ template <class T>
 ShaderFactory<T>::~ShaderFactory() = default;
 
 template <class T>
-Shader * ShaderFactory<T>::newShader(const Shader::Parameters & params) const
+std::unique_ptr<Shader> ShaderFactory<T>::newShader(const Shader::Parameters & params) const
 {
-    return new T(params);
+    return std::make_unique<T>(params);
 }
 
 } // namespace Mercator

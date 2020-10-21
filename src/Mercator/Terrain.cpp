@@ -33,38 +33,25 @@ Terrain::Terrain(unsigned int options, int resolution) : m_options(options),
                                                                   m_res(resolution),
                                                                   m_spacing((float)resolution)
 {
-
 }
 
-Terrain::~Terrain()
-{
-    auto I = m_segments.begin();
-    auto Iend = m_segments.end();
-    for (; I != Iend; ++I) {
-        auto J = I->second.begin();
-        auto Jend = I->second.end();
-        for (; J != Jend; ++J) {
-            Segment * s = J->second;
-            delete s;
-        }
-    }
-}
+Terrain::~Terrain() = default;
 
 void Terrain::addShader(const Shader * t, int id)
 {
     if (m_shaders.count(id)) {
         std::cerr << "WARNING: duplicate use of shader ID " << id << std::endl;
     }
-    
+
     m_shaders[id] = t;
-    
+
     auto I = m_segments.begin();
     auto Iend = m_segments.end();
     for (; I != Iend; ++I) {
         auto J = I->second.begin();
         auto Jend = I->second.end();
         for (; J != Jend; ++J) {
-            Segment *seg=J->second;
+            auto& seg=J->second;
 
             Segment::Surfacestore & sss = seg->getSurfaces();
             sss[id] = t->newSurface(*seg);
@@ -84,12 +71,11 @@ void Terrain::removeShader(const Shader * t, int id)
         auto J = I->second.begin();
         auto Jend = I->second.end();
         for (; J != Jend; ++J) {
-            Segment *seg=J->second;
+            auto& seg=J->second;
 
             Segment::Surfacestore & sss = seg->getSurfaces();
             auto K = sss.find(id);
             if (K != sss.end()) {
-                delete K->second;
                 sss.erase(K);
             }
         }
@@ -106,7 +92,7 @@ void Terrain::addSurfaces(Segment & seg)
                   << std::endl << std::flush;
         sss.clear();
     }
-    
+
     auto I = m_shaders.begin();
     auto Iend = m_shaders.end();
     for (; I != Iend; ++I) {
@@ -114,7 +100,7 @@ void Terrain::addSurfaces(Segment & seg)
         if (!I->second->checkIntersect(seg)) {
             continue;
         }
-        
+
         sss[I->first] = I->second->newSurface(seg);
     }
 }
@@ -137,7 +123,7 @@ float Terrain::get(float x, float z) const
 bool Terrain::getHeight(float x, float z, float& h) const
 {
     Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(z));
-    if ((s == nullptr) || (!s->isValid())) {
+    if ((!s) || (!s->isValid())) {
         return false;
     }
     s->getHeight(x - s->getXRef(), z - s->getZRef(), h);
@@ -148,7 +134,7 @@ bool Terrain::getHeightAndNormal(float x, float z, float & h,
                                   WFMath::Vector<3> & n) const
 {
     Segment * s = getSegmentAtIndex(posToIndex(x), posToIndex(z));
-    if ((s == nullptr) || (!s->isValid())) {
+    if ((!s) || (!s->isValid())) {
         return false;
     }
     s->getHeightAndNormal(x - s->getXRef(), z - s->getZRef(), h, n);
@@ -181,8 +167,8 @@ void Terrain::setBasePoint(int x, int z, const BasePoint& y)
     }
     for(int i = x - 1, ri = 0; i < x + 1; ++i, ++ri) {
         for(int j = z - 1, rj = 0; j < z + 1; ++j, ++rj) {
-            Segment * s = getSegmentAtIndex(i, j);
-            if (!s) {
+            Segment * existingSegment = getSegmentAtIndex(i, j);
+            if (!existingSegment) {
                 bool complete = pointIsSet[ri][rj] &&
                                 pointIsSet[ri + 1][rj + 1] &&
                                 pointIsSet[ri + 1][rj] &&
@@ -190,8 +176,8 @@ void Terrain::setBasePoint(int x, int z, const BasePoint& y)
                 if (!complete) {
                     continue;
                 }
-                s = new Segment(i * m_res, j * m_res, m_res);
-                Matrix<2, 2, BasePoint> & cp = s->getControlPoints();
+                auto newSegment = std::make_unique<Segment>(i * m_res, j * m_res, m_res);
+                Matrix<2, 2, BasePoint> & cp = newSegment->getControlPoints();
                 for(unsigned int k = 0; k < 2; ++k) {
                     for(unsigned int l = 0; l < 2; ++l) {
                         cp(k, l) = existingPoint[ri + k][rj + l];
@@ -200,20 +186,21 @@ void Terrain::setBasePoint(int x, int z, const BasePoint& y)
 
                 for (auto& entry : m_terrainMods) {
                     const TerrainMod* terrainMod = std::get<0>(entry.second);
-                    if (terrainMod->checkIntersects(*s)) {
-                        s->updateMod(entry.first, terrainMod);
+                    if (terrainMod->checkIntersects(*newSegment)) {
+						newSegment->updateMod(entry.first, terrainMod);
                     }
                 }
 
                 // apply shaders last, after all other data is in place
                 if (isShaded()) {
-                    addSurfaces(*s);
+                    addSurfaces(*newSegment);
                 }
-                
-                m_segments[i][j] = s;
-                continue;
+
+				newSegment->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, y);
+				m_segments[i][j] = std::move(newSegment);
+            } else {
+				existingSegment->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, y);
             }
-            s->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, y);
         }
     }
 }
@@ -228,7 +215,7 @@ Segment * Terrain::getSegmentAtIndex(int x, int z) const
     if (J == I->second.end()) {
         return nullptr;
     }
-    return J->second;
+    return J->second.get();
 }
 
 void Terrain::processSegments(const WFMath::AxisBox<2>& area,
@@ -357,7 +344,7 @@ void Terrain::addArea(const Area * area)
     if (I != m_shaders.end()) {
         area->setShader(I->second);
     }
-    
+
     //work out which segments are overlapped by this effector
     //note that the bbox is expanded by one grid unit because
     //segments share edges. this ensures a mod along an edge

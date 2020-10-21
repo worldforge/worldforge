@@ -21,7 +21,7 @@ namespace Mercator {
 class TileShader : public Shader {
   public:
     /// \brief STL map to store sparse array of Shader pointers.
-    typedef std::map<int, Shader *> Shaderstore;
+    typedef std::map<int, std::unique_ptr<Shader>> Shaderstore;
   private:
     /// \brief Store of shaders which are agregated by this shader.
     Shaderstore m_subShaders;
@@ -31,8 +31,8 @@ class TileShader : public Shader {
     ~TileShader() override;
 
     /// \brief Add a shader to those agregated by the tile shader.
-    void addShader(Shader * t, int id) {
-        m_subShaders[id] = t;
+    void addShader(std::unique_ptr<Shader> t, int id) {
+        m_subShaders[id] = std::move(t);
     }
 
     bool checkIntersect(const Segment &) const override;

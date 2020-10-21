@@ -42,8 +42,8 @@ class Terrain {
 
     /// \brief STL map to store sparse array of BasePoints.
     typedef std::map<int, BasePoint> Pointcolumn;
-    /// \brief STL map to store sparse array of Segment pointers.
-    typedef std::map<int, Segment *> Segmentcolumn;
+    /// \brief STL map to store sparse array of Segments.
+    typedef std::map<int, std::unique_ptr<Segment>> Segmentcolumn;
 
     /// \brief STL map to store sparse array of BasePoint columns.
     typedef std::map<int, Pointcolumn > Pointstore;
