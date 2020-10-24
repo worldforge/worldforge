@@ -21,15 +21,14 @@
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::TerrainMod * mp = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
-    terrain.updateMod(1, mp);
+    auto mp = std::make_unique<Mercator::LevelTerrainMod<WFMath::Ball>>(10.0f, circ2);
 
     mp->setContext(std::make_unique<Mercator::TerrainMod::Context>());
     mp->context()->m_id = "foo";
+	terrain.updateMod(1, std::move(mp));
 
     terrain.updateMod(1, nullptr);
 
-    delete mp;
 
     return 0;
 }
@@ -49,32 +48,32 @@ int main()
     terrain.setBasePoint(2, 2, 14.7);
 
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
-    terrain.updateMod(1, mp1);
+    auto mp1 = std::make_unique<Mercator::LevelTerrainMod<WFMath::Ball>>(10.0f, circ2);
+    terrain.updateMod(1, std::move(mp1));
 
     Mercator::Segment * segment = terrain.getSegmentAtIndex(0, 0);
 
     assert(segment->getMods().size() == 1);
 
-    Mercator::TerrainMod * mp1_1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
-    terrain.updateMod(1, mp1_1);
+    auto mp1_1 = std::make_unique<Mercator::LevelTerrainMod<WFMath::Ball>>(10.0f, circ2);
+    auto ptr = mp1_1.get();
+    terrain.updateMod(1, std::move(mp1_1));
     assert(segment->getMods().size() == 1);
-    assert(segment->getMods().find(1)->second == mp1_1);
-    delete mp1;
+    assert(segment->getMods().find(1)->second == ptr);
 
     const WFMath::RotBox<2> rot(
           WFMath::Point<2>(-80.,-130.) ,
           WFMath::Vector<2>(150.0,120.0),
           WFMath::RotMatrix<2>().rotation(WFMath::numeric_constants<WFMath::CoordType>::pi()/4));
-    Mercator::TerrainMod * mp2 = new Mercator::LevelTerrainMod<WFMath::RotBox>(10.0f, rot);
-    terrain.updateMod(2, mp2);
+    auto mp2 = std::make_unique<Mercator::LevelTerrainMod<WFMath::RotBox>>(10.0f, rot);
+    terrain.updateMod(2, std::move(mp2));
 
     const WFMath::Ball<2> ball(WFMath::Point<2>(80, 80), 10);
-    Mercator::CraterTerrainMod<WFMath::Ball> * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
-    terrain.updateMod(3, mp3);
+    auto mp3 = std::make_unique<Mercator::CraterTerrainMod<WFMath::Ball>>(-5.f, ball);
+    terrain.updateMod(3, std::move(mp3));
 
 
-    if (segment == 0) {
+    if (segment == nullptr) {
         std::cerr << "Segment not created by addition of required basepoints"
                   << std::endl << std::flush;
         return 1;
@@ -94,31 +93,26 @@ int main()
 
     assert(segment->isValid());
 
-    terrain.updateMod(3, mp3);
+    auto mp3_rect1 = terrain.updateMod(3, std::make_unique<Mercator::CraterTerrainMod<WFMath::Ball>>(-5.f, ball));
 
     assert(!segment->isValid());
 
     //Check that the stored bbox is correctly updated when calling updateMod().
-    WFMath::AxisBox<2> mp3_rect1 = mp3->bbox();
-    mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, 80), 10));
-    WFMath::AxisBox<2> mp3_rect2 = terrain.updateMod(3, mp3);
-    assert(mp3_rect1 == mp3_rect2);
-    WFMath::AxisBox<2> mp3_rect3 = mp3->bbox();
-    mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, -80), 10));
-    WFMath::AxisBox<2> mp3_rect4 = terrain.updateMod(3, mp3);
-    assert(mp3_rect3 == mp3_rect4);
+	auto new_mp3 = std::make_unique<Mercator::CraterTerrainMod<WFMath::Ball>>(-5.f, ball);
+    new_mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, 80), 10));
+   	auto mp3_rect2 = new_mp3->bbox();
+    WFMath::AxisBox<2> mp3_rect3 = terrain.updateMod(3, std::move(new_mp3));
+    assert(mp3_rect1 == mp3_rect3);
+	auto another_new_mp3 = std::make_unique<Mercator::CraterTerrainMod<WFMath::Ball>>(-5.f, ball);
+	another_new_mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, -80), 10));
+    WFMath::AxisBox<2> mp3_rect4 = terrain.updateMod(3, std::move(another_new_mp3));
+    assert(mp3_rect2 == mp3_rect4);
 
     terrain.updateMod(1, nullptr);
 
-    delete mp1_1;
-
     terrain.updateMod(2, nullptr);
 
-    delete mp2;
-
     terrain.updateMod(3, nullptr);
-
-    delete mp3;
 
     return terrain_mod_context_test(terrain);
 }

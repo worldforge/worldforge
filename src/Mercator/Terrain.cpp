@@ -185,9 +185,9 @@ void Terrain::setBasePoint(int x, int z, const BasePoint& y)
                 }
 
                 for (auto& entry : m_terrainMods) {
-                    const TerrainMod* terrainMod = std::get<0>(entry.second);
+                    auto& terrainMod = entry.second.terrainMod;
                     if (terrainMod->checkIntersects(*newSegment)) {
-						newSegment->updateMod(entry.first, terrainMod);
+						newSegment->updateMod(entry.first, terrainMod.get());
                     }
                 }
 
@@ -238,7 +238,7 @@ void Terrain::processSegments(const WFMath::AxisBox<2>& area,
 }
 
 
-Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
+Terrain::Rect Terrain::updateMod(long id, std::unique_ptr<TerrainMod> mod)
 {
     std::set<Segment*> removed, added, updated;
 
@@ -246,9 +246,9 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
 
     Rect old_box;
     if (I != m_terrainMods.end()) {
-        std::tuple<const TerrainMod *, Rect>& entry = I->second;
+        auto& entry = I->second;
 
-        old_box = std::get<1>(entry);
+        old_box = entry.rect;
 
 
 
@@ -269,21 +269,17 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
            } // of y loop
         } // of x loop
 
-        if (mod) {
-            std::get<0>(entry) = mod;
-            std::get<1>(entry) = mod->bbox();
-        } else {
+        if (!mod) {
             m_terrainMods.erase(id);
         }
-    } else if (mod) {
-        m_terrainMods.emplace(id, std::make_tuple(mod, mod->bbox()));
     }
 
     if (mod) {
-        int lx=I_ROUND(std::floor((mod->bbox().lowCorner()[0] - 1.f) / m_spacing));
-        int lz=I_ROUND(std::floor((mod->bbox().lowCorner()[1] - 1.f) / m_spacing));
-        int hx=I_ROUND(std::ceil((mod->bbox().highCorner()[0] + 1.f) / m_spacing));
-        int hz=I_ROUND(std::ceil((mod->bbox().highCorner()[1] + 1.f) / m_spacing));
+		auto rect = mod->bbox();
+        int lx=I_ROUND(std::floor((rect.lowCorner()[0] - 1.f) / m_spacing));
+        int lz=I_ROUND(std::floor((rect.lowCorner()[1] - 1.f) / m_spacing));
+        int hx=I_ROUND(std::ceil((rect.highCorner()[0] + 1.f) / m_spacing));
+        int hz=I_ROUND(std::ceil((rect.highCorner()[1] + 1.f) / m_spacing));
 
         for (int i=lx;i<hx;++i) {
             for (int j=lz;j<hz;++j) {
@@ -301,23 +297,27 @@ Terrain::Rect Terrain::updateMod(long id, const TerrainMod * mod)
                 }
             } // of y loop
         } // of x loop
-    }
+
+		for (auto& segment : added) {
+			if (mod->checkIntersects(*segment)) {
+				segment->updateMod(id, mod.get());
+			}
+		}
+		for (auto& segment : updated) {
+			if (mod->checkIntersects(*segment)) {
+				segment->updateMod(id, mod.get());
+			} else {
+				segment->updateMod(id, nullptr);
+			}
+		}
+
+		m_terrainMods[id] = TerrainModEntry{std::move(mod), rect};
+	}
 
     for (auto& segment : removed) {
         segment->updateMod(id, nullptr);
     }
-    for (auto& segment : added) {
-        if (mod->checkIntersects(*segment)) {
-            segment->updateMod(id, mod);
-        }
-    }
-    for (auto& segment : updated) {
-        if (mod->checkIntersects(*segment)) {
-            segment->updateMod(id, mod);
-        } else {
-            segment->updateMod(id, nullptr);
-        }
-    }
+
 
     return old_box;
 }
@@ -331,7 +331,7 @@ const TerrainMod* Terrain::getMod(long id) const
 {
     auto I = m_terrainMods.find(id);
     if (I != m_terrainMods.end()) {
-        return std::get<0>(I->second);
+        return I->second.terrainMod.get();
     }
     return nullptr;
 }

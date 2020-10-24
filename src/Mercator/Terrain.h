@@ -73,6 +73,18 @@ class Terrain {
     Segmentstore m_segments;
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
+
+    struct TerrainModEntry {
+    	/**
+    	 * The terrain mod.
+    	 */
+    	std::unique_ptr<TerrainMod> terrainMod;
+
+    	/**
+    	 * The area it last affected.
+    	 */
+		Rect rect;
+    };
   
     /**
      * \brief Stores all terrain mods, identified using a long identifier.
@@ -81,7 +93,7 @@ class Terrain {
      * mechanism for terrain mods, so that they are applied in the same order to
      * Segments.
      */
-    std::unordered_map<long, std::tuple<const TerrainMod *, Rect>> m_terrainMods;
+    std::map<long, TerrainModEntry> m_terrainMods;
 
     /**
      * Stores all terrain areas, along with a Rect of the last area they affected.
@@ -273,7 +285,7 @@ class Terrain {
     /// @param id The id of the mod, which is also used for ordering.
     /// @param mod The terrain mod, or null if the entry for the id should be removed.
     /// @return The area affected by the terrain mod before it was updated.
-    Rect updateMod(long id, const TerrainMod * mod);
+    Rect updateMod(long id, std::unique_ptr<TerrainMod> mod);
     
     /// \brief Checks if a mod with the supplied id has been registered with the terrain.
     ///
