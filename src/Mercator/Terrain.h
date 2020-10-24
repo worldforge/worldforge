@@ -95,13 +95,22 @@ class Terrain {
      */
     std::map<long, TerrainModEntry> m_terrainMods;
 
+	struct TerrainAreaEntry {
+		/**
+		 * The terrain area.
+		 */
+		std::unique_ptr<Area> terrainArea;
+
+		/**
+		 * The area it last affected.
+		 */
+		Rect rect;
+	};
+
     /**
-     * Stores all terrain areas, along with a Rect of the last area they affected.
-     *
-     * The Rect is used to keep track of what area was previously affected
-     * whenever the areas are changed.
+     * Stores all terrain areas, identified using a long identifier.
      */
-    std::unordered_map<const Area *, Rect> m_terrainAreas;
+    std::map<long, TerrainAreaEntry> m_terrainAreas;
 
 	/// \brief Add the required Surface objects to a Segment.
 	///
@@ -295,31 +304,14 @@ class Terrain {
 
     const TerrainMod* getMod(long id) const;
 
-	/// \brief Add an area modifier to the terrain.
-	///
-	/// Add a new Area object to the terrain, which defines a modification
-	/// to the surface.
-    void addArea(const Area* a);
-
     /// \brief Updates the terrain affected by an area.
     ///
-    /// Call this when an already added terrain area has changed.
-    ///
-    /// @param a The terrain area which has changed.
+    /// @param a The terrain area which has changed, or null if the entry should be removed.
     /// @return The area affected by the terrain area before it was updated.
-    Rect updateArea(const Area* a);
+    Rect updateArea(long id, std::unique_ptr<Area> a);
 
-	/// \brief Remove an area modifier from the terrain.
-	///
-	/// Remove an existing Area object from the terrain, and mark all the
-	/// affected terrain surfaces as invalid.
-    void removeArea(const Area* a);
 
-    /// \brief Checks if the supplied area has been registered with the terrain.
-    ///
-    /// @param a The area to check for.
-    /// @return True if the area is added to the terrain.
-    bool hasArea(const Area* a) const;
+    const Area* getArea(long id) const;
 
     /**
      * \brief Converts the supplied position into a segment index.

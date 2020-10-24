@@ -20,7 +20,8 @@ typedef WFMath::Point<2> Point2;
 
 void testAreaShader()
 {
-    Mercator::Area* a1 = new Mercator::Area(1, false);
+    auto a1 = std::make_unique<Mercator::Area>(1, false);
+    auto a1_ptr = a1.get();
     
     WFMath::Polygon<2> p;
     p.addCorner(p.numCorners(), Point2(3, 4));
@@ -44,10 +45,10 @@ void testAreaShader()
     terrain.setBasePoint(1, 0, 2);
     terrain.setBasePoint(1, 1, 11);
     
-    terrain.addArea(a1);
+    terrain.updateArea(1, std::move(a1));
     
     Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_ptr->checkIntersects(*seg));
     
     seg->populateSurfaces();
 }

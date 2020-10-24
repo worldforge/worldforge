@@ -223,22 +223,22 @@ void AreaShader::shade(Surface &s) const
     unsigned int buflen = size * size;
     for (unsigned int i = 0; i < buflen; ++i) data[i] = 0;
 
-    const Segment::Areastore& areas(s.m_segment.getAreas());
+    auto& areas = s.m_segment.getAreas();
     auto it = areas.lower_bound(m_layer);
     auto itend = areas.upper_bound(m_layer);
     
     for (;it != itend; ++it) {
         // apply to surface in turn
-        if (it->second->isHole()) {
-            // shadeHole
+        if (it->second.area->isHole()) {
+            //TODO: shadeHole
         } else
-            shadeArea(s, it->second);
+            shadeArea(s, *it->second.area);
     } // of areas in layer
 }
 
-void AreaShader::shadeArea(Surface& s, const Area* ar) const
+void AreaShader::shadeArea(Surface& s, const Area& ar) const
 {
-    WFMath::Polygon<2> clipped = ar->clipToSegment(s.m_segment);
+    WFMath::Polygon<2> clipped = ar.clipToSegment(s.m_segment);
     assert(clipped.isValid());
     
     if (clipped.numCorners() == 0) return;

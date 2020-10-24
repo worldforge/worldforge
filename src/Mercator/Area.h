@@ -34,16 +34,8 @@ public:
     /// @param hole flag indicating whether this is a hole.
     Area(int layer, bool hole);
     
-    /// \brief Set the layer number and flag indicating whether this is a hole.
-    ///
-    /// @param layer layer number.
-    /// @param hole flag indicating whether this is a hole.
-    void setLayer(int layer, bool hole);
-
     /// Set the geometric shape of this area.
     void setShape(const WFMath::Polygon<2>& p);
-
-    void setShader(const Shader * shader) const;
 
     /// Determine if a point is contained by the shape of this area.
     bool contains(WFMath::CoordType x, WFMath::CoordType z) const;
@@ -66,15 +58,10 @@ public:
         return m_shape;
     }
 
-    const Shader * getShader() const
-    {
-        return m_shader;
-    }
-
     /**
     Test if a segment intersects this area
     */
-    bool checkIntersects(const Segment& s) const;
+    bool checkIntersects(const Segment& s) const override;
 
     /// \brief Clip the shape of this area to a given segment.
     ///
@@ -92,8 +79,6 @@ private:
     bool m_hole;
     /// The geometric shape.
     WFMath::Polygon<2> m_shape;
-    /// Shader that shades this area
-    mutable const Shader * m_shader;
 };
 
 }

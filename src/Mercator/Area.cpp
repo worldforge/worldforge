@@ -31,13 +31,12 @@ static bool isZero(CoordType d)
 #endif
 
 /// \brief Helper to clip points to a given range.
-class TopClip
+struct TopClip
 {
-public:
     /// Constructor
     ///
     /// @param t top of y range
-    TopClip(CoordType t) : topZ(t) { }
+    explicit TopClip(CoordType t) : topZ(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -66,19 +65,17 @@ public:
         CoordType t = (topZ - u.y()) / dy;
         return Point2(u.x() + t * dx, topZ);
     }
-private:
     /// \brief Top of z range.
     CoordType topZ;
 };
 
 /// \brief Helper to clip points to a given range.
-class BottomClip
+struct BottomClip
 {
-public:
     /// Constructor
     ///
     /// @param t bottom of y range
-    BottomClip(CoordType t) : bottomZ(t) { }
+    explicit BottomClip(CoordType t) : bottomZ(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -103,19 +100,17 @@ public:
         CoordType t = (u.y() - bottomZ) / -dy;
         return Point2(u.x() + t * dx, bottomZ);
     }
-private:
     /// \brief Bottom of z range.
     CoordType bottomZ;
 };
 
 /// \brief Helper to clip points to a given range.
-class LeftClip
+struct LeftClip
 {
-public:
     /// Constructor
     ///
     /// @param t left of x range.
-    LeftClip(CoordType t) : leftX(t) { }
+    explicit LeftClip(CoordType t) : leftX(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -142,19 +137,17 @@ public:
         CoordType t = (leftX - u.x()) / dx;
         return Point2(leftX, u.y() + t * dy);
     }
-private:
     /// \brief Left of x range.
     CoordType leftX;
 };
 
 /// \brief Helper to clip points to a given range.
-class RightClip
+struct RightClip
 {
-public:
     /// Constructor
     ///
     /// @param t right of x range.
-    RightClip(CoordType t) : rightX(t) { }
+    explicit RightClip(CoordType t) : rightX(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -181,14 +174,13 @@ public:
         CoordType t = (u.x() - rightX) / -dx;
         return Point2(rightX, u.y() + t * dy);
     }
-private:
     /// \brief Right of x range.
     CoordType rightX;
 };
 
 // FIXME Why pass Clip by value?
 template <class Clip>
-WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Clip clipper)
+WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, const Clip& clipper)
 {
     WFMath::Polygon<2> outpoly;
     
@@ -231,8 +223,7 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
 
 Area::Area(int layer, bool hole) :
     m_layer(layer),
-    m_hole(hole),
-    m_shader(nullptr)
+    m_hole(hole)
 {
 }
 
@@ -241,11 +232,6 @@ void Area::setShape(const WFMath::Polygon<2>& p)
     assert(p.isValid());
     m_shape = p;
     m_box = p.boundingBox();
-}
-
-void Area::setShader(const Shader * shader) const
-{
-    m_shader = shader;
 }
 
 bool Area::contains(CoordType x, CoordType z) const

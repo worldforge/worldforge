@@ -26,7 +26,7 @@ public:
     bool checkIntersect(const Segment &) const override;
 private:
     /// helper to shader a single area into the surface
-    void shadeArea(Surface& s, const Area* ar) const;
+    void shadeArea(Surface& s, const Area& ar) const;
     
     /// The layer number.
     int m_layer;

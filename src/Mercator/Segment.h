@@ -26,6 +26,7 @@ class Terrain;
 class Surface;
 class TerrainMod;
 class Area;
+class Shader;
 
 // This class will need to be reference counted if we want the code to
 // be able to hold onto it, as currently they get deleted internally
@@ -38,8 +39,13 @@ class Segment {
     /// STL map of pointers to Surface objects.
     typedef std::map<int, std::unique_ptr<Surface>> Surfacestore;
 
+    struct AreaEntry {
+    	long id;
+    	const Area* area;
+    };
+
     /// STL multimap of pointers to Area objects affecting this segment.
-    typedef std::multimap<int, const Area *> Areastore;
+    typedef std::multimap<int, AreaEntry> Areastore;
   private:
     /// Distance between segments
     const int m_res;
@@ -61,6 +67,11 @@ class Segment {
     
     /// Areas which intersect this segment
     Areastore m_areas;
+
+    /**
+     * A lookup table into m_areas used when areas are removed.
+     */
+    std::map<long, std::multimap<int, AreaEntry>::iterator> m_areaLookup;
 
     /// \brief Map of TerrainMod objects that are applied to this Segment.
     std::map<long, const TerrainMod*> m_terrainMods;
@@ -193,9 +204,8 @@ class Segment {
     const std::map<long, const TerrainMod*>& getMods() const
     { return m_terrainMods; }
     
-    int addArea(const Area* a);
-    int updateArea(const Area* a);
-    int removeArea(const Area* a);
+	void updateArea(long id, const Area* area, const Shader* shader);
+
   private:
 
     void applyMod(const TerrainMod *t);

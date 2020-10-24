@@ -34,7 +34,8 @@ void writePGMForSurface(const std::string& fileName, int sz, Mercator::Surface* 
 
 void testAreaShader()
 {
-    Mercator::Area* a1 = new Mercator::Area(1, false);
+    auto a1 = std::make_unique<Mercator::Area>(1, false);
+    auto a1_ptr= a1.get();
     
     WFMath::Polygon<2> p;
     p.addCorner(p.numCorners(), Point2(3, 4));
@@ -48,7 +49,7 @@ void testAreaShader()
     
     a1->setShape(p);
     
-    Mercator::Area* a2 = new Mercator::Area(1, false);
+    auto a2 = std::make_unique<Mercator::Area>(1, false);
     
     WFMath::Polygon<2> p2;
     p2.addCorner(p2.numCorners(), Point2(25, 18));
@@ -76,11 +77,11 @@ void testAreaShader()
     terrain.setBasePoint(2, 0, 2);
     terrain.setBasePoint(2, 1, 11);
     
-    terrain.addArea(a1);
+    terrain.updateArea(1, std::move(a1));
    // terrain.addArea(a2);
     
     Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_ptr->checkIntersects(*seg));
     
     seg->populateSurfaces();
     writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[1].get());
@@ -95,7 +96,7 @@ static const unsigned int seg_size = 8;
     
 void testCheckIntersect()
 {
-    Mercator::Area* a1 = new Mercator::Area(1, false);
+    Mercator::Area a1(1, false);
     
     WFMath::Polygon<2> p;
     p.addCorner(p.numCorners(), Point2(1, 1));
@@ -103,23 +104,23 @@ void testCheckIntersect()
     p.addCorner(p.numCorners(), Point2(6, 6));
     p.addCorner(p.numCorners(), Point2(1, 6));
     
-    a1->setShape(p);
+    a1.setShape(p);
     
     Mercator::Segment * seg1 = new Mercator::Segment(0,0,seg_size);
 
-    bool success = a1->checkIntersects(*seg1);
+    bool success = a1.checkIntersects(*seg1);
     assert(success);
 
     Mercator::Segment * seg2 = new Mercator::Segment(1 * seg_size,0,seg_size);
 
-    success = a1->checkIntersects(*seg2);
+    success = a1.checkIntersects(*seg2);
     assert(!success);
 }
 
 int main(int argc, char* argv[])
 {
-    Mercator::Area* a1 = new Mercator::Area(1, false);
-    
+    auto a1 = std::make_unique<Mercator::Area>(1, false);
+    auto a1_ptr = a1.get();
     WFMath::Polygon<2> p;
     p.addCorner(p.numCorners(), Point2(3, 4));
     p.addCorner(p.numCorners(), Point2(10, 10));
@@ -159,102 +160,104 @@ int main(int argc, char* argv[])
     terrain.setBasePoint(3, 0, 7);
     terrain.setBasePoint(3, 1, 9);
     
-    terrain.addArea(a1);
+    terrain.updateArea(1, std::move(a1));
     
     Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_ptr->checkIntersects(*seg));
     
     seg = terrain.getSegmentAtIndex(1,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
-    assert(a1->checkIntersects(*seg) == false);
+    assert(a1_ptr->checkIntersects(*seg) == false);
 
-    WFMath::Polygon<2> clipped = a1->clipToSegment(*seg);
+    WFMath::Polygon<2> clipped = a1_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
     
     seg = terrain.getSegmentAtIndex(-1,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_ptr->checkIntersects(*seg));
     
-    clipped = a1->clipToSegment(*seg);
+    clipped = a1_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
     
     seg = terrain.getSegmentAtIndex(0,1);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_ptr->checkIntersects(*seg));
     
-    clipped = a1->clipToSegment(*seg);
+    clipped = a1_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
 
     seg = terrain.getSegmentAtIndex(2,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
-    assert(a1->checkIntersects(*seg) == false);
+    assert(a1_ptr->checkIntersects(*seg) == false);
 
     p.clear();
     p.addCorner(p.numCorners(), Point2(3 + seg_size, 4));
     p.addCorner(p.numCorners(), Point2(10 + seg_size, 10));
     p.addCorner(p.numCorners(), Point2(-1 + seg_size, 18));
     p.addCorner(p.numCorners(), Point2(-8 + seg_size, 11));
-    
-    a1->setShape(p);
 
-    terrain.updateArea(a1);
+	auto a1_2 = std::make_unique<Mercator::Area>(1, false);
+	auto a1_2_ptr = a1_2.get();
+	a1_2->setShape(p);
+
+    terrain.updateArea(1, std::move(a1_2));
 
     seg = terrain.getSegmentAtIndex(0,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_2_ptr->checkIntersects(*seg));
     
     seg = terrain.getSegmentAtIndex(1,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_2_ptr->checkIntersects(*seg));
 
-    clipped = a1->clipToSegment(*seg);
+    clipped = a1_2_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
     
     seg = terrain.getSegmentAtIndex(-1,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
-    assert(a1->checkIntersects(*seg) == false);
+    assert(a1_2_ptr->checkIntersects(*seg) == false);
     
     seg = terrain.getSegmentAtIndex(0,1);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(a1_2_ptr->checkIntersects(*seg));
     
-    clipped = a1->clipToSegment(*seg);
+    clipped = a1_2_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
 
     seg = terrain.getSegmentAtIndex(2,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
-    assert(a1->checkIntersects(*seg) == false);
+    assert(a1_2_ptr->checkIntersects(*seg) == false);
 
-    clipped = a1->clipToSegment(*seg);
+    clipped = a1_2_ptr->clipToSegment(*seg);
     assert(clipped.isValid());
 
-    terrain.removeArea(a1);
+    terrain.updateArea(1, nullptr);
 
     seg = terrain.getSegmentAtIndex(0,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
 
     seg = terrain.getSegmentAtIndex(1,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
 
     seg = terrain.getSegmentAtIndex(-1,0);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
 
     seg = terrain.getSegmentAtIndex(0,1);
-    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().empty());
     assert(seg->getAreas().count(1) == 0);
 
     testAreaShader();

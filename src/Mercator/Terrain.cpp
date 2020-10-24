@@ -241,7 +241,7 @@ void Terrain::processSegments(const WFMath::AxisBox<2>& area,
 Terrain::Rect Terrain::updateMod(long id, std::unique_ptr<TerrainMod> mod)
 {
     std::set<Segment*> removed, added, updated;
-
+	std::unique_ptr<TerrainMod> old_mod;
     auto I = m_terrainMods.find(id);
 
     Rect old_box;
@@ -249,7 +249,8 @@ Terrain::Rect Terrain::updateMod(long id, std::unique_ptr<TerrainMod> mod)
         auto& entry = I->second;
 
         old_box = entry.rect;
-
+        //Make sure old mod survives within this method.
+		old_mod = std::move(entry.terrainMod);
 
 
         int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
@@ -336,144 +337,108 @@ const TerrainMod* Terrain::getMod(long id) const
     return nullptr;
 }
 
-void Terrain::addArea(const Area * area)
+const Area* Terrain::getArea(long id) const
 {
-    int layer = area->getLayer();
-
-    Shaderstore::const_iterator I = m_shaders.find(layer);
-    if (I != m_shaders.end()) {
-        area->setShader(I->second);
-    }
-
-    //work out which segments are overlapped by this effector
-    //note that the bbox is expanded by one grid unit because
-    //segments share edges. this ensures a mod along an edge
-    //will affect both segments.
-
-    m_terrainAreas.emplace(area, area->bbox());
-
-    int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
-    int lz=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
-    int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
-    int hz=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=lz;j<hz;++j) {
-            Segment *s=getSegmentAtIndex(i,j);
-            if (s) {
-                if (area->checkIntersects(*s)) {
-                    s->addArea(area);
-                }
-            }
-        } // of y loop
-    } // of x loop
-}
-
-Terrain::Rect Terrain::updateArea(const Area * area)
-{
-    std::set<Segment*> removed, added, updated;
-
-     auto I = m_terrainAreas.find(area);
-
-     Rect old_box;
-     if (I != m_terrainAreas.end()) {
-
-         old_box = I->second;
-
-         int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
-         int lz=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
-         int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
-         int hz=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
-
-         for (int i=lx;i<hx;++i) {
-            for (int j=lz;j<hz;++j) {
-                Segment *s=getSegmentAtIndex(i,j);
-                if (!s) {
-                    continue;
-                }
-
-                removed.insert(s);
-
-            } // of y loop
-         } // of x loop
-
-         I->second = area->bbox();
-
-     } else {
-         m_terrainAreas.emplace(area, area->bbox());
-     }
-
-
-
-     int lx=I_ROUND(std::floor((area->bbox().lowCorner()[0] - 1.f) / m_spacing));
-     int lz=I_ROUND(std::floor((area->bbox().lowCorner()[1] - 1.f) / m_spacing));
-     int hx=I_ROUND(std::ceil((area->bbox().highCorner()[0] + 1.f) / m_spacing));
-     int hz=I_ROUND(std::ceil((area->bbox().highCorner()[1] + 1.f) / m_spacing));
-
-     for (int i=lx;i<hx;++i) {
-         for (int j=lz;j<hz;++j) {
-             Segment *s=getSegmentAtIndex(i,j);
-             if (!s) {
-                 continue;
-             }
-
-             auto J = removed.find(s);
-             if (J == removed.end()) {
-                 added.insert(s);
-             } else {
-                 updated.insert(s);
-                 removed.erase(J);
-             }
-         } // of y loop
-     } // of x loop
-
-     for (auto& segment : removed) {
-         segment->removeArea(area);
-     }
-     for (auto& segment : added) {
-         if (area->checkIntersects(*segment)) {
-             segment->addArea(area);
-         }
-     }
-     for (auto& segment : updated) {
-         if (area->checkIntersects(*segment)) {
-             if (segment->updateArea(area) != 0) {
-                 segment->addArea(area);
-             }
-         } else {
-             segment->removeArea(area);
-         }
-     }
-
-     return old_box;
+	auto I = m_terrainAreas.find(id);
+	if (I != m_terrainAreas.end()) {
+		return I->second.terrainArea.get();
+	}
+	return nullptr;
 }
 
 
-void Terrain::removeArea(const Area * area)
+Terrain::Rect Terrain::updateArea(long id, std::unique_ptr<Area> area)
 {
-    m_terrainAreas.erase(area);
+	std::set<Segment*> removed, added, updated;
+	std::unique_ptr<Area> old_area;
 
-    const Rect & eff_box = area->bbox();
+	auto I = m_terrainAreas.find(id);
 
-    int lx=I_ROUND(std::floor((eff_box.lowCorner()[0] - 1.f) / m_spacing));
-    int lz=I_ROUND(std::floor((eff_box.lowCorner()[1] - 1.f) / m_spacing));
-    int hx=I_ROUND(std::ceil((eff_box.highCorner()[0] + 1.f) / m_spacing));
-    int hz=I_ROUND(std::ceil((eff_box.highCorner()[1] + 1.f) / m_spacing));
+	Rect old_box;
+	if (I != m_terrainAreas.end()) {
+		auto& entry = I->second;
 
-    for (int i=lx;i<hx;++i) {
-        for (int j=lz;j<hz;++j) {
-            Segment *s=getSegmentAtIndex(i,j);
-            if (s) {
-                s->removeArea(area);
-            }
-        } // of y loop
-    } // of x loop
+		old_box = entry.rect;
+		//Make sure old area survives within this method.
+		old_area = std::move(entry.terrainArea);
+
+
+		int lx=I_ROUND(std::floor((old_box.lowCorner()[0] - 1.f) / m_spacing));
+		int lz=I_ROUND(std::floor((old_box.lowCorner()[1] - 1.f) / m_spacing));
+		int hx=I_ROUND(std::ceil((old_box.highCorner()[0] + 1.f) / m_spacing));
+		int hz=I_ROUND(std::ceil((old_box.highCorner()[1] + 1.f) / m_spacing));
+
+		for (int i=lx;i<hx;++i) {
+			for (int j=lz;j<hz;++j) {
+				Segment *s=getSegmentAtIndex(i,j);
+				if (!s) {
+					continue;
+				}
+
+				removed.insert(s);
+
+			} // of y loop
+		} // of x loop
+
+		if (!area) {
+			m_terrainAreas.erase(id);
+		}
+	}
+
+	if (area) {
+		auto rect = area->bbox();
+		int lx=I_ROUND(std::floor((rect.lowCorner()[0] - 1.f) / m_spacing));
+		int lz=I_ROUND(std::floor((rect.lowCorner()[1] - 1.f) / m_spacing));
+		int hx=I_ROUND(std::ceil((rect.highCorner()[0] + 1.f) / m_spacing));
+		int hz=I_ROUND(std::ceil((rect.highCorner()[1] + 1.f) / m_spacing));
+
+		for (int i=lx;i<hx;++i) {
+			for (int j=lz;j<hz;++j) {
+				Segment *s=getSegmentAtIndex(i,j);
+				if (!s) {
+					continue;
+				}
+
+				auto J = removed.find(s);
+				if (J == removed.end()) {
+					added.insert(s);
+				} else {
+					updated.insert(s);
+					removed.erase(J);
+				}
+			} // of y loop
+		} // of x loop
+
+		const Shader* shader = nullptr;
+		auto shaderI = m_shaders.find(area->getLayer());
+		if (shaderI != m_shaders.end()) {
+			shader = shaderI->second;
+		}
+
+		for (auto& segment : added) {
+			if (area->checkIntersects(*segment)) {
+				segment->updateArea(id, area.get(), shader);
+			}
+		}
+		for (auto& segment : updated) {
+			if (area->checkIntersects(*segment)) {
+				segment->updateArea(id, area.get(), shader);
+			} else {
+				segment->updateArea(id, nullptr, nullptr);
+			}
+		}
+
+		m_terrainAreas[id] = TerrainAreaEntry{std::move(area), rect};
+	}
+
+	for (auto& segment : removed) {
+		segment->updateArea(id, nullptr, nullptr);
+	}
+
+
+	return old_box;
 }
 
-bool Terrain::hasArea(const Area* a) const
-{
-    return m_terrainAreas.find(a) != m_terrainAreas.end();
-}
 
 
 } // namespace Mercator
