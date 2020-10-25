@@ -69,11 +69,9 @@ template<> Segment<3> Segment<3>::toLocalCoords(const Point<3>& origin,
 template class Segment<2>;
 template class Segment<3>;
 
-static_assert(std::is_pod<Segment<2>>::value, "Segment should be POD.");
 static_assert(std::is_standard_layout<Segment<2>>::value, "Segment should be standard layout.");
 static_assert(std::is_trivially_copyable<Segment<2>>::value, "Segment should be trivially copyable.");
 
-static_assert(std::is_pod<Segment<3>>::value, "Segment should be POD.");
 static_assert(std::is_standard_layout<Segment<3>>::value, "Segment should be standard layout.");
 static_assert(std::is_trivially_copyable<Segment<3>>::value, "Segment should be trivially copyable.");
 

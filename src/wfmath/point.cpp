@@ -125,11 +125,9 @@ Point<3> Point<3>::toParentCoords(const Point<3>& origin,
 template class Point<3>;
 template class Point<2>;
 
-static_assert(std::is_pod<Point<3>>::value, "Point should be POD.");
 static_assert(std::is_standard_layout<Point<3>>::value, "Point should be standard layout.");
 static_assert(std::is_trivially_copyable<Point<3>>::value, "Point should be trivially copyable.");
 
-static_assert(std::is_pod<Point<2>>::value, "Point should be POD.");
 static_assert(std::is_standard_layout<Point<2>>::value, "Point should be standard layout.");
 static_assert(std::is_trivially_copyable<Point<2>>::value, "Point should be trivially copyable.");
 

@@ -122,7 +122,7 @@ class Vector {
  friend class ZeroPrimitive<Vector<dim> >;
  public:
   /// Construct an uninitialized vector
-  Vector() = default;
+  Vector() : m_elem{}, m_valid(false) { }
   /// Construct a copy of a vector
   Vector(const Vector&) = default;
   /// Construct a vector from an object passed by Atlas

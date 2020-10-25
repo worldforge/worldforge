@@ -42,7 +42,6 @@
 
 namespace WFMath {
 
-static_assert(std::is_pod<Quaternion>::value, "Quaternion should be POD.");
 static_assert(std::is_standard_layout<Quaternion>::value, "Quaternion should be standard layout.");
 static_assert(std::is_trivially_copyable<Quaternion>::value, "Quaternion should be trivially copyable.");
 

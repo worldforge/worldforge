@@ -67,11 +67,9 @@ template<> RotBox<3> RotBox<3>::toLocalCoords(const Point<3>& origin,
 template class RotBox<2>;
 template class RotBox<3>;
 
-static_assert(std::is_pod<RotBox<2>>::value, "RotBox should be POD.");
 static_assert(std::is_standard_layout<RotBox<2>>::value, "RotBox should be standard layout.");
 static_assert(std::is_trivially_copyable<RotBox<2>>::value, "RotBox should be trivially copyable.");
 
-static_assert(std::is_pod<RotBox<3>>::value, "RotBox should be POD.");
 static_assert(std::is_standard_layout<RotBox<3>>::value, "RotBox should be standard layout.");
 static_assert(std::is_trivially_copyable<RotBox<3>>::value, "RotBox should be trivially copyable.");
 

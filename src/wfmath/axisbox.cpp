@@ -49,11 +49,9 @@ template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<AxisBox<2>, st
 template AxisBox<3> BoundingBox<3, std::vector>(const std::vector<Point<3>, std::allocator<Point<3> > >&);
 template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<Point<2>, std::allocator<Point<2> > >&);
 
-static_assert(std::is_pod<AxisBox<3>>::value, "AxisBox should be POD.");
 static_assert(std::is_standard_layout<AxisBox<3>>::value, "AxisBox should be standard layout.");
 static_assert(std::is_trivially_copyable<AxisBox<3>>::value, "AxisBox should be trivially copyable.");
 
-static_assert(std::is_pod<AxisBox<2>>::value, "AxisBox should be POD.");
 static_assert(std::is_standard_layout<AxisBox<2>>::value, "AxisBox should be standard layout.");
 static_assert(std::is_trivially_copyable<AxisBox<2>>::value, "AxisBox should be trivially copyable.");
 

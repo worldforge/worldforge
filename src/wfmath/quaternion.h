@@ -45,11 +45,10 @@ class Quaternion
 
   class Identity {};
   ///
-  Quaternion(const Identity &) : m_w(1), m_vec(), m_valid(true), m_age(0) {
-    m_vec.zero();
+  Quaternion(const Identity &) : m_w(1), m_vec(WFMath::Vector<3>::ZERO()), m_valid(true), m_age(0) {
   }
   /// Construct a Quaternion
-  Quaternion () = default;
+  Quaternion() :  m_w(0), m_vec{}, m_valid(false), m_age(0){}
   /// Construct a Quaternion from (w, x, y, z) components
   /**
    * This normalizes the components so the sum of their squares is one.

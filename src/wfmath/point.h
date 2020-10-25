@@ -97,7 +97,7 @@ class Point
  friend class ZeroPrimitive<Point<dim> >;
  public:
   /// Construct an uninitialized point
-  Point () = default;
+  Point () : m_elem{}, m_valid(false) {};
   /// Construct a copy of a point
   Point (const Point&) = default;
   /// Construct a point from an object passed by Atlas

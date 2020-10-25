@@ -84,11 +84,9 @@ template Ball<3> Point<3>::boundingSphereSloppy() const;
 template class Ball<2>;
 template class Ball<3>;
 
-static_assert(std::is_pod<Ball<3>>::value, "Ball should be POD.");
 static_assert(std::is_standard_layout<Ball<3>>::value, "Ball should be standard layout.");
 static_assert(std::is_trivially_copyable<Ball<3>>::value, "Ball should be trivially copyable.");
 
-static_assert(std::is_pod<Ball<2>>::value, "Ball should be POD.");
 static_assert(std::is_standard_layout<Ball<2>>::value, "Ball should be standard layout.");
 static_assert(std::is_trivially_copyable<Ball<2>>::value, "Ball should be trivially copyable.");
 }

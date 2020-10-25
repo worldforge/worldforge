@@ -90,6 +90,9 @@ void test_point(const Point<dim>& p)
 
 int main()
 {
+	Point<2> p{};
+	assert(!p.isValid());
+
   test_point(Point<2>(1, -1));
   test_point(Point<3>(1, -1, numeric_constants<CoordType>::sqrt2()));
 
