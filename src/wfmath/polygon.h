@@ -47,7 +47,7 @@ template<>
 class Polygon<2>
 {
  public:
-  Polygon() : m_points() {}
+  Polygon() = default;
   Polygon(const Polygon& p) = default;
   /// Construct a polygon from an object passed by Atlas
   explicit Polygon(const AtlasInType& a) : m_points() {fromAtlas(a);}
@@ -213,11 +213,11 @@ template<int dim>
 class Poly2Orient
 {
 public:
-  Poly2Orient() : m_origin() {}
+  Poly2Orient() = default;
   Poly2Orient(const Poly2Orient& p) : m_origin() {operator=(p);}
   ~Poly2Orient() = default;
 
-  Poly2Orient& operator=(const Poly2Orient& p);
+  Poly2Orient& operator=(const Poly2Orient& p) = default;
 
   // Convert a point in the 2D polygon to a point in dim dimensional space
   Point<dim> convert(const Point<2>& p) const;

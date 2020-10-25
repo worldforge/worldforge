@@ -39,29 +39,6 @@
 namespace WFMath {
 
 template<int dim>
-inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
-	: m_flip(m.m_flip), m_valid(m.m_valid), m_age(1)
-{
-  for(int i = 0; i < dim; ++i)
-    for(int j = 0; j < dim; ++j)
-      m_elem[i][j] = m.m_elem[i][j];
-}
-
-template<int dim>
-inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
-{
-  for(int i = 0; i < dim; ++i)
-    for(int j = 0; j < dim; ++j)
-      m_elem[i][j] = m.m_elem[i][j];
-
-  m_flip = m.m_flip;
-  m_valid = m.m_valid;
-  m_age = m.m_age;
-
-  return *this;
-}
-
-template<int dim>
 inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, CoordType epsilon) const
 {
   // Since the sum of the squares of the elements in any row or column add

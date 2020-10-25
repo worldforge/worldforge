@@ -37,14 +37,6 @@
 namespace WFMath {
 
 template<int dim>
-inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
-{
-  for(int i = 0; i < dim; ++i) {
-    m_elem[i] = p.m_elem[i];
-  }
-}
-
-template<int dim>
 inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
 {
   for(int i = 0; i < dim; ++i) {
@@ -126,23 +118,6 @@ inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
     p.m_valid = p.m_valid && rhs.m_valid;
 
     return p;
-}
-
-template<int dim>
-inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
-{
-    // Compare pointer addresses
-    if (this == &rhs) {
-      return *this;
-    }
-
-    for(int i = 0; i < dim; ++i) {
-      m_elem[i] = rhs.m_elem[i];
-    }
-
-    m_valid = rhs.m_valid;
-
-    return *this;
 }
 
 template<int dim>

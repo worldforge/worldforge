@@ -87,14 +87,14 @@ template<int dim = 3>
 class RotMatrix {
  public:
   ///
-  RotMatrix() : m_flip(false), m_valid(false), m_age(0) {}
+  RotMatrix() = default;
   ///
-  RotMatrix(const RotMatrix& m);
+  RotMatrix(const RotMatrix& m) = default;
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
   friend std::istream& operator>> <dim>(std::istream& is, RotMatrix& m);
 
-  RotMatrix& operator=(const RotMatrix& m);
+  RotMatrix& operator=(const RotMatrix& m) = default;
   // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.
 

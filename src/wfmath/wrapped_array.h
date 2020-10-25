@@ -37,19 +37,14 @@ namespace WFMath { namespace _miniball {
    template <int d>
    class Wrapped_array {
        private:
-           double coord [d];
+           double coord [d]{};
    
        public:
            // default
-           Wrapped_array()
-           {}
+           Wrapped_array() = default;
    
            // copy from Wrapped_array
-           Wrapped_array (const Wrapped_array& p)
-           {
-               for (int i=0; i<d; ++i)
-                   coord[i] = p.coord[i];
-           }
+           Wrapped_array (const Wrapped_array& p) = default;
    
            // copy from double*
            Wrapped_array (const double* p)
@@ -59,12 +54,7 @@ namespace WFMath { namespace _miniball {
            }
    
            // assignment
-           Wrapped_array& operator = (const Wrapped_array& p)
-           {
-               for (int i=0; i<d; ++i)
-                   coord[i] = p.coord[i];
-               return *this;
-           }
+           Wrapped_array& operator = (const Wrapped_array& p) = default;
    
            // coordinate access
            double& operator [] (int i)

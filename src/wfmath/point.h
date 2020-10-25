@@ -97,9 +97,9 @@ class Point
  friend class ZeroPrimitive<Point<dim> >;
  public:
   /// Construct an uninitialized point
-  Point () : m_valid(false) {}
+  Point () = default;
   /// Construct a copy of a point
-  Point (const Point& p);
+  Point (const Point&) = default;
   /// Construct a point from an object passed by Atlas
   explicit Point (const AtlasInType& a);
   /// Construct a point from a vector.
@@ -118,7 +118,7 @@ class Point
   /// Set the point's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
 
-  Point& operator= (const Point& rhs);
+  Point& operator= (const Point& rhs) = default;
 
   bool isEqualTo(const Point &p, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}

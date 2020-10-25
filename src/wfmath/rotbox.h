@@ -47,7 +47,7 @@ class RotBox
 {
  public:
   /// construct an uninitialized box
-  RotBox() : m_corner0(), m_size(), m_orient() {}
+  RotBox() = default;
   /// construct a box from the given parameters
   /**
    * p gives corner 0 of the box, size gives the offset from corner
@@ -58,8 +58,7 @@ class RotBox
   const RotMatrix<dim>& orientation) : m_corner0(p), m_size(size),
     m_orient(orientation) {}
   /// construct a copy of the box
-  RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
-    m_orient(b.m_orient) {}
+  RotBox(const RotBox& b) = default;
   /// Construct a rotbox from an object passed by Atlas
   explicit RotBox(const AtlasInType& a);
 
@@ -73,7 +72,7 @@ class RotBox
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
   friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 
-  RotBox& operator=(const RotBox& s);
+  RotBox& operator=(const RotBox& s) = default;
 
   bool isEqualTo(const RotBox& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
@@ -187,16 +186,6 @@ class RotBox
   Vector<dim> m_size;
   RotMatrix<dim> m_orient;
 };
-
-template<int dim>
-inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& s)
-{
-  m_corner0 = s.m_corner0;
-  m_size = s.m_size;
-  m_orient = s.m_orient;
-
-  return *this;
-}
 
 template<int dim>
 inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, CoordType epsilon) const

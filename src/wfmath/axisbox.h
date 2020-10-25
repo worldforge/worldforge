@@ -64,13 +64,13 @@ class AxisBox
 {
  public:
   /// Construct an uninitialized box
-  AxisBox() : m_low(), m_high() {}
+  AxisBox() = default;
   /// Construct a box with opposite corners p1 and p2
   AxisBox(const Point<dim>& p1, const Point<dim>& p2, bool ordered = false) :
     m_low(), m_high()
     {setCorners(p1, p2, ordered);}
   /// Construct a copy of a box
-  AxisBox(const AxisBox& a) : m_low(a.m_low), m_high(a.m_high) {}
+  AxisBox(const AxisBox& a) = default;
   /// Construct a box from an object passed by Atlas
   explicit AxisBox(const AtlasInType& a);
 
@@ -82,8 +82,7 @@ class AxisBox
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
 
-  AxisBox& operator=(const AxisBox& a)
-  {m_low = a.m_low; m_high = a.m_high; return *this;}
+  AxisBox& operator=(const AxisBox& a) = default;
 
   bool isEqualTo(const AxisBox& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator==(const AxisBox& a) const	{return isEqualTo(a);}

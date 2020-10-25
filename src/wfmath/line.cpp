@@ -34,4 +34,7 @@ namespace WFMath {
 template class Line<2>;
 template class Line<3>;
 
+static_assert(std::is_standard_layout<Line<3>>::value, "Line should be standard layout.");
+
+static_assert(std::is_standard_layout<Line<2>>::value, "Line should be standard layout.");
 }

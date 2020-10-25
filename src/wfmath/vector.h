@@ -122,9 +122,9 @@ class Vector {
  friend class ZeroPrimitive<Vector<dim> >;
  public:
   /// Construct an uninitialized vector
-  Vector() : m_valid(false) {}
+  Vector() = default;
   /// Construct a copy of a vector
-  Vector(const Vector& v);
+  Vector(const Vector&) = default;
   /// Construct a vector from an object passed by Atlas
   explicit Vector(const AtlasInType& a);
   /// Construct a vector from a point.
@@ -143,7 +143,7 @@ class Vector {
   /// Set the vector's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
 
-  Vector& operator=(const Vector& v);
+  Vector& operator=(const Vector& v) = default;
 
   bool isEqualTo(const Vector& v, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
   bool operator==(const Vector& v) const {return isEqualTo(v);}

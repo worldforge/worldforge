@@ -49,7 +49,7 @@ class Quaternion
     m_vec.zero();
   }
   /// Construct a Quaternion
-  Quaternion () : m_w(0), m_vec(), m_valid(false), m_age(0) {}
+  Quaternion () = default;
   /// Construct a Quaternion from (w, x, y, z) components
   /**
    * This normalizes the components so the sum of their squares is one.

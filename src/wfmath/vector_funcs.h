@@ -43,14 +43,6 @@
 namespace WFMath {
 
 template<int dim>
-Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
-{
-  for(int i = 0; i < dim; ++i) {
-    m_elem[i] = v.m_elem[i];
-  }
-}
-
-template<int dim>
 Vector<dim>::Vector(const Point<dim>& p) : m_valid(p.isValid())
 {
   for(int i = 0; i < dim; ++i) {
@@ -63,19 +55,6 @@ const Vector<dim>& Vector<dim>::ZERO()
 {
   static ZeroPrimitive<Vector<dim> > zeroVector(dim);
   return zeroVector.getShape();
-}
-
-
-template<int dim>
-Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
-{
-  m_valid = v.m_valid;
-
-  for(int i = 0; i < dim; ++i) {
-    m_elem[i] = v.m_elem[i];
-  }
-
-  return *this;
 }
 
 template<int dim>

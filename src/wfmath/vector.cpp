@@ -184,7 +184,13 @@ void Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 }
 
 template class Vector<3>;
+static_assert(std::is_pod<Vector<3>>::value, "Vector should be POD.");
+static_assert(std::is_standard_layout<Vector<3>>::value, "Vector should be standard layout.");
+static_assert(std::is_trivially_copyable<Vector<3>>::value, "Vector should be trivially copyable.");
 template class Vector<2>;
+static_assert(std::is_pod<Vector<2>>::value, "Vector should be POD.");
+static_assert(std::is_standard_layout<Vector<2>>::value, "Vector should be standard layout.");
+static_assert(std::is_trivially_copyable<Vector<2>>::value, "Vector should be trivially copyable.");
 
 template Vector<3>& operator-=(Vector<3>& v1, const Vector<3>& v2);
 template Vector<2>& operator-=(Vector<2>& v1, const Vector<2>& v2);

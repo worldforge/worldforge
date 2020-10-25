@@ -40,17 +40,6 @@
 namespace WFMath {
 
 template<int dim>
-inline Poly2Orient<dim>& Poly2Orient<dim>::operator=(const Poly2Orient<dim>& a)
-{
-  m_origin = a.m_origin;
-
-  for(int i = 0; i < 2; ++i)
-    m_axes[i] = a.m_axes[i];
-
-  return *this;
-}
-
-template<int dim>
 inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, CoordType epsilon) const
 {
   // The same polygon can be expressed in different ways in the interal

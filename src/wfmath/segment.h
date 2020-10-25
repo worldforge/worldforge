@@ -46,19 +46,18 @@ class Segment
 {
  public:
   /// construct an uninitialized segment
-  Segment() :m_p1(), m_p2() {}
+  Segment() = default;
   /// construct a segment with endpoints p1 and p2
   Segment(const Point<dim>& p1, const Point<dim>& p2) : m_p1(p1), m_p2(p2) {}
   /// construct a copy of a segment
-  Segment(const Segment& s) : m_p1(s.m_p1), m_p2(s.m_p2) {}
+  Segment(const Segment& s) = default;
 
-  ~Segment() {}
+  ~Segment() = default;
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
   friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
 
-  Segment& operator=(const Segment& s)
-	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
+  Segment& operator=(const Segment& s) = default;
 
   bool isEqualTo(const Segment& s, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 

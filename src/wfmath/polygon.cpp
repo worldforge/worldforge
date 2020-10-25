@@ -184,4 +184,6 @@ Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
 template class Polygon<3>;
 template class Poly2Orient<3>;
 
+static_assert(std::is_standard_layout<Polygon<3>>::value, "Polygon should be standard layout.");
+static_assert(std::is_standard_layout<Polygon<2>>::value, "Polygon should be standard layout.");
 }

@@ -61,12 +61,12 @@ class Ball
 {
  public:
   /// construct an uninitialized ball
-  Ball() : m_center(), m_radius(0.f) {}
+  Ball() = default;
   /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
   : m_center(center), m_radius(radius) { if (radius < 0) m_center.setValid(false); }
   /// construct a copy of a ball
-  Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
+  Ball(const Ball& b) = default;
   /// Construct a ball from an object passed by Atlas
   explicit Ball(const AtlasInType& a);
 
@@ -80,8 +80,7 @@ class Ball
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
 
-  Ball& operator=(const Ball& b)
-  {m_radius = b.m_radius; m_center = b.m_center; return *this;}
+  Ball& operator=(const Ball& b) = default;
 
   bool isEqualTo(const Ball& b, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 

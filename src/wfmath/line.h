@@ -43,13 +43,13 @@ class Line
 {
  public:
   ///
-  Line() : m_points() {}
+  Line() = default;
   ///
-  Line(const Line<dim>& l) : m_points(l.m_points) {}
+  Line(const Line<dim>& l) = default;
   ///
   explicit Line(const AtlasInType& a);
   ///
-  ~Line() {}
+  ~Line() = default;
 
   /// Create an Atlas object from the line
   AtlasOutType toAtlas() const;
@@ -57,7 +57,7 @@ class Line
   void fromAtlas(const AtlasInType& a);
 
   ///
-  Line& operator=(const Line& a);
+  Line& operator=(const Line& a) = default;
 
   /// generic: check if two classes are equal, up to a given tolerance
   bool isEqualTo(const Line& s, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
@@ -142,13 +142,6 @@ class Line
   typedef typename std::vector<Point<dim> >::const_iterator const_iterator;
   typedef typename std::vector<Point<dim> >::size_type size_type;
 };
-
-template<int dim>
-inline Line<dim>& Line<dim>::operator=(const Line& rhs)
-{
-    m_points = rhs.m_points;
-    return *this;
-}
 
 
 } // namespace WFMath
