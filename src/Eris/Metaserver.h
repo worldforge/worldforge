@@ -12,6 +12,7 @@
 #include <sigc++/signal.h>
 
 #include <boost/asio.hpp>
+#include <boost/asio/steady_timer.hpp>
 
 #include <memory>
 

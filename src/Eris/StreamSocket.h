@@ -23,6 +23,7 @@
 #include <Atlas/Negotiate.h>
 
 #include <boost/asio.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <memory>
