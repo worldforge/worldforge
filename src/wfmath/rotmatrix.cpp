@@ -376,11 +376,9 @@ RotMatrix<3>::RotMatrix(const Quaternion& q,
 template class RotMatrix<2>;
 template class RotMatrix<3>;
 
-static_assert(std::is_pod<RotMatrix<2>>::value, "RotMatrix should be POD.");
 static_assert(std::is_standard_layout<RotMatrix<2>>::value, "RotMatrix should be standard layout.");
 static_assert(std::is_trivially_copyable<RotMatrix<2>>::value, "RotMatrix should be trivially copyable.");
 
-static_assert(std::is_pod<RotMatrix<3>>::value, "RotMatrix should be POD.");
 static_assert(std::is_standard_layout<RotMatrix<3>>::value, "RotMatrix should be standard layout.");
 static_assert(std::is_trivially_copyable<RotMatrix<3>>::value, "RotMatrix should be trivially copyable.");
 
