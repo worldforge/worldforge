@@ -4,8 +4,7 @@
 #include <sigc++/signal.h>
 
 #include <boost/asio/io_service.hpp>
-#include <boost/asio/deadline_timer.hpp>
-#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/asio/steady_timer.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <queue>
@@ -24,11 +23,11 @@ class TimedEvent
 {
 public:
     
-    TimedEvent(EventService& eventService, const boost::posix_time::time_duration& duration, const std::function<void()>& callback);
+    TimedEvent(EventService& eventService, const std::chrono::steady_clock::duration& duration, const std::function<void()>& callback);
     ~TimedEvent();
 
 private:
-    std::unique_ptr<boost::asio::deadline_timer> m_timer;
+    std::unique_ptr<boost::asio::steady_timer> m_timer;
 };
 
 template<typename T>
@@ -75,7 +74,7 @@ public:
      * @param activeMarker An active marker which is used for cancellation of tasks. If it evaluates to "false" the handler won't be invoked. Use ActiveMarker for convenience.
      */
     void runOnMainThreadDelayed(const std::function<void()>& handler,
-                                const boost::posix_time::time_duration& duration,
+                                const std::chrono::steady_clock::duration& duration,
                                 std::shared_ptr<bool> activeMarker = std::make_shared<bool>(true));
 
     /**
@@ -120,7 +119,7 @@ private:
      * @brief Creates a timer, mainly used by TimedEvent
      * @return A deadline timer.
      */
-    std::unique_ptr<boost::asio::deadline_timer> createTimer();
+    std::unique_ptr<boost::asio::steady_timer> createTimer();
 
     /**
      * @brief Transfers all handlers from the m_background_handlers_queue to the m_handlers queue.

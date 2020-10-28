@@ -9,7 +9,7 @@ namespace Eris
 {
 
 TimedEvent::TimedEvent(EventService& eventService,
-        const boost::posix_time::time_duration& duration,
+        const std::chrono::steady_clock::duration& duration,
         const std::function<void()>& callback) :
         m_timer(eventService.createTimer())
 {
@@ -39,9 +39,9 @@ EventService::~EventService()
     processAllHandlers();
 }
 
-std::unique_ptr<boost::asio::deadline_timer> EventService::createTimer()
+std::unique_ptr<boost::asio::steady_timer> EventService::createTimer()
 {
-    return std::make_unique<boost::asio::deadline_timer>(m_io_service);
+    return std::make_unique<boost::asio::steady_timer>(m_io_service);
 }
 
 void EventService::runOnMainThread(const std::function<void()>& handler,
@@ -55,9 +55,9 @@ void EventService::runOnMainThread(const std::function<void()>& handler,
 }
 
 void EventService::runOnMainThreadDelayed(const std::function<void()>& handler,
-                                          const boost::posix_time::time_duration& duration,
+                                          const std::chrono::steady_clock::duration& duration,
                                           std::shared_ptr<bool> activeMarker) {
-    auto timer = std::make_shared<boost::asio::deadline_timer>(m_io_service);
+    auto timer = std::make_shared<boost::asio::steady_timer>(m_io_service);
     timer->expires_from_now(duration);
     timer->async_wait([&, handler, activeMarker, timer](const boost::system::error_code& ec) {
         if (!ec) {

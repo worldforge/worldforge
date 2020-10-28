@@ -52,7 +52,7 @@ void MetaQuery::onConnect() {
 	// save our serial-no (so we can identify replies)
 	_queryNo = gt->getSerialno();
 
-	m_completeTimer.expires_from_now(boost::posix_time::seconds(10));
+	m_completeTimer.expires_from_now(std::chrono::seconds(10));
 	m_completeTimer.async_wait([&](boost::system::error_code ec) {
 		if (!ec) {
 			this->onQueryTimeout();

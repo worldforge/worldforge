@@ -228,7 +228,7 @@ void Meta::disconnect() {
 
 void Meta::startTimeout() {
 	m_metaTimer.cancel();
-	m_metaTimer.expires_from_now(boost::posix_time::seconds(8));
+	m_metaTimer.expires_from_now(std::chrono::seconds(8));
 	m_metaTimer.async_wait([&](boost::system::error_code ec) {
 		if (!ec) {
 			this->metaTimeout();

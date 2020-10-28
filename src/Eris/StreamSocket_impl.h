@@ -99,7 +99,7 @@ void AsioStreamSocket<ProtocolT>::connect(
         const typename ProtocolT::endpoint& endpoint)
 {
     _connectTimer.expires_from_now(
-            boost::posix_time::seconds(CONNECT_TIMEOUT_SECONDS));
+			std::chrono::seconds(CONNECT_TIMEOUT_SECONDS));
     auto self(this->shared_from_this());
     _connectTimer.async_wait([&, self](boost::system::error_code ec) {
         if (!ec) {

@@ -62,7 +62,7 @@ void StreamSocket::detach() {
 void StreamSocket::startNegotiation() {
 	auto self(this->shared_from_this());
 	_negotiateTimer.expires_from_now(
-			boost::posix_time::seconds(NEGOTIATE_TIMEOUT_SECONDS));
+			std::chrono::seconds(NEGOTIATE_TIMEOUT_SECONDS));
 	_negotiateTimer.async_wait([this, self](const boost::system::error_code& ec) {
 		//If the negotiator still exists after the deadline it means that the negotation hasn't
 		//completed yet; we'll consider that a "timeout".

@@ -59,7 +59,7 @@ protected:
 	WFMath::TimeStamp _stamp;    ///< Time stamp of the request, to estimate ping to server
 	size_t m_serverIndex;
 	bool m_complete;
-	boost::asio::deadline_timer m_completeTimer;
+	boost::asio::steady_timer m_completeTimer;
 };
 
 /// return the serial-number of the query GET operation [for identification of replies]

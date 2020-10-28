@@ -163,8 +163,8 @@ protected:
     bool mIsSending;
 
     std::unique_ptr<Atlas::Net::StreamConnect> _sc; ///< negotiation object (nullptr after connection!)
-    boost::asio::deadline_timer _negotiateTimer;
-    boost::asio::deadline_timer _connectTimer;
+    boost::asio::steady_timer _negotiateTimer;
+    boost::asio::steady_timer _connectTimer;
     std::unique_ptr<Atlas::Codec> m_codec;
     std::unique_ptr<Atlas::Objects::ObjectsEncoder> m_encoder;
     bool m_is_connected;

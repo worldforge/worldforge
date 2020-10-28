@@ -79,7 +79,7 @@ namespace Eris {
 
         getConnection().getResponder().await(l->getSerialno(), this, &Avatar::logoutResponse);
         getConnection().send(l);
-        m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), boost::posix_time::seconds(5),
+        m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), std::chrono::seconds(5),
                                                      [&]() {
                                                          warning()
                                                                  << "Did not receive logout response after five seconds; forcing Avatar logout.";

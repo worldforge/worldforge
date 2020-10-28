@@ -196,7 +196,7 @@ private:
 	// storage for the Metaserver protocol
 	boost::asio::ip::udp::socket m_socket;
 
-	boost::asio::deadline_timer m_metaTimer;
+	boost::asio::steady_timer m_metaTimer;
 
 	boost::asio::streambuf m_receive_buffer;
 	std::iostream m_receive_stream;

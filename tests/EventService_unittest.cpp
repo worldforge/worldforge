@@ -42,7 +42,7 @@ int main() {
 		io_service.reset();
 		Eris::EventService ted(io_service);
 		bool called = false;
-		Eris::TimedEvent te(ted, boost::posix_time::seconds(0), [&]() { called = true; });
+		Eris::TimedEvent te(ted, std::chrono::seconds(0), [&]() { called = true; });
 		io_service.run_one();
 		assert(called);
 	}
