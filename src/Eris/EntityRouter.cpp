@@ -25,15 +25,18 @@ EntityRouter::EntityRouter(Entity& ent, View& view) :
     m_entity(ent),
     m_view(view)
 {
+	m_view.getConnection().registerRouterForFrom(this, m_entity.getId());
 }
 
-EntityRouter::~EntityRouter() = default;
+EntityRouter::~EntityRouter() {
+	m_view.getConnection().unregisterRouterForFrom(m_entity.getId());
+}
 
 Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 {
-    assert(op->getFrom() == m_entity.getId());    
+    assert(op->getFrom() == m_entity.getId());
     const std::vector<Root>& args = op->getArgs();
-    
+
     // note it's important we match exactly on sight here, and not derived ops
     // like appearance and disappearance
     if (op->getClassNo() == SIGHT_NO) {
@@ -44,7 +47,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 			}
     	}
     }
-    
+
     if (op->getClassNo() == SOUND_NO) {
 		for (const auto& arg : args) {
 			if (arg->getClassNo() == TALK_NO)
@@ -79,7 +82,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
-    
+
 //    if (op->getClassNo() == SET_NO) {
 //
 //        //If we get a SET op for an entity that's not visible, it means that the entity has moved
@@ -99,7 +102,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 //
 //        return HANDLED;
 //    }
-    
+
     if (op->instanceOf(IMAGINARY_NO)) {
         if (args.empty()) {
 			error() << "entity " << m_entity.getId() << " sent imaginary with no args: " << op;
@@ -108,9 +111,9 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 				m_entity.onImaginary(arg);
 			}
 		}
-        return HANDLED;        
+        return HANDLED;
     }
-    
+
     // explicitly do NOT handle set ops here, since they can
     // validly change multiple entities - handled by the IGRouter
 

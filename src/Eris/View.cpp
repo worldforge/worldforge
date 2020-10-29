@@ -230,7 +230,6 @@ ViewEntity* View::initialSight(const RootEntity& gent) {
 
 	auto entity = createEntity(gent);
 	auto router = std::make_unique<EntityRouter>(*entity, *this);
-	getConnection().registerRouterForFrom(router.get(), entity->getId());
 
 	auto entityPtr = entity.get();
 	//Don't store connection as life time of entity is bound to the view.
@@ -263,7 +262,6 @@ void View::deleteEntity(const std::string& eid) {
 	if (I != m_contents.end()) {
 
 		auto entity = I->second.entity.get();
-		getConnection().unregisterRouterForFrom(entity->getId());
 		if (entity->m_moving) {
 			removeFromPrediction(entity);
 		}
