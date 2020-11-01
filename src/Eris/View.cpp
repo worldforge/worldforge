@@ -32,6 +32,10 @@ View::View(Avatar& av) :
 }
 
 View::~View() {
+	if (m_topLevel) {
+		deleteEntity(m_topLevel->getId());
+	}
+
 	//To avoid having callbacks into the View when deleting children we first move all of them to a temporary copy
 	//and then destroy that.
 	auto contents = std::move(m_contents);
