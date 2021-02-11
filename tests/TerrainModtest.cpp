@@ -72,18 +72,11 @@ int main()
     auto mp3 = std::make_unique<Mercator::CraterTerrainMod<WFMath::Ball>>(-5.f, ball);
     terrain.updateMod(3, std::move(mp3));
 
-
-    if (segment == nullptr) {
-        std::cerr << "Segment not created by addition of required basepoints"
-                  << std::endl << std::flush;
-        return 1;
-    }
-
-    segment->populate();
+        segment->populate();
 
     segment = terrain.getSegmentAtIndex(1, 1);
 
-    if (segment == 0) {
+    if (segment == nullptr) {
         std::cerr << "Segment not created by addition of required basepoints"
                   << std::endl << std::flush;
         return 1;
