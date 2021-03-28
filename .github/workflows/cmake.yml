@@ -23,6 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install autotools
+        shell: bash
+        run: |
+          if [[ "$ImageOS" == "macos1015" ]]; then
+            brew install autoconf automake
+          fi
+
       - name: Install Conan
         shell: bash
         run: |
