@@ -59,6 +59,8 @@ jobs:
             fi
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
 
+            conan remove "freeimage/*" --force
+            conan create freeimage worldforge/stable -pr default --build missing && conan create freeimage worldforge/stable -pr default && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
             conan remove "sigc++/*" --force
             conan create sigc++ worldforge/stable -pr default --build missing && conan create sigc++ worldforge/stable -pr default && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
             conan remove "libcurl/*" --force
@@ -71,8 +73,6 @@ jobs:
             conan create openal worldforge/stable -pr default --build missing && conan create openal worldforge/stable -pr default && conan upload "openal/*@worldforge/stable" -r worldforge -c --all
             conan remove "alut/*" --force
             conan create alut worldforge/stable -pr default --build missing && conan create alut worldforge/stable -pr default && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
-            conan remove "freeimage/*" --force
-            conan create freeimage worldforge/stable -pr default --build missing && conan create freeimage worldforge/stable -pr default && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
             conan remove "sdl2/*" --force
             conan create sdl2 worldforge/stable -pr default --build missing && conan create sdl2 worldforge/stable -pr default && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
             conan remove "libxdg-basedir/*" --force
