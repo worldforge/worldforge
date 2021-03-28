@@ -89,5 +89,5 @@ jobs:
             fi
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
             conan create ../tools/conan worldforge/testing -pr default
-            conan upload "atlas/*@worldforge/testing" -r worldforge -c --all
+            conan upload "wfmath/*@worldforge/testing" -r worldforge -c --all
           fi
