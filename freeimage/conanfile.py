@@ -97,6 +97,7 @@ class FreeImageConan(ConanFile):
         self.output.info("Applying patches")
 
         shutil.copy('CMakeLists.txt', self.source_subfolder)
+        tools.patch(patch_file='patches/zlib.patch', base_path=self.source_subfolder)
 
         if self.settings.compiler == "Visual Studio":
             self.patch_visual_studio()
