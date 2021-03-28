@@ -1,0 +1,83 @@
+name: CMake
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+  # This makes it correctly use C++11 API on GCC by default.
+  CONAN_V2_MODE: 1
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+  CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-16.04, ubuntu-18.04, ubuntu-20.04, windows-2019, macos-10.15 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Conan
+        shell: bash
+        run: |
+          export PATH=~/.local/bin:$PATH
+          if [[ "$ImageOS" == "ubuntu16" ]]; then
+            #The pip and setuptools packages are broken in ubuntu16 so we need to use a virtual environment and specify specific versions.
+            sudo apt-get install python-virtualenv
+            virtualenv -p /usr/bin/python3 ~/venv/py3 --verbose --no-download && . ~/venv/py3/bin/activate && python3 -m pip install --upgrade 'setuptools; python_version >= "3.6"' 'setuptools<51.3.0; python_version < "3.6" and python_version >= "3.0"' "pip<20" wheel conan && python3 -m pip list
+          else
+            pip3 install --upgrade pip wheel setuptools
+            pip3 install --upgrade conan
+          fi
+          conan --version
+          conan user
+          conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+          conan profile new default --detect
+
+      - name: Build artifacts
+        shell: bash
+        # Execute the build.  You can specify a specific target with "--target <NAME>"
+        run: |
+          if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+            export PATH=~/.local/bin:$PATH
+            export CONAN_SCM_TO_CONANDATA=1
+            if [[ "$ImageOS" == "ubuntu16" ]]; then
+              . ~/venv/py3/bin/activate
+            fi
+            conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
+
+            conan remove "sigc++/*" --force
+            conan create sigc++ worldforge/stable -pr default --build missing && conan create sigc++ worldforge/stable -pr default && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
+            conan remove "libcurl/*" --force
+            conan create libcurl worldforge/stable -pr default --build missing && conan create libcurl worldforge/stable -pr default && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
+            conan remove "tinyxml/*" --force
+            conan create tinyxml worldforge/stable -pr default --build missing && conan create tinyxml worldforge/stable -pr default && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
+            conan remove "bullet3/*" --force
+            conan create bullet3 worldforge/stable -pr default --build missing && conan create bullet3 worldforge/stable -pr default && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+            conan remove "openal/*" --force
+            conan create openal worldforge/stable -pr default --build missing && conan create openal worldforge/stable -pr default && conan upload "openal/*@worldforge/stable" -r worldforge -c --all
+            conan remove "alut/*" --force
+            conan create alut worldforge/stable -pr default --build missing && conan create alut worldforge/stable -pr default && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+            conan remove "freeimage/*" --force
+            conan create freeimage worldforge/stable -pr default --build missing && conan create freeimage worldforge/stable -pr default && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+            conan remove "sdl2/*" --force
+            conan create sdl2 worldforge/stable -pr default --build missing && conan create sdl2 worldforge/stable -pr default && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
+            conan remove "libxdg-basedir/*" --force
+            conan create libxdg-basedir worldforge/stable -pr default --build missing && conan create libxdg-basedir worldforge/stable -pr default && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+            conan remove "lua/*" --force
+            conan create lua worldforge/stable -pr default --build missing && conan create lua worldforge/stable -pr default && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+            conan remove "tolua++/*" --force
+            conan create tolua++ worldforge/stable -pr default --build missing && conan create tolua++ worldforge/stable -pr default && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+            conan remove "pcre/*" --force
+            conan install pcre/8.41@_/_ --options "pcre:with_unicode_properties=True" --build pcre && conan upload "pcre/8.41" -r worldforge -c --all
+            conan remove "cegui/*" --force
+            conan create cegui worldforge/stable -pr default --build missing && conan create cegui worldforge/stable -pr default && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
+            conan remove "ogre/*" --force
+            conan create ogre worldforge/stable -pr default --build missing && conan create ogre worldforge/stable -pr default && conan upload "ogre/*@worldforge/stable" -r worldforge -c --all
+          fi
