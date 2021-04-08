@@ -44,7 +44,7 @@ jobs:
           fi
           conan --version
           conan user
-          conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+          conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
           conan profile new default --detect
 
       - name: Build artifacts
