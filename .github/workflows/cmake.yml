@@ -10,6 +10,7 @@ env:
   BUILD_TYPE: Release
   # This makes it correctly use C++11 API on GCC by default.
   CONAN_V2_MODE: 1
+  CONAN_REVISIONS_ENABLED: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
 
@@ -37,7 +38,7 @@ jobs:
             fi
             conan --version
             conan user
-            conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+            conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
             conan profile new default --detect
 
     - name: Create Build Environment
