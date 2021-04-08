@@ -6,7 +6,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "1.12.4"
+    upstream_version = "1.12.11"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
