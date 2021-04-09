@@ -97,6 +97,10 @@ conan_basic_setup()
         else:
             cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = 'ON'
 
+        # If we don't disable precompiled headers on Macos we get an error about "Objective-C was disabled in PCH file but is currently enabled"
+        if self.settings.os == "Macos":
+            cmake.definitions['OGRE_ENABLE_PRECOMPILED_HEADERS'] = 'OFF'
+
         cmake.configure(source_folder=self.source_subfolder)
         cmake.build()
         cmake.install()
