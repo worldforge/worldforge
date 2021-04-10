@@ -201,12 +201,9 @@ class SDL2Conan(ConanFile):
         tools.get(source_url, sha256="b4656c13a1f0d0023ae2f4a9cf08ec92fffb464e0f24238337784159b8b91d57")
         extracted_dir = "SDL2-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
-        tools.patch(base_path=self._source_subfolder, patch_file="cmake.patch")
-        # Workaround for linker error with VS2019, see https://bugzilla.libsdl.org/show_bug.cgi?id=4759
-        if self.settings.compiler == 'Visual Studio' and self.settings.compiler.version == 16:
-            tools.patch(base_path=self._source_subfolder, patch_file="SDL_string.patch")
 
     def build(self):
+        self.apply_patches()
         # ensure sdl2-config is created for MinGW
         tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeLists.txt"),
                               "if(NOT WINDOWS OR CYGWIN)",
@@ -215,6 +212,14 @@ class SDL2Conan(ConanFile):
                               "if(NOT (WINDOWS OR CYGWIN))",
                               "if(NOT WINDOWS OR CYGWIN OR MINGW)")
         self.build_cmake()
+
+    def apply_patches(self):
+        self.output.info("Applying patches")
+
+        tools.patch(base_path=self._source_subfolder, patch_file="cmake.patch")
+        # Workaround for linker error with VS2019, see https://bugzilla.libsdl.org/show_bug.cgi?id=4759
+        if self.settings.compiler == 'Visual Studio' and self.settings.compiler.version == 16:
+            tools.patch(base_path=self._source_subfolder, patch_file="SDL_string.patch")
 
     def check_pkg_config(self, option, package_name):
         if option:
