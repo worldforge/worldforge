@@ -61,31 +61,32 @@ jobs:
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
 
             conan remove "freeimage/*" --force
-            conan create freeimage worldforge/stable -pr default --build missing && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+            conan install ./freeimage -g deploy --build missing && conan create ./freeimage worldforge/stable -pr default
             conan remove "sigc++/*" --force
-            conan create sigc++ worldforge/stable -pr default --build missing && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
+            conan install ./sigc++ -g deploy --build missing && conan create sigc++ worldforge/stable -pr default
             conan remove "libcurl/*" --force
-            conan create libcurl worldforge/stable -pr default --build missing && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
+            conan install ./libcurl -g deploy --build missing && conan create libcurl worldforge/stable -pr default
             conan remove "tinyxml/*" --force
-            conan create tinyxml worldforge/stable -pr default --build missing && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
+            conan install ./tinyxml -g deploy --build missing && conan create tinyxml worldforge/stable -pr default
             conan remove "bullet3/*" --force
-            conan create bullet3 worldforge/stable -pr default --build missing && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+            conan install ./bullet3 -g deploy --build missing && conan create bullet3 worldforge/stable -pr default
             conan remove "openal/*" --force
-            conan create openal worldforge/stable -pr default --build missing && conan upload "openal/*@worldforge/stable" -r worldforge -c --all
+            conan install ./openal -g deploy --build missing && conan create openal worldforge/stable -pr default
             conan remove "alut/*" --force
-            conan create alut worldforge/stable -pr default --build missing && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+            conan install ./alut -g deploy --build missing && conan create alut worldforge/stable -pr default
             conan remove "sdl2/*" --force
-            conan create sdl2 worldforge/stable -pr default --build missing && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
+            conan install ./sdl2 -g deploy --build missing && conan create sdl2 worldforge/stable -pr default
             conan remove "libxdg-basedir/*" --force
-            conan create libxdg-basedir worldforge/stable -pr default --build missing && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+            conan install ./libxdg-basedir -g deploy --build missing && conan create libxdg-basedir worldforge/stable -pr default
             conan remove "lua/*" --force
-            conan create lua worldforge/stable -pr default --build missing && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+            conan install ./lua -g deploy --build missing && conan create lua worldforge/stable -pr default
             conan remove "tolua++/*" --force
-            conan create tolua++ worldforge/stable -pr default --build missing && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+            conan install ./tolua++ -g deploy --build missing && conan create tolua++ worldforge/stable -pr default
             conan remove "pcre/*" --force
-            conan install pcre/8.44@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre && conan upload "pcre/8.44" -r worldforge -c --all
+            conan install pcre/8.44@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
             conan remove "cegui/*" --force
-            conan create cegui worldforge/stable -pr default --build missing && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
+            conan install ./cegui -g deploy --build missing && conan create cegui worldforge/stable -pr default
             conan remove "ogre/*" --force
-            conan create ogre worldforge/stable -pr default --build missing && conan upload "ogre/*@worldforge/stable" -r worldforge -c --all
+            conan install ./ogre -g deploy --build missing && conan create ogre worldforge/stable -pr default
+            conan upload "*" -r worldforge -c --all
           fi
