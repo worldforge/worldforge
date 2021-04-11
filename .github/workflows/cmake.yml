@@ -11,6 +11,7 @@ env:
   # This makes it correctly use C++11 API on GCC by default.
   CONAN_V2_MODE: 1
   CONAN_REVISIONS_ENABLED: 1
+  CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
 
@@ -55,7 +56,6 @@ jobs:
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             export PATH=~/.local/bin:$PATH
-            export CONAN_SCM_TO_CONANDATA=1
             if [[ "$ImageOS" == "ubuntu16" ]]; then
               . ~/venv/py3/bin/activate
             fi
