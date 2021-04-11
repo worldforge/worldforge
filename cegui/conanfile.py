@@ -27,7 +27,8 @@ class CeguiConan(ConanFile):
     }
     default_options = {
         "shared": False,
-        "pcre:with_unicode_properties": True
+        "pcre:with_unicode_properties": True,
+        "pcre:with_bzip2": False
     }
 
     # Custom attributes for Bincrafters recipe conventions
@@ -39,7 +40,7 @@ class CeguiConan(ConanFile):
         "lua/5.1.5@worldforge/stable",
         "tolua++/1.0.93@worldforge/stable",
         "tinyxml/2.6.2@worldforge/stable",
-        "pcre/8.41",
+        "pcre/8.44",
         "libpng/1.6.37",
         "bzip2/1.0.8"
     )
