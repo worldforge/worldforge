@@ -42,7 +42,8 @@ class CeguiConan(ConanFile):
         "tinyxml/2.6.2@worldforge/stable",
         "pcre/8.44",
         "libpng/1.6.37",
-        "bzip2/1.0.8"
+        "bzip2/1.0.8",
+        "libiconv/1.16"
     )
 
     short_paths = True
