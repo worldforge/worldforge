@@ -27,7 +27,7 @@ class AlutConan(ConanFile):
     default_options = {"shared": False, "fPIC": True}
     exports = ["CMakeLists.txt", "patches*"]
     requires = (
-        "openal/1.19.1@worldforge/stable"
+        "openal/1.21.0"
     )
     url = ""
     license = "https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
