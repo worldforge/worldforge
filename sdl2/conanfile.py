@@ -5,7 +5,7 @@ import os
 
 class SDL2Conan(ConanFile):
     name = "sdl2"
-    version = "2.0.10"
+    version = "2.0.14"
     description = "Access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D"
     topics = ("conan", "sdl2", "audio", "keyboard", "graphics", "opengl")
     url = "https://github.com/bincrafters/conan-sdl2"
@@ -201,12 +201,12 @@ class SDL2Conan(ConanFile):
 
     def source(self):
         source_url = "https://www.libsdl.org/release/SDL2-%s.tar.gz" % self.version
-        tools.get(source_url, sha256="b4656c13a1f0d0023ae2f4a9cf08ec92fffb464e0f24238337784159b8b91d57")
+        tools.get(source_url, sha256="d8215b571a581be1332d2106f8036fcb03d12a70bae01e20f424976d275432bc")
         extracted_dir = "SDL2-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
     def build(self):
-        self.apply_patches()
+        # self.apply_patches()
         # ensure sdl2-config is created for MinGW
         tools.replace_in_file(os.path.join(self._source_subfolder, "CMakeLists.txt"),
                               "if(NOT WINDOWS OR CYGWIN)",
