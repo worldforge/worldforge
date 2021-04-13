@@ -68,6 +68,9 @@ class SDL2Conan(ConanFile):
         "sndio": False,
         "sdl2main": True
     }
+    requires = (
+        "libiconv/1.16"
+    )
 
     def build_requirements(self):
         if self.settings.os == "Linux" and tools.os_info.is_linux:
