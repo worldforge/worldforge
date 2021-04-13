@@ -30,7 +30,7 @@ class OpenALConan(ConanFile):
 
     def requirements(self):
         if self.settings.os == "Linux":
-            self.requires("libalsa/1.1.9")
+            self.requires("libalsa/1.2.4")
 
     def source(self):
         source_url = "https://github.com/kcat/openal-soft"
