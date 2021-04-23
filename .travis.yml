@@ -51,7 +51,7 @@ script:
   - mkdir build && cd build
   - conan profile new default --detect
   - conan install ../tools/conan -pr default --build=missing --update
-  - cmake -DBUILD_SHARED_LIBS=OFF .. || travis_terminate 1
+  - cmake -DBUILD_SHARED_LIBS=OFF -DATLAS_GENERATE_OBJECTS=OFF .. || travis_terminate 1
   - make || travis_terminate 1
   - make check || travis_terminate 1
   #  - if [ "$TRAVIS_OS_NAME" != "osx" -a "$CC" == "gcc" ]; then make dox; fi
