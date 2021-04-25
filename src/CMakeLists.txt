@@ -57,7 +57,6 @@ set(HEADER_FILES
         Eris/Room.h
         Eris/Router.h
         Eris/ServerInfo.h
-        Eris/Session.h
         Eris/SpawnPoint.h
         Eris/StreamSocket.h
         Eris/StreamSocket_impl.h
