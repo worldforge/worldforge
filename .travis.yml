@@ -1,9 +1,9 @@
 language: cpp
 jobs:
   include:
-    - os: linux
-      dist: bionic
-      compiler: clang
+#    - os: linux
+#      dist: bionic
+#      compiler: clang
     - os: linux
       dist: bionic
       compiler: gcc
