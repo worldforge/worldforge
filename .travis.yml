@@ -65,5 +65,5 @@ script:
       echo "Creating and uploading Conan artifacts"
       conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
       conan create ../tools/conan worldforge/testing -pr default
-      conan upload "atlas/*@worldforge/testing" -r worldforge -c --all
+      conan upload "*" -r worldforge -c --all
     fi
