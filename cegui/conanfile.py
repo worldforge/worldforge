@@ -39,7 +39,7 @@ class CeguiConan(ConanFile):
         "freeimage/3.18.0@worldforge/stable",
         "lua/5.1.5@worldforge/stable",
         "tolua++/1.0.93@worldforge/stable",
-        "tinyxml/2.6.2@worldforge/stable",
+        "tinyxml/2.6.2",
         "pcre/8.44",
         "libpng/1.6.37",
         "bzip2/1.0.8",
