@@ -51,6 +51,11 @@ script:
   - set -e
   - conan profile new default --detect
   - |
+    if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" == "clang++" ]]; then
+      echo "Setting libc to use C++11 features"
+      conan profile update settings.compiler.libcxx=libstdc++11 default
+    fi
+  - |
     if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
       conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
     else
@@ -58,28 +63,30 @@ script:
       exit 1
     fi
   - conan remove "sigc++/*" --force
-  - conan create sigc++ worldforge/stable -pr default --build missing && conan create sigc++ worldforge/stable -pr default && conan upload "sigc++/*@worldforge/stable" -r worldforge -c --all
+  - conan create sigc++ worldforge/stable -pr default --build missing && conan create sigc++ worldforge/stable -pr default
   - conan remove "libcurl/*" --force
-  - conan create libcurl worldforge/stable -pr default --build missing && conan create libcurl worldforge/stable -pr default && conan upload "libcurl/*@worldforge/stable" -r worldforge -c --all
+  - conan create libcurl worldforge/stable -pr default --build missing && conan create libcurl worldforge/stable -pr default
   - conan remove "tinyxml/*" --force
-  - conan create tinyxml worldforge/stable -pr default --build missing && conan create tinyxml worldforge/stable -pr default && conan upload "tinyxml/*@worldforge/stable" -r worldforge -c --all
+  - conan create tinyxml worldforge/stable -pr default --build missing && conan create tinyxml worldforge/stable -pr default
   - conan remove "bullet3/*" --force
-  - conan create bullet3 worldforge/stable -pr default --build missing && conan create bullet3 worldforge/stable -pr default && conan upload "bullet3/*@worldforge/stable" -r worldforge -c --all
+  - conan create bullet3 worldforge/stable -pr default --build missing && conan create bullet3 worldforge/stable -pr default
   - conan remove "alut/*" --force
-  - conan create alut worldforge/stable -pr default --build missing && conan create alut worldforge/stable -pr default && conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+  - conan create alut worldforge/stable -pr default --build missing && conan create alut worldforge/stable -pr default
   - conan remove "freeimage/*" --force
-  - conan create freeimage worldforge/stable -pr default --build missing && conan create freeimage worldforge/stable -pr default && conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+  - conan create freeimage worldforge/stable -pr default --build missing && conan create freeimage worldforge/stable -pr default
   - conan remove "sdl2/*" --force
-  - conan create sdl2 worldforge/stable -pr default --build missing && conan create sdl2 worldforge/stable -pr default && conan upload "sdl2/*@worldforge/stable" -r worldforge -c --all
+  - conan create sdl2 worldforge/stable -pr default --build missing && conan create sdl2 worldforge/stable -pr default
   - conan remove "libxdg-basedir/*" --force
-  - conan create libxdg-basedir worldforge/stable -pr default --build missing && conan create libxdg-basedir worldforge/stable -pr default && conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+  - conan create libxdg-basedir worldforge/stable -pr default --build missing && conan create libxdg-basedir worldforge/stable -pr default
   - conan remove "lua/*" --force
-  - conan create lua worldforge/stable -pr default --build missing && conan create lua worldforge/stable -pr default && conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+  - conan create lua worldforge/stable -pr default --build missing && conan create lua worldforge/stable -pr default
   - conan remove "tolua++/*" --force
-  - conan create tolua++ worldforge/stable -pr default --build missing && conan create tolua++ worldforge/stable -pr default && conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+  - conan create tolua++ worldforge/stable -pr default --build missing && conan create tolua++ worldforge/stable -pr default
   - conan remove "pcre/*" --force
-  - conan install pcre/8.44@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre && conan upload "pcre/8.44" -r worldforge -c --all
+  - conan install pcre/8.44@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
   - conan remove "cegui/*" --force
-  - conan create cegui worldforge/stable -pr default --build missing && conan create cegui worldforge/stable -pr default && conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
+  - conan create cegui worldforge/stable -pr default --build missing && conan create cegui worldforge/stable -pr default
   - conan remove "ogre/*" --force
-  - conan create ogre worldforge/stable -pr default --build missing && conan create ogre worldforge/stable -pr default && conan upload "ogre/*@worldforge/stable" -r worldforge -c --all
+  - conan create ogre worldforge/stable -pr default --build missing && conan create ogre worldforge/stable -pr default
+  - conan upload "*" -r worldforge -c --all
+
