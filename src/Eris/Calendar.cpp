@@ -60,30 +60,30 @@ void Calendar::initFromCalendarAttr(const MapType& cal)
 {
     auto it = cal.find("days_per_month");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
-    m_daysPerMonth = (unsigned int)it->second.asInt();
+    m_daysPerMonth = (int)it->second.asInt();
 
     it = cal.find("hours_per_day");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
-    m_hoursPerDay = (unsigned int)it->second.asInt();
+    m_hoursPerDay = (int)it->second.asInt();
 
     it = cal.find("minutes_per_hour");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
-    m_minutesPerHour = (unsigned int)it->second.asInt();
+    m_minutesPerHour = (int)it->second.asInt();
 
     it = cal.find("months_per_year");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
-    m_monthsPerYear = (unsigned int)it->second.asInt();
+    m_monthsPerYear = (int)it->second.asInt();
 
     it = cal.find("seconds_per_minute");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data");
-    m_secondsPerMinute = (unsigned int)it->second.asInt();
+    m_secondsPerMinute = (int)it->second.asInt();
 
     Updated.emit();
 }
 
 DateTime Calendar::now() const
 {
-    DateTime n;
+    DateTime n{};
     // we don't have valid calendar data yet
     if (m_daysPerMonth == 0) return n;
 
@@ -104,7 +104,7 @@ DateTime Calendar::now() const
     n.m_month = world_time % m_monthsPerYear;
     world_time /= m_monthsPerYear;
 
-    n.m_year = static_cast<unsigned int>(world_time);
+    n.m_year = static_cast<int>(world_time);
 
     n.m_valid = true;
     return n;

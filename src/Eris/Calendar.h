@@ -28,26 +28,26 @@ Encapsulate a decoded world time instance
 class DateTime
 {
 public:
-    DateTime() : m_valid(false) { }
+    DateTime() = default;
 
     bool valid() const { return m_valid; }
 
-    unsigned int year() const { return m_year; }
-    unsigned int month() const { return m_month; }
-    unsigned int dayOfMonth() const { return m_dayOfMonth; }
+    int year() const { return m_year; }
+    int month() const { return m_month; }
+    int dayOfMonth() const { return m_dayOfMonth; }
 
-    unsigned int seconds() const { return m_seconds; }
-    unsigned int minutes() const { return m_minutes; }
-    unsigned int hours() const { return m_hours; }
+    int seconds() const { return m_seconds; }
+    int minutes() const { return m_minutes; }
+    int hours() const { return m_hours; }
 
 private:
     friend class Calendar;
 
-    unsigned int m_year,
+    int m_year,
         m_month,
         m_dayOfMonth;
 
-    unsigned int m_seconds,
+    int m_seconds,
         m_minutes,
         m_hours;
 
@@ -57,13 +57,13 @@ private:
 class Calendar : public sigc::trackable
 {
 public:
-    Calendar(Avatar&);
+    explicit Calendar(Avatar&);
 
     DateTime now() const;
 
-    unsigned int secondsPerMinute() const { return m_secondsPerMinute; }
-    unsigned int minutesPerHour() const { return m_minutesPerHour; }
-    unsigned int hoursPerDay() const { return m_hoursPerDay; }
+    int secondsPerMinute() const { return m_secondsPerMinute; }
+    int minutesPerHour() const { return m_minutesPerHour; }
+    int hoursPerDay() const { return m_hoursPerDay; }
 
     ///Emitted when the calendar is updated.
     sigc::signal<void> Updated;
@@ -76,7 +76,7 @@ protected:
 
     Avatar& m_avatar;
 
-    unsigned int m_daysPerMonth,
+    int m_daysPerMonth,
                  m_monthsPerYear,
                  m_hoursPerDay,
                  m_minutesPerHour,
