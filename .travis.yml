@@ -1,15 +1,16 @@
 language: cpp
 jobs:
   include:
-    - os: linux
-      dist: bionic
-      compiler: clang
+# Disabled since OpenAL can't be built with clang 7 and libstdc++
+#    - os: linux
+#      dist: bionic
+#      compiler: clang
     - os: linux
       dist: bionic
       compiler: gcc
-    - os: linux
-      dist: focal
-      compiler: clang
+#    - os: linux
+#      dist: focal
+#      compiler: clang
     - os: linux
       dist: focal
       compiler: gcc
