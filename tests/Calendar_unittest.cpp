@@ -113,61 +113,61 @@ int main()
 
     // Test constructor and destructor
     {
-        Eris::DateTime dt;
+        Eris::DateTime dt{};
     }
 
     // Test valid()
     {
-        Eris::DateTime dt;
+        Eris::DateTime dt{};
 
         assert(!dt.valid());
     }
 
     // Test year()
     {
-        Eris::DateTime dt;
+        Eris::DateTime dt{};
 
         dt.year();
     }
 
     // Test month()
     {
-        Eris::DateTime dt;
+        Eris::DateTime dt{};
 
         dt.month();
     }
 
     // Test dayOfMonth()
     {
-        Eris::DateTime dt;
+        Eris::DateTime dt{};
 
         dt.dayOfMonth();
     }
 
     // Test seconds()
     {
-        Eris::DateTime dt;
+		Eris::DateTime dt{};
 
         dt.seconds();
     }
 
     // Test minutes()
     {
-        Eris::DateTime dt;
+		Eris::DateTime dt{};
 
         dt.minutes();
     }
 
     // Test hours()
     {
-        Eris::DateTime dt;
+		Eris::DateTime dt{};
 
         dt.hours();
     }
 
     // Test year()
     {
-        Eris::DateTime dt;
+		Eris::DateTime dt{};
 
         dt.year();
     }
@@ -178,8 +178,8 @@ int main()
     {
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
-        Eris::Calendar ec(*ea);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
+        Eris::Calendar ec(ea);
     }
 
     // FIXME Can't set the toplevel on the view, which is required to
@@ -189,9 +189,9 @@ int main()
     {
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(*ea);
+        TestCalendar ec(ea);
 
         ec.test_topLevelEntityChanged();
     }
@@ -202,9 +202,9 @@ int main()
     {
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(*ea);
+        TestCalendar ec(ea);
 
         ec.test_setSaneDefault();
 
@@ -224,9 +224,9 @@ int main()
     {
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(*ea);
+        TestCalendar ec(ea);
 
         ec.test_setSaneDefault();
 
@@ -257,9 +257,9 @@ int main()
     {
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(*ea);
+        TestCalendar ec(ea);
 
         ec.test_setSaneDefault();
 
@@ -277,9 +277,9 @@ int main()
         SignalFlagger flagger;
         std::string fake_char_id("1");
 		std::string fake_mind_id("12");
-        Eris::Avatar * ea = new TestAvatar(nullptr, fake_mind_id, fake_char_id);
+		TestAvatar ea(nullptr, fake_mind_id, fake_char_id);
 
-        TestCalendar ec(*ea);
+        TestCalendar ec(ea);
         ec.Updated.connect(sigc::mem_fun(flagger,
                 &SignalFlagger::set));
 
