@@ -1,6 +1,5 @@
-#include <iostream>
-#include <Eris/Session.h>
+#include <Eris/EntityRef.h>
 
 int main() {
-    Eris::Session tested();
+    Eris::EntityRef tested{};
 }
