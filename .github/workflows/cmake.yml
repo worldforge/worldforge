@@ -87,6 +87,13 @@ jobs:
             conan install ./cegui -g deploy --build missing && conan create ./cegui worldforge/stable -pr default
             conan remove "ogre/*" --force
             conan install ./ogre -g deploy --build missing && conan create ./ogre worldforge/stable -pr default
+            if [[ "$ImageOS" != "win19" ]]; then
+              conan remove "libgpg-error/*" --force
+              conan install ./libgpg-error -g deploy --build missing && conan create ./libgpg-error worldforge/stable -pr default
+              conan remove "libgcrypt/*" --force
+              conan install ./libgcrypt -g deploy --build missing && conan create ./libgcrypt worldforge/stable -pr default
+            fi
+
             conan user --clean
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
             conan upload "*" -r worldforge -c --all
