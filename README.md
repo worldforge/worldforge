@@ -3,6 +3,7 @@
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/varconf?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/varconf)
 [![Travis build Status](https://travis-ci.com/worldforge/varconf.svg?branch=master)](https://travis-ci.com/worldforge/varconf)
+[![Github build status](https://github.com/worldforge/varconf/actions/workflows/cmake.yml/badge.svg)](https://github.com/worldforge/varconf/actions/workflows/cmake.yml)
 
 Varconf is a configuration system designed for the [WorldForge](http://worldforge.org/ "The main Worldforge site") system.
 Varconf can parse configuration files, command-line arguments and environment
@@ -18,7 +19,7 @@ components used by Worldforge.
 
 Alternatively you can use [Conan](https://www.conan.io) to install all dependencies. 
 ```bash
-conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 mkdir build && cd build
 conan install ../tools/conan --build missing
 cmake ..
