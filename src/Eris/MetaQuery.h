@@ -28,7 +28,7 @@ public:
 	~MetaQuery() override;
 
 	/// return the serial-number of the query GET operation [for identification of replies]
-	long getQueryNo() const;
+	std::int64_t getQueryNo() const;
 
 	size_t getServerIndex() const;
 
@@ -55,7 +55,7 @@ protected:
 
 	Meta& _meta;            ///< The Meta-server object which owns the query
 
-	long _queryNo;        ///< The serial number of the query GET
+	std::int64_t _queryNo;        ///< The serial number of the query GET
 	WFMath::TimeStamp _stamp;    ///< Time stamp of the request, to estimate ping to server
 	size_t m_serverIndex;
 	bool m_complete;
@@ -63,7 +63,7 @@ protected:
 };
 
 /// return the serial-number of the query GET operation [for identification of replies]
-inline long MetaQuery::getQueryNo() const {
+inline std::int64_t MetaQuery::getQueryNo() const {
 	return _queryNo;
 }
 

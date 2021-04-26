@@ -387,8 +387,8 @@ void Connection::cleanupRedispatch(Redispatch* r) {
 	m_finishedRedispatches.push_back(std::unique_ptr<Redispatch>(r));
 }
 
-long getNewSerialno() {
-	static long _nextSerial = 1001;
+std::int64_t getNewSerialno() {
+	static std::int64_t _nextSerial = 1001;
 	// note this will eventually loop (in theory), but that's okay
 	// FIXME - using the same intial starting offset is problematic
 	// if the client dies, and quickly reconnects

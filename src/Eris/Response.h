@@ -68,17 +68,17 @@ public:
 
     ~ResponseTracker();
 
-    void await(long serialno, std::unique_ptr<ResponseBase>);
+    void await(std::int64_t serialno, std::unique_ptr<ResponseBase>);
 
-    void await(long serial, Callback callback);
+    void await(std::int64_t serial, Callback callback);
     
     template <class T>
-    void await(long serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
+    void await(std::int64_t serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
     {
         await(serial, std::make_unique<MemberResponse<T>>(ins, method));
     }
     
-    void ignore(long serial)
+    void ignore(std::int64_t serial)
     {
         await(serial, std::make_unique<NullResponse>());
     }
@@ -86,9 +86,7 @@ public:
     Router::RouterResult handleOp(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
-    typedef std::unordered_map<long, ResponseBase*> RefnoResponseMap;
-//    RefnoResponseMap m_pending;
-    std::unordered_map<long, Callback> m_pending;
+    std::unordered_map<std::int64_t, Callback> m_pending;
 };
 
 } // of namespace

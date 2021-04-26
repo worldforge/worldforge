@@ -527,7 +527,7 @@ void Meta::objectArrived(const Root& obj) {
 	}
 
 // work out which query this is
-	long refno = info->getRefno();
+	auto refno = info->getRefno();
 	QuerySet::iterator Q;
 
 	for (Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)

@@ -206,7 +206,7 @@ protected:
 };
 
 /// operation serial number sequencing
-long getNewSerialno();
+std::int64_t getNewSerialno();
 
 } // of Eris namespace
 

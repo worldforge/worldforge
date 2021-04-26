@@ -37,13 +37,13 @@ ResponseBase::~ResponseBase() = default;
 
 ResponseTracker::~ResponseTracker() = default;
 
-void ResponseTracker::await(long serial, Callback callback)
+void ResponseTracker::await(std::int64_t serial, Callback callback)
 {
     m_pending.emplace(serial, std::move(callback));
 }
 
 
-void ResponseTracker::await(long serialno, std::unique_ptr<ResponseBase> resp)
+void ResponseTracker::await(std::int64_t serialno, std::unique_ptr<ResponseBase> resp)
 {
     assert(m_pending.count(serialno) == 0);
     std::shared_ptr<ResponseBase> holder = std::move(resp);
