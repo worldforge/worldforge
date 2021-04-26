@@ -4,6 +4,7 @@ Mercator: a procedural terrain library
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/mercator?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/mercator)
 [![Travis build Status](https://travis-ci.com/worldforge/mercator.svg?branch=master)](https://travis-ci.com/worldforge/mercator)
+[![Github build status](https://github.com/worldforge/mercator/actions/workflows/cmake.yml/badge.svg)](https://github.com/worldforge/mercator/actions/workflows/cmake.yml)
 
 Mercator is primarily aimed at terrain for multiplayer online games and
 forms one of the [WorldForge](http://worldforge.org/ "The main Worldforge site")
@@ -20,7 +21,7 @@ components used by Worldforge.
 
 Alternatively you can use [Conan](https://www.conan.io) to install all dependencies. 
 ```bash
-conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 mkdir build && cd build
 conan install ../tools/conan --build missing
 cmake ..
