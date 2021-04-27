@@ -67,4 +67,4 @@ class GPGErrorConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["gpg-error"]
-
+        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
