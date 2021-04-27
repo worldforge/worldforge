@@ -24,18 +24,8 @@ int main(int argc, char ** argv)
             Atlas::Message::Element val = I->second;
         }
     }
-    TIME_OFF("Empty Object to Message conversion and iteration");
+    TIME_OFF("Empty Object to Message conversion and iteration")
 
-    TIME_ON;
-    for (i = 0; i < 1000000; ++i) {
-        Atlas::Objects::Operation::RootOperation::const_iterator I = op->begin();
-        Atlas::Objects::Operation::RootOperation::const_iterator Iend = op->end();
-        for (; I != Iend; ++I) {
-            std::string key = I->first;
-            Atlas::Message::Element val = I->second;
-        }
-    }
-    TIME_OFF("Empty Object iteration");
 
     // Fill the object with non-default values
     op->setId("foo");
@@ -65,17 +55,6 @@ int main(int argc, char ** argv)
             Atlas::Message::Element val = I->second;
         }
     }
-    TIME_OFF("Full Object to Message conversion and iteration");
+    TIME_OFF("Full Object to Message conversion and iteration")
 
-
-    TIME_ON;
-    for (i = 0; i < 1000000; ++i) {
-        Atlas::Objects::Operation::RootOperation::const_iterator I = op->begin();
-        Atlas::Objects::Operation::RootOperation::const_iterator Iend = op->end();
-        for (; I != Iend; ++I) {
-            std::string key = I->first;
-            Atlas::Message::Element val = I->second;
-        }
-    }
-    TIME_OFF("Full Object iteration");
 }
