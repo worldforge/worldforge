@@ -17,6 +17,7 @@
 #include <string>
 
 #include <cassert>
+#include <mutex>
 
 namespace Atlas {
 
@@ -81,6 +82,13 @@ protected:
      */
     T m_defaults_Data;
 
+
+    /**
+     * Mutex for whenever the m_being_Data_mutex field need to be accessed.
+     * A std::atomic might be nicer, but the current code requires a mutex.
+     */
+    std::mutex m_being_Data_mutex;
+
     /**
      * The first available instance, not currently in use.
      *
@@ -142,7 +150,7 @@ public:
 };
 
 template <typename T>
-Allocator<T>::Allocator() : m_begin_Data(0)
+Allocator<T>::Allocator() : m_begin_Data(nullptr)
 {
     T::fillDefaultObjectInstance(m_defaults_Data, attr_flags_Data);
 }
@@ -161,14 +169,18 @@ inline T *Allocator<T>::getDefaultObjectInstance()
 template <typename T>
 inline T *Allocator<T>::alloc()
 {
-    if (m_begin_Data) {
-        T *res = m_begin_Data;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        m_begin_Data = static_cast<T*>(m_begin_Data->m_next);
-        return res;
-    }
+	{
+		std::unique_lock<std::mutex> lock(m_being_Data_mutex);
+		if (m_begin_Data) {
+			auto res = m_begin_Data;
+			m_begin_Data = static_cast<T*>(m_begin_Data->m_next);
+			lock.unlock();
+			assert(res->m_refCount == 0);
+			res->m_attrFlags = 0;
+			res->m_attributes.clear();
+			return res;
+		}
+	}
     return new T(&m_defaults_Data);
 }
 
@@ -176,21 +188,26 @@ template <typename T>
 inline void Allocator<T>::free(T *instance)
 {
     instance->reset();
-    instance->m_next = m_begin_Data;
-    m_begin_Data = static_cast<T*>(instance);
+	{
+		std::lock_guard<std::mutex> lock(m_being_Data_mutex);
+		instance->m_next = m_begin_Data;
+		m_begin_Data = static_cast<T*>(instance);
+	}
 }
 
 template <typename T>
 void Allocator<T>::release()
 {
     //Delete all chained instances
-    T* next = m_begin_Data;
+	std::unique_lock<std::mutex> lock(m_being_Data_mutex);
+	T* next = m_begin_Data;
+	m_begin_Data = nullptr;
+	lock.unlock();
     while (next) {
         T* toDelete = next;
         next = static_cast<T*>(next->m_next);
         delete toDelete;
     }
-    m_begin_Data = nullptr;
 }
 
 static const int BASE_OBJECT_NO = 0;
