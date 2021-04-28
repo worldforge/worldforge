@@ -87,7 +87,7 @@ protected:
      * Mutex for whenever the m_being_Data_mutex field need to be accessed.
      * A std::atomic might be nicer, but the current code requires a mutex.
      */
-    std::mutex m_being_Data_mutex;
+    std::mutex m_begin_Data_mutex;
 
     /**
      * The first available instance, not currently in use.
@@ -170,7 +170,7 @@ template <typename T>
 inline T *Allocator<T>::alloc()
 {
 	{
-		std::unique_lock<std::mutex> lock(m_being_Data_mutex);
+		std::unique_lock<std::mutex> lock(m_begin_Data_mutex);
 		if (m_begin_Data) {
 			auto res = m_begin_Data;
 			m_begin_Data = static_cast<T*>(m_begin_Data->m_next);
@@ -189,7 +189,7 @@ inline void Allocator<T>::free(T *instance)
 {
     instance->reset();
 	{
-		std::lock_guard<std::mutex> lock(m_being_Data_mutex);
+		std::lock_guard<std::mutex> lock(m_begin_Data_mutex);
 		instance->m_next = m_begin_Data;
 		m_begin_Data = static_cast<T*>(instance);
 	}
@@ -198,11 +198,10 @@ inline void Allocator<T>::free(T *instance)
 template <typename T>
 void Allocator<T>::release()
 {
-    //Delete all chained instances
-	std::unique_lock<std::mutex> lock(m_being_Data_mutex);
+    //Delete all chained instances. This does not use the mutex as destruction can only happen in one thread,
+    // and trying to use the allocator while it's being destroyed is an illegal state.
 	T* next = m_begin_Data;
 	m_begin_Data = nullptr;
-	lock.unlock();
     while (next) {
         T* toDelete = next;
         next = static_cast<T*>(next->m_next);
