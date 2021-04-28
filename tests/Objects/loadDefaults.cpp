@@ -41,6 +41,7 @@ struct LoadDefaultsDecoder : public Atlas::Message::DecoderBase {
 
 	MessageElementMap m_objects;
 	const Factories& m_factories;
+	std::map<std::string, Root> objectDefinitions;
 };
 
 LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename, const Factories& factories)
@@ -147,12 +148,13 @@ void LoadDefaultsDecoder::fillDefaults() {
 	}
 }
 
-void loadDefaults(const std::string& filename, const Factories& factories) {
+std::map<std::string, Root> loadDefaults(const std::string& filename, const Factories& factories) {
 	LoadDefaultsDecoder load_defaults(filename, factories);
 	Entity::Anonymous e = Entity::AnonymousData::allocator.getDefaultObjectInstance();
 	std::vector<double> coords(3, 0.0);
 	e->setPos(coords);
 	e->setVelocity(coords);
+	return load_defaults.objectDefinitions;
 }
 
 }

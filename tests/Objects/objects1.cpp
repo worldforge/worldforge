@@ -10,7 +10,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Entity::Account;
 using Atlas::Objects::smart_dynamic_cast;
-using Atlas::Objects::objectDefinitions;
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -20,13 +19,9 @@ int main(int argc, char** argv)
 {
 	Atlas::Objects::Factories factories;
     std::string atlas_xml_path;
-    try {
-	    Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH, factories);
-    } catch(const Atlas::Objects::DefaultLoadingException& e) {
-	std::cout << "DefaultLoadingException: "
-             << e.getDescription() << std::endl;
-    }
-    Root root = Atlas::Objects::objectDefinitions.find("root")->second;
+	auto objectDefinitions = Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH, factories);
+
+    Root root = objectDefinitions.find("root")->second;
     Root root_inst;
     root_inst->setAttr("id", std::string("root_instantiation"));
     assert(root->getAttr("id").asString() == "root");

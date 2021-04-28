@@ -2,7 +2,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 #include "loadDefaults.h"
-//#include "../../src/Net/Stream.h"
 #include "DebugBridge.h"
 
 #define DEBUG_PRINT(foo) //foo;
@@ -201,14 +200,14 @@ void testXML(Atlas::Objects::Factories& factories) {
 void check_float_list3(const Atlas::Message::ListType& list,
 					   double el1, double el2, double el3) {
 	assert(list.size() == 3);
-	Atlas::Message::ListType::const_iterator i = list.begin();
+	auto i = list.begin();
 	assert((*i++) == el1);
 	assert((*i++) == el2);
 	assert((*i++) == el3);
 	i++;
 }
 
-void testValues(Atlas::Objects::Factories& factories) {
+void testValues(Atlas::Objects::Factories& factories, std::map<std::string, Root>& objectDefinitions) {
 	Account account;
 	Login l;
 	account->setId("al");
@@ -245,7 +244,7 @@ void testValues(Atlas::Objects::Factories& factories) {
 
 	{
 		Atlas::Message::MapType mobj;
-		Root obj = Atlas::Objects::objectDefinitions.find(std::string("account"))->second;
+		Root obj = objectDefinitions.find(std::string("account"))->second;
 		assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
 		assert(obj->getId() == "account");
 		assert(obj->isDefaultId() == false);
@@ -427,14 +426,10 @@ void test() {
 
 int main() {
 	Atlas::Objects::Factories factories;
-	try {
-		Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH, factories);
-	} catch (const Atlas::Objects::DefaultLoadingException& e) {
-		std::cout << "DefaultLoadingException: "
-				  << e.getDescription() << std::endl;
-	}
+	auto objectDefinitions = Atlas::Objects::loadDefaults(TEST_ATLAS_XML_PATH, factories);
+
 	testXML(factories);
-	testValues(factories);
+	testValues(factories, objectDefinitions);
 	test();
 	return 0;
 }

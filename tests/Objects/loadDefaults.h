@@ -19,7 +19,7 @@ public:
 			Atlas::Exception(a_msg) {}
 };
 
-void loadDefaults(const std::string& filename, const Factories& factories);
+std::map<std::string, Root> loadDefaults(const std::string& filename, const Factories& factories);
 
 }
 } // namespace Atlas::Objects

@@ -79,7 +79,7 @@ public:
 	friend class AddFactories;
 
 	Factories();
-	explicit Factories(const Factories &) = default;
+	Factories(const Factories &) = default;
 	~Factories();
 
 	bool hasFactory(const std::string& name) const;
@@ -126,8 +126,6 @@ private:
 	template <typename T>
 	void addFactory(const std::string& name, int classno);
 };
-
-extern std::map<const std::string, Root> objectDefinitions;
 
 template <typename T>
 void Factories::addFactory(const std::string& name, int classno)

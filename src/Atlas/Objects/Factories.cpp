@@ -42,8 +42,6 @@ SmartPtr<RootData> anonymous_factory(const std::string& name, int no) {
 	return obj;
 }
 
-std::map<const std::string, Root> objectDefinitions;
-
 Factories::Factories() {
 	installStandardTypes();
 }
