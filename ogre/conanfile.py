@@ -6,7 +6,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "1.12.11"
+    upstream_version = "1.12.12"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -22,7 +22,7 @@ class OgreConan(ConanFile):
     short_paths = False
     requires = ["zlib/1.2.11",
                 "bzip2/1.0.8",
-                "freetype/2.10.1",
+                "freetype/2.10.4",
                 "freeimage/3.18.0@worldforge/stable"]
 
     def system_requirements(self):
