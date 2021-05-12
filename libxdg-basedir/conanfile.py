@@ -4,7 +4,7 @@ from pathlib import Path
 
 class Lua(ConanFile):
     name = 'libxdg-basedir'
-    version = '1.2.0'
+    version = '1.2.3'
     license = 'MIT'
     url = ''
     homepage = ''
@@ -18,7 +18,7 @@ class Lua(ConanFile):
 
     def source(self):
         git = tools.Git()
-        git.clone("https://github.com/devnev/libxdg-basedir.git", "libxdg-basedir-1.2.0")
+        git.clone("https://github.com/devnev/libxdg-basedir.git", "libxdg-basedir-1.2.3")
 
     def build(self):
         if self.settings.compiler == "Visual Studio":
