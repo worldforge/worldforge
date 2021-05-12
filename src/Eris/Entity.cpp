@@ -67,7 +67,7 @@ void Entity::shutdown() {
 
 	for (auto& child: m_contents) {
 		//Release all children.
-		child->m_location = nullptr;
+		child->setLocation(nullptr, false);
 	}
 	m_contents.clear();
 
@@ -641,7 +641,7 @@ void Entity::setLocationFromAtlas(const std::string& locId) {
 	setLocation(newLocation);
 }
 
-void Entity::setLocation(Entity* newLocation)
+void Entity::setLocation(Entity* newLocation, bool removeFromOldLocation)
 {
     if (newLocation == m_location) return;
 
@@ -651,7 +651,7 @@ void Entity::setLocation(Entity* newLocation)
         
 // do the actual member updating
     bool wasVisible = isVisible();
-    if (m_location) {
+    if (m_location && removeFromOldLocation) {
     	removeFromLocation();
     }
         

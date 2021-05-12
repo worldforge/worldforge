@@ -522,7 +522,7 @@ protected:
     /** setLocation is the core of the entity hierarchy maintenance logic.
     We make setting location the 'fixup' action; addChild / removeChild are
     correspondingly simple. */
-    void setLocation(Entity* newLocation);
+    void setLocation(Entity* newLocation, bool removeFromOldLocation = true);
     
     /// wrapper for setLocation with additional code the retrieve the
     /// location if it's not available right now
