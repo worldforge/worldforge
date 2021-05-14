@@ -8,32 +8,32 @@
 
 #include <sigc++/trackable.h>
 
-namespace Eris
-{
+namespace Eris {
 
 // forward decls
 class Connection;
 
-class Redispatch : public sigc::trackable
-{
+class Redispatch : public sigc::trackable {
+
+public:
+	virtual ~Redispatch() = default;
+
 protected:
-    Redispatch(Connection& con, Atlas::Objects::Root obj) :
-        m_obj(std::move(obj)),
-        m_con(con)
-    {
+	Redispatch(Connection& con, Atlas::Objects::Root obj) :
+			m_obj(std::move(obj)),
+			m_con(con) {
+	}
 
-    }
+	void post();
 
-    void post();
+	void postModified(const Atlas::Objects::Root& obj);
 
-    void postModified(const Atlas::Objects::Root& obj);
+	void fail();
 
-    void fail();
+	const Atlas::Objects::Root m_obj;
 
-    const Atlas::Objects::Root m_obj;
-    
 private:
-    Connection& m_con;
+	Connection& m_con;
 };
 
 } // of namespace Eris
