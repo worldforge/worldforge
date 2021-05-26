@@ -86,9 +86,7 @@ class SmartPtr
     }
     SmartPtr<T> copy() const noexcept
     {
-        SmartPtr<T> ret = SmartPtr(ptr->copy());
-        ret.decRef();
-        return ret;
+        return SmartPtr(ptr->copy());
     }
     // If you want to make these protected, please ensure that the
     // destructor is made virtual to ensure your new class behaves

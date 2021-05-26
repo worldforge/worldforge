@@ -356,7 +356,7 @@ template<typename T>
 T * BaseObjectData::copyInstance(const T& instance) {
 	T * copied = T::allocator.alloc();
 	*copied = instance;
-	copied->m_refCount = 0;
+	copied->m_refCount = -1;
 	return copied;
 }
 

@@ -88,6 +88,11 @@ int main(int argc, char** argv)
         assert(map["id"].String() == "123456");
         assert(map["args"].List().size() == 1);
 
+        auto sightCopyPtr = sight.copy();
+        assert(sightCopyPtr->getFrom() == "123456");
+
+		Atlas::Objects::Operation::Sight sightCopy = sight->copy();
+		assert(sightCopy->getFrom() == "123456");
 
     }
 
