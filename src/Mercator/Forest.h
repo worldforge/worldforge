@@ -70,6 +70,7 @@ class Forest {
     /// STL vector of plant species in this forest.
     typedef std::vector<Species> PlantSpecies;
   private:
+	//TODO: store as value, not pointer
     /// Area of terrain affected by the presence of this forest.
     Area* m_area;
     

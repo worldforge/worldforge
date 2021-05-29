@@ -47,9 +47,9 @@ int main()
     p.addCorner(p.numCorners(), Point2(50, 50));
     p.addCorner(p.numCorners(), Point2(-50, 50));    
     
-    Mercator::Area* ar = new Mercator::Area(1, false);
-    ar->setShape(p);
-    forest.setArea(ar);
+    Mercator::Area ar(1, false);
+    ar.setShape(p);
+    forest.setArea(&ar);
     
     time.start();
     for (int q=0;q<10;q++) {   
@@ -65,9 +65,9 @@ int main()
     p.addCorner(p.numCorners(), Point2(100, 100));
     p.addCorner(p.numCorners(), Point2(-100, 100));    
     
-    ar = new Mercator::Area(1, false);
-    ar->setShape(p);
-    forest.setArea(ar);
+    Mercator::Area ar2(1, false);
+	ar2.setShape(p);
+    forest.setArea(&ar2);
     
     time.start();
     for (int q=0;q<10;q++) {   

@@ -63,12 +63,11 @@ void testAreaShader()
     
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
     
-    Mercator::Shader * base_shader =
-          new Mercator::FillShader(Mercator::Shader::Parameters());
-    terrain.addShader(base_shader, 0);
+    Mercator::FillShader base_shader{Mercator::Shader::Parameters()};
+    terrain.addShader(&base_shader, 0);
 
-    Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade, 1);
+    Mercator::AreaShader ashade(1);
+    terrain.addShader(&ashade, 1);
     
     terrain.setBasePoint(0, 0, -1);
     terrain.setBasePoint(0, 1, 8);
@@ -106,14 +105,14 @@ void testCheckIntersect()
     
     a1.setShape(p);
     
-    Mercator::Segment * seg1 = new Mercator::Segment(0,0,seg_size);
+    Mercator::Segment seg1(0,0,seg_size);
 
-    bool success = a1.checkIntersects(*seg1);
+    bool success = a1.checkIntersects(seg1);
     assert(success);
 
-    Mercator::Segment * seg2 = new Mercator::Segment(1 * seg_size,0,seg_size);
+    Mercator::Segment seg2 (1 * seg_size,0,seg_size);
 
-    success = a1.checkIntersects(*seg2);
+    success = a1.checkIntersects(seg2);
     assert(!success);
 }
 
@@ -131,8 +130,8 @@ int main(int argc, char* argv[])
     
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, seg_size);
 
-    Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade, 0);
+    Mercator::AreaShader ashade(1);
+    terrain.addShader(&ashade, 0);
     
     terrain.setBasePoint(-2, -1, 5);
     terrain.setBasePoint(-2, 0, 2);

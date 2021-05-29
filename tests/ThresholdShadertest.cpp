@@ -24,10 +24,8 @@ void testHighShader()
     Mercator::Shader::Parameters params;
     params[Mercator::HighShader::key_threshold] = 5.f;
     
-    Mercator::HighShader* dshade = new Mercator::HighShader();
-    delete dshade;
-    dshade = new Mercator::HighShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::HighShader dshade{params};
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, 20);
     terrain.setBasePoint(0, 1, 1);
@@ -43,7 +41,7 @@ void testHighShader()
     seg->populateSurfaces();
 
     seg = terrain.getSegmentAtIndex(1,0);
-    dshade->checkIntersect(*seg);
+    dshade.checkIntersect(*seg);
 }
 
 void testLowShader()
@@ -53,10 +51,8 @@ void testLowShader()
     Mercator::Shader::Parameters params;
     params[Mercator::LowShader::key_threshold] = 5.f;
     
-    Mercator::LowShader* dshade = new Mercator::LowShader();
-    delete dshade;
-    dshade = new Mercator::LowShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::LowShader dshade{params};
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, 2);
     terrain.setBasePoint(0, 1, 1);
@@ -72,7 +68,7 @@ void testLowShader()
     seg->populateSurfaces();
 
     seg = terrain.getSegmentAtIndex(1,0);
-    dshade->checkIntersect(*seg);
+    dshade.checkIntersect(*seg);
 }
 
 void testBandShader()
@@ -83,10 +79,8 @@ void testBandShader()
     params[Mercator::BandShader::key_lowThreshold] = 2.f;
     params[Mercator::BandShader::key_highThreshold] = 8.f;
     
-    Mercator::BandShader* dshade = new Mercator::BandShader();
-    delete dshade;
-    dshade = new Mercator::BandShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::BandShader dshade{params};
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, 2);
     terrain.setBasePoint(0, 1, 1);
@@ -102,7 +96,7 @@ void testBandShader()
     seg->populateSurfaces();
 
     seg = terrain.getSegmentAtIndex(1,0);
-    dshade->checkIntersect(*seg);
+    dshade.checkIntersect(*seg);
 }
 
 int main()

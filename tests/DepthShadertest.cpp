@@ -26,10 +26,8 @@ void testDepthShader()
     params[Mercator::DepthShader::key_waterLevel] = 0.f;
     params[Mercator::DepthShader::key_murkyDepth] = -12.f;
     
-    Mercator::DepthShader* dshade = new Mercator::DepthShader();
-    delete dshade;
-    dshade = new Mercator::DepthShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::DepthShader dshade(params);
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, -20);
     terrain.setBasePoint(0, 1, 1);
@@ -45,7 +43,7 @@ void testDepthShader()
     seg->populateSurfaces();
 
     seg = terrain.getSegmentAtIndex(1,0);
-    dshade->checkIntersect(*seg);
+    dshade.checkIntersect(*seg);
 }
 
 int main()

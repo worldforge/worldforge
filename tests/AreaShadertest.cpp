@@ -37,8 +37,8 @@ void testAreaShader()
     
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
     
-    Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade, 0);
+    Mercator::AreaShader ashade(1);
+    terrain.addShader(&ashade, 0);
     
     terrain.setBasePoint(0, 0, -1);
     terrain.setBasePoint(0, 1, 8);

@@ -42,8 +42,8 @@ int main()
     Mercator::Terrain t;
 
     // Add a null test shader to the terrain
-    Mercator::Shader * shader = new TestShader;
-    t.addShader(shader, 0);
+	TestShader shader{};
+    t.addShader(&shader, 0);
 
     // Create a test area with a shape which intersects
     // the Segment at 0,0
@@ -77,7 +77,7 @@ int main()
     // have been stubbed out.
     Mercator::Segment::Surfacestore & sss = seg->getSurfaces();
 
-    auto* sfce = new Mercator::Surface(*seg, *shader);
+    auto* sfce = new Mercator::Surface(*seg, shader);
 
     // Force allocation of the surface buffer so we can check later that it
     // gets destroyed when the area is added to the terrain.

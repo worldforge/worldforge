@@ -100,8 +100,9 @@ int main()
                   << std::endl << std::flush;
         return 1;
     }
+	Mercator::FillShader fillShader{};
 
-    terrain.addShader(new Mercator::FillShader(), 0);
+    terrain.addShader(&fillShader, 0);
 
     if (tShaders.empty()) {
         std::cerr << "Shader store for terrain is empty after shader was added"

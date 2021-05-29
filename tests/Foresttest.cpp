@@ -92,7 +92,7 @@ int main()
         assert(plants.empty());
         assert(species.empty());
 
-        Mercator::Area* ar = new Mercator::Area(1, false);
+        Mercator::Area ar(1, false);
         WFMath::Polygon<2> p;
         
         p.addCorner(p.numCorners(), Point2(5, 8));
@@ -102,8 +102,8 @@ int main()
         p.addCorner(p.numCorners(), Point2(-2, 26));
         p.addCorner(p.numCorners(), Point2(1, 5));
         
-        ar->setShape(p);
-        forest.setArea(ar);
+        ar.setShape(p);
+        forest.setArea(&ar);
 
         forest.populate();
         // Forest has no species, so even when populated it is empty

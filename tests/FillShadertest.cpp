@@ -24,10 +24,8 @@ void testFillShader()
 
     Mercator::Shader::Parameters params;
     
-    Mercator::FillShader* dshade = new Mercator::FillShader();
-    delete dshade;
-    dshade = new Mercator::FillShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::FillShader dshade{params};
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, -20);
     terrain.setBasePoint(0, 1, 1);

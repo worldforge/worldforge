@@ -28,10 +28,8 @@ void testGrassShader()
     params[Mercator::GrassShader::key_cutoff] = 0.4f;
     params[Mercator::GrassShader::key_intercept] = 4.f;
     
-    Mercator::GrassShader* dshade = new Mercator::GrassShader();
-    delete dshade;
-    dshade = new Mercator::GrassShader(params);
-    terrain.addShader(dshade, 0);
+    Mercator::GrassShader dshade{params};
+    terrain.addShader(&dshade, 0);
     
     terrain.setBasePoint(0, 0, 20);
     terrain.setBasePoint(0, 1, 1);
@@ -48,7 +46,7 @@ void testGrassShader()
 
     // This segment is too low to shade
     seg = terrain.getSegmentAtIndex(1,0);
-    dshade->checkIntersect(*seg);
+    dshade.checkIntersect(*seg);
 }
 
 int main()
