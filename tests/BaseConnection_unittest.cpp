@@ -111,32 +111,37 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
 
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+        TestBaseConnection tbc(io_service, &bridge);
     }
 
 
     // Test the other code path when a second connection is created.
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+        TestBaseConnection tbc(io_service, &bridge);
     }
 
     // Test isConnected.
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+        TestBaseConnection tbc(io_service, &bridge);
 
         assert(!tbc.isConnected());
     }
 
     // Test getStatus().
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
     }
 
     // Test setStatus().
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
 
@@ -149,7 +154,8 @@ int main()
 
     // Test connect() and verify getStatus() changes.
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         assert(tbc.getStatus() == Eris::BaseConnection::DISCONNECTED);
 
@@ -162,7 +168,8 @@ int main()
 
     // Test onConnect() does nothing.
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         tbc.test_onConnect();
     }
@@ -173,7 +180,8 @@ int main()
 
         assert(!onConnect_checker.flagged());
 
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+        TestBaseConnection tbc(io_service, &bridge);
 
         tbc.Connected.connect(sigc::mem_fun(onConnect_checker,
                                             &SignalFlagger::set));
@@ -187,14 +195,15 @@ int main()
 
     // Test hardDisconnect() does nothing.
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         tbc.test_hardDisconnect(true);
     }
 
 //    // Test hardDisconnect() throws in polldefault when connected
 //    {
-//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//        TestBaseConnection tbc(io_service, &bridge);
 //
 //        // Add members to be consistent with connected state.
 //        tbc.setup_stream();
@@ -215,7 +224,7 @@ int main()
 //
 //    // Test hardDisconnect() throws in polldefault when disconnecting
 //    {
-//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//        TestBaseConnection tbc(io_service, &bridge);
 //
 //        // Add members to be consistent with disconnecting state.
 //        tbc.setup_stream();
@@ -236,7 +245,7 @@ int main()
 //
 //    // Test hardDisconnect() throws in polldefault when negotiating
 //    {
-//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//        TestBaseConnection tbc(io_service, &bridge);
 //
 //        // Add members to be consistent with negotiating state.
 //        tbc.setup_stream();
@@ -256,7 +265,7 @@ int main()
 //
 //    // Test hardDisconnect() throws in polldefault when negotiating
 //    {
-//        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+//        TestBaseConnection tbc(io_service, &bridge);
 //
 //        // Add members to be consistent with connecting state.
 //        tbc.setup_stream();
@@ -275,7 +284,8 @@ int main()
 
     // Test hardDisconnect() throws in polldefault when negotiating
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         // Add members to be consistent with connecting state.
         tbc.setup_socket();
@@ -294,7 +304,8 @@ int main()
 
     // Test onConnectTimeout()
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         tbc.test_onConnectTimeout();
 
@@ -303,7 +314,8 @@ int main()
 
     // Test onNegotiateTimeout()
     {
-        TestBaseConnection tbc(io_service, new Atlas::Message::QueuedDecoder);
+		Atlas::Message::QueuedDecoder bridge;
+		TestBaseConnection tbc(io_service, &bridge);
 
         tbc.test_onNegotiateTimeout();
 

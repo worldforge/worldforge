@@ -101,9 +101,6 @@ in response to login / create operations */
         /** Many operations will produce errors if the account is not logged in. */
         bool isLoggedIn() const;
 
-        /// Returns a container of character types that the client is allowed to create.
-        const std::vector<std::string> &getCharacterTypes() const;
-
         /// Get the characters owned by this account.
         /**
         Note you should call
@@ -158,12 +155,6 @@ in response to login / create operations */
          * @returns A store of available spawn points.
          */
         const std::vector<SpawnPoint> &getSpawnPoints() const;
-
-        /**
-        Request de-activation of a character. The 'AvatarDeactivated' signal will
-        be emitted when the deactivation completes.
-        */
-        Result deactivateCharacter(Avatar *av);
 
         /// returns the account ID if logged in
         const std::string &getId() const;
@@ -240,7 +231,7 @@ in response to login / create operations */
     protected:
         friend class AccountRouter;
 
-        friend class Avatar; // so avatar can call deactivateCharacter
+        friend class Avatar; // so avata can call destroyCharacter
 
         void sightCharacter(const Atlas::Objects::Operation::RootOperation &op);
 
@@ -296,7 +287,7 @@ in response to login / create operations */
             CREATED_CHAR        ///< a character was created, we now need to possess it
         };
 
-        void internalDeactivateCharacter(Avatar *av);
+        void internalDeactivateCharacter(const std::string& avatarId);
 
         virtual void updateFromObject(const Atlas::Objects::Entity::Account &p);
 

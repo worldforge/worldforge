@@ -39,17 +39,16 @@ int main() {
 	{
 		boost::asio::io_service io_service;
 		Eris::EventService eventService(io_service);
-		Eris::Connection* c = new Eris::Connection(io_service, eventService, "", "", 0);
-		new Eris::Account(*c);
+		Eris::Connection c(io_service, eventService, "", "", 0);
+		Eris::Account account(c);
 	}
 
 	// Destructor
 	{
 		boost::asio::io_service io_service;
 		Eris::EventService eventService(io_service);
-		Eris::Connection* c = new Eris::Connection(io_service, eventService, "", "", 0);
-		Eris::Account* ac = new Eris::Account(*c);
-		delete ac;
+		Eris::Connection c(io_service, eventService, "", "", 0);
+		Eris::Account ac(c);
 	}
 
 	return 0;

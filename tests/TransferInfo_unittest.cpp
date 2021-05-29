@@ -37,35 +37,34 @@ static const int TEST_PORT = 0x199d;
 int main()
 {
     {
-        new Eris::TransferInfo("", 0, "", "");
+        Eris::TransferInfo info("", 0, "", "");
     }
 
     {
-        Eris::TransferInfo * ti = new Eris::TransferInfo("", 0, "", "");
-        delete ti;
+        Eris::TransferInfo ti("", 0, "", "");
     }
 
     {
-        Eris::TransferInfo * ti = new Eris::TransferInfo(TEST_HOST, 0, "", "");
-        const std::string & host = ti->getHost();
+        Eris::TransferInfo ti(TEST_HOST, 0, "", "");
+        const std::string & host = ti.getHost();
         assert(host == TEST_HOST);
     }
 
     {
-        Eris::TransferInfo * ti = new Eris::TransferInfo("", TEST_PORT, "", "");
-        int port = ti->getPort();
+        Eris::TransferInfo ti("", TEST_PORT, "", "");
+        int port = ti.getPort();
         assert(port == TEST_PORT);
     }
 
     {
-        Eris::TransferInfo * ti = new Eris::TransferInfo("", 0, TEST_KEY, "");
-        const std::string & key = ti->getPossessKey();
+        Eris::TransferInfo ti("", 0, TEST_KEY, "");
+        const std::string & key = ti.getPossessKey();
         assert(key == TEST_KEY);
     }
 
     {
-        Eris::TransferInfo * ti = new Eris::TransferInfo("", 0, "", TEST_ID);
-        const std::string & id = ti->getPossessEntityId();
+        Eris::TransferInfo ti("", 0, "", TEST_ID);
+        const std::string & id = ti.getPossessEntityId();
         assert(id == TEST_ID);
     }
 

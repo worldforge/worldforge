@@ -65,10 +65,6 @@ void testServerInfoCorrect(const Atlas::Objects::Entity::RootEntity& svr)
 
 int main()
 {
-
-    //ctor
-    new Eris::ServerInfo();
-
     {
         //ctor and dtor
         Eris::ServerInfo();

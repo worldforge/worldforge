@@ -291,7 +291,7 @@ namespace Eris {
         CharacterEntityDeleted();
         m_entity = nullptr;
         //When the avatar entity is destroyed we should also deactivate the character.
-        m_account.deactivateCharacter(this);
+        deactivate();
     }
 
     void Avatar::onTransferRequested(const TransferInfo &transfer) {

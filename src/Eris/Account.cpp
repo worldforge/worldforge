@@ -99,7 +99,7 @@ Account::~Account() {
 	ActiveCharacterMap::iterator it;
 	for (it = m_activeAvatars.begin(); it != m_activeAvatars.end();) {
 		auto cur = it++;
-		deactivateCharacter(cur->second.get()); // send logout op
+		cur->second->deactivate(); // send logout op
 	}
 	//Don't wait for logout response, delete all avatars now.
 	while (!m_activeAvatars.empty()) {
@@ -318,11 +318,6 @@ Result Account::takeCharacter(const std::string& id) {
 
 	m_con.getResponder().await(possessOp->getSerialno(), this, &Account::possessResponse);
 	m_status = Status::TAKING_CHAR;
-	return NO_ERR;
-}
-
-Result Account::deactivateCharacter(Avatar* av) {
-	av->deactivate();
 	return NO_ERR;
 }
 
@@ -632,11 +627,13 @@ void Account::avatarCreateResponse(const RootOperation& op) {
 	}
 }
 
-void Account::internalDeactivateCharacter(Avatar* av) {
-	if (m_activeAvatars.find(av->getId()) == m_activeAvatars.end()) {
+void Account::internalDeactivateCharacter(const std::string& avatarId) {
+	auto I = m_activeAvatars.find(avatarId);
+	if (I == m_activeAvatars.end()) {
 		warning() << "trying to deactivate non active character";
+	} else {
+		m_activeAvatars.erase(I);
 	}
-	m_activeAvatars.erase(av->getId());
 }
 
 void Account::sightCharacter(const RootOperation& op) {
