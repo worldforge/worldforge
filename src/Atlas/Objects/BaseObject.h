@@ -191,7 +191,7 @@ inline void Allocator<T>::free(T *instance)
 	{
 		std::lock_guard<std::mutex> lock(m_begin_Data_mutex);
 		instance->m_next = m_begin_Data;
-		m_begin_Data = static_cast<T*>(instance);
+		m_begin_Data = instance;
 	}
 }
 
