@@ -29,32 +29,32 @@
 #include <list>
 #include <map>
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
+namespace Objects {
 
-template <class T>
-static SmartPtr<RootData> factory(const std::string &, int)
-{
+template<class T>
+static SmartPtr <RootData> factory(const std::string&, int) {
 	return SmartPtr<T>();
 }
 
-template <class T>
-static SmartPtr<RootData> defaultInstance(const std::string &, int)
-{
+template<class T>
+static SmartPtr <RootData> defaultInstance(const std::string&, int) {
 	return T::allocator.getDefaultObjectInstance();
 }
 
 
-SmartPtr<RootData> generic_factory(const std::string & name, int no);
-SmartPtr<RootData> anonymous_factory(const std::string & name, int no);
+SmartPtr <RootData> generic_factory(const std::string& name, int no);
 
-typedef Root (*FactoryMethod)(const std::string &, int);
-typedef Root (*DefaultInstanceMethod)(const std::string &, int);
+SmartPtr <RootData> anonymous_factory(const std::string& name, int no);
+
+typedef Root (* FactoryMethod)(const std::string&, int);
+
+typedef Root (* DefaultInstanceMethod)(const std::string&, int);
 
 /**
  * Holds methods for creating new instances and accessing the default instance.
  */
-struct Factory
-{
+struct Factory {
 public:
 	/**
 	 * Method for creating a new instance.
@@ -71,22 +71,42 @@ public:
 	 */
 	int classno;
 };
-typedef std::map<const std::string, Factory > FactoryMap;
+typedef std::map<const std::string, Factory> FactoryMap;
 
-class Factories
-{
+class Factories {
 public:
 	friend class AddFactories;
 
 	Factories();
-	Factories(const Factories &) = default;
+
+	Factories(const Factories&) = default;
+
 	~Factories();
 
 	bool hasFactory(const std::string& name) const;
+
 	Root createObject(const std::string& name) const;
-	Root createObject(const Atlas::Message::MapType & msg) const;
+
+	/**
+	 * Creates a new object.
+	 *
+	 * If the map that's supplied can be destroyed, look into using "createObject" with move semantics..
+	 * @param msg
+	 * @return
+	 */
+	Root createObject(const Atlas::Message::MapType& msg) const;
+
+	/**
+	 * Creates a new object by supplying a Map which is moved into the resulting object.
+	 * @param msg
+	 * @return
+	 */
+	Root createObject(Atlas::Message::MapType&& msg) const;
+
 	Root getDefaultInstance(const std::string& name) const;
+
 	std::list<std::string> getKeys() const;
+
 	int addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod);
 
 	void installStandardTypes();
@@ -98,11 +118,17 @@ public:
 	 */
 	std::vector<Root> parseListOfObjects(const Atlas::Message::ListType& val) const;
 
+	std::vector<Root> parseListOfObjects(Atlas::Message::ListType&& val) const;
+
 private:
 
 	static int enumMax;
 
 	FactoryMap m_factories;
+
+
+	Root instantiateObject(const Atlas::Message::MapType& msg) const;
+
 
 	/**
 	 * Adds a new factory.
@@ -123,16 +149,16 @@ private:
 	 * @param name The class name attached to the factory.
 	 * @param classno The class number.
 	 */
-	template <typename T>
+	template<typename T>
 	void addFactory(const std::string& name, int classno);
 };
 
-template <typename T>
-void Factories::addFactory(const std::string& name, int classno)
-{
+template<typename T>
+void Factories::addFactory(const std::string& name, int classno) {
 	addFactory(name, &factory<T>, &defaultInstance<T>, classno);
 }
 
-} } // namespace Atlas::Objects
+}
+} // namespace Atlas::Objects
 
 #endif //ATLAS_C_FACTORIES_H

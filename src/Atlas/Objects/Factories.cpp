@@ -63,44 +63,54 @@ Root Factories::createObject(const std::string& name) const {
 }
 
 Root Factories::createObject(const MapType& msg_map) const {
-	Root obj(nullptr);
+	Root obj = instantiateObject(msg_map);
 
+	for (auto& entry : msg_map) {
+		obj->setAttr(entry.first, entry.second, this);
+	}
+	return obj;
+}
+
+Root Factories::createObject(Atlas::Message::MapType&& msg_map) const {
+	Root obj = instantiateObject(msg_map);
+
+	for (auto& entry : msg_map) {
+		obj->setAttr(entry.first, std::move(entry.second), this);
+	}
+	return obj;
+}
+
+
+Root Factories::instantiateObject(const Atlas::Message::MapType& msg_map) const {
 	// is this instance of entity or operation?
 	auto I = msg_map.find(Atlas::Objects::OBJTYPE_ATTR);
 	auto Iend = msg_map.end();
-	bool is_instance = false;
 	if (I != Iend && I->second.isString()) {
-		const std::string& objtype = I->second.String();
+		auto& objtype = I->second.String();
 		if (objtype == "op" || objtype == "obj" || objtype == "object") {
 			// get parent
 			I = msg_map.find(Atlas::Objects::PARENT_ATTR);
 			if (I != Iend && I->second.isString()) {
-				const std::string& parent = I->second.String();
+				auto& parent = I->second.String();
 				// objtype and parent ok, try to create it:
 				auto J = m_factories.find(parent);
 				if (J != m_factories.end()) {
-					obj = J->second.factory_method(parent, J->second.classno);
+					return J->second.factory_method(parent, J->second.classno);
 				} else {
 					if (objtype == "op") {
-						obj = Atlas::Objects::Operation::Generic();
+						return Atlas::Objects::Operation::Generic();
 					} else {
-						obj = Atlas::Objects::Entity::Anonymous();
+						return Atlas::Objects::Entity::Anonymous();
 					}
 				}
-				is_instance = true;
 				// FIXME We might want to do something different here.
 			} // has parent attr?
 		} // has known objtype
 	} // has objtype attr
-	if (!is_instance) {
-		// Should we really use factory? Why not just instantiate by hand?
-		obj = Atlas::Objects::Entity::Anonymous();
-	} // not instance
-	for (I = msg_map.begin(); I != Iend; I++) {
-		obj->setAttr(I->first, I->second, this);
-	}
-	return obj;
+	// Should we really use factory? Why not just instantiate by hand?
+	return Atlas::Objects::Entity::Anonymous();
 }
+
 
 Root Factories::getDefaultInstance(const std::string& name) const {
 	auto I = m_factories.find(name);
@@ -143,7 +153,18 @@ std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& 
 	objects.reserve(val.size());
 	for (const auto& entry : val) {
 		if (entry.isMap()) {
-			objects.push_back(createObject(entry.Map()));
+			objects.emplace_back(createObject(entry.Map()));
+		}
+	}
+	return objects;
+}
+
+std::vector<Root> Factories::parseListOfObjects(Atlas::Message::ListType&& val) const {
+	std::vector<Root> objects;
+	objects.reserve(val.size());
+	for (auto& entry : val) {
+		if (entry.isMap()) {
+			objects.emplace_back(createObject(entry.moveMap()));
 		}
 	}
 	return objects;
