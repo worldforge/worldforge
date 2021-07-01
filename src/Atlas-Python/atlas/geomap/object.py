@@ -24,7 +24,7 @@ from atlas.geomap.Vector3D import Vector3D
 
 class MapObject(atlas.Object):
     def __init__(self, obj):
-        apply(atlas.Object.__init__, (self,), obj.__dict__)
+        atlas.Object.__init__(*(self,), **obj.__dict__)
     def get_xyz(self):
         """get location: if relative to location (container),
            add our position to actual container location"""

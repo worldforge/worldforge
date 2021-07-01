@@ -26,7 +26,7 @@ class MediaInfo(UserDict):
         UserDict.__init__(self)
         self.original_dict = media_info_dict
         self.resolver = atlas.analyse.Resolver(self)
-        self.add_objects(media_info_dict.values())
+        self.add_objects(list(media_info_dict.values()))
 
     def add_objects(self, objects):
         """assign to self media info keyed by obj.filter.id
@@ -35,29 +35,29 @@ class MediaInfo(UserDict):
         for obj in objects:
             if hasattr(obj, "filter") and hasattr(obj.filter, "id"):
                 lst = self.get(obj.filter.id, [])
-                print "<<<filter>>>", obj.id, obj.filter.id, len(lst),
+                print("<<<filter>>>", obj.id, obj.filter.id, len(lst), end=' ')
                 lst.append(obj)
                 self[obj.filter.id] = lst
-                print "->", len(lst)
+                print("->", len(lst))
             else:
-                print "[[[itself]]]", obj.id,
+                print("[[[itself]]]", obj.id, end=' ')
                 if type(self.get(obj.id))==ListType:
-                    print "not used"
+                    print("not used")
                 else:
-                    print "used"
+                    print("used")
                     self[obj.id] = obj
         
     def create_object(self, obj):
-        print "MediaInfo:",
+        print("MediaInfo:", end=' ')
         atlas.print_parents(obj)
         #print obj.__class__
         atlas.uri_type["texture_source"] = 1
         unresolved = []
         for attr in ["texture_source", "media_groups"]:
             unresolved = unresolved + self.resolver.resolve_attribute(obj, attr)
-        print "MediaInfo?:", unresolved
+        print("MediaInfo?:", unresolved)
         resolved_objects = self.resolver.new_object(obj)
-        print "MediaInfo!:", map(lambda o:o.id, resolved_objects)
+        print("MediaInfo!:", [o.id for o in resolved_objects])
         self.add_objects(resolved_objects)
         #print self.resolver.pending
         #print "info:", self.resolver.depencies
@@ -69,16 +69,16 @@ class MediaInfo(UserDict):
         pass
 
     def delete_object(self, obj):
-        if self.has_key(obj.id):
+        if obj.id in self:
             del self[obj.id]
 
     def score_match(self, obj, mi):
         """how many same?"""
         score = 0
-        for key, value in mi.filter.items():
+        for key, value in list(mi.filter.items()):
             if hasattr(obj, key):
                 value2 = getattr(obj, key)
-                if type(value)==StringType and hasattr(value2, "id"):
+                if isinstance(value, str) and hasattr(value2, "id"):
                     value2 = value2.id
                 if value==value2:
                     score = score + 1
@@ -89,7 +89,7 @@ class MediaInfo(UserDict):
         
     def lookup_score(self, obj, media_type, original_obj):
         """find best match or if none try again with parents"""
-        if self.has_key(obj.id):
+        if obj.id in self:
             mi_lst = self[obj.id]
             if type(mi_lst)!=ListType: return
             #print "SCORE---:", map(lambda obj:obj.id, mi_lst)
@@ -99,7 +99,7 @@ class MediaInfo(UserDict):
             for mi in mi_lst:
                 mtype = "media_"+media_type
                 if not hasattr(mi, "media_groups"): return []
-                if mi.media_groups.has_key(mtype):
+                if mtype in mi.media_groups:
                     mi2 = mi.media_groups[mtype][0]
                     if type(mi2)==StringType:
                         mi2 = self[mi2]

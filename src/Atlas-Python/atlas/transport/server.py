@@ -26,7 +26,7 @@ BaseServer: handle negotiation using above
 """
 
 import atlas, negotiation
-from connection import args2address
+from .connection import args2address
 from atlas.util.debug import debug
 from atlas.transport.connection import Loop
 

@@ -16,7 +16,7 @@
 #License along with this library; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-print "Not yet ported to rewritten Atlas-Python!"
+print("Not yet ported to rewritten Atlas-Python!")
 import string, time
 import os,stat,sys
 from types import *
@@ -26,10 +26,11 @@ import xml
 
 #temnporary so testing is easier:
 import binary1
-reload(binary1)
+import importlib
+importlib.reload(binary1)
 import binary2
-reload(binary2)
-reload(codec)
+importlib.reload(binary2)
+importlib.reload(codec)
 #import Binary
 #reload(Binary)
 #from Binary import Binary
@@ -41,8 +42,8 @@ def disp_file_stats(msg_count, file_name, description):
     return disp_stats(msg_count,size,description)
 
 def disp_stats(count,total_len,description):
-    print "%s:\n Total length: %6i, Length/msg: %6.1f" % \
-          (description,total_len,1.0*total_len/count)
+    print("%s:\n Total length: %6i, Length/msg: %6.1f" % \
+          (description,total_len,1.0*total_len/count))
     return description,total_len,1.0*total_len/count
 
 def calculate_stats(msgs, codec):
@@ -106,14 +107,14 @@ Bach_beta         544.18      18.72      12.21
 Binary1_beta      441.45      22.03      14.34
 Binary2_test      260.30      19.02      13.23
     """
-    print
-    print
-    print "Test file:",file_name
+    print()
+    print()
+    print("Test file:",file_name)
     global all_msg
     xml_codec = codec.get_XML()
     #all_msg = xml_codec.decode(open(file_name).read())
     all_msg = file.read_file(file_name)
-    print "Msg count:",len(all_msg)
+    print("Msg count:",len(all_msg))
 
     all_stats = []
     #XML size
@@ -142,12 +143,12 @@ Binary2_test      260.30      19.02      13.23
 ##        all_stats[-1][0][0] = name
 ##    all_stats.sort(lambda e1,e2:cmp(e1[2][2],e2[2][2]))
 
-    print
+    print()
     filter_types = ("uncompressed", "gzip -9", "bzip2 -9")
-    print "            %10s %10s %10s" % filter_types
+    print("            %10s %10s %10s" % filter_types)
     for stat in all_stats:
-        print "%-13s %10.2f %10.2f %10.2f" % (
-            stat[0][0], stat[0][2], stat[1][2], stat[2][2])
+        print("%-13s %10.2f %10.2f %10.2f" % (
+            stat[0][0], stat[0][2], stat[1][2], stat[2][2]))
 
 def all_tests():
     all_encoding_stats("cyphesis_atlas_XML_2000-03-27_no_obj.log")
@@ -200,21 +201,21 @@ all_tests()
 #msg2 = p("[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]")
 
 def check_time(codec, all_msgs):
-    print codec.id
+    print(codec.id)
     encode = codec.encode
     str_all_msgs = []
     t0 = time.time()
     for obj in all_msgs:
         str_all_msgs.append(encode(obj))
     t1 = time.time()
-    print t1-t0
+    print(t1-t0)
     decode = codec.decode
     if codec.id[:3]=="XML":
         decode("<atlas>")
     t0 = time.time()
     for str in str_all_msgs: decode(str)
     t1 = time.time()
-    print t1-t0
+    print(t1-t0)
     
 def check_all_times():
     for c in (codec.get_XML(),

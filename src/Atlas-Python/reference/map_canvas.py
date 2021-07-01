@@ -37,7 +37,7 @@ from atlas.transport.file import read_file, read_file_as_dict
 try:
     from wxPython.wx import *
 except ImportError:
-    print "Need wxPython from wxPython.org"
+    print("Need wxPython from wxPython.org")
     sys.exit(1)
 
 try:
@@ -67,7 +67,7 @@ if not haveGLCanvas:
 elif not haveOpenGL:
     frame = wxFrame(None, -1, "")
     frame.Show(true)
-    print "???"
+    print("???")
     dlg = wxMessageDialog(frame,
                           'The OpenGL package was not found.  You can get it at\n'
                           'http://PyOpenGL.sourceforge.net/',
@@ -80,7 +80,7 @@ try:
     foo = glTexImage2D
     texturing_enabled = 1
 except NameError:
-    print "You don't have enough recent OpenGL, disabling texturing..."
+    print("You don't have enough recent OpenGL, disabling texturing...")
     texturing_enabled = 0
 
 fonts_enabled = 0
@@ -93,18 +93,18 @@ if texturing_enabled:
         #font_file = "/usr/share/fonts/default/TrueType/helcr___.ttf"
         font_bitmaps = {}
     except ImportError:
-        print "Fonts disabled"
-        print "You need PyFT FreeType Wrappers for Python"
-        print "from http://starship.python.net/crew/kernr/Projects.html"
-        print "compile line in linux: gcc -O2 -fPIC -shared -I/usr/include/python2.2 -I/usr/include/freetype1/freetype -o freetypecmodule.so freetype_wrap.c -lttf"
-        print "install line: cp freetypecmodule.so freetype.py /usr/lib/python2.2/site-packages/"
-        print "replace 2.2 with your python version"
+        print("Fonts disabled")
+        print("You need PyFT FreeType Wrappers for Python")
+        print("from http://starship.python.net/crew/kernr/Projects.html")
+        print("compile line in linux: gcc -O2 -fPIC -shared -I/usr/include/python2.2 -I/usr/include/freetype1/freetype -o freetypecmodule.so freetype_wrap.c -lttf")
+        print("install line: cp freetypecmodule.so freetype.py /usr/lib/python2.2/site-packages/")
+        print("replace 2.2 with your python version")
 else:
-    print "Fonts disabled, because texturing disabled"
+    print("Fonts disabled, because texturing disabled")
     
 
 if not (texturing_enabled and fonts_enabled):
-    raw_input("press enter to continue...")
+    input("press enter to continue...")
 
 
 def drawCharacter(char, font=font_file, size=24, type='pix'):
@@ -161,7 +161,7 @@ def rot2glmatrix(rot):
 ##    print rot
 ##    print map(lambda row:row + [0.0], rot) + [0.0, 0.0, 0.0, 1.0]
 ##    print "-"*60
-    return map(lambda row:row + [0.0], rot) + [0.0, 0.0, 0.0, 1.0]
+    return [row + [0.0] for row in rot] + [0.0, 0.0, 0.0, 1.0]
 
 class MapCanvas:
     def init_GL(self):
@@ -245,11 +245,11 @@ class MapCanvas:
     def draw_object(self, obj, depth, count=0):
         redraw_flag = 0
         if not obj: return
-        if not self.map.objects.has_key(obj.id): return
+        if obj.id not in self.map.objects: return
         if id(obj)!=id(self.map.objects[obj.id]):
-            print obj.id, "not same id()!!"
+            print(obj.id, "not same id()!!")
         if not hasattr(obj, "detailed_contents"):
-            print "????detailed_contents?",
+            print("????detailed_contents?", end=' ')
             atlas.print_parents(obj)
             #print "self.map.objects:",
             #atlas.print_parents(self.map.objects[obj.parents[0]])
@@ -283,7 +283,7 @@ class MapCanvas:
                 glTranslated(p.x, p.y, 0.0)
                 mi = self.media_info.lookup(obj, "2D")
                 if mi:
-                    apply(glColor3f, mi.rgb_color)
+                    glColor3f(*mi.rgb_color)
                     glLineWidth(mi.line_width)
                 else:
                     glColor3f(0.0, 0.0, 0.0)
@@ -308,16 +308,16 @@ class MapCanvas:
                         if art_info.data_uri[:5]=="file:":
                             file_name = art_info.data_uri[5:]
                         else:
-                            raise ValueError, "url type not supported (yet): "+art_info.data_uri
+                            raise ValueError("url type not supported (yet): "+art_info.data_uri)
                         use_texture = 1
                         if file_name[-4:]==".pnm":
                             fp = open(file_name)
                             fp.readline(); fp.readline()
-                            width,height = map(int, string.split(fp.readline()))
+                            width,height = list(map(int, string.split(fp.readline())))
                             special_flag = max(width, height)>256
                             if not special_flag: fp.close()
                         if special_flag:
-                            print "special!"
+                            print("special!")
                             special_flag = 1
                             fp.readline()
                             self.special_stuff.append(atlas.Object(texture = fp.read(),
@@ -328,7 +328,7 @@ class MapCanvas:
                         else:
                             img = Image.open(file_name)
                             img = img.convert("RGBA")
-                            print img.size
+                            print(img.size)
                             texture = img.tostring("raw", "RGBA", 0, -1)
                             if texture!=self.last_texture:
                                 if use_mipmap:
@@ -370,7 +370,7 @@ class MapCanvas:
                             #glColor3f(1.0, 1.0, 1.0)
                     else:
                         try:
-                            apply(glColor3f, mi.rgb_color)
+                            glColor3f(*mi.rgb_color)
                         except:
                             import pdb; pdb.set_trace()
                 else:
@@ -430,7 +430,7 @@ class MapCanvas:
                 #print obj.text
                 mi = self.media_info.lookup(obj, "2D")
                 if mi:
-                    apply(glColor3f, mi.rgb_color)
+                    glColor3f(*mi.rgb_color)
                     #print "with color:", mi.rgb_color
                 else:
                     glColor3f(0.0, 0.0, 0.0)
@@ -443,7 +443,7 @@ class MapCanvas:
                     extra_pixels = 1
 
                     bitmap_seen = {}
-                    for char in map(chr, range(256)):
+                    for char in map(chr, list(range(256))):
                     #for char in 'V\xc4 )(+-,/.1032547698?ACBEDFIHKJMLONPSRUT\xd6YX':
                         #render font
                         #print char, ord(char)
@@ -462,9 +462,9 @@ class MapCanvas:
                                     curX = 0
                                     curY += curHeight + extra_pixels
                                 else:
-                                    raise ValueError, "too big size for fonts"
+                                    raise ValueError("too big size for fonts")
                             if rasterMap.rows + curY > texture_size:
-                                raise ValueError, "too big size for fonts"
+                                raise ValueError("too big size for fonts")
                         #bitmap seen?
                         key = rasterMap.cols, rasterMap.rows, bitmap
                         if key in bitmap_seen:
@@ -625,12 +625,12 @@ class MapCanvas:
             top_object = self.top_object
         else:
             top_object = None
-            for obj in gmap.objects.values():
+            for obj in list(gmap.objects.values()):
                 if obj.objtype=="object" and not obj.loc and not top_object and obj.contains:
                     top_object = obj
                     if not top_object.has_parent("world"):
-                        print "top_object is not inherited from world!"
-                        print top_object.id
+                        print("top_object is not inherited from world!")
+                        print(top_object.id)
             self.top_object = top_object
         #print "top_object:", top_object
         
@@ -644,7 +644,7 @@ class MapCanvas:
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         for special in self.special_stuff:
-            print special.coordinates
+            print(special.coordinates)
             from atlas.util import texture
             #d?l[xy][12]: screen limits in map world
             lx1, lx2, ly2, ly1 = self.screen_limits
@@ -733,11 +733,11 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
         pos = event.GetPosition()
         posx = pos.x / float(size.width)
         posy = (size.height - pos.y - 1) / float(size.height)
-        print size, pos, posx, posy
+        print(size, pos, posx, posy)
         return posx, posy
 
     def OnLeftMouseUp(self, event):
-        print "left",
+        print("left", end=' ')
         posx, posy = self.get_relative_pos(event)
         self.middle = self.middle[0] + (posx-0.5) * self.zoom, \
                       self.middle[1] + (posy-0.5) * self.zoom,
@@ -745,7 +745,7 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
         self.OnPaint(event)
 
     def OnRightMouseUp(self, event):
-        print "right",
+        print("right", end=' ')
         posx, posy = self.get_relative_pos(event)
         self.middle = self.middle[0] + (posx-0.5) * self.zoom, \
                       self.middle[1] + (posy-0.5) * self.zoom,
@@ -756,7 +756,7 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
         event.Skip()
 
     def OnKeyDown(self, event):
-        print event, event.KeyCode(), time.time()
+        print(event, event.KeyCode(), time.time())
         if event.KeyCode()==ord("+"):
             self.zoom = self.zoom * 0.9
             self.OnPaint(event)
@@ -775,9 +775,9 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
         size_width = float(size.width)
         size_height = float(size.height)
         self.screen_size = size_width, size_height
-        print "-"*60
-        print len(self.map.objects)
-        print size_width, size_height
+        print("-"*60)
+        print(len(self.map.objects))
+        print(size_width, size_height)
         if not self.top_object: # or self.last_size!=(size_width, size_height):
             xlimits, ylimits, zlimits = self.map.dimensions()
             if xlimits.min==None:
@@ -803,15 +803,15 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
 ##        map_maxy += size_y / border_ratio
 ##        size_y += size_y / border_ratio *�2.0
         #if size.width > size.height:
-        print xlimits, ylimits #map_minx, map_miny, map_maxx, map_maxy
-        print xlimits.size(), ylimits.size()
-        print size_width/size_height, xlimits.size()/ylimits.size()
+        print(xlimits, ylimits) #map_minx, map_miny, map_maxx, map_maxy
+        print(xlimits.size(), ylimits.size())
+        print(size_width/size_height, xlimits.size()/ylimits.size())
         if size_width/size_height > xlimits.size()/ylimits.size():
-            print "x extended"
+            print("x extended")
             ratio = size_height / ylimits.size()
             xlimits.extend(size_width/ratio)
         else:
-            print "y extended"
+            print("y extended")
             ratio = size_width / xlimits.size()
             ylimits.extend(size_height/ratio)
         xlimits.set_middle_relative(self.middle[0])
@@ -822,8 +822,8 @@ class wxMapCanvas(wxGLCanvas,MapCanvas):
         self.middle_y = ylimits.middle()
         minx, maxx = xlimits.min, xlimits.max
         miny, maxy = ylimits.min, ylimits.max
-        print minx,miny, maxx,maxy
-        print "zoom position:", self.middle, self.zoom
+        print(minx,miny, maxx,maxy)
+        print("zoom position:", self.middle, self.zoom)
         self.set_2D_view(minx,miny, maxx,maxy)
 
     def OnPaint(self, event):
@@ -877,10 +877,10 @@ def combine_files(files, prefix=""):
         if file[:5]=="file:":
             file = file[5:]
         else:
-            raise ValueError, "uri type not supported: " + file
-        print file
+            raise ValueError("uri type not supported: " + file)
+        print(file)
         dict.update(read_file_as_dict(prefix + file))
-    fill_attributes(dict.values())
+    fill_attributes(list(dict.values()))
     return dict
 
 def file_as_operations(dict, file):
@@ -892,7 +892,7 @@ def file_as_operations(dict, file):
             dict[obj.id] = obj
             for i in range(len(obj.parents)):
                 obj.parents[i] = dict[obj.parents[i]]
-            print obj
+            print(obj)
             #import pdb; pdb.set_trace()
 
 def load_map_and_media_as_atlas_objects(makefile):
@@ -916,13 +916,13 @@ def load_map_and_media_as_atlas_objects(makefile):
     all_objects.update(base_definitions)
     all_objects.update(class_definitions)
     all_objects.update(objects)
-    fill_attributes(all_objects.values())
+    fill_attributes(list(all_objects.values()))
     
     media_info_dict = read_file_as_dict("../examples/meadow_media.atlas")
     all_media_info_dict = {}
     all_media_info_dict.update(base_definitions)
     all_media_info_dict.update(media_info_dict)
-    fill_attributes(all_media_info_dict.values())
+    fill_attributes(list(all_media_info_dict.values()))
     return all_objects, all_media_info_dict
     
 

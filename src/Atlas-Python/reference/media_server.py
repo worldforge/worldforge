@@ -34,7 +34,7 @@ class MediaServer(SocketServer):
     def setup(self):
         #self.objects = read_and_analyse("media.bach")
         self.objects = read_and_analyse("simple_core.atlas")
-        print len(self.objects), "objects loaded"
+        print(len(self.objects), "objects loaded")
 
 class MediaClient(TcpClient):
     def get_op(self, op):

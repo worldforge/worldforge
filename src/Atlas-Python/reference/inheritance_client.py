@@ -34,7 +34,7 @@ class Client(TcpClient):
         
     def info_op(self, op):
         ent = op.arg
-        print ent
+        print(ent)
         del self.waiting[ent.id]
         for id in ent.children:
             self.ask(id)

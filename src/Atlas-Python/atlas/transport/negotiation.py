@@ -99,7 +99,7 @@ class Negotiation:
         return self.result_code
 
     def process_line(self, line):
-        raise AttributeError, "User NegotiationClient or NegotiationServer instead"
+        raise AttributeError("User NegotiationClient or NegotiationServer instead")
 
     def collect_until_newline(self):
         if self.fp:
@@ -116,10 +116,10 @@ class Negotiation:
             return res
 
     def iwill(self, codecs):
-        return string.join(map(lambda c:"IWILL %s\n" % c, codecs), "") + '\n' # Fixes negotiation /Demitar
+        return string.join(["IWILL %s\n" % c for c in codecs], "") + '\n' # Fixes negotiation /Demitar
 
     def ican(self, codecs):
-        return string.join(map(lambda c:"ICAN %s\n" % c, codecs), "") + '\n' # Fixes negotiation /Demitar
+        return string.join(["ICAN %s\n" % c for c in codecs], "") + '\n' # Fixes negotiation /Demitar
 
     def analyse_line_codecs(self, line):
         modes = string.split(line)

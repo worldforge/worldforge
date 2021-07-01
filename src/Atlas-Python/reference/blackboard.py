@@ -27,7 +27,7 @@ from types import *
 try:
     from wxPython.wx import *
 except ImportError:
-    print "Need wxPython from wxPython.org"
+    print("Need wxPython from wxPython.org")
     sys.exit(1)
 from wxPython.lib.PyCrust import shell, version
 from time import time
@@ -72,7 +72,7 @@ class SharedObject:
                 value._id = key
             dict[key] = value
         #print "===", self.__class__, self.__class__.__bases__
-        apply(atlas.Object.__init__, (self,), dict)
+        atlas.Object.__init__(*(self,), **dict)
         self._connection = connection
         self._parent = parent
         self._id = ""
@@ -197,7 +197,7 @@ class BlackboardApp(wxApp):
         self.shell.interp.locals["o"] = atlas.Object
         self.shell.interp.locals["app"] = self
         import local_code
-        for key in local_code.__dict__.keys():
+        for key in list(local_code.__dict__.keys()):
             if key[0]!="_":
                 self.shell.interp.locals[key] = getattr(local_code, key)
         local_code.a = self.shell.interp.locals["a"]
@@ -230,7 +230,7 @@ def str_inf(o):
         return "[[%s]]" % o
     s = "%s,%s" % (o.id,o.__class__)
     if hasattr(o, "contains"):
-        s = "%s<%s>" % (s, str(map(str_inf, o.contains)))
+        s = "%s<%s>" % (s, str(list(map(str_inf, o.contains))))
     return s
 
 class Client(TcpClient):
@@ -246,11 +246,11 @@ class Client(TcpClient):
         left_meadow = self.objects.__dict__.get("left_meadow")
         if left_meadow:
             if type(left_meadow.id)==StringType:
-                print msg, "check_bug: left_meadow.id ok"
+                print(msg, "check_bug: left_meadow.id ok")
             else:
-                print msg, "check_bug: left_meadow.id ERROR"
+                print(msg, "check_bug: left_meadow.id ERROR")
         else:
-            print msg, "check_bug: left_meadow doesn't exist"
+            print(msg, "check_bug: left_meadow doesn't exist")
 
     def register_trigger(self, type, func):
         lst = self.triggers.get(type, [])
@@ -265,16 +265,16 @@ class Client(TcpClient):
     def check_consistency(self, msg, lst):
         #atlas.check_bug("check_consistency: " + msg)
         for obj in lst:
-            if not self.objects.has_key(obj.id): continue
+            if obj.id not in self.objects: continue
             if id(obj)!=id(self.objects[obj.id]):
-                print msg, "check_consistency: not same object:", obj.id
+                print(msg, "check_consistency: not same object:", obj.id)
             for attr in ["contains", "media_roots"]:
                 if hasattr(obj, attr):
                     for value in getattr(obj, attr):
-                        if type(value)==StringType:
-                            print msg, "check_consistency: string value:", obj.id, attr, value
+                        if isinstance(value, str):
+                            print(msg, "check_consistency: string value:", obj.id, attr, value)
                         elif id(value)!=id(self.objects[value.id]):
-                            print msg, "check_consistency: not same content:", obj.id, attr, value.id
+                            print(msg, "check_consistency: not same content:", obj.id, attr, value.id)
             
 
     def resolve_attributes(self, obj):
@@ -293,7 +293,7 @@ class Client(TcpClient):
         try:
             self.objects._send_flag = 0
             if self.verbose:
-                print call_type, obj.id
+                print(call_type, obj.id)
             self.check_consistency("before new_object:", [])
             if call_type!="delete":
                 resolved_objects = self.resolver.new_object(obj)
@@ -306,7 +306,7 @@ class Client(TcpClient):
                 changes_flag = 0
                 for i in range(len(resolved_objects)):
                     obj2 = resolved_objects[i]
-                    if obj2.id=="right_meadow": print "type(right_meadow.contains[0]) ==",type(obj2.contains[0])
+                    if obj2.id=="right_meadow": print("type(right_meadow.contains[0]) ==",type(obj2.contains[0]))
                     obj3 = self.check_class(obj2)
 ##                    if obj2.id=="fence2":
 ##                        print "???? fence2 <- right_meadow:", self.objects.get("right_meadow")
@@ -347,8 +347,8 @@ class Client(TcpClient):
         for id in id_lst:
             id = atlas.get_base_id(id)
             #print "?"*60, id, len(id_lst)
-            if id and not self.pending.has_key(id) and not self.objects.has_key(id):
-                print "?", id
+            if id and id not in self.pending and id not in self.objects:
+                print("?", id)
                 op = atlas.Operation("get", atlas.Object(id=id))
                 self.send_operation(op)
                 self.pending[id] = id
@@ -360,9 +360,9 @@ class Client(TcpClient):
         if method:
             method(ent)
         else:
-            if self.pending.has_key(ent.id):
+            if ent.id in self.pending:
                 del self.pending[ent.id]
-            if self.objects.has_key(ent.id):
+            if ent.id in self.objects:
                 op_type = "set"
             else:
                 op_type = "create"
@@ -370,13 +370,13 @@ class Client(TcpClient):
             setattr(self.objects, ent.id, ent)
             self.objects._send_flag = 1
             if self.verbose:
-                print "added/replaced ("+op_type+") entity:", ent
+                print("added/replaced ("+op_type+") entity:", ent)
             try:
                 ent = self.resolve_attributes(ent)
                 self.call_trigger(op_type, ent)
             except:
                 import traceback, sys
-                print traceback.print_exc(None, sys.stdout)
+                print(traceback.print_exc(None, sys.stdout))
 ##            if hasattr(ent, "contains"):
 ##                self.ask(ent.contains)
 
@@ -386,7 +386,7 @@ class Client(TcpClient):
         setattr(self.objects, ent.id, ent)
         self.objects._send_flag = 1
         if self.verbose:
-            print "added entity:", ent
+            print("added entity:", ent)
         ent = self.resolve_attributes(ent)
         self.call_trigger("create", ent)
 
@@ -405,7 +405,7 @@ class Client(TcpClient):
         finally:
             self.objects._send_flag = 1
         if self.verbose:
-            print "updated entity:", ent
+            print("updated entity:", ent)
         self.call_trigger("set", self.objects[atlas.get_base_id(ent.id)])
 
     def delete_op(self, op):
@@ -421,7 +421,7 @@ class Client(TcpClient):
         finally:
             self.objects._send_flag = 1
         if self.verbose:
-            print "deleted entity:", op.arg.id
+            print("deleted entity:", op.arg.id)
         if len(id_lst)>1:
             self.call_trigger("set", root_obj)
         else:
@@ -430,18 +430,18 @@ class Client(TcpClient):
                 other = root_obj.loc
                 if hasattr(other, "contains"):
                     other.contains.remove(root_obj)
-                    print "removed this object from %s contains" % other.id
+                    print("removed this object from %s contains" % other.id)
 
     def sound_op(self, op):
         talk_op = op.arg
-        print "talk: %s: %s" % (talk_op.from_, talk_op.arg.say)
+        print("talk: %s: %s" % (talk_op.from_, talk_op.arg.say))
 
 
 def main(argv):
     c = Client("Coders blackboard client", args2address(argv))
-    print "Connecting..."
+    print("Connecting...")
     c.connect_and_negotiate()
-    print "ok"
+    print("ok")
     app = BlackboardApp("Blackbord", c)
     c.after_connection_setup()
     app.MainLoop()

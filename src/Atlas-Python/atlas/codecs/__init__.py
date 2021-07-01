@@ -29,12 +29,12 @@
 #to decode string (returns list of decodec objects)
 #obj_list = codec.decode(some_string)
 
-import xml
-import xml2
-import packed
-import binary1
-import binary2
-import bach
+from . import xml
+#from . import xml2
+#import packed
+# from . import binary1
+# from . import binary2
+#import bach
 
 class Codec:
     def __init__(self, id, decoder, encoder):
@@ -57,28 +57,28 @@ class CodecFactory:
         self.decoder_factory = decoder_factory
         self.encoder_factory = encoder_factory
     def __call__(self):
-        return apply(Codec, (self.id, self.decoder_factory(),
+        return Codec(*(self.id, self.decoder_factory(),
                              self.encoder_factory()))
 
 factory_list = [
-    CodecFactory("Bach_beta2",
-                 bach.get_decoder,
-                 bach.get_encoder),
+    # CodecFactory("Bach_beta2",
+    #              bach.get_decoder,
+    #              bach.get_encoder),
     CodecFactory("XML",
-                 xml.get_decoder,
+                 xml.get_encoder,
                  xml.get_encoder),
-    CodecFactory("XML2_test",
-                 xml2.get_parser,
-                 lambda :xml2.gen_xml2),
-    CodecFactory("Packed",
-                 packed.get_parser,
-                 packed.get_encoder),
-    CodecFactory("Binary1_beta",
-                 binary1.get_parser,
-                 lambda :binary1.gen_binary1),
-    CodecFactory("Binary2_test",
-                 binary2.get_parser,
-                 lambda :binary2.gen_binary2)
+    # CodecFactory("XML2_test",
+    #              xml2.get_parser,
+    #              lambda :xml2.gen_xml2),
+    # CodecFactory("Packed",
+    #              packed.get_parser,
+    #              packed.get_encoder),
+    # CodecFactory("Binary1_beta",
+    #              binary1.get_parser,
+    #              lambda :binary1.gen_binary1),
+    # CodecFactory("Binary2_test",
+    #              binary2.get_parser,
+    #              lambda :binary2.gen_binary2)
     ]
 
 factory_dict = {}

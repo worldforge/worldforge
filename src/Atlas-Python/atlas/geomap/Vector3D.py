@@ -42,11 +42,11 @@ class Vector3D:
 
         def __add__(self, other):
                 "Add two vectors"
-                return Vector3D(map(add,self.vector,other.vector))
+                return Vector3D(list(map(add,self.vector,other.vector)))
 
         def __sub__(self, other):
                 "Subtract two vectors"
-                return Vector3D(map(sub,self.vector,other.vector))
+                return Vector3D(list(map(sub,self.vector,other.vector)))
 
         def __mul__(self, other):
                 "Multpiply one vector by another vector or by a number"
@@ -54,11 +54,11 @@ class Vector3D:
                         o_vector=other.vector
                 else:
                         o_vector=[other]*3
-                return Vector3D(map(mul,self.vector,o_vector))
+                return Vector3D(list(map(mul,self.vector,o_vector)))
 
         def __div__(self, other):
                 "Divide a vector by a number"
-                return Vector3D(map(div,self.vector,[other]*3))
+                return Vector3D(list(map(div,self.vector,[other]*3)))
 
         def __getitem__(self, index):
                 "Get a value from a vector given by index"
@@ -81,7 +81,7 @@ class Vector3D:
                 if name=="x": return self.vector[0]
                 if name=="y": return self.vector[1]
                 if name=="z": return self.vector[2]
-                raise AttributeError, name
+                raise AttributeError(name)
 
         def __setattr__(self, name, value):
                 "Set the value of a vector by name"
@@ -92,13 +92,13 @@ class Vector3D:
 
         def __repr__(self):
                 "String representation of a vector"
-                return 'Vector3D' + `(self.x, self.y, self.z)`
+                return 'Vector3D' + repr((self.x, self.y, self.z))
 
         def __neg__(self):
                 "The negative of a vector"
-                return Vector3D(map(neg,self.vector))
+                return Vector3D(list(map(neg,self.vector)))
 
-        def __nonzero__(self):
+        def __bool__(self):
                 "Check for nonzero vector"
                 return not (self.x==self.y==self.y==0.0)
  

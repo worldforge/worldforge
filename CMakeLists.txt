@@ -47,7 +47,7 @@ find_package(BZip2)
 find_package(ZLIB)
 
 
-find_package(PythonInterp 2.7)
+find_package(PythonInterp 3.5)
 cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "PYTHONINTERP_FOUND" FALSE)
 option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
 
@@ -101,7 +101,7 @@ if (ATLAS_GENERATE_OBJECTS)
 
     add_custom_target(GenerateAtlasObjects
             COMMAND ${CMAKE_COMMAND} -E echo "Generating Atlas Object sources."
-            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/tools/generate ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
+            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/Atlas/Objects
             DEPENDS ${PY_SOURCES}
             VERBATIM

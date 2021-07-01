@@ -16,8 +16,8 @@ class AttributeInfo:
         if not type: type = get_atlas_type(value)
         self.name = name
         self.cname = classize(name)
-        self.flag_name = string.upper(name) + "_FLAG"
-        self.attr_name = string.upper(name) + "_ATTR"
+        self.flag_name = name.upper() + "_FLAG"
+        self.attr_name = name.upper() + "_ATTR"
         self.value = value
         self.type = type
         self.ctype = classize(self.type)
@@ -31,7 +31,7 @@ class AttributeInfo:
         self.ctype_as_object = self.ctype
 
     def get_num(self):
-        if self.attr_enum.has_key(self.name):
+        if self.name in self.attr_enum:
             return self.attr_enum[self.name]
         num = self.attr_enum['_free']
         self.attr_enum['_free'] = num + 1
@@ -249,7 +249,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
     def default_map(self, name, obj):
         obj = self.check_obj(name, obj)
         res = "        MapType " + name + ";\n"
-        for (sub_name, sub_value) in obj.value.items():
+        for (sub_name, sub_value) in list(obj.value.items()):
             sub = AttributeInfo(sub_name, sub_value)
             if sub.type == "list":
                 res = res + self.default_list("%s_%s" % (name, sub.name), sub)
@@ -396,7 +396,7 @@ class TypedList(AttributeInfo):
         self.cpp_param_type_as_object = cpp_param_type["list"][len("const "):-1]
         self.cpp_param_type_as_object_ref = cpp_param_type["list"]
         self.ctype_as_object = "List"
-        element_type = string.split(type, "_")[0]
+        element_type = type.split("_")[0]
         self.cpp_element_type = cpp_type[element_type]
         if element_type == "string":
             self.cpp_element_type_begin = "std::string("

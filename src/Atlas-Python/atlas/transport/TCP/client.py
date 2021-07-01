@@ -28,7 +28,8 @@ from atlas.util.debug import debug
 class TcpClient(TcpConnection,Loop):
     """don't use this class directly: derive from it and
        implemnt all needed foo_op -methods"""
-    def __init__(self, name, (host, port)):
+    def __init__(self, name, xxx_todo_changeme):
+        (host, port) = xxx_todo_changeme
         self.name = name
         self.host = host
         self.port = port
@@ -49,9 +50,9 @@ class TcpClient(TcpConnection,Loop):
 
     def process_communication(self):
         fd_in = [self.socket]
-        debug("Selecting: " + str(map(lambda s: s.fileno(), fd_in)))
+        debug("Selecting: " + str([s.fileno() for s in fd_in]))
         ready = select.select(fd_in,[],[], 0)
         ready_in = ready[0]
         if not ready_in: return
-        debug("Ready: " + string.replace(str(map(lambda s: s.fileno(), ready[0]+ready[1]+ready[2])),"\n", "\\n"))
+        debug("Ready: " + string.replace(str([s.fileno() for s in ready[0]+ready[1]+ready[2]]),"\n", "\\n"))
         self.recv()

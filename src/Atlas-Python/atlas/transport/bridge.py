@@ -62,17 +62,17 @@ class Bridge:
     def send_string(self, data):
         """send string using transport specific method: specify your own"""
         if debug_flag:
-            print "send_string:", data
+            print("send_string:", data)
 
     def operation_received(self, op):
         """this is called for eac decoded operation"""
         if debug_flag:
-            print "operation_received:", op
+            print("operation_received:", op)
 
     def connection_ok(self):
         """this is called after negotiation is done"""
         if debug_flag:
-            print "connection_ok"
+            print("connection_ok")
 
     def log(self, type, data):
         """various debug things"""
@@ -116,7 +116,7 @@ class Bridge:
         if self.codec:
             res_str = ""
             if self.operations_to_send:
-                msg = apply(atlas.Messages, self.operations_to_send)
+                msg = atlas.Messages(*self.operations_to_send)
                 self.operations_to_send = []
                 res_str = res_str + self.internal_send_string(self.codec.encode(msg))
             if op!=None:

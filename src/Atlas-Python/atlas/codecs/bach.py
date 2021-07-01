@@ -88,24 +88,24 @@ class BachParser(decoder.BaseDecoder):
         obj = c.value
         if c.excepted_value == "map_name":
             if not isinstance(obj, atlas.Object):
-                raise BachException, "attribute name outside mapping (%s)!" % \
-                      (value)
+                raise BachException("attribute name outside mapping (%s)!" % \
+                      (value))
             c.name = value
             c.excepted_value = "map_value"
         elif c.excepted_value == "map_value":
             if not isinstance(obj, atlas.Object):
-                raise BachException, "attribute value outside mapping (%s:%s)!" % \
-                      (c.name, value)
-            if type(c.name)!=StringType:
+                raise BachException("attribute value outside mapping (%s:%s)!" % \
+                      (c.name, value))
+            if not isinstance(c.name, str):
                 c.name = str(c.name)
             setattr(obj, c.name, value)
             c.excepted_value = "map_name"
         elif c.excepted_value == "list_value":
-            if type(obj)!=ListType:
-                raise BachException, "object not inside list (%s)!" % value
+            if not isinstance(obj, list):
+                raise BachException("object not inside list (%s)!" % value)
             obj.append(value)
         else:
-            raise BachException, "unknown container (%s)!" % value
+            raise BachException("unknown container (%s)!" % value)
         self.mode = self.skip_white_space
 
     def push(self, value, mode = None, ch=None, excepted_value=""):
@@ -148,7 +148,7 @@ class BachParser(decoder.BaseDecoder):
         elif ch=="#":
             self.mode = self.add_comment
         else:
-            raise BachException, "illegal character (%s (%s) at line %i)!" % (ch, ord(ch), self.lineno)
+            raise BachException("illegal character (%s (%s) at line %i)!" % (ch, ord(ch), self.lineno))
 
     def add_comment(self, ch):
         #CHEAT: should add comment field
@@ -172,7 +172,7 @@ class BachParser(decoder.BaseDecoder):
             try:
                 c.value = int(c.value)
             except ValueError:
-                c.value = long(c.value)
+                c.value = int(c.value)
             self.add_value()
             self.get_next_mode(ch)
 
@@ -206,7 +206,7 @@ class BachParser(decoder.BaseDecoder):
         elif ch in ":" + string.whitespace:
             self.add_value()
         else:
-            raise BachException, "illegal character (%s)!" % ch
+            raise BachException("illegal character (%s)!" % ch)
 
 def get_decoder(stream_flag=None):
     bach_msg_parser=BachParser(stream_flag)

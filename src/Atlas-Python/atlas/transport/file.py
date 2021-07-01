@@ -66,7 +66,7 @@ class File:
 
     def check_negotiation_ok(self):
         if not self.bridge.codec:
-            raise IOError, "no codec negotiated in file %s" % self.name
+            raise IOError("no codec negotiated in file %s" % self.name)
 
     def read_all_as_list(self):
         objects = atlas.Messages()

@@ -25,10 +25,11 @@ from atlas.transport.TCP.connection import TcpConnection
 from atlas.transport.negotiation import NegotiationServer
 from atlas.transport.bridge import Bridge
 from atlas.util.debug import debug
-from StringIO import StringIO
+from io import StringIO
 
 class SocketServer(BaseServer):
-    def __init__(self, name, (host, port), client_factory):
+    def __init__(self, name, xxx_todo_changeme, client_factory):
+        (host, port) = xxx_todo_changeme
         self.clients2send = []
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.socket.setblocking(0)
@@ -71,7 +72,7 @@ class SocketServer(BaseServer):
         if ready_in and ready_in[0]==self.socket:
             ready_in = ready_in[1:]
             new_client = self.client_factory(self, self.socket.accept())
-            print "Connected:", new_client.id
+            print("Connected:", new_client.id)
             self.clients.append(new_client)
             debug("New connection: fileno(): %s, addr: %s" % (new_client.fileno(), new_client.addr))
             #print "getpeername():", new_client.fd.getpeername()
@@ -104,7 +105,8 @@ class SocketServer(BaseServer):
 class TcpClient(TcpConnection):
     """don't use this class directly: derive from it and
        implemnt all needed foo_op -methods"""
-    def __init__(self, server, (fd, (host, addr))):
+    def __init__(self, server, xxx_todo_changeme1):
+        (fd, (host, addr)) = xxx_todo_changeme1
         self.id = "%s:%s" % fd.getpeername()
         self.send_buffer = []
         self.server = server

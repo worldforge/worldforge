@@ -42,15 +42,15 @@ class SimpleCoreServer(SocketServer):
         try:
             self.objects = read_and_analyse(file_name)
             self.worlds = []
-            for obj in self.objects.values():
+            for obj in list(self.objects.values()):
                 if obj.has_parent("world") and obj.id!="world":
                     self.worlds.append(obj)
-                    print obj
-            print len(self.objects), "objects loaded in", len(self.worlds), "worlds"
+                    print(obj)
+            print(len(self.objects), "objects loaded in", len(self.worlds), "worlds")
         except IOError:
-            print "no %s, starting empty" % file_name
-            print 'do "python2 gen_simple_core.py" to generate example meadow file'
-            print "or get it from http://purple.worldforge.org/~aloril/atlas/simple_core.atlas"
+            print("no %s, starting empty" % file_name)
+            print('do "python2 gen_simple_core.py" to generate example meadow file')
+            print("or get it from http://purple.worldforge.org/~aloril/atlas/simple_core.atlas")
             self.objects = {}
         self.save_no = 0
         self.save()
@@ -63,13 +63,13 @@ class SimpleCoreServer(SocketServer):
     def save(self):
         return
         name = save_file_name % self.save_no
-        write_file(self.objects.values(), name)
-        print "Wrote", name
+        write_file(list(self.objects.values()), name)
+        print("Wrote", name)
         self.save_no = self.save_no + 1
 
     def next_id(self):
         i = 0
-        while self.objects.has_key(str(i)): i = i + 1
+        while str(i) in self.objects: i = i + 1
         return "a"+str(i)
 
     def check_bidirectional(self, obj, op="create"):
@@ -95,14 +95,14 @@ class SimpleCoreServer(SocketServer):
 class SimpleCoreClient(TcpClient):
     def server_object(self):
         if self.server.worlds:
-            world_ids = map(lambda o:o.id, self.server.worlds)
+            world_ids = [o.id for o in self.server.worlds]
             return atlas.Object(name=server_name, id=server_id,
                                 parents=["server"],
                                 contains=world_ids)
         else:
             return atlas.Object(name=server_name, id=server_id,
                                 parents=["server"],
-                                contains=self.server.objects.keys())
+                                contains=list(self.server.objects.keys()))
                                 #contains=["root"])
 
     def get_op(self, op, reply_op_parent="info"):
@@ -119,7 +119,7 @@ class SimpleCoreClient(TcpClient):
     def fetch_object_id(self, id_path):
         try:
             return atlas.resolve_pointer2(self.server.objects, id_path)
-        except IndexError, KeyError:
+        except IndexError as KeyError:
             return None, ""
 ##        id_lst = string.split(id_path, ".")
 ##        obj = self.server.objects
@@ -142,7 +142,7 @@ class SimpleCoreClient(TcpClient):
         if obj!=None:
             try:
                 obj = obj[id]
-            except IndexError, KeyError:
+            except IndexError as KeyError:
                 obj = None
         return obj
 
@@ -151,7 +151,7 @@ class SimpleCoreClient(TcpClient):
         obj = self.fetch_object(op.arg.id)
         #print "set:", op.arg.id, "->", obj
         if obj:
-            for key, value in op.arg.items():
+            for key, value in list(op.arg.items()):
                 if key=="id": continue
                 obj[key] = value
             self.server.reply_all(op, atlas.Operation("info", op))
@@ -191,7 +191,7 @@ class SimpleCoreClient(TcpClient):
                 del obj[id]
                 self.server.reply_all(op, atlas.Operation("info", op))
                 self.server.check_bidirectional(root_obj, "delete")
-            except KeyError, IndexError:
+            except KeyError as IndexError:
                 obj = None
         if obj==None:
             self.send_error(op, "no object with id " + op.arg.id)

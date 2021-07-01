@@ -35,7 +35,7 @@ class BaseDecoder:
         self.msg=msg
         self.feed(msg) #inherited from XMLParser
         if self.stream_flag:
-            res=apply(atlas.Messages,tuple(self.msgList))
+            res=atlas.Messages(*tuple(self.msgList))
             self.msgList=[]
             return res
         else:

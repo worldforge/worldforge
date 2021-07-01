@@ -17,6 +17,8 @@
 #License along with this library; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+def cmp(x, y): (x > y) - (x < y)
+
 class MinMax:
     def __init__(self, min_no=None, max_no=None):
         self.min = min_no
@@ -54,7 +56,7 @@ class MinMax:
         elif new_size:
             expand_size = (new_size - self.size())/2.0
         else:
-            raise ValueError, "give either percentage or new_size"
+            raise ValueError("give either percentage or new_size")
         self.min = self.min - expand_size
         self.max = self.max + expand_size
 

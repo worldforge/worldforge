@@ -18,7 +18,7 @@
 
 
 import string, traceback, time
-from StringIO import StringIO
+from io import StringIO
 import atlas
 from atlas.util.debug import debug
 
@@ -29,7 +29,7 @@ def args2address(args):
         host="localhost"
     try:
         port=int(args[2])
-    except IndexError, ValueError:
+    except IndexError as ValueError:
         port=6767
     return host, port
 
@@ -57,10 +57,10 @@ class BaseConnection:
         self.send_operation(reply_op)
 
     def error_op(self, op):
-        print "Got error operation (override method from connection.py"
-        print "to define your own error handling: this is here so you don't"
-        print "accidentally echo error operations back and potentially form a loop):"
-        print op
+        print("Got error operation (override method from connection.py")
+        print("to define your own error handling: this is here so you don't")
+        print("accidentally echo error operations back and potentially form a loop):")
+        print(op)
 
     def send_error(self, op, msg):
         err = atlas.Object(message=msg, op=op)

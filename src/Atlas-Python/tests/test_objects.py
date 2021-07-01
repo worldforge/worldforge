@@ -18,7 +18,8 @@
 
 
 import atlas
-reload(atlas)
+import importlib
+importlib.reload(atlas)
 from atlas import *
 
 lst_simple = [Object(j=7), [5.2, "87"]]

@@ -30,7 +30,7 @@ class GeoMap:
         self.objects = {}
         self.all_objects = {}
         self.resolver = atlas.analyse.Resolver(self.all_objects)
-        self.add_objects(objects.values())
+        self.add_objects(list(objects.values()))
 
     def is_geo_object(self, obj):
         return obj.objtype=="object" and obj.has_parent("root_geometry")
@@ -43,7 +43,7 @@ class GeoMap:
     def add_objects(self, objects, resolve_pointers=1):
         if not objects: return
         if resolve_pointers:
-            lst = map(MapObject, objects)
+            lst = list(map(MapObject, objects))
         else:
             lst = objects
         for obj in lst:
@@ -63,7 +63,7 @@ class GeoMap:
             
     def create_object(self, obj):
         #atlas.check_bug("add_object: %s:" % obj.id)
-        print "GeoMap:", 
+        print("GeoMap:", end=' ') 
         atlas.print_parents(obj)
         #print obj.__class__
         #if hasattr(obj, "contains"):
@@ -71,10 +71,10 @@ class GeoMap:
         atlas.uri_type["loc"] = 1
         #atlas.uri_list_type["polyline"] = 1
         unresolved = self.resolve_attributes(obj)
-        print "GeoMap?:", unresolved
+        print("GeoMap?:", unresolved)
         #atlas.check_bug("add_object before resolve:")
         resolved_objects = self.resolver.new_object(obj)
-        print "GeoMap!:", map(lambda o:o.id, resolved_objects)
+        print("GeoMap!:", [o.id for o in resolved_objects])
         #atlas.check_bug("add_object before add_objects:")
         self.add_objects(resolved_objects, resolve_pointers=0)
         #atlas.check_bug("add_object done:")
@@ -89,9 +89,9 @@ class GeoMap:
         self.resolve_position()
 
     def delete_object(self, obj):
-        if self.objects.has_key(obj.id):
+        if obj.id in self.objects:
             del self.objects[obj.id]
-        if self.all_objects.has_key(obj.id):
+        if obj.id in self.all_objects:
             del self.all_objects[obj.id]
         self.resolve_position()
         
@@ -108,7 +108,7 @@ class GeoMap:
             self.resolve_pointer_list(lst2[i])
 
     def resolve_geo_pointers(self):
-        for obj in self.objects.values():
+        for obj in list(self.objects.values()):
             if hasattr(obj, "contains"):
                 self.resolve_pointer_list(obj.contains)
             else:
@@ -123,15 +123,15 @@ class GeoMap:
                 obj.loc = None
                 
     def resolve_position(self):
-        for obj in self.objects.values():
+        for obj in list(self.objects.values()):
             if hasattr(obj, "pos"):
                 if type(obj.pos)==ListType:
                     obj.pos = Vector3D(obj.pos)
             else:
                 obj.pos = Vector3D(0.0, 0.0, 0.0)
-        for obj in self.objects.values():
+        for obj in list(self.objects.values()):
             obj._pos = obj.get_xyz()
-        for obj in self.objects.values():
+        for obj in list(self.objects.values()):
             if hasattr(obj, "polyline"):
                 obj._polyline = deepcopy(obj.polyline)
                 resolve_list_position(obj, obj._polyline)
@@ -146,7 +146,7 @@ class GeoMap:
 ##        y.add(0.0); y.add(10.0)
         limits = MinMaxVector()
 ##        last_limits = deepcopy(limits)
-        for obj in self.objects.values():
+        for obj in list(self.objects.values()):
             index = None
             if obj.detailed_contents: continue
             try:
@@ -172,10 +172,10 @@ class GeoMap:
 ##                        print "pos", obj.id, limits
 ##                        last_limits = deepcopy(limits)
             except ValueError:
-                print "="*60
-                print index
-                print "-"*60
-                print obj
+                print("="*60)
+                print(index)
+                print("-"*60)
+                print(obj)
         return limits.as_tuple()
             
 

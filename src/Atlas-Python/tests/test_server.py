@@ -18,7 +18,8 @@
 
 
 import test_objects
-reload(test_objects)
+import importlib
+importlib.reload(test_objects)
 from test_objects import *
 
 import os, time
@@ -26,7 +27,7 @@ import pdb
 #pdb.set_trace()
 print_debug = 0
 if print_debug:
-    print "test_server:"
+    print("test_server:")
 
 import atlas.util.debug
 atlas.util.debug.debug_flag = 0
@@ -43,12 +44,12 @@ class TestServer(atlas.transport.TCP.server.SocketServer):
             self.process_communication()
             self.idle()
             if print_debug:
-                print self.waiting, self.clients2send
+                print(self.waiting, self.clients2send)
 
 class TestConnection(atlas.transport.TCP.server.TcpClient):
     def talk_op(self, op):
         if print_debug:
-            print repr(str(op))
+            print(repr(str(op)))
         self.server.str_op = str(op)
         reply = atlas.Operation("sound",
                                 atlas.Operation("talk",
@@ -65,7 +66,7 @@ class TestClient(atlas.transport.TCP.client.TcpClient):
         self.waiting = 0
         self.str_op = str(op)
         if print_debug:
-            print repr(str(op))
+            print(repr(str(op)))
 
     def loop(self):
         op = atlas.Operation("talk",
@@ -87,10 +88,10 @@ if res==0:
     tclient.loop()
     assert(tclient.str_op=='{\012\011arg: {\012\011\011arg: {\012\011\011\011say: "Hello Joe!"\012\011\011},\012\011\011from: "Joe",\012\011\011objtype: "op",\012\011\011parents: ["talk"]\012\011},\012\011from: "Joe",\012\011objtype: "op",\012\011parents: ["sound"]\012}\012')
     if print_debug:
-        print "client exits"
+        print("client exits")
 else:
     tserver.loop()
     assert(tserver.str_op=='{\012\011arg: {\012\011\011say: "Hello world!"\012\011},\012\011from: "Joe",\012\011objtype: "op",\012\011parents: ["talk"]\012}\012')
     if print_debug:
-        print "server exits"
+        print("server exits")
     os.wait()

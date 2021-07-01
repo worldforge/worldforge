@@ -20,7 +20,7 @@
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 import math, string
-from UserList import UserList
+from collections import UserList
 import atlas
 from atlas.transport.file import write_file
 from atlas.util.minmax import MinMax
@@ -54,7 +54,7 @@ def calc_pos(pos, offset, scale, angle):
           scale[1] * (x*math.sin(angle)+y*math.cos(angle))
     x0,y0,z0 = offset
     if detailed_debug:
-        print "CALC_POS:", pos, offset, scale, angle, (x,y), [x0+x, y0+y, z0+z]
+        print("CALC_POS:", pos, offset, scale, angle, (x,y), [x0+x, y0+y, z0+z])
     return [x0+x, y0+y, z0+z]
 
 class Polyline:
@@ -65,7 +65,7 @@ class Polyline:
     def get_points(self):
         if self.closed:
             if detailed_debug:
-                print "closed"
+                print("closed")
             return self.points + [self.points[0]]
         else:
             return self.points
@@ -205,8 +205,8 @@ class ReadDxf:
 
     def process_layer(self, name, color=None):
         if detailed_debug:
-            print "LAYER", name, color
-        if not self.layers.has_key(name):
+            print("LAYER", name, color)
+        if name not in self.layers:
             self.layers[name] = Layer()
             self.layers[name].name = name
         if not self.block_name:
@@ -216,18 +216,18 @@ class ReadDxf:
 
     def process_polyline(self, closed=0):
         if detailed_debug:
-            print "POLYLINE"
+            print("POLYLINE")
         self.ent = Polyline(closed)
         self.add(self.ent)
 
     def process_vertex(self, x, y, z):
         if detailed_debug:
-            print "VERTEX", x, y, z
+            print("VERTEX", x, y, z)
         self.ent.points.append([x, y, z])
 
     def process_line(self, x1, y1, z1, x2, y2, z2):
         if detailed_debug:
-            print "LINE", x1, y1, z1, x2, y2, z2
+            print("LINE", x1, y1, z1, x2, y2, z2)
         ent = Polyline()
         self.add(ent)
         ent.points.append([x1, y1, z1])
@@ -235,17 +235,17 @@ class ReadDxf:
 
     def process_text(self, x, y, z, text, rotation, xscale):
         if detailed_debug:
-            print "TEXT", x, y, z, repr(text), rotation, xscale
+            print("TEXT", x, y, z, repr(text), rotation, xscale)
         ent = Text((x, y, z), rotation, text)
         self.add(ent)
         for c in text:
             self.text_count[c] = self.text_count.get(c, 0) + 1
 
     def process_group(self):
-        if not self.group.has_key(0): return
+        if 0 not in self.group: return
         g = self.group
         ent = g[0]
-        if g.has_key(8):
+        if 8 in g:
             self.process_layer(g[8])
         if ent=="LAYER":
             #print ent, g[2]
@@ -274,20 +274,20 @@ class ReadDxf:
         elif ent=="BLOCK":
             self.block_name = g[2]
             if detailed_debug:
-                print "BLOCK", self.block_name, "..."
-            if self.blocks.has_key(self.block_name): raise ValueError ("block already defined", self.block_name)
+                print("BLOCK", self.block_name, "...")
+            if self.block_name in self.blocks: raise ValueError ("block already defined", self.block_name)
             self.blocks[self.block_name] = []
             self.add = self.blocks[self.block_name].append
         elif ent=="ENDBLK":
             self.block_name = ""
             if detailed_debug:
-                print "... BLOCK"
+                print("... BLOCK")
         elif ent=="INSERT":
             name = g[2]
             if detailed_debug:
-                print "INSERT", name
+                print("INSERT", name)
             angle = acad_angle2float(g.get(50, "0.0"))
-            if self.blocks.has_key(name):
+            if name in self.blocks:
                 block = self.blocks[name]
                 for ent in block:
                     self.add(ent.copy_offset([float(g[10]), float(g[20]), float(g[30])],
@@ -305,18 +305,18 @@ class ReadDxf:
     def read(self):
         while self.read_2lines(): pass
         self.in_fp.close()
-        layer_lst = self.layers.keys()
+        layer_lst = list(self.layers.keys())
         layer_lst.sort()
         total = 0
         for layer in layer_lst:
             xlimit, ylimit = self.layers[layer].limits()
             total += len(self.layers[layer])
-            print layer, len(self.layers[layer])
-            print xlimit, ylimit
-            print
+            print(layer, len(self.layers[layer]))
+            print(xlimit, ylimit)
+            print()
             if xlimit.min<1000000: del self.layers[layer]
-        print "all:", total
-        print self.text_count
+        print("all:", total)
+        print(self.text_count)
 
     def write(self, file, media_file):
         atlas.uri_type["loc"] = 1
@@ -348,7 +348,7 @@ class ReadDxf:
                               specification = "atlas_dxf",
                               summary = "source of converted file"))
         
-        for layer in self.layers.values():
+        for layer in list(self.layers.values()):
             #if layer.name!="SVTEKSTI": continue
             layer_obj = layer.as_atlas(amap, world, media_map)
             world.contains.append(layer_obj)
@@ -358,17 +358,17 @@ class ReadDxf:
         self.write_in_order(media_map, media_file)
 
     def write_in_order(self, amap, file):
-        items = amap.objects.items()
+        items = list(amap.objects.items())
         items.sort()
-        write_file(map(lambda a:a[1], items), file)
+        write_file([a[1] for a in items], file)
 
 
 def dxf2atlas(infile, outfile, outfile_media=None):
     if outfile_media==None:
         outfile_media = string.join(string.split(outfile, ".", 2), "_media.")
         if outfile==outfile_media:
-            raise ValueError, "outfile==outfile_media: %s" % outfile_media
-    print infile, "->", outfile, outfile_media
+            raise ValueError("outfile==outfile_media: %s" % outfile_media)
+    print(infile, "->", outfile, outfile_media)
     dxf = ReadDxf(infile)
     dxf.read()
     dxf.write(outfile, outfile_media)

@@ -44,12 +44,12 @@ class File2ClientServer(SocketServer):
 class FeedClient(TcpClient):
     def setup(self):
         self.done = 0
-        print "??"
+        print("??")
     
     def get_op(self, op):
-        print "!!"
+        print("!!")
         if not self.done:
-            print "feeding..."
+            print("feeding...")
             for obj in self.server.objects:
                 self.send_operation(atlas.Operation("info", obj))
             self.done = 1

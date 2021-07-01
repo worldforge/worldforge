@@ -24,7 +24,7 @@ c = Object(id="c", foo=42, parents=[a,b])
 #if repr(c.get_all_attributes()) != "{'id': 'c', 'parents': ['a', 'b'], 'foo': 42, 'a': 3}":
 #    print "get_all_attributes wrong?:", repr(c.get_all_attributes())
 if c.get_all_attributes() != {'id': 'c', 'parents': ['a', 'b'], 'foo': 42, 'a': 3}:
-    print "get_all_attributes wrong?:", c.get_all_attributes()
+    print("get_all_attributes wrong?:", c.get_all_attributes())
 
 abc = {"a":a, "b":b, "c":c}
 ent = Object(id="12", objtype="object", parents=[human_class], pos=[4.5, 6.5, -1.0])
@@ -36,7 +36,7 @@ if not c.has_parent("a") or \
    not c.has_parent("c") or \
    not c.has_parent(c) or \
    c.has_parent(ent):
-    print "c.has_parent works wrong!"
+    print("c.has_parent works wrong!")
 
 if not has_parent(c, a) or \
    not has_parent(c, "a") or \
@@ -46,11 +46,11 @@ if not has_parent(c, a) or \
    not has_parent("c", "a", abc) or \
    has_parent(c, "af", abc) or \
    has_parent("c", "af", abc):
-    print "has_parent works wrong!"
+    print("has_parent works wrong!")
 
 op = Operation("move", Object(loc="house1", pos=[2.1, 0.4, 0.0]), to="joe12")
 if str(op) != '{\n\targ: {\n\t\tloc: "house1",\n\t\tpos: [2.1, 0.4, 0.0]\n\t},\n\tobjtype: "op",\n\tparents: ["move"],\n\tto: "joe12"\n}\n':
-    print "Operation doesn't match:", `op`
+    print("Operation doesn't match:", repr(op))
 
 
 

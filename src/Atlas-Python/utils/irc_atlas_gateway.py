@@ -31,7 +31,7 @@ sys.path.append("..")
 try:
     import irclib
 except ImportError:
-    print "Get irclib from http://sourceforge.net/projects/python-irclib/"
+    print("Get irclib from http://sourceforge.net/projects/python-irclib/")
 
 import string
 from atlas.transport.TCP.client import TcpClient
@@ -70,30 +70,30 @@ class IRC_Client:
         c.add_global_handler("namreply", self.existing_names)
 
     def on_connect(self, connection, event):
-        print "IRC: on_connect:", event.__dict__
-        print connection.join(self.channel)
+        print("IRC: on_connect:", event.__dict__)
+        print(connection.join(self.channel))
 
     def on_join(self, connection, event):
-        print "IRC: on_join:", event.__dict__
+        print("IRC: on_join:", event.__dict__)
         nick = irclib.nm_to_n(event.source())
         if nick==self.nick:
             self.joined.append(event.target())
         self.gateway.atlas_client.create_character(nick)
 
     def on_disconnect(self, connection, event):
-        print "IRC: on_disconnect:", event.__dict__
+        print("IRC: on_disconnect:", event.__dict__)
         if connection.is_connected():
             connection.exit()
 
     def on_pubmsg(self, connection, event):
-        print "IRC: on_pubmsg:", event.__dict__
+        print("IRC: on_pubmsg:", event.__dict__)
         nick = irclib.nm_to_n(event.source())
         say = event.arguments()[0]
-        print "IRC:", nick, say
+        print("IRC:", nick, say)
         self.gateway.atlas_client.talk(nick, say)
 
     def existing_names(self, connection, event):
-        print "IRC: existing_names:", event.__dict__
+        print("IRC: existing_names:", event.__dict__)
         lst = event.arguments()[2]
         for name in string.split(lst):
             if name[0]=='@': name=name[1:]
@@ -106,7 +106,7 @@ class IRC_Client:
         return self.joined
 
     def talk(self, name, say):
-        print "IRC: sound:", name, say
+        print("IRC: sound:", name, say)
         self.connection.privmsg(self.channel, "(%s): %s" % (name, say))
         
 
@@ -118,22 +118,22 @@ class AtlasClient(TcpClient):
     def create_character(self, name):
         char = atlas.Object(id=name, objtype="object", parents=["character"])
         self.send_operation(atlas.Operation("create", char))
-        print "ATLAS: create_character:", name
+        print("ATLAS: create_character:", name)
 
     def talk(self, name, say):
         self.send_operation(atlas.Operation("talk", atlas.Object(say=say), from_ = name, id="gateway"))
-        print "ATLAS: talk:", name, say
+        print("ATLAS: talk:", name, say)
 
     def sound_op(self, op):
         talk_op = op.arg
-        print "ATLAS: sound:", talk_op.from_, talk_op.arg.say
+        print("ATLAS: sound:", talk_op.from_, talk_op.arg.say)
         if hasattr(talk_op, "id") and talk_op.id=="gateway":
-            print "initially from IRC, not shown again"
+            print("initially from IRC, not shown again")
         else:
             self.gateway.irc_client.talk(talk_op.from_, talk_op.arg.say)
 
     def info_op(self, op):
-        print "ATLAS: info:", op
+        print("ATLAS: info:", op)
 
 if __name__=="__main__":
     gateway = Gateway((atlas_server, atlas_port),

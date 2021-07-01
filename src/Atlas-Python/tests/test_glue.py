@@ -40,13 +40,13 @@ def get_absolute_points_and_ids(obj):
         return tuple(a),b
     dict = {}
     if hasattr(obj, "_polyline"):
-        lst = lst + map(combine, obj._polyline, obj.polyline_ids)
+        lst = lst + list(map(combine, obj._polyline, obj.polyline_ids))
     if hasattr(obj, "_area") and obj._area:
         for i in range(len(obj._area)):
-            lst = lst + map(combine, obj._area[i], obj.area_ids[i])
+            lst = lst + list(map(combine, obj._area[i], obj.area_ids[i]))
     if hasattr(obj, "_volume") and obj._volume:
         for i in range(len(obj._volume)):
-            lst = lst + map(combine, obj._volume[i], obj.volume_ids[i])
+            lst = lst + list(map(combine, obj._volume[i], obj.volume_ids[i]))
     if not lst:
         lst = [(tuple(obj._pos), obj.id+".pos")]
     return lst
@@ -65,37 +65,37 @@ def find_glued_ids(vector, obj, point_ids):
             if vector==vector2:
                 obj_ok = 1
                 if debug_flag:
-                    print "this ok: %s: %s with %s glue_id from %s" % (obj_id, vector, id, point_ids)
+                    print("this ok: %s: %s with %s glue_id from %s" % (obj_id, vector, id, point_ids))
             else:
                 if debug_flag:
-                    print "not this one: %s: %s!=%s with %s glue_id from %s" % (obj_id, vector, vector2, id, point_ids)
+                    print("not this one: %s: %s!=%s with %s glue_id from %s" % (obj_id, vector, vector2, id, point_ids))
         else:
             if vector==vector2:
                 result.append(obj_id)
                 if debug_flag:
-                    print "other ok: %s <-> %s: %s with %s glue_id from %s" % (obj.id, obj_id, vector, id, point_ids)
+                    print("other ok: %s <-> %s: %s with %s glue_id from %s" % (obj.id, obj_id, vector, id, point_ids))
             else:
                 if debug_flag:
-                    print "other not ok: %s <-> %s: %s!=%s with %s glue_id from %s" % (obj.id, obj_id, vector, vector2, id, point_ids)
+                    print("other not ok: %s <-> %s: %s!=%s with %s glue_id from %s" % (obj.id, obj_id, vector, vector2, id, point_ids))
                 all_ok = 0
     if obj_ok and not all_ok:
-        raise ValueError, "object %s has %s as absolute position, but not every other is same position in list: %s" % (obj.id, vector, point_ids)
+        raise ValueError("object %s has %s as absolute position, but not every other is same position in list: %s" % (obj.id, vector, point_ids))
     return result
 
 
 def process_glue(msg, obj, point_id, other_id, id_dict, to_process, check_id=1):
-    if id_dict.has_key(other_id):
+    if other_id in id_dict:
         obj2 = gm.objects[other_id]
         point_id2 = id_dict[other_id]
         to_process.append((obj2, point_id2))
         if check_id:
             if point_id!=point_id2:
-                raise ValueError, "Not same point_id: %s:%s vs %s:%s" % (obj.id, point_id, obj2.id, point_id2)
+                raise ValueError("Not same point_id: %s:%s vs %s:%s" % (obj.id, point_id, obj2.id, point_id2))
             if debug_flag:
-                print "%s: %s <-%s-> %s" % (msg, obj.id, point_id, obj2.id)
+                print("%s: %s <-%s-> %s" % (msg, obj.id, point_id, obj2.id))
         else:
             if debug_flag:
-                print "%s: %s:%s <-> %s:%s" % (msg, obj.id, point_id, obj2.id, point_id2)
+                print("%s: %s:%s <-> %s:%s" % (msg, obj.id, point_id, obj2.id, point_id2))
         del id_dict[other_id]
         return 1
     return 0
@@ -118,28 +118,28 @@ from atlas.geomap import GeoMap
 gm = GeoMap(obj_dict)
 
 if debug_flag:
-    print "-"*60
+    print("-"*60)
 #create dictionary indexed by absolute coordinates
 point_dict = {}
-for obj in gm.objects.values():
+for obj in list(gm.objects.values()):
     if hasattr(obj, "glue") and obj.glue:
         if debug_flag:
-            print obj.id
+            print(obj.id)
         for point,id in get_absolute_points_and_ids(obj):
             dict = point_dict.get(point, {})
             dict[obj.id] = id
             point_dict[point] = dict
             #print obj.id, point, dict
 if debug_flag:
-    print point_dict
+    print(point_dict)
 
 #make sure that all objects at each point are connected
-for vector, id_dict in point_dict.items():
+for vector, id_dict in list(point_dict.items()):
     if debug_flag:
-        print "="*60
-        print vector, id_dict
-        print "-"*60
-    item, point_id = id_dict.items()[0]
+        print("="*60)
+        print(vector, id_dict)
+        print("-"*60)
+    item, point_id = list(id_dict.items())[0]
     #if id_dict.has_key("path1_2"): item, point_id = "path1_2", id_dict["path1_2"]
     del id_dict[item]
     to_process = [(gm.objects[item], point_id)]
@@ -155,11 +155,11 @@ for vector, id_dict in point_dict.items():
                 obj2 = gm.all_objects[other]
                 if obj2.has_parent("glue_entity"):
                     if debug_flag:
-                        print "glue_entity:", other, obj2.glue_ids
+                        print("glue_entity:", other, obj2.glue_ids)
                     for glued_point in obj2.glue_ids:
                         other_id_lst = find_glued_ids(vector, obj, glued_point)
                         if debug_flag:
-                            print "found:", other_id_lst
+                            print("found:", other_id_lst)
                         for other3 in other_id_lst:
                             process_glue("explicit", obj, point_id, other3, id_dict, to_process, check_id=0)
         #connect objects at different detail levels as needed
@@ -167,4 +167,4 @@ for vector, id_dict in point_dict.items():
         for obj2 in obj.contains:
             process_glue("contains", obj, point_id, obj2.id, id_dict, to_process, check_id=0)
     if id_dict:
-        raise ValueError, "not glued: %s for %s" % (id_dict, vector)
+        raise ValueError("not glued: %s for %s" % (id_dict, vector))

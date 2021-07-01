@@ -34,7 +34,7 @@ void Factories::installStandardTypes()
         for (obj, namespace) in objects:
             id = obj.id
             idc = classize(id)
-            idu = string.upper(id)
+            idu = id.upper()
             self.write("""
     addFactory<%(namespace)s%(idc)sData>("%(id)s", %(namespace)s%(idu)s_NO);
 """ % vars())  # "for xemacs syntax highlighting

@@ -77,7 +77,7 @@ def map2packed(obj):
     """this encodes mappings"""
     str_list = []
     add_item = str_list.append
-    for name, value in obj.items():
+    for name, value in list(obj.items()):
         type_str, str_value, end_type = to_string_and_type(value)
         add_item('%s%s=%s%s' % (type_str, name, str_value, end_type))
     return string.join(str_list, "")
@@ -118,7 +118,7 @@ class PackedParser(decoder.BaseDecoder):
             elif self.quote_on:
                 self.quote_data = self.quote_data + ch
                 if ch not in string.digits + "abcdef":
-                    raise PackedException, "Illegal character in quoted string" + ch
+                    raise PackedException("Illegal character in quoted string" + ch)
                 if len(self.quote_data)==2:
                     self.data = self.data + chr(eval("0x" + self.quote_data))
                     self.quote_on = 0
@@ -144,12 +144,12 @@ class PackedParser(decoder.BaseDecoder):
         name = self.name_stack.pop()
         if name:
             if not isinstance(obj,Object):
-                raise PackedException, "attribute outside mapping (%s:%s)!" % \
-                      (name, value)
+                raise PackedException("attribute outside mapping (%s:%s)!" % \
+                      (name, value))
             setattr(obj, name, value)
         else:
             if type(obj)!=ListType:
-                raise PackedException, "value mapping list (%s)!" % value
+                raise PackedException("value mapping list (%s)!" % value)
             obj.append(value)
 
     def push_value(self, initial_value):

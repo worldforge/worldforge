@@ -15,8 +15,9 @@
 #You should have received a copy of the GNU Lesser General Public
 #License along with this library; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+import collections
 import os
-import string, re
+import re
 
 from atlas import *
 from atlas.typemap import get_atlas_type
@@ -39,7 +40,7 @@ class DefParser:
                 continue
             if space_count>depth: #sub object
                 if last_obj==None:
-                    raise SyntaxError, ("Unexpected indentation",
+                    raise SyntaxError("Unexpected indentation",
                                         (self.filename, self.lineno, space_count, line))
                 self.parse_lines(lines, space_count, last_obj)
                 last_obj = None
@@ -66,23 +67,23 @@ class DefParser:
                 else:
                     type=""
             else:
-                raise SyntaxError, ("Unexpected element numbers (things delimited with ':')",
+                raise SyntaxError("Unexpected element numbers (things delimited with ':')",
                                     (self.filename, self.lineno, space_count, line))
             if type=="list": #new list subobject
                 if len(value):
                     try:
                         value=eval(value)
                     except:
-                        print "Error at:",(self.filename, self.lineno, line)
+                        print("Error at:",(self.filename, self.lineno, line))
                         raise
                 else:
                     value = []
                 last_obj = value
             elif type=="map": #new mapping subobject
                 value = last_obj = Object()
-                last_obj.specification_file = Object(filename = os.path.basename(self.filename),
-                                                     lineno = self.lineno+1,
-                                                     attribute_order = [])
+                last_obj.specification_file = Object(attribute_order = [],
+                                                     filename = os.path.basename(self.filename),
+                                                     lineno = self.lineno+1)
             else:
                 #hack: reading several lines if """ string
                 if value[:3]=='"""' and not value[-3:]=='"""':
@@ -91,12 +92,12 @@ class DefParser:
                         self.lineno=self.lineno+1
                         line = lines[self.lineno]
                         value = value + line
-                        if not line or string.find(line,'"""')>=0:
+                        if not line or line.find('"""')>=0:
                             break
                 try:
                     value=eval(value)
                 except:
-                    print "Error at:",(self.filename, self.lineno, line)
+                    print("Error at:",(self.filename, self.lineno, line))
                     raise
                 last_obj=None
             if name:
@@ -118,7 +119,7 @@ class DefParser:
 
     def syntax_error(self, msg, obj):
         info = obj.specification_file
-        raise SyntaxError, "%s at %s:%s" % (msg, info.filename, info.lineno)
+        raise SyntaxError("%s at %s:%s" % (msg, info.filename, info.lineno))
 
     def check_fill(self):
         """fill missing attributes and check for attribute definitions"""
@@ -132,39 +133,39 @@ class DefParser:
         for obj in self.objects:
             try:
                 id = obj.id
+                if id in self.id_dict:
+                    self.syntax_error(
+                        'Object with "'+id+'"-id already exists', obj)
+                self.id_dict[id]=obj
             except AttributeError:
                 self.syntax_error(
                     "Id attribute is not specified for object", obj)
-            if self.id_dict.has_key(id):
-                self.syntax_error(
-                    'Object with "'+id+'"-id already exists', obj)
-            self.id_dict[id]=obj
 
     def fill_children(self):
         for obj in self.objects:
             attr_order = obj.specification_file.attribute_order
             try:
                 parent_loc = attr_order.index("parent")
+                attr_order.insert(parent_loc+1, "children")
             except ValueError:
                 self.syntax_error("Parent attribute missing in %s" % obj.id, obj)
-            attr_order.insert(parent_loc+1, "children")
             obj.children=[]
         for obj in self.objects:
             pid = obj.parent
             if pid is not None and pid != "":
                 try:
                     parent_obj = self.id_dict[pid]
+                    parent_obj.children.append(obj.id)
                 except KeyError:
                     self.syntax_error('Parent "%s" is missing in %s' % (pid, obj.id), obj)
-                parent_obj.children.append(obj.id)
 
     def check_type_object(self, obj):
         """recursively check types for all objects"""
-        if type(obj)==ListType:
+        if isinstance(obj, list):
             for sub_obj in obj:
                 self.check_type_object(sub_obj)
-        elif type(obj)==InstanceType:
-            for name, value in obj.items():
+        elif isinstance(obj, dict):
+            for name, value in list(obj.items()):
                 if name != "parent":
                     if value:
                         try:
@@ -195,4 +196,4 @@ def read_all_defs(filelist):
 
 if __name__=="__main__":
     filelist=["root","entity","operation","type"]
-    defs=read_all_defs(map(lambda file:file+".def", filelist))
+    defs=read_all_defs([file+".def" for file in filelist])

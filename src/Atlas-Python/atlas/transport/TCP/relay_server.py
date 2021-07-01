@@ -71,13 +71,13 @@ class RelayClient(atlas.transport.TCP.server.TcpClient):
         self.relay_connection.relay_connection = self
 
     def operation_received(self, op):
-        print "this client: received:", op
+        print("this client: received:", op)
         self.relay_connection.send_operation(op)
 
 
 class OtherClient(atlas.transport.TCP.client.TcpClient):
     def operation_received(self, op):
-        print "other_client: received:", op
+        print("other_client: received:", op)
         self.relay_connection.send_operation(op)
 
 def args2relay_address(args):

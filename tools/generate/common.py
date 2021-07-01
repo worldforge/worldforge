@@ -113,15 +113,16 @@ cpp_param_type2 = {'map': cpp_type['map'] + '&',
 
 
 def capitalize_only(str):
-    return string.upper(str[:1]) + str[1:]
+    return str[:1].upper() + str[1:]
 
 
 # Turns some_thing into SomeThing
 def classize(id, data=0):
     if id is None:
         return "BaseObject"
-    if type(id) != StringType: id = id.id
-    cid = string.join(map(capitalize_only, string.split(id, '_')), "")
+    if not isinstance(id, str):
+        id = id.id
+    cid = "".join(list(map(capitalize_only, id.split('_'))))
     if data: return cid + "Data"
     return cid
 
