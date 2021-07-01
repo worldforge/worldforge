@@ -94,6 +94,8 @@ public:
     void setArgs(std::vector<Root> val);
     /// Set the "args" attribute AsList.
     void setArgsAsList(const Atlas::Message::ListType& val, const Atlas::Objects::Factories* factories);
+    /// Set the "args" attribute AsList through move.
+    void setArgsAsList(Atlas::Message::ListType&& val, const Atlas::Objects::Factories* factories);
     /// Set the first member of "args"
     template <class ObjectData>
     void setArgs1(SmartPtr<ObjectData> val);
@@ -127,7 +129,7 @@ public:
     /// Retrieve the "args" attribute as a non-const reference.
     std::vector<Root>& modifyArgs();
     /// Retrieve the "args" attribute AsList.
-    const Atlas::Message::ListType getArgsAsList() const;
+    Atlas::Message::ListType getArgsAsList() const;
 
     /// Is "serialno" value default?
     bool isDefaultSerialno() const;
@@ -275,6 +277,15 @@ inline void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val
     attr_args = factories->parseListOfObjects(val);
 }
 
+inline void RootOperationData::setArgsAsList(Atlas::Message::ListType&& val, const Factories* factories)
+{
+    if (!factories) {
+        throw Exception("You must pass in a valid Factories instance when setting 'args'.");
+    }
+    m_attrFlags |= ARGS_FLAG;
+    attr_args = factories->parseListOfObjects(std::move(val));
+}
+
 template <class ObjectData>
 inline void RootOperationData::setArgs1(SmartPtr<ObjectData> val)
 {
@@ -388,7 +399,7 @@ inline std::vector<Root>& RootOperationData::modifyArgs()
     return attr_args;
 }
 
-inline const Atlas::Message::ListType RootOperationData::getArgsAsList() const
+inline Atlas::Message::ListType RootOperationData::getArgsAsList() const
 {
     const std::vector<Root>& args_in = getArgs();
     Atlas::Message::ListType args_out;

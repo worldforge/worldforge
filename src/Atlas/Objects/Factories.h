@@ -75,7 +75,6 @@ typedef std::map<const std::string, Factory> FactoryMap;
 
 class Factories {
 public:
-	friend class AddFactories;
 
 	Factories();
 

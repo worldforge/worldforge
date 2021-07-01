@@ -327,8 +327,9 @@ class ArgsRootList(AttributeInfo):
     def __init__(self, name, value, type):
         AttributeInfo.__init__(self, name, value, "RootList")
         self.as_object = "AsList"
-        self.cpp_param_type_as_object = cpp_param_type["list"][:-1]
+        self.cpp_param_type_as_object = cpp_param_type["list"][len("const "):-1]
         self.cpp_param_type_as_object_ref = cpp_param_type["list"]
+        self.cpp_param_type_as_object_move = cpp_param_type["list"][6:]
         self.ctype_as_object = "List"
 
     def set_if(self):
@@ -339,6 +340,9 @@ class ArgsRootList(AttributeInfo):
             res = res + doc(4, 'Set the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
                   "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val, const Atlas::Objects::Factories* factories);\n" % self.__dict__
+            res = res + doc(4, 'Set the "%s" attribute %s through move.' % \
+                            (self.name, self.as_object)) + \
+                  "    void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_move)s& val, const Atlas::Objects::Factories* factories);\n" % self.__dict__
         return res + \
                doc(4, 'Set the first member of "%s"' % self.name) + \
                "    template <class ObjectData>\n    void set%(cname)s1(SmartPtr<ObjectData> val);\n" % self.__dict__
@@ -352,6 +356,15 @@ class ArgsRootList(AttributeInfo):
     }
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s = factories->parseListOfObjects(val);
+}
+
+inline void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_move)s& val, const Factories* factories)
+{
+    if (!factories) {
+        throw Exception("You must pass in a valid Factories instance when setting 'args'.");
+    }
+    m_attrFlags |= %(flag_name)s;
+    attr_%(name)s = factories->parseListOfObjects(std::move(val));
 }
 
 template <class ObjectData>
