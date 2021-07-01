@@ -41,8 +41,8 @@ public:
 	~ObjectsDecoder() override;
 
 	/// Factories accessor
-	const Factories* factories() const {
-		return &m_factories;
+	const Factories& factories() const {
+		return m_factories;
 	}
 
 protected:
