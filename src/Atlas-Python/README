@@ -1,13 +1,3 @@
-When running examples and reference server you need to specify your
-hostname in argument if you want to connect from outside source,
-example: ./chat_server.py foo.org
-
-Examples are at examples directory.
-
-Servers/clients at reference directory can also be considered as
-examples.
-
-
 Copyright:
 ----------
 
