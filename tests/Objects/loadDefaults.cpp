@@ -94,7 +94,7 @@ void LoadDefaultsDecoder::messageArrived(MapType o) {
 	}
 
 	std::string id(I->second.asString());
-	m_objects[id] = o;
+	m_objects[id] = std::move(o);
 }
 
 void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,

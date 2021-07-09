@@ -20,8 +20,7 @@
 #include <sstream>
 #include <cassert>
 #include <vector>
-#include <cstdlib>
-#include <Atlas/Filter.h>
+
 
 #if USE_XML
 #define USE_FILE 0
@@ -206,6 +205,105 @@ void check_float_list3(const Atlas::Message::ListType& list,
 	assert((*i++) == el3);
 	i++;
 }
+
+void testDecodeNested(Atlas::Objects::Factories& factories) {
+
+
+	auto payload = R"""(<atlas><map>
+    <string name="from">30845</string>
+    <string name="to">30845</string>
+    <float name="seconds">3950.28</float>
+    <list name="args">
+        <map>
+            <string name="from">30845</string>
+            <string name="to">30845</string>
+            <float name="seconds">3950.27</float>
+            <list name="args">
+                <map>
+                    <string name="id">30845</string>
+                    <list name="orientation">
+                        <float>0</float>
+                        <float>0.417545</float>
+                        <float>0</float>
+                        <float>0.908656</float>
+                    </list>
+                    <list name="propel">
+                        <float>0.75881</float>
+                        <float>0</float>
+                        <float>0.651312</float>
+                    </list>
+                </map>
+            </list>
+            <string name="parent">move</string>
+            <string name="objtype">op</string>
+        </map>
+    </list>
+    <string name="parent">sight</string>
+    <string name="objtype">op</string>
+</map><atlas>)""";
+
+	std::stringstream ss;
+
+	struct Decoder : Atlas::Objects::ObjectsDecoder {
+		std::vector<Root> objects;
+
+		explicit Decoder(const Atlas::Objects::Factories& factories) :
+				ObjectsDecoder(factories) {
+		}
+
+		void objectArrived(const Root& obj) override {
+			objects.emplace_back(obj);
+		}
+	} decoder(factories);
+
+	Atlas::Codecs::XML codec(ss, ss, decoder);
+	ss << payload;
+	ss.flush();
+	while (ss) {
+		codec.poll();
+	}
+
+
+	Atlas::Objects::Operation::SightData* sightPtr;
+	Atlas::Objects::Operation::MoveData* movePtr;
+	Atlas::Objects::Entity::AnonymousData* anonPtr;
+	{
+		assert(decoder.objects.size() == 1);
+		assert(decoder.objects[0]->getClassNo() == Atlas::Objects::Operation::SIGHT_NO);
+		auto op = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Sight>(decoder.objects[0]);
+		assert(op);
+		sightPtr = op.get();
+		assert(op->getArgs().size() == 1);
+		assert(op->getArgs()[0]->getClassNo() == Atlas::Objects::Operation::MOVE_NO);
+		auto move = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Move>(op->getArgs()[0]);
+		assert(move);
+		movePtr = move.get();
+		assert(move->getArgs().size() == 1);
+		auto anon = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::Anonymous>(move->getArgs()[0]);
+		assert(anon);
+		anonPtr = anon.get();
+	}
+	//This should return all three objects to their pools.
+	decoder.objects.clear();
+
+	//Now parse everything again, and check that we got the same objects this time again.
+	ss = {};
+	ss << payload;
+	ss.flush();
+	while (ss) {
+		codec.poll();
+	}
+	assert(decoder.objects.size() == 1);
+
+	auto op1 = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Sight>(decoder.objects[0]);
+	assert(op1.get() == sightPtr);
+	auto move1 = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Move>(op1->getArgs()[0]);
+	assert(move1.get() == movePtr);
+	auto anon1 = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::Anonymous>(move1->getArgs()[0]);
+	assert(anon1.get() == anonPtr);
+
+}
+
 
 void testValues(Atlas::Objects::Factories& factories, std::map<std::string, Root>& objectDefinitions) {
 	Account account;
@@ -431,5 +529,6 @@ int main() {
 	testXML(factories);
 	testValues(factories, objectDefinitions);
 	test();
+	testDecodeNested(factories);
 	return 0;
 }
