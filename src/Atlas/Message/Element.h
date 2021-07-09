@@ -135,7 +135,7 @@ public:
     Element(StringType&& v)
       : t(TYPE_STRING)
     {
-        s = new DataType<StringType>(v);
+        s = new DataType<StringType>(std::move(v));
     }
 
     /// Set type to MapType, and value to v.
@@ -148,7 +148,7 @@ public:
     Element(MapType&& v)
       : t(TYPE_MAP)
     {
-      m = new DataType<MapType>(v);
+      m = new DataType<MapType>(std::move(v));
     }
 
     /// Set type to ListType, and value to v.
@@ -161,7 +161,7 @@ public:
     Element(ListType&& v)
       : t(TYPE_LIST)
     {
-      l = new DataType<ListType>(v);
+      l = new DataType<ListType>(std::move(v));
     }
 
     /// overload assignment operator !
@@ -297,7 +297,7 @@ public:
       if (TYPE_MAP != t || !m->unique())
       {
         clear(TYPE_MAP);
-        m = new DataType<MapType>(v);
+        m = new DataType<MapType>(std::move(v));
       } else {
         *m = v;
       }
@@ -321,7 +321,7 @@ public:
       if (TYPE_LIST != t || !l->unique())
       {
         clear(TYPE_LIST);
-        l = new DataType<ListType>(v);
+        l = new DataType<ListType>(std::move(v));
       } else {
         *l = v;
       }
@@ -573,7 +573,7 @@ protected:
         DataType() : _refcount(1), _data(nullptr) {}
 
 		explicit DataType(const C& c) : _refcount(1), _data(c) {}
-		explicit DataType(C&& c) : _refcount(1), _data(c) {}
+		explicit DataType(C&& c) : _refcount(1), _data(std::move(c)) {}
         DataType(const DataType&) = delete;
 
         DataType& operator=(const C& c) {_data = c; return *this;}
