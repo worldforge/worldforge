@@ -287,7 +287,7 @@ void testDecodeNested(Atlas::Objects::Factories& factories) {
 	decoder.objects.clear();
 
 	//Now parse everything again, and check that we got the same objects this time again.
-	ss = {};
+	ss.clear();
 	ss << payload;
 	ss.flush();
 	while (ss) {
