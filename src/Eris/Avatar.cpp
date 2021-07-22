@@ -181,18 +181,18 @@ namespace Eris {
     void Avatar::moveInDirection(const WFMath::Vector<3> &vel, const WFMath::Quaternion &orient) {
         Anonymous arg;
         if (vel.isValid()) {
-            arg->setAttr("propel", vel.toAtlas());
+            arg->setAttr("_propel", vel.toAtlas());
         }
         if (orient.isValid()) {
-            arg->setAttr("orientation", orient.toAtlas());
+            arg->setAttr("_direction", orient.toAtlas());
         }
         arg->setId(m_entityId);
 
-        Move moveOp;
-        moveOp->setFrom(m_mindId);
-        moveOp->setArgs1(arg);
+        Set setOp;
+		setOp->setFrom(m_mindId);
+		setOp->setArgs1(arg);
 
-        getConnection().send(moveOp);
+        getConnection().send(setOp);
     }
 
     void Avatar::place(const Entity *entity,
