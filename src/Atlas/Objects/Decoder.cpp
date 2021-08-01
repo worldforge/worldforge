@@ -18,8 +18,7 @@ ObjectsDecoder::ObjectsDecoder(const Factories& f)
 ObjectsDecoder::~ObjectsDecoder() = default;
 
 void ObjectsDecoder::messageArrived(Atlas::Message::MapType o) {
-	Root obj = m_factories.createObject(o);
-	objectArrived(obj);
+	objectArrived(m_factories.createObject(std::move(o)));
 }
 
 }

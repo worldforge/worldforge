@@ -53,6 +53,19 @@ class SmartPtr
         }
         return *this;
     }
+
+    SmartPtr& operator=(SmartPtr<T>&& a) noexcept {
+    	if (a.get() != this->get()) {
+    		//Do a dec-ref on the existing ptr (if any)
+    		decRef();
+    		//But don't do any increase on the new one, just move it over.
+    		// The reference number on it will stay the same, which is what we want.
+    		ptr = a.get();
+    		a.ptr = nullptr;
+    	}
+    	return *this;
+    }
+
     template<class newType>
     operator SmartPtr<newType>() const noexcept {
         return SmartPtr<newType>(ptr);

@@ -50,7 +50,7 @@ protected:
 	void messageArrived(Atlas::Message::MapType) override;
 
 	/// call right object*Arrived method
-	virtual void objectArrived(const Root& obj) = 0;
+	virtual void objectArrived(Root obj) = 0;
 
 	const Factories& m_factories;
 };

@@ -16,7 +16,7 @@ bool unknown_arrived = false;
 struct TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 	explicit TestDecoder(Atlas::Objects::Factories& factories);
-	void objectArrived(const Atlas::Objects::Root& obj) override {
+	void objectArrived(Atlas::Objects::Root obj) override {
 
     	if (obj) {
     		switch (obj->getClassNo()) {

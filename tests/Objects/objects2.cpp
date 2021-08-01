@@ -55,10 +55,10 @@ std::string object2String(const Root& obj) {
 
 struct TestDecoder : public Atlas::Objects::ObjectsDecoder {
 
-	TestDecoder(const Atlas::Objects::Factories& factories)
+	explicit TestDecoder(const Atlas::Objects::Factories& factories)
 			: ObjectsDecoder(factories) {}
 
-	void objectArrived(const Atlas::Objects::Root& obj) override {
+	void objectArrived(Atlas::Objects::Root obj) override {
 
 		if (obj) {
 			switch (obj->getClassNo()) {
@@ -251,7 +251,7 @@ void testDecodeNested(Atlas::Objects::Factories& factories) {
 				ObjectsDecoder(factories) {
 		}
 
-		void objectArrived(const Root& obj) override {
+		void objectArrived(Root obj) override {
 			objects.emplace_back(obj);
 		}
 	} decoder(factories);
