@@ -63,8 +63,8 @@ struct MetaDecoder : Atlas::Objects::ObjectsDecoder {
 			ObjectsDecoder(factories), m_meta(meta) {
 	}
 
-	void objectArrived(const Root& obj) override {
-		m_meta.objectArrived(obj);
+	void objectArrived(Root obj) override {
+		m_meta.objectArrived(std::move(obj));
 	}
 };
 
@@ -519,7 +519,7 @@ void Meta::internalQuery(size_t index) {
 	}
 }
 
-void Meta::objectArrived(const Root& obj) {
+void Meta::objectArrived(Root obj) {
 	Info info = smart_dynamic_cast<Info>(obj);
 	if (!info.isValid()) {
 		error() << "Meta::objectArrived, failed to convert object to INFO op";

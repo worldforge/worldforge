@@ -40,8 +40,8 @@ struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
 			ObjectsDecoder(factories), m_connection(connection) {
 	}
 
-	void objectArrived(const Root& obj) override {
-		m_connection.objectArrived(obj);
+	void objectArrived(Root obj) override {
+		m_connection.objectArrived(std::move(obj));
 	}
 };
 
@@ -255,7 +255,7 @@ void Connection::refreshServerInfo() {
 	send(gt);
 }
 
-void Connection::objectArrived(const Root& obj) {
+void Connection::objectArrived(Root obj) {
 #if ATLAS_LOG == 1
 	std::stringstream debugStream;
 	Atlas::Codecs::Bach debugCodec(debugStream, debugStream, *this /* dummy */);
@@ -269,7 +269,7 @@ void Connection::objectArrived(const Root& obj) {
 #endif
 	RootOperation op = smart_dynamic_cast<RootOperation>(obj);
 	if (op.isValid()) {
-		m_opDeque.push_back(op);
+		m_opDeque.push_back(std::move(op));
 	} else {
 		error() << "Con::objectArrived got non-op";
 	}

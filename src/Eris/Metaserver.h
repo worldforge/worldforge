@@ -119,7 +119,7 @@ public:
 protected:
 	friend class MetaQuery;
 
-	void objectArrived(const Atlas::Objects::Root& obj);
+	void objectArrived(Atlas::Objects::Root obj);
 
 	void doFailure(const std::string& msg);
 

@@ -555,7 +555,7 @@ struct ConnectionDecoder : Atlas::Objects::ObjectsDecoder {
 			ObjectsDecoder(factories), m_connection(connection) {
 	}
 
-	void objectArrived(const Atlas::Objects::Root& obj) override {
+	void objectArrived(Atlas::Objects::Root obj) override {
 		m_connection.objectArrived(obj);
 	}
 };
@@ -582,7 +582,7 @@ Connection::Connection(boost::asio::io_service& io_service,
 Connection::~Connection() {
 }
 
-void Connection::objectArrived(const Root& obj) {
+void Connection::objectArrived(Root obj) {
 }
 
 void Connection::send(const Atlas::Objects::Root& obj) {

@@ -159,7 +159,7 @@ protected:
 
 	void onConnect() override;
 
-	virtual void objectArrived(const Atlas::Objects::Root& obj);
+	virtual void objectArrived(Atlas::Objects::Root obj);
 
 	std::unique_ptr<ConnectionDecoder> m_decoder;
 
