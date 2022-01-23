@@ -95,6 +95,10 @@ class FreeImageConan(ConanFile):
 
     def apply_patches(self):
         self.output.info("Applying patches")
+        # Allow for compilation with C++17
+        tools.replace_in_file(path.join(self.source_subfolder, "Source/OpenEXR/Imath/ImathVec.h"), " throw (IEX_NAMESPACE::MathExc)", "")
+        tools.replace_in_file(path.join(self.source_subfolder, "Source/OpenEXR/Imath/ImathVec.cpp"), " throw (IEX_NAMESPACE::MathExc)", "")
+        tools.replace_in_file(path.join(self.source_subfolder, "Source/OpenEXR/Imath/ImathMatrix.h"), " throw (IEX_NAMESPACE::MathExc)", "")
 
         shutil.copy('CMakeLists.txt', self.source_subfolder)
         if self.settings.os == "Macos":
