@@ -29,6 +29,7 @@ class OgreConan(ConanFile):
             if os_info.with_apt:
                 installer = SystemPackageTool()
                 installer.install("libgl1-mesa-dev")
+                installer.install("libegl1-mesa-dev")
                 installer.install("libxrandr-dev")
 
     def configure(self):
