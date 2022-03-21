@@ -1,0 +1,54 @@
+version: 1.0.{build}
+image: Visual Studio 2019
+environment:
+  CONAN_V2_MODE: 1
+  CONAN_REVISIONS_ENABLED: 1
+  CONAN_SCM_TO_CONANDATA: 1
+cache: '%LOCALAPPDATA%\pip\Cache'
+build_script:
+  - cmd: |
+  set PATH=C:\Python37-x64;C:\Python37-x64\Scripts\;%PATH%
+  pip.exe install "six==1.12"
+  pip.exe install conan
+  conan user
+  conan --version
+  conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+  
+  conan user -p %CONAN_PASSWORD% -r worldforge %CONAN_LOGIN_USERNAME%
+  
+  
+  conan remove "sigc++/*" --force
+  conan create "sigc++" worldforge/stable --build missing
+  conan create "sigc++" worldforge/stable
+  conan remove "alut/*" --force
+  conan create "alut" worldforge/stable --build missing
+  conan create "alut" worldforge/stable
+  REM conan upload "alut/*@worldforge/stable" -r worldforge -c --all
+  conan remove "freeimage/*" --force
+  conan create "freeimage" worldforge/stable --build missing
+  conan create "freeimage" worldforge/stable
+  REM conan upload "freeimage/*@worldforge/stable" -r worldforge -c --all
+  conan remove "libxdg-basedir/*" --force
+  conan create "libxdg-basedir" worldforge/stable --build missing
+  conan create "libxdg-basedir" worldforge/stable
+  REM conan upload "libxdg-basedir/*@worldforge/stable" -r worldforge -c --all
+  conan remove "lua/*" --force
+  conan create "lua" worldforge/stable --build missing
+  conan create "lua" worldforge/stable
+  REM conan upload "lua/*@worldforge/stable" -r worldforge -c --all
+  conan remove "tolua++/*" --force
+  conan create "tolua++" worldforge/stable --build missing
+  conan create "tolua++" worldforge/stable
+  REM conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
+  conan remove "pcre/*" --force
+  conan install pcre/8.41@_/_ --options "pcre:with_unicode_properties=True" --build pcre
+  REM conan upload "pcre/8.41" -r worldforge -c --all
+  conan remove "cegui/*" --force
+  conan create "cegui" worldforge/stable --build missing
+  conan create "cegui" worldforge/stable
+  REM conan upload "cegui/*@worldforge/stable" -r worldforge -c --all
+  conan remove "ogre/*" --force
+  conan create "ogre" worldforge/stable --build missing
+  conan create "ogre" worldforge/stable
+  REM conan upload "ogre/*@worldforge/stable" -r worldforge -c --all
+  conan upload "*" -r worldforge -c --all
