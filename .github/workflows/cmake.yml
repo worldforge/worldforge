@@ -61,14 +61,10 @@ jobs:
               export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
             fi
 
-            conan remove "freeimage/*" --force
-            conan install ./freeimage -g deploy --build missing && conan create ./freeimage worldforge/stable -pr default
             conan remove "sigc++/*" --force
             conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ worldforge/stable -pr default
             conan remove "alut/*" --force
             conan install ./alut -g deploy --build missing && conan create ./alut worldforge/stable -pr default
-            conan remove "sdl2/*" --force
-            conan install ./sdl2 -g deploy --build missing && conan create ./sdl2 worldforge/stable -pr default
             conan remove "libxdg-basedir/*" --force
             conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir worldforge/stable -pr default
             conan remove "lua/*" --force
@@ -76,17 +72,11 @@ jobs:
             conan remove "tolua++/*" --force
             conan install ./tolua++ -g deploy --build missing && conan create ./tolua++ worldforge/stable -pr default
             conan remove "pcre/*" --force
-            conan install pcre/8.44@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
+            conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
             conan remove "cegui/*" --force
             conan install ./cegui -g deploy --build missing && conan create ./cegui worldforge/stable -pr default
             conan remove "ogre/*" --force
             conan install ./ogre -g deploy --build missing && conan create ./ogre worldforge/stable -pr default
-            if [[ "$ImageOS" != "win19" ]]; then
-              conan remove "libgpg-error/*" --force
-              conan install ./libgpg-error -g deploy --build missing && conan create ./libgpg-error worldforge/stable -pr default
-              conan remove "libgcrypt/*" --force
-              conan install ./libgcrypt -g deploy --build missing && conan create ./libgcrypt worldforge/stable -pr default
-            fi
 
             conan user --clean
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME

@@ -2,5 +2,5 @@
 #include <OgreRoot.h>
 
 int main() {
-	Ogre::Root tested();
+	Ogre::Vector3 tested{};
 }
