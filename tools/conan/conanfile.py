@@ -17,9 +17,7 @@ class ErisConan(ConanFile):
     requires = ["sigc++/2.10.0@worldforge/stable",
                 "atlas/0.7.0@worldforge/testing",
                 "wfmath/1.0.3@worldforge/testing",
-                "boost/1.75.0",
-                ("zlib/1.2.11", "override"),
-                ("bzip2/1.0.8", "override")]
+                "boost/1.78.0"]
 
     scm = {
         "type": "git",
