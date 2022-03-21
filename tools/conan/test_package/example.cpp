@@ -2,5 +2,5 @@
 #include <Atlas/Objects/RootOperation.h>
 
 int main() {
-	Atlas::Objects::Operation::RootOperation tested();
+	Atlas::Objects::Operation::RootOperation tested;
 }

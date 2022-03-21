@@ -13,8 +13,8 @@ class AtlasConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    requires = ["bzip2/1.0.8@_/_",
-                "zlib/1.2.11@_/_"]
+    requires = ["bzip2/1.0.8",
+                "zlib/1.2.11"]
     generators = "cmake"
 
     scm = {
