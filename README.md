@@ -15,3 +15,10 @@ conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/cona
 ```
 
 Note that some packages require that Conan is run with Python 3.
+
+## Install locally
+
+To install any of these packages locally, you would in most cases do:
+```bash
+conan create ./<package> worldforge/stable --build missing
+```
