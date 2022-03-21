@@ -9,9 +9,9 @@ These are the libraries used by Worldforge, provided as [Conan](https://www.cona
 
 Most of them are adapted to be used specifically for Worldforge, so they might be missing some features that aren't needed by Worldforge specifically.
 
-The libraries are automatically built by Travis and uploaded to the "worldforge/stable" channel at https://bintray.com/worldforge/worldforge-conan. To use them, configure conan as such
+The libraries are automatically built by Travis and uploaded to the "worldforge/stable" channel at https://artifactory.ogenvik.org/ui/repos/tree/General/conan%2Fworldforge. To use them, configure conan as such
 ```
-conan remote add worldforge https://api.bintray.com/conan/worldforge/worldforge-conan
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 ```
 
 Note that some packages require that Conan is run with Python 3.
