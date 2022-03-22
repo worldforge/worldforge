@@ -106,7 +106,11 @@ conan_basic_setup()
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libdirs = ["lib", "lib/OGRE"]
+        if tools.os_info.is_windows:
+            self.cpp_info.libdirs = ["lib", "lib/OGRE", "bin"]
+        else:
+            self.cpp_info.libdirs = ["lib", "lib/OGRE"]
+
         self.cpp_info.libs = ["Codec_FreeImageStatic", 
                               "OgreMeshLodGeneratorStatic",
                               "OgreOverlayStatic",
