@@ -43,7 +43,8 @@ class CeguiConan(ConanFile):
         "pcre/8.45",
         "libpng/1.6.37",
         "bzip2/1.0.8",
-        "libiconv/1.16"
+        "libiconv/1.16",
+        "zlib/1.2.12"
     )
 
     short_paths = True
