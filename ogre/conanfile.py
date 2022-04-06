@@ -75,6 +75,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_PLATFORM_APPLE_IOS'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_CSHARP'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_HLMS'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_PAGING'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_TERRAIN'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_RTSHADERSYSTEM'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_VOLUME'] = 'OFF'
@@ -115,7 +116,6 @@ conan_basic_setup()
                               "OgreMeshLodGeneratorStatic",
                               "OgreOverlayStatic",
                               "OgreTerrainStatic",
-                              "OgrePagingStatic",
                               "OgreRTShaderSystemStatic",
                               "Plugin_ParticleFXStatic", 
                               "RenderSystem_GL3PlusStatic",
@@ -132,7 +132,6 @@ conan_basic_setup()
         self.cpp_info.includedirs = ["include/OGRE",
                                      "include/OGRE/Overlay", 
                                      "include/OGRE/Terrain",
-                                     "include/OGRE/Paging",
                                      "include/OGRE/MeshLodGenerator",
                                      "include/OGRE/RTShaderSystem"]
 
