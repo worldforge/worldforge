@@ -44,7 +44,7 @@ class FreeImageConan(ConanFile):
 
     # Use version ranges for dependencies unless there's a reason not to
     requires = (
-        "zlib/1.2.11")
+        "zlib/1.2.12")
 
     short_paths = True
 

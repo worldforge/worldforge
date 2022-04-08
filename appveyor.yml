@@ -41,8 +41,8 @@ build_script:
       conan create "tolua++" worldforge/stable
       REM conan upload "tolua++/*@worldforge/stable" -r worldforge -c --all
       conan remove "pcre/*" --force
-      conan install pcre/8.41@_/_ --options "pcre:with_unicode_properties=True" --build pcre
-      REM conan upload "pcre/8.41" -r worldforge -c --all
+      conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --build pcre
+      REM conan upload "pcre/8.45" -r worldforge -c --all
       conan remove "cegui/*" --force
       conan create "cegui" worldforge/stable --build missing
       conan create "cegui" worldforge/stable
