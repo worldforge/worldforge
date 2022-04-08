@@ -21,6 +21,7 @@ class OgreConan(ConanFile):
     source_subfolder = 'source_subfolder'
     short_paths = False
     requires = ["bzip2/1.0.8",
+                "zlib/1.2.12",
                 "freetype/2.11.1",
                 "freeimage/3.18.0@worldforge/stable"]
 
