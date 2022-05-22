@@ -79,28 +79,16 @@ public:
 	{
 	}
 
-    Element(long v)
-      : t(TYPE_INT), i(v)
-    {
-    }
+	Element(IntType v)
+			: t(TYPE_INT), i(v)
+	{
+	}
 
     /// Set type to int, and value to v.
     Element(bool v)
       : t(TYPE_INT), i(v)
     {
     }
-
-    /// Set type to int, and value to v.
-    Element(long long v)
-      : t(TYPE_INT), i(v)
-    {
-    }
-
-    /// Set type to double, and value to v.
-    Element(float v)
-      : t(TYPE_FLOAT), f(v)
-    {
-    }   
 
     /// Set type to double, and value to v.
     Element(FloatType v)
@@ -184,7 +172,7 @@ public:
 		return *this;
 	}
 
-    Element& operator=(long v)
+    Element& operator=(IntType v)
     {
       if (TYPE_INT != t)
       {
@@ -201,26 +189,6 @@ public:
         clear(TYPE_INT);
       }
       i = v;
-      return *this;
-    }
-
-    Element& operator=(long long v)
-    {
-      if (TYPE_INT != t)
-      {
-        clear(TYPE_INT);
-      }
-      i = v;
-      return *this;
-    }
-
-    Element& operator=(float v) 
-    {
-      if (TYPE_FLOAT != t)
-      {
-        clear(TYPE_FLOAT);
-      }
-      f = v;
       return *this;
     }
 
@@ -331,13 +299,6 @@ public:
     /// Check for equality with another Element.
     bool operator==(const Element& o) const;
 
-#if defined(__GNUC__) && __GNUC__ < 3
-    bool operator!=(const Element& o) const
-    {
-        return !(*this == o);
-    }
-#endif // defined(__GNUC__) && __GNUC__ < 3
-    
     /// Check for inequality with anything we can check equality with
     template<class C>
     bool operator!=(C c) const
@@ -352,13 +313,7 @@ public:
 	}
 
 	/// Check for equality with a int.
-	bool operator==(long v) const
-	{
-		return (t == TYPE_INT && i == v);
-	}
-
-	/// Check for equality with a int.
-	bool operator==(long long v) const
+	bool operator==(IntType v) const
 	{
 		return (t == TYPE_INT && i == v);
 	}
