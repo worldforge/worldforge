@@ -72,7 +72,7 @@ conan_basic_setup()
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         cmake.definitions['CEGUI_SAMPLES_ENABLED'] = False
         cmake.definitions['CEGUI_BUILD_PYTHON_MODULES'] = False
-        cmake.definitions['CEGUI_BUILD_LUA_MODULE'] = True
+        cmake.definitions['CEGUI_BUILD_LUA_MODULE'] = False
         cmake.definitions['CEGUI_BUILD_APPLICATION_TEMPLATES'] = False
         cmake.definitions['CEGUI_HAS_FREETYPE'] = True
         cmake.definitions['CEGUI_OPTION_DEFAULT_IMAGECODEC'] = 'FreeImageImageCodec'
