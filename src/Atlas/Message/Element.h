@@ -74,7 +74,7 @@ public:
     Element(Element&& obj) noexcept;
 
     /// Set type to int, and value to v.
-	Element(int v)
+	Element(std::int32_t v)
 			: t(TYPE_INT), i(v)
 	{
 	}
@@ -162,7 +162,7 @@ public:
      */
     Element& operator=(Element&& obj) noexcept;
 
-	Element& operator=(int v)
+	Element& operator=(std::int32_t v)
 	{
 		if (TYPE_INT != t)
 		{
@@ -307,7 +307,7 @@ public:
     }
 
 	/// Check for equality with a int.
-	bool operator==(int v) const
+	bool operator==(std::int32_t v) const
 	{
 		return (t == TYPE_INT && i == v);
 	}
