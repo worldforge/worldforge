@@ -37,8 +37,6 @@ class CeguiConan(ConanFile):
     requires = (
         "freetype/2.11.1",
         "freeimage/3.18.0@worldforge/stable",
-        "lua/5.1.5@worldforge/stable",
-        "tolua++/1.0.93@worldforge/stable",
         "tinyxml/2.6.2",
         "pcre/8.45",
         "libpng/1.6.37",

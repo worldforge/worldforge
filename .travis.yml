@@ -65,14 +65,8 @@ script:
     fi
   - conan remove "sigc++/*" --force
   - conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ worldforge/stable -pr default
-  - conan remove "alut/*" --force
-  - conan install ./alut -g deploy --build missing && conan create ./alut worldforge/stable -pr default
   - conan remove "libxdg-basedir/*" --force
   - conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir worldforge/stable -pr default
-  - conan remove "lua/*" --force
-  - conan install ./lua -g deploy --build missing && conan create ./lua worldforge/stable -pr default
-  - conan remove "tolua++/*" --force
-  - conan install ./tolua++ -g deploy --build missing && conan create ./tolua++ worldforge/stable -pr default
   - conan remove "pcre/*" --force
   - conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
   - conan remove "cegui/*" --force
