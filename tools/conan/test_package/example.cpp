@@ -2,5 +2,5 @@
 #include <varconf/config.h>
 
 int main() {
-    varconf::Config tested();
+    varconf::Config tested{};
 }

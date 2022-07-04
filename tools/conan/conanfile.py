@@ -5,7 +5,6 @@ class VarconfConan(ConanFile):
     name = "varconf"
     version = "1.0.3"
     license = "GPL-2.0+"
-    author = "Erik Ogenvik <erik@ogenvik.org>"
     homepage = "https://www.worldforge.org"
     url = "https://github.com/worldforge/varconf"
     description = "Configuration library for the Worldforge system."
