@@ -177,7 +177,7 @@ public:
 		return *this;
 	}
 
-    Element& operator=(IntType v)
+    Element& operator=(long v)
     {
       if (TYPE_INT != t)
       {
@@ -328,7 +328,7 @@ public:
 	}
 
 	/// Check for equality with a int.
-	bool operator==(IntType v) const
+	bool operator==(long v) const
 	{
 		return (t == TYPE_INT && i == v);
 	}
