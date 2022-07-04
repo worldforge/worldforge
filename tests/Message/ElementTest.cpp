@@ -53,6 +53,15 @@ int main(int argc, char **argv) {
         assert(e.getType() == Element::TYPE_INT);
     }
 
+	{
+		Element e = 1LL;
+		assert(e.isInt());
+		assert(e.isNum());
+		assert(e.Int() == 1);
+		assert(e.asInt() == 1);
+		assert(e.getType() == Element::TYPE_INT);
+	}
+
     {
         Element e = 1.0;
         assert(e.isFloat());

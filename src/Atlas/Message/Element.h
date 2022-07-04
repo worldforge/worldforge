@@ -74,12 +74,17 @@ public:
     Element(Element&& obj) noexcept;
 
     /// Set type to int, and value to v.
-	Element(std::int32_t v)
+	Element(int v)
 			: t(TYPE_INT), i(v)
 	{
 	}
 
-	Element(IntType v)
+	Element(long v)
+			: t(TYPE_INT), i(v)
+	{
+	}
+
+	Element(long long v)
 			: t(TYPE_INT), i(v)
 	{
 	}
@@ -162,7 +167,7 @@ public:
      */
     Element& operator=(Element&& obj) noexcept;
 
-	Element& operator=(std::int32_t v)
+	Element& operator=(int v)
 	{
 		if (TYPE_INT != t)
 		{
@@ -181,6 +186,16 @@ public:
       i = v;
       return *this;
     }
+
+	Element& operator=(long long v)
+	{
+		if (TYPE_INT != t)
+		{
+			clear(TYPE_INT);
+		}
+		i = v;
+		return *this;
+	}
 
     Element& operator=(bool v) 
     {
@@ -307,7 +322,7 @@ public:
     }
 
 	/// Check for equality with a int.
-	bool operator==(std::int32_t v) const
+	bool operator==(int v) const
 	{
 		return (t == TYPE_INT && i == v);
 	}
@@ -318,6 +333,10 @@ public:
 		return (t == TYPE_INT && i == v);
 	}
 
+	bool operator==(long long v) const
+	{
+		return (t == TYPE_INT && i == v);
+	}
 	/// Check for equality with a double.
     bool operator==(FloatType v) const
     {
