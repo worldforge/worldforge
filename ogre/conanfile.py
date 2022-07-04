@@ -28,14 +28,10 @@ class OgreConan(ConanFile):
     def system_requirements(self):
         if os_info.is_linux:
             if os_info.with_apt:
-                installer = SystemPackageTool()
+                installer = SystemPackageTool(default_mode="verify")
                 installer.install("libgl1-mesa-dev")
                 installer.install("libegl1-mesa-dev")
                 installer.install("libxrandr-dev")
-
-    def configure(self):
-        if 'CI' not in os.environ:
-            os.environ['CONAN_SYSREQUIRES_MODE'] = 'verify'
 
     def source(self):
         tools.get("https://github.com/OGRECave/ogre/archive/v{0}.tar.gz".format(self.upstream_version))
