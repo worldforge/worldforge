@@ -5,7 +5,6 @@ class MercatorConan(ConanFile):
     name = "mercator"
     version = "0.4.0"
     license = "GPL-2.0+"
-    author = "Erik Ogenvik <erik@ogenvik.org>"
     homepage = "https://www.worldforge.org"
     url = "https://github.com/worldforge/mercator"
     description = "A terrain generation library for the Worldforge system."
