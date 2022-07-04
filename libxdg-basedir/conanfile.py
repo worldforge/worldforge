@@ -2,11 +2,12 @@ from conans import ConanFile, tools, AutoToolsBuildEnvironment
 import os
 from pathlib import Path
 
+
 class Lua(ConanFile):
     name = 'libxdg-basedir'
     version = '1.2.3'
     license = 'MIT'
-    url = ''
+    url = 'https://github.com/devnev/libxdg-basedir'
     homepage = ''
     description = ''
     settings = 'os', 'arch', 'build_type', 'compiler'
@@ -22,7 +23,7 @@ class Lua(ConanFile):
 
     def build(self):
         if self.settings.compiler == "Visual Studio":
-            #Just skip on win32
+            # Just skip on win32
             return
         self.run("./autogen.sh")
         autotools = AutoToolsBuildEnvironment(self)
@@ -31,12 +32,21 @@ class Lua(ConanFile):
         autotools.configure()
         autotools.make()
         autotools.install()
-        #If we're building static libraries we don't want the shared around.
+        # If we're building static libraries we don't want the shared around.
         if not self.options.shared:
             for filename in Path(self.package_folder).glob('**/*.so*'):
                 print("Removing shared object file at {}".format(filename))
                 os.remove(str(filename))
+        for filename in Path(self.package_folder).glob('**/*.pc'):
+            os.remove(str(filename))
+        for filename in Path(self.package_folder).glob('**/*.la'):
+            os.remove(str(filename))
 
     def package_info(self):
         if self.settings.compiler != "Visual Studio":
             self.cpp_info.libs = ['xdg-basedir']
+
+    def configure(self):
+        # Remove since this is a pure C package.
+        del self.settings.compiler.libcxx
+        del self.settings.compiler.cppstd
