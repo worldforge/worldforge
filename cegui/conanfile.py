@@ -35,7 +35,7 @@ class CeguiConan(ConanFile):
     source_subfolder = "source_subfolder"
 
     requires = (
-        "freetype/2.11.1",
+        "freetype/2.12.1",
         "freeimage/3.18.0@worldforge/stable",
         "tinyxml/2.6.2",
         "pcre/8.45",

@@ -6,7 +6,7 @@ from conans.tools import os_info, SystemPackageTool
 
 class OgreConan(ConanFile):
     name = 'ogre'
-    upstream_version = "13.3.4"
+    upstream_version = "13.4.1"
     package_revision = ""
     version = "{0}{1}".format(upstream_version, package_revision)
 
@@ -22,7 +22,7 @@ class OgreConan(ConanFile):
     short_paths = False
     requires = ["bzip2/1.0.8",
                 "zlib/1.2.12",
-                "freetype/2.11.1",
+                "freetype/2.12.1",
                 "freeimage/3.18.0@worldforge/stable"]
 
     def system_requirements(self):
@@ -81,6 +81,7 @@ conan_basic_setup()
         cmake.definitions['OGRE_BUILD_COMPONENT_RTSHADERSYSTEM'] = 'ON'
         cmake.definitions['OGRE_BUILD_COMPONENT_VOLUME'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
+        cmake.definitions['OGRE_BUILD_COMPONENT_BULLET'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_PROPERTY'] = 'OFF'
         cmake.definitions['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
