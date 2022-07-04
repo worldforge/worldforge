@@ -5,7 +5,6 @@ class ErisConan(ConanFile):
     name = "eris"
     version = "1.4.0"
     license = "GPL-2.0+"
-    author = "Erik Ogenvik <erik@ogenvik.org>"
     homepage = "https://www.worldforge.org"
     url = "https://github.com/worldforge/eris"
     description = "A WorldForge client library."
