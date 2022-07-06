@@ -20,6 +20,7 @@
 #define ERIS_USAGE_H
 
 #include <string>
+#include <map>
 
 namespace Eris {
 
