@@ -26,11 +26,7 @@ namespace Atlas {
 /// Convert an ASCII char to its hexadecimal value
         inline std::string charToHex(char c) {
             char hex[3];
-#ifdef _WIN32
-            _snprintf(hex, 3, "%x", c);
-#else
             snprintf(hex, 3, "%x", c);
-#endif
             return hex;
         }
 
