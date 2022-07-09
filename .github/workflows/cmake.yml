@@ -29,7 +29,7 @@ jobs:
       - name: Install autotools
         shell: bash
         run: |
-          if [[ "$ImageOS" == "macos1015" ]]; then
+          if [[ "$ImageOS" == macos* ]]; then
             brew install autoconf automake
           fi
 
