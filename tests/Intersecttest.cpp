@@ -13,6 +13,11 @@
 #include <Mercator/Intersect.h>
 
 #include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <cassert>
 #include <algorithm>
 
 int main()
@@ -28,7 +33,7 @@ int main()
 
     if (!segment) {
         std::cerr << "Segment not created by addition of required basepoints"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
