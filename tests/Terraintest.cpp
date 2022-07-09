@@ -1,6 +1,12 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
 
 #include <Mercator/Terrain.h>
 #include <Mercator/Segment.h>
@@ -8,12 +14,7 @@
 
 #include <wfmath/const.h>
 
-#ifdef NDEBUG
-#undef NDEBUG
-#endif
-#ifndef DEBUG
-#define DEBUG
-#endif
+
 
 #include <iostream>
 #include <cstdlib>

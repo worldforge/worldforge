@@ -2,6 +2,13 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Damien McGinnes
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <Mercator/Terrain.h>
 #include <Mercator/Segment.h>
 #include <Mercator/Intersect.h>

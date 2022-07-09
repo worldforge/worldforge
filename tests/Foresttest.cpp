@@ -2,12 +2,6 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2004 Alistair Riddoch
 
-#include <Mercator/Forest.h>
-#include <Mercator/Plant.h>
-#include <Mercator/Area.h>
-
-#include <iostream>
-
 #ifdef NDEBUG
 #undef NDEBUG
 #endif
@@ -15,6 +9,11 @@
 #define DEBUG
 #endif
 
+#include <Mercator/Forest.h>
+#include <Mercator/Plant.h>
+#include <Mercator/Area.h>
+
+#include <iostream>
 #include <cassert>
 
 typedef WFMath::Point<2> Point2;
