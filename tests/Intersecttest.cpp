@@ -20,7 +20,7 @@ int main()
 
     Mercator::Segment * segment = terrain.getSegmentAtIndex(0, 0);
 
-    if (segment == 0) {
+    if (!segment) {
         std::cerr << "Segment not created by addition of required basepoints"
                   << std::endl << std::flush;
         return 1;
@@ -51,7 +51,7 @@ int main()
 
     //test axis box moved from above terrain to below it. 
     bool inter=false;
-    float dy = highab.highCorner()[1] - highab.lowCorner()[1] - 0.1;
+    auto dy = highab.highCorner()[1] - highab.lowCorner()[1] - 0.1;
     while (highab.highCorner()[1] > segment->getMin()) {
         highab.shift(WFMath::Vector<3>(0.0, -dy, 0.0));
         if (Mercator::Intersect(terrain, highab)) {
@@ -172,7 +172,7 @@ int main()
     //check the height value
     float h;
     WFMath::Vector<3> n;
-    terrain.getHeightAndNormal(intPoint[0], intPoint[2], h, n);
+    terrain.getHeightAndNormal((float)intPoint[0], (float)intPoint[2], h, n);
     n.normalize();
 
     if (n != intNorm) {
@@ -185,7 +185,7 @@ int main()
     // We can't check for equality here is it just doesn't work with
     // floats. Look it up in any programming book if you don't believe me.
     //  - 20040721 <alriddoch@zepler.org>
-    if (fabs(h - intPoint[1]) > 0.00001) {
+    if (!WFMath::Equal(h, (float)intPoint[1])) {
         std::cerr << "calculated height is different from getHeightAndNormal" << std::endl;
         std::cerr << h << "!=" << intPoint[1] << std::endl;
         return 1;
