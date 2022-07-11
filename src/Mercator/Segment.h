@@ -60,7 +60,7 @@ class Segment {
     /// Pointer to buffer containing height points
     HeightMap m_heightMap;
     /// Pointer to buffer containing normals for height points
-    std::unique_ptr<std::vector<float>> m_normals;
+    std::vector<float> m_normals;
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
@@ -161,12 +161,12 @@ class Segment {
 
     /// \brief Accessor for buffer containing surface normals.
     const float * getNormals() const {
-        return m_normals->data();
+        return m_normals.data();
     }
 
     /// \brief Accessor for write access to buffer containing surface normals.
     float * getNormals() {
-        return m_normals->data();
+        return m_normals.data();
     }
 
     /// \brief Get the height at a relative integer position in the Segment.

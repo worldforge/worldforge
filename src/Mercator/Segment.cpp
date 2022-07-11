@@ -85,7 +85,7 @@ void Segment::invalidate(bool points)
     if (points) {
         m_heightMap.invalidate();
     }
-    m_normals.reset();
+    m_normals = {};
 
     invalidateSurfaces();
 }
@@ -114,11 +114,11 @@ void Segment::populateNormals()
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
-    if (!m_normals) {
-        m_normals = std::make_unique<std::vector<float>>(m_size * m_size * 3);
+    if (m_normals.empty()) {
+        m_normals.reserve(m_size * m_size * 3);
     }
 
-    float * np = m_normals->data();
+    auto * np = m_normals.data();
     
     // Fill in the damn normals
     float h1,h2,h3,h4;
