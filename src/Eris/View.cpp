@@ -58,7 +58,7 @@ void View::registerFactory(std::unique_ptr<Factory> f) {
 sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot) {
 	if (m_contents.count(eid)) {
 		error() << "notifyWhenEntitySeen: entity " << eid << " already in View";
-		return sigc::connection();
+		return {};
 	}
 
 	sigc::connection c = m_notifySights[eid].connect(slot);
@@ -269,6 +269,28 @@ void View::deleteEntity(const std::string& eid) {
 		if (entity->m_moving) {
 			removeFromPrediction(entity);
 		}
+		//If the entity being deleted is an ancestor to the observer, we should detach the nearest closest entity below it (which often is the observer)
+		//and then delete all entities above it (if any, which there often aren't any of).
+		if (entity->isAncestorTo(*m_owner.getEntity())) {
+			Entity* nearestAncestor = m_owner.getEntity();
+			while (nearestAncestor->getLocation() != entity) {
+				nearestAncestor = nearestAncestor->getLocation();
+			}
+			//Remove the nearest ancestor from its parent first
+			nearestAncestor->setLocation(nullptr, true);
+			//The new top level should be the previous nearest ancestor.
+			setTopLevelEntity(nearestAncestor);
+			//If the current entity also has parents, delete them too.
+			if (entity->getLocation()) {
+				auto entityLocation = entity->getLocation();
+				//First remove current location from parent, so we don't delete twice
+				entity->setLocation(nullptr, true);
+				//Delete the whole tree of entities, starting at top
+				deleteEntity(entityLocation->getTopEntity()->getId());
+			}
+
+		}
+
 		//Emit signals about the entity being deleted.
 		EntityDeleted.emit(entity);
 		entity->BeingDeleted.emit();
@@ -402,12 +424,6 @@ void View::sendLookAt(const std::string& eid) {
 void View::setTopLevelEntity(Entity* newTopLevel) {
 	if (newTopLevel == m_topLevel) {
 		return; // no change!
-	}
-
-	if (m_topLevel) {
-		if (m_topLevel->isVisible() && (m_topLevel->getLocation() == nullptr)) {
-			error() << "old top-level entity is visible, but has no location";
-		}
 	}
 
 	m_simulationSpeedConnection.disconnect();
