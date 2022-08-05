@@ -244,17 +244,18 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
         name = ((*I).second).first;
         bool needs_value = ((*I).second).second;
 
-        if (needs_value && (i+1) < argc && argv[i+1][0] != 0
-                        && argv[i+1][0] != '-') {
-          value = argv[++i];
-        } 
-        else {
-			std::stringstream ss;
-	 		ss << "Varconf Warning: short argument \""<< argv[i] <<"\""
-				  " given on command-line expects a value"
-				  " but none was given.";
-          sige.emit(ss.str().c_str());
-        }
+		if (needs_value) {
+			if ((i+1) < argc && argv[i+1][0] != 0 && argv[i+1][0] != '-') {
+				value = argv[++i];
+			}
+			else {
+				std::stringstream ss;
+				ss << "Varconf Warning: short argument \""<< argv[i] <<"\""
+																	   " given on command-line expects a value"
+																	   " but none was given.";
+				sige.emit(ss.str().c_str());
+			}
+		}
       }
       else {
 		  std::stringstream ss;
