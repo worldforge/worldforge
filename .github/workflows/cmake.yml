@@ -31,7 +31,6 @@ jobs:
         run: |
           export PATH=~/.local/bin:$PATH
           if [[ "$ImageOS" == "win19" ]]; then
-            pip3 install --user --upgrade pip wheel setuptools
             pip3 install --user --upgrade conan
             echo "Adjusting path to include local Pip installed packages."
             export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
