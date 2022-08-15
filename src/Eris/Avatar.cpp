@@ -268,6 +268,17 @@ namespace Eris {
             m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(
                     sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
 
+			//Check if we're admin before we announce ourselves to the world.
+			ent->observe("is_admin",
+						 [this](const Atlas::Message::Element &elem) {
+							 if (elem.isInt() && elem.asInt() != 0) {
+								 setIsAdmin(true);
+							 } else {
+								 setIsAdmin(false);
+							 }
+						 },
+						 true);
+
             GotCharacterEntity.emit(ent);
             m_entityAppearanceCon.disconnect(); // stop listening to View::Appearance
 
