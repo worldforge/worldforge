@@ -42,9 +42,11 @@ StoreResult Repository::store(const Signature& signature, const std::vector<char
 
 StoreResult Repository::store(const Signature& signature, const std::filesystem::path& path) {
 	auto fullPath = resolvePathForSignature(signature);
-	std::filesystem::create_directories(fullPath.parent_path());
-	//TODO: handle systems where we can't use symlinks. Either by writing a text file or by copying the data.
-	std::filesystem::create_symlink(path, fullPath);
+	if (!exists(fullPath)) {
+		std::filesystem::create_directories(fullPath.parent_path());
+		//TODO: handle systems where we can't use symlinks. Either by writing a text file or by copying the data.
+		std::filesystem::create_symlink(path, fullPath);
+	}
 	return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
 }
 
