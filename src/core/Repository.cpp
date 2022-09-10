@@ -44,18 +44,17 @@ StoreResult Repository::store(const Signature& signature, const std::filesystem:
 	auto fullPath = resolvePathForSignature(signature);
 	if (!exists(fullPath)) {
 		std::filesystem::create_directories(fullPath.parent_path());
-		//TODO: handle systems where we can't use symlinks. Either by writing a text file or by copying the data.
-		std::filesystem::create_symlink(path, fullPath);
+		std::filesystem::copy_file(path, fullPath);
 	}
 	return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
 }
 
-StoreResult Repository::store(const Signature& signature, const Digest& digest) {
+StoreResult Repository::store(const Signature& signature, const Record& record) {
 	auto fullPath = resolvePathForSignature(signature);
 	std::filesystem::create_directories(fullPath.parent_path());
 	std::ofstream fileStream(fullPath, std::ios::out);
 	if (fileStream.good()) {
-		fileStream << digest;
+		fileStream << record;
 		return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
 	} else {
 		return {.status = StoreStatus::FAILURE};
@@ -65,12 +64,7 @@ StoreResult Repository::store(const Signature& signature, const Digest& digest) 
 FetchResult Repository::fetch(const Signature& signature) const {
 	auto fullPath = resolvePathForSignature(signature);
 	if (exists(fullPath)) {
-		if (std::filesystem::is_symlink(fullPath)) {
-			//TODO: should we perhaps resolve the symlink instead?
-			return {.status=FetchStatus::SUCCESS, .localPath = fullPath};
-		} else {
-			return {.status=FetchStatus::SUCCESS, .localPath = fullPath};
-		}
+		return {.status=FetchStatus::SUCCESS, .localPath = fullPath};
 	} else {
 		return {.status=FetchStatus::FAILURE};
 	}
@@ -78,7 +72,44 @@ FetchResult Repository::fetch(const Signature& signature) const {
 
 
 std::filesystem::path Repository::resolvePathForSignature(const Signature& signature) const {
-	return mRepositoryPath / signature.substr(0, 2) / signature.substr(2);
+	return mRepositoryPath / "data" / signature.substr(0, 2) / signature.substr(2);
+}
+
+bool Repository::contains(const Signature& signature) const {
+	auto path = resolvePathForSignature(signature);
+	return exists(path);
+}
+
+FetchRecordResult Repository::fetchRecord(const Signature& signature) const {
+	auto fetchResult = fetch(signature);
+	FetchRecordResult fetchRecordResult{.fetchResult=fetchResult};
+	if (fetchResult.status == FetchStatus::SUCCESS) {
+		std::ifstream stream(fetchResult.localPath);
+		if (stream.is_open()) {
+			Record record;
+			std::getline(stream, record.version);
+			if (stream) {
+				std::string line;
+				while (std::getline(stream, line)) {
+					std::stringstream ss(line);
+					std::string path;
+					Signature entrySignature;
+					std::string sizeString;
+					std::getline(ss, path, ' ');
+					std::getline(ss, entrySignature, ' ');
+					std::getline(ss, sizeString, ' ');
+					size_t size = std::stol(sizeString);
+					FileEntryType fileEntryType = FileEntryType::FILE;
+					if (path.back() == '/') {
+						fileEntryType = FileEntryType::DIRECTORY;
+					}
+					record.entries.emplace_back(FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
+				}
+			}
+			fetchRecordResult.record = std::move(record);
+		}
+	}
+	return fetchRecordResult;
 }
 
 

@@ -41,7 +41,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 			FileEntry{.fileName = "baz.txt", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "bar", .signature="cd504e8777b6fa35b4f8977cdaf763928434bdd52d787c9ea14e9efccf70aa", .type=FileEntryType::DIRECTORY, .size=1},
 			FileEntry{.fileName = "foo.txt", .signature="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "raw", .signature="865e8776ebf4781bac85bf5ce3fc09330d62b98e718975d5324dad743e74a", .type=FileEntryType::DIRECTORY, .size=2},
+			FileEntry{.fileName = "raw", .signature="ebb6ebcfd90c35b98d14f4b0293fb99f835b903a6a80159bbf407558215d5", .type=FileEntryType::DIRECTORY, .size=2},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));

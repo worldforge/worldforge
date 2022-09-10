@@ -16,41 +16,30 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef SQUALL_PROVIDER_H
-#define SQUALL_PROVIDER_H
+#ifndef SQUALL_ROOT_H
+#define SQUALL_ROOT_H
+
+#include <utility>
 
 #include "Record.h"
 #include "Repository.h"
-#include <future>
-#include <filesystem>
 
 namespace Squall {
-enum class ProviderResultStatus {
-	SUCCESS,
-	FAILURE
-};
-struct ProviderResult {
-	ProviderResultStatus status;
+
+struct Root {
+	Signature signature;
 };
 
-struct Provider {
-	virtual ~Provider() = default;
+class Realizer {
+public:
+	Realizer(Root root, Repository& repository);
 
-	virtual std::future<ProviderResult> fetch(Signature signature,
-											  std::filesystem::path destination) = 0;
+protected:
+	const Root mRoot;
+	Repository& mRepository;
 };
 
-struct RepositoryProvider : public Provider {
-	const Repository& mRepo;
 
-	explicit RepositoryProvider(const Repository& repo) : mRepo(repo) {}
-
-
-	std::future<ProviderResult> fetch(Signature signature,
-									  std::filesystem::path destination) override;
-
-};
 }
 
-
-#endif //SQUALL_PROVIDER_H
+#endif //SQUALL_ROOT_H

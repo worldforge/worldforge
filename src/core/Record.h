@@ -16,8 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef SQUALL_DIGEST_H
-#define SQUALL_DIGEST_H
+#ifndef SQUALL_RECORD_H
+#define SQUALL_RECORD_H
 
 #include <string>
 #include <filesystem>
@@ -39,19 +39,29 @@ struct FileEntry {
 	Signature signature;
 	FileEntryType type;
 	size_t size;
+
+	bool operator==(const FileEntry& rhs) const;
+
+	bool operator!=(const FileEntry& rhs) const;
 };
 
-struct Digest {
+struct Record {
 	std::string version;
 	std::vector<FileEntry> entries;
+
+	bool operator==(const Record& rhs) const;
+
+	bool operator!=(const Record& rhs) const;
 };
 
 }
 
-std::ostream& operator<<(std::ostream& out, const Squall::Digest& digest);
+std::ostream& operator<<(std::ostream& out, const Squall::Record& record);
 
-bool operator==(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
-bool operator!=(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
+//bool operator==(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
+//bool operator!=(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
 
+//bool operator==(const Squall::Record& lhs, const Squall::Record& rhs);
+//bool operator!=(const Squall::Record& lhs, const Squall::Record& rhs);
 
-#endif //SQUALL_DIGEST_H
+#endif //SQUALL_RECORD_H

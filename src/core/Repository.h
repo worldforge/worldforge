@@ -19,9 +19,10 @@
 #ifndef SQUALL_REPOSITORY_H
 #define SQUALL_REPOSITORY_H
 
-#include "Digest.h"
+#include "Record.h"
 #include <filesystem>
 #include <future>
+#include <optional>
 
 namespace Squall {
 
@@ -45,21 +46,29 @@ struct FetchResult {
 	std::filesystem::path localPath;
 };
 
+struct FetchRecordResult {
+	FetchResult fetchResult;
+	std::optional<Record> record;
+};
+
 class Repository {
 public:
 	explicit Repository(const std::filesystem::path& repositoryPath);
 
 	StoreResult store(const Signature& signature, const std::vector<char>& data);
-	StoreResult store(const Signature& signature, const Digest& digest);
+	StoreResult store(const Signature& signature, const Record& record);
 	StoreResult store(const Signature& signature, const std::filesystem::path& path);
 
 	FetchResult fetch(const Signature& signature) const;
+	FetchRecordResult fetchRecord(const Signature& signature) const;
 
+	bool contains(const Signature& signature) const;
+
+	std::filesystem::path resolvePathForSignature(const Signature& signature) const;
 protected:
 
 	std::filesystem::path mRepositoryPath;
 
-	std::filesystem::path resolvePathForSignature(const Signature& signature) const;
 
 };
 }

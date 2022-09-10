@@ -17,3 +17,20 @@
  */
 
 #include "Provider.h"
+
+namespace Squall {
+std::future<ProviderResult> RepositoryProvider::fetch(Squall::Signature signature, std::filesystem::path destination) {
+	auto fetchResult = mRepo.fetch(signature);
+	if (fetchResult.status == FetchStatus::SUCCESS) {
+		std::filesystem::create_directories(destination.parent_path());
+		std::filesystem::copy_file(fetchResult.localPath, destination, std::filesystem::copy_options::skip_existing);
+		std::promise<ProviderResult> promise;
+		promise.set_value(ProviderResult{.status=ProviderResultStatus::SUCCESS});
+		return promise.get_future();
+	} else {
+		std::promise<ProviderResult> promise;
+		promise.set_value(ProviderResult{.status=ProviderResultStatus::FAILURE});
+		return promise.get_future();
+	}
+}
+}
