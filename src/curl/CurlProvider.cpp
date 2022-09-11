@@ -56,10 +56,11 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 			CurlFileEntry curlFileEntry{.file = outputFile};
 
 
-			auto first = signature.substr(0, 2);
-			auto second = signature.substr(2);
+			auto first = signature.str_view().substr(0, 2);
+			auto second = signature.str_view().substr(2);
 
-			auto sourceFile = mBaseUrl + "/" + first + "/" + second;
+			//Note: the "operator+" is (sillily) missing for std::string and std::string_view. Perhaps will be added in C++26?
+			auto sourceFile = mBaseUrl + "/" + std::string(first) + "/" + std::string(second);
 			curl_easy_setopt(curl, CURLOPT_URL, sourceFile.c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlFileEntry);
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlCallback);

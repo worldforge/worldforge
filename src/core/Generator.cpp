@@ -109,7 +109,6 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 }
 
 SignatureResult Generator::generateSignature(std::istream& stream) {
-	std::string signature;
 	SHA256 sha256;
 	size_t size = 0;
 	while (stream) {
@@ -127,9 +126,7 @@ SignatureResult Generator::generateSignature(std::istream& stream) {
 		unsigned int c = signatureRaw.get()[i];
 		ss << std::hex << c;
 	}
-	signature = ss.str();
-
-	return {.signature = signature, .size = size};
+	return {.signature = Signature{ss.str()}, .size = size};
 }
 
 SignatureResult Generator::generateSignature(const std::filesystem::path& filePath) {

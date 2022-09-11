@@ -19,6 +19,7 @@
 #ifndef SQUALL_RECORD_H
 #define SQUALL_RECORD_H
 
+#include "Signature.h"
 #include <string>
 #include <filesystem>
 #include <vector>
@@ -27,7 +28,6 @@ namespace Squall {
 
 static const std::string SignatureVersion = "1";
 
-typedef std::string Signature;
 
 enum class FileEntryType {
 	FILE,

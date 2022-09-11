@@ -29,7 +29,7 @@ Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique
 
 Squall::ResolveResult Squall::Resolver::poll() {
 	if (!mRootRecord) {
-		auto filename = std::filesystem::temp_directory_path() / mRoot.signature;
+		auto filename = std::filesystem::temp_directory_path() / mRoot.signature.str_view();
 		if (mPendingFetches.empty()) {
 			auto result = mProvider->fetch(mRoot.signature, filename);
 			mPendingFetches.emplace_back(
@@ -64,7 +64,7 @@ Squall::ResolveResult Squall::Resolver::poll() {
 				auto traverseEntry = *mIterator;
 				if (traverseEntry.fileEntry.type == FileEntryType::FILE) {
 					//Just put a new request for the next file
-					auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature;
+					auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature.str_view();
 					auto result = mProvider->fetch(traverseEntry.fileEntry.signature, filename);
 					mPendingFetches.emplace_back(
 							PendingFetch{
@@ -77,7 +77,7 @@ Squall::ResolveResult Squall::Resolver::poll() {
 				} else {
 					//Check if we're already looking for the directory entry. If so we will just keep on waiting.
 					if (mPendingFetches.empty() || mPendingFetches.back().signature != traverseEntry.fileEntry.signature) {
-						auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature;
+						auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature.str_view();
 						auto result = mProvider->fetch(traverseEntry.fileEntry.signature, filename);
 						mPendingFetches.emplace_back(
 								PendingFetch{

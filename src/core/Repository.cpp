@@ -72,7 +72,7 @@ FetchResult Repository::fetch(const Signature& signature) const {
 
 
 std::filesystem::path Repository::resolvePathForSignature(const Signature& signature) const {
-	return mRepositoryPath / "data" / signature.substr(0, 2) / signature.substr(2);
+	return mRepositoryPath / "data" / signature.str_view().substr(0, 2) / signature.str_view().substr(2);
 }
 
 bool Repository::contains(const Signature& signature) const {
@@ -93,7 +93,7 @@ FetchRecordResult Repository::fetchRecord(const Signature& signature) const {
 				while (std::getline(stream, line)) {
 					std::stringstream ss(line);
 					std::string path;
-					Signature entrySignature;
+					std::string entrySignature;
 					std::string sizeString;
 					std::getline(ss, path, ' ');
 					std::getline(ss, entrySignature, ' ');

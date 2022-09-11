@@ -7,7 +7,8 @@ add_library(
         core/Provider.cpp
         core/Repository.cpp
         core/Resolver.cpp
-        core/Root.cpp)
+        core/Root.cpp
+        core/Signature.cpp)
 
 target_include_directories(core PUBLIC
         core)
