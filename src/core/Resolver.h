@@ -47,14 +47,14 @@ class Resolver {
 public:
 	Resolver(Repository destinationRepository,
 			 std::unique_ptr<Provider> provider,
-			 Root root);
+			 Signature rootSignature);
 
 	ResolveResult poll();
 
 private:
 	Repository mDestinationRepository;
 	std::unique_ptr<Provider> mProvider;
-	Root mRoot;
+	Signature mRootSignature;
 
 	iterator mIterator;
 	std::vector<PendingFetch> mPendingFetches;

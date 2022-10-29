@@ -20,9 +20,11 @@
 #define SQUALL_REPOSITORY_H
 
 #include "Record.h"
+#include "Root.h"
 #include <filesystem>
 #include <future>
 #include <optional>
+#include <map>
 
 namespace Squall {
 
@@ -51,6 +53,7 @@ struct FetchRecordResult {
 	std::optional<Record> record;
 };
 
+
 class Repository {
 public:
 	explicit Repository(const std::filesystem::path& repositoryPath);
@@ -59,12 +62,18 @@ public:
 	StoreResult store(const Signature& signature, const Record& record);
 	StoreResult store(const Signature& signature, const std::filesystem::path& path);
 
+	std::map<std::string, Root> listRoots() const;
+	StoreResult storeRoot(std::string_view rootName, Root root);
+	std::optional<Root> readRoot(std::string_view rootName) const;
+
 	FetchResult fetch(const Signature& signature) const;
 	FetchRecordResult fetchRecord(const Signature& signature) const;
 
 	bool contains(const Signature& signature) const;
 
 	std::filesystem::path resolvePathForSignature(const Signature& signature) const;
+
+	static bool isValidRootName(std::string_view name);
 protected:
 
 	std::filesystem::path mRepositoryPath;

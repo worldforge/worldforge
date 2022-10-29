@@ -33,7 +33,9 @@ TEST_CASE("Resolver copied files", "[resolver]") {
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repositorySource(repoPath);
 	Repository repositoryDestination("ResolverTestDirectory");
-	Resolver resolver(repositoryDestination, std::make_unique<RepositoryProvider>(repositorySource), Root{.signature="ebb6ebcfd90c35b98d14f4b0293fb99f835b903a6a80159bbf407558215d5"});
+	Resolver resolver(repositoryDestination,
+					  std::make_unique<RepositoryProvider>(repositorySource),
+					  "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
 
 	int i = 0;
 	while (true) {

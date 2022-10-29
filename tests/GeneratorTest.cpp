@@ -32,7 +32,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 
 	auto results = generator.process(10);
 	REQUIRE(results.complete == true);
-	REQUIRE(results.processedFiles.size() == 4);
+	REQUIRE(results.processedFiles.size() == 6);
 
 	std::vector<FileEntry> fileEntries;
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(fileEntries), [](const Squall::GenerateEntry& entry) { return entry.fileEntry; });
@@ -41,7 +41,9 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 			FileEntry{.fileName = "baz.txt", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "bar", .signature="cd504e8777b6fa35b4f8977cdaf763928434bdd52d787c9ea14e9efccf70aa", .type=FileEntryType::DIRECTORY, .size=1},
 			FileEntry{.fileName = "foo.txt", .signature="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "raw", .signature="ebb6ebcfd90c35b98d14f4b0293fb99f835b903a6a80159bbf407558215d5", .type=FileEntryType::DIRECTORY, .size=2},
+			FileEntry{.fileName = "empty_directory", .signature="4355a46b19d348dc2f57c046f8ef63d4538ebb93600f3c9ee954a2746dd865", .type=FileEntryType::DIRECTORY, .size=0},
+			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
+			FileEntry{.fileName = "raw", .signature="1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782", .type=FileEntryType::DIRECTORY, .size=4},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));

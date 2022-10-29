@@ -16,4 +16,13 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Root.h"
+#ifndef SQUALL_CLI_H
+#define SQUALL_CLI_H
+
+namespace Squall {
+
+}
+int main(int argc, char** argv);
+
+
+#endif //SQUALL_CLI_H

@@ -55,7 +55,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 						   [](const GenerateEntry& entry) { return entry.fileEntry; });
 
 			//Make sure they are sorted by alphabetical order
-			std::sort(record.entries.begin(), record.entries.end(), [](const FileEntry& lhs, const FileEntry& rhs) { return lhs.fileName.compare(rhs.fileName); });
+			std::sort(record.entries.begin(), record.entries.end(), [](const FileEntry& lhs, const FileEntry& rhs) { return lhs.fileName < rhs.fileName; });
 
 			mIterators.pop_back();
 			std::filesystem::path currentDirectoryPath;
@@ -75,9 +75,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 			}
 		} else if (lastIterator->is_directory()) {
 			std::filesystem::directory_iterator subdirectoryIterator{*lastIterator};
-			if (subdirectoryIterator != std::filesystem::directory_iterator()) {
-				mIterators.emplace_back(DirectoryIterator{.iterator= std::move(subdirectoryIterator)});
-			}
+			mIterators.emplace_back(DirectoryIterator{.iterator= std::move(subdirectoryIterator)});
 		} else {
 			auto processedEntry = processFile(*lastIterator);
 			mGeneratedEntries.emplace_back(processedEntry);
@@ -94,7 +92,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 
 GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 	auto signatureResult = generateSignature(filePath);
-	spdlog::info("Signature is {} for file {}", signatureResult.signature, filePath.string());
+	spdlog::debug("Signature is {} for file {}", signatureResult.signature, filePath.string());
 	auto localPath = linkFile(filePath, signatureResult.signature);
 	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath};
@@ -102,7 +100,7 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 
 GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Record& record) {
 	auto signature = generateSignature(record);
-	spdlog::info("Signature is {} for record {}", signature, filePath.string());
+	spdlog::debug("Signature is {} for record {}", signature, filePath.string());
 	auto storeEntry = mRepository.store(signature, record);
 	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = record.entries.size()};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=storeEntry.localPath};

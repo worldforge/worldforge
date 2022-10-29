@@ -112,5 +112,62 @@ FetchRecordResult Repository::fetchRecord(const Signature& signature) const {
 	return fetchRecordResult;
 }
 
+std::map<std::string, Root> Repository::listRoots() const {
+	auto rootsPath = mRepositoryPath / "roots";
+	std::filesystem::directory_iterator iterator(rootsPath);
+	std::map<std::string, Root> roots;
+	for (; iterator != std::filesystem::directory_iterator(); iterator++) {
+		if (!iterator->is_directory()) {
+			std::ifstream file(iterator->path());
+			std::string digest;
+			std::getline(file, digest);
+			roots.emplace(iterator->path().filename(), Root{.signature=Signature(digest)});
+		}
+	}
+
+	return roots;
+}
+
+bool Repository::isValidRootName(std::string_view name) {
+	if (name.length() > 32 || name.length() == 0) {
+		return false;
+	}
+	for (auto aChar: name) {
+		if (!std::isalnum(aChar) && aChar != '_' && aChar != '-') {
+			return false;
+		}
+	}
+	return true;
+}
+
+StoreResult Repository::storeRoot(std::string_view rootName, Root root) {
+	if (isValidRootName(rootName)) {
+		auto rootsPath = mRepositoryPath / "roots";
+		create_directories(rootsPath);
+
+		auto path = rootsPath / rootName;
+		std::ofstream rootFile(path, std::ios::out);
+		if (rootFile.good()) {
+			rootFile << root.signature;
+			return {.status=StoreStatus::SUCCESS, .localPath=path};
+		}
+	}
+	return {.status=StoreStatus::FAILURE};
+}
+
+std::optional<Root> Repository::readRoot(std::string_view rootName) const {
+	if (isValidRootName(rootName)) {
+		auto rootsPath = mRepositoryPath / "roots";
+		auto rootPath = rootsPath / rootName;
+		std::ifstream file(rootPath);
+		if (file.good()) {
+			std::string digest;
+			std::getline(file, digest);
+			return Root{.signature = Signature(digest)};
+		}
+	}
+	return {};
+}
+
 
 }

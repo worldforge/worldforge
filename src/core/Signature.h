@@ -34,6 +34,7 @@ namespace Squall {
  */
 struct Signature {
 	static constexpr size_t maxDigestLength = 64;
+	static constexpr size_t minDigestLength = 3;
 
 	std::array<char, maxDigestLength> digest;
 	size_t digestLength;
@@ -42,18 +43,35 @@ struct Signature {
 
 	explicit Signature(std::array<char, maxDigestLength> data, size_t length)
 			: digest(data),
-			  digestLength(length) {}
+			  digestLength(length) {
+		if (digestLength < minDigestLength) {
+			throw std::runtime_error("Signature data must be at least 3 characters.");
+		}
+		if (digestLength > maxDigestLength) {
+			throw std::runtime_error("Signature data must not exceed 64 characters.");
+		}
+	}
 
 	Signature(const char* data)
 			: digest{},
-			  digestLength(std::max(std::strlen(data), maxDigestLength)) {
+			  digestLength(std::strlen(data)) {
+		if (digestLength < minDigestLength) {
+			throw std::runtime_error("Signature data must be at least 3 characters.");
+		}
+		if (digestLength > maxDigestLength) {
+			throw std::runtime_error("Signature data must not exceed 64 characters.");
+		}
+
 		std::strncpy(digest.data(), data, maxDigestLength);
 	}
 
 	Signature(const std::string& data)
 			: digest{},
 			  digestLength(data.length()) {
-		if (data.length() > maxDigestLength) {
+		if (digestLength < minDigestLength) {
+			throw std::runtime_error("Signature data must be at least 3 characters.");
+		}
+		if (digestLength > maxDigestLength) {
 			throw std::runtime_error("Signature data must not exceed 64 characters.");
 		}
 		digest.fill('\0');
@@ -65,7 +83,10 @@ struct Signature {
 	Signature(std::string_view data)
 			: digest{},
 			  digestLength(data.length()) {
-		if (data.length() > maxDigestLength) {
+		if (digestLength < minDigestLength) {
+			throw std::runtime_error("Signature data must be at least 3 characters.");
+		}
+		if (digestLength > maxDigestLength) {
 			throw std::runtime_error("Signature data must not exceed 64 characters.");
 		}
 		digest.fill('\0');
@@ -75,12 +96,11 @@ struct Signature {
 
 	Signature(const Signature& rhs) = default;
 
+	Signature(Signature&& rhs) = default;
+
 	Signature& operator=(const Signature& rhs) = default;
 
-	Signature& operator=(Signature&& rhs) noexcept {
-		digest = rhs.digest;
-		return *this;
-	}
+	Signature& operator=(Signature&& rhs) noexcept = default;
 
 	std::string_view str_view() const {
 		return {digest.data(), digestLength};
@@ -100,6 +120,10 @@ struct Signature {
 
 	bool operator!=(const Signature& rhs) const {
 		return digest != rhs.digest;
+	}
+
+	bool isValid() const {
+		return digestLength <= maxDigestLength && digestLength > minDigestLength;
 	}
 };
 }

@@ -16,7 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Generator.h"
 #include "Repository.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
@@ -24,6 +23,7 @@
 #include <algorithm>
 
 using namespace Squall;
+using namespace Catch::Matchers;
 
 TEST_CASE("Repository finds files", "[repository]") {
 
@@ -42,16 +42,44 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchRecord("ebb6ebcfd90c35b98d14f4b0293fb99f835b903a6a80159bbf407558215d5");
+		auto digestResult = repository.fetchRecord("1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
 		REQUIRE((*digestResult.record).version == "1");
-		REQUIRE((*digestResult.record).entries.size() == 2);
+		REQUIRE((*digestResult.record).entries.size() == 4);
 		REQUIRE((*digestResult.record).entries[0].fileName == "bar/");
 		REQUIRE((*digestResult.record).entries[0].type == Squall::FileEntryType::DIRECTORY);
 		REQUIRE((*digestResult.record).entries[0].size == 1);
-		REQUIRE((*digestResult.record).entries[1].fileName == "foo.txt");
-		REQUIRE((*digestResult.record).entries[1].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[1].size == 3);
+		REQUIRE((*digestResult.record).entries[1].fileName == "empty_directory/");
+		REQUIRE((*digestResult.record).entries[1].type == Squall::FileEntryType::DIRECTORY);
+		REQUIRE((*digestResult.record).entries[1].size == 0);
+		REQUIRE((*digestResult.record).entries[2].fileName == "empty_file");
+		REQUIRE((*digestResult.record).entries[2].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.record).entries[2].size == 0);
+		REQUIRE((*digestResult.record).entries[3].fileName == "foo.txt");
+		REQUIRE((*digestResult.record).entries[3].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.record).entries[3].size == 3);
 	}
 
+	SECTION("root names should be valid") {
+		REQUIRE(Repository::isValidRootName("abc") == true);
+		REQUIRE(Repository::isValidRootName("abc-") == true);
+		REQUIRE(Repository::isValidRootName("abc-_") == true);
+		REQUIRE(Repository::isValidRootName(" abc-_") == false);
+		REQUIRE(Repository::isValidRootName("abc-_$") == false);
+		REQUIRE(Repository::isValidRootName("abc-_ö") == false);
+		REQUIRE(Repository::isValidRootName("") == false);
+		REQUIRE(Repository::isValidRootName("1234567890123456789012345678901234567890") == false);
+	}
+
+	SECTION("should read roots") {
+		REQUIRE(repository.listRoots().size() == 1);
+		REQUIRE(repository.listRoots()["main"].signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+		REQUIRE(repository.readRoot("main")->signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+	} SECTION("should store roots") {
+		Repository repositoryDestination("RepositoryTestDirectory");
+
+		REQUIRE(repositoryDestination.storeRoot("test", {.signature="1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.listRoots().size() == 1);
+		REQUIRE(repositoryDestination.listRoots()["test"].signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+	}
 }

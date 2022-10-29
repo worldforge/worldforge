@@ -18,10 +18,12 @@
 
 #ifndef SQUALL_ITERATOR_H
 #define SQUALL_ITERATOR_H
+
 #include <utility>
 
 #include "Record.h"
 #include "Repository.h"
+
 namespace Squall {
 
 class iterator {
@@ -56,10 +58,15 @@ protected:
 	std::vector<RecordEntry> mRecords;
 	//TraverseEntry mTraverseEntry;
 
-	const Signature& getActiveSignature() const {
+	Signature getActiveSignature() const {
+		if (mRecords.empty()) {
+			return {};
+		}
 		auto& recordEntry = mRecords.back();
-		auto& signature = recordEntry.record.entries[recordEntry.index].signature;
-		return signature;
+		if (recordEntry.record.entries.empty()) {
+			return {};
+		}
+		return recordEntry.record.entries[recordEntry.index].signature;
 	}
 
 public:
@@ -78,7 +85,19 @@ public:
 			if (fileEntry.type == FileEntryType::DIRECTORY) {
 				auto recordResult = mRepository->fetchRecord(fileEntry.signature);
 				if (recordResult.fetchResult.status == FetchStatus::SUCCESS) {
-					mRecords.emplace_back(RecordEntry{.record = *recordResult.record, .index = 0});
+					if (!recordResult.record->entries.empty()) {
+						mRecords.emplace_back(RecordEntry{.record = *recordResult.record, .index = 0});
+					} else {
+						while (!mRecords.empty()) {
+							auto& innerRecordEntry = mRecords.back();
+							innerRecordEntry.index++;
+							if (innerRecordEntry.index == innerRecordEntry.record.entries.size()) {
+								mRecords.pop_back();
+							} else {
+								break;
+							}
+						}
+					}
 				}
 			} else {
 				while (!mRecords.empty()) {
@@ -101,7 +120,15 @@ public:
 
 	bool operator!=(const iterator& other) const { return !(*this == other); }
 
-	operator bool() const { return mRepository && !mRecords.empty() && mRepository->contains(getActiveSignature()); }
+	operator bool() const {
+		if (mRepository && !mRecords.empty()) {
+			auto activeSignature = getActiveSignature();
+			if (activeSignature.isValid()) {
+				return mRepository->contains(activeSignature);
+			}
+		}
+		return false;
+	}
 
 	TraverseEntry operator*() {
 		if (!mRepository || mRecords.empty()) {
@@ -109,7 +136,9 @@ public:
 		}
 		std::filesystem::path path;
 		for (auto& recordEntry: mRecords) {
-			path /= recordEntry.record.entries[recordEntry.index].fileName;
+			if (!recordEntry.record.entries.empty()) {
+				path /= recordEntry.record.entries[recordEntry.index].fileName;
+			}
 		}
 		auto& recordEntry = mRecords.back();
 		auto& fileEntry = recordEntry.record.entries[recordEntry.index];

@@ -28,3 +28,16 @@ target_include_directories(curl PUBLIC
 target_link_libraries(curl PUBLIC
         core
         CONAN_PKG::libcurl)
+
+add_executable(
+        squall
+
+        cli/CLI.cpp
+)
+target_include_directories(squall PUBLIC
+        cli)
+
+target_link_libraries(squall PUBLIC
+        curl
+        core
+        CONAN_PKG::cli11)

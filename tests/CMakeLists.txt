@@ -1,10 +1,14 @@
 add_definitions(-DTESTDATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
+add_executable(SignatureTest SignatureTest.cpp)
+target_link_libraries(SignatureTest PRIVATE
+        CONAN_PKG::catch2
+        core)
+
 add_executable(GeneratorTest GeneratorTest.cpp)
 target_link_libraries(GeneratorTest PRIVATE
         CONAN_PKG::catch2
         core)
-
 
 add_executable(IteratorTest IteratorTest.cpp)
 target_link_libraries(IteratorTest PRIVATE
@@ -40,6 +44,7 @@ target_link_libraries(CurlResolverTest PRIVATE
         core)
 
 add_custom_target(check
+        COMMAND SignatureTest
         COMMAND GeneratorTest
         COMMAND IteratorTest
         COMMAND ProviderTest

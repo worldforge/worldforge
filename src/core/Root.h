@@ -21,22 +21,12 @@
 
 #include <utility>
 
-#include "Record.h"
-#include "Repository.h"
+#include "Signature.h"
 
 namespace Squall {
 
 struct Root {
 	Signature signature;
-};
-
-class Realizer {
-public:
-	Realizer(Root root, Repository& repository);
-
-protected:
-	const Root mRoot;
-	Repository& mRepository;
 };
 
 

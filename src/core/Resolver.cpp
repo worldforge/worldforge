@@ -20,21 +20,23 @@
 
 #include <utility>
 
-Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique_ptr<Provider> provider, Squall::Root root) :
+Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique_ptr<Provider> provider, Squall::Signature rootSignature) :
 		mDestinationRepository(std::move(destinationRepository)),
 		mProvider(std::move(provider)),
-		mRoot(std::move(root)) {
-
+		mRootSignature(rootSignature) {
+	if (!mRootSignature.isValid()) {
+		throw std::runtime_error("Signature is not valid; can't proceed with resolver.");
+	}
 }
 
 Squall::ResolveResult Squall::Resolver::poll() {
 	if (!mRootRecord) {
-		auto filename = std::filesystem::temp_directory_path() / mRoot.signature.str_view();
+		auto filename = std::filesystem::temp_directory_path() / mRootSignature.str_view();
 		if (mPendingFetches.empty()) {
-			auto result = mProvider->fetch(mRoot.signature, filename);
+			auto result = mProvider->fetch(mRootSignature, filename);
 			mPendingFetches.emplace_back(
 					PendingFetch{
-							.signature = mRoot.signature,
+							.signature = mRootSignature,
 							.temporaryPath = filename,
 							.providerResult = std::move(result),
 							.fileEntryType=FileEntryType::DIRECTORY
@@ -46,7 +48,7 @@ Squall::ResolveResult Squall::Resolver::poll() {
 			mPendingFetches.pop_back();
 			if (result.providerResult.get().status == ProviderResultStatus::SUCCESS) {
 				mDestinationRepository.store(result.signature, result.temporaryPath);
-				mRootRecord = mDestinationRepository.fetchRecord(mRoot.signature).record;
+				mRootRecord = mDestinationRepository.fetchRecord(mRootSignature).record;
 				mIterator = iterator(mDestinationRepository, *mRootRecord);
 				return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 			} else {
