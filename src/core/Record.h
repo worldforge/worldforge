@@ -35,6 +35,9 @@ enum class FileEntryType {
 };
 
 struct FileEntry {
+	/**
+	 * The file name of this entry (or directory name if a directory).
+	 */
 	std::string fileName;
 	Signature signature;
 	FileEntryType type;

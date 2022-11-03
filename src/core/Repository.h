@@ -64,6 +64,7 @@ public:
 
 	std::map<std::string, Root> listRoots() const;
 	StoreResult storeRoot(std::string_view rootName, Root root);
+	StoreResult removeRoot(std::string_view rootName);
 	std::optional<Root> readRoot(std::string_view rootName) const;
 
 	FetchResult fetch(const Signature& signature) const;

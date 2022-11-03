@@ -21,6 +21,7 @@
 #include "Generator.h"
 #include "Resolver.h"
 #include "CurlProvider.h"
+#include "Realizer.h"
 
 #include <CLI/App.hpp>
 #include <CLI/Formatter.hpp>
@@ -78,6 +79,18 @@ int main(int argc, char** argv) {
 				spdlog::info("Root {} registered with signature {}.", *rootName, *signature);
 			});
 		}
+		{
+			auto add = root->add_subcommand("remove", "Removes a root.");
+			auto rootName = std::make_shared<std::string>();
+			auto signature = std::make_shared<std::string>();
+			add->add_option("--root", *rootName, "Name of the root.")->required(true);
+			add->final_callback([&repositoryPath, rootName, signature]() {
+				Repository repository(repositoryPath);
+				repository.removeRoot(*rootName);
+
+				spdlog::info("Root {} has been removed.", *rootName, *signature);
+			});
+		}
 	}
 
 
@@ -108,6 +121,7 @@ int main(int argc, char** argv) {
 			}
 
 
+			spdlog::info("Downloading from {}, starting at record {}.", *remotePath, signatureInstance);
 			Resolver resolver(repository,
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
@@ -122,6 +136,64 @@ int main(int argc, char** argv) {
 				spdlog::error("Could not complete remote download.");
 			} else {
 				spdlog::info("Downloaded {} files.", downloadedFiles);
+			}
+		});
+	}
+
+	{
+		auto directoryPath = std::make_shared<std::string>();
+		auto rootName = std::make_shared<std::string>();
+		auto signature = std::make_shared<std::string>();
+		auto realizeConfig = std::make_shared<RealizerConfig>();
+		auto realize = app.add_subcommand("realize", "Realize files onto the file system.");
+		realize->add_option("-d,--destination", *directoryPath, "Filesystem path where files should be realized.")->required(true);
+		realize->add_option("--root", *rootName, "Name of the root.");
+		realize->add_option("--signature", *signature, "A signature.");
+		std::map<std::string, RealizeMethod> map{{"copy",     RealizeMethod::COPY},
+												 {"symlink",  RealizeMethod::SYMLINK},
+												 {"hardlink", RealizeMethod::HARDLINK}};
+		realize->add_option("--method", realizeConfig->method, "Method of realization.")
+				->default_val(RealizeMethod::COPY)
+				->transform(CLI::CheckedTransformer(map, CLI::ignore_case));
+
+
+		realize->final_callback([&repositoryPath, directoryPath, rootName, signature, realizeConfig]() {
+			Repository repository(repositoryPath);
+
+			Signature signatureInstance{};
+			if (!signature->empty()) {
+				signatureInstance = Signature(*signature);
+			} else {
+				auto rootResult = repository.readRoot(*rootName);
+				if (!rootResult) {
+					spdlog::error("Could not find root with name {}.", *rootName);
+				}
+				signatureInstance = rootResult->signature;
+			}
+
+			if (!signatureInstance.isValid()) {
+				throw std::runtime_error("Signature is not valid.");
+			}
+
+			auto recordResult = repository.fetchRecord(signatureInstance);
+			if (recordResult.fetchResult.status == Squall::FetchStatus::FAILURE || !recordResult.record.has_value()) {
+				throw std::runtime_error("Could not fetch record from local repository.");
+			}
+			spdlog::info("Realizing record '{}' into '{}'.", signatureInstance, *directoryPath);
+
+			Squall::iterator iterator(repository, *recordResult.record);
+
+			Realizer realizer(repository, *directoryPath, iterator, *realizeConfig);
+
+			RealizeResult result{};
+			do {
+				result = realizer.poll();
+			} while (result.status == Squall::RealizeStatus::INPROGRESS);
+
+			if (result.status == Squall::RealizeStatus::INCOMPLETE) {
+				spdlog::error("Could not complete realization.");
+			} else {
+				spdlog::info("Completed realizing files into {}.", *directoryPath);
 			}
 		});
 	}

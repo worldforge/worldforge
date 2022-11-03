@@ -155,6 +155,26 @@ StoreResult Repository::storeRoot(std::string_view rootName, Root root) {
 	return {.status=StoreStatus::FAILURE};
 }
 
+StoreResult Repository::removeRoot(std::string_view rootName) {
+	if (isValidRootName(rootName)) {
+		auto rootsPath = mRepositoryPath / "roots";
+		if (!exists(rootsPath)) {
+			return {.status=StoreStatus::FAILURE};
+		}
+
+		auto path = rootsPath / rootName;
+		if (!exists(path)) {
+			return {.status=StoreStatus::FAILURE};
+		}
+		auto result = remove(path);
+		if (result) {
+			return {.status=StoreStatus::SUCCESS, .localPath=path};
+		}
+	}
+	return {.status=StoreStatus::FAILURE};
+}
+
+
 std::optional<Root> Repository::readRoot(std::string_view rootName) const {
 	if (isValidRootName(rootName)) {
 		auto rootsPath = mRepositoryPath / "roots";

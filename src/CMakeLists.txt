@@ -5,6 +5,7 @@ add_library(
         core/Generator.cpp
         core/Iterator.cpp
         core/Provider.cpp
+        core/Realizer.cpp
         core/Repository.cpp
         core/Resolver.cpp
         core/Root.cpp

@@ -34,6 +34,9 @@ public:
 	};
 
 	struct TraverseEntry {
+		/**
+		 * The local path of the entry in the "virtual" file system.
+		 */
 		std::filesystem::path path;
 		FileEntry fileEntry;
 
@@ -56,7 +59,6 @@ protected:
 
 	Repository* mRepository;
 	std::vector<RecordEntry> mRecords;
-	//TraverseEntry mTraverseEntry;
 
 	Signature getActiveSignature() const {
 		if (mRecords.empty()) {
@@ -114,6 +116,10 @@ public:
 
 
 		return *this;
+	}
+
+	iterator operator++(int) {
+		return operator++();
 	}
 
 	bool operator==(const iterator& other) const { return mRecords == other.mRecords; }

@@ -43,7 +43,13 @@ target_link_libraries(CurlResolverTest PRIVATE
         curl
         core)
 
+add_executable(RealizerTest RealizerTest.cpp)
+target_link_libraries(RealizerTest PRIVATE
+        CONAN_PKG::catch2
+        core)
+
 add_custom_target(check
+        COMMAND RealizerTest
         COMMAND SignatureTest
         COMMAND GeneratorTest
         COMMAND IteratorTest
