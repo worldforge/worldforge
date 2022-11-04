@@ -34,7 +34,7 @@ TEST_CASE("Realizer creates file structure", "[realizer]") {
 	Repository repositorySource(repoPath);
 	std::filesystem::path destination("RealizerTestDirectory");
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a")).record);
+	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739")).record);
 	Realizer realizer(repositorySource, destination, i);
 	RealizeResult result{};
 	do {
@@ -70,7 +70,7 @@ TEST_CASE("Realizer can create file structure with symlinks", "[realizer]") {
 	Repository repositorySource(repoPath);
 	std::filesystem::path destination("RealizerTestDirectoryWithSymlinks");
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a")).record);
+	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739")).record);
 	Realizer realizer(repositorySource, destination, i, RealizerConfig{.method=Squall::RealizeMethod::SYMLINK});
 	RealizeResult result{};
 	do {
@@ -108,7 +108,7 @@ TEST_CASE("Realizer can create file structure with hard links", "[realizer]") {
 	Repository repositorySource(repoPath);
 	std::filesystem::path destination("RealizerTestDirectoryWithHardlinks");
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a")).record);
+	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739")).record);
 	Realizer realizer(repositorySource, destination, i, RealizerConfig{.method=Squall::RealizeMethod::HARDLINK});
 	RealizeResult result{};
 	do {

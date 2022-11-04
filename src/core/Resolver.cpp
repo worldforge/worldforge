@@ -17,8 +17,10 @@
  */
 
 #include "Resolver.h"
+#include "Generator.h"
 
 #include <utility>
+#include <spdlog/spdlog.h>
 
 Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique_ptr<Provider> provider, Squall::Signature rootSignature) :
 		mDestinationRepository(std::move(destinationRepository)),
@@ -31,12 +33,12 @@ Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique
 
 Squall::ResolveResult Squall::Resolver::poll() {
 	if (!mRootRecord) {
-		auto filename = std::filesystem::temp_directory_path() / mRootSignature.str_view();
+		auto filename = buildTemporaryPath(mRootSignature);
 		if (mPendingFetches.empty()) {
 			auto result = mProvider->fetch(mRootSignature, filename);
 			mPendingFetches.emplace_back(
 					PendingFetch{
-							.signature = mRootSignature,
+							.expectedSignature = mRootSignature,
 							.temporaryPath = filename,
 							.providerResult = std::move(result),
 							.fileEntryType=FileEntryType::DIRECTORY
@@ -47,7 +49,7 @@ Squall::ResolveResult Squall::Resolver::poll() {
 			auto result = std::move(mPendingFetches.back());
 			mPendingFetches.pop_back();
 			if (result.providerResult.get().status == ProviderResultStatus::SUCCESS) {
-				mDestinationRepository.store(result.signature, result.temporaryPath);
+				mDestinationRepository.store(result.expectedSignature, result.temporaryPath);
 				mRootRecord = mDestinationRepository.fetchRecord(mRootSignature).record;
 				mIterator = iterator(mDestinationRepository, *mRootRecord);
 				return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
@@ -66,11 +68,11 @@ Squall::ResolveResult Squall::Resolver::poll() {
 				auto traverseEntry = *mIterator;
 				if (traverseEntry.fileEntry.type == FileEntryType::FILE) {
 					//Just put a new request for the next file
-					auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature.str_view();
+					auto filename = buildTemporaryPath(traverseEntry.fileEntry.signature);
 					auto result = mProvider->fetch(traverseEntry.fileEntry.signature, filename);
 					mPendingFetches.emplace_back(
 							PendingFetch{
-									.signature = traverseEntry.fileEntry.signature,
+									.expectedSignature = traverseEntry.fileEntry.signature,
 									.temporaryPath = filename,
 									.providerResult = std::move(result),
 									.fileEntryType = FileEntryType::FILE
@@ -78,12 +80,12 @@ Squall::ResolveResult Squall::Resolver::poll() {
 					);
 				} else {
 					//Check if we're already looking for the directory entry. If so we will just keep on waiting.
-					if (mPendingFetches.empty() || mPendingFetches.back().signature != traverseEntry.fileEntry.signature) {
-						auto filename = std::filesystem::temp_directory_path() / traverseEntry.fileEntry.signature.str_view();
+					if (mPendingFetches.empty() || mPendingFetches.back().expectedSignature != traverseEntry.fileEntry.signature) {
+						auto filename = buildTemporaryPath(traverseEntry.fileEntry.signature);
 						auto result = mProvider->fetch(traverseEntry.fileEntry.signature, filename);
 						mPendingFetches.emplace_back(
 								PendingFetch{
-										.signature = traverseEntry.fileEntry.signature,
+										.expectedSignature = traverseEntry.fileEntry.signature,
 										.temporaryPath = filename,
 										.providerResult = std::move(result),
 										.fileEntryType = FileEntryType::DIRECTORY
@@ -97,8 +99,24 @@ Squall::ResolveResult Squall::Resolver::poll() {
 			auto& pending = *I;
 			if (pending.providerResult.valid()) {
 				if (pending.providerResult.get().status == ProviderResultStatus::SUCCESS) {
-					mDestinationRepository.store(pending.signature, pending.temporaryPath);
+					//Make sure that the signature really matches what's in the file
+					auto signatureResult = Generator::generateSignature(pending.temporaryPath);
+					if (!signatureResult.signature.isValid()) {
+						spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.string(), pending.expectedSignature);
+						remove(pending.temporaryPath);
+						mPendingFetches.erase(I);
+						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
+					}
+					if (signatureResult.signature != pending.expectedSignature) {
+						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.string(), pending.expectedSignature, signatureResult.signature);
+						remove(pending.temporaryPath);
+						mPendingFetches.erase(I);
+						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
+					}
+
+					remove(pending.temporaryPath);
 					mPendingFetches.erase(I);
+					mDestinationRepository.store(signatureResult.signature, pending.temporaryPath);
 					return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 				} else {
 					return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 0};
@@ -107,4 +125,9 @@ Squall::ResolveResult Squall::Resolver::poll() {
 		}
 	}
 	return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 0};
+}
+
+std::filesystem::path Squall::Resolver::buildTemporaryPath(const Squall::Signature& signature) {
+	auto filename = std::filesystem::temp_directory_path() / signature.str_view();
+	return filename;
 }

@@ -54,6 +54,12 @@ public:
 
 	GenerateResult process(size_t filesToProcess);
 
+	static SignatureResult generateSignature(const std::filesystem::path& filePath);
+
+	static Signature generateSignature(const Record& record);
+
+	static SignatureResult generateSignature(std::istream& stream);
+
 protected:
 	Repository& mRepository;
 	std::filesystem::path mSourceDirectory;
@@ -65,11 +71,6 @@ protected:
 
 	GenerateEntry processDirectory(const std::filesystem::path& filePath, const Record& record);
 
-	static SignatureResult generateSignature(const std::filesystem::path& filePath);
-
-	static Signature generateSignature(const Record& record);
-
-	static SignatureResult generateSignature(std::istream& stream);
 
 
 	std::filesystem::path linkFile(const std::filesystem::path& filePath, const Signature& signature);

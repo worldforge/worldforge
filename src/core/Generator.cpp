@@ -102,7 +102,11 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 	auto signature = generateSignature(record);
 	spdlog::debug("Signature is {} for record {}", signature, filePath.string());
 	auto storeEntry = mRepository.store(signature, record);
-	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = record.entries.size()};
+	size_t combinedSize = 0;
+	for (auto& entry: record.entries) {
+		combinedSize += entry.size;
+	};
+	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=storeEntry.localPath};
 }
 

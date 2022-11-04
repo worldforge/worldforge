@@ -37,7 +37,10 @@ struct ResolveResult {
 };
 
 struct PendingFetch {
-	Signature signature;
+	/**
+	 * The expected signature, which we'll ask for. It's important that we make sure that the file we receive actually has this signature.
+	 */
+	Signature expectedSignature;
 	std::filesystem::path temporaryPath;
 	std::future<ProviderResult> providerResult;
 	FileEntryType fileEntryType;
@@ -59,6 +62,8 @@ private:
 	iterator mIterator;
 	std::vector<PendingFetch> mPendingFetches;
 	std::optional<Record> mRootRecord;
+
+	static std::filesystem::path buildTemporaryPath(const Signature& signature);
 
 
 };

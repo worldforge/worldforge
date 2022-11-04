@@ -39,14 +39,14 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 
 	std::vector<FileEntry> expected{
 			FileEntry{.fileName = "baz.txt", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "bar", .signature="c412317b3a479cdcee9e9cfbe0666db34683e5bc27e61264e446abaed0dfa9c3", .type=FileEntryType::DIRECTORY, .size=1},
+			FileEntry{.fileName = "bar", .signature="c412317b3a479cdcee9e9cfbe0666db34683e5bc27e61264e446abaed0dfa9c3", .type=FileEntryType::DIRECTORY, .size=0},
 			FileEntry{.fileName = "foo.txt", .signature="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type=FileEntryType::FILE, .size=3},
 			FileEntry{.fileName = "empty_directory", .signature="4355a46b19d348dc2f57c046f8ef63d4538ebb93600f3c9ee954a2746dd865", .type=FileEntryType::DIRECTORY, .size=0},
 			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "file with spaces in name", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "filè with nön äscií chårs", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "file with \\ backslash", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "raw", .signature="b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a", .type=FileEntryType::DIRECTORY, .size=7},
+			FileEntry{.fileName = "raw", .signature="c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739", .type=FileEntryType::DIRECTORY, .size=3},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));

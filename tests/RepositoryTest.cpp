@@ -42,13 +42,13 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchRecord("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
+		auto digestResult = repository.fetchRecord("c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
 		REQUIRE((*digestResult.record).version == "1");
 		REQUIRE((*digestResult.record).entries.size() == 7);
 		REQUIRE((*digestResult.record).entries[0].fileName == "bar/");
 		REQUIRE((*digestResult.record).entries[0].type == Squall::FileEntryType::DIRECTORY);
-		REQUIRE((*digestResult.record).entries[0].size == 1);
+		REQUIRE((*digestResult.record).entries[0].size == 0);
 		REQUIRE((*digestResult.record).entries[1].fileName == "empty_directory/");
 		REQUIRE((*digestResult.record).entries[1].type == Squall::FileEntryType::DIRECTORY);
 		REQUIRE((*digestResult.record).entries[1].size == 0);
@@ -82,13 +82,13 @@ TEST_CASE("Repository finds files", "[repository]") {
 
 	SECTION("should read roots") {
 		REQUIRE(repository.listRoots().size() == 1);
-		REQUIRE(repository.listRoots()["main"].signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
-		REQUIRE(repository.readRoot("main")->signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
+		REQUIRE(repository.listRoots()["main"].signature == "c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739");
+		REQUIRE(repository.readRoot("main")->signature == "c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739");
 	} SECTION("should store roots") {
 		Repository repositoryDestination("RepositoryTestDirectory");
 
-		REQUIRE(repositoryDestination.storeRoot("test", {.signature="b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.storeRoot("test", {.signature="c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
-		REQUIRE(repositoryDestination.listRoots()["test"].signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
+		REQUIRE(repositoryDestination.listRoots()["test"].signature == "c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739");
 	}
 }
