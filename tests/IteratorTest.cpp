@@ -33,7 +33,7 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 	SECTION("iterate over working digest should work") {
 
-		auto fetchDigestResult = repository.fetchRecord("1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+		auto fetchDigestResult = repository.fetchRecord("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
 
 		REQUIRE(fetchDigestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
@@ -48,6 +48,9 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 				"bar/baz.txt",
 				"empty_directory/",
 				"empty_file",
+				"file with \\ backslash",
+				"file with spaces in name",
+				"filè with nön äscií chårs",
 				"foo.txt"
 		};
 

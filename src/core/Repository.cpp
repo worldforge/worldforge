@@ -87,25 +87,7 @@ FetchRecordResult Repository::fetchRecord(const Signature& signature) const {
 		std::ifstream stream(fetchResult.localPath);
 		if (stream.is_open()) {
 			Record record;
-			std::getline(stream, record.version);
-			if (stream) {
-				std::string line;
-				while (std::getline(stream, line)) {
-					std::stringstream ss(line);
-					std::string path;
-					std::string entrySignature;
-					std::string sizeString;
-					std::getline(ss, path, ' ');
-					std::getline(ss, entrySignature, ' ');
-					std::getline(ss, sizeString, ' ');
-					size_t size = std::stol(sizeString);
-					FileEntryType fileEntryType = FileEntryType::FILE;
-					if (path.back() == '/') {
-						fileEntryType = FileEntryType::DIRECTORY;
-					}
-					record.entries.emplace_back(FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
-				}
-			}
+			record << stream;
 			fetchRecordResult.record = std::move(record);
 		}
 	}

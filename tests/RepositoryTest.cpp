@@ -42,10 +42,10 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchRecord("1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+		auto digestResult = repository.fetchRecord("b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
 		REQUIRE((*digestResult.record).version == "1");
-		REQUIRE((*digestResult.record).entries.size() == 4);
+		REQUIRE((*digestResult.record).entries.size() == 7);
 		REQUIRE((*digestResult.record).entries[0].fileName == "bar/");
 		REQUIRE((*digestResult.record).entries[0].type == Squall::FileEntryType::DIRECTORY);
 		REQUIRE((*digestResult.record).entries[0].size == 1);
@@ -55,9 +55,18 @@ TEST_CASE("Repository finds files", "[repository]") {
 		REQUIRE((*digestResult.record).entries[2].fileName == "empty_file");
 		REQUIRE((*digestResult.record).entries[2].type == Squall::FileEntryType::FILE);
 		REQUIRE((*digestResult.record).entries[2].size == 0);
-		REQUIRE((*digestResult.record).entries[3].fileName == "foo.txt");
+		REQUIRE((*digestResult.record).entries[3].fileName == "file with \\ backslash");
 		REQUIRE((*digestResult.record).entries[3].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[3].size == 3);
+		REQUIRE((*digestResult.record).entries[3].size == 0);
+		REQUIRE((*digestResult.record).entries[4].fileName == "file with spaces in name");
+		REQUIRE((*digestResult.record).entries[4].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.record).entries[4].size == 0);
+		REQUIRE((*digestResult.record).entries[5].fileName == "filè with nön äscií chårs");
+		REQUIRE((*digestResult.record).entries[5].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.record).entries[5].size == 0);
+		REQUIRE((*digestResult.record).entries[6].fileName == "foo.txt");
+		REQUIRE((*digestResult.record).entries[6].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.record).entries[6].size == 3);
 	}
 
 	SECTION("root names should be valid") {
@@ -73,13 +82,13 @@ TEST_CASE("Repository finds files", "[repository]") {
 
 	SECTION("should read roots") {
 		REQUIRE(repository.listRoots().size() == 1);
-		REQUIRE(repository.listRoots()["main"].signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
-		REQUIRE(repository.readRoot("main")->signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+		REQUIRE(repository.listRoots()["main"].signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
+		REQUIRE(repository.readRoot("main")->signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
 	} SECTION("should store roots") {
 		Repository repositoryDestination("RepositoryTestDirectory");
 
-		REQUIRE(repositoryDestination.storeRoot("test", {.signature="1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.storeRoot("test", {.signature="b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
-		REQUIRE(repositoryDestination.listRoots()["test"].signature == "1bea8bdd9d78c1e7d85a0f83d453335d3cc217b85583939a9413be43c782");
+		REQUIRE(repositoryDestination.listRoots()["test"].signature == "b468b9ee303050c36b50eb39cd9d1c32e662871963e980aeaa4d3bd81c19b8a");
 	}
 }

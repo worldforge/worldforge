@@ -60,11 +60,6 @@ struct Record {
 }
 
 std::ostream& operator<<(std::ostream& out, const Squall::Record& record);
-
-//bool operator==(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
-//bool operator!=(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs);
-
-//bool operator==(const Squall::Record& lhs, const Squall::Record& rhs);
-//bool operator!=(const Squall::Record& lhs, const Squall::Record& rhs);
+Squall::Record& operator<<(Squall::Record& record, std::istream& in);
 
 #endif //SQUALL_RECORD_H

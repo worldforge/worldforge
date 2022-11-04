@@ -21,26 +21,39 @@
 std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
 	out << record.version << std::endl;
 	for (auto& entry: record.entries) {
-		if (entry.type == Squall::FileEntryType::FILE) {
-			out << entry.fileName << " " << entry.signature << " " << entry.size << std::endl;
-		} else {
-			out << entry.fileName << "/ " << entry.signature << " " << entry.size << std::endl;
+		out << entry.signature << " " << entry.size << " " << entry.fileName;
+
+		if (entry.type == Squall::FileEntryType::DIRECTORY) {
+			out << "/";
 		}
+		out << std::endl;
 	}
 	return out;
 }
 
+Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
+	std::getline(in, record.version);
+	if (in) {
+		std::string line;
+		while (std::getline(in, line)) {
+			std::stringstream ss(line);
+			std::string path;
+			std::string entrySignature;
+			std::string sizeString;
+			std::getline(ss, entrySignature, ' ');
+			std::getline(ss, sizeString, ' ');
+			std::getline(ss, path);
+			size_t size = std::stol(sizeString);
+			Squall::FileEntryType fileEntryType = Squall::FileEntryType::FILE;
+			if (path.back() == '/') {
+				fileEntryType = Squall::FileEntryType::DIRECTORY;
+			}
+			record.entries.emplace_back(Squall::FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
+		}
+	}
 
-//bool operator==(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs) {
-//	return lhs.size == rhs.size &&
-//		   lhs.signature == rhs.signature &&
-//		   lhs.fileName == rhs.fileName &&
-//		   lhs.type == rhs.type;
-//}
-//
-//bool operator!=(const Squall::FileEntry& lhs, const Squall::FileEntry& rhs) {
-//	return !(lhs == rhs);
-//}
+	return record;
+}
 
 
 bool Squall::Record::operator==(const Squall::Record& rhs) const {
