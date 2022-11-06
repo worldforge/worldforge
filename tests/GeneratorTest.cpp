@@ -18,6 +18,12 @@
 
 #include "Generator.h"
 #include "Repository.h"
+
+std::ostream& operator<<(std::ostream& os, Squall::FileEntry const& value) {
+	os << "FileEntry{ signature: " << value.signature << " fileName: '" << value.fileName << "' size: " << value.size << " type: " << static_cast<std::underlying_type<Squall::FileEntryType>::type>(value.type) << "}";
+	return os;
+}
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>
