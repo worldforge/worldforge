@@ -24,6 +24,7 @@
 #include <utility>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace Squall {
 Generator::Generator(Repository& repository, std::filesystem::path sourceDirectory)
