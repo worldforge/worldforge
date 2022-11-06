@@ -36,8 +36,8 @@ jobs:
             echo "Adjusting path to include local Pip installed packages."
             export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
           else
-            pip3 install pip wheel setuptools
-            pip3 install conan
+            pip3 install --user pip wheel setuptools
+            pip3 install --user conan
           fi
           conan --version
           conan user
