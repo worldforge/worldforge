@@ -44,7 +44,9 @@ target_link_libraries(squallcurl PUBLIC
         curl
         z
         ssl
-        crypto)
+        crypto
+        ${CMAKE_DL_LIBS}
+        )
 
 
 add_executable(
@@ -53,12 +55,9 @@ add_executable(
 )
 target_include_directories(squall PUBLIC
         cli)
-target_link_libraries(squall PRIVATE
+target_link_libraries(squall PUBLIC
         squallcurl
         squallcore
-        ${CMAKE_DL_LIBS}
         )
-set_target_properties(squall PROPERTIES ENABLE_EXPORTS 1)
-
 
 INSTALL(TARGETS squall)
