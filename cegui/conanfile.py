@@ -39,10 +39,10 @@ class CeguiConan(ConanFile):
         "freeimage/3.18.0@worldforge/stable",
         "tinyxml/2.6.2",
         "pcre/8.45",
-        "libpng/1.6.37",
+        "libpng/1.6.38",
         "bzip2/1.0.8",
         "libiconv/1.17",
-        "zlib/1.2.12"
+        "zlib/1.2.13"
     )
 
     short_paths = True

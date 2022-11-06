@@ -21,7 +21,7 @@ class OgreConan(ConanFile):
     source_subfolder = 'source_subfolder'
     short_paths = False
     requires = ["bzip2/1.0.8",
-                "zlib/1.2.12",
+                "zlib/1.2.13",
                 "freetype/2.12.1",
                 "freeimage/3.18.0@worldforge/stable"]
 
@@ -110,12 +110,12 @@ conan_basic_setup()
         else:
             self.cpp_info.libdirs = ["lib", "lib/OGRE"]
 
-        self.cpp_info.libs = ["Codec_FreeImageStatic", 
+        self.cpp_info.libs = ["Codec_FreeImageStatic",
                               "OgreMeshLodGeneratorStatic",
                               "OgreOverlayStatic",
                               "OgreTerrainStatic",
                               "OgreRTShaderSystemStatic",
-                              "Plugin_ParticleFXStatic", 
+                              "Plugin_ParticleFXStatic",
                               "RenderSystem_GL3PlusStatic",
                               "OgreGLSupportStatic",
                               "OgreMainStatic"]
@@ -126,9 +126,9 @@ conan_basic_setup()
         elif tools.os_info.is_macos:
             self.cpp_info.system_libs = []
             self.cpp_info.frameworks = ["IOKit", "Cocoa", "Carbon", "OpenGL", "CoreVideo"]
-        
+
         self.cpp_info.includedirs = ["include/OGRE",
-                                     "include/OGRE/Overlay", 
+                                     "include/OGRE/Overlay",
                                      "include/OGRE/Terrain",
                                      "include/OGRE/MeshLodGenerator",
                                      "include/OGRE/RTShaderSystem"]
