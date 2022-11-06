@@ -73,11 +73,6 @@ macro(wf_add_test TEST_FILE)
     endif (BUILD_TESTING)
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
-    if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-        target_link_libraries(${TEST_NAME} PUBLIC
-                ${CONAN_LIBS})
-    endif ()
-
 endmacro()
 
 enable_testing()
