@@ -34,7 +34,7 @@ TEST_CASE("Curl resolver copies files", "[resolver]") {
 
 	Resolver resolver(repositoryDestination,
 					  std::make_unique<CurlProvider>("file://" + repoPath.string()),
-					  "c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739");
+					  "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
 
 	int i = 0;
 	while (true) {

@@ -32,7 +32,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 
 	auto results = generator.process(10);
 	REQUIRE(results.complete == true);
-	REQUIRE(results.processedFiles.size() == 9);
+	REQUIRE(results.processedFiles.size() == 8);
 
 	std::vector<FileEntry> fileEntries;
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(fileEntries), [](const Squall::GenerateEntry& entry) { return entry.fileEntry; });
@@ -45,8 +45,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "file with spaces in name", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "filè with nön äscií chårs", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "file with \\ backslash", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "raw", .signature="c9f2cb8cf1a4e4aeda76245d53e1482695033b59cff133ee59fa74ebb38b739", .type=FileEntryType::DIRECTORY, .size=3},
+			FileEntry{.fileName = "raw", .signature="d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de", .type=FileEntryType::DIRECTORY, .size=3},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));
