@@ -56,9 +56,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
 endmacro()
 
-# Add a "check" target, which builds and runs the tests.
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
 #Macro for adding a test. The test name will be extracted from the name of the first submitted file.
 #Additional files can be submitted as varargs.
 macro(wf_add_test TEST_FILE)
@@ -78,7 +75,6 @@ macro(wf_add_test TEST_FILE)
                 ${CONAN_LIBS})
     endif ()
 
-    add_dependencies(check ${TEST_NAME})
 endmacro()
 
 enable_testing()

@@ -28,6 +28,7 @@ jobs:
 
       - name: Fix paths
         shell: bash
+        #Include all paths for Linux, Windows and MacOS. These will be used in all the steps that follow.
         run: echo ~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:$PATH >> $GITHUB_PATH
 
       - name: Install Conan

@@ -37,3 +37,15 @@ target_link_libraries(CurlResolverTest PRIVATE
 wf_add_test(RealizerTest.cpp)
 target_link_libraries(RealizerTest PRIVATE
         squallcore)
+
+add_custom_target(check
+        COMMAND RealizerTest
+        COMMAND SignatureTest
+        COMMAND GeneratorTest
+        COMMAND IteratorTest
+        COMMAND ProviderTest
+        COMMAND RepositoryTest
+        COMMAND ResolverTest
+        COMMAND CurlProviderTest
+        COMMAND CurlResolverTest
+        )
