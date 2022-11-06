@@ -6,8 +6,7 @@ set(CORE_SOURCE_FILES
         core/Realizer.cpp
         core/Repository.cpp
         core/Resolver.cpp
-        core/Root.cpp
-        core/Signature.cpp)
+        )
 
 set(CORE_HEADER_FILES
         core/Record.h
