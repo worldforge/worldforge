@@ -42,8 +42,6 @@ target_link_libraries(squallcurl PUBLIC
         squallcore
         curl
         z
-        ssl
-        crypto
         ${CMAKE_DL_LIBS}
         )
 

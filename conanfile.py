@@ -11,7 +11,7 @@ class SquallConan(ConanFile):
     topics = ("mmorpg", "worldforge")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    default_options = {"shared": False, "fPIC": True, "libcurl:with_ssl": False}
     generators = "cmake"
     requires = "libcurl/7.84.0", "spdlog/1.10.0", "cli11/2.2.0"
     build_requires = "catch2/3.1.0"
