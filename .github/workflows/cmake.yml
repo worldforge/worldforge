@@ -26,19 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Fix paths
+        shell: bash
+        #Include all paths for Linux, Windows and MacOS. These will be used in all the steps that follow.
+        run: echo ~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:$PATH >> $GITHUB_PATH
+
       - name: Install Conan
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
-          if [[ "$ImageOS" == "win19" ]]; then
-            pip3 install --user --upgrade pip wheel setuptools
-            pip3 install --user --upgrade conan
-            echo "Adjusting path to include local Pip installed packages."
-            export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-          else
-            pip3 install --upgrade pip wheel setuptools
-            pip3 install --upgrade conan
-          fi
+          pip3 install pip wheel setuptools
+          pip3 install conan
           conan --version
           conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
@@ -51,10 +48,6 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
-          if [[ "$ImageOS" == "win19" ]]; then
-            export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-          fi
           conan install ../tools/conan -pr default --build=missing --update
 
       - name: Configure CMake
@@ -84,12 +77,8 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
-            if [[ "$ImageOS" == "win19" ]]; then
-              export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-            fi
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
             conan create ../tools/conan worldforge/testing -pr default
             conan upload "*" -r worldforge -c --all
