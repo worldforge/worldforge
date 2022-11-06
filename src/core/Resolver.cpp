@@ -102,19 +102,19 @@ Squall::ResolveResult Squall::Resolver::poll() {
 					//Make sure that the signature really matches what's in the file
 					auto signatureResult = Generator::generateSignature(pending.temporaryPath);
 					if (!signatureResult.signature.isValid()) {
-						spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.string(), pending.expectedSignature);
+						spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.generic_string(), pending.expectedSignature);
 						remove(pending.temporaryPath);
 						mPendingFetches.erase(I);
 						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 					}
 					if (signatureResult.signature != pending.expectedSignature) {
-						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.string(), pending.expectedSignature, signatureResult.signature);
+						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(), pending.expectedSignature, signatureResult.signature);
 						remove(pending.temporaryPath);
 						mPendingFetches.erase(I);
 						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 					}
 
-					spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult.signature, pending.temporaryPath.string());
+					spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult.signature, pending.temporaryPath.generic_string());
 					mDestinationRepository.store(signatureResult.signature, pending.temporaryPath);
 					remove(pending.temporaryPath);
 					mPendingFetches.erase(I);

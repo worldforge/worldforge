@@ -31,7 +31,7 @@ TEST_CASE("Repository provider copies files", "[provider]") {
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo/data";
 	Repository repositoryDestination("CurlProviderTestDirectory");
-	CurlProvider repositoryProvider("file://" + repoPath.string());
+	CurlProvider repositoryProvider("file://" + repoPath.generic_string());
 
 	SECTION("copies file that exists") {
 		Signature signature("2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");

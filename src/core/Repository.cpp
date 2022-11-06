@@ -103,7 +103,7 @@ std::map<std::string, Root> Repository::listRoots() const {
 			std::ifstream file(iterator->path());
 			std::string digest;
 			std::getline(file, digest);
-			roots.emplace(iterator->path().filename().string(), Root{.signature=Signature(digest)});
+			roots.emplace(iterator->path().filename().generic_string(), Root{.signature=Signature(digest)});
 		}
 	}
 

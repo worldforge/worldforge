@@ -52,20 +52,20 @@ RealizeResult Realizer::poll() {
 			std::filesystem::create_directories(entryDestinationPath.parent_path());
 			if (mConfig.method == RealizeMethod::SYMLINK) {
 				if (exists(entryDestinationPath)) {
-					spdlog::debug("Removing existing file {}", entryDestinationPath.string());
+					spdlog::debug("Removing existing file {}", entryDestinationPath.generic_string());
 					remove(entryDestinationPath);
 				}
-				spdlog::debug("Creating symlink from {} to {}", repositoryPath.string(), entryDestinationPath.string());
+				spdlog::debug("Creating symlink from {} to {}", repositoryPath.generic_string(), entryDestinationPath.generic_string());
 				std::filesystem::create_symlink(repositoryPath, entryDestinationPath);
 			} else if (mConfig.method == RealizeMethod::HARDLINK) {
 				if (exists(entryDestinationPath)) {
-					spdlog::debug("Removing existing file {}", entryDestinationPath.string());
+					spdlog::debug("Removing existing file {}", entryDestinationPath.generic_string());
 					remove(entryDestinationPath);
 				}
-				spdlog::debug("Creating hard link from {} to {}", repositoryPath.string(), entryDestinationPath.string());
+				spdlog::debug("Creating hard link from {} to {}", repositoryPath.generic_string(), entryDestinationPath.generic_string());
 				std::filesystem::create_hard_link(repositoryPath, entryDestinationPath);
 			} else {
-				spdlog::debug("Copying from {} to {}", repositoryPath.string(), entryDestinationPath.string());
+				spdlog::debug("Copying from {} to {}", repositoryPath.generic_string(), entryDestinationPath.generic_string());
 				std::filesystem::copy(repositoryPath, entryDestinationPath, std::filesystem::copy_options::overwrite_existing);
 			}
 			return {.status = RealizeStatus::INPROGRESS};
