@@ -55,6 +55,8 @@ target_include_directories(squall PUBLIC
         cli)
 target_link_libraries(squall PUBLIC
         squallcurl
-        squallcore)
+        squallcore
+        ${CMAKE_DL_LIBS})
+
 
 INSTALL(TARGETS squall)
