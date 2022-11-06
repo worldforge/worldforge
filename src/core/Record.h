@@ -41,7 +41,7 @@ struct FileEntry {
 	std::string fileName;
 	Signature signature;
 	FileEntryType type;
-	size_t size;
+	std::int64_t size;
 
 	bool operator==(const FileEntry& rhs) const;
 

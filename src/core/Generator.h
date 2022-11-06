@@ -43,7 +43,7 @@ struct DirectoryIterator {
 
 struct SignatureResult {
 	Signature signature;
-	size_t size;
+	std::int64_t size;
 };
 
 

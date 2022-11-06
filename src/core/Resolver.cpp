@@ -114,9 +114,10 @@ Squall::ResolveResult Squall::Resolver::poll() {
 						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 					}
 
+					spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult.signature, pending.temporaryPath.string());
+					mDestinationRepository.store(signatureResult.signature, pending.temporaryPath);
 					remove(pending.temporaryPath);
 					mPendingFetches.erase(I);
-					mDestinationRepository.store(signatureResult.signature, pending.temporaryPath);
 					return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 				} else {
 					return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 0};

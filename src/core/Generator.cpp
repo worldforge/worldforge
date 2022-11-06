@@ -102,7 +102,7 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 	auto signature = generateSignature(record);
 	spdlog::debug("Signature is {} for record {}", signature, filePath.string());
 	auto storeEntry = mRepository.store(signature, record);
-	size_t combinedSize = 0;
+	std::int64_t combinedSize = 0;
 	for (auto& entry: record.entries) {
 		combinedSize += entry.size;
 	};
@@ -112,7 +112,7 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 
 SignatureResult Generator::generateSignature(std::istream& stream) {
 	SHA256 sha256;
-	size_t size = 0;
+	std::int64_t size = 0;
 	while (stream) {
 		std::array<char, 4096> buffer{};
 		stream.read(buffer.data(), buffer.size());

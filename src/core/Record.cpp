@@ -43,7 +43,7 @@ Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
 			std::getline(ss, entrySignature, ' ');
 			std::getline(ss, sizeString, ' ');
 			std::getline(ss, path);
-			size_t size = std::stol(sizeString);
+			std::int64_t size = std::stoll(sizeString);
 			Squall::FileEntryType fileEntryType = Squall::FileEntryType::FILE;
 			if (path.back() == '/') {
 				fileEntryType = Squall::FileEntryType::DIRECTORY;

@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 				Repository repository(repositoryPath);
 				repository.storeRoot(*rootName, Root{.signature = Signature(*signature)});
 
-				spdlog::info("Root {} registered with signature {}.", *rootName, *signature);
+				spdlog::info("Root '{}' registered with signature '{}'.", *rootName, *signature);
 			});
 		}
 		{
@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 				Repository repository(repositoryPath);
 				repository.removeRoot(*rootName);
 
-				spdlog::info("Root {} has been removed.", *rootName, *signature);
+				spdlog::info("Root '{}' has been removed.", *rootName, *signature);
 			});
 		}
 	}
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
 			} else {
 				auto rootResult = repository.readRoot(*rootName);
 				if (!rootResult) {
-					spdlog::error("Could not find root with name {}.", *rootName);
+					spdlog::error("Could not find root with name '{}'.", *rootName);
 				}
 				signatureInstance = rootResult->signature;
 			}
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
 			}
 
 
-			spdlog::info("Downloading from {}, starting at record {}.", *remotePath, signatureInstance);
+			spdlog::info("Downloading from '{}', starting at record '{}'.", *remotePath, signatureInstance);
 			Resolver resolver(repository,
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
@@ -193,7 +193,7 @@ int main(int argc, char** argv) {
 			if (result.status == Squall::RealizeStatus::INCOMPLETE) {
 				spdlog::error("Could not complete realization.");
 			} else {
-				spdlog::info("Completed realizing files into {}.", *directoryPath);
+				spdlog::info("Completed realizing files into '{}'.", *directoryPath);
 			}
 		});
 	}
