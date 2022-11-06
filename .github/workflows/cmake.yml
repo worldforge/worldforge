@@ -58,7 +58,7 @@ jobs:
             conan remove "libxdg-basedir/*" --force
             conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir worldforge/stable -pr default
             conan remove "pcre/*" --force
-            conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
+            conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build missing
             conan remove "cegui/*" --force
             conan install ./cegui -g deploy --build missing && conan create ./cegui worldforge/stable -pr default
             conan remove "ogre/*" --force
