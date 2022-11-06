@@ -19,8 +19,6 @@
 #ifndef SQUALL_ROOT_H
 #define SQUALL_ROOT_H
 
-#include <utility>
-
 #include "Signature.h"
 
 namespace Squall {
