@@ -27,22 +27,13 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Conan
+        id: conan
+        uses: turtlebrowser/get-conan@main
+
+      - name: Config Conan
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
-          if [[ "$ImageOS" == "win19" ]]; then
-            pip3 install --user --upgrade pip wheel setuptools
-            pip3 install --user --upgrade conan
-            echo "Adjusting path to include local Pip installed packages."
-            export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-          else
-            pip3 install --upgrade pip wheel setuptools
-            pip3 install --upgrade conan
-          fi
-          conan --version
-          conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-          conan profile new default --detect
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
