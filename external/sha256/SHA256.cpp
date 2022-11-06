@@ -120,14 +120,14 @@ void SHA256::pad() {
 
 	// Append to the padding the total message's length in bits and transform.
 	m_bitlen += m_blocklen * 8;
-	m_data[63] = (u_int8_t)m_bitlen;
-	m_data[62] = (u_int8_t)(m_bitlen >> 8);
-	m_data[61] = (u_int8_t)(m_bitlen >> 16);
-	m_data[60] = (u_int8_t)(m_bitlen >> 24);
-	m_data[59] = (u_int8_t)(m_bitlen >> 32);
-	m_data[58] = (u_int8_t)(m_bitlen >> 40);
-	m_data[57] = (u_int8_t)(m_bitlen >> 48);
-	m_data[56] = (u_int8_t)(m_bitlen >> 56);
+	m_data[63] = (uint8_t)m_bitlen;
+	m_data[62] = (uint8_t)(m_bitlen >> 8);
+	m_data[61] = (uint8_t)(m_bitlen >> 16);
+	m_data[60] = (uint8_t)(m_bitlen >> 24);
+	m_data[59] = (uint8_t)(m_bitlen >> 32);
+	m_data[58] = (uint8_t)(m_bitlen >> 40);
+	m_data[57] = (uint8_t)(m_bitlen >> 48);
+	m_data[56] = (uint8_t)(m_bitlen >> 56);
 	transform();
 }
 
