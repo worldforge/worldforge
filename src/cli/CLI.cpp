@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 			Repository repository(repositoryPath);
 			Generator generator(repository, *sourcePath);
 
-			size_t filesProcessed;
+			size_t filesProcessed = 0;
 			GenerateResult result;
 			do {
 				result = generator.process(10);

@@ -45,7 +45,7 @@ TEST_CASE("Realizer creates file structure", "[realizer]") {
 	std::filesystem::recursive_directory_iterator dirI(destination);
 	std::vector<std::string> fileEntries;
 	do {
-		fileEntries.emplace_back(relative(dirI->path(), destination));
+		fileEntries.emplace_back(relative(dirI->path(), destination).string());
 		dirI++;
 	} while (dirI != std::filesystem::recursive_directory_iterator());
 
@@ -81,9 +81,9 @@ TEST_CASE("Realizer can create file structure with symlinks", "[realizer]") {
 	std::vector<std::string> fileEntries;
 	do {
 		if (dirI->is_symlink()) {
-			fileEntries.emplace_back(read_symlink(dirI->path()));
+			fileEntries.emplace_back(read_symlink(dirI->path()).string());
 		} else if (dirI->is_directory()) {
-			fileEntries.emplace_back(relative(dirI->path(), destination));
+			fileEntries.emplace_back(relative(dirI->path(), destination).string());
 		}
 		dirI++;
 	} while (dirI != std::filesystem::recursive_directory_iterator());
@@ -118,10 +118,8 @@ TEST_CASE("Realizer can create file structure with hard links", "[realizer]") {
 	std::vector<std::string> fileEntries;
 	do {
 		//Each file should have at least 2 links
-		if (dirI->is_regular_file() && dirI->hard_link_count() > 1) {
-			fileEntries.emplace_back(relative(dirI->path(), destination));
-		} else if (dirI->is_directory()) {
-			fileEntries.emplace_back(relative(dirI->path(), destination));
+		if ((dirI->is_regular_file() && dirI->hard_link_count() > 1) || (dirI->is_directory())) {
+			fileEntries.emplace_back(relative(dirI->path(), destination).string());
 		}
 		dirI++;
 	} while (dirI != std::filesystem::recursive_directory_iterator());
