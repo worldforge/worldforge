@@ -27,8 +27,13 @@ using namespace Squall;
 
 TEST_CASE("Generator creates signatures", "[generator]") {
 
+	//For our test we use an empty directory. However, this can't be stored in Git so we need to instead copy the data to a temporary directory and create the empty directory there.
+	std::filesystem::path tempDir("GeneratorTestDirectoryTemp");
+	std::filesystem::create_directories(tempDir);
+	std::filesystem::copy(TESTDATADIR "/raw", "GeneratorTestDirectoryTemp", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+	std::filesystem::create_directories(tempDir / "empty_directory");
 	Repository repository("GeneratorTestDirectory");
-	Generator generator(repository, TESTDATADIR "/raw");
+	Generator generator(repository, "GeneratorTestDirectoryTemp");
 
 	auto results = generator.process(10);
 	REQUIRE(results.complete == true);
@@ -45,9 +50,9 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "file with spaces in name", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
 			FileEntry{.fileName = "filè with nön äscií chårs", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "raw", .signature="d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de", .type=FileEntryType::DIRECTORY, .size=3},
+			FileEntry{.fileName = "GeneratorTestDirectoryTemp", .signature="d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de", .type=FileEntryType::DIRECTORY, .size=3},
 	};
 
-	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));
+	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
 
 }
