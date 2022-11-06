@@ -42,7 +42,7 @@ static size_t curlCallback(void* data, size_t size, size_t nmemb, void* userp) {
 
 
 std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesystem::path destination) {
-	return std::async([=]() -> ProviderResult {
+	return std::async([=, this]() -> ProviderResult {
 		auto curl = curl_easy_init();
 
 		if (curl) {
