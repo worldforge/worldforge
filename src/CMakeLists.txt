@@ -53,11 +53,11 @@ add_executable(
 )
 target_include_directories(squall PUBLIC
         cli)
-target_link_libraries(squall PUBLIC
+target_link_libraries(squall PRIVATE
         squallcurl
         squallcore
         ${CMAKE_DL_LIBS})
-target_link_options(squall PUBLIC -ldl)
+target_link_options(squall PRIVATE -ldl)
 
 
 INSTALL(TARGETS squall)
