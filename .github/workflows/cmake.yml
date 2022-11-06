@@ -26,10 +26,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Fix paths
+        shell: bash
+        run: echo ~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:$PATH >> $GITHUB_PATH
+
       - name: Install Conan
         shell: bash
         run: |
-          export PATH=~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:$PATH
           pip3 install --user pip wheel setuptools
           pip3 install --user conan
           conan --version
@@ -44,10 +47,6 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
-          if [[ "$ImageOS" == "win19" ]]; then
-            export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-          fi
           conan install .. -pr default --build=missing --update
 
       - name: Configure CMake
@@ -77,12 +76,8 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
-            if [[ "$ImageOS" == "win19" ]]; then
-              export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-            fi
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
             conan create .. worldforge/testing -pr default
             conan upload "*" -r worldforge -c --all
