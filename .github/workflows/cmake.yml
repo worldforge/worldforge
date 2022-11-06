@@ -55,7 +55,7 @@ jobs:
           if [[ "$ImageOS" == "win19" ]]; then
             export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
           fi
-          conan install ../tools/conan -pr default --build=missing --update
+          conan install .. -pr default --build=missing --update
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
