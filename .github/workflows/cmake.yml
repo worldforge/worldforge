@@ -29,16 +29,9 @@ jobs:
       - name: Install Conan
         shell: bash
         run: |
-          export PATH=~/.local/bin:$PATH
-          if [[ "$ImageOS" == "win19" ]]; then
-            pip3 install --user pip wheel setuptools
-            pip3 install --user conan
-            echo "Adjusting path to include local Pip installed packages."
-            export PATH="${PATH}:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts"
-          else
-            pip3 install --user pip wheel setuptools
-            pip3 install --user conan
-          fi
+          export PATH=~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:$PATH
+          pip3 install --user pip wheel setuptools
+          pip3 install --user conan
           conan --version
           conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
