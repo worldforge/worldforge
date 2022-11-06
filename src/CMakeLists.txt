@@ -28,18 +28,17 @@ target_link_libraries(squallcore PUBLIC
         spdlog)
 
 
+find_package(CURL 7 REQUIRED)
 set(CURL_SOURCE_FILES
         curl/CurlProvider.cpp)
-
 set(CURL_HEADER_FILES
         curl/CurlProvider.h)
-
 wf_add_library(squallcurl CURL_SOURCE_FILES CURL_HEADER_FILES)
 target_include_directories(squallcurl PUBLIC
         curl)
 target_link_libraries(squallcurl PUBLIC
         squallcore
-        curl
+        ${CURL_LIBRARIES}
         )
 
 
