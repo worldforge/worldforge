@@ -95,7 +95,7 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 	auto signatureResult = generateSignature(filePath);
 	spdlog::debug("Signature is {} for file {}", signatureResult.signature, filePath.string());
 	auto localPath = linkFile(filePath, signatureResult.signature);
-	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
+	FileEntry fileEntry{.fileName=filePath.filename().string(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath};
 }
 
@@ -107,7 +107,7 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 	for (auto& entry: record.entries) {
 		combinedSize += entry.size;
 	};
-	FileEntry fileEntry{.fileName=filePath.filename(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
+	FileEntry fileEntry{.fileName=filePath.filename().string(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=storeEntry.localPath};
 }
 
