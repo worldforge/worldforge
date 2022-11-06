@@ -31,6 +31,10 @@ else ()
     message(FATAL_ERROR "Building without Conan is currently not supported.")
 endif (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+link_libraries(Threads::Threads)
+
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
