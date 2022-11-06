@@ -17,6 +17,7 @@
  */
 
 #include "Record.h"
+#include <sstream>
 
 std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
 	out << record.version << std::endl;
