@@ -25,8 +25,7 @@ target_include_directories(squallcore PUBLIC
         core)
 target_link_libraries(squallcore PUBLIC
         sha256
-        spdlog
-        fmt)
+        spdlog)
 
 
 set(CURL_SOURCE_FILES
@@ -41,8 +40,6 @@ target_include_directories(squallcurl PUBLIC
 target_link_libraries(squallcurl PUBLIC
         squallcore
         curl
-        z
-        ${CMAKE_DL_LIBS}
         )
 
 
@@ -52,9 +49,12 @@ add_executable(
 )
 target_include_directories(squall PUBLIC
         cli)
-target_link_libraries(squall PUBLIC
+target_link_libraries(squall
         squallcurl
         squallcore
         )
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    conan_target_link_libraries(squall)
+endif ()
 
 INSTALL(TARGETS squall)
