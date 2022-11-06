@@ -98,7 +98,7 @@ TEST_CASE("Realizer can create file structure with symlinks", "[realizer]") {
 			TESTDATADIR"/repo/data/2c/26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
 	};
 
-	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));
+	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
 }
 
 TEST_CASE("Realizer can create file structure with hard links", "[realizer]") {
