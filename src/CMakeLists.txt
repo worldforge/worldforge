@@ -1,6 +1,4 @@
-add_library(
-        core
-
+set(CORE_SOURCE_FILES
         core/Record.cpp
         core/Generator.cpp
         core/Iterator.cpp
@@ -11,34 +9,52 @@ add_library(
         core/Root.cpp
         core/Signature.cpp)
 
-target_include_directories(core PUBLIC
+set(CORE_HEADER_FILES
+        core/Record.h
+        core/Generator.h
+        core/Iterator.h
+        core/Provider.h
+        core/Realizer.h
+        core/Repository.h
+        core/Resolver.h
+        core/Root.h
+        core/Signature.h)
+
+
+wf_add_library(squallcore CORE_SOURCE_FILES CORE_HEADER_FILES)
+target_include_directories(squallcore PUBLIC
         core)
-
-target_link_libraries(core PUBLIC
+target_link_libraries(squallcore PUBLIC
         sha256
-        CONAN_PKG::spdlog)
+        spdlog
+        fmt)
 
-add_library(
-        curl
 
+set(CURL_SOURCE_FILES
         curl/CurlProvider.cpp)
 
-target_include_directories(curl PUBLIC
-        curl)
+set(CURL_HEADER_FILES
+        curl/CurlProvider.h)
 
-target_link_libraries(curl PUBLIC
-        core
-        CONAN_PKG::libcurl)
+wf_add_library(squallcurl CURL_SOURCE_FILES CURL_HEADER_FILES)
+target_include_directories(squallcurl PUBLIC
+        curl)
+target_link_libraries(squallcurl PUBLIC
+        squallcore
+        curl
+        z
+        ssl
+        crypto)
+
 
 add_executable(
         squall
-
         cli/CLI.cpp
 )
 target_include_directories(squall PUBLIC
         cli)
-
 target_link_libraries(squall PUBLIC
-        curl
-        core
-        CONAN_PKG::cli11)
+        squallcurl
+        squallcore)
+
+INSTALL(TARGETS squall)

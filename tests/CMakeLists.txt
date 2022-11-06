@@ -1,61 +1,39 @@
 add_definitions(-DTESTDATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
-add_executable(SignatureTest SignatureTest.cpp)
+wf_add_test(SignatureTest.cpp)
 target_link_libraries(SignatureTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-add_executable(GeneratorTest GeneratorTest.cpp)
+wf_add_test(GeneratorTest.cpp)
 target_link_libraries(GeneratorTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-add_executable(IteratorTest IteratorTest.cpp)
+wf_add_test(IteratorTest.cpp)
 target_link_libraries(IteratorTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-add_executable(RepositoryTest RepositoryTest.cpp)
+wf_add_test(RepositoryTest.cpp)
 target_link_libraries(RepositoryTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-add_executable(ProviderTest ProviderTest.cpp)
+wf_add_test(ProviderTest.cpp)
 target_link_libraries(ProviderTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-
-add_executable(ResolverTest ResolverTest.cpp)
+wf_add_test(ResolverTest.cpp)
 target_link_libraries(ResolverTest PRIVATE
-        CONAN_PKG::catch2
-        core)
+        squallcore)
 
-add_executable(CurlProviderTest CurlProviderTest.cpp)
+wf_add_test(CurlProviderTest.cpp)
 target_link_libraries(CurlProviderTest PRIVATE
-        CONAN_PKG::catch2
-        curl
-        core)
+        squallcore
+        squallcurl)
 
-add_executable(CurlResolverTest CurlResolverTest.cpp)
+wf_add_test(CurlResolverTest.cpp)
 target_link_libraries(CurlResolverTest PRIVATE
-        CONAN_PKG::catch2
-        curl
-        core)
+        squallcore
+        squallcurl)
 
-add_executable(RealizerTest RealizerTest.cpp)
+wf_add_test(RealizerTest.cpp)
 target_link_libraries(RealizerTest PRIVATE
-        CONAN_PKG::catch2
-        core)
-
-add_custom_target(check
-        COMMAND RealizerTest
-        COMMAND SignatureTest
-        COMMAND GeneratorTest
-        COMMAND IteratorTest
-        COMMAND ProviderTest
-        COMMAND RepositoryTest
-        COMMAND ResolverTest
-        COMMAND CurlProviderTest
-        COMMAND CurlResolverTest
-        )
+        squallcore)
