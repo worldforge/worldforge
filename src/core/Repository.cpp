@@ -52,7 +52,7 @@ StoreResult Repository::store(const Signature& signature, const std::filesystem:
 StoreResult Repository::store(const Signature& signature, const Record& record) {
 	auto fullPath = resolvePathForSignature(signature);
 	std::filesystem::create_directories(fullPath.parent_path());
-	std::ofstream fileStream(fullPath, std::ios::out);
+	std::ofstream fileStream(fullPath, std::ios::out | std::ios::binary);
 	if (fileStream.good()) {
 		fileStream << record;
 		return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
