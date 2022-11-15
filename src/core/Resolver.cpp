@@ -46,14 +46,16 @@ Squall::ResolveResult Squall::Resolver::poll() {
 			);
 		}
 		if (mPendingFetches.back().providerResult.valid()) {
-			auto result = std::move(mPendingFetches.back());
+			auto lastPending = std::move(mPendingFetches.back());
+			auto result = lastPending.providerResult.get();
 			mPendingFetches.pop_back();
-			if (result.providerResult.get().status == ProviderResultStatus::SUCCESS) {
-				mDestinationRepository.store(result.expectedSignature, result.temporaryPath);
+			if (result.status == ProviderResultStatus::SUCCESS) {
+				mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
 				mRootRecord = mDestinationRepository.fetchRecord(mRootSignature).record;
 				mIterator = iterator(mDestinationRepository, *mRootRecord);
 				return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 			} else {
+				spdlog::error("Provider could not fetch {}.", lastPending.temporaryPath.generic_string());
 				return {.status = ResolveStatus::ERROR};
 			}
 		}
