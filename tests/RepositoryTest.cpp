@@ -26,6 +26,7 @@ using namespace Squall;
 using namespace Catch::Matchers;
 
 TEST_CASE("Repository finds files", "[repository]") {
+	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repository(repoPath);

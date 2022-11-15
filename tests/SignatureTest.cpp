@@ -26,6 +26,7 @@ using namespace Squall;
 using namespace Catch::Matchers;
 
 TEST_CASE("Signatures can be created", "[signature]") {
+	setupEncodings();
 
 	SECTION("valid signatures should be created") {
 		REQUIRE(Signature("2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae").isValid());

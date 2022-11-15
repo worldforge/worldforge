@@ -29,6 +29,7 @@
 using namespace Squall;
 
 TEST_CASE("Resolver copied files", "[resolver]") {
+	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repositorySource(repoPath);

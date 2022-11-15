@@ -27,6 +27,7 @@
 using namespace Squall;
 
 TEST_CASE("Iterator allows iteration", "[iterator]") {
+	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repository(repoPath);

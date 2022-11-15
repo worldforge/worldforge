@@ -23,6 +23,18 @@
 #include <fstream>
 
 namespace Squall {
+
+void setupEncodings() {
+	/**
+	 * In order for us to read file names the same on all platforms we need to use the UTF-8 encoding.
+	 * This might also be solved by handling paths as std::u8string. This solution is a bit easier to implement
+	 * so we'll wait with doing the std::u8string version. It's not unreasonable to consider that all modern
+	 * OSes that this will run on will be using UTF-8 anyways.
+	 */
+	std::setlocale(LC_ALL, ".UTF-8");
+}
+
+
 Repository::Repository(const std::filesystem::path& repositoryPath)
 		: mRepositoryPath(std::filesystem::absolute(repositoryPath)) {
 	std::filesystem::create_directories(mRepositoryPath);

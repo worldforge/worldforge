@@ -28,6 +28,7 @@
 using namespace Squall;
 
 TEST_CASE("Curl resolver copies files", "[resolver]") {
+	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo/data";
 	Repository repositoryDestination("CurlResolverTestDirectory");

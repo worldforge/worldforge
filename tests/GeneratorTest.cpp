@@ -32,6 +32,7 @@ std::ostream& operator<<(std::ostream& os, Squall::FileEntry const& value) {
 using namespace Squall;
 
 TEST_CASE("Generator creates signatures", "[generator]") {
+	setupEncodings();
 
 	//For our test we use an empty directory. However, this can't be stored in Git so we need to instead copy the data to a temporary directory and create the empty directory there.
 	std::filesystem::path tempDir("GeneratorTestDirectoryTemp");

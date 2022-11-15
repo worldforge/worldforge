@@ -29,6 +29,7 @@
 using namespace Squall;
 
 TEST_CASE("Realizer creates file structure", "[realizer]") {
+	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repositorySource(repoPath);

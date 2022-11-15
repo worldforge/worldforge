@@ -29,11 +29,9 @@
 #include <spdlog/spdlog.h>
 
 using namespace Squall;
-namespace Squall {
-
-}
 
 int main(int argc, char** argv) {
+	setupEncodings();
 	CLI::App app{"Squall is a tool for syncing shared read only data from multiple sources."};
 
 	std::string repositoryPath;
