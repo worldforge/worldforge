@@ -31,7 +31,7 @@ void setupEncodings() {
 	 * so we'll wait with doing the std::u8string version. It's not unreasonable to consider that all modern
 	 * OSes that this will run on will be using UTF-8 anyways.
 	 */
-	std::setlocale(LC_ALL, ".UTF-8");
+	setlocale(LC_ALL, ".UTF-8");
 }
 
 
