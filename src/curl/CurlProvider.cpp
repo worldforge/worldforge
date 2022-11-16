@@ -34,10 +34,10 @@ struct CurlFileEntry {
 	std::fstream& file;
 };
 
-static size_t curlCallback(void* data, size_t size, size_t nmemb, void* userp) {
-	auto* curlFileEntry = static_cast<CurlFileEntry*>(userp);
-	curlFileEntry->file.write(static_cast<const char*>(data), static_cast<std::streamsize>(nmemb));
-	return nmemb;
+static size_t curlCallback(void* data, size_t, size_t numberOfBytes, void* userData) {
+	auto* curlFileEntry = static_cast<CurlFileEntry*>(userData);
+	curlFileEntry->file.write(static_cast<const char*>(data), static_cast<std::streamsize>(numberOfBytes));
+	return numberOfBytes;
 }
 
 
@@ -49,7 +49,7 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 			auto destinationPartialPath = destination;
 			destinationPartialPath += ".partial";
 			create_directories(destinationPartialPath.parent_path());
-			std::fstream outputFile(destinationPartialPath, std::ios::out);
+			std::fstream outputFile(destinationPartialPath, std::ios::out | std::ios::binary);
 			if (!outputFile.good()) {
 				return ProviderResult{.status=ProviderResultStatus::FAILURE};
 			}
