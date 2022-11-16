@@ -19,9 +19,6 @@
 #ifndef SQUALL_CLI_H
 #define SQUALL_CLI_H
 
-namespace Squall {
-
-}
 int main(int argc, char** argv);
 
 

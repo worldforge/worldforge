@@ -34,6 +34,10 @@ enum class FileEntryType {
 	DIRECTORY
 };
 
+/**
+ * A file entry, contained in a Record.
+ * This is either a raw data file, or another directory (which would then be represented by another Record).
+ */
 struct FileEntry {
 	/**
 	 * The file name of this entry (or directory name if a directory).
@@ -41,6 +45,10 @@ struct FileEntry {
 	std::string fileName;
 	Signature signature;
 	FileEntryType type;
+	/**
+	 * The size of the entry.
+	 * For a directory this is the size of the combined content of the directory, including any subdirectories.
+	 */
 	std::int64_t size;
 
 	bool operator==(const FileEntry& rhs) const;
@@ -60,6 +68,7 @@ struct Record {
 }
 
 std::ostream& operator<<(std::ostream& out, const Squall::Record& record);
+
 Squall::Record& operator<<(Squall::Record& record, std::istream& in);
 
 #endif //SQUALL_RECORD_H

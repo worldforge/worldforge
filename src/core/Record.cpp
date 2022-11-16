@@ -32,6 +32,7 @@ std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
 	return out;
 }
 
+
 Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
 	std::getline(in, record.version);
 	if (in) {
@@ -56,23 +57,26 @@ Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
 	return record;
 }
 
+namespace Squall {
 
-bool Squall::Record::operator==(const Squall::Record& rhs) const {
+bool Record::operator==(const Record& rhs) const {
 	return entries == rhs.entries &&
 		   version == rhs.version;
 }
 
-bool Squall::Record::operator!=(const Squall::Record& rhs) const {
+bool Record::operator!=(const Record& rhs) const {
 	return !(*this == rhs);
 }
 
-bool Squall::FileEntry::operator==(const Squall::FileEntry& rhs) const {
+bool FileEntry::operator==(const FileEntry& rhs) const {
 	return size == rhs.size &&
 		   signature == rhs.signature &&
 		   fileName == rhs.fileName &&
 		   type == rhs.type;
 }
 
-bool Squall::FileEntry::operator!=(const Squall::FileEntry& rhs) const {
+bool FileEntry::operator!=(const FileEntry& rhs) const {
 	return !(*this == rhs);
+}
+
 }

@@ -33,13 +33,27 @@ struct ProviderResult {
 	ProviderResultStatus status;
 };
 
+/**
+ * A provider fetches data from various sources.
+ * Normally this would either be an already existing local repository or a remote repository.
+ */
 struct Provider {
 	virtual ~Provider() = default;
 
+	/**
+	 * Fetches data for a specific signature. Since this often involve an IO operation it's designed to allow for
+	 * asynchronous operation, and a std::future is returned for this purpose.
+	 * @param signature
+	 * @param destination A local path where we want the data to be written.
+	 * @return
+	 */
 	virtual std::future<ProviderResult> fetch(Signature signature,
 											  std::filesystem::path destination) = 0;
 };
 
+/**
+ * Fetches data from a local repository.
+ */
 struct RepositoryProvider : public Provider {
 	const Repository& mRepo;
 
