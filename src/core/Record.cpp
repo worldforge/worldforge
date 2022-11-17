@@ -34,7 +34,42 @@ std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
 
 
 Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
+
 	std::getline(in, record.version);
+	//Check that it's a version we can deserialize.
+	if (record.version == "1") {
+		Squall::deserializeVersion1(record, in);
+	} else {
+		std::stringstream ss;
+		ss << "Could not deserialize a record with version '" << record.version << "'. This Squall build only knows how to deserialize records of version '" << Squall::RecordVersion << "' or earlier.";
+		throw std::runtime_error(ss.str());
+	}
+
+	return record;
+}
+
+namespace Squall {
+
+bool Record::operator==(const Record& rhs) const {
+	return entries == rhs.entries;
+}
+
+bool Record::operator!=(const Record& rhs) const {
+	return !(*this == rhs);
+}
+
+bool FileEntry::operator==(const FileEntry& rhs) const {
+	return size == rhs.size &&
+		   signature == rhs.signature &&
+		   fileName == rhs.fileName &&
+		   type == rhs.type;
+}
+
+bool FileEntry::operator!=(const FileEntry& rhs) const {
+	return !(*this == rhs);
+}
+
+void deserializeVersion1(Record& record, std::istream& in) {
 	if (in) {
 		std::string line;
 		while (std::getline(in, line)) {
@@ -53,30 +88,5 @@ Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
 			record.entries.emplace_back(Squall::FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
 		}
 	}
-
-	return record;
 }
-
-namespace Squall {
-
-bool Record::operator==(const Record& rhs) const {
-	return entries == rhs.entries &&
-		   version == rhs.version;
-}
-
-bool Record::operator!=(const Record& rhs) const {
-	return !(*this == rhs);
-}
-
-bool FileEntry::operator==(const FileEntry& rhs) const {
-	return size == rhs.size &&
-		   signature == rhs.signature &&
-		   fileName == rhs.fileName &&
-		   type == rhs.type;
-}
-
-bool FileEntry::operator!=(const FileEntry& rhs) const {
-	return !(*this == rhs);
-}
-
 }

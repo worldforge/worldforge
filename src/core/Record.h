@@ -26,7 +26,10 @@
 
 namespace Squall {
 
-static const std::string SignatureVersion = "1";
+/**
+ * This is the current record version that will be used when serializing.
+ */
+static const std::string RecordVersion = "1";
 
 
 enum class FileEntryType {
@@ -57,14 +60,28 @@ struct FileEntry {
 };
 
 struct Record {
+	/**
+	 * The version used when serializing this record. This is stored along with the entry data, as it's used for generating the signature for the record.
+	 */
 	std::string version;
+	/**
+	 * The entries in this Record, sorted alphabetically.
+	 */
 	std::vector<FileEntry> entries;
 
 	bool operator==(const Record& rhs) const;
 
 	bool operator!=(const Record& rhs) const;
+
 };
 
+/**
+ * Deserializes a Record that's stored using the format of version 1.
+ * If newer versions of the format are introduced it's expected that similar functions will be written for them.
+ * @param record
+ * @param in
+ */
+void deserializeVersion1(Squall::Record& record, std::istream& in);
 }
 
 std::ostream& operator<<(std::ostream& out, const Squall::Record& record);

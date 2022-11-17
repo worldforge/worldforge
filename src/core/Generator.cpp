@@ -51,7 +51,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 			std::sort(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& lhs, const GenerateEntry& rhs) { return lhs.sourcePath.compare(rhs.sourcePath); });
 
 
-			Record record{.version=SignatureVersion};
+			Record record{.version=RecordVersion};
 			std::transform(lastEntries.cbegin(), lastEntries.cend(), std::back_inserter(record.entries),
 						   [](const GenerateEntry& entry) { return entry.fileEntry; });
 

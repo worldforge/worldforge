@@ -60,7 +60,9 @@ struct FetchRecordResult {
 	std::optional<Record> record;
 };
 
-
+/**
+ * Represents a repository on disk, where all assets and roots are stored.
+ */
 class Repository {
 public:
 	explicit Repository(const std::filesystem::path& repositoryPath);
