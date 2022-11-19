@@ -17,6 +17,8 @@
  */
 
 #include "Signature.h"
+#include <stdexcept>
+#include <cstring>
 
 namespace Squall {
 Signature::Signature(std::array<char, maxDigestLength> data, size_t length)
@@ -91,9 +93,4 @@ bool Signature::operator!=(const Signature& rhs) const {
 bool Signature::isValid() const {
 	return digestLength <= maxDigestLength && digestLength > minDigestLength;
 }
-}
-
-std::ostream& operator<<(std::ostream& out, const Squall::Signature& signature) {
-	out << signature.str_view();
-	return out;
 }

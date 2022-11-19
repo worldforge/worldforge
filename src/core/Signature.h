@@ -22,8 +22,6 @@
 #include <array>
 #include <string_view>
 #include <string>
-#include <stdexcept>
-#include <cstring>
 
 namespace Squall {
 
@@ -73,7 +71,10 @@ struct Signature {
 };
 }
 
-std::ostream& operator<<(std::ostream& out, const Squall::Signature& signature);
-
+inline std::ostream& operator<<(std::ostream& out, const Squall::Signature& signature) {
+	//Needs to be inlined here in order for Clang to pick up the symbols, for some reason.
+	out << signature.str_view();
+	return out;
+}
 
 #endif //SQUALL_SIGNATURE_H
