@@ -7,6 +7,7 @@ class SquallConan(ConanFile):
     license = "MIT"
     author = "Erik Ogenvik <erik@ogenvik.org>"
     url = "https://github.com/worldforge/squall"
+    homepage = "https://www.worldforge.org"
     description = "Distribute and update content to clients."
     topics = ("mmorpg", "worldforge")
     settings = "os", "compiler", "build_type", "arch"
