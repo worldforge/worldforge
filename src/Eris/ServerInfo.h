@@ -50,7 +50,7 @@ struct ServerInfo
     /// the server program name, i.e 'stage' or 'cyphesis'
     std::string server;
     /// version of the protocol used
-    long protocol_version;
+    std::int64_t protocol_version;
 
     /// the number of clients currently connected to the server
     int clients;
@@ -59,7 +59,7 @@ struct ServerInfo
     \task Verify the accuracy of the ping estimation, since it is currently very poor */
     int ping = -1;
     /// the number of entities on the server
-    long entities;
+    std::int64_t entities;
 
     /// the server's uptime in seconds
     double uptime;

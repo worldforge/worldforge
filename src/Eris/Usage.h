@@ -31,8 +31,8 @@ class View;
 struct UsageParameter {
 	std::string type;
 	std::string constraint;
-	int min;
-	int max;
+	std::int64_t min;
+	std::int64_t max;
 };
 
 struct Usage {
