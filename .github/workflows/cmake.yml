@@ -26,16 +26,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Fix paths
-        shell: bash
-        #Include all paths for Linux, Windows and MacOS. These will be used in all the steps that follow.
-        run: echo ~/.local/bin:/Users/runner/Library/Python/3.11/bin:/c/Users/runneradmin/AppData/Roaming/Python/Python37/Scripts:/c/Users/runneradmin/AppData/Roaming/Python/Python39/Scripts:$PATH >> $GITHUB_PATH
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
 
       - name: Install Conan
         shell: bash
         run: |
-          pip3 install pip wheel setuptools
-          pip3 install --user conan
+          pip install -r .github/workflows/requirements.txt
           conan --version
           conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
