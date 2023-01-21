@@ -25,6 +25,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
@@ -33,7 +34,7 @@ jobs:
       - name: Install Conan
         shell: bash
         run: |
-          pip3 install --user conan
+          pip install -r .github/workflows/requirements.txt
           conan --version
           conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
