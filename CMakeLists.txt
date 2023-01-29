@@ -59,11 +59,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
         install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
     endforeach ()
 
-    target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
-
-    if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-        conan_target_link_libraries(${_LIB_NAME})
-    endif ()
 endmacro()
 
 # Add test
@@ -99,25 +94,12 @@ set(WF_LIBRARY_DIRS)
 set(WF_INCLUDE_DIRS)
 set(WF_LIBRARIES)
 
-if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    MESSAGE(STATUS "Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
-else ()
-    find_package(SigC++
-            2.0
-            REQUIRED)
-    list(APPEND WF_LIBRARIES ${SigC++_LIBRARY})
-    list(APPEND WF_LIBRARY_DIRS ${SigC++_LIBRARY_DIRS})
-    list(APPEND WF_INCLUDE_DIRS ${SigC++_INCLUDE_DIR})
-
-    link_directories(${WF_LIBRARY_DIRS})
-    include_directories(${WF_INCLUDE_DIRS})
-    # Populate for pkg-config
-    set(REQUIRES "sigc++-2.0")
-
+if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
+    message(STATUS "Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif ()
 
+find_package(sigc++ 2.0 REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(tests)

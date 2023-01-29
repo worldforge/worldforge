@@ -12,7 +12,7 @@ class VarconfConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    generators = "cmake"
+    generators = "cmake_find_package", "cmake_paths"
     requires = ["sigc++/2.10.0@worldforge/stable"]
 
     scm = {

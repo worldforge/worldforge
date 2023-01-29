@@ -18,5 +18,8 @@ set(HEADER_FILES
         varconf/varconf_defs.h
         varconf/variable.h)
 
-wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
+wf_add_library("${PROJECT_NAME}${SUFFIX}" SOURCE_FILES HEADER_FILES)
 target_compile_options("${PROJECT_NAME}${SUFFIX}" PRIVATE ${WF_WARNING_FLAGS})
+
+target_link_libraries("${PROJECT_NAME}${SUFFIX}" PUBLIC
+        sigc++::sigc++)
