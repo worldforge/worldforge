@@ -25,10 +25,6 @@ Get rid of overridden removeAttr, as the base class handles this now.
 See if copyAttr and setAttr can be better handled this way.
 copyAttr returns 0 if attribute is hard coded, but not set.
 
-Cut down inlining from Codecs/Utility.h as functions are too large.
-
-I am pretty sure vector is better than list for lots of things.
-
 Add template member to Objects for list types, so that value can be queried
 into anything that implements operator[]
 Something like:
@@ -97,27 +93,6 @@ TODO list for Atlas-C++:
 
 Items are written up by those who they are assigned to, unless otherwise noted
 (using " -- ").
-
-TODO in the 0.5 devel series
-
- - ensure that the Objects code uses member construction efficiently, as
-     was done in 0.4.2
-
- - Stop passing Objects when Object::MapType is the only option
-
-TODO items for anybody who wants to do them:
-
- - add input filtering to Atlas::filterbuf -- sdt
- - make use of Atlas::filterbuf -- sdt
-     look for XXX in src/Net/Stream.cpp -- sdt
- - finish tutorial -- sdt
- - rewrite negotiate [0.3.[9|10] / 0.4.0 ] -- sdt
- - add docs to: [0.4.0]
-    * Atlas::Net::Stream[Accept|Connect]
-     -- sdt
- - write tests/ [0.4.0 / 0.3.10] -- sdt
- - make all tests succeed [0.4.0] -- sdt
- - make use of metrics in negotiation and elsewhere -- sdt [0.4.x]
 
 Notes:
 
