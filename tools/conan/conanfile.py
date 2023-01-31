@@ -32,7 +32,6 @@ class VarconfConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        self.cpp_info.includedirs = ["include/varconf-1.0"]
 
     def package(self):
         pass
