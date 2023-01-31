@@ -7,4 +7,4 @@ Name: @PROJECT_NAME@
 Description: @DESCRIPTION@
 Version: @VERSION@
 Libs: -L${libdir} -lAtlasNet@SUFFIX@ -lAtlasObjects@SUFFIX@ -lAtlasFilters@SUFFIX@ -lAtlasCodecs@SUFFIX@ -lAtlasMessage@SUFFIX@ -lAtlas@SUFFIX@
-Cflags: -I${includedir}/@PROJECT_NAME@@SUFFIX@
+Cflags: -I${includedir}

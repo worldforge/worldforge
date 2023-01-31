@@ -15,7 +15,7 @@ class AtlasConan(ConanFile):
     default_options = {"shared": False, "fPIC": True}
     requires = ["bzip2/1.0.8",
                 "zlib/1.2.13"]
-    generators = "cmake"
+    generators = "cmake_find_package", "cmake_paths"
 
     scm = {
         "type": "git",
@@ -32,8 +32,7 @@ class AtlasConan(ConanFile):
 
     def package_info(self):
         # Since the libraries are interdependent we must provide them in correct order.
-        self.cpp_info.libs = ["AtlasNet-0.7", "AtlasObjects-0.7", "AtlasFilters-0.7", "AtlasCodecs-0.7", "AtlasMessage-0.7", "Atlas-0.7"]
-        self.cpp_info.includedirs = ["include/Atlas-0.7"]
+        self.cpp_info.libs = ["AtlasNet", "AtlasObjects", "AtlasFilters", "AtlasCodecs", "AtlasMessage", "Atlas"]
 
     def package(self):
         pass

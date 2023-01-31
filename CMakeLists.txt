@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.23)
 project(Atlas)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
@@ -8,18 +8,17 @@ include(CMakeDependentOption)
 
 # Version setup
 
-set(ATLAS_VERSION_MAJOR 0)
-set(ATLAS_VERSION_MINOR 7)
-set(ATLAS_VERSION_PATCH 0)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 7)
+set(VERSION_PATCH 0)
 
-set(VERSION ${ATLAS_VERSION_MAJOR}.${ATLAS_VERSION_MINOR}.${ATLAS_VERSION_PATCH})
-set(SUFFIX -${ATLAS_VERSION_MAJOR}.${ATLAS_VERSION_MINOR})
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
-set(ATLAS_ABI_CURRENT 0)
-set(ATLAS_ABI_REVISION 0)
-set(ATLAS_ABI_AGE 0)
-math(EXPR ATLAS_SOVERSION ${ATLAS_ABI_CURRENT}-${ATLAS_ABI_AGE})
-set(ATLAS_ABI_VERSION ${ATLAS_SOVERSION}.${ATLAS_ABI_AGE}.${ATLAS_ABI_REVISION})
+set(ABI_CURRENT 0)
+set(ABI_REVISION 0)
+set(ABI_AGE 0)
+math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
+set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
@@ -38,38 +37,44 @@ set(DESCRIPTION "Networking protocol for the Worldforge system.")
 
 # Check for libraries
 
-if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    MESSAGE("Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
+if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
+    message(STATUS "Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif ()
+
 find_package(BZip2)
 find_package(ZLIB)
 
 
-find_package(PythonInterp 3.5)
-cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "PYTHONINTERP_FOUND" FALSE)
+find_package(Python3 COMPONENTS Interpreter)
+cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "Python3_Interpreter_FOUND" FALSE)
 option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
-    add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
+
     set_target_properties(${_LIB_NAME} PROPERTIES
-            VERSION ${ATLAS_ABI_VERSION}
-            SOVERSION ${ATLAS_SOVERSION}
+            VERSION ${ABI_VERSION}
+            SOVERSION ${SOVERSION}
             )
-    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
-
+    target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
+    target_sources(${_LIB_NAME} PUBLIC FILE_SET headers TYPE HEADERS FILES
+            ${${_HEADER_FILES_VAR}})
+    target_include_directories(${_LIB_NAME}
+            PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+            )
     install(TARGETS ${_LIB_NAME}
+            EXPORT "${PROJECT_NAME}Targets"
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-    foreach (file ${${_HEADER_FILES_VAR}})
-        get_filename_component(dir ${file} DIRECTORY)
-        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}${SUFFIX}/${dir})
-    endforeach ()
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            FILE_SET headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+            )
 
 endmacro()
 
@@ -93,7 +98,7 @@ if (ATLAS_GENERATE_OBJECTS)
 
     add_custom_target(GenerateAtlasXml
             COMMAND ${CMAKE_COMMAND} -E echo "Generating atlas.xml file from .def files."
-            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/data/protocol/spec/tools/def2xml.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/root.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/entity.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/operation.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/type.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
+            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/data/protocol/spec/tools/def2xml.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/root.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/entity.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/operation.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/type.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/data/protocol/spec
             DEPENDS ${ATLAS_XML_SOURCES}
             VERBATIM
@@ -101,23 +106,23 @@ if (ATLAS_GENERATE_OBJECTS)
 
     add_custom_target(GenerateAtlasObjects
             COMMAND ${CMAKE_COMMAND} -E echo "Generating Atlas Object sources."
-            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
+            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/Atlas/Objects
             DEPENDS ${PY_SOURCES}
             VERBATIM
             )
 else (ATLAS_GENERATE_OBJECTS)
-    if (NOT PYTHONINTERP_FOUND)
+    if (NOT Python3_Interpreter_FOUND)
         message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
-    endif()
+    endif ()
 endif (ATLAS_GENERATE_OBJECTS)
 
 add_subdirectory(src)
 
 
 # pkg-config files
-configure_file(tools/atlascpp.pc.in atlascpp${SUFFIX}.pc @ONLY)
-install(FILES ${PROJECT_BINARY_DIR}/atlascpp${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+configure_file(tools/atlascpp.pc.in atlascpp.pc @ONLY)
+install(FILES ${PROJECT_BINARY_DIR}/atlascpp.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # man files
 install(FILES docs/man/man1/atlas_convert.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
@@ -141,29 +146,22 @@ macro(wf_add_test TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
-    set(TEST_OBJECT_LIBS
-            $<TARGET_OBJECTS:AtlasObjects${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasFilters${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasCodecs${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasMessage${SUFFIX}_object>
-            $<TARGET_OBJECTS:Atlas${SUFFIX}_object>)
-
     # If BUILD_TESTING is defined we'll build the test no matter what. This makes it work better on Windows.
     if (BUILD_TESTING)
-        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
+        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN})
     else (BUILD_TESTING)
-        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
+        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
-
-    if (BZIP2_FOUND)
-        target_link_libraries(${TEST_NAME} ${BZIP2_LIBRARIES})
-    endif (BZIP2_FOUND)
-    if (ZLIB_FOUND)
-        target_link_libraries(${TEST_NAME} ${ZLIB_LIBRARIES})
-    endif (ZLIB_FOUND)
 
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+
+    target_link_libraries(${TEST_NAME}
+            AtlasObjects
+            AtlasFilters
+            AtlasCodecs
+            AtlasMessage
+            Atlas)
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
@@ -172,41 +170,34 @@ macro(wf_add_benchmark TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
-    set(TEST_OBJECT_LIBS
-            $<TARGET_OBJECTS:AtlasObjects${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasFilters${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasCodecs${SUFFIX}_object>
-            $<TARGET_OBJECTS:AtlasMessage${SUFFIX}_object>
-            $<TARGET_OBJECTS:Atlas${SUFFIX}_object>)
-
-    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} ${TEST_OBJECT_LIBS})
+    add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
 
-    if (BZIP2_FOUND)
-        target_link_libraries(${TEST_NAME} ${BZIP2_LIBRARIES})
-    endif (BZIP2_FOUND)
-    if (ZLIB_FOUND)
-        target_link_libraries(${TEST_NAME} ${ZLIB_LIBRARIES})
-    endif (ZLIB_FOUND)
+    target_link_libraries(${TEST_NAME}
+            AtlasObjects
+            AtlasFilters
+            AtlasCodecs
+            AtlasMessage
+            Atlas)
 
     #Always build, but activate only if actively running benchmarks.
     if (NOT ATLAS_DISABLE_BENCHMARKS)
         add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
         add_dependencies(benchmark ${TEST_NAME})
-    endif()
+    endif ()
 endmacro()
 
 wf_add_test(tests/Message/ElementTest.cpp)
 wf_add_test(tests/Codecs/codecs.cpp)
 wf_add_test(tests/Objects/custom_ops.cpp)
 wf_add_test(tests/Objects/objects1.cpp tests/Objects/loadDefaults.cpp)
-wf_add_test(tests/Objects/objects2.cpp tests/Objects/DebugBridge.h  tests/Objects/loadDefaults.cpp)
+wf_add_test(tests/Objects/objects2.cpp tests/Objects/DebugBridge.h tests/Objects/loadDefaults.cpp)
 wf_add_test(tests/Objects/encoder1.cpp tests/Objects/loadDefaults.cpp)
 wf_add_test(tests/Objects/decoder1.cpp tests/Objects/loadDefaults.cpp)
 wf_add_test(tests/Objects/objects_fwd.cpp)
 wf_add_test(tests/Objects/attributes.cpp)
 wf_add_test(tests/Objects/flags.cpp)
-add_definitions(-DTEST_ATLAS_XML_PATH="${PROJECT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml")
+add_compile_definitions("TEST_ATLAS_XML_PATH=\"${PROJECT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml\"")
 
 wf_add_benchmark(tests/benchmark/Objects_asMessage.cpp)
 wf_add_benchmark(tests/benchmark/Objects3_Move.cpp tests/Objects/loadDefaults.cpp)
@@ -252,13 +243,14 @@ add_custom_target(changelog DEPENDS ChangeLog)
 # CMake config files
 include(CMakePackageConfigHelpers)
 
+install(EXPORT "${PROJECT_NAME}Targets"
+        FILE "${PROJECT_NAME}Targets.cmake"
+        NAMESPACE "${PROJECT_NAME}::"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+        )
 configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
         PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
-write_basic_package_version_file(
-        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
-        VERSION ${VERSION}
-        COMPATIBILITY ExactVersion)
 install(FILES
         ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
@@ -271,9 +263,9 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR "Worldforge")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${ATLAS_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${ATLAS_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${ATLAS_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
 
 set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)

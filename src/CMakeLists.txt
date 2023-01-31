@@ -104,36 +104,34 @@ set(HEADER_FILES
         Atlas/Version.h)
 
 
-wf_add_library(Atlas${SUFFIX} SOURCE_FILES HEADER_FILES)
+wf_add_library(Atlas SOURCE_FILES HEADER_FILES)
 
-wf_add_library(AtlasCodecs${SUFFIX} CODECS_SOURCE_FILES CODECS_HEADER_FILES)
-target_link_libraries(AtlasCodecs${SUFFIX} Atlas${SUFFIX})
+wf_add_library(AtlasCodecs CODECS_SOURCE_FILES CODECS_HEADER_FILES)
+target_link_libraries(AtlasCodecs Atlas)
 
-wf_add_library(AtlasNet${SUFFIX} NET_SOURCE_FILES NET_HEADER_FILES)
-target_link_libraries(AtlasNet${SUFFIX} Atlas${SUFFIX} AtlasCodecs${SUFFIX})
+wf_add_library(AtlasNet NET_SOURCE_FILES NET_HEADER_FILES)
+target_link_libraries(AtlasNet Atlas AtlasCodecs)
 
-wf_add_library(AtlasMessage${SUFFIX} MESSAGE_SOURCE_FILES MESSAGE_HEADER_FILES)
-target_link_libraries(AtlasMessage${SUFFIX} Atlas${SUFFIX})
+wf_add_library(AtlasMessage MESSAGE_SOURCE_FILES MESSAGE_HEADER_FILES)
+target_link_libraries(AtlasMessage Atlas)
 
-wf_add_library(AtlasObjects${SUFFIX} OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
-target_link_libraries(AtlasObjects${SUFFIX} AtlasMessage${SUFFIX} AtlasCodecs${SUFFIX})
+wf_add_library(AtlasObjects OBJECTS_SOURCE_FILES OBJECTS_HEADER_FILES)
+target_link_libraries(AtlasObjects AtlasMessage AtlasCodecs)
 if (ATLAS_GENERATE_OBJECTS)
-    add_dependencies(AtlasObjects${SUFFIX} GenerateAtlasXml GenerateAtlasObjects)
+    add_dependencies(AtlasObjects GenerateAtlasXml GenerateAtlasObjects)
     add_dependencies(GenerateAtlasObjects GenerateAtlasXml)
 endif (ATLAS_GENERATE_OBJECTS)
 
-wf_add_library(AtlasFilters${SUFFIX} FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
-target_link_libraries(AtlasFilters${SUFFIX} Atlas${SUFFIX})
+wf_add_library(AtlasFilters FILTERS_SOURCE_FILES FILTERS_HEADER_FILES)
+target_link_libraries(AtlasFilters Atlas)
 
 if (BZIP2_FOUND)
-    include_directories(${BZIP2_INCLUDE_DIRS})
-    target_link_libraries(AtlasFilters${SUFFIX} ${BZIP2_LIBRARIES})
+    target_link_libraries(AtlasFilters BZip2::BZip2)
     add_definitions(-DHAVE_BZLIB_H -DHAVE_LIBBZ2)
 endif (BZIP2_FOUND)
 
 if (ZLIB_FOUND)
-    include_directories(${ZLIB_INCLUDE_DIRS})
-    target_link_libraries(AtlasFilters${SUFFIX} ${ZLIB_LIBRARIES})
+    target_link_libraries(AtlasFilters ZLIB::ZLIB)
     add_definitions(-DHAVE_ZLIB_H -DHAVE_LIBZ)
 endif (ZLIB_FOUND)
 
@@ -142,8 +140,8 @@ CHECK_INCLUDE_FILE(unistd.h HAS_UNISTD)
 if (HAS_UNISTD)
     add_executable(atlas_convert atlas_convert.cpp)
     target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
-    target_link_libraries(atlas_convert AtlasCodecs${SUFFIX} AtlasMessage${SUFFIX} Atlas${SUFFIX})
+    target_link_libraries(atlas_convert AtlasCodecs AtlasMessage Atlas)
 
     install(TARGETS atlas_convert
             DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
+endif ()
