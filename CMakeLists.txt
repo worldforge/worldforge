@@ -127,10 +127,6 @@ install(FILES ${PROJECT_BINARY_DIR}/atlascpp.pc DESTINATION ${CMAKE_INSTALL_LIBD
 # man files
 install(FILES docs/man/man1/atlas_convert.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
-# RPM spec files
-configure_file(tools/atlas-cpp.spec.in atlas-cpp.spec @ONLY)
-configure_file(tools/mingw32-atlas-cpp.spec.in mingw32-atlas-cpp.spec @ONLY)
-
 # Add test
 enable_testing()
 
