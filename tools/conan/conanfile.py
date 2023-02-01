@@ -23,16 +23,24 @@ class AtlasConan(ConanFile):
         "revision": "auto"
     }
 
-    def build(self):
+    def imports(self):
+        self.copy("*.dll", "bin", "bin")
+
+    def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions['ATLAS_GENERATE_OBJECTS'] = False
+        print(cmake.definitions)
         cmake.configure(source_folder=".")
+        return cmake
+
+    def build(self):
+        cmake = self._configure_cmake()
         cmake.build()
-        cmake.install()
 
     def package_info(self):
         # Since the libraries are interdependent we must provide them in correct order.
         self.cpp_info.libs = ["AtlasNet", "AtlasObjects", "AtlasFilters", "AtlasCodecs", "AtlasMessage", "Atlas"]
 
     def package(self):
-        pass
+        cmake = self._configure_cmake()
+        cmake.install()
