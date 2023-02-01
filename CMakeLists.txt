@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.23)
 
 project(eris)
 set(CMAKE_CXX_STANDARD 14)
@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 include(GNUInstallDirs)
 include(FindPkgConfig)
-include(FindBoost)
 
 # Version setup
 
@@ -15,7 +14,6 @@ set(VERSION_MINOR 4)
 set(VERSION_PATCH 0)
 
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-set(SUFFIX -${VERSION_MAJOR}.${VERSION_MINOR})
 
 set(ABI_CURRENT 0)
 set(ABI_REVISION 0)
@@ -107,6 +105,10 @@ endmacro()
 if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
     message(STATUS "Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+    if (${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
+        message(STATUS "Enabling position independent code")
+        set(CMAKE_POSITION_INDEPENDENT_CODE ${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
+    endif ()
 endif ()
 
 find_package(sigc++
