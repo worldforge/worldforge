@@ -127,7 +127,7 @@ find_package(wfmath
 find_package(Boost
         1.46.0
         REQUIRED
-        COMPONENTS system)
+        COMPONENTS system headers)
 
 
 #boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.

@@ -78,4 +78,6 @@ target_link_libraries(${LIBNAME} PUBLIC
         Atlas::AtlasObjects
         Atlas::AtlasNet
         sigc++::sigc++
+        Boost::system
+        Boost::headers
         wfmath::wfmath)
