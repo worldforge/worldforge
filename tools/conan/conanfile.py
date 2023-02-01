@@ -13,7 +13,7 @@ class WfmathConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    generators = "cmake"
+    generators = "cmake_find_package", "cmake_paths"
 
     scm = {
         "type": "git",
@@ -29,7 +29,6 @@ class WfmathConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        self.cpp_info.includedirs = ["include/wfmath-1.0"]
 
     def package(self):
         pass

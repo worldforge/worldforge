@@ -59,4 +59,4 @@ set(HEADER_FILES
         wfmath/wrapped_array.h
         wfmath/zero.h)
 
-wf_add_library(${PROJECT_NAME}${SUFFIX} SOURCE_FILES HEADER_FILES)
+wf_add_library(${PROJECT_NAME} SOURCE_FILES HEADER_FILES)

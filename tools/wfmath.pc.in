@@ -6,5 +6,5 @@ includedir=${prefix}/include
 Name: @PROJECT_NAME@
 Description: @DESCRIPTION@
 Version: @VERSION@
-Libs: -L${libdir} -lwfmath@SUFFIX@
-Cflags: -I${includedir}/@PROJECT_NAME@@SUFFIX@
+Libs: -L${libdir} -lwfmath
+Cflags: -I${includedir}
