@@ -181,6 +181,8 @@ macro(wf_add_benchmark TEST_FILE)
     #Always build, but activate only if actively running benchmarks.
     if (NOT ATLAS_DISABLE_BENCHMARKS)
         add_test(NAME ${TEST_NAME}Benchmark COMMAND ${TEST_NAME})
+        #We need to tell adjust the path so tests on windows can find the .dll files.
+        SET_TESTS_PROPERTIES(${TEST_NAME}Benchmark PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}")
         add_dependencies(benchmark ${TEST_NAME})
     endif ()
 endmacro()
