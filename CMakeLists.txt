@@ -86,9 +86,14 @@ macro(wf_add_test TEST_FILE)
     endif (BUILD_TESTING)
     target_link_libraries(${TEST_NAME} "${PROJECT_NAME}")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    #We need to tell adjust the path so tests on windows can find the .dll files.
+    SET_TESTS_PROPERTIES( ${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}" )
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
+
+# Populate for pkg-config
+set(REQUIRES "sigc++-2.0")
 
 # Check for deps
 
