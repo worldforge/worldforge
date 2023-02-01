@@ -77,12 +77,6 @@ endmacro()
 configure_file("tools/${PROJECT_NAME}.pc.in" "${PROJECT_NAME}.pc" @ONLY)
 install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
-# RPM spec files
-#TODO: fix these
-configure_file(tools/${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
-#TODO: fix these
-configure_file(tools/mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
-
 # Add test
 enable_testing()
 
