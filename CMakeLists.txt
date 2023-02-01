@@ -151,6 +151,8 @@ macro(wf_add_test TEST_FILE)
 
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    #We need to tell adjust the path so tests on windows can find the .dll files.
+    SET_TESTS_PROPERTIES( ${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}" )
 
     target_link_libraries(${TEST_NAME}
             AtlasObjects
