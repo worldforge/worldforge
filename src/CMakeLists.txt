@@ -73,3 +73,9 @@ set(HEADER_FILES
         Eris/Usage.h)
 
 wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
+
+target_link_libraries(${LIBNAME} PUBLIC
+        Atlas::AtlasObjects
+        Atlas::AtlasNet
+        sigc++::sigc++
+        wfmath::wfmath)

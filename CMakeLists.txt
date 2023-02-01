@@ -10,18 +10,18 @@ include(FindBoost)
 
 # Version setup
 
-set(ERIS_VERSION_MAJOR 1)
-set(ERIS_VERSION_MINOR 4)
-set(ERIS_VERSION_PATCH 0)
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 4)
+set(VERSION_PATCH 0)
 
-set(VERSION ${ERIS_VERSION_MAJOR}.${ERIS_VERSION_MINOR}.${ERIS_VERSION_PATCH})
-set(SUFFIX -${ERIS_VERSION_MAJOR}.${ERIS_VERSION_MINOR})
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(SUFFIX -${VERSION_MAJOR}.${VERSION_MINOR})
 
-set(ERIS_ABI_CURRENT 0)
-set(ERIS_ABI_REVISION 0)
-set(ERIS_ABI_AGE 0)
-math(EXPR ERIS_SOVERSION ${ERIS_ABI_CURRENT}-${ERIS_ABI_AGE})
-set(ERIS_ABI_VERSION ${ERIS_SOVERSION}.${ERIS_ABI_AGE}.${ERIS_ABI_REVISION})
+set(ABI_CURRENT 0)
+set(ABI_REVISION 0)
+set(ABI_AGE 0)
+math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
+set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
@@ -29,7 +29,7 @@ option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WF_WARNING_FLAGS /W3)
-	add_definitions(-D_WIN32_WINNT=0x0601) #target Windows 7
+    add_definitions(-D_WIN32_WINNT=0x0601) #target Windows 7
 else ()
     set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
 endif ()
@@ -38,31 +38,33 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
-string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
-set(LIBNAME "${PROJECT_NAME_LOWER}${SUFFIX}")
+set(LIBNAME "${PROJECT_NAME}")
 set(DESCRIPTION "A WorldForge client library.")
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
-    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
-	add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}} ${${_HEADER_FILES_VAR}})
+    add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
-            VERSION ${ERIS_ABI_VERSION}
-            SOVERSION ${ERIS_SOVERSION}
+            VERSION ${ABI_VERSION}
+            SOVERSION ${SOVERSION}
             )
-    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
-
+    target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
+    target_sources(${_LIB_NAME} PUBLIC FILE_SET headers TYPE HEADERS FILES
+            ${${_HEADER_FILES_VAR}})
+    target_include_directories(${_LIB_NAME}
+            PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+            )
     install(TARGETS ${_LIB_NAME}
+            EXPORT "${PROJECT_NAME}Targets"
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-    foreach (file ${${_HEADER_FILES_VAR}})
-        get_filename_component(dir ${file} DIRECTORY)
-        install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
-    endforeach ()
-
-    target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            FILE_SET headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+            )
 
 endmacro()
 
@@ -81,70 +83,59 @@ macro(wf_add_test TEST_FILE)
     else (BUILD_TESTING)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
-    target_link_libraries(${TEST_NAME} ${WF_LIBRARIES})
+
+    #Link to the same libs as the main lib without linking to the lib itself.
+    get_target_property(LINKED_LIBS ${LIBNAME} LINK_LIBRARIES)
+    target_link_libraries(${TEST_NAME}
+            ${LINKED_LIBS}
+            )
+
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    #We need to tell adjust the path so tests on windows can find the .dll files.
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}")
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
 macro(wf_add_test_linked TEST_FILE)
-    wf_add_test(${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME_LOWER}${SUFFIX}_object>")
+    wf_add_test(${TEST_FILE} ${ARGN})
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME})
 endmacro()
 
-set(WF_LIBRARY_DIRS)
-set(WF_INCLUDE_DIRS)
-set(WF_LIBRARIES)
 
-if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    MESSAGE("Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
-	set(WF_LIBRARY_DIRS ${CONAN_LIB_DIRS})
-	set(WF_INCLUDE_DIRS ${CONAN_INCLUDE_DIRS})
-	set(WF_LIBRARIES ${CONAN_LIBS})
-else()
-	find_package(SigC++
-			2.0
-			REQUIRED)
-	list(APPEND WF_LIBRARIES ${SigC++_LIBRARY})
-	list(APPEND WF_LIBRARY_DIRS ${SigC++_LIBRARY_DIRS})
-	list(APPEND WF_INCLUDE_DIRS ${SigC++_INCLUDE_DIR})
-
-	find_package(Atlas
-			0.7.0
-			REQUIRED)
-	list(APPEND WF_LIBRARIES ${Atlas_LIBRARIES})
-	list(APPEND WF_INCLUDE_DIRS ${Atlas_INCLUDE_DIR})
-	list(APPEND WF_LIBRARY_DIRS ${Atlas_LIBRARY_DIR})
-
-	find_package(wfmath
-			1.0.3
-			REQUIRED)
-	list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
-	list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
-	list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
-
-
-	find_package(Boost
-			1.46.0
-			REQUIRED
-			COMPONENTS system)
-
-	list(APPEND WF_LIBRARIES ${Boost_LIBRARIES})
-	list(APPEND WF_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-	list(APPEND WF_LIBRARY_DIRS ${Boost_LIBRARY_DIRS})
-
-	#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
-	if (UNIX)
-		set(THREADS_PREFER_PTHREAD_FLAG ON)
-		find_package(Threads REQUIRED)
-		link_libraries(Threads::Threads)
-	endif (UNIX)
-
+if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
+    message(STATUS "Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif ()
-link_directories(${WF_LIBRARY_DIRS})
-include_directories(${WF_INCLUDE_DIRS})
+
+find_package(sigc++
+        2.0
+        REQUIRED)
+
+
+find_package(Atlas
+        0.7.0
+        REQUIRED)
+
+
+find_package(wfmath
+        1.0.3
+        REQUIRED)
+
+
+find_package(Boost
+        1.46.0
+        REQUIRED
+        COMPONENTS system)
+
+
+#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
+if (UNIX)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+    link_libraries(Threads::Threads)
+endif (UNIX)
 
 
 # Populate for pkg-config
@@ -156,14 +147,14 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 # pkg-config files
-configure_file(tools/${PROJECT_NAME_LOWER}.pc.in ${PROJECT_NAME_LOWER}${SUFFIX}.pc @ONLY)
-install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+configure_file(tools/${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)
+install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # RPM spec files
 #TODO: fix these
-configure_file(tools/${PROJECT_NAME_LOWER}.spec.in ${PROJECT_NAME_LOWER}.spec @ONLY)
+configure_file(tools/${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
 #TODO: fix these
-configure_file(tools/mingw32-${PROJECT_NAME_LOWER}.spec.in mingw32-${PROJECT_NAME_LOWER}.spec @ONLY)
+configure_file(tools/mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
 
 # Doxygen support, exports a "dox" target.
 
@@ -199,6 +190,11 @@ add_custom_target(changelog DEPENDS ChangeLog)
 # CMake config files
 include(CMakePackageConfigHelpers)
 
+install(EXPORT "${PROJECT_NAME}Targets"
+        FILE "${PROJECT_NAME}Targets.cmake"
+        NAMESPACE "${PROJECT_NAME}::"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+        )
 configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
         PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
@@ -218,9 +214,9 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR "Worldforge")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${ERIS_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${ERIS_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${ERIS_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
 
 set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)
