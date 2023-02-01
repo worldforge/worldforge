@@ -52,4 +52,7 @@ set(HEADER_FILES
         Mercator/ThresholdShader.h
         Mercator/TileShader.h)
 
-wf_add_library(mercator${SUFFIX} SOURCE_FILES HEADER_FILES)
+wf_add_library(mercator SOURCE_FILES HEADER_FILES)
+target_link_libraries(mercator PUBLIC
+        wfmath::wfmath)
+

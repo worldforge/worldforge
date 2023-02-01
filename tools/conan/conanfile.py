@@ -12,7 +12,7 @@ class MercatorConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    generators = "cmake"
+    generators = "cmake_find_package", "cmake_paths"
     requires = "wfmath/1.0.3@worldforge/testing"
 
     scm = {
@@ -29,7 +29,6 @@ class MercatorConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
-        self.cpp_info.includedirs = ["include/mercator-0.4"]
 
     def package(self):
         pass

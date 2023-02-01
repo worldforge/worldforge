@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.23)
 
 project(mercator)
 set(CMAKE_CXX_STANDARD 14)
@@ -9,18 +9,18 @@ include(CheckIncludeFile)
 
 # Version setup
 
-set(MERCATOR_VERSION_MAJOR 0)
-set(MERCATOR_VERSION_MINOR 4)
-set(MERCATOR_VERSION_PATCH 0)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 4)
+set(VERSION_PATCH 0)
 
-set(VERSION ${MERCATOR_VERSION_MAJOR}.${MERCATOR_VERSION_MINOR}.${MERCATOR_VERSION_PATCH})
-set(SUFFIX -${MERCATOR_VERSION_MAJOR}.${MERCATOR_VERSION_MINOR})
+set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+set(SUFFIX -${VERSION_MAJOR}.${VERSION_MINOR})
 
-set(MERCATOR_ABI_CURRENT 0)
-set(MERCATOR_ABI_REVISION 0)
-set(MERCATOR_ABI_AGE 0)
-math(EXPR MERCATOR_SOVERSION ${MERCATOR_ABI_CURRENT}-${MERCATOR_ABI_AGE})
-set(MERCATOR_ABI_VERSION ${MERCATOR_SOVERSION}.${MERCATOR_ABI_AGE}.${MERCATOR_ABI_REVISION})
+set(ABI_CURRENT 0)
+set(ABI_REVISION 0)
+set(ABI_AGE 0)
+math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
+set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
@@ -37,66 +37,51 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 # Meta data
 
-string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
 set(DESCRIPTION "A terrain generation library for the Worldforge system.")
 
-set(WF_LIBRARY_DIRS)
-set(WF_INCLUDE_DIRS)
-set(WF_LIBRARIES)
-
-if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
-    MESSAGE("Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    conan_basic_setup()
+if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
+    message(STATUS "Using Conan for dependency resolution.")
+    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 endif ()
 
-find_package(wfmath
-        1.0.3
-        REQUIRED)
-list(APPEND WF_LIBRARIES ${wfmath_LIBRARIES})
-list(APPEND WF_INCLUDE_DIRS ${wfmath_INCLUDE_DIR})
-list(APPEND WF_LIBRARY_DIRS ${wfmath_LIBRARY_DIR})
-
-link_directories(${WF_LIBRARY_DIRS})
-include_directories(${WF_INCLUDE_DIRS})
-link_libraries(${WF_LIBRARIES})
-
-# Populate for pkg-config
-set(REQUIRES "wfmath-1.0")
+find_package(wfmath 1.0.3 REQUIRED)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
-    add_library(${_LIB_NAME}_object OBJECT ${${_SOURCE_FILES_VAR}})
     set_target_properties(${_LIB_NAME} PROPERTIES
-            VERSION ${MERCATOR_ABI_VERSION}
-            SOVERSION ${MERCATOR_SOVERSION}
+            VERSION ${ABI_VERSION}
+            SOVERSION ${SOVERSION}
             )
-
+    target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
+    target_sources(${_LIB_NAME} PUBLIC FILE_SET headers TYPE HEADERS FILES
+            ${${_HEADER_FILES_VAR}})
+    target_include_directories(${_LIB_NAME}
+            PUBLIC
+            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+            )
     install(TARGETS ${_LIB_NAME}
+            EXPORT "${PROJECT_NAME}Targets"
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-    foreach (file ${${_HEADER_FILES_VAR}})
-        get_filename_component(dir ${file} DIRECTORY)
-        install(FILES ${file} DESTINATION include/${PROJECT_NAME}${SUFFIX}/${dir})
-    endforeach ()
-
-    target_link_libraries(${_LIB_NAME} ${WF_LIBRARIES})
-    target_compile_options(${_LIB_NAME} PRIVATE ${WF_WARNING_FLAGS})
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            FILE_SET headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+            )
 
 endmacro()
 
 # pkg-config files
-configure_file(tools/${PROJECT_NAME_LOWER}.pc.in ${PROJECT_NAME_LOWER}${SUFFIX}.pc @ONLY)
-install(FILES ${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}${SUFFIX}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+configure_file("tools/${PROJECT_NAME}.pc.in" "${PROJECT_NAME}.pc" @ONLY)
+install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # RPM spec files
 #TODO: fix these
-configure_file(tools/${PROJECT_NAME_LOWER}.spec.in ${PROJECT_NAME_LOWER}.spec @ONLY)
+configure_file(tools/${PROJECT_NAME}.spec.in ${PROJECT_NAME}.spec @ONLY)
 #TODO: fix these
-configure_file(tools/mingw32-${PROJECT_NAME_LOWER}.spec.in mingw32-${PROJECT_NAME_LOWER}.spec @ONLY)
+configure_file(tools/mingw32-${PROJECT_NAME}.spec.in mingw32-${PROJECT_NAME}.spec @ONLY)
 
 # Add test
 enable_testing()
@@ -112,11 +97,14 @@ macro(wf_add_test TEST_FILE)
 
     # If BUILD_TESTING is defined we'll build the test no matter what. This makes it work better on Windows.
     if (BUILD_TESTING)
-        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME_LOWER}${SUFFIX}_object>")
+        add_executable(${TEST_NAME} ${TEST_FILE} ${ARGN})
     else (BUILD_TESTING)
-        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN} "$<TARGET_OBJECTS:${PROJECT_NAME_LOWER}${SUFFIX}_object>")
+        add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
+    target_link_libraries(${TEST_NAME} "${PROJECT_NAME}")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    #We need to tell adjust the path so tests on windows can find the .dll files.
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}")
 
     add_dependencies(check ${TEST_NAME})
 endmacro()
@@ -158,6 +146,11 @@ add_custom_target(changelog DEPENDS ChangeLog)
 # CMake config files
 include(CMakePackageConfigHelpers)
 
+install(EXPORT "${PROJECT_NAME}Targets"
+        FILE "${PROJECT_NAME}Targets.cmake"
+        NAMESPACE "${PROJECT_NAME}::"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+        )
 configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
         PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
@@ -177,9 +170,9 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR "Worldforge")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
 set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${MERCATOR_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${MERCATOR_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${MERCATOR_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
 
 set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)

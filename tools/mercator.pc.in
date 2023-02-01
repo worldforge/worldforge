@@ -7,5 +7,5 @@ Name: @PROJECT_NAME@
 Description: @DESCRIPTION@
 Requires: @REQUIRES@
 Version: @VERSION@
-Libs: -L${libdir} -lmercator@SUFFIX@
-Cflags: -I${includedir}/@PROJECT_NAME@@SUFFIX@
+Libs: -L${libdir} -lmercator
+Cflags: -I${includedir}/@PROJECT_NAME@
