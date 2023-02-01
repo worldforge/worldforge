@@ -152,7 +152,7 @@ macro(wf_add_test TEST_FILE)
     target_include_directories(${TEST_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/src")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     #We need to tell adjust the path so tests on windows can find the .dll files.
-    SET_TESTS_PROPERTIES( ${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}" )
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}")
 
     target_link_libraries(${TEST_NAME}
             AtlasObjects
@@ -249,6 +249,10 @@ install(EXPORT "${PROJECT_NAME}Targets"
 configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
         PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+write_basic_package_version_file(
+        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+        VERSION ${VERSION}
+        COMPATIBILITY ExactVersion)
 install(FILES
         ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
         ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
