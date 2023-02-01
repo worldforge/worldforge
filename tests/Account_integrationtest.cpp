@@ -43,8 +43,10 @@
 
 #include <iostream>
 
-boost::asio::io_service io_service;
-Eris::EventService event_service(io_service);
+namespace {
+    boost::asio::io_service io_service;
+    Eris::EventService event_service(io_service);
+}
 
 class TestConnection : public Eris::Connection {
 public:
@@ -57,7 +59,7 @@ public:
 		setStatus(sc);
 	}
 
-	virtual void send(const Atlas::Objects::Root& obj) {
+	void send(const Atlas::Objects::Root& obj) override {
 		std::cout << "Sending " << obj->getParent()
 				  << std::endl << std::flush;
 	}

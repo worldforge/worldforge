@@ -24,9 +24,9 @@ public:
     Atlas::Message::Element defaultElement;
     bool testVariants;
 
-    ElementParam(Atlas::Message::Element defaultElement, bool testVariants =
+    ElementParam(Atlas::Message::Element defaultElement_, bool testVariants_ =
             true) :
-            defaultElement(defaultElement), testVariants(testVariants)
+            defaultElement(defaultElement_), testVariants(testVariants_)
     {
     }
 

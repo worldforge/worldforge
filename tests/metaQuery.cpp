@@ -18,7 +18,7 @@ using std::cerr;
 bool queryDone = false,
     failure = false,
 	exactTime = false;
-
+namespace {
 void erisLog(Eris::LogLevel, const std::string& msg)
 {
     cerr << "ERIS: " << msg << endl;
@@ -206,7 +206,7 @@ void dumpToHTML(const Eris::Meta& meta)
     cout << "  </dl>" << endl;
     cout << "</div>"  << endl;
 }
-
+}
 int main(int argc, char* argv[])
 {
     std::string metaServer = "metaserver.worldforge.org";

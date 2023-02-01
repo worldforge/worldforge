@@ -41,28 +41,26 @@ public:
     }
 };
 }
+namespace {
+    void testServerInfo(const Atlas::Objects::Entity::RootEntity &svr) {
+        Eris::TestServerInfo serverInfo;
+        serverInfo.injectAtlas(svr);
+    }
 
-void testServerInfo(const Atlas::Objects::Entity::RootEntity& svr)
-{
-    Eris::TestServerInfo serverInfo;
-    serverInfo.injectAtlas(svr);
+    void testServerInfoCorrect(const Atlas::Objects::Entity::RootEntity &svr) {
+        Eris::TestServerInfo serverInfo;
+        serverInfo.injectAtlas(svr);
+
+        assert(serverInfo.ruleset == "mason");
+        assert(serverInfo.name == "a server");
+        assert(serverInfo.clients == 2);
+        assert(serverInfo.server == "localhost");
+        assert(serverInfo.uptime == 1000.0f);
+        assert(serverInfo.entities == 200);
+        assert(serverInfo.version == "1.0");
+        assert(serverInfo.buildDate == "2000-01-01");
+    }
 }
-
-void testServerInfoCorrect(const Atlas::Objects::Entity::RootEntity& svr)
-{
-    Eris::TestServerInfo serverInfo;
-    serverInfo.injectAtlas(svr);
-
-    assert(serverInfo.ruleset == "mason");
-    assert(serverInfo.name == "a server");
-    assert(serverInfo.clients == 2);
-    assert(serverInfo.server == "localhost");
-    assert(serverInfo.uptime == 1000.0f);
-    assert(serverInfo.entities == 200);
-    assert(serverInfo.version == "1.0");
-    assert(serverInfo.buildDate == "2000-01-01");
-}
-
 int main()
 {
     {
