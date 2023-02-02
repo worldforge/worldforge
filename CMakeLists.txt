@@ -117,6 +117,9 @@ find_package(sigc++
 
 
 find_package(Atlas
+        #Needed to make CMake on Windows find the packages. There's probably a better way to package Atlas on Windows
+        #that would prevent this though.
+        PATHS ${CONAN_ATLAS_ROOT}
         0.7.0
         REQUIRED)
 
