@@ -19,7 +19,7 @@
 #ifndef SQUALL_PROVIDER_H
 #define SQUALL_PROVIDER_H
 
-#include "Record.h"
+#include "Manifest.h"
 #include "Repository.h"
 #include <future>
 #include <filesystem>

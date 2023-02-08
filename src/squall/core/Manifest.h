@@ -16,8 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef SQUALL_RECORD_H
-#define SQUALL_RECORD_H
+#ifndef SQUALL_MANIFEST_H
+#define SQUALL_MANIFEST_H
 
 #include "Signature.h"
 #include <string>
@@ -27,9 +27,9 @@
 namespace Squall {
 
 /**
- * This is the current record version that will be used when serializing.
+ * This is the current manifest version that will be used when serializing.
  */
-static const std::string RecordVersion = "1";
+static const std::string ManifestVersion = "1";
 
 
 enum class FileEntryType {
@@ -38,8 +38,8 @@ enum class FileEntryType {
 };
 
 /**
- * A file entry, contained in a Record.
- * This is either a raw data file, or another directory (which would then be represented by another Record).
+ * A file entry, contained in a Manifest.
+ * This is either a raw data file, or another directory (which would then be represented by another Manifest).
  */
 struct FileEntry {
 	/**
@@ -59,33 +59,33 @@ struct FileEntry {
 	bool operator!=(const FileEntry& rhs) const;
 };
 
-struct Record {
+struct Manifest {
 	/**
-	 * The version used when serializing this record. This is stored along with the entry data, as it's used for generating the signature for the record.
+	 * The version used when serializing this manifest. This is stored along with the entry data, as it's used for generating the signature for the manifest.
 	 */
 	std::string version;
 	/**
-	 * The entries in this Record, sorted alphabetically.
+	 * The entries in this Manifest, sorted alphabetically.
 	 */
 	std::vector<FileEntry> entries;
 
-	bool operator==(const Record& rhs) const;
+	bool operator==(const Manifest& rhs) const;
 
-	bool operator!=(const Record& rhs) const;
+	bool operator!=(const Manifest& rhs) const;
 
 };
 
 /**
- * Deserializes a Record that's stored using the format of version 1.
+ * Deserializes a Manifest that's stored using the format of version 1.
  * If newer versions of the format are introduced it's expected that similar functions will be written for them.
- * @param record
+ * @param manifest
  * @param in
  */
-void deserializeVersion1(Squall::Record& record, std::istream& in);
+void deserializeVersion1(Squall::Manifest& manifest, std::istream& in);
 }
 
-std::ostream& operator<<(std::ostream& out, const Squall::Record& record);
+std::ostream& operator<<(std::ostream& out, const Squall::Manifest& manifest);
 
-Squall::Record& operator<<(Squall::Record& record, std::istream& in);
+Squall::Manifest& operator<<(Squall::Manifest& manifest, std::istream& in);
 
-#endif //SQUALL_RECORD_H
+#endif //SQUALL_MANIFEST_H

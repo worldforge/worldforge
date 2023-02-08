@@ -21,13 +21,13 @@
 
 #include <utility>
 
-#include "Record.h"
+#include "Manifest.h"
 #include "Repository.h"
 
 namespace Squall {
 
 /**
- * Iterates recursively over a Record entry, as if it was a directory iterator.
+ * Iterates recursively over a Manifest entry, as if it was a directory iterator.
  *
  * Advancing the iterator will move it either to the next file, or into the next directory.
  * The iterator can be checked against "bool" to see if the next entry exists in the repository.
@@ -49,17 +49,17 @@ public:
 	};
 
 protected:
-	struct RecordEntry {
-		Record record;
+	struct ManifestEntry {
+		Manifest manifest;
 		size_t index;
 
-		bool operator==(const RecordEntry& rhs) const;
+		bool operator==(const ManifestEntry& rhs) const;
 
-		bool operator!=(const RecordEntry& rhs) const;
+		bool operator!=(const ManifestEntry& rhs) const;
 	};
 
 	Repository* mRepository;
-	std::vector<RecordEntry> mRecords;
+	std::vector<ManifestEntry> mManifests;
 
 	Signature getActiveSignature() const;
 
@@ -68,7 +68,7 @@ public:
 	iterator() : mRepository(nullptr) {
 	}
 
-	iterator(Repository& repository, Record record);
+	iterator(Repository& repository, Manifest manifest);
 
 	iterator& operator++();
 

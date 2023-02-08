@@ -61,7 +61,7 @@ private:
 
 	iterator mIterator;
 	std::vector<PendingFetch> mPendingFetches;
-	std::optional<Record> mRootRecord;
+	std::optional<Manifest> mRootManifest;
 
 	static std::filesystem::path buildTemporaryPath(const Signature& signature);
 

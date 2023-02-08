@@ -36,7 +36,7 @@ TEST_CASE("Realizer creates file structure", "[realizer]") {
 	std::filesystem::path destination("RealizerTestDirectory");
 	std::filesystem::remove_all(destination);
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).record);
+	iterator i(repositorySource, *repositorySource.fetchManifest(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).manifest);
 	Realizer realizer(repositorySource, destination, i);
 	RealizeResult result{};
 	do {
@@ -74,7 +74,7 @@ TEST_CASE("Realizer can create file structure with symlinks", "[realizer]") {
 	Repository repositorySource(repoPath);
 	std::filesystem::path destination("RealizerTestDirectoryWithSymlinks");
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).record);
+	iterator i(repositorySource, *repositorySource.fetchManifest(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).manifest);
 	Realizer realizer(repositorySource, destination, i, RealizerConfig{.method=Squall::RealizeMethod::SYMLINK});
 	RealizeResult result{};
 	do {
@@ -112,7 +112,7 @@ TEST_CASE("Realizer can create file structure with hard links", "[realizer]") {
 	Repository repositorySource(repoPath);
 	std::filesystem::path destination("RealizerTestDirectoryWithHardlinks");
 	std::filesystem::create_directories(destination);
-	iterator i(repositorySource, *repositorySource.fetchRecord(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).record);
+	iterator i(repositorySource, *repositorySource.fetchManifest(Signature("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de")).manifest);
 	Realizer realizer(repositorySource, destination, i, RealizerConfig{.method=Squall::RealizeMethod::HARDLINK});
 	RealizeResult result{};
 	do {

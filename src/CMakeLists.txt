@@ -1,5 +1,5 @@
 set(CORE_SOURCE_FILES
-        squall/core/Record.cpp
+        squall/core/Manifest.cpp
         squall/core/Generator.cpp
         squall/core/Iterator.cpp
         squall/core/Provider.cpp
@@ -10,7 +10,7 @@ set(CORE_SOURCE_FILES
         )
 
 set(CORE_HEADER_FILES
-        squall/core/Record.h
+        squall/core/Manifest.h
         squall/core/Generator.h
         squall/core/Iterator.h
         squall/core/Provider.h

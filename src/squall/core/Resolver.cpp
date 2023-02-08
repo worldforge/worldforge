@@ -32,7 +32,7 @@ Squall::Resolver::Resolver(Squall::Repository destinationRepository, std::unique
 }
 
 Squall::ResolveResult Squall::Resolver::poll() {
-	if (!mRootRecord) {
+	if (!mRootManifest) {
 		auto filename = buildTemporaryPath(mRootSignature);
 		if (mPendingFetches.empty()) {
 			auto result = mProvider->fetch(mRootSignature, filename);
@@ -51,8 +51,8 @@ Squall::ResolveResult Squall::Resolver::poll() {
 			mPendingFetches.pop_back();
 			if (result.status == ProviderResultStatus::SUCCESS) {
 				mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
-				mRootRecord = mDestinationRepository.fetchRecord(mRootSignature).record;
-				mIterator = iterator(mDestinationRepository, *mRootRecord);
+				mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
+				mIterator = iterator(mDestinationRepository, *mRootManifest);
 				return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 			} else {
 				spdlog::error("Provider could not fetch {}.", lastPending.temporaryPath.generic_string());

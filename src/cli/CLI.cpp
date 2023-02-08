@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 			}
 
 
-			spdlog::info("Downloading from '{}', starting at record '{}'.", *remotePath, signatureInstance);
+			spdlog::info("Downloading from '{}', starting at manifest '{}'.", *remotePath, signatureInstance);
 			Resolver resolver(repository,
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
@@ -173,13 +173,13 @@ int main(int argc, char** argv) {
 				throw std::runtime_error("Signature is not valid.");
 			}
 
-			auto recordResult = repository.fetchRecord(signatureInstance);
-			if (recordResult.fetchResult.status == Squall::FetchStatus::FAILURE || !recordResult.record.has_value()) {
-				throw std::runtime_error("Could not fetch record from local repository.");
+			auto manifestResult = repository.fetchManifest(signatureInstance);
+			if (manifestResult.fetchResult.status == Squall::FetchStatus::FAILURE || !manifestResult.manifest.has_value()) {
+				throw std::runtime_error("Could not fetch manifest from local repository.");
 			}
-			spdlog::info("Realizing record '{}' into '{}'.", signatureInstance, *directoryPath);
+			spdlog::info("Realizing manifest '{}' into '{}'.", signatureInstance, *directoryPath);
 
-			Squall::iterator iterator(repository, *recordResult.record);
+			Squall::iterator iterator(repository, *manifestResult.manifest);
 
 			Realizer realizer(repository, *directoryPath, iterator, *realizeConfig);
 

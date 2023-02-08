@@ -44,19 +44,19 @@ GenerateResult Generator::process(size_t filesToProcess) {
 		auto& lastIterator = lastIteratorEntry.iterator;
 
 		if (lastIterator == std::filesystem::directory_iterator()) {
-			//We've completed a directory, generate a record and store it.
+			//We've completed a directory, generate a manifest and store it.
 
 			auto& lastEntries = lastIteratorEntry.entries;
 
 			std::sort(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& lhs, const GenerateEntry& rhs) { return lhs.sourcePath.compare(rhs.sourcePath); });
 
 
-			Record record{.version=RecordVersion};
-			std::transform(lastEntries.cbegin(), lastEntries.cend(), std::back_inserter(record.entries),
+			Manifest manifest{.version=ManifestVersion};
+			std::transform(lastEntries.cbegin(), lastEntries.cend(), std::back_inserter(manifest.entries),
 						   [](const GenerateEntry& entry) { return entry.fileEntry; });
 
 			//Make sure they are sorted by alphabetical order
-			std::sort(record.entries.begin(), record.entries.end(), [](const FileEntry& lhs, const FileEntry& rhs) { return lhs.fileName < rhs.fileName; });
+			std::sort(manifest.entries.begin(), manifest.entries.end(), [](const FileEntry& lhs, const FileEntry& rhs) { return lhs.fileName < rhs.fileName; });
 
 			mIterators.pop_back();
 			std::filesystem::path currentDirectoryPath;
@@ -67,7 +67,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 				currentDirectoryPath = mSourceDirectory;
 			}
 
-			auto processedEntry = processDirectory(currentDirectoryPath, record);
+			auto processedEntry = processDirectory(currentDirectoryPath, manifest);
 			mGeneratedEntries.emplace_back(processedEntry);
 			result.processedFiles.emplace_back(processedEntry);
 
@@ -99,12 +99,12 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath};
 }
 
-GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Record& record) {
-	auto signature = generateSignature(record);
-	spdlog::debug("Signature is {} for record {}", signature, filePath.generic_string());
-	auto storeEntry = mRepository.store(signature, record);
+GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Manifest& manifest) {
+	auto signature = generateSignature(manifest);
+	spdlog::debug("Signature is {} for manifest {}", signature, filePath.generic_string());
+	auto storeEntry = mRepository.store(signature, manifest);
 	std::int64_t combinedSize = 0;
-	for (auto& entry: record.entries) {
+	for (auto& entry: manifest.entries) {
 		combinedSize += entry.size;
 	};
 	FileEntry fileEntry{.fileName=filePath.filename().generic_string(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
@@ -141,9 +141,9 @@ SignatureResult Generator::generateSignature(const std::filesystem::path& filePa
 	}
 }
 
-Signature Generator::generateSignature(const Record& record) {
+Signature Generator::generateSignature(const Manifest& manifest) {
 	std::stringstream ss;
-	ss << record;
+	ss << manifest;
 	return generateSignature(ss).signature;
 }
 

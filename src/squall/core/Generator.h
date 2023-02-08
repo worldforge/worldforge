@@ -20,7 +20,7 @@
 #define SQUALL_GENERATOR_H
 
 #include "Repository.h"
-#include "Record.h"
+#include "Manifest.h"
 
 namespace Squall {
 
@@ -56,7 +56,7 @@ public:
 
 	static SignatureResult generateSignature(const std::filesystem::path& filePath);
 
-	static Signature generateSignature(const Record& record);
+	static Signature generateSignature(const Manifest& manifest);
 
 	static SignatureResult generateSignature(std::istream& stream);
 
@@ -69,7 +69,7 @@ protected:
 
 	GenerateEntry processFile(const std::filesystem::path& filePath);
 
-	GenerateEntry processDirectory(const std::filesystem::path& filePath, const Record& record);
+	GenerateEntry processDirectory(const std::filesystem::path& filePath, const Manifest& manifest);
 
 
 

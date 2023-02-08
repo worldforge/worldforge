@@ -19,7 +19,7 @@
 #ifndef SQUALL_REPOSITORY_H
 #define SQUALL_REPOSITORY_H
 
-#include "Record.h"
+#include "Manifest.h"
 #include "Root.h"
 #include <filesystem>
 #include <future>
@@ -55,9 +55,9 @@ struct FetchResult {
 	std::filesystem::path localPath;
 };
 
-struct FetchRecordResult {
+struct FetchManifestResult {
 	FetchResult fetchResult;
-	std::optional<Record> record;
+	std::optional<Manifest> manifest;
 };
 
 /**
@@ -69,7 +69,7 @@ public:
 
 	StoreResult store(const Signature& signature, const std::vector<char>& data);
 
-	StoreResult store(const Signature& signature, const Record& record);
+	StoreResult store(const Signature& signature, const Manifest& manifest);
 
 	StoreResult store(const Signature& signature, const std::filesystem::path& path);
 
@@ -83,7 +83,7 @@ public:
 
 	FetchResult fetch(const Signature& signature) const;
 
-	FetchRecordResult fetchRecord(const Signature& signature) const;
+	FetchManifestResult fetchManifest(const Signature& signature) const;
 
 	bool contains(const Signature& signature) const;
 

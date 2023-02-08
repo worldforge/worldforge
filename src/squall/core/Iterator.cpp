@@ -20,51 +20,51 @@
 
 namespace Squall {
 iterator::TraverseEntry iterator::operator*() {
-	if (!mRepository || mRecords.empty()) {
+	if (!mRepository || mManifests.empty()) {
 		throw std::runtime_error("Attempt to dereference detached iterator.");
 	}
 	std::filesystem::path path;
-	for (auto& recordEntry: mRecords) {
-		if (!recordEntry.record.entries.empty()) {
-			path /= recordEntry.record.entries[recordEntry.index].fileName;
+	for (auto& manifestEntry: mManifests) {
+		if (!manifestEntry.manifest.entries.empty()) {
+			path /= manifestEntry.manifest.entries[manifestEntry.index].fileName;
 		}
 	}
-	auto& recordEntry = mRecords.back();
-	auto& fileEntry = recordEntry.record.entries[recordEntry.index];
+	auto& manifestEntry = mManifests.back();
+	auto& fileEntry = manifestEntry.manifest.entries[manifestEntry.index];
 	return TraverseEntry{.path = path, .fileEntry = fileEntry};
 
 }
 
 Signature iterator::getActiveSignature() const {
-	if (mRecords.empty()) {
+	if (mManifests.empty()) {
 		return {};
 	}
-	auto& recordEntry = mRecords.back();
-	if (recordEntry.record.entries.empty()) {
+	auto& manifestEntry = mManifests.back();
+	if (manifestEntry.manifest.entries.empty()) {
 		return {};
 	}
-	return recordEntry.record.entries[recordEntry.index].signature;
+	return manifestEntry.manifest.entries[manifestEntry.index].signature;
 }
 
-iterator::iterator(Repository& repository, Record record) : mRepository(&repository) {
-	mRecords.emplace_back(RecordEntry{.record= std::move(record), .index = 0});
+iterator::iterator(Repository& repository, Manifest manifest) : mRepository(&repository) {
+	mManifests.emplace_back(ManifestEntry{.manifest= std::move(manifest), .index = 0});
 }
 
 iterator& iterator::operator++() {
 	if (mRepository) {
-		auto& recordEntry = mRecords.back();
-		auto& fileEntry = recordEntry.record.entries[recordEntry.index];
+		auto& manifestEntry = mManifests.back();
+		auto& fileEntry = manifestEntry.manifest.entries[manifestEntry.index];
 		if (fileEntry.type == FileEntryType::DIRECTORY) {
-			auto recordResult = mRepository->fetchRecord(fileEntry.signature);
-			if (recordResult.fetchResult.status == FetchStatus::SUCCESS) {
-				if (!recordResult.record->entries.empty()) {
-					mRecords.emplace_back(RecordEntry{.record = *recordResult.record, .index = 0});
+			auto manifestResult = mRepository->fetchManifest(fileEntry.signature);
+			if (manifestResult.fetchResult.status == FetchStatus::SUCCESS) {
+				if (!manifestResult.manifest->entries.empty()) {
+					mManifests.emplace_back(ManifestEntry{.manifest = *manifestResult.manifest, .index = 0});
 				} else {
-					while (!mRecords.empty()) {
-						auto& innerRecordEntry = mRecords.back();
-						innerRecordEntry.index++;
-						if (innerRecordEntry.index == innerRecordEntry.record.entries.size()) {
-							mRecords.pop_back();
+					while (!mManifests.empty()) {
+						auto& innerManifestEntry = mManifests.back();
+						innerManifestEntry.index++;
+						if (innerManifestEntry.index == innerManifestEntry.manifest.entries.size()) {
+							mManifests.pop_back();
 						} else {
 							break;
 						}
@@ -72,11 +72,11 @@ iterator& iterator::operator++() {
 				}
 			}
 		} else {
-			while (!mRecords.empty()) {
-				auto& innerRecordEntry = mRecords.back();
-				innerRecordEntry.index++;
-				if (innerRecordEntry.index == innerRecordEntry.record.entries.size()) {
-					mRecords.pop_back();
+			while (!mManifests.empty()) {
+				auto& innerManifestEntry = mManifests.back();
+				innerManifestEntry.index++;
+				if (innerManifestEntry.index == innerManifestEntry.manifest.entries.size()) {
+					mManifests.pop_back();
 				} else {
 					break;
 				}
@@ -88,10 +88,10 @@ iterator& iterator::operator++() {
 	return *this;
 }
 
-bool iterator::operator==(const iterator& other) const { return mRecords == other.mRecords; }
+bool iterator::operator==(const iterator& other) const { return mManifests == other.mManifests; }
 
 iterator::operator bool() const {
-	if (mRepository && !mRecords.empty()) {
+	if (mRepository && !mManifests.empty()) {
 		auto activeSignature = getActiveSignature();
 		if (activeSignature.isValid()) {
 			return mRepository->contains(activeSignature);
@@ -100,11 +100,11 @@ iterator::operator bool() const {
 	return false;
 }
 
-bool iterator::RecordEntry::operator==(const iterator::RecordEntry& rhs) const {
-	return record == rhs.record && index == rhs.index;
+bool iterator::ManifestEntry::operator==(const iterator::ManifestEntry& rhs) const {
+	return manifest == rhs.manifest && index == rhs.index;
 }
 
-bool iterator::RecordEntry::operator!=(const iterator::RecordEntry& rhs) const {
+bool iterator::ManifestEntry::operator!=(const iterator::ManifestEntry& rhs) const {
 	return !(*this == rhs);
 }
 }

@@ -34,11 +34,11 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 	SECTION("iterate over working digest should work") {
 
-		auto fetchDigestResult = repository.fetchRecord("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		auto fetchDigestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
 
 		REQUIRE(fetchDigestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
-		iterator it(repository, *fetchDigestResult.record);
+		iterator it(repository, *fetchDigestResult.manifest);
 		for (; it != iterator(); ++it) {
 			paths.emplace_back((*it).path);
 			REQUIRE(it);
@@ -59,7 +59,7 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 	SECTION("missing entry should be marked") {
 
-		Record digest;
+		Manifest digest;
 		digest.entries.emplace_back(FileEntry{
 				.fileName= "missing",
 				.signature="1111111111111111111111111111111111111111111111111111111111111111",

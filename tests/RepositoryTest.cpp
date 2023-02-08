@@ -43,28 +43,28 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchRecord("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		auto digestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
-		REQUIRE((*digestResult.record).version == "1");
-		REQUIRE((*digestResult.record).entries.size() == 6);
-		REQUIRE((*digestResult.record).entries[0].fileName == "bar/");
-		REQUIRE((*digestResult.record).entries[0].type == Squall::FileEntryType::DIRECTORY);
-		REQUIRE((*digestResult.record).entries[0].size == 0);
-		REQUIRE((*digestResult.record).entries[1].fileName == "empty_directory/");
-		REQUIRE((*digestResult.record).entries[1].type == Squall::FileEntryType::DIRECTORY);
-		REQUIRE((*digestResult.record).entries[1].size == 0);
-		REQUIRE((*digestResult.record).entries[2].fileName == "empty_file");
-		REQUIRE((*digestResult.record).entries[2].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[2].size == 0);
-		REQUIRE((*digestResult.record).entries[3].fileName == "file with spaces in name");
-		REQUIRE((*digestResult.record).entries[3].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[3].size == 0);
-		REQUIRE((*digestResult.record).entries[4].fileName == "filè with nön äscií chårs");
-		REQUIRE((*digestResult.record).entries[4].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[4].size == 0);
-		REQUIRE((*digestResult.record).entries[5].fileName == "foo.txt");
-		REQUIRE((*digestResult.record).entries[5].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.record).entries[5].size == 3);
+		REQUIRE((*digestResult.manifest).version == "1");
+		REQUIRE((*digestResult.manifest).entries.size() == 6);
+		REQUIRE((*digestResult.manifest).entries[0].fileName == "bar/");
+		REQUIRE((*digestResult.manifest).entries[0].type == Squall::FileEntryType::DIRECTORY);
+		REQUIRE((*digestResult.manifest).entries[0].size == 0);
+		REQUIRE((*digestResult.manifest).entries[1].fileName == "empty_directory/");
+		REQUIRE((*digestResult.manifest).entries[1].type == Squall::FileEntryType::DIRECTORY);
+		REQUIRE((*digestResult.manifest).entries[1].size == 0);
+		REQUIRE((*digestResult.manifest).entries[2].fileName == "empty_file");
+		REQUIRE((*digestResult.manifest).entries[2].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.manifest).entries[2].size == 0);
+		REQUIRE((*digestResult.manifest).entries[3].fileName == "file with spaces in name");
+		REQUIRE((*digestResult.manifest).entries[3].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.manifest).entries[3].size == 0);
+		REQUIRE((*digestResult.manifest).entries[4].fileName == "filè with nön äscií chårs");
+		REQUIRE((*digestResult.manifest).entries[4].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.manifest).entries[4].size == 0);
+		REQUIRE((*digestResult.manifest).entries[5].fileName == "foo.txt");
+		REQUIRE((*digestResult.manifest).entries[5].type == Squall::FileEntryType::FILE);
+		REQUIRE((*digestResult.manifest).entries[5].size == 3);
 	}
 
 	SECTION("root names should be valid") {

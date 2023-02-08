@@ -16,12 +16,12 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Record.h"
+#include "Manifest.h"
 #include <sstream>
 
-std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
-	out << record.version << std::endl;
-	for (auto& entry: record.entries) {
+std::ostream& operator<<(std::ostream& out, const Squall::Manifest& manifest) {
+	out << manifest.version << std::endl;
+	for (auto& entry: manifest.entries) {
 		out << entry.signature << " " << entry.size << " " << entry.fileName;
 
 		if (entry.type == Squall::FileEntryType::DIRECTORY) {
@@ -33,28 +33,28 @@ std::ostream& operator<<(std::ostream& out, const Squall::Record& record) {
 }
 
 
-Squall::Record& operator<<(Squall::Record& record, std::istream& in) {
+Squall::Manifest& operator<<(Squall::Manifest& manifest, std::istream& in) {
 
-	std::getline(in, record.version);
+	std::getline(in, manifest.version);
 	//Check that it's a version we can deserialize.
-	if (record.version == "1") {
-		Squall::deserializeVersion1(record, in);
+	if (manifest.version == "1") {
+		Squall::deserializeVersion1(manifest, in);
 	} else {
 		std::stringstream ss;
-		ss << "Could not deserialize a record with version '" << record.version << "'. This Squall build only knows how to deserialize records of version '" << Squall::RecordVersion << "' or earlier.";
+		ss << "Could not deserialize a manifest with version '" << manifest.version << "'. This Squall build only knows how to deserialize manifests of version '" << Squall::ManifestVersion << "' or earlier.";
 		throw std::runtime_error(ss.str());
 	}
 
-	return record;
+	return manifest;
 }
 
 namespace Squall {
 
-bool Record::operator==(const Record& rhs) const {
+bool Manifest::operator==(const Manifest& rhs) const {
 	return entries == rhs.entries;
 }
 
-bool Record::operator!=(const Record& rhs) const {
+bool Manifest::operator!=(const Manifest& rhs) const {
 	return !(*this == rhs);
 }
 
@@ -69,7 +69,7 @@ bool FileEntry::operator!=(const FileEntry& rhs) const {
 	return !(*this == rhs);
 }
 
-void deserializeVersion1(Record& record, std::istream& in) {
+void deserializeVersion1(Manifest& manifest, std::istream& in) {
 	if (in) {
 		std::string line;
 		while (std::getline(in, line)) {
@@ -85,7 +85,7 @@ void deserializeVersion1(Record& record, std::istream& in) {
 			if (path.back() == '/') {
 				fileEntryType = Squall::FileEntryType::DIRECTORY;
 			}
-			record.entries.emplace_back(Squall::FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
+			manifest.entries.emplace_back(Squall::FileEntry{.fileName = path, .signature = entrySignature, .type=fileEntryType, .size = size});
 		}
 	}
 }

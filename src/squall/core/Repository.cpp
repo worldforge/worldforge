@@ -61,12 +61,12 @@ StoreResult Repository::store(const Signature& signature, const std::filesystem:
 	return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
 }
 
-StoreResult Repository::store(const Signature& signature, const Record& record) {
+StoreResult Repository::store(const Signature& signature, const Manifest& manifest) {
 	auto fullPath = resolvePathForSignature(signature);
 	std::filesystem::create_directories(fullPath.parent_path());
 	std::ofstream fileStream(fullPath, std::ios::out | std::ios::binary);
 	if (fileStream.good()) {
-		fileStream << record;
+		fileStream << manifest;
 		return {.status = StoreStatus::SUCCESS, .localPath = fullPath};
 	} else {
 		return {.status = StoreStatus::FAILURE};
@@ -92,18 +92,18 @@ bool Repository::contains(const Signature& signature) const {
 	return exists(path);
 }
 
-FetchRecordResult Repository::fetchRecord(const Signature& signature) const {
+FetchManifestResult Repository::fetchManifest(const Signature& signature) const {
 	auto fetchResult = fetch(signature);
-	FetchRecordResult fetchRecordResult{.fetchResult=fetchResult};
+	FetchManifestResult fetchManifestResult{.fetchResult=fetchResult};
 	if (fetchResult.status == FetchStatus::SUCCESS) {
 		std::ifstream stream(fetchResult.localPath);
 		if (stream.is_open()) {
-			Record record;
-			record << stream;
-			fetchRecordResult.record = std::move(record);
+			Manifest manifest;
+			manifest << stream;
+			fetchManifestResult.manifest = std::move(manifest);
 		}
 	}
-	return fetchRecordResult;
+	return fetchManifestResult;
 }
 
 std::map<std::string, Root> Repository::listRoots() const {
