@@ -16,9 +16,9 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Generator.h"
-#include "Repository.h"
-#include "Provider.h"
+#include "core/Generator.h"
+#include "core/Repository.h"
+#include "core/Provider.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>

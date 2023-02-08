@@ -17,11 +17,11 @@
  */
 
 #include "CLI.h"
-#include "Repository.h"
-#include "Generator.h"
-#include "Resolver.h"
-#include "CurlProvider.h"
-#include "Realizer.h"
+#include "core/Repository.h"
+#include "core/Generator.h"
+#include "core/Resolver.h"
+#include "curl/CurlProvider.h"
+#include "core/Realizer.h"
 
 #include <CLI/App.hpp>
 #include <CLI/Formatter.hpp>

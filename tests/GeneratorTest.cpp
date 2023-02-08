@@ -16,8 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Generator.h"
-#include "Repository.h"
+#include "core/Generator.h"
+#include "core/Repository.h"
 
 std::ostream& operator<<(std::ostream& os, Squall::FileEntry const& value) {
 	os << "FileEntry{ signature: " << value.signature << " fileName: '" << value.fileName << "' size: " << value.size << " type: " << static_cast<std::underlying_type<Squall::FileEntryType>::type>(value.type) << "}";
