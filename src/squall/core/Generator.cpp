@@ -17,7 +17,7 @@
  */
 
 #include "Generator.h"
-#include "../../external/sha256/SHA256.h"
+#include "SHA256.h"
 
 #include <spdlog/spdlog.h>
 

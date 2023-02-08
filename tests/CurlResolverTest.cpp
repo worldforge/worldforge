@@ -16,9 +16,9 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "core/Repository.h"
-#include "curl/CurlProvider.h"
-#include "core/Resolver.h"
+#include "squall/core/Repository.h"
+#include "squall/curl/CurlProvider.h"
+#include "squall/core/Resolver.h"
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>

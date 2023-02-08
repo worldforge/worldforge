@@ -14,7 +14,7 @@ The simplest way to install all required dependencies is by using [Conan](https:
 
 ```bash
 mkdir build && cd build
-conan install .. --build missing
+conan install ../tools/conan --build missing
 cmake ..
 make -j all install
 ```

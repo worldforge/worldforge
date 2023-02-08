@@ -2,6 +2,9 @@ add_library(
         sha256
         SHA256.cpp)
 
+target_include_directories(sha256 PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+)
 install(TARGETS sha256
         EXPORT "${PROJECT_NAME}Targets"
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

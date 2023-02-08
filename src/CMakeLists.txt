@@ -1,24 +1,24 @@
 set(CORE_SOURCE_FILES
-        core/Record.cpp
-        core/Generator.cpp
-        core/Iterator.cpp
-        core/Provider.cpp
-        core/Realizer.cpp
-        core/Repository.cpp
-        core/Resolver.cpp
-        core/Signature.cpp
+        squall/core/Record.cpp
+        squall/core/Generator.cpp
+        squall/core/Iterator.cpp
+        squall/core/Provider.cpp
+        squall/core/Realizer.cpp
+        squall/core/Repository.cpp
+        squall/core/Resolver.cpp
+        squall/core/Signature.cpp
         )
 
 set(CORE_HEADER_FILES
-        core/Record.h
-        core/Generator.h
-        core/Iterator.h
-        core/Provider.h
-        core/Realizer.h
-        core/Repository.h
-        core/Resolver.h
-        core/Root.h
-        core/Signature.h)
+        squall/core/Record.h
+        squall/core/Generator.h
+        squall/core/Iterator.h
+        squall/core/Provider.h
+        squall/core/Realizer.h
+        squall/core/Repository.h
+        squall/core/Resolver.h
+        squall/core/Root.h
+        squall/core/Signature.h)
 
 
 find_package(spdlog REQUIRED)
@@ -30,9 +30,9 @@ target_link_libraries(squallcore PUBLIC
 
 find_package(CURL 7 REQUIRED)
 set(CURL_SOURCE_FILES
-        curl/CurlProvider.cpp)
+        squall/curl/CurlProvider.cpp)
 set(CURL_HEADER_FILES
-        curl/CurlProvider.h)
+        squall/curl/CurlProvider.h)
 wf_add_library(squallcurl CURL_SOURCE_FILES CURL_HEADER_FILES)
 
 target_link_libraries(squallcurl PUBLIC
@@ -40,16 +40,4 @@ target_link_libraries(squallcurl PUBLIC
         CURL::libcurl
         )
 
-
-find_package(CLI11 REQUIRED)
-add_executable(
-        squall
-        cli/CLI.cpp
-)
-target_link_libraries(squall
-        squallcurl
-        squallcore
-        CLI11::CLI11
-        )
-
-INSTALL(TARGETS squall)
+add_subdirectory(cli)

@@ -19,7 +19,7 @@
 #ifndef SQUALL_CURLPROVIDER_H
 #define SQUALL_CURLPROVIDER_H
 
-#include "core/Provider.h"
+#include "squall/core/Provider.h"
 
 namespace Squall {
 class CurlProvider : public Provider {

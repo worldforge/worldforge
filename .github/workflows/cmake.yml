@@ -47,16 +47,13 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install .. -pr default --build=missing --update
+          conan install ../tools/conan -pr default --build=missing --update
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
         working-directory: ${{github.workspace}}/build
-        # Note the current convention is to use the -S and -B options here to specify source
-        # and build directories, but this is only available with CMake 3.13 and higher.
-        # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=ON
 
       - name: Build
@@ -77,6 +74,6 @@ jobs:
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
             conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
-            conan create .. worldforge/testing -pr default
+            conan create ../tools/conan worldforge/testing -pr default
             conan upload "*" -r worldforge -c --all
           fi
