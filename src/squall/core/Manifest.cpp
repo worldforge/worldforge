@@ -41,7 +41,10 @@ Squall::Manifest& operator<<(Squall::Manifest& manifest, std::istream& in) {
 		Squall::deserializeVersion1(manifest, in);
 	} else {
 		std::stringstream ss;
-		ss << "Could not deserialize a manifest with version '" << manifest.version << "'. This Squall build only knows how to deserialize manifests of version '" << Squall::ManifestVersion << "' or earlier.";
+		ss << "Could not deserialize a manifest with version '" << manifest.version
+		   << "'. This Squall build only knows how to deserialize manifests of version '"
+		   << Squall::ManifestVersion
+		   << "' or earlier.";
 		throw std::runtime_error(ss.str());
 	}
 

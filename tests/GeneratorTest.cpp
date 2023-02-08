@@ -20,7 +20,8 @@
 #include "squall/core/Repository.h"
 
 std::ostream& operator<<(std::ostream& os, Squall::FileEntry const& value) {
-	os << "FileEntry{ signature: " << value.signature << " fileName: '" << value.fileName << "' size: " << value.size << " type: " << static_cast<std::underlying_type<Squall::FileEntryType>::type>(value.type) << "}";
+	os << "FileEntry{ signature: " << value.signature << " fileName: '" << value.fileName << "' size: " << value.size << " type: "
+	   << static_cast<std::underlying_type<Squall::FileEntryType>::type>(value.type) << "}";
 	return os;
 }
 

@@ -110,7 +110,8 @@ Squall::ResolveResult Squall::Resolver::poll() {
 						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};
 					}
 					if (signatureResult.signature != pending.expectedSignature) {
-						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(), pending.expectedSignature, signatureResult.signature);
+						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(),
+									  pending.expectedSignature, signatureResult.signature);
 						remove(pending.temporaryPath);
 						mPendingFetches.erase(I);
 						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = 1};

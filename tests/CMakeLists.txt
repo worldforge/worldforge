@@ -1,4 +1,4 @@
-add_definitions(-DTESTDATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+add_compile_definitions("TESTDATADIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
 
 wf_add_test(SignatureTest.cpp)
 target_link_libraries(SignatureTest

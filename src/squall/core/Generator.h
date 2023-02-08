@@ -72,7 +72,6 @@ protected:
 	GenerateEntry processDirectory(const std::filesystem::path& filePath, const Manifest& manifest);
 
 
-
 	std::filesystem::path linkFile(const std::filesystem::path& filePath, const Signature& signature);
 };
 }
