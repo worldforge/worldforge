@@ -33,9 +33,6 @@
 #include <wfmath/intersect.h>
 #include <wfmath/error.h>
 
-#include <cmath>
-
-#include <cassert>
 
 // FIXME Work is needed on this code. At very least the following notes
 // from the original author apply:

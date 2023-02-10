@@ -62,6 +62,7 @@
 #include <cstdio>
 #include <istream>
 #include <ostream>
+#include <climits>
 
 #ifdef HAVE_CONFIG_H
   #include "config.h"

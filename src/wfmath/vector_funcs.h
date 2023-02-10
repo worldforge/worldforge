@@ -36,8 +36,6 @@
 
 #include <limits>
 
-#include <cmath>
-
 #include <cassert>
 
 namespace WFMath {

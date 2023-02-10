@@ -32,8 +32,6 @@
 #include <wfmath/intersect_decls.h>
 #include <wfmath/point.h>
 
-#include <iosfwd>
-
 namespace WFMath {
 
 template<int dim>

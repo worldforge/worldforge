@@ -34,6 +34,7 @@
 #include "wfmath/ball.h"
 #include "wfmath/intersect.h"
 #include "wfmath/stream.h"
+#include <cassert>
 
 namespace WFMath {
 

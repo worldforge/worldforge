@@ -24,8 +24,6 @@
 #define WFMATH_MERSENNE_TWISTER_H_
 
 #include <iosfwd>
-#include <climits>
-#include <cmath>
 #include <cstdint>
 
 namespace WFMath {
@@ -39,7 +37,7 @@ public:
 public:
   MTRand();
   explicit MTRand(uint32 oneSeed);
-  explicit MTRand(const uint32 bigSeed[], uint32 seedLength = state_size);
+  explicit MTRand(uint32 bigSeed[], uint32 seedLength = state_size);
 
   // real-valued random numbers on [0, 1] or [0, n]
   template<typename FloatT>
@@ -70,7 +68,7 @@ inline MTRand::MTRand(uint32 oneSeed)
 : index(0)
 { seed(oneSeed); }
 
-inline MTRand::MTRand(const uint32 bigSeed[], const uint32 seedLength)
+inline MTRand::MTRand(uint32 bigSeed[], uint32 seedLength)
 : index(0)
 { seed(bigSeed, seedLength); }
 

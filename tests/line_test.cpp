@@ -43,6 +43,7 @@
 
 #include <vector>
 #include <list>
+#include <cassert>
 
 using namespace WFMath;
 

@@ -36,11 +36,8 @@
 #include <wfmath/polygon.h>
 #include <wfmath/line.h>
 #include <wfmath/error.h>
-#include <string>
 #include <iostream>
-#include <list> // For Polygon<>::operator>>()
 
-#include <cassert>
 
 namespace WFMath {
 

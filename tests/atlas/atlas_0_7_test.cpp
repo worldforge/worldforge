@@ -23,10 +23,10 @@
 // Author: Ron Steinke
 // Created: 2001-12-12
 
-#include<Atlas/Message/Element.h>
+#include <Atlas/Message/Element.h>
 #include "wfmath/atlasconv.h"
 #include "wfmath/stream.h"
-
+#include <cassert>
 using namespace WFMath;
 
 template<class C>

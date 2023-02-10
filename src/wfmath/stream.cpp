@@ -32,6 +32,8 @@
 #include "MersenneTwister.h"
 
 #include <sstream>
+#include <cassert>
+#include <list>
 
 namespace WFMath {
 

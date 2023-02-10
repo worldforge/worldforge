@@ -30,6 +30,7 @@
 
 #include <algorithm>
 #include <list>
+#include <cassert>
 
 namespace WFMath {
 
