@@ -74,7 +74,7 @@ macro(wf_add_test TEST_FILE)
     else (BUILD_TESTING)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
-    target_link_libraries(${TEST_NAME} Catch2::Catch2)
+    target_link_libraries(${TEST_NAME} Catch2::Catch2WithMain)
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     #We need to tell adjust the path so tests on windows can find the .dll files.
     SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES ENVIRONMENT "PATH=${CMAKE_BINARY_DIR}/bin;$ENV{PATH}")
