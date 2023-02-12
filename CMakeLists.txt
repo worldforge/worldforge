@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.12)
 
 project(squall CXX)
 set(CMAKE_CXX_STANDARD 20)
@@ -44,8 +44,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             SOVERSION ${SOVERSION}
             )
     target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
-    target_sources(${_LIB_NAME} PUBLIC FILE_SET headers TYPE HEADERS FILES
-            ${${_HEADER_FILES_VAR}})
     target_include_directories(${_LIB_NAME}
             PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
@@ -57,8 +55,14 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            FILE_SET headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
             )
+    #We would want to use the FILE_SET feature, but that requires CMake 3.23, which prevents us from currently building
+    # Snap packages (as of 2023-02-12). Instead we'll copy each include file.
+    #When distros catch up to more recent CMake versions we can use FILE_SET instead.
+    foreach (file ${${_HEADER_FILES_VAR}})
+        get_filename_component(dir ${file} DIRECTORY)
+        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${dir})
+    endforeach ()
 
 endmacro()
 
