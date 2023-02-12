@@ -14,8 +14,8 @@ class SquallConan(ConanFile):
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     generators = "cmake_find_package", "cmake_paths"
-    requires = "libcurl/7.84.0", "spdlog/1.10.0", "cli11/2.2.0"
-    build_requires = "catch2/3.1.0"
+    requires = "libcurl/7.87.0", "spdlog/1.11.0", "cli11/2.3.2"
+    build_requires = "catch2/3.3.1"
 
     scm = {
         "type": "git",

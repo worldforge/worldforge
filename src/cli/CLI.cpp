@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 			if (result.complete) {
 				//The last processed file contains the signature for the whole directory.
 				auto& lastEntry = *(--result.processedFiles.end());
-				spdlog::info("Signature generated: {}", lastEntry.fileEntry.signature);
+				spdlog::info("Signature generated: {}", lastEntry.fileEntry.signature.str_view());
 			} else {
 				spdlog::error("Could not fully generate digests.");
 			}
@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 			}
 
 
-			spdlog::info("Downloading from '{}', starting at manifest '{}'.", *remotePath, signatureInstance);
+			spdlog::info("Downloading from '{}', starting at manifest '{}'.", *remotePath, signatureInstance.str_view());
 			Resolver resolver(repository,
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
@@ -177,7 +177,7 @@ int main(int argc, char** argv) {
 			if (manifestResult.fetchResult.status == Squall::FetchStatus::FAILURE || !manifestResult.manifest.has_value()) {
 				throw std::runtime_error("Could not fetch manifest from local repository.");
 			}
-			spdlog::info("Realizing manifest '{}' into '{}'.", signatureInstance, *directoryPath);
+			spdlog::info("Realizing manifest '{}' into '{}'.", signatureInstance.str_view(), *directoryPath);
 
 			Squall::iterator iterator(repository, *manifestResult.manifest);
 

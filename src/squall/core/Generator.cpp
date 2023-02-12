@@ -93,7 +93,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 
 GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 	auto signatureResult = generateSignature(filePath);
-	spdlog::debug("Signature is {} for file {}", signatureResult.signature, filePath.generic_string());
+	spdlog::debug("Signature is {} for file {}", signatureResult.signature.str_view(), filePath.generic_string());
 	auto localPath = linkFile(filePath, signatureResult.signature);
 	FileEntry fileEntry{.fileName=filePath.filename().generic_string(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath};
@@ -101,7 +101,7 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 
 GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Manifest& manifest) {
 	auto signature = generateSignature(manifest);
-	spdlog::debug("Signature is {} for manifest {}", signature, filePath.generic_string());
+	spdlog::debug("Signature is {} for manifest {}", signature.str_view(), filePath.generic_string());
 	auto storeEntry = mRepository.store(signature, manifest);
 	std::int64_t combinedSize = 0;
 	for (auto& entry: manifest.entries) {
