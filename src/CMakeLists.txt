@@ -1,6 +1,3 @@
-include_directories("${PROJECT_SOURCE_DIR}/src")
-# Define source files for libraries
-
 set(CODECS_SOURCE_FILES
         Atlas/Codecs/Bach.cpp
         Atlas/Codecs/Packed.cpp
