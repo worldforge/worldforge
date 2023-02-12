@@ -48,7 +48,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 
 			auto& lastEntries = lastIteratorEntry.entries;
 
-			std::sort(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& lhs, const GenerateEntry& rhs) { return lhs.sourcePath.compare(rhs.sourcePath); });
+			std::sort(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& lhs, const GenerateEntry& rhs) { return lhs.fileEntry.fileName < rhs.fileEntry.fileName; });
 
 
 			Manifest manifest{.version=ManifestVersion};
