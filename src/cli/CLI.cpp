@@ -28,6 +28,7 @@
 #include <CLI/Config.hpp>
 #include <spdlog/spdlog.h>
 
+
 using namespace Squall;
 
 int main(int argc, char** argv) {
@@ -124,16 +125,18 @@ int main(int argc, char** argv) {
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
 			ResolveResult result{};
-			size_t downloadedFiles = 0;
+			std::vector<ResolveEntry> downloadedFiles;
 			do {
 				result = resolver.poll();
-				downloadedFiles += result.completedRequests;
+				for (auto& entry: result.completedRequests) {
+					downloadedFiles.emplace_back(entry);
+				}
 			} while (result.status == Squall::ResolveStatus::ONGOING);
 
 			if (result.status == Squall::ResolveStatus::ERROR) {
 				spdlog::error("Could not complete remote download.");
 			} else {
-				spdlog::info("Downloaded {} files.", downloadedFiles);
+				spdlog::info("Downloaded {} files.", downloadedFiles.size());
 			}
 		});
 	}
