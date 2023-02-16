@@ -83,6 +83,8 @@ public:
 
 	FetchResult fetch(const Signature& signature) const;
 
+	FetchResult fetch(const Manifest& manifest, const std::filesystem::path& path) const;
+
 	FetchManifestResult fetchManifest(const Signature& signature) const;
 
 	bool contains(const Signature& signature) const;

@@ -21,6 +21,7 @@
 #include <utility>
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 namespace Squall {
 
@@ -181,6 +182,35 @@ std::optional<Root> Repository::readRoot(std::string_view rootName) const {
 		}
 	}
 	return {};
+}
+
+FetchResult Repository::fetch(const Manifest& manifest, const std::filesystem::path& path) const {
+	auto currentManifest = manifest;
+	for (auto part: path) {
+		auto I = std::find_if(currentManifest.entries.begin(), currentManifest.entries.end(), [&part](const FileEntry& entry) {
+			//Directories are stored in the manifest with an extra "/" tacked on, so we need to remove that.
+			if (entry.type == FileEntryType::DIRECTORY) {
+				return entry.fileName.substr(0, entry.fileName.length() - 1) == part;
+			} else {
+				return entry.fileName == part;
+			}
+		});
+		if (I == currentManifest.entries.end()) {
+			return FetchResult{.status=FetchStatus::FAILURE};
+		}
+		auto signature = I->signature;
+		if (I->type == FileEntryType::FILE) {
+			return fetch(signature);
+		} else {
+			auto fetchManifestResult = fetchManifest(signature);
+			if (fetchManifestResult.fetchResult.status == FetchStatus::FAILURE || !fetchManifestResult.manifest.has_value()) {
+				return FetchResult{.status=FetchStatus::FAILURE};
+			} else {
+				currentManifest = *fetchManifestResult.manifest;
+			}
+		}
+	}
+	return FetchResult{.status=FetchStatus::FAILURE};
 }
 
 

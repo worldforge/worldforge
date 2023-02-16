@@ -21,6 +21,7 @@
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>
 #include <algorithm>
+#include <spdlog/spdlog.h>
 
 using namespace Squall;
 using namespace Catch::Matchers;
@@ -82,11 +83,25 @@ TEST_CASE("Repository finds files", "[repository]") {
 		REQUIRE(repository.listRoots().size() == 1);
 		REQUIRE(repository.listRoots()["main"].signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
 		REQUIRE(repository.readRoot("main")->signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
-	} SECTION("should store roots") {
+	}
+
+	SECTION("should store roots") {
 		Repository repositoryDestination("RepositoryTestDirectory");
 
 		REQUIRE(repositoryDestination.storeRoot("test", {.signature="d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
 		REQUIRE(repositoryDestination.listRoots()["test"].signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+	}
+
+	SECTION("fetching existing file using path should work") {
+
+
+		auto manifestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		REQUIRE(manifestResult.fetchResult.status == FetchStatus::SUCCESS);
+		auto manifest = *manifestResult.manifest;
+		auto fetchResult = repository.fetch(manifest, std::filesystem::path("bar/baz.txt"));
+		REQUIRE(fetchResult.status == FetchStatus::SUCCESS);
+		REQUIRE(fetchResult.localPath == (repoPath / "data" / "e3" / "b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855").string());
+
 	}
 }
