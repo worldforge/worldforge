@@ -46,7 +46,11 @@ struct SignatureResult {
 	std::int64_t size;
 };
 
-
+/**
+ * Generates digests and manifests from an existing file structure.
+ *
+ * Use this when you have files stored on disk that you want to turn insert into a Squall repository.
+ */
 class Generator {
 
 public:

@@ -32,11 +32,13 @@ CurlProvider::CurlProvider(std::string baseUrl)
 
 struct CurlFileEntry {
 	std::fstream& file;
+	size_t bytesCopied;
 };
 
 static size_t curlCallback(void* data, size_t, size_t numberOfBytes, void* userData) {
 	auto* curlFileEntry = static_cast<CurlFileEntry*>(userData);
 	curlFileEntry->file.write(static_cast<const char*>(data), static_cast<std::streamsize>(numberOfBytes));
+	curlFileEntry->bytesCopied += numberOfBytes;
 	return numberOfBytes;
 }
 
@@ -54,7 +56,7 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 				return ProviderResult{.status=ProviderResultStatus::FAILURE};
 			}
 
-			CurlFileEntry curlFileEntry{.file = outputFile};
+			CurlFileEntry curlFileEntry{.file = outputFile, .bytesCopied=0};
 
 
 			auto first = signature.str_view().substr(0, 2);
@@ -77,7 +79,7 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 				return ProviderResult{.status=ProviderResultStatus::FAILURE};
 			} else {
 				std::filesystem::rename(destinationPartialPath, destination);
-				return ProviderResult{.status=ProviderResultStatus::SUCCESS};
+				return ProviderResult{.status=ProviderResultStatus::SUCCESS, .bytesCopied=curlFileEntry.bytesCopied};
 			}
 		}
 		return ProviderResult{.status=ProviderResultStatus::FAILURE};

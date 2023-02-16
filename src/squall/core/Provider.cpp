@@ -25,7 +25,7 @@ std::future<ProviderResult> RepositoryProvider::fetch(Squall::Signature signatur
 		std::filesystem::create_directories(destination.parent_path());
 		std::filesystem::copy_file(fetchResult.localPath, destination, std::filesystem::copy_options::skip_existing);
 		std::promise<ProviderResult> promise;
-		promise.set_value(ProviderResult{.status=ProviderResultStatus::SUCCESS});
+		promise.set_value(ProviderResult{.status=ProviderResultStatus::SUCCESS, .bytesCopied=std::filesystem::file_size(fetchResult.localPath)});
 		return promise.get_future();
 	} else {
 		std::promise<ProviderResult> promise;

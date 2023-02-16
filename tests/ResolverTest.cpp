@@ -50,3 +50,32 @@ TEST_CASE("Resolver copied files", "[resolver]") {
 
 
 }
+
+TEST_CASE("Resolver skips already existing files", "[resolver]") {
+	setupEncodings();
+
+	std::filesystem::path repoPath = TESTDATADIR "/repo";
+	Repository repositorySource(repoPath);
+	std::filesystem::path destinationPath("ResolverTestDirectoryAlreadyExisting");
+	remove_all(destinationPath);
+	std::filesystem::copy(TESTDATADIR "/repo", destinationPath, std::filesystem::copy_options::recursive);
+	Repository repositoryDestination(destinationPath);
+	Resolver resolver(repositoryDestination,
+					  std::make_unique<RepositoryProvider>(repositorySource),
+					  "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+
+	int i = 0;
+	while (true) {
+		auto pollResult = resolver.poll();
+		REQUIRE(pollResult.status != Squall::ResolveStatus::ERROR);
+		for (auto entry: pollResult.completedRequests) {
+			//Should not have copied any files, as all already exists.
+			REQUIRE(entry.bytesCopied == 0);
+		}
+		if (pollResult.status == Squall::ResolveStatus::COMPLETE) {
+			break;
+		}
+	}
+
+
+}

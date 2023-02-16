@@ -31,6 +31,7 @@ enum class ProviderResultStatus {
 };
 struct ProviderResult {
 	ProviderResultStatus status;
+	size_t bytesCopied;
 };
 
 /**

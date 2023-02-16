@@ -30,10 +30,21 @@ enum class ResolveStatus {
 	ONGOING, COMPLETE, ERROR
 };
 
+enum class ResolveEntryStatus {
+	COPIED,
+	ALREADY_EXISTS
+};
+
+struct ResolveEntry {
+	Signature signature;
+	ResolveEntryStatus status;
+	size_t bytesCopied;
+};
+
 struct ResolveResult {
 	ResolveStatus status;
 	size_t pendingRequests;
-	size_t completedRequests;
+	std::vector<ResolveEntry> completedRequests;
 };
 
 struct PendingFetch {
@@ -55,6 +66,11 @@ public:
 	ResolveResult poll();
 
 private:
+	enum class FetchResult {
+		EXISTS_IN_REPO_ALREADY,
+		IS_FETCHED_FROM_REMOTE
+	};
+
 	Repository mDestinationRepository;
 	std::unique_ptr<Provider> mProvider;
 	Signature mRootSignature;
@@ -62,6 +78,8 @@ private:
 	iterator mIterator;
 	std::vector<PendingFetch> mPendingFetches;
 	std::optional<Manifest> mRootManifest;
+
+	FetchResult fetch(Signature signature);
 
 	static std::filesystem::path buildTemporaryPath(const Signature& signature);
 
