@@ -46,7 +46,7 @@ Signature iterator::getActiveSignature() const {
 	return manifestEntry.manifest.entries[manifestEntry.index].signature;
 }
 
-iterator::iterator(Repository& repository, Manifest manifest) : mRepository(&repository) {
+iterator::iterator(const Repository& repository, Manifest manifest, bool recurse) : mRepository(&repository), mRecurse(recurse) {
 	mManifests.emplace_back(ManifestEntry{.manifest= std::move(manifest), .index = 0});
 }
 
@@ -54,7 +54,7 @@ iterator& iterator::operator++() {
 	if (mRepository) {
 		auto& manifestEntry = mManifests.back();
 		auto& fileEntry = manifestEntry.manifest.entries[manifestEntry.index];
-		if (fileEntry.type == FileEntryType::DIRECTORY) {
+		if (fileEntry.type == FileEntryType::DIRECTORY && mRecurse) {
 			auto manifestResult = mRepository->fetchManifest(fileEntry.signature);
 			if (manifestResult.fetchResult.status == FetchStatus::SUCCESS) {
 				if (!manifestResult.manifest->entries.empty()) {

@@ -58,8 +58,12 @@ protected:
 		bool operator!=(const ManifestEntry& rhs) const;
 	};
 
-	Repository* mRepository;
+	const Repository* mRepository;
 	std::vector<ManifestEntry> mManifests;
+	/**
+	 * If we want to recurse into each subdirectory or not.
+	 */
+	bool mRecurse;
 
 	Signature getActiveSignature() const;
 
@@ -68,7 +72,7 @@ public:
 	iterator() : mRepository(nullptr) {
 	}
 
-	iterator(Repository& repository, Manifest manifest);
+	iterator(const Repository& repository, Manifest manifest, bool recurse = true);
 
 	iterator& operator++();
 

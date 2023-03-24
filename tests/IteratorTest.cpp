@@ -32,13 +32,13 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repository(repoPath);
 
-	SECTION("iterate over working digest should work") {
+	SECTION("iterate over working manifest should work") {
 
-		auto fetchDigestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		auto fetchManifestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
 
-		REQUIRE(fetchDigestResult.fetchResult.status == FetchStatus::SUCCESS);
+		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
-		iterator it(repository, *fetchDigestResult.manifest);
+		iterator it(repository, *fetchManifestResult.manifest);
 		for (; it != iterator(); ++it) {
 			paths.emplace_back((*it).path);
 			REQUIRE(it);
@@ -47,6 +47,30 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 		std::vector<std::filesystem::path> expected{
 				"bar/",
 				"bar/baz.txt",
+				"empty_directory/",
+				"empty_file",
+				"file with spaces in name",
+				"filè with nön äscií chårs",
+				"foo.txt"
+		};
+
+		REQUIRE_THAT(paths, Catch::Matchers::Equals(expected));
+	}
+
+	SECTION("iterate over working manifest without recurse should work") {
+
+		auto fetchManifestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+
+		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
+		std::vector<std::filesystem::path> paths;
+		iterator it(repository, *fetchManifestResult.manifest, false);
+		for (; it != iterator(); ++it) {
+			paths.emplace_back((*it).path);
+			REQUIRE(it);
+		}
+
+		std::vector<std::filesystem::path> expected{
+				"bar/",
 				"empty_directory/",
 				"empty_file",
 				"file with spaces in name",
