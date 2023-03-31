@@ -20,6 +20,9 @@ set(ABI_AGE 0)
 math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
 set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
+option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
+
+
 if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
     message(STATUS "Using Conan for dependency resolution.")
     include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
