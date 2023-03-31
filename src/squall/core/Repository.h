@@ -91,6 +91,13 @@ public:
 
 	std::filesystem::path resolvePathForSignature(const Signature& signature) const;
 
+	/**
+	 * Checks if the supplied name is something that is a valid named root name.
+	 * I.e. something that we will store in the filesystem as a root name.
+	 * This currently means that it's either an alphanumeric character, "_" or "-".
+	 * @param name
+	 * @return
+	 */
 	static bool isValidRootName(std::string_view name);
 
 protected:
@@ -99,6 +106,7 @@ protected:
 
 
 };
+
 }
 
 #endif //SQUALL_REPOSITORY_H
