@@ -1,25 +1,29 @@
 import os
 
-from conans import ConanFile, CMake, tools
+from conan import ConanFile
+from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.build import can_run
 
 
-class WfmathTestConan(ConanFile):
+class TestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "cmake"
+    generators = "CMakeDeps", "CMakeToolchain"
+
+    def requirements(self):
+        self.requires(self.tested_reference_str)
+        # It seems we need to add libsigcpp too, otherwise the include directories for it won't be correct.
+        # A bug in Conan 2.0.2 perhaps?
+        self.requires("libsigcpp/2.10.8")
 
     def build(self):
         cmake = CMake(self)
-        # Current dir is "test_package/build/<build_id>" and CMakeLists.txt is
-        # in "test_package"
         cmake.configure()
         cmake.build()
 
-    def imports(self):
-        self.copy("*.dll", dst="bin", src="bin")
-        self.copy("*.dylib*", dst="bin", src="lib")
-        self.copy('*.so*', dst='bin', src='lib')
+    def layout(self):
+        cmake_layout(self)
 
     def test(self):
-        if not tools.cross_building(self.settings):
-            os.chdir("bin")
-            self.run(".%sexample" % os.sep)
+        if can_run(self):
+            cmd = os.path.join(self.cpp.build.bindir, "example")
+            self.run(cmd, env="conanrun")

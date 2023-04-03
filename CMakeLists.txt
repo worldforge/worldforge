@@ -101,15 +101,6 @@ set(REQUIRES "sigc++-2.0")
 
 # Check for deps
 
-if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
-    message(STATUS "Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-    if (${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-        message(STATUS "Enabling position independent code")
-        set(CMAKE_POSITION_INDEPENDENT_CODE ${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-    endif ()
-endif ()
-
 find_package(sigc++ 2.0 REQUIRED)
 
 add_subdirectory(src)
