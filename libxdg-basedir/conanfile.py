@@ -1,9 +1,13 @@
-from conans import ConanFile, tools, AutoToolsBuildEnvironment
+from conan import ConanFile
+from conan.tools.gnu import Autotools, AutotoolsToolchain
 import os
 from pathlib import Path
 
+from conan.tools.layout import basic_layout
+from conan.tools.scm import Git
 
-class Lua(ConanFile):
+
+class Pkg(ConanFile):
     name = 'libxdg-basedir'
     version = '1.2.3'
     license = 'MIT'
@@ -18,17 +22,28 @@ class Lua(ConanFile):
     default_options = {"shared": False, "fPIC": True}
 
     def source(self):
-        git = tools.Git()
-        git.clone("https://github.com/devnev/libxdg-basedir.git", "libxdg-basedir-1.2.3")
+        git = Git(self)
+        git.clone(url="https://github.com/devnev/libxdg-basedir.git", target=".")
 
-    def build(self):
-        if self.settings.compiler == "Visual Studio":
+    def layout(self):
+        basic_layout(self)
+
+    def generate(self):
+        if self.settings.compiler == "msvc":
             # Just skip on win32
             return
-        self.run("./autogen.sh")
-        autotools = AutoToolsBuildEnvironment(self)
+        tc = AutotoolsToolchain(self)
+        tc.generate()
+
+    def build(self):
+        if self.settings.compiler == "msvc":
+            # Just skip on win32
+            return
+        autotools = Autotools(self)
+
         if self.options.fPIC:
             autotools.fpic = True
+        autotools.autoreconf()
         autotools.configure()
         autotools.make()
         autotools.install()
@@ -43,7 +58,7 @@ class Lua(ConanFile):
             os.remove(str(filename))
 
     def package_info(self):
-        if self.settings.compiler != "Visual Studio":
+        if self.settings.compiler != "msvc":
             self.cpp_info.libs = ['xdg-basedir']
 
     def configure(self):

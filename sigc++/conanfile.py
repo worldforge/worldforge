@@ -1,9 +1,13 @@
-from conans import ConanFile, tools, MSBuild, AutoToolsBuildEnvironment
-from conans.tools import Version
-from conans.errors import ConanException
+from conan import ConanFile, tools
+from conan.errors import ConanException
 import os
 import sys
-
+from conan.tools.layout import basic_layout
+from conan.tools.microsoft import MSBuild, MSBuildToolchain
+from conan.tools.scm import Version
+from conan.tools.gnu import Autotools, AutotoolsToolchain
+from conan.tools.files import get
+from conan.tools.files import patch
 
 class SigcppConan(ConanFile):
     name = "sigc++"
@@ -29,7 +33,7 @@ class SigcppConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
-        if self.settings.compiler == "Visual Studio":
+        if self.settings.compiler == "msvc":
             del self.options.shared
 
     @property
@@ -56,46 +60,44 @@ class SigcppConan(ConanFile):
 
     def build_requirements(self):
         if self.settings.os == "Windows" and self.is_python2:
-            self.build_requires("7z_installer/1.0@conan/stable")
+            self.tool_requires("7z_installer/1.0@conan/stable")
 
     def source(self):
-        tools.download("https://download.gnome.org/sources/libsigc++/{}/{}.tar.xz".format(
+        get(self, "https://download.gnome.org/sources/libsigc++/{}/{}.tar.xz".format(
             self.version.rpartition(".")[0],
             self.sourcename,
-        ), self.sourcename + ".tar.xz")
+        ), strip_root=True)
 
-        if self.is_python2:
-            if self.settings.os == "Windows":
-                self.run("7z x {}.tar.xz".format(self.sourcename))
-                os.remove(self.sourcename + ".tar.xz")
-            else:
-                self.run("xz -d {}.tar.xz".format(self.sourcename))
-            tools.unzip(self.sourcename + ".tar")
-            os.remove(self.sourcename + ".tar")
+        patch(self, patch_file="msvc.patch")
+
+    def layout(self):
+        basic_layout(self, src_folder=self.sourcename)
+
+    def generate(self):
+        if self.settings.compiler == "msvc":
+            tc = MSBuildToolchain(self)
+            tc.generate()
         else:
-            tools.unzip(self.sourcename + ".tar.xz")
-            os.remove(self.sourcename + ".tar.xz")
-
-        tools.patch(base_path=self.sourcename, patch_file="msvc.patch")
+            tc = AutotoolsToolchain(self)
+            tc.generate()
 
     def build(self):
-        with tools.chdir(self.sourcename):
-            if self.settings.compiler == "Visual Studio":
-                msbuild = MSBuild(self)
-                msbuild.build(os.path.join("MSVC_Net2013", "libsigc++2.sln"),
-                              platforms=self.platforms,
-                              toolset=self.settings.compiler.toolset)
-            else:
-                autotools = AutoToolsBuildEnvironment(self)
-                args = (['--enable-shared', '--disable-static']
-                        if self.options.shared else
-                        ['--enable-static', '--disable-shared'])
-                autotools.configure(args=args)
-                autotools.make()
-                autotools.install()
+        if self.settings.compiler == "msvc":
+            msbuild = MSBuild(self)
+            msbuild.build(os.path.join("MSVC_Net2013", "libsigc++2.sln"),
+                          platforms=self.platforms,
+                          toolset=self.settings.compiler.toolset)
+        else:
+            autotools = Autotools(self)
+            args = (['--enable-shared', '--disable-static']
+                    if self.options.shared else
+                    ['--enable-static', '--disable-shared'])
+            autotools.configure(args=args)
+            autotools.make()
+            autotools.install()
 
     def package(self):
-        if self.settings.compiler == "Visual Studio":
+        if self.settings.compiler == "msvc":
             self.copy("*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]))
             if self.settings.build_type == "Debug":
                 os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-d-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
