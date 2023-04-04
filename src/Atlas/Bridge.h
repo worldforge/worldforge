@@ -8,6 +8,7 @@
 #define ATLAS_BRIDGE_H
 
 #include <string>
+#include <cinttypes>
 
 /** The Atlas namespace.
 

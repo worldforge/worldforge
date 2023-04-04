@@ -13,6 +13,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <cinttypes>
 
 namespace Atlas { namespace Message {
 
