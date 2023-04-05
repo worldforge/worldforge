@@ -203,7 +203,7 @@ void Room::sight(const RootEntity &room)
     
     if (room->hasAttr("people"))
     {
-        const Atlas::Message::ListType& people = room->getAttr("people").asList();
+        auto people = room->getAttr("people").asList();
         for (const auto & person : people) {
 			appearance(person.asString());
         }
@@ -213,7 +213,7 @@ void Room::sight(const RootEntity &room)
     
     if (room->hasAttr("rooms"))
     {
-        const Atlas::Message::ListType& rooms = room->getAttr("rooms").asList();
+        auto rooms = room->getAttr("rooms").asList();
         for (const auto & item : rooms)
         {
             m_subrooms.push_back(new Room(m_lobby, item.asString()));
