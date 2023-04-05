@@ -28,7 +28,7 @@ target_link_libraries(squallcore PUBLIC
         spdlog::spdlog)
 
 
-find_package(CURL 7 REQUIRED)
+find_package(CURL REQUIRED)
 set(CURL_SOURCE_FILES
         squall/curl/CurlProvider.cpp)
 set(CURL_HEADER_FILES

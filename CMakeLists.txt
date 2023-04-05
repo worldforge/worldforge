@@ -22,20 +22,6 @@ set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
 option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
 
-
-if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
-    message(STATUS "Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-    if (${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-        message(STATUS "Enabling position independent code")
-        set(CMAKE_POSITION_INDEPENDENT_CODE ${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-    endif ()
-endif ()
-
-#set(THREADS_PREFER_PTHREAD_FLAG ON)
-#find_package(Threads REQUIRED)
-#link_libraries(Threads::Threads)
-
 find_package(Catch2 REQUIRED)
 
 # This macro defines a library
