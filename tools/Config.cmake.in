@@ -17,4 +17,7 @@ set_and_check(@PROJECT_NAME@_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
 
 include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
 
+include(CMakeFindDependencyMacro)
+find_dependency(wfmath)
+
 check_required_components(@PROJECT_NAME@)
