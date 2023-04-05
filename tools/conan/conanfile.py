@@ -1,4 +1,10 @@
-from conans import ConanFile, CMake, tools
+import os
+
+from conan import ConanFile
+from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain, CMakeDeps
+from conan.tools.files import copy, update_conandata, collect_libs
+from conan.tools.scm import Git
+from conans.errors import ConanException
 
 
 class WfmathConan(ConanFile):
@@ -13,26 +19,40 @@ class WfmathConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    generators = "cmake_find_package", "cmake_paths"
+    user = "worldforge"
 
-    scm = {
-        "type": "git",
-        "url": "https://github.com/worldforge/wfmath.git",
-        "revision": "auto"
-    }
+    def export(self):
+        git = Git(self, self.recipe_folder)
+        try:
+            scm_url, scm_commit = git.get_url_and_commit()
+            update_conandata(self, {"sources": {"commit": scm_commit, "url": scm_url}})
+        except ConanException:
+            pass
 
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.configure(source_folder=".")
-        return cmake
+    def generate(self):
+        CMakeDeps(self).generate()
+        CMakeToolchain(self).generate()
+
+    def export_sources(self):
+        folder = os.path.join(self.recipe_folder, "../..")
+        copy(self, "*", folder, self.export_sources_folder, excludes=["*build*"])
+
+    def config_options(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
+
+    def layout(self):
+        self.folders.root = "../.."
+        cmake_layout(self)
 
     def build(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
+        cmake.configure()
         cmake.build()
 
-    def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
-
     def package(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
         cmake.install()
+
+    def package_info(self):
+        self.cpp_info.libs = collect_libs(self)

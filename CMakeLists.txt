@@ -37,16 +37,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 set(DESCRIPTION "A math library for the Worldforge system.")
 
-if (EXISTS "${CMAKE_BINARY_DIR}/conan_paths.cmake")
-    message(STATUS "Using Conan for dependency resolution.")
-    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-    if (${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-        message(STATUS "Enabling position independent code")
-        set(CMAKE_POSITION_INDEPENDENT_CODE ${CONAN_CMAKE_POSITION_INDEPENDENT_CODE})
-    endif ()
-endif ()
-
-
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
