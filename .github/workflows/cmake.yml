@@ -9,8 +9,6 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  # This makes it correctly use C++11 API on GCC by default.
-  CONAN_V2_MODE: 1
   CONAN_REVISIONS_ENABLED: 1
   CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
@@ -21,7 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022, macos-11, macos-12 ]
+#        os: [ ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022, macos-11, macos-12 ]
+        os: [ ubuntu-20.04, ubuntu-22.04, macos-11, macos-12 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -36,9 +35,8 @@ jobs:
         run: |
           pip install -r .github/workflows/requirements.txt
           conan --version
-          conan user
+          conan profile detect
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-          conan profile new default --detect
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{github.workspace}}/build
@@ -78,7 +76,7 @@ jobs:
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
-            conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
-            conan create ../tools/conan worldforge/testing -pr default
-            conan upload "*" -r worldforge -c --all
+            conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+            conan create ../tools/conan -pr default
+            conan upload "*" -r worldforge -c
           fi
