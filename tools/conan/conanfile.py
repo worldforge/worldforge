@@ -98,9 +98,3 @@ class AtlasConan(ConanFile):
         self.cpp_info.components["AtlasFilters"].names["cmake_find_package"] = "AtlasFilters"
         self.cpp_info.components["AtlasFilters"].names["cmake_find_package_multi"] = "AtlasFilters"
         self.cpp_info.components["AtlasFilters"].requires = ["Atlas"]
-
-
-
-
-        # Since the libraries are interdependent we must provide them in correct order.
-        # self.cpp_info.libs = ["AtlasNet", "AtlasObjects", "AtlasFilters", "AtlasCodecs", "AtlasMessage", "Atlas"]
