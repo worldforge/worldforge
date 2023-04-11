@@ -15,14 +15,12 @@ Alternatively you can use [Conan](https://www.conan.io) to install all dependenc
 
 ```bash
 conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-mkdir build && cd build
-conan install ../tools/conan --build missing
-cmake ..
-make -j all install
+conan install tools/conan --build missing
+cmake --preset conan-release
+cmake --build --preset conan-release
 ```
 
 Otherwise the library can most easily be built through the following commands.
-
 ```bash
 mkdir build && cd build
 cmake ..
@@ -37,12 +35,24 @@ The test suite can be built and run using the ```check``` target. For example:
 make check
 ```
 
+or 
+
+```bash
+cmake --build --preset conan-release --target check
+```
+
 ### API documentation
 
 If Doxygen is available API documentation can be generated using the ```dox``` target. For example:
 
 ```bash
 make dox
+```
+
+or 
+
+```bash
+cmake --build --preset conan-release --target dox
 ```
 
 ## Version
