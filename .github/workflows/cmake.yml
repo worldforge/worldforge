@@ -13,6 +13,7 @@ env:
   CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  PROFILE_CONAN: conan-release
 
 jobs:
   build:
@@ -23,6 +24,11 @@ jobs:
         os: [ ubuntu-20.04, ubuntu-22.04, macos-11, macos-12 ]
 
     steps:
+      - name: Workaround preset name difference
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
 
       - uses: actions/setup-python@v4
@@ -34,7 +40,6 @@ jobs:
         shell: bash
         run: |
           pip install -r .github/workflows/requirements.txt
-          conan --version
           conan profile detect
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 
@@ -47,15 +52,15 @@ jobs:
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        run: cmake --preset conan-release . -DBUILD_TESTING=ON
+        run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON
 
       - name: Build
         shell: bash
-        run: cmake --build --preset conan-release
+        run: cmake --build --preset $PROFILE_CONAN
 
       - name: Test
         shell: bash
-        run: ctest --preset conan-release --output-on-failure
+        run: ctest --preset $PROFILE_CONAN --output-on-failure
 
       - name: Upload artifacts
         shell: bash
