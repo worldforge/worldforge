@@ -7,12 +7,11 @@ on:
       - master
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
   CONAN_REVISIONS_ENABLED: 1
   CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  PROFILE_CONAN: conan-release
 
 jobs:
   build:
@@ -23,6 +22,11 @@ jobs:
         os: [ ubuntu-20.04, ubuntu-22.04, macos-11, macos-12 ]
 
     steps:
+      - name: Workaround preset name difference
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
+
       - uses: actions/checkout@v3
 
       - uses: actions/setup-python@v4
@@ -34,49 +38,34 @@ jobs:
         shell: bash
         run: |
           pip install -r .github/workflows/requirements.txt
-          conan --version
           conan profile detect
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 
-      - name: Create Build Environment
-        run: cmake -E make_directory ${{github.workspace}}/build
-
       - name: Have Conan install packages
-        working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install ../tools/conan -pr default --build=missing --update
+          conan install tools/conan -pr default --build=missing --update
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        working-directory: ${{github.workspace}}/build
-        # Note the current convention is to use the -S and -B options here to specify source
-        # and build directories, but this is only available with CMake 3.13 and higher.
-        # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=ON
+        run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON
 
       - name: Build
-        working-directory: ${{github.workspace}}/build
         shell: bash
-        # Execute the build.  You can specify a specific target with "--target <NAME>"
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build --preset $PROFILE_CONAN
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
         shell: bash
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C $BUILD_TYPE --output-on-failure
+        run: ctest --preset $PROFILE_CONAN --output-on-failure
 
       - name: Upload artifacts
-        working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
             conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
-            conan create ../tools/conan -pr default
+            conan create tools/conan -pr default
             conan upload "*" -r worldforge -c
           fi
