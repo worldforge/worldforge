@@ -7,10 +7,6 @@ on:
       - master
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
-  # This makes it correctly use C++11 API on GCC by default.
-  CONAN_V2_MODE: 1
   CONAN_REVISIONS_ENABLED: 1
   CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
@@ -22,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022,macos-11, macos-12 ]
+        os: [ ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022, macos-11, macos-12 ]
 
     steps:
       - uses: actions/checkout@v3
@@ -43,27 +39,24 @@ jobs:
         shell: bash
         run: |
           pip install -r .github/workflows/requirements.txt
-          conan --version
-          conan user
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-          conan profile new default --detect
+          conan profile detect
 
       - name: Build artifacts
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
-            conan remove "sigc++/*" --force
-            conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ worldforge/stable -pr default
+            conan remove "readline/*" --force
+            conan install ./readline -g deploy --build missing && conan create ./readline -pr default
             conan remove "libxdg-basedir/*" --force
-            conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir worldforge/stable -pr default
+            conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir -pr default
             conan remove "pcre/*" --force
             conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build missing
             conan remove "cegui/*" --force
-            conan install ./cegui -g deploy --build missing && conan create ./cegui worldforge/stable -pr default
+            conan install ./cegui -g deploy --build missing && conan create ./cegui -pr default
             conan remove "ogre/*" --force
-            conan install ./ogre -g deploy --build missing && conan create ./ogre worldforge/stable -pr default
+            conan install ./ogre -g deploy --build missing && conan create ./ogre -pr default
 
-            conan user --clean
-            conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
-            conan upload "*" -r worldforge -c --all
+            conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+            conan upload "*" -r worldforge -c
           fi
