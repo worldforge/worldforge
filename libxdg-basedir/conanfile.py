@@ -20,6 +20,7 @@ class Pkg(ConanFile):
         "fPIC": [True, False],
     }
     default_options = {"shared": False, "fPIC": True}
+    user = "worldforge"
 
     def source(self):
         git = Git(self)
