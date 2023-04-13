@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.0)
 
 option(BUILD_SHARED_LIBS "Build shared library if true, else build static library" OFF)
 
-include(../conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #Get the sources from Makefile.srcs
