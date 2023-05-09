@@ -19,6 +19,7 @@ class WfmathConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
+    generators = "CMakeToolchain"
     user = "worldforge"
 
     def export(self):
@@ -28,10 +29,6 @@ class WfmathConan(ConanFile):
             update_conandata(self, {"sources": {"commit": scm_commit, "url": scm_url}})
         except ConanException:
             pass
-
-    def generate(self):
-        CMakeDeps(self).generate()
-        CMakeToolchain(self).generate()
 
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")
