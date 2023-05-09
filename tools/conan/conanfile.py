@@ -36,7 +36,6 @@ class AtlasConan(ConanFile):
         copy(self, "*", folder, self.export_sources_folder, excludes=["*build*"])
 
     def generate(self):
-        CMakeDeps(self).generate()
         tc = CMakeToolchain(self)
         tc.variables['ATLAS_GENERATE_OBJECTS'] = False
         tc.generate()
