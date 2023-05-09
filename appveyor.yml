@@ -12,15 +12,15 @@ build_script:
       conan --version
       conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
            
-      conan remove "freeimage/*" --force
+      conan remove "freeimage/*"
       conan create "freeimage" --build missing
-      conan remove "libxdg-basedir/*" --force
+      conan remove "libxdg-basedir/*"
       conan create "libxdg-basedir" --build missing
-      conan remove "pcre/*" --force
+      conan remove "pcre/*"
       conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --build pcre
-      conan remove "cegui/*" --force
+      conan remove "cegui/*"
       conan create "cegui" --build missing
-      conan remove "ogre/*" --force
+      conan remove "ogre/*"
       conan create "ogre" --build missing
       conan remote login worldforge %CONAN_LOGIN_USERNAME% -p %CONAN_PASSWORD%
       conan upload "*" -r worldforge -c --all
