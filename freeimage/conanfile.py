@@ -2,13 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-import shutil
 
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
-from conan.tools.files import copy, update_conandata, collect_libs, get, replace_in_file, patch
-from conan.tools.scm import Git
-from conans.errors import ConanException
+from conan.tools.files import copy, collect_libs, get, replace_in_file, patch
 
 
 class FreeImageConan(ConanFile):
