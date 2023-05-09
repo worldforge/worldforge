@@ -19,7 +19,7 @@ class MercatorConan(ConanFile):
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     user = "worldforge"
-    generators = "CMakeToolchain"
+    generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
         self.requires("wfmath/1.0.3@worldforge")
