@@ -81,7 +81,7 @@ protected:
 
   int flushOutBuffer()
   {
-    int num = pptr() - pbase();
+    auto num = (int)(pptr() - pbase());
     std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
     m_streamBuffer.sputn(encoded.c_str(), (long) encoded.size());
     pbump(-num);
