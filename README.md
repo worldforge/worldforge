@@ -20,5 +20,5 @@ Note that some packages require that Conan is run with Python 3.
 
 To install any of these packages locally, you would in most cases do:
 ```bash
-conan create ./<package> worldforge/stable --build missing
+conan create ./<package> --build missing
 ```

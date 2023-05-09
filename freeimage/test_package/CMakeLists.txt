@@ -1,9 +1,8 @@
-project(test_package)
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.12)
+project(PackageTest CXX)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+find_package(freeimage CONFIG REQUIRED)
 
-add_executable(${PROJECT_NAME} test_package.cpp)
-target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+add_executable(example test_package.cpp)
+target_link_libraries(example freeimage::freeimage)
 configure_file(test.png test.png COPYONLY)
