@@ -1,7 +1,7 @@
 import os
 
 from conan import ConanFile
-from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
 from conan.tools.files import copy, update_conandata, collect_libs
 from conan.tools.scm import Git
 from conans.errors import ConanException
@@ -19,7 +19,7 @@ class MercatorConan(ConanFile):
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     user = "worldforge"
-    generators = "CMakeDeps", "CMakeToolchain"
+    generators = "CMakeToolchain"
 
     def requirements(self):
         self.requires("wfmath/1.0.3@worldforge")
