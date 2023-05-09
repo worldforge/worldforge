@@ -19,7 +19,7 @@ class VarconfConan(ConanFile):
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     requires = ["libsigcpp/2.10.8"]
-    generators = "CMakeToolchain", "CMakeDeps"
+    generators = "CMakeToolchain"
     user = "worldforge"
 
     def export(self):
