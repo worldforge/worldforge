@@ -23,7 +23,7 @@ class ErisConan(ConanFile):
                 "wfmath/1.0.3@worldforge",
                 "boost/1.81.0"]
     user = "worldforge"
-    generators = "CMakeToolchain"
+    generators = "CMakeDeps", "CMakeToolchain"
 
     def export(self):
         git = Git(self, self.recipe_folder)
