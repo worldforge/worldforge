@@ -3,7 +3,7 @@ import os
 
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout, CMakeDeps, CMakeToolchain
-from conan.tools.files import replace_in_file, get, collect_libs, patch, rm
+from conan.tools.files import replace_in_file, get, collect_libs, patch
 
 
 class CeguiConan(ConanFile):
@@ -31,26 +31,25 @@ class CeguiConan(ConanFile):
         "pcre/*:with_unicode_properties": True,
         "pcre/*:with_bzip2": False,
         # Disabled for now since it doesn't build with GCC 13. And we're not using EXR images currently.
-        "freeimage/*:with_openexr": False
+        "freeimage/*:with_openexr": False,
+        "freetype/*:with_brotli": False,
+        "freetype/*:with_bzip2": False,
+        "freetype/*:with_png": False,
+        "freetype/*:with_zlib": False
     }
     user = "worldforge"
+    package_type = "library"
 
-    requires = (
-        "freetype/2.12.1",
-        "freeimage/3.18.0@worldforge",
-        "tinyxml/2.6.2",
-        "pcre/8.45",
-        "libpng/1.6.39",
-        "bzip2/1.0.8",
-        "libiconv/1.17",
-        "zlib/1.2.13"
-    )
-
-    # short_paths = True
+    def requirements(self):
+        self.requires("freetype/2.13.0")
+        self.requires("freeimage/3.18.0@worldforge")
+        self.requires("tinyxml/2.6.2")
+        self.requires("pcre/8.45")
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables['CMAKE_CXX_FLAGS'] = "-fpermissive" #Need to allow for comparison between pointer and integer in TinyXML code
+        tc.variables[
+            'CMAKE_CXX_FLAGS'] = "-fpermissive"  # Need to allow for comparison between pointer and integer in TinyXML code
         tc.variables['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         tc.variables['CEGUI_SAMPLES_ENABLED'] = False
         tc.variables['CEGUI_BUILD_PYTHON_MODULES'] = False
@@ -83,7 +82,9 @@ class CeguiConan(ConanFile):
             tc.variables['CEGUI_BUILD_SHARED_LIBS_WITH_STATIC_DEPENDENCIES'] = 'ON'
 
         tc.generate()
-#        CMakeDeps(self).generate()
+
+        #Don't use CMake deps generator
+        # CMakeDeps(self).generate()
 
     def layout(self):
         cmake_layout(self)
@@ -92,7 +93,6 @@ class CeguiConan(ConanFile):
         version_hyphenated = self.version.replace(".", "-")
         source_url = "https://github.com/cegui/cegui/archive"
         get(self, "{0}/v{1}.zip".format(source_url, version_hyphenated), strip_root=True)
-
 
     def build(self):
         self._apply_patches('patches', self.folders.source_folder)
@@ -104,7 +104,6 @@ class CeguiConan(ConanFile):
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
             """)
-        #rm(self, "Find*.cmake", os.path.join(self.folders.source_folder, "cmake"))
 
         cmake = CMake(self)
         cmake.configure()
@@ -128,4 +127,3 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
                 patch_file = os.path.join(root, filename)
                 dest_path = os.path.join(dest, os.path.relpath(root, source))
                 patch(self, base_path=dest_path, patch_file=patch_file)
-        # os.remove(os.path.join(self.folders.source_folder, "cmake", "FindFreetype.cmake"))

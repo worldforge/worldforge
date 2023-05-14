@@ -1,8 +1,8 @@
 import os
 
-from conan import ConanFile, tools
+from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
-from conan.tools.files import copy, collect_libs, get, replace_in_file, patch
+from conan.tools.files import get
 from conan.tools.system.package_manager import Apt
 
 
@@ -14,17 +14,23 @@ class OgreConan(ConanFile):
 
     settings = 'os', 'arch', 'compiler', 'build_type'
     options = {'shared': [True, False]}
-    default_options = {"shared": False}
+    default_options = {
+        "shared": False,
+        "freetype/*:with_brotli": False,
+        "freetype/*:with_bzip2": False,
+        "freetype/*:with_png": False,
+        "freetype/*:with_zlib": False
+    }
+
     url = 'https://www.ogre3d.org'
     license = 'MIT'
     description = ("Object-Oriented Graphics Rendering Engine (OGRE) "
                    "is a scene-oriented, real-time, 3D rendering engine.")
     short_paths = False
-    requires = ["bzip2/1.0.8",
-                "zlib/1.2.13",
-                "freetype/2.12.1",
+    requires = ["freetype/2.13.0",
                 "freeimage/3.18.0@worldforge"]
     user = "worldforge"
+    package_type = "library"
 
     def layout(self):
         cmake_layout(self)
@@ -80,7 +86,6 @@ class OgreConan(ConanFile):
         tc.variables['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
         tc.variables['OGRE_NODELESS_POSITIONING'] = 'OFF'
         tc.variables['OGRE_CONFIG_THREADS'] = '2'
-        tc.variables['CMAKE_TOOLCHAIN_FILE'] = 'conan_paths.cmake'
         tc.variables['OGRE_STATIC'] = not self.options.shared
 
         if self.settings.os == "Windows":
@@ -131,3 +136,6 @@ class OgreConan(ConanFile):
                                      "include/OGRE/Terrain",
                                      "include/OGRE/MeshLodGenerator",
                                      "include/OGRE/RTShaderSystem"]
+
+        self.cpp_info.set_property("cmake_find_mode", "none")  # Do NOT generate anyfiles
+        self.cpp_info.builddirs.append(os.path.join("lib", "OGRE", "cmake"))

@@ -2,5 +2,5 @@
 #include <CEGUI/String.h>
 
 int main() {
-	CEGUI::String tested();
+	CEGUI::String tested;
 }
