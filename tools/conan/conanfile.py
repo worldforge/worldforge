@@ -18,9 +18,12 @@ class VarconfConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    requires = ["libsigcpp/2.10.8"]
     generators = "CMakeDeps", "CMakeToolchain"
     user = "worldforge"
+    package_type = "library"
+
+    def requirements(self):
+        self.requires("libsigcpp/2.10.8", transitive_headers=True)
 
     def export(self):
         git = Git(self, self.recipe_folder)

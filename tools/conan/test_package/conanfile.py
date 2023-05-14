@@ -11,9 +11,6 @@ class TestConan(ConanFile):
 
     def requirements(self):
         self.requires(self.tested_reference_str)
-        # It seems we need to add libsigcpp too, otherwise the include directories for it won't be correct.
-        # A bug in Conan 2.0.2 perhaps?
-        self.requires("libsigcpp/2.10.8")
 
     def build(self):
         cmake = CMake(self)
