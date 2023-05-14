@@ -20,9 +20,10 @@ class MercatorConan(ConanFile):
     default_options = {"shared": False, "fPIC": True}
     user = "worldforge"
     generators = "CMakeDeps", "CMakeToolchain"
+    package_type = "library"
 
     def requirements(self):
-        self.requires("wfmath/1.0.3@worldforge")
+        self.requires("wfmath/1.0.3@worldforge", transitive_headers=True)
 
     def export(self):
         git = Git(self, self.recipe_folder)
