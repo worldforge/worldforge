@@ -21,6 +21,7 @@ class WfmathConan(ConanFile):
     default_options = {"shared": False, "fPIC": True}
     generators = "CMakeToolchain"
     user = "worldforge"
+    package_type = "library"
 
     def export(self):
         git = Git(self, self.recipe_folder)
