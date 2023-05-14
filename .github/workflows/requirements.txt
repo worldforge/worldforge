@@ -1,1 +1,2 @@
 conan
+ninja
