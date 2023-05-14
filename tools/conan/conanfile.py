@@ -1,7 +1,7 @@
 import os
 
 from conan import ConanFile
-from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
+from conan.tools.cmake import CMake, cmake_layout
 from conan.tools.files import copy, update_conandata, collect_libs
 from conan.tools.scm import Git
 from conans.errors import ConanException
@@ -18,12 +18,15 @@ class ErisConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    requires = ["libsigcpp/2.10.8",
-                "atlas/0.7.0@worldforge",
-                "wfmath/1.0.3@worldforge",
-                "boost/1.81.0"]
     user = "worldforge"
     generators = "CMakeDeps", "CMakeToolchain"
+    package_type = "library"
+
+    def requirements(self):
+        self.requires("libsigcpp/2.10.8", transitive_headers=True)
+        self.requires("atlas/0.7.0@worldforge", transitive_headers=True)
+        self.requires("wfmath/1.0.3@worldforge", transitive_headers=True)
+        self.requires("boost/1.81.0", transitive_headers=True)
 
     def export(self):
         git = Git(self, self.recipe_folder)
