@@ -22,6 +22,7 @@ class AtlasConan(ConanFile):
     requires = ["bzip2/1.0.8",
                 "zlib/1.2.13"]
     user = "worldforge"
+    package_type = "library"
 
     def export(self):
         git = Git(self, self.recipe_folder)
