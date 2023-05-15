@@ -138,4 +138,7 @@ class OgreConan(ConanFile):
                                      "include/OGRE/RTShaderSystem"]
 
         self.cpp_info.set_property("cmake_find_mode", "none")  # Do NOT generate anyfiles
-        self.cpp_info.builddirs.append(os.path.join("lib", "OGRE", "cmake"))
+        if self.settings.os == "Macos":
+            self.cpp_info.builddirs.append("CMake")
+        else:
+            self.cpp_info.builddirs.append(os.path.join("lib", "OGRE", "cmake"))
