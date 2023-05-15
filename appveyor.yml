@@ -16,8 +16,6 @@ build_script:
       conan create "sigc++" --build missing
       conan remove "freeimage/*"
       conan create "freeimage" --build missing
-      conan remove "libxdg-basedir/*"
-      conan create "libxdg-basedir" --build missing
       conan remove "cegui/*"
       conan create "cegui" --build missing
       conan remove "ogre/*"
