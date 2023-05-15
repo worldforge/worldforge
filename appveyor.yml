@@ -18,8 +18,6 @@ build_script:
       conan create "freeimage" --build missing
       conan remove "libxdg-basedir/*"
       conan create "libxdg-basedir" --build missing
-      conan remove "pcre/*"
-      conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --build pcre
       conan remove "cegui/*"
       conan create "cegui" --build missing
       conan remove "ogre/*"

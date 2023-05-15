@@ -54,8 +54,6 @@ jobs:
             conan create ./sigc++ -pr default --build missing
             conan remove "freeimage/*"
             conan create ./freeimage -pr default --build missing
-            conan remove "pcre/*"
-            conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build missing
             conan remove "cegui/*"
             conan create ./cegui -pr default --build missing
             conan remove "ogre/*"
