@@ -46,20 +46,20 @@ jobs:
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
-            conan remove "readline/*" --force
-            conan install ./readline -g deploy --build missing && conan create ./readline -pr default
-            conan remove "libxdg-basedir/*" --force
-            conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir -pr default
-            conan remove "sigc++/*" --force
-            conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ -pr default
-            conan remove "freeimage/*" --force
-            conan install ./freeimage -g deploy --build missing && conan create ./freeimage -pr default
-            conan remove "pcre/*" --force
+            conan remove "readline/*"
+            conan create ./readline -pr default
+            conan remove "libxdg-basedir/*"
+            conan create ./libxdg-basedir -pr default
+            conan remove "sigc++/*"
+            conan create ./sigc++ -pr default
+            conan remove "freeimage/*"
+            conan create ./freeimage -pr default
+            conan remove "pcre/*"
             conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build missing
-            conan remove "cegui/*" --force
-            conan install ./cegui -g deploy --build missing && conan create ./cegui -pr default
-            conan remove "ogre/*" --force
-            conan install ./ogre -g deploy --build missing && conan create ./ogre -pr default
+            conan remove "cegui/*"
+            conan create ./cegui -pr default
+            conan remove "ogre/*"
+            conan create ./ogre -pr default
 
             conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
             conan upload "*" -r worldforge -c
