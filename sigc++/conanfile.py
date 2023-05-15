@@ -6,7 +6,7 @@ from conan.tools.layout import basic_layout
 from conan.tools.microsoft import MSBuild, MSBuildToolchain
 from conan.tools.scm import Version
 from conan.tools.gnu import Autotools, AutotoolsToolchain
-from conan.tools.files import get
+from conan.tools.files import get, copy, collect_libs
 from conan.tools.files import patch
 
 class SigcppConan(ConanFile):
@@ -29,6 +29,8 @@ class SigcppConan(ConanFile):
     sourcename = "libsigc++-{}".format(version)
     platforms = {"x86": "Win32",
                  "x86_64": "x64"}
+    user = "worldforge"
+    package_type = "library"
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -98,17 +100,17 @@ class SigcppConan(ConanFile):
 
     def package(self):
         if self.settings.compiler == "msvc":
-            self.copy("*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]))
+            copy(self, "*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]), dst=self.package_folder)
             if self.settings.build_type == "Debug":
                 os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-d-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
             else:
                 os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
             #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.dll'), os.path.join(self.package_folder, 'bin/sigc-2.0.dll'))
             #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.pdb'), os.path.join(self.package_folder, 'bin/sigc-2.0.pdb'))
-            
-        self.copy("COPYING", dst="license", src=self.sourcename, keep_path=False)
+
+        copy(self, "COPYING", dst="license", src=self.sourcename, keep_path=False)
 
     def package_info(self):
         self.cpp_info.includedirs = [os.path.join("include", "sigc++-2.0"),
                                      os.path.join("lib", "sigc++-2.0", "include")]
-        self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.libs = collect_libs(self)

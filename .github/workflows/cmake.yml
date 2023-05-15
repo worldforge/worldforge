@@ -50,6 +50,8 @@ jobs:
             conan install ./readline -g deploy --build missing && conan create ./readline -pr default
             conan remove "libxdg-basedir/*" --force
             conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir -pr default
+            conan remove "sigc++/*" --force
+            conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ -pr default
             conan remove "freeimage/*" --force
             conan install ./freeimage -g deploy --build missing && conan create ./freeimage -pr default
             conan remove "pcre/*" --force
