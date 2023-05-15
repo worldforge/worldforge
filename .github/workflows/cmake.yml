@@ -46,10 +46,12 @@ jobs:
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
-            conan remove "readline/*"
-            conan create ./readline -pr default --build missing
-            conan remove "libxdg-basedir/*"
-            conan create ./libxdg-basedir -pr default --build missing
+            if [[ "$ImageOS" != win* ]]; then
+              conan remove "readline/*"
+              conan create ./readline -pr default --build missing
+              conan remove "libxdg-basedir/*"
+              conan create ./libxdg-basedir -pr default --build missing
+            fi
             conan remove "sigc++/*"
             conan create ./sigc++ -pr default --build missing
             conan remove "freeimage/*"
