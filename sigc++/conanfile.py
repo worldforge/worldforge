@@ -1,13 +1,12 @@
-from conan import ConanFile, tools
-from conan.errors import ConanException
 import os
-import sys
-from conan.tools.layout import basic_layout
-from conan.tools.microsoft import MSBuild, MSBuildToolchain
-from conan.tools.scm import Version
-from conan.tools.gnu import Autotools, AutotoolsToolchain
+
+from conan import ConanFile
 from conan.tools.files import get, copy, collect_libs
 from conan.tools.files import patch
+from conan.tools.gnu import Autotools, AutotoolsToolchain
+from conan.tools.layout import basic_layout
+from conan.tools.microsoft import MSBuild, MSBuildToolchain
+
 
 class SigcppConan(ConanFile):
     name = "sigc++"
@@ -35,8 +34,6 @@ class SigcppConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
-        if self.settings.compiler == "msvc":
-            del self.options.shared
 
     def source(self):
         get(self, "https://download.gnome.org/sources/libsigc++/{}/{}.tar.xz".format(
@@ -76,11 +73,13 @@ class SigcppConan(ConanFile):
         if self.settings.compiler == "msvc":
             copy(self, "*", src=os.path.join("vs12", self.platforms[str(self.settings.arch)]), dst=self.package_folder)
             if self.settings.build_type == "Debug":
-                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-d-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
+                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-d-2_0.lib'),
+                          os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
             else:
-                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'), os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
-            #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.dll'), os.path.join(self.package_folder, 'bin/sigc-2.0.dll'))
-            #os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.pdb'), os.path.join(self.package_folder, 'bin/sigc-2.0.pdb'))
+                os.rename(os.path.join(self.package_folder, 'lib/sigc-vc120-2_0.lib'),
+                          os.path.join(self.package_folder, 'lib/sigc-2.0.lib'))
+            # os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.dll'), os.path.join(self.package_folder, 'bin/sigc-2.0.dll'))
+            # os.rename(os.path.join(self.package_folder, 'bin/sigc-vc120-2_0.pdb'), os.path.join(self.package_folder, 'bin/sigc-2.0.pdb'))
 
         copy(self, "COPYING", dst="license", src=self.sourcename, keep_path=False)
 
