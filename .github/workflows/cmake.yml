@@ -47,19 +47,19 @@ jobs:
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             conan remove "readline/*"
-            conan create ./readline -pr default
+            conan create ./readline -pr default --build missing
             conan remove "libxdg-basedir/*"
-            conan create ./libxdg-basedir -pr default
+            conan create ./libxdg-basedir -pr default --build missing
             conan remove "sigc++/*"
-            conan create ./sigc++ -pr default
+            conan create ./sigc++ -pr default --build missing
             conan remove "freeimage/*"
-            conan create ./freeimage -pr default
+            conan create ./freeimage -pr default --build missing
             conan remove "pcre/*"
             conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build missing
             conan remove "cegui/*"
-            conan create ./cegui -pr default
+            conan create ./cegui -pr default --build missing
             conan remove "ogre/*"
-            conan create ./ogre -pr default
+            conan create ./ogre -pr default --build missing
 
             conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
             conan upload "*" -r worldforge -c
