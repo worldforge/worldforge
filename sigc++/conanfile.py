@@ -38,32 +38,6 @@ class SigcppConan(ConanFile):
         if self.settings.compiler == "msvc":
             del self.options.shared
 
-    @property
-    def is_python2(self):
-        return sys.version_info[0] == 2
-
-    @property
-    def supports_cpp14(self):
-        compiler = str(self.settings.compiler)
-        version = Version(str(self.settings.compiler.version))
-        if compiler == "Visual Studio" and version >= Version("14"):
-            return True
-        if compiler == "gcc" and version >= Version("5"):
-            return True
-        if compiler == "clang" and version >= Version("3.4"):
-            return True
-        if compiler == "apple-clang" and version >= Version("6.1"):
-            return True
-        return False
-
-    def configure(self):
-        if not self.supports_cpp14:
-            raise ConanException("The specified compiler must support C++14")
-
-    def build_requirements(self):
-        if self.settings.os == "Windows" and self.is_python2:
-            self.tool_requires("7z_installer/1.0@conan/stable")
-
     def source(self):
         get(self, "https://download.gnome.org/sources/libsigc++/{}/{}.tar.xz".format(
             self.version.rpartition(".")[0],
