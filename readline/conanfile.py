@@ -31,10 +31,6 @@ class ReadLineConan(ConanFile):
     def layout(self):
         basic_layout(self, src_folder="src")
 
-    def config_options(self):
-        if self.settings.os == "Windows":
-            del self.options.fPIC
-
     def requirements(self):
         if self.options.with_library == "termcap":
             self.requires("termcap/1.3.1")
@@ -42,6 +38,10 @@ class ReadLineConan(ConanFile):
             self.requires("ncurses/6.2")
 
     def configure(self):
+        if self.settings.compiler == "msvc":
+            # Just skip on win32
+            return
+
         if self.options.shared:
             del self.options.fPIC
         del self.settings.compiler.libcxx
@@ -84,6 +84,9 @@ class ReadLineConan(ConanFile):
         autotools.make()
 
     def package(self):
+        if self.settings.compiler == "msvc":
+            # Just skip on win32
+            return
         copy(self, pattern="COPYING", dst="licenses", src=self.folders.source_folder)
         autotools = Autotools(self)
         autotools.install()
