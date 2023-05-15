@@ -12,6 +12,8 @@ build_script:
       conan --version
       conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
            
+      conan remove "sigc++/*"
+      conan create "sigc++" --build missing
       conan remove "freeimage/*"
       conan create "freeimage" --build missing
       conan remove "libxdg-basedir/*"
