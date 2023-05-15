@@ -48,18 +48,12 @@ jobs:
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             if [[ "$ImageOS" != win* ]]; then
-              conan remove "readline/*"
               conan create ./readline -pr default --build missing
-              conan remove "libxdg-basedir/*"
               conan create ./libxdg-basedir -pr default --build missing
             fi
-            conan remove "sigc++/*"
             conan create ./sigc++ -pr default --build missing
-            conan remove "freeimage/*"
             conan create ./freeimage -pr default --build missing
-            conan remove "ogre/*"
             conan create ./ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
-            conan remove "cegui/*"
             conan create ./cegui -pr default --build missing
 
             conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
