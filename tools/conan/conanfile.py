@@ -23,7 +23,7 @@ class VarconfConan(ConanFile):
     package_type = "library"
 
     def requirements(self):
-        self.requires("libsigcpp/2.10.8", transitive_headers=True)
+        self.requires("sigc++/2.10.0@worldforge", transitive_headers=True)
 
     def export(self):
         git = Git(self, self.recipe_folder)
