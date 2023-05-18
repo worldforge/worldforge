@@ -23,7 +23,7 @@ class ErisConan(ConanFile):
     package_type = "library"
 
     def requirements(self):
-        self.requires("libsigcpp/2.10.8", transitive_headers=True)
+        self.requires("sigc++/2.10.0@worldforge", transitive_headers=True)
         self.requires("atlas/0.7.0@worldforge", transitive_headers=True)
         self.requires("wfmath/1.0.3@worldforge", transitive_headers=True)
         self.requires("boost/1.81.0", transitive_headers=True)
