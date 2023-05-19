@@ -1,10 +1,11 @@
 import os
-from conan import ConanFile, tools
-from conan.errors import ConanInvalidConfiguration
+
+from conan import ConanFile
 from conan.tools.build import cross_building
-from conan.tools.files import get, replace_in_file, copy, rmdir, export_conandata_patches
+from conan.tools.files import get, replace_in_file, copy, rmdir
 from conan.tools.gnu import AutotoolsToolchain, AutotoolsDeps, Autotools
 from conan.tools.layout import basic_layout
+from conan.tools.microsoft import is_msvc
 
 
 class ReadLineConan(ConanFile):
@@ -38,7 +39,7 @@ class ReadLineConan(ConanFile):
             self.requires("ncurses/6.2")
 
     def configure(self):
-        if self.settings.compiler == "msvc":
+        if is_msvc(self):
             # Just skip on win32
             return
 
@@ -51,7 +52,7 @@ class ReadLineConan(ConanFile):
         get(self, **self.conan_data["sources"][self.version], destination=self.folders.source_folder, strip_root=True)
 
     def generate(self):
-        if self.settings.compiler == "msvc":
+        if is_msvc(self):
             # Just skip on win32
             return
         tc = AutotoolsToolchain(self)
@@ -75,7 +76,7 @@ class ReadLineConan(ConanFile):
         replace_in_file(self, os.path.join(self.folders.source_folder, "Makefile.in"), "@TERMCAP_LIB@", "-ltermcap")
 
     def build(self):
-        if self.settings.compiler == "msvc":
+        if is_msvc(self):
             # Just skip on win32
             return
         self._patch_sources()
@@ -84,7 +85,7 @@ class ReadLineConan(ConanFile):
         autotools.make()
 
     def package(self):
-        if self.settings.compiler == "msvc":
+        if is_msvc(self):
             # Just skip on win32
             return
         copy(self, pattern="COPYING", dst="licenses", src=self.folders.source_folder)
