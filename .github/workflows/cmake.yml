@@ -13,6 +13,7 @@ env:
   CONAN_SCM_TO_CONANDATA: 1
   CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
   CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+  PROFILE_CONAN: conan-release
 
 jobs:
   build:
