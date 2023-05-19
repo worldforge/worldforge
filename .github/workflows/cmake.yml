@@ -34,44 +34,34 @@ jobs:
         shell: bash
         run: |
           pip install -r .github/workflows/requirements.txt
-          conan --version
           conan profile detect
           conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 
-      - name: Create Build Environment
-        run: cmake -E make_directory ${{github.workspace}}/build
-
       - name: Have Conan install packages
-        working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install ../tools/conan -pr default --build=missing --update
+          conan install tools/conan -pr default --build=missing --update --output-folder=build_ci
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        working-directory: ${{github.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=ON
+        run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON
 
       - name: Build
-        working-directory: ${{github.workspace}}/build
         shell: bash
-        # Execute the build.  You can specify a specific target with "--target <NAME>"
-        run: cmake --build . --config $BUILD_TYPE
+        run: cmake --build --preset $PROFILE_CONAN
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
         shell: bash
-        run: cmake --build . --config $BUILD_TYPE --target check
+        run: cmake --build --preset $PROFILE_CONAN --target check
 
       - name: Upload artifacts
-        working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
             echo "Creating and uploading Conan artifacts"
             conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
-            conan create ../tools/conan -pr default
+            conan create tools/conan -pr default
             conan upload "*" -r worldforge -c
           fi
