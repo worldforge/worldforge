@@ -27,8 +27,7 @@ class OgreConan(ConanFile):
     description = ("Object-Oriented Graphics Rendering Engine (OGRE) "
                    "is a scene-oriented, real-time, 3D rendering engine.")
     short_paths = False
-    requires = ["freetype/2.13.0",
-                "freeimage/3.18.0@worldforge"]
+    requires = ["freetype/2.13.0"]
     user = "worldforge"
     package_type = "library"
 
@@ -58,12 +57,12 @@ class OgreConan(ConanFile):
         tc.variables['OGRE_INSTALL_DOCS'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_BSP'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_CG'] = 'OFF'
-        tc.variables['OGRE_BUILD_PLUGIN_FREEIMAGE'] = 'ON'
+        tc.variables['OGRE_BUILD_PLUGIN_FREEIMAGE'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_EXRCODEC'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_OCTREE'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_PCZ'] = 'OFF'
         tc.variables['OGRE_BUILD_PLUGIN_PFX'] = 'ON'
-        tc.variables['OGRE_BUILD_PLUGIN_STBI'] = 'OFF'
+        tc.variables['OGRE_BUILD_PLUGIN_STBI'] = 'ON'
         tc.variables['OGRE_BUILD_PLUGIN_DOT_SCENE'] = 'OFF'
         tc.variables['OGRE_BUILD_DEPENDENCIES'] = 'OFF'
         tc.variables['OGRE_CONFIG_ENABLE_ZIP'] = "OFF"

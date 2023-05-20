@@ -28,10 +28,6 @@ class CeguiConan(ConanFile):
     }
     default_options = {
         "shared": False,
-        "pcre/*:with_unicode_properties": True,
-        "pcre/*:with_bzip2": False,
-        # Disabled for now since it doesn't build with GCC 13. And we're not using EXR images currently.
-        "freeimage/*:with_openexr": False,
         "freetype/*:with_brotli": False,
         "freetype/*:with_bzip2": False,
         "freetype/*:with_png": False,
@@ -41,25 +37,21 @@ class CeguiConan(ConanFile):
     package_type = "library"
 
     def requirements(self):
-        self.requires("freetype/2.13.0")
-        self.requires("freeimage/3.18.0@worldforge")
+        self.requires("freetype/2.13.0", transitive_libs=True)
         self.requires("expat/2.5.0")
-        self.requires("pcre/8.45")
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables[
-            'CMAKE_CXX_FLAGS'] = "-fpermissive"  # Need to allow for comparison between pointer and integer in TinyXML code
         tc.variables['CMAKE_POSITION_INDEPENDENT_CODE'] = True
         tc.variables['CEGUI_SAMPLES_ENABLED'] = False
         tc.variables['CEGUI_BUILD_PYTHON_MODULES'] = False
         tc.variables['CEGUI_BUILD_LUA_MODULE'] = False
         tc.variables['CEGUI_BUILD_APPLICATION_TEMPLATES'] = False
         tc.variables['CEGUI_HAS_FREETYPE'] = True
-        tc.variables['CEGUI_HAS_PCRE_REGEX'] = True
-        tc.variables['CEGUI_OPTION_DEFAULT_IMAGECODEC'] = 'FreeImageImageCodec'
-        tc.variables['CEGUI_BUILD_IMAGECODEC_FREEIMAGE'] = 'ON'
+        tc.variables['CEGUI_HAS_PCRE_REGEX'] = False
+        tc.variables['CEGUI_BUILD_IMAGECODEC_FREEIMAGE'] = 'OFF'
         tc.variables['CEGUI_BUILD_IMAGECODEC_SDL2'] = 'OFF'
+        tc.variables['CEGUI_BUILD_IMAGECODEC_STB'] = 'ON'
         tc.variables['CEGUI_BUILD_RENDERER_OGRE'] = 'OFF'
         tc.variables['CEGUI_BUILD_RENDERER_OPENGL'] = 'OFF'
         tc.variables['CEGUI_BUILD_RENDERER_OPENGL3'] = 'OFF'
