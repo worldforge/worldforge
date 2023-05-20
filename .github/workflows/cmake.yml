@@ -47,8 +47,10 @@ jobs:
         shell: bash
         run: |
           if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
-            if [[ "$ImageOS" != win* ]]; then
+            if [[ "$ImageOS" == ubuntu* ]]; then
               conan create ./cpython -pr default --build missing
+            fi
+            if [[ "$ImageOS" != win* ]]; then
               conan create ./readline -pr default --build missing
               conan create ./libxdg-basedir -pr default --build missing
             fi
