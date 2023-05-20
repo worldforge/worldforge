@@ -238,6 +238,7 @@ class CPythonConan(ConanFile):
         # python component: "Build a C extension for Python"
         self.cpp_info.set_property("cmake_file_name", "Python3")
         self.cpp_info.set_property("cmake_target_name", "Python3::Python")
+        self.cpp_info.defines.append("PYTHONHOME={}".format(self.package_folder))
 
         self.cpp_info.components["python"].includedirs.append(
             os.path.join("include", "python{}{}".format(self._version_suffix, self._abi_suffix)))
