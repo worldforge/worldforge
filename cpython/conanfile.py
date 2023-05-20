@@ -5,15 +5,12 @@ from io import StringIO
 
 from conan import ConanFile
 from conan.tools.apple import is_apple_os
-from conan.tools.files import get, replace_in_file, rmdir, apply_conandata_patches, export_conandata_patches, copy, \
-    rename
+from conan.tools.files import get, replace_in_file, rmdir, apply_conandata_patches, export_conandata_patches, copy
 from conan.tools.gnu import AutotoolsToolchain, AutotoolsDeps, Autotools
 from conan.tools.layout import basic_layout
-from conan.tools.microsoft import is_msvc
 from conans.errors import ConanInvalidConfiguration
 from conans.model.version import Version
 from conans.util.env import get_env
-from hgext.githelp import mv
 
 required_conan_version = ">=2.0.0"
 
@@ -33,17 +30,6 @@ class CPythonConan(ConanFile):
         "lto": [True, False],
         "docstrings": [True, False],
         "pymalloc": [True, False],
-        "with_bz2": [True, False],
-        "with_gdbm": [True, False],
-        "with_nis": [True, False],
-        "with_sqlite3": [True, False],
-        "with_tkinter": [True, False],
-        "with_curses": [True, False],
-
-        # Python 2 options
-        "unicode": ["ucs2", "ucs4"],
-        "with_bsddb": [True, False],
-        # Python 3 options
         "with_lzma": [True, False],
 
         # options that don't change package id
@@ -56,17 +42,6 @@ class CPythonConan(ConanFile):
         "lto": False,
         "docstrings": True,
         "pymalloc": True,
-        "with_bz2": False,
-        "with_gdbm": False,
-        "with_nis": False,
-        "with_sqlite3": False,
-        "with_tkinter": False,
-        "with_curses": False,
-
-        # Python 2 options
-        "unicode": "ucs2",
-        "with_bsddb": False,  # True,  # FIXME: libdb package missing (#5309/#5392)
-        # Python 3 options
         "with_lzma": False,
 
         # options that don't change package id
@@ -103,36 +78,14 @@ class CPythonConan(ConanFile):
     def _is_py3(self):
         return Version(self._version_number_only).major == "3"
 
-    @property
-    def _is_py2(self):
-        return Version(self._version_number_only).major == "2"
 
     def config_options(self):
-        if self._is_py2:
-            # Python 2.xx does not support following options
-            del self.options.with_lzma
-        elif self._is_py3:
-            # Python 3.xx does not support following options
-            del self.options.with_bsddb
-            del self.options.unicode
-
         del self.settings.compiler.libcxx
         del self.settings.compiler.cppstd
 
     def configure(self):
         if self.options.shared:
             del self.options.fPIC
-        if not self._supports_modules:
-            del self.options.with_bz2
-            del self.options.with_sqlite3
-            del self.options.with_tkinter
-
-            del self.options.with_bsddb
-            del self.options.with_lzma
-
-    def validate(self):
-        if self.options.get_safe("with_curses", False) and not self.options["ncurses"].with_widec:
-            raise ConanInvalidConfiguration("cpython requires ncurses with wide character support")
 
     def package_id(self):
         del self.info.options.env_vars
@@ -140,38 +93,15 @@ class CPythonConan(ConanFile):
     def source(self):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
-    @property
-    def _with_libffi(self):
-        return self._supports_modules
-
     def requirements(self):
-        self.requires("zlib/1.2.12")
+        self.requires("zlib/1.2.13")
         if self._supports_modules:
             self.requires("expat/2.4.1")
-            if self._with_libffi:
-                self.requires("libffi/3.4.4")
-            self.requires("mpdecimal/2.5.0")  # FIXME: no 2.5.1 to troubleshoot apple
-        if self.settings.os != "Windows":
-            if not is_apple_os(self):
-                self.requires("libuuid/1.0.3")
-            self.requires("libxcrypt/4.4.25")
-        if self.options.get_safe("with_bz2"):
-            self.requires("bzip2/1.0.8")
-        if self.options.get_safe("with_gdbm", False):
-            self.requires("gdbm/1.19")
-        if self.options.get_safe("with_nis", False):
-            # TODO: Add nis when available.
-            raise ConanInvalidConfiguration("nis is not available on CCI (yet)")
-        if self.options.get_safe("with_sqlite3"):
-            self.requires("sqlite3/3.36.0")
-        if self.options.get_safe("with_tkinter"):
-            self.requires("tk/8.6.10")
-        if self.options.get_safe("with_curses", False):
-            self.requires("ncurses/6.2")
-        if self.options.get_safe("with_bsddb", False):
-            self.requires("libdb/5.3.28")
-        if self.options.get_safe("with_lzma", False):
-            self.requires("xz_utils/5.2.5")
+            self.requires("libffi/3.4.4")
+            self.requires("mpdecimal/2.5.0")
+        if not is_apple_os(self):
+            self.requires("libuuid/1.0.3")
+        self.requires("libxcrypt/4.4.25")
 
     def generate(self):
         yes_no = lambda v: "yes" if v else "no"
@@ -187,37 +117,14 @@ class CPythonConan(ConanFile):
             "--with-lto={}".format(yes_no(self.options.lto)),
             "--with-pydebug={}".format(yes_no(self.settings.build_type == "Debug")),
         ])
-        if self._is_py2:
-            tc.configure_args.extend([
-                "--enable-unicode={}".format(yes_no(self.options.unicode)),
-            ])
-        if self._is_py3:
-            tc.configure_args.extend([
-                "--with-system-libmpdec"
-            ])
-            if self.options.get_safe("with_sqlite3"):
-                tc.configure_args.extend([
-                    "--enable-loadable-sqlite-extensions={}".format(
-                        yes_no(not self.options["sqlite3"].omit_load_extension)),
-                ])
+        tc.configure_args.extend([
+            "--with-system-libmpdec"
+        ])
         if self.settings.compiler == "intel-cc":
             tc.configure_args.extend(["--with-icc"])
         if get_env("CC") or self.settings.compiler != "gcc":
             tc.configure_args.append("--without-gcc")
-        if self.options.with_tkinter:
-            tcltk_includes = []
-            tcltk_libs = []
-            # FIXME: collect using some conan util (https://github.com/conan-io/conan/issues/7656)
-            for dep in ("tcl", "tk", "zlib"):
-                tcltk_includes += ["-I{}".format(d) for d in self.deps_cpp_info[dep].include_paths]
-                tcltk_libs += ["-l{}".format(lib) for lib in self.deps_cpp_info[dep].libs]
-            if self.settings.os == "Linux" and not self.options["tk"].shared:
-                # FIXME: use info from xorg.components (x11, xscrnsaver)
-                tcltk_libs.extend(["-l{}".format(lib) for lib in ("X11", "Xss")])
-            tc.configure_args.extend([
-                "--with-tcltk-includes={}".format(" ".join(tcltk_includes)),
-                "--with-tcltk-libs={}".format(" ".join(tcltk_libs)),
-            ])
+
 
         if self.settings.os in ("Linux", "FreeBSD"):
             # Building _testembed fails due to missing pthread/rt symbols
@@ -230,20 +137,10 @@ class CPythonConan(ConanFile):
 
     def _patch_sources(self):
         apply_conandata_patches(self)
-        if self._is_py3 and Version(self._version_number_only) < "3.10":
-            replace_in_file(self, os.path.join(self.source_folder, "setup.py"),
-                            ":libmpdec.so.2", "mpdec")
 
         # Remove vendored packages
         rmdir(self, os.path.join(self.source_folder, "Modules", "_decimal", "libmpdec"))
         rmdir(self, os.path.join(self.source_folder, "Modules", "expat"))
-
-        if self.options.get_safe("with_curses", False):
-            # FIXME: this will link to ALL libraries of ncurses. Only need to link to ncurses(w) (+ eventually tinfo)
-            replace_in_file(self, os.path.join(self.source_folder, "setup.py"),
-                            "curses_libs = ",
-                            "curses_libs = {} #".format(repr(
-                                self.deps_cpp_info["ncurses"].libs + self.deps_cpp_info["ncurses"].system_libs)))
 
     def build(self):
         self._patch_sources()
@@ -311,12 +208,11 @@ class CPythonConan(ConanFile):
     @property
     def _abi_suffix(self):
         res = ""
-        if self._is_py3:
-            if self.settings.build_type == "Debug":
-                res += "d"
-            if Version(self._version_number_only) < "3.8":
-                if self.options.get_safe("pymalloc", False):
-                    res += "m"
+        if self.settings.build_type == "Debug":
+            res += "d"
+        if Version(self._version_number_only) < "3.8":
+            if self.options.get_safe("pymalloc", False):
+                res += "m"
         return res
 
     @property
@@ -353,8 +249,7 @@ class CPythonConan(ConanFile):
             if self.settings.os == "Linux":
                 self.cpp_info.components["python"].system_libs.extend(["dl", "m", "pthread", "util"])
         self.cpp_info.components["python"].requires = ["zlib::zlib"]
-        if self.settings.os != "Windows":
-            self.cpp_info.components["python"].requires.append("libxcrypt::libxcrypt")
+        self.cpp_info.components["python"].requires.append("libxcrypt::libxcrypt")
         self.cpp_info.components["python"].set_property("pkg_config_name", "python-{}.{}".format(py_version.major,
                                                                                                  py_version.minor))
         self.cpp_info.components["python"].libdirs = []
@@ -367,11 +262,12 @@ class CPythonConan(ConanFile):
         self.cpp_info.components["embed"].libs = [self._lib_name]
         self.cpp_info.components["embed"].libdirs = [libdir]
         self.cpp_info.components["embed"].set_property("pkg_config_name", "python-{}.{}-embed".format(py_version.major,
-                                                                                            py_version.minor))
+                                                                                                      py_version.minor))
         self.cpp_info.components["embed"].requires = ["python"]
 
         self.cpp_info.components["_embed_copy"].requires = ["embed"]
-        self.cpp_info.components["_embed_copy"].set_property("pkg_config_name", "python{}-embed".format(py_version.major))
+        self.cpp_info.components["_embed_copy"].set_property("pkg_config_name",
+                                                             "python{}-embed".format(py_version.major))
         self.cpp_info.components["_embed_copy"].libdirs = []
 
         if self._supports_modules:
@@ -380,27 +276,11 @@ class CPythonConan(ConanFile):
             self.cpp_info.components["_hidden"].requires = [
                 "expat::expat",
                 "mpdecimal::mpdecimal",
+                "libffi::libffi"
             ]
-            if self._with_libffi:
-                self.cpp_info.components["_hidden"].requires.append("libffi::libffi")
-            if self.settings.os != "Windows":
-                if not is_apple_os(self):
-                    self.cpp_info.components["_hidden"].requires.append("libuuid::libuuid")
-                self.cpp_info.components["_hidden"].requires.append("libxcrypt::libxcrypt")
-            if self.options.with_bz2:
-                self.cpp_info.components["_hidden"].requires.append("bzip2::bzip2")
-            if self.options.get_safe("with_gdbm", False):
-                self.cpp_info.components["_hidden"].requires.append("gdbm::gdbm")
-            if self.options.with_sqlite3:
-                self.cpp_info.components["_hidden"].requires.append("sqlite3::sqlite3")
-            if self.options.get_safe("with_curses", False):
-                self.cpp_info.components["_hidden"].requires.append("ncurses::ncurses")
-            if self.options.get_safe("with_bsddb"):
-                self.cpp_info.components["_hidden"].requires.append("libdb::libdb")
-            if self.options.get_safe("with_lzma"):
-                self.cpp_info.components["_hidden"].requires.append("xz_utils::xz_utils")
-            if self.options.get_safe("with_tkinter"):
-                self.cpp_info.components["_hidden"].requires.append("tk::tk")
+            if not is_apple_os(self):
+                self.cpp_info.components["_hidden"].requires.append("libuuid::libuuid")
+            self.cpp_info.components["_hidden"].requires.append("libxcrypt::libxcrypt")
             self.cpp_info.components["_hidden"].libdirs = []
 
         if self.options.env_vars:
@@ -424,11 +304,9 @@ class CPythonConan(ConanFile):
         pythonhome_required = is_apple_os(self)
         self.conf_info.define("user.cpython:module_requires_pythonhome", pythonhome_required)
 
-        if self._is_py2:
-            python_root = ""
-        else:
-            python_root = self.package_folder
-            if self.options.env_vars:
-                self.output.info("Setting PYTHON_ROOT environment variable: {}".format(python_root))
-                self.runenv_info.define("PYTHON_ROOT", python_root)
+
+        python_root = self.package_folder
+        if self.options.env_vars:
+            self.output.info("Setting PYTHON_ROOT environment variable: {}".format(python_root))
+            self.runenv_info.define("PYTHON_ROOT", python_root)
         self.conf_info.define("user.cpython:python_root", python_root)
