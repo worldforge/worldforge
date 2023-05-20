@@ -96,7 +96,7 @@ class CPythonConan(ConanFile):
     def requirements(self):
         self.requires("zlib/1.2.13")
         if self._supports_modules:
-            self.requires("expat/2.4.1")
+            self.requires("expat/2.5.0")
             self.requires("libffi/3.4.4")
             self.requires("mpdecimal/2.5.0")
         if not is_apple_os(self):
