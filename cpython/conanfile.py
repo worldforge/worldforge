@@ -238,7 +238,6 @@ class CPythonConan(ConanFile):
         # python component: "Build a C extension for Python"
         self.cpp_info.set_property("cmake_file_name", "Python3")
         self.cpp_info.set_property("cmake_target_name", "Python3::Python")
-        self.cpp_info.defines.append("PYTHONHOME={}".format(self.package_folder))
 
         self.cpp_info.components["python"].includedirs.append(
             os.path.join("include", "python{}{}".format(self._version_suffix, self._abi_suffix)))
@@ -249,6 +248,8 @@ class CPythonConan(ConanFile):
             self.cpp_info.components["python"].defines.append("Py_NO_ENABLE_SHARED")
             if self.settings.os == "Linux":
                 self.cpp_info.components["python"].system_libs.extend(["dl", "m", "pthread", "util"])
+
+        self.cpp_info.components["python"].defines.append("PYTHONHOME=\"{}\"".format(self.package_folder))
         self.cpp_info.components["python"].requires = ["zlib::zlib"]
         self.cpp_info.components["python"].requires.append("libxcrypt::libxcrypt")
         self.cpp_info.components["python"].set_property("pkg_config_name", "python-{}.{}".format(py_version.major,
