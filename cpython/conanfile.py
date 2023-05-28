@@ -249,7 +249,6 @@ class CPythonConan(ConanFile):
             if self.settings.os == "Linux":
                 self.cpp_info.components["python"].system_libs.extend(["dl", "m", "pthread", "util"])
 
-        self.cpp_info.components["python"].defines.append("PYTHONHOME=\"{}\"".format(self.package_folder))
         self.cpp_info.components["python"].requires = ["zlib::zlib"]
         self.cpp_info.components["python"].requires.append("libxcrypt::libxcrypt")
         self.cpp_info.components["python"].set_property("pkg_config_name", "python-{}.{}".format(py_version.major,
