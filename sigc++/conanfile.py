@@ -57,7 +57,7 @@ class SigcppConan(ConanFile):
     def build(self):
         if self.settings.compiler == "msvc":
             msbuild = MSBuild(self)
-            msbuild.build(os.path.join("MSVC_Net2013", "libsigc++2.sln"))
+            msbuild.build(os.path.join("..", self.sourcename, "MSVC_Net2013", "libsigc++2.sln"))
         else:
             autotools = Autotools(self)
             args = (['--enable-shared', '--disable-static']
