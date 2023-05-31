@@ -75,7 +75,7 @@ class CeguiConan(ConanFile):
 
         tc.generate()
 
-        #Don't use CMake deps generator
+        # Don't use CMake deps generator
         # CMakeDeps(self).generate()
 
     def layout(self):
@@ -96,6 +96,10 @@ class CeguiConan(ConanFile):
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
             """)
+
+        # We shouldn't even look for boost.
+        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(Boost",
+                        "#find_package(Boost")
 
         cmake = CMake(self)
         cmake.configure()
