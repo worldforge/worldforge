@@ -54,7 +54,6 @@ jobs:
               conan create ./readline -pr default --build missing
               conan create ./libxdg-basedir -pr default --build missing
             fi
-            conan create ./sigc++ -pr default --build missing
             conan create ./ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
             conan create ./cegui -pr default --build missing
 

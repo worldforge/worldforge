@@ -12,7 +12,6 @@ build_script:
       conan --version
       conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
            
-      conan create "sigc++" --build missing
       conan create "cegui" --build missing
       conan create "ogre" --build missing
       conan remote login worldforge %CONAN_LOGIN_USERNAME% -p %CONAN_PASSWORD%

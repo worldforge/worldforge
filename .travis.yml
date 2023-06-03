@@ -63,12 +63,8 @@ script:
       echo "Could not find Artifactory password and login name"
       exit 1
     fi
-  - conan remove "sigc++/*" --force
-  - conan install ./sigc++ -g deploy --build missing && conan create ./sigc++ worldforge/stable -pr default
   - conan remove "libxdg-basedir/*" --force
   - conan install ./libxdg-basedir -g deploy --build missing && conan create ./libxdg-basedir worldforge/stable -pr default
-  - conan remove "pcre/*" --force
-  - conan install pcre/8.45@_/_ --options "pcre:with_unicode_properties=True" --options "pcre:with_bzip2=False" --build pcre
   - conan remove "cegui/*" --force
   - conan install ./cegui -g deploy --build missing && conan create ./cegui worldforge/stable -pr default
   - conan remove "ogre/*" --force
