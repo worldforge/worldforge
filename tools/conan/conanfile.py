@@ -35,7 +35,7 @@ class MercatorConan(ConanFile):
 
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")
-        copy(self, "*", folder, self.export_sources_folder, excludes=["*build*"])
+        copy(self, "*", folder, self.export_sources_folder, excludes=["build"])
 
     def config_options(self):
         if self.settings.os == "Windows":
