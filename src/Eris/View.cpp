@@ -430,7 +430,7 @@ void View::setTopLevelEntity(Entity* newTopLevel) {
 
 	if (newTopLevel) {
 		assert(newTopLevel->getLocation() == nullptr);
-		m_simulationSpeedConnection = newTopLevel->observe("simulation_speed", sigc::mem_fun(this, &View::parseSimulationSpeed), true);
+		m_simulationSpeedConnection = newTopLevel->observe("simulation_speed", sigc::mem_fun(*this, &View::parseSimulationSpeed), true);
 	}
 	m_topLevel = newTopLevel;
 	TopLevelEntityChanged.emit(); // fire the signal

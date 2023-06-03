@@ -124,14 +124,14 @@ public:
 	*/
 	void getServerInfo(ServerInfo&) const;
 
-	sigc::signal<void> GotServerInfo;
+	sigc::signal<void()> GotServerInfo;
 
 ///////////////////////
 
 	/** Emitted when the disconnection process is initiated. The argument
 	is a flag indicating if the disconnection was clean or not.
 	*/
-	sigc::signal<bool> Disconnecting;
+	sigc::signal<bool()> Disconnecting;
 
 	/**
 	Emitted when a non-fatal error occurs. Tthese are nearly always network
@@ -139,13 +139,13 @@ public:
 	connection will be placed into the DISCONNECTED state after the signal
 	is emitted; thus the current state (when the failure occured) is still valid
 	during the callback */
-	sigc::signal<void, const std::string&> Failure;
+	sigc::signal<void(const std::string&)> Failure;
 
 	/// indicates a status change on the connection
 	/** emitted when the connection status changes; This will often
 	correspond to the emission of a more specific signal (such as Connected),
 	which should be used where available. */
-	sigc::signal<void, Status> StatusChanged;
+	sigc::signal<void(Status)> StatusChanged;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)

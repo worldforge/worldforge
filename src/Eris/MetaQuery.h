@@ -32,7 +32,7 @@ public:
 
 	size_t getServerIndex() const;
 
-	/// Access the elapsed time (in millseconds) since the query was issued
+	/// Access the elapsed time (in milliseconds) since the query was issued
 	long getElapsed();
 
 	bool isComplete() const;

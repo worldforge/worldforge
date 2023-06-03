@@ -4,6 +4,7 @@
 
 #include "EntityRef.h"
 #include "Entity.h"
+#include "ViewEntity.h"
 #include "View.h"
 #include "Log.h"
 
@@ -22,10 +23,10 @@ EntityRef::EntityRef(View& v, const std::string& eid) :
 	m_inner = v.getEntity(eid);
 	if (m_inner)
 	{
-		m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));	
+		m_inner->BeingDeleted.connect(sigc::mem_fun(*this, &EntityRef::onEntityDeleted));
 	} else {
 		// retrieve from the server, tell us when that happens
-        v.notifyWhenEntitySeen(eid, sigc::mem_fun(this, &EntityRef::onEntitySeen));
+        v.notifyWhenEntitySeen(eid, sigc::mem_fun(*this, &EntityRef::onEntitySeen));
 	}
 }
 
@@ -34,7 +35,7 @@ EntityRef::EntityRef(Entity* e) :
 {
     if (m_inner)
 	{
-		m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));	
+		m_inner->BeingDeleted.connect(sigc::mem_fun(*this, &EntityRef::onEntityDeleted));
 	}
 }
 
@@ -43,7 +44,7 @@ EntityRef::EntityRef(const EntityRef& ref) :
 {
     if (m_inner)
     {
-        m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));
+        m_inner->BeingDeleted.connect(sigc::mem_fun(*this, &EntityRef::onEntityDeleted));
     }
 }
 
@@ -61,7 +62,7 @@ EntityRef& EntityRef::operator=(const EntityRef& ref)
     
     if (m_inner)
     {
-        m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));
+        m_inner->BeingDeleted.connect(sigc::mem_fun(*this, &EntityRef::onEntityDeleted));
     }
     
     if (changed) {
@@ -77,12 +78,12 @@ void EntityRef::onEntityDeleted()
 	Changed(m_inner, oldInner);
 }
 
-void EntityRef::onEntitySeen(Entity* e)
+void EntityRef::onEntitySeen(ViewEntity* e)
 {
     assert(e);
     auto oldInner = m_inner;
     m_inner = e;
-    m_inner->BeingDeleted.connect(sigc::mem_fun(this, &EntityRef::onEntityDeleted));	
+    m_inner->BeingDeleted.connect(sigc::mem_fun(*this, &EntityRef::onEntityDeleted));
 	Changed(m_inner, oldInner);
 }
 	

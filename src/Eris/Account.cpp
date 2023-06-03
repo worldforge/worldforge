@@ -91,8 +91,8 @@ Account::Account(Connection& con) :
 		m_status(Status::DISCONNECTED),
 		m_router(std::make_unique<AccountRouter>(this)),
 		m_doingCharacterRefresh(false) {
-	m_con.Connected.connect(sigc::mem_fun(this, &Account::netConnected));
-	m_con.Failure.connect(sigc::mem_fun(this, &Account::netFailure));
+	m_con.Connected.connect(sigc::mem_fun(*this, &Account::netConnected));
+	m_con.Failure.connect(sigc::mem_fun(*this, &Account::netFailure));
 }
 
 Account::~Account() {
@@ -411,7 +411,7 @@ void Account::loginComplete(const AtlasAccount& p) {
 	// notify an people watching us
 	LoginSuccess.emit();
 
-	m_con.Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
+	m_con.Disconnecting.connect(sigc::mem_fun(*this, &Account::netDisconnecting));
 	m_timeout.reset();
 }
 

@@ -122,7 +122,6 @@ protected:
     {
         read_buffer_size = 2048
     };
-    boost::asio::io_service& m_io_service;
     Atlas::Bridge& _bridge;
     Callbacks _callbacks;
 

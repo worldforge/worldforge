@@ -23,7 +23,7 @@ class ErisConan(ConanFile):
     package_type = "library"
 
     def requirements(self):
-        self.requires("sigc++/2.10.0@worldforge", transitive_headers=True)
+        self.requires("libsigcpp/3.0.7", transitive_headers=True)
         self.requires("atlas/0.7.0@worldforge", transitive_headers=True)
         self.requires("wfmath/1.0.3@worldforge", transitive_headers=True)
         self.requires("boost/1.81.0", transitive_headers=True)
@@ -38,7 +38,7 @@ class ErisConan(ConanFile):
 
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")
-        copy(self, "*", folder, self.export_sources_folder, excludes=["*build*"])
+        copy(self, "*", folder, self.export_sources_folder, excludes=["build"])
 
     def config_options(self):
         if self.settings.os == "Windows":

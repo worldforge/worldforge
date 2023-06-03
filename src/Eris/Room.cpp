@@ -179,7 +179,7 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
 
     if (op->instanceOf(SIGHT_NO)) {
         assert(!args.empty());
-        RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
+        auto ent = smart_dynamic_cast<RootEntity>(args.front());
             
         if (ent.isValid() && (ent->getId() == m_roomId)) {
             sight(ent);
@@ -199,7 +199,7 @@ void Room::sight(const RootEntity &room)
     if (room->hasAttr("topic"))
         m_topic = room->getAttr("topic").asString();
     
-    m_lobby->SightPerson.connect(sigc::mem_fun(this, &Room::notifyPersonSight));
+    m_lobby->SightPerson.connect(sigc::mem_fun(*this, &Room::notifyPersonSight));
     
     if (room->hasAttr("people"))
     {

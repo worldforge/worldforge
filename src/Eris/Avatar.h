@@ -167,22 +167,22 @@ public:
 	A client might wish to show some kind of 'busy' animation, eg an hour-glass,
 	while waiting for this signal.
 	*/
-	sigc::signal<void, Entity*> GotCharacterEntity;
+	sigc::signal<void(Entity*)> GotCharacterEntity;
 
 	/**
 	 * Emitted when the avatar entity for whatever reason is deleted.
 	 */
-	sigc::signal<void> CharacterEntityDeleted;
+	sigc::signal<void()> CharacterEntityDeleted;
 
-	sigc::signal<void, Entity&> ContainerOpened;
-	sigc::signal<void, Entity&> ContainerClosed;
+	sigc::signal<void(Entity&)> ContainerOpened;
+	sigc::signal<void(Entity&)> ContainerClosed;
 
 	/**
 	Emitted when a character transfer authentication is requested. Clients
 	should use the hostname, port number, possess key and entity ID to claim
 	the character on a remote host
 	*/
-	sigc::signal<void, const TransferInfo&> TransferRequested;
+	sigc::signal<void(const TransferInfo&)> TransferRequested;
 
 protected:
 	friend class Account;

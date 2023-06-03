@@ -38,7 +38,7 @@ void Task::updateFromAtlas(const AtlasMapType& d) {
 	auto progress = m_progress;
 	auto progressRate = m_progressRate;
 	auto it = d.find("progress");
-	if (it != d.end() && it->second.Float()) {
+	if (it != d.end() && it->second.isFloat()) {
 		m_progress = it->second.asFloat();
 		if (m_progress != progress) {
 			progressChanged();
@@ -126,7 +126,7 @@ void Task::progressChanged() {
 void Task::updatePredictedProgress(const WFMath::TimeDiff& dt) {
 	if (isComplete()) return;
 
-	m_progress += m_progressRate * (dt.milliseconds() / 1000.0);
+	m_progress += m_progressRate * ((double)(dt.milliseconds()) / 1000.0);
 	m_progress = std::min(m_progress, 1.0);
 
 	Progressed.emit();

@@ -9,12 +9,10 @@
 #include <vector>
 #include "Usage.h"
 
-namespace Atlas {
-namespace Message {
+namespace Atlas::Message {
 class Element;
 
 typedef std::map<std::string, Element> MapType;
-}
 }
 
 namespace WFMath { class TimeDiff; }
@@ -60,13 +58,13 @@ public:
 
 	const std::vector<TaskUsage>& getUsages() const;
 
-	sigc::signal<void> Completed;
+	sigc::signal<void()> Completed;
 
-	sigc::signal<void> Progressed;
+	sigc::signal<void()> Progressed;
 
-	sigc::signal<void> ProgressRateChanged;
+	sigc::signal<void()> ProgressRateChanged;
 
-	sigc::signal<void> UsagesChanged;
+	sigc::signal<void()> UsagesChanged;
 
 private:
 	void progressChanged();

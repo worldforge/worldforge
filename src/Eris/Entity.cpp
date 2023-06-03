@@ -53,7 +53,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
     
     
     if (m_type) {
-        m_type->PropertyChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_PropertyChanges));
+        m_type->PropertyChanges.connect(sigc::mem_fun(*this, &Entity::typeInfo_PropertyChanges));
     }
 }
 

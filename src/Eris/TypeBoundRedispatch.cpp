@@ -32,9 +32,9 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
     m_unbound.insert(unbound);
     
     assert(!unbound->isBound());
-    unbound->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), unbound));
+    unbound->Bound.connect(sigc::bind(sigc::mem_fun(*this, &TypeBoundRedispatch::onBound), unbound));
     
-    con.getTypeService().BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
+    con.getTypeService().BadType.connect(sigc::mem_fun(*this, &TypeBoundRedispatch::onBadType));
 }
 
 TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
@@ -46,10 +46,10 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection& con,
 {
     for (auto& item : m_unbound) {
         assert(!item->isBound());
-        item->Bound.connect(sigc::bind(sigc::mem_fun(this, &TypeBoundRedispatch::onBound), item));
+        item->Bound.connect(sigc::bind(sigc::mem_fun(*this, &TypeBoundRedispatch::onBound), item));
     }
     
-    con.getTypeService().BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
+    con.getTypeService().BadType.connect(sigc::mem_fun(*this, &TypeBoundRedispatch::onBadType));
 }
     
 void TypeBoundRedispatch::onBound(TypeInfo* bound)

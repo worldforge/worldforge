@@ -14,7 +14,7 @@ namespace Eris
 {
 
 static LogLevel _logLevel = DEFAULT_LOG;    
-sigc::signal<void, LogLevel, const std::string&> Logged;
+sigc::signal<void(LogLevel, const std::string&)> Logged;
     
 void setLogLevel(LogLevel lvl)
 {

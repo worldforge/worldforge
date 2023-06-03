@@ -7,11 +7,9 @@
 
 #include <sstream>
 
-namespace Atlas {
-    namespace Message {
+namespace Atlas::Message {
         class Element;
     }
-}
 
 namespace Eris
 {

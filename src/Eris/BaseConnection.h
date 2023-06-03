@@ -92,10 +92,10 @@ public:
 	const Atlas::Objects::Factories& getFactories() const;
 
     /// sent on successful negotiation of a game server connection
-    sigc::signal<void> Connected;
+    sigc::signal<void()> Connected;
     
     /// final disconnect (or hard disocnnect) notifcation
-    sigc::signal<void> Disconnected;
+    sigc::signal<void()> Disconnected;
 protected:
     /// create an unconnected instance
     /** Create a new connection, with the client-name  string specified. The client-name

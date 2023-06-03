@@ -57,7 +57,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 				handleSightOp(op, smart_dynamic_cast<RootOperation>(arg));
 			} else {
 				// initial sight of entities
-				RootEntity gent = smart_dynamic_cast<RootEntity>(arg);
+				auto gent = smart_dynamic_cast<RootEntity>(arg);
 				if (gent.isValid()) {
 					// View needs a bound TypeInfo for the entity
 					if (!gent->isDefaultId() && !gent->isDefaultParent()) {

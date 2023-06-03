@@ -99,7 +99,7 @@ public:
 
     double getSimulationSpeed() const;
 
-	typedef sigc::slot<void, ViewEntity*> EntitySightSlot;
+	typedef sigc::slot<void(ViewEntity*)> EntitySightSlot;
 
     /**
     Connect up a slot to be fired when an Entity with the specified ID is seen.
@@ -109,16 +109,16 @@ public:
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
-    sigc::signal<void, ViewEntity*> EntitySeen;
+    sigc::signal<void(ViewEntity*)> EntitySeen;
 
     /** emitted when a SIGHT(CREATE) op is received for an entity */
-    sigc::signal<void, ViewEntity*> EntityCreated;
+    sigc::signal<void(ViewEntity*)> EntityCreated;
     
     /** emitted when a SIGHT(DELETE) op is received for an entity */
-    sigc::signal<void, ViewEntity*> EntityDeleted;
+    sigc::signal<void(ViewEntity*)> EntityDeleted;
 
     /// emitted when the TLVE changes
-    sigc::signal<void> TopLevelEntityChanged;
+    sigc::signal<void()> TopLevelEntityChanged;
 
     /**
      * Emitted after a new Entity has been created and initialized.
@@ -126,7 +126,7 @@ public:
      * This signal is mainly meant for debugging or authoring; normal entity
      * presentation logic should use EntitySeen or EntityCreated instead.
      */
-    sigc::signal<void, ViewEntity*> InitialSightEntity;
+    sigc::signal<void(ViewEntity*)> InitialSightEntity;
 
     void dumpLookQueue();
 
@@ -244,7 +244,7 @@ private:
           
     unsigned int m_maxPendingCount;
           
-    typedef sigc::signal<void, ViewEntity*> EntitySightSignal;
+    typedef sigc::signal<void(ViewEntity*)> EntitySightSignal;
         
     typedef std::unordered_map<std::string, EntitySightSignal> NotifySightMap;
     NotifySightMap m_notifySights;

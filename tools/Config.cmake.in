@@ -21,6 +21,6 @@ include(CMakeFindDependencyMacro)
 find_dependency(sigc++)
 find_dependency(wfmath)
 find_dependency(Atlas)
-find_dependency(boost)
+find_dependency(Boost)
 
 check_required_components(@PROJECT_NAME@)

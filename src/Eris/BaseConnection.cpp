@@ -6,7 +6,6 @@
 
 #include "BaseConnection.h"
 
-#include "Exceptions.h"
 #include "Log.h"
 #include "StreamSocket_impl.h"
 
@@ -14,19 +13,9 @@
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <sigc++/slot.h>
-
 #include <sstream>
 #include <Atlas/Objects/Factories.h>
 #include "CustomEntities.h"
-
-#ifdef _WIN32
-
-#ifndef snprintf
-#define snprintf _snprintf
-#endif
-
-#endif // _WIN32
 
 using namespace boost::asio;
 

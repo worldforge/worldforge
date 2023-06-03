@@ -68,19 +68,19 @@ protected:
         // like appearance and disappearance
         if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
 			for (const auto & arg : args) {
-				AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(arg);
+				auto acc = smart_dynamic_cast<AtlasAccount>(arg);
 				if (acc.isValid()) {
 					m_lobby->sightPerson(acc);
 					continue;
 				}
 
 				if (op->getRefno() == m_anonymousLookSerialno) {
-					RootEntity ent = smart_dynamic_cast<RootEntity>(arg);
+					auto ent = smart_dynamic_cast<RootEntity>(arg);
 					m_lobby->recvInitialSight(ent);
 					continue;
 				}
 
-				Imaginary im = smart_dynamic_cast<Imaginary>(arg);
+				auto im = smart_dynamic_cast<Imaginary>(arg);
 				if (im.isValid()) {
 					m_lobby->recvImaginary(im);
 					continue;
@@ -89,7 +89,7 @@ protected:
 			return HANDLED;
 		} // of sight op
 
-        Sound sound = smart_dynamic_cast<Sound>(op);
+        auto sound = smart_dynamic_cast<Sound>(op);
         if (sound.isValid())
         {
 			for (const auto & arg : args) {
@@ -126,15 +126,15 @@ Lobby::Lobby(Account& a) :
     if (m_account.isLoggedIn()) {
 		onLoggedIn();
 	} else {
-		m_account.LoginSuccess.connect(sigc::mem_fun(this, &Lobby::onLoggedIn));
+		m_account.LoginSuccess.connect(sigc::mem_fun(*this, &Lobby::onLoggedIn));
 	}
 
-    m_account.LogoutComplete.connect(sigc::mem_fun(this, &Lobby::onLogout));
+    m_account.LogoutComplete.connect(sigc::mem_fun(*this, &Lobby::onLogout));
 }
 
 Lobby::~Lobby()
 {
-	//We store ourself in the rooms, so lets first remove that.
+	//We store ourselves in the rooms, so lets first remove that.
 	m_rooms[getId()].release();
 }
 
@@ -277,7 +277,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
     if (tk->isDefaultFrom()) {
         return IGNORED;
     }
-    IdPersonMap::const_iterator P = m_people.find(tk->getFrom());
+    auto P = m_people.find(tk->getFrom());
     if ((P == m_people.end()) || (P->second == nullptr)) {
         getPerson(tk->getFrom()); // force a LOOK if necessary
         debug() << "creating sight-person-redispatch for " << tk->getFrom();
@@ -287,7 +287,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
         sight->setTo(getAccount().getId());
 
         auto *spr = new SightPersonRedispatch(getConnection(), tk->getFrom(), sight);
-        SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
+        SightPerson.connect(sigc::mem_fun(*spr, &SightPersonRedispatch::onSightPerson));
 
         return HANDLED;
     }
@@ -359,7 +359,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 		if (im->isDefaultFrom()) {
 			continue;
 		}
-		IdPersonMap::const_iterator P = m_people.find(im->getFrom());
+		auto P = m_people.find(im->getFrom());
 		if ((P == m_people.end()) || (P->second == nullptr)) {
 			getPerson(im->getFrom()); // force a LOOK if necessary
 			debug() << "creating sight-person-redispatch for " << im->getFrom();
@@ -369,7 +369,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 			sight->setTo(getAccount().getId());
 
 			auto *spr = new SightPersonRedispatch(getConnection(), im->getFrom(), sight);
-			SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
+			SightPerson.connect(sigc::mem_fun(*spr, &SightPersonRedispatch::onSightPerson));
 
 			continue;
 		}

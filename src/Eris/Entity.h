@@ -120,7 +120,7 @@ public:
     /**
      * @brief A slot which can be used for receiving property update signals.
      */
-    typedef sigc::slot<void, const Atlas::Message::Element&> PropertyChangedSlot;
+    typedef sigc::slot<void(const Atlas::Message::Element&)> PropertyChangedSlot;
 
     /**
      * @brief Setup an observer so that the specified slot is fired when the named property's value changes
@@ -289,25 +289,25 @@ public:
     WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const;
 	
 // Signals
-    sigc::signal<void, Entity*> ChildAdded;
-    sigc::signal<void, Entity*> ChildRemoved;
+    sigc::signal<void(Entity*)> ChildAdded;
+    sigc::signal<void(Entity*)> ChildRemoved;
     
     /// Signal that the entity's container changed
     /** emitted when our location changes. First argument is the old location.
     The new location can be found via getLocation.
     Note either the old or new location might be nullptr.
     */
-    sigc::signal<void, Entity*> LocationChanged;
+    sigc::signal<void(Entity*)> LocationChanged;
 
     /** Emitted when one or more properties change. The arguments is a set
     of property IDs which were modified. */
-    sigc::signal<void, const std::set<std::string>&> Changed;
+    sigc::signal<void(const std::set<std::string>&)> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.*/
-    sigc::signal<void> Moved;
+    sigc::signal<void()> Moved;
 
     /** Emitted when an entity starts or stops moving. The new movement status will be emitted. */
-    sigc::signal<void, bool> Moving;
+    sigc::signal<void(bool)> Moving;
 
     /**
 	 * @brief Emitted with the entity speaks.
@@ -324,54 +324,54 @@ public:
 	 *   addressed. Note that all entities, even those not addressed, can
 	 *   still receive such Say operations.
 	 **/
-    sigc::signal< void, const Atlas::Objects::Root & > Say;
+    sigc::signal<void(const Atlas::Objects::Root&)> Say;
 	
     /**
     Emitted when this entity emits an imaginary operation (also known as
     an emote. This is used for debugging, but not much else. 
     */
-    sigc::signal<void, const std::string&> Emote;
+    sigc::signal<void(const std::string&)> Emote;
     
     /**
     Emitted when this entity performs an action. The argument to the
     action is passed as the signal argument. For examples of action
     arguments, see some documentation that probably isn't written yet.
     */
-    sigc::signal<void, const Atlas::Objects::Operation::RootOperation&, const TypeInfo&> Acted;
+    sigc::signal<void(const Atlas::Objects::Operation::RootOperation&, const TypeInfo&)> Acted;
 
 	/**
 	Emitted when this entity performs is hit by something.
 	*/
-	sigc::signal<void, const Atlas::Objects::Operation::Hit&, const TypeInfo&> Hit;
+	sigc::signal<void(const Atlas::Objects::Operation::Hit&, const TypeInfo&)> Hit;
 
     /**
     Emitted when this entity performs an action which causes a noise. This
     may happen alongside the sight of the action, or not, depending on the
     distance to the entity and so on.
     */
-    sigc::signal<void, const Atlas::Objects::Root&, const TypeInfo&> Noise;
+    sigc::signal<void(const Atlas::Objects::Root&, const TypeInfo&)> Noise;
 
     /**
     Emitted when the visibility of the entity changes. Often this happens
     because it has moved in or out of the sight range of the avatar.
     */
-    sigc::signal<void, bool> VisibilityChanged;
+    sigc::signal<void(bool)> VisibilityChanged;
     
     /**
     Emitted prior to deletion. Note that entity instances may be deleted for
     different reasons - passing out of the view, being deleted on the server,
     or during disconnection. This signal is emitted regardless.
     */
-    sigc::signal<void> BeingDeleted;
+    sigc::signal<void()> BeingDeleted;
     
     /**
     Emitted when a task has been added to the entity. Argument is the task.
     */
-    sigc::signal<void, const std::string&, Task*> TaskAdded;
+    sigc::signal<void(const std::string&, Task*)> TaskAdded;
     /**
     Emitted when a task has been removed from the entity. Argument is the task.
     */
-    sigc::signal<void, const std::string&, Task*> TaskRemoved;
+    sigc::signal<void(const std::string&, Task*)> TaskRemoved;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
@@ -605,7 +605,7 @@ protected:
     was changed. */
 	std::set<std::string> m_modifiedProperties;
         
-    typedef sigc::signal<void, const Atlas::Message::Element&> PropertyChangedSignal;
+    typedef sigc::signal<void(const Atlas::Message::Element&)> PropertyChangedSignal;
         
     typedef std::unordered_map<std::string, PropertyChangedSignal> ObserverMap;
     ObserverMap m_observers;

@@ -45,8 +45,8 @@ using Atlas::Objects::Operation::RootOperation;
 
 static bool stub_type_bound = false;
 
-static sigc::signal<void> _test_avatar_logoutRequested;
-static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
+static sigc::signal<void()> _test_avatar_logoutRequested;
+static sigc::signal<void()> _test_avatar_logoutWithTransferRequested;
 
 struct TestAvatar : public Eris::Avatar {
 	explicit TestAvatar(Eris::Account& account) :

@@ -10,8 +10,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <sigc++/slot.h>
-
 #include <cassert>
 
 using namespace Atlas::Objects::Operation;
@@ -31,7 +29,7 @@ MetaQuery::MetaQuery(boost::asio::io_service& io_service,
 		m_complete(false),
 		m_completeTimer(io_service) {
 	_bridge = &bridge;
-	connectRemote(host, 6767);
+	BaseConnection::connectRemote(host, 6767);
 }
 
 // clean up is all done by the Base Connection

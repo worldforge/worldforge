@@ -3,6 +3,7 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 #include <map>
 #include <string>
@@ -66,7 +67,7 @@ public:
     int hoursPerDay() const { return m_hoursPerDay; }
 
     ///Emitted when the calendar is updated.
-    sigc::signal<void> Updated;
+    sigc::signal<void()> Updated;
 
 protected:
     void topLevelEntityChanged();

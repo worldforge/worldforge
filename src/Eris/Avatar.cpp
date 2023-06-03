@@ -46,7 +46,7 @@ namespace Eris {
             m_isAdmin(false),
             m_logoutTimer(nullptr) {
         m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
-		m_entityAppearanceCon= m_view->notifyWhenEntitySeen(m_entityId, sigc::mem_fun(this, &Avatar::onEntityAppear));
+		m_entityAppearanceCon= m_view->notifyWhenEntitySeen(m_entityId, sigc::mem_fun(*this, &Avatar::onEntityAppear));
 
 		//Start by requesting general entity data from the server.
         m_view->getEntityFromServer("");
@@ -266,7 +266,7 @@ namespace Eris {
             }
 
             m_avatarEntityDeletedConnection = ent->BeingDeleted.connect(
-                    sigc::mem_fun(this, &Avatar::onAvatarEntityDeleted));
+                    sigc::mem_fun(*this, &Avatar::onAvatarEntityDeleted));
 
 			//Check if we're admin before we announce ourselves to the world.
 			ent->observe("is_admin",
@@ -336,7 +336,7 @@ namespace Eris {
             return;
         }
 
-        RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
+        auto logout = smart_dynamic_cast<RootOperation>(args.front());
         const std::vector<Root> &args2(logout->getArgs());
         if (args2.empty()) {
             warning() << "argument of avatar INFO(LOGOUT) is empty";

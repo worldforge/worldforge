@@ -39,7 +39,7 @@ configurations of interface, proxies and so forth.
 Account is also the mechanism by which Lobby and Avatars objects are made available to the client,
 in response to login / create operations */
 
-    class Account : virtual public sigc::trackable {
+class Account : virtual public sigc::trackable {
     public:
         /// Create a new Account associated with a Connection object
         /**
@@ -138,12 +138,6 @@ in response to login / create operations */
 
         Result createCharacterThroughOperation(const Atlas::Objects::Operation::Create &c);
 
-        /// pop up the game's character creation dialog, if present
-        //void createCharacter();
-
-        ///  returns true if the game has defined a character creation dialog
-        bool canCreateCharacter();
-
         /**
          * @brief Gets a list of active characters, i.e. entities on the server which the account can control.
          * @returns A list of active characters on the server which the account can control.
@@ -184,49 +178,49 @@ in response to login / create operations */
 
 // signals
         /// emitted when a character has been retrieved from the server
-        sigc::signal<void, const Atlas::Objects::Entity::RootEntity &> GotCharacterInfo;
+        sigc::signal<void(const Atlas::Objects::Entity::RootEntity &)> GotCharacterInfo;
 
         /// emitted when the entire character list had been updated
-        sigc::signal<void> GotAllCharacters;
+        sigc::signal<void()> GotAllCharacters;
 
         ///  Emitted when a server-side error occurs during account creation / login.
         /**
         The argument is an error message from the server - hopefully this will
         become something more useful such as an enum code, in the future.
         */
-        sigc::signal<void, const std::string &> LoginFailure;
+        sigc::signal<void(const std::string &)> LoginFailure;
 
         /** Emitted when login or character creation is successful. */
-        sigc::signal<void> LoginSuccess;
+        sigc::signal<void()> LoginSuccess;
 
         /// Emitted when a logout completes
         /** Depending on whether the logout completed with a positive server
         acknowledgment or just timed out, the argument will be either true
         (success, clean logout) or false (failure, timeout or other problem)
         */
-        sigc::signal<void, bool> LogoutComplete;
+        sigc::signal<void(bool)> LogoutComplete;
 
         /**
         Emitted when creating a character or taking an existing one
         succeeds.
         */
-        sigc::signal<void, Avatar *> AvatarSuccess;
+        sigc::signal<void(Avatar *)> AvatarSuccess;
 
         /**
         Emitted when creating or taking a character fails for some reason.
         String argument is the error message from the server.
         */
-        sigc::signal<void, const std::string &> AvatarFailure;
+        sigc::signal<void(const std::string &)> AvatarFailure;
 
         /**
         Emitted when an active avatar has been deactivated.
         */
-        sigc::signal<void, const std::string &> AvatarDeactivated;
+        sigc::signal<void(const std::string &)> AvatarDeactivated;
 
         /**
          * Emitted when an error message is received.
          */
-        sigc::signal<void, const std::string &> ErrorMessage;
+        sigc::signal<void(const std::string &)> ErrorMessage;
 
     protected:
         friend class AccountRouter;
@@ -313,10 +307,6 @@ in response to login / create operations */
          */
         std::vector<SpawnPoint> m_spawnPoints;
     };
-
-    inline bool Account::canCreateCharacter() {
-        return false;
-    }
 
     inline const ActiveCharacterMap &Account::getActiveCharacters() const {
         return m_activeAvatars;

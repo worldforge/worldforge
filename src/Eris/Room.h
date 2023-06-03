@@ -81,22 +81,22 @@ public:
 // signals
     /** Emitted when entry into the room (after a Join) is complete, i.e the user list has been
     transferred and resolved. */
-    sigc::signal<void, Room*> Entered;
+    sigc::signal<void(Room*)> Entered;
     
     /** The primary talk callback. The arguments are the source room, the person
     talking, and the message itself */
-    sigc::signal<void, Room*, Person*, const std::string&> Speech;
+    sigc::signal<void(Room*, Person*, const std::string&)> Speech;
     
     /** Emote (/me) callback. The arguments are identical to those for Talk above */
-    sigc::signal<void, Room*, Person*, const std::string&> Emote;
+    sigc::signal<void(Room*, Person*, const std::string&)> Emote;
 	
     /** Emitted when a person enters the room; argument is the account ID. Note that
     Appearance is not generated for the local player when entering/leaving; use the
     Entered signal instead. */
-    sigc::signal<void, Room*, Person*> Appearance;
+    sigc::signal<void(Room*, Person*)> Appearance;
     
     /// Similarly, emitted when the specifed person leaves the room
-    sigc::signal<void, Room*, Person*> Disappearance;
+    sigc::signal<void(Room*, Person*)> Disappearance;
 	
 	
 protected:

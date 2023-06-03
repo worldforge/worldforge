@@ -140,7 +140,7 @@ int Connection::disconnect() {
 	// fell through, so someone has locked =>
 	// start a disconnect timeout
 //    _timeout = new Timeout(5000);
-//    _timeout->Expired.connect(sigc::mem_fun(this, &Connection::onDisconnectTimeout));
+//    _timeout->Expired.connect(sigc::mem_fun(*this, &Connection::onDisconnectTimeout));
 	return 0;
 }
 
@@ -267,7 +267,7 @@ void Connection::objectArrived(Root obj) {
 #else
 	debug() << "received op:" << obj->getParent();
 #endif
-	RootOperation op = smart_dynamic_cast<RootOperation>(obj);
+	auto op = smart_dynamic_cast<RootOperation>(obj);
 	if (op.isValid()) {
 		m_opDeque.push_back(std::move(op));
 	} else {
@@ -345,7 +345,7 @@ void Connection::handleTimeout(const std::string& msg) {
 
 void Connection::handleServerInfo(const RootOperation& op) {
 	if (!op->getArgs().empty()) {
-		RootEntity svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+		auto svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
 		if (!svr.isValid()) {
 			error() << "server INFO argument object is broken";
 			return;
@@ -368,7 +368,7 @@ void Connection::onDisconnectTimeout() {
 }
 
 void Connection::postForDispatch(const Root& obj) {
-	RootOperation op = smart_dynamic_cast<RootOperation>(obj);
+	auto op = smart_dynamic_cast<RootOperation>(obj);
 	assert(op.isValid());
 	m_opDeque.push_back(op);
 

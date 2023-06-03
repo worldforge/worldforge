@@ -10,6 +10,7 @@ namespace Eris
 
 class Entity;
 class View;
+class ViewEntity;
 
 class EntityRef : public sigc::trackable
 {
@@ -84,10 +85,10 @@ public:
      * Emitted when value changes.
      * First parameter is new value, second is old value.
      */
-	sigc::signal<void, Entity*, Entity*> Changed;
+	sigc::signal<void(Entity*, Entity*)> Changed;
 private:
 	void onEntityDeleted();
-	void onEntitySeen(Entity* e);
+	void onEntitySeen(ViewEntity* e);
 	
 	Entity* m_inner;
 };

@@ -9,6 +9,7 @@
 #include <memory>
 #include <cstdint>
 #include <string>
+#include <sigc++/trackable.h>
 
 namespace Eris
 {
@@ -16,10 +17,12 @@ namespace Eris
 std::string getErrorMessage(const Atlas::Objects::Operation::RootOperation & err);
 
 
-class ResponseBase
+class ResponseBase : public sigc::notifiable
 {
 public:
     virtual ~ResponseBase();
+
+	virtual void detach() {}
     
     /**
     Process a response.
@@ -33,7 +36,7 @@ public:
 	Router::RouterResult responseReceived(const Atlas::Objects::Operation::RootOperation&) override;
 };
 
-void* clearMemberResponse(void*);
+void clearMemberResponse(sigc::notifiable*);
 
 template <class T>
 class MemberResponse : public ResponseBase
@@ -45,16 +48,20 @@ public:
 		m_object(obj),
 		m_func(method)
 	{
-        obj->add_destroy_notify_callback(&m_object, &clearMemberResponse);
+        obj->add_destroy_notify_callback(this, &clearMemberResponse);
 	}
 	
     ~MemberResponse() override {
-        if (m_object) m_object->remove_destroy_notify_callback(&m_object);
+        if (m_object) m_object->remove_destroy_notify_callback(this);
     }
 
 	Router::RouterResult responseReceived(const Atlas::Objects::Operation::RootOperation& op) override {
         if (m_object) (m_object->*m_func)(op);
         return Router::HANDLED;
+	}
+
+	void detach() override {
+		m_object = nullptr;
 	}
 
 private:

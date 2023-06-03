@@ -41,10 +41,10 @@ public:
     TypeInfo* findTypeByName(const std::string &tynm);
 
     /** emitted when a new type is available and bound to it's parents */
-    sigc::signal<void, TypeInfo*> BoundType;
+    sigc::signal<void(TypeInfo*)> BoundType;
 
     /** emitted when a type is confirmed as being undefined */
-    sigc::signal<void, TypeInfo*> BadType;
+    sigc::signal<void(TypeInfo*)> BadType;
 
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 

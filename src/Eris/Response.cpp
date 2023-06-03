@@ -79,13 +79,10 @@ Router::RouterResult NullResponse::responseReceived(const Atlas::Objects::Operat
     return Router::RouterResult::IGNORED;
 }
 
-void* clearMemberResponse(void* d)
+void clearMemberResponse(sigc::notifiable* d)
 {
     debug() << "clearing out member response object";
-    
-    void** objectPointer = (void**) d;
-    *objectPointer = nullptr;
-    return nullptr;
+	static_cast<ResponseBase*>(d)->detach();
 }
 
 } // of namespace

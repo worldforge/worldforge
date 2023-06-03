@@ -41,7 +41,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
     // like appearance and disappearance
     if (op->getClassNo() == SIGHT_NO) {
     	for (const auto& arg : args) {
-			RootOperation sop = smart_dynamic_cast<RootOperation>(arg);
+			auto sop = smart_dynamic_cast<RootOperation>(arg);
 			if (sop.isValid()) {
 				return handleSightOp(sop);
 			}
@@ -52,7 +52,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 		for (const auto& arg : args) {
 			if (arg->getClassNo() == TALK_NO)
 			{
-				RootOperation talk = smart_dynamic_cast<RootOperation>(arg);
+				auto talk = smart_dynamic_cast<RootOperation>(arg);
 				m_entity.onTalk(talk);
 			} else {
 				if (!arg->isDefaultParent()) {
@@ -61,7 +61,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 						new TypeBoundRedispatch(m_view.getConnection(), op, ty);
 					} else if (ty->isA(m_view.getTypeService().getTypeByName("action"))) {
 						// sound of action
-						RootOperation act = smart_dynamic_cast<RootOperation>(arg);
+						auto act = smart_dynamic_cast<RootOperation>(arg);
 						m_entity.onSoundAction(act, *ty);
 					} else {
 						warning() << "entity " << m_entity.getId() << " emitted sound with strange argument: " << op;

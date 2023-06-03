@@ -298,7 +298,7 @@ int main()
 
 namespace Eris {
 
-sigc::signal<void, LogLevel, const std::string&> Logged;
+sigc::signal<void(LogLevel, const std::string&)> Logged;
 
 void setLogLevel(LogLevel lvl)
 {

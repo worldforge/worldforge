@@ -111,7 +111,7 @@ public:
      * @brief Emitted before an property changes.
      * The first parameter is the name of the property, and the second is the actual property.
      */
-    sigc::signal<void, const std::string&, const Atlas::Message::Element&> PropertyChanges;
+    sigc::signal<void(const std::string&, const Atlas::Message::Element&)> PropertyChanges;
 
 	/**
      * @brief Sets a property.
@@ -149,7 +149,7 @@ protected:
     /**
      * @brief Emitted when the type is bound, i.e there is an unbroken graph of TypeInfo instances through every ancestor to the root object. 
      */
-    sigc::signal<void> Bound;
+    sigc::signal<void()> Bound;
     
     
     /**

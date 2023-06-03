@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 project(eris)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 include(GNUInstallDirs)
@@ -86,6 +86,7 @@ macro(wf_add_test TEST_FILE)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
 
+    target_compile_options(${TEST_NAME} PUBLIC "-w")
     #Link to the same libs as the main lib without linking to the lib itself.
     get_target_property(LINKED_LIBS ${LIBNAME} LINK_LIBRARIES)
     target_link_libraries(${TEST_NAME}
@@ -105,10 +106,7 @@ macro(wf_add_test_linked TEST_FILE)
     target_link_libraries(${TEST_NAME} ${PROJECT_NAME})
 endmacro()
 
-find_package(sigc++
-        2.0
-        REQUIRED)
-
+find_package(sigc++-3 3.0 REQUIRED)
 
 find_package(Atlas
         #Needed to make CMake on Windows find the packages. There's probably a better way to package Atlas on Windows

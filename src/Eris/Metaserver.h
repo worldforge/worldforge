@@ -99,22 +99,22 @@ public:
 // signals
 
 	/// Emitted when information about a server is received
-	sigc::signal<void, const ServerInfo&> ReceivedServerInfo;
+	sigc::signal<void(const ServerInfo&)> ReceivedServerInfo;
 
 	/**
 	Emitted once the complete list of servers has been retrived from
 	the metaserver. Argument is the total number of servers in the list
 	*/
-	sigc::signal<void, int> CompletedServerList;
+	sigc::signal<void(int)> CompletedServerList;
 
 	/// Emitted when the entire server list has been refreshed
-	sigc::signal<void> AllQueriesDone;
+	sigc::signal<void()> AllQueriesDone;
 
 	/**
 	Indicates a failure (usually network related) has occurred.
 	The server list will be cleared, and the status set to INVALID.
 	*/
-	sigc::signal<void, const std::string&> Failure;
+	sigc::signal<void(const std::string&)> Failure;
 
 protected:
 	friend class MetaQuery;

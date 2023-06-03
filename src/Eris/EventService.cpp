@@ -3,7 +3,6 @@
 #include "ActiveMarker.h"
 
 #include <cassert>
-#include <iostream>
 
 namespace Eris
 {

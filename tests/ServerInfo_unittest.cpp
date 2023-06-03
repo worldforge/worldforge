@@ -80,9 +80,9 @@ int main()
     exerciser.addParam("version", ElementParam("1.0"));
     exerciser.addParam("builddate", ElementParam("2000-01-01"));
 
-    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> slot(
+    sigc::slot<void(const Atlas::Objects::Entity::RootEntity&)> slot(
             sigc::ptr_fun(&testServerInfo));
-    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> correctSlot(
+    sigc::slot<void(const Atlas::Objects::Entity::RootEntity&)> correctSlot(
             sigc::ptr_fun(&testServerInfoCorrect));
     exerciser.exercise(slot, correctSlot);
 

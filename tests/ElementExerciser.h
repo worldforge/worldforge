@@ -106,8 +106,8 @@ public:
         mElementParams.insert(std::make_pair(paramName, param));
     }
 
-    void exercise(sigc::slot<void, const EntityType&> exerciseSlot,
-            sigc::slot<void, const EntityType&> correctSlot)
+    void exercise(sigc::slot<void(const EntityType&)> exerciseSlot,
+            sigc::slot<void(const EntityType&)> correctSlot)
     {
         static Atlas::Message::Element::Type types[] = {
                 Atlas::Message::Element::TYPE_FLOAT,

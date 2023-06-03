@@ -77,6 +77,6 @@ wf_add_library(${LIBNAME} SOURCE_FILES HEADER_FILES)
 target_link_libraries(${LIBNAME} PUBLIC
         Atlas::AtlasObjects
         Atlas::AtlasNet
-        sigc++::sigc++
+        libsigcpp::sigc++
         Boost::headers
         wfmath::wfmath)

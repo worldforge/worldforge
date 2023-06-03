@@ -28,7 +28,7 @@ Calendar::Calendar(Avatar& av) :
     m_secondsPerMinute(0)
 {
     av.getView().TopLevelEntityChanged.connect(
-        sigc::mem_fun(this, &Calendar::topLevelEntityChanged));
+        sigc::mem_fun(*this, &Calendar::topLevelEntityChanged));
     // hook up right now if currently valid
     if (av.getView().getTopLevel()) topLevelEntityChanged();
 }
@@ -39,7 +39,7 @@ void Calendar::topLevelEntityChanged()
     Entity* tl = m_avatar.getView().getTopLevel();
     if (!tl || !tl->hasProperty("calendar")) return;
 
-    m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged), true);
+    m_calendarObserver = tl->observe("calendar", sigc::mem_fun(*this, &Calendar::calendarAttrChanged), true);
 }
 
 void Calendar::calendarAttrChanged(const Element& value)
