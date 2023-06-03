@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project(varconf)
 include(GNUInstallDirs)
 include(FindPkgConfig)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
 
@@ -88,6 +88,7 @@ macro(wf_add_test TEST_FILE)
     else (BUILD_TESTING)
         add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_FILE} ${ARGN})
     endif (BUILD_TESTING)
+    target_compile_options(${TEST_NAME} PUBLIC "-w")
     target_link_libraries(${TEST_NAME} "${PROJECT_NAME}")
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     #We need to tell adjust the path so tests on windows can find the .dll files.
@@ -97,11 +98,11 @@ macro(wf_add_test TEST_FILE)
 endmacro()
 
 # Populate for pkg-config
-set(REQUIRES "sigc++-2.0")
+set(REQUIRES "sigc++-3.0")
 
 # Check for deps
 
-find_package(sigc++ 2.0 REQUIRED)
+find_package(sigc++-3 3.0 REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(tests)

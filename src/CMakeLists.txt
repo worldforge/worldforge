@@ -21,5 +21,5 @@ set(HEADER_FILES
 wf_add_library("${PROJECT_NAME}" SOURCE_FILES HEADER_FILES)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        sigc++::sigc++)
+        libsigcpp::sigc++)
 

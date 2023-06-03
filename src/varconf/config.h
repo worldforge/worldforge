@@ -119,10 +119,10 @@ public:
   // Accessor for the contained sections.
   const conf_map& getSections() const;
  
-  sigc::signal<void> sig;
-  sigc::signal<void, const char*> sige;
-  sigc::signal<void, const std::string&, const std::string&> sigv; 
-  sigc::signal<void, const std::string&, const std::string&, Config&> sigsv;
+  sigc::signal<void()> sig;
+  sigc::signal<void(const char*)> sige;
+  sigc::signal<void(const std::string&, const std::string&)> sigv;
+  sigc::signal<void(const std::string&, const std::string&, Config&)> sigsv;
   // libsigc++ signals; in order: standard callback signal, error signal,
   // verbose callback signal and "super-verbose" callback signal. 
 
