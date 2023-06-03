@@ -34,7 +34,7 @@ class AtlasConan(ConanFile):
 
     def export_sources(self):
         folder = os.path.join(self.recipe_folder, "../..")
-        copy(self, "*", folder, self.export_sources_folder, excludes=["*build*"])
+        copy(self, "*", folder, self.export_sources_folder, excludes=["build"])
 
     def generate(self):
         tc = CMakeToolchain(self)

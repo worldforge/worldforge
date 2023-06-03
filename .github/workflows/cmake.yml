@@ -44,7 +44,7 @@ jobs:
       - name: Have Conan install packages
         shell: bash
         run: |
-          conan install tools/conan -pr default --build=missing --update --output-folder=build_ci
+          conan install tools/conan -pr default --build=missing --update
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
