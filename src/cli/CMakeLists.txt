@@ -9,5 +9,7 @@ target_link_libraries(squall-bin
         squallcore
         CLI11::CLI11
         )
+set_target_properties(squall-bin
+        PROPERTIES INSTALL_RPATH "\\\$ORIGIN/../lib64")
 
 INSTALL(TARGETS squall-bin)
