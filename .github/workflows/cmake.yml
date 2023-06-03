@@ -56,11 +56,11 @@ jobs:
 
       - name: Build
         shell: bash
-        run: cmake --build --preset $PROFILE_CONAN
+        run: cmake --build --preset $PROFILE_CONAN --parallel
 
       - name: Test
         shell: bash
-        run: ctest --preset $PROFILE_CONAN --output-on-failure
+        run: ctest --preset $PROFILE_CONAN --output-on-failure --parallel
 
       - name: Upload artifacts
         shell: bash
