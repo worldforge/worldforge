@@ -20,6 +20,7 @@ class SquallConan(ConanFile):
     options = {"shared": [False, True], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     user = "worldforge"
+    package_type = "library"
     generators = "CMakeToolchain", "CMakeDeps"
 
     def requirements(self):
