@@ -15,4 +15,4 @@ build_script:
       conan create "cegui" --build missing
       conan create "ogre" --build missing
       conan remote login worldforge %CONAN_LOGIN_USERNAME% -p %CONAN_PASSWORD%
-      conan upload "*" -r worldforge -c --all
+      conan upload "*" -r worldforge -c
