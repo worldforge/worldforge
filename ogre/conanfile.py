@@ -1,8 +1,10 @@
 import os
 
 from conan import ConanFile
+from conan.tools.apple import is_apple_os
 from conan.tools.cmake import CMake, cmake_layout, CMakeToolchain
 from conan.tools.files import get
+from conan.tools.microsoft import is_msvc
 from conan.tools.system.package_manager import Apt
 
 
@@ -87,13 +89,13 @@ class OgreConan(ConanFile):
         tc.variables['OGRE_CONFIG_THREADS'] = '2'
         tc.variables['OGRE_STATIC'] = not self.options.shared
 
-        if self.settings.os == "Windows":
+        if is_msvc(self):
             tc.variables['OGRE_INSTALL_PDB'] = 'OFF'
         else:
             tc.variables['CMAKE_POSITION_INDEPENDENT_CODE'] = 'ON'
 
         # If we don't disable precompiled headers on Macos we get an error about "Objective-C was disabled in PCH file but is currently enabled"
-        if self.settings.os == "Macos":
+        if is_apple_os(self):
             tc.variables['OGRE_ENABLE_PRECOMPILED_HEADERS'] = 'OFF'
 
         tc.generate()
@@ -113,7 +115,7 @@ class OgreConan(ConanFile):
         else:
             self.cpp_info.libdirs = ["lib", "lib/OGRE"]
 
-        self.cpp_info.libs = ["Codec_FreeImageStatic",
+        self.cpp_info.libs = ["Codec_STBIStatic",
                               "OgreMeshLodGeneratorStatic",
                               "OgreOverlayStatic",
                               "OgreTerrainStatic",
@@ -136,8 +138,7 @@ class OgreConan(ConanFile):
                                      "include/OGRE/MeshLodGenerator",
                                      "include/OGRE/RTShaderSystem"]
 
-        self.cpp_info.set_property("cmake_find_mode", "none")  # Do NOT generate anyfiles
-        if self.settings.os == "Macos":
+        if is_apple_os(self) or is_msvc(self):
             self.cpp_info.builddirs.append("CMake")
         else:
             self.cpp_info.builddirs.append(os.path.join("lib", "OGRE", "cmake"))

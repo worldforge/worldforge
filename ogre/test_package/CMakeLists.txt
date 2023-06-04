@@ -4,4 +4,4 @@ project(PackageTest CXX)
 find_package(OGRE CONFIG REQUIRED)
 
 add_executable(example example.cpp)
-target_link_libraries(example OgreMain)
+target_link_libraries(example ogre::ogre)
