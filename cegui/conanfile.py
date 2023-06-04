@@ -38,7 +38,7 @@ class CeguiConan(ConanFile):
 
     def requirements(self):
         self.requires("freetype/2.13.0", transitive_libs=True)
-        self.requires("expat/2.5.0")
+        self.requires("xerces-c/3.2.4")
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -61,13 +61,13 @@ class CeguiConan(ConanFile):
         tc.variables['CEGUI_BUILD_RENDERER_DIRECT3D11'] = 'OFF'
         tc.variables['CEGUI_BUILD_RENDERER_DIRECTFB'] = 'OFF'
         tc.variables['CEGUI_BUILD_LUA_GENERATOR'] = 'OFF'
-        tc.variables['CEGUI_BUILD_XMLPARSER_EXPAT'] = 'ON'
+        tc.variables['CEGUI_BUILD_XMLPARSER_EXPAT'] = 'OFF'
         tc.variables['CEGUI_BUILD_XMLPARSER_LIBXML2'] = 'OFF'
-        tc.variables['CEGUI_BUILD_XMLPARSER_XERCES'] = 'OFF'
+        tc.variables['CEGUI_BUILD_XMLPARSER_XERCES'] = 'ON'
         tc.variables['CEGUI_BUILD_XMLPARSER_RAPIDXML'] = 'OFF'
         tc.variables['CEGUI_BUILD_XMLPARSER_TINYXML'] = 'OFF'
         tc.variables['CEGUI_BUILD_XMLPARSER_TINYXML2'] = 'OFF'
-        tc.variables['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'ExpatXMLParser'
+        tc.variables['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'XercesXMLParser'
         if not self.options.shared:
             tc.variables['CEGUI_BUILD_STATIC_CONFIGURATION'] = 'ON'
             tc.variables['CEGUI_BUILD_STATIC_FACTORY_MODULE'] = 'ON'
