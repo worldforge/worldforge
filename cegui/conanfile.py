@@ -66,6 +66,7 @@ class CeguiConan(ConanFile):
         tc.variables['CEGUI_BUILD_XMLPARSER_RAPIDXML'] = 'OFF'
         tc.variables['CEGUI_BUILD_XMLPARSER_TINYXML'] = 'OFF'
         tc.variables['CEGUI_BUILD_XMLPARSER_TINYXML2'] = 'OFF'
+        tc.variables['CEGUI_OPTION_DEFAULT_XMLPARSER'] = 'None'
         if not self.options.shared:
             tc.variables['CEGUI_BUILD_STATIC_CONFIGURATION'] = 'ON'
             tc.variables['CEGUI_BUILD_STATIC_FACTORY_MODULE'] = 'ON'
