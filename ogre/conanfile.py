@@ -20,8 +20,7 @@ class OgreConan(ConanFile):
         "shared": False,
         "freetype/*:with_brotli": False,
         "freetype/*:with_bzip2": False,
-        "freetype/*:with_png": False,
-        "freetype/*:with_zlib": False
+        "freetype/*:with_png": False
     }
 
     url = 'https://www.ogre3d.org'

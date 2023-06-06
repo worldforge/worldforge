@@ -30,14 +30,13 @@ class CeguiConan(ConanFile):
         "shared": False,
         "freetype/*:with_brotli": False,
         "freetype/*:with_bzip2": False,
-        "freetype/*:with_png": False,
-        "freetype/*:with_zlib": False
+        "freetype/*:with_png": False
     }
     user = "worldforge"
     package_type = "library"
 
     def requirements(self):
-        self.requires("freetype/2.13.0", transitive_libs=True)
+        self.requires("freetype/2.13.0")
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -74,8 +73,7 @@ class CeguiConan(ConanFile):
 
         tc.generate()
 
-        # Don't use CMake deps generator
-        # CMakeDeps(self).generate()
+        CMakeDeps(self).generate()
 
     def layout(self):
         cmake_layout(self)
@@ -99,6 +97,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
         # We shouldn't even look for boost.
         replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(Boost",
                         "#find_package(Boost")
+
+        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(Freetype)",
+                        "find_package(Freetype CONFIG REQUIRED)\nlink_libraries(Freetype::Freetype)")
+        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(GTK2 COMPONENTS gtk)",
+                        "#find_package(GTK2 COMPONENTS gtk)")
 
         cmake = CMake(self)
         cmake.configure()
