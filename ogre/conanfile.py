@@ -109,7 +109,7 @@ class OgreConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        if self.settings.compiler == "msvc":
+        if is_msvc(self):
             self.cpp_info.libdirs = ["lib", "lib/OGRE", "bin"]
         else:
             self.cpp_info.libdirs = ["lib", "lib/OGRE"]

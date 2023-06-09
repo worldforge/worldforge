@@ -4,6 +4,7 @@ import os
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout, CMakeDeps, CMakeToolchain
 from conan.tools.files import replace_in_file, get, collect_libs, patch
+from conan.tools.microsoft import is_msvc
 
 
 class CeguiConan(ConanFile):
@@ -84,9 +85,9 @@ class CeguiConan(ConanFile):
         get(self, "{0}/v{1}.zip".format(source_url, version_hyphenated), strip_root=True)
 
     def build(self):
-        self._apply_patches('patches', self.folders.source_folder)
+        self._apply_patches(os.path.join(self.export_sources_folder, 'patches'), self.folders.source_folder)
         # Remove VS snprintf workaround
-        if self.settings.compiler == 'msvc' and int(str(self.settings.compiler.version)) >= 14:
+        if is_msvc(self) and int(str(self.settings.compiler.version)) >= 14:
             replace_in_file(self, '{0}/cegui/include/CEGUI/PropertyHelper.h'.format(self.folders.source_folder),
                             '#define snprintf _snprintf', '')
         replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "project(cegui)", """project(cegui)
@@ -100,7 +101,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 
         replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(Freetype)",
                         "find_package(Freetype CONFIG REQUIRED)\nlink_libraries(Freetype::Freetype)")
-        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(GTK2 COMPONENTS gtk)",
+        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder),
+                        "find_package(GTK2 COMPONENTS gtk)",
                         "#find_package(GTK2 COMPONENTS gtk)")
 
         cmake = CMake(self)
