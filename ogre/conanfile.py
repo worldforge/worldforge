@@ -78,7 +78,6 @@ class OgreConan(ConanFile):
         tc.variables['OGRE_BUILD_COMPONENT_BULLET'] = 'OFF'
         tc.variables['OGRE_BUILD_COMPONENT_PYTHON'] = 'OFF'
         tc.variables['OGRE_BUILD_COMPONENT_PROPERTY'] = 'OFF'
-        tc.variables['OGRE_BUILD_COMPONENT_BITES'] = 'OFF'
         tc.variables['OGRE_BUILD_COMPONENT_OVERLAY'] = 'ON'
         tc.variables['OGRE_BUILD_COMPONENT_OVERLAY_IMGUI'] = 'OFF'
         tc.variables['OGRE_CONFIG_THREAD_PROVIDER'] = 'std'
