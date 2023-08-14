@@ -38,6 +38,7 @@ class CeguiConan(ConanFile):
 
     def requirements(self):
         self.requires("freetype/2.13.0")
+        self.requires("pcre/8.45")
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -47,7 +48,7 @@ class CeguiConan(ConanFile):
         tc.variables['CEGUI_BUILD_LUA_MODULE'] = False
         tc.variables['CEGUI_BUILD_APPLICATION_TEMPLATES'] = False
         tc.variables['CEGUI_HAS_FREETYPE'] = True
-        tc.variables['CEGUI_HAS_PCRE_REGEX'] = False
+        tc.variables['CEGUI_HAS_PCRE_REGEX'] = True
         tc.variables['CEGUI_BUILD_IMAGECODEC_FREEIMAGE'] = 'OFF'
         tc.variables['CEGUI_BUILD_IMAGECODEC_SDL2'] = 'OFF'
         tc.variables['CEGUI_BUILD_IMAGECODEC_STB'] = 'ON'
@@ -101,6 +102,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 
         replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(Freetype)",
                         "find_package(Freetype CONFIG REQUIRED)\nlink_libraries(Freetype::Freetype)")
+        replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder), "find_package(PCRE)",
+                        "find_package(PCRE CONFIG REQUIRED)\nlink_libraries(pcre::pcre)")
         replace_in_file(self, "{0}/CMakeLists.txt".format(self.folders.source_folder),
                         "find_package(GTK2 COMPONENTS gtk)",
                         "#find_package(GTK2 COMPONENTS gtk)")
