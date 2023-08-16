@@ -9,7 +9,7 @@ from conans.errors import ConanException
 
 class SquallConan(ConanFile):
     name = "squall"
-    version = "0.1"
+    version = "0.1.0"
     license = "MIT"
     author = "Erik Ogenvik <erik@ogenvik.org>"
     url = "https://github.com/worldforge/squall"
