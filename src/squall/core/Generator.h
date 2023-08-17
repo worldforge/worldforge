@@ -19,6 +19,7 @@
 #ifndef SQUALL_GENERATOR_H
 #define SQUALL_GENERATOR_H
 
+#include <regex>
 #include "Repository.h"
 #include "Manifest.h"
 
@@ -54,7 +55,13 @@ struct SignatureResult {
 class Generator {
 
 public:
-	Generator(Repository& repository, std::filesystem::path sourceDirectory);
+
+	struct Config {
+		std::vector<std::regex> exclude;
+		std::vector<std::regex> include;
+	};
+
+	Generator(Repository& repository, std::filesystem::path sourceDirectory, Config config = {});
 
 	GenerateResult process(size_t filesToProcess);
 
@@ -67,6 +74,8 @@ public:
 protected:
 	Repository& mRepository;
 	std::filesystem::path mSourceDirectory;
+	Config mConfig;
+
 	std::vector<DirectoryIterator> mIterators;
 
 	std::vector<GenerateEntry> mGeneratedEntries;
@@ -77,6 +86,8 @@ protected:
 
 
 	std::filesystem::path linkFile(const std::filesystem::path& filePath, const Signature& signature);
+
+	bool shouldProcessPath(const std::filesystem::path& filePath);
 };
 }
 

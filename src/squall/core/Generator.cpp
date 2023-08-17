@@ -27,9 +27,11 @@
 #include <sstream>
 
 namespace Squall {
-Generator::Generator(Repository& repository, std::filesystem::path sourceDirectory)
+
+Generator::Generator(Repository& repository, std::filesystem::path sourceDirectory, Config config)
 		: mRepository(repository),
-		  mSourceDirectory(std::move(sourceDirectory)) {
+		  mSourceDirectory(std::move(sourceDirectory)),
+		  mConfig(std::move(config)) {
 	std::filesystem::directory_iterator topIterator{mSourceDirectory};
 	if (topIterator != std::filesystem::directory_iterator()) {
 		mIterators.emplace_back(DirectoryIterator{.iterator = std::move(topIterator)});
@@ -74,14 +76,21 @@ GenerateResult Generator::process(size_t filesToProcess) {
 			if (!mIterators.empty()) {
 				mIterators.back().entries.emplace_back(processedEntry);
 			}
+
 		} else if (lastIterator->is_directory()) {
-			std::filesystem::directory_iterator subdirectoryIterator{*lastIterator};
-			mIterators.emplace_back(DirectoryIterator{.iterator= std::move(subdirectoryIterator)});
+			if (shouldProcessPath(*lastIterator)) {
+				std::filesystem::directory_iterator subdirectoryIterator{*lastIterator};
+				mIterators.emplace_back(DirectoryIterator{.iterator= std::move(subdirectoryIterator)});
+			} else {
+				lastIterator++;
+			}
 		} else {
-			auto processedEntry = processFile(*lastIterator);
-			mGeneratedEntries.emplace_back(processedEntry);
-			result.processedFiles.emplace_back(processedEntry);
-			lastIteratorEntry.entries.emplace_back(processedEntry);
+			if (shouldProcessPath(*lastIterator)) {
+				auto processedEntry = processFile(*lastIterator);
+				mGeneratedEntries.emplace_back(processedEntry);
+				result.processedFiles.emplace_back(processedEntry);
+				lastIteratorEntry.entries.emplace_back(processedEntry);
+			}
 			lastIterator++;
 		}
 	}
@@ -149,6 +158,26 @@ Signature Generator::generateSignature(const Manifest& manifest) {
 
 std::filesystem::path Generator::linkFile(const std::filesystem::path& filePath, const Signature& signature) {
 	return mRepository.store(signature, filePath).localPath;
+}
+
+bool Generator::shouldProcessPath(const std::filesystem::path& filePath) {
+	if (!mConfig.exclude.empty() || !mConfig.include.empty()) {
+		auto relative = filePath.filename().generic_string();
+		for (auto& exclusion: mConfig.exclude) {
+			if (std::regex_match(relative, exclusion)) {
+				return false;
+			}
+		}
+		for (auto& inclusion: mConfig.include) {
+			if (std::regex_match(relative, inclusion)) {
+				return true;
+			}
+		}
+		if (!mConfig.include.empty()) {
+			return false;
+		}
+	}
+	return true;
 }
 
 

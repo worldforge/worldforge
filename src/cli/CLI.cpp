@@ -45,11 +45,15 @@ int main(int argc, char** argv) {
 
 	{
 		auto sourcePath = std::make_shared<std::string>();
+		auto excludes = std::make_shared<std::vector<std::regex>>();
+		auto includes = std::make_shared<std::vector<std::regex>>();
 		auto generate = app.add_subcommand("generate", "Generate digests from an existing file structure.");
 		generate->add_option("-s,--source", *sourcePath, "Location of source.")->required(true);
-		generate->final_callback([&repositoryPath, sourcePath]() {
+		generate->add_option("-e,--exclude", *excludes, "Regexp of paths to exclude.");
+		generate->add_option("-i,--include", *includes, "Regexp of paths to include.");
+		generate->final_callback([&repositoryPath, sourcePath, excludes, includes]() {
 			Repository repository(repositoryPath);
-			Generator generator(repository, *sourcePath);
+			Generator generator(repository, *sourcePath, {.exclude = *excludes, .include=*includes});
 
 			size_t filesProcessed = 0;
 			GenerateResult result;
