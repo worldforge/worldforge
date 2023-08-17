@@ -57,6 +57,11 @@ struct PendingFetch {
 	FileEntryType fileEntryType;
 };
 
+/**
+ * Used to make sure that a remote signature is fully contained in a local repository.
+ *
+ * This involves polling the resolver until all data has been transferred into the local repository.
+ */
 class Resolver {
 public:
 	Resolver(Repository destinationRepository,
