@@ -37,6 +37,11 @@ int main(int argc, char** argv) {
 
 	std::string repositoryPath;
 	app.add_option("-r,--repository", repositoryPath, "Location of the repository.");
+	app.add_flag("-v,--verbose", [](std::int64_t verbose) {
+		spdlog::set_level(spdlog::level::trace);
+		spdlog::trace("Verbose logging enabled");
+	}, "Enable verbose logging.");
+
 
 	{
 		auto sourcePath = std::make_shared<std::string>();
