@@ -40,6 +40,10 @@ struct ResolveEntry {
 	Signature signature;
 	ResolveEntryStatus status;
 	size_t bytesCopied;
+	/**
+	 * The path within the Squall repository. This is kept mainly to allow for other component to keep track of the progress.
+	 */
+	std::filesystem::path path;
 };
 
 struct ResolveResult {
@@ -54,6 +58,11 @@ struct PendingFetch {
 	 */
 	Signature expectedSignature;
 	std::filesystem::path temporaryPath;
+	/**
+	 * The path within the Squall repository. This is kept mainly to allow for other component to keep track of the progress.
+	 */
+	std::filesystem::path repositoryPath;
+
 	std::future<ProviderResult> providerResultFuture;
 	std::optional<ProviderResult> providerResult;
 	std::optional<SignatureGenerationContext> signatureGeneratorContext;

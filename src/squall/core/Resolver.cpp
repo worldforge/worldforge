@@ -89,7 +89,8 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 			} else {
 				//Check if the iterator points at an entry that already exists in the local repository.
 				if (mIterator) {
-					completedRequests.emplace_back(ResolveEntry{.signature = (*mIterator).fileEntry.signature, .status = ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied = 0});
+					completedRequests.emplace_back(
+							ResolveEntry{.signature = (*mIterator).fileEntry.signature, .status = ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied = 0, .path = (*mIterator).path});
 					++mIterator;
 				} else if (mPendingFetches.empty()) {
 					auto traverseEntry = *mIterator;
@@ -101,6 +102,7 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 								PendingFetch{
 										.expectedSignature = traverseEntry.fileEntry.signature,
 										.temporaryPath = filename,
+										.repositoryPath = traverseEntry.path,
 										.providerResultFuture = std::move(result)
 								}
 						);
@@ -113,7 +115,8 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 									PendingFetch{
 											.expectedSignature = traverseEntry.fileEntry.signature,
 											.temporaryPath = filename,
-											.providerResultFuture = std::move(result)
+											.repositoryPath = traverseEntry.path,
+											.providerResultFuture = std::move(result),
 									}
 							);
 						}
@@ -140,18 +143,18 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 							if (!signatureResult->signature.isValid()) {
 								spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.generic_string(), pending.expectedSignature.str_view());
 								remove(pending.temporaryPath);
-								mPendingFetches.erase(I);
 								completedRequests.emplace_back(
-										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied});
+										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+								mPendingFetches.erase(I);
 								return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
 							}
 							if (signatureResult->signature != pending.expectedSignature) {
 								spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(),
 											  pending.expectedSignature.str_view(), signatureResult->signature.str_view());
 								remove(pending.temporaryPath);
-								mPendingFetches.erase(I);
 								completedRequests.emplace_back(
-										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied});
+										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+								mPendingFetches.erase(I);
 								return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
 							}
 
@@ -159,9 +162,9 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 										  pending.temporaryPath.generic_string());
 							mDestinationRepository.store(signatureResult->signature, pending.temporaryPath);
 							remove(pending.temporaryPath);
-							mPendingFetches.erase(I);
 							completedRequests.emplace_back(
-									ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied});
+									ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+							mPendingFetches.erase(I);
 						}
 						return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
 					} else {
