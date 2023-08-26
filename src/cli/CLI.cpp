@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
 			ResolveResult result{};
 			std::vector<ResolveEntry> downloadedFiles;
 			do {
-				result = resolver.poll();
+				result = resolver.poll(0);
 				for (auto& entry: result.completedRequests) {
 					downloadedFiles.emplace_back(entry);
 				}

@@ -39,7 +39,7 @@ TEST_CASE("Curl resolver copies files", "[resolver]") {
 
 	int i = 0;
 	while (true) {
-		auto pollResult = resolver.poll();
+		auto pollResult = resolver.poll(1);
 		REQUIRE(pollResult.status != Squall::ResolveStatus::ERROR);
 		REQUIRE(i++ < 20);
 		if (pollResult.status == Squall::ResolveStatus::COMPLETE) {

@@ -84,6 +84,10 @@ public:
 
 	bool operator!=(const iterator& other) const { return !(*this == other); }
 
+	/**
+	 * Returns true if the entry exists in the local repository.
+	 * @return
+	 */
 	operator bool() const;
 
 	TraverseEntry operator*();

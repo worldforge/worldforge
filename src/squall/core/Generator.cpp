@@ -156,6 +156,32 @@ Signature Generator::generateSignature(const Manifest& manifest) {
 	return generateSignature(ss).signature;
 }
 
+std::optional<SignatureResult> Generator::generateSignature(SignatureGenerationContext& context, size_t maxIterations) {
+	size_t iterations = 0;
+	while (context.fileStream) {
+		std::array<char, 4096> buffer{};
+		context.fileStream.read(buffer.data(), buffer.size());
+		auto dataRead = context.fileStream.gcount();
+		context.size += dataRead;
+		auto ptr = reinterpret_cast<const uint8_t*>(buffer.data());
+		context.sha256.update(ptr, dataRead);
+		if (maxIterations != 0 && iterations == maxIterations && context.fileStream) {
+			return {};
+		}
+		iterations++;
+	}
+	auto signatureRaw = std::unique_ptr<uint8_t>(context.sha256.digest());
+
+	std::stringstream ss;
+	for (size_t i = 0; i < 32; ++i) {
+		unsigned int c = signatureRaw.get()[i];
+		ss << std::hex << c;
+	}
+	return {{.signature = Signature{ss.str()}, .size = context.size}};
+
+}
+
+
 std::filesystem::path Generator::linkFile(const std::filesystem::path& filePath, const Signature& signature) {
 	return mRepository.store(signature, filePath).localPath;
 }

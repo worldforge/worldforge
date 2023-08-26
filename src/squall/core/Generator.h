@@ -20,8 +20,10 @@
 #define SQUALL_GENERATOR_H
 
 #include <regex>
+#include <fstream>
 #include "Repository.h"
 #include "Manifest.h"
+#include "SHA256.h"
 
 namespace Squall {
 
@@ -47,6 +49,12 @@ struct SignatureResult {
 	std::int64_t size;
 };
 
+struct SignatureGenerationContext {
+	std::ifstream fileStream;
+	SHA256 sha256;
+	std::int64_t size = 0;
+};
+
 /**
  * Generates digests and manifests from an existing file structure.
  *
@@ -70,6 +78,9 @@ public:
 	static Signature generateSignature(const Manifest& manifest);
 
 	static SignatureResult generateSignature(std::istream& stream);
+
+	static std::optional<SignatureResult> generateSignature(SignatureGenerationContext& context, size_t maxIterations);
+
 
 protected:
 	Repository& mRepository;

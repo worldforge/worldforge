@@ -23,6 +23,7 @@
 #include "Provider.h"
 #include "Root.h"
 #include "Iterator.h"
+#include "Generator.h"
 
 namespace Squall {
 
@@ -53,8 +54,9 @@ struct PendingFetch {
 	 */
 	Signature expectedSignature;
 	std::filesystem::path temporaryPath;
-	std::future<ProviderResult> providerResult;
-	FileEntryType fileEntryType;
+	std::future<ProviderResult> providerResultFuture;
+	std::optional<ProviderResult> providerResult;
+	std::optional<SignatureGenerationContext> signatureGeneratorContext;
 };
 
 /**
@@ -68,7 +70,7 @@ public:
 			 std::unique_ptr<Provider> provider,
 			 Signature rootSignature);
 
-	ResolveResult poll();
+	ResolveResult poll(size_t maxSignatureGenerationIterations);
 
 private:
 	enum class FetchResult {
