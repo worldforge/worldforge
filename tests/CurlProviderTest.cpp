@@ -43,4 +43,12 @@ TEST_CASE("Repository provider copies files", "[provider]") {
 		REQUIRE(std::filesystem::exists(destinationPath));
 	}
 
+	SECTION("fails file that doesn't exists") {
+		Signature signature("aaaab46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");
+		auto destinationPath = repositoryDestination.resolvePathForSignature(signature);
+		auto fetchResult = repositoryProvider.fetch(signature, destinationPath);
+		fetchResult.wait_for(std::chrono::seconds(2));
+		REQUIRE(fetchResult.get().status == ProviderResultStatus::FAILURE);
+	}
+
 }

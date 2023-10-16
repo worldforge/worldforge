@@ -31,12 +31,23 @@ CurlProvider::CurlProvider(std::string baseUrl)
 }
 
 struct CurlFileEntry {
+	CURL* easy;
 	std::fstream& file;
 	size_t bytesCopied;
+	bool hasProcessedHeaders;
 };
 
 static size_t curlCallback(void* data, size_t, size_t numberOfBytes, void* userData) {
 	auto* curlFileEntry = static_cast<CurlFileEntry*>(userData);
+	if (!curlFileEntry->hasProcessedHeaders) {
+		long responseCode;
+		curl_easy_getinfo(curlFileEntry->easy, CURLINFO_RESPONSE_CODE, &responseCode);
+		//0 is ok if we're on a non-http protocol
+		if (responseCode != 200 && responseCode != 0) {
+			return CURL_WRITEFUNC_ERROR;
+		}
+		curlFileEntry->hasProcessedHeaders = true;
+	}
 	curlFileEntry->file.write(static_cast<const char*>(data), static_cast<std::streamsize>(numberOfBytes));
 	curlFileEntry->bytesCopied += numberOfBytes;
 	return numberOfBytes;
@@ -56,7 +67,7 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 				return ProviderResult{.status=ProviderResultStatus::FAILURE};
 			}
 
-			CurlFileEntry curlFileEntry{.file = outputFile, .bytesCopied=0};
+			CurlFileEntry curlFileEntry{.easy = curl, .file = outputFile, .bytesCopied=0, .hasProcessedHeaders=false};
 
 
 			auto first = signature.str_view().substr(0, 2);
