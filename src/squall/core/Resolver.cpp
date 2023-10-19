@@ -51,37 +51,94 @@ Resolver::FetchResult Resolver::fetch(Signature signature) {
 	}
 }
 
+ResolveResult Resolver::pollRootSignature() {
+	if (mPendingFetches.empty()) {
+		auto fetchResult = fetch(mRootSignature);
+		if (fetchResult == FetchResult::EXISTS_IN_REPO_ALREADY) {
+			mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
+			mIterator = iterator(mDestinationRepository, *mRootManifest);
+			return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
+					{.signature=mRootSignature, .status=ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied=0}}};
+		}
+	}
+	auto& lastProviderResultFuture = mPendingFetches.back().providerResultFuture;
+	if (lastProviderResultFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+		auto lastPending = std::move(mPendingFetches.back());
+		auto result = lastPending.providerResultFuture.get();
+		mPendingFetches.pop_back();
+		if (result.status == ProviderResultStatus::SUCCESS) {
+			mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
+			mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
+			mIterator = iterator(mDestinationRepository, *mRootManifest);
+			return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
+					{.signature=mRootSignature, .status=ResolveEntryStatus::COPIED, .bytesCopied=result.bytesCopied}}};
+		} else {
+			spdlog::error("Provider could not fetch {}.", lastPending.temporaryPath.generic_string());
+			return {.status = ResolveStatus::ERROR};
+		}
+	}
+	return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
+}
+
+std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignatureGenerationIterations, std::vector<ResolveEntry> completedRequests) {
+	for (auto I = mPendingFetches.begin(); I != mPendingFetches.end(); I++) {
+		auto& pending = *I;
+
+		if (pending.providerResultFuture.valid() && pending.providerResultFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+			pending.providerResult = pending.providerResultFuture.get();
+		}
+
+		if (pending.providerResult) {
+			auto& providerResult = *pending.providerResult;
+			if (pending.signatureGeneratorContext || providerResult.status == ProviderResultStatus::SUCCESS) {
+				if (!pending.signatureGeneratorContext) {
+					pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = {pending.temporaryPath}};
+				}
+
+				//Make sure that the signature really matches what's in the file
+				auto signatureResult = Generator::generateSignature(*pending.signatureGeneratorContext, maxSignatureGenerationIterations);
+				if (signatureResult) {
+					if (!signatureResult->signature.isValid()) {
+						spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.generic_string(), pending.expectedSignature.str_view());
+						remove(pending.temporaryPath);
+						completedRequests.emplace_back(
+								ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+						mPendingFetches.erase(I);
+						return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+					}
+					if (signatureResult->signature != pending.expectedSignature) {
+						spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(),
+									  pending.expectedSignature.str_view(), signatureResult->signature.str_view());
+						remove(pending.temporaryPath);
+						completedRequests.emplace_back(
+								ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+						mPendingFetches.erase(I);
+						return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+					}
+
+					spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult->signature.str_view(),
+								  pending.temporaryPath.generic_string());
+					mDestinationRepository.store(signatureResult->signature, pending.temporaryPath);
+					remove(pending.temporaryPath);
+					completedRequests.emplace_back(
+							ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
+					mPendingFetches.erase(I);
+				}
+				return {{.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+			} else {
+				return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+			}
+		}
+	}
+	return {};
+}
+
 
 ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 	try {
 		//If we haven't gotten our root manifest we should start with that. That requires slightly different logic.
 		if (!mRootManifest) {
-			if (mPendingFetches.empty()) {
-				auto fetchResult = fetch(mRootSignature);
-				if (fetchResult == FetchResult::EXISTS_IN_REPO_ALREADY) {
-					mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
-					mIterator = iterator(mDestinationRepository, *mRootManifest);
-					return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
-							{.signature=mRootSignature, .status=ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied=0}}};
-				}
-			}
-			auto& lastProviderResultFuture = mPendingFetches.back().providerResultFuture;
-			if (lastProviderResultFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-				auto lastPending = std::move(mPendingFetches.back());
-				auto result = lastPending.providerResultFuture.get();
-				mPendingFetches.pop_back();
-				if (result.status == ProviderResultStatus::SUCCESS) {
-					mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
-					mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
-					mIterator = iterator(mDestinationRepository, *mRootManifest);
-					return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
-							{.signature=mRootSignature, .status=ResolveEntryStatus::COPIED, .bytesCopied=result.bytesCopied}}};
-				} else {
-					spdlog::error("Provider could not fetch {}.", lastPending.temporaryPath.generic_string());
-					return {.status = ResolveStatus::ERROR};
-				}
-			}
-			return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
+			return pollRootSignature();
 		} else {
 			std::vector<ResolveEntry> completedRequests;
 			if (mIterator == iterator()) {
@@ -123,54 +180,9 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 					}
 				}
 			}
-			for (auto I = mPendingFetches.begin(); I != mPendingFetches.end(); I++) {
-				auto& pending = *I;
-
-				if (pending.providerResultFuture.valid() && pending.providerResultFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-					pending.providerResult = pending.providerResultFuture.get();
-				}
-
-				if (pending.providerResult) {
-					auto& providerResult = *pending.providerResult;
-					if (pending.signatureGeneratorContext || providerResult.status == ProviderResultStatus::SUCCESS) {
-						if (!pending.signatureGeneratorContext) {
-							pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = {pending.temporaryPath}};
-						}
-
-						//Make sure that the signature really matches what's in the file
-						auto signatureResult = Generator::generateSignature(*pending.signatureGeneratorContext, maxSignatureGenerationIterations);
-						if (signatureResult) {
-							if (!signatureResult->signature.isValid()) {
-								spdlog::error("Could not generate signature for file {}, with expected signature {}.", pending.temporaryPath.generic_string(), pending.expectedSignature.str_view());
-								remove(pending.temporaryPath);
-								completedRequests.emplace_back(
-										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
-								mPendingFetches.erase(I);
-								return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
-							}
-							if (signatureResult->signature != pending.expectedSignature) {
-								spdlog::error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(),
-											  pending.expectedSignature.str_view(), signatureResult->signature.str_view());
-								remove(pending.temporaryPath);
-								completedRequests.emplace_back(
-										ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
-								mPendingFetches.erase(I);
-								return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
-							}
-
-							spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult->signature.str_view(),
-										  pending.temporaryPath.generic_string());
-							mDestinationRepository.store(signatureResult->signature, pending.temporaryPath);
-							remove(pending.temporaryPath);
-							completedRequests.emplace_back(
-									ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
-							mPendingFetches.erase(I);
-						}
-						return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
-					} else {
-						return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests};
-					}
-				}
+			auto processResult = processPendingFetched(maxSignatureGenerationIterations, std::move(completedRequests));
+			if (processResult) {
+				return *processResult;
 			}
 		}
 		return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};

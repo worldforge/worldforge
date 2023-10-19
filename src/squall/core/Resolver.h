@@ -99,6 +99,10 @@ private:
 
 	static std::filesystem::path buildTemporaryPath(const Signature& signature);
 
+	ResolveResult pollRootSignature();
+
+	std::optional<ResolveResult> processPendingFetched(size_t maxSignatureGenerationIterations, std::vector<ResolveEntry> completedRequests);
+
 
 };
 
