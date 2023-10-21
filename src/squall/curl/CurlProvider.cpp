@@ -55,47 +55,51 @@ static size_t curlCallback(void* data, size_t, size_t numberOfBytes, void* userD
 
 
 std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesystem::path destination) {
-	return std::async([=, this]() -> ProviderResult {
-		auto curl = curl_easy_init();
+	auto curl = curl_easy_init();
 
-		if (curl) {
-			auto destinationPartialPath = destination;
-			destinationPartialPath += ".partial";
-			create_directories(destinationPartialPath.parent_path());
-			std::fstream outputFile(destinationPartialPath, std::ios::out | std::ios::binary);
-			if (!outputFile.good()) {
-				return ProviderResult{.status=ProviderResultStatus::FAILURE};
-			}
-
-			CurlFileEntry curlFileEntry{.easy = curl, .file = outputFile, .bytesCopied=0, .hasProcessedHeaders=false};
-
-
-			auto first = signature.str_view().substr(0, 2);
-			auto second = signature.str_view().substr(2);
-
-			//Note: the "operator+" is (sillily) missing for std::string and std::string_view. Perhaps will be added in C++26?
-			auto sourceFile = mBaseUrl + "/" + std::string(first) + "/" + std::string(second);
-			curl_easy_setopt(curl, CURLOPT_URL, sourceFile.c_str());
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlFileEntry);
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlCallback);
-
-			auto res = curl_easy_perform(curl);
-
-			curl_easy_cleanup(curl);
-			outputFile.close();
-			// something failed
-			if (res != CURLE_OK) {
-				spdlog::error("Curl download of file '{}' failed with error message: {}.", sourceFile, curl_easy_strerror(res));
-
-				return ProviderResult{.status=ProviderResultStatus::FAILURE};
-			} else {
-				std::filesystem::rename(destinationPartialPath, destination);
-				return ProviderResult{.status=ProviderResultStatus::SUCCESS, .bytesCopied=curlFileEntry.bytesCopied};
-			}
+	if (curl) {
+		auto destinationPartialPath = destination;
+		destinationPartialPath += ".partial";
+		create_directories(destinationPartialPath.parent_path());
+		std::fstream outputFile(destinationPartialPath, std::ios::out | std::ios::binary);
+		if (!outputFile.good()) {
+			std::promise<ProviderResult> promise;
+			promise.set_value(ProviderResult{.status=ProviderResultStatus::FAILURE});
+			return promise.get_future();
 		}
-		return ProviderResult{.status=ProviderResultStatus::FAILURE};
 
-	});
+		CurlFileEntry curlFileEntry{.easy = curl, .file = outputFile, .bytesCopied=0, .hasProcessedHeaders=false};
+
+
+		auto first = signature.str_view().substr(0, 2);
+		auto second = signature.str_view().substr(2);
+
+		//Note: the "operator+" is (sillily) missing for std::string and std::string_view. Perhaps will be added in C++26?
+		auto sourceFile = mBaseUrl + "/" + std::string(first) + "/" + std::string(second);
+		curl_easy_setopt(curl, CURLOPT_URL, sourceFile.c_str());
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlFileEntry);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curlCallback);
+
+		auto res = curl_easy_perform(curl);
+
+		curl_easy_cleanup(curl);
+		outputFile.close();
+		// something failed
+		if (res != CURLE_OK) {
+			spdlog::error("Curl download of file '{}' failed with error message: {}.", sourceFile, curl_easy_strerror(res));
+			std::promise<ProviderResult> promise;
+			promise.set_value(ProviderResult{.status=ProviderResultStatus::FAILURE});
+			return promise.get_future();
+		} else {
+			std::filesystem::rename(destinationPartialPath, destination);
+			std::promise<ProviderResult> promise;
+			promise.set_value(ProviderResult{.status=ProviderResultStatus::SUCCESS, .bytesCopied=curlFileEntry.bytesCopied});
+			return promise.get_future();
+		}
+	}
+	std::promise<ProviderResult> promise;
+	promise.set_value(ProviderResult{.status=ProviderResultStatus::FAILURE});
+	return promise.get_future();
 }
 
 }
