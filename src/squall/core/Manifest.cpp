@@ -23,10 +23,6 @@ std::ostream& operator<<(std::ostream& out, const Squall::Manifest& manifest) {
 	out << manifest.version << std::endl;
 	for (auto& entry: manifest.entries) {
 		out << entry.signature << " " << entry.size << " " << entry.fileName;
-
-		if (entry.type == Squall::FileEntryType::DIRECTORY) {
-			out << "/";
-		}
 		out << std::endl;
 	}
 	return out;

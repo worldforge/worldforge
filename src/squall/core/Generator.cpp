@@ -18,6 +18,7 @@
 
 #include "Generator.h"
 #include "SHA256.h"
+#include "Iterator.h"
 
 #include <spdlog/spdlog.h>
 
@@ -69,7 +70,9 @@ GenerateResult Generator::process(size_t filesToProcess) {
 				currentDirectoryPath = mSourceDirectory;
 			}
 
-			auto processedEntry = processDirectory(currentDirectoryPath, manifest);
+			auto containedNewData = std::any_of(lastEntries.begin(), lastEntries.end(),[](const GenerateEntry& entry) {return entry.status == GenerateFileStatus::Copied;});
+
+			auto processedEntry = processDirectory(currentDirectoryPath, manifest, containedNewData);
 			mGeneratedEntries.emplace_back(processedEntry);
 			result.processedFiles.emplace_back(processedEntry);
 
@@ -101,23 +104,48 @@ GenerateResult Generator::process(size_t filesToProcess) {
 }
 
 GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
+	if (!mConfig.existingEntries.empty()) {
+		auto relativePath = std::filesystem::relative(filePath, mSourceDirectory);
+		auto existingI = mConfig.existingEntries.find(relativePath);
+		if (existingI != mConfig.existingEntries.end()) {
+			if (existingI->second.lastWriteTime >= std::filesystem::last_write_time(filePath)) {
+				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
+			}
+		}
+	}
+
 	auto signatureResult = generateSignature(filePath);
 	spdlog::debug("Signature is {} for file {}", signatureResult.signature.str_view(), filePath.generic_string());
 	auto localPath = linkFile(filePath, signatureResult.signature);
 	FileEntry fileEntry{.fileName=filePath.filename().generic_string(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
-	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath};
+	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath, .status = GenerateFileStatus::Copied};
 }
 
-GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Manifest& manifest) {
+GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath, const Manifest& manifest, bool containedNewData) {
+	//We'll only check in our map of existing entries if we know that the directly didn't contain any changed entries.
+	if (!containedNewData && !mConfig.existingEntries.empty()) {
+		auto relativePath = std::filesystem::relative(filePath, mSourceDirectory) / "";
+		auto existingI = mConfig.existingEntries.find(relativePath);
+		if (existingI != mConfig.existingEntries.end()) {
+			if (existingI->second.lastWriteTime >= std::filesystem::last_write_time(filePath)) {
+				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
+			}
+		}
+	}
+
 	auto signature = generateSignature(manifest);
 	spdlog::debug("Signature is {} for manifest {}", signature.str_view(), filePath.generic_string());
 	auto storeEntry = mRepository.store(signature, manifest);
+	if (storeEntry.status == StoreStatus::SUCCESS && !mConfig.skipLastWriteTime) {
+		std::filesystem::last_write_time(storeEntry.localPath, std::filesystem::last_write_time(filePath));
+	}
 	std::int64_t combinedSize = 0;
 	for (auto& entry: manifest.entries) {
 		combinedSize += entry.size;
-	};
-	FileEntry fileEntry{.fileName=filePath.filename().generic_string(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
-	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=storeEntry.localPath};
+	}
+	//Make sure we tack a "/" on to the end of the directory name.
+	FileEntry fileEntry{.fileName=(filePath.filename() / "").generic_string(), .signature = signature, .type=FileEntryType::DIRECTORY, .size = combinedSize};
+	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=storeEntry.localPath, .status = GenerateFileStatus::Copied};
 }
 
 SignatureResult Generator::generateSignature(std::istream& stream) {
@@ -183,7 +211,12 @@ std::optional<SignatureResult> Generator::generateSignature(SignatureGenerationC
 
 
 std::filesystem::path Generator::linkFile(const std::filesystem::path& filePath, const Signature& signature) {
-	return mRepository.store(signature, filePath).localPath;
+	auto result = mRepository.store(signature, filePath);
+	if (result.status == StoreStatus::SUCCESS && !mConfig.skipLastWriteTime) {
+		std::filesystem::last_write_time(result.localPath, std::filesystem::last_write_time(filePath));
+	}
+
+	return result.localPath;
 }
 
 bool Generator::shouldProcessPath(const std::filesystem::path& filePath) {
@@ -204,6 +237,37 @@ bool Generator::shouldProcessPath(const std::filesystem::path& filePath) {
 		}
 	}
 	return true;
+}
+
+std::unordered_map<std::filesystem::path, Generator::ExistingEntry> Generator::readExistingEntries(Repository& repository, Signature rootDirectorySignature) {
+	std::unordered_map<std::filesystem::path, Generator::ExistingEntry> entries;
+
+	auto fetchRootResult = repository.fetchManifest(rootDirectorySignature);
+	if (fetchRootResult.fetchResult.status == FetchStatus::SUCCESS && fetchRootResult.manifest) {
+		auto& manifest = *fetchRootResult.manifest;
+		std::int64_t combinedSize = 0;
+		for (auto& entry: manifest.entries) {
+			combinedSize += entry.size;
+		}
+
+		entries.emplace("./",
+						ExistingEntry{.fileEntry= FileEntry{
+								.fileName="",
+								.signature=rootDirectorySignature,
+								.type=FileEntryType::DIRECTORY,
+								.size=combinedSize
+						},
+								.lastWriteTime=std::filesystem::last_write_time(fetchRootResult.fetchResult.localPath),
+								.repositoryPath=fetchRootResult.fetchResult.localPath});
+		for (Squall::iterator i(repository, *fetchRootResult.manifest); i != Squall::iterator{}; ++i) {
+			auto entry = *i;
+			auto pathToFileInRepository = repository.resolvePathForSignature(entry.fileEntry.signature);
+			entries.emplace(entry.path, ExistingEntry{.fileEntry = entry.fileEntry, .lastWriteTime=std::filesystem::last_write_time(pathToFileInRepository), .repositoryPath=pathToFileInRepository});
+		}
+	}
+
+
+	return entries;
 }
 
 

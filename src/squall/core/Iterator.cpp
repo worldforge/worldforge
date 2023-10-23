@@ -31,6 +31,9 @@ iterator::TraverseEntry iterator::operator*() {
 	}
 	auto& manifestEntry = mManifests.back();
 	auto& fileEntry = manifestEntry.manifest.entries[manifestEntry.index];
+	if (fileEntry.type == FileEntryType::DIRECTORY) {
+		path /= "";
+	}
 	return TraverseEntry{.path = path, .fileEntry = fileEntry};
 
 }
