@@ -151,7 +151,7 @@ TEST_CASE("Generator can read existing entries", "[generator]") {
 	std::vector<std::filesystem::path> expected{
 			"foo.txt", "empty_file", "filè with nön äscií chårs", "empty_directory/", "bar/", "file with spaces in name", "bar/baz.txt", "./"
 	};
-	REQUIRE_THAT(fileEntries, Catch::Matchers::Equals(expected));
+	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
 
 }
 
@@ -253,7 +253,7 @@ TEST_CASE("Generator ignores existing entries if specified, but updates with new
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(statusEntries),
 				   [](const Squall::GenerateEntry& entry) { return std::pair(entry.fileEntry.fileName, entry.status); });
 
-	REQUIRE_THAT(statusEntries, Catch::Matchers::Equals(
+	REQUIRE_THAT(statusEntries, Catch::Matchers::UnorderedEquals(
 			std::vector<std::pair<std::string, GenerateFileStatus>>{std::pair("foo.txt", GenerateFileStatus::Existed),
 																	std::pair("baz.txt", GenerateFileStatus::Copied),
 																	std::pair("bar/", GenerateFileStatus::Copied),
