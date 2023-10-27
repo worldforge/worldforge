@@ -109,7 +109,7 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 		auto existingI = mConfig.existingEntries.find(relativePath);
 		if (existingI != mConfig.existingEntries.end()) {
 			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
-			if (existingI->second.lastWriteTime >= fileLastWriteTime) {
+			if (existingI->second.lastWriteTime == fileLastWriteTime) {
 				spdlog::trace("Last write time for file '{}' was the same ({}), marking as unchanged.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
@@ -135,7 +135,7 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 		auto existingI = mConfig.existingEntries.find(relativePath);
 		if (existingI != mConfig.existingEntries.end()) {
 			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
-			if (existingI->second.lastWriteTime >= fileLastWriteTime) {
+			if (existingI->second.lastWriteTime == fileLastWriteTime) {
 				spdlog::trace("Last write time for directory '{}' was the same ({}), marking as unchanged.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
