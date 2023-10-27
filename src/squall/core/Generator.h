@@ -110,7 +110,7 @@ public:
 		 * A map of existing entries in the repository. This is used to determine which file we don't need to re-process.
 		 * Using this option greatly reduces the time needed to regenerate a pre-existing repository.
 		 */
-		std::unordered_map<std::filesystem::path, ExistingEntry> existingEntries;
+		std::map<std::filesystem::path, ExistingEntry> existingEntries;
 		/**
 		 * If set to true we won't save entries in the repository with the last write value of the source data.
 		 * This means that it won't be possible to compare existing entries in the repo with existing source data,
@@ -137,7 +137,7 @@ public:
 	 * @param rootDirectorySignature
 	 * @return
 	 */
-	static std::unordered_map<std::filesystem::path, ExistingEntry> readExistingEntries(Repository& repository, Signature rootDirectorySignature);
+	static std::map<std::filesystem::path, ExistingEntry> readExistingEntries(Repository& repository, Signature rootDirectorySignature);
 
 protected:
 	Repository& mRepository;

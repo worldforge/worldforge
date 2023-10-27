@@ -239,8 +239,8 @@ bool Generator::shouldProcessPath(const std::filesystem::path& filePath) {
 	return true;
 }
 
-std::unordered_map<std::filesystem::path, Generator::ExistingEntry> Generator::readExistingEntries(Repository& repository, Signature rootDirectorySignature) {
-	std::unordered_map<std::filesystem::path, Generator::ExistingEntry> entries;
+std::map<std::filesystem::path, Generator::ExistingEntry> Generator::readExistingEntries(Repository& repository, Signature rootDirectorySignature) {
+	std::map<std::filesystem::path, Generator::ExistingEntry> entries;
 
 	auto fetchRootResult = repository.fetchManifest(rootDirectorySignature);
 	if (fetchRootResult.fetchResult.status == FetchStatus::SUCCESS && fetchRootResult.manifest) {
