@@ -92,7 +92,7 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 			auto& providerResult = *pending.providerResult;
 			if (pending.signatureGeneratorContext || providerResult.status == ProviderResultStatus::SUCCESS) {
 				if (!pending.signatureGeneratorContext) {
-					pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = {pending.temporaryPath}};
+                    pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = std::ifstream{pending.temporaryPath}};
 				}
 
 				//Make sure that the signature really matches what's in the file
