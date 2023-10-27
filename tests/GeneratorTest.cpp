@@ -40,7 +40,6 @@ std::ostream& operator<<(std::ostream& os, std::pair<std::string, Squall::Genera
 using namespace Squall;
 
 TEST_CASE("Generator creates signatures", "[generator]") {
-	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	//For our test we use an empty directory. However, this can't be stored in Git so we need to instead copy the data to a temporary directory and create the empty directory there.
@@ -87,7 +86,6 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 }
 
 TEST_CASE("Generator excludes if specified", "[generator]") {
-	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	Repository repository("GeneratorExcludeTestDirectory");
@@ -115,7 +113,6 @@ TEST_CASE("Generator excludes if specified", "[generator]") {
 
 
 TEST_CASE("Generator includes if specified", "[generator]") {
-	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	Repository repository("GeneratorIncludeTestDirectory");
@@ -140,7 +137,6 @@ TEST_CASE("Generator includes if specified", "[generator]") {
 }
 
 TEST_CASE("Generator can read existing entries", "[generator]") {
-	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
