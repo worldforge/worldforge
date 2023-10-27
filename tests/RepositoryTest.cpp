@@ -44,13 +44,13 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		auto digestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
 		REQUIRE((*digestResult.manifest).version == "1");
 		REQUIRE((*digestResult.manifest).entries.size() == 6);
 		REQUIRE((*digestResult.manifest).entries[0].fileName == "bar/");
 		REQUIRE((*digestResult.manifest).entries[0].type == Squall::FileEntryType::DIRECTORY);
-		REQUIRE((*digestResult.manifest).entries[0].size == 0);
+		REQUIRE((*digestResult.manifest).entries[0].size == 3);
 		REQUIRE((*digestResult.manifest).entries[1].fileName == "empty_directory/");
 		REQUIRE((*digestResult.manifest).entries[1].type == Squall::FileEntryType::DIRECTORY);
 		REQUIRE((*digestResult.manifest).entries[1].size == 0);
@@ -59,10 +59,10 @@ TEST_CASE("Repository finds files", "[repository]") {
 		REQUIRE((*digestResult.manifest).entries[2].size == 0);
 		REQUIRE((*digestResult.manifest).entries[3].fileName == "file with spaces in name");
 		REQUIRE((*digestResult.manifest).entries[3].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.manifest).entries[3].size == 0);
+		REQUIRE((*digestResult.manifest).entries[3].size == 11);
 		REQUIRE((*digestResult.manifest).entries[4].fileName == "filè with nön äscií chårs");
 		REQUIRE((*digestResult.manifest).entries[4].type == Squall::FileEntryType::FILE);
-		REQUIRE((*digestResult.manifest).entries[4].size == 0);
+		REQUIRE((*digestResult.manifest).entries[4].size == 10);
 		REQUIRE((*digestResult.manifest).entries[5].fileName == "foo.txt");
 		REQUIRE((*digestResult.manifest).entries[5].type == Squall::FileEntryType::FILE);
 		REQUIRE((*digestResult.manifest).entries[5].size == 3);
@@ -81,27 +81,27 @@ TEST_CASE("Repository finds files", "[repository]") {
 
 	SECTION("should read roots") {
 		REQUIRE(repository.listRoots().size() == 1);
-		REQUIRE(repository.listRoots()["main"].signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
-		REQUIRE(repository.readRoot("main")->signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		REQUIRE(repository.listRoots()["main"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		REQUIRE(repository.readRoot("main")->signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
 	}
 
 	SECTION("should store roots") {
 		Repository repositoryDestination("RepositoryTestDirectory");
 
-		REQUIRE(repositoryDestination.storeRoot("test", {.signature="d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.storeRoot("test", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
-		REQUIRE(repositoryDestination.listRoots()["test"].signature == "d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		REQUIRE(repositoryDestination.listRoots()["test"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
 	}
 
 	SECTION("fetching existing file using path should work") {
 
 
-		auto manifestResult = repository.fetchManifest("d12431a960dc4aa17d6cb94ed0a043832c7e8cbc74908c837c548078ff7b52de");
+		auto manifestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
 		REQUIRE(manifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		auto manifest = *manifestResult.manifest;
 		auto fetchResult = repository.fetch(manifest, std::filesystem::path("bar/baz.txt"));
 		REQUIRE(fetchResult.status == FetchStatus::SUCCESS);
-		REQUIRE(fetchResult.localPath == (repoPath / "data" / "e3" / "b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855").string());
+		REQUIRE(fetchResult.localPath == (repoPath / "data" / "ba" / "a5a0964d3320fbc0c6a92214453c8513ea24ab8fd5773484a967248096").string());
 
 	}
 }
