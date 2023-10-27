@@ -44,6 +44,10 @@ jobs:
         shell: bash
         run: |
           conan install tools/conan -pr default --build=missing --update
+          if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+            conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+            conan upload "*" -r worldforge -c
+          fi
 
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
