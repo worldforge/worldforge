@@ -49,7 +49,8 @@ GenerateResult Generator::process(size_t filesToProcess) {
 		if (lastIterator == std::filesystem::directory_iterator()) {
 			//We've completed a directory, generate a manifest and store it.
 
-			auto& lastEntries = lastIteratorEntry.entries;
+			auto lastEntries = std::move(lastIteratorEntry.entries);
+			mIterators.pop_back();
 
 			std::sort(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& lhs, const GenerateEntry& rhs) { return lhs.fileEntry.fileName < rhs.fileEntry.fileName; });
 
@@ -60,8 +61,8 @@ GenerateResult Generator::process(size_t filesToProcess) {
 
 			//Make sure they are sorted by alphabetical order
 			std::sort(manifest.entries.begin(), manifest.entries.end(), [](const FileEntry& lhs, const FileEntry& rhs) { return lhs.fileName < rhs.fileName; });
+			auto containedNewData = std::any_of(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& entry) { return entry.status == GenerateFileStatus::Copied; });
 
-			mIterators.pop_back();
 			std::filesystem::path currentDirectoryPath;
 			if (!mIterators.empty()) {
 				currentDirectoryPath = *mIterators.back().iterator;
@@ -70,7 +71,6 @@ GenerateResult Generator::process(size_t filesToProcess) {
 				currentDirectoryPath = mSourceDirectory;
 			}
 
-			auto containedNewData = std::any_of(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& entry) { return entry.status == GenerateFileStatus::Copied; });
 
 			auto processedEntry = processDirectory(currentDirectoryPath, manifest, containedNewData);
 			mGeneratedEntries.emplace_back(processedEntry);
