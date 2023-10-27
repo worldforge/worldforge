@@ -70,7 +70,7 @@ GenerateResult Generator::process(size_t filesToProcess) {
 				currentDirectoryPath = mSourceDirectory;
 			}
 
-			auto containedNewData = std::any_of(lastEntries.begin(), lastEntries.end(),[](const GenerateEntry& entry) {return entry.status == GenerateFileStatus::Copied;});
+			auto containedNewData = std::any_of(lastEntries.begin(), lastEntries.end(), [](const GenerateEntry& entry) { return entry.status == GenerateFileStatus::Copied; });
 
 			auto processedEntry = processDirectory(currentDirectoryPath, manifest, containedNewData);
 			mGeneratedEntries.emplace_back(processedEntry);
@@ -108,8 +108,15 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 		auto relativePath = std::filesystem::relative(filePath, mSourceDirectory);
 		auto existingI = mConfig.existingEntries.find(relativePath);
 		if (existingI != mConfig.existingEntries.end()) {
-			if (existingI->second.lastWriteTime >= std::filesystem::last_write_time(filePath)) {
+			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
+			if (existingI->second.lastWriteTime >= fileLastWriteTime) {
+				spdlog::trace("Last write time for file {} was the same ({}), marking as unchanged.", filePath.string(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(fileLastWriteTime).time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
+			} else {
+				spdlog::trace("Last write time for file {} ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(fileLastWriteTime).time_since_epoch().count(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(existingI->second.lastWriteTime).time_since_epoch().count());
 			}
 		}
 	}
@@ -127,8 +134,15 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 		auto relativePath = std::filesystem::relative(filePath, mSourceDirectory) / "";
 		auto existingI = mConfig.existingEntries.find(relativePath);
 		if (existingI != mConfig.existingEntries.end()) {
-			if (existingI->second.lastWriteTime >= std::filesystem::last_write_time(filePath)) {
+			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
+			if (existingI->second.lastWriteTime >= fileLastWriteTime) {
+				spdlog::trace("Last write time for directory {} was the same ({}), marking as unchanged.", filePath.string(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(fileLastWriteTime).time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
+			} else {
+				spdlog::trace("Last write time for directory {} ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(fileLastWriteTime).time_since_epoch().count(),
+							  std::chrono::clock_cast<std::chrono::system_clock>(existingI->second.lastWriteTime).time_since_epoch().count());
 			}
 		}
 	}

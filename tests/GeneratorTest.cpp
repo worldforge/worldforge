@@ -35,10 +35,12 @@ std::ostream& operator<<(std::ostream& os, std::pair<std::string, Squall::Genera
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>
 #include <algorithm>
+#include <spdlog/spdlog.h>
 
 using namespace Squall;
 
 TEST_CASE("Generator creates signatures", "[generator]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	//For our test we use an empty directory. However, this can't be stored in Git so we need to instead copy the data to a temporary directory and create the empty directory there.
@@ -85,6 +87,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 }
 
 TEST_CASE("Generator excludes if specified", "[generator]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	Repository repository("GeneratorExcludeTestDirectory");
@@ -112,6 +115,7 @@ TEST_CASE("Generator excludes if specified", "[generator]") {
 
 
 TEST_CASE("Generator includes if specified", "[generator]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	Repository repository("GeneratorIncludeTestDirectory");
@@ -136,7 +140,7 @@ TEST_CASE("Generator includes if specified", "[generator]") {
 }
 
 TEST_CASE("Generator can read existing entries", "[generator]") {
-
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
@@ -156,6 +160,7 @@ TEST_CASE("Generator can read existing entries", "[generator]") {
 }
 
 TEST_CASE("Generator ignores existing entries if specified", "[generator]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	Repository repository("GeneratorIgnoreExistingTestDirectory");
@@ -191,6 +196,7 @@ TEST_CASE("Generator ignores existing entries if specified", "[generator]") {
 }
 
 TEST_CASE("Generator ignores existing entries if specified, but updates with new", "[generator]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	//We will alter the data, so we need to first copy it to a temp directory.
