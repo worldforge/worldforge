@@ -38,7 +38,7 @@ Resolver::FetchResult Resolver::fetch(Signature signature) {
 	} else {
 		//Just put a new request for the next file
 		auto filename = buildTemporaryPath(signature);
-		spdlog::debug("Fetching signature '{}' from '{}'", signature.str_view(), filename.generic_string());
+		spdlog::debug("Fetching signature '{}' and temporarily storing it in '{}'", signature.str_view(), filename.generic_string());
 		auto resultFuture = mProvider->fetch(signature, filename);
 		mPendingFetches.emplace_back(
 				PendingFetch{
@@ -70,6 +70,14 @@ ResolveResult Resolver::pollRootSignature() {
 			mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
 			mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
 			mIterator = iterator(mDestinationRepository, *mRootManifest);
+			{
+				std::error_code ec;
+				remove(lastPending.temporaryPath, ec);
+				if (ec) {
+					spdlog::warn("Error when trying to remove temporary file '{}'. This is not fatal, but means that there's probably a left over file. Error: {}",
+								 lastPending.temporaryPath.string(), ec.message());
+				}
+			}
 			return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
 					{.signature=mRootSignature, .status=ResolveEntryStatus::COPIED, .bytesCopied=result.bytesCopied}}};
 		} else {
@@ -92,7 +100,7 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 			auto& providerResult = *pending.providerResult;
 			if (pending.signatureGeneratorContext || providerResult.status == ProviderResultStatus::SUCCESS) {
 				if (!pending.signatureGeneratorContext) {
-                    pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = std::ifstream{pending.temporaryPath}};
+					pending.signatureGeneratorContext = SignatureGenerationContext{.fileStream = std::ifstream{pending.temporaryPath}};
 				}
 
 				//Make sure that the signature really matches what's in the file
@@ -119,7 +127,14 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 					spdlog::debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult->signature.str_view(),
 								  pending.temporaryPath.generic_string());
 					mDestinationRepository.store(signatureResult->signature, pending.temporaryPath);
-					remove(pending.temporaryPath);
+					{
+						std::error_code ec;
+						remove(pending.temporaryPath, ec);
+						if (ec) {
+							spdlog::warn("Error when trying to remove temporary file '{}'. This is not fatal, but means that there's probably a left over file. Error: {}",
+										 pending.temporaryPath.string(), ec.message());
+						}
+					}
 					completedRequests.emplace_back(
 							ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
 					mPendingFetches.erase(I);
@@ -194,7 +209,8 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 }
 
 std::filesystem::path Resolver::buildTemporaryPath(const Signature& signature) {
-	auto filename = std::filesystem::temp_directory_path() / signature.str_view();
+	auto filename = mDestinationRepository.getPath() / "temp" / signature.str_view();
+	create_directories(filename.parent_path());
 	return filename;
 }
 }

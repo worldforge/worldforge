@@ -97,7 +97,7 @@ private:
 
 	FetchResult fetch(Signature signature);
 
-	static std::filesystem::path buildTemporaryPath(const Signature& signature);
+	std::filesystem::path buildTemporaryPath(const Signature& signature);
 
 	ResolveResult pollRootSignature();
 

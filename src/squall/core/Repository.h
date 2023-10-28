@@ -100,7 +100,11 @@ public:
 	 */
 	static bool isValidRootName(std::string_view name);
 
-protected:
+	const std::filesystem::path& getPath() {
+		return mRepositoryPath;
+	}
+
+private:
 
 	std::filesystem::path mRepositoryPath;
 

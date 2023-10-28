@@ -24,16 +24,21 @@
 #include <catch2/matchers/catch_matchers_vector.hpp>
 #include <utility>
 #include <algorithm>
+#include <spdlog/spdlog.h>
+#include <spdlog/common.h>
 
 
 using namespace Squall;
 
 TEST_CASE("Resolver copied files", "[resolver]") {
+	spdlog::set_level(spdlog::level::trace);
 	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repositorySource(repoPath);
-	Repository repositoryDestination("ResolverTestDirectory");
+	std::filesystem::path testPath = "ResolverTestDirectory";
+	remove_all(testPath);
+	Repository repositoryDestination(testPath);
 	Resolver resolver(repositoryDestination,
 					  std::make_unique<RepositoryProvider>(repositorySource),
 					  "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
