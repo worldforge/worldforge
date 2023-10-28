@@ -209,8 +209,6 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 }
 
 std::filesystem::path Resolver::buildTemporaryPath(const Signature& signature) {
-	auto filename = mDestinationRepository.getPath() / "temp" / signature.str_view();
-	create_directories(filename.parent_path());
-	return filename;
+	return mDestinationRepository.getPath() / "temp" / signature.str_view();
 }
 }
