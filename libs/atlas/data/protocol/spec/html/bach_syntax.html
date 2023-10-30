@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Bach syntax</title>
+  </head>
+
+  <body>
+    <h1>Bach syntax</h1>
+
+Current negotiation identifier is <b>Bach_beta2</b>. Final will be <b>Bach</b>.
+<p>
+Elements in mapping and lists are separated with <b>,</b>.
+<p>
+Mapping is surrounded with <b>{}</b>. Elements in mapping are encoded as
+name:value. Name is encoded without quotes if it consists of digits or
+uppercase or lowercase letter <b>(a-z)</b> or <b>_</b>. Name must not start with a
+number. Quoted name can contain anything, see strings. Value can be
+anything.
+<p>
+List is surrounded with <b>[]</b>. Values can be anything.  Top level
+object in streams is a list. So stream starts with <b>[</b> and ends
+with <b>]</b> (same as &lt;atlas&gt; and &lt;/atlas&gt; in XML).
+<p>
+Integer can start with <b>+-</b> (optional) and digits.
+<p>
+Float numbers consist of mantissa and exponent (optional). Mantissa can contain
+one <b>.</b>. Otherwise they are encoded as integers and are separated with
+<b>e</b> or <b>E</b> (in case there is an exponent).
+<p>
+String is surrounded with <b>"</b> and <b>"</b> is quoted as <b>\"</b>
+and <b>\</b> is quoted as <b>\\</b>. (in future may allow octals and
+special characters like <b>\n</b>).
+<p>
+# is comment character: all character from this to end of line is comment.
+(Might be some day decoded as "comment" -attribute or something equivalent)
+<p>
+Whitespace is allowed outside values and names (Regular expression <b>\s</b>
+or any of <b>\t \n\r\f\v</b>).
+<p>
+Example:
+<pre>
+{
+   parents: ["info"], 
+   arg: {
+     name: "Joe", 
+     pos: [4.5, 6.7, 2.3], 
+     meaning_of_life: 42
+   }
+}
+</pre>
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Tue Jun 25 16:42:12 EEST 2002 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  8 05:02:40 EEST 2002
+<!-- hhmts end -->
+  </body>
+</html>

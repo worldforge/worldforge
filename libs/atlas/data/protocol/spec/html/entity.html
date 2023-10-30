@@ -1,0 +1,524 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+  <head>
+    <title>Entity class tree</title>
+  </head>
+
+  <body>
+    <h1>Entities</h1>
+    Entity class tree specifies class hierarchy. Leaves of tree are
+    class instances ie. actual game objects, player accounts, etc...
+
+    <h2>Entity class tree</h2>
+
+    <ul>
+      <li><a href="#root_entity">root_entity</a>: Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+        <ul>
+          <li><a href="#admin_entity">admin_entity</a>: -"-
+            <ul>
+              <li><a href="#account">account</a>: -"-
+                <ul>
+                  <li><a href="#player">player</a>: -"-
+                  <li><a href="#admin">admin</a>: -"-
+                </ul>
+              <li><a href="#server">server</a>: -"-
+            </ul>
+          <li><a href="#root_geometry">root_geometry</a>: All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.
+            <ul>
+              <li><a href="#game_entity">game_entity</a>: -"-
+                <ul>
+                  <li><a href="#autonomous_entity">autonomous_entity</a>: -"-
+                  <li><a href="#world">world</a>: -"-
+                </ul>
+            </ul>
+          <li><a href="#glue_entity">glue_entity</a>: When to objects that should be clued together use
+    different reference coordinate system with different absolute
+    position in reference coordinate systems, then can't use same ids
+    for shared points. In that case point directly to shared
+    points. For example: glue_ids:[["pond2.area.1.2", "brook1.polyline.1"]]
+    Each list is id_list listing ids on that particular point.
+        </ul>
+    </ul>
+
+
+    <a name="root_entity"><h2>root_entity</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['admin_entity', 'root_geometry', 'glue_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">root_entity</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Starting point for entity hierarchy<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["admin_entity", "root_geometry", "glue_entity"],
+	description: "Later in hierarchy tree objtype changes to 'object' when actual game objects are made.",
+	id: "root_entity",
+	objtype: "class",
+	parents: ["root"],
+	summary: "Starting point for entity hierarchy"
+}
+
+    </PRE>    <a name="admin_entity"><h2>admin_entity</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['account', 'server']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">admin_entity</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All classes and objects used for adminitrativive purposes<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["account", "server"],
+	id: "admin_entity",
+	parents: ["root_entity"],
+	summary: "All classes and objects used for adminitrativive purposes"
+}
+
+    </PRE>    <a name="account"><h2>account</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['player', 'admin']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">account</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['admin_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#password">password</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Base class for accounts<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["player", "admin"],
+	id: "account",
+	parents: ["admin_entity"],
+	password: "",
+	summary: "Base class for accounts"
+}
+
+    </PRE>    <a name="player"><h2>player</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#characters">characters</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">player</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['account']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#password">password</a> (inherited from account) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Player accounts<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	characters: [],
+	children: [],
+	id: "player",
+	parents: ["account"],
+	summary: "Player accounts"
+}
+
+    </PRE>    <a name="admin"><h2>admin</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">admin</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['account']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#password">password</a> (inherited from account) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Privileged accounts<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	id: "admin",
+	parents: ["account"],
+	summary: "Privileged accounts"
+}
+
+    </PRE>    <a name="server"><h2>server</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">server</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['admin_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Info about server<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	id: "server",
+	parents: ["admin_entity"],
+	summary: "Info about server"
+}
+
+    </PRE>    <a name="root_geometry"><h2>root_geometry</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#area">area</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['game_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#contains">contains</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#detailed_contents">detailed_contents</a> (encoding:<a href="type.html#int">int</a>):</b> Value: <font color="green">0</font> C equivalent: 32bit int
+      <li><b><a href="type.html#glue">glue</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> **not written yet**
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">root_geometry</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#loc">loc</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#polyline">polyline</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#pos">pos</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#rotation">rotation</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]</font> From forge/libs/wfmath/wfmath/rotmatrix.h:
+Elements of this class represent rotation matrices. The NxN dimensional
+rotation matrices form a group called O(N), the orthogonal
+matrices. They satisfy the following condition:
+<p>
+A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
+This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
+
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_contains">stamp_contains</a> (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that is contained by this object.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Classes/objects with geometry<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#velocity">velocity</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#volume">volume</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	area: [],
+	children: ["game_entity"],
+	contains: [],
+	description: "All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.",
+	detailed_contents: 0,
+	glue: [],
+	id: "root_geometry",
+	loc: "",
+	parents: ["root_entity"],
+	polyline: [],
+	pos: [0.0, 0.0, 0.0],
+	rotation: [
+		[1.0, 0.0, 0.0],
+		[0.0, 1.0, 0.0],
+		[0.0, 0.0, 1.0]
+	],
+	stamp_contains: 0.0,
+	summary: "Classes/objects with geometry",
+	velocity: [0.0, 0.0, 0.0],
+	volume: []
+}
+
+    </PRE>    <a name="game_entity"><h2>game_entity</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#area">area</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['autonomous_entity', 'world']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#contains">contains</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#detailed_contents">detailed_contents</a> (inherited from root_geometry) (encoding:<a href="type.html#int">int</a>):</b> Value: <font color="green">0</font> C equivalent: 32bit int
+      <li><b><a href="type.html#glue">glue</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> **not written yet**
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_entity</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#loc">loc</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_geometry']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#polyline">polyline</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#pos">pos</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#rotation">rotation</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]</font> From forge/libs/wfmath/wfmath/rotmatrix.h:
+Elements of this class represent rotation matrices. The NxN dimensional
+rotation matrices form a group called O(N), the orthogonal
+matrices. They satisfy the following condition:
+<p>
+A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
+This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
+
+      <li><b><a href="type.html#specification">specification</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas_game</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_contains">stamp_contains</a> (inherited from root_geometry) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that is contained by this object.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All In Game classes and objects<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#velocity">velocity</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#volume">volume</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["autonomous_entity", "world"],
+	id: "game_entity",
+	interface: "game_interface",
+	parents: ["root_geometry"],
+	specification: "atlas_game",
+	summary: "All In Game classes and objects"
+}
+
+    </PRE>    <a name="autonomous_entity"><h2>autonomous_entity</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#area">area</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#contains">contains</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#detailed_contents">detailed_contents</a> (inherited from root_geometry) (encoding:<a href="type.html#int">int</a>):</b> Value: <font color="green">0</font> C equivalent: 32bit int
+      <li><b><a href="type.html#glue">glue</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> **not written yet**
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">autonomous_entity</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from game_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#loc">loc</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['game_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#polyline">polyline</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#pos">pos</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#rotation">rotation</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]</font> From forge/libs/wfmath/wfmath/rotmatrix.h:
+Elements of this class represent rotation matrices. The NxN dimensional
+rotation matrices form a group called O(N), the orthogonal
+matrices. They satisfy the following condition:
+<p>
+A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
+This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
+
+      <li><b><a href="type.html#specification">specification</a> (inherited from game_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas_game</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_contains">stamp_contains</a> (inherited from root_geometry) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that is contained by this object.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All In Game classes and objects which act autonomously<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#velocity">velocity</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#volume">volume</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	id: "autonomous_entity",
+	parents: ["game_entity"],
+	summary: "All In Game classes and objects which act autonomously"
+}
+
+    </PRE>    <a name="world"><h2>world</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#area">area</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#contains">contains</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All classes and objects that have geometry and
+    can be positioned and contain things and/or are contained by something.
+    See maps/semantic_maps.pdf for more info.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#detailed_contents">detailed_contents</a> (inherited from root_geometry) (encoding:<a href="type.html#int">int</a>):</b> Value: <font color="green">0</font> C equivalent: 32bit int
+      <li><b><a href="type.html#glue">glue</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> **not written yet**
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">world</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from game_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#loc">loc</a> (inherited from root_geometry) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#media_roots">media_roots</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_media_info']</font> List ids of root_media_info: can be on same server or at different server:
+    see root_object attribute definition for more info
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['game_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#polyline">polyline</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+      <li><b><a href="type.html#pos">pos</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#root_object">root_object</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">root</font> This usually has value "root", but can also have something like: "world45/root"
+    or even "atlas://other.server.org/world5/root"
+      <li><b><a href="type.html#rotation">rotation</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]</font> From forge/libs/wfmath/wfmath/rotmatrix.h:
+Elements of this class represent rotation matrices. The NxN dimensional
+rotation matrices form a group called O(N), the orthogonal
+matrices. They satisfy the following condition:
+<p>
+A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
+This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
+
+      <li><b><a href="type.html#specification">specification</a> (inherited from game_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas_game</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_contains">stamp_contains</a> (inherited from root_geometry) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that is contained by this object.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Info about world<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#velocity">velocity</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Used in 3D world for various things
+      <li><b><a href="type.html#volume">volume</a> (inherited from root_geometry) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> see maps/semantic_maps.pdf for more info.
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	id: "world",
+	media_roots: ["root_media_info"],
+	parents: ["game_entity"],
+	root_object: "root",
+	summary: "Info about world"
+}
+
+    </PRE>    <a name="glue_entity"><h2>glue_entity</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+When to objects that should be clued together use
+    different reference coordinate system with different absolute
+    position in reference coordinate systems, then can't use same ids
+    for shared points. In that case point directly to shared
+    points. For example: glue_ids:[["pond2.area.1.2", "brook1.polyline.1"]]
+    Each list is id_list listing ids on that particular point.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#glue_ids">glue_ids</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> See glue_geometry for more info
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">glue_entity</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_entity']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Classes/objects that glue objects to each other by using ids<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	description: "When to objects that should be clued together use
+    different reference coordinate system with different absolute
+    position in reference coordinate systems, then can't use same ids
+    for shared points. In that case point directly to shared
+    points. For example: glue_ids:[[\"pond2.area.1.2\", \"brook1.polyline.1\"]]
+    Each list is id_list listing ids on that particular point.",
+	glue_ids: [],
+	id: "glue_entity",
+	parents: ["root_entity"],
+	summary: "Classes/objects that glue objects to each other by using ids"
+}
+
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Nov  1 09:46:09 EET 1999  -->
+<!-- hhmts start  -->
+Last modified: Sat Nov 13 15:46:39 EET 1999
+<!-- hhmts end  -->
+  </body>
+</html>

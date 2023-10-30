@@ -1,0 +1,473 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_type"
+    parent:"root"
+    objtype:"meta"
+    description:"Type hierarchy starts from here."
+
+:map:
+    id:"string"
+    parent:"root_type"
+    objtype:"data_type"
+    description:"UTF-8 encoded string."
+    long_description:"Any character is allowed, including 8 bit control characters and '\\0', C equivalent: {int len; char *data;}, C++: string"
+
+:map:
+    id:"int"
+    parent:"root_type"
+    objtype:"data_type"
+    description:"Integer."
+    long_description:"C equivalent: 32bit int"
+
+:map:
+    id:"float"
+    parent:"root_type"
+    objtype:"data_type"
+    description:"Floating point number."
+    long_description:"C equivalent roughly: double"
+
+:map:
+    id:"uri"
+    parent:"string"
+    objtype:"type"
+    description:"URI (URL) of object"
+    long_description:"""C equivalent roughly: for storing id name: char *, as pointer: void *<br>
+URI is Uniform Resource Locator.
+For more about URI see 
+<a href="http://www.ics.uci.edu/pub/ietf/uri/">http://www.ics.uci.edu/pub/ietf/uri/</a>"""
+
+:map:
+    id:"string_list"
+    parent:"list"
+    objtype:"type"
+    element_type:"string"
+    description:"List of strings"
+
+:map:
+    id:"int_list"
+    parent:"list"
+    objtype:"type"
+    element_type:"int"
+    description:"List of integers"
+    long_description:"C equivalent: int []"
+
+:map:
+    id:"float_list"
+    parent:"list"
+    objtype:"type"
+    element_type:"float"
+    description:"List of floats"
+    long_description:"C equivalent: double []"
+
+:map:
+    id:"uri_list"
+    parent:"string_list"
+    element_type:"uri"
+    description:"URI list"
+    long_description:"C equivalent: char *[], void *[]"
+
+:map:
+    id:"list"
+    parent:"root_type"
+    objtype:"data_type"
+    description:"List of objects"
+    long_description:"C equivalent: void *[]"
+    added_attributes:[]
+
+:map:
+    id:"map"
+    name:"mapping"
+    parent:"root_type"
+    objtype:"data_type"
+    description:"Mapping between string key and value object"
+    long_description:"C equivalent: struct map {char *;void *}; map*"
+    added_attributes:[]
+
+:map:
+    id:"int_list_length"
+    parent:"int_list"
+    objtype:"meta"
+    list_length:0
+    description:"List of ints with constant length"
+    long_description:"Inherit required object from this and set length attribute to suitable value."
+
+:map:
+    id:"float_list_length"
+    parent:"float_list"
+    objtype:"meta"
+    list_length:0
+    description:"List of floats with constant length"
+    long_description:"Inherit required object from this and set length attribute to suitable value."
+
+:map:
+    id:"pos"
+    name:"position"
+    parent:"float_list_length"
+    objtype:"type"
+    list_length:3
+    description:"Position coordinates, usually world is 3D"
+
+:map:
+    id:"velocity"
+    parent:"float_list_length"
+    objtype:"type"
+    list_length:3
+    description:"Velocity object is moving, usually world is 3D"
+
+:map:
+    id:"list_length"
+    parent:"int"
+    objtype:"type"
+    description:"Length for lists"
+
+:map:
+    id:"element_type"
+    parent:"id"
+    description:"Element type for typed lists/mappings"
+
+:map:
+    id:"id"
+    parent:"uri"
+    description:"Id of object"
+    long_description:"C equivalent roughly: for storing id name: char *, as pointer: void *"
+
+:map:
+    id:"id_list"
+    parent:"uri_list"
+    description:"List of ids"
+
+:map:
+    id:"parent"
+    parent:"string"
+    description:"The object this inherits attributes from."
+
+:map:
+    id:"children"
+    parent:"id_list"
+    description:"List of objects that inherit from this object."
+
+:map:
+    id:"contains"
+    parent:"id_list"
+    description:"List of objects that use this object as reference system (usually same as what this object contains)."
+
+:map:
+    id:"added_attributes"
+    parent:"contains"
+    description:"List of attributes that has been added to this object"
+
+:map:
+    id:"characters"
+    parent:"contains"
+    description:"List of characters account can control"
+
+:map:
+    id:"args"
+    parent:"list"
+    objtype:"type"
+    description:"List of arguments this operation has"
+
+:map:
+    id:"operations"
+    parent:"id_list"
+    description:"List of alloved operations"
+    long_description:"Content ids can be either another interface or operation ids or both."
+
+:map:
+    id:"stamp"
+    parent:"float"
+    objtype:"type"
+    description:"Last time this object was modified."
+    long_description:"""Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid."""
+
+:map:
+    id:"stamp_inherit"
+    parent:"stamp"
+    objtype:"type"
+    description:"Last time any object that inherits from this has been modified"
+    long_description:"Value should be reflect when something was changed in some object that inherits from this."
+
+:map:
+    id:"stamp_contains"
+    parent:"stamp"
+    objtype:"type"
+    description:"Last time any object that uses this as reference recursively has been modified"
+    long_description:"Value should be reflect when something was changed in some object that is contained by this object."
+
+
+:map:
+    id:"objtype"
+    name:"object type"
+    parent:"string"
+    objtype:"type"
+    description:"What kind of object this is."
+    long_description:"""Examples of values: "op", "class", "type"."""
+
+:map:
+    id:"interface"
+    parent:"id"
+    description:"What kind of operations are legal for this object."
+
+:map:
+    id:"specification"
+    parent:"string"
+    objtype:"type"
+    description:"What specification this object is part of?"
+
+:map:
+    id:"name"
+    parent:"string"
+    objtype:"type"
+    description:"Name of object."
+
+:map:
+    id:"message"
+    parent:"string"
+    objtype:"type"
+    description:"Some message (for example error message)"
+
+:map:
+    id:"say"
+    parent:"message"
+    description:"What something has said."
+
+:map:
+    id:"html"
+    parent:"string"
+    objtype:"type"
+    description:"String that is actually html."
+
+:map:
+    id:"username"
+    parent:"string"
+    objtype:"type"
+    description:"Username for account usually"
+
+:map:
+    id:"password"
+    parent:"string"
+    objtype:"type"
+    description:"Password for account usually"
+
+:map:
+    id:"description"
+    parent:"html"
+    description:"This gives short description of object."
+
+:map:
+    id:"args_description"
+    parent:"description"
+    description:"This gives description about arguments."
+
+:map:
+    id:"long_description"
+    parent:"description"
+    description:"This gives long description of object."
+
+:map:
+    id:"loc"
+    name:"location"
+    parent:"id"
+    objtype:"type"
+    description:"Reference object for coordinates (location)."
+
+:map:
+    id:"serialno"
+    parent:"int"
+    objtype:"type"
+    description:"Serial number."
+
+:map:
+    id:"refno"
+    parent:"serialno"
+    description:"Reference to serial number."
+
+:map:
+    id:"from"
+    parent:"id"
+    description:"Source of message/operation."
+
+:map:
+    id:"to"
+    parent:"id"
+    description:"Target of message/operation."
+    long_description:"""When client sends operation to it's character
+    in server, then you can omit this because server can assume
+    character can only control directly it's body."""
+
+:map:
+    id:"seconds"
+    parent:"float"
+    objtype:"type"
+    description:"Time in seconds"
+
+:map:
+    id:"future_seconds"
+    parent:"seconds"
+    description:"Time in seconds to add current time"
+
+:map:
+    id:"time_string"
+    parent:"string"
+    objtype:"type"
+    description:"Time in string format: YYYY-MM-DD HH:MM:SS.ss"
+    long_description:"There can be variation in length of different fields if using some weird calendar"
+
+:map:
+    id:"example"
+    parent:"list"
+    objtype:"type"
+    description:"Gives some examples usage"
+
+#attributes for map
+:map:
+    id:"width"
+    parent:"float"
+    objtype:"type"
+    description:"width of something"
+
+:map:
+    id:"grid_data"
+    parent:"list"
+    objtype:"type"
+    description:"grid data"
+
+:map:
+    id:"grid_size"
+    parent:"int_list_length"
+    objtype:"type"
+    list_length:2
+    description:"size of grid area: width and height (and for space depth too) in grid units"
+
+:map:
+    id:"cell_size"
+    parent:"float_list_length"
+    objtype:"type"
+    list_length:2
+    description:"cell size of grid area"
+
+:map:
+    id:"height"
+    parent:"float"
+    objtype:"type"
+    description:"height of something"
+
+:map:
+    id:"line_data"
+    parent:"list"
+    objtype:"type"
+    description:"line object"
+
+:map:
+    id:"media"
+    parent:"uri"
+    description:"media id reference"
+
+#attributes for debugging
+:map:
+    id:"specification_file"
+    parent:"map"
+    objtype:"type"
+    description:"various info about object and its specification file"
+
+:map:
+    id:"filename"
+    parent:"uri"
+    description:"name of file (example: where object was specified)"
+
+:map:
+    id:"lineno"
+    parent:"serialno"
+    description:"linenumber where something is"
+
+:map:
+    id:"attribute_order"
+    parent:"uri_list"
+    description:"order attributes was specified"
+
+#attributes for examples
+:map:
+    id:"e_int"
+    parent:"int"
+    objtype:"type"
+    description:"Root type for all int type example attributes"
+
+:map:
+    id:"e_float"
+    parent:"float"
+    objtype:"type"
+    description:"Root type for all float type example attributes"
+
+:map:
+    id:"e_string"
+    parent:"string"
+    objtype:"type"
+    description:"Root type for all string type example attributes"
+
+:map:
+    id:"e_uri"
+    parent:"uri"
+    description:"Root type for all uri type example attributes"
+
+:map:
+    id:"e_list"
+    parent:"list"
+    objtype:"type"
+    description:"Root type for all list type example attributes"
+
+
+:map:
+    id:"e_HP"
+    parent:"e_int"
+
+:map:
+    id:"e_height"
+    parent:"e_float"
+
+:map:
+    id:"e_width"
+    parent:"e_float"
+
+:map:
+    id:"e_msg"
+    parent:"e_string"
+
+:map:
+    id:"e_polygon"
+    parent:"e_list"
+
+:map:
+    id:"e_attack"
+    parent:"e_int"
+
+:map:
+    id:"e_amount"
+    parent:"e_int"
+
+:map:
+    id:"e_smell"
+    parent:"e_string"
+
+:map:
+    id:"e_surface_type"
+    parent:"e_string"
+
+:map:
+    id:"e_bar"
+    parent:"e_string"
+
+:map:
+    id:"e_sex"
+    parent:"e_string"
+
+:map:
+    id:"e_drunkness"
+    parent:"e_float"
+
+:map:
+    id:"e_status"
+    parent:"e_float"
+

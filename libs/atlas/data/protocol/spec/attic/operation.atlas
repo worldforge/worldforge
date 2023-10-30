@@ -1,0 +1,902 @@
+ATLAS operation definition file (modeline for XEmacs: -*-Python-*-)
+IWILL Bach_beta2
+
+[
+{
+    id:"root_operation",
+    parents:["root"],
+    objtype:"op_definition",
+    serialno:0,
+    refno:0,
+    refid:"",
+    summary:"Base operation for all operators",
+    description:"This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.",
+    from:"",
+    to:"",
+    seconds:0.0,
+    future_seconds:0.0,
+    time_string:"",
+    arg:{}
+    arg_names: ["arg"]
+},
+{
+    id:"action",
+    parents:["root_operation"],
+    summary:"This is base operator for operations that might have effects."
+},
+{
+    id:"info",
+    parents:["root_operation"],
+    summary:"This is base operator for operations that tell you info about objects or events.",
+    example:[{
+        objtype:"op",
+        parents:["info"],
+        arg:{
+            e_msg:"Here is some info"
+        }
+    }]
+},
+{
+    id:"create",
+    parents:["action"],
+    summary:"Create new things from nothing using this operator.",
+    description:"Map editor is main user for this in client side. Server uses this inside \"info\" operation to tell client about new things.",
+    arg_description:"entity describing object that is being created",
+    example:[
+        "Creating axe instance",
+        {
+            objtype:"op",
+            parents:["create"],
+            from:"map-editor",
+            arg:{
+                    parents:["axe"],
+                    name:"Ordinary axe",
+                    e_attack:3
+            }
+        }
+    ]
+},
+{
+    id:"delete",
+    parents:["action"],
+    summary:"Delete something.",
+    arg_description:"id of entity to be deleted",
+    example:[{
+        objtype:"op",
+        parents:["delete"],
+        arg:{
+            id:"foo_bar_344"
+        }
+    }]
+},
+{
+    id:"set",
+    parents:["action"],
+    summary:"Sets attributes for existing entity.",
+    example:[
+        "This one sets HP=50, height=1.8, width=0.3 for object \"9899\"",
+        {
+            objtype:"op",
+            parents:["set"],
+            arg:{
+                id:"9899",
+                e_HP:50,
+                e_height:1.8,
+                e_width:0.3
+            }
+        }
+    ]
+},
+{
+    id:"get",
+    parents:["action"],
+    summary:"Generic operation for getting info about things.",
+    arg_description:"id of target entity",
+    example:[
+        {
+            objtype:"op",
+            parents:["get"],
+            arg:{
+                id:"elf_type_id_45"
+            }
+        },
+        "<h4>Browsing operator hierarchy example:</h4>
+<p>
+First start from operator hierarchy root (root_operation):",
+        {
+            objtype:"op",
+            parents:["get"],
+            arg:{
+                id:"root_operation"
+            }
+        },
+        "Answer might be:",
+        {
+            objtype:"op",
+            parents:["info"],
+            arg:{
+                id:"root_operation",
+                children:["action","info"],
+                summary:"Base operator for all operatios"
+            }
+        },
+        "Then you can ask about action and info:",
+        {
+            objtype:"op",
+            parents:["get"],
+            arg:{
+                id:"action"
+            }
+        },
+        {
+            objtype:"op",
+            parents:["get"],
+            arg:{
+                id:"info"
+            }
+        },
+        "Etc..."
+    ]
+},
+{
+    id:"perception",
+    parents:["info"],
+    specification:"atlas_game",
+    summary:"Character perceives something.",
+    description:"Base operator for all kind of perceptions",
+    arg_description:"perceived thing",
+    example:[
+        "Usually derived operations are used, general notes
+                   on perceptions and actions:
+                   <ul>
+                   <li><b>action.from:</b> who made character to do something
+                   (talk for example); usually character itself, but
+                   not always, examples: 
+                   <ul>
+                     <li>atlas_irc_gateway does puppet characters it
+                         has created for each nick from irc side
+                     <li>admin teaches NPCs by making them to talk
+                         itself
+                     <li>possession by spell
+                   </ul>
+                   
+                   <li><b>action.to:</b> same as character always
+
+                   <li><b>perception.from:</b> who produced this perception:
+                   always character itself (for example sound of talk)
+                   (well... unless you are made to hallusinate ;-)
+
+                   <li><b>perception.to:</b> you (unless you are
+                   server, then it's target to receive perception)
+                   </ul>
+
+                   <b>conclusion:</b> should use perception.from instead of
+                   inner action.from to decide who produced result
+                   <br>
+                   See <a href=\"#sound\">sound</a> and 
+                       <a href=\"#sight\">sight</a>
+                   for actual examples
+                ",
+        {
+            objtype:"op",
+            parents:["perception"],
+            arg:{
+                id:"tree_8374"
+            }
+        }
+    ]
+},
+{
+    id:"error",
+    parents:["info"],
+    summary:"Something went wrong",
+    arg_description:"objects describing what went wrong<br>
+First argument is error entity which describes error.
+Second argument is operation which is wrong (not given if not relevant).",
+    example:[
+        "Client sent \"foo\" -operation which server rejects",
+        {
+            objtype:"op",
+            parents:["error"],
+            refno:123,
+            arg:{
+                message:"Uknown operation foo",
+                op:{
+                    objtype:"op",
+                    parents:["foo"],
+                    serialno:123,
+                    arg:{
+                        e_bar:"do some foo thing by using bar"
+                    }
+                },
+                no:42
+            }
+        }
+    ]
+},
+{
+    id:"combine",
+    parents:["create"],
+    specification:"atlas_game",
+    summary:"Combine existing objects into new objects.",
+    description:"This is how normal characters create objects.",
+    arg_description:"first argument is entity describing object that is being created and rest argument(s) are entities that are used as raw material.",
+    args_source:[],
+    arg_names: ["arg", "args_source"],
+    example:[
+        "Creating axe from wood and iron",
+        {
+            objtype:"op",
+            parents:["combine"],
+            arg:{
+                parents:["axe"],
+                name:"Bjorn's axe"
+            },
+            args_source:[
+                {
+                    id:"Wood_8898"
+                },
+                {
+                    id:"Iron_6578"
+                }
+            ]
+        }
+    ]
+},
+{
+    id:"divide",
+    parents:["create"],
+    specification:"atlas_game",
+    summary:"Divide existing object into pieces.",
+    description:"One of the pieces might be original object modified.",
+    arg_description:"id of original object and entities describing pieces.",
+    args_destination:[],
+    arg_names: ["arg", "args_source"],
+    example:[
+        "taking money from pile",
+        {
+            objtype:"op",
+            parents:["divide"],
+            arg:{
+                id:"money12345"
+            },
+            args_destination:[
+                {
+                    id:"money12345"
+                    e_amount:10
+                },
+                {
+                    e_amount:110
+                }
+            ]
+        }
+    ]
+},
+{
+    id:"communicate",
+    parents:["create"],
+    specification:"atlas_game",
+    summary:"Base operator for all kind of communication.",
+    arg_description:"communication entity",
+    example:[
+        "see talk"
+    ]
+},
+{
+    id:"move",
+    parents:["set"],
+    specification:"atlas_game",
+    summary:"Change position",
+    description:"More about <a href=\"move.html\">movement here</a>",
+    arg_description:"entity with id and new position",
+    example:[
+        "Movement conversation example:",
+        {
+            objtype:"op",
+            parents:["move"],
+            serialno:123,
+            from:"9899",
+            arg:{
+                id:"9899",
+                loc:"11",
+                pos:[12.3,3.0,0.0]
+            }
+        },
+        "Reply from server",
+        {
+            objtype:"op",
+            parents:["info","sight"],
+            serialno:1231,
+            refno:123,
+            from:"9899",
+            to:"9899",
+            seconds:19036033149.3,
+            time_string:"0612-01-05 10:59:09.3",
+            arg:{
+                objtype:"op",
+                parents:["set","move"],
+                serialno:1230,
+                refno:123,
+                from:"9899",
+                seconds:19036033149.3,
+                time_string:"0612-01-05 10:59:09.3",
+                arg:{
+                    id:"9899",
+                    loc:"11",
+                    pos:[12.3,3.0,0.0],
+                }
+            }
+        }
+    ]
+},
+{
+    id:"perceive",
+    parents:["get"],
+    specification:"atlas_game",
+    summary:"Generic base operation for perceiving things by eyes, ears, etc...",
+    arg_description:"object to be perceived",
+    example:[{
+        objtype:"op",
+        parents:["perceive"],
+        arg:{
+            id:"elf_3545"
+        }
+    }]
+},
+{
+    id:"login",
+    parents:["get"],
+    summary:"Operation for logging into server",
+    description:"For more about <a href=\"login.html\">out of game atlas here</a>",
+    arg_description:"entity with player name and password attribute",
+    example:[
+        {
+            objtype:"op",
+            parents:["login"],
+            arg:{,
+                id:"JoeBlatz",
+                password:"Rqv67.%"
+            }
+        },
+        "Conversation examples:<br> When you connect to
+        server you either need to have account already or make
+        one. Here is \"start by creating account\" -example:",
+        {
+            objtype:"op",
+            parents:["create"],
+            serialno:1,
+            arg:{
+                id:"player74",
+                parents:["player"],
+                password:"player_password"
+            }
+        },
+        "What if you already had account by that name? Then
+        reply from server could be something like this (1 argument:
+        message, 2 argument: original operation):",
+        {
+            objtype:"op",
+            parents:["error"],
+            serialno:4,
+            refno:1,
+            seconds:19036033149.3,
+            time_string:"0612-01-05 10:59:09.3",
+            arg:{
+                message:"Account id already exist"
+                op:{
+                    objtype:"op",
+                    parents:["create"],
+                    serialno:1,
+                    arg:{
+                        id:"player74",
+                        parents:["player"],
+                        password:"player_password"
+                    }
+                }
+            }
+        },
+        "For more about error operation see 
+        <a href=\"#error\">error operation definition</a>.
+        <br><br>
+        If account login went OK them you might receive something
+        like:",
+        {
+            objtype:"op",
+            parents:["info"],
+            serialno:2,
+            refno:1,
+            seconds:19036033149.3,
+            time_string:"0612-01-05 10:59:09.3",
+            arg:{
+                id:"player74",
+                parents:["player"],
+                password:"player_password",
+                characters:["Bjorn_1"]
+            }
+        },
+        "If you don't have character, then you need to
+        create one. Creating character is similar to how you create
+        account.",
+        {
+            objtype:"op",
+            parents:["create"],
+            serialno:2,
+            arg:{
+                parents:["farmer"],
+                name:"Nisuf",
+                summary:"ordinary farmer",
+                e_sex:"male"
+            }
+        },
+        "Result of character creation is same as with account
+        creation, only resulting object differs."
+    ]
+},
+{
+    id:"logout",
+    parents:["login"],
+    summary:"Operation for logging out",
+    arg_description:"entity with player name",
+    example:[
+        {
+            objtype:"op",
+            parents:["logout"],
+            arg:{
+                  id:"JoeBlatz"
+            }
+        },
+        "Most useful with server<->server communication
+        telling that certain connection is not anymore pertinent"
+    ]
+},
+{
+    id:"sight",
+    parents:["perception"],
+    summary:"Character sees something",
+    arg_description:"object or event character sees",
+    example:[
+        "See <a href=\"#perception\">perception</a> operation too<br>
+                Common example:",
+        {
+            objtype:"op",
+            parents:["sight"],
+            arg:{
+                id:"grass1",
+                stamp:989.24
+            }
+        },
+        "Reply for looking at 'grass1':",
+        {
+            objtype:"op",
+            parents:["sight"],
+            arg:{
+                id:"grass1",
+                parents:["terrain"],
+                contains:["path1","tree1"],
+                summary:"Grass plains",
+                p:[
+                    [0.0,0.0],
+                    [10.0,0.0],
+                    [10.0,10.0],
+                    [0.0,10.0]
+                ],
+                area:[["grass1.p.0", "grass1.p.1", "grass1.p.2"],
+                      ["grass1.p.0", "grass1.p.2", "grass1.p.3"]]
+            }
+        },
+        "Event example:",
+        {
+            objtype:"op",
+            parents:["sight"],
+            arg:{
+                objtype:"op",
+                parents:["move"],
+                arg:{
+                    id:"orc_23498",
+                    loc:"grass1",
+                    pos:[0.5,3.0,0.0]
+                }
+            }
+        }
+    ]
+},
+{
+    id:"sound",
+    parents:["perception"],
+    summary:"Character hears something",
+    arg_description:"thing character heard",
+    example:[
+        "See <a href=\"#perception\">perception</a> operation too<br>
+                   Example (every operation might have from, 
+to and time tags, not only this operation):",
+        {
+            objtype:"op",
+            parents:["sound"],
+            from:"sentry_34",
+            arg:{
+                objtype:"op",
+                parents:["talk"],
+                arg:{
+                    say:"What has happened there?"
+                }
+            }
+        }
+    ]
+## *** Topic for#coders ismake NPCs pass out by giving them enough vodka
+## <aloril> saw topic? ;-)
+## <wavey> heheh
+## <aloril> added drunkness into cyphesis in morning
+## <aloril> actually it holds for PCs too... ;-)
+## <wavey> i find that I have to remove drunkenness from my code, rather than add it ;)
+## * aloril rofl
+## * wavey chuckles
+## <wavey> damn, i need adsl :?
+## <wavey> :/ even
+## <wavey> doesn't arrive in UK till next spring :/
+## <aloril> hmm... actually need drunkness code for NPC version of http://www.ionet.net/~timtroyr/funhouse/beer.html
+## <wavey> yeah :)
+## <aloril> <ent><attr name="say">99 bottles of beer on the wall</attr><attr name="tone">singing</attr></ent>
+## <wavey> how do you see 'tone' being used?
+## <aloril> tone="talking" or tone="signing"
+## <aloril> hmm.. maybe better name?
+## <aloril> talktype?
+## <wavey> well..
+## <wavey> the name is one thing..
+## <wavey> but i mean more..
+## <wavey> how will clients use it?
+## <aloril> ohh... enough advanced client would use sound card to either talk or sing ...
+## <aloril> less advanced maybe different kind of bubles or different colors in speech window
+## <wavey> i see
+## <wavey> cool
+## <aloril> and text clients of course: Foo says "llll"
+## <wavey> lets think about the name..
+## <aloril> or Foo sings "llll"
+## <wavey> vocalisation?
+## <wavey> naw
+## <aloril> imagine above NPC demo with suitable graphic and suitable sound synthesis ...
+## <wavey> yup
+## <aloril> and in the end of course if any is walking: go to shop and buy more...,
+## <aloril> yup... sure slashdot headlines...
+## <aloril> especially is NPC script is relatively short so that it can be published at above link too...
+## <aloril> fun fun ....
+## <wavey> perhaps 'utterance' is better than 'tone'..
+## <wavey> probably a better word out there too
+## <wavey> or even 'vocal'
+## <wavey> i think i like 'vocal'
+## <wavey> summaries speech or singing
+## <wavey> or whispering
+## <wavey> or shouting
+## <aloril> hmm.. what would be value for drunk people?
+## <wavey> slurrs :)
+## <wavey> or 'drunkenly' :)
+## <aloril> okay, it's vocal then...
+## <wavey> coolio
+## <aloril> what about "say"? is that ok or is there better version?
+## <wavey> tone is purely musical..
+## <wavey> 'speech'?
+## <aloril> ok...
+## <wavey> but 'say' describes it fine :)
+## <aloril> hmm... say might be more generic?
+## <aloril> think about spell intonation...
+## <aloril> well then there is of course non speech sounds too...
+## <aloril> hmm.. maybe screaming is say
+## <aloril> but what about clapping?
+## <aloril> or farting ;-)
+## <aloril> or whistling
+## <aloril> or crunch voice coming when somebody tries to surprise you from behind
+## <wavey> those are actions
+## <aloril> <op><id>sound</id><ent><attr name=".... ></op>
+## <aloril> so is talking...
+## <aloril> but they produce sound you can hear...
+## <wavey> well
+## <wavey> i was wondering about that
+## <wavey> the beer example you started with
+## <aloril> for example if you make sword:
+## <aloril> action would be create sword
+## <wavey> had entity with attr or say and tone
+## <aloril> and it would produce sight and sound operations(/events)
+## <wavey> the tone should be an attr of say (or vocal)
+## <aloril> well there is sound entity which can have as many attributes as needed...
+## <wavey> sure
+## <wavey> that should be an attr of the entitie's vocal attr.
+## <wavey> if you get my meaning.
+## <aloril> question is what those attributes should be...
+## <aloril> ie think about what C structure would capture all sounds...
+## <wavey> ok, clear this up
+## <wavey> can an entity's attributes have attributes themselves?
+## <aloril> entity attributer can be subentity..
+## <wavey> ok cool
+## <aloril> just like structure in C can contain another structure..
+## <wavey> so 'fart' should be an action of an entity
+## <wavey> along with 'say'
+## <aloril> just doesn't make sense for something to be string and structure at the same time ;-)
+## <wavey> and 'sing' should be an attribute of the 'say' attribute
+## <wavey> s/say/vocal
+## <aloril> do you have forge cvs on your disk?
+## <wavey> nope :/
+## <wavey> wanna describe vocalisation once more?
+## <aloril> see: http://www.worldforge.org/website/protocols/proposals/operations.html#sight
+## <aloril> and http://www.worldforge.org/website/protocols/proposals/operations.html#sound
+## <wavey> man singing = entity with attr of 'vocal=singing'
+## <aloril> especially for example move crunch would be like that example in the end of sight
+## <aloril> probably fart too...
+## <wavey> what is 'move crunch'?
+## <aloril> voice stepping on some crunchy
+## <aloril> voice that is generated by stepping on some crunchy
+## <aloril> obviously fart would produce smell perception too 
+## <wavey> crunchy == something that crunches, like a cardboard box
+## <wavey> when you compress it
+## <aloril> yup
+## <aloril> (in above discussion)
+## <wavey> so what do you mean by 'voice'?
+## <aloril> sound
+## <wavey> ok :)
+## <aloril> s/voice/sound/ ;-)
+## <wavey> <aloril> voice stepping on some crunchy
+## <wavey> ^ possibly the most confusing thing i've ever read on irc ;)
+## * aloril rofl
+## <wavey> in fact
+## *** wavey has changed the topic to: <aloril> voice stepping on some crunchy
+## <aloril> voice moving and producing sound ;-)
+## <aloril> perfectly valid thing: it's magical voice
+## <aloril> ;-)
+## * aloril wondering how that would be represented in atlas
+## *** aloril has changed the topic to: <aloril> voice stepping on some crunchy <aloril> it's magical voice
+## <wavey> i'm still utterly without understanding :)
+## <aloril> it's voice with mass ;-)
+## <wavey> ok
+## <wavey> start again
+## ***Mike (~mikeday@203.42.255.220) has joined #coders
+## <aloril> hi mike
+## <Mike> hello
+## <wavey> hiya mike
+## <wavey> tell aloril to stop hurting my head
+## * Mike grins
+## <aloril> drunkness part for http://www.ionet.net/~timtroyr/funhouse/beer.html added to cyphesis
+## <aloril> (actually it's vodka, but that's just detail ;-)
+## <aloril> why did I add it?
+## <aloril> * kosh gives aloril more vodka to improve his coding
+## <aloril> * aloril has been giving vodka to pet NPC ;-)
+## <aloril> <aloril> duh now it passed out..
+## <aloril> <kosh> really?
+## <aloril> <kosh> you have drinking working in cyphesis?
+## *** aloril has changed the topic to: voice stepping on something crunchy generates voice which steps ...
+## <wavey> mike!
+## <wavey> tell him!
+## <wavey> surely it's illegal to be this strange?
+## <Mike> voice. stepping. on something, crunchy.
+## * Mike boggles
+## * aloril is laughing uncontrollably
+## <wavey> aloril is talking uncontrollably
+## <wavey> shoot him in the lungs
+## <wavey> quick
+## <aloril> hey now real, guestion: how topic is expressed in atlas?
+## <wavey> before he says anything else
+## <wavey> <ent><attr name="topic"><attr value="* aloril needs help"></ent>
+## <aloril> <op><id>sound</id>
+## <aloril>   <op><id>move</id>
+## <aloril>     <ent>
+## <aloril>       <type><id>voice</id></type>
+## <aloril>       <attr name="say">crunch</attr>
+## <aloril>       <attr name="vocal">crunch</attr></ent>
+## <aloril>       <loc><id>crunchy_item</id><coords>0,0,0.1</coords></loc>
+## <aloril>   </ent>
+## <aloril>   </op>
+## <aloril> </op>
+},
+{
+    id:"smell",
+    parents:["perception"],
+    summary:"Character smells something",
+    arg_description:"thing character smells",
+    example:[
+        "Example (every operation might have from, 
+to and time tags, not only this operation):",
+        {
+            objtype:"op",
+            parents:["smell"],
+            from:"flower_34",
+            arg:{
+                e_smell:"sweet"
+            }
+        }
+    ]
+},
+{
+    id:"feel",
+    parents:["perception"],
+    summary:"Character feels something (with fingers usually)",
+    arg_description:"thing character touches",
+    example:[{
+        objtype:"op",
+        parents:["feel"],
+        arg:{
+            id:"cloth_34",
+            e_surface_type:"rough"
+        }
+    }]
+},
+{
+    id:"imaginary",
+    parents:["action"],
+    summary:"When something is not yet implemented in server, then character can pretend to do something ;-)",
+    arg_description:"event that is supposed to happen",
+    example:[{
+        objtype:"op",
+        parents:["imaginary"],
+        arg:{
+            id:"some_unimplemented_action"
+        }
+    }]
+},
+{
+    id:"talk",
+    parents:["communicate"],
+    summary:"used for talking",
+    description:"need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log",
+    arg_description:"sentence(s) entity",
+    example:[
+        {
+            objtype:"op",
+            parents:["talk"],
+            arg:{
+                say:"What has happened there?"
+            }
+        },
+        "Talking out of game is same, 
+except you use player id instead of character id."
+    ]
+},
+{
+    id:"look",
+    parents:["perceive"],
+    summary:"Looking at something",
+    arg_description:"target entity",
+    example:[
+        {
+            objtype:"op",
+            parents:["look"],
+            arg:{
+                id:"elf_3545"
+            }
+        },
+        "Conversation examples:<br> When you connect to
+        server you need to look to see things. Server sends all new
+        things that appear and all changes that you see (like
+        movement). But it's clients responsibility to make first
+        update of what it sees. Reason is that only client knows what
+        it has cached.
+
+        <p>First look can leave argument out (it's by default empty): then server sends
+        appropriate top level object for current scheme.",
+        {
+            objtype:"op",
+            parents:["look"],
+            serialno:5,
+            from:"Bjorn_10"
+        },
+        "Server reply:",
+        {
+            objtype:"op",
+            parents:["set","sight"],
+            serialno:100,
+            refno:5,
+            from:"Bjorn_10",
+            to:"Bjorn_10",
+            seconds:19035667864.4,
+            time_string:"0612-01-01 05:31:04.4",
+            arg:{
+                id:"world_0",
+                parents:["world"],
+                contains:["tavern_2","market_3","home_4","axe_5","Nisuf_6","Miyora_7","home_8","smithy_9","Bjorn_10"],
+                stamp:19035660000.0,
+                pos:[0.0,0.0,0.0]
+            }
+        },
+        "Client looks at contains attribute of above object
+        and then looks for those objects in turn:",
+        {
+            objtype:"op",
+            parents:["look"],
+            serialno:6,
+            from:"Bjorn_10",
+            arg:{
+                id:"Nisuf_6"
+            }
+        },
+        "And then server tells you more about it:",
+        {
+            objtype:"op",
+            parents:["set","sight"],
+            serialno:105,
+            refno:6,
+            from:"Nisuf_6",
+            to:"Bjorn_10",
+            seconds:19035667864.4,
+            time_string:"0612-01-01 05:31:04.4",
+            arg:{
+                id:"Nisuf_6",
+                parents:["farmer"],
+                e_drunkness:0.0,
+                stamp:19035650000.0,
+                loc:"world_0",
+                pos:[20.0,50.0,300.0],
+                summary:"ordinary farmer",
+                name:"Nisuf",
+                e_status:1.0,
+            }
+        }
+    ]
+},
+{
+    id:"listen",
+    parents:["perceive"],
+    summary:"Listen (something)",
+    arg_description:"target entity",
+    example:[{
+        objtype:"op",
+        parents:["listen"],
+        arg:{
+            id:"elf_3545"
+        }
+    }]
+},
+{
+    id:"sniff",
+    parents:["perceive"],
+    summary:"Sniff something",
+    arg_description:"target entity",
+    example:[{
+        objtype:"op",
+        parents:["sniff"],
+        arg:{
+            id:"flower_3545"
+        }
+    }]
+},
+{
+    id:"touch",
+    parents:["perceive"],
+    summary:"Touch something",
+    arg_description:"target entity",
+    example:[{
+        objtype:"op",
+        parents:["touch"],
+        arg:{
+            id:"cloth_3545"
+        }
+    }]
+},
+{
+    id:"appearance",
+    parents:["sight"],
+    summary:"Character sees something appearing: it literally appears or has it come in visible range",
+    arg_description:"object or event character sees",
+    example:[{
+        objtype:"op",
+        parents:["appearance"],
+        arg:{
+            id:"grass1",
+            stamp:989.24
+        }
+    }]
+},
+{
+    id:"disappearance",
+    parents:["sight"],
+    summary:"Character sees something disappearing: it literally disappears or has it gone too far to be visible",
+    arg_description:"object or event character sees",
+    example:[{
+        objtype:"op",
+        parents:["disappearance"],
+        arg:{
+            id:"grass1",
+            stamp:989.24
+        }
+    }]
+}
+]

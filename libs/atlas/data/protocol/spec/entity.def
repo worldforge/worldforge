@@ -1,0 +1,47 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_entity"
+    parent:"root"
+    objtype:"class"
+    description:"Starting point for entity hierarchy"
+    long_description:"Later in hierarchy tree objtype changes to 'object' when actual game objects are made."
+    loc:""
+    pos:[0.0,0.0,0.0]
+    velocity:[0.0,0.0,0.0]
+    contains:[]
+    stamp_contains:0.0
+
+:map:
+    id:"admin_entity"
+    parent:"root_entity"
+    description:"All classes and objects used for administrative purposes"
+
+:map:
+    id:"account"
+    parent:"admin_entity"
+    description:"Base class for accounts"
+    username:""
+    password:""
+    characters:[]
+
+:map:
+    id:"player"
+    parent:"account"
+    description:"Player accounts"
+
+:map:
+    id:"admin"
+    parent:"account"
+    description:"Privileged accounts"
+
+:map:
+    id:"game"
+    parent:"admin_entity"
+    description:"Games this server hosts"
+
+:map:
+    id:"game_entity"
+    parent:"root_entity"
+    specification:"atlas_game"
+    interface:"game_interface"
+    description:"All In Game classes and objects"

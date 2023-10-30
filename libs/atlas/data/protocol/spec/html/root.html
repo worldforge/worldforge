@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+  <head>
+    <title>Root object</title>
+  </head>
+
+  <body>
+    <a name="root"><h2>root</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_entity', 'root_operation', 'root_type', 'root_interface']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+You can browse all definitions starting from here and 
+descending into childrens.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">root</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">meta</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+All objects inherit from this.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["root_entity", "root_operation", "root_type", "root_interface"],
+	description: "You can browse all definitions starting from here and 
+descending into childrens.",
+	id: "root",
+	interface: "base_interface",
+	name: "",
+	objtype: "meta",
+	parents: [],
+	specification: "atlas",
+	stamp: 0.0,
+	stamp_inherit: 0.0,
+	summary: "All objects inherit from this."
+}
+
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Nov  1 10:07:24 EET 1999  -->
+<!-- hhmts start  -->
+Last modified: Tue Nov  9 17:18:01 EET 1999
+<!-- hhmts end  -->
+  </body>
+</html>

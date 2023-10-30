@@ -1,0 +1,27 @@
+/** @page index
+
+<H1>Atlas-C++</H1>
+
+Welcome to the Atlas-C++ library documentation.
+
+Atlas-C++ is the current C++ implementation of the Atlas protocol, a
+communications layer designed to be used in the WorldForge MMORPG gaming
+system.
+
+@ref tutorial_index "The Atlas-C++ Tutorial"
+
+<H2>Links</H2>
+
+<UL>
+<LI><a href="http://www.worldforge.org/">The WorldForge Project</a></LI>
+<LI><a hreF="http://www.worldforge.org/website/protocols/">Atlas</a></LI>
+</UL>
+
+<H2>Contact</H2>
+
+The current maintainer for Atlas-C++ is Al Riddoch <alriddoch@zepler.org>
+and the authors were Michael Day <mikeday@corplink.com.au> and Stefanus
+Du Toit <sdt@gmx.net>. The current maintainer of the Atlas protocol is
+Aloril < aloril@iki.fi >.
+
+*/

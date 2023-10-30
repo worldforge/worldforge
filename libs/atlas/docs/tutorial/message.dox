@@ -1,0 +1,106 @@
+/** @page tutorial_message Using Message::Object and higher layers
+
+<h3>Note</h3>
+
+@section higher_concepts Higher Concepts
+
+@subsection message_intro Introduction
+
+By now you should know about Codecs, Bridges and such. You might have noticed
+that these are quite low-level. After all, it would be a great hassle if a
+server would have to parse messages itself by overriding Bridge member
+functions.
+
+This is where Atlas-C++'s higher layers come in. These include Encoders,
+Decoders and Layers.
+
+@subsection encoders Encoders
+
+Encoders accept data in a certain way and construct Atlas messages from these,
+which they pass on to Codecs. For instance, you might have an encoder that
+takes STL maps and can send each of the items in the map as an Atlas map item.
+
+@subsection decoders Decoders
+
+Decoders are on the other side of Encoders. They inherit from Bridge, which
+means you can pass them to a codec. They then parse incoming messages and pass
+them on to the application in some way. For instance, the corresponding example
+to the above case would be a Decoder that parses messages into STL maps and
+passes these on to the application, for instance with callback functions.
+
+@subsection layers Layers
+
+Layers are simply the combination of an Encoder and a Decoder. They are usually
+formed by publicly inheriting from an Encoder and a Decoder.
+
+@subsection message The Message Layer
+
+Now that you are aware of what Encoders, Decoders and Layers are, I will
+introduce you to one of the higher levels that Atlas-C++ provides: Message.
+
+@subsection object Message::Object
+
+This namespace includes a class called Object. As previously mentioned,
+Atlas values can consists of one of 5 types: integers, floats, strings, maps
+and lists. However, C++ is a typed language, and does not support variables
+that can change type.
+
+This is where Message::Object comes in. It is a class that stores 5 differently
+typed values at once, namely - as you can surely guess - int, double,
+std::string, std::list<Message::Object> and std::map<std::string,
+Message::Object>.
+
+For each type two member functions exist: AsType() and IsType(), where Type may
+be one of Int, Float, String, List or Map (i.e. the 5 atlas types). AsType()
+comes in two forms, as a constant method returning a constant reference (so you
+can use it on const Message::Objects) and as a non-constant method returning a
+non-constant reference (so expressions of the form obj.AsList().push_back(123)
+are legal). IsType() returns a boolean value.
+
+To store a value in a Message::Object, you can simply assign the value to
+it. For instance, if you were to initialise an object with an empty string, you
+could declare your object in the form of Message::Object
+obj(string("")). Message::Object overrides conversion constructors for each of
+the 5 types.
+
+Message::Object also has an enum defined within it, Message::Object::Type. This
+can have one of the 6 values TYPE_INT, TYPE_FLOAT, TYPE_STRING, TYPE_LIST,
+TYPE_MAP and TYPE_NONE. It provides a member function, GetType(), which returns
+the appropriate value corresponding to the current type of the object. This is
+useful in switch() statements. TYPE_NONE is returned for objects that aren't
+initialised with any type at all, e.g. if you do not pass an argument to the
+constructor of an object.
+
+@subsection message_enc Message::Encoder
+
+Now, wouldn't it be useful if you could create your message as a
+Message::Object, and then simply send it off through a Codec, without having to
+call all those stream methods? Well, that's exactly what Message::Encoder lets
+you do. You can call StreamMessage(const Message::Object&) and it will send
+the object through a Codec (which you specified at construction time).
+
+@subsection message_dec Message::Decoder
+
+Message::Object truely comes in handy when you're receiving messages. Instead
+of having to keep a parse stack and implement your own Bridge, you can use
+the Message::DecoderBase class. This class is inherited publicly from Bridge
+and will do all the parsing for you. Hence, when a new message arrives, it
+gets put together into an easy-to-digest Message::Object. A protected method,
+ObjectArrived(const Message::Object&) then gets called, which you can override
+in a derived class to do something with the newly arrived message.
+
+@subsection message_queued Message::QueuedDecoder
+
+Message::QueuedDecoder, as annoying as it might be to spell, inherits from
+Message::DecoderBase and allows you to retrieve incoming Message::Objects in a
+queued fashion, rather than by overriding ObjectArrived(). It lets you check
+how many messages are currently queued, peek at the top of the message queue
+and pop the top message off the queue.
+
+@ref tutorial_simple "Previous"
+@ref tutorial_index "Index"
+@ref tutorial_objects "Next"
+
+@author Stefanus Du Toit <sdt@gmx.net>
+
+*/

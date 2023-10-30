@@ -1,0 +1,34 @@
+%Useful macros for atlas objects
+\ProvidesPackage{atlas}
+
+%Atlas obiect (mapping) table
+\newenvironment{Amap}
+  {\begin{tabular}{|ll|}\hline}
+  {\hline\end{tabular}}
+
+%Atlas object figure(s): one or more Atlas objects
+\newenvironment{Aobjectfigure}
+  {\begin{figure}[!hbt]\begin{center}}
+  {\end{center}\end{figure}}
+
+%attribute in Amap table
+\newcommand{\Attr}[2]{\textbf{#1} & #2\\}
+
+%list of 3 float numbers, braces are at right side even with bignumbers (4.5e45, etc..)
+\newcommand{\floatthree}[3]{\left(#1,#2,#3\right)}
+%"pos" -attribute
+\newcommand{\Apos}[3]{\Attr{pos}{\(\floatthree{#1}{#2}{#3}\)}}
+\newcommand{\Avelocity}[3]{\Attr{velocity}{\(\floatthree{#1}{#2}{#3}\)}}
+%bignumber (example: 4.5e45)
+\newcommand{\bn}[2]{#1\,10^{#2}}
+
+%For contributors: name, nick, email 
+\newcommand{\contrib}[3]{#1 (#2)\quad\texttt{<#3>}\\}
+
+%activate hyperlinks when using pdf output
+\ifx\pdfoutput\undefined % We're not running pdftex
+\newcommand{\link}[1]{\texttt{#1}}
+\else
+\RequirePackage[colorlinks,hyperindex,plainpages=false]{hyperref}
+\newcommand{\link}[1]{\href{#1}{#1}}
+\fi

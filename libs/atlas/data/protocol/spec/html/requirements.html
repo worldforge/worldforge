@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>WorldForge Protocol requirements (revision #8)</title>
+  </head>
+
+  <body>
+    <h1>WorldForge Protocol requirements (revision #8)</h1>
+
+<pre>
+ - The protocol must be capable of:
+
+    - transmitting objects
+    - transmitting changes or additions to objects
+
+    (For the purposes of this document, an "object" will be taken to be a
+    bundle of properties. A property is a named or anonymous chunk of data,
+    in one of the "atomic types" of the protocol. Supported types of
+    properties should be described in the protocol specification. Two types
+    are mandated: objects must be able to contain sub-objects, and objects
+    must be able to contain some form of id or reference to other objects.
+    Basic types such as ints, strings and lists are of course highly
+    recommended if the protocol is to be at all useful). 
+
+ - The protocol must be capable of describing such scenarios as:
+
+    - movement of things in a game world
+    - combat between things in a game world
+    - acquisition of things by other things in a game world
+
+    (For the purposes of this document, a "thing in a game world" will be 
+    taken to mean exactly what it says. Sample things include pens, swords,
+    raging oceans and small furry animals. These things may be stored in 
+    completely arbitrary fashion on a client or server, thus the protocol
+    must be capable of describing the above scenarios without making
+    assumptions concerning entity representation).
+
+ - The protocol must also be capable of handling situations involving:
+
+    - login negotiation between clients and servers, including authentication
+    - access control to update, create or destroy particular objects
+
+ - The protocol must be independent of:
+
+    - application layer (the application using it, the calling program),
+      for example: backstage, cyphesis, uclient, anvil...
+	  
+    - session layer (syntax, format, representation, what it looks like),
+      for example: XML, or packed binary, or gzip compressed lisp expressions.
+
+    - transport layer (the mechanism for getting it to places),
+      for example: TCP or UDP sockets, saving to a file, IPX, and so on.
+
+ - To be accepted however, a protocol needs to be demonstrated using one or
+   more actual session layers (syntaxes, formats...) that can represent:
+
+    - all the necessary semantics of the protocol
+    - 20 things in a game world becoming visible in at most 3860 bytes
+    - 20 things in a game world changing direction in at most 3860 bytes
+
+    (Note, the precise bandwidth numbers come from the STAGE requirements,
+    involving a certain number of clients on a server with a T1 line. It
+    can be assumed that all other servers will have similar if not more 
+    stringent ones. The target is not hard to meet, it is just there to 
+    impose a limit on any delusions of bandwidth grandeur a protocol
+    designer may be experiencing).
+
+ - These session layers must be defined completely in an appropriate way,
+   for instance a DTD for an XML based syntax, or detailed descriptions of
+   chunks for a packed binary format. Binary formats must also specify
+   either an endianess convention or a way to detect it at run-time. ASCII
+   formats must specify if they use alternative character sets or encodings
+   rather than pure ASCII.
+
+ - Although working code is not a pre-requisite for protocol acceptance, it
+   must be possible for an implementation of the protocol to be written in
+   any sane language, using sane libraries. No esoteric languages features
+   or unusual libraries must be required. The protocol API (the presentation
+   layer) as presented to an application must be simple and easy to use, for
+   both emitting and receiving.
+
+
+Michael
+</pre>
+Other people participated in developing requirements document: Bryce
+and Fex
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Thu Nov  4 06:49:19 EET 1999 -->
+<!-- hhmts start -->
+Last modified: Thu Nov  4 06:54:06 EET 1999
+<!-- hhmts end -->
+  </body>
+</html>

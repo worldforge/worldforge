@@ -1,0 +1,4 @@
+test 1: test creation speed of sight(move(human)) operations
+test 2: send move operation, act on it and return sight operation
+
+for clear example, see Move.py

@@ -1,0 +1,13 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root"
+    parent:""
+    stamp:0.0
+    stamp_inherit:0.0
+    objtype:"meta"
+    interface:"base_interface"
+    name:""
+    description:"All objects inherit from this."
+    long_description:"""You can browse all definitions starting from here and 
+descending into children."""
+    specification:"atlas"

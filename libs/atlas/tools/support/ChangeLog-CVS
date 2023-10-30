@@ -1,0 +1,1866 @@
+2009-11-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.6.2, Interface version 1.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mingw32-atlas-cpp.spec.in, configure.ac: Add a spec file for
+	  building mingw32 version of the rpm.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update with news item from the stable branch.
+
+	* AUTHORS: Update maintainer email address.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Filter.cpp: Use the C++ eof convention, rather than using
+	  EOF from a C header.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Get the interface version right.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Filters/Makefile.am:
+	  Use the right variable from configure for libraries.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Move the constructor out of the header, and clean it up a bit.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* atlas-cpp.spec.in: Catch up with changes in the stable branch.
+
+	* configure.ac: Re-sync with the stable branch.
+
+2009-02-28  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Atlas/Filter.cpp: Add <cstdio> include to have EOF defined.
+
+2008-11-26  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Codecs/Makefile.am, Atlas/Filters/Makefile.am,
+	  Atlas/Message/Makefile.am, Atlas/Net/Makefile.am,
+	  Atlas/Objects/Makefile.am: Refer to other libraries via
+	  top_builddir rather than using ..
+
+2008-11-26  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Codecs/Makefile.am, Atlas/Filters/Makefile.am,
+	  Atlas/Message/Makefile.am, Atlas/Net/Makefile.am,
+	  Atlas/Objects/Makefile.am: Make the libraries link to the others
+	  they depend on so using them is easier and --as-needed can
+	  be used.
+
+	* Atlas/Makefile.am: Change the subdirectory build order so that
+	  the top level builds first.
+
+2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Atlas/Filter.cpp: Add <cstring> include as required by GCC 4.3.
+
+	* tools/atlas_convert.cpp: Add <cstdlib> include as required by
+	  GCC 4.3.
+
+2007-09-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects2_Move.cpp, benchmark/Objects3_Move.cpp:
+	  Remove a nasty C style cast that was causing warnings.
+
+2007-09-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects2.cpp: Remove a nasty C style cast that was
+	  causing warnings.
+
+2007-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects1.cpp: Remove a nasty C style cast that was
+	  causing warnings.
+
+2007-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects1.cpp: Remove a nasty C style cast that was
+	  causing warnings.
+
+2007-09-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Makefile.am, configure.ac: Remove the debian directory from
+	  distribution.
+
+2007-07-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac, Makefile.am: Add experimental debian packaging stuff.
+
+2007-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Add accessor for attribute flags, to
+	  allow broader testing.
+
+2007-04-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp, Atlas/Codecs/XML.cpp:
+	  Add C stdlib include to get atol. Not previously requires as some
+	  compilers included this inside the STL headers.
+
+	* Atlas/Net/Stream.cpp, Atlas/Codecs/Bach.cpp,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/XML.cpp:
+	  Re-code the parsing state machines for negotiation and codecs
+	  so they are more efficient.
+
+2007-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Makefile.am: Remove Layer.h from the distribution.
+
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateDispatcher.py,
+	  Atlas/Objects/GenerateForward.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/gen_cpp.py:
+	  Add RCS Id keywords to all python code generators, for better
+	  version tracking.
+
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.cpp, Atlas/Codec.cpp, Atlas/EncoderBase.cpp,
+	  Atlas/Exception.cpp, Atlas/Factory.cpp, Atlas/Filter.cpp,
+	  Atlas/Formatter.cpp, Atlas/Negotiate.cpp, Atlas/Codecs/Bach.cpp,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/Utility.cpp,
+	  Atlas/Codecs/XML.cpp, Atlas/Codecs/XMLish.cpp,
+	  Atlas/Filters/Bzip2.cpp, Atlas/Filters/Gzip.cpp,
+	  Atlas/Funky/FEncoder.cpp, Atlas/Message/DecoderBase.cpp,
+	  Atlas/Message/Element.cpp, Atlas/Message/Layer.cpp,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/QueuedDecoder.cpp,
+	  Atlas/Net/Loopback.cpp, Atlas/Net/Stream.cpp,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/Encoder.cpp,
+	  Atlas/Objects/SmartPtr.cpp, Atlas/Objects/loadDefaults.cpp:
+	  Add RCS Id keywords to all non-generated bodies, for better
+	  version tracking.
+
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Codec.h, Atlas/Codec_impl.h, Atlas/Debug.h,
+	  Atlas/EncoderBase.h, Atlas/Exception.h, Atlas/Factory.h,
+	  Atlas/Filter.h, Atlas/Formatter.h, Atlas/Negotiate.h, Atlas/Task.h,
+	  Atlas/Version.h, Atlas/Codecs/Bach.h, Atlas/Codecs/Packed.h,
+	  Atlas/Codecs/Utility.h, Atlas/Codecs/XML.h, Atlas/Filters/Bzip2.h,
+	  Atlas/Filters/Gzip.h, Atlas/Funky/FEncoder.h,
+	  Atlas/Message/DecoderBase.h, Atlas/Message/Element.h,
+	  Atlas/Message/Layer.h, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.h, Atlas/Net/Loopback.h,
+	  Atlas/Net/Stream.h, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Encoder.h, Atlas/Objects/SmartPtr.h,
+	  Atlas/Objects/loadDefaults.h, Atlas/Objects/objectFactory.h:
+	  Add RCS Id keywords to all non-generated headers, for better
+	  version tracking.
+
+2006-10-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Create a new unstable branch, 0.7.x
+
+	* README: Clean up the documentation, and update notes about
+	  current stable and development branch status.
+
+2006-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py: Tweak the copyright name.
+
+	* Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate generated source.
+
+2006-08-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Remove BuildRequires, as all that is required
+	  is a C++ compiler.
+
+2006-05-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Net/Stream.cpp: Fix strange logic in codec negotiation
+	  that ran the state machine for every byte.
+
+2006-04-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.0, Interface version 1.
+
+2006-03-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version to 0.6.0.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateDispatcher.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/gen_cpp.py: Update copyright dates in scripts, and
+	  in the generated code.
+
+	* Atlas/Objects/Anonymous.cpp, Atlas/Objects/Anonymous.h,
+	  Atlas/Objects/Decoder.cpp, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/Dispatcher.cpp, Atlas/Objects/Dispatcher.h,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Generic.cpp,
+	  Atlas/Objects/Generic.h, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/RootOperationChildren1.cpp,
+	  Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate code with updated copyright dates in.
+
+2006-02-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Minor update to autoconf syntax.
+
+2006-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Move some of the doc files into the devel rpm, to
+	  trim down the size of the main library rpm.
+
+2005-12-01  James Turner  <james@worldforge.org>
+
+	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
+	  shortly).
+
+2005-11-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.0rc2, Interface version 1.
+
+2005-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/gen_cpp.py:
+	  Modify generated code to have a string variable for each
+	  standard Atlas attribute name, so that we can easily avoid
+	  constructing a string from a char * every time the code runs.
+	  Use these variables instead of char arrays whenever possible.
+
+	* Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/loadDefaults.cpp,
+	  Atlas/Objects/objectFactory.cpp: Re-generate code with
+	  new features.
+
+	* benchmark/Objects3_Move.cpp: Fix the number of iterations of the
+	  test to be long enough for a sane performance measurement.
+
+2005-11-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.h, Atlas/Codecs/Bach.cpp: Pass strings by
+	  const reference, not by value.
+
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp: Add
+	  removeAttrFlag, to efficiently remove static attrs. Make removeAttr
+	  work for static attrs, as well as dynamic attrs.
+
+	* tests/Objects/flags.cpp: Add a test for removeAttr methods.
+
+2005-10-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.0rc1, Interface version 1.
+
+2005-10-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Filters/Makefile.am: Add -Itop_buildir to ensure config.h
+	  is accessible from out of tree builds.
+
+	* configure.ac: Increment version to 0.6.0rc1, interface version 1.
+
+	* NEWS: Update news.
+
+2005-10-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp Atlas/Codecs/XML.cpp:
+	  Modify poll() method so it does not get stuck in a tight loop
+	  if stream fails with data in the buffer.
+
+2005-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Add nostdinc option, to get rid of unnecessary
+	  -I options on the compile commandlines.
+
+2005-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Negotiate.h, Atlas/Net/Stream.cpp, Atlas/Net/Stream.h:
+	  Modify the Negotiate interface so the decoder Bridge reference
+	  is passed in to getCodec() instead of the Stream constructor.
+	  This gives developers more freedom when designing code that
+	  use this API.
+
+	* tutorial/example/simple_client.cpp,
+	  tutorial/example/simple_server.cpp: Update tutorials to use the
+	  new API.
+
+	* Release 0.5.98, Interface version 0.
+
+2005-09-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.cpp, Atlas/Codecs/Utility.h: Move two big
+	  inlined functions into a .cpp file, as its too big to be inlined
+	  efficiently.
+
+2005-09-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Makefile.am: Remove headers from source list, as they
+	  are already in header list.
+
+	* atlas-cpp.spec.in: Add branch version to rpm name to make it easier
+	  to have two branches installed in parallel.
+
+	* configure.ac: Increment to 0.5.98 for release soon.
+
+2005-09-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.h: Ensure that the value of sscanf is not
+	  ignored.
+
+	* Release 0.5.97, Interface version 0.
+
+2005-09-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment to 0.5.97 for release soon.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/Generic.cpp,
+	  Atlas/Objects/flag.cpp: Ensure that objtype is set on
+	  generic ops, to ensure they get decoded right.
+
+2005-09-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp: Use class numbers directly
+	  rather than instantiating an object to retrieve it.
+
+	* Atlas/Objects/SmartPtr.h: Reduce the reference count on copied
+	  object, as its been incremented in the SmartPtr constructor.
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Anonymous.cpp, Atlas/Objects/Generic.cpp,
+	  Atlas/Objects/Root.cpp, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp,
+	  Atlas/Objects/RootOperationChildren1.cpp,
+	  Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp:
+	  In copy, set the refcount on the copied object to 0, overriding
+	  the value set when the object is copied.
+
+2005-09-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h, Atlas/Message/Element.cpp:
+	  Add static typeName() method which provides a char * representation
+	  of an Element type.
+
+2005-09-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/objectFactory.cpp: Modify factory to avoid double
+	  lookup in factories, create a Generic operation when objtype is
+	  op but parents are not in factories map, and create Anonymous
+	  entities directly rather than looking up "anonymous" in the
+	  factories.
+
+2005-09-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Anonymous.cpp, Atlas/Objects/Anonymous.h,
+	  Atlas/Objects/Generic.cpp, Atlas/Objects/Generic.h:
+	  Add setType() method to Anonymous entities and Generic
+	  operations which allows the parents and class number to
+	  be set simultaneously.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp,
+	  Atlas/Objects/objectFactory.h: Create factory methods for
+	  Anonymous entities and Generic operations which set the
+	  type and class no using above method, allowing the
+	  Factories to be extended with soft types.
+
+2005-09-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp, Atlas/Objects/Root.h,
+	  Atlas/Objects/RootEntity.cpp, Atlas/Objects/RootEntity.h,
+	  Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp:
+	  Make attr_flags_* into pointers, to avoid construction order
+	  problems with static variables.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp, Atlas/Objects/objectFactory.h:
+	  Add class name and number as parameters to factory method, to
+	  make it easier to support soft operation and entity classes.
+	  Hard classes are now added using a protected version of addClass
+	  which passes in the class number.
+
+	* Atlas/Objects/loadDefaults.cpp: Add information about "generic"
+	  so that there is no conflict with the spec file.
+
+	* tests/Objects/objects2.cpp: Update factory test for modified args.
+	  An entity no longer has pos attribute, unless it has been set.
+
+2005-09-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Generic.cpp, Atlas/Objects/Generic.h,
+	  Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py,
+	  Atlas/Objects/Dispatcher.cpp, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/objectFactory.cpp: Add new generic operation
+	  class, to be used for custom operations generated on the fly.
+
+2005-09-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp, Atlas/Objects/Root.h,
+	  Atlas/Objects/RootEntity.cpp, Atlas/Objects/RootEntity.h,
+	  Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/Anonymous.cpp, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperationChildren1.cpp,
+	  Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp:
+	  Add protected getAttrFlag() virtual method to all objects
+	  classes with static attributes, which returns the flag for a
+	  given attribute name string. Re-implement getAttrClass using
+	  getAttrFlag so it is more efficient. Use it to implement hasAttr
+	  more efficiently, and correctly.
+
+	* tests/Objects/attributes.cpp: New check for hasAttr.
+
+2005-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* TODO: Add a bunch more TODO items.
+
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp,
+	  Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h:
+	  Make getAttr(string) non-virtual, and remove overriding
+	  implementations, as all the work is now done by
+	  getAttr(string, value). Rename getAttr(string, value) to
+	  copyAttr(...) to avoid masking.
+
+2005-08-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/RootEntity.h:
+	  Accept integers when floats are required.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp: Return a null smart pointer when
+	  no class exists, rather than throwing.
+
+2005-08-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Anonymous.h, Atlas/Objects/Dispatcher.cpp,
+	  Atlas/Objects/Dispatcher.h, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate sources with updated spec, to include Affect operation.
+	  Add new Objects getAttr method version, which avoids return by
+	  value.
+
+2005-06-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py,
+	  Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/RootOperation.h, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/objectFactory.cpp, Atlas/Objects/objectFactory.h,
+	  tests/Objects/objects2.cpp: Remove obsolete
+	  messageElement2ClassObject().
+
+2005-06-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac, NEWS: Increment version to 0.5.96, add news entry.
+
+	* Release 0.5.96, Interface version 0.
+
+2005-06-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Makefile.am, configure.ac, Atlas/Makefile.am,
+	  Atlas/Utilities/Makefile.am, Atlas/Utilities/atlas_convert.cpp,
+	  tools/Makefile.am, tools/atlas_convert.cpp: Move atlas_convert
+	  out of the library tree into a tools directory of its own.
+
+	* atlas-cpp.spec.in: Remove dependency on libstdc++ package.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Anonymous.h, Atlas/Objects/Dispatcher.cpp,
+	  Atlas/Objects/Dispatcher.h, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate objects included new Wield and Use ops from
+	  the updated spec.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Makefile.am: Move objectFactory.cpp into the generated
+	  sources section as it should be.
+
+	* Atlas/Objects/SmartPtr.h: Remove the factory() method as it clutters
+	  the API, and causes a problem with gcc 4.
+
+	* Atlas/Objects/objectFactory.cpp, Atlas/Objects/objectFactory.h,
+	  Atlas/Objects/GenerateObjectFactory.py: Use an inlined template
+	  factory function rather than the one removed from SmartPtr.
+
+	* tests/Objects/custom_ops.cpp: Update the code demonstrating how
+	  to create and install custom op types.
+
+	* tests/Objects/objects2.cpp: Modify code that tested using factory
+	  method to create instances.
+
+2005-05-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.95, Interface version 0.
+
+2005-05-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update for upcoming release.
+
+	* atlas-cpp.spec.in: Tweak BuildRoot to match fedora guidelines.
+
+2005-05-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp:
+	  Provide hasAttrFlag() method to check whether a known
+	  hard coded attribute has been set.
+
+2005-05-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp: When creating a new object,
+	  initialise the SmartPtr to 0 to start with, for efficiency
+	  and to be sure we really have got a new object.
+
+	* Atlas/Objects/GenerateDecoder.py, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/Decoder.cpp: Remove unknownMessageArrived()
+	  as it was never called.
+
+2005-05-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Makefile.am, Atlas/Objects/flag.cpp: Store the
+	  date in flag.cpp to make sure its modified mtime gets commited
+	  to cvs each time it is updated.
+
+2005-05-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update NEWS from transitional branch.
+
+	* tests/Objects/Makefile.am, tests/Objects/objects2.cpp,
+	  tests/Objects/DebugBridge.h: Include required DebugBridge
+	  class in the tests dir.
+
+	* tutorial/Makefile.am, tutorial/example/COPYING,
+	  tutorial/example/autogen.sh: Include the tutorial example in
+	  the distribution.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version to 0.5.95 as the API has now
+	  changed. Many cleanups.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Decoder.cpp, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/GenerateDecoder.py: Modify decoder so it
+	  has a pointer to a Factories instance, which is by default the
+	  global shared instance.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Anonymous.cpp, Anonymous.h, Decoder.cpp, Decoder.h, Dispatcher.cpp,
+	  Dispatcher.h, Entity.h, ObjectsFwd.h, Operation.h, Root.cpp, Root.h,
+	  RootEntity.cpp, RootEntity.h, RootEntityChildren.cpp,
+	  RootOperation.cpp, RootOperation.h, RootOperationChildren1.cpp,
+	  RootOperationChildren2.cpp, RootOperationChildren3.cpp,
+	  RootOperationChildren4.cpp, RootOperationChildren5.cpp,
+	  flag.cpp, objectFactory.cpp: Check in generated files to make it
+	  easier for people to track latest changes.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Fix the test on empty parents so
+	  it uses the defaults for the instance, not the defaults for the
+	  Root class.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/objectFactory.h,
+	  Atlas/Objects/GenerateObjectFactory.py: Make Factories an singleton
+	  and get rid of the static instance. Add constructors to ensure
+	  it can be copied correctly.
+
+	* Atlas/Objects/loadDefaults.cpp, tests/Objects/custom_ops.cpp:
+	  Convert code from using the static objectFactory to using
+	  the Factories::instance().
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h, Atlas/Objects/GenerateObjectFactory.py:
+	  Make the footprint of SmartPtr factory the same, and get rid
+	  of the nasty C cast from the factory code. Make conversion more
+	  efficient by using iterators better.
+
+	* Atlas/Objects/GenerateDecoder.py: Clean up formatting.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDecoder.py: Cleanups.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.h: Embed the code to convert a message
+	  into an Object into the Factories class, making the function
+	  just a stub.
+
+	* Atlas/Objects/loadDefaults.cpp: Fix some misleading variable names,
+	  left over from when we called everything an Object.
+
+2005-04-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects_iterator.cpp: New test and benchmark for Objects
+	  iterators.
+
+2005-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Don't encode objtype or parents
+	  of anonymous entities.
+
+2005-04-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects_asMessage.cpp: New benchmark for converting
+	  Objects into Messages.
+
+	* Atlas/Objects/gen_cpp.py: Remove explicit Element constructor
+	  when converting Objects to Messages as operator= means that it
+	  is not required.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.94, Interface version 0.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Utilities/atlas_convert.cpp: Add header required for getopt
+	  by some systems.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Improve the efficiency of addToMessage()
+	  by avoiding a call to getFoo() when we already have checked the
+	  flag.
+
+	* Atlas/Objects/AttributeInfo.py: Improve the efficiency of
+	  sendFoo() by avoiding a call to getFoo() when we already have
+	  checked the flag.
+
+	* configure.ac: Increment the version for a bugfix release.
+
+2005-04-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Force parents and objtype to be included
+	  when converting an Objects instance to a Message instance.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.93, Interface version 0.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Include the atlas-convert tool in the rpm spec.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: rpm spec cleanups, including using system
+	  defined compiler optimisations.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Remove some obsolete code relating to version.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Make some local veriable in the C++ iterate
+	  method static for efficiency.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Update AC_INIT args to tarball name is set correctly.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* tutorial/example/DebugBridge.h, tutorial/example/configure.ac,
+	  tutorial/example/simple_client.cpp,
+	  tutorial/example/simple_server.cpp: Bring the tutorial code up to
+	  date.
+
+	* configure.ac: Make the autoconf macros a little cleaner, and
+	  increment version for release.
+
+2005-04-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Formatter.h, Atlas/Formatter.cpp: Implement simple formatting
+	  and add an API for specifying the indent spacing.
+
+	* Atlas/Utilities/atlas_convert.cpp: Clean up command line processing,
+	  handle codec options better, and add options to control formatting
+	  if required.
+
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h, configure.ac: Make Atlas::Message::Element
+	  typedefs private permanently.
+
+	* Atlas/Formatter.cpp, Atlas/Formatter.h, Atlas/Makefile.am: New
+	  class that acts as an adaptor to a Bridge and a stream, outputing
+	  formatting characters to the stream as messages are passed through
+	  it.
+
+2005-03-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Bridge.cpp,
+	  Atlas/Negotiate.h, Atlas/Negotiate.cpp: Add virtual destructors
+	  to Bridge and Negotiate.
+
+	* tests/Objects/objects2.cpp: Fix some messy casts, and replace
+	  with the correct casts or conversions.
+
+2005-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.92, Interface version 0.
+
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
+2004-12-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Makefile.am: Remove SmartPtr_Move benchmark from the
+	  tests, as its no longer relevant, and does not build.
+
+2004-11-19  Ron Steinke <rsteinke@w-link.net>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h: Made
+	  comment parsing properly part of the codec state.
+
+2004-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/custom_ops.cpp: Correctly set parents of custom
+	  wield op to "wield" not "action".
+
+2004-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects1.cpp: Fix a redundant include.
+
+	* tests/Objects/custom_ops.cpp: Add a test demonstrating the
+	  definition of a custom op class.
+
+2004-10-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.91.
+
+2004-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h: Add operator== for comparing to C
+	  strings, to avoid the ambiguity problem.
+
+2004-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Add pure virtual copy method to
+	  BaseObjectData to help solve the problems which occur
+	  when modifying objects using smart pointers.
+
+	* Atlas/Objects/gen_cpp.py: Implement the copy() method in all
+	  the generated classes.
+
+	* Atlas/Objects/SmartPtr.h: Add a copy() method to the SmartPtr
+	  to ensure everything happens in an efficient and type safe way.
+
+	* Atlas/Objects/common.py, Atlas/Objects/GenerateObjectFactory.py:
+	  Update the copyright statements in the generated code.
+
+2004-10-11  Ron Steinke <rsteinke@w-link.net>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h: Fixed a possible
+	  blocking read of string escaped characters to check whether
+	  data was available between reading the escape and the escaped
+	  character.
+
+2004-08-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h, Atlas/Codecs/Packed.cpp,
+	  Atlas/Codecs/Packed.h, Atlas/Codecs/XML.cpp, Atlas/Codecs/XML.h,
+	  Atlas/Net/Stream.cpp, Atlas/Net/Stream.h, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/loadDefaults.cpp, Atlas/Utilities/atlas_convert.cpp,
+	  tests/Objects/objects2.cpp: Convert pointer to decode Bridge
+	  in codecs and negotiation code to a reference for cleaner looking
+	  code.
+
+2004-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Exception.cpp, Atlas/Exception.h:
+	  Move virtual method implementation into the body.
+
+	* Atlas/Task.h: Mark class as obsolete.
+
+	* Atlas/Net/Stream.h: Quick comment about the purpose of these
+	  classes.
+
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Move virtual functions into the body, and stop trying to
+	  inline them.
+
+	* Atlas/Objects/GenerateDispatcher.py: Clean up the generated
+	  dispatcher class.
+
+	* Atlas/Objects/gen_cpp.py: Remove some debugging output from the
+	  code generation process.
+
+2004-07-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update NEWS and README.
+
+	* Release 0.5.90.
+
+2004-07-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Increment version to 0.5.90.
+
+2004-07-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Clear extra attributes of objects in pool
+	  when the object is reused.
+
+2004-07-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Exception.h: Implement what() from base exception class, to
+	  allow description to be queried.
+
+2004-07-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Don't use friend on class definitions
+	  as its forbidden in gcc 3.4.1.
+
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec.
+
+2004-05-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py: Modify factory so behavoir
+	  for unknown objects is less confusing.
+
+2004-05-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/objectFactory.h: Remove redundant include.
+
+	* Atlas/Objects/AttributeInfo.py: Implement recursive
+	  Objects level encoding of operation args.
+
+2004-05-04  James Turner  <james@worldforge.org>
+
+	* Atlas/Net/Stream.cpp: make negotiation state transitions
+	  explicit, rather than using ++.
+	  
+	* Add X-code project
+	
+	* Fixup a missing include in objectFactory that breaks Mac
+
+2004-05-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py: Tolerate old objtype
+	  from the other end.
+
+2004-04-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/DecoderBase.cpp: Eliminate a second deep copy
+	  before calling messageArrived() with a complete message.
+
+2004-03-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects2.cpp: Fix use of std namespace.
+
+	* benchmark/Objects3_Move.cpp: Fix use of std::cout instead
+	  of std::endl.
+
+	* benchmark/Objects3_Move.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects1.cpp,
+	  tests/Objects/objects2.cpp: Don't bail out if xml file
+	  can't be loaded, as defaults are now already set.
+
+	* benchmark/timer.h: Ensure this file is included in the
+	  distribution.
+
+	* Atlas/Version.h: Add new header with API version as defines
+	  and static variables.
+
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
+	  Complete work to set default values for objects at build
+	  time. It is no longer necessary to load atlas.xml into
+	  applications.
+
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py:
+	  Work in progress to set default values for objects at build
+	  time.
+
+2004-02-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Add some debugging output to
+	  the default initialiser generation code.
+
+	* Atlas/Message/Element.h: Add a flag allowing us to make typedefs
+	  private already for apps that want it already.
+
+	* Atlas/Objects/BaseObject.h: Fix a comment.
+
+	* Atlas/Objects/SmartPtr.h: Add typedefs for iterator and
+	  const_iterator, and replace operator! with a explicit
+	  isValid() method for testing for a null pointer.
+
+	* benchmark/Message_Move.cpp, benchmark/Objects3_Move.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp:
+	  Fix up tests to use the right Message typedefs.
+
+2004-02-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
+	  Work in progress to set default values for objects at build
+	  time.
+
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/common.py: Add one more useless attribute.
+
+	* tests/Objects/objects2.cpp: Fix the tests.
+
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/common.py: Add a list
+	  of atlas attributes used for description in the spec, or only
+	  very occaisionally in the field, which should not be implemented
+	  as hard coded attributes.
+
+2004-02-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/encoder1.cpp: Add extra required include.
+
+2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/QueuedDecoder.cpp, Atlas/Message/QueuedDecoder.h,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Shuffle headers around a little to solve problems in recent
+	  gcc.
+
+2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix detection and flagging for zlib and libbz2.
+
+	* Atlas/Filters/Bzip2.cpp, Atlas/Filters/Bzip2.h, Atlas/Filters/Gzip.h:
+	  Fix building of filters. Typos broke it.
+
+	* Atlas/Factory.cpp, Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/Packed.h,
+	  Atlas/Codecs/XML.cpp, Atlas/Codecs/XML.h, Atlas/Net/Stream.h,
+	  Atlas/Objects/loadDefaults.cpp: Remove unnecessary includes
+	  and use forward declarations where apropriate.
+
+	* Atlas/Objects/GenerateDecoder.py, Atlas/Objects/gen_cpp.py:
+	  Use forward declarations to minimise use of includes in Objects
+	  headers.
+
+2004-02-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Make sure setFooAsList() methods
+	  takes arguments as const & rather than by value.
+
+2004-02-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.h: Eliminate using ..; directives from
+	  headers.
+
+	* Atlas/Message/Element.h: Deprecate typedefs inside
+	  Element class in favour if similar typedefs in Message
+	  namespace. Makes forward declarations easier.
+
+	* Turn off -Werror to allow the deprecation warning.
+
+	* Atlas/Message/DecoderBase.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.cpp, Atlas/Message/QueuedDecoder.h:
+	  Adjust Message layer to use the new typedefs.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/gen_cpp.py, 
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/SmartPtr.cpp, Atlas/Objects/loadDefaults.cpp,
+	  Atlas/Objects/objectFactory.h: Adjust the objects layer
+	  to use the new typdefs.
+
+	* Atlas/Utilities/atlas_convert.cpp: Fix the convert utility
+	  to use the new typedefs.
+
+2004-02-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Encoder.h, Atlas/Objects/AttributeInfo.py:
+	  Replace methods that take a const Root & with templates
+	  that can take any kind of SmartPtr.
+
+2004-01-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Makefile.am: Use INCLUDES as CPPFLAGS is reserved.
+
+2003-12-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Remove Serial from rpm spec as it is not required, and messes up
+	  deps.
+
+2003-12-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Atlas.h, Atlas/Debug.h: Move Atlas.h to Debug.h and
+	  modify macro to use file specific flag, to curb the flood
+	  of debug output.
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Message/DecoderBase.cpp: Add
+	  local debug flag, and disable excessive output.
+
+2003-12-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/SmartPtr_Move.cpp: Sort out DEBUG definition clash.
+
+2003-12-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Clean up and canonicalise configure.ac.
+
+	* Fix link order issues with atlas_convert.
+
+	* Use suffix define in pkgconfig spec.
+
+2003-12-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Utilities/Makefile.am: Ensure atlas_convert builds
+	  correctly, especially important when using cross compiler.
+
+2003-11-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Re-work default object code so it is
+	  not a static instance, and is instead a kind of singleton.
+
+	* Atlas/Objects/gen_cpp.py: Make object constructors protected
+	  so it is clear that these objects should not be directly
+	  instanced.
+
+2003-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h: Modified explicit casts so they are
+	  easier to use.
+
+	* Atlas/Objects/GenerateDispatcher.py: Updated usage of casts in
+	  Atlas::Objects::Dispatcher.
+
+2003-10-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/loadDefaults.cpp: Modify LoadDefaultsDecoder
+	  so it no longer uses Dispatcher, which it didn't really require
+	  anyway. Tweak the API and its usage for efficiency.
+
+2003-10-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Final attempt to get
+	  OSX's weird gcc to take this code.
+
+2003-10-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateForward.py: Make forward header a true
+	  forward header by forward declaring SmartPtr instead of
+	  including SmartPtr.h.
+
+2003-08-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h: Add an explicit operator!= for gccs 
+	  before 3, which get confused by the template version.
+
+2003-08-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Correctness tweak
+	  of the way data class member is generated.
+
+	* Atlas/Objects/GenerateForward.py, Atlas/Objects/gen_cpp.py:
+	  Add code to generate a forward declarations header which
+	  includes forward declarations for most of the classes
+	  in the Objects namespace, and the related typedefs.
+
+	* tests/Objects/objects_fwd.cpp: A check to ensure the contents
+	  of the forward header are valid and correct.
+
+2003-08-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Use insert to
+	  add new dispatch methods.
+
+2003-08-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Net/Stream.cpp: Enclose debugging output with a macro.
+
+2003-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h: Fix null pointer checks.
+
+	* Atlas/Net/Stream.h, Atlas/Net/Stream.cpp: Remove filter
+	  stage from negotiation state.
+
+2003-08-03  Ron Steinke <rsteinke@w-link.net>
+
+	* configure.ac: changed AM_CONFIG_HEADER([config.h]) to
+	  AM_CONFIG_HEADER(config.h), since automake 1.4 was interpreting
+	  [config.h] as a literal.
+
+2003-08-03  Ron Steinke <rsteinke@w-link.net>
+
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/gen_cpp.py: Added new function BaseObjectData::find().
+	  In the process replaced virtual public hasAttr() function
+	  with virtual protected getAttrClass() function, which
+	  returns the class_no of the class that has the attribute
+	  instead of just bool. The (now non-virtual) hasAttr()
+	  in BaseObjectData wraps getAttrClass().
+	* Atlas/Objects/BaseObject.h: Added a const_iterator
+	  constructor from iterator.
+
+2003-08-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Fix generated dispatcher
+	  code for new SmartPtr casts.
+
+2003-08-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h, Atlas/Objects/SmartPtr.cpp:
+	  Allow SmartPtr to be NULL, so we can use it for return values
+	  less clumsily.
+
+2003-07-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Negotiate.h: Removed unused Debug() macro. It was polluting
+	  the global namespace.
+
+2003-07-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Ensure configure.ac does the important tests in C++.
+
+2003-07-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Switch to a cleaned up configure.ac.
+
+2003-07-22  Ron Steinke <rsteinke@w-link.net>
+
+	* Added internal refcounting to Atlas::Message::Element,
+	  it should be user-transparent as long as you don't
+	  hold a non-const reference to Element internals
+	  across code that makes a copy of the same element.
+	* Added iterator and const_iterator classes to BaseObjectData.
+
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Tweaks to the updated rpm spec.
+
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
+2003-07-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Filter.h: Sort out streambuf.h problems by including
+	  iostream instead.
+
+2003-06-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Changes to Makefile.ams to try and get distcheck to work.
+
+	* tutorial/simple_client.cpp, tutorial/simple_server.cpp,
+	  tutorial/DebugBridge.h: Include the library headers correctly.
+
+2003-06-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Add rpm spec.
+
+2003-05-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix linking tests with the right other libraries.
+
+2003-05-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h, Atlas/Message/Element.cpp: Move over to
+	  calling Atlas::Message::Object Atlas::Message::Element instead.
+
+	* Atlas/Bindings/Python/wrapperObject.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.h, Atlas/Objects/BaseObject.h:
+	  Update everything to make use of the newly re-named Element
+	  class.
+
+2003-04-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.cpp: Re-implement asMessage() in terms of
+	  addToMessage() and make it non-virtual.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/gen_cpp.py: Move
+	  send*() functions into the implementation, while keeping them
+	  inlined, as there is no need for them to be exposed as inlined.
+
+	* Atlas/Objects/gen_cpp.py: Remove asMessage().
+
+2003-04-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Add explicit send members for
+	  the more complex sequence types, to avoid having
+	  to use a Message::Encoder.
+
+2003-04-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/EncoderBase.cpp, Atlas/EncoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Objects/AttributeInfo.py, Atlas/Objects/BaseObject.cpp,
+	  Atlas/Objects/BaseObject.h, Atlas/Objects/Encoder.h,
+	  Atlas/Objects/gen_cpp.py, Atlas/Utilities/atlas_convert.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp:
+	  Clean up and de-virtualised encoders for performance.
+
+2003-04-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Exception.h, Atlas/Exception.cpp,
+	  Atlas/Message/DecoderBase.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Net/Stream.cpp, Atlas/Net/Stream.h,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Encoder.h, Atlas/Objects/Encoder.cpp,
+	  Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.h:
+	  Take more virtual functions out of headers.
+
+2003-04-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/EncoderBase.h, Atlas/EncoderBase.cpp,
+	  Atlas/Objects/gen_cpp.py:
+	  Take virtual functions out of headers, as they can't be inlined.
+
+	* Atlas/Codecs/Bach.cpp: Fix some botched headers.
+
+	* Atlas/Message/MEncoder.h: Remove the hack which solved a problem
+	  with overloaded methods hiding virtual methods.
+
+	* benchmark/Message_Move.cpp, benchmark/Objects2_Move.cpp,
+	  benchmark/Objects3_Move.cpp, benchmark/Objects_Move.cpp,
+	  benchmark/SmartPtr_Move.cpp, benchmark/Static_Move.cpp,
+	  tests/Objects/decoder1.cpp, tests/Objects/encoder1.cpp,
+	  tests/Objects/objects1.cpp, tests/Objects/objects2.cpp:
+	  Bring benchmark and tests headers into line.
+
+2003-04-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Rename src to Atlas for portability
+
+2003-04-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codec.cpp, src/Codec.h, src/Codec_impl.h,
+	  src/Negotiate.h, src/Negotiate.h, src/Codecs/Bach.h,
+	  src/Codecs/Packed.h, src/Codecs/XML.h,
+	  src/Net/Stream.cpp, src/Net/Stream.h,
+	  src/Objects/loadDefaults.cpp, src/Utilities/atlas_convert.cpp,
+	  tests/Objects/objects2.cpp: Get rid of pointless Task interface
+	  and make Codec and Negotiate base classes no longer templates,
+	  as it makes no difference.
+
+2003-04-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/MEncoder.h, src/Objects/Encoder.h: Make Encoder
+	  constructors explicit for safety.
+
+	* src/Message/Object.cpp, src/Message/Object.h: Add assignment
+	  operators for all the possible types for efficiency.
+	  Move long functions out of header, so they are not
+	  inlined.
+
+	* src/Objects/gen_cpp.py, src/Objects/BaseObject.cpp,
+	  src/Objects/BaseObject.h: Add new method for more efficient
+	  conversion of Objects into Messages.
+
+	* src/Objects/AttributeInfo.py: Make use of more efficient
+	  conversion methods.
+
+	* Make sure the tests and benchmarks are picking up the right
+	  libraries.
+
+2003-03-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/QueuedDecoder.cpp, src/Message/QueuedDecoder.h,
+	  src/Objects/loadDefaults.cpp, tests/Objects/encoder1.cpp:
+	  Rename objectArrived methods to avoid overloading.
+
+	* src/Objects/GenerateDecoder.py, src/Objects/gen_cpp.py,
+	  src/Objects/loadDefaults.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/objects2.cpp: Remove dispatch functionality from
+	  decoder, and implement it in a new class.
+
+2003-03-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Added pkgconfig macro, and put installed headers into a subdir.
+	  Use version suffix on library names.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/GenerateDecoder.py: Rename Objects::Decoder
+	  methods so no overloading.
+
+	* tests/Objects/decoder1.cpp, tests/Objects/objects2.cpp:
+	  Get the tests working again.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Bridge.cpp, src/Bridge.h, src/EncoderBase.h,
+	  src/Codecs/Bach.cpp, src/Codecs/Bach.h,
+	  src/Codecs/Packed.cpp, src/Codecs/Packed.h,
+	  src/Codecs/XML.cpp, src/Codecs/XML.h,
+	  src/Codecs/XMLish.cpp, src/Funky/FEncoder.h,
+	  src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Net/Loopback.cpp, src/Objects/AttributeInfo.py,
+	  src/Objects/BaseObject.cpp, src/Objects/Encoder.h,
+	  src/Utilities/atlas_convert.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp,
+	  tutorial/DebugBridge.h, tutorial/simple_client.cpp,
+	  tutorial/example/DebugBridge.h, tutorial/example/simple_client.cpp:
+	  Rename methods so overloading is not being used, to prevent
+	  the problems that seems to cause with virtual functions.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
+	  src/Objects/GenerateObjectFactory.py, src/Objects/gen_cpp.py
+	  src/Objects/objectFactory.h, src/Utilities/atlas_convert.cpp:
+	  Change argument type from Element to Element::MapType for
+	  efficiency.
+
+	* src/Message/QueuedDecoder.cpp, src/Message/QueuedDecoder.h:
+	  Make method names a little more distinctive, and inline
+	  the short ones.
+
+	* src/Objects/AttributeInfo.py, src/Objects/BaseObject.cpp,
+	  src/Objects/BaseObject.h: Change asObject methods to
+	  asElement.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/GenerateObjectFactory.py,
+	  src/Objects/GenerateDecoder.py,
+	  src/Objects/AttributeInfo.py: Fix method name change in generated
+	  code.
+
+	* benchmark/timer.h, benchmark/Objects3_Move.cpp,
+	  benchmark/Message_Move.cpp, benchmark/Call_Move.cpp:
+	  Get the benchmarks building again.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/BaseObject.h, src/Objects/gen_cpp.py: Make class numbers
+	  static.
+
+	* src/Objects/objectFactory.h, tests/Objects/objects2.cpp: Change
+	  function name to match new type names.
+
+	* tests/Objects/objects2.cpp: Switch to using ISO C++ compliant
+	  stringstream.
+
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/GenerateDecoder.py, src/Objects/SmartPtr.h: Modify
+	  decoder to use type safe conversions.
+
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects: Get the tests compiling again.
+
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/SmartPtr.h: Clean up constructors so member pointer is
+	  directly initialised. Add type conversion template for const
+	  objects. Make methods const as apropriate.
+
+	* gen_cpp.py: Make Objects classes allocation routines return pointers
+	  to their type rather than to the base class, to make writing type
+	  safe code easier.
+
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/SmartPtr.h: Added member templates for type
+	  conversion up and down the tree.
+
+2002-11-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Exception.h, src/Objects/BaseObject.h,
+	  src/Objects/GenerateDecoder.py, src/Objects/objectFactory.h:
+	  Have the base Atlas-C++ exception class inherit from
+	  std::exception. Fix destructor throw specifier.
+
+	* src/Message/DecoderBase.h, src/Message/QueuedDecoder.cpp,
+	  src/Message/QueuedDecoder.h, src/Objects/loadDefaults.cpp:
+	  Pass Element::MapType to the objectArrived() method as atlas
+	  requires the top level element to be a map.
+
+	* src/Objects/objectFactory.h: Modified NoSuchFactoryException
+	  so that it inherits from Atlas::Exception.
+
+	* src/Objects/objectFactory.h, src/Objects/objectFactory.cpp,
+	  src/Objects/GenerateObjectFactory.py:
+	  addFactory now returns an integer which is the type value
+	  which will be used to identify objects of the class
+	  produced by this factory.
+
+	* src/Objects/Decoder.h, src/Objects/Decoder.cpp,
+	  src/Objects/GenerateDecoder.py:
+	  Added addMethod() function to Decoder class, which allows the
+	  application to register methods for custom classes using
+	  the integer value returned by Factories::addFactory().
+
+2002-11-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Message/Object.h, src/Message/QueuedDecoder.cpp:
+	  Rename Atlas::Message::Object to Atlas::Message::Element to
+	  avoid confusion, and namespace clashes.
+	  
+	* src/Objects/AttributeInfo.py, src/Objects/GenerateDecoder.py,
+	  src/Objects/GenerateObjectFactory.py, src/Objects/common.py,
+	  src/Objects/gen_cpp.py, 
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
+	  src/Objects/Encoder.h, src/Objects/loadDefaults.cpp,
+	  src/Objects/objectFactory.h, src/Utilities/atlas_convert.cpp:
+	  Update the Objects API to use the new Message class.
+
+	* configure.in, tests/Objects/Makefile.am:
+	  Fix handling of compression libs by filters.
+
+	* tests/Objects/decoder1.cpp, tests/Objects/encoder1.cpp,
+	  tests/Objects/objects1.cpp, tests/Objects/objects2.cpp,
+	  tutorial/DebugBridge.h:
+	  Update tests so they build again.
+
+2002-06-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codecs/Bach.cpp, src/Message/DecoderBase.cpp,
+	  src/Utilities/atlas_convert.cpp: Strict ISO C++ fixes.
+
+2002-06-05  Michael Koch  <konqueror@gmx.de>
+
+	* src/Codecs/Bach.*: fix allowed characters for names
+
+2002-06-01  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* src/Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.*
+	  supported
+
+2002-05-21  Michael Koch  <konqueror@gmx.de>
+
+	* configure.in: fixed --enable-debug
+
+2002-05-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/common.py: Back off to supporting older more common
+	  versions of python.
+
+	* src/Codecs/Bach.cpp, src/Codecs/Packed.cpp, src/Codecs/XML.cpp,
+	  src/Net/Stream.cpp:
+	  Work around the problem that in_avail() sometimes returns < 0 on
+	  some systems.
+
+2002-05-18  Michael Koch  <konqueror@gmx.de>
+
+	* all Makefile.am: 
+	  fixes for builddir != srcdir
+
+2002-05-17  Michael Koch  <konqueror@gmx.de>
+
+        * atlas-config.in:
+	  - dont output /usr/lib when called with --libs
+	  - return real version instean of the string @ATLAS_VERSION@
+
+2002-05-15  Michael Koch  <konqueror@gmx.de>
+
+        * atlas-config.in: dont output /usr/include when called with --cflags
+
+2002-05-15  Michael Koch  <konqueror@gmx.de>
+
+	* src/Bridge.h: added documentation.
+
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
+	* src/Codecs: fixed encodeString
+
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
+	* src/Makefile.am: added Atlas.h
+	* src/Objects/BaseObject.h: remove debugging code
+
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
+        * src/Objects/SmartPtr.h:
+	  removed DEBUG code: it doesnt compiles and aloril
+	  said its not needed.
+	* configure.in: added --enable-debug
+	  by default debugging is disabled
+	* src/Atlas.h:
+	  new file for gobal definitions
+	  currently used for the definition of ATLAS_DEBUG
+	* src/Codecs/Bach.cpp,
+	  src/Bindings/Python/wrapperObject.cpp:
+	  use ATLAS_DEBUG macro
+	* src/Message/DecoderBase.cpp:
+	  added some asserts
+	  use ATLAS_DEBUG macro
+
+2002-05-13  Michael Koch  <konqueror@gmx.de>
+
+	* src/*, configure.in:
+	  added Bach Codec officially to Atlas-C++
+	
+2002-05-12  Michael Koch  <konqueror@gmx.de>
+
+	* adjusted all member variables to use the prefix m_
+
+2002-05-12  Michael Koch  <konqueror@gmx.de>
+
+	* src/Utititlies/*:
+	  Added new utility to convert ATLAS files using another codec.
+
+	  This doesnt get compiled currently.
+
+2002-05-10  Michael Koch  <konqueror@gmx.de>
+
+	* src/Codecs/Bach.cpp/h:
+	  New class implementing the BACH codec.
+
+2002-05-07  Michael Koch  <konqueror@gmx.de>
+
+	* src/Objects/common.py, src/Objects/gen_cpp.py:
+	  Use latest API from Atlas-Python
+
+2002-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Filter.h, src/Funky/FEncoder.cpp, src/Funky/FEncoder.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h:
+	  Rename Encoder.* files so that IDE's don't get confused by
+	  the duplicate object file names.
+
+	* src/Objects/common.py: Default to recent python version.
+	  Users of older versions of python may have to hack this file.
+
+2001-10-07  Al Riddoch  <alriddoch@zepler.org>
+
+This entry covers the changes made by Jesse Jones for which no ChangeLog
+entries were commited. It also includes further changes made by myself.
+
+	* src/Objects/BaseObject.cpp: Re-ordered includes.
+
+	* src/Objects/BaseObject.h: Added include to ensure header is stand
+	  alone. Make accessor method const.  Make sure non-callable
+	  function returns something when asserts are not compiled in.
+
+	* src/Bridge.h: Fixed malformed declarations for mapBegin and
+	  listBegin.
+
+	* src/Codec.cpp, src/Objects/loadDefaults.cpp: Re-ordered includes to
+	  ensure that respective headers are stand alone.
+
+	* src/Net/Stream.cpp: Re-ordered includes to ensure that header is
+	  stand alone. Made some functions static. Removed invalid default
+	  arguements as these belong in the headers. Removed stage style
+	  TODO as these are not used in the Atlas-C++ code. Added some
+	  casts.
+
+	* src/Codecs/XML.cpp: Added some casts.
+
+	* src/Message/Encoder.h: Added a bunch of inherited methods to
+	  prevent them from being hidden by the new overloaded methods.
+	  Removed confusing "Inherited" typedef. Re-styled inherited
+	  methods.
+
+	* src/Exception.h: Fixed misspelled "UNKNOW". Made getDescription a
+	  const method.
+
+	* src/Filter.h: Removed an extra comma from the Type declaration.
+	  Added some casts. Moved inline virtual methods to cpp file.
+
+	* src/Filter.cpp: Added virtual filterbuf methods from header file.
+
+	* src/Negotiate.h: Removed an extra comma from the declaration.
+
+	* src/Message/Layer.h: Removed duplicate constructor.
+
+	* src/Codecs/Packed.cpp, src/Codecs/Utility.h: Added a cast.
+
+	* src/Codecs/Packed.h: Removed a comma from the declaration.
+
+	* src/Codecs/XML.h: Removed commas from declarations.
+
+	* src/Net/Stream.h: Forward references Bridge so header stands alone.
+
+2001-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Cleaned up some unnecessary includes.
+
+	* src/Net/Stream.cpp: Re-wrote client greeting code so it is more
+          efficient, as described by Damien McGinnes.
+
+2001-07-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Exception.h: Added exception base class, with string
+	  description.
+
+	* src/Objects/loadDefaults.h, src/Objects/BaseObject.h,
+	  src/Message/Object.h: Modify exception classes to derive from
+	  exception base class.
+
+	* src/Objects/loadDefaults.cpp, src/Objects/BaseObject.cpp: Re-style
+	  code for consistancy and readability.
+
+	* src/Message/Object.h: Added feature to Message::Object so it
+	  can store pointers properlly.
+
+	* src/Objects/GenerateObjectFactory.py: Make generated code ISO
+	  conformant, and more readable.
+
+	* src/Objects/common.py: Updated copyright date for generated files.
+
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Added interface and library versioning.
+
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Net/Stream.cpp, src/Objects/BaseObject.cpp,
+	  src/Objects/loadDefaults.cpp: Fixed code for strict ISO
+	  conformance; mainly strict use of std:: namespace.
+
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/Object.h, src/Message/Object.cpp: Removed buggy and
+	  largely unused memory pool code.
+
+	* src/Objects/loadDefaults.cpp: Removed double use of find()
+	  method, and re-styled code to fit in with the rest of Atlas-C++.
+
+	* src/Net/Stream.cpp: Switched negotiation code over to picking
+	  Packed by default.
+
+	* src/Filters/Bzip2.cpp: Modified code to use latest Bzip2 API.
+
+	* src/Codecs/Packed.cpp: Fixed beginning and ending of stream,
+	  which does not have an encoding in Packed.
+
+	* NEWS, HACKING: updated.
+
+2001-05-06  Al Riddoch  <alriddoch@zepler.org>
+
+        * src/Message/Object.cpp: Added true cpp file so that class static
+          member is handled cleanly.
+
+        * src/Message/Object.h: Moved clear and operator new/delete()
+          functions around so they can be inlined.
+
+        * src/Net/Stream.cc: Added ATLAS to greeting message as required
+          by the Atlas protocol.
+
+        * src/Net/Stream.*: Made header in NegotiateHelper pass by reference.
+
+2001-03-22  Al Riddoch  <alriddoch@zepler.org>
+
+        * configure.in: Changed package name to Atlas-C++ to ensure it
+	  is distinguishable from the other versions.
+
+	* configure.in: Added rule to make atlas-config script.
+
+2001-03-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codecs/Makefile.am: Install Codec header files, so codecs can
+	  be used directly.
+
+	* src/Codecs/*.cpp: Removed default value for can_read parameter from
+	  definition as it is only required in declaration.
+
+	* Added some std:: prefixes as required.
+
+2001-03-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Updated ROADMAP and NEWS to latest versions from stable branch.
+
+	* Modified docs to indicate new maintainer.
+
+2001-03-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codec.*, src/Codecs/*: Ported across simplified ISO compliant
+	  Codec classes from stable branch. Removed Metrics and Parameters.
+	  
+	* src/Filter.*, src/Filters/*: Removed Metrics and Parameters.
+
+	* src/Factory.*: Removed Factory mechanism, changes copied from
+	  stable branch.
+
+	* src/Net/Stream.*: Changed negotiation classes to simplified but
+	  ISO compliant version from stable branch, with placeholder
+	  code for Filter negotiation.
+
+	* HACKING: Copied across from stable branch, and modified to reflect
+	  status of this branch.
+
+	* README: Updated contents from the stable branch.
+
+	* tutorial/example/*: Created similar tutorial to that on stable
+	  branch. The only differences are differences to the API.
+
+	* src/Filter.h, Makefile.am: Sorted out using config.h in Filter.h.
+
+	* src/Filters/*: Moved filters into their own namespace,
+	  in accordance with the convention used throughout this
+	  library.
+
+	* src/*: Removed all "using namespace .." directives.
+
+2001-03-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/*: Removed "using namespace std;" throughout code, as all
+	  uses of symbols in this namespace are now fully qualified.
+
+2001-03-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/*: Backed off changes to namespaces and template classes with
+	  Stream parameter, as they proved to be of no benefit to portability.
+
+	* src/*: Finished off a bit more ISO conformance. (all std:: additions).
+
+	* src/Message/Object.h: Copied changes from stable branch
+	  including memory pool optimisation, asNum() and isNum() methods, and
+	  change of ListType from std::list to std::vector.
+
+	* src/*: Replaced int with long throughout code for compatability
+	  with changes type in Message::Object
+
+2001-01-05  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
+
+	* src/Filter.h: added filterbuf. Input filtering is not
+	    implemented yet.
+	* configure.am: added check for <streambuf>. You will need an
+	    automike with a C++ check for this.
+	* configure.in: regenerated from new configure.am.
+	* TODO: updated todo list.
+	* src/Net/Stream.h: identified a problem. Look for XXX.
+
+2001-01-04  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
+
+	* src/*: made everything ISO C++ conforming, from what I can see
+	    (mainly a great number of std:: additions).
+
+2000-12-22  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Removed dependency on socket++ in test programs.
+
+	* Added atlas.m4 autoconf macro script.
+
+2000-12-21  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Split filters into header and cpp file in the same model
+	  as Codecs.
+
+	* Re-worked tutorial, test and benchmarks so they compile without
+	  installing the library.
+
+2000-12-20  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Removed hierarchical namespaces, leaving single flat Atlas
+	  namespace.
+
+	* Reduced template usage, especially removing all Stream
+	  templates.
+
+	* Split codecs into header and cpp file, and removed static Codec
+	  instances.
+
+	* Re-worked factories() static member function in Factory
+	  so it now uses portable static list pointer instead of static
+	  list.
+
+2000-12-19  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Added atlas-config script.
+
+2000-12-13  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Added first attempt at a UML class diagram.
+
+2000-12-09  Aloril  <aloril@iki.fi>
+
+	* added bool instanceOf(int classNo) const; method
+
+2000-12-08  Aloril  <aloril@iki.fi>
+
+	* Decoder::unknownObjectArrived(const Entity::Empty&); ->
+	Decoder::objectArrived(const Entity::Anonymous&);
+
+	* s/Empty/Anonymous/
+
+	* added Atlas::Objects::Entity::Empty class which is used when
+ 	unknown object has arrived (usually unknown objects have pos
+ 	attribute, which is dynamic in Root):
+	Decoder::unknownObjectArrived(const Entity::Empty&);
+	and for args: if(op->getArgs()[0]->getClassNo() == Entity::EMPTY_NO) ...
+
+2000-12-02  Aloril  <aloril@iki.fi>
+
+	* changed method names: FooMethod -> fooMethod
+
+	* optimized src/Objects: now few hundred times faster than earlier
+
+2000-11-17  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Removed .cc files
+
+2000-11-09  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Renamed all cc files to cpp for Visual studio. Old .cc files still
+	  remain. Will be removed once we are sure this is stable.
+	
+2000-11-01  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Fixed negotiation so it is now possible for packed to get picked.
+	  (Packed decoder appears to segfault though)
+	

@@ -1,0 +1,33 @@
+*.o
+*.a
+*.lo
+*.la
+.deps
+.libs
+config.*
+atlas-cpp.spec
+atlascpp-0.6.pc
+compile
+test-driver
+depcomp
+mingw32-atlas-cpp.spec
+missing
+stamp-h1
+#ignore all temporary files
+*~
+#ignore Eclipse settings
+.settings
+.pydevproject
+.project
+.cproject
+.autotools
+#ignore generated reports
+abi_report
+#ignore Python cached compilation files
+*.pyc
+
+.directory
+.idea
+cmake-build*
+build
+CMakeUserPresets.json

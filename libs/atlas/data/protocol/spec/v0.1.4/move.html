@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Movement</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Movement</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#types"><b>Movement types</b></a></td>
+        <td>Relative, absolute, etc..</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#loc"><b>Location tag</b></a></td>
+        <td>What location tag contains</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#containers"><b>Containers and relative movement</b></a></td>
+        <td>You are on ship that moves at sea</td>
+      </tr>
+
+    </TABLE>
+
+    <h3><a name="types">Movement types</a></h3>
+
+    <table>
+      <tr>
+        <td><b></b></td>
+        <td><b>Movement type</b></td>
+        <td><b>Server</b></td>
+        <td><b>Client</b></td>
+        <td><b>tags</b></td>
+      </tr>
+      <tr>
+        <td><b>a)</b></td>
+        <td>Relative coordinates</td>
+        <td>Nethack and many MUDs</td>
+        <td>Simple client</td>
+        <td>vector, relrotation</td>
+      </tr>
+      <tr>
+        <td><b>b)</b></td>
+        <td>Force vector</td>
+        <td>QUADAS, Cyphesis in future</td>
+        <td>Normal client</td>
+        <td>forcevector, torquerotation</td>
+      </tr>
+      <tr>
+        <td><b>c)</b></td>
+        <td>Force vector/limb</td>
+        <td>Some future world with VR</td>
+        <td>VR client with suit</td>
+        <td>forcevector, torquerotation</td>
+      </tr>
+      <tr>
+        <td><b>d)</b></td>
+        <td>Absolute coordinates</td>
+        <td>Cyphesis currently</td>
+        <td>Map editor</td>
+        <td>coords, rotation</td>
+      </tr>
+    </table>
+    <p>
+    If you have better suggestions for tag names, mail to 
+    <a href="mailto:scripting@worldforge.org">scripting@</a>.
+    <p>
+    <b>Server  should always support less accurate movement:</b>
+    <p>
+    <table>
+      <tr><td>Advanced server:</td><td>a,b,c</td></tr>
+      <tr><td>Less advanced server:</td><td>a,b</td></tr>
+      <tr><td>Simple server:</td><td>a</td></tr>
+    </table>
+    <p>
+    Same for client.
+    Client tries most advanced method of moving and if it gets illegal
+    event back then it falls back to less advanced method.
+    <p>
+    Server implementation could be something like this:
+    server:b, client:a
+    Create appropriate force vector for requested move difference and use
+    it as if that was requested.
+    <p>
+    When 'force' -tag is used by client, then likely server sends
+    movement sights using 'vector' -tag.
+    <p>
+    <b>Why?</b>
+    <p>
+    It would be nice if server would work with less advanced clients and
+    vice versa. We can't immediately implement some very detailed
+    moving. It's just that when client uses less accurate 'movement type'
+    then (s)he cannot control her/his character as accurately.  For some
+    programs it doesn't make even sense to do it initially (like some
+    existing program).
+
+    <h3><a name="loc">Location tag</a></h3>
+    
+    This is current/new location for entity.
+    It contains id, position and optionally orientation.
+    <p>
+    Id: Entity that acts as reference for location.
+    <p>
+    Either coords, vector or forcevector is used for position. Units
+    are in meters unless something different has been decided between
+    server and client.
+    <p>
+    Coords: absolute coordinates in relation to reference entity.
+    Example (x,y,z):
+    <PRE>
+       &lt;coords&gt;12.4,23.2,-0.5&lt;/coords&gt;
+    </PRE>
+    <p>
+    Vector: relative to receiving character. Example:
+    <PRE>
+       &lt;vector&gt;12.4,23.2,-0.5&lt;/vector&gt;
+    </PRE>
+    <p>
+    Forcevector: Force relative to receiving character. Default unit
+    is newton. Example:
+    <PRE>
+       &lt;forcevector&gt;12.4,23.2,-0.5&lt;/forcevector&gt;
+    </PRE>
+    <p>
+    Either rotation, relrotation or torquerotation is used for
+    rotation. Units are in radians unless something different has been
+    decided between server and client.
+    <p>
+    Rotation: Absolute rotation in relation to reference
+    entity. Example (x,y,z -axis):
+    <PRE>
+       &lt;rotation&gt;0.1,-0.2,2.0&lt;/rotation&gt;
+    </PRE>
+    <p>
+    Relrotation: Relative rotation in relation to receiving character. Example:
+    <PRE>
+       &lt;relrotation&gt;0.1,-0.2,2.0&lt;/relrotation&gt;
+    </PRE>
+    <p>
+    Forcerotation: Relative torque in relation to receiving
+    character. Default unit is newton meter. Example:
+    <PRE>
+       &lt;torquerotation&gt;0.1,-0.2,2.0&lt;/torquerotation&gt;
+    </PRE>
+    <p>
+
+    <h3><a name="containers">Containers and relative movement</a></h3>
+    
+    
+    You are on ship that moves at sea.
+    <p>
+    You move: ship has moved in relation to you:
+    <PRE>
+       &lt;ent&gt;
+         &lt;id&gt;you_123&lt;/id&gt;
+         &lt;loc&gt;&lt;id&gt;ship_12&lt;/id&gt;&lt;vector&gt;-4.5,2,0&lt;/vector&gt;&lt;/loc&gt;
+       &lt;/ent&gt;
+    </PRE>
+    <p>
+    Ship moves: sea has moved in relation to ship:
+    <PRE>
+       &lt;ent&gt;
+         &lt;id&gt;ship_12&lt;/id&gt;
+         &lt;loc&gt;&lt;id&gt;sea_1&lt;/id&gt;&lt;vector&gt;0.1,5,0&lt;/vector&gt;&lt;/loc&gt;
+       &lt;/ent&gt;
+    </PRE>
+    <p>
+    Sea moves: you don't notice.
+    <p>
+    Somebody else moves on same ship: somebody has moved in relation
+    to you:
+    <PRE>
+       &lt;ent&gt;
+         &lt;id&gt;somebody_else_1234&lt;/id&gt;
+         &lt;loc&gt;&lt;id&gt;ship_12&lt;/id&gt;&lt;vector&gt;-0.5,2,0&lt;/vector&gt;&lt;/loc&gt;
+       &lt;/ent&gt;
+    </PRE>
+    <p>
+    Another ship moves: ship2 has moved in relation to your ship:
+    <PRE>
+       &lt;ent&gt;
+         &lt;id&gt;ship2_33&lt;/id&gt;
+         &lt;loc&gt;&lt;id&gt;sea_1&lt;/id&gt;&lt;vector&gt;-3.1,1.2,0&lt;/vector&gt;&lt;/loc&gt;
+       &lt;/ent&gt;
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Jun  7 15:45:46 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jun  7 19:56:50 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

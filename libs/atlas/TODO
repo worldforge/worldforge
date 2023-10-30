@@ -1,0 +1,102 @@
+Use std::shared_ptr with a custom allocator for our SmartPtr. This will ensure
+thread safety.
+
+In all codecs/negotiators:
+  peek()
+  rdbuf().in_avail() and cache result
+  rdbuf().sgetc() for each char
+  rdbuf().xsgetn() for many (in negotiators)
+
+Need to add to the codec interface so that we can verify codec is at
+stream level before and after building a datagram.
+
+Logic in StreamFoo::poll() is bogus. can_read does not mean that sockets
+can be read from many times, just once, so can_read should be checked outside
+the do loop, then inside a while check should be used to copy all bytes
+from the stream into m_buf at once. This makes the do..while loop redundant.
+We can read all the bytes into the buffer straight away. The neogitaters
+are not byte based, but expect all available input to have been copied into
+the buffer.
+
+Add IHEAR to negotiation, so that it is possible to negotiate various
+alternate transports include UDP, SCTP etc..
+
+Get rid of overridden removeAttr, as the base class handles this now.
+See if copyAttr and setAttr can be better handled this way.
+copyAttr returns 0 if attribute is hard coded, but not set.
+
+Add template member to Objects for list types, so that value can be queried
+into anything that implements operator[]
+Something like:
+    template<typename VectorT>
+    int getPos(VectorT & v) {
+        v[0] = m_pos[0];
+        ...
+    }
+How much does this really help? Not sure.
+
+Make sure objects deep copy really copies arguments of ops.
+
+hasAttr currently returns true if a hardcoded attribute is not really set.
+Needs fixing - very counterintuitive.
+
+Don't use explicit Element constructor when assigning to another Element.
+
+Note that Atlas::Message::Element segfaults of a map is set to be a member
+of itself.
+
+Don't pass Bridge to StreamFoo at construction time. Its not required until
+getCodec() time. Make it an argument of getCodec(). Bridge passed to Codec
+should be a reference rather than a pointer.
+
+Fix all use of if (..) .. to always use { } in Root.h etc.
+
+Make sure parents and objtype are not sent if they are empty.
+
+If we move get|set(...)AsList() methods from Root.h and other headers,
+into body, we will remove the need for Element.h from any header.
+This is also the key to removing SmartPtr.h from Root*.h
+
+There is some inefficient copying going on in the way args are encoded.
+
+Note that most people are not interested in the Objects::Decoder also
+handling dispatch. Just decode and pass to the application.
+
+Invstigate removing methods which only exist to prevent hiding methods in the
+base class. This should be possible now that the methods do not have the same
+name.
+
+Ensure that the Decoder method registration code is type safe. Probably good
+to use templates.
+
+Items below are probably still valid, but this is where i reconsider the
+order and priority of tasks, and make my own notes.
+
+Write a very fast binary codec, with a name derived from our architecture.
+
+Make the code for adding new decoder methods templaty so we can ovoid nasty casting.
+
+Write codecs, connectors and acceptors for datagram based communication,
+specialising Codec<> template using an abstract datagram class interface.
+
+Write acceptor/negotiator for file based atlas, to load from a file
+of unknown codec.
+
+Modify the objects API so we can track which attributes have been set, rather
+than relying on their value. Then we can get orientation, and perhaps even
+bbox into the spec, and support that well.
+
+Add cout operators for Message::Object at least. Its a pain having to mess about
+with them.
+
+TODO list for Atlas-C++:
+
+Items are written up by those who they are assigned to, unless otherwise noted
+(using " -- ").
+
+Notes:
+
+Stefanus Du Toit is no longer participating largely.
+Michael Day is no longer participating largely.
+Al Riddoch is no longer participating largely.
+Erik Ogenvik has now taken over ownership this code.

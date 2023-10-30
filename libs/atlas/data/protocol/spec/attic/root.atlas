@@ -1,0 +1,24 @@
+ATLAS root definition file (modeline for XEmacs: -*-Python-*-)
+IWILL Bach_beta2
+
+[
+{
+    id:"root",
+    parents:[],
+    stamp:0.0,
+    stamp_inherit:0.0,
+    objtype:"meta",
+    interface:"base_interface",
+    name:"",
+    summary:"All objects inherit from this.",
+    description:"You can browse all definitions starting from here and 
+descending into childrens.",
+    specification:"atlas"
+## <aloril> implementation doesn't need to do that
+## <aloril> and if you look at def files, they don't have that at all: it's generated (and maybe with real server too)
+## <aloril> it just saves as yet additional operation
+## *** cyanide (~ojw@reggae-08-36.nv.iinet.net.au) has joined #forge
+## <Eridon> hey ya cyan
+## <aloril> and for leaf classes: only admins are privliged to get list of all instances of humans for example
+}
+]

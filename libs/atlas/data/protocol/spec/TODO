@@ -1,0 +1,8 @@
+Outline of changes in the next version:
+  times change from float to int, and specced in milliseconds
+  merge SECONDS and STAMP
+  abolish STAMP_CONTAINS and FUTURE_SECONDS
+
+- binary2
+- specify operations and their args semantically much more than currently is done:
+  especially movement modes

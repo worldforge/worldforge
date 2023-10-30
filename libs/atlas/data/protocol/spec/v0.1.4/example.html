@@ -1,0 +1,922 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Example session</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+
+    <h2>Example session</h2>
+
+    <h3>Scenario</h3>
+    This is homework by <a href="mailto:lavoie@yoho.genie.uottawa.ca">Lavoie Philippe</a> (slightly modified)
+    <p>
+      'quoted text': Makes things more compact in example, actual
+      content will be added later as appendix.
+    <p></p>
+    
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#login"><b>Login</b></a></td>
+        <td>There are two players: JoeBlatz and Bork. They will both
+          connect to the same server S. They have characters A and B
+          respectively. There is a monster M that resides on monster
+          server X.
+        </td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#looking"><b>Looking</b></a></td>
+        <td>A and B 'connect' to the server S. The server puts them in
+          their current location which is in the middle of a road. A
+          tree is to their left (at 10 meters). They see nothing
+          else.
+        </td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#jump"><b>Appearing and movement</b></a></td>
+        <td>Then a monster jumps from a tree branch and goes for them.</td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#description"><b>Description</b></a></td>
+        <td>The monster is a geeklizard: a computer user who became green
+          and lizard like after staring too long at his computer.
+        </td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#spell"><b>Spell casting and results</b></a></td>
+        <td>The geeklizard will try to slay them by talking them to
+          death. It will start by a story about the advantage of calcium in
+          the development of the infant.  That speak is magic and will cause
+          A to fall asleep,
+        </td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#sword"><b>Prepare for fight</b></a></td>
+        <td>player B will kill M by using a sword. The fight sequence
+          is: B gets his sword in his hand, M continue to talk (no effect),
+        </td>
+      </tr>
+      
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#swing"><b>Swing with sword and damage</b></a></td>
+        <td>B swing and misses, M moved out of the way, 
+          M swing and hit (but only minimal damage),
+          B swing and hit, M talks about the advantage of
+          asynchronous transfer over TCP/IP will trying to flee,
+        </td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#error"><b>Transmission error</b></a></td>
+        <td>B catches up to M,swings again.
+          The server doesn't receive the last swing message. 
+          B sends the message again
+        </td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#kill"><b>Kill</b></a></td>
+        <td>and it kills M.
+        </td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#steal"><b>Steal money</b></a></td>
+        <td>Player B will steal the money from A
+        </td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#track"><b>Tracking</b></a></td>
+        <td>and take off. A wakes up 1 hour later
+          and tries to read the tracks on the road to see where B went.
+        </td>
+      </tr>
+
+    </table>
+
+    <h3>Atlas XML examples</h3>
+
+    <h4><a name="login">Login</a></h4>
+
+    <em>
+      There are two players: JoeBlatz and Bork. They will both connect
+      to the same server S. They have characters A and B
+      respectively. There is a monster M that resides on monster
+      server X.
+    </em>
+    <p>
+      A-&gt;S (login):
+    <PRE>
+&lt;msg&gt;
+  &lt;op&gt;
+    &lt;from&gt;JoeBlatz&lt;/from&gt;
+    &lt;id&gt;login&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;JoeBlatz&lt;/id&gt;
+      &lt;attr name="password"&gt;Rqv67.%&lt;/attr&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+    
+    S-&gt;A (login accepted):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;S:&lt;/from&gt;
+  &lt;to&gt;JoeBlatz&lt;/to&gt;
+  &lt;id&gt;info&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;JoeBlatz&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;Player&lt;/id&gt;&lt;/type&gt;
+    &lt;attr name="name"&gt;Joe Blatz&lt;/attr&gt;
+    &lt;attr name="password"&gt;Rqv67.%&lt;/attr&gt;
+    &lt;contains&gt;&lt;id&gt;A&lt;/id&gt;&lt;/contains&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    B-&gt;S, S-&gt;B: similar
+    <p>
+      M-&gt;S, S-&gt;M: similar (player=X, character=M)<br>
+      <ul>
+        <li>Of course login is only once/all monsters<br>
+        <li>X server likely has privileges to create monsters too:<br>
+        <ul>
+            <li>create them to S
+            <li>or keep them in server X: then all messages that include M will
+            have &lt;id&gt;X/M&lt;/id&gt; instead of &lt;id&gt;M&lt;/id&gt;
+            (Note that if servers S and X have common id space, then S can
+            choose to hide the existence of server X)
+        </ul>
+    </ul>
+    <p>
+
+      <hr>
+
+      <h4><a name="looking">Looking</a></h4>
+
+      <em>A and B 'connect' to the server S. The server puts them in
+        their current location which is in the middle of a road. A tree
+        is to their left (at 10 meters). They see nothing else.
+      </em>
+    <p>
+      Map by <a href="mailto:dusk@ravendusk.org">John R Street</a>
+    <PRE>
+  01234567890
+ 0+----+-+--+
+ 1|    | |  |
+ 2|    |A|  |
+ 3|*   | |  |
+ 4|    |B|  |
+ 5|    | |  |
+ 6|    |P|  |
+ 7|    |A|  |
+ 8|    |T|  |
+ 9|    |H|  |
+ 0+----+-+--+
+ 
+ *=tree
+    </PRE>
+
+    A-&gt;S (look around):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;A&lt;/from&gt;
+  &lt;id&gt;look&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S-&gt;A (what A sees):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;id&gt;grass1&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    A-&gt;S (look at grass):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;A&lt;/from&gt;
+  &lt;id&gt;look&lt;/id&gt;
+  &lt;id&gt;grass1&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S-&gt;A (what A sees):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;grass1&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;terrain&lt;/id&gt;&lt;/type&gt;
+    &lt;contains&gt;
+      &lt;id&gt;path1&lt;/id&gt;
+      &lt;id&gt;tree1&lt;/id&gt;
+    &lt;/contains&gt;
+    &lt;attr name="description"&gt;Grass plains&lt;/attr&gt;
+    &lt;attr name="polygon"&gt;
+      &lt;coords&gt;0,0&lt;/coords&gt;&lt;coords&gt;10,0&lt;/coords&gt;&lt;coords&gt;10,10&lt;/coords&gt;
+      &lt;coords&gt;0,10&lt;/coords&gt;&lt;coords&gt;0,0&lt;/coords&gt;
+    &lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    A-&gt;S (look again specific objects):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;op&gt;
+    &lt;from&gt;A&lt;/from&gt;
+    &lt;id&gt;look&lt;/id&gt;
+    &lt;id&gt;path1&lt;/id&gt;
+  &lt;/op&gt;
+  &lt;op&gt;
+    &lt;from&gt;A&lt;/from&gt;
+    &lt;id&gt;look&lt;/id&gt;
+    &lt;id&gt;tree1&lt;/id&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    S-&gt;A (what A sees):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;op&gt;
+    &lt;to&gt;A&lt;/to&gt;
+    &lt;id&gt;sight&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;path1&lt;/id&gt;
+      &lt;type&gt;&lt;id&gt;road&lt;/id&gt;&lt;/type&gt;
+      &lt;contains&gt;
+        &lt;id&gt;A&lt;/id&gt;
+        &lt;id&gt;B&lt;/id&gt;
+      &lt;/contains&gt;
+      &lt;loc&gt;&lt;id&gt;grass1&lt;/id&gt;&lt;coords&gt;5,0&lt;/coords&gt;&lt;/loc&gt;
+      &lt;attr name="description"&gt;Path&lt;/attr&gt;
+      &lt;attr name="polygon"&gt;
+        &lt;!-- Note: relative coordinates to container (loc) --&gt;
+        &lt;coords&gt;0,0&lt;/coords&gt;&lt;coords&gt;2,0&lt;/coords&gt;&lt;coords&gt;2,10&lt;/coords&gt;
+        &lt;coords&gt;0,10&lt;/coords&gt;&lt;coords&gt;0,0&lt;/coords&gt;
+      &lt;/attr&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+  &lt;op&gt;
+    &lt;to&gt;A&lt;/to&gt;
+    &lt;id&gt;sight&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;tree1&lt;/id&gt;
+      &lt;type&gt;&lt;id&gt;tree&lt;/id&gt;&lt;/type&gt;
+      &lt;loc&gt;&lt;id&gt;grass1&lt;/id&gt;&lt;coords&gt;1,3&lt;/coords&gt;&lt;/loc&gt;
+      &lt;attr name="description"&gt;Tree&lt;/attr&gt;
+      &lt;attr name="height"&gt;5.6&lt;/attr&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    A-&gt;S (look at B):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;A&lt;/from&gt;
+  &lt;id&gt;look&lt;/id&gt;
+  &lt;id&gt;B&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S-&gt;A (what A sees):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;B&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;human&lt;/id&gt;&lt;/type&gt;
+    &lt;loc&gt;&lt;id&gt;path1&lt;/id&gt;&lt;coords&gt;6,4&lt;/coords&gt;&lt;/loc&gt;
+    &lt;attr name="description"&gt;Player B, bla bla&lt;/attr&gt;
+    &lt;contains&gt;
+       &lt;id&gt;swordB&lt;/id&gt;
+    &lt;/contains&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    [A looks at swordB and receivers answer]
+    <p>
+      B&lt;-&gt;S: similar
+
+    <p>
+    <hr>
+
+    <h4><a name="jump">Appearing and movement</a></h4>
+
+ <em>Then a monster jumps from a tree branch and goes for them.</em>
+<p>
+S->A (A sess Geeklizard jumping):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;op&gt;
+    &lt;to&gt;A&lt;/to&gt;
+    &lt;id&gt;appear&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;M&lt;/id&gt;
+      &lt;loc&gt;&lt;id&gt;tree1&lt;/id&gt;&lt;coords&gt;0,0,3.0&lt;/coords&gt;&lt;/loc&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+  &lt;op&gt;
+    &lt;to&gt;&lt;id&gt;A&lt;/id&gt;&lt;to&gt;
+    &lt;id&gt;sight&lt;/id&gt;
+    &lt;op&gt;
+      &lt;id&gt;jump&lt;/id&gt; &lt;!-- derived from move --&gt;
+      &lt;ent&gt;
+        &lt;id&gt;M&lt;/id&gt;
+        &lt;loc&gt;&lt;id&gt;grass1&lt;/id&gt;&lt;coords&gt;0.5,3.0,0.0&lt;/coords&gt;&lt;/loc&gt;
+      &lt;/ent&gt;
+    &lt;/op&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="description">Description</a></h4>
+
+    <em>The monster is a geeklizard: a computer user who became green
+      and lizard like after staring too long at his computer.</em>
+
+    <p>
+      A->S (looks at M: similar to earlier looking)
+    <p>
+      S->A (send info about M: note multiple inheritance)
+      
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;M&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;human&lt;/id&gt;&lt;id&gt;lizard&lt;/id&gt;&lt;/type&gt;
+    &lt;loc&gt;&lt;id&gt;grass1&lt;/id&gt;&lt;coords&gt;0.6,3.0,0.0&lt;/coords&gt;&lt;/loc&gt;
+    &lt;attr name="description"&gt;Geeklizard&lt;/attr&gt;
+    &lt;attr name="velocity"&gt;3,0&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    A->S (get lizard type):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;A&lt;/from&gt;
+  &lt;id&gt;get&lt;/id&gt;
+  &lt;id&gt;lizard&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->A (Lizard is green):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;info&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;lizard&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;monster&lt;/id&gt;&lt;/type&gt;
+    &lt;attr name="color"&gt;Green&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="spell">Spell casting and results</a></h4>
+
+    <em>The geeklizard will try to slay them by talking them to
+      death. It will start by a story about the advantage of calcium in
+      the development of the infant.  That speak is magic and will cause
+      A to fall asleep,</em>
+
+    <p>
+      M->S ('cast' magical speech):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;M&lt;/from&gt;
+  &lt;id&gt;sleepy bore&lt;/id&gt; &lt;!-- see later: has multiple inheritance --&gt;
+  &lt;op&gt;
+    &lt;id&gt;talk&lt;/id&gt;
+    &lt;ent&gt;&lt;attr name="say"&gt;blah blah calcium blah blah&lt;/attr&gt;&lt;/ent&gt;
+  &lt;/op&gt;
+  &lt;op&gt;
+    &lt;id&gt;spell&lt;/id&gt;
+    &lt;ent&gt;&lt;attr name="action"&gt;sleep&lt;/attr&gt;&lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/op&gt;
+    </PRE>
+
+S->A (notice spell and fall asleep):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;op&gt;
+    &lt;to&gt;A&lt;/to&gt;
+    &lt;id&gt;perception&lt;/id&gt;
+    'previous section copied here'
+  &lt;/op&gt;
+  &lt;op&gt;
+    &lt;to&gt;A&lt;/to&gt;
+    &lt;id&gt;change&lt;/id&gt;
+    &lt;ent&gt;&lt;attr name="state"&gt;sleep&lt;/attr&gt;&lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    S->B (notice spell and see A to fall asleep):
+
+    <PRE>
+&lt;msg&gt;
+  'perception op similar to above'
+  &lt;op&gt;
+    &lt;to&gt;B&lt;/to&gt;
+    &lt;id&gt;sight&lt;/id&gt;
+    'include above change op to A here'
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+B->S (get 'sleepy bore' op: see above Lizard for example)<br>
+S->B:
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;info&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;sleepy bore&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;talk&lt;/id&gt;&lt;id&gt;spell&lt;/id&gt;&lt;/type&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="sword">Prepare for fight</a></h4>
+
+    <em>player B will kill M by using a sword. The fight sequence
+      is: B gets his sword in his hand, M continue to talk (no effect),</em>
+    <p>
+      B->S (gets his sword in his hand):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;id&gt;grab&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;swordB&lt;/id&gt;
+    &lt;loc&gt;&lt;id&gt;B#hand&lt;/id&gt;&lt;/loc&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    M->S and S->B (Ms spell):
+    <p>
+      similar to previous+sees sword to move it's hand
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;&lt;id&gt;B&lt;/id&gt;&lt;to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  'include previous op here'
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="swing">Swing with sword and damage</a></h4>
+
+    <em>B swing and misses, M moved out of the way, 
+      M swing and hit (but only minimal damage),</em>
+    <p>
+      B->S (B swings):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;id&gt;swing&lt;/id&gt; &lt;!-- derived from attack --&gt;
+  &lt;ent&gt;
+    &lt;id&gt;swordB&lt;/id&gt;
+    &lt;loc&gt;&lt;id&gt;B_hand&lt;/id&gt;
+         &lt;coords&gt;'where M is - sword length'&lt;/coords&gt;
+    &lt;/loc&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->B (misses):
+    <p>
+      M moves out of the way and swordB moves where M was.
+    <p>
+      movements, similar to above grab
+    <p>
+      M->S, S->B (M swing and hit):
+    <p>
+      swing like above, sight of it like above
+    <p>
+      hit:
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;M&lt;/from&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;change&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;B&lt;/id&gt;
+    &lt;attr name="status"&gt;0.9&lt;/attr&gt;
+    &lt;!-- previous value was: 1.0 --&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <em>B swing and hit, M talks about the advantage of
+      asynchronous transfer over TCP/IP will trying to flee,</em>
+    <p>
+      Similar to previous...
+    <p>
+
+    <hr>
+
+    <h4><a name="error">Transmission error</a></h4>
+
+    <em>B catches up to M,swings again.
+      The server doesn't receive the last swing message. 
+      B sends the message again</em>
+    <p>
+      Content similar previous.
+    <p>
+      To facialiate detection of missing messages:
+    <p>
+      B->S:
+
+    <PRE>
+&lt;msg no="100"&gt;
+  &lt;op/&gt;
+&lt;/msg&gt;
+
+&lt;msg no="102"&gt;
+  &lt;op/&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    Now libatlas detects missing message "101" and asks sender to
+    resend it.
+    <p>
+
+    <hr>
+
+    <h4><a name="kill">Kill</a></h4>
+
+    <em>and it kills M.</em>
+    <p>
+      B->S (swing M):
+      
+    <PRE>
+&lt;op no="101"&gt;
+  'similar to earlier swing'
+&lt;/op&gt;
+    </PRE>
+
+    S->M (B kills M):
+    <p>
+      It disappears:
+
+    <PRE>
+&lt;op no="200" refno="101"&gt; &lt;!-- when B sees this message
+                                embedded inside sight message:
+                                it has originated from me and 
+                                'refno' was from that swing: 
+                                I killed it with that swing --&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;to&gt;M&lt;/to&gt;
+  &lt;id&gt;kill&lt;/id&gt; &lt;!-- derived from delete --&gt;
+  &lt;id&gt;M&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    Alternative if it leaves corpse:
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;to&gt;M&lt;/to&gt;
+  &lt;id&gt;dead&lt;/id&gt; &lt;!-- derived from change --&gt;
+  &lt;ent&gt;
+    &lt;id&gt;M&lt;/id&gt;
+    &lt;attr name="status"&gt;0.0&lt;/attr&gt;
+    &lt;attr name="state"&gt;dead&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->B (sees above):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  'above included here'
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="steal">Steal money</a></h4>
+
+    <em>Player B will steal the money from A</em>
+    <p>
+      B->S (search body of A):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;id&gt;search&lt;/id&gt; &lt;!-- derived from look --&gt;
+  &lt;id&gt;A&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->B (sees possessions):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;A&lt;/id&gt;
+    'other attributes here..'
+    &lt;contains&gt;
+      &lt;id&gt;swordA&lt;/id&gt;
+      &lt;id&gt;backpackA&lt;/id&gt;
+    &lt;/contains&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    B->S (look at backpack)<br>
+    S->B (sees money):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;backpackA&lt;/id&gt;
+    'other attributes here..'
+    &lt;contains&gt;
+      &lt;id&gt;moneyA&lt;/id&gt;
+    &lt;/contains&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    B->S (look money):<br>
+    S->B (sees amount):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;moneyA&lt;/id&gt;
+    &lt;attr name="amount"&gt;120&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    B->S (try to steal sword and divide money to two heaps):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;op no="105"&gt;
+    &lt;from&gt;B&lt;/from&gt;
+    &lt;id&gt;steal&lt;/id&gt; &lt;!-- derived from grab --&gt;
+    &lt;ent&gt;
+      &lt;id&gt;swordA&lt;/id&gt;
+      &lt;loc&gt;&lt;id&gt;backbackB&lt;/id&gt;&lt;/loc&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+  &lt;op no="106"&gt;
+    &lt;from&gt;B&lt;/from&gt;
+    &lt;id&gt;divide&lt;/id&gt;
+    &lt;id&gt;moneyA&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;moneyA&lt;/id&gt;
+      &lt;attr name="amount"&gt;10&lt;/attr&gt;
+    &lt;/ent&gt;
+    &lt;ent&gt;
+      &lt;type&gt;&lt;id&gt;money&lt;/id&gt;&lt;/type&gt;
+      &lt;attr name="amount"&gt;110&lt;/attr&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    S->B (B sees sword stealing sword failed and dividing money succeeded):
+
+    <PRE>
+&lt;msg&gt;
+  &lt;!-- sword moves slightly in A's hand --&gt;
+  &lt;op no="210" refno="105"&gt;
+     &lt;to&gt;&lt;id&gt;B&lt;/id&gt;
+     &lt;id&gt;sight&lt;/id&gt;
+     &lt;op no="211" refno="105"&gt;
+       &lt;from&gt;B&lt;/from&gt;
+       &lt;id&gt;move&lt;/id&gt;
+       &lt;ent&gt;
+         &lt;id&gt;swordA&lt;/id&gt;
+         &lt;loc&gt;&lt;id&gt;handA&lt;/id&gt;&lt;coords&gt;'changes 0.02 meters'&lt;/coords&gt;&lt;/loc&gt;
+       &lt;/ent&gt;
+     &lt;/op&gt;
+  &lt;/op&gt;
+  &lt;!-- A's hand moves --&gt;
+  &lt;op no="212" refno="105"&gt;
+     &lt;to&gt;&lt;id&gt;B&lt;/id&gt;
+     &lt;id&gt;sight&lt;/id&gt;
+     &lt;op no="213" refno="105"&gt;
+       &lt;from&gt;B&lt;/from&gt;
+       &lt;op&gt;
+         &lt;id&gt;move&lt;/id&gt;
+         &lt;ent&gt;
+           &lt;id&gt;handA&lt;/id&gt;
+           &lt;loc&gt;&lt;id&gt;A&lt;/id&gt;&lt;coords&gt;'changes 0.3 meters'&lt;/coords&gt;&lt;/loc&gt;
+         &lt;/ent&gt;
+       &lt;/op&gt;
+     &lt;/op&gt;
+  &lt;/op&gt;
+  &lt;!-- sees dividing succeeding --&gt;
+  &lt;op no="214" refno="106"&gt;
+     &lt;to&gt;&lt;id&gt;B&lt;/id&gt;
+     &lt;id&gt;sight&lt;/id&gt;
+     &lt;op no="215" refno="106"&gt;
+       &lt;from&gt;B&lt;/from&gt;
+       'like content of divide except this line is added to latest entity:'
+       &lt;id&gt;moneyA_110&lt;/id&gt;
+     &lt;/op&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+    </PRE>
+
+    B->S (steal second part of divided money):<br>
+    similar as stealing sword above (with op no="107")
+    <p>
+      S->B (sees stealing succeed):
+
+      <PRE>
+&lt;op no="216" refno="107"&gt;
+  &lt;to&gt;B&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;op no="217" refno="107"&gt;
+    &lt;from&gt;B&lt;/from&gt;
+    &lt;id&gt;steal&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;moneyA_110&lt;/id&gt;
+      &lt;loc&gt;&lt;id&gt;backbackB&lt;/id&gt;&lt;/loc&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+&lt;/op&gt;
+      </PRE>
+
+    B->S (Then combine it with existing money):
+      <PRE>
+&lt;op no="108"&gt;
+  &lt;from&gt;B&lt;/from&gt;
+  &lt;id&gt;combine&lt;/id&gt;
+    &lt;id&gt;moneyB&lt;/id&gt;
+    &lt;id&gt;moneyB&lt;/id&gt;
+    &lt;id&gt;moneyA_110&lt;/id&gt;
+&lt;/op&gt;
+      </PRE>
+
+    S->B (sees result of combining):
+
+      <PRE>
+&lt;msg&gt;
+  &lt;op no="218" refno="108"&gt;
+    &lt;to&gt;B&lt;/to&gt;
+    &lt;id&gt;change&lt;/id&gt;
+    &lt;ent&gt;
+      &lt;id&gt;moneyB&lt;/id&gt;
+      &lt;attr name="amount"&gt;130&lt;/attr&gt; &lt;!-- had previously 20 pieces --&gt;
+    &lt;/ent&gt;
+  &lt;/op&gt;
+  &lt;op no="219" refno="108"&gt;
+    &lt;to&gt;B&lt;/to&gt;
+    &lt;id&gt;delete&lt;/id&gt;
+    &lt;id&gt;moneyA_110&lt;/id&gt;
+  &lt;/op&gt;
+&lt;/msg&gt;
+      </PRE>
+
+    <hr>
+
+    <h4><a name="track">Tracking</a></h4>
+
+    <em>and take off. A wakes up 1 hour later</em>
+    <p>
+      B->S (movement like earlier)<br>
+      S->B (sight like earlier)
+    <p>
+      S->A (awakening like sleeping earlier)
+    <p>
+      A->S (looking in the possession: like earlier)<br>
+      S->A (result: similar like earlier)
+    <p>
+      What if A doesn't look at his possessions? Then it will become as
+      surprise when he is next time shopping ;-)
+    <p>
+
+      <em>and tries to read the tracks on the road to see where B went.</em>
+    <p>
+      A->S (see road):
+
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;A&lt;/from&gt;
+  &lt;id&gt;track&lt;/id&gt; &lt;!-- derived from search --&gt;
+  &lt;id&gt;road&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->A (sees road):
+
+    <PRE>
+&lt;op&gt;
+  &lt;to&gt;A&lt;/to&gt;
+  &lt;id&gt;sight&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;road&lt;/id&gt;
+    &lt;attr name="tracks of B" type="coordslist"&gt;
+       'listing of some coordinates where B went'
+    &lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    How do you know track is derived from search?
+    <p>
+      X->S:
+
+    <PRE>
+&lt;op
+  &lt;id&gt;get&lt;/id&gt;
+  &lt;id&gt;track&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    S->X:
+
+    <PRE>
+&lt;op
+  &lt;id&gt;info&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;track&lt;/id&gt;
+    &lt;type&gt;&lt;id&gt;search&lt;/id&gt;&lt;/type&gt; &lt;!-- here is parent type told --&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Wed Jun  2 11:14:30 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  5 17:12:08 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

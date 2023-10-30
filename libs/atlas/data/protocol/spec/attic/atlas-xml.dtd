@@ -1,0 +1,22 @@
+<!-- Atlas XML Syntax -->
+<!-- extracted from xml_syntax.html -->
+
+<!-- Tags -->
+
+<!ELEMENT atlas       (map*)>
+<!ATTLIST atlas       version  CDATA #IMPLIED>
+
+<!ELEMENT string     (#PCDATA)>
+<!ATTLIST string     name  CDATA #IMPLIED>
+
+<!ELEMENT int     (#PCDATA)>
+<!ATTLIST int     name  CDATA #IMPLIED>
+
+<!ELEMENT float     (#PCDATA)>
+<!ATTLIST float     name  CDATA #IMPLIED>
+
+<!ELEMENT list     (string|int|float|list|map)*>
+<!ATTLIST list     name  CDATA #IMPLIED>
+
+<!ELEMENT map     (string|int|float|list|map)*>
+<!ATTLIST map     name  CDATA #IMPLIED>

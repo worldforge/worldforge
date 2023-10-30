@@ -1,0 +1,14 @@
+/** @page tutorial_building Building the examples
+
+@section The Automakefile
+
+The following is the Makefile.am that can be used to build the examples.
+
+@verbinclude Makefile.am
+
+@ref tutorial_objects "Previous"
+@ref tutorial_index "Index"
+
+@author Stefanus Du Toit <sdt@gmx.net>
+
+*/
