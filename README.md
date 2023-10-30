@@ -33,13 +33,13 @@ Squall is meant to allow for a client to sync data from one or many servers, whe
 
 The main idea is that all content is identified by hashing of the data. All data is stored in a central location, in a repository. When using the data a client can either traverse the repository directly (like a virtual file system), or "realize" the content onto the file system as either copied data or soft or hard links.
 
-### Records
+### Manifests
 
-The basic method of describing data is through "records". These are simple text files that describe the content of a directory. Each entry in the directory is either a file or a subdirectory. In the Record this is expressed with a hash of the content, the size of the content and the name of the file/directory.
+The basic method of describing data is through "manifests". These are simple text files that describe the content of a directory. Each entry in the directory is either a file or a subdirectory. In the Manifest this is expressed with a hash of the content, the size of the content and the name of the file/directory.
 
-Each Record entry always start with the version of the format. Future versions of this library might introduce new features which would make it incompatible with older versions.
+Each Manifest entry always start with the version of the format. Future versions of this library might introduce new features which would make it incompatible with older versions.
 
-Here's an example of a Record:
+Here's an example of a Manifest:
 
 ```
 1
