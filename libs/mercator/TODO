@@ -1,0 +1,93 @@
+Can pulling out the matissa and exponent give us a bit more predictability
+with seeding?
+
+Use template metaprogs to provide a general solution for visiting every
+point in a segment that intersects with an area.
+
+Why are HEIGHT, ROUGHNESS and FALLOFF referenced outside Basepoint?
+
+Consider if Segment::m_xRef could become a float and multiply by m_res on
+initialisation, as it is always used this way.
+
+In Terrain::getHeightAndNormal, the calculation for values passed to
+Segment::get() needs to be checked. Its seems to result in strange values
+being passed.
+
+Kick James repeatedly in the head for using .count() and [] to check then
+modify maps.
+
+Think carefully about whether Surface needs a writable reference to Segment.
+
+Add checks for making sure that mods get applied to segments as the segments
+are created.
+
+* Implement the constructors which take a Shader::Paramters.
+
+* How about a class for handling building sections of arbitrary size.
+  Uses quasi random techniques to define the pattern of building elements,
+  with hopefully an efficient way to render.
+
+* SHould probably make segment etc. less involved in memory, and provide
+  a way for the memory to be special
+
+* Look at using allocators to control memory allocation for buffers.
+
+* Make SnowShader, High, with thinner snow on steep areas, and more snow on the
+  north,
+
+* Make GrassShader, banded, with thinner grass on steep areas,
+
+* Mercator should handle weather, vegetation, maybe even houses
+
+* Delete all the leaked surfaces and shaders.
+
+* Devise some way so that FillShader surfaces don't need a shaded surface, as
+  they can just use a constant color.
+
+* Add threshold shaders. Add an underwater shader which colors the sea bed
+  according to its depth.
+
+* Try and do something smarter with Segment texCoords and lineIndeces, as they
+  are the same for every segment, but recalculated every time.
+
+* Re-work code to use 2D arrays for 2D data - AJR
+
+* a sea level? multiple sea levels?
+
+* include Munins texture blending model
+
+* a cache that dynamically creates Segments when they are requested and
+  deallocates based on a rule such as LRU
+
+* allow for non fractal tiles (hand drawn ones inserted into the landscape) ??
+
+* variable detail? (32, 64 and 128 side tiles on the same terrain?) unsure how
+  this fits in with the RNG scheme, so this might be difficult. a tile of side
+  2^n must butt up against tile of size 2^n-1, 2^n or 2^n+1.  ie 32 cant
+  interact with a 128
+
+* transparent patches? allowing caves, or tunnels?
+
+DONE TODOs
+==========
+* allow local terrain deformation:
+   -subtraction eg of a sphere to make a crater - DONE dpm
+   -addition eg of a cylindroid to make a mesa - DONE dpm
+   -set all heights within a polygon to one value (level ground on which to build) - DONE dpm
+
+* move some of the stage terrain code into mercator
+   - normal/height calcs - DONE dpm
+   - axisbox intersect - DONE dpm
+   - ray intersect - DONE dpm
+   
+* The semantics of Terrain::get() were not as I expected. I wanted an
+  interpolated value. Should another function be added to do what I
+  want, plus get the normal too, as it seems to be free? - DONE
+
+* Need to fix normals along edge and corner point. Currently they create
+  visible seems because they are not the same on adjacent segments. -DONE
+
+* variable roughness. DONE dpm
+
+
+

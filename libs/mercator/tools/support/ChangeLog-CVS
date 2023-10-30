@@ -1,0 +1,1571 @@
+2012-11-08  Al Riddoch  <alriddoch@googlemail.com>
+
+	* A minor performance improvement to the way constants are defined,
+	  and a small fix for more recent compilers.
+
+2011-02-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.0, interface version 1
+
+2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Major overhaul of the area and mod systems removing code
+	  duplication, and to make them more consistent. Allow areas
+	  and terrain mods to be updated in place. Fix a number of issues
+	  and memory leaks.
+
+2010-11-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update news.
+
+	* Release 0.2.9, interface version 8
+
+2010-11-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.h: Add an accessor so the mods stored in a segment
+	  are accessible for testing.
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod.h: Add support for
+	  storing context data from the application in each terrain mod
+	  object.
+
+2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update news.
+
+	* Release 0.2.8, interface version 7
+
+2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Buffer.h, Mercator/DepthShader.cpp,
+	  Mercator/GrassShader.cpp, Mercator/ShaderFactory.cpp,
+	  Mercator/ThresholdShader.cpp, Mercator/TileShader.cpp:
+	  Remove <cassert> from the library headers.
+
+	* Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h: Modify the interface
+	  to refer to Areas and Shaders as const where appropriate.
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod,h: Remove a large
+	  inline function.
+
+2009-02-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* tests/testTerrain.cpp: Add required cstdlib include to get rand().
+
+2009-02-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mercator.spec.in: Add Packager tag. Fix the included docs to be
+	  consistent with other packages.
+
+2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Increment version.
+
+	* NEWS: Update news.
+
+	* Release 0.2.7, interface version 6
+
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/GrassShader.cpp: Add required <cmath> include.
+
+2009-01-04  Simon Goodall  <simon@worldforge.org>
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add a removeShader method
+	  to remove previously added shaders. Fix removeArea so that surfaces
+	  with no areas are removed.
+
+2009-01-04  Simon Goodall  <simon@worldforge.org>
+
+	* Mercator/Segment.cpp: Fix iterator erase logic in removeArea. Erase
+	  invalidates iterators.
+
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
+	* tests/testForest.cpp, tests/testPlant.cpp: Fix a warning caused
+	  by defining DEBUG to force asserts in the tests.
+
+2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
+
+	* tests/testForest.cpp, tests/testPlant.cpp: Force debug mode before
+	  including asserts so checks are always run.
+
+2008-11-08  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: Convert #warnings to FIXMEs.
+
+2008-11-04  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Added AC_PROG_CXX as it is required to set up the
+	  C++ compiler correctly.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update news.
+
+	* Release 0.2.6
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mercator.spec.in: Remove packager tag, as it should be
+	  set in the packagers macros.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: When created a new Segment, apply existing
+	  mods now that we actually store them in the right place.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h: Make
+	  Segment::clipToSegment() public as it's useful, and const as
+	  it should be.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Redefine the x and y
+	  reference for the terrain to be in world coords, not grid offset,
+	  to simplify the arithmetic considerably.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.h: Accompany each stored mod with information
+	  about its bbox at the time it was added, so we can more effectively
+	  move it around.
+
+	* Mercator/Terrain.cpp: Implement moving mods around more effectively.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.h: Accompany each stored area with information
+	  about its bbox at the time it was added, so we can more effectively
+	  move it around.
+
+	* Mercator/Terrain.cpp: Implement moving areas around more
+	  effectively.
+
+2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h: Remove code that handled
+	  ownership of allocated terrain mods, as Terrain now owns them.
+	  Implement API for removing an individual TerrainMod. Convert
+	  storage over to a set for easy removal.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add storage for terrain
+	  mods. Flesh out the API for mods and areas allowing them
+	  to be modified in place, and allowing mods to be removed.
+
+	* tests/testArea.cpp: Add test stub for removing terrain mods.
+
+2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: Don't mess around with surface data
+	  for segments which don't intersect with a modifier.
+
+2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Increment the interface version as the API has
+	  changed.
+
+2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h:
+	  Add new interface to remove Area mods from the terrain.
+
+	* tests/testArea.cpp: Update the tests to cover removeArea().
+
+2008-08-07  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp: Fix applyMod() so it correctly calculates
+	  mod offset in segments other than 0,0.
+
+	* tests/testTerrainMod.cpp: Re-order setup of modified terrain
+	  in such an order that the modifiers actually have an effect.
+
+2008-08-04  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: Fix one of the more obvious gratuitous
+	  ineffeciencies. Use I_ROUND rather than integer casting.
+	  Add some debug code for debugging issues with modifiers.
+
+2008-07-02  Erik Hjortsberg <erik.hjortsberg@iteam.se>
+
+	* Mercator/Segment.cpp: Delete surfaces at shut down, else we'll have
+	  a memory leak.
+
+2008-07-01  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Mercator/RandCache.h, Mercator/AreaShader.h,
+	  Mercator/AreaShader.cpp: Add standard headers required by
+	  versions of GCC 4.3 or later.
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mercator.spec.in: Break out the static libraries into their own
+	  package. Add a new sub package for the documentation.
+
+	* Doxyfile: Do an automated update of the doxygen configuration.
+
+2007-11-05  Al Riddoch  <alriddoch@googlemail.com>
+
+	* acinclude.m4: Update to the latest pkgconfig check macros.
+
+	* configure.ac: Use the latest pkgconfig macros, provide more useful
+	  error messages when libraries can't be found. Increment the version
+	  number for future release.
+
+	* NEWS: Add news to test distribution of latest version.
+
+	* AUTHORS: Update maintainers email address.
+
+	* mercator.spec.in: Disable dependencies, and use multiple CPU cores
+	  when building the rpm.
+
+2007-11-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testForest.cpp: Add some more straightforward coverage.
+
+2007-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Doxyfile: Update to a more recent version.
+
+2007-09-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp,
+	  Mercator/AreaShader.h, Mercator/BasePoint.h, Mercator/RandCache.h:
+	  Add doc comments for some members.
+
+2007-09-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.h, Mercator/DepthShader.h, Mercator/FillShader.h,
+	  Mercator/GrassShader.h, Mercator/RandCache.h, Mercator/Segment.cpp,
+	  Mercator/ThresholdShader.h: Add doc comments for some members.
+
+2007-09-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/ShaderFactory.cpp,
+	  Mercator/ShaderFactory.h, Mercator/ThresholdShader.h: Add doc
+	  comments for some members.
+
+2007-09-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.cpp, Mercator/Forest.h, Mercator/Surface.cpp,
+	  Mercator/Surface.h, Mercator/TileShader.h: Add doc comments for
+	  some members.
+
+2007-09-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp,
+	  Mercator/AreaShader.h, Mercator/BasePoint.h, Mercator/Buffer.h,
+	  Mercator/DepthShader.h, Mercator/FillShader.h, Mercator/Forest.h,
+	  Mercator/GrassShader.h, Mercator/RandCache.h, Mercator/Segment.cpp,
+	  Mercator/ShaderFactory.h, Mercator/Surface.h,
+	  Mercator/ThresholdShader.h, Mercator/TileShader.h: Add doc comments
+	  for all compounds and types. Many members now to be done.
+
+2007-09-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h,
+	  Mercator/Segment.cpp, Mercator/Segment.h, Mercator/Shader.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h, Mercator/TerrainMod.h:
+	  Add doxygen comments documenting all members that area currently
+	  reported as undocumented.
+
+2007-09-17  Al Riddoch  <alriddoch@zepler.org>
+
+	c Mercator/TerrainMod.h: Add some API documentation to the naughty
+	  undocumented classes.
+
+2007-08-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Ensure any subsequent species candidates
+	  are skipped once the species for a given node has been instanced.
+
+	* tests/testForest.cpp: Test the plant counts increase in the
+	  expected proportions as species are added.
+
+2007-08-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h: Shuffle the namespacing
+	  around a little to make code less verbose and clearer.
+
+	* tests/testForest.cpp: Add tests to cover the new species code.
+
+2007-08-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h:
+	  First pass at re-implementing the forest code as a flexible
+	  general case, rather than a quick hack.
+
+2006-08-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number.
+
+	* NEWS: Update news.
+
+	* Release 0.2.5
+
+2006-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac, Mercator/iround.h, Mercator/GrassShader.cpp,
+	  Mercator/Segment.cpp: Add macro for absolute value of floating
+	  point numbers. Check for fabsf() and fall back to fabs() on non
+	  C99 systems.
+
+2005-12-02  James Turner  <james@worldforge.org>
+
+	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
+	  shortly).
+
+2005-07-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/BasePoint.h: Re-order "const static" to "static const"
+	  to eliminate some warnings.
+
+2005-06-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number.
+
+	* NEWS: Update news.
+
+	* Releases 0.2.4
+
+2005-06-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Move static variable definitions into the cpp files, as gcc 4
+	  isn't happy otherwise.
+
+2005-06-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment interface version.
+
+	* NEWS: Update NEWS.
+
+	* Release 0.2.3
+
+2005-06-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Rename static variables that hold parameter key strings
+	  to be prefixed with key_. Add static variables to hold the
+	  default values of parameters. Make sure the default values
+	  of parameters are set in the constructor that takes named
+	  paramters. Add accessors for all shader parameters.
+
+	* tests/testShaderFactory.cpp: Add code to test whether shaders
+	  correctly  set their paramaters when passes in as named paramters.
+	  Includes check to make sure parameters all default to the right
+	  value.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/GrassShader.cpp: Added missing static variable definitions.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version for dependency handling.
+
+	* Mercator/DepthShader.h, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.h: Add static string variable declarations
+	  for parameter names for shaders that take parameters. Provide a more
+	  in depth explanation of the algorithm used by GrassShader.
+
+	* Mercator/DepthShader.cpp, Mercator/FillShader.cpp,
+	  Mercator/GrassShader.cpp, Mercator/ThresholdShader.cpp:
+	  Implement the code in the Parameters version of the constructor
+	  to set the parameters of the shader by named values.
+
+2005-05-24  James Turner  <james@worldforge.org>
+
+	* Mercator/Area.cpp: fix ::checkIntersect to handle the case where
+	  the Area is fully contained by a segment.
+
+2005-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testWFMath.cpp: Clear up some of the reporting.
+
+2005-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testWFMath.cpp, tests/Makefile.am: Add a test for wfmath
+	  Intersect functions.
+
+2005-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testShaderFactory.cpp: Forgot to add test.
+
+2005-05-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TileShader.cpp: Delete subShaders from destructor.
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
+	  Mercator/FillShader.cpp, Mercator/FillShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h,
+	  Mercator/Shader.h: Add a second constructor to all shaders
+	  which takes a generic parameter map type, to allow creation
+	  of shaders to be automated.
+
+	* Mercator/ShaderFactory.h, Mercator/ShaderFactory.cpp,
+	  Mercator/ShaderFactory_impl.h: New factory classes to handle
+	  creating shaders from a string giving the shader type.
+
+	* tests/testShaderFactory.cpp: Test for new shader factory classes.
+
+2005-05-09  James Turner  <james@worldforge.org>
+
+	* Mercator/AreaShader.cpp: zero out the Buffer before shading it,
+	  to avoid problems if the memory allocator doesn't zero it for us.
+
+2005-05-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Set date on 0.2.2 release entry.
+
+	* configure.ac: Increment interface version for release.
+
+	* Release 0.2.2, interface version 3.
+
+2005-05-08  James Turner  <james@worldforge.org>
+
+	* Mercator/Terrain.cpp: when adding an area, if the segment already has
+	  a shader for the area's layer, mark the surface as invalid.
+	
+	* Mercator/Segment.h, Mercator/Segment.cpp: rename 'getBox' to 'getRect',
+	  and make a real 'getBox' that returns an AxisBox<3>, where the z values
+	  are defined by the min and max height of the segment.
+	
+	* Mercator/AreaShader.cpp: update for the changed Segment API
+
+2005-05-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/Buffer.h,
+	  Mercator/Buffer_impl.h, Mercator/GrassShader.cpp,
+	  Mercator/Shader.cpp, Mercator/Shader.h, Mercator/Surface.cpp,
+	  Mercator/Surface.h: Surfaces now have a const reference to Segment
+	  so they can't modify the Segment data.
+
+2005-05-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Add accessor for segment position on the
+	  basepoint grid.
+
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* acinclude.m4: Remove unused CPPUnit macro, and add required
+	  pkg-config macro.
+
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Add a pending news item for the upcoming release.
+
+	* configure.ac: Update autoconf usage. Remove MERCATOR_VERSION.
+
+	* tests/Makefile.am: Add test*.pgm to the DISTCLEANFILES so that
+	  distcheck runs cleanly.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* mercator.spec.in: Remove some unnecessary Requires lines from the
+	  rpm spec.
+
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TileShader.cpp: Fix shader so it allocates surface store
+	  before shading, and does not attempt to shade subsurfaces that will
+	  contain no data.
+
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TileShader.h, Mercator/TileShader.cpp: Implement shading
+	  the tile buffer, and method required to add sub shaders.
+
+	* tests/testTileShader.cpp: Unit test for TileShader.
+
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Fix documentation comment now that member
+	  has been changed.
+
+	* Mercator/TileShader.h, Mercator/TileShader.cpp:
+	  Starting point for new class to handle determining what the
+	  surface is made of.
+
+2005-04-12 James Turner <james@worldforge.org>
+
+	* Mercator/Terrain.cpp: when adding an area to a segment, check if
+	  any shaders now intersect the segment, and if so, add a surface for
+	  them.
+	  
+	* Mercator/Terrain.cpp: re-order Segment building code in setBasePoint,
+	  so areas are added before surfaces.
+	  
+	* Mercator/Segment.cpp, Mercator/Segment.h: factor segment invalidation
+	  into a helper method, and invalidate segments when an Area is added
+	  to a Segment.
+
+	* Mercator/Area.cpp: remove debug code.
+
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testShader.cpp: Check if a shader being tested intersects with
+	  a given Segment before attempting to populate it.
+
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Fix use of iterators
+	  in for loops to be more efficient.
+
+2005-04-12 James Turner <james@worldforge.org>
+
+	* Mercator/Terrain.cpp: formatting / style changes to appease the
+	  great dark lord of Soton.
+
+2005-04-12 James Turner <james@worldforge.org>
+
+	* Mercator/Shader.h: change checkIntersects to work on Segments
+	  (as the comments suggest it originally did).
+	  
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: when adding a shader,
+	  clients must now specify a unique integer ID, which is used
+	  to identify the shader in a Segment's surfacestore. As a result,
+	  the Shaderstore is now a std::map<>. When adding shaders to
+	  a Segment, checkIntersects is now used to only add shaders which
+	  affect the segment.
+	  
+	* Mercator/Segment.cpp, Mercator/Segment.h: change Surfacestore to
+	  be sparse, implement as a map, where the index value is the ID of
+	  the shader which generated the surface.
+	  
+	* Mercator/AreaShader.cpp, Mercator/AreaShader.h, 
+	  Mercator/DepthShader.h, Mercator/DepthShader.cpp,
+	  Mercator/FillShader.cpp, Mercator/FillShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  update the revised shader API. In all cases the only change is
+	  removed a level of indirection, since every implementation of
+	  checkIntersect simply called 's.m_segment' to do useful work.
+	  
+	* tests/testArea.cpp, tests/testTerrain.cpp: update tests for new
+	  shader API.
+
+2005-04-11 James Turner <james@worldforge.org>
+
+	* tests/timeSeg.cpp: fix up for changes to Forest API.
+
+2005-04-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.h: Fix bbox() accessor to return by reference, and
+	  add an accessor for the area polygon.
+
+	* configure.ac: Bump version to 0.2.2, so apps can test for new
+	  Forest and Area API.
+
+2005-04-10 James Turner <james@worldforge.org>
+
+	* Mercator/Forrest.cpp, Mercator/Forrest.h: make Forrest objects own
+	  an area, replacing their own Box + Polygon storage, which was
+	  only partially supported.
+	  
+	* tests/testForrest.cpp: update for changed Forrest API
+	
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: make Terrain track a list
+	  of areas, and install them on newly created segments if required.
+	  Necessary to allow Areas to be defined prior to segments they
+	  may intersect.
+
+2005-04-05 James Turner <james@worldforge.org>
+
+	* Mercator/AreaShader.cpp, Mercator/Area.cpp: remove #pragmas I
+	  left in, which GCC moans about.
+
+2005-03-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/AreaShader.cpp: Fix iterator usage in shade().
+
+	* tests/Makefile.am: Enable testArea again.
+
+2005-03-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Makefile.am: Remove testArea from tests so its not run as
+	  its broken.
+
+2005-03-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Makefile.am: Add testArea to the check programs so it builds.
+
+2005-03-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/AreaShader.cpp: Include config.h so that iround.h works
+	  right.
+
+2005-03-25  James Turner  <james@worldforge.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp, 
+	  Mercator/AreaShader.h: adding missing copyright statements on the
+	  new files.
+
+2005-03-25  James Turner  <james@worldforge.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h: initial work on supporting
+	  polygonal areas in Mercator.
+	  
+	* Mercator/AreaShader.cpp, Mercator/AreaShader.h: shader which scan-
+	  converts areas into a Surface, with basic anti-aliasing.
+	  
+	* test/testArea.cpp: basic tests of the Area API
+
+2005-03-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod.h: Add a virtual
+	  destructor to TerrainMod.
+
+2005-02-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h: Remove obsolete unused
+	  vertex cache code.
+
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* mercator.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
+2004-08-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testIntersect.cpp: Fix equality test in the tests and
+	  add a commenting explaining why.
+
+	* Commit configure.ac changes for the 0.2.1 release.
+	  Actual 0.2.1 release date was 2004-07-21.
+
+2004-08-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Matrix.h,
+	  Mercator/Plant.h, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Shader.cpp, Mercator/Shader.h, Mercator/Terrain.cpp,
+	  Mercator/Terrain.h: Some minor API tweaks and cleanups.
+
+	* tests/main.cpp, tests/testShader.cpp: Update tests to take
+	  account of API changes.
+
+2004-06-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod_impl.h: Fixes to work with gcc 3.4 stricter
+	  template compiler thanks to Erik Hjortsberg.
+
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec.
+
+2004-06-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Add method to set min and max at creation time.
+
+	* Mercator/Terrain.cpp: When creating a new segment, set its
+	  min and max to the min and max height of the BasePoints.
+
+2004-06-03  James Turner  <james@worldforge.org>
+
+	* XCode project updates
+
+2004-06-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/iround.h, Mercator/DepthShader.cpp, Mercator/Forest.cpp,
+	  Mercator/Segment.cpp, Mercator/Terrain.cpp: Clean up use of the
+	  I_ROUND macro by moving its definition into a build only header.
+
+	* Mercator/Segment.cpp: Ensure floats are used not doubles in
+	  calculations, and use the float version of libm calls where
+	  apropriate.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.2.0, interface version 1.0.0
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Final tweak to rpm spec.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Tweak configure.ac.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testIntersect.cpp: Provide more details when getHeightAndNormal
+	  test fails.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/BasePoint.cpp: Tweak roughnes and falloff to give nicer
+	  looking terrain.
+
+	* Mercator/Segment.cpp: Clarify the qRMD implementation function.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Get canonical system for cross compiling.
+
+2004-05-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Migrate to configure.ac and fix rpm spec.
+
+2004-05-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Switch to configure.ac, bump up version numbers, fix spec
+	  and prepare for release.
+
+2004-04-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Fix the normal calculation. Really right
+	  now.
+
+2004-04-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp: Fixes to be compatible
+	  with other compilers.
+
+	* Mercator/Segment.cpp: Fix seem normals, and avoid using variable
+	  size local arrays, and handle systems with no rint.
+
+	* Mercator/Forest.cpp, Mercator/DepthShader.cpp: Handle systems with
+	  no rint.
+
+2004-03-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/GrassShader.cpp: Fix uninitialised 0,0 corner tile
+	  in grass shader.
+
+2004-02-22  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* README: minor mods, added Vegetation section
+
+2004-02-07  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/Forest.cpp: fixed 'bbox to polygon' calc;
+	  also test inside polygon during populate.
+
+2004-02-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testForest.cpp: Update tests to use new accessors
+	  for forest area.
+
+2004-02-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.h, Mercator/Forest.cpp: Modify accessors
+	  so area of a forest is stored as Polygon instead of a
+	  box.
+
+2004-02-03  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/RandCache.h: make RandCache store uint32 rather than
+	  double. Should halve memory usage.
+
+2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/Forest.h, Mercator/Forest.cpp: make forest use
+	  RandCache.
+
+2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/RandCache.h: add code to provide a pool of repeatable
+	  (2d indexed) random numbers for use by Forest etc.
+	  thanks to rsteinke.
+
+2004-01-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Use WFMath's value of PI, as windows
+	  does not include it in math.h.
+
+2004-01-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Revert changes to rng seeding as the
+	  behavoir broke some of the key repeatability features required.
+	  Add comments explaining what the valued properties of the
+	  algorithm are.
+
+2004-01-17  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h : modified seeding
+	  arrangement so that number of rng seeds is proportional to
+	  number of trees, not number of gridpoints. This significantly 
+	  speeds up forest generation and has the byproduct of improving
+	  the randomness of forests. I defaulted the seed to 0 in the
+	  constructor so hopefully existing code will still compile
+	* tests/testForest.cpp put a seed in the forest constructor
+	* tests/timeSeg.cpp added a test to time forest population
+
+2004-01-17  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/Forest.cpp : modified seeding in forest to use an array
+
+2004-01-15  James Turner <james@worldforge.org>
+    
+	* Update XCode project : proper WFMath dependancy, and many more
+	  tests, plus an aggregate target which builds all the tests.
+
+2004-01-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/Forest.cpp,
+	  Mercator/Terrain.cpp: Make sure config.h and cmath are
+	  being included as required.
+
+2004-01-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Reduce probability of tree at given node
+	  by factor of 10.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h:
+	  Add accessors for plant and forest properties. Implement
+	  populating the forest with plants.
+
+	* tests/testPlant.cpp: Add tests for new accessors.
+
+	* tests/testForest.cpp: Add test for populating code.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testQRNG.cpp: Unit test to verify predictability of quasi
+	  random number generator.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h,
+	  Mercator/Plant.cpp, Mercator/Plant.h, tests/testPlant.cpp:
+	  New classes for handling vegetation, including basics of
+	  functionality, and unit tests.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/BasePoint.h, Mercator/BasePoint.cpp:
+	  Move static float variable definition into cpp file
+	  for strict C++ compliance.
+
+2003-12-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Remove Serial from rpm spec as it is not required, and messes up
+	  deps.
+
+2003-11-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.cpp: Use lrintf or equivalent for clean
+	  fast float-int conversion.
+
+2003-11-03 James Turner <james@worldforge.org>
+
+	* Add ProjectBuilder project, Mercator builds with no
+	  problems, but hasn't been tested.
+
+2003-11-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix BuildRequires in rpm spec.
+
+2003-10-31 Damien McGinnes 
+
+	* fixed tests/util_timer compile and link
+
+2003-10-31 Damien McGinnes 
+
+	* Added timeSeg test
+
+2003-10-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp: Use apropriate rint() function to convert
+	  float to int.
+
+	* Mercator/Intersect.cpp, Mercator/Intersect.h, tests/main.cpp:
+	  Add copyright notice.
+
+	* Mercator/TerrainMod.h, Mercator/TerrainMod_impl.h: Fix copyright
+	  notice.
+
+2003-10-31 Damien McGinnes 
+
+	* Mercator/DepthShader.cpp: fixed type warning
+
+	* README: Added some text
+
+2003-10-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Fix incorrect assert.
+
+2003-09-22 Damien McGinnes 
+
+	* Mercator/Segment.cpp: minor changes to interpolation to improve 
+	  performance in the general case. (gives about a 5% speedup)
+
+	* Mercator/Intersect.cpp: made some file scope functions static on
+	  advice from rsteinke. init'ed som vars to keep gcc happy. made ray
+	  intersect return true if ray begins below terrain.
+
+2003-09-14 Damien McGinnes 
+
+	* testPhys.cpp: added a rudimentary physics model to do a more useful
+	  test of the ray-terrain intersection
+	* Mercator/Intersect.cpp,h: some cleanups for bugs found during the
+	  above test
+
+2003-09-13 Damien McGinnes 
+
+	* TODO: cleaned up a few old TODOs
+        
+2003-09-13 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: some intersection code cleanup
+	  ray intersection now returns the point of intersection
+	  and normal.
+	* Mercator/Segment.cpp: fixed normal for intersection on diagonal
+	  of a cell (between the two triangles of the quad) also normalised
+	  the returned normal
+
+2003-09-12 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: maybe finished ray intersection
+	  needs more testing
+	* tests/testIntersect.cpp: added more tests
+
+2003-09-11 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: added ray intersection with terrain
+	  not complete yet, ray/triangle tests not added
+	* tests/testIntersect.cpp: added ray intersection test -  not finished
+
+2003-09-10 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: added point intersection with terrain
+	  and height over terrain functions
+
+2003-09-10 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: added files for axisbox intersection
+	  with terrain
+	* tests/testIntersect.cpp: added files for intersection unit tests
+
+2003-09-06 Damien McGinnes 
+
+	* Mercator/Surface.cpp: fixed a segfault in invalidate; slight
+	  cleanup to the rounding code in clipToSegment.
+
+2003-09-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Surface.h: Use <climits> to get the max value of
+	  a char.
+
+	* Mercator/Surface.cpp, Mercator/Buffer.h, Mercator/Buffer_impl.h:
+	  Modify buffers and thus surfaces to handle their memory
+	  dynamically, providing facilities for allocating and
+	  deleting the buffer.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Implement easier
+	  memory management, getting rid of the flags for points and
+	  normals, using the value of the pointer instead.
+	  Add a few to be called to cause the segment to free its
+	  data, with the option to keep hold of the height field.
+
+2003-09-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp: Add new
+	  getHeightAndNormal() method which makes available the method
+	  of the same name from Segment on the whole terrain.
+
+2003-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Shader.h: Add default arguments for constructor,
+	  which default to alpha channel only.
+
+	* Mercator/ThresholdShader.cpp, Mercator/GrassShader.cpp,
+	  Mercator/FillShader.cpp, Mercator/DepthShader.cpp:
+	  Stop specifying arguements to the shader constructor, and thus
+	  accept the defaults. Net effect is that surface buffers now
+	  just contain alpha values by default.
+
+2003-08-22 Damien McGinnes
+
+	* Mercator/Segment.cpp: fixed edge and corner normals.
+
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Buffer_impl.h: Add to distribution.
+
+	* Mercator/Segment.cpp: Make sure math functions are specified
+	  as being from the global namespace, and add support for rintf
+	  as its better than rint, and available under FreeBSD.
+
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.h: Make segment this buffer is bound to public.
+
+	* Mercator/Segment.cpp: Set m_min and m_max to values other
+	  that 0, so that they end up with the right value.
+
+	* Mercator/DepthShader.h, Mercator/DepthShader.cpp,
+	  Mercator/FillShader.h, Mercator/FillShader.cpp,
+	  Mercator/GrassShader.h, Mercator/GrassShader.cpp,
+	  Mercator/ThresholdShader.h, Mercator/ThresholdShader.cpp,
+	  Mercator/Shader.h: Add virtual method to shaders to
+	  allow a check whether the min and max values of a segment
+	  intersect with the range affected by this shader.
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Make shader
+	  reference public, and add a check so that we only
+	  shade surfaces where the shader usefully applies to the segment.
+
+2003-08-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Add test for lrintf() which is more
+	  suitable and faster than rint() on platforms which have it.
+
+2003-08-14  Damien McGinnes
+
+	* Mercator/Segment.cpp: use MersenneTwister from wfmath
+
+2003-08-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update to use wfmath 0.3 for compatability with eris 1.2.
+	  We are now clear to use Mersenne Twister from wfmath.
+
+2003-08-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.cpp, Mercator/Buffer.h, Mercator/Buffer_impl.h:
+	  Convert to template so that buffer data can be an array of any
+	  type.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Specialise Buffer as
+	  unsigned bytes. Much more compact than floats.
+
+	* Mercator/ThresholdShader.cpp, Mercator/GrassShader.h,
+	  Mercator/GrassShader.cpp, Mercator/FillShader.cpp,
+	  Mercator/DepthShader.cpp: Re-write shaders to be largely
+	  buffer type independant.
+
+2003-08-09  Damien McGinnes
+
+	* Mercator/Segment.cpp, Mercator/MersenneTwister.h, configure,in: 
+	  put MersenneTwister in Mercator until clients are ready to move
+	  across to wfmath-0.3
+
+2003-08-09  Damien McGinnes
+
+	* Mercator/Segment.cpp: use a local random number generator to
+	  ensure the rng state cant be affected by other use of rand() in
+	  an app. Change the RNG code to utilise the MersenneTwister.
+	* configure.in: require wfmath 0.3 for the MersenneTwister RNG.
+	* Mercator/BasePoint.h: seed() now returns an unsigned int.
+	* this RNG gives a 20% spped increase on optimized (-O2) code 
+	  compared with rand(). (unoptimized it's roughly the same)
+
+          generate 400 tiles (height only, res 64)
+          std rand = 1.75 seconds = 4.4 ms per tile
+          mt rand = 1.41 seconds = 3.5 ms per tile
+
+2003-08-08  Damien McGinnes
+
+	* Mercator/Segment.cpp: changed round() to rint()
+	* updated TODO
+
+2003-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Removed depency on Atlas-C++ for now.
+
+2003-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add vertex cache
+	  pointer to segment. Vertex buffer is handled by client.
+
+2003-07-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod.h, Mercator/TerrainMod_impl.h,
+	  Mercator/TerrainMod.cpp: Move definition of virtual
+	  methods out of the headers, as they can't be inlined.
+
+	* tests/testTerrainMod.cpp: Add unit test for terrain mods.
+
+2003-07-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.cpp, Mercator/Buffer.h: Add accessor operators so
+	  data can be accessed by coordinate and channel. Store size locally.
+
+	* Mercator/Matrix.h: Use unsigned int for indexs. Safer.
+
+	* Mercator/GrassShader.cpp Mercator/GrassShader.h: Add new shader
+	  for bands which also have a slope dependence.
+
+	* tests/testShader.cpp: Include GrassShader in tests.
+
+2003-07-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h: Fix some
+	  bugs.
+
+	* Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Fix order of constructor argments.
+
+2003-07-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h:
+	  Add a shader for tinting terrain below water level to simulate
+	  light attenuation due to water.
+
+2003-07-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Shader.cpp, Mercator/Shader.h: Add flags to shader
+	  to specify whether this shader requires colour and alpha
+	  elements in the surface buffer. Add a method which
+	  creates a surface with the required kind of buffer.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Make a couple of
+	  references const. Add flags which provide hints about
+	  the number of channels required in the surface.
+
+	* Mercator/Terrain.cpp: Use new method in shader to create
+	  surface objects.
+
+	* Mercator/FillShader.cpp, Mercator/FillShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Update shaders to new base class.
+
+	* tests/testShader.cpp: Update tests, check for a bit more
+	  info, and ensure that exit status reflects if an error
+	  occured.
+
+2003-07-26 Damien McGinnes
+
+	* Mercator/Segment.cpp: check segment validity before applying mod to
+	  prevent a segfault.
+
+2003-07-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/FillShader.cpp: Fix unsigned int warning.
+
+	* Mercator/ThresholdShader.cpp Mercator/ThresholdShader.h:
+	  Implement threshold shaders for simple landscape concepts.
+
+	* tests/testShader.cpp: Update shader unit test to test all current
+	  shaders.
+
+2003-07-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* We're not using CppUnit, so get rid of the check.
+
+2003-07-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add new argment to to
+	  constructor for options, which amongst others will define whether the
+	  terrain has surfaces. Implement code for adding surfaces
+	  to a segment, and shading those surfaces.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add a typedef and
+	  accessors for the surface list. Add a method to call populate
+	  on all the segments surfaces.
+
+	* tests/testTerrain.cpp: Add tests to overall unit test to
+	  check the shader functionality of Terrain.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/FillShader.h: Make FillShader inherit from Shader,
+	  as it should have done all along.
+
+	* Mercator/Segment.h: Add list of surfaces of this segment.
+	  Fill out some comments.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Store a reference to
+	  its shader in a surface. Add populate member which causes the
+	  shader to shade this surface. This allows the code to populate
+	  a set of surfaces without knowing what the shaders are supposed
+	  to be.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add methods to add
+	  and shade the surfaces of a segment.
+
+	* tests/testShader.cpp: Modify unit test to account for modified
+	  API.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.h, Mercator/Buffer.cpp: Add member to store
+	  number of channels, and add accessors for channels, and Segment
+	  reference.
+
+	* Mercator/Shader.cpp, Mercator/Shader.h: Remove constructor
+	  arguments, and segment reference member. A shader is not
+	  bound to a segment, not restricted to a fixed number of channels.
+	  Add shade() vertual method which applies the given shader to
+	  a surface.
+
+	* Mercator/FillShader.cpp, Mercator/FillShader.h: Add demo shader that
+	  just fills the surface with 1s.
+
+	* tests/testShader.cpp: Add a shader unit test which uses FillShader
+	  for now.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/testTerrain.cpp: Add unit test for terrain class.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Add storage and accessors for shaders.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Tweak configure.in to be a little more compatable with older
+	  autoconf.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Add accessor for the size member.
+
+	* Mercator/Buffer.h, Mercator/Buffer.cpp, Mercator/Surface.h,
+	  Mercator/Surface.cpp: Make a base class for handling
+	  float buffers for vertex, texture coord and colour data.
+	  Use it as the basis for Surface.
+
+	* Mercator/Shader.h, Mercator/Shader.cpp: Place holder for shaders
+	  which implement rules creating a surface from the segment height
+	  data according to a rule.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Free the float buffers using the correct
+	  array delete operator.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Allocate point data on the
+	  fly.  Use m_res and m_size in the terrain population functions rather
+	  than recalculating, or passing values.
+
+2003-07-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Make surface class a little
+	  more flexible by paramaterising the number of channels.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add convenience membe
+	  m_size which is m_res + 1, so we don't have to keep doing that
+	  calculation.
+
+2003-07-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Re-name getSize() to getResolution()
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Store a reference to the
+	  the segment this is a layer of, and add an enumeration for indicating
+	  the orientation of the texturing on this layer.
+
+2003-07-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Clean up configure.in a bit.
+
+2003-07-05 Damien McGinnes
+        
+	* Mercator/TerrainMod.h: added a CraterTerrainMod that subtracts a 
+	  sphere from the terrain.
+
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Remove legacy mercator-config script and m4 macro, as we
+	  don't want people using them.
+
+2003-06-27 Damien McGinnes
+        
+	* Mercator/Terrain.cpp, Terrain.h: made addMod take a const ref 
+	  to a terrain mod (bit cleaner)
+	* Mercator/TerrainMod.h: made clone methods const
+
+2003-06-26 Damien McGinnes
+        
+	* Mercator/Segment.cpp, Segment.h: Added the location of the
+	  segment. Changed applyMod to work with mods in absolute coords
+	* Mercator/Terrain.cpp, Terrain.h: added addMod to apply mods to 
+	  the terrain - this allows a mod to span several segments
+	* Mercator/TerrainMod.h: added a clone method, fixed the virtual
+	  keyword on a few methods, disabled copy constructors
+
+2003-06-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix Makefile.ams so that distcheck works.
+
+	* tests/main.cpp: Fix tests to work with recent API changes.
+
+2003-06-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Mercator.h, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h: Clean up the
+	  way the default segment resolution and size is handled.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Framework for
+	  class representation texture layers on the terrain.
+
+2003-06-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Updated copyright statements to include Damien a bit more.
+
+2003-06-22  Damien McGinnes
+
+	* Mercator/Segment.cpp: fixed an error in the clip code (x and y 
+	  were switched)
+        
+2003-06-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Make invalidate() private.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Fix bugs in revised
+	  setBasePoint. Remove obsolete methods, and simply to one
+	  getSegment call, as two are no longer required. Add destructor.
+
+2003-06-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h: Store control
+	  points in the segment object, so it can be re-populated.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Manage the creation of
+	  new Segment objects when inserting new base points, and handle
+	  invalidation at this point too. getSegmentSafe is now deprecated.
+	  Untested.
+
+	* tests/main.cpp: Update tests for API change, and clean up output.
+
+2003-06-21  Damien McGinnes
+
+	* Mercator/Terrain.cpp: 
+	  - fixed a bug in invalidatePoint (i, j), not (x,y)
+	  - removed the erase line in invalidateSegment (mem leak, and loses
+	    mods to the segment)
+	  - fixed one of the loop limits in refresh
+
+2003-06-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Matrix.cpp: Add template instantiations, which I assume
+	  was the effect intended by the previous code.
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp:
+	  Re-work segment invalidation code. operator[] should never
+	  be used to test for a key in an STL map.
+
+	* Mercator/Segment.cpp, Mercator/Segment.h, Mercator/TerrainMod.h:
+	  Fix comment and code formatting.
+
+2003-06-20  Damien McGinnes
+
+	* Mercator/Terrain.cpp: changed invalidate and getSegmentSafe to use
+	  the validity flags
+	* tests/main.cpp: did a 30 second test of the above code
+        
+2003-06-20  Damien McGinnes
+
+	* Mercator/Segment.cpp: added validity flags for points and normals,
+	  and fixed up a few code alignment probs
+	* Mercator/Terrain.h: started to change invalidate. (commented out
+	  right now)
+	  Need to modify getSegmentSafe to use the validity flags and only
+	  create a new segment when one is not already there.
+
+2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Add support for legacy interface.
+
+2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/main.cpp: Move the test prog out of the main code.
+
+	* Mercator/BasePoint.h: Re-work BasePoint class to be more inline
+	  with the main style.
+
+	* Mercator/Segment.cpp: Fix up the code to use the new BasePoint
+	  style.
+
+2003-06-15 Damien McGinnes
+
+	* new BasePoint.h replaces floats for basepoints
+	* Mercator/Segment.cpp : variable roughness implemented
+	* added a basic test file - doesnt do much
+
+2003-06-09 Damien McGinnes
+
+	* Mercator/Segment.cpp : modified the normals, this time hopefully so
+	  they will work
+
+2003-06-09 Damien McGinnes
+
+	* Mercator/Segment.cpp : modified the normal array to be same size as
+	  the heights array. bottom and right boundaries are a bit of a hack
+
+2003-06-09 Damien McGinnes
+
+	* Mercator/Segment.cpp : added in an attempt at values for the normal
+	  array. Array is one row and column smaller than the height array.
+ 
+2003-06-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Tidy up some code,
+	  and add the beginnings of the normal calculation code.
+
+2003-06-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp: Get rid of the passing
+	  over extra surrounding basepoints into Segment::populate.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: No longer require
+	  surrounding basepoints when doing qRMD. Add API and stubs for
+	  storing an entire array of normals. Segment::populateNormals()
+	  currently just allocates the array of normals. It does nothing
+	  else.
+
+2003-06-06 Damien McGinnes
+
+	* TerrainMod.h: fixed where I called Center() instead of getCenter()
+
+2003-06-06 Damien McGinnes
+
+	* TerrainMod.h : added. Defines modifiers for the terrain.
+	* Segment.h/Segment.cpp : modified to use TerrainMod objects, stored
+	  in a list, applied in order during populate
+	* removed Segment_impl.h refactored out.
+
+2003-06-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment_impl.h Mercator/Segment.cpp: Fix problem
+	  with wfmath template instances, and clean up code.
+
+2003-06-03 Damien McGinnes
+
+	* Segment.cpp Segment.h Segment_impl.h: started work on modification
+	  of terrain. Still got a problem that the Contains call in
+	  Segment_impl.h doesnt work (link error)
+
+2003-05-24 Damien McGinnes
+
+	* Mercator/Segment.h Mercator/Segment.cpp: Cleaned up Segment, removed
+	  tile.cpp and tile.h and moved them into Segment
+	* TODO: added some ideas
+	* AUTHORS: added some authors
+	* added getHeightAndNormal to segment
+	* addded some test code for modifying terrain to segment
+
+2003-05-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add a destructor so
+	  we can free the vertex storage.
+
+2003-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h:
+	  Initialise min and max properly, and make their accessors const.
+
+2003-04-25  Damien McGinnes
+
+	* Mercator/tile.cpp,h: Added min and max calcs
+	* Mercator/Segment.cpp,h: added accessors for min and max
+
+2003-04-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Add accessor for resolution variable.
+
+2003-04-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Matrix.cpp, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp: Move source into Mercator subdir
+	  for portability.
+
+2003-03-31 Damien McGinnes
+
+	* src/tile.cpp: modified algorithm, cleaned up code slightly
+	  algorithm now generates 1 tile very quickly, but has problems
+	  on steep tiles where one side is quite flat. (seams are more
+	  visible).
+
+2003-03-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/tile.cpp: Tweak tile() to create a size+1 * size+1 segment.
+
+	* src/Segment.cpp: Switch to using damien's algorithm for
+	  testing.
+
+2003-03-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Matrix.h, src/Matrix.cpp: Add matrix class for handling
+	  basepoints.
+
+	* src/tile.h, src/tile.cpp: damiens experimental qRMD implementation.
+
+	* src/Terrain.h, src/Terrain.cpp, src/Segment.cpp: Use Matrix to
+	  handle basepoints.
+
+	* src/Segment.cpp: Use memcpy to make copying rows more efficient.
+
+2003-03-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.h, src/Terrain.cpp: Make value for missing points the
+	  the average of surrounding points that are present. Makes edges
+	  of know terrain more sane.
+
+2003-03-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Back off change to default height points to make
+	  terrain seamless again.
+
+2003-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Make default height points work more sanely.
+
+2003-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Make refreshing work more sanely.
+
+2003-02-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.h: Add accessor for point store.
+
+2003-02-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.h, src/Segment.cpp: Add a row and column of extra
+	  heightpoints to the segment to make it easier to render.
+
+2003-01-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Convert to using pkg-config
+
+2003-01-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.cpp, src/Segment.h: Fully implement qRMD with roughness
+	  and falloff.
+
+2003-01-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.cpp, src/Segment.h: First stab at qRMD algorithm.
+
+2003-01-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Fix segment dependencies.
+
+2003-01-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.cpp, src/Segment.h, src/Terrain.cpp: Implement
+	  midpoint based terrain algorithm, currently without any
+	  displacement.
+
+2003-01-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.cpp, src/Segment.h, src/Terrain.cpp, src/Terrain.h:
+	  Switch to using floats instead of doubles internally for performance.
+
+2003-01-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.h, src/Segment.cpp: Add class for terrain segment, which
+	  currently contains an interpolated sloped area.
+
+	* src/Terrain.h, src/Terrain.cpp: Add functionality required to manage
+	  segments in the terrain.
