@@ -1,0 +1,22 @@
+Original author is James Turner (james@worldforge.org)
+
+Current maintainer is Erik Ogenvik (erik@ogenvik.org)
+
+Numerous contributions by Ron Steinke including the Perl bindings, WFmath 
+conversion and bug reports by the dozen.
+
+Eris would not have been possible without Uclient by Karsten Olaf-Laux, the
+first large-scale client to use Atlas. 
+
+Al Riddoch has contributed so many build / packaging fixes, bug reports and 
+clarified the Atlas protocol for me on countless occasions. He is truly
+the master of autoconf and rpmbuild.
+
+Contributors :
+	Alistair Riddoch
+	Karsten Olaf-Laux
+	Anders Petersen
+	Ron Steinke
+	Michael Koch
+	Simon Goodall
+	Erik Ogenvik (née Hjortsberg)

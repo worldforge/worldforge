@@ -1,0 +1,66 @@
+TYPEMAP
+
+SignalBase*	O_OBJECT
+Connection*	O_OBJECT
+Person*		O_HANDLE
+PersonHandle*	O_OBJECT
+Lobby*		O_HANDLE
+Room*		O_HANDLE
+RoomHandle*	O_OBJECT
+Player*		O_OBJECT
+Meta*		O_OBJECT
+Timeout*	O_OBJECT
+AtlasObject	T_ATLAS
+AtlasConstObject* T_ATLAS_CONST
+World*		O_HANDLE
+Avatar*		O_HANDLE
+WorldHandle*	O_OBJECT
+AvatarHandle*	O_OBJECT
+Entity*		O_ENTITY
+TypeInfo*	O_HANDLE
+TypeInfoHandle*	O_OBJECT
+
+OUTPUT
+
+O_HANDLE
+	sv_setref_pv( $arg, CLASS, (void*) new HandleType<Eris::$type>::type($var) );
+
+O_ENTITY
+	$arg = dynamic_cast<PerlEntity*>($var)->sv();
+
+T_ATLAS_CONST
+	$arg = AtlasToSV(*$var);
+
+INPUT
+
+O_HANDLE
+	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) ) {
+		HandleType<Eris::$type>::type* handle =
+			(HandleType<Eris::$type>::type*) SvIV((SV*)SvRV( $arg ));
+		assert(handle);
+		$var = *handle;
+		if(!$var) {
+			warn( \"Stale reference for $type\" );
+			XSRETURN_UNDEF;
+		}
+	}
+	else {
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+O_ENTITY
+	$var = PerlEntity::get($arg);
+	if(!$var) {
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+T_ATLAS
+	try {
+		SVToAtlas($arg, $var);
+	}
+	catch (...) {
+		warn( \"Unable to convert $var to an Atlas::Message::Object\" );
+		XSRETURN_UNDEF;
+	}

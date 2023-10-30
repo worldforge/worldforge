@@ -1,0 +1,39 @@
+alriddoch's quick list:
+
+Optimisations
+
+ - replace a call to map::count followed by map::operation[] with a call to
+   find, as its twice as efficient.
+- in entity attribute handling, hash the attr name to a compile-time index,
+ so nativePropertyChanged can use a single switch statement
+ 
+BUGS
+
+- add bugs here
+
+Test Cases
+
+- Avatar::place
+- picking
+
+- simulate a server shutdown (call shutdown() on the client socket)
+
+- cycle character through create, unsubscribe and re-take on a single
+  account (needs unsubscribe behaviour to speced and implemented)
+
+1.3 TODO
+
+- room creation / binding
+  room creation seems okay, the only reason for the pending crap is so
+  we can hold the Room object around.
+  
+  map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
+  yech.
+
+ - custom routers
+ 	- run first, but can't consume ops
+ 	- attached on Connection, or on the 'owning' router?
+ 	- Conenction seems more robust. re-structure how routers are tracked,
+ 	  possibly?
+
+- Avatar unsubscribe!

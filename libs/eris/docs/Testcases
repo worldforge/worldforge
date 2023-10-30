@@ -1,0 +1,36 @@
+test cases
+
+ check for an anonymous OOG look on login, send empty lobby
+ check for OOG entry
+ 
+ repeat, but with one other account, then two
+ 
+ check for sight person returning correct values
+ 
+ check that SightPerson signal fires when the new people log in,
+ and also when they go away
+ 
+ check chat is received okay
+ ditto for emotes
+ 
+ private chat, check it's okay
+
+------------------------
+ 
+ 
+ ---- movement ---------
+ 
+ 	prediction ? risky.
+ 
+ ----- batched appearance ------
+ 
+ 	toggle option for batching on agent, and re-run test?
+ 	yes, that's a good idea.
+ 
+
+-------------------------------
+
+    
+inject unseen for wielded
+
+ 
