@@ -1,0 +1,44 @@
+Inline in the foo.h any method in foo_funcs.h that does not require another
+header, and has no loop
+
+Re-write operators so that for a given operator O, operatorO is implemented
+using operatorO= rather than the other way around which is inefficient.
+
+Add throw(ColinearVectors) to the appropriate vector and matrix
+	rotation functions
+Get rid of templates as template args, use ValueType for standard
+	containers instead
+
+Intersect functions unimplemented for dim != 2,3 (extremely low priority):
+	Intersect(Polygon<>, AxisBox<>, bool)
+	Intersect(Polygon<>, RotBox<>, bool)
+	Intersect(RotBox<>, AxisBox<>, bool)
+	Intersect(RotBox<>, RotBox<>, bool)
+    These will be postponed until I can think of a way to write them,
+    or someone needs them, whichever comes first
+Add shape tests from COAL
+Write rotateInverse() functions
+Look into whether miniball code can handle using float instead of double;
+	if so, replace Wrapped_array with Point
+Requests from Jesse: NAN, INFINITY, RADIANS_TO_DEGREES, DEGREES_TO_RADIANS
+Write an API reference for the library. Find some inline documentation tool?
+Deal with difficulties in making certain functions friends of the
+	appropriate classes
+Rearrange the functions in foo_funcs.h to match the order in the class
+	in foo.h
+
+Schedule:
+0.3.0 will come out once I get around to testing the Polygon intersect functions
+      and make sure they work. At that point the old Intersect()/IntersectProper()
+      interface will be removed, as will support for deprecated network
+      formats in atlas_conv.h. This is also an appropriate time to make changes
+      that break binary compatibility.
+
+alriddoch's TODO 2008-11-10
+
+Clean up const.h removing all includes that it itself does not use.
+
+<cmath>, <cassert> and <iosfwd> should go. Clean up the rest of the headers
+that turn out to need this, but completely get rid of asserts from the
+interface headers. This should reduce the cost of including these headers,
+and stop them from polluting the namespace.

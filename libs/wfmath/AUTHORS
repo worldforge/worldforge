@@ -1,0 +1,21 @@
+Maintainer:
+	Erik Ogenvik <erik@ogenvik.org>
+
+Original author:
+	Ron Steinke <rsteinke@w-link.net>
+
+Other contributors:
+	James Turner <james@worldforge.org>
+	Michael Koch <konqueror@gmx.de>
+	Dan Tomalesky <grim@xynesis.com>
+	Al Riddoch <alriddoch@googlemail.com>
+
+The Miniball code of Bernd Gaertner
+<http://www.inf.ethz.ch/personal/gaertner>
+is used for finding bounding spheres for
+collections of points.
+
+The Mersenne Twister code of Richard J. Wagner
+<rjwagner@writeme.com> is used for random
+number generation.
+

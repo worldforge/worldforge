@@ -1,0 +1,42 @@
+print "This is a bc script which computes sloppyMagMax for Vector<3>.\n"
+print "You have to run it with the -l option to take advantage of the\n"
+print "math library.\n"
+
+scale = 50
+
+p = sqrt(2) - 1
+q = sqrt(3) + 1 - (2 * sqrt(2))
+
+print "p = ", p, "\n"
+print "q = ", q, "\n"
+
+r = p / (-2 * q)
+f = (q - 1) / (3 * q)
+
+print "r = ", r, "\n"
+print "f = ", f, "\n"
+
+s = sqrt((f^3) + (r^2))
+
+print "s = ", s, "\n"
+
+/* Cube roots */
+
+z1 = e(l(r + s) / 3)
+z2 = -e(l(s - r) / 3)
+
+print "z1 = ", z1, "\n"
+print "z2 = ", z2, "\n"
+
+test = e((l(e(3)) / 3) - 1)
+
+print "Test? ", test, "\n"
+
+point = z1 + z2
+
+print "point = ", point, "\n"
+
+val = 1 / sqrt((1 + (2 * (point^2)))/((1 + (2 * p * point) + (q * (point^2)))^2))
+
+print "val = ", val, "\n"
+print "sqrt(val) = ", sqrt(val), "\n"

@@ -1,0 +1,1327 @@
+2012-01-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.12, interface version 6
+
+2012-01-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Fix a number of portability bugs. Make a bunch of performance
+	  improvements, mostly be avoiding converting between double and float.
+	  Switch to using standard C++ library for math functions, as the way
+	  templates work makes getting the right float type way more efficient.
+	  Fix some bad namespacing which broke on some compilers.
+
+2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.11, interface version 5
+
+2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Inline all Atlas related methods in atlasconv.h to avoid linking
+	  issues. Explicitly instantiate all templates and avoid including
+	  headers full of big functions in client apps. Make all public
+	  templates default to 3 dimensions. Clean out assertions
+	  which might cause runtime crashes, or lead to instability in
+	  non-debug builds. Fix a number of bugs with intersection and
+	  barycenter functions.
+
+2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.10
+
+2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/int_to_string.cpp: Reduce the scope of some const variables.
+
+	* wfmath/vector.cpp: Add some template specialisations.
+
+2009-08-04  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/axisbox.h: Add writable accessors to the axisbox
+	  corner points.
+
+2009-06-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/point.h, wfmath/point_funcs.h,
+	  wfmath/vector.h, wfmath/vector_funcs.h: Fix copy constructors
+	  to take a reference, and don't inline the heavy loop.
+
+2009-01-26  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.9
+
+	* NEWS: Update date on release news item.
+
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/axisbox.cpp, wfmath/axisbox.h: Fix a missing include.
+
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/atlasconv.h: Move the inlined constructor from Atlas
+	  data here to keep it out of the library compiled code.
+
+	* wfmath/axisbox.cpp, wfmath/axisbox.h: Don't include all the code
+	  as inlined by default, and instead force instantiation of the
+	  templates in the library.
+
+	* wfmath/const.h: Fill out the set for forward declarations.
+
+	* wfmath/intersect_decls.h, wfmath/axisbox.h:
+	  Remove the now redundant forward declarations.
+
+	* wfmath/point.cpp: Include axisbox_funcs.h as it contains
+	  Point functions which require AxisBox.
+
+2009-01-11  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/zero.h: Add a new line to the end of zero.h.
+
+	* configure.ac: Check for fabsf.
+
+	* wfmath/atlasconv.h: Move inlined constructors into this file
+	  to ensure code that requires Atlas-C++ isn't linked by the main
+	  library.
+
+	* wfmath/const.cpp: Add a special float implementation of Equal
+	  to use more efficient underlying mechanism.
+
+	* wfmath/const.h: Add forward declarations for major classes.
+
+	* wfmath/point.cpp, wfmath/vector.cpp: Add specialisations of
+	  some previously inlined code to reduce dependency mess.
+	  Force instantation of templates so code is included in the
+	  library for things that should not be inlined.
+
+	* wfmath/point.h, wfmath/vector.h: Remove forward declarations
+	  and unnecessary includes. Strip out asserts as including cassert
+	  interferes with application code. Remove some messy inlined
+	  code and clean up the declaraions of 3D only methods. Don't
+	  force inclusaion of the _funcs.h headers which contains most
+	  of the implementation.
+
+	* wfmath/point_funcs.h, wfmath/vector_funcs.h: Clean up formatting
+	  and scoping. Remove inline from a number of methods.
+
+	* wfmath/quaternion.cpp: Use CoordType, not float.
+
+	* wfmath/rotbox.h: Include quaternion.h as required.
+
+	* wfmath/rotmatrix.h: Remove asserts as they interfere with
+	  application code.
+
+	* wfmath/rotmatrix_funcs.h: Add cassert include back here as
+	  required.
+
+2009-01-05 Erik Hjortsberg <erik@worldforge.org>
+
+	* wfmath/atlasconv.h: Provide proper templated parsing methods for all 
+	current terrain mods and shapes.
+
+	* wfmath/zero.h: Add a helper class for holding zero values of points
+	and vectors.
+
+	* wfmath/ball.h, wfmath/polygon.h, wfmath/rotbox.h: Add toAtlas and 
+	fromAtlas methods, implemented in atlasconv.h. Also add contstructor
+	which takes Atlas data.
+
+	* wfmath/atlas_0_6_test.cpp: Added tests for parsing shapes from Atlas.
+
+
+2008-11-15  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.8
+
+	* NEWS: Update date on release news item.
+
+	* configure.ac: Increment version number.
+
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/intstring_test.cpp, wfmath/probability_test.cpp:
+	  Force debug mode before including <cassert>.
+
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/quaternion_test.cpp, wfmath/rotmatrix_test.cpp,
+	  wfmath/shape_test.cpp, wfmath/vector_test.cpp: Force debug mode
+	  before include <cassert>.
+
+2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/polygon_intersect.h: Convery the warning about unfinished
+	  functionality to a big FIXME section.
+
+2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/intersect.h: Add another set of parentheses to make things
+	  clearer.
+
+2008-11-07  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/intersect.h: Move parentheses to a more appropriate place.
+
+2008-11-04  Anders Petersson  <demitar@worldforge.org>
+
+	* configure.ac: Added AC_PROG_CXX to prevent a circular dependency in
+	  AC_CHECK_HEADERS(sstream strstream, ...)
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath.spec.in: Create new sub package for generated documentation.
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Add support for cross compiling, and fix up the
+	  comments.
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.7
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update date on release news item.
+
+	* acinclude.m4: Include the latest version of the pkgconfig macro.
+
+	* configure.ac: Increment version number, and use latest pkgconfig
+	  check syntax.
+
+	* AUTHORS, wfmath.spec.in: Update contact email addresses,
+
+	* atlas/Makefile.am: Remove Atlas-C++ 0.4 test programs.
+
+2007-11-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Split static libraries out into their own
+	  package.
+
+2007-11-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: Initialise age when setting up Quaternion from
+	  Atlas data.
+
+2007-07-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update date on release news item.
+
+	* Release 0.3.6
+
+2007-07-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number to 0.3.6
+
+2007-07-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/axisbox.h, wfmath/axisbox_funcs.h, wfmath/ball.h,
+	  wfmath/ball_funcs.h, wfmath/point.h, wfmath/point_funcs.h:
+	  Tighten up template specicialisations to deal with stricter
+	  rules in gcc 4.2.
+
+2007-02-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/polygon_intersect.cpp, wfmath/polygon_intersect.h,
+	  wfmath/rotmatrix_funcs.h: When an assert is used to detect
+	  a bad condition in a function, ensure that in a production build
+	  where asserts are disabled, the function still returns a sane
+	  value, to avoid compiler warnings.
+
+2006-08-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update date on release news item.
+
+	* Release 0.3.5
+
+2006-08-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* autogen.sh: Get rid of non-functional --enable-compile-warnings
+	  flag, and enable debug by default when invoking configure from
+	  autogen.
+
+2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/Makefile.am: Remove useless AM_CXXFLAGS.
+
+	* configure.ac: Straighten out interface version numbers, remove
+	  unused substitutions, and add debug compiler flag support. Increment
+	  version for release.
+
+	* NEWS: Add provisional news item for release.
+
+2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/point.h, wfmath/point_funcs.h, wfmath/quaternion.cpp,
+	  wfmath/quaternion.h, wfmath/vector.h, wfmath/vector_funcs.h:
+	  Re-order and reimplement some of the operators, so they
+	  are more efficient and in some cases cleaner.
+
+	* wfmath/quaternion_test.cpp: Output values for the results of
+	  test calculations to make them easier to debug when they fail.
+
+2006-08-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/intstring_test.cpp: Switch to using atol instead of
+	  atoi to ensure longs work on platforms where long is bigger
+	  than int.
+
+2006-08-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/quaternion.cpp: If a quaternion is initialised with values
+	  which would make it normalise with division by zero, or be
+	  initialised with NaN, mark as invalid and return.
+
+	* autogen.sh: Remove references to long removed mainainer mode.
+
+2005-12-02  James Turner  <james@worldforge.org>
+
+	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
+	  shortly).
+
+2005-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: If a quaternion is initialised with values
+	  which would make it normalise with division by zero, mark
+	  as invalid and return.
+
+2005-06-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Minor changes to spec.
+
+	* NEWS: Update NEWS.
+
+	* Release 0.3.4
+
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/Makefile.am: Don't force compilation with -O2. There are
+	  good reasons not to.
+
+	* configure.ac: Update autoconf usage.
+
+	* acinclude.m4: Remove unused AM_PATH_ATLAS, and add required
+	  pkg-config macro.
+
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Fix a bug in initialising the version to a non-literal.
+
+	* doc/Doxyfile.in: Use VERSION instead of WFMATH_VERSION as intended by
+	  autoconf.
+
+2005-04-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version to 0.3.4 for release, and clean
+	  up a bit.
+
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
+Sunday, October 10th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed CXXFLAGS to AM_CXXFLAGS in the atlas
+	  Makefile.am to fix a configure warning.
+	* Change a comma operator in an assert() to && to
+	  fix a compile warning.
+
+Saturday, October 9th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Added missing 'inline' keywords in int_to_string.h.
+
+2004-07-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Minor update to the rpm spec. No need to re-spin the release.
+
+Wednesday, July 19th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* 0.3.3 release.
+
+Wednesday, June 30th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Erik Hjortsberg's gcc 3.4 compile fixes, part 2.
+
+Wednesday, June 30th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Erik Hjortsberg's gcc 3.4 compile fixes.
+
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec.
+
+2004-06-03  James Turner  <james@worldforge.org>
+
+	* XCode project updates
+
+Saturday, March 6th, 2004 Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: Add typedefs so the tests still work
+	  with the 0.4 series.
+
+Wednesday, March 3rd, 2004 James Turner <james@worldforge.org>
+
+	* Made atlasconv.h use the new Atlas::Message public typdefs, instead
+	  of the current Element typedefs, which are becoming private.
+	* ProjectBuilder updates for X-Code 
+	
+Wednesday, February 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed 'no newline at end of file' warning for timestamp_test.cpp.
+
+Sunday, February 15th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the Atlas forward declaration workaround to return
+	  a reference to Atlas::Message::Element instead of a copy.
+
+Thursday, February 5th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Got the fooCorner() fix right.
+	* 0.3.2 release! for the last time!
+
+Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Added wfmath.spec to EXTRA_DIST to ease rpm building.
+	* 0.3.2 release! (no, really! this time I mean it!)
+
+Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Added a missing word to some descriptive text in wfmath.spec.
+	* 0.3.2 release!
+
+Friday, January 30th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the fooCorner() functions in Ball from {assert(false);}
+	  to {assert(false); abort();}, per Al's comments, so they
+	  fail properly if used when NDEBUG is defined.
+
+Thursday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Updated the AUTHORS file.
+
+Thursday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version to 0.3.2, in preparation for a release
+	  tommorow.
+
+Thursday, January 29th, James Turner <james@worldforge.org>
+
+        * Add a test for the timestamp/timediff code (not exhaustive
+          by any means)
+
+Thursday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed the TimeDiff constructor from milliseconds to
+	  set the is_valid flag (thanks James!).
+
+Tuesday, January 27th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the Shuffle() function to use the new random
+	  number API instead of the old one, and use
+	  std::vector<>::size_type instead of unsigned for
+	  greater portability. Added a basic test to make sure
+	  it builds and runs.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Made the Quaternion costructor from a Vector<3> (for
+	  a rotation around that axis) 'explicit'.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Added round-off age checks to the functions where
+	  Quaternion and RotMatrix<3> rotate each other.
+	* Added rotate() convienience wrappers to RotMatrix,
+	  Quaternion and Vector for cases where rotation
+	  is just multiplication.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/point.h, wfmath/axisbox.h, wfmath/axisbox_funcs.h,
+	  wfmath/segment.h, wfmath/segment_funcs.h, wfmath/ball.h,
+	  wfmath/rotbox.h, wfmath/rotbox_funcs.h, wfmath/polygon.h,
+	  wfmath/polygon_funcs.h, wfmath/polygon.cpp: Added
+	  Quaternion-based rotation functions and toParentCoords(),
+	  toLocalCoords() to all shapes, in parallel to those
+	  functions previously added to Point.
+	* wfmath/rotmatrix*, wfmath/quaternion*: Added functions
+	  to let RotMatrix<3> and Quaternion rotate each other.
+	  RotMatrix<3>::rotate(Quaternion) was needed for
+	  Quaternion-based rotation of RotBox<3>.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/MersenneTwister.h, wfmath/const.h, wfmath/miniball_funcs.h:
+	  Replace ANSI C headers #include <foo.h> with #include <cfoo>.
+	* wfmath/stream.h: Removed commented-out sstream #include.
+	* wfmath/timestamp.*: Moved winsock.h #include into the .cpp file,
+	  moved timeval class declaration for win32 inside the TimeStamp
+	  class.
+
+Sunday, January 11th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/timestamp.h: Pull winsock #include outside of
+	  WFMath namespace.
+
+Sunday, December 21st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/timestamp.h: Pull in winsock2.h instead of winsock.h
+	  under win32.
+
+Friday, December 19th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Remove Serial from rpm spec as it is not required, and messes up
+	  deps.
+
+Saturday, December 6th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/polygon_intersect.cpp: Got rid of the only
+	  new/delete calls in the whole library, as the
+	  object in question could just as well be declared
+	  on the stack.
+
+Saturday, December 6th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/timestamp.cpp: Added James' patch to make
+	  valgrind happy.
+
+Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Only one of the Point/Quaterion and Point/Matrix coordinate
+	  transformation functions can or needs to have a default
+	  rotation argument.
+
+Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* The inverse of a Quaternion is q.inverse(), not -q.
+
+Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Added local/parent coordinate transformation functions
+	  and quaternion based 3D rotations to Point, still need to
+	  add these to the rest of the shape classes.
+
+Sunday, October 26th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/quaternion.cpp, wfmath/atlasconv.h: Set validity
+	  of vector component of Quaternion in three other places
+	  we'd missed.
+	* wfmath/rotmatrix*, wfmath/quaternion*: Added roundoff aging
+	  code. As we do many floating point calculations, RotMatrix
+	  and Quaternion will tend to drift from their respective
+	  normalizations due to roundoff error. The new code adds
+	  an m_age, which keeps track of how many computations ago
+	  they were normalized, and automatically renomalizes them
+	  after a given number of computations. Because we know that
+	  they're still close to being normalized, the renormalization
+	  code is linearized, so it's not too horrible as a speed hit.
+
+Sunday, October 26th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/quaternion.cpp: Ensure vector component is valid when
+	  constructing a valid quaternion.
+
+Sunday, September 21st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Some cleanups to int_to_string.cpp
+	* Added some macros to const.h for future
+	  normalization-aging checks in RotMatrix
+	  and Quaterion.
+	* 0.3.1 release
+
+Monday, August 25nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Moved hash() function out of MersenneTwister.h to
+	  randgen.cpp, to get time_t and clock_t out of the
+	  header.
+
+Friday, August 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Forgot to make deprecated IRand(), Drand() (which
+	  now wrap Mersenne Twister) inline. Now fixed.
+
+Tuesday, August 19th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Remove obsolete file wfmath.m4.
+
+Tuesday, August 19th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Updated spec.
+
+Sunday, August 17th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Moved config.h include after timestamp.h include
+	  in timestamp.cpp, since it's only the unistd.h include
+	  that's causing the FreeBSD problem.
+
+Sunday, August 17th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/timestamp.cpp: Moved include of timestamp.h
+	  to workaround problem on FreeBSD.
+
+	* Makefile.am: Remove obsolete .pbxproj from DIST list.
+
+Saturday, August 16th, 2003   James Turner <james@worldforge.org>
+
+	* Update ProjectBuilder files. Move along, nothing to see
+	  here, unless you're on OS-X. If you are, please let me
+	  know if these are useful.
+
+Thursday, August 14th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed typos in a #error message in atlasconv.h.
+	* Changed atlas/Makefile.am to build the tests with 0.3.
+	* 0.3.0 release!
+
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed to using Mersenne Twister for random number
+	  generation. Anyone who wants the old interface
+	  should #define WFMATH_USE_OLD_RAND.
+	* Dropped old, deprecated intersect interface version.
+	  This version of the API was used briefly in stage
+	  at one point, and that was at least a year ago.
+
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Forgot to change to 0.3 in wfmath/Makefile.am, fixed that.
+	* Got rid of support for old 'list of lists' encoding
+	  for AxisBox in atlasconv.h. Also got rid of a bunch
+	  of push_back() calls by predeclaring the size of
+	  Atlas::Message::Foo::ListType instances.
+
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Updated version number to 0.3 in preparation for doing
+	  a release next week.
+	* Got rid of wfmath-config, we won't support it in 0.3.
+	* Added instring_test, which tests both IntToString() and IRand().
+	* Got rid of operator<() in all classes except for those
+	  in timestamp.*. It was only there 'so we could use wfmath
+	  classes as keys in std::map'. However, since equality
+	  isn't transitive (a == b && b == c does not imply a == c),
+	  this has some problems. If you really want a map of spatial
+	  objects, you probably want something like stage's OctTree
+	  instead.
+	* Fixed IRand() to deal with the fact that UINT_MAX is often
+	  larger than RAND_MAX.
+	* Added a few inline IntToString() cases to make sure short
+	  and int get cast to the appropriate (signed or unsigned)
+	  version of long.
+	* Added int_to_string.h to wfmath.h.
+
+Monday, August 4th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Added IntToString() utility function, because I'm tired of
+	  writing the same code in a dozen different applications.
+
+Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* More poly-atlas tweaks. Forgot to inline some wrapper
+	  functions, had to add a template AtlasInType constructor
+	  to take advantange of the fact that the Atlas::Message::Foo
+	  constructor is overloaded (needed that to build Eris).
+
+Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Changes to support both Atlas-C++ 0.4 and 0.6 with atlasconv.h
+	* Changed needless 'const CoordType' for pass-by-value
+	  in some Quaternion function calls to 'CoordType'
+
+Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a couple more m_valid bugs.
+
+Monday, July 21st, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: Use AsNum() rather than AsFloat() so that
+	  integers don't cause exceptions.
+
+	* wfmath/quaternion.h: Fix operator=() so it copies m_valid to
+	  the assignee.
+
+Thursday, July 3rd, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
+Friday, June 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Did a Quaternion-specific implementation of rotation(from, to)
+	  instead of just calling the RotMatrix version and
+	  converting. Also changed RotMatrix<2>::rotation(from, to)
+	  not to throw ColinearVectors in the case where the
+	  inputs are antiparallel, since in 2d there's only
+	  one possible plane of rotation and we can give
+	  a canonical answer.
+
+Tuesday, June 24th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a bug in RotMatrix::rotation(from, to),
+	  added a Quaternion wrapper for the same function
+
+Tuesday, June 3rd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Instantiated Intersect(), Contains() functions
+	  and stream operators for dim=2,3 in .cpp files
+	* Made most template functions inline, bumped
+	  the interface number in case this broke
+	  compatibility
+
+Tuesday, May 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Added elements() const accessors to the underlying
+	  arrays in Vector and Point.
+
+Sunday, May 4th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Toned down chuck's more explicit message for the
+	  failure of the configure check for Atlas. Anyone
+	  who doesn't know what Atlas is isn't going to care
+	  about the Atlas::Message::Object encoding code
+	  stubs, and it's best not to make them think they
+	  need to download another library if they don't have to.
+
+Thursday, May 1st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed configure.in to configure.ac, since
+	  it now contains code which is incompatible
+	  with autoconf 2.13
+
+Thursday, April 24th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Add news item, and fix rpm spec.
+
+	* Release 0.2.11, API 0.2, interface version 1.
+
+Wednesday, April 23rd, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Update spec file, and set the interface version ready for
+	  release.
+
+Wednesday, April 23rd, 2003   James Turner <james@worldforge.org>
+
+	* Updated configure.in to use pkg-config to detect Atlas-C++,
+	  removing the need for AM_PATH_ATLAS in one more place.
+	* Wrapped the sstream / strstream include tests in an
+	  AC_LANG(C++) section, which they need in order to detect
+	  correctly, at least on OS-X.
+
+Tuesday, April 22nd, 2003   James Turner <james@worldforge.org>
+
+	* Added the ProjectBuilder files to EXTRA_DIST in
+	  anticipation of a new stable release. 
+
+Tuesday, April 22nd, 2003 	Ron Steinke <rsteinke@w-link.net>
+
+	* Added trivial RotMatrix<>::parity() function.
+
+Thursday, April 17th, 2003	James Turner <james@worldforge.org>
+
+	* Add support for the Atlas tests to the ProjectBuilder files
+	  (you'll need to update the reference to Atlas.framework to
+	  whereever you built it). Again, all the tests pass.
+
+Wednesday, April 16th, 2003 	James Turner <james@worldforge.org>
+
+	* Updated the ProjectBuilder files, including targets for some of
+	  the test cases, which all pass with flying colours.
+
+Friday, January 31, 2003	Al Riddoch <alriddoch@zepler.org>
+
+	* Convert to using pkg-config
+
+Saturday, January 11, 2003	James Turner <james@worldforge.org>
+
+	* Changed 'libtool' to 'libtoolize' in autogen.sh so
+	  an autoXXXX build works under Mac OS-X.
+	* Added project builder files to produce a WFMath framework
+	  If you use this or have any comments, please let me know.
+
+Monday, November 4, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added isValid() member functions to TimeStamp, TimeDiff
+	  (the flags were already there)
+	* Improved TimeStamp, TimeDiff documentation
+
+Saturday, November 2, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added documentation. With the exception of those associated
+	  with Polygon, all API functions should now be documented.
+
+Saturday, November 2, 2002	Al Riddoch <alriddoch@zepler.org>
+
+	* Add rpm spec.
+
+Friday, November 1, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added Doxyfile.in to CVS, did some work towards docs
+
+Wednesday, October 30, 2002     Michael Koch <konqueror@gmx.de>
+
+	* Added manpage for wfmath-config.
+
+Wednesday, October 23, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Portability fix. Apparently debian on sparc uses
+	  int instead of long for the usec field of struct timeval.
+
+Monday, October 10, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed operator==() for quaternions to regard two
+	  quaternions as equal iff they produce the same
+	  3x3 rotation matrix. This means q == -q is true.
+        * Added a Shuffle() function which randomizes the order
+          of elements contained in a std::vector.
+	* Doc updates
+	* Bumped version number to 0.2.10
+
+Monday, September 2, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version number to 0.2.9
+
+Friday, August 2, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a bug involving the machine dependence of the
+	  behavior of % for negative numbers
+
+Monday, July 22, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Wraped a declaration of a variable which is only used in
+	  an assert() in #ifndef NDEBUG
+
+Saturday, June 23, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added timestamp class from Eris
+	* Added random number generators (really wrappers for rand())
+	* Added Quaternion::inverse()
+
+Saturday, May 11, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version number to 0.2.8, due to the sign convention changes
+
+Friday, May 10, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added an isValid() flag to all classes. Point and Vector
+	  also have a setValid() function, since you can assign
+	  values directly to the array elements.
+	* Switched _Poly2Orient to use the Point and Vector isValid()
+	  flags, rather than having its own flags.
+
+Friday, May 10, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Switched sign convention for quaternions to match
+	  the more sensible convention used by cyphesis.
+	  This fixes a bug with wfmath and cyphesis miscommunicating
+	  about orientations over the network, but introduces
+	  a similar problem with older versions of wfmath.
+	  Everyone is urged to upgrade wfmath.
+
+Friday, April 26, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added WFMATH_DEPRECATE_OLD_INTERSECT flag to build
+	  without the old intersect API. Fixed wfmath to build
+	  with the old API removed.
+
+Friday, April 26, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version number for 0.2.7 release
+
+Sunday, April 21, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Changed format sent by AxisBox<>::toAtlas() for better
+	  network optimization
+
+Wednesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* The eris-support-on-msvc changes now work
+
+Wednesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Hopefully have enough of wfmath working on msvc now to support eris
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).7
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).6
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).5
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).4
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).3
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* (Continued work on MSVC++ workarounds).2
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Continued work on MSVC++ workarounds
+
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Started adding workarounds to compile with MSVC++
+	* Started adding doxygen docs
+
+Friday, March 24, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Tweaked the syntax of the new Parallel() function slightly
+
+Thursday, March 23, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Finished Intersect(Polygon, Polygon). Now I've just got to
+	  test all those intersection functions
+	* Added Parallel() and Perpendicular() functions to compare the
+	  orientation of two vectors
+	* Incremented version number to 0.2.6
+
+Tuesday, March 23, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed bug with declaring the default value of the "proper"
+	  argument of the intersection functions twice
+	* Moved the function definitions for intersection-oriented
+	  members of _Poly2Orient from polygon_funcs.h into
+	  polygon_intersect.h
+	* Wrote definitions for Contains(Polygon, AxisBox),
+	  Contains(Polygon, RotBox), and Contains(Polygon, Polygon).
+	  Got most of Intersect(Polygon, Polygon) done, except
+	  for the case where the two planes containing the polygons
+	  intersect in a line (the standard case in 3d)
+
+Thursday, March 21, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed Polygon<> intersection functions with AxisBox<> and
+	  RotBox<> in polygon_intersect.h
+	* Replaced separate Intersect() and IntersectProper() functions
+	  with a "bool proper" argument to Intersect(), did the same
+	  for Contains(). For backwards compatibility, make the "proper"
+	  argument default to false, and wrote generic IntersectProper()
+	  and ContainsProper() templates to call Intersect() and Contains()
+	  with proper = true (keep them? deprecate them? which API is better?).
+
+Tuesday, March 12, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added a default value of 1.0 for the norm in Vector::normalize()
+	* Added a virtual destructor to the exception defined in atlasconv.h
+	* Fixed a terminate-the-loop-proberly bug in probability.cpp
+	  (replaced DBL_MIN by DBL_EPSILON)
+	* Got test functions to compile with gcc-3.0
+
+Saturday, March 9, 2002		Dan Tomalesky <grim@xynesis.com>
+
+    * Added acinclude.m4 for atlas so people without atlas can still
+      autogen.sh and configure will give warning instead of getting
+      bizarre macro missing error for atlas when atlas is not installed
+
+Thursday, March 7, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed error in configure check for sstream vs. strstream
+
+Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Merged in Grimicus' patch to add wfmath-config
+
+Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Redid sstream vs. strstream compatibility code
+
+Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Got rid of stupid "set fail bit" on parse errors for
+	  operator>>(), it now throws instead
+	* Added configure check for sstream vs. strstream,
+	  compatibility code
+
+Monday, March 04, 2002	Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/error.h: Added destructor with throw(); to exception class.
+
+	* wfmath/polygon.h: Removed trailing comma from enumeration.
+
+	* wfmath/polygon.h, wfmath/stream.h: Fixed std:: namespace issues,
+	  and made typenames explicit.
+
+Wednesday, February 27, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Commented out horribly broken intersection functions
+	  with AxisBox and RotBox in polygon_intersect.h
+
+Wednesday, February 27, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Autogen.sh cleanups
+
+Tuesday, February 26, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Bump version number to 0.2.5, so we can have an official
+	  version needed by the stage patches.
+
+Monday, February 25, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added rotation() functions to RotMatrix<3> and Quaternion
+	  which take a single Vector<3> as argument (as opposed to
+	  a vector for the rotation axis and an angle), and determine
+	  the rotation angle from the length of the vector. This
+	  is nice for things like the rotation generated by
+	  (angular velocity) * dT, since it handles the zero-length
+	  axis case cleanly, and avoids an extra call to sqrt().
+	* Fixed an error in atlasconv.h, where specializations
+	  of AxisBox<>::fromAtlas() to particular dimensions
+	  weren't marked as inline
+
+Friday, February 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Broke the Polygon<> intersection functions out of
+	  polygon_funcs.h and polygon.cpp into the separate
+	  files polygon_intersect.h and polygon_intersect.cpp 
+	* Moved the implementations of the boundingBox() and
+	  boundingSphere() functions in Point out of point_funcs.h
+	  into axisbox_funcs.h and ball_funcs.h. This lets me
+	  remove the include dependence of Point on AxisBox and Ball.
+	* Fixed up list of files included in wfmath.h. It now
+	  includes everything but atlasconv.h, which is intentionally
+	  excluded.
+
+Wednesday, February 20, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed RotBox to match the new sense of RotMatrix<>
+	  rotation, still need to look at its interaction
+	  with Polygon<> to get that right
+	* Wrote Intersect(RotBox, AxisBox) for 2d, 3d
+	* Removed a needless <iostream> dependency from atlasconv.h
+	* Bump version number to 0.2.4
+
+Sunday, February 17, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Some doc fixes
+	* Added a #warning about using the Polygon<> Intersect()
+	  and Contains() functions
+
+Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Missed a change in rotation sense in Vector<3>::rotate(const Quaterion&),
+	  fixed now
+
+Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added comments to many assert()'s
+	* Switched the sense of rotation in RotMatrix<> and Quaternion
+	  to be compatible with OpenGL and the rest of Worldforge. Also
+	  used this as an excuse to scrap all the Euler angle stuff,
+	  since: 1) with different axis conventions floating around, it's
+	  very confusing, and 2) I have yet to see someone try to use
+	  it in the case where it is the correct solution
+
+Tuesday, February 12, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed Point<>:origin() to Point<>::setToOrigin()
+	* Added assert() checks on array indices passed to
+	  many functions
+
+Tuesday, February 12, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added Equal() template to call foo->isEqualTo().
+	* Replaced "const CoordType&" with CoordType everywhere it
+	  was used.
+	* Got rid of scaleEpsilon member function in Point<> in favor
+	  of calling _ScaleEpsilon directly, minimized use of
+	  _scaleEpsilon member function in Vector<>
+	* Improved efficiency of some member functions in Segment<>
+	* Got rid of <iostream> in wrapped_array.h, got rid of
+	  MINIBALL_NO_STD_NAMESPACE test on whether to include
+	  <list> or <list.h> and <cassert> or <assert.h> (since
+	  we're including them as <list> and <assert.h> elsewhere),
+	  got rid of miniball_config.h
+
+Friday, February 1, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed IsFloatEqual() to Equal(), removed FloatAdd()
+	  and FloatSubtract(), vastly improved precision checks
+	  for round-off error. The intersection functions still
+	  need to be audited to make sure they're handling it
+	  right.
+	* API change, increment version to 0.2.3
+
+Monday, January 28, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleanups to const.h, const.cpp suggested by Jesse Jones
+	  in the code review, and associated repurcussions to the
+	  rest of the codebase.
+
+Friday, January 25, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Some efficiency improvements and generalizations to the
+	  backend of the probability functions
+	* Wrote Polygon<3> intersections with AxisBox<3> and RotBox<3>
+
+Thursday, January 24, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Karsten's Makefile.am fixes for srcdir != builddir
+	* New probability distribution functions, Gaussian
+	  and Poisson distributions
+	* Increment version to 0.2.2
+
+Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed namespace from WF::Math to WFMath
+	* Changed fromAtlas() to throw an exception instead of
+	  returning bool, added constructors from Atlas::Message::Object
+	  to appropriate types
+	* Incremented version number to 0.2.1, since there were API changes
+	  and other people are starting to care about dependencies on this
+	  library; there'll probably be a lot of 0.2 versions
+
+Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the atlas functions for Quaternion and AxisBox<>
+	  to conform to atlas specs, got rid of atlas functions which
+	  still used string conversion
+	* Fixed Contains(Polygon<2>, Segment<2>) and
+	  Contains(Polygon<2>, Polygon<2>) for endpoint intersection;
+	  commented out Intersect(RotBox<>, AxisBox<>) and
+	  IntersectProper(RotBox<>, AxisBox<>) because I'm
+	  pretty sure the algorithm's wrong
+	* Added another rotation() function to RotMatrix<>, this
+	  one constructs the rotation necessary to rotate one vector
+	  into another
+	* Got versioning on library build working correctly
+	* Changed version to 0.2.0, implementation of remaining
+	  Polygon<> intersection routines delayed until a later version
+
+Sunday, January 20, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Wrote all the Polygon<2> intersection functions, and
+	  about half of the general Polygon<> intersection functions;
+	  a few of the 2d functions still need more work
+	* Changed intersect_test back to shape_test; decided one
+	  test program was sufficient for all of AxisBox<>, Ball<>,
+	  Segment<>, and RotBox<>
+	* Wrote test code for Polygon<> to call the generic tests;
+	  added the generic tests to shape_test; wrote fairly complete
+	  test code for Quaternion
+	* Changed from FromAtlas() and ToAtlas() functions to fromAtlas()
+	  and toAtlas() member functions; changed Vector<> and Point<>
+	  from sending string objects to atlas to sending lists, so
+	  we're more compatible with the getPos() and getVelocity()
+	  methods of Atlas::Objects::Entity::RootEntityData
+	* Upped version number to 0.1.9. The library now implements
+	  the functionality in stage/math, plus the mathematical
+	  parts of coal and eris. Will go to 0.2 when the polygon
+	  intersect functions are done, and the unit tests are
+	  more complete
+
+Tuesday, January 15, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleaned up Euler angle stuff in RotMatrix<> and Quaternion,
+	  changed everything to z-y-z convention
+	* Moved template specialization declarations from vector.h
+	  to vector_funcs.h
+	* Made Vector<> and Point<> mathematical operators all friends
+	  instead of members, to allow friendship for mathematical
+	  operators which take mixed types
+
+Friday, January 11, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added Quaternion class, based on code from eris
+	* Renamed matrix.h, matrix_funcs.h, matrix.cpp, matrix_test.cpp
+	  to rotmatrix.h, rotmatrix_funcs.h, rotmatrix.cpp, rotmatrix_test.cpp;
+	  this matches the name of the class, and it's best to have the
+	  matrix.h slot available in case we need it later. Need to do
+	  this now before everyone starts using the library
+
+Wednesday, January 9, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added BoundingBox(), BoundingSphere() functions for a
+	  container of points. The BoundingSphere() function
+	  uses the (GPL'd) miniball code of Bernd Gaertner
+	  <http://www.inf.ethz.ch/personal/gaertner>
+	* Moved the implementations of operator<<() and operator>>()
+	  for Polygon<2> out of stream.h and into stream.cpp, fixing
+	  a linker error for any file which included stream.h (oops).
+
+Wednesday, January 9, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Started on Polygon<> class
+	* Wrote some test functions for the generic
+	  part of the class interface (operator=(), isEqualTo(), etc.)
+	  and the generic shape interface (getCorner(), boundingBox(), etc.)
+	* Added Midpoint() function in point.h
+	* Cleaned up operator<() to check !IsFloatEqual()
+	  when comparing variables of type CoordType
+	* Added autogen.sh
+
+Friday, January 4, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Got atlas_test working
+
+Thursday, January 3, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed Barycenter() to take a container of Point<>
+	  instead of an array, added BoundingBox() for a
+	  container of AxisBox<>
+	* Optimized special cases in AxisBox::getCorner() and
+	  RotBox::getCorner(), got rid of AxisBox::lowCorner()
+	  and AxisBox::highCorner()
+	* Extended RotMatrix<> to allow for mirror image flips
+	  in addition to rotations, added mirror() functions to
+	  both RotMatrix<> and Vector<>
+	* Removed foolish const from return value of
+	  RotMatrix<>::rotation()
+	* Wrote better member accessors for most shapes (there's
+	  no reason not to have direct access to the members in
+	  anything but AxisBox<>)
+	* Inlined some of the simpler class member functions
+	* Moved atlasconv.h from atlas/ into wfmath/, since we don't
+	  need Atlas to install it, just to build the test code
+
+Monday, December 31, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Added boundingSphere(), boundingSphereSloppy() to all
+	  the shapes
+	* Wrote FloatMin(), FloatMax(), and FloatClamp(). This
+	  let me remove std::min() and std::max(), and with
+	  them the dependency on <algorithm>
+	* Cleaned up the inclusion of outside headers
+	* Replaced double with CoordType everywhere, with the
+	  exception of the precision/tolerance/epsilon arguments
+	  of float comparison functions and the intenals of
+	  IsFloatEqual()
+	* Switched CoordType from double to float. This puts
+	  the library precision at about 3e-6 (on my machine),
+	  close to the precision of the strings being passed by
+	  ToAtlas() and FromAtlas()
+	* Replaced fromStream() with operator>>(), using fail()
+	  flag to indicate a bad parse
+	* Upped the version number from 0.0.1 to 0.1.0, as
+	  the shape API appears to be settling down, and
+	  it sure doesn't feel like 0.0 anymore
+
+Monday, December 31, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleaned up string and stream stuff, classes only need
+	  to include <iosfwd>, everything else is in stream.h/stream.cpp,
+	  removed stringconv.h/stringconv.cpp
+
+Sunday, December 30, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Finished the RotBox<> intersection functions
+	* Cleaned up use of namespaces in *.cpp files
+	* Added to the test code
+	* Miscelaneous bug fixes
+
+Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed an error in the README
+
+Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Wrote some documentation, cleaned up the little that was
+	  already there.
+
+Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Removed some unnecessary template specifications, changed
+	  Vector<len> to Vector<dim> and RotMatrix<size> to RotMatrix<dim>
+	  for cross class consistency in the name of the template parameter
+	* Removed the base Shape<> class, leaving a bunch of simple classes
+	  for basic shapes which possess a common interface
+	* Changed test code to use toString() method directly rather than
+	  through operator<<()
+	* Changed ToAtlas() and FromAtlas() to use toString() and fromString(),
+	  eliminating the need for a separately compiled atlas conversion
+	  library
+	* Added the shape interface functions to Point<>
+	* Replaced the symlinks to COPYING and INSTALL files added by automake
+	  with the files themselves. This should hopefully let me get them
+	  into CVS.
+	* More work on intersection functions
+
+Tuesday, December 18, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Some cleanup on RotMatrix<>::setVals() backend, Atlas conversion
+	  functions
+	* Added Ball<>, Segment<>, RotBox<> classes (not all RotBox<>
+	  intersection functions written yet)
+
+Monday, December 17, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Wrote Shape<> base class
+	* Wrote AxisBox<> class
+	* Cleaned up header file naming convention, so foo_funcs.h is
+	  always the function templates for the class in foo.h
+
+Friday, December 14, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* .cvsignore fixes
+	* Rearranged the ordering of function declarations in the
+	  classes in an attempt at a cross-class standard, added
+	  some bits I'd missed
+	* Added polar, spherical coordinate conversions to Point<> and Vector<>
+
+Thursday, December 13, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Added setVals() method to Matrix<>
+	* Added operator>> for Vector<>, Matrix<>, Point<> to give
+	  string read capability, added stream_funcs.cpp
+	* Added toString() and fromString() for Vector<>, Matrix<>, Point<>,
+	  changed operator<< to use toString(), removed operator>>
+
+Wednesday, December 12, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Created atlas_funcs.cpp, wrote GetAtlasDoubleList() and
+	  SetAtlasDoubleList() to handle most of the Atlas
+	  interface work
+	* Got a test for Atlas into configure.in
+	* First CVS upload
+`	* Copied the CoalCoord class in as Point<>, moved CoordType
+	  and IsFloatEqual() into const.h, const.cpp
+	* Added FloatAdd() and FloatSubtract() to handle numbers
+	  whose sum/difference is (nearly) zero
+	* Modified Vector<> and Matrix<> to use CoordType
+
+Tuesday, December 11, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Got test functions working with RotMatrix<>
+	* Created atlas_funcs.h to hold Atlas interface code,
+	  wrote ToAtlas() and FromAtlas() for Vector<> and
+	  Matrix<>
+
+Monday, December 10, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* After coversation with Rakshasa about how matrices are actually
+	  being used in stage, replaced Matrix<> with RotMatrix<>
+
+
+Friday, December 7, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Created some tests in matrix_test
+	* Added GPL information to all the source files
+
+Thursday, December 6, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Added more tests to vector_test
+	* Implemented sloppyMag and associated functions
+	  for Vector<2>, Vector<3>
+	* Added a script, bc_sloppy_mag_3, to calculate some constants
+	  for the Vector<3> implementation of sloppyMag
+	* Got rid of RowVector<> and ColumnVector<> classes,
+	  added rowSet() and columnSet() to Matrix<>
+
+Wednesday, December 5, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* First ChangeLog entry
+	* Autoconf is working, and the Vector<> and Matrix<> class compile
+	* Got the README, AUTHORS, and TODO files written
+	* Changed #include "foo.h" to #include <wfmath/foo.h> in
+	  the header files
+	* Added const.h
+	* Created vector_test.cpp, matrix_test.cpp, started work on
+	  vector_test
