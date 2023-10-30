@@ -1,0 +1,12 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="solid">
+                <int name="default">0</int>
+            </map>
+        </map>
+        <string name="id">region</string>
+        <string name="objtype">class</string>
+        <string name="parent">feature</string>
+    </map>
+</atlas>

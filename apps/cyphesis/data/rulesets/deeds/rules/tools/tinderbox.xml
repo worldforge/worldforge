@@ -1,0 +1,42 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/containers/tinderbox/model/tinderbox.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/containers/tinderbox/model/tinderbox.mesh</string>
+            </map>
+            <map name="density">
+                <float name="default">300</float>
+            </map>
+            <map name="cooldown">
+                <float name="default">1</float>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="ignite">
+                        <string name="name">Ignite</string>
+                        <map name="params">
+                            <map name="targets">
+                                <string name="type">entity</string>
+                                <string name="constraint">entity instance_of types.game_entity</string>
+                                <int name="min">0</int>
+                                <int name="max">1</int>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Tinderbox.ignite</string>
+                        <string name="constraint">get_entity(actor.attached_hand_primary) = tool</string>
+                        <string name="description">Light a fire a wielded tinderbox.</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">tinderbox</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

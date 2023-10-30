@@ -1,0 +1,12 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="present">
+                <string name="default">dural/plants/shrubs/fern/model/fern_large.mesh</string>
+            </map>
+        </map>
+        <string name="id">fern_large</string>
+        <string name="objtype">class</string>
+        <string name="parent">fern</string>
+    </map>
+</atlas>

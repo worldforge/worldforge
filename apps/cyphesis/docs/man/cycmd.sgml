@@ -1,0 +1,551 @@
+<refentry id="cycmd">
+
+ <refmeta>
+  <refentrytitle>cycmd</refentrytitle>
+  <manvolnum>1</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>cycmd</refname>
+  <refpurpose>cycmd game server process</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <cmdsynopsis>
+   <command>cycmd</command>
+   <arg choice="opt" rep="repeat">--section:option=value</arg>
+   <arg choice="opt">command<arg choice="opt">server</arg></arg>
+  </cmdsynopsis>
+ </refsynopsisdiv>
+
+ <refsect1><title>Description</title>
+  <para>
+The <command>cycmd</command> program provides a commandline interface to a
+cyphesis server.
+  </para>
+ </refsect1>
+
+ <refsect1><title>Options</title>
+  <para>
+Configuration options are divided up into named sections, which need to
+be specified when modifying or overriding the options. In a config file
+the name of a section is specified in square brackets at the beginning
+of the section. On the command line the section is given at the
+beginning of the option specification, as shown in the synopsis above.
+  </para>
+  <refsect2><title>Client Options</title>
+   <para>
+The following options used by <command>cycmd</command> are present in the
+client section of the config file, and overridden by specifying the client
+section name on the command line.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>serverhost</varname>
+       <initializer>=hostname</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Hostname of the server to connect to.
+      </para>
+      <para>
+This setting provides the hostname of the system where cyphesis is running
+that <command>cycmd</command> should try and connect to.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect2>
+
+  <refsect2><title>Server Options</title>
+   <para>
+The following options are present in the cyphesis section of the config
+file, and overridden by specifying the cyphesis section name on the
+command line. These options apply to the server, but are also required
+by the client to ensure that the client can connect.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>tcpport</varname>
+       <initializer>=6767</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Network port for server TCP connections.
+      </para>
+      <para>
+Specifies the port number to use when connecting to the server.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>unixport</varname>
+       <initializer>="cyphesis.sock"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Local liston socket for Unix domain connections.
+      </para>
+      <para>
+Specifies the filename to use to listen for local trusted client connections.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect2>
+ </refsect1>
+
+ <refsect1><title>Commands</title>
+  <variablelist>
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>add_agent</command>
+      <arg choice="opt">type</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Create an in-game agent.
+     </para>
+     <para>
+Create an avatar or agent in the game to be used to manipulate the world.
+By default an avatar of type "creator" is created, and this is required for
+most operations. Avatars of other types can be created, but have limited
+ability to edit the world.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>cancel</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Cancel the current admin task.
+     </para>
+     <para>
+Various commands begin a background admin task in the client. This command
+stops any currently running task.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>connect</command>
+      <arg choice="req">hostname</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Connect the server to a peer.
+     </para>
+     <para>
+Try and establish a connection to a peer server.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>creator_create</command>
+      <arg choice="req">type</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Use agent to create an entity.
+     </para>
+     <para>
+Use the in-game agent owned by this client to create an in-game entity of any
+type.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>delete</command>
+      <arg choice="req">id</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Delete an entity from the server.
+     </para>
+     <para>
+Delete the in-game entity with the given ID from the world.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>dump</command>
+      <arg choice="opt">filename</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Write the contents of the world to an Atlas dump file.
+     </para>
+     <para>
+An Atlas representation of every entity on the server is written to a file
+using the XML codec.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>get</command>
+      <arg choice="req">id</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Examine any object on the server.
+     </para>
+     <para>
+Get an object description from the server, and display its contents.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>find_by_name</command>
+      <arg choice="req">name</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Find an entity with the given name.
+     </para>
+     <para>
+Search the world for an entity with the given name, and return the first one
+found.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>find_by_type</command>
+      <arg choice="req">type</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Find an entity with the given type.
+     </para>
+     <para>
+Search the world for an entity with the given type, and return the first one
+found.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>flush</command>
+      <arg choice="req">type</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Flush entities from the server
+     </para>
+     <para>
+Search the world for entities with the given type, and delete them all.
+     </para>
+     <para>
+This process does not work perfectly reliably, so may have to be run multiple
+times to fully clear the server.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>help</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Display online help.
+     </para>
+     <para>
+Lists all the commands available, with a short description of what each one
+does.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>install</command>
+      <arg choice="req">type_id</arg>
+      <arg choice="req">parent_id</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Install a new type in the server.
+     </para>
+     <para>
+
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>look</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Return a view of the current server lobby.
+     </para>
+     <para>
+Look at the current server lobby, where all users currently logged in
+are represented. The view is returned and displayed.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>logout</command>
+      <arg choice="opt">account</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Log user out of server.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>monitor</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Enable server monitoring.
+     </para>
+     <para>
+Direct the server to report all in-game operations to the client. A digest
+of each operation is displayed, including the type, which entity the operation
+is from and which entity the operation is to.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>query</command>
+      <arg choice="req">entity_id</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Synonym for "get" (deprecated).
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>reload</command>
+      <arg choice="req">type</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Reload the script for a type.
+     </para>
+     <para>
+Reload the Python script for a given type from the file on disk.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>restore</command>
+      <arg choice="opt">filename</arg>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Restore the contents of an Atlas dump file into the world.
+     </para>
+     <para>
+Read entities from an Atlas XML codec dump file, and restore them into the
+server. The most reliable use case for this is with an empty server to restore
+a snapshot of the world taken at an earlier time.
+     </para>
+     <para>
+It is possible to restore a dump file into server which already contains a
+world, but the following caveats apply:
+     </para>
+     <para>
+If there are collisions between the ID space being used in the existing world,
+and the ID space used in the dump file, the tool will do its best to do the
+right thing, but the results are to some extent undefined. If an entity with
+the same ID and type exists in both spaces, only one will exist after the
+restore and it will have some of the properties of both copies of that entity.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>stat</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Examine the current server status.
+     </para>
+     <para>
+Get a description of the current server status, and display its contents.
+     </para>
+    </listitem>
+   </varlistentry>
+
+   <varlistentry>
+    <term><cmdsynopsis>
+      <command>unmonitor</command>
+     </cmdsynopsis>
+    </term>
+    <listitem>
+     <para>
+Disable server monitoring.
+     </para>
+     <para>
+Direct the server to stop reporting all in-game operations to the client.
+     </para>
+    </listitem>
+   </varlistentry>
+
+  </variablelist>
+ </refsect1>
+ <refsect1><title>Examples</title>
+  <para>
+The first example shows getting the current server status and checking
+the lobby to see if any users are logged in.
+  </para>
+  <programlisting>
+cyphesis> stat
+Info(
+     clients:  1
+     name:  calcitration.ecs.soton.ac.uk
+     objtype:  obj
+     parent:  server
+     ruleset:  mason
+     server:  cyphesis
+     uptime:  1728.2
+     version:  0.3.2
+)
+cyphesis> look
+Sight(
+      id: lobby
+      name: lobby
+      objtype: obj
+      parent: room
+      people: [  1 ]
+      rooms: [  ]
+)
+cyphesis> 
+  </programlisting>
+  <para>
+The first entity returned shows various information about the server,
+including when it was built, the number of connected client, the
+current ruleset, and the server uptime. The second entity representing
+the lobby shows that only one user is current logged in, and no chat
+rooms have been created.
+  </para>
+  <para>The second example shows how to install a new type.</para>
+  <programlisting>
+cyphesis> get thing
+Info(
+     children:  [  feature character plant food stackable structure arm arrow axe barrel block_house board boat boundary bow campfire cleaver coin fire gallows house lumber pelvis ribcage shin skull stall sword thigh tower twobyfour wall weather ]
+     contains:  [  ]
+     id:  thing
+     loc:  
+     name:  
+     objtype:  class
+     parent:  game_entity
+     pos:  [  0 0 0 ]
+     stamp_contains:  0
+     velocity:  [  0 0 0 ]
+)
+cyphesis> install box thing
+cyphesis> 
+  </programlisting>
+  <para>
+The third example shows server monitoring being enable, followed by information
+of a series of in-game operations. The flow of messages in while monitoring the
+server can be large. In order to suppress the flow, the
+<command>unmonitor</command> command must be used.
+  </para>
+  <programlisting>
+cyphesis> monitor 
+cyphesis> 
+tick(from="900006",to="900006")
+tick(from="900007",to="900007")
+cyphesis> 
+tick(from="900008",to="900008")
+cyphesis> 
+tick(from="899982",to="899982")
+cyphesis> 
+tick(from="899356",to="899356")
+cyphesis> 
+tick(from="899357",to="899357")
+cyphesis> 
+tick(from="899358",to="899358")
+cyphesis> 
+tick(from="899359",to="899359")
+cyphesis> 
+tick(from="899360",to="899360")
+cyphesis> 
+tick(from="899361",to="899361")
+cyphesis> 
+  </programlisting>
+ </refsect1>
+ <refsect1><title>Author</title>
+  <para>
+Written by Alistair Riddoch.
+  </para>
+ </refsect1>
+ <refsect1><title>Reporting bugs</title>
+  <para>
+Report bugs to <email>general@worldforge.org</email>.
+  </para>
+ </refsect1>
+ <refsect1><title>Copyright</title>
+  <para>
+Copyright 2004 Alistair Riddoch.
+  </para>
+ </refsect1>
+ <refsect1><title>See Also</title>
+  <para>
+<citerefentry><refentrytitle>cyphesis</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cyclient</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cyphesis-tools</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+  </para>
+ </refsect1>
+</refentry>

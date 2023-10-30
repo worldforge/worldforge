@@ -1,0 +1,47 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="agility">
+                <float name="default">0.3</float>
+            </map>
+            <map name="strength">
+                <float name="default">0.3</float>
+            </map>
+            <!-- Set a high friction so that mobile entities can cling to slopes without sliding down. -->
+            <map name="friction">
+                <float name="default">10</float>
+            </map>
+            <!-- By default mobile entities should step up 30% of their height. This is based on humans. -->
+            <map name="step_factor">
+                <float name="default">0.3</float>
+            </map>
+            <map name="speed_ground">
+                <float name="default">5</float>
+            </map>
+            <map name="speed_water">
+                <float name="default">1</float>
+            </map>
+            <!-- By default we'll allow mobiles to jump like a normal human -->
+            <map name="speed_jump">
+                <float name="default">7.5</float>
+            </map>
+            <map name="_mover_mass_max">
+                <float name="default">50.0</float>
+            </map>
+            <map name="move_constraint">
+                <string name="default">describe("Creature can't be moved.", false)</string>
+            </map>
+            <map name="__scripts">
+                <list name="prepend">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.ExperienceProviding.ExperienceProviding</string>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">mobile</string>
+        <string name="objtype">class</string>
+        <string name="parent">creature</string>
+    </map>
+</atlas>

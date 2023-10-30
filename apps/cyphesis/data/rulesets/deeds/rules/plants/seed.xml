@@ -1,0 +1,38 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="germinates">
+                <string name="default">plant</string>
+            </map>
+            <map name="density">
+                <float name="default">600</float>
+            </map>
+            <map name="_consume_mass_conversion">
+                <float name="default">0.5</float>
+            </map>
+            <map name="consumable_type">
+                <string name="default">plant</string>
+            </map>
+            <map name="__scripts">
+                <list name="default">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.StatusDeletable.StatusDeletable</string>
+                    </map>
+                </list>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="consume">
+                        <string name="name">Eat</string>
+                        <string name="handler">world.objects.Consumable.consume</string>
+                        <string name="constraint">actor can_reach tool</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">seed</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

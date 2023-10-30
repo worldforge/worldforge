@@ -1,0 +1,41 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/containers/bag/model/bag.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="mass">
+                <float name="default">0.5</float>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/containers/bag/bag.modeldef</string>
+            </map>
+            <map name="domain">
+                <string name="default">container</string>
+            </map>
+            <map name="name">
+                <string name="default">Bag</string>
+            </map>
+            <map name="description">
+                <string name="default">A small bag.</string>
+            </map>
+            <map name="usages">
+                <map name="append">
+                    <map name="open_container">
+                        <string name="name">Open</string>
+                        <string name="handler">world.objects.Container.open_container</string>
+                        <string name="constraint">describe("You're too far away.", actor can_reach tool)</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">bag</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

@@ -1,0 +1,20 @@
+<atl as>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/structures/cathedral_pew/model/pew_broken.mesh</string>
+                    <string name="type">mesh</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/structures/cathedral_pew/model/pew_broken.mesh</string>
+            </map>
+        </map>
+        <string name="id">pew_broken</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+
+</atlas>

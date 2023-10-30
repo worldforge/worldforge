@@ -1,0 +1,85 @@
+# This file contains global settings for the cyphesis server. Typically it is not
+# necessary to modify this file when setting up a server. It is better to override
+# settings in this file by adding them to .cyphesis.vconf in the home directory of
+# of the user who runs the server. This makes it possible for more than one user
+# to run a server on the same machine, by overriding the port number used, and the
+# database name.
+
+[cyphesis]
+
+# Default ruleset config file and script directory
+ruleset="deeds"
+# Name to identify this server, please customise and include
+# If none is specified here, the machines hostname is used
+# servername="Deeds server"
+# TCP port to listen on
+tcpport=6767
+# Unix socket to listen on
+# unixport="cyphesis.sock"
+# Resticted mode prevents creation of user accounts
+restricted="false"
+# Register server with the meta server
+usemetaserver="true"
+metaserver="metaserver.worldforge.org"
+# How often to check in with the metaserver
+msheartbeat=240
+# additional attributes to send to MS of Monitor Variables
+# as a pipe delimited list
+metastats="clients|entities|version|ruleset|buildid"
+
+#If enabled, it will be possible to see runtime stats of the server using Remotery.
+remotery="false"
+
+# Run in daemon mode
+daemon="false"
+# Run at an increased nice level
+nice=0
+# Leave control of NPCs to AI client
+useaiclient="false"
+# Database configuration. By default "sqlite" is used.
+database="sqlite"
+#database="postgres"
+# Do not specify a host, unless it is something other than localhost. Only applies to "postgres".
+# dbserver = "darkstar"
+# Name of the database in the rdbms. Only applies to "postgres".
+dbname = "cyphesis"
+# Name of the database user in the rdbms. Only applies to "postgres".
+# dbuser = "cyphesis"
+# Password used to access the rdbms, if required. Only applies to "postgres".
+# dbpasswd = ""
+# List of peers to connect to during startup
+#   PeerEntry: hostname|port|server_account_username|server_account_password
+#   PeerList : "PeerEntry1 PeerEntry2 ..."
+# peers = "host|6767|server|server"
+
+# The are name, value pairs that will be registered with
+# the metaserver
+[metaattributes]
+server="cyphesis"
+
+[client]
+# Client specific options
+# Script package
+package="main"
+# Script function
+function="default"
+
+[slave]
+# Server host to connet to
+server="localhost"
+# Unix socket to listen on
+unixport="cyslave.sock"
+# TCP port to listen on
+tcpport=6768
+
+[mason]
+ruleset="basic"
+assetsdir="@CMAKE_INSTALL_PREFIX@/share/cyphesis/assets"
+
+[deeds]
+ruleset="basic"
+assetsdir="@CMAKE_INSTALL_PREFIX@/share/cyphesis/assets"
+# Automatically import this world if the server is unpopulated.
+# The default value relies on the content of the "Worldforge World" project
+# being installed.
+autoimport="@WORLDFORGE_WORLDS_PATH@/deeds/braga/world.xml"

@@ -1,0 +1,53 @@
+<atlas>
+    <map>
+        <string name="id">ploughed_field</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="parent">region</string>
+                <int name="vis_dist">100</int>
+                <map name="area">
+                    <int name="layer">8</int>
+                    <map name="shape">
+                        <list name="points">
+                            <list>
+                                <float>-3.5</float>
+                                <float>-3.5</float>
+                            </list>
+                            <list>
+                                <float>-5</float>
+                                <float>0</float>
+                            </list>
+                            <list>
+                                <float>-3.5</float>
+                                <float>3.5</float>
+                            </list>
+                            <list>
+                                <float>0</float>
+                                <float>5</float>
+                            </list>
+                            <list>
+                                <float>3.5</float>
+                                <float>3.5</float>
+                            </list>
+                            <list>
+                                <float>5</float>
+                                <float>0</float>
+                            </list>
+                            <list>
+                                <float>3.5</float>
+                                <float>-3.5</float>
+                            </list>
+                            <list>
+                                <float>0</float>
+                                <float>-5</float>
+                            </list>
+                        </list>
+                        <string name="type">polygon</string>
+                    </map>
+                </map>
+            </map>
+        </list>
+    </map>
+</atlas>

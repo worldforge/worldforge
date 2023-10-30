@@ -1,0 +1,127 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/containers/bottle/model/bottle.mesh</string>
+                    <string name="type">cylinder-y</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/containers/bottle/bottle.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">2600</float>
+            </map>
+            <map name="domain">
+                <string name="default">stackable</string>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="consume">
+                        <string name="name">Drink</string>
+                        <string name="handler">world.objects.Potion.consume</string>
+                        <string name="constraint">actor can_reach tool</string>
+                    </map>
+                </map>
+            </map>
+            <map name="__effects"/>
+        </map>
+        <string name="id">potion</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+    <map>
+        <string name="id">potion_health</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="parent">potion</string>
+                <string name="name">Potion of health</string>
+                <string name="description">A reddish liquid. You can faintly make out what seems to be sparkles
+                    suspended within. Drinking it will make you feel much better.
+                </string>
+                <map name="__effects">
+                    <float name="status!append">1.0</float>
+                </map>
+                <string name="__message">You feel much better.</string>
+            </map>
+        </list>
+    </map>
+
+    <map>
+        <string name="id">potion_poison</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="parent">potion</string>
+                <string name="name">Potion of poison</string>
+                <string name="description">A green liquid. It seems to give off light, a green tint. The smell is putrid.
+                </string>
+                <map name="__handler">
+                    <string name="language">python</string>
+                    <string name="name">world.objects.effects.Poisoning.potion_handler</string>
+                </map>
+                <string name="__message">You feel sick to the core.</string>
+            </map>
+        </list>
+    </map>
+
+    <map>
+        <string name="id">potion_death</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="parent">potion</string>
+                <string name="name">Potion of death</string>
+                <string name="description">A black liquid. Or is it green? It seems to shift. You feel a great unease just by looking at it.
+                </string>
+                <map name="__effects">
+                    <float name="status">-10.0</float>
+                </map>
+                <string name="__message">You feel an immense pain. It's like your insides are rotting away.</string>
+            </map>
+        </list>
+    </map>
+
+    <map>
+      <string name="id">potion_smallness</string>
+      <string name="objtype">archetype</string>
+      <string name="parent">archetype</string>
+      <list name="entities">
+        <map>
+          <string name="parent">potion</string>
+          <string name="name">Potion of smallness</string>
+          <string name="description">A murky, slightly purple liquid. It seems to shimmer, somehow changing size.
+          </string>
+          <map name="__handler">
+            <string name="language">python</string>
+            <string name="name">world.objects.effects.Smallness.potion_handler</string>
+          </map>
+          <string name="__message">You feel yourself shrink.</string>
+        </map>
+      </list>
+    </map>
+
+    <map>
+        <string name="id">potion_level</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="parent">potion</string>
+                <string name="name">Potion of levelling</string>
+                <string name="description">The liquid within emits a faint golden glow.
+                </string>
+                <map name="__effects">
+                    <int name="level!append">1</int>
+                </map>
+                <string name="__message">You gain one level.</string>
+            </map>
+        </list>
+    </map>
+</atlas>

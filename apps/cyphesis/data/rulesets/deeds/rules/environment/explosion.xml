@@ -1,0 +1,44 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-3</float>
+                    <float>-3</float>
+                    <float>-3</float>
+                    <float>3</float>
+                    <float>3</float>
+                    <float>3</float>
+                </list>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">sphere</string>
+                </map>
+            </map>
+            <map name="solid">
+                <int name="default">0</int>
+            </map>
+            <map name="transient">
+                <int name="default">1</int>
+            </map>
+            <map name="present">
+                <string name="default">dural/environment/explosion/explosion.modeldef</string>
+            </map>
+            <map name="damage">
+                <float name="default">20</float>
+            </map>
+            <map name="__scripts">
+                <list name="default">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.objects.elements.Explosion.Explosion</string>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">explosion</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

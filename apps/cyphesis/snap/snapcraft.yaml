@@ -1,0 +1,146 @@
+name: cyphesis
+base: core22
+version: git
+title: Cyphesis MMORPG server
+summary: Server for Worldforge MMORPGs
+description: |
+    A server for the Worldforge MMORPG system.
+    Run this to host your own online game. It includes a complete
+    physics based simulation with powerful online editing capabilities.
+grade: devel
+confinement: strict
+license: GPL-2.0
+
+apps:
+    cyphesis:
+        #daemon: simple
+        command: bin/cyphesis
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
+            WF_cyphesis_bindir: "$SNAP/bin"
+        #listen-stream: "[::]:6767"
+        plugs:
+            - network
+            - network-bind
+    cypasswd:
+        command: bin/cypasswd
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cycmd:
+        command: bin/cycmd
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cydb:
+        command: bin/cydb
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cyaiclient:
+        command: bin/cyaiclient
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+
+parts:
+    sigc++:
+        source: https://github.com/libsigcplusplus/libsigcplusplus.git
+        source-tag: 3.4.0
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - g++
+
+    wfmath:
+        source: https://github.com/worldforge/wfmath.git
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - g++
+
+    atlas:
+        source: https://github.com/worldforge/atlas-cpp.git
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - g++
+
+    varconf:
+        source: https://github.com/worldforge/varconf.git
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - g++
+        after:
+            - sigc++
+
+    mercator:
+        source: https://github.com/worldforge/mercator.git
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - g++
+        after:
+            - wfmath
+    worlds:
+        source: https://github.com/worldforge/worlds.git
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+
+    media:
+        build-packages:
+            - rsync
+            - curl
+        override-pull: |
+            #rsync -rtzu --include='*.mesh' --include='*/' --exclude='*' amber.worldforge.org::ember-media/ember-media-0.8.0/media/assets $SNAPCRAFT_PART_SRC/assets
+            cd $SNAPCRAFT_PART_SRC
+            curl -L https://amber.worldforge.org/ember/media/ember-media-0.8.0.tar.xz -o $SNAPCRAFT_PART_SRC/ember-media-0.8.0.tar.xz
+            tar -xJf $SNAPCRAFT_PART_SRC/ember-media-0.8.0.tar.xz
+        override-stage: |
+            mkdir -p $SNAPCRAFT_STAGE/share/cyphesis
+            cp -a $SNAPCRAFT_PART_SRC/ember-media-0.8.0/media/assets $SNAPCRAFT_STAGE/share/cyphesis
+        override-prime: |
+            mkdir -p $SNAPCRAFT_PRIME/share/cyphesis
+            cp -a $SNAPCRAFT_STAGE/share/cyphesis/assets $SNAPCRAFT_PRIME/share/cyphesis
+        plugin: nil
+
+    cyphesis:
+        source: .
+        plugin: cmake
+        cmake-parameters: [ "-DCMAKE_INSTALL_PREFIX=" ]
+        build-packages:
+            - python3-dev
+            - libsqlite3-dev
+            - libgcrypt-dev
+            - libbullet-dev
+            - libxdg-basedir-dev
+            - libreadline-dev
+            - libboost-filesystem-dev
+            - libboost-system-dev
+            - libbz2-dev
+            - g++
+        stage-packages:
+            - libboost-filesystem1.74.0
+            - libboost-system1.74.0
+            - libbullet3.06
+            - libpython3.10
+            - libxdg-basedir1
+        after:
+            - media
+            - atlas
+            - varconf
+            - mercator
+            - worlds
+            - sigc++

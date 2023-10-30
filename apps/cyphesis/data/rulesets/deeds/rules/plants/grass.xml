@@ -1,0 +1,25 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.1</float>
+                    <float>0</float>
+                    <float>-0.1</float>
+                    <float>0.1</float>
+                    <float>1</float>
+                    <float>0.1</float>
+                </list>
+            </map>
+            <map name="present">
+                <string name="default">dural/plants/grass/grass_clump/grass_clump.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">200</float>
+            </map>
+        </map>
+        <string name="id">grass</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

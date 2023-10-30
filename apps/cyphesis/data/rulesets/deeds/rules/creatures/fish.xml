@@ -1,0 +1,21 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="mode">
+                <string name="default">submerged</string>
+            </map>
+            <map name="speed_ground">
+                <float name="default">0</float>
+            </map>
+            <map name="speed_water">
+                <float name="default">3</float>
+            </map>
+            <map name="speed_jump">
+                <float name="default">0</float>
+            </map>
+        </map>
+        <string name="id">fish</string>
+        <string name="objtype">class</string>
+        <string name="parent">creature</string>
+    </map>
+</atlas>

@@ -1,0 +1,12 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="present">
+                <string name="default">dural/plants/shrubs/shrub/shrub_b.modeldef</string>
+            </map>
+        </map>
+        <string name="id">magnolia</string>
+        <string name="objtype">class</string>
+        <string name="parent">shrub</string>
+    </map>
+</atlas>

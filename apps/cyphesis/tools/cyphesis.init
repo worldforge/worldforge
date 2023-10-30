@@ -1,0 +1,143 @@
+#!/bin/sh
+#
+#
+# cyphesis          This shell script takes care of starting and stopping
+#                   the cyphesis service.
+#
+# chkconfig: - 90 10
+# description: Cyphesis is a server for WorldForge online games.
+# processname: cyphesis
+#
+### BEGIN INIT INFO
+# Provides:          cyphesis
+# Required-Start:    $network $syslog $remote_fs postgresql
+# Required-Stop:     $network postgresql
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: Cyphesis is a server for WorldForge online games.
+# Description:       Cyphesis is a server for WorldForge online games.
+### END INIT INFO
+
+if [ -f /etc/rc.d/init.d/functions ] ; then
+        . /etc/rc.d/init.d/functions
+fi
+
+# Source cyphesis service configuration
+if [ -f /etc/sysconfig/cyphesis ] ; then
+        . /etc/sysconfig/cyphesis
+else
+        CYPHESISUSER=cyphesis
+fi
+
+POSTGRESUSER=postgres
+
+start() {
+        # Start the daemon.
+
+        # Make sure postgres superuser exists
+        if ! su $POSTGRESUSER -c true >/dev/null 2>&1; then
+            echo
+            echo $"Could not check for running PostgreSQL database."
+            return 1
+        fi
+
+        # Make sure postgres is running
+        if ! su $POSTGRESUSER -c "psql -c \"\" template1" >/dev/null 2>&1; then
+            echo $"PostgreSQL server is not running."
+            return 1
+        fi
+
+        # Make sure the user we are going to run as exists
+        if ! su $CYPHESISUSER -c true >/dev/null 2>&1; then
+            echo $"Cannot find user $CYPHESISUSER to run cyphesis service."
+            return 1
+        fi
+
+        # Make sure the user has a postgres account
+        if ! su $CYPHESISUSER -c "psql -c \"\" template1" >/dev/null 2>&1; then
+            echo -n $"Creating PostgreSQL account: "
+            su $POSTGRESUSER -c "createuser -A -d -q -R $CYPHESISUSER" >/dev/null 2>&1
+            RETVAL=$?
+            if [ $RETVAL -eq 0 ]; then
+                echo_success
+            else
+                echo_failure
+                echo
+                return 1
+            fi
+            echo
+        fi
+
+        # Make sure the database exists
+        if ! su $CYPHESISUSER -c "psql -c \"\" cyphesis" >/dev/null 2>&1; then
+            # Create the database
+            echo -n $"Creating PostgreSQL database: "
+            su $CYPHESISUSER -c "createdb -q cyphesis" >/dev/null 2>&1
+            RETVAL=$?
+            if [ $RETVAL -eq 0 ]; then
+                echo_success
+            else
+                echo_failure
+                echo
+                return 1
+            fi
+            echo
+        fi
+
+        echo -n $"Starting cyphesis: "
+
+        # Run the server, in self daemonising mode
+        su $CYPHESISUSER -c "/usr/bin/cyphesis --cyphesis:daemon=true" >/dev/null 2>&1
+        RETVAL=$?
+        if [ $RETVAL -eq 0 ]; then
+            echo_success
+            touch /var/lock/cyphesis
+        else
+            echo_failure
+            echo
+        fi
+        echo
+        return $RETVAL
+}
+
+stop() {
+        # Stop server
+        echo -n $"Shutting down cyphesis: "
+        killproc cyphesis
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f /var/lock/cyphesis
+        return $RETVAL
+}
+
+case "$1" in
+  start)
+        start
+        RETVAL=$?
+        ;;
+  stop)
+        stop
+        RETVAL=$?
+        ;;
+  restart|reload|force-reload)
+        stop
+        start
+        RETVAL=$?
+        ;;
+  condrestart)
+        if [ -f /var/lock/cyphesis ]; then
+            stop
+            start
+            RETVAL=$?
+        fi
+        ;;
+  status)
+        status cyphesis
+        RETVAL=$?
+        ;;
+  *)
+        echo $"Usage: $0 (start|stop|restart|condrestart|status)"
+        exit 1
+esac
+
+exit $RETVAL

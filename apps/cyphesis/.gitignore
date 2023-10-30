@@ -1,0 +1,39 @@
+*.o
+*.a
+*.gcda
+*.gcno
+*.gcov
+.*.swp
+default.apspec
+cyphesis.spec
+cyphesis.iss
+docs/man/manpage.*
+tests/*test
+tests/*test.log
+tests/*integration
+tests/*integration.log
+tests/test-suite.log
+doc
+python_doc
+log
+*.exe
+# Ignore temporary files
+*~
+# Ignore desktop files
+.directory
+# ignore Eclipse project files
+.project
+.cproject
+.settings
+.cdtconfig*
+.pydevproject
+#ignore build directories
+builds
+x86
+x86_64
+.idea
+*.pyc
+/*build*
+/cmake-install*
+CMakeUserPresets.json
+mediarepo

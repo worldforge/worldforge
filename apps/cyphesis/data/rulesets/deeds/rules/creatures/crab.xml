@@ -1,0 +1,114 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">sphere</string>
+                    <string name="scaler">y</string>
+                </map>
+            </map>
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.4</float>
+                    <float>0</float>
+                    <float>-0.4</float>
+                    <float>0.4</float>
+                    <float>0.8</float>
+                    <float>0.4</float>
+                </list>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/spider/spider.modeldef</string>
+            </map>
+            <map name="maxscale">
+                <float name="default">1.2</float>
+            </map>
+            <!-- Carnivore -->
+            <map name="_modifier_consume_type_plant">
+                <float name="default">0</float>
+            </map>
+            <map name="usages">
+                <map name="append">
+                    <map name="consume">
+                        <string name="name">Eat</string>
+                        <string name="handler">world.objects.Consumable.consume</string>
+                        <string name="constraint">describe("Too far away.", actor can_reach tool) &amp;&amp; describe("You can't eat it while it's alive.", tool.props.status &lt;= 0)</string>
+                    </map>
+                </map>
+            </map>
+            <map name="_usages">
+                <map name="append">
+                    <map name="strike">
+                        <string name="name">Pinch</string>
+                        <map name="params">
+                            <map name="targets">
+                                <string name="type">entity</string>
+                                <string name="constraint">entity instance_of types.game_entity</string>
+                                <int name="min">0</int>
+                                <int name="max">1</int>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Unarmed.strike</string>
+                    </map>
+                </map>
+            </map>
+            <map name="_goals">
+                <list name="append">
+                    <map>
+                        <string name="class">mind.goals.common.move.Roam</string>
+                        <map name="params">
+                            <float name="radius">5</float>
+                            <list name="locations">
+                                <string>origin</string>
+                            </list>
+                        </map>
+                    </map>
+                </list>
+            </map>
+            <map name="damage_strike">
+                <float name="default">3</float>
+            </map>
+            <map name="cooldown_strike">
+                <float name="default">1</float>
+            </map>
+            <map name="warmup_strike">
+                <float name="default">0.2</float>
+            </map>
+        </map>
+        <string name="id">crab</string>
+        <string name="objtype">class</string>
+        <string name="parent">mobile</string>
+    </map>
+
+    <map>
+        <string name="id">crab_spawner</string>
+        <string name="objtype">class</string>
+        <string name="parent">spawner_instances</string>
+        <map name="attributes">
+            <map name="__spawner_locations">
+                <list name="default">
+                    <map>
+                        <list name="pos">
+                            <float>0</float>
+                            <float>0</float>
+                            <float>0</float>
+                        </list>
+                        <float name="radius">5</float>
+                    </map>
+                </list>
+            </map>
+            <map name="__spawner_interval">
+                <int name="default">300</int>
+            </map>
+            <map name="__spawner_entity">
+                <map name="default">
+                    <string name="objtype">obj</string>
+                    <string name="parent">crab</string>
+                </map>
+            </map>
+            <map name="__spawner_amount">
+                <int name="default">1</int>
+            </map>
+        </map>
+    </map>
+</atlas>

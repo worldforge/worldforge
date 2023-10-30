@@ -1,0 +1,24 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/tools/hammer/model/hammer.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/tools/hammer/hammer.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">2000</float>
+            </map>
+            <map name="name">
+                <string name="default">Hammer</string>
+            </map>
+        </map>
+        <string name="id">hammer</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

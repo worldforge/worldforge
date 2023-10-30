@@ -1,0 +1,48 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.1</float>
+                    <float>0</float>
+                    <float>-0.1</float>
+                    <float>0.1</float>
+                    <float>0.1</float>
+                    <float>0.1</float>
+                </list>
+            </map>
+            <map name="present">
+                <string name="default">common/primitives/placeholder.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">100</float>
+            </map>
+            <map name="speed_ground">
+                <float name="default">0.1</float>
+            </map>
+            <map name="speed_water">
+                <float name="default">0.1</float>
+            </map>
+            <!-- Annelids can't jump -->
+            <map name="speed_jump">
+                <float name="default">0</float>
+            </map>
+            <!-- Annelids can be eaten since they are so small -->
+            <map name="_consume_mass_conversion">
+                <float name="default">0.5</float>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="consume">
+                        <string name="name">Eat</string>
+                        <string name="handler">world.objects.Consumable.consume</string>
+                        <string name="constraint">actor can_reach tool</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">annelid</string>
+        <string name="objtype">class</string>
+        <string name="parent">creature</string>
+    </map>
+</atlas>

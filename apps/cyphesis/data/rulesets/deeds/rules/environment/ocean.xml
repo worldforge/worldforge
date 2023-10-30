@@ -1,0 +1,23 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="mode">
+                <string name="default">fixed</string>
+            </map>
+            <map name="present">
+                <string name="default">dural/environment/ocean.entitymap</string>
+            </map>
+            <map name="water_body">
+                <int name="default">1</int>
+            </map>
+            <map name="vis_dist">
+                <float name="default">1000000</float>
+            </map>
+        </map>
+        <string name="id">ocean</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+        <string name="description">An infinitely large body of water. There should only be at most one ocean per domain.</string>
+    </map>
+
+</atlas>

@@ -1,0 +1,133 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.4</float>
+                    <float>0</float>
+                    <float>-0.4</float>
+                    <float>0.4</float>
+                    <float>1.8</float>
+                    <float>0.4</float>
+                </list>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/biped/male/model/male.mesh</string>
+                    <string name="type">capsule-y</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/biped/human.entitymap</string>
+            </map>
+            <map name="attachments">
+                <map name="default">
+                    <!-- Requirements for things wielded are that they are contained in the entity's inventory. Also check if there's a required level. -->
+                    <string name="hand_primary">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <!-- The "secondary hand" only allows things that are specifically designed to be worn on the secondary hand. Also check if there's a required level. -->
+                    <string name="hand_secondary">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'hand_secondary' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <!-- Requirements for things worn are that they are contained in the entity's inventory and have the appropriate "worn" property. Also check if there's a required level. -->
+                    <string name="torso">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'torso' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <string name="legs">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'legs' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <string name="feet">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'feet' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <string name="head">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'head' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                    <string name="back">describe("Needs to be in inventory.", contains(actor.contains, child = tool)) &amp;&amp; tool.worn = 'back' &amp;&amp;
+                        (tool.level_required = none || describe("You lack required level.", tool.level_required &lt; actor.level))
+                    </string>
+                </map>
+            </map>
+            <map name="__decays">
+                <list name="default">
+                    <string>dead_human_skull</string>
+                </list>
+            </map>
+            <!-- TODO: replace or otherwise handle -->
+            <map name="guise">
+                <map name="default">
+                    <map name="material">
+                        <string name="head">simon</string>
+                    </map>
+                </map>
+            </map>
+            <map name="level">
+                <int name="default">0</int>
+            </map>
+            <map name="xp">
+                <float name="default">0</float>
+            </map>
+            <map name="sex">
+                <string name="default">male</string>
+            </map>
+            <!-- Don't move too slow or it makes traversal boring -->
+            <map name="speed_ground">
+                <float name="default">8</float>
+            </map>
+            <map name="damage_punch">
+                <float name="default">1</float>
+            </map>
+            <map name="cooldown_punch">
+                <float name="default">1.5</float>
+            </map>
+            <map name="warmup_punch">
+                <float name="default">0.2</float>
+            </map>
+            <map name="_usages">
+                <map name="default">
+                    <map name="punch">
+                        <string name="name">Punch</string>
+                        <map name="params">
+                            <map name="targets">
+                                <string name="type">entity</string>
+                                <string name="constraint">entity instance_of types.game_entity</string>
+                                <int name="min">0</int>
+                                <int name="max">1</int>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Unarmed.strike</string>
+                        <!-- Can only punch if there's nothing wielded in the primary hand. -->
+                        <string name="constraint">get_entity(actor.attached_hand_primary) = none</string>
+                        <string name="description">Punch something with your fist.</string>
+                    </map>
+                </map>
+            </map>
+            <map name="__scripts">
+                <list name="append">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.DecaysInto.DecaysInto</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Levelable.Levelable</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Levelable.Levelled</string>
+                    </map>
+                </list>
+            </map>
+            <map name="levelled_modifiers">
+                <map name="append">
+                    <map name="damage_punch">
+                        <float name="add_fraction">0.1</float>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">human</string>
+        <string name="objtype">class</string>
+        <string name="parent">mobile</string>
+    </map>
+</atlas>

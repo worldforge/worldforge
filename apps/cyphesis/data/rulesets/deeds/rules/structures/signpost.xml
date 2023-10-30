@@ -1,0 +1,33 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/structures/sign_post/model/sign_post.mesh</string>
+                    <string name="type">mesh</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/structures/sign_post/sign_post.modeldef</string>
+            </map>
+            <map name="message">
+                <string name="default"></string>
+            </map>
+            <map name="density">
+                <float name="default">500</float>
+            </map>
+            <map name="usages">
+                <map name="append">
+                    <map name="read">
+                        <string name="name">Read</string>
+                        <string name="handler">world.objects.structures.Signpost.read</string>
+                        <string name="description">Read the message.</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">signpost</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

@@ -1,0 +1,35 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="density">
+                <float name="default">600</float>
+            </map>
+            <map name="friction_roll">
+                <float name="default">0.5</float>
+            </map>
+            <!-- When hitting with an axe we want the tree to take much more damage -->
+            <map name="__modifier_hit_type_chop">
+                <float name="default">40</float>
+            </map>
+            <map name="__scripts">
+                <list name="append">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Hittable.Hittable</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Loggable.Loggable</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.StatusDeletable.StatusDeletable</string>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">tree</string>
+        <string name="objtype">class</string>
+        <string name="parent">plant</string>
+    </map>
+</atlas>

@@ -1,0 +1,39 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/quadruped/model/dog.mesh</string>
+                    <string name="type">sphere</string>
+                    <string name="scaler">y</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/quadruped/dog.modeldef</string>
+            </map>
+            <map name="maxscale">
+                <float name="default">1.2</float>
+            </map>
+            <!-- Carnivore -->
+            <map name="_modifier_consume_type_plant">
+                <float name="default">0</float>
+            </map>
+            <map name="_goals">
+                <list name="append">
+                    <map>
+                        <string name="class">mind.goals.common.move.Roam</string>
+                        <map name="params">
+                            <float name="radius">10</float>
+                            <list name="locations">
+                                <string>origin</string>
+                            </list>
+                        </map>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">dog</string>
+        <string name="objtype">class</string>
+        <string name="parent">mobile</string>
+    </map>
+</atlas>

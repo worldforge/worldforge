@@ -1,0 +1,36 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.1</float>
+                    <float>0</float>
+                    <float>-0.1</float>
+                    <float>0.1</float>
+                    <float>0.2</float>
+                    <float>0.1</float>
+                </list>
+            </map>
+            <map name="alcohol">
+                <float name="default">0</float>
+            </map>
+            <map name="germinates">
+                <string name="default">appletree</string>
+            </map>
+            <map name="density">
+                <float name="default">900</float>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">sphere</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/plants/fruit/apple/apple.modeldef</string>
+            </map>
+        </map>
+        <string name="id">apple</string>
+        <string name="objtype">class</string>
+        <string name="parent">seed</string>
+    </map>
+</atlas>

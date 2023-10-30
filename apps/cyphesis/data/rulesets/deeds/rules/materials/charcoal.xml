@@ -1,0 +1,30 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/resources/charcoal/model/charcoal_single.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="density">
+                <float name="default">300</float>
+            </map>
+            <map name="material">
+                <string name="default">wood</string>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/resources/charcoal/model/charcoal_single.mesh</string>
+            </map>
+            <map name="domain">
+                <string name="default">stackable</string>
+            </map>
+            <map name="name">
+                <string name="default">Charcoal</string>
+            </map>
+        </map>
+        <string name="id">charcoal</string>
+        <string name="objtype">class</string>
+        <string name="parent">material</string>
+    </map>
+</atlas>

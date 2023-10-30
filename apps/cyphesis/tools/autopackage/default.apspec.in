@@ -1,0 +1,59 @@
+# -*-shell-script-*-
+
+[Meta]
+RootName: @worldforge.org/cyphesis:$SOFTWAREVERSION
+PackageFileName: cyphesis-$SOFTWAREVERSION.package
+DisplayName: Cyphesis RPG Server
+ShortName: cyphesis
+Maintainer: Al Riddoch <alriddoch@googlemail.com>
+Packager: Al Riddoch <alriddoch@googlemail.com>
+Summary: Cyphesis is a simple MMORPG server
+URL: http://www.worldforge.org/dev/eng/servers/cyphesis
+License: GNU General Public License, Version 2
+SoftwareVersion: @VERSION@
+AutopackageTarget: 1.2
+
+[Description]
+Cyphesis is a very simple world simulator. NPCs that do things according to
+rules. They have minds with simple input and output. They can
+use/move/make things and have simple discussion. They can deduce
+simple things (like where I can get these things and where I should
+be). They have simple memory and use it too. They can have goals (like
+build home for me or go to dinner).
+This package includes the rules data, scripts and map data required for the
+Deeds game. Use this package if you intend to run an Deeds server.
+
+[BuildPrepare]
+export CC=gcc
+export CXX=g++
+prepareBuild --enable-binreloc
+
+[BuildUnprepare]
+unprepareBuild
+
+[Imports]
+for bin in bin/*
+do
+  mv ${bin} ${bin}_tmp
+  statifier ${bin}_tmp ${bin}
+  rm ${bin}_tmp
+done
+echo '*' | import
+
+[Prepare]
+# Dependency checking
+# require @whatever.you/need 1.0
+require @python.org/python @PYTHON_VERSION@
+
+[Install]
+# Put your installation script here
+installExe bin/*
+installMan 1 man/man1/*
+copyFiles etc/cyphesis "$PREFIX/etc"
+installData share/cyphesis
+mkdirs "$PREFIX/var/tmp"
+# installMenuItem
+
+[Uninstall]
+# Usually just the following line is enough to uninstall everything
+uninstallFromLog

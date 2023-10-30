@@ -1,0 +1,262 @@
+<atlas>
+
+    <map>
+        <string name="id">_consume_mass_conversion</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on consumables, define how much of the mass is converted when being eaten.</string>
+    </map>
+
+    <map>
+        <string name="id">_modifier_eat</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on omnivores, define how much of the mass is converted into food when something is eaten.</string>
+    </map>
+
+    <map>
+        <string name="id">_modifier_consume_type_meat</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on carnivores, define how much of the mass is converted into food when something is eaten.</string>
+    </map>
+
+    <map>
+        <string name="id">_modifier_consume_type_plant</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on herbivores, define how much of the mass is converted into food when something is eaten.</string>
+    </map>
+
+    <map>
+        <string name="id">_modifier_consume_type_soil</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on plants, define how much of the mass is converted into food when nourishment is take from the parent.</string>
+    </map>
+
+    <map>
+        <string name="id">consumable_type</string>
+        <string name="objtype">type</string>
+        <string name="parent">string</string>
+        <string name="description">Used on consumables to define whether they are meat or plant based.</string>
+        <list name="values">
+            <string>plant</string>
+            <string>meat</string>
+        </list>
+    </map>
+
+    <map>
+        <string name="id">_nutrients</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">For living things, the amount of 'food' contained in them. Nutrients are consumed to recover 'status' or to grow.</string>
+    </map>
+
+
+    <map>
+        <string name="id">_nutrients_max_factor</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on consumers, to define the max amount of food mass their stomach can contains as a factor of their mass.</string>
+    </map>
+
+    <map>
+        <string name="id">_burn_speed</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used on flammable entities to determine how fast they burn.</string>
+    </map>
+
+    <map>
+        <string name="id">__decays</string>
+        <string name="objtype">type</string>
+        <string name="parent">list</string>
+        <string name="description">A list of entities or archetypes which should be created when the entity is deleted. Handled by the DecaysInto trait.</string>
+    </map>
+
+    <map>
+        <string name="id">level_required</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">An entity marked with this cannot be used by entities that have a lower level.</string>
+    </map>
+
+    <map>
+        <string name="id">level</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">The level of the entity. This governs additional modifiers applied as well as which entities can be used.</string>
+    </map>
+
+    <map>
+        <string name="id">xp</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Experience points. Scripts handle upgrading the entity to new levels as this increases.</string>
+    </map>
+
+    <map>
+        <string name="id">xp_provided</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">The amount of experience points awarded for killing an entity.</string>
+    </map>
+
+    <map>
+        <string name="id">__aggressor</string>
+        <string name="objtype">type</string>
+        <string name="parent">string</string>
+        <string name="description">Id of the other entity which last hit an entity. This is used for determining to whom XP should be rewarded.</string>
+    </map>
+
+
+    <map>
+        <string name="id">stamina</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">The energy level of the entity. When stamina is zero some actions can't be performed.</string>
+    </map>
+
+
+    <map>
+        <string name="id">__spawner_interval</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">Used by Spawner to determine the interval between checks.</string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_locations</string>
+        <string name="objtype">type</string>
+        <string name="parent">list</string>
+        <string name="description">Used by Spawner to determine locations where to create new entities.
+            Each location is a map.
+            Optionally a "pos" can be specified to define a position relative to the entity.
+            Optionally a "loc" can be specified to refer to an entity (otherwise the entity to which the property belongs to is used).
+            Optionally a "radius" can be specified to randomize position within a circle.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_amount</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">Used by Spawner to determine how many entities it should create.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_criteria</string>
+        <string name="objtype">type</string>
+        <string name="parent">string</string>
+        <string name="description">Used by Spawner in "vicinity" mode to check for valid entities.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_radius</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used by Spawner in "vicinity" mode to determine the area it checks within.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_entity</string>
+        <string name="objtype">type</string>
+        <string name="parent">map</string>
+        <string name="description">Used by Spawner to create new entities. Contains an Entity specification.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_instances</string>
+        <string name="objtype">type</string>
+        <string name="parent">list</string>
+        <string name="description">Used by Spawner to keep track of the entities it has spawned, independent of where they are.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">__spawner_disabled</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">Used by Spawner to optionally disable.
+        </string>
+    </map>
+
+    <map>
+        <string name="id">craft_duration</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used by the Generic Craft mechanism to set the duration of the craft task, in seconds. Defaults to 5.0.</string>
+    </map>
+
+    <map>
+        <string name="id">craft_input</string>
+        <string name="objtype">type</string>
+        <string name="parent">list</string>
+        <string name="description">Used by the Generic Craft mechanism. A list of the ingredients needed to be present on the actor, which will be consumed.
+            Each entry is a map containing a required Entity Filter as a "constraint" string, and an optional "amount" (defaults to 1).
+        </string>
+    </map>
+
+    <map>
+        <string name="id">craft_output</string>
+        <string name="objtype">type</string>
+        <string name="parent">list</string>
+        <string name="description">Used by the Generic Craft mechanism. A list of entity declarations which will be created as a result of the crafting.</string>
+    </map>
+
+    <map>
+        <string name="id">craft_name</string>
+        <string name="objtype">type</string>
+        <string name="parent">string</string>
+        <string name="description">Used by the Generic Craft mechanism. An optional name of the thing(s) created. To be emitted as an Imaginary.</string>
+    </map>
+
+    <map>
+        <string name="id">rooted</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">Put on entities that players shouldn't be allowed to move when they are planted in the 'land'.</string>
+    </map>
+
+    <map>
+        <string name="id">_mover_mass_max</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">Used in movement constraints to limit movement of too heavy entities.</string>
+    </map>
+
+    <map>
+        <string name="id">__spawn_properties</string>
+        <string name="objtype">type</string>
+        <string name="parent">map</string>
+        <string name="description">Used together with "__spawn" property. Declared extra properties which will be installed on any new entities created at the spawn.</string>
+    </map>
+
+    <map>
+        <string name="id">immortal</string>
+        <string name="objtype">type</string>
+        <string name="parent">int</string>
+        <string name="description">Used by the "Immortality" script to make an entity immortal. An "immortal" entity cannot be destroyed by normal means.</string>
+    </map>
+
+    <map>
+        <string name="id">maxscale</string>
+        <string name="objtype">type</string>
+        <string name="parent">float</string>
+        <string name="description">The max scale of an entity. This is a single value; when enforcing one dimension of the actual scale value will be used (often y).</string>
+    </map>
+
+    <map>
+        <string name="id">_origin</string>
+        <string name="objtype">type</string>
+        <string name="parent">map</string>
+        <string name="description">Records the location into which the entity is spawned. This is used by NPCs to allow for rules where they wander close to where they are spawned.</string>
+    </map>
+
+
+</atlas>

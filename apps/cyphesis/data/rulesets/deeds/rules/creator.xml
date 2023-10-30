@@ -1,0 +1,90 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="is_admin">
+                <int name="default">1</int>
+            </map>
+            <map name="transient">
+                <int name="default">-1</int>
+            </map>
+            <map name="solid">
+                <int name="default">0</int>
+            </map>
+            <!-- Creator agents should have a bbox, so that they easily can be made solid for testing purposes. -->
+            <map name="bbox">
+                <list name="default">
+                    <float>-.5</float>
+                    <float>0</float>
+                    <float>-.5</float>
+                    <float>.5</float>
+                    <float>1</float>
+                    <float>.5</float>
+                </list>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">sphere</string>
+                </map>
+            </map>
+            <map name="friction">
+                <float name="default">10</float>
+            </map>
+            <map name="angularfactor">
+                <list name="default">
+                    <float>0</float>
+                    <float>0</float>
+                    <float>0</float>
+                </list>
+            </map>
+            <map name="mass">
+                <float name="default">1</float>
+            </map>
+            <!-- Creator agents should by default move quickly. -->
+            <map name="speed_ground">
+                <float name="default">15</float>
+            </map>
+            <map name="speed_water">
+                <float name="default">15</float>
+            </map>
+            <map name="speed_flight">
+                <float name="default">15</float>
+            </map>
+            <map name="speed_jump">
+                <float name="default">7.5</float>
+            </map>
+            <map name="step_factor">
+                <float name="default">0.7</float>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/misc/flame/creator.modeldef</string>
+            </map>
+            <map name="mode">
+                <string name="default">free</string>
+            </map>
+            <map name="perception_sight">
+                <float name="default">1.0</float>
+            </map>
+            <map name="domain">
+                <string name="default">inventory</string>
+            </map>
+            <map name="reach">
+                <float name="default">1000</float>
+            </map>
+            <map name="visibility">
+                <string name="default">private</string>
+            </map>
+            <map name="__scripts">
+                <list name="prepend">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.objects.characters.Creator.Creator</string>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">creator</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

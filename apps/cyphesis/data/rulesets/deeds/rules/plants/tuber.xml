@@ -1,0 +1,21 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="density">
+                <float name="default">800</float>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="consume">
+                        <string name="name">Eat</string>
+                        <string name="handler">world.objects.Consumable.consume</string>
+                        <string name="constraint">actor can_reach tool</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">tuber</string>
+        <string name="objtype">class</string>
+        <string name="parent">plant</string>
+    </map>
+</atlas>

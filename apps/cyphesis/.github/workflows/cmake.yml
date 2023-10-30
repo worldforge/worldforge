@@ -1,0 +1,128 @@
+name: Build all
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - master
+
+env:
+    CONAN_REVISIONS_ENABLED: 1
+    CONAN_SCM_TO_CONANDATA: 1
+    CONAN_SYSREQUIRES_MODE: enabled
+    CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+    CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+    PROFILE_CONAN: conan-release
+
+jobs:
+    build:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ ubuntu-20.04, ubuntu-22.04 ]
+
+        steps:
+            -   uses: actions/checkout@v3.3.0
+
+            -   name: Cache media
+                uses: actions/cache@v3.2.3
+                with:
+                    path: |
+                        ${{github.workspace}}/mediarepo
+                    key: dev-media
+
+            -   name: Install tools
+                shell: bash
+                run: |
+                    if [[ "$ImageOS" == "macos1015" ]]; then
+                      brew install autoconf automake
+                    else
+                      sudo apt install ccache
+                    fi
+
+            -   uses: actions/setup-python@v4
+                with:
+                    python-version: '3.9'
+                    cache: 'pip'
+
+            -   name: Install Conan
+                shell: bash
+                run: |
+                    pip install -r .github/workflows/requirements.txt
+                    conan profile detect
+                    #Set the default profile to use g++ 17 it it's not detected
+                    sed -i.backup 's/compiler.cppstd=gnu14/compiler.cppstd=gnu17/g' ~/.conan2/profiles/default
+                    conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+
+            -   name: Have Conan install packages
+                shell: bash
+                run: |
+                    export PATH=~/.local/bin:$PATH
+                    conan install . -pr default --build=missing --update --output-folder=build_ci -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+                    if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+                      conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+                      conan upload "*" -r worldforge -c
+                    fi
+
+            -   name: Configure CMake
+                # Use a bash shell so we can use the same syntax for environment variable
+                # access regardless of the host operating system
+                shell: bash
+                run: |
+                    mkdir -p ~/install/usr
+                    cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr
+
+            -   name: Build
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN
+
+            -   name: Test
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN --target check
+
+            -   name: Install
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN --target install
+
+            -   name: Download media
+                working-directory: ${{github.workspace}}/build
+                shell: bash
+                run: cmake --build . --preset $PROFILE_CONAN --target mediarepo-checkout
+
+            -   name: Process and install media
+                working-directory: ${{github.workspace}}/build
+                shell: bash
+                run: cmake --build . --preset $PROFILE_CONAN --target media-process-install
+
+            -   name: Build Snap
+                if: env.BUILD_SNAP == 'true'
+                shell: bash
+                run: |
+                    echo "Building Snap"
+                    cd ~/install/usr
+                    cp -a ${{github.workspace}}/build/Release/snap ~/install/usr/
+                    snapcraft --destructive-mode
+                    echo "Uploading Snap"
+                    snapcraft upload ~/install/usr/*.snap --release edge
+
+            -   name: Store Snap
+                if: env.BUILD_SNAP == 'true'
+                uses: actions/upload-artifact@v3.1.2
+                with:
+                    name: snap
+                    path: ~/install/usr/*.snap
+#    - name: Upload artifacts
+#      working-directory: ${{github.workspace}}/build
+#      shell: bash
+#      run: |
+#          export PATH=~/.local/bin:$PATH
+#          if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+#            echo "Creating and uploading Conan artifacts"
+#            export CONAN_SCM_TO_CONANDATA=1
+#            if [[ "$ImageOS" == "ubuntu16" ]]; then
+#              . ~/venv/py3/bin/activate
+#            fi
+#            conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
+#            conan create ../tools/conan worldforge/testing -pr default
+#            conan upload "varconf/*@worldforge/testing" -r worldforge -c --all
+#          fi

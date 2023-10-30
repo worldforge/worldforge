@@ -1,0 +1,284 @@
+<atlas>
+    <map>
+        <string name="id">goblin</string>
+        <string name="objtype">class</string>
+        <string name="parent">mobile</string>
+        <map name="attributes">
+            <map name="attachments">
+                <map name="default">
+                    <!-- Requirements for things wielded are that they are contained in the entity's inventory. -->
+                    <string name="hand_primary">contains(actor.contains, child = tool)</string>
+                    <!-- The "secondary hand" only allows things that are specifically designed to be worn on the secondary hand. -->
+                    <string name="hand_secondary">contains(actor.contains, child = tool) &amp;&amp; tool.worn = 'hand_secondary'</string>
+                </map>
+            </map>
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.4</float>
+                    <float>0</float>
+                    <float>-0.4</float>
+                    <float>0.4</float>
+                    <float>1.8</float>
+                    <float>0.4</float>
+                </list>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/biped/goblin/model/goblin.mesh</string>
+                    <string name="type">capsule-y</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/biped/goblin/goblin.entitymap</string>
+            </map>
+            <map name="__decays">
+                <list name="default">
+                    <string>dead_goblin_skull</string>
+                </list>
+            </map>
+            <map name="complexion">
+                <string name="default">green</string>
+                <list name="value">
+                    <string>green</string>
+                    <string>brown</string>
+                </list>
+            </map>
+            <map name="damage_punch">
+                <float name="default">5</float>
+            </map>
+            <map name="cooldown_punch">
+                <float name="default">1</float>
+            </map>
+            <map name="warmup_punch">
+                <float name="default">0.2</float>
+            </map>
+            <map name="_usages">
+                <map name="default">
+                    <map name="punch">
+                        <string name="name">Punch</string>
+                        <map name="params">
+                            <map name="targets">
+                                <string name="type">entity</string>
+                                <string name="constraint">entity instance_of types.game_entity</string>
+                                <int name="min">0</int>
+                                <int name="max">1</int>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Unarmed.strike</string>
+                        <string name="constraint">get_entity(actor.attached_hand_primary) = none</string>
+                        <string name="description">Punch something with your fist.</string>
+                    </map>
+                </map>
+            </map>
+            <map name="_relations">
+                <list name="prepend">
+                    <!-- Fight humans. -->
+                    <map>
+                        <string name="filter">entity.type=types.human</string>
+                        <float name="disposition">-10</float>
+                        <float name="threat">-10</float>
+                    </map>
+                </list>
+            </map>
+            <map name="__scripts">
+                <list name="append">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.DecaysInto.DecaysInto</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Levelable.Levelled</string>
+                    </map>
+                </list>
+            </map>
+            <map name="_goals">
+                <list name="append">
+                    <map>
+                        <string name="class">mind.goals.common.move.Roam</string>
+                        <map name="params">
+                            <float name="radius">10</float>
+                            <list name="locations">
+                                <string>origin</string>
+                            </list>
+                        </map>
+                    </map>
+                </list>
+            </map>
+            <map name="levelled_modifiers">
+                <map name="append">
+                    <map name="damage_punch">
+                        <float name="add_fraction">0.1</float>
+                    </map>
+                    <map name="xp_provided">
+                        <float name="add_fraction">0.1</float>
+                    </map>
+                </map>
+            </map>
+            <map name="level">
+                <int name="default">0</int>
+            </map>
+            <map name="xp_provided">
+                <float name="default">10</float>
+            </map>
+        </map>
+    </map>
+
+    <map>
+        <string name="id">goblin_archer</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="id">main</string>
+                <list name="contains">
+                    <string>bow</string>
+                    <string>arrow</string>
+                </list>
+                <map name="attached_hand_primary">
+                    <string name="$eid">bow</string>
+                </map>
+                <string name="parent">goblin</string>
+            </map>
+            <map>
+                <string name="id">bow</string>
+                <string name="parent">bow</string>
+                <map name="mode_data">
+                    <string name="mode">planted</string>
+                    <string name="$eid">main</string>
+                    <string name="attachment">hand_primary</string>
+                </map>
+            </map>
+            <map>
+                <string name="id">arrow</string>
+                <string name="parent">arrow</string>
+                <int name="amount">20</int>
+            </map>
+        </list>
+        <list name="thoughts">
+        </list>
+    </map>
+
+    <map>
+        <string name="id">goblin_fighter</string>
+        <string name="objtype">archetype</string>
+        <string name="parent">archetype</string>
+        <list name="entities">
+            <map>
+                <string name="id">main</string>
+                <list name="contains">
+                    <string>axe</string>
+                </list>
+                <map name="attached_hand_primary">
+                    <string name="$eid">axe</string>
+                </map>
+                <string name="parent">goblin</string>
+            </map>
+            <map>
+                <string name="id">axe</string>
+                <string name="parent">axe</string>
+                <map name="mode_data">
+                    <string name="mode">planted</string>
+                    <string name="$eid">main</string>
+                    <string name="attachment">hand_primary</string>
+                </map>
+            </map>
+        </list>
+    </map>
+
+    <map>
+        <string name="id">goblin_spawner</string>
+        <string name="objtype">class</string>
+        <string name="parent">spawner_instances</string>
+        <map name="attributes">
+            <map name="__spawner_locations">
+                <list name="default">
+                    <map>
+                        <list name="pos">
+                            <float>0</float>
+                            <float>0</float>
+                            <float>0</float>
+                        </list>
+                        <float name="radius">10</float>
+                    </map>
+                </list>
+            </map>
+            <map name="__spawner_interval">
+                <int name="default">300</int>
+            </map>
+            <map name="__spawner_entity">
+                <map name="default">
+                    <string name="objtype">obj</string>
+                    <string name="parent">goblin</string>
+                </map>
+            </map>
+            <map name="__spawner_amount">
+                <int name="default">1</int>
+            </map>
+        </map>
+    </map>
+
+    <map>
+        <string name="id">goblin_archer_spawner</string>
+        <string name="objtype">class</string>
+        <string name="parent">spawner_instances</string>
+        <map name="attributes">
+            <map name="__spawner_locations">
+                <list name="default">
+                    <map>
+                        <list name="pos">
+                            <float>0</float>
+                            <float>0</float>
+                            <float>0</float>
+                        </list>
+                        <float name="radius">10</float>
+                    </map>
+                </list>
+            </map>
+            <map name="__spawner_interval">
+                <int name="default">300</int>
+            </map>
+            <map name="__spawner_entity">
+                <map name="default">
+                    <string name="objtype">obj</string>
+                    <string name="parent">goblin_archer</string>
+                </map>
+            </map>
+            <map name="__spawner_amount">
+                <int name="default">1</int>
+            </map>
+        </map>
+    </map>
+
+    <map>
+        <string name="id">goblin_fighter_spawner</string>
+        <string name="objtype">class</string>
+        <string name="parent">spawner_instances</string>
+        <map name="attributes">
+            <map name="__spawner_locations">
+                <list name="default">
+                    <map>
+                        <list name="pos">
+                            <float>0</float>
+                            <float>0</float>
+                            <float>0</float>
+                        </list>
+                        <float name="radius">10</float>
+                    </map>
+                </list>
+            </map>
+            <map name="__spawner_interval">
+                <int name="default">300</int>
+            </map>
+            <map name="__spawner_entity">
+                <map name="default">
+                    <string name="objtype">obj</string>
+                    <string name="parent">goblin_fighter</string>
+                </map>
+            </map>
+            <map name="__spawner_amount">
+                <int name="default">1</int>
+            </map>
+        </map>
+    </map>
+</atlas>

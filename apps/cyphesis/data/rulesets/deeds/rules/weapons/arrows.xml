@@ -1,0 +1,87 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/weapons/arrow/model/arrow_a.mesh</string>
+                    <string name="type">cylinder-z</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/weapons/arrow/arrow_a.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">500</float>
+            </map>
+            <map name="domain">
+                <string name="default">stackable</string>
+            </map>
+            <map name="__scripts">
+                <list name="append">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Embeddable.Embeddable</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Levelable.Levelled</string>
+                    </map>
+                </list>
+            </map>
+            <map name="level">
+                <int name="default">0</int>
+            </map>
+            <!-- Increase damage as the level increase. -->
+            <map name="levelled_modifiers">
+                <map name="append">
+                    <map name="damage">
+                        <float name="add_fraction">0.1</float>
+                    </map>
+                </map>
+            </map>
+            <map name="description">
+                <string name="default">An arrow made to be shot from a bow. The tip is of low grade iron and the fletching seems to be from some waterfowl.</string>
+            </map>
+            <map name="name">
+                <string name="default">Arrow</string>
+            </map>
+        </map>
+        <string name="id">arrow</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/weapons/arrow/model/arrow_b.mesh</string>
+                    <string name="type">cylinder-z</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/weapons/arrow/arrow_b.modeldef</string>
+            </map>
+        </map>
+        <string name="id">arrow_b</string>
+        <string name="objtype">class</string>
+        <string name="parent">arrow</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/weapons/arrow/model/arrow_c.mesh</string>
+                    <string name="type">cylinder-z</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/weapons/arrow/arrow_c.modeldef</string>
+            </map>
+        </map>
+        <string name="id">arrow_c</string>
+        <string name="objtype">class</string>
+        <string name="parent">arrow</string>
+    </map>
+</atlas>

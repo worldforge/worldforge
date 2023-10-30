@@ -1,0 +1,31 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>1</float>
+                    <float>1</float>
+                    <float>6</float>
+                </list>
+            </map>
+            <map name="height">
+                <float name="default">6</float>
+            </map>
+            <map name="density">
+                <float name="default">400</float>
+            </map>
+            <map name="maxscale">
+                <float name="default">1</float>
+            </map>
+            <map name="present">
+                <string name="default">dural/plants/trees/poplar/poplar.modeldef</string>
+            </map>
+            <map name="name">
+                <string name="default">Poplar</string>
+            </map>
+        </map>
+        <string name="id">poplar</string>
+        <string name="objtype">class</string>
+        <string name="parent">tree</string>
+    </map>
+</atlas>

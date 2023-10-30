@@ -1,0 +1,22 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/tools/bucksaw/model/bucksaw.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/tools/bucksaw/bucksaw.modeldef</string>
+            </map>
+            <map name="density">
+                <float name="default">2000</float>
+            </map>
+        </map>
+        <string name="id">bucksaw</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

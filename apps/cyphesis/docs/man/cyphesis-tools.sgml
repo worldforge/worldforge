@@ -1,0 +1,156 @@
+<refentry id="cyphesis-tools">
+
+ <refmeta>
+  <refentrytitle>cyphesis-tools</refentrytitle>
+  <manvolnum>1</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>cyconfig, cypasswd, cypython, cydb</refname>
+  <refpurpose>cyphesis tools</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <cmdsynopsis>
+   <command>/usr/bin/cyconfig</command>
+   <arg choice="opt" rep="repeat">--section:option=value</arg>
+  </cmdsynopsis>
+  <cmdsynopsis>
+   <command>/usr/bin/cypasswd</command>
+   <group choice="opt">
+    <group choice="req">
+     <arg choice="req">-a</arg>
+     <arg choice="req">-s</arg>
+     <arg choice="req">-d</arg>
+    </group>
+    <arg choice="req">account</arg>
+   </group>
+  </cmdsynopsis>
+  <cmdsynopsis>
+   <command>/usr/bin/cyexport</command>
+   <arg choice="req">filepath</arg>
+  </cmdsynopsis>
+  <cmdsynopsis>
+   <command>/usr/bin/cyimport</command>
+   <arg choice="req">filepath</arg>
+  </cmdsynopsis>
+  <cmdsynopsis>
+   <command>/usr/bin/cypython</command>
+   <arg choice="opt" rep="repeat">--section:option=value</arg>
+  </cmdsynopsis>
+  <cmdsynopsis>
+   <command>/usr/bin/cydb</command>
+   <arg choice="opt" rep="repeat">--section:option=value</arg>
+   <arg choice="req">dataset</arg>
+   <arg choice="req">action</arg>
+  </cmdsynopsis>
+ </refsynopsisdiv>
+
+ <refsect1><title>Description</title>
+  <para>
+The cyphesis tools manage the data and configuration files used by cyphesis.
+  </para>
+  <para>
+The <command>cyconfig</command> program provides an easy scriptable way to
+make permanent changes to the server config from the command line.
+It works by writing new config options to <filename>.cyphesis.vconf</filename>
+in the users home directory, which is read by the server at startup,
+and overrides the contents of the main config file. For a description of
+the various options that the server takes, please see 
+<citerefentry><refentrytitle>cyphesis</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>.
+  </para>
+  <para>
+The <command>cypasswd</command> tool is used to administrate the accounts table
+in the server database.
+  </para>
+  <para>
+The <command>cyexport</command> tool exports entities from
+a running server into a file. The file generated can be imported into a server
+through the tool <command>cyimport</command>.
+  </para>
+  <para>
+The <command>cyimport</command> tool imports entities from a file,
+previously exported through the <command>cyexport</command> tool, into a
+running server.
+  </para>
+  <para>
+The <command>cypython</command> tool allows you to execute Python code in a 
+running server. This command must be run on the same machine as the server 
+(it uses domain sockets for communication with the server). When run the user
+is presented with an interactive console into which Python code can be entered.
+Commands are sent to the server by pressing enter.
+  </para>
+  <para>
+The <command>cydb</command> tool is used to perform maintenance on the server
+database. Use only when the server is offline.
+The first argument specified which dataset to work with, and the second argument 
+specifies the action for that data set.
+The following datasets are supported:
+  </para>
+  <variablelist> 
+    <varlistentry>
+      <term>user</term> 
+      <listitem> 
+        <para>Purge, list, delete or modify user entries.
+        </para>
+      </listitem> 
+    </varlistentry> 
+    <varlistentry>
+      <term>world</term>
+      <listitem> 
+        <para>Purge the world of all entities.
+        </para>
+      </listitem> 
+    </varlistentry> 
+  </variablelist> 
+</refsect1>
+
+ <refsect1><title>Options</title>
+  <para>
+The <command>cypasswd</command> can either add a new account, set the password
+of an existing account, or remove an account from the database. When no
+arguments are given, it prompts for a new admin password for cyphesis.
+When run with the <option>-a</option> option, the command prompts for a
+password to be entered and an account with the username given by <option>account</option>,
+and with the password supplied at the prompt is created. When run with the
+<option>-s</option> option, the command prompts for a password, and the
+existing account with username given by <option>account</option> has its password changed to
+the new one entered.  When run with the <option>-d</option> option, the
+account with username given by <option>account</option> is removed from the database.
+  </para>
+  <para>
+Whenever the <command>cypasswd</command> prompts for a password, a second
+prompt is displayed asking for confirmation of the password. If the two
+password entered do not match, the operation is aborted, and no changes are
+made to the database.
+  </para>
+  <para>
+The <command>cyexport</command> by default don't export transient entities.
+This can be changed by the option <option>--export:transients=1</option>
+  </para>
+ </refsect1>
+ <refsect1><title>Author</title>
+  <para>
+Written by Alistair Riddoch and Erik Ogenvik.
+  </para>
+ </refsect1>
+ <refsect1><title>Reporting bugs</title>
+  <para>
+Report bugs to <email>erik@ogenvik.org</email>.
+  </para>
+ </refsect1>
+ <refsect1><title>Copyright</title>
+  <para>
+Copyright 2004 Alistair Riddoch.
+Copyright 2013 Erik Ogenvik.
+  </para>
+ </refsect1>
+ <refsect1><title>See Also</title>
+  <para>
+<citerefentry><refentrytitle>cyphesis</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cyclient</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cycmd</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+  </para>
+ </refsect1>
+</refentry>

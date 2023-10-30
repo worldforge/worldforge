@@ -1,0 +1,24 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="present">
+                <string name="default">dural/items/valuables/moraf_coin/moraf_coin.modeldef</string>
+            </map>
+            <map name="mass">
+                <float name="default">0.01</float>
+            </map>
+            <map name="material">
+                <string name="default">gold</string>
+            </map>
+            <map name="domain">
+                <string name="default">stackable</string>
+            </map>
+            <map name="description">
+                <string name="default">A shining coin.</string>
+            </map>
+        </map>
+        <string name="id">coin</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

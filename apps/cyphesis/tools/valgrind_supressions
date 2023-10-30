@@ -1,0 +1,81 @@
+{
+   PAININTHEHOLE
+   Memcheck:Cond
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN2
+   Memcheck:Cond
+   fun:__mpn_extract_double
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN3
+   Memcheck:Value4
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN4
+   Memcheck:Value4
+   fun:__mpn_lshift
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN5
+   Memcheck:Value4
+   fun:__mpn_mul_1
+   fun:__mpn_mul
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN6
+   Memcheck:Value4
+   fun:__mpn_mul
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN7
+   Memcheck:Value4
+   fun:__mpn_mul_1
+   fun:__printf_fp
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   PAIN8
+   Memcheck:Value4
+   fun:__mpn_rshift
+   fun:vfprintf
+   fun:vsnprintf
+}
+
+{
+   LIBPQ
+   Memcheck:Cond
+   obj:/usr/lib/libpq.so.5.1
+}
+
+{
+   STD_STRING_FREE
+   Memcheck:Free
+   fun:_ZdaPvRKSt9nothrow_t
+   fun:_ZNS*
+}

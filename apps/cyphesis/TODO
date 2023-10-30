@@ -1,0 +1,1619 @@
+Write an EntityKit TypeNode integration test. The addAttributes path needs
+to be tested.
+
+Check in EntityRuleHandlertest that things behave correctly if
+EntityBuilder::installFactory fails. Same in PropertyRuleHandlertest for
+CorePropertyManager::installFactory.
+
+Location and MemEntity both have a timestamp, which do very close, but not
+quite the same thing. See if we can come up with a design to eliminate the
+difference?
+
+MemEntity is an ideal case for a memory pool, especially if you include
+the PythonWrapper object.
+
+There may be a compute saving to putting mem entities into their containers
+directly in addContents(), rather than having to do the lookup when we
+get the SIght data in readEntity
+
+MemMap::findByType would be more efficient if we find the TypeNode probably.
+
+Make LocatedEntity the sole base class for dealing with entities.
+ * Move remaining Property methods into LocatedEntity, de-virt modProperty
+   and setProperty
+ * Convert MemMap to store using LocatedEntity maybe?
+ * LocatedEntity::setAttr ignores the class of type properties. It should
+   call copy as in Entity::
+
+traits on property to specify the name simply.
+
+Providing there is no extra deps, move all the property access methods
+into LocatedEntiy.
+ 1) MemEntity will need type properties to save RAM, so let it have them
+    (Property<foo> rather than SoftProperty. This is the difference between
+     using ClientPropertyManager and CorePropertyManager)
+
+See if we can create a Property<Map> class with extra interface, rather
+like the generic methods added to TerrainModProperty
+
+We don't need PropertyManager to be virtual. Just move all the functionality
+into the base class.
+
+Remove libcommon from WorldRouterintegration and
+Rulesetintegration
+
+Remove BaseWorld lookup from TeleportAuthenticator, and use isDestroyed
+instead. Requires holding a reference.
+
+disconnectObject does not remove a non-Account ConnectableRouter from
+the connection. Neither does it remove Characters.
+
+Add checks to ensure unlinkExternalMind has the desired effect on movement.
+Once these checks are in place, we can do the movement change more directly
+without having to go via the mindMoveOperation phase.
+
+Make [un]linkExternalMind return success, to indicate if an event should be
+logged. Keeps logging of events cleanly in the server code.
+
+The dynamic_cast, and other logic can be removed from Connection::operation
+if it could be moved into Character::externalOperation. In order for this
+to be possible, Link and ExternalMind move into common, and CommSocket
+would need to move into a library. This removes an expensive dynamic_cast
+from the path of every operation coming into the server.
+
+Appropriate clothing buff.
+ - match the weather in terms of warmth
+ - social bonus for not wearing battle gear
+
+Ducplicated code in ServerAccount::addNewEntity; very similar to
+Account::addNewCharacter.
+
+Reverse the flow of the possess key on the server. Have it created on the
+destination based on a secret, and passed back to the source server, and from
+there back to the client.
+
+A solid attempt at i18n, which different l12n for connections?
+
+1. Make sure all retries have exponential backoff.
+2. Make sure all periodic things have jitter.
+  a) Metaserver query needs deterministics jitter, to ensure clients drift.
+  b) AI needs smaller jitter for now
+  c) Trees need bigger jitter, but again deterministic - same offset each
+     time for a given instance.
+
+Abstract rules. Tasks are already one type, but we need MOAR! recipes,
+and designs and stuff.
+
+Move Server (base of ServerRouting) reference into Link.
+It needs to actually handle lobby dispatch first.
+
+There are only very few places where ConnectedRouter::m_connection is used
+as anything other than Link - should be possible to weaken the coupling.
+
+When coverage tells us 0% in a header, that is because the header had to
+generate implicit default code - probably destructor.
+
+Move logic for reply ops from CommClient::objectArrived to Connection?
+Would probably clean up the logic in CommClient, and allow send()
+to be removed.
+
+Name of server for negotiation purposes is done _every_ connection
+in CommClient. Calculate it centrally.
+
+Client connection can be made way more efficient by embedding the objects
+as members, rather than using pointers. To this end, make Negotiate
+a member, using a template arg. Make the stream type also a member.
+Move all explicit listener related functionality to a subclass
+of CommClient, leaving CommClient as the common, template base class
+for CommPeer and the new class. Encoder could also be embedded, except for
+the need to pass in the codec on construction - arguably bad design.
+
+Now that the client is getting an info response to create, get rid of the
+need to see?
+
+On account connection, the call to MTRand to salt and encrypt the password
+looks a bit expensive. Syscalls opening dev/urandom, which could block.
+
+Intetionally surrender as many capabilities as we can in order to avoid
+security issues.
+
+Peer should probably store a lower level version of the hostname, rather
+than the input to the resolver, thus ensuring the other party can connect
+to the right place. Juncture stores the high level representation, and uses
+DNS to resolve. This is correct, as it may need to re-resolve
+later - the other server may have moved. Peer will get deleted if the other
+servers address changes, and has to express an accurate version to the client.
+
+In Juncture - tighten up detecting the failed socket condition.
+Once we are connected to Peer, probably shouldnt have the m_socket pointer
+any more, and need to make sure we are no longer connected to the signals.
+Can we clear the socket signals?
+
+There are many ways in which MemMap does the same job as WorldRouter.
+Common base class?
+
+Fix up WorldLoader so it can work with IG only. Requires support for
+GetOperation in Creator
+
+Optionally report back success in the form of Info on in-game ops with
+serialno?
+
+Improve Interactive to use serialno for responses
+
+Why isn't ExternalMind a ConnectedRouter
+
+Re-factor login code so Session is the unique class rather than Account.
+Constraining logins to be one per account may be sound policy, but it
+should be policy rather than a hard constraint of the architecture.
+
+Need to work out what to do with sections, vs rulesets when uploading and
+storing rules at the server end.
+
+Probably cleaner, and less globals to initiate ruleset load from the config
+phase in main()
+
+It's possible to add permissions and possibly even protection against
+CPU overload into the scripting API. Permissions could be controlled by a
+global context as well is flags on the objects
+
+Consider moving WorldTime back to Python, or making it way more data driven
+
+Create inherited types in the script API for common operations - actually
+cheaper believe it or not
+
+A given owning entity (Account/Admin) needs to keep track of the work it is
+doing when doing a ruleset upload. The whole ruleset change should be
+encapsulated into a transaction, with its own instance of RuleHandler etc,
+and once done it should be possible to check for errors, commit, or not.
+Writing rules to database should only be done if transaction succeeds, so
+all pending writes need to be encapsulated too. This requires the handler
+and builder code not to be in server.
+
+Add a Server config class in server/ which adds all the base EntityFactories
+to the builder, and the PropertyFactories to the CorePropertyManager. Then
+both those can be made independant of server. It could also handle all the
+really core types being added to Inheritance.
+
+Is PyCreator/PyCharacter still needed in the client side? It seems to have
+been abandoned before being fully introduced.
+
+Add Arithmetic functionality to all scripts. Cos you know.
+Add the concept of the Property script in general and use it to replace the
+un-flexible concept of a specific Arithmetic script type.
+It may be just more efficient to ignore this concept for most scripts,
+but will almost certainly simplify the code to add it to many.
+A more flexible concept of scripting attributes might make sense too.
+
+Include doxygen docs in http self-served docs.
+
+Make it possible to forget
+
+Use "name" as the property that is supposed to get an operation
+
+EntityBuilder shouldn't need a permenent reference to the world.
+
+Allow long cut and cross cut with saws. Long cut is along grain, bisecting by longest dimension. cross cut is across both grains
+
+Sort out a better way to handle materials. We shouldn't have a base class
+the same as an attribute without the entity hierarchy, but being able to
+declare attributes, and have definition data would be necessary. Good sample
+case for having proper data driven, scriptable properties.
+
+use boost intrusive containers for op queues
+
+Check out _GLIBCXX_DEBUG
+  Turns out to be useful to detect usage issues with STL, but requires full
+  rebuild of everything that uses stdc++, including non WF deps.
+
+Macro todo list
+  Re-work Atlas to be more secure, client driven encrypted
+  Make server more modular, scalable
+
+Protocol revision:
+  Stop announcing by server, request at client instead
+  Consolidate negotiation, and allow other undefined headers
+  Allow for multiple exchanges during negotiation
+
+Use SCMS like scheme to ensure no grey goo. entities cannot create other
+entities which can create further persistent entities.
+
+Frontends, backends, routers based architecture
+
+Use 64bit milliseconds everywhere. Merge SECONDS and STAMP into a single
+attribute. Get rid of FUTURE_SECONDS in favor of things being able to set
+STAMP/SECONDS in advance. Use time for STAMP instead of incrementing integer.
+
+Character should inherit from and implement the Agent interface, which
+the server code uses when talking to it. This de-couples server from most
+of the rulesets directory.
+
+If we want to support loading data and config over network, make the loader
+classes abstract so the underlying implementation for getting data can vary.
+
+Add config option which allows server owner to control the type of account
+created by default. If they want "admin"/"builder" then they should have it.
+In fact "builder" is a smashing idea for a new account type.
+
+Harmonize Atlas repr of Areas with mods, and also fix bindings and properties
+to make exchanging data easier.
+
+Add new kind of marker area, only used internally to track things about
+bits of terrain, like ownership. Requires new class in Mercator probably.
+
+We should say "circle" to reference WFMath::Ball in 2D. Pick a different name
+depending in dinension. "rectangle" instead of "box" perhaps.
+
+Allow Admin to use an op - perhaps Login - to claim any object on the server.
+
+Use Java object builder/aspect pattern for Property factories in
+CorePropertyManager
+
+It looks as though Look FROM account is required to activate a possess key,
+which I was not expecting. Are clients expecting this?
+
+Add database stuff to store server metadata like version of server,
+(to detect rolling back to earlier versions).
+
+TerrainModProperty:
+Do the same for areas.
+We need op post-processing rather than pre-processing for move updates.
+
+Abstract entities for tracking non-physical concepts such as quests, trade
+transactions, entity recipes, contruction blueprints etc.
+See http://www.igda.org/newsletter/?p=483 for how to do trading.
+
+Extend Mercator to allow terrain mod volume calculations. Use these to work
+out when a quarry should work, and how much it should be extended.
+
+Sort InnerTerrainMod with very thorough tests (check pre/post), then try
+and refactor.
+
+
+CommPythonClient should probably execute python in dispath rather than read()
+
+Rename ArithmeticScript as Arithmetic
+
+Inheritance::isTypeOf(TypeNode) can have a tighter loop
+
+What are we doing with spawns?
+Set location
+Restrict classes
+Setup inventory
+Filter and modify character names.
+
+Implement a null Atlas::Bridge which just does nothing.
+
+Note that the SystemAccount will probably cause problems during character
+creation, as the system will try and persist characters, and referential
+integretiy will be bad, as the account itself is not persisted.
+
+Make cycmd stop dumping all ops to output unless monitoring is on,
+and stop it re-writing the prompt so much.
+
+cyclient - add interactive
+         - add args on commandline
+
+Constrain movement if not directly in a movement domain.
+
+Tower defense game.
+
+Use PGconnectStart for async db stuff.
+
+Internal "perceptive" property, which stores a set of currently visible IDs,
+and can be used to send appearance/disappearance ops. Should cut down to cost
+but increase storage.
+
+A Dungeon Master like play style, where lots of minions are available to
+dig and build dungeons, which a classic dungeon crawl mechanic for heros
+in the Diablo style.
+
+We really need to expose mind state better.
+
+Add functionality to handle ids in blocks or ranges.
+
+Does _anyone_ use Atlas::Objects iterators?
+
+EntityFactory::m_children is only used in updating children properties, and
+probably could be done by look up the children in Inheritance.
+
+Separate the rulesets loading code out of EntityBuilder, making EntityBuilder
+vastly simpler. Remove unused headers from EnittyBuilder and Ruleset.
+
+It makes increasing sense to make the python subsystem behave a little
+differently in the client:
+ 1) Allow all operation types in client, but error on unknown in server.
+ 2) Redirect Python output via logging mechanism in server, but not in client.
+Needs to be done to make things sane.
+
+FOO_NO numbers for operation classes are currently initialised to zero,
+meaning they get missed in valgrind tests for non-initialised data.
+Remove the initialisation and see what happens with valgrind now.
+
+Minds which are asleep currently ignore all updates. This is a bit mad,
+as it means we waste storage on what is inevitably going to be an outdated
+world view. Either keep it updated, or just purge it completely.
+
+Use a hidden property giving a list of worker IDs to establish common
+state with tasks.
+
+It might be useful to expose task attributes so they can be modified by
+the task script itself, and ensure this propagates immediately back to
+the client UI.
+
+Add a single function for handling all those mind ops which just need
+TO setting.
+
+Check all Python for InstanceType, as that is what C++ objects used to be,
+but not any more.
+
+Client bindings don't belong in server module, and server module should
+not be available at all in the client bindings.
+
+Look into loudmouth for XMPP stuff.
+
+Fix Arithmetic and Mind code so the factory is not created every time,
+nor the type looked up every time. Python related factories need to be way
+more consistent.
+
+Look through dynamic casts and consider when it would be cleaner to
+extend the interface in the base class.
+
+Go through Python types sorting out where tp_methods can be used.
+Sort out weak references for Entity and related wrappers,
+Move Location into server, and isLocation somwhere else.
+Many types have their own tp_new, but could be using _GenericNew.
+
+Mind interface is pretty simple, so it should be possible to have a hive or
+herd mind at either core or python layer. One significant goal will be to
+eliminate the copy of the world per individual, but this is being done
+already. It will probably e a major bonus to have a single view of the
+world from all the entities, so that if one entity has seen something, they
+are all considered to have seen it implicitly. In order for many things to
+work these still need to make their own decissions though there is
+collectivism to their movement decisions.
+
+Touched on before, but why not break down clustering by the kind of computation,
+so the physics layer is separated, and can only be talked to by RPC?
+Another idea - separate the frontend with it's checks and socket handling
+from the worldprocessing code. Connection, Account, Lobby etc would all be
+handled in a frontend server with multiple processes. They share one listen
+socket, and use herd of elephents prevention to listen to sockets. The then
+send operations to a backend server which has the world processing.
+
+WorldTime and DateTime need to be purely data driven
+
+Implement connection limits.
+
+Ensure that distance functions mark results as invalid if there
+is a broken entity hierarchy.
+
+Ways to hold territory:
+ NPC manned towner foritifications. No door or ladder at ground level.
+ Must be frequently re-supplied.
+
+Define class properties that generate a random instance value per entity.
+This is another type which must be added to every instance, and can never
+be used as a default.
+
+Look up launchd.plist man page for details of how to manage a unix daemon
+under OS-X.
+http://developer.apple.com/technotes/tn2005/tn2083.html
+
+Add daily option to the create_release file, and work out where the hell to
+put them.
+
+--conf=<file> for specifying config. Simple.
+
+Add a class for the movement domain which is a property of the movement
+parent. Point to it from the Motion object. (safe reference).
+Encapsulate most data related to movement in Motion rather than leaving
+it to clog up Location.
+
+Fix up cycmd to work more like cydb.
+
+Move account update functionality into AccountBase. Keep cypasswd as the
+user facing tool.
+
+Look up using ares for asynch DNS. Possibly is skstream once that
+does other stuff.
+
+Look up Proactor pattern, Bloom filter.
+
+How to support phasing? (Instancing so that the same place changes
+fundamentally only to a subset of players)
+
+Paxos algorithm for consensus (master election) in an unreliable distributed
+system.
+
+Modify metaserver to allow DNS queries.
+
+Strip out the hierarchical movements domains. Flat!
+The movement domain then handles collisions and line of sight
+checking.
+
+Areas of world with an associated in-game chat channel.
+
+Connection, Master and Peer (and implicitly TrustedConnection) have members
+in common, and could probably stand to inherit from a common parent.
+Connection would make sense as the parent, moving stuff related to being
+connected to a client to a child class UserConnection.
+
+Add a way to extend the terrain base on where someone is walking.
+Probably should sit on top of a general mechanism for modifying the
+world based on player activity.
+
+Fix out type updates in Eris. Need to be picked up in the special place
+where serverinfo updates are picked up no.
+
+Python console will make everything so much more introspective.
+
+Remove the implicit bbox. Replace with coding the bbox property to set up
+the visibility metric when applied.
+
+OpQueEntry could be a conventional C style queue. Would be more efficient as
+we are searching by hand already.
+
+As noted before, ArithmeticFactory ScriptFactory and TaskFactory contain
+much common code. Use inheritance.
+
+Move the functionality from Statistics into StatisticsProperty, getting
+rid of the class completely. Make it the simplest possible interface for the
+python script, then see if this can be generalised for more broadly
+applicable stuff. Python properties?
+
+Allow generic simulated entities which have a real ID, but are not yet in
+the world. The server will track them for you, and control varies depending
+on privs. e.g. admin can create arbitrary simulated entities, and then insert
+them for real. simulated is a bad term because in fact the difference is that 
+they are _NOT_ simulated.
+
+seq is not restored.
+
+Properties added by requirePropertyClass and perhaps related functions
+are not getting installed or applied.
+
+Currently properties are being installed early before all Entity IDs have been
+restored. Need to delay. This will be a problem if there are Entity properties
+around linking things together by pointers.
+
+Make operations that depend on newId generation failable, so that a
+database issue does not cause an assertion to fail.
+
+Make sure property names are limited to 32, and also class names to the same
+length. Make this 32 limit a compile time constant. Also check ruleset name
+length.
+
+Fix abort() in newId() when Database connection is down. Probably best done
+with an ID pool.
+
+Make non-value related members of a TerrainModProperty mutable, so
+they can be modified without having to get a non-const pointer.
+
+modProperty should handle setting the flag_unsent flag on properties.
+
+Central Knowledge, available to all NPCs without being taught.
+
+Add SIGINT handler to cycmd to cancel tasks.
+
+Doxygen TODO lists!
+
+All the in-place property mods are not handling apply()
+Should this be done in Update()?
+updateOperation could handle setting clearing the per_clean flag, the
+entity_clean flag, and apply the properties.
+
+add_map really has no code in it
+update_map contains very little and is probably obsolete as it never gets
+called
+Review hooks and see if they really are needed.
+Note that:
+ in sight_create_operation all that is being checked for is if we created it
+ If we did create it, this is going to be a special interest to any mind
+ so we could look at supporting it in the core base class.
+
+ in sight_move_operation we are looking for changes to the inventory
+ and taking ownership. Could this again be supported in the base code?
+
+ Both sight_move and sight_create update the map via the Python API
+ when this could be more efficiently done in the C++ if the op
+ handler wasn't overridden. Why not assume the python handler does not
+ override?
+
+ The overall concept of overriding from scripts and also from handlers
+ probably needs to be looked at.
+
+Num property to implement stuff. Only works if it is installed as a class
+property, otherwise does nothing. (Resets to one).
+Value of one means nothing is sent.
+Installing class causes instance property to be placed, but install is
+not called on it.
+
+Add an entity flag to indicate that the entity has been modified in
+the python API, and on returning to core context an update needs to
+be triggered.
+
+Move requireSpecificProperty() and have it check on the defaults for
+a default value.
+
+Update Thing::updateProperties so it checks all properities to see whether
+they've been written to the database. May need to trigger a database update.
+
+Re-work the python wrappers to handle generating the necessary update flags
+when modifying an IG entity. Complete different from the wrapper behavior
+in the mind, which should probably no implement setattr at all.
+It may need to generate Update or perhaps even Set operations as necessary.
+
+Use a property flag for removing properties.
+
+Fix up OutfitProperty to work with the modified API and conventions.
+It can't really be a class property as it has entity refs, so I guess
+it must be instance only. install() might like TerrainModPropery()
+detect the case of a class version, and ensure that it is added as
+an instance property.
+
+Cutting down simulation cost when nothing is watching.
+Gorgious. Send out a ping, and get back an estimate. at the simplest level
+the simulation can continue, but decline to send out update ops. Kick off
+an update in response to any subsequent look ops. Seq is being incremented
+so Appearance will tell minds they need an update.
+
+Make the overall movement model configurable. If a flat world is all that is
+needed, there is no need to add more. In a fantasy MMO there is probably very
+little need for more. There is a strong link here between this and the need
+for persistence. If we only need character persistence, we can't really deal
+with them having something other than the world as their LOC.
+
+Define an operation which went sent returns the count of entities which
+can see something, so we can suspend simulation.
+
+If properties are responsible for their own serialisation, the represations
+can be much more efficient.
+
+Re-enable mapping of character to account.
+
+Design a way to make only the starting POS and ORIENATION of an entity
+storable.
+
+Sort out enable_persitence. Purge the old code.
+
+TerrainModProperty needs state, so it must be an instance property.
+This can be handled in ::instal() once class properties are flagged.
+
+Use database to allow characters to go offline.
+
+Location is stil adding bbox data to RootEntity or MapType representations.
+Stop, as this should be handled by the property.
+
+Make sure all the places properties are set use one single way to do
+it, ensuring the right calls get made to set it up.
+
+Some entities (Character) may end up updating a class property and
+then we get an error when the Update op arrives for an undiscovered
+property. This also corrupts the class.
+
+requireSpecificProperty installs new properties. Need to make sure it does
+it correctly.
+
+Think carefully about what happens when EntityBuilder::installFactory
+calls Inheritance::addChild. If add child returns NULL, there
+was something wrong with the factory installation and it should fail.
+
+isSimple() and isSolid() should be entity flags, once the collision
+stuff is sorted.
+
+Modify client code which inherits from Entity so it uses LocatedEntity
+or summink instead, removing the need for ClientPropertyManager.
+
+Fix the insert properry count. Incremented in the wrong place.
+
+Use return value of Property::get to ensure we are not storing
+worthless data in the properties table.
+
+Check use of the property manager in Character when adding status property.
+
+Implement flag_class in EntityBuilder.
+
+Once things are sorted for the new property mechanism, with install and apply
+implemented, 
+
+insertEntity and updateEntity are returning the bool result of scheduleCommand
+incorrectly.
+
+Perhaps we can use property flags for Update ops, rather then the cludgy
+going through strings?
+
+Remove assertion from CorePropertyManager that a property called objtype
+can't be created.
+
+Implement transient to avoid Database traffic.
+
+Make sure the select fallback code handles congested and busy ok.
+
+Sort out http connection with a configurable port.
+
+Make it so classes inherit python scripts, now that the factory is independant
+of atlas type name.
+
+Need a property flag to indicate that it is new, rather than just dirty.
+
+Make update interval has jitter on it, so we don't get spikey load.
+
+Types should have integer IDs. Bootstrap type queries with well know IDs for basic types.
+
+Admin Creator avatatar gets destroyed once it is no longer connected, but
+it then calls Connection::removeObject() despite the Connection being
+long gone.
+
+Use a broadcast cost heuristic to determine how often movement updates should
+done for an entity.
+
+Migrate everything out of BaseEntity until nothing remains, at which point
+rename it to IdentifiedRouter or something like that, inheriting from
+Identified. LocatedEnity should eventually not inherit from it.
+
+rename removePlayer to something more suitable.
+
+Once defaults work, handle pulling from defaults in the SpecificProperty
+templates.
+
+Fix the issue of leaked sigc++ connections, as connections to tool.containered
+are added, but never disconnected.
+
+Fix the rest of defaults on the TypeNode.
+
+Use onFoo() methods to implement some of the signals we expect.
+
+Quaternion and BBox need to be more like Vector3D and Point3D, and all 4 should
+really be in physics.
+
+In a compound object, that contains sub-objects, COMPONENTS can be like
+CONTAINS, but COMPONENTS do not have a separate existence. They are destroyed
+if the entity is destroyed, and do not have globally addressable IDs.
+They can still be represented by Entity, but won't be in the global ID
+dictionary. This leads to the idea of a component property interface whcih
+abstracts looking up component IDs. An accompanying stamp can reduce the
+frequency with which clients need to inspect the components, as they should
+change very infrequently.
+
+SEQ is not being used in the memmap code, as it is not being set.
+
+Re-write plant using properties when we can write scripts for property
+handlers.
+
+Character::m_rightHandWield needs to stop being hard coded. Should
+be really easy to do. Make it a dynamic property always, add install
+it as required.
+
+B&W style village construction. Nursery, plus schools for training.
+
+Re-factor abstract factories to be called Kits, and high level factories that
+assemble arrangements of objects as Builders. Concrete factories can then
+use the suffix factory.
+
+Put locks around writing the user config file.
+
+Move bbox out of Location, and make it a soft property only.
+
+Add instance configuration support to tools and clients.
+
+Add setting for config file.
+
+openID, libopkele
+echo -n 'username:phpMyID:password' | openssl md5
+
+Separate functionality for removing from container, and adding to new
+container.
+
+Modify security in NPCMind so we can do the goals without broadcasting the
+talk ops. Use the TO on the Talk op to determine if this is an admin op,
+so that clients can redirect ops easily. Need to verify that checking
+Sound.FROM is the only reason interlinguish functions need the op. It
+may be possible to get rid of passing in orignal_op completely.
+
+New Atlas-C++ has no inheritance tree, just one class in Objects. Instead
+it has function to create the instances, which create the defaults object
+if required, pass it in, and return a smartptr to an instance from the pool.
+Convenience versions of these function could take op arguments for operations,
+or IDs or the like for entities.
+
+Activations should use type nodes perhaps.
+
+Check if SECONDS is set before using it? All ops in basemind should do this.
+
+Add an argument to Location::addToEntity which specifies which need to be
+set as zero values of they are not set. This should make it easier to
+deal with the concept of POSless entities, and perhaps entities without
+velocity. Would be nice to get rid of any situation where something has
+zero velocity, as this is annoying to have to check for.
+
+Fix new PythonArithmeticScript() from being leaked. ArithmeticFactory(124)
+Shader surfaces are being leaked from TerrainProperty::set(130)
+
+Switch over to using Atlas::Objects as the fundamental unit in the objects
+code. Needs AtlasFileLoader to be converted over. This is the best first step
+before we have a type tree. Done. Now get rules loading from the Database once
+more, as the database code insists on MapType. Could we store the attribute
+defaults in the Atlas default type thingy? Would this cause problems?
+So, when we are creating a Atlas::Objects::Anonymous instances, need to
+be able to set up the default object so it just works. A barrier to this being
+really useful is the way Atlas-C++ currently handles defaults. It does not send
+them at all. Need to modify so it sends them if they have been flagged on
+the defaults object. Default to not flagging, and then modify sending behavoir.
+Think about using an inherited interface to prevent calling getName()
+which might cause a crash.
+
+Core cyphesis daemon is very simple and robust. Never crashes. It launches
+and monitors and number of child daemons. Simplest configuration is a single
+child daemon. It reads and parses the config mostly for checking purposes.
+Write common infrastructure which can check the contents of the config
+for errant values, and report them. Use the current help data structures.
+There should in the eventual configuration be one watcher daemon, one
+simulation daemon, one persistor daemon, and one spatial processing daemon per
+CPU. Simulation should be network bound, peristence should be disk bound, and
+spatial should be CPU bound.
+
+Experiment with factory base classes. Can we have a base class for BaseEntity,
+inherit from it overriding with a function that returns Entity.
+
+Datagram classes in skstream, Address classes in skstream. Datagram can be
+sent to an address, without re-encoding. Datagram can be treated as stream.
+Address can encapsulate getaddrinfo results, or stand alone endpoints.
+
+There need to be two different filters on movement. The first pass should
+determine what is possible given the desired input. The second should
+determine side effects of the movement. Can we really separate them, given
+that the side effects modify the effort and possibility of the movement?
+
+Blocking movement thingies are going to have to go. Handling move ops should
+just schedule the move. We pass to some collision subsystem, and then send
+the result once the result it back.
+
+Make IGEntityExerciser succeed in stimulating the Create op.
+Make IGEntityExerciser succeed in stimulating the Move op.
+
+Create a simple class that fully encapsulates having a python script in
+a general way, which can then be used by entity, task, statistics etc.
+
+EntityFactory has got really convoluted. Try and verify that the same things
+are done when a tool is updated as when it is loaded. May be good to break
+things down into smaller functions.
+
+script_factory->refreshClass is called before populateFactory(). Seems weird.
+Surely the script might have been changed? If it has, what causes it to be
+loaded?
+
+Fill out auto activation op stuff. Now that operations is automatic,
+need to ensure children inherit the behavior as well as the value, which
+requires some work on the activations.
+
+In EntityFactory, we should abort a task install if the target does not exist.
+
+Add unit tests to make sure rule install order with multiple dependencies
+is okay.
+
+Write a task to beat down fire with shovel.
+
+Specify contents of the house in the class rule, rather than using the script
+to create it. Contained entity data format again, just like blueprint.
+CONSTITUANTS?
+
+Add a transient property which indicates that something does not last, and
+should not be persisted. This would allow most of the seed scripts to be
+removed.
+
+There is a chance something could get screwed up in waitingRules.
+If something depends on two classes, and the second is not present the first
+time it fires, m_waitingRules will get modified mid iteration, and then
+the waiting item will get removed despite the fact that is has not been
+installed.
+
+When a task cannot be installed because of pre-reqs, record the error so
+it can be reported.
+
+Push to remove the world class, making it all more driven by data behavior.
+
+Re-write goals for butcher so they now interact correctly with the task
+implementation.
+
+GetOp is not part of IG, so illustrates for OOG dispatch to be different from
+IG.
+
+Apply behavior to newly created skellys. Now that the mind classes have been
+removed, skeletons need goals to do anything.
+
+Implement blocking rules until all associated rules can be verified so
+tasks can't get installed without their activation ops and classes existing.
+
+self.progress seems to start out at -2 in Slice. Uninitialised?
+
+Add a way to handle per-host config in a single config file.
+
+Fix parameter lookup in varconf.
+
+Add a call to Atlas-C++ which takes a bit field of attribute bits, and returns
+a bitfield of attribute bits that was requested but not present. Reduces
+error checking complexity loads.
+
+Pig seller seems to assume he is being given coins when actually they
+are being handed round by other people.
+
+Look up in Python Nutshell and read up on ref-counting + exceptions. Read
+whole section on embedding.
+
+ServerRouting owns accounts currently, so have it encapsulate the whole
+database thing. Check if the findAccount test is a good reason not to do
+this.
+
+metaserver needs to reinitialise if bind is lost.
+
+Make sure autopackage uses /var/tmp rather than PREFIX/var/tmp
+
+Instrument BaseMind/MemMap to detect mutiple additions of the same thing
+to the same mind.
+
+Make it easier to use cypasswd to elevate privs.
+
+Add ability to create other types of avatar.
+
+Investigate -static-libgcc for partially static version of binaries for
+distribution.
+
+autopackage should start server
+
+Set up python environment during test, so they import from the source tree.
+
+Find out why locks up when it can't load ruleset.
+
+Add a new kind of programmable mind, for babysitting player characters.
+
+Provide python access to the game config.
+
+Prevent soft attributes being set with the names of known properties.
+
+Set name from client.
+
+Setting attributes needs to be re-done more complex. Reporting divided
+into scopes, and reporting done based on what really happened, not what
+the Set wanted to happen.
+
+Move the stuff that generates vast quantity of test Atlas data into
+its own class, so other things can use it.
+
+Complete the work on property exercising tests.
+
+Fix python code which uses PyMem_DEL to use PyObject_Del which is the
+right thing now.
+
+Minds are getting properties from the core factory, because it is now accessed
+as a singleton. This cannot stand.
+
+Add a humanoid base class, putting default character bbox and the like in
+there, plus decays="skull".
+
+If I attach a property that listens out for delete ops, and creates things,
+do the returned ops still work okay? Ie does the deleted entity stick
+around long enough for the operation to get dispatched, even though it has
+been removed from the world map. If so, could use this to handle creating
+corpse, bones etc.
+
+Implement some kind of helper mechanism which monitors ops going to the client
+and if some match a certain template, it sends hints in the form of emotes.
+
+Move metabolism into a property, ensuring that Character becomes a cleaner
+class. Implement death better, creating a skeleton with a named skull.
+Mod the lich code to use the name on the skull when creating the skeleton.
+
+Take another look at the scheme used in mind code to purge entities
+it thinks are bad.
+
+Add an operation to account allowing the client to add a mind to its
+Character. When a Character has internal and external mind, ops from the
+internal mind should go only to the externalMind.
+
+Add an option to put a python console on stdio. See PyRun_InteractiveOneFlags
+to see an example of a functio which takes a line, and executes it in
+the way that the interactive interpretter does.
+
+Implement GUISE property.
+
+Atlas::Message::Element has TYPE_NONE, so we have a conceivable way
+to signal clearing of an attribute. Basically only possible soft attributes
+unless we want to make the Atlas::Objects code hideous. If we are going to
+find a way to signal this to the client, we need to add it to Atlas-C++.
+
+How do we clear a Property if it is specified by Update arg, but is no
+longer set to anything? Need a way for force it.
+
+Make updateProperties read-only perhaps? Needs to clean out properties.
+
+In GuiseProperty, need to ensure that  Set operation is simply a trigger
+for an update, so we can do things efficiently. A signal triggered
+by destruction or container change should trigger a Set(guis={}) which
+once it gets to the SetOperation handler gets its arg re-written, I guess
+the only option is the complete value.
+
+Strip most operations out of the mindFooOperation() interface, as all soft
+ops now go via scripts, if at all.
+
+Make sure all properties override correctly. Check const.
+
+Look at PyOplist and see if it would be better to embed the object rather than
+have a pointer.
+
+Consider, can we pre-fetch and cache the python object involved in calling a
+hook?
+
+Plough field, grow veggies. Carrot turnip.
+
+Add code to EntityPropertytest to cover setting by ID.
+
+Can we make client connection code more generic, getting rid of the
+nasty merged TCP / UNIX stuff, and sharing code between tools and client.
+Perhaps even totally generic for server and client.
+
+Add log rotation /etc/logrotate.d/foo to rpm.
+
+Improve pig death handling. Death is effectively just removing the mind
+state, so do so. Also think about disconnecting the incoming side
+of external mind. Perhaps interact in some way with the movement state?
+
+Ad physical constraints system, which if move op comes, it is filtered
+or transformed by it. For example, in a structure, elements of that
+structure would be contrained so that they translated move ops into
+move ops of their parent entity, the structure itself. This should be
+possible using the generic idea of properties that handle operations,
+and gives us a use case example for how a given property might need
+to filter or override an operation.
+
+datagram notes: see skstream TODO. Idea: When a broadcast op arrives at
+the Connection, route it to an object handling datagram comms for a given
+set of clients, and it caches the object, and notes the target address.
+It then builds a pool of target addresses for the cached op as the
+op is broadcast around the clients, and then later, in the socket loop
+code, it then handles sending the data out. Alternatively it could 
+serialise when it first gets the op, and cache the serialised data
+in the stream, noting the identity of the operation so that it can
+resend it. As long as it holds the operation smart pointer, no
+other operation can arrive with the same address, although another one
+later may easily have the same address once the smartptr releases to the
+memory pool. As soon as another op arrives for transmission, it should be
+okay to release the previous one, as it is not coming back.
+
+Why handle sight_create_operation in NPCMind when the implementation in
+BaseMind does everything fine, and we can handle the ownership in the
+add_map() hook?
+
+Should Unseen be handled in BaseMind -> MemMap rather than taking the
+hit in the python code?
+
+Replace hasAttrFlag which isDefaultFoo for efficiency.
+
+rootWorldId should be a parameter to WorldRouter, not hardcoded.
+
+Make ServerRouting pluggable by replacing with NodeRouting subclass, or
+something, which might contain more stuff to handle being a node in a
+distributed server. Might also be necessary to replace WorldRouter, which
+will be no problem, as everything currently refers to it by its base class.
+
+Fix appear disappear for instantaneous edit move ops.
+
+map and list attributes on python objects are a problem, because the
+wrappers copy then in getattr, meaning that modifications are lost.
+
+Key player owned property, like houses and mounts should perhaps be listed
+in the account charlist, and thus in the connection objects list, allowing
+direct external control.
+
+Read readline docs, and sort out good way of ensuring output does
+not mess up prompt.
+
+Make sure client can't get the impression it has taken over a non character
+entity.
+
+In next series, PARENTS on Atlas objects should be a vector.
+
+Make logging task rotate the tree to flat over a tick interval, which
+removes the issue of the progress glitching half way through the task,
+as long as the rate is set to zero for the tick while the tree falls.
+
+When dispatching a unicast op`to an entity, check if its
+flags change for zero to non-zero as a result, and if so, add it to a queue
+to be commited to database later. This even allows for immediate effect
+ops to be grouped into a transaction perhaps. It might be necessary or
+apropriate to guarantee that immediate ops are dispatched immediatly
+rather than returning to idle if a certain number of ops occur.
+
+Implement stacking basics with the active code in a property, and wrappers
+in a base C++ class. Once properties can directly handle ops, less of a
+problem, and the base class goes away. Stacking is explicit and driven by
+mind and client.
+
+Remove scriptSubscribe functions.
+
+Get rid of Entity::m_attributes by making a SoftProperty class for adding
+arbitrary properties to entities. Saves some lookups I think.
+
+Combine and Divide need to ensure the atomicity of the operation, ensuring
+that if creation fails, the whole thing fails. Without its not safe. Should
+either allow changes to the original entities to be specified?
+
+Add a task to cut things in half, to be used on materials.
+Take a unit vector vertically upwards, transform by the entities transform
+and use the resulting vector to determine which way is up. This axis and
+the axis which closely matches the direction of the acting entity to the
+centre of the material will be used. The position of the cut is defined by
+the position clicked on, and the width of the cut should be defined in the
+script somewhere.
+
+Add trenching rule, and perhaps think about a generic task that can allow
+someone to help someone else do the task they are doing.
+
+Add property system, with property classes registered with entity factory,
+and stored in the entity class object. Implementation should avoid looking up
+excessively in dictionaries at entity instance time. Instead the work should
+be done at class creation time. In the long term, properties defined by
+scripts should be required. Reduce the role of C++ inheritance in what
+properties things have, and instead put more on the bass class, and perhaps
+use flags to indicate whether they are in use.
+
+Make use of wrapTask().
+
+Hmm, when logging out an account, the characters from that account, do
+they remain in the connections dictionary? Is this bad?
+
+Separate out IG_OP_SWITCH from OOG_OP_SWITCH. Very little overlap.
+IG Does not have: GET, ERROR, INFO, LOGIN, LOGOUT, USE??? (should fix),
+                  ADD, CUT
+OOG Does not have: ACTION, APPEARANCE, DISAPPEARANCE, COMBINE, DELETE,
+                   DISAPPEARANCE, DIVIDE, ERROR, INFO, MOVE, SIGHT,
+                   SOUND, TOUCH, USE, WIELD, ADD, ATTACK, BURN,
+                   CHOP, CUT, EAT, NOURISH, SETUP, TICK, UPDATE
+
+The w2m*Operation code does only 2 things:
+  It checks for Setup and Tick ops whether they are for the mind, which
+  we can do in the mind code.
+
+  It filters based on drunkness.
+Both can go, removing the mechanism altogether.
+
+STUN can be used for NAT detection. Useful? UDP only. Still useful.
+
+Perhaps it should be possible to specify class data about the hard coded
+classes in data/*,xml.
+
+Test account and avatar creation from client when database is down.
+
+Once SEQ has replaced STAMP in Atlas-C++, use it instead of serialno
+in Tick op args.
+
+Note that tp_new should do essential non-repeatable initialisation, like
+calling in place constructor. Current newFoo() functions in the Python
+API code do not cause the types tp_new or tp_init to be called. Need to
+work out why, and see if changes are needed.
+
+Add media for boots, bowl, cow, flower, hat, knife, leaf, loaf, statue, stool,
+and longtable
+
+Need to work out a sane way to handle udp socket for sending to multiple
+clients quickly and efficiently.
+
+Add short varconf args.
+
+Make gobos rob after ganking.
+
+Perhaps entities can have an Atlas Anonymous attached to avoid newly
+constructing one every time look is called. Ref counting objects mean
+no copy is required.
+
+Add pickaxes, and trowels, and knowledge about tools to the tool merchant.
+
+Sequence of events when database goes down:
+
+2006:01:22 17:58:23 NOTICE DATABASE: FATAL:  terminating connection due to administrator command
+2006:01:22 17:58:23 ERROR Got database query complete when no query was pending
+2006:01:22 17:58:37 ERROR newId(): Database query error.
+2006:01:22 17:58:37 ERROR DATABASE: server closed the connection unexpectedly
+        This probably means the server terminated abnormally
+        before or while processing the request.
+cyphesis: WorldRouter.cpp:288: virtual Entity* WorldRouter::addNewEntity(const std::string&, const Atlas::Objects::Entity::RootEntity&): Assertion `!id.empty()' failed.
+2006:01:22 17:58:37 CRITICAL Aborted
+
+Notice there is often a deley before the third event, but even so it might
+be possible to bridge a gap in database availability with some kind of
+local ID generation. Anyway, clearly we are notified that the database
+is going down quite some time before it causes, so we should be able to do
+something about trying to reconnect. Might need to separate the
+server Database Idler from the Database socket, so the idler can manage
+attempting to re-connect.
+
+Code using "unit_vector_to.." is probably only working in the same
+container, and should probably be fixed to work with distance_to().
+
+In operation_new, and other places where keywords are used, iterate
+over the keywords rather than checking for a number of values. Should be
+more efficient, especially when the kwds are empty. Also allows errors to
+be detected better.
+
+Make more things emit suitable action operations, especially picking up,
+dropping, and combat.
+
+Should be able to use PyModule_New() to add submodules to existing modules,
+rather than the messy dictionary hack now used for some.
+
+When checking type of a python object, use PyObject_TypeCheck() new in 2.2
+especially when inheritance is involved.
+
+With the new way python types are defined, it may be possible to get
+rid of separate wrapper and script objects, and have the script inherit from
+the wrapper directly. The C++ pointer would have to be added to the structure
+later, once the script object which inherits from the wrapper base class
+has been returned. This means no access to the core object allowed during
+__init__(). Problem may arrise when checking the type of the script to
+see if it inherits from the wrapper class. Is this possible?
+
+Py_Location now holders pointer to owning Entity if any. Now we need to
+incref and decref in the important places.
+
+We need to be able to check if things are visible from goal scripts, so
+a MemEntity version of the Entity wrapper is required.
+This would mean we could make buy_thing goal expire when seller goes out
+of sight.
+
+The getTickAddtion calculation is almost certainly redundant. We almost
+certainly worked in out in previous call to generateMove().
+
+Add face() to buy_livestock and related goals.
+
+Modify mindMap so that entities are visible if they get updated.
+
+Once Script returns an int which differentiates between an error, and
+a missing method, then mind reference in PythonMindScript can got, and
+error can be reported in BaseMind or somewhere similar.
+
+Once stored python wrapper is done, the wrapper can be specialised for
+Character so that task related code is exposed.
+
+Don't do the same bullshit help every time the user clicks on a helping NPC.
+Bugs: Crash when fire burns. (sear)
+
+Look up upgrading the python API usage to 2.2 spec. In particular
+look at generic attribute handling, PyType_Ready, inheritance etc.
+Method doc strings.
+
+Use getProperty to implement a surface property, and integrate into the
+height adjustment code.
+
+Do any Python types with have an _attr member initialise it before
+they have to in setattr? Py_Entity/Thing used to.
+
+Character jumps to the bottom when swimming.
+Jumping to bottom is because when the character rises above water
+the movement code assumes it is walking, and then height is constrained 
+accordingly to terrain.
+Character/Pedestrian needs to handle surface properties, so it can't walk
+up steep slopes. Also need to handle jump, to get down steep slopes the quick
+way.
+
+Lobby accounts still indexed on string IDs. Good or bad?
+
+Should ImmutableProperty inherit from Property, or the other way round so
+that implementations of get and add can be shared? Yeah.
+
+Write test for SignalProperty.
+
+In cycmd, use flag to indicate when output is written, so it is possible to
+identify when at prompt, and move to next, and also possible to more cleanly
+redraw prompt, rather than forcing it every time codec->poll() is called.
+
+ForbiddenThingFactory::duplicateFactory could return PersistantThingFactory
+so its possible to add more abstract factories.
+
+In order to have attribute defaults inherit from parent classes,
+the code must first store the unmodified defaults direct from the rule
+in a separate place. Its main attributes should then be the result of merging
+those with its parent. This ensures that the result is always right, without
+having to walk all the way up to GameEntity. It is also makes propagating
+modified attributes down the tree easier, as long as a factory stores
+a list of its children. This means we have two compelling reasons why the
+parent factory needs to be available when the child is being installed.
+
+Handle SQL escaping of attributes encoded string before persisting.
+
+Implement tracking terrain surface, and preventing climbing of steep terrain.
+
+Implement data driven gui dialogues, in Sear and perhaps equator.
+
+<map>
+  <list name="parents><string>dialogue</string></list>
+  <string name="label">Dialogue</string>
+  <list name="contents">
+    <map>
+      <list name="parents"><string>vbox</string></list>
+      <list name="contents">
+        <map>
+          <list name="parents"><string>label</string></list>
+          <string name="label">This is a dialogue</string>
+        </map>
+        <map>
+          <list name="parents"><string>hbox</string></list>
+          <list name="contents">
+            <map>
+              <list name="parents"><string>button</string></list>
+              <string name="label">Okay</string>
+            </map>
+            <map>
+              <list name="parents"><string>button</string></list>
+              <string name="label">Cancel</string>
+            </map>
+          </list>
+        </map>
+      </list>
+    </map>
+  </list>
+<map>
+
+
+        -------------------------Dialogue------------------------
+        |                                                       |
+        |   A dialogue                                          |
+        |                                                       |
+        |     --------------------     -------------------      |
+        |     |      Okay        |     |     Cancel      |      |
+        |     --------------------     -------------------      |
+        |                                                       |
+        ---------------------------------------------------------
+
+Are attributes inherited? I think not. Need to be.
+
+Carefully use flags to check for illegal stuff from client/mind ops.
+
+Walking army of the undead, daily.
+
+Spatial iterators, for map have a reference to a const_iterator, and filter
+while incrementing. Iterate between space(bot_left, top_right)  and end().
+
+Don't update POS in database if VELOCITY is non-zero.
+
+strlen.com
+
+Predators should now use combat code to defeat prey before eating, and
+then Eat op on character should only work on incapacitated characters.
+
+A bunch of stuff in Character::externalOperation can go if we don't care
+about ops having serialnos.
+
+Move contents of mindUseOperation to UseOperation, and have mindUseOperation
+filter ops like it should.
+
+Combat system needs to depend on character stats, armour, clothing and
+weapon at very least. Probably need a class to encapsulate important
+processed stat information for a character. This makes it harder to
+have a fully configurable combat system.
+
+Define new class Volume which contains the set of points and normals
+required by the collision code. Cache the volume, and bounding radius
+of entities in Location. bounding radius is very easy. Add a course
+collision check based on bounding radius.
+
+Not sure destination based movement is working right if destination pos
+changes due to LOC change.
+
+Fix collisions. Leaving needs to be the inverse of entering, and this
+implicitly means we need to check collisions with the parents' children.
+We could also probably do with a very course check to make the whole thing
+cheaper.
+
+Collision code would be more reliable if collisions were check with
+current parent's siblings, as well as entities siblings.
+
+Make sure all Property classes have add(Entity)
+
+Task tick ops need to embed the ident of the task, to ensure a replacement
+does not cause a problem.
+
+Modify Attack handler so it is the attackee that creates the task object,
+so attacking a pointless target has no effect without any smarts required
+in mindAttackOperation().
+
+We can probably block all ops to mind when its unconcious from
+the Character class.
+
+Make Connect and Attack standard Atlas op.
+
+Sort out issue where carrying a living tree kills people. Caused by
+eat op from tree.
+
+Attribute modifiers should be a new low-level primitive on Entity,
+like property. They should be done before attributes are set from data,
+but after default attributes are set. Scale control variables should
+be assumed to be 1 initially for the purposes of scaling.
+A function like merge should be used to apply scalars. It needs to be
+able to copy the modded data into Atlas for reporting back to the client.
+
+Fix dodgey collision code which causes structures with complex parts to cause
+tight loop conditions.
+
+It should be possible to make trees fall so that they are parallel with
+the terrain, if a mechanism is available to determine normal of the
+supporting surface.
+
+Does it matter if World gets a delete op when status becomes < 0? It
+shouldn't, as the delete op should be ingored, so World does not need
+a Set op implementation.
+
+Sort out a way to move world functionality into a script.
+
+On #python talk to deltab TFK or #pyrex.
+
+When reloading a python module, try to load it even if it didn't load before.
+
+Prevent forbidden attribute from leaking through in move ops from client.
+
+Re-code chickens so they flee on contact, rather than on sight.
+Fix lych and skellys.
+
+Implement swimming, which requires constraining the updated pos in the movement
+code to be sure of getting the right Z. Try and do some direction stuff in
+the sear interface.
+
+Clean up old movement code, get rid of Movement::m_velocity, and perhaps
+m_orient.
+
+When getMoveUpdate is first called in moveMoveOperation, it doesn't really
+want an operation, just an update of the position.
+
+Add swimming to Pedestrian. Try and add floating by default to non aquatic
+creatures.
+
+Move Create handler from Entity into Thing, as everything IG inherits from
+Thing.
+
+Make an Atlas encoding to describe basic layers.
+
+Implement buying clothes to be worn. Garment base class, use wield operations
+to use.
+
+Implement spawnpoints, and separate mason and werewolf locations.
+
+Make sure python object references aren't leaked in script factories.
+
+Implement subsystems on server object. Allow Admin to fetch the subsystems,
+like "configuration", "policy" etc.
+
+policy should include things like:
+   Account creation on the fly.
+   Number of characters per account.
+   Number of character played at the same time per account.
+   Visibility of player on character and character on player.
+   Character removal from world on logout.
+
+Installed types from the client need to be persisted in the database.
+
+Create harness device which is a number of entities connected by ropes.
+Consists of hook, and a number of ends to be held by people. Each end is
+attached by a rope entity to the thing to be moved. To attach the hook,
+it is wielded and used on the target. Each person the wields and uses
+their ends. When enough people pull, the target moves. Vector of travel
+is the average of the distances to the people pulling.
+
+Add use of pickaxe to split rocks. Initial rock in ground could be huge,
+and require splitting, or heavy equipment to move. Rock can be shaped into
+stone billet for use in building using a chisel.
+
+Add operation Increment which allows deltas to be made to attributes.
+Important for atomicity in delayed events. Propagated as Sight(Set).
+
+Grass should dry out.
+Earth and sand should return to the soil.
+Sand can be made into a sandy area using a tamper.
+Digging earth could create a field area.
+Might need to notify entities when their parent changes.
+
+Code up projectile movement as a first test of entity movement.
+
+Sort out so lobby had a real ID.
+
+Code up allowing accounts to create rooms, and guilds.
+
+Optimise down the number of calls to iterator::end in mindUseOperation
+
+Add a reach attribute to tools which tells the client how far the NPC must
+be from the target before they can use it on something.
+
+Fix Creator::LookOperation so that it doesn't return anything if no
+match can be found. Also it should probably not accept ops with TO already
+set.
+
+Add cydumprules to the man pages.
+
+Clean out Python operation API, as its full of unused and useless functions.
+
+Slave or Peer servers need to negotiate types at startup.
+
+Make the butcher more helpful to n00bs.
+
+Implement a Tool base class which eliminates the need for tool scripts - 
+handles the necessary op conversions driven by data.
+
+Make sure stamp is updated in MemMap and checked, and implement Unseen.
+
+Implement trivial combat, and code up a bunny bashing quests for the hard
+of thinking.
+
+Add ticker callback mechanism to WorldRouter, which calls callback whenever
+a tick is required. Will reduce the cost of the op queue by making it smaller,
+and should be cheaper than tick ops. Needs to be carefully designed. Can handle
+stuff like one-shots, as well as regular ticks.
+
+Spec an op similar to use, but for things which are just used by themselves,
+like buttons, valves, levers etc. Target has operations=[...] just the same,
+and the arg of the new op specifies what op to do, but the Character just
+needs the one gateway.
+
+Implement Task interface, which represent enduring tasks, including combat.
+Could also include destination based movement. Task needs a name, and an
+accessor for it, so it can be used as a private Property.
+
+When calling NPCMind.face when buying an item, for some reason the velocity
+of Pedestrian is valid and set to a weird value. This is because the
+target position where the merchant wants to be is at a different z value
+from where the character ends up. This is a general problem with moving
+to pre-defined positions.
+
+Does sightFooOperation etc. in BaseMind.h have to be virtual? I think not.
+Yes it does, as its overridden in some client code.
+
+CONTAINS could be some kind of spatial set of buckets for efficiency
+when doing collision detection, but if this is not to be true for all entities
+then the mechanism for modifying CONTAINS needs to be virtualised, and
+made a method on the container/LOC. If the spatial stuff is to work then
+the entity needs to be removed while it still has its old coords, and added
+to its new container with its new coords.
+
+We should be able to look at the attributes of an python instance to
+determine what operations it needs to be subbed to. It doesn't have a
+dictionary, but it does have the methods as attributes.
+
+Make sure that goals involving movement don't issue a move op unless its
+necessary. ie check to see if we are already moving in the right direction.
+
+Fix Movement/Pedestrian to handle destination based movement where LOC
+changes. Just use distanceTo as the velocity vector.
+
+The spot_something goal is a hack - need something better. Probably need
+some kind of Knowledge about target entity. Give the Knowledge predicate
+as an argument to spot_something(), and add Knowledge with that predicate
+once something has been spotted. For example
+spot_something('lumber', 'spotted_lumber')
+
+mind.things in NPCMind seems to be completely based on the name attribute,
+though it seems like it would make more sense for it to use type some of
+the time.
+
+Each entity could have a Mode object which controls how its movement/position
+is simulated, including the effect of gravity etc. This would be associated
+with a mode string.
+
+If the character moves an entity into another similar entity, then
+we should create a Pile. This can be detected in mindMoveOp().
+
+Currently no mechanism to inform client/mind that the ID they just
+specified is gone. Need to think of something, and make sure mind
+deals correctly. Something like Unseen operation.
+
+Can Property mechanism be used to handle raw Python data as properties?
+
+Sort out the issue of un-initialised POS, ORIENTATION and BBOX in the
+database.
+
+MemEntity needs some kind of reference flag/count if a python object
+is holding a reference. Probably as well to ref-count all IG entities,
+then we can hold a reference in the op queue, and avoid lookup up the
+FROM at dispatch time. Would also allow entities to hold pointers.
+
+Fix unit_vector_to in python interface to make sure it doesn't cause
+a normalise() abort(). Probably re-write to use relativePosition() which
+may need to be fixed to give the right direction. The correct direction
+should be the coordinate space that the observer's position is in. It
+is probably currently returning it in the entities local coords.
+
+Stop creator characters for getting filed into the accounts_entity_ent
+table.
+
+Transforming with an invalid quaternion creates an invalid vector or point.
+We must not do it. See FIXME in WorldRouter.cpp.
+
+Is it necessary to copy new_coords in Pedestrain::genMoveOperation()?
+
+Sort out trees thrashing database. Postpone until we have done something
+about database transactions.
+
+Centralise serialno assigment on IG ops, checking for 0 to see if we should?
+
+Sort out FIXME in Creator::operation().
+
+Character creation should not fail if creating its bootstrap inventory fails.
+Errors from coin creation are confusing clients.
+
+Convert FormatedXMLWriter into a templat that can drive any Atlas codec.
+Thus we can have any Atlas Codec output in formatted human readable form.
+Formatter can be a generic non-template Brige that sits between Encoder
+and Codec.
+
+It might make sense to keep a pointer to the entity an operation is from
+in the queue, if its available at the point when we store it. How do we
+then make sure we don't hold bad references?
+
+Report error properlly in MemEntity when clock skew is detected.
+
+Try and avoid removing stuff from the mind as soon as its been added. Perhaps
+by checking the iterator ID on insert?
+
+Try out dynamic cast rather than string test to identify ops in WorldRouter.
+
+It would probably be easier to move extraction of parents from a new entity
+to world.addNewObject() to avoid duplication.
+
+Use "REFERENCES foo ON DELETE CASCADE" SQL to make sure character table
+relations are removed when a character is deleted, or an account is deleted.
+
+Make cyclient more robust about receiving random ops.
+
+Fix or get rid of cyphesis-setup
+
+Fix usage of map.get in BaseMind and NPCMind
+
+Make ExternalMind inherit from something higher that BaseMind. It has so
+few features.
+
+Its really not necessary for WorldRouter and its base to be so virtual, or
+inherit from BaseEntity. Get rid of that, shift all the serialno stuff into
+base.
+
+Add time to location, so we can stamp update time, and always calculate pos.
+
+Enforce well-formed args and parents on IG ops centrally.
+
+Make sure we don't schedule database maintenence if its already doing it.
+
+Add some simple sound op examples
+
+Need to profile why startup takes so long - we are chewing a lot of ops.
+
+Modify var dir for socket so it is actually the right place.
+
+Run "SET autocommit TO 'off';" on connection to database, and run "COMMIT;"
+every 30 seconds (or so).
+
+Make database maintainance intervals configurable.
+
+Clean the database. Use VACUUM once an hour, and probably VACUUM ANALYSE
+and VACUUM FULL each once per day. REINDEX may also be required.
+
+Sort out socket address re-use, and lingering.
+
+Fix up cypasswd to allow creation of additional admin accounts.
+
+Experiment with BEGIN / COMMIT blocks to reduce load on database. A
+possibility is starting a transaction, and then commiting, delaying if their
+are requests which have not yet been sent. This of course pre-supposes that
+the mechanism for sending queries to the database asynchronously has
+been done. It is probably acceptible to only accept queries that do not
+return any tuples, and then the asyncronous recieve mechanism doesn't need
+to worry about who wants the tuples.
+
+General TODO
+
+  Connecting to other server: Make class peer of CommClient called
+  CommConnection or something which is basically the same, but implements
+  connecting instead of accepting. Might even be able to merge the code
+  in, or make it a template. Make object which inherits from Connection
+  called ServerConnection which is created and linked to CommConnection
+  which handles pushing operations from the other server into the
+  WorldRouter. The question now is, how this is managed at the other end,
+  and what is done with operaions generated by this server due to
+  operations from the other one.
+
+Possible ideas:
+
+  Modify map to make more use of stamp.

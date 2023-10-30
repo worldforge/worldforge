@@ -1,0 +1,70 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="friction">
+                <float name="default">1</float>
+            </map>
+            <map name="friction_roll">
+                <float name="default">0.1</float>
+            </map>
+            <map name="friction_spin">
+                <float name="default">0.05</float>
+            </map>
+            <map name="mode">
+                <string name="default">planted</string>
+            </map>
+            <map name="status">
+                <float name="default">1.0</float>
+            </map>
+            <!-- Plants should by default be represented by an upright cylinder. -->
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">cylinder-y</string>
+                </map>
+            </map>
+            <!-- Normal plants can only consume "soil". There's of course the option to also add a subtype which can consume meat... -->
+            <map name="_modifier_consume_type_soil">
+                <float name="default">1</float>
+            </map>
+            <!-- The max amount of nutrients we can hold in our reserves, compared to our mass -->
+            <map name="_nutrients_max_factor">
+                <float name="default">0.1</float>
+            </map>
+            <map name="fruits_max">
+                <int name="default">0</int>
+            </map>
+            <!-- Plants should starve when nutrients are depleted. -->
+            <map name="starveable">
+                <int name="default">1</int>
+            </map>
+            <map name="__scripts">
+                <list name="default">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.objects.plants.FruitPlant.FruitPlant</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Nourishable.Nourishable</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.Growing.Growing</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.PlantFeeding.PlantFeeding</string>
+                    </map>
+                </list>
+            </map>
+            <!-- Mark this as "rooted" so that movement constraint can take that into consideration. -->
+            <map name="rooted">
+                <int name="default">1</int>
+            </map>
+        </map>
+        <string name="id">plant</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

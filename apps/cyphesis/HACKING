@@ -1,0 +1,35 @@
+The following guidelines should be observed when coding cyphesis-C++.
+
+REFERENCES
+
+References should be used instead of pointers wherever it is possible.
+If necessary the design of the code should reflect this preference.  If a
+pointer is to be used which will be initialised to a value, will never
+change and can never be NULL, then that pointer should be a reference.
+
+
+CODE FORMATTING
+
+Hard tabs should not be used anywhere to format the code either in python
+or C++. Normal white spaces should be used at all times.
+
+In C++ 4 character indenting is used, with opening braces at the end
+of lines, except at the beginning of methods and functions where they
+should be at the beginning of a line containing no other characters.
+
+With the exception of function definitions, { should always be at the end
+of a line, and } should always be the first non-whitespace character on a
+line. In the case of if or for statements, the clause should always be
+enclosed by { } and the opening { should be on the same line as the if or for
+statement.
+
+DATA FORMATS
+
+Data in the form of rules, and persistent stores conforms to the Atlas
+protocol. Atlas uses strings in a variety of scenarios, the most common
+being type names and property names. These names should be single English
+words using British English spelling and should contain only lower case
+alphabetic characters. Multiple words may be combined where they can
+reasonably be considered as a single word together. A suitable example
+would be "online" which has a distinct meaning alone, but is technically
+correctly spelt as "on line".

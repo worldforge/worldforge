@@ -1,0 +1,37 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/structures/ground_palisade/model/ground_palisade_a.mesh</string>
+                    <string name="type">cylinder-y</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/structures/ground_palisade/pile.entitymap</string>
+            </map>
+            <map name="constituants">
+                <map name="default">
+                </map>
+            </map>
+            <map name="density">
+                <float name="default">1000</float>
+            </map>
+            <map name="__scripts">
+                <list name="default">
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.objects.outdoor.Pile.Pile</string>
+                    </map>
+                    <map>
+                        <string name="language">python</string>
+                        <string name="name">world.traits.ScaleDeletable.ScaleDeletable</string>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">pile</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+</atlas>

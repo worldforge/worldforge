@@ -1,0 +1,38 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/containers/barrel/model/barrel.mesh</string>
+                    <string name="type">cylinder-y</string>
+                </map>
+            </map>
+            <map name="density">
+                <float name="default">50</float>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/containers/barrel/model/barrel.mesh</string>
+            </map>
+            <map name="domain">
+                <string name="default">container</string>
+            </map>
+            <map name="description">
+                <string name="default">A sturdy barrel. It's a bit unclear what it contains.</string>
+            </map>
+            <map name="usages">
+                <map name="append">
+                    <map name="open_container">
+                        <string name="name">Open</string>
+                        <string name="handler">world.objects.Container.open_container</string>
+                        <string name="constraint">describe("You're too far away.", actor can_reach tool)</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">barrel</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

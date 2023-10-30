@@ -1,0 +1,13 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="density">
+                <float name="default">30</float>
+            </map>
+        </map>
+        <string name="id">garment</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

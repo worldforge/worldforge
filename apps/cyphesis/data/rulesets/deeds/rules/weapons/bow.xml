@@ -1,0 +1,61 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/weapons/bow/model/bow.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/weapons/bow/model/bow.mesh</string>
+            </map>
+<!--            <map name="ammo">-->
+<!--                <string name="default">arrow</string>-->
+<!--            </map>-->
+            <map name="density">
+                <float name="default">500</float>
+            </map>
+            <map name="cooldown">
+                <float name="default">2</float>
+            </map>
+            <map name="warmup">
+                <float name="default">0.8</float>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="draw">
+                        <string name="name">Draw</string>
+                        <map name="params">
+                            <map name="direction">
+                                <string name="type">direction</string>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Bow.draw</string>
+                        <string name="constraint">get_entity(actor.attached_hand_primary) = tool and describe("You must have arrows in your inventory.", contains(actor.contains, child instance_of types.arrow))</string>
+                        <string name="description">Fire an arrow with a bow.</string>
+                    </map>
+                    <map name="shoot">
+                        <string name="name">Shoot</string>
+                        <map name="params">
+                            <map name="direction">
+                                <string name="type">direction</string>
+                            </map>
+                        </map>
+                        <string name="handler">world.objects.tools.Bow.shoot</string>
+                        <string name="constraint">get_entity(actor.attached_hand_primary) = tool and describe("You must have arrows in your inventory.", contains(actor.contains, child instance_of types.arrow))</string>
+                        <string name="description">Fire an arrow with a bow directly (for testing purposes; this should be removed).</string>
+                    </map>
+                </map>
+            </map>
+            <map name="description">
+                <string name="default">A basic bow, made of yew and twine rope.</string>
+            </map>
+        </map>
+        <string name="id">bow</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+</atlas>

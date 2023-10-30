@@ -1,0 +1,370 @@
+<refentry id="cyphesis">
+
+ <refmeta>
+  <refentrytitle>cyphesis</refentrytitle>
+  <manvolnum>1</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>cyphesis</refname>
+  <refpurpose>cyphesis game server process</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <cmdsynopsis>
+   <command>/usr/bin/cyphesis</command>
+   <arg choice="opt" rep="repeat">--section:option=value</arg>
+  </cmdsynopsis>
+ </refsynopsisdiv>
+
+ <refsect1><title>Description</title>
+  <para>
+The <command>cyphesis</command> program implements the core world server for
+WorldForge.
+  </para>
+ </refsect1>
+ <refsect1><title>Options</title>
+  <para>
+Configuration options are divided up into named sections, which need to
+be specified when modifying or overriding the options. In a config file
+the name of a section is specified in square brackets at the beginning
+of the section. On the command line the section is given at the
+beginning of the option specification, as shown in the synopsis above.
+  </para>
+  <refsect2><title>Server Options</title>
+   <para>
+The following options are present in the cyphesis section of the config
+file, and overridden by specifying the cyphesis section name on the
+command line.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>directory</varname>
+       <initializer>="/path/to/server/data"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Directory where server data and scripts can be found.
+      </para>
+      <para>
+Name of the top level ruleset this server should use.
+      </para>
+      <para>
+Normally this directory is set at compile time, but in some rare cases it
+may be necessary to tell cyphesis to use a different directory.
+      
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>confdir</varname>
+       <initializer>="/path/to/server/config"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Directory where server config can be found.
+      </para>
+      <para>
+Normally this directory is set at compile time, but in some rare cases it
+may be necessary to tell cyphesis to use a different directory.
+      </para>
+      
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>vardir</varname>
+       <initializer>="/path/to/server/var"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Directory where temporary files can be stored.
+      </para>
+      <para>
+Normally this directory is set at compile time, but in some rare cases it
+may be necessary to tell cyphesis to use a different directory.
+      </para>
+      
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>ruleset</varname>
+       <initializer>="deeds"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Ruleset name.
+      </para>
+      <para>
+Name of the top level ruleset this server should use.
+      </para>
+      <para>
+Rulesets are hierarchical, so it is very probable that the top level ruleset
+will depend on another ruleset. In order to specify the that ruleset
+depends on another ruleset, a section is required in the config file with
+the name of the ruleset, which contains an additional ruleset option.
+On startup the server will look for dependent rulesets until it reaches
+a ruleset which has no dependencies, at which point it is assumed the base
+ruleset has been found.
+      </para>
+      <para>
+For example, the deeds ruleset depends on the basic ruleset, but the
+basic ruleset has no dependencies. The required configuration entries for
+this arrangement look like this:
+      </para>
+      <programlisting>
+[cyphesis]
+ruleset="deeds"
+[deeds]
+ruleset="basic"
+      </programlisting>
+      
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>servername</varname>
+       <initializer>=hostname</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Server name.
+      </para>
+      <para>
+Name that identifies this server. If this option is omitted from the config
+file, and not provided any other way, then the system hostname will be used.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>tcpport</varname>
+       <initializer>=6767</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Network listen port for TCP connections.
+      </para>
+      <para>
+Specifies the port number to use to listen for incoming client connections.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>unixport</varname>
+       <initializer>="cyphesis.sock"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Local liston socket for Unix domain connections.
+      </para>
+      <para>
+Specifies the filename to use to listen for local trusted client connections.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>restricted</varname>
+       <initializer>=false</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Flag to control restricted mode.
+      </para>
+      <para>
+If this option is true the server is run in restricted mode. This
+means that clients will not be able to create new accounts, leaving
+account creation entirelu in the hands of the administrator.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>usemetaserver</varname>
+       <initializer>=true</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Flag to control use of metaserver.
+      </para>
+      <para>
+If this flag is true the server registers its presence with a metaserver.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>metaserver</varname>
+       <initializer>="metaserver.worldforge.org"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Hostname to use as metaserver.
+      </para>
+      <para>
+The hostname is used as the address of the metaserver where the presence of
+this server is registered if the usemetaserver option is enabled.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>daemon</varname>
+       <initializer>=false</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Flag to control daemon mode.
+      </para>
+      <para>
+If this flag is true the server automatically drop into the background
+after startup. For convenience the parent process will not complete
+until the server has completed its setup, including reading all config
+information, loading all data from the database, setting up internal
+data structures and setting up communications. The exit status of the
+parent process indicates whether these steps were completed successfully.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>useaiclient</varname>
+       <initializer>=false</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Flag to control use of AI client.
+      </para>
+      <para>
+If this flag is true the server does not attempt to do any AI simulation
+internally, and instead relies on a specialist AI client. This feature
+is not yet implemented.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>dbserver</varname>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Remote hostname for the PostgreSQL RDBMS.
+      </para>
+      <para>
+If this setting is present the server will use a remote instance of the
+PostgreSQL RDBMS for its database requirements at the hostname provided.
+Do not use this setting unless you need a remote database for some
+reason. Specify "localhost" will cause the database module to use
+remote connection even though the connection is to the local machine.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>dbname</varname>
+       <initializer>="cyphesis"</initializer>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Name of database to use.
+      </para>
+      <para>
+This setting provides the database name the server is to use for its data.
+If this setting is omitted, the name cyphesis is used.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>dbuser</varname>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Database account name for access.
+      </para>
+      <para>
+This setting provides the username to be used to authenticate with the
+database. If it is not included, the username of the user running the
+server is used.
+      </para>
+     </listitem>
+    </varlistentry>
+
+    <varlistentry>
+     <term><fieldsynopsis>
+       <varname>dbpasswd</varname>
+      </fieldsynopsis>
+     </term>
+     <listitem>
+      <para>
+Database account password for access.
+      </para>
+      <para>
+This setting provides the password to be used to authenticate with the
+database. PostgreSQL does not usually require a password when connecting
+to a PostgreSQL RDBMS on the same system as the server, when the database
+username to be used is the same as the user running the server. If
+this is the case then the setting must be omitted from the config file.
+      </para>
+     </listitem>
+    </varlistentry>
+    
+   </variablelist>
+  </refsect2>
+ </refsect1>
+ <refsect1><title>Author</title>
+  <para>
+Written by Alistair Riddoch.
+  </para>
+ </refsect1>
+ <refsect1><title>Reporting bugs</title>
+  <para>
+Report bugs to <email>general@worldforge.org</email>.
+  </para>
+ </refsect1>
+ <refsect1><title>Copyright</title>
+  <para>
+Copyright 2004 Alistair Riddoch.
+  </para>
+ </refsect1>
+ <refsect1><title>See Also</title>
+  <para>
+<citerefentry><refentrytitle>cyclient</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cyphesis-tools</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cycmd</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+  </para>
+ </refsect1>
+</refentry>

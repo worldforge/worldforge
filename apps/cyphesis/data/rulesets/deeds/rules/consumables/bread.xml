@@ -1,0 +1,82 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/food/country_bread/model/bread_loaf.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/food/country_bread/model/bread_loaf.mesh</string>
+            </map>
+            <map name="density">
+                <float name="default">190</float>
+            </map>
+            <map name="_consume_mass_conversion">
+                <float name="default">1.0</float>
+            </map>
+            <map name="consumable_type">
+                <string name="default">plant</string>
+            </map>
+            <map name="usages">
+                <map name="default">
+                    <map name="consume">
+                        <string name="name">Eat</string>
+                        <string name="handler">world.objects.Consumable.consume</string>
+                        <string name="constraint">actor can_reach tool</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">bread</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/food/country_bread/model/bread_loaf_cut.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/food/country_bread/model/bread_loaf_cut.mesh</string>
+            </map>
+            <map name="_consume_mass_conversion">
+                <float name="default">1.0</float>
+            </map>
+            <map name="consumable_type">
+                <string name="default">plant</string>
+            </map>
+        </map>
+        <string name="id">bread_cut</string>
+        <string name="objtype">class</string>
+        <string name="parent">bread</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/food/country_bread/model/bread_slice.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/food/country_bread/model/bread_slice.mesh</string>
+            </map>
+            <map name="_consume_mass_conversion">
+                <float name="default">1.0</float>
+            </map>
+            <map name="consumable_type">
+                <string name="default">plant</string>
+            </map>
+        </map>
+        <string name="id">bread_slice</string>
+        <string name="objtype">class</string>
+        <string name="parent">bread</string>
+    </map>
+</atlas>

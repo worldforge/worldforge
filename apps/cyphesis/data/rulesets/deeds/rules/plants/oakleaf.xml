@@ -1,0 +1,15 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="present">
+                <string name="default">dural/plants/shrubs/shrub/shrub_a.modeldef</string>
+            </map>
+            <map name="name">
+                <string name="default">Oakleaf bush</string>
+            </map>
+        </map>
+        <string name="id">oakleaf</string>
+        <string name="objtype">class</string>
+        <string name="parent">shrub</string>
+    </map>
+</atlas>

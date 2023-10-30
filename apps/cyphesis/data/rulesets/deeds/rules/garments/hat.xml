@@ -1,0 +1,38 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/biped/malebuilder/model/farmers_cap.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/biped/malebuilder/model/farmers_cap.mesh</string>
+            </map>
+            <map name="worn">
+                <string name="default">head</string>
+            </map>
+            <map name="modify">
+                <list name="default">
+                    <map>
+                        <string name="constraint">get_entity(actor.attached_head) = entity</string>
+                        <list name="observed_properties">
+                            <string>attached_head</string>
+                        </list>
+                        <map name="modifiers">
+                            <map name="armor">
+                                <float name="append">0.5</float>
+                            </map>
+                        </map>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">hat</string>
+        <string name="objtype">class</string>
+        <string name="parent">garment</string>
+    </map>
+
+</atlas>

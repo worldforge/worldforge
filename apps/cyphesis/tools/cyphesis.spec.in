@@ -1,0 +1,137 @@
+%define name @PACKAGE@
+%define version @VERSION@
+%define release 1
+
+Summary: A simple personal server for the WorldForge project
+Name: %{name}
+Version: %{version}
+Release: %{release}
+License: GPL
+Group: Amusements/Games
+URL: http://www.worldforge.org/dev/eng/servers/cyphesis
+Packager:
+Vendor: WorldForge
+Distribution: Mason
+Source0: %{name}-%{version}.tar.bz2
+Source1: cyphesis.init
+Source2: cyclient.init
+Source3: cyphesis.sysconfig
+Source4: compile_python.py
+PreReq: initscripts /usr/sbin/useradd /sbin/chkconfig /usr/bin/find /bin/rm
+Requires: postgresql-server
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: atlascpp-devel mercator-devel >= 0.2.0 varconf-devel >= 0.6.2 readline-devel postgresql-devel >= 7.1 python-devel >= 2.0.0
+Obsoletes: cyphesis-service cyphesis-mason
+
+%description
+Cyphesis is a very simple world simulator. NPCs that do things according to
+rules. They have minds with simple input and output. They can
+use/move/make things and have simple discussion. They can deduce
+simple things (like where I can get these things and where I should
+be). They have simple memory and use it too. They can have goals (like
+build home for me or go to dinner).
+This package includes the rules data, scripts and map data required for the
+Mason game. Use this package if you intend to run an Mason server.
+
+#%package acorn
+#Summary: Game data for running the Acorn game in cyphesis
+#Group: Amusements/Games
+#Requires: %{name} = %{version}
+
+#%description acorn
+#This is the rules data, scripts and map data required for the Acorn
+#game. Install this package if you intend to run an Acorn server.
+#Acorn is deprecated. See README for details.
+
+#%package werewolf
+#Summary: Game data for running the Werewolf game in cyphesis
+#Group: Amusements/Games
+#Requires: %{name} = %{version} %{name}-acorn
+
+#%description werewolf
+#This is the rules data, scripts and map data required for the Werewolf
+#game. Install this package if you intend to run an Werewolf server.
+#Werewolf is not yet functional.
+
+%prep
+%setup -q
+
+%build
+CXXFLAGS=$RPM_OPT_FLAGS %configure --disable-dependency-tracking
+make -j 3
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+%{SOURCE4} $RPM_BUILD_ROOT/%{_datadir}/cyphesis/scripts
+%{SOURCE4} $RPM_BUILD_ROOT/%{_datadir}/cyphesis/rulesets/basic
+%{SOURCE4} $RPM_BUILD_ROOT/%{_datadir}/cyphesis/rulesets/mason
+find $RPM_BUILD_ROOT/%{_datadir}/cyphesis/scripts -name *.py | xargs /bin/rm
+find $RPM_BUILD_ROOT/%{_datadir}/cyphesis/rulesets -name *.py | xargs /bin/rm
+if [ -d /etc/rc.d/init.d ]
+then
+        install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+        install -m 755 %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/cyphesis
+        install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/cyclient
+        echo /etc/rc.d/init.d/cyphesis >> service.lst
+        echo /etc/rc.d/init.d/cyclient >> service.lst
+fi
+if [ -d /etc/sysconfig ]
+then
+        install -d $RPM_BUILD_ROOT/etc/sysconfig
+        install -m 644 %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/cyphesis
+        echo %config\(noreplace\) /etc/sysconfig/cyphesis >> service.lst
+fi
+
+%pre
+useradd -M -n -r -s /bin/bash -c "Cyphesis user" cyphesis >/dev/null 2>&1 || :
+
+%post
+chkconfig --add cyphesis
+chkconfig --add cyclient
+
+# If we obsolete cyphesis-service, then it will delete its service entries
+# and account after our %pre and %post have run. We need to ensure they
+# are re-added.
+%triggerpostun -- cyphesis-service
+useradd -M -n -r -s /bin/bash -c "Cyphesis user" cyphesis >/dev/null 2>&1 || :
+chkconfig --add cyphesis
+chkconfig --add cyclient
+
+%preun
+if [ $1 = 0 ] ; then
+        chkconfig --del cyphesis
+        chkconfig --del cyclient
+fi
+
+%postun
+if [ $1 -ge 1 ]; then
+        /sbin/service cyphesis condrestart >/dev/null 2>&1
+fi
+if [ $1 = 0 ] ; then
+        userdel cyphesis >/dev/null 2>&1 || :
+fi
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -f service.lst
+%defattr(-,root,root)
+%config(noreplace) %{_sysconfdir}/cyphesis/cyphesis.vconf
+%config %{_sysconfdir}/cyphesis/mason.d
+%{_bindir}/cy*
+%{_datadir}/cyphesis/scripts
+%{_datadir}/cyphesis/rulesets/basic
+%{_datadir}/cyphesis/rulesets/mason
+%{_mandir}/man1/*.1.gz
+%doc AUTHORS COPYING NEWS README
+
+#%files acorn
+#%defattr(-,root,root)
+#%config %{_sysconfdir}/cyphesis/acorn.xml
+#%{_datadir}/cyphesis/rulesets/acorn
+
+#%files werewolf
+#%defattr(-,root,root)
+#%config %{_sysconfdir}/cyphesis/werewolf.xml
+#%{_datadir}/cyphesis/rulesets/werewolf

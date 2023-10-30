@@ -1,0 +1,105 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="type">mesh</string>
+                    <string name="path">dural/structures/cg_smithy/model/cg_smithy.mesh</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/structures/cg_smithy/model/cg_smithy.mesh</string>
+            </map>
+            <map name="area">
+                <map name="default">
+                    <int name="layer">7</int>
+                    <map name="shape">
+                        <list name="points">
+                            <list>
+                                <float>0.846432</float>
+                                <float>-1.05163</float>
+                            </list>
+                            <list>
+                                <float>0.702834</float>
+                                <float>-7.68035</float>
+                            </list>
+                            <list>
+                                <float>-7.06029</float>
+                                <float>-8.26479</float>
+                            </list>
+                            <list>
+                                <float>-7.0986</float>
+                                <float>-1.02287</float>
+                            </list>
+                            <list>
+                                <float>-8.56834</float>
+                                <float>-0.416192</float>
+                            </list>
+                            <list>
+                                <float>-8.43746</float>
+                                <float>4.39172</float>
+                            </list>
+                            <list>
+                                <float>5.13564</float>
+                                <float>4.68302</float>
+                            </list>
+                            <list>
+                                <float>5.12089</float>
+                                <float>-0.463925</float>
+                            </list>
+                        </list>
+                        <string name="type">polygon</string>
+                    </map>
+                </map>
+            </map>
+            <map name="terrainmod">
+                <map name="default">
+                    <float name="heightoffset">0</float>
+                    <map name="shape">
+                        <list name="points">
+                            <list>
+                                <float>0.846432</float>
+                                <float>-1.05163</float>
+                            </list>
+                            <list>
+                                <float>0.702834</float>
+                                <float>-7.68035</float>
+                            </list>
+                            <list>
+                                <float>-7.06029</float>
+                                <float>-8.26479</float>
+                            </list>
+                            <list>
+                                <float>-7.0986</float>
+                                <float>-1.02287</float>
+                            </list>
+                            <list>
+                                <float>-8.56834</float>
+                                <float>-0.416192</float>
+                            </list>
+                            <list>
+                                <float>-8.43746</float>
+                                <float>4.39172</float>
+                            </list>
+                            <list>
+                                <float>5.13564</float>
+                                <float>4.68302</float>
+                            </list>
+                            <list>
+                                <float>5.12089</float>
+                                <float>-0.463925</float>
+                            </list>
+                        </list>
+                        <string name="type">polygon</string>
+                    </map>
+                    <string name="type">levelmod</string>
+                </map>
+            </map>
+        </map>
+        <string name="id">castle_smithy</string>
+        <string name="objtype">class</string>
+        <string name="parent">structure</string>
+    </map>
+
+</atlas>

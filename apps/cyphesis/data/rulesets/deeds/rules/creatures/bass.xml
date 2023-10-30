@@ -1,0 +1,32 @@
+<atlas>
+    <map>
+        <map name="attributes">
+            <map name="bbox">
+                <list name="default">
+                    <float>-0.3377</float>
+                    <float>-0.0001</float>
+                    <float>-0.0446</float>
+                    <float>0.1829</float>
+                    <float>0.2381</float>
+                    <float>0.045</float>
+                </list>
+            </map>
+            <map name="mass">
+                <float name="default">5</float>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/tubular/bass_lm.modeldef</string>
+            </map>
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/tubular/model/bass_lm.mesh</string>
+                    <string name="type">capsule-x</string>
+                    <string name="scaler">y</string>
+                </map>
+            </map>
+        </map>
+        <string name="id">bass</string>
+        <string name="objtype">class</string>
+        <string name="parent">fish</string>
+    </map>
+</atlas>

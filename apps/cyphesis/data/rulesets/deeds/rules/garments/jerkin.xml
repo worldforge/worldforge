@@ -1,0 +1,101 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/creatures/biped/malebuilder/model/folded_shirt.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/creatures/biped/malebuilder/folded_shirt.entitymap</string>
+            </map>
+            <map name="worn">
+                <string name="default">torso</string>
+            </map>
+            <map name="name">
+                <string name="default">Simple leather jerkin</string>
+            </map>
+            <map name="description">
+                <string name="default">A simple leather jerkin. The leather isn't of the best quality.</string>
+            </map>
+            <map name="modify">
+                <list name="default">
+                    <map>
+                        <string name="constraint">get_entity(actor.attached_torso) = entity</string>
+                        <list name="observed_properties">
+                            <string>attached_torso</string>
+                        </list>
+                        <map name="modifiers">
+                            <map name="armor">
+                                <float name="append">2</float>
+                            </map>
+                        </map>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">jerkin_leather_simple</string>
+        <string name="objtype">class</string>
+        <string name="parent">garment</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="name">
+                <string name="default">Cured leather jerkin</string>
+            </map>
+            <map name="description">
+                <string name="default">A jerkin made of cured leather.</string>
+            </map>
+            <map name="modify">
+                <list name="default">
+                    <map>
+                        <string name="constraint">get_entity(actor.attached_torso) = entity</string>
+                        <list name="observed_properties">
+                            <string>attached_torso</string>
+                        </list>
+                        <map name="modifiers">
+                            <map name="armor">
+                                <float name="append">3</float>
+                            </map>
+                        </map>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">jerkin_leather_cured</string>
+        <string name="objtype">class</string>
+        <string name="parent">jerkin_leather_simple</string>
+    </map>
+
+    <map>
+        <map name="attributes">
+            <map name="name">
+                <string name="default">Reinforced leather jerkin</string>
+            </map>
+            <map name="description">
+                <string name="default">A reinforced leather jerkin. The leather seems to be of higher quality.</string>
+            </map>
+            <map name="modify">
+                <list name="default">
+                    <map>
+                        <string name="constraint">get_entity(actor.attached_torso) = entity</string>
+                        <list name="observed_properties">
+                            <string>attached_torso</string>
+                        </list>
+                        <map name="modifiers">
+                            <map name="armor">
+                                <float name="append">4</float>
+                            </map>
+                        </map>
+                    </map>
+                </list>
+            </map>
+        </map>
+        <string name="id">jerkin_leather_reinforced</string>
+        <string name="objtype">class</string>
+        <string name="parent">jerkin_leather_simple</string>
+    </map>
+</atlas>

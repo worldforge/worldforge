@@ -1,0 +1,48 @@
+<atlas>
+
+    <map>
+        <map name="attributes">
+            <map name="geometry">
+                <map name="default">
+                    <string name="path">dural/items/misc/curly_document/model/curly_document.mesh</string>
+                    <string name="type">box</string>
+                </map>
+            </map>
+            <map name="present">
+                <string name="default">dural/items/misc/curly_document/model/curly_document.mesh</string>
+            </map>
+            <map name="mass">
+                <float name="default">0.1</float>
+            </map>
+        </map>
+        <string name="id">blueprint</string>
+        <string name="objtype">class</string>
+        <string name="parent">thing</string>
+    </map>
+
+    <!-- A general base for blueprints which all require a forge_pit. -->
+    <map>
+        <map name="attributes">
+            <map name="usages">
+                <map name="append">
+                    <map name="craft">
+                        <map name="params">
+                            <map name="targets">
+                                <string name="type">entity</string>
+                                <string name="constraint">describe("You need a forge pit for crafting.", entity instance_of types.forge_pit) and (actor can_reach entity)</string>
+                                <int name="min">1</int>
+                                <int name="max">1</int>
+                            </map>
+                        </map>
+                        <string name="name">Craft</string>
+                        <string name="handler">world.objects.crafting.Craft.general_crafting</string>
+                    </map>
+                </map>
+            </map>
+        </map>
+        <string name="id">blueprint_generic_forge_pit</string>
+        <string name="objtype">class</string>
+        <string name="parent">blueprint</string>
+    </map>
+
+</atlas>
