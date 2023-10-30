@@ -93,6 +93,18 @@ TEST_CASE("Repository finds files", "[repository]") {
 		REQUIRE(repositoryDestination.listRoots()["test"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
 	}
 
+	SECTION("should store roots with strange names") {
+		Repository repositoryDestination("RepositoryRootStrangeNamesTestDirectory");
+
+		REQUIRE(repositoryDestination.storeRoot("test-foo", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.listRoots().size() == 1);
+		REQUIRE(repositoryDestination.listRoots()["test-foo"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+
+		REQUIRE(repositoryDestination.storeRoot("test:foo", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::FAILURE);
+
+	}
+
+
 	SECTION("fetching existing file using path should work") {
 
 
