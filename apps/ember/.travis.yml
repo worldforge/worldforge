@@ -1,0 +1,102 @@
+language: cpp
+jobs:
+  include:
+#    - os: linux
+#      dist: bionic
+#      compiler: clang
+    - os: linux #This one builds the AppImage and Snap (though not currently, as we've disabled it since it's done on Github Actions)
+      dist: bionic
+      compiler: gcc
+      env:
+        - BUILD_APPIMAGE=0 #Disabled here since we build it on Github Actions
+        - BUILD_SNAP=0 #Disabled here since we build it on Github Actions
+#    - os: linux
+#      dist: focal
+#      compiler: clang
+    - os: linux
+      dist: focal
+      compiler: gcc
+    - os: osx
+      osx_image: xcode10.2
+      compiler: clang
+
+addons:
+  snaps:
+    - name: snapcraft
+      confinement: classic
+  apt:
+    packages:
+      - ccache
+      - python3-pip
+      - doxygen
+      - graphviz
+      - libgl1-mesa-dev
+      - libxrandr-dev
+      - libxaw7-dev
+      - rsync
+  homebrew:
+    packages:
+      - xz
+      - ccache
+      - python3
+      - rsync
+git:
+  depth: false # We want the complete depth to be able to do "git describe" to get version numbers.
+
+env:
+  global:
+    - CONAN_V2_MODE=1
+    - CONAN_REVISIONS_ENABLED=1
+    - CONAN_SCM_TO_CONANDATA=1
+
+cache:
+  - pip
+  - ccache
+  - directories:
+      - $HOME/Library/Caches/Homebrew
+      - $HOME/build/worldforge/ember/build/media-0.8.0
+before_install:
+  - sudo pip3 install --upgrade pip wheel setuptools jinja2
+  - sudo pip3 install conan
+  - conan user
+  - conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+script:
+  - mkdir -p build && cd build
+  - conan profile new default --detect
+  - |
+    if [[ "$TRAVIS_OS_NAME" != "osx" && "$CXX" == "clang++" ]]; then
+      echo "Setting libc to use C++11 features"
+      conan profile update settings.compiler.libcxx=libstdc++11 default
+    fi
+  - conan install .. -pr default --build=missing --update
+  - |
+    if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+      echo "Uploading Conan artifacts"
+      conan user -p $CONAN_PASSWORD -r worldforge $CONAN_LOGIN_USERNAME
+      conan upload "*" -r worldforge -c --all
+    fi
+  - mkdir -p ~/install/usr
+  - cmake -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_BUILD_TYPE=Release .. || travis_terminate 1
+  - make media-download || travis_terminate 1
+  - make -j2 || travis_terminate 1
+  - make -j2 check || travis_terminate 1
+  # - if [ "$TRAVIS_OS_NAME" != "osx" -a "$CC" == "gcc" ]; then make dox; fi
+  - make install || travis_terminate 1
+  - |
+    if [[ x"$BUILD_APPIMAGE" == x"1" ]]; then
+      echo "Building AppImage"
+      ln -s ./usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
+      ln -s ./usr/share/applications/org.worldforge.ember.desktop ~/install/
+      ln -s ember.png ~/install/.DirIcon
+      curl -L https://github.com/AppImage/AppImageKit/releases/download/12/AppRun-x86_64 > ~/install/AppRun
+      chmod a+x ~/install/AppRun
+      curl -L https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
+      chmod a+x appimagetool-x86_64.AppImage
+      ./appimagetool-x86_64.AppImage -n ~/install
+    fi
+  - |
+    if [[ x"$BUILD_SNAP" == x"1" ]]; then
+      echo "Building Snap"
+      cp snap/snapcraft.yaml ~/install/usr/
+      cd ~/install/usr/ && snapcraft --destructive-mode
+    fi

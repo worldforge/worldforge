@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<terrain>
+	<layers>
+		<layer name="Sand" shadername="sand" diffusetexture="dural/environment/ground_sand_dirty/texture/D.dds" normalmaptexture="dural/environment/ground_sand_dirty/texture/N.dds" tilesize="8">
+			<foliage planttype="grass" populationtechnique="cluster" rendertechnique="grass">
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">10</param>
+				<param key="clusterDistance">25</param>
+				<param key="density">1.5</param>
+				<param key="falloff">0.6</param>
+				<param key="material">/dural/plants/grass/ducktail/texture/wave</param>
+				<param key="minHeight">2.0</param>
+				<param key="maxHeight">2.5</param>
+				<param key="minWidth">1.0</param>
+				<param key="maxWidth">1.5</param>
+				<param key="swayLength">0.25</param>
+				<param key="renderTech">quad</param>
+			</foliage>
+		</layer>
+		<layer name="Grass" shadername="grass" diffusetexture="dural/environment/ground_grass/texture/D.dds" normalmaptexture="dural/environment/ground_grass/texture/N.dds" tilesize="6">
+			<!--foliage planttype="grass" populationtechnique="cluster" rendertechnique="grass">
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">10</param>
+				<param key="clusterDistance">25</param>
+				<param key="density">2</param>
+				<param key="falloff">0.6</param>
+				<param key="material">/global/plants/grass/bittergrass_green/simple/wave</param>
+				<param key="minHeight">0.75</param>
+				<param key="maxHeight">1.25</param>
+				<param key="minWidth">0.75</param>
+				<param key="maxWidth">1.25</param>
+				<param key="renderTech">crossquad</param> 
+				
+				
+				<param key="minHeight">0.45</param>
+				<param key="maxHeight">0.65</param>
+				<param key="minWidth">0.45</param>
+				<param key="maxWidth">0.65</param>
+				<param key="swayLength">0.05</param>
+				<param key="renderTech">crossquad</param> 
+				
+				
+			</foliage-->
+			<foliage planttype="grass_green" populationtechnique="cluster" rendertechnique="grass">
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">10</param>
+				<param key="clusterDistance">25</param>
+				<param key="density">2</param>
+				<param key="falloff">0.6</param>
+				<param key="material">/dural/plants/grass/grass_clump/texture/green/wave</param>
+
+				<param key="minHeight">0.45</param>
+				<param key="maxHeight">0.65</param>
+				<param key="minWidth">0.45</param>
+				<param key="maxWidth">0.65</param>
+				<param key="swayLength">0.05</param>
+				<param key="renderTech">crossquad</param> 
+			</foliage>			
+			<!-- foliage planttype="grass_brown" populationtechnique="cluster" rendertechnique="grass">
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">10</param>
+				<param key="clusterDistance">24</param>
+				<param key="density">2</param>
+				<param key="falloff">0.6</param>
+				<param key="material">/global/plants/grass/bittergrass_brown/simple/wave</param>
+
+				<param key="minHeight">0.45</param>
+				<param key="maxHeight">0.65</param>
+				<param key="minWidth">0.45</param>
+				<param key="maxWidth">0.65</param>
+				<param key="swayLength">0.05</param>
+				<param key="renderTech">crossquad</param> 
+			</foliage>			
+			<foliage planttype="grass_yellow" populationtechnique="cluster" rendertechnique="grass">
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">10</param>
+				<param key="clusterDistance">23</param>
+				<param key="density">2</param>
+				<param key="falloff">0.6</param>
+				<param key="material">/global/plants/grass/bittergrass_yellow/simple/wave</param>
+
+				<param key="minHeight">0.45</param>
+				<param key="maxHeight">0.65</param>
+				<param key="minWidth">0.45</param>
+				<param key="maxWidth">0.65</param>
+				<param key="swayLength">0.05</param>
+				<param key="renderTech">crossquad</param> 
+			</foliage -->			
+			<foliage planttype="fern" populationtechnique="cluster" rendertechnique="shrubbery">
+				<param key="mesh">dural/plants/shrubs/fern/model/fern.mesh</param>
+				<param key="minScale">0.7</param>
+				<param key="maxScale">2.0</param>
+				<param key="threshold">70</param>
+				
+				<param key="minClusterRadius">1</param>
+				<param key="maxClusterRadius">3</param>
+				<param key="clusterDistance">30</param>
+				<param key="density">1</param>
+				<param key="falloff">0.7</param>
+			</foliage>
+			<foliage planttype="camellia" populationtechnique="cluster" rendertechnique="shrubbery">
+				<param key="mesh">dural/plants/flowers/camellia/model/camellia.mesh</param>
+				<param key="minScale">0.5</param>
+				<param key="maxScale">2</param>
+				<param key="threshold">150</param>
+				
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">5</param>
+				<param key="clusterDistance">40</param>
+				<param key="density">1</param>
+				<param key="falloff">0.7</param>
+			</foliage>
+			<foliage planttype="leaves" populationtechnique="cluster" rendertechnique="shrubbery">
+				<param key="mesh">dural/plants/shrubs/leaf/model/leaves_a.mesh</param>
+				<param key="minScale">0.5</param>
+				<param key="maxScale">2</param>
+				<param key="threshold">150</param>
+				
+				<param key="minClusterRadius">2</param>
+				<param key="maxClusterRadius">5</param>
+				<param key="clusterDistance">35</param>
+				<param key="density">1</param>
+				<param key="falloff">0.7</param>
+			</foliage>
+		</layer>
+		<layer name="Snow" shadername="snow" diffusetexture="dural/environment/snow/texture/D.dds" normalmaptexture="" tilesize="8">
+		</layer>
+		<layer name="Rock" shadername="rock" diffusetexture="dural/environment/stone_granite_weathered/texture/D.dds" normalmaptexture="dural/environment/stone_granite_weathered/texture/N.dds" tilesize="6">
+		</layer>
+		<layer name="Silt" shadername="silt" diffusetexture="dural/base/texture/dark.dds" normalmaptexture="" tilesize="8">
+		</layer>
+		<layer name="Leaf covered" areaindex="6" diffusetexture="dural/environment/ground_leaf_covered/texture/D.dds" normalmaptexture="dural/environment/ground_leaf_covered/texture/N.dds" tilesize="4">
+		</layer>
+		<layer name="Dirt" areaindex="7" diffusetexture="dural/environment/ground_dirt_dry/texture/D.dds" normalmaptexture="dural/environment/ground_dirt_dry/texture/N.dds" tilesize="4">
+		</layer>
+		<layer name="Plowed" areaindex="8" diffusetexture="dural/environment/ground_dirt_plowed/texture/D.dds" normalmaptexture="dural/environment/ground_dirt_plowed/texture/N.dds" tilesize="8">
+		</layer>
+	</layers>
+</terrain>

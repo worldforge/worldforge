@@ -1,0 +1,123 @@
+//
+// C++ Interface: ITerrainPageBridge
+//
+// Description: 
+//
+//
+// Author: Erik Ogenvik <erik@ogenvik.org>, (C) 2008
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
+//
+#ifndef EMBEROGREITERRAINPAGEBRIDGE_H
+#define EMBEROGREITERRAINPAGEBRIDGE_H
+
+namespace Ember {
+namespace OgreView {
+namespace Terrain {
+
+class TerrainPage;
+
+class TerrainPageGeometry;
+
+/**
+
+@brief Implementation of this interface acts as bridges between an Ember TerrainPage and an Ogre terrain page.
+
+Because we don't want to make Ember and the scene manager used for terrain rendering too tightly coupled we provide this interface instead of letting TerrainPage know of any scene manager classes.
+It's up to the scene manager specific adapter code to provide concrete instances of this interface which knows how to react mainly to calls to updateTerrain(), and update the Ogre representation accordinly.
+
+@author Erik Ogenvik <erik@ogenvik.org>
+*/
+class ITerrainPageBridge {
+	friend class TerrainPage;
+
+public:
+	/**
+	 *    @brief Ctor.
+	 */
+	ITerrainPageBridge() : mTerrainPage(nullptr) {}
+
+	/**
+	 *    @brief Dtor.
+	 */
+	virtual ~ITerrainPageBridge() = default;
+
+
+	/**
+	 *    @brief Updates the Ogre mesh after changes to the underlying heightdata.
+	 *
+	 * Call this when the heightdata has changed and you want the Ogre representation to be updated to reflect this.
+	 */
+	virtual void updateTerrain(TerrainPageGeometry& geometry) = 0;
+
+	/**
+	 *    @brief Notifies class in the Ogre side about the page being ready (after being created or modified).
+	 */
+	virtual void terrainPageReady() = 0;
+
+	/**
+	 * @brief Accessor to the terrain page this bridge is bound to.
+	 * @return A pointer to the terrain page, or null if no page yet has been bound.
+	 */
+	TerrainPage* getTerrainPage() const;
+
+	/**
+	 * @brief Binds the bridge to a TerrainPage.
+	 * @param terrainPage 
+	 */
+	void bindToTerrainPage(TerrainPage* terrainPage);
+
+	/**
+	 * @brief Unbinds from a TerrainPage.
+	 * Call this when the TerrainPage to which this bridge is connected to is destroyed. If not, you run the risk of segfaults since the bridge will still keep a pointer to the now deleted TerrainPage.
+	 */
+	void unbindFromTerrainPage();
+
+	/**
+	 * @brief Returns true if the page is shown.
+	 *
+	 * The page might be in preparation stages and not actually shown to the user.
+	 * @return True if the page has finished loading and is shown.
+	 */
+	virtual bool isPageShown() const = 0;
+
+
+protected:
+
+
+	/**
+	@brief The TerrainPage instance to which this bridge is connected to.
+	*/
+	TerrainPage* mTerrainPage;
+};
+
+
+inline void ITerrainPageBridge::bindToTerrainPage(TerrainPage* terrainPage) {
+	mTerrainPage = terrainPage;
+}
+
+inline void ITerrainPageBridge::unbindFromTerrainPage() {
+	mTerrainPage = nullptr;
+}
+
+inline TerrainPage* ITerrainPageBridge::getTerrainPage() const {
+	return mTerrainPage;
+}
+
+
+}
+}
+}
+#endif

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.8,0.0},{0.8,0.0}}" />
+		<Property name="Position" value="{{0.1,50.0},{0.1,0.0}}" />
+		<Property name="Text" value="Server logger" />
+		<Window name="LoggingEnabled" type="EmberLook/Checkbox">
+			<Property name="Position" value="{{0,4},{0,20}}" />
+			<Property name="Size" value="{{0,120},{0,20}}" />
+			<Property name="TooltipText" value="Toggle logging enabled." />
+			<Property name="Text" value="Enabled" />
+		</Window>
+		<Window name="ClearButton" type="EmberLook/Button">
+			<Property name="Text" value="Clear" />
+			<Property name="Position" value="{{0.0,140},{0,20}}" />
+			<Property name="Size" value="{{0,50},{0,20}}" />
+		</Window>		
+		<Window name="LogText" type="EmberLook/MultiLineEditbox">
+			<Property name="Position" value="{{0,4},{0,45.0}}" />
+			<Property name="Size" value="{{1,-8},{1,-50}}" />
+		</Window>
+	</Window>
+</GUILayout>

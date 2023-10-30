@@ -1,0 +1,97 @@
+2014-02-17	Erik Ogenvik <erik@ogenvik.org>
+
+	* Version 0.7.2 released
+
+2013-10-25	Erik Ogenvik <erik@ogenvik.org>
+
+	* Version 0.7.1 released
+
+2013-01-14	Erik Ogenvik <erik@worldforge.org>
+
+	* Version 0.7.0 released
+
+2012-07-11	Erik Ogenvik <erik@worldforge.org>
+
+	* Version 0.6.3 released
+
+2011-11-16	Erik Ogenvik <erik@worldforge.org>
+
+	* Version 0.6.2 released
+
+2011-04-17	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.6.1 released
+
+2010-11-17	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.6.0 released
+
+2009-10-19	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.7 released
+
+2009-04-24	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.6 released
+
+2008-12-07	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.5 released
+
+2008-09-09	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.4 released
+
+2008-07-08	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.3 released
+
+2008-04-19	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.2 released
+
+2007-12-20	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.1 released
+
+2007-07-24	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.5.0 released
+
+2007-03-01	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.4.2 released
+
+2006-09-01	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.4.1 released
+
+2006-03-05	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.4.0 released
+
+2005-10-29	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.3.4 released
+
+2005-09-26	Erik Hjortsberg <erik@worldforge.org>
+
+	* Version 0.3.2 released
+
+Xmp - 07/12/2002
+XML widgets complete
+
+Xmp - 04/12/2002
+StateManager is well underway, Labels work, now aiming for panels and after
+that buttons.
+
+OGRE is being experimented with as a potential 3D engine.
+
+Xmp - 11/11/2002
+
+The statemanager work is now in progess.  The states will be specified in XML &
+parsed by libxml2.
+
+Xmp - 10/10/2002
+
+Dime has now reached basic IRC like functionality.

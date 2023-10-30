@@ -1,0 +1,54 @@
+<entityrecipes>
+    <entityrecipe name="magnolia">
+        <entities>
+            <map>
+                <string name="parent">magnolia</string>
+                <list name="scale" optional="scale">
+                    <float>$scale</float>
+                </list>
+            </map>
+        </entities>
+        <adapters>
+            <adapter name="scale" type="number_range" allowrandom="yes" title="Scale"/>
+        </adapters>
+    </entityrecipe>
+    <entityrecipe name="oakleaf">
+        <entities>
+            <map>
+                <string name="parent">oakleaf</string>
+                <list name="scale" optional="scale">
+                    <float>$scale</float>
+                </list>
+            </map>
+        </entities>
+        <adapters>
+            <adapter name="scale" type="number_range" allowrandom="yes" title="Scale"/>
+        </adapters>
+    </entityrecipe>
+    <entityrecipe name="willow_bush">
+        <entities>
+            <map>
+                <string name="parent">willow_bush</string>
+                <list name="scale" optional="scale">
+                    <float>$scale</float>
+                </list>
+            </map>
+        </entities>
+        <adapters>
+            <adapter name="scale" type="number_range" allowrandom="yes" title="Scale"/>
+        </adapters>
+    </entityrecipe>
+    <entityrecipe name="wormwood">
+        <entities>
+            <map>
+                <string name="parent">wormwood</string>
+                <list name="scale" optional="scale">
+                    <float>$scale</float>
+                </list>
+            </map>
+        </entities>
+        <adapters>
+            <adapter name="scale" type="number_range" allowrandom="yes" title="Scale"/>
+        </adapters>
+    </entityrecipe>
+</entityrecipes>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.00,300.0},{0.0,300.0}}" />
+		<Property name="Position" value="{{0,0},{0,0}}" />
+		<Property name="HorizontalAlignment" value="Centre" />
+		<Property name="VerticalAlignment" value="Centre" />
+		<Property name="Text" value="Trade Window" />
+		
+		<Window name="Label" type="EmberLook/StaticText">
+			<Property name="Size" value="{{1.00,0.0},{0.0,50.0}}" />
+			<Property name="Position" value="{{0,0},{0,0}}" />
+			<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+			<Property name="Text" value="Below are goods available from this merchant, you can click them to buy or drag your own items from your inventory here to attempt to sell them." />
+		</Window>
+		<Window name="AvailableGoods" type="EmberLook/MultiColumnList">
+			<Property name="Size" value="{{1.00,0.0},{1.0,-50.0}}" />
+			<Property name="Position" value="{{0,0},{0,50}}" />
+			
+			<Property name="ColumnHeader" value="text:Item width:{0.6, 0} id:0" />
+			<Property name="ColumnHeader" value="text:Price width:{0.2, 0} id:1" />
+			<Property name="ColumnHeader" value="text:In stock width:{0.2, -1} id:2" />
+		</Window>
+	</Window>
+</GUILayout>

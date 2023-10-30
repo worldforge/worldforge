@@ -1,0 +1,238 @@
+//
+// C++ Implementation: LensFlare
+//
+// Description:
+//
+//
+// Author     : David de Lorenzo
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
+//
+#include "LensFlare.h"
+#include "domain/EmberEntity.h"
+
+#include <OgreVector.h>
+#include <OgreSceneManager.h>
+#include <OgreBillboard.h>
+#include <OgreBillboardSet.h>
+#include <OgreSceneNode.h>
+#include <OgreCamera.h>
+
+using namespace Ogre;
+
+namespace Ember {
+namespace OgreView {
+
+namespace Environment {
+
+
+/* ------------------------------------------------------------------------- */
+/// Constructor
+/// @param LightPosition The 3D position of the Light, relative to the camera.
+/// @param camera        The camera on which the lensflare effect will appear.
+/// @param SceneMgr      Pointer on the SceneManager.
+/* ------------------------------------------------------------------------- */
+LensFlare::LensFlare(Camera* camera, SceneManager* SceneMgr) : mHaloSet(nullptr), mBurstSet(nullptr), mLightNode(nullptr)
+{
+	mSceneMgr      = SceneMgr;
+	mCamera        = camera;
+	mHidden        = true;
+}
+
+/* ------------------------------------------------------------------------- */
+/// Destructor
+/* ------------------------------------------------------------------------- */
+LensFlare::~LensFlare()
+{
+	if (mLightNode) {
+		mLightNode->detachObject(mHaloSet);
+		mLightNode->detachObject(mBurstSet);
+		mSceneMgr->destroyBillboardSet(mHaloSet);
+		mSceneMgr->destroyBillboardSet(mBurstSet);
+
+/*		Ogre::SceneNode* parent = static_cast<Ogre::SceneNode*>(mNode->getParent());
+		if (parent) {
+			parent->removeAndDestroyChild(mNode->getName());
+		} else {
+			mNode->getCreator()->destroySceneNode(mNode);
+		}*/
+	}
+}
+
+void LensFlare::setNode(Ogre::SceneNode* node)
+{
+	mLightNode = node;
+}
+
+void LensFlare::initialize()
+{
+	createLensFlare();
+}
+
+
+/* ------------------------------------------------------------------------- */
+/// this function creates and shows all the LensFlare graphical elements.
+/* ------------------------------------------------------------------------- */
+bool LensFlare::createLensFlare()
+{
+	Real LF_scale = 150;
+	try {
+		// -----------------------------------------------------
+		// We create 2 sets of billboards for the lensflare
+		// -----------------------------------------------------
+		mHaloSet = mSceneMgr->createBillboardSet("halo");
+		mHaloSet->setMaterialName("/global/environment/lensflare/halo");
+		mHaloSet->setCullIndividually(true);
+		mHaloSet->setRenderQueueGroup(RENDER_QUEUE_SKIES_LATE);
+
+		mBurstSet= mSceneMgr->createBillboardSet("burst");
+		mBurstSet->setMaterialName("/global/environment/lensflare/burst");
+		mBurstSet->setCullIndividually(true);
+		mBurstSet->setRenderQueueGroup(RENDER_QUEUE_SKIES_LATE);
+	} catch (const std::exception&) {
+		S_LOG_FAILURE("Couldn't load lens flare, you are probably missing the needed materials.");
+		return false;
+	}
+	// The node is located at the light source.
+	//mLightNode  = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+
+	mLightNode->attachObject(mBurstSet);
+	mLightNode->attachObject(mHaloSet);
+
+	// -------------------------------
+	// Creation of the Halo billboards
+	// -------------------------------
+	Billboard* LF_Halo1 = mHaloSet->createBillboard(0,0,0);
+	LF_Halo1->setDimensions(LF_scale*0.5f,LF_scale*0.5f);
+	Billboard* LF_Halo2 = mHaloSet->createBillboard(0,0,0);
+	LF_Halo2->setDimensions(LF_scale,LF_scale);
+	Billboard* LF_Halo3 = mHaloSet->createBillboard(0,0,0);
+	LF_Halo3->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
+
+
+	// -------------------------------
+	// Creation of the "Burst" billboards
+	// -------------------------------
+	Billboard* LF_Burst1 = mBurstSet->createBillboard(0,0,0);
+	LF_Burst1->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
+	Billboard* LF_Burst2 = mBurstSet->createBillboard(0,0,0);
+	LF_Burst2->setDimensions(LF_scale*0.5f,LF_scale*0.5f);
+	Billboard* LF_Burst3 = mBurstSet->createBillboard(0,0,0);
+	LF_Burst3->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
+
+	return true;
+}
+
+const Ogre::Vector3& LensFlare::getLightPosition() const
+{
+	return mLightNode->_getDerivedPosition();
+}
+
+
+/* -------------------------------------------------------------------------- */
+/// This function updates the lensflare effect.
+/** This function should be called by your frameListener.
+*/
+/* -------------------------------------------------------------------------- */
+void LensFlare::update()
+{
+	if (mHidden || !mLightNode) return;
+
+	/// If the Light is out of the Camera field Of View, the lensflare is hidden.
+	if (!mCamera->isVisible(getLightPosition()))
+	{
+		mHaloSet->setVisible(false);
+		mBurstSet->setVisible(false);
+		return;
+	}
+
+	Vector3 lightToCamera = mCamera->getDerivedPosition() - getLightPosition();
+
+	Vector3 CameraVect  = lightToCamera.length() * mCamera->getDerivedDirection();
+	CameraVect += mCamera->getDerivedPosition();
+
+	// The LensFlare effect takes place along this vector.
+	Vector3 LFvect = (CameraVect - getLightPosition());
+
+//	LFvect += Vector3(-64,-64,0);  // sprite dimension (to be adjusted, but not necessary)
+
+	// The different sprites are placed along this line.
+	mHaloSet->getBillboard(0)->setPosition( LFvect);
+	mHaloSet->getBillboard(1)->setPosition( LFvect*0.725f);
+	mHaloSet->getBillboard(2)->setPosition( LFvect*0.250f);
+
+	mBurstSet->getBillboard(0)->setPosition( LFvect*0.833f);
+	mBurstSet->getBillboard(1)->setPosition( LFvect*0.500f);
+	mBurstSet->getBillboard(2)->setPosition( LFvect*0.320f);
+
+	// We redraw the lensflare (in case it was previouly out of the camera field, and hidden)
+	this->setVisible(true);
+}
+
+/* ------------------------------------------------------------------------- */
+/// This function shows (or hide) the lensflare effect.
+/* ------------------------------------------------------------------------- */
+void LensFlare::setVisible(bool visible)
+{
+	if (mLightNode) {
+		mHaloSet->setVisible(visible);
+		mBurstSet->setVisible(visible);
+		mHidden = !visible;
+	}
+}
+
+
+/* ------------------------------------------------------------------------- */
+/// This function updates the light source position.
+/** This function can be used if the light source is moving.*/
+/* ------------------------------------------------------------------------- */
+// void LensFlare::setLightPosition(Vector3 pos)
+// {
+// 	mLightPosition = pos;
+// 	if (mNode) {
+// 		mNode->setPosition(mLightPosition);
+// 	}
+// }
+
+
+/* ------------------------------------------------------------------------- */
+/// This function changes the colour of the burst.
+/* ------------------------------------------------------------------------- */
+void LensFlare::setBurstColour(ColourValue color)
+{
+	if (mLightNode) {
+		mBurstSet->getBillboard(0)->setColour(color);
+		mBurstSet->getBillboard(1)->setColour(color*0.8f);
+		mBurstSet->getBillboard(2)->setColour(color*0.6f);
+	}
+}
+
+/* ------------------------------------------------------------------------- */
+/// This function changes the colour of the halos.
+/* ------------------------------------------------------------------------- */
+void LensFlare::setHaloColour(ColourValue color)
+{
+	if (mLightNode) {
+		mHaloSet->getBillboard(0)->setColour(color*0.8f);
+		mHaloSet->getBillboard(1)->setColour(color*0.6f);
+		mHaloSet->getBillboard(2)->setColour(color);
+	}
+}
+
+
+}
+
+}
+}

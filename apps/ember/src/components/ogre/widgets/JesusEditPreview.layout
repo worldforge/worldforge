@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.300000,0.0},{0.200000,0.0}}" />
+		<Property name="Position" value="{{0.700000,0.0},{0.500000,0.0}}" />
+		<Property name="Alpha" value="0.6" />
+		<Property name="Text" value="Builder Preview" />
+		<Window name="MainInnerWindow" type="DefaultWindow">
+			<Property name="Position" value="{{0.0,2},{0,0}}" />
+			<Property name="Size" value="{{1,-2},{1,0}}" />
+			<Property name="InheritsAlpha" value="True" />
+			<Window name="Image" type="EmberLook/StaticImage">
+				<Property name="Size" value="{{0.900000,0.0},{0.900000,0.0}}" />
+			</Window>
+			<Window name="Zoom" type="EmberLook/VerticalSlider">
+				<Property name="Size" value="{{0.050000,0.0},{0.900000,0.0}}" />
+				<Property name="Position" value="{{0.900000,0.0},{0.050000,0.0}}" />
+				<Property name="TooltipText" value="Drag the slider to zoom." />
+			</Window>
+		</Window>
+	</Window>
+</GUILayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.0,400.0},{0.0,450.0}}" />
+		<Property name="Position" value="{{0.5,-200.0},{0.5,-200.0}}" />
+		<Property name="Text" value="Settings" />
+		
+		<Window name="Tabs" type="EmberLook/TabControl">
+			<Property name="Size" value="{{1.0, 0.0}, {1.0, -35.0}}" />
+			<Property name="Position" value="{{0.0, 0.0}, {0.0, 0.0}}" />
+		</Window>
+		<Window name="OKButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
+			<Property name="Position" value="{{1.0, -240.0}, {1.0, -30.0}}" />
+			
+			<Property name="Text" value="OK" />
+		</Window>
+		<Window name="ApplyButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
+			<Property name="Position" value="{{1.0, -160.0}, {1.0, -30.0}}" />
+			<Property name="Disabled" value="true" />
+			
+			<Property name="Text" value="Apply" />
+		</Window>
+		<Window name="CancelButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
+			<Property name="Position" value="{{1.0, -80.0}, {1.0, -30.0}}" />
+			
+			<Property name="Text" value="Cancel" />
+		</Window>
+	</Window>
+</GUILayout>

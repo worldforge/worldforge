@@ -1,0 +1,6 @@
+add_compile_options(${WF_WARNING_FLAGS})
+add_subdirectory(components)
+add_subdirectory(domain)
+add_subdirectory(services)
+add_subdirectory(framework)
+add_subdirectory(main)

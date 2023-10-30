@@ -1,0 +1,10 @@
+<GUILayout version="4">
+	<Window name="Wrapper" type="DefaultWindow">
+		<Property name="Position" value="{{0,0},{0,0}}" />
+		<Property name="Size" value="{{0,100},{0,25}}" />
+		<Window name="String" type="EmberLook/Combobox">
+			<Property name="Position" value="{{0,0},{0,0}}" />
+			<Property name="Size" value="{{0,100},{0,100}}" />
+		</Window>
+	</Window>
+</GUILayout>

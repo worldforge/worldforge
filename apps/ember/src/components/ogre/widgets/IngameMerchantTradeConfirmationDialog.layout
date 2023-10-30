@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.00,200.0},{0.0,200.0}}" />
+		<Property name="Position" value="{{0,0},{0,0}}" />
+		<Property name="HorizontalAlignment" value="Centre" />
+		<Property name="VerticalAlignment" value="Centre" />
+		<Property name="Text" value="Confirm the trade" />
+		
+		<Window name="Label" type="EmberLook/StaticText">
+			<Property name="Size" value="{{1.0,0.0},{0.0,50.0}}" />
+			<Property name="Position" value="{{0,0},{0,0}}" />
+			<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+			<Property name="Text" value="Are you sure you want to buy XY for XY?" />
+		</Window>
+		<Window name="ConfirmButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.5,-5.0},{0.0,30.0}}" />
+			<Property name="Position" value="{{0.0,0.0},{1.0,-30.0}}" />
+			
+			<Property name="Text" value="Confirm" />
+		</Window>
+		<Window name="CancelButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.5,-5.0},{0.0,30.0}}" />
+			<Property name="Position" value="{{0.5,5.0},{1.0,-30.0}}" />
+			
+			<Property name="Text" value="Cancel" />
+		</Window>
+	</Window>
+</GUILayout>

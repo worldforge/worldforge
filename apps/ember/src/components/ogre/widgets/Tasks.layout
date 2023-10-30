@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Position" value="{{0.0,0.0},{1,-390.0}}" />
+		<Property name="Size" value="{{0,300},{0,90.0}}" />
+		<Property name="Text" value="Tasks" />
+		<Property name="Alpha" value="0.6" />
+		<Window name="MainInnerWindow" type="DefaultWindow">
+			<Property name="Position" value="{{0.0,2},{0,0}}" />
+			<Property name="Size" value="{{1,-2},{1,0}}" />
+			<Window name="NameText" type="EmberLook/StaticText">
+				<Property name="Position" value="{{0.0,5},{0,5}}" />
+				<Property name="Size" value="{{0,250},{0,20}}" />
+			</Window>
+			<Window name="Progress" type="EmberLook/ProgressBar">
+				<Property name="Text" value="Progress" />
+				<Property name="Position" value="{{0.0,5},{0,25}}" />
+				<Property name="Size" value="{{0,280},{0,15}}" />
+			</Window>
+			<Window name="Buttons" type="HorizontalLayoutContainer">
+				<Property name="Size" value="{{1,-5},{0,20}}" />
+				<Property name="Position" value="{{0.0,5},{0,42}}" />
+			</Window>
+		</Window>
+	</Window>
+</GUILayout>

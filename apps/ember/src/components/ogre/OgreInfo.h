@@ -1,0 +1,76 @@
+//
+// C++ Interface: OgreInfo
+//
+// Description:
+//
+//
+// Author: Erik Ogenvik <erik@ogenvik.org>, (C) 2006
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software Foundation,
+// Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
+//
+#ifndef EMBEROGREOGREINFO_H
+#define EMBEROGREOGREINFO_H
+
+#include <string>
+
+namespace Ember {
+namespace OgreView {
+
+/**
+
+@brief Provides methods for getting some basic information about the Ogre environment, as well as utility method for working with Ogre.
+
+@author Erik Ogenvik <erik@ogenvik.org>
+*/
+class OgreInfo
+{
+public:
+
+    /**
+     * @brief Checks if the rendering is indirect, for example when using Mesa drivers on Linux. This will result in _very_ bad performance, and is usually caused by the user not having vendor drivers installed.
+     * @return True if rendering is indirect.
+     */
+    static bool isIndirect();
+
+    /**
+     * @brief Creates a "unique" resource name.
+     * The way this is done is by appending the value of an internal counter on the supplied name.
+     * This of course doesn't guarantee that the name is unique, but with the counter being a long long int it should be fairly safe.
+     * @param resourceName The name of the resource.
+     * @return The supplied name with the value of an internal counter suffixed.
+     */
+    static std::string createUniqueResourceName(const std::string& resourceName);
+
+    /**
+     * @brief Performs simple diagnosis of the current state of the Ogre system and writes to the supplied stream.
+     *
+     * @param outputStream Stream to which the diagnosis information will be written.
+     */
+    static void diagnose(std::ostream& outputStream);
+
+private:
+
+	/**
+	 * @brief Internal counter for generating "unique" resource names.
+	 */
+	static long long int sResourceCounter;
+
+};
+
+}
+
+}
+
+#endif

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Ember
+GenericName=3d client for Worldforge MMORPGs
+GenericName[sv]=3d klient för Worldforge MMORPGs
+GenericName[tr]=Worldforge MMORPG için 3B İstemci
+Icon=ember
+Exec=ember
+Terminal=false
+Categories=Game;RolePlaying;
+Keywords=Game;Role Playing;Role-Playing;3D;3-D;Massively;Multiplayer;Online;MMO;MMORPG;Fantasy;

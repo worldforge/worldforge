@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="MainWindow" type="EmberLook/DialogWindow">
+		<Property name="Size" value="{{0.0,300.0},{0.0,200.0}}" />
+		<Property name="Position" value="{{0.5,-150.0},{0.5,-100.0}}" />
+		<Property name="Text" value="Unapplied changes!" />
+		<Property name="CloseButtonEnabled" value="false" />
+		
+		<Window name="Text" type="EmberLook/StaticText">
+			<Property name="Size" value="{{1.0, 0.0}, {1.0, -35.0}}" />
+			<Property name="Position" value="{{0.0, 0.0}, {0.0, 0.0}}" />
+			
+			<Property name="Text" value="There are changes in the settings that weren't applied. Do you want to apply or discard them?" />
+			<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+		</Window>
+		<Window name="ApplyButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
+			<Property name="Position" value="{{1.0, -160.0}, {1.0, -30.0}}" />
+			
+			<Property name="Text" value="Apply" />
+		</Window>
+		<Window name="DiscardButton" type="EmberLook/Button">
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
+			<Property name="Position" value="{{1.0, -80.0}, {1.0, -30.0}}" />
+			
+			<Property name="Text" value="Discard" />
+		</Window>
+	</Window>
+</GUILayout>

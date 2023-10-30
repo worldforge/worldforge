@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+	<Window name="Mainwindow" type="EmberLook/FrameWindow">
+		<Property name="Visible" value="false" />
+		<Property name="Size" value="{{0,400.0},{0,400.0}}" />
+		<Property name="Position" value="{{0.0,0.0},{0,0.0}}" />
+		<Property name="Alpha" value="0.6" />
+		<Property name="Text" value="Entity browser" />
+		<Window name="MainInnerWindow" type="DefaultWindow">
+			<Property name="Position" value="{{0.0,4},{0,0}}" />
+			<Property name="Size" value="{{1,-8},{1,0}}" />
+			<Property name="InheritsAlpha" value="True" />
+			<Window name="MainTabControl" type="EmberLook/TabControl">
+				<Property name="Size" value="{{1.0,-8.0},{1.00,-8.0}}" />
+				<Property name="Position" value="{{0.0,4.0},{0.0,4.0}}" />
+				<Property name="InheritsAlpha" value="true" />
+				<Window name="Eris" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
+					<Property name="Text" value="Eris" />
+					<Property name="InheritsAlpha" value="false" />
+					<Property name="Visible" value="true" />
+					<Window name="FilterEntities" type="EmberLook/Editbox">
+						<Property name="Position" value="{{0,0},{1.0,-50}}" />
+						<Property name="Size" value="{{0,75},{0,25}}" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+					<Window name="Refresh" type="EmberLook/Button">
+						<Property name="Position" value="{{0,0},{1.0,-20}}" />
+						<Property name="Size" value="{{0,75},{0,20}}" />
+						<Property name="Text" value="Refresh" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+					<Window name="EntityList" type="EmberLook/Listbox">
+						<Property name="Position" value="{{0,4},{0,4}}" />
+						<Property name="Size" value="{{0,200},{1,-70}}" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+				</Window>
+				<Window name="Ogre" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
+					<Property name="Text" value="Ogre" />
+					<Property name="InheritsAlpha" value="false" />
+					<Property name="Visible" value="false" />
+					<Window name="FilterSceneNodes" type="EmberLook/Editbox">
+						<Property name="Position" value="{{0,4},{1.0,-65}}" />
+						<Property name="Size" value="{{0,75},{0,25}}" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+					<Window name="RefreshSceneNodes" type="EmberLook/Button">
+						<Property name="Position" value="{{0,0},{1.0,-20}}" />
+						<Property name="Size" value="{{0,75},{0,20}}" />
+						<Property name="Text" value="Refresh" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+					<Window name="SceneNodesList" type="EmberLook/Listbox">
+						<Property name="Position" value="{{0,4},{0,4}}" />
+						<Property name="Size" value="{{0,200},{1,-70}}" />
+						<Property name="InheritsAlpha" value="True" />
+					</Window>
+					<Window name="SceneNodeInfo" type="VerticalLayoutContainer">
+						<Property name="Position" value="{{0,205},{0,4}}" />
+						<Property name="Size" value="{{1,-210},{1,-70}}" />
+						<Property name="InheritsAlpha" value="True" />
+						<Window name="Position" type="DefaultWindow">
+							<Property name="Size" value="{{1.0,0},{0,25}}" />
+							<Window name="Text" type="EmberLook/StaticText">
+								<Property name="Position" value="{{0,0},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+								<Property name="Text" value="Pos.:" />
+								<Property name="InheritsAlpha" value="True" />
+								<Property name="VertFormatting" value="TopAligned" />
+								<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+								<Property name="FrameEnabled" value="false" />
+							</Window>
+							<Window name="X" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,50},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Y" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,100},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Z" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,150},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+						</Window>
+						<Window name="Orientation" type="DefaultWindow">
+							<Property name="Size" value="{{1.0,0},{0,30}}" />
+							<Window name="Text" type="EmberLook/StaticText">
+								<Property name="Position" value="{{0,0},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+								<Property name="Text" value="Orient.:" />
+								<Property name="InheritsAlpha" value="True" />
+								<Property name="VertFormatting" value="TopAligned" />
+								<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+								<Property name="FrameEnabled" value="false" />
+							</Window>
+							<Window name="X" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,50},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Y" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,100},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Z" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,150},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Scalar" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,200},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+						</Window>
+						<Window name="Scale" type="DefaultWindow">
+							<Property name="Size" value="{{1.0,0},{0,55}}" />
+							<Window name="Text" type="EmberLook/StaticText">
+								<Property name="Position" value="{{0,0},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+								<Property name="Text" value="Scale:" />
+								<Property name="InheritsAlpha" value="True" />
+								<Property name="VertFormatting" value="TopAligned" />
+								<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+								<Property name="FrameEnabled" value="false" />
+							</Window>
+							<Window name="X" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,50},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Y" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,100},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="Z" type="EmberLook/Editbox">
+								<Property name="Position" value="{{0,150},{0,0}}" />
+								<Property name="Size" value="{{0,45},{0,25}}" />
+							</Window>
+							<Window name="SizeText" type="EmberLook/StaticText">
+								<Property name="Position" value="{{0,0},{0,30}}" />
+								<Property name="Size" value="{{1,0},{0,25}}" />
+								<Property name="Text" value="Size:" />
+								<Property name="InheritsAlpha" value="True" />
+								<Property name="VertFormatting" value="TopAligned" />
+								<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+								<Property name="FrameEnabled" value="false" />
+							</Window>
+						</Window>
+						<Window name="BoundingBox" type="DefaultWindow">
+							<Property name="Size" value="{{1.0,0},{0,55}}" />
+							<Window name="ShowBoundingBox" type="EmberLook/Checkbox">
+								<Property name="Size" value="{{1,0},{0,20}}" />
+								<Property name="Text" value="Show bounding box" />
+							</Window>
+						</Window>
+					</Window>
+				</Window>
+			</Window>
+		</Window>
+	</Window>
+</GUILayout>

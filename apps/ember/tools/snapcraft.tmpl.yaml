@@ -1,0 +1,32 @@
+name: ember
+base: core20
+version: '@VERSION@'
+title: Ember MMORPG client
+summary: 3d client for Worldforge MMORPGs
+description: |
+  A client for the Worldforge MMORPG system.
+  Play online multiuser games, or create them yourself.
+grade: devel
+confinement: strict
+license: GPL-2.0
+compression: lzo
+
+apps:
+  ember:
+    extensions: [gnome-3-38]
+    environment:
+      SDL_AUDIODRIVER: pulse
+    command: bin/ember
+    plugs:
+      - audio-playback
+      - network
+      - opengl
+      - wayland
+      - x11
+
+parts:
+  ember:
+    stage-packages:
+      - libgcc1
+    source: .
+    plugin: dump
