@@ -569,14 +569,14 @@ Connection::Connection(boost::asio::io_service& io_service,
 		BaseConnection(io_service, cnm, "game_"),
 		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(event_service),
-		_host(host),
-		_port(port),
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info{host},
 		m_responder(nullptr) {
 	_bridge = m_decoder.get();
+	_host = host;
+	_port = port;
 }
 
 Connection::~Connection() {

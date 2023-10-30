@@ -53,14 +53,14 @@ Connection::Connection(boost::asio::io_service& io_service,
 		BaseConnection(io_service, std::move(clientName), "game_"),
 		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(eventService),
-		_host(host),
-		_port(port),
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
 		m_lock(0),
 		m_info{host},
 		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
+	_host = host;
+	_port = port;
 }
 
 Connection::Connection(boost::asio::io_service& io_service,
@@ -70,8 +70,6 @@ Connection::Connection(boost::asio::io_service& io_service,
 		BaseConnection(io_service, std::move(clientName), "game_"),
 		m_decoder(new ConnectionDecoder(*this, *_factories)),
 		_eventService(eventService),
-		_host("local"),
-		_port(0),
 		_localSocket(std::move(socket)),
 		m_typeService(new TypeService(*this)),
 		m_defaultRouter(nullptr),
@@ -79,6 +77,8 @@ Connection::Connection(boost::asio::io_service& io_service,
 		m_info{_host},
 		m_responder(new ResponseTracker) {
 	_bridge = m_decoder.get();
+	_host = "local";
+	_port = 0;
 }
 
 

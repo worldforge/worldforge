@@ -165,8 +165,6 @@ protected:
 
 	EventService& _eventService;
 
-	const std::string _host;
-	const short _port;      ///< port of the server
 	const std::string _localSocket;
 
 	friend class Redispatch;
