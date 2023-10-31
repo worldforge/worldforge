@@ -36,6 +36,8 @@ jobs:
                         ${{github.workspace}}/apps/cyphesis/mediarepo
                     key: mediarepo
 
+            -   name: Install ccache
+                uses: hendrikmuhs/ccache-action@v1.2
 
             -   name: Setup environment
                 shell: bash
@@ -46,8 +48,9 @@ jobs:
                     if [[ "$ImageOS" == "ubuntu20" ]]; then
                       echo "BUILD_APPIMAGE=true" >> $GITHUB_ENV
                     fi
+                    export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
-            -   name: Install autotools
+            -   name: Install Mac tools
                 shell: bash
                 if: runner.os == 'macOS'
                 run: |
