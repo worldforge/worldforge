@@ -7,6 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 # Meta data
 set(DESCRIPTION "The Worldforge project.")
+# Setting this at the top level prevents the libs from installing any artifacts.
+# If you want the libs to install artifacts you can invoke cmake in the specific library directory or by setting NO_LIBS_INSTALL to "FALSE".
+if (NOT DEFINED NO_LIBS_INSTALL)
+    set(NO_LIBS_INSTALL "TRUE")
+    message(STATUS "This is a mono repo build, which means that no artifacts from the libs will be installed. You can override this by setting NO_LIBS_INSTALL to 'FALSE', or by invoking cmake at each lib directory.")
+endif ()
 
 include(GNUInstallDirs)
 include(FindPkgConfig)

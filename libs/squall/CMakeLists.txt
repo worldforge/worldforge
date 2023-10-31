@@ -26,31 +26,33 @@ find_package(Catch2 REQUIRED)
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 
     add_library(${_LIB_NAME} ${${_SOURCE_FILES_VAR}})
-    set_target_properties(${_LIB_NAME} PROPERTIES
-            VERSION ${ABI_VERSION}
-            SOVERSION ${SOVERSION}
-            )
+
     target_compile_options(${_LIB_NAME} PUBLIC ${WF_WARNING_FLAGS})
     target_include_directories(${_LIB_NAME}
             PUBLIC
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-            )
-    install(TARGETS ${_LIB_NAME}
-            EXPORT "${PROJECT_NAME}Targets"
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            )
-    #We would want to use the FILE_SET feature, but that requires CMake 3.23, which prevents us from currently building
-    # Snap packages (as of 2023-02-12). Instead we'll copy each include file.
-    #When distros catch up to more recent CMake versions we can use FILE_SET instead.
-    foreach (file ${${_HEADER_FILES_VAR}})
-        get_filename_component(dir ${file} DIRECTORY)
-        install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${dir})
-    endforeach ()
-
+    )
+    if (NOT NO_LIBS_INSTALL)
+        set_target_properties(${_LIB_NAME} PROPERTIES
+                VERSION ${ABI_VERSION}
+                SOVERSION ${SOVERSION}
+        )
+        install(TARGETS ${_LIB_NAME}
+                EXPORT "${PROJECT_NAME}Targets"
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+        #We would want to use the FILE_SET feature, but that requires CMake 3.23, which prevents us from currently building
+        # Snap packages (as of 2023-02-12). Instead we'll copy each include file.
+        #When distros catch up to more recent CMake versions we can use FILE_SET instead.
+        foreach (file ${${_HEADER_FILES_VAR}})
+            get_filename_component(dir ${file} DIRECTORY)
+            install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${dir})
+        endforeach ()
+    endif ()
 endmacro()
 
 #Macro for adding a test. The test name will be extracted from the name of the first submitted file.
@@ -78,23 +80,25 @@ add_subdirectory(external)
 add_subdirectory(src)
 add_subdirectory(tests)
 
+if (NOT NO_LIBS_INSTALL)
 
-# CMake config files
-include(CMakePackageConfigHelpers)
+    # CMake config files
+    include(CMakePackageConfigHelpers)
 
-install(EXPORT "${PROJECT_NAME}Targets"
-        FILE "${PROJECT_NAME}Targets.cmake"
-        NAMESPACE "${PROJECT_NAME}::"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-        )
-configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
-        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-        PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
-write_basic_package_version_file(
-        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
-        VERSION ${VERSION}
-        COMPATIBILITY ExactVersion)
-install(FILES
-        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
-        ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+    install(EXPORT "${PROJECT_NAME}Targets"
+            FILE "${PROJECT_NAME}Targets.cmake"
+            NAMESPACE "${PROJECT_NAME}::"
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+    )
+    configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+            PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
+    write_basic_package_version_file(
+            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+            VERSION ${VERSION}
+            COMPATIBILITY ExactVersion)
+    install(FILES
+            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
+            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+endif ()

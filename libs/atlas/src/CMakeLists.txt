@@ -26,7 +26,7 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/RootOperationChildren4.cpp
         Atlas/Objects/RootOperationChildren5.cpp
         Atlas/Objects/RootOperationChildren6.cpp
-        )
+)
 
 set(OBJECTS_HEADER_FILES
         Atlas/Objects/Anonymous.h
@@ -132,13 +132,16 @@ if (ZLIB_FOUND)
     add_definitions(-DHAVE_ZLIB_H -DHAVE_LIBZ)
 endif (ZLIB_FOUND)
 
-CHECK_INCLUDE_FILE(unistd.h HAS_UNISTD)
-# The "atlas_convert" tool, only available on systems which provides unistd.h
-if (HAS_UNISTD)
-    add_executable(atlas_convert atlas_convert.cpp)
-    target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
-    target_link_libraries(atlas_convert AtlasCodecs AtlasMessage Atlas)
+if (NOT NO_LIBS_INSTALL)
 
-    install(TARGETS atlas_convert
-            DESTINATION ${CMAKE_INSTALL_BINDIR})
+    CHECK_INCLUDE_FILE(unistd.h HAS_UNISTD)
+    # The "atlas_convert" tool, only available on systems which provides unistd.h
+    if (HAS_UNISTD)
+        add_executable(atlas_convert atlas_convert.cpp)
+        target_compile_options(atlas_convert PRIVATE ${WF_WARNING_FLAGS})
+        target_link_libraries(atlas_convert AtlasCodecs AtlasMessage Atlas)
+
+        install(TARGETS atlas_convert
+                DESTINATION ${CMAKE_INSTALL_BINDIR})
+    endif ()
 endif ()

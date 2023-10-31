@@ -48,6 +48,12 @@ If Doxygen is available API documentation can be generated using the ```dox``` t
 cmake --build --preset conan-release --target dox
 ```
 
+### Building libraries
+
+By default, all components will be built and only the server and client will be installed. However, you can force
+installation of libs also either by setting the CMake variable "NO_LIBS_INSTALL" to "FALSE", or by invoking CMake in the
+directory of the lib you want to build.
+
 ## Dependencies
 
 We use Conan for our dependency handling. If you're developing locally you can issue this command to setup both a "
