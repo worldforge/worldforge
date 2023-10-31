@@ -36,8 +36,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src")
 
 set(DESCRIPTION "A terrain generation library for the Worldforge system.")
 
-find_package(wfmath 1.0.3 REQUIRED)
-
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
 

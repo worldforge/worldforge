@@ -86,9 +86,6 @@ macro(wf_add_test TEST_FILE)
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
-# We only need Atlas for tests
-find_package(Atlas 0.7.0)
-
 add_subdirectory(src)
 add_subdirectory(tests)
 
