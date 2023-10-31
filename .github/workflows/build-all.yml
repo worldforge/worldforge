@@ -89,11 +89,11 @@ jobs:
 
             -   name: Build
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN --parallel
+                run: cmake --build --preset $PROFILE_CONAN
 
             -   name: Test
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN --target check --parallel
+                run: cmake --build --preset $PROFILE_CONAN --target check
 
 #            -   name: Install
 #                shell: bash
