@@ -6,25 +6,25 @@ if (TARGET cppunit::cppunit)
             TestOgreView.cpp
             ConvertTestCase.cpp
             ModelMountTestCase.cpp
-            $<TARGET_OBJECTS:emberogre>
-            $<TARGET_OBJECTS:caelum>
-            $<TARGET_OBJECTS:meshtree>
-            $<TARGET_OBJECTS:pagedgeometry>
-            $<TARGET_OBJECTS:widgets>
-            $<TARGET_OBJECTS:emberogre_terrain>
-            $<TARGET_OBJECTS:entitymapping>
-            $<TARGET_OBJECTS:cegui>
-            $<TARGET_OBJECTS:navigation>
-            $<TARGET_OBJECTS:services>
-            $<TARGET_OBJECTS:domain>
-            $<TARGET_OBJECTS:framework>
-            $<TARGET_OBJECTS:ember_tinyxml>
+            $<TARGET_OBJECTS:ember-ogre>
+            $<TARGET_OBJECTS:ember-caelum>
+            $<TARGET_OBJECTS:ember-meshtree>
+            $<TARGET_OBJECTS:ember-pagedgeometry>
+            $<TARGET_OBJECTS:ember-widgets>
+            $<TARGET_OBJECTS:ember-ogre_terrain>
+            $<TARGET_OBJECTS:ember-entitymapping>
+            $<TARGET_OBJECTS:ember-cegui>
+            $<TARGET_OBJECTS:ember-navigation>
+            $<TARGET_OBJECTS:ember-services>
+            $<TARGET_OBJECTS:ember-domain>
+            $<TARGET_OBJECTS:ember-framework>
+            $<TARGET_OBJECTS:ember-tinyxml>
             $<TARGET_OBJECTS:binreloc>
             $<TARGET_OBJECTS:CEGUIOgreRenderer>
             $<TARGET_OBJECTS:CEGUITinyXMLParser>
-            $<TARGET_OBJECTS:DetourTileCache>
-            $<TARGET_OBJECTS:Detour>
-            $<TARGET_OBJECTS:Recast>)
+            $<TARGET_OBJECTS:ember-DetourTileCache>
+            $<TARGET_OBJECTS:ember-Detour>
+            $<TARGET_OBJECTS:ember-Recast>)
     target_compile_definitions(TestOgreView PUBLIC -DLOG_TASKS)
     target_link_libraries(TestOgreView cppunit::cppunit
             ${WF_LIBRARIES}
@@ -35,20 +35,21 @@ if (TARGET cppunit::cppunit)
 
     add_executable(TestTasks
             TestTasks.cpp
-            $<TARGET_OBJECTS:framework>
-            $<TARGET_OBJECTS:ember_tinyxml>)
+            $<TARGET_OBJECTS:ember-framework>
+            $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestTasks PUBLIC -DLOG_TASKS)
     target_link_libraries(TestTasks
             ${WF_LIBRARIES}
             cppunit::cppunit
-            mojoal)
+            mojoal
+            eris)
     add_test(NAME TestTasks COMMAND TestTasks)
     add_dependencies(check TestTasks)
 
     add_executable(TestTimeFrame
             TestTimeFrame.cpp
-            $<TARGET_OBJECTS:framework>
-            $<TARGET_OBJECTS:ember_tinyxml>)
+            $<TARGET_OBJECTS:ember-framework>
+            $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestTimeFrame PUBLIC -DLOG_TASKS)
     target_link_libraries(TestTimeFrame
             ${WF_LIBRARIES}
@@ -59,13 +60,14 @@ if (TARGET cppunit::cppunit)
 
     add_executable(TestFramework
             TestFramework.cpp
-            $<TARGET_OBJECTS:framework>
-            $<TARGET_OBJECTS:ember_tinyxml>)
+            $<TARGET_OBJECTS:ember-framework>
+            $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestFramework PUBLIC -DLOG_TASKS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
     target_link_libraries(TestFramework
             ${WF_LIBRARIES}
             cppunit::cppunit
-            mojoal)
+            mojoal
+            eris)
     add_test(NAME TestFramework COMMAND TestFramework)
     add_dependencies(check TestFramework)
 

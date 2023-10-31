@@ -54,5 +54,5 @@ set(HEADER_FILES
 
 wf_add_library(mercator SOURCE_FILES HEADER_FILES)
 target_link_libraries(mercator PUBLIC
-        wfmath::wfmath)
+        wfmath)
 

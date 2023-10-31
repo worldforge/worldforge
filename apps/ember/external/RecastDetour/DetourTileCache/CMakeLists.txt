@@ -1,5 +1,10 @@
-add_library(DetourTileCache OBJECT
+add_library(ember-DetourTileCache OBJECT
         Source/DetourTileCache.cpp
-        Source/DetourTileCacheBuilder.cpp)
+        Source/DetourTileCacheBuilder.cpp
+)
 
-target_include_directories(DetourTileCache PUBLIC Include ../Detour/Include)
+target_link_libraries(ember-DetourTileCache PUBLIC
+        ember-Detour
+)
+
+target_include_directories(ember-DetourTileCache PUBLIC Include)

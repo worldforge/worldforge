@@ -1,3 +1,6 @@
-add_library(meshtree OBJECT
-        MeshTree.cpp TParameters.cpp TStem.cpp)
+add_library(ember-meshtree OBJECT
+        MeshTree.cpp
+        TParameters.cpp
+        TStem.cpp
+)
 

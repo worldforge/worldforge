@@ -1,13 +1,13 @@
-add_library(rulessimulationscripts
+add_library(cyphesis-rulessimulationscripts
         ScriptUtils.cpp
-        )
-target_link_libraries(rulessimulationscripts PUBLIC
-        common
-        pycxx
-        )
+)
+target_link_libraries(cyphesis-rulessimulationscripts PUBLIC
+        cyphesis-common
+        cyphesis-pycxx
+)
 
 
-add_library(rulessimulation
+add_library(cyphesis-rulessimulation
         BaseWorld.cpp
         Entity.cpp
         Thing.cpp
@@ -66,21 +66,22 @@ add_library(rulessimulation
         TerrainPointsProperty.cpp
         FilterProperty.cpp
         AliasProperty.cpp
-        ActionsProperty.cpp)
+        ActionsProperty.cpp
+)
 
-target_link_libraries(rulessimulation PUBLIC
-        rulessimulationscripts
-        common
-        mercator::mercator
+target_link_libraries(cyphesis-rulessimulation PUBLIC
+        cyphesis-rulessimulationscripts
+        cyphesis-common
+        mercator
         ${BULLET_LIBRARIES}
-        )
+)
 
-target_link_directories(rulessimulation PUBLIC
+target_link_directories(cyphesis-rulessimulation PUBLIC
         ${BULLET_LIB_DIR}
-        )
+)
 
-target_include_directories(rulessimulation PUBLIC
+target_include_directories(cyphesis-rulessimulation PUBLIC
         ${BULLET_INCLUDE_DIR}
-        )
+)
 
 add_subdirectory(python)

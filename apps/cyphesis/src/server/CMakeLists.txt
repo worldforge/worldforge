@@ -1,16 +1,18 @@
 configure_file(buildid.cpp.in buildid.cpp)
 
-add_library(comm
+add_library(cyphesis-comm
         CommMetaClient.cpp
         CommMDNSPublisher.cpp
-        IdleConnector.cpp)
+        IdleConnector.cpp
+)
 
-target_link_libraries(comm PUBLIC
-        common)
+target_link_libraries(cyphesis-comm PUBLIC
+        cyphesis-common
+)
 
 if (AVAHI_FOUND)
     #For some reason it seems we need to also link to avahi-common
-    target_link_libraries(comm PUBLIC
+    target_link_libraries(cyphesis-comm PUBLIC
             ${AVAHI_LIBRARIES}
             -lavahi-common)
 endif (AVAHI_FOUND)
@@ -52,20 +54,22 @@ set(server_files
         ScriptReloader.cpp
         AccountProperty.cpp
         SquallAssetsGenerator.cpp
-        ${CMAKE_CURRENT_BINARY_DIR}/buildid.cpp)
+        ${CMAKE_CURRENT_BINARY_DIR}/buildid.cpp
+)
 
-add_library(server
+add_library(cyphesis-server
         ${server_files})
 
-target_link_libraries(server PUBLIC
-        common
-        pythonbase
-        squall::squall
+target_link_libraries(cyphesis-server PUBLIC
+        cyphesis-common
+        cyphesis-pythonbase
+        squallcore
 )
 
 
 add_executable(cyphesis
-        server.cpp)
+        server.cpp
+)
 
 #If Python has been built statically (as with Conan) we need to enable exports so the dynamic loading works.
 if (PYTHON_IS_STATIC)
@@ -77,23 +81,23 @@ if (PostgreSQL_FOUND)
 endif (PostgreSQL_FOUND)
 
 target_link_libraries(cyphesis
-        server
-        rulessimulation_python
-        rulessimulation
-        entityfilter_python
-        entityfilter
-        rulesbase_python
-        rulesbase
-        atlas_python
-        common_python
-        physics_python
-        modules
-        common
-        db
-        physics
-        comm
-        metaserverapi
-        remotery
+        cyphesis-server
+        cyphesis-rulessimulation_python
+        cyphesis-rulessimulation
+        cyphesis-entityfilter_python
+        cyphesis-entityfilter
+        cyphesis-rulesbase_python
+        cyphesis-rulesbase
+        cyphesis-atlas_python
+        cyphesis-common_python
+        cyphesis-physics_python
+        cyphesis-modules
+        cyphesis-common
+        cyphesis-db
+        cyphesis-physics
+        cyphesis-comm
+        cyphesis-metaserverapi
+        cyphesis-remotery
 )
 
 install(TARGETS cyphesis DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

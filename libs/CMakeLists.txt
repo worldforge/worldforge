@@ -1,0 +1,6 @@
+add_subdirectory(wfmath)
+add_subdirectory(varconf)
+add_subdirectory(mercator)
+add_subdirectory(atlas)
+add_subdirectory(eris)
+add_subdirectory(squall)

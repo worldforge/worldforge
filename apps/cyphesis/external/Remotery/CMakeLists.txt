@@ -1,7 +1,7 @@
-add_library(remotery
+add_library(cyphesis-remotery
     lib/Remotery.c
 )
 
-target_include_directories(remotery PUBLIC lib)
+target_include_directories(cyphesis-remotery PUBLIC lib)
 
 

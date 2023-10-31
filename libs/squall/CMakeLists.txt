@@ -20,8 +20,6 @@ set(ABI_AGE 0)
 math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
 set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
-option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
-
 find_package(Catch2 REQUIRED)
 
 # This macro defines a library
@@ -57,7 +55,7 @@ endmacro()
 
 #Macro for adding a test. The test name will be extracted from the name of the first submitted file.
 #Additional files can be submitted as varargs.
-macro(wf_add_test TEST_FILE)
+macro(squall_add_test TEST_FILE)
 
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 

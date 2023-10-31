@@ -1,4 +1,4 @@
-add_library(rulessimulation_python
+add_library(cyphesis-rulessimulation_python
         CyPy_Entity.cpp
         CyPy_Server.cpp
         CyPy_Task.cpp
@@ -7,11 +7,12 @@ add_library(rulessimulation_python
         CyPy_UsageInstance.cpp
         CyPy_EntityProps.cpp
         CyPy_Domain.cpp
-        )
+)
 
-target_link_libraries(rulessimulation_python PUBLIC
-        rulessimulation
-        pythonbase)
+target_link_libraries(cyphesis-rulessimulation_python PUBLIC
+        cyphesis-rulessimulation
+        cyphesis-pythonbase
+)
 
 
 

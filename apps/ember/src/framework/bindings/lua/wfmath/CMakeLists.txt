@@ -1,9 +1,12 @@
-add_library(BindingsWFMath OBJECT
+add_library(ember-BindingsWFMath OBJECT
         BindingsWFMath.cpp)
-target_precompile_headers(BindingsWFMath
+target_precompile_headers(ember-BindingsWFMath
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
+
+target_link_libraries(ember-BindingsWFMath PUBLIC
+        wfmath)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsWFMath PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsWFMath PRIVATE "/bigobj")
 endif ()

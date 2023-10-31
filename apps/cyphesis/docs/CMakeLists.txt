@@ -5,15 +5,15 @@ add_subdirectory(man)
 #That means that you need to don't forget to run this yourself whenever you update the bindings.
 add_custom_target(GeneratePythonDocs
         COMMENT "Generating Python docs stubs."
-        COMMAND pythondocgenerator atlas > atlas.py
-        COMMAND pythondocgenerator server > server.py
-        COMMAND pythondocgenerator entity_filter > entity_filter.py
-        COMMAND pythondocgenerator common > common.py
-        COMMAND pythondocgenerator ai > ai.py
-        COMMAND pythondocgenerator physics > physics.py
-        COMMAND pythondocgenerator rules > rules.py
+        COMMAND cyphesis-pythondocgenerator atlas > atlas.py
+        COMMAND cyphesis-pythondocgenerator server > server.py
+        COMMAND cyphesis-pythondocgenerator entity_filter > entity_filter.py
+        COMMAND cyphesis-pythondocgenerator common > common.py
+        COMMAND cyphesis-pythondocgenerator ai > ai.py
+        COMMAND cyphesis-pythondocgenerator physics > physics.py
+        COMMAND cyphesis-pythondocgenerator rules > rules.py
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs/python
-        DEPENDS pythondocgenerator rulesai_python rulessimulation_python entityfilter_python rulesbase_python
+        DEPENDS cyphesis-pythondocgenerator cyphesis-rulesai_python cyphesis-rulessimulation_python cyphesis-entityfilter_python cyphesis-rulesbase_python
         VERBATIM
         )
 

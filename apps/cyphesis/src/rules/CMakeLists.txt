@@ -1,4 +1,4 @@
-add_library(rulesbase
+add_library(cyphesis-rulesbase
         LocatedEntity.cpp
         EntityProperties.cpp
         AtlasProperties.cpp
@@ -16,12 +16,12 @@ add_library(rulesbase
         Modifier.cpp
         PhysicalProperties.cpp)
 
-target_link_libraries(rulesbase PUBLIC
-        wfmath::wfmath
-        Atlas::Atlas
+target_link_libraries(cyphesis-rulesbase PUBLIC
+        wfmath
+        Atlas
         libsigcpp::sigc++
-        common
-        )
+        cyphesis-common
+)
 
 
 add_subdirectory(python)

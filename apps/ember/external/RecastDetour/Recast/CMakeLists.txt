@@ -1,4 +1,4 @@
-add_library(Recast OBJECT
+add_library(ember-Recast OBJECT
         Source/Recast.cpp
         Source/RecastArea.cpp
         Source/RecastAlloc.cpp
@@ -10,4 +10,4 @@ add_library(Recast OBJECT
         Source/RecastRasterization.cpp
         Source/RecastRegion.cpp)
 
-target_include_directories(Recast PUBLIC Include)
+target_include_directories(ember-Recast PUBLIC Include)

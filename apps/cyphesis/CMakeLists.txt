@@ -47,12 +47,6 @@ link_libraries(Threads::Threads)
 #If we're using Conan this won't set the Python3_EXECUTABLE environment variables as expected, which is why we do that in conanfile.py
 find_package(Python3 COMPONENTS Development Interpreter REQUIRED)
 
-find_package(Atlas 0.7.0 REQUIRED)
-find_package(varconf 1.0.3 REQUIRED)
-find_package(mercator 0.4.0 REQUIRED)
-find_package(wfmath 1.0.3 REQUIRED)
-find_package(Squall 0.1.0 REQUIRED)
-
 find_package(sigc++-3 3.0 REQUIRED)
 find_package(libgcrypt 1.2 REQUIRED)
 find_package(Bullet 2.81 REQUIRED)
@@ -195,10 +189,10 @@ endmacro()
 
 
 # Add a "check" target, which builds and runs the tests.
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
+#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
 
 # Add a "benchmark" target, which builds and runs the benchmarks.
-add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
+#add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
 
 configure_file(tools/Version.tmpl.h generated/Version.h @ONLY)
 configure_file(tools/config.tmpl.h generated/config.h @ONLY)
@@ -235,7 +229,7 @@ if (DOXYGEN_FOUND)
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile-python
     )
 
-    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
+#    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
 
 endif (DOXYGEN_FOUND)
 
@@ -243,7 +237,7 @@ add_custom_command(
         OUTPUT ChangeLog
         COMMAND ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} cce66ef4a196a4871ebaebe82cd91c8dd733be13
 )
-add_custom_target(changelog DEPENDS ChangeLog)
+#add_custom_target(changelog DEPENDS ChangeLog)
 
 # Packaging
 

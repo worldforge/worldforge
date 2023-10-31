@@ -1,6 +1,8 @@
-add_library(assets
+add_library(ember-assets
         AssetsUpdater.cpp
 )
 
-target_link_libraries(assets PUBLIC squall::squall)
+target_link_libraries(ember-assets PUBLIC
+        squallcore
+        squallcurl)
 

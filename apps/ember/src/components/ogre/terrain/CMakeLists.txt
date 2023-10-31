@@ -1,4 +1,4 @@
-add_library(emberogre_terrain OBJECT
+add_library(ember-ogre_terrain OBJECT
         OgreTerrain/OgreTerrainMaterialGeneratorEmber.cpp
         OgreTerrain/OgreTerrainAdapter.cpp
         OgreTerrain/OgreTerrainObserver.cpp
@@ -51,9 +51,16 @@ add_library(emberogre_terrain OBJECT
         TerrainPageDeletionTask.cpp
         techniques/OnePixelMaterialGenerator.cpp
         TerrainModTranslator.cpp
-        )
+)
 
-target_precompile_headers(emberogre_terrain
+target_precompile_headers(ember-ogre_terrain
         REUSE_FROM
-        emberogre)
+        ember-ogre)
+
+target_link_libraries(ember-ogre_terrain PUBLIC
+        ember-framework
+        wfmath
+        mercator
+        ember-ogre
+)
 #target_compile_definitions(emberogre_terrain PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")

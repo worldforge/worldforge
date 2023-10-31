@@ -1,9 +1,9 @@
-add_library(modules
+add_library(cyphesis-modules
         DateTime.cpp
         WorldTime.cpp
         WeakEntityRef.cpp)
 
 
-target_link_libraries(modules PUBLIC
-        common
-        )
+target_link_libraries(cyphesis-modules PUBLIC
+        cyphesis-common
+)

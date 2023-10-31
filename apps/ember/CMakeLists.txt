@@ -93,7 +93,7 @@ endif ()
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/external ${PROJECT_BINARY_DIR}/generated)
 
 enable_testing()
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 #On Unix we'll automatically build all widgets as reloadable modules, but not on Windows or OSX (since we couldn't get it to work as we would like).
 cmake_dependent_option(WF_USE_WIDGET_PLUGINS "Build widgets as reloadable plugins." ON "UNIX AND NOT APPLE;NOT CONAN_FOUND" OFF)
@@ -175,37 +175,6 @@ link_libraries(${SDL2_LIBRARIES})
 find_package(sigc++-3 3.0 REQUIRED)
 link_libraries(libsigcpp::sigc++)
 
-
-find_package(Atlas
-        0.7.0
-        REQUIRED)
-link_libraries(Atlas::Atlas)
-
-find_package(wfmath
-        1.0.3
-        REQUIRED)
-link_libraries(wfmath::wfmath)
-
-find_package(eris
-        1.4.0
-        REQUIRED)
-link_libraries(eris::eris)
-
-
-find_package(varconf
-        1.0.3
-        REQUIRED)
-link_libraries(varconf::varconf)
-
-find_package(mercator
-        0.4.0
-        REQUIRED)
-link_libraries(mercator::mercator)
-
-find_package(squall
-        0.1.0
-        REQUIRED)
-link_libraries(squall::squall)
 
 find_package(OGRE
         13.4.2
@@ -335,7 +304,8 @@ endif ()
 
 add_subdirectory(external)
 add_subdirectory(src)
-add_subdirectory(tests)
+#TODO: enable again once we've sorted the monorepo
+#add_subdirectory(tests)
 
 file(GLOB MODELDEFINITIONS_FILES data/dural/*.modeldef)
 foreach (FILE ${MODELDEFINITIONS_FILES})
@@ -404,7 +374,7 @@ if (DOXYGEN_FOUND)
             DEPENDS ${DOXYGEN_INPUT}
     )
 
-    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
+#    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
 
 endif (DOXYGEN_FOUND)
 
@@ -412,7 +382,7 @@ add_custom_command(
         OUTPUT ChangeLog
         COMMAND ${CMAKE_SOURCE_DIR}/scripts/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} f12012e7616c191a8926432faf866c8e43854062
 )
-add_custom_target(changelog DEPENDS ChangeLog)
+#add_custom_target(changelog DEPENDS ChangeLog)
 
 
 # Packaging

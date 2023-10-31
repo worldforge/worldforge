@@ -1,13 +1,15 @@
-add_library(entityfilter
+add_library(cyphesis-entityfilter
         Filter.cpp
         ParserDefinitions.cpp
         Providers.cpp
         Predicates.cpp
-        ProviderFactory.cpp)
+        ProviderFactory.cpp
+)
 
 add_subdirectory(python)
 
-target_link_libraries(entityfilter
-        common)
+target_link_libraries(cyphesis-entityfilter
+        cyphesis-common
+)
 
 

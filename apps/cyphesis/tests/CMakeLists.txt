@@ -9,22 +9,22 @@ endif (PostgreSQL_FOUND)
 
 #Just link all libraries here.
 link_libraries(
-        pycxx
+        cyphesis-pycxx
         ${BULLET_LIBRARIES}
-        mercator::mercator
-        wfmath::wfmath
-        Atlas::Atlas
-        Atlas::AtlasCodecs
-        Atlas::AtlasNet
-        Atlas::AtlasMessage
-        Atlas::AtlasObjects
-        Atlas::AtlasFilters
-        varconf::varconf
+        mercator
+        wfmath
+        Atlas
+        AtlasCodecs
+        AtlasNet
+        AtlasMessage
+        AtlasObjects
+        AtlasFilters
+        varconf
         libsigcpp::sigc++
-        remotery
+        cyphesis-remotery
         Boost::filesystem
         readline::readline
-        Detour
+        cyphesis-Detour
         libxdg-basedir::libxdg-basedir
         libgcrypt::libgcrypt
 )
@@ -44,28 +44,30 @@ if (SEGFAULT_LIBRARY)
     link_libraries(${SEGFAULT_LIBRARY})
 endif (SEGFAULT_LIBRARY)
 
-add_library(stubnavigation
+add_library(cyphesis-stubnavigation
         stubs/navigation/libstub.cpp
-        ../src/navigation/fastlz.c)
+        ../src/navigation/fastlz.c
+)
 
 set(PYTHON_TESTS_LIBS
-        rulesai_python
-        rulessimulation_python
-        entityfilter_python
-        rulesbase_python
-        physics_python
-        atlas_python
-        common_python
-        pythonbase
-        rulesai
-        rulessimulation
-        entityfilter
-        stubnavigation
-        rulesbase
-        modules
-        physics
-        common
-        remotery)
+        cyphesis-rulesai_python
+        cyphesis-rulessimulation_python
+        cyphesis-entityfilter_python
+        cyphesis-rulesbase_python
+        cyphesis-physics_python
+        cyphesis-atlas_python
+        cyphesis-common_python
+        cyphesis-pythonbase
+        cyphesis-rulesai
+        cyphesis-rulessimulation
+        cyphesis-entityfilter
+        cyphesis-stubnavigation
+        cyphesis-rulesbase
+        cyphesis-modules
+        cyphesis-physics
+        cyphesis-common
+        cyphesis-remotery
+)
 
 
 #Macro for adding a test
@@ -108,7 +110,7 @@ wf_add_test(TestBaseTest.cpp)
 wf_add_test(modules/RefTest.cpp)
 
 wf_add_test(common/OperationsDispatcherTest.cpp)
-target_link_libraries(OperationsDispatcherTest modules common)
+target_link_libraries(OperationsDispatcherTest cyphesis-modules cyphesis-common)
 
 wf_add_test(common/logTest.cpp ../src/common/log.cpp)
 wf_add_test(common/InheritanceTest.cpp ../src/common/Inheritance.cpp ../src/common/custom.cpp)
@@ -152,7 +154,7 @@ wf_add_test(common/LinkTest.cpp ../src/common/Link.cpp)
 wf_add_test(common/CommSocketTest.cpp)
 wf_add_test(common/composeTest.cpp)
 wf_add_test(common/FileSystemObserverIntegrationTest.cpp ../src/common/FileSystemObserver.cpp)
-target_link_libraries(FileSystemObserverIntegrationTest common)
+target_link_libraries(FileSystemObserverIntegrationTest cyphesis-common)
 
 # PHYSICS_TESTS
 wf_add_test(physics/BBoxTest.cpp ../src/physics/BBox.cpp ../src/common/const.cpp)
@@ -167,7 +169,7 @@ wf_add_test(physics/CourseTest.cpp ../src/physics/Course.cpp)
 
 wf_add_test(modules/DateTimeTest.cpp ../src/modules/DateTime.cpp)
 wf_add_test(rules/LocationTest.cpp ../src/rules/Location.cpp ../src/rules/EntityLocation.cpp)
-target_link_libraries(LocationTest physics)
+target_link_libraries(LocationTest cyphesis-physics)
 wf_add_test(rules/EntityRefTest.cpp ../src/modules/WeakEntityRef.cpp)
 wf_add_test(modules/TerrainContextTest.cpp)
 
@@ -212,7 +214,7 @@ wf_add_test(rules/simulation/LinePropertyTest.cpp PropertyCoverage.cpp ../src/ru
         ../src/common/Property.cpp)
 wf_add_test(server/MindPropertyTest.cpp PropertyCoverage.cpp ../src/server/MindProperty.cpp
         ../src/common/Property.cpp)
-target_link_libraries(MindPropertyTest pycxx)
+target_link_libraries(MindPropertyTest cyphesis-pycxx)
 
 wf_add_test(rules/ModePropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/ModeProperty.cpp
         ../src/common/Property.cpp)
@@ -226,7 +228,7 @@ wf_add_test(rules/TerrainModPropertyTest.cpp PropertyCoverage.cpp ../src/rules/s
         ../src/rules/simulation/TerrainProperty.cpp
         ../src/common/Property.cpp)
 wf_add_test(rules/PythonClassTest.cpp python_testers.cpp ../src/pythonbase/PythonClass.cpp ../src/pythonbase/PythonMalloc.cpp)
-target_link_libraries(PythonClassTest pycxx)
+target_link_libraries(PythonClassTest cyphesis-pycxx)
 wf_add_test(rules/TerrainPropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/TerrainProperty.cpp
         ../src/common/Property.cpp)
 wf_add_test(rules/TransientPropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/TransientProperty.cpp
@@ -329,8 +331,9 @@ wf_add_test(rules/entityfilter/EntityFilterTest.cpp
         ../src/modules/WeakEntityRef.cpp
         ../src/common/Property.cpp
         ../src/common/TypeNode.cpp
-        ../src/common/PropertyManager.cpp)
-target_link_libraries(EntityFilterTest entityfilter)
+        ../src/common/PropertyManager.cpp
+)
+target_link_libraries(EntityFilterTest cyphesis-entityfilter)
 target_compile_definitions(EntityFilterTest PRIVATE -DBOOST_SPIRIT_DEBUG)
 
 wf_add_test(rules/entityfilter/EntityFilterParserTest.cpp
@@ -345,8 +348,9 @@ wf_add_test(rules/entityfilter/EntityFilterParserTest.cpp
         ../src/modules/WeakEntityRef.cpp
         ../src/common/Property.cpp
         ../src/common/TypeNode.cpp
-        ../src/common/PropertyManager.cpp)
-target_link_libraries(EntityFilterParserTest entityfilter)
+        ../src/common/PropertyManager.cpp
+)
+target_link_libraries(EntityFilterParserTest cyphesis-entityfilter)
 
 wf_add_test(rules/entityfilter/EntityFilterProvidersTest.cpp ../src/rules/simulation/EntityProperty.cpp
         ../src/rules/simulation/Entity.cpp
@@ -356,8 +360,9 @@ wf_add_test(rules/entityfilter/EntityFilterProvidersTest.cpp ../src/rules/simula
         ../src/modules/WeakEntityRef.cpp
         ../src/common/Property.cpp
         ../src/common/TypeNode.cpp
-        ../src/common/PropertyManager.cpp)
-target_link_libraries(EntityFilterProvidersTest entityfilter)
+        ../src/common/PropertyManager.cpp
+)
+target_link_libraries(EntityFilterProvidersTest cyphesis-entityfilter)
 
 
 # RULESETS_INTEGRATION
@@ -375,7 +380,8 @@ wf_add_test(rules/PropertyEntityIntegration.cpp ../src/rules/simulation/Entity.c
         ../src/rules/LocatedEntity.cpp
         ../src/common/Property.cpp
         ../src/common/TypeNode.cpp
-        ../src/rules/Modifier.cpp)
+        ../src/rules/Modifier.cpp
+)
 wf_add_test(rules/TerrainModPropertyIntegration.cpp ../src/rules/simulation/Entity.cpp
         ../src/rules/LocatedEntity.cpp
         ../src/rules/PhysicalProperties.cpp
@@ -388,10 +394,12 @@ wf_add_test(rules/TerrainModPropertyIntegration.cpp ../src/rules/simulation/Enti
         ../src/rules/simulation/TerrainProperty.cpp
         ../src/modules/WeakEntityRef.cpp
         ../src/common/Property.cpp
-        ../src/common/TypeNode.cpp)
+        ../src/common/TypeNode.cpp
+)
 wf_add_test(rules/simulation/ContainedVisibilityPropertyIntegration.cpp ../src/rules/simulation/ContainedVisibilityProperty.cpp
         ../src/rules/simulation/Entity.cpp
-        ../src/rules/LocatedEntity.cpp)
+        ../src/rules/LocatedEntity.cpp
+)
 wf_add_test(rules/ai/BaseMindMapEntityIntegration.cpp
         ../src/rules/ai/BaseMind.cpp
         ../src/rules/ai/MemEntity.cpp
@@ -406,24 +414,27 @@ wf_add_test(rules/ai/BaseMindMapEntityIntegration.cpp
         ../src/rules/Location.cpp
         ../src/rules/EntityLocation.cpp
         ../src/common/Property.cpp
-        ../src/client/ClientPropertyManager.cpp)
+        ../src/client/ClientPropertyManager.cpp
+)
 wf_add_test(rules/simulation/AreaPropertyIntegration.cpp ../src/rules/simulation/AreaProperty.cpp
         ../src/rules/simulation/Entity.cpp
         ../src/rules/LocatedEntity.cpp
         ../src/physics/Course.cpp
-        ../src/physics/Shape.cpp)
+        ../src/physics/Shape.cpp
+)
 wf_add_test(rules/SuspendedPropertyIntegration.cpp ../src/rules/simulation/SuspendedProperty.cpp
         ../src/rules/simulation/Entity.cpp
-        ../src/rules/LocatedEntity.cpp)
-target_link_libraries(SuspendedPropertyIntegration common)
+        ../src/rules/LocatedEntity.cpp
+)
+target_link_libraries(SuspendedPropertyIntegration cyphesis-common)
 wf_add_test(rules/ThingIntegration.cpp)
-target_link_libraries(ThingIntegration rulessimulation rulesbase modules common physics ${PYTHON_TESTS_LIBS})
+target_link_libraries(ThingIntegration cyphesis-rulessimulation cyphesis-rulesbase cyphesis-modules cyphesis-common cyphesis-physics ${PYTHON_TESTS_LIBS})
 wf_add_test(rules/RulesIntegrationTest.cpp)
-target_link_libraries(RulesIntegrationTest rulessimulation rulesbase modules common physics ${PYTHON_TESTS_LIBS})
+target_link_libraries(RulesIntegrationTest cyphesis-rulessimulation cyphesis-rulesbase cyphesis-modules cyphesis-common cyphesis-physics ${PYTHON_TESTS_LIBS})
 wf_add_test(rules/ObserverIntegrationTest.cpp)
-target_link_libraries(ObserverIntegrationTest rulessimulation rulesbase modules common physics ${PYTHON_TESTS_LIBS})
+target_link_libraries(ObserverIntegrationTest cyphesis-rulessimulation cyphesis-rulesbase cyphesis-modules cyphesis-common cyphesis-physics ${PYTHON_TESTS_LIBS})
 wf_add_test(rules/TerrainPropertyIntegration.cpp)
-target_link_libraries(TerrainPropertyIntegration rulessimulation rulesbase modules common physics ${PYTHON_TESTS_LIBS})
+target_link_libraries(TerrainPropertyIntegration cyphesis-rulessimulation cyphesis-rulesbase cyphesis-modules cyphesis-common cyphesis-physics ${PYTHON_TESTS_LIBS})
 
 
 # CLIENT_TESTS
@@ -514,8 +525,9 @@ wf_add_test(server/WorldRouterIntegration.cpp ../src/rules/simulation/WorldRoute
         ../src/rules/simulation/Thing.cpp
         ../src/rules/simulation/World.cpp
         ../src/rules/simulation/BaseWorld.cpp
-        ../src/rules/Modifier.cpp)
-target_link_libraries(WorldRouterIntegration modules physics common pycxx)
+        ../src/rules/Modifier.cpp
+)
+target_link_libraries(WorldRouterIntegration cyphesis-modules cyphesis-physics cyphesis-common cyphesis-pycxx)
 wf_add_test(server/RulesetIntegration.cpp ../src/server/Ruleset.cpp
         ../src/server/EntityBuilder.cpp
         ../src/server/EntityFactory.cpp
@@ -525,8 +537,9 @@ wf_add_test(server/RulesetIntegration.cpp ../src/server/Ruleset.cpp
         ../src/server/PropertyRuleHandler.cpp
         ../src/server/Persistence.cpp
         ../src/rules/simulation/BaseWorld.cpp
-        ../src/rules/Modifier.cpp)
-target_link_libraries(RulesetIntegration common pycxx)
+        ../src/rules/Modifier.cpp
+)
+target_link_libraries(RulesetIntegration cyphesis-common cyphesis-pycxx)
 #Rulesetintegration_LDFLAGS = $(PYTHON_LINKER_FLAGS)
 wf_add_test(server/ConnectionShakerIntegration.cpp ../src/server/Connection.cpp
         ../src/common/Shaker.cpp)
@@ -541,7 +554,7 @@ wf_add_test(server/AccountConnectionCharacterIntegration.cpp
         ../src/server/Connection.cpp)
 target_link_libraries(AccountConnectionCharacterIntegration ${PYTHON_TESTS_LIBS})
 wf_add_test(server/AccountIntegration.cpp)
-target_link_libraries(AccountIntegration server ${PYTHON_TESTS_LIBS})
+target_link_libraries(AccountIntegration cyphesis-server ${PYTHON_TESTS_LIBS})
 
 wf_add_test(server/EntityFactoryTypeNodeIntegration.cpp TestPropertyManager.cpp ../src/server/EntityFactory.cpp
         ../src/common/TypeNode.cpp
@@ -563,7 +576,7 @@ wf_add_test(server/AccountConnectionIntegration.cpp ../src/server/Account.cpp
         ../src/common/TypeNode.cpp
         ../src/common/custom.cpp
         ../src/common/operations.cpp)
-target_link_libraries(AccountConnectionIntegration physics)
+target_link_libraries(AccountConnectionIntegration cyphesis-physics)
 wf_add_test(server/AccountServerLobbyIntegration.cpp ../src/server/Account.cpp
         ../src/server/ServerRouting.cpp
         ../src/server/Lobby.cpp)
@@ -581,7 +594,7 @@ wf_add_test(tools/FlusherTest.cpp ../src/tools/Flusher.cpp
 wf_add_test(tools/OperationMonitorTest.cpp ../src/tools/OperationMonitor.cpp
         ../src/common/ClientTask.cpp)
 wf_add_test(tools/EntityExporterTest.cpp ../src/tools/EntityExporterBase.cpp)
-target_link_libraries(EntityExporterTest common)
+target_link_libraries(EntityExporterTest cyphesis-common)
 
 
 # PYTHON_TESTS
@@ -590,12 +603,12 @@ target_link_libraries(EntityExporterTest common)
 
 wf_add_test(navigation/SteeringIntegration.cpp)
 target_link_libraries(SteeringIntegration
-        navigation
-        rulesai
-        rulesbase
-        modules
-        common
-        physics
-        DetourTileCache
-        Detour
-        Recast)
+        cyphesis-navigation
+        cyphesis-rulesai
+        cyphesis-rulesbase
+        cyphesis-modules
+        cyphesis-common
+        cyphesis-physics
+        cyphesis-DetourTileCache
+        cyphesis-Detour
+        cyphesis-Recast)

@@ -1,9 +1,15 @@
-add_library(BindingsAtlas OBJECT
-        BindingsAtlas.cpp)
-target_precompile_headers(BindingsAtlas
+add_library(ember-BindingsAtlas OBJECT
+        BindingsAtlas.cpp
+)
+
+target_precompile_headers(ember-BindingsAtlas
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
+
+target_link_libraries(ember-BindingsAtlas PUBLIC
+        AtlasObjects)
+
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsAtlas PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsAtlas PRIVATE "/bigobj")
 endif ()

@@ -11,7 +11,7 @@ if (NOT WF_USE_WIDGET_PLUGINS)
 endif ()
 
 
-add_library(widgets OBJECT
+add_library(ember-widgets OBJECT
 
         ActionBarInput.cpp
         ActionBarIcon.cpp
@@ -87,9 +87,13 @@ add_library(widgets OBJECT
         ${STATIC_WIDGETS}
 )
 
-target_precompile_headers(widgets
+target_precompile_headers(ember-widgets
         REUSE_FROM
-        emberogre)
+        ember-ogre)
+
+target_link_libraries(ember-widgets PUBLIC
+        ember-framework
+        ember-ogre)
 
 #wf_add_plugin(ServerWidget
 #        ServerWidget.cpp
@@ -126,24 +130,32 @@ file(GLOB LUA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.lua")
 install(FILES ${LUA_FILES} DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/ember/scripting/lua/)
 
 
-add_library(BindingsAtlasAdapters OBJECT
+add_library(ember-BindingsAtlasAdapters OBJECT
         adapters/atlas/bindings/lua/BindingsAtlasAdapters.cpp)
-target_precompile_headers(BindingsAtlasAdapters
+target_precompile_headers(ember-BindingsAtlasAdapters
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
+target_link_libraries(ember-BindingsAtlasAdapters PUBLIC
+        AtlasObjects
+        varconf
+        ember-framework)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsAtlasAdapters PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsAtlasAdapters PRIVATE "/bigobj")
 endif ()
 
-add_library(BindingsRepresentations OBJECT
+add_library(ember-BindingsRepresentations OBJECT
         representations/bindings/lua/BindingsRepresentations.cpp)
-target_precompile_headers(BindingsRepresentations
+target_precompile_headers(ember-BindingsRepresentations
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
+target_link_libraries(ember-BindingsRepresentations PUBLIC
+        AtlasObjects
+        varconf
+        ember-framework)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsRepresentations PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsRepresentations PRIVATE "/bigobj")
 endif ()
 
-target_compile_definitions(widgets PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")
+target_compile_definitions(ember-widgets PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")

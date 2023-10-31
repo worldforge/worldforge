@@ -21,9 +21,6 @@ set(ABI_AGE 0)
 math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
 set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
-option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
-option(BUILD_SHARED_LIBS "Build libraries as shared as opposed to static." ON)
-
 # Set compiler flags
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WF_WARNING_FLAGS /W3)
@@ -72,9 +69,6 @@ endmacro()
 
 # Add test
 enable_testing()
-
-# Add a "check" target, which builds and runs the tests.
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 #Macro for adding a test. The test name will be extracted from the name of the first submitted file.
 #Additional files can be submitted as varargs.
@@ -131,15 +125,13 @@ if (DOXYGEN_FOUND)
             DEPENDS ${DOXYGEN_INPUT}
     )
 
-    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
-
 endif (DOXYGEN_FOUND)
 
-add_custom_command(
-        OUTPUT ChangeLog
-        COMMAND ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
-)
-add_custom_target(changelog DEPENDS ChangeLog)
+#add_custom_command(
+#        OUTPUT ChangeLog
+#        COMMAND ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
+#)
+#add_custom_target(changelog DEPENDS ChangeLog)
 
 
 # CMake config files

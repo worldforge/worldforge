@@ -1,7 +1,8 @@
-add_library(CEGUITinyXMLParser OBJECT
+add_library(ember-CEGUITinyXMLParser OBJECT
         XMLParser.cpp
-        XMLParserModule.cpp)
+        XMLParserModule.cpp
+)
 
-target_link_libraries(CEGUITinyXMLParser PUBLIC
-        ember_tinyxml)
+target_link_libraries(ember-CEGUITinyXMLParser PUBLIC
+        ember-tinyxml)
 

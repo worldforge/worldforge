@@ -1,4 +1,4 @@
-add_library(common
+add_library(cyphesis-common
         const.cpp
         binreloc.c
         newid.cpp
@@ -42,25 +42,25 @@ add_library(common
         net/SquallHandler.cpp
         )
 
-target_link_libraries(common PUBLIC
-        wfmath::wfmath
-        Atlas::Atlas
-        Atlas::AtlasCodecs
-        Atlas::AtlasNet
-        Atlas::AtlasMessage
-        Atlas::AtlasObjects
-        Atlas::AtlasFilters
-        varconf::varconf
+target_link_libraries(cyphesis-common PUBLIC
+        wfmath
+        Atlas
+        AtlasCodecs
+        AtlasNet
+        AtlasMessage
+        AtlasObjects
+        AtlasFilters
+        varconf
         libsigcpp::sigc++
         libgcrypt::libgcrypt
-        remotery
+        cyphesis-remotery
         Boost::filesystem
         libxdg-basedir::libxdg-basedir
         )
 
 
 
-target_compile_definitions(common PUBLIC
+target_compile_definitions(cyphesis-common PUBLIC
         -DBINDIR="${CMAKE_INSTALL_FULL_BINDIR}"
         -DDATADIR="${CMAKE_INSTALL_FULL_DATADIR}"
         -DSYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}"
@@ -78,16 +78,16 @@ if (PostgreSQL_FOUND)
 
 endif (PostgreSQL_FOUND)
 
-add_library(db ${db_files})
+add_library(cyphesis-db ${db_files})
 
 if (PostgreSQL_FOUND)
-    target_link_libraries(db PUBLIC PostgreSQL::PostgreSQL)
+    target_link_libraries(cyphesis-db PUBLIC PostgreSQL::PostgreSQL)
 endif (PostgreSQL_FOUND)
 
-target_link_libraries(db PUBLIC
+target_link_libraries(cyphesis-db PUBLIC
         SQLite::SQLite3
-        remotery
-        common
+        cyphesis-remotery
+        cyphesis-common
         )
 
 

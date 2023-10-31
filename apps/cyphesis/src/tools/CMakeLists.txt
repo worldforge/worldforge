@@ -1,5 +1,3 @@
-
-
 add_executable(cycmd
         cycmd.cpp
         Flusher.cpp
@@ -14,56 +12,72 @@ add_executable(cycmd
         AvatarContext.cpp
         ConnectionContext.cpp
         JunctureContext.cpp
-        Interactive.cpp)
+        Interactive.cpp
+)
 
 target_link_libraries(cycmd PUBLIC
-        common
+        cyphesis-common
         readline::readline
-        )
+)
 
 install(TARGETS cycmd DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 add_executable(cyconfig cyconfig.cpp)
-target_link_libraries(cyconfig
-        common)
+target_link_libraries(cyconfig PUBLIC
+        cyphesis-common
+)
 install(TARGETS cyconfig DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 add_executable(cypasswd
         cypasswd.cpp
-        DatabaseCreation.cpp)
-target_link_libraries(cypasswd
-        db
-        common)
+        DatabaseCreation.cpp
+)
+target_link_libraries(cypasswd PUBLIC
+        cyphesis-db
+        cyphesis-common
+)
 install(TARGETS cypasswd DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 add_executable(cydb
         cydb.cpp
-        DatabaseCreation.cpp)
+        DatabaseCreation.cpp
+)
 
 target_link_libraries(cydb
         readline::readline
-        db
-        common)
+        cyphesis-db
+        cyphesis-common
+)
 install(TARGETS cydb DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 add_executable(cypython cypython.cpp)
 target_link_libraries(cypython
         readline::readline
-        common)
+        cyphesis-common
+)
 install(TARGETS cypython DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
-add_executable(cyexport cyexport.cpp EntityExporterBase.cpp
-        EntityExporter.cpp AgentCreationTask.cpp
+add_executable(cyexport
+        cyexport.cpp
+        EntityExporterBase.cpp
+        EntityExporter.cpp
+        AgentCreationTask.cpp
         WaitForDeletionTask.cpp
-        )
-target_link_libraries(cyexport
-        common)
+)
+target_link_libraries(cyexport PUBLIC
+        cyphesis-common
+)
 install(TARGETS cyexport DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
-add_executable(cyimport cyimport.cpp EntityImporterBase.cpp
-        EntityImporter.cpp AgentCreationTask.cpp
-        EntityTraversalTask.cpp WaitForDeletionTask.cpp)
+add_executable(cyimport
+        cyimport.cpp
+        EntityImporterBase.cpp
+        EntityImporter.cpp
+        AgentCreationTask.cpp
+        EntityTraversalTask.cpp
+        WaitForDeletionTask.cpp
+)
 target_link_libraries(cyimport
-        common)
+        cyphesis-common)
 install(TARGETS cyimport DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 

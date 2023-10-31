@@ -1,3 +1,4 @@
-add_library(binreloc OBJECT
-        binreloc.cpp)
+add_library(ember-binreloc OBJECT
+        binreloc.cpp
+)
 

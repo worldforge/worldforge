@@ -1,12 +1,15 @@
 file(GLOB BINDINGS_FILES *.cpp)
 
-add_library(BindingsEris OBJECT
+add_library(ember-BindingsEris OBJECT
         ${BINDINGS_FILES})
 
-target_precompile_headers(BindingsEris
+target_link_libraries(ember-BindingsEris PUBLIC
+        eris)
+
+target_precompile_headers(ember-BindingsEris
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsEris PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsEris PRIVATE "/bigobj")
 endif ()

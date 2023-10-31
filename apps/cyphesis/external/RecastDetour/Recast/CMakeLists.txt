@@ -1,4 +1,4 @@
-add_library(Recast
+add_library(cyphesis-Recast
         Source/Recast.cpp
         Source/RecastArea.cpp
         Source/RecastAlloc.cpp
@@ -10,4 +10,4 @@ add_library(Recast
         Source/RecastRasterization.cpp
         Source/RecastRegion.cpp)
 
-target_include_directories(Recast PUBLIC Include)
+target_include_directories(cyphesis-Recast PUBLIC Include)

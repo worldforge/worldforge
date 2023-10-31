@@ -10,24 +10,24 @@ if (PYTHON_IS_STATIC)
 endif ()
 
 target_link_libraries(cyaiclient
-        client
-        rulesai_python
-        rulesai
-        entityfilter_python
-        entityfilter
-        navigation
-        rulesbase_python
-        atlas_python
-        common_python
-        physics_python
-        rulesbase
-        modules
-        common
-        physics
-        DetourTileCache
-        Detour
-        Recast
-        remotery
+        cyphesis-client
+        cyphesis-rulesai_python
+        cyphesis-rulesai
+        cyphesis-entityfilter_python
+        cyphesis-entityfilter
+        cyphesis-navigation
+        cyphesis-rulesbase_python
+        cyphesis-atlas_python
+        cyphesis-common_python
+        cyphesis-physics_python
+        cyphesis-rulesbase
+        cyphesis-modules
+        cyphesis-common
+        cyphesis-physics
+        cyphesis-DetourTileCache
+        cyphesis-Detour
+        cyphesis-Recast
+        cyphesis-remotery
         )
 
 install(TARGETS cyaiclient DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

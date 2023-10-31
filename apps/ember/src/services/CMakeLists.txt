@@ -1,4 +1,4 @@
-add_library(services OBJECT
+add_library(ember-services OBJECT
         config/ConfigListener.cpp
         config/ConfigListenerContainer.cpp
         config/ConfigService.cpp
@@ -38,19 +38,24 @@ add_library(services OBJECT
         sound/SoundSource.cpp
         EmberServices.cpp)
 
-target_link_libraries(services PUBLIC mojoal)
+target_link_libraries(ember-services PUBLIC
+        mojoal
+        varconf
+        ember-framework)
 
 
 file(GLOB BINDINGS_FILES bindings/lua/*.cpp)
 
-add_library(BindingsServices OBJECT
+add_library(ember-BindingsServices OBJECT
         ${BINDINGS_FILES})
+target_link_libraries(ember-BindingsServices PUBLIC
+        ember-services)
 
-target_precompile_headers(BindingsServices
+target_precompile_headers(ember-BindingsServices
         REUSE_FROM
-        BindingsLua)
+        ember-BindingsLua)
 
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
-    target_compile_options(BindingsServices PRIVATE "/bigobj")
+    target_compile_options(ember-BindingsServices PRIVATE "/bigobj")
 endif ()

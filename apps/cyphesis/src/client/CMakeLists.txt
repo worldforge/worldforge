@@ -2,9 +2,9 @@ add_subdirectory(cyclient)
 add_subdirectory(aiclient)
 
 
-add_library(client
+add_library(cyphesis-client
         ClientPropertyManager.cpp
         BaseClient.cpp)
 
-target_link_libraries(client PUBLIC
-        common)
+target_link_libraries(cyphesis-client PUBLIC
+        cyphesis-common)

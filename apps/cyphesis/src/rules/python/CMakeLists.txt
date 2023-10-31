@@ -1,44 +1,52 @@
-add_library(rulesbase_python
+add_library(cyphesis-rulesbase_python
         PythonScriptFactory.cpp
         PythonWrapper.cpp
         CoordHelper.h
-        ScriptsProperty.cpp)
+        ScriptsProperty.cpp
+)
 
-target_link_libraries(rulesbase_python PUBLIC
-        pythonbase)
+target_link_libraries(cyphesis-rulesbase_python PUBLIC
+        cyphesis-pythonbase
+)
 
-add_library(atlas_python
+add_library(cyphesis-atlas_python
         CyPy_Atlas.cpp
         CyPy_Operation.cpp
         CyPy_Element.cpp
         CyPy_RootEntity.cpp
         CyPy_Oplist.cpp
-        CyPy_Root.cpp)
+        CyPy_Root.cpp
+)
 
-target_link_libraries(atlas_python PUBLIC
-        pythonbase)
+target_link_libraries(cyphesis-atlas_python PUBLIC
+        cyphesis-pythonbase
+)
 
-add_library(physics_python
+add_library(cyphesis-physics_python
         CyPy_Point3D.cpp
         CyPy_Vector3D.cpp
         CyPy_Quaternion.cpp
         CyPy_Axisbox.cpp
         CyPy_Physics.cpp
-        CyPy_Ball.cpp)
+        CyPy_Ball.cpp
+)
 
-target_link_libraries(physics_python PUBLIC
-        atlas_python
-        physics
-        pythonbase)
+target_link_libraries(cyphesis-physics_python PUBLIC
+        cyphesis-atlas_python
+        cyphesis-physics
+        cyphesis-pythonbase
+)
 
-add_library(common_python
+add_library(cyphesis-common_python
         CyPy_LocatedEntity.cpp
         CyPy_Common.cpp
         CyPy_Location.cpp
         CyPy_EntityLocation.cpp
         CyPy_Props.cpp
-        CyPy_Rules.cpp)
+        CyPy_Rules.cpp
+)
 
-target_link_libraries(common_python PUBLIC
-        physics_python
-        pythonbase)
+target_link_libraries(cyphesis-common_python PUBLIC
+        cyphesis-physics_python
+        cyphesis-pythonbase
+)

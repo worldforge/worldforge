@@ -1,4 +1,4 @@
-add_library(pythonbase
+add_library(cyphesis-pythonbase
         PythonClass.cpp
         PythonContext.cpp
         Python_API.cpp
@@ -6,9 +6,10 @@ add_library(pythonbase
         PythonMalloc.cpp
         PythonDebug.cpp)
 
-target_link_libraries(pythonbase PUBLIC
-        common
-        pycxx)
+target_link_libraries(cyphesis-pythonbase PUBLIC
+        cyphesis-common
+        cyphesis-pycxx
+)
 
 
 

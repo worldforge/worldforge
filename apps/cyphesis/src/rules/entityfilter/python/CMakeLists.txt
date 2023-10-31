@@ -1,9 +1,10 @@
-add_library(entityfilter_python
+add_library(cyphesis-entityfilter_python
         CyPy_EntityFilter.cpp
-        )
+)
 
-target_link_libraries(entityfilter_python PUBLIC
-        pythonbase)
+target_link_libraries(cyphesis-entityfilter_python PUBLIC
+        cyphesis-pythonbase
+)
 
 
 

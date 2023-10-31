@@ -1,4 +1,4 @@
-add_library(physics
+add_library(cyphesis-physics
         Vector3D.cpp
         BBox.cpp
         BBox.h
@@ -8,10 +8,11 @@ add_library(physics
         Transform.cpp
         Convert.h
         Course_impl.h
-        Shape_impl.h)
+        Shape_impl.h
+)
 
-target_link_libraries(physics PUBLIC
-        wfmath::wfmath
-        Atlas::Atlas
-        )
+target_link_libraries(cyphesis-physics PUBLIC
+        wfmath
+        Atlas
+)
 

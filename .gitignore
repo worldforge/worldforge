@@ -1,0 +1,11 @@
+# Ignore temporary files
+*~
+# Ignore vi swap files
+*.swp
+# Ignore desktop files
+.directory
+.idea
+build
+cmake-*
+CMakeUserPresets.json
+conan_provider.cmake

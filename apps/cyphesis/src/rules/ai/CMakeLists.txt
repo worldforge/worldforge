@@ -1,4 +1,4 @@
-add_library(rulesai
+add_library(cyphesis-rulesai
         BaseMind.cpp
         MemEntity.cpp
         MemMap.cpp
@@ -8,15 +8,16 @@ add_library(rulesai
         AwarenessStoreProvider.cpp
         SharedTerrain.cpp
         TypeResolver.cpp
-        )
+)
 
-target_link_libraries(rulesai PUBLIC
-        remotery
-        navigation
-        entityfilter
-        physics
-        rulesbase
-        mercator::mercator)
+target_link_libraries(cyphesis-rulesai PUBLIC
+        cyphesis-remotery
+        cyphesis-navigation
+        cyphesis-entityfilter
+        cyphesis-physics
+        cyphesis-rulesbase
+        mercator
+)
 
 add_subdirectory(python)
 
