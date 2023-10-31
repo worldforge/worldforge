@@ -54,10 +54,10 @@ jobs:
                       fi
                       if [[ "$ImageOS" != win* ]]; then
                         conan create tools/conan-packages/readline -pr default --build missing
-                        conan create tools/libxdg-basedir -pr default --build missing
+                        conan create tools/conan-packages/libxdg-basedir -pr default --build missing
                       fi
-                      conan create tools/ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
-                      conan create tools/cegui -pr default --build missing
+                      conan create tools/conan-packages/ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
+                      conan create tools/conan-packages/cegui -pr default --build missing
                     
                       conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
                       conan upload "*" -r worldforge -c
