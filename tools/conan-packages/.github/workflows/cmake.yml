@@ -1,0 +1,64 @@
+name: Build all
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+env:
+  CONAN_REVISIONS_ENABLED: 1
+  CONAN_SCM_TO_CONANDATA: 1
+  CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+  CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-20.04, ubuntu-22.04, macos-11, macos-12 ]
+    #        os: [ ubuntu-20.04, ubuntu-22.04, windows-2019, windows-2022, macos-11, macos-12 ]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install autotools
+        shell: bash
+        run: |
+          if [[ "$ImageOS" == macos* ]]; then
+            brew install autoconf automake
+          fi
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Install Conan
+        shell: bash
+        run: |
+          pip install -r .github/workflows/requirements.txt
+          conan profile detect
+          #Set the default profile to use g++ 17 it it's not detected
+          sed -i.backup 's/compiler.cppstd=gnu14/compiler.cppstd=gnu17/g' ~/.conan2/profiles/default
+          conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+
+      - name: Build artifacts
+        shell: bash
+        run: |
+          if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+            if [[ "$ImageOS" == ubuntu* ]]; then
+              conan create ./cpython -pr default --build missing
+            fi
+            if [[ "$ImageOS" != win* ]]; then
+              conan create ./readline -pr default --build missing
+              conan create ./libxdg-basedir -pr default --build missing
+            fi
+            conan create ./ogre -pr default --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=true
+            conan create ./cegui -pr default --build missing
+
+            conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+            conan upload "*" -r worldforge -c
+          fi

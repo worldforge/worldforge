@@ -1,0 +1,151 @@
+diff --git cegui/include/CEGUI/RendererModules/Ogre/Renderer.h cegui/include/CEGUI/RendererModules/Ogre/Renderer.h
+index 094962a..5946f6e 100644
+--- cegui/include/CEGUI/RendererModules/Ogre/Renderer.h
++++ cegui/include/CEGUI/RendererModules/Ogre/Renderer.h
+@@ -33,6 +33,7 @@
+ #include "CEGUI/Config.h"
+ 
+ #include <vector>
++#include <memory>
+ 
+ #if (defined( __WIN32__ ) || defined( _WIN32 )) && !defined(CEGUI_STATIC)
+ #   ifdef CEGUIOGRERENDERER_EXPORTS
+@@ -57,7 +58,11 @@ class RenderTarget;
+ #if (CEGUI_OGRE_VERSION < ((1 << 16) | (9 << 8) | 0))
+ class TexturePtr;
+ #else
++# if (CEGUI_OGRE_VERSION < ((1 << 16) | (10 << 8) | 0))
+ template<typename T> class SharedPtr;
++# else
++template<typename T> using SharedPtr = std::shared_ptr<T>;
++# endif
+ class Texture;
+ typedef SharedPtr<Texture> TexturePtr;
+ #endif
+diff --git cegui/src/RendererModules/Ogre/GeometryBuffer.cpp cegui/src/RendererModules/Ogre/GeometryBuffer.cpp
+index 6ac3d34..3267d29 100644
+--- cegui/src/RendererModules/Ogre/GeometryBuffer.cpp
++++ cegui/src/RendererModules/Ogre/GeometryBuffer.cpp
+@@ -132,7 +132,7 @@ static void cleanupRenderOp(
+ {
+     OGRE_DELETE rop.vertexData;
+     rop.vertexData = 0;
+-    vb.setNull();
++    vb.reset();
+ }
+ 
+ //----------------------------------------------------------------------------//
+diff --git cegui/src/RendererModules/Ogre/Renderer.cpp cegui/src/RendererModules/Ogre/Renderer.cpp
+index 14cacb9..d358aa0 100644
+--- cegui/src/RendererModules/Ogre/Renderer.cpp
++++ cegui/src/RendererModules/Ogre/Renderer.cpp
+@@ -920,7 +920,7 @@ void OgreRenderer::initialiseShaders()
+         }
+         else// If no shader was compatible
+         {
+-            d_pimpl->d_vertexShader.setNull();
++            d_pimpl->d_vertexShader.reset();
+             CEGUI_THROW(RendererException(
+                 "OgreRenderer::initialiseShaders: No supported syntax - "
+                 "unable to compile '__cegui_internal_vs__'"));
+@@ -971,8 +971,8 @@ void OgreRenderer::initialiseShaders()
+         }
+         else
+         {
+-            d_pimpl->d_vertexShader.setNull();
+-            d_pimpl->d_pixelShader.setNull();
++            d_pimpl->d_vertexShader.reset();
++            d_pimpl->d_pixelShader.reset();
+ 
+             CEGUI_THROW(RendererException(
+                 "OgreRenderer::initialiseShaders: No supported syntax - "
+@@ -1003,10 +1003,10 @@ void OgreRenderer::cleanupShaders()
+     if (d_pimpl->d_hlmsSamplerblock != NULL)
+         hlmsManager->destroySamplerblock(d_pimpl->d_hlmsSamplerblock);
+ #endif
+-    d_pimpl->d_pixelShaderParameters.setNull();
+-    d_pimpl->d_vertexShaderParameters.setNull();
+-    d_pimpl->d_pixelShader.setNull();
+-    d_pimpl->d_vertexShader.setNull();
++    d_pimpl->d_pixelShaderParameters.reset();
++    d_pimpl->d_vertexShaderParameters.reset();
++    d_pimpl->d_pixelShader.reset();
++    d_pimpl->d_vertexShader.reset();
+ }
+ 
+ //----------------------------------------------------------------------------//
+diff --git cegui/src/RendererModules/Ogre/ResourceProvider.cpp cegui/src/RendererModules/Ogre/ResourceProvider.cpp
+index 8080e65..8725737 100644
+--- cegui/src/RendererModules/Ogre/ResourceProvider.cpp
++++ cegui/src/RendererModules/Ogre/ResourceProvider.cpp
+@@ -59,7 +59,7 @@ void OgreResourceProvider::loadRawDataContainer(const String& filename,
+     Ogre::DataStreamPtr input = Ogre::ResourceGroupManager::getSingleton().
+         openResource(filename.c_str(), orpGroup.c_str());
+ 
+-    if (input.isNull())
++    if (!input)
+         CEGUI_THROW(InvalidRequestException(
+             "Unable to open resource file '" + filename +
+             "' in resource group '" + orpGroup + "'."));
+diff --git cegui/src/RendererModules/Ogre/Texture.cpp cegui/src/RendererModules/Ogre/Texture.cpp
+index e9ecf70..e025a30 100644
+--- cegui/src/RendererModules/Ogre/Texture.cpp
++++ cegui/src/RendererModules/Ogre/Texture.cpp
+@@ -106,7 +106,7 @@ OgreTexture::OgreTexture(const String& name, const Sizef& sz) :
+     createEmptyOgreTexture();
+ 
+     // throw exception if no texture was able to be created
+-    if (d_texture.isNull())
++    if (!d_texture)
+         CEGUI_THROW(RendererException(
+             "Failed to create Texture object with spcecified size."));
+     
+@@ -222,7 +222,7 @@ void OgreTexture::loadFromMemory(const void* buffer, const Sizef& buffer_size,
+     d_texture->getBuffer(0,0).get()->blitFromMemory(*pixelBox);
+ 
+     // throw exception if no texture was able to be created
+-    if (d_texture.isNull())
++    if (!d_texture)
+         CEGUI_THROW(RendererException(
+             "Failed to blit to Texture from memory."));
+ 
+@@ -235,7 +235,7 @@ void OgreTexture::loadFromMemory(const void* buffer, const Sizef& buffer_size,
+ //----------------------------------------------------------------------------//
+ void OgreTexture::blitFromMemory(const void* sourceData, const Rectf& area)
+ {
+-    if (d_texture.isNull()) // TODO: exception?
++    if (!d_texture) // TODO: exception?
+         return;
+ 
+     // NOTE: const_cast because Ogre takes pointer to non-const here. Rather
+@@ -250,7 +250,7 @@ void OgreTexture::blitFromMemory(const void* sourceData, const Rectf& area)
+ //----------------------------------------------------------------------------//
+ void OgreTexture::blitToMemory(void* targetData)
+ {
+-    if (d_texture.isNull()) // TODO: exception?
++    if (!d_texture) // TODO: exception?
+         return;
+ 
+     Ogre::PixelBox pb(d_size.d_width, d_size.d_height,
+@@ -261,10 +261,10 @@ void OgreTexture::blitToMemory(void* targetData)
+ //----------------------------------------------------------------------------//
+ void OgreTexture::freeOgreTexture()
+ {
+-    if (!d_texture.isNull() && !d_isLinked)
++    if (d_texture && !d_isLinked)
+         Ogre::TextureManager::getSingleton().remove(d_texture->getHandle());
+ 
+-    d_texture.setNull();
++    d_texture.reset();
+ }
+ 
+ //----------------------------------------------------------------------------//
+@@ -320,7 +320,7 @@ void OgreTexture::setOgreTexture(Ogre::TexturePtr texture, bool take_ownership)
+     d_texture = texture;
+     d_isLinked = !take_ownership;
+ 
+-    if (!d_texture.isNull())
++    if (d_texture)
+     {
+         d_size.d_width = d_texture->getWidth();
+         d_size.d_height= d_texture->getHeight();

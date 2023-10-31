@@ -1,0 +1,26 @@
+Index: cegui/include/CEGUI/falagard/FormattingSetting.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- cegui/include/CEGUI/falagard/FormattingSetting.h	(revision 6267:ed25a866ade793aadd803e5ef575a31aa5dbe8e8)
++++ cegui/include/CEGUI/falagard/FormattingSetting.h	(revision 6267+:ed25a866ade7+)
+@@ -103,16 +103,10 @@
+     }
+ 
+     //------------------------------------------------------------------------//
+-    virtual void writeXMLTagToStream(XMLSerializer& /*xml_stream*/) const
+-    {
+-        // This does nothing and needs to be specialised or overridden
+-    }
++    virtual void writeXMLTagToStream(XMLSerializer& /*xml_stream*/) const;
+ 
+     //------------------------------------------------------------------------//
+-    virtual void writeXMLAttributesToStream(XMLSerializer& /*xml_stream*/) const
+-    {
+-        // This does nothing and needs to be specialised or overridden
+-    }
++    virtual void writeXMLAttributesToStream(XMLSerializer& /*xml_stream*/) const;
+ 
+     //------------------------------------------------------------------------//
+     bool operator==(const FormattingSetting<T>& rhs) const

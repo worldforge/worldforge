@@ -1,0 +1,18 @@
+version: 1.0.{build}
+image: Visual Studio 2019
+environment:
+  CONAN_REVISIONS_ENABLED: 1
+  CONAN_SCM_TO_CONANDATA: 1
+cache: '%LOCALAPPDATA%\pip\Cache'
+build_script:
+  - cmd: |
+      set PATH=C:\Python37-x64;C:\Python37-x64\Scripts\;%PATH%
+      pip.exe install conan
+      conan profile detect
+      conan --version
+      conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+           
+      conan create "cegui" --build missing
+      conan create "ogre" --build missing
+      conan remote login worldforge %CONAN_LOGIN_USERNAME% -p %CONAN_PASSWORD%
+      conan upload "*" -r worldforge -c
