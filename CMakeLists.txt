@@ -55,9 +55,29 @@ enable_testing()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
 add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
-
 add_custom_target(dox)
-
 
 add_subdirectory(libs)
 add_subdirectory(apps)
+
+# Packaging
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
+set(CPACK_PACKAGE_VENDOR "Worldforge")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
+set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+
+set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)
+
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "worldforge" CACHE INTERNAL "tarball basename")
+
+set(CPACK_SOURCE_IGNORE_FILES
+        # no hidden files
+        "/\\\\..+$"
+        "~$"
+)
+
+include(CPack)

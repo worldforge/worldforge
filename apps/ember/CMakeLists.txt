@@ -384,36 +384,3 @@ add_custom_command(
 )
 #add_custom_target(changelog DEPENDS ChangeLog)
 
-
-# Packaging
-
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
-set(CPACK_PACKAGE_VENDOR "Worldforge")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
-set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
-set(CPACK_PACKAGE_VERSION_MAJOR "${EMBER_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${EMBER_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${EMBER_VERSION_PATCH}")
-#set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_SOURCE_DIR}/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
-
-set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)
-
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION}" CACHE INTERNAL "tarball basename")
-
-set(CPACK_SOURCE_IGNORE_FILES
-        # no hidden files
-        "/\\\\..+$"
-        "~$"
-)
-
-include(CPack)
-
-message(STATUS "*********")
-message(STATUS "Ember is configured and ready to be built.")
-message(STATUS "To run it you also need media. There are two ways of getting the media:")
-message(STATUS "1. Simplest is to use the 'media-download' target. This will use 'rsync' to download only the required preprocessed media.")
-message(STATUS "2. If you want to also make changes to the raw media you can use the target 'mediarepo-checkout' to use Subversion to check out the raw media repo.")
-message(STATUS "   Note that this might take a while, will download ~10GB of data and will consume ~20GB on disk.")
-message(STATUS "In addition, if you've downloaded the raw media repo, but want Ember to use processed media instead of the raw media repo,")
-message(STATUS "you can use the target 'mediarepo-process' to create 'processed' media. This requires Python and ImageMagick.")
-message(STATUS "*********")
