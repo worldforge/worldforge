@@ -1,0 +1,228 @@
+name: Build all
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - master
+
+env:
+    CONAN_REVISIONS_ENABLED: 1
+    CONAN_SCM_TO_CONANDATA: 1
+    CONAN_SYSREQUIRES_MODE: enabled
+    CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+    CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+    RSYNC_PASSWORD: ${{ secrets.RSYNC_PASSWORD }}
+    PROFILE_CONAN: conan-release
+    SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+
+jobs:
+    build_unix:
+        name: Build on *NIX
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                #Enable building on macOS when it can be fixed. Currently we're getting SDL linking errors.
+                #        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-11 ]
+                os: [ ubuntu-20.04, ubuntu-22.04 ]
+
+        steps:
+            -   uses: actions/checkout@v3.3.0
+
+            -   name: Cache media
+                uses: actions/cache@v3.2.3
+                with:
+                    path: |
+                        ${{github.workspace}}/apps/cyphesis/mediarepo
+                    key: mediarepo
+
+
+            -   name: Setup environment
+                shell: bash
+                run: |
+                    if [[ "$ImageOS" == "ubuntu20" ]]; then
+                      echo "BUILD_SNAP=true" >> $GITHUB_ENV
+                    fi
+                    if [[ "$ImageOS" == "ubuntu20" ]]; then
+                      echo "BUILD_APPIMAGE=true" >> $GITHUB_ENV
+                    fi
+
+            -   name: Install autotools
+                shell: bash
+                if: runner.os == 'macOS'
+                run: |
+                    brew install autoconf automake
+
+            -   name: Install Snapcraft
+                if: env.BUILD_SNAP == 'true'
+                uses: samuelmeuli/action-snapcraft@v2
+                with:
+                    snapcraft_token: ${{ secrets.SNAPCRAFT_TOKEN }}
+
+            -   uses: actions/setup-python@v4
+                with:
+                    python-version: '3.9'
+                    cache: 'pip'
+
+            -   name: Install Conan
+                shell: bash
+                run: |
+                    pip install -r .github/workflows/requirements.txt
+                    conan profile detect
+                    #Set the default profile to use g++ 17 it it's not detected
+                    sed -i.backup 's/compiler.cppstd=gnu14/compiler.cppstd=gnu17/g' ~/.conan2/profiles/default
+                    conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+
+            -   name: Have Conan install packages
+                shell: bash
+                run: |
+                    export PATH=~/.local/bin:$PATH
+                    conan install . -pr default --build=missing --update -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+                    if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+                      conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+                      conan upload "*" -r worldforge -c
+                    fi
+
+            -   name: Configure CMake
+                # Use a bash shell so we can use the same syntax for environment variable
+                # access regardless of the host operating system
+                shell: bash
+                run: |
+                    mkdir -p ~/install/usr
+                    cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr
+
+            -   name: Build
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN
+
+            -   name: Test
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN --target check
+
+#            -   name: Install
+#                shell: bash
+#                run: cmake --build --preset $PROFILE_CONAN --target install
+#
+#            -   name: Build Snap
+#                if: env.BUILD_SNAP == 'true'
+#                shell: bash
+#                run: |
+#                    echo "Building Snap"
+#                    cd ~/install/usr
+#                    cp -a ${{github.workspace}}/build/Release/snap ~/install/usr/
+#                    snapcraft --destructive-mode
+#                    echo "Uploading Snap"
+#                    snapcraft upload ~/install/usr/*.snap --release edge
+#
+#            -   name: Store Snap
+#                if: env.BUILD_SNAP == 'true'
+#                uses: actions/upload-artifact@v3.1.2
+#                with:
+#                    name: snap
+#                    path: ~/install/usr/*.snap
+#
+#            -   name: Build AppImage
+#                if: env.BUILD_APPIMAGE == 'true'
+#                working-directory: ${{github.workspace}}/build/Release
+#                run: |
+#                    echo "Building AppImage"
+#                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
+#                    ln -s ~/install/usr/share/applications/org.worldforge.ember.desktop ~/install/
+#                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/.DirIcon
+#                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/AppRun-x86_64 > ~/install/AppRun
+#                    chmod a+x ~/install/AppRun
+#                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
+#                    chmod a+x appimagetool-x86_64.AppImage
+#                    ./appimagetool-x86_64.AppImage -n ~/install
+#
+#            -   name: Store AppImage
+#                if: env.BUILD_APPIMAGE == 'true'
+#                uses: actions/upload-artifact@v3.1.2
+#                with:
+#                    name: AppImage
+#                    path: ${{github.workspace}}/build/Release/Ember-x86_64.AppImage
+#
+#            -   name: Upload AppImage to amber
+#                if: env.BUILD_APPIMAGE == 'true'
+#                working-directory: ${{github.workspace}}/build/Release
+#                run: rsync -uzcP --no-p ${{github.workspace}}/build/Release/Ember-x86_64.AppImage ${{ secrets.RSYNC_USER }}@amber.worldforge.org::ember-unstable/
+
+
+#  build_windows:
+#    name: Build on Windows
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ windows-2022 ]
+#
+#    steps:
+#      - uses: actions/checkout@v3.3.0
+#
+#      - name: Cache media
+#        uses: actions/cache@v3.2.3
+#        with:
+#          path: |
+#            ${{github.workspace}}/build_ci/media-0.8.0
+#          key: dev-media
+#
+#      - uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.9'
+#          cache: 'pip'
+#
+#      - name: Install Conan
+#        shell: bash
+#        run: |
+#          pip install -r .github/workflows/requirements.txt
+#          conan --version
+#          conan profile detect
+#          conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+#
+#      - name: Set up Cygwin
+#        uses: egor-tensin/setup-cygwin@v4.0.1
+#        with:
+#          packages: rsync
+#
+#      - name: Have Conan install packages
+#        shell: cmd
+#        run: |
+#          conan install . -pr default --build=missing --update
+#          conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+#          conan upload "*" -r worldforge -c
+#
+#      - name: Configure CMake
+#        shell: cmd
+#        run: |
+#          cmake --preset $PROFILE_CONAN -DCMAKE_INSTALL_PREFIX=%USERPROFILE%\install -DVERSION_PACKAGE=latest-DWF_USE_WIDGET_PLUGINS=OFF
+#
+#      - name: Download media
+#        shell: cmd
+#        run: cmake --build --preset $PROFILE_CONAN --target media-download
+#
+#      - name: Build
+#        shell: cmd
+#        run: cmake --build --preset $PROFILE_CONAN --parallel -- /m
+#
+#      - name: Test
+#        shell: cmd
+#        run: ctest --preset $PROFILE_CONAN --output-on-failure
+#
+#      - name: Install
+#        shell: cmd
+#        run: cmake --preset $PROFILE_CONAN --target install
+#
+#      - name: Build NSIS
+#        working-directory: ${{github.workspace}}/build_ci
+#        shell: cmd
+#        run: makensis Ember.nsi
+#
+#      - name: Store NSIS
+#        uses: actions/upload-artifact@v3.1.2
+#        with:
+#          name: NSIS
+#          path: ${{github.workspace}}/build_ci/*.exe
+#
+#      - name: Upload exe to amber
+#        working-directory: ${{github.workspace}}/build_ci
+#        shell: cmd
+#        run: rsync -uzcP --no-p *.exe ${{ secrets.RSYNC_USER }}@amber.worldforge.org::ember-unstable/
