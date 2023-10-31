@@ -2,11 +2,14 @@
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
 
-Squall is a library used for making sure that clients have up to date content. It handles both syncing as well as partial updates.
+Squall is a library used for making sure that clients have up to date content. It handles both syncing as well as
+partial updates.
 
-It's meant to be used in an environment where there's a need to have multiple clients which can download content from multiple servers, and where there's a need to easily signal to the clients when content has changed.
+It's meant to be used in an environment where there's a need to have multiple clients which can download content from
+multiple servers, and where there's a need to easily signal to the clients when content has changed.
 
-Squall is part of the [WorldForge](http://worldforge.org/ "The main Worldforge site") virtual world system, but can be used independently.
+Squall is part of the [WorldForge](http://worldforge.org/ "The main Worldforge site") virtual world system, but can be
+used independently.
 
 ## Installation
 
@@ -29,15 +32,22 @@ make check
 
 ## Description
 
-Squall is meant to allow for a client to sync data from one or many servers, where there are multiple versions of the same data, but with various smaller alterations. A typical example would be a Worldforge client which connects to multiple game servers, where a lot of media is the same, but each server has some extra media.
+Squall is meant to allow for a client to sync data from one or many servers, where there are multiple versions of the
+same data, but with various smaller alterations. A typical example would be a Worldforge client which connects to
+multiple game servers, where a lot of media is the same, but each server has some extra media.
 
-The main idea is that all content is identified by hashing of the data. All data is stored in a central location, in a repository. When using the data a client can either traverse the repository directly (like a virtual file system), or "realize" the content onto the file system as either copied data or soft or hard links.
+The main idea is that all content is identified by hashing of the data. All data is stored in a central location, in a
+repository. When using the data a client can either traverse the repository directly (like a virtual file system), or "
+realize" the content onto the file system as either copied data or soft or hard links.
 
 ### Manifests
 
-The basic method of describing data is through "manifests". These are simple text files that describe the content of a directory. Each entry in the directory is either a file or a subdirectory. In the Manifest this is expressed with a hash of the content, the size of the content and the name of the file/directory.
+The basic method of describing data is through "manifests". These are simple text files that describe the content of a
+directory. Each entry in the directory is either a file or a subdirectory. In the Manifest this is expressed with a hash
+of the content, the size of the content and the name of the file/directory.
 
-Each Manifest entry always start with the version of the format. Future versions of this library might introduce new features which would make it incompatible with older versions.
+Each Manifest entry always start with the version of the format. Future versions of this library might introduce new
+features which would make it incompatible with older versions.
 
 Here's an example of a Manifest:
 
@@ -49,6 +59,10 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 0 empty_file
 ```
 
 If a file name ends with "/" it denotes a directory.
+
+## License
+
+Squall is licensed under either the MIT License or the GPL v3+, at your choice.
 
 ## How to help
 
