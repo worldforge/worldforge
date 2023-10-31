@@ -84,20 +84,16 @@ jobs:
                     fi
 
             -   name: Configure CMake
-                # Use a bash shell so we can use the same syntax for environment variable
-                # access regardless of the host operating system
                 shell: bash
-                run: |
-                    mkdir -p ~/install/usr
-                    cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr
 
             -   name: Build
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN
+                run: cmake --build --preset $PROFILE_CONAN --parallel
 
             -   name: Test
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN --target check
+                run: cmake --build --preset $PROFILE_CONAN --target check --parallel
 
 #            -   name: Install
 #                shell: bash

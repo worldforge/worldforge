@@ -12,31 +12,6 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CMakeDependentOption)
 
-# Version setup. Figure out the version from 'git describe' if VERSION isn't set externally.
-execute_process(COMMAND git -C ${PROJECT_SOURCE_DIR} describe
-        OUTPUT_VARIABLE GIT_REPO_VERSION)
-string(REGEX REPLACE "\n$" "" GIT_REPO_VERSION "${GIT_REPO_VERSION}")
-if (NOT VERSION)
-    if (NOT GIT_REPO_VERSION)
-        set(VERSION "${VERSION_FALLBACK}")
-    else ()
-        set(VERSION "${GIT_REPO_VERSION}")
-    endif ()
-endif ()
-
-if (NOT VERSION_PACKAGE)
-    message(STATUS "Setting VERSION_PACKAGE to ${VERSION}. You can override this by setting the 'VERSION_PACKAGE' variable externally.")
-    set(VERSION_PACKAGE "${VERSION}")
-endif ()
-
-message(STATUS "Building version ${VERSION}")
-
-#Split a version number like "1.2.3" into a list to extract parts.
-string(REPLACE "." ";" VERSION_LIST ${VERSION})
-list(GET VERSION_LIST 0 EMBER_VERSION_MAJOR)
-list(GET VERSION_LIST 1 EMBER_VERSION_MINOR)
-list(GET VERSION_LIST 2 EMBER_VERSION_PATCH)
-
 option(FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 if (${FORCE_COLORED_OUTPUT})
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
