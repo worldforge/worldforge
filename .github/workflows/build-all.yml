@@ -36,8 +36,10 @@ jobs:
                         ${{github.workspace}}/apps/cyphesis/mediarepo
                     key: mediarepo
 
-            -   name: Install ccache
+            -   name: Use ccache
                 uses: hendrikmuhs/ccache-action@v1.2
+                with:
+                    key: ${{ github.job }}-${{ matrix.os }}
 
             -   name: Setup environment
                 shell: bash
