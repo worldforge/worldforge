@@ -27,9 +27,7 @@
 #include <Atlas/Codec.h>
 #include <Atlas/Negotiate.h>
 
-#include "common/asio.h"
-#include "common/asio.h"
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/steady_timer.hpp>
 

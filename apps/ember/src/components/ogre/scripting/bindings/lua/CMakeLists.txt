@@ -8,6 +8,8 @@ add_library(ember-BindingsEmberOgre OBJECT
 
 target_link_libraries(ember-BindingsEmberOgre PUBLIC
         ember-ogre
+        ember-external-sol2
+        ember-external-OGRE
 )
 
 if (MSVC)

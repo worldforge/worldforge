@@ -25,6 +25,8 @@ link_libraries(
         Boost::filesystem
         readline::readline
         external-Detour
+        external-Recast
+        external-DetourTileCache
         libxdg-basedir::libxdg-basedir
         libgcrypt::libgcrypt
 )

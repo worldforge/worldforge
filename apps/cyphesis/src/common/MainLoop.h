@@ -19,7 +19,7 @@
 #ifndef CYPHESIS_MAINLOOP_H
 #define CYPHESIS_MAINLOOP_H
 
-#include "common/io_context.h"
+#include <boost/asio/io_context.hpp>
 #include <chrono>
 
 struct OperationsHandler;

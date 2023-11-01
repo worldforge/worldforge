@@ -25,5 +25,7 @@ add_library(ember-lua_component STATIC
 
 target_link_libraries(ember-lua_component PUBLIC
         eris
-        ember-services)
+        ember-services
+        ember-external-sol2
+)
 

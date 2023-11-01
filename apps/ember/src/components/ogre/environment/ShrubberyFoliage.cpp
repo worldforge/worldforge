@@ -36,8 +36,8 @@
 
 #include "../terrain/ITerrainAdapter.h"
 
-#include "pagedgeometry/include/BatchPage.h"
-#include "pagedgeometry/include/TreeLoader3D.h"
+#include "BatchPage.h"
+#include "TreeLoader3D.h"
 
 namespace Ember {
 namespace OgreView {

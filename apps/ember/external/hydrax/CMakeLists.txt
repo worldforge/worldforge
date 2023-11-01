@@ -1,4 +1,4 @@
-add_library(ember-hydrax OBJECT
+add_library(ember-external-hydrax OBJECT
         src/CfgFileManager.cpp
         src/DecalsManager.cpp
         src/Enums.cpp

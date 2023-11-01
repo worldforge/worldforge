@@ -21,7 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "CaelumSun.h"
-#include "caelum/include/CaelumSystem.h"
+#include "CaelumSystem.h"
 #include "components/ogre/Convert.h"
 
 #include "framework/Tokeniser.h"

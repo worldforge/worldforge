@@ -13,9 +13,6 @@ target_sources(${EMBER_EXECUTABLE_NAME} PRIVATE
         Ember.cpp
         ConsoleInputBinder.cpp
         $<TARGET_OBJECTS:ember-ogre>
-        $<TARGET_OBJECTS:ember-caelum>
-        $<TARGET_OBJECTS:ember-meshtree>
-        $<TARGET_OBJECTS:ember-pagedgeometry>
         $<TARGET_OBJECTS:ember-widgets>
         $<TARGET_OBJECTS:ember-ogre_terrain>
         $<TARGET_OBJECTS:ember-entitymapping>
@@ -24,19 +21,22 @@ target_sources(${EMBER_EXECUTABLE_NAME} PRIVATE
         $<TARGET_OBJECTS:ember-services>
         $<TARGET_OBJECTS:ember-domain>
         $<TARGET_OBJECTS:ember-framework>
-        $<TARGET_OBJECTS:ember-tinyxml>
-        $<TARGET_OBJECTS:ember-binreloc>
-        $<TARGET_OBJECTS:ember-CEGUIOgreRenderer>
-        $<TARGET_OBJECTS:ember-DetourTileCache>
-        $<TARGET_OBJECTS:ember-Detour>
-        $<TARGET_OBJECTS:ember-Recast>)
+        $<TARGET_OBJECTS:ember-external-caelum>
+        $<TARGET_OBJECTS:ember-external-CEGUIOgreRenderer>
+        $<TARGET_OBJECTS:ember-external-meshtree>
+        $<TARGET_OBJECTS:ember-external-pagedgeometry>
+        $<TARGET_OBJECTS:external-tinyxml>
+        $<TARGET_OBJECTS:external-binreloc>
+        $<TARGET_OBJECTS:external-DetourTileCache>
+        $<TARGET_OBJECTS:external-Detour>
+        $<TARGET_OBJECTS:external-Recast>)
 
 target_link_libraries(${EMBER_EXECUTABLE_NAME}
         ember-assets
         ember-lua_component
         mercator
-        mojoal
-        ember-CEGUITinyXMLParser
+        ember-external-mojoal
+        ember-external-CEGUITinyXMLParser
         ${BULLET_LIBRARIES})
 
 install(TARGETS ${EMBER_EXECUTABLE_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

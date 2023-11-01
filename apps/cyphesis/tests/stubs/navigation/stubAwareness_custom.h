@@ -1,11 +1,11 @@
 //Add custom implementations of stubbed functions here; this file won't be rewritten when re-generating stubs.
-#include "RecastDetour/Detour/Include/DetourNavMesh.h"
-#include "RecastDetour/Detour/Include/DetourNavMeshQuery.h"
-#include "RecastDetour/Detour/Include/DetourNavMeshBuilder.h"
-#include "RecastDetour/DetourTileCache/Include/DetourTileCache.h"
-#include "RecastDetour/DetourTileCache/Include/DetourTileCacheBuilder.h"
-#include "RecastDetour/Detour/Include/DetourCommon.h"
-#include "RecastDetour/Detour/Include/DetourObstacleAvoidance.h"
+#include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
+#include "DetourNavMeshBuilder.h"
+#include "DetourTileCache.h"
+#include "DetourTileCacheBuilder.h"
+#include "DetourCommon.h"
+#include "DetourObstacleAvoidance.h"
 #include "navigation/AwarenessUtils.h"
 
 template<typename TItem>

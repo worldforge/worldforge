@@ -15,6 +15,7 @@ add_library(ember-BindingsDomain OBJECT
 
 target_link_libraries(ember-BindingsDomain PUBLIC
         ember-domain
+        ember-external-sol2
 )
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.

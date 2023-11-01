@@ -90,7 +90,7 @@ if (APPLE)
     link_libraries(iconv)
 endif ()
 
-include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/external ${PROJECT_BINARY_DIR}/generated)
+include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/generated)
 
 enable_testing()
 #add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})

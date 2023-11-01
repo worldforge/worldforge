@@ -1,4 +1,4 @@
-add_library(ember-pagedgeometry OBJECT
+add_library(ember-external-pagedgeometry OBJECT
         source/BatchPage.cpp
         source/BatchedGeometry.cpp
         source/GrassLoader.cpp
@@ -13,25 +13,10 @@ add_library(ember-pagedgeometry OBJECT
         source/WindBatchedGeometry.cpp
         source/WindBatchPage.cpp
         source/ShaderHelper.cpp
+)
 
-        include/BatchPage.h
-        include/BatchedGeometry.h
-        include/GrassLoader.h
-        include/ImpostorPage.h
-        include/PagedGeometry.h
-        include/PropertyMaps.h
-        include/StaticBillboardSet.h
-        include/TreeLoader2D.h
-        include/TreeLoader3D.h
-        include/DummyPage.h
-        include/PassiveEntityPage.h
-        include/WindBatchedGeometry.h
-        include/WindBatchPage.h
-        include/ShaderHelper.h
-        include/RandomTable.h)
+target_include_directories(ember-external-pagedgeometry PUBLIC include)
 
-target_include_directories(ember-pagedgeometry PUBLIC include)
-
-target_link_libraries(ember-pagedgeometry PUBLIC
+target_link_libraries(ember-external-pagedgeometry PUBLIC
         eris)
 

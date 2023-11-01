@@ -189,19 +189,27 @@ add_library(ember-ogre OBJECT
 )
 
 target_link_libraries(ember-ogre PUBLIC
-        mojoal
-        ember-assets
-        eris
         ember-framework
+        ember-assets
+        ember-external-mojoal
+        ember-external-OGRE
+        ember-external-pagedgeometry
+        ember-external-CEGUIOgreRenderer
+        ember-external-caelum
+        ember-external-meshtree
+        external-Recast
+        external-DetourTileCache
+        eris
         mercator
-        squallcore)
+        squallcore
+)
 
 #target_compile_definitions(emberogre PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")
 target_precompile_headers(ember-ogre
         PUBLIC
-        "${PROJECT_SOURCE_DIR}/external/OGRE/OgreAnyCleaned.h"
-        <Ogre.h>
-        <CEGUI/CEGUI.h>
+        "<OGRE/OgreAnyCleaned.h>"
+        "<Ogre.h>"
+        "<CEGUI/CEGUI.h>"
 )
 
 add_subdirectory(scripting)

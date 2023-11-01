@@ -19,8 +19,7 @@
 #ifndef COMMON_COMM_SOCKET_H
 #define COMMON_COMM_SOCKET_H
 
-#include "common/io_context.h"
-
+#include <boost/asio/io_context.hpp>
 
 /// \defgroup ServerSockets Server Socket Classes
 ///

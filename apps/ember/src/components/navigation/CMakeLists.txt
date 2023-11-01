@@ -8,6 +8,9 @@ add_library(ember-navigation OBJECT
 target_link_libraries(ember-navigation PUBLIC
         ember-Detour
         ember-DetourTileCache
+        external-Detour
+        external-Recast
+        external-DetourTileCache
         eris
         wfmath
 )

@@ -21,7 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "CaelumEnvironment.h"
-#include "caelum/include/Caelum.h"
+#include "Caelum.h"
 #include "CaelumSky.h"
 #include "CaelumSun.h"
 #include "SimpleWater.h"

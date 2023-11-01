@@ -41,9 +41,7 @@
 #include <string>
 #include <deque>
 
-#include "common/asio.h"
-#include "common/asio.h"
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/scoped_ptr.hpp>

@@ -29,7 +29,7 @@
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Operation.h>
 
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <chrono>
 #include <functional>
 #include <list>

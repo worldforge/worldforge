@@ -1,4 +1,4 @@
-add_library(ember-caelum OBJECT
+add_library(ember-external-caelum OBJECT
         src/Astronomy.cpp
         src/BrightStarCatalogue.cpp
         src/CaelumDefaultTypeDescriptorData.cpp
@@ -24,6 +24,6 @@ add_library(ember-caelum OBJECT
         src/UniversalClock.cpp
 )
 
-target_include_directories(ember-caelum PUBLIC include)
+target_include_directories(ember-external-caelum PUBLIC include)
 
 

@@ -131,28 +131,38 @@ install(FILES ${LUA_FILES} DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/ember/scrip
 
 
 add_library(ember-BindingsAtlasAdapters OBJECT
-        adapters/atlas/bindings/lua/BindingsAtlasAdapters.cpp)
-target_precompile_headers(ember-BindingsAtlasAdapters
-        REUSE_FROM
-        ember-BindingsLua)
+        adapters/atlas/bindings/lua/BindingsAtlasAdapters.cpp
+)
+
 target_link_libraries(ember-BindingsAtlasAdapters PUBLIC
+        ember-framework
+        ember-external-sol2
         AtlasObjects
         varconf
-        ember-framework)
+)
+target_precompile_headers(ember-BindingsAtlasAdapters
+        REUSE_FROM
+        ember-BindingsLua
+)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
     target_compile_options(ember-BindingsAtlasAdapters PRIVATE "/bigobj")
 endif ()
 
 add_library(ember-BindingsRepresentations OBJECT
-        representations/bindings/lua/BindingsRepresentations.cpp)
-target_precompile_headers(ember-BindingsRepresentations
-        REUSE_FROM
-        ember-BindingsLua)
+        representations/bindings/lua/BindingsRepresentations.cpp
+)
+
 target_link_libraries(ember-BindingsRepresentations PUBLIC
+        ember-framework
+        ember-external-sol2
         AtlasObjects
         varconf
-        ember-framework)
+)
+target_precompile_headers(ember-BindingsRepresentations
+        REUSE_FROM
+        ember-BindingsLua
+)
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.
     target_compile_options(ember-BindingsRepresentations PRIVATE "/bigobj")

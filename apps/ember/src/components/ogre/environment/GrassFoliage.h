@@ -25,7 +25,7 @@
 
 #include "FoliageBase.h"
 
-#include "pagedgeometry/include/GrassLoader.h"
+#include "GrassLoader.h"
 
 namespace Forests {
 class PagedGeometry;

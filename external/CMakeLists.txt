@@ -1,4 +1,7 @@
+add_subdirectory(binreloc)
 add_subdirectory(dir_monitor)
 add_subdirectory(RecastDetour)
 add_subdirectory(Remotery)
 add_subdirectory(sqlite3pp)
+add_subdirectory(tinyxml)
+add_subdirectory(utf8)

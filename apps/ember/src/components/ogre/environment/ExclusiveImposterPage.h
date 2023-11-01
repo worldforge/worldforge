@@ -19,7 +19,7 @@
 #ifndef EXCLUSIVEIMPOSTERPAGE_H_
 #define EXCLUSIVEIMPOSTERPAGE_H_
 
-#include "pagedgeometry/include/ImpostorPage.h"
+#include "ImpostorPage.h"
 
 namespace Ember
 {

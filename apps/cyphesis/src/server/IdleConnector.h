@@ -19,9 +19,7 @@
 #ifndef SERVER_IDLE_CONNECTOR_H
 #define SERVER_IDLE_CONNECTOR_H
 
-#include "common/asio.h"
-#include "common/asio.h"
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <sigc++/signal.h>
 

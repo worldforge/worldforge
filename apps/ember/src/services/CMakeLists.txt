@@ -39,21 +39,26 @@ add_library(ember-services OBJECT
         EmberServices.cpp)
 
 target_link_libraries(ember-services PUBLIC
-        mojoal
+        ember-framework
+        ember-external-mojoal
         varconf
-        ember-framework)
+)
 
 
 file(GLOB BINDINGS_FILES bindings/lua/*.cpp)
 
 add_library(ember-BindingsServices OBJECT
-        ${BINDINGS_FILES})
+        ${BINDINGS_FILES}
+)
 target_link_libraries(ember-BindingsServices PUBLIC
-        ember-services)
+        ember-services
+        ember-external-sol2
+)
 
 target_precompile_headers(ember-BindingsServices
         REUSE_FROM
-        ember-BindingsLua)
+        ember-BindingsLua
+)
 
 if (MSVC)
     #Need to allow for a lot of symbols when compiling the bindings on MSVC.

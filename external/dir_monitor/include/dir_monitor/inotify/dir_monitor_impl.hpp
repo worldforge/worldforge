@@ -6,9 +6,7 @@
 //
 #pragma once
 
-#include "common/asio.h"
-#include "common/asio.h"
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/bimap.hpp>
 #include <boost/filesystem.hpp>

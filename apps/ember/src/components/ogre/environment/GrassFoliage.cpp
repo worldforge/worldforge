@@ -33,7 +33,7 @@
 #include "../terrain/TerrainLayerDefinition.h"
 #include "../terrain/ITerrainAdapter.h"
 
-#include "pagedgeometry/include/BatchPage.h"
+#include "BatchPage.h"
 
 #include <OgreTechnique.h>
 

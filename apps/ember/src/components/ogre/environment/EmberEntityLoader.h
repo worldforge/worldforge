@@ -23,7 +23,7 @@
 #ifndef EMBEROGRE_ENVIRONMENTEMBERENTITYLOADER_H
 #define EMBEROGRE_ENVIRONMENTEMBERENTITYLOADER_H
 
-#include "pagedgeometry/include/PagedGeometry.h"
+#include "PagedGeometry.h"
 #include <sigc++/connection.h>
 #include <unordered_map>
 

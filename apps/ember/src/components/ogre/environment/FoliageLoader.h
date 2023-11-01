@@ -23,7 +23,7 @@
 #ifndef EMBEROGRE_ENVIRONMENTFOLIAGELOADER_H
 #define EMBEROGRE_ENVIRONMENTFOLIAGELOADER_H
 
-#include "pagedgeometry/include/PagedGeometry.h"
+#include "PagedGeometry.h"
 #include <sigc++/trackable.h>
 #include <components/ogre/terrain/TerrainShader.h>
 

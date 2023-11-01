@@ -58,8 +58,8 @@
 #include "components/ogre/Convert.h"
 
 #include "components/navigation/Awareness.h"
-#include "RecastDetour/DetourTileCache/Include/DetourTileCache.h"
-#include "RecastDetour/DetourTileCache/Include/DetourTileCacheBuilder.h"
+#include "DetourTileCache.h"
+#include "DetourTileCacheBuilder.h"
 
 #include <OgreManualObject.h>
 #include <OgreSceneManager.h>

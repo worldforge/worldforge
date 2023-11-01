@@ -21,9 +21,7 @@
 
 #include "metaserverapi/MetaServerPacket.hpp"
 
-#include "common/asio.h"
-#include "common/asio.h"
-#include "common/asio.h"
+#include <boost/asio.hpp>
 #include <boost/asio/steady_timer.hpp>
 
 #include <string>

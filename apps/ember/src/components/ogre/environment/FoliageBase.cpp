@@ -30,7 +30,7 @@
 #include "../terrain/TerrainPageSurface.h"
 #include "../terrain/TerrainLayerDefinitionManager.h"
 
-#include "pagedgeometry/include/PagedGeometry.h"
+#include "PagedGeometry.h"
 
 using namespace Ember::OgreView::Terrain;
 

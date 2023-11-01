@@ -19,8 +19,7 @@
 #ifndef COMMASIOLISTENER_H_
 #define COMMASIOLISTENER_H_
 
-#include "common/asio.h"
-
+#include <boost/asio.hpp>
 #include <functional>
 
 template<typename ProtocolT, typename ClientT>

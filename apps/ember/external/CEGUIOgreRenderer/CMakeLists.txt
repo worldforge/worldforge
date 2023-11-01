@@ -1,9 +1,11 @@
-add_library(ember-CEGUIOgreRenderer OBJECT
-        GeometryBuffer.cpp
-        ImageCodec.cpp
-        Renderer.cpp
-        ResourceProvider.cpp
-        Texture.cpp
-        TextureTarget.cpp
-        WindowTarget.cpp)
+add_library(ember-external-CEGUIOgreRenderer OBJECT
+        CEGUIOgreRenderer/GeometryBuffer.cpp
+        CEGUIOgreRenderer/ImageCodec.cpp
+        CEGUIOgreRenderer/Renderer.cpp
+        CEGUIOgreRenderer/ResourceProvider.cpp
+        CEGUIOgreRenderer/Texture.cpp
+        CEGUIOgreRenderer/TextureTarget.cpp
+        CEGUIOgreRenderer/WindowTarget.cpp
+)
 
+target_include_directories(ember-external-CEGUIOgreRenderer PUBLIC .)

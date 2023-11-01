@@ -23,7 +23,7 @@
 #ifndef EMBEROGRE_ENVIRONMENTFOLIAGELAYER_H
 #define EMBEROGRE_ENVIRONMENTFOLIAGELAYER_H
 
-#include "pagedgeometry/include/GrassLoader.h"
+#include "GrassLoader.h"
 
 #include <sigc++/trackable.h>
 #include <components/ogre/terrain/TerrainShader.h>

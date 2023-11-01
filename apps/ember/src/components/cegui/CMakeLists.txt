@@ -8,13 +8,18 @@ add_library(ember-cegui OBJECT
 
 target_link_libraries(ember-cegui PUBLIC
         varconf
-        CEGUITinyXMLParser
+        ember-external-CEGUITinyXMLParser
+        ember-external-CEGUIOgreRenderer
 )
 
 file(GLOB CEGUI_FILES bindings/lua/*.cpp)
 
 add_library(ember-BindingsCEGUI OBJECT
         ${CEGUI_FILES}
+)
+
+target_link_libraries(ember-BindingsCEGUI PUBLIC
+        ember-external-sol2
 )
 
 target_precompile_headers(ember-BindingsCEGUI

@@ -33,9 +33,13 @@ add_library(ember-framework OBJECT
 add_subdirectory(bindings)
 
 target_link_libraries(ember-framework PUBLIC
+        external-tinyxml
+        external-utf8
+        external-dirmonitor
         AtlasObjects
         eris
-        varconf)
+        varconf
+)
 
 #wf_generate_lua_bindings(bindings/lua/wfmath/WFMath)
 

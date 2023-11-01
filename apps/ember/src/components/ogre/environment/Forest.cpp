@@ -26,10 +26,10 @@
 
 #include "framework/LoggingInstance.h"
 #include "services/config/ConfigService.h"
-#include "pagedgeometry/include/TreeLoader3D.h"
-#include "pagedgeometry/include/BatchPage.h"
-#include "pagedgeometry/include/DummyPage.h"
-#include "pagedgeometry/include/PassiveEntityPage.h"
+#include "TreeLoader3D.h"
+#include "BatchPage.h"
+#include "DummyPage.h"
+#include "PassiveEntityPage.h"
 
 #include "../Scene.h"
 #include "../model/ModelRepresentation.h"
