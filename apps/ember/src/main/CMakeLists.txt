@@ -52,29 +52,29 @@ if (WF_USE_WIDGET_PLUGINS)
             ${CMAKE_DL_LIBS})
 
     wf_add_plugin(ServerWidget
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/ServerWidget.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/ServerWidget.cpp
     )
     wf_add_plugin(Quit
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/Quit.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/Quit.cpp
     )
     wf_add_plugin(InspectWidget
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/InspectWidget.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/InspectWidget.cpp
     )
 
     wf_add_plugin(Help
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/Help.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/Help.cpp
     )
 
     wf_add_plugin(ContainerWidget
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/ContainerWidget.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/ContainerWidget.cpp
     )
 
     wf_add_plugin(IngameChatWidget
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/IngameChatWidget.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/IngameChatWidget.cpp
     )
 
     wf_add_plugin(EntityCreatorWidget
-            ${CMAKE_SOURCE_DIR}/src/components/ogre/widgets/EntityCreatorWidget.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/../components/ogre/widgets/EntityCreatorWidget.cpp
     )
     get_property(_PLUGIN_LIBS_LIST GLOBAL PROPERTY PLUGIN_LIBS_LIST)
 

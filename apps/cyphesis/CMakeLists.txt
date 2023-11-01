@@ -148,7 +148,7 @@ if (Python3_EXECUTABLE)
             TARGET media-process-install
             COMMAND ${CMAKE_COMMAND} -E echo "Processing media in '${MEDIAREPO_DIR}/trunk' and placing it in '${MEDIAREPO_PROCESSED_DIR}'."
             COMMAND ${CMAKE_COMMAND} -E echo "NOTE: this will make Cyphesis use the processed media in '${MEDIAREPO_PROCESSED_DIR}' instead of the raw media in '${MEDIAREPO_DIR}/trunk'."
-            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/scripts/make_dist_media.py ${MEDIAREPO_DIR}/trunk ${MEDIAREPO_PROCESSED_DIR} ${MEDIA_PROCESS_TEXTURE_MAX_SIZE}
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/scripts/make_dist_media.py ${MEDIAREPO_DIR}/trunk ${MEDIAREPO_PROCESSED_DIR} ${MEDIA_PROCESS_TEXTURE_MAX_SIZE}
     )
 else (Python3_EXECUTABLE)
     add_custom_command(
@@ -167,19 +167,19 @@ set(STUB_HEADERS "")
 
 macro(wf_generate_stubs DIRECTORY)
 
-    file(GLOB_RECURSE H_FILES RELATIVE "${CMAKE_SOURCE_DIR}/src" "${CMAKE_SOURCE_DIR}/src/${DIRECTORY}/*.h")
+    file(GLOB_RECURSE H_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/src/${DIRECTORY}/*.h")
 
-    set(STUB_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/stubs)
+    set(STUB_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/stubs)
 
     foreach (FILE ${H_FILES})
         set(STUB_FILE ${STUB_DIRECTORY}/stub${FILE}.h)
         set(STUB_CUSTOM_FILE ${STUB_DIRECTORY}/stub${FILE}.h)
-        set(SOURCE_FILE "${CMAKE_SOURCE_DIR}/src/${FILE}")
+        set(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/${FILE}")
 
         add_custom_command(TARGET stubs
                 COMMAND ${CMAKE_COMMAND} -E echo "Generating stubs for ${FILE}\n"
-                COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/scripts/generator/generate_stub.py ${FILE} ${STUB_DIRECTORY}
-                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src
+                COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/scripts/generator/generate_stub.py ${FILE} ${STUB_DIRECTORY}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
         list(APPEND STUB_HEADERS ${STUB_FILE})
@@ -235,7 +235,7 @@ endif (DOXYGEN_FOUND)
 
 add_custom_command(
         OUTPUT ChangeLog
-        COMMAND ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} cce66ef4a196a4871ebaebe82cd91c8dd733be13
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} cce66ef4a196a4871ebaebe82cd91c8dd733be13
 )
 #add_custom_target(changelog DEPENDS ChangeLog)
 

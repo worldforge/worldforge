@@ -380,7 +380,7 @@ endif (DOXYGEN_FOUND)
 
 add_custom_command(
         OUTPUT ChangeLog
-        COMMAND ${CMAKE_SOURCE_DIR}/scripts/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} f12012e7616c191a8926432faf866c8e43854062
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate-ChangeLog.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} f12012e7616c191a8926432faf866c8e43854062
 )
 #add_custom_target(changelog DEPENDS ChangeLog)
 

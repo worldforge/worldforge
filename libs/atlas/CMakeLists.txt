@@ -97,16 +97,16 @@ if (ATLAS_GENERATE_OBJECTS)
 
     add_custom_target(GenerateAtlasXml
             COMMAND ${CMAKE_COMMAND} -E echo "Generating atlas.xml file from .def files."
-            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/data/protocol/spec/tools/def2xml.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/root.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/entity.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/operation.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/type.def ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/data/protocol/spec
+            COMMAND PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/tools/def2xml.py ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/root.def ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/entity.def ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/operation.def ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/type.def ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec
             DEPENDS ${ATLAS_XML_SOURCES}
             VERBATIM
     )
 
     add_custom_target(GenerateAtlasObjects
             COMMAND ${CMAKE_COMMAND} -E echo "Generating Atlas Object sources."
-            COMMAND PYTHONPATH=${CMAKE_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/src/Atlas/Objects
+            COMMAND PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/src/Atlas-Python ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/generate/gen_cpp.py ${CMAKE_CURRENT_SOURCE_DIR}/data/protocol/spec/xml/atlas.xml
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/Atlas/Objects
             DEPENDS ${PY_SOURCES}
             VERBATIM
     )
@@ -230,7 +230,7 @@ endif (DOXYGEN_FOUND)
 
 add_custom_command(
         OUTPUT ChangeLog
-        COMMAND ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} 8bd480b053190ffde2afe33af66f484953036f5a
 )
 
 #add_custom_target(changelog DEPENDS ChangeLog)
@@ -273,7 +273,7 @@ if (NOT NO_LIBS_INSTALL)
     set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
     set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
     set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
-    #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
+    #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_CURRENT_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
 
     set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)
 
