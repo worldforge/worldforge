@@ -2,7 +2,7 @@
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/worldforge?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/worldforge)
-[![Build with CMake](https://github.com/worldforge/worldforge/actions/workflows/cmake.yml/badge.svg)](https://github.com/worldforge/worldforge/actions/workflows/cmake.yml)
+[![Build with CMake](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml/badge.svg)](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml)
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/ember)
 
