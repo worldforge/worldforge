@@ -163,29 +163,7 @@ endif (Python3_EXECUTABLE)
 #We'll use xmllint for validating schemas of some of our xml files.
 find_program(XMLLINT xmllint)
 
-set(STUB_HEADERS "")
 
-macro(wf_generate_stubs DIRECTORY)
-
-    file(GLOB_RECURSE H_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/src" "${CMAKE_CURRENT_SOURCE_DIR}/src/${DIRECTORY}/*.h")
-
-    set(STUB_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests/stubs)
-
-    foreach (FILE ${H_FILES})
-        set(STUB_FILE ${STUB_DIRECTORY}/stub${FILE}.h)
-        set(STUB_CUSTOM_FILE ${STUB_DIRECTORY}/stub${FILE}.h)
-        set(SOURCE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/${FILE}")
-
-        add_custom_command(TARGET stubs
-                COMMAND ${CMAKE_COMMAND} -E echo "Generating stubs for ${FILE}\n"
-                COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/scripts/generator/generate_stub.py ${FILE} ${STUB_DIRECTORY}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-
-        list(APPEND STUB_HEADERS ${STUB_FILE})
-    endforeach (FILE)
-
-endmacro()
 
 
 # Add a "check" target, which builds and runs the tests.
