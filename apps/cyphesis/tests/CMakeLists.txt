@@ -9,7 +9,7 @@ endif (PostgreSQL_FOUND)
 
 #Just link all libraries here.
 link_libraries(
-        cyphesis-pycxx
+        cyphesis-external-pycxx
         ${BULLET_LIBRARIES}
         mercator
         wfmath
@@ -21,10 +21,10 @@ link_libraries(
         AtlasFilters
         varconf
         libsigcpp::sigc++
-        cyphesis-remotery
+        external-remotery
         Boost::filesystem
         readline::readline
-        cyphesis-Detour
+        external-Detour
         libxdg-basedir::libxdg-basedir
         libgcrypt::libgcrypt
 )
@@ -66,7 +66,7 @@ set(PYTHON_TESTS_LIBS
         cyphesis-modules
         cyphesis-physics
         cyphesis-common
-        cyphesis-remotery
+        external-remotery
 )
 
 
@@ -214,7 +214,7 @@ wf_add_test(rules/simulation/LinePropertyTest.cpp PropertyCoverage.cpp ../src/ru
         ../src/common/Property.cpp)
 wf_add_test(server/MindPropertyTest.cpp PropertyCoverage.cpp ../src/server/MindProperty.cpp
         ../src/common/Property.cpp)
-target_link_libraries(MindPropertyTest cyphesis-pycxx)
+target_link_libraries(MindPropertyTest cyphesis-external-pycxx)
 
 wf_add_test(rules/ModePropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/ModeProperty.cpp
         ../src/common/Property.cpp)
@@ -228,7 +228,7 @@ wf_add_test(rules/TerrainModPropertyTest.cpp PropertyCoverage.cpp ../src/rules/s
         ../src/rules/simulation/TerrainProperty.cpp
         ../src/common/Property.cpp)
 wf_add_test(rules/PythonClassTest.cpp python_testers.cpp ../src/pythonbase/PythonClass.cpp ../src/pythonbase/PythonMalloc.cpp)
-target_link_libraries(PythonClassTest cyphesis-pycxx)
+target_link_libraries(PythonClassTest cyphesis-external-pycxx)
 wf_add_test(rules/TerrainPropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/TerrainProperty.cpp
         ../src/common/Property.cpp)
 wf_add_test(rules/TransientPropertyTest.cpp PropertyCoverage.cpp ../src/rules/simulation/TransientProperty.cpp
@@ -527,7 +527,7 @@ wf_add_test(server/WorldRouterIntegration.cpp ../src/rules/simulation/WorldRoute
         ../src/rules/simulation/BaseWorld.cpp
         ../src/rules/Modifier.cpp
 )
-target_link_libraries(WorldRouterIntegration cyphesis-modules cyphesis-physics cyphesis-common cyphesis-pycxx)
+target_link_libraries(WorldRouterIntegration cyphesis-modules cyphesis-physics cyphesis-common cyphesis-external-pycxx)
 wf_add_test(server/RulesetIntegration.cpp ../src/server/Ruleset.cpp
         ../src/server/EntityBuilder.cpp
         ../src/server/EntityFactory.cpp
@@ -539,7 +539,7 @@ wf_add_test(server/RulesetIntegration.cpp ../src/server/Ruleset.cpp
         ../src/rules/simulation/BaseWorld.cpp
         ../src/rules/Modifier.cpp
 )
-target_link_libraries(RulesetIntegration cyphesis-common cyphesis-pycxx)
+target_link_libraries(RulesetIntegration cyphesis-common cyphesis-external-pycxx)
 #Rulesetintegration_LDFLAGS = $(PYTHON_LINKER_FLAGS)
 wf_add_test(server/ConnectionShakerIntegration.cpp ../src/server/Connection.cpp
         ../src/common/Shaker.cpp)
@@ -609,6 +609,6 @@ target_link_libraries(SteeringIntegration
         cyphesis-modules
         cyphesis-common
         cyphesis-physics
-        cyphesis-DetourTileCache
-        cyphesis-Detour
-        cyphesis-Recast)
+        external-DetourTileCache
+        external-Detour
+        external-Recast)

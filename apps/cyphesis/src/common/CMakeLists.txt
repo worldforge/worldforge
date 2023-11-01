@@ -40,7 +40,7 @@ add_library(cyphesis-common
         FormattedXMLWriter.cpp
         AssetsHandler.cpp
         net/SquallHandler.cpp
-        )
+)
 
 target_link_libraries(cyphesis-common PUBLIC
         wfmath
@@ -51,13 +51,14 @@ target_link_libraries(cyphesis-common PUBLIC
         AtlasObjects
         AtlasFilters
         varconf
+        external-dirmonitor
+        external-remotery
+        external-sqlite3pp
         libsigcpp::sigc++
         libgcrypt::libgcrypt
-        cyphesis-remotery
         Boost::filesystem
         libxdg-basedir::libxdg-basedir
-        )
-
+)
 
 
 target_compile_definitions(cyphesis-common PUBLIC
@@ -86,9 +87,9 @@ endif (PostgreSQL_FOUND)
 
 target_link_libraries(cyphesis-db PUBLIC
         SQLite::SQLite3
-        cyphesis-remotery
+        external-remotery
         cyphesis-common
-        )
+)
 
 
 

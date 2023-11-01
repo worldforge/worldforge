@@ -3,17 +3,13 @@ add_library(cyphesis-navigation
         fastlz.c
         Steering.cpp
         AwarenessUtils.h
-        IHeightProvider.h)
+        IHeightProvider.h
+)
 
 target_link_libraries(cyphesis-navigation PUBLIC
-        cyphesis-Detour
-        cyphesis-DetourTileCache
-        cyphesis-Recast
-        cyphesis-remotery
-        cyphesis-rulesai)
-
-#target_include_directories(navigation PUBLIC
-#    ../../external/RecastDetour/Recast/Include
-#    ../../external/RecastDetour/Detour/Include
-#    ../../external/RecastDetour/DetourTileCache/Include)
-
+        cyphesis-rulesai
+        external-Detour
+        external-DetourTileCache
+        external-Recast
+        external-remotery
+)

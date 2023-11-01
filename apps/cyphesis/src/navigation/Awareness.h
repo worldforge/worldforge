@@ -19,7 +19,7 @@
 #ifndef AWARENESS_H_
 #define AWARENESS_H_
 
-#include "RecastDetour/Recast/Include/Recast.h"
+#include "Recast.h"
 
 #include "rules/LocatedEntity.h"
 #include "rules/Location.h"

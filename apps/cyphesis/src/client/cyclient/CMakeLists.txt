@@ -13,9 +13,9 @@ add_executable(cyclient
 target_link_libraries(cyclient
         cyphesis-client
         cyphesis-navigation
-        cyphesis-DetourTileCache
-        cyphesis-Detour
-        cyphesis-Recast
+        external-DetourTileCache
+        external-Detour
+        external-Recast
         cyphesis-rulesai_python
         cyphesis-rulesai
         cyphesis-entityfilter_python

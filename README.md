@@ -20,7 +20,7 @@ The simplest way to install all required dependencies is by using [Conan](https:
 conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
 conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
 cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release
-cmake --build --preset conan-release -j --target all --target install
+cmake --build --preset conan-release -j --target all
 cmake --build --preset conan-release -j --target install
 cmake --build --preset conan-release -j --target mediarepo-checkout 
 cmake --build --preset conan-release -j --target media-process-install 

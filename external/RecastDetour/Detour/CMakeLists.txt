@@ -1,4 +1,4 @@
-add_library(cyphesis-Detour
+add_library(external-Detour
         Source/DetourAlloc.cpp
         Source/DetourCommon.cpp
         Source/DetourNavMesh.cpp
@@ -7,4 +7,4 @@ add_library(cyphesis-Detour
         Source/DetourNode.cpp
         Source/DetourObstacleAvoidance.cpp)
 
-target_include_directories(cyphesis-Detour PUBLIC Include)
+target_include_directories(external-Detour PUBLIC Include)

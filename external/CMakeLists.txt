@@ -1,0 +1,4 @@
+add_subdirectory(dir_monitor)
+add_subdirectory(RecastDetour)
+add_subdirectory(Remotery)
+add_subdirectory(sqlite3pp)

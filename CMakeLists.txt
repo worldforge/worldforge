@@ -63,6 +63,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)
 add_custom_target(benchmark COMMAND ${CMAKE_CTEST_COMMAND} -R Benchmark)
 add_custom_target(dox)
 
+add_subdirectory(external)
 add_subdirectory(libs)
 add_subdirectory(apps)
 

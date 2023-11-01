@@ -97,7 +97,7 @@ target_link_libraries(cyphesis
         cyphesis-physics
         cyphesis-comm
         cyphesis-metaserverapi
-        cyphesis-remotery
+        external-remotery
 )
 
 install(TARGETS cyphesis DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

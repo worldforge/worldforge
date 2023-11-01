@@ -3,7 +3,7 @@ add_library(cyphesis-rulessimulationscripts
 )
 target_link_libraries(cyphesis-rulessimulationscripts PUBLIC
         cyphesis-common
-        cyphesis-pycxx
+        cyphesis-external-pycxx
 )
 
 

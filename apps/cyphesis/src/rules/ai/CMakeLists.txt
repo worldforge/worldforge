@@ -11,7 +11,7 @@ add_library(cyphesis-rulesai
 )
 
 target_link_libraries(cyphesis-rulesai PUBLIC
-        cyphesis-remotery
+        external-remotery
         cyphesis-navigation
         cyphesis-entityfilter
         cyphesis-physics

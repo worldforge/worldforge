@@ -24,10 +24,10 @@ target_link_libraries(cyaiclient
         cyphesis-modules
         cyphesis-common
         cyphesis-physics
-        cyphesis-DetourTileCache
-        cyphesis-Detour
-        cyphesis-Recast
-        cyphesis-remotery
+        external-DetourTileCache
+        external-Detour
+        external-Recast
+        external-remotery
         )
 
 install(TARGETS cyaiclient DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

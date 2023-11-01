@@ -8,7 +8,7 @@ add_library(cyphesis-pythonbase
 
 target_link_libraries(cyphesis-pythonbase PUBLIC
         cyphesis-common
-        cyphesis-pycxx
+        cyphesis-external-pycxx
 )
 
 

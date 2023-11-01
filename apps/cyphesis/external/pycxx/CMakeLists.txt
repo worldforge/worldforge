@@ -1,4 +1,4 @@
-add_library(cyphesis-pycxx
+add_library(cyphesis-external-pycxx
         Src/cxx_exceptions.cxx
         Src/cxx_extensions.cxx
         Src/cxxextensions.c
@@ -21,8 +21,8 @@ add_library(cyphesis-pycxx
         CXX/WrapPython.h
         )
 
-target_include_directories(cyphesis-pycxx PRIVATE .)
-target_link_libraries(cyphesis-pycxx PUBLIC
+target_include_directories(cyphesis-external-pycxx PRIVATE .)
+target_link_libraries(cyphesis-external-pycxx PUBLIC
         Python3::Python
         )
 
