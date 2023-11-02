@@ -1,2 +1,6 @@
-add_subdirectory(ember)
-add_subdirectory(cyphesis)
+if (NOT SKIP_EMBER)
+    add_subdirectory(ember)
+endif ()
+if (NOT SKIP_CYPHESIS)
+    add_subdirectory(cyphesis)
+endif ()

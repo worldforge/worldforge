@@ -42,7 +42,8 @@
 #include <boost/thread.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <squall/core/Repository.h>
-#include <boost/url/src.hpp>
+#include <boost/url/parse.hpp>
+#include <boost/url/url.hpp>
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"

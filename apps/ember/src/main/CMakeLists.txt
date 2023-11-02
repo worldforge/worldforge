@@ -37,6 +37,7 @@ target_link_libraries(${EMBER_EXECUTABLE_NAME}
         mercator
         ember-external-mojoal
         ember-external-CEGUITinyXMLParser
+        Boost::url
         ${BULLET_LIBRARIES})
 
 install(TARGETS ${EMBER_EXECUTABLE_NAME} DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

@@ -40,8 +40,9 @@ class Worldforge(ConanFile):
         self.requires("libcurl/8.2.1")
         self.requires("spdlog/1.12.0")
         self.requires("cli11/2.3.2")
+        self.requires("boost/1.83.0")
 
-        self.requires("zlib/1.2.13")
+        self.requires("zlib/1.3")
         self.requires("bzip2/1.0.8")
 
         if self.options.with_client:
@@ -49,15 +50,13 @@ class Worldforge(ConanFile):
             self.requires("ogre/13.4.2@worldforge")
             self.requires("sdl/2.28.3")
             self.requires("lua/5.3.6")
-            self.requires("libxml2/2.10.4", override=True)
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.8.4")
-            self.requires("sqlite3/3.42.0")
-            self.requires("readline/8.1.2@worldforge")
+            self.requires("sqlite3/3.44.0")
+            self.requires("readline/8.1.2")
             self.requires("cpython/3.10.0@worldforge")
-            self.requires("boost/1.81.0")
 
         if not is_msvc(self):
             self.requires("libxdg-basedir/1.2.3@worldforge")
@@ -82,6 +81,11 @@ class Worldforge(ConanFile):
         tc.variables["WORLDFORGE_WORLDS_SOURCE_PATH"] = os.path.join(
             self.dependencies["worldforge-worlds"].package_folder, "worlds")
         tc.preprocessor_definitions["PYTHONHOME"] = "\"{}\"".format(self.dependencies["cpython"].package_folder)
+        if not self.options.with_client:
+            tc.variables["SKIP_EMBER"] = "TRUE"
+        if not self.options.with_server:
+            tc.variables["SKIP_CYPHESIS"] = "TRUE"
+
         tc.generate()
 
     def layout(self):

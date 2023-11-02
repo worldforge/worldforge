@@ -94,7 +94,7 @@ class CPythonConan(ConanFile):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
     def requirements(self):
-        self.requires("zlib/1.2.13")
+        self.requires("zlib/1.3")
         if self._supports_modules:
             self.requires("expat/2.5.0")
             self.requires("libffi/3.4.4")
