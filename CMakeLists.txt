@@ -27,6 +27,10 @@ if (${FORCE_COLORED_OUTPUT})
     endif ()
 endif ()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_definitions(-D_WIN32_WINNT=0x0A00) #target Windows 10
+endif ()
+
 # Set compiler flags, but only if not running in a CI server. CI environments would normally set the environment variable CI.
 if (DEFINED ENV{CI})
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -39,10 +43,12 @@ else ()
     if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         set(WF_WARNING_FLAGS /W3)
     else ()
-        set(WF_WARNING_FLAGS -Wall -Winit-self -Wwrite-strings -Wundef -Wno-unused-parameter -Wno-missing-field-initializers -Wno-long-long)
+        set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
     endif ()
 endif ()
 MESSAGE(STATUS "Setting compiler warnings to '${WF_WARNING_FLAGS}'")
+#Do this globally for the whole repo
+add_compile_options(${WF_WARNING_FLAGS})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
 
