@@ -186,7 +186,7 @@ add_subdirectory(tests EXCLUDE_FROM_ALL)
 
 configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 
-install(FILES README.md COPYING AUTHORS THANKS NEWS DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/cyphesis)
+install(FILES README.md COPYING AUTHORS THANKS DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/cyphesis)
 install(DIRECTORY DESTINATION ${SOCKET_DIR})
 
 ## Doxygen support, exports a "dox" target.
