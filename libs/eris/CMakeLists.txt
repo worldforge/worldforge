@@ -1,5 +1,5 @@
 set(LIBNAME "eris")
-include_directories("${PROJECT_SOURCE_DIR}/src")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
@@ -45,7 +45,7 @@ endmacro()
 macro(wf_add_test_linked TEST_FILE)
     wf_add_test(${TEST_FILE} ${ARGN})
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
-    target_link_libraries(${TEST_NAME} ${PROJECT_NAME})
+    target_link_libraries(${TEST_NAME} ${LIBNAME})
 endmacro()
 
 find_package(sigc++-3 3.0 REQUIRED)
