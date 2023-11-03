@@ -224,11 +224,15 @@ private:
         // The async_monitor thread is joined to make sure the directory monitor service is
         // destroyed _after_ the thread is finished (not that the thread tries to access
         // instance properties which don't exist anymore).
-        async_monitor_thread_.join();
+		if (async_monitor_thread_.joinable()) {
+			async_monitor_thread_.join();
+		}
 
         // The work thread is stopped and joined, too.
         stop_work_thread();
-        work_thread_.join();
+		if (work_thread_.joinable()) {
+			work_thread_.join();
+		}
 
         CloseHandle(iocp_);
     }

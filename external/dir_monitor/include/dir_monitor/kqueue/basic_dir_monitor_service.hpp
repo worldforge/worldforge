@@ -57,7 +57,9 @@ public:
         // The async_monitor thread is joined to make sure the directory monitor service is
         // destroyed _after_ the thread is finished (not that the thread tries to access
         // instance properties which don't exist anymore).
-        async_monitor_thread_.join();
+		if (async_monitor_thread_.joinable()) {
+			async_monitor_thread_.join();
+		}
     }
 
     typedef boost::shared_ptr<DirMonitorImplementation> implementation_type;
