@@ -144,7 +144,6 @@ class VARCONF_API VarPtr
 };
 
 class Variable;
-typedef std::vector<Variable> VarList;
 
 class VARCONF_API Variable : public VarPtr {
 public:
@@ -156,8 +155,6 @@ public:
   Variable(double d)        : VarPtr(new VarBase(d)) {}
   Variable(const std::string& s) : VarPtr(new VarBase(s)) {}
   Variable(const char* s)         : VarPtr(new VarBase(s)) {}
-  Variable(int n, const Variable& v);
-  Variable(const VarList& v);
 
   virtual ~Variable();
 
@@ -175,14 +172,11 @@ public:
   Variable& operator=(double d);
   Variable& operator=(const std::string& s);
   Variable& operator=(const char* s);
-  Variable& operator=(const VarList& v);
 
   explicit operator bool() const         {return bool(this->elem());}
   explicit operator int() const          {return int(this->elem());}
   explicit operator double() const       {return double(this->elem());}
   explicit operator std::string() const  {return std::string(this->elem());}
-  VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
-  Variable& operator[](int i);
 
   std::string as_string() const {return std::string(this->elem());}
 
@@ -196,32 +190,6 @@ public:
   bool is_int()  const          {return (*this)->is_int();}
   bool is_double() const        {return (*this)->is_double();}
   bool is_string() const        {return (*this)->is_string();}
-  bool is_array() const         {return array() != nullptr;}
-};
-
-class VARCONF_API VarArray : public VarBase, public VarList {
-public:
-  VarArray() = default;
-  VarArray(const VarArray& v) = default;
-  explicit VarArray(const int n, const Variable& v = Variable())
-        : VarBase(), VarList(n, v) {}
-  explicit VarArray(const VarList& v) : VarBase(), VarList(v) {}
-  ~VarArray() override;
-
-  friend std::ostream& operator<<(std::ostream& out, const VarArray& v);
-  friend bool operator ==(const VarBase& one, const VarArray& two) {return false;}
-  friend bool operator ==(const VarArray& one, const VarBase& two) {return false;}
-  friend bool operator ==(const VarArray& one, const VarArray& two);
-
-  explicit operator bool() const override;
-  explicit operator int() const override;
-  explicit operator double() const override;
-  explicit operator std::string() const override;
-
-  bool is_bool() override;
-  bool is_int() override;
-  bool is_double() override;
-  bool is_string() override;
 };
 
 } // namespace varconf

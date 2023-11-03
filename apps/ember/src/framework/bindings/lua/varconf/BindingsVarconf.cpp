@@ -40,7 +40,6 @@ void registerBindingsVarconf(sol::state_view& lua) {
 	variable["is_int"] = &Variable::is_int;
 	variable["is_double"] = &Variable::is_double;
 	variable["is_string"] = &Variable::is_string;
-	variable["is_array"] = &Variable::is_array;
 
 
 }

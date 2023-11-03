@@ -35,7 +35,7 @@ namespace varconf {
 VarBase::VarBase()
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(false), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(""), m_scope(GLOBAL)
+   m_scope(GLOBAL)
 {
 }
 
@@ -61,6 +61,7 @@ VarBase::VarBase(int i)
    m_val(std::to_string(i)), m_scope(GLOBAL)
 {
 }
+
 
 VarBase::VarBase(double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
@@ -187,7 +188,7 @@ VarBase::operator bool() const
 VarBase::operator int() const
 {
   if (!m_have_int) {
-    m_val_int = atoi(m_val.c_str());
+    m_val_int = std::stoi(m_val);
     m_have_int = true;
   }
   return m_val_int;
@@ -196,7 +197,7 @@ VarBase::operator int() const
 VarBase::operator double() const
 {
   if (!m_have_double) {
-    m_val_double = atof(m_val.c_str());
+    m_val_double = std::stod(m_val);
     m_have_double = true;
   }
   return m_val_double;
@@ -244,35 +245,17 @@ bool VarBase::is_string()
   return m_have_string;
 }
 
-Variable::Variable (const Variable& c) : VarPtr(c.is_array()
-  ? VarPtr(new VarArray(*(c.array()))) : static_cast<const VarPtr&>(c))
+Variable::Variable (const Variable& c) : VarPtr( static_cast<const VarPtr&>(c))
 {
 
 }
 
-Variable::Variable( const int n, const Variable& v)
-  : VarPtr(new VarArray(n, v))
-{
 
-}
 
-Variable::Variable( const VarList& v) : VarPtr(new VarArray(v))
-{
-
-}
 
 Variable::~Variable() = default;
 
-Variable& Variable::operator=( const Variable& c)
-{
-  VarList *array_val = c.array();
-
-  if(array_val) // Equivalent to c.is_array()
-    VarPtr::operator=(new VarArray(*array_val));
-  else
-    VarPtr::operator=(c);
-  return *this;
-}
+Variable& Variable::operator=( const Variable& c) = default;
 
 Variable& Variable::operator=( VarBase* vb)
 {
@@ -308,102 +291,6 @@ Variable& Variable::operator=( const char* s)
 {
   VarPtr::operator=(new VarBase(s));
   return *this;
-}
-
-Variable& Variable::operator=( const VarList& v)
-{
-  VarPtr::operator=(new VarArray(v));
-  return *this;
-}
-
-Variable& Variable::operator[](const int i)
-{
-  std::vector<Variable> *the_array = array();
-
-  if(!the_array) {
-    auto *new_array = new VarArray(i + 1);
-    (*new_array)[0] = *this;
-    VarPtr::operator=(new_array);
-    the_array = new_array;
-  }
-  else if ((int)the_array->size() < i + 1)
-    the_array->resize(i + 1);
-
-  return (*the_array)[i];
-}
-
-
-VarArray::~VarArray() = default;
-
-std::ostream& operator<<( std::ostream& out, const VarArray& v)
-{
-  out << "(";
-
-  auto i = v.begin();
-  while(true) {
-    out << *i;
-    if(++i == v.end())
-      break;
-    out << ",";
-  }
-
-  out << ")";
-  return out;
-}
-
-bool operator ==( const VarArray& one, const VarArray& two)
-{
-  if(one.size() != two.size())
-    return false;
-
-  VarArray::const_iterator i1, i2;
-
-  for(i1 = one.begin(), i2 = two.begin(); i1 != one.end(); ++i1, ++i2)
-    if(i1->elem() != i2->elem())
-      return false;
-
-  return true;
-}
-
-VarArray::operator bool() const
-{
-  return false;
-}
-
-VarArray::operator int() const
-{
-  return 0;
-}
-
-VarArray::operator double() const
-{
-  return 0;
-}
-
-VarArray::operator std::string() const
-{
-  return "";
-}
-
-
-bool VarArray::is_bool()
-{
-  return false;
-}
-
-bool VarArray::is_int()
-{
-  return false;
-}
-
-bool VarArray::is_double()
-{
-  return false;
-}
-
-bool VarArray::is_string()
-{
-  return false;
 }
 
 } // namespace varconf
