@@ -80,3 +80,8 @@ target_link_libraries(${LIBNAME} PUBLIC
         libsigcpp::sigc++
         Boost::headers
         wfmath)
+
+if (UNIX)
+    target_link_libraries(${LIBNAME} PUBLIC
+            Threads::Threads)
+endif ()

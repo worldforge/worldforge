@@ -55,6 +55,12 @@ find_package(Boost
         REQUIRED
         COMPONENTS headers)
 
+#boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
+if (UNIX)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_package(Threads REQUIRED)
+endif (UNIX)
+
 add_subdirectory(src)
 add_subdirectory(tests)
 
