@@ -124,15 +124,6 @@ private:
 	bool addSharedMedia(const std::string& path, const std::string& type, const std::string& section);
 
 	/**
-	 * Checks if there's either processed media, or raw media repository available, and use that if possible.
-	 * @param path
-	 * @param section
-	 * @param recursive
-	 * @return True if media was found.
-	 */
-	bool addSourceRepoMedia(const std::string& path, const std::string& section);
-
-	/**
 	 * @brief Adds a resource directory to the Ogre resource system.
 	 * @param path File system path.
 	 * @param type The type of archive.

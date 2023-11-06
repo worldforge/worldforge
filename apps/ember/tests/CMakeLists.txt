@@ -27,7 +27,6 @@ if (TARGET cppunit::cppunit)
             $<TARGET_OBJECTS:ember-Recast>)
     target_compile_definitions(TestOgreView PUBLIC -DLOG_TASKS)
     target_link_libraries(TestOgreView cppunit::cppunit
-            ${WF_LIBRARIES}
             ${BULLET_LIBRARIES}
             mojoal)
     add_test(NAME TestOgreView COMMAND TestOgreView)
@@ -39,7 +38,6 @@ if (TARGET cppunit::cppunit)
             $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestTasks PUBLIC -DLOG_TASKS)
     target_link_libraries(TestTasks
-            ${WF_LIBRARIES}
             cppunit::cppunit
             mojoal
             eris)
@@ -52,7 +50,6 @@ if (TARGET cppunit::cppunit)
             $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestTimeFrame PUBLIC -DLOG_TASKS)
     target_link_libraries(TestTimeFrame
-            ${WF_LIBRARIES}
             cppunit::cppunit
             mojoal)
     add_test(NAME TestTimeFrame COMMAND TestTimeFrame)
@@ -64,7 +61,6 @@ if (TARGET cppunit::cppunit)
             $<TARGET_OBJECTS:ember-tinyxml>)
     target_compile_definitions(TestFramework PUBLIC -DLOG_TASKS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
     target_link_libraries(TestFramework
-            ${WF_LIBRARIES}
             cppunit::cppunit
             mojoal
             eris)

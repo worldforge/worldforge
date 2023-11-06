@@ -95,7 +95,7 @@ To get a server running you need to build the project and then start the "cyphes
 
 ## Running a client
 
-To get a client running you need to build the project and then start the "ember.bin" artifact.
+To get a client running you need to build the project and then start the "ember" artifact.
 
 ## Worlds data
 

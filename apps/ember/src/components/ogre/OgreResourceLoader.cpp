@@ -167,41 +167,6 @@ bool OgreResourceLoader::addSharedMedia(const std::string& path, const std::stri
 	return addResourceDirectory(sharedMediaPath / path, type, section, OnFailure::Throw);
 }
 
-bool OgreResourceLoader::addSourceRepoMedia(const std::string& path, const std::string& section) {
-
-	//If there's processed media available, use that.
-	//Otherwise, if the raw media repository is available, use that instead.
-
-#ifdef EMBER_PROCESSEDMEDIAREPODIR
-	boost::filesystem::path processedMediaRepoDir(EMBER_PROCESSEDMEDIAREPODIR);
-	if (!processedMediaRepoDir.empty()) {
-		boost::filesystem::path relativePath(path);
-		processedMediaRepoDir /= relativePath;
-		boost::system::error_code ec;
-		if (boost::filesystem::is_directory(processedMediaRepoDir, ec)) {
-			S_LOG_INFO("Found processed media repo at '" << processedMediaRepoDir.string() << "'.");
-			return addResourceDirectory(processedMediaRepoDir.string(), "EmberFileSystem", section, OnFailure::Throw);
-		}
-	}
-#endif
-
-
-#ifdef EMBER_SOURCEMEDIAREPODIR
-	boost::filesystem::path sourceMediaRepoDir(EMBER_SOURCEMEDIAREPODIR);
-	if (!sourceMediaRepoDir.empty()) {
-		boost::filesystem::path relativePath(path);
-		sourceMediaRepoDir /= relativePath;
-		boost::system::error_code ec;
-		if (boost::filesystem::is_directory(sourceMediaRepoDir, ec)) {
-			S_LOG_INFO("Found source media repo at '" << sourceMediaRepoDir.string() << "'.");
-			return addResourceDirectory(sourceMediaRepoDir.string(), "EmberFileSystem", section, OnFailure::Throw);
-		}
-	}
-#endif
-	return false;
-}
-
-
 bool OgreResourceLoader::addUserMedia(const std::string& path, const std::string& type, const std::string& section) {
 	auto userMediaPath = ConfigService::getSingleton().getUserMediaDirectory();
 	auto emberMediaPath = ConfigService::getSingleton().getEmberMediaDirectory();
@@ -451,10 +416,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 }
 
 bool OgreResourceLoader::addMedia(const std::string& path, const std::string& resourceGroup) {
-	if (!addSourceRepoMedia(path, resourceGroup)) {
-		return addSharedMedia("media/" + path, "EmberFileSystem", resourceGroup);
-	}
-	return true;
+	return addSharedMedia("media/" + path, "EmberFileSystem", resourceGroup);
 }
 
 void OgreResourceLoader::refreshModelDefinition(const boost::filesystem::path& fullPath, const boost::filesystem::path& relativePath) {

@@ -1,14 +1,9 @@
-cmake_minimum_required(VERSION 3.18)
-
 #Specifies the version of the media. This should normally be the version after the current version.
 set(MEDIA_VERSION "0.8.0")
 #If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
 set(VERSION_FALLBACK "0.8.0-dev")
 
 project(Ember)
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 # Meta data
 set(DESCRIPTION "The Worldforge client.")
@@ -42,53 +37,10 @@ list(GET VERSION_LIST 0 EMBER_VERSION_MAJOR)
 list(GET VERSION_LIST 1 EMBER_VERSION_MINOR)
 list(GET VERSION_LIST 2 EMBER_VERSION_PATCH)
 
-option(FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
-if (${FORCE_COLORED_OUTPUT})
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        add_compile_options(-fdiagnostics-color=always)
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        add_compile_options(-fcolor-diagnostics)
-    endif ()
-endif ()
-
-# Set compiler flags, but only if not running in a CI server. CI environments would normally set the environment variable CI.
-if (DEFINED ENV{CI})
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(WF_WARNING_FLAGS "")
-    else ()
-        #Turn of diagnostics. Perhaps a bit too harsh?
-        set(WF_WARNING_FLAGS "-w")
-    endif ()
-else ()
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(WF_WARNING_FLAGS /W3)
-    else ()
-        set(WF_WARNING_FLAGS -Wall -Winit-self -Wwrite-strings -Wundef -Wno-unused-parameter -Wno-missing-field-initializers -Wno-long-long)
-    endif ()
-endif ()
-MESSAGE(STATUS "Setting compiler warnings to '${WF_WARNING_FLAGS}'")
-
-
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 add_compile_definitions("EMBER_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}\"")
 add_compile_definitions("EMBER_LIBDIR=\"${CMAKE_INSTALL_FULL_LIBDIR}\"")
 add_compile_definitions("EMBER_SYSCONFDIR=\"${CMAKE_INSTALL_FULL_SYSCONFDIR}\"")
-if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    # EMBER_SOURCEMEDIAREPODIR points to an optional media repo path, i.e. a Subversion checkout of the media repo
-    # found at https://svn.worldforge.org:886/svn/media/trunk/.
-    add_compile_definitions("EMBER_SOURCEMEDIAREPODIR=\"${PROJECT_SOURCE_DIR}/mediarepo/trunk\"")
-    # EMBER_PROCESSEDMEDIAREPODIR points to an optional "processed" media path, i.e. a directory where the source media
-    # found at EMBER_SOURCEMEDIAREPODIR has been processed using the "scripts/make_dist_media.py" script.
-    add_compile_definitions("EMBER_PROCESSEDMEDIAREPODIR=\"${CMAKE_BINARY_DIR}/ember-media-${MEDIA_VERSION}/media\"")
-endif (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-
-# On Windows there are some headers that define "min" and "max" as preprocessor macros, which messes up compilation. This tells them to stop.
-add_compile_definitions("NOMINMAX")
-
-if (APPLE)
-    #On Mac we're having trouble with "iconv" not being linked properly, so we'll do it here.
-    link_libraries(iconv)
-endif ()
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/generated)
 
@@ -134,21 +86,15 @@ macro(wf_add_plugin _LIB_NAME _SOURCE_FILES)
 
 endmacro()
 
-
-set(WF_LIBRARY_DIRS)
-set(WF_INCLUDE_DIRS)
-set(WF_LIBRARIES)
-
 if (WIN32)
     link_libraries(Shlwapi) #Needed for getting Windows specific directories.
-    add_compile_definitions("_WIN32_WINNT=0x0601") #target Windows 7
     add_compile_definitions("_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING") #CEGUI has a String iterator that inherits from std::iterator, which shouldn't be done. We don't want to see the warning from MSVC all the time.
 endif ()
 
 add_compile_definitions(AL_LIBTYPE_STATIC)
 
 find_package(Boost
-        1.60.0
+        1.83.0
         REQUIRED
         COMPONENTS system filesystem thread)
 
@@ -266,7 +212,7 @@ endif ()
 find_package(OpenGL)
 link_libraries(OpenGL::GL)
 
-find_package(Bullet 2.81 REQUIRED)
+find_package(Bullet 2.89 REQUIRED)
 include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
 link_libraries(${BULLET_LIBRARIES})
 
@@ -316,7 +262,6 @@ configure_file(tools/bintray.tmpl.json bintray.json @ONLY)
 message(STATUS "Installing snapcraft.yaml file into build directory. Copy this one to the installation directory if you want to build snaps.")
 configure_file(tools/snapcraft.tmpl.yaml snap/snapcraft.yaml @ONLY)
 configure_file(tools/ember.tmpl.conf ember.conf @ONLY)
-configure_file(tools/ember.tmpl ember @ONLY)
 configure_file(tools/Ember.tmpl.nsi Ember.nsi @ONLY)
 configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 configure_file(tools/support/refresh-amber-media-dev.sh.in scripts/refresh-amber-media-dev.sh @ONLY)

@@ -24,6 +24,7 @@
 #define WIDGETDEFINITIONS_H
 
 #include <boost/dll.hpp>
+#include <utility>
 #include <vector>
 #include <set>
 #include <map>
@@ -70,6 +71,8 @@ public:
 	 * The pluginCallback will automatically be called on destruction.
 	 */
 	struct PluginEntry {
+		explicit PluginEntry(WidgetPluginCallback callback) : pluginCallback(std::move(callback)) {}
+
 		PluginEntry(PluginEntry&& rhs) = default;
 
 		~PluginEntry();
@@ -78,7 +81,7 @@ public:
 
 #ifdef WF_USE_WIDGET_PLUGINS
 		boost::filesystem::path path;
-		WidgetPluginFunction pluginFn; //We need to hold on to this, since it the dynamic library's lifetime is bound to it.
+		WidgetPluginFunction pluginFn; //We need to hold on to this, since the dynamic library's lifetime is bound to it.
 #endif
 		WidgetPluginCallback pluginCallback; //A deregistering function
 	};
