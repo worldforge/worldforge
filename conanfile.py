@@ -34,6 +34,10 @@ class Worldforge(ConanFile):
         'libsndfile/*:with_mpeg': False
     }
 
+    def configure(self):
+        if is_msvc(self):
+            self.options.with_server = False
+
     def requirements(self):
         self.requires("bullet3/2.89")
         self.requires("libsigcpp/3.0.7")
@@ -57,6 +61,7 @@ class Worldforge(ConanFile):
             self.requires("sqlite3/3.44.0")
             self.requires("readline/8.1.2")
             self.requires("cpython/3.10.0@worldforge")
+            #self.requires("avahi/0.8")
 
         if not is_msvc(self):
             self.requires("libxdg-basedir/1.2.3@worldforge")

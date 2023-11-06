@@ -41,6 +41,13 @@ target_link_libraries(ember-framework PUBLIC
         varconf
 )
 
+if (NOT WIN32)
+    target_link_libraries(ember-framework PUBLIC
+            libxdg-basedir::libxdg-basedir
+    )
+endif ()
+
+
 #wf_generate_lua_bindings(bindings/lua/wfmath/WFMath)
 
 

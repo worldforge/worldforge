@@ -19,45 +19,11 @@ It provides a complete solution for running an MMORPG server. Amongst its featur
 * Emergent gameplay through multiple simple systems interacting
 * Quick and powerful procedural terrain generation
 
-## Installation
-
-The simplest way to install all required dependencies is by using [Conan](https://www.conan.io).
-
-```bash
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-conan install . --build missing
-cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release
-cmake --build --preset conan-release -j --target all
-cmake --build --preset conan-release -j --target mediarepo-checkout 
-cmake --build --preset conan-release -j --target media-process-install 
-cmake --build --preset conan-release -j --target install
-```
-
-NOTE: The invocation of the target "media-process-install" is optional. It will go through the raw Subversion assets and
-convert .png to .dds as well as scaling down textures. If you omit this step Cyphesis will instead use the raw
-Subversion media. Which you might want if you're developing locally.
-
-### Tests
-
-The test suite can be built and run using the ```check``` target. For example:
-
-```
-make check
-```
-
 ### Documentation
 
 Documentation describing how the system works can be found [here](docs/dox/index.md).
 
 There's also a collection of design documents found in the ["docs/design" directory](docs/design)
-
-### API documentation
-
-If Doxygen is available API documentation can be generated using the ```dox``` target. For example:
-
-```
-make dox
-```
 
 ### Python stubs
 
@@ -67,15 +33,6 @@ as type lookup and code completion easier.
 
 These stubs are auto generated from the C++ bindings through the custom target "GeneratePythonDocs".
 Execute this target whenever you've done edits to the Python bindings.
-
-## Dependencies
-
-We use Conan for our dependency handling. If you're developing locally you can issue this command to setup both a "
-debug" and "release" environment.
-
-```bash
-conan install -s build_type=Debug . --build missing --update  && conan install . --build missing --update
-```
 
 ## Running a basic server
 
@@ -164,7 +121,7 @@ pydevd.settrace('localhost', port=9999, stdoutToServer=False, stderrToServer=Fal
 
 ## Using standard malloc memory allocator in Python
 
-During development it can sometimes be good to use the standard "malloc" memory allocator rather than
+During development, it can sometimes be good to use the standard "malloc" memory allocator rather than
 the Python specific allocator. For example if you want to profile memory usage.
 This can be enabled by setting the environment variable "PYTHONMALLOC" to something (doesn't matter what).
 Upon startup Cyphesis will then use malloc, and write a line about this to the log.

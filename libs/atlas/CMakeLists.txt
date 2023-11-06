@@ -1,32 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
 project(Atlas)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-include(GNUInstallDirs)
-include(CheckIncludeFile)
-include(CMakeDependentOption)
-
-# Version setup
-
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 7)
-set(VERSION_PATCH 0)
-
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-
-set(ABI_CURRENT 0)
-set(ABI_REVISION 0)
-set(ABI_AGE 0)
-math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
-set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
-
-# Set compiler flags
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(WF_WARNING_FLAGS /W3)
-    add_definitions(-D_WIN32_WINNT=0x0601) #target Windows 7
-else ()
-    set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
-endif ()
 
 # Meta data
 
@@ -53,27 +25,6 @@ macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
             "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
-    if (NOT NO_LIBS_INSTALL)
-        set_target_properties(${_LIB_NAME} PROPERTIES
-                VERSION ${ABI_VERSION}
-                SOVERSION ${SOVERSION}
-        )
-        install(TARGETS ${_LIB_NAME}
-                EXPORT "${PROJECT_NAME}Targets"
-                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-                INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        )
-        #We would want to use the FILE_SET feature, but that requires CMake 3.23, which prevents us from currently building
-        # Snap packages (as of 2023-02-12). Instead we'll copy each include file.
-        #When distros catch up to more recent CMake versions we can use FILE_SET instead.
-        foreach (file ${${_HEADER_FILES_VAR}})
-            get_filename_component(dir ${file} DIRECTORY)
-            install(FILES ${file} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${dir})
-        endforeach ()
-    endif ()
-
 
 endmacro()
 
@@ -118,16 +69,12 @@ endif (ATLAS_GENERATE_OBJECTS)
 
 add_subdirectory(src)
 
-
 if (NOT TARGET benchmark)
     add_custom_target(benchmark)
 endif ()
 if (NOT TARGET check)
     add_custom_target(check)
 endif ()
-
-# Add test
-enable_testing()
 
 #Macro for adding a test. The test name will be extracted from the name of the first submitted file.
 #Additional files can be submitted as varargs.
@@ -234,56 +181,3 @@ add_custom_command(
 )
 
 #add_custom_target(changelog DEPENDS ChangeLog)
-
-if (NOT NO_LIBS_INSTALL)
-
-    # pkg-config files
-    configure_file(tools/atlascpp.pc.in atlascpp.pc @ONLY)
-    install(FILES ${PROJECT_BINARY_DIR}/atlascpp.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
-
-    # man files
-    install(FILES docs/man/man1/atlas_convert.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-
-    # CMake config files
-    include(CMakePackageConfigHelpers)
-
-    install(EXPORT "${PROJECT_NAME}Targets"
-            FILE "${PROJECT_NAME}Targets.cmake"
-            NAMESPACE "${PROJECT_NAME}::"
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
-    )
-    configure_package_config_file(tools/Config.cmake.in ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
-            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-            PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR)
-    write_basic_package_version_file(
-            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
-            VERSION ${VERSION}
-            COMPATIBILITY ExactVersion)
-    install(FILES
-            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake
-            ${PROJECT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-
-    # Packaging (for source tarballs
-
-    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
-    set(CPACK_PACKAGE_VENDOR "Worldforge")
-    set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
-    set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/COPYING")
-    set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
-    set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
-    set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
-    #set(CPACK_INSTALL_SCRIPT "sh ${CMAKE_CURRENT_SOURCE_DIR}/tools/support/generate-ChangeLog.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CPACK_PACKAGE_INSTALL_DIRECTORY} 8bd480b053190ffde2afe33af66f484953036f5a")
-
-    set(CPACK_SOURCE_GENERATOR TBZ2 ZIP)
-
-    set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${VERSION}" CACHE INTERNAL "tarball basename")
-
-    set(CPACK_SOURCE_IGNORE_FILES
-            # no hidden files
-            "/\\\\..+$"
-            "~$"
-    )
-
-    include(CPack)
-endif ()

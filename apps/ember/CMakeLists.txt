@@ -260,9 +260,7 @@ else ()
 endif ()
 
 if (NOT WIN32)
-    find_package(XDGBaseDir REQUIRED 1.0.0)
-    link_libraries(${XDGBaseDir_LIBRARIES})
-    include_directories(SYSTEM ${XDGBaseDir_INLUDE_DIR})
+    find_package(libxdg-basedir REQUIRED)
 endif ()
 
 find_package(OpenGL)

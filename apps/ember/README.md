@@ -15,50 +15,6 @@ And if you're a world builder who wants to build your own world, this is also th
 
 To learn more about Worldforge visit our [website](http://worldforge.org/ "The main Worldforge site").
 
-## Installation
-
-The simplest way to install all required dependencies is by using [Conan](https://www.conan.io).
-
-```bash
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
-cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release
-cmake --build --preset conan-release -j --target all --target install
-```
-
-Alternatively you can use the [Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to
-compile Ember.
-This is script provided by the Worldforge project which will download and install all of the required libraries and
-components used by Worldforge.
-
-### Tests
-
-The test suite can be built and run using the ```check``` target. For example:
-
-```bash
-make check
-```
-
-or
-
-```bash
-cmake --build --preset conan-release --target check
-```
-
-### API documentation
-
-If Doxygen is available API documentation can be generated using the ```dox``` target. For example:
-
-```bash
-make dox
-```
-
-or
-
-```bash
-cmake --build --preset conan-release --target dox
-```
-
 ### Working with media
 
 An alternative to the ```media-download``` target is to instead use the raw media repo source, as found at
@@ -74,12 +30,6 @@ by ```mediarepo-checkout```, and places the results in the build directory, unde
 When running a non-release build Ember will automatically load media from this directory, taking precedence over the
 ```mediarepo``` directory.
 
-## Dependencies
-
-We use Conan for our dependency handling. If you're developing locally you can issue this command to setup both a "debug" and "release" environment.
-```bash
-conan install -s build_type=Debug . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True --update  && conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True --update
-```
 
 ## Running Ember
 
@@ -87,11 +37,9 @@ As Ember is a 3d client it requires a 3d capable graphics card. If you have a fa
 though.
 
 If you want to run Ember as a world builder tool we strongly recommend that you also install and run a local instance of
-the [Cyphesis](https://github.com/worldforge/cyphesis "Cyphesis server") server.
+the [Cyphesis](../cyphesis/README.md) server.
 By running an instance of the Cyphesis server on your local machine you're automatically given administrative access to
 the world, and can build and alter it however you like.
-Just as with Ember we recommend that you use the
-[Hammer](http://wiki.worldforge.org/wiki/Hammer_Script "The Hammer script") tool to compile Cyphesis.
 
 ## How to help
 
