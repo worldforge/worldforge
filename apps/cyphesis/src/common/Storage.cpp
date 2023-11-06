@@ -21,7 +21,6 @@
 #include "system.h"
 #include "globals.h"
 #include "log.h"
-#include "compose.hpp"
 #include "debug.h"
 #include "Shaker.h"
 
@@ -40,8 +39,8 @@ Storage::Storage(Database& database) : m_connection(database) {
         if (m_connection.initConnection() != 0) {
             throw std::runtime_error("Still couldn't connect.");
         }
-        log(INFO, String::compose("Auto created database for new instance "
-                                  "\"%1\".", ::instance));
+        spdlog::info("Auto created database for new instance "
+                                  "\"{}\".", ::instance);
     }
 
     std::map<std::string, int> chunks;
@@ -71,7 +70,7 @@ Storage::Storage(Database& database) : m_connection(database) {
 
     Atlas::Message::MapType data;
     if (getAccount("admin", data) != 0) {
-        debug_print("Bootstrapping admin account.")
+        cy_debug_print("Bootstrapping admin account.")
 
 
         //The shaker isn't meant for this, but it will suffice. A password of 32
@@ -80,7 +79,7 @@ Storage::Storage(Database& database) : m_connection(database) {
         std::string password = shaker.generateSalt(32);
 
 
-        log(INFO, "Created 'admin' account with randomized password.\n"
+        spdlog::info("Created 'admin' account with randomized password.\n"
                   "In order to use it, use the 'cypasswd' tool from the "
                   "command line to alter the password.");
 

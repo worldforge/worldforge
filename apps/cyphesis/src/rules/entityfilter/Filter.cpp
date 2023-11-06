@@ -18,11 +18,11 @@ namespace EntityFilter {
             parse_success = qi::phrase_parse(iter_begin, iter_end, grammar,
                                              boost::spirit::qi::space, m_predicate);
         } catch (const std::invalid_argument& e) {
-            throw std::invalid_argument(String::compose("Error when parsing '%1':\n%2", what, e.what()));
+            throw std::invalid_argument(fmt::format("Error when parsing '{}':\n{}", what, e.what()));
         }
         if (!(parse_success && iter_begin == iter_end)) {
             auto parsedPart = what.substr(0, iter_begin - what.begin());
-            throw std::invalid_argument(String::compose("Attempted creating entity filter with invalid query. Query was '%1'.\n Parser error was at '%2'", what, parsedPart));
+            throw std::invalid_argument(fmt::format("Attempted creating entity filter with invalid query. Query was '{}'.\n Parser error was at '{}'", what, parsedPart));
         }
     }
 

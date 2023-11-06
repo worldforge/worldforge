@@ -29,7 +29,6 @@
 #include "common/Property.h"
 #include "common/Router.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/Visibility.h"
 
 #include <Atlas/Objects/Operation.h>
@@ -532,8 +531,8 @@ class LocatedEntity : public Router, public ReferenceCounted
                                         = Atlas::Message::Element())
         {
             if (!PropertyUtil::isValidName(name)) {
-                log(WARNING, String::compose("Tried to add property '%1' to entity '%2', which has an invalid name.", name, describeEntity()));
-                throw std::runtime_error(String::compose("Tried to add property '%1' to entity '%2', which has an invalid name.", name, describeEntity()));
+                spdlog::warn("Tried to add property '{}' to entity '{}', which has an invalid name.", name, describeEntity());
+                throw std::runtime_error(fmt::format("Tried to add property '{}' to entity '{}', which has an invalid name.", name, describeEntity()));
             }
 
             auto* p = modProperty(name, def_val);
@@ -549,11 +548,11 @@ class LocatedEntity : public Router, public ReferenceCounted
                 m_properties[name].property.reset(sp);
                 sp->install(*this, name);
                 if (p != nullptr) {
-                    log(WARNING, String::compose("Property %1 on entity with id %2 "
+                    spdlog::warn("Property {} on entity with id {} "
                                                  "reinstalled with new class."
                                                  "This might cause instability. Make sure that all "
                                                  "properties are properly installed in "
-                                                 "CorePropertyManager.", name, getId()));
+                                                 "CorePropertyManager.", name, getId());
                     Atlas::Message::Element val;
                     if (p->get(val)) {
                         sp->set(val);

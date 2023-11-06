@@ -20,13 +20,13 @@
 
 #include "tools/ObjectContext.h"
 
-#include "common/compose.hpp"
 #include "common/operations/Tick.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
 
 #include <iostream>
+#include <fmt/format.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -55,7 +55,7 @@ void Flusher::setup(const std::string & arg, OpVector & ret)
 
     type = arg;
 
-    m_description = String::compose("flushing %1", type);
+    m_description = fmt::format("flushing {}", type);
 
     // Send a look to search by type.
     Look l;
@@ -83,7 +83,7 @@ void Flusher::operation(const Operation & op, OpVector & res)
         // want to delete.
         const std::vector<Root> & args = op->getArgs();
         if (args.empty()) {
-            std::cerr << "Got empty sight" << std::endl << std::flush;
+            std::cerr << "Got empty sight" << std::endl;
             return;
         }
         const Root & arg = args.front();
@@ -93,11 +93,11 @@ void Flusher::operation(const Operation & op, OpVector & res)
             return;
         }
         if (!sight_ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-            std::cerr << "Got sight no ID" << std::endl << std::flush;
+            std::cerr << "Got sight no ID" << std::endl;
             return;
         }
         if (!sight_ent->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
-            std::cerr << "Got sight no PARENT" << std::endl << std::flush;
+            std::cerr << "Got sight no PARENT" << std::endl;
             return;
         }
         if (sight_ent->getParent() != type) {
@@ -106,7 +106,7 @@ void Flusher::operation(const Operation & op, OpVector & res)
         const std::string & id = sight_ent->getId();
 
         std::cout << "Deleting: " << type << "(" << id << ")"
-                  << std::endl << std::flush;
+                  << std::endl;
 
         // Send a delete to the entity we have seen.
         Delete d;
@@ -139,7 +139,7 @@ void Flusher::operation(const Operation & op, OpVector & res)
         // to schedule the next look.
         if (op->getArgs().empty() ||
             op->getArgs().front()->getName() != "flusher") {
-            std::cout << "Not for us" << std::endl << std::flush;
+            std::cout << "Not for us" << std::endl;
             return;
         }
 

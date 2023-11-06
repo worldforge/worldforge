@@ -35,7 +35,6 @@
 #include "rules/simulation/WorldRouter.h"
 #include "server/SystemAccount.h"
 
-#include "common/compose.hpp"
 #include "common/Inheritance.h"
 #include "common/log.h"
 #include "common/CommSocket.h"

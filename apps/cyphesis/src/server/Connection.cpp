@@ -29,7 +29,6 @@
 #include "common/system.h"
 #include "common/TypeNode.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/CommSocket.h"
 
 
@@ -46,7 +45,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Entity::Anonymous;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -57,15 +55,15 @@ Connection::Connection(CommSocket& socket,
         Link(socket, std::move(id)), m_server(svr)
 {
     m_server.registerConnection(this);
-    logEvent(CONNECT, String::compose("%1 - - Connect from %2", id.m_id, addr));
+    logEvent(CONNECT, fmt::format("{} - - Connect from {}", id.m_id, addr));
 }
 
 Connection::~Connection()
 {
-    debug_print("destroy called")
+    cy_debug_print("destroy called")
     m_server.deregisterConnection(this);
 
-    logEvent(DISCONNECT, String::compose("%1 - - Disconnect", getId()));
+    logEvent(DISCONNECT, fmt::format("{} - - Disconnect", getId()));
 
     //It's important that we disconnect ourselves as a possession router before we disconnect our objects,
     //else there's a risk that the external minds manager will just issue new possession request to this connection.
@@ -100,7 +98,7 @@ Account* Connection::addNewAccount(const std::string& type,
 
     auto id = newId();
     if (id.m_intId < 0) {
-        log(ERROR, "Account creation failed as no ID available");
+        spdlog::error("Account creation failed as no ID available");
         return nullptr;
     }
 
@@ -185,13 +183,13 @@ size_t Connection::dispatch(size_t numberOfOps)
         rmt_ScopedCPUSample(dispatch_operation, 0)
         auto op = std::move(m_operationsQueue.front());
         m_operationsQueue.pop_front();
-        debug_print("deliver locally")
+        cy_debug_print("deliver locally")
         OpVector reply;
         long serialno = op->getSerialno();
 //        if (debug_flag) {
 //            auto timeDiff = BaseWorld::instance().getTimeAsSeconds() - op->getSeconds();
 //            if (timeDiff > 0.02) {
-//                log(WARNING, String::compose("Time diff for connection %1: %2", getId(), timeDiff));
+//                spdlog::warn("Time diff for connection {}: {}", getId(), timeDiff);
 //            }
 //        }
         operation(op, reply);
@@ -222,7 +220,7 @@ size_t Connection::dispatch(size_t numberOfOps)
 //            if (debug_flag) {
 //                auto timeDiff = BaseWorld::instance().getTimeAsSeconds() - op->getSeconds();
 //                if (timeDiff > 0.02) {
-//                    log(WARNING, String::compose("Time diff for router %1:  %2", entry.second.router->getId(), timeDiff));
+//                    spdlog::warn("Time diff for router {}:  {}", entry.second.router->getId(), timeDiff);
 //                }
 //            }
 
@@ -251,28 +249,28 @@ size_t Connection::queuedOps() const
 
 void Connection::externalOperation(const Operation& op, Link& link)
 {
-    debug_print("Connection::externalOperation")
-    //log(INFO, String::compose("externalOperation in %1", getId()));
+    cy_debug_print("Connection::externalOperation")
+    //spdlog::info("externalOperation in {}", getId());
 
     if (op->isDefaultFrom()) {
         m_operationsQueue.emplace_back(op);
         if (m_operationsQueue.size() > 1000) {
-            log(WARNING, String::compose("Operations queue for connection %1 is alarmingly high, currently at %2. New op of type '%3'.",
-                                         getId(), m_operationsQueue.size(), op->getParent()));
+            spdlog::warn("Operations queue for connection {} is alarmingly high, currently at {}. New op of type '{}'.",
+                                         getId(), m_operationsQueue.size(), op->getParent());
         }
     } else {
         auto& from = op->getFrom();
-        debug_print("send on to " << from)
+        cy_debug_print("send on to " << from)
         auto I = m_routers.find(integerId(from));
         if (I == m_routers.end()) {
-            sendError(op, String::compose("Client \"%1\" op from \"%2\" is from non-existent object.",
+            sendError(op, fmt::format("Client \"{}\" op from \"{}\" is from non-existent object.",
                                           op->getParent(), from), from);
             return;
         } else {
             I->second.opsQueue.emplace_back(op);
             if (I->second.opsQueue.size() > 1000) {
-                log(WARNING, String::compose("Operations queue for router %1 is alarmingly high, currently at %2. New op of type '%3'.",
-                                             I->second.router->getId(), I->second.opsQueue.size(), op->getParent()));
+                spdlog::warn("Operations queue for router {} is alarmingly high, currently at {}. New op of type '{}'.",
+                                             I->second.router->getId(), I->second.opsQueue.size(), op->getParent());
             }
         }
     }
@@ -280,7 +278,7 @@ void Connection::externalOperation(const Operation& op, Link& link)
 
 void Connection::operation(const Operation& op, OpVector& res)
 {
-    debug_print("Connection::operation")
+    cy_debug_print("Connection::operation")
     auto op_no = op->getClassNo();
     switch (op_no) {
         case Atlas::Objects::Operation::CREATE_NO:
@@ -299,14 +297,14 @@ void Connection::operation(const Operation& op, OpVector& res)
             break;
         default:
             std::string parent = op->getParent().empty() ? "-" : op->getParent();
-            error(op, String::compose("Unknown operation %1 in Connection", parent), res);
+            error(op, fmt::format("Unknown operation {} in Connection", parent), res);
             break;
     }
 }
 
 void Connection::LoginOperation(const Operation& op, OpVector& res)
 {
-    debug_print("Got login op")
+    cy_debug_print("Got login op")
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
         error(op, "Login has no argument", res);
@@ -319,7 +317,7 @@ void Connection::LoginOperation(const Operation& op, OpVector& res)
     Element user_attr;
     std::string username;
     if (arg->copyAttr("username", user_attr) != 0 || !user_attr.isString()) {
-        log(WARNING, "Got Login for account with no username. Checking for old style Login.");
+        spdlog::warn("Got Login for account with no username. Checking for old style Login.");
         if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
             error(op, "Got account Login with no username.", res);
             return;
@@ -355,17 +353,17 @@ void Connection::LoginOperation(const Operation& op, OpVector& res)
     Anonymous info_arg;
     account->addToEntity(info_arg);
     info->setArgs1(info_arg);
-    debug_print("Good login")
+    cy_debug_print("Good login")
     res.emplace_back(std::move(info));
 
-    logEvent(LOGIN, String::compose("%1 %2 - Login account %3 (%4)",
+    logEvent(LOGIN, fmt::format("{} {} - Login account {} ({})",
                                     getId(), account->getId(), username,
                                     account->getType()));
 }
 
 void Connection::CreateOperation(const Operation& op, OpVector& res)
 {
-    debug_print("Got create op")
+    cy_debug_print("Got create op")
     if (!m_routers.empty()) {
         clientError(op, "This connection is already logged in", res);
         return;
@@ -417,10 +415,10 @@ void Connection::CreateOperation(const Operation& op, OpVector& res)
     Anonymous info_arg;
     account->addToEntity(info_arg);
     info->setArgs1(info_arg);
-    debug_print("Good create")
+    cy_debug_print("Good create")
     res.push_back(info);
 
-    logEvent(LOGIN, String::compose("%1 %2 - Create account %3 (%4)",
+    logEvent(LOGIN, fmt::format("{} {} - Create account {} ({})",
                                     getId(),
                                     account->getId(),
                                     username,
@@ -454,7 +452,7 @@ void Connection::LogoutOperation(const Operation& op, OpVector& res)
     }
     auto I = m_connectableRouters.find(obj_id);
     if (I == m_connectableRouters.end()) {
-        error(op, String::compose("Got logout for unknown entity ID(%1)",
+        error(op, fmt::format("Got logout for unknown entity ID({})",
                                   obj_id),
               res);
         return;
@@ -478,7 +476,7 @@ void Connection::GetOperation(const Operation& op, OpVector& res)
         Anonymous info_arg;
         m_server.addToEntity(info_arg);
         info->setArgs1(std::move(info_arg));
-        debug_print("Replying to empty get")
+        cy_debug_print("Replying to empty get")
     } else {
         const Root& arg = args.front();
         if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
@@ -486,10 +484,10 @@ void Connection::GetOperation(const Operation& op, OpVector& res)
             return;
         }
         const std::string& id = arg->getId();
-        debug_print("Get got for " << id)
+        cy_debug_print("Get got for " << id)
         Atlas::Objects::Root o = Inheritance::instance().getClass(id, Visibility::PUBLIC);
         if (!o.isValid()) {
-            error(op, String::compose("Unknown type definition for \"%1\" requested", id), res);
+            error(op, fmt::format("Unknown type definition for \"{}\" requested", id), res);
             return;
         }
         info->setArgs1(o);

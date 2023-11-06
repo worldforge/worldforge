@@ -79,9 +79,9 @@ size_t OperationsDispatcher<T>::processUntil(std::chrono::steady_clock::duration
                 //Check if there's too large a difference in time
                 auto timeDiff = duration - opQueueEntry.time_for_dispatch;
                 if (timeDiff > m_time_diff_report) {
-                    log(WARNING, String::compose("Op (%1, from %2 to %3) was handled too late. Time diff: %4 seconds. Ops in queue: %5",
+                    spdlog::warn("Op ({}, from {} to {}) was handled too late. Time diff: {} seconds. Ops in queue: {}",
                                                  opQueueEntry->getParent(), opQueueEntry.from->describeEntity(),
-                                                 opQueueEntry->getTo(), std::chrono::duration_cast<std::chrono::duration<float>>(timeDiff).count(), m_operationQueue.size()));
+                                                 opQueueEntry->getTo(), std::chrono::duration_cast<std::chrono::duration<float>>(timeDiff).count(), m_operationQueue.size());
                 }
             }
             dispatchOperation(opQueueEntry);
@@ -187,7 +187,7 @@ void OperationsDispatcher<T>::addOperationToQueue(Operation op, Ref<T> ent)
     if (opdispatcher_debug_flag) {
         std::cout << "OperationsDispatcher::addOperationToQueue {" << std::endl;
         debug_dump(op, std::cout);
-        std::cout << "}" << std::endl << std::flush;
+        std::cout << "}" << std::endl;
     }
     m_operationQueue.emplace(std::move(op), std::move(ent), ++m_sequence);
     //Only mark the queue as dirty if the first entry has changed.

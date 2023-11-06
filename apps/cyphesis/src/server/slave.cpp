@@ -31,7 +31,6 @@
 #include "common/globals.h"
 #include "common/Inheritance.h"
 #include "common/system.h"
-#include "common/compose.hpp"
 
 #include <varconf/config.h>
 
@@ -68,22 +67,22 @@ int main(int argc, char ** argv)
         int dbstatus = p->init();
         if (dbstatus < 0) {
             database_flag = false;
-            log(ERROR, "Error opening database. Database disabled.");
+            spdlog::error("Error opening database. Database disabled.");
             if (dbstatus == DATABASE_TABERR) {
-                log(INFO, "Database connection established, "
+                spdlog::info("Database connection established, "
                           "but unable to create required tables.");
-                log(INFO, "Please ensure that any obsolete database "
+                spdlog::info("Please ensure that any obsolete database "
                           "tables have been removed.");
             } else {
-                log(INFO, "Unable to connect to the RDBMS.");
-                log(INFO, "Please ensure that the RDBMS is running, "
+                spdlog::info("Unable to connect to the RDBMS.");
+                spdlog::info("Please ensure that the RDBMS is running, "
                           "the cyphesis database exists and is accessible "
                           "to the user running cyphesis.");
             }
-            log(INFO, String::compose("To disable this message please run:\n\n"
-                                      "    cyconfig --%1:usedatabase=false\n\n"
+            spdlog::info("To disable this message please run:\n\n"
+                                      "    cyconfig --{}:usedatabase=false\n\n"
                                       "to permanently disable database usage.",
-                                      instance));
+                                      instance);
         }
     }
 
@@ -92,7 +91,7 @@ int main(int argc, char ** argv)
     // be created manually by the server administrator.
     if (readConfigItem("cyphesis","restricted", restricted_flag) == 0) {
         if (restricted_flag) {
-            log(INFO, "Setting restricted mode.");
+            spdlog::info("Setting restricted mode.");
         }
     }
 
@@ -129,7 +128,7 @@ int main(int argc, char ** argv)
 
     if (((int_id = newId(server_id)) < 0) ||
         ((lobby_int_id = newId(lobby_id)) < 0)) {
-        log(CRITICAL, "Unable to get server IDs from Database");
+        spdlog::critical("Unable to get server IDs from Database");
         return EXIT_DATABASE_ERROR;
     }
 
@@ -148,26 +147,26 @@ int main(int argc, char ** argv)
     CommUnixListener * listener = new CommUnixListener(commServer,
           *new CommClientFactory<SlaveClientConnection>());
     if (listener->setup(slave_socket_name) != 0) {
-        log(ERROR, "Could not create listen socket. Init failed.");
+        spdlog::error("Could not create listen socket. Init failed.");
         return EXIT_SOCKET_ERROR;
     }
     commServer.addSocket(listener);
 
     std::string master_id;
     if (newId(master_id) < 0) {
-        log(CRITICAL, "Unable to get master ID from Database");
+        spdlog::critical("Unable to get master ID from Database");
         return EXIT_DATABASE_ERROR;
     }
 
     CommMaster * master = new CommMaster(commServer);
     if (master->connect(serverHostname) != 0) {
-        log(ERROR, "Could not connect to master. Init failed.");
+        spdlog::error("Could not connect to master. Init failed.");
         return EXIT_SOCKET_ERROR;
     }
     master->setup(new Master(*master, commServer.m_server, master_id));
     commServer.addSocket(master);
 
-    log(INFO, "Running");
+    spdlog::info("Running");
 
     // Inform things that want to know that we are running.
     running();
@@ -183,14 +182,14 @@ int main(int argc, char ** argv)
             // exceptions that can be caused  by external influences
             // should be caught close to where they are thrown. If
             // an exception makes it here then it should be debugged.
-            log(ERROR, "Exception caught in main()");
+            spdlog::error("Exception caught in main()");
         }
     }
     // exit flag has been set so we close down the databases, and indicate
     // to the metaserver (if we are using one) that this server is going down.
     // It is assumed that any preparation for the shutdown that is required
     // by the game has been done before exit flag was set.
-    log(NOTICE, "Performing clean shutdown...");
+    spdlog::debug("Performing clean shutdown...");
 
     } // close scope of CommServer, which cause the destruction of the
       // server and world objects, and the entire world contents
@@ -211,6 +210,6 @@ int main(int argc, char ** argv)
 
     delete global_conf;
 
-    log(INFO, "Clean shutdown complete.");
+    spdlog::info("Clean shutdown complete.");
     return 0;
 }

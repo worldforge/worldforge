@@ -49,7 +49,8 @@ using namespace boost::asio;
 
 int main(int argc, char ** argv)
 {
-    setLoggingPrefix("PYTHON");
+	//Perhaps tell spdlog to use a prefix?
+    //setLoggingPrefix("PYTHON");
 
 
     int config_status = loadConfig(argc, argv, 0); 
@@ -61,7 +62,7 @@ int main(int argc, char ** argv)
             showUsage(argv[0], USAGE_CYPYTHON, "");
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -78,7 +79,7 @@ int main(int argc, char ** argv)
 
     if (!sk.is_open()) {
         std::cerr << "Connection to " << python_socket_name
-                  << " failed" << std::endl << std::flush;
+                  << " failed" << std::endl;
         return 1;
     }
 
@@ -86,7 +87,7 @@ int main(int argc, char ** argv)
         const char * line = readline(">>> ");
         if (line == 0) {
             exit_flag = true;
-            std::cout << std::endl << std::flush;
+            std::cout << std::endl;
         } else {
             add_history(line);
             sk.write_some(buffer(std::string(line) + "\n"));

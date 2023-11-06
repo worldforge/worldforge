@@ -257,7 +257,7 @@ void Accountintegration::test_addNewCharacter()
 //    auto chr = m_ac->addNewCharacter(new_char, args, res);
 //    assert(chr);
 //
-//    std::cout << "Test 1" << std::endl << std::flush;
+//    std::cout << "Test 1" << std::endl;
 }
 
 void Accountintegration::test_getType()

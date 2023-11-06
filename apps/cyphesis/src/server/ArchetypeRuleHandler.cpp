@@ -24,7 +24,6 @@
 
 #include "common/log.h"
 #include "common/debug.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Factories.h>
 
@@ -37,7 +36,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -50,22 +48,20 @@ int ArchetypeRuleHandler::installArchetypeClass(const std::string& class_name,
     // Get the new factory for this rule
     auto* parent_factory = dynamic_cast<ArchetypeFactory*>(m_builder.getClassFactory(parent));
     if (parent_factory == nullptr) {
-        debug_print(
+        cy_debug_print(
              "class \"" << class_name
                       << "\" has non existent parent \"" << parent
                       << "\". Waiting.")
         dependent = parent;
-        reason = compose("Entity rule \"%1\" has parent \"%2\" which does "
+        reason = fmt::format("Entity rule \"{}\" has parent \"{}\" which does "
                          "not exist.", class_name, parent);
         return 1;
     }
     auto factory = parent_factory->duplicateFactory();
     if (!factory) {
-        log(ERROR,
-            compose(
-                "Attempt to install rule \"%1\" which has parent \"%2\" "
+        spdlog::error("Attempt to install rule \"{}\" which has parent \"{}\" "
                 "which cannot be instantiated", class_name,
-                parent));
+                parent);
         return -1;
     }
 
@@ -76,7 +72,7 @@ int ArchetypeRuleHandler::installArchetypeClass(const std::string& class_name,
         return -1;
     }
 
-    debug_print("INSTALLING " << class_name << ":" << parent)
+    cy_debug_print("INSTALLING " << class_name << ":" << parent)
 
     auto factoryPtr = factory.get();
     // Install the factory in place.
@@ -100,8 +96,8 @@ int ArchetypeRuleHandler::modifyArchetypeClass(const std::string& class_name,
     auto factory =
         dynamic_cast<ArchetypeFactory*>(m_builder.getClassFactory(class_name));
     if (factory == nullptr) {
-        log(ERROR, compose("Could not find factory for existing entity class "
-                           "\"%1\".", class_name));
+        spdlog::error("Could not find factory for existing entity class "
+                           "\"{}\".", class_name);
         return -1;
     }
     assert(factory != nullptr);
@@ -118,11 +114,9 @@ int ArchetypeRuleHandler::modifyArchetypeClass(const std::string& class_name,
         // This is non fatal, but nice to know it has happened.
         // This should only happen if the client attempted to modify the
         // type data for a core hard coded type.
-        log(ERROR,
-            compose(
-                "ArchetypeRuleHandler::modifyEntityClass: \"%1\" modified "
+        spdlog::error("ArchetypeRuleHandler::modifyEntityClass: \"{}\" modified "
                 "by client, but has no parent factory.",
-                class_name));
+                class_name);
         factory->m_entities.clear();
         factory->m_thoughts.clear();
     }
@@ -170,8 +164,8 @@ int ArchetypeRuleHandler::populateArchetypeFactory(
 //                delete factory->m_scriptFactory;
 //                factory->m_scriptFactory = psf;
 //            } else {
-//                log(ERROR, compose("Python class \"%1.%2\" failed to load",
-//                                   script_package, script_class));
+//                spdlog::error("Python class \"{}.{}\" failed to load",
+//                                   script_package, script_class);
 //                delete psf;
 //                return -1;
 //            }

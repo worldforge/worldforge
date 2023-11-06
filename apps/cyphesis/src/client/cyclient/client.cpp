@@ -39,7 +39,7 @@
 static void usage(const char* prgname)
 {
     std::cout << "usage: " << prgname << " [ [package.]function ]"
-              << std::endl << std::flush;
+              << std::endl;
 }
 
 STRING_OPTION(server, "localhost", "client", "serverhost",
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
             showUsage(argv[0], USAGE_CLIENT, "[ [package.]function]");
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -82,12 +82,12 @@ int main(int argc, char** argv)
         std::string arg(argv[optindex]);
         std::string::size_type pos = arg.rfind('.');
         if (pos == std::string::npos) {
-            // std::cout << "function " << arg << std::endl << std::flush;
+            // std::cout << "function " << arg << std::endl;
             function = arg;
         } else {
             package = arg.substr(0, pos);
             function = arg.substr(pos + 1);
-            // std::cout << "module.function " << package << "." << function << std::endl << std::flush;
+            // std::cout << "module.function " << package << "." << function << std::endl;
         }
     } else if (optindex != argc) {
         usage(argv[0]);

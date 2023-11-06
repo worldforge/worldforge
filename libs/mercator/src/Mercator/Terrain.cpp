@@ -89,7 +89,7 @@ void Terrain::addSurfaces(Segment & seg)
     Segment::Surfacestore & sss = seg.getSurfaces();
     if (!sss.empty()) {
         std::cerr << "WARNING: Adding surfaces to a terrain segment which has surfaces"
-                  << std::endl << std::flush;
+                  << std::endl;
         sss.clear();
     }
 

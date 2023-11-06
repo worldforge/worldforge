@@ -39,7 +39,7 @@
 static int install(int argc, char ** argv)
 {
     if (argc < 2) {
-        std::cerr << "usage: " << argv[0] << " <ruleset> [ <directory> | <zipfile> ]" << std::endl << std::flush;
+        std::cerr << "usage: " << argv[0] << " <ruleset> [ <directory> | <zipfile> ]" << std::endl;
         return 1;
     }
     return 0;

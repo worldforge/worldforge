@@ -25,7 +25,6 @@
 
 #include "tools/OperationMonitor.h"
 
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Operation.h>
 

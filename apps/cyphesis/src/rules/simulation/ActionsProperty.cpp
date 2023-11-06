@@ -148,8 +148,8 @@ void ActionsProperty::set(const Atlas::Message::Element& val)
 //                    };
 //                    m_data.emplace(entry.first, std::move(attachment));
 //                } catch (const std::invalid_argument& e) {
-//                    log(WARNING, String::compose(
-//                            "Error when creating entity filter for attachment with constraint '%1'.: \n%2",
+//                    log(WARNING, fmt::format(
+//                            "Error when creating entity filter for attachment with constraint '{}'.: \n{}",
 //                            entry.second.String(),
 //                            e.what())
 //                    );

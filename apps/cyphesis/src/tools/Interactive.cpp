@@ -37,7 +37,6 @@
 
 #include "common/operations/Monitor.h"
 #include "common/operations/Connect.h"
-#include "common/compose.hpp"
 #include "common/utils.h"
 
 #include <sigc++/connection.h>
@@ -53,6 +52,7 @@ extern "C" {
 }
 #endif
 
+#include <fmt/format.h>
 #include <iostream>
 
 using Atlas::Message::Element;
@@ -157,7 +157,7 @@ static void help()
                   << std::string(max_length - strlen(I->cmd_string), ' ')
                   << I->cmd_description << std::endl;
     }
-    std::cout << std::endl << std::flush;
+    std::cout << std::endl;
 }
 
 Interactive::Interactive(Atlas::Objects::Factories& factories, boost::asio::io_context& io_context) :
@@ -201,17 +201,17 @@ void Interactive::appearanceArrived(const Operation & op)
     }
     RootEntity ent = smart_dynamic_cast<RootEntity>(op->getArgs().front());
     if (!ent.isValid()) {
-        std::cerr << "Got Appearance of non-entity" << std::endl << std::flush;
+        std::cerr << "Got Appearance of non-entity" << std::endl;
         return;
     }
     if (!ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        std::cerr << "Got Appearance of non-string ID" << std::endl << std::flush;
+        std::cerr << "Got Appearance of non-string ID" << std::endl;
         return;
     }
     const std::string & id = ent->getId();
     std::cout << "Appearance(id: " << id << ")";
     if (!ent->hasAttrFlag(Atlas::Objects::Entity::LOC_FLAG)) {
-        std::cout << std::endl << std::flush;
+        std::cout << std::endl;
         return;
     }
     const std::string & loc = ent->getLoc();
@@ -236,17 +236,17 @@ void Interactive::disappearanceArrived(const Operation & op)
     }
     RootEntity ent = smart_dynamic_cast<RootEntity>(op->getArgs().front());
     if (!ent.isValid()) {
-        std::cerr << "Got Disappearance of non-entity" << std::endl << std::flush;
+        std::cerr << "Got Disappearance of non-entity" << std::endl;
         return;
     }
     if (!ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        std::cerr << "Got Disappearance of non-string ID" << std::endl << std::flush;
+        std::cerr << "Got Disappearance of non-string ID" << std::endl;
         return;
     }
     const std::string & id = ent->getId();
     std::cout << "Disappearance(id: " << id << ")";
     if (!ent->hasAttrFlag(Atlas::Objects::Entity::LOC_FLAG)) {
-        std::cout << std::endl << std::flush;
+        std::cout << std::endl;
         return;
     }
     const std::string & loc = ent->getLoc();
@@ -265,7 +265,7 @@ void Interactive::infoArrived(const Operation & op)
     }
     const Root & ent = op->getArgs().front();
     if (m_server_flag) {
-        std::cout << "Server query success" << std::endl << std::flush;
+        std::cout << "Server query success" << std::endl;
         if (!ent->isDefaultName()) {
             m_serverName = ent->getName();
             std::string::size_type p = m_serverName.find('.');
@@ -285,7 +285,7 @@ void Interactive::infoArrived(const Operation & op)
     } else if (m_currentTask == nullptr && op->isDefaultRefno()) {
         std::cout << "Info(" << std::endl;
         output(ent);
-        std::cout << ")" << std::endl << std::flush;
+        std::cout << ")" << std::endl;
         // Display results of command
     }
     AtlasStreamClient::infoArrived(op);
@@ -306,7 +306,7 @@ void Interactive::errorArrived(const Operation & op)
     if (arg->copyAttr("message", message_attr) == 0 && message_attr.isString()) {
         std::cout << message_attr.asString();
     }
-    std::cout << ")" << std::endl << std::flush;
+    std::cout << ")" << std::endl;
 }
 
 void Interactive::soundArrived(const Operation & op)
@@ -320,7 +320,7 @@ void Interactive::soundArrived(const Operation & op)
     }
     reply_flag = true;
     if (op->getArgs().empty()) {
-        std::cout << "Sound op has no args" << std::endl << std::flush;
+        std::cout << "Sound op has no args" << std::endl;
         return;
     }
     Operation sub_op = smart_dynamic_cast<Operation>(op->getArgs().front());
@@ -328,22 +328,22 @@ void Interactive::soundArrived(const Operation & op)
         return;
     }
     if (sub_op->isDefaultFrom()) {
-        std::cout << "Sound arg has no from" << std::endl << std::flush;
+        std::cout << "Sound arg has no from" << std::endl;
         return;
     }
     const std::string & from = sub_op->getFrom();
     if (sub_op->getArgs().empty()) {
-        std::cout << "Sound arg has no args" << std::endl << std::flush;
+        std::cout << "Sound arg has no args" << std::endl;
         return;
     }
     const Root & arg = sub_op->getArgs().front();
     Element say;
     if (arg->copyAttr("say", say) != 0 || !say.isString()) {
-        std::cout << "Sound arg arg has no say" << std::endl << std::flush;
+        std::cout << "Sound arg arg has no say" << std::endl;
         return;
     }
     std::cout << "[" << from << "] " << say.String()
-              << std::endl << std::flush;
+              << std::endl;
 }
 
 void Interactive::loginSuccess(const Atlas::Objects::Root & arg)
@@ -464,7 +464,7 @@ void Interactive::loop()
     CmdLine.connect(sigc::mem_fun(*this, &Interactive::runCommand));
     ContextSwitch.connect(sigc::mem_fun(*this, &Interactive::switchContext));
     while (select() == 0);
-    std::cout << std::endl << std::flush;
+    std::cout << std::endl;
     rl_callback_handler_remove();
 }
 
@@ -490,7 +490,7 @@ int Interactive::select(bool rewrite_prompt)
     if (result >= 0) {
         return 0;
     }
-    std::cout << "Server disconnected" << std::endl << std::flush;
+    std::cout << "Server disconnected" << std::endl;
     return -1;
 }
 
@@ -511,7 +511,7 @@ void Interactive::updatePrompt()
     if (c) {
         context = c->repr();
     }
-    m_prompt = String::compose("[%1@%2 %3{%4}]%5 ", context, m_serverName,
+    m_prompt = fmt::format("[{0}@{1} {2}{{{3}}}]{4} ", context, m_serverName,
                                m_systemType, status, designation);
     rl_set_prompt(m_prompt.c_str());
 }
@@ -547,7 +547,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
 
     std::shared_ptr<ObjectContext> command_context = m_currentContext.lock();
     if (!command_context) {
-        std::cout << "ERROR: Context free" << std::endl << std::flush;
+        std::cout << "ERROR: Context free" << std::endl;
         return;
     }
 
@@ -558,7 +558,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         size_t space = arg.find(' ');
         if (space == std::string::npos || space >= (arg.size() - 1)) {
             std::cout << "usage: install <type id> <parent id>"
-                      << std::endl << std::flush;
+                      << std::endl;
         } else {
             Create c;
             c->setFrom(m_accountId);
@@ -620,7 +620,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
     } else if (cmd == "reload") {
         if (arg.empty()) {
             reply_expected = false;
-            std::cout << "reload: Argument required" << std::endl << std::flush;
+            std::cout << "reload: Argument required" << std::endl;
         } else {
             Set s;
 
@@ -678,7 +678,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
                       << monitor_time.count() << " seconds = "
                       << om->count() / monitor_time.count()
                       << " operations per second"
-                      << std::endl << std::flush;
+                      << std::endl;
 
             endTask();
         }
@@ -688,7 +688,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
 
         if (args.size() != 2) {
             std::cout << "usage: connect <hostname> <port>"
-                      << std::endl << std::flush;
+                      << std::endl;
 
             reply_expected = false;
         } else {
@@ -726,7 +726,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         send(c);
     } else if (cmd == "delete") {
         if (arg.empty()) {
-            std::cout << "Please specify the entity to delete" << std::endl << std::flush;
+            std::cout << "Please specify the entity to delete" << std::endl;
             reply_expected = false;
         } else {
             Delete del;
@@ -743,7 +743,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         }
     } else if (cmd == "find_by_name") {
         if (arg.empty()) {
-            std::cout << "Please specify the name to search for" << std::endl << std::flush;
+            std::cout << "Please specify the name to search for" << std::endl;
             reply_expected = false;
         } else {
             Look l;
@@ -761,7 +761,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         }
     } else if (cmd == "find_by_type") {
         if (arg.empty()) {
-            std::cout << "Please specify the type to search for" << std::endl << std::flush;
+            std::cout << "Please specify the type to search for" << std::endl;
             reply_expected = false;
         } else {
             Look l;
@@ -780,7 +780,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
     } else if (cmd == "flush") {
         if (arg.empty()) {
             // FIXME usage
-            std::cout << "Please specify the type to flush" << std::endl << std::flush;
+            std::cout << "Please specify the type to flush" << std::endl;
             reply_expected = false;
         } else {
             runTask(std::make_shared<Flusher>(command_context), arg);
@@ -788,11 +788,11 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         }
     } else if (cmd == "cancel") {
         if (endTask() != 0) {
-            std::cout << "No task currently running" << std::endl << std::flush;
+            std::cout << "No task currently running" << std::endl;
         }
     } else if (cmd == "dump") {
         if (command_context->repr() != "avatar") {
-            std::cout << "You must have an agent in the world in order to dump the world." << std::endl << std::flush;
+            std::cout << "You must have an agent in the world in order to dump the world." << std::endl;
         } else {
             //Extract the avatar id by "misusing" the setFromContext method
             Operation op;
@@ -802,7 +802,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         }
     } else if (cmd == "restore") {
         if (command_context->repr() != "avatar") {
-            std::cout << "You must have an agent in the world in order to dump the world." << std::endl << std::flush;
+            std::cout << "You must have an agent in the world in order to dump the world." << std::endl;
         } else {
             //Extract the avatar id by "misusing" the setFromContext method
             Operation op;
@@ -816,7 +816,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
 
         if (args.empty()) {
             std::cout << "usage: create <type> <params> ... "
-                      << std::endl << std::flush;
+                      << std::endl;
         } else {
             Anonymous cmap;
             cmap->setParent(args[0]);
@@ -836,7 +836,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
 
         if (args.size() != 2) {
             std::cout << "usage: login <username> <password>"
-                      << std::endl << std::flush;
+                      << std::endl;
             reply_expected = false;
         } else {
             Anonymous cmap;
@@ -853,7 +853,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
         }
     } else {
         reply_expected = false;
-        std::cout << cmd << ": Command not known" << std::endl << std::flush;
+        std::cout << cmd << ": Command not known" << std::endl;
     }
 
     if (!reply_expected) {
@@ -864,7 +864,7 @@ void Interactive::exec(const std::string & cmd, const std::string & arg)
     time_t wait_start_time = time(nullptr);
     while (!reply_flag) {
        if (time(nullptr) - wait_start_time > 5) {
-           std::cout << cmd << ": No reply from server" << std::endl << std::flush;
+           std::cout << cmd << ": No reply from server" << std::endl;
            return;
        }
        if (select(false) != 0) {

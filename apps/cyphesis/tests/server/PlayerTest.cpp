@@ -36,7 +36,6 @@
 #include "rules/simulation/Entity.h"
 
 #include "common/CommSocket.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 #include "../NullPropertyManager.h"
 
@@ -53,8 +52,6 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
-
-using String::compose;
 
 template <typename T>
 std::ostream & operator<<(std::ostream & os,

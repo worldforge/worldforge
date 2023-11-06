@@ -21,7 +21,6 @@
 #include "debug.h"
 #include "Property.h"
 #include "PropertyManager.h"
-#include "compose.hpp"
 #include "log.h"
 
 #include <set>
@@ -71,11 +70,11 @@ TypeNode::PropertiesUpdate TypeNode::injectProperty(const std::string& name,
 {
     TypeNode::PropertiesUpdate update;
     if (!PropertyUtil::isValidName(name)) {
-        log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which has an invalid name.", name, m_name));
+        spdlog::warn("Tried to add a property '{}' to type '{}', which has an invalid name.", name, m_name);
         return update;
     }
     if (prop->hasFlags(prop_flag_instance)) {
-        log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which is forbidden since it's instance only.", name, m_name));
+        spdlog::warn("Tried to add a property '{}' to type '{}', which is forbidden since it's instance only.", name, m_name);
         return update;
     }
 
@@ -116,12 +115,12 @@ void TypeNode::addProperties(const MapType& attributes, const PropertyManager& p
 {
     for (const auto& entry : attributes) {
         if (!PropertyUtil::isValidName(entry.first)) {
-            log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which has an invalid name.", entry.first, m_name));
+            spdlog::warn("Tried to add a property '{}' to type '{}', which has an invalid name.", entry.first, m_name);
             continue;
         }
         auto p = propertyManager.addProperty(entry.first);
         if (p->hasFlags(prop_flag_instance)) {
-            log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which is forbidden since it's instance only.", entry.first, m_name));
+            spdlog::warn("Tried to add a property '{}' to type '{}', which is forbidden since it's instance only.", entry.first, m_name);
             continue;
         }
         assert(p != nullptr);
@@ -147,7 +146,7 @@ TypeNode::PropertiesUpdate TypeNode::updateProperties(const MapType& attributes,
     for (auto& entry : m_defaults) {
         //Don't remove ephemeral attributes.
         if (attributes.find(entry.first) == attributes.end() && !entry.second->hasFlags(prop_flag_persistence_ephem)) {
-            debug_print(entry.first << " removed")
+            cy_debug_print(entry.first << " removed")
             propertiesUpdate.removedProps.insert(entry.first);
             propertiesMapPrivate.erase(entry.first);
             propertiesMapProtected.erase(entry.first);
@@ -168,7 +167,7 @@ TypeNode::PropertiesUpdate TypeNode::updateProperties(const MapType& attributes,
     // properties for added default attributes.
     for (auto& entry : attributes) {
         if (!PropertyUtil::isValidName(entry.first)) {
-            log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which has an invalid name.", entry.first, m_name));
+            spdlog::warn("Tried to add a property '{}' to type '{}', which has an invalid name.", entry.first, m_name);
             continue;
         }
 
@@ -176,7 +175,7 @@ TypeNode::PropertiesUpdate TypeNode::updateProperties(const MapType& attributes,
         if (I == m_defaults.end()) {
             auto p = propertyManager.addProperty(entry.first);
             if (p->hasFlags(prop_flag_instance)) {
-                log(WARNING, String::compose("Tried to add a property '%1' to type '%2', which is forbidden since it's instance only.", entry.first, m_name));
+                spdlog::warn("Tried to add a property '{}' to type '{}', which is forbidden since it's instance only.", entry.first, m_name);
                 continue;
             }
             p->addFlags(prop_flag_class);

@@ -46,29 +46,29 @@ LocatedEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
 {
     if (op->getArgs().empty()) {
         std::cerr << "Arg of reply to make has no args"
-                  << std::endl << std::flush;
+                  << std::endl;
         return nullptr;
     }
     RootEntity created = smart_dynamic_cast<RootEntity>(op->getArgs().front());
     if (!created.isValid()) {
         std::cerr << "Created argument is not an entity"
-                  << std::endl << std::flush;
+                  << std::endl;
         return nullptr;
     }
     if (!created->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
         std::cerr << "Created entity has no id"
-                  << std::endl << std::flush;
+                  << std::endl;
         return nullptr;
     }
     const std::string& created_id = created->getId();
     if (created->getParent().empty()) {
         std::cerr << "Created entity " << created_id << " has no type"
-                  << std::endl << std::flush;
+                  << std::endl;
         return nullptr;
     }
     const std::string& created_type = created->getParent();
     std::cout << "Created: " << created_type << "(" << created_id << ")"
-              << std::endl << std::flush;
+              << std::endl;
     return m_map.updateAdd(created, create_time).get();
 }
 
@@ -80,30 +80,30 @@ Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity)
     op->setTo(getId());
     OpVector result;
     if (sendAndWaitReply(op, result) != 0) {
-        std::cerr << "No reply to make" << std::endl << std::flush;
+        std::cerr << "No reply to make" << std::endl;
         return nullptr;
     }
     assert(!result.empty());
     const Operation& res = result.front();
     if (!res.isValid()) {
-        std::cerr << "nullptr reply to make" << std::endl << std::flush;
+        std::cerr << "nullptr reply to make" << std::endl;
         return nullptr;
     }
     // FIXME Make this more robust against an info response
     if (res->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
         if (res->getArgs().empty()) {
-            std::cerr << "Reply to make has no args" << std::endl << std::flush;
+            std::cerr << "Reply to make has no args" << std::endl;
             return nullptr;
         }
         RootOperation arg = smart_dynamic_cast<RootOperation>(res->getArgs().front());
         if (!arg.isValid()) {
             std::cerr << "Arg of reply to make is not an operation"
-                      << std::endl << std::flush;
+                      << std::endl;
             return nullptr;
         }
         if (arg->getClassNo() != Atlas::Objects::Operation::CREATE_NO) {
             std::cerr << "Reply to make isn't sight of create"
-                      << std::endl << std::flush;
+                      << std::endl;
             return nullptr;
         }
         return handleMakeResponse(arg, res->getSeconds());
@@ -111,7 +111,7 @@ Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity)
         return handleMakeResponse(res, res->getSeconds());
     } else {
         std::cerr << "Reply to make isn't sight or info"
-                  << std::endl << std::flush;
+                  << std::endl;
         return nullptr;
     }
 }

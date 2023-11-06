@@ -40,13 +40,13 @@ void Vector3Property::set(const Atlas::Message::Element& val)
             m_data.fromAtlas(val.List());
         } catch (...) {
             m_data = {};
-            log(ERROR, "Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
+            spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
         }
     } else if (val.isNone()) {
         m_data = {};
     } else {
         m_data = {};
-        log(ERROR, "Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
+        spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
     }
 }
 

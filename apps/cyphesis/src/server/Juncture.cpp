@@ -25,7 +25,6 @@
 
 #include "common/operations/Connect.h"
 
-#include "common/compose.hpp"
 #include "common/debug.h"
 #include "common/log.h"
 #include "common/Inheritance.h"
@@ -46,7 +45,6 @@ using Atlas::Objects::Operation::Error;
 using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Operation::Login;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -62,7 +60,7 @@ void Juncture::onSocketConnected()
     m_peer->destroyed.connect(sigc::mem_fun(*this, &Juncture::onPeerLost));
     m_peer->replied.connect(sigc::mem_fun(*this, &Juncture::onPeerReplied));
 
-    log(INFO, String::compose("Juncture onPeerC succeeded %1", getId()));
+    spdlog::info("Juncture onPeerC succeeded {}", getId());
     if (m_connection != nullptr) {
         Anonymous info_arg;
         addToEntity(info_arg);
@@ -127,7 +125,7 @@ int Juncture::attemptConnect(const std::string & hostname, int port)
     m_host = hostname;
     m_port = port;
 
-    log(INFO, String::compose("Connection in progress %1", getId()));
+    spdlog::info("Connection in progress {}", getId());
     peer->connected.connect(sigc::mem_fun(*this,
                                               &Juncture::onSocketConnected));
     peer->failed.connect(sigc::mem_fun(*this,
@@ -150,7 +148,7 @@ Juncture::~Juncture() = default;
 
 void Juncture::externalOperation(const Operation & op, Link &)
 {
-    log(ERROR, String::compose("%1 called", __PRETTY_FUNCTION__));
+    spdlog::error("{} called", __PRETTY_FUNCTION__);
     assert(m_connection != nullptr);
     OpVector reply;
     long serialno = op->getSerialno();
@@ -200,7 +198,7 @@ void Juncture::addToEntity(const RootEntity & ent) const
 
 void Juncture::LoginOperation(const Operation & op, OpVector & res)
 {
-    log(INFO, "Juncture got login");
+    spdlog::info("Juncture got login");
 
     const std::vector<Root> & args = op->getArgs();
     if (args.empty()) {
@@ -258,7 +256,7 @@ void Juncture::OtherOperation(const Operation & op, OpVector & res)
 
 void Juncture::customConnectOperation(const Operation & op, OpVector & res)
 {
-    log(INFO, "Juncture got connect");
+    spdlog::info("Juncture got connect");
 
     if (m_peer != nullptr) {
         error(op, "Juncture already connected", res, getId());
@@ -287,11 +285,11 @@ void Juncture::customConnectOperation(const Operation & op, OpVector & res)
     }
     auto port = port_attr.Int();
 
-    debug_print("Connecting to " << hostname)
+    cy_debug_print("Connecting to " << hostname)
     m_address = PeerAddress{};
 
     boost::asio::ip::tcp::resolver resolver(m_connection->m_commSocket.m_io_context);
-    boost::asio::ip::tcp::resolver::query query(hostname, compose("%1", port));
+    boost::asio::ip::tcp::resolver::query query(hostname, fmt::format("{}", port));
 
     try {
         m_address.i = resolver.resolve(query);
@@ -310,7 +308,7 @@ void Juncture::customConnectOperation(const Operation & op, OpVector & res)
 int Juncture::teleportEntity(const LocatedEntity * ent)
 {
     if (m_peer == nullptr) {
-        log(ERROR, "Attempt to teleport through disconnected juncture");
+        spdlog::error("Attempt to teleport through disconnected juncture");
         return -1;
     }
     return m_peer->teleportEntity(ent);

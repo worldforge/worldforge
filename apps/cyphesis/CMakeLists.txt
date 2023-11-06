@@ -163,8 +163,7 @@ endif (Python3_EXECUTABLE)
 #We'll use xmllint for validating schemas of some of our xml files.
 find_program(XMLLINT xmllint)
 
-
-
+find_package(spdlog REQUIRED)
 
 # Add a "check" target, which builds and runs the tests.
 #add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} -E Benchmark)

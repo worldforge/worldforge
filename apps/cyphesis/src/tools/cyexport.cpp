@@ -16,7 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "common/compose.hpp"
 #include "common/log.h"
 #include "common/globals.h"
 #include "common/sockets.h"
@@ -38,7 +37,8 @@ BOOL_OPTION(minds, true, "export", "minds", "Flag to control if minds should als
 
 int main(int argc, char** argv)
 {
-    setLoggingPrefix("EXPORT");
+    //Perhaps tell spdlog to use a prefix?
+    // setLoggingPrefix("EXPORT");
 
     int config_status = loadConfig(argc, argv, USAGE_CYCMD);
     if (config_status < 0) {
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
             showUsage(argv[0], USAGE_CYCMD);
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 
     std::cout << "Attempting local connection" << std::endl;
     if (bridge.connectLocal(localSocket) == 0) {
-        if (bridge.create("sys", create_session_username(), String::compose("%1%2", ::rand(), ::rand())) != 0) {
+        if (bridge.create("sys", create_session_username(), fmt::format("{}{}", ::rand(), ::rand())) != 0) {
             std::cerr << "Could not create sys account." << std::endl;
             return -1;
         }

@@ -44,6 +44,11 @@
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
 #include "../../stubs/physics/stubVector3D.h"
+#include <fmt/ostream.h>
+
+template <> struct fmt::formatter<btVector3> : ostream_formatter {};
+template <> struct fmt::formatter<BroadphaseNativeTypes> : ostream_formatter {};
+
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -52,7 +57,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 
-using String::compose;
 
 
 class GeometryPropertyIntegrationTest : public Cyphesis::TestBase

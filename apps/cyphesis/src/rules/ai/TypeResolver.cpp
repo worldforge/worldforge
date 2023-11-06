@@ -21,7 +21,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 #include <common/log.h>
-#include <common/compose.hpp>
 
 
 const TypeStore& TypeResolver::getTypeStore() const

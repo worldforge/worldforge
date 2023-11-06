@@ -60,10 +60,10 @@ static const bool debug_flag = false;
 
 /// \brief Python type to handle output from python scripts
 ///
-/// In instance of this type is used to replace sys.stdout and sys.stderr
+/// An instance of this type is used to replace sys.stdout and sys.stderr
 /// in the Python interpreter so that all script output goes to the cyphesis
 /// log subsystem
-struct LogWriter : public WrapperBase<LogLevel, LogWriter>
+struct LogWriter : public WrapperBase<spdlog::level::level_enum, LogWriter>
 {
     std::string m_message;
 
@@ -73,13 +73,13 @@ struct LogWriter : public WrapperBase<LogLevel, LogWriter>
 
     }
 
-    LogWriter(Py::PythonClassInstance* self, LogLevel value)
+    LogWriter(Py::PythonClassInstance* self, spdlog::level::level_enum value)
             : WrapperBase(self, value)
     {
 
     }
 
-    void python_log(LogLevel lvl, const std::string& msg)
+    void python_log(spdlog::level::level_enum lvl, const std::string& msg)
     {
 
         m_message += msg;
@@ -88,7 +88,7 @@ struct LogWriter : public WrapperBase<LogLevel, LogWriter>
         for (p = m_message.find_first_of('\n');
              p != std::string::npos;
              p = m_message.find_first_of('\n', n)) {
-            log(lvl, m_message.substr(n, p - n));
+			spdlog::log(lvl, m_message.substr(n, p - n));
             n = p + 1;
         }
         if (m_message.size() > n) {
@@ -142,14 +142,14 @@ Py::Object Get_PyClass(const Py::Module& module,
 {
     auto py_class = module.getAttr(type);
     if (py_class.isNull()) {
-        log(ERROR, String::compose("Could not find python class \"%1.%2\"",
-                                   package, type));
+        spdlog::error("Could not find python class \"{}.{}\"",
+                                   package, type);
         PyErr_Print();
         return Py::Null();
     }
     if (!py_class.isCallable()) {
-        log(ERROR, String::compose("Could not instance python class \"%1.%2\"",
-                                   package, type));
+        spdlog::error("Could not instance python class \"{}.{}\"",
+                                   package, type);
         return Py::Null();
     }
     return py_class;
@@ -164,7 +164,7 @@ Py::Module Get_PyModule(const std::string& package)
     Py::String package_name(package);
     PyObject* module = PyImport_Import(package_name.ptr());
     if (module == nullptr) {
-        log(ERROR, String::compose("Missing python module \"%1\"", package));
+        spdlog::error("Missing python module \"{}\"", package);
         PyErr_Print();
         return Py::Module(nullptr);
     }
@@ -177,9 +177,9 @@ Py::Object Create_PyScript(const Py::Object& wrapper, const Py::Callable& py_cla
         return py_class.apply(Py::TupleN(wrapper));
     } catch (...) {
         if (PyErr_Occurred() == nullptr) {
-            log(ERROR, "Could not create python instance");
+            spdlog::error("Could not create python instance");
         } else {
-            log(ERROR, "Reporting python error");
+            spdlog::error("Reporting python error");
             PyErr_Print();
         }
         return Py::None();
@@ -202,10 +202,10 @@ namespace {
                 auto& path = entry.first;
                 auto module = Get_PyModule(package);
                 if (!module.isNull()) {
-                    log(INFO, String::compose("Reloading module \"%1\" from file %2.", package, path));
+                    spdlog::info("Reloading module \"{}\" from file {}.", package, path.string());
                     auto result = PyImport_ReloadModule(module.ptr());
                     if (result != module.ptr()) {
-                        log(WARNING, String::compose("New pointer returned when reloading module \"%1\".", package));
+                        spdlog::warn("New pointer returned when reloading module \"{}\".", package);
                     }
 
                 }
@@ -255,7 +255,7 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
     //we need to tell Python where to find its stuff. This is done through the PYTHONHOME environment variable.
     //Our build system is setup so that it will inject the preprocessor variable by that same name in that case.
 #if defined(PYTHONHOME)
-    log(INFO, "Setting Python home directory to " PYTHONHOME);
+    spdlog::info("Setting Python home directory to " PYTHONHOME);
     setenv("PYTHONHOME", PYTHONHOME, 1);
 #endif
 
@@ -270,7 +270,7 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
 
     if (usemalloc) {
         setupPythonMalloc();
-        log(INFO, "Python is using malloc for memory allocation.");
+        spdlog::info("Python is using malloc for memory allocation.");
     }
 
     Py_InitializeEx(0);
@@ -288,14 +288,14 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
     Py::Module sys_module(PyImport_Import(Py::String("sys").ptr()));
 
     if (sys_module.isNull()) {
-        log(CRITICAL, "Python could not import sys module");
+        spdlog::critical("Python could not import sys module");
         return;
     }
 
     if (log_stdout) {
         LogWriter::init_type();
-        sys_module.setAttr("stdout", LogWriter::wrap(SCRIPT));
-        sys_module.setAttr("stderr", LogWriter::wrap(SCRIPT_ERROR));
+        sys_module.setAttr("stdout", LogWriter::wrap(spdlog::level::info));
+        sys_module.setAttr("stderr", LogWriter::wrap(spdlog::level::err));
     }
 
     auto sys_path = sys_module.getAttr("path");
@@ -308,13 +308,13 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
             }
 
         } else {
-            log(CRITICAL, "Python sys.path is not a list");
+            spdlog::critical("Python sys.path is not a list");
         }
     } else {
-        log(CRITICAL, "Python could not import sys.path");
+        spdlog::critical("Python could not import sys.path");
     }
 
-    debug_print(Py_GetPath())
+    cy_debug_print(Py_GetPath())
 }
 
 void shutdown_python_api()
@@ -338,7 +338,7 @@ void run_user_scripts(const std::string& prefix)
     if (!path.empty()) {
         path /= "cyphesis";
         path /= (prefix + ".d");
-        log(INFO, String::compose("Looking for extra python scripts in %1.", path));
+        spdlog::info("Looking for extra python scripts in {}.", path.string());
         if (boost::filesystem::is_directory(path)) {
             boost::filesystem::recursive_directory_iterator dir(path), end{};
 
@@ -346,7 +346,7 @@ void run_user_scripts(const std::string& prefix)
                 if (boost::filesystem::is_regular_file(dir->status()) && dir->path().extension() == ".py") {
                     auto fileHandle = fopen(dir->path().c_str(), "r");
                     if (fileHandle) {
-                        log(INFO, String::compose("Running script '%1'.", dir->path().c_str()));
+                        spdlog::info("Running script '{}'.", dir->path().c_str());
                         PyRun_SimpleFileEx(fileHandle, dir->path().c_str(), true);
                         if (PyErr_Occurred()) {
                             PyErr_Print();

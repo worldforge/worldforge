@@ -28,7 +28,6 @@
 #include "common/debug.h"
 #include "common/globals.h"
 #include "common/Inheritance.h"
-#include "common/compose.hpp"
 #include "common/system.h"
 #include "common/sockets.h"
 #include "common/utils.h"
@@ -52,12 +51,12 @@ INT_OPTION(http_port_num, 6780, CYPHESIS, "httpport",
 int main(int argc, char ** argv)
 {
     if (security_init() != 0) {
-        log(CRITICAL, "Security initialisation Error. Exiting.");
+        spdlog::critical("Security initialisation Error. Exiting.");
         return EXIT_SECURITY_ERROR;
     }
 
     if (security_check() != SECURITY_OKAY) {
-        log(CRITICAL, "Security check error. Exiting.");
+        spdlog::critical("Security check error. Exiting.");
         return EXIT_SECURITY_ERROR;
     }
 
@@ -68,14 +67,14 @@ int main(int argc, char ** argv)
         if (config_status == CONFIG_VERSION) {
             std::cout << argv[0] << " (cyphesis) " << consts::version
                       << " (Cyphesis build: " << consts::buildId << ")"
-                      << std::endl << std::flush;
+                      << std::endl;
 
             return 0;
         } else if (config_status == CONFIG_HELP) {
             showUsage(argv[0], USAGE_SERVER);
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file.
         return EXIT_CONFIG_ERROR;
@@ -107,7 +106,7 @@ int main(int argc, char ** argv)
 
     if (((int_id = newId(server_id)) < 0) ||
         ((lobby_int_id = newId(lobby_id)) < 0)) {
-        log(CRITICAL, "Unable to get server IDs from Database");
+        spdlog::critical("Unable to get server IDs from Database");
         return EXIT_DATABASE_ERROR;
     }
 
@@ -126,21 +125,21 @@ int main(int argc, char ** argv)
     CommServer * commServer = new CommServer;
 
     if (commServer->setup() != 0) {
-        log(CRITICAL, "Internal error setting up network infrastructure");
+        spdlog::critical("Internal error setting up network infrastructure");
         return EXIT_SOCKET_ERROR;
     }
 
     CommTCPListener * httpListener = new CommTCPListener(*commServer,
           *new CommHttpClientFactory());
     if (httpListener->setup(http_port_num) != 0) {
-        log(ERROR, String::compose("Could not create http listen socket on "
-                                   "port %1.", http_port_num));
+        spdlog::error("Could not create http listen socket on "
+                                   "port {}.", http_port_num);
         delete httpListener;
     } else {
         commServer->addSocket(httpListener);
     }
 
-    log(INFO, "Running");
+    spdlog::info("Running");
     logEvent(START, "- - - Standalone server startup");
 
     // Inform things that want to know that we are running.
@@ -159,14 +158,14 @@ int main(int argc, char ** argv)
             // exceptions that can be caused  by external influences
             // should be caught close to where they are thrown. If
             // an exception makes it here then it should be debugged.
-            log(ERROR, "Exception caught in main()");
+            spdlog::error("Exception caught in main()");
         }
     }
     // exit flag has been set so we close down the databases, and indicate
     // to the metaserver (if we are using one) that this server is going down.
     // It is assumed that any preparation for the shutdown that is required
     // by the game has been done before exit flag was set.
-    log(NOTICE, "Performing clean shutdown...");
+    spdlog::debug("Performing clean shutdown...");
 
     delete commServer;
 
@@ -174,7 +173,7 @@ int main(int argc, char ** argv)
 
     delete global_conf;
 
-    log(INFO, "Clean shutdown complete.");
+    spdlog::info("Clean shutdown complete.");
     logEvent(STOP, "- - - Standalone server shutdown");
     return 0;
 }

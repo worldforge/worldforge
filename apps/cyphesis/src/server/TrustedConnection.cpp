@@ -21,7 +21,6 @@
 #include "Player.h"
 #include "SystemAccount.h"
 
-#include <common/compose.hpp>
 #include <common/log.h>
 
 /// \brief TrustedConnection constructor
@@ -51,9 +50,9 @@ std::unique_ptr<Account> TrustedConnection::newAccount(const std::string& type,
         return std::make_unique<Admin>(this, username, hash, id);
     } else {
         if (type != "player") {
-            log(WARNING, String::compose("Local client tried to create "
-                                         "account of unknown type \"%1\". "
-                                         "Creating Player.", type));
+            spdlog::warn("Local client tried to create "
+                                         "account of unknown type \"{}\". "
+                                         "Creating Player.", type);
         }
         return std::make_unique<Player>(this, username, hash, id);
     }

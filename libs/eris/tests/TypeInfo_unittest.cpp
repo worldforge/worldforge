@@ -50,7 +50,7 @@ using namespace Eris;
 using namespace Atlas::Objects::Operation;
 
 static void writeLog(Eris::LogLevel, const std::string& msg) {
-	std::cerr << msg << std::endl << std::flush;
+	std::cerr << msg << std::endl;
 }
 
 boost::asio::io_service io_service;
@@ -66,7 +66,7 @@ public:
 
 	virtual void send(const Atlas::Objects::Root& obj) {
 		std::cout << "Sending " << obj->getParent()
-				  << std::endl << std::flush;
+				  << std::endl;
 	}
 };
 

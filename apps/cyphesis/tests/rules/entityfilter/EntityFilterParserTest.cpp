@@ -219,7 +219,7 @@ std::shared_ptr<Predicate> ParserTest::ConstructPredicate(const std::string& que
 
     if (!(parse_success && iter_begin == iter_end)) {
         throw std::invalid_argument(
-                String::compose("Attempted creating entity filter with invalid query: %1", query));
+                fmt::format("Attempted creating entity filter with invalid query: {}", query));
     }
     assert(pred.get());
 

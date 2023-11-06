@@ -74,7 +74,7 @@ PossessionClient::~PossessionClient()
 
 void PossessionClient::notifyAccountCreated(RouterId accountId)
 {
-    log(INFO, "Creating possession account on server.");
+    spdlog::info("Creating possession account on server.");
     m_account = std::make_unique<PossessionAccount>(accountId, m_mindFactory, *this);
     OpVector res;
     m_account->enablePossession(res);
@@ -131,23 +131,23 @@ void PossessionClient::processResponses(const OpVector& incomingRes, OpVector& o
         if (debug_flag) {
             std::cout << "PossessionClient::operation return {" << std::endl;
             debug_dump(resOp, std::cout);
-            std::cout << "}" << std::endl << std::flush;
+            std::cout << "}" << std::endl;
         }
         //Any op with both "from" and "to" set should be re-sent.
         if ((!resOp->isDefaultTo() && !resOp->isDefaultFrom())) {
             auto mind = m_account->findMindForId(resOp->getTo());
             if (mind) {
                 resolveDispatchTimeForOp(*resOp);
-                m_operationsDispatcher.addOperationToQueue(std::move(resOp), std::move(mind));
+                m_operationsDispatcher.addOperationToQueue(resOp, std::move(mind));
                 updatedDispatcher = true;
             } else {
-                log(WARNING, String::compose("Resulting op of type '%1' is set to the mind with id '%2', which can't be found.", resOp->getParent(), resOp->getTo()));
+                spdlog::warn("Resulting op of type '{}' is set to the mind with id '{}', which can't be found.", resOp->getParent(), resOp->getTo());
             }
         } else {
             //            if (resOp->getClassNo() != Atlas::Objects::Operation::TICK_NO) {
-            //                log(INFO, String::compose("Out %1 from %2", resOp->getParent(), resOp->getFrom()));
+            //                spdlog::info("Out {} from {}", resOp->getParent(), resOp->getFrom());
             //            }
-            outgoingRes.emplace_back(std::move(resOp));
+            outgoingRes.emplace_back(resOp);
         }
     }
     if (updatedDispatcher) {
@@ -161,7 +161,7 @@ void PossessionClient::processOperation(const Operation& op, OpVector& res)
     if (debug_flag) {
         std::cout << "PossessionClient::operation received {" << std::endl;
         debug_dump(op, std::cout);
-        std::cout << "}" << std::endl << std::flush;
+        std::cout << "}" << std::endl;
     }
 
     OpVector accountRes;

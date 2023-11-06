@@ -20,10 +20,10 @@
 #endif
 
 #include "binreloc.h"
-#include "compose.hpp"
 #include "globals.h"
 #include "system.h"
 #include <iostream>
+#include <fmt/format.h>
 
 void getinstallprefix()
 {
@@ -35,6 +35,6 @@ void getinstallprefix()
 
     etc_directory = br_find_etc_dir("");
     share_directory = br_find_data_dir("data");
-    var_directory = String::compose("%1/var", br_find_prefix(""));
+    var_directory = fmt::format("{}/var", br_find_prefix(""));
     bin_directory = br_find_bin_dir("bin");
 }

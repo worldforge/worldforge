@@ -68,11 +68,11 @@ void CommPythonClient::read(size_t bytes)
         int next = mBuffer[i];
         if (next == '\n') {
             if (m_incoming.empty()) {
-                std::cout << "[NOT]" << std::endl << std::flush;
+                std::cout << "[NOT]" << std::endl;
             } else {
-                // std::cout << m_incoming << std::endl << std::flush;
+                // std::cout << m_incoming << std::endl;
                 std::cout << "[" << m_pyContext->runCommand(m_incoming)
-                          << "]" << std::endl << std::flush;
+                          << "]" << std::endl;
                 m_incoming.clear();
             }
         } else if (next == '\r') {

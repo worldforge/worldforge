@@ -130,7 +130,7 @@ HandlerResult MindsProperty::operation(LocatedEntity& ent, const Operation& op, 
         return RelayOperation(ent, op, res);
     } else {
         if (world2mind(op)) {
-            debug_print("MindsProperty::operation(" << op->getParent() << ") passed to mind")
+            cy_debug_print("MindsProperty::operation(" << op->getParent() << ") passed to mind")
             OpVector mres;
             sendToMinds(op, mres);
             for (auto& resOp: mres) {
@@ -222,14 +222,14 @@ HandlerResult MindsProperty::ThoughtOperation(LocatedEntity& ent, const Operatio
 /// @param res The filtered result is returned here.
 void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("Got Use op from mind")
+    cy_debug_print("Got Use op from mind")
 
     //Make sure that the first contained arg is another Use operation,
     // which is then sent to the actual tool.
 
     auto& args = op->getArgs();
     if (args.empty()) {
-        log(ERROR, "mindUseOperation: use op has no arguments. " + ent.describeEntity());
+        spdlog::error("mindUseOperation: use op has no arguments. " + ent.describeEntity());
         return;
     }
 
@@ -240,23 +240,23 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
         //TODO: should we perhaps check that this only can be Action ops?
         auto innerOp = smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(args.front());
         if (!innerOp) {
-            log(ERROR, "mindUseOperation: Second arg is not an operation. " + ent.describeEntity());
+            spdlog::error("mindUseOperation: Second arg is not an operation. " + ent.describeEntity());
             return;
         }
 
         auto& innerArgs = innerOp->getArgs();
         if (innerArgs.empty()) {
-            log(ERROR, "mindUseOperation: inner use op has no arguments. " + ent.describeEntity());
+            spdlog::error("mindUseOperation: inner use op has no arguments. " + ent.describeEntity());
             return;
         }
 
         auto toolEnt = smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(innerArgs.front());
         if (!toolEnt) {
-            log(ERROR, "mindUseOperation: First inner arg is not an entity. " + ent.describeEntity());
+            spdlog::error("mindUseOperation: First inner arg is not an entity. " + ent.describeEntity());
             return;
         }
         if (!toolEnt->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-            log(ERROR, "mindMoveOperation: First inner arg has no ID. " + ent.describeEntity());
+            spdlog::error("mindMoveOperation: First inner arg has no ID. " + ent.describeEntity());
             return;
         }
 
@@ -276,7 +276,7 @@ void MindsProperty::mindUseOperation(LocatedEntity& ent, const Operation& op, Op
 /// @param res The filtered result is returned here.
 void MindsProperty::mindWieldOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("Got Wield op from mind")
+    cy_debug_print("Got Wield op from mind")
     op->setTo(ent.getId());
     res.push_back(op);
 }
@@ -287,19 +287,19 @@ void MindsProperty::mindWieldOperation(LocatedEntity& ent, const Operation& op, 
 /// @param res The filtered result is returned here.
 void MindsProperty::mindMoveOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("MindsProperty::mind_move_op")
+    cy_debug_print("MindsProperty::mind_move_op")
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        log(ERROR, "mindMoveOperation: move op has no argument. " + ent.describeEntity());
+        spdlog::error("mindMoveOperation: move op has no argument. " + ent.describeEntity());
         return;
     }
     const RootEntity arg = smart_dynamic_cast<RootEntity>(args.front());
     if (!arg.isValid()) {
-        log(ERROR, "mindMoveOperation: Arg is not an entity. " + ent.describeEntity());
+        spdlog::error("mindMoveOperation: Arg is not an entity. " + ent.describeEntity());
         return;
     }
     if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        log(ERROR, "mindMoveOperation: Arg has no ID. " + ent.describeEntity());
+        spdlog::error("mindMoveOperation: Arg has no ID. " + ent.describeEntity());
         return;
     }
     const std::string& other_id = arg->getId();
@@ -313,7 +313,7 @@ void MindsProperty::mindMoveOperation(LocatedEntity& ent, const Operation& op, O
 
 void MindsProperty::moveOtherEntity(LocatedEntity& ent, const Operation& op, OpVector& res, const RootEntity& arg, const std::string& other_id) const
 {
-    debug_print("Moving something else. " << other_id)
+    cy_debug_print("Moving something else. " << other_id)
     auto other = BaseWorld::instance().getEntity(other_id);
     if (!other) {
         Unseen u;
@@ -448,7 +448,7 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
 {
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        log(ERROR, "mindSetOperation: set op has no argument. " + ent.describeEntity());
+        spdlog::error("mindSetOperation: set op has no argument. " + ent.describeEntity());
         return;
     }
 
@@ -475,21 +475,21 @@ void MindsProperty::mindSetOperation(LocatedEntity& ent, const Operation& op, Op
                     if (mag > 1.0) {
                         new_propel.normalize();
                     }
-                    cleanedArg->setAttr(std::move(entry.first), new_propel.toAtlas());
+                    cleanedArg->setAttr(entry.first, new_propel.toAtlas());
                 }
             } catch (...) {
                 //just ignore malformed data
             }
 
         } else if (entry.first == "_direction") {
-            cleanedArg->setAttr(std::move(entry.first), std::move(entry.second));
+            cleanedArg->setAttr(entry.first, std::move(entry.second));
         } else if (entry.first == "_destination") {
-            cleanedArg->setAttr(std::move(entry.first), std::move(entry.second));
+            cleanedArg->setAttr(entry.first, std::move(entry.second));
         } else if (entry.first == "id") {
             //no-op
         } else {
-            log(ERROR, String::compose("mindSetOperation: set op tried to set non-allowed property '%1' on entity %2. ",
-                                       entry.first, ent.describeEntity()));
+            spdlog::error("mindSetOperation: set op tried to set non-allowed property '{}' on entity {}. ",
+                                       entry.first, ent.describeEntity());
         }
     }
     setOp->setArgs1(std::move(cleanedArg));
@@ -533,7 +533,7 @@ void MindsProperty::mindImaginaryOperation(LocatedEntity& ent, const Operation& 
 /// @param res The filtered result is returned here.
 void MindsProperty::mindTalkOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("MindsProperty::mindTalkOperation")
+    cy_debug_print("MindsProperty::mindTalkOperation")
     op->setTo(ent.getId());
     res.push_back(op);
 }
@@ -544,7 +544,7 @@ void MindsProperty::mindTalkOperation(LocatedEntity& ent, const Operation& op, O
 /// @param res The filtered result is returned here.
 void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("Got look up from mind from [" << op->getFrom() << "] to [" << op->getTo() << "]")
+    cy_debug_print("Got look up from mind from [" << op->getFrom() << "] to [" << op->getTo() << "]")
 
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
@@ -558,13 +558,13 @@ void MindsProperty::mindLookOperation(LocatedEntity& ent, const Operation& op, O
         //TODO: handle multiple entities being looked at in one op, up to some limit.
         const Root& arg = args.front();
         if (arg->isDefaultId()) {
-            log(ERROR, ent.describeEntity() + " mindLookOperation: Op has no ID");
+            spdlog::error(ent.describeEntity() + " mindLookOperation: Op has no ID");
             return;
         }
         op->setTo(arg->getId());
     }
-    debug_print("  now to [" << op->getTo() << "]")
-    res.push_back(std::move(op));
+    cy_debug_print("  now to [" << op->getTo() << "]")
+    res.push_back(op);
 }
 
 /// \brief Filter a GoalInfo operation coming from the mind
@@ -586,12 +586,12 @@ void MindsProperty::mindTouchOperation(LocatedEntity& ent, const Operation& op, 
     // Work out what is being touched.
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        log(ERROR, "mindTouchOperation: Op has no ARGS");
+        spdlog::error("mindTouchOperation: Op has no ARGS");
         return;
     }
     auto arg = smart_dynamic_cast<Atlas::Objects::Entity::Anonymous>(args.front());
     if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        log(ERROR, ent.describeEntity() + " mindTouchOperation: Op has no ID");
+        spdlog::error(ent.describeEntity() + " mindTouchOperation: Op has no ID");
         return;
     }
 
@@ -624,7 +624,7 @@ void MindsProperty::mindTouchOperation(LocatedEntity& ent, const Operation& op, 
 /// @param res The filtered result is returned here.
 void MindsProperty::mindOtherOperation(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    log(WARNING, String::compose("Passing '%1' op from mind through to world. %2", op->getParent(), ent.describeEntity()));
+    spdlog::warn("Passing '{}' op from mind through to world. {}", op->getParent(), ent.describeEntity());
     op->setTo(ent.getId());
     res.push_back(op);
 }
@@ -661,15 +661,15 @@ void MindsProperty::mindThinkOperation(LocatedEntity& ent, const Operation& op, 
 /// @param res The result of the operation is returned here.
 void MindsProperty::mind2body(LocatedEntity& ent, const Operation& op, OpVector& res) const
 {
-    debug_print("MindsProperty::mind2body(" << op->getParent() << ") " << ent.describeEntity())
+    cy_debug_print("MindsProperty::mind2body(" << op->getParent() << ") " << ent.describeEntity())
 
     if (!op->isDefaultTo()) {
-        log(ERROR, String::compose("Operation \"%1\" from mind with TO set. %2", op->getParent(), ent.describeEntity()));
+        spdlog::error("Operation \"{}\" from mind with TO set. {}", op->getParent(), ent.describeEntity());
         return;
     }
     if (!op->isDefaultFutureSeconds() && op->getClassNo() != Atlas::Objects::Operation::TICK_NO) {
-        log(ERROR, String::compose("Operation \"%1\" from mind with "
-                                   "FUTURE_SECONDS set. %2", op->getParent(), ent.describeEntity()));
+        spdlog::error("Operation \"{}\" from mind with "
+                                   "FUTURE_SECONDS set. {}", op->getParent(), ent.describeEntity());
     }
     auto op_no = op->getClassNo();
     switch (op_no) {

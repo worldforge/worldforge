@@ -20,7 +20,23 @@
 #define TESTS_ASSERT_BASE_H
 
 #include <cmath>
+#include <fmt/format.h>
+#include <list>
 
+namespace {
+//	template <typename T>
+//	std::string stringify(const T* ptr) {
+//		return fmt::to_string(fmt::ptr(ptr));
+//	}
+	template <typename T>
+	std::string stringify(const T& value) {
+		if constexpr (std::is_pointer<T>()) {
+			return fmt::to_string(fmt::ptr(value));
+		} else {
+			return fmt::to_string(value);
+		}
+	}
+}
 
 namespace Cyphesis {
 
@@ -100,7 +116,7 @@ namespace Cyphesis {
                                const char * func, const char * file, int line)
     {
         if (!val) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4' failed.",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
                                        file, line, func, n));
             return -1;
         }
@@ -112,7 +128,7 @@ namespace Cyphesis {
                                 const char * func, const char * file, int line)
     {
         if (val) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4' failed.",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
                                        file, line, func, n));
             return -1;
         }
@@ -125,9 +141,9 @@ namespace Cyphesis {
                                 const char * func, const char * file, int line)
     {
         if (lval != rval) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 == %5' failed. "
-                                       "%6 != %7",
-                                       file, line, func, l, r, lval, rval));
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} == {}' failed. "
+                                       "{} != {}",
+                                       file, line, func, l, r, stringify(lval), stringify(rval)));
             return -1;
         }
         return 0;
@@ -140,9 +156,9 @@ namespace Cyphesis {
                                      const char * func, const char * file, int line)
     {
         if (std::abs(lval - rval) > epsilon) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 ~= %5' failed. "
-                                       "%6 != %7",
-                                       file, line, func, l, r, lval, rval));
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} ~= {}' failed. "
+                                       "{} != {}",
+                                       file, line, func, l, r, stringify(lval), stringify(rval)));
             return -1;
         }
         return 0;
@@ -154,9 +170,9 @@ namespace Cyphesis {
                                    const char * func, const char * file, int line)
     {
         if (lval == rval) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 != %5' failed. "
-                                       "%6 == %7",
-                                       file, line, func, l, r, lval, rval));
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} != {}' failed. "
+                                       "{} == {}",
+                                       file, line, func, l, r, stringify(lval), stringify(rval)));
             return -1;
         }
         return 0;
@@ -168,8 +184,8 @@ namespace Cyphesis {
                                   const char * func, const char * file, int line)
     {
         if (lval <= rval) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 > %5' failed. "
-                                       "%6 <= %7",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} > {}' failed. "
+                                       "{} <= {}",
                                        file, line, func, l, r, lval, rval));
             return -1;
         }
@@ -182,8 +198,8 @@ namespace Cyphesis {
                                const char * func, const char * file, int line)
     {
         if (lval >= rval) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 < %5' failed. "
-                                       "%6 >= %7",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} < {}' failed. "
+                                       "{} >= {}",
                                        file, line, func, l, r, lval, rval));
             return -1;
         }
@@ -195,7 +211,7 @@ namespace Cyphesis {
                                const char * func, const char * file, int line)
     {
         if (ptr != 0) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4' null failed.",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{}' null failed.",
                                        file, line, func, n));
             return -1;
         }
@@ -207,7 +223,7 @@ namespace Cyphesis {
                                   const char * func, const char * file, int line)
     {
         if (ptr == 0) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4' not null failed.",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{}' not null failed.",
                                        file, line, func, n));
             return -1;
         }

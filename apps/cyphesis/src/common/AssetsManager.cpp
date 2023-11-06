@@ -21,7 +21,6 @@
 #include "FileSystemObserver.h"
 #include "globals.h"
 #include "log.h"
-#include "compose.hpp"
 
 AssetsManager::AssetsManager(FileSystemObserver& file_system_observer)
         : m_file_system_observer(file_system_observer) {
@@ -31,11 +30,10 @@ AssetsManager::AssetsManager(FileSystemObserver& file_system_observer)
     } else {
         mAssetsPath = std::filesystem::path(CYPHESIS_RAW_ASSETS_DIRECTORY);
         if (std::filesystem::exists(mAssetsPath)) {
-            log(INFO, String::compose("Could not find any assets directory in '%1' but found raw assets in '%2'.", assets_directory, CYPHESIS_RAW_ASSETS_DIRECTORY));
+			spdlog::info("Could not find any assets directory in '{}' but found raw assets in '{}'.", assets_directory, CYPHESIS_RAW_ASSETS_DIRECTORY);
         } else {
-            log(ERROR,
-                String::compose("Could not find neither assets directory in '%1' or found raw assets in '%2'. Will continue but the server will probably not function correctly.", assets_directory,
-                                CYPHESIS_RAW_ASSETS_DIRECTORY));
+			spdlog::error("Could not find neither assets directory in '{}' or found raw assets in '{}'. Will continue but the server will probably not function correctly.", assets_directory,
+                                CYPHESIS_RAW_ASSETS_DIRECTORY);
         }
     }
 

@@ -34,7 +34,6 @@
 #include "rules/simulation/Entity.h"
 
 #include "common/CommSocket.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -44,8 +43,6 @@
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
-
-using String::compose;
 
 class SystemAccounttest : public Cyphesis::TestBase
 {

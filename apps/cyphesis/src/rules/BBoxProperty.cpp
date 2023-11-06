@@ -50,7 +50,7 @@ void BBoxProperty::set(const Element& val)
         m_data.fromAtlas(val.asList());
     }
     catch (Atlas::Message::WrongTypeException&) {
-        log(ERROR, "BBoxProperty::set: Box bbox data");
+        spdlog::error("BBoxProperty::set: Box bbox data");
     }
 }
 

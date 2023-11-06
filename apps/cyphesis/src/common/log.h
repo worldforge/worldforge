@@ -21,15 +21,8 @@
 
 #include <string>
 #include <functional>
+#include <spdlog/spdlog.h>
 
-// Some systems pollute the namespace with defines of ERROR and perhaps
-// others.
-#undef ERROR
-
-typedef enum log_level { INFO, SCRIPT, NOTICE,
-                         WARNING, CYLOG_ERROR, ERROR = CYLOG_ERROR,
-                         SCRIPT_ERROR,
-                         CRITICAL } LogLevel;
 
 typedef enum log_event { NONE = 0,
                          START,          // Server binary started
@@ -45,20 +38,7 @@ typedef enum log_event { NONE = 0,
                          POSSESS_CHAR,   // Imported avatar claimed
 } LogEvent;
 
-/**
- * An optional function which will be called before anything is written to the log.
- */
-extern std::function<std::string()> s_logPrefixFn;
-
-void setLoggingPrefix(std::string prefix);
-
-void initLogger();
-void rotateLogger();
-void log(LogLevel, const std::string & msg);
-void log_formatted(LogLevel, const std::string & msg);
 void logEvent(LogEvent, const std::string & msg);
-void logSysError(LogLevel);
 
-bool testEventLog(const char * path);
 
 #endif // COMMON_LOG_H

@@ -23,7 +23,6 @@
 
 #include "common/log.h"
 #include "common/debug.h"
-#include "common/compose.hpp"
 #include "common/PropertyManager.h"
 #include "common/PropertyFactory.h"
 
@@ -32,7 +31,6 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -60,13 +58,13 @@ int PropertyRuleHandler::install(const std::string& name,
 {
     assert(desc->getObjtype() == "type");
     if (m_propertyManager.getPropertyFactory(name) != nullptr) {
-        log(ERROR, compose("Property rule \"%1\" already exists.", name));
+        spdlog::error("Property rule \"{}\" already exists.", name);
         return -1;
     }
     PropertyKit* parent_factory = m_propertyManager.getPropertyFactory(parent);
     if (parent_factory == nullptr) {
         dependent = parent;
-        reason = compose("Property rule \"%1\" has parent \"%2\" which does "
+        reason = fmt::format("Property rule \"{}\" has parent \"{}\" which does "
                          "not exist.", name, parent);
         return 1;
     }

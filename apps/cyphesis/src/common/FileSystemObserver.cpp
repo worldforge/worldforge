@@ -21,7 +21,6 @@
 #include "FileSystemObserver.h"
 
 #include "log.h"
-#include "compose.hpp"
 #include "Remotery.h"
 
 #include <boost/algorithm/string.hpp>
@@ -34,7 +33,7 @@ FileSystemObserver::FileSystemObserver(boost::asio::io_context& ioService)
         mDirectoryMonitor = std::make_unique<boost::asio::dir_monitor>(ioService);
         observe();
     } catch (const boost::exception& e) {
-        log(WARNING, "Could not initialize file system observer; probably due to running out of file descriptors.");
+        spdlog::warn("Could not initialize file system observer; probably due to running out of file descriptors.");
     }
 }
 
@@ -70,7 +69,7 @@ void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, s
         try {
             mDirectoryMonitor->add_directory(dirname.string());
         } catch (...) {
-            log(WARNING, String::compose("Could not observe directory %1", dirname.string()));
+            spdlog::warn("Could not observe directory {}", dirname.string());
         }
         mCallBacks.emplace(dirname, std::move(callback));
     }

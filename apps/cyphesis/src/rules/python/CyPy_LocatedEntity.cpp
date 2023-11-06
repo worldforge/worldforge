@@ -46,7 +46,7 @@ Py::Object wrapLocatedEntity(Ref<LocatedEntity> le)
             return wrapped;
         }
     }
-    throw Py::TypeError(String::compose("Tried to wrap located entity '%1' but could not find any wrapper provider.", le->describeEntity()));
+    throw Py::TypeError(fmt::format("Tried to wrap located entity '{}' but could not find any wrapper provider.", le->describeEntity()));
 
 }
 

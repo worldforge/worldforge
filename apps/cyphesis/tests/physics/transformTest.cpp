@@ -37,7 +37,7 @@ int main()
 
         const WFMath::Point<3> transformed = position.toParentCoords(WFMath::Point<3>(0,2,0), WFMath::Quaternion(1,0,0,0));
 
-        std::cout << position << ", " << transformed << std::endl << std::flush;
+        std::cout << position << ", " << transformed << std::endl;
     }
 
     {
@@ -45,35 +45,35 @@ int main()
 
         const WFMath::Point<3> transformed = position.toLocalCoords(WFMath::Point<3>(0,2,0), WFMath::Quaternion(1,0,0,0));
 
-        std::cout << position << ", " << transformed << std::endl << std::flush;
+        std::cout << position << ", " << transformed << std::endl;
     }
 
     {
         WFMath::Vector<3> direction(0, 1, 0);
         const WFMath::Quaternion quat(0.707, 0, 0, 0.707);
 
-        std::cout << direction << std::endl << std::flush;
+        std::cout << direction << std::endl;
 
-        std::cout << direction.rotate(quat) << std::endl << std::flush;
+        std::cout << direction.rotate(quat) << std::endl;
     }
 
     {
         WFMath::Vector<3> direction(0, 1, 0);
         const WFMath::Quaternion quat(-1, 0, 0, 0);
 
-        std::cout << direction << std::endl << std::flush;
+        std::cout << direction << std::endl;
 
-        std::cout << direction.rotate(quat) << std::endl << std::flush;
+        std::cout << direction.rotate(quat) << std::endl;
     }
 
     {
         WFMath::Quaternion quat(1, 0, 0, 0);
         const WFMath::Quaternion rot(0.707, 0, 0, 0.707);
-        std::cout << quat << std::endl << std::flush;
+        std::cout << quat << std::endl;
         quat *= rot;
-        std::cout << quat << std::endl << std::flush;
+        std::cout << quat << std::endl;
         quat /= rot;
-        std::cout << quat << std::endl << std::flush;
+        std::cout << quat << std::endl;
     }
 
     return ret;

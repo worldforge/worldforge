@@ -316,7 +316,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
             for (auto expectedThing : expectedThings) {
                 auto I = std::find_if(std::begin(res), std::end(res), [&](Operation entry) { return entry->getTo() == expectedThing->getId(); });
                 if (I == std::end(res)) {
-                    addFailure(String::compose("Could not find entity id '%1' in list of broadcasts.", expectedThing->getId()));
+                    addFailure(fmt::format("Could not find entity id '{}' in list of broadcasts.", expectedThing->getId()));
                     return false;
                 } else {
                     res.erase(I);
@@ -325,7 +325,7 @@ struct ThingIntegration : public Cyphesis::TestBaseWithContext<Context>
 
             if (!res.empty()) {
                 for (auto& op : res) {
-                    addFailure(String::compose("Found broadcast op to '%1' which was not expected.", op->getTo()));
+                    addFailure(fmt::format("Found broadcast op to '{}' which was not expected.", op->getTo()));
                 }
                 return false;
             }

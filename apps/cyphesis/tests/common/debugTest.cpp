@@ -37,19 +37,6 @@ using Atlas::Message::ListType;
 
 int main()
 {
-    {
-        static const bool debug_flag = true;
-        bool flag_set = false;
-        debug(flag_set = true;);
-        assert(flag_set == true);
-    }
-
-    {
-        static const bool debug_flag = false;
-        bool flag_set = false;
-        debug(flag_set = true;);
-        assert(flag_set == false);
-    }
 
     {
         // Test debug dumping an empty map

@@ -36,7 +36,6 @@
 
 #include <varconf/config.h>
 
-#include "common/compose.hpp"
 #include "DatabaseCreation.h"
 
 
@@ -78,7 +77,7 @@ namespace {
                       << std::string(max_length - strlen(I->sys_name), ' ')
                       << I->sys_description << std::endl;
         }
-        std::cout << std::endl << std::flush;
+        std::cout << std::endl;
         return 0;
     }
 
@@ -88,12 +87,12 @@ namespace {
     {
         std::string cmd = "DELETE FROM entities WHERE loc IS NOT null";
         if (Database::instance().runCommandQuery(cmd) != 0) {
-            std::cout << "Entity purge fail" << std::endl << std::flush;
+            std::cout << "Entity purge fail" << std::endl;
             return 1;
         }
         cmd = "DELETE FROM properties";
         if (Database::instance().runCommandQuery(cmd) != 0) {
-            std::cout << "Property purge fail" << std::endl << std::flush;
+            std::cout << "Property purge fail" << std::endl;
             return 1;
         }
         return 0;
@@ -104,7 +103,7 @@ namespace {
     {
         std::string cmd = "DELETE FROM accounts WHERE username != 'admin'";
         if (Database::instance().runCommandQuery(cmd) != 0) {
-            std::cout << "User purge fail" << std::endl << std::flush;
+            std::cout << "User purge fail" << std::endl;
             return 1;
         }
         return 0;
@@ -121,7 +120,7 @@ namespace {
             std::string name = I.column("username");
             std::string type = I.column("type");
             std::cout << (type == "admin" ? "*" : " ") << name
-                      << std::endl << std::flush;
+                      << std::endl;
         }
 
         return 0;
@@ -132,27 +131,27 @@ namespace {
     {
         if (argc != 2) {
             std::cout << "usage: " << system->sys_name
-                      << " <username>" << std::endl << std::flush;
+                      << " <username>" << std::endl;
             return 1;
         }
         std::string id = argv[1];
-        std::string cmd = String::compose("SELECT username FROM accounts "
-                                          "WHERE username='%1'", id);
+        std::string cmd = fmt::format("SELECT username FROM accounts "
+                                          "WHERE username='{}'", id);
         DatabaseResult res = Database::instance().runSimpleSelectQuery(cmd);
         if (res.size() == 0) {
             std::cout << "User account " << id << " not found"
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
         if (res.size() != 1) {
             std::cout << "ERROR: Multiple accounts match " << id
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
-        cmd = String::compose("DELETE FROM accounts WHERE "
-                              "username = '%1'", id);
+        cmd = fmt::format("DELETE FROM accounts WHERE "
+                              "username = '{}'", id);
         if (Database::instance().runCommandQuery(cmd) != 0) {
-            std::cout << "User delete fail" << std::endl << std::flush;
+            std::cout << "User delete fail" << std::endl;
             return 1;
         }
 
@@ -176,7 +175,7 @@ namespace {
                 default:
                     std::cout << "usage: " << system->sys_name
                               << " [-t TYPE|-p PASSWORD] USERNAME"
-                              << std::endl << std::flush;
+                              << std::endl;
                     return 1;
             }
         }
@@ -184,21 +183,21 @@ namespace {
         if (argc - optind != 1 || (type == 0 && password == 0)) {
             std::cout << "usage: " << system->sys_name
                       << " [-t TYPE] [-p PASSWORD] USERNAME"
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
         std::string id = argv[optind];
-        std::string cmd = String::compose("SELECT username, type FROM accounts "
-                                          "WHERE username='%1'", id);
+        std::string cmd = fmt::format("SELECT username, type FROM accounts "
+                                          "WHERE username='{}'", id);
         DatabaseResult res = Database::instance().runSimpleSelectQuery(cmd);
         if (res.size() == 0) {
             std::cout << "User account " << id << " not found"
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
         if (res.size() != 1) {
             std::cout << "ERROR: Multiple accounts match " << id
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
         if (type != 0) {
@@ -207,29 +206,29 @@ namespace {
                 new_type != "disabled") {
                 std::cout << "ERROR: Account type must be one of "
                              "\"player\", \"admin\" or \"disabled\""
-                          << std::endl << std::flush;
+                          << std::endl;
             }
             // FIXME Verify the account exists.
-            cmd = String::compose("UPDATE accounts SET type = '%1' WHERE "
-                                  "username = '%2'", new_type, id);
+            cmd = fmt::format("UPDATE accounts SET type = '{}' WHERE "
+                                  "username = '{}'", new_type, id);
             if (Database::instance().runCommandQuery(cmd) != 0) {
-                std::cout << "User mod type fail" << std::endl << std::flush;
+                std::cout << "User mod type fail" << std::endl;
                 return 1;
             }
             std::cout << "Account type updated."
-                      << std::endl << std::flush;
+                      << std::endl;
         }
         if (password != 0) {
             std::string new_pass;
             encrypt_password(password, new_pass);
-            cmd = String::compose("UPDATE accounts SET password = '%1' WHERE "
-                                  "username = '%2'", new_pass, id);
+            cmd = fmt::format("UPDATE accounts SET password = '{}' WHERE "
+                                  "username = '{}'", new_pass, id);
             if (Database::instance().runCommandQuery(cmd) != 0) {
-                std::cout << "User mod password fail" << std::endl << std::flush;
+                std::cout << "User mod password fail" << std::endl;
                 return 1;
             }
             std::cout << "Account password updated."
-                      << std::endl << std::flush;
+                      << std::endl;
         }
 
         return 0;
@@ -240,7 +239,7 @@ namespace {
     {
         struct dbsys* subsyss = system->sys_subsys;
         if (subsyss == 0) {
-            std::cout << "INTERNAL ERROR" << std::endl << std::flush;
+            std::cout << "INTERNAL ERROR" << std::endl;
             return 1;
         }
         int nargc = argc - 1;
@@ -256,7 +255,7 @@ namespace {
         }
         std::cout << "ERROR: No such command: "
                   << system->sys_name << " " << nargv[0]
-                  << std::endl << std::endl << std::flush;
+                  << std::endl << std::endl;
         dbs_help(ab, system, argc, argv);
         return 0;
     }
@@ -315,7 +314,7 @@ namespace {
 //        rl_callback_handler_install(prompt.c_str(), &gotCommand);
 //        rl_completion_entry_function = &completion_generator;
 //
-//        std::cout << std::endl << std::flush;
+//        std::cout << std::endl;
 //        rl_callback_handler_remove();
 //    }
 
@@ -356,7 +355,7 @@ namespace {
             size_t space = arg.find(' ');
             if (space == std::string::npos || space >= (arg.size() - 1)) {
                 std::cout << "usage: install <type id> <parent id>"
-                          << std::endl << std::flush;
+                          << std::endl;
             } else {
                 Create c;
                 c->setFrom(accountId);
@@ -407,7 +406,7 @@ namespace {
         } else if (cmd == "reload") {
             if (arg.empty()) {
                 reply_expected = false;
-                std::cout << "reload: Argument required" << std::endl << std::flush;
+                std::cout << "reload: Argument required" << std::endl;
             } else {
                 Set s;
 
@@ -463,7 +462,7 @@ namespace {
                           << monitor_time << " seconds = "
                           << om->count() / monitor_time
                           << " operations per second"
-                          << std::endl << std::flush;
+                          << std::endl;
 
                 endTask();
             }
@@ -498,10 +497,10 @@ namespace {
             encoder->streamObjectsMessage(c);
         } else if (cmd == "delete") {
             if (agentId.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else if (arg.empty()) {
-                std::cout << "Please specify the entity to delete" << std::endl << std::flush;
+                std::cout << "Please specify the entity to delete" << std::endl;
                 reply_expected = false;
             } else {
                 Delete del;
@@ -518,10 +517,10 @@ namespace {
             }
         } else if (cmd == "find_by_name") {
             if (agentId.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else if (arg.empty()) {
-                std::cout << "Please specify the name to search for" << std::endl << std::flush;
+                std::cout << "Please specify the name to search for" << std::endl;
                 reply_expected = false;
             } else {
                 Look l;
@@ -537,10 +536,10 @@ namespace {
             }
         } else if (cmd == "find_by_type") {
             if (agentId.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else if (arg.empty()) {
-                std::cout << "Please specify the type to search for" << std::endl << std::flush;
+                std::cout << "Please specify the type to search for" << std::endl;
                 reply_expected = false;
             } else {
                 Look l;
@@ -556,10 +555,10 @@ namespace {
             }
         } else if (cmd == "flush") {
             if (agentId.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else if (arg.empty()) {
-                std::cout << "Please specify the type to flush" << std::endl << std::flush;
+                std::cout << "Please specify the type to flush" << std::endl;
                 reply_expected = false;
             } else {
                 AdminTask * task = new Flusher(agentId);
@@ -568,10 +567,10 @@ namespace {
             }
         } else if (cmd == "creator_create") {
             if (agentId.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else if (arg.empty()) {
-                std::cout << "Use add_agent to add an in-game agent first" << std::endl << std::flush;
+                std::cout << "Use add_agent to add an in-game agent first" << std::endl;
                 reply_expected = false;
             } else {
                 Create c;
@@ -587,11 +586,11 @@ namespace {
             }
         } else if (cmd == "cancel") {
             if (endTask() != 0) {
-                std::cout << "No task currently running" << std::endl << std::flush;
+                std::cout << "No task currently running" << std::endl;
             }
         } else {
             reply_expected = false;
-            std::cout << cmd << ": Command not known" << std::endl << std::flush;
+            std::cout << cmd << ": Command not known" << std::endl;
         }
 
         ios << std::flush;
@@ -601,7 +600,7 @@ namespace {
         time_t wait_start_time = time(nullptr);
         while (!reply_flag) {
            if (time(nullptr) - wait_start_time > 5) {
-               std::cout << cmd << ": No reply from server" << std::endl << std::flush;
+               std::cout << cmd << ": No reply from server" << std::endl;
                return;
            }
            poll(false);
@@ -617,7 +616,7 @@ namespace {
             }
         }
         std::cout << "ERROR: No such command: " << argv[0]
-                  << std::endl << std::endl << std::flush;
+                  << std::endl << std::endl;
         dbs_help(ab, &tool, argc, argv);
         return 1;
     }
@@ -627,7 +626,8 @@ namespace {
 
 int main(int argc, char ** argv)
 {
-    setLoggingPrefix("DB");
+	//Perhaps tell spdlog to use a prefix?
+    //setLoggingPrefix("DB");
 
     int config_status = loadConfig(argc, argv, USAGE_DBASE); 
     if (config_status < 0) {
@@ -638,7 +638,7 @@ int main(int argc, char ** argv)
             showUsage(argv[0], USAGE_DBASE, "[ cmd ]");
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;

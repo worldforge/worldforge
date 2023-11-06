@@ -53,6 +53,7 @@ link_libraries(
         external-DetourTileCache
         libxdg-basedir::libxdg-basedir
         libgcrypt::libgcrypt
+        spdlog::spdlog
 )
 
 link_directories(
@@ -178,7 +179,6 @@ wf_add_test(common/ScriptKitTest.cpp)
 wf_add_test(rules/EntityKitTest.cpp)
 wf_add_test(common/LinkTest.cpp ../src/common/Link.cpp)
 wf_add_test(common/CommSocketTest.cpp)
-wf_add_test(common/composeTest.cpp)
 wf_add_test(common/FileSystemObserverIntegrationTest.cpp ../src/common/FileSystemObserver.cpp)
 target_link_libraries(FileSystemObserverIntegrationTest cyphesis-common)
 

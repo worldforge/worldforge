@@ -54,7 +54,7 @@ int ObserverClient::setup(const std::string & account,
             std::cerr << "WARNING: Made non secure connection to the server."
                       << std::endl
                       << "WARNING: Attempting to login with no password."
-                      << std::endl << std::flush;
+                      << std::endl;
         }
     }
 

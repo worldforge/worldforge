@@ -34,7 +34,6 @@
 #include "rules/simulation/Entity.h"
 
 #include "common/CommSocket.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 #include "common/id.h"
 #include "../DatabaseNull.h"
@@ -57,8 +56,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Operation::RootOperation;
-
-using String::compose;
 
 
 std::ostream& operator<<(std::ostream& os,
@@ -111,6 +108,18 @@ std::ostream& operator<<(std::ostream& os,
     }
     os << "]";
     return os;
+}
+
+namespace std {
+auto format_as(const std::map<long, Ref<LocatedEntity>>::const_iterator& f) {
+	return "[iterator]";
+}
+}
+
+auto format_as(const Ref<LocatedEntity>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
 }
 
 class TestAccount;
@@ -505,7 +514,7 @@ void Accounttest::test_LogoutOperation_unknown()
     OpVector res;
 
     Anonymous arg;
-    arg->setId(String::compose("%1", cid));
+    arg->setId(fmt::format("{}", cid));
     op->setArgs1(arg);
 
     m_account->LogoutOperation(op, res);

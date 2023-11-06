@@ -65,7 +65,7 @@ void DepthShader::shade(Surface & s) const
     const float * height_data = s.getSegment().getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
-                  << std::endl << std::flush;
+                  << std::endl;
         return;
     }
     unsigned int size = s.getSegment().getSize();

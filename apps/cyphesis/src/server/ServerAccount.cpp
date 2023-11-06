@@ -44,7 +44,6 @@ using Atlas::Objects::Entity::RootEntity;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-using String::compose;
 
 static const bool debug_flag = false;
 

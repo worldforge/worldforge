@@ -95,14 +95,14 @@ void AwareMind::processMove(OpVector& res)
             Atlas::Objects::Entity::Anonymous what;
             what->setId(m_ownEntity->getId());
             what->setAttr("_propel", result.direction.toAtlas());
-            //log(INFO, String::compose("Moving in direction %1, %2 with velocity %3", result.direction.x(), result.direction.y(), result.direction.mag()));
+            //spdlog::info("Moving in direction {}, {} with velocity {}", result.direction.x(), result.direction.y(), result.direction.mag());
             if (result.direction != WFMath::Vector<3>::ZERO()) {
                 WFMath::Quaternion orientation;
                 orientation.rotation(WFMath::Vector<3>(0, 0, 1), result.direction, WFMath::Vector<3>(0, 1, 0));
                 if (orientation.isValid()) {
                     what->setAttr("_direction", orientation.toAtlas());
                 } else {
-                    log(WARNING, "Orientation to be sent in steering isn't valid.");
+                    spdlog::warn("Orientation to be sent in steering isn't valid.");
                 }
             }
             if (result.destination.isValid()) {
@@ -121,7 +121,7 @@ void AwareMind::processMove(OpVector& res)
 //            if (debug_flag) {
 //                std::cout << "Move arg {" << std::endl;
 //                debug_dump(what, std::cout);
-//                std::cout << "}" << std::endl << std::flush;
+//                std::cout << "}" << std::endl;
 //            }
 
             res.emplace_back(std::move(set));
@@ -150,7 +150,7 @@ void AwareMind::entityAdded(MemEntity& entity)
 {
     if (m_ownEntity) {
         if (mAwareness) {
-//        log(INFO, String::compose("Adding entity %1", entity.getId()));
+//        spdlog::info("Adding entity {}", entity.getId());
             //TODO: check if the entity is dynamic
             if (entity.m_parent == m_ownEntity->m_parent) {
                 mAwareness->addEntity(*m_ownEntity, entity, false);
@@ -158,7 +158,7 @@ void AwareMind::entityAdded(MemEntity& entity)
         } else {
             //Check if we've received the current domain entity.
             if (m_ownEntity->m_parent && entity.getIntId() == m_ownEntity->m_parent->getIntId()) {
-                //log(INFO, "Creating awareness.");
+                //spdlog::info("Creating awareness.");
                 requestAwareness(entity);
 
                 auto terrainElem = entity.getAttr("terrain_points");
@@ -265,7 +265,7 @@ void AwareMind::entityDeleted(MemEntity& entity)
 {
     BaseMind::entityDeleted(entity);
     if (mAwareness) {
-        //log(INFO, "Removed entity.");
+        //spdlog::info("Removed entity.");
         mAwareness->removeEntity(*m_ownEntity, entity);
     }
 }

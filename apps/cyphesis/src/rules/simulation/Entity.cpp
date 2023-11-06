@@ -97,7 +97,7 @@ void Entity::setType(const TypeNode* t)
         if (I == s_monitorsMap.end()) {
             auto result = s_monitorsMap.emplace(t, 1);
 
-            Monitors::instance().watch(String::compose("entity_count{type=\"%1\"}", t->name()), std::make_unique<Variable<int>>(result.first->second));
+            Monitors::instance().watch(fmt::format("entity_count{{type=\"{}\"}}", t->name()), std::make_unique<Variable<int>>(result.first->second));
         } else {
             I->second++;
         }
@@ -493,8 +493,8 @@ Ref<LocatedEntity> Entity::createNewEntity(const Operation& op, OpVector& res)
         return obj;
     }
     catch (const std::runtime_error& e) {
-        log(ERROR, String::compose("Error when trying to create entity: %1", e.what()));
-        error(op, String::compose("Error when trying to create entity: %1", e.what()), res, getId());
+        spdlog::error("Error when trying to create entity: {}", e.what());
+        error(op, fmt::format("Error when trying to create entity: {}", e.what()), res, getId());
         return {};
     }
 }
@@ -510,7 +510,7 @@ Ref<LocatedEntity> Entity::createNewEntity(const RootEntity& ent)
     if (!ent->hasAttrFlag(Atlas::Objects::Entity::LOC_FLAG) && (m_parent)) {
         ent->setLoc(m_parent->getId());
     }
-    debug_print(getId() << " creating " << type)
+    cy_debug_print(getId() << " creating " << type)
 
     return BaseWorld::instance().addNewEntity(type, ent);
 

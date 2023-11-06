@@ -36,7 +36,6 @@
 #include "common/const.h"
 #include "common/Inheritance.h"
 #include "common/AtlasFileLoader.h"
-#include "common/compose.hpp"
 #include "common/AssetsManager.h"
 #include "Remotery.h"
 
@@ -54,7 +53,6 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
-using String::compose;
 
 typedef std::map<std::string, Root> RootDict;
 
@@ -85,15 +83,15 @@ int Ruleset::installRuleInner(const std::string& class_name,
     assert(class_name == class_desc->getId());
 
     if (class_name.size() > consts::id_len) {
-        log(ERROR, compose("Rule \"%1\" has name longer than %2 characters. "
-                           "Skipping.", class_name, consts::id_len));
+        spdlog::error("Rule \"{}\" has name longer than {} characters. "
+                           "Skipping.", class_name, consts::id_len);
         return -1;
     }
 
     const std::string& parent = class_desc->getParent();
     if (parent.empty()) {
-        log(ERROR, compose("Rule \"%1\" has empty parent. Skipping.",
-                           class_name));
+        spdlog::error("Rule \"{}\" has empty parent. Skipping.",
+                           class_name);
         return -1;
     }
     int ret = -1;
@@ -110,8 +108,8 @@ int Ruleset::installRuleInner(const std::string& class_name,
         ret = m_archetypeHandler->install(class_name, parent, class_desc,
                                           dependent, reason, changes);
     } else {
-        log(ERROR, compose(R"(Rule "%1" has unknown objtype="%2". Skipping.)",
-                           class_name, class_desc->getObjtype()));
+        spdlog::error(R"(Rule "{}" has unknown objtype="{}". Skipping.)",
+                           class_name, class_desc->getObjtype());
         return -1;
     }
 
@@ -161,13 +159,13 @@ void Ruleset::installItem(const std::string& class_name,
         const std::string& wClassName = I->second.name;
         const Root& wClassDesc = I->second.desc;
         readyRules.emplace(wClassName, wClassDesc);
-        debug_print("WAITING rule " << wClassName
+        cy_debug_print("WAITING rule " << wClassName
                         << " now ready from " << class_name);
     }
     m_waitingRules.erase(class_name);
 
-    RootDict::const_iterator K = readyRules.begin();
-    RootDict::const_iterator Kend = readyRules.end();
+    auto K = readyRules.begin();
+    auto Kend = readyRules.end();
     for (; K != Kend; ++K) {
         const std::string& rClassName = K->first;
         const Root& rClassDesc = K->second;
@@ -201,22 +199,22 @@ int Ruleset::modifyRuleInner(const std::string& class_name,
 
     Root o = Inheritance::instance().getClass(class_name, Visibility::PRIVATE);
     if (!o.isValid()) {
-        log(ERROR, compose("Could not find existing type \"%1\" in "
-                           "inheritance", class_name));
+        spdlog::error("Could not find existing type \"{}\" in "
+                           "inheritance", class_name);
         return -1;
     }
     assert(!o->isDefaultParent());
     assert(!o->getParent().empty());
     if (class_desc->isDefaultParent() || class_desc->getParent().empty()) {
-        log(ERROR, compose("Updated type \"%1\" has no parent in its "
-                           "description", class_name));
+        spdlog::error("Updated type \"{}\" has no parent in its "
+                           "description", class_name);
         return -1;
     }
     //TODO: allow changing of parents.
     if (class_desc->getParent() != o->getParent()) {
-        log(ERROR, compose("Updated type \"%1\" attempting to change parent "
-                           "from %2 to %3", class_name,
-                           o->getParent(), class_desc->getParent()));
+        spdlog::error("Updated type \"{}\" attempting to change parent "
+                           "from {} to {}", class_name,
+                           o->getParent(), class_desc->getParent());
         return -1;
     }
     int ret = -1;
@@ -238,17 +236,17 @@ void Ruleset::processChangedRules()
         RootDict updatedRules;
         for (auto& path : m_changedRules) {
             try {
-                log(NOTICE, compose("Reloading rule file %1", path));
+                spdlog::debug("Reloading rule file {}", path.string());
                 auto& filename = path.native();
                 AtlasFileLoader f(Inheritance::instance().getFactories(), filename, updatedRules);
                 if (!f.isOpen()) {
-                    log(ERROR, compose("Unable to open rule file \"%1\".", filename));
+                    spdlog::error("Unable to open rule file \"{}\".", filename);
                 } else {
-                    log(INFO, compose("Rule file \"%1\" reloaded.", filename));
+                    spdlog::info("Rule file \"{}\" reloaded.", filename);
                     f.read();
                 }
             } catch (const std::exception& e) {
-                log(ERROR, compose("Error when reacting to changed file at '%1': %2", path, e.what()));
+                spdlog::error("Error when reacting to changed file at '{}': {}", path.string(), e.what());
             }
         }
         if (!updatedRules.empty()) {
@@ -257,10 +255,10 @@ void Ruleset::processChangedRules()
                 auto& class_name = entry.first;
                 auto& class_desc = entry.second;
                 if (Inheritance::instance().hasClass(class_name)) {
-                    log(INFO, compose("Updating existing rule \"%1\".", class_name));
+                    spdlog::info("Updating existing rule \"{}\".", class_name);
                     modifyRuleInner(class_name, class_desc, changes);
                 } else {
-                    log(INFO, compose("Installing new rule \"%1\".", class_name));
+                    spdlog::info("Installing new rule \"{}\".", class_name);
                     installItem(class_name, class_desc, changes);
                 }
             }
@@ -320,7 +318,7 @@ void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
         });
 
         boost::filesystem::recursive_directory_iterator dir(directory), end;
-        log(INFO, compose("Trying to load rules from directory '%1'", directory));
+        spdlog::info("Trying to load rules from directory '{}'", directory.string());
 
         int count = 0;
         while (dir != end) {
@@ -328,7 +326,7 @@ void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
                 auto filename = dir->path().native();
                 AtlasFileLoader f(Inheritance::instance().getFactories(), filename, rules);
                 if (!f.isOpen()) {
-                    log(ERROR, compose("Unable to open rule file \"%1\".", filename));
+                    spdlog::error("Unable to open rule file \"{}\".", filename);
                 } else {
                     f.read();
                     count += f.count();
@@ -337,7 +335,7 @@ void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
             ++dir;
         }
 
-        log(INFO, compose("Loaded %1 rules.", count));
+        spdlog::info("Loaded {} rules.", count);
     }
 
 
@@ -360,7 +358,7 @@ void Ruleset::loadRules(const std::string& ruleset)
     }
 
     if (ruleTable.empty()) {
-        log(ERROR, "Rule database table contains no rules.");
+        spdlog::error("Rule database table contains no rules.");
     }
 
     //Just ignore any changes, since this happens at startup before any clients are connected.
@@ -375,6 +373,6 @@ void Ruleset::loadRules(const std::string& ruleset)
     // Perhaps we can keep them too?
     // m_waitingRules.clear();
     for (auto& entry : m_waitingRules) {
-        log(ERROR, entry.second.reason);
+        spdlog::error(entry.second.reason);
     }
 }

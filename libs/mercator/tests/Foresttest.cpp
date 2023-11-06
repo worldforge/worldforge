@@ -31,7 +31,7 @@ void dumpPlants(const Mercator::Forest::PlantStore & plants)
             std::cout << " displaced to "
                       << (WFMath::Vector<2>(I->first, J->first) +
                           p.m_displacement)
-                      << std::endl << std::flush;
+                      << std::endl;
         }
     }
 }
@@ -141,7 +141,7 @@ int main()
         dumpPlants(plants);
 
         std::cout << countPlants(plants) << "," << plant_count
-                  << std::endl << std::flush;
+                  << std::endl;
 
     }
 }

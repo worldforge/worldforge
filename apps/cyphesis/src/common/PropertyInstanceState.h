@@ -46,7 +46,7 @@ class PropertyInstanceState {
         ~PropertyInstanceState() {
             //When an instance of this is destroyed, all entities should already have deregistered themselves from it.
             if (!mStates.empty()) {
-                log(WARNING, "Property instance state wasn't empty as is should be at shutdown.");
+                spdlog::warn("Property instance state wasn't empty as is should be at shutdown.");
             }
             //assert(mStates.empty());
         }

@@ -153,11 +153,11 @@ class AwarenessContext : public rcContext
         void doLog(const rcLogCategory category, const char* msg, const int len) override
         {
             if (category == RC_LOG_PROGRESS) {
-                ::log(INFO, String::compose("Recast: %1", msg));
+                spdlog::info("Recast: {}", msg);
             } else if (category == RC_LOG_WARNING) {
-                ::log(WARNING, String::compose("Recast: %1", msg));
+                spdlog::warn("Recast: {}", msg);
             } else {
-                ::log(ERROR, String::compose("Recast: %1", msg));
+                spdlog::error("Recast: {}", msg);
             }
         }
 
@@ -190,11 +190,11 @@ Awareness::Awareness(long domainEntityId,
 {
     auto validExtent = extent;
     if (!extent.isValid()) {
-        ::log(WARNING, "No valid extent, will default to small area");
+        ::spdlog::warn("No valid extent, will default to small area");
         validExtent = {{-100, -100, -100},
                        {100,  100,  100}};
     }
-    debug_print("Creating awareness with extent " << extent << " and agent radius " << agentRadius)
+    cy_debug_print("Creating awareness with extent " << extent << " and agent radius " << agentRadius)
     try {
         auto talloc = std::make_unique<LinearAllocator>(128000);
         auto tcomp = std::make_unique<FastLZCompressor>();
@@ -401,7 +401,7 @@ void Awareness::addEntity(const MemEntity& observer, const MemEntity& entity, bo
             mMovingEntities.insert(entityEntry.get());
         }
         I = mObservedEntities.emplace(entity.getIntId(), std::move(entityEntry)).first;
-        debug_print("Creating new entry for " << entity.getId())
+        cy_debug_print("Creating new entry for " << entity.getId())
     } else {
         I->second->numberOfObservers++;
     }
@@ -426,11 +426,11 @@ void Awareness::removeEntity(const MemEntity& observer, const MemEntity& entity)
 {
     auto I = mObservedEntities.find(entity.getIntId());
     if (I != mObservedEntities.end()) {
-        debug_print("Removing entity " << entity.getId())
+        cy_debug_print("Removing entity " << entity.getId())
         //Decrease the number of observers, and delete entry if there's none left
         auto& entityEntry = I->second;
         if (entityEntry->numberOfObservers == 0) {
-            log(WARNING, String::compose("Entity entry %1 has decreased number of observers to < 0. This indicates an error.", entity.getId()));
+            spdlog::warn("Entity entry {} has decreased number of observers to < 0. This indicates an error.", entity.getId());
         }
         entityEntry->numberOfObservers--;
         if (entityEntry->numberOfObservers == 0) {
@@ -541,7 +541,7 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
         if (!entityEntry.isIgnored) {
             //Check if the bbox now is invalid
             if (!entityEntry.bbox.data.isValid()) {
-                debug_print("Ignoring entity " << entity.getId() << " because it has no valid bbox.")
+                cy_debug_print("Ignoring entity " << entity.getId() << " because it has no valid bbox.")
                 entityEntry.isIgnored = true;
 
                 //We must now mark those areas that the entities used to touch as dirty, as well as remove the entity areas
@@ -556,11 +556,11 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
                 //Only update if there's a change
                 if (hasNewPosition || hasNewBbox) {
 
-                    debug_print("Updating entity location for entity " << entityEntry.entityId)
+                    cy_debug_print("Updating entity location for entity " << entityEntry.entityId)
 
                     //If an entity which previously didn't move start moving we need to move it to the "movable entities" collection.
                     if (entityEntry.velocity.data.isValid() && entityEntry.velocity.data != WFMath::Vector<3>::ZERO()) {
-                        debug_print("Entity is now moving.")
+                        cy_debug_print("Entity is now moving.")
                         mMovingEntities.insert(&entityEntry);
                         entityEntry.isMoving = true;
                         auto existingI = mEntityAreas.find(&entityEntry);
@@ -596,7 +596,7 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
                                 }
                             }
                         }
-                        debug_print("Entity affects " << area << ". Dirty unaware tiles: " << mDirtyUnwareTiles.size() << " Dirty aware tiles: " << mDirtyAwareTiles.size())
+                        cy_debug_print("Entity affects " << area << ". Dirty unaware tiles: " << mDirtyUnwareTiles.size() << " Dirty aware tiles: " << mDirtyAwareTiles.size())
                     }
 
                 }
@@ -727,7 +727,7 @@ void Awareness::markTilesAsDirty(int tileMinXIndex, int tileMaxXIndex, int tileM
             }
         }
     }
-    debug_print("Marking tiles as dirty. Aware: " << mDirtyAwareTiles.size() << " Unaware: " << mDirtyUnwareTiles.size())
+    cy_debug_print("Marking tiles as dirty. Aware: " << mDirtyAwareTiles.size() << " Unaware: " << mDirtyUnwareTiles.size())
     if (!wereDirtyTiles && !mDirtyAwareTiles.empty()) {
         EventTileDirty();
     }
@@ -736,7 +736,7 @@ void Awareness::markTilesAsDirty(int tileMinXIndex, int tileMaxXIndex, int tileM
 size_t Awareness::rebuildDirtyTile()
 {
     if (!mDirtyAwareTiles.empty()) {
-        debug_print("Rebuilding aware tiles. Number of dirty aware tiles: " << mDirtyAwareTiles.size())
+        cy_debug_print("Rebuilding aware tiles. Number of dirty aware tiles: " << mDirtyAwareTiles.size())
         rmt_ScopedCPUSample(rebuildDirtyTile, 0)
         const auto tileIndexI = mDirtyAwareOrderedTiles.begin();
         const auto& tileIndex = *tileIndexI;
@@ -760,7 +760,7 @@ void Awareness::pruneTiles()
     //remove any tiles that aren't used
     if (mActiveTileList->size() > mAwareTiles.size()) {
         if (mActiveTileList->size() > mDesiredTilesAmount) {
-            //debug_print("Pruning tiles. Number of active tiles: " << mActiveTileList->size() << ". Number of aware tiles: " << mAwareTiles.size() << " Desired amount: " << mDesiredTilesAmount);
+            //cy_debug_print("Pruning tiles. Number of active tiles: " << mActiveTileList->size() << ". Number of aware tiles: " << mAwareTiles.size() << " Desired amount: " << mDesiredTilesAmount);
             std::pair<int, int> entry = mActiveTileList->pop_back();
 
             dtCompressedTileRef tilesRefs[MAX_LAYERS];
@@ -1065,7 +1065,7 @@ void Awareness::setAwarenessArea(const std::string& areaId, const WFMath::RotBox
     awareAreaSet = std::move(newAwareAreaSet);
 
 
-    debug_print(
+    cy_debug_print(
             "Awareness area set: " << area << ". Dirty unaware tiles: " << mDirtyUnwareTiles.size() << " Dirty aware tiles: " << mDirtyAwareTiles.size() << " Aware tile count: "
                                    << mAwareTiles.size())
 
@@ -1136,7 +1136,7 @@ void Awareness::rebuildTile(int tx, int ty, const std::vector<WFMath::RotBox<2>>
         }
         dtStatus status = mTileCache->addTile(tile->data, tile->dataSize, DT_COMPRESSEDTILE_FREE_DATA, 0); // Add compressed tiles to tileCache
         if (dtStatusFailed(status)) {
-            log(WARNING, String::compose("Failed to add tile in awareness. x: %1 y: %2 Reason: %3", tx, ty, status & DT_STATUS_DETAIL_MASK));
+            spdlog::warn("Failed to add tile in awareness. x: {} y: {} Reason: {}", tx, ty, status & DT_STATUS_DETAIL_MASK);
             dtFree(tile->data);
             tile->data = 0;
             continue;
@@ -1147,7 +1147,7 @@ void Awareness::rebuildTile(int tx, int ty, const std::vector<WFMath::RotBox<2>>
         rmt_ScopedCPUSample(buildNavMeshTile, 0)
         dtStatus status = mTileCache->buildNavMeshTilesAt(tx, ty, mNavMesh);
         if (dtStatusFailed(status)) {
-            log(WARNING, String::compose("Failed to build nav mesh tile in awareness. x: %1 y: %2 Reason: %3", tx, ty, status & DT_STATUS_DETAIL_MASK));
+            spdlog::warn("Failed to build nav mesh tile in awareness. x: {} y: {} Reason: {}", tx, ty, status & DT_STATUS_DETAIL_MASK);
         }
     }
 

@@ -36,7 +36,7 @@
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
-    std::cerr << msg << std::endl << std::flush;
+    std::cerr << msg << std::endl;
 }
 
 class TestConnection : public Eris::Connection {

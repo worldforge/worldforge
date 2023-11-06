@@ -56,17 +56,17 @@ int main()
 //
 //        Point3D relPos = relativePos(locEnt, locEnt);
 //
-//        std::cout << "RelPos to self: " << relPos << std::endl << std::flush;
+//        std::cout << "RelPos to self: " << relPos << std::endl;
 //
 //        relPos = relativePos(locEnt, locTlve);
 //
 //        std::cout << "RelPos ent -> tlve: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        relPos = relativePos(locTlve, locEnt);
 //
 //        std::cout << "RelPos tlve -> ent: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent->m_parent = 0;
 //    }
@@ -85,7 +85,7 @@ int main()
 //        Point3D relPos = relativePos(ent1->m_location, ent2->m_location);
 //
 //        std::cout << "RelPos ent1 -> ent2: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -114,7 +114,7 @@ int main()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -144,7 +144,7 @@ int main()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -175,7 +175,7 @@ int main()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -208,7 +208,7 @@ int main()
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
 //                  << " Distance ent3 -> ent4: " << distance
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -231,7 +231,7 @@ int main()
 //
 //        std::cout << "Distance ent1 -> ent2: "
 //                  << distance << "," << distance.isValid()
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        assert(distance.isValid());
 //        assert(distance == Vector3D(0,0,0));

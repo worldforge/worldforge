@@ -56,17 +56,17 @@ void testDistanceFunctions()
 //
 //        Point3D relPos = relativePos(ent->m_location, ent->m_location);
 //
-//        std::cout << "RelPos to self: " << relPos << std::endl << std::flush;
+//        std::cout << "RelPos to self: " << relPos << std::endl;
 //
 //        relPos = relativePos(ent->m_location, tlve->m_location);
 //
 //        std::cout << "RelPos ent -> tlve: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        relPos = relativePos(tlve->m_location, ent->m_location);
 //
 //        std::cout << "RelPos tlve -> ent: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent->m_parent = 0;
 //    }
@@ -88,7 +88,7 @@ void testDistanceFunctions()
 //        assert(!relPos.isValid());
 //
 //        std::cout << "RelPos ent1 -> ent2: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //    }
 //
@@ -108,7 +108,7 @@ void testDistanceFunctions()
 //        assert(!relPos.isValid());
 //
 //        std::cout << "RelPos ent1 -> ent2: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -130,7 +130,7 @@ void testDistanceFunctions()
 //        assert(!relPos.isValid());
 //
 //        std::cout << "RelPos ent1 -> ent2: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -151,7 +151,7 @@ void testDistanceFunctions()
 //        assert(relPos.isValid());
 //
 //        std::cout << "RelPos ent1 -> ent2: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -180,7 +180,7 @@ void testDistanceFunctions()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -210,7 +210,7 @@ void testDistanceFunctions()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -238,7 +238,7 @@ void testDistanceFunctions()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -269,7 +269,7 @@ void testDistanceFunctions()
 //        Point3D relPos = relativePos(ent3->m_location, ent4->m_location);
 //
 //        std::cout << "RelPos ent3 -> ent4: " << relPos
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -306,7 +306,7 @@ void testDistanceFunctions()
 //                  << " Distance ent3 -> ent4: " << distance
 //                  << " square distance ent3 -> ent4: " << d
 //                  << " square horizontal distance ent3 -> ent4: " << hd
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
@@ -329,7 +329,7 @@ void testDistanceFunctions()
 //
 //        std::cout << "Distance ent1 -> ent2: "
 //                  << distance << "," << distance.isValid()
-//                  << std::endl << std::flush;
+//                  << std::endl;
 //
 //        assert(distance.isValid());
 //        assert(distance == Vector3D(0,0,0));

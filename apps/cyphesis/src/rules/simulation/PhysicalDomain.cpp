@@ -60,7 +60,7 @@
 #include <chrono>
 #include <boost/optional.hpp>
 #include <algorithm>
-
+#include <fmt/format.h>
 static const bool debug_flag = false;
 
 using Atlas::Message::Element;
@@ -298,7 +298,7 @@ struct PhysicalDomain::PhysicalMotionState : public btMotionState
                 m_bulletEntry.markedForVisibilityRecalculation = true;
             }
 
-            //            debug_print(
+            //            cy_debug_print(
             //                    "setWorldTransform: "<< m_entity.describeEntity() << " (" << centerOfMassWorldTrans.getOrigin().x() << "," << centerOfMassWorldTrans.getOrigin().y() << "," << centerOfMassWorldTrans.getOrigin().z() << ")");
 
             auto& bulletTransform = m_rigidBody.getCenterOfMassTransform();
@@ -746,7 +746,7 @@ void PhysicalDomain::buildTerrainPages()
                 }
                 if (spinningFriction) {
 #if BT_BULLET_VERSION < 285
-                    log(WARNING, "Your version of Bullet doesn't support spinning friction.");
+                    spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
                     terrainEntry.rigidBody->setSpinningFriction(*spinningFriction);
 #endif
@@ -767,9 +767,7 @@ PhysicalDomain::TerrainEntry& PhysicalDomain::buildTerrainPage(Mercator::Segment
 
     int vertexCountOneSide = segment.getSize();
 
-    std::stringstream ss;
-    ss << segment.getXRef() << ":" << segment.getZRef();
-    TerrainEntry& terrainEntry = m_terrainSegments[ss.str()];
+    TerrainEntry& terrainEntry = m_terrainSegments[fmt::format("{}:{}", segment.getXRef(), segment.getZRef())];
     if (!terrainEntry.data) {
         terrainEntry.data = std::make_unique<std::array<btScalar, 65 * 65>>();
     }
@@ -931,7 +929,7 @@ void PhysicalDomain::updateObserverEntry(BulletEntry& bulletEntry, OpVector& res
 
         auto appearFn = [&](BulletEntry* appearedEntry) {
             //Send Appear
-            // debug_print(" appear: " << viewedEntry->entity.describeEntity() << " for " << bulletEntry.entity.describeEntity());
+            // cy_debug_print(" appear: " << viewedEntry->entity.describeEntity() << " for " << bulletEntry.entity.describeEntity());
             Anonymous that_ent;
             that_ent->setId(appearedEntry->entity.getId());
             that_ent->setStamp(appearedEntry->entity.getSeq());
@@ -982,7 +980,7 @@ void PhysicalDomain::updateObservedEntry(BulletEntry& bulletEntry, OpVector& res
         auto disappearFn = [&](BulletEntry* existingObserverEntry) {
             if (generateOps) {
                 //Send disappearence
-                // debug_print(" disappear: " << bulletEntry.entity.describeEntity() << " for " << noLongerObservingEntry->entity.describeEntity());
+                // cy_debug_print(" disappear: " << bulletEntry.entity.describeEntity() << " for " << noLongerObservingEntry->entity.describeEntity());
                 Disappearance disappear;
                 Anonymous that_ent;
                 that_ent->setId(bulletEntry.entity.getId());
@@ -998,7 +996,7 @@ void PhysicalDomain::updateObservedEntry(BulletEntry& bulletEntry, OpVector& res
         auto appearFn = [&](BulletEntry* newObserverEntry) {
             if (generateOps) {
                 //Send appear
-                // debug_print(" appear: " << bulletEntry.entity.describeEntity() << " for " << viewingEntry->entity.describeEntity());
+                // cy_debug_print(" appear: " << bulletEntry.entity.describeEntity() << " for " << viewingEntry->entity.describeEntity());
                 Appearance appear;
                 Anonymous that_ent;
                 that_ent->setId(bulletEntry.entity.getId());
@@ -1077,7 +1075,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity)
 
     auto existingPosProp = entity.modPropertyClassFixed<PositionProperty>();
     if (!existingPosProp || !existingPosProp->data().isValid()) {
-        log(WARNING, String::compose("Tried to add entity %1 to physical domain belonging to %2, but there's no valid position.", entity.describeEntity(), m_entity.describeEntity()));
+        spdlog::warn("Tried to add entity {} to physical domain belonging to {}, but there's no valid position.", entity.describeEntity(), m_entity.describeEntity());
         return;
     }
 
@@ -1171,7 +1169,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity)
             }
 
 
-            debug_print("PhysicsDomain adding entity " << entity.describeEntity() << " with mass " << mass
+            cy_debug_print("PhysicsDomain adding entity " << entity.describeEntity() << " with mass " << mass
                                                        << " and inertia (" << inertia.x() << "," << inertia.y() << "," << inertia.z() << ")")
 
             btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, nullptr, entry.collisionShape.get(), inertia);
@@ -1187,7 +1185,7 @@ void PhysicalDomain::addEntity(LocatedEntity& entity)
             auto frictionSpinProp = entity.getPropertyType<double>("friction_spin");
             if (frictionSpinProp) {
 #if BT_BULLET_VERSION < 285
-                log(WARNING, "Your version of Bullet doesn't support spinning friction.");
+                spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
                 rigidBodyCI.m_spinningFriction = (btScalar) frictionSpinProp->data();
 #endif
@@ -1356,7 +1354,7 @@ void PhysicalDomain::toggleChildPerception(LocatedEntity& entity)
 
 void PhysicalDomain::removeEntity(LocatedEntity& entity)
 {
-    debug_print("PhysicalDomain::removeEntity " << entity.describeEntity())
+    cy_debug_print("PhysicalDomain::removeEntity " << entity.describeEntity())
     auto I = m_entries.find(entity.getIntId());
     if (I == m_entries.end()) {
         //This could happen if the entity didn't have any position, for example.
@@ -1524,7 +1522,7 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
     } else if (name == "friction_spin") {
         if (bulletEntry.collisionObject) {
 #if BT_BULLET_VERSION < 285
-            log(WARNING, "Your version of Bullet doesn't support spinning friction.");
+            spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
             auto frictionProp = dynamic_cast<const Property<double>*>(&prop);
             bulletEntry.collisionObject->setSpinningFriction(static_cast<btScalar>(frictionProp->data()));
@@ -1593,7 +1591,7 @@ void PhysicalDomain::childEntityPropertyApplied(const std::string& name, const P
                             attachedEntry->entity.setAttrValue("mode", modeProp->data());
                         }
                         if (!bulletEntry.attachedEntities.empty()) {
-                            log(WARNING, "Set of attached entities isn't empty after changing all of them to free mode.");
+                            spdlog::warn("Set of attached entities isn't empty after changing all of them to free mode.");
                         }
                     }
                     //It's crucial we call this when changing mass, otherwise we might get divide-by-zero in the simulation
@@ -1920,7 +1918,7 @@ void PhysicalDomain::entityPropertyApplied(const std::string& name, const Proper
         }
     } else if (name == "friction_spin") {
 #if BT_BULLET_VERSION < 285
-        log(WARNING, "Your version of Bullet doesn't support spinning friction.");
+        spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
         auto frictionSpinningProp = dynamic_cast<const Property<double>*>(&prop);
         for (auto& entry: m_terrainSegments) {
@@ -2013,7 +2011,7 @@ void PhysicalDomain::calculatePositionForEntity(ModeProperty::Mode mode, Physica
                         if (modeDataProp->getPlantedOnData().entityId) {
                             auto plantedOnId = *modeDataProp->getPlantedOnData().entityId;
                             if (plantedOnId == entity.getIntId()) {
-                                log(WARNING, String::compose("Entity %1 was marked to be planted on itself.", entity.describeEntity()));
+                                spdlog::warn("Entity {} was marked to be planted on itself.", entity.describeEntity());
                             } else {
                                 //If it's desired that the entity should be planted on the ground then make it so.
                                 //Since the ground is everywhere.
@@ -2125,7 +2123,7 @@ void PhysicalDomain::calculatePositionForEntity(ModeProperty::Mode mode, Physica
                                     }
                                 }
                             } else {
-                                log(WARNING, String::compose("Did not get a convex shape when creating placement shape, for entity %1.", entity.describeEntity()));
+                                spdlog::warn("Did not get a convex shape when creating placement shape, for entity {}.", entity.describeEntity());
                             }
                         }
                     }
@@ -2161,7 +2159,7 @@ void PhysicalDomain::calculatePositionForEntity(ModeProperty::Mode mode, Physica
     } else if (mode == ModeProperty::Mode::Fixed || mode == ModeProperty::Mode::Projectile) {
         //Don't do anything to adjust height
     } else {
-        log(WARNING, "Unknown mode for entity " + entity.describeEntity());
+        spdlog::warn("Unknown mode for entity " + entity.describeEntity());
     }
 }
 
@@ -2192,7 +2190,7 @@ void PhysicalDomain::applyNewPositionForEntity(BulletEntry& entry, const WFMath:
     if (collObject) {
         btTransform& transform = collObject->getWorldTransform();
 
-        debug_print("PhysicalDomain::new pos " << entity.describeEntity() << " " << pos)
+        cy_debug_print("PhysicalDomain::new pos " << entity.describeEntity() << " " << pos)
 
         transform.setOrigin(Convert::toBullet(newPos));
         transform *= btTransform(btQuaternion::getIdentity(), entry.centerOfMassOffset).inverse();
@@ -2326,7 +2324,7 @@ void PhysicalDomain::applyPropel(BulletEntry& entry, btVector3 propel)
 
             //TODO: add support for flying and swimming
             if (!propel.isZero()) {
-                debug_print("PhysicalDomain::applyPropel " << entity.describeEntity() << " " << propel << " " << propel.length())
+                cy_debug_print("PhysicalDomain::applyPropel " << entity.describeEntity() << " " << propel << " " << propel.length())
 
                 //Check if we're trying to jump
                 if (propel.m_floats[1] > 0) {
@@ -2393,7 +2391,7 @@ void PhysicalDomain::applyTransform(LocatedEntity& entity, const TransformData& 
 
     if (transformData.plantedOnEntity) {
         if (transformData.plantedOnEntity == &entity) {
-            log(WARNING, String::compose("Tried to plant entity %1 on itself.", entity.describeEntity()));
+            spdlog::warn("Tried to plant entity {} on itself.", entity.describeEntity());
         } else {
             auto plantedOnI = m_entries.find(transformData.plantedOnEntity->getIntId());
             if (plantedOnI != m_entries.end()) {
@@ -2423,7 +2421,7 @@ void PhysicalDomain::applyTransformInternal(BulletEntry& entry,
     }
     WFMath::Quaternion rotationChange = WFMath::Quaternion::IDENTITY();
     if (orientation.isValid() && !orientation.isEqualTo(entry.orientationProperty.data(), 0.001)) {
-        debug_print("PhysicalDomain::new orientation " << entry.entity.describeEntity() << " " << orientation)
+        cy_debug_print("PhysicalDomain::new orientation " << entry.entity.describeEntity() << " " << orientation)
 
         if (entry.collisionShape) {
             btTransform& transform = entry.collisionObject->getWorldTransform();
@@ -2558,9 +2556,9 @@ void PhysicalDomain::processDirtyTerrainAreas()
 
     auto worldHeight = mContainingEntityEntry.bbox.highCorner().y() - mContainingEntityEntry.bbox.lowCorner().y();
 
-    debug_print("dirty segments: " << dirtySegments.size())
+    cy_debug_print("dirty segments: " << dirtySegments.size())
     for (auto& segment: dirtySegments) {
-        debug_print("rebuilding segment at x: " << segment->getXRef() << " z: " << segment->getZRef())
+        cy_debug_print("rebuilding segment at x: " << segment->getXRef() << " z: " << segment->getZRef())
 
         auto& terrainEntry = buildTerrainPage(*segment);
         if (friction) {
@@ -2571,7 +2569,7 @@ void PhysicalDomain::processDirtyTerrainAreas()
         }
         if (frictionSpinning) {
 #if BT_BULLET_VERSION < 285
-            log(WARNING, "Your version of Bullet doesn't support spinning friction.");
+            spdlog::warn("Your version of Bullet doesn't support spinning friction.");
 #else
             terrainEntry.rigidBody->setSpinningFriction(*frictionSpinning);
 #endif
@@ -2605,9 +2603,9 @@ void PhysicalDomain::processDirtyTerrainAreas()
         collObject.setWorldTransform(btTransform(btQuaternion::getIdentity(), btVector3(center.x(), 0, center.y())));
         m_dynamicsWorld->contactTest(&collObject, callback);
 
-        debug_print("Matched " << callback.m_entries.size() << " entries")
+        cy_debug_print("Matched " << callback.m_entries.size() << " entries")
         for (BulletEntry* entry: callback.m_entries) {
-            debug_print("Adjusting " << entry->entity.describeEntity())
+            cy_debug_print("Adjusting " << entry->entity.describeEntity())
             Anonymous anon;
             anon->setId(entry->entity.getId());
             std::vector<double> posList;
@@ -2665,9 +2663,9 @@ void PhysicalDomain::sendMoveSight(BulletEntry& entry, bool posChange, bool velo
             Set setOp;
             move_arg->setId(entity.getId());
             if (debug_flag) {
-                debug_print("Sending set op for movement.")
+                cy_debug_print("Sending set op for movement.")
                 if (entry.velocityProperty.data().isValid()) {
-                    debug_print("new velocity: " << entry.velocityProperty.data() << " " << entry.velocityProperty.data().mag())
+                    cy_debug_print("new velocity: " << entry.velocityProperty.data() << " " << entry.velocityProperty.data().mag())
                 }
             }
 
@@ -2733,7 +2731,7 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSin
             bool hadValidVelocity = lastSentLocation.velocity.isValid();
             //Send an update if either the previous velocity was invalid, or any of the velocity components have changed enough, or if either the new or the old velocity is zero.
             if (!hadValidVelocity) {
-                debug_print("No previous valid velocity " << entity.describeEntity() << " " << lastSentLocation.velocity)
+                cy_debug_print("No previous valid velocity " << entity.describeEntity() << " " << lastSentLocation.velocity)
                 velocityChange = true;
                 lastSentLocation.velocity = bulletEntry.velocityProperty.data();
             } else {
@@ -2742,11 +2740,11 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSin
                 bool zChange = !fuzzyEquals(velocity.z(), lastSentLocation.velocity.z(), 0.01);
                 bool hadZeroVelocity = lastSentLocation.velocity.isEqualTo(WFMath::Vector<3>::ZERO());
                 if (xChange || yChange || zChange) {
-                    debug_print("Velocity changed " << entity.describeEntity() << " " << velocity)
+                    cy_debug_print("Velocity changed " << entity.describeEntity() << " " << velocity)
                     velocityChange = true;
                     lastSentLocation.velocity = bulletEntry.velocityProperty.data();
                 } else if (bulletEntry.velocityProperty.data().isEqualTo(WFMath::Vector<3>::ZERO()) && !hadZeroVelocity) {
-                    debug_print("Old or new velocity zero " << entity.describeEntity() << " " << velocity)
+                    cy_debug_print("Old or new velocity zero " << entity.describeEntity() << " " << velocity)
                     velocityChange = true;
                     lastSentLocation.velocity = bulletEntry.velocityProperty.data();
                 }
@@ -2758,7 +2756,7 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSin
             bool hadZeroAngular = lastSentLocation.angularVelocity.isEqualTo(WFMath::Vector<3>::ZERO());
             angularChange = !fuzzyEquals(lastSentLocation.angularVelocity, angular, 0.01);
             if (!angularChange && bulletEntry.angularVelocityProperty.data().isEqualTo(WFMath::Vector<3>::ZERO()) && !hadZeroAngular) {
-                debug_print("Angular changed " << entity.describeEntity() << " " << angular)
+                cy_debug_print("Angular changed " << entity.describeEntity() << " " << angular)
                 angularChange = true;
                 lastSentLocation.angularVelocity = bulletEntry.angularVelocityProperty.data();
             }
@@ -2978,7 +2976,7 @@ void PhysicalDomain::tick(double tickSize, OpVector& res)
                 movedEntry->angularVelocityProperty.data().zero();
             }
             if (movedEntry->velocityProperty.data().isValid()) {
-                debug_print("Stopped moving " << movedEntry->entity.describeEntity())
+                cy_debug_print("Stopped moving " << movedEntry->entity.describeEntity())
                 movedEntry->velocityProperty.data().zero();
             }
             processMovedEntity(*movedEntry, tickSize);
@@ -3017,15 +3015,14 @@ void PhysicalDomain::tick(double tickSize, OpVector& res)
     auto duration = std::chrono::steady_clock::now() - start;
     auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
     if (debug_flag) {
-        log(microseconds > 3000 ? WARNING : INFO,
-            String::compose("Physics took %1 μs (just stepSimulation %2 μs, visibility %3 μs, tick size %4 μs, visibility queue: %5, postTick: %6 μs, moving count: %7).",
+		spdlog::log(microseconds > 3000 ? spdlog::level::warn : spdlog::level::info, "Physics took {} μs (just stepSimulation {} μs, visibility {} μs, tick size {} μs, visibility queue: {}, postTick: {} μs, moving count: {}).",
                             microseconds,
                             std::chrono::duration_cast<std::chrono::microseconds>(interim).count(),
                             std::chrono::duration_cast<std::chrono::microseconds>(visDuration).count(),
                             static_cast<long>(tickSize * 1000000),
                             m_visibilityRecalculateQueue.size(),
                             std::chrono::duration_cast<std::chrono::microseconds>(postDuration).count(),
-                            movingSize)
+                            movingSize
         );
     }
     s_processTimeUs += microseconds;

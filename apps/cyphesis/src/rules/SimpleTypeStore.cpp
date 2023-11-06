@@ -21,7 +21,6 @@
 #include "SimpleTypeStore.h"
 #include "common/log.h"
 #include "common/TypeNode.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Factories.h>
@@ -51,9 +50,9 @@ TypeNode* SimpleTypeStore::addChild(const Atlas::Objects::Root& obj)
     if (!parent.empty()) {
         auto I = m_types.find(parent);
         if (I == m_types.end()) {
-            log(ERROR, String::compose("Installing %1 \"%2\" "
-                                       "which has unknown parent \"%3\".",
-                                       obj->getObjtype(), child, parent));
+            spdlog::error("Installing {} \"{}\" "
+                                       "which has unknown parent \"{}\".",
+                                       obj->getObjtype(), child, parent);
             return nullptr;
         }
         parentNode = I->second.get();
@@ -63,11 +62,11 @@ TypeNode* SimpleTypeStore::addChild(const Atlas::Objects::Root& obj)
     if (I != m_types.end()) {
 
         const TypeNode* existingParent = I->second->parent();
-        log(ERROR, String::compose("Installing %1 \"%2\"(parent \"%3\") "
-                                   "which was already installed as a %4 with parent \"%5\"",
+        spdlog::error("Installing {} \"{}\"(parent \"{}\") "
+                                   "which was already installed as a {} with parent \"{}\"",
                                    obj->getObjtype(), child, parent,
                                    I->second->description(Visibility::PRIVATE)->getObjtype(),
-                                   existingParent ? existingParent->name() : "NON"));
+                                   existingParent ? existingParent->name() : "NON");
         return nullptr;
     }
     auto type = std::make_unique<TypeNode>(child, obj);

@@ -33,6 +33,7 @@
 #include <Atlas/Objects/Anonymous.h>
 
 #include "Remotery.h"
+#include <sstream>
 
 using Atlas::Message::Element;
 using Atlas::Objects::Root;
@@ -97,12 +98,12 @@ void BaseMind::sightSetOperation(const Operation& op, OpVector& res)
 {
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     RootEntity ent(smart_dynamic_cast<RootEntity>(args.front()));
     if (!ent.isValid()) {
-        log(ERROR, "Got sight(set) of non-entity");
+        spdlog::error("Got sight(set) of non-entity");
         return;
     }
     m_map.updateAdd(ent, op->getSeconds());
@@ -115,13 +116,13 @@ void BaseMind::SoundOperation(const Operation& op, OpVector& res)
     if (!isAwake()) { return; }
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     const Root& arg = args.front();
     Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
     if (op2.isValid()) {
-        debug_print(" args is an op!")
+        cy_debug_print(" args is an op!")
         std::string event_name("sound_");
         event_name += op2->getParent();
 
@@ -133,23 +134,23 @@ void BaseMind::SoundOperation(const Operation& op, OpVector& res)
 
 void BaseMind::SightOperation(const Operation& op, OpVector& res)
 {
-    debug_print("BaseMind::SightOperation(Sight)")
+    cy_debug_print("BaseMind::SightOperation(Sight)")
     // Deliver argument to sight things
     if (!isAwake()) { return; }
     if (op->isDefaultSeconds()) {
-        log(ERROR, "Sight operation had no seconds set, ignoring it.");
+        spdlog::error("Sight operation had no seconds set, ignoring it.");
         return;
     }
 
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     const Root& arg = args.front();
     Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
     if (op2.isValid()) {
-        debug_print(String::compose(" args is an op (%1)!", op2->getParent()))
+        cy_debug_print(fmt::format(" args is an op ({})!", op2->getParent()))
         std::string event_name("sight_");
         event_name += op2->getParent();
 
@@ -165,10 +166,10 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res)
     } else /* if (op2->getObjtype() == "object") */ {
         RootEntity ent(Atlas::Objects::smart_dynamic_cast<RootEntity>(arg));
         if (!ent.isValid()) {
-            log(ERROR, "Arg of sight operation is not an op or an entity");
+            spdlog::error("Arg of sight operation is not an op or an entity");
             return;
         }
-        debug_print(" arg is an entity!")
+        cy_debug_print(" arg is an entity!")
         auto me = m_map.updateAdd(ent, op->getSeconds());
         if (me) {
             me->setVisible();
@@ -179,16 +180,16 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res)
 void BaseMind::ThinkOperation(const Operation& op, OpVector& res)
 {
     //Get the contained op
-    debug_print("BaseMind::ThinkOperation(Think)")
+    cy_debug_print("BaseMind::ThinkOperation(Think)")
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     const Root& arg = args.front();
     Operation op2(Atlas::Objects::smart_dynamic_cast<Operation>(arg));
     if (op2.isValid()) {
-        debug_print(" args is an op!")
+        cy_debug_print(" args is an op!")
         std::string event_name("think_");
         event_name += op2->getParent();
 
@@ -214,7 +215,7 @@ void BaseMind::AppearanceOperation(const Operation& op, OpVector& res)
     auto& args = op->getArgs();
     for (auto& arg : args) {
         if (!arg->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-            log(ERROR, "BaseMind: Appearance op does not have ID");
+            spdlog::error("BaseMind: Appearance op does not have ID");
             continue;
         }
         const std::string& id = arg->getId();
@@ -230,7 +231,7 @@ void BaseMind::AppearanceOperation(const Operation& op, OpVector& res)
                     res.push_back(l);
                 }
             } else {
-                log(ERROR, "BaseMind: Appearance op does not have stamp");
+                spdlog::error("BaseMind: Appearance op does not have stamp");
             }
             entity->update(op->getSeconds());
             entity->setVisible();
@@ -255,7 +256,7 @@ void BaseMind::DisappearanceOperation(const Operation& op, OpVector& res)
     }
     auto& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     for (auto& arg : args) {
@@ -276,7 +277,7 @@ void BaseMind::UnseenOperation(const Operation& op, OpVector& res)
     }
     auto& args = op->getArgs();
     if (args.empty()) {
-        debug_print(" no args!")
+        cy_debug_print(" no args!")
         return;
     }
     for (auto& arg : args) {
@@ -340,12 +341,12 @@ void BaseMind::InfoOperation(const Operation& op, OpVector& res)
         auto resolvedTypes = m_typeResolver->InfoOperation(op, res);
         //For any resolved types, find any unresolved entities, set their type and put any pending operations in "res".
         for (auto& type : resolvedTypes) {
-            //log(NOTICE, String::compose("Mind %1: Resolved type '%2'.", getId(), type->name()));
+            //spdlog::debug("Mind {}: Resolved type '{}'.", getId(), type->name());
 
             auto resolved = m_map.resolveEntitiesForType(type);
             for (auto& entity : resolved) {
 
-                //log(NOTICE, String::compose("Mind %1: Resolved entity %2.", getId(), entity->getId()));
+                //spdlog::debug("Mind {}: Resolved entity {}.", getId(), entity->getId());
 
                 auto J = m_pendingEntitiesOperations.find(entity->getId());
                 if (J != m_pendingEntitiesOperations.end()) {
@@ -355,7 +356,7 @@ void BaseMind::InfoOperation(const Operation& op, OpVector& res)
 
                 //If we have resolved our own entity we should do some house keeping
                 if (entity->getId() == m_entityId) {
-                    log(NOTICE, String::compose("%1: Resolved own entity for %2.", getId(), entity->describeEntity()));
+                    spdlog::debug("{}: Resolved own entity for {}.", getId(), entity->describeEntity());
                     setOwnEntity(res, entity);
                 }
             }
@@ -371,15 +372,15 @@ void BaseMind::ErrorOperation(const Operation& op, OpVector& res)
         Atlas::Message::Element message;
         if (arg->copyAttr("message", message) == 0 && message.isString()) {
             if (getEntity()) {
-                log(WARNING, String::compose("BaseMind %1, entity %2, error from server: %3", getId(), getEntity()->describeEntity(), message.String()));
+                spdlog::warn("BaseMind {}, entity {}, error from server: {}", getId(), getEntity()->describeEntity(), message.String());
             } else {
-                log(WARNING, String::compose("BaseMind %1, error from server: %2", getId(), message.String()));
+                spdlog::warn("BaseMind {}, error from server: {}", getId(), message.String());
             }
         } else {
             if (getEntity()) {
-                log(WARNING, String::compose("BaseMind %1, entity %2, unspecified error from server", getId(), getEntity()->describeEntity()));
+                spdlog::warn("BaseMind {}, entity {}, unspecified error from server", getId(), getEntity()->describeEntity());
             } else {
-                log(WARNING, String::compose("BaseMind %1, unspecified error from server.", getId()));
+                spdlog::warn("BaseMind {}, unspecified error from server.", getId());
             }
         }
     }
@@ -403,7 +404,7 @@ void BaseMind::updateServerTimeFromOperation(const Atlas::Objects::Operation::Ro
     if (!op.isDefaultSeconds()) {
         //Alert if there's a too large difference in time.
         if (op.getSeconds() - mServerTime < -30) {
-            log(WARNING, String::compose("Operation '%1' has seconds set (%2) earlier than already recorded seconds (%3).", op.getParent(), op.getSeconds(), mServerTime));
+            spdlog::warn("Operation '{}' has seconds set ({}) earlier than already recorded seconds ({}).", op.getParent(), op.getSeconds(), mServerTime);
         }
         mServerTime = op.getSeconds();
     }
@@ -417,7 +418,7 @@ void BaseMind::operation(const Operation& op, OpVector& res)
     if (debug_flag) {
         std::cout << "BaseMind::operation received {" << std::endl;
         debug_dump(op, std::cout);
-        std::cout << "}" << std::endl << std::flush;
+        std::cout << "}" << std::endl;
     }
 
     int op_no = op->getClassNo();
@@ -439,7 +440,7 @@ void BaseMind::operation(const Operation& op, OpVector& res)
                     return;
                 }
             } else {
-                log(WARNING, String::compose("Got %1 operation without any 'from'.", op->getParent()));
+                spdlog::warn("Got {} operation without any 'from'.", op->getParent());
             }
         }
 
@@ -499,7 +500,7 @@ void BaseMind::operation(const Operation& op, OpVector& res)
         for (const auto& resOp : res) {
             std::cout << "BaseMind::operation sent {" << std::endl;
             debug_dump(resOp, std::cout);
-            std::cout << "}" << std::endl << std::flush;
+            std::cout << "}" << std::endl;
         }
     }
 }
@@ -572,7 +573,7 @@ void BaseMind::callSightOperation(const Operation& op,
     m_map.getAdd(op->getFrom());
     auto op_no = op->getClassNo();
     if (debug_flag && (op_no == OP_INVALID)) {
-        debug_print(getId() << " could not deliver sight of "
+        cy_debug_print(getId() << " could not deliver sight of "
                         << op->getParent());
     }
     if (op_no == Atlas::Objects::Operation::SET_NO) {
@@ -588,7 +589,7 @@ void BaseMind::callSoundOperation(const Operation& op,
     m_map.getAdd(op->getFrom());
     auto op_no = op->getClassNo();
     if (debug_flag && (op_no == OP_INVALID)) {
-        debug_print(getId() << " could not deliver sound of "
+        cy_debug_print(getId() << " could not deliver sound of "
                             << op->getParent())
     }
 
@@ -599,7 +600,7 @@ void BaseMind::callSoundOperation(const Operation& op,
         std::cout << I->second->getId() << ":" << I->second->getType() << " is "
                   << ( I->second->isVisible() ? "visible " : "hid " )
                   << I->second->lastSeen()
-                  << std::endl << std::flush;
+                  << std::endl;
     }
 #endif
 
@@ -641,7 +642,7 @@ void BaseMind::entityAdded(MemEntity& entity)
     if (!m_ownEntity) {
         //If we have resolved our own entity we should do some house keeping
         if (entity.getId() == m_entityId) {
-            log(NOTICE, String::compose("%1: Added own entity for %2.", getId(), entity.describeEntity()));
+            spdlog::debug("{}: Added own entity for {}.", getId(), entity.describeEntity());
             OpVector res;
             setOwnEntity(res, Ref<MemEntity>(&entity));
             for (auto& resOp: res) {

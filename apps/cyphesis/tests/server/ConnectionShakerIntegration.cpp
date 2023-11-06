@@ -40,7 +40,6 @@
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
-using String::compose;
 
 bool database_flag = false;
 

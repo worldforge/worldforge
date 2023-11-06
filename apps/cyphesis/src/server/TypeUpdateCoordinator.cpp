@@ -50,7 +50,7 @@ TypeUpdateCoordinator::TypeUpdateCoordinator(Inheritance& inheritance, WorldRout
                 entry.second->operation(change, res);
             }
 
-            debug_print("WorldRouter::messageToClients {"
+            cy_debug_print("WorldRouter::messageToClients {"
                                 << change->getParent() << ":"
                                 << change->getFrom() << ":" << change->getTo() << "}")
 

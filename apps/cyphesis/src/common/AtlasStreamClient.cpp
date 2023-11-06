@@ -26,7 +26,6 @@
 
 #include "common/debug.h"
 #include "common/log.h"
-#include "compose.hpp"
 
 
 #include <Atlas/Codec.h>
@@ -296,16 +295,16 @@ void AtlasStreamClient::objectArrived(Root obj)
     RootOperation op = Atlas::Objects::smart_dynamic_cast<RootOperation>(obj);
     if (!op.isValid()) {
         std::cerr << "ERROR: Non op object received from server"
-                  << std::endl << std::flush;;
+                  << std::endl;;
         if (!obj->isDefaultParent()) {
             std::cerr << "NOTICE: Unexpected object has parent "
                       << obj->getParent()
-                      << std::endl << std::flush;
+                      << std::endl;
         }
         if (!obj->isDefaultObjtype()) {
             std::cerr << "NOTICE: Unexpected object has objtype "
                       << obj->getObjtype()
-                      << std::endl << std::flush;
+                      << std::endl;
         }
         return;
     }
@@ -325,7 +324,7 @@ void AtlasStreamClient::dispatch()
 void AtlasStreamClient::operation(const RootOperation& op)
 {
     if (debug_flag) {
-        debug_print("Received:");
+        cy_debug_print("Received:");
         debug_dump(op, std::cerr);
     }
     if (m_currentTask != nullptr) {
@@ -372,7 +371,7 @@ void AtlasStreamClient::infoArrived(const RootOperation& op)
         return;
     }
     if (op->isDefaultArgs() || op->getArgs().empty()) {
-        std::cerr << "WARNING: Malformed account from server" << std::endl << std::flush;
+        std::cerr << "WARNING: Malformed account from server" << std::endl;
         return;
     }
     if (op->isDefaultRefno()) {
@@ -447,7 +446,7 @@ void AtlasStreamClient::send(const RootOperation& op)
     }
 
     if (debug_flag) {
-        debug_print("Sending:");
+        cy_debug_print("Sending:");
         debug_dump(op, std::cerr);
     }
 
@@ -478,7 +477,7 @@ int AtlasStreamClient::connectLocal(const std::string& filename)
         std::function<void()> dispatcher = [&] { this->dispatch(); };
         m_socket = std::make_unique<LocalStreamClientSocket>(m_io_context, dispatcher, local::stream_protocol::endpoint(filename));
     } catch (const std::exception& e) {
-        log(ERROR, String::compose("Error when connecting to local socket.\n%1", e.what()));
+        spdlog::error("Error when connecting to local socket.\n{}", e.what());
         return -1;
     }
     return m_socket->negotiate(*this);
@@ -541,7 +540,7 @@ int AtlasStreamClient::waitForLoginResponse()
     while (poll(std::chrono::seconds(10)) == 0) {
         if (reply_flag && !error_flag) {
             if (m_infoReply->isDefaultId()) {
-                std::cerr << "Malformed reply" << std::endl << std::flush;
+                std::cerr << "Malformed reply" << std::endl;
             } else {
                 m_accountId = m_infoReply->getId();
                 m_accountType = m_infoReply->getParent();
@@ -562,7 +561,7 @@ int AtlasStreamClient::pollOne(const std::chrono::steady_clock::duration& durati
     }
     int result = m_socket->poll(duration, [&]() -> bool { return !mOps.empty(); });
     if (result == -1) {
-        std::cerr << "Server disconnected" << std::endl << std::flush;
+        std::cerr << "Server disconnected" << std::endl;
     }
     return result;
 }
@@ -575,7 +574,7 @@ int AtlasStreamClient::poll(const std::chrono::steady_clock::duration& duration)
     }
     int result = m_socket->poll(duration, []() { return false; });
     if (result == -1) {
-        std::cerr << "Server disconnected" << std::endl << std::flush;
+        std::cerr << "Server disconnected" << std::endl;
     }
     return result;
 }
@@ -585,7 +584,7 @@ int AtlasStreamClient::runTask(std::shared_ptr<ClientTask> task, const std::stri
     assert(task != nullptr);
 
     if (m_currentTask != nullptr) {
-        std::cout << "Busy" << std::endl << std::flush;
+        std::cout << "Busy" << std::endl;
         return -1;
     }
 

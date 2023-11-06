@@ -229,7 +229,7 @@ TerrainModTranslator::buildTranslator(const Atlas::Message::MapType& modElement,
         shape.fromAtlas(shapeElement);
     } catch (...) {
         ///Just log an error and return false, this isn't fatal.
-        log(WARNING, "Error when parsing shape from atlas.");
+        spdlog::warn("Error when parsing shape from atlas.");
         return nullptr;
     }
 
@@ -241,17 +241,17 @@ TerrainModTranslator::buildTranslator(const Atlas::Message::MapType& modElement,
 
         auto I = modElement.find("slopes");
         if (I == modElement.end()) {
-            log(WARNING, "SlopeTerrainMod defined without slopes");
+            spdlog::warn("SlopeTerrainMod defined without slopes");
             return nullptr;
         }
         const Element& modSlopeElem = I->second;
         if (!modSlopeElem.isList()) {
-            log(WARNING, "SlopeTerrainMod defined with malformed slopes");
+            spdlog::warn("SlopeTerrainMod defined with malformed slopes");
             return nullptr;
         }
         const ListType& slopes = modSlopeElem.asList();
         if (slopes.size() < 2 || !slopes[0].isNum() || !slopes[1].isNum()) {
-            log(WARNING, "SlopeTerrainMod defined without slopes");
+            spdlog::warn("SlopeTerrainMod defined without slopes");
             return nullptr;
         }
         const auto dx = static_cast<float>(slopes[0].asNum());

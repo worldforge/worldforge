@@ -26,7 +26,6 @@
 #include "log.h"
 #include "debug.h"
 #include "globals.h"
-#include "compose.hpp"
 #include "const.h"
 #include "Remotery.h"
 
@@ -35,11 +34,11 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string.hpp>
+#include <sstream>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
-using String::compose;
 
 using namespace sqlite3pp;
 
@@ -61,8 +60,7 @@ DatabaseSQLite::~DatabaseSQLite()
     m_workerCondition.notify_all();
     m_workerThread.join();
     if (!pendingQueries.empty()) {
-        log(ERROR, compose("Database delete with %1 queries pending",
-                           pendingQueries.size()));
+        spdlog::error("Database delete with {} queries pending", pendingQueries.size());
 
     }
 }
@@ -116,7 +114,7 @@ int DatabaseSQLite::initConnection()
         boost::filesystem::create_directories(db_path.parent_path());
         m_database = std::make_unique<database>(db_path.c_str());
     } catch (const std::runtime_error& e) {
-        log(WARNING, "Error when opening SQLite database.");
+        spdlog::warn("Error when opening SQLite database.");
         return -1;
     }
 
@@ -154,7 +152,7 @@ int DatabaseSQLite::getObject(const std::string& table,
 {
     assert(m_database);
 
-    debug_print("Database::getObject() " << table << "." << key)
+    cy_debug_print("Database::getObject() " << table << "." << key)
     std::string query = std::string("SELECT * FROM ") + table + " WHERE id = '" + key + "'";
 
     try {
@@ -162,20 +160,20 @@ int DatabaseSQLite::getObject(const std::string& table,
 
         auto firstRowIterator = qry.begin();
         if (firstRowIterator == qry.end()) {
-            debug_print("No entry for " << key << " in " << table
+            cy_debug_print("No entry for " << key << " in " << table
                             << " table")
             return -1;
         }
 
         auto data = (*firstRowIterator).get<const char*>(1);
 
-        debug_print("Got record " << key << " from database, value " << data)
+        cy_debug_print("Got record " << key << " from database, value " << data)
 
         int ret = decodeMessage(data, o);
 
         return ret;
     } catch (const database_error& e) {
-        log(WARNING, String::compose("Error when running database query: %1", e.what()));
+        spdlog::warn("Error when running database query: {}", e.what());
         return -1;
     }
 }
@@ -184,14 +182,14 @@ void DatabaseSQLite::reportError(const char* errorMsg)
 {
     std::string msg = std::string("DATABASE: ") + errorMsg;
     msg = msg.substr(0, msg.size() - 1);
-    log(ERROR, msg);
+    spdlog::error(msg);
 }
 
 DatabaseResult DatabaseSQLite::runSimpleSelectQuery(const std::string& query)
 {
     assert(m_database);
 
-    debug_print("QUERY: " << query)
+    cy_debug_print("QUERY: " << query)
     auto query_instance = std::make_unique<sqlite3pp::query>(*m_database, query.c_str());
 
     return DatabaseResult(std::make_unique<DatabaseResultWorkerSqlite>(std::move(query_instance)));
@@ -205,7 +203,7 @@ int DatabaseSQLite::runCommandQuery(const std::string& query)
         command cmd(*m_database, query.c_str());
         cmd.execute();
     } catch (const database_error& e) {
-        log(ERROR, String::compose("runCommandQuery('%1'): Database query error.", query));
+        spdlog::error("runCommandQuery('{}'): Database query error.", query);
         reportError(e.what());
         return -1;
     }
@@ -238,7 +236,7 @@ int DatabaseSQLite::registerRelation(std::string& tablename,
     query += targettable;
     query += " (id) ON DELETE CASCADE )";
 
-    debug_print("CREATE QUERY: " << query)
+    cy_debug_print("CREATE QUERY: " << query)
     if (runCommandQuery(query) != 0) {
         return -1;
     }
@@ -252,7 +250,7 @@ int DatabaseSQLite::registerSimpleTable(const std::string& name,
     assert(m_database);
 
     if (row.empty()) {
-        log(ERROR, "Attempt to create empty database table");
+        spdlog::error("Attempt to create empty database table");
     }
     std::string createquery = "CREATE TABLE IF NOT EXISTS ";
     createquery += name;
@@ -277,12 +275,12 @@ int DatabaseSQLite::registerSimpleTable(const std::string& name,
         } else if (type.isFloat()) {
             createquery += " float";
         } else {
-            log(ERROR, "Illegal column type in database simple row");
+            spdlog::error("Illegal column type in database simple row");
         }
     }
     createquery += ")";
 
-    debug_print("CREATE QUERY: " << createquery)
+    cy_debug_print("CREATE QUERY: " << createquery)
     int ret = runCommandQuery(createquery);
     return ret;
 }
@@ -318,21 +316,21 @@ int DatabaseSQLite::registerEntityTable(const std::map<std::string, int>& chunks
 {
     assert(m_database);
 
-    std::string query = compose("CREATE TABLE IF NOT EXISTS entities ("
+    std::string query = fmt::format("CREATE TABLE IF NOT EXISTS entities ("
                                 "id integer UNIQUE PRIMARY KEY, "
                                 "loc integer, "
-                                "type char(%1), "
+                                "type char({}), "
                                 "seq integer", consts::id_len);
     auto I = chunks.begin();
     auto Iend = chunks.end();
     for (; I != Iend; ++I) {
-        query += compose(", %1 varchar(1024)", I->first);
+        query += fmt::format(", {} varchar(1024)", I->first);
     }
     query += ")";
     if (runCommandQuery(query) != 0) {
         return -1;
     }
-    query = compose("INSERT INTO entities VALUES (%1, null, 'world', 0, '')",
+    query = fmt::format("INSERT INTO entities VALUES ({}, null, 'world', 0, '')",
                     consts::rootWorldIntId);
     if (runCommandQuery(query) != 0) {
         return -1;
@@ -344,10 +342,10 @@ int DatabaseSQLite::registerPropertyTable()
 {
     assert(m_database);
 
-    std::string query = compose("CREATE TABLE IF NOT EXISTS properties ("
+    std::string query = fmt::format("CREATE TABLE IF NOT EXISTS properties ("
                                 "id integer REFERENCES entities "
                                 "ON DELETE CASCADE, "
-                                "name varchar(%1), "
+                                "name varchar({}), "
                                 "value text)", consts::id_len);
     if (runCommandQuery(query) != 0) {
         return -1;

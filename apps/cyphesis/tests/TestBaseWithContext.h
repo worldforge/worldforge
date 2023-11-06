@@ -26,7 +26,6 @@
 #define DEBUG
 #endif
 
-#include "common/compose.hpp"
 #include "AssertBase.h"
 
 #include "StreamOperators.h"
@@ -94,12 +93,12 @@ namespace Cyphesis {
         int error_count = 0;
 
         for (auto& test : m_tests) {
-            std::cerr << "Starting test " << test.name << std::endl << std::flush;
+            std::cerr << "Starting test " << test.name << std::endl;
             {
                 ContextT context{};
                 test.method(context);
             }
-            std::cerr << "Completed test " << test.name << std::endl << std::flush;
+            std::cerr << "Completed test " << test.name << std::endl;
 
             if (!m_errorReports.empty()) {
                 ++error_count;

@@ -30,7 +30,6 @@
 #include "common/log.h"
 #include "common/globals.h"
 #include "common/Monitors.h"
-#include "common/compose.hpp"
 #include "Remotery.h"
 #include <varconf/config.h>
 
@@ -162,7 +161,7 @@ void CommMetaClient::metaserverKeepalive()
 void CommMetaClient::metaserverReply(size_t packet_size)
 {
     if ( packet_size < sizeof(uint32_t)) {
-        log(WARNING, "WARNING: Reply from metaserver too short");
+        spdlog::warn("WARNING: Reply from metaserver too short");
         return;
     }
 
@@ -171,7 +170,7 @@ void CommMetaClient::metaserverReply(size_t packet_size)
     if(shake.getPacketType() == NMT_HANDSHAKE )
     {
         uint32_t handshake = shake.getIntData(4); // we know 4 bytes for type, and 4 for shake
-        debug_print("MetaServer contacted successfully."
+        cy_debug_print("MetaServer contacted successfully."
                        )
 
         auto servershake = std::make_shared<MetaServerPacket>();
@@ -204,7 +203,7 @@ void CommMetaClient::metaserverTerminate()
             mSocket.send_to(buffer(term->getBuffer().data(), term->getSize()), mDestination);
         } catch (const std::exception& e) {
             //This isn't fatal
-            log(INFO, String::compose("Got error when trying to send data to the metaserver at shutdown: %1", e.what()));
+            spdlog::info("Got error when trying to send data to the metaserver at shutdown: {}", e.what());
         }
     }
 }
@@ -255,7 +254,7 @@ void CommMetaClient::updateAttributes()
             m_serverAttributes[v] = tmp;
         } else {
             ss << "WARNING: [cyphesis].metastats item [" << v << "] is not a monitored variable";
-            log(WARNING,ss.str());
+            spdlog::warn(ss.str());
         }
     }
 

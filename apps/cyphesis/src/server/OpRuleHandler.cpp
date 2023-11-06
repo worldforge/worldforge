@@ -20,18 +20,17 @@
 
 #include "common/debug.h"
 #include "common/Inheritance.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Factories.h>
 
 #include <iostream>
+#include <fmt/format.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -46,11 +45,11 @@ int OpRuleHandler::installOpDefinition(const std::string & class_name,
     Inheritance & i = Inheritance::instance();
 
     if (!i.hasClass(parent)) {
-        debug_print("op_definition \"" << class_name
+        cy_debug_print("op_definition \"" << class_name
                         << "\" has non existent parent \"" << parent
                         << "\". Waiting.");
         dependent = parent;
-        reason = compose("Operation \"%1\" has parent \"%2\" which does "
+        reason = fmt::format("Operation \"{}\" has parent \"{}\" which does "
                          "not exist.", class_name, parent);
         return 1;
     }

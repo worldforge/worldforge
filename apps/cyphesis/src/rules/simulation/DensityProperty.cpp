@@ -46,7 +46,7 @@ void DensityProperty::updateMass(LocatedEntity& entity) const
         float volume = volumeVector.x() * volumeVector.y() * volumeVector.z();
 
         if (!std::isnormal(volume) && volume != 0) {
-            log(WARNING, String::compose("Volume of %1 is not a normal number.", volume));
+            spdlog::warn("Volume of {} is not a normal number.", volume);
         } else {
             double mass = volume * m_data;
 

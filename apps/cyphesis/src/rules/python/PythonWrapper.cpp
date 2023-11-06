@@ -21,7 +21,6 @@
 #include "CyPy_Oplist.h"
 #include "CyPy_LocatedEntity.h"
 
-#include "common/compose.hpp"
 #include "common/log.h"
 #include "common/operations/Tick.h"
 #include "common/debug.h"
@@ -53,19 +52,19 @@ HandlerResult PythonWrapper::operation(const std::string& op_type,
 
     assert(!m_wrapper.isNull());
     std::string op_name = op_type + "_operation";
-    debug_print("Got script " << this->m_wrapper.type().str() << " on object " << this->m_wrapper.str() << " for " << op_name);
+    cy_debug_print("Got script " << this->m_wrapper.type().str() << " on object " << this->m_wrapper.str() << " for " << op_name);
     if (!m_wrapper.hasAttr(op_name)) {
-        debug_print("No method to be found for " << op_name);
+        cy_debug_print("No method to be found for " << op_name);
         return OPERATION_IGNORED;
     }
 
     try {
         PythonLogGuard logGuard([this, op_type]() {
-            return String::compose("%1, %2: ", this->m_wrapper.str(), op_type);
+            return fmt::format("{}, {}: ", this->m_wrapper.as_string(), op_type);
         });
         auto ret = m_wrapper.callMemberFunction(op_name, Py::TupleN(CyPy_Operation::wrap(op)));
 
-        debug_print("Called python method " << op_name);
+        cy_debug_print("Called python method " << op_name);
         return processScriptResult(op_name, ret, res);
 
     } catch (const Py::BaseException& py_ex) {
@@ -73,14 +72,13 @@ HandlerResult PythonWrapper::operation(const std::string& op_type,
             PyErr_Print();
         }
         //It's important that we only access m_wrapper.as_string() after PyErr_Print(), as it's invalid to access any Python stuff when there's an error set.
-        log(ERROR, String::compose("Python error calling \"%1\" on " +
-                                   m_wrapper.as_string(), op_name));
+        spdlog::error("Python error calling \"{}\" on " +
+                                   m_wrapper.as_string(), op_name);
         if (op->getClassNo() == Atlas::Objects::Operation::TICK_NO) {
-            log(ERROR,
-                String::compose("Script for %1 has reported an error "
+            spdlog::error("Script for {} has reported an error "
                                 "processing a tick operation. "
                                 "This entity is probably now inactive.",
-                                m_wrapper.as_string()));
+                                m_wrapper.as_string());
         }
         return OPERATION_IGNORED;
     }
@@ -98,7 +96,7 @@ void PythonWrapper::attachPropertyCallbacks(LocatedEntity& entity)
                 if (propertyName == changedPropertyName) {
                     try {
                         PythonLogGuard logGuard([this, fieldName]() {
-                            return String::compose("%1, %2: ", this->m_wrapper.str(), fieldName);
+                            return fmt::format("{}, {}: ", this->m_wrapper.as_string(), fieldName);
                         });
                         OpVector res;
                         auto ret = m_wrapper.callMemberFunction(fieldName);
@@ -116,7 +114,7 @@ void PythonWrapper::attachPropertyCallbacks(LocatedEntity& entity)
                             }
                         }
                     } catch (const Py::BaseException& py_ex) {
-                        log(ERROR, String::compose("Could not call property update function %1 on %2 for entity %3", fieldName, m_wrapper.str(), entity.describeEntity()));
+                        spdlog::error("Could not call property update function {} on {} for entity {}", fieldName, m_wrapper.as_string(), entity.describeEntity());
                         if (PyErr_Occurred()) {
                             PyErr_Print();
                         }
@@ -140,7 +138,7 @@ void PythonWrapper::hook(const std::string& function,
 
     try {
         PythonLogGuard logGuard([this]() {
-            return String::compose("%1: ", this->m_wrapper.str());
+            return fmt::format("{}: ", this->m_wrapper.as_string());
         });
         auto ret = m_wrapper.callMemberFunction(function, Py::TupleN(wrapper));
         //Ignore Handler result; it does nothing in this context. But process any ops.
@@ -150,7 +148,7 @@ void PythonWrapper::hook(const std::string& function,
             PyErr_Print();
         }
         //It's important that we only access m_wrapper.str() after PyErr_Print(), as it's invalid to access any Python stuff when there's an error set.
-        log(ERROR, String::compose("Could not call hook function %1 on %2 for entity %3", function, m_wrapper.str(), entity->describeEntity()));
+        spdlog::error("Could not call hook function {} on {} for entity {}", function, m_wrapper.as_string(), entity->describeEntity());
     }
 
 }
@@ -170,7 +168,7 @@ HandlerResult PythonWrapper::processScriptResult(const std::string& scriptName, 
             } else if (numRet == 2) {
                 result = OPERATION_BLOCKED;
             } else {
-                log(ERROR, String::compose("Unrecognized return code %1 for script '%2'", numRet, scriptName));
+                spdlog::error("Unrecognized return code {} for script '{}'", numRet, scriptName);
             }
 
         } else if (CyPy_Operation::check(pythonResult)) {
@@ -181,12 +179,12 @@ HandlerResult PythonWrapper::processScriptResult(const std::string& scriptName, 
                 res.push_back(opRes);
             }
         } else {
-            log(ERROR, String::compose("Python script \"%1\" returned an invalid result.", scriptName));
+            spdlog::error("Python script \"{}\" returned an invalid result.", scriptName);
         }
     };
 
     if (ret.isNone()) {
-        debug_print("Returned none");
+        cy_debug_print("Returned none");
     } else {
         //Check if it's a tuple and process it.
         if (ret.isTuple()) {

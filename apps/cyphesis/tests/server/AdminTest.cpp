@@ -36,7 +36,6 @@
 #include "rules/simulation/Entity.h"
 
 #include "common/CommSocket.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 #include "common/Inheritance.h"
 #include "common/operations/Monitor.h"
@@ -58,8 +57,6 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
-
-using String::compose;
 
 std::ostream & operator<<(std::ostream & os,
                           const MapType::const_iterator &)
@@ -481,7 +478,7 @@ void Admintest::test_LogoutOperation_unknown()
     OpVector res;
 
     Anonymous arg;
-    arg->setId(String::compose("%1", cid));
+    arg->setId(std::to_string(cid));
     op->setArgs1(arg);
 
     m_account->LogoutOperation(op, res);
@@ -495,7 +492,7 @@ void Admintest::test_LogoutOperation_known()
     Account_LogoutOperation_called = nullptr;
 
     long cid = m_id_counter++;
-    std::string cid_str = String::compose("%1", cid);
+    std::string cid_str = std::to_string(cid);
     Account * ac2 = new Admin(0,
                               "f3332c00-5d2b-45c1-8cf4-3429bdf2845f",
                               "c0e095f0-575c-477c-bafd-2055d6958d4d",
@@ -525,7 +522,7 @@ void Admintest::test_LogoutOperation_other_but_unconnected()
     m_account->m_connection = 0;
 
     long cid = m_id_counter++;
-    std::string cid_str = String::compose("%1", cid);
+    std::string cid_str = std::to_string(cid);
     Account * ac2 = new Admin(0,
                               "f3332c00-5d2b-45c1-8cf4-3429bdf2845f",
                               "c0e095f0-575c-477c-bafd-2055d6958d4d",
@@ -629,7 +626,7 @@ void Admintest::test_GetOperation_obj_unconnected()
 void Admintest::test_GetOperation_obj_OOG()
 {
     long cid = m_id_counter++;
-    std::string cid_str = String::compose("%1", cid);
+    std::string cid_str = std::to_string(cid);
     auto to = new TestObject(cid);
 
     m_server->addRouter(std::unique_ptr<ConnectableRouter>(to));
@@ -663,7 +660,7 @@ void Admintest::test_GetOperation_obj_OOG()
 void Admintest::test_GetOperation_obj_IG()
 {
     long cid = m_id_counter++;
-    std::string cid_str = String::compose("%1", cid);
+    std::string cid_str = std::to_string(cid);
     Ref<Entity>  to = new Entity(cid);
 
     m_server->m_world.addEntity(to, m_gw);
@@ -851,7 +848,7 @@ void Admintest::test_SetOperation_obj_not_found()
 
     Anonymous arg;
     arg->setObjtype("obj");
-    arg->setId(compose("%1", cid));
+    arg->setId(std::to_string(cid));
     op->setArgs1(arg);
 
     m_account->SetOperation(op, res);

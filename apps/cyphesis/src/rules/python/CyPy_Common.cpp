@@ -66,7 +66,7 @@ Py::Object CyPy_Log::debug_(const Py::Tuple& args)
         auto message = args[1].as_string();
 
         if (consts::debug_level >= level) {
-            log(SCRIPT, message);
+			spdlog::info(message);
         }
     }
     return Py::None();
@@ -78,7 +78,7 @@ Py::Object CyPy_Log::thinking(const Py::Tuple& args)
         args.verify_length(1);
         auto message = args[0].as_string();
 
-        log(SCRIPT, message);
+		spdlog::trace(message);
     }
 
     return Py::None();

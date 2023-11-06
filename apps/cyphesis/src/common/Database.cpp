@@ -22,7 +22,6 @@
 #include "log.h"
 #include "debug.h"
 #include "globals.h"
-#include "compose.hpp"
 #include "const.h"
 
 #include <Atlas/Codecs/Packed.h>
@@ -33,11 +32,11 @@
 
 #include <cassert>
 #include <boost/algorithm/string.hpp>
+#include <sstream>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
-using String::compose;
 
 typedef Atlas::Codecs::Packed Serialiser;
 
@@ -57,8 +56,7 @@ int Database::createInstanceDatabase()
     std::string error_message;
 
     if (connect(CYPHESIS, error_message) != 0) {
-        log(ERROR, compose("Connection to master database failed: \n%1",
-                           error_message));
+        spdlog::error("Connection to master database failed: \n{}", error_message);
         return -1;
     }
 
@@ -66,11 +64,11 @@ int Database::createInstanceDatabase()
     if (::instance == CYPHESIS) {
         dbname = CYPHESIS;
     } else {
-        dbname = compose("%1_%2", CYPHESIS, ::instance);
+        dbname = fmt::format("{}_{}", CYPHESIS, ::instance);
     }
     readConfigItem(::instance, "dbname", dbname);
 
-    if (runCommandQuery(compose("CREATE DATABASE %1", dbname)) != 0) {
+    if (runCommandQuery(fmt::format("CREATE DATABASE {}", dbname)) != 0) {
         shutdownConnection();
         return -1;
     }
@@ -97,7 +95,7 @@ int Database::decodeMessage(const std::string & data,
     codec.poll();
 
     if (!m_d.check()) {
-        log(WARNING, "Database entry does not appear to be decodable");
+        spdlog::warn("Database entry does not appear to be decodable");
         return -1;
     }
 
@@ -113,7 +111,7 @@ DatabaseResult Database::selectRelation(const std::string & name,
     query += " WHERE source = ";
     query += id;
 
-    debug_print("Selecting on id = " << id << " ... ");
+    cy_debug_print("Selecting on id = " << id << " ... ");
 
     return runSimpleSelectQuery(query);
 }
@@ -155,7 +153,7 @@ DatabaseResult Database::selectSimpleRowBy(const std::string & name,
     query += " = ";
     query += value;
 
-    debug_print("Selecting on " << column << " = " << value
+    cy_debug_print("Selecting on " << column << " = " << value
                     << " ... ");
 
     return runSimpleSelectQuery(query);
@@ -204,8 +202,8 @@ int Database::insertEntity(const std::string & id,
                            int seq,
                            const std::string & value)
 {
-    std::string query = compose("INSERT INTO entities VALUES "
-                                "(%1, %2, '%3', %4, '%5')",
+    std::string query = fmt::format("INSERT INTO entities VALUES "
+                                "({}, {}, '{}', {}, '{}')",
                                 id, loc, type, seq, value);
     return scheduleCommand(query);
 }
@@ -215,9 +213,9 @@ int Database::updateEntity(const std::string & id,
                            const std::string & location_data,
                            const std::string & location_entity_id)
 {
-    std::string query = compose("UPDATE entities SET seq = %1, location = '%2',"
-                                " loc = '%3'"
-                                " WHERE id = %4", seq, location_data,
+    std::string query = fmt::format("UPDATE entities SET seq = {}, location = '{}',"
+                                " loc = '{}'"
+                                " WHERE id = {}", seq, location_data,
                                 location_entity_id, id);
     return scheduleCommand(query);
 }
@@ -226,33 +224,33 @@ int Database::updateEntityWithoutLoc(const std::string & id,
                  int seq,
                  const std::string & location_data)
 {
-    std::string query = compose("UPDATE entities SET seq = %1, location = '%2'"
-                                " WHERE id = %3", seq, location_data, id);
+    std::string query = fmt::format("UPDATE entities SET seq = {}, location = '{}'"
+                                " WHERE id = {}", seq, location_data, id);
     return scheduleCommand(query);
 }
 
 
 DatabaseResult Database::selectEntities(const std::string & loc)
 {
-    std::string query = compose("SELECT id, type, seq, location FROM entities"
-                                " WHERE loc = %1", loc);
+    std::string query = fmt::format("SELECT id, type, seq, location FROM entities"
+                                " WHERE loc = {}", loc);
 
-    debug_print("Selecting on loc = " << loc << " ... ");
+    cy_debug_print("Selecting on loc = " << loc << " ... ");
 
     return runSimpleSelectQuery(query);
 }
 
 int Database::dropEntity(long id)
 {
-    std::string query = compose("DELETE FROM properties WHERE id = '%1'", id);
+    std::string query = fmt::format("DELETE FROM properties WHERE id = '{}'", id);
 
     scheduleCommand(query);
 
-    query = compose("DELETE FROM entities WHERE id = %1", id);
+    query = fmt::format("DELETE FROM entities WHERE id = {}", id);
 
     scheduleCommand(query);
 
-    query = compose("DELETE FROM thoughts WHERE id = %1", id);
+    query = fmt::format("DELETE FROM thoughts WHERE id = {}", id);
 
     scheduleCommand(query);
 
@@ -266,10 +264,10 @@ int Database::insertProperties(const std::string & id,
     std::string query("INSERT INTO properties VALUES ");
     for (auto& tuple : tuples) {
         if (first) {
-            query += compose("(%1, '%2', '%3')", id, tuple.first, tuple.second);
+            query += fmt::format("({}, '{}', '{}')", id, tuple.first, tuple.second);
             first = 0;
         } else {
-            query += compose(", (%1, '%2', '%3')", id, tuple.first, tuple.second);
+            query += fmt::format(", ({}, '{}', '{}')", id, tuple.first, tuple.second);
         }
     }
     return scheduleCommand(query);
@@ -277,10 +275,10 @@ int Database::insertProperties(const std::string & id,
 
 DatabaseResult Database::selectProperties(const std::string & id)
 {
-    std::string query = compose("SELECT name, value FROM properties"
-                                " WHERE id = %1", id);
+    std::string query = fmt::format("SELECT name, value FROM properties"
+                                " WHERE id = {}", id);
 
-    debug_print("Selecting on id = " << id << " ... ");
+    cy_debug_print("Selecting on id = " << id << " ... ");
 
     return runSimpleSelectQuery(query);
 }
@@ -289,8 +287,8 @@ int Database::updateProperties(const std::string & id,
                                const KeyValues & tuples)
 {
     for (const auto& entry : tuples) {
-        std::string query = compose("UPDATE properties SET value = '%3' WHERE"
-                                    " id=%1 AND name='%2'",
+        std::string query = fmt::format("UPDATE properties SET value = '{2}' WHERE"
+                                    " id={0} AND name='{1}'",
                                     id, entry.first, entry.second);
         scheduleCommand(query);
     }
@@ -300,10 +298,10 @@ int Database::updateProperties(const std::string & id,
 
 DatabaseResult Database::selectThoughts(const std::string & loc)
 {
-    std::string query = compose("SELECT thought FROM thoughts"
-                                " WHERE id = %1", loc);
+    std::string query = fmt::format("SELECT thought FROM thoughts"
+                                " WHERE id = {}", loc);
 
-    debug_print("Selecting on id = " << loc << " ... ");
+    cy_debug_print("Selecting on id = " << loc << " ... ");
 
     return runSimpleSelectQuery(query);
 }
@@ -312,12 +310,12 @@ int Database::replaceThoughts(const std::string & id,
                          const std::vector<std::string>& thoughts)
 {
 
-    std::string deleteQuery = compose("DELETE FROM thoughts WHERE id=%1", id);
+    std::string deleteQuery = fmt::format("DELETE FROM thoughts WHERE id={}", id);
     scheduleCommand(deleteQuery);
 
     for (auto& thought : thoughts) {
-        std::string insertQuery = compose("INSERT INTO thoughts (id, thought)"
-                                          " VALUES (%1, '%2')", id, boost::replace_all_copy(thought, "'", "''"));
+        std::string insertQuery = fmt::format("INSERT INTO thoughts (id, thought)"
+                                          " VALUES ({}, '{}')", id, boost::replace_all_copy(thought, "'", "''"));
         scheduleCommand(insertQuery);
     }
     return 0;
@@ -334,7 +332,7 @@ bool Database::registerArrayTable(const std::string & name,
                                   const MapType & row)
 {
     if (m_connection == 0) {
-        log(CRITICAL, "Database connection is down. This is okay during tests");
+        spdlog::critical("Database connection is down. This is okay during tests");
         return false;
     }
 
@@ -342,7 +340,7 @@ bool Database::registerArrayTable(const std::string & name,
     assert(dimension <= 5);
 
     if (row.empty()) {
-        log(ERROR, "Attempt to create empty array table");
+        spdlog::error("Attempt to create empty array table");
     }
 
     std::string query("SELECT * from ");
@@ -404,36 +402,36 @@ bool Database::registerArrayTable(const std::string & name,
             query += " = 1.0";
             createquery += " float";
         } else {
-            log(ERROR, "Illegal column type in database array row");
+            spdlog::error("Illegal column type in database array row");
         }
     }
 
-    debug_print("QUERY: " << query)
+    cy_debug_print("QUERY: " << query)
     clearPendingQuery();
     int status = PQsendQuery(m_connection, query.c_str());
     if (!status) {
-        log(ERROR, "registerArrayTable(): Database query error.");
+        spdlog::error("registerArrayTable(): Database query error.");
         reportError();
         return false;
     }
     if (!tuplesOk()) {
-        debug(reportError(););
-        debug_print("Table does not yet exist"
+        cy_debug(reportError(););
+        cy_debug_print("Table does not yet exist"
                        )
     } else {
-        debug_print("Table exists")
+        cy_debug_print("Table exists")
         allTables.insert(name);
         return true;
     }
 
     createquery += ") WITHOUT OIDS";
-    debug_print("CREATE QUERY: " << createquery);
+    cy_debug_print("CREATE QUERY: " << createquery);
     int ret = runCommandQuery(createquery);
     if (ret != 0) {
         return false;
     }
     indexquery += ")";
-    debug_print("INDEX QUERY: " << indexquery);
+    cy_debug_print("INDEX QUERY: " << indexquery);
     ret = runCommandQuery(indexquery);
     if (ret != 0) {
         return false;
@@ -450,7 +448,7 @@ const DatabaseResult Database::selectArrayRows(const std::string & name,
     query += " WHERE id = ";
     query += id;
 
-    debug_print("ARRAY QUERY: " << query)
+    cy_debug_print("ARRAY QUERY: " << query)
 
     return runSimpleSelectQuery(query);
 }
@@ -492,14 +490,14 @@ int Database::createArrayRow(const std::string & name,
             query << ", " << e.String();
             break;
           default:
-            log(ERROR, "Bad type constructing array database row for insert");
+            spdlog::error("Bad type constructing array database row for insert");
             break;
         }
     }
     query << ")";
 
     std::string qstr = query.str();
-    debug_print("QUery: " << qstr)
+    cy_debug_print("QUery: " << qstr)
     return scheduleCommand(qstr);
 }
 
@@ -533,7 +531,7 @@ int Database::updateArrayRow(const std::string & name,
             query << "'" << e.String() << "'";
             break;
           default:
-            log(ERROR, "Bad type constructing array database row for update");
+            spdlog::error("Bad type constructing array database row for update");
             break;
         }
     }
@@ -543,7 +541,7 @@ int Database::updateArrayRow(const std::string & name,
     }
     
     std::string qstr = query.str();
-    debug_print("QUery: " << qstr)
+    cy_debug_print("QUery: " << qstr)
     return scheduleCommand(qstr);
 }
 

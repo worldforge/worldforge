@@ -46,7 +46,6 @@ using Atlas::Objects::Operation::Info;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -106,7 +105,7 @@ void Admin::LogoutOperation(const Operation & op, OpVector & res)
             if (account_id != getId() && m_connection != nullptr) {
                 Router * account = m_connection->m_server.getObject(account_id);
                 if (account) {
-                    log(INFO, String::compose("Admin account %1 is forcefully logging out account %2.", getId(), account_id));
+                    spdlog::info("Admin account {} is forcefully logging out account {}.", getId(), account_id);
                     account->operation(op, res);
                     return;
                 }
@@ -191,7 +190,7 @@ void Admin::GetOperation(const Operation & op, OpVector & res)
 
             info->setArgs1(info_arg);
         } else {
-            clientError(op, compose("Unknown object id \"%1\" requested", id),
+            clientError(op, fmt::format("Unknown object id \"{}\" requested", id),
                         res, getId());
             return;
         }
@@ -200,13 +199,13 @@ void Admin::GetOperation(const Operation & op, OpVector & res)
                objtype == "op_definition") {
         const Root & o = Inheritance::instance().getClass(id, Visibility::PRIVATE);
         if (!o.isValid()) {
-            clientError(op, compose("Unknown type definition for \"%1\" "
+            clientError(op, fmt::format("Unknown type definition for \"{}\" "
                                     "requested", id), res);
             return;
         }
         info->setArgs1(o);
     } else {
-        error(op, compose(R"(Unknown object type "%1" requested for "%2")",
+        error(op, fmt::format(R"(Unknown object type "{}" requested for "{}")",
                           objtype, id), res, getId());
         return;
     }
@@ -244,7 +243,7 @@ void Admin::SetOperation(const Operation & op, OpVector & res)
                 Account::SetOperation(op, res);
                 return;
             }
-            log(WARNING, "Unable to set attributes of non-character yet");
+            spdlog::warn("Unable to set attributes of non-character yet");
         }
         // Manipulate attributes of existing objects.
     } else if (objtype == "class" || objtype == "op_definition") {
@@ -294,8 +293,8 @@ void Admin::CreateOperation(const Operation& op, OpVector& res)
         }
         const Root & o = Inheritance::instance().getClass(type_str, Visibility::PRIVATE);
         if (!o.isValid()) {
-            error(op, compose("Attempt to install type with non-existent "
-                              "parent \"%1\"", type_str), res, getId());
+            error(op, fmt::format("Attempt to install type with non-existent "
+                              "parent \"{}\"", type_str), res, getId());
             return;
         }
         if (Ruleset::instance().installRule(id, "unknown", arg) == 0) {

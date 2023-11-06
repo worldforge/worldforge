@@ -133,22 +133,22 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             if(arg->copyAttr("teleport_host", tp_host_attr) != 0
                     || !tp_host_attr.isString()) {
                 debug() << "No teleport host specified. Doing normal logout."
-                        << std::endl << std::flush;
+                        << std::endl;
                 gotArgs = false;
             } else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
                     || !tp_port_attr.isInt()) {
                 debug() << "No teleport port specified. Doing normal logout."
-                        << std::endl << std::flush;
+                        << std::endl;
                 gotArgs = false;
             } else if (arg->copyAttr("possess_key", pkey_attr) != 0
                     || !pkey_attr.isString()) {
                 debug() << "No possess key specified. Doing normal logout."
-                        << std::endl << std::flush;
+                        << std::endl;
                 gotArgs = false;
             } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
                     || !pentity_id_attr.isString()) {
                 debug() << "No entity ID specified. Doing normal logout."
-                        << std::endl << std::flush;
+                        << std::endl;
                 gotArgs = false;
             }
 
@@ -162,7 +162,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
                 debug() << "Server transfer data: Host: " << teleport_host
                     << ", Port: " << teleport_port << ", "
                     << "Key: " << possess_key << ", "
-                    << "ID: " << possess_entity_id << std::endl << std::flush;
+                    << "ID: " << possess_entity_id << std::endl;
                 // Now do a transfer request
                 TransferInfo transfer(teleport_host, teleport_port, possess_key
                         , possess_entity_id);

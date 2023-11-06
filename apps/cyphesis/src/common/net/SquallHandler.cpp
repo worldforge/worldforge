@@ -29,18 +29,18 @@ HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDat
             auto absolutePath = std::filesystem::absolute(squallPath);
             auto relative = std::filesystem::relative(absolutePath, repositoryDataPath);
             if (relative.empty()) {
-                log(WARNING, std::string("Requested path ") + context.path + " is not relative to squall root path. Someone is trying to compromise the system.");
+                spdlog::warn("Requested path {} is not relative to squall root path. Someone is trying to compromise the system.", context.path);
                 HttpHandling::reportBadRequest(context.io, 401, "Invalid request");
             } else {
                 if (!std::filesystem::exists(absolutePath)) {
-                    log(NOTICE, std::string("Squall path '") + context.path + "'not found.");
+                    spdlog::debug("Squall path '{}'not found.", context.path);
                     HttpHandling::reportBadRequest(context.io, 404, "Not Found");
                 } else {
                     if (std::ifstream is{absolutePath, std::ios::binary | std::ios::ate}) {
                         auto size = is.tellg();
-                        log(NOTICE, std::string("Serving up '") + absolutePath.generic_string() + "', with size of " + std::to_string(size) + " bytes.");
+                        spdlog::debug("Serving up '{}', with size of {} bytes.", absolutePath.generic_string(), std::to_string(size));
                         is.seekg(0, std::ios::beg);
-                        HttpHandling::sendHeaders(context.io, 200, "application/octet-stream", "OK", {std::string("Content-Length: ") + std::to_string(size)});
+                        HttpHandling::sendHeaders(context.io, 200, "application/octet-stream", "OK", {fmt::format("Content-Length: {}", std::to_string(size))});
 
                         //Blocking write here, should be improved
                         std::array<char, 2028> buffer;

@@ -27,7 +27,6 @@
 
 #include "tools/ObjectContext.h"
 
-#include "common/compose.hpp"
 #include "common/operations/Tick.h"
 
 #include <Atlas/Objects/Operation.h>

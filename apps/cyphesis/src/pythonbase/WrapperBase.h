@@ -19,7 +19,6 @@
 #ifndef CYPHESIS_WRAPPERBASE_H
 #define CYPHESIS_WRAPPERBASE_H
 
-#include <common/compose.hpp>
 #include <common/log.h>
 #include "pycxx/CXX/Extensions.hxx"
 
@@ -72,7 +71,7 @@ class WrapperBase : public Py::PythonClass<TPythonClass, TClassInstance>
                 o->m_pycxx_object = new TPythonClass(o, args, kwds);
                 TClassInstance::_new(o);
             } catch (const Py::BaseException& e) {
-                log(WARNING, String::compose("Error when creating Python class %1.", subtype->tp_name));
+                spdlog::warn("Error when creating Python class {}.", subtype->tp_name);
                 subtype->tp_free(o);
                 return nullptr;
             }
@@ -157,7 +156,7 @@ typename T::value_type& verifyObject(const Py::Object& object, const std::string
 {
     if (!T::check(object)) {
         if (message.empty()) {
-            throw Py::TypeError(String::compose("Must be %1. Instead got %2", T::type_object()->tp_name, object.type().as_string()));
+            throw Py::TypeError(fmt::format("Must be {}. Instead got {}", T::type_object()->tp_name, object.type().as_string()));
         }
         throw Py::TypeError(message);
     }

@@ -25,6 +25,21 @@
 #include "../TestBase.h"
 #include "../TestWorld.h"
 
+namespace WFMath {
+template <int dim>
+auto format_as(const WFMath::Point<dim>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+template <int dim>
+auto format_as(const WFMath::Vector<dim>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+}
+
 
 struct MemEntityExt;
 //Keep track of all created things and make sure they are destroyed when the Context is destroyed.

@@ -66,7 +66,7 @@ bool IGEntityExerciser::checkProperties(const std::set<std::string> & prop_names
     for (; I != Iend; ++I) {
         if (this->m_ent->getProperty(*I) == nullptr) {
             std::cerr << "Entity does not have \"" << *I << "\" property."
-                      << std::endl << std::flush;
+                      << std::endl;
             return false;
         }
     }

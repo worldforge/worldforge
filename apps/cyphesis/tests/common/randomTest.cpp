@@ -61,7 +61,7 @@ int main()
 
         int num = randint(std::min(int1, int2), std::max(int1, int2));
         std::cout << num << ":" << previ << " " << int1 << ":" << int2
-                  << std::endl << std::flush;
+                  << std::endl;
         assert(num != int1);
         assert(num != int2);
         assert(num != previ);

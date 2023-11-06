@@ -30,7 +30,6 @@
 
 #include "Interactive.h"
 
-#include "common/compose.hpp"
 #include "common/log.h"
 #include "common/globals.h"
 #include "common/sockets.h"
@@ -38,16 +37,16 @@
 
 #include <varconf/config.h>
 
-using String::compose;
 
 static void usage(char * prg)
 {
-    std::cerr << "usage: " << prg << " [options] [ cmd [ server ] ]" << std::endl << std::flush;
+    std::cerr << "usage: " << prg << " [options] [ cmd [ server ] ]" << std::endl;
 }
 
 int main(int argc, char ** argv)
 {
-    setLoggingPrefix("CMD");
+	//Perhaps tell spdlog to use a prefix?
+    //setLoggingPrefix("CMD");
 
     int config_status = loadConfig(argc, argv, USAGE_CYCMD);
     if (config_status < 0) {
@@ -58,7 +57,7 @@ int main(int argc, char ** argv)
             showUsage(argv[0], USAGE_CYCMD, "[ cmd [ server ] ]");
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -98,15 +97,15 @@ int main(int argc, char ** argv)
             localSocket = client_socket_name;
         }
 
-        log(NOTICE, "Attempting local connection");
+        spdlog::debug("Attempting local connection");
         if (bridge.connectLocal(localSocket) == 0) {
             bridge.setup();
             if (bridge.create("sys",
                               create_session_username(),
-                              compose("%1%2", ::rand(), ::rand())) != 0) {
+                              fmt::format("{}{}", ::rand(), ::rand())) != 0) {
                 bridge.getLogin();
                 if (bridge.login() != 0) {
-                    std::cout << "failed." << std::endl << std::flush;
+                    std::cout << "failed." << std::endl;
                     return 1;
                 }
             }
@@ -121,7 +120,7 @@ int main(int argc, char ** argv)
         server = "localhost";
     }
     
-    log(NOTICE, "Attempting tcp connection");
+    spdlog::debug("Attempting tcp connection");
 
     if (bridge.connect(server) != 0) {
         return 1;
@@ -131,7 +130,7 @@ int main(int argc, char ** argv)
         std::cerr << "WARNING: No login details available for remote host"
                   << std::endl
                   << "WARNING: Attempting command without logging in"
-                  << std::endl << std::flush;
+                  << std::endl;
     } else {
         bridge.getLogin();
         if (bridge.login() != 0) {

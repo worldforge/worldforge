@@ -40,10 +40,10 @@ int main()
 
         if (res != 8) {
             std::cerr << "Terrain with res specified does not have correct res."
-                      << std::endl << std::flush;
+                      << std::endl;
             std::cerr << "Resolution " << 8 << " was specified, but "
                       << res << " was returned."
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
     }
@@ -54,10 +54,10 @@ int main()
 
     if (res != Mercator::defaultResolution) {
         std::cerr << "Terrain with no res specified does not have default"
-                  << std::endl << std::flush;
+                  << std::endl;
         std::cerr << "Resolution " << Mercator::defaultResolution
                   << " is default, but " << res << " was returned."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -65,10 +65,10 @@ int main()
         float testHeight = terrain.get((float)rand(), (float)rand());
         if (testHeight != Mercator::Terrain::defaultLevel) {
             std::cerr << "Randomly selected point in empty terrain object was not default height"
-                      << std::endl << std::flush;
+                      << std::endl;
             std::cerr << "Point had height " << testHeight
                       << " but default is " << Mercator::Terrain::defaultLevel
-                      << std::endl << std::flush;
+                      << std::endl;
             return 1;
         }
     }
@@ -76,7 +76,7 @@ int main()
     Mercator::Segment * seg = terrain.getSegmentAtIndex(rand(), rand());
     if (seg != 0) {
         std::cerr << "Randomly selected segment position did not return NULL segment pointer on empty terrain"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -86,19 +86,19 @@ int main()
 
     if (!tSegments.empty()) {
         std::cerr << "Segment store for empty terrain is not empty"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
     if (!tPoints.empty()) {
         std::cerr << "Point store for empty terrain is not empty"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
     if (!tShaders.empty()) {
         std::cerr << "Shader store for empty terrain is not empty"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 	Mercator::FillShader fillShader{};
@@ -107,7 +107,7 @@ int main()
 
     if (tShaders.empty()) {
         std::cerr << "Shader store for terrain is empty after shader was added"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -118,13 +118,13 @@ int main()
 
     if (tPoints.empty()) {
         std::cerr << "Point store for populated terrain is empty"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
     if (tSegments.empty()) {
         std::cerr << "Segment store for populated terrain is empty"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -132,25 +132,25 @@ int main()
     terrain.getBasePoint(0, 0, bp);
     if (bp.seed() != 2800) {
         std::cerr << "BasePoint seed calculation is incorrect."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
     terrain.getBasePoint(1, 0, bp);
     if (bp.seed() != -7100U) {
         std::cerr << "BasePoint seed calculation is incorrect."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
     terrain.getBasePoint(0, 1, bp);
     if (bp.seed() != 200) {
         std::cerr << "BasePoint seed calculation is incorrect."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
     terrain.getBasePoint(1, 1, bp);
     if (bp.seed() != 14700) {
         std::cerr << "BasePoint seed calculation is incorrect."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -158,7 +158,7 @@ int main()
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -166,7 +166,7 @@ int main()
     
     if (surfaces.size() != tShaders.size()) {
         std::cerr << "Number of surfaces in the Segment does not match number of shaders on the terrain"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 
@@ -180,19 +180,19 @@ int main()
     terrain.getHeightAndNormal(5.5f, 6.5f, height, normal);
     if (!WFMath::Equal(height, 2.00456953f)) {
         std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
     terrain.getHeightAndNormal(15.5f, 12.6f, height, normal);
     if (!WFMath::Equal(height, 2.221810579f)) {
         std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
     terrain.getHeightAndNormal(20.2f, 17.4f, height, normal);
     if (!WFMath::Equal(height, 0.9405912161f)) {
         std::cerr << "Height sampling is incorrect. This is caused by the underlying algorithm being changed."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 

@@ -18,13 +18,11 @@
 
 #include "Script.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-using String::compose;
 
 
 HandlerResult Script::operation(const std::string& opname,
@@ -53,27 +51,27 @@ int Script::getScriptDetails(const Atlas::Message::MapType& script,
     auto Jend = script.end();
 
     if (J == Jend || !J->second.isString()) {
-        log(ERROR, compose("%1 \"%2\" script has no name.",
-                           context, class_name));
+        spdlog::error("{} \"{}\" script has no name.",
+                           context, class_name);
         return -1;
     }
     const std::string& script_name = J->second.String();
     J = script.find("language");
     if (J == Jend || !J->second.isString()) {
-        log(ERROR, compose("%1 \"%2\" script has no language.",
-                           context, class_name));
+        spdlog::error("{} \"{}\" script has no language.",
+                           context, class_name);
         return -1;
     }
     const std::string& script_language = J->second.String();
     if (script_language != "python") {
-        log(ERROR, compose(R"(%1 "%2" script has unknown language "%3".)",
-                           context, class_name, script_language));
+        spdlog::error(R"({} "{}" script has unknown language "{}".)",
+                           context, class_name, script_language);
         return -1;
     }
     std::string::size_type ptr = script_name.rfind('.');
     if (ptr == std::string::npos) {
-        log(ERROR, compose(R"(%1 "%2" python script has bad class name "%3".)",
-                           context, class_name, script_name));
+        spdlog::error(R"({} "{}" python script has bad class name "{}".)",
+                           context, class_name, script_name);
         return -1;
     }
     script_package = script_name.substr(0, ptr);

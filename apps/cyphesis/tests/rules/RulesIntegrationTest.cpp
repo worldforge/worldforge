@@ -38,6 +38,26 @@
 #include "rules/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
 
+namespace WFMath {
+template <int dim>
+auto format_as(const WFMath::Point<dim>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+template <int dim>
+auto format_as(const WFMath::Vector<dim>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+auto format_as(const WFMath::Quaternion& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+}
+
 using Atlas::Objects::Operation::Set;
 using Atlas::Objects::Operation::Wield;
 using Atlas::Objects::Operation::Move;

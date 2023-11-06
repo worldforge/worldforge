@@ -152,7 +152,7 @@ bool Location::readFromMessage(const MapType& msg)
             if (pos.isList() && pos.List().size() == 3) {
                 m_pos.fromAtlas(pos);
             } else {
-                log(ERROR, "Malformed POS data");
+                spdlog::error("Malformed POS data");
             }
         }
         I = msg.find("velocity");
@@ -162,7 +162,7 @@ bool Location::readFromMessage(const MapType& msg)
             if (velocity.isList() && velocity.List().size() == 3) {
                 m_velocity.fromAtlas(velocity);
             } else {
-                log(ERROR, "Malformed velocity data");
+                spdlog::error("Malformed velocity data");
             }
         }
         I = msg.find("orientation");
@@ -172,7 +172,7 @@ bool Location::readFromMessage(const MapType& msg)
             if (orientation.isList() && orientation.List().size() == 4) {
                 m_orientation.fromAtlas(orientation);
             } else {
-                log(ERROR, "Malformed ORIENTATION data");
+                spdlog::error("Malformed ORIENTATION data");
             }
         }
         I = msg.find("angular");
@@ -182,12 +182,12 @@ bool Location::readFromMessage(const MapType& msg)
             if (angular.isList() && angular.List().size() == 3) {
                 m_angularVelocity.fromAtlas(angular);
             } else {
-                log(ERROR, "Malformed angular velocity data");
+                spdlog::error("Malformed angular velocity data");
             }
         }
     }
     catch (Atlas::Message::WrongTypeException&) {
-        log(ERROR, "Location::readFromMessage: Bad location data");
+        spdlog::error("Location::readFromMessage: Bad location data");
     }
     return had_data;
 }
@@ -195,7 +195,7 @@ bool Location::readFromMessage(const MapType& msg)
 bool Location::readFromEntity(const Atlas::Objects::Entity::RootEntity& ent)
 {
     bool had_data = false;
-    debug_print("Location::readFromEntity")
+    cy_debug_print("Location::readFromEntity")
     try {
         if (ent->hasAttrFlag(Atlas::Objects::Entity::POS_FLAG)) {
             had_data = true;
@@ -211,7 +211,7 @@ bool Location::readFromEntity(const Atlas::Objects::Entity::RootEntity& ent)
             if (element.isList() && element.List().size() == 4) {
                 m_orientation.fromAtlas(element);
             } else {
-                log(ERROR, "Malformed ORIENTATION data.");
+                spdlog::error("Malformed ORIENTATION data.");
             }
         }
         if (ent->copyAttr("angular", element) == 0) {
@@ -220,12 +220,12 @@ bool Location::readFromEntity(const Atlas::Objects::Entity::RootEntity& ent)
                 m_angularVelocity = WFMath::Vector<3>(static_cast<WFMath::CoordType>(element.List()[0].asNum()), static_cast<WFMath::CoordType>(element.List()[1].asNum()),
                                                       static_cast<WFMath::CoordType>(element.List()[2].asNum()));
             } else {
-                log(ERROR, "Malformed angular velocity data.");
+                spdlog::error("Malformed angular velocity data.");
             }
         }
     }
     catch (Atlas::Message::WrongTypeException&) {
-        log(ERROR, "Location::readFromEntity: Bad location data");
+        spdlog::error("Location::readFromEntity: Bad location data");
     }
     return had_data;
 }

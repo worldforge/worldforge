@@ -21,7 +21,6 @@
 
 #include "rules/simulation/BaseWorld.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 
 #include <iostream>
@@ -48,7 +47,7 @@ int PossessionAuthenticator::addPossession(const std::string& entity_id,
         return -1;
     }
     m_possessions.emplace(entity_id, std::make_unique<PendingPossession>(entity_id, possess_key));
-    debug_print(String::compose("Added possession auth entry for %1,%2",
+    cy_debug_print(fmt::format("Added possession auth entry for {},{}",
                                        entity_id, possess_key));
     return 0;
 }
@@ -60,12 +59,12 @@ int PossessionAuthenticator::removePossession(const std::string& entity_id)
 {
     auto I = m_possessions.find(entity_id);
     if (I == m_possessions.end()) {
-        log(ERROR, String::compose("No possession auth entry for entity ID %1",
-                                   entity_id));
+        spdlog::error("No possession auth entry for entity ID {}",
+                                   entity_id);
         return -1;
     }
     removePossession(I);
-    debug_print(String::compose("Removed possession auth entry for entity ID %1",
+    cy_debug_print(fmt::format("Removed possession auth entry for entity ID {}",
                                        entity_id));
 
     return 0;
@@ -99,8 +98,8 @@ Ref<LocatedEntity> PossessionAuthenticator::authenticatePossession(const std::st
 {
     auto I = m_possessions.find(entity_id);
     if (I == m_possessions.end()) {
-        log(ERROR, String::compose("Unable to find possessable entity with ID %1",
-                                   entity_id));
+        spdlog::error("Unable to find possessable entity with ID {}",
+                                   entity_id);
         return nullptr;
     }
     auto& entry = I->second;
@@ -110,8 +109,8 @@ Ref<LocatedEntity> PossessionAuthenticator::authenticatePossession(const std::st
         auto entity = BaseWorld::instance().getEntity(entity_id);
         if (!entity) {
             // This means the authentication entry itself is invalid. Remove it.
-            log(ERROR, String::compose("Unable to find possessable entity with ID %1",
-                                       entity_id));
+            spdlog::error("Unable to find possessable entity with ID {}",
+                                       entity_id);
             removePossession(I);
             return nullptr;
         }

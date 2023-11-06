@@ -26,13 +26,13 @@
 //Note that this test depends on the line count staying the same. If you add or remove a line here in the beginning, make sure to update the line numbers in many of tests.
 #include "TestBase.h"
 
-#include "common/compose.hpp"
+
 
 #include <iostream>
 
 #include <cassert>
 
-using String::compose;
+
 
 class Test : public Cyphesis::TestBase {
   public:
@@ -93,7 +93,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:86: void {anonymous}::test_ASSERT_TRUE()::T::test_macro(): "
+               fmt::format("{}:86: void {{anonymous}}::test_ASSERT_TRUE()::T::test_macro(): "
                        "Assertion 'val' failed.", __FILE__));
     }
 
@@ -118,7 +118,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:111: void {anonymous}::test_ASSERT_EQUAL()::T::test_macro(): "
+               fmt::format("{}:111: void {{anonymous}}::test_ASSERT_EQUAL()::T::test_macro(): "
                        "Assertion 'i == j' failed. 1 != 2", __FILE__));
     }
 
@@ -143,7 +143,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:136: void {anonymous}::test_ASSERT_NOT_EQUAL()::T::test_macro(): "
+               fmt::format("{}:136: void {{anonymous}}::test_ASSERT_NOT_EQUAL()::T::test_macro(): "
                        "Assertion 'i != j' failed. 1 == 1", __FILE__));
     }
 
@@ -168,7 +168,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:161: void {anonymous}::test_ASSERT_GREATER()::T::test_macro(): "
+               fmt::format("{}:161: void {{anonymous}}::test_ASSERT_GREATER()::T::test_macro(): "
                        "Assertion 'i > j' failed. 1 <= 2", __FILE__));
     }
 
@@ -193,7 +193,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:186: void {anonymous}::test_ASSERT_LESS()::T::test_macro(): "
+               fmt::format("{}:186: void {{anonymous}}::test_ASSERT_LESS()::T::test_macro(): "
                        "Assertion 'i < j' failed. 3 >= 2", __FILE__));
     }
 
@@ -219,7 +219,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:212: void {anonymous}::test_ASSERT_NULL()::T::test_macro(): "
+               fmt::format("{}:212: void {{anonymous}}::test_ASSERT_NULL()::T::test_macro(): "
                        "Assertion '&i' null failed.", __FILE__));
     }
 
@@ -244,7 +244,7 @@ namespace {
         assert(t.errorCount() == 1);
 
         assert(t.errorReports().front() ==
-               compose("%1:237: void {anonymous}::test_ASSERT_NOT_NULL()::T::test_macro(): "
+               fmt::format("{}:237: void {{anonymous}}::test_ASSERT_NOT_NULL()::T::test_macro(): "
                        "Assertion 'i' not null failed.", __FILE__));
     }
 }

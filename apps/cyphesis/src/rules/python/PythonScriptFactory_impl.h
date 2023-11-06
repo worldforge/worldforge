@@ -61,12 +61,12 @@ Py::Object PythonScriptFactory<T>::createScript(T& entity) const
     }
     try {
         PythonLogGuard logGuard([wrapper]() {
-            return String::compose("%1: ", wrapper.str());
+            return fmt::format("{}: ", wrapper.as_string());
         });
 
         return this->m_class->apply(Py::TupleN(wrapper));
     } catch (...) {
-        log(ERROR, String::compose("Error when creating script '%1.%2'.", this->m_package, this->m_type));
+        spdlog::error("Error when creating script '{}.{}'.", this->m_package, this->m_type);
         if (PyErr_Occurred() != nullptr) {
             PyErr_Print();
         }

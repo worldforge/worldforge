@@ -85,7 +85,7 @@ void UsagesProperty::set(const Atlas::Message::Element& val)
                     m_usages.emplace(usageEntry.first, std::move(usage));
                 }
             } catch (const std::invalid_argument& e) {
-                log(ERROR, String::compose("Could not install usage '%1' : %2", usageEntry.first, e.what()));
+                spdlog::error("Could not install usage '{}' : {}", usageEntry.first, e.what());
             }
         }
     }
@@ -136,19 +136,19 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
             return OPERATION_IGNORED;
         }
         auto op_type = argOp->getParent();
-        debug_print("Got op type " << op_type << " from arg")
+        cy_debug_print("Got op type " << op_type << " from arg")
 
         auto obj = Inheritance::instance().getFactories().createObject(op_type);
         if (!obj.isValid()) {
-            log(ERROR, String::compose("Character::UseOperation Unknown op type "
-                                       "\"%1\".", op_type));
+            spdlog::error("Character::UseOperation Unknown op type "
+                                       "\"{}\".", op_type);
             return OPERATION_IGNORED;
         }
 
         auto rop = smart_dynamic_cast<Operation>(obj);
         if (!rop.isValid()) {
-            log(ERROR, String::compose("Character::UseOperation Op type "
-                                       "\"%1\" but it is not an operation type. ", op_type));
+            spdlog::error("Character::UseOperation Op type "
+                                       "\"{}\" but it is not an operation type. ", op_type);
             return OPERATION_IGNORED;
         }
         rop->setFrom(actor->getId());
@@ -173,7 +173,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
             for (auto& param : usage.params) {
                 Atlas::Message::Element element;
                 if (arguments->copyAttr(param.first, element) != 0 || !element.isList()) {
-                    actor->clientError(op, String::compose("Could not find required list argument '%1'.", param.first), res, actor->getId());
+                    actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
                     return OPERATION_IGNORED;
                 }
 
@@ -184,13 +184,13 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
                         case UsageParameter::Type::ENTITY:
                         case UsageParameter::Type::ENTITYLOCATION: {
                             if (!argElement.isMap()) {
-                                actor->clientError(op, String::compose("Inner argument in list of arguments for '%1' was not a map.", param.first), res, actor->getId());
+                                actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
                                 return OPERATION_IGNORED;
                             }
                             //The arg is for an RootEntity, expressed as a message. Extract id and pos.
                             auto idI = argElement.Map().find("id");
                             if (idI == argElement.Map().end() || !idI->second.isString()) {
-                                actor->clientError(op, String::compose("Inner argument in list of arguments for '%1' had no id string.", param.first), res, actor->getId());
+                                actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
                                 return OPERATION_IGNORED;
                             }
 
@@ -236,19 +236,19 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
                     //PyImport_ReloadModule(module.ptr());
                     auto functionObject = module.getDict()[functionName];
                     if (!functionObject.isCallable()) {
-                        actor->error(op, String::compose("Could not find Python function %1", usage.handler), res, actor->getId());
+                        actor->error(op, fmt::format("Could not find Python function {}", usage.handler), res, actor->getId());
                         return OPERATION_IGNORED;
                     }
 
                     try {
 
                         PythonLogGuard logGuard([functionName, actor]() {
-                            return String::compose("Usage '%1', entity %2: ", functionName, actor->describeEntity());
+                            return fmt::format("Usage '{}', entity {}: ", functionName, actor->describeEntity());
                         });
                         auto ret = Py::Callable(functionObject).apply(Py::TupleN(UsageInstance::scriptCreator(std::move(usageInstance))));
                         return ScriptUtils::processScriptResult(usage.handler, ret, res, e);
                     } catch (const Py::BaseException& py_ex) {
-                        log(ERROR, String::compose("Python error calling \"%1\" for entity %2", usage.handler, e.describeEntity()));
+                        spdlog::error("Python error calling \"{}\" for entity {}", usage.handler, e.describeEntity());
                         if (PyErr_Occurred()) {
                             PyErr_Print();
                         }

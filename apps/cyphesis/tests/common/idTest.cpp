@@ -131,7 +131,7 @@ int main()
         return 1;
     }
 
-    std::cout << "It worked" << std::endl << std::flush;
+    std::cout << "It worked" << std::endl;
 
 
     return 0;

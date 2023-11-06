@@ -49,14 +49,14 @@ AreaProperty::~AreaProperty() = default;
 void AreaProperty::apply(LocatedEntity& owner)
 {
     if (!m_shape) {
-        log(ERROR, "Terrain area has no shape to apply");
+        spdlog::error("Terrain area has no shape to apply");
         return;
     }
 
     const TerrainProperty* terrain = getTerrain(owner);
 
     if (!terrain) {
-        log(ERROR, "Terrain area could not find terrain");
+        spdlog::error("Terrain area could not find terrain");
         return;
     }
 
@@ -74,7 +74,7 @@ void AreaProperty::set(const Element& ent)
     MapType::const_iterator Iend = m_data.end();
 
     if (I == m_data.end() || !I->second.isMap()) {
-        log(ERROR, "Area shape data missing or is not map");
+        spdlog::error("Area shape data missing or is not map");
         return;
     }
     auto shape = Shape::newFromAtlas(I->second.Map());

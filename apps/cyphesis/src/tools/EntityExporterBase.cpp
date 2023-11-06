@@ -37,25 +37,25 @@
 
 static const bool debug_flag = false;
 #define S_LOG_VERBOSE(message) \
-    { debug(std::stringstream ss;\
+    { cy_debug(std::stringstream ss;\
     ss << message;\
-    log(NOTICE, ss.str());) }
+    spdlog::debug(ss.str());) }
 #define S_LOG_INFO(message) \
     { std::stringstream ss;\
     ss << message;\
-    log(INFO, ss.str()); }
+    spdlog::info(ss.str()); }
 #define S_LOG_WARNING(message) \
     { std::stringstream ss;\
     ss << message;\
-    log(WARNING, ss.str()); }
+    spdlog::warn(ss.str()); }
 #define S_LOG_FAILURE(message) \
     { std::stringstream ss;\
     ss << message;\
-    log(ERROR, ss.str()); }
+    spdlog::error(ss.str()); }
 #define S_LOG_CRITICAL(message) \
     { std::stringstream ss;\
     ss << message;\
-    log(CRITICAL, ss.str()); }
+    spdlog::critical(ss.str()); }
 
 
 using Atlas::Objects::Root;

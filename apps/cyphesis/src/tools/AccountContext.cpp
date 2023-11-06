@@ -44,28 +44,28 @@ AccountContext::AccountContext(Interactive& i,
 
 bool AccountContext::accept(const RootOperation& op) const
 {
-    debug_print("Checking account context to see if it matches"
+    cy_debug_print("Checking account context to see if it matches"
     )
     return m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo;
 }
 
 int AccountContext::dispatch(const RootOperation& op)
 {
-    debug_print("Dispatching with account context to see if it matches"
+    cy_debug_print("Dispatching with account context to see if it matches"
     )
     if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO &&
         !op->getArgs().empty()) {
-        std::cout << "Dispatching info" << std::endl << std::flush;
+        std::cout << "Dispatching info" << std::endl;
         const Root& ent = op->getArgs().front();
         if (ent->hasAttrFlag(Atlas::Objects::ID_FLAG) &&
             ent->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
             const std::string& type = ent->getParent();
             if (type == "juncture") {
-                std::cout << "created juncture" << std::endl << std::flush;
+                std::cout << "created juncture" << std::endl;
                 m_client.addCurrentContext(shared_ptr<ObjectContext>(
                     new JunctureContext(m_client, ent->getId())));
             } else {
-                std::cout << "created avatar" << std::endl << std::flush;
+                std::cout << "created avatar" << std::endl;
                 m_client.addCurrentContext(shared_ptr<ObjectContext>(
                     new AvatarContext(m_client, ent->getId())));
 
@@ -77,7 +77,7 @@ int AccountContext::dispatch(const RootOperation& op)
                !op->getArgs().empty()) {
         std::cout << "Sight(" << std::endl;
         m_client.output(op->getArgs().front());
-        std::cout << ")" << std::endl << std::flush;
+        std::cout << ")" << std::endl;
     }
     assert(m_refNo != 0L);
     m_refNo = 0L;

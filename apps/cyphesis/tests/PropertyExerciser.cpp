@@ -306,7 +306,7 @@ Element PropertyExerciser::randomAtlasValue()
         return map_values[randint(0, map_values.size())];
         break;
       case 6:
-        std::cout << "NNOON 6" << std::endl << std::flush;
+        std::cout << "NNOON 6" << std::endl;
       default:
         return Element();
         break;

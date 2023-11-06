@@ -122,7 +122,7 @@ void Task::initTask(const std::string& id, OpVector& res)
 {
     m_start_time = m_usageInstance.op->getSeconds();
     if (m_script.isNull()) {
-        log(WARNING, "Task script failed");
+        spdlog::warn("Task script failed");
         irrelevant();
     } else {
         callScriptFunction("setup", Py::TupleN{Py::String(id)}, res);
@@ -163,13 +163,13 @@ void Task::callScriptFunction(const std::string& function, const Py::Tuple& args
     if (m_script.hasAttr(function)) {
         try {
             PythonLogGuard logGuard([this, function]() {
-                return String::compose("Task '%1', entity %2, function %3: ", m_script.type().str(), m_usageInstance.actor->describeEntity(), function);
+                return fmt::format("Task '{}', entity {}, function {}: ", m_script.type().as_string(), m_usageInstance.actor->describeEntity(), function);
             });
             auto ret = m_script.callMemberFunction(function, args);
             //Ignore any return codes
             ScriptUtils::processScriptResult(m_script.type().str(), ret, res, *m_usageInstance.actor);
         } catch (const Py::BaseException& e) {
-            log(ERROR, String::compose("Error when calling '%1' on task '%2' on entity '%3'.", function, m_script.str(), m_usageInstance.actor->describeEntity()));
+            spdlog::error("Error when calling '{}' on task '{}' on entity '{}'.", function, m_script.as_string(), m_usageInstance.actor->describeEntity());
             if (PyErr_Occurred() != nullptr) {
                 PyErr_Print();
             }
@@ -187,7 +187,7 @@ void Task::callUsageScriptFunction(const std::string& function, const std::map<s
         }
         try {
             PythonLogGuard logGuard([this, function]() {
-                return String::compose("Task '%1', entity %2, function %3: ", m_script.type().str(), m_usageInstance.actor->describeEntity(), function);
+                return fmt::format("Task '{}', entity {}, function {}: ", m_script.type().as_string(), m_usageInstance.actor->describeEntity(), function);
             });
             //Make a copy if the script should be removed as part of a call to "irrelevant".
             auto script = m_script;
@@ -195,7 +195,7 @@ void Task::callUsageScriptFunction(const std::string& function, const std::map<s
             //Ignore any return codes
             ScriptUtils::processScriptResult(script.type().str(), ret, res, *m_usageInstance.actor);
         } catch (const Py::BaseException& e) {
-            log(ERROR, String::compose("Error when calling '%1' on task '%2' on entity '%3'.", function, m_script.str(), m_usageInstance.actor->describeEntity()));
+            spdlog::error("Error when calling '{}' on task '{}' on entity '{}'.", function, m_script.as_string(), m_usageInstance.actor->describeEntity());
             if (PyErr_Occurred() != nullptr) {
                 PyErr_Print();
             }

@@ -20,7 +20,6 @@
 
 #include "globals.h"
 #include "OperationsDispatcher.h"
-#include "compose.hpp"
 #include "log.h"
 #include <boost/asio/signal_set.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -150,7 +149,7 @@ void MainLoop::run(bool daemon,
                     rmt_ScopedCPUSample(runIO_one, 0)
                     io_context.run_one();
                 } catch (const std::exception& ex) {
-                    log(ERROR, String::compose("Exception caught in main loop: %1", ex.what()));
+                    spdlog::error("Exception caught in main loop: {}", ex.what());
                 }
             } while (!nextOpTimeExpired && std::chrono::steady_clock::now() < op_handling_expiry_time);
         }
@@ -187,7 +186,7 @@ void MainLoop::run(bool daemon,
     // to the metaserver (if we are using one) that this server is going down.
     // It is assumed that any preparation for the shutdown that is required
     // by the game has been done before exit flag was set.
-    log(NOTICE, "Performing clean shutdown...");
+    spdlog::debug("Performing clean shutdown...");
 
 
     signalSet.cancel();

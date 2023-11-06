@@ -46,7 +46,7 @@ BaseWorld::~BaseWorld() {
 void BaseWorld::shutdown()
 {
     if (!m_eobjects.empty()) {
-        debug_print("Flushing world with " << m_eobjects.size() << " entities");
+        cy_debug_print("Flushing world with " << m_eobjects.size() << " entities");
         // Make sure that no entity references are retained.
         for (const auto& entry : m_eobjects) {
             entry.second->m_parent = nullptr;
@@ -92,7 +92,7 @@ void BaseWorld::registerAlias(std::string alias, LocatedEntity& entity)
     auto I = m_entityAliases.emplace(alias, &entity);
     if (!I.second) {
         if (I.first->second != &entity) {
-            log(WARNING, String::compose("Tried to register entity %1 with alias %2, which already is connected to entity %3.", entity.describeEntity(), alias, I.first->second->describeEntity()));
+            spdlog::warn("Tried to register entity {} with alias {}, which already is connected to entity {}.", entity.describeEntity(), alias, I.first->second->describeEntity());
         }
     }
 }
@@ -104,10 +104,10 @@ void BaseWorld::deregisterAlias(const std::string& alias, LocatedEntity& entity)
         if (I->second == &entity) {
             m_entityAliases.erase(I);
         } else {
-            log(WARNING, String::compose("Tried to deregister entity %1 from alias %2, which is connected to entity %3.", entity.describeEntity(), alias, I->second->describeEntity()));
+            spdlog::warn("Tried to deregister entity {} from alias {}, which is connected to entity {}.", entity.describeEntity(), alias, I->second->describeEntity());
         }
     } else {
-        log(WARNING, String::compose("Tried to deregister entity %1 from alias %2, which has no entry.", entity.describeEntity(), alias));
+        spdlog::warn("Tried to deregister entity {} from alias {}, which has no entry.", entity.describeEntity(), alias);
     }
 }
 
@@ -125,10 +125,10 @@ void BaseWorld::setIsSuspended(bool suspended)
     bool wasSuspended = m_isSuspended;
     m_isSuspended = suspended;
     if (!suspended && wasSuspended) {
-        log(INFO, "Resuming world.");
+        spdlog::info("Resuming world.");
         resumeWorld();
     } else {
-        log(INFO, "Suspending world.");
+        spdlog::info("Suspending world.");
     }
 }
 

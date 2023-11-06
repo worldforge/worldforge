@@ -47,19 +47,19 @@ void EntityProperty::set(const Atlas::Message::Element& val)
     if (val.isString()) {
         const std::string& id = val.String();
         if (m_data.get() == nullptr || m_data->getId() != id) {
-            debug_print("Assigning " << id)
+            cy_debug_print("Assigning " << id)
             if (id.empty()) {
                 m_data = WeakEntityRef(nullptr);
             } else {
                 auto e = BaseWorld::instance().getEntity(id);
                 if (e) {
-                    debug_print("Assigned")
+                    cy_debug_print("Assigned")
                     m_data = WeakEntityRef(e);
                 }
             }
         }
     } else if (val.isPtr()) {
-        debug_print("Assigning pointer")
+        cy_debug_print("Assigning pointer")
         auto e = static_cast<LocatedEntity*>(val.Ptr());
         m_data = WeakEntityRef(e);
     } else if (val.isMap()) {

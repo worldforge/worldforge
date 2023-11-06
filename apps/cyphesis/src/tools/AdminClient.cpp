@@ -101,14 +101,14 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
 {
     if (m_uploadedRules.find(id) != m_uploadedRules.end()) {
         std::cout << "Overridden rule " << id << " ignored."
-                  << std::endl << std::flush;
+                  << std::endl;
 
         return -1;
     }
 
     if (checkRule(id) == 0) {
         std::cout << "Updating " << id << " on server."
-                  << std::endl << std::flush;
+                  << std::endl;
 
         Set s;
 
@@ -118,12 +118,12 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
         }
         catch (Atlas::Message::WrongTypeException&) {
             std::cerr << "Malformed data in rule"
-                      << std::endl << std::flush;
+                      << std::endl;
             return -1;
         }
         if (!set_arg.isValid()) {
             std::cerr << "Unknown error converting rule for upload"
-                      << std::endl << std::flush;
+                      << std::endl;
             return -1;
         }
         set_arg->setAttr("ruleset", set);
@@ -140,7 +140,7 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
             std::cerr << "Failed to update existing \"" << id << "\" class."
                       << std::endl;
             std::cerr << "Server Error: \"" << m_errorMessage << "\"."
-                      << std::endl << std::flush;
+                      << std::endl;
             return -1;
         }
 
@@ -152,28 +152,28 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
     MapType::const_iterator I = rule.find("parent");
     if (I == rule.end()) {
         std::cerr << "Rule " << id << " to be uploaded has no parent."
-                  << std::endl << std::flush;
+                  << std::endl;
         return -1;
     }
     const Element & pelem = I->second;
     if (!pelem.isString()) {
         std::cerr << "Rule " << id << " to be uploaded has non-string parent."
-                  << std::endl << std::flush;
+                  << std::endl;
         return -1;
     }
     const std::string& parent = pelem.asString();
 
     if (checkRule(parent) != 0) {
-        debug(std::cerr << "Rule \"" << id << "\" to be uploaded has parent \""
+        cy_debug(std::cerr << "Rule \"" << id << "\" to be uploaded has parent \""
                         << parent << "\" which does not exist on server yet."
-                        << std::endl << std::flush;);
+                        << std::endl;);
         RuleWaitList::const_iterator J = m_waitingRules.lower_bound(parent);
         RuleWaitList::const_iterator Jend = m_waitingRules.upper_bound(parent);
         for (; J != Jend; ++J) {
             if (id == J->second.first.first) {
-                debug(std::cerr << "Discarding rule with ID \"" << id
+                cy_debug(std::cerr << "Discarding rule with ID \"" << id
                                 << "\" as one is already waiting for upload."
-                                << std::endl << std::flush;);
+                                << std::endl;);
                 return -1;
             }
         }
@@ -182,7 +182,7 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
         return -1;
     }
 
-    std::cout << "Uploading " << id << " to server." << std::endl << std::flush;
+    std::cout << "Uploading " << id << " to server." << std::endl;
 
     Create c;
 
@@ -192,12 +192,12 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
     }
     catch (Atlas::Message::WrongTypeException&) {
         std::cerr << "Malformed data in rule"
-                  << std::endl << std::flush;
+                  << std::endl;
         return -1;
     }
     if (!create_arg.isValid()) {
         std::cerr << "Unknown error converting rule for upload"
-                  << std::endl << std::flush;
+                  << std::endl;
         return -1;
     }
     create_arg->setAttr("ruleset", set);
@@ -214,7 +214,7 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
         std::cerr << "Failed to upload new \"" << id << "\" class."
                   << std::endl;
         std::cerr << "Server Error: \"" << m_errorMessage << "\"."
-                  << std::endl << std::flush;
+                  << std::endl;
         return -1;
     }
 
@@ -228,7 +228,7 @@ int AdminClient::uploadRule(const std::string & id, const std::string & set,
         const std::string & waitId = J->second.first.first;
         const std::string & waitSet = J->second.first.second;
         const MapType & waitRule = J->second.second;
-        debug_print("WAITING rule " << waitId << " now ready");
+        cy_debug_print("WAITING rule " << waitId << " now ready");
         int ret = uploadRule(waitId, waitSet, waitRule);
         if (ret > 0) {
             count += ret;
@@ -278,6 +278,6 @@ void AdminClient::report()
                   << I->second.first.second
                   << "\" was never uploaded as its parent does not exist in "
                      "any of the available rulesets."
-                  << std::endl << std::flush;
+                  << std::endl;
     }
 }

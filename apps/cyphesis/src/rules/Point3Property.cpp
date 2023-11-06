@@ -40,13 +40,13 @@ void Point3Property::set(const Atlas::Message::Element& val)
             m_data.fromAtlas(val.List());
         } catch (...) {
             m_data = {};
-            log(ERROR, "Point3Property::set: Data was not in format which could be parsed into 3d point.");
+            spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
         }
     } else if (val.isNone()) {
         m_data = {};
     } else {
         m_data = {};
-        log(ERROR, "Point3Property::set: Data was not in format which could be parsed into 3d point.");
+        spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
     }
 }
 

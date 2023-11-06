@@ -60,8 +60,28 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
-
-using String::compose;
+namespace WFMath {
+auto format_as(const WFMath::Point<2>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+auto format_as(const WFMath::Point<3>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+auto format_as(const WFMath::Vector<2>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+auto format_as(const WFMath::Vector<3>& f) {
+	std::stringstream ss;
+	ss << f;
+	return ss.str();
+}
+}
 
 namespace Cyphesis {
     template<>
@@ -71,8 +91,8 @@ namespace Cyphesis {
                                      const char* func, const char* file, int line)
     {
         if (!lval.isEqualTo(rval, epsilon)) {
-            addFailure(String::compose("%1:%2: %3: Assertion '%4 ~= %5' failed. "
-                                       "%6 != %7",
+            addFailure(fmt::format("{}:{}: {}: Assertion '{} ~= {}' failed. "
+                                       "{} != {}",
                                        file, line, func, l, r, lval, rval));
             return -1;
         }
@@ -588,8 +608,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
                     auto* planted1RigidBody = domain.test_getRigidBody(planted1.getIntId());
                     btVector3 aabbMin, aabbMax;
                     planted1RigidBody->getAabb(aabbMin, aabbMax);
-                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 9, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1'.", plantedShape)); });
-                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 11, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1'.", plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 9, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 11, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
 
                 }
 
@@ -619,8 +639,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
                     auto* planted2RigidBody = domain.test_getRigidBody(planted2.getIntId());
                     btVector3 aabbMin, aabbMax;
                     planted2RigidBody->getAabb(aabbMin, aabbMax);
-                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 10, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1'.", plantedShape)); });
-                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 12, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1'.", plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 10, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 12, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}'.", plantedShape)); });
 
                 }
 
@@ -649,13 +669,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
                 ASSERT_TRUE(plantedOn.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
                 ASSERT_EQUAL(planted1.getIntId(), *plantedOn.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
                 ASSERT_FUZZY_EQUAL_FN(plantedOn.requirePropertyClassFixed<PositionProperty>().data().y(), 11, 0.1,
-                                      [&]() { this->addFailure(String::compose("Using shape '%1' on top of '%2'.", plantedOnTopShape, plantedShape)); });
+                                      [&]() { this->addFailure(fmt::format("Using shape '{}' on top of '{}'.", plantedOnTopShape, plantedShape)); });
                 {
                     auto* plantedOnRigidBody = domain.test_getRigidBody(plantedOn.getIntId());
                     btVector3 aabbMin, aabbMax;
                     plantedOnRigidBody->getAabb(aabbMin, aabbMax);
-                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 11, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1' on top of '%2'.", plantedOnTopShape, plantedShape)); });
-                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 12, 0.1, [&]() { this->addFailure(String::compose("Using shape '%1' on top of '%2'.", plantedOnTopShape, plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMin.y(), 11, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}' on top of '{}'.", plantedOnTopShape, plantedShape)); });
+                    ASSERT_FUZZY_EQUAL_FN(aabbMax.y(), 12, 0.1, [&]() { this->addFailure(fmt::format("Using shape '{}' on top of '{}'.", plantedOnTopShape, plantedShape)); });
                 }
 
                 domain.removeEntity(planted2);

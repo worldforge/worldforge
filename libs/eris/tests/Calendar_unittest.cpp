@@ -94,13 +94,13 @@ class TestConnection : public Eris::Connection {
 
     virtual void send(const Atlas::Objects::Root &obj) {
         std::cout << "Sending " << obj->getParent()
-                  << std::endl << std::flush;
+                  << std::endl;
     }
 };
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
-    std::cerr << msg << std::endl << std::flush;
+    std::cerr << msg << std::endl;
 }
 
 static double stub_worldtime = 0.;
@@ -306,7 +306,7 @@ void setLogLevel(LogLevel lvl)
 
 void doLog(LogLevel lvl, const std::string& msg)
 {
-    std::cerr << msg << std::endl << std::flush;
+    std::cerr << msg << std::endl;
 }
 
 

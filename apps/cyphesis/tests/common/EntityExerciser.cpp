@@ -104,12 +104,12 @@ bool EntityExerciser::checkAttributes(const std::set<std::string> & attr_names)
     for (; I != Iend; ++I) {
         if (this->m_ent->getAttr(*I, null) != 0) {
             std::cerr << "Entity does not have \"" << *I << "\" attribute."
-                      << std::endl << std::flush;
+                      << std::endl;
             res = false;
         }
         if (this->m_ent->getProperty(*I) == nullptr) {
             std::cerr << "Entity does not have \"" << *I << "\" property."
-                      << std::endl << std::flush;
+                      << std::endl;
             res = false;
         }
         auto J = attr_types.begin();

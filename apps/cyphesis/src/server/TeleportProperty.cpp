@@ -50,33 +50,33 @@ HandlerResult TeleportProperty::teleport_handler(LocatedEntity& e,
 {
     auto* svr = s_serverRouting;
     if (svr == nullptr) {
-        log(ERROR, "Unable to access ServerRouting object");
+        spdlog::error("Unable to access ServerRouting object");
         return OPERATION_IGNORED;
     }
     Router* obj = svr->getObject(data());
     if (obj == nullptr) {
-        log(ERROR, "Unknown peer ID specified");
+        spdlog::error("Unknown peer ID specified");
         return OPERATION_IGNORED;
     }
     auto* link = dynamic_cast<Juncture*>(obj);
     if (link == nullptr) {
-        log(ERROR, "Non Peer ID specified");
+        spdlog::error("Non Peer ID specified");
         return OPERATION_IGNORED;
     }
 
     // Get the ID of the sender
     if (op->isDefaultFrom()) {
-        debug_print("ERROR: Operation with no entity to be teleported"
+        cy_debug_print("ERROR: Operation with no entity to be teleported"
         )
         return OPERATION_IGNORED;
     }
-    log(INFO, String::compose("Teleport request sender has ID %1",
-                              op->getFrom()));
+    spdlog::info("Teleport request sender has ID {}",
+                              op->getFrom());
 
     // This is the sender entity
     auto entity = BaseWorld::instance().getEntity(op->getFrom());
     if (!entity) {
-        debug_print("No entity found with the specified ID: "<< op->getFrom());
+        cy_debug_print("No entity found with the specified ID: "<< op->getFrom());
         return OPERATION_IGNORED;
     }
 

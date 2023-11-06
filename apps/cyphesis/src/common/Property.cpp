@@ -19,7 +19,6 @@
 #include "Property_impl.h"
 #include "Property.h"
 #include "log.h"
-#include "compose.hpp"
 #include "ModifierType.h"
 
 
@@ -225,7 +224,7 @@ std::pair<ModifierType, std::string> PropertyUtil::parsePropertyModification(con
         } else if (modifier == "add-fraction") {
             type = ModifierType::AddFraction;
         } else {
-            log(WARNING, String::compose(R"(Could not recognize "%1" modification in property "%2")", modifier, propertyName));
+            spdlog::warn(R"(Could not recognize "{}" modification in property "{}")", modifier, propertyName);
             return {ModifierType::Default, propertyName};
         }
         return {type, cleanName};

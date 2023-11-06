@@ -113,7 +113,7 @@ HandlerResult AttachmentsProperty::operation(LocatedEntity& entity, const Operat
                             queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
                             if (!attachment.filter->match(queryContext)) {
                                 if (errors.empty()) {
-                                    entity.clientError(op, String::compose("Attached entity failed the constraint '%1'.", attachment.contraint), res, entity.getId());
+                                    entity.clientError(op, fmt::format("Attached entity failed the constraint '{}'.", attachment.contraint), res, entity.getId());
                                 } else {
                                     entity.clientError(op, errors.front(), res, entity.getId());
                                 }
@@ -195,10 +195,9 @@ void AttachmentsProperty::set(const Atlas::Message::Element& val)
                     };
                     m_data.emplace(entry.first, std::move(attachment));
                 } catch (const std::invalid_argument& e) {
-                    log(WARNING, String::compose(
-                            "Error when creating entity filter for attachment with constraint '%1'.: \n%2",
+                    spdlog::warn("Error when creating entity filter for attachment with constraint '{}'.: \n{}",
                             entry.second.String(),
-                            e.what())
+                            e.what()
                     );
                 }
             }

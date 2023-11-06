@@ -57,7 +57,7 @@ UsageParameter UsageParameter::parse(const Atlas::Message::Element& element)
     } else if (I->second.String() == "position") {
         parameter.type = UsageParameter::Type::POSITION;
     } else {
-        throw std::invalid_argument(String::compose("Parameter type not recognized: %1.", I->second.String()));
+        throw std::invalid_argument(fmt::format("Parameter type not recognized: {}.", I->second.String()));
     }
 
 
@@ -183,7 +183,7 @@ std::pair<bool, std::string> UsageInstance::isValid() const
     for (auto& param : definition.params) {
         auto I = args.find(param.first);
         if (I == args.end()) {
-            return {false, String::compose("Could not find required '%1' argument.", param.first)};
+            return {false, fmt::format("Could not find required '{}' argument.", param.first)};
         }
         std::vector<std::string> errorMessages;
         int count = param.second.countValidArgs(I->second, actor, tool, errorMessages);
@@ -192,11 +192,11 @@ std::pair<bool, std::string> UsageInstance::isValid() const
             if (!errorMessages.empty()) {
                 return {false, *errorMessages.begin()};
             } else {
-                return {false, String::compose("Too few '%1' arguments. Should be minimum %2, got %3.", param.first, param.second.min, count)};
+                return {false, fmt::format("Too few '{}' arguments. Should be minimum {}, got {}.", param.first, param.second.min, count)};
             }
         }
         if (count > param.second.max) {
-            return {false, String::compose("Too many '%1' arguments. Should be maximum %2, got %3.", param.first, param.second.max, count)};
+            return {false, fmt::format("Too many '{}' arguments. Should be maximum {}, got {}.", param.first, param.second.max, count)};
         }
 
     }

@@ -21,13 +21,13 @@
 
 #include "common/serialno.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/MultiLineListFormatter.h>
 
 #include <chrono>
+#include <sstream>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -85,7 +85,7 @@ void EntityExporter::operation(const Operation& op, OpVector& res)
         if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
             std::string message =
                     op->getArgs().front()->getAttr("message").asString();
-            log(ERROR, String::compose("Got error. Message: %1", message));
+            spdlog::error("Got error. Message: {}", message);
         }
     }
 

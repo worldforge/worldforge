@@ -307,6 +307,6 @@ std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string
         p = I->second->newProperty();
     }
     p->flags().addFlags(PropertyUtil::flagsForPropertyName(name));
-    debug_print(name << " property found. ")
+    cy_debug_print(name << " property found. ")
     return p;
 }

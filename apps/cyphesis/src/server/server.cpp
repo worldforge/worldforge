@@ -21,6 +21,9 @@
 
 #endif
 
+#include <spdlog/spdlog.h>
+#include <spdlog/common.h>
+
 #include "common/net/CommHttpClient.h"
 #include "CommPythonClient.h"
 #include "CommMetaClient.h"
@@ -91,7 +94,7 @@
 #include <fstream>
 #include <rules/simulation/PhysicalDomain.h>
 
-using String::compose;
+
 using namespace boost::asio;
 
 class TrustedConnection;
@@ -192,7 +195,7 @@ namespace {
             auto database = new DatabasePostgres();
             return std::make_unique<PgServerDatabase>(std::unique_ptr<DatabasePostgres>(database), std::make_unique<CommPSQLSocket>(io_context, *database));
 #else
-            log(ERROR, "Database specified as 'postgres', but this server is not built with Postgres SQL support.");
+            spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
             throw std::runtime_error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
 #endif
         } else {
@@ -208,7 +211,7 @@ namespace {
         if (useMetaserver) {
             cmc = std::make_unique<CommMetaClient>(io_context);
             if (cmc->setup(mserver) != 0) {
-                log(ERROR, "Error creating metaserver comm channel.");
+                spdlog::error("Error creating metaserver comm channel.");
                 cmc.reset();
             }
         }
@@ -221,7 +224,7 @@ namespace {
 #if defined(HAVE_AVAHI)
         cmdns = std::make_unique<CommMDNSPublisher>(io_context, serverRouting);
         if (cmdns->setup() != 0) {
-            log(ERROR, "Unable to register service with MDNS daemon.");
+            spdlog::error("Unable to register service with MDNS daemon.");
             cmdns.reset();
         }
 #endif // defined(HAVE_AVAHI)
@@ -266,18 +269,18 @@ namespace {
                 }
             }
             if (client_port_num < dynamic_port_end) {
-                auto errorMsg = String::compose("Could not find free client listen "
-                                                "socket in range %1-%2. Init failed.",
+                auto errorMsg = fmt::format("Could not find free client listen "
+                                                "socket in range {}-{}. Init failed.",
                                                 dynamic_port_start, dynamic_port_end);
-                log(ERROR, errorMsg);
-                log(INFO, String::compose("To allocate 8 more ports please run:"
+                spdlog::error(errorMsg);
+                spdlog::info("To allocate 8 more ports please run:"
                                           "\n\n    cyconfig "
-                                          "--cyphesis:dynamic_port_end=%1\n\n",
-                                          dynamic_port_end + 8));
+                                          "--cyphesis:dynamic_port_end={}\n\n",
+                                          dynamic_port_end + 8);
                 throw std::runtime_error(errorMsg);
             }
-            log(INFO, String::compose("Auto configuring new instance \"%1\" "
-                                      "to use port %2.", instance, client_port_num));
+            spdlog::info("Auto configuring new instance \"{}\" "
+                                      "to use port {}.", instance, client_port_num);
             global_conf->setItem(instance, "tcpport", client_port_num, varconf::USER);
             global_conf->setItem(CYPHESIS, "dynamic_port_start", client_port_num + 1, varconf::USER);
         } else {
@@ -288,12 +291,12 @@ namespace {
                                                                io_context,
                                                                ip::tcp::endpoint(ip::tcp::v6(), client_port_num));
             } catch (const std::exception& e) {
-                auto errorMsg = String::compose("Could not create client listen socket "
-                                                "on port %1. Init failed. The most common reason for this "
+                auto errorMsg = fmt::format("Could not create client listen socket "
+                                                "on port {}. Init failed. The most common reason for this "
                                                 "is that you're already running an instance of Cyphesis."
-                                                "\nError: %2",
+                                                "\nError: {}",
                                                 client_port_num, e.what());
-                log(ERROR, errorMsg);
+                spdlog::error(errorMsg);
                 throw std::runtime_error(errorMsg);
             }
         }
@@ -325,7 +328,7 @@ namespace {
                                                                                                                                            serverRouting.getName(),
                                                                                                                                            io_context,
                                                                                                                                            local::stream_protocol::endpoint(client_socket_name));
-        log(INFO, String::compose("Listening to local named socket at %1", client_socket_name));
+        spdlog::info("Listening to local named socket at {}", client_socket_name);
 
 
         auto httpCreator = [&]() -> std::shared_ptr<CommHttpClient> {
@@ -341,10 +344,10 @@ namespace {
         socketListeners.httpListener = std::make_unique<CommAsioListener<ip::tcp, CommHttpClient> >(httpCreator, httpStarter, serverRouting.getName(), io_context,
                                                                                                     ip::tcp::endpoint(ip::tcp::v6(), http_port_num));
 
-        log(INFO, compose("Http service. The following endpoints are available over port %1.", http_port_num));
-        log(INFO, " /config : shows server configuration");
-        log(INFO, " /monitors : various monitored values, suitable for time series systems");
-        log(INFO, " /monitors/numerics : only numerical values, suitable for time series system that only operates on numerical data");
+        spdlog::info("Http service. The following endpoints are available over port {}.", http_port_num);
+        spdlog::info(" /config : shows server configuration");
+        spdlog::info(" /monitors : various monitored values, suitable for time series systems");
+        spdlog::info(" /monitors/numerics : only numerical values, suitable for time series system that only operates on numerical data");
 
         return socketListeners;
     }
@@ -359,10 +362,10 @@ namespace {
             settings->reuse_open_port = true;
             auto error = rmt_CreateGlobalInstance(&rmt);
             if (RMT_ERROR_NONE != error) {
-                printf("Error launching Remotery %d\n", error);
+                spdlog::error("Error launching Remotery {}", std::to_string(error));
                 return -1;
             } else {
-                log(INFO, String::compose("Remotery enabled on port %1.", settings->port));
+                spdlog::info("Remotery enabled on port {}.", settings->port);
             }
         }
 
@@ -375,25 +378,26 @@ namespace {
 
         //Check if we should spawn AI clients.
         if (ai_clients) {
-            log(INFO, compose("Spawning %1 AI client processes.", ai_clients));
+            spdlog::info("Spawning {} AI client processes.", ai_clients);
             for (int i = 0; i < ai_clients; ++i) {
                 auto pid = fork();
                 if (pid == 0) {
                     execl((bin_directory + "/cyaiclient").c_str(),
                           (bin_directory + "/cyaiclient").c_str(),
-                          String::compose("--cyphesis:confdir=%1", etc_directory).c_str(),
-                          String::compose("--cyphesis:vardir=%1", var_directory).c_str(),
-                          String::compose("--cyphesis:directory=%1", share_directory).c_str(),
+                          fmt::format("--cyphesis:confdir={}", etc_directory).c_str(),
+                          fmt::format("--cyphesis:vardir={}", var_directory).c_str(),
+                          fmt::format("--cyphesis:directory={}", share_directory).c_str(),
                           nullptr);
                     return 0;
                 } else if (pid == -1) {
-                    log(WARNING, "Could not spawn AI client process.");
+                    spdlog::warn("Could not spawn AI client process.");
                 }
             }
         }
 
+		//TODO: do we need to make spdlog interact with syslog? Or should we just remove all of that stuff?
         // If we are a daemon logging to syslog, we need to set it up.
-        initLogger();
+//        initLogger();
 
         auto io_context = std::make_unique<boost::asio::io_context>();
 
@@ -412,7 +416,7 @@ namespace {
             // don't allow connecting users to create accounts. Accounts must
             // be created manually by the server administrator.
             if (restricted_flag) {
-                log(INFO, "Setting restricted mode.");
+                spdlog::info("Setting restricted mode.");
             }
 
             readConfigItem(instance, "inittime", timeoffset);
@@ -438,19 +442,19 @@ namespace {
             assets_manager.init();
 
             //Perhaps move all this into the AssetsManager?
-            log(INFO, String::compose("Reading assets from %1", assets_manager.getAssetsPath()));
+            spdlog::info("Reading assets from {}", assets_manager.getAssetsPath().string());
 
             std::filesystem::path squallRepositoryPath = std::filesystem::path(var_directory) / "lib" / "cyphesis" / "squall" ;
 
             SquallAssetsGenerator assetsGenerator{Squall::Repository(squallRepositoryPath), assets_manager.getAssetsPath()};
 
-            log(INFO, String::compose("Setting up Squall repository at %1, with assets located at %2.", squallRepositoryPath.string(), assets_manager.getAssetsPath().string()));
-            log(INFO, "Will now generate the Squall repository. This will take some time the first time the server is ran, but should be quick once done.");
+            spdlog::info("Setting up Squall repository at {}, with assets located at {}.", squallRepositoryPath.string(), assets_manager.getAssetsPath().string());
+            spdlog::info("Will now generate the Squall repository. This will take some time the first time the server is ran, but should be quick once done.");
             auto rootSignature = assetsGenerator.generateFromAssets("cyphesis-" + ruleset_name);
             if (rootSignature) {
-                log(INFO, String::compose("Generated squall signature %1.", rootSignature->str()));
+                spdlog::info("Generated squall signature {}.", rootSignature->str_view());
             } else {
-                log(WARNING, "Could not generate Squall signature.");
+                spdlog::warn("Could not generate Squall signature.");
                 return 1;
             }
 
@@ -498,7 +502,7 @@ namespace {
                 auto I = operationsMap.find(op->getClassNo());
                 if (I == operationsMap.end()) {
                     auto result = operationsMap.emplace(op->getClassNo(), 1);
-                    monitors.watch(String::compose("operation_count{type=\"%1\"}", op->getParent()), std::make_unique<Variable<int>>(result.first->second));
+                    monitors.watch(fmt::format("operation_count{{type=\"{}\"}}", op->getParent()), std::make_unique<Variable<int>>(result.first->second));
                 } else {
                     I->second++;
                 }
@@ -519,7 +523,7 @@ namespace {
             long lobby_int_id;
 
             if ((lobby_int_id = database.newId()) < 0) {
-                log(CRITICAL, "Unable to get server IDs from Database");
+                spdlog::critical("Unable to get server IDs from Database");
                 return EXIT_DATABASE_ERROR;
             }
 
@@ -542,7 +546,7 @@ namespace {
 
             run_user_scripts("cyphesis");
 
-            log(INFO, "Restoring world from database...");
+            spdlog::info("Restoring world from database...");
 
             store.restoreWorld(world.getBaseEntity());
             // Read the world entity if any from the database, or set it up.
@@ -550,7 +554,7 @@ namespace {
             // position or orientation data.
             store.initWorld(world.getBaseEntity());
 
-            log(INFO, "Restored world.");
+            spdlog::info("Restored world.");
 
             // Configuration is now complete, and verified as somewhat sane, so
             // we save the updated user config.
@@ -590,7 +594,7 @@ namespace {
                         //Populate the server through separate process (mainly because it's easier as we've
                         //already written the importer tool; we might also do it in-process, but that would
                         //require some rewriting of code).
-                        log(INFO, compose("Trying to import world from %1.", importPath));
+                        spdlog::info("Trying to import world from {}.", importPath);
                         std::stringstream ss;
                         ss << bin_directory << "/cyimport";
                         ss << " --cyphesis:confdir=\"" << etc_directory << "\"";
@@ -601,15 +605,15 @@ namespace {
                         std::thread importer([=]() {
                             int result = std::system(command.c_str());
                             if (result == 0) {
-                                log(INFO, "Imported world into empty server.");
+                                spdlog::info("Imported world into empty server.");
                             } else {
-                                log(INFO, "No world imported.");
+                                spdlog::info("No world imported.");
                             }
                         });
                         importer.detach();
                     }
                 } else {
-                    log(NOTICE, compose("Not importing as \"%1\" could not be found", importPath));
+                    spdlog::debug("Not importing as \"{}\" could not be found.", importPath);
                     file.close();
                 }
             }
@@ -646,7 +650,7 @@ namespace {
                 IdleConnector storage_idle(*io_context);
                 storage_idle.idling.connect([&store]() { store.tick(); });
 
-                log(INFO, "Running and accepting connections");
+                spdlog::info("Running and accepting connections");
                 logEvent(START, "- - - Standalone server startup");
 
                 MainLoop::run(daemon_flag, *io_context, world.getOperationsHandler(), {softExitStart, softExitPoll, softExitTimeout, dispatchOperationsFn}, time);
@@ -665,13 +669,13 @@ namespace {
                 exit_flag = false;
                 if (store.shutdown(exit_flag, world.getEntities()) != 0) {
                     //Ignore this error and carry on with shutting down.
-                    log(ERROR, "Error when shutting down");
+                    spdlog::error("Error when shutting down");
                 }
             } catch (const std::exception& e) {
-                log(ERROR, String::compose("Exception caught when shutting down: %1", e.what()));
+                spdlog::error("Exception caught when shutting down: {}", e.what());
             } catch (...) {
                 //Ignore this error and carry on with shutting down.
-                log(ERROR, "Exception caught when shutting down");
+                spdlog::error("Exception caught when shutting down");
             }
 
 
@@ -705,14 +709,15 @@ namespace {
 
 int main(int argc, char** argv)
 {
-    std::setlocale(LC_ALL, "C");
+	//spdlog::set_level(spdlog::level::debug);
+	std::setlocale(LC_ALL, "C");
     if (security_init() != 0) {
-        log(CRITICAL, "Security initialization Error. Exiting.");
+        spdlog::critical("Security initialization Error. Exiting.");
         return EXIT_SECURITY_ERROR;
     }
 
     if (security_check() != SECURITY_OKAY) {
-        log(CRITICAL, "Security check error. Exiting.");
+        spdlog::critical("Security check error. Exiting.");
         return EXIT_SECURITY_ERROR;
     }
 
@@ -726,14 +731,14 @@ int main(int argc, char** argv)
         if (config_status == CONFIG_VERSION) {
             std::cout << argv[0] << " (cyphesis) " << consts::version
                       << " (Cyphesis build: " << consts::buildId << ")"
-                      << std::endl << std::flush;
+                      << std::endl;
 
             return 0;
         } else if (config_status == CONFIG_HELP) {
             showUsage(argv[0], USAGE_SERVER);
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file.
         return EXIT_CONFIG_ERROR;
@@ -753,7 +758,7 @@ int main(int argc, char** argv)
     if (result != 0) {
         return result;
     }
-    log(INFO, "Clean shutdown complete.");
+    spdlog::info("Clean shutdown complete.");
     logEvent(STOP, "- - - Standalone server shutdown");
 
     return result;

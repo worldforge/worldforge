@@ -26,7 +26,6 @@
 #endif
 
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 
 #include "CommAsioClient.h"
@@ -129,15 +128,15 @@ void CommAsioClient<ProtocolT>::do_read()
                                     //No need to read if connection has been actively shut down.
                                     if (m_active) {
                                         std::stringstream ss;
-                                        log_level level = WARNING;
+                                        spdlog::level::level_enum level = spdlog::level::warn;
                                         if (ec == boost::asio::error::eof) {
-                                            ss << String::compose("Connection at '%1' hung up unexpectedly.", socketName(mSocket));
-                                            level = NOTICE;
+                                            ss << fmt::format("Connection at '{}' hung up unexpectedly.", socketName(mSocket));
+                                            level = spdlog::level::debug;
                                         } else {
-                                            ss << String::compose("Error when reading from socket at '%1': (", socketName(mSocket)) << ec << ") " << ec.message();
+                                            ss << fmt::format("Error when reading from socket at '{}': (", socketName(mSocket)) << ec << ") " << ec.message();
 
                                         }
-                                        log(level, ss.str());
+										spdlog::log(level, ss.str());
                                     }
                                 }
                             });
@@ -177,15 +176,15 @@ void CommAsioClient<ProtocolT>::write()
                                          //No need to write if connection has been actively shut down.
                                          if (m_active) {
                                              std::stringstream ss;
-                                             log_level level = WARNING;
+                                        	 spdlog::level::level_enum level = spdlog::level::warn;
                                              if (ec == boost::asio::error::eof) {
-                                                 ss << String::compose("Connection at '%1' hung up unexpectedly.", socketName(mSocket));
-                                                 level = NOTICE;
+                                                 ss << fmt::format("Connection at '{}' hung up unexpectedly.", socketName(mSocket));
+                                            	 level = spdlog::level::debug;
                                              } else {
-                                                 ss << String::compose("Error when reading from socket at '%1': (", socketName(mSocket)) << ec << ") " << ec.message();
+                                                 ss << fmt::format("Error when reading from socket at '{}': (", socketName(mSocket)) << ec << ") " << ec.message();
 
                                              }
-                                             log(level, ss.str());
+											 spdlog::log(level, ss.str());
                                          }
 
                                      }
@@ -275,7 +274,7 @@ void CommAsioClient<ProtocolT>::startNegotiation()
         //If the negotiator still exists after the deadline it means that the negotiation hasn't
         //completed yet; we'll consider that a "timeout".
         if (m_negotiate != nullptr) {
-            log(NOTICE, String::compose("Client at '%1' disconnected because of negotiation timeout.", socketName(mSocket)));
+            spdlog::debug("Client at '{}' disconnected because of negotiation timeout.", socketName(mSocket));
             mSocket.close();
         }
     });
@@ -298,7 +297,7 @@ int CommAsioClient<ProtocolT>::negotiate()
 
     // Check if negotiation failed
     if (m_negotiate->getState() == Atlas::Negotiate::FAILED) {
-        log(NOTICE, String::compose("Failed to negotiate with client at '%1'.", socketName(mSocket)));
+        spdlog::debug("Failed to negotiate with client at '{}'.", socketName(mSocket));
         return -1;
     }
     // Negotiation was successful
@@ -310,7 +309,7 @@ int CommAsioClient<ProtocolT>::negotiate()
     m_negotiate.reset();
 
     if (m_codec == nullptr) {
-        log(NOTICE, String::compose("Could not create codec during negotiation with '%1'.", socketName(mSocket)));
+        spdlog::debug("Could not create codec during negotiation with '{}'.", socketName(mSocket));
         return -1;
     }
     // Create a new encoder to send high level objects to the codec
@@ -346,15 +345,14 @@ void CommAsioClient<ProtocolT>::objectArrived(Atlas::Objects::Root obj)
         debugEncoder.streamObjectsMessage(obj);
         debugStream << std::flush;
 
-        std::cerr << "received: " << debugStream.str() << std::endl << std::flush;
+        std::cerr << "received: " << debugStream.str() << std::endl;
     }
 
-    Atlas::Objects::Operation::RootOperation op = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(obj);
+    auto op = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(obj);
     if (!op.isValid()) {
-        log(ERROR,
-            String::compose("Invalid object of type \"%1\" with parent "
-                            "\"%2\" arrived from client at '%3'", obj->getObjtype(),
-                            obj->getParent(), socketName(mSocket)));
+        spdlog::error("Invalid object of type \"{}\" with parent "
+                            "\"{}\" arrived from client at '{}'", obj->getObjtype(),
+                            obj->getParent(), socketName(mSocket));
     } else {
         externalOperation(std::move(op));
     }
@@ -364,7 +362,7 @@ template<class ProtocolT>
 int CommAsioClient<ProtocolT>::send(const Atlas::Objects::Operation::RootOperation& op)
 {
     if (!mSocket.is_open()) {
-        log(ERROR, "Writing to closed client");
+        spdlog::error("Writing to closed client");
         return -1;
     }
     assert(m_encoder);
@@ -378,7 +376,7 @@ int CommAsioClient<ProtocolT>::send(const Atlas::Objects::Operation::RootOperati
         debugEncoder.streamObjectsMessage(op);
         debugStream << std::flush;
 
-        std::cerr << "sending: " << debugStream.str() << std::endl << std::flush;
+        std::cerr << "sending: " << debugStream.str() << std::endl;
     }
 
     m_encoder->streamObjectsMessage(op);

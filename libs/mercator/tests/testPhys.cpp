@@ -30,7 +30,7 @@ int main()
 
     if (segment == 0) {
         std::cerr << "Segment not created by addition of required basepoints"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 

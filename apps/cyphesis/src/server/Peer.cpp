@@ -25,7 +25,6 @@
 #include "rules/simulation/BaseWorld.h"
 #include "common/CommSocket.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 #include "rules/LocatedEntity.h"
 
@@ -60,7 +59,7 @@ Peer::Peer(CommSocket& client,
         m_state(PEER_INIT),
         m_server(svr)
 {
-    logEvent(CONNECT, String::compose("%1 - - Connect to %2", id.m_id, addr));
+    logEvent(CONNECT, fmt::format("{} - - Connect to {}", id.m_id, addr));
 }
 
 Peer::~Peer()
@@ -86,7 +85,7 @@ PeerAuthState Peer::getAuthState()
 
 void Peer::externalOperation(const Operation& op, Link&)
 {
-    log(ERROR, String::compose("%1 called", __PRETTY_FUNCTION__));
+    spdlog::error("{} called", __PRETTY_FUNCTION__);
 }
 
 /// \brief Execute an operation sent by a connected peer
@@ -141,13 +140,13 @@ void Peer::operation(const Operation& op, OpVector& res)
 int Peer::teleportEntity(const LocatedEntity* ent)
 {
     if (m_state != PEER_AUTHENTICATED) {
-        log(ERROR, "Peer not authenticated yet.");
+        spdlog::error("Peer not authenticated yet.");
         return -1;
     }
 
     long iid = ent->getIntId();
     if (m_teleports.find(iid) != m_teleports.end()) {
-        log(INFO, "Transfer of this entity already in progress");
+        spdlog::info("Transfer of this entity already in progress");
         return -1;
     }
 
@@ -174,7 +173,7 @@ int Peer::teleportEntity(const LocatedEntity* ent)
         // is used by the client to authenticate a teleport on the destination
         // peer
         std::string key;
-        log(INFO, "Entity has a mind. Generating random key");
+        spdlog::info("Entity has a mind. Generating random key");
         // FIXME non-random, plus potetial timing attack.
         WFMath::MTRand generator;
         for (int i = 0; i < 32; i++) {
@@ -184,7 +183,7 @@ int Peer::teleportEntity(const LocatedEntity* ent)
 
         s.setKey(key);
         // Add an additional possess key argument
-        log(INFO, String::compose("Adding possess key %1 to Create op", key));
+        spdlog::info("Adding possess key {} to Create op", key);
         Anonymous key_arg;
         key_arg->setAttr("possess_key", key);
 
@@ -192,12 +191,12 @@ int Peer::teleportEntity(const LocatedEntity* ent)
         create_args.push_back(key_arg);
     }
     this->send(op);
-    log(INFO, "Sent Create op to peer");
+    spdlog::info("Sent Create op to peer");
 
     // Set it as validated and add to the list of teleports
     s.setRequested();
     m_teleports.emplace(iid, s);
-    log(INFO, "Added new teleport state");
+    spdlog::info("Added new teleport state");
 
     return 0;
 }
@@ -208,17 +207,17 @@ int Peer::teleportEntity(const LocatedEntity* ent)
 /// @param res The result set of replies
 void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
 {
-    log(INFO, "Got a peer teleport response");
+    spdlog::info("Got a peer teleport response");
     // Response to a Create op
     const std::vector<Root>& args = op->getArgs();
     if (args.empty()) {
-        log(ERROR, "Malformed args in Info op");
+        spdlog::error("Malformed args in Info op");
         return;
     }
     const Root& arg = args.front();
 
     if (op->isDefaultRefno()) {
-        log(ERROR, "Response to teleport has no refno");
+        spdlog::error("Response to teleport has no refno");
         return;
     }
 
@@ -226,21 +225,21 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
 
     auto I = m_teleports.find(iid);
     if (I == m_teleports.end()) {
-        log(ERROR, "Info op for unknown create");
+        spdlog::error("Info op for unknown create");
         return;
     }
 
     auto& s = I->second;
 
     s.setCreated();
-    log(INFO, String::compose("Entity with ID %1 replicated on peer", iid));
+    spdlog::info("Entity with ID {} replicated on peer", iid);
 
     // This is the sender entity. This is retreived again rather than
     // relying on a pointer (in the TeleportState object perhaps) as the
     // entity might have been deleted in the time between sending and response
     auto entity = BaseWorld::instance().getEntity(iid);
     if (!entity) {
-        log(ERROR, String::compose("No entity found with ID: %1", iid));
+        spdlog::error("No entity found with ID: {}", iid);
         // Clean up the teleport state object
         m_teleports.erase(I);
         return;
@@ -250,7 +249,7 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
     if (s.isMind()) {
         auto mindsProperty = entity->getPropertyClassFixed<MindsProperty>();
         if (mindsProperty->getMinds().empty()) {
-            log(ERROR, "No external mind (though teleport state claims it)");
+            spdlog::error("No external mind (though teleport state claims it)");
             return;
         }
         std::vector<Root> logout_args;
@@ -272,7 +271,7 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
         OpVector temp;
 
         mindsProperty->sendToMinds(logoutOp, temp);
-        log(INFO, "Sent random key to connected mind");
+        spdlog::info("Sent random key to connected mind");
     }
 
     // FIXME Remove from the world cleanly, not delete.
@@ -284,8 +283,8 @@ void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
     delOp->setArgs1(del_arg);
     delOp->setTo(entity->getId());
     entity->sendWorld(delOp);
-    log(INFO, "Deleted entity from current server");
-    logEvent(EXPORT_ENT, String::compose("%1 - %2 Exported entity",
+    spdlog::info("Deleted entity from current server");
+    logEvent(EXPORT_ENT, fmt::format("{} - {} Exported entity",
                                          getId(), entity->getId()));
 
     // Clean up the teleport state object
@@ -304,8 +303,8 @@ void Peer::cleanTeleports()
         auto time_passed = curr_time - I->second.getCreateTime();
         // If 5 seconds have passed, the teleport has failed
         if (std::chrono::duration_cast<std::chrono::seconds>(time_passed).count() >= 10 && I->second.isRequested()) {
-            log(INFO, String::compose("Teleport timed out for entity (ID %1)",
-                                      I->first));
+            spdlog::info("Teleport timed out for entity (ID {})",
+                                      I->first);
             I = m_teleports.erase(I);
         } else {
             I = std::next(I);

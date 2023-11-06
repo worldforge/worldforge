@@ -25,7 +25,6 @@
 #include "common/Link.h"
 #include "common/operations/Possess.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 #include "rules/LocatedEntity.h"
 
@@ -49,16 +48,14 @@ int ExternalMindsManager::addConnection(
 {
     auto result = m_connections.emplace(connection.getRouterId(), connection);
     if (!result.second) {
-        log(WARNING, String::compose(
-                "Tried to register a external mind connection for "
-                "router %1 for which there's already a connection registered.",
-                connection.getRouterId()));
+        spdlog::warn("Tried to register a external mind connection for "
+                "router {} for which there's already a connection registered.",
+                connection.getRouterId());
         return -1;
     }
-    log(INFO, String::compose(
-            "New external mind connection registered for router %1. "
-            "There are now %2 connections.",
-            connection.getRouterId(), m_connections.size()));
+    spdlog::info("New external mind connection registered for router {}. "
+            "There are now {} connections.",
+            connection.getRouterId(), m_connections.size());
 
     //As we now have a new connection we'll see if there are any minds in waiting
 
@@ -74,17 +71,14 @@ int ExternalMindsManager::removeConnection(const std::string& routerId)
 {
     auto result = m_connections.erase(routerId);
     if (result == 0) {
-        log(WARNING,
-            String::compose(
-                    "Tried to deregister a external mind connection for "
-                    "router %1 for which there's no connection registered.",
-                    routerId));
+        spdlog::warn("Tried to deregister a external mind connection for "
+                    "router {} for which there's no connection registered.",
+                    routerId);
         return -1;
     } else {
-        log(INFO, String::compose(
-                "Deregistered external mind connection registered for router %1. "
-                "There are now %2 connections.", routerId,
-                m_connections.size()));
+        spdlog::info("Deregistered external mind connection registered for router {}. "
+                "There are now {} connections.", routerId,
+                m_connections.size());
         return 0;
     }
 }
@@ -148,8 +142,8 @@ int ExternalMindsManager::requestPossessionFromRegisteredClients(const std::stri
             possessOp->setArgs1(possess_args);
             possessOp->setTo(connection.getRouterId());
 
-            debug_print(String::compose(
-                    "Requesting possession of mind for entity %1 from link with id %2 and router with id %3.",
+            cy_debug_print(fmt::format(
+                    "Requesting possession of mind for entity {} from link with id {} and router with id {}.",
                     entity_id, connection.getLink()->getId(),
                     connection.getRouterId()));
 

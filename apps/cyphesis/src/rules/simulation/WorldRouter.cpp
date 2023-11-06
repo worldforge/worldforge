@@ -89,7 +89,7 @@ void WorldRouter::shutdown()
 /// class. Send a Setup op to the entity.
 void WorldRouter::addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent)
 {
-    debug_print("WorldRouter::addEntity(" << ent->describeEntity() << ")")
+    cy_debug_print("WorldRouter::addEntity(" << ent->describeEntity() << ")")
     assert(ent->getIntId() != 0);
     assert(m_eobjects.find(ent->getIntId()) == m_eobjects.end());
     m_eobjects[ent->getIntId()] = ent;
@@ -97,7 +97,7 @@ void WorldRouter::addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEnti
 
     ent->changeContainer(parent);
 
-    //debug_print("Entity loc " << ent->m_location)
+    //cy_debug_print("Entity loc " << ent->m_location)
 
     if (ent->m_contains != nullptr) {
         //Iterate through copy, to handle entities being deleted while iterating.
@@ -126,19 +126,19 @@ void WorldRouter::addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEnti
 Ref<LocatedEntity> WorldRouter::addNewEntity(const std::string& typestr,
                                              const RootEntity& attrs)
 {
-    debug_print("WorldRouter::addNewEntity(\"" << typestr << "\", attrs)")
+    cy_debug_print("WorldRouter::addNewEntity(\"" << typestr << "\", attrs)")
     auto id = newId();
 
     if (!id.isValid()) {
-        log(ERROR, "Unable to get ID for new Entity");
+        spdlog::error("Unable to get ID for new Entity");
         return nullptr;
     }
 
     auto ent = m_entityCreator.newEntity(id, typestr, attrs);
     if (!ent) {
-        log(ERROR, String::compose("Attempt to create an entity of type \"%1\" "
+        spdlog::error("Attempt to create an entity of type \"{}\" "
                                    "but type is unknown or forbidden",
-                                   typestr));
+                                   typestr);
         return nullptr;
     }
 
@@ -149,7 +149,7 @@ Ref<LocatedEntity> WorldRouter::addNewEntity(const std::string& typestr,
         loc = getEntity(attrs->getLoc());
     }
     if (!loc) {
-        log(ERROR, String::compose("Attempt to create an entity %1 without a valid parent.", ent->describeEntity()));
+        spdlog::error("Attempt to create an entity {} without a valid parent.", ent->describeEntity());
         return nullptr;
     }
 
@@ -168,7 +168,7 @@ Ref<LocatedEntity> WorldRouter::addNewEntity(const std::string& typestr,
 void WorldRouter::delEntity(LocatedEntity* ent)
 {
     if (ent == m_baseEntity.get()) {
-        log(WARNING, "Attempt to delete game world");
+        spdlog::warn("Attempt to delete game world");
         return;
     }
     assert(ent->getIntId() != 0);
@@ -208,7 +208,7 @@ void WorldRouter::resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperat
 /// for each observer.
 void WorldRouter::message(Operation op, LocatedEntity& fromEntity)
 {
-    debug_print("WorldRouter::message {"
+    cy_debug_print("WorldRouter::message {"
                         << op->getParent() << ":"
                         << op->getFrom() << ":" << op->getTo() << "}")
 
@@ -223,9 +223,9 @@ void WorldRouter::message(Operation op, LocatedEntity& fromEntity)
             }
         } else {
             //Don't broadcast ops which shouldn't be broadcasted.
-            log(WARNING, String::compose("Trying to broadcast '%1' op from %2, which we don't allow. Did you forget to set 'to' on the op?",
+            spdlog::warn("Trying to broadcast '{}' op from {}, which we don't allow. Did you forget to set 'to' on the op?",
                                          op->getParent(),
-                                         fromEntity.describeEntity()));
+                                         fromEntity.describeEntity());
 
         }
     } else {
@@ -264,11 +264,11 @@ void WorldRouter::deliverTo(const Operation& op, Ref<LocatedEntity> ent)
     op->setSeconds(std::chrono::duration_cast<std::chrono::duration<double>>(getTime()).count());
 
     OpVector res;
-    debug_print("WorldRouter::deliverTo begin {"
+    cy_debug_print("WorldRouter::deliverTo begin {"
                     << op->getParent() << ":"
                     << op->getFrom() << ":" << op->getTo() << "}")
     ent->operation(op, res);
-    debug_print("WorldRouter::deliverTo done {"
+    cy_debug_print("WorldRouter::deliverTo done {"
                     << op->getParent() << ":"
                     << op->getFrom() << ":" << op->getTo() << "}")
     for (auto& resOp : res) {
@@ -285,11 +285,11 @@ void WorldRouter::deliverTo(const Operation& op, Ref<LocatedEntity> ent)
             if (fromEntity) {
                 message(resOp, *fromEntity);
             } else {
-                log(WARNING, String::compose("Resulting operation %1, from sending op of type %2 to entity '%3' was marked as being from entity with id '%4' which doesn't exist.",
+                spdlog::warn("Resulting operation {}, from sending op of type {} to entity '{}' was marked as being from entity with id '{}' which doesn't exist.",
                                              resOp->getParent(),
                                              op->getParent(),
                                              ent->describeEntity(),
-                                             resOp->getFrom()));
+                                             resOp->getFrom());
             }
         }
     }
@@ -308,7 +308,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from)
     try {
         rmt_ScopedCPUSample(WorldRouter_operation, 0)
 
-        debug_print("WorldRouter::operation {"
+        cy_debug_print("WorldRouter::operation {"
                             << op->getParent() << ":"
                             << op->getFrom() << ":" << op->getTo() << "}")
         assert(op->getFrom() == from->getId());
@@ -319,7 +319,7 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from)
         if (!op->isDefaultTo()) {
             const std::string& to = op->getTo();
             if (to.empty()) {
-                log(ERROR, String::compose("Op with 'to' set to an empty string. From %1. Op: %2", from->describeEntity(), debug_tostring(op)));
+                spdlog::error("Op with 'to' set to an empty string. From {}. Op: {}", from->describeEntity(), debug_tostring(op));
                 return;
             }
             Ref<LocatedEntity> to_entity;
@@ -363,16 +363,16 @@ void WorldRouter::operation(const Operation& op, Ref<LocatedEntity> from)
         }
     }
     catch (const std::exception& ex) {
-        log(ERROR, String::compose("Exception caught in OperationsDispatcher::dispatchOperation() "
+        spdlog::error("Exception caught in OperationsDispatcher::dispatchOperation() "
                                    "thrown while processing operation "
-                                   "sent to \"%1\" from \"%2\": %3",
-                                   op->getTo(), op->getFrom(), ex.what()));
+                                   "sent to \"{}\" from \"{}\": {}",
+                                   op->getTo(), op->getFrom(), ex.what());
     }
     catch (...) {
-        log(ERROR, String::compose("Unspecified exception caught in OperationsDispatcher::dispatchOperation() "
+        spdlog::error("Unspecified exception caught in OperationsDispatcher::dispatchOperation() "
                                    "thrown while processing operation "
-                                   "sent to \"%1\" from \"%2\"",
-                                   op->getTo(), op->getFrom()));
+                                   "sent to \"{}\" from \"{}\"",
+                                   op->getTo(), op->getFrom());
     }
 }
 

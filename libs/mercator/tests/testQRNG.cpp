@@ -29,7 +29,7 @@ int main()
         if (rnd != results[i]) {
             std::cerr << "Mismatch between QRNG and known result sequuence"
                       << std::endl
-                      << rnd << " != " << results[i] << std::endl << std::flush;
+                      << rnd << " != " << results[i] << std::endl;
             exit = 1;
         }
         assert(rnd == results[i]);

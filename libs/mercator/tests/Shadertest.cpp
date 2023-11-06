@@ -17,7 +17,7 @@ int shadeTest(Mercator::Segment & segment)
 
     if (surface.getChannels() != 4) {
         std::cerr << "Surface does not have 4 channels."
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 

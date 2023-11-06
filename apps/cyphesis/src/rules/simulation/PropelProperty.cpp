@@ -47,13 +47,13 @@ void PropelProperty::set(const Element& val)
             mData.fromAtlas(val.List());
         } catch (...) {
             mData = {};
-            log(ERROR, "PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
+            spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
         }
     } else if (val.isNone()) {
         mData = {};
     } else {
         mData = {};
-        log(ERROR, "PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
+        spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
     }
 
 }

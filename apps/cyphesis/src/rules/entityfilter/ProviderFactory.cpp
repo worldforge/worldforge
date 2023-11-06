@@ -161,7 +161,7 @@ namespace EntityFilter {
             } else if (attr == "area") {
                 return BBoxProvider::Measurement::AREA;
             }
-            throw std::invalid_argument(String::compose("Could not compile query as '%1' isn't a valid measurement for a Bounding Box.", attr));
+            throw std::invalid_argument(fmt::format("Could not compile query as '{}' isn't a valid measurement for a Bounding Box.", attr));
         };
 
         segments.pop_front();

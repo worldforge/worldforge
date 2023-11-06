@@ -58,9 +58,9 @@ int python_client_script(const std::string& package,
         auto ret = callable.apply(args, kwds);
     } catch (...) {
         if (PyErr_Occurred() == nullptr) {
-            log(ERROR, "Could not call function");
+            spdlog::error("Could not call function");
         } else {
-            log(ERROR, "Reporting python error");
+            spdlog::error("Reporting python error");
             PyErr_Print();
         }
         return -1;

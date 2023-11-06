@@ -45,7 +45,7 @@ int convert(const std::string& file_in, const std::string& codec_in,
 
 	if (!in.is_open()) {
 		std::cerr << "Unable to open " << file_in << " for input"
-				  << std::endl << std::flush;
+				  << std::endl;
 		return 1;
 	}
 
@@ -53,7 +53,7 @@ int convert(const std::string& file_in, const std::string& codec_in,
 
 	if (!out.is_open()) {
 		std::cerr << "Unable to open " << file_out << " for output"
-				  << std::endl << std::flush;
+				  << std::endl;
 		return 1;
 	}
 
@@ -102,7 +102,7 @@ void usage(const char* program) {
 			  << " [-i infile] [-o outfile] <input file> <output file>"
 			  << std::endl;
 	std::cout << "Supported Codecs: XML Back Packed"
-			  << std::endl << std::flush;
+			  << std::endl;
 }
 }
 int main( int argc, char** argv )
@@ -133,7 +133,7 @@ int main( int argc, char** argv )
     std::string file_in(argv[argc - 2]);
     std::string file_out(argv[argc - 1]);
 
-    std::cout << "Reading from " << file_in << " to " << file_out << std::endl << std::flush;
+    std::cout << "Reading from " << file_in << " to " << file_out << std::endl;
 
     // convert file
     return convert(file_in, codec_in, file_out, codec_out);

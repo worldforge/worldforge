@@ -191,26 +191,26 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res)
 
             //Extract the contained operation, and register the relay into m_relays
             if (op->isDefaultSerialno()) {
-                log(ERROR, "ExternalMind::RelayOperation no serial number. " + m_entity->describeEntity());
+                spdlog::error("ExternalMind::RelayOperation no serial number. " + m_entity->describeEntity());
                 return;
             }
 
             Element from_id;
             if (op->copyAttr("from_id", from_id) != 0 || !from_id.isString()) {
-                log(ERROR, "ExternalMind::RelayOperation no valid 'from_id' attribute. " + m_entity->describeEntity());
+                spdlog::error("ExternalMind::RelayOperation no valid 'from_id' attribute. " + m_entity->describeEntity());
                 return;
             }
 
 
             if (op->getArgs().empty()) {
-                log(ERROR, "ExternalMind::RelayOperation relay op has no args. " + m_entity->describeEntity());
+                spdlog::error("ExternalMind::RelayOperation relay op has no args. " + m_entity->describeEntity());
                 return;
             }
 
             Operation relayedOp = Atlas::Objects::smart_dynamic_cast<Operation>(op->getArgs().front());
 
             if (!relayedOp.isValid()) {
-                log(ERROR, "ExternalMind::RelayOperation first arg is not an operation. " + m_entity->describeEntity());
+                spdlog::error("ExternalMind::RelayOperation first arg is not an operation. " + m_entity->describeEntity());
                 return;
             }
 
@@ -286,7 +286,7 @@ void ExternalMind::GetOperation(const Operation& op, OpVector& res)
 
             auto& o = Inheritance::instance().getClass(id, visibility);
             if (!o.isValid()) {
-                clientError(op, String::compose("Unknown type definition for \"%1\" "
+                clientError(op, fmt::format("Unknown type definition for \"{}\" "
                                                 "requested", id), res);
                 continue;
             }

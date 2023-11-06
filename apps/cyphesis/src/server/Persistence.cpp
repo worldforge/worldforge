@@ -47,14 +47,14 @@ bool Persistence::findAccount(const std::string& name)
     std::string namestr = "'" + name + "'";
     DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
     if (dr.error()) {
-        log(ERROR, String::compose("Failure while finding account '%1'.", name));
+        spdlog::error("Failure while finding account '{}'.", name);
         return false;
     }
     if (dr.empty()) {
         return false;
     }
     if (dr.size() > 1) {
-        log(ERROR, String::compose("Duplicate username in accounts database for name '%1'.", name));
+        spdlog::error("Duplicate username in accounts database for name '{}'.", name);
     }
     return true;
 }
@@ -64,35 +64,35 @@ std::unique_ptr<Account> Persistence::getAccount(const std::string& name)
     std::string namestr = "'" + name + "'";
     DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
     if (dr.error()) {
-        log(ERROR, String::compose("Failure while finding account '%1'.", name));
+        spdlog::error("Failure while finding account '{}'.", name);
         return nullptr;
     }
     if (dr.empty()) {
         return nullptr;
     }
     if (dr.size() > 1) {
-        log(ERROR, String::compose("Duplicate username in accounts database for name '%1'.", name));
+        spdlog::error("Duplicate username in accounts database for name '{}'.", name);
     }
     auto first = dr.begin();
     const char* c = first.column("id");
     if (c == nullptr) {
-        log(ERROR, "Unable to find id field in accounts database.");
+        spdlog::error("Unable to find id field in accounts database.");
         return nullptr;
     }
     RouterId id(c);
     if (!id.isValid()) {
-        log(ERROR, String::compose(R"(Invalid ID "%1" for account "%2" from database.)", id.m_id, name));
+        spdlog::error(R"(Invalid ID "{}" for account "{}" from database.)", id.m_id, name);
         return nullptr;
     }
     c = first.column("password");
     if (c == nullptr) {
-        log(ERROR, "Unable to find password field in accounts database.");
+        spdlog::error("Unable to find password field in accounts database.");
         return nullptr;
     }
     std::string passwd = c;
     c = first.column("type");
     if (c == nullptr) {
-        log(ERROR, "Unable to find type field in accounts database.");
+        spdlog::error("Unable to find type field in accounts database.");
         return nullptr;
     }
     std::string type = c;

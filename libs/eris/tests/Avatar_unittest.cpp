@@ -54,7 +54,7 @@ class TestConnection : public Eris::Connection {
 
     void send(const Atlas::Objects::Root &obj) override {
         std::cout << "Sending " << obj->getParent()
-                  << std::endl << std::flush;
+                  << std::endl;
     }
 };
 
@@ -112,7 +112,7 @@ class TestEntity : public Eris::ViewEntity {
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
-    std::cerr << msg << std::endl << std::flush;
+    std::cerr << msg << std::endl;
 }
 
 int main()

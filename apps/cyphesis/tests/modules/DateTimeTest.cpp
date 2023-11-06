@@ -35,7 +35,7 @@ int main()
 {
     DateTime datum(0);
 
-    std::cout << datum.asString() << std::endl << std::flush;
+    std::cout << datum.asString() << std::endl;
 
     assert(datum.isValid());
 
@@ -55,7 +55,7 @@ int main()
 
         assert(strlen(string_date) == 19);
 
-        std::cout << string_date << std::endl << std::flush;
+        std::cout << string_date << std::endl;
 
         DateTime date_from_string(string_date);
 
@@ -63,7 +63,7 @@ int main()
 
         assert(date_from_string.asString() == string_date);
 
-        std::cout << date_from_string.asString() << std::endl << std::flush;
+        std::cout << date_from_string.asString() << std::endl;
 
         DateTime date_from_values(year, month, day, hour, min, sec);
 

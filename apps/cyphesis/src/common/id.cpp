@@ -17,7 +17,6 @@
 
 #include "common/id.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 long integerId(const std::string& id)
 {
@@ -38,7 +37,7 @@ long forceIntegerId(const std::string& id)
     try {
         return std::stol(id);
     } catch (...) {
-        log(CRITICAL, String::compose("Unable to convert ID \"%1\" to an integer", id));
+        spdlog::critical("Unable to convert ID \"{}\" to an integer", id);
         abort();
     }
 }

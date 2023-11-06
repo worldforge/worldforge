@@ -31,6 +31,7 @@
 #include <common/Inheritance.h>
 #include "rules/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
+#include <sstream>
 
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
@@ -38,7 +39,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -86,7 +86,7 @@ Ref<Entity> ArchetypeFactory::createEntity(RouterId id,
     auto entity = m_entityBuilder.newChildEntity(id, concreteType, cleansedAttributes);
 
     if (entity == nullptr) {
-        log(ERROR, String::compose("Could not create entity of type %1.", concreteType));
+        spdlog::error("Could not create entity of type {}.", concreteType);
         return nullptr;
     }
 
@@ -95,13 +95,13 @@ Ref<Entity> ArchetypeFactory::createEntity(RouterId id,
     for (auto& childId : attributes->getContains()) {
         auto entityI = entities.find(childId);
         if (entityI == entities.end()) {
-            log(ERROR, String::compose("Referenced child entity with id %1 does not exist.", childId));
+            spdlog::error("Referenced child entity with id {} does not exist.", childId);
             return nullptr;
         }
         auto childEntityId = newId();
         auto childEntity = createEntity(childEntityId, entityI->second, entities);
         if (childEntity == nullptr) {
-            log(ERROR, String::compose("Could not create child entity with id %1.", childId));
+            spdlog::error("Could not create child entity with id {}.", childId);
             return nullptr;
         }
         childEntity->changeContainer(entity);
@@ -136,7 +136,7 @@ bool ArchetypeFactory::parseEntities(const std::map<std::string, MapType>& entit
 
         auto entity = smart_dynamic_cast<RootEntity>(Inheritance::instance().getFactories().createObject(entityI.second));
         if (!entity.isValid()) {
-            log(ERROR, "Entity definition is not in Entity format.");
+            spdlog::error("Entity definition is not in Entity format.");
             return false;
         }
 
@@ -169,7 +169,7 @@ Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attribute
         if (attributes->hasAttr("entities")) {
             auto entitiesElem = attributes->getAttr("entities");
             if (!entitiesElem.isList()) {
-                log(WARNING, "'entities' attribute is not a list.");
+                spdlog::warn("'entities' attribute is not a list.");
             } else {
                 const ListType& entitiesList = entitiesElem.asList();
                 parseEntities(entitiesList, entities);
@@ -179,7 +179,7 @@ Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attribute
         if (attributes->hasAttr("thoughts")) {
             auto thoughtsElem = attributes->getAttr("thoughts");
             if (!thoughtsElem.isList()) {
-                log(WARNING, "'thoughts' attribute is not a list.");
+                spdlog::warn("'thoughts' attribute is not a list.");
             } else {
                 extraThoughts = thoughtsElem.asList();
             }
@@ -205,7 +205,7 @@ Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attribute
     }
 
     if (entitiesCandidates.empty()) {
-        log(WARNING, String::compose("Could not find any entity without a parent in archetype %1.", m_type->name()));
+        spdlog::warn("Could not find any entity without a parent in archetype {}.", m_type->name());
         return nullptr;
     }
 
@@ -215,7 +215,7 @@ Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const RootEntity& attribute
             ss << entry.first << ",";
         }
 
-        log(WARNING, String::compose("Found multiple entities without a parent location in archetype %1: %2", m_type->name(), ss.str()));
+        spdlog::warn("Found multiple entities without a parent location in archetype {}: {}", m_type->name(), ss.str());
         return nullptr;
     }
 
@@ -285,7 +285,7 @@ std::vector<Atlas::Message::Element> ArchetypeFactory::createOriginLocationThoug
     if (posProp && posProp->data().isValid()) {
         auto& pos = posProp->data();
         Atlas::Message::MapType thought;
-        thought["object"] = String::compose("(%1,%2,%3)", pos.x(), pos.y(), pos.z());
+        thought["object"] = fmt::format("({},{},{})", pos.x(), pos.y(), pos.z());
         thought["predicate"] = "location";
         thought["subject"] = "origin";
         return std::vector<Atlas::Message::Element>{thought};
@@ -339,10 +339,10 @@ void ArchetypeFactory::resolveEntityReference(std::map<std::string, EntityCreati
                     id = resolvedI->second.createdEntity->getId();
                     return;
                 } else {
-                    log(WARNING, String::compose("Attribute '%1' refers to an entity which wasn't created.", id));
+                    spdlog::warn("Attribute '{}' refers to an entity which wasn't created.", id);
                 }
             } else {
-                log(WARNING, String::compose("Could not find entity with id '%1'.", id));
+                spdlog::warn("Could not find entity with id '{}'.", id);
             }
         }
         //If it's a map we need to process all child elements too

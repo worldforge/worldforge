@@ -108,6 +108,6 @@ void HttpHandling::processQuery(std::ostream& io,
             return;
         }
     }
-    log(NOTICE, std::string("Path '") + path + "'not found.");
+    spdlog::debug("Path '{}'not found.", path);
     reportBadRequest(io, 404, "Not Found");
 }

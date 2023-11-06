@@ -48,6 +48,12 @@ std::ostream& operator<<(std::ostream& os,
     return os;
 }
 
+namespace std {
+auto format_as(const std::map<std::string, ModifiableProperty>::const_iterator&) {
+	return "[iterator]";
+}
+}
+
 template<typename T>
 class test_values
 {

@@ -16,7 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "common/compose.hpp"
 #include "common/log.h"
 #include "common/globals.h"
 #include "common/sockets.h"
@@ -62,7 +61,8 @@ static void usage(char* prg)
 
 int main(int argc, char** argv)
 {
-    setLoggingPrefix("IMPORT");
+	//Perhaps tell spdlog to use a prefix?
+    //setLoggingPrefix("IMPORT");
 
     int config_status = loadConfig(argc, argv, USAGE_CYCMD);
     if (config_status < 0) {
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
             showUsage(argv[0], USAGE_CYCMD);
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -104,26 +104,26 @@ int main(int argc, char** argv)
         localSocket = client_socket_name;
     }
 
-    log(NOTICE, "Attempting local connection");
+    spdlog::debug("Attempting local connection");
     if (bridge.connectLocal(localSocket) == 0) {
         if (bridge.create("sys", create_session_username(),
-                          String::compose("%1%2", ::rand(), ::rand())) != 0) {
-            log(ERROR, "Could not create sys account.");
+                          fmt::format("{}{}", ::rand(), ::rand())) != 0) {
+            spdlog::error("Could not create sys account.");
             return -1;
         }
         auto loginInfo = bridge.getInfoReply();
         std::string accountId = loginInfo->getId();
         auto accountName = loginInfo->getName();
 
-        log(NOTICE, "Attempting creation of agent");
+        spdlog::debug("Attempting creation of agent");
         auto agentCreationTask = std::make_shared<AgentCreationTask>(accountId, accountName, "creator");
         bridge.runTask(agentCreationTask, "");
         if (bridge.pollUntilTaskComplete() != 0) {
-            log(ERROR, "Could not create agent.");
+            spdlog::error("Could not create agent.");
             return -1;
         }
         if (!agentCreationTask->m_agent_id || !agentCreationTask->m_mind_id) {
-            log(ERROR, "Could not create agent; no id received.");
+            spdlog::error("Could not create agent; no id received.");
             return -1;
         }
 
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
         if (clear && merge) {
             std::cerr
                     << "'--clear' and '--merge' are mutually exclusive; you can't specify both."
-                    << std::endl << std::flush;
+                    << std::endl;
             return -1;
         }
 
@@ -156,13 +156,13 @@ int main(int argc, char** argv)
                         return true;
                     };
 
-            log(NOTICE, "Checking if world already is populated.");
+            spdlog::debug("Checking if world already is populated.");
             auto populationCheck = std::make_shared<EntityTraversalTask>(accountId, visitor);
             bridge.runTask(populationCheck, "0");
             if (bridge.pollUntilTaskComplete() != 0) {
                 std::cerr
                         << "Error when checking if the server already is populated."
-                        << std::endl << std::flush;
+                        << std::endl;
                 return -1;
             }
 
@@ -174,13 +174,13 @@ int main(int argc, char** argv)
                              "use the '--merge' flag to merge the "
                              "entities in the export with the existing"
                              " ones. The results of this are not always"
-                             " predictable though." << std::endl << std::flush;
+                             " predictable though." << std::endl;
                 return -1;
             }
         }
 
         if (clear) {
-            log(NOTICE, "Clearing world first.");
+            spdlog::debug("Clearing world first.");
             //Tell the world to clear itself
             Anonymous deleteArg;
             deleteArg->setId("0");
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
 
             bridge.send(deleteOp);
 
-            log(NOTICE, "Waiting for world to be cleared.");
+            spdlog::debug("Waiting for world to be cleared.");
             //Wait for the agent to be deleted.
             bridge.runTask(std::make_shared<WaitForDeletionTask>(agent_id), "");
             if (bridge.pollUntilTaskComplete() != 0) {
@@ -201,7 +201,7 @@ int main(int argc, char** argv)
                 return -1;
             }
 
-            log(NOTICE, "World is cleared; creating new agent.");
+            spdlog::debug("World is cleared; creating new agent.");
 
             //Once the world has been cleared we need to create a new agent,
             //since the first one got deleted
@@ -214,14 +214,14 @@ int main(int argc, char** argv)
             }
             if (!agentCreationTask->m_agent_id || !agentCreationTask->m_mind_id) {
                 std::cerr << "Could not create agent; no id received."
-                          << std::endl << std::flush;
+                          << std::endl;
                 return -1;
             }
             agent_id = *agentCreationTask->m_agent_id;
             mind_id = *agentCreationTask->m_mind_id;
         }
 
-        log(NOTICE, "Starting import.");
+        spdlog::debug("Starting import.");
 
         auto importer = std::make_shared<EntityImporter>(accountId, mind_id);
 
@@ -231,11 +231,11 @@ int main(int argc, char** argv)
 
         bridge.runTask(importer, filename);
         if (bridge.pollUntilTaskComplete() != 0) {
-            std::cerr << "Could not import." << std::endl << std::flush;
+            std::cerr << "Could not import." << std::endl;
             return -1;
         }
 
-        log(INFO, "Import done.");
+        spdlog::info("Import done.");
         return 0;
     }
 

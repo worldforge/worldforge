@@ -16,7 +16,6 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <common/compose.hpp>
 #include <common/debug.h>
 #include "CyPy_Element.h"
 #include "CyPy_Operation.h"
@@ -203,7 +202,7 @@ void CyPy_ElementList::init_type()
 
 Py::Object CyPy_ElementList::repr()
 {
-    return Py::String(String::compose("<%1 object at %2>(%3)", type_object()->tp_name, this, debug_tostring(m_value)));
+    return Py::String(fmt::format("<{} object at {}>({})", type_object()->tp_name, fmt::ptr(this), debug_tostring(m_value)));
 }
 
 Py::Object CyPy_ElementList::rich_compare(const Py::Object& other, int op)
@@ -335,7 +334,7 @@ void CyPy_ElementMap::init_type()
 
 Py::Object CyPy_ElementMap::repr()
 {
-    return Py::String(String::compose("<%1 object at %2>(%3)", type_object()->tp_name, this, debug_tostring(m_value)));
+    return Py::String(fmt::format("<{} object at {}>({})", type_object()->tp_name, fmt::ptr(this), debug_tostring(m_value)));
 }
 
 
@@ -530,7 +529,7 @@ Element CyPy_Element::asElement(const Py::Object& o)
     if (o.isNone()) {
         return Element();
     }
-    throw Py::TypeError(String::compose("Contained object (of type %1) could not be converted to an Element.", o.type().as_string()));
+    throw Py::TypeError(fmt::format("Contained object (of type {}) could not be converted to an Element.", o.type().as_string()));
 }
 
 Py::Object CyPy_Element::wrap(Atlas::Message::Element value)

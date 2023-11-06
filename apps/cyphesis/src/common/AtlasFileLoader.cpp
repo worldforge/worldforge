@@ -19,7 +19,6 @@
 #include "common/AtlasFileLoader.h"
 
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "common/debug.h"
 
 #include <Atlas/Objects/Root.h>
@@ -27,21 +26,23 @@
 #include <Atlas/Objects/Factories.h>
 #include <Atlas/Codecs/XML.h>
 
+#include <sstream>
+
 using Atlas::Objects::Root;
 
 /// \brief Called from the base class when a complete message has been decoded
 void AtlasFileLoader::objectArrived(Root obj)
 {
     if (obj->isDefaultId()) {
-        log(ERROR, String::compose("Object without ID read from file %1", m_filename));
+        spdlog::error("Object without ID read from file {}", m_filename);
         std::stringstream ss;
         debug_dump(obj, ss);
-        log(ERROR, "Object: " + ss.str());
+        spdlog::error("Object: " + ss.str());
         return;
     }
     const std::string& id = obj->getId();
     if (m_messages.find(id) != m_messages.end()) {
-        log(WARNING, String::compose("Duplicate object ID \"%1\" loaded from file %2.", id, m_filename));
+        spdlog::warn("Duplicate object ID \"{}\" loaded from file {}.", id, m_filename);
     }
     m_messages[id] = std::move(obj);
     ++m_count;

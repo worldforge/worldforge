@@ -43,7 +43,7 @@ void Link::send(const Operation & op) const
         if (debug_flag) {
             std::cerr << "sending: ";
             debug_dump(op, std::cerr);
-            std::cerr << std::endl << std::flush;
+            std::cerr << std::endl;
         }
 
         m_encoder->streamObjectsMessage(op);
@@ -57,7 +57,7 @@ void Link::send(const OpVector& opVector) const
             if (debug_flag) {
                 std::cerr << "sending: ";
                 debug_dump(op, std::cerr);
-                std::cerr << std::endl << std::flush;
+                std::cerr << std::endl;
             }
 
             m_encoder->streamObjectsMessage(op);

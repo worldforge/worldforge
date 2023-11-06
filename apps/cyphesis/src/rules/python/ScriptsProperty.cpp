@@ -7,13 +7,11 @@
 #include "rules/LocatedEntity.h"
 #include "rules/Script.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-using String::compose;
 
 std::map<std::pair<std::string, std::string>, std::shared_ptr<ScriptKit<LocatedEntity>>> ScriptsProperty::sScriptFactories;
 
@@ -38,8 +36,8 @@ void ScriptsProperty::set(const Atlas::Message::Element& element)
                         sScriptFactories.emplace(key, psf);
                         m_scripts.push_back(std::move(psf));
                     } else {
-                        log(ERROR, String::compose("Python class \"%1.%2\" failed to load",
-                                                   script_package, script_class));
+                        spdlog::error("Python class \"{}.{}\" failed to load",
+                                                   script_package, script_class);
                     }
                 }
             }

@@ -41,14 +41,13 @@ using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
-using String::compose;
 
 void MemMap::addEntity(const Ref<MemEntity>& entity)
 {
     assert(entity != nullptr);
     assert(!entity->getId().empty());
 
-    debug_print("MemMap::addEntity " << entity->describeEntity() << " " << entity->getId())
+    cy_debug_print("MemMap::addEntity " << entity->describeEntity() << " " << entity->getId())
     long next = -1;
     if (m_checkIterator != m_entities.end()) {
         next = m_checkIterator->first;
@@ -68,7 +67,7 @@ void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, dou
         auto old_loc = entity->m_parent;
         const std::string& new_loc_id = ent->getLoc();
         if (new_loc_id == entity->getId()) {
-            log(WARNING, String::compose("Entity had itself set as parent.", entity->describeEntity()));
+            spdlog::warn("Entity had itself set as parent.", entity->describeEntity());
         } else {
             // Has LOC been changed?
             if (!old_loc || new_loc_id != old_loc->getId()) {
@@ -110,7 +109,7 @@ void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, dou
             }
         } else {
             if (parent != entity->getType()->name()) {
-                log(WARNING, String::compose("Got new type for entity %1 which already has a type.", entity->describeEntity()));
+                spdlog::warn("Got new type for entity {} which already has a type.", entity->describeEntity());
             }
         }
     }
@@ -137,7 +136,7 @@ void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, d
 {
     assert(entity != nullptr);
 
-    debug_print(" got " << entity->describeEntity())
+    cy_debug_print(" got " << entity->describeEntity())
 
     auto old_loc = entity->m_parent;
     readEntity(entity, ent, timestamp);
@@ -183,7 +182,7 @@ MemMap::~MemMap()
 
 void MemMap::sendLook(OpVector& res)
 {
-    debug_print("MemMap::sendLooks")
+    cy_debug_print("MemMap::sendLooks")
     if (!m_additionsById.empty()) {
         auto id = std::move(m_additionsById.front());
         m_additionsById.pop_front();
@@ -202,7 +201,7 @@ Ref<MemEntity> MemMap::addId(RouterId id)
     assert(!id.m_id.empty());
     assert(m_entities.find(id.m_intId) == m_entities.end());
 
-    debug_print("MemMap::add_id")
+    cy_debug_print("MemMap::add_id")
     m_additionsById.emplace_back(id.m_id);
     //TODO: Should we perhaps wait with creating new entities until we've actually gotten the entity data?
     Ref<MemEntity> entity(new MemEntity(id));
@@ -213,7 +212,7 @@ Ref<MemEntity> MemMap::addId(RouterId id)
 Ref<MemEntity> MemMap::del(const std::string& id)
 // Delete an entity from memory
 {
-    debug_print("MemMap::del(" << id << ")")
+    cy_debug_print("MemMap::del(" << id << ")")
 
     long int_id = integerId(id);
 
@@ -251,10 +250,10 @@ Ref<MemEntity> MemMap::del(const std::string& id)
 Ref<MemEntity> MemMap::get(const std::string& id) const
 // Get an entity from memory
 {
-    debug_print("MemMap::get")
+    cy_debug_print("MemMap::get")
     if (id.empty()) {
         // This shouldn't really occur, and shouldn't be a problem
-        log(ERROR, "MemMap::get queried for empty ID string.");
+        spdlog::error("MemMap::get queried for empty ID string.");
         return nullptr;
     }
 
@@ -272,7 +271,7 @@ Ref<MemEntity> MemMap::getAdd(const std::string& id)
 // Get an entity from memory, or add it if we haven't seen it yet
 // This could be implemented by calling get() for all but the the last line
 {
-    debug_print("MemMap::getAdd(" << id << ")")
+    cy_debug_print("MemMap::getAdd(" << id << ")")
     if (id.empty()) {
         return nullptr;
     }
@@ -280,7 +279,7 @@ Ref<MemEntity> MemMap::getAdd(const std::string& id)
     long int_id = integerId(id);
 
     if (int_id == -1) {
-        log(ERROR, String::compose("MemMap::getAdd: Invalid ID \"%1\".", id));
+        spdlog::error("MemMap::getAdd: Invalid ID \"{}\".", id);
         return nullptr;
     }
 
@@ -310,21 +309,21 @@ Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, const double& d)
 // entity is visible, as we may have received it because we can see the
 // creator.
 {
-    debug_print("MemMap::updateAdd")
+    cy_debug_print("MemMap::updateAdd")
     if (!ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        log(ERROR, "MemMap::updateAdd, Missing id in updated entity");
+        spdlog::error("MemMap::updateAdd, Missing id in updated entity");
         return nullptr;
     }
     const std::string& id = ent->getId();
     if (id.empty()) {
-        log(ERROR, "MemMap::updateAdd, Empty ID in updated entity.");
+        spdlog::error("MemMap::updateAdd, Empty ID in updated entity.");
         return nullptr;
     }
 
     long int_id = integerId(id);
 
     if (int_id == -1) {
-        log(ERROR, String::compose("MemMap::updateAdd: Invalid ID \"%1\".", id));
+        spdlog::error("MemMap::updateAdd: Invalid ID \"{}\".", id);
         return nullptr;
     }
 
@@ -394,7 +393,7 @@ EntityVector MemMap::findByType(const std::string& what)
 
     for (auto& entry : m_entities) {
         auto item = entry.second;
-        debug_print("Found" << what << ":" << item->describeEntity())
+        cy_debug_print("Found" << what << ":" << item->describeEntity())
         if (item->isVisible() && item->getType() && item->getType()->name() == what) {
             res.push_back(item.get());
         }
@@ -415,10 +414,10 @@ EntityVector MemMap::findByLocation(const EntityLocation& loc,
 #ifndef NDEBUG
     auto place_by_id = get(place->getId());
     if (place != place_by_id) {
-        log(ERROR, compose("MemMap consistency check failure: find location "
-                           "has LOC %1 which is different in dict (%2)",
+        spdlog::error("MemMap consistency check failure: find location "
+                           "has LOC {} which is different in dict ({})",
                            place->describeEntity(),
-                           place_by_id->describeEntity()));
+                           place_by_id->describeEntity());
         return res;
     }
 #endif // NDEBUG
@@ -427,7 +426,7 @@ EntityVector MemMap::findByLocation(const EntityLocation& loc,
     for (auto& item : *place->m_contains) {
         assert(item != nullptr);
         if (!item) {
-            log(ERROR, "Weird entity in memory");
+            spdlog::error("Weird entity in memory");
             continue;
         }
         if (!item->isVisible()) {
@@ -467,7 +466,7 @@ void MemMap::check(const double& time)
             }
 
         } else {
-            debug_print(me->describeEntity() << "|"
+            cy_debug_print(me->describeEntity() << "|"
                                              << me->lastSeen() << "|" << me->isVisible()
                                              << " is fine")
             ++m_checkIterator;
@@ -477,7 +476,7 @@ void MemMap::check(const double& time)
 
 void MemMap::flush()
 {
-    debug_print("Flushing memory with " << m_entities.size()
+    cy_debug_print("Flushing memory with " << m_entities.size()
                                         << " entities and " << m_entityRelatedMemory.size() << " entity memories.")
     m_entities.clear();
     m_entityRelatedMemory.clear();
@@ -495,7 +494,7 @@ std::vector<Ref<MemEntity>> MemMap::resolveEntitiesForType(const TypeNode* typeN
     auto I = m_unresolvedEntities.find(typeNode->name());
     if (I != m_unresolvedEntities.end()) {
         for (auto& entity : I->second) {
-            //log(NOTICE, String::compose("Resolved entity %1.", entity->getId()));
+            //spdlog::debug("Resolved entity {}.", entity->getId());
             entity->setType(typeNode);
             applyTypePropertiesToEntity(entity);
 

@@ -104,7 +104,7 @@ void PossessionAccount::operation(const Operation& op, OpVector& res)
             I->second->operation(op, res);
 
             if (I->second->isDestroyed()) {
-                log(NOTICE, String::compose("Deleting mind %1.", I->second->describeEntity()));
+                spdlog::debug("Deleting mind {}.", I->second->describeEntity());
                 m_entitiesWithMinds.erase(I->second->getEntity()->getId());
                 m_minds.erase(I);
                 mind_count--;
@@ -117,7 +117,7 @@ void PossessionAccount::operation(const Operation& op, OpVector& res)
         if (I != m_entitiesWithMinds.end()) {
             I->second->operation(op, res);
             if (I->second->isDestroyed()) {
-                log(NOTICE, String::compose("Deleting mind %1.", I->second->describeEntity()));
+                spdlog::debug("Deleting mind {}.", I->second->describeEntity());
                 m_minds.erase(I->second->getId());
                 mind_count--;
                 m_entitiesWithMinds.erase(I);
@@ -126,7 +126,7 @@ void PossessionAccount::operation(const Operation& op, OpVector& res)
             return;
         }
 
-        log(WARNING, String::compose("Received operation %1 directed at %2 which isn't anything recognized by the account %3.", op->getParent(), op->getTo(), getId()));
+        spdlog::warn("Received operation {} directed at {} which isn't anything recognized by the account {}.", op->getParent(), op->getTo(), getId());
 
     } else {
 
@@ -145,7 +145,7 @@ void PossessionAccount::operation(const Operation& op, OpVector& res)
                 entry.second->operation(op, res);
             }
         } else {
-            log(NOTICE, String::compose("Unknown operation %1 in PossessionAccount %2", op->getParent(), getId()));
+            spdlog::debug("Unknown operation {} in PossessionAccount {}", op->getParent(), getId());
         }
     }
 }
@@ -174,7 +174,7 @@ void PossessionAccount::externalOperation(const Operation& op, Link&)
 
 void PossessionAccount::PossessOperation(const Operation& op, OpVector& res)
 {
-    debug_print("Got possession request.")
+    cy_debug_print("Got possession request.")
 
     auto args = op->getArgs();
     if (!args.empty()) {
@@ -195,7 +195,7 @@ void PossessionAccount::PossessOperation(const Operation& op, OpVector& res)
 
 void PossessionAccount::takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey)
 {
-    log(INFO, String::compose("Taking possession of entity with id %1.", possessEntityId));
+    spdlog::info("Taking possession of entity with id {}.", possessEntityId);
 
     Anonymous what;
     what->setId(possessEntityId);
@@ -207,34 +207,34 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
     m_client.sendWithCallback(possess, [this](const Operation& op, OpVector& resInner) {
 
         if (op->getClassNo() != Atlas::Objects::Operation::INFO_NO) {
-            log(ERROR, "Malformed possession response: not an info.");
+            spdlog::error("Malformed possession response: not an info.");
         }
 
         const std::vector<Root>& args = op->getArgs();
         if (args.empty()) {
-            log(ERROR, "no args character possession response");
+            spdlog::error("no args character possession response");
             return;
         }
 
         RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(args.front());
         if (!ent.isValid()) {
-            log(ERROR, "malformed character possession response");
+            spdlog::error("malformed character possession response");
             return;
         }
 
         if (!ent->hasAttr("entity")) {
-            log(ERROR, "malformed character possession response");
+            spdlog::error("malformed character possession response");
             return;
         }
         auto entityElem = ent->getAttr("entity");
         if (!entityElem.isMap()) {
-            log(ERROR, "malformed character possession response");
+            spdlog::error("malformed character possession response");
             return;
         }
 
         auto I = entityElem.Map().find("id");
         if (I == entityElem.Map().end() || !I->second.isString()) {
-            log(ERROR, "malformed character possession response");
+            spdlog::error("malformed character possession response");
             return;
         }
 
@@ -243,7 +243,7 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
         createMindInstance(resInner, RouterId(ent->getId()), entityId);
 
     }, [=]() {
-        log(WARNING, String::compose("Could not take possession of entity with id %1", possessEntityId));
+        spdlog::warn("Could not take possession of entity with id {}", possessEntityId);
     });
 
 
@@ -252,7 +252,7 @@ void PossessionAccount::takePossession(OpVector& res, const std::string& possess
 
 void PossessionAccount::createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId)
 {
-    log(INFO, String::compose("Creating mind instance for entity id %1 with mind id %2, number of minds: %3.", entityId, mindId.m_id, m_minds.size() + 1));
+    spdlog::info("Creating mind instance for entity id {} with mind id {}, number of minds: {}.", entityId, mindId.m_id, m_minds.size() + 1);
     Ref<BaseMind> mind = m_mindFactory.newMind(mindId, entityId);
     m_minds.emplace(mindId.m_id, mind);
     mind_count++;

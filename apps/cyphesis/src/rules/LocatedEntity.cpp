@@ -31,6 +31,7 @@
 #include <Atlas/Objects/Anonymous.h>
 
 #include <memory>
+#include <sstream>
 
 using Atlas::Objects::Operation::Update;
 using Atlas::Message::Element;
@@ -182,7 +183,7 @@ PropertyBase* LocatedEntity::setAttrValue(const std::string& name, Element attr)
 PropertyBase* LocatedEntity::setAttr(const std::string& name, const Modifier* modifier)
 {
     if (!PropertyUtil::isValidName(name)) {
-        log(WARNING, String::compose("Tried to add a property '%1' to entity '%2', which has an invalid name.", name, describeEntity()));
+        spdlog::warn("Tried to add a property '{}' to entity '{}', which has an invalid name.", name, describeEntity());
         return nullptr;
     }
 
@@ -256,7 +257,7 @@ void LocatedEntity::addModifier(const std::string& propertyName, Modifier* modif
         return;
     }
     if (!PropertyUtil::isValidName(propertyName)) {
-        log(WARNING, String::compose("Tried to add a modifier for property '%1' to entity '%2', which has an invalid name.", propertyName, describeEntity()));
+        spdlog::warn("Tried to add a modifier for property '{}' to entity '{}', which has an invalid name.", propertyName, describeEntity());
         return;
     }
 
@@ -318,7 +319,7 @@ void LocatedEntity::removeModifier(const std::string& propertyName, Modifier* mo
 
     auto propertyI = m_properties.find(propertyName);
     if (propertyI == m_properties.end()) {
-        log(WARNING, String::compose("Tried to remove modifier from property %1 which couldn't be found.", propertyName));
+        spdlog::warn("Tried to remove modifier from property {} which couldn't be found.", propertyName);
         return;
     }
 

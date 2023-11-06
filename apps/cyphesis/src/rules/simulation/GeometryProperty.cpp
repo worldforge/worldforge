@@ -23,7 +23,6 @@
 #include "common/globals.h"
 #include "common/TypeNode.h"
 #include "common/debug.h"
-#include "common/compose.hpp"
 #include "common/AtlasQuery.h"
 #include "common/AssetsManager.h"
 #include "common/Inheritance.h"
@@ -61,7 +60,7 @@ void GeometryProperty::set(const Atlas::Message::Element& data)
                 auto fullpath = AssetsManager::instance().getAssetsPath() / path;
                 AssetsManager::instance().observeFile(boost::filesystem::path{fullpath}, [this, fullpath](const boost::filesystem::path& changedPath) {
 
-                    log(NOTICE, String::compose("Reloading geometry from %1.", fullpath));
+                    spdlog::debug("Reloading geometry from {}.", fullpath.string());
                     boost::filesystem::ifstream fileStream(boost::filesystem::path{fullpath});
                     if (fileStream) {
                         auto innerDeserializer = std::make_shared<OgreMeshDeserializer>(fileStream);
@@ -88,7 +87,7 @@ void GeometryProperty::set(const Atlas::Message::Element& data)
                         visitor.prop = this;
                         m_owner.apply_visitor(visitor);
                     } else {
-                        log(ERROR, "Could not reload geometry file at " + fullpath.string());
+                        spdlog::error("Could not reload geometry file at " + fullpath.string());
                     }
                 });
 
@@ -99,13 +98,13 @@ void GeometryProperty::set(const Atlas::Message::Element& data)
                     deserializer->deserialize();
                     m_meshBounds = deserializer->m_bounds;
                 } else {
-                    log(ERROR, "Could not find geometry file at " + fullpath.string());
+                    spdlog::error("Could not find geometry file at " + fullpath.string());
                 }
             } else {
-                log(ERROR, "Could not recognize geometry file type: " + path);
+                spdlog::error("Could not recognize geometry file type: " + path);
             }
         } catch (const std::exception& ex) {
-            log(ERROR, "Exception when trying to parse geometry at " + path);
+            spdlog::error("Exception when trying to parse geometry at " + path);
         }
     });
 
@@ -282,7 +281,7 @@ void GeometryProperty::parseData(std::shared_ptr<OgreMeshDeserializer> deseriali
             buildCompoundCreator();
         }
     } else {
-        log(WARNING, "Geometry property without 'type' attribute set. Property value: " + debug_tostring(m_data));
+        spdlog::warn("Geometry property without 'type' attribute set. Property value: " + debug_tostring(m_data));
     }
 }
 
@@ -315,22 +314,22 @@ void GeometryProperty::buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> me
                 auto& trisList = trisI->second.List();
 
                 if (vertsList.empty()) {
-                    log(ERROR, "Vertices is empty for mesh.");
+                    spdlog::error("Vertices is empty for mesh.");
                     return;
                 }
 
                 if (vertsList.size() % 3 != 0) {
-                    log(ERROR, "Vertices is not even with 3.");
+                    spdlog::error("Vertices is not even with 3.");
                     return;
                 }
 
                 if (trisList.empty()) {
-                    log(ERROR, "Triangles is empty for mesh.");
+                    spdlog::error("Triangles is empty for mesh.");
                     return;
                 }
 
                 if (trisList.size() % 3 != 0) {
-                    log(ERROR, "Triangles is not even with 3.");
+                    spdlog::error("Triangles is not even with 3.");
                     return;
                 }
 
@@ -342,7 +341,7 @@ void GeometryProperty::buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> me
 
                 for (size_t i = 0; i < vertsList.size(); i += 3) {
                     if (!vertsList[i].isFloat() || !vertsList[i + 1].isFloat() || !vertsList[i + 2].isFloat()) {
-                        log(ERROR, "Vertex data was not a float for mesh.");
+                        spdlog::error("Vertex data was not a float for mesh.");
                         return;
                     }
                     local_verts[i] = (float) vertsList[i].Float();
@@ -353,11 +352,11 @@ void GeometryProperty::buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> me
                 local_indices.resize(trisList.size());
                 for (size_t i = 0; i < trisList.size(); i += 3) {
                     if (!trisList[i].isInt() || !trisList[i + 1].isInt() || !trisList[i + 2].isInt()) {
-                        log(ERROR, "Index data was not an int for mesh.");
+                        spdlog::error("Index data was not an int for mesh.");
                         return;
                     }
                     if (trisList[i].Int() >= numberOfVertices || trisList[i + 1].Int() >= numberOfVertices || trisList[i + 2].Int() >= numberOfVertices) {
-                        log(ERROR, "Index data was out of bounds for vertices for mesh.");
+                        spdlog::error("Index data was out of bounds for vertices for mesh.");
                         return;
                     }
                     local_indices[i] = (unsigned int) trisList[i].Int();
@@ -367,10 +366,10 @@ void GeometryProperty::buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> me
 
 
             } else {
-                log(ERROR, "Could not find list of triangles for mesh.");
+                spdlog::error("Could not find list of triangles for mesh.");
             }
         } else {
-            log(ERROR, "Could not find list of vertices for mesh.");
+            spdlog::error("Could not find list of vertices for mesh.");
         }
     } else {
         *indices = std::move(meshDeserializer->m_indices);
@@ -379,13 +378,13 @@ void GeometryProperty::buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> me
 
 
     if (indices->empty() || verts->empty()) {
-        log(ERROR, "Vertices or indices were empty.");
+        spdlog::error("Vertices or indices were empty.");
         return;
     }
 
     for (auto index : *indices) {
         if (index >= verts->size() / 3) {
-            log(ERROR, "Index out of bounds.");
+            spdlog::error("Index out of bounds.");
             return;
         }
     }
@@ -517,7 +516,7 @@ void GeometryProperty::buildCompoundCreator()
                             });
                         } else {
                             //TODO: implement more shapes when needed. "box" should go a long way though.
-                            log(WARNING, String::compose("Unrecognized compound shape type '%1'.", type));
+                            spdlog::warn("Unrecognized compound shape type '{}'.", type);
                         }
                     });
 

@@ -95,7 +95,7 @@ void GrassShader::shade(Surface & s) const
     const float * height_data = seg.getPoints();
     if (height_data == nullptr) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
-                  << std::endl << std::flush;
+                  << std::endl;
         return;
     }
     int size = seg.getSize();

@@ -89,13 +89,13 @@ Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op)
 {
     OpVector result;
     if (sendAndWaitReply(op, result) != 0) {
-        std::cerr << "No reply to look" << std::endl << std::flush;
+        std::cerr << "No reply to look" << std::endl;
         return nullptr;
     }
     assert(!result.empty());
     const Operation& res = result.front();
     if (!res.isValid()) {
-        std::cerr << "nullptr reply to look" << std::endl << std::flush;
+        std::cerr << "nullptr reply to look" << std::endl;
         return nullptr;
     }
     const std::string& resparent = res->getParent();
@@ -103,28 +103,28 @@ Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op)
         return nullptr;
     }
     if (resparent != "sight") {
-        std::cerr << "Reply to look is " << resparent << " not sight" << std::endl << std::flush;
+        std::cerr << "Reply to look is " << resparent << " not sight" << std::endl;
         return nullptr;
     }
     if (res->getArgs().empty()) {
-        std::cerr << "Reply to look has no args" << std::endl << std::flush;
+        std::cerr << "Reply to look has no args" << std::endl;
         return nullptr;
     }
     RootEntity seen = smart_dynamic_cast<RootEntity>(res->getArgs().front());
     if (!seen.isValid()) {
-        std::cerr << "Sight arg is not an entity" << std::endl << std::flush;
+        std::cerr << "Sight arg is not an entity" << std::endl;
         return nullptr;
     }
     if (!seen->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        std::cerr << "Looked at entity has no id" << std::endl << std::flush;
+        std::cerr << "Looked at entity has no id" << std::endl;
         return nullptr;
     }
     const std::string& sight_id = seen->getId();
     if (seen->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
         std::cout << "Seen: " << seen->getParent()
-                  << "(" << sight_id << ")" << std::endl << std::flush;
+                  << "(" << sight_id << ")" << std::endl;
     } else {
-        std::cout << "Seen: " << sight_id << std::endl << std::flush;
+        std::cout << "Seen: " << sight_id << std::endl;
     }
     return m_map.updateAdd(seen, res->getSeconds());
 }

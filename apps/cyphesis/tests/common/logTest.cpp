@@ -28,49 +28,10 @@
 
 #include <cassert>
 
-#include <errno.h>
 
 int main()
 {
     assert(daemon_flag == false);
-
-    log(INFO, "Info log message.");
-    log(SCRIPT, "Script log message.");
-    log(NOTICE, "Notice log message.");
-    log(WARNING, "Warning log message.");
-    log(SCRIPT_ERROR, "Script Error log message.");
-    log(CRITICAL, "Critical log message.");
-
-    log_formatted(INFO, "Info message with no \\n");
-    log_formatted(INFO, "Info message with a \\n\n");
-    log_formatted(INFO, "Info message with a \\n \n and text on another line");
-    log_formatted(INFO, "Info message with two \\n\n on two lines\n");
-
-    errno = 0;
-    logSysError(INFO);
-    logSysError(SCRIPT);
-    logSysError(NOTICE);
-    logSysError(WARNING);
-    logSysError(SCRIPT_ERROR);
-    logSysError(CRITICAL);
-
-    errno = -1;
-    logSysError(INFO);
-    logSysError(SCRIPT);
-    logSysError(NOTICE);
-    logSysError(WARNING);
-    logSysError(SCRIPT_ERROR);
-    logSysError(CRITICAL);
-
-    errno = EINVAL;
-    logSysError(INFO);
-    logSysError(SCRIPT);
-    logSysError(NOTICE);
-    logSysError(WARNING);
-    logSysError(SCRIPT_ERROR);
-    logSysError(CRITICAL);
-
-    assert(testEventLog("/dev/null"));
 
     logEvent(START, "Test start event log message");
     logEvent(STOP, "Test stop event log message");

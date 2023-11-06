@@ -215,7 +215,7 @@ Py::Object CyPy_Entity::mod_property(const Ref<Entity>& entity, const Py::Tuple&
     }
     Atlas::Message::Element value;
     if (prop->get(value) != 0) {
-        throw Py::RuntimeError(String::compose("Could not create property '%1'.", name));
+        throw Py::RuntimeError(fmt::format("Could not create property '{}'.", name));
     }
     return CyPy_Element::asPyObject(value, false);
 }

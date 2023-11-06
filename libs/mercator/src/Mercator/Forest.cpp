@@ -97,7 +97,7 @@ void Forest::populate()
                 }
                 
 //                std::cout << "Plant at [" << i << ", " << j << "]"
-//                          << std::endl << std::flush;
+//                          << std::endl;
                 //this is a bit of a hack
                 rng.seed((int)(prob / I->m_probability * 123456));
 

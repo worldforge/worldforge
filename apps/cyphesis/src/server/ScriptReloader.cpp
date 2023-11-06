@@ -33,7 +33,7 @@ ScriptReloader::ScriptReloader(BaseWorld& world)
 //        for (auto& entry : m_entityFactories) {
 //            auto entityFactory = dynamic_cast<EntityFactoryBase*>(entry.second);
 //            if (entityFactory && entityFactory->m_scriptFactory) {
-//                log(NOTICE, compose("Reloading scripts for %1", entityFactory->m_type->name()));
+//                log(NOTICE, fmt::format("Reloading scripts for {}", entityFactory->m_type->name()));
 //                entityFactory->m_scriptFactory->refreshClass();
 //                collector.emplace(entityFactory->m_type, entityFactory);
 //            }

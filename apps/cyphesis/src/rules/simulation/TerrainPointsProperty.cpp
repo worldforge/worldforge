@@ -52,11 +52,11 @@ void TerrainPointsProperty::apply(LocatedEntity& entity)
             }
             const ListType& point = val.List();
             if (point.size() < 3) {
-                log(WARNING, "Terrain point must be at least size 3.");
+                spdlog::warn("Terrain point must be at least size 3.");
                 continue;
             }
             if (!point[0].isNum() || !point[1].isNum() || !point[2].isNum()) {
-                log(WARNING, "Terrain point must be all numbers.");
+                spdlog::warn("Terrain point must be all numbers.");
                 continue;
             }
 
@@ -67,7 +67,7 @@ void TerrainPointsProperty::apply(LocatedEntity& entity)
             double falloff;
             if (point.size() > 3) {
                 if (!point[3].isNum()) {
-                    log(WARNING, "Terrain point roughness must be a number.");
+                    spdlog::warn("Terrain point roughness must be a number.");
                     continue;
                 }
                 roughness = point[3].asNum();
@@ -76,7 +76,7 @@ void TerrainPointsProperty::apply(LocatedEntity& entity)
             }
             if (point.size() > 4) {
                 if (!point[4].isNum()) {
-                    log(WARNING, "Terrain point falloff must be a number.");
+                    spdlog::warn("Terrain point falloff must be a number.");
                     continue;
                 }
                 falloff = point[4].asNum();

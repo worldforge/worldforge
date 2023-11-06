@@ -159,7 +159,7 @@ HandlerResult StackableDomain::MoveOperation(LocatedEntity& owner, const Operati
     amount = std::max(0, std::min(amountProperty.data(), amount));
 
     if (amount == 0) {
-        log(WARNING, String::compose("Got move op in StackableDomain with 0 or less amount, for %1", owner.describeEntity()));
+        spdlog::warn("Got move op in StackableDomain with 0 or less amount, for {}", owner.describeEntity());
         return HandlerResult::OPERATION_BLOCKED;
     }
 
@@ -176,7 +176,7 @@ HandlerResult StackableDomain::MoveOperation(LocatedEntity& owner, const Operati
         try {
             new_ent->setAttr(entry.first, std::move(elem));
         } catch (const Atlas::Message::WrongTypeException& ex) {
-            log(WARNING, String::compose("Error when setting attribute '%1' when copying entity '%2' with Stackable domain. Error message: %3", entry.first, owner.describeEntity(), ex.what()));
+            spdlog::warn("Error when setting attribute '{}' when copying entity '{}' with Stackable domain. Error message: {}", entry.first, owner.describeEntity(), ex.what());
         }
     }
     //Make sure to adjust the amount

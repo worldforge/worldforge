@@ -329,7 +329,7 @@ int StubServer::run(pid_t child)
                 if (WIFSIGNALED(childStatus)) {
                     std::cerr << "child died with signal "
                               << WTERMSIG(childStatus)
-                              << std::endl << std::flush;
+                              << std::endl;
                 }
                 
                 std::cerr << "child got bad exit status" << endl;

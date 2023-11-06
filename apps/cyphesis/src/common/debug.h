@@ -24,11 +24,11 @@
 
 namespace Atlas { namespace Message { class Element; } }
 
-#define debug(prg) { if (debug_flag) { prg } }
+#define cy_debug(prg) { if (debug_flag) { prg } }
 
-#define debug_func() {\
+#define cy_debug_func() {\
     if (debug_flag) { \
-        std::cerr << __PRETTY_FUNCTION__ << std::endl << std::flush;\
+        std::cerr << __PRETTY_FUNCTION__ << std::endl;\
     }\
 }
 
@@ -38,12 +38,12 @@ namespace Atlas { namespace Message { class Element; } }
  * The text will be passed to std::cerr, so it's possible to chain the string.
  * An example:
  *
- * debug_print("some text" << someValue << "some more text);
+ * cy_debug_print("some text" << someValue << "some more text);
  *
  * @param text The text.
  */
-#define debug_print(text) { if (debug_flag) { \
-        std::cerr << text << std::endl << std::flush;\
+#define cy_debug_print(text) { if (debug_flag) { \
+        std::cerr << text << std::endl;\
 } }
 
 /**
@@ -52,12 +52,12 @@ namespace Atlas { namespace Message { class Element; } }
  * The text will be passed to std::cerr, so it's possible to chain the string.
  * An example:
  *
- * debug_print("some text" << someValue << "some more text);
+ * cy_debug_print("some text" << someValue << "some more text);
  *
  * @param text The text.
  */
-#define debug_print_pretty(text) { if (debug_flag) { \
-        std::cerr << text << "     :: " << __PRETTY_FUNCTION__ << std::endl << std::flush;\
+#define cy_debug_print_pretty(text) { if (debug_flag) { \
+        std::cerr << text << "     :: " << __PRETTY_FUNCTION__ << std::endl;\
 } }
 
 void output_element(std::ostream & out,

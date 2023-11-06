@@ -67,7 +67,7 @@ int main(int argc, char** argv)
         encoder.streamEnd();
 
         message = sstream.str();
-        //std::cout << message << std::endl << std::flush;
+        //std::cout << message << std::endl;
 
         //Disable storing of data.
         sstream.setstate(std::ios_base::badbit);

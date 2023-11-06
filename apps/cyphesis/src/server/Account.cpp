@@ -25,6 +25,7 @@
 #include "Persistence.h"
 #include "PossessionAuthenticator.h"
 #include "common/custom.h"
+#include "common/TypeNode.h"
 
 #include "rules/simulation/BaseWorld.h"
 #include "rules/LocatedEntity.h"
@@ -32,7 +33,6 @@
 #include "common/id.h"
 #include "common/debug.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 #include "AccountProperty.h"
 
 #include <wfmath/atlasconv.h>
@@ -115,7 +115,7 @@ std::unique_ptr<ExternalMind> Account::createMind(const Ref<LocatedEntity>& enti
 int Account::connectCharacter(const Ref<LocatedEntity>& entity, OpVector& res)
 {
     if (m_minds.find(entity->getIntId()) != m_minds.end()) {
-        log(WARNING, String::compose("Entity %1 is already connected to mind of account %2.", entity->describeEntity(), m_username));
+        spdlog::warn("Entity {} is already connected to mind of account {}.", entity->describeEntity(), m_username);
         return 1;
     } else {
         //Create an external mind and hook it up with the entity
@@ -190,7 +190,7 @@ void Account::removeMindFromEntity(ExternalMind* mind)
     if (m_connection) {
         m_connection->removeRouter(mind->getIntId());
     } else {
-        log(WARNING, "Account still had minds even after connection had been shut down.");
+        spdlog::warn("Account still had minds even after connection had been shut down.");
     }
     auto& entity = mind->getEntity();
     if (!entity->isDestroyed()) {
@@ -206,7 +206,7 @@ void Account::removeMindFromEntity(ExternalMind* mind)
 void Account::LogoutOperation(const Operation& op, OpVector& res)
 {
     if (m_connection == nullptr) {
-        error(op, String::compose("Account::LogoutOperation on account %1 (%2) that doesn't seem to "
+        error(op, fmt::format("Account::LogoutOperation on account {} ({}) that doesn't seem to "
                                   "be connected.", getId(), m_username), res, getId());
         return;
     }
@@ -454,7 +454,7 @@ void Account::CreateOperation(const Operation& op, OpVector& res)
 
 void Account::SetOperation(const Operation& op, OpVector& res)
 {
-    debug_print("Account::Operation(set)")
+    cy_debug_print("Account::Operation(set)")
     //Nothing to set on account.
 
 }
@@ -560,12 +560,12 @@ void Account::PossessOperation(const Operation& op, OpVector& res)
             if (connectCharacter(character.get(), res) == 0) {
                 PossessionAuthenticator::instance().removePossession(to);
                 logEvent(POSSESS_CHAR,
-                         String::compose("%1 %2 %3 Claimed character (%4) "
-                                         "by account %5",
+                         fmt::format("{} {} {} Claimed character ({}) "
+                                         "by account {}",
                                          m_connection->getId(),
                                          getId(),
                                          character->getId(),
-                                         character->getType(),
+                                         character->getType()->name(),
                                          m_username));
             }
         }
@@ -575,7 +575,7 @@ void Account::PossessOperation(const Operation& op, OpVector& res)
             connectCharacter(J->second, res);
             return;
         }
-        clientError(op, String::compose("Could not find character '%1' to possess.", to), res, getId());
+        clientError(op, fmt::format("Could not find character '{}' to possess.", to), res, getId());
     }
 
 }
@@ -626,7 +626,7 @@ void Account::LookOperation(const Operation& op, OpVector& res)
         res.push_back(s);
         return;
     }
-    error(op, String::compose("Unknown look target '%1'.", to), res, getId());
+    error(op, fmt::format("Unknown look target '{}'.", to), res, getId());
 }
 
 void Account::GetOperation(const Operation& op, OpVector& res)
@@ -636,7 +636,7 @@ void Account::GetOperation(const Operation& op, OpVector& res)
 void Account::OtherOperation(const Operation& op, OpVector& res)
 {
     std::string parent = op->getParent().empty() ? "-" : op->getParent();
-    error(op, String::compose("Unknown operation %1 in Account %2 (%3)", parent, getId(), m_username), res);
+    error(op, fmt::format("Unknown operation {} in Account {} ({})", parent, getId(), m_username), res);
 }
 
 Account::~Account() = default;

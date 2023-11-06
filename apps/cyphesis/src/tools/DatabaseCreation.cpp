@@ -21,7 +21,7 @@ std::unique_ptr<Database> createDatabase()
 #ifdef POSTGRES_FOUND
         return std::make_unique<DatabasePostgres>();
 #else
-        log(ERROR, "Database specified as 'postgres', but this server is not built with Postgres SQL support.");
+        spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
         throw std::runtime_error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
 #endif
     } else {

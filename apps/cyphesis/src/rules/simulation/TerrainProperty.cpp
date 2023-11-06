@@ -94,13 +94,13 @@ std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> Terra
 
             auto patternI = surfaceMap.find("pattern");
             if (patternI == surfaceMap.end() || !patternI->second.isString()) {
-                log(WARNING, "Surface has no 'pattern'.");
+                spdlog::warn("Surface has no 'pattern'.");
                 continue;
             }
 
             auto nameI = surfaceMap.find("name");
             if (nameI == surfaceMap.end() || !nameI->second.isString()) {
-                log(WARNING, "Surface has no 'name'.");
+                spdlog::warn("Surface has no 'name'.");
                 continue;
             }
             surfaceNames.push_back(nameI->second.String());
@@ -113,7 +113,7 @@ std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> Terra
                     if (entry.second.isNum()) {
                         shaderParams.emplace(entry.first, (float) entry.second.asNum());
                     } else {
-                        log(WARNING, "'terrain.shaders...params' entry must be a map of floats..");
+                        spdlog::warn("'terrain.shaders...params' entry must be a map of floats..");
                     }
                 }
             }
@@ -124,7 +124,7 @@ std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> Terra
             if (shader) {
                 tileShader->addShader(std::move(shader), layer);
             } else {
-                log(WARNING, String::compose("Could not recognize surface with pattern '%1'", pattern));
+                spdlog::warn("Could not recognize surface with pattern '{}'", pattern);
             }
             layer++;
         }
@@ -174,7 +174,7 @@ boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x,
     auto& terrain = *sInstanceState.getState(entity)->terrain;
     auto segment = terrain.getSegmentAtPos(x, z);
     if (segment == nullptr) {
-        debug(std::cerr << "No terrain at this point" << std::endl << std::flush;);
+        cy_debug(std::cerr << "No terrain at this point" << std::endl;);
         return boost::none;
     }
     if (!segment->isValid()) {
@@ -188,11 +188,11 @@ boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x,
     WFMath::Vector<3> normal;
     float height = -23;
     segment->getHeightAndNormal(x, z, height, normal);
-    debug_print("At the point " << x << "," << z
+    cy_debug_print("At the point " << x << "," << z
                     << " of the segment the height is " << height << std::endl;
                   std::cout << "The segment has " << surfaces.size());
     if (surfaces.empty()) {
-        log(ERROR, "The terrain has no surface data");
+        spdlog::error("The terrain has no surface data");
         return boost::none;
     }
     Mercator::Surface& tile_surface = *surfaces.begin()->second;
@@ -218,12 +218,12 @@ boost::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEn
             z > mod_box.lowCorner().y() && z < mod_box.highCorner().y()) {
             Mercator::Effector::Context* c = mod->context();
             if (c == nullptr) {
-                log(WARNING, "Terrrain mod with no context");
+                spdlog::warn("Terrrain mod with no context");
                 continue;
             }
-            debug_print("Context has id" << c->m_id);
+            cy_debug_print("Context has id" << c->m_id);
             auto tc = static_cast<TerrainContext*>(c);
-            debug_print("Context has pointer " << tc->m_entity.get());
+            cy_debug_print("Context has pointer " << tc->m_entity.get());
             ret.push_back(tc->m_entity.get());
         }
     }

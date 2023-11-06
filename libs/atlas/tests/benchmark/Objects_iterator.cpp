@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
         Atlas::Message::MapType message;
         op->addToMessage(message);
         if (i == 0) {
-            std::cout << "Message: " << message.size() << std::endl << std::flush;
+            std::cout << "Message: " << message.size() << std::endl;
         }
         Atlas::Message::MapType::const_iterator I = message.begin();
         Atlas::Message::MapType::const_iterator Iend = message.end();
@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
         Atlas::Message::MapType message;
         op->addToMessage(message);
         if (i == 0) {
-            std::cout << "Message: " << message.size() << std::endl << std::flush;
+            std::cout << "Message: " << message.size() << std::endl;
         }
         Atlas::Message::MapType::const_iterator I = message.begin();
         Atlas::Message::MapType::const_iterator Iend = message.end();

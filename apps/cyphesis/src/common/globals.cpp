@@ -23,7 +23,6 @@
 
 #include "const.h"
 #include "log.h"
-#include "compose.hpp"
 #include "system.h"
 
 #include <varconf/config.h>
@@ -37,6 +36,7 @@
 #include <cassert>
 #include <boost/filesystem/operations.hpp>
 #include <basedir.h>
+#include <sstream>
 
 const char* const CYPHESIS = "cyphesis";
 const char* const SLAVE = "slave";
@@ -134,7 +134,7 @@ static int check_tmp_path(const std::string& dir)
         if (!createResult) {
             return -1;
         }
-        log(INFO, String::compose("Created tmp directory at %1", tmp_directory));
+        spdlog::info("Created tmp directory at {}", tmp_directory);
     } else {
         if (!boost::filesystem::is_directory(tmp_directory)) {
             return -1;
@@ -302,13 +302,13 @@ void StaticOption<ValueT>::read(varconf::Variable var)
 template<typename ValueT>
 std::string StaticOption<ValueT>::repr() const
 {
-    return String::compose("%1", m_default);
+    return fmt::format("{}", m_default);
 }
 
 template<typename ValueT>
 size_t StaticOption<ValueT>::size() const
 {
-    return String::compose("%1", m_default).size();
+    return fmt::format("{}", m_default).size();
 }
 
 template
@@ -334,13 +334,13 @@ class UnixSockOption : public StaticOption<std::string>
 
 void UnixSockOption::missing()
 {
-    m_data = String::compose(m_format, instance);
+    m_data = fmt::format(m_format, instance);
 }
 
 void UnixSockOption::postProcess()
 {
     if (m_data.find('/') != 0) {
-        m_data = String::compose("%1/tmp/%2",
+        m_data = fmt::format("{}/tmp/{}",
                                  var_directory,
                                  m_data);
     }
@@ -406,8 +406,8 @@ int Options::check_config(varconf::Config& config,
             const std::string& option_name = entry.first;
             if (section_help.find(option_name) == section_help.end() &&
                 entry.second->scope() == varconf::INSTANCE) {
-                log(WARNING, String::compose("Invalid option -- %1:%2",
-                                             section_name, option_name));
+                spdlog::warn("Invalid option -- {}:{}",
+                                             section_name, option_name);
             }
         }
     }
@@ -420,8 +420,8 @@ void Options::addOption(const std::string& section,
 {
     OptionMap& config_section = m_sectionMap[section];
     if (config_section.find(setting) != config_section.end()) {
-        log(ERROR, String::compose("Config option %1:%2 already defined",
-                                   section, setting));
+        spdlog::error("Config option {}:{} already defined",
+                                   section, setting);
         return;
     }
     m_sectionMap[section].emplace(setting, std::move(option));
@@ -505,7 +505,7 @@ int loadConfig(int argc, char** argv, int usage)
 
     //Listen for errors from Varconf and write to the log.
     global_conf->sige.connect([](const char* error) {
-        log(ERROR, error);
+        spdlog::error(error);
     });
 
     global_conf->setParameterLookup('h', "help");
@@ -528,7 +528,7 @@ int loadConfig(int argc, char** argv, int usage)
     if (configHome) {
         homeConfigPath = boost::filesystem::path(configHome) / "cyphesis.vconf";
         if (boost::filesystem::exists(homeConfigPath)) {
-            log(INFO, String::compose("Reading settings from %1", homeConfigPath.string()));
+            spdlog::info("Reading settings from {}", homeConfigPath.string());
             auto home_dir_config = global_conf->readFromFile(homeConfigPath.string());
             if (!home_dir_config) {
                 // Not being able to read from the local config file, if it exists, should result in fail fast.
@@ -558,7 +558,7 @@ int loadConfig(int argc, char** argv, int usage)
     bool dynamicPaths = false;
     readConfigItem("cyphesis", "dynamicpaths", dynamicPaths);
     if (dynamicPaths) {
-        log(INFO, "Dynamic paths are now enabled. All paths will be calculated relative to the current executable.");
+        spdlog::info("Dynamic paths are now enabled. All paths will be calculated relative to the current executable.");
         getinstallprefix();
     }
 
@@ -577,13 +577,13 @@ int loadConfig(int argc, char** argv, int usage)
                                                  "/cyphesis/cyphesis.vconf",
                                                  varconf::GLOBAL);
     if (!main_config) {
-        log(ERROR, String::compose("Unable to read main config file \"%1\"",
+        spdlog::error("Unable to read main config file \"{}\"",
                                    etc_directory +
-                                   "/cyphesis/cyphesis.vconf"));
+                                   "/cyphesis/cyphesis.vconf");
         if (!homeConfigPath.empty()) {
-            log(INFO, "Try removing .cyphesis.vconf from your home directory as it may specify an invalid installation directory, and then restart cyphesis.");
+            spdlog::info("Try removing .cyphesis.vconf from your home directory as it may specify an invalid installation directory, and then restart cyphesis.");
         } else {
-            log(INFO, "Please ensure that cyphesis has been installed correctly.");
+            spdlog::info("Please ensure that cyphesis has been installed correctly.");
         }
         //We should fail if we can't read the config file.
         return CONFIG_ERROR;
@@ -609,11 +609,11 @@ int loadConfig(int argc, char** argv, int usage)
 
     if (readConfigItem("", "instance", raw_instance) == 0) {
         if (force_simple_name(raw_instance, instance) != 0) {
-            log(ERROR, "Invalid instance name.");
+            spdlog::error("Invalid instance name.");
             return CONFIG_ERROR;
         }
         if (raw_instance != instance) {
-            log(INFO, String::compose("Using instance name \"%1\".", instance));
+            spdlog::info("Using instance name \"{}\".", instance);
         }
     }
 
@@ -679,12 +679,12 @@ void readInstanceConfiguration(const std::string& section)
     // Load up the ruleset.
     if (readConfigItem(section, "ruleset", ruleset_name)) {
         if (section == DEFAULT_INSTANCE) {
-            log(ERROR, String::compose("No ruleset specified in config. "
-                                       "Using \"%1\" rules.", DEFAULT_RULESET));
+            spdlog::error("No ruleset specified in config. "
+                                       "Using \"{}\" rules.", DEFAULT_RULESET);
         } else {
-            log(INFO, String::compose("Auto configuring new instance \"%1\" "
-                                      "to use ruleset \"%2\".",
-                                      instance, ruleset_name));
+            spdlog::info("Auto configuring new instance \"{}\" "
+                                      "to use ruleset \"{}\".",
+                                      instance, ruleset_name);
             global_conf->setItem(section,
                                  "ruleset",
                                  ruleset_name,
@@ -699,20 +699,18 @@ void readInstanceConfiguration(const std::string& section)
             // Binreloc enabled builds installed system wide have localstatedir
             // set to something that is never writable, so must always fall
             // back to /var/tmp, so we should not display the message.
-            log(WARNING,
-                String::compose("No temporary directory found at \"%1/tmp\"",
-                                var_directory));
+            spdlog::warn("No temporary directory found at \"{}/tmp\"",
+                                var_directory);
         }
         if (check_tmp_path(FALLBACK_LOCALSTATEDIR) != 0) {
-            log(CRITICAL, String::compose("No temporary directory available "
-                                          "at \"%1/tmp\" or \"%2/tmp\".",
+            spdlog::critical("No temporary directory available "
+                                          "at \"{}/tmp\" or \"{}/tmp\".",
                                           var_directory,
-                                          FALLBACK_LOCALSTATEDIR));
+                                          FALLBACK_LOCALSTATEDIR);
         } else {
             if (var_directory != "/usr/var") {
-                log(NOTICE,
-                    String::compose("Using \"%1/tmp\" as temporary directory",
-                                    FALLBACK_LOCALSTATEDIR));
+                spdlog::debug("Using \"{}/tmp\" as temporary directory",
+                                    FALLBACK_LOCALSTATEDIR);
             }
             var_directory = FALLBACK_LOCALSTATEDIR;
         }
@@ -723,7 +721,7 @@ void readInstanceConfiguration(const std::string& section)
 void reportVersion(const char* prgname)
 {
     std::cout << prgname << " (cyphesis) " << consts::version
-              << " (WorldForge)" << std::endl << std::flush;
+              << " (WorldForge)" << std::endl;
 }
 
 void showUsage(const char* prgname, unsigned int usage_flags, const char* extras)

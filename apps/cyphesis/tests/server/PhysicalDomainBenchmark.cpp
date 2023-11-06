@@ -31,7 +31,6 @@
 
 #include "rules/simulation/Entity.h"
 
-#include "common/compose.hpp"
 #include "common/debug.h"
 
 #include <Atlas/Objects/Anonymous.h>
@@ -62,7 +61,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 
-using String::compose;
 
 
 class PhysicalDomainBenchmark : public Cyphesis::TestBase
@@ -165,10 +163,10 @@ void PhysicalDomainBenchmark::test_static_entities_no_move()
     std::stringstream ss;
     long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count();
     ss << "Average tick duration: " << milliseconds / 30.0 << " ms";
-    log(INFO, ss.str());
+    spdlog::info(ss.str());
     ss = std::stringstream();
     ss << "Physics per second: " << (milliseconds / 2.0) / 10.0 << " %";
-    log(INFO, ss.str());
+    spdlog::info(ss.str());
 
 }
 
@@ -223,10 +221,10 @@ void PhysicalDomainBenchmark::test_determinism()
     std::stringstream ss;
     long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count();
     ss << "Average tick duration: " << milliseconds / 30.0 << " ms";
-    log(INFO, ss.str());
+    spdlog::info(ss.str());
     ss = std::stringstream();
     ss << "Physics per second: " << (milliseconds / 2.0) / 10.0 << " %";
-    log(INFO, ss.str());
+    spdlog::info(ss.str());
 }
 
 void PhysicalDomainBenchmark::test_visibilityPerformance()
@@ -280,7 +278,7 @@ void PhysicalDomainBenchmark::test_visibilityPerformance()
     {
         std::stringstream ss;
         ss << "Added " << counter << " planted entities at " << (size.x() / 100.0) << " meter interval.";
-        log(INFO, ss.str());
+        spdlog::info(ss.str());
     }
 
     int numberOfObservers = 200;
@@ -316,10 +314,10 @@ void PhysicalDomainBenchmark::test_visibilityPerformance()
         std::stringstream ss;
         long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count();
         ss << "Average tick duration with " << numberOfObservers << " moving observers: " << milliseconds / (15. * 20.0) << " ms";
-        log(INFO, ss.str());
+        spdlog::info(ss.str());
         ss = std::stringstream();
         ss << "Physics per second with " << numberOfObservers << " moving observers: " << (milliseconds / 20.0) / 10.0 << " %";
-        log(INFO, ss.str());
+        spdlog::info(ss.str());
     }
     std::set<LocatedEntity*> transformedEntities;
     //Now stop the observers from moving, and measure again
@@ -337,10 +335,10 @@ void PhysicalDomainBenchmark::test_visibilityPerformance()
         std::stringstream ss;
         long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start).count();
         ss << "Average tick duration without moving observer: " << milliseconds / 15. << " ms";
-        log(INFO, ss.str());
+        spdlog::info(ss.str());
         ss = std::stringstream();
         ss << "Physics per second without moving observer: " << (milliseconds / 1.0) / 10.0 << " %";
-        log(INFO, ss.str());
+        spdlog::info(ss.str());
     }
 }
 

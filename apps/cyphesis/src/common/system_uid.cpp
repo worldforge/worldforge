@@ -22,14 +22,13 @@
 
 #include "system.h"
 
-#include "common/compose.hpp"
 #include "common/log.h"
 
 
 unsigned int security_check()
 {
     if (getuid() == 0 || geteuid() == 0) {
-        log(CYLOG_ERROR, "Running cyphesis as the superuser is dangerous.");
+        spdlog::error("Running cyphesis as the superuser is dangerous.");
         return 0;
     }
     return SECURITY_OKAY;
@@ -37,5 +36,5 @@ unsigned int security_check()
 
 std::string create_session_username()
 {
-    return String::compose("admin_%1_%2", getpid(), getuid());
+    return fmt::format("admin_{}_{}", getpid(), getuid());
 }

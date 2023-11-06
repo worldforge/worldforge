@@ -36,7 +36,6 @@
 #include "rules/Script.h"
 #include "rules/simulation/Task.h"
 
-#include "common/compose.hpp"
 #include "common/id.h"
 #include "common/Inheritance.h"
 #include "common/log.h"
@@ -483,15 +482,15 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj)
     const std::string& child = obj->getId();
     const std::string& parent = obj->getParent();
     if (atlasObjects.find(child) != atlasObjects.end()) {
-        std::cerr << String::compose("Installing type \"%1\"(\"%2\") "
+        std::cerr << fmt::format("Installing type \"{}\"(\"{}\") "
                                      "which was already installed",
                                      child, parent) << std::endl;
         return 0;
     }
     auto I = atlasObjects.find(parent);
     if (I == atlasObjects.end()) {
-        std::cerr << String::compose("Installing type \"%1\" "
-                                     "which has unknown parent \"%2\".",
+        std::cerr << fmt::format("Installing type \"{}\" "
+                                     "which has unknown parent \"{}\".",
                                      child, parent) << std::endl;
         return 0;
     }

@@ -49,6 +49,9 @@
 #include "PossessionAccount.h"
 #include <varconf/config.h>
 
+#include <memory>
+#include <utility>
+
 
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
@@ -67,7 +70,7 @@ namespace {
 
     void usage(const char* prgname)
     {
-        std::cout << "usage: " << prgname << " [ local_socket_path ]" << std::endl << std::flush;
+        std::cout << "usage: " << prgname << " [ local_socket_path ]" << std::endl;
     }
 
     void connectToServer(boost::asio::io_context& io_context, AwareMindFactory& mindFactory)
@@ -79,7 +82,7 @@ namespace {
 
         commClient->getSocket().async_connect({client_socket_name}, [&io_context, &mindFactory, commClient](boost::system::error_code ec) {
             if (!ec) {
-                log(INFO, "Connection detected; creating possession client.");
+                spdlog::info("Connection detected; creating possession client.");
 
                 /**
                  * The Flusher will flush the comm socket every ten milliseconds, as long as the connection is alive.
@@ -95,7 +98,7 @@ namespace {
                             std::weak_ptr<CommAsioClient<boost::asio::local::stream_protocol>> _commClient,
                             std::chrono::steady_clock::duration _flushInterval)
                             : io_context(_io_context),
-                              commClient(_commClient),
+                              commClient(std::move(_commClient)),
                               flushInterval(_flushInterval)
                     {
                     }
@@ -122,7 +125,7 @@ namespace {
                         }
                     }
                 };
-                auto flusher = std::shared_ptr<Flusher>(new Flusher(io_context, commClient, std::chrono::milliseconds(10)));
+                auto flusher = std::make_shared<Flusher>(io_context, commClient, std::chrono::milliseconds(10));
                 flusher->flush();
 
 
@@ -157,13 +160,15 @@ STRING_OPTION(password, "", "aiclient", "password", "Password to use to authenti
 
 int main(int argc, char** argv)
 {
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [AI] [%l] %v");
 
     //Kill ourselves if our parent is killed.
     prctl(PR_SET_PDEATHSIG, SIGTERM);
 
     Monitors monitors;
 
-    setLoggingPrefix("AI");
+	//Perhaps tell spdlog to use a prefix?
+    //setLoggingPrefix("AI");
 
     int config_status = loadConfig(argc, argv, USAGE_AICLIENT);
     if (config_status < 0) {
@@ -174,7 +179,7 @@ int main(int argc, char** argv)
             showUsage(argv[0], USAGE_AICLIENT, "[ local_socket_path ]");
             return 0;
         } else if (config_status != CONFIG_ERROR) {
-            log(ERROR, "Unknown error reading configuration.");
+            spdlog::error("Unknown error reading configuration.");
         }
         // Fatal error loading config file
         return 1;
@@ -202,7 +207,7 @@ int main(int argc, char** argv)
             printf("Error launching Remotery %d\n", error);
             return -1;
         } else {
-            log(INFO, String::compose("Remotery enabled on port %1.", settings->port));
+            spdlog::info("Remotery enabled on port {}.", settings->port);
         }
     }
 
@@ -251,10 +256,10 @@ int main(int argc, char** argv)
             if (mindFactory.m_scriptFactory == nullptr) {
                 auto psf = std::make_unique<PythonScriptFactory<BaseMind>>(script_package, script_class);
                 if (psf->setup() == 0) {
-                    log(INFO, String::compose("Initialized mind code with Python class %1.%2.", script_package, script_class));
+                    spdlog::info("Initialized mind code with Python class {}.{}.", script_package, script_class);
                     mindFactory.m_scriptFactory = std::move(psf);
                 } else {
-                    log(ERROR, String::compose("Python class \"%1.%2\" failed to load", script_package, script_class));
+                    spdlog::error("Python class \"{}.{}\" failed to load", script_package, script_class);
                 }
             }
 
@@ -291,10 +296,10 @@ int main(int argc, char** argv)
             CommAsioListener<boost::asio::ip::tcp, CommHttpClient> httpListener(httpCreator, httpStarter, "cyaiclient", io_context,
                                                                                 boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), http_port_num));
 
-            log(INFO, String::compose("Http service. The following endpoints are available over port %1.", http_port_num));
-            log(INFO, " /config : shows client configuration");
-            log(INFO, " /monitors : various monitored values, suitable for time series systems");
-            log(INFO, " /monitors/numerics : only numerical values, suitable for time series system that only operates on numerical data");
+            spdlog::info("Http service. The following endpoints are available over port {}.", http_port_num);
+            spdlog::info(" /config : shows client configuration");
+            spdlog::info(" /monitors : various monitored values, suitable for time series systems");
+            spdlog::info(" /monitors/numerics : only numerical values, suitable for time series system that only operates on numerical data");
 
             monitors.watch("accounts", PossessionAccount::account_count);
             monitors.watch("minds", PossessionAccount::mind_count);
@@ -309,7 +314,7 @@ int main(int argc, char** argv)
                 mindFactory.m_scriptFactory->refreshClass();
             });
 
-            log(INFO, String::compose("Trying to connect to server at %1.", client_socket_name));
+            spdlog::info("Trying to connect to server at {}.", client_socket_name);
             connectToServer(io_context, mindFactory);
 
             /// \brief Use a "work" instance to make sure the io_context never runs out of work and is stopped.
@@ -319,7 +324,7 @@ int main(int argc, char** argv)
 
             signalSet.clear();
 
-            log(INFO, "Shutting down.");
+            spdlog::info("Shutting down.");
         }
         //We need to collect any objects before we delete the typeStore.
         PyGC_Collect();

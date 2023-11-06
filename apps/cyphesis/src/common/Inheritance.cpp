@@ -20,7 +20,6 @@
 
 #include "log.h"
 #include "TypeNode.h"
-#include "compose.hpp"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/RootOperation.h>
@@ -163,18 +162,18 @@ TypeNode* Inheritance::addChild(const Root& obj)
     if (I != Iend) {
 
         const TypeNode* existingParent = I->second->parent();
-        log(ERROR, String::compose("Installing %1 \"%2\"(parent \"%3\") "
-                                   "which was already installed as a %4 with parent \"%5\"",
+        spdlog::error("Installing {} \"{}\"(parent \"{}\") "
+                                   "which was already installed as a {} with parent \"{}\"",
                                    obj->getObjtype(), child, parent,
                                    I->second->description(Visibility::PRIVATE)->getObjtype(),
-                                   existingParent ? existingParent->name() : "NON"));
+                                   existingParent ? existingParent->name() : "NON");
         return nullptr;
     }
     I = atlasObjects.find(parent);
     if (I == Iend) {
-        log(ERROR, String::compose("Installing %1 \"%2\" "
-                                   "which has unknown parent \"%3\".",
-                                   obj->getObjtype(), child, parent));
+        spdlog::error("Installing {} \"{}\" "
+                                   "which has unknown parent \"{}\".",
+                                   obj->getObjtype(), child, parent);
         return nullptr;
     }
     Element children(ListType(1, child));
@@ -183,7 +182,7 @@ TypeNode* Inheritance::addChild(const Root& obj)
 
     if (description->copyAttr("children", children) == 0) {
         assert(children.isList());
-        children.asList().push_back(child);
+        children.asList().emplace_back(child);
     }
     description->setAttr("children", children);
     I->second->setDescription(description);
@@ -295,7 +294,7 @@ void installStandardObjects(TypeStore& i)
     auto anonymousTypeCount = 2; //Anonymous and Generic shouldn't be included
     auto atlasTypeCount = i.getFactories().getKeys().size() - anonymousTypeCount;
     if (typeCount != atlasTypeCount) {
-        log(ERROR, String::compose("There are %1 Atlas types, but there are only %2 types registered in Cyphesis.", atlasTypeCount, typeCount));
+        spdlog::error("There are {} Atlas types, but there are only {} types registered in Cyphesis.", atlasTypeCount, typeCount);
     }
 
 

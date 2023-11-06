@@ -115,16 +115,16 @@ void World::DeleteOperation(const Operation& op, OpVector& res)
                     if (arg->copyAttr("force", force) == 0 && force.isInt() && force.asInt() == 1) {
                         clearWorld(res);
                     } else {
-                        log(ERROR, "World::DeleteOperation cannot delete world unless 'force' flag is set.");
+                        spdlog::error("World::DeleteOperation cannot delete world unless 'force' flag is set.");
                     }
                 } else {
                     BaseWorld::instance().delEntity(entity.get());
                 }
             } else {
-                log(NOTICE, String::compose("Tried to delete non existent entity with id %1", arg->getId()));
+                spdlog::debug("Tried to delete non existent entity with id {}", arg->getId());
             }
         } else {
-            log(ERROR, "World::DeleteOperation got delete op with arg but no id.");
+            spdlog::error("World::DeleteOperation got delete op with arg but no id.");
         }
     } else {
         assert(m_parent == nullptr);
@@ -132,9 +132,9 @@ void World::DeleteOperation(const Operation& op, OpVector& res)
     }
 }
 
-void World::clearWorld(OpVector& res)
+void World::clearWorld(OpVector&)
 {
-    log(INFO, "Clearing world; deleting all entities.");
+    spdlog::info("Clearing world; deleting all entities.");
 
     OpVector ignoredRes;
     auto& baseWorld = BaseWorld::instance();
@@ -178,7 +178,7 @@ void World::clearWorld(OpVector& res)
 
     m_contains.reset();
 
-    log(INFO, "World cleared of all entities.");
+    spdlog::info("World cleared of all entities.");
 }
 
 void World::RelayOperation(const Operation& op, OpVector& res)
@@ -197,14 +197,13 @@ void World::RelayOperation(const Operation& op, OpVector& res)
         }
     } else {
         if (op->getArgs().empty()) {
-            log(ERROR, "World::RelayOperation no args.");
+            spdlog::error("World::RelayOperation no args.");
             return;
         }
-        Operation relayedOp = Atlas::Objects::smart_dynamic_cast<Operation>(op->getArgs().front());
+        auto relayedOp = Atlas::Objects::smart_dynamic_cast<Operation>(op->getArgs().front());
 
         if (!relayedOp.isValid()) {
-            log(ERROR,
-                "World::RelayOperation first arg is not an operation.");
+            spdlog::error("World::RelayOperation first arg is not an operation.");
             return;
         }
 
@@ -216,15 +215,13 @@ void World::RelayOperation(const Operation& op, OpVector& res)
             //from a random entity or its mind.
             auto I = m_relays.find(op->getRefno());
             if (I == m_relays.end()) {
-                log(WARNING,
-                    "World::RelayOperation could not find registrered Relay with refno.");
+                spdlog::warn("World::RelayOperation could not find registrered Relay with refno.");
                 return;
             }
 
             //Make sure that this op really comes from the entity the original Relay op was sent to.
             if (op->getFrom() != I->second.entityId) {
-                log(WARNING,
-                    "World::RelayOperation got relay op with mismatching 'from'.");
+                spdlog::warn("World::RelayOperation got relay op with mismatching 'from'.");
                 return;
             }
 

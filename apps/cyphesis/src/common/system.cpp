@@ -24,7 +24,6 @@
 
 #include "log.h"
 #include "globals.h"
-#include "compose.hpp"
 
 #include <wfmath/MersenneTwister.h>
 #include <gcrypt.h>
@@ -58,8 +57,8 @@ static int security_new_key(const std::string & key_filename)
     FILE * key_file = ::fopen(key_filename.c_str(), "wx");
 
     if (key_file == nullptr) {
-        log(CRITICAL, String::compose("Unable to open file %1 to store server"
-                                      " identity", key_filename));
+        spdlog::critical("Unable to open file {} to store server"
+                                      " identity", key_filename);
         return -1;
     }
 
@@ -71,13 +70,13 @@ static int security_new_key(const std::string & key_filename)
                                        "(genkey(dsa(nbits %d)))", 1024);
 
     if (gcry_err_code(ret) != GPG_ERR_NO_ERROR) {
-        std::cout << "SEXP FAIL" << std::endl << std::flush;
+        std::cout << "SEXP FAIL" << std::endl;
     }
 
     ret = gcry_pk_genkey(&key, key_parameters);
 
     if (gcry_err_code(ret) != GPG_ERR_NO_ERROR) {
-        std::cout << "GENKEY FAIL" << std::endl << std::flush;
+        std::cout << "GENKEY FAIL" << std::endl;
         ::fclose(key_file);
         return -1;
     }
@@ -87,7 +86,7 @@ static int security_new_key(const std::string & key_filename)
     ret = gcry_pk_testkey(key);
 
     if (gcry_err_code(ret) != GPG_ERR_NO_ERROR) {
-        std::cout << "TESTKEY FAIL" << std::endl << std::flush;
+        std::cout << "TESTKEY FAIL" << std::endl;
         ::fclose(key_file);
         return -1;
     }
@@ -97,7 +96,7 @@ static int security_new_key(const std::string & key_filename)
     gcry_sexp_sprint(key, GCRYSEXP_FMT_CANON, key_text, ktxtlen);
 
     if (fwrite(key_text, ktxtlen, 1, key_file) != ktxtlen) {
-        log(ERROR, String::compose("Unable to write key to %1.", key_filename));
+        spdlog::error("Unable to write key to {}.", key_filename);
     }
 
     fclose(key_file);
@@ -113,8 +112,8 @@ static int security_load_key(const std::string & key_filename, size_t len)
     FILE * key_file = ::fopen(key_filename.c_str(), "r");
 
     if (key_file == nullptr) {
-        log(CRITICAL, String::compose("Unable to open file %1 to read server"
-                                      " identity", key_filename));
+        spdlog::critical("Unable to open file {} to read server"
+                                      " identity", key_filename);
         perror("ARSE!");
         return -1;
     }
@@ -124,8 +123,8 @@ static int security_load_key(const std::string & key_filename, size_t len)
 
     size_t records = fread(key_text.data(), len, 1, key_file);
     if (records != 1) {
-        log(CRITICAL, String::compose("Unable to load identity information"
-                                      " from file %1", key_filename));
+        spdlog::critical("Unable to load identity information"
+                                      " from file {}", key_filename);
         return -1;
     }
 
@@ -134,15 +133,15 @@ static int security_load_key(const std::string & key_filename, size_t len)
     gcry_error_t ret = gcry_sexp_new(&key, key_text.data(), len, 0);
 
     if (gcry_err_code(ret) != GPG_ERR_NO_ERROR) {
-        log(CRITICAL, String::compose("Malformed identity information"
-                                      " from file %1", key_filename));
+        spdlog::critical("Malformed identity information"
+                                      " from file {}", key_filename);
         return -1;
     }
 
     ret = gcry_pk_testkey(key);
 
     if (gcry_err_code(ret) != GPG_ERR_NO_ERROR) {
-        std::cout << "TESTKEY FAIL" << std::endl << std::flush;
+        std::cout << "TESTKEY FAIL" << std::endl;
         return -1;
     }
 
@@ -154,24 +153,24 @@ unsigned int security_setup()
     std::string key_filename;
     char * home = getenv("HOME");
     if (home == nullptr) {
-        std::cout << "No home" << std::endl << std::flush;
-        key_filename = String::compose("%1/tmp/cyphesis_%2_id_dsa",
+        std::cout << "No home" << std::endl;
+        key_filename = fmt::format("{}/tmp/cyphesis_{}_id_dsa",
                                        var_directory, instance);
     } else {
-        std::cout << "home" << std::endl << std::flush;
-        key_filename = String::compose("%1/.cyphesis_%2_id_dsa",
+        std::cout << "home" << std::endl;
+        key_filename = fmt::format("{}/.cyphesis_{}_id_dsa",
                                        home, instance);
     }
 
-    std::cout << "KEY: " << key_filename << std::endl << std::flush;
+    std::cout << "KEY: " << key_filename << std::endl;
 
     struct stat key_stat{};
 
     if (::stat(key_filename.c_str(), &key_stat) != 0) {
-        std::cout << "not yet" << std::endl << std::flush;
+        std::cout << "not yet" << std::endl;
         security_new_key(key_filename);
     } else {
-        std::cout << "loading" << std::endl << std::flush;
+        std::cout << "loading" << std::endl;
         security_load_key(key_filename, static_cast<size_t>(key_stat.st_size));
     }
 
@@ -182,7 +181,7 @@ unsigned int security_setup()
 void reduce_priority(int p)
 {
     if (nice(p) < 0) {
-        log(ERROR, "Unable to increase nice level to reduce priority");
+        spdlog::error("Unable to increase nice level to reduce priority");
     }
 }
 
@@ -235,16 +234,16 @@ namespace {
     extern "C" void report_status(int)
     {
         if (exit_flag) {
-            log(NOTICE, "Shutting down");
+            spdlog::debug("Shutting down");
         } else {
-            log(NOTICE, "Running");
+            spdlog::debug("Running");
         }
     }
-
-    extern "C" void rotate_logs(int)
-    {
-        rotateLogger();
-    }
+//
+//    extern "C" void rotate_logs(int)
+//    {
+//        rotateLogger();
+//    }
 }
 
 void interactive_signals()
@@ -314,10 +313,11 @@ void daemon_signals()
     action.sa_handler = SIG_IGN;
     sigaction(SIGQUIT, &action, nullptr);
 
-    sigemptyset(&action.sa_mask);
-    action.sa_flags = 0;
-    action.sa_handler = rotate_logs;
-    sigaction(SIGHUP, &action, nullptr);
+//Could we integrate this into spdlog so we rotate logs on SIGHUP?
+//    sigemptyset(&action.sa_mask);
+//    action.sa_flags = 0;
+//    action.sa_handler = rotate_logs;
+//    sigaction(SIGHUP, &action, nullptr);
 
     sigemptyset(&action.sa_mask);
     action.sa_flags = 0;
@@ -352,7 +352,7 @@ int daemonise()
             daemon_signals();
             // Change current working directory to /
             if (chdir("/") != 0) {
-                log(ERROR, "Unable to change current working directory to /");
+                spdlog::error("Unable to change current working directory to /");
             }
             // Get rid if stdio
             close(STDIN_FILENO);
@@ -370,7 +370,7 @@ int daemonise()
             // We are not the daemon process
             daemon_flag = false;
 
-            log(ERROR, "Failed to fork() to go to the background.");
+            spdlog::error("Failed to fork() to go to the background.");
 
             break;
         default:
@@ -393,26 +393,26 @@ int daemonise()
             }
 
             if (running) {
-                log(INFO, "Running");
+                spdlog::info("Running");
             } else {
                 int estatus = WEXITSTATUS(status);
                 if (estatus == EXIT_SUCCESS) {
-                    log(ERROR, "Cyphesis exited normally at initialization.");
+                    spdlog::error("Cyphesis exited normally at initialization.");
                 } else if (estatus == EXIT_DATABASE_ERROR) {
-                    log(ERROR, "Cyphesis was unable to connect to the database.");
+                    spdlog::error("Cyphesis was unable to connect to the database.");
                 } else if (estatus == EXIT_SOCKET_ERROR) {
-                    log(ERROR, "Cyphesis was unable to open a listen socket.");
+                    spdlog::error("Cyphesis was unable to open a listen socket.");
                 } else if (estatus == EXIT_PORT_ERROR) {
-                    log(ERROR, "Could not find free client listen socket. "
+                    spdlog::error("Could not find free client listen socket. "
                                "Init failed.");
-                    log(INFO, String::compose("To allocate 8 more ports please"
+                    spdlog::info("To allocate 8 more ports please"
                                               " run:\n\n    cyconfig "
-                                              "--cyphesis:dynamic_port_end=%1"
-                                              "\n\n", dynamic_port_end + 8));
+                                              "--cyphesis:dynamic_port_end={}"
+                                              "\n\n", dynamic_port_end + 8);
                 } else {
-                    log(ERROR, "Cyphesis exited unexpectedly at initialization.");
+                    spdlog::error("Cyphesis exited unexpectedly at initialization.");
                 }
-                log(ERROR, "See syslog for details.");
+                spdlog::error("See syslog for details.");
             }
 
             break;
@@ -448,7 +448,7 @@ void hash_password(const std::string & pwd, const std::string & salt,
                         (const unsigned char *)passwd_and_salt.c_str(),
                         passwd_and_salt.size());
     // Build a string containing the salt and hash together
-    // hash = String::compose("$1$%1$", salt);
+    // hash = fmt::format("$1${}$", salt);
     if (!salt.empty()) {
         hash = "$1$";
         hash += salt;
@@ -491,7 +491,7 @@ int check_password(const std::string & pwd, const std::string & hash)
         // Extract the salt from the hash string
         size_t dp = hash.find('$', 3);
         if (dp == std::string::npos) {
-            log(CYLOG_ERROR, "Password hash has no $ symbol after the salt.");
+            spdlog::error("Password hash has no $ symbol after the salt.");
             return -1;
         }
         assert(dp > 3);

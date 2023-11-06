@@ -41,7 +41,7 @@ CyPy_LocatedEntityBase<TValue, TPythonClass>::CyPy_LocatedEntityBase(Py::PythonC
         : WrapperBase<TValue, TPythonClass, Py::PythonClassInstanceWeak>::WrapperBase(self, std::move(value))
 {
     if (!this->m_value) {
-        log(WARNING, "Created a Python Entity wrapper with null entity, this should not happen.");
+        spdlog::warn("Created a Python Entity wrapper with null entity, this should not happen.");
     }
 }
 

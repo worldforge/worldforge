@@ -83,5 +83,5 @@ void OperationMonitor::operation(const Operation& op, OpVector&)
 
 //    std::cout << op->getParent() << "(from=\"" << op->getFrom()
 //              << "\",to=\"" << op->getTo() << "\")"
-//              << std::endl << std::flush;
+//              << std::endl;
 }

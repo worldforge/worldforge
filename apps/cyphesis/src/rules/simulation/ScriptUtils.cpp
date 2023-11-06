@@ -39,7 +39,7 @@ HandlerResult ScriptUtils::processScriptResult(const std::string& scriptName, co
             } else if (numRet == 2) {
                 result = OPERATION_BLOCKED;
             } else {
-                log(ERROR, String::compose("Unrecognized return code %1 for script '%2' attached to entity '%3'", numRet, scriptName, e.describeEntity()));
+                spdlog::error("Unrecognized return code {} for script '{}' attached to entity '{}'", numRet, scriptName, e.describeEntity());
             }
 
         } else if (CyPy_Operation::check(pythonResult)) {
@@ -60,13 +60,13 @@ HandlerResult ScriptUtils::processScriptResult(const std::string& scriptName, co
                 res.push_back(opRes);
             }
         } else {
-            log(ERROR, String::compose("Python script \"%1\" returned an invalid "
-                                       "result.", scriptName));
+            spdlog::error("Python script \"{}\" returned an invalid "
+                                       "result.", scriptName);
         }
     };
 
     if (ret.isNone()) {
-        debug_print("Returned none")
+        cy_debug_print("Returned none")
     } else {
         //Check if it's a tuple and process it.
         if (ret.isTuple()) {

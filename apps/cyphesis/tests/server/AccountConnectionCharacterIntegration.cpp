@@ -49,7 +49,6 @@
 #include <common/Monitors.h>
 
 using Atlas::Objects::Operation::RootOperation;
-using String::compose;
 
 Monitors monitors;
 

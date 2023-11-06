@@ -31,7 +31,7 @@ CyPy_Filter::CyPy_Filter(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dic
     try {
         m_value.reset(new EntityFilter::Filter(filterString, factory));
     } catch (const std::exception& e) {
-        throw Py::TypeError(String::compose("Error when parsing query: %1", e.what()));
+        throw Py::TypeError(fmt::format("Error when parsing query: {}", e.what()));
     }
 }
 
@@ -53,7 +53,7 @@ CyPy_Filter::CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFi
 
 Py::Object CyPy_Filter::str()
 {
-    return Py::String(String::compose("Entity filter: %1", this->m_value->getDeclaration()));
+    return Py::String(fmt::format("Entity filter: {}", this->m_value->getDeclaration()));
 }
 
 CyPy_EntityFilter::CyPy_EntityFilter()

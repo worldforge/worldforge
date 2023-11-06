@@ -51,17 +51,17 @@ void AdminMind::externalOperation(const Operation& op, Link& link)
     // If an admin connection specifies a TO on the op, we treat
     // it specially, and make sure it goes direct, otherwise
     // we handle it like a normal mind.
-    debug_print("AdminMind::externalOperation(" << op->getParent() << ")");
+    cy_debug_print("AdminMind::externalOperation(" << op->getParent() << ")");
 
     //TODO: The old Creator code had features for searching for entities.
     //TODO: Instead of retaining them we should add code in the Admin class
     //TODO: for searching for entities using a random EntityFilter expression
     if (op->isDefaultTo()) {
-        debug_print("AdminMind handling op normally");
+        cy_debug_print("AdminMind handling op normally");
         ExternalMind::externalOperation(op, link);
     } else if (op->getTo() == getId() && op->isDefaultFutureSeconds()) {
         //Send directly to the entity, bypassing any normal Thought filtering
-        debug_print("Creator handling op ");
+        cy_debug_print("Creator handling op ");
         OpVector lres;
         m_entity->operation(op, lres);
     } else {
@@ -92,9 +92,9 @@ void AdminMind::externalOperation(const Operation& op, Link& link)
             }
 
         } else {
-            log(ERROR, String::compose("Creator operation from client "
-                                       "is to unknown ID \"%1\"",
-                                       op->getTo()));
+            spdlog::error("Creator operation from client "
+                                       "is to unknown ID \"{}\"",
+                                       op->getTo());
 
             Anonymous unseen_arg;
             unseen_arg->setId(op->getTo());
@@ -126,7 +126,7 @@ void AdminMind::GetOperation(const Operation& op, OpVector& res)
 
             auto& o = Inheritance::instance().getClass(id, Visibility::PRIVATE);
             if (!o.isValid()) {
-                clientError(op, String::compose("Unknown type definition for \"%1\" "
+                clientError(op, fmt::format("Unknown type definition for \"{}\" "
                                                 "requested", id), res);
                 continue;
             }

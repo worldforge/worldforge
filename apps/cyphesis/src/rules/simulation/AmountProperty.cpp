@@ -34,7 +34,7 @@ void AmountProperty::apply(LocatedEntity& entity)
     if (!domainProp || domainProp->data() != "stackable") {
         //Amount requires that the entity is stackable
         data() = 1;
-        log(WARNING, String::compose("Amount property set on non-stackable entity %1.", entity.describeEntity()));
+        spdlog::warn("Amount property set on non-stackable entity {}.", entity.describeEntity());
         return;
     }
 

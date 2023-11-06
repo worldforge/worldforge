@@ -101,7 +101,7 @@ class TestBaseConnection : public Eris::BaseConnection {
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {
-    std::cerr << msg << std::endl << std::flush;
+    std::cerr << msg << std::endl;
 }
 
 int main()

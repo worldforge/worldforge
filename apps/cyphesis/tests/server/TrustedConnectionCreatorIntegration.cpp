@@ -52,7 +52,6 @@
 #include <Atlas/Objects/Encoder.h>
 
 using Atlas::Objects::Operation::RootOperation;
-using String::compose;
 
 Atlas::Objects::Factories factories;
 
@@ -297,7 +296,7 @@ void TrustedConnectionCreatorintegration::test_external_op_puppet_nonexistant()
 
     Atlas::Objects::Operation::Talk op;
     op->setFrom(mind.getId());
-    op->setTo(compose("%1", m_id_counter++));
+    op->setTo(std::to_string(m_id_counter++));
 
     TestDecoder decoder{factories};
     decoder.streamBegin();

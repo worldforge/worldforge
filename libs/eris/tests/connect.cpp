@@ -33,11 +33,11 @@ bool done = false;
 
 static void usage(const char* prgname) {
 	std::cout << "usage: " << prgname << " [-p port ] [-nv] host [port]"
-			  << std::endl << std::flush;
+			  << std::endl;
 }
 
 static void erisLog(Eris::LogLevel level, const std::string& msg) {
-	std::cout << "LOG: " << msg << std::endl << std::flush;
+	std::cout << "LOG: " << msg << std::endl;
 }
 
 static void onConnected(Eris::Connection* c) {
@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 
 	if (option_verbose && option_nonblock) {
 		std::cerr << "Connecting non blocking"
-				  << std::endl << std::flush;
+				  << std::endl;
 	}
 
 	int arg_left = argc - optind;

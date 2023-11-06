@@ -21,7 +21,6 @@
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/RootEntity.h>
 
-#include "common/compose.hpp"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

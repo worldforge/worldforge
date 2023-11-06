@@ -20,7 +20,6 @@
 
 #include "common/serialno.h"
 #include "common/log.h"
-#include "common/compose.hpp"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -62,10 +61,8 @@ void AgentCreationTask::setup(const std::string& arg, OpVector& res)
 void AgentCreationTask::operation(const Operation& op, OpVector& res)
 {
     if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
-        log(ERROR,
-            String::compose(
-                    "Got error when creating agent. Message: %1",
-                    op->getArgs().front()->getAttr("message").asString()));
+        spdlog::error("Got error when creating agent. Message: {}",
+                    op->getArgs().front()->getAttr("message").asString());
     } else if (!op->isDefaultRefno() && op->getRefno() == m_serial_no) {
         if (m_state == State::CREATING_CHARACTER) {
             if (!op->getArgs().empty()) {
@@ -99,7 +96,7 @@ void AgentCreationTask::operation(const Operation& op, OpVector& res)
                         }
                     }
                 } else {
-                    log(ERROR, "No id received in response to creation.");
+                    spdlog::error("No id received in response to creation.");
                 }
                 m_complete = true;
 

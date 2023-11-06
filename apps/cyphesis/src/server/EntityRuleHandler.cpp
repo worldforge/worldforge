@@ -24,7 +24,6 @@
 
 #include "common/log.h"
 #include "common/debug.h"
-#include "common/compose.hpp"
 
 #include <iostream>
 
@@ -33,7 +32,6 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 
-using String::compose;
 
 
 class Entity;
@@ -84,11 +82,11 @@ int EntityRuleHandler::installEntityClass(const std::string& class_name,
         if (I != mFactories.end()) {
             factory = I->second(nullptr);
         } else {
-            debug_print("class \"" << class_name
+            cy_debug_print("class \"" << class_name
                             << "\" has non existent parent \"" << parent
                             << "\". Waiting.")
             dependent = parent;
-            reason = compose("Entity rule \"%1\" has parent 'game_entity' and requires a "
+            reason = fmt::format("Entity rule \"{}\" has parent 'game_entity' and requires a "
                              "pre-defined entity factory, which could not be found.", class_name);
             return 1;
         }
@@ -96,11 +94,11 @@ int EntityRuleHandler::installEntityClass(const std::string& class_name,
         auto parent_factory = dynamic_cast<EntityFactoryBase*>(m_builder.getClassFactory(parent));
         // Get the new factory for this rule
         if (parent_factory == nullptr) {
-            debug_print("class \"" << class_name
+            cy_debug_print("class \"" << class_name
                             << "\" has non existent parent \"" << parent
                             << "\". Waiting.")
             dependent = parent;
-            reason = compose("Entity rule \"%1\" has parent \"%2\" which does "
+            reason = fmt::format("Entity rule \"{}\" has parent \"{}\" which does "
                              "not exist.", class_name, parent);
             return 1;
         }
@@ -129,9 +127,8 @@ int EntityRuleHandler::installEntityClass(const std::string& class_name,
     // Get the new factory for this rule
 
     if (factory == nullptr) {
-        log(ERROR,
-            compose("Attempt to install rule \"%1\" which has parent \"%2\" "
-                    "which cannot be instantiated", class_name, parent));
+        spdlog::error("Attempt to install rule \"{}\" which has parent \"{}\" "
+                    "which cannot be instantiated", class_name, parent);
         return -1;
     }
 
@@ -142,7 +139,7 @@ int EntityRuleHandler::installEntityClass(const std::string& class_name,
         return -1;
     }
 
-    debug_print("INSTALLING " << class_name << ":" << parent)
+    cy_debug_print("INSTALLING " << class_name << ":" << parent)
 
     auto factoryPtr = factory.get();
     // Install the factory in place.
@@ -170,8 +167,8 @@ int EntityRuleHandler::modifyEntityClass(const std::string& class_name,
 
     auto factory = dynamic_cast<EntityFactoryBase*>(m_builder.getClassFactory(class_name));
     if (factory == nullptr) {
-        log(ERROR, compose("Could not find factory for existing entity class "
-                           "\"%1\".", class_name));
+        spdlog::error("Could not find factory for existing entity class "
+                           "\"{}\".", class_name);
         return -1;
     }
     assert(factory != nullptr);
@@ -187,9 +184,9 @@ int EntityRuleHandler::modifyEntityClass(const std::string& class_name,
         // This is non fatal, but nice to know it has happened.
         // This should only happen if the client attempted to modify the
         // type data for a core hard coded type.
-        log(ERROR, compose("EntityRuleHandler::modifyEntityClass: \"%1\" modified "
+        spdlog::error("EntityRuleHandler::modifyEntityClass: \"{}\" modified "
                            "by client, but has no parent factory.",
-                           class_name));
+                           class_name);
         factory->m_attributes = MapType();
     }
     factory->m_classAttributes.clear();
@@ -223,8 +220,7 @@ int EntityRuleHandler::populateEntityFactory(const std::string& class_name,
         const MapType& attrs = J->second.asMap();
         for (const auto& entry : attrs) {
             if (!entry.second.isMap()) {
-                log(ERROR, compose("Attribute '%1' in rule '%2' is not a "
-                                   "map.", entry.first, class_name));
+                spdlog::error("Attribute '{}' in rule '{}' is not a map.", entry.first, class_name);
                 continue;
             }
             const MapType& attr = entry.second.asMap();

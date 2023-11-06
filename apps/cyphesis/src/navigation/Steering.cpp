@@ -58,7 +58,7 @@ Steering::Steering(MemEntity& avatar) :
     if (bbox.isValid()) {
         mAvatarHorizRadius = std::sqrt(boxSquareHorizontalBoundingRadius(bbox));
     } else {
-        log(WARNING, "Created Steering with avatar without any bounding box. This is unusual.");
+        spdlog::warn("Created Steering with avatar without any bounding box. This is unusual.");
     }
 
 }
@@ -240,7 +240,7 @@ int Steering::updatePath(double currentTimestamp, const WFMath::Point<3>& curren
                 {resolvedPosition.position.x() - 5, resolvedPosition.position.z() - 5},
                 {resolvedPosition.position.x() + 5, resolvedPosition.position.z() + 5}));
     }
-    //debug_print("Updating path, size of new path: " << result << ". Pos: " << currentAvatarPosition);
+    //cy_debug_print("Updating path, size of new path: " << result << ". Pos: " << currentAvatarPosition);
     EventPathUpdated();
     mUpdateNeeded = false;
     return mPathResult;
@@ -448,7 +448,7 @@ SteeringResult Steering::update(double currentTimestamp)
                 bool shouldSend = false;
                 bool avoiding = mAwareness->avoidObstacles(mAvatar.getIntId(), entityPosition, velocityNorm * mMaxSpeed, newVelocity, currentTimestamp, &nextWaypoint);
                 if (avoiding) {
-                    //log(INFO, "Avoiding.");
+                    //spdlog::info("Avoiding.");
                     velocityNorm = newVelocity / mMaxSpeed;
 
                     //Schedule a new steering op very soon

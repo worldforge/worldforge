@@ -78,7 +78,7 @@ int main()
 
     if (segment == nullptr) {
         std::cerr << "Segment not created by addition of required basepoints"
-                  << std::endl << std::flush;
+                  << std::endl;
         return 1;
     }
 

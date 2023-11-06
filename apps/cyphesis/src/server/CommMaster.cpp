@@ -28,7 +28,7 @@
 /// @param addr Address of the remote master server.
 CommMaster::CommMaster() : CommClient()
 {
-    std::cout << "Outgoing master connection." << std::endl << std::flush;
+    std::cout << "Outgoing master connection." << std::endl;
 }
 
 CommMaster::~CommMaster()

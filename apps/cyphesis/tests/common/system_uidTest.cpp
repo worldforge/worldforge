@@ -45,26 +45,21 @@ static const uid_t SAFE_UID = 17;
 static uid_t test_uid = SAFE_UID;
 static uid_t test_euid = SAFE_UID;
 
-static bool test_error_logged = false;
 
 int main()
 {
     unsigned magic_res = security_check();
     assert(magic_res == SECURITY_OKAY);
-    assert(test_error_logged == false);
 
     test_uid = 0;
     magic_res = security_check();
     assert(magic_res != SECURITY_OKAY);
-    assert(test_error_logged == true);
     test_uid = SAFE_UID;
 
 
-    test_error_logged = false;
     test_euid = 0;
     magic_res = security_check();
     assert(magic_res != SECURITY_OKAY);
-    assert(test_error_logged == true);
 
     std::string session_name = create_session_username();
     assert(!session_name.empty());
@@ -80,12 +75,6 @@ extern "C" uid_t geteuid()
     return test_euid;
 }
 
-void log(LogLevel lvl, const std::string & msg)
-{
-    if (lvl == CYLOG_ERROR) {
-        test_error_logged = true;
-    }
-}
 
 void rotateLogger()
 {

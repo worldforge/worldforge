@@ -37,7 +37,6 @@ using Atlas::Objects::Entity::Anonymous;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -67,7 +66,7 @@ Root BaseClient::createSystemAccount()
 {
     Anonymous player_ent;
     player_ent->setAttr("username", create_session_username());
-    player_ent->setAttr("password", compose("%1%2", ::rand(), ::rand()));
+    player_ent->setAttr("password", fmt::format("{}{}", ::rand(), ::rand()));
     player_ent->setParent("sys");
 
     Create createAccountOp;
@@ -77,7 +76,7 @@ Root BaseClient::createSystemAccount()
     if (m_connection.wait() != 0) {
         std::cerr << "ERROR: Failed to log into server: \""
                   << m_connection.errorMessage() << "\""
-                  << std::endl << std::flush;
+                  << std::endl;
         return Root(nullptr);
     }
 
@@ -108,7 +107,7 @@ Root BaseClient::createAccount(const std::string& name,
     player_ent->setAttr("password", password);
     player_ent->setParent("player");
 
-    debug_print("Logging " << name << " in with " << password << " as password");
+    cy_debug_print("Logging " << name << " in with " << password << " as password");
 
     Login loginAccountOp;
     loginAccountOp->setArgs1(player_ent);
@@ -229,7 +228,7 @@ Ref<CreatorClient> BaseClient::createCharacter(const std::string& type)
     auto mind_id = idFromString(arg->getId());
 
     if (!mind_id.isValid()) {
-        log(ERROR, String::compose("Invalid character ID \"%1\" from server.", mind_id.m_id));
+        spdlog::error("Invalid character ID \"{}\" from server.", mind_id.m_id);
     }
 
     Ref<CreatorClient> obj(new CreatorClient(mind_id, entityId, m_connection, m_typeStore));
@@ -259,7 +258,7 @@ void BaseClient::logout()
     send(logout);
 
     if (m_connection.wait() != 0) {
-        std::cerr << "ERROR: Failed to logout" << std::endl << std::flush;
+        std::cerr << "ERROR: Failed to logout" << std::endl;
     }
 }
 

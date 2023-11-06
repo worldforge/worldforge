@@ -58,6 +58,7 @@ target_link_libraries(cyphesis-common PUBLIC
         libgcrypt::libgcrypt
         Boost::filesystem
         libxdg-basedir::libxdg-basedir
+        spdlog::spdlog
 )
 
 

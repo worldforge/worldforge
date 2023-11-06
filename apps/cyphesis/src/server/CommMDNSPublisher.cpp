@@ -36,7 +36,6 @@
 #include "common/const.h"
 #include "common/debug.h"
 #include "rules/simulation/BaseWorld.h"
-#include "common/compose.hpp"
 #include "common/sockets.h"
 
 #include <iostream>
@@ -65,23 +64,23 @@ static void client_callback(AvahiClient * s,
             break;
 
         case AVAHI_CLIENT_S_COLLISION:
-            log(WARNING, "Name collision while publishing using avahi MDNS");
+            spdlog::warn("Name collision while publishing using avahi MDNS");
             break;
 
         case AVAHI_CLIENT_FAILURE:
-            log(WARNING, "Failure while publishing using avahi MDNS");
+            spdlog::warn("Failure while publishing using avahi MDNS");
             break;
 
         case AVAHI_CLIENT_CONNECTING:
-            log(NOTICE, "Avahi returned connecting");
+            spdlog::debug("Avahi returned connecting");
             break;
 
         case AVAHI_CLIENT_S_REGISTERING:
-            log(WARNING, "Avahi registering");
+            spdlog::warn("Avahi registering");
             break;
 
         default:
-            log(WARNING, "Unknown state");
+            spdlog::warn("Unknown state");
             break;
     }
 }
@@ -97,7 +96,7 @@ static void group_callback(AvahiEntryGroup * g,
              break;
  
          case AVAHI_ENTRY_GROUP_COLLISION : {
-             log(NOTICE, "Avahi callback reported group collision");
+             spdlog::debug("Avahi callback reported group collision");
              
              /* A service name collision happened. Let's pick a new name */
              // char * n = avahi_alternative_service_name(name);
@@ -112,7 +111,7 @@ static void group_callback(AvahiEntryGroup * g,
          }
  
          case AVAHI_ENTRY_GROUP_FAILURE :
-             log(NOTICE, "Avahi callback reported group failure");
+             spdlog::debug("Avahi callback reported group failure");
  
              /* Some kind of failure happened while we were registering our services */
              // avahi_simple_poll_quit(simple_poll);
@@ -140,19 +139,19 @@ static AvahiWatch* watch_new(const AvahiPoll *api,
                              AvahiWatchCallback callback,
                              void *userdata)
 {
-    debug_print("avahi_watch_new " << fd << " " << callback);
+    cy_debug_print("avahi_watch_new " << fd << " " << callback);
     auto* cmp = static_cast<CommMDNSPublisher*>(api->userdata);
     if (cmp->m_avahiFd != -1) {
-        log(ERROR, "Avahi asked for multiple fds. Unable to comply.");
+        spdlog::error("Avahi asked for multiple fds. Unable to comply.");
     } else {
         cmp->m_avahiFd = fd;
     }
 
     if (~event & AVAHI_WATCH_IN) {
-        log(ERROR, "Avahi watcher does not require read events.");
+        spdlog::error("Avahi watcher does not require read events.");
     }
     if (event & ~AVAHI_WATCH_IN) {
-        log(WARNING, "Avahi watcher requires unsupported events.");
+        spdlog::warn("Avahi watcher requires unsupported events.");
     }
 
     auto* aw = new AvahiWatch;
@@ -168,20 +167,20 @@ static AvahiWatch* watch_new(const AvahiPoll *api,
 
 static void watch_update(AvahiWatch *w, AvahiWatchEvent event)
 {
-    debug_print("avahi_watch_update")
+    cy_debug_print("avahi_watch_update")
     w->m_requiredEvent = event;
 }
 
 static AvahiWatchEvent watch_get_events(AvahiWatch *w)
 {
-    debug_print("avahi_watch_get_events")
+    cy_debug_print("avahi_watch_get_events")
     return w->m_events;
 }
 
 static void watch_free(AvahiWatch *w)
 {
-    debug_print("avahi_watch_free")
-    log(WARNING, "avahi watch_free handler called");
+    cy_debug_print("avahi_watch_free")
+    spdlog::warn("avahi watch_free handler called");
 }
 
 struct AvahiTimeout {
@@ -197,7 +196,7 @@ static AvahiTimeout* timeout_new(const AvahiPoll * api,
                                  AvahiTimeoutCallback callback,
                                  void *userdata)
 {
-    debug_print("avahi_timeout_new("
+    cy_debug_print("avahi_timeout_new("
                     << (tv ? tv->tv_sec : -1)  << "," << callback << ")");
     CommMDNSPublisher * cmp = static_cast<CommMDNSPublisher*>(api->userdata);
 
@@ -214,7 +213,7 @@ static AvahiTimeout* timeout_new(const AvahiPoll * api,
 
     cmp->m_avahiTimeouts.insert(at);
 
-    debug_print("avahi_timeout_new " << at);
+    cy_debug_print("avahi_timeout_new " << at);
     return at;
 }
 
@@ -222,7 +221,7 @@ static void timeout_update(AvahiTimeout * at, const struct timeval *tv)
 {
     CommMDNSPublisher * cmp = at->m_publisher;
 
-    debug_print("avahi_timeout_update(" << at << ","
+    cy_debug_print("avahi_timeout_update(" << at << ","
                     << (tv ? tv->tv_sec : -1) << ")");
 
     if (tv != 0) {
@@ -238,7 +237,7 @@ static void timeout_update(AvahiTimeout * at, const struct timeval *tv)
 
 static void timeout_free(AvahiTimeout * at)
 {
-    debug_print("avahi_timeout_free(" << at << ")");
+    cy_debug_print("avahi_timeout_free(" << at << ")");
     at->m_state = AvahiTimeout::DEAD;
     at->m_publisher->m_avahiTimeouts.erase(at);
     delete at;
@@ -281,8 +280,8 @@ int CommMDNSPublisher::setup()
                                      &m_avahiError);
 
     if (m_avahiClient == 0) {
-        log(ERROR, String::compose("Avahi client creation failed: %1",
-                                   avahi_strerror(m_avahiError)));
+        spdlog::error("Avahi client creation failed: {}",
+                                   avahi_strerror(m_avahiError));
         return -1;
     }
 
@@ -294,7 +293,7 @@ int CommMDNSPublisher::setup()
     do_timer_check();
 
     if (m_avahiFd == -1) {
-        log(ERROR, "Avahi client has not registered a file descriptor");
+        spdlog::error("Avahi client has not registered a file descriptor");
         return -1;
     }
 
@@ -327,18 +326,18 @@ void CommMDNSPublisher::setup_service(AvahiClient * client)
     }
 
     if (m_group == 0) {
-        log(ERROR, String::compose("Avahi group creation failure. %1",
-                                   avahi_strerror(avahi_client_errno(client))));
+        spdlog::error("Avahi group creation failure. {}",
+                                   avahi_strerror(avahi_client_errno(client)));
         return;
     }
 
     AvahiStringList * txt;
     txt = avahi_string_list_new(
-      String::compose("clients=%1", m_server.getClients()).c_str(),
-      String::compose("ruleset=%1", m_server.getRuleset()).c_str(),
-      String::compose("server=%1", "cyphesis").c_str(),
-      String::compose("uptime=%1", m_server.m_world.upTime()).c_str(),
-      String::compose("version=%1", std::string(consts::version)).c_str(),
+      fmt::format("clients={}", m_server.getClients()).c_str(),
+      fmt::format("ruleset={}", m_server.getRuleset()).c_str(),
+      fmt::format("server={}", "cyphesis").c_str(),
+      fmt::format("uptime={}", m_server.m_world.upTime()).c_str(),
+      fmt::format("version={}", std::string(consts::version)).c_str(),
       nullptr);
 
     int ret;
@@ -353,13 +352,13 @@ void CommMDNSPublisher::setup_service(AvahiClient * client)
 
     avahi_string_list_free(txt);
     if (ret < 0) {
-        log(ERROR, "Avahi service publish failed");
+        spdlog::error("Avahi service publish failed");
         return;
     }
 
     ret = avahi_entry_group_commit(m_group);
     if (ret < 0) {
-        log(ERROR, "Avahi service commit failed");
+        spdlog::error("Avahi service commit failed");
         return;
     }
 }
@@ -371,7 +370,7 @@ void CommMDNSPublisher::checkTimers(time_t t)
     for (; I != Iend; ++I) {
         if ((*I)->m_state == AvahiTimeout::ENABLED &&
             (*I)->m_expiry.tv_sec <= t) {
-            debug_print("TImeout " << (*I) << " is now due at " << t);
+            cy_debug_print("TImeout " << (*I) << " is now due at " << t);
             (*I)->m_state = AvahiTimeout::EXPIRED;
             (*I)->m_callback(*I, (*I)->m_userdata);
         }

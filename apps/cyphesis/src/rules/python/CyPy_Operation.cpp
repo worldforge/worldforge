@@ -313,7 +313,7 @@ Py::Object CyPy_Operation::sequence_item(Py_ssize_t item)
     if (root) {
         return CyPy_Root::wrap(std::move(root));
     }
-    //log(WARNING, "Non operation or entity being returned as arg of operation");
+    //spdlog::warn("Non operation or entity being returned as arg of operation");
     return CyPy_Element::wrap(arg->asMessage());
 }
 

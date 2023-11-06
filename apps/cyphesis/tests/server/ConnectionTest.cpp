@@ -35,7 +35,6 @@
 #include "server/Player.h"
 #include "server/ServerRouting.h"
 
-#include "common/compose.hpp"
 #include "common/Inheritance.h"
 #include "common/log.h"
 #include "common/CommSocket.h"
@@ -389,7 +388,7 @@ void Connectiontest::test_foo()
         auto& rm = m_connection->m_routers;
         auto I = rm.begin();
         for (; I != rm.end(); ++I) {
-            std::string object_id = String::compose("%1", I->first);
+            std::string object_id = fmt::format("{}", I->first);
             std::cout << "ID: " << object_id << std::endl;
             op_arg->setId(object_id);
             m_connection->operation(op, res);

@@ -108,7 +108,7 @@ static int get_password(const std::string & acname,
     std::cin >> password;
     std::cout << std::endl << "Retype " << acname << " password: " << std::flush;
     std::cin >> password2;
-    std::cout << std::endl << std::flush;
+    std::cout << std::endl;
 
 #ifdef HAVE_TERMIOS_H
     tcsetattr( STDIN_FILENO, TCSADRAIN, &termios_old );
@@ -126,7 +126,7 @@ static int get_password(const std::string & acname,
 //#ifdef POSTGRES_FOUND
 //        return std::make_unique<DatabasePostgres>();
 //#else
-//        log(ERROR, "Database specified as 'postgres', but this server is not built with Postgres SQL support.");
+//        spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
 //        throw std::runtime_error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
 //#endif
 //    } else {
@@ -219,7 +219,7 @@ int main(int argc, char ** argv)
     }
 
     if (security_init() != 0) {
-        log(CRITICAL, "Security initialisation Error. Exiting.");
+        spdlog::critical("Security initialisation Error. Exiting.");
         return EXIT_SECURITY_ERROR;
     }
 
@@ -232,7 +232,7 @@ int main(int argc, char ** argv)
     // bool res = db->getAccount("admin", data);
 
     // if (!res) {
-        // std::cout << "Admin account does not yet exist" << std::endl << std::flush;
+        // std::cout << "Admin account does not yet exist" << std::endl;
         // acname = "admin";
         // action = ADD;
     // }
@@ -240,14 +240,14 @@ int main(int argc, char ** argv)
             MapType o;
             int res = db.getAccount(acname, o);
             if (res != 0) {
-                std::cout << "Account '" << acname << "' does not yet exist" << std::endl << std::flush;
+                std::cout << "Account '" << acname << "' does not yet exist" << std::endl;
                 return 1;
             }
         }
         if (action == DEL) {
             int res = db.delAccount(acname);
             if (res == 0) {
-                std::cout << "Account '" << acname << "' removed." << std::endl << std::flush;
+                std::cout << "Account '" << acname << "' removed." << std::endl;
             }
             return 0;
         }
@@ -262,7 +262,7 @@ int main(int argc, char ** argv)
             }
             amap["type"] = account_type;
             std::cout << "Changing '" << acname << "' to a " << account_type
-                      << " account" << std::endl << std::flush;
+                      << " account" << std::endl;
         } else {
             std::string password, password2;
 
@@ -270,7 +270,7 @@ int main(int argc, char ** argv)
 
             if (password != password2) {
                 std::cout << "Passwords did not match. Account database unchanged."
-                          << std::endl << std::flush;
+                          << std::endl;
                 return 1;
             }
 
@@ -281,7 +281,7 @@ int main(int argc, char ** argv)
         if (action == ADD) {
             amap["username"] = acname;
             if (actype == SERVER) {
-                std::cout << "Creating server account" << std::endl << std::flush;
+                std::cout << "Creating server account" << std::endl;
                 amap["type"] = "server";
             }
             res = db.putAccount(amap);
@@ -289,7 +289,7 @@ int main(int argc, char ** argv)
             res = db.modAccount(amap, acname);
         }
         if (res == 0) {
-            std::cout << "Account changed." << std::endl << std::flush;
+            std::cout << "Account changed." << std::endl;
             return 0;
         }
         return 1;

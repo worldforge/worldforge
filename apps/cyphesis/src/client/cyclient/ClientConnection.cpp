@@ -40,7 +40,7 @@ ClientConnection::~ClientConnection() = default;
 
 void ClientConnection::operation(const RootOperation & op)
 {
-    debug_print("A " << op->getParent() << " op from server!")
+    cy_debug_print("A " << op->getParent() << " op from server!")
 
     reply_flag = true;
     operationQueue.push_back(op);
@@ -49,12 +49,12 @@ void ClientConnection::operation(const RootOperation & op)
 #if 0
     const std::string & from = op->getFrom();
     if (from.empty()) {
-        std::cerr << "ERROR: Operation with no destination" << std::endl << std::flush;
+        std::cerr << "ERROR: Operation with no destination" << std::endl;
         return;
     }
     dict_t::const_iterator I = objects.find(from);
     if (I == objects.end()) {
-        std::cerr << "ERROR: Operation with invalid destination" << std::endl << std::flush;
+        std::cerr << "ERROR: Operation with invalid destination" << std::endl;
         return;
     }
     OpVector res = I->second->message(op);
@@ -85,21 +85,21 @@ int ClientConnection::sendAndWaitReply(const Operation & op, OpVector & res)
     long no = newSerialNo();
     op->setSerialno(no);
     send(op);
-    debug_print("Waiting for reply to " << op->getParent());
+    cy_debug_print("Waiting for reply to " << op->getParent());
     while (true) {
         if (pending()) {
             Operation input = pop();
             assert(input.isValid());
             if (input.isValid()) {
                 if (input->getRefno() == no) {
-                    debug_print("Got reply")
+                    cy_debug_print("Got reply")
                     res.push_back(input);
                     return 0;
                 } else {
-                    debug_print("Not reply")
+                    cy_debug_print("Not reply")
                 }
             } else {
-                debug_print("Not op")
+                cy_debug_print("Not op")
             }
         } else if (wait() != 0) {
             return -1;

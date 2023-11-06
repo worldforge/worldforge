@@ -40,7 +40,6 @@ using Atlas::Objects::Entity::Anonymous;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -57,7 +56,7 @@ void BaseClient::externalOperation(const Operation& op, Link& link)
     if (debug_flag) {
         std::cout << "BaseClient::externalOperation received {" << std::endl;
         debug_dump(op, std::cout);
-        std::cout << "}" << std::endl << std::flush;
+        std::cout << "}" << std::endl;
     }
 
     OpVector res;
@@ -89,7 +88,7 @@ void BaseClient::externalOperation(const Operation& op, Link& link)
         for (auto resOp : res) {
             std::cout << "BaseClient::externalOperation sent {" << std::endl;
             debug_dump(resOp, std::cout);
-            std::cout << "}" << std::endl << std::flush;
+            std::cout << "}" << std::endl;
         }
     }
 
@@ -105,7 +104,7 @@ void BaseClient::createSystemAccount(const std::string& usernameSuffix)
     Anonymous player_ent;
     m_username = create_session_username() + usernameSuffix;
     player_ent->setAttr("username", m_username);
-    m_password = compose("%1%2", ::rand(), ::rand());
+    m_password = fmt::format("{}{}", ::rand(), ::rand());
     player_ent->setAttr("password", m_password);
     player_ent->setParent("sys");
 
@@ -117,14 +116,12 @@ void BaseClient::createSystemAccount(const std::string& usernameSuffix)
                              if (!ent->isDefaultId()) {
                                  notifyAccountCreated(RouterId(ent->getId()));
                              } else {
-                                 log(ERROR, "ERROR: Logged in, but account has no id.");
+                                 spdlog::error("ERROR: Logged in, but account has no id.");
                              }
                          }
                      },
                      []() {
-                         std::cerr << "ERROR: Failed to log into server: \""
-                                   //<< m_connection.errorMessage() << "\""
-                                   << std::endl << std::flush;
+						spdlog::error("ERROR: Failed to log into server.");
                      });
 }
 
@@ -159,7 +156,7 @@ int BaseClient::runTask(std::shared_ptr<ClientTask> task, const std::string& arg
 {
 
     if (m_task != nullptr) {
-        std::cout << "Busy" << std::endl << std::flush;
+        std::cout << "Busy" << std::endl;
         return -1;
     }
 
@@ -219,7 +216,7 @@ void BaseClient::sendWithCallback(Operation op, std::function<void(const Operati
 #endif
     timer->async_wait([&, serialno](boost::system::error_code ec) {
         if (!ec) {
-            log(WARNING, String::compose("Timeout on operation with serial no %1.", serialno));
+            spdlog::warn("Timeout on operation with serial no {}.", serialno);
             auto I = m_callbacks.find(serialno);
             if (I != m_callbacks.end()) {
                 if (I->second.timeoutCallback) {

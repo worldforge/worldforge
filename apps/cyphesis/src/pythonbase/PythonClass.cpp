@@ -22,7 +22,6 @@
 #include "Python_Script_Utils.h"
 
 #include "common/log.h"
-#include "common/compose.hpp"
 #include <Python.h>
 
 /// \brief ScriptKit constructor
@@ -62,14 +61,14 @@ int PythonClass::getClass(const Py::Module& module)
         return -1;
     }
     if (!new_class.isCallable()) {
-        log(ERROR, String::compose("Python class \"%1.%2\" is not callable.",
-                                   m_package, m_type));
+        spdlog::error("Python class \"{}.{}\" is not callable.",
+                                   m_package, m_type);
         return -1;
     }
 //    if (!PyType_IsSubtype((PyTypeObject*)new_class.type().ptr, m_base)) {
-//        log(ERROR, String::compose("Python class \"%1.%2\" does not inherit "
-//                                   "from a core server type \"%3\".",
-//                                   m_package, m_type, m_base->tp_name));
+//        spdlog::error("Python class \"{}.{}\" does not inherit "
+//                                   "from a core server type \"{}\".",
+//                                   m_package, m_type, m_base->tp_name);
 //        return -1;
 //    }
     m_class = Py::Callable(new_class);
@@ -79,22 +78,22 @@ int PythonClass::getClass(const Py::Module& module)
 
 int PythonClass::refresh()
 {
-    log(NOTICE, String::compose("Refreshing Python module \"%1.%2\".", m_package, m_type));
+    spdlog::debug("Refreshing Python module \"{}.{}\".", m_package, m_type);
     if (m_module.isNull()) {
-        log(ERROR, String::compose("Abort refresh of non loaded module \"%1.%2\".", m_package, m_type));
+        spdlog::error("Abort refresh of non loaded module \"{}.{}\".", m_package, m_type);
         return -1;
     }
     Py::Module new_module(PyImport_ReloadModule(m_module.ptr()));
     if (new_module.isNull()) {
-        log(ERROR, String::compose("Error reloading python module \"%1\"",
-                                   m_package));
+        spdlog::error("Error reloading python module \"{}\"",
+                                   m_package);
         PyErr_Clear();
         return -1;
     }
     int ret = getClass(new_module);
     if (ret != 0) {
-        log(ERROR, String::compose(R"(Error finding python class "%1" in "%2")",
-                                   m_type, m_package));
+        spdlog::error(R"(Error finding python class "{}" in "{}")",
+                                   m_type, m_package);
         return -1;
         // After reloading, but failing to get the class, I think the old class
         // should still work, but is no longer bound to the name. It won't
@@ -102,9 +101,9 @@ int PythonClass::refresh()
         // in m_class
     }
     if (m_module != new_module) {
-        log(WARNING, String::compose("Python module \"%1.%2\" has changed "
+        spdlog::warn("Python module \"{}.{}\" has changed "
                                      "its pointer on reload",
-                                     m_package, m_type));
+                                     m_package, m_type);
         m_module = new_module;
     }
     return 0;

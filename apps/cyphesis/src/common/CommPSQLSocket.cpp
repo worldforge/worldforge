@@ -50,7 +50,7 @@ CommPSQLSocket::CommPSQLSocket(boost::asio::io_context& io_context, DatabasePost
     assert(con != nullptr);
     
     if (PQsetnonblocking(con, 1) == -1) {
-        log(ERROR, "Unable to put database connection in non-blocking mode.");
+        spdlog::error("Unable to put database connection in non-blocking mode.");
     }
 
     //wrap the postgres socket in our tcp socket
@@ -73,10 +73,10 @@ void CommPSQLSocket::tryReConnect()
     m_reconnectTimer.async_wait([this](boost::system::error_code ec) {
         if (!ec) {
             if (m_db.initConnection() == 0) {
-                log(NOTICE, "Database connection re-established");
+                spdlog::debug("Database connection re-established");
                 PGconn * con = m_db.getConnection();
                 if (PQsetnonblocking(con, 1) == -1) {
-                    log(ERROR, "Unable to put database connection in non-blocking mode.");
+                    spdlog::error("Unable to put database connection in non-blocking mode.");
                 }
                 int fd = PQsocket(con);
                 if (fd >= 0) {
@@ -123,20 +123,20 @@ void CommPSQLSocket::do_read()
 
 int CommPSQLSocket::read()
 {
-    debug_print("CommPSQLSocket::read()")
+    cy_debug_print("CommPSQLSocket::read()")
     PGconn * con = m_db.getConnection();
     assert(con != 0);
 
     if (PQstatus(con) != CONNECTION_OK) {
-        log(ERROR, "Database connection closed.");
+        spdlog::error("Database connection closed.");
         return -1;
     }
 
     if (PQconsumeInput(con) == 0) {
-        log(ERROR, "Error reading from database connection.");
+        spdlog::error("Error reading from database connection.");
         m_db.reportError();
         
-        log(ERROR, "Connection to RDBMS lost.");
+        spdlog::error("Connection to RDBMS lost.");
         return 1;
     }
 
@@ -156,7 +156,7 @@ int CommPSQLSocket::read()
 
 void CommPSQLSocket::dispatch()
 {
-    debug_print("CommPSQLSocket::dispatch()"
+    cy_debug_print("CommPSQLSocket::dispatch()"
                    )
 
     if (m_db.queryInProgress()) {

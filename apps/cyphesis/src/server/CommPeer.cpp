@@ -95,22 +95,21 @@ void CommPeer::checkAuth()
     // Wait for the negotiation to finish with the peer
     if (m_negotiate != nullptr) {
         if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - m_start_auth).count() > 10) {
-            log(NOTICE, "Client disconnected because of negotiation timeout.");
+            spdlog::debug("Client disconnected because of negotiation timeout.");
             mSocket.cancel();
             return;
         }
     } else {
         Peer* peer = dynamic_cast<Peer*>(m_link.get());
         if (peer == nullptr) {
-            log(WARNING, "Casting CommPeer connection to Peer failed");
+            spdlog::warn("Casting CommPeer connection to Peer failed");
             return;
         }
         // Check if we have been stuck in a state of authentication in-progress
         // for over 20 seconds. If so, disconnect from and remove peer.
         if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - m_start_auth).count() > 20) {
             if (peer->getAuthState() == PEER_AUTHENTICATING) {
-                log(NOTICE,
-                    "Peer disconnected because authentication timed out.");
+                spdlog::debug("Peer disconnected because authentication timed out.");
                 mSocket.cancel();
                 return;
             }

@@ -26,13 +26,13 @@
 #define DEBUG
 #endif
 
-#include "common/compose.hpp"
 #include "AssertBase.h"
 #include "StreamOperators.h"
 
 #include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
-
+#include <spdlog/spdlog.h>
+#include <list>
 
 namespace Cyphesis {
 
@@ -56,19 +56,16 @@ class TestBase : public AssertBase
     virtual void setup() = 0;
     virtual void teardown() = 0;
 
-    void addTest(Test t);
+    void addTest(const Test& t);
 
     int run();
 
 
 };
 
-inline
-TestBase::~TestBase()
-{
-}
+inline TestBase::~TestBase()= default;
 
-void TestBase::addTest(Test t)
+void TestBase::addTest(const Test& t)
 {
     m_tests.push_back(t);
 }
@@ -77,23 +74,23 @@ int TestBase::run()
 {
     int error_count = 0;
 
-    std::list<Test>::const_iterator Iend = m_tests.end();
-    std::list<Test>::const_iterator I = m_tests.begin();
+    auto Iend = m_tests.end();
+    auto I = m_tests.begin();
     for (; I != Iend; ++I) {
         setup();
-        std::cerr << "Starting test " << I->name << std::endl << std::flush;
+		spdlog::info("Starting test {}", I->name);
         (*I).method();
         teardown();
-        std::cerr << "Completed test " << I->name << std::endl << std::flush;
+		spdlog::info("Completed test {}", I->name);
 
         if (!m_errorReports.empty()) {
             ++error_count;
 
-            std::cerr << "Test \"" << (*I).name << "\" failed:" << std::endl;
+			spdlog::error("Test \"{}\" failed:", I->name);
 
 
             for (const auto& report : m_errorReports) {
-                std::cerr << report << std::endl;
+				spdlog::error(report);
             }
 
             m_errorReports.clear();

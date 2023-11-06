@@ -106,7 +106,7 @@ int TasksProperty::get(Atlas::Message::Element& val) const
 
 void TasksProperty::set(const Atlas::Message::Element& val)
 {
-    log(ERROR, "Cannot set 'tasks' property.");
+    spdlog::error("Cannot set 'tasks' property.");
 }
 
 TasksProperty* TasksProperty::copy() const
@@ -172,7 +172,7 @@ void TasksProperty::stopTask(const std::string& id, LocatedEntity& owner, OpVect
 {
     // This is just clearTask without an assert
     if (m_tasks.find(id) == m_tasks.end()) {
-        log(ERROR, "Tasks property stop when no task");
+        spdlog::error("Tasks property stop when no task");
         return;
     }
 
@@ -209,11 +209,11 @@ HandlerResult TasksProperty::TickOperation(LocatedEntity& owner,
     Element serialno;
     if (arg->copyAttr(SERIALNO, serialno) == 0 && (serialno.isInt())) {
         if (serialno.asInt() != task->serialno()) {
-            debug_print("Old tick")
+            cy_debug_print("Old tick")
             return OPERATION_BLOCKED;
         }
     } else {
-        log(ERROR, "Character::TickOperation: No serialno in tick arg");
+        spdlog::error("Character::TickOperation: No serialno in tick arg");
         return OPERATION_BLOCKED;
     }
     bool hadChange = task->tick(id, op, res);
@@ -226,8 +226,7 @@ HandlerResult TasksProperty::TickOperation(LocatedEntity& owner,
     }
 
     if (task != nullptr && res.empty()) {
-        log(WARNING,
-            String::compose("Character::%1: Task %2 on entity %3 has stalled, i.e. it's still active but didn't return anything from latest Tick op.", __func__, task->name(), owner.describeEntity()));
+        spdlog::warn("Character::{}: Task {} on entity {} has stalled, i.e. it's still active but didn't return anything from latest Tick op.", __func__, task->name(), owner.describeEntity());
     }
     return OPERATION_BLOCKED;
 }
@@ -241,7 +240,7 @@ namespace {
         for (auto& param : params) {
             auto I = args.find(param.first);
             if (I == args.end()) {
-                return {false, String::compose("Could not find required '%1' argument.", param.first)};
+                return {false, fmt::format("Could not find required '{}' argument.", param.first)};
             }
 
             std::vector<std::string> errorMessages;
@@ -251,11 +250,11 @@ namespace {
                 if (!errorMessages.empty()) {
                     return {false, *errorMessages.begin()};
                 } else {
-                    return {false, String::compose("Too few '%1' arguments. Should be minimum %2, got %3.", param.first, param.second.min, count)};
+                    return {false, fmt::format("Too few '{}' arguments. Should be minimum {}, got {}.", param.first, param.second.min, count)};
                 }
             }
             if (count > param.second.max) {
-                return {false, String::compose("Too many '%1' arguments. Should be maximum %2, got %3.", param.first, param.second.max, count)};
+                return {false, fmt::format("Too many '{}' arguments. Should be maximum {}, got {}.", param.first, param.second.max, count)};
             }
 
         }
@@ -331,7 +330,7 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
 
         auto usageI = std::find_if(task->usages().begin(), task->usages().end(), [&](const TaskUsage& it) -> bool { return it.name == usageId; });
         if (usageI == task->usages().end()) {
-            actor->error(op, String::compose("Usage does %1 not exist in task %2.", usageId, taskId), res, actor->getId());
+            actor->error(op, fmt::format("Usage does {} not exist in task {}.", usageId, taskId), res, actor->getId());
             return OPERATION_BLOCKED;
         }
 
@@ -344,7 +343,7 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
             auto result = innerArg->copyAttr(param.first, argumentElement);
 
             if (result != 0 || !argumentElement.isList()) {
-                actor->clientError(op, String::compose("Could not find required list argument '%1'.", param.first), res, actor->getId());
+                actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
                 return OPERATION_IGNORED;
             }
 
@@ -355,13 +354,13 @@ HandlerResult TasksProperty::UseOperation(LocatedEntity& e,
                     case UsageParameter::Type::ENTITY:
                     case UsageParameter::Type::ENTITYLOCATION: {
                         if (!argElement.isMap()) {
-                            actor->clientError(op, String::compose("Inner argument in list of arguments for '%1' was not a map.", param.first), res, actor->getId());
+                            actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
                             return OPERATION_IGNORED;
                         }
                         //The arg is for an RootEntity, expressed as a message. Extract id and pos.
                         auto idI = argElement.Map().find("id");
                         if (idI == argElement.Map().end() || !idI->second.isString()) {
-                            actor->clientError(op, String::compose("Inner argument in list of arguments for '%1' had no id string.", param.first), res, actor->getId());
+                            actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
                             return OPERATION_IGNORED;
                         }
 

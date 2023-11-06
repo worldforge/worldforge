@@ -46,12 +46,13 @@ struct PythonLogGuard
 
     explicit PythonLogGuard(const std::function<std::string()>& logFn)
     {
-        s_logPrefixFn = logFn;
+		//TODO: how to make this work with spdlog? Needs to also work with multithreading somehow.
+//        s_logPrefixFn = logFn;
     }
 
     ~PythonLogGuard()
     {
-        s_logPrefixFn = nullptr;
+//        s_logPrefixFn = nullptr;
     }
 };
 

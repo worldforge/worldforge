@@ -33,7 +33,6 @@
 
 #include "rules/simulation/Entity.h"
 
-#include "common/compose.hpp"
 #include "../DatabaseNull.h"
 
 #include <Atlas/Objects/Anonymous.h>
@@ -48,7 +47,6 @@ using Atlas::Objects::Operation::Imaginary;
 using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Operation::Talk;
 
-using String::compose;
 
 static int test_send_count;
 

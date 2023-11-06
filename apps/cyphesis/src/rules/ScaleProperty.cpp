@@ -68,7 +68,7 @@ void ScaleProperty::set(const Atlas::Message::Element& val)
     } else if (val.isNum()) {
         //Warn here. We don't accept single numbers. We could, but it would be confusing since the 'get' method always returns a list.
         //So we instead want to keep the API less confusing and forcing rule writers to supply lists.
-        log(WARNING, "Trying to set a 'scale' property to a number. It only accepts list of numbers (even if it only contains one entry).");
+        spdlog::warn("Trying to set a 'scale' property to a number. It only accepts list of numbers (even if it only contains one entry).");
     }
 }
 

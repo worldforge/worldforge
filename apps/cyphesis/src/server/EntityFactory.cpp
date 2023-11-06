@@ -31,7 +31,6 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
-using String::compose;
 
 static const bool debug_flag = false;
 

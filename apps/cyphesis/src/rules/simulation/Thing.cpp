@@ -64,8 +64,8 @@ void Thing::DeleteOperation(const Operation& op, OpVector& res)
 {
     if (m_parent == nullptr) {
         //TODO: is this really incorrect? Why shouldn't we be allowed to delete entities that have no parent?
-        log(ERROR, String::compose("Deleting %1(%2) when it is not "
-                                   "in the world.", getType(), getId()));
+        spdlog::error("Deleting {} when it is not "
+                                   "in the world.", describeEntity());
         assert(m_parent != nullptr);
         return;
     }
@@ -114,11 +114,11 @@ void Thing::DeleteOperation(const Operation& op, OpVector& res)
 
 void Thing::MoveOperation(const Operation& op, OpVector& res)
 {
-    debug_print("Thing::move_operation")
+    cy_debug_print("Thing::move_operation")
 
 //    if (m_parent == nullptr) {
-//        log(ERROR, String::compose("Moving %1(%2) when it is not in the world.",
-//                                   getType(), getId()));
+//        spdlog::error("Moving {}({}) when it is not in the world.",
+//                                   getType(), getId());
 //        assert(m_parent != nullptr);
 //        return;
 //    }
@@ -310,7 +310,7 @@ void Thing::SetOperation(const Operation& op, OpVector& res)
 /// @param res The result of the operation is returned here.
 void Thing::updateProperties(const Operation& op, OpVector& res)
 {
-    debug_print("Generating property update")
+    cy_debug_print("Generating property update")
 
     Anonymous set_arg;
     Anonymous set_arg_protected;
@@ -324,7 +324,7 @@ void Thing::updateProperties(const Operation& op, OpVector& res)
     for (const auto& entry : m_properties) {
         auto& prop = entry.second.property;
         if (prop && prop->hasFlags(prop_flag_unsent)) {
-            debug_print("UPDATE:  " << prop_flag_unsent << " " << entry.first)
+            cy_debug_print("UPDATE:  " << prop_flag_unsent << " " << entry.first)
             if (prop->hasFlags(prop_flag_visibility_private)) {
                 prop->add(entry.first, set_arg_private);
                 hadPrivateChanges = true;
@@ -431,7 +431,7 @@ bool Thing::lookAtEntity(const Operation& op, OpVector& res, const LocatedEntity
 
 void Thing::generateSightOp(const LocatedEntity& observingEntity, const Operation& originalLookOp, OpVector& res) const
 {
-    debug_print("Thing::generateSightOp() observer " << observingEntity.describeEntity() << " observed " << this->describeEntity())
+    cy_debug_print("Thing::generateSightOp() observer " << observingEntity.describeEntity() << " observed " << this->describeEntity())
 
     Sight s;
 
@@ -572,7 +572,7 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
                 error(op, "Move op loc does not exist", res, getId());
                 return;
             }
-            debug_print("LOC: " << new_loc_id)
+            cy_debug_print("LOC: " << new_loc_id)
             auto test_loc = new_loc;
             for (; test_loc != nullptr; test_loc = test_loc->m_parent) {
                 if (test_loc == this) {
@@ -596,7 +596,7 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
     Element attr_mode;
     if (ent->copyAttr("mode", attr_mode) == 0) {
         if (!attr_mode.isString()) {
-            log(ERROR, "Non string 'mode' set in Thing::MoveOperation");
+            spdlog::error("Non string 'mode' set in Thing::MoveOperation");
         } else {
             // Update the mode
             setAttrValue("mode", attr_mode);
@@ -772,7 +772,7 @@ void Thing::moveOtherEntity(const Operation& op, const RootEntity& ent, OpVector
             if (isChildOfUs) {
                 otherEntity->operation(op, res);
             } else {
-                log(WARNING, String::compose("Entity %1 being asked to move entity %2 which is not contained by the first.", describeEntity(), otherEntity->describeEntity()));
+                spdlog::warn("Entity {} being asked to move entity {} which is not contained by the first.", describeEntity(), otherEntity->describeEntity());
             }
         } else {
             //Entity is either being moved into or out of us (or within us, with "loc" being set even though it's already a child).
@@ -793,8 +793,7 @@ void Thing::moveOtherEntity(const Operation& op, const RootEntity& ent, OpVector
                     //TODO: perform checks if moving out of us is allowed
                     auto destinationEntity = BaseWorld::instance().getEntity(ent->getLoc());
                     if (!destinationEntity) {
-                        log(WARNING,
-                            String::compose("Entity %1 being asked to move entity %2 to new parent with id %3, which does not exist.", describeEntity(), otherEntity->describeEntity(), ent->getLoc()));
+                        spdlog::warn("Entity {} being asked to move entity {} to new parent with id {}, which does not exist.", describeEntity(), otherEntity->describeEntity(), ent->getLoc());
                     } else {
                         //Send move op on to the new destination entity.
                         destinationEntity->operation(op, res);

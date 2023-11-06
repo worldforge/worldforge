@@ -29,12 +29,13 @@
 
 #include <Atlas/Objects/RootOperation.h>
 
+#include <utility>
+
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
-using String::compose;
 
 static const bool debug_flag = false;
 
@@ -61,8 +62,8 @@ Ref<Entity> EntityBuilder::newEntity(RouterId id, const std::string& type, const
     try {
         return newChildEntity(id, type, attributes);
     } catch (const std::exception& ex) {
-        log(ERROR, String::compose("Error when creating entity of type %1."
-                                   " Message: %2", type, ex.what()));
+        spdlog::error("Error when creating entity of type {}."
+                                   " Message: {}", type, ex.what());
         return nullptr;
     }
 }
@@ -71,18 +72,18 @@ Ref<Entity> EntityBuilder::newChildEntity(RouterId id,
                                                  const std::string& type,
                                                  const Atlas::Objects::Entity::RootEntity& attributes) const
 {
-    debug_print("EntityFactor::newEntity()")
+    cy_debug_print("EntityFactor::newEntity()")
     auto I = m_entityFactories.find(type);
     if (I == m_entityFactories.end()) {
         return nullptr;
     }
 
     auto& factory = I->second;
-    debug_print("[" << type << "]")
+    cy_debug_print("[" << type << "]")
     if (attributes) {
         attributes->removeAttr("parent");
     }
-    return factory->newEntity(id, attributes);
+    return factory->newEntity(std::move(id), attributes);
 
 }
 
@@ -106,7 +107,7 @@ int EntityBuilder::installFactory(const std::string& class_name, const Root& cla
         return -1;
     }
 
-    Monitors::instance().watch(compose("created_count{type=\"%1\"}", class_name), std::make_unique<Variable<int>>(factory->m_createdCount));
+    Monitors::instance().watch(fmt::format(R"(created_count{{type="{}"}})", class_name), std::make_unique<Variable<int>>(factory->m_createdCount));
 
     m_entityFactories.emplace(class_name, std::move(factory));
 

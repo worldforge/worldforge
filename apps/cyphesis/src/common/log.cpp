@@ -24,20 +24,12 @@
 
 #include "log.h"
 #include "globals.h"
-#include "compose.hpp"
 
 #include <iostream>
 #include <fstream>
 
-#include <cstring>
 #include <ctime>
-#include <functional>
 
-extern "C" {
-#ifdef HAVE_SYSLOG_H
-#include <syslog.h>
-#endif // HAVE_SYSLOG_H
-}
 
 static void logDate(std::ostream& log_stream)
 {
@@ -51,159 +43,6 @@ static void logDate(std::ostream& log_stream)
 }
 
 static std::ofstream event_log;
-
-static void open_event_log()
-{
-    std::string event_log_file = var_directory + "/tmp/cyphesis_event.log";
-
-    event_log.open(event_log_file.c_str(), std::ios::out | std::ios::app);
-
-    if (!event_log.is_open()) {
-        log(ERROR, String::compose("Unable to open event log file \"%1\"",
-                                   event_log_file));
-        logSysError(ERROR);
-    }
-}
-
-bool testEventLog(const char* path)
-{
-    event_log.open(path, std::ios::out);
-    return event_log.is_open();
-}
-
-namespace {
-    std::string logging_prefix;
-}
-
-void setLoggingPrefix(std::string prefix)
-{
-    logging_prefix = std::move(prefix);
-}
-
-
-void initLogger()
-{
-#ifdef HAVE_SYSLOG
-    std::string ident = String::compose("Cyphesis{%1}", instance);
-    if (daemon_flag) {
-        openlog(strdup(ident.c_str()), LOG_PID, LOG_DAEMON);
-    }
-#endif // HAVE_SYSLOG
-
-    open_event_log();
-}
-
-void rotateLogger()
-{
-    if (event_log.is_open()) {
-        event_log.close();
-    }
-
-    open_event_log();
-}
-
-std::function<std::string()> s_logPrefixFn;
-
-std::ostream& operator<<(std::ostream& s, LogLevel lvl);
-
-std::ostream& operator<<(std::ostream& s, LogLevel lvl)
-{
-    switch (lvl) {
-        case INFO:
-            s << "INFO";
-            break;
-        case SCRIPT:
-            s << "SCRIPT";
-            break;
-        case NOTICE:
-            s << "NOTICE";
-            break;
-        case WARNING:
-            s << "WARNING";
-            break;
-        case ERROR:
-            s << "ERROR";
-            break;
-        case SCRIPT_ERROR:
-            s << "SCRIPT_ERROR";
-            break;
-        case CRITICAL:
-            s << "CRITICAL";
-            break;
-        default:
-            s << "UNKNOWN";
-            break;
-    }
-    return s;
-}
-
-void log(LogLevel lvl, const std::string& msg)
-{
-#ifdef HAVE_SYSLOG
-    if (daemon_flag) {
-        int type;
-        switch (lvl) {
-            case SCRIPT:
-            case INFO:
-                type = LOG_INFO;
-                break;
-            case NOTICE:
-                type = LOG_NOTICE;
-                break;
-            case WARNING:
-                type = LOG_WARNING;
-                break;
-            case SCRIPT_ERROR:
-            case ERROR:
-                type = LOG_ERR;
-                break;
-            case CRITICAL:
-                type = LOG_CRIT;
-                break;
-            default:
-                type = LOG_CRIT;
-                break;
-        }
-        if (!logging_prefix.empty()) {
-            syslog(type, "%s %s", logging_prefix.c_str(), msg.c_str());
-        } else {
-            syslog(type, "%s", msg.c_str());
-        }
-
-    } else {
-#else // HAVE_SYSLOG
-        {
-#endif // HAVE_SYSLOG
-
-        logDate(std::cout);
-        if (!logging_prefix.empty()) {
-            std::cout << " " << logging_prefix;
-        }
-
-        if (s_logPrefixFn) {
-            std::cout << " " << lvl << " " << s_logPrefixFn() << msg << std::endl;
-        } else {
-            std::cout << " " << lvl << " " << msg << std::endl;
-        }
-
-    }
-}
-
-void log_formatted(LogLevel lvl, const std::string& msg)
-{
-    std::string::size_type s = 0;
-    std::string::size_type p = msg.find('\n');
-    do {
-        log(lvl, msg.substr(s, p - s));
-        s = p + 1;
-        p = msg.find('\n', s);
-    } while (p != std::string::npos);
-
-    // If the last line is not terminated with a newline, print it.
-    if (s < msg.size()) {
-        log(lvl, msg.substr(s));
-    }
-}
 
 void logEvent(LogEvent lev, const std::string& msg)
 {
@@ -254,14 +93,4 @@ void logEvent(LogEvent lev, const std::string& msg)
     logDate(event_log);
     event_log << " " << instance << " " << type << " " << msg
               << std::endl;
-}
-
-void logSysError(LogLevel lvl)
-{
-    char* err = strerror(errno);
-    if (err != nullptr) {
-        log(lvl, err);
-    } else {
-        log(ERROR, "Error getting error message from system.");
-    }
 }
