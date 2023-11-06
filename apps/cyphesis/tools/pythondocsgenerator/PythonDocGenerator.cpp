@@ -25,6 +25,7 @@
 #include "rules/python/CyPy_Atlas.h"
 #include "rules/python/CyPy_Common.h"
 #include "rules/simulation/python/CyPy_Server.h"
+#include <spdlog/sinks/stdout_sinks.h>
 
 /**
  * A simple tool that will load all of our bindings and then at request try to generate suitable stubs based on the meta data from the bindings.
@@ -40,6 +41,9 @@
  */
 int main(int argc, char** argv)
 {
+	//Ant log output goes to cerr, so as not to interfere with program output.
+	spdlog::default_logger()->sinks().clear();
+	spdlog::default_logger()->sinks().emplace_back(std::make_shared<spdlog::sinks::stderr_sink_mt>());
     init_python_api({&CyPy_Server::init, &CyPy_Ai::init, &CyPy_Rules::init, &CyPy_Physics::init, &CyPy_EntityFilter::init, &CyPy_Atlas::init, &CyPy_Common::init}, {}, false);
 
     if (argc > 1) {
