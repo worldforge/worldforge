@@ -13,22 +13,20 @@ used independently.
 
 ## Installation
 
-The simplest way to install all required dependencies is by using [Conan](https://www.conan.io).
+Squall is build along with the main Worldforge system. There are instructions to be found [here](../../README.md).
+
+However, you might not want to build all of Worldforge just to build Squall. You still need to invoke Conan at the top
+level, but there are some flags which can be used to limit the amount of unnecessary build. From the root
+directory ("../..") use these commands:
 
 ```bash
-mkdir build && cd build
-conan install ../tools/conan --build missing
-cmake ..
-make -j all install
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+conan install . --build missing -o Worldforge/*:with_client=False -o Worldforge/*:with_server=False
+cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release -DNO_LIBS_INSTALL=FALSE
 ```
 
-### Tests
-
-The test suite can be built and run using the ```check``` target. For example:
-
-```bash
-make check
-```
+You can then build and install. This will also enable "library installation" where libsquall.a|so|dll will be
+installed (which it won't be if built from the root).
 
 ## Description
 
@@ -62,7 +60,39 @@ If a file name ends with "/" it denotes a directory.
 
 ## License
 
-Squall is licensed under either the MIT License or the GPL v3+, at your choice.
+Squall is licensed under either the MIT License or the GPL v3+, at your choice. This makes this library stand apart from
+other Worldforge libraries. The intention is to allow for Squall to be used outside of Worldforge, since we think it's
+neat.
+
+## Design
+
+Since we had a couple of extra requirements we didn't want to just use basic file transfers for syncing media. The main
+requirements we had were:
+
+* Allow the client to connect to different servers, each with slightly different media. The idea here is that we provide
+  base media, and then will let servers extend this with their own media. Thus we envision that a lot of the media will
+  be similar. So for example, a client would connect to two different servers, which share 90% of common assets. These
+  common assets wouldn't need to be re-downloaded.
+* Have a built in mechanism for when assets are updated. This ties in to the vision we have about a development loop
+  where the world is created inside a running server, without the need to restart the server. To accomplish this we need
+  a good way to inform the client about changed assets. Whenever something changes the client should download the
+  changed asset only.
+* Use simple and tested existing file transfer mechanisms. Such as HTTP. We want to make it simple to expose assets
+  using a basic file server.
+
+### Implementation
+
+All of these requirements led to the design of Squall. It borrows ideas from both Git and BitTorrent, in the sense that
+all assets are represented by hashes of their content. This also goes for directories.
+
+An effect of this is that a client only needs to download any hashes that it's missing. Thus fulfilling requirement #1.
+
+Since directories also are computed using hashes of their content, any change to an assets will resonate to all its
+parent directories and in the end to the root directory. Thus every change will result in a new hash for the root, which
+can be commnuicated to the client. Thus fulfilling requirement #2.
+
+And since we only need to expose data attached to hashes it's easy to serve data using a standard file server. Thus
+fulfilling requirement #3.
 
 ## How to help
 
