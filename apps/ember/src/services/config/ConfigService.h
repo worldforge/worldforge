@@ -248,22 +248,10 @@ public:
 	boost::filesystem::path getEmberDataDirectory() const;
 
 	/**
-	 *    returns the path to the media directory specific to a user, but synced with the main server, which would normally be ~/.local/share/ember/ember-media
-	 * @return
-	 */
-	boost::filesystem::path getEmberMediaDirectory() const;
-
-	/**
 	 *    returns the path to the media directory specific to a user, containing media created by the user, which would normally be ~/.local/share/ember/user-media
 	 * @return
 	 */
 	boost::filesystem::path getUserMediaDirectory() const;
-
-	/**
-	 *    returns the path to the media directory shared between users, which would normally be $prefix/ember/media
-	 * @return
-	 */
-	boost::filesystem::path getSharedMediaDirectory() const;
 
 	/**
 	 *    returns the path to the shared config directory where all the original configuration files are stored

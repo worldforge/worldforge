@@ -189,8 +189,6 @@ Application::Application(Input& input,
 		S_LOG_INFO("Created empty user specific settings file at '" << userConfigFilePath.string() << "'.");
 	}
 
-	S_LOG_INFO("Using media from " << mConfigService.getEmberMediaDirectory().string());
-
 	initializeServices();
 
 	auto squallRepoPath = std::filesystem::path(mConfigService.getHomeDirectory(BaseDirType_DATA).string()) / "squall";

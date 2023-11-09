@@ -169,11 +169,8 @@ bool OgreResourceLoader::addSharedMedia(const std::string& path, const std::stri
 
 bool OgreResourceLoader::addUserMedia(const std::string& path, const std::string& type, const std::string& section) {
 	auto userMediaPath = ConfigService::getSingleton().getUserMediaDirectory();
-	auto emberMediaPath = ConfigService::getSingleton().getEmberMediaDirectory();
 
-	bool foundDir = addResourceDirectory(emberMediaPath / path, type, section, OnFailure::Ignore);
-
-	return addResourceDirectory(userMediaPath / path, type, section, OnFailure::Ignore) || foundDir;
+	return addResourceDirectory(userMediaPath / path, type, section, OnFailure::Ignore);
 }
 
 bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& path,

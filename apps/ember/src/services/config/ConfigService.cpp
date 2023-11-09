@@ -404,24 +404,9 @@ boost::filesystem::path ConfigService::getEmberDataDirectory() const {
 	return getHomeDirectory(BaseDirType_DATA);
 }
 
-boost::filesystem::path ConfigService::getEmberMediaDirectory() const {
-	boost::filesystem::path path;
-	//look for a media channel key in the config, and if found use that, else use the version of ember as a standard path
-	if (hasItem("wfut", "channel")) {
-		path = getEmberDataDirectory() / static_cast<std::string> ( getValue("wfut", "channel"));
-	} else {
-		path = getEmberDataDirectory() / ("ember-media-" EMBER_MEDIA_VERSION);
-	}
-	return path;
-}
-
 
 boost::filesystem::path ConfigService::getUserMediaDirectory() const {
 	return getHomeDirectory(BaseDirType_DATA) / "user-media";
-}
-
-boost::filesystem::path ConfigService::getSharedMediaDirectory() const {
-	return getSharedDataDirectory() / "media";
 }
 
 boost::filesystem::path ConfigService::getPluginDirectory() const {
