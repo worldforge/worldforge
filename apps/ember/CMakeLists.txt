@@ -265,7 +265,6 @@ configure_file(tools/ember.tmpl.conf ember.conf @ONLY)
 configure_file(tools/Ember.tmpl.nsi Ember.nsi @ONLY)
 configure_file(docs/Doxyfile.in Doxyfile @ONLY)
 configure_file(tools/support/refresh-amber-media-dev.sh.in scripts/refresh-amber-media-dev.sh @ONLY)
-configure_file(tools/support/make_dist_media.py.in scripts/make_dist_media.py @ONLY)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ember.conf DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/ember)
 install(FILES tools/org.worldforge.ember.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
@@ -287,9 +286,9 @@ find_program(RSYNC_CMD NAMES rsync)
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     #On systems with Snapcraft this command will build a snap, otherwise one has to do some extra copying of the "snap" folder.
-    add_custom_target(snap-build)
+    add_custom_target(snap-build-ember)
     add_custom_command(
-            TARGET snap-build
+            TARGET snap-build-ember
             COMMAND ${CMAKE_COMMAND} -E echo "I will now copy the snapfile to the installation directory and run 'snapcraft'."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/snap
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/snap/snapcraft.yaml ${CMAKE_INSTALL_PREFIX}/snap/snapcraft.yaml

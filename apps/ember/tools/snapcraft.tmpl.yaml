@@ -1,5 +1,5 @@
 name: ember
-base: core20
+base: core22
 version: '@VERSION@'
 title: Ember MMORPG client
 summary: 3d client for Worldforge MMORPGs
@@ -13,7 +13,7 @@ compression: lzo
 
 apps:
   ember:
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     environment:
       SDL_AUDIODRIVER: pulse
     command: bin/ember
@@ -28,5 +28,16 @@ parts:
   ember:
     stage-packages:
       - libgcc1
-    source: .
     plugin: dump
+    source: .
+    stage:
+      - bin/ember
+      - bin/squall
+      - etc/ember
+      - share/applications
+      - share/doc/ember
+      - share/icons
+      - share/ember
+      - share/metainfo
+      - share/man/man1/ember*
+

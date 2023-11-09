@@ -184,9 +184,24 @@ add_subdirectory(docs)
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 
 configure_file(docs/Doxyfile.in Doxyfile @ONLY)
+message(STATUS "Installing snapcraft.yaml file into build directory. Copy this one to the installation directory if you want to build snaps.")
+configure_file(tools/snapcraft.tmpl.yaml snap/snapcraft.yaml @ONLY)
 
 install(FILES README.md COPYING AUTHORS THANKS DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/cyphesis)
 install(DIRECTORY DESTINATION ${SOCKET_DIR})
+
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    #On systems with Snapcraft this command will build a snap, otherwise one has to do some extra copying of the "snap" folder.
+    add_custom_target(snap-build-cyphesis)
+    add_custom_command(
+            TARGET snap-build-cyphesis
+            COMMAND ${CMAKE_COMMAND} -E echo "I will now copy the snapfile to the installation directory and run 'snapcraft'."
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/snap
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/snap/snapcraft.yaml ${CMAKE_INSTALL_PREFIX}/snap/snapcraft.yaml
+            COMMAND snapcraft
+            WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
+    )
+endif ()
 
 ## Doxygen support, exports a "dox" target.
 

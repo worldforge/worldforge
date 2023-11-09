@@ -1,0 +1,69 @@
+name: cyphesis
+base: core22
+version: '@VERSION@'
+title: Cyphesis MMORPG server
+summary: Server for Worldforge MMORPGs
+description: |
+    A server for the Worldforge MMORPG system.
+    Run this to host your own online game. It includes a complete
+    physics based simulation with powerful online editing capabilities.
+grade: devel
+confinement: strict
+license: GPL-2.0
+
+apps:
+    cyphesis:
+        #daemon: simple
+        command: bin/cyphesis
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
+            WF_cyphesis_bindir: "$SNAP/bin"
+        #listen-stream: "[::]:6767"
+        plugs:
+            - network
+            - network-bind
+    cypasswd:
+        command: bin/cypasswd
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cycmd:
+        command: bin/cycmd
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cydb:
+        command: bin/cydb
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+    cyaiclient:
+        command: bin/cyaiclient
+        environment:
+            WF_cyphesis_confdir: "$SNAP/etc"
+            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+            WF_cyphesis_directory: "$SNAP/share"
+            WF_cyphesis_bindir: "$SNAP/bin"
+
+parts:
+    cyphesis:
+        stage-packages:
+            - libgcc1
+        plugin: dump
+        source: .
+        stage:
+            - bin/cy*
+            - bin/squall
+            - etc/cyphesis
+            - share/cyphesis
+            - share/doc/cyphesis
+            - share/man/man1/cy*
