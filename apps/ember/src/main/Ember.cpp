@@ -126,6 +126,12 @@ int main(int argc, char** argv) {
 
 #endif
 
+	//If there's a SNAP environment variable set it means we're running inside a Snap package and should adjust accordingly.
+	auto snapEnv = std::getenv("SNAP");
+	if (snapEnv) {
+		prefix = std::string(snapEnv);
+	}
+
 	//put the application object in its own scope so it gets destroyed before we signal all clear
 	{
 		if (prefix.empty()) {
