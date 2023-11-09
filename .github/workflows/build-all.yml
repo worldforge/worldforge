@@ -41,10 +41,17 @@ jobs:
                 with:
                     key: ${{ github.job }}-${{ matrix.os }}
 
+            -   name: "Install packages"
+                uses: awalsh128/cache-apt-pkgs-action@v1.3
+                with:
+                    #Needed for the assets processing step in Cyphesis
+                    packages: imagemagick file
+                    version: 1.0
+
             -   name: Setup environment
                 shell: bash
                 run: |
-                    if [[ "$ImageOS" == "ubuntu20" ]]; then
+                    if [[ "$ImageOS" == "ubuntu22" ]]; then
                       echo "BUILD_SNAP=true" >> $GITHUB_ENV
                     fi
                     if [[ "$ImageOS" == "ubuntu20" ]]; then
@@ -90,7 +97,8 @@ jobs:
 
             -   name: Configure CMake
                 shell: bash
-                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+                #The -DCMAKE_C_FLAGS="-s" will strip all executables, which we want because we want to provide a Snap package
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS="-s"
 
             -   name: Build
                 shell: bash
