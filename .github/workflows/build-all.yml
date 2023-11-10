@@ -42,7 +42,7 @@ jobs:
                     key: ${{ github.job }}-${{ matrix.os }}
 
             -   name: "Install packages"
-                uses: awalsh128/cache-apt-pkgs-action@v1.3
+                uses: awalsh128/cache-apt-pkgs-action@v1.3.1
                 with:
                     #Needed for the assets processing step in Cyphesis
                     packages: imagemagick file
