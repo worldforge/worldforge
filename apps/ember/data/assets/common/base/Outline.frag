@@ -16,6 +16,8 @@ void main()
     fragColour = colour;
     if (diffuseColour.w == 0) {
         fragColour.w = 0;
+    } else {
+        fragColour.w = alpha_value;
     }
 
 }
