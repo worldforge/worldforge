@@ -743,11 +743,9 @@ fragment_program Lighting/SimpleFp glsl
 		param_named_auto numberOfActiveLights light_count
 		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
-		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
 		param_named_auto fogColour fog_colour
 
-		param_named_auto shininess surface_shininess
 		param_named diffuseMap int 0
 	}
 }
@@ -762,9 +760,7 @@ fragment_program Lighting/ShadowFp glsl
 		param_named_auto numberOfActiveLights light_count
 		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
-		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
-		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
 		param_named diffuseMap int 0
 
@@ -848,13 +844,9 @@ fragment_program Lighting/OffsetMapping/SimpleFp glsl
 	default_params
 	{
 		param_named_auto numberOfActiveLights light_count
-		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
-		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
-		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
-		param_named scaleBias float2 0.0 0.0
 		param_named diffuseMap int 0
 		param_named normalHeightMap int 1
 	}
@@ -868,13 +860,9 @@ fragment_program Lighting/OffsetMappingFp glsl
 	default_params
 	{
 		param_named_auto numberOfActiveLights light_count
-		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
-		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
-		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
-		param_named scaleBias float2 0.0 0.0
 		param_named diffuseMap int 0
 		param_named normalHeightMap int 1
 	}
@@ -890,11 +878,8 @@ fragment_program Lighting/OffsetMapping/ShadowFp glsl
 		param_named_auto numberOfActiveLights light_count
 		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
-		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
-		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
-		param_named scaleBias float2 0.0 0.0
 		param_named diffuseMap int 0
 		param_named normalHeightMap int 1
 
@@ -924,13 +909,11 @@ fragment_program Lighting/OffsetMapping/SpecularFp glsl
 	default_params
 	{
 		param_named_auto numberOfActiveLights light_count
-		param_named_auto lightPosition light_position_array 3
 		param_named_auto lightDiffuse light_diffuse_colour_array 3
 		param_named_auto lightSpecular light_specular_colour_array 3
 		param_named_auto ambientColour ambient_light_colour
 		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
-		param_named scaleBias float2 0.0 0.0
 		param_named diffuseMap int 0
 		param_named specularMap int 1
 		param_named normalHeightMap int 2
@@ -951,7 +934,6 @@ fragment_program Lighting/OffsetMapping/Specular/ShadowFp glsl
 		param_named_auto ambientColour ambient_light_colour
 		param_named_auto shininess surface_shininess
 		param_named_auto fogColour fog_colour
-		param_named scaleBias float2 0.0 0.0
 		param_named diffuseMap int 0
 		param_named specularMap int 1
 		param_named normalHeightMap int 2

@@ -73,24 +73,19 @@ void Shader::buildPasses(bool normalMapped) {
 
 	int activeLayersCount = 0;
 	if (shaderPass) {
-		for (auto I = mTerrainPageSurfaces.begin(); I != mTerrainPageSurfaces.end(); ++I) {
-			const TerrainPageSurfaceLayer* surfaceLayer = I->second;
+		for (auto mTerrainPageSurface: mTerrainPageSurfaces) {
+			const TerrainPageSurfaceLayer* surfaceLayer = mTerrainPageSurface.second;
 
-			if (I == mTerrainPageSurfaces.begin()) {
-				shaderPass->setBaseLayer(surfaceLayer);
-				activeLayersCount++;
-			} else {
-				if (surfaceLayer->intersects(*mGeometry)) {
-					if (!shaderPass->hasRoomForLayer(surfaceLayer)) {
-						if (normalMapped) {
-							shaderPass = addPassNormalMapped();
-						} else {
-							shaderPass = addPass();
-						}
+			if (surfaceLayer->intersects(*mGeometry)) {
+				if (!shaderPass->hasRoomForLayer(surfaceLayer)) {
+					if (normalMapped) {
+						shaderPass = addPassNormalMapped();
+					} else {
+						shaderPass = addPass();
 					}
-					shaderPass->addLayer(*mGeometry, surfaceLayer);
-					activeLayersCount++;
 				}
+				shaderPass->addLayer(*mGeometry, surfaceLayer);
+				activeLayersCount++;
 			}
 		}
 	} else {
@@ -106,12 +101,6 @@ void Shader::buildPasses(bool normalMapped) {
 
 bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& managedTextures) const {
 	S_LOG_VERBOSE("Compiling terrain page material " << material->getName());
-
-	//The normal, shadowed, shaders have clones with the suffix "/NoShadows" which will skip the shadows.
-	std::string materialSuffix;
-	if (!mIncludeShadows) {
-		materialSuffix = "/NoShadows";
-	}
 
 	material->removeAllTechniques();
 	Ogre::Material::LodValueList lodList;
@@ -129,7 +118,7 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 
 		for (auto& shaderPass: mPassesNormalMapped) {
 			Ogre::Pass* pass = technique->createPass();
-			if (!shaderPass->finalize(*pass, managedTextures, mIncludeShadows, materialSuffix)) {
+			if (!shaderPass->finalize(*pass, managedTextures, mIncludeShadows, true)) {
 				return false;
 			}
 			//If we use multipasses we need to disable fog for all passes except the last one (else the fog will stack up).
@@ -139,22 +128,22 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 		}
 	}
 
-    {
-        // Create the default technique
-        auto technique = material->createTechnique();
-        technique->setLodIndex(currentLodIndex++);
-        technique->setShadowCasterMaterial(shadowCasterMaterial);
-        for (auto &shaderPass: mPasses) {
-            Ogre::Pass *pass = technique->createPass();
-            if (!shaderPass->finalize(*pass, managedTextures, mIncludeShadows, materialSuffix)) {
-                return false;
-            }
-            //If we use multipasses we need to disable fog for all passes except the last one (else the fog will stack up).
-            if (shaderPass != mPasses.back()) {
-                pass->getFragmentProgramParameters()->setNamedConstant("disableFogColour", 1);
-            }
-        }
-    }
+	{
+		// Create the default technique
+		auto technique = material->createTechnique();
+		technique->setLodIndex(currentLodIndex++);
+		technique->setShadowCasterMaterial(shadowCasterMaterial);
+		for (auto& shaderPass: mPasses) {
+			Ogre::Pass* pass = technique->createPass();
+			if (!shaderPass->finalize(*pass, managedTextures, mIncludeShadows, true)) {
+				return false;
+			}
+			//If we use multipasses we need to disable fog for all passes except the last one (else the fog will stack up).
+			if (shaderPass != mPasses.back()) {
+				pass->getFragmentProgramParameters()->setNamedConstant("disableFogColour", 1);
+			}
+		}
+	}
 
 	if (mUseCompositeMap) {
 		// Create a technique which renders using the pre-rendered composite map
@@ -173,7 +162,14 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 			cmVertexProgramName += "SimpleVp";
 		}
 		pass->setVertexProgram(cmVertexProgramName);
-		pass->setFragmentProgram("SplattingFp/1" + materialSuffix);
+		auto fragProgram = ShaderPass::fetchOrCreateSplattingFragmentProgram(ShaderPass::SplattingFragmentConfig{
+				.lightning = true,
+				.shadows = true,
+				.offsetMapping= false,
+				.fog = true,
+				.layers = 1, //Only one layer, which is the composite diffuse texture
+		});
+		pass->setGpuProgram(Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM, fragProgram);
 
 		Ogre::TextureUnitState* normalMapTextureUnitState = pass->createTextureUnitState();
 
@@ -190,6 +186,13 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 				shadowMapTus->setTextureBorderColour(Ogre::ColourValue(1.0, 1.0, 1.0, 1.0));
 			}
 		}
+
+		//Since we reuse the same fragment shader as the up close terrain we need a texture for the blending, even if we only use one layer.
+		//Use the "onepixel" one, as it's full white.
+		auto* blendMapTUS = pass->createTextureUnitState();
+		blendMapTUS->setTextureScale(1, 1);
+		blendMapTUS->setTextureName("dynamic/onepixel");
+		blendMapTUS->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
 
 		Ogre::TextureUnitState* compositeMapTus = pass->createTextureUnitState();
 		compositeMapTus->setName(COMPOSITE_MAP_ALIAS);
@@ -215,19 +218,19 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 		}
 	}
 
-    {
-        //Now also add a "Low" technique, for use in the compass etc.
-        auto technique = material->createTechnique();
-        technique->setLodIndex(currentLodIndex);
-        technique->setSchemeName("Low");
+	{
+		//Now also add a "Low" technique, for use in the compass etc.
+		auto technique = material->createTechnique();
+		technique->setLodIndex(currentLodIndex);
+		technique->setSchemeName("Low");
 
-        for (auto &shaderPass: mPasses) {
-            Ogre::Pass *pass = technique->createPass();
-            if (!shaderPass->finalize(*pass, managedTextures, false, "/Simple")) {
-                return false;
-            }
-        }
-    }
+		for (auto& shaderPass: mPasses) {
+			Ogre::Pass* pass = technique->createPass();
+			if (!shaderPass->finalize(*pass, managedTextures, false, false)) {
+				return false;
+			}
+		}
+	}
 
 	// Apply the LOD levels
 	material->setLodLevels(lodList);
@@ -251,10 +254,9 @@ bool Shader::compileCompositeMapMaterial(Ogre::MaterialPtr material, std::set<st
 
 		Ogre::Technique* technique = material->createTechnique();
 
-		std::string materialSuffix = "/NoLighting";
 		for (auto& shaderPass: mPasses) {
 			Ogre::Pass* pass = technique->createPass();
-			if (!shaderPass->finalize(*pass, managedTextures, false, materialSuffix)) {
+			if (!shaderPass->finalize(*pass, managedTextures, false, false)) {
 				return false;
 			}
 		}

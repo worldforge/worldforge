@@ -12,8 +12,6 @@ fragment_program Caelum/BaseFP glsl
 	source CaelumBase.frag
     default_params
     {
-        param_named_auto emissiveColour surface_emissive_colour
-
         param_named diffuseMap int 0
     }
 }

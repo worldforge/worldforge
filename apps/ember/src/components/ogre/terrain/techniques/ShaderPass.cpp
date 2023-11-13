@@ -29,8 +29,119 @@
 #include <utility>
 #include <boost/algorithm/string/predicate.hpp>
 
-
 namespace Ember::OgreView::Terrain::Techniques {
+
+
+Ogre::GpuProgramPtr ShaderPass::fetchOrCreateSplattingFragmentProgram(SplattingFragmentConfig config) {
+	auto& mgr = Ogre::GpuProgramManager::getSingleton();
+	//If there are no valid layers we'll just use a simple white colour. This should normally not happen.
+	if (config.layers == 0) {
+		mgr.getByName("SimpleWhiteFp", Ogre::RGN_DEFAULT);
+	}
+
+	std::stringstream ss;
+
+	ss << "SplatFp/";
+	if (config.offsetMapping) {
+		ss << "OffsetMapping/";
+	}
+	ss << config.layers;
+	if (!config.fog) {
+		ss << "/NoFog";
+	}
+	if (!config.lightning) {
+		ss << "/NoLighting";
+	} else if (!config.shadows) {
+		ss << "/NoShadows";
+	}
+
+	auto programName = ss.str();
+
+	auto prog = mgr.getByName(programName, Ogre::RGN_DEFAULT);
+	if (prog) {
+		return prog;
+	} else {
+		prog = mgr.createProgram(programName, Ogre::RGN_DEFAULT, "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
+		prog->setSourceFile("common/base/Splat.frag");
+		std::stringstream definesSS;
+		definesSS << "BASE_LAYER=0";
+		if (config.lightning) {
+			definesSS << ",NUM_LIGHTS=3";
+		} else {
+			definesSS << ",NUM_LIGHTS=0";
+		}
+		if (config.offsetMapping) {
+			definesSS << ",OFFSET_MAPPING=1";
+		} else {
+			definesSS << ",OFFSET_MAPPING=0";
+		}
+		if (config.shadows) {
+			definesSS << ",SHADOW=1";
+		} else {
+			definesSS << ",SHADOW=0";
+		}
+		if (config.fog) {
+			definesSS << ",FOG=1";
+		} else {
+			definesSS << ",FOG=0";
+		}
+		definesSS << ",NUM_LAYERS=" << std::to_string(config.layers);
+		prog->setParameter("preprocessor_defines", definesSS.str());
+
+		auto params = prog->getDefaultParameters();
+
+		int samplerIndex = 0;
+
+		params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
+		params->setNamedAutoConstant("ambientColour", Ogre::GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR);
+		if (config.lightning) {
+			params->setNamedAutoConstant("numberOfActiveLights", Ogre::GpuProgramParameters::ACT_LIGHT_COUNT);
+			params->setNamedAutoConstant("lightPosition", Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY, 3);
+			params->setNamedAutoConstant("lightDiffuse", Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR_ARRAY, 3);
+
+			params->setNamedConstant("normalTexture", samplerIndex++);
+		}
+
+		if (config.shadows) {
+			params->setNamedAutoConstant("inverseShadowMapSize0", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+			params->setNamedConstant("shadowMap0", samplerIndex++);
+			params->setNamedAutoConstant("inverseShadowMapSize1", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+			params->setNamedConstant("shadowMap1", samplerIndex++);
+			params->setNamedAutoConstant("inverseShadowMapSize2", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+			params->setNamedConstant("shadowMap2", samplerIndex++);
+			params->setNamedAutoConstant("inverseShadowMapSize3", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+			params->setNamedConstant("shadowMap3", samplerIndex++);
+			params->setNamedAutoConstant("inverseShadowMapSize4", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+			params->setNamedConstant("shadowMap4", samplerIndex++);
+
+			params->setNamedConstant("fixedDepthBias", -0.0001f);
+			params->setNamedConstant("gradientClamp", 0.0098f);
+			params->setNamedConstant("gradientScaleBias", 0.01f);
+		}
+
+		if (config.fog) {
+			params->setNamedAutoConstant("fogColour", Ogre::GpuProgramParameters::ACT_FOG_COLOUR);
+			params->setNamedConstant("disableFogColour", -0.0001f);
+		}
+
+		if (config.offsetMapping) {
+			params->setNamedAutoConstant("cameraPositionObjSpace", Ogre::GpuProgramParameters::ACT_CAMERA_POSITION_OBJECT_SPACE);
+			params->setNamedConstant("scaleBias", Ogre::Vector2(0.01f, -0.00f));
+		}
+
+		for (int layer = 0; layer < config.layers; ++layer) {
+			if (layer % 4 == 0) {
+				int blendLevel = (layer / 4);
+				params->setNamedConstant("blendMap" + std::to_string(blendLevel), samplerIndex++);
+			}
+			params->setNamedConstant("diffuseTexture" + std::to_string(layer), samplerIndex++);
+			if (config.offsetMapping) {
+				params->setNamedConstant("normalHeightTexture" + std::to_string(layer), samplerIndex++);
+			}
+		}
+		return prog;
+	}
+}
 
 Ogre::TexturePtr ShaderPass::getCombinedBlendMapTexture(size_t passIndex, size_t batchIndex, std::set<std::string>& managedTextures) const {
 	// we need an unique name for our alpha texture
@@ -40,9 +151,9 @@ Ogre::TexturePtr ShaderPass::getCombinedBlendMapTexture(size_t passIndex, size_t
 	const Ogre::String combinedBlendMapName(combinedBlendMapTextureNameSS.str());
 	Ogre::TexturePtr combinedBlendMapTexture;
 	Ogre::TextureManager* textureMgr = Ogre::Root::getSingletonPtr()->getTextureManager();
-	if (textureMgr->resourceExists(combinedBlendMapName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)) {
+	if (textureMgr->resourceExists(combinedBlendMapName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME)) {
 		S_LOG_VERBOSE("Using already created blendMap texture " << combinedBlendMapName);
-		combinedBlendMapTexture = static_cast<Ogre::TexturePtr>(textureMgr->getByName(combinedBlendMapName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
+		combinedBlendMapTexture = static_cast<Ogre::TexturePtr>(textureMgr->getByName(combinedBlendMapName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME));
 		if (!combinedBlendMapTexture->isLoaded()) {
 			combinedBlendMapTexture->createInternalResources();
 		}
@@ -55,7 +166,12 @@ Ogre::TexturePtr ShaderPass::getCombinedBlendMapTexture(size_t passIndex, size_t
 #ifndef _WIN32
 	flags |= Ogre::TU_AUTOMIPMAP;
 #endif // ifndef _WIN32
-	combinedBlendMapTexture = textureMgr->createManual(combinedBlendMapName, "General", Ogre::TEX_TYPE_2D, mBlendMapPixelWidth, mBlendMapPixelWidth, (int) textureMgr->getDefaultNumMipmaps(),
+	combinedBlendMapTexture = textureMgr->createManual(combinedBlendMapName,
+													   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+													   Ogre::TEX_TYPE_2D,
+													   mBlendMapPixelWidth,
+													   mBlendMapPixelWidth,
+													   (int) textureMgr->getDefaultNumMipmaps(),
 													   Ogre::PF_B8G8R8A8, flags);
 	managedTextures.insert(combinedBlendMapName);
 	combinedBlendMapTexture->createInternalResources();
@@ -64,7 +180,6 @@ Ogre::TexturePtr ShaderPass::getCombinedBlendMapTexture(size_t passIndex, size_t
 
 ShaderPass::ShaderPass(Ogre::SceneManager& sceneManager, int blendMapPixelWidth, TerrainIndex position, bool useNormalMapping) :
 		mScales{},
-		mBaseLayer(nullptr),
 		mSceneManager(sceneManager),
 		mBlendMapPixelWidth(blendMapPixelWidth),
 		mPosition(std::move(position)),
@@ -77,11 +192,6 @@ ShaderPass::ShaderPass(Ogre::SceneManager& sceneManager, int blendMapPixelWidth,
 
 ShaderPass::~ShaderPass() = default;
 
-void ShaderPass::setBaseLayer(const TerrainPageSurfaceLayer* layer) {
-	mLayers.push_back(layer);
-	mBaseLayer = layer;
-	mScales[0] = layer->getScale();
-}
 
 ShaderPassBlendMapBatch* ShaderPass::getCurrentBatch() {
 	auto I = mBlendMapBatches.rbegin();
@@ -104,9 +214,17 @@ void ShaderPass::addLayer(const TerrainPageGeometry& geometry, const TerrainPage
 	mLayers.push_back(layer);
 }
 
-bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextures, bool useShadows, const std::string& shaderSuffix) const {
-	S_LOG_VERBOSE("Creating terrain material pass with: NormalMapping=" << mUseNormalMapping << " Shadows=" << useShadows << " Suffix=" << shaderSuffix);
-	if (shaderSuffix != "/NoLighting") {
+bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextures, bool useShadows, bool useLighting) const {
+	S_LOG_VERBOSE("Creating terrain material pass with: NormalMapping=" << mUseNormalMapping << " Shadows=" << useShadows << " Lighting=" << useLighting);
+
+	SplattingFragmentConfig fragmentConfig{
+			.lightning=useLighting,
+			.shadows=useShadows,
+			.offsetMapping=mUseNormalMapping,
+			.fog=true,
+			.layers=(int) mLayers.size()
+	};
+	if (useLighting) {
 		S_LOG_VERBOSE("Adding normal map texture unit state.");
 		Ogre::TextureUnitState* normalMapTextureUnitState = pass.createTextureUnitState();
 
@@ -127,28 +245,6 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 		S_LOG_VERBOSE("Added " << mShadowLayers << " shadow layers.");
 	}
 
-	auto baseTexture = mBaseLayer ? resolveTexture(mBaseLayer->getDiffuseTextureName()) : nullptr;
-
-	// should we use a base pass?
-	if (baseTexture) {
-		Ogre::ushort numberOfTextureUnitsOnCard = Ogre::Root::getSingleton().getRenderSystem()->getCapabilities()->getNumTextureUnits();
-		S_LOG_VERBOSE("Adding new base layer with diffuse texture " << mBaseLayer->getDiffuseTextureName() << " (" << numberOfTextureUnitsOnCard << " texture units supported)");
-		// add the first layer of the terrain, no alpha or anything
-		Ogre::TextureUnitState* textureUnitState = pass.createTextureUnitState();
-		textureUnitState->setTexture(baseTexture);
-		textureUnitState->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
-
-		if (mUseNormalMapping) {
-			auto normalTexture = resolveTexture(mBaseLayer->getNormalTextureName());
-			Ogre::TextureUnitState* normalMapTextureUnitState = pass.createTextureUnitState();
-			if (!normalTexture) {
-				//Since the shader always expects a normal texture we need to supply a dummy one if no specific one exists.
-				normalTexture = Ogre::TextureManager::getSingleton().getByName("dynamic/onepixel", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-			}
-			normalMapTextureUnitState->setTexture(normalTexture);
-			textureUnitState->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
-		}
-	}
 
 	size_t i = 0;
 	// add our blendMap textures first
@@ -156,38 +252,21 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 		batch->finalize(pass, getCombinedBlendMapTexture(pass.getIndex(), i++, managedTextures), mUseNormalMapping);
 	}
 
-	//we provide different fragment programs for different amounts of textures used, so we need to determine which one to use.
-	std::stringstream ss;
-	ss << "SplattingFp/";
-	if (mUseNormalMapping) {
-		ss << "OffsetMapping/";
-	}
-	ss << mLayers.size();
-	//If no base layer is used we need to use a variant of the shader adapted to this.
-	//This is done by adding the "NoBaseLayer" segment.
-	if (!baseTexture) {
-		ss << "/NoBaseLayer";
-		pass.setSceneBlending(Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
-	}
-	ss << shaderSuffix;
-	std::string fragmentProgramName(ss.str());
+	pass.setSceneBlending(Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
 
-	if (shaderSuffix == "/NoLighting") {
+	if (!useLighting) {
 		pass.setMaxSimultaneousLights(0);
 	} else {
 		pass.setMaxSimultaneousLights(3);
 	}
 
-	//If there are no valid layers we'll just use a simple white colour. This should normally not happen.
-	if (mLayers.empty()) {
-		fragmentProgramName = "SimpleWhiteFp";
-	}
+	auto fragmentProgram = fetchOrCreateSplattingFragmentProgram(fragmentConfig);
 
 	try {
-		S_LOG_VERBOSE("Using fragment program " << fragmentProgramName << " for terrain page.");
-		pass.setFragmentProgram(fragmentProgramName);
+		S_LOG_VERBOSE("Using fragment program " << fragmentProgram->getName() << " for terrain page.");
+		pass.setGpuProgram(Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM, fragmentProgram);
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when setting fragment program '" << fragmentProgramName << "'." << ex);
+		S_LOG_WARNING("Error when setting fragment program '" << fragmentProgram->getName() << "'." << ex);
 		return false;
 	}
 	if (!pass.hasFragmentProgram()) {

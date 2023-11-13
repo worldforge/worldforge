@@ -35,8 +35,6 @@ class TerrainPageSurfaceLayer;
 
 class TerrainPageGeometry;
 
-class TerrainPageShadow;
-
 namespace Techniques {
 
 class ShaderPassBlendMapBatch;
@@ -45,6 +43,15 @@ typedef std::vector<const TerrainPageSurfaceLayer*> LayerStore;
 
 class ShaderPass {
 public:
+
+	struct SplattingFragmentConfig {
+		bool lightning;
+		bool shadows;
+		bool offsetMapping;
+		bool fog;
+		int layers;
+	};
+
 	friend class ShaderPassBlendMapBatch;
 
 	ShaderPass(Ogre::SceneManager& sceneManager,
@@ -55,8 +62,6 @@ public:
 	~ShaderPass();
 
 	void addLayer(const TerrainPageGeometry& geometry, const TerrainPageSurfaceLayer* layer);
-
-	void setBaseLayer(const TerrainPageSurfaceLayer* layer);
 
 	void addShadowLayer();
 
@@ -69,7 +74,9 @@ public:
 	 * @param shaderSuffix A suffix to add to the shader name. This allows you to make it use a somewhat different shader depending on graphics level etc.
 	 * @return True if the creation of the pass was successful.
 	 */
-	bool finalize(Ogre::Pass& pass, std::set<std::string>& managedTextures, bool useShadows = true, const std::string& shaderSuffix = "") const;
+	bool finalize(Ogre::Pass& pass, std::set<std::string>& managedTextures, bool useShadows, bool useLighting) const;
+
+	static Ogre::GpuProgramPtr fetchOrCreateSplattingFragmentProgram(SplattingFragmentConfig config);
 
 private:
 
@@ -84,7 +91,6 @@ private:
 	std::array<float, 16> mScales;
 	std::vector<std::unique_ptr<ShaderPassBlendMapBatch>> mBlendMapBatches;
 	LayerStore mLayers;
-	const TerrainPageSurfaceLayer* mBaseLayer;
 	Ogre::SceneManager& mSceneManager;
 	int mBlendMapPixelWidth;
 	TerrainIndex mPosition;

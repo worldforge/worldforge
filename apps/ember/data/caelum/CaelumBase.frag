@@ -4,7 +4,6 @@ in vec4 oUv0;
 in vec4 oColour;
 
 uniform sampler2D diffuseMap;
-uniform vec4 emissiveColour;
 
 out vec4 fragColour;
 
