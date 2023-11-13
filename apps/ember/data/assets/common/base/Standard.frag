@@ -21,10 +21,6 @@ uniform vec3 	    lightAmbient;
 
 uniform vec4        scaleBias;
 
-uniform vec4	    lightPosition;
-uniform vec3	    lightDiffuse;
-uniform vec3	    lightSpecular;
-
 uniform vec4        lightPositions[NUM_LIGHTS];
 uniform vec4        lightDiffuseColours[NUM_LIGHTS];
 uniform vec4        lightSpecularColours[NUM_LIGHTS];

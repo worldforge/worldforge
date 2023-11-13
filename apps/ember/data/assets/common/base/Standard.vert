@@ -56,7 +56,7 @@ void main(void)
 	oShadowTexCoord3 = shadowViewProjectionMatrix3 * worldPos;
 	oShadowTexCoord4 = shadowViewProjectionMatrix4 * worldPos;
 
-    vec3 oEyeDir = eyePosition - vertex.xyz;
+    oEyeDir = eyePosition - vertex.xyz;
 /*
     vec3 localbinormal = cross(tangent, normal);
 
