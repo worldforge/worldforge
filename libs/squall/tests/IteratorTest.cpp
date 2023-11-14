@@ -34,7 +34,7 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 	SECTION("iterate over working manifest should work") {
 
-		auto fetchManifestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		auto fetchManifestResult = repository.fetchManifest("e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 
 		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
@@ -59,7 +59,7 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 	SECTION("iterate over working manifest without recurse should work") {
 
-		auto fetchManifestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		auto fetchManifestResult = repository.fetchManifest("e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 
 		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;

@@ -24,7 +24,7 @@
 #include <unordered_map>
 #include "Repository.h"
 #include "Manifest.h"
-#include "SHA256.h"
+#include "blake3.h"
 
 namespace Squall {
 
@@ -66,8 +66,15 @@ struct SignatureResult {
 };
 
 struct SignatureGenerationContext {
+	explicit SignatureGenerationContext(std::ifstream inFileStream)
+			: fileStream(std::move(inFileStream)),
+			  hasher(),
+			  size(0) {
+		blake3_hasher_init(&hasher);
+	}
+
 	std::ifstream fileStream;
-	SHA256 sha256;
+	blake3_hasher hasher;
 	std::int64_t size = 0;
 };
 

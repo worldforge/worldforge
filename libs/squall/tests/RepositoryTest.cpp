@@ -33,9 +33,9 @@ TEST_CASE("Repository finds files", "[repository]") {
 	Repository repository(repoPath);
 
 	SECTION("fetching foo.txt should work") {
-		auto fooResult = repository.fetch("2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");
+		auto fooResult = repository.fetch("4e0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9");
 		REQUIRE(fooResult.status == FetchStatus::SUCCESS);
-		REQUIRE(fooResult.localPath == repoPath / "data" / "2c" / "26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");
+		REQUIRE(fooResult.localPath == repoPath / "data" / "4e" / "0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9");
 	}
 
 	SECTION("fetching non-existing file should work") {
@@ -44,7 +44,7 @@ TEST_CASE("Repository finds files", "[repository]") {
 	}
 
 	SECTION("fetching digest should work") {
-		auto digestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		auto digestResult = repository.fetchManifest("e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 		REQUIRE(digestResult.fetchResult.status == FetchStatus::SUCCESS);
 		REQUIRE((*digestResult.manifest).version == "1");
 		REQUIRE((*digestResult.manifest).entries.size() == 6);
@@ -81,26 +81,26 @@ TEST_CASE("Repository finds files", "[repository]") {
 
 	SECTION("should read roots") {
 		REQUIRE(repository.listRoots().size() == 1);
-		REQUIRE(repository.listRoots()["main"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
-		REQUIRE(repository.readRoot("main")->signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		REQUIRE(repository.listRoots()["main"].signature == "e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
+		REQUIRE(repository.readRoot("main")->signature == "e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 	}
 
 	SECTION("should store roots") {
 		Repository repositoryDestination("RepositoryTestDirectory");
 
-		REQUIRE(repositoryDestination.storeRoot("test", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.storeRoot("test", {.signature="e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
-		REQUIRE(repositoryDestination.listRoots()["test"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		REQUIRE(repositoryDestination.listRoots()["test"].signature == "e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 	}
 
 	SECTION("should store roots with strange names") {
 		Repository repositoryDestination("RepositoryRootStrangeNamesTestDirectory");
 
-		REQUIRE(repositoryDestination.storeRoot("test-foo", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::SUCCESS);
+		REQUIRE(repositoryDestination.storeRoot("test-foo", {.signature="e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538"}).status == StoreStatus::SUCCESS);
 		REQUIRE(repositoryDestination.listRoots().size() == 1);
-		REQUIRE(repositoryDestination.listRoots()["test-foo"].signature == "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		REQUIRE(repositoryDestination.listRoots()["test-foo"].signature == "e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 
-		REQUIRE(repositoryDestination.storeRoot("test:foo", {.signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c"}).status == StoreStatus::FAILURE);
+		REQUIRE(repositoryDestination.storeRoot("test:foo", {.signature="e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538"}).status == StoreStatus::FAILURE);
 
 	}
 
@@ -108,12 +108,12 @@ TEST_CASE("Repository finds files", "[repository]") {
 	SECTION("fetching existing file using path should work") {
 
 
-		auto manifestResult = repository.fetchManifest("678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+		auto manifestResult = repository.fetchManifest("e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 		REQUIRE(manifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		auto manifest = *manifestResult.manifest;
 		auto fetchResult = repository.fetch(manifest, std::filesystem::path("bar/baz.txt"));
 		REQUIRE(fetchResult.status == FetchStatus::SUCCESS);
-		REQUIRE(fetchResult.localPath == (repoPath / "data" / "ba" / "a5a0964d3320fbc0c6a92214453c8513ea24ab8fd5773484a967248096").string());
+		REQUIRE(fetchResult.localPath == (repoPath / "data" / "96" / "24faa79d245cea9c345474fdb1a863b75921a8dd7aff3d84b22c65d1fc847").string());
 
 	}
 }

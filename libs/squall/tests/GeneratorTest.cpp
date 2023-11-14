@@ -58,14 +58,14 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(fileEntries), [](const Squall::GenerateEntry& entry) { return entry.fileEntry; });
 
 	std::vector<FileEntry> expected{
-			FileEntry{.fileName = "baz.txt", .signature="baa5a0964d3320fbc0c6a92214453c8513ea24ab8fd5773484a967248096", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "bar/", .signature="30752969dd1c5dec24c19d3ae03fbd5f5c42c99643f28631d9afca333e764e3", .type=FileEntryType::DIRECTORY, .size=3},
-			FileEntry{.fileName = "foo.txt", .signature="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "empty_directory/", .signature="4355a46b19d348dc2f57c046f8ef63d4538ebb93600f3c9ee954a2746dd865", .type=FileEntryType::DIRECTORY, .size=0},
-			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "file with spaces in name", .signature="2b1174193affa11ee2b6e669354daa8e7f34a288d30bc450f366def0b3150", .type=FileEntryType::FILE, .size=11},
-			FileEntry{.fileName = "filè with nön äscií chårs", .signature="fe1d32909ae8da342e13735cc5259e381aa7c5a397f49644899e6f693319f6cd", .type=FileEntryType::FILE, .size=10},
-			FileEntry{.fileName = "GeneratorTestDirectoryTemp/", .signature="678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c", .type=FileEntryType::DIRECTORY, .size=27},
+			FileEntry{.fileName = "baz.txt", .signature="9624faa79d245cea9c345474fdb1a863b75921a8dd7aff3d84b22c65d1fc847", .type=FileEntryType::FILE, .size=3},
+			FileEntry{.fileName = "bar/", .signature="bd539dd09fbba4435b6508ede49cc5f5e4283ee59d3bf9b82134c3a1d88b1d8", .type=FileEntryType::DIRECTORY, .size=3},
+			FileEntry{.fileName = "foo.txt", .signature="4e0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9", .type=FileEntryType::FILE, .size=3},
+			FileEntry{.fileName = "empty_directory/", .signature="50cc112b1c612e6962547aacdcef9a40d4416ef8dd9388e885991853c40c9", .type=FileEntryType::DIRECTORY, .size=0},
+			FileEntry{.fileName = "empty_file", .signature="af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262", .type=FileEntryType::FILE, .size=0},
+			FileEntry{.fileName = "file with spaces in name", .signature="9a8d1531a7b333fdfb1d3c22a1a51cc4c7f45d1224124c8e192a2949a48c55", .type=FileEntryType::FILE, .size=11},
+			FileEntry{.fileName = "filè with nön äscií chårs", .signature="e0bec2fd7cfe6879b198671d88f7dedc746cf565931d82583a37b68f52a467", .type=FileEntryType::FILE, .size=10},
+			FileEntry{.fileName = "GeneratorTestDirectoryTemp/", .signature="e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538", .type=FileEntryType::DIRECTORY, .size=27},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
@@ -100,11 +100,11 @@ TEST_CASE("Generator excludes if specified", "[generator]") {
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(fileEntries), [](const Squall::GenerateEntry& entry) { return entry.fileEntry; });
 
 	std::vector<FileEntry> expected{
-			FileEntry{.fileName = "foo.txt", .signature="2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "empty_file", .signature="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type=FileEntryType::FILE, .size=0},
-			FileEntry{.fileName = "file with spaces in name", .signature="2b1174193affa11ee2b6e669354daa8e7f34a288d30bc450f366def0b3150", .type=FileEntryType::FILE, .size=11},
-			FileEntry{.fileName = "filè with nön äscií chårs", .signature="fe1d32909ae8da342e13735cc5259e381aa7c5a397f49644899e6f693319f6cd", .type=FileEntryType::FILE, .size=10},
-			FileEntry{.fileName = "raw/", .signature="2675e67431d84490427875ca62e98417cdd4b377a2462982c983b2643053bcd4", .type=FileEntryType::DIRECTORY, .size=24},
+			FileEntry{.fileName = "foo.txt", .signature="4e0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9", .type=FileEntryType::FILE, .size=3},
+			FileEntry{.fileName = "empty_file", .signature="af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262", .type=FileEntryType::FILE, .size=0},
+			FileEntry{.fileName = "file with spaces in name", .signature="9a8d1531a7b333fdfb1d3c22a1a51cc4c7f45d1224124c8e192a2949a48c55", .type=FileEntryType::FILE, .size=11},
+			FileEntry{.fileName = "filè with nön äscií chårs", .signature="e0bec2fd7cfe6879b198671d88f7dedc746cf565931d82583a37b68f52a467", .type=FileEntryType::FILE, .size=10},
+			FileEntry{.fileName = "raw/", .signature="33c244dedaccb884429e27c6679891718927b4ee2fc68db636853a1659284", .type=FileEntryType::DIRECTORY, .size=24},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
@@ -127,9 +127,9 @@ TEST_CASE("Generator includes if specified", "[generator]") {
 	std::transform(results.processedFiles.begin(), results.processedFiles.end(), std::back_inserter(fileEntries), [](const Squall::GenerateEntry& entry) { return entry.fileEntry; });
 
 	std::vector<FileEntry> expected{
-			FileEntry{.fileName = "baz.txt", .signature="baa5a0964d3320fbc0c6a92214453c8513ea24ab8fd5773484a967248096", .type=FileEntryType::FILE, .size=3},
-			FileEntry{.fileName = "bar/", .signature="30752969dd1c5dec24c19d3ae03fbd5f5c42c99643f28631d9afca333e764e3", .type=FileEntryType::DIRECTORY, .size=3},
-			FileEntry{.fileName = "raw/", .signature="3796aa35d46c474e168b6d80a39752203d25195713a76ef894608ccb5e16c31e", .type=FileEntryType::DIRECTORY, .size=3},
+			FileEntry{.fileName = "baz.txt", .signature="9624faa79d245cea9c345474fdb1a863b75921a8dd7aff3d84b22c65d1fc847", .type=FileEntryType::FILE, .size=3},
+			FileEntry{.fileName = "bar/", .signature="bd539dd09fbba4435b6508ede49cc5f5e4283ee59d3bf9b82134c3a1d88b1d8", .type=FileEntryType::DIRECTORY, .size=3},
+			FileEntry{.fileName = "raw/", .signature="a5b236ea7edc9281d696ad8046e58b826ea5b3f6f2c6a2261aee39fd1fbe", .type=FileEntryType::DIRECTORY, .size=3},
 	};
 
 	REQUIRE_THAT(fileEntries, Catch::Matchers::UnorderedEquals(expected));
@@ -141,7 +141,7 @@ TEST_CASE("Generator can read existing entries", "[generator]") {
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
 	Repository repository(repoPath);
-	auto existingEntries = Generator::readExistingEntries(repository, "678ad9fb8345c7677a1057b4fc9b4d8a26b2616256e1c296cd27b1b5e81b2c");
+	auto existingEntries = Generator::readExistingEntries(repository, "e34c28f74227a7213ede2d254a8e98b3379add41e69a5538525b8ba8dde538");
 	REQUIRE(existingEntries.size() == 8);
 
 	std::vector<std::filesystem::path> fileEntries;
@@ -234,14 +234,14 @@ TEST_CASE("Generator ignores existing entries if specified, but updates with new
 	REQUIRE(results.processedFiles.size() == 8);
 
 	std::vector<FileEntry> expected{
-			FileEntry{.fileName = "foo.txt", .signature = "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae", .type = FileEntryType::FILE, .size = 3},
-			FileEntry{.fileName = "baz.txt", .signature = "3271fe079143b338a5934c322d59ab7f9efa1eb92968d74dd132e64c2d1a", .type = FileEntryType::FILE, .size = 4},
-			FileEntry{.fileName = "bar/", .signature = "a8c3d1e2d4aa9c7f64eec9d44c1ce33c3978b9622b118594d82358328372e414", .type = FileEntryType::DIRECTORY, .size = 4},
-			FileEntry{.fileName = "empty_file", .signature = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", .type = FileEntryType::FILE, .size = 0},
-			FileEntry{.fileName = "file with spaces in name", .signature = "2b1174193affa11ee2b6e669354daa8e7f34a288d30bc450f366def0b3150", .type = FileEntryType::FILE, .size = 11},
-			FileEntry{.fileName = "filè with nön äscií chårs", .signature = "fe1d32909ae8da342e13735cc5259e381aa7c5a397f49644899e6f693319f6cd", .type = FileEntryType::FILE, .size = 10},
-			FileEntry{.fileName = "biz.txt", .signature = "9bdd85331e7570288d1d5a21c2f981b0a85dbee0127d78a6b6ea38b27192e46f", .type = Squall::FileEntryType::FILE, .size = 3},
-			FileEntry{.fileName = "GeneratorIgnoreExistingButHandleNewTestDirectory/", .signature = "5297e27e356e98c0a06f9ef7cc2bfbc55b9fb767a83fdbc43d7fa3f57c518ed", .type = Squall::FileEntryType::DIRECTORY, .size = 31}
+			FileEntry{.fileName = "foo.txt", .signature = "4e0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9", .type = FileEntryType::FILE, .size = 3},
+			FileEntry{.fileName = "baz.txt", .signature = "f32d3dc144b46a1ea85a9fefa8ac173cdd69c2f77a349cea48154f591bdf2df", .type = FileEntryType::FILE, .size = 4},
+			FileEntry{.fileName = "bar/", .signature = "d2e92c63df1361d5357bfa513a96215515659561fa4c3b745c21bc11a9dbc37", .type = FileEntryType::DIRECTORY, .size = 4},
+			FileEntry{.fileName = "empty_file", .signature = "af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262", .type = FileEntryType::FILE, .size = 0},
+			FileEntry{.fileName = "file with spaces in name", .signature = "9a8d1531a7b333fdfb1d3c22a1a51cc4c7f45d1224124c8e192a2949a48c55", .type = FileEntryType::FILE, .size = 11},
+			FileEntry{.fileName = "filè with nön äscií chårs", .signature = "e0bec2fd7cfe6879b198671d88f7dedc746cf565931d82583a37b68f52a467", .type = FileEntryType::FILE, .size = 10},
+			FileEntry{.fileName = "biz.txt", .signature = "b75449e57485ea6ed4354ef662ebb537cd8e3beecbe96f3b216dad11fa35", .type = Squall::FileEntryType::FILE, .size = 3},
+			FileEntry{.fileName = "GeneratorIgnoreExistingButHandleNewTestDirectory/", .signature = "6864b25dc26cd2ceb9d1713c3932a551dd5f336a0a6361430bdd661d0f1c9d5", .type = Squall::FileEntryType::DIRECTORY, .size = 31}
 	};
 
 

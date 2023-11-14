@@ -35,7 +35,7 @@ TEST_CASE("Repository provider copies files", "[provider]") {
 	CurlProvider repositoryProvider("file://" + repoPath.generic_string());
 
 	SECTION("copies file that exists") {
-		Signature signature("2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae");
+		Signature signature("4e0bb39f3b1a3feb89f536c93be15055482df748674b0d26e5a7577772e9");
 		auto destinationPath = repositoryDestination.resolvePathForSignature(signature);
 		auto fetchResult = repositoryProvider.fetch(signature, destinationPath);
 		fetchResult.wait_for(std::chrono::seconds(2));

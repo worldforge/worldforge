@@ -27,7 +27,7 @@ set(CORE_HEADER_FILES
 find_package(spdlog REQUIRED)
 wf_add_library(squallcore CORE_SOURCE_FILES CORE_HEADER_FILES)
 target_link_libraries(squallcore PUBLIC
-        sha256
+        blake3
         spdlog::spdlog)
 
 

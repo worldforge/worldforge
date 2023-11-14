@@ -64,16 +64,18 @@ Squall is licensed under either the MIT License or the GPL v3+, at your choice. 
 other Worldforge libraries. The intention is to allow for Squall to be used outside of Worldforge, since we think it's
 neat.
 
+Note that the BLAKE3 hashing algorithm that we use is licensed dually under either CC0 1.0 or Apache License 2.0.
+
 ## Design
 
 Since we had a couple of extra requirements we didn't want to just use basic file transfers for syncing media. The main
 requirements we had were:
 
 * Allow the client to connect to different servers, each with slightly different media. The idea here is that we provide
-  base media, and then will let servers extend this with their own media. Thus we envision that a lot of the media will
-  be similar. So for example, a client would connect to two different servers, which share 90% of common assets. These
-  common assets wouldn't need to be re-downloaded.
-* Have a built in mechanism for when assets are updated. This ties in to the vision we have about a development loop
+  base media, and then will let servers extend this with their own media. We therefore envision that a lot of the media
+  will be similar. So for example, a client would connect to two different servers, which share 90% of common assets.
+  These common assets wouldn't need to be re-downloaded.
+* Have a built-in mechanism for when assets are updated. This ties in to the vision we have about a development loop
   where the world is created inside a running server, without the need to restart the server. To accomplish this we need
   a good way to inform the client about changed assets. Whenever something changes the client should download the
   changed asset only.
@@ -88,8 +90,8 @@ all assets are represented by hashes of their content. This also goes for direct
 An effect of this is that a client only needs to download any hashes that it's missing. Thus fulfilling requirement #1.
 
 Since directories also are computed using hashes of their content, any change to an assets will resonate to all its
-parent directories and in the end to the root directory. Thus every change will result in a new hash for the root, which
-can be commnuicated to the client. Thus fulfilling requirement #2.
+parent directories and in the end to the root directory. Thus, every change will result in a new hash for the root,
+which can be communicated to the client. In that way fulfilling requirement #2.
 
 And since we only need to expose data attached to hashes it's easy to serve data using a standard file server. Thus
 fulfilling requirement #3.

@@ -17,7 +17,6 @@
  */
 
 #include "Generator.h"
-#include "SHA256.h"
 #include "Iterator.h"
 
 #include <spdlog/spdlog.h>
@@ -163,7 +162,8 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 }
 
 SignatureResult Generator::generateSignature(std::istream& stream) {
-	SHA256 sha256;
+	blake3_hasher hasher;
+	blake3_hasher_init(&hasher);
 	std::int64_t size = 0;
 	while (stream) {
 		std::array<char, 4096> buffer{};
@@ -171,13 +171,14 @@ SignatureResult Generator::generateSignature(std::istream& stream) {
 		auto dataRead = stream.gcount();
 		size += dataRead;
 		auto ptr = reinterpret_cast<const uint8_t*>(buffer.data());
-		sha256.update(ptr, dataRead);
+		blake3_hasher_update(&hasher, ptr, dataRead);
 	}
-	auto signatureRaw = std::unique_ptr<uint8_t>(sha256.digest());
+	std::array<uint8_t, BLAKE3_OUT_LEN> output{};
+	blake3_hasher_finalize(&hasher, output.data(), BLAKE3_OUT_LEN);
 
 	std::stringstream ss;
-	for (size_t i = 0; i < 32; ++i) {
-		unsigned int c = signatureRaw.get()[i];
+	for (size_t i = 0; i < BLAKE3_OUT_LEN; ++i) {
+		unsigned int c = output[i];
 		ss << std::hex << c;
 	}
 	return {.signature = Signature{ss.str()}, .size = size};
@@ -206,17 +207,18 @@ std::optional<SignatureResult> Generator::generateSignature(SignatureGenerationC
 		auto dataRead = context.fileStream.gcount();
 		context.size += dataRead;
 		auto ptr = reinterpret_cast<const uint8_t*>(buffer.data());
-		context.sha256.update(ptr, dataRead);
+		blake3_hasher_update(&context.hasher, ptr, dataRead);
 		if (maxIterations != 0 && iterations == maxIterations && context.fileStream) {
 			return {};
 		}
 		iterations++;
 	}
-	auto signatureRaw = std::unique_ptr<uint8_t>(context.sha256.digest());
+	std::array<uint8_t, BLAKE3_OUT_LEN> output{};
+	blake3_hasher_finalize(&context.hasher, output.data(), BLAKE3_OUT_LEN);
 
 	std::stringstream ss;
-	for (size_t i = 0; i < 32; ++i) {
-		unsigned int c = signatureRaw.get()[i];
+	for (size_t i = 0; i < BLAKE3_OUT_LEN; ++i) {
+		unsigned int c = output[i];
 		ss << std::hex << c;
 	}
 	return {{.signature = Signature{ss.str()}, .size = context.size}};
