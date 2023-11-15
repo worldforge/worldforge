@@ -40,7 +40,10 @@ how they work.
 
 ## Installation
 
-The simplest way to install all required dependencies is by using [Conan](https://www.conan.io).
+The simplest way to install all required dependencies is by using [Conan](https://www.conan.io). This setup requires
+CMake 3.23+
+
+Make sure you have installed Conan, CMake, Subversion (if you're building the server) and a c++ compile (g++ or clang).
 
 ```bash
 conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
@@ -57,6 +60,22 @@ The last two invocations are only needed if you also want to host your own serve
 NOTE: The invocation of the target "media-process-install" is optional. It will go through the raw Subversion assets and
 convert .png to .dds as well as scaling down textures. If you omit this step Cyphesis will instead use the raw
 Subversion media. Which you might want if you're developing locally.
+
+### CMake < 3.23
+
+If your CMake tool is an earlier version, < 3.23, you can't use the "presets" system with Conan. Instead you have to
+issue these commands:
+
+```bash
+conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
+mkdir -p build/Release && cd build/Release
+cmake ../.. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install/release
+cmake --build . -j --target all
+cmake --build . -j --target install
+cmake --build . -j --target mediarepo-checkout 
+cmake --build . -j --target media-process-install 
+```
 
 ### Tests
 
