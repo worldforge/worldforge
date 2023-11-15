@@ -123,15 +123,24 @@ endif ()
 
 
 add_custom_target(mediarepo-checkout)
+add_custom_target(mediarepo-checkout-full)
 if (SUBVERSION_CMD)
     #We'll only checkout the "assets" directory by default, and without any "source" directories.
     add_custom_command(
             TARGET mediarepo-checkout
-            COMMAND ${CMAKE_COMMAND} -E echo "Using Subversion to checkout https://svn.worldforge.org:886/svn/media/trunk to ${MEDIAREPO_DIR}/trunk, with a subset of files."
+            COMMAND ${CMAKE_COMMAND} -E echo "Using Subversion to do sparse checkout https://svn.worldforge.org:886/svn/media/trunk to ${MEDIAREPO_DIR}/trunk, with a subset of files."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_DIR}
-            COMMAND ${SUBVERSION_CMD} checkout https://svn.worldforge.org:886/svn/media/trunk ${MEDIAREPO_DIR}/trunk --depth empty
+            COMMAND [ ! -d ${MEDIAREPO_DIR}/trunk ] && ${SUBVERSION_CMD} checkout https://svn.worldforge.org:886/svn/media/trunk ${MEDIAREPO_DIR}/trunk --depth files || true
             COMMAND cd ${MEDIAREPO_DIR}/trunk && ${SUBVERSION_CMD} list --recursive https://svn.worldforge.org:886/svn/media/trunk | grep assets/ | grep --invert-match /source | xargs ${SUBVERSION_CMD} update --depth empty
     )
+    #This will do a full checkout of all assets. Useful if you intend to do development where you edit media.
+    add_custom_command(
+            TARGET mediarepo-checkout-full
+            COMMAND ${CMAKE_COMMAND} -E echo "Using Subversion to checkout https://svn.worldforge.org:886/svn/media/trunk to ${MEDIAREPO_DIR}/trunk."
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_DIR}
+            COMMAND ${SUBVERSION_CMD} checkout https://svn.worldforge.org:886/svn/media/trunk ${MEDIAREPO_DIR}/trunk --depth infinity
+    )
+
 else (SUBVERSION_CMD)
     add_custom_command(
             TARGET mediarepo-checkout

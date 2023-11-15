@@ -124,6 +124,15 @@ will be automatically installed and used. However, if you're setting up your own
 Worlds repository and use that instead. You can either configure Cyphesis to load from a different location by setting
 WORLDFORGE_WORLDS_PATH at CMake time, or by altering the content of "cyphesis.vconf.in" ("autoimport" setting).
 
+## Media
+
+When building and running Cyphesis you need access to the media, which is stored in Subversion. The Subversion server is
+at https://svn.worldforge.org:886/svn/media/trunk. The CMake command "mediarepo-checkout" will do a "sparse" checkout
+which will only fetch a subset of media, omitting source media. If you intend to do development and need the full media
+you can issue the CMake command "mediarepo-checkout-full" instead which will checkout all media.
+
+Media is stored in "app/cyphesis/mediarepo".
+
 ### Conan packages
 
 We use Conan for our third party dependencies. In most cases we use the packages provided
