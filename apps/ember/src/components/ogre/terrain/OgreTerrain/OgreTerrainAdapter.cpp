@@ -217,7 +217,7 @@ void OgreTerrainAdapter::updateExistingTerrain(const Ogre::Terrain* terrainPtr, 
 		//Check that there's no background process or that it's being prepared for creation.
 		if (terrain->isDerivedDataUpdateInProgress() || !terrain->isLoaded()) {
 			MainLoopController::getSingleton().getEventService().runOnMainThreadDelayed(
-					[=, heightData = std::move(heightData)] { updateExistingTerrain(terrainPtr, index, heightData); },
+					[=, this, heightData = std::move(heightData)] { updateExistingTerrain(terrainPtr, index, heightData); },
 					std::chrono::milliseconds(1),
 					mActiveMarker);
 		} else {
@@ -260,7 +260,7 @@ void OgreTerrainAdapter::removePage(const TerrainIndex& index) {
 	//So we check for both of these, and if that's the case we'll delay removal.
 	if ((terrain && (terrain->isDerivedDataUpdateInProgress() || !terrain->isLoaded()))) {
 		MainLoopController::getSingleton().getEventService().runOnMainThreadDelayed(
-				[=] { removePage(index); },
+				[this, index] { removePage(index); },
 				std::chrono::milliseconds(1),
 				mActiveMarker);
 	} else {

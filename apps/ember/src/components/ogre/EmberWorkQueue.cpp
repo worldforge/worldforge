@@ -70,7 +70,7 @@ void EmberWorkQueue::processResponses() {
 				processResponse(response);
 				OGRE_DELETE response;
 			} else {
-				mEventService.runOnMainThread([=] {
+				mEventService.runOnMainThread([this, response] {
 					processResponse(response);
 					OGRE_DELETE response;
 				});

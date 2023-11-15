@@ -568,7 +568,7 @@ void TerrainHandler::updateMod(const std::string& id,
 																	   modId,
 																	   pos,
 																	   orientation,
-																	   [=](const std::vector<WFMath::AxisBox<2>>& areas) {
+																	   [this](const std::vector<WFMath::AxisBox<2>>& areas) {
 																		   reloadTerrain(areas);
 																	   }));
 	}

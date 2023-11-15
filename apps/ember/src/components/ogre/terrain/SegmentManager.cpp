@@ -92,7 +92,7 @@ std::shared_ptr<Segment> SegmentManager::createFakeSegment(const std::string& ke
 			s->invalidate();
 		}
 	};
-	std::function<Mercator::Segment*()> segmentProvider = [=]() {
+	std::function<Mercator::Segment*()> segmentProvider = [=, this]() {
 		auto* segment = new Mercator::Segment(xIndex * mTerrain.getResolution(), zIndex * mTerrain.getResolution(), mTerrain.getResolution());
 
 		WFMath::MTRand rand;
