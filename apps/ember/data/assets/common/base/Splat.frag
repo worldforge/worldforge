@@ -57,7 +57,6 @@ uniform int disableFogColour;
 
 #if SHADOW
 #define LINEAR_RANGE 0
-#endif // if SHADOW
 
 // Shadow maps
 uniform sampler2D shadowMap0;
@@ -84,6 +83,7 @@ in vec4 shadowTexCoord1;
 in vec4 shadowTexCoord2;
 in vec4 shadowTexCoord3;
 in vec4 shadowTexCoord4;
+#endif // if SHADOW
 
 #if NUM_LAYERS > 8
 uniform vec4 scales[3];

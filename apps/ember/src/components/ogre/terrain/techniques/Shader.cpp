@@ -164,7 +164,7 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 		pass->setVertexProgram(cmVertexProgramName);
 		auto fragProgram = ShaderPass::fetchOrCreateSplattingFragmentProgram(ShaderPass::SplattingFragmentConfig{
 				.lightning = true,
-				.shadows = true,
+				.shadows = mIncludeShadows,
 				.offsetMapping= false,
 				.fog = true,
 				.layers = 1, //Only one layer, which is the composite diffuse texture
