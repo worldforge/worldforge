@@ -114,6 +114,8 @@ jobs:
 
             -   name: Build Ember Snap
                 if: env.BUILD_SNAP == 'true'
+                env:
+                    PATH: /snap/bin:$PATH
                 shell: bash
                 run: |
                     echo "Building Snap"

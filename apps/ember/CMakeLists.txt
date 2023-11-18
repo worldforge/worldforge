@@ -292,7 +292,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
             COMMAND ${CMAKE_COMMAND} -E echo "I will now copy the snapfile to the installation directory and run 'snapcraft'."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/snap
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/snap/snapcraft.yaml ${CMAKE_INSTALL_PREFIX}/snap/snapcraft.yaml
-            COMMAND snapcraft
+            COMMAND ${SNAPCRAFT_COMMAND}
             WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}
     )
 endif ()
