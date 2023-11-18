@@ -45,7 +45,7 @@
 #include "rules/LocatedEntity.h"
 #include "rules/simulation/World.h"
 
-#ifdef POSTGRES_FOUND
+#ifdef CYPHESIS_USE_POSTGRES
 
 #include "common/CommPSQLSocket.h"
 #include "common/DatabasePostgres.h"
@@ -129,7 +129,7 @@ namespace {
         virtual void stopVacuum() = 0;
     };
 
-#ifdef POSTGRES_FOUND
+#ifdef CYPHESIS_USE_POSTGRES
 
     struct PgServerDatabase : public ServerDatabase
     {
@@ -191,7 +191,7 @@ namespace {
         readConfigItem(instance, "database", databaseBackend);
 
         if (databaseBackend == "postgres") {
-#ifdef POSTGRES_FOUND
+#ifdef CYPHESIS_USE_POSTGRES
             auto database = new DatabasePostgres();
             return std::make_unique<PgServerDatabase>(std::unique_ptr<DatabasePostgres>(database), std::make_unique<CommPSQLSocket>(io_context, *database));
 #else

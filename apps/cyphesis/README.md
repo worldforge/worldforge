@@ -134,6 +134,11 @@ but not enabled by default. You need to set the option "--cyphesis:remotery=true
 After that's done you can open the file found at [external/Remotery/vis/index.html]() to see
 real time measurements.
 
+## Database storage
+
+By default we'll use SQLite for storing all data. There's an option to instead use Postgres which can be enabled by
+submitting the "CYPHESIS_USE_POSTGRES" CMake option. Note that we currently don't provide any Conan support for this.
+
 ## Copyright notices
 
 The server code in C++ is distributed under the GNU General Public

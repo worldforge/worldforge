@@ -60,6 +60,13 @@ endif (AVAHI_FOUND)
 
 find_package(PostgreSQL 7.1)
 cmake_dependent_option(CYPHESIS_USE_POSTGRES "Use PostgreSQL for storage" FALSE "PostgreSQL_FOUND" FALSE)
+if (CYPHESIS_USE_POSTGRES)
+    message(STATUS "Compiling with Postgres support.")
+    add_compile_definitions(CYPHESIS_USE_POSTGRES)
+else ()
+    message(STATUS "Compiling without Postgres support (will use SQLite only).")
+endif ()
+
 
 find_package(SQLite3 REQUIRED)
 

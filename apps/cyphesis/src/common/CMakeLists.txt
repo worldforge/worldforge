@@ -73,18 +73,18 @@ set(db_files
         Storage.cpp
         DatabaseSQLite.cpp)
 
-if (PostgreSQL_FOUND)
+if (CYPHESIS_USE_POSTGRES)
     list(APPEND db_files
             DatabasePostgres.cpp
             CommPSQLSocket.cpp)
 
-endif (PostgreSQL_FOUND)
+endif (CYPHESIS_USE_POSTGRES)
 
 add_library(cyphesis-db ${db_files})
 
-if (PostgreSQL_FOUND)
+if (CYPHESIS_USE_POSTGRES)
     target_link_libraries(cyphesis-db PUBLIC PostgreSQL::PostgreSQL)
-endif (PostgreSQL_FOUND)
+endif (CYPHESIS_USE_POSTGRES)
 
 target_link_libraries(cyphesis-db PUBLIC
         SQLite::SQLite3

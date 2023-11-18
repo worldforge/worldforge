@@ -7,7 +7,7 @@
 #include "common/log.h"
 #include "common/DatabaseSQLite.h"
 
-#ifdef POSTGRES_FOUND
+#ifdef CYPHESIS_USE_POSTGRES
 #include "common/CommPSQLSocket.h"
 #include "common/DatabasePostgres.h"
 #endif
@@ -18,7 +18,7 @@ std::unique_ptr<Database> createDatabase()
     readConfigItem(instance, "database", databaseBackend);
 
     if (databaseBackend == "postgres") {
-#ifdef POSTGRES_FOUND
+#ifdef CYPHESIS_USE_POSTGRES
         return std::make_unique<DatabasePostgres>();
 #else
         spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");

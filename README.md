@@ -43,7 +43,8 @@ how they work.
 The simplest way to install all required dependencies is by using [Conan](https://www.conan.io). This setup requires
 CMake 3.23+
 
-Make sure you have installed Conan, CMake, Subversion (if you're building the server) and a c++ compile (g++ or clang).
+Make sure you have installed a c++ compiler (g++ or clang), Conan, CMake, Subversion and ImageMagick (if you're building
+the server).
 
 ```bash
 conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
@@ -60,6 +61,7 @@ The last two invocations are only needed if you also want to host your own serve
 NOTE: The invocation of the target "media-process-install" is optional. It will go through the raw Subversion assets and
 convert .png to .dds as well as scaling down textures. If you omit this step Cyphesis will instead use the raw
 Subversion media. Which you might want if you're developing locally.
+This step also requires ImageMagick to be installed.
 
 ### CMake < 3.23
 
