@@ -21,6 +21,7 @@ apps:
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
         #listen-stream: "[::]:6767"
         plugs:
             - network
@@ -32,6 +33,7 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
     cycmd:
         command: bin/cycmd
         environment:
@@ -39,6 +41,7 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
     cydb:
         command: bin/cydb
         environment:
@@ -46,6 +49,7 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
     cyaiclient:
         command: bin/cyaiclient
         environment:
@@ -53,6 +57,7 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
 
 parts:
     cyphesis:
