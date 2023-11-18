@@ -108,27 +108,30 @@ jobs:
                 shell: bash
                 run: cmake --build --preset $PROFILE_CONAN  --parallel 4 --target check
 
-#            -   name: Install
-#                shell: bash
-#                run: cmake --build --preset $PROFILE_CONAN --target install
-#
-#            -   name: Build Snap
-#                if: env.BUILD_SNAP == 'true'
-#                shell: bash
-#                run: |
-#                    echo "Building Snap"
-#                    cd ~/install/usr
-#                    cp -a ${{github.workspace}}/build/Release/snap ~/install/usr/
-#                    snapcraft --destructive-mode
-#                    echo "Uploading Snap"
-#                    snapcraft upload ~/install/usr/*.snap --release edge
-#
-#            -   name: Store Snap
-#                if: env.BUILD_SNAP == 'true'
-#                uses: actions/upload-artifact@v3.1.2
-#                with:
-#                    name: snap
-#                    path: ~/install/usr/*.snap
+            -   name: Install
+                shell: bash
+                run: cmake --build --preset $PROFILE_CONAN --target install
+
+            -   name: Build Ember Snap
+                if: env.BUILD_SNAP == 'true'
+                shell: bash
+                run: |
+                    echo "Building Snap"
+                    run: cmake --build --preset $PROFILE_CONAN  --parallel 4 --target snap-build-ember
+
+            -   name: Upload Snaps to Snapstore
+                if: env.BUILD_SNAP == 'true'
+                shell: bash
+                run: |
+                    echo "Uploading Snap"
+                    snapcraft upload ~/install/usr/*.snap --release edge
+
+            -   name: Store Snaps
+                if: env.BUILD_SNAP == 'true'
+                uses: actions/upload-artifact@v3.1.2
+                with:
+                    name: snap
+                    path: ~/install/usr/*.snap
 #
 #            -   name: Build AppImage
 #                if: env.BUILD_APPIMAGE == 'true'
