@@ -399,6 +399,8 @@ namespace {
         // If we are a daemon logging to syslog, we need to set it up.
 //        initLogger();
 
+
+		//A pointer because we need to reset this before we shut down the Python API. Perhaps this could be done better?
         auto io_context = std::make_unique<boost::asio::io_context>();
 
         try {
@@ -434,12 +436,8 @@ namespace {
             readConfigItem(instance, "nice", nice);
 
 
-            FileSystemObserver file_system_observer(*io_context);
-
-
-
-            AssetsManager assets_manager(file_system_observer);
-            assets_manager.init();
+            AssetsManager assets_manager(std::make_unique<FileSystemObserver>(*io_context));
+			assets_manager.observeAssetsDirectory();
 
             //Perhaps move all this into the AssetsManager?
             spdlog::info("Reading assets from {}", assets_manager.getAssetsPath().string());
@@ -657,7 +655,7 @@ namespace {
                 if (metaClient) {
                     metaClient->metaserverTerminate();
                 }
-                file_system_observer.stop();
+				assets_manager.stopFileObserver();
                 //Cancel vacuum tasks, otherwise they might hold up the io_context.
                 serverDatabase->stopVacuum();
             }

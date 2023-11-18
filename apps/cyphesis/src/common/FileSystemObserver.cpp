@@ -69,7 +69,7 @@ void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, s
         try {
             mDirectoryMonitor->add_directory(dirname.string());
         } catch (...) {
-            spdlog::warn("Could not observe directory {}", dirname.string());
+            spdlog::warn("Could not observe directory '{}'", dirname.string());
         }
         mCallBacks.emplace(dirname, std::move(callback));
     }

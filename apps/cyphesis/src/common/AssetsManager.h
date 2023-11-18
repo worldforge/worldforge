@@ -28,22 +28,31 @@
 
 class FileSystemObserver;
 
+/**
+ * Observes a series of paths. By calling "observeFile" and "observeDirectory" you can then install callbacks for when files are changed.
+ */
 class AssetsManager : public Singleton<AssetsManager>
 {
     public:
 
-        explicit AssetsManager(FileSystemObserver& file_system_observer);
+        explicit AssetsManager(std::unique_ptr<FileSystemObserver> file_system_observer);
         ~AssetsManager() override;
 
-        void init();
+		/**
+		 * Tell the assets manager to observe the "assets" directory, which contains all assets that we serve to the clients.
+		 */
+		void observeAssetsDirectory();
 
         void observeFile(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
         void observeDirectory(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
 
         std::filesystem::path getAssetsPath() const { return mAssetsPath;}
+
+		void stopFileObserver();
+
     private:
 
-        FileSystemObserver& m_file_system_observer;
+        std::unique_ptr<FileSystemObserver> m_file_system_observer;
 
         std::filesystem::path mAssetsPath;
 

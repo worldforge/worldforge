@@ -219,12 +219,9 @@ int main(int argc, char** argv)
         {
             boost::asio::io_context io_context;
             HttpHandling httpCache(monitors);
-            FileSystemObserver file_system_observer(io_context);
             AwareMindFactory mindFactory(typeStore);
 
-            AssetsManager assets_manager(file_system_observer);
-            assets_manager.init();
-
+            AssetsManager assets_manager(std::make_unique<FileSystemObserver>(io_context));
 
             std::vector<std::string> python_directories;
             // Add the path to the non-ruleset specific code.
