@@ -18,7 +18,11 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CMakeDependentOption)
 
-option(SNAPCRAFT_COMMAND "The 'snapcraft' command." "snapcraft")
+if (NOT DEFINED SNAPCRAFT_COMMAND)
+    #Allow for setting the path for the snapcraft command from outside, if setting PATH doesn't cut it.
+    SET(SNAPCRAFT_COMMAND "snapcraft")
+endif ()
+
 option(FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." FALSE)
 if (${FORCE_COLORED_OUTPUT})
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
