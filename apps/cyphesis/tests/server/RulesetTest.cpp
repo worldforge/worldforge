@@ -460,3 +460,5 @@ TypeNode* Inheritance::addChild(const Atlas::Objects::Root & obj)
 #include "../stubs/server/stubEntityRuleHandler.h"
 #include "../stubs/common/stubPropertyManager.h"
 #include "../stubs/common/stubAssetsManager.h"
+#include "../stubs/common/stubFileSystemObserver.h"
+

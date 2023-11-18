@@ -48,6 +48,7 @@ link_libraries(
         external-remotery
         Boost::filesystem
         readline::readline
+        external-dirmonitor
         external-Detour
         external-Recast
         external-DetourTileCache

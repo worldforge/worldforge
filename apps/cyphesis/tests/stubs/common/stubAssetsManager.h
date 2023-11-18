@@ -9,7 +9,7 @@
 
 #ifndef STUB_AssetsManager_AssetsManager
 //#define STUB_AssetsManager_AssetsManager
-   AssetsManager::AssetsManager(FileSystemObserver& file_system_observer)
+   AssetsManager::AssetsManager(std::unique_ptr<FileSystemObserver> file_system_observer)
     : Singleton(file_system_observer)
   {
     
@@ -24,13 +24,13 @@
   }
 #endif //STUB_AssetsManager_AssetsManager_DTOR
 
-#ifndef STUB_AssetsManager_init
-//#define STUB_AssetsManager_init
-  void AssetsManager::init()
+#ifndef STUB_AssetsManager_observeAssetsDirectory
+//#define STUB_AssetsManager_observeAssetsDirectory
+  void AssetsManager::observeAssetsDirectory()
   {
     
   }
-#endif //STUB_AssetsManager_init
+#endif //STUB_AssetsManager_observeAssetsDirectory
 
 #ifndef STUB_AssetsManager_observeFile
 //#define STUB_AssetsManager_observeFile
@@ -47,6 +47,14 @@
     
   }
 #endif //STUB_AssetsManager_observeDirectory
+
+#ifndef STUB_AssetsManager_stopFileObserver
+//#define STUB_AssetsManager_stopFileObserver
+  void AssetsManager::stopFileObserver()
+  {
+    
+  }
+#endif //STUB_AssetsManager_stopFileObserver
 
 
 #endif

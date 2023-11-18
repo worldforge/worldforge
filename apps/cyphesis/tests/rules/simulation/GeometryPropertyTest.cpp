@@ -52,4 +52,5 @@ int main()
 
 
 #include "../../stubs/common/stubAssetsManager.h"
+#include "../../stubs/common/stubFileSystemObserver.h"
 #include "../../stubs/common/stubInheritance.h"

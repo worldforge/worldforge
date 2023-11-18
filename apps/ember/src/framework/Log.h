@@ -78,10 +78,10 @@ class LogObserver;
  * @author Tim Enderling
  */
 
-class StdOutLogObserver;
+struct StdOutLogObserver;
 
 class Log {
-	friend class StdOutLogObserver;
+	friend struct StdOutLogObserver;
 
 private:
 
