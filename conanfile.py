@@ -52,7 +52,7 @@ class Worldforge(ConanFile):
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
             self.requires("ogre/13.4.2@worldforge")
-            self.requires("sdl/2.28.3")
+            self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
 
         if self.options.with_server:
@@ -67,6 +67,7 @@ class Worldforge(ConanFile):
             self.requires("libxdg-basedir/1.2.3@worldforge")
 
         self.requires("libcap/2.69", override=True)
+        self.requires("libxml2/2.11.5", override=True)
 
         self.test_requires("cppunit/1.15.1")
         self.test_requires("catch2/3.4.0")
