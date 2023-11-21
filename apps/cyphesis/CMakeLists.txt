@@ -108,27 +108,6 @@ else ()
     endif ()
 endif ()
 
-#add_custom_target(assets-download)
-#if (RSYNC_CMD)
-#    add_custom_command(
-#            TARGET assets-download
-#            COMMAND ${CMAKE_COMMAND} -E echo "I will now use rsync to install the assets from amber.worldforge.org into ${ASSETS_DIR}."
-#            COMMAND ${CMAKE_COMMAND} -E make_directory ${ASSETS_DIR}
-#            #We'll for now only copy ".mesh" files.
-#            COMMAND rsync -rtzu --include='*.mesh' --include='*/' --exclude='*' amber.worldforge.org::ember-media/ember-media-0.8.0/media/assets ${ASSETS_DIR}
-#            COMMAND ${CMAKE_COMMAND} -E echo "Copying ${ASSETS_DIR} to ${CMAKE_INSTALL_FULL_DATADIR}/cyphesis/assets."
-#            COMMAND ${CMAKE_COMMAND} -E copy_directory ${ASSETS_DIR} ${CMAKE_INSTALL_FULL_DATADIR}/cyphesis/
-#            COMMAND ${CMAKE_COMMAND} -E echo "Done."
-#            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-#    )
-#else (RSYNC_CMD)
-#    add_custom_command(
-#            TARGET assets-download
-#            COMMAND ${CMAKE_COMMAND} -E echo "Could not find the Rsync command. The target 'assets-download' is disabled."
-#    )
-#endif (RSYNC_CMD)
-
-
 add_custom_target(mediarepo-checkout)
 add_custom_target(mediarepo-checkout-full)
 if (SUBVERSION_CMD)
@@ -175,6 +154,21 @@ else (Python3_EXECUTABLE)
     )
 endif (Python3_EXECUTABLE)
 
+add_custom_target(media-download-rsync)
+if (RSYNC_CMD)
+    add_custom_command(
+            TARGET media-download-rsync
+            COMMAND ${CMAKE_COMMAND} -E echo "I will now use rsync to install the assets from amber.worldforge.org into ${MEDIAREPO_PROCESSED_DIR}."
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${MEDIAREPO_PROCESSED_DIR}
+            COMMAND rsync -rtzu amber.worldforge.org::worldforge-media ${MEDIAREPO_PROCESSED_DIR}
+            COMMAND ${CMAKE_COMMAND} -E echo "Done."
+    )
+else (RSYNC_CMD)
+    add_custom_command(
+            TARGET media-download-rsync
+            COMMAND ${CMAKE_COMMAND} -E echo "Could not find the Rsync command. The target 'assets-download' is disabled."
+    )
+endif (RSYNC_CMD)
 
 ##TODO: check for binreloc?
 
