@@ -119,7 +119,7 @@ jobs:
                 shell: bash
                 run: |
                     echo "Building Snap"
-                    run: cmake --build --preset $PROFILE_CONAN  --parallel 4 --target snap-build-ember
+                    cmake --build --preset $PROFILE_CONAN  --parallel 4 --target snap-build-ember
 
             -   name: Upload Snaps to Snapstore
                 if: env.BUILD_SNAP == 'true'
