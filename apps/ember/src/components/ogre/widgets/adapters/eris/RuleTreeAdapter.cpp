@@ -19,7 +19,7 @@
 #include "RuleTreeAdapter.h"
 
 #include "../../ColouredListItem.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <CEGUI/widgets/Tree.h>
 

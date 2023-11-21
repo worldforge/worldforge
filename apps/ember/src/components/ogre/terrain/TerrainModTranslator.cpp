@@ -22,7 +22,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "TerrainModTranslator.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Mercator/TerrainMod.h>
 
@@ -216,7 +216,7 @@ std::unique_ptr<TerrainModTranslator::InnerTranslator> TerrainModTranslator::bui
 		shape.fromAtlas(shapeElement);
 	} catch (...) {
 		///Just log an error and return false, this isn't fatal.
-		S_LOG_WARNING("Error when parsing shape from atlas.");
+		logger->warn("Error when parsing shape from atlas.");
 		return nullptr;
 	}
 
@@ -228,17 +228,17 @@ std::unique_ptr<TerrainModTranslator::InnerTranslator> TerrainModTranslator::bui
 
 		auto I = modElement.find("slopes");
 		if (I == modElement.end()) {
-			S_LOG_WARNING("SlopeTerrainMod defined without slopes");
+			logger->warn("SlopeTerrainMod defined without slopes");
 			return nullptr;
 		}
 		const Element& modSlopeElem = I->second;
 		if (!modSlopeElem.isList()) {
-			S_LOG_WARNING("SlopeTerrainMod defined with malformed slopes");
+			logger->warn("SlopeTerrainMod defined with malformed slopes");
 			return nullptr;
 		}
 		const ListType& slopes = modSlopeElem.asList();
 		if (slopes.size() < 2 || !slopes[0].isNum() || !slopes[1].isNum()) {
-			S_LOG_WARNING("SlopeTerrainMod defined without slopes");
+			logger->warn("SlopeTerrainMod defined without slopes");
 			return nullptr;
 		}
 		auto dx = static_cast<float>(slopes[0].asNum());

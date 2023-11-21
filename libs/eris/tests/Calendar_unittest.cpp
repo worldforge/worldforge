@@ -33,7 +33,6 @@
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>
 #include <Eris/View.h>
-#include <Eris/Log.h>
 #include <Eris/IGRouter.h>
 #include <Eris/EventService.h>
 
@@ -98,16 +97,10 @@ class TestConnection : public Eris::Connection {
     }
 };
 
-static void writeLog(Eris::LogLevel, const std::string & msg)
-{       
-    std::cerr << msg << std::endl;
-}
 
 static double stub_worldtime = 0.;
 int main()
 {
-    Eris::Logged.connect(sigc::ptr_fun(writeLog));
-    Eris::setLogLevel(Eris::LOG_DEBUG);
 
     /////////////////////////// DateTime ///////////////////////////
 
@@ -297,18 +290,6 @@ int main()
 #include <Eris/Entity.h>
 
 namespace Eris {
-
-sigc::signal<void(LogLevel, const std::string&)> Logged;
-
-void setLogLevel(LogLevel lvl)
-{
-}
-
-void doLog(LogLevel lvl, const std::string& msg)
-{
-    std::cerr << msg << std::endl;
-}
-
 
 Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_account(pl),

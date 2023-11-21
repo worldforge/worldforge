@@ -3,6 +3,7 @@ add_library(ember-BindingsAtlas OBJECT
 )
 
 target_link_libraries(ember-BindingsAtlas PUBLIC
+        ember-framework
         ember-external-sol2
         AtlasObjects
 )

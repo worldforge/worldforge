@@ -106,14 +106,14 @@ void registerBindingsFramework(sol::state_view& lua) {
 
 
 	auto log = lua.create_table();
-	log["verbose"] = [](const std::string& message) { S_LOG_VERBOSE(message); };
-	log["info"] = [](const std::string& message) { S_LOG_INFO(message); };
-	log["warning"] = [](const std::string& message) { S_LOG_WARNING(message); };
+	log["verbose"] = [](const std::string& message) { logger->debug(message); };
+	log["info"] = [](const std::string& message) { logger->info(message); };
+	log["warning"] = [](const std::string& message) { logger->warn(message); };
 	log["failure"] = [](const std::string& message) {
-		S_LOG_FAILURE(message);
+		logger->error(message);
 	};
-	log["critical"] = [](const std::string& message) { S_LOG_CRITICAL(message); };
-	log["foo"] = [](const std::string& message) { S_LOG_CRITICAL(message); };
+	log["critical"] = [](const std::string& message) { logger->critical(message); };
+	log["foo"] = [](const std::string& message) { logger->critical(message); };
 
 	lua["log"] = log;
 }

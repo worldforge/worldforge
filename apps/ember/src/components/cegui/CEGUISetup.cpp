@@ -22,7 +22,7 @@
 #include "platform/platform_windows.h"
 #endif
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "services/input/Input.h"
@@ -49,18 +49,18 @@ CEGUI::OgreRenderer& CEGUISetup::createRenderer(Ogre::RenderWindow* renderWindow
 		std::string modulePath = configService.getPrefix() + "/lib64/cegui-0.8";
 		if (std::ifstream(modulePath).good()) {
 			setenv("CEGUI_MODULE_DIR", modulePath.c_str(), 1);
-			S_LOG_INFO("Setting CEGUI_MODULE_DIR to " << modulePath);
+			logger->info("Setting CEGUI_MODULE_DIR to {}", modulePath);
 		} else {
 			modulePath = configService.getPrefix() + "/lib/cegui-0.8";
 			if (std::ifstream(modulePath).good()) {
 				setenv("CEGUI_MODULE_DIR", modulePath.c_str(), 1);
-				S_LOG_INFO("Setting CEGUI_MODULE_DIR to " << modulePath);
+				logger->info("Setting CEGUI_MODULE_DIR to {}", modulePath);
 			}
 		}
 #endif
 		//We need to set the current directory to the prefix before trying to load CEGUI.
 		if (chdir(configService.getPrefix().c_str())) {
-			S_LOG_WARNING("Failed to change to the prefix directory '" << configService.getPrefix() << "'. Gui loading might fail.");
+			logger->warn("Failed to change to the prefix directory '{}'. Gui loading might fail.", configService.getPrefix());
 		}
 	}
 
@@ -92,11 +92,11 @@ CEGUISetup::CEGUISetup(Ogre::RenderWindow& window)
 	mGuiSystem = &CEGUI::System::create(*mGuiRenderer, mOgreResourceProvider, mXmlParser.get(), mOgreImageCodec, nullptr, "cegui/datafiles/configs/cegui.config");
 	auto schemeI = CEGUI::SchemeManager::getSingleton().getIterator();
 	if (schemeI.isAtEnd()) {
-		// 			S_LOG_FAILURE("Could not load any CEGUI schemes. This means that there's something wrong with how CEGUI is setup. Check the CEGUI log for more detail. We'll now exit Ember.");
+		// 			logger->error("Could not load any CEGUI schemes. This means that there's something wrong with how CEGUI is setup. Check the CEGUI log for more detail. We'll now exit Ember.");
 		throw Exception("Could not load any CEGUI schemes. This means that there's something wrong with how CEGUI is setup. Check the CEGUI log for more detail. We'll now exit Ember.");
 	}
 
-	Input::getSingleton().EventSizeChanged.connect([this](int width, int height) { mGuiSystem->notifyDisplaySizeChanged(CEGUI::Sizef((float)width, (float)height)); });
+	Input::getSingleton().EventSizeChanged.connect([this](int width, int height) { mGuiSystem->notifyDisplaySizeChanged(CEGUI::Sizef((float) width, (float) height)); });
 
 
 }

@@ -122,7 +122,7 @@ bool OgrePluginLoader::loadPlugin(const std::string& pluginName) {
 		Ogre::Root::getSingleton().installPlugin(it->second);
 		return true;
 	}
-	S_LOG_FAILURE("Could not find required plugin " << pluginName);
+	logger->error("Could not find required plugin {}", pluginName);
 	return false;
 #endif
 }
@@ -141,7 +141,7 @@ bool OgrePluginLoader::loadDynPlugin(const std::string& pluginName) {
 		std::string pluginPath;
 		pluginPath = dir + "/" + pluginName + mPluginExtension;
 		if (std::ifstream(pluginPath).good()) {
-			S_LOG_INFO("Trying to load the plugin '" << pluginPath << "'.");
+			logger->info("Trying to load the plugin '{}'.", pluginPath);
 			Ogre::Root::getSingleton().loadPlugin(pluginPath);
 			return true;
 		}

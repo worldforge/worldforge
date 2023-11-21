@@ -31,7 +31,7 @@ class ScriptKit;
 
 class MindKit {
   protected:
-    MindKit() = default;;
+    MindKit() = default;
 
   public:
     std::unique_ptr<ScriptKit<BaseMind>> m_scriptFactory;

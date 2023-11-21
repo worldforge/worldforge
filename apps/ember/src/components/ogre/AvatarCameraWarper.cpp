@@ -28,8 +28,7 @@
 
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 AvatarCameraWarper::AvatarCameraWarper(MovementController& movementController, const Camera::MainCamera& camera, Eris::View& view, float movementThreshold) :
 		AvatarFollowsCamera("toggle_avatar_follows_camera", this, "Toggles the avatar being moved when the first person camera is moved. An optional threshold value can also be specified."),
@@ -51,13 +50,13 @@ void AvatarCameraWarper::setEnabled(bool enabled) {
 void AvatarCameraWarper::runCommand(const std::string& command, const std::string& args) {
 	if (AvatarFollowsCamera == command) {
 		mEnabled = !mEnabled;
-		S_LOG_INFO("Setting avatar camera warper to " << (mEnabled ? "enabled" : "disabled") << ".");
+		logger->info("Setting avatar camera warper to {}.", (mEnabled ? "enabled" : "disabled"));
 		Tokeniser tokeniser(args);
 		if (tokeniser.hasRemainingTokens()) {
 			try {
 				std::istringstream(tokeniser.nextToken()) >> mMovementThreshold;
 			} catch (const std::exception& e) {
-				S_LOG_WARNING("Could not update movement threshold in avatar camera warper." << e);
+				logger->warn("Could not update movement threshold in avatar camera warper: {}", e.what());
 			}
 		}
 	}
@@ -80,4 +79,4 @@ void AvatarCameraWarper::updateAvatarPosition(const Ogre::Vector3& worldPosition
 }
 
 }
-}
+

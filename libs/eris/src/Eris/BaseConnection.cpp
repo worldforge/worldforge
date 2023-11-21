@@ -76,8 +76,7 @@ int BaseConnection::connectRemote(const std::string & host, short port)
         setStatus(CONNECTING);
         socket->connectWithQuery(query);
     } catch (const std::exception& e) {
-        error() << "Error when trying to connect to " << host << " on port "
-                << port << ": " << e.what();
+        logger->error("Error when trying to connect to {} on port {}: {}", host, port, e.what());
         hardDisconnect(true);
         return -1;
     }

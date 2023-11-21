@@ -79,16 +79,16 @@ Ogre::MaterialPtr EmberTerrainProfile::generate(const Ogre::Terrain* terrain) {
 	std::unique_ptr<IPageData> pageData = mDataProvider.getPageData(index);
 
 	if (!pageData) {
-		S_LOG_WARNING("Could not find corresponding page data for OgreTerrain at " << "[" << index.first << "|" << index.second << "]");
+		logger->warn("Could not find corresponding page data for OgreTerrain at [{}|{}]", index.first, index.second);
 		return getOrCreateMaterialClone(mErrorMaterialTemplate, terrain->getMaterialName());
 	}
 
-	S_LOG_INFO("Loading material for terrain page: " << "[" << index.first << "|" << index.second << "]");
+	logger->info("Loading material for terrain page: [{}|{}]", index.first, index.second);
 
 	auto mat = pageData->getMaterial();
 
 	if (!mat) {
-		S_LOG_WARNING("Terrain material was not found.");
+		logger->warn("Terrain material was not found.");
 		return getOrCreateMaterialClone(mErrorMaterialTemplate, terrain->getMaterialName());
 	}
 
@@ -104,7 +104,7 @@ Ogre::MaterialPtr EmberTerrainProfile::generate(const Ogre::Terrain* terrain) {
 					tus->setTexture(normalMap);
 				} else if (tus->getName() == Techniques::Shader::COMPOSITE_MAP_ALIAS) {
 					if (!compositeMap) {
-						S_LOG_WARNING("A composite map was required for for terrain page: " << "[" << index.first << "|" << index.second << "] but could not be found.");
+						logger->warn("A composite map was required for for terrain page: [{}|{}] but could not be found.", index.first, index.second);
 					} else {
 						tus->setTexture(compositeMap);
 					}
@@ -125,11 +125,11 @@ Ogre::MaterialPtr EmberTerrainProfile::generateForCompositeMap(const Ogre::Terra
 	auto materialName = terrain->getMaterialName() + "_comp";
 	auto index = calculateTerrainIndex(*terrain, mTerrainGroup);
 
-	S_LOG_VERBOSE("Loading composite map material for terrain page: " << "[" << index.first << "|" << index.second << "]");
+	logger->debug("Loading composite map material for terrain page: [{}|{}]", index.first, index.second);
 
 	std::unique_ptr<IPageData> pageData(mDataProvider.getPageData(index));
 	if (!pageData) {
-		S_LOG_WARNING("Could not find corresponding page data for OgreTerrain at " << "[" << index.first << "|" << index.second << "]");
+		logger->warn("Could not find corresponding page data for OgreTerrain at [{}|{}]", index.first, index.second);
 		return getOrCreateMaterialClone(mErrorMaterialTemplate, materialName);
 	}
 
@@ -138,7 +138,7 @@ Ogre::MaterialPtr EmberTerrainProfile::generateForCompositeMap(const Ogre::Terra
 	if (mat) {
 		return getOrCreateMaterialClone(mat, materialName);
 	} else {
-		S_LOG_WARNING("Composite map material was not found. This might happen if the page is currently being unloaded.");
+		logger->warn("Composite map material was not found. This might happen if the page is currently being unloaded.");
 		return getOrCreateMaterialClone(mErrorMaterialTemplate, materialName);
 	}
 }

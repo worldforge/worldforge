@@ -71,8 +71,7 @@ using namespace CEGUI;
 using namespace Ember::OgreView::Gui;
 using namespace Ember;
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 unsigned long GUIManager::msAutoGenId(0);
 
@@ -101,9 +100,9 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 
 	try {
 
-		S_LOG_INFO("Starting CEGUI");
+		logger->info("Starting CEGUI");
 		mDefaultScheme = "EmberLook";
-		S_LOG_VERBOSE("Setting default scheme to " << mDefaultScheme);
+		logger->debug("Setting default scheme to {}", mDefaultScheme);
 
 		mCeguiSetup.getSystem().getClipboard()->setNativeProvider(mNativeClipboardProvider.get());
 
@@ -120,7 +119,7 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 
 		mWorldLoadingScreen = std::make_unique<WorldLoadingScreen>();
 
-		S_LOG_INFO("CEGUI system set up");
+		logger->info("CEGUI system set up");
 
 		getInput().EventKeyPressed.connect(sigc::mem_fun(*this, &GUIManager::pressedKey));
 		getInput().setInputMode(Input::IM_GUI);
@@ -147,12 +146,12 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 
 
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_FAILURE("GUIManager - error when creating gui." << ex);
+		logger->error("GUIManager - error when creating gui: {}", ex.what());
 		throw Exception(ex.getMessage().c_str());
 	}
 
 	if (chdir(configService.getEmberDataDirectory().generic_string().c_str())) {
-		S_LOG_WARNING("Failed to change to the data directory '" << configService.getEmberDataDirectory().string() << "'.");
+		logger->warn("Failed to change to the data directory '{}'.", configService.getEmberDataDirectory().string());
 	}
 
 	mWidgetDefinitions->registerWidgets(*this);
@@ -161,7 +160,7 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 }
 
 GUIManager::~GUIManager() {
-	S_LOG_INFO("Shutting down GUI manager.");
+	logger->info("Shutting down GUI manager.");
 	mCeguiSetup.getSystem().setDefaultCustomRenderedStringParser(nullptr);
 
 	mWorldLoadingScreen.reset();
@@ -226,10 +225,10 @@ CEGUI::Window* GUIManager::createWindow(const std::string& windowType, const std
 		CEGUI::Window* window = mWindowManager->createWindow(windowType, windowName);
 		return window;
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_FAILURE("Error when creating new window of type " << windowType << " with name " << windowName << ".\n" << ex.getMessage().c_str());
+		logger->error("Error when creating new window of type {} with name {}.\n{}", windowType, windowName, ex.getMessage().c_str());
 		return nullptr;
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating new window of type " << windowType << " with name " << windowName << "." << ex);
+		logger->error("Error when creating new window of type {} with name {}: {}", windowType, windowName, ex.what());
 		return nullptr;
 	}
 }
@@ -241,14 +240,14 @@ Widget* GUIManager::createWidget() {
 		mWidgets.emplace_back(std::unique_ptr<Widget>(widget));
 		return widget;
 	} catch (const std::exception& e) {
-		S_LOG_FAILURE("Error when loading widget." << e);
+		logger->error("Error when loading widget: {}", e.what());
 		return nullptr;
 	}
 }
 
 void GUIManager::destroyWidget(Widget* widget) {
 	if (!widget) {
-		S_LOG_WARNING("Trying to destroy null widget.");
+		logger->warn("Trying to destroy null widget.");
 		return;
 	}
 	removeWidget(widget);
@@ -287,7 +286,7 @@ bool GUIManager::frameStarted(const Ogre::FrameEvent& evt) {
 		CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 		CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(evt.timeSinceLastFrame);
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 
 	//iterate over all widgets and send them a frameStarted event
@@ -299,7 +298,7 @@ bool GUIManager::frameStarted(const Ogre::FrameEvent& evt) {
 		try {
 			aWidget->frameStarted(evt);
 		} catch (const CEGUI::Exception& ex) {
-			S_LOG_WARNING("Error in CEGUI." << ex);
+			logger->warn("Error in CEGUI: {}", ex.what());
 		}
 	}
 
@@ -334,16 +333,16 @@ void GUIManager::runCommand(const std::string& command, const std::string& args)
 		getInput().toggleInputMode();
 	} else if (command == ToggleGui.getCommand()) {
 
-		S_LOG_VERBOSE("Toggle Gui Initiated -- " << getInput().getInputMode());
+		logger->debug("Toggle Gui Initiated -- {}", fmt::underlying(getInput().getInputMode()));
 
 		if (mEnabled) {
-			S_LOG_INFO("Disabling GUI");
+			logger->info("Disabling GUI");
 			mEnabled = false;
 
 			getInput().removeAdapter(mCEGUIAdapter.get());
 
 		} else {
-			S_LOG_INFO("Enabling GUI");
+			logger->info("Enabling GUI");
 			mEnabled = true;
 
 			getInput().addAdapter(mCEGUIAdapter.get());
@@ -411,5 +410,5 @@ CEGUI::Renderer* GUIManager::getGuiRenderer() const {
 }
 
 }
-}
+
 

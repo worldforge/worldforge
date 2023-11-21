@@ -57,7 +57,7 @@ void View::registerFactory(std::unique_ptr<Factory> f) {
 
 sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot) {
 	if (m_contents.count(eid)) {
-		error() << "notifyWhenEntitySeen: entity " << eid << " already in View";
+		logger->error("notifyWhenEntitySeen: entity {} already in View", eid);
 		return {};
 	}
 
@@ -177,7 +177,7 @@ void View::disappear(const std::string& eid) {
 			//debug() << "got disappearance for pending " << eid;
 			m_pending[eid].sightAction = SightAction::DISCARD;
 		} else {
-			warning() << "got disappear for unknown entity " << eid;
+			logger->warn("got disappear for unknown entity {}", eid);
 		}
 	}
 }
@@ -204,7 +204,7 @@ void View::sight(const RootEntity& gent) {
 				break;
 
 			case SightAction::QUEUED:
-				error() << "got sight of queued entity " << eid << " somehow";
+				logger->error("got sight of queued entity {} somehow", eid);
 				eraseFromLookQueue(eid);
 				break;
 
@@ -306,7 +306,7 @@ void View::deleteEntity(const std::string& eid) {
 		if (isPending(eid)) {
 			m_pending[eid].sightAction = SightAction::DISCARD;
 		} else {
-			warning() << "got delete for unknown entity " << eid;
+			logger->warn("got delete for unknown entity {}", eid);
 		}
 	}
 }
@@ -361,7 +361,7 @@ size_t View::pruneAbandonedPendingEntities() {
 	auto now = std::chrono::steady_clock::now();
 	for (auto I = m_pending.begin(); I != m_pending.end();) {
 		if (I->second.sightAction != SightAction::QUEUED && (now - I->second.registrationTime) > std::chrono::seconds(20)) {
-			warning() << "Didn't receive any response for entity " << I->first << " within 20 seconds, will remove it from pending list.";
+			logger->warn("Didn't receive any response for entity {} within 20 seconds, will remove it from pending list.", I->first);
 			I = m_pending.erase(I);
 			pruned++;
 		} else {
@@ -453,9 +453,9 @@ void View::issueQueuedLook() {
 }
 
 void View::dumpLookQueue() {
-	debug() << "look queue:";
+	logger->debug("look queue:");
 	for (const auto& lookOp : m_lookQueue) {
-		debug() << "\t" << lookOp;
+		logger->debug("\t{}", lookOp);
 	}
 }
 
@@ -468,7 +468,7 @@ void View::eraseFromLookQueue(const std::string& eid) {
 		}
 	}
 
-	error() << "entity " << eid << " not present in the look queue";
+	logger->error("entity {} not present in the look queue", eid);
 }
 
 } // of namespace Eris

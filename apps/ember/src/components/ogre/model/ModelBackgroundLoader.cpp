@@ -23,7 +23,7 @@
 #include "ModelBackgroundLoader.h"
 #include "Model.h"
 #include "framework/TimeFrame.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <OgreSubMesh.h>
 #include <OgreMaterialManager.h>
@@ -37,10 +37,7 @@
 #include <Ogre.h>
 #include <framework/TimedLog.h>
 
-namespace Ember {
-namespace OgreView {
-
-namespace Model {
+namespace Ember::OgreView::Model {
 
 ModelBackgroundLoaderListener::ModelBackgroundLoaderListener(ModelBackgroundLoader& loader) :
 		mLoader(loader) {
@@ -111,7 +108,7 @@ bool ModelBackgroundLoader::performLoading() {
 						addTicket(ticket);
 					}
 				} catch (const std::exception& ex) {
-					S_LOG_FAILURE("Could not load the mesh " << subModel.meshName << " when loading model " << mModelDefinition.getOrigin() << "." << ex);
+					logger->error("Could not load the mesh {} when loading model {}: {}",subModel.meshName,mModelDefinition.getOrigin(), ex.what());
 					continue;
 				}
 			}
@@ -140,9 +137,9 @@ bool ModelBackgroundLoader::performLoading() {
 #else
 					try {
 						meshPtr->load();
-						S_LOG_VERBOSE("Loaded mesh in main thread: " << meshPtr->getName() << " Memory used: " << (meshPtr->getSize() / 1000000.f) << " Mb");
+						logger->debug("Loaded mesh in main thread: {} Memory used: {} Mb", meshPtr->getName(), ((float)(meshPtr->getSize()) / 1000000.f));
 					} catch (const std::exception& ex) {
-						S_LOG_FAILURE("Could not load the mesh " << meshPtr->getName() << " when loading model " << mModelDefinition.getOrigin() << "." << ex);
+						logger->error("Could not load the mesh {} when loading model {}: {}", meshPtr->getName(), mModelDefinition.getOrigin(), ex.what());
 					}
 					return false;
 #endif
@@ -240,12 +237,12 @@ bool ModelBackgroundLoader::performLoading() {
 			if (texture && !texture->isLoaded()) {
 				try {
 					if (!texture->isPrepared()) {
-						S_LOG_WARNING("Texture was not prepared: "  << texture->getName());
+						logger->warn("Texture was not prepared: {}", texture->getName());
 					}
 					texture->load();
-					S_LOG_VERBOSE("Loaded texture in main thread: " << texture->getName() << " Memory used: " << (texture->getSize() / 1000000.f) << " Mb");
+					logger->debug("Loaded texture in main thread: {} Memory used: {} Mb", texture->getName(), ((float)(texture->getSize()) / 1000000.f));
 				} catch (const std::exception& e) {
-					S_LOG_WARNING("Error when loading texture " << texture->getName() << e);
+					logger->warn("Error when loading texture {}: {}", texture->getName(), e.what());
 				}
 				return false;
 			}
@@ -256,14 +253,14 @@ bool ModelBackgroundLoader::performLoading() {
 		if (areAllTicketsProcessed()) {
 			if (!mMaterialsToLoad.empty()) {
 				auto I = mMaterialsToLoad.begin();
-				Ogre::MaterialPtr material = *I;
+				auto material = *I;
 				mMaterialsToLoad.erase(I);
 				if (!material->isLoaded()) {
 					try {
 						material->load();
-						S_LOG_VERBOSE("Loaded material in main thread: " << material->getName());
+						logger->debug("Loaded material in main thread: {}", material->getName());
 					} catch (const std::exception& e) {
-						S_LOG_WARNING("Error when loading material " << material->getName() << e);
+						logger->warn("Error when loading material {}: {}", material->getName(), e.what());
 					}
 					return false;
 				}
@@ -306,5 +303,5 @@ void ModelBackgroundLoader::addTicket(Ogre::BackgroundProcessTicket ticket) {
 
 }
 
-}
-}
+
+

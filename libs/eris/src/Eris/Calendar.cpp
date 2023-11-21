@@ -51,7 +51,7 @@ void Calendar::calendarAttrChanged(const Element& value)
         try {
             initFromCalendarAttr(value.Map());
         } catch (const InvalidAtlas& e) {
-            warning() << "Error when parsing calendar attribute. " << e.what();
+            logger->warn("Error when parsing calendar attribute. {}", e.what());
         }
     }
 }

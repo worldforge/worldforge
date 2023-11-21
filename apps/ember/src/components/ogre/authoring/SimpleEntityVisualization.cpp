@@ -21,7 +21,7 @@
 #include "components/ogre/Convert.h"
 
 #include "framework/Exception.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
@@ -76,7 +76,7 @@ SimpleEntityVisualization::SimpleEntityVisualization(EmberEntity& entity, Ogre::
 			mErisEntityBoundingBox->setMaterial(materialPtr);
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting Ogre material for bounding box." << ex);
+		logger->error("Error when setting Ogre material for bounding box: {}", ex.what());
 		OGRE_DELETE mErisEntityBoundingBox;
 		mErisEntityBoundingBox = nullptr;
 		throw Exception("Error when setting Ogre material for bounding box.");

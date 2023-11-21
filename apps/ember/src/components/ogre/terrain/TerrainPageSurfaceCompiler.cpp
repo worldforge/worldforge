@@ -37,7 +37,7 @@ TerrainPageSurfaceCompiler::TerrainPageSurfaceCompiler(ICompilerTechniqueProvide
 
 TerrainPageSurfaceCompiler::~TerrainPageSurfaceCompiler() {
 	//Clean up any textures that were created for the specific page.
-	for (auto& textureName : mManagedTextures) {
+	for (auto& textureName: mManagedTextures) {
 		Ogre::TextureManager::getSingleton().remove(textureName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
 	}
 }
@@ -73,8 +73,9 @@ bool TerrainPageSurfaceCompilationInstance::compile(const Ogre::MaterialPtr& mat
 		}
 		return result;
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when compiling material " << material->getName() <<
-													   ". It's probably in an invalid state and will be reset (with blank terrain pages as a probable result)." << ex);
+		logger->warn("Error when compiling material '{}'. It's probably in an invalid state and will be reset (with blank terrain pages as a probable result): {}",
+					 material->getName(),
+					 ex.what());
 		material->removeAllTechniques();
 		return false;
 	}
@@ -88,8 +89,9 @@ bool TerrainPageSurfaceCompilationInstance::compileCompositeMap(const Ogre::Mate
 		}
 		return result;
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when compiling material " << material->getName() <<
-													   ". It's probably in an invalid state and will be reset (with blank terrain pages as a probable result)." << ex);
+		logger->warn("Error when compiling material '{}'. It's probably in an invalid state and will be reset (with blank terrain pages as a probable result): {}",
+					 material->getName(),
+					 ex.what());
 		material->removeAllTechniques();
 		return false;
 	}

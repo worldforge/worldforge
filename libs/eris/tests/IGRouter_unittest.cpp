@@ -735,7 +735,5 @@ Router::RouterResult Router::handleEntity(const RootEntity&) {
 TimedEvent::~TimedEvent() {
 }
 
-void doLog(LogLevel lvl, const std::string& msg) {
-}
 
 } // namespace Eris

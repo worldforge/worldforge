@@ -20,7 +20,7 @@
 #include "TaskQueue.h"
 #include "TaskExecutionContext.h"
 #include "TaskUnit.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 namespace Ember {
 
@@ -48,9 +48,9 @@ void TaskExecutor::run() {
 				taskUnit->executeInBackgroundThread(context);
 				mTaskQueue.addProcessedTask(std::move(taskUnit));
 			} catch (const std::exception& ex) {
-				S_LOG_CRITICAL("Error when executing task in background." << ex);
+				logger->critical("Error when executing task in background: {}", ex.what());
 			} catch (...) {
-				S_LOG_CRITICAL("Unknown error when executing task in background.");
+				logger->critical("Unknown error when executing task in background.");
 			}
 		} else {
 			break;

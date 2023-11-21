@@ -131,7 +131,7 @@ Atlas::Message::Element ModelDefinitionAtlasComposer::composeGeometry(Model* mod
 				indexBuffer->unlock();
 			}
 		}
-		S_LOG_VERBOSE("Created mesh data with " << vertices.size() << " vertex element and " << indices.size() << " index elements.");
+		logger->debug("Created mesh data with {} vertex element and {} index elements.", vertices.size(), indices.size());
 		geometryMap["vertices"] = std::move(vertices);
 		geometryMap["indices"] = std::move(indices);
 	} else if (collisionType == "asset") {
@@ -156,7 +156,7 @@ void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::El
 	size_t numEntries = vertexData.vertexCount * 3;
 	vertices.reserve(vertices.size() + numEntries);
 
-	S_LOG_VERBOSE("Copying " << numEntries << " vertex elements.");
+	logger->debug("Copying {} vertex elements.", numEntries);
 	for (size_t i = 0; i < vertexData.vertexCount; ++i) {
 		float* pFloat;
 		posElem->baseVertexPointerToElement(pVertex, &pFloat);
@@ -193,19 +193,19 @@ std::string ModelDefinitionAtlasComposer::composeToFile(Model* model, const std:
 			dir.remove_filename();
 
 			if (!boost::filesystem::exists(dir)) {
-				S_LOG_INFO("Creating directory " << dir.string());
+				logger->info("Creating directory {}", dir.string());
 				boost::filesystem::create_directories(dir);
 			}
 
 
 			std::fstream exportFile(filename.c_str(), std::fstream::out);
 
-			S_LOG_INFO("Creating atlas type " << filename.string());
+			logger->info("Creating atlas type {}", filename.string());
 			composeToStream(exportFile, model, cleanedTypename.string(), parentTypeName, scale, collisionType);
 			exportFile.close();
 			return filename.string();
 		} catch (const std::exception& e) {
-			S_LOG_WARNING("Error when exporting Model to Atlas data." << e);
+			logger->warn("Error when exporting Model to Atlas data: {}", e.what());
 		}
 	}
 	return "";

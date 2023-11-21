@@ -37,7 +37,7 @@ TerrainPageSurface::TerrainPageSurface(const TerrainPosition& terrainPosition,
 									   ICompilerTechniqueProvider& compilerTechniqueProvider) :
 		mSurfaceCompiler(std::make_unique<TerrainPageSurfaceCompiler>(compilerTechniqueProvider)) {
 	//create a name for out material
-	// 	S_LOG_INFO("Creating a material for the terrain.");
+	// 	logger->info("Creating a material for the terrain.");
 	std::stringstream materialNameSS;
 	materialNameSS << "EmberTerrain_Segment";
 	materialNameSS << "_" << terrainPosition.x() << "_" << terrainPosition.y();

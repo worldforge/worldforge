@@ -19,7 +19,7 @@
 #include "TransferInfoStringSerializer.h"
 #include "AvatarTransferInfo.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Atlas/Message/Element.h>
 #include <Atlas/Message/MEncoder.h>
@@ -39,7 +39,7 @@ bool TransferInfoStringSerializer::serialize(const TransferInfoStore& infoObject
 		info["entityid"] = transferInfo.getTransferInfo().getPossessEntityId();
 		info["avatarname"] = transferInfo.getAvatarName();
 		info["timestamp"] = (transferInfo.getTimestamp() - WFMath::TimeStamp::epochStart()).milliseconds();
-		infos.push_back(info);
+		infos.emplace_back(info);
 	}
 
 	Atlas::Message::QueuedDecoder decoder;
@@ -92,10 +92,10 @@ bool TransferInfoStringSerializer::deserialize(TransferInfoStore& infoObjects, s
 			}
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Couldn't deserialize transfer info objects." << ex);
+		logger->error("Couldn't deserialize transfer info objects:", ex.what());
 		return false;
 	}
-	S_LOG_VERBOSE("Read " << infoObjects.size() << " transfer info objects from storage.");
+	logger->debug("Read {} transfer info objects from storage.", infoObjects.size());
 	return true;
 }
 

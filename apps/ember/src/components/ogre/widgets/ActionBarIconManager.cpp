@@ -61,7 +61,7 @@ ActionBarIconSlot* ActionBarIconManager::createSlot(unsigned int pixelSize) {
 
 ActionBarIcon* ActionBarIconManager::createIcon(Gui::Icons::Icon* icon, unsigned int pixelSize) {
 	if (!icon) {
-		S_LOG_WARNING("Trying to create an EntityIcon with an invalid Icon.");
+		logger->warn("Trying to create an EntityIcon with an invalid Icon.");
 		return nullptr;
 	}
 	std::stringstream ss;

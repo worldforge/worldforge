@@ -21,7 +21,7 @@
 #include "components/ogre/GraphicalChangeAdapter.h"
 #include "components/ogre/ShaderManager.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 namespace Ember
 {

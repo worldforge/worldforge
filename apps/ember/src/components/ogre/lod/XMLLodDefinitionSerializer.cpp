@@ -93,10 +93,9 @@ void XMLLodDefinitionSerializer::importLodDefinition(const Ogre::DataStreamPtr& 
 						if (tmp && isValidMeshName) {
 							dist.meshName = tmp;
 						} else {
-							S_LOG_FAILURE(
-									lodDef.getName() <<
-													 " contains invalid mesh name for user created lod level. Skipping lod level for distance "
-													 << distElem->Attribute("distance"));
+							logger->error("{} contains invalid mesh name for user created lod level. Skipping lod level for distance ",
+										  lodDef.getName(),
+										  distElem->Attribute("distance"));
 							continue;
 						}
 					}
@@ -146,7 +145,7 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 	TiXmlDocument xmlDoc;
 
 	if (!boost::filesystem::exists(mExportDirectory)) {
-		S_LOG_INFO("Creating directory " << mExportDirectory.string());
+		logger->info("Creating directory {}", mExportDirectory.string());
 		boost::filesystem::create_directories(mExportDirectory);
 	}
 
@@ -176,7 +175,7 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 
 			// <level>...</level> <level>...</level> <level>...</level>
 			const LodDefinition::LodDistanceMap& manualLod = lodDef->getManualLodData();
-			for (const auto& it : manualLod) {
+			for (const auto& it: manualLod) {
 
 				// <level distance="10">...</level>
 				TiXmlElement levelElem("level");
@@ -231,7 +230,7 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 	}
 
 	xmlDoc.InsertEndChild(rootElem);
-	S_LOG_INFO("Saved file " << (mExportDirectory / fileName).string());
+	logger->info("Saved file {}", (mExportDirectory / fileName).string());
 	return xmlDoc.SaveFile((mExportDirectory / fileName).string());
 }
 

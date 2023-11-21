@@ -66,7 +66,7 @@ std::vector<TerrainLayerDefinition> XMLLayerDefinitionSerializer::parseScript(Og
 
 				if (!shadername.empty() || areaId != 0) {
 					//make sure that there's no preexisting shader defined
-					S_LOG_VERBOSE("Adding terrain layer definition for shader '" << shadername << "' and area index '" << areaId << "'.");
+					logger->debug("Adding terrain layer definition for shader '{}' and area index '{}'.", shadername, areaId);
 					try {
 						TerrainLayerDefinition definition{};
 						definition.mShaderName = shadername;
@@ -98,9 +98,9 @@ std::vector<TerrainLayerDefinition> XMLLayerDefinitionSerializer::parseScript(Og
 
 						definitions.emplace_back(std::move(definition));
 					} catch (const std::exception& ex) {
-						S_LOG_FAILURE("Error when reading terrain layer definition." << ex);
+						logger->error("Error when reading terrain layer definition: {}", ex.what());
 					} catch (...) {
-						S_LOG_FAILURE("Error when reading terrain layer definition.");
+						logger->error("Error when reading terrain layer definition.");
 					}
 				}
 			}

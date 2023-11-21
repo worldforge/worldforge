@@ -52,7 +52,7 @@ std::map<std::string, std::unique_ptr<SoundGroupDefinition>> XMLSoundDefParser::
 
 			auto newModel = std::make_unique<SoundGroupDefinition>();
 
-			S_LOG_INFO("Sound Model " << finalName << " created.");
+			logger->info("Sound Model {} created.", finalName);
 
 			readBuffers(newModel.get(), smElem);
 			defs.emplace(finalName, std::move(newModel));

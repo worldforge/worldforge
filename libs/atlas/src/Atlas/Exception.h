@@ -23,9 +23,6 @@ class Exception : public std::runtime_error
 
     ~Exception() noexcept override = default;
 
-    std::string getDescription() const {
-        return what();
-    }
 };
 
 } // namespace Atlas

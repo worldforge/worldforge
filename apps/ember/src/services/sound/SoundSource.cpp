@@ -25,7 +25,7 @@
 
 #include "SoundGeneral.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/Exception.h"
 #include <cassert>
 

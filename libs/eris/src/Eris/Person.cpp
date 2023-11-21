@@ -33,7 +33,7 @@ void Person::sight(const AtlasAccount &acc)
 {
     if (acc->getId() != m_id)
     {
-        error() << "person got sight(account) with mismatching Ids";
+        logger->error("person got sight(account) with mismatching Ids");
         return;
     }
     
@@ -48,7 +48,7 @@ void Person::msg(const std::string &msg)
 {
     if (!m_lobby.getConnection().isConnected())
     {
-        error() << "sending private chat, but connection is down";
+        logger->error("sending private chat, but connection is down");
         return;
     }
 	

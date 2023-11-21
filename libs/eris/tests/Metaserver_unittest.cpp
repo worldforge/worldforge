@@ -235,7 +235,4 @@ void EventService::runOnMainThread(std::function<void()> const&,
 								   std::shared_ptr<bool> activeMarker) {
 }
 
-void doLog(LogLevel lvl, const std::string& msg) {
-}
-
 }

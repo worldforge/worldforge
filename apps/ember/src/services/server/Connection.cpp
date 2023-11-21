@@ -18,7 +18,7 @@
 
 #include "Connection.h"
 #include "IConnectionListener.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include "framework/Session.h"
 namespace Ember
@@ -43,7 +43,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
 		try {
 			mListener->sendingObject(obj);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when logging sending of object."<< ex);
+			logger->warn("Error when logging sending of object: {}", ex.what());
 		}
 	}
 	Eris::Connection::send(obj);
@@ -55,7 +55,7 @@ void Connection::objectArrived(Atlas::Objects::Root obj)
 		try {
 			mListener->receivedObject(obj);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when logging receiving of object."<< ex);
+			logger->warn("Error when logging receiving of object: {}", ex.what());
 		}
 	}
 	Eris::Connection::objectArrived(std::move(obj));

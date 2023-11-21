@@ -44,9 +44,7 @@
 #include <memory>
 
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 std::map<Ogre::SceneManager*, std::map<Ogre::InstancedEntity*, Model*>> Model::sInstancedEntities;
 
@@ -85,7 +83,7 @@ Model::~Model() {
 }
 
 void Model::reset() {
-//	S_LOG_VERBOSE("Resetting "<< getName());
+//	logger->debug("Resetting "<< getName());
 	Resetting.emit();
 	//	resetAnimations();
 	resetSubmodels();
@@ -161,7 +159,7 @@ bool Model::loadAssets() {
 //							}
 //							animation.addAnimationPart(animPart);
 //						} catch (const std::exception& ex) {
-//							S_LOG_FAILURE("Error when loading animation: " << animationPartDef.Name << "." << ex);
+//							logger->error("Error when loading animation: " << animationPartDef.Name << ": {}", ex.what());
 //						}
 //					}
 //				}
@@ -175,7 +173,7 @@ bool Model::createModelAssets() {
 	TimedLog timedLog("Model::createActualModel " + mDefinition->getOrigin());
 
 	if (mAssetCreationContext.mCurrentlyLoadingSubModelIndex < mDefinition->getSubModelDefinitions().size()) {
-		auto I = mDefinition->getSubModelDefinitions().begin() + mAssetCreationContext.mCurrentlyLoadingSubModelIndex;
+		auto I = mDefinition->getSubModelDefinitions().begin() + static_cast<ptrdiff_t>(mAssetCreationContext.mCurrentlyLoadingSubModelIndex);
 		auto& submodelDef = *I;
 		try {
 
@@ -223,7 +221,7 @@ bool Model::createModelAssets() {
 											subEntityIndex = subEntityDef.subEntityIndex;
 											subEntity = entity->getSubEntity(subEntityIndex);
 										} else {
-											S_LOG_WARNING("Model definition " << mDefinition->getOrigin() << " has a reference to entity with index " << subEntityDef.subEntityIndex << " which is out of bounds.");
+											logger->warn("Model definition {} has a reference to entity with index {} which is out of bounds.", mDefinition->getOrigin(), subEntityDef.subEntityIndex);
 											continue;
 										}
 									}
@@ -234,10 +232,10 @@ bool Model::createModelAssets() {
 											subEntity->setMaterialName(subEntityDef.materialName);
 										}
 									} else {
-										S_LOG_WARNING("Could not add subentity.");
+										logger->warn("Could not add subentity.");
 									}
 								} catch (const std::exception& ex) {
-									S_LOG_WARNING("Error when getting sub entities for model '" << mDefinition->getOrigin() << "'." << ex);
+									logger->warn("Error when getting sub entities for model '{}: {}", mDefinition->getOrigin(), ex.what());
 								}
 							}
 						} else {
@@ -276,12 +274,12 @@ bool Model::createModelAssets() {
 				timedLog.report("Created submodel.");
 
 			} else {
-				S_LOG_FAILURE("Could not load mesh " << submodelDef.meshName << " which belongs to model " << mDefinition->getOrigin() << ".");
+				logger->error("Could not load mesh {} which belongs to model {}.",submodelDef.meshName,mDefinition->getOrigin());
 			}
 
 
 		} catch (const std::exception& e) {
-			S_LOG_FAILURE("Submodel load error for mesh '" << submodelDef.meshName << "'." << e);
+			logger->error("Submodel load error for mesh '{}': {}",submodelDef.meshName , e.what());
 		}
 		mAssetCreationContext.mCurrentlyLoadingSubModelIndex++;
 		return false;
@@ -354,7 +352,7 @@ void Model::createActions() {
 								}
 								animation.addAnimationPart(animPart);
 							} catch (const std::exception& ex) {
-								S_LOG_FAILURE("Error when loading animation: " << animationPartDef.Name << "." << ex);
+								logger->error("Error when loading animation '{}': {}",animationPartDef.Name , ex.what());
 							}
 						}
 					}
@@ -415,7 +413,7 @@ void Model::createParticles() {
 				addMovable(ogreParticleSystem);
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Could not create particle system: " << particleSystemDef.Script << "." << ex);
+			logger->error("Could not create particle system '{}': {}",particleSystemDef.Script , ex.what());
 		}
 	}
 }
@@ -435,7 +433,7 @@ void Model::createLights() {
 				ogreLight = mManager.createLight();
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Could not create light." << ex);
+			logger->error("Could not create light: {}", ex.what());
 			continue;
 		}
 		if (ogreLight) {
@@ -522,7 +520,7 @@ SubModel* Model::getSubModel(size_t index) {
 	if (result != mSubmodels.end()) {
 		return result->get();
 	}
-	S_LOG_FAILURE("Could not find submodel with index " << index << " in model " << mName);
+	logger->error("Could not find submodel with index {} in model {}",index , mName);
 	return nullptr;
 
 }
@@ -851,7 +849,7 @@ void Model::setQueryFlags(unsigned int flags) {
 //			++I;
 //		} catch (const Ogre::Exception& ex) {
 //			//An exception occurred when forcing an update of the particle system. Remove it.
-//			S_LOG_FAILURE("Error when loading particle system " << (*I)->getOgreParticleSystem()->getName() << ". Removing it.");
+//			logger->error("Error when loading particle system " << (*I)->getOgreParticleSystem()->getName() << ". Removing it.");
 //			mMovableObjects.erase(std::find(std::begin(mMovableObjects), std::end(mMovableObjects), (*I)->getOgreParticleSystem()));
 //			delete *I;
 //			I = mParticleSystems.erase(I);
@@ -933,7 +931,7 @@ bool Model::useInstancing() const {
 
 void Model::setUseInstancing(bool useInstancing) {
 	if (mLoaded) {
-		S_LOG_WARNING("Altering 'useInstancing' on a Model which already is loaded. This will have no effect.");
+		logger->warn("Altering 'useInstancing' on a Model which already is loaded. This will have no effect.");
 	}
 	mUseInstancing = useInstancing;
 }
@@ -947,5 +945,5 @@ void Model::doWithMovables(const std::function<void(Ogre::MovableObject*, int)>&
 
 
 }
-}
-}
+
+

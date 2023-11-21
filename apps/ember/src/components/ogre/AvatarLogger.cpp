@@ -35,8 +35,7 @@
 #endif
 
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 AvatarLogger::AvatarLogger(EmberEntity& avatarEntity)
 		: mChatLogger(nullptr) {
@@ -53,7 +52,7 @@ AvatarLogger::AvatarLogger(EmberEntity& avatarEntity)
 		std::stringstream logFileSS;
 		logFileSS << dir << "/" << avatarEntity.getName() << "_chatlog.log";
 		mChatLogger = std::make_unique<std::ofstream>(logFileSS.str().c_str(), std::ios::app);
-		S_LOG_VERBOSE("Chat Logging set to write in [ " << logFileSS.str() << " ]");
+		logger->debug("Chat Logging set to write in [ {} ]", logFileSS.str());
 
 		*mChatLogger << "-------------------------------------------------------" << std::endl;
 		*mChatLogger << "Chat Logging Initialized at " << TimeHelper::getLocalTimeStr() << std::endl;
@@ -63,7 +62,7 @@ AvatarLogger::AvatarLogger(EmberEntity& avatarEntity)
 		GUIManager::getSingleton().AppendIGChatLine.connect(sigc::mem_fun(*this, &AvatarLogger::GUIManager_AppendIGChatLine));
 
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating directory for logs." << ex);
+		logger->error("Error when creating directory for logs: {}", ex.what());
 	}
 }
 
@@ -79,4 +78,4 @@ void AvatarLogger::GUIManager_AppendIGChatLine(const EntityTalk& entityTalk, Emb
 }
 
 }
-}
+

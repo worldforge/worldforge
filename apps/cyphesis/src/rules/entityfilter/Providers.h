@@ -163,7 +163,7 @@ namespace EntityFilter {
         public:
             explicit ConsumingProviderBase(std::shared_ptr<Consumer<TProviding>> consumer);
 
-            ~ConsumingProviderBase() override = default;;
+            ~ConsumingProviderBase() override = default;
 
             const std::type_info* getType() const override;
     };
@@ -206,7 +206,7 @@ namespace EntityFilter {
         public:
             ConsumingNamedAttributeProviderBase(std::shared_ptr<Consumer<TProviding>> consumer, const std::string& attribute_name);
 
-            ~ConsumingNamedAttributeProviderBase() override = default;;
+            ~ConsumingNamedAttributeProviderBase() override = default;
 
             const std::type_info* getType() const override;
     };

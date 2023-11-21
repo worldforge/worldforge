@@ -21,7 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "XMLEntityMappingDefinitionSerializer.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 //#include "components/ogre/EmberOgrePrerequisites.h"
 using namespace Ember::EntityMapping;
 using namespace Ember::EntityMapping::Definitions;
@@ -43,7 +43,7 @@ void XMLEntityMappingDefinitionSerializer::parseScript(TiXmlDocument xmlDocument
 		if (rootElem->ValueStr() == "entitymapping") {
 			parseSingleMapping(rootElem, path);
 		} else {
-			S_LOG_FAILURE("Unrecognized start tag when parsing entity mapping in file '" << path << "': " << rootElem->ValueStr());
+			logger->error("Unrecognized start tag when parsing entity mapping in file '{}': {}",path , rootElem->ValueStr());
 		}
 
 	}

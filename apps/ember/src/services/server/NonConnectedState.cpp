@@ -21,7 +21,7 @@
 
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 namespace Ember {
 
@@ -80,7 +80,7 @@ bool NonConnectedState::connectLocal(const std::string& socket) {
 
 
 void NonConnectedState::disconnected() {
-	S_LOG_INFO("Disconnected");
+	logger->info("Disconnected");
 
 	ConsoleBackend::getSingleton().pushMessage("Disconnected from server.", "important");
 

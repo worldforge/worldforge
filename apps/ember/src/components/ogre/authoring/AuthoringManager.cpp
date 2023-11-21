@@ -33,10 +33,7 @@
 #include <Eris/View.h>
 #include <Eris/Connection.h>
 
-namespace Ember {
-namespace OgreView {
-
-namespace Authoring {
+namespace Ember::OgreView::Authoring {
 AuthoringManager::AuthoringManager(World& world) :
 		DisplayAuthoringVisualizations("displayauthoringvisualizations", this, "Displays authoring markers for all entities."),
 		HideAuthoringVisualizations("hideauthoringvisualizations", this, "Hides authoring markers for all entities."),
@@ -82,7 +79,7 @@ void AuthoringManager::displayGeometryVisualization(EmberEntity& entity) {
 		try {
 			vis = std::make_unique<GeometryVisualization>(entity, node);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when displaying geometry." << ex);
+			logger->warn("Error when displaying geometry: {}", ex.what());
 			//just delete the node and return
 			node->getCreator()->destroySceneNode(node);
 			return;
@@ -168,5 +165,5 @@ void AuthoringManager::stopMovement() {
 
 
 }
-}
-}
+
+

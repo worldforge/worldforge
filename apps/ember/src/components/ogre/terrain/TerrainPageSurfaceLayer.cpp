@@ -50,7 +50,7 @@ TerrainPageSurfaceLayer::~TerrainPageSurfaceLayer() = default;
 bool TerrainPageSurfaceLayer::intersects(const TerrainPageGeometry& geometry) const {
 	const SegmentVector validSegments = geometry.getValidSegments();
 	//check if at least one surface intersects
-	for (const auto& validSegment : validSegments) {
+	for (const auto& validSegment: validSegments) {
 		if (mShader.checkIntersect(*validSegment.segment)) {
 			return true;
 		}
@@ -61,7 +61,7 @@ bool TerrainPageSurfaceLayer::intersects(const TerrainPageGeometry& geometry) co
 void TerrainPageSurfaceLayer::fillImage(const TerrainPageGeometry& geometry, Image& image, unsigned int channel) const {
 	int segmentsPerAxis = geometry.getPage()->getNumberOfSegmentsPerAxis();
 	SegmentVector validSegments = geometry.getValidSegments();
-	for (const auto& validSegment : validSegments) {
+	for (const auto& validSegment: validSegments) {
 		Mercator::Segment* segment = validSegment.segment;
 		if (mShader.checkIntersect(*segment)) {
 			Mercator::Surface* surface = getSurfaceForSegment(segment);
@@ -73,7 +73,8 @@ void TerrainPageSurfaceLayer::fillImage(const TerrainPageGeometry& geometry, Ima
 				for (int i = 0; i < segment->getResolution(); ++i) {
 					for (int j = 0; j < segment->getResolution(); ++j) {
 						//interpolate four samples to get the fragment coverage
-						*dataPtr = (unsigned char) ((srcPtr[(i * segmentSize) + j] + srcPtr[(i * segmentSize) + j + 1] + srcPtr[((i + 1) * segmentSize) + j] + srcPtr[((i + 1) * segmentSize) + j + 1]) / 4);
+						*dataPtr = (unsigned char) (
+								(srcPtr[(i * segmentSize) + j] + srcPtr[(i * segmentSize) + j + 1] + srcPtr[((i + 1) * segmentSize) + j] + srcPtr[((i + 1) * segmentSize) + j + 1]) / 4);
 						dataPtr++;
 					}
 				}
@@ -136,7 +137,7 @@ const TerrainLayerDefinition& TerrainPageSurfaceLayer::getDefinition() const {
 
 void TerrainPageSurfaceLayer::populate(const TerrainPageGeometry& geometry) {
 	const SegmentVector validSegments = geometry.getValidSegments();
-	for (const auto& validSegment : validSegments) {
+	for (const auto& validSegment: validSegments) {
 #if 0
 		//the current Mercator code works such that whenever an Area is added to Terrain, _all_ surfaces for the affected segments are invalidated, thus requiering a total repopulation of the segment
 		//If however that code was changed to only invalidate the affected surface the code below would be very much handy
@@ -155,7 +156,7 @@ void TerrainPageSurfaceLayer::populate(const TerrainPageGeometry& geometry) {
 		if (I2 == segment->getSurfaces().end()) {
 			//the segment doesn't contain this surface yet, lets add it
 			if (mShader.checkIntersect(*segment)) {
-				S_LOG_VERBOSE("Adding new surface with id " << mSurfaceIndex << " to segment at x: " << segment->getXRef() << " z: " << segment->getZRef());
+				logger->debug("Adding new surface with id {} to segment at x: {} z: {}", mSurfaceIndex, segment->getXRef(), segment->getZRef());
 				Mercator::Segment::Surfacestore& sss = segment->getSurfaces();
 				sss[mSurfaceIndex] = mShader.newSurface(*segment);
 			}

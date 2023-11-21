@@ -106,7 +106,7 @@ void LoadingBar::updateRender(bool forceUpdate) {
 			CEGUI::System::getSingleton().getDefaultGUIContext().draw();
 			mGuiSetup.getRenderWindow().swapBuffers();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when updating render for loading bar." << ex);
+			logger->error("Error when updating render for loading bar: {}", ex.what());
 		}
 		mTimer.reset();
 	}

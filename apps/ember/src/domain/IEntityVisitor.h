@@ -33,7 +33,7 @@ struct IEntityVisitor
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~IEntityVisitor() = default;;
+	virtual ~IEntityVisitor() = default;
 
 	/**
 	 * @brief Called for each entity in the hierarchy that's visited.

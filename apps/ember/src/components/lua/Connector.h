@@ -24,7 +24,7 @@
 #define EMBER_LUA_CONNECTOR_H
 
 #include "sol2/sol.hpp"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
@@ -173,12 +173,12 @@ struct LuaConnector {
 					return result;
 				}
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("(LuaScriptModule) Exception thrown calling event handler : " << ex);
+				logger->error("(LuaScriptModule) Exception thrown calling event handler: {}", ex.what());
 				if constexpr (!std::is_void<TReturn>()) {
 					return TReturn();
 				}
 			} catch (...) {
-				S_LOG_FAILURE("Unspecified error when executing Lua.");
+				logger->error("Unspecified error when executing Lua.");
 				if constexpr (!std::is_void<TReturn>()) {
 					return TReturn();
 				}

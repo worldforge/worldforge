@@ -67,7 +67,7 @@ struct ModelAttachedActionCreator : public EntityMapping::IActionCreator {
 	void createActions(EntityMapping::EntityMapping& modelMapping,
 					   EntityMapping::Cases::CaseBase& aCase,
 					   EntityMapping::Definitions::CaseDefinition& caseDefinition) override {
-		for (auto& actionDef : caseDefinition.Actions) {
+		for (auto& actionDef: caseDefinition.Actions) {
 			if (actionDef.Type == "display-part") {
 				aCase.addAction(std::make_unique<EmberEntityPartAction>(mEntity, actionDef.Value));
 			} else if (actionDef.Type == "display-model") {
@@ -100,7 +100,7 @@ struct ModelContainedActionCreator : public EntityMapping::IActionCreator {
 	void createActions(EntityMapping::EntityMapping& modelMapping,
 					   EntityMapping::Cases::CaseBase& aCase,
 					   EntityMapping::Definitions::CaseDefinition& caseDefinition) override {
-		for (auto& actionDef : caseDefinition.Actions) {
+		for (auto& actionDef: caseDefinition.Actions) {
 			if (actionDef.Type == "display-effect") {
 				//TODO: implement effect. One example would be an entity on fire.
 			}
@@ -144,7 +144,7 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 
 
 	std::string attachPoint;
-	for (auto& fitting : mFittings) {
+	for (auto& fitting: mFittings) {
 		if (fitting.second.mChildEntityId == entity.getId()) {
 			attachPoint = fitting.second.mMountPoint;
 
@@ -167,7 +167,7 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 			if (modelRepresentation && mModelRepresentation->getModel().isLoaded()) {
 				try {
 					const AttachPointDefinitionStore& attachpoints = mModelRepresentation->getModel().getDefinition()->getAttachPointsDefinitions();
-					for (const auto& attachpoint : attachpoints) {
+					for (const auto& attachpoint: attachpoints) {
 						if (attachpoint.Name == attachPoint) {
 							auto nodeProvider = std::make_unique<ModelBoneProvider>(mModelMount->getNodeProvider()->getNode(), mModelRepresentation->getModel());
 							nodeProvider->setAttachPointDefinition(attachpoint);
@@ -177,7 +177,7 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 						}
 					}
 				} catch (const std::exception& ex) {
-					S_LOG_WARNING("Failed to attach to attach point '" << attachPoint << "' on model '" << mModelRepresentation->getModel().getDefinition()->getOrigin() << "'." << ex);
+					logger->warn("Failed to attach to attach point '{}' on model '{}': {}", attachPoint, mModelRepresentation->getModel().getDefinition()->getOrigin(), ex.what());
 				}
 			}
 		});
@@ -188,7 +188,7 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 		mapping->initialize();
 		auto result = mMappings.emplace(&entity, std::move(mapping));
 		if (!result.second) {
-			S_LOG_CRITICAL("A model attachment mapping for entity " << entity.getId() << " already existed. This can cause memory corruption.");
+			logger->critical("A model attachment mapping for entity {} already existed. This can cause memory corruption.", entity.getId());
 		}
 	} else {
 		mMappings.erase(&entity);
@@ -250,7 +250,7 @@ void ModelAttachment::entity_AttrChanged(const Atlas::Message::Element& attribut
 
 void ModelAttachment::setupFittings() {
 	const AttachPointDefinitionStore& attachpoints = mModelRepresentation->getModel().getDefinition()->getAttachPointsDefinitions();
-	for (const auto& attachpoint : attachpoints) {
+	for (const auto& attachpoint: attachpoints) {
 		auto observer = std::make_unique<AttributeObserver>(mChildEntity, attachpoint.Name, ".");
 		observer->EventChanged.connect(sigc::bind(sigc::mem_fun(*this, &ModelAttachment::entity_AttrChanged), attachpoint.Name));
 		observer->forceEvaluation();
@@ -296,7 +296,7 @@ void ModelAttachment::model_Reloaded() {
 }
 
 void ModelAttachment::reattachEntities() {
-	for (auto& fitting : mFittings) {
+	for (auto& fitting: mFittings) {
 		if (fitting.second.mChild && mChildEntity.hasChild(fitting.second.mChildEntityId)) {
 			EmberEntity* entity = fitting.second.mChild;
 			entity->setAttachment(nullptr);

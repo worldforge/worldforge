@@ -48,7 +48,7 @@ TypeInfo::TypeInfo(const Root &atype, TypeService &ts) :
 bool TypeInfo::isA(TypeInfo* tp) const
 {
     if (!m_bound) {
-        warning() << "calling isA on unbound type " << m_name;
+        logger->warn("calling isA on unbound type {}", m_name);
     }
     
     // uber fast short-circuit for type equality
@@ -62,7 +62,7 @@ bool TypeInfo::isA(TypeInfo* tp) const
 bool TypeInfo::isA(const std::string& typeName) const
 {
     if (!m_bound) {
-        warning() << "calling isA on unbound type " << m_name;
+        logger->warn("calling isA on unbound type {}", m_name);
     }
     if (m_name == typeName) {
         return true;
@@ -81,7 +81,7 @@ bool TypeInfo::hasUnresolvedChildren() const
 void TypeInfo::resolveChildren()
 {
     if (m_unresolvedChildren.empty()) {
-        error() << "Type " << m_name << " has no unresolved children";
+        logger->error("Type {} has no unresolved children", m_name);
         return;
     }
 
@@ -97,7 +97,7 @@ void TypeInfo::processTypeData(const Root &atype)
 {
 
     if (atype->getId() != m_name) {
-        error() << "mis-targeted INFO operation for " << atype->getId() << " arrived at " << m_name;
+        logger->error("mis-targeted INFO operation for {} arrived at {}", atype->getId(), m_name);
         return;
     }
 
@@ -106,7 +106,7 @@ void TypeInfo::processTypeData(const Root &atype)
     {
         const Atlas::Message::Element childElem(atype->getAttr("children"));
         if (!childElem.isList()) {
-            warning() << "'children' element is not of list type when processing entity type " << m_name << ".";
+            logger->warn("'children' element is not of list type when processing entity type {}.", m_name);
         } else {
             const Atlas::Message::ListType & children(childElem.asList());
 
@@ -171,7 +171,7 @@ void TypeInfo::processTypeData(const Root &atype)
 bool TypeInfo::operator==(const TypeInfo &x) const
 {
     if (&m_typeService != &x.m_typeService)
-        warning() << "comparing TypeInfos from different type services, bad";
+        logger->warn("comparing TypeInfos from different type services, bad");
         
     return (m_name == x.m_name);
 }
@@ -190,7 +190,7 @@ void TypeInfo::setParent(TypeInfo* tp)
     }
 	
     if (m_ancestors.count(tp)) {
-        error() << "Adding " << tp->m_name << " as parent of " << m_name << ", but already marked as ancestor";
+        logger->error("Adding {} as parent of {}, but already marked as ancestor", tp->m_name, m_name);
     }
 
     // update the gear
@@ -205,11 +205,11 @@ void TypeInfo::addChild(TypeInfo* tp)
 {
 	assert(tp);
     if (tp == this) {
-        error() << "Attempt to add " << getName() << " as a child if itself";
+        logger->error("Attempt to add {} as a child if itself",  getName());
         return;
     }
     if (tp->getName() == this->getName()) {
-        error() << "Attempt to add " << getName() << " as child to identical parent ";
+        logger->error("Attempt to add {} as child to identical parent ", getName());
         return;
     }
     
@@ -248,7 +248,7 @@ void TypeInfo::extractDefaultProperties(const Atlas::Objects::Root& atype)
     if (atype->hasAttr("properties")) {
         auto propertiesElement = atype->getAttr("properties");
         if (!propertiesElement.isMap()) {
-            warning() << "'properties' element is not of map type when processing entity type " << m_name << ".";
+            logger->warn("'properties' element is not of map type when processing entity type {}.", m_name);
         } else {
 			m_properties = propertiesElement.Map();
         }

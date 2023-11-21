@@ -34,7 +34,7 @@
 class OgreMeshDeserializer
 {
     public:
-        explicit OgreMeshDeserializer(std::ifstream& stream);;
+        explicit OgreMeshDeserializer(std::ifstream& stream);
 
         void deserialize();
 
@@ -55,11 +55,11 @@ class OgreMeshDeserializer
         bool m_flipEndian;
         std::uint32_t mCurrentstreamLen;
 
-        void determineEndianness(std::istream& stream);;
+        void determineEndianness(std::istream& stream);
 
-        void readFileHeader(std::istream& stream);;
+        void readFileHeader(std::istream& stream);
 
-        unsigned short readChunk(std::istream& stream);;
+        unsigned short readChunk(std::istream& stream);
 
         void readBools(std::istream& stream, bool* pDest, size_t count);
 

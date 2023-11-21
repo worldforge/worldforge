@@ -49,10 +49,6 @@
 using namespace Eris;
 using namespace Atlas::Objects::Operation;
 
-static void writeLog(Eris::LogLevel, const std::string& msg) {
-	std::cerr << msg << std::endl;
-}
-
 boost::asio::io_service io_service;
 Eris::EventService event_service(io_service);
 
@@ -130,8 +126,6 @@ public:
 };
 
 int main() {
-	Eris::Logged.connect(sigc::ptr_fun(writeLog));
-	Eris::setLogLevel(Eris::LOG_DEBUG);
 
 	TestConnection con("name", "localhost", 6767, true);
 
@@ -182,7 +176,7 @@ int main() {
 		Atlas::Message::MapType level;
 		attributes["level"] = 2.0f;
 		attributes["level2"] = true;
-		attributes["velocity"] = WFMath::Vector<3>(3, 2, 1).toAtlas();;
+		attributes["velocity"] = WFMath::Vector<3>(3, 2, 1).toAtlas();
 		typeInfo->setAttr("properties", attributes);
 		typeService.setup_recvTypeInfo(typeInfo);
 	}

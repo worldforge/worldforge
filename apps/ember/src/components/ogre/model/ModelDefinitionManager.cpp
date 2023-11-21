@@ -115,10 +115,10 @@ void ModelDefinitionManager::runCommand(const std::string& command, const std::s
 		tokeniser.initTokens(args);
 		std::string value = tokeniser.nextToken();
 		if (value == "true") {
-			S_LOG_INFO("Showing models.");
+			logger->info("Showing models.");
 			setShowModels(true);
 		} else if (value == "false") {
-			S_LOG_INFO("Hiding models.");
+			logger->info("Hiding models.");
 			setShowModels(false);
 		}
 	}

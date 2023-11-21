@@ -30,7 +30,6 @@
 #include "Eris/Account.h"
 #include "Eris/ViewEntity.h"
 #include "Eris/View.h"
-#include "Eris/Log.h"
 #include "Eris/EventService.h"
 
 #include "SignalFlagger.h"
@@ -110,16 +109,11 @@ class TestEntity : public Eris::ViewEntity {
     }
 };
 
-static void writeLog(Eris::LogLevel, const std::string & msg)
-{       
-    std::cerr << msg << std::endl;
-}
 
 int main()
 {
 	Atlas::Objects::Factories factories;
-    Eris::Logged.connect(sigc::ptr_fun(writeLog));
-    Eris::setLogLevel(Eris::LOG_DEBUG);
+
 
     // Test constructor
     {

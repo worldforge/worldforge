@@ -190,7 +190,7 @@ void ModelPreviewWorker::scaleNode() {
 	if (mModelMount) {
 		mModelMount->rescale(hasBBox() ? &getBBox() : nullptr);
 	} else {
-		S_LOG_WARNING("Tried to scale node without there being a valid model mount.");
+		logger->warn("Tried to scale node without there being a valid model mount.");
 	}
 }
 

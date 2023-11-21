@@ -55,6 +55,8 @@ find_package(Boost
         REQUIRED
         COMPONENTS headers)
 
+find_package(spdlog REQUIRED)
+
 #boost::asio on unix systems requires pthreads, but that's not always picked up, so we need to declare it.
 if (UNIX)
     set(THREADS_PREFER_PTHREAD_FLAG ON)

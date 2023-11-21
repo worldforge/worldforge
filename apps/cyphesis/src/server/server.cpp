@@ -395,11 +395,6 @@ namespace {
             }
         }
 
-		//TODO: do we need to make spdlog interact with syslog? Or should we just remove all of that stuff?
-        // If we are a daemon logging to syslog, we need to set it up.
-//        initLogger();
-
-
 		//A pointer because we need to reset this before we shut down the Python API. Perhaps this could be done better?
         auto io_context = std::make_unique<boost::asio::io_context>();
 

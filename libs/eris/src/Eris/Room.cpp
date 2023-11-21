@@ -49,7 +49,7 @@ void Room::say(const std::string &tk)
 {
     if (!m_lobby->getConnection().isConnected())
     {
-        error() << "talking in room " << m_roomId << ", but connection is down";
+        logger->error("talking in room {}, but connection is down", m_roomId);
         return;
     }
 	
@@ -70,7 +70,7 @@ void Room::emote(const std::string &em)
 {
     if (!m_lobby->getConnection().isConnected())
     {
-        error() << "emoting in room " << m_roomId << ", but connection is down";
+        logger->error("emoting in room {}, but connection is down", m_roomId);
         return;
     }
 	
@@ -93,7 +93,7 @@ void Room::leave()
 {
     if (!m_lobby->getConnection().isConnected())
     {
-        error() << "leaving room " << m_roomId << ", but connection is down";
+        logger->error("leaving room {}, but connection is down", m_roomId);
         return;
     }
 
@@ -113,7 +113,7 @@ Room* Room::createRoom(const std::string &name)
 {
     if (!m_lobby->getConnection().isConnected())
     {
-        error() << "creating room in room  " << m_roomId << ", but connection is down";
+        logger->error("creating room in room {}, but connection is down", m_roomId);
         return nullptr;
     }
 
@@ -155,7 +155,7 @@ std::vector<Person*> Room::getPeople() const
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
     if (op->getTo() != m_lobby->getAccount().getId()) {
-        error() << "Room received op TO account " << op->getTo() << ", not the account ID";
+        logger->error("Room received op TO account {}, not the account ID", op->getTo());
         return IGNORED;
     }
 
@@ -193,7 +193,7 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
 void Room::sight(const RootEntity &room)
 {
     if (m_entered)
-        warning() << "got SIGHT of entered room " << m_roomId;
+        logger->warn("got SIGHT of entered room {}", m_roomId);
         
     m_name = room->getName();
     if (room->hasAttr("topic"))
@@ -226,7 +226,7 @@ void Room::handleSoundTalk(Person* p, const std::string& speech)
     assert(p);
     
     if (m_members.count(p->getAccount()) == 0) {
-        error() << "room " << m_roomId << " got sound(talk) from non-member account";
+        logger->error("room {} got sound(talk) from non-member account", m_roomId);
         return;
     }
     
@@ -238,7 +238,7 @@ void Room::handleEmote(Person* p, const std::string& description)
     assert(p);
     
     if (m_members.count(p->getAccount()) == 0) {
-        error() << "room " << m_roomId << " got sight(imaginary) from non-member account";
+        logger->error("room {} got sight(imaginary) from non-member account", m_roomId);
         return;
     }
 
@@ -251,7 +251,7 @@ void Room::appearance(const std::string& personId)
 {
     auto P = m_members.find(personId);
     if (P != m_members.end()) {
-        error() << "duplicate appearance of person " << personId << " in room " << m_roomId;
+        logger->error("duplicate appearance of person {} in room {}", m_roomId, personId);
         return;
     }
     
@@ -272,7 +272,7 @@ void Room::disappearance(const std::string& personId)
     auto P = m_members.find(personId);
     if (P == m_members.end())
     {
-        error() << "during disappearance, person " << personId << " not found in room " << m_roomId;
+        logger->error("during disappearance, person {} not found in room {}",personId, m_roomId);
         return;
     }
     

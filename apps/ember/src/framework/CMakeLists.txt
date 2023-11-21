@@ -4,9 +4,6 @@ add_library(ember-framework OBJECT
         ConsoleCommandWrapper.cpp
         DeepAttributeObserver.cpp
         DirectAttributeObserver.cpp
-        Log.cpp
-        LoggingInstance.cpp
-        StreamLogObserver.cpp
         Tokeniser.cpp
         TimedLog.cpp
         TimeHelper.cpp
@@ -29,6 +26,7 @@ add_library(ember-framework OBJECT
         tasks/FunctionalTask.cpp
         FileSystemObserver.cpp
         StackChecker.cpp
+        LogExtensions.cpp
 )
 add_subdirectory(bindings)
 
@@ -39,6 +37,7 @@ target_link_libraries(ember-framework PUBLIC
         AtlasObjects
         eris
         varconf
+        spdlog::spdlog
 )
 
 if (NOT WIN32)

@@ -19,7 +19,7 @@
 #include "EntityImporter.h"
 
 #include "AtlasObjectDecoder.h"
-#include "LoggingInstance.h"
+#include "Log.h"
 #include <Atlas/Codecs/XML.h>
 
 #include <Eris/Account.h>
@@ -129,9 +129,9 @@ std::vector<EntityImporter::ShortInfo> EntityImporter::getInfoFromDirectory(cons
 			}
 
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when trying to read import info from '" << file_path.string() << "'." << ex);
+			logger->error("Error when trying to read import info from '{}': {}", file_path.string(), ex.what());
 		} catch (...) {
-			S_LOG_FAILURE("Unspecified error when trying to read import info from '" << file_path.string() << "'.");
+			logger->error("Unspecified error when trying to read import info from '{}'.", file_path.string());
 		}
 
 

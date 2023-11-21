@@ -17,7 +17,7 @@
  */
 
 #include "RulesFetcher.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Response.h>
@@ -65,7 +65,7 @@ void RulesFetcher::fetchRule(const std::string& id) {
 
 void RulesFetcher::operationGetRuleResult(const Atlas::Objects::Operation::RootOperation& op) {
 	if (op->getArgs().empty()) {
-		S_LOG_WARNING("Got response to GET for rule with no args.");
+		logger->warn("Got response to GET for rule with no args.");
 		return;
 	}
 
@@ -81,7 +81,7 @@ void RulesFetcher::operationGetRuleResult(const Atlas::Objects::Operation::RootO
 					if (childElem.isString()) {
 						children.push_back(childElem.asString());
 					} else {
-						S_LOG_WARNING("Child was not a string.");
+						logger->warn("Child was not a string.");
 					}
 				}
 			}

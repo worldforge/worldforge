@@ -21,7 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "ColouredListItem.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 namespace Ember {
 namespace OgreView {
@@ -50,7 +50,7 @@ void ColouredListItem::setColours()
 	try {
 		setSelectionBrushImage("EmberLook/MultiListSelectionBrush");
 	} catch (...) {
-		S_LOG_WARNING("Could not set selection brush image.");
+		logger->warn("Could not set selection brush image.");
 	}
 }
 
@@ -120,7 +120,7 @@ void ColouredTreeItem::setColours()
 	try {
 		setSelectionBrushImage("EmberLook/MultiListSelectionBrush");
 	} catch (...) {
-		S_LOG_WARNING("Could not set selection brush image.");
+		logger->warn("Could not set selection brush image.");
 	}
 
 }

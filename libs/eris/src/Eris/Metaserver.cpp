@@ -122,17 +122,17 @@ void Meta::queryServer(const std::string &ip)
 
 void Meta::queryServerByIndex(size_t index) {
 	if (m_status == INVALID) {
-		error() << "called queryServerByIndex with invalid server list";
+		logger->error("called queryServerByIndex with invalid server list");
 		return;
 	}
 
 	if (index >= m_gameServers.size()) {
-		error() << "called queryServerByIndex with bad server index " << index;
+		logger->error("called queryServerByIndex with bad server index {}", index);
 		return;
 	}
 
 	if (m_gameServers[index].status == ServerInfo::QUERYING) {
-		warning() << "called queryServerByIndex on server already being queried";
+		logger->warn("called queryServerByIndex on server already being queried");
 		return;
 	}
 
@@ -141,7 +141,7 @@ void Meta::queryServerByIndex(size_t index) {
 
 void Meta::refresh() {
 	if (!m_activeQueries.empty()) {
-		warning() << "called meta::refresh() while doing another query, ignoring";
+		logger->warn("called meta::refresh() while doing another query, ignoring");
 		return;
 	}
 
@@ -174,8 +174,7 @@ void Meta::cancel() {
 
 const ServerInfo& Meta::getInfoForServer(size_t index) const {
 	if (index >= m_gameServers.size()) {
-		error() << "passed out-of-range index " << index <<
-				" to getInfoForServer";
+		logger->error("passed out-of-range index {} to getInfoForServer", index);
 		throw BaseException("Out of bounds exception when getting server info.");
 	} else {
 		return m_gameServers[index];
@@ -299,15 +298,15 @@ void Meta::deleteQuery(MetaQuery* query) {
 			AllQueriesDone.emit();
 		}
 	} else {
-		error() << "Tried to delete meta server query which wasn't "
+		logger->error("Tried to delete meta server query which wasn't "
 				   "among the active queries. This indicates an error "
-				   "with the flow in Metaserver.";
+				   "with the flow in Metaserver.");
 	}
 }
 
 void Meta::recv() {
 	if (m_bytesToRecv == 0) {
-		error() << "No bytes to receive when calling recv().";
+		logger->error("No bytes to receive when calling recv().");
 		return;
 	}
 
@@ -326,7 +325,7 @@ void Meta::recv() {
 //	} while (iobuf->in_avail() && m_bytesToRecv);
 
 	if (m_bytesToRecv > 0) {
-		error() << "Fragment data received by Meta::recv";
+		logger->error("Fragment data received by Meta::recv");
 		return; // can't do anything till we get more data
 	}
 
@@ -365,7 +364,7 @@ void Meta::recvCmd(uint32_t op) {
 
 void Meta::processCmd() {
 	if (m_status != GETTING_LIST) {
-		error() << "Command received when not expecting any. It will be ignored. The command was: " << m_gotCmd;
+		logger->error("Command received when not expecting any. It will be ignored. The command was: {}", m_gotCmd);
 		return;
 	}
 
@@ -393,7 +392,7 @@ void Meta::processCmd() {
 			m_dataPtr = unpack_uint32(total_servers, m_data.data());
 			if (!m_gameServers.empty()) {
 				if (total_servers != m_totalServers) {
-					warning() << "Server total in new packet has changed. " << total_servers << ":" << m_totalServers;
+					logger->warn("Server total in new packet has changed. {}:{}",total_servers, m_totalServers);
 				}
 			} else {
 				m_totalServers = total_servers;
@@ -522,7 +521,7 @@ void Meta::internalQuery(size_t index) {
 void Meta::objectArrived(Root obj) {
 	Info info = smart_dynamic_cast<Info>(obj);
 	if (!info.isValid()) {
-		error() << "Meta::objectArrived, failed to convert object to INFO op";
+		logger->error("Meta::objectArrived, failed to convert object to INFO op");
 		return;
 	}
 
@@ -534,16 +533,16 @@ void Meta::objectArrived(Root obj) {
 		if ((*Q)->getQueryNo() == refno) break;
 
 	if (Q == m_activeQueries.end()) {
-		error() << "Couldn't locate query for meta-query reply";
+		logger->error("Couldn't locate query for meta-query reply");
 	} else {
 		(*Q)->setComplete();
 
 		RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());
 		if (!svr.isValid()) {
-			error() << "Query INFO argument object is broken";
+			logger->error("Query INFO argument object is broken");
 		} else {
 			if ((*Q)->getServerIndex() >= m_gameServers.size()) {
-				error() << "Got server info with out of bounds index.";
+				logger->error("Got server info with out of bounds index.");
 			} else {
 				ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
 

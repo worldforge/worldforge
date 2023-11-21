@@ -34,12 +34,7 @@
 
 #include <memory>
 
-namespace Ember
-{
-namespace OgreView
-{
-
-namespace Authoring
+namespace Ember::OgreView::Authoring
 {
 AuthoringVisualization::AuthoringVisualization(EmberEntity& entity, Ogre::SceneNode* sceneNode) :
 	mEntity(entity),
@@ -117,12 +112,12 @@ void AuthoringVisualization::createGraphicalRepresentation()
 				}
 				mCollisionDetector->collisionInfo = EntityCollisionInfo{&mEntity, true};
 			} catch (const std::exception& ex) {
-				S_LOG_WARNING("Error when attaching axes mesh."<< ex);
+				logger->warn("Error when attaching axes mesh: {}", ex.what());
 				mSceneNode->getCreator()->destroyMovableObject(mGraphicalRepresentation);
 			}
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when loading axes mesh."<< ex);
+		logger->warn("Error when loading axes mesh: {}", ex.what());
 	}
 }
 
@@ -139,5 +134,5 @@ void AuthoringVisualization::removeGraphicalRepresentation()
 }
 
 }
-}
-}
+
+

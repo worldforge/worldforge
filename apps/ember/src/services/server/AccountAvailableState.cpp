@@ -21,7 +21,7 @@
 
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include "services/config/ConfigService.h"
 
@@ -50,21 +50,21 @@ void AccountAvailableState::loginFailure(const std::string& msg) {
 	std::ostringstream temp;
 
 	temp << "Login Failure:" << msg;
-	S_LOG_WARNING(temp.str());
+	logger->warn(temp.str());
 
 	ConsoleBackend::getSingleton().pushMessage(temp.str(), "error");
 	getSignals().LoginFailure.emit(&mAccount, msg);
 }
 
 void AccountAvailableState::loginSuccess() {
-	S_LOG_INFO("Login Success.");
+	logger->info("Login Success.");
 	ConsoleBackend::getSingleton().pushMessage("Login Successful", "important");
 	setChildState(std::make_unique<LoggedInState>(*this, mAccount));
 	getSignals().LoginSuccess.emit(&mAccount);
 }
 
 void AccountAvailableState::logoutComplete(bool clean) {
-	S_LOG_INFO("Logout Complete cleanness=" << clean);
+	logger->info("Logout Complete cleanness={}", clean);
 	ConsoleBackend::getSingleton().pushMessage("Logged out from server", "important");
 
 	destroyChildState();
@@ -85,10 +85,10 @@ void AccountAvailableState::runCommand(const std::string& command, const std::st
 		try {
 			mAccount.createAccount(uname, realname, password);
 		} catch (const std::exception& except) {
-			S_LOG_WARNING("Got error on account creation." << except);
+			logger->warn("Got error on account creation:", except.what());
 			return;
 		} catch (...) {
-			S_LOG_WARNING("Got unknown error on account creation.");
+			logger->warn("Got unknown error on account creation.");
 			return;
 		}
 

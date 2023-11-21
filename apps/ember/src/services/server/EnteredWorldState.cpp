@@ -21,7 +21,7 @@
 
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Eris/Entity.h>
 #include <Eris/Avatar.h>

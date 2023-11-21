@@ -61,7 +61,7 @@ AssetsManager::~AssetsManager() {
 
 TexturePair AssetsManager::showTexture(const std::string& textureName) {
 	// 	if (!mOgreCEGUITexture) {
-	// 		S_LOG_WARNING("You must first create a valid OgreCEGUITexture instance.");
+	// 		logger->warn("You must first create a valid OgreCEGUITexture instance.");
 	// 		return;
 	// 	}
 	if (Ogre::TextureManager::getSingleton().resourceExists(textureName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)) {
@@ -71,7 +71,7 @@ TexturePair AssetsManager::showTexture(const std::string& textureName) {
 				try {
 					texturePtr->load();
 				} catch (...) {
-					S_LOG_WARNING("Error when loading " << textureName << ". This texture will not be shown.");
+					logger->warn("Error when loading {}. This texture will not be shown.", textureName);
 					return {};
 				}
 			}
@@ -99,7 +99,7 @@ TexturePair AssetsManager::createTextureImage(Ogre::TexturePtr& texturePtr, cons
 		static_cast<CEGUI::OgreTexture*>(ogreCEGUITexture)->setOgreTexture(texturePtr);
 	} else {
 		//create a CEGUI texture from our Ogre texture
-		S_LOG_VERBOSE("Creating new CEGUI texture from Ogre texture.");
+		logger->debug("Creating new CEGUI texture from Ogre texture.");
 		ogreCEGUITexture = &GUIManager::getSingleton().createTexture(texturePtr);
 	}
 
@@ -178,9 +178,9 @@ bool AssetsManager::exportMesh(const Ogre::MeshPtr& mesh, const boost::filesyste
 				boost::filesystem::create_directories(filePath.parent_path());
 			}
 			serializer.exportMesh(mesh.get(), filePath.string());
-			S_LOG_INFO("Exported mesh " << filePath.string());
+			logger->info("Exported mesh {}", filePath.string());
 		} catch (const Ogre::Exception& ex) {
-			S_LOG_FAILURE("Error when exporting mesh " << mesh->getName() << "to path " << filePath.string() << "." << ex);
+			logger->error("Error when exporting mesh {}to path {}: {}", mesh->getName(), filePath.string(), ex.what());
 			return false;
 		}
 		return true;

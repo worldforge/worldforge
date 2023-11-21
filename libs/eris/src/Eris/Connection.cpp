@@ -104,12 +104,12 @@ int Connection::connect() {
 
 int Connection::disconnect() {
 	if (_status == DISCONNECTING) {
-		warning() << "duplicate disconnect on Connection that's already disconnecting";
+		logger->warn("duplicate disconnect on Connection that's already disconnecting");
 		return -1;
 	}
 
 	if (_status == DISCONNECTED) {
-		warning() << "called disconnect on already disconnected Connection";
+		logger->warn("called disconnect on already disconnected Connection");
 		return -1;
 	}
 
@@ -159,7 +159,7 @@ void Connection::dispatch() {
 
 void Connection::send(const Atlas::Objects::Root& obj) {
 	if ((_status != CONNECTED) && (_status != DISCONNECTING)) {
-		error() << "called send on closed connection";
+		logger->error("called send on closed connection");
 		return;
 	}
 
@@ -177,7 +177,7 @@ void Connection::send(const Atlas::Objects::Root& obj) {
 	debugEncoder.streamObjectsMessage(obj);
 	debugStream << std::flush;
 
-	debug() << "sending:" << debugStream.str();
+	logger->debug("sending: {}", debugStream.str());
 #endif
 
 	_socket->getEncoder().streamObjectsMessage(obj);
@@ -203,7 +203,7 @@ void Connection::unregisterRouterForFrom(const std::string& fromId) {
 
 void Connection::setDefaultRouter(Router* router) {
 	if (m_defaultRouter || !router) {
-		error() << "setDefaultRouter duplicate set or null argument";
+		logger->error("setDefaultRouter duplicate set or null argument");
 		return;
 	}
 
@@ -226,14 +226,14 @@ void Connection::unlock() {
 	if (--m_lock == 0) {
 		switch (_status) {
 			case DISCONNECTING:
-				debug() << "Connection unlocked in DISCONNECTING, closing socket";
-				debug() << "have " << m_opDeque.size() << " ops waiting";
+				logger->debug("Connection unlocked in DISCONNECTING, closing socket");
+				logger->debug("have {} ops waiting", m_opDeque.size());
 				m_opDeque.clear();
 				hardDisconnect(true);
 				break;
 
 			default:
-				warning() << "Connection unlocked in spurious state : this may cause a failure later";
+				logger->warn("Connection unlocked in spurious state : this may cause a failure later");
 				break;
 		}
 	}
@@ -245,7 +245,7 @@ void Connection::getServerInfo(ServerInfo& si) const {
 
 void Connection::refreshServerInfo() {
 	if (_status != CONNECTED) {
-		warning() << "called refreshServerInfo while not connected, ignoring";
+		logger->warn("called refreshServerInfo while not connected, ignoring");
 		return;
 	}
 
@@ -263,15 +263,15 @@ void Connection::objectArrived(Root obj) {
 	debugEncoder.streamObjectsMessage(obj);
 	debugStream << std::flush;
 
-	debug() << "received:" << debugStream.str();
+	logger->debug("received: {}", debugStream.str());
 #else
-	debug() << "received op:" << obj->getParent();
+	logger->debug("received op: {}", obj->getParent());
 #endif
 	auto op = smart_dynamic_cast<RootOperation>(obj);
 	if (op.isValid()) {
 		m_opDeque.push_back(std::move(op));
 	} else {
-		error() << "Con::objectArrived got non-op";
+		logger->error("Con::objectArrived got non-op");
 	}
 }
 
@@ -304,7 +304,7 @@ void Connection::dispatchOp(const RootOperation& op) {
 					return;
 				}
 			} else if (!m_toRouters.empty()) {
-				warning() << "received op with TO=" << op->getTo() << ", but no router is registered for that id";
+				logger->warn("received op with TO={}, but no router is registered for that id", op->getTo());
 			}
 		}
 
@@ -319,11 +319,10 @@ void Connection::dispatchOp(const RootOperation& op) {
 			rr = m_defaultRouter->handleOperation(op);
 		}
 		if (rr != Router::HANDLED) {
-			warning() << "no-one handled op:" << op;
+			logger->warn("no-one handled op: {}", op);
 		}
 	} catch (const Atlas::Exception& ae) {
-		error() << "caught Atlas exception: '" << ae.getDescription() <<
-				"' while dispatching op:\n" << op;
+		logger->error("caught Atlas exception: '{}' while dispatching op:\n{}", ae.what(), op);
 	}
 }
 
@@ -347,7 +346,7 @@ void Connection::handleServerInfo(const RootOperation& op) {
 	if (!op->getArgs().empty()) {
 		auto svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
 		if (!svr.isValid()) {
-			error() << "server INFO argument object is broken";
+			logger->error("server INFO argument object is broken");
 			return;
 		}
 
@@ -379,7 +378,7 @@ void Connection::postForDispatch(const Root& obj) {
 	debugEncoder.streamObjectsMessage(obj);
 	debugStream << std::flush;
 
-	debug() << "posted for re-dispatch:" << debugStream.str();
+	logger->("posted for re-dispatch: {}", debugStream.str());
 #endif
 }
 

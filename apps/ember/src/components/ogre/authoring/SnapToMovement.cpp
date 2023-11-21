@@ -77,7 +77,7 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 			sphereEntity->setMaterialName("/common/base/authoring/point");
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when setting up debug nodes for snapping." << ex);
+		logger->warn("Error when setting up debug nodes for snapping: {}", ex.what());
 	}
 
 	auto nodeIterator = mDebugNodes.begin();
@@ -147,7 +147,7 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 											try {
 												sphereEntity->setMaterialName("/common/base/authoring/point/moved");
 											} catch (const std::exception& ex) {
-												S_LOG_WARNING("Error when setting material for point." << ex);
+												logger->warn("Error when setting material for point: {}", ex.what());
 											}
 										}
 									}

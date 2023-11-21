@@ -13,17 +13,17 @@ std::string getErrorMessage(const RootOperation & err)
     std::string msg;
     const std::vector<Atlas::Objects::Root>& args = err->getArgs();
     if (args.empty()) {
-        error() << "got Error error op from server without args";
+        logger->error("got Error error op from server without args");
         msg = "Unknown error.";
     } else {
         const Atlas::Objects::Root & arg = args.front();
         Atlas::Message::Element message;
         if (arg->copyAttr("message", message) != 0) {
-            error() << "got Error error op from server without message";
+            logger->error("got Error error op from server without message");
             msg = "Unknown error.";
         } else {
             if (!message.isString()) {
-                error() << "got Error error op from server with bad message";
+                logger->error("got Error error op from server with bad message");
                 msg = "Unknown error.";
             } else {
                 msg = message.String();
@@ -59,8 +59,7 @@ Router::RouterResult ResponseTracker::handleOp(const RootOperation& op)
 
     auto it = m_pending.find(op->getRefno());
     if (it == m_pending.end()) {
-        warning() << "received op with valid refno (" << op->getRefno() << 
-            ") but no response is registered";
+        logger->warn("received op with valid refno ({}) but no response is registered", op->getRefno());
         return Router::IGNORED;
     }
 
@@ -81,7 +80,7 @@ Router::RouterResult NullResponse::responseReceived(const Atlas::Objects::Operat
 
 void clearMemberResponse(sigc::notifiable* d)
 {
-    debug() << "clearing out member response object";
+    logger->debug("clearing out member response object");
 	static_cast<ResponseBase*>(d)->detach();
 }
 

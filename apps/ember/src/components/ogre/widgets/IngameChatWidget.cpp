@@ -425,7 +425,7 @@ void IngameChatWidget::Label::attachToEntity(EmberEntity* entity) {
 	try {
 		updateEntityName();
 	} catch (const Exception& ex) {
-		S_LOG_FAILURE("Could not get widget EntityName." << ex);
+		logger->error("Could not get widget EntityName: {}", ex.what());
 	}
 	setActive(true);
 }

@@ -72,7 +72,7 @@ void ActiveWidgetHandler::Input_InputModeChanged(Input::InputMode mode) {
 			try {
 				mLastActiveWindow->activate();
 			} catch (...) {
-				S_LOG_WARNING("Error when trying to restore previously captured window.");
+				logger->warn("Error when trying to restore previously captured window.");
 			}
 			mLastActiveWindow = nullptr;
 			mLastActiveWindowDestructionStartedConnection->disconnect();

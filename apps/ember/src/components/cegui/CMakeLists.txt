@@ -20,6 +20,7 @@ add_library(ember-BindingsCEGUI OBJECT
 )
 
 target_link_libraries(ember-BindingsCEGUI PUBLIC
+        ember-framework
         ember-external-sol2
 )
 

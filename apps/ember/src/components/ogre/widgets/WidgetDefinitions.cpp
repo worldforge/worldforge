@@ -23,7 +23,7 @@
 
 #include "WidgetDefinitions.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "framework/FileSystemObserver.h"
@@ -58,7 +58,7 @@ WidgetDefinitions::~WidgetDefinitions() {
 void WidgetDefinitions::registerWidgets(GUIManager& guiManager) {
 
 #ifndef WF_USE_WIDGET_PLUGINS
-	S_LOG_INFO("Loading Widgets statically");
+	logger->info("Loading Widgets statically");
 	mPlugins.emplace("ServerWidget", PluginEntry{ServerWidget::registerWidget(guiManager)});
 	mPlugins.emplace("Quit", PluginEntry{Quit::registerWidget(guiManager)});
 	mPlugins.emplace("InspectWidget", PluginEntry{InspectWidget::registerWidget(guiManager)});
@@ -79,7 +79,7 @@ void WidgetDefinitions::registerWidgets(GUIManager& guiManager) {
 					for (auto& path: mDirtyPluginPaths) {
 						auto J = mPlugins.find(path);
 						if (J != mPlugins.end()) {
-							S_LOG_INFO("Reloading plugin '" << path.string() << "'.");
+							logger->info("Reloading plugin {}''.", path.string());
 							//First remove the existing plugin.
 							mPlugins.erase(J);
 							CEGUI::WindowManager::getSingleton().cleanDeadPool(); //Need to make sure there's no reference to the erased plugin.
@@ -95,7 +95,7 @@ void WidgetDefinitions::registerWidgets(GUIManager& guiManager) {
 	});
 
 
-	S_LOG_INFO("Loading Widgets dynamically");
+	logger->info("Loading Widgets dynamically");
 	registerPluginWithName(guiManager, "ServerWidget");
 	registerPluginWithName(guiManager, "Quit");
 	registerPluginWithName(guiManager, "InspectWidget");
@@ -124,12 +124,12 @@ void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const boost::file
 		auto registerFn = boost::dll::import_alias<std::function<void()>(GUIManager&)>(
 				pluginPath, "registerWidget"
 		);
-		S_LOG_INFO("Creating Widget Plugin from '" << pluginPath.string() << "'.");
+		logger->info("Creating Widget Plugin from '{}'.", pluginPath.string());
 		auto disconnectFn = registerFn(guiManager);
 		PluginEntry pluginEntry{pluginPath, std::move(registerFn), std::move(disconnectFn)};
 		mPlugins.emplace(pluginPath, std::move(pluginEntry));
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when loading plugin '" << pluginPath.string() << "': " << ex);
+		logger->error("Error when loading plugin '{}': {}", pluginPath.string(), ex);
 	}
 #endif
 }
@@ -138,7 +138,7 @@ void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const boost::file
 WidgetDefinitions::PluginEntry::~PluginEntry() {
 	if (pluginCallback) {
 #ifdef WF_USE_WIDGET_PLUGINS
-		S_LOG_INFO("Shutting down Widget Plugin at '" << path.string() << "'.");
+		logger->info("Shutting down Widget Plugin at '{}'.", path.string());
 #endif
 		pluginCallback();
 		CEGUI::WindowManager::getSingleton().cleanDeadPool(); //Need to make sure there's no reference to the plugin.

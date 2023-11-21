@@ -43,6 +43,7 @@
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Formatter.h>
+#include <Atlas/Objects/RootOperation.h>
 
 #include <wfmath/atlasconv.h>
 
@@ -55,12 +56,24 @@
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>
 
+#include <fmt/ostream.h>
+
 using namespace Atlas::Message;
 
-namespace Ember {
-namespace OgreView {
+template <> struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {};
 
-namespace Gui {
+namespace Atlas {
+namespace Objects {
+std::ostream& operator<<(std::ostream& s, const Atlas::Objects::Root& obj);
+
+}
+namespace Message {
+std::ostream& operator<<(std::ostream& s, const Atlas::Message::Element& msg);
+
+}
+}
+
+namespace Ember::OgreView::Gui {
 
 /**
  * @author Erik Ogenvik
@@ -159,7 +172,7 @@ public:
 			mMarkerEntity->setQueryFlags(MousePicker::CM_NONPICKABLE);
 			mMarkerNode->attachObject(mMarkerEntity);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when creating marker node." << ex);
+			logger->warn("Error when creating marker node: {}", ex.what());
 			return;
 		}
 		mMarkerNode->setVisible(true);
@@ -210,7 +223,7 @@ void EntityEditor::submitChanges() {
 				formatter.streamBegin();
 				encoder.streamMessageElement(attributes);
 				formatter.streamEnd();
-				S_LOG_VERBOSE("Sending attribute update to server:\n" << ss.str());
+				logger->debug("Sending attribute update to server:\n {}", ss.str());
 
 				mWorld.getAvatar()->setAttributes(mEntity.getId(), attributes);
 			}
@@ -424,7 +437,7 @@ void EntityEditor::getPath() {
 		}
 		return Eris::Router::HANDLED;
 	});
-	S_LOG_VERBOSE("Asking for entity path.");
+	logger->debug("Asking for entity path.");
 
 }
 
@@ -458,18 +471,18 @@ void EntityEditor::operationGetGoalsResult(const Atlas::Objects::Operation::Root
 
 		//We'll be getting back a Think op, which wraps a Set op, where the arguments are the thoughts.
 		if (relayedOp->getParent() != "think") {
-			S_LOG_WARNING("Got think operation with wrong type set.");
+			logger->warn("Got think operation with wrong type set.");
 			return;
 		}
 
 		if (relayedOp->getArgs().empty()) {
-			S_LOG_WARNING("Got Thought op without any arguments.");
+			logger->warn("Got Thought op without any arguments.");
 			return;
 		}
 
 		auto innerOp = relayedOp->getArgs().front();
 		if (innerOp->getClassNo() != Atlas::Objects::Operation::SET_NO) {
-			S_LOG_WARNING("Get Thought op with inner op that wasn't Set.");
+			logger->warn("Get Thought op with inner op that wasn't Set.");
 		}
 
 		auto setOp = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Set>(innerOp);
@@ -493,22 +506,22 @@ void EntityEditor::operationGetPathResult(const Atlas::Objects::Operation::RootO
 		//We'll be getting back a Relay op, which wraps a Think op, which wraps an anonymous op, where the arguments is the path.
 
 		if (relayedOp->getParent() != "think") {
-			S_LOG_WARNING("Got think operation with wrong type set: " << op);
+			logger->warn("Got think operation with wrong type set: {}", op);
 			return;
 		}
 
 		if (relayedOp->getArgs().empty()) {
-			S_LOG_WARNING("Got Thought op without any arguments: " << op);
+			logger->warn("Got Thought op without any arguments: {}", op);
 			return;
 		}
 
 		auto innerOp = relayedOp->getArgs().front();
 		if (innerOp->getClassNo() != Atlas::Objects::Entity::ANONYMOUS_NO) {
-			S_LOG_WARNING("Get Thought op with inner entity that wasn't anonymous: " << op);
+			logger->warn("Get Thought op with inner entity that wasn't anonymous: {}", op);
 			return;
 		}
 
-		Atlas::Objects::Entity::Anonymous pathEntity = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::Anonymous>(innerOp);
+		auto pathEntity = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::Anonymous>(innerOp);
 
 		if (!mPathPolygon) {
 			mPathPolygon = std::make_unique<Authoring::Polygon>(mWorld.getSceneManager().getRootSceneNode(), nullptr, false);
@@ -524,7 +537,7 @@ void EntityEditor::operationGetPathResult(const Atlas::Objects::Operation::RootO
 			if (pathElem.isList()) {
 				size_t currentIndex = 0;
 				const auto& path = pathElem.List();
-				S_LOG_VERBOSE("Got path info from entity with length of " << path.size());
+				logger->debug("Got path info from entity with length of {}", path.size());
 				Element currentPathIndexElement;
 				if (pathEntity->copyAttr("current_path_index", currentPathIndexElement) == 0 && currentPathIndexElement.isInt()) {
 					currentIndex = currentPathIndexElement.Int();
@@ -558,10 +571,10 @@ void EntityEditor::operationGetPathResult(const Atlas::Objects::Operation::RootO
 
 				}
 			} else {
-				S_LOG_WARNING("Response to path request had 'path' property which wasn't a list: " << op);
+				logger->warn("Response to path request had 'path' property which wasn't a list: {}", op);
 			}
 		} else {
-			S_LOG_WARNING("Response to path request contained no 'path' property: " << op);
+			logger->warn("Response to path request contained no 'path' property: {}", op);
 		}
 		mPathPolygon->updateRender();
 	}
@@ -587,18 +600,18 @@ void EntityEditor::operationGetThoughtResult(const Atlas::Objects::Operation::Ro
 
 		//We'll be getting back a Think op, which wraps a Set op, where the arguments are the thoughts.
 		if (op->getParent() != "think") {
-			S_LOG_WARNING("Got think operation with wrong type set.");
+			logger->warn("Got think operation with wrong type set.");
 			return;
 		}
 
 		if (op->getArgs().empty()) {
-			S_LOG_WARNING("Got Thought op without any arguments.");
+			logger->warn("Got Thought op without any arguments.");
 			return;
 		}
 
 		auto innerOp = op->getArgs().front();
 		if (innerOp->getClassNo() != Atlas::Objects::Operation::SET_NO) {
-			S_LOG_WARNING("Get Thought op with inner op that wasn't Set.");
+			logger->warn("Get Thought op with inner op that wasn't Set.");
 		}
 
 		auto setOp = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Set>(innerOp);
@@ -609,7 +622,7 @@ void EntityEditor::operationGetThoughtResult(const Atlas::Objects::Operation::Ro
 				EventGotThought(thought);
 			}
 		} else {
-			S_LOG_VERBOSE("Got thought op without any thoughts.");
+			logger->debug("Got thought op without any thoughts.");
 		}
 	}
 }
@@ -639,18 +652,18 @@ void EntityEditor::operationGetGoalInfoResult(const Atlas::Objects::Operation::R
 		//Since we'll just be iterating over the args we only need to do an extra check that what we got is a
 		//"info" operation.
 		if (relayedOp->getParent() != "think") {
-			S_LOG_WARNING("Got goal info operation with wrong type.");
+			logger->warn("Got goal info operation with wrong type.");
 			return;
 		}
 
 		if (relayedOp->getArgs().empty()) {
-			S_LOG_WARNING("Got Thought op without any arguments.");
+			logger->warn("Got Thought op without any arguments.");
 			return;
 		}
 
 		auto innerOp = relayedOp->getArgs().front();
 		if (innerOp->getClassNo() != Atlas::Objects::Operation::INFO_NO) {
-			S_LOG_WARNING("Get Thought op with inner op that wasn't Info.");
+			logger->warn("Get Thought op with inner op that wasn't Info.");
 		}
 
 		auto infoOp = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Info>(innerOp);
@@ -661,7 +674,7 @@ void EntityEditor::operationGetGoalInfoResult(const Atlas::Objects::Operation::R
 				EventGotGoalInfo(goalInfo);
 			}
 		} else {
-			S_LOG_VERBOSE("Got goal info op without any goals.");
+			logger->debug("Got goal info op without any goals.");
 		}
 	}
 }
@@ -686,13 +699,13 @@ WFMath::Point<3> EntityEditor::createPoint(float x, float y, float z) {
 
 Atlas::Objects::Operation::RootOperation EntityEditor::extractRelayResponse(const Atlas::Objects::Operation::RootOperation& relayResponse) {
 	if (relayResponse->getParent() != "relay") {
-		S_LOG_WARNING("Got relay response which wasn't a relay: " << relayResponse);
+		logger->warn("Got relay response which wasn't a relay: {}", relayResponse);
 		return nullptr;
 	}
 
 	//If there are no arguments it means that the relay timed out.
 	if (relayResponse->getArgs().empty()) {
-		S_LOG_WARNING("Time out on relay: " << relayResponse);
+		logger->warn("Time out on relay: {}", relayResponse);
 		return nullptr;
 	}
 
@@ -702,5 +715,5 @@ Atlas::Objects::Operation::RootOperation EntityEditor::extractRelayResponse(cons
 
 }
 
-}
-}
+
+

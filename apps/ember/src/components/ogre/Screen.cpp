@@ -23,7 +23,7 @@
 #include "services/config/ConfigService.h"
 
 #include "framework/Exception.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
 
 #include <OgreCamera.h>
@@ -122,7 +122,7 @@ std::string Screen::_takeScreenshot() {
 			boost::filesystem::create_directories(dir);
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating directory for screenshots." << ex);
+		logger->error("Error when creating directory for screenshots: {}", ex.what());
 		throw Exception("Error when saving screenshot.");
 	}
 
@@ -130,7 +130,7 @@ std::string Screen::_takeScreenshot() {
 		// take screenshot
 		mWindow.writeContentsToFile((dir / filename.str()).string());
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Could not write screenshot to disc." << ex);
+		logger->error("Could not write screenshot to disc: {}", ex.what());
 		throw Exception("Error when saving screenshot.");
 	}
 	return (dir / filename.str()).string();
@@ -139,7 +139,7 @@ std::string Screen::_takeScreenshot() {
 void Screen::takeScreenshot() {
 	try {
 		const std::string& result = _takeScreenshot();
-		S_LOG_INFO("Screenshot saved at: " << result);
+		logger->info("Screenshot saved at: {}", result);
 		ConsoleBackend::getSingletonPtr()->pushMessage("Wrote image: " + result, "info");
 	} catch (const std::exception& ex) {
 		ConsoleBackend::getSingletonPtr()->pushMessage(std::string("Error when saving screenshot: ") + ex.what(), "error");

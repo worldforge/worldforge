@@ -17,7 +17,7 @@
  */
 
 #include "AtlasHelper.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/AtlasObjectDecoder.h"
 #include <Atlas/Message/Element.h>
 #include <Atlas/Objects/Root.h>
@@ -44,7 +44,7 @@ std::string AtlasHelper::serialize(const Atlas::Objects::Root& obj, const std::s
 	} else if (codecType == "presentation") {
 		codec = std::make_unique<Atlas::PresentationBridge>(ss);
 	} else {
-		S_LOG_WARNING("Could not recognize codec type '" << codecType << "'. Supported types are: xml, bach");
+		logger->warn("Could not recognize codec type '{}'. Supported types are: xml, bach", codecType);
 		return "";
 	}
 
@@ -66,7 +66,7 @@ Atlas::Objects::Root AtlasHelper::deserialize(const std::string& text, const std
 	} else if (codecType == "xml") {
 		codec = std::make_unique<Atlas::Codecs::XML>(ss, ss, atlasLoader);
 	} else {
-		S_LOG_WARNING("Could not recognize codec type '" << codecType << "'. Supported types are: xml, bach");
+		logger->warn("Could not recognize codec type '{}'. Supported types are: xml, bach", codecType);
 		return {};
 	}
 	codec->poll();

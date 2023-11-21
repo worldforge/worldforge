@@ -34,8 +34,7 @@
 #include <OgreTextureManager.h>
 #include <OgreViewport.h>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 SimpleRenderContextResourceLoader::SimpleRenderContextResourceLoader(SimpleRenderContext& renderContext) :
         mRenderContext(renderContext) {
@@ -46,7 +45,7 @@ void SimpleRenderContextResourceLoader::loadResource(Ogre::Resource* resource) {
         try {
             mRenderContext.getRenderTexture()->update();
         } catch (const std::exception& ex) {
-            S_LOG_FAILURE("Error when updating render for SimpleRenderContext, after the resource has been reloaded." << ex);
+            logger->error("Error when updating render for SimpleRenderContext, after the resource has been reloaded: {}", ex.what());
         }
     }
 }
@@ -96,7 +95,7 @@ SimpleRenderContext::SimpleRenderContext(const std::string& prefix, Ogre::Textur
 
     Ogre::Real aspectRatio = static_cast<float>(texture->getWidth()) / static_cast<float>(texture->getHeight());
 
-    S_LOG_VERBOSE("Setting aspect ratio of camera to " << aspectRatio);
+    logger->debug("Setting aspect ratio of camera to {}", aspectRatio);
     mCamera->setAspectRatio(aspectRatio);
 
 }
@@ -109,7 +108,7 @@ SimpleRenderContext::~SimpleRenderContext() {
 }
 
 void SimpleRenderContext::setupScene(const std::string& prefix) {
-    S_LOG_VERBOSE("Creating new SimpleRenderContext for prefix " << prefix << " with w:" << mWidth << " h:" << mHeight);
+    logger->debug("Creating new SimpleRenderContext for prefix {} with w:{} h:{}",prefix, mWidth, mHeight);
     //Make sure we get the default manager; the most simple one.
     mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::DefaultSceneManagerFactory::FACTORY_TYPE_NAME, prefix + "_sceneManager");
     //One might wonder why we're not setting the fog to FOG_NONE. The reason is that it seems that due to a bug in either
@@ -252,7 +251,7 @@ void SimpleRenderContext::createImage(const std::string& prefix) {
 
     Ogre::Real aspectRatio = static_cast<float>(mWidth) / static_cast<float>(mHeight);
 
-    S_LOG_VERBOSE("Setting aspect ratio of camera to " << aspectRatio);
+    logger->debug("Setting aspect ratio of camera to {}", aspectRatio);
     mCamera->setAspectRatio(aspectRatio);
 
     //the width and height needs to be multipes of 2
@@ -260,7 +259,7 @@ void SimpleRenderContext::createImage(const std::string& prefix) {
     mHeight = Ogre::Bitwise::firstPO2From(mHeight);
 
     //first, create a RenderTexture to which the Ogre renderer should render the image
-    S_LOG_VERBOSE("Creating new rendertexture " << (prefix + "_SimpleRenderContextRenderTexture") << " with w:" << mWidth << " h:" << mHeight);
+    logger->debug("Creating new rendertexture {} with w:{} h:{}", (prefix + "_SimpleRenderContextRenderTexture"), mWidth, mHeight);
     auto& textureMgr = Ogre::TextureManager::getSingleton();
     auto texture = textureMgr.createManual(prefix + "_SimpleRenderContextRenderTexture",
                                            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -272,7 +271,7 @@ void SimpleRenderContext::createImage(const std::string& prefix) {
                                            Ogre::TU_RENDERTARGET,
                                            &mResourceLoader);
     if (!texture) {
-        S_LOG_WARNING("Could not create a texture.");
+        logger->warn("Could not create a texture.");
         return;
     }
 
@@ -292,7 +291,7 @@ void SimpleRenderContext::setTexture(Ogre::TexturePtr texture) {
         //initially deactivate it until setActive(true) is called
         mRenderTexture->setActive(false);
 
-        S_LOG_VERBOSE("Adding camera.");
+        logger->debug("Adding camera.");
         mViewPort = mRenderTexture->addViewport(mCamera);
         mViewPort->setShadowsEnabled(true);
         //make sure the camera renders into this new texture
@@ -355,4 +354,4 @@ Ogre::Light* SimpleRenderContext::getLight() {
 }
 
 }
-}
+

@@ -56,7 +56,7 @@ class AvatarTransferInfo;
 class ServerServiceSignals {
 public:
 
-	virtual ~ServerServiceSignals() = default;;
+	virtual ~ServerServiceSignals() = default;
 
 	sigc::signal<void(Eris::Avatar*)> GotAvatar;
 	sigc::signal<void(Eris::View*)> GotView;

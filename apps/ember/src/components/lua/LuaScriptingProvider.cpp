@@ -23,7 +23,7 @@
 #include "LuaScriptingProvider.h"
 
 #include "framework/Exception.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "services/config/ConfigService.h"
 
 #include "LuaScriptingCallContext.h"
@@ -78,7 +78,7 @@ LuaScriptingProvider::LuaScriptingProvider() {
 
 
 LuaScriptingProvider::~LuaScriptingProvider() {
-	S_LOG_INFO("Shutting down lua environment.");
+	logger->info("Shutting down lua environment.");
 }
 
 void LuaScriptingProvider::stop() {
@@ -91,7 +91,7 @@ void LuaScriptingProvider::stop() {
 
 		forceGC();
 	} catch (...) {
-		S_LOG_WARNING("Error when stopping lua.");
+		logger->warn("Error when stopping lua.");
 	}
 }
 

@@ -197,7 +197,7 @@ void TerrainManager::terrainHandler_AfterTerrainUpdate(const std::vector<WFMath:
 				//Only insert page if the page is still marked for being shown.
 				const TerrainIndex& index = page->getWFIndex();
 
-				S_LOG_VERBOSE("Updating terrain page [" << index.first << "|" << index.second << "]");
+				logger->debug("Updating terrain page [{}|{}]", index.first, index.second);
 				mTerrainAdapter->showPage(geometry);
 				EventTerrainPageGeometryUpdated.emit(*page);
 			}

@@ -124,12 +124,12 @@ declare -i single=0
 while getopts "hrc" options
 do
   case $options in
-    r ) report=1;;
-    c ) configure=1;;
+    r ) report=1;
+    c ) configure=1;
     h ) usage
-         exit 0;;
+         exit 0;
     * ) usage
-         exit 1;;
+         exit 1;
   esac
 done
 

@@ -49,7 +49,7 @@ TerrainPage::TerrainPage(const TerrainIndex& index, int pageSize, ICompilerTechn
 		mExtent(WFMath::Point<2>(mPosition.x() * (getPageSize() - 1), -(mPosition.y() - 1) * (getPageSize() - 1)),
 				WFMath::Point<2>((mPosition.x() + 1) * (getPageSize() - 1), -(mPosition.y()) * (getPageSize() - 1))) {
 
-	S_LOG_VERBOSE("Creating TerrainPage at position " << index.first << ":" << index.second);
+	logger->debug("Creating TerrainPage at position {}:{}", index.first, index.second);
 }
 
 TerrainPage::~TerrainPage() = default;

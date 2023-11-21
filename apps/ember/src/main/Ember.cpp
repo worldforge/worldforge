@@ -18,10 +18,12 @@
 
 #include "Application.h"
 #include "services/input/Input.h"
-#include "services/logging/ErisLogReciever.h"
 #include "ConfigBoundLogObserver.h"
 #include "framework/Tokeniser.h"
+#include "framework/LogExtensions.h"
+#include "framework/Log.h"
 #include "services/config/ConfigService.h"
+#include "components/ogre/OgreLogObserver.h"
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
@@ -36,6 +38,12 @@
 #include "MainWrapper.h"
 
 #include "Version.h"
+#include "Eris/Log.h"
+#include "squall/core/Log.h"
+#include "components/cegui/CEGUILogger.h"
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/pattern_formatter.h>
 
 extern "C"
 int main(int argc, char** argv) {
@@ -57,9 +65,11 @@ int main(int argc, char** argv) {
 			} else if (arg == "-h" || arg == "--help") {
 				std::cout << "-h, --help    - display this message" << std::endl;
 				std::cout << "-v, --version - display version info" << std::endl;
-				std::cout << "--home <path> - sets the home directory to something different than the default (XDG Base Directory Specification on *NIX systems, $APPDATA\\Ember on win32 systems)" << std::endl;
+				std::cout << "--home <path> - sets the home directory to something different than the default (XDG Base Directory Specification on *NIX systems, $APPDATA\\Ember on win32 systems)"
+						  << std::endl;
 				std::cout << "-p <path>, --prefix <path> - sets the prefix to something else than the one set at compilation (only valid on *NIX systems)" << std::endl;
-				std::cout << "--config <section>:<key> <value> - allows you to override config file settings. See the ember.conf file for examples. (~/.config/ember/ember.conf on *NIX systems)" << std::endl;
+				std::cout << "--config <section>:<key> <value> - allows you to override config file settings. See the ember.conf file for examples. (~/.config/ember/ember.conf on *NIX systems)"
+						  << std::endl;
 				exit_program = true;
 				break;
 			} else if (arg == "-p" || arg == "--prefix") {
@@ -150,18 +160,24 @@ int main(int argc, char** argv) {
 		//output all logging to ember.log
 		auto filename = configService.getHomeDirectory(Ember::BaseDirType_DATA) / "ember.log";
 		std::cout << "Writing logs to " << filename.string() << std::endl;
-		std::ofstream logOutStream(filename.string());
+		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename.string(), true);
+		Ember::logger = std::make_shared<spdlog::logger>("main", sink);
+		spdlog::set_default_logger(Ember::logger);
+
 		{
+			Eris::logger = std::make_shared<spdlog::logger>("eris", sink);
+			Squall::logger = std::make_shared<spdlog::logger>("squall", sink);
+			Ember::OgreView::OgreLogObserver::logger = std::make_shared<spdlog::logger>("OGRE", sink);
+			Ember::Cegui::CEGUILogger::logger = std::make_shared<spdlog::logger>("CEGUI", sink);
+
+			auto formatter = std::make_unique<spdlog::pattern_formatter>();
+			formatter->add_flag<Ember::DetailedMessageFormatter>('*').set_pattern("[%Y-%m-%d %H:%M:%S.%e] %* [%n] [%l] %v");
+			spdlog::set_formatter(std::move(formatter));
 			//write to the log the version number
-			logOutStream << "Ember version " EMBER_VERSION << std::endl;
+			Ember::logger->info("Ember version " EMBER_VERSION);
+			Ember::logger->info("Enabling detailed logging. The values are as follows: current thread id (0=main) : current frame : milliseconds since start of current frame (only for main thread)");
 
-			Ember::ConfigBoundLogObserver logObserver(configService, logOutStream);
-			Ember::Log::addObserver(&logObserver);
-
-			//default to INFO, though this can be changed by the config file
-			logObserver.setFilter(Ember::Log::INFO);
-
-			Ember::ErisLogReciever erisLogReciever;
+			Ember::ConfigBoundLogObserver logObserver(sink);
 
 			//Setup input services
 			Ember::Input input;
@@ -171,8 +187,12 @@ int main(int argc, char** argv) {
 
 			app.start();
 		}
-		logOutStream << "Ember shut down normally." << std::endl;
+		sink->set_level(spdlog::level::info);
+		Ember::logger->info("Ember shut down normally.");
+		Ember::logger->flush();
 	}
 
 	return 0;
 }
+
+

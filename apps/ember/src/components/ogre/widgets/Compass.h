@@ -168,7 +168,7 @@ class ICompassImpl
 friend class Compass;
 public:
 	ICompassImpl();
-	virtual ~ICompassImpl() = default;;
+	virtual ~ICompassImpl() = default;
     virtual void reposition(float x, float y) = 0;
     virtual void rotate(const Ogre::Degree& degree) = 0;
 

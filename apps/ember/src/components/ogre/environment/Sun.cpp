@@ -60,7 +60,7 @@ Sun::Sun(Ogre::Camera* camera, Ogre::SceneManager* sceneMgr) :
 // 		Ogre::ParticleSystem* sunParticle = sceneMgr->createParticleSystem("Sun", "Space/Sun");
 // 		mSunNode->attachObject(sunParticle);
 // 	} catch (const std::exception& ex) {
-// 		S_LOG_FAILURE("Error when creating sun. Message: " << ex.getFullDescription());
+// 		logger->error("Error when creating sun. Message: " << ex.getFullDescription());
 // 	}
 
 	setSunPosition(Ogre::Vector3(-500, 300, -350));

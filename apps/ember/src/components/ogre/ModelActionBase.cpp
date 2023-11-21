@@ -97,7 +97,7 @@ void ModelActionBase::showModel(const std::string& modelName) {
 		try {
 			auto definition = modelDefinitionManager.getByName(modelName);
 			if (!definition) {
-				S_LOG_FAILURE("Could not find model " << modelName << ", using placeholder.");
+				logger->error("Could not find model {}, using placeholder.", modelName);
 				//add a placeholder model
 				definition = modelDefinitionManager.getByName("common/primitives/placeholder.modeldef");
 			}
@@ -111,7 +111,7 @@ void ModelActionBase::showModel(const std::string& modelName) {
 				mAttachmentFunction(std::move(newRepresentation));
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Could not load model of type " << modelName << " from group 'ModelDefinitions'." << ex);
+			logger->error("Could not load model of type {} from group 'ModelDefinitions': {}", modelName, ex.what());
 		}
 	}
 }

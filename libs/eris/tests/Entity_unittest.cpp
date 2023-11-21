@@ -152,9 +152,5 @@ void Task::updateFromAtlas(const Atlas::Message::MapType & d)
 {
 }
 
-void doLog(LogLevel lvl, const std::string& msg)
-{
-}
-
 
 }

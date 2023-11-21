@@ -332,7 +332,7 @@ Atlas::Negotiate::State StreamAccept::getState()
             return SUCCEEDED;
         }
         
-        std::cout << "done, but no codec" << std::endl;
+        Debug(std::cout << "done, but no codec" << std::endl;)
     }
     else if (m_inStream || m_outStream)
     {

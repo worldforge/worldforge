@@ -19,7 +19,7 @@
 #include "Generator.h"
 #include "Iterator.h"
 
-#include <spdlog/spdlog.h>
+#include "Log.h"
 
 #include <utility>
 #include <fstream>
@@ -109,11 +109,11 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 		if (existingI != mConfig.existingEntries.end()) {
 			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
 			if (existingI->second.lastWriteTime == fileLastWriteTime) {
-				spdlog::trace("Last write time for file '{}' was the same ({}), marking as unchanged.", filePath.string(),
+				logger->trace("Last write time for file '{}' was the same ({}), marking as unchanged.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
 			} else {
-				spdlog::trace("Last write time for file '{}' ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
+				logger->trace("Last write time for file '{}' ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count(),
 							  existingI->second.lastWriteTime.time_since_epoch().count());
 			}
@@ -121,7 +121,7 @@ GenerateEntry Generator::processFile(const std::filesystem::path& filePath) {
 	}
 
 	auto signatureResult = generateSignature(filePath);
-	spdlog::debug("Signature is {} for file {}", signatureResult.signature.str_view(), filePath.generic_string());
+	logger->debug("Signature is {} for file {}", signatureResult.signature.str_view(), filePath.generic_string());
 	auto localPath = linkFile(filePath, signatureResult.signature);
 	FileEntry fileEntry{.fileName=filePath.filename().generic_string(), .signature = signatureResult.signature, .type=FileEntryType::FILE, .size = signatureResult.size};
 	return {.fileEntry = fileEntry, .sourcePath=filePath, .repositoryPath=localPath, .status = GenerateFileStatus::Copied};
@@ -135,11 +135,11 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 		if (existingI != mConfig.existingEntries.end()) {
 			auto fileLastWriteTime = std::filesystem::last_write_time(filePath);
 			if (existingI->second.lastWriteTime == fileLastWriteTime) {
-				spdlog::trace("Last write time for directory '{}' was the same ({}), marking as unchanged.", filePath.string(),
+				logger->trace("Last write time for directory '{}' was the same ({}), marking as unchanged.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count());
 				return {.fileEntry = existingI->second.fileEntry, .sourcePath=filePath, .repositoryPath=existingI->second.repositoryPath, .status = GenerateFileStatus::Existed};
 			} else {
-				spdlog::trace("Last write time for directory '{}' ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
+				logger->trace("Last write time for directory '{}' ({}) differed from what was stored in the repo ({}), marking as changed.", filePath.string(),
 							  fileLastWriteTime.time_since_epoch().count(),
 							  existingI->second.lastWriteTime.time_since_epoch().count());
 			}
@@ -147,7 +147,7 @@ GenerateEntry Generator::processDirectory(const std::filesystem::path& filePath,
 	}
 
 	auto signature = generateSignature(manifest);
-	spdlog::debug("Signature is {} for manifest {}", signature.str_view(), filePath.generic_string());
+	logger->debug("Signature is {} for manifest {}", signature.str_view(), filePath.generic_string());
 	auto storeEntry = mRepository.store(signature, manifest);
 	if (storeEntry.status == StoreStatus::SUCCESS && !mConfig.skipLastWriteTime) {
 		std::filesystem::last_write_time(storeEntry.localPath, std::filesystem::last_write_time(filePath));
@@ -230,7 +230,7 @@ std::filesystem::path Generator::linkFile(const std::filesystem::path& filePath,
 	auto result = mRepository.store(signature, filePath);
 	if (result.status == StoreStatus::SUCCESS && !mConfig.skipLastWriteTime) {
 		auto lastWriteTime = std::filesystem::last_write_time(filePath);
-		spdlog::trace("Setting last write time of file '{}' to {}.", filePath.string(), lastWriteTime.time_since_epoch().count());
+		logger->trace("Setting last write time of file '{}' to {}.", filePath.string(), lastWriteTime.time_since_epoch().count());
 		std::filesystem::last_write_time(result.localPath, lastWriteTime);
 	}
 
@@ -281,7 +281,7 @@ std::map<std::filesystem::path, Generator::ExistingEntry> Generator::readExistin
 			auto entry = *i;
 			auto pathToFileInRepository = repository.resolvePathForSignature(entry.fileEntry.signature);
 			auto lastWriteTime = std::filesystem::last_write_time(pathToFileInRepository);
-			spdlog::trace("Reading existing entry '{}' with last write time of {}.", pathToFileInRepository.string(), lastWriteTime.time_since_epoch().count());
+			logger->trace("Reading existing entry '{}' with last write time of {}.", pathToFileInRepository.string(), lastWriteTime.time_since_epoch().count());
 			entries.emplace(entry.path, ExistingEntry{.fileEntry = entry.fileEntry, .lastWriteTime=lastWriteTime, .repositoryPath=pathToFileInRepository});
 		}
 	}

@@ -17,7 +17,7 @@
  */
 
 #include "OOGChat.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
 
 #include <Eris/Person.h>
@@ -63,7 +63,7 @@ OOGChat::~OOGChat() = default;
 // Lobby Specific callbacks
 
 void OOGChat::sightPerson(Eris::Person* person) {
-	S_LOG_INFO("Sighted Person name:\"" << person->getName() << "\" id:" << person->getAccount());
+	logger->info("Sighted Person name:\"{}\" id:{}", person->getName(), person->getAccount());
 }
 
 void OOGChat::privateTalk(Eris::Person* person, const std::string& msg) {
@@ -71,7 +71,7 @@ void OOGChat::privateTalk(Eris::Person* person, const std::string& msg) {
 
 	temp << "PRIVMSG(" << person->getName() << ") says:" << msg;
 
-	S_LOG_INFO(temp.str());
+	logger->info(temp.str());
 
 #if 0 // not new sstream
 	temp<<std::ends;
@@ -110,7 +110,7 @@ void OOGChat::entered(Eris::Room* room) {
 	std::ostringstream temp;
 
 	temp << "Entry of " << room->getName() << " complete";
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 #if 0 //not new stream
 	temp<<std::ends;
 #endif
@@ -121,7 +121,7 @@ void OOGChat::talk(Eris::Room* room, Eris::Person* person, const std::string& ms
 	std::ostringstream temp;
 
 	temp << "[" << room->getName() << "] " << person->getName() << " says: " << msg;
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 	temp << std::ends;
 	ConsoleBackend::getSingletonPtr()->pushMessage(temp.str(), "info");
 }
@@ -130,7 +130,7 @@ void OOGChat::emote(Eris::Room* room, Eris::Person* person, const std::string& m
 	std::ostringstream temp;
 
 	temp << "[" << room->getName() << "] " << person->getName() << " " << msg;
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 #if 0 // not new sstream
 	temp<<std::ends;
 #endif
@@ -141,7 +141,7 @@ void OOGChat::appearance(Eris::Room* room, Eris::Person* person) {
 	std::ostringstream temp;
 
 	temp << person->getName() << " appears in " << room->getName();
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 #if 0 // not new sstream
 	temp<<std::ends;
 #endif
@@ -152,7 +152,7 @@ void OOGChat::disappearance(Eris::Room* room, Eris::Person* person) {
 	std::ostringstream temp;
 
 	temp << person->getName() << " disappears from " << room->getName();
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 #if 0 // if not new sstream
 	temp<<std::ends;
 #endif

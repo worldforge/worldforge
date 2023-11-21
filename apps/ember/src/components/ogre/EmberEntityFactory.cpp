@@ -27,9 +27,7 @@
 #include <Eris/EventService.h>
 #include <Eris/TypeInfo.h>
 
-
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 EmberEntityFactory::EmberEntityFactory(Eris::View& view, Scene& scene) :
 		mView(view),
@@ -43,7 +41,7 @@ EmberEntityFactory::~EmberEntityFactory() = default;
 std::unique_ptr<Eris::ViewEntity> EmberEntityFactory::instantiate(const Atlas::Objects::Entity::RootEntity& ge, Eris::TypeInfo* type, Eris::View& w) {
 
 	auto entity = std::make_unique<EmberEntity>(ge->getId(), type, w);
-	S_LOG_VERBOSE("Entity " << entity->getId() << " (" << type->getName() << ") added to game view.");
+	logger->debug("Entity {} ({}) added to game view.", entity->getId(), type->getName());
 	return entity;
 }
 
@@ -57,5 +55,5 @@ int EmberEntityFactory::priority() {
 }
 
 }
-}
+
 

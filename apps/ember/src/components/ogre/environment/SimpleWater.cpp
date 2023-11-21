@@ -172,7 +172,7 @@ bool SimpleWater::initialize() {
 			return true;
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating simple water." << ex);
+		logger->error("Error when creating simple water: {}", ex.what());
 	}
 	return false;
 }

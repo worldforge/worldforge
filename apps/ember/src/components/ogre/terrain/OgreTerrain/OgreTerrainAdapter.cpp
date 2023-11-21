@@ -254,7 +254,7 @@ bool OgreTerrainAdapter::isPageShown(const TerrainIndex& index) {
 
 
 void OgreTerrainAdapter::removePage(const TerrainIndex& index) {
-	S_LOG_VERBOSE("removing page " << index.first << ":" << index.second);
+	logger->debug("removing page {}:{}", index.first, index.second);
 	auto terrain = mTerrainGroup->getTerrain(index.first, index.second);
 	//We can't delete the page if it's either 1) not yet fully created 2) being altered in a background thread.
 	//So we check for both of these, and if that's the case we'll delay removal.

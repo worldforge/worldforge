@@ -152,14 +152,14 @@ Ogre::TexturePtr ShaderPass::getCombinedBlendMapTexture(size_t passIndex, size_t
 	Ogre::TexturePtr combinedBlendMapTexture;
 	Ogre::TextureManager* textureMgr = Ogre::Root::getSingletonPtr()->getTextureManager();
 	if (textureMgr->resourceExists(combinedBlendMapName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME)) {
-		S_LOG_VERBOSE("Using already created blendMap texture " << combinedBlendMapName);
+		logger->debug("Using already created blendMap texture {}", combinedBlendMapName);
 		combinedBlendMapTexture = static_cast<Ogre::TexturePtr>(textureMgr->getByName(combinedBlendMapName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME));
 		if (!combinedBlendMapTexture->isLoaded()) {
 			combinedBlendMapTexture->createInternalResources();
 		}
 		return combinedBlendMapTexture;
 	}
-	S_LOG_VERBOSE("Creating new blendMap texture " << combinedBlendMapName << " with size " << mBlendMapPixelWidth);
+	logger->debug("Creating new blendMap texture {} with size {}",combinedBlendMapName, mBlendMapPixelWidth);
 	int flags = Ogre::TU_DYNAMIC_WRITE_ONLY;
 	// automipmapping seems to cause some trouble on Windows, at least in OpenGL on Nvidia cards
 	// Thus we'll disable it. The performance impact shouldn't be significant.
@@ -215,7 +215,7 @@ void ShaderPass::addLayer(const TerrainPageGeometry& geometry, const TerrainPage
 }
 
 bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextures, bool useShadows, bool useLighting) const {
-	S_LOG_VERBOSE("Creating terrain material pass with: NormalMapping=" << mUseNormalMapping << " Shadows=" << useShadows << " Lighting=" << useLighting);
+	logger->debug("Creating terrain material pass with: NormalMapping={} Shadows={} Lighting={}",mUseNormalMapping,useShadows, useLighting);
 
 	SplattingFragmentConfig fragmentConfig{
 			.lightning=useLighting,
@@ -225,7 +225,7 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 			.layers=(int) mLayers.size()
 	};
 	if (useLighting) {
-		S_LOG_VERBOSE("Adding normal map texture unit state.");
+		logger->debug("Adding normal map texture unit state.");
 		Ogre::TextureUnitState* normalMapTextureUnitState = pass.createTextureUnitState();
 
 		// Set up an alias for the normal texture. This way the terrain implementation can generate the normal texture at a later time and link it to this material.
@@ -242,7 +242,7 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 			textureUnitState->setTextureAddressingMode(Ogre::TextureUnitState::TAM_BORDER);
 			textureUnitState->setTextureBorderColour(Ogre::ColourValue(1.0, 1.0, 1.0, 1.0));
 		}
-		S_LOG_VERBOSE("Added " << mShadowLayers << " shadow layers.");
+		logger->debug("Added {} shadow layers.",mShadowLayers);
 	}
 
 
@@ -263,10 +263,10 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 	auto fragmentProgram = fetchOrCreateSplattingFragmentProgram(fragmentConfig);
 
 	try {
-		S_LOG_VERBOSE("Using fragment program " << fragmentProgram->getName() << " for terrain page.");
+		logger->debug("Using fragment program {} for terrain page.",fragmentProgram->getName());
 		pass.setGpuProgram(Ogre::GpuProgramType::GPT_FRAGMENT_PROGRAM, fragmentProgram);
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when setting fragment program '" << fragmentProgram->getName() << "'." << ex);
+		logger->warn("Error when setting fragment program '{}': {}",fragmentProgram->getName(), ex.what());
 		return false;
 	}
 	if (!pass.hasFragmentProgram()) {
@@ -291,7 +291,7 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when setting fragment program parameters." << ex);
+		logger->warn("Error when setting fragment program parameters: {}", ex.what());
 		return false;
 	}
 
@@ -304,10 +304,10 @@ bool ShaderPass::finalize(Ogre::Pass& pass, std::set<std::string>& managedTextur
 	}
 
 	if (mSceneManager.getFogMode() != Ogre::FOG_EXP2) {
-		S_LOG_FAILURE("Fog mode is different, but using vertex program " << lightningVpProgram << " for terrain material pass.");
+		logger->error("Fog mode is different, but using vertex program {} for terrain material pass.",lightningVpProgram );
 	}
 
-	S_LOG_VERBOSE("Using vertex program " << lightningVpProgram << " for terrain material pass.");
+	logger->debug("Using vertex program {} for terrain material pass.",lightningVpProgram);
 	pass.setVertexProgram(lightningVpProgram);
 
 	return true;

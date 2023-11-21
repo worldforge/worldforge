@@ -212,6 +212,8 @@ endif ()
 find_package(OpenGL)
 link_libraries(OpenGL::GL)
 
+find_package(spdlog REQUIRED)
+
 find_package(Bullet 2.89 REQUIRED)
 include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
 link_libraries(${BULLET_LIBRARIES})

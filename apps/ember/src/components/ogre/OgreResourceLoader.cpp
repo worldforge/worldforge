@@ -90,7 +90,7 @@ struct EmberResourceLoadingListener : public Ogre::ResourceLoadingListener {
 	}
 
 	bool resourceCollision(Ogre::Resource* resource, Ogre::ResourceManager* resourceManager) override {
-		S_LOG_VERBOSE("Resource '" << resource->getName() << "' already exists in group '" << resource->getGroup() << "' for type '" << resourceManager->getResourceType() << "'.");
+		logger->debug("Resource '{}' already exists in group '{}' for type '{}'.", resource->getName(), resource->getGroup(), resourceManager->getResourceType());
 		if (resourceManager->getResourceType() == "Material") {
 
 			//If a material, update the old version once the new one has been compiled (hence the need for "runOnMainThread".
@@ -104,7 +104,7 @@ struct EmberResourceLoadingListener : public Ogre::ResourceLoadingListener {
 					mat->copyDetailsTo(oldMat);
 					oldMat->load();
 				} else {
-					S_LOG_WARNING("Material '" << existingMaterial->getName() << "' does not exist anymore in group '" << existingMaterial->getGroup() << "'.");
+					logger->warn("Material '{}' does not exist anymore in group '{}'.", existingMaterial->getName(), existingMaterial->getGroup());
 				}
 			});
 		}
@@ -178,7 +178,7 @@ bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& pat
 											  const std::string& section,
 											  OnFailure onFailure) {
 	if (boost::filesystem::is_directory(path)) {
-		S_LOG_VERBOSE("Adding dir " << path.string());
+		logger->debug("Adding dir {}", path.string());
 		try {
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path.string(), type, section, true);
 			mResourceRootPaths.emplace_back(path.string());
@@ -190,7 +190,7 @@ bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& pat
 				case OnFailure::Ignore:
 					break;
 				case OnFailure::Report:
-					S_LOG_FAILURE("Couldn't load " << path.string() << ". Continuing as if nothing happened.");
+					logger->error("Couldn't load {}. Continuing as if nothing happened.", path.string());
 					break;
 				case OnFailure::Throw:
 					throw Ember::Exception(std::string("Could not load from required directory '") + path.string() +
@@ -202,11 +202,12 @@ bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& pat
 			case OnFailure::Ignore:
 				break;
 			case OnFailure::Report:
-				S_LOG_FAILURE("Couldn't find resource directory " << path.string());
+				logger->error("Couldn't find resource directory {}", path.string());
 				break;
 			case OnFailure::Throw:
-				throw Ember::Exception(std::string("Could not find required directory '") + path.string() +
-									   "'. This is fatal and Ember will shut down. The probable cause for this error is that you haven't properly installed all required media.");
+				throw Ember::Exception(fmt::format(
+						"Could not find required directory '{}'. This is fatal and Ember will shut down. The probable cause for this error is that you haven't properly installed all required media.",
+						path.string()));
 		}
 	}
 	return false;
@@ -263,7 +264,7 @@ void OgreResourceLoader::preloadMedia() {
 		try {
 			Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(group);
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("An error occurred when preloading media." << ex);
+			logger->error("An error occurred when preloading media: {}", ex.what());
 		}
 	}
 }
@@ -276,7 +277,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 			if (!boost::filesystem::is_regular_file(ev.path)) {
 				return;
 			}
-			S_LOG_VERBOSE("Resource changed " << ev.path.string() << " " << ev.type_cstr());
+			logger->debug("Resource changed {} {}", ev.path.string(), ev.type_cstr());
 
 			if (ev.type == boost::asio::dir_monitor_event::modified) {
 				try {
@@ -300,7 +301,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 							try {
 								resource->reload();
 							} catch (const std::exception& e) {
-								S_LOG_FAILURE("Could not reload resource '" << resourceName << "' of type '" << resourceManager.getResourceType() << "'." << e);
+								logger->error("Could not reload resource '{}' of type '{}': {}", resourceName, resourceManager.getResourceType(), e.what());
 							}
 						}
 					} else {
@@ -344,7 +345,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 									materialMgr->parseScript(fileStream, group);
 								}
 							} catch (const std::exception& ex) {
-								S_LOG_FAILURE("Error when parsing changed file '" << ev.path.string() << "'." << ex);
+								logger->error("Error when parsing changed file '{}': {}", ev.path.string(), ex.what());
 							}
 						} else if (extension == ".dds" || extension == ".png" || extension == ".jpg") {
 							reloadResource(Ogre::TextureManager::getSingleton(), relative.string());
@@ -371,7 +372,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 //						while (iterator.hasMoreElements()) {
 //							auto resource = Ogre::static_pointer_cast<Ogre::HighLevelGpuProgram>(iterator.getNext());
 //							if (resource->getSourceFile() == relative) {
-//								S_LOG_VERBOSE("Reloading GLSL script " << resource->getName());
+//								logger->debug("Reloading GLSL script " << resource->getName());
 //								Ogre::SharedPtr<Ogre::DataStream> stream(new Ogre::MemoryDataStream(0));
 //								Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(stream);
 //								//Ogre::GpuProgramManager::getSingleton().cac

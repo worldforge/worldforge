@@ -149,7 +149,7 @@ void ModelEditHelper::showAttachPointHelperEntity(const std::string& attachPoint
 			try {
 				mAttachPointHelper = std::make_unique<ModelAttachPointHelper>(*mModel, attachpoint, std::move(attachedModel));
 			} catch (const std::exception& e) {
-				S_LOG_WARNING("Could not create attach point helper with mesh " << meshName << "." << e);
+				logger->warn("Could not create attach point helper with mesh {}: {}", meshName, e.what());
 				return;
 			}
 			break;
@@ -170,7 +170,7 @@ void ModelEditHelper::showAttachPointHelperModel(const std::string& attachPointN
 				try {
 					mAttachPointHelper = std::make_unique<ModelAttachPointHelper>(*mModel, attachpoint, std::move(attachedModel));
 				} catch (const std::exception& e) {
-					S_LOG_WARNING("Could not create attach point helper with model " << modelName << "." << e);
+					logger->warn("Could not create attach point helper with model {}: {}", modelName, e.what());
 					return;
 				}
 			}

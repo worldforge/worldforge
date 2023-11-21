@@ -17,11 +17,11 @@
  */
 
 #include "CurlProvider.h"
+#include "squall/core/Log.h"
 #include <curl/curl.h>
 
 #include <utility>
 #include <fstream>
-#include <spdlog/spdlog.h>
 
 namespace Squall {
 
@@ -86,7 +86,7 @@ std::future<ProviderResult> CurlProvider::fetch(Signature signature, std::filesy
 		outputFile.close();
 		// something failed
 		if (res != CURLE_OK) {
-			spdlog::error("Curl download of file '{}' failed with error message: {}.", sourceFile, curl_easy_strerror(res));
+			logger->error("Curl download of file '{}' failed with error message: {}.", sourceFile, curl_easy_strerror(res));
 			std::promise<ProviderResult> promise;
 			promise.set_value(ProviderResult{.status=ProviderResultStatus::FAILURE});
 			return promise.get_future();

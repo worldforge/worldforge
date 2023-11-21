@@ -7,7 +7,6 @@ add_library(ember-services OBJECT
         input/InputCommandMapper.cpp
         input/EmberIcon.h
         input/IInputAdapter.h
-        logging/ErisLogReciever.cpp
         metaserver/MetaserverService.cpp
         scripting/ScriptingService.cpp
         server/AccountAvailableState.cpp

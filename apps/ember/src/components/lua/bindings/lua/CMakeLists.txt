@@ -2,6 +2,7 @@ add_library(ember-BindingsLua OBJECT
         BindingsLua.cpp)
 
 target_link_libraries(ember-BindingsLua PUBLIC
+        ember-framework
         ember-external-sol2
 )
 

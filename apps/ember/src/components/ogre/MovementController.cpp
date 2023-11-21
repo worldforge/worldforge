@@ -139,7 +139,7 @@ MovementController::MovementController(Avatar& avatar, Camera::MainCamera& camer
 
 
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Could not setup awareness; steering and path finding will be disabled." << ex);
+				logger->error("Could not setup awareness; steering and path finding will be disabled: {}", ex.what());
 			}
 		} else {
 			mSteering.reset();
@@ -189,11 +189,11 @@ MovementController::MovementController(Avatar& avatar, Camera::MainCamera& camer
 			mCameraMount->setMotionHandler(mFreeFlyingMotionHandler.get());
 			mCameraMount->attachToNode(mFreeFlyingNode);
 		} else {
-			S_LOG_FAILURE("Failed to create free flying camera node.");
+			logger->error("Failed to create free flying camera node.");
 		}
 
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting up free flying camera mount." << ex);
+		logger->error("Error when setting up free flying camera mount: {}", ex.what());
 	}
 
 }
@@ -435,7 +435,7 @@ void MovementController::createDecal(Ogre::Vector3 position) {
 //
 //		// 		mPulsatingController = new Ogre::WaveformControllerFunction(Ogre::WFT_SINE, 1, 0.33, 0.25);
 //	} catch (const std::exception& ex) {
-//		S_LOG_WARNING("Error when creating terrain decal." << ex);
+//		logger->warn("Error when creating terrain decal: {}", ex.what());
 //	}
 }
 

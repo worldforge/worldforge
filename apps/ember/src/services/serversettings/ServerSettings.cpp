@@ -19,7 +19,7 @@
 
 #include "ServerSettings.h"
 #include "ServerSettingsCredentials.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "services/config/ConfigService.h"
 #include <fstream>
 #include <sstream>
@@ -61,12 +61,12 @@ void ServerSettings::readFromDisk() {
 	if (!file.fail()) {
 		// read in file
 		// 		serverCache.readFromFile(cacheFile.c_str(),varconf::GLOBAL);
-		S_LOG_VERBOSE("Loading existing server settings [ " << filePath.string() << " ]");
+		logger->debug("Loading existing server settings [ {} ]", filePath.string());
 		try {
 			// make sure it is well formed
 			mConfig->parseStream(file, varconf::GLOBAL);
 		} catch (varconf::ParseError& ex) {
-			S_LOG_FAILURE("Error loading server settings file: " << ex);
+			logger->error("Error loading server settings file: {}", ex.what());
 			return;
 		}
 		file.close();

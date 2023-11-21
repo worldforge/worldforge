@@ -21,18 +21,17 @@
 #include "EmberWorkQueue.h"
 #include "EmberOgrePrerequisites.h"
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 EmberWorkQueue::EmberWorkQueue(Eris::EventService& eventService)
 		: DefaultWorkQueue("EmberWorkQueue"),
 		  mEventService(eventService) {
 	//Set the number of Ogre worker threads to half the number of logical cores.
 	unsigned int logicalCores = std::thread::hardware_concurrency();
 	if (logicalCores == 0) {
-		S_LOG_INFO("Could not get information about logical cores in machine.");
+		logger->info("Could not get information about logical cores in machine.");
 	} else {
 		logicalCores = std::max<unsigned int>(1, logicalCores / 2);
-		S_LOG_INFO("Setting Ogre to use " << logicalCores << " worker threads.");
+		logger->info("Setting Ogre to use {} worker threads.", logicalCores);
 		setWorkerThreadCount(logicalCores);
 	}
 }
@@ -84,6 +83,5 @@ void EmberWorkQueue::processResponses() {
 			}
 		}
 	}
-}
 }
 }

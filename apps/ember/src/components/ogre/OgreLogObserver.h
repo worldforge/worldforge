@@ -24,9 +24,9 @@
 #define EMBEROGREOGRELOGOBSERVER_H
 
 #include <OgreLog.h>
+#include <spdlog/logger.h>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 /**
 @author Erik Ogenvik
@@ -34,24 +34,14 @@ A log observer which writes to the Ogre log system.
 This is a combined Ogre::LogListener and a StreamLogObserver.
 The StreamLogObserver part does the main work, while the Ogre::LogListener implementation allow us to receive ogre log events.
 */
-class OgreLogObserver : public Ogre::LogListener {
-public:
-	/**
-	* Creates a new OgreLogObserver using default values.
-	*/
-	OgreLogObserver();
-
-	~OgreLogObserver() override;
+struct OgreLogObserver : public Ogre::LogListener {
+	inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("OGRE");;
 
 	void messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName, bool& skipThisMessage) override;
-
-protected:
-
 
 };
 
 }
 
-}
 
 #endif

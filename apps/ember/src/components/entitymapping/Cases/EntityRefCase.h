@@ -35,8 +35,8 @@ namespace Cases {
 class EntityRefCase : public Case<Matches::EntityRefMatch>, public EntityBaseCase
 {
 public:
-	EntityRefCase() = default;;
-	~EntityRefCase() override = default;;
+	EntityRefCase() = default;
+	~EntityRefCase() override = default;
 protected:
 	void _setState(bool state) override;
 };

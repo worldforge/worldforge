@@ -34,8 +34,7 @@ class RadioButton;
 
 }
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 /**
 Utility define for binding CEGUI elements to methods. 
@@ -323,12 +322,12 @@ inline const std::string& Widget::getPrefix() const { return mPrefix; }
 template<typename T>
 T& Widget::getWindow(const std::string& windowName) {
 	if (!mMainWindow) {
-		S_LOG_WARNING("Trying to get a window (" + windowName + ") on widget that has no main sheet loaded (" << mPrefix << ").");
+		logger->warn("Trying to get a window ({}) on widget that has no main sheet loaded ({}).", windowName, mPrefix);
 		throw std::runtime_error("No main sheet loaded.");
 	}
 	auto window = dynamic_cast<T*>(mMainWindow->getChildRecursive(windowName));
 	if (!window) {
-		S_LOG_WARNING("The window with id " << windowName << ", located under widget " << mPrefix << " does not exist.");
+		logger->warn("The window with id {}, located under widget {} does not exist.", windowName, mPrefix);
 		throw std::runtime_error("No window found.");
 	}
 	return *window;
@@ -339,6 +338,6 @@ T& Widget::getWindow(const std::string& windowName) {
 
 }
 
-}
+
 
 #endif // WIDGET_H

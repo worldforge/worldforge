@@ -60,7 +60,7 @@ bool DelayedCompassRenderer::frameStarted(const Ogre::FrameEvent& event) {
 			mCompass.getMap().render();
 			mCompass.refresh();
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when updating compass." << ex);
+			logger->warn("Error when updating compass: {}", ex.what());
 		}
 	}
 	return true;
@@ -185,7 +185,7 @@ void RenderedCompassImpl::reposition(float x, float y) {
 		try {
 			mRenderTexture->update();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when updating render for compass." << ex);
+			logger->error("Error when updating render for compass: {}", ex.what());
 		}
 	}
 	mX = x;
@@ -255,7 +255,7 @@ void RenderedCompassImpl::_setCompass(Compass* compass) {
 			}
 		}
 	}
-	S_LOG_WARNING("Could not load material '" << mMaterialName << "' for the compass.");
+	logger->warn("Could not load material '{}' for the compass.", mMaterialName);
 }
 
 Ogre::TexturePtr RenderedCompassImpl::getTexture() const {

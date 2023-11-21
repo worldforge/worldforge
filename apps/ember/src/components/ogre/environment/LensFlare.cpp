@@ -102,7 +102,7 @@ bool LensFlare::createLensFlare()
 		mBurstSet->setCullIndividually(true);
 		mBurstSet->setRenderQueueGroup(RENDER_QUEUE_SKIES_LATE);
 	} catch (const std::exception&) {
-		S_LOG_FAILURE("Couldn't load lens flare, you are probably missing the needed materials.");
+		logger->error("Couldn't load lens flare, you are probably missing the needed materials.");
 		return false;
 	}
 	// The node is located at the light source.

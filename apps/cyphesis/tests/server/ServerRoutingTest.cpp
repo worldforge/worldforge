@@ -168,7 +168,7 @@ int main()
         assert(id.isValid());
 
         Account* ac = new TestAccount(0, "bob", "", id);
-        server.addAccount(std::unique_ptr<Account>(ac));;
+        server.addAccount(std::unique_ptr<Account>(ac));
         assert(server.getObjects().size() == 1);
         Account* rac = server.getAccountByName("bob");
         assert(rac == ac);
@@ -184,7 +184,7 @@ int main()
         assert(id.isValid());
 
         Account* ac = new TestAccount(0, "bob", "", id);
-        server.addAccount(std::unique_ptr<Account>(ac));;
+        server.addAccount(std::unique_ptr<Account>(ac));
         assert(server.getObjects().size() == 1);
         Account* rac = server.getAccountByName("alice");
         assert(rac == 0);

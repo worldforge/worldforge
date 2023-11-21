@@ -295,7 +295,7 @@ void AtlasStreamClient::objectArrived(Root obj)
     RootOperation op = Atlas::Objects::smart_dynamic_cast<RootOperation>(obj);
     if (!op.isValid()) {
         std::cerr << "ERROR: Non op object received from server"
-                  << std::endl;;
+                  << std::endl;
         if (!obj->isDefaultParent()) {
             std::cerr << "NOTICE: Unexpected object has parent "
                       << obj->getParent()

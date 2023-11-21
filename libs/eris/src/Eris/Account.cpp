@@ -19,7 +19,6 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <memory>
 
 using Atlas::Objects::Root;
@@ -46,14 +45,14 @@ public:
 	RouterResult handleOperation(const RootOperation& op) override {
 		// logout
 		if (op->getClassNo() == LOGOUT_NO) {
-			debug() << "Account received forced logout from server";
+			logger->debug("Account received forced logout from server");
 			m_account->internalLogout(false);
 			return HANDLED;
 		}
 
 		if ((op->getClassNo() == SIGHT_NO) && (op->getTo() == m_account->getId())) {
 			const std::vector<Root>& args = op->getArgs();
-			AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+			auto acc = smart_dynamic_cast<AtlasAccount>(args.front());
 			m_account->updateFromObject(acc);
 
 			// refresh character data if it changed
@@ -72,7 +71,7 @@ public:
 		if (op->getClassNo() == ERROR_NO) {
 			auto message = getErrorMessage(op);
 			if (!message.empty()) {
-				notice() << "Got error message from server: " << message;
+				logger->trace("Got error message from server: {}", message);
 				m_account->ErrorMessage.emit(message);
 			}
 
@@ -113,12 +112,12 @@ Account::~Account() {
 
 Result Account::login(const std::string& uname, const std::string& password) {
 	if (!m_con.isConnected()) {
-		error() << "called login on unconnected Connection";
+		logger->error("called login on unconnected Connection");
 		return NOT_CONNECTED;
 	}
 
 	if (m_status != Status::DISCONNECTED) {
-		error() << "called login, but state is not currently disconnected";
+		logger->error("called login, but state is not currently disconnected");
 		return ALREADY_LOGGED_IN;
 	}
 
@@ -162,14 +161,14 @@ Result Account::createAccount(const Atlas::Objects::Entity::Account& accountOp) 
 
 Result Account::logout() {
 	if (!m_con.isConnected()) {
-		error() << "called logout on bad connection ignoring";
+		logger->error("called logout on bad connection ignoring");
 		return NOT_CONNECTED;
 	}
 
 	if (m_status == Status::LOGGING_OUT) return NO_ERR;
 
 	if (m_status != Status::LOGGED_IN) {
-		error() << "called logout on non-logged-in Account";
+		logger->error("called logout on non-logged-in Account");
 		return NOT_LOGGED_IN;
 	}
 
@@ -193,7 +192,7 @@ Result Account::logout() {
 
 const CharacterMap& Account::getCharacters() {
 	if (m_status != Status::LOGGED_IN)
-		error() << "Not logged into an account : getCharacter returning empty dictionary";
+		logger->error("Not logged into an account : getCharacter returning empty dictionary");
 
 	return _characters;
 }
@@ -247,10 +246,10 @@ Result Account::createCharacterThroughOperation(const Create& c) {
 	if (!m_con.isConnected()) return NOT_CONNECTED;
 	if (m_status != Status::LOGGED_IN) {
 		if ((m_status == Status::CREATING_CHAR) || (m_status == Status::TAKING_CHAR)) {
-			error() << "duplicate char creation / take";
+			logger->error("duplicate char creation / take");
 			return DUPLICATE_CHAR_ACTIVE;
 		} else {
-			error() << "called createCharacter on unconnected Account, ignoring";
+			logger->error("called createCharacter on unconnected Account, ignoring");
 			return NOT_LOGGED_IN;
 		}
 	}
@@ -268,10 +267,10 @@ Result Account::takeTransferredCharacter(const std::string& id, const std::strin
 	if (!m_con.isConnected()) return NOT_CONNECTED;
 	if (m_status != Status::LOGGED_IN) {
 		if ((m_status == Status::CREATING_CHAR) || (m_status == Status::TAKING_CHAR)) {
-			error() << "duplicate char creation / take";
+			logger->error("duplicate char creation / take");
 			return DUPLICATE_CHAR_ACTIVE;
 		} else {
-			error() << "called takeCharacter on unconnected Account, ignoring";
+			logger->error("called takeCharacter on unconnected Account, ignoring");
 			return NOT_LOGGED_IN;
 		}
 	}
@@ -298,10 +297,10 @@ Result Account::takeCharacter(const std::string& id) {
 	if (!m_con.isConnected()) return NOT_CONNECTED;
 	if (m_status != Status::LOGGED_IN && m_status != Status::CREATED_CHAR) {
 		if ((m_status == Status::CREATING_CHAR) || (m_status == Status::TAKING_CHAR)) {
-			error() << "duplicate char creation / take";
+			logger->error("duplicate char creation / take");
 			return DUPLICATE_CHAR_ACTIVE;
 		} else {
-			error() << "called takeCharacter on unconnected Account, ignoring";
+			logger->error("called takeCharacter on unconnected Account, ignoring");
 			return NOT_LOGGED_IN;
 		}
 	}
@@ -350,7 +349,7 @@ Result Account::internalLogin(const std::string& uname, const std::string& pwd) 
 
 void Account::logoutResponse(const RootOperation& op) {
 	if (!op->instanceOf(INFO_NO))
-		warning() << "received a logout response that is not an INFO";
+		logger->warn("received a logout response that is not an INFO");
 
 	internalLogout(true);
 }
@@ -358,11 +357,11 @@ void Account::logoutResponse(const RootOperation& op) {
 void Account::internalLogout(bool clean) {
 	if (clean) {
 		if (m_status != Status::LOGGING_OUT)
-			error() << "got clean logout, but not logging out already";
+			logger->error("got clean logout, but not logging out already");
 	} else {
 		if ((m_status != Status::LOGGED_IN) && (m_status != Status::TAKING_CHAR) &&
 			(m_status != Status::CREATING_CHAR))
-			error() << "got forced logout, but not currently logged in";
+			logger->error("got forced logout, but not currently logged in");
 	}
 
 	m_con.unregisterRouterForTo(m_router.get(), m_accountId);
@@ -383,22 +382,22 @@ void Account::loginResponse(const RootOperation& op) {
 		const std::vector<Root>& args = op->getArgs();
 		loginComplete(smart_dynamic_cast<AtlasAccount>(args.front()));
 	} else
-		warning() << "received malformed login response: " << op->getClassNo();
+		logger->warn("received malformed login response: {}", op->getClassNo());
 }
 
 void Account::loginComplete(const AtlasAccount& p) {
 	if (m_status != Status::LOGGING_IN) {
-		error() << "got loginComplete, but not currently logging in!";
+		logger->error("got loginComplete, but not currently logging in!");
 	}
 
 	if (!p.isValid()) {
-		error() << "no account in response.";
+		logger->error("no account in response.");
 		return;
 	}
 
 	//The user name being different should not be a fatal thing.
 	if (p->getUsername() != m_username) {
-		warning() << "received username does not match existing";
+		logger->warn("received username does not match existing");
 		m_username = p->getUsername();
 	}
 
@@ -530,7 +529,7 @@ void Account::updateFromObject(const AtlasAccount& p) {
 				}
 			}
 		} else {
-			error() << "Account has attribute \"spawns\" which is not of type List.";
+			logger->error("Account has attribute \"spawns\" which is not of type List.");
 		}
 	}
 	if (m_status == Status::CREATING_CHAR && !createdCharacterId.empty()) {
@@ -541,11 +540,11 @@ void Account::updateFromObject(const AtlasAccount& p) {
 
 void Account::loginError(const Error& err) {
 	if (!err) {
-		warning() << "Got invalid error";
+		logger->warn("Got invalid error");
 		return;
 	}
 	if (m_status != Status::LOGGING_IN) {
-		error() << "got loginError while not logging in";
+		logger->error("got loginError while not logging in");
 	}
 
 	std::string msg = getErrorMessage(err);
@@ -574,36 +573,36 @@ void Account::possessResponse(const RootOperation& op) {
 	} else if (op->instanceOf(INFO_NO)) {
 		const std::vector<Root>& args = op->getArgs();
 		if (args.empty()) {
-			warning() << "no args character possess response";
+			logger->warn("no args character possess response");
 			return;
 		}
 
 		auto ent = smart_dynamic_cast<RootEntity>(args.front());
 		if (!ent.isValid()) {
-			warning() << "malformed character possess response";
+			logger->warn("malformed character possess response");
 			return;
 		}
 
 		if (!ent->hasAttr("entity")) {
-			warning() << "malformed character possess response";
+			logger->warn("malformed character possess response");
 			return;
 		}
 
 		auto entityMessage = ent->getAttr("entity");
 
 		if (!entityMessage.isMap()) {
-			warning() << "malformed character possess response";
+			logger->warn("malformed character possess response");
 			return;
 		}
 		auto entityObj = smart_dynamic_cast<RootEntity>(m_con.getFactories().createObject(entityMessage.Map()));
 
 		if (!entityObj || entityObj->isDefaultId()) {
-			warning() << "malformed character possess response";
+			logger->warn("malformed character possess response");
 			return;
 		}
 
 		if (m_activeAvatars.find(ent->getId()) != m_activeAvatars.end()) {
-			warning() << "got possession response for character already created";
+			logger->warn("got possession response for character already created");
 			return;
 		}
 
@@ -614,7 +613,7 @@ void Account::possessResponse(const RootOperation& op) {
 		m_activeAvatars[av->getId()] = std::move(av);
 
 	} else
-		warning() << "received incorrect avatar create/take response";
+		logger->warn("received incorrect avatar create/take response");
 }
 
 void Account::avatarCreateResponse(const RootOperation& op) {
@@ -630,7 +629,7 @@ void Account::avatarCreateResponse(const RootOperation& op) {
 void Account::internalDeactivateCharacter(const std::string& avatarId) {
 	auto I = m_activeAvatars.find(avatarId);
 	if (I == m_activeAvatars.end()) {
-		warning() << "trying to deactivate non active character";
+		logger->warn("trying to deactivate non active character");
 	} else {
 		m_activeAvatars.erase(I);
 	}
@@ -638,25 +637,25 @@ void Account::internalDeactivateCharacter(const std::string& avatarId) {
 
 void Account::sightCharacter(const RootOperation& op) {
 	if (!m_doingCharacterRefresh) {
-		error() << "got sight of character outside a refresh, ignoring";
+		logger->error("got sight of character outside a refresh, ignoring");
 		return;
 	}
 
 	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
-		error() << "got sight of character with no args";
+		logger->error("got sight of character with no args");
 		return;
 	}
 
-	RootEntity ge = smart_dynamic_cast<RootEntity>(args.front());
+	auto ge = smart_dynamic_cast<RootEntity>(args.front());
 	if (!ge.isValid()) {
-		error() << "got sight of character with malformed args";
+		logger->error("got sight of character with malformed args");
 		return;
 	}
 
 	auto C = _characters.find(ge->getId());
 	if (C != _characters.end()) {
-		error() << "duplicate sight of character " << ge->getId();
+		logger->error("duplicate sight of character {}", ge->getId());
 		return;
 	}
 
@@ -679,7 +678,7 @@ state */
 void Account::netConnected() {
 	// re-connection
 	if (!m_username.empty() && !m_pass.empty() && (m_status == Status::DISCONNECTED)) {
-		debug() << "Account " << m_username << " got netConnected, doing reconnect";
+		logger->debug("Account {} got netConnected, doing reconnect", m_username);
 		internalLogin(m_username, m_pass);
 	}
 }
@@ -698,7 +697,7 @@ void Account::netFailure(const std::string& /*msg*/) {
 }
 
 void Account::handleLogoutTimeout() {
-	error() << "LOGOUT timed out waiting for response";
+	logger->error("LOGOUT timed out waiting for response");
 
 	m_status = Status::DISCONNECTED;
 	m_timeout.reset();
@@ -708,34 +707,34 @@ void Account::handleLogoutTimeout() {
 
 void Account::avatarLogoutResponse(const RootOperation& op) {
 	if (!op->instanceOf(INFO_NO)) {
-		warning() << "received an avatar logout response that is not an INFO";
+		logger->warn("received an avatar logout response that is not an INFO");
 		return;
 	}
 
 	const std::vector<Root>& args(op->getArgs());
 
 	if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
-		warning() << "argument of avatar logout INFO is not a logout op";
+		logger->warn("argument of avatar logout INFO is not a logout op");
 		return;
 	}
 
-	RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
+	auto logout = smart_dynamic_cast<RootOperation>(args.front());
 	const std::vector<Root>& args2(logout->getArgs());
 	if (args2.empty()) {
-		warning() << "argument of avatar logout INFO is logout without args";
+		logger->warn("argument of avatar logout INFO is logout without args");
 		return;
 	}
 
 	std::string charId = args2.front()->getId();
-	debug() << "got logout for character " << charId;
+	logger->debug("got logout for character {}", charId);
 
 	if (m_characterIds.find(charId) == m_characterIds.end()) {
-		warning() << "character ID " << charId << " is unknown on account " << m_accountId;
+		logger->warn("character ID {} is unknown on account {}", charId, m_accountId);
 	}
 
 	auto it = m_activeAvatars.find(charId);
 	if (it == m_activeAvatars.end()) {
-		warning() << "character ID " << charId << " does not correspond to an active avatar.";
+		logger->warn("character ID {} does not correspond to an active avatar.", charId);
 		return;
 	}
 

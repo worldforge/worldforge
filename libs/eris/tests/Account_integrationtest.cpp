@@ -29,7 +29,6 @@
 #include <Eris/Connection.h>
 #include <Eris/Avatar.h>
 #include <Eris/Exceptions.h>
-#include <Eris/Log.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/EventService.h>
 
@@ -167,13 +166,7 @@ public:
 			Eris::Avatar(*ac, mindId, ent_id) {}
 };
 
-static void writeLog(Eris::LogLevel, const std::string& msg) {
-	std::cerr << msg << std::endl;
-}
-
 int main() {
-	Eris::Logged.connect(sigc::ptr_fun(writeLog));
-	Eris::setLogLevel(Eris::LOG_DEBUG);
 	boost::asio::io_service io_service;
 	Eris::EventService tes(io_service);
 

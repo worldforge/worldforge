@@ -42,7 +42,7 @@ bool XMLHelper::Load(TiXmlDocument& xmlDoc, Ogre::DataStreamPtr stream) {
 			int errorColumn = xmlDoc.ErrorCol();
 			std::stringstream ss;
 			ss << "Failed to load xml file '" << stream->getName() << "'! Error at column: " << errorColumn << " line: " << errorLine << ". Error message: " << errorDesc;
-			S_LOG_FAILURE(ss.str());
+			logger->error(ss.str());
 			return false;
 		} else {
 			return true;
@@ -60,7 +60,7 @@ bool XMLHelper::Load(TiXmlDocument& xmlDoc, std::istream& stream, const boost::f
 		int errorColumn = xmlDoc.ErrorCol();
 		std::stringstream ss;
 		ss << "Failed to load xml file '" << path << "'! Error at column: " << errorColumn << " line: " << errorLine << ". Error message: " << errorDesc;
-		S_LOG_FAILURE(ss.str());
+		logger->error(ss.str());
 		return false;
 	} else {
 		return true;
@@ -102,7 +102,7 @@ Ogre::Quaternion XMLHelper::fillQuaternionFromElement(TiXmlElement* elem) {
 	Ogre::Quaternion q(degrees, vector);
 
 	if (q.isNaN()) {
-		S_LOG_WARNING("Reading rotation resulted in invalid quaternion.");
+		logger->warn("Reading rotation resulted in invalid quaternion.");
 	}
 	return q;
 

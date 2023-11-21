@@ -18,7 +18,7 @@
 
 #include "ConnectedState.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
 #include "AssetsSyncState.h"
 
@@ -39,14 +39,14 @@ void ConnectedState::disconnect() {
 	try {
 		mConnection.disconnect();
 	} catch (const std::exception& e) {
-		S_LOG_WARNING("Got error on disconnect." << e);
+		logger->warn("Got error on disconnect: {}", e.what());
 	} catch (...) {
-		S_LOG_WARNING("Got unknown error on disconnect");
+		logger->warn("Got unknown error on disconnect");
 	}
 }
 
 bool ConnectedState::disconnecting() {
-	S_LOG_INFO("Disconnecting");
+	logger->info("Disconnecting");
 	destroyChildState();
 	return true;
 }

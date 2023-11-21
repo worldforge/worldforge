@@ -22,7 +22,7 @@
 //
 #include "GrassFoliage.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include "FoliageLayer.h"
 

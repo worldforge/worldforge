@@ -18,7 +18,7 @@
 
 #include "EntityMaker.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/Tokeniser.h"
 
 #include <Eris/TypeService.h>
@@ -32,9 +32,7 @@
 
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+namespace Ember::OgreView::Authoring {
 
 EntityMaker::EntityMaker(Eris::Avatar& avatar, Eris::Connection& connection) :
 		CreateEntity("createentity", this, "Create an entity."),
@@ -103,9 +101,9 @@ void EntityMaker::createEntityOfType(const std::string& type, const std::string&
 	mConnection.send(c);
 	std::stringstream ss;
 	ss << pos;
-	S_LOG_INFO("Trying to create entity of type " << type << " at position " << ss.str());
+	logger->info("Trying to create entity of type {} at position {}", type, ss.str());
 
 }
 }
-}
-}
+
+

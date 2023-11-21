@@ -23,7 +23,7 @@
 #include "IconImageStore.h"
 #include <CEGUI/CEGUI.h>
 #include <Ogre.h>
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "components/ogre/GUIManager.h"
 
 namespace Ember {
@@ -161,7 +161,7 @@ void IconImageStore::createImageset() {
 			Ogre::TEX_TYPE_2D, mImageSize, mImageSize, 0, Ogre::PF_A8R8G8B8, Ogre::TU_RENDERTARGET);
 
 	if (!mTexPtr) {
-		S_LOG_WARNING("Could not create a texture.");
+		logger->warn("Could not create a texture.");
 		return;
 	}
 
@@ -190,7 +190,7 @@ size_t IconImageStore::getNumberOfUnclaimedIcons() {
 
 IconImageStoreEntry* IconImageStore::claimImageEntry() {
 	if (!getNumberOfUnclaimedIcons()) {
-		S_LOG_WARNING("Trying to claim image entry from store with no unclaimed entries.");
+		logger->warn("Trying to claim image entry from store with no unclaimed entries.");
 		return nullptr;
 	}
 	IconImageStoreEntry* entry = mUnclaimedIconImages.top();
@@ -200,10 +200,10 @@ IconImageStoreEntry* IconImageStore::claimImageEntry() {
 
 void IconImageStore::returnImageEntry(IconImageStoreEntry* imageEntry) {
 // 	if (std::find(mUnclaimedIconImages.begin(), mUnclaimedIconImages.end(), imageEntry) != mUnclaimedIconImages.end()) {
-// 		S_LOG_WARNING("Trying to return an image entry which is unclaimed.");
+// 		logger->warn("Trying to return an image entry which is unclaimed.");
 // 	}
 	if (std::find_if(mIconImages.begin(), mIconImages.end(), [imageEntry](const std::unique_ptr<IconImageStoreEntry>& entry) { return entry.get() == imageEntry; }) == mIconImages.end()) {
-		S_LOG_WARNING("Trying to return an image entry which doesn't belong to this store.");
+		logger->warn("Trying to return an image entry which doesn't belong to this store.");
 	}
 
 	mUnclaimedIconImages.push(imageEntry);

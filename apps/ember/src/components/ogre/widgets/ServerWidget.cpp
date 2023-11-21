@@ -260,13 +260,13 @@ void ServerWidget::showServerInfo(Eris::Connection& connection) {
 		}
 
 	} catch (...) {
-		S_LOG_WARNING("Error when getting the server info window.");
+		logger->warn("Error when getting the server info window.");
 		return;
 	}
 }
 
 bool ServerWidget::fetchCredentials(Eris::Connection& connection, std::string& user, std::string& pass) {
-	S_LOG_VERBOSE("Fetching saved credentials.");
+	logger->debug("Fetching saved credentials.");
 
 	Eris::ServerInfo sInfo;
 	connection.getServerInfo(sInfo);
@@ -283,7 +283,7 @@ bool ServerWidget::fetchCredentials(Eris::Connection& connection, std::string& u
 }
 
 bool ServerWidget::saveCredentials() {
-	S_LOG_VERBOSE("Saving credentials.");
+	logger->debug("Saving credentials.");
 
 	Eris::ServerInfo sInfo;
 	mAccount.getConnection().getServerInfo(sInfo);
@@ -308,7 +308,7 @@ bool ServerWidget::saveCredentials() {
 		}
 		return false;
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_FAILURE("Error when getting windows from CEGUI." << ex);
+		logger->error("Error when getting windows from CEGUI: {}", ex.what());
 		return false;
 	}
 }
@@ -331,9 +331,9 @@ void ServerWidget::loginSuccess(Eris::Account* account) {
 		try {
 			saveCredentials();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when saving password." << ex);
+			logger->error("Error when saving password: {}", ex.what());
 		} catch (...) {
-			S_LOG_FAILURE("Unspecified error when saving password.");
+			logger->error("Unspecified error when saving password.");
 		}
 	}
 
@@ -622,7 +622,7 @@ void ServerWidget::avatar_Deactivated(const std::string&) {
 void ServerWidget::createPreviewTexture() {
 	auto imageWidget = mWidget->getWindow("Image");
 	if (!imageWidget) {
-		S_LOG_FAILURE("Could not find CreateCharacterPanel/Image, aborting creation of preview texture.");
+		logger->error("Could not find CreateCharacterPanel/Image, aborting creation of preview texture.");
 	} else {
 		mModelPreviewRenderer = std::make_unique<ModelRenderer>(imageWidget, "newCharacterPreview");
 		mModelPreviewManipulator = std::make_unique<CameraEntityTextureManipulator>(*imageWidget, mModelPreviewRenderer->getEntityTexture());

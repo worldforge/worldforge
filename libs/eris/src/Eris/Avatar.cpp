@@ -81,8 +81,7 @@ namespace Eris {
         getConnection().send(l);
         m_logoutTimer = std::make_unique<TimedEvent>(getConnection().getEventService(), std::chrono::seconds(5),
                                                      [&]() {
-                                                         warning()
-                                                                 << "Did not receive logout response after five seconds; forcing Avatar logout.";
+                                                         logger->warn("Did not receive logout response after five seconds; forcing Avatar logout.");
                                                          m_account.destroyAvatar(getId());
                                                      });
     }
@@ -325,29 +324,28 @@ namespace Eris {
 
     void Avatar::logoutResponse(const RootOperation &op) {
         if (!op->instanceOf(INFO_NO)) {
-            warning() << "received an avatar logout response that is not an INFO";
+            logger->warn("received an avatar logout response that is not an INFO");
             return;
         }
 
         const std::vector<Root> &args(op->getArgs());
 
         if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
-            warning() << "argument of avatar logout INFO is not a logout op";
+            logger->warn("argument of avatar logout INFO is not a logout op");
             return;
         }
 
         auto logout = smart_dynamic_cast<RootOperation>(args.front());
         const std::vector<Root> &args2(logout->getArgs());
         if (args2.empty()) {
-            warning() << "argument of avatar INFO(LOGOUT) is empty";
+            logger->warn("argument of avatar INFO(LOGOUT) is empty");
             return;
         }
 
         std::string charId = args2.front()->getId();
-        debug() << "got logout for character " << charId;
+        logger->debug("got logout for character {}", charId);
         if (charId != m_mindId) {
-            error() << "got logout for character " << charId
-                    << " that is not this avatar " << m_mindId;
+            logger->error("got logout for character {} that is not this avatar {}", charId, m_mindId);
             return;
         }
 

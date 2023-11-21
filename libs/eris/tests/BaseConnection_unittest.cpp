@@ -99,16 +99,11 @@ class TestBaseConnection : public Eris::BaseConnection {
 
 };
 
-static void writeLog(Eris::LogLevel, const std::string & msg)
-{
-    std::cerr << msg << std::endl;
-}
 
 int main()
 {
 
     boost::asio::io_service io_service;
-    Eris::Logged.connect(sigc::ptr_fun(writeLog));
 
     {
 		Atlas::Message::QueuedDecoder bridge;

@@ -302,7 +302,7 @@ void World::View_gotAvatarCharacter(Eris::Entity* entity) {
 		mTerrainManager->startPaging();
 		EventGotAvatar();
 	} else {
-		S_LOG_CRITICAL("Somehow got a null avatar entity.");
+		logger->critical("Somehow got a null avatar entity.");
 	}
 }
 

@@ -4,6 +4,7 @@ add_library(ember-BindingsEris OBJECT
         ${BINDINGS_FILES})
 
 target_link_libraries(ember-BindingsEris PUBLIC
+        ember-framework
         ember-external-sol2
         eris
 )

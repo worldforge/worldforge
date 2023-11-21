@@ -79,6 +79,7 @@ target_link_libraries(${LIBNAME} PUBLIC
         AtlasNet
         libsigcpp::sigc++
         Boost::headers
+        spdlog::spdlog
         wfmath)
 
 if (UNIX)

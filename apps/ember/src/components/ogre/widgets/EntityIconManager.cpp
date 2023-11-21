@@ -54,7 +54,7 @@ EntityIconSlot* EntityIconManager::createSlot(unsigned int pixelSize) {
 
 std::unique_ptr<EntityIcon> EntityIconManager::createIconInstance(Gui::Icons::Icon* icon, EmberEntity* entity, unsigned int pixelSize) {
 	if (!icon) {
-		S_LOG_WARNING("Trying to create an EntityIcon with an invalid Icon.");
+		logger->warn("Trying to create an EntityIcon with an invalid Icon.");
 		return nullptr;
 	}
 	std::stringstream ss;

@@ -22,11 +22,10 @@
 //
 #include "MeshSerializerListener.h"
 #include "framework/TimedLog.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 MeshSerializerListener::MeshSerializerListener(bool requireTangents)
 		: mRequireTangents(requireTangents) {
@@ -80,9 +79,9 @@ void MeshSerializerListener::processMeshCompleted(Ogre::Mesh* mesh) {
 		try {
 			if (!mesh->suggestTangentVectorBuildParams(Ogre::VES_TANGENT, outSourceCoordSet, outIndex)) {
 #ifdef DEBUG
-				S_LOG_VERBOSE("No tangents available for " << mesh->getName() << " mesh; generating new ones now.");
+				logger->debug("No tangents available for {} mesh; generating new ones now.", mesh->getName());
 #else
-				S_LOG_WARNING("No tangents available for " << mesh->getName() << " mesh; generating new ones now. You should instead make sure that all meshes have tangents pregenerated.");
+				logger->warn("No tangents available for {} mesh; generating new ones now. You should instead make sure that all meshes have tangents pregenerated.", mesh->getName());
 #endif
 				Ember::TimedLog timedLog("Building tangents for " + mesh->getName());
 				mesh->buildTangentVectors(Ogre::VES_TANGENT, outSourceCoordSet, outIndex);
@@ -95,4 +94,4 @@ void MeshSerializerListener::processMeshCompleted(Ogre::Mesh* mesh) {
 }
 
 }
-}
+

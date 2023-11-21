@@ -160,9 +160,9 @@ struct TestContext
         m_b1 = new TestEntity(1);
         add_entity(m_b1);
 
-        types["thing"] = std::make_unique<TypeNode>("thing");;
+        types["thing"] = std::make_unique<TypeNode>("thing");
 
-        types["barrel"] = std::make_unique<TypeNode>("barrel");;
+        types["barrel"] = std::make_unique<TypeNode>("barrel");
         types["barrel"]->setParent(types["thing"].get());
         m_b1->setType(types["barrel"].get());
         m_b1->setProperty("mass", std::make_unique<SoftProperty>(30));
@@ -784,7 +784,7 @@ int main()
 {
     Tested t;
 
-    return t.run();;
+    return t.run();
 
     //TODO: Move remaining old tests
 // START of Soft property and general filtering tests

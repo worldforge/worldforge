@@ -31,7 +31,7 @@ namespace EntityFilter {
                         ("instance_of", ComparePredicate::Comparator::INSTANCE_OF)
                         ("in", ComparePredicate::Comparator::IN)
                         ("includes", ComparePredicate::Comparator::INCLUDES)
-                        ("can_reach", ComparePredicate::Comparator::CAN_REACH);;
+                        ("can_reach", ComparePredicate::Comparator::CAN_REACH);
             }
 
         };

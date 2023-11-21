@@ -64,9 +64,9 @@ bool TerrainMaterialCompilationTask::executeTaskInMainThread() {
 		auto& compilationInstance = J->first;
 		auto page = J->second;
 		compilationInstance->compile(page->getMaterial());
-		S_LOG_VERBOSE("Compiling terrain page composite map material");
+		logger->debug("Compiling terrain page composite map material");
 		compilationInstance->compileCompositeMap(page->getCompositeMapMaterial());
-		S_LOG_VERBOSE("Recompiled material for terrain page " << "[" << page->getWFIndex().first << "|" << page->getWFIndex().second << "]");
+		logger->debug("Recompiled material for terrain page [{}|{}]", page->getWFIndex().first, page->getWFIndex().second);
 		mSignal(*page); // Notify the terrain system of the material change
 		std::stringstream ss;
 		ss << "Compiled for page [" << page->getWFIndex().first << "|" << page->getWFIndex().second << "]";

@@ -28,7 +28,7 @@
 #include "../terrain/TerrainManager.h"
 #include "../terrain/TerrainLayerDefinition.h"
 #include "../terrain/PlantInstance.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <wfmath/intersect.h>
 
 #include <Ogre.h>
@@ -100,9 +100,9 @@ void FoliageLoader::plantQueryExecuted(const Terrain::PlantAreaQueryResult& quer
 	try {
 		mPagedGeometry.reloadGeometryPage(Ogre::Vector3(queryResult.mQuery.mCenter.x, 0, queryResult.mQuery.mCenter.y), true);
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when reloading geometry." << ex);
+		logger->error("Error when reloading geometry: {}", ex.what());
 	} catch (...) {
-		S_LOG_FAILURE("Unknown error when reloading geometry.");
+		logger->error("Unknown error when reloading geometry.");
 	}
 	mLatestPlantsResult = nullptr;
 

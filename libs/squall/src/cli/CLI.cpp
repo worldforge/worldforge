@@ -22,6 +22,7 @@
 #include "squall/core/Resolver.h"
 #include "squall/curl/CurlProvider.h"
 #include "squall/core/Realizer.h"
+#include "squall/core/Log.h"
 
 #include <CLI/App.hpp>
 #include <CLI/Formatter.hpp>
@@ -39,7 +40,7 @@ int main(int argc, char** argv) {
 	app.add_option("-r,--repository", repositoryPath, "Location of the repository.");
 	app.add_flag("-v,--verbose", [](std::int64_t verbose) {
 		spdlog::set_level(spdlog::level::trace);
-		spdlog::trace("Verbose logging enabled");
+		logger->trace("Verbose logging enabled");
 	}, "Enable verbose logging.");
 
 
@@ -62,13 +63,13 @@ int main(int argc, char** argv) {
 				filesProcessed += result.processedFiles.size();
 			} while (!result.complete);
 
-			spdlog::info("Processed {} files.", filesProcessed);
+			logger->info("Processed {} files.", filesProcessed);
 			if (result.complete) {
 				//The last processed file contains the signature for the whole directory.
 				auto& lastEntry = *(--result.processedFiles.end());
-				spdlog::info("Signature generated: {}", lastEntry.fileEntry.signature.str_view());
+				logger->info("Signature generated: {}", lastEntry.fileEntry.signature.str_view());
 			} else {
-				spdlog::error("Could not fully generate digests.");
+				logger->error("Could not fully generate digests.");
 			}
 		});
 	}
@@ -84,7 +85,7 @@ int main(int argc, char** argv) {
 				Repository repository(repositoryPath);
 				repository.storeRoot(*rootName, Root{.signature = Signature(*signature)});
 
-				spdlog::info("Root '{}' registered with signature '{}'.", *rootName, *signature);
+				logger->info("Root '{}' registered with signature '{}'.", *rootName, *signature);
 			});
 		}
 		{
@@ -96,7 +97,7 @@ int main(int argc, char** argv) {
 				Repository repository(repositoryPath);
 				repository.removeRoot(*rootName);
 
-				spdlog::info("Root '{}' has been removed.", *rootName, *signature);
+				logger->info("Root '{}' has been removed.", *rootName, *signature);
 			});
 		}
 	}
@@ -119,7 +120,7 @@ int main(int argc, char** argv) {
 			} else {
 				auto rootResult = repository.readRoot(*rootName);
 				if (!rootResult) {
-					spdlog::error("Could not find root with name '{}'.", *rootName);
+					logger->error("Could not find root with name '{}'.", *rootName);
 				}
 				signatureInstance = rootResult->signature;
 			}
@@ -129,7 +130,7 @@ int main(int argc, char** argv) {
 			}
 
 
-			spdlog::info("Downloading from '{}', starting at manifest '{}'.", *remotePath, signatureInstance.str_view());
+			logger->info("Downloading from '{}', starting at manifest '{}'.", *remotePath, signatureInstance.str_view());
 			Resolver resolver(repository,
 							  std::make_unique<CurlProvider>(*remotePath),
 							  signatureInstance);
@@ -143,9 +144,9 @@ int main(int argc, char** argv) {
 			} while (result.status == Squall::ResolveStatus::ONGOING);
 
 			if (result.status == Squall::ResolveStatus::ERROR) {
-				spdlog::error("Could not complete remote download.");
+				logger->error("Could not complete remote download.");
 			} else {
-				spdlog::info("Downloaded {} files.", downloadedFiles.size());
+				logger->info("Downloaded {} files.", downloadedFiles.size());
 			}
 		});
 	}
@@ -176,7 +177,7 @@ int main(int argc, char** argv) {
 			} else {
 				auto rootResult = repository.readRoot(*rootName);
 				if (!rootResult) {
-					spdlog::error("Could not find root with name {}.", *rootName);
+					logger->error("Could not find root with name {}.", *rootName);
 				}
 				signatureInstance = rootResult->signature;
 			}
@@ -189,7 +190,7 @@ int main(int argc, char** argv) {
 			if (manifestResult.fetchResult.status == Squall::FetchStatus::FAILURE || !manifestResult.manifest.has_value()) {
 				throw std::runtime_error("Could not fetch manifest from local repository.");
 			}
-			spdlog::info("Realizing manifest '{}' into '{}'.", signatureInstance.str_view(), *directoryPath);
+			logger->info("Realizing manifest '{}' into '{}'.", signatureInstance.str_view(), *directoryPath);
 
 			Squall::iterator iterator(repository, *manifestResult.manifest);
 
@@ -201,9 +202,9 @@ int main(int argc, char** argv) {
 			} while (result.status == Squall::RealizeStatus::INPROGRESS);
 
 			if (result.status == Squall::RealizeStatus::INCOMPLETE) {
-				spdlog::error("Could not complete realization.");
+				logger->error("Could not complete realization.");
 			} else {
-				spdlog::info("Completed realizing files into '{}'.", *directoryPath);
+				logger->info("Completed realizing files into '{}'.", *directoryPath);
 			}
 		});
 	}

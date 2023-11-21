@@ -36,10 +36,7 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
-
-namespace Authoring {
+namespace Ember::OgreView::Authoring {
 
 unsigned int PolygonPoint::sPointCounter = 0;
 
@@ -69,12 +66,12 @@ PolygonPoint::PolygonPoint(Ogre::SceneNode& baseNode, IPolygonPositionProvider* 
 		mEntity->setRenderingDistance(300);
 
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating polygon point marker entity." << ex);
+		logger->error("Error when creating polygon point marker entity: {}", ex.what());
 		return;
 	}
 
 	if (!mEntity) {
-		S_LOG_FAILURE("Unexpected error when creating polygon point marker entity.");
+		logger->error("Unexpected error when creating polygon point marker entity.");
 		return;
 	}
 	mNode->attachObject(mEntity);
@@ -89,7 +86,7 @@ PolygonPoint::~PolygonPoint() {
 			mBaseNode.getCreator()->destroyEntity(mEntity);
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when deleting polygon point." << ex);
+		logger->warn("Error when deleting polygon point. {}", ex.what());
 	}
 }
 
@@ -174,5 +171,5 @@ void PolygonPoint::makeInteractive(BulletWorld* bulletWorld) {
 
 }
 
-}
-}
+
+

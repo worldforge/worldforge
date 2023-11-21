@@ -31,7 +31,7 @@
 #include "services/config/ConfigListenerContainer.h"
 
 #include "framework/Tokeniser.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/MainLoopController.h"
 #include "framework/utf8.h"
 
@@ -184,9 +184,9 @@ void Input::shutdownInteraction() {
 
 	//Release the mouse for safety's sake.
 	SDL_SetWindowGrab(mMainVideoSurface, SDL_FALSE);
-	S_LOG_INFO("Shutting down SDL.");
+	logger->info("Shutting down SDL.");
 	SDL_Quit();
-	S_LOG_INFO("SDL shut down.");
+	logger->info("SDL shut down.");
 
 }
 
@@ -697,7 +697,7 @@ void Input::Config_CatchMouse(const std::string& section, const std::string& key
 			}
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when changing mouse grabbing." << ex);
+		logger->error("Error when changing mouse grabbing: {}", ex.what());
 	}
 }
 
@@ -727,11 +727,11 @@ void Input::lostFocus() {
 }
 
 void Input::setMouseGrab(bool enabled) {
-	S_LOG_VERBOSE("mouse grab: " << enabled);
+	logger->debug("mouse grab: {}", enabled);
 
 	auto result = SDL_SetRelativeMouseMode(enabled ? SDL_TRUE : SDL_FALSE);
 	if (result != 0) {
-		S_LOG_WARNING("Setting relative mouse mode doesn't work.");
+		logger->warn("Setting relative mouse mode doesn't work.");
 	}
 
 	//We must reset the relative mouse state reporting.

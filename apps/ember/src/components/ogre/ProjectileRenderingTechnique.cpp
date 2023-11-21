@@ -103,7 +103,7 @@ void ProjectileRenderingTechnique::registerEntity(EmberEntity& entity) {
                     }
 
                 } catch (const Ogre::Exception& ex) {
-                    S_LOG_WARNING("Error when trying to add ribbon trail." << ex);
+                    logger->warn("Error when trying to add ribbon trail: {}", ex.what());
                 }
             }
         }

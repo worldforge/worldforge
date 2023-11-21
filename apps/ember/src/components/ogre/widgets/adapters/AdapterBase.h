@@ -24,7 +24,7 @@
 #define EMBEROGRE_GUI_ADAPTERS_ADAPTERBASE_H
 
 #include "components/ogre/widgets/CEGUIUtils.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "ValueTypeHelper.h"
 #include <CEGUI/Event.h>
 #include <Atlas/Message/Element.h>
@@ -350,7 +350,7 @@ bool AdapterBase<ValueType>::hasChanges() {
 		return _hasChanges();
 	}
 	catch (const std::exception& ex) {
-		S_LOG_WARNING("Error when checking for changes." << ex);
+		logger->warn("Error when checking for changes. {}", ex.what());
 		return false;
 	}
 }

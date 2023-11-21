@@ -17,7 +17,7 @@
 
 #include "AtlasMessageLoader.h"
 
-#include "LoggingInstance.h"
+#include "Log.h"
 
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
@@ -39,12 +39,12 @@ AtlasMessageLoader::~AtlasMessageLoader() = default;
 void AtlasMessageLoader::objectArrived(Root obj)
 {
 	if (obj->isDefaultId()) {
-		S_LOG_WARNING("Object without ID read from file.");
+		logger->warn("Object without ID read from file.");
 		return;
 	}
 	const std::string & id = obj->getId();
 	if (mMessages.find(id) != mMessages.end()) {
-		S_LOG_WARNING("Duplicate object ID '"<< id << "' loaded.");
+		logger->warn("Duplicate object ID '{}' loaded.", id);
 	}
 	mMessages[id] = std::move(obj);
 	++mCount;

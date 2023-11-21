@@ -19,10 +19,6 @@ bool queryDone = false,
     failure = false,
 	exactTime = false;
 namespace {
-void erisLog(Eris::LogLevel, const std::string& msg)
-{
-    cerr << "ERIS: " << msg << endl;
-}
 
 void gotServerList(int count)
 {
@@ -212,9 +208,6 @@ int main(int argc, char* argv[])
     std::string metaServer = "metaserver.worldforge.org";
     std::vector< std::string > args(argv, argv + argc);
     void (* dumper)(const Eris::Meta &) = dumpToScreen;
-    
-    Eris::setLogLevel(Eris::LOG_DEBUG);
-    Eris::Logged.connect(sigc::ptr_fun(&erisLog));
     
     if(args.size() > 1)
     {

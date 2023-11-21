@@ -77,9 +77,7 @@
 #include <boost/filesystem.hpp>
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
-
+namespace Ember::OgreView {
 
 OgreSetup::OgreSetup() :
 		DiagnoseOgre("diagnoseOgre", this, "Diagnoses the current Ogre state and writes the output to the log."),
@@ -92,38 +90,38 @@ OgreSetup::OgreSetup() :
 		mSaveShadersToCache(false) {
 
 
-	S_LOG_INFO("Compiled against Ogre version " << OGRE_VERSION);
+	logger->info("Compiled against Ogre version {}", OGRE_VERSION);
 
 #if OGRE_DEBUG_MODE
-	S_LOG_INFO("Compiled against Ogre in debug mode.");
+	logger->info("Compiled against Ogre in debug mode.");
 #else
-	S_LOG_INFO("Compiled against Ogre in release mode.");
+	logger->info("Compiled against Ogre in release mode.");
 #endif
 
 #if OGRE_THREAD_SUPPORT == 0
-	S_LOG_INFO("Compiled against Ogre without threading support.");
+	logger->info("Compiled against Ogre without threading support.");
 #elif OGRE_THREAD_SUPPORT == 1
-	S_LOG_INFO("Compiled against Ogre with multi threading support.");
+	logger->info("Compiled against Ogre with multi threading support.");
 #elif OGRE_THREAD_SUPPORT == 2
-	S_LOG_INFO("Compiled against Ogre with semi threading support.");
+	logger->info("Compiled against Ogre with semi threading support.");
 #elif OGRE_THREAD_SUPPORT == 3
-	S_LOG_INFO("Compiled against Ogre with threading support without synchronization.");
+	logger->info("Compiled against Ogre with threading support without synchronization.");
 #else
-	S_LOG_INFO("Compiled against Ogre with unknown threading support.");
+	logger->info("Compiled against Ogre with unknown threading support.");
 #endif
 
 #if OGRE_THREAD_PROVIDER == 0
-	S_LOG_INFO("Using no thread provider.");
+	logger->info("Using no thread provider.");
 #elif OGRE_THREAD_PROVIDER == 1
-	S_LOG_INFO("Using Boost thread provider.");
+	logger->info("Using Boost thread provider.");
 #elif OGRE_THREAD_PROVIDER == 2
-	S_LOG_INFO("Using Poco thread provider.");
+	logger->info("Using Poco thread provider.");
 #elif OGRE_THREAD_PROVIDER == 3
-	S_LOG_INFO("Using TBB thread provider.");
+	logger->info("Using TBB thread provider.");
 #elif OGRE_THREAD_PROVIDER == 4
-	S_LOG_INFO("Using STD thread provider.");
+	logger->info("Using STD thread provider.");
 #else
-	S_LOG_INFO("Using unknown thread provider.");
+	logger->info("Using unknown thread provider.");
 #endif
 
 
@@ -148,7 +146,7 @@ OgreSetup::OgreSetup() :
 		//Set the default resolution to 1280 x 720 unless overridden by the user.
 		renderSystem->setConfigOption("Video Mode", "1280 x  720"); //OGRE stores the value with two spaces after "x".
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Could not set default resolution." << ex);
+		logger->warn("Could not set default resolution: {}", ex.what());
 	}
 	mRoot->setRenderSystem(renderSystem);
 
@@ -160,7 +158,7 @@ OgreSetup::~OgreSetup() {
 		Ogre::MaterialManager::getSingleton().removeListener(mMaterialsListener.get());
 	}
 
-	S_LOG_INFO("Shutting down Ogre.");
+	logger->info("Shutting down Ogre.");
 	if (mRoot) {
 
 
@@ -172,7 +170,7 @@ OgreSetup::~OgreSetup() {
 					Ogre::GpuProgramManager::getSingleton().saveMicrocodeCache(cacheStream);
 				}
 			} catch (...) {
-				S_LOG_WARNING("Error when trying to save GPU cache file.");
+				logger->warn("Error when trying to save GPU cache file.");
 			}
 		}
 
@@ -193,7 +191,7 @@ void OgreSetup::runCommand(const std::string& command, const std::string& args) 
 	if (DiagnoseOgre == command) {
 		std::stringstream ss;
 		OgreInfo::diagnose(ss);
-		S_LOG_INFO(ss.str());
+		logger->info(ss.str());
 		ConsoleBackend::getSingleton().pushMessage("Ogre diagnosis information has been written to the log.", "info");
 	}
 }
@@ -220,14 +218,14 @@ void OgreSetup::createOgreSystem() {
 //		//The reason for this is that Ogre loads a lot of dynamic modules, and in some build configuration
 //		//(like AppImage) the lookup path for some of these are based on the installation directory of Ember.
 //		if (chdir(configSrv.getPrefix().c_str())) {
-//			S_LOG_WARNING("Failed to change to the prefix directory '" << configSrv.getPrefix() << "'. Ogre loading might fail.");
+//			logger->warn("Failed to change to the prefix directory '" << configSrv.getPrefix() << "'. Ogre loading might fail.");
 //		}
 //	}
 
 
 
 	if (chdir(configSrv.getEmberDataDirectory().generic_string().c_str())) {
-		S_LOG_WARNING("Failed to change to the data directory '" << configSrv.getEmberDataDirectory().string() << "'.");
+		logger->warn("Failed to change to the data directory '{}'.", configSrv.getEmberDataDirectory().string());
 	}
 
 }
@@ -266,21 +264,21 @@ void OgreSetup::configure() {
 						mRoot->getRenderSystem()->setConfigOption(splits[0], splits[1]);
 					}
 				} catch (const std::exception& ex) {
-					S_LOG_WARNING("Got exception when trying to set setting." << ex);
+					logger->warn("Got exception when trying to set setting: {}", ex.what());
 				}
 			}
 		}
 
 		auto validation = mRoot->getRenderSystem()->validateConfigOptions();
 		if (!validation.empty()) {
-			S_LOG_WARNING("Possible issue when setting render system options: " << validation);
+			logger->warn("Possible issue when setting render system options: {}", validation);
 		}
 
 		parseWindowGeometry(mRoot->getRenderSystem()->getConfigOptions(), width, height, fullscreen);
 
 
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Got exception when setting up OGRE:" << ex);
+		logger->error("Got exception when setting up OGRE: {}", ex.what());
 	}
 
 
@@ -322,7 +320,7 @@ void OgreSetup::configure() {
 					Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(cacheStream);
 				}
 			} catch (...) {
-				S_LOG_WARNING("Error when trying to open GPU cache file.");
+				logger->warn("Error when trying to open GPU cache file.");
 			}
 		}
 	}
@@ -387,12 +385,12 @@ void OgreSetup::setStandardValues() {
 					schemeName);
 
 			if (!techniqueCreated) {
-				S_LOG_WARNING("Could not create RTShader tech for material " << originalMaterial->getName() << ".");
+				logger->warn("Could not create RTShader tech for material {}.", originalMaterial->getName());
 				return nullptr;
 			}
 			// Case technique registration succeeded.
 
-			S_LOG_VERBOSE("Created auto generated shaders for material " << originalMaterial->getName());
+			logger->debug("Created auto generated shaders for material {}", originalMaterial->getName());
 
 			// Force creating the shaders for the generated technique.
 			shaderGenerator->validateMaterial(schemeName, originalMaterial->getName(), originalMaterial->getGroup());
@@ -469,7 +467,7 @@ void OgreSetup::registerOpenGLContextFix() {
 	Ogre::GLContext* ogreGLcontext = nullptr;
 	mRenderWindow->getCustomAttribute("GLCONTEXT", &ogreGLcontext);
 	if (ogreGLcontext) {
-		S_LOG_INFO("Registering OpenGL context loss fix.");
+		logger->info("Registering OpenGL context loss fix.");
 		Input::getSingleton().EventSDLEventReceived.connect([=](const SDL_Event& event) {
 			if (event.type == SDL_WINDOWEVENT) {
 				switch (event.window.event) {
@@ -491,4 +489,4 @@ void OgreSetup::registerOpenGLContextFix() {
 }
 
 }
-}
+

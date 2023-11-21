@@ -55,9 +55,7 @@ bool shouldExport(const std::string& string) {
 }
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 
 ModelDefinitionPtr XMLModelDefinitionSerializer::parseDocument(TiXmlDocument& xmlDoc, const std::string& origin) {
@@ -75,13 +73,13 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseDocument(TiXmlDocument& xm
 					return modelDef;
 				}
 			} catch (const Ogre::Exception& ex) {
-				S_LOG_FAILURE("Error when parsing model '" << name << "'." << ex);
+				logger->error("Error when parsing model '{}': {}", name, ex.what());
 			}
 		} else {
-			S_LOG_FAILURE("Invalid initial element in model definition '" << origin << "': " << rootElem->ValueStr());
+			logger->error("Invalid initial element in model definition '{}': {}", origin, rootElem->ValueStr());
 		}
 	}
-	return ModelDefinitionPtr();
+	return {};
 }
 
 ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& stream, const boost::filesystem::path& path) {
@@ -90,7 +88,7 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& strea
 	if (xmlHelper.Load(xmlDoc, stream, path)) {
 		return parseDocument(xmlDoc, path.string());
 	}
-	return ModelDefinitionPtr();
+	return {};
 }
 
 ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(Ogre::DataStreamPtr& stream) {
@@ -99,7 +97,7 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(Ogre::DataStreamPtr
 	if (xmlHelper.Load(xmlDoc, stream)) {
 		return parseDocument(xmlDoc, stream->getName());
 	}
-	return ModelDefinitionPtr();
+	return {};
 }
 
 void XMLModelDefinitionSerializer::readModel(const ModelDefinitionPtr& modelDef, TiXmlElement* modelNode) {
@@ -128,7 +126,7 @@ void XMLModelDefinitionSerializer::readModel(const ModelDefinitionPtr& modelDef,
 			//This is also the default
 			modelDef->mUseScaleOf = ModelDefinition::UseScaleOf::MODEL_ALL;
 		} else {
-			S_LOG_WARNING("Unrecognized model scaling directive: " << useScaleOf);
+			logger->warn("Unrecognized model scaling directive: {}", useScaleOf);
 		}
 	}
 
@@ -219,8 +217,8 @@ void XMLModelDefinitionSerializer::readModel(const ModelDefinitionPtr& modelDef,
 
 
 void XMLModelDefinitionSerializer::readSubModels(const ModelDefinitionPtr& modelDef, TiXmlElement* mSubModelNode) {
-	S_LOG_VERBOSE("Read Submodels");
-	const char* tmp = nullptr;
+	logger->debug("Read Submodels");
+	const char* tmp;
 	TiXmlElement* elem;
 	bool notfound = true;
 
@@ -237,7 +235,7 @@ void XMLModelDefinitionSerializer::readSubModels(const ModelDefinitionPtr& model
 				subModelDef.shadowCaster = boost::algorithm::to_lower_copy(std::string(tmp)) == "true";
 			}
 
-			S_LOG_VERBOSE(" Add submodel  : " + subModelDef.meshName);
+			logger->debug(" Add submodel  : {}", subModelDef.meshName);
 			try {
 				elem = smElem->FirstChildElement("parts");
 				if (elem)
@@ -246,19 +244,19 @@ void XMLModelDefinitionSerializer::readSubModels(const ModelDefinitionPtr& model
 				modelDef->addSubModelDefinition(subModelDef);
 			}
 			catch (const Ogre::Exception& e) {
-				S_LOG_FAILURE("Load error for mesh " << tmp << e);
+				logger->error("Load error for mesh {}: {}", tmp, e.what());
 			}
 		}
 	}
 
 	if (notfound) {
-		S_LOG_VERBOSE("No submodel found.");
+		logger->debug("No submodel found.");
 	}
 }
 
 void XMLModelDefinitionSerializer::readParts(TiXmlElement* mPartNode, SubModelDefinition* def) {
 	TiXmlElement* elem;
-	const char* tmp = nullptr;
+	const char* tmp;
 	bool notfound = true;
 
 	for (TiXmlElement* partElem = mPartNode->FirstChildElement();
@@ -270,7 +268,7 @@ void XMLModelDefinitionSerializer::readParts(TiXmlElement* mPartNode, SubModelDe
 
 		PartDefinition partDef{tmp ? std::string(tmp) : ""};
 
-		S_LOG_VERBOSE("  Add part  : " + partDef.name);
+		logger->debug("  Add part  : " + partDef.name);
 
 		// show
 		tmp = partElem->Attribute("show");
@@ -290,13 +288,13 @@ void XMLModelDefinitionSerializer::readParts(TiXmlElement* mPartNode, SubModelDe
 	}
 
 	if (notfound) {
-		S_LOG_VERBOSE("No part found.");
+		logger->debug("No part found.");
 	}
 }
 
 void XMLModelDefinitionSerializer::readSubEntities(TiXmlElement* mSubEntNode, PartDefinition* def) {
 
-	const char* tmp = nullptr;
+	const char* tmp;
 	bool notfound = true;
 
 	for (TiXmlElement* seElem = mSubEntNode->FirstChildElement();
@@ -307,13 +305,13 @@ void XMLModelDefinitionSerializer::readSubEntities(TiXmlElement* mSubEntNode, Pa
 		if (tmp) {
 			notfound = false;
 			subEntityDef.subEntityIndex = static_cast<unsigned int>(std::strtoul(tmp, nullptr, 10));
-			S_LOG_VERBOSE("   Add sub entity with index: " << subEntityDef.subEntityIndex);
+			logger->debug("   Add sub entity with index: {}", subEntityDef.subEntityIndex);
 		} else {
 			tmp = seElem->Attribute("name");
 			if (tmp) {
 				notfound = false;
 				subEntityDef.subEntityName = tmp;
-				S_LOG_VERBOSE("   Add sub entity: " << subEntityDef.subEntityName);
+				logger->debug("   Add sub entity: {}", subEntityDef.subEntityName);
 			}
 		}
 		if (!notfound) {
@@ -324,20 +322,20 @@ void XMLModelDefinitionSerializer::readSubEntities(TiXmlElement* mSubEntNode, Pa
 			}
 			def->addSubEntityDefinition(std::move(subEntityDef));
 		} else {
-			S_LOG_FAILURE("A subentity name or index must be specified for each subentity.");
+			logger->error("A subentity name or index must be specified for each subentity.");
 		}
 	}
 
 	if (notfound) {
-		S_LOG_VERBOSE("No sub entity found.");
+		logger->debug("No sub entity found.");
 	}
 }
 
 void XMLModelDefinitionSerializer::readActions(const ModelDefinitionPtr& modelDef, TiXmlElement* mAnimNode) {
 	TiXmlElement* elem;
-	const char* tmp = nullptr;
+	const char* tmp;
 	bool notfound = true;
-	S_LOG_VERBOSE("Read Actions");
+	logger->debug("Read Actions");
 
 	for (TiXmlElement* animElem = mAnimNode->FirstChildElement();
 		 animElem != nullptr; animElem = animElem->NextSiblingElement()) {
@@ -346,7 +344,7 @@ void XMLModelDefinitionSerializer::readActions(const ModelDefinitionPtr& modelDe
 		tmp = animElem->Attribute("name");
 		if (tmp) {
 			ActionDefinition actionDef{tmp};
-			S_LOG_VERBOSE(" Add action  : " << tmp);
+			logger->debug(" Add action  : {}", tmp);
 
 			tmp = animElem->Attribute("speed");
 			if (tmp) {
@@ -372,13 +370,13 @@ void XMLModelDefinitionSerializer::readActions(const ModelDefinitionPtr& modelDe
 	}
 
 	if (notfound) {
-		S_LOG_VERBOSE("No actions found.");
+		logger->debug("No actions found.");
 	}
 
 }
 
 void XMLModelDefinitionSerializer::readSounds(TiXmlElement* mAnimationsNode, ActionDefinition* action) {
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* soundElem = mAnimationsNode->FirstChildElement();
 		 soundElem != nullptr; soundElem = soundElem->NextSiblingElement()) {
@@ -399,13 +397,13 @@ void XMLModelDefinitionSerializer::readSounds(TiXmlElement* mAnimationsNode, Act
 			}
 
 			action->addSoundDefinition(std::move(def));
-			S_LOG_VERBOSE("  Add Sound: " << groupName);
+			logger->debug("  Add Sound: {}", groupName);
 		}
 	}
 }
 
 void XMLModelDefinitionSerializer::readActivations(TiXmlElement* activationsNode, ActionDefinition* action) {
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* activationElem = activationsNode->FirstChildElement();
 		 activationElem != nullptr; activationElem = activationElem->NextSiblingElement()) {
@@ -419,18 +417,18 @@ void XMLModelDefinitionSerializer::readActivations(TiXmlElement* activationsNode
 			} else if (typeString == "action") {
 				def.type = ActivationDefinition::ACTION;
 			} else {
-				S_LOG_WARNING("No recognized activation type: " << typeString);
+				logger->warn("No recognized activation type: {}", typeString);
 				continue;
 			}
 			def.trigger = activationElem->GetText();
-			S_LOG_VERBOSE("  Add activation: " << typeString << " : " << def.trigger);
+			logger->debug("  Add activation: {} : {}", typeString, def.trigger);
 			action->getActivationDefinitions().emplace_back(std::move(def));
 		}
 	}
 }
 
 void XMLModelDefinitionSerializer::readAnimations(TiXmlElement* mAnimationsNode, ActionDefinition* action) {
-	const char* tmp = nullptr;
+	const char* tmp;
 	for (TiXmlElement* animElem = mAnimationsNode->FirstChildElement();
 		 animElem != nullptr; animElem = animElem->NextSiblingElement()) {
 		int iterations = 1;
@@ -450,7 +448,7 @@ void XMLModelDefinitionSerializer::readAnimations(TiXmlElement* mAnimationsNode,
 }
 
 void XMLModelDefinitionSerializer::readAnimationParts(TiXmlElement* mAnimPartNode, AnimationDefinition* animDef) {
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* apElem = mAnimPartNode->FirstChildElement();
 		 apElem != nullptr; apElem = apElem->NextSiblingElement()) {
@@ -460,7 +458,7 @@ void XMLModelDefinitionSerializer::readAnimationParts(TiXmlElement* mAnimPartNod
 		tmp = apElem->Attribute("name");
 		if (tmp) {
 			name = tmp;
-			S_LOG_VERBOSE("  Add animation  : " + name);
+			logger->debug("  Add animation  : " + name);
 		}
 
 		AnimationPartDefinition animPartDef{name};
@@ -492,7 +490,7 @@ void XMLModelDefinitionSerializer::readAnimationParts(TiXmlElement* mAnimPartNod
 void XMLModelDefinitionSerializer::readAttachPoints(const ModelDefinitionPtr& modelDef, TiXmlElement* mAnimPartNode) {
 	AttachPointDefinitionStore& attachPoints = modelDef->mAttachPoints;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* apElem = mAnimPartNode->FirstChildElement();
 		 apElem != nullptr; apElem = apElem->NextSiblingElement()) {
@@ -502,7 +500,7 @@ void XMLModelDefinitionSerializer::readAttachPoints(const ModelDefinitionPtr& mo
 		tmp = apElem->Attribute("name");
 		if (tmp)
 			attachPointDef.Name = tmp;
-		S_LOG_VERBOSE("  Add attachpoint  : " + attachPointDef.Name);
+		logger->debug("  Add attachpoint  : " + attachPointDef.Name);
 
 		// bone
 		tmp = apElem->Attribute("bone");
@@ -537,7 +535,7 @@ void XMLModelDefinitionSerializer::readParticleSystems(const ModelDefinitionPtr&
 	TiXmlElement* elem;
 	ModelDefinition::ParticleSystemSet& particleSystems = modelDef->mParticleSystems;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (auto apElem = mParticleSystemsNode->FirstChildElement();
 		 apElem != nullptr; apElem = apElem->NextSiblingElement()) {
@@ -548,7 +546,7 @@ void XMLModelDefinitionSerializer::readParticleSystems(const ModelDefinitionPtr&
 		if (tmp) {
 			def.Script = tmp;
 		}
-		S_LOG_VERBOSE("  Add particlescript  : " + def.Script);
+		logger->debug("  Add particlescript  : " + def.Script);
 
 		elem = apElem->FirstChildElement("bindings");
 		if (elem) {
@@ -573,7 +571,7 @@ void XMLModelDefinitionSerializer::readParticleSystems(const ModelDefinitionPtr&
 }
 
 void XMLModelDefinitionSerializer::readParticleSystemsBindings(ModelDefinition::ParticleSystemDefinition& def, TiXmlElement* mParticleSystemsNode) {
-	const char* tmp = nullptr;
+	const char* tmp;
 // 	bool nopartfound = true;
 
 	for (TiXmlElement* apElem = mParticleSystemsNode->FirstChildElement();
@@ -600,7 +598,7 @@ void XMLModelDefinitionSerializer::readParticleSystemsBindings(ModelDefinition::
 			continue;
 		}
 
-		S_LOG_VERBOSE("  Add binding between " << emitterVar << " and " << binding.AtlasAttribute << ".");
+		logger->debug("  Add binding between {} and {}.", emitterVar, binding.AtlasAttribute);
 
 
 		def.Bindings.emplace_back(std::move(binding));
@@ -635,7 +633,7 @@ void XMLModelDefinitionSerializer::readParticleSystemsParams(ModelDefinition::Pa
 void XMLModelDefinitionSerializer::readViews(const ModelDefinitionPtr& modelDef, TiXmlElement* viewsNode) {
 	TiXmlElement* elem;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* viewElem = viewsNode->FirstChildElement();
 		 viewElem != nullptr; viewElem = viewElem->NextSiblingElement()) {
@@ -647,7 +645,7 @@ void XMLModelDefinitionSerializer::readViews(const ModelDefinitionPtr& modelDef,
 
 			ViewDefinition def{name};
 
-			S_LOG_VERBOSE(" Add View  : " + def.Name);
+			logger->debug(" Add View  : " + def.Name);
 
 			elem = viewElem->FirstChildElement("rotation");
 			if (elem) {
@@ -671,7 +669,7 @@ void XMLModelDefinitionSerializer::readLights(const ModelDefinitionPtr& modelDef
 	TiXmlElement* elem;
 	ModelDefinition::LightSet& lights = modelDef->mLights;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* lElem = mLightsNode->FirstChildElement();
 		 lElem != nullptr; lElem = lElem->NextSiblingElement()) {
@@ -750,7 +748,7 @@ void XMLModelDefinitionSerializer::readLights(const ModelDefinitionPtr& modelDef
 			def.position = Ogre::Vector3::ZERO;
 		}
 
-		S_LOG_VERBOSE("  Add light");
+		logger->debug("  Add light");
 
 		lights.emplace_back(def);
 	}
@@ -759,7 +757,7 @@ void XMLModelDefinitionSerializer::readLights(const ModelDefinitionPtr& modelDef
 void XMLModelDefinitionSerializer::readBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement* boneGroupsNode) {
 	TiXmlElement* elem;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* boneGroupElem = boneGroupsNode->FirstChildElement();
 		 boneGroupElem != nullptr; boneGroupElem = boneGroupElem->NextSiblingElement()) {
@@ -771,7 +769,7 @@ void XMLModelDefinitionSerializer::readBoneGroups(const ModelDefinitionPtr& mode
 
 			BoneGroupDefinition def{name};
 
-			S_LOG_VERBOSE(" Add Bone Group  : " + def.Name);
+			logger->debug(" Add Bone Group  : " + def.Name);
 
 			elem = boneGroupElem->FirstChildElement("bones");
 			if (elem) {
@@ -794,7 +792,7 @@ void XMLModelDefinitionSerializer::readBoneGroups(const ModelDefinitionPtr& mode
 void XMLModelDefinitionSerializer::readPoses(const ModelDefinitionPtr& modelDef, TiXmlElement* mNode) {
 	PoseDefinitionStore& poses = modelDef->mPoseDefinitions;
 
-	const char* tmp = nullptr;
+	const char* tmp;
 
 	for (TiXmlElement* apElem = mNode->FirstChildElement(); apElem != nullptr; apElem = apElem->NextSiblingElement()) {
 		PoseDefinition definition;
@@ -802,11 +800,11 @@ void XMLModelDefinitionSerializer::readPoses(const ModelDefinitionPtr& modelDef,
 		// name
 		tmp = apElem->Attribute("name");
 		if (!tmp) {
-			S_LOG_WARNING("Read pose definition with no name; skipping it.");
+			logger->warn("Read pose definition with no name; skipping it.");
 			continue;
 		}
 		std::string name(tmp);
-		S_LOG_VERBOSE("  Add pose  : " + name);
+		logger->debug("  Add pose  : " + name);
 
 
 		TiXmlElement* elem = apElem->FirstChildElement("rotate");
@@ -841,7 +839,7 @@ bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelD
 	try {
 
 		if (!boost::filesystem::exists(path.parent_path())) {
-			S_LOG_INFO("Creating directory " << path.parent_path().string());
+			logger->info("Creating directory {}", path.parent_path().string());
 			boost::filesystem::create_directories(path.parent_path());
 		}
 
@@ -949,11 +947,11 @@ bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelD
 		xmlDoc.InsertEndChild(modelElem);
 
 		xmlDoc.SaveFile(path.string());
-		S_LOG_INFO("Saved file " << path.string());
+		logger->info("Saved file {}", path.string());
 		return true;
 	}
 	catch (...) {
-		S_LOG_FAILURE("An error occurred saving the modeldefinition for " << path.filename().string() << ".");
+		logger->error("An error occurred saving the modeldefinition for {}.", path.filename().string());
 		return false;
 	}
 
@@ -1308,5 +1306,5 @@ boost::optional<std::string> XMLModelDefinitionSerializer::particleSystemSetting
 }
 
 } //end namespace
-}
-}
+
+

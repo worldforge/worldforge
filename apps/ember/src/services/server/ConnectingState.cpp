@@ -20,7 +20,7 @@
 #include "ServerServiceSignals.h"
 #include "ServerServiceConnectionListener.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
 #include "Version.h"
 
@@ -66,10 +66,10 @@ bool ConnectingState::connect() {
 			return false;
 		}
 	} catch (const Eris::BaseException& except) {
-		S_LOG_WARNING("Got error on connect." << except);
+		logger->warn("Got error on connect:", except.what());
 		return false;
 	} catch (...) {
-		S_LOG_WARNING("Got unknown error on connect.");
+		logger->warn("Got unknown error on connect.");
 		return false;
 	}
 	mHasSignalledDisconnected = false;
@@ -77,7 +77,7 @@ bool ConnectingState::connect() {
 }
 
 void ConnectingState::connected() {
-	S_LOG_INFO("Connected");
+	logger->info("Connected");
 	getSignals().GotConnection.emit(&mConnection);
 
 	setChildState(std::make_unique<ConnectedState>(*this, mConnection));
@@ -91,7 +91,7 @@ void ConnectingState::connected() {
 
 void ConnectingState::statusChanged(Eris::BaseConnection::Status status) {
 	getSignals().EventStatusChanged.emit(status);
-	S_LOG_INFO("Status Changed to: " << status);
+	logger->info("Status Changed to: {}", fmt::underlying(status));
 }
 
 void ConnectingState::disconnected() {
@@ -106,7 +106,7 @@ void ConnectingState::gotFailure(const std::string& msg) {
 	std::ostringstream temp;
 
 	temp << "Got Server error: " << msg;
-	S_LOG_WARNING(temp.str());
+	logger->warn(temp.str());
 
 	ConsoleBackend::getSingleton().pushMessage(temp.str(), "error");
 

@@ -24,7 +24,7 @@
 
 #include <utility>
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include "FoliageLoader.h"
 
@@ -39,10 +39,7 @@
 #include "BatchPage.h"
 #include "TreeLoader3D.h"
 
-namespace Ember {
-namespace OgreView {
-
-namespace Environment {
+namespace Ember::OgreView::Environment {
 
 ShrubberyFoliage::ShrubberyFoliage(Terrain::TerrainManager& terrainManager,
 								   Terrain::TerrainLayer terrainLayer,
@@ -79,7 +76,7 @@ void ShrubberyFoliage::frameStarted() {
 		try {
 			mPagedGeometry->update();
 		} catch (const std::exception&) {
-			S_LOG_FAILURE("Error when updating shrubbery for terrain layer " << mTerrainLayer.layerDef.mName << " and areaId " << mTerrainLayer.layerDef.mAreaId << ".");
+			logger->error("Error when updating shrubbery for terrain layer {} and areaId {}.", mTerrainLayer.layerDef.mName, mTerrainLayer.layerDef.mAreaId);
 			throw;
 		}
 	}
@@ -105,5 +102,5 @@ void ShrubberyFoliage::setFarDistance(float factor) {
 
 }
 
-}
-}
+
+

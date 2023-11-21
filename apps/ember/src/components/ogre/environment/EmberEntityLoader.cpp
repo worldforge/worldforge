@@ -62,7 +62,7 @@ EmberEntityLoader::~EmberEntityLoader() {
 
 void EmberEntityLoader::addEmberEntity(Model::ModelRepresentation* modelRepresentation) {
 	if (!modelRepresentation) {
-		S_LOG_WARNING("Tried to add a null ref entity to the paged geometry.");
+		logger->warn("Tried to add a null ref entity to the paged geometry.");
 		return;
 	}
 	EmberEntity& entity = modelRepresentation->getEntity();
@@ -100,7 +100,7 @@ void EmberEntityLoader::addEmberEntity(Model::ModelRepresentation* modelRepresen
 
 void EmberEntityLoader::removeEmberEntity(EmberEntity* entity) {
 	if (!entity) {
-		S_LOG_WARNING("Tried to remove a null ref entity from the paged geometry.");
+		logger->warn("Tried to remove a null ref entity from the paged geometry.");
 		return;
 	}
 #if EMBERENTITYLOADER_USEBATCH

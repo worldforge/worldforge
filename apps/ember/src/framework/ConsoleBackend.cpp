@@ -24,7 +24,7 @@
 
 #include "ConsoleBackend.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "Tokeniser.h"
 #include "CommandHistory.h"
 #include <memory>
@@ -68,11 +68,11 @@ bool ConsoleBackend::onGotMessage(const std::string& message, const std::string&
 
 void ConsoleBackend::registerCommand(const std::string& command, ConsoleCallback callback, const std::string& description, bool suppressLogging) {
 	if (!suppressLogging) {
-		S_LOG_INFO("Registering: " << command);
+		logger->info("Registering: {}", command);
 	}
 
 	if (mRegisteredCommands.find(command) != mRegisteredCommands.end()) {
-		S_LOG_WARNING("The command '" + command + "' already has been registered.");
+		logger->warn("The command '{}' already has been registered.", command);
 	} else {
 		ConsoleObjectEntry entry;
 		entry.Object = std::move(callback);
@@ -94,12 +94,12 @@ void ConsoleBackend::registerCommand(const std::string& command, ConsoleObject* 
 
 void ConsoleBackend::deregisterCommand(const std::string& command, bool suppressLogging) {
 	if (!suppressLogging) {
-		S_LOG_INFO("Deregistering: " << command);
+		logger->info("Deregistering: {}", command);
 	}
 
 	auto I = mRegisteredCommands.find(command);
 	if (I == mRegisteredCommands.end()) {
-		S_LOG_WARNING("Trying to deregister command '" << command << "' which isn't registered.");
+		logger->warn("Trying to deregister command '{}' which isn't registered.", command);
 	} else {
 		// Delete from the map
 		mRegisteredCommands.erase(I);
@@ -153,7 +153,7 @@ void ConsoleBackend::runCommand(const std::string& command, bool addToHistory) {
 	if (I != mRegisteredCommands.end() && I->second.Object != nullptr) {
 		I->second.Object(cmd, args);
 	} else { // Else print error message
-		S_LOG_WARNING("Unknown command:" << command);
+		logger->warn("Unknown command: {}", command);
 		pushMessage(std::string("Unknown command ") + command, "error");
 	}
 }
@@ -169,7 +169,7 @@ void ConsoleBackend::runCommand(const std::string& command, const std::string& a
 		}
 	}
 
-	S_LOG_VERBOSE(temp.str());
+	logger->debug(temp.str());
 	temp << std::ends;
 
 	pushMessage(temp.str());

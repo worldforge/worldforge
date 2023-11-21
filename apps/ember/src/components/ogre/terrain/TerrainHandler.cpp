@@ -236,7 +236,7 @@ void TerrainHandler::getBasePoints(sigc::slot<void(Mercator::Terrain::Pointstore
 
 TerrainHandler::ShaderEntry* TerrainHandler::createShader(const TerrainLayerDefinition* layerDef, std::unique_ptr<Mercator::Shader> mercatorShader) {
 	size_t index = mShaderMap.size();
-	S_LOG_VERBOSE("Creating new shader for shader " << layerDef->mShaderName << " with index " << index);
+	logger->debug("Creating new shader for shader {} with index {}", layerDef->mShaderName, index);
 
 	ShaderEntry entry{
 			TerrainLayer{*layerDef, (int) index},
@@ -310,7 +310,7 @@ const std::map<size_t, TerrainHandler::ShaderEntry>& TerrainHandler::getAllShade
 void TerrainHandler::destroyPage(const TerrainIndex& index) {
 	auto I = mPages.find(index);
 	if (I != mPages.end()) {
-		S_LOG_VERBOSE("Destroying page at index [" << index.first << "," << index.second << "]");
+		logger->debug("Destroying page at index [{},{}]", index.first, index.second);
 		mTerrainAdapter.removePage(index);
 		mPages.erase(I);
 	}
@@ -441,7 +441,7 @@ void TerrainHandler::setUpTerrainPageAtIndex(const TerrainIndex& index) {
 	int x = index.first;
 	int y = index.second;
 
-	S_LOG_INFO("Setting up TerrainPage at index [" << x << "," << y << "]");
+	logger->info("Setting up TerrainPage at index [{},{}]", x, y);
 	auto I = mPages.find(index);
 	if (I == mPages.end()) {
 
@@ -449,11 +449,11 @@ void TerrainHandler::setUpTerrainPageAtIndex(const TerrainIndex& index) {
 		if (resultI.second) {
 			auto page = resultI.first->second;
 
-			S_LOG_VERBOSE("Adding terrain page to TerrainHandler: [" << index.first << "|" << index.second << "]");
+			logger->debug("Adding terrain page to TerrainHandler: [{}|{}]", index.first, index.second);
 
 			mTaskQueue->enqueueTask(std::make_unique<TerrainPageCreationTask>(*this, page, *mHeightMapBufferProvider, *mHeightMap));
 		} else {
-			S_LOG_WARNING("Could not insert terrain page at [" << index.first << "|" << index.second << "]");
+			logger->warn("Could not insert terrain page at [{}|{}]", index.first, index.second);
 		}
 	}
 

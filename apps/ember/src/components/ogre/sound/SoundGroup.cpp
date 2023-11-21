@@ -20,7 +20,7 @@
 #include "SoundGroup.h"
 #include "SoundDefinition.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 
 #include "services/EmberServices.h"
@@ -86,7 +86,7 @@ void SoundGroup::setPlayOrder(const unsigned int playO) {
 // 	{
 // 		if (!mSamples.size())
 // 		{
-// 			S_LOG_INFO("Group has no samples to play");
+// 			logger->info("Group has no samples to play");
 // 			return;
 // 		}
 // 

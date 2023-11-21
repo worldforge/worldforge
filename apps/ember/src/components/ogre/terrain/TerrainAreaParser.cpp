@@ -22,7 +22,7 @@
 //
 #include "TerrainAreaParser.h"
 #include "TerrainArea.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <wfmath/atlasconv.h>
 
 namespace Ember {
@@ -45,7 +45,7 @@ bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMat
 			shapeMap = &shapeElement.Map();
 			auto shapeTypeI = shapeMap->find("type");
 			if (shapeTypeI == shapeMap->end() || !shapeTypeI->second.isString() || shapeTypeI->second != "polygon") {
-				S_LOG_FAILURE("TerrainArea 'shape' element must be of type 'polygon', since Ember currently doesn't support any other shape type.");
+				logger->error("TerrainArea 'shape' element must be of type 'polygon', since Ember currently doesn't support any other shape type.");
 				return false;
 			}
 		}
@@ -55,7 +55,7 @@ bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMat
 		WFMath::Polygon<2> newPoly(*shapeMap);
 		poly = newPoly;
 	} catch (const WFMath::_AtlasBadParse& ex) {
-		S_LOG_WARNING("Error when parsing polygon data from atlas." << ex);
+		logger->warn("Error when parsing polygon data from atlas: {}", ex.what());
 		return false;
 	}
 
@@ -77,7 +77,7 @@ Atlas::Message::Element TerrainAreaParser::createElement(const WFMath::Polygon<2
 			shapeElement.Map()["type"] = "polygon";
 			map.insert(std::make_pair("shape", shapeElement));
 		} else {
-			S_LOG_WARNING("A polygon should be serialized into a map.");
+			logger->warn("A polygon should be serialized into a map.");
 		}
 	}
 	map["layer"] = layer;

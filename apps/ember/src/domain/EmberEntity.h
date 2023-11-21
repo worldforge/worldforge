@@ -444,19 +444,14 @@ inline EmberEntity::PositioningMode EmberEntity::getPositioningMode() const {
 
 }
 
+namespace Eris {
 /**
  * Provides a simple description of the entity, to be used for debugging and internal tools.
  *
  * Don't show this to the user during game play (but might be ok for authoring).
  */
-std::ostream& operator<<(std::ostream& s, const Eris::Entity& entity);
-/**
- * Provides a simple description of the entity, to be used for debugging and internal tools.
- *
- * Don't show this to the user during game play (but might be ok for authoring).
- * @return
- */
-Ember::LoggingInstance& operator<<(Ember::LoggingInstance& s, const Eris::Entity& entity);
+std::ostream& operator<<(std::ostream& s, const Entity& entity);
+}
 
 
 #endif // EMBEROGRE_EMBERENTITY_H

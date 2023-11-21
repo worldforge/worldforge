@@ -24,7 +24,7 @@
 #include "EntityTalk.h"
 #include "IHeightProvider.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/AtlasQuery.h"
 
 #include <Eris/TypeInfo.h>
@@ -32,8 +32,12 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/MultiLineListFormatter.h>
+#include <fmt/ostream.h>
 #include <sstream>
 #include <iostream>
+
+template <> struct fmt::formatter<Eris::Entity> : ostream_formatter {};
+template <> struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {};
 
 namespace Ember {
 
@@ -106,7 +110,7 @@ void EmberEntity::init(const Atlas::Objects::Entity::RootEntity& ge, bool fromCr
 	if (getPredictedPos().isValid()) {
 		std::stringstream ss;
 		ss << "Entity " << *this << " placed at " << getPredictedPos();
-		S_LOG_VERBOSE(ss.str());
+		logger->debug(ss.str());
 	}
 
 	mIsInitialized = true;
@@ -173,7 +177,7 @@ void EmberEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talkArg
 	//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
 	mSuggestedResponses = entityTalk.getSuggestedResponses();
 
-	S_LOG_VERBOSE("Entity " << *this << " says: \"" << entityTalk.getMessage() << "\"");
+	logger->debug("Entity {} says: \"{}\"", *this, entityTalk.getMessage());
 
 	EventTalk.emit(entityTalk);
 
@@ -190,7 +194,7 @@ void EmberEntity::onSoundAction(const Atlas::Objects::Operation::RootOperation& 
 
 	std::string message = getNameOrType() + " emits a " + op->getParent() + ".";
 	ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
-	S_LOG_VERBOSE("Entity: " << this->getId() << " (" << this->getName() << ") sound action: " << op->getParent());
+	logger->debug("Entity: {} ({}) sound action: {}",this->getId(), this->getName(), op->getParent());
 
 	Eris::ViewEntity::onSoundAction(op, typeInfo);
 }
@@ -228,13 +232,13 @@ void EmberEntity::updateAttachment() {
 			newLocationEntity->getAttachment()->attachEntity(*this);
 
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Problem when creating new attachment for entity." << ex);
+			logger->warn("Problem when creating new attachment for entity. {}", ex.what());
 		}
 	} else {
 		try {
 			setAttachment(nullptr);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Problem when setting attachment for entity." << ex);
+			logger->warn("Problem when setting attachment for entity. {}", ex.what());
 		}
 	}
 }
@@ -245,7 +249,7 @@ void EmberEntity::onAction(const Atlas::Objects::Operation::RootOperation& act, 
 		std::string message = getNameOrType() + " performs a " + act->getParent() + ".";
 		ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
 
-		S_LOG_VERBOSE("Entity: " << this->getId() << " (" << this->getName() << ") action: " << act->getParent());
+		logger->debug("Entity: {} ({}) action: {}", this->getId(), this->getName(), act->getParent());
 	}
 
 	Entity::onAction(act, typeInfo);
@@ -564,9 +568,10 @@ std::string EmberEntity::describeEntity() const {
 
 }
 
+namespace Eris {
 
 std::ostream& operator<<(std::ostream& s, const Eris::Entity& entity) {
-	auto name = entity.getName();
+	auto& name = entity.getName();
 	s << entity.getId();
 	if (entity.getType()) {
 		s << "(" << entity.getType()->getName();
@@ -582,9 +587,4 @@ std::ostream& operator<<(std::ostream& s, const Eris::Entity& entity) {
 	return s;
 }
 
-Ember::LoggingInstance& operator<<(Ember::LoggingInstance& s, const Eris::Entity& entity) {
-	std::stringstream ss;
-	ss << entity;
-	s << ss.str();
-	return s;
 }

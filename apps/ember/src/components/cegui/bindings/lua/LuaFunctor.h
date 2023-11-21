@@ -20,7 +20,7 @@
 #define EMBER_LUAFUNCTOR_H
 #include <CEGUI/CEGUI.h>
 #include "sol2/sol.hpp"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 
 template <typename T>
@@ -87,7 +87,7 @@ struct LuaFunctor : std::enable_shared_from_this<LuaFunctor> {
 		if (callback) {
 			auto result = callback(eventArgs);
 			if (!result.valid()) {
-				S_LOG_FAILURE(result.get<sol::error>());
+				Ember::logger->error(result.get<sol::error>().what());
 				return false;
 			} else {
 				sol::object resultObject = result;
@@ -120,7 +120,7 @@ struct LuaFunctorWithSelf : std::enable_shared_from_this<LuaFunctorWithSelf> {
 		if (callback) {
 			auto result = callback(this_object, eventArgs);
 			if (!result.valid()) {
-				S_LOG_FAILURE(result.get<sol::error>());
+				Ember::logger->error(result.get<sol::error>().what());
 				return false;
 			} else {
 				sol::object resultObject = result;

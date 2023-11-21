@@ -25,9 +25,9 @@
 
 #include <CEGUI/Logger.h>
 #include "services/config/ConfigListenerContainer.h"
+#include <spdlog/logger.h>
 
-namespace Ember {
-namespace Cegui {
+namespace Ember::Cegui {
 
 /**
 	An implementation of the CEGUI::Logger interface which will reroute all CEGUI log messages to the main Ember logging service instead.
@@ -38,6 +38,9 @@ namespace Cegui {
 */
 class CEGUILogger : public CEGUI::Logger, ConfigListenerContainer {
 public:
+
+	inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("CEGUI");
+
 	CEGUILogger();
 
 	~CEGUILogger() override;
@@ -82,6 +85,5 @@ private:
 
 }
 
-}
 
 #endif

@@ -25,8 +25,8 @@
 ///include the Logging service, since we want logging available from most classes
 ///in most cases, use the S_LOG* defines
 ///such as:
-///S_LOG_INFO("some info");
-#include "framework/LoggingInstance.h"
+///logger->info("some info");
+#include "framework/Log.h"
 
 #include "framework/Exception.h"
 

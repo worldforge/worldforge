@@ -21,7 +21,7 @@
 #include "MetaserverService.h"
 
 #include "services/config/ConfigService.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/Tokeniser.h"
 
 
@@ -46,7 +46,7 @@ MetaserverService::MetaserverService(Session& session, ConfigService& configSrv)
 		metaserverHostname = "metaserver.worldforge.org";
 	}
 
-	S_LOG_INFO("Connecting to meta server at address " << metaserverHostname << ".");
+	logger->info("Connecting to meta server at address {}.", metaserverHostname);
 	mMetaserver = std::make_unique<Eris::Meta>(mSession.m_io_service, mSession.m_event_service, metaserverHostname, 20);
 	mMetaserver->Failure.connect(sigc::mem_fun(*this, &MetaserverService::gotFailure));
 	mMetaserver->ReceivedServerInfo.connect(sigc::mem_fun(*this, &MetaserverService::receivedServerInfo));
@@ -60,25 +60,33 @@ MetaserverService::~MetaserverService() {
 
 
 void MetaserverService::gotFailure(const string& msg) {
-	S_LOG_WARNING("Got Meta-server error: " << msg);
+	logger->warn("Got Meta-server error: {}", msg);
 }
 
 void MetaserverService::receivedServerInfo(const Eris::ServerInfo& sInfo) {
 
-	S_LOG_VERBOSE("Got serverinfo:\n"
-						  << "Hostname: " << sInfo.host
-						  << "\nServerName: " << sInfo.name
-						  << "\nRuleset: " << sInfo.ruleset
-						  << "\nServer Type: " << sInfo.server
-						  << "\nClients: " << sInfo.clients
-						  << "\nPing: " << sInfo.ping
-						  << "\nUptime: " << (int) sInfo.uptime
-						  << "\nEntities: " << sInfo.entities);
+	logger->debug("Got serverinfo:\n"
+				  "Hostname: {}"
+				  "\nServerName: {}"
+				  "\nRuleset: {}"
+				  "\nServer Type: {}"
+				  "\nClients: {}"
+				  "\nPing: {}"
+				  "\nUptime: {}"
+				  "\nEntities: {}",
+				  sInfo.host,
+				  sInfo.name,
+				  sInfo.ruleset,
+				  sInfo.server,
+				  sInfo.clients,
+				  sInfo.ping,
+				  (int) sInfo.uptime,
+				  sInfo.entities);
 }
 
 void MetaserverService::completedServerList(int count) {
-	S_LOG_INFO("Server List completed.");
-	S_LOG_INFO("Servers: " << count);
+	logger->info("Server List completed.");
+	logger->info("Servers: {}", count);
 
 	//     stringstream out;
 	//     out << "Listing hostnames..." << endl;
@@ -93,7 +101,7 @@ void MetaserverService::completedServerList(int count) {
 	//       }
 	//
 	//
-	//     S_LOG_INFO( out.str());
+	//     logger->info( out.str());
 
 }
 

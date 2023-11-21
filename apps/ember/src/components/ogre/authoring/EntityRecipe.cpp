@@ -74,7 +74,7 @@ const std::string& EntityRecipe::getDescription() const {
 }
 
 Atlas::Message::MapType EntityRecipe::createEntity(Eris::TypeService& typeService, const std::map<std::string, Atlas::Message::Element>& adapterValues, const TiXmlElement& entitySpec) {
-	S_LOG_VERBOSE("Creating entity.");
+	logger->debug("Creating entity.");
 
 //	ScriptingService& scriptingService = EmberServices::getSingleton().getScriptingService();
 //	if (!mEntityRecipe.mScript.empty()) {

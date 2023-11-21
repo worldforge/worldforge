@@ -25,7 +25,7 @@
 #include "terrain/TerrainDefPoint.h"
 
 #include "domain/EmberEntity.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <OgreSceneManager.h>
 
@@ -185,7 +185,7 @@ void TerrainEntityManager::entityTerrainModAttrChanged(EmberEntity& entity, cons
 					terrainModEntry = &result.first->second;
 				}
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Error when paring terrain mod." << ex);
+				logger->error("Error when paring terrain mod: {}", ex.what());
 			}
 		}
 	} else {

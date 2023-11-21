@@ -23,7 +23,7 @@
 #include "components/ogre/MotionManager.h"
 #include "components/ogre/terrain/TerrainManager.h"
 #include "domain/EmberEntity.h"
-
+#include "framework/Log.h"
 
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
@@ -41,13 +41,13 @@ void registerLua<EmberOgre>(sol::table& space) {
 		if (entity) {
 			auto result = entityFoundFn(entity);
 			if (!result.valid()) {
-				S_LOG_WARNING(result.get<sol::error>());
+				Ember::logger->warn(result.get<sol::error>().what());
 			}
 		} else {
 			if (entityNotFoundFn) {
 				auto result = entityNotFoundFn(entityId);
 				if (!result.valid()) {
-					S_LOG_WARNING(result.get<sol::error>());
+					Ember::logger->warn(result.get<sol::error>().what());
 				}
 			}
 		}

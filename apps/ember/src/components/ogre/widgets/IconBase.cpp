@@ -80,7 +80,7 @@ const Image* IconBase::loadImageFromImageset(const std::string& imagesetName, co
 			std::string imagesetFileName("cegui/datafiles/imagesets/" + imagesetName + ".imageset");
 			ImageManager::getSingleton().loadImageset(imagesetFileName);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when loading imageset " << imagesetName << "." << ex);
+			logger->warn("Error when loading imageset {}: {}", imagesetName, ex.what());
 			return nullptr;
 		}
 	}

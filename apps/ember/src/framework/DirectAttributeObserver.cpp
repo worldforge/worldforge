@@ -17,7 +17,7 @@
  */
 
 #include "DirectAttributeObserver.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 namespace Ember {
 

@@ -125,7 +125,7 @@ const Element& Entity::valueOfProperty(const std::string& name) const
                 return *element;
             }
         }
-        error() << "did valueOfProperty(" << name << ") on entity " << m_id << " which has no such name";
+        logger->error("did valueOfProperty({}) on entity {} which has no such name", name, m_id);
         throw InvalidOperation("no such property " + name);
     } else {
         return A->second;
@@ -283,7 +283,7 @@ void Entity::setFromRoot(const Root& obj, bool includeTypeInfoProperties)
         try {
             setProperty(entry.first, entry.second);
         } catch (const std::exception& ex) {
-            warning() << "Error when setting property '" << entry.first << "'. Message: " << ex.what();
+            logger->warn("Error when setting property '{}'. Message: {}", entry.first, ex.what());
         }
     }
 
@@ -305,7 +305,7 @@ void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
     const std::vector<Root>& talkArgs = talk->getArgs();
     if (talkArgs.empty())
     {
-        warning() << "entity " << getId() << " got sound(talk) with no args";
+        logger->warn("entity {} got sound(talk) with no args", getId());
         return;
     }
 
@@ -521,7 +521,7 @@ void Entity::endUpdate()
 {
     if (m_updateLevel < 1)
     {
-        error() << "mismatched begin/end update pair on entity";
+        logger->error("mismatched begin/end update pair on entity");
         return;
     }
         
@@ -582,12 +582,12 @@ void Entity::updateTasks(const Element& e)
 		auto it = tkmap.find("name");
         if (it == tkmap.end())
         {
-            error() << "task without name";
+            logger->error("task without name");
             continue;
         }
         if (!it->second.isString())
         {
-            error() << "task with invalid name";
+            logger->error("task with invalid name");
             continue;
         }
 
@@ -754,7 +754,7 @@ void Entity::removeChild(Entity* e)
 		onChildRemoved(e);
 		return;
     }
-	error() << "child " << e->getId() << " of entity " << m_id << " not found doing remove";
+	logger->error("child {} of entity {} not found doing remove", e->getId(), m_id);
 }
 
 // visiblity related methods

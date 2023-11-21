@@ -84,7 +84,7 @@ void ShaderPassBlendMapBatch::finalize(Ogre::Pass& pass, const Ogre::TexturePtr&
 		auto baseTexture = resolveTexture(layer->getDiffuseTextureName());
 		if (baseTexture) {
 			//add the layer textures
-			S_LOG_VERBOSE("Adding new layer with diffuse texture " << baseTexture->getName());
+			logger->debug("Adding new layer with diffuse texture {}", baseTexture->getName());
 			auto* diffuseTUS = pass.createTextureUnitState();
 			//textureUnitState->setTextureScale(0.025, 0.025);
 			diffuseTUS->setTexture(baseTexture);
@@ -101,7 +101,9 @@ void ShaderPassBlendMapBatch::finalize(Ogre::Pass& pass, const Ogre::TexturePtr&
 				normalMapTextureUnitState->setTextureAddressingMode(Ogre::TextureUnitState::TAM_WRAP);
 			}
 		} else {
-			S_LOG_WARNING("Not adding layer to material '" << pass.getParent()->getParent()->getName() << "' since the diffuse texture ('" << layer->getDiffuseTextureName() << "') is missing.");
+			logger->warn("Not adding layer to material '{}' since the diffuse texture ('{}') is missing.",
+						 pass.getParent()->getParent()->getName(),
+						 layer->getDiffuseTextureName());
 		}
 	}
 }

@@ -56,7 +56,7 @@ SoundGroup* SoundAction::setGroup(const std::string& name) {
 	auto groupModel = SoundDefinitionManager::getSingleton().getSoundGroupDefinition(name);
 
 	if (!groupModel) {
-		S_LOG_FAILURE("A template to the group " << name << " could not be found.");
+		logger->error("A template to the group {} could not be found.", name);
 		return nullptr;
 	}
 
@@ -106,7 +106,7 @@ void SoundAction::SoundInstance_PlayComplete() {
 			mInstance = nullptr;
 		}
 	} else {
-		S_LOG_WARNING("Got a play complete signal while there's no sound instance registered. For some reason the sound instance must have already been removed.");
+		logger->warn("Got a play complete signal while there's no sound instance registered. For some reason the sound instance must have already been removed.");
 	}
 }
 

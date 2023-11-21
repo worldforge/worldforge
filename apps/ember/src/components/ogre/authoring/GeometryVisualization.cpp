@@ -20,7 +20,7 @@
 #include "domain/EmberEntity.h"
 #include "components/ogre/Convert.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/AtlasQuery.h"
 #include "components/ogre/model/Model.h"
 

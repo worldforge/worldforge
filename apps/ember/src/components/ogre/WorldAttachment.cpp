@@ -81,7 +81,7 @@ void WorldAttachment::attachEntity(EmberEntity& entity) {
 				auto nodeAttachment = std::make_unique<EmptyNodeAttachment>(getAttachedEntity(), entity, std::make_unique<SceneNodeProvider>(node, mWorldNode), std::move(oceanRepresentation));
 				entity.setAttachment(std::move(nodeAttachment));
 			} else {
-				S_LOG_WARNING("Tried to activate ocean representation, but there was no world instance available.");
+				logger->warn("Tried to activate ocean representation, but there was no world instance available.");
 			}
 		} else {
 			entity.setAttachment({});
@@ -92,7 +92,7 @@ void WorldAttachment::attachEntity(EmberEntity& entity) {
 		mapping->initialize();
 		auto result = mMappings.emplace(&entity, std::move(mapping));
 		if (!result.second) {
-			S_LOG_CRITICAL("A world attachment mapping for entity " << entity.getId() << " already existed. This can cause memory corruption.");
+			logger->critical("A world attachment mapping for entity {} already existed. This can cause memory corruption.", entity.getId());
 		}
 	} else {
 		mMappings.erase(&entity);

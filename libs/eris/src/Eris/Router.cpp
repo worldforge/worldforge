@@ -32,13 +32,13 @@ Router::RouterResult Router::handleObject(const Root& obj)
 
 Router::RouterResult Router::handleOperation(const RootOperation& )
 {
-    warning() << "doing default routing of operation";
+    logger->warn("doing default routing of operation");
     return IGNORED;
 }
 
 Router::RouterResult Router::handleEntity(const RootEntity& )
 {
-    warning() << "doing default routing of entity";
+    logger->warn("doing default routing of entity");
     return IGNORED;
 }
 

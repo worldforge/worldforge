@@ -34,10 +34,6 @@
 
 #include <iostream>
 
-static void writeLog(Eris::LogLevel, const std::string & msg)
-{       
-    std::cerr << msg << std::endl;
-}
 
 class TestConnection : public Eris::Connection {
   public:
@@ -60,8 +56,6 @@ class TestConnection : public Eris::Connection {
 
 int main()
 {
-    Eris::Logged.connect(sigc::ptr_fun(writeLog));
-    Eris::setLogLevel(Eris::LOG_DEBUG);
 
     // Test constructor and destructor
     {

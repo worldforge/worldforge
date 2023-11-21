@@ -37,8 +37,7 @@ BOOL_OPTION(minds, true, "export", "minds", "Flag to control if minds should als
 
 int main(int argc, char** argv)
 {
-    //Perhaps tell spdlog to use a prefix?
-    // setLoggingPrefix("EXPORT");
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [export] [%^%l%$] %v");
 
     int config_status = loadConfig(argc, argv, USAGE_CYCMD);
     if (config_status < 0) {

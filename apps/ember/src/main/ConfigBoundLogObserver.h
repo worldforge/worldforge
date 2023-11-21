@@ -23,8 +23,8 @@
 #ifndef EMBERConfigBoundLogObserver_H
 #define EMBERConfigBoundLogObserver_H
 
-#include "framework/StreamLogObserver.h"
-#include <sigc++/trackable.h>
+#include "services/config/ConfigListenerContainer.h"
+#include <spdlog/spdlog.h>
 
 namespace Ember {
 
@@ -36,43 +36,17 @@ class ConfigService;
  * @brief A logging observer which is bound to the configuration and changes behaviour in reaction to changed configuration values.
  *
  */
-class ConfigBoundLogObserver : public StreamLogObserver, public virtual sigc::trackable
+class ConfigBoundLogObserver
 {
 public:
-	/**
-	 * @brief Ctor.
-	 *
-	 * @param configService The config service to bind to.
-	 * @param out The stream log messages will be written to.
-	 */
-    ConfigBoundLogObserver(ConfigService& configService, std::ostream &out);
+    ConfigBoundLogObserver(spdlog::sink_ptr sink);
 
-    /**
-     * @brief Dtor.
-     */
-    ~ConfigBoundLogObserver() override;
+    ~ConfigBoundLogObserver() = default;;
 
 protected:
 
-    /**
-     * @brief The config service.
-     */
-    ConfigService& mConfigService;
+	ConfigListenerContainer mConfigListener;
 	
-	/**
-	* @brief Updates from the config.
-	*
-	* The relevant section is "general" and the key "logginglevel". It can have the values of verbose|info|warning|failure|critical
-	*/
-	void updateFromConfig();
-	
-	/**
-	* @brief React on changes to the config.
-	* @param section
-	* @param key
-	*/
-	void ConfigService_EventChangedConfigItem(const std::string& section, const std::string& key);
-
 };
 
 }

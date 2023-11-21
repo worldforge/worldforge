@@ -49,9 +49,7 @@ using namespace boost::asio;
 
 int main(int argc, char ** argv)
 {
-	//Perhaps tell spdlog to use a prefix?
-    //setLoggingPrefix("PYTHON");
-
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [python] [%^%l%$] %v");
 
     int config_status = loadConfig(argc, argv, 0); 
     if (config_status < 0) {

@@ -24,9 +24,7 @@
 #include <OgreRenderWindow.h>
 #include <boost/filesystem/operations.hpp>
 
-namespace Ember {
-namespace OgreView {
-namespace Camera {
+namespace Ember::OgreView::Camera {
 
 Recorder::Recorder() :
 		mSequence(0),
@@ -56,7 +54,7 @@ bool Recorder::frameStarted(const Ogre::FrameEvent& event) {
 				boost::filesystem::create_directories(dir);
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when creating directory for screenshots." << ex);
+			logger->error("Error when creating directory for screenshots: ", ex.what());
 			stopRecording();
 			return true;
 		}
@@ -64,7 +62,7 @@ bool Recorder::frameStarted(const Ogre::FrameEvent& event) {
 			// take screenshot
 			EmberOgre::getSingleton().getRenderWindow()->writeContentsToFile((dir / filename.str()).string());
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Could not write screenshot to disc." << ex);
+			logger->error("Could not write screenshot to disk: ", ex.what());
 			stopRecording();
 			return true;
 		}
@@ -73,6 +71,6 @@ bool Recorder::frameStarted(const Ogre::FrameEvent& event) {
 }
 
 }
-}
-}
+
+
 

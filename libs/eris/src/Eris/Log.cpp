@@ -10,28 +10,9 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/PresentationBridge.h>
 
-namespace Eris
-{
 
-static LogLevel _logLevel = DEFAULT_LOG;    
-sigc::signal<void(LogLevel, const std::string&)> Logged;
-    
-void setLogLevel(LogLevel lvl)
-{
-    _logLevel = lvl;
-}    
-    
-LogLevel getLogLevel()
-{
-    return _logLevel;
-}
-
-void doLog(LogLevel lvl, const std::string& msg)
-{
-    if (lvl <= _logLevel)
-        Logged.emit(lvl, msg);
-}
-
+namespace Atlas {
+namespace Objects {
 std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
 {
     std::stringstream s;
@@ -40,7 +21,8 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     return os << s.str();
 }
-
+}
+namespace Message {
 std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
 {
 	if (msg.isMap()) {
@@ -52,5 +34,6 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
 	}
 	return os;
 }
+}
+}
 
-} // of namespace

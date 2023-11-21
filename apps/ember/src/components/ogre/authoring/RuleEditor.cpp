@@ -18,7 +18,7 @@
 
 #include "RuleEditor.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 
 #include <Eris/Connection.h>
@@ -77,7 +77,7 @@ void RuleEditor::operationGetRuleResult(const Atlas::Objects::Operation::RootOpe
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
-		S_LOG_WARNING("Got response to GET for rule which wasn't registered in our queue.");
+		logger->warn("Got response to GET for rule which wasn't registered in our queue.");
 		return;
 	}
 
@@ -93,7 +93,7 @@ void RuleEditor::operationCreateRuleResult(const Atlas::Objects::Operation::Root
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
-		S_LOG_WARNING("Got response to SET or CREATE for rule which wasn't registered in our queue.");
+		logger->warn("Got response to SET or CREATE for rule which wasn't registered in our queue.");
 		return;
 	}
 	mQueuedRules.erase(queueI);
@@ -112,7 +112,7 @@ void RuleEditor::operationUpdateRuleResult(const Atlas::Objects::Operation::Root
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
-		S_LOG_WARNING("Got response to SET or CREATE for rule which wasn't registered in our queue.");
+		logger->warn("Got response to SET or CREATE for rule which wasn't registered in our queue.");
 		return;
 	}
 	mQueuedRules.erase(queueI);

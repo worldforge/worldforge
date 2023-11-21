@@ -99,7 +99,7 @@ Ogre::SceneNode* PolygonAdapter::getEntitySceneNode() {
 void PolygonAdapter::toggleDisplayOfPolygon() {
 	if (!mPolygon) {
 		if (!mEntity) {
-			S_LOG_WARNING("There's no entity attached to the PolygonAdapter, and the polygon can't thus be shown.");
+			logger->warn("There's no entity attached to the PolygonAdapter, and the polygon can't thus be shown.");
 		} else {
 			//It's important that we do the call to getChangedElement before we create and set mPolygon, since if that's set, the values from there will be used instead of the original atlas values.
 			::Atlas::Message::Element areaElem(getChangedElement());
@@ -123,13 +123,13 @@ void PolygonAdapter::toggleDisplayOfPolygon() {
 			try {
 				mPickListener.reset();
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Error when deleting polygon point pick listener." << ex);
+				logger->error("Error when deleting polygon point pick listener: {}", ex.what());
 			}
 		}
 		try {
 			mPolygon.reset();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when deleting polygon." << ex);
+			logger->error("Error when deleting polygon: {}", ex.what());
 		}
 	}
 }

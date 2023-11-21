@@ -24,7 +24,7 @@
 #include "InputCommandMapper.h"
 #include "framework/ConsoleBackend.h"
 #include "services/config/ConfigService.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <SDL_keyboard.h>
 #include <algorithm>
@@ -58,8 +58,8 @@ void InputCommandMapper::readFromConfigSection(const std::string& sectionName) {
 	//get the mappings from the config service
 	ConfigService::SectionMap section = ConfigService::getSingleton().getSection(sectionName);
 
-	for (ConfigService::SectionMap::const_iterator I = section.begin(); I != section.end(); ++I) {
-		bindCommand(std::string(I->first), std::string(I->second));
+	for (auto & I : section) {
+		bindCommand(std::string(I.first), std::string(I.second));
 	}
 
 }
@@ -67,7 +67,7 @@ void InputCommandMapper::readFromConfigSection(const std::string& sectionName) {
 void InputCommandMapper::Input_EventKeyPressed(const SDL_Keysym& key, Input::InputMode inputMode) {
 	if (mEnabled && isActiveForInputMode(inputMode)) {
 		//check if we have any key with a matching command
-		KeyMapStore::const_iterator keyI = mKeymap.find(key.scancode);
+		auto keyI = mKeymap.find(key.scancode);
 		if (keyI != mKeymap.end()) {
 			std::pair<KeyCommandStore::iterator, KeyCommandStore::iterator> commandsI = mKeyCommands.equal_range(keyI->second);
 			for (auto I = commandsI.first; I != commandsI.second; ++I) {
@@ -86,7 +86,7 @@ void InputCommandMapper::Input_EventKeyReleased(const SDL_Keysym& key, Input::In
 	if (mEnabled && isActiveForInputMode(inputMode)) {
 		//check if we have any key with a matching command
 		//only check for commands that start with a "+"
-		KeyMapStore::const_iterator keyI = mKeymap.find(key.scancode);
+		auto keyI = mKeymap.find(key.scancode);
 		if (keyI != mKeymap.end()) {
 			std::pair<KeyCommandStore::iterator, KeyCommandStore::iterator> commandsI = mKeyCommands.equal_range(keyI->second);
 			for (auto I = commandsI.first; I != commandsI.second; ++I) {
@@ -121,12 +121,12 @@ bool InputCommandMapper::isActiveForInputMode(Input::InputMode mode) const {
 
 
 void InputCommandMapper::bindCommand(const std::string& key, const std::string& command) {
-	S_LOG_INFO("Binding key " << key << " to command " << command << " for state " << getState() << ".");
+	logger->info("Binding key {} to command {} for state {}.", key, command, getState());
 	mKeyCommands.insert(KeyCommandStore::value_type(key, command));
 }
 
 void InputCommandMapper::unbindCommand(const std::string& key) {
-	S_LOG_INFO("Unbinding key " << key << " for state " << getState() << ".");
+	logger->info("Unbinding key {} for state {}.", key, getState());
 	mKeyCommands.erase(key);
 }
 

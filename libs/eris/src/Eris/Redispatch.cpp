@@ -23,7 +23,7 @@ void Redispatch::postModified(const Atlas::Objects::Root& obj)
 
 void Redispatch::fail()
 {
-    warning() << "redispatch failed for " << m_obj;
+    logger->warn("redispatch failed for {}", m_obj);
     m_con.cleanupRedispatch(this);
 }
 

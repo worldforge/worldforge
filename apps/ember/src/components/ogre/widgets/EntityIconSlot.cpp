@@ -56,7 +56,7 @@ bool EntityIconSlot::addEntityIcon(EntityIcon* icon) {
 			mContainer->notifyScreenAreaChanged();
 			mContainer->invalidate();
 		} else {
-			S_LOG_WARNING("Trying to add entity icon to slot that already has one icon contained.");
+			logger->warn("Trying to add entity icon to slot that already has one icon contained.");
 			return false;
 		}
 	}

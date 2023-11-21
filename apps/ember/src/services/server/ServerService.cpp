@@ -30,7 +30,6 @@
 #include "services/config/ConfigService.h"
 
 #include "framework/Session.h"
-#include <framework/LoggingInstance.h>
 
 //Needed for the "access" function.
 #ifdef _WIN32
@@ -39,6 +38,7 @@
 #endif
 
 #include "framework/FileSystemObserver.h"
+#include "framework/Log.h"
 
 namespace Ember {
 
@@ -157,16 +157,16 @@ void ServerService::setupLocalServerObservation(ConfigService& configService) {
 		try {
 			Ember::FileSystemObserver::getSingleton().add_directory(directory, [this](const Ember::FileSystemObserver::FileSystemEvent& event) {
 				if (event.ev.path == mLocalSocketPath) {
-					S_LOG_VERBOSE("Local server socket directory changed.");
+					logger->debug("Local server socket directory changed.");
 					EventLocalSocketChanged.emit();
 				}
 			});
 		} catch (...) {
-			S_LOG_INFO("Could not observe the directory '" << mLocalSocketPath.string() << "' which means Ember won't detect if a local server is started.");
+			logger->info("Could not observe the directory '{}' which means Ember won't detect if a local server is started.", mLocalSocketPath.string());
 		}
-		S_LOG_VERBOSE("Observing directory " << directory << " for local server socket.");
+		logger->debug("Observing directory {} for local server socket.", directory);
 	} else {
-		S_LOG_INFO("Could not observe the directory '" << mLocalSocketPath.string() << "' which means Ember won't detect if a local server is started.");
+		logger->info("Could not observe the directory '{}' which means Ember won't detect if a local server is started.", mLocalSocketPath.string());
 	}
 }
 

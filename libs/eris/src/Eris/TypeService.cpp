@@ -89,7 +89,7 @@ void TypeService::handleOperation(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {
     	auto message = getErrorMessage(op);
-    	notice() << "Error from server when requesting type: " << message;
+    	logger->trace("Error from server when requesting type: {}", message);
         auto& args = op->getArgs();
 		for (const auto& arg : args) {
 			Get request = smart_dynamic_cast<Get>(arg);
@@ -125,7 +125,7 @@ void TypeService::handleOperation(const RootOperation& op)
 			}
 		}
     } else {
-        error() << "type service got op that wasn't info or error";
+        logger->error("type service got op that wasn't info or error");
     }
 }
 
@@ -133,7 +133,7 @@ void TypeService::recvTypeInfo(const Root &atype)
 {
 	auto T = m_types.find(atype->getId());
     if (T == m_types.end()) {
-        error() << "received type object with unknown ID " << atype->getId();
+        logger->error("received type object with unknown ID {}", atype->getId());
         return;
     }
 	
@@ -181,11 +181,11 @@ void TypeService::recvError(const Get& get)
 			auto T = m_types.find(request->getId());
 			if (T == m_types.end()) {
 				// This type isn't known, which is strange
-				error() << "got ERROR(GET()) with request for unknown type: " + request->getId();
+				logger->error("got ERROR(GET()) with request for unknown type: {}", request->getId());
 				continue;
 			}
 
-			warning() << "type " << request->getId() << " undefined on server";
+			logger->warn("type {} undefined on server", request->getId());
 			BadType.emit(T->second.get());
 
 			m_types.erase(T);

@@ -18,7 +18,7 @@
 
 #include "EntityImporterBase.h"
 
-#include "LoggingInstance.h"
+#include "Log.h"
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
@@ -51,13 +51,13 @@ bool EntityImporterBase::getEntity(const std::string & id, OpVector & res)
 {
 	auto I = mPersistedEntities.find(id);
 	if (I == mPersistedEntities.end()) {
-		S_LOG_VERBOSE("Could not find entity with id " << id << "; this one was probably transient.");
+		Ember::logger->debug("Could not find entity with id {}; this one was probably transient.", id);
 		//This will often happen if the child entity was transient, and therefore wasn't exported (but is still references from the parent entity).
 		return false;
 	}
 	const RootEntity& obj = smart_dynamic_cast<RootEntity>(I->second);
 	if (!obj.isValid()) {
-		S_LOG_FAILURE("Corrupt dump - non entity found " << id << ".");
+		Ember::logger->error("Corrupt dump - non entity found {}.", id);
 		return false;
 	}
 
@@ -73,7 +73,7 @@ bool EntityImporterBase::getEntity(const std::string & id, OpVector & res)
 	get->setFrom(mAccountId);
 	get->setSerialno(newSerialNumber());
 	res.push_back(get);
-	S_LOG_VERBOSE("EntityImporterBase: Getting entity with id " << id);
+	Ember::logger->debug("EntityImporterBase: Getting entity with id {}", id);
 	return true;
 }
 
@@ -95,7 +95,7 @@ bool EntityImporterBase::getRule(const std::string & id, OpVector & res)
 {
 	auto I = mPersistedRules.find(id);
 	if (I == mPersistedRules.end()) {
-		S_LOG_WARNING("Could not find rule with id " << id << ".");
+		Ember::logger->warn("Could not find rule with id {}.", id);
 		return false;
 	}
 
@@ -213,7 +213,7 @@ void EntityImporterBase::sendMinds()
 {
 	if (!mResolvedMindMapping.empty()) {
 		Atlas::Objects::Factories factories;
-		S_LOG_INFO("Sending minds.");
+		Ember::logger->info("Sending minds.");
 		for (const auto& mind : mResolvedMindMapping) {
 			Atlas::Message::MapType message;
 			mind.second->addToMessage(message);
@@ -313,7 +313,7 @@ void EntityImporterBase::sendMinds()
 			thinkOp->setArgs1(setOp);
 
 			mStats.mindsProcessedCount++;
-			S_LOG_VERBOSE("Restoring mind of " << mind.first);
+			Ember::logger->debug("Restoring mind of {}", mind.first);
 			mThoughtOpsInTransit++;
 
 			sigc::slot<void(const Operation&)> slot = sigc::mem_fun(*this, &EntityImporterBase::operationThinkResult);
@@ -335,7 +335,7 @@ void EntityImporterBase::sendResolvedEntityReferences()
 
 			auto createdEntityI = mEntityIdMap.find(persistedEntityId);
 			if (createdEntityI == mEntityIdMap.end()) {
-				S_LOG_WARNING("Could not find final server side entity id for persisted entity " << persistedEntityId << " when doing entity ref resolving.");
+				Ember::logger->warn("Could not find final server side entity id for persisted entity {} when doing entity ref resolving.", persistedEntityId);
 				continue;
 			}
 			const auto& createdEntityId = createdEntityI->second;
@@ -390,8 +390,12 @@ void EntityImporterBase::resolveEntityReferences(Atlas::Message::Element& elemen
 
 void EntityImporterBase::complete()
 {
-	S_LOG_INFO("Restore done.");
-	S_LOG_INFO("Restored " << mStats.entitiesProcessedCount<< ", created: " << mStats.entitiesCreateCount << ", updated: " << mStats.entitiesUpdateCount << ", create errors: " << mStats.entitiesCreateErrorCount << " .");
+	Ember::logger->info("Restore done.");
+	Ember::logger->info("Restored {}, created: {}, updated: {}, create errors: {} .",
+						mStats.entitiesProcessedCount,
+						mStats.entitiesCreateCount,
+						mStats.entitiesUpdateCount,
+						mStats.entitiesCreateErrorCount);
 	EventCompleted.emit();
 }
 
@@ -444,7 +448,7 @@ void EntityImporterBase::createRule(const Atlas::Objects::Root & obj, OpVector &
 	createOp->setArgs1(obj);
 
 	createOp->setSerialno(newSerialNumber());
-	S_LOG_INFO("Creating new rule '" << obj->getId() << "' on server.");
+	Ember::logger->info("Creating new rule '{}' on server.", obj->getId());
 	res.push_back(createOp);
 }
 
@@ -478,7 +482,7 @@ void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& 
 	}
 
 	if (updatedDefinition->asMessage() != existingDefinition->asMessage()) {
-		S_LOG_INFO("Updating server rule '"<< updatedDefinition->getId() << "'.");
+		Ember::logger->info("Updating server rule '{}'.", updatedDefinition->getId());
 		Atlas::Objects::Operation::Set setOp;
 		setOp->setFrom(mAccountId);
 		setOp->setArgs1(updatedDefinition);
@@ -488,7 +492,7 @@ void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& 
 	} else {
 		mStats.rulesProcessedCount++;
 		EventProgress.emit();
-		S_LOG_VERBOSE("Not updating server rule '"<< updatedDefinition->getId() << "' as nothing is changed.");
+		Ember::logger->debug("Not updating server rule '{}' as nothing is changed.", updatedDefinition->getId());
 		walkRules(res);
 	}
 }
@@ -528,7 +532,7 @@ void EntityImporterBase::errorArrived(const Operation & op, OpVector & res)
 		auto& current = mRuleStack.back();
 
 		std::string ruleId = current.definition->getId();
-		S_LOG_FAILURE("Could not create rule with id '" << ruleId << "', continuing with next. Server message: " << errorMessage);
+		Ember::logger->error("Could not create rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
 		EventProgress.emit();
 		walkRules(res);
 	}
@@ -541,7 +545,7 @@ void EntityImporterBase::errorArrived(const Operation & op, OpVector & res)
 		auto& current = mRuleStack.back();
 
 		std::string ruleId = current.definition->getId();
-		S_LOG_FAILURE("Could not update rule with id '" << ruleId << "', continuing with next. Server message: " << errorMessage);
+		Ember::logger->error("Could not update rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
 		mStats.rulesCreateErrorCount++;
 		EventProgress.emit();
 		walkRules(res);
@@ -576,14 +580,14 @@ void EntityImporterBase::errorArrived(const Operation & op, OpVector & res)
 				entityType = entity->getParent();
 			}
 		}
-		S_LOG_FAILURE("Could not create entity of type '" << entityType << "', continuing with next. Server message: " << errorMessage);
+		Ember::logger->error("Could not create entity of type '{}', continuing with next. Server message: {}",entityType , errorMessage);
 		mStats.entitiesCreateErrorCount++;
 		EventProgress.emit();
 		walkEntities(res);
 	}
 		break;
 	default:
-		S_LOG_FAILURE("Unexpected state in state machine. Server message: " << errorMessage);
+		Ember::logger->error("Unexpected state in state machine. Server message: {}", errorMessage);
 		break;
 	}
 }
@@ -594,7 +598,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 		return;
 	}
 	if (op->isDefaultArgs() || op->getArgs().empty()) {
-		S_LOG_FAILURE("Info with no arg.");
+		Ember::logger->error("Info with no arg.");
 		return;
 	}
 	const Root & arg = op->getArgs().front();
@@ -602,7 +606,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 	if (m_state == RULE_WALKING) {
 		auto& current = mRuleStack.back();
 		if (arg->getId() != current.definition->getId()) {
-			S_LOG_WARNING("Got info on rule " << arg->getId() << " when expecting " << current.definition->getId() << ".");
+			Ember::logger->warn("Got info on rule {} when expecting {}.", arg->getId(), current.definition->getId());
 			return;
 		}
 
@@ -625,7 +629,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 		mNewIds.insert(arg->getId());
 		StackEntry & current = mTreeStack.back();
 		current.restored_id = arg->getId();
-		S_LOG_VERBOSE("Created: " << arg->getParent() << "(" << arg->getId() << ")");
+		Ember::logger->debug("Created: {}({})", arg->getParent(), arg->getId());
 
 		auto I = mCreateEntityMapping.find(op->getRefno());
 		if (I != mCreateEntityMapping.end()) {
@@ -637,18 +641,18 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 			mEntityIdMap.insert(std::make_pair(I->second, arg->getId()));
 			mCreateEntityMapping.erase(op->getRefno());
 		} else {
-			S_LOG_WARNING("Got info about create for an entity which we didn't seem to have sent.");
+			Ember::logger->warn("Got info about create for an entity which we didn't seem to have sent.");
 		}
 
 		walkEntities(res);
 	} else if (m_state == ENTITY_WALKING) {
 		const RootEntity& ent = smart_dynamic_cast<RootEntity>(arg);
 		if (!ent.isValid()) {
-			S_LOG_FAILURE("Info response is not entity.");
+			Ember::logger->error("Info response is not entity.");
 			return;
 		}
 		if (arg->isDefaultId()) {
-			S_LOG_FAILURE("Corrupted info response: no id.");
+			Ember::logger->error("Corrupted info response: no id.");
 		}
 		const std::string & id = arg->getId();
 
@@ -665,7 +669,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 
 			current.restored_id = id;
 
-			S_LOG_VERBOSE("Updating: " << obj->getId() << " ," << obj->getParent());
+			Ember::logger->debug("Updating: {} ,{}", obj->getParent(), obj->getId());
 
 			update->removeAttrFlag(Atlas::Objects::Entity::CONTAINS_FLAG);
 			update->removeAttrFlag(Atlas::Objects::STAMP_FLAG);
@@ -696,7 +700,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 void EntityImporterBase::sightArrived(const Operation & op, OpVector & res)
 {
 	if (op->isDefaultArgs() || op->getArgs().empty()) {
-		S_LOG_FAILURE("No arg");
+		Ember::logger->error("No arg");
 		return;
 	}
 	const Root & arg = op->getArgs().front();
@@ -706,7 +710,7 @@ void EntityImporterBase::sightArrived(const Operation & op, OpVector & res)
 			break;
 		}
 		if (arg->isDefaultId()) {
-			S_LOG_WARNING("Corrupted top level entity: no id");
+			Ember::logger->warn("Corrupted top level entity: no id");
 			cancel();
 			return;
 		} else {
@@ -722,14 +726,14 @@ void EntityImporterBase::sightArrived(const Operation & op, OpVector & res)
 			break;
 		}
 		if (sub_op->getClassNo() != Atlas::Objects::Operation::SET_NO || sub_op->getArgs().empty() || sub_op->isDefaultSerialno()) {
-			S_LOG_FAILURE("This is not our entity update response.");
+			Ember::logger->error("This is not our entity update response.");
 			break;
 		}
 		walkEntities(res);
 	}
 		break;
 	default:
-		S_LOG_WARNING("Unexpected state in state machine.");
+		Ember::logger->warn("Unexpected state in state machine.");
 		break;
 	}
 }
@@ -766,7 +770,7 @@ void EntityImporterBase::start(const std::string& filename)
 	rootObj->copyAttr("minds", mindsElem);
 	if (rootObj->copyAttr("rules", rulesElem) == 0) {
 		if (!rulesElem.isList()) {
-			S_LOG_WARNING("Rules element is not list.");
+			Ember::logger->warn("Rules element is not list.");
 			EventCompleted.emit();
 			return;
 		} else {
@@ -785,12 +789,12 @@ void EntityImporterBase::start(const std::string& filename)
 	}
 
 	if (!entitiesElem.isList()) {
-		S_LOG_WARNING("Entities element is not list.");
+		Ember::logger->warn("Entities element is not list.");
 		EventCompleted.emit();
 		return;
 	}
 	if (!mindsElem.isList()) {
-		S_LOG_WARNING("Minds element is not list.");
+		Ember::logger->warn("Minds element is not list.");
 		EventCompleted.emit();
 		return;
 	}
@@ -814,7 +818,7 @@ void EntityImporterBase::start(const std::string& filename)
 		if (I != mPersistedEntities.end()) {
 			if (I->second->hasAttr("suspended")) {
 				I->second->setAttr("suspended", 0);
-				S_LOG_INFO("Resuming suspended world.");
+				Ember::logger->info("Resuming suspended world.");
 			}
 		}
 	}
@@ -829,7 +833,10 @@ void EntityImporterBase::start(const std::string& filename)
 		}
 	}
 
-	S_LOG_INFO("Starting loading of world. Number of entities: " << mPersistedEntities.size() << " Number of minds: " << mPersistedMinds.size() << " Number of rules: " << mPersistedRules.size());
+	Ember::logger->info("Starting loading of world. Number of entities: {} Number of minds: {} Number of rules: {}",
+						mPersistedEntities.size(),
+						mPersistedMinds.size(),
+						mPersistedRules.size());
 	mStats.entitiesCount = static_cast<unsigned int>(mPersistedEntities.size());
 	mStats.mindsCount = static_cast<unsigned int>(mPersistedMinds.size());
 	mStats.rulesCount = static_cast<unsigned int>(mPersistedRules.size());
@@ -893,7 +900,7 @@ void EntityImporterBase::startRuleWalking()
 {
 	auto ruleI = mPersistedRules.find("root");
 	if (ruleI == mPersistedRules.end()) {
-		S_LOG_WARNING("Rules exist, but there's no root rule.");
+		Ember::logger->warn("Rules exist, but there's no root rule.");
 		startEntityWalking();
 	}
 	m_state = RULE_WALKING;

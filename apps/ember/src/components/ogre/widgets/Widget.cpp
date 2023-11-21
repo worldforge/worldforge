@@ -72,10 +72,10 @@ CEGUI::Window* Widget::loadMainSheet(const std::string& filename, const std::str
 	try {
 		mMainWindow = UniqueWindowPtr<CEGUI::Window>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(finalFileName));
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when loading from " << filename << "." << ex);
+		logger->error("Error when loading from {}: {}", filename, ex.what());
 		throw ex;
 	} catch (...) {
-		S_LOG_FAILURE("Unknown error when loading from " << filename << ".");
+		logger->error("Unknown error when loading from {}.", filename);
 		throw;
 	}
 	//Main window is handled by ourselves.
@@ -105,17 +105,17 @@ void Widget::onEventFirstTimeShown() {
 CEGUI::Window* Widget::getWindow(const std::string& windowName, bool throwIfNotFound) {
 	try {
 		if (!mMainWindow) {
-			S_LOG_WARNING("Trying to get a window (" + windowName + ") on widget that has no main sheet loaded (" << mPrefix << ").");
+			logger->warn("Trying to get a window ({}) on widget that has no main sheet loaded ({}).", windowName, mPrefix);
 			return nullptr;
 		}
 		assert(mMainWindow && "You must call loadMainSheet(...) before you can call this method.");
 		CEGUI::Window* window = mMainWindow->getChildRecursive(windowName);
 		if (!window) {
-			S_LOG_WARNING("The window with id " << windowName << ", located under widget " << mPrefix << " does not exist.");
+			logger->warn("The window with id {}, located under widget {} does not exist.", windowName, mPrefix);
 		}
 		return window;
 	} catch (const CEGUI::Exception&) {
-		S_LOG_WARNING("The window " << windowName << " doesn't exist.");
+		logger->warn("The window {} doesn't exist.", windowName);
 		if (throwIfNotFound) {
 			throw Exception("The window '" + windowName + "' could not be found.");
 		}

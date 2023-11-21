@@ -45,8 +45,7 @@ static void usage(char * prg)
 
 int main(int argc, char ** argv)
 {
-	//Perhaps tell spdlog to use a prefix?
-    //setLoggingPrefix("CMD");
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [cmd] [%^%l%$] %v");
 
     int config_status = loadConfig(argc, argv, USAGE_CYCMD);
     if (config_status < 0) {

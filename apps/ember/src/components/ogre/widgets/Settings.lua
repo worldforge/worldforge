@@ -590,17 +590,6 @@ function SettingsWidget:buildSettingsUi()
 					suggestions = { "verbose", "info", "warning", "failure", "critical" }
 				},
 				{
-					label = "Logging detailed",
-					helpString = "",
-
-					section = "general",
-					key = "loggingdetailed",
-
-					representationFactory = function(value)
-						return Representations["CheckboxRepresentation<varconf::Variable>"].new(value)
-					end,
-				},
-				{
 					label = "CEGUI Logging level",
 					helpString = "",
 

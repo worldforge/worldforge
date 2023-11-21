@@ -18,7 +18,7 @@
 
 #include "HeightMap.h"
 #include "IHeightMapSegment.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <wfmath/vector.h>
 
 namespace Ember {

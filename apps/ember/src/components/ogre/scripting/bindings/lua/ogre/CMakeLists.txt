@@ -4,6 +4,7 @@ add_library(ember-BindingsOgre OBJECT
         ${BINDINGS_FILES}
 )
 target_link_libraries(ember-BindingsOgre PUBLIC
+        ember-framework
         ember-external-sol2
         ember-external-OGRE
 )

@@ -49,30 +49,30 @@ TerrainUpdateTask::~TerrainUpdateTask() = default;
 
 void TerrainUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecutionContext& context) {
 	int terrainRes = mTerrain.getResolution();
-	for (auto I = mTerrainPoints.begin(); I != mTerrainPoints.end(); ++I) {
+	for (const auto& mTerrainPoint: mTerrainPoints) {
 		Mercator::BasePoint bp;
-		const TerrainPosition& pos = I->position;
-		if (mTerrain.getBasePoint(static_cast<int> (pos.x()), static_cast<int> (pos.y()), bp) && (WFMath::Equal(I->height, bp.height()))
-			&& (WFMath::Equal(I->roughness, bp.roughness()) && (WFMath::Equal(I->falloff, bp.falloff())))) {
-			S_LOG_VERBOSE("Point [" << pos.x() << "," << pos.y() << "] unchanged");
+		const TerrainPosition& pos = mTerrainPoint.position;
+		if (mTerrain.getBasePoint(static_cast<int> (pos.x()), static_cast<int> (pos.y()), bp) && (WFMath::Equal(mTerrainPoint.height, bp.height()))
+			&& (WFMath::Equal(mTerrainPoint.roughness, bp.roughness()) && (WFMath::Equal(mTerrainPoint.falloff, bp.falloff())))) {
+			logger->debug("Point [{},{}] unchanged", pos.x(), pos.y());
 			continue;
 		} else {
-			S_LOG_VERBOSE("Setting base point [" << pos.x() << "," << pos.y() << "] to height " << I->height);
+			logger->debug("Setting base point [{},{}] to height {}", pos.x(), pos.y(), mTerrainPoint.height);
 		}
-		bp.height() = I->height;
-		bp.roughness() = I->roughness;
-		bp.falloff() = I->falloff;
+		bp.height() = mTerrainPoint.height;
+		bp.roughness() = mTerrainPoint.roughness;
+		bp.falloff() = mTerrainPoint.falloff;
 
 		// FIXME Sort out roughness and falloff, and generally verify this code is the same as that in Terrain layer
 		mTerrain.setBasePoint(static_cast<int> (pos.x()), static_cast<int> (pos.y()), bp);
-		mUpdatedBasePoints.push_back(UpdateBasePointStore::value_type(pos, bp));
+		mUpdatedBasePoints.emplace_back(pos, bp);
 		mUpdatedPositions.emplace_back(pos.x() * terrainRes, pos.y() * terrainRes);
 	}
 	mSegmentManager.syncWithTerrain();
 }
 
 bool TerrainUpdateTask::executeTaskInMainThread() {
-	for (const auto& updatedBasePoint : mUpdatedBasePoints) {
+	for (const auto& updatedBasePoint: mUpdatedBasePoints) {
 		mTerrainInfo.setBasePoint(updatedBasePoint.first, updatedBasePoint.second);
 	}
 	mTerrainHandler.EventWorldSizeChanged.emit();

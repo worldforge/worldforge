@@ -18,7 +18,7 @@
 
 #include "EntityExporter.h"
 
-#include "LoggingInstance.h"
+#include "Log.h"
 #include "TimeHelper.h"
 
 #include <Atlas/MultiLineListFormatter.h>

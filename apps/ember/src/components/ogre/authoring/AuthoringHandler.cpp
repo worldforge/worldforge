@@ -22,11 +22,15 @@
 #include "components/ogre/World.h"
 #include "components/ogre/Scene.h"
 #include "domain/EmberEntity.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <Eris/View.h>
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
+#include <fmt/ostream.h>
 #include <sigc++/bind.h>
+
+template <> struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {};
+template <> struct fmt::formatter<Eris::Entity> : ostream_formatter {};
 
 namespace Ember::OgreView::Authoring {
 
@@ -72,7 +76,7 @@ void AuthoringHandler::createVisualizationForEntity(EmberEntity* entity) {
 			if (parentVisIterator != mVisualizations.end()) {
 				parentNode = parentVisIterator->second->getSceneNode();
 			} else {
-				S_LOG_WARNING("Could not find parent visualization for entity. " << *entity);
+				logger->warn("Could not find parent visualization for entity. {}", *entity);
 				parentNode = mWorld.getScene().getSceneManager().getRootSceneNode();
 			}
 		} else {
@@ -82,7 +86,7 @@ void AuthoringHandler::createVisualizationForEntity(EmberEntity* entity) {
 		Ogre::SceneNode* sceneNode = parentNode->createChildSceneNode();
 		mVisualizations.emplace(entity, std::make_unique<AuthoringVisualization>(*entity, sceneNode));
 	} else {
-		S_LOG_WARNING("Got create signal for entity which already has an authoring visualization. This should not happen. " << *entity);
+		logger->warn("Got create signal for entity which already has an authoring visualization. This should not happen. {}", *entity);
 	}
 
 }
@@ -98,7 +102,7 @@ void AuthoringHandler::view_EntityDeleted(Eris::Entity* entity) {
 		}
 		mVisualizations.erase(I);
 	} else {
-		S_LOG_WARNING("Got delete signal for entity which doesn't has an authoring visualization. This should not happen. " << *entity);
+		logger->warn("Got delete signal for entity which doesn't has an authoring visualization. This should not happen. {}", *entity);
 	}
 }
 

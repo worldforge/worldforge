@@ -49,9 +49,9 @@ WidgetPluginCallback ContainerWidget::registerWidget(GUIManager& guiManager) {
 				auto widget = std::make_unique<Gui::ContainerWidget>(guiManager, dynamic_cast<EmberEntity&>(entity));
 				state->containerWidgets.emplace(entity.getId(), std::move(widget));
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Could not create container widget." << ex);
+				logger->error("Could not create container widget: {}", ex.what());
 			} catch (...) {
-				S_LOG_FAILURE("Could not create container widget.");
+				logger->error("Could not create container widget.");
 			}
 		};
 

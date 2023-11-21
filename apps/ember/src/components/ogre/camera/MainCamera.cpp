@@ -112,7 +112,7 @@ void MainCamera::Config_ClipDistances(const std::string& /*section*/, const std:
 		float nearDistance = std::stof(tokeniser.nextToken());
 		float farDistance = std::stof(tokeniser.nextToken());
 
-		S_LOG_INFO("Setting main camera clip distances to near: " << nearDistance << " far: " << farDistance);
+		logger->info("Setting main camera clip distances to near: {} far: {}",nearDistance, farDistance);
 
 		mScene.getMainCamera().setNearClipDistance(nearDistance);
 
@@ -347,9 +347,9 @@ void MainCamera::Input_MouseMoved(const MouseMotion& motion, Input::InputMode mo
 
 void MainCamera::enableCompositor(const std::string& compositorName, bool enable) {
 	if (enable) {
-		S_LOG_INFO("Enabling compositor '" << compositorName << "'.");
+		logger->info("Enabling compositor '{}'.", compositorName);
 	} else {
-		S_LOG_INFO("Disabling compositor '" << compositorName << "'.");
+		logger->info("Disabling compositor '{}'.", compositorName);
 	}
 	if (std::find(mLoadedCompositors.begin(), mLoadedCompositors.end(), compositorName) == mLoadedCompositors.end()) {
 		Ogre::CompositorInstance* compositor = Ogre::CompositorManager::getSingleton().addCompositor(mWindow.getViewport(0), compositorName);
@@ -368,7 +368,7 @@ void MainCamera::enableCompositor(const std::string& compositorName, bool enable
 				}
 			}
 			if (hasErrors) {
-				S_LOG_FAILURE("Compositor " << compositorName << " has errors and will be disabled.");
+				logger->error("Compositor {} has errors and will be disabled.", compositorName);
 				Ogre::CompositorManager::getSingleton().removeCompositor(mWindow.getViewport(0), compositorName);
 			} else {
 				compositor->setEnabled(true);

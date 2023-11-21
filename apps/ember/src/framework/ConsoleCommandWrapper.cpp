@@ -22,7 +22,7 @@
 //
 #include "ConsoleCommandWrapper.h"
 #include "ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <utility>
 
 namespace Ember {
@@ -41,7 +41,7 @@ ConsoleCommandWrapper::ConsoleCommandWrapper(std::string command, ConsoleObject*
 			ConsoleBackend::getSingletonPtr()->registerCommand(mInverseCommand, object, std::string("Releases the command ") + mCommand, suppressLogging);
 		}
 	} else {
-		S_LOG_WARNING("Could not register command " << mCommand << " since there was no console backend.");
+		logger->warn("Could not register command {} since there was no console backend.", mCommand);
 	}
 }
 

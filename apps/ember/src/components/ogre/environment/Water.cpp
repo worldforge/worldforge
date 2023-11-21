@@ -228,7 +228,7 @@ bool Water::initialize() {
 		mWaterNode->attachObject(mWaterEntity);
 		return true;
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating water." << ex);
+		logger->error("Error when creating water: {}", ex.what());
 		return false;
 	}
 

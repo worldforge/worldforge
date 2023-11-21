@@ -34,10 +34,7 @@
 #define TIME_FIXED_MONTH 11
 #define TIME_FIXED_DAY 14
 
-namespace Ember {
-namespace OgreView {
-
-namespace Environment {
+namespace Ember::OgreView::Environment {
 
 CaelumEnvironment::CaelumEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera, Eris::Calendar& calendar) :
 		SetCaelumTime("set_caelumtime", this, "Sets the caelum time. parameters: <hour> <minute>"),
@@ -60,7 +57,7 @@ void CaelumEnvironment::createFirmament() {
 	try {
 		setupCaelum(mSceneMgr, mWindow, mCamera);
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Could not load Caelum." << ex);
+		logger->error("Could not load Caelum: {}", ex.what());
 		throw;
 	}
 }
@@ -116,7 +113,7 @@ void CaelumEnvironment::setupWater() {
 		}
 		mWater = std::move(water);
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Could not load water." << ex);
+		logger->error("Could not load water: {}", ex.what());
 	}
 }
 
@@ -129,33 +126,33 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 	try {
 		mCaelumSystem->setSkyDome(new Caelum::SkyDome(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
 	} catch (const Caelum::UnsupportedException& ex) {
-		S_LOG_WARNING("Error when creating Caelum sky dome." << ex);
+		logger->warn("Error when creating Caelum sky dome: {}", ex.what());
 	}
 	try {
 		mCaelumSystem->setSun(new Caelum::SpriteSun(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
 		mSun = std::make_unique<CaelumSun>(*this, mCaelumSystem->getSun());
 	} catch (const Caelum::UnsupportedException& ex) {
 		//TODO: use a simple sun object
-		S_LOG_WARNING("Error when creating Caelum sun." << ex);
+		logger->warn("Error when creating Caelum sun: {}", ex.what());
 	}
 	try {
 		mCaelumSystem->setMoon(new Caelum::Moon(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
 	} catch (const Caelum::UnsupportedException& ex) {
-		S_LOG_WARNING("Error when creating Caelum moon." << ex);
+		logger->warn("Error when creating Caelum moon: {}", ex.what());
 	}
 	try {
 		mCaelumSystem->setCloudSystem(new Caelum::CloudSystem(mSceneMgr, mCaelumSystem->getCaelumGroundNode()));
 	} catch (const Caelum::UnsupportedException& ex) {
-		S_LOG_WARNING("Error when creating Caelum clouds." << ex);
+		logger->warn("Error when creating Caelum clouds: {}", ex.what());
 	}
 	try {
 		mCaelumSystem->setPointStarfield(new Caelum::PointStarfield(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
 	} catch (const Caelum::UnsupportedException& ex) {
-		S_LOG_WARNING("Error when creating Caelum point star field." << ex);
+		logger->warn("Error when creating Caelum point star field: {}", ex.what());
 		try {
 			mCaelumSystem->setImageStarfield(new Caelum::ImageStarfield(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
 		} catch (const Caelum::UnsupportedException& ex) {
-			S_LOG_WARNING("Error when creating Caelum image star field." << ex);
+			logger->warn("Error when creating Caelum image star field: {}", ex.what());
 		}
 	}
 
@@ -180,7 +177,7 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 	if (currentServerTime.valid()) {
 		mCaelumSystem->getUniversalClock()->setGregorianDateTime(TIME_FIXED_YEAR, TIME_FIXED_MONTH, TIME_FIXED_DAY, currentServerTime.hours(), currentServerTime.minutes(), currentServerTime.seconds());
 	} else {
-		S_LOG_WARNING("Could not get server time, using local time for environment.");
+		logger->warn("Could not get server time, using local time for environment.");
 		int year, month, day, hour, minute, second;
 		Ember::TimeHelper::getLocalTime(year, month, day, hour, minute, second);
 		mCaelumSystem->getUniversalClock()->setGregorianDateTime(TIME_FIXED_YEAR, TIME_FIXED_MONTH, TIME_FIXED_DAY, hour, minute, second);
@@ -280,5 +277,5 @@ void CaelumEnvironment::runCommand(const std::string& command, const std::string
 
 }
 
-}
-}
+
+

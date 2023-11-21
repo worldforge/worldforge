@@ -27,9 +27,7 @@
 #include <OgreTechnique.h>
 #include <OgreMaterialManager.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+namespace Ember::OgreView::Authoring {
 MaterialEditor::MaterialEditor() :
 		AlterMaterial("alter_material", this, "Alters a material. Usage: <material name> <technique index> <pass index> [<tecture unit index>] <property> <value>") {
 }
@@ -86,13 +84,13 @@ void MaterialEditor::runCommand(const std::string& command, const std::string& a
 				}
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when altering material." << ex);
+			logger->warn("Error when altering material: ", ex.what());
 		} catch (...) {
-			S_LOG_WARNING("Error when altering material.");
+			logger->warn("Error when altering material.");
 		}
 	}
 }
 
 }
-}
-}
+
+

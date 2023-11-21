@@ -59,12 +59,12 @@ const CEGUI::Image* EntityCEGUITexture::getImage() const {
 
 void EntityCEGUITexture::createImage(const std::string& imageSetName) {
 	//create a CEGUI texture from our Ogre texture
-	S_LOG_VERBOSE("Creating new CEGUI texture from Ogre texture.");
+	logger->debug("Creating new CEGUI texture from Ogre texture.");
 	Ogre::TexturePtr texturePtr(mRenderContext->getTexture());
 	mCeguiTexture = &GUIManager::getSingleton().createTexture(texturePtr);
 
 //	//we need a imageset in order to create GUI elements from the ceguiTexture
-//	S_LOG_VERBOSE("Creating new CEGUI imageset with name " << imageSetName + "_EntityCEGUITextureImageset");
+//	logger->debug("Creating new CEGUI imageset with name " << imageSetName + "_EntityCEGUITextureImageset");
 	mImage = &CEGUI::ImageManager::getSingleton().create("BasicImage", imageSetName + "_EntityCEGUITextureImageset");
 	auto* basicImage = static_cast<CEGUI::BasicImage*>(mImage);
 	basicImage->setTexture(mCeguiTexture);

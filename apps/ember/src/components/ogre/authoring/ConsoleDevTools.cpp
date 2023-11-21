@@ -289,13 +289,13 @@ void ConsoleDevTools::performBenchmark() {
 							totalDuration += entry;
 							auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(entry).count();
 							std::string message = "FPS: " + std::to_string(60 / (microseconds / 1000000.0));
-							S_LOG_INFO(message);
+							logger->info(message);
 							ConsoleBackend::getSingleton().pushMessage(message);
 						}
 
 						auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(totalDuration).count();
 						std::string message = "Total FPS: " + std::to_string((float) (60 * results.size()) / (microseconds / 1000000.0));
-						S_LOG_INFO(message);
+						logger->info(message);
 						ConsoleBackend::getSingleton().pushMessage(message);
 
 					} else {

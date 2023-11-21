@@ -46,7 +46,7 @@ Foliage::Foliage(Terrain::TerrainManager& terrainManager) :
 }
 
 Foliage::~Foliage() {
-	S_LOG_INFO("Shutting down foliage system.");
+	logger->info("Shutting down foliage system.");
 
 	Ogre::Root::getSingleton().removeFrameListener(this);
 }
@@ -65,7 +65,7 @@ void Foliage::initializeLayer(const TerrainLayer& terrainLayer) {
 				mFoliages.emplace_back(std::move(foliageBase));
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when creating foliage." << ex);
+			logger->error("Error when creating foliage: {}", ex.what());
 		}
 	}
 }
@@ -95,7 +95,7 @@ bool Foliage::frameStarted(const Ogre::FrameEvent&) {
 		try {
 			(*I)->frameStarted();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when updating foliage. Will disable this layer." << ex);
+			logger->error("Error when updating foliage. Will disable this layer: {}", ex.what());
 			I = mFoliages.erase(I);
 		}
 	}

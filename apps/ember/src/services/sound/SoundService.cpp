@@ -20,7 +20,7 @@
 #include "SoundService.h"
 
 #include "services/config/ConfigService.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include "SoundSample.h"
 #include "SoundInstance.h"
@@ -34,15 +34,15 @@ SoundService::SoundService(ConfigService& configService)
 		: Service("Sound")
 		, mContext(nullptr), mDevice(nullptr), mResourceProvider(nullptr)
 		, mEnabled(false) {
-	S_LOG_INFO("Sound Service starting");
+	logger->info("Sound Service starting");
 
 	if (configService.hasItem("audio", "enabled")
 		&& !static_cast<bool>(configService.getValue("audio", "enabled"))) {
-		S_LOG_INFO("Sound disabled.");
+		logger->info("Sound disabled.");
 	} else {
 
 		if (isEnabled()) {
-			S_LOG_FAILURE("Can't start the sound system if it's already started.");
+			logger->error("Can't start the sound system if it's already started.");
 		} else {
 
 			mDevice = alcOpenDevice(nullptr);
@@ -63,13 +63,13 @@ SoundService::SoundService(ConfigService& configService)
 
 			if (!mDevice) {
 				mEnabled = false;
-				S_LOG_FAILURE("Sound Service failed to start, sound device not found");
+				logger->error("Sound Service failed to start, sound device not found");
 			} else {
 
 				mContext = alcCreateContext(mDevice, nullptr);
 				if (!mContext) {
 					mEnabled = false;
-					S_LOG_FAILURE("Sound Service failed to start, sound device not found");
+					logger->error("Sound Service failed to start, sound device not found");
 				} else {
 					mEnabled = alcMakeContextCurrent(mContext) == ALC_TRUE;
 				}
@@ -83,7 +83,7 @@ SoundService::SoundService(ConfigService& configService)
 
 SoundService::~SoundService() {
 	if (!mInstances.empty()) {
-		S_LOG_WARNING("Found a still registered SoundInstance when shutting down sound service. This shouldn't normally happen, since all instances should be handled by their proper owners and removed well in advance of the SoundService shutting down. We'll now delete the instance, which might lead to a segfault or similar problem as the instance owner might still expect it to be existing.");
+		logger->warn("Found a still registered SoundInstance when shutting down sound service. This shouldn't normally happen, since all instances should be handled by their proper owners and removed well in advance of the SoundService shutting down. We'll now delete the instance, which might lead to a segfault or similar problem as the instance owner might still expect it to be existing.");
 	}
 	mInstances.clear();
 

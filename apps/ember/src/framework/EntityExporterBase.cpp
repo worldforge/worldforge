@@ -18,7 +18,7 @@
 
 #include "EntityExporterBase.h"
 
-#include "LoggingInstance.h"
+#include "Log.h"
 
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/QueuedDecoder.h>
@@ -149,7 +149,7 @@ void EntityExporterBase::dumpMind(const std::string& entityId, const Operation &
 		entityMap["thoughts"] = thoughts;
 		mMinds.emplace_back(entityMap);
 	} else {
-		S_LOG_VERBOSE("Got commune response without any thoughts for entity " << entityId <<".");
+		Ember::logger->debug("Got commune response without any thoughts for entity {}.", entityId);
 	}
 }
 
@@ -158,7 +158,7 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 
 	auto I = mThoughtsOutstanding.find(op->getRefno());
 	if (I == mThoughtsOutstanding.end()) {
-		S_LOG_WARNING("Got unrecognized thought info.");
+		Ember::logger->warn("Got unrecognized thought info.");
 		return;
 	}
 	const std::string entityId = I->second;
@@ -170,7 +170,7 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 	//very carefully.
 
 	if (op->getClassNo() == Atlas::Objects::Operation::ROOT_OPERATION_NO) {
-		S_LOG_VERBOSE("Got time out when requesting thoughts for entity " << entityId << ".");
+		Ember::logger->debug("Got time out when requesting thoughts for entity {}.", entityId);
 		//An empty root operation signals a timeout; we never got any answer from the entity.
 		mStats.mindsError++;
 		EventProgress.emit();
@@ -180,14 +180,14 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 	//Since we'll just be iterating over the args we only need to do an extra check that what we got is a
 	//"think" operation.
 	if (op->getParent() != "think") {
-		S_LOG_WARNING("Got think operation with wrong type set for entity " << entityId << ".");
+		Ember::logger->warn("Got think operation with wrong type set for entity {}.", entityId);
 		mStats.mindsError++;
 		EventProgress.emit();
 		return;
 	}
 
 	if (op->getArgs().empty()) {
-		S_LOG_WARNING("Got think operation with no inner args operations for entity " << entityId << ".");
+		Ember::logger->warn("Got think operation with no inner args operations for entity {}.", entityId);
 		mStats.mindsError++;
 		EventProgress.emit();
 		return;
@@ -196,7 +196,7 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 	auto setOp = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Operation::Set>(op->getArgs().front());
 
 	if (!setOp.isValid()) {
-		S_LOG_WARNING("Got think operation with no inner Set operation for entity " << entityId << ".");
+		Ember::logger->warn("Got think operation with no inner Set operation for entity {}.", entityId);
 		mStats.mindsError++;
 		EventProgress.emit();
 		return;
@@ -204,7 +204,7 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 
 	dumpMind(entityId, setOp);
 	mStats.mindsReceived++;
-	S_LOG_VERBOSE("Got commune result for entity " << entityId << ". " << mThoughtsOutstanding.size() << " thoughts requests waiting for response.");
+	Ember::logger->debug("Got commune result for entity {}. {} thoughts requests waiting for response.", entityId, mThoughtsOutstanding.size());
 	EventProgress.emit();
 
 }
@@ -233,7 +233,7 @@ void EntityExporterBase::pollQueue()
 
 		sigc::slot<void(const Operation&)> slot = sigc::mem_fun(*this, &EntityExporterBase::operationGetResult);
 		sendAndAwaitResponse(get, slot);
-		S_LOG_VERBOSE("Requesting info about entity with id " << get_arg->getId());
+		Ember::logger->debug("Requesting info about entity with id {}", get_arg->getId());
 
 		mOutstandingGetRequestCounter++;
 
@@ -253,12 +253,12 @@ void EntityExporterBase::infoArrived(const Operation & op)
 	}
 	auto ent = smart_dynamic_cast<RootEntity>(args.front());
 	if (!ent.isValid()) {
-		S_LOG_WARNING("Malformed OURS when dumping.");
+		Ember::logger->warn("Malformed OURS when dumping.");
 		mStats.entitiesError++;
 		EventProgress.emit();
 		return;
 	}
-	S_LOG_VERBOSE("Got info when dumping about entity " << ent->getId() << ". Outstanding requests: " << mOutstandingGetRequestCounter);
+	Ember::logger->debug("Got info when dumping about entity {}. Outstanding requests: {}", ent->getId(), mOutstandingGetRequestCounter);
 	mStats.entitiesReceived++;
 	EventProgress.emit();
 	//If the entity is transient and we've been told not to export transient ones, we should skip this one (and all of its children).
@@ -342,7 +342,7 @@ void EntityExporterBase::requestThoughts(const std::string& entityId, const std:
 	sigc::slot<void(const Operation&)> slot = sigc::mem_fun(*this, &EntityExporterBase::operationGetThoughtResult);
 	sendAndAwaitResponse(think, slot);
 	mThoughtsOutstanding.insert(std::make_pair(think->getSerialno(), persistedId));
-	S_LOG_VERBOSE("Sending request for thoughts for entity with id " << entityId << " (local id " << persistedId << ").");
+	Ember::logger->debug("Sending request for thoughts for entity with id {} (local id {}).", entityId, persistedId);
 	mStats.mindsQueried++;
 }
 
@@ -365,7 +365,7 @@ void EntityExporterBase::requestRule(const std::string& rule)
 
 void EntityExporterBase::adjustReferencedEntities()
 {
-	S_LOG_VERBOSE("Adjusting referenced entity ids.");
+	Ember::logger->debug("Adjusting referenced entity ids.");
 	if (!mPreserveIds) {
 		for (auto& mind : mMinds) {
 			//We know that mMinds only contain maps, and that there's always a "thoughts" list
@@ -547,17 +547,20 @@ void EntityExporterBase::complete()
 
 	mComplete = true;
 	EventCompleted.emit();
-	S_LOG_INFO("Completed exporting " << mStats.entitiesReceived << " entities," << mStats.mindsReceived << " minds and " << mStats.rulesReceived << " rules.");
+	Ember::logger->info("Completed exporting {} entities, {} minds and {} rules.",
+						mStats.entitiesReceived,
+						mStats.mindsReceived,
+						mStats.rulesReceived);
 }
 
 void EntityExporterBase::start(const std::string& filename, const std::string& entityId)
 {
 	if (mComplete || mCancelled) {
-		S_LOG_FAILURE("Can not restart an already completed or cancelled export instance.");
+		Ember::logger->error("Can not restart an already completed or cancelled export instance.");
 		return;
 	}
 
-	S_LOG_INFO("Starting entity dump to file '" << filename << "'.");
+	Ember::logger->info("Starting entity dump to file '{}'.", filename);
 	mFilename = filename;
 	mRootEntityId = entityId;
 
@@ -611,8 +614,8 @@ void EntityExporterBase::operationGetResult(const Operation & op)
 					}
 				}
 			}
-			S_LOG_WARNING("Got unexpected response on a GET request with operation of type " << op->getParent());
-			S_LOG_WARNING("Error message: " << errorMessage);
+			Ember::logger->warn("Got unexpected response on a GET request with operation of type {}", op->getParent());
+			Ember::logger->warn("Error message: {}", errorMessage);
 			mStats.entitiesError++;
 			EventProgress.emit();
 		}
@@ -631,7 +634,7 @@ void EntityExporterBase::operationGetRuleResult(const Operation & op)
 {
 	if (!mCancelled) {
 		if (op->getArgs().empty()) {
-			S_LOG_WARNING("Got response to GET for rule with no args.");
+			Ember::logger->warn("Got response to GET for rule with no args.");
 			mStats.rulesError++;
 			cancel();
 			return;
@@ -639,7 +642,7 @@ void EntityExporterBase::operationGetRuleResult(const Operation & op)
 
 		Root ent = smart_dynamic_cast<Root>(op->getArgs().front());
 		if (!ent.isValid()) {
-			S_LOG_WARNING("Malformed rule arg when dumping.");
+			Ember::logger->warn("Malformed rule arg when dumping.");
 			mStats.rulesError++;
 			cancel();
 			return;
@@ -655,7 +658,7 @@ void EntityExporterBase::operationGetRuleResult(const Operation & op)
 						if (childElem.isString()) {
 							children.push_back(childElem.asString());
 						} else {
-							S_LOG_WARNING("Child was not a string.");
+							Ember::logger->warn("Child was not a string.");
 						}
 					}
 				}

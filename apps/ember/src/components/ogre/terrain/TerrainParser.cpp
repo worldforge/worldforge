@@ -19,7 +19,7 @@
 
 #include "components/ogre/terrain/TerrainDefPoint.h"
 #include "components/ogre/Convert.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Mercator/BasePoint.h>
 
@@ -36,7 +36,7 @@ TerrainDefPointStore TerrainParser::parseTerrain(const Atlas::Message::MapType& 
 
 	auto parsePointFn = [&](const Atlas::Message::ListType& point) {
 		if (point.size() < 3) {
-			S_LOG_INFO("Point with less than 3 nums.");
+			logger->info("Point with less than 3 nums.");
 			return;
 		}
 
@@ -60,13 +60,13 @@ TerrainDefPointStore TerrainParser::parseTerrain(const Atlas::Message::MapType& 
 
 	for (auto& entry: points) {
 		if (!entry.second.isList()) {
-			S_LOG_INFO("Non list in points.");
+			logger->info("Non list in points.");
 			continue;
 		}
 		try {
 			parsePointFn(entry.second.List());
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when parsing terrain points data." << ex);
+			logger->warn("Error when parsing terrain points data: {}", ex.what());
 		}
 	}
 

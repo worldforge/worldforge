@@ -114,11 +114,11 @@ void Environment::setFirmamentEnabled(bool enabled) {
 			EventEnvironmentSetup.emit();
 		} catch (...) {
 			if (mFallbackProvider) {
-				S_LOG_FAILURE("Error when creating environment, trying with fallback provider.");
+				logger->error("Error when creating environment, trying with fallback provider.");
 				mProvider = std::move(mFallbackProvider);
 				setFirmamentEnabled(enabled);
 			} else {
-				S_LOG_FAILURE("Error when creating environment. There's no fallback provider to use however, so we have to abort.");
+				logger->error("Error when creating environment. There's no fallback provider to use however, so we have to abort.");
 				throw;
 			}
 		}

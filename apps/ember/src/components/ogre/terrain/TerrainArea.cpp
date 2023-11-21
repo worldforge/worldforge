@@ -25,7 +25,7 @@
 
 #include "domain/EmberEntity.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Mercator/Area.h>
 
@@ -40,7 +40,7 @@ TerrainArea::TerrainArea(EmberEntity& entity) :
 
 std::unique_ptr<Mercator::Area> TerrainArea::parse(const Atlas::Message::Element& value) {
 	if (!value.isMap()) {
-		S_LOG_FAILURE("TerrainArea element ('area') must be of map type.");
+		logger->error("TerrainArea element ('area') must be of map type.");
 		return {};
 	}
 

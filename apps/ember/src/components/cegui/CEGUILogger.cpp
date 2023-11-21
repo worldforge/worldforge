@@ -21,11 +21,9 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "CEGUILogger.h"
-#include "framework/LoggingInstance.h"
 #include <CEGUI/Exceptions.h>
 
-namespace Ember {
-namespace Cegui {
+namespace Ember::Cegui {
 
 CEGUILogger::CEGUILogger() {
 	registerConfigListener("cegui", "minimumlogginglevel", sigc::mem_fun(*this, &CEGUILogger::Config_MinimumLogLevel));
@@ -44,16 +42,16 @@ void CEGUILogger::logEvent(const CEGUI::String& message, CEGUI::LoggingLevel lev
 		switch (level) {
 			case CEGUI::Insane:
 			case CEGUI::Informative:
-				LoggingInstance("CEGUI", Log::MessageImportance::VERBOSE) << cegui << message.c_str();
+				logger->debug(message.c_str());
 				break;
 			case CEGUI::Standard:
-				LoggingInstance("CEGUI", Log::MessageImportance::INFO) << cegui << message.c_str();
+				logger->info(message.c_str());
 				break;
 			case CEGUI::Warnings:
-				LoggingInstance("CEGUI", Log::MessageImportance::WARNING) << cegui << message.c_str();
+				logger->warn(message.c_str());
 				break;
 			case CEGUI::Errors:
-				LoggingInstance("CEGUI", Log::MessageImportance::FAILURE) << cegui << message.c_str();
+				logger->error(message.c_str());
 				break;
 		}
 	}
@@ -63,7 +61,7 @@ void CEGUILogger::logEvent(const CEGUI::String& message, CEGUI::LoggingLevel lev
 void CEGUILogger::Config_MinimumLogLevel(const std::string& section, const std::string& /*key */, varconf::Variable& variable) {
 	std::string newLogLevel(variable);
 
-	S_LOG_INFO("Setting CEGUI logging level to '" << newLogLevel << "'.");
+	logger->info("Setting CEGUI logging level to '{}'.", newLogLevel);
 
 	if (newLogLevel == "insane") {
 		d_level = CEGUI::Insane;
@@ -79,4 +77,4 @@ void CEGUILogger::Config_MinimumLogLevel(const std::string& section, const std::
 }
 
 }
-}
+

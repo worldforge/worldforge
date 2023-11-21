@@ -22,7 +22,7 @@
 
 #include "services/config/ConfigService.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 
 #include <OgreRoot.h>
@@ -38,13 +38,13 @@ Scene::Scene() :
 		//create the main camera, we will of course have a couple of different cameras, but this will be the main one
 		mMainCamera(mSceneManager->createCamera("MainCamera")),
 		mBulletWorld(std::make_unique<BulletWorld>()) {
-	S_LOG_INFO("Using SceneManager: " << mSceneManager->getTypeName());
+	logger->info("Using SceneManager: {}", mSceneManager->getTypeName());
 
 }
 
 Scene::~Scene() {
 	if (!mTechniques.empty()) {
-		S_LOG_WARNING("Scene was deleted while there still was registered techniques.");
+		logger->warn("Scene was deleted while there still was registered techniques.");
 	}
 	//Delete all techniques before destroying the scene manager.
 	mTechniques.clear();
@@ -92,7 +92,7 @@ std::unique_ptr<Terrain::ITerrainAdapter> Scene::createTerrainAdapter() {
 	int pageSize = static_cast<int>(configService.getValue("terrain", "pagesize"));
 
 	if (pageSize <= 0) {
-		S_LOG_WARNING("Page size (\"terrain:pageSize\") config option set to invalid value of " << pageSize << " ; setting it to 512");
+		logger->warn("Page size (\"terrain:pageSize\") config option set to invalid value of {} ; setting it to 512", pageSize);
 		pageSize = 512;
 	}
 

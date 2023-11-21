@@ -28,6 +28,8 @@ using Atlas::Objects::smart_dynamic_cast;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 
+template <> struct fmt::formatter<Atlas::Objects::Operation::Imaginary> : ostream_formatter {};
+
 namespace Eris {
 
 class OOGRouter : public Router
@@ -141,7 +143,7 @@ Lobby::~Lobby()
 void Lobby::look(const std::string &id)
 {
     if (!m_account.isLoggedIn()) {
-        error() << "Lobby trying look while not logged in";
+        logger->error("Lobby trying look while not logged in");
         return;
     }
 
@@ -166,7 +168,7 @@ Room* Lobby::join(const std::string& roomId)
 {
     if (!m_account.isLoggedIn())
     {
-        error() << "Lobby trying join while not logged in";
+        logger->error("Lobby trying join while not logged in");
         return nullptr;
     }
 
@@ -211,7 +213,7 @@ Room* Lobby::getRoom(const std::string &id)
 {
     auto R = m_rooms.find(id);
     if (R == m_rooms.end()) {
-        error() << "called getRoom with unknown ID " << id;
+        logger->error("called getRoom with unknown ID {}", id);
         return nullptr;
     }
 
@@ -223,7 +225,7 @@ void Lobby::sightPerson(const AtlasAccount &ac)
 	if (!ac->isDefaultId()) {
 		auto P = m_people.find(ac->getId());
 		if (P == m_people.end()) {
-			error() << "got un-requested sight of person " << ac->getId();
+			logger->error("got un-requested sight of person {}", ac->getId());
 			return;
 		}
 
@@ -280,7 +282,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
     auto P = m_people.find(tk->getFrom());
     if ((P == m_people.end()) || (P->second == nullptr)) {
         getPerson(tk->getFrom()); // force a LOOK if necessary
-        debug() << "creating sight-person-redispatch for " << tk->getFrom();
+        logger->debug("creating sight-person-redispatch for {}", tk->getFrom());
 
         Sight sight;
         sight->setArgs1(tk);
@@ -294,13 +296,13 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
 
     const std::vector<Root>& args = tk->getArgs();
     if (args.empty()) {
-        error() << "received sound(talk) with no args";
+        logger->error("received sound(talk) with no args");
         return HANDLED;
     }
 
     for (const auto& arg : args) {
 		if (!args.front()->hasAttr("say")) {
-			error() << "received sound(talk) with bad arg";
+			logger->error("received sound(talk) with bad arg");
 			continue;
 		}
 		std::string speech = arg->getAttr("say").asString();
@@ -312,7 +314,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
 			if (room != m_rooms.end()) {
 				room->second->handleSoundTalk(P->second.get(), speech);
 			} else {
-				warning() << "lobby got sound(talk) with unknown loc: " << loc;
+				logger->warn("lobby got sound(talk) with unknown loc: {}", loc);
 			}
 		} else {
 			// no location, hence assume it's one-to-one chat
@@ -328,7 +330,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
 void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
 {
     if (!obj->hasAttr("loc")) {
-        error() << "lobby got appearance arg without loc: " << obj;
+        logger->error("lobby got appearance arg without loc: {}", obj);
         return;
     }
 
@@ -338,19 +340,19 @@ void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
     if (room != m_rooms.end()) {
         room->second->appearance(obj->getId());
     } else
-        warning() << "lobby got appearance with unknown loc: " << loc;
+        logger->warn("lobby got appearance with unknown loc: {}", loc);
 }
 
 Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 {
     const auto& args = im->getArgs();
 	if (args.empty()) {
-		warning() << "received sight(imaginary) with no args: " << im;
+		logger->warn("received sight(imaginary) with no args: {}", im);
 		return HANDLED;
 	}
     for (const auto& arg : args) {
 		if (arg->hasAttr("description")) {
-			warning() << "received sight(imaginary) with bad args: " << im;
+			logger->warn("received sight(imaginary) with bad args: {}", im);
 			continue;
 		}
 
@@ -362,7 +364,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 		auto P = m_people.find(im->getFrom());
 		if ((P == m_people.end()) || (P->second == nullptr)) {
 			getPerson(im->getFrom()); // force a LOOK if necessary
-			debug() << "creating sight-person-redispatch for " << im->getFrom();
+			logger->debug("creating sight-person-redispatch for {}", im->getFrom());
 
 			Sight sight;
 			sight->setArgs1(im);
@@ -381,10 +383,10 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 			if (room != m_rooms.end()) {
 				room->second->handleEmote(P->second.get(), description);
 			} else {
-				error() << "lobby got sight(imaginary) with unknown loc: " << loc;
+				logger->error("lobby got sight(imaginary) with unknown loc: {}", loc);
 			}
 		} else {
-			warning() << "received imaginary with no loc set:" << im;
+			logger->warn("received imaginary with no loc set: {}", im);
 		}
     }
 
@@ -397,7 +399,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
 {
     if (!obj->hasAttr("loc")) {
-        error() << "lobby got disappearance arg without loc: " << obj;
+        logger->error("lobby got disappearance arg without loc: {}", obj);
         return;
     }
 
@@ -409,7 +411,7 @@ void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
 		if (room != m_rooms.end()) {
 			room->second->disappearance(obj->getId());
 		} else {
-			error() << "lobby got disappearance with unknown loc: " << loc;
+			logger->error("lobby got disappearance with unknown loc: {}", loc);
 		}
     }
 

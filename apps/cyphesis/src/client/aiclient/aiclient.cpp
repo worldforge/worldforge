@@ -160,15 +160,12 @@ STRING_OPTION(password, "", "aiclient", "password", "Password to use to authenti
 
 int main(int argc, char** argv)
 {
-	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [AI] [%l] %v");
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [AI] [%^%l%$] %v");
 
     //Kill ourselves if our parent is killed.
     prctl(PR_SET_PDEATHSIG, SIGTERM);
 
     Monitors monitors;
-
-	//Perhaps tell spdlog to use a prefix?
-    //setLoggingPrefix("AI");
 
     int config_status = loadConfig(argc, argv, USAGE_AICLIENT);
     if (config_status < 0) {

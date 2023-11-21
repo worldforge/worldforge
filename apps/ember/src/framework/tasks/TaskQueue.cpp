@@ -22,17 +22,15 @@
 #include "TaskExecutor.h"
 #include "TaskUnit.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Eris/EventService.h>
 
-namespace Ember {
-
-namespace Tasks {
+namespace Ember::Tasks {
 
 TaskQueue::TaskQueue(unsigned int numberOfExecutors, Eris::EventService& eventService) :
 		mEventService(eventService), mActive(true), mIsQueuedOnMainThread(false) {
-	S_LOG_VERBOSE("Creating task queue with " << numberOfExecutors << " executors.");
+	logger->debug("Creating task queue with {} executors.", numberOfExecutors);
 	for (unsigned int i = 0; i < numberOfExecutors; ++i) {
 		mExecutors.push_back(std::make_unique<TaskExecutor>(*this));
 	}
@@ -73,7 +71,7 @@ bool TaskQueue::enqueueTask(std::unique_ptr<ITask> task, ITaskExecutionListener*
 		mUnprocessedQueueCond.notify_one();
 		return true;
 	} else {
-		S_LOG_WARNING("Tried to enqueue the task " << task->getName() << " on a task queue which isn't active (i.e. is shutting down).");
+		logger->warn("Tried to enqueue the task {} on a task queue which isn't active (i.e. is shutting down).", task->getName());
 		return false;
 	}
 
@@ -128,19 +126,19 @@ void TaskQueue::processCompletedTasks() {
 					std::unique_lock<std::mutex> lock(mProcessedQueueMutex);
 					mProcessedTaskUnits.pop();
 				} catch (const std::exception& ex) {
-					S_LOG_FAILURE("Error when deleting task in main thread." << ex);
+					logger->error("Error when deleting task in main thread: {}", ex.what());
 				} catch (...) {
-					S_LOG_FAILURE("Unknown error when deleting task in main thread.");
+					logger->error("Unknown error when deleting task in main thread.");
 				}
 			}
 
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when executing task in main thread." << ex);
+			logger->error("Error when executing task in main thread: {}", ex.what());
 			//Task is broken; remove it
 			std::unique_lock<std::mutex> lock(mProcessedQueueMutex);
 			mProcessedTaskUnits.pop();
 		} catch (...) {
-			S_LOG_FAILURE("Unknown error when executing task in main thread.");
+			logger->error("Unknown error when executing task in main thread.");
 			//Task is broken; remove it
 			std::unique_lock<std::mutex> lock(mProcessedQueueMutex);
 			mProcessedTaskUnits.pop();
@@ -162,4 +160,4 @@ void TaskQueue::processCompletedTasks() {
 
 }
 
-}
+

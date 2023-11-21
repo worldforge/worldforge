@@ -57,7 +57,7 @@ TerrainPageGeometry::TerrainPageGeometry(std::shared_ptr<Terrain::TerrainPage> p
 	if (count == 0) {
 		std::stringstream ss;
 		ss << "Created TerrainPageGeometry for which there are no valid segments. Pos: " << page->getWFPosition();
-		S_LOG_WARNING(ss.str());
+		logger->warn(ss.str());
 	}
 }
 

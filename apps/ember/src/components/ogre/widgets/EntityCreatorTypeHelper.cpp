@@ -200,7 +200,7 @@ bool EntityCreatorTypeHelper::createButton_Click(const CEGUI::EventArgs& args) {
 					EventCreateFromType(definition);
 				}
 			} catch (const std::exception& ex) {
-				S_LOG_WARNING("Error when trying to create entity from type." << ex);
+				logger->warn("Error when trying to create entity from type: {}", ex.what());
 			}
 		}
 	}

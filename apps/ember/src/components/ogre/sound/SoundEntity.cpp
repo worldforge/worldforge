@@ -88,7 +88,7 @@ const SoundAction* SoundEntity::playMovementSound(const std::string& actionName)
 void SoundEntity::createActions() {
 //		Model::Model* model = mParentEntity.getModel();
 //		if (!model) {
-//			S_LOG_FAILURE("Tried to create actions for a entity which has no model specified.");
+//			logger->error("Tried to create actions for a entity which has no model specified.");
 //			return;
 //		}
 //		const Model::ActionDefinitionsStore& store = model->getDefinition()->getActionDefinitions();

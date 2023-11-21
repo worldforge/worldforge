@@ -19,7 +19,7 @@
 */
 
 #include "ConfigService.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
 #include "framework/Tokeniser.h"
 
@@ -74,7 +74,7 @@ std::string getAppSupportDirPath()
 	FSRef fs;
 	OSErr err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, true, &fs);
 	if (err != noErr) {
-		S_LOG_FAILURE("error doing FindFolder");
+		logger->error("error doing FindFolder");
 		return std::string();
 	}
 
@@ -136,7 +136,7 @@ ConfigService::ConfigService(std::string prefix) :
 		mPluginDir = boost::filesystem::path(mPrefix) / libdirectory / "ember" / "widgets";
 	}
 	xdgInitHandle(&mBaseDirHandle);
-	S_LOG_INFO("Setting config directory to " << mEtcDir.string());
+	logger->info("Setting config directory to '{}'", mEtcDir.string());
 #endif
 	mGlobalConfig.sige.connect(sigc::mem_fun(*this, &ConfigService::configError));
 	mGlobalConfig.sigv.connect(sigc::mem_fun(*this, &ConfigService::updatedConfig));
@@ -251,29 +251,29 @@ bool ConfigService::deleteItem(const std::string& section, const std::string& ke
 
 bool ConfigService::loadSavedConfig(const std::string& filename, const StringConfigMap& commandLineSettings) {
 	auto path = getSharedConfigDirectory() / filename;
-	S_LOG_INFO ("Loading shared config file from " << path.string() << ".");
+	logger->info("Loading shared config file from {}.", path.string());
 	bool success = mGlobalConfig.readFromFile(path.string(), varconf::GLOBAL);
 	auto userConfigPath = getHomeDirectory(BaseDirType_CONFIG) / filename;
 	std::ifstream file(userConfigPath.c_str());
 	if (!file.fail()) {
-		S_LOG_INFO ("Loading user config file from " << userConfigPath.string() << ".");
+		logger->info("Loading user config file from {}.", userConfigPath.string());
 		try {
 			mUserConfig.parseStream(file, varconf::USER);
 		}
 		catch (varconf::ParseError& p) {
-			S_LOG_FAILURE ("Error loading user config file: " << p);
+			logger->error("Error loading user config file: {}", p.what());
 			success = false;
 		}
 	} else {
-		S_LOG_INFO ("Could not find any user config file.");
+		logger->info("Could not find any user config file.");
 	}
 
 	//after loading the config from file, override with command time settings
-	for (auto I = commandLineSettings.begin(); I != commandLineSettings.end(); ++I) {
-		for (auto J = I->second.begin(); J != I->second.end(); ++J) {
-			S_LOG_INFO("Setting command line config option " << I->first << ":" << J->first << " to " << J->second);
-			mCommandLineConfig.setItem(I->first, J->first, J->second);
-			EventChangedConfigItem(I->first, J->first);
+	for (const auto& commandLineSetting: commandLineSettings) {
+		for (auto J = commandLineSetting.second.begin(); J != commandLineSetting.second.end(); ++J) {
+			logger->info("Setting command line config option {}:{} to {}", commandLineSetting.first, J->first, J->second);
+			mCommandLineConfig.setItem(commandLineSetting.first, J->first, J->second);
+			EventChangedConfigItem(commandLineSetting.first, J->first);
 		}
 	}
 	return success;
@@ -287,9 +287,9 @@ bool ConfigService::saveConfig(const boost::filesystem::path& filename, unsigned
 	//First get the instance values (i.e. those values which have been changed at runtime).
 	//But only get those that differs from the global config.
 	const varconf::conf_map& instanceSections = mInstanceConfig.getSections();
-	for (const auto& instanceSection : instanceSections) {
+	for (const auto& instanceSection: instanceSections) {
 		const varconf::sec_map& section = instanceSection.second;
-		for (const auto& J : section) {
+		for (const auto& J: section) {
 			//only set the value if it differs from the global one
 			if (mGlobalConfig.getItem(instanceSection.first, J.first) != J.second) {
 				exportConfig.setItem(instanceSection.first, J.first, J.second, varconf::INSTANCE);
@@ -299,9 +299,9 @@ bool ConfigService::saveConfig(const boost::filesystem::path& filename, unsigned
 
 	//Then also add all user settings, i.e. those that already had been set in the user config file.
 	const varconf::conf_map& userSections = mUserConfig.getSections();
-	for (const auto& userSection : userSections) {
+	for (const auto& userSection: userSections) {
 		const varconf::sec_map& section = userSection.second;
-		for (const auto& J : section) {
+		for (const auto& J: section) {
 			//We can't directly use the value, as it might have been updated in the instance config. We therefore needs to go through getValue
 			exportConfig.setItem(userSection.first, J.first, getValue(userSection.first, J.first), varconf::INSTANCE);
 		}
@@ -316,7 +316,7 @@ void ConfigService::updatedConfig(const std::string& section, const std::string&
 }
 
 void ConfigService::configError(const char* error) {
-	S_LOG_FAILURE (std::string ( error ));
+	logger->error(error);
 }
 
 boost::filesystem::path ConfigService::getHomeDirectory(BaseDirType baseDirType) const {
@@ -392,7 +392,7 @@ boost::filesystem::path ConfigService::getSharedConfigDirectory() const {
 
 boost::filesystem::path ConfigService::getEmberDataDirectory() const {
 	if (hasItem("paths", "datadir")) {
-		return boost::filesystem::path(static_cast<std::string> ( getValue("paths", "datadir")));
+		return {static_cast<std::string> ( getValue("paths", "datadir"))};
 	}
 //#ifdef __APPLE__
 //			return getBundleResourceDirPath();

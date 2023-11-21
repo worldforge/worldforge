@@ -62,7 +62,7 @@
 #include "domain/IHeightProvider.h"
 #include "domain/EmberEntity.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/Exception.h"
 
 #include <Eris/View.h>
@@ -80,8 +80,8 @@
 #define MAX_PATHPOLY      256 // max number of polygons in a path
 #define MAX_PATHVERT      512 // most verts in a path
 #define MAX_OBSTACLES_CIRCLES 4 // max number of circle obstacles to consider when doing avoidance
-namespace Ember {
-namespace Navigation {
+
+namespace Ember::Navigation {
 
 // This value specifies how many layers (or "floors") each navmesh tile is expected to have.
 static const int EXPECTED_LAYERS_PER_TILE = 1;
@@ -124,11 +124,11 @@ class AwarenessContext : public rcContext {
 protected:
 	void doLog(const rcLogCategory category, const char* msg, const int len) override {
 		if (category == RC_LOG_PROGRESS) {
-			S_LOG_VERBOSE("Recast: " << msg);
+			logger->debug("Recast: {}", msg);
 		} else if (category == RC_LOG_WARNING) {
-			S_LOG_WARNING("Recast: " << msg);
+			logger->warn("Recast: {}", msg);
 		} else {
-			S_LOG_FAILURE("Recast: " << msg);
+			logger->error("Recast: {}",msg);
 		}
 	}
 
@@ -1131,4 +1131,4 @@ void Awareness::processTiles(std::vector<const dtCompressedTile*> tiles, const s
 }
 
 }
-}
+

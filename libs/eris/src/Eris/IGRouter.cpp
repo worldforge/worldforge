@@ -48,7 +48,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     if (op->getClassNo() == SIGHT_NO) {
         if (args.empty()) {
-            warning() << "Avatar received sight with empty args";
+            logger->warn("Avatar received sight with empty args");
             return IGNORED;
         }
 
@@ -107,7 +107,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     if (op->getClassNo() == UNSEEN_NO)
     {
         if (args.empty()) {
-            warning() << "Avatar received unseen with empty args";
+            logger->warn("Avatar received unseen with empty args");
             return IGNORED;
         }
 		for (const auto& arg : args) {
@@ -120,7 +120,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     // logout
     if (op->getClassNo() == LOGOUT_NO) {
-        debug() << "Avatar received forced logout from server";
+        logger->debug("Avatar received forced logout from server");
 
         if(args.size() >= 2) {
             bool gotArgs = true;
@@ -132,23 +132,19 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             Element pentity_id_attr;
             if(arg->copyAttr("teleport_host", tp_host_attr) != 0
                     || !tp_host_attr.isString()) {
-                debug() << "No teleport host specified. Doing normal logout."
-                        << std::endl;
+                logger->debug("No teleport host specified. Doing normal logout.");
                 gotArgs = false;
             } else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
                     || !tp_port_attr.isInt()) {
-                debug() << "No teleport port specified. Doing normal logout."
-                        << std::endl;
+                logger->debug("No teleport port specified. Doing normal logout.");
                 gotArgs = false;
             } else if (arg->copyAttr("possess_key", pkey_attr) != 0
                     || !pkey_attr.isString()) {
-                debug() << "No possess key specified. Doing normal logout."
-                        << std::endl;
+                logger->debug("No possess key specified. Doing normal logout.");
                 gotArgs = false;
             } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
                     || !pentity_id_attr.isString()) {
-                debug() << "No entity ID specified. Doing normal logout."
-                        << std::endl;
+                logger->debug("No entity ID specified. Doing normal logout.");
                 gotArgs = false;
             }
 
@@ -159,10 +155,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
                 int teleport_port = static_cast<int>(tp_port_attr.Int());
                 std::string possess_key = pkey_attr.String();
                 std::string possess_entity_id = pentity_id_attr.String();
-                debug() << "Server transfer data: Host: " << teleport_host
-                    << ", Port: " << teleport_port << ", "
-                    << "Key: " << possess_key << ", "
-                    << "ID: " << possess_entity_id << std::endl;
+                logger->debug("Server transfer data: Host: {}, Port: {}, Key: {}, ID: {}", teleport_host, teleport_port, possess_key, possess_entity_id);
                 // Now do a transfer request
                 TransferInfo transfer(teleport_host, teleport_port, possess_key
                         , possess_entity_id);
@@ -240,14 +233,14 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 					ent->onHit(smart_dynamic_cast<Hit>(op), *ty);
 				}
 			} else {
-				warning() << "received hit with TO unset";
+				logger->warn("received hit with TO unset");
 			}
 		}
 
 
 		if (ty->isA(m_actionType)) {
 			if (op->isDefaultFrom()) {
-				warning() << "received op " << ty->getName() << " with FROM unset";
+				logger->warn("received op {} with FROM unset", ty->getName());
 				return HANDLED;
 			}
 

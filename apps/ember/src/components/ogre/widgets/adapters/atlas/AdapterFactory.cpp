@@ -59,18 +59,18 @@ AdapterFactory::~AdapterFactory() = default;
 template<typename TAdapter>
 TAdapter* AdapterFactory::createAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	if (!container) {
-		S_LOG_FAILURE("No container sent to adapter factory.");
+		logger->error("No container sent to adapter factory.");
 		return nullptr;
 	}
 	if (!verifyCorrectType<TAdapter>(element)) {
-		S_LOG_FAILURE("Type is not correct for adapter.");
+		logger->error("Type is not correct for adapter.");
 		return nullptr;
 	}
 
 	try {
 		return loadWindowIntoAdapter<TAdapter>(container, adapterPrefix, element, entity);
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when loading adapter." << ex);
+		logger->error("Error when loading adapter: {}", ex.what());
 		return nullptr;
 	}
 }
@@ -441,7 +441,7 @@ CEGUI::Window* AdapterFactory::loadLayoutIntoContainer(CEGUI::Window* container,
 		}
 	}
 	if (!window) {
-		S_LOG_FAILURE("Failed to create a new window from the layout in " << layoutfile << ".");
+		logger->error("Failed to create a new window from the layout in {}.", layoutfile);
 		return nullptr;
 	}
 	if (container) {

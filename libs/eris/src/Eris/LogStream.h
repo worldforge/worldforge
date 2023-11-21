@@ -4,75 +4,26 @@
 #include "Log.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Message/Element.h>
 
-#include <sstream>
+#include <fmt/ostream.h>
 
 namespace Atlas::Message {
         class Element;
-    }
+}
 
-namespace Eris
-{
+template <> struct fmt::formatter<Atlas::Objects::Root> : ostream_formatter {};
+template <> struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {};
+template <> struct fmt::formatter<Atlas::Message::Element> : ostream_formatter {};
 
-void doLog(LogLevel lvl, const std::string& msg);
-
-class logStreamBase
-{
-public:
-    std::ostream& operator<<(const std::string& s)
-    {
-        return m_stream << s;
-    }
-
-
-protected:
-
-    std::ostringstream m_stream;
-};
-
-class notice : public logStreamBase
-{
-public:
-    ~notice()
-    {
-        m_stream << std::flush;
-        doLog(LOG_NOTICE, m_stream.str());
-    }
-};
-
-class debug : public logStreamBase
-{
-public:
-    ~debug()
-    {
-        m_stream << std::flush;
-        doLog(LOG_DEBUG, m_stream.str());
-    }
-};
-
-class warning : public logStreamBase
-{
-public:
-    ~warning()
-    {
-        m_stream << std::flush;
-        doLog(LOG_WARNING, m_stream.str());
-    }
-};
-
-class error : public logStreamBase
-{
-public:
-    ~error()
-    {
-        m_stream << std::flush;
-        doLog(LOG_ERROR, m_stream.str());
-    }
-};
-
+namespace Atlas {
+namespace Objects {
 std::ostream& operator<<(std::ostream& s, const Atlas::Objects::Root& obj);
+
+}
+namespace Message {
 std::ostream& operator<<(std::ostream& s, const Atlas::Message::Element& msg);
 
-} // of namespace Eris
-
+}
+}
 #endif

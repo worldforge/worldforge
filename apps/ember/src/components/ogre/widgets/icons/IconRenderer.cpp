@@ -115,7 +115,7 @@ void IconRenderer::performRendering(Model::Model* model, Icon*) {
 			try {
 				mRenderContext->getViewport()->update();
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Error when updating render for IconRenderer." << ex);
+				logger->error("Error when updating render for IconRenderer: {}", ex.what());
 			}
 		}
 
@@ -146,7 +146,7 @@ void IconRenderer::blitRenderToIcon(Icon* icon) {
 
 		} catch (...) {
 			//Catch possible exceptions and ignore them
-			S_LOG_WARNING("Got exception when trying to lock buffers. This will lead to some corrupt icons.");
+			logger->warn("Got exception when trying to lock buffers. This will lead to some corrupt icons.");
 		}
 
 		//Now that the icon is updated, emit a signal to this effect.
@@ -230,7 +230,7 @@ bool DelayedIconRendererWorker::frameStarted(const Ogre::FrameEvent&) {
 			entries.front().frameStarted();
 		}
 	} catch (const std::exception& e) {
-		S_LOG_FAILURE("Error when rendering icon." << e);
+		logger->error("Error when rendering icon: {}", e.what());
 		entries.pop();
 	}
 	return true;

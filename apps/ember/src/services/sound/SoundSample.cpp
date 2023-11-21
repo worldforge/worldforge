@@ -84,7 +84,7 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 		FILE* newFile = fopen(filename.c_str(), "rb");
 // 		if (!newFile)
 // 		{
-// 			S_LOG_FAILURE("Failed to open file(" + filename + ") to stream.");
+// 			logger->error("Failed to open file(" + filename + ") to stream.");
 // 			return;
 // 		}
 // 
@@ -93,7 +93,7 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 
 // 		if (ov_open(newFile, &mStream, nullptr, 0) < 0)
 // 		{
-// 			S_LOG_FAILURE("Failed to bind ogg stream to sound sample.");
+// 			logger->error("Failed to bind ogg stream to sound sample.");
 // 
 // 			fclose(newFile);
 // 			return;
@@ -114,7 +114,7 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 		alGenBuffers(2, mBuffers);
 // 		if (alGetError() != AL_NO_ERROR)
 // 		{
-// 			S_LOG_FAILURE("Failed to bind ogg stream to sound sample.");
+// 			logger->error("Failed to bind ogg stream to sound sample.");
 // 
 // 			fclose(newFile);
 // 			return;
@@ -123,7 +123,7 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 		alGenSources(1, &mSource);
 // 		if (alGetError() != AL_NO_ERROR)
 // 		{
-// 			S_LOG_FAILURE("Failed to bind ogg stream to sound sample.");
+// 			logger->error("Failed to bind ogg stream to sound sample.");
 // 
 // 			alDeleteBuffers(2, mBuffers);
 // 			fclose(newFile);
@@ -240,7 +240,7 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 			{
 // 				if (result < 0)
 // 				{
-// 					S_LOG_FAILURE("Failed to read from ogg stream.");
+// 					logger->error("Failed to read from ogg stream.");
 // 					return false;
 // 				}
 // 				else break;

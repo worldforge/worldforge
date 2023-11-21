@@ -112,7 +112,7 @@ Icon* IconManager::getIcon(int, EmberEntity* entity) {
 						texPtr = Ogre::TextureManager::getSingleton().load(iconPath, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 					}
 				} catch (...) {
-					S_LOG_WARNING("Error when trying to load the icon " << iconPath << ". The icon will be rendered dynamically.");
+					logger->warn("Error when trying to load the icon {}. The icon will be rendered dynamically.", iconPath);
 					texPtr.reset();
 				}
 				if (texPtr) {

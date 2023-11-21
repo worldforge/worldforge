@@ -214,12 +214,6 @@ private:
 	Eris::View* mWorldView;
 
 	/**
-	 * @brief The main log observer used for all logging.
-	 * The default implementation is to write all log messages to a file out stream.
-	 */
-	std::unique_ptr<LogObserver> mLogObserver;
-
-	/**
 	 * @brief A transient copy of command line set config settings. The settings here will be injected into the ConfigService when the services are started.
 	 * @see initializeServices()
 	 */

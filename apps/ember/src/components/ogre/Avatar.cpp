@@ -65,8 +65,7 @@
 
 #include <wfmath/stream.h>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 Avatar::Avatar(Eris::Avatar& erisAvatar,
 			   EmberEntity& erisAvatarEntity,
@@ -139,7 +138,7 @@ void Avatar::runCommand(const std::string& command, const std::string& args) {
 					Model::Model& model = modelRepresentation->getModel();
 					const auto& attachPoints = model.getAttachedPoints();
 					if (attachPoints) {
-						for (const auto& attachPoint : *attachPoints) {
+						for (const auto& attachPoint: *attachPoints) {
 							if (attachPoint.Definition.Name == attachPointName) {
 								attachPoint.TagPoint->setOrientation(rotation);
 							}
@@ -160,7 +159,7 @@ void Avatar::runCommand(const std::string& command, const std::string& args) {
 		mErisAvatar.say(args);
 		std::string msg;
 		msg = "Saying: [" + args + "]. ";
-		S_LOG_VERBOSE(msg);
+		logger->debug(msg);
 	} else if (SayTo == command) {
 		Tokeniser tokeniser(args);
 		std::string entityIdsString = tokeniser.nextToken();
@@ -177,7 +176,7 @@ void Avatar::runCommand(const std::string& command, const std::string& args) {
 		} else {
 			msg = "Saying to no entity: [" + message + "]. ";
 		}
-		S_LOG_VERBOSE(msg);
+		logger->debug(msg);
 	} else if (Emote == command) {
 		mErisAvatar.emote(args);
 
@@ -273,8 +272,9 @@ void Avatar::attemptMove() {
 
 	if (sendToServer) {
 		std::stringstream ss;
-		ss << "Sending move op to server, direction: " << newMovementState.movement << ", orientation: " << newMovementState.orientation << ", speed: " << sqrt(newMovementState.movement.sqrMag()) << ".";
-		S_LOG_VERBOSE(ss.str());
+		ss << "Sending move op to server, direction: " << newMovementState.movement << ", orientation: " << newMovementState.orientation << ", speed: " << sqrt(newMovementState.movement.sqrMag())
+		   << ".";
+		logger->debug(ss.str());
 
 		//Save the ten latest orientations sent to the server, so we can later when we receive an update from the server we can recognize that it's our own updates and ignore them.
 		long long currentTime = TimeHelper::currentTimeMillis();
@@ -336,7 +336,7 @@ void Avatar::setAttributes(const std::string& entityId, Atlas::Message::MapType&
 		//We'll use this flag to make sure that nothing gets sent in the case that the only thing changed was immutable attributes (like "pos").
 		bool areAttributesToSend = false;
 		Atlas::Message::MapType moveAttributes;
-		for (auto& element : elements) {
+		for (auto& element: elements) {
 			if (element.first == "pos" ||
 				element.first == "mode" ||
 				element.first == "orientation" ||
@@ -354,7 +354,7 @@ void Avatar::setAttributes(const std::string& entityId, Atlas::Message::MapType&
 		//Some attributes can only be changed through a Move op.
 		if (!moveAttributes.empty()) {
 			Atlas::Objects::Entity::Anonymous moveArgs;
-			for (auto& element : moveAttributes) {
+			for (auto& element: moveAttributes) {
 				moveArgs->setAttr(element.first, element.second);
 			}
 
@@ -394,11 +394,11 @@ void Avatar::setAttributes(const std::string& entityId, Atlas::Message::MapType&
 				//For now ignore; perhaps we should do some error checking instead?
 				return Eris::Router::IGNORED;
 			});
-			S_LOG_INFO("Setting attributes of entity with id " << entityId);
+			logger->info("Setting attributes of entity with id {}", entityId);
 			mErisAvatar.getConnection().send(setOp);
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Got error on setting attributes on entity." << ex);
+		logger->warn("Got error on setting attributes on entity: {}", ex.what());
 	}
 }
 
@@ -422,11 +422,11 @@ void Avatar::adminTell(const std::string& entityId, const std::string& attribute
 			//Handle it here, so it does not propagate into the regular system.
 			return Eris::Router::HANDLED;
 		});
-		S_LOG_INFO("Admin telling entity" << entityId << ": " << attribute << ": " << value);
+		logger->info("Admin telling entity {}: {}: {}", entityId, attribute, value);
 		mErisAvatar.getConnection().send(sound);
 
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Got error on admin_tell." << ex);
+		logger->warn("Got error on admin_tell: {}", ex.what());
 	}
 }
 
@@ -445,10 +445,10 @@ void Avatar::deleteEntity(const std::string& entityId) {
 			return Eris::Router::IGNORED;
 		});
 
-		S_LOG_INFO("Deleting entity with id " << entityId);
+		logger->info("Deleting entity with id {}", entityId);
 		mErisAvatar.getConnection().send(deleteOp);
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Got error on deleting entity." << ex);
+		logger->warn("Got error on deleting entity: {}", ex.what());
 	}
 }
 
@@ -494,7 +494,7 @@ void Avatar::avatar_Moved() {
 	//		float distance = WFMath::Distance(I->second.position, mErisAvatarEntity.getPosition());
 	//		if (I->second.movement != WFMath::Vector<3>::ZERO() && distance < 0.3) {
 	//			mLastTransmittedMovements.erase(I);
-	//			S_LOG_VERBOSE("Ignoring server movement update since it's sent by us.");
+	//			logger->debug("Ignoring server movement update since it's sent by us.");
 	//			return;
 	//		}
 	//	}
@@ -516,7 +516,7 @@ void Avatar::entity_ChildRemoved(Eris::Entity* childEntity) {
 }
 
 void Avatar::Config_AvatarRotationUpdateFrequency(const std::string& section, const std::string& key, varconf::Variable& variable) {
-	setMinIntervalOfRotationChanges((float)static_cast<double>(variable));
+	setMinIntervalOfRotationChanges((float) static_cast<double>(variable));
 }
 
 void Avatar::Config_LogChatMessages(const std::string& section, const std::string& key, varconf::Variable& variable) {
@@ -606,7 +606,7 @@ void Avatar::populateUsageArgs(Atlas::Objects::Entity::RootEntity& entity,
 							   const Eris::Entity* target,
 							   const WFMath::Point<3>& posInWorld,
 							   WFMath::Vector<3> direction) {
-	for (auto& param : params) {
+	for (auto& param: params) {
 		Atlas::Message::ListType list;
 		if (param.second.type == "entity" || param.second.type == "entity_location") {
 			if (target) {
@@ -693,7 +693,7 @@ void Avatar::taskUsage(std::string taskId, const Eris::TaskUsage& usage) {
 	auto& pickedResults = EmberOgre::getSingleton().getWorld()->getEntityPickListener().getPersistentResult();
 	Eris::Entity* target = nullptr;
 	WFMath::Point<3> posInWorld;
-	for (auto& pickedResult : pickedResults) {
+	for (auto& pickedResult: pickedResults) {
 		if (pickedResult.entityRef) {
 			target = pickedResult.entityRef.get();
 			if (!pickedResult.position.isNaN()) {
@@ -727,7 +727,7 @@ void Avatar::taskUsage(std::string taskId, const Eris::TaskUsage& usage) {
 void Avatar::stopCurrentTask() {
 	//Get the first task with a usage, and invoke that. The protocol is that the first usage always should be the "default".
 	auto& tasks = mErisAvatarEntity.getTasks();
-	for (auto& entry : tasks) {
+	for (auto& entry: tasks) {
 		auto& task = entry.second;
 		if (!task->getUsages().empty()) {
 			taskUsage(entry.first, task->getUsages().front());
@@ -746,7 +746,7 @@ boost::optional<std::string> Avatar::performDefaultUsage() {
 		auto& pickedResults = EmberOgre::getSingleton().getWorld()->getEntityPickListener().getPersistentResult();
 		Eris::Entity* entity = nullptr;
 		WFMath::Point<3> pos;
-		for (auto& pickedResult : pickedResults) {
+		for (auto& pickedResult: pickedResults) {
 			if (pickedResult.entityRef) {
 				entity = pickedResult.entityRef.get();
 				if (!pickedResult.position.isNaN()) {
@@ -791,5 +791,5 @@ boost::optional<std::string> Avatar::performDefaultUsage() {
 
 
 }
-}
+
 

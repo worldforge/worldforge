@@ -18,12 +18,9 @@
 */
 
 #include "SoundGeneral.h"
-#include "framework/LoggingInstance.h"
-
+#include "framework/Log.h"
 
 #include "al.h"
-
-
 
 namespace Ember
 {
@@ -33,11 +30,10 @@ namespace Ember
 		if (error == AL_NO_ERROR) {
 			return true;
 		} else {
-			if (description == "") {
-				S_LOG_FAILURE("OpenAl error: " << error);
+			if (description.empty()) {
+				logger->error("OpenAl error: {}", error);
 			} else {
-				S_LOG_FAILURE("OpenAl error: " << error
-					      << "\nDescription: " << description);
+				logger->error("OpenAl error: {}\nDescription: {}", error, description);
 			}
 			return false;
 		}

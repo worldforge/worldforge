@@ -42,7 +42,7 @@ struct ITask {
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~ITask() = default;;
+	virtual ~ITask() = default;
 
 	/**
 	 * @brief Executes the task in a background thread. This is where the bulk of the work should happen.

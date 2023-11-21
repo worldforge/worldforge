@@ -20,7 +20,7 @@
 #include "Segment.h"
 #include "SegmentHolder.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Mercator/Shader.h>
 #include <Mercator/Terrain.h>

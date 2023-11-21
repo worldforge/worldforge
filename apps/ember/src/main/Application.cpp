@@ -34,6 +34,7 @@
 
 #include "services/config/ConfigConsoleCommands.h"
 #include "ConsoleInputBinder.h"
+#include "framework/LogExtensions.h"
 
 #include <Eris/View.h>
 #include <Eris/Connection.h>
@@ -84,7 +85,7 @@ private:
 
 	bool mEnableStackCheck{false};
 
-	void Config_DesiredFps(const std::string& section, const std::string& key, varconf::Variable& variable) {
+	void Config_DesiredFps(const std::string&, const std::string&, varconf::Variable& variable) {
 		//Check for double, but cast to int. That way we'll catch all numbers.
 		if (variable.is_double()) {
 			mDesiredFps = static_cast<int>(variable);
@@ -103,7 +104,7 @@ private:
 		}
 	}
 
-	void Config_FrameStackCheck(const std::string& section, const std::string& key, varconf::Variable& variable) {
+	void Config_FrameStackCheck(const std::string&, const std::string&, varconf::Variable& variable) {
 		if (variable.is_bool()) {
 			mEnableStackCheck = static_cast<bool>(variable);
 			if (mEnableStackCheck && mDesiredFps > 0) {
@@ -167,14 +168,14 @@ Application::Application(Input& input,
 	auto dirName = mConfigService.getHomeDirectory(BaseDirType_CONFIG);
 
 	if (!boost::filesystem::is_directory(dirName)) {
-		S_LOG_INFO("Creating home directory at " << dirName.string());
+		logger->info("Creating home directory at {}", dirName.string());
 		boost::filesystem::create_directories(dirName);
 	}
 
 	int result = chdir(mConfigService.getHomeDirectory(BaseDirType_CONFIG).generic_string().c_str());
 
 	if (result) {
-		S_LOG_WARNING("Could not change directory to '" << mConfigService.getHomeDirectory(BaseDirType_CONFIG).c_str() << "'.");
+		logger->warn("Could not change directory to '{}'.", mConfigService.getHomeDirectory(BaseDirType_CONFIG).c_str());
 	}
 
 	//load the config file. Note that this will load the shared config file, and then the user config file if available.
@@ -186,7 +187,7 @@ Application::Application(Input& input,
 		//Create empty template file.
 		std::ofstream outstream(userConfigFilePath.c_str());
 		outstream << "#This is a user specific settings file. Settings here override those found in the application installed ember.conf file." << std::endl;
-		S_LOG_INFO("Created empty user specific settings file at '" << userConfigFilePath.string() << "'.");
+		logger->info("Created empty user specific settings file at '{}'.", userConfigFilePath.string());
 	}
 
 	initializeServices();
@@ -232,8 +233,6 @@ Application::~Application() {
 	mScriptingResourceProvider.reset();
 	mFileSystemObserver.reset();
 	mSession.reset();
-
-	Log::removeObserver(mLogObserver.get());
 }
 
 /**
@@ -261,9 +260,12 @@ void Application::mainLoop() {
 
 	while (!mShouldQuit) {
 		try {
-			StreamLogObserver::sCurrentFrameStartMilliseconds = std::chrono::steady_clock::now();
+			DetailedMessageFormatter::sCurrentFrameStartMilliseconds = std::chrono::steady_clock::now();
 
 			StackChecker::resetCounter();
+
+			//Flush log at start of each frame.
+			logger->flush();
 
 			unsigned int frameActionMask = 0;
 			auto timePerFrame = desiredFpsListener.getTimePerFrame();
@@ -334,19 +336,19 @@ void Application::mainLoop() {
 
 			//Check if it took more than 140% of the allotted time (but avoid floats when doing the comparisons).
 			if (updatedRendering && (timeFrame.getElapsedTime().count() * 1000000) > (timePerFrame.count() * 1400000)) {
-				S_LOG_VERBOSE("Frame took too long.");
+				logger->debug("Frame took too long.");
 			}
 
 			StackChecker::printBacktraces();
 
 		} catch (const boost::exception& ex) {
-			S_LOG_CRITICAL("Got exception, shutting down." << boost::diagnostic_information(ex));
+			logger->critical("Got exception, shutting down. {}", boost::diagnostic_information(ex));
 			throw;
 		} catch (const std::exception& ex) {
-			S_LOG_CRITICAL("Got exception, shutting down." << ex);
+			logger->critical("Got exception, shutting down: {}", ex.what());
 			throw;
 		} catch (...) {
-			S_LOG_CRITICAL("Got unknown exception, shutting down.");
+			logger->critical("Got unknown exception, shutting down.");
 			throw;
 		}
 	}
@@ -354,7 +356,7 @@ void Application::mainLoop() {
 
 void Application::initializeServices() {
 	// Initialize Ember services
-	S_LOG_INFO("Initializing Ember services");
+	logger->info("Initializing Ember services");
 
 	mServices = std::make_unique<EmberServices>(*mSession, mConfigService);
 
@@ -370,7 +372,7 @@ void Application::initializeServices() {
 				boost::urls::url url = parseResult.value();
 
 				if (url.host().empty()) {
-					S_LOG_INFO("Asset url is missing hostname, which means we're meant to use the same host as the game server itself.");
+					logger->info("Asset url is missing hostname, which means we're meant to use the same host as the game server itself.");
 					std::string host = mServices->getServerService().getConnection()->getHost();
 					//If there's no host we're using a local socket connection, and host should be "localhost"
 					if (host == "local") {
@@ -463,7 +465,7 @@ void Application::startScripting() {
 		//load the bootstrap script which will load all other scripts
 		mServices->getScriptingService().loadScript("lua/Bootstrap.lua");
 	} catch (const std::exception& e) {
-		S_LOG_FAILURE("Error when loading bootstrap script." << e);
+		logger->error("Error when loading bootstrap script: {}", e.what());
 	}
 	static const std::string luaSuffix = ".lua";
 	std::list<std::string> luaFiles;
@@ -506,9 +508,9 @@ void Application::startScripting() {
 			readme
 					<< "Any script files placed here will be executed as long as they have a supported file suffix.\nScripts are executed in alphabetical order.\nEmber currently supports lua scripts (ending with '.lua').";
 			readme.close();
-			S_LOG_INFO("Created user user scripting directory (" + userScriptDirectoryPath.string() + ").");
+			logger->info("Created user user scripting directory (" + userScriptDirectoryPath.string() + ").");
 		} catch (const std::exception&) {
-			S_LOG_INFO("Could not create user scripting directory.");
+			logger->info("Could not create user scripting directory.");
 		}
 	}
 }
@@ -522,15 +524,15 @@ void Application::start() {
 		}
 	} catch (const std::exception& ex) {
 		std::cerr << "==== Error during startup ====\n\r\t" << ex.what() << "\n" << std::endl;
-		S_LOG_CRITICAL("Error during startup." << ex);
+		logger->critical("Error during startup: {}", ex.what());
 		return;
 	} catch (ShutdownException& ex2) {
 		//Note that a ShutdownException is not an error. It just means that the user closed the application during startup. We should therefore just exit, as intended.
-		S_LOG_INFO("ShutdownException caught: " << ex2.getReason());
+		logger->info("ShutdownException caught: {}", ex2.getReason());
 		return;
 	} catch (...) {
 		std::cerr << "==== Error during startup ====\n\r\tUnknown fatal error during startup. Something went wrong which caused a shutdown. Check the log file for more information." << std::endl;
-		S_LOG_CRITICAL("Unknown fatal error during startup.");
+		logger->critical("Unknown fatal error during startup.");
 		return;
 	}
 	mInput.startInteraction();

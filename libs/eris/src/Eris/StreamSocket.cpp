@@ -68,7 +68,7 @@ void StreamSocket::startNegotiation() {
 		//completed yet; we'll consider that a "timeout".
 		if (_sc != nullptr) {
 			if (_callbacks.stateChanged) {
-				debug() << "Client disconnected because of negotiation timeout.";
+				logger->debug("Client disconnected because of negotiation timeout.");
 //                log(NOTICE, "Client disconnected because of negotiation timeout.");
 				_callbacks.stateChanged(DISCONNECTING);
 //                mSocket.close();
@@ -106,7 +106,7 @@ Atlas::Negotiate::State StreamSocket::negotiate() {
 	_sc.reset();
 
 	if (m_codec == nullptr) {
-		error() << "Could not create codec during negotiation.";
+		logger->error("Could not create codec during negotiation.");
 		return Atlas::Negotiate::FAILED;
 	}
 	// Create a new encoder to send high level objects to the codec

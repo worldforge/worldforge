@@ -22,52 +22,33 @@
 //
 #include "ConfigBoundLogObserver.h"
 
-#include "services/config/ConfigService.h"
+#include "framework/Log.h"
+#include <spdlog/sinks/sink.h>
 
 namespace Ember {
 
-ConfigBoundLogObserver::ConfigBoundLogObserver(ConfigService& configService, std::ostream &out)
-: StreamLogObserver(out), mConfigService(configService)
-{
-	configService.EventChangedConfigItem.connect(sigc::mem_fun(*this, &ConfigBoundLogObserver::ConfigService_EventChangedConfigItem));
-}
-
-
-ConfigBoundLogObserver::~ConfigBoundLogObserver() = default;
-
-void ConfigBoundLogObserver::updateFromConfig()
-{
-	if (mConfigService.itemExists("general", "logginglevel")) {
-		std::string loggingLevel = static_cast<std::string>(mConfigService.getValue("general", "logginglevel"));
-		Log::MessageImportance importance(Log::INFO);
-		if (loggingLevel == "verbose") {
-			importance = Log::VERBOSE;
-		} else if (loggingLevel == "info") {
-			importance = Log::INFO;
-		} else if (loggingLevel == "warning") {
-			importance = Log::WARNING;
-		} else if (loggingLevel == "failure") {
-			importance = Log::FAILURE;
-		} else if (loggingLevel == "critical") {
-			importance = Log::CRITICAL;
+ConfigBoundLogObserver::ConfigBoundLogObserver(spdlog::sink_ptr sink) {
+	mConfigListener.registerConfigListener("general", "logginglevel", [&, sink](const std::string&, const std::string&, const varconf::Variable& variable) {
+		if (variable.is_string()) {
+			std::string loggingLevel = variable.as_string();
+			spdlog::level::level_enum level = spdlog::level::info;
+			if (loggingLevel == "verbose") {
+				level = spdlog::level::debug;
+			} else if (loggingLevel == "info") {
+				level = spdlog::level::info;;
+			} else if (loggingLevel == "warning") {
+				level = spdlog::level::warn;
+			} else if (loggingLevel == "failure") {
+				level = spdlog::level::err;
+			} else if (loggingLevel == "critical") {
+				level = spdlog::level::critical;
+			}
+			logger->set_level(spdlog::level::info);
+			logger->info("Setting log level to {}", fmt::underlying(level));
+			sink->set_level(level);
 		}
-		setFilter(importance);
-	}
-	if (mConfigService.itemExists("general", "loggingdetailed")) {
-		varconf::Variable detailed = mConfigService.getValue("general", "loggingdetailed");
-		if (detailed.is_bool()) {
-			setDetailed(static_cast<bool>(detailed));
-		}
-	}
-}
+	}, true);
 
-void ConfigBoundLogObserver::ConfigService_EventChangedConfigItem(const std::string& section, const std::string& key)
-{
-	if (section == "general") {
-		if (key == "logginglevel" || key == "loggingdetailed") {
-			updateFromConfig();
-		}
-	}
 }
 
 }

@@ -28,6 +28,7 @@
 #include <Atlas/Codec.h>
 
 static const int CONNECT_TIMEOUT_SECONDS = 5;
+template <> struct fmt::formatter<boost::system::error_code> : ostream_formatter {};
 
 namespace Eris
 {
@@ -49,13 +50,13 @@ AsioStreamSocket<ProtocolT>::~AsioStreamSocket()
             try {
                 m_socket.shutdown(ProtocolT::socket::shutdown_both);
             } catch (const std::exception& e) {
-                warning() << "Error when shutting down socket: " << e.what();
+                logger->warn("Error when shutting down socket: {}", e.what());
             }
         }
         try {
             m_socket.close();
         } catch (const std::exception&) {
-            warning() << "Error when closing socket.";
+            logger->warn("Error when closing socket.");
         }
     }
 }
@@ -155,7 +156,7 @@ void AsioStreamSocket<ProtocolT>::negotiate_read()
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         } else {
-                            warning() << "Error when reading from socket while negotiating: (" << ec << ") " << ec.message();
+                            logger->warn("Error when reading from socket while negotiating: ({}) {}", ec, ec.message());
                         }
                     }
                 }
@@ -180,7 +181,7 @@ void AsioStreamSocket<ProtocolT>::do_read()
                         if (ec != boost::asio::error::operation_aborted) {
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         } else {
-                            warning() << "Error when reading from socket: (" << ec << ") " << ec.message();
+                            logger->warn("Error when reading from socket: ({}) {}", ec, ec.message());
                         }
                     }
                 }
@@ -223,7 +224,7 @@ void AsioStreamSocket<ProtocolT>::write()
                             _callbacks.stateChanged(CONNECTION_FAILED);
                         }
                     } else {
-                        warning() << "Error when writing to socket: (" << ec << ") " << ec.message();
+                        logger->warn("Error when writing to socket: ({}) {}", ec, ec.message());
                     }
                 }
             });
@@ -244,7 +245,7 @@ void AsioStreamSocket<ProtocolT>::negotiate_write()
                     {
                         this->mWriteBuffer->consume(length);
                     } else {
-                        warning() << "Error when writing to socket while negotiating: (" << ec << ") " << ec.message();
+                        logger->warn("Error when writing to socket while negotiating: ({}) {}" ,ec, ec.message());
                     }
                 });
     }

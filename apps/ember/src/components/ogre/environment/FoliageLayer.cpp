@@ -27,7 +27,7 @@
 #include "../terrain/TerrainManager.h"
 #include "../terrain/TerrainLayerDefinition.h"
 #include "../terrain/PlantInstance.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <OgreTechnique.h>
 
@@ -105,7 +105,7 @@ unsigned int FoliageLayer::_populateGrassList(PageInfo /*page*/, float* posBuff,
 			finalGrassCount++;
 		}
 	} else {
-		S_LOG_CRITICAL("_populateGrassList called without mLatestPlantsResult being set. This should never happen.");
+		logger->critical("_populateGrassList called without mLatestPlantsResult being set. This should never happen.");
 	}
 	return finalGrassCount;
 }

@@ -86,7 +86,7 @@ bool HydraxWater::initialize()
 //		struct stat theStat;
 //		int ret = stat(configFilename.c_str(), &theStat);
 //		if (ret) {
-//			S_LOG_FAILURE("Could not find file "<< configFilename);
+//			logger->error("Could not find file "<< configFilename);
 //			return false;
 //		}
 //		std::ifstream *filestream = OGRE_NEW_T(std::ifstream, Ogre::MEMCATEGORY_GENERAL)();
@@ -94,7 +94,7 @@ bool HydraxWater::initialize()
 //
 //		if (filestream->fail())
 //		{
-//			S_LOG_FAILURE("Could not open file "<< configFilename);
+//			logger->error("Could not open file "<< configFilename);
 //			delete filestream;
 //			return false;
 //		}
@@ -104,7 +104,7 @@ bool HydraxWater::initialize()
 //		Ogre::DataStreamPtr dataPtr(stream);
 //
 //		if (stream->size() == 0) {
-//			S_LOG_FAILURE("Zero size file found at "<< configFilename);
+//			logger->error("Zero size file found at "<< configFilename);
 //			return false;
 //		}
 //
@@ -122,7 +122,7 @@ bool HydraxWater::initialize()
 //		return true;
 //	} catch (const std::exception& ex)
 //	{
-//		S_LOG_FAILURE("Error when creating hydrax water: " << ex.what());
+//		logger->error("Error when creating hydrax water: " << ex.what());
 //		return false;
 //	}
 	return true;

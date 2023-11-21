@@ -238,8 +238,9 @@ bool SubModelPart::createInstancedEntities() {
 								if (Ogre::HighLevelGpuProgramManager::getSingleton().resourceExists(vertexProgramName, resourceGroup)) {
 									pass->setVertexProgram(vertexProgramName);
 								} else {
-									S_LOG_WARNING("The model '" << mSubModel.mModel.getName() << "' is set to use instancing, but the required vertex program '" << vertexProgramName
-																<< "' couldn't be found.");
+									logger->warn("The model '{}' is set to use instancing, but the required vertex program '{}' couldn't be found.",
+												 mSubModel.mModel.getName(),
+												 vertexProgramName);
 								}
 							}
 
@@ -257,8 +258,9 @@ bool SubModelPart::createInstancedEntities() {
 											if (Ogre::HighLevelGpuProgramManager::getSingleton().resourceExists(vertexProgramName, resourceGroup)) {
 												shadowCasterPass->setVertexProgram(vertexProgramName);
 											} else {
-												S_LOG_WARNING("The model '" << mSubModel.mModel.getName() << "' is set to use instancing, but the required shadow caster vertex program '"
-																			<< vertexProgramName << "' couldn't be found.");
+												logger->warn("The model '{}' is set to use instancing, but the required shadow caster vertex program '{}' couldn't be found.",
+															 mSubModel.mModel.getName(),
+															 vertexProgramName);
 											}
 										}
 									}
@@ -268,7 +270,9 @@ bool SubModelPart::createInstancedEntities() {
 							}
 						}
 					} else {
-						S_LOG_WARNING("The material '" << materialName << "' used by a submesh of the mesh '" << entity->getMesh()->getName() << "' could not be found. The submesh will be hidden.");
+						logger->warn("The material '{}' used by a submesh of the mesh '{}' could not be found. The submesh will be hidden.",
+									 materialName,
+									 entity->getMesh()->getName());
 						continue;
 					}
 				}
@@ -302,13 +306,13 @@ bool SubModelPart::createInstancedEntities() {
 
 						managersAndMaterials.emplace_back(std::make_pair(instanceManager, instancedMaterialName));
 					} catch (const std::exception& e) {
-						S_LOG_FAILURE("Could not create instanced versions of mesh " << meshName << " (as " << instancedMeshName << ")." << e);
+						logger->error("Could not create instanced versions of mesh {} (as {}): {}", meshName, instancedMeshName, e.what());
 						throw;
 					}
 
 				} else {
 					//Could not make into instanced.
-					S_LOG_WARNING("Could not create instanced version of subentity with index " << entry.subEntityIndex << " of entity " << entity->getName());
+					logger->warn("Could not create instanced version of subentity with index {} of entity {}", entry.subEntityIndex, entity->getName());
 				}
 			}
 		}
@@ -321,15 +325,15 @@ bool SubModelPart::createInstancedEntities() {
 					mSubModel.mModel.addMovable(instancedEntity);
 					::Ember::OgreView::Model::Model::sInstancedEntities[entry.first->getSceneManager()][instancedEntity] = &mSubModel.mModel;
 				} else {
-					S_LOG_FAILURE("Could not create instanced entity " << entry.first->getName());
+					logger->error("Could not create instanced entity {}", entry.first->getName());
 				}
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Could not create instanced entity " << entry.first->getName() << ex);
+				logger->error("Could not create instanced entity {}: {}", entry.first->getName(), ex.what());
 			}
 		}
 		return true;
 	} catch (const std::exception& e) {
-		S_LOG_FAILURE("Error when trying to create instanced mesh for " << mName << "." << e);
+		logger->error("Error when trying to create instanced mesh for {}: {}", mName, e.what());
 		return false;
 	}
 }

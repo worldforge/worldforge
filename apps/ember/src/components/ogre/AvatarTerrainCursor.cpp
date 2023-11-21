@@ -93,10 +93,10 @@ bool AvatarTerrainCursor::getTerrainCursorPosition(const Ogre::Vector3** positio
 			mLastTerrainPosition = intersectResult.second;
 			updated = true;
 		}
-// 					S_LOG_VERBOSE("getTerrainCursorPosition : Update ("<< mLastMouseX << "," << mLastMouseY << ")->" << Ogre::StringConverter::toString(mLastTerrainPosition));
+// 					logger->debug("getTerrainCursorPosition : Update ("<< mLastMouseX << "," << mLastMouseY << ")->" << Ogre::StringConverter::toString(mLastTerrainPosition));
 	}
 	*position = &mLastTerrainPosition;
-// 		S_LOG_VERBOSE("getTerrainCursorPosition : return");
+// 		logger->debug("getTerrainCursorPosition : return");
 	return updated;
 }
 

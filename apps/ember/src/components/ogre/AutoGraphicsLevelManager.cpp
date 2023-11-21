@@ -21,7 +21,7 @@
 #include "services/config/ConfigListenerContainer.h"
 
 #include "framework/MainLoopController.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/TimeFrame.h"
 
 #include <numeric>

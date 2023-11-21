@@ -25,9 +25,7 @@
 #include "EntityRecipeManager.h"
 #include "components/ogre/XMLHelper.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+namespace Ember::OgreView::Authoring {
 XMLEntityRecipeSerializer::XMLEntityRecipeSerializer() = default;
 
 XMLEntityRecipeSerializer::~XMLEntityRecipeSerializer() = default;
@@ -70,7 +68,7 @@ std::map<std::string, std::unique_ptr<EntityRecipe>> XMLEntityRecipeSerializer::
 
 
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when parsing entity recipe '" << name << "'." << ex);
+			logger->error("Error when parsing entity recipe '{}': {}", name, ex.what());
 		}
 	}
 	return entries;
@@ -112,7 +110,7 @@ void XMLEntityRecipeSerializer::readRecipe(EntityRecipe& entRecipe, TiXmlElement
 }
 
 void XMLEntityRecipeSerializer::readAdapters(EntityRecipe& entRecipe, TiXmlElement* adaptersNode) {
-	S_LOG_VERBOSE("Read adapters.");
+	logger->debug("Read adapters.");
 	for (TiXmlElement* smElem = adaptersNode->FirstChildElement("adapter"); smElem != nullptr; smElem = smElem->NextSiblingElement("adapter")) {
 		const std::string* name, * type, * tooltip, * defaultValue;
 		std::string tooltipText;
@@ -128,7 +126,7 @@ void XMLEntityRecipeSerializer::readAdapters(EntityRecipe& entRecipe, TiXmlEleme
 
 		defaultValue = smElem->Attribute(std::string("default"));
 
-		S_LOG_VERBOSE(" adapter '" << *name << "' of type " << *type);
+		logger->debug(" adapter '{}' of type {}", *name, *type);
 
 		auto adapter = std::make_unique<GUIAdapter>();
 		adapter->mType = *type;
@@ -166,7 +164,7 @@ void XMLEntityRecipeSerializer::readAdapters(EntityRecipe& entRecipe, TiXmlEleme
 }
 
 void XMLEntityRecipeSerializer::readBindAdapters(EntityRecipe& /*entRecipe*/, GUIAdapterBindings* bindings, TiXmlElement* bindAdaptersNode) {
-	S_LOG_VERBOSE("  Reading bind adapters.");
+	logger->debug("  Reading bind adapters.");
 	for (TiXmlElement* elem = bindAdaptersNode->FirstChildElement(); elem != nullptr; elem = elem->NextSiblingElement()) {
 		const std::string* name;
 
@@ -178,7 +176,7 @@ void XMLEntityRecipeSerializer::readBindAdapters(EntityRecipe& /*entRecipe*/, GU
 }
 
 void XMLEntityRecipeSerializer::readScript(EntityRecipe& entRecipe, TiXmlElement* scriptNode) {
-	S_LOG_VERBOSE("Read script.");
+	logger->debug("Read script.");
 	const char* text = scriptNode->GetText();
 	if (text) {
 		entRecipe.mScript = text;
@@ -186,5 +184,5 @@ void XMLEntityRecipeSerializer::readScript(EntityRecipe& entRecipe, TiXmlElement
 }
 
 }
-}
-}
+
+

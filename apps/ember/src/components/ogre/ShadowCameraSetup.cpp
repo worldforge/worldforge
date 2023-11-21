@@ -23,21 +23,18 @@
 #include "ShadowCameraSetup.h"
 #include "ShadowDetailManager.h"
 #include "framework/Tokeniser.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include <OgreRoot.h>
 #include <OgreShadowCameraSetupPSSM.h>
 #include <OgreShadowCameraSetup.h>
 #include <RTShaderSystem/OgreRTShaderSystem.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 ShadowCameraSetup::ShadowCameraSetup(Ogre::SceneManager& sceneMgr, GraphicalChangeAdapter& graphicalChangeAdapter) :
 		mSceneMgr(sceneMgr),
-		mShadowDetailManager(std::make_unique<ShadowDetailManager>(graphicalChangeAdapter, sceneMgr))
-{
+		mShadowDetailManager(std::make_unique<ShadowDetailManager>(graphicalChangeAdapter, sceneMgr)) {
 	//	// Need to detect D3D or GL for best depth shadowmapping
 //	bool isOpenGL;
 //	if (Ogre::Root::getSingleton().getRenderSystem()->getName().find("GL") != Ogre::String::npos) {
@@ -81,19 +78,18 @@ ShadowCameraSetup::ShadowCameraSetup(Ogre::SceneManager& sceneMgr, GraphicalChan
 
 ShadowCameraSetup::~ShadowCameraSetup() = default;
 
-void ShadowCameraSetup::Config_ShadowTextureSize(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+void ShadowCameraSetup::Config_ShadowTextureSize(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_int()) {
-			S_LOG_VERBOSE("Setting shadow texture size: " << static_cast<int>(variable));
+			logger->debug("Setting shadow texture size: {}", static_cast<int>(variable));
 			mSceneMgr.setShadowTextureSize(static_cast<int>(variable));
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow texture size." << ex);
+		logger->error("Error when setting shadow texture size: {}", ex.what());
 	}
 }
-void ShadowCameraSetup::Config_ShadowSplitPoints(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+
+void ShadowCameraSetup::Config_ShadowSplitPoints(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_string()) {
 			Ogre::PSSMShadowCameraSetup::SplitPointList splitPointList = mPssmSetup->getSplitPoints();
@@ -102,76 +98,72 @@ void ShadowCameraSetup::Config_ShadowSplitPoints(const std::string& section, con
 			splitPointList[1] = std::stof(tokeniser.nextToken());
 			splitPointList[2] = std::stof(tokeniser.nextToken());
 			splitPointList[3] = std::stof(tokeniser.nextToken());
-			S_LOG_VERBOSE("Setting shadow split points: " << splitPointList[0] << " " << splitPointList[1] << " " << splitPointList[2] << " " << splitPointList[3]);
+			logger->debug("Setting shadow split points: {} {} {} {}", splitPointList[0], splitPointList[1], splitPointList[2], splitPointList[3]);
 			mPssmSetup->setSplitPoints(splitPointList);
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow split points." << ex);
-	}
-}
-void ShadowCameraSetup::Config_ShadowSplitPadding(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
-	try {
-		if (variable.is_double()) {
-			S_LOG_VERBOSE("Setting shadow split padding: " << static_cast<double>(variable));
-			mPssmSetup->setSplitPadding((float)static_cast<double>(variable));
-		}
-	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow split padding." << ex);
+		logger->error("Error when setting shadow split points: {}", ex.what());
 	}
 }
 
-void ShadowCameraSetup::Config_ShadowOptimalAdjustFactors(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+void ShadowCameraSetup::Config_ShadowSplitPadding(const std::string& section, const std::string& key, varconf::Variable& variable) {
+	try {
+		if (variable.is_double()) {
+			logger->debug("Setting shadow split padding: {}", static_cast<double>(variable));
+			mPssmSetup->setSplitPadding((float) static_cast<double>(variable));
+		}
+	} catch (const std::exception& ex) {
+		logger->error("Error when setting shadow split padding: {}", ex.what());
+	}
+}
+
+void ShadowCameraSetup::Config_ShadowOptimalAdjustFactors(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_string()) {
-			S_LOG_VERBOSE("Setting shadow optimal adjust factor: " << static_cast<std::string>(variable));
+			logger->debug("Setting shadow optimal adjust factor: {}", static_cast<std::string>(variable));
 			Tokeniser tokeniser(variable.as_string());
 			mPssmSetup->setOptimalAdjustFactor(0, std::stof(tokeniser.nextToken()));
 			mPssmSetup->setOptimalAdjustFactor(1, std::stof(tokeniser.nextToken()));
 			mPssmSetup->setOptimalAdjustFactor(2, std::stof(tokeniser.nextToken()));
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow optimal adjust factors." << ex);
+		logger->error("Error when setting shadow optimal adjust factors: {}", ex.what());
 	}
 }
 
-void ShadowCameraSetup::Config_ShadowUseAggressiveFocusRegion(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+void ShadowCameraSetup::Config_ShadowUseAggressiveFocusRegion(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_bool()) {
-			S_LOG_VERBOSE("Setting shadow use aggressive focus region: " << static_cast<bool>(variable));
+			logger->debug("Setting shadow use aggressive focus region: {}", static_cast<bool>(variable));
 			mPssmSetup->setUseAggressiveFocusRegion(static_cast<bool>(variable));
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow use aggressive focus region." << ex);
+		logger->error("Error when setting shadow use aggressive focus region: {}", ex.what());
 	}
 }
 
-void ShadowCameraSetup::Config_ShadowFarDistance(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+void ShadowCameraSetup::Config_ShadowFarDistance(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_double()) {
-			S_LOG_VERBOSE("Setting shadow far distance: " << static_cast<double>(variable));
-			mSceneMgr.setShadowFarDistance((float)static_cast<double>(variable));
+			logger->debug("Setting shadow far distance: {}", static_cast<double>(variable));
+			mSceneMgr.setShadowFarDistance((float) static_cast<double>(variable));
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow far distance." << ex);
+		logger->error("Error when setting shadow far distance: {}", ex.what());
 	}
 }
 
-void ShadowCameraSetup::Config_ShadowRenderBackfaces(const std::string& section, const std::string& key, varconf::Variable& variable)
-{
+void ShadowCameraSetup::Config_ShadowRenderBackfaces(const std::string& section, const std::string& key, varconf::Variable& variable) {
 	try {
 		if (variable.is_bool()) {
-			S_LOG_VERBOSE("Setting shadow render back faces: " << static_cast<bool>(variable));
+			logger->debug("Setting shadow render back faces: {}", static_cast<bool>(variable));
 			mSceneMgr.setShadowCasterRenderBackFaces(static_cast<bool>(variable));
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when setting shadow render back faces." << ex);
+		logger->error("Error when setting shadow render back faces: {}", ex.what());
 	}
 
 }
 
 }
-}
+

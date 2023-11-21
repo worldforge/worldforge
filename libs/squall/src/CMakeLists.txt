@@ -21,6 +21,7 @@ set(CORE_HEADER_FILES
         squall/core/Root.h
         squall/core/Signature.h
         squall/core/AsyncProvider.h
+        squall/core/Log.h
 )
 
 

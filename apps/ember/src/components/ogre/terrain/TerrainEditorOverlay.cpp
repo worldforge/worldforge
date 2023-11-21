@@ -133,7 +133,7 @@ void BasePointUserObject::updateMarking() {
 			}
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_WARNING("Could not set new marker material. This is not fatal." << ex);
+		logger->warn("Could not set new marker material. This is not fatal: {}", ex.what());
 	}
 }
 
@@ -236,7 +236,7 @@ void TerrainEditorOverlay::createOverlay(std::map<int, std::map<int, Mercator::B
 				entity->setRenderingDistance(300);
 				entity->setQueryFlags(MousePicker::CM_UNDEFINED);
 			} catch (const std::exception& ex) {
-				S_LOG_FAILURE("Error when creating base point marker entity." << ex);
+				logger->error("Error when creating base point marker entity: {}", ex.what());
 				continue;
 			}
 
@@ -506,7 +506,7 @@ void TerrainEditorOverlay::sendChangesToServerWithBasePoints(std::map<int, std::
 			s->setTo(terrainEntity->getId());
 
 			connection->send(s);
-			S_LOG_INFO("Sent updated terrain to server (" << positions.size() << " base points updated).");
+			logger->info("Sent updated terrain to server ({} base points updated).",positions.size());
 
 			//also reset the marking for the base points
 			for (const auto& entry: mBasePointUserObjects) {
@@ -515,7 +515,7 @@ void TerrainEditorOverlay::sendChangesToServerWithBasePoints(std::map<int, std::
 			//clear all actions
 			mActions.clear();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Could not send terrain to server." << ex);
+			logger->error("Could not send terrain to server: {}", ex.what());
 		}
 	}
 }

@@ -626,8 +626,7 @@ namespace {
 
 int main(int argc, char ** argv)
 {
-	//Perhaps tell spdlog to use a prefix?
-    //setLoggingPrefix("DB");
+	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [db] [%^%l%$] %v");
 
     int config_status = loadConfig(argc, argv, USAGE_DBASE); 
     if (config_status < 0) {

@@ -77,7 +77,7 @@ int main(int argc, char** argv)
         Atlas::Objects::loadDefaults("../../data/protocols/atlas/spec/atlas.xml", factories);
     } catch(const Atlas::Objects::DefaultLoadingException& e) {
         std::cout << "DefaultLoadingException: "
-             << e.getDescription() << std::endl;
+             << e.what() << std::endl;
     }
     double i;
     TIME_ON

@@ -20,7 +20,7 @@
 
 #include "CursorWorldListener.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/MainLoopController.h"
 #include "framework/TimeFrame.h"
 #include "components/ogre/camera/MainCamera.h"
@@ -168,7 +168,7 @@ void CursorWorldListener::sendWorldClick(MousePickType pickType, const CEGUI::Ve
 
 bool CursorWorldListener::windowMouseButtonDown(const CEGUI::EventArgs& args) {
 	if (isInGUIMode()) {
-		S_LOG_VERBOSE("Main sheet is capturing input");
+		logger->debug("Main sheet is capturing input");
 		CEGUI::Window* aWindow = mMainWindow.getCaptureWindow();
 		if (aWindow) {
 			aWindow->releaseInput();

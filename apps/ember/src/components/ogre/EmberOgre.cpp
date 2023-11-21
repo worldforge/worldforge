@@ -50,9 +50,6 @@
 #include "meshtree/TParameters.h"
 #include "environment/Tree.h"
 
-//#include "carpenter/Carpenter.h"
-//#include "carpenter/BluePrint.h"
-
 #include "model/ModelDefinitionManager.h"
 #include "mapping/EmberEntityMappingManager.h"
 
@@ -82,7 +79,7 @@
 #include "OgreResourceProvider.h"
 #include "Version.h"
 #include "components/cegui/CEGUISetup.h"
-#include "framework/StreamLogObserver.h"
+#include "framework/LogExtensions.h"
 
 #include <Eris/Connection.h>
 #include <Eris/View.h>
@@ -197,7 +194,7 @@ EmberOgre::EmberOgre(MainLoopController& mainLoopController,
 
 	serverService.AssetsUnloadRequest.connect([this]() {
 		if (Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("world")) {
-			S_LOG_INFO("Unloading resource group 'world' as we've been asked to unload World resources.");
+			logger->info("Unloading resource group 'world' as we've been asked to unload World resources.");
 			Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup("world");
 			mResourceLoader->unloadUnusedResources();
 
@@ -245,7 +242,7 @@ EmberOgre::~EmberOgre() {
 }
 
 bool EmberOgre::renderOneFrame(const TimeFrame& timeFrame) {
-	StreamLogObserver::sCurrentFrame = mRoot->getNextFrameNumber();
+	DetailedMessageFormatter::sCurrentFrame = mRoot->getNextFrameNumber();
 
 	if (mInput.isApplicationVisible()) {
 		//If we're resuming from paused mode we need to reset the event times to prevent particle effects strangeness
@@ -276,7 +273,7 @@ bool EmberOgre::renderOneFrame(const TimeFrame& timeFrame) {
 //			log.report("_fireFrameEnded");
 
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when rending one frame in the main render loop." << ex);
+			logger->error("Error when rending one frame in the main render loop: {}", ex.what());
 			throw ex;
 		}
 
@@ -336,7 +333,7 @@ bool EmberOgre::setup(MainLoopController& mainLoopController, Eris::EventService
 	//out of pure interest we'll print out how many modeldefinitions we've loaded
 	auto count = Model::ModelDefinitionManager::getSingleton().getEntries().size();
 
-	S_LOG_INFO("Finished loading " << count << " modeldefinitions.");
+	logger->info("Finished loading {} modeldefinitions.", count);
 
 	setupProfiler();
 
@@ -347,17 +344,17 @@ bool EmberOgre::setup(MainLoopController& mainLoopController, Eris::EventService
 
 	//should media be preloaded?
 	if (preloadMedia) {
-		S_LOG_INFO("Begin preload.");
+		logger->info("Begin preload.");
 		mResourceLoader->preloadMedia();
 
-		S_LOG_INFO("End preload.");
+		logger->info("End preload.");
 	}
 	try {
 		mGUIManager = std::make_unique<GUIManager>(*mGuiSetup, configSrv, mServerService, mainLoopController);
 		EventGUIManagerCreated.emit(*mGUIManager);
 	} catch (const std::exception& ex) {
 		//we failed at creating a gui, abort (since the user could be running in full screen mode and could have some trouble shutting down)
-		S_LOG_FAILURE("Error when loading GUIManager." << ex);
+		logger->error("Error when loading GUIManager: {}", ex.what());
 		throw Exception("Could not load gui, aborting. Make sure that all media got downloaded and installed correctly.");
 	} catch (...) {
 		//we failed at creating a gui, abort (since the user could be running in full screen mode and could have some trouble shutting down)
@@ -365,7 +362,7 @@ bool EmberOgre::setup(MainLoopController& mainLoopController, Eris::EventService
 	}
 
 	if (chdir(configSrv.getHomeDirectory(BaseDirType_DATA).generic_string().c_str())) {
-		S_LOG_WARNING("Failed to change directory to '" << configSrv.getHomeDirectory(BaseDirType_DATA).string() << "'");
+		logger->warn("Failed to change directory to '{}'", configSrv.getHomeDirectory(BaseDirType_DATA).string());
 	}
 
 
@@ -396,7 +393,7 @@ void EmberOgre::preloadMedia() {
 		try {
 			Ogre::TextureManager::getSingleton().load(shaderTexture, "General");
 		} catch (const std::exception& e) {
-			S_LOG_FAILURE("Error when loading texture " << shaderTexture << "." << e);
+			logger->error("Error when loading texture {}: {}", shaderTexture, e.what());
 		}
 	}
 

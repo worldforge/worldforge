@@ -24,7 +24,7 @@
 #include "EmberEntityLoader.h"
 #include "ExclusiveImposterPage.h"
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "services/config/ConfigService.h"
 #include "TreeLoader3D.h"
 #include "BatchPage.h"
@@ -39,29 +39,21 @@
 #include "../terrain/TerrainHandler.h"
 #include "../terrain/ITerrainAdapter.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-
-namespace Environment
-{
+namespace Ember::OgreView::Environment {
 
 Forest::Forest(Terrain::TerrainManager& terrainManager) :
-	mTerrainManager(terrainManager), mMaxRange(500)
-{
+		mTerrainManager(terrainManager),
+		mMaxRange(500) {
 	Ogre::Root::getSingleton().addFrameListener(this);
 	mTerrainManager.getHandler().EventWorldSizeChanged.connect(sigc::mem_fun(*this, &Forest::worldSizeChanged));
 }
 
-Forest::~Forest()
-{
+Forest::~Forest() {
 	Ogre::Root::getSingleton().removeFrameListener(this);
 }
 
-void Forest::initialize()
-{
-	S_LOG_INFO("Initializing forest.");
+void Forest::initialize() {
+	logger->info("Initializing forest.");
 
 	mTrees = std::make_unique<Forests::PagedGeometry>();
 	mTrees->setCamera(&mTerrainManager.getScene().getMainCamera()); //Set the camera so PagedGeometry knows how to calculate LODs
@@ -70,8 +62,8 @@ void Forest::initialize()
 	mTrees->setInfinite();
 	// 	mTrees->addDetailLevel<Forests::BatchPage>(150, 50);		//Use batches up to 150 units away, and fade for 30 more units
 	//  mTrees->addDetailLevel<Forests::DummyPage>(100, 0);		//Use batches up to 150 units away, and fade for 30 more units
-	mTrees->addDetailLevel<Forests::PassiveEntityPage> (256, 0); //Use standard entities up to 256 units away, and don't fade since the PassiveEntityPage doesn't support this (yet)
-	mTrees->addDetailLevel<ExclusiveImposterPage> (mMaxRange, 50); //Use impostors up to 500 units, and for for 50 more units
+	mTrees->addDetailLevel<Forests::PassiveEntityPage>(256, 0); //Use standard entities up to 256 units away, and don't fade since the PassiveEntityPage doesn't support this (yet)
+	mTrees->addDetailLevel<ExclusiveImposterPage>(mMaxRange, 50); //Use impostors up to 500 units, and for for 50 more units
 
 	//Create a new TreeLoader2D object
 	mEntityLoader = std::make_unique<EmberEntityLoader>(*mTrees, 64);
@@ -79,27 +71,25 @@ void Forest::initialize()
 	mTrees->setPageLoader(mEntityLoader.get()); //Assign the "treeLoader" to be used to load geometry for the PagedGeometry instance
 }
 
-void Forest::addTree(Ogre::Entity *entity, const Ogre::Vector3 &position, Ogre::Degree yaw, Ogre::Real scale)
-{
+void Forest::addTree(Ogre::Entity* entity, const Ogre::Vector3& position, Ogre::Degree yaw, Ogre::Real scale) {
 	if (mTreeLoader && mTrees) {
-		S_LOG_VERBOSE("Adding tree of entity type " << entity->getMesh()->getName() << " to position x: " << position.x << " y: " << position.y << " z: " << position.z << " and scale " << scale);
+		logger->debug("Adding tree of entity type {} to position x: {} y: {} z: {} and scale {}", entity->getMesh()->getName(), position.x, position.y, position.z, scale);
 		try {
 			mTreeLoader->addTree(entity, position, yaw, scale);
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when adding tree." << ex);
+			logger->error("Error when adding tree:", ex.what());
 		}
 	} else {
-		S_LOG_WARNING("Could not add tree before the forest has been initialized.");
+		logger->warn("Could not add tree before the forest has been initialized.");
 	}
 }
 
-bool Forest::frameStarted(const Ogre::FrameEvent & evt)
-{
+bool Forest::frameStarted(const Ogre::FrameEvent& evt) {
 	if (mTrees) {
 		try {
 			mTrees->update();
 		} catch (const std::exception& ex) {
-			S_LOG_FAILURE("Error when updating forest. Will disable forest."<< ex);
+			logger->error("Error when updating forest. Will disable forest:", ex.what());
 			mTrees.reset();
 			mTreeLoader.reset();
 			mEntityLoader.reset();
@@ -108,23 +98,20 @@ bool Forest::frameStarted(const Ogre::FrameEvent & evt)
 	return true;
 }
 
-void Forest::addEmberEntity(Model::ModelRepresentation* modelRepresentation)
-{
+void Forest::addEmberEntity(Model::ModelRepresentation* modelRepresentation) {
 	if (mEntityLoader) {
 		mEntityLoader->addEmberEntity(modelRepresentation);
 		modelRepresentation->getModel().setRenderingDistance(mMaxRange);
 	}
 }
 
-void Forest::removeEmberEntity(EmberEntity* entity)
-{
+void Forest::removeEmberEntity(EmberEntity* entity) {
 	if (mEntityLoader) {
 		mEntityLoader->removeEmberEntity(entity);
 	}
 }
 
-void Forest::worldSizeChanged()
-{
+void Forest::worldSizeChanged() {
 	if (!mEntityLoader) {
 		initialize();
 	}
@@ -133,6 +120,6 @@ void Forest::worldSizeChanged()
 
 }
 
-}
-}
+
+
 

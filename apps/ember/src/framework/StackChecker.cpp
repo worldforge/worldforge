@@ -17,7 +17,7 @@
  */
 
 #include "StackChecker.h"
-#include "LoggingInstance.h"
+#include "Log.h"
 #include <array>
 
 #ifdef UNWIND_ENABLED
@@ -197,7 +197,7 @@ public:
 	}
 
 	explicit StackCheckerInstance(std::chrono::milliseconds maxFrameDuration) {
-		S_LOG_FAILURE("The libunwind library isn't available for this build, so the slow frame stack print feature isn't available.");
+		logger->error("The libunwind library isn't available for this build, so the slow frame stack print feature isn't available.");
 	}
 
 

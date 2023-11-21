@@ -232,8 +232,8 @@ void EntityCreatorWidget::buildWidget() {
 
 				std::stringstream ss;
 				ss << pos;
-				S_LOG_INFO("Trying to create entity at position " << ss.str());
-				S_LOG_VERBOSE("Sending entity data to server: " << AtlasHelper::serialize(c, "xml"));
+				logger->info("Trying to create entity at position {}", ss.str());
+				logger->debug("Sending entity data to server: {}", AtlasHelper::serialize(c, "xml"));
 			}
 		};
 		mCreateNewEntityFn = [&, createEntitiesFn]() {
@@ -531,7 +531,7 @@ void EntityCreatorWidget::refreshEntityMap() {
 		}
 
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Could not create preview entity." << ex);
+		logger->error("Could not create preview entity: {}", ex.what());
 	}
 
 	refreshPreview();
@@ -560,7 +560,7 @@ void EntityCreatorWidget::refreshPreview() {
 			}
 		}
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Could not create preview entity." << ex);
+		logger->error("Could not create preview entity: {}", ex.what());
 	}
 }
 

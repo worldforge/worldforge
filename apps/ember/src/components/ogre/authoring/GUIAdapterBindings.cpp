@@ -22,11 +22,7 @@
 #include <Atlas/Message/MEncoder.h>
 #include <Atlas/Message/QueuedDecoder.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
+namespace Ember::OgreView::Authoring
 {
 GUIAdapterBindings::GUIAdapterBindings() :
 	mElement(nullptr)
@@ -56,7 +52,7 @@ std::vector<std::string>& GUIAdapterBindings::getAdapters()
 	return mAdapters;
 }
 
-void GUIAdapterBindings::setValue(Atlas::Message::Element& val, TiXmlNode& element)
+void GUIAdapterBindings::setValue(Atlas::Message::Element& val, TiXmlNode&)
 {
 	TiXmlNode* parent = mElement->Parent();
 	/*
@@ -130,7 +126,7 @@ TiXmlDocument GUIAdapterBindings::convertAtlasToXml(Atlas::Message::Element& val
 	encoder.listElementItem(val);
 	formatter.streamEnd();
 
-	S_LOG_VERBOSE("  got adapter value " << data.str());
+	logger->debug("  got adapter value {}", data.str());
 	// Create TinyXml node
 	TiXmlDocument xmlDoc;
 	xmlDoc.Parse(data.str().c_str());
@@ -143,5 +139,5 @@ TiXmlDocument GUIAdapterBindings::convertAtlasToXml(Atlas::Message::Element& val
 
 }
 
-}
-}
+
+

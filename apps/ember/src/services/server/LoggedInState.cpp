@@ -25,7 +25,7 @@
 
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>
@@ -86,7 +86,7 @@ void LoggedInState::checkTransfer() {
 }
 
 void LoggedInState::takeTransferredCharacter(const Eris::TransferInfo& transferInfo) {
-	S_LOG_INFO("Trying to take transferred character with id " << transferInfo.getPossessEntityId() << ".");
+	logger->info("Trying to take transferred character with id {}.", transferInfo.getPossessEntityId());
 	mAccount.takeTransferredCharacter(transferInfo.getPossessEntityId(), transferInfo.getPossessKey());
 }
 
@@ -101,12 +101,12 @@ bool LoggedInState::logout() {
 }
 
 void LoggedInState::gotCharacterInfo(const Atlas::Objects::Entity::RootEntity& info) {
-	S_LOG_INFO("Got character info");
+	logger->info("Got character info");
 	getSignals().GotCharacterInfo.emit(info);
 }
 
 void LoggedInState::gotAllCharacters() {
-	S_LOG_INFO("Got all characters");
+	logger->info("Got all characters");
 	getSignals().GotAllCharacters.emit();
 }
 
@@ -154,7 +154,7 @@ void LoggedInState::removeTransferInfo(const AvatarTransferInfo& transferInfo) {
 	if (teleportsOutputFile.good()) {
 		serializer.serialize(transferObjects, teleportsOutputFile);
 	} else {
-		S_LOG_CRITICAL("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
+		logger->critical("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
 	}
 	teleportsOutputFile.close();
 
@@ -176,7 +176,7 @@ void LoggedInState::avatar_transferRequest(const Eris::TransferInfo& transferInf
 	if (teleportsOutputFile.good()) {
 		serializer.serialize(transferObjects, teleportsOutputFile);
 	} else {
-		S_LOG_CRITICAL("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
+		logger->critical("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
 	}
 	teleportsOutputFile.close();
 

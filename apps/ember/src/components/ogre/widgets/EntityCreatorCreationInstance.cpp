@@ -105,7 +105,7 @@ void EntityCreatorCreationInstance::createEntity() {
 			mAxisMarker = mEntityNode->getCreator()->createEntity(OgreInfo::createUniqueResourceName("EntityCreator_axisMarker"), "common/primitives/model/axes.mesh");
 			mEntityNode->attachObject(mAxisMarker);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when loading axes mesh." << ex);
+			logger->warn("Error when loading axes mesh: {}", ex.what());
 		}
 	}
 
@@ -118,13 +118,13 @@ void EntityCreatorCreationInstance::createEntity() {
 		// Creating entity data
 		auto parentI = entityMap.find("parent");
 		if (parentI == entityMap.end() || !parentI->second.isString()) {
-			S_LOG_FAILURE("No parent found.");
+			logger->error("No parent found.");
 			return;
 		}
 
 		Eris::TypeInfo* erisType = mTypeService.getTypeByName(parentI->second.String());
 		if (!erisType) {
-			S_LOG_FAILURE("Type " << parentI->second.String() << " not found.");
+			logger->error("Type {} not found.", parentI->second.String());
 			return;
 		}
 
@@ -184,7 +184,7 @@ void EntityCreatorCreationInstance::setModel(EntityPreview& entry, const std::st
 
 //	//if the model definition isn't valid, use a placeholder
 //	if (!mModel->getDefinition()->isValid()) {
-//		S_LOG_FAILURE("Could not find " << modelName << ", using placeholder.");
+//		logger->error("Could not find " << modelName << ", using placeholder.");
 //		//add a placeholder model
 //		Model::ModelDefinitionPtr modelDef = mModel->getDefinition();
 //		modelDef->createSubModelDefinition("common/primitives/model/box.mesh")->createPartDefinition("main")->setShow(true);

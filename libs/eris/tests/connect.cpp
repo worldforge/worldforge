@@ -36,10 +36,6 @@ static void usage(const char* prgname) {
 			  << std::endl;
 }
 
-static void erisLog(Eris::LogLevel level, const std::string& msg) {
-	std::cout << "LOG: " << msg << std::endl;
-}
-
 static void onConnected(Eris::Connection* c) {
 	std::cout << "connected to server" << std::endl;
 	if (--connection_count == 0) {
@@ -89,9 +85,6 @@ int main(int argc, char** argv) {
 
 	boost::asio::io_service io_service;
 	Eris::EventService event_service(io_service);
-
-	Eris::Logged.connect(sigc::ptr_fun(erisLog));
-	Eris::setLogLevel(Eris::LOG_DEBUG);
 
 	for (int i = optind; i < argc; ++i) {
 		Eris::Connection* c = new Eris::Connection(io_service, event_service,

@@ -86,7 +86,7 @@ void OgreEntityRenderer::showEntity(const std::string& mesh) {
 		setEntity(mEntity);
 		mTexture->getRenderContext()->setActive(true);
 	} catch (const std::exception& ex) {
-		S_LOG_FAILURE("Error when creating entity." << ex);
+		logger->error("Error when creating entity: {}", ex.what());
 	}
 }
 

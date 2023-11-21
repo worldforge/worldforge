@@ -23,7 +23,7 @@
 #include "ScriptingService.h"
 
 
-#include "framework/LoggingInstance.h"
+#include "framework/Log.h"
 #include "framework/IScriptingProvider.h"
 #include "framework/Tokeniser.h"
 
@@ -55,42 +55,42 @@ void ScriptingService::loadScript(const std::string& script) {
 		ResourceWrapper resWrapper = mResourceProvider->getResource(script);
 		if (!resWrapper.hasData()) {
 			scriptError("Unable to find script file " + script + ".");
-			S_LOG_FAILURE("Unable to find script file " + script + ".");
+			logger->error("Unable to find script file " + script + ".");
 			return;
 		}
 
 		for (auto& entry: mProviders) {
 			//check if the provider will load the script
 			if (entry.second->willLoadScript(script)) {
-				S_LOG_INFO("Loading script: " << script << " with scripting provider " << entry.second->getName());
+				logger->info("Loading script: {} with scripting provider {}", script, entry.second->getName());
 				try {
 					entry.second->loadScript(resWrapper, nullptr);
 				} catch (const std::exception& ex) {
-					S_LOG_WARNING("Error when loading script " << script << " with provider " << entry.second->getName() << "." << ex);
+					logger->warn("Error when loading script {} with provider {}: {}", script, entry.second->getName(), ex.what());
 					scriptError(ex.what());
 				} catch (...) {
-					S_LOG_WARNING("Got unknown script error when loading the script " << script);
+					logger->warn("Got unknown script error when loading the script {}", script);
 					scriptError("Unknown error loading script " + script);
 				}
 				return;
 			}
 		}
-		S_LOG_FAILURE("Could not find a scripting provider which will load the script " << script << ".");
+		logger->error("Could not find a scripting provider which will load the script {}.", script);
 	}
 }
 
 void ScriptingService::executeCode(const std::string& scriptCode, const std::string& scriptType, IScriptingCallContext* callContext) {
 	auto I = mProviders.find(scriptType);
 	if (I == mProviders.end()) {
-		S_LOG_FAILURE("There is no scripting provider with the name \"" << scriptType << "\"");
+		logger->error("There is no scripting provider with the name \"{}\"", scriptType);
 	} else {
 		try {
 			I->second->executeScript(scriptCode, callContext);
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when executing script\n" << scriptCode << "\nwith provider " << I->second->getName() << "." << ex);
+			logger->warn("Error when executing script\n{}\nwith provider {}: {}", scriptCode, I->second->getName(), ex.what());
 			scriptError(ex.what());
 		} catch (...) {
-			S_LOG_WARNING("Got unknown script error when executing the script " << scriptCode);
+			logger->warn("Got unknown script error when executing the script {}", scriptCode);
 			scriptError("Unknown error executing script.");
 		}
 	}
@@ -98,15 +98,15 @@ void ScriptingService::executeCode(const std::string& scriptCode, const std::str
 
 void ScriptingService::registerScriptingProvider(std::unique_ptr<IScriptingProvider> provider) {
 	if (mProviders.find(provider->getName()) != mProviders.end()) {
-		S_LOG_FAILURE("Could not add already existing scripting provider with name " + provider->getName());
+		logger->error("Could not add already existing scripting provider with name {}", provider->getName());
 	} else {
-		S_LOG_INFO("Registering scripting provider " << provider->getName());
+		logger->info("Registering scripting provider {}", provider->getName());
 		mProviders[provider->getName()] = std::move(provider);
 	}
 }
 
 void ScriptingService::scriptError(const std::string& error) {
-	//S_LOG_WARNING(error);
+	//logger->warn(error);
 	EventScriptError.emit(error);
 }
 

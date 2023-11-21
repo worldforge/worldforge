@@ -148,7 +148,7 @@ bool GUICEGUIAdapter::injectMouseMove(const MouseMotion& motion, bool& freezeMou
 	try {
 		mGuiContext.injectMousePosition((float) motion.xPosition, (float) motion.yPosition);
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 	return true;
 }
@@ -169,9 +169,9 @@ bool GUICEGUIAdapter::injectMouseButtonUp(Input::MouseButton button) {
 		mGuiContext.injectMouseButtonUp(ceguiButton);
 		return false;
 	} catch (const std::exception& e) {
-		S_LOG_WARNING("Error in CEGUI." << e);
+		logger->warn("Error in CEGUI: {}", e.what());
 	} catch (...) {
-		S_LOG_WARNING("Unknown error in CEGUI.");
+		logger->warn("Unknown error in CEGUI.");
 	}
 	return true;
 }
@@ -188,14 +188,14 @@ bool GUICEGUIAdapter::injectMouseButtonDown(Input::MouseButton button) {
 		try {
 			mGuiContext.injectMouseWheelChange(-1.0);
 		} catch (const CEGUI::Exception& ex) {
-			S_LOG_WARNING("Error in CEGUI." << ex);
+			logger->warn("Error in CEGUI: {}", ex.what());
 		}
 		return false;
 	} else if (button == Input::MouseWheelUp) {
 		try {
 			mGuiContext.injectMouseWheelChange(1.0);
 		} catch (const CEGUI::Exception& ex) {
-			S_LOG_WARNING("Error in CEGUI." << ex);
+			logger->warn("Error in CEGUI: {}", ex.what());
 		}
 		return false;
 	} else {
@@ -206,7 +206,7 @@ bool GUICEGUIAdapter::injectMouseButtonDown(Input::MouseButton button) {
 		mGuiContext.injectMouseButtonDown(ceguiButton);
 		return false;
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 	return true;
 }
@@ -228,7 +228,7 @@ bool GUICEGUIAdapter::injectChar(int character) {
 			mGuiContext.injectChar(character);
 		}
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 	return true;
 
@@ -242,7 +242,7 @@ bool GUICEGUIAdapter::injectKeyDown(const SDL_Scancode& key) {
 			mGuiContext.injectKeyDown(scanCode);
 		}
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 	return true;
 
@@ -256,7 +256,7 @@ bool GUICEGUIAdapter::injectKeyUp(const SDL_Scancode& key) {
 			mGuiContext.injectKeyUp(scanCode);
 		}
 	} catch (const CEGUI::Exception& ex) {
-		S_LOG_WARNING("Error in CEGUI." << ex);
+		logger->warn("Error in CEGUI: {}", ex.what());
 	}
 	return true;
 

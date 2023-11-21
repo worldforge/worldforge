@@ -89,7 +89,7 @@ void Shader::buildPasses(bool normalMapped) {
 			}
 		}
 	} else {
-		S_LOG_WARNING("Could not create pass in Shader terrain technique.");
+		logger->warn("Could not create pass in Shader terrain technique.");
 	}
 	//If the number of active layers are more than 2 we should use a composite map.
 	if (activeLayersCount > 2) {
@@ -100,7 +100,7 @@ void Shader::buildPasses(bool normalMapped) {
 }
 
 bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& managedTextures) const {
-	S_LOG_VERBOSE("Compiling terrain page material " << material->getName());
+	logger->debug("Compiling terrain page material {}", material->getName());
 
 	material->removeAllTechniques();
 	Ogre::Material::LodValueList lodList;
@@ -214,7 +214,7 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 				}
 			}
 		} catch (const std::exception& ex) {
-			S_LOG_WARNING("Error when setting fragment program parameters." << ex);
+			logger->warn("Error when setting fragment program parameters: {}", ex.what());
 		}
 	}
 
@@ -242,7 +242,9 @@ bool Shader::compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& 
 	material->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
 
 	if (material->getSupportedTechniques().empty()) {
-		S_LOG_WARNING("The material '" << material->getName() << "' has no supported techniques. The reason for this is: \n" << material->getUnsupportedTechniquesExplanation());
+		logger->warn("The material '{}' has no supported techniques. The reason for this is: \n{}",
+					 material->getName(),
+					 material->getUnsupportedTechniquesExplanation());
 		return false;
 	}
 	return true;

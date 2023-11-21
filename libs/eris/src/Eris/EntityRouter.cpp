@@ -64,10 +64,10 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 						auto act = smart_dynamic_cast<RootOperation>(arg);
 						m_entity.onSoundAction(act, *ty);
 					} else {
-						warning() << "entity " << m_entity.getId() << " emitted sound with strange argument: " << op;
+						logger->warn("entity {} emitted sound with strange argument: {}", m_entity.getId(), op);
 					}
 				} else {
-					warning() << "entity " << m_entity.getId() << " emitted sound with strange argument: " << op;
+					logger->warn("entity {} emitted sound with strange argument: {}", m_entity.getId(), op);
 				}
 			}
 		}
@@ -105,7 +105,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 
     if (op->instanceOf(IMAGINARY_NO)) {
         if (args.empty()) {
-			error() << "entity " << m_entity.getId() << " sent imaginary with no args: " << op;
+			logger->error("entity {} sent imaginary with no args: {}", m_entity.getId(), op);
 		} else {
 			for (const auto& arg : args) {
 				m_entity.onImaginary(arg);

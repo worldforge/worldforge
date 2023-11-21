@@ -71,7 +71,7 @@ bool ListAdapter::_hasChanges() {
 	bool hasChanges = false;
 	for (auto& wrapper : mAdapters) {
 		if (!wrapper.Adapter) {
-// 			S_LOG_WARNING("The list of adapters contained a null reference. This should never happen.");
+// 			logger->warn("The list of adapters contained a null reference. This should never happen.");
 		} else {
 			hasChanges = hasChanges || wrapper.Adapter->hasChanges();
 		}
@@ -90,7 +90,7 @@ void ListAdapter::addAttributeAdapter(Adapters::Atlas::AdapterBase* adapter, CEG
 		wrapper.ContainerWindow.reset(containerWindow);
 		mAdapters.emplace_back(std::move(wrapper));
 	} else {
-// 		S_LOG_WARNING("Tried to add a null adapter.");
+// 		logger->warn("Tried to add a null adapter.");
 	}
 }
 

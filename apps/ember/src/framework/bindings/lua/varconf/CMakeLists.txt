@@ -3,6 +3,7 @@ add_library(ember-BindingsVarconf OBJECT
 )
 
 target_link_libraries(ember-BindingsVarconf PUBLIC
+        ember-framework
         ember-external-sol2
         varconf
 )

@@ -102,12 +102,12 @@ void ModelBoneProvider::setOffsets(const Ogre::Vector3& translate, const Ogre::Q
 	if (!translate.isNaN()) {
 		mOffsetTranslation = translate;
 	} else {
-		S_LOG_WARNING("Translation set for model bone provider for attach point '" << mAttachPointDefinition.BoneName << "' is invalid");
+		logger->warn("Translation set for model bone provider for attach point '{}' is invalid", mAttachPointDefinition.BoneName);
 	}
 	if (!rotate.isNaN()) {
 		mOffsetRotation = rotate;
 	} else {
-		S_LOG_WARNING("Rotation set for model bone provider for attach point '" << mAttachPointDefinition.BoneName << "' is invalid");
+		logger->warn("Rotation set for model bone provider for attach point '{}' is invalid", mAttachPointDefinition.BoneName);
 	}
 	updatePositionAndOrientation();
 }

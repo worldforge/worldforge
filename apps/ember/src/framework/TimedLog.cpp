@@ -19,7 +19,7 @@
 
 #include <utility>
 
-#include "LoggingInstance.h"
+#include "Log.h"
 
 namespace Ember
 {
@@ -28,7 +28,7 @@ TimedLog::TimedLog(std::string logName, bool reportStart) :
 	mLogName(std::move(logName)), mStart(std::chrono::steady_clock::now())
 {
 	if (reportStart) {
-		S_LOG_VERBOSE("Started task '" << mLogName << "'.");
+		logger->debug("Started task '{}'.", mLogName);
 	}
 }
 
@@ -36,7 +36,7 @@ TimedLog::~TimedLog()
 {
 	auto currentTime = std::chrono::steady_clock::now();
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
-	S_LOG_VERBOSE("Ended task '" << mLogName << "' after " << microDuration.count() << " microseconds.");
+	logger->debug("Ended task '{}' after {} microseconds.", mLogName, microDuration.count());
 }
 
 void TimedLog::report()
@@ -45,9 +45,9 @@ void TimedLog::report()
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
 	if (mLastReport.time_since_epoch().count()) {
 		auto microLastReportDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mLastReport);
-		S_LOG_VERBOSE("Reported on task '" << mLogName << "' after " << microDuration.count() << " microseconds, "<< microLastReportDuration.count() <<" since last reported time.");
+		logger->debug("Reported on task '{}' after {} microseconds, {} since last reported time.", mLogName, microDuration.count(), microLastReportDuration.count());
 	} else {
-		S_LOG_VERBOSE("Reported on task '" << mLogName << "' after " << microDuration.count() << " microseconds.");
+		logger->debug("Reported on task '{}' after {} microseconds.", mLogName, microDuration.count());
 	}
 	mLastReport = currentTime;
 }
@@ -57,9 +57,9 @@ void TimedLog::report(const std::string& reportName)
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
 	if (mLastReport.time_since_epoch().count()) {
 		auto microLastReportDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mLastReport);
-		S_LOG_VERBOSE("Reported '" << reportName << "' on task '" << mLogName << "' after " << microDuration.count() << " microseconds, "<< microLastReportDuration.count() <<" since last reported time.");
+		logger->debug("Reported '{}' on task '{}' after {} microseconds, {} since last reported time.", reportName, mLogName, microDuration.count(), microLastReportDuration.count());
 	} else {
-		S_LOG_VERBOSE("Reported '" << reportName << "' on task '" << mLogName << "' after " << microDuration.count() << " microseconds.");
+		logger->debug("Reported '{}' on task '{}' after {} microseconds.", reportName, mLogName, microDuration.count());
 	}
 	mLastReport = currentTime;
 }
