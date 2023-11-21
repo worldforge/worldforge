@@ -18,6 +18,7 @@
 
 #include "LogExtensions.h"
 #include <map>
+#include <sstream>
 
 namespace Ember {
 
