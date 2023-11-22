@@ -45,7 +45,7 @@ jobs:
                 uses: awalsh128/cache-apt-pkgs-action@v1.3.1
                 with:
                     #Needed for the assets processing step in Cyphesis
-                    packages: imagemagick file
+                    packages: imagemagick file rsync
                     version: 1.0
 
             -   name: Setup environment
@@ -64,6 +64,10 @@ jobs:
                 if: runner.os == 'macOS'
                 run: |
                     brew install autoconf automake
+
+            -   name: Install LXD (for Snapcraft)
+                if: env.BUILD_SNAP == 'true'
+                uses: canonical/setup-lxd
 
             -   name: Install Snapcraft
                 if: env.BUILD_SNAP == 'true'
