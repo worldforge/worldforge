@@ -25,6 +25,8 @@
 
 namespace Ember::Cegui {
 
+std::shared_ptr<spdlog::logger> CEGUILogger::logger = std::make_shared<spdlog::logger>("CEGUI");
+
 CEGUILogger::CEGUILogger() {
 	registerConfigListener("cegui", "minimumlogginglevel", sigc::mem_fun(*this, &CEGUILogger::Config_MinimumLogLevel));
 

@@ -39,7 +39,7 @@ namespace Ember::Cegui {
 class CEGUILogger : public CEGUI::Logger, ConfigListenerContainer {
 public:
 
-	inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("CEGUI");
+	static std::shared_ptr<spdlog::logger> logger;
 
 	CEGUILogger();
 

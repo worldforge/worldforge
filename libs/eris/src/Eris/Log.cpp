@@ -36,4 +36,6 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
 }
 }
 }
-
+namespace Eris {
+std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("eris");;
+}

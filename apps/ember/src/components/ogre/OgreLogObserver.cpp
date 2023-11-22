@@ -28,6 +28,8 @@ using namespace Ogre;
 
 namespace Ember::OgreView {
 
+std::shared_ptr<spdlog::logger> OgreLogObserver::logger = std::make_shared<spdlog::logger>("OGRE");
+
 void OgreLogObserver::messageLogged(const String& message, LogMessageLevel lml, bool maskDebug, const String& logName, bool& skipThisMessage) {
 	if (!skipThisMessage) {
 

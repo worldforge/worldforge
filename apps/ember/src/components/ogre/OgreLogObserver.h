@@ -35,7 +35,7 @@ This is a combined Ogre::LogListener and a StreamLogObserver.
 The StreamLogObserver part does the main work, while the Ogre::LogListener implementation allow us to receive ogre log events.
 */
 struct OgreLogObserver : public Ogre::LogListener {
-	inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("OGRE");;
+	static std::shared_ptr<spdlog::logger> logger;
 
 	void messageLogged(const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String& logName, bool& skipThisMessage) override;
 
