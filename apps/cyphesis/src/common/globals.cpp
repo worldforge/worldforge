@@ -652,6 +652,9 @@ void updateUserConfiguration()
     // Write out any changes that have been overridden at user scope. It
     // may be a good idea to do this at shutdown.
     if (configHome != nullptr) {
+        boost::filesystem::path configHomePath(configHome);
+        //Make sure directory exists.
+        create_directories(configHomePath);
         global_conf->writeToFile((boost::filesystem::path(configHome) / "cyphesis.vconf").string(), varconf::USER);
     }
 
