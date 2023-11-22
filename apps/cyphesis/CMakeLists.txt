@@ -196,7 +196,7 @@ add_subdirectory(docs)
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 
 configure_file(docs/Doxyfile.in Doxyfile @ONLY)
-message(STATUS "Installing snapcraft.yaml file into build directory. Copy this one to the installation directory if you want to build snaps.")
+message(STATUS "Installing snapcraft.yaml file into build directory. Copy this one to the installation directory if you want to build snaps, or preferably use the 'snap-build-cyphesis' build target.")
 configure_file(tools/snapcraft.tmpl.yaml snap/snapcraft.yaml @ONLY)
 
 install(FILES README.md COPYING AUTHORS THANKS DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/cyphesis)

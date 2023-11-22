@@ -11,9 +11,15 @@ confinement: strict
 license: GPL-2.0
 compression: lzo
 
+plugs:
+  worldforge:
+    interface: content
+    content: socket-directory
+    target: $SNAP_DATA
+
 apps:
   ember:
-    extensions: [gnome]
+    extensions: [ gnome ]
     environment:
       SDL_AUDIODRIVER: pulse
     command: bin/ember
