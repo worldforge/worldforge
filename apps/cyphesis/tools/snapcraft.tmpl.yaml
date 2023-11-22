@@ -21,7 +21,8 @@ apps:
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
             WF_cyphesis_bindir: "$SNAP/bin"
-            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
+            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+            PYTHONHOME : "$SNAP"
         #listen-stream: "[::]:6767"
         plugs:
             - network
@@ -33,7 +34,8 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
-            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
+            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+            PYTHONHOME : "$SNAP"
     cycmd:
         command: bin/cycmd
         environment:
@@ -41,7 +43,8 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
-            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
+            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+            PYTHONHOME : "$SNAP"
     cydb:
         command: bin/cydb
         environment:
@@ -49,7 +52,8 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
-            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
+            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+            PYTHONHOME : "$SNAP"
     cyaiclient:
         command: bin/cyaiclient
         environment:
@@ -57,7 +61,8 @@ apps:
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
             WF_cyphesis_bindir: "$SNAP/bin"
-            WF_cyphesis_assetsdir: "$SNAP/share/cyphesis/assets"
+            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+            PYTHONHOME : "$SNAP"
 
 parts:
     cyphesis:
@@ -69,6 +74,7 @@ parts:
             - bin/cy*
             - bin/squall
             - etc/cyphesis
+            - lib/python**
             - share/cyphesis
             - share/doc/cyphesis
             - share/man/man1/cy*

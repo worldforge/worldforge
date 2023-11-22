@@ -61,7 +61,7 @@ class Worldforge(ConanFile):
             self.requires("sqlite3/3.44.0")
             self.requires("readline/8.1.2")
             self.requires("cpython/3.10.0@worldforge")
-            #self.requires("avahi/0.8")
+            # self.requires("avahi/0.8")
 
         if not is_msvc(self):
             self.requires("libxdg-basedir/1.2.3@worldforge")
@@ -84,6 +84,8 @@ class Worldforge(ConanFile):
         tc.variables["PYTHON_IS_STATIC"] = "TRUE"
         # The default CMake FindPython3 component will set the Python3_EXECUTABLE, which is then used in Cyphesis. Therefore do this here.
         tc.variables["Python3_EXECUTABLE"] = os.path.join(self.dependencies["cpython"].package_folder, "bin/python")
+        # Inject the PYTHOHOME variable so we can copy the Python scripts to the Snap package if we choose to build that.
+        tc.variables["PYTHONHOME"] = self.dependencies["cpython"].package_folder
         tc.variables["WORLDFORGE_WORLDS_SOURCE_PATH"] = os.path.join(
             self.dependencies["worldforge-worlds"].package_folder, "worlds")
         tc.preprocessor_definitions["PYTHONHOME"] = "\"{}\"".format(self.dependencies["cpython"].package_folder)
