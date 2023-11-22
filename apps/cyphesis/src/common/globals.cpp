@@ -490,6 +490,7 @@ namespace {
                         auto section = fullname.substr(0, separatorPos);
                         auto name = fullname.substr(separatorPos + 1);
                         auto value = env.substr((eq_pos + 1), (env.size() - (eq_pos + 1)));
+                        spdlog::info("Setting config item {}:{} to '{}' since it was specified in env variable '{}'.", section, name, value, env);
                         global_conf->setItem(section, name, value, varconf::INSTANCE);
                     }
                 }

@@ -255,8 +255,12 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
     //we need to tell Python where to find its stuff. This is done through the PYTHONHOME environment variable.
     //Our build system is setup so that it will inject the preprocessor variable by that same name in that case.
 #if defined(PYTHONHOME)
-    spdlog::info("Setting Python home directory to " PYTHONHOME);
-    setenv("PYTHONHOME", PYTHONHOME, 1);
+    if (getenv("SNAP") != nullptr) {
+        spdlog::info("Detected running as Snap so won't alter the Python home directory.");
+    } else {
+        spdlog::info("Setting Python home directory to " PYTHONHOME);
+        setenv("PYTHONHOME", PYTHONHOME, 1);
+    }
 #endif
 
     python_directories = std::move(scriptDirectories);

@@ -207,6 +207,9 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     add_custom_target(snap-build-cyphesis)
     add_custom_command(
             TARGET snap-build-cyphesis
+            COMMAND ${CMAKE_COMMAND} -E echo "First I need to copy the Python scripts needed for the base Python installation from ${PYTHONHOME}/lib."
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/lib
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${PYTHONHOME}/lib ${CMAKE_INSTALL_PREFIX}/lib
             COMMAND ${CMAKE_COMMAND} -E echo "I will now copy the snapfile to the installation directory and run 'snapcraft'."
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/snap
             COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/snap/snapcraft.yaml ${CMAKE_INSTALL_PREFIX}/snap/snapcraft.yaml
