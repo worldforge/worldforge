@@ -18,6 +18,11 @@ slots:
         source:
             write:
                 - $SNAP_COMMON/tmp/cyphesis_cyphesis.sock
+        allow-auto-connection:
+            plug-publisher-id:
+                - $SLOT_PUBLISHER_ID
+            plug-attributes:
+                content: $SLOT(content)
 
 apps:
     cyphesis:
