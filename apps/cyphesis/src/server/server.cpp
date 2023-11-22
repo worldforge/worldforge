@@ -606,7 +606,7 @@ namespace {
                         importer.detach();
                     }
                 } else {
-                    spdlog::debug("Not importing as \"{}\" could not be found.", importPath);
+                    spdlog::warn("Not importing as \"{}\" could not be found.", importPath);
                     file.close();
                 }
             }

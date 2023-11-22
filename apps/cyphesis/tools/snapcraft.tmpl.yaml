@@ -19,8 +19,8 @@ apps:
             WF_cyphesis_confdir: "$SNAP/etc"
             WF_cyphesis_vardir: "$SNAP_USER_COMMON"
             WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
             WF_cyphesis_bindir: "$SNAP/bin"
+            WF_deeds_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
             WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
             PYTHONHOME : "$SNAP"
         #listen-stream: "[::]:6767"
@@ -78,3 +78,4 @@ parts:
             - share/cyphesis
             - share/doc/cyphesis
             - share/man/man1/cy*
+            - share/worldforge/worlds/**
