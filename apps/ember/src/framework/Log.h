@@ -26,7 +26,7 @@
 #include <spdlog/logger.h>
 
 namespace Ember {
-inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("ember");;
+extern std::shared_ptr<spdlog::logger> logger;
 }
 
 #endif

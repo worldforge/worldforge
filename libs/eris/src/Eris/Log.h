@@ -6,9 +6,7 @@
 #include <string>
 
 namespace Eris {
-
-inline static std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("eris");;
-
+extern std::shared_ptr<spdlog::logger> logger;
 }
 
 #include "LogStream.h"

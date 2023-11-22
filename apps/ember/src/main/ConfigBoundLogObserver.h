@@ -39,7 +39,7 @@ class ConfigService;
 class ConfigBoundLogObserver
 {
 public:
-    ConfigBoundLogObserver(spdlog::sink_ptr sink);
+    explicit ConfigBoundLogObserver(spdlog::sink_ptr sink);
 
     ~ConfigBoundLogObserver() = default;;
 

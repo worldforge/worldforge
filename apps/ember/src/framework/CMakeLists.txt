@@ -27,6 +27,7 @@ add_library(ember-framework OBJECT
         FileSystemObserver.cpp
         StackChecker.cpp
         LogExtensions.cpp
+        Log.cpp
 )
 add_subdirectory(bindings)
 

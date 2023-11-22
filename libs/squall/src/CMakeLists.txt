@@ -8,6 +8,7 @@ set(CORE_SOURCE_FILES
         squall/core/Resolver.cpp
         squall/core/Signature.cpp
         squall/core/AsyncProvider.cpp
+        squall/core/Log.cpp
 )
 
 set(CORE_HEADER_FILES

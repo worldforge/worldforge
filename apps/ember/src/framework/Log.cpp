@@ -16,14 +16,8 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef WORLDFORGE_LOG_H
-#define WORLDFORGE_LOG_H
+#include "Log.h"
 
-#include <spdlog/logger.h>
-
-namespace Squall {
-extern std::shared_ptr<spdlog::logger> logger;
+namespace Ember {
+std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("ember");
 }
-
-
-#endif //WORLDFORGE_LOG_H
