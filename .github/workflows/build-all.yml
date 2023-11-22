@@ -67,7 +67,7 @@ jobs:
 
             -   name: Install LXD (for Snapcraft)
                 if: env.BUILD_SNAP == 'true'
-                uses: canonical/setup-lxd
+                uses: canonical/setup-lxd@v0.1.1
 
             -   name: Install Snapcraft
                 if: env.BUILD_SNAP == 'true'
@@ -147,7 +147,8 @@ jobs:
                 shell: bash
                 run: |
                     echo "Uploading Snap"
-                    snapcraft upload ~/install/usr/*.snap --release edge
+                    snapcraft upload ~/install/usr/ember*.snap --release edge
+                    snapcraft upload ~/install/usr/cyphesis*.snap --release edge
 
             -   name: Store Snaps
                 if: env.BUILD_SNAP == 'true'
