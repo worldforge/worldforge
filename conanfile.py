@@ -41,7 +41,7 @@ class Worldforge(ConanFile):
     def requirements(self):
         self.requires("bullet3/2.89")
         self.requires("libsigcpp/3.0.7")
-        self.requires("libcurl/8.2.1")
+        self.requires("libcurl/8.4.0")
         self.requires("spdlog/1.12.0")
         self.requires("cli11/2.3.2")
         self.requires("boost/1.83.0")
