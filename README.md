@@ -4,7 +4,8 @@
 [![Appveyor build status](https://ci.appveyor.com/api/projects/status/github/worldforge/worldforge?branch=master&svg=true)](https://ci.appveyor.com/project/erikogenvik/worldforge)
 [![Build with CMake](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml/badge.svg)](https://github.com/worldforge/worldforge/actions/workflows/build-all.yml)
 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/ember)
+[![cyphesis](https://snapcraft.io/cyphesis/badge.svg)](https://snapcraft.io/cyphesis)
+[![ember](https://snapcraft.io/ember/badge.svg)](https://snapcraft.io/ember)
 
 The [WorldForge](http://worldforge.org/ "The main Worldforge site") project lets you create virtual world system.
 We provide servers, clients, tools, protocol and media. You provide the world. Everything we do is Free Software.
