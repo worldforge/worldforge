@@ -17,7 +17,7 @@ slots:
         content: socket-directory
         source:
             write:
-                - $SNAP_COMMON/tmp/cyphesis_cyphesis.sock
+                - $SNAP_COMMON/tmp
         allow-auto-connection:
             plug-publisher-id:
                 - $SLOT_PUBLISHER_ID
