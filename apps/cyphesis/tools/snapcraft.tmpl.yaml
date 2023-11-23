@@ -21,11 +21,6 @@ slots:
         source:
             write:
                 - $SNAP_COMMON/tmp
-        allow-auto-connection:
-            plug-publisher-id:
-                - $SLOT_PUBLISHER_ID
-            plug-attributes:
-                content: $SLOT(content)
 
 apps:
     cyphesis:
