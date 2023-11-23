@@ -91,9 +91,6 @@ int main(int argc, char ** argv)
 
     readConfigItem(instance, "usedatabase", database_flag);
 
-    // If we are a daemon logging to syslog, we need to set it up.
-    initLogger();
-
     Inheritance::instance();
 
     SystemTime time;

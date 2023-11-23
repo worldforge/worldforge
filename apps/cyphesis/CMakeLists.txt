@@ -36,10 +36,6 @@ set(DESCRIPTION "The Worldforge server.")
 set(SOCKET_DIR ${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/tmp)
 set(PACKAGE_BUGREPORT "erik@ogenvik.org")
 
-check_function_exists(syslog HAVE_SYSLOG)
-
-check_include_files(syslog.h HAVE_SYSLOG_H)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 link_libraries(Threads::Threads)

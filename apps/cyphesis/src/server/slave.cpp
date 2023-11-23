@@ -56,9 +56,6 @@ int main(int argc, char ** argv)
         }
     }
 
-    // If we are a daemon logging to syslog, we need to set it up.
-    initLogger();
-
     // Initialise the persistance subsystem. If we have been built with
     // database support, this will open the various databases used to
     // store server data.
