@@ -9,7 +9,9 @@ description: |
 grade: devel
 confinement: strict
 license: GPL-2.0
-compression: lzo
+source-code: https://github.com/worldforge/worldforge
+website: https://www.worldforge.org
+contact: erik@ogenvik.org
 
 plugs:
   worldforge:
