@@ -72,8 +72,8 @@ HandlerResult PythonWrapper::operation(const std::string& op_type,
             PyErr_Print();
         }
         //It's important that we only access m_wrapper.as_string() after PyErr_Print(), as it's invalid to access any Python stuff when there's an error set.
-        spdlog::error("Python error calling \"{}\" on " +
-                                   m_wrapper.as_string(), op_name);
+        spdlog::error("Python error calling \"{}\" on {}",
+                                   op_name, m_wrapper.as_string());
         if (op->getClassNo() == Atlas::Objects::Operation::TICK_NO) {
             spdlog::error("Script for {} has reported an error "
                                 "processing a tick operation. "

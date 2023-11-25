@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_ExtensionClass__h
-#define __CXX_ExtensionClass__h
+#ifndef CXX_ExtensionClass_h
+#define CXX_ExtensionClass_h
 
 #include <cstddef>
 
@@ -507,5 +507,5 @@ namespace Py
     };
 } // Namespace Py
 
-// End of __CXX_ExtensionClass__h
+// End of CXX_ExtensionClass_h
 #endif

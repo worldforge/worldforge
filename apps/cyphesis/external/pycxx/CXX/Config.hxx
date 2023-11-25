@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __PyCXX_config_hh__
-#define __PyCXX_config_hh__
+#ifndef PyCXX_config_hxx
+#define PyCXX_config_hxx
 
 
 #include "WrapPython.h"
@@ -91,4 +91,4 @@ typedef Py_ssize_t PyCxx_ssize_t;
 #if PY_MINOR_VERSION < 2
 typedef long int Py_hash_t;
 #endif
-#endif //  __PyCXX_config_hh__
+#endif //  PyCXX_config_hxx

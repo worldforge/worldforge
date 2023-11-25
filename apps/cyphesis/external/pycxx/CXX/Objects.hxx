@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_Objects__h
-#define __CXX_Objects__h
+#ifndef CXX_Objects_h
+#define CXX_Objects_h
 
 #include "WrapPython.h"
 #include "Version.hxx"
@@ -1333,7 +1333,7 @@ namespace Py
             validate();
         }
 
-        SeqBase<T>( const Object &ob )
+        SeqBase( const Object &ob )
         : Object( ob )
         {
             validate();
@@ -2546,20 +2546,20 @@ namespace Py
         T the_item;
 
     public:
-        mapref<T>( MapBase<T> &map, const std::string &k )
+        mapref( MapBase<T> &map, const std::string &k )
         : s( map ), the_item()
         {
             key = String( k );
             if( map.hasKey( key ) ) the_item = map.getItem( key );
         }
 
-        mapref<T>( MapBase<T> &map, const Object &k )
+        mapref( MapBase<T> &map, const Object &k )
         : s( map ), key( k ), the_item()
         {
             if( map.hasKey( key ) ) the_item = map.getItem( key );
         }
 
-        virtual ~mapref<T>()
+        virtual ~mapref()
         {}
 
         // MapBase<T> stuff
@@ -2743,7 +2743,7 @@ namespace Py
         }
 
         // TMM: 02Jul'01 - changed MapBase<T> to Object in next line
-        MapBase<T>( const Object &ob )
+        MapBase( const Object &ob )
         : Object( ob )
         {
             validate();
@@ -3532,4 +3532,4 @@ namespace Py
     }
 
 } // namespace Py
-#endif    // __CXX_Objects__h
+#endif    // CXX_Objects_h

@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_PythonType__h
-#define __CXX_PythonType__h
+#ifndef CXX_PythonType_h
+#define CXX_PythonType_h
 
 namespace Py
 {
@@ -200,5 +200,5 @@ namespace Py
 
 } // Namespace Py
 
-// End of __CXX_PythonType__h
+// End of CXX_PythonType_h
 #endif

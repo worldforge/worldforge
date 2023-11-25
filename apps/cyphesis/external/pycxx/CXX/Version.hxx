@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __PyCXX_version_hxx__
-#define __PyCXX_version_hxx__
+#ifndef PyCXX_version_hxx
+#define PyCXX_version_hxx
 
 #define PYCXX_VERSION_MAJOR 7
 #define PYCXX_VERSION_MINOR 0

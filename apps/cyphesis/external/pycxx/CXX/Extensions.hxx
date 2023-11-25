@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_Extensions__h
-#define __CXX_Extensions__h
+#ifndef CXX_Extensions_h
+#define CXX_Extensions_h
 
 
 #ifdef _MSC_VER

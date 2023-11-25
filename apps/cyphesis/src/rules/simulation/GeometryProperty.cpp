@@ -83,7 +83,7 @@ void GeometryProperty::set(const Atlas::Message::Element& data)
                             }
                         };
 
-                        my_visitor visitor{};
+                        my_visitor visitor;
                         visitor.prop = this;
                         m_owner.apply_visitor(visitor);
                     } else {

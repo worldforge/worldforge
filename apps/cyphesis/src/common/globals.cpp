@@ -318,7 +318,7 @@ class StaticOption<int>;
 class UnixSockOption : public StaticOption<std::string>
 {
     protected:
-        const char* const m_format;
+        const std::string m_format;
     public:
         UnixSockOption(const std::string& val,
                        const std::string& descr,
@@ -334,7 +334,7 @@ class UnixSockOption : public StaticOption<std::string>
 
 void UnixSockOption::missing()
 {
-    m_data = fmt::format(m_format, instance);
+    m_data = fmt::vformat(m_format, fmt::make_format_args(instance));
 }
 
 void UnixSockOption::postProcess()

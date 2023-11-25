@@ -317,8 +317,6 @@ void init_python_api(std::vector<std::function<std::string()>> initFunctions, st
     } else {
         spdlog::critical("Python could not import sys.path");
     }
-
-    cy_debug_print(Py_GetPath())
 }
 
 void shutdown_python_api()

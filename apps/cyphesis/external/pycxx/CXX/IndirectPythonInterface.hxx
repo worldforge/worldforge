@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_INDIRECT_PYTHON_INTERFACE__HXX__
-#define __CXX_INDIRECT_PYTHON_INTERFACE__HXX__
+#ifndef CXX_INDIRECT_PYTHON_INTERFACE_HXX
+#define CXX_INDIRECT_PYTHON_INTERFACE_HXX
 
 #include "WrapPython.h"
 
@@ -151,4 +151,4 @@ void _XDECREF( PyObject *op );
 const char *__Py_PackageContext();
 };
 
-#endif    // __CXX_INDIRECT_PYTHON_INTERFACE__HXX__
+#endif    // CXX_INDIRECT_PYTHON_INTERFACE_HXX

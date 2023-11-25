@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_ExtensionTypeBase__h
-#define __CXX_ExtensionTypeBase__h
+#ifndef CXX_ExtensionTypeBase_h
+#define CXX_ExtensionTypeBase_h
 
 namespace Py
 {
@@ -177,5 +177,5 @@ namespace Py
 
 } // Namespace Py
 
-// End of __CXX_ExtensionTypeBase__h
+// End of CXX_ExtensionTypeBase_h
 #endif

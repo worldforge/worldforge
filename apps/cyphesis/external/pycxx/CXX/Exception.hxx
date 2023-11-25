@@ -35,8 +35,8 @@
 //
 //-----------------------------------------------------------------------------
 
-#ifndef __CXX_Exception_h
-#define __CXX_Exception_h
+#ifndef CXX_Exception_h
+#define CXX_Exception_h
 
 #include "WrapPython.h"
 #include "Version.hxx"

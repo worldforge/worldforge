@@ -3,8 +3,8 @@
 //
 //  Copyright (c) 2008 Barry A. Scott
 //
-#ifndef __CXX_Debug_hxx
-#define __CXX_Debug_hxx
+#ifndef CXX_Debug_hxx
+#define CXX_Debug_hxx
 
 //
 //  Functions useful when debugging PyCXX
