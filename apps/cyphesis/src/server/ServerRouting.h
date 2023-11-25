@@ -23,7 +23,6 @@
 #include "common/Router.h"
 #include "common/Shaker.h"
 #include "ConnectableRouter.h"
-#include "common/AssetsHandler.h"
 #include <memory>
 #include <set>
 
@@ -59,7 +58,7 @@ class ServerRouting
         /// The Lobby management object.
         std::unique_ptr<Lobby> m_lobby;
 
-        AssetsHandler m_assetsHandler;
+		std::vector<std::string> m_assets;
         /// The number of clients currently connected.
         int m_numClients;
         //All client connections in the system. These aren't owned by this instance.
@@ -75,8 +74,7 @@ class ServerRouting
                       Persistence& persistence,
                       std::string ruleset,
                       std::string name,
-                      RouterId lobbyId,
-                      AssetsHandler assetsHandler);
+                      RouterId lobbyId);
 
         ~ServerRouting();
 
@@ -126,6 +124,10 @@ class ServerRouting
         {
             return m_accounts;
         }
+
+		void setAssets(std::vector<std::string> assets) {
+			m_assets = assets;
+		}
 
         /// Accessor for server ruleset.
         const std::string& getRuleset() const

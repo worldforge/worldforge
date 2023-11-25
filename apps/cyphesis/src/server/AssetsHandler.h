@@ -19,15 +19,24 @@
 #ifndef CYPHESIS_ASSETSHANDLER_H
 #define CYPHESIS_ASSETSHANDLER_H
 
+#include "squall/core/Signature.h"
 #include <string>
+#include <filesystem>
+#include <optional>
 
 class AssetsHandler {
 public:
-    AssetsHandler(std::string squallSignature);
+    explicit AssetsHandler(std::filesystem::path squallRepositoryPath);
 
     std::string resolveAssetsUrl() const;
 
-    std::string mSquallSignature;
+	std::optional<Squall::Signature> refreshSquallRepository(std::filesystem::path pathToAssets);
+
+private:
+
+	std::filesystem::path mSquallRepositoryPath;
+
+    std::optional<Squall::Signature> mSquallSignature;
 };
 
 #endif  // CYPHESIS_ASSETSHANDLER_H

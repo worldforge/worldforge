@@ -38,7 +38,6 @@ add_library(cyphesis-common
         net/CommHttpClient.cpp
         net/HttpHandling.cpp
         FormattedXMLWriter.cpp
-        AssetsHandler.cpp
         net/SquallHandler.cpp
 )
 

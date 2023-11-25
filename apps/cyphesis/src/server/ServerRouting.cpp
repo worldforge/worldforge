@@ -33,6 +33,9 @@
 #include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/RootEntity.h>
 
+#include <utility>
+#include <ranges>
+
 
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
@@ -49,12 +52,10 @@ ServerRouting::ServerRouting(BaseWorld& wrld,
                              Persistence& persistence,
                              std::string ruleset,
                              std::string name,
-                             RouterId lobbyId,
-                             AssetsHandler assetsHandler) :
+                             RouterId lobbyId) :
         m_svrRuleset(std::move(ruleset)),
         m_svrName(std::move(name)),
-        m_lobby(new Lobby(*this, lobbyId)),
-        m_assetsHandler(assetsHandler),
+        m_lobby(new Lobby(*this, std::move(lobbyId))),
         m_numClients(0),
         m_processOpsTotal(0),
         m_world(wrld),
@@ -148,8 +149,10 @@ void ServerRouting::addToMessage(MapType& omap) const {
         omap["restricted"] = "true";
     }
     omap["entities"] = (Atlas::Message::IntType) m_world.getEntities().size();
-    omap["assets"] = Atlas::Message::ListType{m_assetsHandler.resolveAssetsUrl()};
-    //"squall://localhost:6880/#c1eac889a2e74eceaf3e417c59de6754c90ee83a89b3a36ada4d7a41011d8dd"
+
+	//TODO: Use std::ranges::to when we upgrade to C++23
+	auto assets_view = m_assets | std::views::transform([](auto entry) {return Atlas::Message::Element(entry);}) ;
+    omap["assets"] = std::vector<Atlas::Message::Element>(assets_view.begin(), assets_view.end());
 
     // We could add all sorts of stats here, but I don't know exactly what yet.
 }
@@ -170,7 +173,9 @@ void ServerRouting::addToEntity(const RootEntity& ent) const {
     }
     ent->setAttr("entities", (Atlas::Message::IntType) m_world.getEntities().size());
 
-    ent->setAttr("assets", Atlas::Message::ListType{m_assetsHandler.resolveAssetsUrl()});
+	//TODO: Use std::ranges::to when we upgrade to C++23
+	auto assets_view = m_assets | std::views::transform([](auto entry) {return Atlas::Message::Element(entry);}) ;
+    ent->setAttr("assets", std::vector<Atlas::Message::Element>(assets_view.begin(), assets_view.end()));
 
     // We could add all sorts of stats here, but I don't know exactly what yet.
 }

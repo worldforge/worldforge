@@ -17,10 +17,13 @@
  */
 
 #include "SquallAssetsGenerator.h"
+
+#include <utility>
 #include "squall/core/Generator.h"
 
 SquallAssetsGenerator::SquallAssetsGenerator(Squall::Repository repository, std::filesystem::path assetsPath)
-        : mRepository(repository), mAssetsPath(assetsPath) {
+        : mRepository(std::move(repository)),
+		mAssetsPath(std::move(assetsPath)) {
 
 }
 
@@ -39,11 +42,11 @@ std::optional<Squall::Signature> SquallAssetsGenerator::generateFromAssets(const
     } while (!result.complete);
 
     if (result.processedFiles.empty()) {
-        return std::optional<Squall::Signature>();
+        return {};
     } else {
         auto& lastEntry = *(--result.processedFiles.end());
         auto signature = lastEntry.fileEntry.signature;
         mRepository.storeRoot(rootName, Squall::Root{.signature = signature});
-        return std::optional<Squall::Signature>(signature);
+        return {signature};
     }
 }

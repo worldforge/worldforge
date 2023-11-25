@@ -70,6 +70,7 @@
 #include "common/Storage.h"
 #include "common/net/SquallHandler.h"
 #include "SquallAssetsGenerator.h"
+#include "AssetsHandler.h"
 
 #include <varconf/config.h>
 
@@ -432,20 +433,23 @@ namespace {
 
 
             AssetsManager assets_manager(std::make_unique<FileSystemObserver>(*io_context));
+
+            std::filesystem::path squallRepositoryPath = std::filesystem::path(var_directory) / "lib" / "cyphesis" / "squall" ;
+			AssetsHandler assetsHandler{squallRepositoryPath};
+
 			assets_manager.observeAssetsDirectory();
+
 
             //Perhaps move all this into the AssetsManager?
             spdlog::info("Reading assets from {}", assets_manager.getAssetsPath().string());
 
-            std::filesystem::path squallRepositoryPath = std::filesystem::path(var_directory) / "lib" / "cyphesis" / "squall" ;
 
-            SquallAssetsGenerator assetsGenerator{Squall::Repository(squallRepositoryPath), assets_manager.getAssetsPath()};
 
             spdlog::info("Setting up Squall repository at {}, with assets located at {}.", squallRepositoryPath.string(), assets_manager.getAssetsPath().string());
             spdlog::info("Will now generate the Squall repository. This will take some time the first time the server is ran, but should be quick once done.");
-            auto rootSignature = assetsGenerator.generateFromAssets("cyphesis-" + ruleset_name);
-            if (rootSignature) {
-                spdlog::info("Generated squall signature {}.", rootSignature->str_view());
+			auto rootSignatureResult = assetsHandler.refreshSquallRepository(assets_manager.getAssetsPath());
+            if (rootSignatureResult) {
+                spdlog::info("Generated squall signature {}.", rootSignatureResult->str_view());
             } else {
                 spdlog::warn("Could not generate Squall signature.");
                 return 1;
@@ -504,8 +508,6 @@ namespace {
             CyPy_Server::registerWorld(&world);
 
             StorageManager store(world, serverDatabase->database(), entityBuilder, propertyManager);
-            //TODO: fetch from assets dynamically
-            AssetsHandler assetsHandler{rootSignature->str()};
 
             //Instantiate at startup
             HttpHandling httpCache(monitors);
@@ -526,8 +528,8 @@ namespace {
                                         persistence,
                                         ruleset_name,
                                         server_name,
-                                        lobby_int_id,
-                                        assetsHandler);
+                                        lobby_int_id);
+			serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
 
             //Need to register the server routing instance with the Teleport property.
             TeleportProperty::s_serverRouting = &serverRouting;

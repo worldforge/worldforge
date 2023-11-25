@@ -17,15 +17,34 @@
  */
 
 #include "AssetsHandler.h"
+#include "SquallAssetsGenerator.h"
+#include "common/globals.h"
+#include <spdlog/spdlog.h>
 
-AssetsHandler::AssetsHandler(std::string squallSignature)
-        : mSquallSignature(squallSignature) {
+#include <utility>
+
+AssetsHandler::AssetsHandler(std::filesystem::path squallRepositoryPath)
+		: mSquallRepositoryPath(std::move(squallRepositoryPath)) {
 
 }
 
 std::string AssetsHandler::resolveAssetsUrl() const {
-    //By omitting host we're telling the client to use the same host as the current connection.
+	if (mSquallSignature) {
+		//By omitting host we're telling the client to use the same host as the current connection.
 //    return std::string("http://:6780/squall/" + mSquallSignature.substr(0, 2) + "/" + mSquallSignature.substr(2));
-    return std::string("squall://:6780/squall#" + mSquallSignature);
+		return std::string("squall://:6780/squall#" + mSquallSignature->str());
+	} else {
+		return "";
+	}
+}
+
+std::optional<Squall::Signature> AssetsHandler::refreshSquallRepository(std::filesystem::path pathToAssets) {
+	SquallAssetsGenerator assetsGenerator{Squall::Repository(mSquallRepositoryPath), std::move(pathToAssets)};
+
+	auto rootSignatureResult = assetsGenerator.generateFromAssets("cyphesis-" + ruleset_name);
+	if (rootSignatureResult) {
+		mSquallSignature = *rootSignatureResult;
+	}
+	return rootSignatureResult;
 }
 
