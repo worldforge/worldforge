@@ -72,9 +72,7 @@
 #include "SquallAssetsGenerator.h"
 #include "AssetsHandler.h"
 
-#include <varconf/config.h>
 
-#include <boost/filesystem/operations.hpp>
 #include <common/FileSystemObserver.h>
 #include <common/AssetsManager.h>
 #include <common/DatabaseSQLite.h>
@@ -87,14 +85,17 @@
 #include <rules/python/CyPy_Common.h>
 #include <rules/python/CyPy_Rules.h>
 #include <rules/simulation/ExternalMind.h>
+#include <rules/simulation/PhysicalDomain.h>
+#include "saf/saf.hpp"
 
 #include <Atlas/Objects/RootEntity.h>
+
+#include <varconf/config.h>
+#include <boost/filesystem/operations.hpp>
 
 #include <memory>
 #include <thread>
 #include <fstream>
-#include <rules/simulation/PhysicalDomain.h>
-
 
 using namespace boost::asio;
 
@@ -438,22 +439,26 @@ namespace {
 			AssetsHandler assetsHandler{squallRepositoryPath};
 
 			assets_manager.observeAssetsDirectory();
+			auto assetsPath = assets_manager.getAssetsPath();
 
 
             //Perhaps move all this into the AssetsManager?
-            spdlog::info("Reading assets from {}", assets_manager.getAssetsPath().string());
+            spdlog::info("Reading assets from {}", assetsPath.string());
 
 
 
-            spdlog::info("Setting up Squall repository at {}, with assets located at {}.", squallRepositoryPath.string(), assets_manager.getAssetsPath().string());
+            spdlog::info("Setting up Squall repository at {}, with assets located at {}.", squallRepositoryPath.string(), assetsPath.string());
             spdlog::info("Will now generate the Squall repository. This will take some time the first time the server is ran, but should be quick once done.");
-			auto rootSignatureResult = assetsHandler.refreshSquallRepository(assets_manager.getAssetsPath());
+			auto rootSignatureResult = assetsHandler.refreshSquallRepository(assetsPath);
             if (rootSignatureResult) {
                 spdlog::info("Generated squall signature {}.", rootSignatureResult->str_view());
             } else {
                 spdlog::warn("Could not generate Squall signature.");
                 return 1;
             }
+
+
+
 
 
             std::vector<std::string> python_directories;
@@ -530,6 +535,32 @@ namespace {
                                         server_name,
                                         lobby_int_id);
 			serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
+
+
+			auto& ctx = *io_context;
+			assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx, &assetsHandler, &serverRouting](const boost::filesystem::path& path){
+
+				spdlog::debug("Assets have changed; will regenerate Squall repository.");
+				auto promise = saf::promise<std::optional<Squall::Signature>>{ ctx };
+				auto future = promise.get_future();
+				auto f = std::async([assetsPath, p = std::move(promise),&assetsHandler]() mutable {
+					auto result = assetsHandler.refreshSquallRepository(assetsPath);
+					p.set_value(result);
+				});
+
+				boost::asio::co_spawn(ctx, [future = std::move(future), &assetsHandler, &serverRouting]() mutable -> boost::asio::awaitable<void>{
+					co_await future.async_wait(boost::asio::deferred);
+					std::optional<Squall::Signature> result = future.get();
+					if (result.has_value()) {
+						spdlog::info("New Squall repository root is {}.", result.value().str());
+						serverRouting.setAssets({assetsHandler.resolveAssetsUrl()});
+					} else {
+						spdlog::warn("Couldn't generate new Squall repository after file change.");
+					}
+				}, boost::asio::detached);
+
+			});
+
 
             //Need to register the server routing instance with the Teleport property.
             TeleportProperty::s_serverRouting = &serverRouting;

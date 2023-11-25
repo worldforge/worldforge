@@ -35,7 +35,8 @@
 
 #include <utility>
 #include <ranges>
-
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Anonymous.h>
 
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
@@ -189,7 +190,29 @@ size_t ServerRouting::dispatch(size_t numberOfOps) {
     }
     //This should not be a large number, and it should differ widely between frames. We put it here to help with finding bottlenecks though.
     Monitors::instance().insert("queued_external_ops", (Atlas::Message::IntType) queuedOps);
-    m_processOpsTotal += processed;
+    m_processOpsTotal += static_cast<long>(processed);
     return processed;
+}
+
+void ServerRouting::setAssets(std::vector<std::string> assets) {
+	if (m_assets != assets) {
+		m_assets = std::move(assets);
+		sendUpdateToClients();
+	}
+}
+
+void ServerRouting::sendUpdateToClients() {
+	Atlas::Objects::Operation::Change change;
+
+	std::vector<Atlas::Objects::Root> args;
+	Atlas::Objects::Entity::Anonymous o;
+	addToEntity(o);
+	args.emplace_back(o);
+	change->setArgs(args);
+
+	OpVector res;
+	for (auto& entry : m_connections) {
+		entry->send(change);
+	}
 }
 

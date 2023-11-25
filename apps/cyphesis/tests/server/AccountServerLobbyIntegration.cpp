@@ -107,8 +107,7 @@ void AccountServerLobbyintegration::setup()
     m_server = new ServerRouting(*m_world, *m_persistence,
                                  "59331d74-bb5d-4a54-b1c2-860999a4e344",
                                  "93e1f67f-63c5-4b07-af4c-574b2273563d",
-                                 m_id_counter++,
-                                 AssetsHandler({}));
+                                 m_id_counter++);
     for (int i = 0; i < 3; ++i) {
         m_account = new TestAccount(*m_server,
                                     m_id_counter++);
@@ -212,7 +211,6 @@ int main()
 #include "common/Variable.h"
 
 #include <cstdlib>
-#include "../stubs/common/stubAssetsHandler.h"
 
 std::string assets_directory("");
 

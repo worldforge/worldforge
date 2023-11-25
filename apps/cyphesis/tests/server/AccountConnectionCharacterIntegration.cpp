@@ -108,8 +108,7 @@ void AccountConnectionCharacterintegration::setup()
                                  *m_persistence,
                                  "989cfbbe-67e3-4571-858c-488b91e06e7d",
                                  "10658e5e-373b-4565-b34e-954b9223961e",
-                                 m_id_counter++,
-                                 AssetsHandler({}));
+                                 m_id_counter++);
     m_connection = new Connection(*(CommSocket*)0,
                                   *m_server,
                                   "a4754783-9909-476b-a418-6997477dff49",
@@ -286,7 +285,6 @@ int main()
 #include "common/Inheritance.h"
 #include "common/Property_impl.h"
 #include "common/PropertyManager.h"
-#include "../stubs/common/stubAssetsHandler.h"
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;

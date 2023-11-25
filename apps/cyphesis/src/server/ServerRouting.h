@@ -125,9 +125,9 @@ class ServerRouting
             return m_accounts;
         }
 
-		void setAssets(std::vector<std::string> assets) {
-			m_assets = assets;
-		}
+		void setAssets(std::vector<std::string> assets);
+
+		void sendUpdateToClients();
 
         /// Accessor for server ruleset.
         const std::string& getRuleset() const

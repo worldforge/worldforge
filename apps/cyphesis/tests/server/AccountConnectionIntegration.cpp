@@ -139,8 +139,7 @@ void AccountConnectionintegration::setup()
                                  *m_persistence,
                                  "testrules",
                                  "testname",
-                                 2,
-                                 AssetsHandler({}));
+                                 2);
     m_connection = new Connection(m_commSocket,
                                   *m_server,
                                   "test_addr",
@@ -267,7 +266,6 @@ int main()
 #include <cstdlib>
 #include "../stubs/server/stubBuildid.h"
 #include "../stubs/common/stubconst.h"
-#include "../stubs/common/stubAssetsHandler.h"
 
 // globals - why do we have these again?
 

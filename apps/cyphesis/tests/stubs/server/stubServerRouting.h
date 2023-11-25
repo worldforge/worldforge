@@ -9,7 +9,7 @@
 
 #ifndef STUB_ServerRouting_ServerRouting
 //#define STUB_ServerRouting_ServerRouting
-   ServerRouting::ServerRouting(BaseWorld& wrld, Persistence& persistence, std::string ruleset, std::string name, RouterId lobbyId, AssetsHandler assetsHandler)
+   ServerRouting::ServerRouting(BaseWorld& wrld, Persistence& persistence, std::string ruleset, std::string name, RouterId lobbyId)
   {
     
   }
@@ -30,6 +30,22 @@
     
   }
 #endif //STUB_ServerRouting_disconnectAllConnections
+
+#ifndef STUB_ServerRouting_setAssets
+//#define STUB_ServerRouting_setAssets
+  void ServerRouting::setAssets(std::vector<std::string> assets)
+  {
+    
+  }
+#endif //STUB_ServerRouting_setAssets
+
+#ifndef STUB_ServerRouting_sendUpdateToClients
+//#define STUB_ServerRouting_sendUpdateToClients
+  void ServerRouting::sendUpdateToClients()
+  {
+    
+  }
+#endif //STUB_ServerRouting_sendUpdateToClients
 
 #ifndef STUB_ServerRouting_addRouter
 //#define STUB_ServerRouting_addRouter
