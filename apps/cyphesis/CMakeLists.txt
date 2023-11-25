@@ -2,23 +2,10 @@ cmake_minimum_required(VERSION 3.12)
 
 project(Cyphesis)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
 
 include(GNUInstallDirs)
-include(FindPkgConfig)
-include(CheckFunctionExists)
-include(CheckIncludeFiles)
 include(GetGitRevisionDescription)
 include(CMakeDependentOption)
-
-# Version setup
-
-set(CYPHESIS_VERSION_MAJOR 0)
-set(CYPHESIS_VERSION_MINOR 7)
-set(CYPHESIS_VERSION_PATCH 0)
-
-set(VERSION ${CYPHESIS_VERSION_MAJOR}.${CYPHESIS_VERSION_MINOR}.${CYPHESIS_VERSION_PATCH})
 
 # Set compiler flags
 set(WF_WARNING_FLAGS -Wall -Winit-self -Wcast-qual -Wwrite-strings -Wextra -Wundef -Wmissing-declarations -Wno-unused-parameter -Wshadow -Wno-missing-field-initializers -Wno-long-long)
@@ -32,6 +19,7 @@ enable_testing()
 
 # Meta data
 get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+
 set(DESCRIPTION "The Worldforge server.")
 set(SOCKET_DIR ${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/tmp)
 set(PACKAGE_BUGREPORT "erik@ogenvik.org")
@@ -74,7 +62,6 @@ find_package(Boost
         REQUIRED
         COMPONENTS filesystem system)
 
-set(ASSETS_DIR assets-${VERSION})
 set(MEDIAREPO_DIR ${PROJECT_SOURCE_DIR}/mediarepo)
 add_compile_definitions("CYPHESIS_RAW_ASSETS_DIRECTORY=\"${MEDIAREPO_DIR}/trunk/assets\"")
 

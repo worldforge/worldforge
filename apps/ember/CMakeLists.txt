@@ -1,8 +1,3 @@
-#Specifies the version of the media. This should normally be the version after the current version.
-set(MEDIA_VERSION "0.8.0")
-#If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
-set(VERSION_FALLBACK "0.8.0-dev")
-
 project(Ember)
 
 # Meta data
@@ -12,40 +7,12 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CMakeDependentOption)
 
-# Version setup. Figure out the version from 'git describe' if VERSION isn't set externally.
-execute_process(COMMAND git -C ${PROJECT_SOURCE_DIR} describe
-        OUTPUT_VARIABLE GIT_REPO_VERSION)
-string(REGEX REPLACE "\n$" "" GIT_REPO_VERSION "${GIT_REPO_VERSION}")
-if (NOT VERSION)
-    if (NOT GIT_REPO_VERSION)
-        set(VERSION "${VERSION_FALLBACK}")
-    else ()
-        set(VERSION "${GIT_REPO_VERSION}")
-    endif ()
-endif ()
-
-if (NOT VERSION_PACKAGE)
-    message(STATUS "Setting VERSION_PACKAGE to ${VERSION}. You can override this by setting the 'VERSION_PACKAGE' variable externally.")
-    set(VERSION_PACKAGE "${VERSION}")
-endif ()
-
-message(STATUS "Building version ${VERSION}")
-
-#Split a version number like "1.2.3" into a list to extract parts.
-string(REPLACE "." ";" VERSION_LIST ${VERSION})
-list(GET VERSION_LIST 0 EMBER_VERSION_MAJOR)
-list(GET VERSION_LIST 1 EMBER_VERSION_MINOR)
-list(GET VERSION_LIST 2 EMBER_VERSION_PATCH)
-
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 add_compile_definitions("EMBER_DATADIR=\"${CMAKE_INSTALL_FULL_DATADIR}\"")
 add_compile_definitions("EMBER_LIBDIR=\"${CMAKE_INSTALL_FULL_LIBDIR}\"")
 add_compile_definitions("EMBER_SYSCONFDIR=\"${CMAKE_INSTALL_FULL_SYSCONFDIR}\"")
 
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_BINARY_DIR}/generated)
-
-enable_testing()
-#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 #On Unix we'll automatically build all widgets as reloadable modules, but not on Windows or OSX (since we couldn't get it to work as we would like).
 cmake_dependent_option(WF_USE_WIDGET_PLUGINS "Build widgets as reloadable plugins." ON "UNIX AND NOT APPLE;NOT CONAN_FOUND" OFF)

@@ -18,6 +18,30 @@ include(GNUInstallDirs)
 include(FindPkgConfig)
 include(CMakeDependentOption)
 
+#If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
+set(VERSION_FALLBACK "0.8.0-dev")
+
+find_package(Git QUIET)
+
+# Version setup. Figure out the version from 'git describe' if VERSION isn't set externally.
+execute_process(COMMAND ${GIT_EXECUTABLE} -C ${PROJECT_SOURCE_DIR} describe
+        OUTPUT_VARIABLE GIT_REPO_VERSION)
+string(REGEX REPLACE "\n$" "" GIT_REPO_VERSION "${GIT_REPO_VERSION}")
+if (NOT VERSION)
+    if (NOT GIT_REPO_VERSION)
+        set(VERSION "${VERSION_FALLBACK}")
+    else ()
+        set(VERSION "${GIT_REPO_VERSION}")
+    endif ()
+endif ()
+
+if (NOT VERSION_PACKAGE)
+    message(STATUS "Setting VERSION_PACKAGE to ${VERSION}. You can override this by setting the 'VERSION_PACKAGE' variable externally.")
+    set(VERSION_PACKAGE "${VERSION}")
+endif ()
+
+message(STATUS "Building version ${VERSION}")
+
 if (NOT DEFINED SNAPCRAFT_COMMAND)
     #Allow for setting the path for the snapcraft command from outside, if setting PATH doesn't cut it.
     SET(SNAPCRAFT_COMMAND "snapcraft")
