@@ -38,6 +38,10 @@ squall_add_test(RealizerTest.cpp)
 target_link_libraries(RealizerTest
         squallcore)
 
+squall_add_test(DifferenceTest.cpp)
+target_link_libraries(DifferenceTest
+        squallcore)
+
 add_custom_target(check-squall
         COMMAND RealizerTest
         COMMAND SignatureTest
@@ -48,6 +52,7 @@ add_custom_target(check-squall
         COMMAND ResolverTest
         COMMAND CurlProviderTest
         COMMAND CurlResolverTest
+        COMMAND DifferenceTest
 )
 add_dependencies(check check-squall)
 

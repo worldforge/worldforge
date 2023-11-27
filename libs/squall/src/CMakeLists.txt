@@ -9,6 +9,7 @@ set(CORE_SOURCE_FILES
         squall/core/Signature.cpp
         squall/core/AsyncProvider.cpp
         squall/core/Log.cpp
+        squall/core/Difference.cpp
 )
 
 set(CORE_HEADER_FILES
@@ -23,6 +24,7 @@ set(CORE_HEADER_FILES
         squall/core/Signature.h
         squall/core/AsyncProvider.h
         squall/core/Log.h
+        squall/core/Difference.h
 )
 
 
