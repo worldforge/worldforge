@@ -162,13 +162,18 @@ int main(int argc, char** argv) {
 		std::cout << "Writing logs to " << filename.string() << std::endl;
 		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(filename.string(), true);
 		Ember::logger = std::make_shared<spdlog::logger>("main", sink);
+		spdlog::initialize_logger(Ember::logger);
 		spdlog::set_default_logger(Ember::logger);
 
 		{
 			Eris::logger = std::make_shared<spdlog::logger>("eris", sink);
+			spdlog::initialize_logger(Eris::logger);
 			Squall::logger = std::make_shared<spdlog::logger>("squall", sink);
+			spdlog::initialize_logger(Squall::logger);
 			Ember::OgreView::OgreLogObserver::logger = std::make_shared<spdlog::logger>("OGRE", sink);
+			spdlog::initialize_logger(Ember::OgreView::OgreLogObserver::logger);
 			Ember::Cegui::CEGUILogger::logger = std::make_shared<spdlog::logger>("CEGUI", sink);
+			spdlog::initialize_logger(Ember::Cegui::CEGUILogger::logger);
 
 			auto formatter = std::make_unique<spdlog::pattern_formatter>();
 			formatter->add_flag<Ember::DetailedMessageFormatter>('*').set_pattern("[%Y-%m-%d %H:%M:%S.%e] %* [%n] [%l] %v");

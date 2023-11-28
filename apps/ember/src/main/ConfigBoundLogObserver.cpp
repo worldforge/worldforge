@@ -27,8 +27,8 @@
 
 namespace Ember {
 
-ConfigBoundLogObserver::ConfigBoundLogObserver(spdlog::sink_ptr sink) {
-	mConfigListener.registerConfigListener("general", "logginglevel", [&, sink](const std::string&, const std::string&, const varconf::Variable& variable) {
+ConfigBoundLogObserver::ConfigBoundLogObserver() {
+	mConfigListener.registerConfigListener("general", "logginglevel", [&](const std::string&, const std::string&, const varconf::Variable& variable) {
 		if (variable.is_string()) {
 			std::string loggingLevel = variable.as_string();
 			spdlog::level::level_enum level = spdlog::level::info;
@@ -43,9 +43,9 @@ ConfigBoundLogObserver::ConfigBoundLogObserver(spdlog::sink_ptr sink) {
 			} else if (loggingLevel == "critical") {
 				level = spdlog::level::critical;
 			}
-			logger->set_level(spdlog::level::info);
+			spdlog::set_level(spdlog::level::info);
 			logger->info("Setting log level to {}", fmt::underlying(level));
-			sink->set_level(level);
+			spdlog::set_level(level);
 		}
 	}, true);
 

@@ -36,17 +36,16 @@ class ConfigService;
  * @brief A logging observer which is bound to the configuration and changes behaviour in reaction to changed configuration values.
  *
  */
-class ConfigBoundLogObserver
-{
+class ConfigBoundLogObserver {
 public:
-    explicit ConfigBoundLogObserver(spdlog::sink_ptr sink);
+	explicit ConfigBoundLogObserver();
 
-    ~ConfigBoundLogObserver() = default;;
+	~ConfigBoundLogObserver() = default;;
 
 protected:
 
 	ConfigListenerContainer mConfigListener;
-	
+
 };
 
 }
