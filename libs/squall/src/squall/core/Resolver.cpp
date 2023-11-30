@@ -124,8 +124,8 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 						return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
 					}
 
-					logger->debug("Successfully fetched signature {} into temporary path {}, will now store in repository.", signatureResult->signature.str_view(),
-								  pending.temporaryPath.generic_string());
+					logger->debug("Successfully fetched signature {} into temporary path {}, will now store in repository. This data can be accessed as {}.", signatureResult->signature.str_view(),
+								  pending.temporaryPath.generic_string(), pending.repositoryPath.string());
 					mDestinationRepository.store(signatureResult->signature, pending.temporaryPath);
 					{
 						std::error_code ec;

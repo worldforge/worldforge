@@ -16,31 +16,32 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef EMBER_ASSETSSYNCSTATE_H
-#define EMBER_ASSETSSYNCSTATE_H
+#ifndef EMBER_ASSETSSYNCNEEDEDSTATE_H
+#define EMBER_ASSETSSYNCNEEDEDSTATE_H
 
 #include "StateBase.h"
 #include "AccountAvailableState.h"
 #include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
 #include "services/server/ServerServiceSignals.h"
+#include "framework/AutoCloseConnection.h"
 #include <Eris/ServerInfo.h>
 
 namespace Ember {
 
-class AssetsSyncState : public virtual StateBase<AccountAvailableState> {
+class AssetsSyncNeededState : public virtual StateBase<AccountAvailableState> {
 public:
-	AssetsSyncState(IState& parentState, Eris::Connection& connection);
+	AssetsSyncNeededState(IState& parentState, Eris::Connection& connection);
 
-	~AssetsSyncState() override;
+	~AssetsSyncNeededState() override;
 
 private:
 
-	void processServerInfo(Eris::ServerInfo info);
+	void processServerInfo(const Eris::ServerInfo& info);
 
 	void syncComplete(AssetsSync::UpdateResult result, std::string assetPath);
 
-	sigc::connection serverInfoConnection;
+	AutoCloseConnection serverInfoConnection;
 
 	Eris::Connection& mConnection;
 
@@ -48,4 +49,4 @@ private:
 };
 }
 
-#endif //EMBER_ASSETSSYNCSTATE_H
+#endif //EMBER_ASSETSSYNCNEEDEDSTATE_H

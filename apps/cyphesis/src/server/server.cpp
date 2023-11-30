@@ -735,8 +735,9 @@ namespace {
 
 int main(int argc, char** argv)
 {
-	//spdlog::set_level(spdlog::level::debug);
 	std::setlocale(LC_ALL, "C");
+	//TODO: read from config instead
+	spdlog::set_level(spdlog::level::debug);
     if (security_init() != 0) {
         spdlog::critical("Security initialization Error. Exiting.");
         return EXIT_SECURITY_ERROR;

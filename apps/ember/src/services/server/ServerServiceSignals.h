@@ -102,7 +102,16 @@ public:
 	 */
 	sigc::signal<void(const std::vector<AvatarTransferInfo>&)> TransferInfoAvailable;
 
+	/**
+	 * Emitted when we first connect and we initially want to sync all assets.
+	 */
 	sigc::signal<void(AssetsSync)> AssetsSyncRequest;
+
+	/**
+	 * Emitted when we're already connected, and have assets loaded, and then need to re-sync new assets.
+	 */
+	sigc::signal<void(AssetsSync)> AssetsReSyncRequest;
+
 
 	sigc::signal<void()> AssetsUnloadRequest;
 

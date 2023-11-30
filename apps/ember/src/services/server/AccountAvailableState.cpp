@@ -24,6 +24,7 @@
 #include "framework/Log.h"
 
 #include "services/config/ConfigService.h"
+#include <Eris/Connection.h>
 
 
 namespace Ember {
@@ -39,6 +40,12 @@ AccountAvailableState::AccountAvailableState(IState& parentState, Eris::Connecti
 	mAccount.ErrorMessage.connect([&](const std::string& message) {
 		ConsoleBackend::getSingleton().pushMessage("Error from server: " + message, "error");
 	});
+	serverInfoConnection = connection.GotServerInfo.connect([&connection, this]() {
+		Eris::ServerInfo serverInfo{};
+		connection.getServerInfo(serverInfo);
+		this->processServerInfo(serverInfo);
+	});
+
 	getSignals().GotAccount.emit(&mAccount);
 }
 
@@ -107,4 +114,13 @@ void AccountAvailableState::runCommand(const std::string& command, const std::st
 		ConsoleBackend::getSingleton().pushMessage(msg, "info");
 	}
 }
+
+void AccountAvailableState::processServerInfo(const Eris::ServerInfo& info) {
+	for (const auto& assetPath: info.assets) {
+		AssetsSync syncRequest{.assetsPath = assetPath};
+		//Just emit, we don't care about any results.
+		StateBaseCore::getSignals().AssetsReSyncRequest.emit(syncRequest);
+	}
+}
+
 }

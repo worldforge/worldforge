@@ -21,9 +21,7 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "OgreResourceLoader.h"
-#include "services/EmberServices.h"
 #include "framework/Tokeniser.h"
-#include "services/server/ServerService.h"
 #include "services/config/ConfigService.h"
 #include "model/ModelDefinitionManager.h"
 #include "sound/XMLSoundDefParser.h"
@@ -39,43 +37,133 @@
 #include <components/ogre/model/XMLModelDefinitionSerializer.h>
 #include <squall/core/Repository.h>
 #include "SquallArchive.h"
+#include "squall/core/Difference.h"
+#include <OgreScriptCompiler.h>
 
+namespace {
+void refreshShader(std::filesystem::path path, std::string group) {
+	//When a shader file changes, we need to go through all GpuPrograms and find any that uses that file.
+	//Multiple GPU Programs can be using the same shader, through the usage of pre-processor directives.
+	//Once we've found that there's a matching GPU program, we'll reload that and then we need to go through _all_ materials,
+	//and look through all techniques and all of their passes, to find if they refer to this changed GPU program, and if so reload it.
+	//Hopefully this is quick, but if not we might need to offload it to a background task, however that will work.
+	for (auto gpuProgramEntry: Ogre::GpuProgramManager::getSingleton().getResourceIterator()) {
+		if (gpuProgramEntry.second->getGroup() == group) {
+			auto gpuProgram = dynamic_cast<Ogre::GpuProgram*>(gpuProgramEntry.second.get());
+			if (gpuProgram) {
+				if (gpuProgram->getSourceFile() == path.string()) {
+					if (gpuProgram->isReloadable()) {
+						Ember::logger->trace("Reloading GPU program {} since the source file at {} was changed.", gpuProgram->getName(), gpuProgram->getSourceFile());
+						gpuProgram->reload();
+						for (auto materialEntry: Ogre::MaterialManager::getSingleton().getResourceIterator()) {
+							auto material = dynamic_cast<Ogre::Material* >(materialEntry.second.get());
+							if (material) {
+								if (material->isLoaded()) {
+									for (auto technique: material->getTechniques()) {
+										for (auto pass: technique->getPasses()) {
+											for (std::uint8_t programTypeIndex = 0; programTypeIndex < Ogre::GPT_COUNT; ++programTypeIndex) {
+												auto programType = static_cast<Ogre::GpuProgramType>(programTypeIndex);//Danger here, with the unsafe enum casting and all. It's dirty.
+												if (pass->hasGpuProgram(programType)) {
+													auto usedProg = pass->getGpuProgram(programType);
+													if (usedProg) {
+														if (usedProg.get() == gpuProgram) {
+															Ember::logger->trace("Reloading material {} since the GPU program at {} was changed.", material->getName(),
+																				 gpuProgram->getSourceFile());
+															material->reload();
+															break;
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					} else {
+						Ember::logger->warn("GPU program {}, with source path {}, was updated from the server, but it's not reloadable. So it won't be reloaded.", gpuProgram->getName(),
+											gpuProgram->getSourceFile());
+					}
+				}
+			}
+		}
+	}
+}
+
+void parseScript(Ogre::ScriptLoader& scriptLoader, std::filesystem::path path, std::string group) {
+	try {
+		auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(path.string(), group, nullptr, false);
+		if (stream) {
+			scriptLoader.parseScript(stream, group);
+		}
+	} catch (const std::exception& ex) {
+		Ember::logger->error("Error when parsing changed file '{}' in group '{}': {}", path.string(), group, ex.what());
+	}
+}
 
 /**
- * This method is licensed under the CC BY-SA 3.0 as it's taken from this StackOverflow answer: https://stackoverflow.com/a/29221546
- * Copyright 2017 Robert Massaioli, https://stackoverflow.com/users/83446/robert-massaioli
- *
- * It's provided since boost::filesystem::relative is only available in boost 1.60, and we want to support
- * distros that don't yet have that version.
- *
- * Provides a relative path.
+ * Refresh an updated model definition, either by just adding it if it doesn't already exists, or by updating it and reloading all instances.
+ * @param fullPath The full path to the definition.
  */
-static boost::filesystem::path relativeTo(const boost::filesystem::path& from, const boost::filesystem::path& to) {
-	// Start at the root path and while they are the same then do nothing then when they first
-	// diverge take the entire from path, swap it with '..' segments, and then append the remainder of the to path.
-	boost::filesystem::path::const_iterator fromIter = from.begin();
-	boost::filesystem::path::const_iterator toIter = to.begin();
+void refreshModelDefinition(const boost::filesystem::path& relativePath, std::string group) {
+	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(relativePath.string(), group, nullptr, false);
+	if (stream) {
+		auto& modelDefMgr = Ember::OgreView::Model::ModelDefinitionManager::getSingleton();
+		Ember::OgreView::Model::XMLModelDefinitionSerializer serializer;
 
-	// Loop through both while they are the same to find nearest common directory
-	while (fromIter != from.end() && toIter != to.end() && (*toIter) == (*fromIter)) {
-		++toIter;
-		++fromIter;
+		auto modelDef = serializer.parseScript(stream);
+		if (modelDef) {
+			auto existingDef = modelDefMgr.getByName(relativePath.string());
+			//Model definition doesn't exist, just add it.
+			if (!existingDef) {
+				modelDefMgr.addDefinition(relativePath.string(), modelDef);
+			} else {
+				//otherwise update existing
+				existingDef->moveFrom(std::move(*modelDef));
+				existingDef->reloadAllInstances();
+			}
+		}
 	}
+}
 
-	// Replace from path segments with '..' (from => nearest common directory)
-	boost::filesystem::path finalPath;
-	while (fromIter != from.end()) {
-		finalPath /= "..";
-		++fromIter;
+void processChangedOrNew(std::filesystem::path path, std::string group) {
+	auto reloadOrAddResource = [&](Ogre::ResourceManager& resourceManager, const std::string& resourceName) {
+		if (resourceManager.resourceExists(resourceName, group)) {
+			auto resource = resourceManager.getResourceByName(resourceName, group);
+			if (resource->isLoaded() || resource->isPrepared()) {
+				try {
+					resource->reload();
+				} catch (const std::exception& e) {
+					Ember::logger->error("Could not reload resource '{}' of type '{}': {}", resourceName, resourceManager.getResourceType(), e.what());
+				}
+			}
+		} else {
+			//Add resource
+			Ogre::ResourceGroupManager::getSingleton().declareResource(resourceName, resourceManager.getResourceType(), group);
+			resourceManager.createResource(resourceName, group);
+		}
+	};
+
+
+	auto extension = path.extension();
+
+	if (extension == ".png" || extension == ".dds" || extension == ".jpg" || extension == ".jpeg") {
+		reloadOrAddResource(Ogre::TextureManager::getSingleton(), path);
+	} else if (extension == ".mesh") {
+		reloadOrAddResource(Ogre::MeshManager::getSingleton(), path);
+	} else if (extension == ".skeleton") {
+		reloadOrAddResource(Ogre::SkeletonManager::getSingleton(), path);
+	} else if (extension == ".frag" || extension == ".vert" || extension == ".glsl") {
+		refreshShader(path, group);
+	} else if (extension == ".program") {
+		parseScript(Ogre::ScriptCompilerManager::getSingleton(), path, group);
+	} else if (extension == ".material") {
+		parseScript(Ogre::MaterialManager::getSingleton(), path, group);
+	} else if (extension == ".modeldef") {
+		refreshModelDefinition({path}, group);
 	}
+}
 
-	// Append the remainder of the to path (nearest common directory => to)
-	while (toIter != to.end()) {
-		finalPath /= *toIter;
-		++toIter;
-	}
-
-	return finalPath;
 }
 
 namespace Ember::OgreView {
@@ -118,7 +206,8 @@ OgreResourceLoader::OgreResourceLoader(Squall::Repository repository) :
 		UnloadUnusedResources("unloadunusedresources", this, "Unloads any unused resources."),
 		mFileSystemArchiveFactory(std::make_unique<FileSystemArchiveFactory>()),
 		mSquallArchiveFactory(std::make_unique<SquallArchiveFactory>(repository)),
-		mLoadingListener(std::make_unique<EmberResourceLoadingListener>()) {
+		mLoadingListener(std::make_unique<EmberResourceLoadingListener>()),
+		mRepository(repository) {
 }
 
 OgreResourceLoader::~OgreResourceLoader() {
@@ -182,7 +271,7 @@ bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& pat
 		try {
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path.string(), type, section, true);
 			mResourceRootPaths.emplace_back(path.string());
-			observeDirectory(path);
+			observeDirectory(path, section);
 
 			return true;
 		} catch (const std::exception&) {
@@ -193,8 +282,9 @@ bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& pat
 					logger->error("Couldn't load {}. Continuing as if nothing happened.", path.string());
 					break;
 				case OnFailure::Throw:
-					throw Ember::Exception(std::string("Could not load from required directory '") + path.string() +
-										   "'. This is fatal and Ember will shut down. The probable cause for this error is that you haven't properly installed all required media.");
+					throw Ember::Exception(fmt::format(
+							"Could not load from required directory '{}'. This is fatal and Ember will shut down. The probable cause for this error is that you haven't properly installed all required media.",
+							path.string()));
 			}
 		}
 	} else {
@@ -269,9 +359,9 @@ void OgreResourceLoader::preloadMedia() {
 	}
 }
 
-void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
+void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path, std::string group) {
 	try {
-		FileSystemObserver::getSingleton().add_directory(path, [](const FileSystemObserver::FileSystemEvent& event) {
+		FileSystemObserver::getSingleton().add_directory(path, [group](const FileSystemObserver::FileSystemEvent& event) {
 			auto& ev = event.ev;
 			//Skip if it's not a file. This also means that we won't catch deletion of files. That's ok for now; but perhaps we need to revisit this.
 			if (!boost::filesystem::is_regular_file(ev.path)) {
@@ -290,122 +380,27 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path) {
 				}
 			}
 
-
-			auto resourceGroups = Ogre::ResourceGroupManager::getSingleton().getResourceGroups();
-			for (auto& group: resourceGroups) {
-
-				auto reloadResource = [&](Ogre::ResourceManager& resourceManager, const std::string& resourceName) {
-					if (resourceManager.resourceExists(resourceName, group)) {
-						auto resource = resourceManager.getResourceByName(resourceName, group);
-						if (resource->isLoaded() || resource->isPrepared()) {
-							try {
-								resource->reload();
-							} catch (const std::exception& e) {
-								logger->error("Could not reload resource '{}' of type '{}': {}", resourceName, resourceManager.getResourceType(), e.what());
-							}
-						}
-					} else {
-						//Add resource
-						Ogre::ResourceGroupManager::getSingleton().declareResource(resourceName, resourceManager.getResourceType(), group);
-						resourceManager.createResource(resourceName, group);
+			auto startsWith = [](const boost::filesystem::path& root, boost::filesystem::path aPath) {
+				while (!aPath.empty()) {
+					if (aPath == root) {
+						return true;
 					}
+					aPath = aPath.parent_path();
+				}
+				return false;
+			};
 
-				};
+			auto locations = Ogre::ResourceGroupManager::getSingleton().listResourceLocations(group);
+			for (auto& location: *locations) {
+				boost::filesystem::path locationDirectory(location);
+				if (startsWith(locationDirectory, ev.path)) {
+					auto relative = boost::filesystem::relative(ev.path, locationDirectory);
 
-				auto startsWith = [](const boost::filesystem::path& root, boost::filesystem::path aPath) {
-					while (!aPath.empty()) {
-						if (aPath == root) {
-							return true;
-						}
-						aPath = aPath.parent_path();
-					}
-					return false;
-				};
-
-				auto locations = Ogre::ResourceGroupManager::getSingleton().listResourceLocations(group);
-				for (auto& location: *locations) {
-					boost::filesystem::path locationDirectory(location);
-					if (startsWith(locationDirectory, ev.path)) {
-						auto relative = relativeTo(locationDirectory, ev.path);
-						auto extension = ev.path.extension();
-
-						if (extension == ".modeldef") {
-							if (event.ev.type == boost::asio::dir_monitor_event::event_type::added ||
-								event.ev.type == boost::asio::dir_monitor_event::event_type::modified ||
-								event.ev.type == boost::asio::dir_monitor_event::event_type::renamed_old_name ||
-								event.ev.type == boost::asio::dir_monitor_event::event_type::renamed_new_name) {
-								refreshModelDefinition(ev.path, relative);
-							}
-						} else if (extension == ".material") {
-							try {
-								auto materialMgr = Ogre::MaterialManager::getSingletonPtr();
-								if (materialMgr) {
-									std::ifstream stream(ev.path.string());
-									Ogre::SharedPtr<Ogre::DataStream> fileStream(new Ogre::FileStreamDataStream(&stream, false));
-									materialMgr->parseScript(fileStream, group);
-								}
-							} catch (const std::exception& ex) {
-								logger->error("Error when parsing changed file '{}': {}", ev.path.string(), ex.what());
-							}
-						} else if (extension == ".dds" || extension == ".png" || extension == ".jpg") {
-							reloadResource(Ogre::TextureManager::getSingleton(), relative.string());
-						} else if (extension == ".mesh") {
-							reloadResource(Ogre::MeshManager::getSingleton(), relative.string());
-						} else if (extension == ".skeleton") {
-							reloadResource(Ogre::SkeletonManager::getSingleton(), relative.string());
-						} else if (extension == ".glsl" || extension == ".frag" || extension == ".vert") {
-							//Reloading GLSL shaders in Render System GL doesn't seem to work. Perhaps we'll have more luck with GL3+?
-
-
-//						{
-//							Ogre::SharedPtr<Ogre::DataStream> stream(new Ogre::MemoryDataStream(0));
-//							Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(stream);
-//
-//							Ogre::HighLevelGpuProgramManager::getSingleton().reloadAll(true);
-//							Ogre::GpuProgramManager::getSingleton().reloadAll(true);
-//							Ogre::MaterialManager::getSingleton().reloadAll(true);
-//						}
-
-
-
-//						auto iterator = Ogre::HighLevelGpuProgramManager::getSingleton().getResourceIterator();
-//						while (iterator.hasMoreElements()) {
-//							auto resource = Ogre::static_pointer_cast<Ogre::HighLevelGpuProgram>(iterator.getNext());
-//							if (resource->getSourceFile() == relative) {
-//								logger->debug("Reloading GLSL script " << resource->getName());
-//								Ogre::SharedPtr<Ogre::DataStream> stream(new Ogre::MemoryDataStream(0));
-//								Ogre::GpuProgramManager::getSingleton().loadMicrocodeCache(stream);
-//								//Ogre::GpuProgramManager::getSingleton().cac
-//								resource->reload();
-//
-////								auto matIterator = Ogre::MaterialManager::getSingleton().getResourceIterator();
-////								while (matIterator.hasMoreElements()) {
-////									bool needReload = false;
-////									auto material = Ogre::static_pointer_cast<Ogre::Material>(matIterator.getNext());
-////									for (auto* tech : material->getTechniques()) {
-////										for (auto* pass : tech->getPasses()) {
-////											if (pass->getFragmentProgramName() == resource->getName()) {
-////												pass->setFragmentProgram("");
-////												pass->setFragmentProgram(resource->getName());
-////												needReload = true;
-////											}
-////											if (pass->getVertexProgramName() == resource->getName()) {
-////												pass->setVertexProgram("");
-////												pass->setVertexProgram(resource->getName());
-////												needReload = true;
-////											}
-////										}
-////									}
-////									if (needReload) {
-////										material->reload();
-////									}
-////								}
-//							}
-//						}
-						}
-					}
+					processChangedOrNew({relative.string()}, group);
+					break;
 				}
 			}
+
 		});
 	} catch (...) {
 		//Ignore errors
@@ -417,36 +412,40 @@ bool OgreResourceLoader::addMedia(const std::string& path, const std::string& re
 	return addSharedMedia("media/" + path, "EmberFileSystem", resourceGroup);
 }
 
-void OgreResourceLoader::refreshModelDefinition(const boost::filesystem::path& fullPath, const boost::filesystem::path& relativePath) {
-	std::ifstream stream(fullPath.string());
-	if (stream) {
-		auto modelDefMgr = Model::ModelDefinitionManager::getSingletonPtr();
-		if (modelDefMgr) {
-			Model::XMLModelDefinitionSerializer serializer;
-
-			auto modelDef = serializer.parseScript(stream, relativePath);
-			if (modelDef) {
-				auto existingDef = modelDefMgr->getByName(relativePath.string());
-				//Model definition doesn't exist, just add it.
-				if (!existingDef) {
-					modelDefMgr->addDefinition(relativePath.string(), modelDef);
-				} else {
-					//otherwise update existing
-					existingDef->moveFrom(std::move(*modelDef));
-					existingDef->reloadAllInstances();
-				}
-			}
-		}
-	}
-}
-
-bool OgreResourceLoader::addSquallMedia(Squall::Signature signature, const std::string& resourceGroup) {
+bool OgreResourceLoader::addSquallMedia(Squall::Signature signature) {
 
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(signature.str(),
 																   "Squall",
-																   resourceGroup, true);
+																   "world",
+																   true);
+	mSquallSignature = signature;
 
 	return true;
 }
 
+void OgreResourceLoader::replaceSquallMedia(Squall::Signature signature) {
+	if (mSquallSignature) {
+		auto newManifestOptional = mRepository.fetchManifest(signature);
+		auto oldManifestOptional = mRepository.fetchManifest(*mSquallSignature);
+		if (newManifestOptional.manifest && oldManifestOptional.manifest) {
+			auto difference = Squall::resolveDifferences(mRepository, Squall::DifferenceRequest{.oldManifest = *oldManifestOptional.manifest, .newManifest = *newManifestOptional.manifest});
+
+			auto& resourceGroupManager = Ogre::ResourceGroupManager::getSingleton();
+			auto squallArchive = static_cast<SquallArchive*>(resourceGroupManager.getResourceLocationList("world").front().archive);
+			squallArchive->setRootSignature(signature);
+
+
+			for (auto& entry: difference.newEntries) {
+				processChangedOrNew(entry.path, "world");
+			}
+
+			for (auto& entry: difference.alteredEntries) {
+				processChangedOrNew(entry.change.path, "world");
+			}
+
+			//How should we handle removed entries? Normally if something isn't used it should be removed as part of cleanup, so perhaps there's no need to actively unload it?
+		}
+
+	}
+}
 }

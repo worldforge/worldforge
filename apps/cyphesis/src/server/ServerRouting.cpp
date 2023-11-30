@@ -37,6 +37,7 @@
 #include <ranges>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
+#include <spdlog/spdlog.h>
 
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
@@ -196,6 +197,7 @@ size_t ServerRouting::dispatch(size_t numberOfOps) {
 
 void ServerRouting::setAssets(std::vector<std::string> assets) {
 	if (m_assets != assets) {
+		spdlog::debug("Received new assets, informing clients.");
 		m_assets = std::move(assets);
 		sendUpdateToClients();
 	}

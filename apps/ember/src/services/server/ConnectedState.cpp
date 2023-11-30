@@ -20,19 +20,19 @@
 
 #include "framework/Log.h"
 #include "framework/ConsoleBackend.h"
-#include "AssetsSyncState.h"
+#include "AssetsSyncNeededState.h"
 
 #include <Eris/Connection.h>
 
 namespace Ember {
 
 ConnectedState::ConnectedState(IState& parentState, Eris::Connection& connection) :
-		StateBase<AssetsSyncState>::StateBase(parentState),
+		StateBase<AssetsSyncNeededState>::StateBase(parentState),
 		DisConnect("disconnect", this, "Disconnect from the server."),
 		mConnection(connection) {
 	mConnection.Disconnecting.connect(sigc::mem_fun(*this, &ConnectedState::disconnecting));
 	mConnection.Failure.connect(sigc::mem_fun(*this, &ConnectedState::gotFailure));
-	setChildState(std::make_unique<AssetsSyncState>(*this, connection));
+	setChildState(std::make_unique<AssetsSyncNeededState>(*this, connection));
 }
 
 void ConnectedState::disconnect() {

@@ -280,46 +280,47 @@ void Connection::dispatchOp(const RootOperation& op) {
 		bool anonymous = op->isDefaultTo();
 
 		Router::RouterResult rr = m_responder->handleOp(op);
-		if (rr == Router::HANDLED) {
-			return;
-		}
-
-		// locate a router based on from
-		if (!op->isDefaultFrom()) {
-			auto R = m_fromRouters.find(op->getFrom());
-			if (R != m_fromRouters.end()) {
-				rr = R->second->handleOperation(op);
-				if (rr == Router::HANDLED) {
-					return;
-				}
-			}
-		}
-
-		// locate a router based on the op's TO value
-		if (!anonymous) {
-			auto R = m_toRouters.find(op->getTo());
-			if (R != m_toRouters.end()) {
-				rr = R->second->handleOperation(op);
-				if (rr == Router::HANDLED) {
-					return;
-				}
-			} else if (!m_toRouters.empty()) {
-				logger->warn("received op with TO={}, but no router is registered for that id", op->getTo());
-			}
-		}
-
-		// special-case, server info refreshes are handled here directly
-		if (op->getClassNo() == INFO_NO && anonymous) {
-			handleServerInfo(op);
-			return;
-		}
-
-		// go to the default router
-		if (m_defaultRouter) {
-			rr = m_defaultRouter->handleOperation(op);
-		}
+		//If any of our routers handled it we shouldn't do anything more.
 		if (rr != Router::HANDLED) {
-			logger->warn("no-one handled op: {}", op);
+			// locate a router based on from
+			if (!op->isDefaultFrom()) {
+				auto R = m_fromRouters.find(op->getFrom());
+				if (R != m_fromRouters.end()) {
+					rr = R->second->handleOperation(op);
+					if (rr == Router::HANDLED) {
+						return;
+					}
+				}
+			}
+
+			// locate a router based on the op's TO value
+			if (!anonymous) {
+				auto R = m_toRouters.find(op->getTo());
+				if (R != m_toRouters.end()) {
+					rr = R->second->handleOperation(op);
+					if (rr == Router::HANDLED) {
+						return;
+					}
+				} else if (!m_toRouters.empty()) {
+					logger->warn("received op with TO={}, but no router is registered for that id", op->getTo());
+				}
+			}
+
+			// special-case, server info refreshes are handled here directly
+			if (op->getClassNo() == INFO_NO && anonymous) {
+				handleServerInfo(op);
+			} else if (op->getClassNo() == CHANGE_NO && anonymous) {
+				handleServerInfo(op);
+			} else {
+
+				// go to the default router
+				if (m_defaultRouter) {
+					rr = m_defaultRouter->handleOperation(op);
+				}
+				if (rr != Router::HANDLED) {
+					logger->warn("no-one handled op: {}", op);
+				}
+			}
 		}
 	} catch (const Atlas::Exception& ae) {
 		logger->error("caught Atlas exception: '{}' while dispatching op:\n{}", ae.what(), op);
@@ -347,6 +348,14 @@ void Connection::handleServerInfo(const RootOperation& op) {
 		auto svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());
 		if (!svr.isValid()) {
 			logger->error("server INFO argument object is broken");
+			return;
+		}
+		if (svr->isDefaultParent()) {
+			logger->warn("Got what we though was a server info update, but it had no parent.");
+			return;
+		}
+		if (svr->getParent() != "server") {
+			logger->warn("Got what we though was a server info update, but parent is {}.", svr->getParent());
 			return;
 		}
 

@@ -26,6 +26,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/asio/steady_timer.hpp>
 
+namespace {
+auto settleWaitTime = std::chrono::milliseconds(100);
+}
+
 FileSystemObserver::FileSystemObserver(boost::asio::io_context& ioService)
     : m_ioService(ioService)
 {
@@ -55,7 +59,8 @@ void FileSystemObserver::observe()
             if (!ec && ev.type != boost::asio::dir_monitor_event::null) {
                 //Don't process directly, since there might be many events coming directly after each other. Instead
                 //add to the map of changed paths and schedule a processing in 2 milliseconds
-                m_changedPaths.emplace(ev.path, std::make_pair(std::chrono::steady_clock::now(), ev));
+                m_changedPaths[ev.path] = std::make_pair(std::chrono::steady_clock::now(), ev);
+				spdlog::trace("File change was detected for path '{}'.", ev.path.string());
                 processChangedPaths();
                 this->observe();
             }
@@ -93,7 +98,7 @@ void FileSystemObserver::processChangedPaths()
     if (!m_changedPaths.empty()) {
         auto firstI = m_changedPaths.begin();
         //check if enough time has passed for the first entry
-        if (firstI->second.first <= std::chrono::steady_clock::now() - std::chrono::milliseconds(2)) {
+        if ((firstI->second.first + settleWaitTime) <= std::chrono::steady_clock::now()) {
             for (const auto& I : mCallBacks) {
                 auto& ev = firstI->second.second;
                 if (boost::starts_with(ev.path.string(), I.first.string())) {
@@ -114,8 +119,8 @@ void FileSystemObserver::processChangedPaths()
         if (!m_changedPaths.empty()) {
             auto& time_point = m_changedPaths.begin()->second.first;
             auto timer = std::make_shared<boost::asio::steady_timer>(m_ioService);
-            timer->expires_at(time_point + std::chrono::milliseconds(2));
-            timer->async_wait([&, timer](const boost::system::error_code& ec) {
+            timer->expires_at(time_point + std::chrono::milliseconds(20));
+            timer->async_wait([this, timer](const boost::system::error_code& ec) {
                 if (!ec) {
                     processChangedPaths();
                 }

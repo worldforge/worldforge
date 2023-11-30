@@ -23,7 +23,9 @@
 #include "LoggedInState.h"
 #include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
+#include "framework/AutoCloseConnection.h"
 #include <Eris/Account.h>
+#include <Eris/ServerInfo.h>
 
 namespace Ember {
 
@@ -61,6 +63,8 @@ private:
 	 */
 	Eris::Account mAccount;
 
+	AutoCloseConnection serverInfoConnection;
+
 	/**
 	 * @brief Callback for login failures.
 	 * @param msg Login failure message.
@@ -73,6 +77,9 @@ private:
 	void loginSuccess();
 
 	void logoutComplete(bool clean);
+
+	void processServerInfo(const Eris::ServerInfo& info);
+
 
 };
 

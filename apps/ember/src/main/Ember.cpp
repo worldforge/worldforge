@@ -182,7 +182,7 @@ int main(int argc, char** argv) {
 			Ember::logger->info("Ember version " EMBER_VERSION);
 			Ember::logger->info("Enabling detailed logging. The values are as follows: current thread id (0=main) : current frame : milliseconds since start of current frame (only for main thread)");
 
-			Ember::ConfigBoundLogObserver logObserver(sink);
+			Ember::ConfigBoundLogObserver logObserver;
 
 			//Setup input services
 			Ember::Input input;

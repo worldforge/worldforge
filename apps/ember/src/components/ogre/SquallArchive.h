@@ -52,6 +52,8 @@ public:
 
 	Ogre::FileInfoListPtr findFileInfo(const Ogre::String& pattern, bool recursive, bool dirs) const override;
 
+	void setRootSignature(Squall::Signature rootSignature);
+
 protected:
 	Squall::Repository mRepository;
 	Squall::Manifest mRootManifest;

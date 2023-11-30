@@ -80,6 +80,7 @@
 #include "Version.h"
 #include "components/cegui/CEGUISetup.h"
 #include "framework/LogExtensions.h"
+#include <squall/core/Difference.h>
 
 #include <Eris/Connection.h>
 #include <Eris/View.h>
@@ -501,35 +502,42 @@ std::future<void> EmberOgre::loadAssets(Squall::Signature signature) {
 //		mResourceLoader->addSquallMedia(signature, "world");
 //	});
 
+	auto& resourceGroupManager = Ogre::ResourceGroupManager::getSingleton();
+	if (resourceGroupManager.resourceGroupExists("world") && resourceGroupManager.isResourceGroupInitialised("world")) {
+		//Media is already loaded, we need to perform an inject-and-replace action where we go through all new, changed or removed media.
+		mResourceLoader->replaceSquallMedia(signature);
+		std::promise<void> promise{};
+		promise.set_value();
+		return promise.get_future();
+	} else {
+		//We would preferably do this in a background thread, but alas we can't, since the call to "initialiseResourceGroup" will
+		// need to load any shaders it detects, and this can only be done on the main thread (at least with OpenGL).
+		//So instead we interleave it with updates of the render.
+		mResourceLoader->addSquallMedia(signature);
+		struct : Ogre::ResourceGroupListener {
+			EmberOgre* parent = nullptr;
+			TimeFrame timeFrame = TimeFrame{std::chrono::milliseconds{16}};
 
-
-	//We would preferably do this in a background thread, but alas we can't, since the call to "initialiseResourceGroup" will
-	// need to load any shaders it detects, and this can only be done on the main thread (at least with OpenGL).
-	//So instead we interleave it with updates of the render.
-	mResourceLoader->addSquallMedia(signature, "world");
-	struct : Ogre::ResourceGroupListener {
-		EmberOgre* parent = nullptr;
-		TimeFrame timeFrame = TimeFrame{std::chrono::milliseconds{16}};
-
-		//Each time a resource is created we check if we should render, with 60 fps.
-		void resourceCreated(const Ogre::ResourcePtr&) override {
-			if (!timeFrame.isTimeLeft()) {
-				parent->mInput.processInput();
-				parent->renderOneFrame(timeFrame);
-				timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+			//Each time a resource is created we check if we should render, with 60 fps.
+			void resourceCreated(const Ogre::ResourcePtr&) override {
+				if (!timeFrame.isTimeLeft()) {
+					parent->mInput.processInput();
+					parent->renderOneFrame(timeFrame);
+					timeFrame = TimeFrame{std::chrono::milliseconds{16}};
+				}
 			}
+		} listener;
+		listener.parent = this;
+		if (Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("world")) {
+			Ogre::ResourceGroupManager::getSingleton().addResourceGroupListener(&listener);
+			Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("world");
+			Ogre::ResourceGroupManager::getSingleton().removeResourceGroupListener(&listener);
 		}
-	} listener;
-	listener.parent = this;
-	if (Ogre::ResourceGroupManager::getSingleton().resourceGroupExists("world")) {
-		Ogre::ResourceGroupManager::getSingleton().addResourceGroupListener(&listener);
-		Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("world");
-		Ogre::ResourceGroupManager::getSingleton().removeResourceGroupListener(&listener);
-	}
 
-	std::promise<void> promise{};
-	promise.set_value();
-	return promise.get_future();
+		std::promise<void> promise{};
+		promise.set_value();
+		return promise.get_future();
+	}
 }
 
 }

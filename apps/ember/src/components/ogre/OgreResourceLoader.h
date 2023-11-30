@@ -95,7 +95,14 @@ public:
 	 */
 	bool addMedia(const std::string& path, const std::string& resourceGroup);
 
-	bool addSquallMedia(Squall::Signature signature, const std::string& resourceGroup);
+	bool addSquallMedia(Squall::Signature signature);
+
+	void replaceSquallMedia(Squall::Signature signature);
+
+	std::optional<Squall::Signature> getSquallSignature() const {
+		return mSquallSignature;
+	}
+
 
 
 private:
@@ -118,6 +125,10 @@ private:
 
 	std::vector<std::string> mResourceRootPaths;
 
+	Squall::Repository mRepository;
+
+	std::optional<Squall::Signature> mSquallSignature;
+
 
 	bool addUserMedia(const std::string& path, const std::string& type, const std::string& section);
 
@@ -136,14 +147,9 @@ private:
 							  const std::string& section,
 							  OnFailure onFailure);
 
-	void observeDirectory(const boost::filesystem::path& path);
+	void observeDirectory(const boost::filesystem::path& path, std::string group);
 
-	/**
-	 * Refresh an updated model definition, either by just adding it if it doesn't already exists, or by updating it and reloading all instances.
-	 * @param fullPath The full path to the definition.
-	 * @param relativePath The relative path, used as an identifier.
-	 */
-	static void refreshModelDefinition(const boost::filesystem::path& fullPath, const boost::filesystem::path& relativePath);
+
 };
 
 }

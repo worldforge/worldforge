@@ -24,9 +24,7 @@
 #include "ITask.h"
 #include "TaskQueue.h"
 
-namespace Ember {
-
-namespace Tasks {
+namespace Ember::Tasks {
 template<typename T>
 struct FunctionalTask : public ITask {
 
@@ -52,7 +50,7 @@ void enqeueFunctionalTask(TaskQueue& queue, std::function<T(TaskExecutionContext
 
 
 }
-}
+
 
 
 #endif //EMBER_FUNCTIONALTASK_H

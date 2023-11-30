@@ -16,16 +16,16 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "AssetsSyncState.h"
+#include "AssetsSyncNeededState.h"
 #include "ServerServiceSignals.h"
-#include "services/server/ServerServiceSignals.h"
 #include <Eris/Connection.h>
 #include <sigc++/bind.h>
 
 namespace Ember {
-AssetsSyncState::AssetsSyncState(IState& parentState, Eris::Connection& connection)
+AssetsSyncNeededState::AssetsSyncNeededState(IState& parentState, Eris::Connection& connection)
 		: StateBase<AccountAvailableState>::StateBase(parentState), mConnection(connection) {
 	serverInfoConnection = connection.GotServerInfo.connect([&connection, this]() {
+		//This is a one time thing. We handle in-game updates of the assets in a separate component.
 		serverInfoConnection.disconnect();
 		Eris::ServerInfo serverInfo{};
 		connection.getServerInfo(serverInfo);
@@ -35,14 +35,12 @@ AssetsSyncState::AssetsSyncState(IState& parentState, Eris::Connection& connecti
 
 }
 
-AssetsSyncState::~AssetsSyncState() {
+AssetsSyncNeededState::~AssetsSyncNeededState() {
 	StateBaseCore::getSignals().AssetsUnloadRequest.emit();
 }
 
 
-void AssetsSyncState::processServerInfo(Eris::ServerInfo info) {
-
-
+void AssetsSyncNeededState::processServerInfo(const Eris::ServerInfo& info) {
 	mAssetsPaths = info.assets;
 
 	if (mAssetsPaths.empty()) {
@@ -50,13 +48,13 @@ void AssetsSyncState::processServerInfo(Eris::ServerInfo info) {
 	} else {
 		for (const auto& assetPath: mAssetsPaths) {
 			AssetsSync syncRequest{.assetsPath = assetPath};
-			syncRequest.Complete.connect(sigc::bind(sigc::mem_fun(*this, &AssetsSyncState::syncComplete), assetPath));
+			syncRequest.Complete.connect(sigc::bind(sigc::mem_fun(*this, &AssetsSyncNeededState::syncComplete), assetPath));
 			StateBaseCore::getSignals().AssetsSyncRequest.emit(syncRequest);
 		}
 	}
 }
 
-void AssetsSyncState::syncComplete(AssetsSync::UpdateResult result, std::string assetPath) {
+void AssetsSyncNeededState::syncComplete(AssetsSync::UpdateResult result, std::string assetPath) {
 	auto I = std::find(mAssetsPaths.begin(), mAssetsPaths.end(), assetPath);
 	if (I != mAssetsPaths.end()) {
 		mAssetsPaths.erase(I);

@@ -27,13 +27,13 @@ ChangeSummary resolveDifferences(const Repository& repository, DifferenceRequest
 	std::map<std::filesystem::path, FileEntry> oldEntries;
 	std::map<std::filesystem::path, FileEntry> newEntries;
 
-	for (auto oldIterator = iterator(repository, request.oldManifest, true); oldIterator != iterator(); oldIterator++) {
+	for (auto oldIterator = iterator(repository, request.oldManifest, true); oldIterator && oldIterator != iterator(); oldIterator++) {
 		if (oldIterator) {
 			auto traverseEntry = *oldIterator;
 			oldEntries.emplace(traverseEntry.path, traverseEntry.fileEntry);
 		}
 	}
-	for (auto newIterator = iterator(repository, request.newManifest, true); newIterator != iterator(); newIterator++) {
+	for (auto newIterator = iterator(repository, request.newManifest, true); newIterator && newIterator != iterator(); newIterator++) {
 		if (newIterator) {
 			auto traverseEntry = *newIterator;
 			newEntries.emplace(traverseEntry.path, traverseEntry.fileEntry);

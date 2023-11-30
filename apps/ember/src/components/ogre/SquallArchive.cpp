@@ -102,11 +102,7 @@ namespace Ember::OgreView {
 SquallArchive::SquallArchive(Squall::Repository repository, Squall::Signature rootSignature)
 		: Archive(std::string("squall:/") + rootSignature.str(), "Squall"),
 		  mRepository(std::move(repository)) {
-	auto fetchResult = mRepository.fetchManifest(rootSignature);
-	if (fetchResult.fetchResult.status == Squall::FetchStatus::FAILURE) {
-		throw std::runtime_error("Could not fetch manifest from Squall.");
-	}
-	mRootManifest = *fetchResult.manifest;
+	setRootSignature(rootSignature);
 }
 
 
@@ -206,6 +202,14 @@ void SquallArchive::findFiles(std::regex* pattern,
 			}
 		}
 	}
+}
+
+void SquallArchive::setRootSignature(Squall::Signature rootSignature) {
+	auto fetchResult = mRepository.fetchManifest(rootSignature);
+	if (fetchResult.fetchResult.status == Squall::FetchStatus::FAILURE) {
+		throw std::runtime_error("Could not fetch manifest from Squall.");
+	}
+	mRootManifest = *fetchResult.manifest;
 }
 
 

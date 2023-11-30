@@ -33,6 +33,7 @@ auto callback(std::map<boost::filesystem::path, std::list<std::function<void(con
                 callback(event.ev.path);
             }
         }
+		spdlog::debug("Received file system change event of type {}. Path: {}", event.ev.type_cstr(), event.ev.path.string());
 
         for (auto& entry: directoryCallbacks) {
 

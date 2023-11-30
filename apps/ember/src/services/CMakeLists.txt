@@ -26,7 +26,7 @@ add_library(ember-services OBJECT
         server/IState.h
         server/ServerServiceSignals.h
         server/StateBase.h
-        server/AssetsSyncState.cpp
+        server/AssetsSyncNeededState.cpp
         serversettings/ServerSettings.cpp
         serversettings/ServerSettingsCredentials.cpp
         sound/SoundBinding.cpp

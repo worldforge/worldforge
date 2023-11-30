@@ -50,11 +50,13 @@ size_t AssetsUpdater::poll() {
 		auto& firstSession = mActiveSessions.front();
 		auto resolveResult = firstSession.resolver.poll(10);
 		if (resolveResult.status == Squall::ResolveStatus::COMPLETE) {
-			firstSession.callback.set_value(UpdateResult::Success);
+			auto callback = std::move(firstSession.callback);
 			mActiveSessions.erase(mActiveSessions.begin());
+			callback.set_value(UpdateResult::Success);
 		} else if (resolveResult.status == Squall::ResolveStatus::ERROR) {
-			firstSession.callback.set_value(UpdateResult::Failure);
+			auto callback = std::move(firstSession.callback);
 			mActiveSessions.erase(mActiveSessions.begin());
+			callback.set_value(UpdateResult::Failure);
 		} else {
 			SyncProgress(resolveResult);
 		}

@@ -9,7 +9,7 @@
 #include "Log.h"
 
 #include <Atlas/Objects/Entity.h>
-
+#include <ranges>
 
 using Atlas::Objects::Entity::RootEntity;
 
@@ -48,11 +48,11 @@ void ServerInfo::processServer(const RootEntity &svr)
     if (!svr->copyAttr("entities", element) && element.isInt()) {
         entities = element.Int();
     }
-    
+
     if (!svr->copyAttr("version", element) && element.isString()) {
         version = element.String();
     }
-    
+
     if (!svr->copyAttr("builddate", element) && element.isString()) {
         buildDate = element.String();
     }
@@ -62,11 +62,8 @@ void ServerInfo::processServer(const RootEntity &svr)
     }
 
     if (!svr->copyAttr("assets", element) && element.isList()) {
-		for (auto& url : element.List()) {
-			if (url.isString()) {
-				assets.emplace_back(url.String());
-			}
-		}
+		auto assetsAsStrings = element.List() | std::views::filter([](auto entry) {return entry.isString();}) | std::views::transform([](auto entry) { return entry.String();});
+		assets = {assetsAsStrings.begin(), assetsAsStrings.end()};
 	}
 
 }

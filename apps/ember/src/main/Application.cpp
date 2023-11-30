@@ -62,6 +62,53 @@ extern "C"
 sighandler_t oldSignals[NSIG];
 }
 
+namespace {
+struct ResolveSquallResult {
+	Squall::Signature signature;
+	std::string baseUrl;
+};
+
+std::optional<ResolveSquallResult> resolveSquallUrl(const std::string& squallUrl, const std::string& serverHostname) {
+	auto parseResult = boost::urls::parse_uri(squallUrl);
+	if (parseResult.has_value()) {
+		boost::urls::url url = parseResult.value();
+
+		if (url.host().empty()) {
+			Ember::logger->debug("Asset url is missing hostname, which means we're meant to use the same host as the game server itself.");
+			std::string host = serverHostname;
+			//If there's no host we're using a local socket connection, and host should be "localhost"
+			if (host == "local") {
+				host = "localhost";
+			}
+			url.set_host(host);
+		}
+
+		if (url.scheme() == "squall" || url.scheme() == "squalls") {
+			std::string portSection = url.has_port() ? std::string(":") + std::string(url.port()) : "";
+
+			//"squall" is "http" and "squalls" is "https"
+			std::string baseUrl = (url.scheme() == "squall" ? "http://" : "https://") + url.host() + portSection + url.path();
+			Squall::Signature signature(url.fragment());
+			return {{.signature=signature, .baseUrl= baseUrl}};
+		} else if (url.scheme() == "http" || url.scheme() == "https") {
+
+			auto segments = url.segments();
+			//The last two segments make up the signature. Pop those to access the root url of the Squall repository.
+			boost::urls::url urlCopy = url;
+			auto lastPart = urlCopy.segments().back();
+			urlCopy.segments().pop_back();
+			auto firstPart = urlCopy.segments().back();
+			urlCopy.segments().pop_back();
+			std::stringstream ss;
+			ss << urlCopy;
+			Squall::Signature signature(firstPart + lastPart);
+			return {{.signature = signature, .baseUrl = ss.str()}};
+		}
+	}
+	return {};
+}
+}
+
 namespace Ember {
 
 /**
@@ -365,61 +412,22 @@ void Application::initializeServices() {
 
 	mServices->getServerService().GotView.connect(sigc::mem_fun(*this, &Application::Server_GotView));
 	mServices->getServerService().DestroyedView.connect(sigc::mem_fun(*this, &Application::Server_DestroyedView));
-	mServices->getServerService().AssetsSyncRequest.connect([this](AssetsSync assetsSync) {
+
+	auto assetsSyncHandler = [this](AssetsSync assetsSync) {
 		try {
-			auto parseResult = boost::urls::parse_uri(assetsSync.assetsPath);
-			if (parseResult.has_value()) {
-				boost::urls::url url = parseResult.value();
-
-				if (url.host().empty()) {
-					logger->info("Asset url is missing hostname, which means we're meant to use the same host as the game server itself.");
-					std::string host = mServices->getServerService().getConnection()->getHost();
-					//If there's no host we're using a local socket connection, and host should be "localhost"
-					if (host == "local") {
-						host = "localhost";
-					}
-					url.set_host(host);
-				}
-
-				if (url.scheme() == "squall" || url.scheme() == "squalls") {
-					std::string portSection = url.has_port() ? std::string(":") + std::string(url.port()) : "";
-
-					//"squall" is "http" and "squalls" is "https"
-					std::string baseUrl = (url.scheme() == "squall" ? "http://" : "https://") + url.host() + portSection + url.path();
-					Squall::Signature signature(url.fragment());
-					auto future = mAssetsUpdater.syncSquall(baseUrl, signature);
-
+			if (!assetsSync.assetsPath.empty()) {
+				auto urlResolveResult = resolveSquallUrl(assetsSync.assetsPath, mServices->getServerService().getConnection()->getHost());
+				if (urlResolveResult) {
+					logger->info("Resolved squall base url from '{}' to '{}'.", assetsSync.assetsPath, urlResolveResult->baseUrl);
+					auto future = mAssetsUpdater.syncSquall(urlResolveResult->baseUrl, urlResolveResult->signature);
 					mAssetUpdates.emplace_back(AssetsUpdateBridge{.stage= AssetsUpdateBridge::SyncStage{.pollFuture = std::move(future)},
-							.squallSignature = signature.str(),
+							.squallSignature = urlResolveResult->signature.str(),
 							.CompleteSignal = assetsSync.Complete});
 					if (mAssetUpdates.size() == 1) {
 						scheduleAssetsPoll();
 					}
-				} else if (url.scheme() == "http" || url.scheme() == "https") {
-
-					auto segments = url.segments();
-					if (segments.size() < 2) {
-						assetsSync.Complete(AssetsSync::UpdateResult::Failure);
-					} else {
-						//The last two segments make up the signature. Pop those to access the root url of the Squall repository.
-						boost::urls::url urlCopy = url;
-						auto lastPart = urlCopy.segments().back();
-						urlCopy.segments().pop_back();
-						auto firstPart = urlCopy.segments().back();
-						urlCopy.segments().pop_back();
-						std::stringstream ss;
-						ss << urlCopy;
-						Squall::Signature signature(firstPart + lastPart);
-						auto future = mAssetsUpdater.syncSquall(ss.str(), signature);
-
-						mAssetUpdates.emplace_back(AssetsUpdateBridge{.stage= AssetsUpdateBridge::SyncStage{.pollFuture = std::move(future)},
-								.squallSignature = signature.str(),
-								.CompleteSignal = assetsSync.Complete});
-						if (mAssetUpdates.size() == 1) {
-							scheduleAssetsPoll();
-						}
-					}
 				} else {
+					logger->warn("Could not resolve squall base url from {}.", assetsSync.assetsPath);
 					assetsSync.Complete(AssetsSync::UpdateResult::Failure);
 				}
 			} else {
@@ -428,8 +436,9 @@ void Application::initializeServices() {
 		} catch (const std::exception& ex) {
 			assetsSync.Complete(AssetsSync::UpdateResult::Failure);
 		}
-	});
-
+	};
+	mServices->getServerService().AssetsSyncRequest.connect(assetsSyncHandler);
+	mServices->getServerService().AssetsReSyncRequest.connect(assetsSyncHandler);
 
 	mServices->getServerService().setupLocalServerObservation(mConfigService);
 
