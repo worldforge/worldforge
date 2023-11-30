@@ -684,19 +684,16 @@ br_build_path (const char *dir, const char *file)
 {
 	char *dir2, *result;
 	size_t len;
-	int must_free = 0;
 
 	len = strlen (dir);
 	if (len > 0 && dir[len - 1] != '/') {
 		dir2 = br_strcat (dir, "/");
-		must_free = 1;
-	} else
-		dir2 = (char *) dir;
-
-	result = br_strcat (dir2, file);
-	if (must_free)
+		result = br_strcat (dir2, file);
 		free (dir2);
-	return result;
+		return result;
+	} else {
+		return br_strcat (dir, file);
+	}
 }
 
 
@@ -738,12 +735,13 @@ br_strndup (const char *str, size_t size)
 char *
 br_dirname (const char *path)
 {
-	char *end, *result;
+	const char *end;
+	char *result;
 
 	if (path == nullptr)
 		return nullptr;
 
-	end = (char*)strrchr (path, '/');
+	end = strrchr (path, '/');
 	if (end == nullptr)
 		return strdup (".");
 

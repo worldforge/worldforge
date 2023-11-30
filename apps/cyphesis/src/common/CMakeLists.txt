@@ -1,6 +1,5 @@
 add_library(cyphesis-common
         const.cpp
-        binreloc.c
         newid.cpp
         id.cpp
         log.cpp
@@ -59,6 +58,7 @@ target_link_libraries(cyphesis-common PUBLIC
         libxdg-basedir::libxdg-basedir
         spdlog::spdlog
         external-saf
+        external-binreloc
 )
 
 

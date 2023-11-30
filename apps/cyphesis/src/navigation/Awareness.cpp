@@ -458,7 +458,6 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
 {
     bool hasNewPosition = false;
     bool hasNewBbox = false;
-    bool hasNewMovement = false;
     if (!ent || ent->hasAttrFlag(Atlas::Objects::Entity::POS_FLAG)) {
         if (timestamp > entityEntry.pos.timestamp) {
             if (auto prop = entity.getPropertyClassFixed<PositionProperty>()) {
@@ -473,7 +472,6 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
             if (auto prop = entity.getPropertyClassFixed<VelocityProperty>()) {
                 entityEntry.velocity.data = prop->data();
                 entityEntry.velocity.timestamp = timestamp;
-                hasNewMovement = true;
             }
         }
     }
@@ -491,7 +489,6 @@ bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& e
             if (auto prop = entity.getPropertyClassFixed<AngularVelocityProperty>()) {
                 entityEntry.angular.data = prop->data();
                 entityEntry.angular.timestamp = timestamp;
-                hasNewMovement = true;
             }
         }
     }

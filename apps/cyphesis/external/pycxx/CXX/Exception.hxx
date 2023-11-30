@@ -72,6 +72,7 @@ namespace Py
     // for user defined exceptions to be made know to pycxx
     typedef void (*throw_exception_func_t)( void );
     void addPythonException( ExtensionExceptionType &py_exc_type, throw_exception_func_t throw_func );
+	void addPythonException( PyObject *py_exc_type, throw_exception_func_t func );
 
 #if defined( PYCXX_6_2_COMPATIBILITY )
     class Exception : public BaseException

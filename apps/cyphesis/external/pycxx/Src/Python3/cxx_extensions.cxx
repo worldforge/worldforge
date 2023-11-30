@@ -745,6 +745,7 @@ PythonExtensionBase *getPythonExtensionBase( PyObject *self )
     }
 }
 
+PythonExtensionBase *getPythonExtensionBaseExact( PyObject *self );
 PythonExtensionBase *getPythonExtensionBaseExact( PyObject *self )
 {
     if( self->ob_type->tp_flags&Py_TPFLAGS_BASETYPE )

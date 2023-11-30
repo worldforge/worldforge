@@ -411,7 +411,7 @@ class shared_state final
                         {
                             if (type != net::cancellation_type::none)
                             {
-                                auto lg = this->internal_lock();
+                                auto innerLock = this->internal_lock();
                                 // already completed
                                 if (!c_slot.is_connected())
                                     return;

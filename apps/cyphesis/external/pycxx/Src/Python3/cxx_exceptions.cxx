@@ -49,6 +49,7 @@ void ifPyErrorThrowCxxException()
         }
     }
 }
+void initExceptions();
 
 void initExceptions()
 {
