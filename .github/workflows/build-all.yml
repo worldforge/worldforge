@@ -91,9 +91,15 @@ jobs:
                 run: |
                     pip install -r .github/workflows/requirements.txt
                     conan profile detect
-                    #Set the default profile to use g++ 17 it it's not detected
-                    sed -i.backup 's/compiler.cppstd=gnu14/compiler.cppstd=gnu17/g' ~/.conan2/profiles/default
                     conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+
+            -   name: Alter Conan config for Ubuntu 20.04
+                if: ${{ matrix.os == 'ubuntu-20.04' }}
+                shell: bash
+                run: |
+                    cp .github/settings_user.yml ~/.conan2/
+                    echo "os.libc=glibc" >> ~/.conan2/profiles/default
+                    echo "os.libc.version=2.31" >> ~/.conan2/profiles/default
 
             -   name: Have Conan install packages
                 shell: bash
