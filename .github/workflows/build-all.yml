@@ -29,6 +29,12 @@ jobs:
         steps:
             -   uses: actions/checkout@v3.3.0
 
+            - name: Set up GCC
+              uses: egor-tensin/setup-gcc@v1
+              if: ${{ matrix.os == 'ubuntu-20.04' }}
+              with:
+                  version: 11
+
             -   name: Cache media
                 uses: actions/cache@v3.2.3
                 with:
