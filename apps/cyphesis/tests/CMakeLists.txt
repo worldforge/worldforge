@@ -86,15 +86,7 @@ set(PYTHON_TESTS_LIBS
         cyphesis-atlas_python
         cyphesis-common_python
         cyphesis-pythonbase
-        cyphesis-rulesai
-        cyphesis-rulessimulation
-        cyphesis-entityfilter
         cyphesis-stubnavigation
-        cyphesis-rulesbase
-        cyphesis-modules
-        cyphesis-physics
-        cyphesis-common
-        external-remotery
 )
 
 
@@ -581,7 +573,7 @@ wf_add_test(server/AccountConnectionCharacterIntegration.cpp
         ../src/server/Connection.cpp)
 target_link_libraries(AccountConnectionCharacterIntegration ${PYTHON_TESTS_LIBS})
 wf_add_test(server/AccountIntegration.cpp)
-target_link_libraries(AccountIntegration cyphesis-server ${PYTHON_TESTS_LIBS})
+target_link_libraries(AccountIntegration ${PYTHON_TESTS_LIBS} cyphesis-server)
 
 wf_add_test(server/EntityFactoryTypeNodeIntegration.cpp TestPropertyManager.cpp ../src/server/EntityFactory.cpp
         ../src/common/TypeNode.cpp

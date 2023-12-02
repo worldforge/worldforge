@@ -70,8 +70,9 @@ add_library(cyphesis-rulessimulation
 )
 
 target_link_libraries(cyphesis-rulessimulation PUBLIC
+        cyphesis-entityfilter
         cyphesis-rulessimulationscripts
-        cyphesis-common
+        cyphesis-modules
         mercator
         ${BULLET_LIBRARIES}
 )

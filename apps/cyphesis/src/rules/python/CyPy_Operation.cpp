@@ -23,7 +23,6 @@
 #include "CyPy_Oplist.h"
 #include <Atlas/Objects/Generic.h>
 #include <Atlas/Objects/Entity.h>
-#include <common/log.h>
 #include <common/Inheritance.h>
 
 using Atlas::Message::Element;
@@ -314,7 +313,7 @@ Py::Object CyPy_Operation::sequence_item(Py_ssize_t item)
         return CyPy_Root::wrap(std::move(root));
     }
     //spdlog::warn("Non operation or entity being returned as arg of operation");
-    return CyPy_Element::wrap(arg->asMessage());
+    return CyPy_ElementMap::wrap(arg->asMessage());
 }
 
 Py::Object CyPy_Operation::number_add(const Py::Object& other)

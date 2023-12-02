@@ -6,6 +6,7 @@ add_library(cyphesis-rulesbase_python
 )
 
 target_link_libraries(cyphesis-rulesbase_python PUBLIC
+        cyphesis-rulesbase
         cyphesis-pythonbase
 )
 
@@ -20,6 +21,12 @@ add_library(cyphesis-atlas_python
 
 target_link_libraries(cyphesis-atlas_python PUBLIC
         cyphesis-pythonbase
+        Atlas
+        AtlasCodecs
+        AtlasNet
+        AtlasMessage
+        AtlasObjects
+        AtlasFilters
 )
 
 add_library(cyphesis-physics_python
@@ -33,10 +40,11 @@ add_library(cyphesis-physics_python
 
 target_link_libraries(cyphesis-physics_python PUBLIC
         cyphesis-atlas_python
-        cyphesis-physics
         cyphesis-pythonbase
+        cyphesis-physics
 )
 
+#TODO: move part into the "common" directory and rename what's kept as "cyphesis-rulesbase_python"
 add_library(cyphesis-common_python
         CyPy_LocatedEntity.cpp
         CyPy_Common.cpp
@@ -49,4 +57,5 @@ add_library(cyphesis-common_python
 target_link_libraries(cyphesis-common_python PUBLIC
         cyphesis-physics_python
         cyphesis-pythonbase
+        cyphesis-rulesbase
 )

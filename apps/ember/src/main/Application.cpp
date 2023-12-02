@@ -92,7 +92,6 @@ std::optional<ResolveSquallResult> resolveSquallUrl(const std::string& squallUrl
 			return {{.signature=signature, .baseUrl= baseUrl}};
 		} else if (url.scheme() == "http" || url.scheme() == "https") {
 
-			auto segments = url.segments();
 			//The last two segments make up the signature. Pop those to access the root url of the Squall repository.
 			boost::urls::url urlCopy = url;
 			auto lastPart = urlCopy.segments().back();

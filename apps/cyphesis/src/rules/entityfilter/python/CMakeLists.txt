@@ -3,6 +3,7 @@ add_library(cyphesis-entityfilter_python
 )
 
 target_link_libraries(cyphesis-entityfilter_python PUBLIC
+        cyphesis-entityfilter
         cyphesis-pythonbase
 )
 

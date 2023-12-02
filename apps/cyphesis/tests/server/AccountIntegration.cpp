@@ -437,10 +437,6 @@ int main()
     return t.run();
 }
 
-
-
-// stubs
-
 #include "server/EntityFactory.h"
 #include "server/ArchetypeFactory.h"
 #include "server/Juncture.h"
@@ -466,7 +462,7 @@ int main()
 #include "rules/simulation/VisibilityProperty.h"
 #include "rules/simulation/SuspendedProperty.h"
 #include "rules/simulation/DomainProperty.h"
-#include "../stubs/rules/stubScaleProperty.h"
+#include "rules/ScaleProperty.h"
 
 #include "common/const.h"
 #include "common/globals.h"
