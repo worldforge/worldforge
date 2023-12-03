@@ -21,6 +21,8 @@
 
 
 #include "MetaServerPacket.hpp"
+#include <netinet/in.h> // htonl
+#include <cstring>      // memcpy
 
 MetaServerPacket::MetaServerPacket() :
 		  m_packetType(NMT_NULL),

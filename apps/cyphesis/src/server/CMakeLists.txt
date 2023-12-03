@@ -8,6 +8,7 @@ add_library(cyphesis-comm
 
 target_link_libraries(cyphesis-comm PUBLIC
         cyphesis-common
+        metaserver-api
 )
 
 if (AVAHI_FOUND)
@@ -97,7 +98,6 @@ target_link_libraries(cyphesis
         cyphesis-db
         cyphesis-physics
         cyphesis-comm
-        cyphesis-metaserverapi
         external-remotery
 )
 

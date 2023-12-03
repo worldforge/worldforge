@@ -19,7 +19,7 @@
 #ifndef SERVER_COMM_META_CLIENT_H
 #define SERVER_COMM_META_CLIENT_H
 
-#include "metaserverapi/MetaServerPacket.hpp"
+#include "MetaServerPacket.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/asio/steady_timer.hpp>

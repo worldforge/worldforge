@@ -30,9 +30,6 @@
 /*
  * System Includes
  */
-#include <iosfwd>
-#include <cstring>      // memcpy
-#include <netinet/in.h> // htonl
 #include <array>
 #include <string>
 
@@ -98,11 +95,11 @@ public:
 	MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
-	NetMsgType getPacketType() const { return m_packetType; }
+	const NetMsgType getPacketType() const { return m_packetType; }
 	void setPacketType(const NetMsgType& nmt);
 
 	const std::string getAddressStr() const { return m_AddressStr; }
-	uint32_t getAddressInt() const { return m_AddressInt; }
+	const uint32_t getAddressInt() const { return m_AddressInt; }
 	const std::string getAddress() const { return m_AddressStr; }
 	void setAddress(const std::string& address);
 
@@ -126,7 +123,8 @@ public:
 	const std::string getPacketMessage(unsigned int offset) const;
 	uint32_t getIntData(unsigned int offset) const;
 
-	uint32_t	IpAsciiToNet(const char *buffer);
+	static uint32_t	IpAsciiToNet(const char *buffer);
+	static std::string IpNetToAscii(uint32_t address);
 
 	std::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
 	void setBuffer( std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )

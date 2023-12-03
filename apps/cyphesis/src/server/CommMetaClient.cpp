@@ -22,7 +22,7 @@
 /*
  * Imported MetaServer API implementation.
  */
-#include "metaserverapi/MetaServerAPI.hpp"
+#include "MetaServerAPI.hpp"
 
 #include "CommMetaClient.h"
 
