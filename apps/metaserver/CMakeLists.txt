@@ -10,7 +10,10 @@ find_package(Boost
         REQUIRED
         COMPONENTS program_options filesystem)
 
+add_compile_definitions(SYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+
 add_subdirectory(src)
+add_subdirectory(tests)
 
 configure_file(metaserver-ng.conf.in metaserver-ng.conf @ONLY)
 configure_file(metaserver-ng.dox.in metaserver-ng.dox @ONLY)
