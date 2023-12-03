@@ -19,7 +19,10 @@
  */
 
 #include "DataObject.hpp"
-#include <glog/logging.h> // thing about this
+#include <spdlog/spdlog.h>
+#include <fmt/ostream.h>
+
+template <> struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {};
 
 DataObject::DataObject()
 {
@@ -48,7 +51,7 @@ DataObject::addServerAttribute(const std::string& sessionid, const std::string& 
 	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
 	{
 		m_serverData[sessionid][name] = value;
-		VLOG(9) << "  AddServerAttribute: " << sessionid << ":" << name << ":" << value;
+		spdlog::trace("  AddServerAttribute: {}:{}:{}",sessionid, name, value);
 		return true;
 	}
 	return false;
@@ -329,16 +332,13 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::st
 
 	ss_slice.clear();
 
-	VLOG(5) << "pre - start_idx: " << start_idx
-			<< " -- max_items:" << max_items
-			<< " -- ss_slice:" << ss_slice.size()
-			<< " -- serverData: " << m_serverData.size();
+	spdlog::trace("pre - start_idx: {} -- max_items:{} -- ss_slice:{} -- serverData: {}", start_idx, max_items, ss_slice.size(), m_serverData.size());
 
 
 	/*
 	 * in the event of no session specified, just use the "default" list
 	 */
-	VLOG(5) << "getServerSessionList(" << sessionid << ")";
+	spdlog::trace("getServerSessionList({})", sessionid);
 
 	/*
 	 * If we're doing the default list and it doesn't match with the current data
@@ -346,15 +346,15 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::st
 	 */
 	if ( start_idx == 0 && sessionid == "default" )
 	{
-		VLOG(5) << "Refreshing (default) server list";
+		spdlog::trace( "Refreshing (default) server list");
 		createServerSessionListresp("default");
 	}
 
 	 /*
 	  * Lets see how things are looking
 	  */
-	VLOG(7) << "FULL m_serverData     : " << m_serverData.size();
-	VLOG(7) << "m_serverDataList[" << sessionid << "] : " << getServerSessionCount(sessionid);
+	spdlog::trace("FULL m_serverData     : {}", m_serverData.size());
+	spdlog::trace("m_serverDataList[{}] : {}", sessionid, getServerSessionCount(sessionid));
 
 	/*
 	 * If we're empty or going out of bounds, just return the big bubkis
@@ -372,17 +372,17 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::st
 		  */
 		 if ( ss_slice.size() >= max_items )
 		 {
-			 VLOG(7) << "ss_slice size(" << ss_slice.size() << ") is greater than max_items (" << max_items << ")";
+			 spdlog::trace( "ss_slice size({}) is greater than max_items ({})", ss_slice.size(), max_items);
 			 break;
 		 }
 	     ss_slice.push_back(*ss_itr);
-		 VLOG(7) << "   I(" << ss_slice.size() << "): " << *ss_itr;
+		 spdlog::trace("   I({}): {}",ss_slice.size(), *ss_itr);
 
 	 }
 
-	 VLOG(7) << "   M: " << ss_slice.size();
+	 spdlog::trace("   M: {}", ss_slice.size());
 	 ss_slice.unique();
-	 VLOG(7) << "   N: " << ss_slice.size();
+	 spdlog::trace( "   N: {}", ss_slice.size());
 	 return ss_slice;
 }
 
@@ -409,7 +409,7 @@ DataObject::expireServerSessions( unsigned int expiry )
     {
     	std::string key = itr->first;
 
-		VLOG(9) << "  from_iso_string (" << key << ": " << getServerExpiryIso(key);
+		spdlog::trace("  from_iso_string ({}: {}",key, getServerExpiryIso(key));
     	etime =  boost::posix_time::from_iso_string(getServerExpiryIso(key)) +
     			 boost::posix_time::seconds(expiry);
 
@@ -514,7 +514,7 @@ DataObject::expireClientSessions( unsigned int expiry )
     	}
 
 
-		VLOG(9) << "  from_iso_string: " << et;
+		spdlog::trace("  from_iso_string: {}", et);
     	etime =  boost::posix_time::from_iso_string(et) +
     			 boost::posix_time::seconds(expiry);
 
@@ -560,23 +560,23 @@ DataObject::expireClientSessionCache( unsigned int expiry )
 	 */
 	for( auto& f : m_listreqExpiry )
 	{
-		VLOG(8) << "  iterate m_listreqExpiry : " << f.first << "=" << f.second;
+		spdlog::trace("  iterate m_listreqExpiry : {}={}", f.first, f.second);
 		etime = boost::posix_time::from_iso_string(f.second)
 		      + boost::posix_time::seconds(expiry);
 
-		VLOG(9) << "  evaluate etime : " << etime;
-		VLOG(9) << "  evaluate   now : " << now;
+		spdlog::trace("  evaluate etime : {}", etime);
+		spdlog::trace("  evaluate   now : {}", now);
 		if ( now > etime )
 		{
-			VLOG(8) << "  expire m_listreqExpiry : " << f.first;
+			spdlog::trace("  expire m_listreqExpiry : {}", f.first);
 			expiredCSC.push_back(f.first);
 		}
 	}
 
-	VLOG(8) << "  collected expiredCSC(" << expiredCSC.size() << ")";
+	spdlog::trace("  collected expiredCSC({})", expiredCSC.size());
 	for( auto& f : expiredCSC )
 	{
-		VLOG(7) << "  purge expired(" << f << ")";
+		spdlog::trace("  purge expired({})", f);
 		m_listreqExpiry.erase(f);
 		m_serverListreq.erase(f);
 	}
@@ -601,7 +601,7 @@ DataObject::addHandshake(unsigned int def_hs )
 	}
 
 	// set expiry in data structure, if it exists already it is updated
-	VLOG(9) << "  from_iso_string: " << getNowStr();
+	spdlog::trace("  from_iso_string: {}", getNowStr());
 	m_handshakeQueue[handshake]["expiry"] = getNowStr();
 
 	// if we find said element again, return handshake, otherwise 0
@@ -665,7 +665,7 @@ DataObject::expireHandshakes( unsigned int expiry )
     		et = "20000101T010000.000000";
     	}
 
-    	VLOG(4) << "  from_iso_string: " << et;
+    	spdlog::trace("  from_iso_string: {}", et);
     	etime =  boost::posix_time::from_iso_string(et) +
     			 boost::posix_time::seconds(expiry);
 
@@ -701,7 +701,7 @@ DataObject::getHandshakeExpiry( unsigned int hs )
 	 */
 	if( handshakeExists(hs) )
 	{
-		VLOG(9) << "  from_iso_string: " << m_handshakeQueue[hs]["expiry"];
+		spdlog::trace("  from_iso_string: {}", m_handshakeQueue[hs]["expiry"]);
 		return boost::posix_time::from_iso_string( m_handshakeQueue[hs]["expiry"] );
 	}
 	else
@@ -729,13 +729,13 @@ DataObject::getServerSessionCount(std::string s)
 	 * is passed, but a listreq cache is not created return
 	 * 0 to indicate that the requested cache is not present
 	 */
-	VLOG(8) << "getServerSessionCount(" << s << ")";
+	spdlog::trace("getServerSessionCount({})", s);
 	if ( s == "default" )
 	{
 		/*
 		 * Called with the default argument
 		 */
-		VLOG(9) << "  default m_serverData.size() count";
+		spdlog::trace("  default m_serverData.size() count");
 		return m_serverData.size();
 
 	}
@@ -747,14 +747,14 @@ DataObject::getServerSessionCount(std::string s)
 			/*
 			 * We've got a custom list defined already, give a count
 			 */
-			VLOG(9) << "  m_serverListreq[" << s << "] found of size : " << m_serverListreq[s].size();
+			spdlog::trace("  m_serverListreq[{}] found of size : {}",s , m_serverListreq[s].size());
 			return m_serverListreq[s].size();
 		}
 
 		/*
 		 * We have no custom list
 		 */
-		VLOG(9) <<   "no m_serverListreq[" << s << "] Found.  Return 0.";
+		spdlog::trace("no m_serverListreq[{}] Found.  Return 0.", s);
 		return 0;
 	}
 
@@ -804,14 +804,14 @@ DataObject::createServerSessionListresp(std::string ip)
 	ip_list.clear();
 	ip_vec.clear();
 
-	VLOG(9) << "createServerSessionListresp(" << ip << ")";
-    VLOG(9) << "m_serverData(" << m_serverData.size() << ")";
+	spdlog::trace("createServerSessionListresp({})", ip);
+    spdlog::trace("m_serverData({})", m_serverData.size());
 	/*
 	 * Check if cache exists ... if so erase it
 	 */
 	if ( m_serverListreq.find(ip) != m_serverListreq.end() )
 	{
-		VLOG(9) << "  m_serverListreq[" << ip << "] exists, erasing";
+		spdlog::trace("  m_serverListreq[{}] exists, erasing", ip);
 		m_serverListreq.erase(ip);
 //		m_serverListreq[ip].clear();
 	}
@@ -822,7 +822,7 @@ DataObject::createServerSessionListresp(std::string ip)
 	 */
 	for( auto& foo : m_serverData )
 	{
-		VLOG(9) << "    Temp Cache[" << ip << "] = " << foo.first;
+		spdlog::trace("    Temp Cache[{}] = {}", ip, foo.first);
 		ip_list.push_back(foo.first);
 	}
 
@@ -833,7 +833,7 @@ DataObject::createServerSessionListresp(std::string ip)
 
 	for( auto& bar: ip_list )
 	{
-		VLOG(9) << "    Packing vector (" << bar << ")";
+		spdlog::trace("    Packing vector ({})", bar);
 		ip_vec.push_back(bar);
 	}
 
@@ -851,10 +851,10 @@ DataObject::getServerSessionCacheList()
 {
 	std::list<std::string> slist;
 	slist.clear();
-	VLOG(9) << "getServerSessionCacheList(): total=" << m_serverListreq.size();
+	spdlog::trace("getServerSessionCacheList(): total={}", m_serverListreq.size());
 	for( auto& m : m_serverListreq )
 	{
-		VLOG(9) << "  cache-" << m.first;
+		spdlog::trace("  cache-{}", m.first);
 		slist.push_back(m.first);
 	}
 	return slist;
@@ -874,7 +874,7 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 		 *           removed ... very bad
 		 * Option 2: expiry sub-map is empty ... which is not allowed
 		 */
-		VLOG(3) << "session(" << sessionid << ") does not exist for expiry request";
+		spdlog::trace("session({}) does not exist for expiry request", sessionid);
 		et = getNowStr();
 	}
 	else
@@ -889,7 +889,7 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 		}
 		else
 		{
-			VLOG(3) << "session(" << sessionid << ") does not contain expiry attribute";
+			spdlog::trace("session({}) does not contain expiry attribute", sessionid);
 			et = getNowStr();
 		}
 	}
@@ -900,7 +900,7 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 	 */
 	if ( et.length() == 0 || et == "" )
 	{
-		VLOG(3) << "session(" << sessionid << ") expiry time empty, defaulting:" << etdef;
+		spdlog::trace("session({}) expiry time empty, defaulting:{}",sessionid, etdef);
 		et = etdef;
 	}
 
@@ -920,7 +920,7 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 		 * the session is maybe on the way out in which case just
 		 * let it be as it will disappear itself
 		 */
-		LOG(WARNING) << "expiry time for session(" << sessionid << ") seems bad, resetting: " << etdef;
+		spdlog::warn("expiry time for session({}) seems bad, resetting: {}", sessionid, etdef);
 		if ( m_serverData.find(sessionid) != m_serverData.end() )
 		{
 			/*

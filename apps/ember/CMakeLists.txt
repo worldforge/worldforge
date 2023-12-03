@@ -4,7 +4,6 @@ project(Ember)
 set(DESCRIPTION "The Worldforge client.")
 
 include(GNUInstallDirs)
-include(FindPkgConfig)
 include(CMakeDependentOption)
 
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
@@ -184,8 +183,6 @@ find_package(spdlog REQUIRED)
 find_package(Bullet 2.89 REQUIRED)
 include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
 link_libraries(${BULLET_LIBRARIES})
-
-find_package(cppunit 1.8.0)
 
 
 if (WF_USE_WIDGET_PLUGINS)

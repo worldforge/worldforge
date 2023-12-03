@@ -22,8 +22,8 @@
 #ifndef METASERVERVERSION_HPP
 #define METASERVERVERSION_HPP
 
-const char SERVER_VERSION[] = "@VERSION@";
-const char API_VERSION[] =  "@APIVER@";
+const char SERVER_VERSION[] = "1.0.5";
+const char API_VERSION[] =  "1.0.0";
 
 
-#endif /* METASERVERVERSION_HPP_ */
+#endif /* METASERVERVERSION_HPP */

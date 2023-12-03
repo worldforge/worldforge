@@ -1,27 +1,9 @@
-#Worldforge Next Generation MetaServer
-#
-#Copyright (C) 2011 Sean Ryan <sryan@evercrack.com>
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
 [server]
 port=8453
 ip=0.0.0.0
 daemon=true
-logfile=@logdir@/metaserver-ng.log
-pidfile=@rundir@/metaserver-ng.pid
+logfile=@CMAKE_INSTALL_FULL_LOCALSTATEDIR@/log/metaserver-ng.log
+pidfile=@CMAKE_INSTALL_FULL_RUNSTATEDIR@/metaserver-ng.pid
 client_stats=true
 server_stats=true
 # Domain under which all metaserver information is published
@@ -30,13 +12,13 @@ domain=ms.worldforge.org
 
 [scoreboard]
 # m_serverData
-server=@rundir@/server.score
+server=@CMAKE_INSTALL_FULL_RUNSTATEDIR@/server.score
 # m_clientData
-client=@rundir@/client.score
+client=@CMAKE_INSTALL_FULL_RUNSTATEDIR@/client.score
 # Collected various sources, e.g. number of total packets processed and uptime
-stats=@rundir@/stats.score
+stats=@CMAKE_INSTALL_FULL_RUNSTATEDIR@/stats.score
 # m_serverListreq (server list per client)
-ccache=@rundir@/ccache.score
+ccache=@CMAKE_INSTALL_FULL_RUNSTATEDIR@/ccache.score
 
 [logging]
 loglevel=INFO
@@ -44,7 +26,7 @@ logging_flush_seconds=10
 server_sessions=true
 client_sessions=true
 packet_logging=false
-packet_logfile=@logdir@/packetlog.bin
+packet_logfile=@CMAKE_INSTALL_FULL_LOCALSTATEDIR@/log/packetlog.bin
 packet_logging_flush_seconds=10
 packet_allow=true
 packet_deny=true

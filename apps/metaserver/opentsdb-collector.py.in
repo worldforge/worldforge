@@ -45,11 +45,11 @@ class StateParser():
         self.attr = attr
 
 	# corresponds to scoreboard.score
-        self.score = '@rundir@/server.score'
+        self.score = '@CMAKE_INSTALL_FULL_RUNSTATEDIR@/server.score'
 	# corresponds to scoreboard.stats
-        self.stats = '@rundir@/stats.score'
+        self.stats = '@CMAKE_INSTALL_FULL_RUNSTATEDIR@/stats.score'
 	# corresponds to batch.tsdb
-        self.batch = '@rundir@/batch.tsdb'
+        self.batch = '@CMAKE_INSTALL_FULL_RUNSTATEDIR@/batch.tsdb'
         self.excludes = ['ip_int', 'expiry', 'port']
         self.host = 'localhost'
         self.port = 4242

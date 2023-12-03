@@ -41,17 +41,11 @@
 
 #include <set>
 
-#include <glog/logging.h>
 
 /*
  * Magic Definitions
  */
-const char BUILD_ID[] = "@BUILDID@";
-const char BUILD_USER[] = "@BUILDUSER@";
-const char BUILD_HOST[] = "@BUILDHOST@";
-const char BUILD_SIG[] = "@BUILDSIG@";
-
-const char DEFAULT_CONF[] = "@sysconfdir@";
+const char DEFAULT_CONF[] = SYSCONFDIR;
 
 /*
  * Forward Declarations

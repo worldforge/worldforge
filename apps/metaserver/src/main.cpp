@@ -33,9 +33,9 @@
 #include <signal.h>
 #include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
-#include <glog/logging.h>
 #include <boost/filesystem.hpp>
 #include <boost/exception/all.hpp>
+#include <spdlog/spdlog.h>
 
 /*
 	Entry point
@@ -93,11 +93,6 @@ int main(int argc, char** argv)
 		( "performance.tick_update_milliseconds", boost::program_options::value<int>()->default_value(5000), "Update Timer Interval.\nDefault: 5000")
 		( "performance.tick_score_milliseconds", boost::program_options::value<int>()->default_value(60000), "Scoreboard Timer Interval.\nDefault: 60000")
 			;
-
-	/*
-	 * Initialize Logging
-	 */
-	google::InitGoogleLogging("");
 
 
 	/*
@@ -259,7 +254,7 @@ int main(int argc, char** argv)
 		std::cout << "Attempting to register MetaServer configuration ... " << std::endl;
 		ms.registerConfig(vm);
 		std::cout << "Logging to logfile: " << ms.getLogFile() << std::endl;
-		VLOG(5) << "Configuration Registered";
+		spdlog::trace("Configuration Registered");
 
 		/**
 		 *	Create pid file
@@ -273,12 +268,12 @@ int main(int argc, char** argv)
 			 * Create rundir as required
 			 */
 			pid_file_path = vm["server.pidfile"].as<std::string>();
-			LOG(INFO) << "Pidfile: " << pid_file_path.string();
+			spdlog::info("Pidfile: {}", pid_file_path.string());
 			std::cout << "Pidfile: " << pid_file_path.string() << std::endl;
 
 			if ( ! boost::filesystem::is_directory(pid_file_path.parent_path().string()))
 			{
-				LOG(INFO) << "Creating Run Directory : " << pid_file_path.parent_path().string();
+				spdlog::info("Creating Run Directory : {}", pid_file_path.parent_path().string());
 				std::cout << "Creating Run Directory : " << pid_file_path.parent_path().string() << std::endl;
 				bool pf = boost::filesystem::create_directory(pid_file_path.parent_path());
 				if(!pf)
@@ -291,7 +286,7 @@ int main(int argc, char** argv)
 			if ( boost::filesystem::is_regular_file(pid_file_path) )
 			{
 				std::cout << "Pidfile Exists: " << pid_file_path.string() << std::endl;
-				LOG(INFO) << "Pidfile Exists: " << pid_file_path.string();
+				spdlog::info("Pidfile Exists: {}", pid_file_path.string());
 
 				/*
 				 * PIDFILE is present, check is process is running
@@ -301,17 +296,16 @@ int main(int argc, char** argv)
 				int pid = 0;
 				pif >> pid;
 				std::cout << "Checking pid : " << pid << std::endl;
-				LOG(INFO) << "Checking pid : " << pid;
-
+				spdlog::info("Checking pid : {}");
 				if( kill(pid,0) == -1 )
 				{
 					std::cout << "Pidfile is stale, removing." << std::endl;
-					LOG(INFO) << "Pidfile is stale, removing.";
+					spdlog::info("Pidfile is stale, removing.");
 					boost::filesystem::remove(pid_file_path);
 				}
 				else
 				{
-					LOG(INFO) << "Refusing to start!";
+					spdlog::info("Refusing to start!");
 					throw std::runtime_error("Pidfile exists and process is running, refusing to start");
 				}
 			}
@@ -319,7 +313,7 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			LOG(INFO) << "Pidfile Not Specified";
+			spdlog::info("Pidfile Not Specified");
 			std::cout << "Pidfile Not Specified " << std::endl;
 		}
 
@@ -336,10 +330,10 @@ int main(int argc, char** argv)
 		{
 			std::cout << "Running as daemon." << std::endl;
 			std::cout << "NOTE: Be sure to check the logfile for any messages, as console output is now disabled." << std::endl;
-			LOG(INFO) << "Running as a daemon";
+			spdlog::info("Running as a daemon");
 			if ( daemon(0,0) != 0 )
 			{
-				LOG(ERROR) << "Problem executing as a deamon.";
+				spdlog::error("Problem executing as a deamon.");
 			}
 		}
 
@@ -363,7 +357,7 @@ int main(int argc, char** argv)
 		 * Define Handlers
 		 */
 		//MetaServerHandlerUDP tcp(ms, io_service, ip, port);
-		VLOG(5) << "Start UPD Handler";
+		spdlog::trace("Start UPD Handler");
 		MetaServerHandlerUDP udp(ms, io_service, ip, port);
 
 		/*
@@ -377,7 +371,7 @@ int main(int argc, char** argv)
 		 */
 		while(! ms.isShutdown() )
 		{
-			LOG(INFO) << "Enter ASYNC loop";
+			spdlog::info("Enter ASYNC loop");
 			try
 			{
 				/*
@@ -390,9 +384,9 @@ int main(int argc, char** argv)
 			{
 				std::cerr << "Boost Exception :" << std::endl;
 				std::cerr << boost::diagnostic_information(bex) << std::endl;
-				LOG(ERROR) << "Boost Exception :";
-				LOG(ERROR) << boost::diagnostic_information(bex);
-				LOG(ERROR) << "Calling reinitialisation of the timers";
+				spdlog::error("Boost Exception :");
+				spdlog::error(boost::diagnostic_information(bex));
+				spdlog::error("Calling reinitialisation of the timers");
 				ms.initTimers(io_service);
 			}
 			catch(const std::exception& ex)
@@ -414,21 +408,21 @@ int main(int argc, char** argv)
 				if ( ms.isShutdown() )
 				{
 					std::cout << "Shutdown sequence initiated : " << ex.what() << std::endl;
-					LOG(INFO) << "Shutdown sequence initiated : " << ex.what() ;
+					spdlog::info("Shutdown sequence initiated : {}", ex.what()) ;
 
 				}
 				else
 				{
 					std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
 					std::cerr << boost::diagnostic_information(ex) << std::endl;
-					LOG(ERROR) << "IOService Loop Exception:" << ex.what();
-					LOG(ERROR) << boost::diagnostic_information(ex);
-					LOG(ERROR) << "Calling reinitialisation of the timers";
+					spdlog::error("IOService Loop Exception: {}", ex.what());
+					spdlog::error(boost::diagnostic_information(ex));
+					spdlog::error("Calling reinitialisation of the timers");
 					ms.initTimers(io_service);
 				}
 			}
 		}
-		LOG(INFO) << "Shutting Down Metaserver";
+		spdlog::info("Shutting Down Metaserver");
 
 	}
 	catch (const std::exception& e)
@@ -437,9 +431,7 @@ int main(int argc, char** argv)
 		 * This will catch exceptions during the startup etc
 		 */
 		std::cerr << "Unknown Exception: " << e.what() << std::endl;
-		google::FlushLogFiles(google::INFO);
 	}
-	LOG(INFO) << "All Done!";
-	google::FlushLogFiles(google::INFO);
+	spdlog::info("All Done!");
 	return 0;
 }

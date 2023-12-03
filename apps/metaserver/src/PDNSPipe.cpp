@@ -27,7 +27,7 @@
 #include "MetaServer.hpp"
 #include <boost/asio/ip/udp.hpp>
 #include <boost/algorithm/string.hpp>
-#include <glog/logging.h>
+#include <spdlog/spdlog.h>
 
 int main(int argc, char** argv)
 {
@@ -75,12 +75,6 @@ int main(int argc, char** argv)
 			return 0;
 		}
 
-		/*
-		 * Debug
-		 */
-		google::InitGoogleLogging("");
-		//google::SetLogDestination(google::INFO,"/tmp/pdnspipe.log");
-
 		/**
 		 * domain and banner
 		 */
@@ -115,7 +109,7 @@ int main(int argc, char** argv)
 		 std::cin >> helo >> proto;
 
 		 std::cerr << "Received: " << helo << "\t" << proto << std::endl;
-		 LOG(INFO) << "Received Helo: " << helo << "\t" << proto;
+		 spdlog::info("Received Helo: {}\t{}", helo, proto);
 
 		 if ( !(boost::equals(helo,"HELO")) || proto != 1 )
 		 {
@@ -142,7 +136,7 @@ int main(int argc, char** argv)
 		 *      4 = id
 		 *      5 = remote ip
 		 */
-		 std::string fields[6] = "";
+		 std::string fields[6] = {};
 		 std::string line;
 
 		 while(1)
@@ -158,7 +152,7 @@ int main(int argc, char** argv)
 				 continue;
 
 			 std::cerr << "Received: " << line << std::endl;
-			 LOG(INFO) << "Received Line: " << line;
+			 spdlog::info("Received Line: {}", line);
 
 			 iss << line;
 

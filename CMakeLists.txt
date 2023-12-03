@@ -21,6 +21,9 @@ include(CMakeDependentOption)
 #If no VERSION is set externally, and we can't figure out the Git version, we'll use this version as fallback.
 set(VERSION_FALLBACK "0.8.0-dev")
 
+find_package(cppunit 1.8.0)
+find_package(spdlog REQUIRED)
+
 find_package(Git QUIET)
 
 # Version setup. Figure out the version from 'git describe' if VERSION isn't set externally.

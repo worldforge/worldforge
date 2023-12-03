@@ -10,7 +10,7 @@
  3) Provide a robust framework that would facilitate future development
  4) Serve as a evaluation of multiple boost libraries for inclusion into the WorldForge codebase ( most specifically targetted was boost::asio ).
 
- Code: https://github.com/worldforge/metaserver-ng 
+ Code: https://github.com/worldforge/worldforge
  Bugs / Features : https://launchpad.net/metaserver-ng
 
  This is as always, a work-in-progress.  If you have questions / comments / suggestions, please feel free to contact any of the WorldForge folks as detailed on http://worldforge.org

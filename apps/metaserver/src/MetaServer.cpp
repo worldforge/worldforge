@@ -38,7 +38,12 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
-#include <json/writer.h>
+//#include <json/writer.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <fmt/ostream.h>
+
+template <> struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {};
 
 
 MetaServer::MetaServer()
@@ -95,15 +100,14 @@ MetaServer::MetaServer()
 
 MetaServer::~MetaServer()
 {
-	LOG(INFO) << "Shutting down metaserver-ng";
-	google::FlushLogFiles(google::INFO);
+	spdlog::info("Shutting down metaserver-ng");
 }
 
 void
 MetaServer::expiry_timer(const boost::system::error_code& error)
 {
 
-	VLOG(5) << "Tick expiry_timer";
+	spdlog::trace("Tick expiry_timer");
 
 	boost::posix_time::ptime now = msdo.getNow();
 	boost::posix_time::ptime etime;
@@ -116,7 +120,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<unsigned int> expiredHS = msdo.expireHandshakes(m_handshakeExpirySeconds);
 	if ( expiredHS.size() > 0 )
 	{
-		VLOG(2) << "Expiry Handshakes: " << expiredHS.size();
+		spdlog::trace("Expiry Handshakes: {}", expiredHS.size());
 	}
 
     /*
@@ -125,7 +129,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<std::string> expiredSS = msdo.expireServerSessions(m_sessionExpirySeconds);
 	if ( expiredSS.size() > 0 )
 	{
-		VLOG(2) << "Expiry ServerSessions: " << expiredSS.size();
+		spdlog::trace("Expiry ServerSessions: {}", expiredSS.size());
 	}
 
     /**
@@ -134,7 +138,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<std::string> expiredCS = msdo.expireClientSessions(m_clientExpirySeconds);
 	if ( expiredCS.size() > 0 )
 	{
-		VLOG(2) << "Expiry ClientSessions: " << expiredCS.size();
+		spdlog::trace("Expiry ClientSessions: {}", expiredCS.size());
 	}
 
 	/*
@@ -143,7 +147,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
 	if ( expiredCS.size() > 0 )
 	{
-		VLOG(2) << "Expiry ClientSession Cache: " << expiredCS.size();
+		spdlog::trace("Expiry ClientSession Cache: {}", expiredCS.size());
 	}
 
 	/**
@@ -157,16 +161,16 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
 		 */
 		std::list<std::string> slist = msdo.getServerSessionList(0,msdo.getServerSessionCount());
-		VLOG(2) << " Total Server Sessions: " << slist.size();
+		spdlog::trace(" Total Server Sessions: {}", slist.size());
 		while ( ! slist.empty() )
 		{
 			std::string key = slist.front(); slist.pop_front();
 
 			std::map<std::string,std::string> item = msdo.getServerSession(key);
-			VLOG(2) << " Server Session: " << key;
+			spdlog::trace(" Server Session: {}", key);
 			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 			{
-				VLOG(3) << "    " << itr_inner->first << " == " << itr_inner->second;
+				spdlog::trace("    {} == {}", itr_inner->first, itr_inner->second);
 			}
 		}
 	}
@@ -184,18 +188,18 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 		{
 			std::string key = slist.front(); slist.pop_front();
 			std::map<std::string,std::string> item = msdo.getClientSession(key);
-			VLOG(2) << " Client Session: " << key;
+			spdlog::trace(" Client Session: {}", key);
 			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 			{
-				VLOG(2) << "    " << itr_inner->first << " == " << itr_inner->second;
+				spdlog::trace("    {} == {}", itr_inner->first, itr_inner->second);
 			}
 			item = msdo.getClientFilter(key);
 			if ( item.size() > 0 )
 			{
-				VLOG(2) << "    Filters:";
+				spdlog::trace("    Filters:");
 				for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
 				{
-					VLOG(2) << "        " << itr_inner->first << " == " << itr_inner->second;
+					spdlog::trace("        {} == {}", itr_inner->first, itr_inner->second);
 				}
 			}
 
@@ -210,20 +214,19 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	if ( m_logPackets )
 	{
 		if ( i > 0 )
-			VLOG(2) << "     PacketLogger Flushed : " << i;
+			spdlog::trace("     PacketLogger Flushed : {}", i);
 	}
 
 	/*
 	 * Flush the main logfiles
 	 */
 	etime = m_loggingFlushTime + boost::posix_time::seconds(m_loggingFlushSeconds);
-	VLOG(9) << "   logginfFlushTime: " << m_loggingFlushTime;
-	VLOG(9) << "   etime           : " << etime;
+	spdlog::trace("   logginfFlushTime: {}", m_loggingFlushTime);
+	spdlog::trace("   etime           : {}", etime);
 	if ( etime > now )
 	{
 		m_loggingFlushTime = now;
-		VLOG_EVERY_N(3,10) << "  Flushing Log Messages";
-		google::FlushLogFiles(google::INFO);
+		spdlog::default_logger()->flush();
 	}
 
 
@@ -238,7 +241,7 @@ void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
 
-	VLOG(5) << "Tick update_timer";
+	spdlog::trace("Tick update_timer");
 
 	/**
 	 *  Update Stats
@@ -285,191 +288,191 @@ MetaServer::update_timer(const boost::system::error_code& error)
 void
 MetaServer::score_timer(const boost::system::error_code& error)
 {
-	VLOG(5) << "Tick score_timer(" << m_scoreDelayMilliseconds << ")";
-
-	if(!error)
-	{
-
-		/*
-		 * Check for the pidfile, shutdown if it's missing
-		 */
-		if ( !boost::filesystem::exists(m_pidFile) ||
-			 !boost::filesystem::is_regular_file(m_pidFile) )
-		{
-			m_isShutdown = true;
-			throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
-		}
-
-		/*
-		 * We want to write the m_serverData scoreboard
-		 */
-		std::ofstream clubber;
-		std::list<std::string> slist;
-		std::map<std::string,std::string> sess;
-		Json::Value root;
-		Json::FastWriter fw;
-
-		if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
-		{
-			/*
-			 * The parent directory of the specified score file does not exist
-			 * and we want to just skip nicely over it, making a warning in the logs
-			 * and continuing on anyway
-			 */
-			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreServer.string() << ")";
-		}
-		else
-		{
-			/*
-			 * Directory is present, we're go for the clobber and fill
-			 */
-			boost::filesystem::remove(m_scoreServer);
-			clubber.open(m_scoreServer.c_str());
-			clubber.clear();
-
-			/*
-			 * Blast out servers
-			 */
-			slist = msdo.getServerSessionList(0,m_maxServerSessions);
-			VLOG(5) << "Servers: " << slist.size();
-			for(auto& m : slist )
-			{
-				VLOG(9) << "scoreboard(" << m_scoreServer.string() << "):" << m;
-				sess = msdo.getServerSession(m);
-				//clubber << m << "={";
-				for( auto& n : sess )
-				{
-				    //clubber << n.first << "=" << n.second << ",";
-				    VLOG(9) << "review session item (" << n.first << "=" << n.second << ")";
-				    root[m][n.first] = n.second;
-				}
-				//clubber << "}" << std::endl;
-			}
-			if ( ! root.isNull() )
-			{
-			   // we only want to output the document if it is not
-			   // null
-			   VLOG(7) << "persist session scoreboard";
-			   clubber << fw.write(root);
-			}
-			clubber.close();
-
-		}
-
-		/*
-		 * Client Sessions
-		 */
-		if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
-		{
-			/*
-			 * The parent directory of the specified score file does not exist
-			 * and we want to just skip nicely over it, making a warning in the logs
-			 * and continuing on anyway
-			 */
-			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreClient.string() << ")";
-		}
-		else
-		{
-			/*
-			 * Directory is present, we're go for the clobber and fill
-			 */
-			boost::filesystem::remove(m_scoreClient);
-			clubber.open(m_scoreClient.c_str());
-			clubber.clear();
-
-			/*
-			 * Blast out clients
-			 */
-			slist = msdo.getClientSessionList();
-			VLOG(5) << "Clients: " << slist.size();
-			for(auto& m : slist )
-			{
-				VLOG(9) << "scoreboard(" << m_scoreClient.string() << "):" << m;
-				sess = msdo.getClientSession(m);
-				clubber << m << "={";
-				for( auto& n : sess )
-				{
-					clubber << n.first << "=" << n.second << ",";
-				}
-				clubber << "}" << std::endl;
-			}
-			clubber.close();
-
-		}
-
-		/*
-		 * Stats Scoreboard
-		 */
-		if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
-		{
-			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreStats.string() << ")";
-		}
-		else
-		{
-			boost::filesystem::remove(m_scoreStats);
-			clubber.open(m_scoreStats.c_str());
-			clubber.clear();
-
-			/*
-			 * Put in the stats
-			 */
-			for( auto& r: m_metaStats )
-			{
-				clubber << r.first << "=" << r.second << std::endl;
-			}
-			clubber.close();
-		}
-
-		/*
-		 * Cache Scoreboard
-		 */
-		if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
-		{
-			LOG(WARNING) << "Parent path of score file does not exist (" << m_scoreCCache.string() << ")";
-		}
-		else
-		{
-			std::list<std::string> v;
-			boost::filesystem::remove(m_scoreCCache);
-			clubber.open(m_scoreCCache.c_str());
-			clubber.clear();
-			v.clear();
-			slist = msdo.getServerSessionCacheList();
-			for( auto& m : slist )
-			{
-				clubber << m << "(" << msdo.getServerSessionCount(m) << ")";
-
-				v = msdo.getServerSessionList(0,m_maxServerSessions,m);
-
-				clubber << "(" << v.size() << ")";
-				if ( v.size() > 0 )
-				{
-					clubber << "={ ";
-					for(auto& n : v)
-					{
-						clubber << n << ",";
-					}
-					clubber << " };" << std::endl;
-				}
-				else
-				{
-					clubber << "={ };" << std::endl;
-				}
-			}
-			clubber.close();
-		}
-
-	}
-	else
-	{
-		VLOG(4) << "Timer Skipped : " << error.message();
-	}
-
-	/*
-	 * Reset Timer
-	 */
-    m_scoreTimer->expires_from_now(boost::posix_time::millisec(m_scoreDelayMilliseconds));
-    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
+//	spdlog::trace("Tick score_timer({})", m_scoreDelayMilliseconds);
+//
+//	if(!error)
+//	{
+//
+//		/*
+//		 * Check for the pidfile, shutdown if it's missing
+//		 */
+//		if ( !boost::filesystem::exists(m_pidFile) ||
+//			 !boost::filesystem::is_regular_file(m_pidFile) )
+//		{
+//			m_isShutdown = true;
+//			throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
+//		}
+//
+//		/*
+//		 * We want to write the m_serverData scoreboard
+//		 */
+//		std::ofstream clubber;
+//		std::list<std::string> slist;
+//		std::map<std::string,std::string> sess;
+//		Json::Value root;
+//		Json::FastWriter fw;
+//
+//		if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
+//		{
+//			/*
+//			 * The parent directory of the specified score file does not exist
+//			 * and we want to just skip nicely over it, making a warning in the logs
+//			 * and continuing on anyway
+//			 */
+//			spdlog::warn("Parent path of score file does not exist ({})",m_scoreServer.string());
+//		}
+//		else
+//		{
+//			/*
+//			 * Directory is present, we're go for the clobber and fill
+//			 */
+//			boost::filesystem::remove(m_scoreServer);
+//			clubber.open(m_scoreServer.c_str());
+//			clubber.clear();
+//
+//			/*
+//			 * Blast out servers
+//			 */
+//			slist = msdo.getServerSessionList(0,m_maxServerSessions);
+//			spdlog::trace("Servers: {}", slist.size());
+//			for(auto& m : slist )
+//			{
+//				spdlog::trace("scoreboard({}):{}",m_scoreServer.string() , m);
+//				sess = msdo.getServerSession(m);
+//				//clubber << m << "={";
+//				for( auto& n : sess )
+//				{
+//				    //clubber << n.first << "=" << n.second << ",";
+//				    spdlog::trace("review session item ({}={})", n.first, n.second);
+//				    root[m][n.first] = n.second;
+//				}
+//				//clubber << "}" << std::endl;
+//			}
+//			if ( ! root.isNull() )
+//			{
+//			   // we only want to output the document if it is not
+//			   // null
+//			   spdlog::trace("persist session scoreboard");
+//			   clubber << fw.write(root);
+//			}
+//			clubber.close();
+//
+//		}
+//
+//		/*
+//		 * Client Sessions
+//		 */
+//		if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
+//		{
+//			/*
+//			 * The parent directory of the specified score file does not exist
+//			 * and we want to just skip nicely over it, making a warning in the logs
+//			 * and continuing on anyway
+//			 */
+//			spdlog::warn("Parent path of score file does not exist ({})", m_scoreClient.string());
+//		}
+//		else
+//		{
+//			/*
+//			 * Directory is present, we're go for the clobber and fill
+//			 */
+//			boost::filesystem::remove(m_scoreClient);
+//			clubber.open(m_scoreClient.c_str());
+//			clubber.clear();
+//
+//			/*
+//			 * Blast out clients
+//			 */
+//			slist = msdo.getClientSessionList();
+//			spdlog::trace("Clients: {}", slist.size());
+//			for(auto& m : slist )
+//			{
+//				spdlog::trace("scoreboard({}):{}", m_scoreClient.string(), m);
+//				sess = msdo.getClientSession(m);
+//				clubber << m << "={";
+//				for( auto& n : sess )
+//				{
+//					clubber << n.first << "=" << n.second << ",";
+//				}
+//				clubber << "}" << std::endl;
+//			}
+//			clubber.close();
+//
+//		}
+//
+//		/*
+//		 * Stats Scoreboard
+//		 */
+//		if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
+//		{
+//			spdlog::warn("Parent path of score file does not exist ({})", m_scoreStats.string());
+//		}
+//		else
+//		{
+//			boost::filesystem::remove(m_scoreStats);
+//			clubber.open(m_scoreStats.c_str());
+//			clubber.clear();
+//
+//			/*
+//			 * Put in the stats
+//			 */
+//			for( auto& r: m_metaStats )
+//			{
+//				clubber << r.first << "=" << r.second << std::endl;
+//			}
+//			clubber.close();
+//		}
+//
+//		/*
+//		 * Cache Scoreboard
+//		 */
+//		if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
+//		{
+//			spdlog::warn("Parent path of score file does not exist ({})",m_scoreCCache.string());
+//		}
+//		else
+//		{
+//			std::list<std::string> v;
+//			boost::filesystem::remove(m_scoreCCache);
+//			clubber.open(m_scoreCCache.c_str());
+//			clubber.clear();
+//			v.clear();
+//			slist = msdo.getServerSessionCacheList();
+//			for( auto& m : slist )
+//			{
+//				clubber << m << "({}" << msdo.getServerSessionCount(m) << ")";
+//
+//				v = msdo.getServerSessionList(0,m_maxServerSessions,m);
+//
+//				clubber << "({}" << v.size() << ")";
+//				if ( v.size() > 0 )
+//				{
+//					clubber << "={ ";
+//					for(auto& n : v)
+//					{
+//						clubber << n << ",";
+//					}
+//					clubber << " };" << std::endl;
+//				}
+//				else
+//				{
+//					clubber << "={ };" << std::endl;
+//				}
+//			}
+//			clubber.close();
+//		}
+//
+//	}
+//	else
+//	{
+//		spdlog::trace("Timer Skipped : {}", error.message());
+//	}
+//
+//	/*
+//	 * Reset Timer
+//	 */
+//    m_scoreTimer->expires_from_now(boost::posix_time::millisec(m_scoreDelayMilliseconds));
+//    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
 }
 
 /**
@@ -532,7 +535,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		processADMINREQ(msp,rsp);
 	default:
 //		--m_PacketSequence;
-		VLOG(1) << "Packet Type [" << msp.getPacketType() << "] not supported.";
+		spdlog::trace("Packet Type [] not supported.", msp.getPacketType());
 		break;
 	}
 
@@ -570,7 +573,7 @@ MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 
 	if ( i > 0 )
 	{
-		VLOG(1) << "processSERVERKEEPALIVE(): " << i;
+		spdlog::trace("processSERVERKEEPALIVE(): {}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -589,7 +592,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
 	uint32_t packed_ip = 0;
-	VLOG(1) << "processSERVERSHAKE(): " << shake;
+	spdlog::trace("processSERVERSHAKE(): {}", shake);
 
 	/**
 	 * If a handshake exists, we can know the following:
@@ -635,13 +638,13 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		 * to determine communication latency
 		 */
 		boost::posix_time::ptime t1 = msdo.getHandshakeExpiry(shake);
-		VLOG(5) << ip << "-handShakeExpiry(" << shake << "):" << t1;
+		spdlog::trace("{}-handShakeExpiry({}):{}", ip, shake, t1);
 
 		boost::posix_time::ptime t2 = msdo.getNow();
-		VLOG(5) << ip << "-handShakeExpiry(now): " << t2;
+		spdlog::trace("{}-handShakeExpiry(now): {}", ip, t2);
 
 		unsigned int latency = msdo.getLatency(t1,t2);
-		VLOG(5) << "  " << ip << "-latency : " << latency;
+		spdlog::trace("  {}-latency : {}", ip, latency);
 
 		ss3 << latency;
 
@@ -675,7 +678,7 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 		uint32_t key = in.getIntData(4);
 		if ( key == 0 )
 		{
-			VLOG(1) << "processTERMINATE-client(): " << in.getAddressStr();
+			spdlog::trace("processTERMINATE-client(): {}", in.getAddressStr());
 			/*
 			 * Normally want to terminate sessions and may turn this back
 			 * on, but generally speaking we want client sessions to expire out
@@ -685,13 +688,13 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 		else
 		{
 			std::string skey = MetaServerPacket::IpNetToAscii(key);
-			VLOG(1) << "processTERMINATE-server(" << key << ")(" << skey << ")";
+			spdlog::trace("processTERMINATE-server({})({})", key, skey);
 			msdo.removeServerSession(skey);
 		}
 	}
 	else
 	{
-		VLOG(1) << "processTERMINATE-server(): " << in.getAddressStr();
+		spdlog::trace("processTERMINATE-server(): {}", in.getAddressStr());
 		msdo.removeServerSession(in.getAddressStr());
 	}
 
@@ -705,7 +708,7 @@ MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 
 	if ( i > 0 )
 	{
-		VLOG(1) << "processCLIENTKEEPALIVE()" << i;
+		spdlog::trace("processCLIENTKEEPALIVE(){}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -718,7 +721,7 @@ MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	VLOG(1) << "processCLIENTSHAKE()" << shake;
+	spdlog::trace("processCLIENTSHAKE(){}", shake);
 
 	if( msdo.handshakeExists(shake) )
 	{
@@ -763,9 +766,9 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	 */
 	if ( server_index == 0 )
 	{
-		VLOG(4) << "Initial LISTREQ Request, creating lookup cache (" << ip_str << ")";
+		spdlog::trace("Initial LISTREQ Request, creating lookup cache ({})", ip_str);
 		total = msdo.createServerSessionListresp(ip_str);
-		VLOG(5) << "  Total: " << total;
+		spdlog::trace("  Total: {}", total);
 		packed_max = total;
 	}
 
@@ -788,10 +791,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	std::list<std::string> sess_list = msdo.getServerSessionList(server_index,packed_max,ip_str);
     std::list<std::string>::iterator list_itr;
 
-	VLOG(5) << "server_index:" << server_index
-			<< " ** total: " << total
-			<< " ** packed_max: " << packed_max
-			<< " ** sess_list: " << sess_list.size();
+	spdlog::trace("server_index:{} ** total: {} ** packed_max: {} ** sess_list: {}", server_index, total, packed_max, sess_list.size());
 
     for ( list_itr = sess_list.begin(); list_itr != sess_list.end() ; list_itr++ )
     {
@@ -816,10 +816,8 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
     		 */
     		std::istringstream( msdo.getServerSession(*list_itr)["ip_int"] ) >> temp_int;
 
-    		VLOG(5) << "Packing Session Itr[" << *list_itr << "] Session Int["
-    				<< msdo.getServerSession(*list_itr)["ip_int"] << "] Session IP["
-    				<< msdo.getServerSession(*list_itr)["ip"] << "] SS Int["
-    				<< temp_int << "]";
+    		spdlog::trace("Packing Session Itr[{}] Session Int[{}] Session IP[{}] SS Int[{}]",
+						  *list_itr, msdo.getServerSession(*list_itr)["ip_int"],msdo.getServerSession(*list_itr)["ip"],temp_int);
     		resp_list.push_back( temp_int );
 
     		//resp_list.push_back( atoi( msdo.getServerSession(*list_itr)["ip_int"].c_str() ) );
@@ -830,7 +828,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 
     if ( packed != resp_list.size() )
     {
-    	LOG(WARNING) << "Packed: " << packed << " vs Response: " << resp_list.size() << "MISMATCH!";
+    	spdlog::warn("Packed: {} vs Response: {}MISMATCH!", packed,resp_list.size());
     }
 
 	out.setAddress( in.getAddress() );
@@ -847,7 +845,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 		out.addPacketData( (uint32_t)resp_list.size() );
 		while ( ! resp_list.empty() )
 		{
-			VLOG(2) << "processLISTRESP() - Adding : " << resp_list.front();
+			spdlog::trace("processLISTRESP() - Adding : {}", resp_list.front());
 			out.addPacketData(resp_list.front());
 			resp_list.pop_front();
 		}
@@ -857,7 +855,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 		/*
 		 *  For the record, I think this is a stupid protocol construct
 		 */
-		VLOG(2) << "processLISTRESP(0,0) - Empty";
+		spdlog::trace("processLISTRESP(0,0) - Empty");
 		out.addPacketData( 0 );
 		out.addPacketData( 0 );
 	}
@@ -873,7 +871,7 @@ MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
-	LOG(INFO) << "processSERVERATTR() : " << name << "," << value;
+	spdlog::info("processSERVERATTR() : {},{}", name, value);
 	msdo.addServerAttribute(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -888,7 +886,7 @@ MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out)
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
-	VLOG(2) << "processCLIENTATTR() : " << name << "," << value;
+	spdlog::trace("processCLIENTATTR() : {},{}", name, value);
 	msdo.addClientAttribute(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -903,7 +901,7 @@ MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& ou
 	std::string name = msg.substr(0,name_length);
 	std::string value = msg.substr(name_length,value_length);
 	std::string ip = in.getAddressStr();
-	VLOG(2) << "processCLIENTFILTER() : " << name << "," << value;
+	spdlog::trace("processCLIENTFILTER() : {},{}",name, value);
 	msdo.addClientFilter(ip,name,value);
 
 	out.setPacketType(NMT_NULL);
@@ -943,9 +941,9 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 
 	std::string name = msg.substr(0,msg_length);
 
-	VLOG(2) << "processDNSREQ-type: " << dns_type << " : " << name;
-	VLOG(2) << "processDNSREQ-msg_length : " << msg_length;
-	VLOG(2) << "processDNSREQ-msg: " << msg.length() << " : " << msg;
+	spdlog::trace("processDNSREQ-type: {} : {}", dns_type, name);
+	spdlog::trace("processDNSREQ-msg_length : {}", msg_length);
+	spdlog::trace("processDNSREQ-msg: {} : {}", msg.length(), msg);
 
 	/**
 	 * Determine packet search type and get results
@@ -956,14 +954,14 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			 * Forward lookup
 			 */
 			resp_list = msdo.searchServerSessionByAttribute( "name", name );
-			VLOG(2) << "processDNSREQ: DNS_TYPE_A request : " << resp_list.size();
+			spdlog::trace("processDNSREQ: DNS_TYPE_A request : {}", resp_list.size());
 			break;
 		case DNS_TYPE_PTR:
 			/*
 			 * Reverse Lookup
 			 */
 			resp_list = msdo.searchServerSessionByAttribute( "ip", name );
-			VLOG(2) << "processDNSREQ: DNS_TYPE_PTR request : " << resp_list.size();
+			spdlog::trace("processDNSREQ: DNS_TYPE_PTR request : {}", resp_list.size());
 			break;
 		case DNS_TYPE_ALL:
 			/*
@@ -971,14 +969,14 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			 */
 			temp_list = msdo.searchServerSessionByAttribute("name", name);
 			resp_list = msdo.searchServerSessionByAttribute("ip", name);
-			VLOG(2) << "processDNSREQ: DNS_TYPE_ALL request : " << temp_list.size() << ":" << resp_list.size();
+			spdlog::trace("processDNSREQ: DNS_TYPE_ALL request : {}:{}" , temp_list.size(), resp_list.size());
 			resp_list.merge(temp_list);
 			break;
 
 		default:
 			// search name by default
 			// resp_list = msdo.searchServerSessionByAttribute("name", name );
-			VLOG(2) << "processDNSREQ: unknown DNS_TYPE sent : " << dns_type;
+			spdlog::trace("processDNSREQ: unknown DNS_TYPE sent : {}", dns_type);
 			break;
 	}
 
@@ -1032,12 +1030,12 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 		for ( itr = resp_list.begin(); itr!=resp_list.end(); itr++ )
 		{
 			rlength = itr->length();
-			VLOG(2) << "Stuffing DNSRESP Packet [" << rlength << "] " << *itr;
+			spdlog::trace("Stuffing DNSRESP Packet [{}] {}", rlength, *itr);
 			out.addPacketData(rlength);
 			outmsg+=*itr;
 		}
 
-		VLOG(2) << "Stuffing DNSRESP Message [" << outmsg << "]";
+		spdlog::trace("Stuffing DNSRESP Message [{}]", outmsg);
 
 		out.addPacketData(outmsg);
 
@@ -1045,7 +1043,7 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 	else
 	{
 
-		VLOG(2) << "processDNSREQ: packing null packet";
+		spdlog::trace("processDNSREQ: packing null packet");
 		/*
 		 * Max Servers
 		 */
@@ -1069,7 +1067,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 	std::stringstream ss;
 	std::string out_msg = "";
 
-	VLOG(2) << "processADMINREQ(" << sub_type << ")";
+	spdlog::trace("processADMINREQ({})", sub_type);
 
 	/*
 	 * TODO: add in acl check, deny immediately if appropriate
@@ -1080,7 +1078,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 
 	switch(sub_type) {
 		case NMT_ADMINREQ_ENUMERATE:
-			VLOG(3) << "NMT_ADMINREQ_ENUMERATE : " << m_adminCommandSet.size();
+			spdlog::trace("NMT_ADMINREQ_ENUMERATE : {}", m_adminCommandSet.size());
 			out.addPacketData(NMT_ADMINRESP_ENUMERATE);
 			out.addPacketData(m_adminCommandSet.size());
 			for(auto& p: m_adminCommandSet)
@@ -1111,7 +1109,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			out.addPacketData(in_port);
 			break;
 		default:
-			VLOG(2) << "NMT_ADMINRESP_ERR";
+			spdlog::trace("NMT_ADMINRESP_ERR");
 			out.addPacketData(NMT_ADMINRESP_ERR);
 	}
 
@@ -1375,18 +1373,18 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	/**
 	 * Print out the startup values
 	 */
-	LOG(INFO) << "WorldForge MetaServer Runtime Configuration";
-	LOG(INFO) << "Server Version: " << SERVER_VERSION;
-	LOG(INFO) << "API    Version: " << API_VERSION;
+	spdlog::info("WorldForge MetaServer Runtime Configuration");
+	spdlog::info("Server Version: {}", SERVER_VERSION);
+	spdlog::info("API    Version: {}", API_VERSION);
 	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
 	{
 		if ( it->second.value().type() == typeid(int) )
 		{
-			LOG(INFO) << "  " << it->first.c_str() << " = " << it->second.as<int>();
+			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<int>());
 		}
 		else if (it->second.value().type() == typeid(std::string) )
 		{
-			LOG(INFO) << "  " << it->first.c_str() << " = " << it->second.as<std::string>().c_str();
+			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<std::string>().c_str());
 		}
 	}
 }
@@ -1405,13 +1403,13 @@ MetaServer::initLogger()
 		 * Create the log directory if it does not exist
 		 */
 		boost::filesystem::path p = m_Logfile;
-		LOG(INFO) << "Log File: " << p.filename().string();
+		spdlog::info("Log File: {}", p.filename().string());
 		std::cout << "Log File: " << p.filename().string() << std::endl;
 		std::cout << "Log Directory Root Path: " << p.parent_path().string() << std::endl;
 
 		if ( ! boost::filesystem::is_directory(p.parent_path().string()))
 		{
-			LOG(INFO) << "Creating Log Directory : " << p.parent_path().string();
+			spdlog::info("Creating Log Directory : {}", p.parent_path().string());
 			std::cout << "Creating Log Directory : " << p.parent_path().string() << std::endl;
 			boost::filesystem::create_directory(p.parent_path());
 		}
@@ -1419,30 +1417,33 @@ MetaServer::initLogger()
 		/*
 		 * I hope this actually logs to stdout in the event that no destination is set
 		 */
-		google::SetLogDestination(google::INFO,m_Logfile.c_str());
-		LOG(INFO) << "Metaserver Logfile : " << m_Logfile;
+		auto sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(m_Logfile, true);
+		auto logger = std::make_shared<spdlog::logger>("metaserver", sink);
+		spdlog::initialize_logger(logger);
+		spdlog::set_default_logger(logger);
+		spdlog::info("Metaserver Logfile : {}", m_Logfile);
 	}
 //	else
 //	{
 //		boost::filesystem::path p = boost::filesystem::temp_directory_path();
 //		p /= "/metaserver.log";
 //		google::SetLogDestination(google::INFO,p.c_str());
-//		LOG(INFO) << "Temporary Logfile: " << p;
-//		std::cout << "Temporary Logfile: " << p << std::endl;
+//		spdlog::info("Temporary Logfile: {}" << p;
+//		std::cout << "Temporary Logfile: {}" << p << std::endl;
 //	}
 
-	LOG(INFO) << "MetaServer logging initialized";
+	spdlog::info("MetaServer logging initialized");
 
 }
 
 void
 MetaServer::initTimers(boost::asio::io_service& ios)
 {
-	LOG(INFO) << "Timer initiation";
+	spdlog::info("Timer initiation");
 
 	if(m_expiryTimer)
 	{
-		LOG(WARNING) << "Purging m_expiryTimer";
+		spdlog::warn("Purging m_expiryTimer");
 		m_expiryTimer->cancel();
 		delete m_expiryTimer;
 		m_expiryTimer = 0;
@@ -1450,14 +1451,14 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 
 	if(m_updateTimer)
 	{
-		LOG(WARNING) << "Purging m_updateTimer";
+		spdlog::warn("Purging m_updateTimer");
 		m_updateTimer->cancel();
 		delete m_updateTimer;
 	}
 
 	if(m_scoreTimer)
 	{
-		LOG(WARNING) << "Purging m_scoreTimer";
+		spdlog::warn("Purging m_scoreTimer");
 		m_scoreTimer->cancel();
 		delete m_scoreTimer;
 	}
@@ -1482,7 +1483,7 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 //    m_scoreTimer  = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 //    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
 
-	LOG(INFO) << "Timer initiation completed";
+	spdlog::info("Timer initiation completed");
 
 }
 
@@ -1508,11 +1509,11 @@ MetaServer::getMSStats( std::map<std::string,std::string>& req_stats )
 		/*
 		 * If you've specified nothing, you get everything
 		 */
-		VLOG(3) << "Full Stats Request";
+		spdlog::trace("Full Stats Request");
 		for(auto& x: m_metaStats)
 		{
 			req_stats[x.first] = x.second;
-			VLOG(4) << "   Set " + x.first + " to " + x.second;
+			spdlog::trace("   Set {} to {}", x.first, x.second);
 		}
 	}
 	else
@@ -1520,8 +1521,9 @@ MetaServer::getMSStats( std::map<std::string,std::string>& req_stats )
 		/*
 		 * Check all elements of the requesting map
 		 */
-		VLOG(3) << "Partial Stats Request";
-		for(auto& x: req_stats)
+		spdlog::trace("Partial Stats Request");
+		auto statsCopy = req_stats;
+		for(auto& x: statsCopy)
 		{
 
 			/*
@@ -1530,16 +1532,15 @@ MetaServer::getMSStats( std::map<std::string,std::string>& req_stats )
 			if ( m_metaStats.count(x.first) > 0 )
 			{
 				req_stats[x.first] = m_metaStats[x.first];
-				VLOG(4) << "   Set " + x.first + " to " + m_metaStats[x.first];
+				spdlog::trace("   Set {} to {}", x.first, m_metaStats[x.first]);
 			}
 			else
 			{
 				/*
 				 * If not present, remove the entry
-				 * NOTE: can I remove WITH the iterator i'm using?
 				 */
 				req_stats.erase(x.first);
-				VLOG(4) << "   Removing " + x.first;
+				spdlog::trace("   Removing {}", x.first);
 			}
 		}
 	}
