@@ -15,6 +15,7 @@ env:
     RSYNC_PASSWORD: ${{ secrets.RSYNC_PASSWORD }}
     PROFILE_CONAN: conan-release
     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+    CI: 1 #This will turn off a couple of warnings in the build
 
 jobs:
     build_unix:
@@ -38,7 +39,7 @@ jobs:
                 uses: egor-tensin/setup-gcc@v1
                 if: ${{ matrix.os == 'ubuntu-20.04' }}
                 with:
-                  version: 11
+                    version: 11
 
             -   name: Cache media
                 uses: actions/cache@v3.2.3
@@ -68,6 +69,9 @@ jobs:
                     fi
                     if [[ "$ImageOS" == "ubuntu20" ]]; then
                       echo "BUILD_APPIMAGE=true" >> $GITHUB_ENV
+                    fi
+                    if [[ "$ImageOS" == "win22" ]]; then
+                      echo "BUILD_EMBER_NSIS=true" >> $GITHUB_ENV
                     fi
                     export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
 
@@ -130,10 +134,14 @@ jobs:
 
             -   name: Test
                 shell: bash
-                run: cmake --build --preset conan-release --parallel 4 --target check
+                run: |
+                    if [[ "$ImageOS" == "win22" ]]; then
+                        ctest --preset conan-release --output-on-failure
+                    else
+                        cmake --build --preset conan-release --parallel 4 --target check
+                    fi
 
             -   name: Install
-                if: env.BUILD_SNAP == 'true'
                 shell: bash
                 run: cmake --build --preset conan-release --target install
 
@@ -148,6 +156,11 @@ jobs:
                 run: |
                     echo "Building Snap"
                     cmake --build --preset conan-release  --parallel 4 --target snap-build-ember
+
+#            -   name: Build NSIS
+#                if: env.BUILD_EMBER_NSIS == 'true'
+#                shell: cmd
+#                run: makensis ${{github.workspace}}/build/apps/ember/Ember.nsi
 
             -   name: Downloading Cyphesis media
                 if: env.BUILD_SNAP == 'true'
@@ -177,6 +190,12 @@ jobs:
                 with:
                     name: snap
                     path: ~/install/usr/*.snap
+
+#            -   name: Store NSIS
+#                uses: actions/upload-artifact@v3.1.2
+#                with:
+#                    name: NSIS
+#                    path: ${{github.workspace}}/*.exe
 #
 #            -   name: Build AppImage
 #                if: env.BUILD_APPIMAGE == 'true'
