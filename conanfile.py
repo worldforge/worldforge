@@ -87,18 +87,21 @@ class Worldforge(ConanFile):
         tc = CMakeToolchain(self)
         # We need to do some stuff differently if Conan is in use, so we'll tell the CMake system this.
         tc.variables["CONAN_FOUND"] = "TRUE"
-        tc.variables["PYTHON_IS_STATIC"] = "TRUE"
-        # The default CMake FindPython3 component will set the Python3_EXECUTABLE, which is then used in Cyphesis. Therefore do this here.
-        tc.variables["Python3_EXECUTABLE"] = os.path.join(self.dependencies["cpython"].package_folder, "bin/python")
-        # Inject the PYTHOHOME variable so we can copy the Python scripts to the Snap package if we choose to build that.
-        tc.variables["PYTHONHOME"] = self.dependencies["cpython"].package_folder
-        tc.variables["WORLDFORGE_WORLDS_SOURCE_PATH"] = os.path.join(
-            self.dependencies["worldforge-worlds"].package_folder, "worlds")
-        tc.preprocessor_definitions["PYTHONHOME"] = "\"{}\"".format(self.dependencies["cpython"].package_folder)
         if not self.options.with_client:
             tc.variables["SKIP_EMBER"] = "TRUE"
         if not self.options.with_server:
             tc.variables["SKIP_CYPHESIS"] = "TRUE"
+        else:
+            tc.variables["PYTHON_IS_STATIC"] = "TRUE"
+            # The default CMake FindPython3 component will set the Python3_EXECUTABLE, which is then used in Cyphesis.
+            # Therefore, do this here.
+            tc.variables["Python3_EXECUTABLE"] = os.path.join(self.dependencies["cpython"].package_folder, "bin/python")
+            # Inject the PYTHOHOME variable so we can copy the Python scripts to the Snap package if we choose to build
+            # that.
+            tc.variables["PYTHONHOME"] = self.dependencies["cpython"].package_folder
+            tc.variables["WORLDFORGE_WORLDS_SOURCE_PATH"] = os.path.join(
+                self.dependencies["worldforge-worlds"].package_folder, "worlds")
+            tc.preprocessor_definitions["PYTHONHOME"] = "\"{}\"".format(self.dependencies["cpython"].package_folder)
 
         if not self.options.without_metaserver_server:
             tc.variables["BUILD_METASERVER_SERVER"] = "TRUE"
