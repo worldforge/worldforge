@@ -63,7 +63,7 @@ if (ATLAS_GENERATE_OBJECTS)
     )
 else (ATLAS_GENERATE_OBJECTS)
     if (NOT Python3_Interpreter_FOUND)
-        message("Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
+        message(STATUS "Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
     endif ()
 endif (ATLAS_GENERATE_OBJECTS)
 

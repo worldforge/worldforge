@@ -122,7 +122,7 @@ jobs:
             -   name: Configure CMake
                 shell: bash
                 #The -DCMAKE_C_FLAGS="-s" will strip all executables, which we want because we want to provide a Snap package
-                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS="-s"
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS="-s" -DATLAS_GENERATE_OBJECTS=OFF -DATLAS_DISABLE_BENCHMARKS=ON
 
             -   name: Build
                 shell: bash
