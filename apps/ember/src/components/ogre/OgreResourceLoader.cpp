@@ -41,13 +41,13 @@
 #include <OgreScriptCompiler.h>
 
 namespace {
-void refreshShader(std::filesystem::path path, std::string group) {
+void refreshShader(const std::filesystem::path& path, const std::string& group) {
 	//When a shader file changes, we need to go through all GpuPrograms and find any that uses that file.
 	//Multiple GPU Programs can be using the same shader, through the usage of pre-processor directives.
 	//Once we've found that there's a matching GPU program, we'll reload that and then we need to go through _all_ materials,
 	//and look through all techniques and all of their passes, to find if they refer to this changed GPU program, and if so reload it.
 	//Hopefully this is quick, but if not we might need to offload it to a background task, however that will work.
-	for (auto gpuProgramEntry: Ogre::GpuProgramManager::getSingleton().getResourceIterator()) {
+	for (const auto& gpuProgramEntry: Ogre::GpuProgramManager::getSingleton().getResourceIterator()) {
 		if (gpuProgramEntry.second->getGroup() == group) {
 			auto gpuProgram = dynamic_cast<Ogre::GpuProgram*>(gpuProgramEntry.second.get());
 			if (gpuProgram) {
@@ -55,7 +55,7 @@ void refreshShader(std::filesystem::path path, std::string group) {
 					if (gpuProgram->isReloadable()) {
 						Ember::logger->trace("Reloading GPU program {} since the source file at {} was changed.", gpuProgram->getName(), gpuProgram->getSourceFile());
 						gpuProgram->reload();
-						for (auto materialEntry: Ogre::MaterialManager::getSingleton().getResourceIterator()) {
+						for (const auto& materialEntry: Ogre::MaterialManager::getSingleton().getResourceIterator()) {
 							auto material = dynamic_cast<Ogre::Material* >(materialEntry.second.get());
 							if (material) {
 								if (material->isLoaded()) {
@@ -90,14 +90,14 @@ void refreshShader(std::filesystem::path path, std::string group) {
 	}
 }
 
-void parseScript(Ogre::ScriptLoader& scriptLoader, std::filesystem::path path, std::string group) {
+void parseScript(Ogre::ScriptLoader& scriptLoader, const std::filesystem::path& path, std::string group) {
 	try {
-		auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(path.string(), group, nullptr, false);
+		auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(path.generic_string(), group, nullptr, false);
 		if (stream) {
 			scriptLoader.parseScript(stream, group);
 		}
 	} catch (const std::exception& ex) {
-		Ember::logger->error("Error when parsing changed file '{}' in group '{}': {}", path.string(), group, ex.what());
+		Ember::logger->error("Error when parsing changed file '{}' in group '{}': {}", path.generic_string(), group, ex.what());
 	}
 }
 
@@ -105,18 +105,18 @@ void parseScript(Ogre::ScriptLoader& scriptLoader, std::filesystem::path path, s
  * Refresh an updated model definition, either by just adding it if it doesn't already exists, or by updating it and reloading all instances.
  * @param fullPath The full path to the definition.
  */
-void refreshModelDefinition(const boost::filesystem::path& relativePath, std::string group) {
-	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(relativePath.string(), group, nullptr, false);
+void refreshModelDefinition(const boost::filesystem::path& relativePath, const std::string& group) {
+	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(relativePath.generic_string(), group, nullptr, false);
 	if (stream) {
 		auto& modelDefMgr = Ember::OgreView::Model::ModelDefinitionManager::getSingleton();
 		Ember::OgreView::Model::XMLModelDefinitionSerializer serializer;
 
 		auto modelDef = serializer.parseScript(stream);
 		if (modelDef) {
-			auto existingDef = modelDefMgr.getByName(relativePath.string());
+			auto existingDef = modelDefMgr.getByName(relativePath.generic_string());
 			//Model definition doesn't exist, just add it.
 			if (!existingDef) {
-				modelDefMgr.addDefinition(relativePath.string(), modelDef);
+				modelDefMgr.addDefinition(relativePath.generic_string(), modelDef);
 			} else {
 				//otherwise update existing
 				existingDef->moveFrom(std::move(*modelDef));
@@ -126,7 +126,7 @@ void refreshModelDefinition(const boost::filesystem::path& relativePath, std::st
 	}
 }
 
-void processChangedOrNew(std::filesystem::path path, std::string group) {
+void processChangedOrNew(const std::filesystem::path& path, std::string group) {
 	auto reloadOrAddResource = [&](Ogre::ResourceManager& resourceManager, const std::string& resourceName) {
 		if (resourceManager.resourceExists(resourceName, group)) {
 			auto resource = resourceManager.getResourceByName(resourceName, group);
@@ -148,17 +148,17 @@ void processChangedOrNew(std::filesystem::path path, std::string group) {
 	auto extension = path.extension();
 
 	if (extension == ".png" || extension == ".dds" || extension == ".jpg" || extension == ".jpeg") {
-		reloadOrAddResource(Ogre::TextureManager::getSingleton(), path);
+		reloadOrAddResource(Ogre::TextureManager::getSingleton(), path.generic_string());
 	} else if (extension == ".mesh") {
-		reloadOrAddResource(Ogre::MeshManager::getSingleton(), path);
+		reloadOrAddResource(Ogre::MeshManager::getSingleton(), path.generic_string());
 	} else if (extension == ".skeleton") {
-		reloadOrAddResource(Ogre::SkeletonManager::getSingleton(), path);
+		reloadOrAddResource(Ogre::SkeletonManager::getSingleton(), path.generic_string());
 	} else if (extension == ".frag" || extension == ".vert" || extension == ".glsl") {
-		refreshShader(path, group);
+		refreshShader(path.generic_string(), group);
 	} else if (extension == ".program") {
-		parseScript(Ogre::ScriptCompilerManager::getSingleton(), path, group);
+		parseScript(Ogre::ScriptCompilerManager::getSingleton(), path.generic_string(), group);
 	} else if (extension == ".material") {
-		parseScript(Ogre::MaterialManager::getSingleton(), path, group);
+		parseScript(Ogre::MaterialManager::getSingleton(), path.generic_string(), group);
 	} else if (extension == ".modeldef") {
 		refreshModelDefinition({path}, group);
 	}

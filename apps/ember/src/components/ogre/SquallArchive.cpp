@@ -28,7 +28,7 @@ std::optional<std::filesystem::path> resolveFile(const Squall::Repository& repos
 
 	std::vector<std::string> elements;
 	for (const auto& subpath: path) {
-		elements.emplace_back(subpath);
+		elements.emplace_back(subpath.generic_string());
 	}
 	size_t i = 0;
 	for (auto subpath: elements) {
