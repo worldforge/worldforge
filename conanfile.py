@@ -37,7 +37,7 @@ class Worldforge(ConanFile):
         'libsndfile/*:with_mpeg': False
     }
 
-    def configure(self):
+    def config_options(self):
         if is_msvc(self):
             self.options.with_server = False
 
