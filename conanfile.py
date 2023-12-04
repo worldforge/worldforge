@@ -57,11 +57,13 @@ class Worldforge(ConanFile):
             self.requires("ogre/13.4.2@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
+            self.requires("libunwind/1.7.2")
+
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
             self.requires("libgcrypt/1.8.4")
-            self.requires("sqlite3/3.44.0")
+            self.requires("sqlite3/3.44.2")
             self.requires("readline/8.1.2")
             self.requires("cpython/3.10.0@worldforge")
             # self.requires("avahi/0.8")
@@ -71,6 +73,7 @@ class Worldforge(ConanFile):
 
         self.requires("libcap/2.69", override=True)
         self.requires("libxml2/2.11.5", override=True)
+        self.requires("libxcrypt/4.4.36", override=True)
 
         self.test_requires("cppunit/1.15.1")
         self.test_requires("catch2/3.4.0")
