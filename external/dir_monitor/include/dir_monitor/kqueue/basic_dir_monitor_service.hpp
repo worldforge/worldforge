@@ -86,7 +86,7 @@ public:
         int wd = ::open(dirname.c_str(), O_EVTONLY);
         if (wd == -1)
         {
-            boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::asio::dir_monitor_impl::add_directory: open failed");
+            boost::system::system_error e(boost::system::error_code(errno, boost::system::system_category()), "boost::asio::dir_monitor_impl::add_directory: open failed");
             boost::throw_exception(e);
         }
 

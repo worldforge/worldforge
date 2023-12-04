@@ -146,7 +146,7 @@ private:
         int fd = kqueue();
         if (fd == -1)
         {
-            boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::asio::dir_monitor_impl::init_kqueue: kqueue failed");
+            boost::system::system_error e(boost::system::error_code(errno, boost::system::system_category()), "boost::asio::dir_monitor_impl::init_kqueue: kqueue failed");
             boost::throw_exception(e);
         }
         return fd;
@@ -217,7 +217,7 @@ private:
 
                 if (nEvents < 0 or eventData.flags == EV_ERROR)
                 {
-                    boost::system::system_error e(boost::system::error_code(errno, boost::system::get_system_category()), "boost::asio::dir_monitor_impl::work_thread: kevent failed");
+                    boost::system::system_error e(boost::system::error_code(errno, boost::system::system_category()), "boost::asio::dir_monitor_impl::work_thread: kevent failed");
                     boost::throw_exception(e);
                 }
 
