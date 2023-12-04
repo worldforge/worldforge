@@ -126,16 +126,16 @@ jobs:
 
             -   name: Build
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN --parallel 4
+                run: cmake --build --preset conan-release --parallel 4
 
             -   name: Test
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN  --parallel 4 --target check
+                run: cmake --build --preset conan-release --parallel 4 --target check
 
             -   name: Install
                 if: env.BUILD_SNAP == 'true'
                 shell: bash
-                run: cmake --build --preset $PROFILE_CONAN --target install
+                run: cmake --build --preset conan-release --target install
 
             -   name: Setup LXD
                 if: env.BUILD_SNAP == 'true'
@@ -147,21 +147,21 @@ jobs:
                 shell: bash
                 run: |
                     echo "Building Snap"
-                    cmake --build --preset $PROFILE_CONAN  --parallel 4 --target snap-build-ember
+                    cmake --build --preset conan-release  --parallel 4 --target snap-build-ember
 
             -   name: Downloading Cyphesis media
                 if: env.BUILD_SNAP == 'true'
                 shell: bash
                 run: |
                     echo "Getting media"
-                    cmake --build --preset $PROFILE_CONAN  --parallel 4 --target media-download-rsync
+                    cmake --build --preset conan-release  --parallel 4 --target media-download-rsync
 
             -   name: Build Cyphesis Snap
                 if: env.BUILD_SNAP == 'true'
                 shell: bash
                 run: |
                     echo "Building Snap"
-                    cmake --build --preset $PROFILE_CONAN  --parallel 4 --target snap-build-cyphesis
+                    cmake --build --preset conan-release  --parallel 4 --target snap-build-cyphesis
 
             -   name: Upload Snaps to Snapstore
                 if: env.BUILD_SNAP == 'true'
