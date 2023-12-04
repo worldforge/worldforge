@@ -54,7 +54,7 @@ std::string Gzip::encode(const std::string& data)
 #else
 	outgoing.next_in = (z_const Bytef*)data.data();
 #endif
-    outgoing.avail_in = data.size();
+    outgoing.avail_in = (uInt)data.size();
 
     do
     {       
@@ -85,7 +85,7 @@ std::string Gzip::decode(const std::string& data)
 #else
 	incoming.next_in = (z_const Bytef*)data.data();
 #endif
-    incoming.avail_in = data.size();
+    incoming.avail_in = (uInt)data.size();
 
     do 
     {

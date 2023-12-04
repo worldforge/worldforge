@@ -52,7 +52,7 @@ std::string Bzip2::encode(const std::string& data)
     buf[0] = 0;
 
     outgoing.next_in = const_cast<char*>(data.data());
-    outgoing.avail_in = data.size();
+    outgoing.avail_in = (unsigned int)data.size();
 
     do 
     {       
@@ -79,7 +79,7 @@ std::string Bzip2::decode(const std::string& data)
     buf[0] = 0;
 
     incoming.next_in = const_cast<char*>(data.data());
-    incoming.avail_in = data.size();
+    incoming.avail_in = (unsigned int)data.size();
 
     do
     {
