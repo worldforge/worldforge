@@ -181,9 +181,9 @@ bool Element::operator==(const Element& o) const
         case TYPE_INT: return i == o.i;
 		case TYPE_FLOAT: return Equal(f, o.f);
         case TYPE_PTR: return p == o.p;
-        case TYPE_STRING: return *s == *o.s;
-        case TYPE_MAP: return *m == *o.m;
-        case TYPE_LIST: return *l == *o.l;
+        case TYPE_STRING: return s->_data == o.s->_data;
+        case TYPE_MAP: return m->_data == o.m->_data;
+        case TYPE_LIST: return l->_data == o.l->_data;
     }
     return false;
 }

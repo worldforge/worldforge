@@ -354,7 +354,7 @@ public:
     bool operator==(const char * v) const
     {
       if(t == TYPE_STRING)
-        return (*s == v);
+        return (s->_data == v);
       return false;
     }
 
@@ -362,7 +362,7 @@ public:
     bool operator==(const StringType& v) const
     {
       if(t == TYPE_STRING)
-        return (*s == v);
+        return (s->_data == v);
       return false;
     }
 
@@ -370,7 +370,7 @@ public:
     bool operator==(const MapType& v) const
     {
       if(t == TYPE_MAP)
-        return (*m == v);
+        return (m->_data == v);
       return false;
     }
 
@@ -378,7 +378,7 @@ public:
     bool operator==(const ListType& v) const
     {
       if (t == TYPE_LIST)
-        return (*l == v);
+        return (l->_data == v);
       return false;
     }
 
@@ -555,7 +555,7 @@ protected:
         DataType& operator=(const C&& c) {_data = std::move(c); return *this;}
         DataType& operator=(const DataType&) = delete;
 
-        bool operator==(const C& c) const {return _data == c;}
+        bool operator==(const DataType<C>& c) const {return _data == c._data;}
 
         void ref() {++_refcount;}
         void unref() {if(--_refcount == 0) delete this;}
@@ -580,8 +580,6 @@ protected:
             return std::move(_data);
         }
 //        operator const C&() const {return _data;}
-
-    private:
 
         unsigned long _refcount;
         C _data;
