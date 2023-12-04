@@ -221,7 +221,7 @@ Application::Application(Input& input,
 	int result = chdir(mConfigService.getHomeDirectory(BaseDirType_CONFIG).generic_string().c_str());
 
 	if (result) {
-		logger->warn("Could not change directory to '{}'.", mConfigService.getHomeDirectory(BaseDirType_CONFIG).c_str());
+		logger->warn("Could not change directory to '{}'.", mConfigService.getHomeDirectory(BaseDirType_CONFIG).generic_string());
 	}
 
 	//load the config file. Note that this will load the shared config file, and then the user config file if available.
