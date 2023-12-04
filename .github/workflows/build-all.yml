@@ -29,10 +29,15 @@ jobs:
         steps:
             -   uses: actions/checkout@v3.3.0
 
-            - name: Set up GCC
-              uses: egor-tensin/setup-gcc@v1
-              if: ${{ matrix.os == 'ubuntu-20.04' }}
-              with:
+            -   name: Workaround preset name difference
+                if: runner.os == 'Windows'
+                shell: bash
+                run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
+
+            -   name: Set up GCC
+                uses: egor-tensin/setup-gcc@v1
+                if: ${{ matrix.os == 'ubuntu-20.04' }}
+                with:
                   version: 11
 
             -   name: Cache media
@@ -128,6 +133,7 @@ jobs:
                 run: cmake --build --preset $PROFILE_CONAN  --parallel 4 --target check
 
             -   name: Install
+                if: env.BUILD_SNAP == 'true'
                 shell: bash
                 run: cmake --build --preset $PROFILE_CONAN --target install
 
