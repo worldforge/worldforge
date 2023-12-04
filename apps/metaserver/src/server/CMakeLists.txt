@@ -1,3 +1,10 @@
+find_package(Boost
+        1.83.0
+        REQUIRED
+        COMPONENTS program_options filesystem)
+
+add_compile_definitions(SYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+
 add_executable(metaserver
         main.cpp
         MetaServer.cpp

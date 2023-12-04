@@ -83,7 +83,9 @@ MESSAGE(STATUS "Setting compiler warnings to '${WF_WARNING_FLAGS}'")
 add_compile_options(${WF_WARNING_FLAGS})
 
 option(BUILD_TESTING "Should tests always be built; otherwise they will be built when the 'check' target is executed." OFF)
-
+option(SKIP_EMBER "Skips building the Ember client." OFF)
+option(SKIP_CYPHESIS "Skips building the Cyphesis server." OFF)
+option(BUILD_METASERVER_SERVER "Includes the MetaServer server into the build. This isn't normally needed." OFF)
 
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 

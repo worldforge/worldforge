@@ -18,11 +18,14 @@ class Worldforge(ConanFile):
     options = {
         "with_client": [True, False],
         "with_server": [True, False],
+        "without_metaserver_server": [True, False]
     }
 
     default_options = {
         "with_client": True,
         "with_server": True,
+        #Normally you don't want to build the actual metaserver server.
+        "without_metaserver_server": True,
         # Skipped because we had issues building xz_utils, which is used by libunwind
         'sdl/*:libunwind': False,
         # We got build errors with X11 on OpenSuSE, so disable for now. Unclear what the X11 support entails.
@@ -93,6 +96,9 @@ class Worldforge(ConanFile):
             tc.variables["SKIP_EMBER"] = "TRUE"
         if not self.options.with_server:
             tc.variables["SKIP_CYPHESIS"] = "TRUE"
+
+        if not self.options.without_metaserver_server:
+            tc.variables["BUILD_METASERVER_SERVER"] = "TRUE"
 
         tc.generate()
 
