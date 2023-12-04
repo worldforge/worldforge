@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
 				}
 			} while (result.status == Squall::ResolveStatus::ONGOING);
 
-			if (result.status == Squall::ResolveStatus::ERROR) {
+			if (result.status == Squall::ResolveStatus::HAD_ERROR) {
 				logger->error("Could not complete remote download.");
 			} else {
 				logger->info("Downloaded {} files.", downloadedFiles.size());

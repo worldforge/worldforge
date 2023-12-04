@@ -53,7 +53,7 @@ size_t AssetsUpdater::poll() {
 			auto callback = std::move(firstSession.callback);
 			mActiveSessions.erase(mActiveSessions.begin());
 			callback.set_value(UpdateResult::Success);
-		} else if (resolveResult.status == Squall::ResolveStatus::ERROR) {
+		} else if (resolveResult.status == Squall::ResolveStatus::HAD_ERROR) {
 			auto callback = std::move(firstSession.callback);
 			mActiveSessions.erase(mActiveSessions.begin());
 			callback.set_value(UpdateResult::Failure);

@@ -28,7 +28,7 @@
 namespace Squall {
 
 enum class ResolveStatus {
-	ONGOING, COMPLETE, ERROR
+	ONGOING, COMPLETE, HAD_ERROR
 };
 
 enum class ResolveEntryStatus {

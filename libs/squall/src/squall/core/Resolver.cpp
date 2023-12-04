@@ -82,7 +82,7 @@ ResolveResult Resolver::pollRootSignature() {
 					{.signature=mRootSignature, .status=ResolveEntryStatus::COPIED, .bytesCopied=result.bytesCopied}}};
 		} else {
 			logger->error("Provider could not fetch {}.", lastPending.temporaryPath.generic_string());
-			return {.status = ResolveStatus::ERROR};
+			return {.status = ResolveStatus::HAD_ERROR};
 		}
 	}
 	return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
@@ -112,7 +112,7 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 						completedRequests.emplace_back(
 								ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
 						mPendingFetches.erase(I);
-						return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+						return {{.status = ResolveStatus::HAD_ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
 					}
 					if (signatureResult->signature != pending.expectedSignature) {
 						logger->error("File {} had a different signature than expected. Expected signature: {}, actual signature: {}.", pending.temporaryPath.generic_string(),
@@ -121,7 +121,7 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 						completedRequests.emplace_back(
 								ResolveEntry{.signature=signatureResult->signature, .status=ResolveEntryStatus::COPIED, .bytesCopied=providerResult.bytesCopied, .path=pending.repositoryPath});
 						mPendingFetches.erase(I);
-						return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+						return {{.status = ResolveStatus::HAD_ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
 					}
 
 					logger->debug("Successfully fetched signature {} into temporary path {}, will now store in repository. This data can be accessed as {}.", signatureResult->signature.str_view(),
@@ -141,7 +141,7 @@ std::optional<ResolveResult> Resolver::processPendingFetched(size_t maxSignature
 				}
 				return {{.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
 			} else {
-				return {{.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
+				return {{.status = ResolveStatus::HAD_ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = completedRequests}};
 			}
 		}
 	}
@@ -203,7 +203,7 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 		return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
 	} catch (const std::exception& ex) {
 		logger->error("Error when polling in resolver: {}", ex.what());
-		return {.status = ResolveStatus::ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
+		return {.status = ResolveStatus::HAD_ERROR, .pendingRequests = mPendingFetches.size(), .completedRequests = {}};
 
 	}
 }

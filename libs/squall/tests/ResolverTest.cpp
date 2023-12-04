@@ -46,7 +46,7 @@ TEST_CASE("Resolver copied files", "[resolver]") {
 	int i = 0;
 	while (true) {
 		auto pollResult = resolver.poll(1);
-		REQUIRE(pollResult.status != Squall::ResolveStatus::ERROR);
+		REQUIRE(pollResult.status != Squall::ResolveStatus::HAD_ERROR);
 		REQUIRE(i++ < 20);
 		if (pollResult.status == Squall::ResolveStatus::COMPLETE) {
 			break;
@@ -72,7 +72,7 @@ TEST_CASE("Resolver skips already existing files", "[resolver]") {
 	int i = 0;
 	while (true) {
 		auto pollResult = resolver.poll(1);
-		REQUIRE(pollResult.status != Squall::ResolveStatus::ERROR);
+		REQUIRE(pollResult.status != Squall::ResolveStatus::HAD_ERROR);
 		for (auto entry: pollResult.completedRequests) {
 			//Should not have copied any files, as all already exists.
 			REQUIRE(entry.bytesCopied == 0);
