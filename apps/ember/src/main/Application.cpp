@@ -432,7 +432,7 @@ void Application::initializeServices() {
 			} else {
 				assetsSync.Complete(AssetsSync::UpdateResult::Success);
 			}
-		} catch (const std::exception& ex) {
+		} catch (const std::exception&) {
 			assetsSync.Complete(AssetsSync::UpdateResult::Failure);
 		}
 	};
