@@ -64,9 +64,9 @@ struct Signature {
 		return str_view();
 	}
 
-	bool operator==(const Signature& rhs) const;
+	bool operator==(const Signature& rhs) const noexcept;
 
-	bool operator!=(const Signature& rhs) const;
+	bool operator!=(const Signature& rhs) const noexcept;
 
 	bool isValid() const;
 };

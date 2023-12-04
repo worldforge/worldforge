@@ -278,7 +278,8 @@ class DatabaseResult
 
             virtual const_iterator_worker& operator++() = 0;
 
-            virtual bool operator==(const const_iterator_worker& other) const = 0;
+            virtual bool operator==(const const_iterator_worker& other) const noexcept = 0;
+            bool operator!=(const const_iterator_worker& other) const noexcept { return !operator==(other);}
         };
 
         /// \brief Iterator for DatabaseResult
@@ -295,12 +296,12 @@ class DatabaseResult
 
                 const_iterator(const_iterator&& ci) noexcept;
 
-                bool operator==(const const_iterator& other)
+                bool operator==(const const_iterator& other) const
                 {
                     return (*m_worker == *other.m_worker);
                 }
 
-                bool operator!=(const const_iterator& other)
+                bool operator!=(const const_iterator& other) const
                 {
                     return !(*this == other);
                 }

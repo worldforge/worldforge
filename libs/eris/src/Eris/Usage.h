@@ -43,7 +43,7 @@ struct Usage {
 
 	std::map<std::string, UsageParameter> params;
 
-	bool operator==(const Usage& x) const {
+	bool operator==(const Usage& x) const noexcept {
 		return name == x.name;
 	}
 };
@@ -53,7 +53,7 @@ struct TaskUsage {
 
 	std::map<std::string, UsageParameter> params;
 
-	bool operator==(const TaskUsage& x) const {
+	bool operator==(const TaskUsage& x) const noexcept {
 		return name == x.name;
 	}
 

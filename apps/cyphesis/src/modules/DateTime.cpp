@@ -107,7 +107,7 @@ std::string DateTime::asString()
     return std::string( buffer );
 }
 
-bool DateTime::operator==( const DateTime & date ) const
+bool DateTime::operator==( const DateTime & date ) const noexcept
 {
     return ( m_year == date.m_year ) &&
            ( m_month == date.m_month ) &&

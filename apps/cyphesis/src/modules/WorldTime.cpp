@@ -87,12 +87,12 @@ std::string WorldTime::operator[](const std::string & name) const
     return "";
 }
 
-bool WorldTime::operator==(const WorldTime & other) const
+bool WorldTime::operator==(const WorldTime & other) const noexcept
 {
     return m_time == other.m_time;
 }
 
-bool WorldTime::operator==(const std::string & when) const
+bool WorldTime::operator==(const std::string & when) const noexcept
 {
     cy_debug_print("Checking whether it is " << when << " when the date is " << m_time);
 

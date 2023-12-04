@@ -173,7 +173,7 @@ Element& Element::operator=(Element&& obj) noexcept
   return *this;
 }
 
-bool Element::operator==(const Element& o) const
+bool Element::operator==(const Element& o) const noexcept
 {
     if (t != o.t) { return false; }
     switch(t) {

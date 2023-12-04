@@ -138,7 +138,8 @@ public:
 	 * @param value Another object to compare to.
 	 * @return True if the objects are identical.
 	 */
-	bool operator==(const ActionBarIcon& value) { return this == &value; }
+	bool operator==(const ActionBarIcon& value) const { return this == &value; }
+	bool operator!=(const ActionBarIcon& value) const { return this != &value; }
 
 	/**
 	 * @brief Handler for CEGUI drag start event.

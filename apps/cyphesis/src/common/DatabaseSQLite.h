@@ -161,7 +161,7 @@ struct DatabaseResultWorkerSqlite : public DatabaseResult::DatabaseResultWorker
 
         const_iterator_worker& operator++() override;
 
-        bool operator==(const const_iterator_worker& other) const override;
+        bool operator==(const const_iterator_worker& other) const noexcept override;
     };
 
 

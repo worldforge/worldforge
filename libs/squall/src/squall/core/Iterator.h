@@ -53,9 +53,9 @@ protected:
 		Manifest manifest;
 		size_t index;
 
-		bool operator==(const ManifestEntry& rhs) const;
+		bool operator==(const ManifestEntry& rhs) const noexcept;
 
-		bool operator!=(const ManifestEntry& rhs) const;
+		bool operator!=(const ManifestEntry& rhs) const noexcept;
 	};
 
 	const Repository* mRepository;
@@ -80,9 +80,9 @@ public:
 		return operator++();
 	}
 
-	bool operator==(const iterator& other) const;
+	bool operator==(const iterator& other) const noexcept;
 
-	bool operator!=(const iterator& other) const { return !(*this == other); }
+	bool operator!=(const iterator& other) const noexcept { return !(*this == other); }
 
 	/**
 	 * Returns true if the entry exists in the local repository.

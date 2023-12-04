@@ -189,7 +189,7 @@ struct DatabaseResultWorkerPostgres : public DatabaseResult::DatabaseResultWorke
             return *this;
         }
 
-        bool operator==(const const_iterator_worker& other) const override
+        bool operator==(const const_iterator_worker& other) const noexcept override
         {
             return (m_row == ((const const_iterator_worker_postgres&)other).m_row);
         }

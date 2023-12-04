@@ -168,7 +168,7 @@ void TypeInfo::processTypeData(const Root &atype)
     }
 }
 
-bool TypeInfo::operator==(const TypeInfo &x) const
+bool TypeInfo::operator==(const TypeInfo &x) const noexcept
 {
     if (&m_typeService != &x.m_typeService)
         logger->warn("comparing TypeInfos from different type services, bad");
@@ -176,7 +176,7 @@ bool TypeInfo::operator==(const TypeInfo &x) const
     return (m_name == x.m_name);
 }
 
-bool TypeInfo::operator<(const TypeInfo &x) const
+bool TypeInfo::operator<(const TypeInfo &x) const noexcept
 {
     return m_name < x.m_name;
 }

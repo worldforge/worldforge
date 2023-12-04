@@ -313,7 +313,7 @@ public:
     }
 
     /// Check for equality with another Element.
-    bool operator==(const Element& o) const;
+    bool operator==(const Element& o) const noexcept;
 
     /// Check for inequality with anything we can check equality with
     template<class C>

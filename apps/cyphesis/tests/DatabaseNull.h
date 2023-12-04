@@ -33,10 +33,10 @@ struct const_iterator_worker_null : public DatabaseResult::const_iterator_worker
     const char* column(const char* column) const override
     { return ""; }
 
-    DatabaseResult::const_iterator_worker& operator++() override
+    DatabaseResult::const_iterator_worker& operator++()  override
     { return *this; }
 
-    bool operator==(const const_iterator_worker& other) const override
+    bool operator==(const const_iterator_worker& other) const noexcept override
     { return true; }
 };
 

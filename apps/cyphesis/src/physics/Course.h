@@ -56,9 +56,9 @@ class Course {
 
 
     ///
-    bool operator==(const Course& s) const {return isEqualTo(s);}
+    bool operator==(const Course& s) const noexcept {return isEqualTo(s);}
     ///
-    bool operator!=(const Course& s) const {return !isEqualTo(s);}
+    bool operator!=(const Course& s) const noexcept {return !isEqualTo(s);}
 
     bool isValid() const {return m_path.isValid();}
 

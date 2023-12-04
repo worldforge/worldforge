@@ -67,7 +67,10 @@ class DateTime {
     static int dpm() { return m_dpm; }
     static int mpy() { return m_mpy; }
 
-    bool operator==( const DateTime & ) const;
+    bool operator==( const DateTime & ) const noexcept;
+    bool operator!=( const DateTime & d) const noexcept {
+		return !operator==(d);
+	};
 };
 
 inline std::ostream & operator<<(std::ostream& s, const DateTime& d) {

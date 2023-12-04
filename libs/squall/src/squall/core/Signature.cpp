@@ -82,11 +82,11 @@ std::string Signature::str() const {
 	return std::string(str_view());
 }
 
-bool Signature::operator==(const Signature& rhs) const {
+bool Signature::operator==(const Signature& rhs) const noexcept {
 	return digest == rhs.digest;
 }
 
-bool Signature::operator!=(const Signature& rhs) const {
+bool Signature::operator!=(const Signature& rhs) const noexcept {
 	return digest != rhs.digest;
 }
 

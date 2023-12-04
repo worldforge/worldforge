@@ -416,7 +416,7 @@ DatabaseResult::const_iterator_worker& DatabaseResultWorkerSqlite::const_iterato
     return *this;
 }
 
-bool DatabaseResultWorkerSqlite::const_iterator_worker_sqlite::operator==(const const_iterator_worker& other) const
+bool DatabaseResultWorkerSqlite::const_iterator_worker_sqlite::operator==(const const_iterator_worker& other) const noexcept
 {
     return (m_iterator == ((const const_iterator_worker_sqlite&) other).m_iterator);
 }

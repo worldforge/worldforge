@@ -72,9 +72,19 @@ class WeakEntityRef
         return (m_inner == e.m_inner);
     }
 
+	bool operator!=(const WeakEntityRef& e) const noexcept
+    {
+        return !operator==(e);
+    }
+
     bool operator==(const LocatedEntity* e) const noexcept
     {
         return (m_inner == e);
+    }
+
+	bool operator!=(const LocatedEntity* e) const noexcept
+    {
+        return !operator==(e);
     }
 
     bool operator<(const WeakEntityRef& e) const noexcept

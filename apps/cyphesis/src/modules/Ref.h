@@ -131,34 +131,34 @@ class Ref
             return (m_inner == nullptr);
         }
 
-        constexpr bool operator==(const Ref& e) const
+        constexpr bool operator==(const Ref& e) const noexcept
         {
             return (m_inner == e.m_inner);
         }
 
         template<class TSubclass>
-        constexpr bool operator==(const Ref<TSubclass>& e) const
+        constexpr bool operator==(const Ref<TSubclass>& e) const noexcept
         {
             return (m_inner == e.get());
         }
 
-        constexpr bool operator==(const T* e) const
+        constexpr bool operator==(const T* e) const noexcept
         {
             return (m_inner == e);
         }
 
-        constexpr bool operator!=(const Ref& e) const
+        constexpr bool operator!=(const Ref& e) const noexcept
         {
             return (m_inner != e.m_inner);
         }
 
         template<class TSubclass>
-        constexpr bool operator!=(const Ref<TSubclass>& e) const
+        constexpr bool operator!=(const Ref<TSubclass>& e) const noexcept
         {
             return (m_inner != e.get());
         }
 
-        constexpr bool operator!=(const T* e) const
+        constexpr bool operator!=(const T* e) const noexcept
         {
             return (m_inner != e);
         }

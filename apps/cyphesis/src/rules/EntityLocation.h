@@ -54,13 +54,13 @@ struct EntityLocation
      */
     bool isValid() const;
 
-    bool operator==(const EntityLocation& rhs) const
+    bool operator==(const EntityLocation& rhs) const noexcept
     {
         return m_parent == rhs.m_parent
                && m_pos == rhs.m_pos;
     }
 
-    bool operator!=(const EntityLocation& rhs) const
+    bool operator!=(const EntityLocation& rhs) const noexcept
     {
         return !(*this == rhs);
     }

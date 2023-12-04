@@ -65,11 +65,11 @@ public:
     void resolveChildren();
     
 // operators
-    /// efficent comparisom of types (uses type ids if possible)
-    bool operator==(const TypeInfo &x) const;
+    /// efficent comparison of types (uses type ids if possible)
+    bool operator==(const TypeInfo &x) const noexcept;
 
     /// efficent ordering of type (uses type ids if possible)
-    bool operator<(const TypeInfo &x) const;
+    bool operator<(const TypeInfo &x) const noexcept;
 
 // accessors
     /// the unique type name (matches the Atlas type)

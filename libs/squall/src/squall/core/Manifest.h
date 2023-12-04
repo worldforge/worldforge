@@ -54,9 +54,9 @@ struct FileEntry {
 	 */
 	std::int64_t size;
 
-	bool operator==(const FileEntry& rhs) const;
+	bool operator==(const FileEntry& rhs) const noexcept;
 
-	bool operator!=(const FileEntry& rhs) const;
+	bool operator!=(const FileEntry& rhs) const noexcept;
 };
 
 struct Manifest {
@@ -69,9 +69,9 @@ struct Manifest {
 	 */
 	std::vector<FileEntry> entries;
 
-	bool operator==(const Manifest& rhs) const;
+	bool operator==(const Manifest& rhs) const noexcept;
 
-	bool operator!=(const Manifest& rhs) const;
+	bool operator!=(const Manifest& rhs) const noexcept;
 
 };
 

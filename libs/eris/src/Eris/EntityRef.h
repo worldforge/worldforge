@@ -66,17 +66,17 @@ public:
 		return (m_inner == nullptr);
 	}
 
-    bool operator==(const EntityRef& e) const
+    bool operator==(const EntityRef& e) const noexcept
     {
         return (m_inner == e.m_inner);
     }
 
-    bool operator==(const Entity* e) const
+    bool operator==(const Entity* e) const noexcept
     {
         return (m_inner == e);
     }
 
-    bool operator<(const EntityRef& e) const
+    bool operator<(const EntityRef& e) const noexcept
     {
         return (m_inner < e.m_inner);
     }

@@ -49,22 +49,22 @@ Squall::Manifest& operator<<(Squall::Manifest& manifest, std::istream& in) {
 
 namespace Squall {
 
-bool Manifest::operator==(const Manifest& rhs) const {
+bool Manifest::operator==(const Manifest& rhs) const noexcept {
 	return entries == rhs.entries;
 }
 
-bool Manifest::operator!=(const Manifest& rhs) const {
+bool Manifest::operator!=(const Manifest& rhs) const noexcept {
 	return !(*this == rhs);
 }
 
-bool FileEntry::operator==(const FileEntry& rhs) const {
+bool FileEntry::operator==(const FileEntry& rhs) const noexcept {
 	return size == rhs.size &&
 		   signature == rhs.signature &&
 		   fileName == rhs.fileName &&
 		   type == rhs.type;
 }
 
-bool FileEntry::operator!=(const FileEntry& rhs) const {
+bool FileEntry::operator!=(const FileEntry& rhs) const noexcept {
 	return !(*this == rhs);
 }
 

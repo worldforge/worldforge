@@ -91,7 +91,7 @@ iterator& iterator::operator++() {
 	return *this;
 }
 
-bool iterator::operator==(const iterator& other) const { return mManifests == other.mManifests; }
+bool iterator::operator==(const iterator& other) const noexcept { return mManifests == other.mManifests; }
 
 iterator::operator bool() const {
 	if (mRepository && !mManifests.empty()) {
@@ -103,11 +103,11 @@ iterator::operator bool() const {
 	return false;
 }
 
-bool iterator::ManifestEntry::operator==(const iterator::ManifestEntry& rhs) const {
+bool iterator::ManifestEntry::operator==(const iterator::ManifestEntry& rhs) const noexcept {
 	return manifest == rhs.manifest && index == rhs.index;
 }
 
-bool iterator::ManifestEntry::operator!=(const iterator::ManifestEntry& rhs) const {
+bool iterator::ManifestEntry::operator!=(const iterator::ManifestEntry& rhs) const noexcept {
 	return !(*this == rhs);
 }
 }

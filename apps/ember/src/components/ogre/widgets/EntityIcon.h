@@ -161,8 +161,9 @@ public:
 	 * @param value Another object to compare to.
 	 * @return True if the objects are identical.
 	 */
-	bool operator==(const EntityIcon& value) {return this == &value;}
-	
+	bool operator==(const EntityIcon& value) const noexcept {return this == &value;}
+	bool operator!=(const EntityIcon& value) const noexcept {return this != &value;}
+
 protected:
 
 	

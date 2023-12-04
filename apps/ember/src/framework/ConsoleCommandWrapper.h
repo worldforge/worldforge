@@ -77,7 +77,8 @@ public:
      */
     const std::string& getDescription() const;
 
-	bool operator==( const std::string& command) const;
+	bool operator==( const std::string& command) const noexcept;
+	bool operator!=( const std::string& command) const noexcept;
 
 private:
 
@@ -108,7 +109,9 @@ private:
 inline const std::string& ConsoleCommandWrapper::getCommand() const {return mCommand;}
 inline const std::string& ConsoleCommandWrapper::getInverseCommand() const {return mInverseCommand;}
 inline const std::string& ConsoleCommandWrapper::getDescription() const {return mDescription;}
-inline bool ConsoleCommandWrapper::operator==( const std::string& command) const { return command == mCommand; }
+inline bool ConsoleCommandWrapper::operator==( const std::string& command) const noexcept { return command == mCommand; }
+inline bool ConsoleCommandWrapper::operator!=( const std::string& command) const noexcept { return command != mCommand; }
+
 
 
 }

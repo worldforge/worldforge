@@ -16,12 +16,12 @@ unsigned int BasePoint::seed() const
     return I_ROUND(m_height * 1000.0);
 }
 
-bool BasePoint::operator==(const BasePoint& rhs) const
+bool BasePoint::operator==(const BasePoint& rhs) const noexcept
 {
 	return rhs.m_falloff == m_falloff && rhs.m_height == m_height && rhs.m_roughness == m_roughness;
 }
 
-bool BasePoint::operator!=(const BasePoint& rhs) const
+bool BasePoint::operator!=(const BasePoint& rhs) const noexcept
 {
 	return !(*this == rhs);
 }

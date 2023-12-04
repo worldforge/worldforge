@@ -62,19 +62,19 @@ public:
 		return (mEntity == nullptr);
 	}
 
-	bool operator==(const EmberEntityRef& e) const {
+	bool operator==(const EmberEntityRef& e) const noexcept {
 		return (mEntity == e.mEntity);
 	}
 
-	bool operator!=(const EmberEntityRef& e) const {
+	bool operator!=(const EmberEntityRef& e) const noexcept {
 		return (mEntity != e.mEntity);
 	}
 
-	bool operator!=(const EmberEntity* e) const {
+	bool operator!=(const EmberEntity* e) const noexcept {
 		return (mEntity != e);
 	}
 
-	bool operator<(const EmberEntityRef& e) const {
+	bool operator<(const EmberEntityRef& e) const noexcept {
 		return (mEntity < e.mEntity);
 	}
 

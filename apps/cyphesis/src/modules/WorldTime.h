@@ -54,8 +54,16 @@ class WorldTime {
     double seconds() const { return m_time.seconds(); }
     void update(int secs) { m_time.update(secs); }
     std::string operator[](const std::string & name) const;
-    bool operator==(const WorldTime & other) const;
-    bool operator==(const std::string & when) const;
+    bool operator==(const WorldTime & other) const noexcept;
+    bool operator!=(const WorldTime & other) const noexcept
+	{
+		return !operator==(other);
+	}
+    bool operator==(const std::string & when) const noexcept;
+    bool operator!=(const std::string & when) const noexcept
+	{
+		return !operator==(when);
+	}
 };
 
 #endif // MODULES_WORLD_TIME_H
