@@ -187,14 +187,14 @@ void SquallArchive::findFiles(std::regex* pattern,
 		if (!dirs || (*it).fileEntry.type != Squall::FileEntryType::DIRECTORY) {
 			if (!pattern || std::regex_match((*it).path.filename().string(), *pattern)) {
 				if (simpleList) {
-					simpleList->emplace_back((*it).path);
+					simpleList->emplace_back((*it).path.generic_string());
 				}
 				if (detailList) {
 					Ogre::FileInfo fi;
 					fi.archive = this;
-					fi.filename = (*it).path;
+					fi.filename = (*it).path.generic_string();
 					fi.basename = (*it).path.filename().generic_string();
-					fi.path = (*it).path.parent_path();
+					fi.path = (*it).path.parent_path().generic_string();
 					fi.compressedSize = (*it).fileEntry.size;
 					fi.uncompressedSize = fi.compressedSize;
 					detailList->emplace_back(std::move(fi));
