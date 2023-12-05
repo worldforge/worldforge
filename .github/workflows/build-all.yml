@@ -157,10 +157,10 @@ jobs:
                     echo "Building Snap"
                     cmake --build --preset conan-release  --parallel 4 --target snap-build-ember
 
-#            -   name: Build NSIS
-#                if: env.BUILD_EMBER_NSIS == 'true'
-#                shell: cmd
-#                run: makensis ${{github.workspace}}/build/apps/ember/Ember.nsi
+            -   name: Build NSIS
+                if: env.BUILD_EMBER_NSIS == 'true'
+                shell: cmd
+                run: makensis ${{github.workspace}}/build/apps/ember/Ember.nsi
 
             -   name: Downloading Cyphesis media
                 if: env.BUILD_SNAP == 'true'
@@ -191,11 +191,12 @@ jobs:
                     name: snap
                     path: ~/install/usr/*.snap
 
-#            -   name: Store NSIS
-#                uses: actions/upload-artifact@v3.1.2
-#                with:
-#                    name: NSIS
-#                    path: ${{github.workspace}}/*.exe
+            -   name: Store NSIS
+                if: env.BUILD_EMBER_NSIS == 'true'
+                uses: actions/upload-artifact@v3.1.2
+                with:
+                    name: NSIS
+                    path: ${{github.workspace}}/*.exe
 #
 #            -   name: Build AppImage
 #                if: env.BUILD_APPIMAGE == 'true'
