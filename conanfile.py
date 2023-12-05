@@ -24,7 +24,7 @@ class Worldforge(ConanFile):
     default_options = {
         "with_client": True,
         "with_server": True,
-        #Normally you don't want to build the actual metaserver server.
+        # Normally you don't want to build the actual metaserver server.
         "without_metaserver_server": True,
         # Skipped because we had issues building xz_utils, which is used by libunwind
         'sdl/*:libunwind': False,
@@ -57,8 +57,8 @@ class Worldforge(ConanFile):
             self.requires("ogre/13.4.2@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
-            self.requires("libunwind/1.7.2")
-
+            if not is_msvc(self):
+                self.requires("libunwind/1.7.2")
 
         if self.options.with_server:
             self.requires("worldforge-worlds/0.1.0@worldforge")
