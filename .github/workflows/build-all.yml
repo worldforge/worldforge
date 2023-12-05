@@ -141,7 +141,22 @@ jobs:
                         cmake --build --preset conan-release --parallel 4 --target check
                     fi
 
-            -   name: Install
+            -   name: Build AppImage
+                if: env.BUILD_APPIMAGE == 'true'
+                run: |
+                    echo "Installing Ember only first"
+                    cmake --install build/Release/apps/ember
+                    echo "Building AppImage"
+                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
+                    ln -s ~/install/usr/share/applications/org.worldforge.ember.desktop ~/install/
+                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/.DirIcon
+                    curl -L https://github.com/AppImage/AppImageKit/releases/download/13/AppRun-x86_64 > ~/install/AppRun
+                    chmod a+x ~/install/AppRun
+                    curl -L https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
+                    chmod a+x appimagetool-x86_64.AppImage
+                    ./appimagetool-x86_64.AppImage -n ~/install                    
+
+            -   name: Install all
                 shell: bash
                 run: cmake --build --preset conan-release --target install
 
@@ -197,27 +212,27 @@ jobs:
                 with:
                     name: NSIS
                     path: ${{github.workspace}}/build/apps/ember/*.exe
-#
-#            -   name: Build AppImage
-#                if: env.BUILD_APPIMAGE == 'true'
-#                working-directory: ${{github.workspace}}/build/Release
-#                run: |
-#                    echo "Building AppImage"
-#                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
-#                    ln -s ~/install/usr/share/applications/org.worldforge.ember.desktop ~/install/
-#                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/.DirIcon
-#                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/AppRun-x86_64 > ~/install/AppRun
-#                    chmod a+x ~/install/AppRun
-#                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
-#                    chmod a+x appimagetool-x86_64.AppImage
-#                    ./appimagetool-x86_64.AppImage -n ~/install
-#
-#            -   name: Store AppImage
-#                if: env.BUILD_APPIMAGE == 'true'
-#                uses: actions/upload-artifact@v3.1.2
-#                with:
-#                    name: AppImage
-#                    path: ${{github.workspace}}/build/Release/Ember-x86_64.AppImage
+            #
+            #            -   name: Build AppImage
+            #                if: env.BUILD_APPIMAGE == 'true'
+            #                working-directory: ${{github.workspace}}/build/Release
+            #                run: |
+            #                    echo "Building AppImage"
+            #                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/
+            #                    ln -s ~/install/usr/share/applications/org.worldforge.ember.desktop ~/install/
+            #                    ln -s ~/install/usr/share/icons/hicolor/64x64/apps/ember.png ~/install/.DirIcon
+            #                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/AppRun-x86_64 > ~/install/AppRun
+            #                    chmod a+x ~/install/AppRun
+            #                    curl -L https://github.com/AppImage/AppImageKit/releases/download/12/appimagetool-x86_64.AppImage > appimagetool-x86_64.AppImage
+            #                    chmod a+x appimagetool-x86_64.AppImage
+            #                    ./appimagetool-x86_64.AppImage -n ~/install
+            #
+            -   name: Store AppImage
+                if: env.BUILD_APPIMAGE == 'true'
+                uses: actions/upload-artifact@v3.1.2
+                with:
+                    name: AppImage
+                    path: Ember-x86_64.AppImage
 #
 #            -   name: Upload AppImage to amber
 #                if: env.BUILD_APPIMAGE == 'true'
