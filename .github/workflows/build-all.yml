@@ -16,6 +16,7 @@ env:
     PROFILE_CONAN: conan-release
     SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
     CI: 1 #This will turn off a couple of warnings in the build
+    SCCACHE_GHA_ENABLED: "true"
 
 jobs:
     build_unix:
@@ -48,10 +49,8 @@ jobs:
                         ~/install/usr/share/cyphesis/assets
                     key: worldforge-media
 
-            -   name: Use ccache
-                uses: hendrikmuhs/ccache-action@v1.2
-                with:
-                    key: ${{ github.job }}-${{ matrix.os }}
+            -   name: Use sccache
+                uses: mozilla-actions/sccache-action@v0.0.3
 
             -   name: "Install packages"
                 uses: awalsh128/cache-apt-pkgs-action@v1.3.1
@@ -126,7 +125,7 @@ jobs:
             -   name: Configure CMake
                 shell: bash
                 #The -DCMAKE_C_FLAGS="-s" will strip all executables, which we want because we want to provide a Snap package
-                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_FLAGS="-s" -DATLAS_GENERATE_OBJECTS=OFF -DATLAS_DISABLE_BENCHMARKS=ON
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache -DCMAKE_C_FLAGS="-s" -DATLAS_GENERATE_OBJECTS=OFF -DATLAS_DISABLE_BENCHMARKS=ON
 
             -   name: Build
                 shell: bash
