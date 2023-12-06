@@ -23,8 +23,8 @@
  * Local Includes
  */
 #include "MetaServer.hpp"
-#include "MetaServerPacket.hpp"
 #include "MetaServerHandlerUDP.hpp"
+#include "Network.h"
 
 /*
  * System Includes
@@ -33,17 +33,18 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <istream>
-#include <fstream>
 #include <boost/asio/placeholders.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+
 //#include <json/writer.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <fmt/ostream.h>
 
 template <> struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {};
+
 
 
 MetaServer::MetaServer()
@@ -576,7 +577,7 @@ MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 		spdlog::trace("processSERVERKEEPALIVE(): {}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
-		out.setAddress( in.getAddress() );
+		out.setAddress( in.getAddress() , in.getAddressInt());
 	}
 }
 
@@ -618,7 +619,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		if ( in.getSize() > 8 )
 		{
 			packed_ip = in.getIntData(8);
-			ip = MetaServerPacket::IpNetToAscii(packed_ip);
+			ip = IpNetToAscii(packed_ip);
 
 			ss2.str("");
 			ss2 << packed_ip;
@@ -687,7 +688,7 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 		}
 		else
 		{
-			std::string skey = MetaServerPacket::IpNetToAscii(key);
+			std::string skey = IpNetToAscii(key);
 			spdlog::trace("processTERMINATE-server({})({})", key, skey);
 			msdo.removeServerSession(skey);
 		}
@@ -711,7 +712,7 @@ MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
 		spdlog::trace("processCLIENTKEEPALIVE(){}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
-		out.setAddress( in.getAddress() );
+		out.setAddress( in.getAddress(), in.getAddressInt() );
 	}
 
 }
@@ -831,7 +832,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
     	spdlog::warn("Packed: {} vs Response: {}MISMATCH!", packed,resp_list.size());
     }
 
-	out.setAddress( in.getAddress() );
+	out.setAddress( in.getAddress(), in.getAddressInt() );
 	out.setPacketType(NMT_LISTRESP);
 
 	/**
@@ -1095,7 +1096,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			/*
 			 * Convert IP
 			 */
-			out.setAddress(MetaServerPacket::IpNetToAscii(in_addr));
+			out.setAddress(IpNetToAscii(in_addr), in_addr);
 			out.setPort(in_port);
 			msdo.addServerSession(out.getAddress());
 

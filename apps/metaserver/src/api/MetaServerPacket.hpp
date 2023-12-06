@@ -95,13 +95,13 @@ public:
 	MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
-	const NetMsgType getPacketType() const { return m_packetType; }
+	NetMsgType getPacketType() const { return m_packetType; }
 	void setPacketType(const NetMsgType& nmt);
 
-	const std::string getAddressStr() const { return m_AddressStr; }
-	const uint32_t getAddressInt() const { return m_AddressInt; }
-	const std::string getAddress() const { return m_AddressStr; }
-	void setAddress(const std::string& address);
+	std::string getAddressStr() const { return m_AddressStr; }
+	uint32_t getAddressInt() const { return m_AddressInt; }
+	std::string getAddress() const { return m_AddressStr; }
+	void setAddress(const std::string& address, uint32_t addressInt);
 
 	void setSequence(const unsigned long long seq = 0) { m_Sequence = seq; }
 	unsigned long long getSequence() const { return m_Sequence; }
@@ -120,11 +120,8 @@ public:
 	unsigned int addPacketData(uint32_t i);
 	unsigned int addPacketData(const std::string& s);
 
-	const std::string getPacketMessage(unsigned int offset) const;
+	std::string getPacketMessage(unsigned int offset) const;
 	uint32_t getIntData(unsigned int offset) const;
-
-	static uint32_t	IpAsciiToNet(const char *buffer);
-	static std::string IpNetToAscii(uint32_t address);
 
 	std::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
 	void setBuffer( std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )

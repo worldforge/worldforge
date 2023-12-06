@@ -24,6 +24,7 @@
  * Local Includes
  */
 #include "MetaServer.hpp"
+#include "Network.h"
 
 /*
  * System Includes
@@ -197,8 +198,8 @@ class MetaServer_unittest : public CppUnit::TestCase
     	 * match in size
     	 */
     	std::string inmsg;
-    	std::list<int> index;
-    	int index_total = 0;
+    	std::list<size_t> index;
+    	size_t index_total = 0;
     	for( int i = 1; i<=packet_commands; i++)
     	{
     		std::cout << "I: " << i << std::endl;
@@ -219,7 +220,7 @@ class MetaServer_unittest : public CppUnit::TestCase
     	CPPUNIT_ASSERT( inmsg.length() == index_total );
 
     	// check each item to make sure not minorly mangled
-        int offset = 0;
+        size_t offset = 0;
     	for(auto &i : index)
     	{
     		std::string j = inmsg.substr(offset,i);
@@ -259,10 +260,10 @@ class MetaServer_unittest : public CppUnit::TestCase
          */
         in.setPacketType(NMT_ADMINREQ);
         in.addPacketData(NMT_ADMINREQ_ADDSERVER);
-        in.addPacketData( in.IpAsciiToNet("127.0.2.1"));
+        in.addPacketData( IpAsciiToNet("127.0.2.1"));
         in.addPacketData( 12345 );
 
-        in.setAddress("123.123.123.123");
+        in.setAddress("123.123.123.123", IpAsciiToNet("123.123.123.123"));
         in.setPort(11111);
 
         MetaServer* ms = new MetaServer();

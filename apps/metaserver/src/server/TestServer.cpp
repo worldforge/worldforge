@@ -20,6 +20,7 @@
  */
 
 #include "MetaServer.hpp"
+#include "Network.h"
 #include <boost/asio/ip/udp.hpp>
 
 typedef std::vector <std::string> attribute_list;
@@ -124,7 +125,7 @@ int main(int argc, char** argv)
 		bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 		MetaServerPacket shake( recvBuffer, bytes_recvd );
-		shake.setAddress(sender_endpoint.address().to_string());
+		shake.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
 		shake.setPort(sender_endpoint.port());
 
 		unsigned int shake_key = shake.getIntData(4);
@@ -138,14 +139,14 @@ int main(int argc, char** argv)
 		if ( vm.count("pserver") )
 		{
 			std::string s = vm["pserver"].as<std::string>();
-			servershake.addPacketData( MetaServerPacket::IpAsciiToNet(s.c_str()) );
+			servershake.addPacketData( IpAsciiToNet(s.c_str()) );
 
 			if ( vm.count("pport") )
 			{
 				servershake.addPacketData(vm["pport"].as<int>());
 			}
 		}
-		servershake.setAddress( shake.getAddress() );
+		servershake.setAddress( shake.getAddress(), shake.getAddressInt() );
 		s.send_to(boost::asio::buffer(servershake.getBuffer(), servershake.getSize()), *iterator );
 
 		/**
@@ -198,7 +199,7 @@ int main(int argc, char** argv)
 			MetaServerPacket out;
 			servershake.setPacketType(NMT_SERVERSHAKE);
 			servershake.addPacketData(pkey);
-			servershake.setAddress( in.getAddress() );
+			servershake.setAddress( in.getAddress(), in.getAddressInt() );
 			s.send_to(boost::asio::buffer(out.getBuffer(), out.getSize()), *iterator );
 
 			std::cout << "Sleeping between keepalives : " << vm["keepalive-interval"].as<int>() << std::endl;
@@ -212,7 +213,7 @@ int main(int argc, char** argv)
 		sleep(5);
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
-		term.setAddress( shake.getAddress());
+		term.setAddress( shake.getAddress(), shake.getAddressInt());
 
 		/*
 		 * If a packed server has been specified (ie registration of a server
@@ -222,7 +223,7 @@ int main(int argc, char** argv)
 		if ( vm.count("pserver") )
 		{
 			std::string s = vm["pserver"].as<std::string>();
-			term.addPacketData( MetaServerPacket::IpAsciiToNet(s.c_str()) );
+			term.addPacketData( IpAsciiToNet(s.c_str()) );
 		}
 
 		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );

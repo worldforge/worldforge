@@ -23,6 +23,7 @@
 
 #include "MetaServer.hpp"
 #include "MetaServerPacket.hpp"
+#include "Network.h"
 
 #include <cppunit/TestCase.h>
 #include <cppunit/TestRunner.h>
@@ -234,10 +235,8 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     void test_IpAsciiToNet_returnmatch()
     {
     	uint32_t r;
-    	MetaServerPacket * msp = new MetaServerPacket();
 
-    	r = msp->IpAsciiToNet("127.0.2.1");
-    	delete msp;
+    	r = IpAsciiToNet("127.0.2.1");
 
     	CPPUNIT_ASSERT( r == 16908415 );
 
@@ -249,10 +248,8 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     void test_IpNetToAscii()
     {
     	std::string r;
-    	MetaServerPacket * msp = new MetaServerPacket();
 
-    	r = msp->IpNetToAscii(16908415);
-    	delete msp;
+    	r = IpNetToAscii(16908415);
 
     	CPPUNIT_ASSERT( r == "127.0.2.1");
     }
@@ -266,7 +263,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	MetaServerPacket * msp = new MetaServerPacket();
 
-    	msp->setAddress( a );
+    	msp->setAddress( a, IpAsciiToNet(a.c_str()) );
 
     	CPPUNIT_ASSERT( a == msp->getAddress() );
 
@@ -282,7 +279,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	MetaServerPacket * msp = new MetaServerPacket();
 
-    	msp->setAddress( "127.0.2.1" );
+    	msp->setAddress( "127.0.2.1", IpAsciiToNet("127.0.2.1") );
 
     	CPPUNIT_ASSERT( msp->getAddressStr() == "127.0.2.1" );
 
@@ -297,7 +294,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     {
     	MetaServerPacket * msp = new MetaServerPacket();
 
-    	msp->setAddress( "127.0.2.1" );
+    	msp->setAddress( "127.0.2.1", IpAsciiToNet("127.0.2.1") );
 
     	CPPUNIT_ASSERT( msp->getAddressInt() == 16908415 );
 
@@ -412,8 +409,8 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     	uint32_t ip_n = 0;
     	std::string ip_s = "";
 
-    	ip_n = MetaServerPacket::IpAsciiToNet("127.0.2.1");
-    	ip_s = MetaServerPacket::IpNetToAscii(16908415);
+    	ip_n = IpAsciiToNet("127.0.2.1");
+    	ip_s = IpNetToAscii(16908415);
 
     	CPPUNIT_ASSERT(ip_s == "127.0.2.1" );
     	CPPUNIT_ASSERT(ip_n == 16908415 );

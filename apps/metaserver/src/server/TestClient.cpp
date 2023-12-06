@@ -21,6 +21,18 @@
 
 #include "MetaServer.hpp"
 #include <boost/asio/ip/udp.hpp>
+#include <arpa/inet.h>
+
+namespace {
+std::string
+IpNetToAscii(uint32_t address) {
+	  std::array<char, INET_ADDRSTRLEN> chars{};
+	  inet_ntop(AF_INET, &address, chars.data(), INET_ADDRSTRLEN);
+	  return {chars.data()};
+}
+}
+
+
 typedef std::vector <std::string> attribute_list;
 
 int main(int argc, char** argv)
@@ -33,7 +45,7 @@ int main(int argc, char** argv)
 	boost::program_options::options_description desc( "TestClient" );
 	boost::program_options::variables_map vm;
 	boost::asio::io_service io_service;
-	std::array<char, MAX_PACKET_BYTES> recvBuffer;
+	std::array<char, MAX_PACKET_BYTES> recvBuffer{};
 	boost::asio::ip::udp::endpoint sender_endpoint;
 	size_t bytes_recvd;
 
@@ -125,7 +137,7 @@ int main(int argc, char** argv)
 			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 			MetaServerPacket shake( recvBuffer, bytes_recvd );
-			shake.setAddress(sender_endpoint.address().to_string());
+			shake.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
 			shake.setPort(sender_endpoint.port());
 			std::cout << "Got handshake ... ";
 
@@ -137,7 +149,7 @@ int main(int argc, char** argv)
 			MetaServerPacket clientshake;
 			clientshake.setPacketType(NMT_CLIENTSHAKE);
 			clientshake.addPacketData(shake_key);
-			clientshake.setAddress( shake.getAddress() );
+			clientshake.setAddress( shake.getAddress() , shake.getAddressInt());
 			s.send_to(boost::asio::buffer(clientshake.getBuffer(), clientshake.getSize()), *iterator );
 			std::cout << "Sending registration." << std::endl;
 			//std::cout << "Sleeping between keepalives : 2s" << std::endl;
@@ -228,14 +240,14 @@ int main(int argc, char** argv)
 
 			req.setPacketType(NMT_LISTREQ);
 			req.addPacketData(from);
-			req.setAddress( sender_endpoint.address().to_string() );
+			req.setAddress( sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint() );
 			req.setPort( sender_endpoint.port() );
 			s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator );
 
 			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
 
 			MetaServerPacket resp( recvBuffer, bytes_recvd );
-			resp.setAddress(sender_endpoint.address().to_string());
+			resp.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
 			resp.setPort(sender_endpoint.port());
 
 			if ( resp.getPacketType() != NMT_LISTRESP || resp.getPacketType() == NMT_PROTO_ERANGE )
@@ -252,7 +264,7 @@ int main(int argc, char** argv)
 				//std::cout << "     " << count << " / " << offset << " == ";
 				uint32_t ip = resp.getIntData(offset);
 				//std::cout << ip << std::endl;
-				std::cout << "Server: " << resp.IpNetToAscii(ip) << std::endl;
+				std::cout << "Server: " << IpNetToAscii(ip) << std::endl;
 			}
 			from += packed;
 		}
@@ -264,7 +276,7 @@ int main(int argc, char** argv)
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
 		term.addPacketData(0); // increase size of term packet to indicate client
-		term.setAddress( sender_endpoint.address().to_string() );
+		term.setAddress( sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint() );
 		term.setPort( sender_endpoint.port() );
 		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
 

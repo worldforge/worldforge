@@ -5,6 +5,7 @@ set(DESCRIPTION "The Worldforge metaserver.")
 
 include(GNUInstallDirs)
 
+add_compile_definitions(SYSCONFDIR="${CMAKE_INSTALL_FULL_SYSCONFDIR}")
 
 add_subdirectory(src)
 add_subdirectory(tests)

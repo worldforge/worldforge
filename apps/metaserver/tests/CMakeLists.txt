@@ -1,6 +1,12 @@
 include_directories(../src/server ../src/api)
 
 if (BUILD_METASERVER_SERVER)
+
+    find_package(Boost
+            1.83.0
+            REQUIRED
+            COMPONENTS program_options filesystem)
+
     add_executable(MetaServer_unittest
             MetaServer_unittest.cpp
             ../src/server/MetaServer.cpp

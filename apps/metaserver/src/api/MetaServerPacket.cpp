@@ -29,6 +29,7 @@ MetaServerPacket::MetaServerPacket() :
 		  m_AddressInt(0),
 		  m_Port(0),
 		  m_Bytes(0),
+		  m_packetPayload{},
 		  m_needFree(true),
 		  m_outBound(false),
 		  m_Sequence(0),
@@ -67,11 +68,7 @@ MetaServerPacket::MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, 
 		}
 }
 
-MetaServerPacket::~MetaServerPacket()
-{
-
-	 //delete m_packetPayload.c_array();
-}
+MetaServerPacket::~MetaServerPacket() = default;
 
 void
 MetaServerPacket::setPacketType(const NetMsgType& nmt)
@@ -92,7 +89,7 @@ MetaServerPacket::setPacketType(const NetMsgType& nmt)
 }
 
 void
-MetaServerPacket::setAddress(const std::string& address)
+MetaServerPacket::setAddress(const std::string& address, uint32_t addressInt)
 {
 
 	/*
@@ -106,7 +103,7 @@ MetaServerPacket::setAddress(const std::string& address)
 	 */
 
 		m_AddressStr = address;
-		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
+		m_AddressInt = addressInt;
 
 }
 
@@ -126,7 +123,7 @@ MetaServerPacket::addPacketData(const std::string& s)
 	return ret_off;
 }
 
-const std::string
+std::string
 MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
 	// Just initialise local variable for debug purposes
@@ -142,33 +139,6 @@ MetaServerPacket::getIntData(unsigned int offset) const
 	uint32_t tmpint = 222;
 	unpack_uint32(&tmpint, m_readPtr + offset );
 	return tmpint;
-}
-
-/*
- * This is the original metaserver way
- * This ... is stupid IMO, metaserver expects from
- * 127.0.2.1
- *
- * String value	1.2.0.127
-   Binary	00000001 . 00000010 . 00000000 . 01111111
-   Integer	16908415
- */
-uint32_t
-MetaServerPacket::IpAsciiToNet(const char *buffer) {
-
-  uint32_t ret = 0;
-  int shift = 0;  //  fill out the MSB first
-  bool startQuad = true;
-  while ((shift <= 24) && (*buffer)) {
-    if (startQuad) {
-      unsigned char quad = (unsigned char) atoi(buffer);
-      ret |= (((uint32_t)quad) << shift);
-      shift += 8;
-    }
-    startQuad = (*buffer == '.');
-    ++buffer;
-  }
-  return ret;
 }
 
 /*  This is the correct way to do things.
@@ -195,27 +165,6 @@ MetaServerPacket::IpAsciiToNet(const char *buffer) {
 }
 */
 
-
-std::string
-MetaServerPacket::IpNetToAscii(uint32_t address) {
-  const int sizer = 15;
-  char ip_buffer[20];
-
-   /**
-    *  This is the "correct way" of doing things
-
-   snprintf(ip_buffer, sizer, "%u.%u.%u.%u", (address>>24)&0xFF,
-        (address>>16)&0xFF, (address>>8)&0xFF, (address>>0)&0xFF);
-	*/
-
-   /**
-    *  This is the old ms way ...
-    */
-   snprintf(ip_buffer, sizer, "%u.%u.%u.%u", (address>>0)&0xFF,
-       (address>>8)&0xFF, (address>>16)&0xFF, (address>>24)&0xFF);
-
-   return ( std::string(ip_buffer));
-}
 
 /**
  * Pulls out the first byte of a packet, which universally indicates the packet type.
