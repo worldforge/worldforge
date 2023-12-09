@@ -42,7 +42,7 @@ class Worldforge(ConanFile):
             self.options.with_server = False
 
     def requirements(self):
-        self.requires("bullet3/2.89")
+
         self.requires("libsigcpp/3.0.7")
         self.requires("libcurl/8.4.0")
         self.requires("spdlog/1.12.0")
@@ -51,6 +51,9 @@ class Worldforge(ConanFile):
 
         self.requires("zlib/1.3")
         self.requires("bzip2/1.0.8")
+
+        if self.options.with_client or self.options.with_server:
+            self.requires("bullet3/2.89")
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
