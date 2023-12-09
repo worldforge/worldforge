@@ -8,8 +8,9 @@ add_library(cyphesis-navigation
 
 target_link_libraries(cyphesis-navigation PUBLIC
         cyphesis-rulesai
-        external-Detour
+        external-DetourCrowd
         external-DetourTileCache
+        external-Detour
         external-Recast
         external-remotery
 )

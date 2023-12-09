@@ -17,7 +17,6 @@
 //
 
 #include <float.h>
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -41,7 +40,7 @@ bool rcErodeWalkableArea(rcContext* ctx, int radius, rcCompactHeightfield& chf)
 	const int w = chf.width;
 	const int h = chf.height;
 	
-	ctx->startTimer(RC_TIMER_ERODE_AREA);
+	rcScopedTimer timer(ctx, RC_TIMER_ERODE_AREA);
 	
 	unsigned char* dist = (unsigned char*)rcAlloc(sizeof(unsigned char)*chf.spanCount, RC_ALLOC_TEMP);
 	if (!dist)
@@ -215,8 +214,6 @@ bool rcErodeWalkableArea(rcContext* ctx, int radius, rcCompactHeightfield& chf)
 	
 	rcFree(dist);
 	
-	ctx->stopTimer(RC_TIMER_ERODE_AREA);
-	
 	return true;
 }
 
@@ -245,7 +242,7 @@ bool rcMedianFilterWalkableArea(rcContext* ctx, rcCompactHeightfield& chf)
 	const int w = chf.width;
 	const int h = chf.height;
 	
-	ctx->startTimer(RC_TIMER_MEDIAN_AREA);
+	rcScopedTimer timer(ctx, RC_TIMER_MEDIAN_AREA);
 	
 	unsigned char* areas = (unsigned char*)rcAlloc(sizeof(unsigned char)*chf.spanCount, RC_ALLOC_TEMP);
 	if (!areas)
@@ -306,8 +303,6 @@ bool rcMedianFilterWalkableArea(rcContext* ctx, rcCompactHeightfield& chf)
 	memcpy(chf.areas, areas, sizeof(unsigned char)*chf.spanCount);
 	
 	rcFree(areas);
-
-	ctx->stopTimer(RC_TIMER_MEDIAN_AREA);
 	
 	return true;
 }
@@ -322,7 +317,7 @@ void rcMarkBoxArea(rcContext* ctx, const float* bmin, const float* bmax, unsigne
 {
 	rcAssert(ctx);
 	
-	ctx->startTimer(RC_TIMER_MARK_BOX_AREA);
+	rcScopedTimer timer(ctx, RC_TIMER_MARK_BOX_AREA);
 
 	int minx = (int)((bmin[0]-chf.bmin[0])/chf.cs);
 	int miny = (int)((bmin[1]-chf.bmin[1])/chf.ch);
@@ -357,9 +352,6 @@ void rcMarkBoxArea(rcContext* ctx, const float* bmin, const float* bmax, unsigne
 			}
 		}
 	}
-
-	ctx->stopTimer(RC_TIMER_MARK_BOX_AREA);
-
 }
 
 
@@ -391,7 +383,7 @@ void rcMarkConvexPolyArea(rcContext* ctx, const float* verts, const int nverts,
 {
 	rcAssert(ctx);
 	
-	ctx->startTimer(RC_TIMER_MARK_CONVEXPOLY_AREA);
+	rcScopedTimer timer(ctx, RC_TIMER_MARK_CONVEXPOLY_AREA);
 
 	float bmin[3], bmax[3];
 	rcVcopy(bmin, verts);
@@ -448,8 +440,6 @@ void rcMarkConvexPolyArea(rcContext* ctx, const float* verts, const int nverts,
 			}
 		}
 	}
-
-	ctx->stopTimer(RC_TIMER_MARK_CONVEXPOLY_AREA);
 }
 
 int rcOffsetPoly(const float* verts, const int nverts, const float offset,
@@ -541,7 +531,7 @@ void rcMarkCylinderArea(rcContext* ctx, const float* pos,
 {
 	rcAssert(ctx);
 	
-	ctx->startTimer(RC_TIMER_MARK_CYLINDER_AREA);
+	rcScopedTimer timer(ctx, RC_TIMER_MARK_CYLINDER_AREA);
 	
 	float bmin[3], bmax[3];
 	bmin[0] = pos[0] - r;
@@ -597,6 +587,4 @@ void rcMarkCylinderArea(rcContext* ctx, const float* pos,
 			}
 		}
 	}
-	
-	ctx->stopTimer(RC_TIMER_MARK_CYLINDER_AREA);
 }

@@ -6,11 +6,10 @@ add_library(ember-navigation OBJECT
         AwarenessUtils.h)
 
 target_link_libraries(ember-navigation PUBLIC
-        ember-Detour
-        ember-DetourTileCache
         external-Detour
-        external-Recast
+        external-DetourCrowd
         external-DetourTileCache
+        external-Recast
         eris
         wfmath
 )

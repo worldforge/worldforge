@@ -48,18 +48,18 @@
 #include "DetourTileCacheBuilder.h"
 #include <string.h>
 
-namespace Ember {
-namespace Navigation {
+
+namespace Ember::Navigation {
 
 struct FastLZCompressor : public dtTileCacheCompressor {
-	virtual ~FastLZCompressor() = default;
+	~FastLZCompressor() override = default;
 
 	int maxCompressedSize(const int bufferSize) override {
 		return (int) ((float) bufferSize * 1.05f);
 	}
 
 	dtStatus compress(const unsigned char* buffer, const int bufferSize, unsigned char* compressed, const int /*maxCompressedSize*/, int* compressedSize) override {
-		*compressedSize = fastlz_compress((void*) buffer, bufferSize, compressed);
+		*compressedSize = fastlz_compress((const void*) buffer, bufferSize, compressed);
 		return DT_SUCCESS;
 	}
 
@@ -71,16 +71,16 @@ struct FastLZCompressor : public dtTileCacheCompressor {
 
 struct LinearAllocator : public dtTileCacheAlloc {
 	unsigned char* buffer;
-	int capacity;
-	int top;
-	int high;
+	size_t capacity;
+	size_t top;
+	size_t high;
 
 	explicit LinearAllocator(const int cap) :
 			buffer(nullptr), capacity(0), top(0), high(0) {
 		resize(cap);
 	}
 
-	virtual ~LinearAllocator() {
+	~LinearAllocator() override {
 		dtFree(buffer);
 	}
 
@@ -96,7 +96,7 @@ struct LinearAllocator : public dtTileCacheAlloc {
 		top = 0;
 	}
 
-	void* alloc(const int size) override {
+	void* alloc(const size_t size) override {
 		if (!buffer)
 			return nullptr;
 		if (top + size > capacity)
@@ -115,7 +115,7 @@ struct MeshProcess : public dtTileCacheMeshProcess {
 
 	inline MeshProcess() = default;
 
-	virtual ~MeshProcess() = default;
+	~MeshProcess() override = default;
 
 	void process(struct dtNavMeshCreateParams* params, unsigned char* polyAreas, unsigned short* polyFlags) override {
 		// Update poly flags from areas.
@@ -171,6 +171,6 @@ struct RasterizationContext {
 };
 
 }
-}
+
 
 #endif /* AWARENESSUTILS_H_ */

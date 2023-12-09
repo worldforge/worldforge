@@ -21,7 +21,7 @@ target_sources(ember PRIVATE
         $<TARGET_OBJECTS:external-tinyxml>
         $<TARGET_OBJECTS:external-binreloc>
         $<TARGET_OBJECTS:external-DetourTileCache>
-        $<TARGET_OBJECTS:external-Detour>
+        $<TARGET_OBJECTS:external-DetourCrowd>
         $<TARGET_OBJECTS:external-Recast>)
 
 target_link_libraries(ember
@@ -30,6 +30,7 @@ target_link_libraries(ember
         mercator
         ember-external-mojoal
         ember-external-CEGUITinyXMLParser
+        external-Detour
         Boost::url
         ${BULLET_LIBRARIES})
 

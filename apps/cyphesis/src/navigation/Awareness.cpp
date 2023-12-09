@@ -57,6 +57,9 @@
 #include "AwarenessUtils.h"
 
 #include "IHeightProvider.h"
+#include "common/debug.h"
+
+#include "rules/ai/MemEntity.h"
 
 #include "DetourNavMesh.h"
 #include "DetourNavMeshQuery.h"
@@ -65,10 +68,6 @@
 #include "DetourTileCacheBuilder.h"
 #include "DetourCommon.h"
 #include "DetourObstacleAvoidance.h"
-
-#include "common/debug.h"
-
-#include "rules/ai/MemEntity.h"
 
 #include "Remotery.h"
 
