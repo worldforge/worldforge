@@ -49,9 +49,10 @@ link_libraries(
         Boost::filesystem
         readline::readline
         external-dirmonitor
+        external-DetourTileCache
+        external-DetourCrowd
         external-Detour
         external-Recast
-        external-DetourTileCache
         libxdg-basedir::libxdg-basedir
         libgcrypt::libgcrypt
         spdlog::spdlog
