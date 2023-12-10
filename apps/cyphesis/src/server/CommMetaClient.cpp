@@ -77,10 +77,11 @@ int CommMetaClient::setup(const std::string & mserver)
      */
     updateAttributes();
 
-    ip::udp::resolver::query query(ip::udp::v4(), m_server, "8453");
+    ip::udp::resolver::query query(ip::udp::v4(), mserver, "8453");
     mResolver.async_resolve(query,
-            [this](boost::system::error_code ec, ip::udp::resolver::iterator iterator ) {
+            [this, mserver](boost::system::error_code ec, ip::udp::resolver::iterator iterator ) {
                 if (!ec) {
+					spdlog::debug("Connected to meta server at {}.", mserver);
                     mHasEndpoint = true;
                     mDestination = *iterator;
                     this->metaserverKeepalive();
@@ -139,6 +140,7 @@ void CommMetaClient::metaserverKeepalive()
 
     keep->setPacketType(NMT_SERVERKEEPALIVE);
 
+	spdlog::trace("Sending keep-alive to meta server.");
     mSocket.async_send_to(buffer(keep->getBuffer().data(), keep->getSize()),
             mDestination,
             [this, keep](boost::system::error_code ec, std::size_t length)
@@ -200,7 +202,7 @@ void CommMetaClient::metaserverTerminate()
             mSocket.send_to(buffer(term->getBuffer().data(), term->getSize()), mDestination);
         } catch (const std::exception& e) {
             //This isn't fatal
-            spdlog::info("Got error when trying to send data to the metaserver at shutdown: {}", e.what());
+            spdlog::info("Got error when trying to send data to the meta server at shutdown: {}", e.what());
         }
     }
 }

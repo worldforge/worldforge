@@ -211,7 +211,7 @@ namespace {
     {
         std::unique_ptr<CommMetaClient> cmc;
         if (useMetaserver) {
-			spdlog::debug("Trying to connect to meta server.");
+			spdlog::debug("Trying to connect to meta server at {}.", mserver);
             cmc = std::make_unique<CommMetaClient>(io_context);
             if (cmc->setup(mserver) != 0) {
                 spdlog::error("Error creating meta server comm channel.");
