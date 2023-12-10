@@ -44,14 +44,16 @@ static const bool debug_flag = false;
 ///
 /// @param svr Reference to the object that manages all socket communication.
 CommMetaClient::CommMetaClient(io_context& ioService) :
-        mSocket(ioService, ip::udp::endpoint(ip::udp::v4(), 0)), mKeepaliveTimer(
-                ioService), mResolver(ioService), mHasEndpoint(false), m_heartbeatTime(300)
+        mSocket(ioService, ip::udp::endpoint(ip::udp::v4(), 0)),
+		mKeepaliveTimer(ioService),
+		mResolver(ioService),
+		mHasEndpoint(false),
+		mReadBuffer{},
+		m_heartbeatTime(300)
 {
 }
 
-CommMetaClient::~CommMetaClient()
-{
-}
+CommMetaClient::~CommMetaClient()= default;
 
 /// \brief Set the target address if the communication socket.
 ///
@@ -106,11 +108,7 @@ void CommMetaClient::do_receive()
 void CommMetaClient::keepalive()
 {
 
-#if BOOST_VERSION >= 106600
     mKeepaliveTimer.expires_after(std::chrono::seconds(m_heartbeatTime));
-#else
-    mKeepaliveTimer.expires_from_now(std::chrono::seconds(m_heartbeatTime));
-#endif
     mKeepaliveTimer.async_wait([this](boost::system::error_code ec)
     {
         if (!ec)
@@ -170,8 +168,7 @@ void CommMetaClient::metaserverReply(size_t packet_size)
     if(shake.getPacketType() == NMT_HANDSHAKE )
     {
         uint32_t handshake = shake.getIntData(4); // we know 4 bytes for type, and 4 for shake
-        cy_debug_print("MetaServer contacted successfully."
-                       )
+        spdlog::debug("MetaServer contacted successfully.");
 
         auto servershake = std::make_shared<MetaServerPacket>();
         servershake->setPacketType(NMT_SERVERSHAKE);
@@ -179,7 +176,7 @@ void CommMetaClient::metaserverReply(size_t packet_size)
 
 
         mSocket.async_send_to(buffer(servershake->getBuffer().data(), servershake->getSize()),mDestination,
-                [this, servershake](boost::system::error_code ec, std::size_t length){});
+                [servershake](boost::system::error_code ec, std::size_t length){});
 
 
     }
@@ -220,7 +217,7 @@ void CommMetaClient::metaserverAttribute(const std::string& k, const std::string
 
 
     mSocket.async_send_to(buffer(m->getBuffer().data(), m->getSize()), mDestination,
-            [this, m](boost::system::error_code ec, std::size_t length){});
+            [m](boost::system::error_code ec, std::size_t length){});
 }
 
 /// \brief Read attributes from config and monitor

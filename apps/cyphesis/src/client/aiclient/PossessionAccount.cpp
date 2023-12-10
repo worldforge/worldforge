@@ -174,7 +174,7 @@ void PossessionAccount::externalOperation(const Operation& op, Link&)
 
 void PossessionAccount::PossessOperation(const Operation& op, OpVector& res)
 {
-    cy_debug_print("Got possession request.")
+    spdlog::trace("Got possession request.");
 
     auto args = op->getArgs();
     if (!args.empty()) {
