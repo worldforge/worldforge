@@ -420,17 +420,10 @@ void Meta::processCmd() {
 			while (m_packed--) {
 				uint32_t ip;
 				m_dataPtr = unpack_uint32(ip, m_dataPtr);
-
-				char buf[32];
-				snprintf(buf, 32, "%u.%u.%u.%u",
-						 (ip & 0x000000FF),
-						 (ip & 0x0000FF00) >> 8u,
-						 (ip & 0x00FF0000) >> 16u,
-						 (ip & 0xFF000000) >> 24u
-				);
+				auto ipAsString = boost::asio::ip::address_v4(ip).to_string();
 
 				// FIXME  - decide whether a reverse name lookup is necessary here or not
-				m_gameServers.push_back(ServerInfo{buf});
+				m_gameServers.emplace_back(ServerInfo{ipAsString});
 			}
 
 			if (m_gameServers.size() < m_totalServers) {

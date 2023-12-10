@@ -257,7 +257,7 @@ end
 
 function ServerBrowser:addRow(sInfo)
 	if self.hideOldServers then
-		if Ember.MetaserverService:compareVersions(self.minimumVersion, sInfo.version) > 0 then
+		if Ember.MetaserverService.compareVersions(self.minimumVersion, sInfo.version) > 0 then
 			return
 		end
 	end
@@ -274,10 +274,10 @@ function ServerBrowser:addRow(sInfo)
 	local item = Ember.OgreView.Gui.ColouredListItem.new(sInfo.name)
 	self.serverList:setItem(item, 1, rowNumber)
 
-	local item = Ember.OgreView.Gui.ColouredListItem.new(sInfo.ping)
+	local item = Ember.OgreView.Gui.ColouredListItem.new(tostring(sInfo.ping))
 	self.serverList:setItem(item, 2, rowNumber)
 
-	local item = Ember.OgreView.Gui.ColouredListItem.new(sInfo.clients)
+	local item = Ember.OgreView.Gui.ColouredListItem.new(tostring(sInfo.clients))
 	self.serverList:setItem(item, 3, rowNumber)
 
 	local item = Ember.OgreView.Gui.ColouredListItem.new(sInfo.ruleset)
