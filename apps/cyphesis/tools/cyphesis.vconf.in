@@ -20,7 +20,8 @@ tcpport=6767
 restricted="false"
 # Register server with the meta server
 usemetaserver="true"
-metaserver="metaserver.worldforge.org"
+#metaserver="metaserver.worldforge.org"
+metaserver="amber.worldforge.org"
 # How often to check in with the metaserver
 msheartbeat=240
 # additional attributes to send to MS of Monitor Variables
