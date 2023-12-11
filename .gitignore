@@ -5,6 +5,7 @@
 # Ignore desktop files
 .directory
 .idea
+!.idea/codeStyles
 build
 cmake-*
 CMakeUserPresets.json
