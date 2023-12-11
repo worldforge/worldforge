@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 		std::stringstream port_str;
 		port_str << vm["port"].as<int>();
 
-		boost::asio::ip::udp::socket s(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
+		boost::asio::ip::udp::socket socket(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 		boost::asio::ip::udp::resolver resolver(io_service);
 		boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), vm["server"].as<std::string>(), port_str.str() );
 		boost::asio::ip::udp::resolver::iterator iterator = resolver.resolve(query);
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 		 */
 		MetaServerPacket keep;
 		keep.setPacketType(NMT_SERVERKEEPALIVE);
-		s.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator );
+		socket.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator );
 
 		/**
 		 *    1.2 - receive handshake
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 		boost::asio::ip::udp::endpoint sender_endpoint;
 		size_t bytes_recvd;
 
-		bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
+		bytes_recvd = socket.receive_from(boost::asio::buffer(recvBuffer), sender_endpoint );
 
 		MetaServerPacket shake( recvBuffer, bytes_recvd );
 		shake.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
@@ -138,8 +138,8 @@ int main(int argc, char** argv)
 		servershake.addPacketData(shake_key);
 		if ( vm.count("pserver") )
 		{
-			std::string s = vm["pserver"].as<std::string>();
-			servershake.addPacketData( IpAsciiToNet(s.c_str()) );
+			std::string pserver = vm["pserver"].as<std::string>();
+			servershake.addPacketData( IpAsciiToNet(pserver.c_str()) );
 
 			if ( vm.count("pport") )
 			{
@@ -147,7 +147,7 @@ int main(int argc, char** argv)
 			}
 		}
 		servershake.setAddress( shake.getAddress(), shake.getAddressInt() );
-		s.send_to(boost::asio::buffer(servershake.getBuffer(), servershake.getSize()), *iterator );
+		socket.send_to(boost::asio::buffer(servershake.getBuffer(), servershake.getSize()), *iterator );
 
 		/**
 		 *  Step 2 : register attributes if any
@@ -162,16 +162,16 @@ int main(int argc, char** argv)
 				if( pos != std::string::npos )
 				{
 					std::string n = ele.substr(0,pos);
-					std::string v = ele.substr(pos+1);
+					std::string value = ele.substr(pos + 1);
 					std::cout << " register: " << n << std::endl;
-					std::cout << "    value: " << v << std::endl;
+					std::cout << "    value: " << value << std::endl;
 					MetaServerPacket a;
 					a.setPacketType(NMT_SERVERATTR);
 					a.addPacketData(n.length());
-					a.addPacketData(v.length());
+					a.addPacketData(value.length());
 					a.addPacketData(n);
-					a.addPacketData(v);
-					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator );
+					a.addPacketData(value);
+					socket.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator );
 				}
 				else
 				{
@@ -188,10 +188,10 @@ int main(int argc, char** argv)
 		{
 
 			// 1.1
-			s.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator );
+			socket.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator );
 
 			// 1.2
-			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
+			bytes_recvd = socket.receive_from(boost::asio::buffer(recvBuffer), sender_endpoint );
 			MetaServerPacket in(recvBuffer, bytes_recvd );
 			unsigned int pkey = in.getIntData(4);
 
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 			servershake.setPacketType(NMT_SERVERSHAKE);
 			servershake.addPacketData(pkey);
 			servershake.setAddress( in.getAddress(), in.getAddressInt() );
-			s.send_to(boost::asio::buffer(out.getBuffer(), out.getSize()), *iterator );
+			socket.send_to(boost::asio::buffer(out.getBuffer(), out.getSize()), *iterator );
 
 			std::cout << "Sleeping between keepalives : " << vm["keepalive-interval"].as<int>() << std::endl;
 			sleep( vm["keepalive-interval"].as<int>() );
@@ -222,15 +222,15 @@ int main(int argc, char** argv)
 		 */
 		if ( vm.count("pserver") )
 		{
-			std::string s = vm["pserver"].as<std::string>();
-			term.addPacketData( IpAsciiToNet(s.c_str()) );
+			std::string pserver = vm["pserver"].as<std::string>();
+			term.addPacketData( IpAsciiToNet(pserver.c_str()) );
 		}
 
-		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
+		socket.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
 
 
 	}
-	catch (std::exception& e)
+	catch (const std::exception& e)
 	{
 		std::cerr << "Exception: " << e.what() << std::endl;
 	}
