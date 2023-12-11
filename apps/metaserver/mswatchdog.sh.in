@@ -25,8 +25,8 @@
 #
 
 TIME=$(date)
-MSHOME=@CMAKE_INSTALL_FULL_PREFIX@
-CONF=@CMAKE_INSTALL_FULL_PREFIX@/etc/metaserver-ng.conf
+MSHOME=@CMAKE_INSTALL_PREFIX@
+CONF=@CMAKE_INSTALL_PREFIX@/etc/metaserver-ng.conf
 
 if [[ -f ~/.metaserver-ng.conf ]]; then
 	CONF=~/.metaserver-ng.conf;
