@@ -29,41 +29,47 @@
 #include <memory>
 
 
-
 class LocatedEntity;
+
 class EntityKit;
+
 class Entity;
 
 
 /// \brief Builder to handle the creation of all entities for the world.
 class EntityBuilder : public EntityCreator {
-  protected:
+protected:
 
-    std::map<std::string, std::unique_ptr<EntityKit>> m_entityFactories;
+	std::map<std::string, std::unique_ptr<EntityKit>> m_entityFactories;
 
-  public:
-    explicit EntityBuilder();
-    virtual ~EntityBuilder();
+public:
+	explicit EntityBuilder();
 
-    int installFactory(const std::string & class_name,
-                       const Atlas::Objects::Root & class_desc,
-                       std::unique_ptr<EntityKit> factory);
-    EntityKit * getClassFactory(const std::string & class_name) const;
-    Ref<Entity> newEntity(RouterId id,
-                              const std::string & type,
-                              const Atlas::Objects::Entity::RootEntity & attrs) const override;
-    Ref<Entity> newChildEntity(RouterId id,
-                              const std::string & type,
-                              const Atlas::Objects::Entity::RootEntity & attrs) const;
+	virtual ~EntityBuilder();
 
-    void installBaseFactory(const std::string & class_name,
-                            const std::string & parent,
-                            std::unique_ptr<EntityKit> factory);
-    void flushFactories();
+	int installFactory(const std::string& class_name,
+					   const Atlas::Objects::Root& class_desc,
+					   std::unique_ptr<EntityKit> factory);
 
-    const std::map<std::string, std::unique_ptr<EntityKit>>& getFactories() const {
-        return m_entityFactories;
-    }
+	EntityKit* getClassFactory(const std::string& class_name) const;
+
+	Ref<Entity> newEntity(RouterId id,
+						  const std::string& type,
+						  const Atlas::Objects::Entity::RootEntity& attrs) const override;
+
+	Ref<Entity> newChildEntity(RouterId id,
+							   const std::string& type,
+							   const Atlas::Objects::Entity::RootEntity& attrs) const;
+
+	void installBaseFactory(const std::string& class_name,
+							const std::string& parent,
+							std::unique_ptr<EntityKit> factory);
+
+	void flushFactories();
+
+	const std::map<std::string, std::unique_ptr<EntityKit>>& getFactories() const {
+		return m_entityFactories;
+	}
 
 };
 

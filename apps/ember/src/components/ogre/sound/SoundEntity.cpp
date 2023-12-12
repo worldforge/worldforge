@@ -24,8 +24,8 @@
 #include "components/ogre/model/ModelDefinition.h"
 #include "domain/EmberEntity.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 SoundEntity::SoundEntity(EmberEntity& parentEntity)
 		: mParentEntity(parentEntity), mCurrentMovementAction(nullptr) {
 	parentEntity.Acted.connect(sigc::mem_fun(*this, &SoundEntity::Entity_Action));
@@ -33,10 +33,10 @@ SoundEntity::SoundEntity(EmberEntity& parentEntity)
 }
 
 SoundEntity::~SoundEntity() {
-	for (auto& action : mActions) {
+	for (auto& action: mActions) {
 		delete action.second;
 	}
-	for (auto& movementAction : mMovementActions) {
+	for (auto& movementAction: mMovementActions) {
 		delete movementAction.second;
 	}
 	//Note that we shouldn't delete the mCurrentMovementAction since that's a pointer to an object held in the mMovementActions store.
@@ -128,4 +128,4 @@ void SoundEntity::createActions() {
 }
 
 }
-}
+

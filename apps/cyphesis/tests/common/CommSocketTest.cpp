@@ -27,32 +27,27 @@
 
 #include <cassert>
 
-class TestCommSocket : public CommSocket
-{
-  public:
-    TestCommSocket() : CommSocket(*(boost::asio::io_context*)0)
-    {
-    }
+class TestCommSocket : public CommSocket {
+public:
+	TestCommSocket() : CommSocket(*(boost::asio::io_context*) 0) {
+	}
 
-    virtual void disconnect()
-    {
-    }
+	virtual void disconnect() {
+	}
 
-    virtual int flush()
-    {
-        return 0;
-    }
+	virtual int flush() {
+		return 0;
+	}
 
 };
 
-int main()
-{
+int main() {
 
-    {
-        CommSocket * cs = new TestCommSocket();
+	{
+		CommSocket* cs = new TestCommSocket();
 
-        delete cs;
-    }
+		delete cs;
+	}
 
-    return 0;
+	return 0;
 }

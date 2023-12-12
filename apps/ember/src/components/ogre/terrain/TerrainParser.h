@@ -28,10 +28,8 @@ template<int>
 class Point;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainManager;
 
@@ -56,8 +54,5 @@ struct TerrainParser {
 
 }
 
-}
-
-}
 
 #endif /* TERRAINPARSER_H_ */

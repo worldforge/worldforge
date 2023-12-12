@@ -37,9 +37,9 @@ namespace Ember {
  * An instance of this class mainly envelopes an OpenAL soundsource, allocating it when it's created and removing it at destruction time.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class SoundSource
-{
-friend class SoundInstance;
+class SoundSource {
+	friend class SoundInstance;
+
 public:
 
 	/**
@@ -53,36 +53,34 @@ public:
 	 * When an instance is destroyed the OpenAL sound source will be released as well.
 	 */
 	virtual ~SoundSource();
-	
+
 	/**
 	 * @brief Sets the position of the sound source.
 	 * @param position The position, in world units.
 	 */
 	void setPosition(const WFMath::Point<3>& position);
-	
+
 	/**
 	 * @brief Sets the orientation of the sound source.
 	 * @param orientation The orientation.
 	 */
 	void setOrientation(const WFMath::Quaternion& orientation);
-	
+
 	/**
 	 * @brief Sets the velocity of the sound source.
 	 * @param velocity The velocity, in world units.
 	 */
 	void setVelocity(const WFMath::Vector<3>& velocity);
-	
+
 	/**
 	* @brief Return openAl source within this sample
 	* @return The identifier of the source
 	*/
 	ALuint getALSource() const;
-	
+
 protected:
 
 
-
-	
 	/**
 	 * @brief The OpenAL source which this class represents.
 	 */
@@ -90,8 +88,7 @@ protected:
 
 };
 
-inline ALuint SoundSource::getALSource() const
-{
+inline ALuint SoundSource::getALSource() const {
 	return mALSource;
 }
 

@@ -20,37 +20,32 @@
 #include "rules/entityfilter/ProviderFactory.h"
 
 FilterProperty::FilterProperty(const FilterProperty& rhs)
-        : PropertyBase(rhs)
-{
-    if (rhs.m_data) {
-        m_data = std::make_unique<EntityFilter::Filter>(*rhs.m_data);
-    }
+		: PropertyBase(rhs) {
+	if (rhs.m_data) {
+		m_data = std::make_unique<EntityFilter::Filter>(*rhs.m_data);
+	}
 }
 
 
-const EntityFilter::Filter* FilterProperty::getData() const
-{
-    return m_data.get();
+const EntityFilter::Filter* FilterProperty::getData() const {
+	return m_data.get();
 }
 
-FilterProperty* FilterProperty::copy() const
-{
-    return new FilterProperty(*this);
+FilterProperty* FilterProperty::copy() const {
+	return new FilterProperty(*this);
 }
 
-int FilterProperty::get(Atlas::Message::Element& val) const
-{
-    if (m_data) {
-        val = m_data->getDeclaration();
-    }
-    return 0;
+int FilterProperty::get(Atlas::Message::Element& val) const {
+	if (m_data) {
+		val = m_data->getDeclaration();
+	}
+	return 0;
 }
 
-void FilterProperty::set(const Atlas::Message::Element& val)
-{
-    if (val.isString()) {
-        m_data = std::make_unique<EntityFilter::Filter>(val.String(), EntityFilter::ProviderFactory());
-    } else {
-        m_data.reset();
-    }
+void FilterProperty::set(const Atlas::Message::Element& val) {
+	if (val.isString()) {
+		m_data = std::make_unique<EntityFilter::Filter>(val.String(), EntityFilter::ProviderFactory());
+	} else {
+		m_data.reset();
+	}
 }

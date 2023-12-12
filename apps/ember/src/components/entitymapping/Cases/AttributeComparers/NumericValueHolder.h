@@ -23,14 +23,14 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_CASES_ATTRIBUTECOMPARERSNUMERICVALUEHOLDER_H
 #define EMBEROGRE_MODEL_MAPPING_CASES_ATTRIBUTECOMPARERSNUMERICVALUEHOLDER_H
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Base class for all comparers that must hold a value.
@@ -46,10 +46,10 @@ protected:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

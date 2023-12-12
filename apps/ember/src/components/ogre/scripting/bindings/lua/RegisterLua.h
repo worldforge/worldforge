@@ -39,7 +39,7 @@ struct unique_usertype_traits<Ogre::SharedPtr<T>> {
 };
 }
 
-template <typename T>
+template<typename T>
 void registerLua(sol::table& space);
 
 #endif //EMBER_REGISTERLUA_H

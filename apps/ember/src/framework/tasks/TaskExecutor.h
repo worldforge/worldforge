@@ -21,11 +21,8 @@
 
 #include <thread>
 
-namespace Ember
-{
 
-namespace Tasks
-{
+namespace Ember::Tasks {
 
 class TaskQueue;
 
@@ -34,9 +31,9 @@ class TaskQueue;
  * @brief A task executor, responsible for processing tasks.
  * Each instance of this holds a thread. It's only purpose is to ask the queue for new tasks to process. If no tasks are available it will sleep (inside of TaskQueue::fetchNextTask).
  */
-class TaskExecutor
-{
+class TaskExecutor {
 	friend class TaskQueue;
+
 public:
 	/**
 	 * @brief Ctor.
@@ -79,7 +76,6 @@ protected:
 	std::thread mThread;
 
 
-
 	/**
 	 * @brief Main loop method.
 	 */
@@ -88,5 +84,5 @@ protected:
 };
 
 }
-}
+
 #endif /* TASKEXECUTOR_H_ */

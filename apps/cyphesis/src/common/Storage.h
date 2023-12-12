@@ -24,19 +24,22 @@
 /// \brief Class to handle connecting to the cyphesis database in order to
 /// access the account table
 class Storage {
-  protected:
-    /// \brief Database connection used to change the accounts table
-    Database & m_connection;
+protected:
+	/// \brief Database connection used to change the accounts table
+	Database& m_connection;
 
-  public:
-    explicit Storage(Database& database);
+public:
+	explicit Storage(Database& database);
 
-    int putAccount(const Atlas::Message::MapType & o);
-    int modAccount(const Atlas::Message::MapType & o,
-                   const std::string & accountId);
-    int delAccount(const std::string & account);
-    int getAccount(const std::string & username,
-                   Atlas::Message::MapType & o);
+	int putAccount(const Atlas::Message::MapType& o);
+
+	int modAccount(const Atlas::Message::MapType& o,
+				   const std::string& accountId);
+
+	int delAccount(const std::string& account);
+
+	int getAccount(const std::string& username,
+				   Atlas::Message::MapType& o);
 
 };
 

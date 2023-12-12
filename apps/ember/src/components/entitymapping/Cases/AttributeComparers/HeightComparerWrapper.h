@@ -31,14 +31,14 @@ class Entity;
 }
 
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 struct NumericComparer;
 
@@ -66,10 +66,10 @@ protected:
 };
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

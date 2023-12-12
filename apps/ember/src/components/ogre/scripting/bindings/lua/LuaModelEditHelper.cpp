@@ -26,9 +26,10 @@ using namespace Ember::Lua;
 template<>
 void registerLua<ModelEditHelper>(sol::table& space) {
 	auto modelEditHelper = space.new_usertype<ModelEditHelper>("ModelEditHelper",
-															 sol::constructors<ModelEditHelper(Ember::OgreView::Model::Model * , SimpleRenderContext & )>());
-	modelEditHelper["showAttachPointHelperEntity"] = sol::overload([](ModelEditHelper* self, const std::string& attachPointName, const std::string& meshName) { return self->showAttachPointHelperEntity(attachPointName, meshName); },
-																   [](ModelEditHelper* self, const std::string& attachPointName) { return self->showAttachPointHelperEntity(attachPointName); });
+															   sol::constructors<ModelEditHelper(Ember::OgreView::Model::Model*, SimpleRenderContext&)>());
+	modelEditHelper["showAttachPointHelperEntity"] = sol::overload(
+			[](ModelEditHelper* self, const std::string& attachPointName, const std::string& meshName) { return self->showAttachPointHelperEntity(attachPointName, meshName); },
+			[](ModelEditHelper* self, const std::string& attachPointName) { return self->showAttachPointHelperEntity(attachPointName); });
 	modelEditHelper["showAttachPointHelperModel"] = &ModelEditHelper::showAttachPointHelperModel;
 	modelEditHelper["hideAttachPointHelper"] = &ModelEditHelper::hideAttachPointHelper;
 	modelEditHelper["startInputRotate"] = &ModelEditHelper::startInputRotate;

@@ -26,52 +26,45 @@
 #include "ModeDataProperty.h"
 
 VoidDomain::VoidDomain(LocatedEntity& entity)
-        : Domain(entity)
-{
+		: Domain(entity) {
 }
 
-bool VoidDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const
-{
-    //The entity to which the domain belongs can see its content, otherwise nothing can be seen.
-    return &observingEntity == &m_entity;
+bool VoidDomain::isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const {
+	//The entity to which the domain belongs can see its content, otherwise nothing can be seen.
+	return &observingEntity == &m_entity;
 }
 
 void VoidDomain::getVisibleEntitiesFor(const LocatedEntity& observingEntity,
-                                       std::list<LocatedEntity*>& entityList) const
-{
-    //Can't see anything
+									   std::list<LocatedEntity*>& entityList) const {
+	//Can't see anything
 }
 
 
-void VoidDomain::addEntity(LocatedEntity& entity)
-{
-    //TODO: make these kind of reset actions on the domain being moved out of instead. Like PhysicalDomain.
-    //entity.m_location.resetTransformAndMovement();
-    entity.removeFlags(entity_clean);
+void VoidDomain::addEntity(LocatedEntity& entity) {
+	//TODO: make these kind of reset actions on the domain being moved out of instead. Like PhysicalDomain.
+	//entity.m_location.resetTransformAndMovement();
+	entity.removeFlags(entity_clean);
 
 
-    //Reset any mode_data properties when moving to this domain.
-    if (auto prop = entity.getPropertyClassFixed<ModeDataProperty>()) {
-        if (prop->getMode() != ModeProperty::Mode::Unknown) {
-            entity.setAttrValue(ModeDataProperty::property_name, Atlas::Message::Element());
-            entity.enqueueUpdateOp();
-        }
-    }
-
-}
-
-void VoidDomain::removeEntity(LocatedEntity& entity)
-{
+	//Reset any mode_data properties when moving to this domain.
+	if (auto prop = entity.getPropertyClassFixed<ModeDataProperty>()) {
+		if (prop->getMode() != ModeProperty::Mode::Unknown) {
+			entity.setAttrValue(ModeDataProperty::property_name, Atlas::Message::Element());
+			entity.enqueueUpdateOp();
+		}
+	}
 
 }
 
-bool VoidDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const
-{
-    return &reachingEntity == &m_entity;
+void VoidDomain::removeEntity(LocatedEntity& entity) {
+
 }
 
-boost::optional<std::function<void()>> VoidDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback)
-{
-    return boost::none;
+bool VoidDomain::isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const {
+	return &reachingEntity == &m_entity;
+}
+
+boost::optional<std::function<void()>> VoidDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+	return boost::none;
 }
 

@@ -21,13 +21,11 @@
 
 #include "IConnectionListener.h"
 
-namespace Ember
-{
+namespace Ember {
 
 class ServerServiceSignals;
 
-class ServerServiceConnectionListener: public IConnectionListener
-{
+class ServerServiceConnectionListener : public IConnectionListener {
 public:
 	explicit ServerServiceConnectionListener(ServerServiceSignals& signals);
 

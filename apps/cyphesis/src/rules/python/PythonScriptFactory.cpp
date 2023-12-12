@@ -26,13 +26,12 @@
 #include "rules/simulation/Task.h"
 
 template<>
-PythonScriptFactory<LocatedEntity>::PythonScriptFactory(const std::string & p,
-                                                        const std::string & t) :
-                                                        PythonClass(p, t)
-{
+PythonScriptFactory<LocatedEntity>::PythonScriptFactory(const std::string& p,
+														const std::string& t) :
+		PythonClass(p, t) {
 }
 
 
-
-template class PythonScriptFactory<LocatedEntity>;
+template
+class PythonScriptFactory<LocatedEntity>;
 

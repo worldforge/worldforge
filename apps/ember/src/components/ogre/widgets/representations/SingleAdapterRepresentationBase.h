@@ -25,12 +25,8 @@
 #include "RepresentationBase.h"
 #include "../adapters/AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief a representation using just one adapter
@@ -72,7 +68,7 @@ public:
 	virtual void addSuggestion(const std::string& suggestion);
 
 protected:
-	std::unique_ptr<Adapters::AdapterBase<ValueType>> mAdapter;
+	std::unique_ptr<Adapters::AdapterBase < ValueType>> mAdapter;
 
 	/**
 	 * @brief sets the single adapter to use in this representation
@@ -80,11 +76,13 @@ protected:
 	 * @param adapter the single adapter we want to use (this class takes ownership of it and will delete it!)
 	 * @note You may only call this once in your inherited implementation (usually in the constructor)
 	 */
-	void setAdapter(std::unique_ptr<Adapters::AdapterBase<ValueType>> adapter);
+	void setAdapter(std::unique_ptr<Adapters::AdapterBase < ValueType>>
+
+	adapter);
 };
 
 template<typename ValueType>
-SingleAdapterRepresentationBase<ValueType>::SingleAdapterRepresentationBase() {}
+SingleAdapterRepresentationBase<ValueType>::SingleAdapterRepresentationBase() = default;
 
 template<typename ValueType>
 SingleAdapterRepresentationBase<ValueType>::~SingleAdapterRepresentationBase() = default;
@@ -130,16 +128,13 @@ void SingleAdapterRepresentationBase<ValueType>::addSuggestion(const std::string
 }
 
 template<typename ValueType>
-void SingleAdapterRepresentationBase<ValueType>::setAdapter(std::unique_ptr<Adapters::AdapterBase<ValueType>> adapter) {
-	mAdapter = std::move(adapter);
+void SingleAdapterRepresentationBase<ValueType>::setAdapter(std::unique_ptr<Adapters::AdapterBase < ValueType>>
+
+adapter) {
+mAdapter = std::move(adapter);
 }
 
 }
 
-}
-
-}
-
-}
 
 #endif

@@ -37,20 +37,18 @@ int Player::s_numberOfPlayers = 0;
 /// @param passwd a string giving the password.
 /// @param id a string giving the identifier of the account.
 /// @param intId an integer giving the identifier of the account.
-Player::Player(Connection * conn,
-               const std::string & username,
-               const std::string & passwd,
-               RouterId id) :
-        Account(conn, username, passwd, std::move(id))
-{
-    s_numberOfPlayers++;
+Player::Player(Connection* conn,
+			   const std::string& username,
+			   const std::string& passwd,
+			   RouterId id) :
+		Account(conn, username, passwd, std::move(id)) {
+	s_numberOfPlayers++;
 }
 
-const char * Player::getType() const
-{
-    return "player";
+const char* Player::getType() const {
+	return "player";
 }
 
 Player::~Player() {
-    s_numberOfPlayers--;
+	s_numberOfPlayers--;
 }

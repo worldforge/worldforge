@@ -21,10 +21,8 @@
 
 #include "ICameraMotionHandler.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class Avatar;
 
 /**
@@ -32,8 +30,7 @@ class Avatar;
  *
  * By using this the user will have control of the Avatar, and any movement will be translated into entity movement.
  */
-class AvatarCameraMotionHandler: public ICameraMotionHandler
-{
+class AvatarCameraMotionHandler : public ICameraMotionHandler {
 public:
 
 	/**
@@ -48,6 +45,7 @@ public:
 	~AvatarCameraMotionHandler() override = default;
 
 	void move(const WFMath::Quaternion& orientation, const WFMath::Vector<3>& movement, float timeslice) override;
+
 private:
 
 	/**
@@ -58,6 +56,6 @@ private:
 
 }
 
-}
+
 
 #endif /* AVATARCAMERAMOTIONHANDLER_H_ */

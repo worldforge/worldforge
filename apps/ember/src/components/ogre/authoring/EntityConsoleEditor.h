@@ -22,9 +22,9 @@
 #include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 class EntityConsoleEditor : public ConsoleObject {
 public:
@@ -48,6 +48,6 @@ private:
 };
 
 }
-}
-}
+
+
 #endif /* COMPONENTS_OGRE_AUTHORING_ENTITYCONSOLEEDITOR_H_ */

@@ -27,31 +27,29 @@
 #include <fstream>
 
 /// \brief Task class for monitoring all in-game operations occuring.
-class OperationMonitor : public ClientTask
-{
-    protected:
+class OperationMonitor : public ClientTask {
+protected:
 
-        Atlas::Message::QueuedDecoder mDecoder;
-        std::unique_ptr<Atlas::Bridge> mCodec;
-        std::unique_ptr<Atlas::Objects::ObjectsEncoder> mEncoder;
-        std::unique_ptr<std::ostream> mOutFile;
-        std::ostream* mOutStream;
+	Atlas::Message::QueuedDecoder mDecoder;
+	std::unique_ptr<Atlas::Bridge> mCodec;
+	std::unique_ptr<Atlas::Objects::ObjectsEncoder> mEncoder;
+	std::unique_ptr<std::ostream> mOutFile;
+	std::ostream* mOutStream;
 
-        int op_count;
-    public:
-        std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
+	int op_count;
+public:
+	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 
-        ~OperationMonitor() override;
+	~OperationMonitor() override;
 
-        int count() const
-        {
-            return op_count;
-        }
+	int count() const {
+		return op_count;
+	}
 
 
-        void setup(const std::string& arg, OpVector&) override;
+	void setup(const std::string& arg, OpVector&) override;
 
-        void operation(const Operation& op, OpVector&) override;
+	void operation(const Operation& op, OpVector&) override;
 };
 
 #endif // TOOLS_OPERATION_MONITOR_H

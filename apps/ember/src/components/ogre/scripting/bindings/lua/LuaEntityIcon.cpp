@@ -28,16 +28,16 @@ using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 using namespace Ember;
 
-template <>
+template<>
 void registerLua<EntityIcon>(sol::table& space) {
 	auto entityIconDragDropTarget = space.new_usertype<EntityIconDragDropTarget>("EntityIconDragDropTarget",
-																			   sol::constructors<EntityIconDragDropTarget(CEGUI::Window*)>());
+																				 sol::constructors<EntityIconDragDropTarget(CEGUI::Window*)>());
 	entityIconDragDropTarget["EventIconEntered"] = LuaConnector::make_property(&EntityIconDragDropTarget::EventIconEntered);
 	entityIconDragDropTarget["EventIconLeaves"] = LuaConnector::make_property(&EntityIconDragDropTarget::EventIconLeaves);
 	entityIconDragDropTarget["EventIconDropped"] = LuaConnector::make_property(&EntityIconDragDropTarget::EventIconDropped);
 	//TODO: check if we still need to == operator with sol
 	auto entityIcon = space.new_usertype<EntityIcon>("EntityIcon", sol::no_constructor,
-												   sol::base_classes, sol::bases<EntityIconDragDropTarget>());
+													 sol::base_classes, sol::bases<EntityIconDragDropTarget>());
 	entityIcon["getImage"] = &EntityIcon::getImage;
 	entityIcon["getDragContainer"] = &EntityIcon::getDragContainer;
 	entityIcon["getIcon"] = &EntityIcon::getIcon;
@@ -49,7 +49,7 @@ void registerLua<EntityIcon>(sol::table& space) {
 	entityIcon["getTag"] = &EntityIcon::getTag;
 
 	auto entityIconDragDropPreview = space.new_usertype<EntityIconDragDropPreview>("EntityIconDragDropPreview",
-																				 sol::constructors<EntityIconDragDropPreview(Ember::OgreView::World&)>());
+																				   sol::constructors<EntityIconDragDropPreview(Ember::OgreView::World&)>());
 	entityIconDragDropPreview["createPreview"] = &EntityIconDragDropPreview::createPreview;
 	entityIconDragDropPreview["cleanupCreation"] = &EntityIconDragDropPreview::cleanupCreation;
 	entityIconDragDropPreview["getDropPosition"] = &EntityIconDragDropPreview::getDropPosition;
@@ -67,7 +67,7 @@ void registerLua<EntityIcon>(sol::table& space) {
 	entityIconManager["EventIconDragStop"] = LuaConnector::make_property(&EntityIconManager::EventIconDragStop);
 
 	auto entityIconSlot = space.new_usertype<EntityIconSlot>("EntityIconSlot", sol::no_constructor,
-														   sol::base_classes, sol::bases<EntityIconDragDropTarget>());
+															 sol::base_classes, sol::bases<EntityIconDragDropTarget>());
 	entityIconSlot["addEntityIcon"] = &EntityIconSlot::addEntityIcon;
 	entityIconSlot["removeEntityIcon"] = &EntityIconSlot::removeEntityIcon;
 	entityIconSlot["getEntityIcon"] = &EntityIconSlot::getEntityIcon;

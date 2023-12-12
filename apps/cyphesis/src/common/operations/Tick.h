@@ -21,20 +21,23 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int TICK_NO;
 
 /// \brief An operation used to trigger one of a number of types of update.
 /// \ingroup CustomOperations
-class Tick : public Generic
-{
-  public:
-    Tick() {
-        (*this)->setType("tick", TICK_NO);
-    }
+class Tick : public Generic {
+public:
+	Tick() {
+		(*this)->setType("tick", TICK_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_TICK_H

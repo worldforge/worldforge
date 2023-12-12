@@ -25,8 +25,8 @@
 namespace Ogre {
 class TerrainGroup;
 }
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 struct IPageDataProvider;
 
 namespace Terrain {
@@ -136,7 +136,7 @@ protected:
 
 };
 } /* Terrain */
-} /* OgreView */
-} /* Ember */
+} // namespace Ember::OgreView
+
 
 #endif /* end of include guard: OGRETERRAINMATERIALGENERATOREMBER_H */

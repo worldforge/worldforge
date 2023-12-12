@@ -21,16 +21,12 @@
 #include <utility>
 #include "components/ogre/terrain/TerrainPageGeometry.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain::Techniques {
 
-namespace Techniques {
-
-Base::Base(const TerrainPageGeometryPtr& geometry,
+Base::Base(TerrainPageGeometryPtr geometry,
 		   SurfaceLayerStore terrainPageSurfaces)
-		: mGeometry(geometry),
+		: mGeometry(std::move(geometry)),
 		  mTerrainPageSurfaces(std::move(terrainPageSurfaces)) {
 }
 
@@ -38,7 +34,7 @@ Base::~Base() = default;
 
 }
 
-}
 
-}
-}
+
+
+

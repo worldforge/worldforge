@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<MultiColumnList>(sol::table& space) {
 	space.new_usertype<MCLGridRef>("MCLGridRef",
 								   sol::constructors<MCLGridRef(unsigned int, unsigned int)>(),
@@ -89,10 +90,13 @@ void registerLua<MultiColumnList>(sol::table& space) {
 	multiColumnList["removeColumnWithID"] = &MultiColumnList::removeColumnWithID;
 	multiColumnList["moveColumn"] = &MultiColumnList::moveColumn;
 	multiColumnList["moveColumnWithID"] = &MultiColumnList::moveColumnWithID;
-	multiColumnList["addRow"] = sol::overload([](MultiColumnList* self) { return self->addRow(); }, [](MultiColumnList* self, ListboxItem* item, unsigned int col_id) { return self->addRow(item, col_id); });
-	multiColumnList["insertRow"] = sol::overload([](MultiColumnList* self, unsigned int row_idx) { return self->insertRow(row_idx); }, [](MultiColumnList* self, ListboxItem* item, unsigned int col_id, unsigned int row_idx) { return self->insertRow(item, col_id, row_idx); });
+	multiColumnList["addRow"] = sol::overload([](MultiColumnList* self) { return self->addRow(); },
+											  [](MultiColumnList* self, ListboxItem* item, unsigned int col_id) { return self->addRow(item, col_id); });
+	multiColumnList["insertRow"] = sol::overload([](MultiColumnList* self, unsigned int row_idx) { return self->insertRow(row_idx); },
+												 [](MultiColumnList* self, ListboxItem* item, unsigned int col_id, unsigned int row_idx) { return self->insertRow(item, col_id, row_idx); });
 	multiColumnList["removeRow"] = &MultiColumnList::removeRow;
-	multiColumnList["setItem"] = sol::overload(sol::resolve<ListboxItem*, const MCLGridRef&>(&MultiColumnList::setItem), sol::resolve<ListboxItem*, unsigned int, unsigned int>(&MultiColumnList::setItem));
+	multiColumnList["setItem"] = sol::overload(sol::resolve<ListboxItem*, const MCLGridRef&>(&MultiColumnList::setItem),
+											   sol::resolve<ListboxItem*, unsigned int, unsigned int>(&MultiColumnList::setItem));
 	multiColumnList["setSelectionMode"] = &MultiColumnList::setSelectionMode;
 	multiColumnList["setNominatedSelectionColumnID"] = &MultiColumnList::setNominatedSelectionColumnID;
 	multiColumnList["setNominatedSelectionColumn"] = &MultiColumnList::setNominatedSelectionColumn;
@@ -103,7 +107,8 @@ void registerLua<MultiColumnList>(sol::table& space) {
 	multiColumnList["setShowVertScrollbar"] = &MultiColumnList::setShowVertScrollbar;
 	multiColumnList["setShowHorzScrollbar"] = &MultiColumnList::setShowHorzScrollbar;
 	multiColumnList["clearAllSelections"] = &MultiColumnList::clearAllSelections;
-	multiColumnList["setItemSelectState"] = sol::overload(sol::resolve<ListboxItem*, bool>(&MultiColumnList::setItemSelectState), sol::resolve<const MCLGridRef&, bool>(&MultiColumnList::setItemSelectState));
+	multiColumnList["setItemSelectState"] = sol::overload(sol::resolve<ListboxItem*, bool>(&MultiColumnList::setItemSelectState),
+														  sol::resolve<const MCLGridRef&, bool>(&MultiColumnList::setItemSelectState));
 	multiColumnList["handleUpdatedItemData"] = &MultiColumnList::handleUpdatedItemData;
 	multiColumnList["setColumnHeaderWidth"] = &MultiColumnList::setColumnHeaderWidth;
 	multiColumnList["setUserSortControlEnabled"] = &MultiColumnList::setUserSortControlEnabled;
@@ -115,7 +120,8 @@ void registerLua<MultiColumnList>(sol::table& space) {
 	multiColumnList["ensureColumnIsVisible"] = &MultiColumnList::ensureColumnIsVisible;
 	multiColumnList["ensureItemRowIsVisible"] = &MultiColumnList::ensureItemRowIsVisible;
 	multiColumnList["ensureItemColumnIsVisible"] = &MultiColumnList::ensureItemColumnIsVisible;
-	multiColumnList["ensureItemIsVisible"] = sol::overload(sol::resolve<const ListboxItem*>(&MultiColumnList::ensureItemIsVisible), sol::resolve<const MCLGridRef&>(&MultiColumnList::ensureItemIsVisible));
+	multiColumnList["ensureItemIsVisible"] = sol::overload(sol::resolve<const ListboxItem*>(&MultiColumnList::ensureItemIsVisible),
+														   sol::resolve<const MCLGridRef&>(&MultiColumnList::ensureItemIsVisible));
 	multiColumnList["setAutoSizeColumnUsesHeader"] = &MultiColumnList::setAutoSizeColumnUsesHeader;
 	multiColumnList["getAutoSizeColumnUsesHeader"] = &MultiColumnList::getAutoSizeColumnUsesHeader;
 }

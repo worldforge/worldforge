@@ -32,10 +32,10 @@
 
 using namespace Ogre;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 
 /* ------------------------------------------------------------------------- */
@@ -44,18 +44,16 @@ namespace Environment {
 /// @param camera        The camera on which the lensflare effect will appear.
 /// @param SceneMgr      Pointer on the SceneManager.
 /* ------------------------------------------------------------------------- */
-LensFlare::LensFlare(Camera* camera, SceneManager* SceneMgr) : mHaloSet(nullptr), mBurstSet(nullptr), mLightNode(nullptr)
-{
-	mSceneMgr      = SceneMgr;
-	mCamera        = camera;
-	mHidden        = true;
+LensFlare::LensFlare(Camera* camera, SceneManager* SceneMgr) : mHaloSet(nullptr), mBurstSet(nullptr), mLightNode(nullptr) {
+	mSceneMgr = SceneMgr;
+	mCamera = camera;
+	mHidden = true;
 }
 
 /* ------------------------------------------------------------------------- */
 /// Destructor
 /* ------------------------------------------------------------------------- */
-LensFlare::~LensFlare()
-{
+LensFlare::~LensFlare() {
 	if (mLightNode) {
 		mLightNode->detachObject(mHaloSet);
 		mLightNode->detachObject(mBurstSet);
@@ -71,13 +69,11 @@ LensFlare::~LensFlare()
 	}
 }
 
-void LensFlare::setNode(Ogre::SceneNode* node)
-{
+void LensFlare::setNode(Ogre::SceneNode* node) {
 	mLightNode = node;
 }
 
-void LensFlare::initialize()
-{
+void LensFlare::initialize() {
 	createLensFlare();
 }
 
@@ -85,8 +81,7 @@ void LensFlare::initialize()
 /* ------------------------------------------------------------------------- */
 /// this function creates and shows all the LensFlare graphical elements.
 /* ------------------------------------------------------------------------- */
-bool LensFlare::createLensFlare()
-{
+bool LensFlare::createLensFlare() {
 	Real LF_scale = 150;
 	try {
 		// -----------------------------------------------------
@@ -97,7 +92,7 @@ bool LensFlare::createLensFlare()
 		mHaloSet->setCullIndividually(true);
 		mHaloSet->setRenderQueueGroup(RENDER_QUEUE_SKIES_LATE);
 
-		mBurstSet= mSceneMgr->createBillboardSet("burst");
+		mBurstSet = mSceneMgr->createBillboardSet("burst");
 		mBurstSet->setMaterialName("/global/environment/lensflare/burst");
 		mBurstSet->setCullIndividually(true);
 		mBurstSet->setRenderQueueGroup(RENDER_QUEUE_SKIES_LATE);
@@ -114,29 +109,28 @@ bool LensFlare::createLensFlare()
 	// -------------------------------
 	// Creation of the Halo billboards
 	// -------------------------------
-	Billboard* LF_Halo1 = mHaloSet->createBillboard(0,0,0);
-	LF_Halo1->setDimensions(LF_scale*0.5f,LF_scale*0.5f);
-	Billboard* LF_Halo2 = mHaloSet->createBillboard(0,0,0);
-	LF_Halo2->setDimensions(LF_scale,LF_scale);
-	Billboard* LF_Halo3 = mHaloSet->createBillboard(0,0,0);
-	LF_Halo3->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
+	Billboard* LF_Halo1 = mHaloSet->createBillboard(0, 0, 0);
+	LF_Halo1->setDimensions(LF_scale * 0.5f, LF_scale * 0.5f);
+	Billboard* LF_Halo2 = mHaloSet->createBillboard(0, 0, 0);
+	LF_Halo2->setDimensions(LF_scale, LF_scale);
+	Billboard* LF_Halo3 = mHaloSet->createBillboard(0, 0, 0);
+	LF_Halo3->setDimensions(LF_scale * 0.25f, LF_scale * 0.25f);
 
 
 	// -------------------------------
 	// Creation of the "Burst" billboards
 	// -------------------------------
-	Billboard* LF_Burst1 = mBurstSet->createBillboard(0,0,0);
-	LF_Burst1->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
-	Billboard* LF_Burst2 = mBurstSet->createBillboard(0,0,0);
-	LF_Burst2->setDimensions(LF_scale*0.5f,LF_scale*0.5f);
-	Billboard* LF_Burst3 = mBurstSet->createBillboard(0,0,0);
-	LF_Burst3->setDimensions(LF_scale*0.25f,LF_scale*0.25f);
+	Billboard* LF_Burst1 = mBurstSet->createBillboard(0, 0, 0);
+	LF_Burst1->setDimensions(LF_scale * 0.25f, LF_scale * 0.25f);
+	Billboard* LF_Burst2 = mBurstSet->createBillboard(0, 0, 0);
+	LF_Burst2->setDimensions(LF_scale * 0.5f, LF_scale * 0.5f);
+	Billboard* LF_Burst3 = mBurstSet->createBillboard(0, 0, 0);
+	LF_Burst3->setDimensions(LF_scale * 0.25f, LF_scale * 0.25f);
 
 	return true;
 }
 
-const Ogre::Vector3& LensFlare::getLightPosition() const
-{
+const Ogre::Vector3& LensFlare::getLightPosition() const {
 	return mLightNode->_getDerivedPosition();
 }
 
@@ -146,13 +140,11 @@ const Ogre::Vector3& LensFlare::getLightPosition() const
 /** This function should be called by your frameListener.
 */
 /* -------------------------------------------------------------------------- */
-void LensFlare::update()
-{
+void LensFlare::update() {
 	if (mHidden || !mLightNode) return;
 
 	/// If the Light is out of the Camera field Of View, the lensflare is hidden.
-	if (!mCamera->isVisible(getLightPosition()))
-	{
+	if (!mCamera->isVisible(getLightPosition())) {
 		mHaloSet->setVisible(false);
 		mBurstSet->setVisible(false);
 		return;
@@ -160,7 +152,7 @@ void LensFlare::update()
 
 	Vector3 lightToCamera = mCamera->getDerivedPosition() - getLightPosition();
 
-	Vector3 CameraVect  = lightToCamera.length() * mCamera->getDerivedDirection();
+	Vector3 CameraVect = lightToCamera.length() * mCamera->getDerivedDirection();
 	CameraVect += mCamera->getDerivedPosition();
 
 	// The LensFlare effect takes place along this vector.
@@ -169,13 +161,13 @@ void LensFlare::update()
 //	LFvect += Vector3(-64,-64,0);  // sprite dimension (to be adjusted, but not necessary)
 
 	// The different sprites are placed along this line.
-	mHaloSet->getBillboard(0)->setPosition( LFvect);
-	mHaloSet->getBillboard(1)->setPosition( LFvect*0.725f);
-	mHaloSet->getBillboard(2)->setPosition( LFvect*0.250f);
+	mHaloSet->getBillboard(0)->setPosition(LFvect);
+	mHaloSet->getBillboard(1)->setPosition(LFvect * 0.725f);
+	mHaloSet->getBillboard(2)->setPosition(LFvect * 0.250f);
 
-	mBurstSet->getBillboard(0)->setPosition( LFvect*0.833f);
-	mBurstSet->getBillboard(1)->setPosition( LFvect*0.500f);
-	mBurstSet->getBillboard(2)->setPosition( LFvect*0.320f);
+	mBurstSet->getBillboard(0)->setPosition(LFvect * 0.833f);
+	mBurstSet->getBillboard(1)->setPosition(LFvect * 0.500f);
+	mBurstSet->getBillboard(2)->setPosition(LFvect * 0.320f);
 
 	// We redraw the lensflare (in case it was previouly out of the camera field, and hidden)
 	this->setVisible(true);
@@ -184,8 +176,7 @@ void LensFlare::update()
 /* ------------------------------------------------------------------------- */
 /// This function shows (or hide) the lensflare effect.
 /* ------------------------------------------------------------------------- */
-void LensFlare::setVisible(bool visible)
-{
+void LensFlare::setVisible(bool visible) {
 	if (mLightNode) {
 		mHaloSet->setVisible(visible);
 		mBurstSet->setVisible(visible);
@@ -210,23 +201,21 @@ void LensFlare::setVisible(bool visible)
 /* ------------------------------------------------------------------------- */
 /// This function changes the colour of the burst.
 /* ------------------------------------------------------------------------- */
-void LensFlare::setBurstColour(ColourValue color)
-{
+void LensFlare::setBurstColour(ColourValue color) {
 	if (mLightNode) {
 		mBurstSet->getBillboard(0)->setColour(color);
-		mBurstSet->getBillboard(1)->setColour(color*0.8f);
-		mBurstSet->getBillboard(2)->setColour(color*0.6f);
+		mBurstSet->getBillboard(1)->setColour(color * 0.8f);
+		mBurstSet->getBillboard(2)->setColour(color * 0.6f);
 	}
 }
 
 /* ------------------------------------------------------------------------- */
 /// This function changes the colour of the halos.
 /* ------------------------------------------------------------------------- */
-void LensFlare::setHaloColour(ColourValue color)
-{
+void LensFlare::setHaloColour(ColourValue color) {
 	if (mLightNode) {
-		mHaloSet->getBillboard(0)->setColour(color*0.8f);
-		mHaloSet->getBillboard(1)->setColour(color*0.6f);
+		mHaloSet->getBillboard(0)->setColour(color * 0.8f);
+		mHaloSet->getBillboard(1)->setColour(color * 0.6f);
 		mHaloSet->getBillboard(2)->setColour(color);
 	}
 }
@@ -234,5 +223,5 @@ void LensFlare::setHaloColour(ColourValue color)
 
 }
 
-}
-}
+
+

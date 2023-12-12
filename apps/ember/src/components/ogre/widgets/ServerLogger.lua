@@ -18,7 +18,7 @@ function ServerLogger.buildWidget(widget)
 			ServerLogger.receivedConnection = nil
 		end
 	end
-	function LoggingEnabled_SelectStateChanged(args)
+	function LoggingEnabled_SelectStateChanged(_)
 		local checkBox = CEGUI.toToggleButton(widget:getWindow("LoggingEnabled"))
 		if checkBox then
 			cleanup()
@@ -47,7 +47,7 @@ function ServerLogger.buildWidget(widget)
 
 	--subscribe event
 	widget:getWindow("LoggingEnabled"):subscribeEvent("SelectStateChanged", LoggingEnabled_SelectStateChanged)
-	widget:getWindow("ClearButton"):subscribeEvent("Clicked", function(args)
+	widget:getWindow("ClearButton"):subscribeEvent("Clicked", function(_)
 		logTextWidget:setText("")
 	end)
 

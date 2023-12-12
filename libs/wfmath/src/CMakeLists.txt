@@ -27,7 +27,7 @@ set(SOURCE_FILES
         wfmath/vector.cpp
         wfmath/vector_funcs.h
         wfmath/miniball_funcs.h
-        )
+)
 
 set(HEADER_FILES
         wfmath/atlasconv.h

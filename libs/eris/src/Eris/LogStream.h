@@ -9,12 +9,18 @@
 #include <fmt/ostream.h>
 
 namespace Atlas::Message {
-        class Element;
+class Element;
 }
 
-template <> struct fmt::formatter<Atlas::Objects::Root> : ostream_formatter {};
-template <> struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {};
-template <> struct fmt::formatter<Atlas::Message::Element> : ostream_formatter {};
+template<>
+struct fmt::formatter<Atlas::Objects::Root> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<Atlas::Message::Element> : ostream_formatter {
+};
 
 namespace Atlas {
 namespace Objects {

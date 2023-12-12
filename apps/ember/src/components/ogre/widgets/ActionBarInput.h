@@ -27,9 +27,8 @@
 #include <string>
 #include <sigc++/signal.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 /**
 	@brief
 	@author Tiberiu Paunescu <tpa12@sfu.ca>
@@ -60,7 +59,6 @@ struct ActionBarInput {
 
 };
 }
-}
-}
+
 
 #endif

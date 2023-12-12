@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<MultiLineEditbox>(sol::table& space) {
 	auto multiLineEditbox = space.new_usertype<MultiLineEditbox>("MultiLineEditbox",
 																 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

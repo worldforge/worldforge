@@ -88,9 +88,8 @@ int traverseTreeByDistance(Ogre::TerrainQuadTreeNode* node,
 
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 OgreTerrainAdapter::OgreTerrainAdapter(Ogre::SceneManager& sceneManager, int terrainPageSize) :
 		mLoadRadius(300),
@@ -322,7 +321,7 @@ void OgreTerrainAdapter::setTerrainEntity(EmberEntity* entity) {
 	mEntity = entity;
 }
 
-} /* namespace Terrain */
-} /* namespace OgreView */
-} /* namespace Ember */
+} // namespace Ember::OgreView::Terrain
+
+
 

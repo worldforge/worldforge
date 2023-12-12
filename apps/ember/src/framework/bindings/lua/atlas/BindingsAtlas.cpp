@@ -22,7 +22,6 @@
 #include <Atlas/Codecs/Bach.h>
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Codecs/Packed.h>
-#include <Atlas/Message/DecoderBase.h>
 #include <Atlas/Message/Element.h>
 #include <Atlas/Message/MEncoder.h>
 #include <Atlas/Message/QueuedDecoder.h>
@@ -71,7 +70,8 @@ void registerBindingsAtlas(sol::state_view& lua) {
 								sol::base_classes, sol::bases<Codec, Bridge>()
 	);
 	auto element = Message.new_usertype<Element>("Element",
-												 sol::constructors<Element(), Element(IntType), Element(bool), Element(FloatType), Element(StringType), Element(MapType), Element(ListType), Element(PtrType)>()
+												 sol::constructors<Element(), Element(IntType), Element(bool), Element(FloatType), Element(StringType), Element(MapType), Element(ListType), Element(
+														 PtrType)>()
 	);
 	element["isNone"] = &Element::isNone;
 	element["isInt"] = &Element::isInt;

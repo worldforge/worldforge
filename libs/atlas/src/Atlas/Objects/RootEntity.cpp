@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 const std::string LOC_ATTR = "loc";
 const std::string POS_ATTR = "pos";
@@ -174,13 +174,13 @@ void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<st
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -191,4 +191,4 @@ void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<st
     attr_data[STAMP_CONTAINS_ATTR] = STAMP_CONTAINS_FLAG;
 }
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity

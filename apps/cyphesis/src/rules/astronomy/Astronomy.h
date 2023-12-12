@@ -18,23 +18,22 @@
 #include "World.h"
 
 class Astronomy {
-  private:
-    World world; // Wacky values to make it compile
-    std::list<Sun> m_suns;
-    std::list<Moon> m_moons;
-    std::list<Planet> m_planets;
+private:
+	World world; // Wacky values to make it compile
+	std::list <Sun> m_suns;
+	std::list <Moon> m_moons;
+	std::list <Planet> m_planets;
 
-    double m_longitude;
+	double m_longitude;
 
-    static const int world_maxy = 200;
-  public:
-    Astronomy() : world(34, 35) { }
+	static const int world_maxy = 200;
+public:
+	Astronomy() : world(34, 35) {}
 
-    Atlas::Message::Element asObject(const Vector3D & from)
-    {
-        Atlas::Message::Element::MapType amap;
-        amap["longitude"] = (from.z() / world_maxy) * 90;
-    }
+	Atlas::Message::Element asObject(const Vector3D& from) {
+		Atlas::Message::Element::MapType amap;
+		amap["longitude"] = (from.z() / world_maxy) * 90;
+	}
 };
 
 #endif // ELEVATION_H

@@ -26,54 +26,65 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_MemMap : public WrapperBase<MemMap*, CyPy_MemMap>
-{
-    public:
-        CyPy_MemMap(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_MemMap : public WrapperBase<MemMap*, CyPy_MemMap> {
+public:
+	CyPy_MemMap(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_MemMap(Py::PythonClassInstance* self, MemMap* value);
+	CyPy_MemMap(Py::PythonClassInstance* self, MemMap* value);
 
-        ~CyPy_MemMap() = default;
+	~CyPy_MemMap() = default;
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object find_by_location(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_location);
+	Py::Object find_by_location(const Py::Tuple& args);
 
-        Py::Object find_by_type(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_type);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_location);
 
-        Py::Object updateAdd(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, updateAdd);
+	Py::Object find_by_type(const Py::Tuple& args);
 
-        Py::Object delete_(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, delete_);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_type);
 
-        Py::Object get(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, get);
+	Py::Object updateAdd(const Py::Tuple& args);
 
-        Py::Object get_all();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_MemMap, get_all);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, updateAdd);
 
-        Py::Object get_add(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, get_add);
+	Py::Object delete_(const Py::Tuple& args);
 
-        Py::Object find_by_filter(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_filter);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, delete_);
 
-        Py::Object find_by_location_query(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_location_query);
+	Py::Object get(const Py::Tuple& args);
 
-        Py::Object add_entity_memory(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, add_entity_memory);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, get);
 
-        Py::Object remove_entity_memory(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, remove_entity_memory);
+	Py::Object get_all();
 
-        Py::Object recall_entity_memory(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, recall_entity_memory);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_MemMap, get_all);
 
-        static EntityFilter::QueryContext createFilterContext(LocatedEntity* entity, MemMap* memMap);
+	Py::Object get_add(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, get_add);
+
+	Py::Object find_by_filter(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_filter);
+
+	Py::Object find_by_location_query(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, find_by_location_query);
+
+	Py::Object add_entity_memory(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, add_entity_memory);
+
+	Py::Object remove_entity_memory(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, remove_entity_memory);
+
+	Py::Object recall_entity_memory(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_MemMap, recall_entity_memory);
+
+	static EntityFilter::QueryContext createFilterContext(LocatedEntity* entity, MemMap* memMap);
 
 };
 

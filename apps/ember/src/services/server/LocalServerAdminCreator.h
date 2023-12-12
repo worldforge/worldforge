@@ -34,7 +34,7 @@ class ServerService;
 
 class AdminEntityCreator : public sigc::trackable {
 public:
-	AdminEntityCreator(Eris::Account& account);
+	explicit AdminEntityCreator(Eris::Account& account);
 
 	void operationGetResult(const Atlas::Objects::Operation::RootOperation& op);
 

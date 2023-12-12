@@ -40,114 +40,107 @@ using Atlas::Objects::Entity::Anonymous;
 
 static const bool debug_flag = false;
 
-Lobby::Lobby(ServerRouting & s, RouterId id) :
-       Router(std::move(id)),
-       m_server(s)
-{
+Lobby::Lobby(ServerRouting& s, RouterId id) :
+		Router(std::move(id)),
+		m_server(s) {
 }
 
 Lobby::~Lobby() = default;
 
-void Lobby::addAccount(ConnectableRouter * ac)
-{
-    cy_debug_print("Lobby::addAccount(" << ac->getId() << ")");
+void Lobby::addAccount(ConnectableRouter* ac) {
+	cy_debug_print("Lobby::addAccount(" << ac->getId() << ")");
 
-    Appearance a;
-    Anonymous us;
-    us->setId(ac->getId());
-    us->setLoc(getId());
-    a->setArgs1(us);
-    a->setFrom(ac->getId());
-    a->setTo(getId());
+	Appearance a;
+	Anonymous us;
+	us->setId(ac->getId());
+	us->setLoc(getId());
+	a->setArgs1(us);
+	a->setFrom(ac->getId());
+	a->setTo(getId());
 
-    OpVector res;
-    operation(a, res);
-    assert(res.empty());
+	OpVector res;
+	operation(a, res);
+	assert(res.empty());
 
-    m_accounts[ac->getId()] = ac;
+	m_accounts[ac->getId()] = ac;
 }
 
-void Lobby::removeAccount(ConnectableRouter * ac)
-{
-    cy_debug_print("Lobby::delAccount(" << ac->getId() << ")");
-                    
+void Lobby::removeAccount(ConnectableRouter* ac) {
+	cy_debug_print("Lobby::delAccount(" << ac->getId() << ")");
 
-    auto result = m_accounts.erase(ac->getId());
-    if (result) {
-        Disappearance d;
-        Anonymous us;
-        us->setId(ac->getId());
-        us->setLoc(getId());
-        d->setArgs1(us);
-        d->setFrom(ac->getId());
-        d->setTo(getId());
 
-        OpVector res;
-        operation(d, res);
-        assert(res.empty());
-    }
+	auto result = m_accounts.erase(ac->getId());
+	if (result) {
+		Disappearance d;
+		Anonymous us;
+		us->setId(ac->getId());
+		us->setLoc(getId());
+		d->setArgs1(us);
+		d->setFrom(ac->getId());
+		d->setTo(getId());
+
+		OpVector res;
+		operation(d, res);
+		assert(res.empty());
+	}
 }
 
 
-void Lobby::externalOperation(const Operation & op, Link &)
-{
-    spdlog::error("{} called", __PRETTY_FUNCTION__);
+void Lobby::externalOperation(const Operation& op, Link&) {
+	spdlog::error("{} called", __PRETTY_FUNCTION__);
 }
 
-void Lobby::operation(const Operation & op, OpVector & res)
-{
-    cy_debug_print("Lobby::operation(" << op->getParent());
-    const std::string & to = op->getTo();
-    if (to.empty() || to == getId()) {
-        Operation newop(op.copy());
-        for (auto& entry : m_accounts) {
-            auto c = entry.second->getConnection();
-            if (c) {
-                newop->setTo(entry.first);
-                cy_debug_print("Lobby sending " << newop->getParent() << " operation to " << entry.first);
-                c->send(newop);
-            }
-        }
-    } else {
-        auto I = m_accounts.find(to);
-        if (I == m_accounts.end()) {
-            error(op, "Target account not logged in", res);
-        } else {
-            auto c = I->second->getConnection();
-            if (!c) {
-                error(op, "Target account not logged in", res);
-            } else {
-                c->send(op);
-            }
-        }
-    }
+void Lobby::operation(const Operation& op, OpVector& res) {
+	cy_debug_print("Lobby::operation(" << op->getParent());
+	const std::string& to = op->getTo();
+	if (to.empty() || to == getId()) {
+		Operation newop(op.copy());
+		for (auto& entry: m_accounts) {
+			auto c = entry.second->getConnection();
+			if (c) {
+				newop->setTo(entry.first);
+				cy_debug_print("Lobby sending " << newop->getParent() << " operation to " << entry.first);
+				c->send(newop);
+			}
+		}
+	} else {
+		auto I = m_accounts.find(to);
+		if (I == m_accounts.end()) {
+			error(op, "Target account not logged in", res);
+		} else {
+			auto c = I->second->getConnection();
+			if (!c) {
+				error(op, "Target account not logged in", res);
+			} else {
+				c->send(op);
+			}
+		}
+	}
 }
 
-void Lobby::addToMessage(MapType & omap) const
-{
-    omap["name"] = "lobby";
-    omap["parent"] = "room";
-    ListType player_list;
-    for (auto& entry : m_accounts) {
-        player_list.push_back(entry.first);
-    }
-    omap["people"] = player_list;
-    omap["rooms"] = ListType();
-    omap["objtype"] = "obj";
-    omap["id"] = getId();
+void Lobby::addToMessage(MapType& omap) const {
+	omap["name"] = "lobby";
+	omap["parent"] = "room";
+	ListType player_list;
+	for (auto& entry: m_accounts) {
+		player_list.push_back(entry.first);
+	}
+	omap["people"] = player_list;
+	omap["rooms"] = ListType();
+	omap["objtype"] = "obj";
+	omap["id"] = getId();
 }
 
-void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity & ent) const
-{
-    ent->setName("lobby");
-    ListType plist(1, "room");
-    ent->setParent("room");
-    ListType player_list;
-    for (auto& entry : m_accounts) {
-        player_list.push_back(entry.first);
-    }
-    ent->setAttr("people", player_list);
-    ent->setAttr("rooms", ListType());
-    ent->setObjtype("obj");
-    ent->setId(getId());
+void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const {
+	ent->setName("lobby");
+	ListType plist(1, "room");
+	ent->setParent("room");
+	ListType player_list;
+	for (auto& entry: m_accounts) {
+		player_list.push_back(entry.first);
+	}
+	ent->setAttr("people", player_list);
+	ent->setAttr("rooms", ListType());
+	ent->setObjtype("obj");
+	ent->setId(getId());
 }

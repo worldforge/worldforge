@@ -24,22 +24,20 @@
 
 struct OperationsHandler;
 
-struct MainLoop
-{
+struct MainLoop {
 
-    struct Callbacks
-    {
-        std::function<std::chrono::steady_clock::duration()> softExitStart;
-        std::function<bool()> softExitPoll;
-        std::function<void()> softExitTimeout;
-        std::function<void()> dispatchOperations;
-    };
+	struct Callbacks {
+		std::function<std::chrono::steady_clock::duration()> softExitStart;
+		std::function<bool()> softExitPoll;
+		std::function<void()> softExitTimeout;
+		std::function<void()> dispatchOperations;
+	};
 
-    static void run(bool daemon,
-                    boost::asio::io_context& io_context,
-                    OperationsHandler& operationsHandler,
-                    const Callbacks& callbacks,
-                    std::chrono::steady_clock::duration& time);
+	static void run(bool daemon,
+					boost::asio::io_context& io_context,
+					OperationsHandler& operationsHandler,
+					const Callbacks& callbacks,
+					std::chrono::steady_clock::duration& time);
 
 
 };

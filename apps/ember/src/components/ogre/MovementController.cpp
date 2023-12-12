@@ -52,8 +52,8 @@
 
 using namespace Ogre;
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 MovementControllerInputListener::MovementControllerInputListener(MovementController& controller) :
 		mController(controller) {
@@ -444,5 +444,5 @@ Ogre::SceneNode* MovementController::getFreeFlyingCameraNode() {
 }
 
 }
-}
+
 

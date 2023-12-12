@@ -25,21 +25,21 @@
 /// \brief Class to handle Entity where new characters can be spawned.
 /// \ingroup PropertyClasses
 class SpawnProperty : public Property<Atlas::Message::MapType> {
-  public:
-    static constexpr const char* property_name = "__spawn";
+public:
+	static constexpr const char* property_name = "__spawn";
 
-    SpawnProperty() = default;
+	SpawnProperty() = default;
 
-    ~SpawnProperty() override = default;
+	~SpawnProperty() override = default;
 
-    SpawnProperty * copy() const override;
+	SpawnProperty* copy() const override;
 
-    void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-    void remove(LocatedEntity&, const std::string&) override;
+	void remove(LocatedEntity&, const std::string&) override;
 
-    protected:
-        SpawnProperty(const SpawnProperty& rhs) = default;
+protected:
+	SpawnProperty(const SpawnProperty& rhs) = default;
 
 };
 

@@ -37,95 +37,105 @@
 class LocatedEntity;
 
 class Location : public EntityLocation {
-  protected:
+protected:
 
-    double m_timeStamp;
+	double m_timeStamp;
 
-    float m_radius; // Radius of bounding sphere of box
-    float m_squareRadius;
-  public:
-    /**
-     * Velocity vector, relative to m_parent entity.
-     */
-    Vector3D m_velocity;
-    /**
-     * Angular velocity of the entity, i.e. how it's being continuously rotated.
-     */
-    Vector3D m_angularVelocity;
-    Quaternion m_orientation;
+	float m_radius; // Radius of bounding sphere of box
+	float m_squareRadius;
+public:
+	/**
+	 * Velocity vector, relative to m_parent entity.
+	 */
+	Vector3D m_velocity;
+	/**
+	 * Angular velocity of the entity, i.e. how it's being continuously rotated.
+	 */
+	Vector3D m_angularVelocity;
+	Quaternion m_orientation;
 
-    BBox m_bBox;
+	BBox m_bBox;
 
-    Location();
-    explicit Location(Ref<LocatedEntity> rf);
-    explicit Location(Ref<LocatedEntity> rf,
-                      const Point3D& pos);
-    explicit Location(Ref<LocatedEntity> rf,
-                      const Point3D& pos,
-                      Vector3D velocity);
+	Location();
 
-    explicit Location(LocatedEntity * rf);
-    explicit Location(LocatedEntity * rf,
-                      const Point3D& pos);
-    explicit Location(LocatedEntity * rf,
-                      const Point3D& pos,
-                      Vector3D velocity);
+	explicit Location(Ref<LocatedEntity> rf);
 
-    explicit Location(EntityLocation entityLocation);
+	explicit Location(Ref<LocatedEntity> rf,
+					  const Point3D& pos);
+
+	explicit Location(Ref<LocatedEntity> rf,
+					  const Point3D& pos,
+					  Vector3D velocity);
+
+	explicit Location(LocatedEntity* rf);
+
+	explicit Location(LocatedEntity* rf,
+					  const Point3D& pos);
+
+	explicit Location(LocatedEntity* rf,
+					  const Point3D& pos,
+					  Vector3D velocity);
+
+	explicit Location(EntityLocation entityLocation);
 
 
-    float radius() const { return m_radius; }
-    float squareRadius() const { return m_squareRadius; }
+	float radius() const { return m_radius; }
 
-    const Vector3D & velocity() const { return m_velocity; }
-    const Quaternion & orientation() const { return m_orientation; }
-    const BBox & bBox() const { return m_bBox; }
+	float squareRadius() const { return m_squareRadius; }
 
-    const double & timeStamp() const {
-        return m_timeStamp;
-    }
+	const Vector3D& velocity() const { return m_velocity; }
 
-    void update(const double & time) {
-        m_timeStamp = time;
-    }
+	const Quaternion& orientation() const { return m_orientation; }
 
-    void setBBox(const BBox & b) {
-        m_bBox = b;
-        modifyBBox();
-    }
+	const BBox& bBox() const { return m_bBox; }
 
-    void resetTransformAndMovement() {
-        m_pos = {};
-        m_orientation = {};
-        m_velocity = {};
-        m_angularVelocity = {};
-    }
+	const double& timeStamp() const {
+		return m_timeStamp;
+	}
 
-    void addToMessage(Atlas::Message::MapType & ent) const;
-    void addToEntity(const Atlas::Objects::Entity::RootEntity & ent) const;
+	void update(const double& time) {
+		m_timeStamp = time;
+	}
 
-    /**
-     * Reads data from a map message.
-     * @return True if map contained location data.
-     */
-    bool readFromMessage(const Atlas::Message::MapType & message);
-    /**
-     * Reads data from an entity message.
-     * @return True if entity contained location data.
-     */
-    bool readFromEntity(const Atlas::Objects::Entity::RootEntity & ent);
+	void setBBox(const BBox& b) {
+		m_bBox = b;
+		modifyBBox();
+	}
 
-    void modifyBBox();
+	void resetTransformAndMovement() {
+		m_pos = {};
+		m_orientation = {};
+		m_velocity = {};
+		m_angularVelocity = {};
+	}
 
-    friend std::ostream & operator<<(std::ostream& s, Location& v);
+	void addToMessage(Atlas::Message::MapType& ent) const;
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const;
+
+	/**
+	 * Reads data from a map message.
+	 * @return True if map contained location data.
+	 */
+	bool readFromMessage(const Atlas::Message::MapType& message);
+
+	/**
+	 * Reads data from an entity message.
+	 * @return True if entity contained location data.
+	 */
+	bool readFromEntity(const Atlas::Objects::Entity::RootEntity& ent);
+
+	void modifyBBox();
+
+	friend std::ostream& operator<<(std::ostream& s, Location& v);
 };
 
 
-Vector3D distanceTo(const Location & self, const Location & other);
+Vector3D distanceTo(const Location& self, const Location& other);
 
-Point3D relativePos(const Location & self, const Location & other);
+Point3D relativePos(const Location& self, const Location& other);
 
-boost::optional<WFMath::CoordType> squareDistance(const Location & self, const Location & other);
+boost::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other);
 
 /**
  * \brief Gets the squared distance between the two supplied location, if possible, along with the common ancestor.
@@ -141,16 +151,16 @@ boost::optional<WFMath::CoordType> squareDistance(const Location & self, const L
  * @param ancestor Any ancestor location will be placed here.
  * @return The distance, squared. Note that this value is invalid if no ancestor could be found, so make sure to check the return value of the "ancestor" parameter.
  */
-WFMath::CoordType squareDistanceWithAncestor(const Location & self, const Location & other, const Location** ancestor);
-boost::optional<WFMath::CoordType> squareHorizontalDistance(const Location & self, const Location & other);
+WFMath::CoordType squareDistanceWithAncestor(const Location& self, const Location& other, const Location** ancestor);
 
-inline boost::optional<WFMath::CoordType> distance(const Location & self, const Location & other)
-{
-    auto distance = squareDistance(self, other);
-    if (!distance) {
-        return boost::none;
-    }
-    return std::sqrt(*distance);
+boost::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other);
+
+inline boost::optional<WFMath::CoordType> distance(const Location& self, const Location& other) {
+	auto distance = squareDistance(self, other);
+	if (!distance) {
+		return boost::none;
+	}
+	return std::sqrt(*distance);
 }
 
 

@@ -28,14 +28,14 @@
 #include "StringComparer.h"
 #include "AttributeComparerWrapper.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 
 /**
@@ -54,10 +54,10 @@ private:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

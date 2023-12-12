@@ -22,14 +22,14 @@
 //
 #include "StringComparerWrapper.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 
 StringComparerWrapper::StringComparerWrapper(std::unique_ptr<StringComparer> comparer)
@@ -43,8 +43,8 @@ bool StringComparerWrapper::testAttribute(const Atlas::Message::Element& attribu
 
 }
 
-}
 
-}
 
-}
+
+
+

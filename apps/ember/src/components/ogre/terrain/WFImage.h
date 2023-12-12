@@ -22,24 +22,19 @@
 
 #include "Image.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class WFImage : public Image {
 public:
 	explicit WFImage(std::unique_ptr<Image::ImageBuffer> buffer);
 
-	void blit(const OgreImage& imageToBlit, unsigned int destinationChannel, int widthOffset = 0, int heightOffset = 0) override;
+	void blit(const OgreImage& imageToBlit, unsigned int destinationChannel, int widthOffset, int heightOffset) override;
 
-	void blit(const WFImage& imageToBlit, unsigned int destinationChannel, int widthOffset = 0, int heightOffset = 0) override;
+	void blit(const WFImage& imageToBlit, unsigned int destinationChannel, int widthOffset, int heightOffset) override;
 };
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINWFIMAGE_H_ */

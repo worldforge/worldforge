@@ -26,10 +26,12 @@
 /// Variables which should be represented in the monitors output are
 /// referenced by subclasses this interface
 class VariableBase {
-  public:
-    virtual ~VariableBase() = default;
-    virtual void send(std::ostream &) = 0;
-    virtual bool isNumeric() const = 0;
+public:
+	virtual ~VariableBase() = default;
+
+	virtual void send(std::ostream&) = 0;
+
+	virtual bool isNumeric() const = 0;
 };
 
 /// \brief Concrete class template for dynamic variable monitors
@@ -38,14 +40,16 @@ class VariableBase {
 /// monitoring subsystem.
 template<typename T>
 class Variable : public VariableBase {
-  protected:
-    const T & m_variable;
-  public:
-    explicit Variable(const T & variable);
+protected:
+	const T& m_variable;
+public:
+	explicit Variable(const T& variable);
 
-    ~Variable() override;
-    void send(std::ostream &) override;
-    bool isNumeric() const override;
+	~Variable() override;
+
+	void send(std::ostream&) override;
+
+	bool isNumeric() const override;
 };
 
 #endif // COMMON_VARIABLE_H

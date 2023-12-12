@@ -36,80 +36,76 @@ using Atlas::Objects::Operation::Set;
 using Atlas::Message::Element;
 
 EntityTraversalTask::EntityTraversalTask(const std::string& accountId,
-        std::function<bool(const Atlas::Objects::Entity::RootEntity&)>& visitor) :
-        mAccountId(accountId), mVisitor(visitor), mSerial(0)
-{
+										 std::function<bool(const Atlas::Objects::Entity::RootEntity&)>& visitor) :
+		mAccountId(accountId), mVisitor(visitor), mSerial(0) {
 }
 
 EntityTraversalTask::~EntityTraversalTask() = default;
 
-void EntityTraversalTask::setup(const std::string & arg, OpVector & res)
-{
-    Anonymous get_arg;
-    get_arg->setId("0");
-    get_arg->setObjtype("obj");
+void EntityTraversalTask::setup(const std::string& arg, OpVector& res) {
+	Anonymous get_arg;
+	get_arg->setId("0");
+	get_arg->setObjtype("obj");
 
-    Get get;
-    get->setArgs1(get_arg);
-    get->setFrom(mAccountId);
-    get->setSerialno(newSerialNo());
-    mSerial = get->getSerialno();
-    res.push_back(get);
+	Get get;
+	get->setArgs1(get_arg);
+	get->setFrom(mAccountId);
+	get->setSerialno(newSerialNo());
+	mSerial = get->getSerialno();
+	res.push_back(get);
 }
 
-void EntityTraversalTask::operation(const Operation & op, OpVector & res)
-{
-    if (!op->isDefaultRefno() && op->getRefno() == mSerial) {
-        if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
-            if (!op->getArgs().empty()) {
-                auto arg = smart_dynamic_cast<RootEntity>(
-                        op->getArgs().front());
-                if (arg.isValid()) {
-                    bool result = mVisitor(arg);
-                    if (result) {
-                        if (!arg->isDefaultContains()
-                                && !arg->getContains().empty()) {
-                            mStack.emplace_back();
-                            mStack.back().children = arg->getContains();
-                            mStack.back().currentChildIterator =
-                                    mStack.back().children.begin();
-                            getEntity(*mStack.back().currentChildIterator, res);
-                            return;
-                        } else {
-                            while (!mStack.empty()) {
-                                StackEntry& stackEntry = mStack.back();
-                                ++stackEntry.currentChildIterator;
-                                if (stackEntry.currentChildIterator
-                                        == stackEntry.children.end()) {
-                                    mStack.pop_back();
-                                } else {
-                                    getEntity(*stackEntry.currentChildIterator,
-                                            res);
-                                    return;
-                                }
-                            }
-                            m_complete = true;
-                        }
-                    } else {
-                        m_complete = true;
-                    }
-                }
-            }
-        }
-    }
+void EntityTraversalTask::operation(const Operation& op, OpVector& res) {
+	if (!op->isDefaultRefno() && op->getRefno() == mSerial) {
+		if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
+			if (!op->getArgs().empty()) {
+				auto arg = smart_dynamic_cast<RootEntity>(
+						op->getArgs().front());
+				if (arg.isValid()) {
+					bool result = mVisitor(arg);
+					if (result) {
+						if (!arg->isDefaultContains()
+							&& !arg->getContains().empty()) {
+							mStack.emplace_back();
+							mStack.back().children = arg->getContains();
+							mStack.back().currentChildIterator =
+									mStack.back().children.begin();
+							getEntity(*mStack.back().currentChildIterator, res);
+							return;
+						} else {
+							while (!mStack.empty()) {
+								StackEntry& stackEntry = mStack.back();
+								++stackEntry.currentChildIterator;
+								if (stackEntry.currentChildIterator
+									== stackEntry.children.end()) {
+									mStack.pop_back();
+								} else {
+									getEntity(*stackEntry.currentChildIterator,
+											  res);
+									return;
+								}
+							}
+							m_complete = true;
+						}
+					} else {
+						m_complete = true;
+					}
+				}
+			}
+		}
+	}
 }
 
-void EntityTraversalTask::getEntity(const std::string & id, OpVector & res)
-{
-    Anonymous get_arg;
-    get_arg->setId(id);
-    get_arg->setObjtype("obj");
+void EntityTraversalTask::getEntity(const std::string& id, OpVector& res) {
+	Anonymous get_arg;
+	get_arg->setId(id);
+	get_arg->setObjtype("obj");
 
-    Get get;
-    get->setArgs1(get_arg);
-    get->setFrom(mAccountId);
-    get->setSerialno(newSerialNo());
-    mSerial = get->getSerialno();
-    res.push_back(get);
+	Get get;
+	get->setArgs1(get_arg);
+	get->setFrom(mAccountId);
+	get->setSerialno(newSerialNo());
+	mSerial = get->getSerialno();
+	res.push_back(get);
 }
 

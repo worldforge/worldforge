@@ -69,57 +69,55 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-int main()
-{
-    Ref<World> e(new World());
-    TypeNode type("world");
-    e->setType(&type);
+int main() {
+	Ref<World> e(new World());
+	TypeNode type("world");
+	e->setType(&type);
 
-    IGEntityExerciser ee(e);
+	IGEntityExerciser ee(e);
 
-    assert(e->m_parent == nullptr);
+	assert(e->m_parent == nullptr);
 
-    // Throw an op of every type at the entity
-    ee.runOperations();
+	// Throw an op of every type at the entity
+	ee.runOperations();
 
-    // Subscribe the entity to every class of op
-    std::set<std::string> opNames;
-    ee.addAllOperations(opNames);
+	// Subscribe the entity to every class of op
+	std::set<std::string> opNames;
+	ee.addAllOperations(opNames);
 
-    // Throw an op of every type at the entity again now it is subscribed
-    ee.runOperations();
+	// Throw an op of every type at the entity again now it is subscribed
+	ee.runOperations();
 
-    return 0;
+	return 0;
 }
 
 // stubs
 
 
-void addToEntity(const Point3D & p, std::vector<double> & vd)
-{
-    vd.resize(3);
-    vd[0] = p[0];
-    vd[1] = p[1];
-    vd[2] = p[2];
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
+	vd.resize(3);
+	vd[0] = p[0];
+	vd[1] = p[1];
+	vd[2] = p[2];
 }
 
 #ifndef STUB_BaseWorld_getEntity
 #define STUB_BaseWorld_getEntity
-Ref<LocatedEntity> BaseWorld::getEntity(const std::string & id) const
-{
-    return getEntity(integerId(id));
+
+Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
+	return getEntity(integerId(id));
 }
 
-Ref<LocatedEntity> BaseWorld::getEntity(long id) const
-{
-    auto I = m_eobjects.find(id);
-    if (I != m_eobjects.end()) {
-        assert(I->second);
-        return I->second;
-    } else {
-        return nullptr;
-    }
+Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
+	auto I = m_eobjects.find(id);
+	if (I != m_eobjects.end()) {
+		assert(I->second);
+		return I->second;
+	} else {
+		return nullptr;
+	}
 }
+
 #endif //STUB_BaseWorld_getEntity
 
 #include "../stubs/rules/simulation/stubBaseWorld.h"

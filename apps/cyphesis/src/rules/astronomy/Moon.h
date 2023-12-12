@@ -11,9 +11,9 @@
 // 
 
 class Moon : public Body {
-  private:
-  public:
-    Moon(double p, double r, double e = 0, double a = 0) : Body(p,r,e,a) { }
+private:
+public:
+	Moon(double p, double r, double e = 0, double a = 0) : Body(p, r, e, a) {}
 };
 
 #endif // ASTRONOMY_MOON_H

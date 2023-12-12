@@ -25,11 +25,9 @@
 #include <chrono>
 #include <iomanip>
 
-namespace Ember
-{
+namespace Ember {
 
-void TimeHelper::getLocalTime(int& year, int& month, int& day, int& hour, int& minute, int& second)
-{
+void TimeHelper::getLocalTime(int& year, int& month, int& day, int& hour, int& minute, int& second) {
 	// latest version of boost::posix_time seems to be broken on win32. Fallback to boost::date_time::c_time
 	tm storage{};
 	time_t t = time(nullptr);
@@ -43,8 +41,7 @@ void TimeHelper::getLocalTime(int& year, int& month, int& day, int& hour, int& m
 	year = now->tm_year + 1900;
 }
 
-std::string TimeHelper::getLocalTimeStr()
-{
+std::string TimeHelper::getLocalTimeStr() {
 	int year, month, day, hour, minute, second;
 	std::stringstream s;
 
@@ -68,8 +65,7 @@ std::string TimeHelper::getLocalTimeStr()
 
 }
 
-long long TimeHelper::currentTimeMillis()
-{
+long long TimeHelper::currentTimeMillis() {
 	// Determine milliseconds since epoch (1970.01.01) with C++11 chrono.
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 	return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();

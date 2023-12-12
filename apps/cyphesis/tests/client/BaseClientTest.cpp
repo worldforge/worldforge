@@ -36,66 +36,64 @@ using Atlas::Objects::Operation::RootOperation;
 
 Atlas::Objects::Factories factories;
 
-class TestBaseClient : public BaseClient
-{
-  public:
-    explicit TestBaseClient(boost::asio::io_context& io_context, TypeStore& typeStore) : BaseClient(io_context, factories, typeStore) { }
+class TestBaseClient : public BaseClient {
+public:
+	explicit TestBaseClient(boost::asio::io_context& io_context, TypeStore& typeStore) : BaseClient(io_context, factories, typeStore) {}
 
-    void idle() override { }
+	void idle() override {}
 };
 
-int main()
-{
-    NullPropertyManager propertyManager;
-    SimpleTypeStore typeStore(propertyManager);
-    boost::asio::io_context io_context;
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+int main() {
+	NullPropertyManager propertyManager;
+	SimpleTypeStore typeStore(propertyManager);
+	boost::asio::io_context io_context;
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        bc->createAccount("8e7e4452-f666-11df-8027-00269e5444b3", "84abee0c-f666-11df-8f7e-00269e5444b3");
+		bc->createAccount("8e7e4452-f666-11df-8027-00269e5444b3", "84abee0c-f666-11df-8f7e-00269e5444b3");
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        bc->createSystemAccount();
+		bc->createSystemAccount();
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        bc->createCharacter("9e7f4004-f666-11df-a327-00269e5444b3");
+		bc->createCharacter("9e7f4004-f666-11df-a327-00269e5444b3");
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        bc->logout();
+		bc->logout();
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    {
-        BaseClient * bc = new TestBaseClient{io_context, typeStore};
+	{
+		BaseClient* bc = new TestBaseClient{io_context, typeStore};
 
-        bc->handleNet();
+		bc->handleNet();
 
-        delete bc;
-    }
+		delete bc;
+	}
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -112,9 +110,9 @@ int main()
 #include "../stubs/client/cyclient/stubCreatorClient.h"
 
 #define STUB_ClientConnection_pop
-RootOperation ClientConnection::pop()
-{
-    return RootOperation(nullptr);
+
+RootOperation ClientConnection::pop() {
+	return RootOperation(nullptr);
 }
 
 #include "../stubs/client/cyclient/stubClientConnection.h"
@@ -125,9 +123,8 @@ RootOperation ClientConnection::pop()
 #include "../stubs/common/stubProperty.h"
 #include "../stubs/common/stubPropertyManager.h"
 
-std::string create_session_username()
-{
-    return "admin_test";
+std::string create_session_username() {
+	return "admin_test";
 }
 
 #include "../stubs/common/stubid.h"

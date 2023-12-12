@@ -22,12 +22,11 @@
 
 #include "common/PropertyManager.h"
 
-class ClientPropertyManager : public PropertyManager
-{
-    public:
-        ClientPropertyManager();
+class ClientPropertyManager : public PropertyManager {
+public:
+	ClientPropertyManager();
 
-        std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override;
+	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override;
 };
 
 

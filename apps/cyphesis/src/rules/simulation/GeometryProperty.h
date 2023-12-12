@@ -62,82 +62,80 @@ class OgreMeshDeserializer;
  *
  * @ingroup PropertyClasses
  */
-class GeometryProperty : public Property<Atlas::Message::MapType>
-{
-    public:
+class GeometryProperty : public Property<Atlas::Message::MapType> {
+public:
 
-        static constexpr const char* property_name = "geometry";
+	static constexpr const char* property_name = "geometry";
 
-        GeometryProperty() = default;
+	GeometryProperty() = default;
 
-        ~GeometryProperty() override = default;
+	~GeometryProperty() override = default;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        void install(TypeNode&, const std::string&) override;
+	void install(TypeNode&, const std::string&) override;
 
-        GeometryProperty* copy() const override;
+	GeometryProperty* copy() const override;
 
-        /**
-         * Creates a new shape instance for the supplied bounding box, and setting the center of mass offset.
-         * @param bbox The bounding box of the entity for which the shape will be used.
-         * @param centerOfMassOffset Out parameter for the center of mass offset.
-         * @return A pair containing at least a collision shape as first entry. Ownership of this shape is passed to the caller.
-         * Optionally there can also be as a second entry a shared pointer to a "backing" shape. Such a shape is shared between multiple instances, and deleted only
-         * when all instances are deleted. Calling code needs to retain the shared pointer as long as the first collision shape is in use.
-         */
-        std::shared_ptr<btCollisionShape> createShape(const WFMath::AxisBox<3>& bbox,
-                                                      btVector3& centerOfMassOffset, float mass) const;
+	/**
+	 * Creates a new shape instance for the supplied bounding box, and setting the center of mass offset.
+	 * @param bbox The bounding box of the entity for which the shape will be used.
+	 * @param centerOfMassOffset Out parameter for the center of mass offset.
+	 * @return A pair containing at least a collision shape as first entry. Ownership of this shape is passed to the caller.
+	 * Optionally there can also be as a second entry a shared pointer to a "backing" shape. Such a shape is shared between multiple instances, and deleted only
+	 * when all instances are deleted. Calling code needs to retain the shared pointer as long as the first collision shape is in use.
+	 */
+	std::shared_ptr<btCollisionShape> createShape(const WFMath::AxisBox<3>& bbox,
+												  btVector3& centerOfMassOffset, float mass) const;
 
-    protected:
-        GeometryProperty(const GeometryProperty& rhs) = default;
+protected:
+	GeometryProperty(const GeometryProperty& rhs) = default;
 
-        /**
-         * Defines how the geometry should be scaled in accordance to the entity bounding box.
-         */
-        enum class ScalerType
-        {
-                /**
-                 * Use the smallest dimension.
-                 */
-                        Min,
-                /**
-                 * Use the largest dimension.
-                 */
-                        Max,
-                /**
-                 * Use the x axis.
-                 */
-                        XAxis,
-                /**
-                 * Use the y axis.
-                 */
-                        YAxis,
-                /**
-                 * Use the z axis.
-                 */
-                        ZAxis
-        };
+	/**
+	 * Defines how the geometry should be scaled in accordance to the entity bounding box.
+	 */
+	enum class ScalerType {
+		/**
+		 * Use the smallest dimension.
+		 */
+		Min,
+		/**
+		 * Use the largest dimension.
+		 */
+		Max,
+		/**
+		 * Use the x axis.
+		 */
+		XAxis,
+		/**
+		 * Use the y axis.
+		 */
+		YAxis,
+		/**
+		 * Use the z axis.
+		 */
+		ZAxis
+	};
 
-        WFMath::AxisBox<3> m_meshBounds;
+	WFMath::AxisBox<3> m_meshBounds;
 
-        boost::variant<LocatedEntity*, TypeNode*> m_owner;
+	boost::variant<LocatedEntity*, TypeNode*> m_owner;
 
-        /**
-         * Creator function used for creating a new shape instance.
-         */
-        std::function<std::shared_ptr<btCollisionShape>(const WFMath::AxisBox<3>& bbox,
-                                                        const WFMath::Vector<3>& size,
-                                                        btVector3& centerOfMassOffset,
-                                                        float mass)> mShapeCreator;
+	/**
+	 * Creator function used for creating a new shape instance.
+	 */
+	std::function<std::shared_ptr<btCollisionShape>(const WFMath::AxisBox<3>& bbox,
+													const WFMath::Vector<3>& size,
+													btVector3& centerOfMassOffset,
+													float mass)> mShapeCreator;
 
-        void buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> meshDeserializer);
+	void buildMeshCreator(std::shared_ptr<OgreMeshDeserializer> meshDeserializer);
 
-        void buildCompoundCreator();
+	void buildCompoundCreator();
 
-        GeometryProperty::ScalerType parseScalerType();
+	GeometryProperty::ScalerType parseScalerType();
 
-        void parseData(std::shared_ptr<OgreMeshDeserializer> deserializer);
+	void parseData(std::shared_ptr<OgreMeshDeserializer> deserializer);
 
 };
 

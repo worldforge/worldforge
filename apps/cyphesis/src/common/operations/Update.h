@@ -21,20 +21,23 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int UPDATE_NO;
 
 /// \brief An operation used to trigger a location update.
 /// \ingroup CustomOperations
-class Update : public Generic
-{
-  public:
-    Update() {
-        (*this)->setType("update", UPDATE_NO);
-    }
+class Update : public Generic {
+public:
+	Update() {
+		(*this)->setType("update", UPDATE_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_UPDATE_H

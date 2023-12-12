@@ -28,60 +28,54 @@
 
 static const bool debug_flag = false;
 
-Link::Link(CommSocket & socket, RouterId id) :
-            Router(std::move(id)),
-            m_encoder(nullptr),
-            m_commSocket(socket)
-{
+Link::Link(CommSocket& socket, RouterId id) :
+		Router(std::move(id)),
+		m_encoder(nullptr),
+		m_commSocket(socket) {
 }
 
 Link::~Link() = default;
 
-void Link::send(const Operation & op) const
-{
-    if (m_encoder) {
-        if (debug_flag) {
-            std::cerr << "sending: ";
-            debug_dump(op, std::cerr);
-            std::cerr << std::endl;
-        }
+void Link::send(const Operation& op) const {
+	if (m_encoder) {
+		if (debug_flag) {
+			std::cerr << "sending: ";
+			debug_dump(op, std::cerr);
+			std::cerr << std::endl;
+		}
 
-        m_encoder->streamObjectsMessage(op);
-    }
+		m_encoder->streamObjectsMessage(op);
+	}
 }
 
-void Link::send(const OpVector& opVector) const
-{
-    if (m_encoder) {
-        for (const auto& op : opVector) {
-            if (debug_flag) {
-                std::cerr << "sending: ";
-                debug_dump(op, std::cerr);
-                std::cerr << std::endl;
-            }
+void Link::send(const OpVector& opVector) const {
+	if (m_encoder) {
+		for (const auto& op: opVector) {
+			if (debug_flag) {
+				std::cerr << "sending: ";
+				debug_dump(op, std::cerr);
+				std::cerr << std::endl;
+			}
 
-            m_encoder->streamObjectsMessage(op);
-        }
-    }
+			m_encoder->streamObjectsMessage(op);
+		}
+	}
 }
 
 
-void Link::sendError(const Operation & op,
-                     const std::string & errstring,
-                     const std::string & to) const
-{
-    Atlas::Objects::Operation::Error e;
+void Link::sendError(const Operation& op,
+					 const std::string& errstring,
+					 const std::string& to) const {
+	Atlas::Objects::Operation::Error e;
 
-    buildError(op, errstring, e, to);
+	buildError(op, errstring, e, to);
 
-    send(e);
+	send(e);
 }
 
-void Link::disconnect()
-{
-    m_commSocket.disconnect();
+void Link::disconnect() {
+	m_commSocket.disconnect();
 }
 
-void Link::notifyConnectionComplete()
-{
+void Link::notifyConnectionComplete() {
 }

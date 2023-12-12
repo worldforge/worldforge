@@ -29,9 +29,8 @@
 
 #include "ModelDefinition.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 struct BoneGroupRef {
 	BoneGroupDefinition boneGroupDefinition;
@@ -141,8 +140,6 @@ inline int Animation::getIterations() const {
 }
 
 }
-}
 
-}
 
 #endif

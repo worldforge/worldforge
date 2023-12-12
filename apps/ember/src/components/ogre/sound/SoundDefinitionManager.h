@@ -34,8 +34,8 @@
 #include <memory>
 #include <unordered_map>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 class XMLSoundDefParser;
@@ -82,6 +82,5 @@ protected:
 
 }
 
-}
 
 #endif

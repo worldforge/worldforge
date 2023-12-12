@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 Allocator<AnonymousData> AnonymousData::allocator;
         
@@ -48,15 +48,15 @@ bool AnonymousData::instanceOf(int classNo) const
 void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, uint32_t>& attr_data)
 {
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
 }
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity

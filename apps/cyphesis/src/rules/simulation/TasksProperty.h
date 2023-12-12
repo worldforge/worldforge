@@ -26,74 +26,70 @@
 
 /// \brief Keeps track of any ongoing tasks.
 /// \ingroup PropertyClasses
-class TasksProperty : public PropertyBase
-{
-    protected:
+class TasksProperty : public PropertyBase {
+protected:
 
-        struct TaskEntry
-        {
-            TaskEntry() = delete;
+	struct TaskEntry {
+		TaskEntry() = delete;
 
-            TaskEntry(TaskEntry&&) noexcept = default;
+		TaskEntry(TaskEntry&&) noexcept = default;
 
-            TaskEntry& operator=(TaskEntry&&) noexcept = default;
+		TaskEntry& operator=(TaskEntry&&) noexcept = default;
 
-            TaskEntry(const TaskEntry&) noexcept = delete;
+		TaskEntry(const TaskEntry&) noexcept = delete;
 
-            TaskEntry& operator=(const TaskEntry&) noexcept = delete;
+		TaskEntry& operator=(const TaskEntry&) noexcept = delete;
 
-            explicit TaskEntry(Ref<Task> _task) noexcept
-                    : task(_task)
-            {
-            }
+		explicit TaskEntry(Ref<Task> _task) noexcept
+				: task(_task) {
+		}
 
-            ~TaskEntry()
-            {
-                if (task) {
-                    task->irrelevant();
-                }
-            }
+		~TaskEntry() {
+			if (task) {
+				task->irrelevant();
+			}
+		}
 
 
-            Ref<Task> task;
-        };
+		Ref<Task> task;
+	};
 
-        std::map<std::string, TaskEntry> m_tasks;
-    public:
-        static constexpr const char* property_name = "tasks";
-        static constexpr const char* property_atlastype = "map";
+	std::map<std::string, TaskEntry> m_tasks;
+public:
+	static constexpr const char* property_name = "tasks";
+	static constexpr const char* property_atlastype = "map";
 
-        explicit TasksProperty();
+	explicit TasksProperty();
 
-        TasksProperty(const TasksProperty& rhs) = delete;
+	TasksProperty(const TasksProperty& rhs) = delete;
 
-        void install(LocatedEntity&, const std::string&) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        TasksProperty* copy() const override;
+	TasksProperty* copy() const override;
 
-        int updateTask(LocatedEntity& owner, OpVector& res);
+	int updateTask(LocatedEntity& owner, OpVector& res);
 
-        int startTask(const std::string& id, Ref<Task> task,
-                      LocatedEntity& owner,
-                      OpVector& res);
+	int startTask(const std::string& id, Ref<Task> task,
+				  LocatedEntity& owner,
+				  OpVector& res);
 
-        int clearTask(const std::string& id, LocatedEntity& owner, OpVector& res);
+	int clearTask(const std::string& id, LocatedEntity& owner, OpVector& res);
 
-        void stopTask(const std::string& id, LocatedEntity& owner, OpVector& res);
+	void stopTask(const std::string& id, LocatedEntity& owner, OpVector& res);
 
-        HandlerResult TickOperation(LocatedEntity& owner, const Operation& op, OpVector&);
+	HandlerResult TickOperation(LocatedEntity& owner, const Operation& op, OpVector&);
 
-        HandlerResult UseOperation(LocatedEntity& owner, const Operation& op, OpVector&);
+	HandlerResult UseOperation(LocatedEntity& owner, const Operation& op, OpVector&);
 
-        HandlerResult operation(LocatedEntity& owner,
-                                const Operation& op,
-                                OpVector&) override;
+	HandlerResult operation(LocatedEntity& owner,
+							const Operation& op,
+							OpVector&) override;
 };
 
 #endif // RULESETS_TASKS_PROPERTY_H

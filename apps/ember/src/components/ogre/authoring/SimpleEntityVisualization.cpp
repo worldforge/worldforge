@@ -24,19 +24,16 @@
 #include "framework/Log.h"
 
 #include <OgreSceneNode.h>
-#include <OgreSceneManager.h>
 #include <OgreWireBoundingBox.h>
 #include <OgreEntity.h>
 #include <Ogre.h>
 
-namespace Ogre
-{
+namespace Ogre {
 
 /**
  This is just like a WireBoundBox but not aligned to the axes, hence it will correctly line up according to its orientation.
  */
-class OOBBWireBoundingBox: public WireBoundingBox
-{
+class OOBBWireBoundingBox : public WireBoundingBox {
 public:
 
 	void getWorldTransforms(Matrix4* xform) const override {
@@ -46,12 +43,9 @@ public:
 
 }
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 /**
  * @brief The material used for showing the eris bbox.
  */
@@ -62,8 +56,7 @@ SimpleEntityVisualization::SimpleEntityVisualization(EmberEntity& entity, Ogre::
 		mSceneNode(sceneNode),
 		mErisEntityBoundingBox(OGRE_NEW Ogre::OOBBWireBoundingBox()),
 		mBboxConnection(entity.observe("bbox", sigc::mem_fun(*this, &SimpleEntityVisualization::entity_BboxChanged), false)),
-		mScaleConnection(entity.observe("scale", sigc::mem_fun(*this, &SimpleEntityVisualization::entity_BboxChanged), false))
-{
+		mScaleConnection(entity.observe("scale", sigc::mem_fun(*this, &SimpleEntityVisualization::entity_BboxChanged), false)) {
 
 	mVelocityArrowEntity = sceneNode->getCreator()->createEntity("common/primitives/model/arrow.mesh");
 	mVelocitySceneNode = sceneNode->getParentSceneNode()->createChildSceneNode();
@@ -88,8 +81,7 @@ SimpleEntityVisualization::SimpleEntityVisualization(EmberEntity& entity, Ogre::
 	mEntity.Moved.connect(sigc::mem_fun(*this, &SimpleEntityVisualization::entity_Moved));
 }
 
-SimpleEntityVisualization::~SimpleEntityVisualization()
-{
+SimpleEntityVisualization::~SimpleEntityVisualization() {
 	mBboxConnection.disconnect();
 	mSceneNode->detachAllObjects();
 	OGRE_DELETE mErisEntityBoundingBox;
@@ -98,18 +90,15 @@ SimpleEntityVisualization::~SimpleEntityVisualization()
 	mVelocitySceneNode->getCreator()->destroySceneNode(mVelocitySceneNode);
 }
 
-void SimpleEntityVisualization::entity_Moved()
-{
+void SimpleEntityVisualization::entity_Moved() {
 	updatePositionAndOrientation();
 }
 
-void SimpleEntityVisualization::entity_BboxChanged(const Atlas::Message::Element& /*attributeValue*/)
-{
+void SimpleEntityVisualization::entity_BboxChanged(const Atlas::Message::Element& /*attributeValue*/) {
 	updateBbox();
 }
 
-void SimpleEntityVisualization::updateBbox()
-{
+void SimpleEntityVisualization::updateBbox() {
 	//if there's no bounding box defined for this entity, show one that is 0.2 meters across in all direction
 	if (mEntity.hasBBox() && mEntity.getBBox().isValid()) {
 		mErisEntityBoundingBox->setupBoundingBox(Convert::toOgre(mEntity.getBBox()));
@@ -118,8 +107,7 @@ void SimpleEntityVisualization::updateBbox()
 	}
 }
 
-void SimpleEntityVisualization::updatePositionAndOrientation()
-{
+void SimpleEntityVisualization::updatePositionAndOrientation() {
 	if (mEntity.getPosition().isValid()) {
 		mSceneNode->setPosition(Convert::toOgre(mEntity.getPosition()));
 		mVelocitySceneNode->setPosition(Convert::toOgre(mEntity.getPosition()));
@@ -145,5 +133,5 @@ void SimpleEntityVisualization::updatePositionAndOrientation()
 }
 
 }
-}
-}
+
+

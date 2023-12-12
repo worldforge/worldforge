@@ -26,9 +26,9 @@
 #include "CommHttpClient.h"
 
 struct HttpHandleContext {
-    std::ostream& io;
-    const std::list<std::string>& headers;
-    const std::string& path;
+	std::ostream& io;
+	const std::list<std::string>& headers;
+	const std::string& path;
 };
 
 
@@ -36,31 +36,31 @@ struct HttpHandleContext {
 ///
 class HttpHandling : public HttpRequestProcessor {
 public:
-    enum class HandleResult {
-        Handled, Ignored
-    };
-    typedef std::function<HandleResult(HttpHandleContext)> HttpHandler;
+	enum class HandleResult {
+		Handled, Ignored
+	};
+	typedef std::function<HandleResult(HttpHandleContext)> HttpHandler;
 
 
-    HttpHandling(const Monitors& monitors);
+	HttpHandling(const Monitors& monitors);
 
-    void processQuery(std::ostream&, const std::list<std::string>&);
+	void processQuery(std::ostream&, const std::list<std::string>&);
 
-    //std::vector<std::unique_ptr<HttpPathHandler>> mHandlers;
-    std::vector<HttpHandler> mHandlers;
+	//std::vector<std::unique_ptr<HttpPathHandler>> mHandlers;
+	std::vector<HttpHandler> mHandlers;
 
-    static void sendHeaders(std::ostream&,
-                            int status = 200,
-                            const std::string& type = "text/plain",
-                            const std::string& mesg = "OK",
-                            std::vector<std::string> extraHeaders = {});
+	static void sendHeaders(std::ostream&,
+							int status = 200,
+							const std::string& type = "text/plain",
+							const std::string& mesg = "OK",
+							std::vector<std::string> extraHeaders = {});
 
-    static void reportBadRequest(std::ostream&,
-                                 int status = 400,
-                                 const std::string& mesg = "Bad Request");
+	static void reportBadRequest(std::ostream&,
+								 int status = 400,
+								 const std::string& mesg = "Bad Request");
 
 private:
-    const Monitors& m_monitors;
+	const Monitors& m_monitors;
 
 };
 

@@ -27,9 +27,8 @@
 
 #include <OgreTextureManager.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainPageSurfaceCompiler::TerrainPageSurfaceCompiler(ICompilerTechniqueProvider& compilerTechniqueProvider) :
 		mCompilerTechniqueProvider(compilerTechniqueProvider) {
@@ -98,5 +97,5 @@ bool TerrainPageSurfaceCompilationInstance::compileCompositeMap(const Ogre::Mate
 }
 
 }
-}
-}
+
+

@@ -21,14 +21,11 @@
 
 #include <boost/dll.hpp>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 class GUIManager;
 }
-}
-/**
- * A typedef for the return value of a Plugin Function.
- */
+
 typedef std::function<void()> WidgetPluginCallback;
 /**
  * A typedef for a Plugin Function as delivered by the Boost.DLL system.

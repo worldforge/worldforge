@@ -30,32 +30,28 @@
 
 #include "MatchDefinition.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Definitions {
 
+namespace Ember::EntityMapping::Definitions {
 
 
 /**
 	A definition for a EntityMapping.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct EntityMappingDefinition
-{
+struct EntityMappingDefinition {
 	CaseDefinition RootCase;
 	std::string Name;
 };
 
 
-
 }
 
-}
 
-}
+
+
 
 #endif

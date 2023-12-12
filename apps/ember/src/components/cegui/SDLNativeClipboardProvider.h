@@ -21,8 +21,8 @@
 
 #include <CEGUI/Clipboard.h>
 
-namespace Ember {
-namespace Cegui {
+
+namespace Ember::Cegui {
 
 /**
  * @brief A native clipboard provider which will interface with Input.
@@ -45,5 +45,5 @@ private:
 };
 
 }
-}
+
 #endif /* SDLNATIVECLIPBOARDPROVIDER_H_ */

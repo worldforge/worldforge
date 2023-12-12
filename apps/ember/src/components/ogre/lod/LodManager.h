@@ -30,19 +30,14 @@
 
 #include <string>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Lod
-{
+
+namespace Ember::OgreView::Lod {
 
 /**
  * @brief LodManager will assign Lod settings to meshes.
  */
 class LodManager :
-	public Ember::Singleton<LodManager>
-{
+		public Ember::Singleton<LodManager> {
 public:
 
 	/**
@@ -60,27 +55,28 @@ public:
 	 *
 	 * @param mesh The mesh which needs Lod.
 	 */
-	void loadLod(Ogre::MeshPtr mesh);
+	static void loadLod(Ogre::MeshPtr mesh);
 
 	/**
 	 * @brief Converts a *.mesh to a *.loddef name.
 	 */
-	std::string convertMeshNameToLodName(std::string meshName);
+	static std::string convertMeshNameToLodName(std::string meshName);
 
 	/**
 	 * @brief Loads LodDefinition data into the mesh.
 	 */
-	void loadLod(Ogre::MeshPtr mesh, const LodDefinition& definition);
+	static void loadLod(Ogre::MeshPtr mesh, const LodDefinition& definition);
 
 private:
 
 	template<typename T>
 	static void loadUserLodImpl(T it, T itEnd, Ogre::Mesh* mesh);
+
 	template<typename T>
 	static void loadAutomaticLodImpl(T it, T itEnd, Ogre::LodConfig& lodConfig);
 };
 
 }
-}
-}
+
+
 #endif // ifndef LODMANAGER_H

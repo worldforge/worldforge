@@ -23,8 +23,7 @@
 
 #include <vector>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -34,9 +33,8 @@ namespace Ember
  * The typical example of an implementation of this is a class which allows entities placed on the ground to "snap" to the ground.
  * Other implementations might provide ways for entities to rest on tables or shelves.
  */
-struct IHeightProvider
-{
-	virtual ~IHeightProvider()= default;
+struct IHeightProvider {
+	virtual ~IHeightProvider() = default;
 
 	/**
 	 * @brief Returns the height at the specified position in the world.
@@ -49,14 +47,14 @@ struct IHeightProvider
 	 */
 	virtual bool getHeight(const TerrainPosition& atPosition, float& height) const = 0;
 
-    /**
-     * @brief Performs a fast copy of the raw height data for the supplied area.
-     * @param xMin Minimum x coord of the area.
-     * @param xMax Maximum x coord of the area.
-     * @param yMin Minimum y coord of the area.
-     * @param yMax Maximum y coord of the area.
-     * @param heights A vector into which heigh data will be placed. This should preferably already have a capacity reserved.
-     */
+	/**
+	 * @brief Performs a fast copy of the raw height data for the supplied area.
+	 * @param xMin Minimum x coord of the area.
+	 * @param xMax Maximum x coord of the area.
+	 * @param yMin Minimum y coord of the area.
+	 * @param yMax Maximum y coord of the area.
+	 * @param heights A vector into which heigh data will be placed. This should preferably already have a capacity reserved.
+	 */
 	virtual void blitHeights(int xMin, int xMax, int yMin, int yMax, std::vector<float>& heights) const = 0;
 
 };

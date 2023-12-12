@@ -25,55 +25,54 @@
 /**
  * A client task for creating a new agent in the game world.
  */
-class AgentCreationTask : public ClientTask
-{
-    public:
-        /**
-         * Ctor.
-         * @param account_id The id of the logged in account.
-         * @param agent_type The type of agent to create.
-         * @param agent_id A string into which the agent id
-         * (once created) will be put.
-         */
-        AgentCreationTask(std::string account_id,
-                          std::string account_name,
-                          std::string agent_type);
+class AgentCreationTask : public ClientTask {
+public:
+	/**
+	 * Ctor.
+	 * @param account_id The id of the logged in account.
+	 * @param agent_type The type of agent to create.
+	 * @param agent_id A string into which the agent id
+	 * (once created) will be put.
+	 */
+	AgentCreationTask(std::string account_id,
+					  std::string account_name,
+					  std::string agent_type);
 
-        ~AgentCreationTask() override;
+	~AgentCreationTask() override;
 
-        /// \brief Set up the task processing user arguments
-        void setup(const std::string& arg, OpVector&) override;
+	/// \brief Set up the task processing user arguments
+	void setup(const std::string& arg, OpVector&) override;
 
-        /// \brief Handle an operation from the server
-        void operation(const Operation&, OpVector&) override;
+	/// \brief Handle an operation from the server
+	void operation(const Operation&, OpVector&) override;
 
-        boost::optional<std::string> m_agent_id;
-        boost::optional<std::string> m_account_name;
-        boost::optional<std::string> m_mind_id;
+	boost::optional<std::string> m_agent_id;
+	boost::optional<std::string> m_account_name;
+	boost::optional<std::string> m_mind_id;
 
-    protected:
+protected:
 
-        /**
-         * The id of the logged in account.
-         */
-        const std::string m_account_id;
+	/**
+	 * The id of the logged in account.
+	 */
+	const std::string m_account_id;
 
-        /**
-         * The type of the agent.
-         */
-        const std::string m_agent_type;
+	/**
+	 * The type of the agent.
+	 */
+	const std::string m_agent_type;
 
-        /**
-         * Keeps track of the serial number of the sent op.
-         */
-        long int m_serial_no;
+	/**
+	 * Keeps track of the serial number of the sent op.
+	 */
+	long int m_serial_no;
 
-        enum class State {
-                CREATING_CHARACTER,
-                POSSESSING_CHARACTER
-        };
+	enum class State {
+		CREATING_CHARACTER,
+		POSSESSING_CHARACTER
+	};
 
-        State m_state;
+	State m_state;
 };
 
 #endif /* AGENTCREATIONTASK_H_ */

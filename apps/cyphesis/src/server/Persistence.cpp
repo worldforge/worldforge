@@ -38,84 +38,80 @@ using Atlas::Objects::Root;
 static const bool debug_flag = false;
 
 Persistence::Persistence(Database& database)
-        : m_db(database)
-{
+		: m_db(database) {
 }
 
-bool Persistence::findAccount(const std::string& name)
-{
-    std::string namestr = "'" + name + "'";
-    DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
-    if (dr.error()) {
-        spdlog::error("Failure while finding account '{}'.", name);
-        return false;
-    }
-    if (dr.empty()) {
-        return false;
-    }
-    if (dr.size() > 1) {
-        spdlog::error("Duplicate username in accounts database for name '{}'.", name);
-    }
-    return true;
+bool Persistence::findAccount(const std::string& name) {
+	std::string namestr = "'" + name + "'";
+	DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
+	if (dr.error()) {
+		spdlog::error("Failure while finding account '{}'.", name);
+		return false;
+	}
+	if (dr.empty()) {
+		return false;
+	}
+	if (dr.size() > 1) {
+		spdlog::error("Duplicate username in accounts database for name '{}'.", name);
+	}
+	return true;
 }
 
-std::unique_ptr<Account> Persistence::getAccount(const std::string& name)
-{
-    std::string namestr = "'" + name + "'";
-    DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
-    if (dr.error()) {
-        spdlog::error("Failure while finding account '{}'.", name);
-        return nullptr;
-    }
-    if (dr.empty()) {
-        return nullptr;
-    }
-    if (dr.size() > 1) {
-        spdlog::error("Duplicate username in accounts database for name '{}'.", name);
-    }
-    auto first = dr.begin();
-    const char* c = first.column("id");
-    if (c == nullptr) {
-        spdlog::error("Unable to find id field in accounts database.");
-        return nullptr;
-    }
-    RouterId id(c);
-    if (!id.isValid()) {
-        spdlog::error(R"(Invalid ID "{}" for account "{}" from database.)", id.m_id, name);
-        return nullptr;
-    }
-    c = first.column("password");
-    if (c == nullptr) {
-        spdlog::error("Unable to find password field in accounts database.");
-        return nullptr;
-    }
-    std::string passwd = c;
-    c = first.column("type");
-    if (c == nullptr) {
-        spdlog::error("Unable to find type field in accounts database.");
-        return nullptr;
-    }
-    std::string type = c;
-    if (type == "admin") {
-        return std::make_unique<Admin>(nullptr, name, passwd, id);
-    } else if (type == "server") {
-        return std::make_unique<ServerAccount>(nullptr, name, passwd, id);
-    } else {
-        return std::make_unique<Player>(nullptr, name, passwd, id);
-    }
+std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
+	std::string namestr = "'" + name + "'";
+	DatabaseResult dr = m_db.selectSimpleRowBy("accounts", "username", namestr);
+	if (dr.error()) {
+		spdlog::error("Failure while finding account '{}'.", name);
+		return nullptr;
+	}
+	if (dr.empty()) {
+		return nullptr;
+	}
+	if (dr.size() > 1) {
+		spdlog::error("Duplicate username in accounts database for name '{}'.", name);
+	}
+	auto first = dr.begin();
+	const char* c = first.column("id");
+	if (c == nullptr) {
+		spdlog::error("Unable to find id field in accounts database.");
+		return nullptr;
+	}
+	RouterId id(c);
+	if (!id.isValid()) {
+		spdlog::error(R"(Invalid ID "{}" for account "{}" from database.)", id.m_id, name);
+		return nullptr;
+	}
+	c = first.column("password");
+	if (c == nullptr) {
+		spdlog::error("Unable to find password field in accounts database.");
+		return nullptr;
+	}
+	std::string passwd = c;
+	c = first.column("type");
+	if (c == nullptr) {
+		spdlog::error("Unable to find type field in accounts database.");
+		return nullptr;
+	}
+	std::string type = c;
+	if (type == "admin") {
+		return std::make_unique<Admin>(nullptr, name, passwd, id);
+	} else if (type == "server") {
+		return std::make_unique<ServerAccount>(nullptr, name, passwd, id);
+	} else {
+		return std::make_unique<Player>(nullptr, name, passwd, id);
+	}
 }
 
-void Persistence::putAccount(const Account& ac)
-{
-    std::string columns = "username, type, password";
-    std::string values = "'";
-    values += ac.username();
-    values += "', '";
-    values += ac.getType();
-    values += "', '";
-    values += ac.password();
-    values += "'";
-    m_db.createSimpleRow("accounts", ac.getId(), columns, values);
+void Persistence::putAccount(const Account& ac) {
+	std::string columns = "username, type, password";
+	std::string values = "'";
+	values += ac.username();
+	values += "', '";
+	values += ac.getType();
+	values += "', '";
+	values += ac.password();
+	values += "'";
+	m_db.createSimpleRow("accounts", ac.getId(), columns, values);
 }
 
 

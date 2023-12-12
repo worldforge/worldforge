@@ -27,34 +27,31 @@
  *
  * \ingroup PropertyClasses
  */
-class Point3Property : public PropertyBase
-{
-    public:
+class Point3Property : public PropertyBase {
+public:
 
-        static constexpr const char* property_atlastype = "list";
+	static constexpr const char* property_atlastype = "list";
 
-        explicit Point3Property() = default;
+	explicit Point3Property() = default;
 
-        Point3Property(const Point3Property& rhs);
+	Point3Property(const Point3Property& rhs);
 
-        ~Point3Property() override = default;
+	~Point3Property() override = default;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const override;
+	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-        const WFMath::Point<3>& data() const
-        { return m_data; }
+	const WFMath::Point<3>& data() const { return m_data; }
 
-        WFMath::Point<3>& data()
-        { return m_data; }
+	WFMath::Point<3>& data() { return m_data; }
 
-        Point3Property* copy() const override;
+	Point3Property* copy() const override;
 
-    protected:
-        WFMath::Point<3> m_data;
+protected:
+	WFMath::Point<3> m_data;
 };
 
 

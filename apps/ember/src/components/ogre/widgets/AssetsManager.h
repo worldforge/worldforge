@@ -30,17 +30,14 @@
 #include <components/ogre/lod/PMInjectorSignaler.h>
 
 namespace CEGUI {
-class OgreCEGUITexture;
 
 class Image;
 
 class Texture;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 
 /**
@@ -131,8 +128,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

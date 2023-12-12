@@ -18,7 +18,6 @@
 
 #include "SimulationSpeedProperty.h"
 
-SimulationSpeedProperty* SimulationSpeedProperty::copy() const
-{
-    return new SimulationSpeedProperty(*this);
+SimulationSpeedProperty* SimulationSpeedProperty::copy() const {
+	return new SimulationSpeedProperty(*this);
 }

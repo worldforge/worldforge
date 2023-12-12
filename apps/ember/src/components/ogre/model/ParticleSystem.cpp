@@ -30,9 +30,8 @@
 #include <OgreSceneManager.h>
 #include <OgreNode.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 Ogre::ParticleSystem* ParticleSystem::getOgreParticleSystem() {
 	return mOgreParticleSystem;
@@ -88,5 +87,5 @@ bool ParticleSystem::objectRendering(const Ogre::MovableObject* movable, const O
 
 
 }
-}
-}
+
+

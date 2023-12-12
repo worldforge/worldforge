@@ -31,9 +31,8 @@ namespace Eris
 {
 class View;
 }
-namespace Ember
-{
-namespace OgreView
+
+namespace Ember::OgreView
 {
 
 namespace Camera
@@ -121,5 +120,5 @@ private:
 };
 
 }
-}
+
 #endif /* ADMINMOVEMENTADJUSTER_H_ */

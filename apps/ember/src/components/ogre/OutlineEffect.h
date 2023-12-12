@@ -24,8 +24,8 @@
 #include <OgreVector.h>
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 class Scene;
 
 struct StencilOpQueueListener;
@@ -50,7 +50,7 @@ protected:
 	Scene& mScene;
 	EmberEntityRef mSelectedEntity;
 	std::unique_ptr<StencilOpQueueListener> mStencilOpQueueListener;
-	
+
 	/**
 	 * Keeps track of the entities involved in the "outline".
 	 */
@@ -85,6 +85,6 @@ protected:
 	Outline mOutline;
 };
 }
-}
+
 
 #endif //EMBER_OUTLINEEFFECT_H

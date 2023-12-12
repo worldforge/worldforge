@@ -19,24 +19,20 @@
 
 /// \brief Constructor
 TeleportState::TeleportState(std::chrono::steady_clock::time_point time) : m_state(TELEPORT_NONE),
-                                            m_teleportTime(time)
-{
+																		   m_teleportTime(time) {
 }
 
 /// \brief Set the teleport state as requested
-void TeleportState::setRequested()
-{
-    m_state = TELEPORT_REQUESTED;
+void TeleportState::setRequested() {
+	m_state = TELEPORT_REQUESTED;
 }
 
 /// \brief Set the teleport state as created
-void TeleportState::setCreated()
-{
-    m_state = TELEPORT_CREATED;
+void TeleportState::setCreated() {
+	m_state = TELEPORT_CREATED;
 }
 
 /// \brief Set the teleport possess key
-void TeleportState::setKey(const std::string & key)
-{
-    m_possessKey = key;
+void TeleportState::setKey(const std::string& key) {
+	m_possessKey = key;
 }

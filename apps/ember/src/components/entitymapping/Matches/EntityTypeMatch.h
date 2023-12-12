@@ -23,16 +23,16 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_MATCHESENTITYTYPEMATCH_H
 #define EMBEROGRE_MODEL_MAPPING_MATCHESENTITYTYPEMATCH_H
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 class EntityTypeCase;
 }
-}
-}
+
+
 
 #include "../Cases/EntityTypeCase.h"
 #include "AbstractMatch.h"
@@ -41,12 +41,12 @@ namespace Eris {
 class Entity;
 }
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 /**
 	Watches for certain entity types.
@@ -65,8 +65,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

@@ -21,9 +21,8 @@
 
 extern int opSerialCount;
 
-inline int newSerialNo()
-{
-    return ++opSerialCount;
+inline int newSerialNo() {
+	return ++opSerialCount;
 }
 
 #endif // COMMON_SERIALNO_H

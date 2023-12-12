@@ -29,41 +29,40 @@
 
 #include <cassert>
 
-int main()
-{
-    FormattedXMLWriter writer(std::cout);
+int main() {
+	FormattedXMLWriter writer(std::cout);
 
-    writer.closeOutput();
+	writer.closeOutput();
 
-    Atlas::Message::MapType foo;
-    foo["a"] = 1;
-    foo["b"] = true;
-    foo["c"] = 1.;
-    foo["d"] = "one";
-    foo["e"] = Atlas::Message::ListType(1, 1);
-    foo["f"] = Atlas::Message::Element();
+	Atlas::Message::MapType foo;
+	foo["a"] = 1;
+	foo["b"] = true;
+	foo["c"] = 1.;
+	foo["d"] = "one";
+	foo["e"] = Atlas::Message::ListType(1, 1);
+	foo["f"] = Atlas::Message::Element();
 
-    Atlas::Message::MapType bar;
-    bar["a"] = 1;
-    bar["b"] = true;
-    bar["c"] = 1.;
-    bar["d"] = "one";
-    bar["e"] = Atlas::Message::ListType(1, 1);
+	Atlas::Message::MapType bar;
+	bar["a"] = 1;
+	bar["b"] = true;
+	bar["c"] = 1.;
+	bar["d"] = "one";
+	bar["e"] = Atlas::Message::ListType(1, 1);
 
-    Atlas::Message::MapType mim;
-    mim["a"] = 1;
-    mim["b"] = true;
-    mim["c"] = 1.;
-    mim["d"] = "one";
-    mim["e"] = Atlas::Message::ListType(1, 1);
+	Atlas::Message::MapType mim;
+	mim["a"] = 1;
+	mim["b"] = true;
+	mim["c"] = 1.;
+	mim["d"] = "one";
+	mim["e"] = Atlas::Message::ListType(1, 1);
 
-    bar["z"] = mim;
+	bar["z"] = mim;
 
-    foo["z"] = bar;
+	foo["z"] = bar;
 
-    writer.outputObject(foo);
+	writer.outputObject(foo);
 
-    writer.openOutput();
+	writer.openOutput();
 
-    return 0;
+	return 0;
 }

@@ -38,110 +38,108 @@
 #include <varconf/config.h>
 
 
-static void usage(char * prg)
-{
-    std::cerr << "usage: " << prg << " [options] [ cmd [ server ] ]" << std::endl;
+static void usage(char* prg) {
+	std::cerr << "usage: " << prg << " [options] [ cmd [ server ] ]" << std::endl;
 }
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char** argv) {
 	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [cmd] [%^%l%$] %v");
 
-    int config_status = loadConfig(argc, argv, USAGE_CYCMD);
-    if (config_status < 0) {
-        if (config_status == CONFIG_VERSION) {
-            reportVersion(argv[0]);
-            return 0;
-        } else if (config_status == CONFIG_HELP) {
-            showUsage(argv[0], USAGE_CYCMD, "[ cmd [ server ] ]");
-            return 0;
-        } else if (config_status != CONFIG_ERROR) {
-            spdlog::error("Unknown error reading configuration.");
-        }
-        // Fatal error loading config file
-        return 1;
-    }
+	int config_status = loadConfig(argc, argv, USAGE_CYCMD);
+	if (config_status < 0) {
+		if (config_status == CONFIG_VERSION) {
+			reportVersion(argv[0]);
+			return 0;
+		} else if (config_status == CONFIG_HELP) {
+			showUsage(argv[0], USAGE_CYCMD, "[ cmd [ server ] ]");
+			return 0;
+		} else if (config_status != CONFIG_ERROR) {
+			spdlog::error("Unknown error reading configuration.");
+		}
+		// Fatal error loading config file
+		return 1;
+	}
 
-    int optindex = config_status;
+	int optindex = config_status;
 
-    std::string server;
-    readConfigItem("client", "serverhost", server);
+	std::string server;
+	readConfigItem("client", "serverhost", server);
 
-    int useslave = 0;
-    readConfigItem("client", "useslave", useslave);
+	int useslave = 0;
+	readConfigItem("client", "useslave", useslave);
 
-    bool interactive = true;
-    std::string cmd;
-    if (optindex < argc) {
-        if ((argc - optindex) == 2) {
-            server = argv[optindex + 1];
-        } else if ((argc - optindex) > 2) {
-            usage(argv[0]);
-            return 1;
-        }
-        cmd = argv[optindex];
-        interactive = false;
-    }
+	bool interactive = true;
+	std::string cmd;
+	if (optindex < argc) {
+		if ((argc - optindex) == 2) {
+			server = argv[optindex + 1];
+		} else if ((argc - optindex) > 2) {
+			usage(argv[0]);
+			return 1;
+		}
+		cmd = argv[optindex];
+		interactive = false;
+	}
 
-    Atlas::Objects::Factories factories;
+	Atlas::Objects::Factories factories;
 
-    boost::asio::io_context io_context;
-    Interactive bridge(factories, io_context);
+	boost::asio::io_context io_context;
+	Interactive bridge(factories, io_context);
 
-    if (server.empty()) {
-        std::string localSocket;
-        if (useslave != 0) {
-            localSocket = slave_socket_name;
-        } else {
-            localSocket = client_socket_name;
-        }
+	if (server.empty()) {
+		std::string localSocket;
+		if (useslave != 0) {
+			localSocket = slave_socket_name;
+		} else {
+			localSocket = client_socket_name;
+		}
 
-        spdlog::debug("Attempting local connection");
-        if (bridge.connectLocal(localSocket) == 0) {
-            bridge.setup();
-            if (bridge.create("sys",
-                              create_session_username(),
-                              fmt::format("{}{}", ::rand(), ::rand())) != 0) {
-                bridge.getLogin();
-                if (bridge.login() != 0) {
-                    std::cout << "failed." << std::endl;
-                    return 1;
-                }
-            }
-            if (!interactive) {
-                bridge.exec(cmd, "");
-            } else {
-                bridge.updatePrompt();
-                bridge.loop();
-            }
-            return 0;
-        }
-        server = "localhost";
-    }
-    
-    spdlog::debug("Attempting tcp connection");
+		spdlog::debug("Attempting local connection");
+		if (bridge.connectLocal(localSocket) == 0) {
+			bridge.setup();
+			if (bridge.create("sys",
+							  create_session_username(),
+							  fmt::format("{}{}", ::rand(), ::rand())) != 0) {
+				bridge.getLogin();
+				if (bridge.login() != 0) {
+					std::cout << "failed." << std::endl;
+					return 1;
+				}
+			}
+			if (!interactive) {
+				bridge.exec(cmd, "");
+			} else {
+				bridge.updatePrompt();
+				bridge.loop();
+			}
+			return 0;
+		}
+		server = "localhost";
+	}
 
-    if (bridge.connect(server) != 0) {
-        return 1;
-    }
-    bridge.setup();
-    if (!interactive) {
-        std::cerr << "WARNING: No login details available for remote host"
-                  << std::endl
-                  << "WARNING: Attempting command without logging in"
-                  << std::endl;
-    } else {
-        bridge.getLogin();
-        if (bridge.login() != 0) {
-            return 1;
-        }
-    }
-    if (!interactive) {
-        bridge.exec(cmd, "");
-    } else {
-        bridge.updatePrompt();
-        bridge.loop();
-    }
-    delete global_conf;
-    return 0;
+	spdlog::debug("Attempting tcp connection");
+
+	if (bridge.connect(server) != 0) {
+		return 1;
+	}
+	bridge.setup();
+	if (!interactive) {
+		std::cerr << "WARNING: No login details available for remote host"
+				  << std::endl
+				  << "WARNING: Attempting command without logging in"
+				  << std::endl;
+	} else {
+		bridge.getLogin();
+		if (bridge.login() != 0) {
+			return 1;
+		}
+	}
+	if (!interactive) {
+		bridge.exec(cmd, "");
+	} else {
+		bridge.updatePrompt();
+		bridge.loop();
+	}
+	delete global_conf;
+	return 0;
 }

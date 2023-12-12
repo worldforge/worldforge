@@ -21,10 +21,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Vector3Adapter>(sol::table& space) {
 	auto vector3Adapter = space.new_usertype<Vector3Adapter>("Vector3Adapter",
-														   sol::constructors<Vector3Adapter(CEGUI::Window*, CEGUI::Window*, CEGUI::Window*)>());
+															 sol::constructors<Vector3Adapter(CEGUI::Window*, CEGUI::Window*, CEGUI::Window*)>());
 	vector3Adapter["getValue"] = &Vector3Adapter::getValue;
 	vector3Adapter["getOriginalValue"] = &Vector3Adapter::getOriginalValue;
 	vector3Adapter["setValue"] = &Vector3Adapter::setValue;

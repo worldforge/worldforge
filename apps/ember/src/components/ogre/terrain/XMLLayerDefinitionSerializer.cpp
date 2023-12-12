@@ -26,10 +26,8 @@
 #include "TerrainLayerDefinitionManager.h"
 #include "TerrainLayerDefinition.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 XMLLayerDefinitionSerializer::XMLLayerDefinitionSerializer() = default;
 
@@ -39,8 +37,7 @@ XMLLayerDefinitionSerializer::~XMLLayerDefinitionSerializer() = default;
 std::vector<TerrainLayerDefinition> XMLLayerDefinitionSerializer::parseScript(Ogre::DataStreamPtr& stream) {
 	std::vector<TerrainLayerDefinition> definitions;
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
-	if (xmlHelper.Load(xmlDoc, stream)) {
+	if (XMLHelper::Load(xmlDoc, stream)) {
 
 		TiXmlElement* rootElem = xmlDoc.RootElement();
 		TiXmlElement* layersElem = rootElem->FirstChildElement("layers");
@@ -111,5 +108,5 @@ std::vector<TerrainLayerDefinition> XMLLayerDefinitionSerializer::parseScript(Og
 }
 }
 
-}
-}
+
+

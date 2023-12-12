@@ -26,8 +26,11 @@
 #include <varconf/varconf.h>
 
 #include <boost/filesystem/path.hpp>
+
 #if !defined(__APPLE__) && !defined(_WIN32)
+
 #include <basedir.h>
+
 #endif
 
 #include <string>
@@ -229,7 +232,7 @@ public:
 	 * @param filename of file to save to.
 	 * @param scopeMask we will only write out variables which have their scope in this mask
 	 */
-	bool saveConfig(const boost::filesystem::path& filename, unsigned int scopeMask = varconf::GLOBAL | varconf::USER | varconf::INSTANCE);
+	bool saveConfig(const boost::filesystem::path& filename);
 
 
 	/**

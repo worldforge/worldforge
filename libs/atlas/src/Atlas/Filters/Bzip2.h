@@ -16,23 +16,26 @@ extern "C" {
 #include <bzlib.h>
 }
 
-namespace Atlas { namespace Filters {
 
-class Bzip2 : public Filter
-{
-    bz_stream incoming;
-    bz_stream outgoing;
-    char buf[4096];
+namespace Atlas::Filters {
 
-    public:
+class Bzip2 : public Filter {
+	bz_stream incoming;
+	bz_stream outgoing;
+	char buf[4096];
 
-    void begin() override;
-    void end() override;
-    
-    std::string encode(const std::string&) override;
-    std::string decode(const std::string&) override;
+public:
+
+	void begin() override;
+
+	void end() override;
+
+	std::string encode(const std::string&) override;
+
+	std::string decode(const std::string&) override;
 };
 
-} } // namespace Atlas::Filters
+}
+// namespace Atlas::Filters
 
 #endif // ATLAS_FILTERS_BZIP2_H

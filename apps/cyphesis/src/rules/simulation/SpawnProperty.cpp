@@ -24,17 +24,14 @@
 
 using Atlas::Message::MapType;
 
-SpawnProperty * SpawnProperty::copy() const
-{
-    return new SpawnProperty(*this);
+SpawnProperty* SpawnProperty::copy() const {
+	return new SpawnProperty(*this);
 }
 
-void SpawnProperty::apply(LocatedEntity& ent)
-{
-    BaseWorld::instance().registerSpawner(ent.getId());
+void SpawnProperty::apply(LocatedEntity& ent) {
+	BaseWorld::instance().registerSpawner(ent.getId());
 }
 
-void SpawnProperty::remove(LocatedEntity& ent, const std::string&)
-{
-    BaseWorld::instance().unregisterSpawner(ent.getId());
+void SpawnProperty::remove(LocatedEntity& ent, const std::string&) {
+	BaseWorld::instance().unregisterSpawner(ent.getId());
 }

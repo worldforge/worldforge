@@ -29,8 +29,8 @@
 #include "IWorldPickListener.h"
 #include "EmberOgrePrerequisites.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 /**
@@ -51,6 +51,6 @@ struct MousePicker {
 
 }
 
-}
+
 
 #endif

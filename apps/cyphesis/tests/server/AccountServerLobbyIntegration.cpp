@@ -51,149 +51,143 @@ using Atlas::Objects::Operation::Talk;
 static int test_send_count;
 
 class TestAccount;
-class AccountServerLobbyintegration : public Cyphesis::TestBase
-{
-  private:
-    DatabaseNull m_database;
-    Persistence* m_persistence;
-    ServerRouting * m_server;
-    TestAccount * m_account;
-    long m_id_counter;
-    std::unique_ptr<TestWorld> m_world;
-  public:
-    AccountServerLobbyintegration();
 
-    void setup();
-    void teardown();
+class AccountServerLobbyintegration : public Cyphesis::TestBase {
+private:
+	DatabaseNull m_database;
+	Persistence* m_persistence;
+	ServerRouting* m_server;
+	TestAccount* m_account;
+	long m_id_counter;
+	std::unique_ptr<TestWorld> m_world;
+public:
+	AccountServerLobbyintegration();
 
-    void test_talk();
-    void test_emote();
-    void test_lobby_look();
+	void setup();
+
+	void teardown();
+
+	void test_talk();
+
+	void test_emote();
+
+	void test_lobby_look();
 };
 
-class TestAccount : public Account
-{
-  public:
-    TestAccount(ServerRouting & svr, RouterId id);
-    ~TestAccount();
-    int characterError(const Operation & op,
-                       const Atlas::Objects::Root & ent,
-                       OpVector & res) const
-    {
-        return false;
-    }
+class TestAccount : public Account {
+public:
+	TestAccount(ServerRouting& svr, RouterId id);
 
-        void test_processExternalOperation(const Operation & op, OpVector& res) {
-            processExternalOperation(op, res);
-        }
-                  
+	~TestAccount();
+
+	int characterError(const Operation& op,
+					   const Atlas::Objects::Root& ent,
+					   OpVector& res) const {
+		return false;
+	}
+
+	void test_processExternalOperation(const Operation& op, OpVector& res) {
+		processExternalOperation(op, res);
+	}
+
 };
 
 AccountServerLobbyintegration::AccountServerLobbyintegration() :
-      m_server(0), m_id_counter(0L)
-{
-    ADD_TEST(AccountServerLobbyintegration::test_talk);
-    ADD_TEST(AccountServerLobbyintegration::test_emote);
-    ADD_TEST(AccountServerLobbyintegration::test_lobby_look);
+		m_server(0), m_id_counter(0L) {
+	ADD_TEST(AccountServerLobbyintegration::test_talk);
+	ADD_TEST(AccountServerLobbyintegration::test_emote);
+	ADD_TEST(AccountServerLobbyintegration::test_lobby_look);
 }
 
-void AccountServerLobbyintegration::setup()
-{
-    m_persistence = new Persistence(m_database);
+void AccountServerLobbyintegration::setup() {
+	m_persistence = new Persistence(m_database);
 
-    Ref<LocatedEntity> gw = new Entity(m_id_counter++);
-    m_world.reset();
-    m_world.reset(new TestWorld(gw));
-    m_server = new ServerRouting(*m_world, *m_persistence,
-                                 "59331d74-bb5d-4a54-b1c2-860999a4e344",
-                                 "93e1f67f-63c5-4b07-af4c-574b2273563d",
-                                 m_id_counter++);
-    for (int i = 0; i < 3; ++i) {
-        m_account = new TestAccount(*m_server,
-                                    m_id_counter++);
-        m_server->addAccount(std::unique_ptr<Account>(m_account));
-        m_server->getLobby().addAccount(m_account);
-    }
-    ASSERT_NOT_NULL(m_account);
+	Ref<LocatedEntity> gw = new Entity(m_id_counter++);
+	m_world.reset();
+	m_world.reset(new TestWorld(gw));
+	m_server = new ServerRouting(*m_world, *m_persistence,
+								 "59331d74-bb5d-4a54-b1c2-860999a4e344",
+								 "93e1f67f-63c5-4b07-af4c-574b2273563d",
+								 m_id_counter++);
+	for (int i = 0; i < 3; ++i) {
+		m_account = new TestAccount(*m_server,
+									m_id_counter++);
+		m_server->addAccount(std::unique_ptr<Account>(m_account));
+		m_server->getLobby().addAccount(m_account);
+	}
+	ASSERT_NOT_NULL(m_account);
 }
 
-void AccountServerLobbyintegration::teardown()
-{
-    delete m_server;
-    delete m_persistence;
+void AccountServerLobbyintegration::teardown() {
+	delete m_server;
+	delete m_persistence;
 }
 
-void AccountServerLobbyintegration::test_talk()
-{
-    test_send_count = 0;
+void AccountServerLobbyintegration::test_talk() {
+	test_send_count = 0;
 
-    Anonymous talk_arg;
-    talk_arg->setAttr("say", "bb6a71d1-3ee9-43ac-8750-cd9d8f7921f6");
+	Anonymous talk_arg;
+	talk_arg->setAttr("say", "bb6a71d1-3ee9-43ac-8750-cd9d8f7921f6");
 
-    Talk op;
-    op->setArgs1(talk_arg);
-    op->setFrom(m_account->getId());
+	Talk op;
+	op->setArgs1(talk_arg);
+	op->setFrom(m_account->getId());
 
-    OpVector res;
-    m_account->test_processExternalOperation(op, res);
-    ASSERT_TRUE(res.empty());
+	OpVector res;
+	m_account->test_processExternalOperation(op, res);
+	ASSERT_TRUE(res.empty());
 
-    // Ensure the resulting broadcast sound was sent to all three accounts
-    ASSERT_EQUAL(test_send_count, 3);
+	// Ensure the resulting broadcast sound was sent to all three accounts
+	ASSERT_EQUAL(test_send_count, 3);
 }
 
-void AccountServerLobbyintegration::test_emote()
-{
-    test_send_count = 0;
+void AccountServerLobbyintegration::test_emote() {
+	test_send_count = 0;
 
-    Anonymous emote_arg;
-    emote_arg->setAttr("description", "c7ef270a-c4be-484c-a6a7-94efc4ff6ade");
+	Anonymous emote_arg;
+	emote_arg->setAttr("description", "c7ef270a-c4be-484c-a6a7-94efc4ff6ade");
 
-    Imaginary op;
-    op->setArgs1(emote_arg);
-    op->setFrom(m_account->getId());
+	Imaginary op;
+	op->setArgs1(emote_arg);
+	op->setFrom(m_account->getId());
 
-    OpVector res;
-    m_account->test_processExternalOperation(op, res);
-    ASSERT_TRUE(res.empty());
+	OpVector res;
+	m_account->test_processExternalOperation(op, res);
+	ASSERT_TRUE(res.empty());
 
-    // Ensure the resulting broadcast sound was sent to all three accounts
-    ASSERT_EQUAL(test_send_count, 3);
+	// Ensure the resulting broadcast sound was sent to all three accounts
+	ASSERT_EQUAL(test_send_count, 3);
 }
 
-void AccountServerLobbyintegration::test_lobby_look()
-{
-    test_send_count = 0;
+void AccountServerLobbyintegration::test_lobby_look() {
+	test_send_count = 0;
 
-    Look op;
-    op->setFrom(m_account->getId());
+	Look op;
+	op->setFrom(m_account->getId());
 
-    OpVector res;
-    m_account->test_processExternalOperation(op, res);
-    ASSERT_TRUE(!res.empty());
+	OpVector res;
+	m_account->test_processExternalOperation(op, res);
+	ASSERT_TRUE(!res.empty());
 }
 
-TestAccount::TestAccount(ServerRouting & svr, RouterId cid) :
-          Account(new Connection(*(CommSocket*)0,
-                                 svr,
-                                 "7546215f-ac75-4e1a-a2c3-a9226219259b",
-                                 cid),
-                  "cec7a6f5-ebf1-4531-a0d9-ed9bb46882ad",
-                  "59cf380e-7398-48a7-81cc-961265fadcd0",
-                  cid)
-{
+TestAccount::TestAccount(ServerRouting& svr, RouterId cid) :
+		Account(new Connection(*(CommSocket*) 0,
+							   svr,
+							   "7546215f-ac75-4e1a-a2c3-a9226219259b",
+							   cid),
+				"cec7a6f5-ebf1-4531-a0d9-ed9bb46882ad",
+				"59cf380e-7398-48a7-81cc-961265fadcd0",
+				cid) {
 }
 
-TestAccount::~TestAccount()
-{
-    delete m_connection;
+TestAccount::~TestAccount() {
+	delete m_connection;
 }
 
-int main()
-{
-    AccountServerLobbyintegration test_case;
+int main() {
+	AccountServerLobbyintegration test_case;
 
-    return test_case.run();
+	return test_case.run();
 }
 
 // stubs
@@ -228,13 +222,12 @@ std::string assets_directory("");
 #include "../stubs/server/stubConnection.h"
 
 #define STUB_Link_send
-void Link::send(const Operation & op) const
-{
-    ++test_send_count;
+
+void Link::send(const Operation& op) const {
+	++test_send_count;
 }
 
-void Link::send(const OpVector& opVector) const
-{
+void Link::send(const OpVector& opVector) const {
 }
 
 #include "../stubs/common/stubLink.h"
@@ -256,23 +249,20 @@ std::string instance("130779df-1e84-4c61-9caf-3e1506597fe1");
 #include "../stubs/common/stubconst.h"
 
 
-const char * const CYPHESIS = "cyphesis";
+const char* const CYPHESIS = "cyphesis";
 int timeoffset = 0;
 
-bool_config_register::bool_config_register(bool & var,
-                                           const char * section,
-                                           const char * setting,
-                                           const char * help)
-{
+bool_config_register::bool_config_register(bool& var,
+										   const char* section,
+										   const char* setting,
+										   const char* help) {
 }
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

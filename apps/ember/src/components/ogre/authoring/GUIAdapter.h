@@ -28,12 +28,8 @@
 #include <Atlas/Message/Element.h>
 #include <CEGUI/Window.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace Ember::OgreView::Authoring {
 /**
  * @brief GUI adapters wrapper.
  *
@@ -42,8 +38,7 @@ namespace Authoring
  *
  * @author Alexey Torkhov <atorkhov@gmail.com>
  */
-struct GUIAdapter
-{
+struct GUIAdapter {
 	/**
 	 * Adapter type.
 	 */
@@ -79,8 +74,6 @@ struct GUIAdapter
 };
 
 }
-}
 
-}
 
 #endif

@@ -19,7 +19,6 @@
 
 #include "rules/LocatedEntity.h"
 
-VisibilityDistanceProperty* VisibilityDistanceProperty::copy() const
-{
-    return new VisibilityDistanceProperty(*this);
+VisibilityDistanceProperty* VisibilityDistanceProperty::copy() const {
+	return new VisibilityDistanceProperty(*this);
 }

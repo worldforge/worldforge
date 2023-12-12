@@ -17,8 +17,7 @@ ShaderKit::ShaderKit() = default;
 
 ShaderKit::~ShaderKit() = default;
 
-ShaderFactories::ShaderFactories()
-{
+ShaderFactories::ShaderFactories() {
 	m_factories.emplace("grass", std::make_unique<ShaderFactory<GrassShader>>());
 	m_factories.emplace("depth", std::make_unique<ShaderFactory<DepthShader>>());
 	m_factories.emplace("fill", std::make_unique<ShaderFactory<FillShader>>());
@@ -35,15 +34,14 @@ ShaderFactories::~ShaderFactories() = default;
 /// @param type a string giving the type of shader.
 /// @param params a map of the parameters for the shader
 /// @returns a pointer to the new shader object
-std::unique_ptr<Shader> ShaderFactories::newShader(const std::string & type,
-                                    const Shader::Parameters & params) const
-{
-    auto I = m_factories.find(type);
-    if (I == m_factories.end()) {
-        return nullptr;
-    }
-    assert(I->second);
-    return I->second->newShader(params);
+std::unique_ptr<Shader> ShaderFactories::newShader(const std::string& type,
+												   const Shader::Parameters& params) const {
+	auto I = m_factories.find(type);
+	if (I == m_factories.end()) {
+		return nullptr;
+	}
+	assert(I->second);
+	return I->second->newShader(params);
 }
 
 } // namespace Mercator

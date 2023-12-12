@@ -18,14 +18,13 @@
 
 #include "OgreWindowProvider.h"
 #include "services/input/Input.h"
-#include "framework/MainLoopController.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
 
-namespace Ember {
 
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 OgreWindowProvider::OgreWindowProvider(Ogre::RenderWindow& window) :
 		mWindow(window) {
@@ -55,5 +54,5 @@ void OgreWindowProvider::getWindowSize(unsigned int& width, unsigned int& height
 }
 
 }
-}
+
 

@@ -24,18 +24,15 @@ WorldTimeProperty::WorldTimeProperty() = default;
 WorldTimeProperty::~WorldTimeProperty() = default;
 
 
-WorldTimeProperty * WorldTimeProperty::copy() const
-{
-    return new WorldTimeProperty(*this);
+WorldTimeProperty* WorldTimeProperty::copy() const {
+	return new WorldTimeProperty(*this);
 }
 
-int WorldTimeProperty::get(Atlas::Message::Element& val) const
-{
-    val = BaseWorld::instance().getTimeAsSeconds();
-    return 0;
+int WorldTimeProperty::get(Atlas::Message::Element& val) const {
+	val = BaseWorld::instance().getTimeAsSeconds();
+	return 0;
 }
 
-void WorldTimeProperty::set(const Atlas::Message::Element& val)
-{
-    //Just ignore. Or should we allow the time for the base world to be set?
+void WorldTimeProperty::set(const Atlas::Message::Element& val) {
+	//Just ignore. Or should we allow the time for the base world to be set?
 }

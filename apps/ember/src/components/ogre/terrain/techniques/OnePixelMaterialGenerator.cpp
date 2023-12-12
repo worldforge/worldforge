@@ -21,13 +21,11 @@
 #include <OgreTexture.h>
 #include <OgreDataStream.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
-namespace Techniques {
+
+namespace Ember::OgreView::Terrain::Techniques {
 void OnePixelMaterialGenerator::loadResource(Ogre::Resource* resource) {
 
-	auto* texture = static_cast<Ogre::Texture*>(resource);
+	auto* texture = dynamic_cast<Ogre::Texture*>(resource);
 	static Ogre::uchar data[3] = {0xFF, 0x7F, 0x7F};
 
 	Ogre::DataStreamPtr stream(new Ogre::MemoryDataStream(&data, 3, false, true));
@@ -39,6 +37,6 @@ void OnePixelMaterialGenerator::loadResource(Ogre::Resource* resource) {
 }
 
 }
-}
-}
-}
+
+
+

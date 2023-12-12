@@ -19,8 +19,7 @@
 #ifndef IENTITYVISITOR_H_
 #define IENTITYVISITOR_H_
 
-namespace Ember
-{
+namespace Ember {
 
 class EmberEntity;
 
@@ -28,8 +27,7 @@ class EmberEntity;
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A visitor interface for traversing the entity hierarchy.
  */
-struct IEntityVisitor
-{
+struct IEntityVisitor {
 	/**
 	 * @brief Dtor.
 	 */

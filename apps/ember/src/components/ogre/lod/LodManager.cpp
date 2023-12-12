@@ -25,26 +25,25 @@
 #include "ScaledPixelCountLodStrategy.h"
 
 #include <MeshLodGenerator/OgreMeshLodGenerator.h>
-#include <OgrePixelCountLodStrategy.h>
 #include <OgreDistanceLodStrategy.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
+
+namespace Ember::OgreView::Lod {
 
 LodManager::LodManager() = default;
 
 LodManager::~LodManager() = default;
 
-void LodManager::loadLod(Ogre::MeshPtr mesh)
-{
+void LodManager::loadLod(Ogre::MeshPtr mesh) {
 	assert(mesh->getNumLodLevels() == 1);
 	std::string lodDefName = convertMeshNameToLodName(mesh->getName());
 
 	try {
 		Ogre::ResourcePtr resource = LodDefinitionManager::getSingleton().load(lodDefName, "General");
-		const LodDefinition& def = *static_cast<const LodDefinition*>(resource.get());
-		loadLod(mesh, def);
+		auto def = dynamic_cast<const LodDefinition*>(resource.get());
+		if (def) {
+			loadLod(mesh, *def);
+		}
 	} catch (const Ogre::FileNotFoundException&) {
 		// Exception is thrown if a mesh hasn't got a loddef.
 		// By default, use the automatic mesh lod management system.
@@ -52,8 +51,7 @@ void LodManager::loadLod(Ogre::MeshPtr mesh)
 	}
 }
 
-void LodManager::loadLod(Ogre::MeshPtr mesh, const LodDefinition& def)
-{
+void LodManager::loadLod(Ogre::MeshPtr mesh, const LodDefinition& def) {
 	if (def.getUseAutomaticLod()) {
 		Ogre::MeshLodGenerator::getSingleton().generateAutoconfiguredLodLevels(mesh);
 	} else if (def.getLodDistanceCount() == 0) {
@@ -103,7 +101,7 @@ std::string LodManager::convertMeshNameToLodName(std::string meshName) {
 		meshName = meshName.substr(start + 1);
 	}
 
-	size_t end = meshName.find_last_of(".");
+	size_t end = meshName.find_last_of('.');
 	if (end != std::string::npos) {
 		meshName = meshName.substr(0, end);
 	}
@@ -128,7 +126,7 @@ template<typename T>
 void LodManager::loadUserLodImpl(T it, T itEnd, Ogre::Mesh* mesh) {
 	for (; it != itEnd; it++) {
 		const Ogre::String& meshName = it->second.meshName;
-		if (meshName != "") {
+		if (!meshName.empty()) {
 			assert(Ogre::ResourceGroupManager::getSingleton().resourceExistsInAnyGroup(meshName));
 			mesh->updateManualLodLevel(static_cast<Ogre::ushort>(it->first), meshName);
 		}
@@ -136,5 +134,5 @@ void LodManager::loadUserLodImpl(T it, T itEnd, Ogre::Mesh* mesh) {
 }
 
 }
-}
-}
+
+

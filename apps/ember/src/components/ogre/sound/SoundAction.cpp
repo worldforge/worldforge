@@ -20,7 +20,6 @@
 #include "SoundEntity.h"
 #include "SoundGroup.h"
 #include "SoundDefinition.h"
-#include "SoundGroupDefinition.h"
 #include "SoundDefinitionManager.h"
 
 #include "services/EmberServices.h"
@@ -30,8 +29,8 @@
 
 using namespace Ember;
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 SoundAction::SoundAction(SoundEntity& soundEntity)
 		: mSoundEntity(soundEntity),
 		  mInstance(nullptr),
@@ -63,7 +62,7 @@ SoundGroup* SoundAction::setGroup(const std::string& name) {
 	mGroup = std::make_unique<SoundGroup>();
 
 	auto& soundDefinitions = groupModel->mSamples;
-	for (const auto& soundDefinition : soundDefinitions) {
+	for (const auto& soundDefinition: soundDefinitions) {
 		// Register Individual samples
 		mGroup->addSound(soundDefinition);
 	}
@@ -130,5 +129,5 @@ void SoundAction::setIsLooping(bool isLooping) {
 }
 
 }
-}
+
 

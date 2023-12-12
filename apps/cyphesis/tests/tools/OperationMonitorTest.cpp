@@ -30,23 +30,22 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        ClientTask * tf = new OperationMonitor;
+int main() {
+	{
+		ClientTask* tf = new OperationMonitor;
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new OperationMonitor;
+	{
+		ClientTask* tf = new OperationMonitor;
 
-        OpVector ret;
-        tf->setup("df954cce-957b-49ac-80e1-be75d83382a1", ret);
-        assert(ret.empty());
+		OpVector ret;
+		tf->setup("df954cce-957b-49ac-80e1-be75d83382a1", ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
 }
 

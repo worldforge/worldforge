@@ -13,10 +13,8 @@
 #include <cstdlib>
 #include <map>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 struct TerrainFoliageDefinition;
 struct PlantAreaQueryResult;
 
@@ -44,8 +42,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* VEGETATION_H_ */

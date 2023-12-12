@@ -52,32 +52,50 @@ const char DEFAULT_CONF[] = SYSCONFDIR;
  */
 class PacketLogger;
 
-class MetaServer
-{
-   public:
+class MetaServer {
+public:
 	MetaServer();
+
 	~MetaServer();
+
 	void expiry_timer(const boost::system::error_code& error);
+
 	void update_timer(const boost::system::error_code& error);
+
 	void score_timer(const boost::system::error_code& error);
 
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
+
 	void processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processLISTREQ(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out);
+
 	void processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out);
 
-	void registerConfig( boost::program_options::variables_map & vm );
+	void registerConfig(boost::program_options::variables_map& vm);
+
 	void initLogger();
-	void initTimers( boost::asio::io_service& ios);
+
+	void initTimers(boost::asio::io_service& ios);
+
 	std::string getLogFile() { return m_Logfile; }
+
 	bool isShutdown() { return m_isShutdown; }
 
 	unsigned long long getDeltaMillis();
@@ -86,10 +104,10 @@ class MetaServer
 
 	void shutDown() { m_isShutdown = true; }
 
-	void getMSStats( std::map<std::string,std::string>& req_stats );
+	void getMSStats(std::map<std::string, std::string>& req_stats);
 
 
-   private:
+private:
 
 	DataObject msdo;
 	unsigned int m_handshakeExpirySeconds;
@@ -122,12 +140,12 @@ class MetaServer
 	boost::filesystem::path m_scoreServer;
 	boost::filesystem::path m_scoreClient;
 	boost::filesystem::path m_scoreStats;
-	boost::filesystem::path m_scoreCCache;	
+	boost::filesystem::path m_scoreCCache;
 	bool m_logPacketAllow;
 	bool m_logPacketDeny;
 	std::string m_Domain;
 	std::set<std::string> m_adminCommandSet;
-	std::map<std::string,std::string> m_metaStats;
+	std::map<std::string, std::string> m_metaStats;
 	unsigned int m_serverClientCacheExpirySeconds;
 
 };

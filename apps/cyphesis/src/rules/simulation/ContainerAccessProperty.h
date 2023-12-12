@@ -25,33 +25,32 @@
 
 class ContainerDomain;
 
-class ContainerAccessProperty : public PropertyBase
-{
-    public:
+class ContainerAccessProperty : public PropertyBase {
+public:
 
 
-        static constexpr const char* property_name = "__container_access";
-        static constexpr const char* property_atlastype = "list";
+	static constexpr const char* property_name = "__container_access";
+	static constexpr const char* property_atlastype = "list";
 
-        explicit ContainerAccessProperty(ContainerDomain& container);
+	explicit ContainerAccessProperty(ContainerDomain& container);
 
-        ContainerAccessProperty(const ContainerAccessProperty& rhs) = delete;
+	ContainerAccessProperty(const ContainerAccessProperty& rhs) = delete;
 
-        int get(Atlas::Message::Element&) const override;
+	int get(Atlas::Message::Element&) const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        ContainerAccessProperty* copy() const override;
+	ContainerAccessProperty* copy() const override;
 
-        HandlerResult operation(LocatedEntity& e, const Operation& op, OpVector& res) override;
+	HandlerResult operation(LocatedEntity& e, const Operation& op, OpVector& res) override;
 
-        void install(LocatedEntity&, const std::string&) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-    protected:
+protected:
 
-        ContainerDomain& m_container;
+	ContainerDomain& m_container;
 };
 
 

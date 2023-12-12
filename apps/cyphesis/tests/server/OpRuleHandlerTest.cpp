@@ -37,90 +37,89 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-static TypeNode * stub_addChild_result = 0;
+static TypeNode* stub_addChild_result = 0;
 Atlas::Objects::Factories factories;
 
-int main()
-{
-    Inheritance inheritance(factories);
-    {
-        RuleHandler * rh = new OpRuleHandler();
-        delete rh;
-    }
+int main() {
+	Inheritance inheritance(factories);
+	{
+		RuleHandler* rh = new OpRuleHandler();
+		delete rh;
+	}
 
-    // check() empty description
-    {
-        RuleHandler * rh = new OpRuleHandler();
+	// check() empty description
+	{
+		RuleHandler* rh = new OpRuleHandler();
 
-        Anonymous description;
-        description->setParent("foo");
-        int ret = rh->check(description);
+		Anonymous description;
+		description->setParent("foo");
+		int ret = rh->check(description);
 
-        assert(ret == -1);
+		assert(ret == -1);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    // check() description with op_definition objtype
-    {
-        RuleHandler * rh = new OpRuleHandler();
+	// check() description with op_definition objtype
+	{
+		RuleHandler* rh = new OpRuleHandler();
 
-        Anonymous description;
-        description->setObjtype("op_definition");
-        description->setParent("foo");
-        int ret = rh->check(description);
+		Anonymous description;
+		description->setObjtype("op_definition");
+		description->setParent("foo");
+		int ret = rh->check(description);
 
-        assert(ret == 0);
+		assert(ret == 0);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    {
-        RuleHandler * rh = new OpRuleHandler();
+	{
+		RuleHandler* rh = new OpRuleHandler();
 
-        Anonymous description;
-        std::string dependent, reason;
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		Anonymous description;
+		std::string dependent, reason;
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        int ret = rh->install("", "", description, dependent, reason, changes);
+		int ret = rh->install("", "", description, dependent, reason, changes);
 
-        assert(ret == -1);
+		assert(ret == -1);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    // Install a rule with addChild rigged to give a correct result
-    {
-        RuleHandler * rh = new OpRuleHandler();
+	// Install a rule with addChild rigged to give a correct result
+	{
+		RuleHandler* rh = new OpRuleHandler();
 
-        Anonymous description;
-        std::string dependent, reason;
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		Anonymous description;
+		std::string dependent, reason;
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        stub_addChild_result = (TypeNode *) malloc(sizeof(TypeNode));
-        int ret = rh->install("", "", description, dependent, reason, changes);
+		stub_addChild_result = (TypeNode*) malloc(sizeof(TypeNode));
+		int ret = rh->install("", "", description, dependent, reason, changes);
 
-        assert(ret == 0);
+		assert(ret == 0);
 
-        free(stub_addChild_result);
-        stub_addChild_result = 0;
+		free(stub_addChild_result);
+		stub_addChild_result = 0;
 
-        delete rh;
-    }
-    {
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
-        RuleHandler * rh = new OpRuleHandler();
+		delete rh;
+	}
+	{
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		RuleHandler* rh = new OpRuleHandler();
 
-        Anonymous description;
-        int ret = rh->update("", description, changes);
+		Anonymous description;
+		int ret = rh->update("", description, changes);
 
-        // FIXME Currently does nothing
-        assert(ret == 0);
+		// FIXME Currently does nothing
+		assert(ret == 0);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
- 
+
 }
 
 // stubs
@@ -132,26 +131,28 @@ int main()
 
 #ifndef STUB_Inheritance_addChild
 #define STUB_Inheritance_addChild
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root & obj)
-{
-    return stub_addChild_result;
+
+TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+	return stub_addChild_result;
 }
+
 #endif //STUB_Inheritance_addChild
 
 
 #ifndef STUB_Inheritance_hasClass
 #define STUB_Inheritance_hasClass
-bool Inheritance::hasClass(const std::string & parent)
-{
-    return true;
+
+bool Inheritance::hasClass(const std::string& parent) {
+	return true;
 }
+
 #endif //STUB_Inheritance_hasClass
 
 #include "../stubs/common/stubInheritance.h"
 
 
-Root atlasOpDefinition(const std::string & name, const std::string & parent)
-{
-    return Root();
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	return Root();
 }
+
 #include "../stubs/common/stublog.h"

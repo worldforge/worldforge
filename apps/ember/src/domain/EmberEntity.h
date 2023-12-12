@@ -41,8 +41,6 @@ struct IEntityControlDelegate;
 struct IEntityVisitor;
 struct IHeightProvider;
 
-class LoggingInstance;
-
 class EntityTalk;
 
 struct ActionEntry {

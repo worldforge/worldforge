@@ -65,56 +65,54 @@ using Atlas::Message::MapType;
 #define SERVER 2
 
 namespace {
-    void usage(std::ostream& stream, char* n, bool verbose = false)
-    {
-        stream << "usage: " << n << std::endl;
-        stream << "       " << n << " [ -a | -d ] [ -s | -r | -p ] account" << std::endl;
-        stream << "       " << n << " -h" << std::endl;
+void usage(std::ostream& stream, char* n, bool verbose = false) {
+	stream << "usage: " << n << std::endl;
+	stream << "       " << n << " [ -a | -d ] [ -s | -r | -p ] account" << std::endl;
+	stream << "       " << n << " -h" << std::endl;
 
-        if (!verbose) {
-            stream << std::flush;
-            return;
-        }
+	if (!verbose) {
+		stream << std::flush;
+		return;
+	}
 
-        stream << std::endl;
-        stream << "Help options" << std::endl;
-        stream << "  -h                          Display this help" << std::endl;
-        stream << std::endl;
-        stream << "Managing accounts" << std::endl;
-        stream << "  -a                          Add a new account" << std::endl;
-        stream << "  -d                          Delete an account" << std::endl;
-        stream << "  -s                          Make server account" << std::endl;
-        stream << "  -r                          Make admin account" << std::endl;
-        stream << "  -p                          Make player account (default)"
-               << std::endl;
-    }
+	stream << std::endl;
+	stream << "Help options" << std::endl;
+	stream << "  -h                          Display this help" << std::endl;
+	stream << std::endl;
+	stream << "Managing accounts" << std::endl;
+	stream << "  -a                          Add a new account" << std::endl;
+	stream << "  -d                          Delete an account" << std::endl;
+	stream << "  -s                          Make server account" << std::endl;
+	stream << "  -r                          Make admin account" << std::endl;
+	stream << "  -p                          Make player account (default)"
+		   << std::endl;
+}
 }
 
-static int get_password(const std::string & acname,
-                        std::string & password,
-                        std::string & password2)
-{
-    // TODO Catch signals, and restore terminal
+static int get_password(const std::string& acname,
+						std::string& password,
+						std::string& password2) {
+	// TODO Catch signals, and restore terminal
 #ifdef HAVE_TERMIOS_H
-    termios termios_old, termios_new;
+	termios termios_old, termios_new;
 
-    tcgetattr( STDIN_FILENO, &termios_old );
-    termios_new = termios_old;
-    termios_new.c_lflag &= ~(ICANON|ECHO);
-    tcsetattr( STDIN_FILENO, TCSADRAIN, &termios_new );
+	tcgetattr( STDIN_FILENO, &termios_old );
+	termios_new = termios_old;
+	termios_new.c_lflag &= ~(ICANON|ECHO);
+	tcsetattr( STDIN_FILENO, TCSADRAIN, &termios_new );
 #endif
 
-    std::cout << "New " << acname << " password: " << std::flush;
-    std::cin >> password;
-    std::cout << std::endl << "Retype " << acname << " password: " << std::flush;
-    std::cin >> password2;
-    std::cout << std::endl;
+	std::cout << "New " << acname << " password: " << std::flush;
+	std::cin >> password;
+	std::cout << std::endl << "Retype " << acname << " password: " << std::flush;
+	std::cin >> password2;
+	std::cout << std::endl;
 
 #ifdef HAVE_TERMIOS_H
-    tcsetattr( STDIN_FILENO, TCSADRAIN, &termios_old );
+	tcsetattr( STDIN_FILENO, TCSADRAIN, &termios_old );
 #endif
 
-    return 0;
+	return 0;
 }
 //
 //static std::unique_ptr<Database> createDatabase()
@@ -140,161 +138,160 @@ STRING_OPTION(player, "", "", "player", "Make server account")
 STRING_OPTION(server, "", "", "server", "Make admin account")
 STRING_OPTION(admin, "", "", "admin", "Make player account (default)")
 
-int main(int argc, char ** argv)
-{
-    varconf::Config * conf = varconf::Config::inst();
+int main(int argc, char** argv) {
+	varconf::Config* conf = varconf::Config::inst();
 
-    conf->setParameterLookup('a', "add");
-    conf->setParameterLookup('d', "del");
-    conf->setParameterLookup('p', "player");
-    conf->setParameterLookup('s', "server");
-    conf->setParameterLookup('r', "admin");
+	conf->setParameterLookup('a', "add");
+	conf->setParameterLookup('d', "del");
+	conf->setParameterLookup('p', "player");
+	conf->setParameterLookup('s', "server");
+	conf->setParameterLookup('r', "admin");
 
-    int config_status = loadConfig(argc, argv, USAGE_DBASE);
-    if (config_status < 0) {
-        if (config_status == CONFIG_VERSION) {
-            reportVersion(argv[0]);
-            return 0;
-        } else if (config_status == CONFIG_HELP) {
-            usage(std::cout, argv[0], true);
-            return 0;
-        } else if (config_status != CONFIG_ERROR) {
-            std::cerr << "Unknown error reading configuration." << std::endl;
-        }
-        // Fatal error loading config file
-        return 1;
-    }
+	int config_status = loadConfig(argc, argv, USAGE_DBASE);
+	if (config_status < 0) {
+		if (config_status == CONFIG_VERSION) {
+			reportVersion(argv[0]);
+			return 0;
+		} else if (config_status == CONFIG_HELP) {
+			usage(std::cout, argv[0], true);
+			return 0;
+		} else if (config_status != CONFIG_ERROR) {
+			std::cerr << "Unknown error reading configuration." << std::endl;
+		}
+		// Fatal error loading config file
+		return 1;
+	}
 
-    int extra_arg_count = argc - config_status;
+	int extra_arg_count = argc - config_status;
 
-    std::string acname;
-    int actype = PLAYER;
-    int action = SET;
+	std::string acname;
+	int actype = PLAYER;
+	int action = SET;
 
-    if (global_conf->findItem("", "add")) {
-        action = ADD;
-    }
+	if (global_conf->findItem("", "add")) {
+		action = ADD;
+	}
 
-    if (global_conf->findItem("", "del")) {
-        if (action != SET) {
-            usage(std::cerr, argv[0]);
-            return 1;
-        }
-        action = DEL;
-    }
+	if (global_conf->findItem("", "del")) {
+		if (action != SET) {
+			usage(std::cerr, argv[0]);
+			return 1;
+		}
+		action = DEL;
+	}
 
-    if (global_conf->findItem("", "player")) {
-        if (action == SET) {
-            action = MOD;
-        }
-        actype = PLAYER;
-    }
+	if (global_conf->findItem("", "player")) {
+		if (action == SET) {
+			action = MOD;
+		}
+		actype = PLAYER;
+	}
 
-    if (global_conf->findItem("", "server")) {
-        if (action == SET) {
-            action = MOD;
-        }
-        actype = SERVER;
-    }
+	if (global_conf->findItem("", "server")) {
+		if (action == SET) {
+			action = MOD;
+		}
+		actype = SERVER;
+	}
 
-    if (global_conf->findItem("", "admin")) {
-        if (action == SET) {
-            action = MOD;
-        }
-        actype = ADMIN;
-    }
+	if (global_conf->findItem("", "admin")) {
+		if (action == SET) {
+			action = MOD;
+		}
+		actype = ADMIN;
+	}
 
-    if (extra_arg_count == 0) {
-        if (action != SET) {
-            usage(std::cerr, argv[0]);
-            return 1;
-        }
-        acname = "admin";
-        actype = ADMIN;
-    } else if (extra_arg_count == 1) {
-        acname = argv[config_status];
-    } else {
-        usage(std::cerr, argv[0]);
-        return 1;
-    }
+	if (extra_arg_count == 0) {
+		if (action != SET) {
+			usage(std::cerr, argv[0]);
+			return 1;
+		}
+		acname = "admin";
+		actype = ADMIN;
+	} else if (extra_arg_count == 1) {
+		acname = argv[config_status];
+	} else {
+		usage(std::cerr, argv[0]);
+		return 1;
+	}
 
-    if (security_init() != 0) {
-        spdlog::critical("Security initialisation Error. Exiting.");
-        return EXIT_SECURITY_ERROR;
-    }
+	if (security_init() != 0) {
+		spdlog::critical("Security initialisation Error. Exiting.");
+		return EXIT_SECURITY_ERROR;
+	}
 
-    try {
-        auto database = createDatabase();
-        Storage db(*database);
+	try {
+		auto database = createDatabase();
+		Storage db(*database);
 
-    // MapType data;
+		// MapType data;
 
-    // bool res = db->getAccount("admin", data);
+		// bool res = db->getAccount("admin", data);
 
-    // if (!res) {
-        // std::cout << "Admin account does not yet exist" << std::endl;
-        // acname = "admin";
-        // action = ADD;
-    // }
-        if (action != ADD) {
-            MapType o;
-            int res = db.getAccount(acname, o);
-            if (res != 0) {
-                std::cout << "Account '" << acname << "' does not yet exist" << std::endl;
-                return 1;
-            }
-        }
-        if (action == DEL) {
-            int res = db.delAccount(acname);
-            if (res == 0) {
-                std::cout << "Account '" << acname << "' removed." << std::endl;
-            }
-            return 0;
-        }
+		// if (!res) {
+		// std::cout << "Admin account does not yet exist" << std::endl;
+		// acname = "admin";
+		// action = ADD;
+		// }
+		if (action != ADD) {
+			MapType o;
+			int res = db.getAccount(acname, o);
+			if (res != 0) {
+				std::cout << "Account '" << acname << "' does not yet exist" << std::endl;
+				return 1;
+			}
+		}
+		if (action == DEL) {
+			int res = db.delAccount(acname);
+			if (res == 0) {
+				std::cout << "Account '" << acname << "' removed." << std::endl;
+			}
+			return 0;
+		}
 
-        MapType amap;
-        if (action == MOD) {
-            std::string account_type("player");
-            if (actype == SERVER) {
-                account_type = "server";
-            } else if (actype == ADMIN) {
-                account_type = "admin";
-            }
-            amap["type"] = account_type;
-            std::cout << "Changing '" << acname << "' to a " << account_type
-                      << " account" << std::endl;
-        } else {
-            std::string password, password2;
+		MapType amap;
+		if (action == MOD) {
+			std::string account_type("player");
+			if (actype == SERVER) {
+				account_type = "server";
+			} else if (actype == ADMIN) {
+				account_type = "admin";
+			}
+			amap["type"] = account_type;
+			std::cout << "Changing '" << acname << "' to a " << account_type
+					  << " account" << std::endl;
+		} else {
+			std::string password, password2;
 
-            get_password(acname, password, password2);
+			get_password(acname, password, password2);
 
-            if (password != password2) {
-                std::cout << "Passwords did not match. Account database unchanged."
-                          << std::endl;
-                return 1;
-            }
+			if (password != password2) {
+				std::cout << "Passwords did not match. Account database unchanged."
+						  << std::endl;
+				return 1;
+			}
 
-            amap["password"] = password;
-        }
+			amap["password"] = password;
+		}
 
-        int res;
-        if (action == ADD) {
-            amap["username"] = acname;
-            if (actype == SERVER) {
-                std::cout << "Creating server account" << std::endl;
-                amap["type"] = "server";
-            }
-            res = db.putAccount(amap);
-        } else {
-            res = db.modAccount(amap, acname);
-        }
-        if (res == 0) {
-            std::cout << "Account changed." << std::endl;
-            return 0;
-        }
-        return 1;
-    } catch (const std::runtime_error& ex) {
-        std::cout << "There was an error: " << ex.what() << std::endl;
-        return 1;
-    }
+		int res;
+		if (action == ADD) {
+			amap["username"] = acname;
+			if (actype == SERVER) {
+				std::cout << "Creating server account" << std::endl;
+				amap["type"] = "server";
+			}
+			res = db.putAccount(amap);
+		} else {
+			res = db.modAccount(amap, acname);
+		}
+		if (res == 0) {
+			std::cout << "Account changed." << std::endl;
+			return 0;
+		}
+		return 1;
+	} catch (const std::runtime_error& ex) {
+		std::cout << "There was an error: " << ex.what() << std::endl;
+		return 1;
+	}
 }

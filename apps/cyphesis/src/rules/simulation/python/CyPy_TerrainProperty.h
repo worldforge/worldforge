@@ -25,36 +25,41 @@
 #include "pythonbase/WrapperBase.h"
 
 class TerrainProperty;
+
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_TerrainProperty: public WrapperBase<Ref<LocatedEntity>, CyPy_TerrainProperty>
-{
-    public:
-        CyPy_TerrainProperty(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_TerrainProperty : public WrapperBase<Ref<LocatedEntity>, CyPy_TerrainProperty> {
+public:
+	CyPy_TerrainProperty(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_TerrainProperty(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
+	CyPy_TerrainProperty(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
 
-        ~CyPy_TerrainProperty() override;
+	~CyPy_TerrainProperty() override;
 
-        static void init_type();
+	static void init_type();
 
-        const TerrainProperty& getTerrainProperty();
+	const TerrainProperty& getTerrainProperty();
 
-        Py::Object getHeight(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getHeight);
+	Py::Object getHeight(const Py::Tuple& args);
 
-        Py::Object getSurface(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getSurface);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getHeight);
 
-        Py::Object getSurfaceName(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getSurfaceName);
+	Py::Object getSurface(const Py::Tuple& args);
 
-        Py::Object getNormal(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getNormal);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getSurface);
 
-        Py::Object findMods(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, findMods);
+	Py::Object getSurfaceName(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getSurfaceName);
+
+	Py::Object getNormal(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, getNormal);
+
+	Py::Object findMods(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_TerrainProperty, findMods);
 
 };
 

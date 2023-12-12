@@ -30,28 +30,27 @@
 
 #include <cassert>
 
-int main()
-{
-    Point3D point1(0,0,0), point2(1,1,1);
+int main() {
+	Point3D point1(0, 0, 0), point2(1, 1, 1);
 
-    assert(squareDistance(point1, point2) > 1);
+	assert(squareDistance(point1, point2) > 1);
 
-    std::vector<double> empty, point_store, vector_store;
+	std::vector<double> empty, point_store, vector_store;
 
-    addToEntity(point1, point_store);
- 
-    Vector3D vector1(0,0,0);
+	addToEntity(point1, point_store);
 
-    addToEntity(vector1, vector_store);
+	Vector3D vector1(0, 0, 0);
 
-    assert(fromStdVector(point1, empty) == -1);
-    assert(fromStdVector(vector1, empty) == -1);
+	addToEntity(vector1, vector_store);
 
-    assert(fromStdVector(point1, point_store) == 0);
-    assert(fromStdVector(vector1, vector_store) == 0);
+	assert(fromStdVector(point1, empty) == -1);
+	assert(fromStdVector(vector1, empty) == -1);
 
-    sqrMag(point1);
-    sqrMag(point2);
+	assert(fromStdVector(point1, point_store) == 0);
+	assert(fromStdVector(vector1, vector_store) == 0);
 
-    return 0;
+	sqrMag(point1);
+	sqrMag(point2);
+
+	return 0;
 }

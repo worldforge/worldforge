@@ -25,55 +25,54 @@
 #include <boost/filesystem/path.hpp>
 #include <map>
 
-class FileSystemObserver
-{
-    public:
-        /**
-         * A file system event.
-         */
-        struct FileSystemEvent {
-            /**
-             * The directory monitoring event.
-             */
-            const boost::asio::dir_monitor_event& ev;
+class FileSystemObserver {
+public:
+	/**
+	 * A file system event.
+	 */
+	struct FileSystemEvent {
+		/**
+		 * The directory monitoring event.
+		 */
+		const boost::asio::dir_monitor_event& ev;
 
-            /**
-             * The path relative to the watched directory.
-             */
-            const boost::filesystem::path& relativePath;
-        };
+		/**
+		 * The path relative to the watched directory.
+		 */
+		const boost::filesystem::path& relativePath;
+	};
 
-        explicit FileSystemObserver(boost::asio::io_context& ioService);
+	explicit FileSystemObserver(boost::asio::io_context& ioService);
 
-        ~FileSystemObserver();
+	~FileSystemObserver();
 
-        /**
-         * Adds a directory recursively.
-         * @param dirname The path.
-         * @param callback A callback, called whenever a change is detected.
-         */
-        void add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback);
+	/**
+	 * Adds a directory recursively.
+	 * @param dirname The path.
+	 * @param callback A callback, called whenever a change is detected.
+	 */
+	void add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback);
 
-        /**
-         * Removes a previously watched directory.
-         * @param dirname
-         */
-        void remove_directory(const boost::filesystem::path& dirname);
+	/**
+	 * Removes a previously watched directory.
+	 * @param dirname
+	 */
+	void remove_directory(const boost::filesystem::path& dirname);
 
-        void stop();
+	void stop();
 
-    private:
-        std::unique_ptr<boost::asio::dir_monitor> mDirectoryMonitor;
+private:
+	std::unique_ptr<boost::asio::dir_monitor> mDirectoryMonitor;
 
-        std::map<boost::filesystem::path, std::function<void(const FileSystemEvent&)>> mCallBacks;
+	std::map<boost::filesystem::path, std::function<void(const FileSystemEvent&)>> mCallBacks;
 
-        boost::asio::io_context& m_ioService;
+	boost::asio::io_context& m_ioService;
 
-        std::map<boost::filesystem::path, std::pair<std::chrono::steady_clock::time_point, boost::asio::dir_monitor_event>> m_changedPaths;
+	std::map<boost::filesystem::path, std::pair<std::chrono::steady_clock::time_point, boost::asio::dir_monitor_event>> m_changedPaths;
 
-        void observe();
+	void observe();
 
-        void processChangedPaths();
+	void processChangedPaths();
 };
 
 

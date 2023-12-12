@@ -29,22 +29,19 @@ using Atlas::Message::FloatType;
 
 CalendarProperty::CalendarProperty() = default;
 
-int CalendarProperty::get(Element & ent) const
-{
-    MapType & c = (ent = MapType()).asMap();
-    c["seconds_per_minute"] = (int)DateTime::spm();
-    c["minutes_per_hour"] = (int)DateTime::mph();
-    c["hours_per_day"] = (int)DateTime::hpd();
-    c["days_per_month"] = (int)DateTime::dpm();
-    c["months_per_year"] = (int)DateTime::mpy();
-    return 0;
+int CalendarProperty::get(Element& ent) const {
+	MapType& c = (ent = MapType()).asMap();
+	c["seconds_per_minute"] = (int) DateTime::spm();
+	c["minutes_per_hour"] = (int) DateTime::mph();
+	c["hours_per_day"] = (int) DateTime::hpd();
+	c["days_per_month"] = (int) DateTime::dpm();
+	c["months_per_year"] = (int) DateTime::mpy();
+	return 0;
 }
 
-void CalendarProperty::set(const Element & ent)
-{
+void CalendarProperty::set(const Element& ent) {
 }
 
-CalendarProperty * CalendarProperty::copy() const
-{
-    return new CalendarProperty(*this);
+CalendarProperty* CalendarProperty::copy() const {
+	return new CalendarProperty(*this);
 }

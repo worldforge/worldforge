@@ -34,95 +34,95 @@ struct OperationsListener;
 /// This is now also intended to be the base for in-game persistence.
 /// It implements the basic types required for persistence.
 /// \ingroup EntityClasses
-class Entity : public LocatedEntity
-{
-    protected:
+class Entity : public LocatedEntity {
+protected:
 
-        /// Map of delegate properties.
-        std::multimap<int, std::string> m_delegates;
+	/// Map of delegate properties.
+	std::multimap<int, std::string> m_delegates;
 
-        /// A static map tracking the number of existing entities per type.
-        /// A monitor by the name of "entity_count{type=*}" will be created
-        /// per type.
-        static std::unordered_map<const TypeNode*, int> s_monitorsMap;
+	/// A static map tracking the number of existing entities per type.
+	/// A monitor by the name of "entity_count{type=*}" will be created
+	/// per type.
+	static std::unordered_map<const TypeNode*, int> s_monitorsMap;
 
-        std::unique_ptr<Domain> m_domain;
+	std::unique_ptr<Domain> m_domain;
 
-        std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override;
+	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override;
 
-    public:
-        explicit Entity(RouterId id);
+public:
+	explicit Entity(RouterId id);
 
-        ~Entity() override;
+	~Entity() override;
 
-        std::vector<OperationsListener*> m_listeners;
+	std::vector<OperationsListener*> m_listeners;
 
-        void setType(const TypeNode* t) override;
+	void setType(const TypeNode* t) override;
 
-        void addToMessage(Atlas::Message::MapType&) const override;
+	void addToMessage(Atlas::Message::MapType&) const override;
 
-        void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
-        virtual void DeleteOperation(const Operation&, OpVector&);
+	virtual void DeleteOperation(const Operation&, OpVector&);
 
-        virtual void ImaginaryOperation(const Operation&, OpVector&);
+	virtual void ImaginaryOperation(const Operation&, OpVector&);
 
-        virtual void LookOperation(const Operation&, OpVector&);
+	virtual void LookOperation(const Operation&, OpVector&);
 
-        virtual void MoveOperation(const Operation&, OpVector&);
+	virtual void MoveOperation(const Operation&, OpVector&);
 
-        virtual void SetOperation(const Operation&, OpVector&);
+	virtual void SetOperation(const Operation&, OpVector&);
 
-        virtual void TalkOperation(const Operation&, OpVector&);
+	virtual void TalkOperation(const Operation&, OpVector&);
 
-        virtual void UpdateOperation(const Operation&, OpVector&);
+	virtual void UpdateOperation(const Operation&, OpVector&);
 
-        virtual void RelayOperation(const Operation&, OpVector&);
+	virtual void RelayOperation(const Operation&, OpVector&);
 
-        virtual void CreateOperation(const Operation& op, OpVector& res);
+	virtual void CreateOperation(const Operation& op, OpVector& res);
 
-        void externalOperation(const Operation& op, Link&) override;
+	void externalOperation(const Operation& op, Link&) override;
 
-        void operation(const Operation&, OpVector&) override;
+	void operation(const Operation&, OpVector&) override;
 
-        HandlerResult callDelegate(const std::string&,
-                                   const Operation&,
-                                   OpVector&);
+	HandlerResult callDelegate(const std::string&,
+							   const Operation&,
+							   OpVector&);
 
-        /// \brief Find and call the handler for an operation
-        ///
-        /// @param op The operation to be processed.
-        /// @param res The result of the operation is returned here.
-        void callOperation(const Operation&, OpVector&);
+	/// \brief Find and call the handler for an operation
+	///
+	/// @param op The operation to be processed.
+	/// @param res The result of the operation is returned here.
+	void callOperation(const Operation&, OpVector&);
 
-        void installDelegate(int, const std::string&) override;
+	void installDelegate(int, const std::string&) override;
 
-        void removeDelegate(int, const std::string&) override;
+	void removeDelegate(int, const std::string&) override;
 
-        void addChild(LocatedEntity& childEntity) override;
+	void addChild(LocatedEntity& childEntity) override;
 
-        void removeChild(LocatedEntity& childEntity) override;
+	void removeChild(LocatedEntity& childEntity) override;
 
-        void onContainered(const Ref<LocatedEntity>& oldLocation) override;
+	void onContainered(const Ref<LocatedEntity>& oldLocation) override;
 
-        void onUpdated() override;
+	void onUpdated() override;
 
-        void destroy() override;
+	void destroy() override;
 
-        Domain* getDomain() override;
+	Domain* getDomain() override;
 
-        const Domain* getDomain() const override;
+	const Domain* getDomain() const override;
 
-        void setDomain(std::unique_ptr<Domain> domain) override;
+	void setDomain(std::unique_ptr<Domain> domain) override;
 
-        void sendWorld(Operation op) override;
+	void sendWorld(Operation op) override;
 
-        void addListener(OperationsListener* listener) override;
+	void addListener(OperationsListener* listener) override;
 
-        void removeListener(OperationsListener* listener) override;
+	void removeListener(OperationsListener* listener) override;
 
-        Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity);
-        Ref<LocatedEntity> createNewEntity(const Operation& op, OpVector& res);
+	Ref<LocatedEntity> createNewEntity(const Atlas::Objects::Entity::RootEntity& entity);
+
+	Ref<LocatedEntity> createNewEntity(const Operation& op, OpVector& res);
 };
 
 #endif // RULESETS_ENTITY_H

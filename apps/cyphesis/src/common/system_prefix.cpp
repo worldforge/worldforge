@@ -25,16 +25,15 @@
 #include <iostream>
 #include <fmt/format.h>
 
-void getinstallprefix()
-{
-    BrInitError error;
-    if (br_init (&error) == 0) {
-        std::cerr << "Error when setting up BinReloc: " << error << std::endl;
-        return;
-    }
+void getinstallprefix() {
+	BrInitError error;
+	if (br_init(&error) == 0) {
+		std::cerr << "Error when setting up BinReloc: " << error << std::endl;
+		return;
+	}
 
-    etc_directory = br_find_etc_dir("");
-    share_directory = br_find_data_dir("data");
-    var_directory = fmt::format("{}/var", br_find_prefix(""));
-    bin_directory = br_find_bin_dir("bin");
+	etc_directory = br_find_etc_dir("");
+	share_directory = br_find_data_dir("data");
+	var_directory = fmt::format("{}/var", br_find_prefix(""));
+	bin_directory = br_find_bin_dir("bin");
 }

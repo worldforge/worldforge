@@ -40,115 +40,105 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
 EntityExporter::EntityExporter(const std::string& accountId,
-                               const std::string& avatarId) :
-        EntityExporterBase(accountId, avatarId, getCurrentTime()), mCurrentRes(
-        nullptr)
-{
-    assert(accountId != "");
-    assert(avatarId != "");
+							   const std::string& avatarId) :
+		EntityExporterBase(accountId, avatarId, getCurrentTime()), mCurrentRes(
+		nullptr) {
+	assert(accountId != "");
+	assert(avatarId != "");
 }
 
-void EntityExporter::setup(const std::string& arg, OpVector& ret)
-{
-    mCurrentRes = &ret;
+void EntityExporter::setup(const std::string& arg, OpVector& ret) {
+	mCurrentRes = &ret;
 
-    //Start by asking the server for information about itself
-    //so we can provide correct meta data in fillWithServerData()
-    Get get;
-    get->setObjtype("op");
-    get->setSerialno(newSerialNumber());
-    CallbackFunction callback = sigc::mem_fun(*this,
-                                              &EntityExporter::operationGetServerInfo);
-    sendAndAwaitResponse(get, callback);
+	//Start by asking the server for information about itself
+	//so we can provide correct meta data in fillWithServerData()
+	Get get;
+	get->setObjtype("op");
+	get->setSerialno(newSerialNumber());
+	CallbackFunction callback = sigc::mem_fun(*this,
+											  &EntityExporter::operationGetServerInfo);
+	sendAndAwaitResponse(get, callback);
 
-    start(arg, "0");
+	start(arg, "0");
 
-    mCurrentRes = nullptr;
+	mCurrentRes = nullptr;
 
-    if (mComplete || mCancelled) {
-        m_complete = true;
-    }
+	if (mComplete || mCancelled) {
+		m_complete = true;
+	}
 }
 
-void EntityExporter::operation(const Operation& op, OpVector& res)
-{
-    mCurrentRes = &res;
+void EntityExporter::operation(const Operation& op, OpVector& res) {
+	mCurrentRes = &res;
 
-    if (!op->isDefaultRefno()) {
-        auto I = mCallbacks.find(op->getRefno());
-        if (I != mCallbacks.end()) {
-            auto callback = I->second;
-            mCallbacks.erase(I);
-            callback(op);
-        }
-    } else {
-        if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
-            std::string message =
-                    op->getArgs().front()->getAttr("message").asString();
-            spdlog::error("Got error. Message: {}", message);
-        }
-    }
+	if (!op->isDefaultRefno()) {
+		auto I = mCallbacks.find(op->getRefno());
+		if (I != mCallbacks.end()) {
+			auto callback = I->second;
+			mCallbacks.erase(I);
+			callback(op);
+		}
+	} else {
+		if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
+			std::string message =
+					op->getArgs().front()->getAttr("message").asString();
+			spdlog::error("Got error. Message: {}", message);
+		}
+	}
 
-    mCurrentRes = nullptr;
+	mCurrentRes = nullptr;
 
-    if (mComplete || mCancelled) {
-        m_complete = true;
-    }
+	if (mComplete || mCancelled) {
+		m_complete = true;
+	}
 }
 
-long int EntityExporter::newSerialNumber()
-{
-    return newSerialNo();
+long int EntityExporter::newSerialNumber() {
+	return newSerialNo();
 }
 
-void EntityExporter::send(const Atlas::Objects::Operation::RootOperation& op)
-{
-    if (mCurrentRes) {
-        mCurrentRes->push_back(op);
-    }
+void EntityExporter::send(const Atlas::Objects::Operation::RootOperation& op) {
+	if (mCurrentRes) {
+		mCurrentRes->push_back(op);
+	}
 }
 
 void EntityExporter::sendAndAwaitResponse(
-        const Atlas::Objects::Operation::RootOperation& op,
-        CallbackFunction& callback)
-{
-    if (mCurrentRes) {
-        mCallbacks.emplace(op->getSerialno(), callback);
-        mCurrentRes->push_back(op);
-    }
+		const Atlas::Objects::Operation::RootOperation& op,
+		CallbackFunction& callback) {
+	if (mCurrentRes) {
+		mCallbacks.emplace(op->getSerialno(), callback);
+		mCurrentRes->push_back(op);
+	}
 }
 
 Atlas::Formatter* EntityExporter::createMultiLineFormatter(std::iostream& s,
-                                                           Atlas::Bridge& b)
-{
-    return new Atlas::MultiLineListFormatter(s, b);
+														   Atlas::Bridge& b) {
+	return new Atlas::MultiLineListFormatter(s, b);
 }
 
-std::string EntityExporter::getCurrentTime()
-{
-    auto now = std::chrono::system_clock::now();
-    std::stringstream ss;
-    ss << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-    return ss.str();
+std::string EntityExporter::getCurrentTime() {
+	auto now = std::chrono::system_clock::now();
+	std::stringstream ss;
+	ss << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+	return ss.str();
 }
 
-void EntityExporter::fillWithServerData(Atlas::Message::MapType& serverMap)
-{
-    Element e;
-    if (m_server_info->copyAttr("ruleset", e) == 0 && e.isString()) {
-        serverMap["ruleset"] = e.asString();
-    }
-    if (m_server_info->copyAttr("version", e) == 0 && e.isString()) {
-        serverMap["version"] = e.asString();
-    }
+void EntityExporter::fillWithServerData(Atlas::Message::MapType& serverMap) {
+	Element e;
+	if (m_server_info->copyAttr("ruleset", e) == 0 && e.isString()) {
+		serverMap["ruleset"] = e.asString();
+	}
+	if (m_server_info->copyAttr("version", e) == 0 && e.isString()) {
+		serverMap["version"] = e.asString();
+	}
 }
 
 void EntityExporter::operationGetServerInfo(
-        const Atlas::Objects::Operation::RootOperation& op)
-{
-    if (!op->getArgs().empty()) {
-        m_server_info = op->getArgs().front();
-    }
+		const Atlas::Objects::Operation::RootOperation& op) {
+	if (!op->getArgs().empty()) {
+		m_server_info = op->getArgs().front();
+	}
 
 }
 

@@ -23,11 +23,11 @@ using namespace Ember::OgreView::Gui;
 using namespace Ember::OgreView::Model;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ModelRenderer>(sol::table& space) {
 	auto modelRenderer = space.new_usertype<ModelRenderer>("ModelRenderer",
-	sol::constructors<ModelRenderer(CEGUI::Window* image, const std::string&)>(),
-			sol::base_classes, sol::bases<MovableObjectRenderer>()
+														   sol::constructors<ModelRenderer(CEGUI::Window* image, const std::string&)>(),
+														   sol::base_classes, sol::bases<MovableObjectRenderer>()
 	);
 	modelRenderer["showModel"] = sol::overload(sol::resolve<const std::string&, const Ogre::Vector3&, const Ogre::Quaternion&>(&ModelRenderer::showModel),
 											   sol::resolve<const ModelDefinitionPtr&, const Ogre::Vector3&, const Ogre::Quaternion&>(&ModelRenderer::showModel),

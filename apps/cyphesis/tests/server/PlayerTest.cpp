@@ -53,105 +53,98 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Entity::RootEntity;
 
-template <typename T>
-std::ostream & operator<<(std::ostream & os,
-                          const std::list<T> & sl)
-{
-    typename std::list<T>::const_iterator I = sl.begin();
-    typename std::list<T>::const_iterator Iend = sl.end();
-    os << "[";
-    for (; I != Iend; ++I) {
-        if (I != sl.begin()) {
-            os << ", ";
-        }
-        os << *I;
-    }
-    os << "]";
-    return os;
+template<typename T>
+std::ostream& operator<<(std::ostream& os,
+						 const std::list<T>& sl) {
+	typename std::list<T>::const_iterator I = sl.begin();
+	typename std::list<T>::const_iterator Iend = sl.end();
+	os << "[";
+	for (; I != Iend; ++I) {
+		if (I != sl.begin()) {
+			os << ", ";
+		}
+		os << *I;
+	}
+	os << "]";
+	return os;
 }
 
-class Playertest : public Cyphesis::TestBase
-{
-  protected:
-    static long m_id_counter;
+class Playertest : public Cyphesis::TestBase {
+protected:
+	static long m_id_counter;
 
-    ServerRouting * m_server;
-    Connection * m_connection;
-    Player * m_account;
-    TestWorld* m_world;
+	ServerRouting* m_server;
+	Connection* m_connection;
+	Player* m_account;
+	TestWorld* m_world;
 
-    public:
-    Playertest();
+public:
+	Playertest();
 
-    static long newId();
+	static long newId();
 
-    void setup() override;
-    void teardown() override;
+	void setup() override;
 
-    void test_getType();
+	void teardown() override;
+
+	void test_getType();
 
 };
 
 long Playertest::m_id_counter = 0L;
 
 Playertest::Playertest() : m_server(nullptr),
-                         m_connection(nullptr),
-                         m_account(nullptr)
-{
-    ADD_TEST(Playertest::test_getType);
+						   m_connection(nullptr),
+						   m_account(nullptr) {
+	ADD_TEST(Playertest::test_getType);
 }
 
-long Playertest::newId()
-{
-    return ++m_id_counter;
+long Playertest::newId() {
+	return ++m_id_counter;
 }
 
-void Playertest::setup()
-{
-    Ref<Entity> gw = new Entity(m_id_counter++);
-    m_world = new TestWorld(gw);
+void Playertest::setup() {
+	Ref<Entity> gw = new Entity(m_id_counter++);
+	m_world = new TestWorld(gw);
 
-    m_server = new ServerRouting(*m_world,
-                                 *(Persistence*)nullptr,
-                                 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
-                                 "bad621d4-616d-4faf-b9e6-471d12b139a9",
-                                 m_id_counter++);
-    m_connection = new Connection(*(CommSocket*)0, *m_server,
-                                  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
-                                  m_id_counter++);
-    m_account = new Player(m_connection,
-                          "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
-                          "fa1a03a2-a745-4033-85cb-bb694e921e62",
-                          m_id_counter++);
+	m_server = new ServerRouting(*m_world,
+								 *(Persistence*) nullptr,
+								 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
+								 "bad621d4-616d-4faf-b9e6-471d12b139a9",
+								 m_id_counter++);
+	m_connection = new Connection(*(CommSocket*) 0, *m_server,
+								  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
+								  m_id_counter++);
+	m_account = new Player(m_connection,
+						   "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
+						   "fa1a03a2-a745-4033-85cb-bb694e921e62",
+						   m_id_counter++);
 }
 
-void Playertest::teardown()
-{
-    delete m_world;
-    delete m_server;
-    delete m_account;
-    delete m_connection;
+void Playertest::teardown() {
+	delete m_world;
+	delete m_server;
+	delete m_account;
+	delete m_connection;
 }
 
-void Playertest::test_getType()
-{
-    ASSERT_TRUE(m_account != 0);
+void Playertest::test_getType() {
+	ASSERT_TRUE(m_account != 0);
 
-    const char * type = m_account->getType();
-    ASSERT_EQUAL(std::string("player"), type);
+	const char* type = m_account->getType();
+	ASSERT_EQUAL(std::string("player"), type);
 }
 
 
-int main()
-{
-    boost::asio::io_context io_context;
-    EntityBuilder eb;
-    NullPropertyManager propertyManager;
-    Ruleset ruleset(eb, io_context, propertyManager);
+int main() {
+	boost::asio::io_context io_context;
+	EntityBuilder eb;
+	NullPropertyManager propertyManager;
+	Ruleset ruleset(eb, io_context, propertyManager);
 
-    Playertest t;
+	Playertest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -194,50 +187,50 @@ int main()
 #include "../stubs/common/stubTypeNode.h"
 
 #define STUB_Inheritance_getClass
-const Atlas::Objects::Root& Inheritance::getClass(const std::string & parent, Visibility) const
-{
-    return noClass;
+
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
+	return noClass;
 }
 
 
 #define STUB_Inheritance_getType
-const TypeNode* Inheritance::getType(const std::string & parent) const
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return 0;
-    }
-    return I->second.get();
+
+const TypeNode* Inheritance::getType(const std::string& parent) const {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return 0;
+	}
+	return I->second.get();
 }
 
 #define STUB_Inheritance_hasClass
-bool Inheritance::hasClass(const std::string & parent)
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return false;
-    }
-    return true;
+
+bool Inheritance::hasClass(const std::string& parent) {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return false;
+	}
+	return true;
 }
 
 #include "../stubs/common/stubInheritance.h"
 
 #define STUB_Router_clientError
-void Router::clientError(const Operation & op,
-                         const std::string & errstring,
-                         OpVector & res,
-                         const std::string & to) const
-{
-    res.push_back(Atlas::Objects::Operation::Error());
+
+void Router::clientError(const Operation& op,
+						 const std::string& errstring,
+						 OpVector& res,
+						 const std::string& to) const {
+	res.push_back(Atlas::Objects::Operation::Error());
 }
 
 #define STUB_Router_error
-void Router::error(const Operation & op,
-                   const std::string & errstring,
-                   OpVector & res,
-                   const std::string & to) const
-{
-    res.push_back(Atlas::Objects::Operation::Error());
+
+void Router::error(const Operation& op,
+				   const std::string& errstring,
+				   OpVector& res,
+				   const std::string& to) const {
+	res.push_back(Atlas::Objects::Operation::Error());
 }
 
 #include "../stubs/common/stubRouter.h"
@@ -246,26 +239,28 @@ void Router::error(const Operation & op,
 #include "../stubs/common/stubProperty.h"
 #include "../stubs/common/stubPropertyManager.h"
 
-RouterId newId()
-{
-    long new_id = Playertest::newId();
-    return {new_id};
+RouterId newId() {
+	long new_id = Playertest::newId();
+	return {new_id};
 }
 
 #include "../stubs/common/stublog.h"
 
 bool database_flag = false;
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int MONITOR_NO = -1;
-} } }
+}
+}
+}
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

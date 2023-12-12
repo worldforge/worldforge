@@ -21,24 +21,26 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
-    extern int THOUGHT_NO;
+extern int THOUGHT_NO;
 
-    /// \brief A thought sent from a mind.
-    ///
-    /// Whenever a mind wants to control an entity this is done through Thoughts.
+/// \brief A thought sent from a mind.
+///
+/// Whenever a mind wants to control an entity this is done through Thoughts.
 
-    /// \ingroup CustomOperations
-    class Thought : public Generic
-    {
-        public:
-            Thought()
-            {
-                (*this)->setType("thought", THOUGHT_NO);
-            }
-    };
+/// \ingroup CustomOperations
+class Thought : public Generic {
+public:
+	Thought() {
+		(*this)->setType("thought", THOUGHT_NO);
+	}
+};
 
-} } }
+}
+}
+}
 
 #endif //CYPHESIS_THOUGHT_H

@@ -26,8 +26,7 @@
 #include <OgreFrameListener.h>
 #include "IEnvironmentProvider.h"
 
-namespace Hydrax
-{
+namespace Hydrax {
 class Hydrax;
 }
 
@@ -40,8 +39,7 @@ namespace Environment {
 @brief Uses the Hydrax system for showing water.
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class HydraxWater : public IWater, public Ogre::FrameListener
-{
+class HydraxWater : public IWater, public Ogre::FrameListener {
 public:
 	HydraxWater(Ogre::Camera& camera, Ogre::SceneManager& mSceneMgr);
 
@@ -57,6 +55,7 @@ public:
 	 * @return True if the water technique is supported.
 	 */
 	virtual bool isSupported() const;
+
 	/**
 	 * @brief Initializes the water. You must call this in order for the water to show up.
 	 * @return True if the water technique could be setup, else false.
@@ -65,7 +64,6 @@ public:
 
 
 protected:
-
 
 
 	/**
@@ -82,8 +80,7 @@ protected:
 	 * @brief The main Hydrax instance.
 	 * Owned by this class and destroyed along with it.
 	 */
-	Hydrax::Hydrax *mHydrax;
-
+	Hydrax::Hydrax* mHydrax;
 
 
 };

@@ -23,10 +23,8 @@
 #include <OgreVector.h>
 #include <OgreVector.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 
 /**
@@ -80,7 +78,7 @@ struct PlantInstance {
 	/**
 	 * @brief The rotation of the plant around the vertical axis.
 	 */
-	float orientation;
+	float orientation = 0.0f;
 
 	/**
 	 * @brief The scale of the plant, for width and height.
@@ -89,6 +87,6 @@ struct PlantInstance {
 };
 
 }
-}
-}
+
+
 #endif /* EMBEROGRE_TERRAIN_PLANTINSTANCE_H_ */

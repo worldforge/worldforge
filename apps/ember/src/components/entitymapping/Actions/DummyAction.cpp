@@ -23,26 +23,23 @@
 #include "DummyAction.h"
 #include "../ChangeContext.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Actions {
 
-void DummyAction::activate(ChangeContext&)
-{
-};
+namespace Ember::EntityMapping::Actions {
 
-void DummyAction::deactivate(ChangeContext&)
-{
-};
+void DummyAction::activate(ChangeContext&) {
+}
+
+void DummyAction::deactivate(ChangeContext&) {
+}
 
 
 }
 
-}
 
-}
+
+
 

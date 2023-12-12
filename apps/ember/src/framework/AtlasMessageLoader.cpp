@@ -24,33 +24,30 @@
 #include <Atlas/Objects/Factories.h>
 
 using Atlas::Objects::Root;
-namespace Ember
-{
+namespace Ember {
 
 AtlasMessageLoader::AtlasMessageLoader(const Atlas::Objects::Factories& factories, std::map<std::string, Root>& messages) :
 		ObjectsDecoder(factories),
 		mCount(0),
-		mMessages(messages)
-{
+		mMessages(messages) {
 }
 
 AtlasMessageLoader::~AtlasMessageLoader() = default;
 
-void AtlasMessageLoader::objectArrived(Root obj)
-{
+void AtlasMessageLoader::objectArrived(Root obj) {
 	if (obj->isDefaultId()) {
 		logger->warn("Object without ID read from file.");
 		return;
 	}
-	const std::string & id = obj->getId();
+	const std::string& id = obj->getId();
 	if (mMessages.find(id) != mMessages.end()) {
 		logger->warn("Duplicate object ID '{}' loaded.", id);
 	}
 	mMessages[id] = std::move(obj);
 	++mCount;
 }
-int AtlasMessageLoader::count()
-{
+
+int AtlasMessageLoader::count() const {
 	return mCount;
 }
 

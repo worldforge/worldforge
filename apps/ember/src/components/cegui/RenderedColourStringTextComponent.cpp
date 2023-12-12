@@ -51,43 +51,37 @@
 
 using namespace CEGUI;
 
-namespace Ember
-{
-namespace Cegui
-{
+
+namespace Ember::Cegui {
 
 RenderedColourStringTextComponent::RenderedColourStringTextComponent() :
-		RenderedStringTextComponent()
-{
+		RenderedStringTextComponent() {
 }
 
 RenderedColourStringTextComponent::RenderedColourStringTextComponent(const String& text, const String& font_name) :
-		RenderedStringTextComponent(text, font_name)
-{
+		RenderedStringTextComponent(text, font_name) {
 }
 
-void RenderedColourStringTextComponent::draw(const CEGUI::Window* ref_wnd, CEGUI::GeometryBuffer& buffer, const CEGUI::Vector2f& position, const CEGUI::ColourRect* /*mod_colours*/, const CEGUI::Rectf* clip_rect, const float vertical_space, const float space_extra) const
-{
+void RenderedColourStringTextComponent::draw(const CEGUI::Window* ref_wnd, CEGUI::GeometryBuffer& buffer, const CEGUI::Vector2f& position, const CEGUI::ColourRect* /*mod_colours*/,
+											 const CEGUI::Rectf* clip_rect, const float vertical_space, const float space_extra) const {
 	RenderedStringTextComponent::draw(ref_wnd, buffer, position, nullptr, clip_rect, vertical_space, space_extra);
 }
 
-RenderedStringTextComponent* RenderedColourStringTextComponent::clone() const
-{
+RenderedStringTextComponent* RenderedColourStringTextComponent::clone() const {
 	return new RenderedColourStringTextComponent(*this);
 }
 
-RenderedStringTextComponent* RenderedColourStringTextComponent::split(const CEGUI::Window* ref_wnd, float split_point, bool first_component)
-{
+RenderedStringTextComponent* RenderedColourStringTextComponent::split(const CEGUI::Window* ref_wnd, float split_point, bool first_component) {
 	const Font* fnt = getEffectiveFont(ref_wnd);
 
 	// This is checked, but should never fail, since if we had no font our
 	// extent would be 0 and we would never cause a split to be needed here.
 	if (!fnt)
-		CEGUI_THROW(InvalidRequestException( "RenderedStringTextComponent::split: "
-		"unable to split with no font set."));
+		CEGUI_THROW(InvalidRequestException("RenderedStringTextComponent::split: "
+											"unable to split with no font set."));
 
 	// create 'left' side of split and clone our basic configuration
-	RenderedColourStringTextComponent* lhs = new RenderedColourStringTextComponent;
+	auto* lhs = new RenderedColourStringTextComponent;
 	lhs->d_padding = d_padding;
 	lhs->d_verticalFormatting = d_verticalFormatting;
 	lhs->d_font = d_font;
@@ -133,4 +127,4 @@ RenderedStringTextComponent* RenderedColourStringTextComponent::split(const CEGU
 	return lhs;
 }
 }
-}
+

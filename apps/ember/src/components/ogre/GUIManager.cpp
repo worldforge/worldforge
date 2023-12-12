@@ -42,7 +42,6 @@
 #include "components/cegui/SDLNativeClipboardProvider.h"
 
 
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "services/server/ServerServiceSignals.h"
 
@@ -55,7 +54,6 @@
 
 #include <CEGUI/WindowManager.h>
 #include <CEGUI/SchemeManager.h>
-#include <CEGUI/FactoryModule.h>
 #include "CEGUIOgreRenderer/ResourceProvider.h"
 #include "CEGUIOgreRenderer/ImageCodec.h"
 #include <CEGUI/widgets/MultiLineEditbox.h>
@@ -177,7 +175,7 @@ GUIManager::~GUIManager() {
 
 }
 
-void GUIManager::render() {
+void GUIManager::render() const {
 	if (mEnabled) {
 		CEGUI::System::getSingleton().renderAllGUIContexts();
 	}
@@ -385,7 +383,7 @@ Gui::EntityTooltip* GUIManager::getEntityTooltip() const {
 	return mEntityTooltip.get();
 }
 
-std::string GUIManager::getLayoutDir() const {
+std::string GUIManager::getLayoutDir() {
 	return "cegui/datafiles/layouts/";
 }
 

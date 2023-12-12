@@ -22,27 +22,22 @@
 
 #include <utility>
 
-namespace Ember
-{
+namespace Ember {
 
 ServerSettingsCredentials::ServerSettingsCredentials(std::string hostName, std::string serverName) :
-	mHostName(std::move(hostName)),
-	mServerName(std::move(serverName))
-{
+		mHostName(std::move(hostName)),
+		mServerName(std::move(serverName)) {
 }
 
 ServerSettingsCredentials::ServerSettingsCredentials(const Eris::ServerInfo& serverInfo) :
-	mHostName(serverInfo.host), mServerName(serverInfo.name)
-{
+		mHostName(serverInfo.host), mServerName(serverInfo.name) {
 }
 
-const std::string& ServerSettingsCredentials::getHostName() const
-{
+const std::string& ServerSettingsCredentials::getHostName() const {
 	return mHostName;
 }
 
-const std::string& ServerSettingsCredentials::getServerName() const
-{
+const std::string& ServerSettingsCredentials::getServerName() const {
 	return mServerName;
 }
 }

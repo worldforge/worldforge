@@ -19,36 +19,34 @@
 #include "../TestBase.h"
 #include "common/FileSystemObserver.h"
 
-class FileSystemObserverIntegrationTest : public Cyphesis::TestBase
-{
+class FileSystemObserverIntegrationTest : public Cyphesis::TestBase {
 
-    public:
+public:
 
-        void setup() override {
+	void setup() override {
 
-        }
+	}
 
-        void teardown() override {
+	void teardown() override {
 
-        }
+	}
 
-        void test_createAndShutdown() {
-            boost::asio::io_context io_context;
-            {
-                FileSystemObserver fileSystemObserver(io_context);
-            }
-            io_context.run();
-        }
+	void test_createAndShutdown() {
+		boost::asio::io_context io_context;
+		{
+			FileSystemObserver fileSystemObserver(io_context);
+		}
+		io_context.run();
+	}
 
-        FileSystemObserverIntegrationTest() {
-            ADD_TEST(FileSystemObserverIntegrationTest::test_createAndShutdown);
-        }
+	FileSystemObserverIntegrationTest() {
+		ADD_TEST(FileSystemObserverIntegrationTest::test_createAndShutdown);
+	}
 };
 
 
-int main()
-{
-    FileSystemObserverIntegrationTest t;
+int main() {
+	FileSystemObserverIntegrationTest t;
 
-    return t.run();
+	return t.run();
 }

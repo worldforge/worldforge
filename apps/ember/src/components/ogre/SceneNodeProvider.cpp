@@ -22,8 +22,8 @@
 #include <OgreMovableObject.h>
 #include <OgreSceneManager.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 SceneNodeProvider::SceneNodeProvider(Ogre::SceneNode* node, Ogre::SceneNode* parentNode, bool transferNodeOwnership) :
 		mNode(node), mParentNode(parentNode), mOwnsNode(transferNodeOwnership), mOffsetNode(nullptr) {
@@ -135,4 +135,4 @@ Ogre::Vector3 SceneNodeProvider::getScale() const {
 }
 
 }
-}
+

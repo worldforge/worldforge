@@ -34,8 +34,8 @@ the basic resources required for the progress bar and will be loaded automatical
 
 namespace Ember {
 class MainLoopController;
-namespace OgreView {
-namespace Gui {
+
+namespace OgreView::Gui {
 
 class LoadingBar;
 
@@ -152,7 +152,7 @@ public:
 
 };
 }
-}
+
 
 }
 

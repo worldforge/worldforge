@@ -31,10 +31,7 @@
 #include "SubModelPart.h"
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Model {
+namespace Ember::OgreView::Model {
 
 ModelDefinition::ModelDefinition() :
 		mRenderingDistance(0.0f),
@@ -171,7 +168,7 @@ const RenderingDefinition* ModelDefinition::getRenderingDefinition() const {
 }
 
 void ModelDefinition::reloadAllInstances() {
-	for (auto& model : mModelInstances) {
+	for (auto& model: mModelInstances) {
 		model->reload();
 	}
 }
@@ -203,7 +200,7 @@ const AttachPointDefinitionStore& ModelDefinition::getAttachPointsDefinitions() 
 }
 
 void ModelDefinition::addAttachPointDefinition(const AttachPointDefinition& definition) {
-	for (auto& mAttachPoint : mAttachPoints) {
+	for (auto& mAttachPoint: mAttachPoints) {
 		if (mAttachPoint.Name == definition.Name) {
 			mAttachPoint = definition;
 			return;
@@ -322,5 +319,5 @@ ActivationDefinitionStore& ActionDefinition::getActivationDefinitions() {
 
 
 }
-}
-}
+
+

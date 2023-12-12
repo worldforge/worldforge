@@ -19,10 +19,8 @@
 #ifndef IANIMATED_H_
 #define IANIMATED_H_
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -33,8 +31,7 @@ namespace OgreView
  * It's up to the actual implementation to determine how to present the animation update.
  * For something represented by an instance of Model it would be suitable to update the current animation of the model.
  */
-struct IAnimated
-{
+struct IAnimated {
 
 	/**
 	 * @brief Dtor.
@@ -50,6 +47,6 @@ struct IAnimated
 
 }
 
-}
+
 
 #endif /* IANIMATED_H_ */

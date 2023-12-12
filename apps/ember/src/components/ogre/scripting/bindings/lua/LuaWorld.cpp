@@ -32,7 +32,7 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<World>(sol::table& space) {
 	auto world = space.new_usertype<World>("World", sol::no_constructor);
 	world["getSceneManager"] = &World::getSceneManager;

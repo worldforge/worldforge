@@ -128,7 +128,7 @@ protected:
 		} else if (category == RC_LOG_WARNING) {
 			logger->warn("Recast: {}", msg);
 		} else {
-			logger->error("Recast: {}",msg);
+			logger->error("Recast: {}", msg);
 		}
 	}
 
@@ -364,7 +364,7 @@ void Awareness::Domain_ChildRemoved(Eris::Entity* entity) {
 
 				buildEntityAreas(*entity, areas);
 
-				for (auto& entry : areas) {
+				for (auto& entry: areas) {
 					markTilesAsDirty(entry.second.boundingBox());
 				}
 				mEntityAreas.erase(entity);
@@ -394,7 +394,7 @@ void Awareness::Entity_Moved(Eris::Entity* entity) {
 
 			buildEntityAreas(*entity, areas);
 
-			for (auto& entry : areas) {
+			for (auto& entry: areas) {
 				markTilesAsDirty(entry.second.boundingBox());
 				auto existingI = mEntityAreas.find(entry.first);
 				if (existingI != mEntityAreas.end()) {
@@ -423,7 +423,7 @@ bool Awareness::avoidObstacles(const WFMath::Point<2>& position, const WFMath::V
 
 	WFMath::Ball<2> playerRadius(position, 5);
 
-	for (auto entity : mMovingEntities) {
+	for (auto entity: mMovingEntities) {
 
 		if (entity->isVisible()) {
 
@@ -692,7 +692,8 @@ void Awareness::setAwarenessArea(const WFMath::RotBox<2>& area, const WFMath::Se
 	for (int tx = tileMinXIndex; tx <= tileMaxXIndex; ++tx) {
 		for (int ty = tileMinYIndex; ty <= tileMaxYIndex; ++ty) {
 			// Tile bounds.
-			WFMath::AxisBox<2> tileBounds(WFMath::Point<2>((mCfg.bmin[0] + tx * tcs) - tileBorderSize, (mCfg.bmin[2] + ty * tcs) - tileBorderSize), WFMath::Point<2>((mCfg.bmin[0] + (tx + 1) * tcs) + tileBorderSize, (mCfg.bmin[2] + (ty + 1) * tcs) + tileBorderSize));
+			WFMath::AxisBox<2> tileBounds(WFMath::Point<2>((mCfg.bmin[0] + tx * tcs) - tileBorderSize, (mCfg.bmin[2] + ty * tcs) - tileBorderSize),
+										  WFMath::Point<2>((mCfg.bmin[0] + (tx + 1) * tcs) + tileBorderSize, (mCfg.bmin[2] + (ty + 1) * tcs) + tileBorderSize));
 			if (WFMath::Intersect(area, tileBounds, false) || WFMath::Contains(area, tileBounds, false)) {
 
 				std::pair<int, int> index(tx, ty);
@@ -759,12 +760,12 @@ void Awareness::rebuildTile(int tx, int ty, const std::vector<WFMath::RotBox<2>>
 	for (int j = 0; j < ntiles; ++j) {
 		TileCacheData* tile = &tiles[j];
 
-		dtTileCacheLayerHeader* header = (dtTileCacheLayerHeader*) tile->data;
+		auto* header = (dtTileCacheLayerHeader*) tile->data;
 		dtTileRef tileRef = mTileCache->getTileRef(mTileCache->getTileAt(header->tx, header->ty, header->tlayer));
 		if (tileRef) {
 			mTileCache->removeTile(tileRef, nullptr, nullptr);
 		}
-		dtStatus status = mTileCache->addTile(tile->data, tile->dataSize, DT_COMPRESSEDTILE_FREE_DATA, 0);  // Add compressed tiles to tileCache
+		dtStatus status = mTileCache->addTile(tile->data, tile->dataSize, DT_COMPRESSEDTILE_FREE_DATA, nullptr);  // Add compressed tiles to tileCache
 		if (dtStatusFailed(status)) {
 			dtFree(tile->data);
 			tile->data = nullptr;
@@ -778,7 +779,7 @@ void Awareness::rebuildTile(int tx, int ty, const std::vector<WFMath::RotBox<2>>
 
 }
 
-void Awareness::buildEntityAreas(Eris::Entity& entity, std::map<Eris::Entity*, WFMath::RotBox<2>>& entityAreas) {
+void Awareness::buildEntityAreas(Eris::Entity& entity, std::map<Eris::Entity*, WFMath::RotBox<2>>& entityAreas) const {
 
 	//The entity is solid (i.e. can be collided with) if it has a bbox and the "solid" property isn't set to false (or 0 as it's an int).
 	bool isSolid = entity.hasBBox();
@@ -825,7 +826,7 @@ void Awareness::buildEntityAreas(Eris::Entity& entity, std::map<Eris::Entity*, W
 }
 
 void Awareness::findEntityAreas(const WFMath::AxisBox<2>& extent, std::vector<WFMath::RotBox<2> >& areas) {
-	for (auto& entry : mEntityAreas) {
+	for (auto& entry: mEntityAreas) {
 		auto& rotbox = entry.second;
 		if (WFMath::Contains(extent, rotbox, false) || WFMath::Intersect(extent, rotbox, false)) {
 			areas.push_back(rotbox);
@@ -949,7 +950,7 @@ int Awareness::rasterizeTileLayers(const std::vector<WFMath::RotBox<2>>& entityA
 	}
 
 // Mark areas.
-	for (auto& rotbox : entityAreas) {
+	for (auto& rotbox: entityAreas) {
 		float boxVerts[3 * 4];
 
 		boxVerts[0] = rotbox.getCorner(1).x();
@@ -1025,7 +1026,8 @@ int Awareness::rasterizeTileLayers(const std::vector<WFMath::RotBox<2>>& entityA
 	return n;
 }
 
-void Awareness::processTiles(const WFMath::AxisBox<2>& area, const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const {
+void Awareness::processTiles(const WFMath::AxisBox<2>& area,
+							 const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const {
 	float bmin[]{static_cast<float>(area.lowCorner().x()), -100, static_cast<float>(area.lowCorner().y())};
 	float bmax[]{static_cast<float>(area.highCorner().x()), 100, static_cast<float>(area.highCorner().y())};
 
@@ -1064,10 +1066,11 @@ void Awareness::processAllTiles(const std::function<void(unsigned int, dtTileCac
 
 }
 
-void Awareness::processTiles(std::vector<const dtCompressedTile*> tiles, const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const {
+void Awareness::processTiles(std::vector<const dtCompressedTile*> tiles,
+							 const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const {
 	struct TileCacheBuildContext {
-		inline TileCacheBuildContext(struct dtTileCacheAlloc* a) :
-				layer(0), lcset(0), lmesh(0), alloc(a) {
+		inline explicit TileCacheBuildContext(struct dtTileCacheAlloc* a) :
+				layer(nullptr), lcset(nullptr), lmesh(nullptr), alloc(a) {
 		}
 
 		inline ~TileCacheBuildContext() {
@@ -1093,7 +1096,7 @@ void Awareness::processTiles(std::vector<const dtCompressedTile*> tiles, const s
 	dtTileCacheCompressor* tcomp = mTileCache->getCompressor();
 	const dtTileCacheParams* params = mTileCache->getParams();
 
-	for (auto* tile : tiles) {
+	for (auto* tile: tiles) {
 
 		talloc->reset();
 

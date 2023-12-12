@@ -27,10 +27,8 @@
 #include "TerrainLayerDefinition.h"
 #include <OgreDataStream.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainLayerDefinitionManager;
 
@@ -43,14 +41,11 @@ public:
 
 	~XMLLayerDefinitionSerializer();
 
-	std::vector<TerrainLayerDefinition> parseScript(Ogre::DataStreamPtr& stream);
+	static std::vector<TerrainLayerDefinition> parseScript(Ogre::DataStreamPtr& stream);
 
 };
 
 }
 
-}
-
-}
 
 #endif

@@ -29,10 +29,8 @@
 #include <algorithm>
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
@@ -94,8 +92,5 @@ void WidgetPool<T>::initializePool(size_t initialSize) {
 
 }
 
-}
-
-}
 
 #endif

@@ -30,40 +30,36 @@
  *
  * For example, a Subtract(2) modifier can also be expressed with a Prepend(-2) or Append(-2) modifier.
  */
-struct Modifier
-{
-    
-    Atlas::Message::Element mValue;
+struct Modifier {
 
-    explicit Modifier(Atlas::Message::Element value) : mValue(std::move(value))
-    {}
+	Atlas::Message::Element mValue;
 
-    virtual ~Modifier() = default;
-    /**
-     * Modifies the submitted value in place.
-     * @param element The value to be changed.
-     * @param baseValue The base value, which is taken into account in some modifiers.
-     */
-    virtual void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const = 0;
+	explicit Modifier(Atlas::Message::Element value) : mValue(std::move(value)) {}
 
-    virtual ModifierType getType() const = 0;
-    
-    static std::unique_ptr<Modifier> createModifier(ModifierType modificationType, Atlas::Message::Element attr);
+	virtual ~Modifier() = default;
+
+	/**
+	 * Modifies the submitted value in place.
+	 * @param element The value to be changed.
+	 * @param baseValue The base value, which is taken into account in some modifiers.
+	 */
+	virtual void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const = 0;
+
+	virtual ModifierType getType() const = 0;
+
+	static std::unique_ptr<Modifier> createModifier(ModifierType modificationType, Atlas::Message::Element attr);
 
 };
 
-struct DefaultModifier : public Modifier
-{
+struct DefaultModifier : public Modifier {
 
-    explicit DefaultModifier(Atlas::Message::Element value) : Modifier(std::move(value))
-    {}
+	explicit DefaultModifier(Atlas::Message::Element value) : Modifier(std::move(value)) {}
 
-    void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
+	void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
 
-    ModifierType getType() const override
-    {
-        return ModifierType::Default;
-    }
+	ModifierType getType() const override {
+		return ModifierType::Default;
+	}
 };
 
 /**
@@ -73,18 +69,15 @@ struct DefaultModifier : public Modifier
  * For maps it will result in the values being inserted.
  * For lists it will result in the values being added to the start of the list.
  */
-struct PrependModifier : public Modifier
-{
+struct PrependModifier : public Modifier {
 
-    explicit PrependModifier(Atlas::Message::Element value) : Modifier(std::move(value))
-    {}
+	explicit PrependModifier(Atlas::Message::Element value) : Modifier(std::move(value)) {}
 
-    void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
+	void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
 
-    ModifierType getType() const override
-    {
-        return ModifierType::Prepend;
-    }
+	ModifierType getType() const override {
+		return ModifierType::Prepend;
+	}
 };
 
 /**
@@ -94,17 +87,14 @@ struct PrependModifier : public Modifier
  * For maps it will result in the values being inserted.
  * For lists it will result in the values being added to the back of the list.
  */
-struct AppendModifier : public Modifier
-{
-    explicit AppendModifier(Atlas::Message::Element value) : Modifier(std::move(value))
-    {}
+struct AppendModifier : public Modifier {
+	explicit AppendModifier(Atlas::Message::Element value) : Modifier(std::move(value)) {}
 
-    void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
+	void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
 
-    ModifierType getType() const override
-    {
-        return ModifierType::Append;
-    }
+	ModifierType getType() const override {
+		return ModifierType::Append;
+	}
 };
 
 /**
@@ -114,17 +104,14 @@ struct AppendModifier : public Modifier
  * For maps it will result in the keys being removed (any values are ignored).
  * For lists it will result in the values being removed to the start of the list.
  */
-struct SubtractModifier : public Modifier
-{
-    explicit SubtractModifier(Atlas::Message::Element value) : Modifier(std::move(value))
-    {}
+struct SubtractModifier : public Modifier {
+	explicit SubtractModifier(Atlas::Message::Element value) : Modifier(std::move(value)) {}
 
-    void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
+	void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
 
-    ModifierType getType() const override
-    {
-        return ModifierType::Subtract;
-    }
+	ModifierType getType() const override {
+		return ModifierType::Subtract;
+	}
 
 };
 
@@ -136,18 +123,15 @@ struct SubtractModifier : public Modifier
  * For maps nothing will happen.
  * For lists nothing will happen.
  */
-struct AddFractionModifier : public Modifier
-{
+struct AddFractionModifier : public Modifier {
 
-    explicit AddFractionModifier(Atlas::Message::Element value) : Modifier(std::move(value))
-    {}
+	explicit AddFractionModifier(Atlas::Message::Element value) : Modifier(std::move(value)) {}
 
-    void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
+	void process(Atlas::Message::Element& element, const Atlas::Message::Element& baseValue) const override;
 
-    ModifierType getType() const override
-    {
-        return ModifierType::AddFraction;
-    }
+	ModifierType getType() const override {
+		return ModifierType::AddFraction;
+	}
 
 };
 

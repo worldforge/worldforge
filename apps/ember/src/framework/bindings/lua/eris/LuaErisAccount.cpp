@@ -23,7 +23,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Account>(sol::table& space) {
 	auto account = space.new_usertype<Account>("Account", sol::no_constructor);
 	account["getConnection"] = &Account::getConnection;

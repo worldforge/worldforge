@@ -32,67 +32,64 @@
 #include <boost/optional.hpp>
 
 namespace Mercator {
-    class Terrain;
+class Terrain;
 
-    class TerrainMod;
+class TerrainMod;
 
-    class TileShader;
+class TileShader;
 }
 
 /// \brief Class to handle Entity terrain property
 /// This property only defines the surfaces. The separate TerrainPointsProperty defines the actual terrain geometry.
 /// \ingroup PropertyClasses
-class TerrainProperty : public Property<Atlas::Message::ListType>
-{
-    protected:
+class TerrainProperty : public Property<Atlas::Message::ListType> {
+protected:
 
-        struct State
-        {
-            std::unique_ptr<Mercator::Terrain> terrain;
-            std::unique_ptr<Mercator::TileShader> tileShader;
-            std::vector<std::string> surfaceNames;
-        };
+	struct State {
+		std::unique_ptr<Mercator::Terrain> terrain;
+		std::unique_ptr<Mercator::TileShader> tileShader;
+		std::vector<std::string> surfaceNames;
+	};
 
-        std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> createShaders(const Atlas::Message::ListType& surfaceList) const;
+	std::pair<std::unique_ptr<Mercator::TileShader>, std::vector<std::string>> createShaders(const Atlas::Message::ListType& surfaceList) const;
 
-        TerrainProperty(const TerrainProperty& rhs) = default;
+	TerrainProperty(const TerrainProperty& rhs) = default;
 
-        void applyToState(LocatedEntity& entity, State& state) const;
+	void applyToState(LocatedEntity& entity, State& state) const;
 
-        static PropertyInstanceState<State> sInstanceState;
+	static PropertyInstanceState<State> sInstanceState;
 
-    public:
+public:
 
-        static constexpr const char* property_name = "terrain";
+	static constexpr const char* property_name = "terrain";
 
-        TerrainProperty() = default;
+	TerrainProperty() = default;
 
-        void install(LocatedEntity& owner, const std::string& name) override;
+	void install(LocatedEntity& owner, const std::string& name) override;
 
-        void remove(LocatedEntity& owner, const std::string& name) override;
+	void remove(LocatedEntity& owner, const std::string& name) override;
 
-        TerrainProperty* copy() const override;
+	TerrainProperty* copy() const override;
 
-        void apply(LocatedEntity& entity) override;
+	void apply(LocatedEntity& entity) override;
 
-        bool getHeightAndNormal(LocatedEntity& entity, float x, float z, float&, Vector3D&) const;
+	bool getHeightAndNormal(LocatedEntity& entity, float x, float z, float&, Vector3D&) const;
 
-        bool getHeight(LocatedEntity& entity, float x, float z, float&) const;
+	bool getHeight(LocatedEntity& entity, float x, float z, float&) const;
 
-        boost::optional<int> getSurface(LocatedEntity& entity, float x, float z) const;
+	boost::optional<int> getSurface(LocatedEntity& entity, float x, float z) const;
 
-        /// \brief Find the mods at a given location
-        ///
-        /// @param pos the x,y coordinates of a point on the terrain
-        /// @param mods a reference to the list to be returned
-        boost::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) const;
+	/// \brief Find the mods at a given location
+	///
+	/// @param pos the x,y coordinates of a point on the terrain
+	/// @param mods a reference to the list to be returned
+	boost::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) const;
 
-        Mercator::Terrain& getData(const LocatedEntity& entity);
+	Mercator::Terrain& getData(const LocatedEntity& entity);
 
-        Mercator::Terrain& getData(const LocatedEntity& entity) const;
+	Mercator::Terrain& getData(const LocatedEntity& entity) const;
 
-        const std::vector<std::string>& getSurfaceNames(const LocatedEntity& entity) const;
-
+	const std::vector<std::string>& getSurfaceNames(const LocatedEntity& entity) const;
 
 
 };

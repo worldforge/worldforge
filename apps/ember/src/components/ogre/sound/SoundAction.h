@@ -75,7 +75,7 @@ public:
 	 * If no sound is currently playing this will be null. Note that the SoundInstance returned here could be deleted at any time, so don't store any reference to it.
 	 * @return The sound instance, or null if no sound is being played.
 	 */
-	SoundInstance* getInstance() const;
+	[[nodiscard]] SoundInstance* getInstance() const;
 
 	void update(SoundSource& soundSource) override;
 

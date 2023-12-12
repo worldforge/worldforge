@@ -28,8 +28,7 @@
 #include <OgreRoot.h>
 
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 
 Scene::Scene() :
@@ -113,4 +112,4 @@ BulletWorld& Scene::getBulletWorld() const {
 }
 
 }
-}
+

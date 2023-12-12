@@ -7,35 +7,37 @@
 using Atlas::Objects::Operation::SetData;
 
 class WieldData;
+
 typedef Atlas::Objects::SmartPtr<WieldData> Wield;
 
 int WIELD_NO = -1;
 
-class WieldData : public SetData
-{
+class WieldData : public SetData {
 protected:
-    /// Construct a WieldData class definition.
-    explicit WieldData(WieldData *defaults = nullptr) : SetData((SetData*)defaults)
-    {
-        m_class_no = WIELD_NO;
-    }
-    /// Default destructor.
-    ~WieldData() override;
+	/// Construct a WieldData class definition.
+	explicit WieldData(WieldData* defaults = nullptr) : SetData((SetData*) defaults) {
+		m_class_no = WIELD_NO;
+	}
+
+	/// Default destructor.
+	~WieldData() override;
 
 public:
-    /// Copy this object.
-    WieldData * copy() const override;
+	/// Copy this object.
+	WieldData* copy() const override;
 
-    /// Is this instance of some class?
-    bool instanceOf(int classNo) const override;
+	/// Is this instance of some class?
+	bool instanceOf(int classNo) const override;
 
 public:
-    template <typename>
-    friend class ::Atlas::Objects::Allocator;
-    static ::Atlas::Objects::Allocator<WieldData> allocator;
+	template<typename>
+	friend
+	class ::Atlas::Objects::Allocator;
+
+	static ::Atlas::Objects::Allocator<WieldData> allocator;
 
 private:
-    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data);
+	static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
 
@@ -43,35 +45,31 @@ private:
 
 WieldData::~WieldData() = default;
 
-WieldData * WieldData::copy() const
-{
-    WieldData * copied = WieldData::allocator.alloc();
-    *copied = *this;
-    return copied;
+WieldData* WieldData::copy() const {
+	WieldData* copied = WieldData::allocator.alloc();
+	*copied = *this;
+	return copied;
 }
 
-bool WieldData::instanceOf(int classNo) const
-{
-    if(WIELD_NO == classNo) return true;
-    return SetData::instanceOf(classNo);
+bool WieldData::instanceOf(int classNo) const {
+	if (WIELD_NO == classNo) return true;
+	return SetData::instanceOf(classNo);
 }
 
-void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data)
-{
-    data.attr_objtype = "op";
-    data.attr_serialno = 0;
-    data.attr_refno = 0;
-    data.attr_seconds = 0.0;
-    data.attr_future_seconds = 0.0;
-    data.attr_stamp = 0.0;
-    data.attr_parent = "wield";
+void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, uint32_t>& attr_data) {
+	data.attr_objtype = "op";
+	data.attr_serialno = 0;
+	data.attr_refno = 0;
+	data.attr_seconds = 0.0;
+	data.attr_future_seconds = 0.0;
+	data.attr_stamp = 0.0;
+	data.attr_parent = "wield";
 }
 
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char** argv) {
 	Atlas::Objects::Factories factories;
-    WIELD_NO = factories.addFactory("wield", &Atlas::Objects::factory<WieldData>, &Atlas::Objects::defaultInstance<WieldData>);
+	WIELD_NO = factories.addFactory("wield", &Atlas::Objects::factory<WieldData>, &Atlas::Objects::defaultInstance<WieldData>);
 
-    Wield op;
+	Wield op;
 }

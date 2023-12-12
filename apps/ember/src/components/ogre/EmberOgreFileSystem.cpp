@@ -47,8 +47,8 @@ boost::filesystem::path concatenate_path(const boost::filesystem::path& base, co
 
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 //-----------------------------------------------------------------------
 FileSystemArchive::FileSystemArchive(const String& name, const String& archType)
 		: Archive(name, archType), mBaseName(name) {
@@ -133,7 +133,7 @@ void FileSystemArchive::findFiles(const boost::filesystem::path& directory,
 	std::copy(boost::filesystem::directory_iterator(directory), boost::filesystem::directory_iterator(), std::back_inserter(files));
 	std::sort(files.begin(), files.end());
 
-	for (const auto& path : files) {
+	for (const auto& path: files) {
 		if (boost::filesystem::is_directory(path)) {
 			if (recursive) {
 				if (path.filename().string() != "source") {
@@ -258,4 +258,4 @@ const String& FileSystemArchiveFactory::getType() const {
 }
 
 }
-}
+

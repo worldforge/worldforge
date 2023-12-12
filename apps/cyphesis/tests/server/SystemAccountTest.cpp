@@ -44,77 +44,72 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 
-class SystemAccounttest : public Cyphesis::TestBase
-{
-  protected:
-    long m_id_counter;
+class SystemAccounttest : public Cyphesis::TestBase {
+protected:
+	long m_id_counter;
 
-    ServerRouting * m_server;
-    Connection * m_connection;
-    Account * m_account;
-    TestWorld* m_world;
-  public:
-    SystemAccounttest();
+	ServerRouting* m_server;
+	Connection* m_connection;
+	Account* m_account;
+	TestWorld* m_world;
+public:
+	SystemAccounttest();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    void test_getType();
-    void test_store();
+	void teardown();
+
+	void test_getType();
+
+	void test_store();
 };
 
 SystemAccounttest::SystemAccounttest() : m_id_counter(0L),
-                                         m_server(0),
-                                         m_connection(0),
-                                         m_account(0)
-{
-    ADD_TEST(SystemAccounttest::test_getType);
-    ADD_TEST(SystemAccounttest::test_store);
+										 m_server(0),
+										 m_connection(0),
+										 m_account(0) {
+	ADD_TEST(SystemAccounttest::test_getType);
+	ADD_TEST(SystemAccounttest::test_store);
 }
 
-void SystemAccounttest::setup()
-{
-    Ref<Entity> gw = new Entity(m_id_counter++);
-    m_world = new TestWorld(gw);
-    m_server = new ServerRouting(*m_world,
-                                 *(Persistence*)nullptr,
-                                 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
-                                 "bad621d4-616d-4faf-b9e6-471d12b139a9",
-                                 m_id_counter++);
-    m_connection = new Connection(*(CommSocket*)0, *m_server,
-                                  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
-                                  m_id_counter++);
-    m_account = new SystemAccount(m_connection,
-                                  "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
-                                  "fa1a03a2-a745-4033-85cb-bb694e921e62",
-                                  m_id_counter++);
+void SystemAccounttest::setup() {
+	Ref<Entity> gw = new Entity(m_id_counter++);
+	m_world = new TestWorld(gw);
+	m_server = new ServerRouting(*m_world,
+								 *(Persistence*) nullptr,
+								 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
+								 "bad621d4-616d-4faf-b9e6-471d12b139a9",
+								 m_id_counter++);
+	m_connection = new Connection(*(CommSocket*) 0, *m_server,
+								  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
+								  m_id_counter++);
+	m_account = new SystemAccount(m_connection,
+								  "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
+								  "fa1a03a2-a745-4033-85cb-bb694e921e62",
+								  m_id_counter++);
 }
 
-void SystemAccounttest::teardown()
-{
-    delete m_world;
-    delete m_server;
-    delete m_account;
-    delete m_connection;
+void SystemAccounttest::teardown() {
+	delete m_world;
+	delete m_server;
+	delete m_account;
+	delete m_connection;
 }
 
-void SystemAccounttest::test_getType()
-{
-    const char * type = m_account->getType();
+void SystemAccounttest::test_getType() {
+	const char* type = m_account->getType();
 
-    ASSERT_EQUAL(std::string("sys"), type);
+	ASSERT_EQUAL(std::string("sys"), type);
 }
 
-void SystemAccounttest::test_store()
-{
-    m_account->store();
+void SystemAccounttest::test_store() {
+	m_account->store();
 }
 
-int main()
-{
-    SystemAccounttest t;
+int main() {
+	SystemAccounttest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -133,13 +128,14 @@ int main()
 #include "../stubs/rules/simulation/stubExternalMind.h"
 
 #define STUB_Admin_Admin_DTOR
-Admin::~Admin()
-{
-    if (m_monitorConnection.connected()) {
-        m_monitorConnection.disconnect();
-    }
+
+Admin::~Admin() {
+	if (m_monitorConnection.connected()) {
+		m_monitorConnection.disconnect();
+	}
 
 }
+
 #include "../stubs/server/stubAdmin.h"
 #include "../stubs/server/stubConnection.h"
 
@@ -161,11 +157,9 @@ bool database_flag = false;
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

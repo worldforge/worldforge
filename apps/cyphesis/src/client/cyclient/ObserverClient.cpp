@@ -17,7 +17,9 @@
 
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "ObserverClient.h"
@@ -29,53 +31,49 @@
 #include <thread>
 
 ObserverClient::ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore& typeStore)
-: BaseClient(io_context, factories, typeStore)
-{
+		: BaseClient(io_context, factories, typeStore) {
 }
 
 ObserverClient::~ObserverClient() = default;
 
-int ObserverClient::setup(const std::string & account,
-                          const std::string & password,
-                          const std::string & avatar)
-{
-    if (connectLocal(client_socket_name) != 0) {
-        std::cerr << "WARNING: Could not make secure connection to:"
-                  << std::endl << "    " << client_socket_name
-                  << std::endl;
-        if (connect(m_server, client_port_num) != 0) {
-            std::cerr << "WARNING: Could not make non-secure connection to: "
-                      << m_server << " port " << client_port_num
-                      << std::endl;
-            return -1;
-        }
+int ObserverClient::setup(const std::string& account,
+						  const std::string& password,
+						  const std::string& avatar) {
+	if (connectLocal(client_socket_name) != 0) {
+		std::cerr << "WARNING: Could not make secure connection to:"
+				  << std::endl << "    " << client_socket_name
+				  << std::endl;
+		if (connect(m_server, client_port_num) != 0) {
+			std::cerr << "WARNING: Could not make non-secure connection to: "
+					  << m_server << " port " << client_port_num
+					  << std::endl;
+			return -1;
+		}
 
-        if (password.empty()) {
-            std::cerr << "WARNING: Made non secure connection to the server."
-                      << std::endl
-                      << "WARNING: Attempting to login with no password."
-                      << std::endl;
-        }
-    }
+		if (password.empty()) {
+			std::cerr << "WARNING: Made non secure connection to the server."
+					  << std::endl
+					  << "WARNING: Attempting to login with no password."
+					  << std::endl;
+		}
+	}
 
-    if (account.empty()) {
-        m_player = createSystemAccount();
-    } else {
-        m_player = createAccount(account, password);
-    }
-    if (!m_player.isValid()) {
-        return -1;
-    }
-    return 0;
+	if (account.empty()) {
+		m_player = createSystemAccount();
+	} else {
+		m_player = createAccount(account, password);
+	}
+	if (!m_player.isValid()) {
+		return -1;
+	}
+	return 0;
 }
 
-int ObserverClient::teardown()
-{
-    m_connection.cleanDisconnect();
-    return 0;
+int ObserverClient::teardown() {
+	m_connection.cleanDisconnect();
+	return 0;
 }
 
-void ObserverClient::idle()
-{
-    std::this_thread::sleep_for(std::chrono::microseconds(100));
+void ObserverClient::idle() {
+	std::this_thread::sleep_for(std::chrono::microseconds(100));
 }

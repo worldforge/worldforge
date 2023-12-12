@@ -397,7 +397,7 @@ void ServerWidget::fillAllowedCharacterTypes(Eris::Account* account) {
 					auto textWindow = propWindow->createChild("EmberLook/Editbox");
 					textWindow->setSize({{0, 100},
 										 {0, 20}});
-					textWindow->subscribeEvent(textWindow->EventTextChanged, [textWindow, this, propEntry]() {
+					textWindow->subscribeEvent(CEGUI::Window::EventTextChanged, [textWindow, this, propEntry]() {
 						mNewEntity[propEntry.name] = textWindow->getText().c_str();
 						updateNewCharacter();
 					});

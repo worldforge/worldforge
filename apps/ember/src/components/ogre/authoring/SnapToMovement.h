@@ -27,24 +27,21 @@
 #include <wfmath/vector.h>
 #include <vector>
 
-namespace Ogre
-{
+namespace Ogre {
 class SceneNode;
+
 class Node;
+
 class SceneManager;
 }
-namespace Eris
-{
+namespace Eris {
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 
 /**
  * @brief Provides snap-to functionality for moved entities, i.e. it allows them to snap to other entities.
@@ -53,8 +50,7 @@ namespace Authoring
  * The snapping is done through the corners of the bounding boxes.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class SnapToMovement
-{
+class SnapToMovement {
 public:
 	/**
 	 * @brief Ctor.
@@ -85,8 +81,7 @@ protected:
 	/**
 	 * @brief A simple struct for snapping candidates.
 	 */
-	struct SnapPointCandidate
-	{
+	struct SnapPointCandidate {
 		WFMath::CoordType distance;
 		WFMath::Vector<3> adjustment;
 		EmberEntity* entity;
@@ -118,7 +113,7 @@ protected:
 
 }
 
-}
+
 
 }
 

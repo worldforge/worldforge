@@ -31,39 +31,44 @@ class DatabasePostgres;
 /// RDBMS.
 /// \ingroup ServerSockets
 class CommPSQLSocket : private boost::noncopyable {
-  protected:
+protected:
 
-    boost::asio::io_context& m_io_context;
-    std::unique_ptr<boost::asio::ip::tcp::socket> m_socket;
-    boost::asio::steady_timer m_vacuumTimer;
-    boost::asio::steady_timer m_reindexTimer;
-    boost::asio::steady_timer m_reconnectTimer;
+	boost::asio::io_context& m_io_context;
+	std::unique_ptr <boost::asio::ip::tcp::socket> m_socket;
+	boost::asio::steady_timer m_vacuumTimer;
+	boost::asio::steady_timer m_reindexTimer;
+	boost::asio::steady_timer m_reconnectTimer;
 
 
-    /// Reference to the low level database management object.
-    DatabasePostgres & m_db;
+	/// Reference to the low level database management object.
+	DatabasePostgres& m_db;
 
-    /// Flag indicating whether the next vacuum job should be vacuum full.
-    bool m_vacuumFull;
+	/// Flag indicating whether the next vacuum job should be vacuum full.
+	bool m_vacuumFull;
 
-    void do_read();
-    int read();
-    void dispatch();
+	void do_read();
 
-    void vacuum();
-    void reindex();
+	int read();
 
-    void tryReConnect();
-  public:
-    /// Interval between database vacuum jobs.
-    static const int vacFreq;
-    /// Interval between database reindex jobs.
-    static const int reindexFreq;
+	void dispatch();
 
-    CommPSQLSocket(boost::asio::io_context& io_context, DatabasePostgres & db);
-    virtual ~CommPSQLSocket();
+	void vacuum();
 
-    void cancel();
+	void reindex();
+
+	void tryReConnect();
+
+public:
+	/// Interval between database vacuum jobs.
+	static const int vacFreq;
+	/// Interval between database reindex jobs.
+	static const int reindexFreq;
+
+	CommPSQLSocket(boost::asio::io_context& io_context, DatabasePostgres& db);
+
+	virtual ~CommPSQLSocket();
+
+	void cancel();
 };
 
 #endif // SERVER_COMM_PSQL_SOCKET_H

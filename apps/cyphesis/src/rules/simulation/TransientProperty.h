@@ -24,20 +24,21 @@
 /// \brief Class to handle Entity which are ephemeral and get auto deleted
 /// \ingroup PropertyClasses
 class TransientProperty : public Property<double> {
-  public:
-    static constexpr const char* property_name = "transient";
+public:
+	static constexpr const char* property_name = "transient";
 
-    TransientProperty() = default;
+	TransientProperty() = default;
 
-    ~TransientProperty() override = default;
+	~TransientProperty() override = default;
 
-    TransientProperty * copy() const override;
+	TransientProperty* copy() const override;
 
-    void install(LocatedEntity&, const std::string &) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-    void apply(LocatedEntity&) override;
-    protected:
-        TransientProperty(const TransientProperty& rhs) = default;
+	void apply(LocatedEntity&) override;
+
+protected:
+	TransientProperty(const TransientProperty& rhs) = default;
 };
 
 #endif // RULESETS_TRANSIENT_PROPERTY_H

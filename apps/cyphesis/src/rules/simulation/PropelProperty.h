@@ -29,31 +29,35 @@
  *
  * \ingroup PropertyClasses
  */
-class PropelProperty: public PropertyBase {
-    public:
-        static constexpr const char* property_name = "_propel";
-        static constexpr const char* property_atlastype = "list";
+class PropelProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "_propel";
+	static constexpr const char* property_atlastype = "list";
 
-        PropelProperty();
+	PropelProperty();
 
-        ~PropelProperty() override = default;
-        const WFMath::Vector<3> & data() const { return mData; }
-        WFMath::Vector<3> & data() { return mData; }
+	~PropelProperty() override = default;
 
-        int get(Atlas::Message::Element & val) const override;
+	const WFMath::Vector<3>& data() const { return mData; }
 
-        void set(const Atlas::Message::Element & val) override;
+	WFMath::Vector<3>& data() { return mData; }
 
-        void add(const std::string & key,
-                         Atlas::Message::MapType & map) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void add(const std::string & key,
-                         const Atlas::Objects::Entity::RootEntity & ent) const override;
+	void set(const Atlas::Message::Element& val) override;
 
-        PropelProperty * copy() const override;
-    protected:
-        WFMath::Vector<3> mData;
-        PropelProperty(const PropelProperty &) = default;
+	void add(const std::string& key,
+			 Atlas::Message::MapType& map) const override;
+
+	void add(const std::string& key,
+			 const Atlas::Objects::Entity::RootEntity& ent) const override;
+
+	PropelProperty* copy() const override;
+
+protected:
+	WFMath::Vector<3> mData;
+
+	PropelProperty(const PropelProperty&) = default;
 
 };
 

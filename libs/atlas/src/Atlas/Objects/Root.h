@@ -12,7 +12,7 @@
 
 #include <Atlas/Message/Element.h>
 
-namespace Atlas { namespace Objects { 
+namespace Atlas::Objects {
 
 template <class T> class SmartPtr;
 
@@ -311,6 +311,6 @@ inline bool RootData::isDefaultName() const
 }
 
 
-} } // namespace Atlas::Objects
+} // namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_ROOT_H

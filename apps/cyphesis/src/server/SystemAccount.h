@@ -21,22 +21,21 @@
 
 #include "server/Admin.h"
 
-class SystemAccount : public Admin
-{
-    public:
-        SystemAccount(Connection* conn,
-                      const std::string& username,
-                      const std::string& passwd,
-                      RouterId id);
+class SystemAccount : public Admin {
+public:
+	SystemAccount(Connection* conn,
+				  const std::string& username,
+				  const std::string& passwd,
+				  RouterId id);
 
-        ~SystemAccount() override;
+	~SystemAccount() override;
 
-        const char* getType() const override;
+	const char* getType() const override;
 
-        bool isPersisted() const override;
+	bool isPersisted() const override;
 
-    protected:
-        virtual void processExternalOperation(const Operation& op, OpVector& res);
+protected:
+	virtual void processExternalOperation(const Operation& op, OpVector& res);
 
 };
 

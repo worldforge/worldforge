@@ -53,18 +53,6 @@ class Widget;
 
 
 /**
-Because CEGUI::Listbox can't hold const objects in its
-*/
-template<typename T>
-class ConstWrapper {
-public:
-	explicit ConstWrapper(T value) : mValue(value) {}
-
-	T mValue;
-};
-
-
-/** 
 
 @brief Base class for all widgets.
 Put all widget set up code in the buildWidget() method.
@@ -337,7 +325,6 @@ T& Widget::getWindow(const std::string& windowName) {
 
 
 }
-
 
 
 #endif // WIDGET_H

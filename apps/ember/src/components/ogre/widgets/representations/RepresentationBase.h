@@ -27,12 +27,8 @@
 #include <Atlas/Message/Element.h>
 #include <sigc++/signal.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief a visual (CEGUI widget) representation of data (using adapters)
@@ -42,69 +38,68 @@ namespace Representations {
  * can use it standalone.
  */
 template<typename ValueType>
-class RepresentationBase
-{
+class RepresentationBase {
 public:
-	
+
 	/**
 	 * @brief Dtor
 	 */
 	virtual ~RepresentationBase();
-	
+
 	/**
 	 * @brief retrieves the GUI layout root
 	 * 
 	 * This is useful for adding the representation to your own GUI layouts
 	 */
 	virtual CEGUI::Window* getGuiRoot() = 0;
-	
+
 	/**
 	 * @brief programatically sets the edited value
 	 * 
 	 * This can be used for "revert to default" for example
 	 */
 	virtual void setEditedValue(const ValueType& v) = 0;
-	
+
 	/**
 	 * @brief retrieves the value user is editing
 	 */
 	virtual const ValueType& getEditedValue() const = 0;
-	
+
 	/**
 	 * @brief retrieves a signal user can connect to, emitted when the value is edited
 	 * 
 	 * @see AdapterBase::EventValueChanged
 	 */
 	virtual sigc::signal<void()>& getEventValueChangedSignal() = 0;
-	
+
 	/**
 	 * @brief retrieves the original value (at the time of representation construction)
 	 * 
 	 * @copydoc AdapterBase::getOriginalValue
 	 */
 	virtual const ValueType& getOriginalValue() const = 0;
-	
+
 	/**
 	 * @brief notifies the representation to apply it's changes (to the original value)
 	 * 
 	 * @copydoc AdapterBase::applyChanges
 	 */
 	virtual void applyChanges() = 0;
-	
+
 	/**
 	 * @brief checks whether this representation has changes
 	 * 
 	 * @copydoc AdapterBase::hasChanges
 	 */
 	virtual bool hasChanges() const = 0;
-	
+
 	/**
 	 * @brief checks whether this represents something that has been removed
 	 * 
 	 * @copydoc AdapterBase::isRemoved
 	 */
 	virtual bool isRemoved() const = 0;
-	
+
 	/**
 	 * @brief adds a suggested value
 	 * 
@@ -118,10 +113,5 @@ RepresentationBase<ValueType>::~RepresentationBase() = default;
 
 }
 
-}
-
-}
-
-}
 
 #endif

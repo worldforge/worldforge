@@ -25,9 +25,8 @@
 #include <CEGUI/widgets/Listbox.h>
 #include <CEGUI/widgets/Editbox.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 ListHolder::ListHolder(CEGUI::Listbox& listbox, CEGUI::Editbox* filterEditbox)
 		: mListbox(listbox),
@@ -39,11 +38,11 @@ ListHolder::ListHolder(CEGUI::Listbox& listbox, CEGUI::Editbox* filterEditbox)
 		});
 	}
 
-	listbox.subscribeEvent(CEGUI::Listbox::EventSelectionChanged, [&](){
+	listbox.subscribeEvent(CEGUI::Listbox::EventSelectionChanged, [&]() {
 		auto selected = listbox.getFirstSelectedItem();
 		if (selected) {
 			EventSelected(selected->getID());
-		}else {
+		} else {
 			EventSelected(-1);
 		}
 	});
@@ -159,5 +158,5 @@ void ListHolder::resetList() {
 }
 
 }
-}
-}
+
+

@@ -20,39 +20,36 @@
 #include "Remotery.h"
 
 RepeatedTask::RepeatedTask(boost::asio::io_context& io_context, std::chrono::steady_clock::duration interval, std::function<void()> function)
-    : mInterval(std::move(interval)),
-      mTimer(io_context),
-      mFunction(std::move(function))
-{
+		: mInterval(std::move(interval)),
+		  mTimer(io_context),
+		  mFunction(std::move(function)) {
 #if BOOST_VERSION >= 106600
-    mTimer.expires_after(mInterval);
+	mTimer.expires_after(mInterval);
 #else
-    mTimer.expires_from_now(mInterval);
+	mTimer.expires_from_now(mInterval);
 #endif
-    mTimer.async_wait([this](boost::system::error_code ec) {
-        if (!ec) {
-            this->executeTask();
-        }
-    });
+	mTimer.async_wait([this](boost::system::error_code ec) {
+		if (!ec) {
+			this->executeTask();
+		}
+	});
 }
 
-void RepeatedTask::cancel()
-{
-    mTimer.cancel();
+void RepeatedTask::cancel() {
+	mTimer.cancel();
 }
 
-void RepeatedTask::executeTask()
-{
-    rmt_ScopedCPUSample(RepeatedTaskExecute, 0)
-    mFunction();
+void RepeatedTask::executeTask() {
+	rmt_ScopedCPUSample(RepeatedTaskExecute, 0)
+	mFunction();
 #if BOOST_VERSION >= 106600
-    mTimer.expires_after(mInterval);
+	mTimer.expires_after(mInterval);
 #else
-    mTimer.expires_from_now(mInterval);
+	mTimer.expires_from_now(mInterval);
 #endif
-    mTimer.async_wait([this](boost::system::error_code ec) {
-        if (!ec) {
-            this->executeTask();
-        }
-    });
+	mTimer.async_wait([this](boost::system::error_code ec) {
+		if (!ec) {
+			this->executeTask();
+		}
+	});
 }

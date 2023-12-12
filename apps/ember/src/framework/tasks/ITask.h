@@ -21,9 +21,8 @@
 
 #include <string>
 
-namespace Ember {
 
-namespace Tasks {
+namespace Ember::Tasks {
 
 class TaskExecutionContext;
 
@@ -67,6 +66,5 @@ struct ITask {
 
 }
 
-}
 
 #endif /* TASK_H_ */

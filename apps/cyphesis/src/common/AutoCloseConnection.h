@@ -25,45 +25,39 @@
  * Wraps a sigc::connection and disconnects it when being deleted. Supports move semantics.
  * This helps with managing connections through RAII.
  */
-struct AutoCloseConnection
-{
+struct AutoCloseConnection {
 
-    AutoCloseConnection() = default;
+	AutoCloseConnection() = default;
 
-    explicit AutoCloseConnection(const sigc::connection& connection_) : connection(connection_)
-    {
-    }
+	explicit AutoCloseConnection(const sigc::connection& connection_) : connection(connection_) {
+	}
 
-    AutoCloseConnection(AutoCloseConnection&& rhs) noexcept:
-            connection(rhs.connection), owned(rhs.owned)
-    {
-        rhs.owned = false;
-    }
+	AutoCloseConnection(AutoCloseConnection&& rhs) noexcept:
+			connection(rhs.connection), owned(rhs.owned) {
+		rhs.owned = false;
+	}
 
-    ~AutoCloseConnection()
-    {
-        if (owned && connection) {
-            connection.disconnect();
-        }
-    }
+	~AutoCloseConnection() {
+		if (owned && connection) {
+			connection.disconnect();
+		}
+	}
 
-    AutoCloseConnection& operator=(const sigc::connection& connection_)
-    {
-        if (owned && connection) {
-            connection.disconnect();
-        }
-        this->connection = connection_;
-        return *this;
-    }
+	AutoCloseConnection& operator=(const sigc::connection& connection_) {
+		if (owned && connection) {
+			connection.disconnect();
+		}
+		this->connection = connection_;
+		return *this;
+	}
 
 
-    sigc::connection connection;
-    bool owned = true;
+	sigc::connection connection;
+	bool owned = true;
 
-    void disconnect()
-    {
-        connection.disconnect();
-    }
+	void disconnect() {
+		connection.disconnect();
+	}
 
 };
 

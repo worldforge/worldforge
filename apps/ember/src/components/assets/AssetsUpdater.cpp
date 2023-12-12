@@ -19,7 +19,6 @@
 #include "AssetsUpdater.h"
 #include <squall/curl/CurlProvider.h>
 #include <squall/core/AsyncProvider.h>
-#include <squall/core/Iterator.h>
 #include <algorithm>
 
 namespace Ember {

@@ -27,64 +27,60 @@
 #include "CyPy_Domain.h"
 
 
-CyPy_Server::CyPy_Server() : ExtensionModule("server")
-{
+CyPy_Server::CyPy_Server() : ExtensionModule("server") {
 
-    add_varargs_method("get_alias_entity", &CyPy_Server::get_alias_entity, "Gets an entity registered by an alias, if available.");
+	add_varargs_method("get_alias_entity", &CyPy_Server::get_alias_entity, "Gets an entity registered by an alias, if available.");
 
 
-    CyPy_Entity::init_type();
-    CyPy_EntityProps::init_type();
-    CyPy_Task::init_type();
-    CyPy_World::init_type();
+	CyPy_Entity::init_type();
+	CyPy_EntityProps::init_type();
+	CyPy_Task::init_type();
+	CyPy_World::init_type();
 
-    CyPy_TerrainProperty::init_type();
+	CyPy_TerrainProperty::init_type();
 
-    CyPy_Usage::init_type();
-    CyPy_UsageInstance::init_type();
-    CyPy_Domain::init_type();
+	CyPy_Usage::init_type();
+	CyPy_UsageInstance::init_type();
+	CyPy_Domain::init_type();
 
-    initialize("Python bindings for code related to the simulation of the world.");
+	initialize("Python bindings for code related to the simulation of the world.");
 
-    Py::Dict d(moduleDictionary());
-    d["Thing"] = CyPy_Entity::type();
-    d["Task"] = CyPy_Task::type();
+	Py::Dict d(moduleDictionary());
+	d["Thing"] = CyPy_Entity::type();
+	d["Task"] = CyPy_Task::type();
 
-    d["EntityProps"] = CyPy_EntityProps::type();
-    d["World"] = CyPy_World::type();
-    d["TerrainProperty"] = CyPy_TerrainProperty::type();
-    d["Usage"] = CyPy_Usage::type();
-    d["UsageInstance"] = CyPy_UsageInstance::type();
-    d["Domain"] = CyPy_Domain::type();
+	d["EntityProps"] = CyPy_EntityProps::type();
+	d["World"] = CyPy_World::type();
+	d["TerrainProperty"] = CyPy_TerrainProperty::type();
+	d["Usage"] = CyPy_Usage::type();
+	d["UsageInstance"] = CyPy_UsageInstance::type();
+	d["Domain"] = CyPy_Domain::type();
 
-    d["OPERATION_IGNORED"] = Py::Long(OPERATION_IGNORED);
-    d["OPERATION_HANDLED"] = Py::Long(OPERATION_HANDLED);
-    d["OPERATION_BLOCKED"] = Py::Long(OPERATION_BLOCKED);
+	d["OPERATION_IGNORED"] = Py::Long(OPERATION_IGNORED);
+	d["OPERATION_HANDLED"] = Py::Long(OPERATION_HANDLED);
+	d["OPERATION_BLOCKED"] = Py::Long(OPERATION_BLOCKED);
 
 
 }
 
-void CyPy_Server::registerWorld(BaseWorld* world)
-{
-    Py::Module server("server");
-    server.setAttr("world", CyPy_World::wrap(world));
+void CyPy_Server::registerWorld(BaseWorld* world) {
+	Py::Module server("server");
+	server.setAttr("world", CyPy_World::wrap(world));
 }
 
-std::string CyPy_Server::init()
-{
-    PyImport_AppendInittab("server", []() {
-        static CyPy_Server server{};
-        return server.module().ptr();
-    });
-    return "server";
+std::string CyPy_Server::init() {
+	PyImport_AppendInittab("server", []() {
+		static CyPy_Server server{};
+		return server.module().ptr();
+	});
+	return "server";
 }
 
-Py::Object CyPy_Server::get_alias_entity(const Py::Tuple& args)
-{
-    args.verify_length(1);
-    auto entity = BaseWorld::instance().getAliasEntity(verifyString(args.front()));
-    if (!entity) {
-        return Py::None();
-    }
-    return CyPy_LocatedEntity::wrap(Ref<LocatedEntity>(entity));
+Py::Object CyPy_Server::get_alias_entity(const Py::Tuple& args) {
+	args.verify_length(1);
+	auto entity = BaseWorld::instance().getAliasEntity(verifyString(args.front()));
+	if (!entity) {
+		return Py::None();
+	}
+	return CyPy_LocatedEntity::wrap(Ref<LocatedEntity>(entity));
 }

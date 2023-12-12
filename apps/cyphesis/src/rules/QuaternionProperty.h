@@ -26,30 +26,31 @@
  *
  * \ingroup PropertyClasses
  */
-class QuaternionProperty: public PropertyBase
-{
-    public:
+class QuaternionProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_atlastype = "list";
+	static constexpr const char* property_atlastype = "list";
 
-        explicit QuaternionProperty() = default;
+	explicit QuaternionProperty() = default;
 
-        QuaternionProperty(const QuaternionProperty& rhs);
+	QuaternionProperty(const QuaternionProperty& rhs);
 
-        ~QuaternionProperty() override = default;
+	~QuaternionProperty() override = default;
 
-        int get(Atlas::Message::Element & val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element &) override;
+	void set(const Atlas::Message::Element&) override;
 
-        void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const override;
+	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-        const WFMath::Quaternion& data() const { return m_data; }
-        WFMath::Quaternion& data() { return m_data; }
+	const WFMath::Quaternion& data() const { return m_data; }
 
-        QuaternionProperty * copy() const override;
-    protected:
-        WFMath::Quaternion m_data;
+	WFMath::Quaternion& data() { return m_data; }
+
+	QuaternionProperty* copy() const override;
+
+protected:
+	WFMath::Quaternion m_data;
 };
 
 #endif /* RULESETS_QUATERNIONPROPERTY_H_ */

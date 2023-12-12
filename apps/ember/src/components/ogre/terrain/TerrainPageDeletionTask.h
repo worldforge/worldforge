@@ -23,9 +23,8 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 class TerrainPage;
 
@@ -50,6 +49,6 @@ private:
 };
 
 }
-}
-}
+
+
 #endif /* TERRAINPAGEDELETIONTASK_H_ */

@@ -29,47 +29,44 @@
 
 #include "IconImageStore.h"
 #include "Icon.h"
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
 
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 class Icon;
+
 class IconImageStoreEntry;
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class IconStore{
+class IconStore {
 public:
 
 	explicit IconStore() = default;
 
-    ~IconStore();
-    
-    Icon* createIcon(const std::string& key);
-    Icon* createIcon(const std::string& key, const Ogre::TexturePtr& texPtr);
-    Icon* getIcon(const std::string& key);
-    bool hasIcon(const std::string& key);
-    void destroyIcon(Icon* icon);
-    
+	~IconStore();
+
+	Icon* createIcon(const std::string& key);
+
+	Icon* createIcon(const std::string& key, const Ogre::TexturePtr& texPtr);
+
+	Icon* getIcon(const std::string& key);
+
+	bool hasIcon(const std::string& key);
+
+	void destroyIcon(Icon* icon);
+
 protected:
 	std::unordered_map<std::string, std::unique_ptr<Icon>> mIcons;
 	std::vector<std::unique_ptr<IconImageStore>> mIconImageStores;
 	std::unordered_map<std::string, std::unique_ptr<IconImageStore>> mPremadeIconImageStores;
-	
+
 	IconImageStoreEntry* getImageStoreEntry();
 
 };
 
 }
 
-}
-
-}
-
-}
 
 #endif

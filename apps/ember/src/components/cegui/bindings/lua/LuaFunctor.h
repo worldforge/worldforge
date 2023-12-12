@@ -18,12 +18,13 @@
 
 #ifndef EMBER_LUAFUNCTOR_H
 #define EMBER_LUAFUNCTOR_H
+
 #include <CEGUI/CEGUI.h>
 #include "sol2/sol.hpp"
 #include "framework/Log.h"
 
 
-template <typename T>
+template<typename T>
 void registerLua(sol::table& space);
 
 namespace {

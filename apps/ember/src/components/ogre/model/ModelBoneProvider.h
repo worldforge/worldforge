@@ -32,9 +32,8 @@ class SceneNode;
 class MovableObject;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -112,7 +111,6 @@ public:
 	}
 
 	void setAttachPointDefinition(AttachPointDefinition attachPointDefinition);
-
 
 
 protected:
@@ -199,8 +197,6 @@ private:
 };
 
 }
-}
 
-}
 
 #endif /* MODELBONEPROVIDER_H_ */

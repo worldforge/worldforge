@@ -29,9 +29,8 @@
 #include <Mercator/Surface.h>
 #include <Mercator/Shader.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainPageSurfaceLayer::TerrainPageSurfaceLayer(TerrainPageSurface& terrainPageSurface,
 												 const TerrainLayerDefinition& definition,
@@ -169,5 +168,5 @@ void TerrainPageSurfaceLayer::populate(const TerrainPageGeometry& geometry) {
 
 }
 
-}
-}
+
+

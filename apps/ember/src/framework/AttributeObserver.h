@@ -28,11 +28,11 @@
 #include <string>
 #include <sigc++/signal.h>
 
-namespace Atlas {
-namespace Message {
+
+namespace Atlas::Message {
 class Element;
 }
-}
+
 
 namespace Eris {
 class Entity;

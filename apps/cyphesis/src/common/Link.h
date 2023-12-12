@@ -24,9 +24,9 @@
 class CommSocket;
 
 namespace Atlas {
-  namespace Objects {
-    class ObjectsEncoder;
-  }
+namespace Objects {
+class ObjectsEncoder;
+}
 }
 
 /// \brief Class representing links from a client at the Atlas level.
@@ -34,42 +34,43 @@ namespace Atlas {
 /// This means that operations sent to this class will then be routed through
 /// some comm socket to an external client.
 class Link : public Router {
-  protected:
-    /// \brief The Atlas encoder used to send objects over this link
-    Atlas::Objects::ObjectsEncoder * m_encoder;
-  public:
-    CommSocket & m_commSocket;
+protected:
+	/// \brief The Atlas encoder used to send objects over this link
+	Atlas::Objects::ObjectsEncoder* m_encoder;
+public:
+	CommSocket& m_commSocket;
 
-    Link(CommSocket & commSocket, RouterId id);
+	Link(CommSocket& commSocket, RouterId id);
 
-    ~Link() override;
+	~Link() override;
 
-    void setEncoder(Atlas::Objects::ObjectsEncoder * e) {
-        m_encoder = e;
-    }
+	void setEncoder(Atlas::Objects::ObjectsEncoder* e) {
+		m_encoder = e;
+	}
 
-    /**
-     * Sends an op and flushes the socket.
-     *
-     * If you intend to send multiple ops, consider using the overload which
-     * accepts an OpVector instead.
-     * @param op An op to send.
-     */
-    void send(const Operation & op) const;
+	/**
+	 * Sends an op and flushes the socket.
+	 *
+	 * If you intend to send multiple ops, consider using the overload which
+	 * accepts an OpVector instead.
+	 * @param op An op to send.
+	 */
+	void send(const Operation& op) const;
 
-    /**
-     * Sends multiple ops.
-     *
-     * @param opVector A vector of ops to send.
-     */
-    void send(const OpVector& opVector) const;
+	/**
+	 * Sends multiple ops.
+	 *
+	 * @param opVector A vector of ops to send.
+	 */
+	void send(const OpVector& opVector) const;
 
-    void sendError(const Operation & op,
-                   const std::string &,
-                   const std::string &) const;
-    void disconnect();
+	void sendError(const Operation& op,
+				   const std::string&,
+				   const std::string&) const;
 
-    virtual void notifyConnectionComplete();
+	void disconnect();
+
+	virtual void notifyConnectionComplete();
 };
 
 #endif // COMMON_LINK_H

@@ -23,8 +23,8 @@
 #include "Atlas/Objects/Anonymous.h"
 #include "Atlas/Objects/Generic.h"
 
-namespace Atlas {
-namespace Objects {
+
+namespace Atlas::Objects {
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -56,7 +56,7 @@ bool Factories::hasFactory(const std::string& name) const {
 Root Factories::createObject(const std::string& name) const {
 	auto I = m_factories.find(name);
 	if (I == m_factories.end()) {
-		return Root(nullptr);
+		return {nullptr};
 	} else {
 		return (*I).second.factory_method(name, (*I).second.classno);
 	}
@@ -65,7 +65,7 @@ Root Factories::createObject(const std::string& name) const {
 Root Factories::createObject(const MapType& msg_map) const {
 	Root obj = instantiateObject(msg_map);
 
-	for (auto& entry : msg_map) {
+	for (auto& entry: msg_map) {
 		obj->setAttr(entry.first, entry.second, this);
 	}
 	return obj;
@@ -74,7 +74,7 @@ Root Factories::createObject(const MapType& msg_map) const {
 Root Factories::createObject(Atlas::Message::MapType&& msg_map) const {
 	Root obj = instantiateObject(msg_map);
 
-	for (auto& entry : msg_map) {
+	for (auto& entry: msg_map) {
 		obj->setAttr(entry.first, std::move(entry.second), this);
 	}
 	return obj;
@@ -116,7 +116,7 @@ Root Factories::getDefaultInstance(const std::string& name) const {
 	auto I = m_factories.find(name);
 	if (I == m_factories.end()) {
 		//perhaps throw something instead?
-		return Root(nullptr);
+		return {nullptr};
 	} else {
 		return (*I).second.default_instance_method(name, (*I).second.classno);
 	}
@@ -124,7 +124,7 @@ Root Factories::getDefaultInstance(const std::string& name) const {
 
 std::list<std::string> Factories::getKeys() const {
 	std::list<std::string> keys;
-	for (const auto& factory : m_factories) {
+	for (const auto& factory: m_factories) {
 		keys.push_back(factory.first);
 	}
 	return keys;
@@ -151,7 +151,7 @@ int Factories::addFactory(const std::string& name, FactoryMethod method, Default
 std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& val) const {
 	std::vector<Root> objects;
 	objects.reserve(val.size());
-	for (const auto& entry : val) {
+	for (const auto& entry: val) {
 		if (entry.isMap()) {
 			objects.emplace_back(createObject(entry.Map()));
 		}
@@ -162,7 +162,7 @@ std::vector<Root> Factories::parseListOfObjects(const Atlas::Message::ListType& 
 std::vector<Root> Factories::parseListOfObjects(Atlas::Message::ListType&& val) const {
 	std::vector<Root> objects;
 	objects.reserve(val.size());
-	for (auto& entry : val) {
+	for (auto& entry: val) {
 		if (entry.isMap()) {
 			objects.emplace_back(createObject(entry.moveMap()));
 		}
@@ -171,4 +171,4 @@ std::vector<Root> Factories::parseListOfObjects(Atlas::Message::ListType&& val) 
 }
 
 }
-} // namespace Atlas::Objects
+// namespace Atlas::Objects

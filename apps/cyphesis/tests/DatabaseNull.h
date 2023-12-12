@@ -24,176 +24,144 @@
 #include <memory>
 
 
-struct const_iterator_worker_null : public DatabaseResult::const_iterator_worker
-{
+struct const_iterator_worker_null : public DatabaseResult::const_iterator_worker {
 
-    const char* column(int column) const override
-    { return ""; }
+	const char* column(int column) const override { return ""; }
 
-    const char* column(const char* column) const override
-    { return ""; }
+	const char* column(const char* column) const override { return ""; }
 
-    DatabaseResult::const_iterator_worker& operator++()  override
-    { return *this; }
+	DatabaseResult::const_iterator_worker& operator++() override { return *this; }
 
-    bool operator==(const const_iterator_worker& other) const noexcept override
-    { return true; }
+	bool operator==(const const_iterator_worker& other) const noexcept override { return true; }
 };
 
-class DatabaseNullResultWorker : public DatabaseResult::DatabaseResultWorker
-{
-    public:
-        ~DatabaseNullResultWorker() override = default;
+class DatabaseNullResultWorker : public DatabaseResult::DatabaseResultWorker {
+public:
+	~DatabaseNullResultWorker() override = default;
 
-        int size() const override
-        {
-            return 0;
-        }
+	int size() const override {
+		return 0;
+	}
 
-        int columns() const override
-        {
-            return 0;
-        }
+	int columns() const override {
+		return 0;
+	}
 
-        bool error() const override
-        {
-            return false;
-        }
+	bool error() const override {
+		return false;
+	}
 
-        DatabaseResult::const_iterator begin() const override
-        {
-            return DatabaseResult::const_iterator(std::unique_ptr<DatabaseResult::const_iterator_worker>(new const_iterator_worker_null), *this);
-        }
+	DatabaseResult::const_iterator begin() const override {
+		return DatabaseResult::const_iterator(std::unique_ptr<DatabaseResult::const_iterator_worker>(new const_iterator_worker_null), *this);
+	}
 
-        DatabaseResult::const_iterator end() const override
-        {
-            return DatabaseResult::const_iterator(std::unique_ptr<DatabaseResult::const_iterator_worker>(new const_iterator_worker_null), *this);
-        }
+	DatabaseResult::const_iterator end() const override {
+		return DatabaseResult::const_iterator(std::unique_ptr<DatabaseResult::const_iterator_worker>(new const_iterator_worker_null), *this);
+	}
 
 };
 
-class DatabaseNull : public Database
-{
+class DatabaseNull : public Database {
 
-    public:
+public:
 
-        long id = 1;
-        std::function<long()> idGeneratorFn = [&]() -> long {
-            return id++;
-        };
+	long id = 1;
+	std::function<long()> idGeneratorFn = [&]() -> long {
+		return id++;
+	};
 
-        int initConnection() override
-        {
-            return 0;
-        }
+	int initConnection() override {
+		return 0;
+	}
 
-        void shutdownConnection() override
-        {
+	void shutdownConnection() override {
 
-        }
+	}
 
-        size_t queryQueueSize() const override
-        {
-            return 0;
-        }
+	size_t queryQueueSize() const override {
+		return 0;
+	}
 
 
-        int getObject(const std::string& table,
-                      const std::string& key,
-                      Atlas::Message::MapType&) override
-        {
-            return 0;
-        }
+	int getObject(const std::string& table,
+				  const std::string& key,
+				  Atlas::Message::MapType&) override {
+		return 0;
+	}
 
-        int encodeObject(const Atlas::Message::MapType&,
-                         std::string&) override
-        {
-            return 0;
-        }
+	int encodeObject(const Atlas::Message::MapType&,
+					 std::string&) override {
+		return 0;
+	}
 
-        void reportError(const char* errorMsg)
-        {}
+	void reportError(const char* errorMsg) {}
 
-        int connect(const std::string& context, std::string& error_msg) override
-        {
-            return 0;
-        }
+	int connect(const std::string& context, std::string& error_msg) override {
+		return 0;
+	}
 
 
-        DatabaseResult runSimpleSelectQuery(const std::string& query) override
-        {
-            return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
-        }
+	DatabaseResult runSimpleSelectQuery(const std::string& query) override {
+		return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
+	}
 
-        int runCommandQuery(const std::string& query) override
-        {
-            return 0;
-        }
+	int runCommandQuery(const std::string& query) override {
+		return 0;
+	}
 
 
-        int registerRelation(std::string& tablename,
-                             const std::string& sourcetable,
-                             const std::string& targettable,
-                             RelationType kind) override
-        {
-            return 0;
-        }
+	int registerRelation(std::string& tablename,
+						 const std::string& sourcetable,
+						 const std::string& targettable,
+						 RelationType kind) override {
+		return 0;
+	}
 
-        int registerThoughtsTable() override
-        {
-            return 0;
-        }
+	int registerThoughtsTable() override {
+		return 0;
+	}
 
-        int registerEntityTable(const std::map<std::string, int>& chunks) override
-        {
-            return 0;
-        }
+	int registerEntityTable(const std::map<std::string, int>& chunks) override {
+		return 0;
+	}
 
-        int registerPropertyTable() override
-        {
-            return 0;
-        }
+	int registerPropertyTable() override {
+		return 0;
+	}
 
 
-        /// Creates a new unique id for the database.
-        /// Note that this method will access the database, so it's a fairly expensive method.
-        long newId() override
-        {
-            if (idGeneratorFn) {
-                return idGeneratorFn();
-            }
-            return 0;
-        }
+	/// Creates a new unique id for the database.
+	/// Note that this method will access the database, so it's a fairly expensive method.
+	long newId() override {
+		if (idGeneratorFn) {
+			return idGeneratorFn();
+		}
+		return 0;
+	}
 
-        int registerEntityIdGenerator() override
-        {
-            return 0;
-        }
+	int registerEntityIdGenerator() override {
+		return 0;
+	}
 
 
-        int registerSimpleTable(const std::string& name,
-                                const Atlas::Message::MapType& row) override
-        {
-            return 0;
-        }
+	int registerSimpleTable(const std::string& name,
+							const Atlas::Message::MapType& row) override {
+		return 0;
+	}
 
-        int scheduleCommand(const std::string& query) override
-        {
-            return 0;
-        }
+	int scheduleCommand(const std::string& query) override {
+		return 0;
+	}
 
-        int runMaintainance()
-        {
-            return 0;
-        }
+	int runMaintainance() {
+		return 0;
+	}
 
-        int launchNewQuery() override
-        { return 0; }
+	int launchNewQuery() override { return 0; }
 
-        int clearPendingQuery() override
-        { return 0; }
+	int clearPendingQuery() override { return 0; }
 
-        void blockUntilAllQueriesComplete() override {}
+	void blockUntilAllQueriesComplete() override {}
 
 };
 

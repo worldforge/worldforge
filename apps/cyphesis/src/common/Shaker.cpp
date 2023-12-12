@@ -18,22 +18,21 @@
 
 #include "Shaker.h"
 
-static const char hex_table[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
-                                    '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+static const char hex_table[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
+								   '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
 Shaker::Shaker() = default;
 
 /// \brief Generates salt by using 
 /// a Random Number Generator of type WFMath::MTRand
 /// @param length The amount to iterate to generate the salt. 
-std::string Shaker::generateSalt(size_t length)
-{
-    std::string salt;
-	
-    for (size_t i = 0; i < length; ++i) 
-    {
-        auto b = static_cast<unsigned char>(rng.randInt() & 0xff);
-        salt.push_back(hex_table[b & 0xf]);
-        salt.push_back(hex_table[(b & 0xf0) >> 4]);
-    }
-    return salt;
+std::string Shaker::generateSalt(size_t length) {
+	std::string salt;
+
+	for (size_t i = 0; i < length; ++i) {
+		auto b = static_cast<unsigned char>(rng.randInt() & 0xff);
+		salt.push_back(hex_table[b & 0xf]);
+		salt.push_back(hex_table[(b & 0xf0) >> 4]);
+	}
+	return salt;
 }

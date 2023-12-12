@@ -48,7 +48,7 @@ PolygonPoint::PolygonPoint(Ogre::SceneNode& baseNode, IPolygonPositionProvider* 
 		mEntity(nullptr) {
 	Ogre::Vector3 nodePosition = Convert::toOgre<Ogre::Vector3>(localPosition);
 	if (mPositionProvider) {
-		nodePosition.y = (Ogre::Real)mPositionProvider->getHeightForPosition(localPosition);
+		nodePosition.y = (Ogre::Real) mPositionProvider->getHeightForPosition(localPosition);
 	}
 	mNode = mBaseNode.createChildSceneNode(nodePosition);
 	mNode->setScale(scale, scale, scale);
@@ -99,7 +99,7 @@ Ogre::SceneNode* PolygonPoint::getNode() const {
 }
 
 WFMath::Point<2> PolygonPoint::getLocalPosition() const {
-	return WFMath::Point<2>(mNode->getPosition().x, mNode->getPosition().z);
+	return {mNode->getPosition().x, mNode->getPosition().z};
 }
 
 void PolygonPoint::setLocalPosition(const WFMath::Point<2>& position) {
@@ -138,7 +138,7 @@ void PolygonPoint::translate(const WFMath::Vector<2>& translation) {
 	getNode()->translate(Ogre::Vector3(ogrePos.x, 0, ogrePos.y));
 	if (mPositionProvider) {
 		Ogre::Vector3 pos = getNode()->getPosition();
-		pos.y = (Ogre::Real)mPositionProvider->getHeightForPosition(Convert::toWF<WFMath::Point<2>>(pos));
+		pos.y = (Ogre::Real) mPositionProvider->getHeightForPosition(Convert::toWF<WFMath::Point<2>>(pos));
 		getNode()->setPosition(pos);
 	}
 	if (mCollisionDetector) {

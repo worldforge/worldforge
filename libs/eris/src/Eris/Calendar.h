@@ -8,82 +8,86 @@
 #include <map>
 #include <string>
 
-namespace Atlas
-{
-namespace Message
-{
+
+namespace Atlas::Message {
 class Element;
+
 typedef std::map<std::string, Element> MapType;
 }
-}
 
-namespace Eris
-{
+
+namespace Eris {
 
 class Avatar;
+
 class Calendar;
 
 /**
 Encapsulate a decoded world time instance
 */
-class DateTime
-{
+class DateTime {
 public:
-    DateTime() = default;
+	DateTime() = default;
 
-    bool valid() const { return m_valid; }
+	bool valid() const { return m_valid; }
 
-    int year() const { return m_year; }
-    int month() const { return m_month; }
-    int dayOfMonth() const { return m_dayOfMonth; }
+	int year() const { return m_year; }
 
-    int seconds() const { return m_seconds; }
-    int minutes() const { return m_minutes; }
-    int hours() const { return m_hours; }
+	int month() const { return m_month; }
+
+	int dayOfMonth() const { return m_dayOfMonth; }
+
+	int seconds() const { return m_seconds; }
+
+	int minutes() const { return m_minutes; }
+
+	int hours() const { return m_hours; }
 
 private:
-    friend class Calendar;
+	friend class Calendar;
 
-    int m_year,
-        m_month,
-        m_dayOfMonth;
+	int m_year,
+			m_month,
+			m_dayOfMonth;
 
-    int m_seconds,
-        m_minutes,
-        m_hours;
+	int m_seconds,
+			m_minutes,
+			m_hours;
 
-    bool m_valid;
+	bool m_valid;
 };
 
-class Calendar : public sigc::trackable
-{
+class Calendar : public sigc::trackable {
 public:
-    explicit Calendar(Avatar&);
+	explicit Calendar(Avatar&);
 
-    DateTime now() const;
+	DateTime now() const;
 
-    int secondsPerMinute() const { return m_secondsPerMinute; }
-    int minutesPerHour() const { return m_minutesPerHour; }
-    int hoursPerDay() const { return m_hoursPerDay; }
+	int secondsPerMinute() const { return m_secondsPerMinute; }
 
-    ///Emitted when the calendar is updated.
-    sigc::signal<void()> Updated;
+	int minutesPerHour() const { return m_minutesPerHour; }
+
+	int hoursPerDay() const { return m_hoursPerDay; }
+
+	///Emitted when the calendar is updated.
+	sigc::signal<void()> Updated;
 
 protected:
-    void topLevelEntityChanged();
-    void calendarAttrChanged(const Atlas::Message::Element& value);
+	void topLevelEntityChanged();
 
-    void initFromCalendarAttr(const Atlas::Message::MapType& cal);
+	void calendarAttrChanged(const Atlas::Message::Element& value);
 
-    Avatar& m_avatar;
+	void initFromCalendarAttr(const Atlas::Message::MapType& cal);
 
-    int m_daysPerMonth,
-                 m_monthsPerYear,
-                 m_hoursPerDay,
-                 m_minutesPerHour,
-                 m_secondsPerMinute;
+	Avatar& m_avatar;
 
-    sigc::connection m_calendarObserver;
+	int m_daysPerMonth,
+			m_monthsPerYear,
+			m_hoursPerDay,
+			m_minutesPerHour,
+			m_secondsPerMinute;
+
+	sigc::connection m_calendarObserver;
 };
 
 } // of namespace Eris

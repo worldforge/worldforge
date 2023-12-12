@@ -29,9 +29,8 @@
 
 #include <Mercator/Area.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainArea::TerrainArea(EmberEntity& entity) :
 		mEntity(entity),
@@ -102,5 +101,5 @@ bool TerrainArea::placeArea(WFMath::Polygon<2>& poly) {
 }
 
 }
-}
-}
+
+

@@ -31,8 +31,7 @@
 #include <memory>
 #include <functional>
 
-namespace Py
-{
+namespace Py {
 class Object;
 }
 
@@ -40,98 +39,97 @@ class Object;
  * This struct defines the requirements for a parameter.
  */
 struct UsageParameter {
-    typedef boost::variant<EntityLocation, WFMath::Point<3>, WFMath::Vector<3>> UsageArg;
+	typedef boost::variant<EntityLocation, WFMath::Point<3>, WFMath::Vector<3>> UsageArg;
 
-    /**
-     * The type of parameter.
-     */
-    enum class Type {
-        /**
-         * An entity reference is required.
-         */
-        ENTITY,
-        /**
-         * An entity location is required. This means that there must both be an entity as well as a position.
-         */
-        ENTITYLOCATION,
-        /**
-         * A position (i.e. a WFMath::Point<3>) is required.
-         */
-        POSITION,
-        /**
-         * A direction (i.e. a WFMath::Vector<3>) is required.
-         */
-        DIRECTION
-    };
+	/**
+	 * The type of parameter.
+	 */
+	enum class Type {
+		/**
+		 * An entity reference is required.
+		 */
+		ENTITY,
+		/**
+		 * An entity location is required. This means that there must both be an entity as well as a position.
+		 */
+		ENTITYLOCATION,
+		/**
+		 * A position (i.e. a WFMath::Point<3>) is required.
+		 */
+		POSITION,
+		/**
+		 * A direction (i.e. a WFMath::Vector<3>) is required.
+		 */
+		DIRECTION
+	};
 
-    /**
-     * The type of this parameter.
-     */
-    Type type;
-    /**
-     * An optional constraint.
-     * A shared_ptr to allow for easier Python bindings.
-     */
-    std::shared_ptr<EntityFilter::Filter> constraint;
-    /*
-     * The minimum number of entries required for this parameter.
-     * Defaults to 1.
-     */
-    int min = 1;
-    /*
-     * The maximum number of entries required for this parameter.
-     * Defaults to 1.
-     */
-    int max = 1;
+	/**
+	 * The type of this parameter.
+	 */
+	Type type;
+	/**
+	 * An optional constraint.
+	 * A shared_ptr to allow for easier Python bindings.
+	 */
+	std::shared_ptr<EntityFilter::Filter> constraint;
+	/*
+	 * The minimum number of entries required for this parameter.
+	 * Defaults to 1.
+	 */
+	int min = 1;
+	/*
+	 * The maximum number of entries required for this parameter.
+	 * Defaults to 1.
+	 */
+	int max = 1;
 
-    static UsageParameter parse(const Atlas::Message::Element& element);
+	static UsageParameter parse(const Atlas::Message::Element& element);
 
-    int countValidArgs(const std::vector<UsageArg>& args, const Ref<LocatedEntity>& actor, const Ref<LocatedEntity>& tool, std::vector<std::string>& errorMessages) const;
+	int countValidArgs(const std::vector<UsageArg>& args, const Ref<LocatedEntity>& actor, const Ref<LocatedEntity>& tool, std::vector<std::string>& errorMessages) const;
 };
 
 struct Usage {
-    std::string description;
+	std::string description;
 
-    std::map<std::string, UsageParameter> params;
+	std::map<std::string, UsageParameter> params;
 
-    /**
-     * The Python script which will handle this op.
-     */
-    std::string handler;
-    std::shared_ptr<EntityFilter::Filter> constraint;
+	/**
+	 * The Python script which will handle this op.
+	 */
+	std::string handler;
+	std::shared_ptr<EntityFilter::Filter> constraint;
 };
 
-class UsageInstance
-{
-  public:
-    static std::function<Py::Object(UsageInstance&& usageInstance)> scriptCreator;
+class UsageInstance {
+public:
+	static std::function<Py::Object(UsageInstance&& usageInstance)> scriptCreator;
 
-    /**
-     * The usage definition.
-     */
-    Usage definition;
+	/**
+	 * The usage definition.
+	 */
+	Usage definition;
 
-    /**
-     * The entity performing the usage.
-     */
-    Ref<LocatedEntity> actor;
+	/**
+	 * The entity performing the usage.
+	 */
+	Ref<LocatedEntity> actor;
 
-    /**
-     * The entity containing the usage.
-     */
-    Ref<LocatedEntity> tool;
+	/**
+	 * The entity containing the usage.
+	 */
+	Ref<LocatedEntity> tool;
 
-    /**
-     * Any arguments sent along.
-     */
-    std::map<std::string, std::vector<UsageParameter::UsageArg>> args;
+	/**
+	 * Any arguments sent along.
+	 */
+	std::map<std::string, std::vector<UsageParameter::UsageArg>> args;
 
-    /**
-     * The operation triggering the usage.
-     */
-    Atlas::Objects::Operation::RootOperation op;
+	/**
+	 * The operation triggering the usage.
+	 */
+	Atlas::Objects::Operation::RootOperation op;
 
-    std::pair<bool, std::string> isValid() const;
+	std::pair<bool, std::string> isValid() const;
 };
 
 #endif  // CYPHESIS_USAGEINSTANCE_H

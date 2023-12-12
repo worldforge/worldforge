@@ -23,8 +23,7 @@
 #include <string>
 #include <vector>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -34,8 +33,7 @@ namespace Ember
  * In addition, it can be addressed to zero or many entities.
  * Just because it's addressed to entities different from the user's avatar doesn't mean that the it can't be heard, but usually it means that the message isn't of that much important to the user.
  */
-class EntityTalk
-{
+class EntityTalk {
 public:
 
 	/**
@@ -62,6 +60,7 @@ public:
 	 * @return True if the message is addressed to the specified entity. Note that this will also return false if the message isn't addressed to anyone.
 	 */
 	bool isAddressedToEntity(const std::string& entityId) const;
+
 	/**
 	 * @brief Checks if the message is addressed to the specified entity, or to none.
 	 * @param entityId The id of the entity to check.

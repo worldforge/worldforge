@@ -11,125 +11,135 @@
 #include <Atlas/Exception.h>
 #include <cassert>
 
-namespace Atlas { namespace Objects {
+namespace Atlas::Objects {
 
-template <class T>
-class SmartPtr
-{
-  public:
-    template<class U> friend
-    class SmartPtr;
+template<class T>
+class SmartPtr {
+public:
+	template<class U> friend
+	class SmartPtr;
 
-    typedef T DataT;
+	typedef T DataT;
 
-    SmartPtr() noexcept : ptr(T::allocator.alloc()) {
-    }
-    SmartPtr(const SmartPtr<T>& a) noexcept : ptr(a.get()) {
-        incRef();
-    }
-    SmartPtr(SmartPtr<T>&& a) noexcept : ptr(a.get()) {
-        a.ptr = nullptr;
-    }
-    SmartPtr(T *a_ptr) noexcept : ptr(a_ptr)
-    {
-        incRef();
-    }
+	SmartPtr() noexcept: ptr(T::allocator.alloc()) {
+	}
+
+	SmartPtr(const SmartPtr<T>& a) noexcept: ptr(a.get()) {
+		incRef();
+	}
+
+	SmartPtr(SmartPtr<T>&& a) noexcept: ptr(a.get()) {
+		a.ptr = nullptr;
+	}
+
+	SmartPtr(T* a_ptr) noexcept: ptr(a_ptr) {
+		incRef();
+	}
+
 	template<class oldType>
 	explicit SmartPtr(const SmartPtr<oldType>& a) noexcept : ptr(a.get()) {
 		incRef();
 	}
+
 	template<class oldType>
 	explicit SmartPtr(SmartPtr<oldType>&& a) noexcept : ptr(a.get()) {
 		a.ptr = nullptr;
 	}
-    ~SmartPtr() {
-        decRef();
-    }
-    SmartPtr& operator=(const SmartPtr<T>& a) noexcept {
-        if (a.get() != this->get()) {
-            decRef();
-            ptr = a.get();
-            incRef();
-        }
-        return *this;
-    }
 
-    SmartPtr& operator=(SmartPtr<T>&& a) noexcept {
-    	if (a.get() != this->get()) {
-    		//Do a dec-ref on the existing ptr (if any)
-    		decRef();
-    		//But don't do any increase on the new one, just move it over.
-    		// The reference number on it will stay the same, which is what we want.
-    		ptr = a.get();
-    		a.ptr = nullptr;
-    	}
-    	return *this;
-    }
+	~SmartPtr() {
+		decRef();
+	}
 
-    template<class newType>
-    operator SmartPtr<newType>() const noexcept {
-        return SmartPtr<newType>(ptr);
-    }
-    template<class newType>
-    operator SmartPtr<const newType>() const noexcept {
-        return SmartPtr<const newType>(ptr);
-    }
-    constexpr bool isValid() const noexcept {
-        return ptr != nullptr;
-    }
-    constexpr bool operator!() const noexcept {
-        return this->ptr == nullptr;
-    }
+	SmartPtr& operator=(const SmartPtr<T>& a) noexcept {
+		if (a.get() != this->get()) {
+			decRef();
+			ptr = a.get();
+			incRef();
+		}
+		return *this;
+	}
 
-    explicit constexpr operator bool () const noexcept
-    {
-        return !this->operator!();
-    }
+	SmartPtr& operator=(SmartPtr<T>&& a) noexcept {
+		if (a.get() != this->get()) {
+			//Do a dec-ref on the existing ptr (if any)
+			decRef();
+			//But don't do any increase on the new one, just move it over.
+			// The reference number on it will stay the same, which is what we want.
+			ptr = a.get();
+			a.ptr = nullptr;
+		}
+		return *this;
+	}
 
-    constexpr T& operator*() const noexcept {
-        assert(ptr);
-        return *ptr;
-    }
-    constexpr T* operator->() const noexcept {
-        assert(ptr);
-        return ptr;
-    }
-    constexpr T* get() const noexcept {
-        return ptr;
-    }
-    SmartPtr<T> copy() const noexcept
-    {
-        return SmartPtr(ptr->copy());
-    }
-    // If you want to make these protected, please ensure that the
-    // destructor is made virtual to ensure your new class behaves
-    // correctly.
-  private:
-    void decRef() const noexcept {
-        if (ptr != nullptr) {
-            ptr->decRef();
-        }
-    }
-    void incRef() const noexcept {
-        if (ptr != nullptr) {
-            ptr->incRef();
-        }
-    }
-    T * ptr;
+	template<class newType>
+	operator SmartPtr<newType>() const noexcept {
+		return SmartPtr<newType>(ptr);
+	}
+
+	template<class newType>
+	operator SmartPtr<const newType>() const noexcept {
+		return SmartPtr<const newType>(ptr);
+	}
+
+	constexpr bool isValid() const noexcept {
+		return ptr != nullptr;
+	}
+
+	constexpr bool operator!() const noexcept {
+		return this->ptr == nullptr;
+	}
+
+	explicit constexpr operator bool() const noexcept {
+		return !this->operator!();
+	}
+
+	constexpr T& operator*() const noexcept {
+		assert(ptr);
+		return *ptr;
+	}
+
+	constexpr T* operator->() const noexcept {
+		assert(ptr);
+		return ptr;
+	}
+
+	constexpr T* get() const noexcept {
+		return ptr;
+	}
+
+	SmartPtr<T> copy() const noexcept {
+		return SmartPtr(ptr->copy());
+	}
+	// If you want to make these protected, please ensure that the
+	// destructor is made virtual to ensure your new class behaves
+	// correctly.
+private:
+	void decRef() const noexcept {
+		if (ptr != nullptr) {
+			ptr->decRef();
+		}
+	}
+
+	void incRef() const noexcept {
+		if (ptr != nullptr) {
+			ptr->incRef();
+		}
+	}
+
+	T* ptr;
 };
 
 template<typename returnPtrType, class fromType>
-returnPtrType smart_dynamic_cast(const SmartPtr<fromType> & o)
-{
-    return returnPtrType(dynamic_cast<typename returnPtrType::DataT*>(o.get()));
+returnPtrType smart_dynamic_cast(const SmartPtr<fromType>& o) {
+	return returnPtrType(dynamic_cast<typename returnPtrType::DataT*>(o.get()));
 }
 
 template<typename returnPtrType, class fromType>
-returnPtrType smart_static_cast(const SmartPtr<fromType> & o)
-{
-    return returnPtrType((typename returnPtrType::DataT *)o.get());
+returnPtrType smart_static_cast(const SmartPtr<fromType>& o) {
+	return returnPtrType((typename returnPtrType::DataT*) o.get());
 }
 
-} } // namespace Atlas::Objects
+}
+// namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_SMARTPTR_H

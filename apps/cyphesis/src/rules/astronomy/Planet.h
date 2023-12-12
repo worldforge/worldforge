@@ -11,9 +11,9 @@
 // 
 
 class Planet : public Body {
-  private:
-  public:
-    Planet(double p, double r, double e = 0, double a = 0) : Body(p,r,e,a) { }
+private:
+public:
+	Planet(double p, double r, double e = 0, double a = 0) : Body(p, r, e, a) {}
 };
 
 #endif // ASTRONOMY_PLANET_H

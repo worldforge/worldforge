@@ -96,7 +96,7 @@ void View::update() {
 	WFMath::TimeStamp t(WFMath::TimeStamp::now());
 
 	// run motion prediction for each moving entity
-	for (auto& it : m_moving) {
+	for (auto& it: m_moving) {
 		it->updatePredictedState(t, m_simulationSpeed);
 	}
 
@@ -106,7 +106,7 @@ void View::update() {
 	}
 	WFMath::TimeDiff dt = t - m_lastUpdateTime;
 
-	for (auto& m_progressingTask : m_progressingTasks) {
+	for (auto& m_progressingTask: m_progressingTasks) {
 		m_progressingTask->updatePredictedProgress(dt);
 	}
 
@@ -297,7 +297,7 @@ void View::deleteEntity(const std::string& eid) {
 		//We need to delete all children too.
 		auto children = I->second.entity->getContent();
 		m_contents.erase(I);
-		for (auto& child : children) {
+		for (auto& child: children) {
 			deleteEntity(child->getId());
 		}
 
@@ -454,7 +454,7 @@ void View::issueQueuedLook() {
 
 void View::dumpLookQueue() {
 	logger->debug("look queue:");
-	for (const auto& lookOp : m_lookQueue) {
+	for (const auto& lookOp: m_lookQueue) {
 		logger->debug("\t{}", lookOp);
 	}
 }

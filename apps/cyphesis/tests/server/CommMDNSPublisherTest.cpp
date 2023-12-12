@@ -37,17 +37,17 @@
 
 #include <cassert>
 
-int main()
-{
+int main() {
 #ifndef HAVE_AVAHI
-    }
+}
+
 #else // HAVE_AVAHI
-    ServerRouting test_server(*(BaseWorld*) 0, *(Persistence*)nullptr, "", "", 2);
-    {
+ServerRouting test_server(*(BaseWorld*) 0, *(Persistence*)nullptr, "", "", 2);
+{
 
-    }
+}
 
-    return 0;
+return 0;
 }
 
 // Stub functions
@@ -61,17 +61,17 @@ int main()
 
 std::chrono::steady_clock::duration BaseWorld::getTime() const
 {
-    return std::chrono::milliseconds(0);
+return std::chrono::milliseconds(0);
 }
 
 float BaseWorld::getTimeAsSeconds() const
 {
-    return 0;
+return 0;
 }
 
 int CommSocket::flush()
 {
-    return 0;
+return 0;
 }
 
 #include "../stubs/common/stublog.h"
@@ -79,8 +79,8 @@ int CommSocket::flush()
 
 namespace consts {
 
-    const int buildId = -1;
-    const char* version = "test_version";
+const int buildId = -1;
+const char* version = "test_version";
 }
 
 int timeoffset = 0;
@@ -92,7 +92,7 @@ int client_port_num = 6767;
 
 AvahiStringList* avahi_string_list_new(const char* txt, ...)
 {
-    return 0;
+return 0;
 }
 
 void avahi_string_list_free(AvahiStringList* l)
@@ -101,54 +101,54 @@ void avahi_string_list_free(AvahiStringList* l)
 
 const char* avahi_strerror(int error)
 {
-    static const char error_message[] = "test_stub_error";
-    return &error_message[0];
+static const char error_message[] = "test_stub_error";
+return &error_message[0];
 }
 
 AvahiClient* avahi_client_new(const AvahiPoll* poll_api,
-                              AvahiClientFlags flags,
-                              AvahiClientCallback callback,
-                              void* userdata,
-                              int* ret_error)
+						  AvahiClientFlags flags,
+						  AvahiClientCallback callback,
+						  void* userdata,
+						  int* ret_error)
 {
-    static char dummy_object[sizeof(int)];
+static char dummy_object[sizeof(int)];
 
-    // The object is opaque, so it probably doesn't even need to be non-null
-    return (AvahiClient*) &dummy_object[0];
+// The object is opaque, so it probably doesn't even need to be non-null
+return (AvahiClient*) &dummy_object[0];
 }
 
 int avahi_entry_group_add_service_strlst(AvahiEntryGroup* group,
-                                         AvahiIfIndex interface,
-                                         AvahiProtocol protocol,
-                                         AvahiPublishFlags flags,
-                                         const char* name,
-                                         const char* type,
-                                         const char* domain,
-                                         const char* host,
-                                         uint16_t port,
-                                         AvahiStringList* txt)
+									 AvahiIfIndex interface,
+									 AvahiProtocol protocol,
+									 AvahiPublishFlags flags,
+									 const char* name,
+									 const char* type,
+									 const char* domain,
+									 const char* host,
+									 uint16_t port,
+									 AvahiStringList* txt)
 {
-    return 0;
+return 0;
 }
 
 int avahi_entry_group_commit(AvahiEntryGroup*)
 {
-    return 0;
+return 0;
 }
 
 AvahiEntryGroup* avahi_entry_group_new(AvahiClient* c,
-                                       AvahiEntryGroupCallback callback,
-                                       void* userdata)
+								   AvahiEntryGroupCallback callback,
+								   void* userdata)
 {
-    static char dummy_object[sizeof(int)];
+static char dummy_object[sizeof(int)];
 
-    // The object is opaque, so it probably doesn't even need to be non-null
-    return (AvahiEntryGroup*) &dummy_object[0];
+// The object is opaque, so it probably doesn't even need to be non-null
+return (AvahiEntryGroup*) &dummy_object[0];
 }
 
 int avahi_client_errno(AvahiClient*)
 {
-    return 0;
+return 0;
 }
 
 Shaker::Shaker()
@@ -157,7 +157,7 @@ Shaker::Shaker()
 
 std::string Shaker::generateSalt(size_t length)
 {
-    return "";
+return "";
 }
 
 #endif // HAVE_AVAHI

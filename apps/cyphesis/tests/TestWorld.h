@@ -29,90 +29,77 @@
 #include <functional>
 #include <utility>
 
-struct TestWorldExtension
-{
-    std::function<void(const Operation& op, LocatedEntity& ent)> messageFn;
-    std::function<Ref<LocatedEntity>(const std::string&, const Atlas::Objects::Entity::RootEntity&)> addNewEntityFn;
+struct TestWorldExtension {
+	std::function<void(const Operation& op, LocatedEntity& ent)> messageFn;
+	std::function<Ref<LocatedEntity>(const std::string&, const Atlas::Objects::Entity::RootEntity&)> addNewEntityFn;
 };
 
-struct TestWorld : public BaseWorld
-{
+struct TestWorld : public BaseWorld {
 
-    static TestWorldExtension extension;
-    TestWorldExtension m_extension;
+	static TestWorldExtension extension;
+	TestWorldExtension m_extension;
 
-    Ref<LocatedEntity> m_gw;
+	Ref<LocatedEntity> m_gw;
 
-    explicit TestWorld()
-            : BaseWorld([]() { return std::chrono::steady_clock::now().time_since_epoch(); })
-    {
-    }
+	explicit TestWorld()
+			: BaseWorld([]() { return std::chrono::steady_clock::now().time_since_epoch(); }) {
+	}
 
-    explicit TestWorld(Ref<LocatedEntity> gw)
-            : BaseWorld([]() { return std::chrono::steady_clock::now().time_since_epoch(); }),
-              m_gw(std::move(gw))
-    {
-        m_eobjects[m_gw->getIntId()] = m_gw;
-    }
+	explicit TestWorld(Ref<LocatedEntity> gw)
+			: BaseWorld([]() { return std::chrono::steady_clock::now().time_since_epoch(); }),
+			  m_gw(std::move(gw)) {
+		m_eobjects[m_gw->getIntId()] = m_gw;
+	}
 
-    ~TestWorld() override {
-        //Make sure that no entity references are retained.
-        for (const auto& entry : m_eobjects) {
-            entry.second->destroy();
-            //Set the type to null so we won't clear properties again in the destructor.
-            entry.second->setType(nullptr);
-        }
-    }
+	~TestWorld() override {
+		//Make sure that no entity references are retained.
+		for (const auto& entry: m_eobjects) {
+			entry.second->destroy();
+			//Set the type to null so we won't clear properties again in the destructor.
+			entry.second->setType(nullptr);
+		}
+	}
 
-    void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override
-    {
-        m_eobjects[ent->getIntId()] = ent;
-        if (parent) {
-            parent->addChild(*ent);
-        }
-    }
+	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
+		m_eobjects[ent->getIntId()] = ent;
+		if (parent) {
+			parent->addChild(*ent);
+		}
+	}
 
-    Ref<LocatedEntity> addNewEntity(const std::string& id,
-                                    const Atlas::Objects::Entity::RootEntity& op) override
-    {
-        if (m_extension.addNewEntityFn) {
-            return m_extension.addNewEntityFn(id, op);
-        } else if (extension.addNewEntityFn) {
-            return extension.addNewEntityFn(id, op);
-        }
-        return nullptr;
-    }
+	Ref<LocatedEntity> addNewEntity(const std::string& id,
+									const Atlas::Objects::Entity::RootEntity& op) override {
+		if (m_extension.addNewEntityFn) {
+			return m_extension.addNewEntityFn(id, op);
+		} else if (extension.addNewEntityFn) {
+			return extension.addNewEntityFn(id, op);
+		}
+		return nullptr;
+	}
 
-    void delEntity(LocatedEntity* obj) override
-    {}
+	void delEntity(LocatedEntity* obj) override {}
 
-    const std::set<std::string>& getSpawnEntities() const override
-    {
-        static std::set<std::string> spawns;
-        return spawns;
-    }
+	const std::set<std::string>& getSpawnEntities() const override {
+		static std::set<std::string> spawns;
+		return spawns;
+	}
 
-    void registerSpawner(const std::string& id) override
-    {}
+	void registerSpawner(const std::string& id) override {}
 
-    void unregisterSpawner(const std::string& id) override
-    {}
+	void unregisterSpawner(const std::string& id) override {}
 
 
-    void message(Operation op, LocatedEntity& ent) override
-    {
-        if (m_extension.messageFn) {
-            m_extension.messageFn(op, ent);
-        } else if (extension.messageFn) {
-            extension.messageFn(op, ent);
-        }
-    }
+	void message(Operation op, LocatedEntity& ent) override {
+		if (m_extension.messageFn) {
+			m_extension.messageFn(op, ent);
+		} else if (extension.messageFn) {
+			extension.messageFn(op, ent);
+		}
+	}
 
-    Ref<LocatedEntity> findByName(const std::string& name) override
-    { return nullptr; }
+	Ref<LocatedEntity> findByName(const std::string& name) override { return nullptr; }
 
-    Ref<LocatedEntity> findByType(const std::string& type) override
-    { return nullptr; }
+	Ref<LocatedEntity> findByType(const std::string& type) override { return nullptr; }
 
 };
 

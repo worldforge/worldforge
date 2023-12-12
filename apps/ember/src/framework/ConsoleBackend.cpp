@@ -163,7 +163,7 @@ void ConsoleBackend::runCommand(const std::string& command, const std::string& a
 
 	// This commands prints all currently registered commands to the Log File
 	if (command == LIST_CONSOLE_COMMANDS) {
-		for (const auto& registeredCommand : mRegisteredCommands) {
+		for (const auto& registeredCommand: mRegisteredCommands) {
 			// TODO - should we check to see if I->second is valid?
 			temp << registeredCommand.first << " : " << registeredCommand.second.Description << std::endl;
 		}

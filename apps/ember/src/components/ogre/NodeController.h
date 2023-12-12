@@ -23,11 +23,9 @@
 
 #include <sigc++/trackable.h>
 
-namespace Ember
-{
+namespace Ember {
 struct IEntityControlDelegate;
-namespace OgreView
-{
+namespace OgreView {
 
 class NodeAttachment;
 
@@ -39,8 +37,7 @@ class NodeAttachment;
  * In normal behavior, all position and orientation updates are fetched from the entity to which the attachment is attached.
  * This class is however expected to be extended with a subclass which provides other behavior.
  */
-class NodeController: public virtual sigc::trackable, public IMovable
-{
+class NodeController : public virtual sigc::trackable, public IMovable {
 public:
 	/**
 	 * @brief Ctor.
@@ -64,7 +61,9 @@ protected:
 	NodeAttachment& mAttachment;
 
 	void movementUpdate();
+
 	void entity_Moved();
+
 	virtual void updatePosition();
 
 };

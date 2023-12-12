@@ -25,14 +25,14 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ContainerView>(sol::table& space) {
 	auto containerView = space.new_usertype<ContainerView>("ContainerView",
-														 sol::constructors<ContainerView(Ember::OgreView::Gui::EntityIconManager&,
-																						 Ember::OgreView::Gui::Icons::IconManager&,
-																						 CEGUI::Tooltip&,
-																						 CEGUI::Window&,
-																						 int)>());
+														   sol::constructors<ContainerView(Ember::OgreView::Gui::EntityIconManager&,
+																						   Ember::OgreView::Gui::Icons::IconManager&,
+																						   CEGUI::Tooltip&,
+																						   CEGUI::Window&,
+																						   int)>());
 	containerView["showEntityContents"] = &ContainerView::showEntityContents;
 	containerView["getEntityIcon"] = &ContainerView::getEntityIcon;
 	containerView["addEntityIcon"] = &ContainerView::addEntityIcon;

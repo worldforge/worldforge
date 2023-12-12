@@ -26,36 +26,37 @@
 #include <unordered_map>
 
 
-namespace varconf
-{
+namespace varconf {
 class Variable;
 }
 
-namespace Eris
-{
+namespace Eris {
 class View;
+
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 class ConfigListenerContainer;
+
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 class World;
 
 /**
  * @brief Namespace for authoring classes and activities.
  * Any class or mechanism which deals with how to alter the world should go in here.
  */
-namespace Authoring
-{
+namespace Authoring {
 
 class AuthoringHandler;
+
 class EntityMover;
+
 class SimpleEntityVisualization;
+
 class GeometryVisualization;
+
 class EntityConsoleEditor;
 
 /**
@@ -63,8 +64,7 @@ class EntityConsoleEditor;
  * @brief Manages authoring, mainly visualizations of entities for authoring purposes.
  * The actual visualizations is handled by an instance of AuthoringHandler, which is held by this class.
  */
-class AuthoringManager: public ConsoleObject, ConfigListenerContainer
-{
+class AuthoringManager : public ConsoleObject, ConfigListenerContainer {
 public:
 	/**
 	 * @brief Ctor.
@@ -117,7 +117,7 @@ public:
 	/**
 	 * @copydoc ConsoleObject::runCommand
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	void startMovement(EmberEntity& entity, EntityMover& mover);
 

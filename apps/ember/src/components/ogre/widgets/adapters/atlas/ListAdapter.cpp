@@ -26,14 +26,8 @@ using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 ListAdapter::ListAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* childContainer)
 		: AdapterBase(element),
@@ -69,7 +63,7 @@ void ListAdapter::fillElementFromGui() {
 
 bool ListAdapter::_hasChanges() {
 	bool hasChanges = false;
-	for (auto& wrapper : mAdapters) {
+	for (auto& wrapper: mAdapters) {
 		if (!wrapper.Adapter) {
 // 			logger->warn("The list of adapters contained a null reference. This should never happen.");
 		} else {
@@ -101,20 +95,20 @@ void ListAdapter::removeAdapters() {
 ::Atlas::Message::Element ListAdapter::_getChangedElement() {
 	//if one adapter has changes, we have to send all
 	::Atlas::Message::ListType attributes;
-	for (auto& wrapper : mAdapters) {
+	for (auto& wrapper: mAdapters) {
 		auto& adapter = wrapper.Adapter;
 		if (!adapter->isRemoved()) {
 			attributes.emplace_back(adapter->getChangedElement());
 		}
 	}
-	return Element(attributes);
+	return {attributes};
 }
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

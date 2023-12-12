@@ -29,8 +29,8 @@
 
 #include <sigc++/trackable.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Camera {
 class Recorder;
 }
@@ -108,5 +108,5 @@ protected:
 };
 
 }
-}
+
 #endif /* SCREEN_H_ */

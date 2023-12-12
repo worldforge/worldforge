@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Titlebar>(sol::table& space) {
 	auto titlebar = space.new_usertype<Titlebar>("Titlebar",
 												 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

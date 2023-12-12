@@ -24,20 +24,14 @@
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
-#include <OgreCamera.h>
 
 #include <wfmath/const.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Camera
-{
+
+namespace Ember::OgreView::Camera {
 
 FirstPersonCameraMount::FirstPersonCameraMount(const CameraSettings& cameraSettings, Ogre::SceneManager& sceneManager) :
-	CameraMountBase(cameraSettings), mCameraNode(nullptr)
-{
+		CameraMountBase(cameraSettings), mCameraNode(nullptr) {
 	mCameraRootNode = sceneManager.createSceneNode(OgreInfo::createUniqueResourceName("FirstPersonCameraNodeRootNode"));
 	mCameraRootNode->setInheritOrientation(false);
 
@@ -46,8 +40,7 @@ FirstPersonCameraMount::FirstPersonCameraMount(const CameraSettings& cameraSetti
 
 }
 
-FirstPersonCameraMount::~FirstPersonCameraMount()
-{
+FirstPersonCameraMount::~FirstPersonCameraMount() {
 	if (mCameraRootNode) {
 		//This will handle the mCameraPitchNode and the mCameraNode too.
 		mCameraRootNode->removeAndDestroyAllChildren();
@@ -56,8 +49,7 @@ FirstPersonCameraMount::~FirstPersonCameraMount()
 }
 
 
-void FirstPersonCameraMount::attachToNode(Ogre::Node* sceneNode)
-{
+void FirstPersonCameraMount::attachToNode(Ogre::Node* sceneNode) {
 	if (sceneNode == mCameraRootNode->getParentSceneNode()) {
 		return;
 	}
@@ -70,20 +62,17 @@ void FirstPersonCameraMount::attachToNode(Ogre::Node* sceneNode)
 	}
 }
 
-void FirstPersonCameraMount::attachToCamera(MainCamera& camera)
-{
+void FirstPersonCameraMount::attachToCamera(MainCamera& camera) {
 	CameraMountBase::attachToCamera(camera);
 	mCameraNode->attachObject(mCamera);
 }
 
-void FirstPersonCameraMount::detachFromCamera()
-{
+void FirstPersonCameraMount::detachFromCamera() {
 	mCameraNode->detachObject(mCamera);
 	CameraMountBase::detachFromCamera();
 }
 
-Ogre::Degree FirstPersonCameraMount::pitch(float relativeMovement)
-{
+Ogre::Degree FirstPersonCameraMount::pitch(float relativeMovement) {
 	Ogre::Degree degrees(mCameraSettings.getDegreesPerMouseUnit() * relativeMovement);
 
 	if (mCameraSettings.getInvertCamera()) {
@@ -108,8 +97,7 @@ Ogre::Degree FirstPersonCameraMount::pitch(float relativeMovement)
 	return degrees;
 }
 
-Ogre::Degree FirstPersonCameraMount::yaw(float relativeMovement)
-{
+Ogre::Degree FirstPersonCameraMount::yaw(float relativeMovement) {
 	Ogre::Degree degrees(mCameraSettings.getDegreesPerMouseUnit() * relativeMovement);
 
 	if (!WFMath::Equal(.0f, degrees.valueDegrees())) {
@@ -123,5 +111,5 @@ Ogre::Degree FirstPersonCameraMount::yaw(float relativeMovement)
 }
 
 }
-}
-}
+
+

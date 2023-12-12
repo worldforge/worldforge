@@ -31,31 +31,32 @@ class PropertyKit;
 
 /// \brief Base class for classes that handle creating Entity properties.
 class PropertyManager : public Singleton<PropertyManager> {
-  protected:
-    // Data structure for factories and the like?
-    std::map<std::string, std::unique_ptr<PropertyKit>> m_propertyFactories;
+protected:
+	// Data structure for factories and the like?
+	std::map<std::string, std::unique_ptr<PropertyKit>> m_propertyFactories;
 
-    PropertyManager();
+	PropertyManager();
 
-    void installFactory(const std::string &,
-                        std::unique_ptr<PropertyKit>);
-  public:
-    ~PropertyManager() override;
+	void installFactory(const std::string&,
+						std::unique_ptr<PropertyKit>);
 
-    /// \brief Add a new named property to an Entity
-    ///
-    /// @param name a string giving the name of the property.
-    virtual std::unique_ptr<PropertyBase> addProperty(const std::string & name) const = 0;
+public:
+	~PropertyManager() override;
 
-    virtual int installFactory(const std::string & type_name,
-                               const Atlas::Objects::Root & type_desc,
-                               std::unique_ptr<PropertyKit> factory);
+	/// \brief Add a new named property to an Entity
+	///
+	/// @param name a string giving the name of the property.
+	virtual std::unique_ptr<PropertyBase> addProperty(const std::string& name) const = 0;
 
-    PropertyKit * getPropertyFactory(const std::string &) const;
+	virtual int installFactory(const std::string& type_name,
+							   const Atlas::Objects::Root& type_desc,
+							   std::unique_ptr<PropertyKit> factory);
 
-    const std::map<std::string, std::unique_ptr<PropertyKit>>& getPropertyFactories() const {
-        return m_propertyFactories;
-    }
+	PropertyKit* getPropertyFactory(const std::string&) const;
+
+	const std::map<std::string, std::unique_ptr<PropertyKit>>& getPropertyFactories() const {
+		return m_propertyFactories;
+	}
 };
 
 #endif // COMMON_PROPERTY_MANAGER_H

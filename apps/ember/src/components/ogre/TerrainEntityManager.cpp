@@ -36,8 +36,8 @@
 
 #include <sigc++/bind.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * Listens to entity signal which is of interest to terrain mods and areas.
@@ -68,7 +68,7 @@ struct TerrainEffectorListener {
 	}
 
 	~TerrainEffectorListener() {
-		for (auto& conn : connections) {
+		for (auto& conn: connections) {
 			conn.disconnect();
 		}
 	}
@@ -267,4 +267,4 @@ void TerrainEntityManager::entityModeChanged(EmberEntity& entity, const Ember::T
 	}
 }
 }
-}
+

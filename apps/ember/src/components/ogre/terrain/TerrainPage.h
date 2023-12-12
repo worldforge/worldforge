@@ -43,9 +43,8 @@ class Segment;
 class Shader;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 struct TerrainShader;
 
 class TerrainPageSurface;
@@ -203,8 +202,6 @@ inline int TerrainPage::getBlendMapSize() const {
 	return (getPageSize() - 1);
 }
 }
-}
 
-}
 
 #endif

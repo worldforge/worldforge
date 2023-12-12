@@ -34,9 +34,9 @@
 using namespace WFMath;
 using namespace Ember;
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 MovementAdapterWorkerBase::MovementAdapterWorkerBase(MovementAdapter& adapter) :
 		mAdapter(adapter) {
@@ -269,5 +269,5 @@ const std::shared_ptr<IMovementBridge>& MovementAdapter::getBridge() const {
 
 }
 
-}
-}
+
+

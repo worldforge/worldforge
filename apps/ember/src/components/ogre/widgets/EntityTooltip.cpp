@@ -29,9 +29,8 @@
 #include <CEGUI/RenderedStringWordWrapper.h>
 #include <CEGUI/LeftAlignedRenderedString.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 EmberEntityTooltipWidget::EmberEntityTooltipWidget(const CEGUI::String& type, const CEGUI::String& name) :
 		CEGUI::Tooltip(type, name) {
@@ -44,7 +43,7 @@ CEGUI::Sizef EmberEntityTooltipWidget::getTextSize_impl() const {
 	CEGUI::RenderedStringWordWrapper<CEGUI::LeftAlignedRenderedString> wordWrapper(textWindow->getRenderedString());
 	auto pixelSize = textWindow->getPixelSize();
 	wordWrapper.format(textWindow, CEGUI::Sizef(pixelSize.d_width, 1000));
-	return CEGUI::Sizef(180, std::max(wordWrapper.getVerticalExtent(textWindow), 80.0f));
+	return {180, std::max(wordWrapper.getVerticalExtent(textWindow), 80.0f)};
 }
 
 const CEGUI::String EmberEntityTooltipWidget::WidgetTypeName("Ember/EntityTooltip");
@@ -129,7 +128,7 @@ std::string EntityTooltip::composeEntityInfoText(EmberEntity& entity) {
 			ss << std::endl << "Worn on the " << element.asString();
 		}
 	}
-	for (auto& entry : entity.getUsages()) {
+	for (auto& entry: entity.getUsages()) {
 		ss << std::endl << "Can be used to " << entry.first;
 	}
 	auto description = entity.ptrOfProperty("description");
@@ -148,5 +147,5 @@ EmberEntity* EntityTooltip::getActiveEntity() {
 }
 
 }
-}
-}
+
+

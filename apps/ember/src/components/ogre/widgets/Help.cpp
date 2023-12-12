@@ -27,14 +27,10 @@
 
 #include "../EmberOgre.h"
 
-#include <CEGUI/Window.h>
-
-
-
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 WidgetPluginCallback Help::registerWidget(GUIManager& guiManager) {
 
@@ -93,5 +89,5 @@ void Help::EmberOgre_CreatedAvatarEntity(EmberEntity& entity) {
 }
 
 }
-}
-}
+
+

@@ -21,8 +21,8 @@
 #include "TaskUnit.h"
 #include "ITask.h"
 
-namespace Ember {
-namespace Tasks {
+
+namespace Ember::Tasks {
 TaskExecutionContext::TaskExecutionContext(TaskExecutor& executor, TaskUnit& taskUnit) :
 		mExecutor(executor),
 		mTaskUnit(taskUnit) {
@@ -41,10 +41,10 @@ void TaskExecutionContext::executeTask(std::unique_ptr<ITask> task, ITaskExecuti
 }
 
 void TaskExecutionContext::executeTasks(std::vector<std::unique_ptr<ITask>> tasks) {
-	for (auto& task : tasks) {
+	for (auto& task: tasks) {
 		executeTask(std::move(task));
 	}
 }
 
 }
-}
+

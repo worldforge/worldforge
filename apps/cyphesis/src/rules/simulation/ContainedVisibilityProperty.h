@@ -28,21 +28,20 @@
  * This is to be used on things such as fires and effects.
  * \ingroup PropertyClasses
  */
-class ContainedVisibilityProperty : public BoolProperty
-{
-    public:
-        static constexpr const char* property_name = "contained_visibility";
+class ContainedVisibilityProperty : public BoolProperty {
+public:
+	static constexpr const char* property_name = "contained_visibility";
 
-        explicit ContainedVisibilityProperty() = default;
+	explicit ContainedVisibilityProperty() = default;
 
-        ContainedVisibilityProperty* copy() const override;
+	ContainedVisibilityProperty* copy() const override;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        void remove(LocatedEntity&, const std::string&) override;
+	void remove(LocatedEntity&, const std::string&) override;
 
-    protected:
-        ContainedVisibilityProperty(const ContainedVisibilityProperty& rhs) = default;
+protected:
+	ContainedVisibilityProperty(const ContainedVisibilityProperty& rhs) = default;
 };
 
 

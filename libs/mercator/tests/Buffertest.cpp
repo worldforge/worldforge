@@ -5,12 +5,11 @@
 #include <Mercator/Buffer.h>
 #include <Mercator/Segment.h>
 
-int main()
-{
-    Mercator::Segment s(0,0,64);
-    Mercator::Buffer<float> b(64, 4);
+int main() {
+	Mercator::Segment s(0, 0, 64);
+	Mercator::Buffer<float> b(64, 4);
 
-    return 0;
+	return 0;
 }
 
 // stubs

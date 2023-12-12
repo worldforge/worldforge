@@ -28,42 +28,34 @@ namespace CEGUI {
 class PushButton;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 PositionAdapter::PositionAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::PushButton* moveButton)
-: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow), mZWindow(zWindow)
-{
+		: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow), mZWindow(zWindow) {
 	if (mXWindow) {
-		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this)));
 	}
 	if (mYWindow) {
-		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this)));
 	}
 	if (mZWindow) {
-		addGuiEventConnection(mZWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mZWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&PositionAdapter::window_TextChanged, this)));
 	}
-	
+
 	if (moveButton) {
-		addGuiEventConnection(moveButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&PositionAdapter::moveButton_Clicked, this))); 
+		addGuiEventConnection(moveButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&PositionAdapter::moveButton_Clicked, this)));
 	}
-	
+
 	updateGui(mOriginalValue);
 }
 
 
 PositionAdapter::~PositionAdapter() = default;
 
-void PositionAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void PositionAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
-	
+
 	WFMath::Vector<3> vector(element);
 // 	axisBox.fromAtlas(element.asList());
 	if (mXWindow) {
@@ -77,22 +69,19 @@ void PositionAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-bool PositionAdapter::window_TextChanged(const CEGUI::EventArgs& e)
-{
+bool PositionAdapter::window_TextChanged(const CEGUI::EventArgs& e) {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
 	return true;
 }
 
-bool PositionAdapter::moveButton_Clicked(const CEGUI::EventArgs& e)
-{
+bool PositionAdapter::moveButton_Clicked(const CEGUI::EventArgs& e) {
 	EventMoveClicked.emit();
 	return true;
 }
 
-void PositionAdapter::fillElementFromGui()
-{
+void PositionAdapter::fillElementFromGui() {
 	WFMath::Vector<3> vector;
 	if (mXWindow) {
 		vector.x() = std::strtof(mXWindow->getText().c_str(), nullptr);
@@ -106,8 +95,7 @@ void PositionAdapter::fillElementFromGui()
 	mEditedValue = vector.toAtlas();
 }
 
-bool PositionAdapter::_hasChanges()
-{
+bool PositionAdapter::_hasChanges() {
 	WFMath::Vector<3> originalValue;
 	originalValue.fromAtlas(mOriginalValue);
 	WFMath::Vector<3> newValue;
@@ -116,9 +104,9 @@ bool PositionAdapter::_hasChanges()
 }
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

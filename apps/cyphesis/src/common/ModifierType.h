@@ -18,12 +18,11 @@
 
 #ifndef CYPHESIS_MODIFIERTYPE_H
 #define CYPHESIS_MODIFIERTYPE_H
-enum class ModifierType
-{
-        Default,
-        Prepend,
-        Append,
-        Subtract,
-        AddFraction
+enum class ModifierType {
+	Default,
+	Prepend,
+	Append,
+	Subtract,
+	AddFraction
 };
 #endif //CYPHESIS_MODIFIERTYPE_H

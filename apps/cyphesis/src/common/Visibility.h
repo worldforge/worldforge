@@ -24,21 +24,20 @@
  *
  * When communicating information to clients we use these enums to protect some data.
  */
-enum class Visibility
-{
-        /**
-        * Sent to all.
-        */
-            PUBLIC,
-        /**
-        * Sent to the entity itself and admins.
-        */
-            PROTECTED,
+enum class Visibility {
+	/**
+	* Sent to all.
+	*/
+	PUBLIC,
+	/**
+	* Sent to the entity itself and admins.
+	*/
+	PROTECTED,
 
-        /**
-        * Sent only to admins (not even the entity itself).
-        */
-            PRIVATE
+	/**
+	* Sent only to admins (not even the entity itself).
+	*/
+	PRIVATE
 };
 
 #endif //CYPHESIS_VISIBILITY_H

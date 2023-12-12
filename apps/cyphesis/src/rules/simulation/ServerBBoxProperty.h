@@ -28,15 +28,16 @@
  *
  * \ingroup PropertyClasses
  */
-class ServerBBoxProperty : public BBoxProperty
-{
-    public:
-        ServerBBoxProperty() = default;
-        void updateBboxOnEntity(LocatedEntity& entity) const override;
+class ServerBBoxProperty : public BBoxProperty {
+public:
+	ServerBBoxProperty() = default;
 
-        ServerBBoxProperty* copy() const override;
-    protected:
-        ServerBBoxProperty(const ServerBBoxProperty& rhs) = default;
+	void updateBboxOnEntity(LocatedEntity& entity) const override;
+
+	ServerBBoxProperty* copy() const override;
+
+protected:
+	ServerBBoxProperty(const ServerBBoxProperty& rhs) = default;
 
 };
 

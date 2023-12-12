@@ -26,8 +26,8 @@ using namespace Ember::Lua;
 template<>
 void registerLua<ModelDefinitionsAdapter>(sol::table& space) {
 	space.new_usertype<ModelDefinitionsAdapter>("ModelDefinitionsAdapter",
-												   sol::constructors<ModelDefinitionsAdapter(ListHolder&)>(),
-												   "update", &ModelDefinitionsAdapter::update
+												sol::constructors<ModelDefinitionsAdapter(ListHolder&)>(),
+												"update", &ModelDefinitionsAdapter::update
 	);
 
 }

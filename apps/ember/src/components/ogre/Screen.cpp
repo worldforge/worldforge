@@ -32,8 +32,8 @@
 #include <OgreViewport.h>
 #include <boost/filesystem/operations.hpp>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 Screen::Screen(Ogre::RenderWindow& window) :
 		ToggleRendermode("toggle_rendermode", this, "Toggle between wireframe and solid render modes."),
@@ -161,4 +161,4 @@ const Ogre::RenderTarget::FrameStats& Screen::getFrameStats() {
 }
 
 }
-}
+

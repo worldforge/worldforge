@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 Allocator<ErrorData> ErrorData::allocator;
         
@@ -88,4 +88,4 @@ void ChangeData::fillDefaultObjectInstance(ChangeData& data, std::map<std::strin
         data.attr_parent = default_parent;
 }
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation

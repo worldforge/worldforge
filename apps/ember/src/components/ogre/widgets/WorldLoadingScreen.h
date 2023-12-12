@@ -28,9 +28,8 @@ class Window;
 class WindowManager;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 /**
  @author Sean Ryan
@@ -63,11 +62,11 @@ protected:
 	/**
 	 * @brief Internal CEGUI Widget/Window for the loading screen
 	 */
-	UniqueWindowPtr <CEGUI::Window> mLoadingWindow;
+	UniqueWindowPtr<CEGUI::Window> mLoadingWindow;
 
 };
 
 }
-}
-}
+
+
 #endif /* WORLDWORLDLOADINGSCREEN_H_ */

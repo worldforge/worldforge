@@ -22,10 +22,9 @@
 
 using Atlas::Objects::Operation::RootOperation;
 
-void IdContext::setFromContext(const RootOperation & op)
-{
-    op->setFrom(m_id);
-    if (!op->isDefaultSerialno()) {
-        m_refNo = op->getSerialno();
-    }
+void IdContext::setFromContext(const RootOperation& op) {
+	op->setFrom(m_id);
+	if (!op->isDefaultSerialno()) {
+		m_refNo = op->getSerialno();
+	}
 }

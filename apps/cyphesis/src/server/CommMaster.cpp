@@ -26,20 +26,17 @@
 ///
 /// @param svr Reference to the object that manages all socket communication.
 /// @param addr Address of the remote master server.
-CommMaster::CommMaster() : CommClient()
-{
-    std::cout << "Outgoing master connection." << std::endl;
+CommMaster::CommMaster() : CommClient() {
+	std::cout << "Outgoing master connection." << std::endl;
 }
 
-CommMaster::~CommMaster()
-{
+CommMaster::~CommMaster() {
 }
 
-int CommMaster::connect(const std::string & host)
-{
-    m_clientIos.open(host, client_port_num);
-    if (m_clientIos.is_open()) {
-        return 0;
-    }
-    return -1;
+int CommMaster::connect(const std::string& host) {
+	m_clientIos.open(host, client_port_num);
+	if (m_clientIos.is_open()) {
+		return 0;
+	}
+	return -1;
 }

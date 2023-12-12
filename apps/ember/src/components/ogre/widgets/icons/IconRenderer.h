@@ -30,38 +30,41 @@
 #include <OgreFrameListener.h>
 #include <components/ogre/SceneNodeProvider.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class SimpleRenderContext;
 
-namespace Model
-{
-	class Model;
+namespace Model {
+class Model;
 }
 
-namespace Gui {
 
-namespace Icons {
+namespace Gui::Icons {
 
 class Icon;
+
 class IconRenderer;
+
 class IconImageStoreEntry;
+
 class DelayedIconRendererWorker;
 
 /**
 An entry belonging to the DelayedIconRendererWorker.
 */
-class DelayedIconRendererEntry
-{
+class DelayedIconRendererEntry {
 public:
-	DelayedIconRendererEntry(DelayedIconRendererWorker& renderer, std::shared_ptr<Model::Model>  model, Icon* icon);
+	DelayedIconRendererEntry(DelayedIconRendererWorker& renderer, std::shared_ptr<Model::Model> model, Icon* icon);
+
 	virtual ~DelayedIconRendererEntry();
+
 	/**
 	 *    Accessor for the model which will be rendered.
 	 * @return
 	 */
 	Model::Model* getModel();
+
 	/**
 	 *    Accessor for the icon.
 	 * @return
@@ -92,17 +95,19 @@ protected:
 The abstract class which performs the actual rendering.
 Note that it's the responsibility of this class to make sure that the Model supplied in the render method is properly destroyed.
 */
-class IconRenderWorker
-{
+class IconRenderWorker {
 public:
 	explicit IconRenderWorker(IconRenderer& renderer);
+
 	virtual ~IconRenderWorker();
-    /**
-     * Starts the process of rendering the model onto the icon. Depending on the implementation the actual blitting and rendering might be delayed some frames.
-     * @param model The model to render. Note that it's the responsibility of this class to make sure that's it's properly destroyed after use.
-     * @param icon
-     */
-    virtual void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) = 0;
+
+	/**
+	 * Starts the process of rendering the model onto the icon. Depending on the implementation the actual blitting and rendering might be delayed some frames.
+	 * @param model The model to render. Note that it's the responsibility of this class to make sure that's it's properly destroyed after use.
+	 * @param icon
+	 */
+	virtual void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) = 0;
+
 protected:
 	IconRenderer& mRenderer;
 	IconImageStoreEntry* mImageStoreEntry;
@@ -111,9 +116,9 @@ protected:
 /**
 Renders with a delay between the rendering and the blitting, thus allowing the GPU to perform the rendering.
 */
-class DelayedIconRendererWorker : public Ogre::FrameListener, public IconRenderWorker
-{
-friend class DelayedIconRendererEntry;
+class DelayedIconRendererWorker : public Ogre::FrameListener, public IconRenderWorker {
+	friend class DelayedIconRendererEntry;
+
 public:
 	explicit DelayedIconRendererWorker(IconRenderer& renderer);
 
@@ -124,12 +129,12 @@ public:
 	*/
 	bool frameStarted(const Ogre::FrameEvent& event) override;
 
-    /**
-     * Starts the process of rendering a model onto an icon. The blitting will be delayed a couple of frames though.
-     * @param model
-     * @param icon
-     */
-    void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) override;
+	/**
+	 * Starts the process of rendering a model onto an icon. The blitting will be delayed a couple of frames though.
+	 * @param model
+	 * @param icon
+	 */
+	void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) override;
 
 
 protected:
@@ -161,19 +166,18 @@ protected:
 /**
 An instance of this class will render the icon and blit it to texture all in the same frame.
 */
-class DirectRendererWorker : public IconRenderWorker
-{
+class DirectRendererWorker : public IconRenderWorker {
 public:
 	explicit DirectRendererWorker(IconRenderer& renderer);
 
 	~DirectRendererWorker() override;
 
-    /**
-     * Starts the process of rendering a model onto an icon. The blitting will occur in the same frame as the rendering.
-     * @param model
-     * @param icon
-     */
-     void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) override;
+	/**
+	 * Starts the process of rendering a model onto an icon. The blitting will occur in the same frame as the rendering.
+	 * @param model
+	 * @param icon
+	 */
+	void render(const std::shared_ptr<Model::Model>& model, Icon* icon, IconImageStoreEntry* imageStoreEntry) override;
 };
 
 /**
@@ -182,53 +186,53 @@ public:
 	The actual rendering will be handled by an instance of IconRenderWorker.
 	Note that it's not guaranteed that the rendering and blitting will occur on the same frame.
 */
-class IconRenderer
-{
-friend class IconRenderWorker;
+class IconRenderer {
+	friend class IconRenderWorker;
+
 public:
 
-    /**
-     * Ctor. Be sure to call setWorker before you start any rendering.
-     * @param prefix
-     * @param pixelWidth
-     */
-    IconRenderer(const std::string& prefix, int pixelWidth);
+	/**
+	 * Ctor. Be sure to call setWorker before you start any rendering.
+	 * @param prefix
+	 * @param pixelWidth
+	 */
+	IconRenderer(const std::string& prefix, int pixelWidth);
 
-    ~IconRenderer();
+	~IconRenderer();
 
-    /**
-     * Renders a model by the specified name to the icon.
-     * @param modelName The name of the model to render.
-     * @param icon The icon it should be rendered to.
-     */
-    void render(const std::string& modelName, Icon* icon);
+	/**
+	 * Renders a model by the specified name to the icon.
+	 * @param modelName The name of the model to render.
+	 * @param icon The icon it should be rendered to.
+	 */
+	void render(const std::string& modelName, Icon* icon);
 
-    /**
-     * Gets the SimpleRenderContext used for the rendering.
-     * @return
-     */
-    SimpleRenderContext* getRenderContext();
+	/**
+	 * Gets the SimpleRenderContext used for the rendering.
+	 * @return
+	 */
+	SimpleRenderContext* getRenderContext();
 
-    /**
-     * Sets the worker instance. Be sure to call this before doing any rendering.
-     * @param worker
-     */
-    void setWorker(std::unique_ptr<IconRenderWorker> worker);
-
-
-    /**
-     * Performs the actual rendering op.
-     * @param model
-     * @param icon
-     */
-    void performRendering(Model::Model* model, Icon* icon);
+	/**
+	 * Sets the worker instance. Be sure to call this before doing any rendering.
+	 * @param worker
+	 */
+	void setWorker(std::unique_ptr<IconRenderWorker> worker);
 
 
-    /**
-     * Blits the rendered texture onto the icon texture.
-     * @param icon
-     */
-    void blitRenderToIcon(Icon* icon);
+	/**
+	 * Performs the actual rendering op.
+	 * @param model
+	 * @param icon
+	 */
+	void performRendering(Model::Model* model, Icon* icon);
+
+
+	/**
+	 * Blits the rendered texture onto the icon texture.
+	 * @param icon
+	 */
+	void blitRenderToIcon(Icon* icon);
 
 protected:
 
@@ -242,10 +246,8 @@ protected:
 
 }
 
-}
 
 }
 
-}
 
 #endif

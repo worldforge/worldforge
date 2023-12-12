@@ -32,63 +32,57 @@
 /// @param package Name of the script package where the script type is
 /// @param type Name of the script types instanced by this factory
 template<>
-Py::Object wrapPython(LocatedEntity* value)
-{
-    return CyPy_LocatedEntity::wrap(value);
+Py::Object wrapPython(LocatedEntity* value) {
+	return CyPy_LocatedEntity::wrap(value);
 }
 
 template<class T>
-int PythonScriptFactory<T>::setup()
-{
-    return load();
+int PythonScriptFactory<T>::setup() {
+	return load();
 }
 
 template<class T>
-const std::string& PythonScriptFactory<T>::package() const
-{
-    return m_package;
+const std::string& PythonScriptFactory<T>::package() const {
+	return m_package;
 }
 
 template<class T>
-Py::Object PythonScriptFactory<T>::createScript(T& entity) const
-{
-    if (!this->m_class || this->m_class->isNull()) {
-        return Py::Null();
-    }
-    auto wrapper = wrapPython(&entity);
-    if (wrapper.isNull()) {
-        return Py::Null();
-    }
-    try {
-        PythonLogGuard logGuard([wrapper]() {
-            return fmt::format("{}: ", wrapper.as_string());
-        });
+Py::Object PythonScriptFactory<T>::createScript(T& entity) const {
+	if (!this->m_class || this->m_class->isNull()) {
+		return Py::Null();
+	}
+	auto wrapper = wrapPython(&entity);
+	if (wrapper.isNull()) {
+		return Py::Null();
+	}
+	try {
+		PythonLogGuard logGuard([wrapper]() {
+			return fmt::format("{}: ", wrapper.as_string());
+		});
 
-        return this->m_class->apply(Py::TupleN(wrapper));
-    } catch (...) {
-        spdlog::error("Error when creating script '{}.{}'.", this->m_package, this->m_type);
-        if (PyErr_Occurred() != nullptr) {
-            PyErr_Print();
-        }
-        return Py::None();
-    }
+		return this->m_class->apply(Py::TupleN(wrapper));
+	} catch (...) {
+		spdlog::error("Error when creating script '{}.{}'.", this->m_package, this->m_type);
+		if (PyErr_Occurred() != nullptr) {
+			PyErr_Print();
+		}
+		return Py::None();
+	}
 }
 
 template<class T>
-int PythonScriptFactory<T>::addScript(T& entity) const
-{
-    auto script = createScript(entity);
-    if (!script.isNone() && !script.isNull()) {
-        entity.setScript(std::make_unique<PythonWrapper>(script));
-    }
+int PythonScriptFactory<T>::addScript(T& entity) const {
+	auto script = createScript(entity);
+	if (!script.isNone() && !script.isNull()) {
+		entity.setScript(std::make_unique<PythonWrapper>(script));
+	}
 
-    return (script.isNull()) ? -1 : 0;
+	return (script.isNull()) ? -1 : 0;
 }
 
 template<class T>
-int PythonScriptFactory<T>::refreshClass()
-{
-    return refresh();
+int PythonScriptFactory<T>::refreshClass() {
+	return refresh();
 }
 
 #endif // RULESETS_PYTHON_SCRIPT_FACTORY_IMPL_H

@@ -27,8 +27,8 @@ class SceneNode;
 class MovableObject;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class SceneNodeProvider : public INodeProvider {
 public:
@@ -86,6 +86,6 @@ protected:
 
 }
 
-}
+
 
 #endif /* SCENENODEPROVIDER_H_ */

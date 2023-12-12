@@ -8,7 +8,7 @@
 #ifndef ATLAS_OBJECTS_OBJECTS_FWD_H
 #define ATLAS_OBJECTS_OBJECTS_FWD_H
 
-namespace Atlas { namespace Objects { 
+namespace Atlas::Objects {
 
 template <class T> class SmartPtr;
 
@@ -229,6 +229,6 @@ namespace Operation {
     typedef SmartPtr<GenericData> Generic;
 }
 
-} } // namespace Atlas::Objects
+} // namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_OBJECTS_FWD_H

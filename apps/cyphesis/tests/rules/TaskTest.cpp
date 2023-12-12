@@ -40,53 +40,58 @@
 #include "pythonbase/Python_API.h"
 
 struct TestTask : public Task {
-    TestTask(UsageInstance usageInstance, Py::Object script): Task(usageInstance, script) {}
-    bool getObsolete() const {
-        return m_obsolete;
-    }
+	TestTask(UsageInstance usageInstance, Py::Object script) : Task(usageInstance, script) {}
+
+	bool getObsolete() const {
+		return m_obsolete;
+	}
 };
 
 
-class Tasktest : public Cyphesis::TestBase
-{
-  private:
-    Ref<LocatedEntity> chr;
-    UsageInstance usageInstance;
-    Py::Dict script;
-    Ref<TestTask> m_task;
+class Tasktest : public Cyphesis::TestBase {
+private:
+	Ref<LocatedEntity> chr;
+	UsageInstance usageInstance;
+	Py::Dict script;
+	Ref<TestTask> m_task;
 
-    static bool Script_operation_called;
-    static HandlerResult Script_operation_ret;
-  public:
-    Tasktest();
+	static bool Script_operation_called;
+	static HandlerResult Script_operation_ret;
+public:
+	Tasktest();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    void test_obsolete();
-    void test_irrelevant();
-    void test_operation();
-    void test_sequence();
-    void test_setScript();
-    void test_initTask_script();
-    void test_initTask_script_fail();
+	void teardown();
 
-    static HandlerResult get_Script_operation_ret();
+	void test_obsolete();
+
+	void test_irrelevant();
+
+	void test_operation();
+
+	void test_sequence();
+
+	void test_setScript();
+
+	void test_initTask_script();
+
+	void test_initTask_script_fail();
+
+	static HandlerResult get_Script_operation_ret();
 };
 
 bool Tasktest::Script_operation_called = false;
 HandlerResult Tasktest::Script_operation_ret = OPERATION_IGNORED;
 
-HandlerResult Tasktest::get_Script_operation_ret()
-{
-    Script_operation_called = true;
-    return Script_operation_ret;
+HandlerResult Tasktest::get_Script_operation_ret() {
+	Script_operation_called = true;
+	return Script_operation_ret;
 }
 
-Tasktest::Tasktest()
-{
+Tasktest::Tasktest() {
 
-    ADD_TEST(Tasktest::test_obsolete);
+	ADD_TEST(Tasktest::test_obsolete);
 //    ADD_TEST(Tasktest::test_irrelevant);
 //    ADD_TEST(Tasktest::test_operation);
 //    ADD_TEST(Tasktest::test_sequence);
@@ -95,39 +100,34 @@ Tasktest::Tasktest()
 //    ADD_TEST(Tasktest::test_initTask_script_fail);
 }
 
-void Tasktest::setup()
-{
-    Script_operation_called = false;
+void Tasktest::setup() {
+	Script_operation_called = false;
 
-    chr = new Entity(3);
-    usageInstance = UsageInstance{};
-    usageInstance.actor = chr;
-    script = Py::Dict();
+	chr = new Entity(3);
+	usageInstance = UsageInstance{};
+	usageInstance.actor = chr;
+	script = Py::Dict();
 
-    m_task = new TestTask(usageInstance, script);
+	m_task = new TestTask(usageInstance, script);
 }
 
-void Tasktest::teardown()
-{
+void Tasktest::teardown() {
 }
 
-void Tasktest::test_obsolete()
-{
-    ASSERT_EQUAL(m_task->getObsolete(), false);
-    ASSERT_EQUAL(m_task->obsolete(), false);
+void Tasktest::test_obsolete() {
+	ASSERT_EQUAL(m_task->getObsolete(), false);
+	ASSERT_EQUAL(m_task->obsolete(), false);
 }
 
-void Tasktest::test_irrelevant()
-{
-    ASSERT_EQUAL(m_task->getObsolete(), false);
-    ASSERT_EQUAL(m_task->obsolete(), false);
-    m_task->irrelevant();
-    ASSERT_EQUAL(m_task->getObsolete(), true);
-    ASSERT_EQUAL(m_task->obsolete(), true);
+void Tasktest::test_irrelevant() {
+	ASSERT_EQUAL(m_task->getObsolete(), false);
+	ASSERT_EQUAL(m_task->obsolete(), false);
+	m_task->irrelevant();
+	ASSERT_EQUAL(m_task->getObsolete(), true);
+	ASSERT_EQUAL(m_task->obsolete(), true);
 }
 
-void Tasktest::test_operation()
-{
+void Tasktest::test_operation() {
 //    Operation op;
 //    OpVector res;
 //
@@ -136,8 +136,7 @@ void Tasktest::test_operation()
 //    ASSERT_EQUAL(Script_operation_called, false);
 }
 
-void Tasktest::test_sequence()
-{
+void Tasktest::test_sequence() {
 //    m_task->nextTick(1.5);
 //
 //    Atlas::Message::Element val;
@@ -167,8 +166,7 @@ void Tasktest::test_sequence()
 //    assert(m_task->obsolete());
 }
 
-void Tasktest::test_setScript()
-{
+void Tasktest::test_setScript() {
 //    Script * s1 = new Script;
 //    Script * s2 = new Script;
 //
@@ -181,8 +179,7 @@ void Tasktest::test_setScript()
 //    ASSERT_EQUAL(m_task->m_script, s2);
 }
 
-void Tasktest::test_initTask_script()
-{
+void Tasktest::test_initTask_script() {
 //    Script_operation_ret = OPERATION_BLOCKED;
 //
 //    Script * s1 = new Script;
@@ -197,8 +194,7 @@ void Tasktest::test_initTask_script()
 //    ASSERT_EQUAL(res.size(), 1u);
 }
 
-void Tasktest::test_initTask_script_fail()
-{
+void Tasktest::test_initTask_script_fail() {
 //    Script_operation_ret = OPERATION_IGNORED;
 //
 //    Script * s1 = new Script;
@@ -214,15 +210,14 @@ void Tasktest::test_initTask_script_fail()
 }
 
 
-int main()
-{
+int main() {
 
-    setupPythonMalloc();
+	setupPythonMalloc();
 
-    init_python_api({});
-    auto result = Tasktest{}.run();
-    shutdown_python_api();
-    return result;
+	init_python_api({});
+	auto result = Tasktest{}.run();
+	shutdown_python_api();
+	return result;
 }
 
 // stubs
@@ -240,12 +235,13 @@ int main()
 #include "../stubs/rules/simulation/stubBaseWorld.h"
 
 #define STUB_Script_operation
-HandlerResult Script::operation(const std::string & opname,
-                                const Atlas::Objects::Operation::RootOperation & op,
-                                OpVector & res)
-{
-    return Tasktest::get_Script_operation_ret();
+
+HandlerResult Script::operation(const std::string& opname,
+								const Atlas::Objects::Operation::RootOperation& op,
+								OpVector& res) {
+	return Tasktest::get_Script_operation_ret();
 }
+
 #include "../stubs/rules/stubScript.h"
 #include "../stubs/common/stublog.h"
 #include "../stubs/rules/simulation/stubActionsProperty.h"

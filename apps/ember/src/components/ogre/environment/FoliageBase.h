@@ -38,8 +38,8 @@ namespace Forests {
 class PagedGeometry;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 namespace Terrain {
 class TerrainArea;
@@ -152,6 +152,6 @@ double getTerrainHeight(double x, double z, void* userData = nullptr);
 
 }
 
-}
+
 
 #endif

@@ -26,29 +26,31 @@
  *
  * \ingroup PropertyClasses
  */
-class Vector3Property: public PropertyBase
-{
-    public:
+class Vector3Property : public PropertyBase {
+public:
 
-        static constexpr const char* property_atlastype = "list";
+	static constexpr const char* property_atlastype = "list";
 
-        explicit Vector3Property() = default;
-        Vector3Property(const Vector3Property& rhs);
+	explicit Vector3Property() = default;
 
-        ~Vector3Property() override = default;
+	Vector3Property(const Vector3Property& rhs);
 
-        void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const override;
+	~Vector3Property() override = default;
 
-        int get(Atlas::Message::Element & val) const override;
+	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-        void set(const Atlas::Message::Element &) override;
+	int get(Atlas::Message::Element& val) const override;
 
-        const WFMath::Vector<3>& data() const { return m_data; }
-        WFMath::Vector<3>& data() { return m_data; }
+	void set(const Atlas::Message::Element&) override;
 
-        Vector3Property * copy() const override;
-    protected:
-        WFMath::Vector<3> m_data;
+	const WFMath::Vector<3>& data() const { return m_data; }
+
+	WFMath::Vector<3>& data() { return m_data; }
+
+	Vector3Property* copy() const override;
+
+protected:
+	WFMath::Vector<3> m_data;
 };
 
 #endif /* RULESETS_VECTOR3PROPERTY_H_ */

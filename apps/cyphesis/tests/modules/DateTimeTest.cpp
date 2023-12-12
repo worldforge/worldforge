@@ -31,60 +31,59 @@
 
 #include <cstdio>
 
-int main()
-{
-    DateTime datum(0);
+int main() {
+	DateTime datum(0);
 
-    std::cout << datum.asString() << std::endl;
+	std::cout << datum.asString() << std::endl;
 
-    assert(datum.isValid());
+	assert(datum.isValid());
 
-    // Hmm, we have loads of off by one errors in this code.
-    // assert(datum.seconds() == 0);
+	// Hmm, we have loads of off by one errors in this code.
+	// assert(datum.seconds() == 0);
 
-    {
-        static int year = 2000,
-                   month = 1,
-                   day = 1,
-                   hour = 12,
-                   min = 45,
-                   sec = 12;
-        static char string_date[32];
+	{
+		static int year = 2000,
+				month = 1,
+				day = 1,
+				hour = 12,
+				min = 45,
+				sec = 12;
+		static char string_date[32];
 
-        sprintf(string_date, "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec);
+		sprintf(string_date, "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, min, sec);
 
-        assert(strlen(string_date) == 19);
+		assert(strlen(string_date) == 19);
 
-        std::cout << string_date << std::endl;
+		std::cout << string_date << std::endl;
 
-        DateTime date_from_string(string_date);
+		DateTime date_from_string(string_date);
 
-        assert(date_from_string.isValid());
+		assert(date_from_string.isValid());
 
-        assert(date_from_string.asString() == string_date);
+		assert(date_from_string.asString() == string_date);
 
-        std::cout << date_from_string.asString() << std::endl;
+		std::cout << date_from_string.asString() << std::endl;
 
-        DateTime date_from_values(year, month, day, hour, min, sec);
+		DateTime date_from_values(year, month, day, hour, min, sec);
 
-        assert(date_from_values.isValid());
+		assert(date_from_values.isValid());
 
-        assert(date_from_string == date_from_values);
+		assert(date_from_string == date_from_values);
 
-        assert(date_from_string.asString() == date_from_values.asString());
+		assert(date_from_string.asString() == date_from_values.asString());
 
-        assert(date_from_string.seconds() == date_from_values.seconds());
-    }
+		assert(date_from_string.seconds() == date_from_values.seconds());
+	}
 
-    {
-        DateTime new_date(2317);
+	{
+		DateTime new_date(2317);
 
-        assert(new_date.isValid());
+		assert(new_date.isValid());
 
-        new_date.update(0);
+		new_date.update(0);
 
-        assert(datum == new_date);
-    }
+		assert(datum == new_date);
+	}
 
-    return 0;
+	return 0;
 }

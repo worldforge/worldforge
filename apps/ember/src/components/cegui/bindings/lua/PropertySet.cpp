@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<PropertySet>(sol::table& space) {
 	auto propertySet = space.new_usertype<PropertySet>("PropertySet", sol::no_constructor);
 

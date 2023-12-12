@@ -23,16 +23,10 @@
 #include "QuickHelpCursor.h"
 #include "QuickHelp.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Gui
-{
+namespace Ember::OgreView::Gui {
 
-QuickHelpCursor::QuickHelpCursor() : mQuickHelp(Gui::QuickHelp::getSingleton())
-{
+QuickHelpCursor::QuickHelpCursor() : mQuickHelp(Gui::QuickHelp::getSingleton()) {
 	mQuickHelp.EventHelpMessageAdded.connect(sigc::mem_fun(*this, &QuickHelpCursor::getLatestHelpMessage));
 	mQuickHelp.EventHelpMessageLocationChanged.connect(sigc::mem_fun(*this, &QuickHelpCursor::setCursorLocation));
 
@@ -46,26 +40,22 @@ QuickHelpCursor::QuickHelpCursor() : mQuickHelp(Gui::QuickHelp::getSingleton())
 
 QuickHelpCursor::~QuickHelpCursor() = default;
 
-void QuickHelpCursor::getLatestHelpMessage(std::list<HelpMessage>::const_iterator position)
-{
+void QuickHelpCursor::getLatestHelpMessage(std::list<HelpMessage>::const_iterator position) {
 	mCurrentPosition = position;
 	updateMessage();
 }
 
-void QuickHelpCursor::updateMessage()
-{
+void QuickHelpCursor::updateMessage() {
 	if (mCurrentPosition != mQuickHelp.getEnd()) {
 		EventUpdateText.emit(*mCurrentPosition);
 	}
 }
 
-void QuickHelpCursor::nextMessage()
-{
+void QuickHelpCursor::nextMessage() {
 	if (getSize()) {
 		//list.end() returns an iterator that is one past the front of the list, so we have a bit of extra work
 		++mCurrentPosition;
-		if (mCurrentPosition != mQuickHelp.getEnd())
-		{
+		if (mCurrentPosition != mQuickHelp.getEnd()) {
 			++mCursorLocation;
 			updateMessage();
 		} else {
@@ -74,33 +64,28 @@ void QuickHelpCursor::nextMessage()
 	}
 }
 
-void QuickHelpCursor::previousMessage()
-{
-	if (mCurrentPosition != mQuickHelp.getBeginning())
-	{
+void QuickHelpCursor::previousMessage() {
+	if (mCurrentPosition != mQuickHelp.getBeginning()) {
 		--mCursorLocation;
 		--mCurrentPosition;
 		updateMessage();
 	}
 }
 
-size_t QuickHelpCursor::getSize() const
-{
+size_t QuickHelpCursor::getSize() const {
 	return mQuickHelp.getSize();
 }
 
-size_t QuickHelpCursor::getCursorLocation() const
-{
+size_t QuickHelpCursor::getCursorLocation() const {
 	return mCursorLocation;
 }
 
-void QuickHelpCursor::setCursorLocation(size_t cursorLocation)
-{
+void QuickHelpCursor::setCursorLocation(size_t cursorLocation) {
 	mCursorLocation = cursorLocation;
 }
 
 
 }
 
-}
-}
+
+

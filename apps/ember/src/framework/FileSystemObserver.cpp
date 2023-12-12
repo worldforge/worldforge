@@ -44,7 +44,7 @@ void FileSystemObserver::observe() {
 		mDirectoryMonitor->async_monitor([this, marker](const boost::system::error_code& ec, const boost::asio::dir_monitor_event& ev) {
 			//Use the marker to avoid processing after this has been deleted.
 			if (!ec && ev.type != boost::asio::dir_monitor_event::null && *marker) {
-				for (const auto& I : mCallBacks) {
+				for (const auto& I: mCallBacks) {
 					if (boost::starts_with(ev.path.string(), I.first.string())) {
 						auto relative = boost::filesystem::relative(ev.path, I.first);
 						FileSystemEvent event{

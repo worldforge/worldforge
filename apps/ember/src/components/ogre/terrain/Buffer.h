@@ -23,10 +23,8 @@
 #include <string>
 #include <vector>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -155,8 +153,5 @@ unsigned int Buffer<DataType>::getResolution() const {
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINBUFFER_H_ */

@@ -43,9 +43,8 @@
 #include <boost/algorithm/string.hpp>
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 SubModelPart::SubModelPart(std::string name, SubModel& subModel) :
 		mName(std::move(name)), mSubModel(subModel) {
@@ -366,5 +365,5 @@ void SubModelPart::destroy() {
 }
 
 }
-}
-}
+
+

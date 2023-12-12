@@ -26,21 +26,21 @@
 #include <unordered_map>
 
 class AwarenessStore;
+
 class TypeStore;
 
-class AwareMindFactory : public MindKit
-{
-    public:
-        explicit AwareMindFactory(TypeStore& typeStore);
+class AwareMindFactory : public MindKit {
+public:
+	explicit AwareMindFactory(TypeStore& typeStore);
 
-        ~AwareMindFactory() override = default;
+	~AwareMindFactory() override = default;
 
-        BaseMind* newMind(RouterId id, const std::string& entity_id) const override;
+	BaseMind* newMind(RouterId id, const std::string& entity_id) const override;
 
-    protected:
-        TypeStore& mTypeStore;
-        std::unique_ptr<SharedTerrain> mSharedTerrain;
-        std::unique_ptr<AwarenessStoreProvider> mAwarenessStoreProvider;
+protected:
+	TypeStore& mTypeStore;
+	std::unique_ptr<SharedTerrain> mSharedTerrain;
+	std::unique_ptr<AwarenessStoreProvider> mAwarenessStoreProvider;
 
 };
 

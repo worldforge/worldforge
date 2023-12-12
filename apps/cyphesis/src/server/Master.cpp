@@ -20,15 +20,12 @@
 
 #include "common/id.h"
 
-Master::Master(CommClient & cli, ServerRouting & svr, const std::string & id) :
-        m_commClient(cli), m_server(svr)
-{
+Master::Master(CommClient& cli, ServerRouting& svr, const std::string& id) :
+		m_commClient(cli), m_server(svr) {
 }
 
-Master::~Master()
-{
+Master::~Master() {
 }
 
-void Master::operation(const Operation &, OpVector &)
-{
+void Master::operation(const Operation&, OpVector&) {
 }

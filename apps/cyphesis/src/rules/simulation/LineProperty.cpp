@@ -29,28 +29,24 @@ using Atlas::Message::FloatType;
 
 LineProperty::LineProperty() = default;
 
-int LineProperty::get(Element & ent) const
-{
-    ent = ListType();
-    objectListAsMessage(m_data, ent.asList());
-    return 0;
+int LineProperty::get(Element& ent) const {
+	ent = ListType();
+	objectListAsMessage(m_data, ent.asList());
+	return 0;
 }
 
-void LineProperty::set(const Element & ent)
-{
-    if (ent.isList()) {
-        objectListFromMessage<Point3D, CoordList>(ent.asList(), m_data);
-    }
+void LineProperty::set(const Element& ent) {
+	if (ent.isList()) {
+		objectListFromMessage<Point3D, CoordList>(ent.asList(), m_data);
+	}
 }
 
-void LineProperty::add(const std::string & s, MapType & ent) const
-{
-    if (!m_data.empty()) {
-        get(ent[s]);
-    }
+void LineProperty::add(const std::string& s, MapType& ent) const {
+	if (!m_data.empty()) {
+		get(ent[s]);
+	}
 }
 
-LineProperty * LineProperty::copy() const
-{
-    return new LineProperty(*this);
+LineProperty* LineProperty::copy() const {
+	return new LineProperty(*this);
 }

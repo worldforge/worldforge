@@ -31,6 +31,7 @@
 namespace Atlas {
 
 bool Equal(double x1, double x2, double epsilon = std::numeric_limits<double>::epsilon());
+
 bool Equal(float x1, float x2, float epsilon = std::numeric_limits<float>::epsilon());
 
 } // namespace Atlas

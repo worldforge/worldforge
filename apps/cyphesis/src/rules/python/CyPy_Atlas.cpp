@@ -25,34 +25,32 @@
 #include "CyPy_EntityLocation.h"
 #include "CyPy_Root.h"
 
-CyPy_Atlas::CyPy_Atlas() : ExtensionModule("atlas")
-{
+CyPy_Atlas::CyPy_Atlas() : ExtensionModule("atlas") {
 
-    CyPy_ElementMap::init_type();
-    CyPy_ElementList::init_type();
-    CyPy_Root::init_type();
-    CyPy_Operation::init_type();
-    CyPy_Oplist::init_type();
-    CyPy_RootEntity::init_type();
+	CyPy_ElementMap::init_type();
+	CyPy_ElementList::init_type();
+	CyPy_Root::init_type();
+	CyPy_Operation::init_type();
+	CyPy_Oplist::init_type();
+	CyPy_RootEntity::init_type();
 
 
-    initialize("Atlas bindings, allowing the Atlas library to be used from Python.");
+	initialize("Atlas bindings, allowing the Atlas library to be used from Python.");
 
-    Py::Dict d(moduleDictionary());
+	Py::Dict d(moduleDictionary());
 
-    d["Operation"] = CyPy_Operation::type();
-    d["Root"] = CyPy_Root::type();
-    d["Oplist"] = CyPy_Oplist::type();
-    d["Entity"] = CyPy_RootEntity::type();
-    d["ElementList"] = CyPy_ElementList::type();
-    d["ElementMap"] = CyPy_ElementMap::type();
+	d["Operation"] = CyPy_Operation::type();
+	d["Root"] = CyPy_Root::type();
+	d["Oplist"] = CyPy_Oplist::type();
+	d["Entity"] = CyPy_RootEntity::type();
+	d["ElementList"] = CyPy_ElementList::type();
+	d["ElementMap"] = CyPy_ElementMap::type();
 }
 
-std::string CyPy_Atlas::init()
-{
-    PyImport_AppendInittab("atlas", []() {
-        static auto module = new CyPy_Atlas();
-        return module->module().ptr();
-    });
-    return "atlas";
+std::string CyPy_Atlas::init() {
+	PyImport_AppendInittab("atlas", []() {
+		static auto module = new CyPy_Atlas();
+		return module->module().ptr();
+	});
+	return "atlas";
 }

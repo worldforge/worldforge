@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Spinner>(sol::table& space) {
 	auto spinner = space.new_usertype<Spinner>("Spinner",
 											   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

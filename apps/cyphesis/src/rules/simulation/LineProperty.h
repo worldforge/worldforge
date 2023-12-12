@@ -28,19 +28,22 @@
 /// \brief Class to handle Entity terrain property
 /// \ingroup PropertyClasses
 class LineProperty : public PropertyBase {
-  protected:
-    LineProperty(const LineProperty& rhs) = default;
-    CoordList m_data;
-  public:
-    static constexpr const char* property_atlastype = "list";
-    explicit LineProperty();
+protected:
+	LineProperty(const LineProperty& rhs) = default;
 
-    int get(Atlas::Message::Element & val) const override;
-    void set(const Atlas::Message::Element & val) override;
+	CoordList m_data;
+public:
+	static constexpr const char* property_atlastype = "list";
 
-    void add(const std::string & key, Atlas::Message::MapType & map) const override;
+	explicit LineProperty();
 
-    LineProperty * copy() const override;
+	int get(Atlas::Message::Element& val) const override;
+
+	void set(const Atlas::Message::Element& val) override;
+
+	void add(const std::string& key, Atlas::Message::MapType& map) const override;
+
+	LineProperty* copy() const override;
 };
 
 #endif // RULESETS_LINE_PROPERTY_H

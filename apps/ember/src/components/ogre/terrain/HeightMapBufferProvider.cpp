@@ -20,10 +20,8 @@
 #include "HeightMapBuffer.h"
 #include "Buffer.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 HeightMapBufferProvider::HeightMapBufferProvider(unsigned int bufferResolution,
 												 unsigned int desiredBuffers,
@@ -75,5 +73,5 @@ void HeightMapBufferProvider::maintainPool() {
 
 }
 
-}
-}
+
+

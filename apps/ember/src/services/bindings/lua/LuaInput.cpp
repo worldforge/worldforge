@@ -22,7 +22,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Input>(sol::table& space) {
 	auto input = space.new_usertype<Input>("Input", sol::no_constructor);
 	input["getSingleton"] = &Input::getSingleton;

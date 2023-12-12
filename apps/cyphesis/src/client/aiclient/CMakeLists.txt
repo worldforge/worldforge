@@ -28,6 +28,6 @@ target_link_libraries(cyaiclient
         external-Detour
         external-Recast
         external-remotery
-        )
+)
 
 install(TARGETS cyaiclient DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

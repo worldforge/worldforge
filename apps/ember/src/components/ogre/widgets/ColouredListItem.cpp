@@ -23,30 +23,24 @@
 #include "ColouredListItem.h"
 #include "framework/Log.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
-ColouredListItem::ColouredListItem(const CEGUI::String& text) : ListboxTextItem(text)
-{
+ColouredListItem::ColouredListItem(const CEGUI::String& text) : ListboxTextItem(text) {
 	setColours();
 }
 
-ColouredListItem::ColouredListItem(const CEGUI::String& text, unsigned int item_id) : ListboxTextItem(text, item_id)
-{
+ColouredListItem::ColouredListItem(const CEGUI::String& text, unsigned int item_id) : ListboxTextItem(text, item_id) {
 	setColours();
 }
 
-ColouredListItem::ColouredListItem(const CEGUI::String& text, unsigned int item_id, void *item_data) : ListboxTextItem(text, item_id, item_data)
-{
+ColouredListItem::ColouredListItem(const CEGUI::String& text, unsigned int item_id, void* item_data) : ListboxTextItem(text, item_id, item_data) {
 	setColours();
 }
 
-void ColouredListItem::setColours()
-{
-	setSelectionColours(CEGUI::Colour(50,50,50));
-	setTextColours(CEGUI::Colour(0,0,0));
+void ColouredListItem::setColours() {
+	setSelectionColours(CEGUI::Colour(50, 50, 50));
+	setTextColours(CEGUI::Colour(0, 0, 0));
 	try {
 		setSelectionBrushImage("EmberLook/MultiListSelectionBrush");
 	} catch (...) {
@@ -54,16 +48,14 @@ void ColouredListItem::setColours()
 	}
 }
 
-CEGUI::Sizef ColouredListItem::getPixelSize() const
-{
+CEGUI::Sizef ColouredListItem::getPixelSize() const {
 	if (isDisabled()) {
 		return CEGUI::Sizef(0, 0);
 	}
 	return CEGUI::ListboxTextItem::getPixelSize();
 }
 
-void ColouredListItem::draw(CEGUI::GeometryBuffer& buffer, const CEGUI::Rectf& targetRect, float alpha, const CEGUI::Rectf* clipper) const
-{
+void ColouredListItem::draw(CEGUI::GeometryBuffer& buffer, const CEGUI::Rectf& targetRect, float alpha, const CEGUI::Rectf* clipper) const {
 	if (isDisabled()) {
 		return;
 	}
@@ -71,52 +63,38 @@ void ColouredListItem::draw(CEGUI::GeometryBuffer& buffer, const CEGUI::Rectf& t
 
 }
 
-ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text)
-{
+ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text) {
 	return new ColouredListItem(text);
 }
 
-ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text, unsigned int item_id)
-{
+ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text, unsigned int item_id) {
 	return new ColouredListItem(text, item_id);
 }
 
-ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text, unsigned int item_id, void *item_data)
-{
+ColouredListItem* ColouredListItem::createColouredListItem(const CEGUI::String& text, unsigned int item_id, void* item_data) {
 	return new ColouredListItem(text, item_id, item_data);
 }
 
 
-
-
-
-
-
-
 ColouredTreeItem::ColouredTreeItem(const CEGUI::String& text)
-: TreeItem(text)
-{
+		: TreeItem(text) {
 	setColours();
 }
 
 ColouredTreeItem::ColouredTreeItem(const CEGUI::String& text, unsigned int item_id)
-: TreeItem(text, item_id)
-{
+		: TreeItem(text, item_id) {
 	setColours();
 }
 
-ColouredTreeItem::ColouredTreeItem(const CEGUI::String& text, unsigned int item_id, void *item_data)
-: TreeItem(text, item_id, item_data)
-{
+ColouredTreeItem::ColouredTreeItem(const CEGUI::String& text, unsigned int item_id, void* item_data)
+		: TreeItem(text, item_id, item_data) {
 	setColours();
 }
 
 
-
-void ColouredTreeItem::setColours()
-{
-	setSelectionColours(CEGUI::Colour(50,50,50));
-	setTextColours(CEGUI::Colour(0,0,0));
+void ColouredTreeItem::setColours() {
+	setSelectionColours(CEGUI::Colour(50, 50, 50));
+	setTextColours(CEGUI::Colour(0, 0, 0));
 	try {
 		setSelectionBrushImage("EmberLook/MultiListSelectionBrush");
 	} catch (...) {
@@ -126,22 +104,19 @@ void ColouredTreeItem::setColours()
 }
 
 
-ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text)
-{
+ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text) {
 	return new ColouredTreeItem(text);
 }
 
-ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text, unsigned int item_id)
-{
+ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text, unsigned int item_id) {
 	return new ColouredTreeItem(text, item_id);
 }
 
-ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text, unsigned int item_id, void *item_data)
-{
+ColouredTreeItem* ColouredTreeItem::create(const CEGUI::String& text, unsigned int item_id, void* item_data) {
 	return new ColouredTreeItem(text, item_id, item_data);
 }
 
 }
 
-}
-}
+
+

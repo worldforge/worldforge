@@ -53,92 +53,90 @@ using Atlas::Objects::Operation::RootOperation;
 Monitors monitors;
 
 /// Test code paths between account, connection and avatar classes
-class AccountConnectionCharacterintegration : public Cyphesis::TestBase
-{
-  protected:
-    long m_id_counter;
-    static LogEvent m_logEvent_logged;
-    static Operation m_Link_send_sent;
+class AccountConnectionCharacterintegration : public Cyphesis::TestBase {
+protected:
+	long m_id_counter;
+	static LogEvent m_logEvent_logged;
+	static Operation m_Link_send_sent;
 
-    DatabaseNull m_database;
-    Persistence* m_persistence;
-    ServerRouting * m_server;
-    Connection * m_connection;
-    Account * m_account;
-    Ref<Entity> m_character;
-    TypeNode * m_characterType;
-    std::unique_ptr<TestWorld> m_world;
-  public:
-    AccountConnectionCharacterintegration();
+	DatabaseNull m_database;
+	Persistence* m_persistence;
+	ServerRouting* m_server;
+	Connection* m_connection;
+	Account* m_account;
+	Ref<Entity> m_character;
+	TypeNode* m_characterType;
+	std::unique_ptr<TestWorld> m_world;
+public:
+	AccountConnectionCharacterintegration();
 
-    void setup();
+	void setup();
 
-    void teardown();
+	void teardown();
 
-    void test_subscribe();
-    void test_connect_existing();
-    void test_unsubscribe();
-    void test_unsubscribe_other();
+	void test_subscribe();
+
+	void test_connect_existing();
+
+	void test_unsubscribe();
+
+	void test_unsubscribe_other();
 
 };
 
 LogEvent AccountConnectionCharacterintegration::m_logEvent_logged = NONE;
 
 AccountConnectionCharacterintegration::AccountConnectionCharacterintegration() :
-    m_id_counter(0L),
-    m_connection(0),
-    m_character(0),
-    m_characterType(0)
-{
+		m_id_counter(0L),
+		m_connection(0),
+		m_character(0),
+		m_characterType(0) {
 
-    ADD_TEST(AccountConnectionCharacterintegration::test_subscribe);
-    ADD_TEST(AccountConnectionCharacterintegration::test_connect_existing);
-    ADD_TEST(AccountConnectionCharacterintegration::test_unsubscribe);
-    ADD_TEST(AccountConnectionCharacterintegration::test_unsubscribe_other);
+	ADD_TEST(AccountConnectionCharacterintegration::test_subscribe);
+	ADD_TEST(AccountConnectionCharacterintegration::test_connect_existing);
+	ADD_TEST(AccountConnectionCharacterintegration::test_unsubscribe);
+	ADD_TEST(AccountConnectionCharacterintegration::test_unsubscribe_other);
 }
 
-void AccountConnectionCharacterintegration::setup()
-{
-    m_persistence = new Persistence(m_database);
+void AccountConnectionCharacterintegration::setup() {
+	m_persistence = new Persistence(m_database);
 
-    Ref<Entity> gw = new Entity(m_id_counter++);
-    m_world.reset();
-    m_world.reset(new TestWorld(gw));
-    m_server = new ServerRouting(*m_world,
-                                 *m_persistence,
-                                 "989cfbbe-67e3-4571-858c-488b91e06e7d",
-                                 "10658e5e-373b-4565-b34e-954b9223961e",
-                                 m_id_counter++);
-    m_connection = new Connection(*(CommSocket*)0,
-                                  *m_server,
-                                  "a4754783-9909-476b-a418-6997477dff49",
-                                  m_id_counter++);
-    m_account = new Player(m_connection,
-                           "fred",
-                           "25846125-f1bb-4963-852e-856a8be45515",
-                           m_id_counter++);
-    m_character = new Entity(m_id_counter++);
-    m_characterType = new TypeNode("test_avatar");
-    m_character->setType(m_characterType);
+	Ref<Entity> gw = new Entity(m_id_counter++);
+	m_world.reset();
+	m_world.reset(new TestWorld(gw));
+	m_server = new ServerRouting(*m_world,
+								 *m_persistence,
+								 "989cfbbe-67e3-4571-858c-488b91e06e7d",
+								 "10658e5e-373b-4565-b34e-954b9223961e",
+								 m_id_counter++);
+	m_connection = new Connection(*(CommSocket*) 0,
+								  *m_server,
+								  "a4754783-9909-476b-a418-6997477dff49",
+								  m_id_counter++);
+	m_account = new Player(m_connection,
+						   "fred",
+						   "25846125-f1bb-4963-852e-856a8be45515",
+						   m_id_counter++);
+	m_character = new Entity(m_id_counter++);
+	m_characterType = new TypeNode("test_avatar");
+	m_character->setType(m_characterType);
 
 }
 
-void AccountConnectionCharacterintegration::teardown()
-{
-    m_character.reset();
-    m_world->shutdown();
-    m_world.reset();
-    delete m_connection;
-    delete m_account;
-    delete m_characterType;
-    delete m_server;
-    delete m_persistence;
+void AccountConnectionCharacterintegration::teardown() {
+	m_character.reset();
+	m_world->shutdown();
+	m_world.reset();
+	delete m_connection;
+	delete m_account;
+	delete m_characterType;
+	delete m_server;
+	delete m_persistence;
 }
 
-void AccountConnectionCharacterintegration::test_subscribe()
-{
+void AccountConnectionCharacterintegration::test_subscribe() {
 
-    //Test Possess instead
+	//Test Possess instead
 
 //    // Inject an external op through the connection which is from
 //    // the Character. This should result in the Character being set up
@@ -164,33 +162,31 @@ void AccountConnectionCharacterintegration::test_subscribe()
 //    ASSERT_EQUAL(m_logEvent_logged, TAKE_CHAR);
 }
 
-void AccountConnectionCharacterintegration::test_connect_existing()
-{
-    // Invote Account::connectCharacter to set up the character for IG
-    // with an external mind linked back to the connection.
+void AccountConnectionCharacterintegration::test_connect_existing() {
+	// Invote Account::connectCharacter to set up the character for IG
+	// with an external mind linked back to the connection.
 
-    // Initial state is that the account already belongs to the connection,
-    // but the character does not yet, as it is new.
+	// Initial state is that the account already belongs to the connection,
+	// but the character does not yet, as it is new.
 
-    m_connection->m_routers[m_account->getIntId()].router = m_account;
+	m_connection->m_routers[m_account->getIntId()].router = m_account;
 
-    ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) ==
-                m_connection->m_routers.end())
+	ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) ==
+				m_connection->m_routers.end())
 
-    ASSERT_NULL(m_character->getPropertyClassFixed<MindsProperty>())
+	ASSERT_NULL(m_character->getPropertyClassFixed<MindsProperty>())
 
-    OpVector res;
-    m_account->connectCharacter(m_character, res);
+	OpVector res;
+	m_account->connectCharacter(m_character, res);
 
-    ASSERT_NOT_NULL(m_character->getPropertyClassFixed<MindsProperty>())
-    auto mind = dynamic_cast<ExternalMind*>(m_character->getPropertyClassFixed<MindsProperty>()->getMinds().front());
-    ASSERT_TRUE(mind->isLinkedTo(m_connection))
+	ASSERT_NOT_NULL(m_character->getPropertyClassFixed<MindsProperty>())
+	auto mind = dynamic_cast<ExternalMind*>(m_character->getPropertyClassFixed<MindsProperty>()->getMinds().front());
+	ASSERT_TRUE(mind->isLinkedTo(m_connection))
 //    ASSERT_TRUE(m_connection->m_objects.find(m_character->getIntId()) !=
 //                m_connection->m_objects.end())
 }
 
-void AccountConnectionCharacterintegration::test_unsubscribe()
-{
+void AccountConnectionCharacterintegration::test_unsubscribe() {
 //    // Initial state is that the account already belongs to the connection,
 //    // and the character is linked up.
 //
@@ -219,51 +215,48 @@ void AccountConnectionCharacterintegration::test_unsubscribe()
 //                m_connection->m_objects.end())
 }
 
-void AccountConnectionCharacterintegration::test_unsubscribe_other()
-{
-    // Initial state is that the account already belongs to the connection,
-    // and the character is linked up to another connection
+void AccountConnectionCharacterintegration::test_unsubscribe_other() {
+	// Initial state is that the account already belongs to the connection,
+	// and the character is linked up to another connection
 
-    m_connection->m_routers[m_account->getIntId()].router = m_account;
-    m_connection->m_connectableRouters[m_account->getIntId()] = m_account;
-    m_connection->m_routers[m_character->getIntId()].router = m_character.get();
+	m_connection->m_routers[m_account->getIntId()].router = m_account;
+	m_connection->m_connectableRouters[m_account->getIntId()] = m_account;
+	m_connection->m_routers[m_character->getIntId()].router = m_character.get();
 
-    Connection  other_connection(*(CommSocket*)0,
-                         *m_server,
-                         "242eedae-6a2e-4c5b-9901-711b14d7e851",
-                         m_id_counter++);
+	Connection other_connection(*(CommSocket*) 0,
+								*m_server,
+								"242eedae-6a2e-4c5b-9901-711b14d7e851",
+								m_id_counter++);
 
 
-    ExternalMind mind(6, m_character);
-    m_character->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
-    mind.linkUp(&other_connection);
+	ExternalMind mind(6, m_character);
+	m_character->requirePropertyClassFixed<MindsProperty>().addMind(&mind);
+	mind.linkUp(&other_connection);
 
-    ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) !=
-                m_connection->m_routers.end())
-    ASSERT_TRUE(mind.isLinked())
-    ASSERT_TRUE(!mind.isLinkedTo(m_connection))
-    ASSERT_TRUE(mind.isLinkedTo(&other_connection))
+	ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) !=
+				m_connection->m_routers.end())
+	ASSERT_TRUE(mind.isLinked())
+	ASSERT_TRUE(!mind.isLinkedTo(m_connection))
+	ASSERT_TRUE(mind.isLinkedTo(&other_connection))
 
-    m_connection->disconnectObject(
-        m_connection->m_connectableRouters.find(m_account->getIntId())->second,
-        "test_disconnect_event"
-    );
+	m_connection->disconnectObject(
+			m_connection->m_connectableRouters.find(m_account->getIntId())->second,
+			"test_disconnect_event"
+	);
 
-    //ASSERT_NOT_EQUAL(m_logEvent_logged, DROP_CHAR);
-    ASSERT_TRUE(mind.isLinked())
-    ASSERT_TRUE(!mind.isLinkedTo(m_connection))
-    ASSERT_TRUE(mind.isLinkedTo(&other_connection))
-    ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) !=
-                m_connection->m_routers.end())
+	//ASSERT_NOT_EQUAL(m_logEvent_logged, DROP_CHAR);
+	ASSERT_TRUE(mind.isLinked())
+	ASSERT_TRUE(!mind.isLinkedTo(m_connection))
+	ASSERT_TRUE(mind.isLinkedTo(&other_connection))
+	ASSERT_TRUE(m_connection->m_routers.find(m_character->getIntId()) !=
+				m_connection->m_routers.end())
 }
 
 
+int main() {
+	AccountConnectionCharacterintegration t;
 
-int main()
-{
-    AccountConnectionCharacterintegration t;
-
-    return t.run();
+	return t.run();
 }
 
 // stubs

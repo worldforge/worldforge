@@ -27,31 +27,34 @@ ways such as compressing and then encrypting.
 @see Negotiate
 */
 
-class Filter
-{
-    public:
+class Filter {
+public:
 
-    explicit Filter(std::unique_ptr<Filter> = nullptr);
-	Filter(const Filter &) = delete;
-	Filter & operator=(const Filter &) = delete;
-    virtual ~Filter();
+	explicit Filter(std::unique_ptr<Filter> = nullptr);
 
-    virtual void begin() = 0;
-    virtual void end() = 0;
+	Filter(const Filter&) = delete;
 
-    virtual std::string encode(const std::string&) = 0;
-    virtual std::string decode(const std::string&) = 0;
+	Filter& operator=(const Filter&) = delete;
 
-    enum Type
-    {
-        CHECKSUM,
-        COMPRESSION,
-        ENCRYPTION
-    };
+	virtual ~Filter();
 
-    protected:
+	virtual void begin() = 0;
 
-    std::unique_ptr<Filter> m_next;
+	virtual void end() = 0;
+
+	virtual std::string encode(const std::string&) = 0;
+
+	virtual std::string decode(const std::string&) = 0;
+
+	enum Type {
+		CHECKSUM,
+		COMPRESSION,
+		ENCRYPTION
+	};
+
+protected:
+
+	std::unique_ptr<Filter> m_next;
 };
 
 typedef int int_type;
@@ -60,44 +63,44 @@ class filterbuf : public std::streambuf {
 
 public:
 
-  filterbuf(std::streambuf& buffer,
-            Filter& filter)
-   : m_streamBuffer(buffer), m_filter(filter)
-  {
-    setp(m_outBuffer, m_outBuffer + (m_outBufferSize - 1));
-    setg(m_inBuffer + m_inPutback, m_inBuffer + m_inPutback,
-         m_inBuffer + m_inPutback);
-  }
-  
-  ~filterbuf() override;
-  
+	filterbuf(std::streambuf& buffer,
+			  Filter& filter)
+			: m_streamBuffer(buffer), m_filter(filter) {
+		setp(m_outBuffer, m_outBuffer + (m_outBufferSize - 1));
+		setg(m_inBuffer + m_inPutback, m_inBuffer + m_inPutback,
+			 m_inBuffer + m_inPutback);
+	}
+
+	~filterbuf() override;
+
 protected:
-  static const int m_outBufferSize = 10;
-  char m_outBuffer[m_outBufferSize];
+	static const int m_outBufferSize = 10;
+	char m_outBuffer[m_outBufferSize];
 
-  static const int m_inBufferSize = 10;
-  static const int m_inPutback = 4;
-  char m_inBuffer[m_inBufferSize];
+	static const int m_inBufferSize = 10;
+	static const int m_inPutback = 4;
+	char m_inBuffer[m_inBufferSize];
 
-  int flushOutBuffer()
-  {
-    auto num = (int)(pptr() - pbase());
-    std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
-    m_streamBuffer.sputn(encoded.c_str(), (long) encoded.size());
-    pbump(-num);
-    return num;
-  }  
-  
-  int_type overflow(int_type c) override;
-  int_type underflow() override;
-  int sync() override;
-  
+	int flushOutBuffer() {
+		auto num = (int) (pptr() - pbase());
+		std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
+		m_streamBuffer.sputn(encoded.c_str(), (long) encoded.size());
+		pbump(-num);
+		return num;
+	}
+
+	int_type overflow(int_type c) override;
+
+	int_type underflow() override;
+
+	int sync() override;
+
 private:
 
-  std::streambuf& m_streamBuffer;
-  Filter& m_filter;
+	std::streambuf& m_streamBuffer;
+	Filter& m_filter;
 };
- 
+
 } // Atlas namespace
 
 #endif

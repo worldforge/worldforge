@@ -26,20 +26,20 @@
  *
  * \ingroup PropertyClasses
  */
-class PerceptionSightProperty : public Property<double>
-{
-    public:
-        static constexpr const char* property_name = "perception_sight";
+class PerceptionSightProperty : public Property<double> {
+public:
+	static constexpr const char* property_name = "perception_sight";
 
-        PerceptionSightProperty() = default;
+	PerceptionSightProperty() = default;
 
-        ~PerceptionSightProperty() override = default;
+	~PerceptionSightProperty() override = default;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        PerceptionSightProperty* copy() const override;
-    protected:
-        PerceptionSightProperty(const PerceptionSightProperty& rhs) = default;
+	PerceptionSightProperty* copy() const override;
+
+protected:
+	PerceptionSightProperty(const PerceptionSightProperty& rhs) = default;
 
 };
 

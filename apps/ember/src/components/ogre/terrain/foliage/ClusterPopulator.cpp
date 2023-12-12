@@ -20,12 +20,8 @@
 #include <Mercator/Surface.h>
 #include <Mercator/Shader.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Foliage {
+namespace Ember::OgreView::Terrain::Foliage {
 
 ClusterPopulator::ClusterPopulator(int layerIndex, std::unique_ptr<IScaler> scaler, size_t plantIndex) :
 		PlantPopulator(layerIndex, std::move(scaler), plantIndex),
@@ -92,7 +88,7 @@ void ClusterPopulator::getClustersForArea(const SegmentRefPtr& segmentRef, const
 
 	Mercator::Segment& mercatorSegment = segmentRef->getMercatorSegment();
 	int res = mercatorSegment.getResolution();
-	auto clustersPerSegment = static_cast<int>((float)(res * res) / (mClusterDistance * mClusterDistance));
+	auto clustersPerSegment = static_cast<int>((float) (res * res) / (mClusterDistance * mClusterDistance));
 	auto clusterRadiusRange = mMaxClusterRadius - mMinClusterRadius;
 	auto xRef = mercatorSegment.getXRef();
 	auto zRef = mercatorSegment.getZRef();
@@ -122,7 +118,7 @@ void ClusterPopulator::populateWithClusters(const SegmentRefPtr& segmentRef,
 											const WFMath::AxisBox<2>& area,
 											const ClusterStore& clusters,
 											const Buffer<unsigned char>& combinedCoverage) {
-	for (const auto& cluster : clusters) {
+	for (const auto& cluster: clusters) {
 		populateWithCluster(segmentRef, result, area, cluster, combinedCoverage);
 	}
 
@@ -138,7 +134,8 @@ void ClusterPopulator::populateWithCluster(const SegmentRefPtr& segmentRef,
 
 	auto volume = (cluster.radius() * cluster.radius()) * WFMath::numeric_constants<WFMath::CoordType>::pi();
 	auto instancesInEachCluster = static_cast<unsigned int>(volume * mDensity);
-	auto seed = static_cast<WFMath::MTRand::uint32>(mPlantIndex + (static_cast<WFMath::MTRand::uint32> (cluster.center().x()) << 4) + (static_cast<WFMath::MTRand::uint32> (cluster.center().y()) << 8));
+	auto seed = static_cast<WFMath::MTRand::uint32>(mPlantIndex + (static_cast<WFMath::MTRand::uint32> (cluster.center().x()) << 4) +
+													(static_cast<WFMath::MTRand::uint32> (cluster.center().y()) << 8));
 	WFMath::MTRand rng(seed);
 
 	unsigned int res = combinedCoverage.getResolution();
@@ -160,8 +157,8 @@ void ClusterPopulator::populateWithCluster(const SegmentRefPtr& segmentRef,
 		if (WFMath::Contains(area, pos, true)) {
 			WFMath::Point<2> localPos(pos.x() - mercatorSegment.getXRef(), pos.y() - mercatorSegment.getZRef());
 			if (data[((unsigned int) localPos.y() * res) + ((unsigned int) localPos.x())] >= mThreshold) {
-				mercatorSegment.getHeightAndNormal((float)localPos.x(), (float)localPos.y(), height, normal);
-				plants.emplace_back(PlantInstance{Ogre::Vector3((float)pos.x(), height, (float)pos.y()), rotation, scale});
+				mercatorSegment.getHeightAndNormal((float) localPos.x(), (float) localPos.y(), height, normal);
+				plants.emplace_back(PlantInstance{Ogre::Vector3((float) pos.x(), height, (float) pos.y()), rotation, scale});
 			}
 		}
 	}
@@ -217,7 +214,7 @@ float ClusterPopulator::getTreshold() const {
 
 }
 
-}
 
-}
-}
+
+
+

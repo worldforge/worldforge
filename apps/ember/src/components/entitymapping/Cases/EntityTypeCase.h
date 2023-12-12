@@ -23,29 +23,29 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_CASESENTITYTYPECASE_H
 #define EMBEROGRE_MODEL_MAPPING_CASESENTITYTYPECASE_H
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 class EntityTypeMatch;
 }
-}
-}
+
+
 
 #include "../Matches/EntityTypeMatch.h"
 #include "EntityBaseCase.h"
 #include "Case.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 /**
 	An entity type triggering case that is a child of an EntityTypeMatch
@@ -62,8 +62,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

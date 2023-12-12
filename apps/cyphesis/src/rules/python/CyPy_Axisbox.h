@@ -27,35 +27,34 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Axisbox : public WrapperBase<WFMath::AxisBox<3>, CyPy_Axisbox>
-{
-    public:
-        CyPy_Axisbox(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Axisbox : public WrapperBase<WFMath::AxisBox<3>, CyPy_Axisbox> {
+public:
+	CyPy_Axisbox(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Axisbox(Py::PythonClassInstance* self, WFMath::AxisBox<3> value);
+	CyPy_Axisbox(Py::PythonClassInstance* self, WFMath::AxisBox<3> value);
 
-        static void init_type();
+	static void init_type();
 
-    protected:
+protected:
 
 
-        Py::Object sqr_bounding_radius();
+	Py::Object sqr_bounding_radius();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, sqr_bounding_radius);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, sqr_bounding_radius);
 
-        Py::Object sqr_horizontal_bounding_radius();
+	Py::Object sqr_horizontal_bounding_radius();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, sqr_horizontal_bounding_radius);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, sqr_horizontal_bounding_radius);
 
-        Py::Object as_sequence();
+	Py::Object as_sequence();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, as_sequence);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Axisbox, as_sequence);
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object rich_compare(const Py::Object& other, int type) override;
+	Py::Object rich_compare(const Py::Object& other, int type) override;
 };
 
 

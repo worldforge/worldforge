@@ -22,7 +22,7 @@ macro(wf_generate_stubs DIRECTORY)
 
 endmacro()
 
-add_definitions(-DTESTDATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+add_compile_definitions(TESTDATADIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 if (AVAHI_FOUND)
     link_libraries(${AVAHI_LIBRARIES} -lavahi-common)

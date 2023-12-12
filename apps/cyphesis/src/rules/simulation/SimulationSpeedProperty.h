@@ -25,18 +25,17 @@
  * Determines the speed of the simulation.
  * \ingroup PropertyClasses
  */
-class SimulationSpeedProperty : public Property<double>
-{
-    public:
-        static constexpr const char* property_name = "simulation_speed";
+class SimulationSpeedProperty : public Property<double> {
+public:
+	static constexpr const char* property_name = "simulation_speed";
 
-        /// \brief Constructor
-        SimulationSpeedProperty() = default;
+	/// \brief Constructor
+	SimulationSpeedProperty() = default;
 
-        SimulationSpeedProperty* copy() const override;
+	SimulationSpeedProperty* copy() const override;
 
-    protected:
-        SimulationSpeedProperty(const SimulationSpeedProperty& rhs) = default;
+protected:
+	SimulationSpeedProperty(const SimulationSpeedProperty& rhs) = default;
 
 };
 

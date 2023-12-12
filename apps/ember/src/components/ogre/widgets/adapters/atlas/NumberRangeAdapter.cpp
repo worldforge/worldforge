@@ -20,14 +20,8 @@
 
 #include <wfmath/MersenneTwister.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 NumberRangeAdapter::NumberRangeAdapter(const ::Atlas::Message::Element& element, Windows windows)
 		: AdapterBase(element),
@@ -97,9 +91,9 @@ void NumberRangeAdapter::randomize() {
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

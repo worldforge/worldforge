@@ -26,90 +26,82 @@
 #include <wfmath/const.h>
 #include <common/serialno.h>
 
-CyPy_Const::CyPy_Const() : ExtensionModule("const")
-{
-    initialize("Const");
+CyPy_Const::CyPy_Const() : ExtensionModule("const") {
+	initialize("Const");
 
-    Py::Dict d(moduleDictionary());
-    d["debug_level"] = Py::Long(consts::debug_level);
-    d["debug_thinking"] = Py::Long(consts::debug_thinking);
-    d["time_multiplier"] = Py::Float(consts::time_multiplier);
-    d["basic_tick"] = Py::Float(consts::basic_tick);
-    d["epsilon"] = Py::Float(WFMath::numeric_constants<WFMath::CoordType>::epsilon());
-
-}
-
-CyPy_Globals::CyPy_Globals() : ExtensionModule("globals")
-{
-    initialize("Globals");
-
-    Py::Dict d(moduleDictionary());
-    d["share_directory"] = Py::String(share_directory);
-}
-
-
-CyPy_Log::CyPy_Log() : ExtensionModule("log")
-{
-
-    add_varargs_method("debug", &CyPy_Log::debug_, "");
-    add_varargs_method("thinking", &CyPy_Log::thinking, "");
-
-    initialize("Logging");
+	Py::Dict d(moduleDictionary());
+	d["debug_level"] = Py::Long(consts::debug_level);
+	d["debug_thinking"] = Py::Long(consts::debug_thinking);
+	d["time_multiplier"] = Py::Float(consts::time_multiplier);
+	d["basic_tick"] = Py::Float(consts::basic_tick);
+	d["epsilon"] = Py::Float(WFMath::numeric_constants<WFMath::CoordType>::epsilon());
 
 }
 
-Py::Object CyPy_Log::debug_(const Py::Tuple& args)
-{
-    if (consts::debug_level != 0) {
-        args.verify_length(2);
-        Py::Long level(args[0]);
-        auto message = args[1].as_string();
+CyPy_Globals::CyPy_Globals() : ExtensionModule("globals") {
+	initialize("Globals");
 
-        if (consts::debug_level >= level) {
+	Py::Dict d(moduleDictionary());
+	d["share_directory"] = Py::String(share_directory);
+}
+
+
+CyPy_Log::CyPy_Log() : ExtensionModule("log") {
+
+	add_varargs_method("debug", &CyPy_Log::debug_, "");
+	add_varargs_method("thinking", &CyPy_Log::thinking, "");
+
+	initialize("Logging");
+
+}
+
+Py::Object CyPy_Log::debug_(const Py::Tuple& args) {
+	if (consts::debug_level != 0) {
+		args.verify_length(2);
+		Py::Long level(args[0]);
+		auto message = args[1].as_string();
+
+		if (consts::debug_level >= level) {
 			spdlog::info(message);
-        }
-    }
-    return Py::None();
+		}
+	}
+	return Py::None();
 }
 
-Py::Object CyPy_Log::thinking(const Py::Tuple& args)
-{
-    if (consts::debug_thinking != 0) {
-        args.verify_length(1);
-        auto message = args[0].as_string();
+Py::Object CyPy_Log::thinking(const Py::Tuple& args) {
+	if (consts::debug_thinking != 0) {
+		args.verify_length(1);
+		auto message = args[0].as_string();
 
 		spdlog::trace(message);
-    }
+	}
 
-    return Py::None();
+	return Py::None();
 }
 
 
-CyPy_Common::CyPy_Common() : ExtensionModule("common")
-{
+CyPy_Common::CyPy_Common() : ExtensionModule("common") {
 
-    add_noargs_method("new_serial_no", &CyPy_Common::new_serial_no, "Gets the next system wide serial number.");
+	add_noargs_method("new_serial_no", &CyPy_Common::new_serial_no, "Gets the next system wide serial number.");
 
-    initialize("Common");
+	initialize("Common");
 
-    Py::Dict d(moduleDictionary());
-    d["log"] = m_log.moduleObject();
-    d["const"] = m_const.moduleObject();
-    d["globals"] = m_globals.moduleObject();
+	Py::Dict d(moduleDictionary());
+	d["log"] = m_log.moduleObject();
+	d["const"] = m_const.moduleObject();
+	d["globals"] = m_globals.moduleObject();
 
 
 }
 
-std::string CyPy_Common::init()
-{
-    PyImport_AppendInittab("common", []() {
-        static auto module = new CyPy_Common();
-        return module->module().ptr();
-    });
-    return "common";
+std::string CyPy_Common::init() {
+	PyImport_AppendInittab("common", []() {
+		static auto module = new CyPy_Common();
+		return module->module().ptr();
+	});
+	return "common";
 }
 
-Py::Object CyPy_Common::new_serial_no()
-{
-       return Py::Long(newSerialNo());
+Py::Object CyPy_Common::new_serial_no() {
+	return Py::Long(newSerialNo());
 }

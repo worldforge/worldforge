@@ -11,8 +11,9 @@ find_package(ZLIB)
 
 
 find_package(Python3 COMPONENTS Interpreter)
-cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "Python3_Interpreter_FOUND" FALSE)
+cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "Python3_EXECUTABLE" FALSE)
 option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
+
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
@@ -61,9 +62,12 @@ if (ATLAS_GENERATE_OBJECTS)
             DEPENDS ${PY_SOURCES}
             VERBATIM
     )
+    message(STATUS "Added targets for generating Atlas code.")
 else (ATLAS_GENERATE_OBJECTS)
-    if (NOT Python3_Interpreter_FOUND)
+    if (NOT Python3_EXECUTABLE)
         message(STATUS "Could not find any suitable Python environment. This just means that the automatic code generation features won't be available. Unless you plan on changing the protocol this should not be an issue.")
+    else ()
+        message(STATUS "Atlas code generation disabled.")
     endif ()
 endif (ATLAS_GENERATE_OBJECTS)
 

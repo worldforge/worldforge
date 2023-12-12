@@ -22,10 +22,7 @@
 #include <Atlas/Message/Element.h>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainHandler;
 
@@ -64,8 +61,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* TERRAINSHADERPARSER_H_ */

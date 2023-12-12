@@ -24,24 +24,25 @@
 #include <unordered_map>
 #include <sigc++/trackable.h>
 #include <memory>
-namespace Eris
-{
+
+namespace Eris {
 class View;
+
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 class World;
 
-namespace Authoring
-{
+namespace Authoring {
 class AuthoringVisualization;
+
 class AuthoringVisualizationMover;
+
 class EntityMover;
+
 class AuthoringHandler;
 
 /**
@@ -49,14 +50,14 @@ class AuthoringHandler;
  * @brief An instance of a move operation. An instance of this is created when a AuthoringVisualizationMover is used for displaying the movement of an entity.
  * Note that this inherits from EntityObserverBase which makes it react to the entity being deleted. However, this functionality is already taken care of in AuthoringHandler::view_EntityDeleted making it a bit superfluous.
  */
-class AuthoringMoveInstance: public EntityObserverBase
-{
+class AuthoringMoveInstance : public EntityObserverBase {
 public:
 	AuthoringMoveInstance(EmberEntity& entity, AuthoringVisualization& visualization, EntityMover& mover, AuthoringHandler& moveHandler);
 
 	~AuthoringMoveInstance() override;
 
 	AuthoringVisualization& getVisualization();
+
 private:
 	void cleanup() override;
 
@@ -71,8 +72,7 @@ private:
  * These are visualizations of all entities, for authoring sake. The main use of this is for entities which doesn't have a graphical visualization (like an area) or entities for which the graphical representation is hard to graphically select.
  *
  */
-class AuthoringHandler: public virtual sigc::trackable, public IEntityVisitor
-{
+class AuthoringHandler : public virtual sigc::trackable, public IEntityVisitor {
 public:
 	/**
 	 * @brief Ctor.

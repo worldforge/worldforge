@@ -29,9 +29,8 @@
 #include <vector>
 #include <OgreMovableObject.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 struct ParticleSystemBinding;
 
@@ -87,8 +86,6 @@ protected:
 };
 
 }
-}
 
-}
 
 #endif

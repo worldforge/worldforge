@@ -32,9 +32,9 @@ using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 RulesFetcher::RulesFetcher(Eris::Connection& connection, std::string mindId) :
 		mConnection(connection), mMindId(std::move(mindId)) {
@@ -77,7 +77,7 @@ void RulesFetcher::operationGetRuleResult(const Atlas::Objects::Operation::RootO
 		if (arg->copyAttr("children", childrenElement) == 0) {
 			if (childrenElement.isList()) {
 				ListType& childrenList = childrenElement.asList();
-				for (auto& childElem : childrenList) {
+				for (auto& childElem: childrenList) {
 					if (childElem.isString()) {
 						children.push_back(childElem.asString());
 					} else {
@@ -119,5 +119,5 @@ const std::string& RulesFetcher::getRootRule() const {
 }
 
 }
-}
-}
+
+

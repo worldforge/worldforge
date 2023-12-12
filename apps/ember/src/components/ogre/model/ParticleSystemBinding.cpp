@@ -25,11 +25,8 @@
 #include <OgreParticleEmitter.h>
 #include <OgreParticleSystem.h>
 
-#include <utility>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 void ParticleSystemBinding::scaleValue(Ogre::Real scaler) const {
 	updateSettings(*mParticleSystem->getOgreParticleSystem(), mEmitterVal, std::max(0.f, mOriginalValue * scaler));
@@ -50,5 +47,5 @@ void ParticleSystemBinding::updateSettings(Ogre::ParticleSystem& particleSystem,
 }
 
 }
-}
-}
+
+

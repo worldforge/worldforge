@@ -29,8 +29,8 @@
 #include "services/sound/SoundSource.h"
 #include "services/sound/SoundSample.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 SoundGroupBinding::SoundGroupBinding(SoundSource& source, SoundGroup& soundGroup)
 		: SoundBinding(source), mSoundGroup(soundGroup) {
@@ -38,7 +38,7 @@ SoundGroupBinding::SoundGroupBinding(SoundSource& source, SoundGroup& soundGroup
 	mBufferBindings.resize(samples.size());
 	ALsizei i = 0;
 	//get the buffers and bind the source to them
-	for (auto& sample : samples) {
+	for (auto& sample: samples) {
 		auto sampleBuffers = sample->getBuffers();
 		mBufferBindings[i] = *(sampleBuffers.begin());
 		++i;
@@ -147,4 +147,4 @@ const std::list<BaseSoundSample*>& SoundGroup::getSamples() const {
 
 
 }
-}
+

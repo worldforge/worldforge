@@ -27,24 +27,20 @@
 
 using namespace CEGUI;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
-ActionBarIconDragDropTarget::ActionBarIconDragDropTarget(CEGUI::Window* container)
-{
-	container->subscribeEvent(CEGUI::Window::EventDragDropItemEnters, CEGUI::Event::Subscriber(& ActionBarIconDragDropTarget::dragContainer_DragEnter, this));
-	container->subscribeEvent(CEGUI::Window::EventDragDropItemLeaves, CEGUI::Event::Subscriber(& ActionBarIconDragDropTarget::dragContainer_DragLeave, this));
-	container->subscribeEvent(CEGUI::Window::EventDragDropItemDropped, CEGUI::Event::Subscriber(& ActionBarIconDragDropTarget::dragContainer_DragDropped, this));
+ActionBarIconDragDropTarget::ActionBarIconDragDropTarget(CEGUI::Window* container) {
+	container->subscribeEvent(CEGUI::Window::EventDragDropItemEnters, CEGUI::Event::Subscriber(&ActionBarIconDragDropTarget::dragContainer_DragEnter, this));
+	container->subscribeEvent(CEGUI::Window::EventDragDropItemLeaves, CEGUI::Event::Subscriber(&ActionBarIconDragDropTarget::dragContainer_DragLeave, this));
+	container->subscribeEvent(CEGUI::Window::EventDragDropItemDropped, CEGUI::Event::Subscriber(&ActionBarIconDragDropTarget::dragContainer_DragDropped, this));
 
 }
 
 ActionBarIconDragDropTarget::~ActionBarIconDragDropTarget() = default;
 
 
-bool ActionBarIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs& args)
-{
+bool ActionBarIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs& args) {
 	ActionBarIcon* actionBarIcon = parseIcon(args);
 	if (actionBarIcon) {
 		return handleDragEnter(args, actionBarIcon);
@@ -52,8 +48,7 @@ bool ActionBarIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs
 	return true;
 }
 
-bool ActionBarIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs& args)
-{
+bool ActionBarIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs& args) {
 	ActionBarIcon* actionBarIcon = parseIcon(args);
 	if (actionBarIcon) {
 		return handleDragLeave(args, actionBarIcon);
@@ -61,11 +56,9 @@ bool ActionBarIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs
 	return true;
 }
 
-bool ActionBarIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs& args)
-{
+bool ActionBarIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs& args) {
 	const boost::any* anyData = getUserData(args);
-	if (anyData)
-	{
+	if (anyData) {
 		if (typeid(GenericIconUserData<ActionBarIcon>) == anyData->type()) {
 			const auto& mUserData = boost::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
 			return handleDragActionBarIconDropped(args, &mUserData.mGenericIcon);
@@ -79,33 +72,29 @@ bool ActionBarIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventAr
 }
 
 
-
-bool ActionBarIconDragDropTarget::handleDragEnter(const CEGUI::EventArgs& args, ActionBarIcon* icon)
-{
+bool ActionBarIconDragDropTarget::handleDragEnter(const CEGUI::EventArgs& args, ActionBarIcon* icon) {
 	EventIconEntered.emit(icon);
 	return true;
 }
-bool ActionBarIconDragDropTarget::handleDragLeave(const CEGUI::EventArgs& args, ActionBarIcon* icon)
-{
+
+bool ActionBarIconDragDropTarget::handleDragLeave(const CEGUI::EventArgs& args, ActionBarIcon* icon) {
 	EventIconLeaves.emit(icon);
 	return true;
 }
-bool ActionBarIconDragDropTarget::handleDragActionBarIconDropped(const CEGUI::EventArgs& args, ActionBarIcon* icon)
-{
+
+bool ActionBarIconDragDropTarget::handleDragActionBarIconDropped(const CEGUI::EventArgs& args, ActionBarIcon* icon) {
 	EventActionBarIconDropped.emit(icon);
 	return true;
 }
-bool ActionBarIconDragDropTarget::handleDragEntityIconDropped(const CEGUI::EventArgs& args, EntityIcon* icon)
-{
+
+bool ActionBarIconDragDropTarget::handleDragEntityIconDropped(const CEGUI::EventArgs& args, EntityIcon* icon) {
 	EventEntityIconDropped.emit(icon);
 	return true;
 }
 
-ActionBarIcon* ActionBarIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args)
-{
+ActionBarIcon* ActionBarIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args) {
 	const boost::any* anyData = getUserData(args);
-	if (anyData)
-	{
+	if (anyData) {
 		if (typeid(GenericIconUserData<ActionBarIcon>) == anyData->type()) {
 			const auto& mUserData = boost::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
 			return &mUserData.mGenericIcon;
@@ -114,8 +103,7 @@ ActionBarIcon* ActionBarIconDragDropTarget::parseIcon(const CEGUI::EventArgs& ar
 	return nullptr;
 }
 
-const boost::any* ActionBarIconDragDropTarget::getUserData(const CEGUI::EventArgs& args) const
-{
+const boost::any* ActionBarIconDragDropTarget::getUserData(const CEGUI::EventArgs& args) const {
 	const auto& ddea = dynamic_cast<const DragDropEventArgs&>(args);
 	DragContainer* container = ddea.dragDropItem;
 	if (container) {
@@ -127,5 +115,5 @@ const boost::any* ActionBarIconDragDropTarget::getUserData(const CEGUI::EventArg
 
 }
 
-}
-}
+
+

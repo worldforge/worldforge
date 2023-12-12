@@ -21,20 +21,23 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int TELEPORT_NO;
 
 /// \brief A teleport operation that moves a player entity to another server
 /// \ingroup CustomOperations
-class Teleport : public Generic
-{
-  public:
-    Teleport() {
-        (*this)->setType("teleport", TELEPORT_NO);
-    }
+class Teleport : public Generic {
+public:
+	Teleport() {
+		(*this)->setType("teleport", TELEPORT_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_TELEPORT_H

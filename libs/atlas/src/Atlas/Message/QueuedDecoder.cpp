@@ -6,11 +6,12 @@
 
 #include <Atlas/Message/QueuedDecoder.h>
 
-namespace Atlas { namespace Message {
 
-void QueuedDecoder::messageArrived(MapType obj)
-{
-    m_objectQueue.push(std::move(obj));
+namespace Atlas::Message {
+
+void QueuedDecoder::messageArrived(MapType obj) {
+	m_objectQueue.push(std::move(obj));
 }
 
-} } // namespace Atlas::Message
+}
+// namespace Atlas::Message

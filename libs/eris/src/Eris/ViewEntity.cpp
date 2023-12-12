@@ -9,11 +9,10 @@
 #include <sigc++/bind.h>
 
 
-
 namespace Eris {
 ViewEntity::ViewEntity(std::string id, TypeInfo* ty, View& view) :
-	Entity(std::move(id), ty),
-	m_view(view) {
+		Entity(std::move(id), ty),
+		m_view(view) {
 }
 
 ViewEntity::~ViewEntity() = default;
@@ -29,15 +28,13 @@ Entity* ViewEntity::getEntity(const std::string& id) {
 	return child;
 }
 
-void ViewEntity::onTaskAdded(const std::string& id, Task* task)
-{
+void ViewEntity::onTaskAdded(const std::string& id, Task* task) {
 	task->ProgressRateChanged.connect(sigc::bind(sigc::mem_fun(*this, &ViewEntity::task_ProgressRateChanged), task));
 	Entity::onTaskAdded(id, task);
 	m_view.taskRateChanged(task);
 }
 
-void ViewEntity::task_ProgressRateChanged(Task* task)
-{
+void ViewEntity::task_ProgressRateChanged(Task* task) {
 	m_view.taskRateChanged(task);
 }
 

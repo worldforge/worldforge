@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { 
+namespace Atlas::Objects {
 
 const std::string ID_ATTR = "id";
 const std::string PARENT_ATTR = "parent";
@@ -171,4 +171,4 @@ void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, u
     attr_data[NAME_ATTR] = NAME_FLAG;
 }
 
-} } // namespace Atlas::Objects
+} // namespace Atlas::Objects

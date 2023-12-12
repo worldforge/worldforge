@@ -25,25 +25,12 @@
 
 #include "../ComboboxAdapter.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
-namespace Adapters {
-
-namespace Atlas {
-
-typedef ::Ember::OgreView::Gui::Adapters::ComboboxAdapter< ::Atlas::Message::Element, std::string> StringAdapter;
+typedef ::Ember::OgreView::Gui::Adapters::ComboboxAdapter<::Atlas::Message::Element, std::string> StringAdapter;
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

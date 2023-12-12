@@ -22,14 +22,14 @@
 //
 #include "EntityCreationObserver.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
 
-namespace Observers {
+
+
+
+namespace Ember::EntityMapping::Matches::Observers {
 
 EntityCreationObserver::EntityCreationObserver(EntityRefMatch& entityRefMatch)
 		: mEntityRefMatch(entityRefMatch) {
@@ -53,8 +53,8 @@ void EntityCreationObserver::entitySeen(Eris::Entity* entity) {
 
 }
 
-}
 
-}
 
-}
+
+
+

@@ -38,21 +38,16 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 RuleEditor::RuleEditor(Eris::Avatar& avatar) :
-		mAvatar(avatar)
-{
+		mAvatar(avatar) {
 
 }
 
-Atlas::Message::IntType RuleEditor::updateOrCreateRule(Atlas::Objects::Root& rule)
-{
+Atlas::Message::IntType RuleEditor::updateOrCreateRule(Atlas::Objects::Root& rule) {
 	auto serial = Eris::getNewSerialno();
 
 	mQueuedRules.insert(std::make_pair(serial, rule));
@@ -72,8 +67,7 @@ Atlas::Message::IntType RuleEditor::updateOrCreateRule(Atlas::Objects::Root& rul
 	return serial;
 }
 
-void RuleEditor::operationGetRuleResult(const Atlas::Objects::Operation::RootOperation& op)
-{
+void RuleEditor::operationGetRuleResult(const Atlas::Objects::Operation::RootOperation& op) {
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
@@ -88,8 +82,7 @@ void RuleEditor::operationGetRuleResult(const Atlas::Objects::Operation::RootOpe
 	}
 }
 
-void RuleEditor::operationCreateRuleResult(const Atlas::Objects::Operation::RootOperation& op)
-{
+void RuleEditor::operationCreateRuleResult(const Atlas::Objects::Operation::RootOperation& op) {
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
@@ -106,9 +99,7 @@ void RuleEditor::operationCreateRuleResult(const Atlas::Objects::Operation::Root
 }
 
 
-
-void RuleEditor::operationUpdateRuleResult(const Atlas::Objects::Operation::RootOperation& op)
-{
+void RuleEditor::operationUpdateRuleResult(const Atlas::Objects::Operation::RootOperation& op) {
 	auto refno = op->getRefno();
 	auto queueI = mQueuedRules.find(refno);
 	if (queueI == mQueuedRules.end()) {
@@ -124,8 +115,7 @@ void RuleEditor::operationUpdateRuleResult(const Atlas::Objects::Operation::Root
 	}
 }
 
-void RuleEditor::updateRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule)
-{
+void RuleEditor::updateRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule) {
 	Atlas::Objects::Operation::Set op;
 	op->setFrom(mAvatar.getId());
 	op->setArgs1(rule);
@@ -135,8 +125,7 @@ void RuleEditor::updateRule(Atlas::Message::IntType serial, Atlas::Objects::Root
 	mAvatar.getConnection().send(op);
 }
 
-void RuleEditor::createRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule)
-{
+void RuleEditor::createRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule) {
 	Atlas::Objects::Operation::Create op;
 	op->setFrom(mAvatar.getId());
 	op->setArgs1(rule);
@@ -147,5 +136,5 @@ void RuleEditor::createRule(Atlas::Message::IntType serial, Atlas::Objects::Root
 }
 
 }
-}
-}
+
+

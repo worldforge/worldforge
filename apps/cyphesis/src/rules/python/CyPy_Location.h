@@ -25,32 +25,31 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Location : public WrapperBase<Location, CyPy_Location>
-{
-    public:
-        CyPy_Location(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Location : public WrapperBase<Location, CyPy_Location> {
+public:
+	CyPy_Location(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Location(Py::PythonClassInstance* self, Location value);
+	CyPy_Location(Py::PythonClassInstance* self, Location value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String&) override;
+	Py::Object getattro(const Py::String&) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object repr() override;
+	Py::Object repr() override;
 
-        Py::Object number_subtract(const Py::Object&) override;
+	Py::Object number_subtract(const Py::Object&) override;
 
-    private:
+private:
 
-        Py::Object copy();
+	Py::Object copy();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Location, copy);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Location, copy);
 
-        Py::Object add_to_entity(const Py::Tuple& args);
+	Py::Object add_to_entity(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Location, add_to_entity);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Location, add_to_entity);
 };
 
 

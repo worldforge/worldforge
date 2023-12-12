@@ -31,51 +31,50 @@
 #include "rules/simulation/World.h"
 
 
-int main(int argc, char ** argv)
-{
-    TestPropertyManager tpm;
-    // database_flag = false;
+int main(int argc, char** argv) {
+	TestPropertyManager tpm;
+	// database_flag = false;
 
-    Ref<Entity>  thing(new Thing(1));
+	Ref<Entity> thing(new Thing(1));
 
-    // Check no flags are set
-    assert(thing->flags().m_flags == 0);
-    // Check test attribute is not there
-    assert(!thing->hasAttr("test_attr1"));
-    // Check test property not there
-    assert(thing->getProperty("test_attr1") == 0);
-    assert(thing->modProperty("test_attr1") == 0);
-    // Set the flag that this entity is clean
-    thing->addFlags(entity_clean);
-    // Check the flags are no longer clear
-    assert(thing->flags().m_flags != 0);
-    // Check the entity_clean flag is set
-    assert(thing->flags().m_flags & entity_clean);
-    // Check entity_clean is the only flag set
-    assert((thing->flags().m_flags & ~entity_clean) == 0);
-    // Set the flag that this entity is queued
-    thing->addFlags(entity_queued);
-    // Check the entity_queued flag is set
-    assert(thing->flags().m_flags & entity_queued);
-    // Check the entity_clean flag is still set
-    assert(thing->flags().m_flags & entity_clean);
+	// Check no flags are set
+	assert(thing->flags().m_flags == 0);
+	// Check test attribute is not there
+	assert(!thing->hasAttr("test_attr1"));
+	// Check test property not there
+	assert(thing->getProperty("test_attr1") == 0);
+	assert(thing->modProperty("test_attr1") == 0);
+	// Set the flag that this entity is clean
+	thing->addFlags(entity_clean);
+	// Check the flags are no longer clear
+	assert(thing->flags().m_flags != 0);
+	// Check the entity_clean flag is set
+	assert(thing->flags().m_flags & entity_clean);
+	// Check entity_clean is the only flag set
+	assert((thing->flags().m_flags & ~entity_clean) == 0);
+	// Set the flag that this entity is queued
+	thing->addFlags(entity_queued);
+	// Check the entity_queued flag is set
+	assert(thing->flags().m_flags & entity_queued);
+	// Check the entity_clean flag is still set
+	assert(thing->flags().m_flags & entity_clean);
 
-    thing->setAttrValue("test_attr1", 1);
+	thing->setAttrValue("test_attr1", 1);
 
-    // Check entity_clean is no longer set
-    assert((thing->flags().m_flags & entity_clean) == 0);
-    // Check the attribute is there
-    assert(thing->hasAttr("test_attr1"));
-    // Check it is there as a property
-    assert(thing->getProperty("test_attr1") != 0);
-    assert(thing->modProperty("test_attr1") != 0);
-    Atlas::Message::Element val;
-    assert(thing->getProperty("test_attr1")->get(val) == 0);
-    assert(val.isInt());
-    // Check it is not available as any other type as it was installed as a soft property.
-    assert(!thing->modPropertyType<int>("test_attr1"));
-    assert(!thing->modPropertyType<double>("test_attr1"));
-    assert(!thing->modPropertyType<std::string>("test_attr1"));
+	// Check entity_clean is no longer set
+	assert((thing->flags().m_flags & entity_clean) == 0);
+	// Check the attribute is there
+	assert(thing->hasAttr("test_attr1"));
+	// Check it is there as a property
+	assert(thing->getProperty("test_attr1") != 0);
+	assert(thing->modProperty("test_attr1") != 0);
+	Atlas::Message::Element val;
+	assert(thing->getProperty("test_attr1")->get(val) == 0);
+	assert(val.isInt());
+	// Check it is not available as any other type as it was installed as a soft property.
+	assert(!thing->modPropertyType<int>("test_attr1"));
+	assert(!thing->modPropertyType<double>("test_attr1"));
+	assert(!thing->modPropertyType<std::string>("test_attr1"));
 
 }
 
@@ -102,7 +101,6 @@ using Atlas::Objects::Entity::RootEntity;
 #include "../stubs/rules/simulation/stubModeDataProperty.h"
 
 
-
 #include "../stubs/common/stubRouter.h"
 #include "../stubs/common/stubLink.h"
 #include "../stubs/modules/stubWeakEntityRef.h"
@@ -113,38 +111,33 @@ using Atlas::Objects::Entity::RootEntity;
 #include "../stubs/common/stubPropertyManager.h"
 #include "../stubs/common/stubTypeNode.h"
 
-void addToEntity(const Point3D & p, std::vector<double> & vd)
-{
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
 }
 
-WFMath::CoordType squareDistance(const Point3D & u, const Point3D & v)
-{
-    return 1.f;
+WFMath::CoordType squareDistance(const Point3D& u, const Point3D& v) {
+	return 1.f;
 }
 
-template <typename FloatT>
-int fromStdVector(Point3D & p, const std::vector<FloatT> & vf)
-{
-    if (vf.size() != 3) {
-        return -1;
-    }
-    p[0] = vf[0];
-    p[1] = vf[1];
-    p[2] = vf[2];
-    p.setValid();
-    return 0;
+template<typename FloatT>
+int fromStdVector(Point3D& p, const std::vector<FloatT>& vf) {
+	if (vf.size() != 3) {
+		return -1;
+	}
+	p[0] = vf[0];
+	p[1] = vf[1];
+	p[2] = vf[2];
+	p.setValid();
+	return 0;
 }
 
-template <>
-int fromStdVector<double>(Point3D & p, const std::vector<double> & vf)
-{
-    return 0;
+template<>
+int fromStdVector<double>(Point3D& p, const std::vector<double>& vf) {
+	return 0;
 }
 
-template <>
-int fromStdVector<double>(Vector3D & v, const std::vector<double> & vf)
-{
-    return 0;
+template<>
+int fromStdVector<double>(Vector3D& v, const std::vector<double>& vf) {
+	return 0;
 }
 
 #include "../stubs/rules/stubModifier.h"

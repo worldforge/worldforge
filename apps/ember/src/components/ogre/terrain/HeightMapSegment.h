@@ -21,10 +21,8 @@
 
 #include "IHeightMapSegment.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class HeightMapBuffer;
 
@@ -76,8 +74,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINHEIGHTMAPSEGMENT_H_ */

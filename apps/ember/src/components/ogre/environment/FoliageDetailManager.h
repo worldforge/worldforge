@@ -22,29 +22,25 @@
 #include <string>
 #include <memory>
 
-namespace varconf
-{
+namespace varconf {
 class Variable;
 }
 
-namespace Ember
-{
+namespace Ember {
 class ConfigListenerContainer;
 
-namespace OgreView
-{
+namespace OgreView {
 class GraphicalChangeAdapter;
 
-namespace Environment
-{
+namespace Environment {
 
 class Foliage;
+
 /**
  * @brief This class manages the detail level of foliage by responding to the changeRequired signal from IGraphicalManager.
  * Acts as a sub-component of the automatic handling of graphics system.
  */
-class FoliageDetailManager
-{
+class FoliageDetailManager {
 public:
 	/**
 	 * @brief Constructor.

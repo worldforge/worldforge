@@ -25,7 +25,6 @@
 #include <OgreHardwarePixelBuffer.h>
 #include <OgreTextureUnitState.h>
 #include <OgrePass.h>
-#include <boost/algorithm/string/predicate.hpp>
 
 namespace Ember::OgreView::Terrain::Techniques {
 
@@ -50,7 +49,7 @@ std::vector<const TerrainPageSurfaceLayer*>& ShaderPassBlendMapBatch::getLayers(
 	return mLayers;
 }
 
-void ShaderPassBlendMapBatch::assignCombinedBlendMapTexture(Ogre::TexturePtr texture) {
+void ShaderPassBlendMapBatch::assignCombinedBlendMapTexture(const Ogre::TexturePtr& texture) {
 	if (std::find(mSyncedTextures.begin(), mSyncedTextures.end(), texture->getName()) == mSyncedTextures.end()) {
 		TimedLog log("ShaderPassBlendMapBatch::assignCombinedBlendMapTexture", true);
 

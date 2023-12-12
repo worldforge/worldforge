@@ -185,12 +185,12 @@ public:
 		/**
 		 * @brief In gui mode, the mouse will move the cursor and allow interaction with the GUI system
 		 */
-				IM_GUI,
+		IM_GUI,
 
 		/**
 		 * @brief In movement mode, the mouse will move the camera and the keys will move the player. Interaction with the gui is not possible.
 		 */
-				IM_MOVEMENT
+		IM_MOVEMENT
 	};
 
 	Input();
@@ -616,7 +616,7 @@ private:
 	/**
 	 * @brief Keeps track of the last time input processing ended.
 	 */
-    std::chrono::steady_clock::time_point mLastTimeInputProcessingEnd;
+	std::chrono::steady_clock::time_point mLastTimeInputProcessingEnd;
 
 };
 

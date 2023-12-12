@@ -40,8 +40,8 @@ namespace Mercator {
 class TerrainMod;
 }
 
-namespace Ember {
-namespace Terrain {
+
+namespace Ember::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -103,6 +103,6 @@ protected:
 };
 
 }
-}
+
 
 #endif

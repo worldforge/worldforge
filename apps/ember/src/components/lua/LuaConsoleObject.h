@@ -28,8 +28,8 @@
 
 #include <memory>
 
-namespace Ember {
-namespace Lua {
+
+namespace Ember::Lua {
 
 /**
  * @author Erik Ogenvik
@@ -60,6 +60,6 @@ private:
 };
 
 }
-}
+
 
 #endif

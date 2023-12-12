@@ -43,53 +43,51 @@ using Atlas::Objects::smart_dynamic_cast;
 static const bool debug_flag = false;
 
 BaseClient::BaseClient(CommSocket& commSocket)
-    : Link(commSocket, 0), m_serialNo(0)
-{
+		: Link(commSocket, 0), m_serialNo(0) {
 
 }
 
 
-void BaseClient::externalOperation(const Operation& op, Link& link)
-{
+void BaseClient::externalOperation(const Operation& op, Link& link) {
 
-    if (debug_flag) {
-        std::cout << "BaseClient::externalOperation received {" << std::endl;
-        debug_dump(op, std::cout);
-        std::cout << "}" << std::endl;
-    }
+	if (debug_flag) {
+		std::cout << "BaseClient::externalOperation received {" << std::endl;
+		debug_dump(op, std::cout);
+		std::cout << "}" << std::endl;
+	}
 
-    OpVector res;
+	OpVector res;
 
-    if (m_task) {
-        m_task->operation(op, res);
+	if (m_task) {
+		m_task->operation(op, res);
 
-        if (m_task->isComplete()) {
-            m_task.reset();
-        }
-    } else {
+		if (m_task->isComplete()) {
+			m_task.reset();
+		}
+	} else {
 
 
-        if (op->isDefaultTo() && !op->isDefaultRefno()) {
-            auto I = m_callbacks.find(op->getRefno());
-            if (I != m_callbacks.end()) {
-                I->second.timeout->cancel();
-                I->second.callback(op, res);
-                m_callbacks.erase(I);
-            }
-        } else {
-            operation(op, res);
-        }
-    }
+		if (op->isDefaultTo() && !op->isDefaultRefno()) {
+			auto I = m_callbacks.find(op->getRefno());
+			if (I != m_callbacks.end()) {
+				I->second.timeout->cancel();
+				I->second.callback(op, res);
+				m_callbacks.erase(I);
+			}
+		} else {
+			operation(op, res);
+		}
+	}
 
-    link.send(res);
+	link.send(res);
 
-    if (debug_flag) {
-        for (auto resOp : res) {
-            std::cout << "BaseClient::externalOperation sent {" << std::endl;
-            debug_dump(resOp, std::cout);
-            std::cout << "}" << std::endl;
-        }
-    }
+	if (debug_flag) {
+		for (auto resOp: res) {
+			std::cout << "BaseClient::externalOperation sent {" << std::endl;
+			debug_dump(resOp, std::cout);
+			std::cout << "}" << std::endl;
+		}
+	}
 
 }
 
@@ -97,143 +95,134 @@ void BaseClient::externalOperation(const Operation& op, Link& link)
 ///
 /// @param name User name of the new account
 /// @param password Password of the new account
-void BaseClient::createSystemAccount(const std::string& usernameSuffix)
-{
+void BaseClient::createSystemAccount(const std::string& usernameSuffix) {
 
-    Anonymous player_ent;
-    m_username = create_session_username() + usernameSuffix;
-    player_ent->setAttr("username", m_username);
-    m_password = fmt::format("{}{}", ::rand(), ::rand());
-    player_ent->setAttr("password", m_password);
-    player_ent->setParent("sys");
+	Anonymous player_ent;
+	m_username = create_session_username() + usernameSuffix;
+	player_ent->setAttr("username", m_username);
+	m_password = fmt::format("{}{}", ::rand(), ::rand());
+	player_ent->setAttr("password", m_password);
+	player_ent->setParent("sys");
 
-    Create createAccountOp;
-    createAccountOp->setArgs1(player_ent);
-    sendWithCallback(createAccountOp, [&](const Operation& op, OpVector& res) {
-                         if (!op->getArgs().empty()) {
-                             auto ent = op->getArgs().front();
-                             if (!ent->isDefaultId()) {
-                                 notifyAccountCreated(RouterId(ent->getId()));
-                             } else {
-                                 spdlog::error("ERROR: Logged in, but account has no id.");
-                             }
-                         }
-                     },
-                     []() {
-						spdlog::error("ERROR: Failed to log into server.");
-                     });
+	Create createAccountOp;
+	createAccountOp->setArgs1(player_ent);
+	sendWithCallback(createAccountOp, [&](const Operation& op, OpVector& res) {
+						 if (!op->getArgs().empty()) {
+							 auto ent = op->getArgs().front();
+							 if (!ent->isDefaultId()) {
+								 notifyAccountCreated(RouterId(ent->getId()));
+							 } else {
+								 spdlog::error("ERROR: Logged in, but account has no id.");
+							 }
+						 }
+					 },
+					 []() {
+						 spdlog::error("ERROR: Failed to log into server.");
+					 });
 }
 
-void BaseClient::logout()
-{
-    Logout logout;
-    send(logout);
-}
-
-
-std::string BaseClient::getErrorMessage(const Operation& err)
-{
-    const std::vector<Root>& args = err->getArgs();
-    if (args.empty()) {
-        return "Unknown error.";
-    } else {
-        const Root& arg = args.front();
-        Atlas::Message::Element message;
-        if (arg->copyAttr("message", message) != 0) {
-            return "Unknown error.";
-        } else {
-            if (!message.isString()) {
-                return "Unknown error.";
-            } else {
-                return message.String();
-            }
-        }
-    }
-}
-
-int BaseClient::runTask(std::shared_ptr<ClientTask> task, const std::string& arg)
-{
-
-    if (m_task != nullptr) {
-        std::cout << "Busy" << std::endl;
-        return -1;
-    }
-
-    m_task = std::move(task);
-
-    OpVector res;
-
-    m_task->setup(arg, res);
-
-    if (m_task->isComplete()) {
-        m_task.reset();
-        return -1;
-    }
-
-    send(res);
-
-    return 0;
-}
-
-int BaseClient::runTask(std::function<bool(const Operation&, OpVector&)> function)
-{
-    return runTask(std::make_shared<FunctionClientTask>(function), "");
+void BaseClient::logout() {
+	Logout logout;
+	send(logout);
 }
 
 
-int BaseClient::endTask()
-{
-    m_task.reset();
-    return 0;
+std::string BaseClient::getErrorMessage(const Operation& err) {
+	const std::vector<Root>& args = err->getArgs();
+	if (args.empty()) {
+		return "Unknown error.";
+	} else {
+		const Root& arg = args.front();
+		Atlas::Message::Element message;
+		if (arg->copyAttr("message", message) != 0) {
+			return "Unknown error.";
+		} else {
+			if (!message.isString()) {
+				return "Unknown error.";
+			} else {
+				return message.String();
+			}
+		}
+	}
+}
+
+int BaseClient::runTask(std::shared_ptr<ClientTask> task, const std::string& arg) {
+
+	if (m_task != nullptr) {
+		std::cout << "Busy" << std::endl;
+		return -1;
+	}
+
+	m_task = std::move(task);
+
+	OpVector res;
+
+	m_task->setup(arg, res);
+
+	if (m_task->isComplete()) {
+		m_task.reset();
+		return -1;
+	}
+
+	send(res);
+
+	return 0;
+}
+
+int BaseClient::runTask(std::function<bool(const Operation&, OpVector&)> function) {
+	return runTask(std::make_shared<FunctionClientTask>(function), "");
+}
+
+
+int BaseClient::endTask() {
+	m_task.reset();
+	return 0;
 }
 
 /**
  * Checks if there's an active task.
  * @return True if there's a task set.
  */
-bool BaseClient::hasTask() const
-{
-    return (bool)m_task;
+bool BaseClient::hasTask() const {
+	return (bool) m_task;
 }
 
 
-void BaseClient::notifyConnectionComplete()
-{
-    createSystemAccount();
+void BaseClient::notifyConnectionComplete() {
+	createSystemAccount();
 }
 
-void BaseClient::sendWithCallback(Operation op, std::function<void(const Operation&, OpVector&)> callback, std::function<void()> timeoutCallback, std::chrono::milliseconds duration)
-{
-    auto serialno = m_serialNo++;
-    op->setSerialno(serialno);
+void BaseClient::sendWithCallback(Operation op, std::function<void(const Operation&, OpVector&)> callback, std::function<void()> timeoutCallback, std::chrono::milliseconds duration) {
+	auto serialno = m_serialNo++;
+	op->setSerialno(serialno);
 
-    auto timer = std::make_unique<boost::asio::steady_timer>(m_commSocket.m_io_context);
+	auto timer = std::make_unique<boost::asio::steady_timer>(m_commSocket.m_io_context);
 #if BOOST_VERSION >= 106600
-    timer->expires_after(duration);
+	timer->expires_after(duration);
 #else
-    timer->expires_from_now(duration);
+	timer->expires_from_now(duration);
 #endif
-    timer->async_wait([&, serialno](boost::system::error_code ec) {
-        if (!ec) {
-            spdlog::warn("Timeout on operation with serial no {}.", serialno);
-            auto I = m_callbacks.find(serialno);
-            if (I != m_callbacks.end()) {
-                if (I->second.timeoutCallback) {
-                    I->second.timeoutCallback();
-                }
-                m_callbacks.erase(I);
-            }
-        }
-    });
+	timer->async_wait([&, serialno](boost::system::error_code ec) {
+		if (!ec) {
+			spdlog::warn("Timeout on operation with serial no {}.", serialno);
+			auto I = m_callbacks.find(serialno);
+			if (I != m_callbacks.end()) {
+				if (I->second.timeoutCallback) {
+					I->second.timeoutCallback();
+				}
+				m_callbacks.erase(I);
+			}
+		}
+	});
 
-    CallbackEntry entry{
-        std::move(callback),
-        std::move(timer),
-        std::move(timeoutCallback)
-    };
+	CallbackEntry entry{
+			std::move(callback),
+			std::move(timer),
+			std::move(timeoutCallback)
+	};
 
-    m_callbacks.emplace(serialno, std::move(entry));
-    send(op);
+	m_callbacks.emplace(serialno, std::move(entry));
+	send(op);
 
 }
 

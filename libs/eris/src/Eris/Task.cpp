@@ -56,7 +56,7 @@ void Task::updateFromAtlas(const AtlasMapType& d) {
 	std::vector<TaskUsage> usages;
 	it = d.find("usages");
 	if (it != d.end() && it->second.isList()) {
-		for (auto& entry : it->second.List()) {
+		for (auto& entry: it->second.List()) {
 			if (entry.isMap()) {
 				TaskUsage usage;
 				auto nameI = entry.Map().find("name");
@@ -66,7 +66,7 @@ void Task::updateFromAtlas(const AtlasMapType& d) {
 				auto paramsI = entry.Map().find("params");
 				if (paramsI != entry.Map().end() && paramsI->second.isMap()) {
 					auto& params = paramsI->second.Map();
-					for (auto& paramEntry : params) {
+					for (auto& paramEntry: params) {
 						UsageParameter param;
 						if (paramEntry.second.isMap()) {
 							auto& paramMap = paramEntry.second.Map();
@@ -126,7 +126,7 @@ void Task::progressChanged() {
 void Task::updatePredictedProgress(const WFMath::TimeDiff& dt) {
 	if (isComplete()) return;
 
-	m_progress += m_progressRate * ((double)(dt.milliseconds()) / 1000.0);
+	m_progress += m_progressRate * ((double) (dt.milliseconds()) / 1000.0);
 	m_progress = std::min(m_progress, 1.0);
 
 	Progressed.emit();

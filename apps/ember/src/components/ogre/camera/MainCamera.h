@@ -37,42 +37,47 @@
 #include <OgreFrameListener.h>
 #include <OgreSceneQuery.h>
 
-namespace WFMath
-{
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
 }
 
-namespace Ember
-{
+namespace Ember {
 struct MouseMotion;
+
 class InputCommandMapper;
+
 class Input;
+
 class ConfigListenerContainer;
+
 class EmberEntity;
 
-namespace OgreView
-{
+namespace OgreView {
 class Avatar;
+
 struct EntityPickResult;
 struct IWorldPickListener;
 struct IMovementProvider;
 struct ICameraMotionHandler;
 struct MousePickerArgs;
+
 class AvatarTerrainCursor;
+
 class Scene;
 
-namespace Terrain
-{
+namespace Terrain {
 struct ITerrainAdapter;
 }
 
 /**
  * @brief Namespace for all camera related classes and activities.
  */
-namespace Camera
-{
+namespace Camera {
 struct ICameraMount;
+
 class Recorder;
+
 class CameraSettings;
 
 /**
@@ -81,8 +86,7 @@ class CameraSettings;
  *
  * While there can be many different cameras in the system, this represent the "main" one. It renders directly to the main Ogre::RenderWindow.
  */
-class MainCamera: public Ogre::FrameListener, public virtual sigc::trackable
-{
+class MainCamera : public Ogre::FrameListener, public virtual sigc::trackable {
 public:
 
 	/**
@@ -142,6 +146,7 @@ public:
 	bool worldToScreen(const Ogre::Vector3& worldPos, Ogre::Vector2& screenPos);
 
 	static Ogre::Vector2 worldToScreen(Ogre::Camera& camera, const Ogre::Vector3& worldPos);
+
 	/**
 	 * Methods from Ogre::FrameListener
 	 */
@@ -261,7 +266,7 @@ private:
 	 * @param compositionPass A composition pass.
 	 * @return True if the pass is valid.
 	 */
-	bool validateCompositionTargetPass(Ogre::CompositionTargetPass& compositionPass);
+	static bool validateCompositionTargetPass(Ogre::CompositionTargetPass& compositionPass);
 
 };
 

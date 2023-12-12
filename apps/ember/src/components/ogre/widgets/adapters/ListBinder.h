@@ -55,7 +55,7 @@ public:
 	 * @brief Ctor.
 	 * @param listbox The list widget to bind to.
 	 */
-	ListBinder(WidgetT* listbox);
+	explicit ListBinder(WidgetT* listbox);
 
 	/**
 	 * @brief Adds a new type to the binder.

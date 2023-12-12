@@ -25,8 +25,6 @@
 #include "../terrain/PlantAreaQuery.h"
 #include "../terrain/PlantAreaQueryResult.h"
 #include "../terrain/TerrainManager.h"
-#include "../terrain/TerrainLayerDefinition.h"
-#include "../terrain/PlantInstance.h"
 #include "framework/Log.h"
 
 #include <OgreTechnique.h>
@@ -34,10 +32,9 @@
 using namespace Forests;
 using namespace Ogre;
 using namespace Ember::OgreView::Terrain;
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+namespace Ember::OgreView::Environment {
 
 FoliageLayer::FoliageLayer(::Forests::PagedGeometry* geom, GrassLoader<FoliageLayer>* ldr) :
 		mTerrainManager(nullptr),
@@ -78,7 +75,7 @@ void FoliageLayer::configure(Terrain::TerrainManager* terrainManager,
 unsigned int FoliageLayer::prepareGrass(const Forests::PageInfo& page, float densityFactor, float /*volume*/, bool& isAvailable) {
 	if (mLatestPlantsResult) {
 		isAvailable = true;
-		return (unsigned int) (mLatestPlantsResult->mStore.size() * densityFactor);
+		return (unsigned int) ((float) mLatestPlantsResult->mStore.size() * densityFactor);
 	} else {
 		PlantAreaQuery query{*mTerrainLayer, mFoliageDefinition->mPlantType, page.bounds, Ogre::Vector2(page.centerPoint.x, page.centerPoint.z)};
 		sigc::slot<void(const Terrain::PlantAreaQueryResult&)> slot = sigc::mem_fun(*this, &FoliageLayer::plantQueryExecuted);
@@ -94,7 +91,7 @@ unsigned int FoliageLayer::_populateGrassList(PageInfo /*page*/, float* posBuff,
 	unsigned int finalGrassCount = 0;
 	if (mLatestPlantsResult) {
 		const PlantAreaQueryResult::PlantStore& store = mLatestPlantsResult->mStore;
-		for (const auto& I : store) {
+		for (const auto& I: store) {
 			if (finalGrassCount == grassCount) {
 				break;
 			}
@@ -181,5 +178,5 @@ bool FoliageLayer::isCastShadowsEnabled() const {
 
 }
 
-}
-}
+
+

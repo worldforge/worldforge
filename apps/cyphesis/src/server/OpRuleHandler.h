@@ -25,30 +25,31 @@ class EntityBuilder;
 
 /// \brief Handle processing and updating of task ruless
 class OpRuleHandler : public RuleHandler {
-  protected:
+protected:
 
-    int installOpDefinition(const std::string & class_name,
-                            const std::string & parent,
-                            const Atlas::Objects::Root & class_desc,
-                            std::string & dependent,
-                            std::string & reason);
+	int installOpDefinition(const std::string& class_name,
+							const std::string& parent,
+							const Atlas::Objects::Root& class_desc,
+							std::string& dependent,
+							std::string& reason);
 
-    int modifyOpDefinition(const std::string & class_name,
-                           const Atlas::Objects::Root & class_desc);
+	int modifyOpDefinition(const std::string& class_name,
+						   const Atlas::Objects::Root& class_desc);
 
-  public:
+public:
 
-    int check(const Atlas::Objects::Root & desc) override;
+	int check(const Atlas::Objects::Root& desc) override;
 
-    int install(const std::string &,
-                        const std::string &,
-                        const Atlas::Objects::Root & desc,
-                        std::string &,
-                        std::string &,
-                        std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
-    int update(const std::string &,
-                       const Atlas::Objects::Root & desc,
-                       std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+	int install(const std::string&,
+				const std::string&,
+				const Atlas::Objects::Root& desc,
+				std::string&,
+				std::string&,
+				std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
+
+	int update(const std::string&,
+			   const Atlas::Objects::Root& desc,
+			   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) override;
 };
 
 #endif // SERVER_OP_RULE_HANDLER_H

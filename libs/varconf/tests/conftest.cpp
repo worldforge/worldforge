@@ -8,101 +8,98 @@
 
 #include <cassert>
 
-void callback( const std::string & section,
-               const std::string & key,
-               varconf::Config & conf)
-{
-  std::cout << "\nConfig Change: item " << key << " under section " << section
-       << " has changed to " << conf.getItem( section, key) << ".\n"; 
-}
- 
-void error( const char * message)
-{
-  std::cerr << message;
+void callback(const std::string& section,
+			  const std::string& key,
+			  varconf::Config& conf) {
+	std::cout << "\nConfig Change: item " << key << " under section " << section
+			  << " has changed to " << conf.getItem(section, key) << ".\n";
 }
 
-int main( int argc, char ** argv)
-{
-  varconf::Config config;
+void error(const char* message) {
+	std::cerr << message;
+}
 
-  config.sige.connect(sigc::ptr_fun(error));
-  config.sigsv.connect(sigc::ptr_fun(callback));
+int main(int argc, char** argv) {
+	varconf::Config config;
 
-  config.setParameterLookup( 'f', "foo", true);
-  config.setParameterLookup( 'b', "bar", false);
+	config.sige.connect(sigc::ptr_fun(error));
+	config.sigsv.connect(sigc::ptr_fun(callback));
 
-  config.getCmdline( argc, argv);
-  config.getEnv( "TEST_");
-  assert(config.readFromFile( std::string(SRCDIR) + "/conf.cfg"));
-  config.setItem( "tcp", "port", 6700, varconf::GLOBAL);
-  config.setItem( "tcp", "v6port", 6700, varconf::USER);
-  config.setItem( "console", "colours", "plenty", varconf::INSTANCE);
-  config.setItem( "console", "speed", "fast", varconf::USER);
+	config.setParameterLookup('f', "foo", true);
+	config.setParameterLookup('b', "bar", false);
 
-  assert(config.find("tcp", "port"));
-  assert(config.find("console", "enabled"));
-  assert(config.getItem("tcp", "port")->scope() == varconf::GLOBAL);
-  //Default scope for read files are USER
-  assert(config.getItem("console", "enabled")->scope() == varconf::USER);
+	config.getCmdline(argc, argv);
+	config.getEnv("TEST_");
+	assert(config.readFromFile(std::string(SRCDIR) + "/conf.cfg"));
+	config.setItem("tcp", "port", 6700, varconf::GLOBAL);
+	config.setItem("tcp", "v6port", 6700, varconf::USER);
+	config.setItem("console", "colours", "plenty", varconf::INSTANCE);
+	config.setItem("console", "speed", "fast", varconf::USER);
 
-  std::cout << "\nEnter sample configuration data to test parseStream() method.\n";
+	assert(config.find("tcp", "port"));
+	assert(config.find("console", "enabled"));
+	assert(config.getItem("tcp", "port")->scope() == varconf::GLOBAL);
+	//Default scope for read files are USER
+	assert(config.getItem("console", "enabled")->scope() == varconf::USER);
 
-  std::stringstream ss;
-  ss << "[general]"<< std::endl;
-  ss << "setting = true"<< std::endl;
-  ss << "emptyrightbeforeeof = ";
+	std::cout << "\nEnter sample configuration data to test parseStream() method.\n";
 
-  try {
-    config.parseStream( ss, varconf::USER);
-  }
-  catch (const varconf::ParseError& p) {
-    std::cout << "\nError while parsing from input stream.\n";
-    std::cout << p.what();
-  }
+	std::stringstream ss;
+	ss << "[general]" << std::endl;
+	ss << "setting = true" << std::endl;
+	ss << "emptyrightbeforeeof = ";
 
-  assert(config.find("general", "setting"));
-  assert(config.find("general", "emptyrightbeforeeof"));
+	try {
+		config.parseStream(ss, varconf::USER);
+	}
+	catch (const varconf::ParseError& p) {
+		std::cout << "\nError while parsing from input stream.\n";
+		std::cout << p.what();
+	}
 
-  config.writeToFile( "conf2.cfg");
-  
-  std::cout << "\nFile configuration data:\n"
-            << "--------------------------\n"
-            << config;
+	assert(config.find("general", "setting"));
+	assert(config.find("general", "emptyrightbeforeeof"));
 
-  std::cout << "\nUSER configuration data:\n"
-            << "--------------------------\n";
+	config.writeToFile("conf2.cfg");
 
-  config.writeToStream(std::cout, varconf::USER);
+	std::cout << "\nFile configuration data:\n"
+			  << "--------------------------\n"
+			  << config;
 
-  std::cout << "\nINSTANCE configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nUSER configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, varconf::INSTANCE);
+	config.writeToStream(std::cout, varconf::USER);
 
-  std::cout << "\nGLOBAL configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nINSTANCE configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, varconf::GLOBAL);
+	config.writeToStream(std::cout, varconf::INSTANCE);
 
-  std::cout << "\nGLOBAL & USER configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nGLOBAL configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, (varconf::Scope)(varconf::GLOBAL | varconf::USER));
+	config.writeToStream(std::cout, varconf::GLOBAL);
 
-  std::cout << "\nINSTANCE & USER configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nGLOBAL & USER configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, (varconf::Scope)(varconf::INSTANCE | varconf::USER));
+	config.writeToStream(std::cout, (varconf::Scope) (varconf::GLOBAL | varconf::USER));
 
-  std::cout << "\nINSTANCE & GLOBAL configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nINSTANCE & USER configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, (varconf::Scope)(varconf::GLOBAL | varconf::INSTANCE));
+	config.writeToStream(std::cout, (varconf::Scope) (varconf::INSTANCE | varconf::USER));
 
-  std::cout << "\nINSTANCE, USER & GLOBAL configuration data:\n"
-            << "--------------------------\n";
+	std::cout << "\nINSTANCE & GLOBAL configuration data:\n"
+			  << "--------------------------\n";
 
-  config.writeToStream(std::cout, (varconf::Scope)(varconf::GLOBAL | varconf::INSTANCE | varconf::USER));
+	config.writeToStream(std::cout, (varconf::Scope) (varconf::GLOBAL | varconf::INSTANCE));
 
-  return 0;
+	std::cout << "\nINSTANCE, USER & GLOBAL configuration data:\n"
+			  << "--------------------------\n";
+
+	config.writeToStream(std::cout, (varconf::Scope) (varconf::GLOBAL | varconf::INSTANCE | varconf::USER));
+
+	return 0;
 }

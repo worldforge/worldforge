@@ -24,42 +24,34 @@
 #include <wfmath/quaternion.h>
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 OrientationAdapter::OrientationAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::Window* scalarWindow)
-: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow), mZWindow(zWindow), mScalarWindow(scalarWindow)
-{
+		: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow), mZWindow(zWindow), mScalarWindow(scalarWindow) {
 	if (mXWindow) {
-		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this)));
 	}
 	if (mYWindow) {
-		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this)));
 	}
 	if (mZWindow) {
-		addGuiEventConnection(mZWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mZWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this)));
 	}
 	if (mScalarWindow) {
-		addGuiEventConnection(mScalarWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mScalarWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&OrientationAdapter::window_TextChanged, this)));
 	}
 
-	
+
 	updateGui(mOriginalValue);
 }
 
 
 OrientationAdapter::~OrientationAdapter() = default;
 
-void OrientationAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void OrientationAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
-	
+
 	WFMath::Quaternion orientation(element);
 // 	axisBox.fromAtlas(element.asList());
 	if (mXWindow) {
@@ -77,16 +69,14 @@ void OrientationAdapter::updateGui(const ::Atlas::Message::Element& element)
 
 }
 
-bool OrientationAdapter::window_TextChanged(const CEGUI::EventArgs& e)
-{
+bool OrientationAdapter::window_TextChanged(const CEGUI::EventArgs& e) {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
 	return true;
 }
 
-void OrientationAdapter::fillElementFromGui()
-{
+void OrientationAdapter::fillElementFromGui() {
 	double x(0), y(0), z(0), scalar(0);
 	if (mXWindow) {
 		x = std::stod(mXWindow->getText().c_str());
@@ -104,8 +94,7 @@ void OrientationAdapter::fillElementFromGui()
 	mEditedValue = orientation.toAtlas();
 }
 
-bool OrientationAdapter::_hasChanges()
-{
+bool OrientationAdapter::_hasChanges() {
 	WFMath::Quaternion originalOrientation(mOriginalValue);
 	WFMath::Quaternion newOrientation(getValue());
 	return originalOrientation != newOrientation;
@@ -113,9 +102,9 @@ bool OrientationAdapter::_hasChanges()
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

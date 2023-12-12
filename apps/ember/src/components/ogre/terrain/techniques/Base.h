@@ -22,12 +22,8 @@
 
 #include "components/ogre/terrain/TerrainPageSurfaceCompiler.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Techniques {
+namespace Ember::OgreView::Terrain::Techniques {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -42,7 +38,7 @@ public:
 	 * @param terrainPageSurfaces The surfaces to generate a rendering technique for.
 	 * @param terrainPageShadow An optional shadow.
 	 */
-	Base(const TerrainPageGeometryPtr& geometry,
+	Base(TerrainPageGeometryPtr geometry,
 		 SurfaceLayerStore terrainPageSurfaces);
 
 	/**
@@ -66,10 +62,5 @@ protected:
 
 }
 
-}
-
-}
-
-}
 
 #endif /* EMBEROGRETERRAINTECHNIQUESBASE_H_ */

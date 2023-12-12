@@ -14,7 +14,8 @@
 #include <vector>
 #include <stack>
 
-namespace Atlas { namespace Message {
+
+namespace Atlas::Message {
 
 class Element;
 
@@ -37,56 +38,70 @@ typedef std::vector<Element> ListType;
  * 
  */
 
-class DecoderBase : public Bridge
-{
+class DecoderBase : public Bridge {
 public:
-    DecoderBase();
+	DecoderBase();
 
-    ~DecoderBase() override = default;
+	~DecoderBase() override = default;
 
-    // Callback functions from Bridge
-    void streamBegin() override;
-    void streamMessage() override;
-    void streamEnd() override;
+	// Callback functions from Bridge
+	void streamBegin() override;
 
-    void mapMapItem(std::string name) override;
-    void mapListItem(std::string name) override;
-    void mapIntItem(std::string name, std::int64_t) override;
-    void mapFloatItem(std::string name, double) override;
-    void mapStringItem(std::string name, std::string) override;
-    void mapNoneItem(std::string name) override;
-    void mapEnd() override;
-    
-    void listMapItem() override;
-    void listListItem() override;
-    void listIntItem(std::int64_t) override;
-    void listFloatItem(double) override;
-    void listStringItem(std::string) override;
-    void listNoneItem() override;
-    void listEnd() override;
-    
+	void streamMessage() override;
+
+	void streamEnd() override;
+
+	void mapMapItem(std::string name) override;
+
+	void mapListItem(std::string name) override;
+
+	void mapIntItem(std::string name, std::int64_t) override;
+
+	void mapFloatItem(std::string name, double) override;
+
+	void mapStringItem(std::string name, std::string) override;
+
+	void mapNoneItem(std::string name) override;
+
+	void mapEnd() override;
+
+	void listMapItem() override;
+
+	void listListItem() override;
+
+	void listIntItem(std::int64_t) override;
+
+	void listFloatItem(double) override;
+
+	void listStringItem(std::string) override;
+
+	void listNoneItem() override;
+
+	void listEnd() override;
+
 protected:
 
-    /// Our current decoding state.
-    enum State {
-        STATE_STREAM,
-        STATE_MAP,
-        STATE_LIST
-    };
+	/// Our current decoding state.
+	enum State {
+		STATE_STREAM,
+		STATE_MAP,
+		STATE_LIST
+	};
 
-    /// The state stack.
-    std::stack<State> m_state;
-    /// The map stack.
-    std::stack<MapType> m_maps;
-    /// The list stack.
-    std::stack<ListType> m_lists;
-    /// Names for maps and lists.
-    std::stack<std::string> m_names;
+	/// The state stack.
+	std::stack<State> m_state;
+	/// The map stack.
+	std::stack<MapType> m_maps;
+	/// The list stack.
+	std::stack<ListType> m_lists;
+	/// Names for maps and lists.
+	std::stack<std::string> m_names;
 
-    /// Override this - called when an object was received.
-    virtual void messageArrived(MapType obj) = 0;
+	/// Override this - called when an object was received.
+	virtual void messageArrived(MapType obj) = 0;
 };
 
-} } // namespace Atlas::Message
+}
+// namespace Atlas::Message
 
 #endif

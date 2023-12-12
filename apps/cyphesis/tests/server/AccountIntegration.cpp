@@ -73,177 +73,164 @@ using Atlas::Objects::Operation::Move;
 Atlas::Objects::Factories factories;
 
 
-class TestCommSocket : public CommSocket
-{
-    public:
-        TestCommSocket() : CommSocket(*(boost::asio::io_context*) 0)
-        {
-        }
+class TestCommSocket : public CommSocket {
+public:
+	TestCommSocket() : CommSocket(*(boost::asio::io_context*) 0) {
+	}
 
-        virtual void disconnect()
-        {
-        }
+	virtual void disconnect() {
+	}
 
-        virtual int flush()
-        {
-            return 0;
-        }
+	virtual int flush() {
+		return 0;
+	}
 
 };
 
-class TestAccount : public Account
-{
-    public:
-        TestAccount(Connection* conn, const std::string& username,
-                    const std::string& passwd,
-                    RouterId id) :
-                Account(conn, username, passwd, std::move(id))
-        {
-        }
+class TestAccount : public Account {
+public:
+	TestAccount(Connection* conn, const std::string& username,
+				const std::string& passwd,
+				RouterId id) :
+			Account(conn, username, passwd, std::move(id)) {
+	}
 
-        virtual int characterError(const Operation& op,
-                                   const Atlas::Objects::Root& ent,
-                                   OpVector& res) const
-        {
-            return 0;
-        }
+	virtual int characterError(const Operation& op,
+							   const Atlas::Objects::Root& ent,
+							   OpVector& res) const {
+		return 0;
+	}
 };
 
-class Accountintegration : public Cyphesis::TestBase
-{
-        DatabaseNull m_database;
-        Persistence* m_persistence;
+class Accountintegration : public Cyphesis::TestBase {
+	DatabaseNull m_database;
+	Persistence* m_persistence;
 
-        WorldRouter* m_world;
+	WorldRouter* m_world;
 
-        ServerRouting* m_server;
+	ServerRouting* m_server;
 
-        CommSocket* m_tc;
-        Connection* m_c;
-        TestAccount* m_ac;
-        EntityRuleHandler* m_entityRuleHandler;
+	CommSocket* m_tc;
+	Connection* m_c;
+	TestAccount* m_ac;
+	EntityRuleHandler* m_entityRuleHandler;
 
-    public:
-        Accountintegration();
+public:
+	Accountintegration();
 
-        void setup();
+	void setup();
 
-        void teardown();
+	void teardown();
 
-        void test_addNewCharacter();
+	void test_addNewCharacter();
 
-        void test_getType();
+	void test_getType();
 
-        void test_addToMessage();
+	void test_addToMessage();
 
-        void test_addToEntity();
+	void test_addToEntity();
 
-        void test_CreateOperation();
+	void test_CreateOperation();
 
-        void test_GetOperation();
+	void test_GetOperation();
 
-        void test_ImaginaryOperation();
+	void test_ImaginaryOperation();
 
-        void test_LookOperation();
+	void test_LookOperation();
 
-        void test_SetOperation();
+	void test_SetOperation();
 
-        void test_TalkOperation();
+	void test_TalkOperation();
 
-        void test_LogoutOperation();
+	void test_LogoutOperation();
 
-        void test_connectCharacter_entity();
+	void test_connectCharacter_entity();
 
-        void test_connectCharacter_character();
+	void test_connectCharacter_character();
 
-        Inheritance* m_inheritance;
-        Ref<Entity> m_rootEntity;
-        EntityBuilder* m_eb;
-        PropertyManager* m_propertyManager;
+	Inheritance* m_inheritance;
+	Ref<Entity> m_rootEntity;
+	EntityBuilder* m_eb;
+	PropertyManager* m_propertyManager;
 };
 
-Accountintegration::Accountintegration()
-{
-    ADD_TEST(Accountintegration::test_addNewCharacter);
-    ADD_TEST(Accountintegration::test_getType);
-    ADD_TEST(Accountintegration::test_addToMessage);
-    ADD_TEST(Accountintegration::test_addToEntity);
-    ADD_TEST(Accountintegration::test_CreateOperation);
-    ADD_TEST(Accountintegration::test_GetOperation);
-    ADD_TEST(Accountintegration::test_ImaginaryOperation);
-    ADD_TEST(Accountintegration::test_LookOperation);
-    ADD_TEST(Accountintegration::test_SetOperation);
-    ADD_TEST(Accountintegration::test_TalkOperation);
-    ADD_TEST(Accountintegration::test_LogoutOperation);
-    ADD_TEST(Accountintegration::test_connectCharacter_entity);
-    ADD_TEST(Accountintegration::test_connectCharacter_character);
+Accountintegration::Accountintegration() {
+	ADD_TEST(Accountintegration::test_addNewCharacter);
+	ADD_TEST(Accountintegration::test_getType);
+	ADD_TEST(Accountintegration::test_addToMessage);
+	ADD_TEST(Accountintegration::test_addToEntity);
+	ADD_TEST(Accountintegration::test_CreateOperation);
+	ADD_TEST(Accountintegration::test_GetOperation);
+	ADD_TEST(Accountintegration::test_ImaginaryOperation);
+	ADD_TEST(Accountintegration::test_LookOperation);
+	ADD_TEST(Accountintegration::test_SetOperation);
+	ADD_TEST(Accountintegration::test_TalkOperation);
+	ADD_TEST(Accountintegration::test_LogoutOperation);
+	ADD_TEST(Accountintegration::test_connectCharacter_entity);
+	ADD_TEST(Accountintegration::test_connectCharacter_character);
 }
 
-Atlas::Objects::Root composeDeclaration(std::string class_name, std::string parent, Atlas::Message::MapType rawAttributes)
-{
+Atlas::Objects::Root composeDeclaration(std::string class_name, std::string parent, Atlas::Message::MapType rawAttributes) {
 
-    Atlas::Objects::Root decl;
-    decl->setObjtype("class");
-    decl->setId(class_name);
-    decl->setParent(parent);
+	Atlas::Objects::Root decl;
+	decl->setObjtype("class");
+	decl->setId(class_name);
+	decl->setParent(parent);
 
-    Atlas::Message::MapType composed;
-    for (const auto& entry : rawAttributes) {
-        composed[entry.first] = Atlas::Message::MapType{
-                {"default", entry.second}
-        };
-    }
+	Atlas::Message::MapType composed;
+	for (const auto& entry: rawAttributes) {
+		composed[entry.first] = Atlas::Message::MapType{
+				{"default", entry.second}
+		};
+	}
 
-    decl->setAttr("attributes", composed);
-    return decl;
+	decl->setAttr("attributes", composed);
+	return decl;
 };
 
 
-void Accountintegration::setup()
-{
-    m_rootEntity = new Entity(0);
-    m_persistence = new Persistence(m_database);
-    m_inheritance = new Inheritance(factories);
-    m_eb = new EntityBuilder();
-    m_propertyManager = new TestPropertyManager();
-    m_entityRuleHandler = new EntityRuleHandler(*m_eb, *m_propertyManager);
+void Accountintegration::setup() {
+	m_rootEntity = new Entity(0);
+	m_persistence = new Persistence(m_database);
+	m_inheritance = new Inheritance(factories);
+	m_eb = new EntityBuilder();
+	m_propertyManager = new TestPropertyManager();
+	m_entityRuleHandler = new EntityRuleHandler(*m_eb, *m_propertyManager);
 
-    m_world = new WorldRouter(m_rootEntity, *m_eb, []() { return std::chrono::milliseconds(0); });
+	m_world = new WorldRouter(m_rootEntity, *m_eb, []() { return std::chrono::milliseconds(0); });
 
-    m_server = new ServerRouting(*m_world, *m_persistence, "noruleset", "unittesting",
-                                 2);
+	m_server = new ServerRouting(*m_world, *m_persistence, "noruleset", "unittesting",
+								 2);
 
-    m_tc = new TestCommSocket();
-    m_c = new Connection(*m_tc, *m_server, "addr", 3);
-    m_ac = new TestAccount(m_c, "user", "password", 4);
+	m_tc = new TestCommSocket();
+	m_c = new Connection(*m_tc, *m_server, "addr", 3);
+	m_ac = new TestAccount(m_c, "user", "password", 4);
 
-    std::string dependent, reason;
+	std::string dependent, reason;
 
-    {
-        auto decl = composeDeclaration("thing", "game_entity", {});
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
-        m_entityRuleHandler->install(decl->getId(), decl->getParent(), decl, dependent, reason, changes);
-    }
+	{
+		auto decl = composeDeclaration("thing", "game_entity", {});
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		m_entityRuleHandler->install(decl->getId(), decl->getParent(), decl, dependent, reason, changes);
+	}
 }
 
-void Accountintegration::teardown()
-{
-    delete m_entityRuleHandler;
-    delete m_c;
-    delete m_server;
-    delete m_ac;
-    delete m_tc;
-    m_world->shutdown();
-    delete m_world;
-    m_rootEntity = nullptr;
-    delete m_eb;
-    delete m_inheritance;
-    delete m_persistence;
-    delete m_propertyManager;
+void Accountintegration::teardown() {
+	delete m_entityRuleHandler;
+	delete m_c;
+	delete m_server;
+	delete m_ac;
+	delete m_tc;
+	m_world->shutdown();
+	delete m_world;
+	m_rootEntity = nullptr;
+	delete m_eb;
+	delete m_inheritance;
+	delete m_persistence;
+	delete m_propertyManager;
 }
 
-void Accountintegration::test_addNewCharacter()
-{
+void Accountintegration::test_addNewCharacter() {
 //    WorldRouter::instance().createSpawnPoint(Atlas::Message::MapType{
 //        {"name",     "foo"},
 //        {"entities", Atlas::Message::MapType{{"thing", Atlas::Message::MapType{}}}}
@@ -260,65 +247,58 @@ void Accountintegration::test_addNewCharacter()
 //    std::cout << "Test 1" << std::endl;
 }
 
-void Accountintegration::test_getType()
-{
-    m_ac->getType();
+void Accountintegration::test_getType() {
+	m_ac->getType();
 }
 
-void Accountintegration::test_addToMessage()
-{
-    MapType emap;
-    m_ac->addToMessage(emap);
+void Accountintegration::test_addToMessage() {
+	MapType emap;
+	m_ac->addToMessage(emap);
 }
 
-void Accountintegration::test_addToEntity()
-{
-    RootEntity ent;
-    m_ac->addToEntity(ent);
+void Accountintegration::test_addToEntity() {
+	RootEntity ent;
+	m_ac->addToEntity(ent);
 }
 
-void Accountintegration::test_CreateOperation()
-{
-    Anonymous op_arg;
-    op_arg->setParent("game_entity");
-    op_arg->setName("Bob");
+void Accountintegration::test_CreateOperation() {
+	Anonymous op_arg;
+	op_arg->setParent("game_entity");
+	op_arg->setName("Bob");
 
-    Create op;
-    op->setArgs1(op_arg);
+	Create op;
+	op->setArgs1(op_arg);
 
-    OpVector res;
-    m_ac->operation(op, res);
+	OpVector res;
+	m_ac->operation(op, res);
 }
 
-void Accountintegration::test_GetOperation()
-{
-    Anonymous op_arg;
-    op_arg->setParent("");
+void Accountintegration::test_GetOperation() {
+	Anonymous op_arg;
+	op_arg->setParent("");
 
-    Get op;
-    op->setArgs1(op_arg);
+	Get op;
+	op->setArgs1(op_arg);
 
-    OpVector res;
-    m_ac->operation(op, res);
+	OpVector res;
+	m_ac->operation(op, res);
 }
 
-void Accountintegration::test_ImaginaryOperation()
-{
-    Anonymous op_arg;
-    op_arg->setLoc("2");
+void Accountintegration::test_ImaginaryOperation() {
+	Anonymous op_arg;
+	op_arg->setLoc("2");
 
-    Imaginary op;
-    op->setArgs1(op_arg);
-    op->setSerialno(1);
+	Imaginary op;
+	op->setArgs1(op_arg);
+	op->setSerialno(1);
 
-    OpVector res;
-    m_ac->operation(op, res);
+	OpVector res;
+	m_ac->operation(op, res);
 
-    // FIXME Test response is sent to Lobby
+	// FIXME Test response is sent to Lobby
 }
 
-void Accountintegration::test_LookOperation()
-{
+void Accountintegration::test_LookOperation() {
 //    WorldRouter::instance().createSpawnPoint(Atlas::Message::MapType{
 //        {"name",     "foo"},
 //        {"entities", Atlas::Message::MapType{{"thing", Atlas::Message::MapType{}}}}
@@ -343,8 +323,7 @@ void Accountintegration::test_LookOperation()
 //    // FIXME This doesn't test a lot
 }
 
-void Accountintegration::test_SetOperation()
-{
+void Accountintegration::test_SetOperation() {
 //    WorldRouter::instance().createSpawnPoint(Atlas::Message::MapType{
 //        {"name",     "foo"},
 //        {"entities", Atlas::Message::MapType{{"thing", Atlas::Message::MapType{}}}}
@@ -376,65 +355,60 @@ void Accountintegration::test_SetOperation()
 //    // FIXME Ensure character has been modified
 }
 
-void Accountintegration::test_TalkOperation()
-{
-    Anonymous op_arg;
-    op_arg->setParent("");
-    op_arg->setLoc("1");
+void Accountintegration::test_TalkOperation() {
+	Anonymous op_arg;
+	op_arg->setParent("");
+	op_arg->setLoc("1");
 
-    Talk op;
-    op->setSerialno(1);
-    op->setArgs1(op_arg);
+	Talk op;
+	op->setSerialno(1);
+	op->setArgs1(op_arg);
 
-    OpVector res;
-    m_ac->operation(op, res);
+	OpVector res;
+	m_ac->operation(op, res);
 
-    // FIXME Sound op should have been sent to the lobby
+	// FIXME Sound op should have been sent to the lobby
 }
 
-void Accountintegration::test_LogoutOperation()
-{
-    Logout op;
-    op->setSerialno(1);
+void Accountintegration::test_LogoutOperation() {
+	Logout op;
+	op->setSerialno(1);
 
-    Anonymous op_arg;
-    op_arg->setParent("");
-    op->setArgs1(op_arg);
+	Anonymous op_arg;
+	op_arg->setParent("");
+	op->setArgs1(op_arg);
 
-    OpVector res;
-    m_ac->operation(op, res);
+	OpVector res;
+	m_ac->operation(op, res);
 
-    // FIXME Account should have been removed from Lobby, and also from
-    // Connection
+	// FIXME Account should have been removed from Lobby, and also from
+	// Connection
 }
 
-void Accountintegration::test_connectCharacter_entity()
-{
-    OpVector res;
-    Ref<Entity> e = new Entity(7);
+void Accountintegration::test_connectCharacter_entity() {
+	OpVector res;
+	Ref<Entity> e = new Entity(7);
 
-    int ret = m_ac->connectCharacter(e.get(), res);
-    ASSERT_EQUAL(ret, 0);
+	int ret = m_ac->connectCharacter(e.get(), res);
+	ASSERT_EQUAL(ret, 0);
 }
 
-void Accountintegration::test_connectCharacter_character()
-{
-    Ref<Entity> e = new Entity(8);
-    OpVector res;
-    int ret = m_ac->connectCharacter(e.get(), res);
-    ASSERT_EQUAL(ret, 0);
-    ASSERT_NOT_NULL(e->getPropertyClassFixed<MindsProperty>());
-    ASSERT_FALSE(e->getPropertyClassFixed<MindsProperty>()->getMinds().empty());
+void Accountintegration::test_connectCharacter_character() {
+	Ref<Entity> e = new Entity(8);
+	OpVector res;
+	int ret = m_ac->connectCharacter(e.get(), res);
+	ASSERT_EQUAL(ret, 0);
+	ASSERT_NOT_NULL(e->getPropertyClassFixed<MindsProperty>());
+	ASSERT_FALSE(e->getPropertyClassFixed<MindsProperty>()->getMinds().empty());
 }
 
-int main()
-{
-    PossessionAuthenticator possesionAuthenticator;
-    ExternalMindsManager externalMindsManager(possesionAuthenticator);
-    Monitors m;
-    Accountintegration t;
+int main() {
+	PossessionAuthenticator possesionAuthenticator;
+	ExternalMindsManager externalMindsManager(possesionAuthenticator);
+	Monitors m;
+	Accountintegration t;
 
-    return t.run();
+	return t.run();
 }
 
 #include "server/EntityFactory.h"

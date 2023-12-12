@@ -21,25 +21,23 @@
 
 /// \brief Constructor for socket object.
 ///
-IdleConnector::IdleConnector(boost::asio::io_context & io_context) :  m_timer(io_context)
-{
-    idle();
+IdleConnector::IdleConnector(boost::asio::io_context& io_context) : m_timer(io_context) {
+	idle();
 }
 
 IdleConnector::~IdleConnector() = default;
 
-void IdleConnector::idle()
-{
+void IdleConnector::idle() {
 #if BOOST_VERSION >= 106600
-    m_timer.expires_after(std::chrono::seconds(1));
+	m_timer.expires_after(std::chrono::seconds(1));
 #else
-    m_timer.expires_from_now(std::chrono::seconds(1));
+	m_timer.expires_from_now(std::chrono::seconds(1));
 #endif
-    m_timer.async_wait([this](boost::system::error_code ec){
-        if (!ec) {
-            rmt_ScopedCPUSample(idling, 0)
-            this->idling.emit();
-            this->idle();
-        }
-    });
+	m_timer.async_wait([this](boost::system::error_code ec) {
+		if (!ec) {
+			rmt_ScopedCPUSample(idling, 0)
+			this->idling.emit();
+			this->idle();
+		}
+	});
 }

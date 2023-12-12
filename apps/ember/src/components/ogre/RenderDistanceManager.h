@@ -22,19 +22,15 @@
 #include "sigc++/connection.h"
 #include "string"
 
-namespace varconf
-{
+namespace varconf {
 class Variable;
 }
 
-namespace Ember
-{
+namespace Ember {
 
 class ConfigListenerContainer;
-namespace OgreView
-{
-namespace Environment
-{
+namespace OgreView {
+namespace Environment {
 struct IFog;
 }
 
@@ -45,8 +41,7 @@ class GraphicalChangeAdapter;
  * By calling setCompensatedFarRenderDistance() with a factor value, the fog density is also affected to compensate for the missing render distance.
  * To affect only the render distance, call setFarRenderDistance().
  */
-class RenderDistanceManager : public boost::noncopyable
-{
+class RenderDistanceManager : public boost::noncopyable {
 public:
 	/**
 	 * @brief Constructor.

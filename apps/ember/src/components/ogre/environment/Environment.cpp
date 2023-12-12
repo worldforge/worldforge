@@ -29,10 +29,10 @@
 #include <OgreStringConverter.h>
 #include <OgreSceneManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 Environment::Environment(Ogre::SceneManager& sceneMgr,
 						 Terrain::TerrainManager& terrainManager,
@@ -56,7 +56,7 @@ Environment::~Environment() = default;
 void Environment::terrainEnabled(EmberEntity& entity) {
 	setFirmamentEnabled(true);
 	if (entity.getPredictedPos().isValid()) {
-		setWorldPosition((float)entity.getPredictedPos().x(), (float)entity.getPredictedPos().y());
+		setWorldPosition((float) entity.getPredictedPos().x(), (float) entity.getPredictedPos().y());
 	} else {
 		setWorldPosition(0, 0);
 	}
@@ -176,5 +176,5 @@ Ogre::ColourValue Environment::getAmbientLightColour() const {
 
 }
 
-}
-}
+
+

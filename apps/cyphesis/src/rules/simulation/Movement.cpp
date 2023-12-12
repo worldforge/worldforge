@@ -20,18 +20,15 @@
 
 #include "rules/Location.h"
 
-Movement::Movement(LocatedEntity & body) : m_body(body),
-                                           m_serialno(0)
-{
+Movement::Movement(LocatedEntity& body) : m_body(body),
+										  m_serialno(0) {
 }
 
-bool Movement::updateNeeded(const Location & location) const
-{
-    return (location.velocity().isValid() && location.velocity() != Vector3D::ZERO());
+bool Movement::updateNeeded(const Location& location) const {
+	return (location.velocity().isValid() && location.velocity() != Vector3D::ZERO());
 }
 
-void Movement::reset()
-{
-    ++m_serialno;
-    m_targetPos.setValid(false);
+void Movement::reset() {
+	++m_serialno;
+	m_targetPos.setValid(false);
 }

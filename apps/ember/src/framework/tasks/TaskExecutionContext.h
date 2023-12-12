@@ -22,8 +22,8 @@
 #include <vector>
 #include <memory>
 
-namespace Ember {
-namespace Tasks {
+
+namespace Ember::Tasks {
 
 class TaskExecutor;
 
@@ -77,6 +77,6 @@ private:
 	TaskUnit& mTaskUnit;
 };
 }
-}
+
 
 #endif /* TASKEXECUTIONCONTEXT_H_ */

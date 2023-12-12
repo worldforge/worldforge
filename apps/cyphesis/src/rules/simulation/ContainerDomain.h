@@ -24,90 +24,84 @@
 #include <set>
 #include <string>
 
-class ContainerDomain : public Domain
-{
-    public:
-        struct ObservationEntry;
-        struct ClosenessObserverEntry
-        {
-            std::string reacherEntityId;
-            LocatedEntity& target;
-            /**
-             * Callback to call when entries no longer are close.
-             */
-            std::function<void()> callback;
-        };
+class ContainerDomain : public Domain {
+public:
+	struct ObservationEntry;
+	struct ClosenessObserverEntry {
+		std::string reacherEntityId;
+		LocatedEntity& target;
+		/**
+		 * Callback to call when entries no longer are close.
+		 */
+		std::function<void()> callback;
+	};
 
-        struct ObservationEntry
-        {
-            Ref<LocatedEntity> observer;
+	struct ObservationEntry {
+		Ref<LocatedEntity> observer;
 
-            /**
-             * A list of disconnect functions which are to be called when the observation needs to be severed.
-             */
-            std::vector<std::function<void()>> disconnectFunctions;
-            std::list<LocatedEntity*> observedEntities;
-            std::set<ClosenessObserverEntry*> closenessObservations;
-        };
+		/**
+		 * A list of disconnect functions which are to be called when the observation needs to be severed.
+		 */
+		std::vector<std::function<void()>> disconnectFunctions;
+		std::list<LocatedEntity*> observedEntities;
+		std::set<ClosenessObserverEntry*> closenessObservations;
+	};
 
-        std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>> m_closenessObservations;
+	std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>> m_closenessObservations;
 
 
-        explicit ContainerDomain(LocatedEntity& entity);
+	explicit ContainerDomain(LocatedEntity& entity);
 
-        ~ContainerDomain() override = default;
+	~ContainerDomain() override = default;
 
-        bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
+	bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
 
-        void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
+	void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
 
-        std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
+	std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
 
-        void addEntity(LocatedEntity& entity) override;
+	void addEntity(LocatedEntity& entity) override;
 
-        void removeEntity(LocatedEntity& entity) override;
+	void removeEntity(LocatedEntity& entity) override;
 
-        bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
-        std::vector<CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
+	std::vector<CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
 
-        boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
+	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 
 
-        LocatedEntity& getEntity()
-        {
-            return m_entity;
-        }
+	LocatedEntity& getEntity() {
+		return m_entity;
+	}
 
-        const std::map<std::string, ObservationEntry>& getEntries() const
-        {
-            return m_reachingEntities;
-        };
+	const std::map<std::string, ObservationEntry>& getEntries() const {
+		return m_reachingEntities;
+	};
 
-        std::map<std::string, ObservationEntry>& getEntries()
-        {
-            return m_reachingEntities;
-        };
+	std::map<std::string, ObservationEntry>& getEntries() {
+		return m_reachingEntities;
+	};
 
-        void setObservers(std::vector<std::string> observerIds);
+	void setObservers(std::vector<std::string> observerIds);
 
-        bool hasObserverRegistered(const LocatedEntity& entity) const;
+	bool hasObserverRegistered(const LocatedEntity& entity) const;
 
-        void removed() override;
+	void removed() override;
 
-        void addObserver(std::string& entityId);
+	void addObserver(std::string& entityId);
 
-        void removeObserver(const std::basic_string<char>& entityId);
+	void removeObserver(const std::basic_string<char>& entityId);
 
-    private:
+private:
 
-        ContainerAccessProperty* mContainerAccessProperty;
+	ContainerAccessProperty* mContainerAccessProperty;
 
-        /**
-         * A map of the entities that currently are reaching into this container.
-         * Key is the entity id of the reaching entity.
-         */
-        std::map<std::string, ObservationEntry> m_reachingEntities;
+	/**
+	 * A map of the entities that currently are reaching into this container.
+	 * Key is the entity id of the reaching entity.
+	 */
+	std::map<std::string, ObservationEntry> m_reachingEntities;
 
 };
 

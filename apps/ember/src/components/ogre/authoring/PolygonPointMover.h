@@ -28,23 +28,20 @@
 #include <wfmath/point.h>
 #include <sigc++/trackable.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 class PolygonPoint;
+
 class Polygon;
 
 /**
  @brief A listener interface which will receive updates when the movement of the point changes.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-struct IMovementListener
-{
+struct IMovementListener {
 
 	/**
 	 * @brief Dtor.
@@ -70,8 +67,7 @@ struct IMovementListener
 
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class PolygonPointMover: public IMovementBridge, public virtual sigc::trackable
-{
+class PolygonPointMover : public IMovementBridge, public virtual sigc::trackable {
 public:
 
 	/**
@@ -87,16 +83,25 @@ public:
 	~PolygonPointMover() override;
 
 	const WFMath::Quaternion& getOrientation() const override;
+
 	void setOffset(boost::optional<float> offset) override;
+
 	boost::optional<float> getOffset() const override;
+
 	const WFMath::Point<3>& getPosition() const override;
+
 	void setPosition(const WFMath::Point<3>& position) override;
+
 	void move(const WFMath::Vector<3>& directionVector) override;
+
 	void setRotation(int axis, WFMath::CoordType angle) override;
+
 	void setOrientation(const WFMath::Quaternion& rotation) override;
+
 	void yaw(WFMath::CoordType angle) override;
 
 	void finalizeMovement() override;
+
 	void cancelMovement() override;
 
 private:
@@ -144,6 +149,7 @@ private:
 	WFMath::Point<2> mInitialPosition;
 
 	void input_KeyPressed(const SDL_Keysym& key, Input::InputMode mode);
+
 	void input_KeyReleased(const SDL_Keysym& key, Input::InputMode mode);
 
 	/**
@@ -176,8 +182,8 @@ private:
 
 }
 
-}
 
-}
+
+
 
 #endif

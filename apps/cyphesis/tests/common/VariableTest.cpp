@@ -29,18 +29,17 @@
 
 #include <cassert>
 
-int main()
-{
-    int i = 1;
-    Variable<int> v1(i);
+int main() {
+	int i = 1;
+	Variable<int> v1(i);
 
-    std::string s;
-    Variable<std::string> v2(s);
+	std::string s;
+	Variable<std::string> v2(s);
 
-    const char * c = "bar";
-    Variable<const char *> v3(c);
+	const char* c = "bar";
+	Variable<const char*> v3(c);
 
-    v1.send(std::cout);
-    v2.send(std::cout);
-    v3.send(std::cout);
+	v1.send(std::cout);
+	v2.send(std::cout);
+	v3.send(std::cout);
 }

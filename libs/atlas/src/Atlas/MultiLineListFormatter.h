@@ -24,20 +24,25 @@ namespace Atlas {
 /**
  * @brief A formatter which uses multiple lines for list contents.
  */
-class MultiLineListFormatter : public Atlas::Formatter
-{
+class MultiLineListFormatter : public Atlas::Formatter {
 public:
 	MultiLineListFormatter(std::ostream& s, Atlas::Bridge& b);
 
 	void mapListItem(std::string name) override;
 
 	void listMapItem() override;
+
 	void listListItem() override;
+
 	void listIntItem(std::int64_t l) override;
+
 	void listFloatItem(double d) override;
+
 	void listStringItem(std::string s) override;
-    void listNoneItem() override;
-    void listEnd() override;
+
+	void listNoneItem() override;
+
+	void listEnd() override;
 
 };
 

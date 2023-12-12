@@ -11,9 +11,9 @@
 // 
 
 class Sun : public Body {
-  private:
-  public:
-    Sun(double p, double r, double e = 0, double a = 0) : Body(p,r,e,a) { }
+private:
+public:
+	Sun(double p, double r, double e = 0, double a = 0) : Body(p, r, e, a) {}
 };
 
 #endif // ASTRONOMY_SUN_H

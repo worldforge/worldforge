@@ -23,8 +23,8 @@
 #include "services/sound/SoundGeneral.h"
 #include <string>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 /**
  * @brief Represent each buffer described inside specific sound groups.
  */
@@ -49,6 +49,6 @@ struct SoundDefinition {
 };
 
 }
-}
+
 
 #endif

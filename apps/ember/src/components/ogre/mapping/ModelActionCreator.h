@@ -24,9 +24,8 @@
 #include "components/entitymapping/IActionCreator.h"
 #include "components/entitymapping/Actions/Action.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Mapping {
+
+namespace Ember::OgreView::Mapping {
 
 /**
  * A basic implementation of IActionCreator used for displaying Models.
@@ -90,8 +89,6 @@ protected:
 
 };
 
-}
-}
 }
 
 

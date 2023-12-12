@@ -15,10 +15,8 @@ template<int>
 class Ball;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 template<typename>
 class Buffer;
@@ -87,8 +85,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* CLUSTERPOPULATOR_H_ */

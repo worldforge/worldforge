@@ -27,42 +27,46 @@
 
 
 class PropertyExerciser {
-  private:
-    Atlas::Message::IntType integer_ptr_target;
-    Atlas::Message::FloatType float_ptr_target;
-    Atlas::Message::PtrType ptr_ptr_target;
-    Atlas::Message::StringType string_ptr_target;
-    Atlas::Message::MapType map_ptr_target;
-    Atlas::Message::ListType list_ptr_target;
-    
-    std::vector<Atlas::Message::IntType> integer_values;
-    std::vector<Atlas::Message::FloatType> float_values;
-    std::vector<Atlas::Message::PtrType> ptr_values;
-    std::vector<Atlas::Message::StringType> string_values;
-    std::vector<Atlas::Message::MapType> map_values;
-    std::vector<Atlas::Message::ListType> list_values;
+private:
+	Atlas::Message::IntType integer_ptr_target;
+	Atlas::Message::FloatType float_ptr_target;
+	Atlas::Message::PtrType ptr_ptr_target;
+	Atlas::Message::StringType string_ptr_target;
+	Atlas::Message::MapType map_ptr_target;
+	Atlas::Message::ListType list_ptr_target;
 
-    Atlas::Message::Element randomAtlasValue();
-    const std::string & randomString() const;
+	std::vector<Atlas::Message::IntType> integer_values;
+	std::vector<Atlas::Message::FloatType> float_values;
+	std::vector<Atlas::Message::PtrType> ptr_values;
+	std::vector<Atlas::Message::StringType> string_values;
+	std::vector<Atlas::Message::MapType> map_values;
+	std::vector<Atlas::Message::ListType> list_values;
 
-    std::unique_ptr<Inheritance> m_inheritance;
+	Atlas::Message::Element randomAtlasValue();
 
-    template <typename T>
-    void testSetByType(PropertyBase & property,
-                       Atlas::Message::Element::Type element_type,
-                       const std::vector<T> & values);
-    
-    void testGet(PropertyBase & property,
-                 Atlas::Message::Element::Type element_type);
-    void testAdd(PropertyBase & property,
-                 Atlas::Message::Element::Type element_type);
-    void testSet(PropertyBase & property,
-                 Atlas::Message::Element::Type element_type);
-  public:
-    PropertyExerciser();
+	const std::string& randomString() const;
 
-    int exerciseProperty(PropertyBase & property,
-                         Atlas::Message::Element::Type element_type);
+	std::unique_ptr<Inheritance> m_inheritance;
+
+	template<typename T>
+	void testSetByType(PropertyBase& property,
+					   Atlas::Message::Element::Type element_type,
+					   const std::vector<T>& values);
+
+	void testGet(PropertyBase& property,
+				 Atlas::Message::Element::Type element_type);
+
+	void testAdd(PropertyBase& property,
+				 Atlas::Message::Element::Type element_type);
+
+	void testSet(PropertyBase& property,
+				 Atlas::Message::Element::Type element_type);
+
+public:
+	PropertyExerciser();
+
+	int exerciseProperty(PropertyBase& property,
+						 Atlas::Message::Element::Type element_type);
 };
 
 

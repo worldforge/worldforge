@@ -48,8 +48,7 @@ namespace Environment {
 * The position is needed for updating the paged geometry when the position of the entity changes, since we need to update the page both at the entity's previous position as well as the page in the new position.
 * The connections are useful for disconnecting the listeners when we're not listening to the entity anymore (i.e. when it's been removed from the world).
 */
-struct ModelRepresentationInstance
-{
+struct ModelRepresentationInstance {
 	/**
 	@brief The entity instance.
 	*/
@@ -85,23 +84,22 @@ struct ModelRepresentationInstance
 
 	The storage of entities can either use a straight up map, or use batches, where each batch corresponds to a page in the paged geometry. The latter is more efficient when generating the pages needed by the paged geometry engine, but requires more memory and is less effective when adding or removing entities. The batching can be turned on and off through the EMBERENTITYLOADER_USEBATCH define.
 */
-class EmberEntityLoader : public ::Forests::PageLoader
-{
+class EmberEntityLoader : public ::Forests::PageLoader {
 public:
 	typedef std::unordered_map<std::string, ModelRepresentationInstance> EntityMap;
 	typedef std::map<int, EntityMap> EntityColumn;
 	typedef std::map<int, EntityColumn> EntityStore;
 
-    /**
-     * @brief Ctor.
-     * @param geom The geometry for which this class will provide entity loading.
-     * @param batchSize The size of each batch. Only relevant if batching is used.
-     */
-    EmberEntityLoader(::Forests::PagedGeometry &geom, unsigned int batchSize);
+	/**
+	 * @brief Ctor.
+	 * @param geom The geometry for which this class will provide entity loading.
+	 * @param batchSize The size of each batch. Only relevant if batching is used.
+	 */
+	EmberEntityLoader(::Forests::PagedGeometry& geom, unsigned int batchSize);
 
-    /**
-     * Dtor.
-     */
+	/**
+	 * Dtor.
+	 */
 	~EmberEntityLoader() override;
 
 	/**
@@ -121,7 +119,7 @@ public:
 	/**
 	 * @copydoc Forests::PageLoader::loadPage()
 	 */
-	void loadPage(::Forests::PageInfo &page) override;
+	void loadPage(::Forests::PageInfo& page) override;
 
 protected:
 #if EMBERENTITYLOADER_USEBATCH
@@ -144,7 +142,7 @@ protected:
 	/**
 	@brief The main paged geometry instance which will handle all rendering.
 	*/
-	::Forests::PagedGeometry &mGeom;
+	::Forests::PagedGeometry& mGeom;
 
 	/**
 	@brief The size, in world units, for each batch. Only relevant if batching is used.
@@ -171,7 +169,7 @@ protected:
 	 * @param entity The which we should lookup.
 	 * @return A pointer to the EntityMap where the entity is stored, or null if no entity map can be found.
 	 */
-	EntityMap* getStoreForEntity(EmberEntity * entity);
+	EntityMap* getStoreForEntity(EmberEntity* entity);
 };
 
 }

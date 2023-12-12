@@ -25,68 +25,68 @@
 #include <boost/asio/steady_timer.hpp>
 
 class CreatorClient;
+
 class ClientTask;
 
 /// \brief Base class for classes that implement clients used to connect to a
 /// cyphesis server
-class BaseClient : public Link
-{
-    protected:
+class BaseClient : public Link {
+protected:
 
-        std::shared_ptr<ClientTask> m_task;
+	std::shared_ptr<ClientTask> m_task;
 
-        std::string m_username;
-        std::string m_password;
+	std::string m_username;
+	std::string m_password;
 
-        long m_serialNo;
+	long m_serialNo;
 
-        struct CallbackEntry
-        {
-            std::function<void(const Operation&, OpVector&)> callback;
-            std::unique_ptr<boost::asio::steady_timer> timeout;
-            std::function<void()> timeoutCallback;
-        };
+	struct CallbackEntry {
+		std::function<void(const Operation&, OpVector&)> callback;
+		std::unique_ptr<boost::asio::steady_timer> timeout;
+		std::function<void()> timeoutCallback;
+	};
 
-        std::map<long, CallbackEntry> m_callbacks;
+	std::map<long, CallbackEntry> m_callbacks;
 
 
-        static std::string getErrorMessage(const Operation& err);
+	static std::string getErrorMessage(const Operation& err);
 
-        virtual void notifyAccountCreated(RouterId accountId) = 0;
+	virtual void notifyAccountCreated(RouterId accountId) = 0;
 
-    public:
-        explicit BaseClient(CommSocket& commSocket);
+public:
+	explicit BaseClient(CommSocket& commSocket);
 
-        ~BaseClient() override = default;
+	~BaseClient() override = default;
 
-        void createSystemAccount(const std::string& usernameSuffix = "");
+	void createSystemAccount(const std::string& usernameSuffix = "");
 
-        Atlas::Objects::Root createAccount(const std::string& name,
-                                           const std::string& pword);
+	Atlas::Objects::Root createAccount(const std::string& name,
+									   const std::string& pword);
 
-        CreatorClient* createCharacter(const std::string& name);
+	CreatorClient* createCharacter(const std::string& name);
 
-        void logout();
+	void logout();
 
-        void externalOperation(const Operation& op, Link&) override;
+	void externalOperation(const Operation& op, Link&) override;
 
 
-        int runTask(std::shared_ptr<ClientTask> task, const std::string& arg);
-        int runTask(std::function<bool(const Operation&, OpVector&)> function);
+	int runTask(std::shared_ptr<ClientTask> task, const std::string& arg);
 
-        int endTask();
+	int runTask(std::function<bool(const Operation&, OpVector&)> function);
 
-        void sendWithCallback(Operation op, std::function<void(const Operation&, OpVector&)> callback,
-                              std::function<void()> timeoutCallback = std::function<void()>(),
-                              std::chrono::milliseconds timeout = std::chrono::milliseconds(5000));
+	int endTask();
 
-        /**
-         * Checks if there's an active task.
-         * @return True if there's a task set.
-         */
-        bool hasTask() const;
+	void sendWithCallback(Operation op, std::function<void(const Operation&, OpVector&)> callback,
+						  std::function<void()> timeoutCallback = std::function<void()>(),
+						  std::chrono::milliseconds timeout = std::chrono::milliseconds(5000));
 
-        void notifyConnectionComplete() override;
+	/**
+	 * Checks if there's an active task.
+	 * @return True if there's a task set.
+	 */
+	bool hasTask() const;
+
+	void notifyConnectionComplete() override;
 
 };
 

@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<MouseCursor>(sol::table& space) {
 	auto mouseCursor = space.new_usertype<MouseCursor>("MouseCursor", sol::no_constructor,
 													   sol::base_classes, sol::bases<EventSet>()

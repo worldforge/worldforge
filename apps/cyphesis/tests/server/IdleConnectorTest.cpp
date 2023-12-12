@@ -31,27 +31,25 @@
 
 static bool trigger_called = false;
 
-static void trigger()
-{
-    trigger_called = true;
+static void trigger() {
+	trigger_called = true;
 }
 
-int main()
-{
-    boost::asio::io_context s;
-    IdleConnector * ic = new IdleConnector(s);
+int main() {
+	boost::asio::io_context s;
+	IdleConnector* ic = new IdleConnector(s);
 
-    ic->idling.connect(sigc::ptr_fun(trigger));
+	ic->idling.connect(sigc::ptr_fun(trigger));
 
-    assert(!trigger_called);
+	assert(!trigger_called);
 
-    s.run_one();
+	s.run_one();
 
-    assert(trigger_called);
+	assert(trigger_called);
 
-    delete ic;
+	delete ic;
 
-    return 0;
+	return 0;
 }
 
 // stubs

@@ -21,10 +21,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<HelpMessage>(sol::table& space) {
 	auto helpMessage = space.new_usertype<HelpMessage>("HelpMessage",
-	sol::constructors<HelpMessage(std::string, std::string, const std::string&, std::string)>());
+													   sol::constructors<HelpMessage(std::string, std::string, const std::string&, std::string)>());
 	helpMessage["mTitle"] = &HelpMessage::mTitle;
 	helpMessage["mMessage"] = &HelpMessage::mMessage;
 	helpMessage["mTags"] = &HelpMessage::mTags;

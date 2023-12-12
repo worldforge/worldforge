@@ -23,6 +23,7 @@
 
 #ifndef ENTITYMOVERBASE_H_
 #define ENTITYMOVERBASE_H_
+
 #include "IMovementBridge.h"
 #include "SnapToMovement.h"
 #include "framework/ConsoleCommandWrapper.h"
@@ -33,23 +34,18 @@
 #include <boost/optional.hpp>
 #include <Eris/EntityRef.h>
 
-namespace Ogre
-{
+namespace Ogre {
 class Node;
 }
 
-namespace Eris
-{
+namespace Eris {
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 class SnapToMovement;
 
 
@@ -60,7 +56,7 @@ class SnapToMovement;
  *
  * @note You should preferable keep just one static instance of this available.
  */
-class SnapListener : public ConsoleObject{
+class SnapListener : public ConsoleObject {
 public:
 
 	/**
@@ -79,7 +75,7 @@ public:
 	 * @param command
 	 * @param args
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	/**
 	 * @brief Allows toggling of the snap to functionality through the +snaptomovement command.
@@ -119,8 +115,7 @@ private:
  * The snap to behavior is off by default, but can be toggled through the SnapTo command wrapper object. This maps to the "+snaptomovement" command.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class EntityMoverBase: public IMovementBridge, public virtual sigc::trackable
-{
+class EntityMoverBase : public IMovementBridge, public virtual sigc::trackable {
 public:
 	/**
 	 * @brief Ctor.
@@ -152,7 +147,7 @@ public:
 	void setOrientation(const WFMath::Quaternion& rotation) override;
 
 	void yaw(WFMath::CoordType angle) override;
-	
+
 	/**
 	 * @brief Sets whether snap to functionality should be enabled.
 	 *
@@ -245,7 +240,7 @@ protected:
 	void processPickResults(const std::vector<PickResult>& results) override;
 };
 }
-}
+
 
 }
 

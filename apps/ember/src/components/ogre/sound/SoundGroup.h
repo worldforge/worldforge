@@ -33,8 +33,8 @@ class SoundSource;
 
 class BaseSoundSample;
 }
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class SoundGroup;
 
@@ -149,7 +149,6 @@ protected:
 };
 }
 
-}
 
 #endif
 

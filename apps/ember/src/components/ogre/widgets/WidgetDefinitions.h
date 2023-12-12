@@ -30,8 +30,8 @@
 #include <map>
 #include "WidgetPlugin.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 class GUIManager;
 namespace Gui {
 
@@ -97,6 +97,5 @@ private:
 }
 }
 
-}
 
 #endif

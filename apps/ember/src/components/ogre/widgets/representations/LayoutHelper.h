@@ -24,39 +24,27 @@
 
 #include <string>
 
-namespace CEGUI
-{
-	class String;
-	class Window;
+namespace CEGUI {
+class String;
+
+class Window;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief class that takes care of layout loading and all the fuss associated with it (prefixes mostly)
  * 
  * TODO: I am not sure I like the way this is done, perhaps I will move this to Representation base class
  */
-class LayoutHelper
-{
+class LayoutHelper {
 public:
 	static CEGUI::Window* loadLayout(const std::string& layout, CEGUI::String& prefix);
-	
-private:
-	static unsigned int mLastPrefixBase;
+
 };
 
 }
 
-}
-
-}
-
-}
 
 #endif

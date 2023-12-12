@@ -18,25 +18,20 @@
 
 #include "DetachedEntity.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 DetachedEntity::DetachedEntity(const std::string& id, Eris::TypeInfo* ty) :
-	Eris::Entity(id, ty)
-{
+		Eris::Entity(id, ty) {
 }
+
 DetachedEntity::~DetachedEntity() {
 	//Since we might have faked that we have a parent we need to reset that to prevent base class from trying to remove us from it.
 	m_location = nullptr;
 }
 
 
-
-void DetachedEntity::setFromMessage(const Atlas::Message::MapType& attrs)
-{
+void DetachedEntity::setFromMessage(const Atlas::Message::MapType& attrs) {
 	beginUpdate();
 
 	Atlas::Message::MapType::const_iterator A;
@@ -56,24 +51,20 @@ void DetachedEntity::setFromMessage(const Atlas::Message::MapType& attrs)
 	endUpdate();
 }
 
-void DetachedEntity::doInit(const Atlas::Objects::Entity::RootEntity& rootEntity)
-{
+void DetachedEntity::doInit(const Atlas::Objects::Entity::RootEntity& rootEntity) {
 	init(rootEntity, true);
 }
 
-Eris::Entity* DetachedEntity::getEntity(const std::string&)
-{
+Eris::Entity* DetachedEntity::getEntity(const std::string&) {
 	return nullptr;
 }
 
-void DetachedEntity::setLocationEntity(Eris::Entity* location)
-{
+void DetachedEntity::setLocationEntity(Eris::Entity* location) {
 	//We fake that it's a child, while it's really not in reality.
 	m_location = location;
 }
 
 
+}
 
-}
-}
-}
+

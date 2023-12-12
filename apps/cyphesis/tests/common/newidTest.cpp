@@ -32,22 +32,21 @@
 
 #include <cassert>
 
-int main()
-{
-    DatabaseNull database;
-    database.idGeneratorFn = [](){
-        static long id = 0;
-        return ++id;
-    };
+int main() {
+	DatabaseNull database;
+	database.idGeneratorFn = []() {
+		static long id = 0;
+		return ++id;
+	};
 
 
-    auto id = newId();
+	auto id = newId();
 
-    assert(id.isValid());
-    assert(!id.m_id.empty());
-    assert(id.m_intId > 0);
+	assert(id.isValid());
+	assert(!id.m_id.empty());
+	assert(id.m_intId > 0);
 
-    return 0;
+	return 0;
 }
 
 // stubs

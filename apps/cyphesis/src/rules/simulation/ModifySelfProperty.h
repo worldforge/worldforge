@@ -22,49 +22,47 @@
 
 #include "ModifyProperty.h"
 
-class ModifySelfProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_name = "modify_self";
-        static constexpr const char* property_atlastype = "map";
+class ModifySelfProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "modify_self";
+	static constexpr const char* property_atlastype = "map";
 
-        ModifySelfProperty();
+	ModifySelfProperty();
 
-        ModifySelfProperty(const ModifySelfProperty& rhs);
+	ModifySelfProperty(const ModifySelfProperty& rhs);
 
-        ~ModifySelfProperty() override = default;
+	~ModifySelfProperty() override = default;
 
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        void install(LocatedEntity& owner, const std::string& name) override;
+	void install(LocatedEntity& owner, const std::string& name) override;
 
-        ModifySelfProperty* copy() const override;
+	ModifySelfProperty* copy() const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void apply(LocatedEntity& e) override;
+	void apply(LocatedEntity& e) override;
 
-    protected:
+protected:
 
-        std::map<std::string, ModifyEntry> m_modifyEntries;
-        Atlas::Message::Element m_data;
+	std::map<std::string, ModifyEntry> m_modifyEntries;
+	Atlas::Message::Element m_data;
 
-        /**
-       * Entity specific state. Since we need to listen to changes in properties we need to keep track of connections for these signals.
-       */
-        struct State
-        {
-            sigc::connection updatedConnection;
-        };
+	/**
+   * Entity specific state. Since we need to listen to changes in properties we need to keep track of connections for these signals.
+   */
+	struct State {
+		sigc::connection updatedConnection;
+	};
 
-        static PropertyInstanceState<State> sInstanceState;
+	static PropertyInstanceState<State> sInstanceState;
 
-        void setData(const Atlas::Message::Element& val);
+	void setData(const Atlas::Message::Element& val);
 
-        void checkIfActive(LocatedEntity& entity);
+	void checkIfActive(LocatedEntity& entity);
 
 };
 

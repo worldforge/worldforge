@@ -22,7 +22,7 @@
 #include "components/lua/Connector.h"
 
 
-template <typename T>
+template<typename T>
 void registerLua(sol::table& space);
 
 #endif //EMBER_ERIS_REGISTERLUA_H

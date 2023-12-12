@@ -22,7 +22,7 @@
 #include <iostream>
 #include <string>
 
-namespace Atlas { namespace Message { class Element; } }
+namespace Atlas { namespace Message { class Element; }}
 
 #define cy_debug(prg) { if (debug_flag) { prg } }
 
@@ -60,14 +60,14 @@ namespace Atlas { namespace Message { class Element; } }
         std::cerr << text << "     :: " << __PRETTY_FUNCTION__ << std::endl;\
 } }
 
-void output_element(std::ostream & out,
-                    const Atlas::Message::Element & item,
-                    size_t depth);
+void output_element(std::ostream& out,
+					const Atlas::Message::Element& item,
+					size_t depth);
 
-template <typename T>
-void debug_dump(const T & t, std::ostream &);
+template<typename T>
+void debug_dump(const T& t, std::ostream&);
 
-template <typename T>
-std::string debug_tostring(const T & t);
+template<typename T>
+std::string debug_tostring(const T& t);
 
 #endif // COMMON_DEBUG_H

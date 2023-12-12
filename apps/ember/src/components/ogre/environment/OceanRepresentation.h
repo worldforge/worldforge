@@ -23,16 +23,14 @@
 #include <sigc++/trackable.h>
 #include <components/ogre/BulletCollisionDetector.h>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 class Scene;
-namespace Environment
-{
+namespace Environment {
 
 class Environment;
+
 struct IWater;
 
 /**
@@ -43,8 +41,7 @@ struct IWater;
  * The ocean is a little special, so we can't use the normal ModelRepresentation for it. Instead this class will bind an entity to an IWater instance.
  * Currently the only logic there is is to alter the level of the water depending on the vertical position of the entity.
  */
-class OceanRepresentation: public IGraphicalRepresentation, public virtual sigc::trackable
-{
+class OceanRepresentation : public IGraphicalRepresentation, public virtual sigc::trackable {
 public:
 	OceanRepresentation(EmberEntity& entity, Environment& environment, Scene& scene);
 
@@ -81,7 +78,7 @@ private:
 	/**
 	 * @brief The entity which this representation is bound to.
 	 */
-	EmberEntity & mEntity;
+	EmberEntity& mEntity;
 
 	/**
 	 * @brief The world environment.

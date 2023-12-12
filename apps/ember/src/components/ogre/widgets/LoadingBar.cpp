@@ -35,9 +35,9 @@ the basic resources required for the progress bar and will be loaded automatical
 #include <CEGUI/ImageManager.h>
 
 using namespace Ogre;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 
 LoadingBar::LoadingBar(const Cegui::CEGUISetup& ceguiSetup, MainLoopController& mainLoopController) :
@@ -96,7 +96,7 @@ void LoadingBar::setVersionText(const std::string& versionText) {
 }
 
 void LoadingBar::updateRender(bool forceUpdate) {
-	if (mTimer.getMilliseconds() > (1000/60) || forceUpdate) {
+	if (mTimer.getMilliseconds() > (1000 / 60) || forceUpdate) {
 		try {
 			Input::getSingleton().processInput();
 			if (mMainLoopController.shouldQuit() || mGuiSetup.getRenderWindow().isClosed()) {
@@ -233,5 +233,5 @@ void ResourceGroupLoadingBarSection::resourceGroupLoadEnded(const String& groupN
 }
 
 }
-}
-}
+
+

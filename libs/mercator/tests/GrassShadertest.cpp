@@ -18,40 +18,38 @@
 
 typedef WFMath::Point<2> Point2;
 
-void testGrassShader()
-{
-    Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
+void testGrassShader() {
+	Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
 
-    Mercator::Shader::Parameters params;
-    params[Mercator::GrassShader::key_lowThreshold] = 2.f;
-    params[Mercator::GrassShader::key_highThreshold] = 15.f;
-    params[Mercator::GrassShader::key_cutoff] = 0.4f;
-    params[Mercator::GrassShader::key_intercept] = 4.f;
-    
-    Mercator::GrassShader dshade{params};
-    terrain.addShader(&dshade, 0);
-    
-    terrain.setBasePoint(0, 0, 20);
-    terrain.setBasePoint(0, 1, 1);
-    terrain.setBasePoint(1, 0, 2);
-    terrain.setBasePoint(1, 1, 0.5);
-    terrain.setBasePoint(2, 0, 2);
-    terrain.setBasePoint(2, 1, 0.5);
-    
-    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
-    
-    seg->populateSurfaces();
-    seg->populate();
-    seg->populateSurfaces();
+	Mercator::Shader::Parameters params;
+	params[Mercator::GrassShader::key_lowThreshold] = 2.f;
+	params[Mercator::GrassShader::key_highThreshold] = 15.f;
+	params[Mercator::GrassShader::key_cutoff] = 0.4f;
+	params[Mercator::GrassShader::key_intercept] = 4.f;
 
-    // This segment is too low to shade
-    seg = terrain.getSegmentAtIndex(1,0);
-    dshade.checkIntersect(*seg);
+	Mercator::GrassShader dshade{params};
+	terrain.addShader(&dshade, 0);
+
+	terrain.setBasePoint(0, 0, 20);
+	terrain.setBasePoint(0, 1, 1);
+	terrain.setBasePoint(1, 0, 2);
+	terrain.setBasePoint(1, 1, 0.5);
+	terrain.setBasePoint(2, 0, 2);
+	terrain.setBasePoint(2, 1, 0.5);
+
+	Mercator::Segment* seg = terrain.getSegmentAtIndex(0, 0);
+
+	seg->populateSurfaces();
+	seg->populate();
+	seg->populateSurfaces();
+
+	// This segment is too low to shade
+	seg = terrain.getSegmentAtIndex(1, 0);
+	dshade.checkIntersect(*seg);
 }
 
-int main()
-{
-    testGrassShader();
+int main() {
+	testGrassShader();
 
-    return 0;
+	return 0;
 }

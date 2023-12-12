@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Tree>(sol::table& space) {
 	auto tree = space.new_usertype<Tree>("Tree",
 										 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()
@@ -50,12 +51,12 @@ void registerLua<Tree>(sol::table& space) {
 	treeItem["getFont"] = &TreeItem::getFont;
 	treeItem["getTextColours"] = &TreeItem::getTextColours;
 	treeItem["setFont"] = sol::overload(sol::resolve<void(
-	const Font*)>(&TreeItem::setFont),
-			[](TreeItem* self, const char* font_name) { self->setFont(font_name); });
+												const Font*)>(&TreeItem::setFont),
+										[](TreeItem* self, const char* font_name) { self->setFont(font_name); });
 	treeItem["setTextColours"] = sol::overload(sol::resolve<void(
-	const ColourRect&)>(&TreeItem::setTextColours),
-			sol::resolve<void(Colour, Colour, Colour, Colour)>(&TreeItem::setTextColours),
-			sol::resolve<void(Colour)>(&TreeItem::setTextColours));
+													   const ColourRect&)>(&TreeItem::setTextColours),
+											   sol::resolve<void(Colour, Colour, Colour, Colour)>(&TreeItem::setTextColours),
+											   sol::resolve<void(Colour)>(&TreeItem::setTextColours));
 	treeItem["getText"] = [](TreeItem* self) { return std::string(self->getText().c_str()); };
 	treeItem["getTooltipText"] = [](TreeItem* self) { return std::string(self->getTooltipText().c_str()); };
 	treeItem["getID"] = &TreeItem::getID;
@@ -75,9 +76,9 @@ void registerLua<Tree>(sol::table& space) {
 	treeItem["setAutoDeleted"] = &TreeItem::setAutoDeleted;
 	treeItem["setOwnerWindow"] = &TreeItem::setOwnerWindow;
 	treeItem["setSelectionColours"] = sol::overload(sol::resolve<void(
-	const ColourRect&)>(&TreeItem::setSelectionColours),
-			sol::resolve<void(Colour, Colour, Colour, Colour)>(&TreeItem::setSelectionColours),
-			sol::resolve<void(Colour)>(&TreeItem::setSelectionColours));
+															const ColourRect&)>(&TreeItem::setSelectionColours),
+													sol::resolve<void(Colour, Colour, Colour, Colour)>(&TreeItem::setSelectionColours),
+													sol::resolve<void(Colour)>(&TreeItem::setSelectionColours));
 	treeItem["setSelectionBrushImage"] = sol::overload(sol::resolve<const Image*>(&TreeItem::setSelectionBrushImage), [](TreeItem* self, const char* name) { self->setSelectionBrushImage(name); });
 	treeItem["setButtonLocation"] = &TreeItem::setButtonLocation;
 	treeItem["getButtonLocation"] = &TreeItem::getButtonLocation;

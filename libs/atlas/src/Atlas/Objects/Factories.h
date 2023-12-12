@@ -29,23 +29,23 @@
 #include <list>
 #include <map>
 
-namespace Atlas {
-namespace Objects {
+
+namespace Atlas::Objects {
 
 template<class T>
-static SmartPtr <RootData> factory(const std::string&, int) {
+static SmartPtr<RootData> factory(const std::string&, int) {
 	return SmartPtr<T>();
 }
 
 template<class T>
-static SmartPtr <RootData> defaultInstance(const std::string&, int) {
+static SmartPtr<RootData> defaultInstance(const std::string&, int) {
 	return T::allocator.getDefaultObjectInstance();
 }
 
 
-SmartPtr <RootData> generic_factory(const std::string& name, int no);
+SmartPtr<RootData> generic_factory(const std::string& name, int no);
 
-SmartPtr <RootData> anonymous_factory(const std::string& name, int no);
+SmartPtr<RootData> anonymous_factory(const std::string& name, int no);
 
 typedef Root (* FactoryMethod)(const std::string&, int);
 
@@ -71,7 +71,6 @@ public:
 	 */
 	int classno;
 };
-typedef std::map<const std::string, Factory> FactoryMap;
 
 class Factories {
 public:
@@ -123,7 +122,7 @@ private:
 
 	static int enumMax;
 
-	FactoryMap m_factories;
+	std::map<const std::string, Factory> m_factories;
 
 
 	Root instantiateObject(const Atlas::Message::MapType& msg) const;
@@ -158,6 +157,6 @@ void Factories::addFactory(const std::string& name, int classno) {
 }
 
 }
-} // namespace Atlas::Objects
+// namespace Atlas::Objects
 
 #endif //ATLAS_C_FACTORIES_H

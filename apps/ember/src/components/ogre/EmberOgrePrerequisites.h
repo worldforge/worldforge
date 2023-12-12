@@ -16,14 +16,13 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef __EmberPrerequisites_H__
-#define __EmberPrerequisites_H__
+#ifndef EmberPrerequisites_H_
+#define EmberPrerequisites_H_
 
 
 #include "OgreIncludes.h"
 
 ///include the Logging service, since we want logging available from most classes
-///in most cases, use the S_LOG* defines
 ///such as:
 ///logger->info("some info");
 #include "framework/Log.h"

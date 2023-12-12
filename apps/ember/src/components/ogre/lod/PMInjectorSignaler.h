@@ -32,27 +32,23 @@
 
 #include <sigc++/signal.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Lod
-{
+
+namespace Ember::OgreView::Lod {
 
 /**
  * @brief Extends PMInjector with sigc++ signaling, when Lod is injected into a mesh.
  */
 class PMInjectorSignaler :
-	public Ogre::LodWorkQueueInjectorListener
-{
+		public Ogre::LodWorkQueueInjectorListener {
 public:
 	sigc::signal<void(Ogre::LodConfig*)> LodInjected;
 
 	bool shouldInject(Ogre::LodWorkQueueRequest* request) override;
+
 	void injectionCompleted(Ogre::LodWorkQueueRequest* request) override;
 };
 
 }
-}
-}
+
+
 #endif // ifndef PMINJECTORSIGNALER_H

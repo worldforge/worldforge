@@ -34,132 +34,130 @@
 
 #include <cassert>
 
-static void test_function(Atlas::Objects::Operation::RootOperation)
-{
+static void test_function(Atlas::Objects::Operation::RootOperation) {
 }
 
 #include "../TestWorld.h"
 #include "rules/simulation/Entity.h"
 
 class MyTestWorld : public TestWorld {
-  public:
-    explicit MyTestWorld(Ref<LocatedEntity> gw) : TestWorld(gw) {
-        m_eobjects[gw->getIntId()] = gw;
-    }
+public:
+	explicit MyTestWorld(Ref<LocatedEntity> gw) : TestWorld(gw) {
+		m_eobjects[gw->getIntId()] = gw;
+	}
 
-    void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
-        m_eobjects[ent->getIntId()] = ent;
-    }
+	void addEntity(const Ref<LocatedEntity>& ent, const Ref<LocatedEntity>& parent) override {
+		m_eobjects[ent->getIntId()] = ent;
+	}
 };
 
-int main()
-{
-    // We have to use the MyTestWorld class, as it implements the functions
-    // missing from BaseWorld interface.
+int main() {
+	// We have to use the MyTestWorld class, as it implements the functions
+	// missing from BaseWorld interface.
 
-    {
-        // Test constructor
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
-    }
+	{
+		// Test constructor
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
+	}
 
-    {
-        // Test destructor
-        Ref<Entity> wrld(new Entity(1));
-        BaseWorld * tw = new MyTestWorld(wrld);
+	{
+		// Test destructor
+		Ref<Entity> wrld(new Entity(1));
+		BaseWorld* tw = new MyTestWorld(wrld);
 
-        delete tw;
-    }
+		delete tw;
+	}
 
-    {
-        // Test constructor sets singleton pointer
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test constructor sets singleton pointer
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        assert(&BaseWorld::instance() == &tw);
-    }
+		assert(&BaseWorld::instance() == &tw);
+	}
 
-    {
-        // Test constructor installs reference to world entity
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test constructor installs reference to world entity
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        assert(tw.m_gw == wrld);
-    }
+		assert(tw.m_gw == wrld);
+	}
 
-    {
-        // Test retrieving non existent entity by string ID is ok
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test retrieving non existent entity by string ID is ok
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        assert(!tw.getEntity("2"));
-    }
+		assert(!tw.getEntity("2"));
+	}
 
-    {
-        // Test retrieving existent entity by string ID is ok
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test retrieving existent entity by string ID is ok
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        LocatedEntity * tc = new Entity(2);
+		LocatedEntity* tc = new Entity(2);
 
-        tw.addEntity(tc, wrld);
+		tw.addEntity(tc, wrld);
 
-        assert(tw.getEntity("2") == tc);
-    }
+		assert(tw.getEntity("2") == tc);
+	}
 
-    {
-        // Test retrieving existent entity by integer ID is ok
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test retrieving existent entity by integer ID is ok
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        LocatedEntity * tc = new Entity(2);
+		LocatedEntity* tc = new Entity(2);
 
-        tw.addEntity(tc, wrld);
+		tw.addEntity(tc, wrld);
 
-        assert(tw.getEntity(2) == tc);
-    }
+		assert(tw.getEntity(2) == tc);
+	}
 
-    {
-        // Test retrieving non existent entity by integer ID is ok
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test retrieving non existent entity by integer ID is ok
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        assert(!tw.getEntity(2));
-    }
+		assert(!tw.getEntity(2));
+	}
 
-    {
-        // Test retrieving reference to all entities is okay and empty
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test retrieving reference to all entities is okay and empty
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        assert(tw.getEntities().size() == 1);
-    }
+		assert(tw.getEntities().size() == 1);
+	}
 
-    {
-        // Test getting the time
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test getting the time
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        tw.getTime();
-    }
+		tw.getTime();
+	}
 
-    {
-        // Test getting the uptime
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test getting the uptime
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        tw.upTime();
-    }
+		tw.upTime();
+	}
 
-    {
-        // Test connecting to the dispatch signal
-        Ref<Entity> wrld(new Entity(1));
-        MyTestWorld tw(wrld);
+	{
+		// Test connecting to the dispatch signal
+		Ref<Entity> wrld(new Entity(1));
+		MyTestWorld tw(wrld);
 
-        tw.Dispatching.connect(sigc::ptr_fun(&test_function));
-    }
+		tw.Dispatching.connect(sigc::ptr_fun(&test_function));
+	}
 
-    return 0;
+	return 0;
 }
 
 #include "../stubs/common/stubid.h"

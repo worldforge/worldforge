@@ -26,19 +26,16 @@
 #include <wfmath/point.h>
 #include <list>
 
-namespace Ogre
-{
+namespace Ogre {
 class ManualObject;
+
 class SceneNode;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 class PolygonPoint;
 
@@ -47,8 +44,7 @@ class PolygonPoint;
  The polygon is rendered using a simple line.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class PolygonRenderer
-{
+class PolygonRenderer {
 public:
 
 	/**
@@ -98,8 +94,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

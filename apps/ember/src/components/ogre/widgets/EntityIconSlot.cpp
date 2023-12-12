@@ -27,10 +27,9 @@
 #include <CEGUI/CEGUI.h>
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 EntityIconSlot::EntityIconSlot(UniqueWindowPtr<CEGUI::Window> container)
 		: EntityIconDragDropTarget(container.get()),
@@ -98,5 +97,5 @@ void EntityIconSlot::notifyIconDraggedOff(EntityIcon* entityIcon) {
 
 }
 
-}
-}
+
+

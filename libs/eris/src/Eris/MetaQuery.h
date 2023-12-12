@@ -20,10 +20,10 @@ includes server latency. */
 class MetaQuery : public BaseConnection {
 public:
 	MetaQuery(boost::asio::io_service& io_service,
-			Atlas::Bridge& bridge,
-			Meta& meta,
-			const std::string& host,
-			size_t index);
+			  Atlas::Bridge& bridge,
+			  Meta& meta,
+			  const std::string& host,
+			  size_t index);
 
 	~MetaQuery() override;
 

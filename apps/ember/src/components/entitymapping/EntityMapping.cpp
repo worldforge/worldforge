@@ -23,10 +23,10 @@
 #include "EntityMapping.h"
 #include <Eris/View.h>
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 
 EntityMapping::EntityMapping(Eris::Entity& entity) : mEntity(entity) {
@@ -49,4 +49,4 @@ void EntityMapping::initialize() {
 
 }
 
-}
+

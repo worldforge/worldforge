@@ -60,88 +60,73 @@ EntityExporterBase::EntityExporterBase(const std::string& accountId, const std::
 		mAvatarId(avatarId),
 		mMindId(mindId),
 		mCurrentTimestamp(currentTimestamp),
-		mStats( { }),
+		mStats({}),
 		mComplete(false),
 		mCancelled(false),
 		mOutstandingGetRequestCounter(0),
 		mExportTransient(false),
 		mPreserveIds(false),
 		mExportRules(false),
-		mExportMinds(true)
-{
+		mExportMinds(true) {
 }
 
 EntityExporterBase::~EntityExporterBase() = default;
 
-void EntityExporterBase::setDescription(const std::string& description)
-{
+void EntityExporterBase::setDescription(const std::string& description) {
 	mDescription = description;
 }
 
-void EntityExporterBase::setName(const std::string& name)
-{
+void EntityExporterBase::setName(const std::string& name) {
 	mName = name;
 }
 
-void EntityExporterBase::setExportTransient(bool exportTransient)
-{
+void EntityExporterBase::setExportTransient(bool exportTransient) {
 	mExportTransient = exportTransient;
 }
 
-bool EntityExporterBase::getExportTransient() const
-{
+bool EntityExporterBase::getExportTransient() const {
 	return mExportTransient;
 }
 
-void EntityExporterBase::setExportMinds(bool exportMinds)
-{
+void EntityExporterBase::setExportMinds(bool exportMinds) {
 	mExportMinds = exportMinds;
 }
 
-bool EntityExporterBase::getExportMinds() const
-{
+bool EntityExporterBase::getExportMinds() const {
 	return mExportMinds;
 }
 
-void EntityExporterBase::setPreserveIds(bool preserveIds)
-{
+void EntityExporterBase::setPreserveIds(bool preserveIds) {
 	mPreserveIds = preserveIds;
 }
 
-bool EntityExporterBase::getPreserveIds() const
-{
+bool EntityExporterBase::getPreserveIds() const {
 	return mPreserveIds;
 }
 
-void EntityExporterBase::setExportRules(bool exportRules)
-{
+void EntityExporterBase::setExportRules(bool exportRules) {
 	mExportRules = exportRules;
 }
 
-bool EntityExporterBase::getExportRules() const
-{
+bool EntityExporterBase::getExportRules() const {
 	return mExportRules;
 }
 
-const EntityExporterBase::Stats& EntityExporterBase::getStats() const
-{
+const EntityExporterBase::Stats& EntityExporterBase::getStats() const {
 	return mStats;
 }
 
-void EntityExporterBase::cancel()
-{
+void EntityExporterBase::cancel() {
 	mCancelled = true;
 }
 
-void EntityExporterBase::dumpEntity(const RootEntity & ent)
-{
+void EntityExporterBase::dumpEntity(const RootEntity& ent) {
 	Atlas::Message::MapType entityMap;
 	ent->addToMessage(entityMap);
 	mEntities.emplace_back(entityMap);
 }
 
-void EntityExporterBase::dumpMind(const std::string& entityId, const Operation & op)
-{
+void EntityExporterBase::dumpMind(const std::string& entityId, const Operation& op) {
 	auto thoughts = op->getArgsAsList();
 	if (!thoughts.empty()) {
 		Atlas::Message::MapType entityMap;
@@ -153,8 +138,7 @@ void EntityExporterBase::dumpMind(const std::string& entityId, const Operation &
 	}
 }
 
-void EntityExporterBase::thoughtOpArrived(const Operation & op)
-{
+void EntityExporterBase::thoughtOpArrived(const Operation& op) {
 
 	auto I = mThoughtsOutstanding.find(op->getRefno());
 	if (I == mThoughtsOutstanding.end()) {
@@ -209,8 +193,7 @@ void EntityExporterBase::thoughtOpArrived(const Operation & op)
 
 }
 
-void EntityExporterBase::pollQueue()
-{
+void EntityExporterBase::pollQueue() {
 	//When we've queried, and gotten responses for all entities, and all types are bound,
 	//and there are no more thoughts we're waiting to receive; then we're done.
 	if (mEntityQueue.empty() && mOutstandingGetRequestCounter == 0 && mThoughtsOutstanding.empty()) {
@@ -243,9 +226,8 @@ void EntityExporterBase::pollQueue()
 	EventProgress.emit();
 }
 
-void EntityExporterBase::infoArrived(const Operation & op)
-{
-	const std::vector<Root> & args = op->getArgs();
+void EntityExporterBase::infoArrived(const Operation& op) {
+	const std::vector<Root>& args = op->getArgs();
 	if (args.empty()) {
 		mStats.entitiesError++;
 		EventProgress.emit();
@@ -324,8 +306,7 @@ void EntityExporterBase::infoArrived(const Operation & op)
 	pollQueue();
 }
 
-void EntityExporterBase::requestThoughts(const std::string& entityId, const std::string& persistedId)
-{
+void EntityExporterBase::requestThoughts(const std::string& entityId, const std::string& persistedId) {
 	Atlas::Objects::Operation::Generic think;
 	think->setParent("think");
 	think->setTo(entityId);
@@ -346,8 +327,7 @@ void EntityExporterBase::requestThoughts(const std::string& entityId, const std:
 	mStats.mindsQueried++;
 }
 
-void EntityExporterBase::requestRule(const std::string& rule)
-{
+void EntityExporterBase::requestRule(const std::string& rule) {
 	Get get;
 	Anonymous arg;
 	arg->setId(rule);
@@ -363,24 +343,23 @@ void EntityExporterBase::requestRule(const std::string& rule)
 	mOutstandingGetRequestCounter++;
 }
 
-void EntityExporterBase::adjustReferencedEntities()
-{
+void EntityExporterBase::adjustReferencedEntities() {
 	Ember::logger->debug("Adjusting referenced entity ids.");
 	if (!mPreserveIds) {
-		for (auto& mind : mMinds) {
+		for (auto& mind: mMinds) {
 			//We know that mMinds only contain maps, and that there's always a "thoughts" list
 			auto& thoughts = mind.asMap().find("thoughts")->second.asList();
-			for (auto& thought : thoughts) {
+			for (auto& thought: thoughts) {
 				//If the thought is a list of things the entity owns, we should adjust it with the new entity ids.
 				if (thought.isMap()) {
 					auto& thoughtMap = thought.Map();
 					if (thoughtMap.count("things") > 0) {
 						auto& thingsElement = thoughtMap.find("things")->second;
 						if (thingsElement.isMap()) {
-							for (auto& thingI : thingsElement.asMap()) {
+							for (auto& thingI: thingsElement.asMap()) {
 								if (thingI.second.isList()) {
 									Atlas::Message::ListType newList;
-									for (auto& thingId : thingI.second.asList()) {
+									for (auto& thingId: thingI.second.asList()) {
 										if (thingId.isString()) {
 											auto entityIdLookupI = mIdMapping.find(thingId.asString());
 											//Check if the owned entity has been created with a new id. If so, replace the data.
@@ -404,7 +383,7 @@ void EntityExporterBase::adjustReferencedEntities()
 						auto& pendingThingsElement = thoughtMap.find("pending_things")->second;
 						if (pendingThingsElement.isList()) {
 							Atlas::Message::ListType newList;
-							for (auto& thingId : pendingThingsElement.asList()) {
+							for (auto& thingId: pendingThingsElement.asList()) {
 								if (thingId.isString()) {
 									auto entityIdLookupI = mIdMapping.find(thingId.asString());
 									//Check if the owned entity has been created with a new id. If so, replace the data.
@@ -445,7 +424,7 @@ void EntityExporterBase::adjustReferencedEntities()
 			}
 		}
 	}
-	for (auto& entity : mEntities) {
+	for (auto& entity: mEntities) {
 		auto& entityMap = entity.asMap();
 		//We know that mEntities only contain maps
 		auto containsIElem = entityMap.find("contains");
@@ -455,7 +434,7 @@ void EntityExporterBase::adjustReferencedEntities()
 				auto& contains = containsElem.asList();
 				Atlas::Message::ListType newContains;
 				newContains.reserve(contains.size());
-				for (auto& entityElem : contains) {
+				for (auto& entityElem: contains) {
 					//we can assume that it's string
 					auto I = mIdMapping.find(entityElem.asString());
 					if (I != mIdMapping.end()) {
@@ -469,8 +448,7 @@ void EntityExporterBase::adjustReferencedEntities()
 	}
 }
 
-void EntityExporterBase::resolveEntityReferences(Atlas::Message::Element& element)
-{
+void EntityExporterBase::resolveEntityReferences(Atlas::Message::Element& element) {
 	if (element.isMap()) {
 		auto entityRefI = element.asMap().find("$eid");
 		if (entityRefI != element.asMap().end() && entityRefI->second.isString()) {
@@ -480,29 +458,28 @@ void EntityExporterBase::resolveEntityReferences(Atlas::Message::Element& elemen
 			}
 		}
 		//If it's a map we need to process all child elements too
-		for (auto& I : element.asMap()) {
+		for (auto& I: element.asMap()) {
 			resolveEntityReferences(I.second);
 		}
 	} else if (element.isList()) {
 		//If it's a list we need to process all child elements too
-		for (auto& I : element.asList()) {
+		for (auto& I: element.asList()) {
 			resolveEntityReferences(I);
 		}
 	}
 }
 
-void EntityExporterBase::complete()
-{
+void EntityExporterBase::complete() {
 
 	adjustReferencedEntities();
 
 	//Make sure the minds are stored in a deterministic fashion
-	std::sort(mMinds.begin(), mMinds.end(), [](Atlas::Message::Element const & a, Atlas::Message::Element const &b) {
+	std::sort(mMinds.begin(), mMinds.end(), [](Atlas::Message::Element const& a, Atlas::Message::Element const& b) {
 		return integerId(a.asMap().find("id")->second.asString()) < integerId(b.asMap().find("id")->second.asString());
 	});
 
 	//Make sure the rules are stored in a deterministic fashion
-	std::sort(mRules.begin(), mRules.end(), [](Atlas::Message::Element const & a, Atlas::Message::Element const &b) {
+	std::sort(mRules.begin(), mRules.end(), [](Atlas::Message::Element const& a, Atlas::Message::Element const& b) {
 		return a.asMap().find("id")->second.asString() < b.asMap().find("id")->second.asString();
 	});
 
@@ -553,8 +530,7 @@ void EntityExporterBase::complete()
 						mStats.rulesReceived);
 }
 
-void EntityExporterBase::start(const std::string& filename, const std::string& entityId)
-{
+void EntityExporterBase::start(const std::string& filename, const std::string& entityId) {
 	if (mComplete || mCancelled) {
 		Ember::logger->error("Can not restart an already completed or cancelled export instance.");
 		return;
@@ -574,8 +550,7 @@ void EntityExporterBase::start(const std::string& filename, const std::string& e
 
 }
 
-void EntityExporterBase::startRequestingEntities()
-{
+void EntityExporterBase::startRequestingEntities() {
 	// Send a get for the requested root entity
 	mOutstandingGetRequestCounter++;
 	Get get;
@@ -595,8 +570,7 @@ void EntityExporterBase::startRequestingEntities()
 	EventProgress.emit();
 }
 
-void EntityExporterBase::operationGetResult(const Operation & op)
-{
+void EntityExporterBase::operationGetResult(const Operation& op) {
 	mOutstandingGetRequestCounter--;
 	if (!mCancelled) {
 		if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
@@ -622,16 +596,14 @@ void EntityExporterBase::operationGetResult(const Operation & op)
 	}
 }
 
-void EntityExporterBase::operationGetThoughtResult(const Operation & op)
-{
+void EntityExporterBase::operationGetThoughtResult(const Operation& op) {
 	if (!mCancelled) {
 		thoughtOpArrived(op);
 		pollQueue();
 	}
 }
 
-void EntityExporterBase::operationGetRuleResult(const Operation & op)
-{
+void EntityExporterBase::operationGetRuleResult(const Operation& op) {
 	if (!mCancelled) {
 		if (op->getArgs().empty()) {
 			Ember::logger->warn("Got response to GET for rule with no args.");
@@ -654,7 +626,7 @@ void EntityExporterBase::operationGetRuleResult(const Operation & op)
 			if (ent->copyAttr("children", childrenElement) == 0) {
 				if (childrenElement.isList()) {
 					ListType& childrenList = childrenElement.asList();
-					for (auto& childElem : childrenList) {
+					for (auto& childElem: childrenList) {
 						if (childElem.isString()) {
 							children.push_back(childElem.asString());
 						} else {
@@ -717,7 +689,7 @@ void EntityExporterBase::operationGetRuleResult(const Operation & op)
 			}
 		}
 
-		for (auto& child : children) {
+		for (auto& child: children) {
 			requestRule(child);
 		}
 

@@ -22,20 +22,18 @@
 #include "PropertyFactory.h"
 #include "Property.h"
 
-template <class T>
-std::unique_ptr<PropertyBase> PropertyFactory<T>::newProperty()
-{
-    auto prop = std::make_unique<T>();
-    prop->addFlags(m_flags);
-    return prop;
+template<class T>
+std::unique_ptr<PropertyBase> PropertyFactory<T>::newProperty() {
+	auto prop = std::make_unique<T>();
+	prop->addFlags(m_flags);
+	return prop;
 }
 
-template <class T>
-std::unique_ptr<PropertyKit> PropertyFactory<T>::duplicateFactory() const
-{
-    auto copy = std::make_unique<PropertyFactory<T>>();
-    copy->m_flags = m_flags;
-    return copy;
+template<class T>
+std::unique_ptr<PropertyKit> PropertyFactory<T>::duplicateFactory() const {
+	auto copy = std::make_unique<PropertyFactory<T>>();
+	copy->m_flags = m_flags;
+	return copy;
 }
 
 #endif // COMMON_PROPERTY_FACTORY_IMPL_H

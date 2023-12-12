@@ -22,20 +22,18 @@
 
 #include "al.h"
 
-namespace Ember
-{
-	bool SoundGeneral::checkAlError(const std::string& description)
-	{
-		ALenum error = alGetError();
-		if (error == AL_NO_ERROR) {
-			return true;
+namespace Ember {
+bool SoundGeneral::checkAlError(const std::string& description) {
+	ALenum error = alGetError();
+	if (error == AL_NO_ERROR) {
+		return true;
+	} else {
+		if (description.empty()) {
+			logger->error("OpenAl error: {}", error);
 		} else {
-			if (description.empty()) {
-				logger->error("OpenAl error: {}", error);
-			} else {
-				logger->error("OpenAl error: {}\nDescription: {}", error, description);
-			}
-			return false;
+			logger->error("OpenAl error: {}\nDescription: {}", error, description);
 		}
+		return false;
 	}
+}
 }

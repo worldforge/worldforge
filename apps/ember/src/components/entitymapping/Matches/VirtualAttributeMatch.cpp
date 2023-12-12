@@ -20,11 +20,11 @@
 
 #include <utility>
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 
 VirtualAttributeMatch::VirtualAttributeMatch(std::string attributeName, std::initializer_list<std::string> internalAttributeNames)
@@ -34,7 +34,7 @@ VirtualAttributeMatch::VirtualAttributeMatch(std::string attributeName, std::ini
 
 
 void VirtualAttributeMatch::testAttribute(const Atlas::Message::Element& attribute, bool triggerEvaluation) {
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->testMatch(attribute);
 	}
 	if (triggerEvaluation) {
@@ -44,12 +44,12 @@ void VirtualAttributeMatch::testAttribute(const Atlas::Message::Element& attribu
 
 void VirtualAttributeMatch::setEntity(Eris::Entity* entity) {
 	AbstractMatch<Cases::AttributeCase>::setEntity(entity);
-	for (auto& observer : mMatchAttributeObservers) {
+	for (auto& observer: mMatchAttributeObservers) {
 		observer->observeEntity(entity);
 	}
 	if (entity) {
 
-		for (const auto& attribute : mInternalAttributeNames) {
+		for (const auto& attribute: mInternalAttributeNames) {
 			if (entity->hasProperty(attribute)) {
 				//Since the attribute is virtual we won't send any specific attribute.
 				testAttribute(Atlas::Message::Element(), false);
@@ -66,6 +66,5 @@ void VirtualAttributeMatch::addMatchAttributeObserver(std::unique_ptr<Observers:
 
 }
 
-}
 
-}
+

@@ -24,35 +24,32 @@
 
 template<class ProtocolT, typename ClientT>
 CommAsioListener<ProtocolT, ClientT>::CommAsioListener(
-    std::function<std::shared_ptr<ClientT>()> clientCreator,
-    std::function<void(ClientT&)> clientStarter,
-    std::string serverName, boost::asio::io_context& ioService,
-    const typename ProtocolT::endpoint& endpoint)
-    :mClientCreator(clientCreator),
-     mClientStarter(clientStarter),
-     mServerName(std::move(serverName)),
-     mAcceptor(ioService, endpoint)
-{
-    startAccept();
+		std::function<std::shared_ptr<ClientT>()> clientCreator,
+		std::function<void(ClientT&)> clientStarter,
+		std::string serverName, boost::asio::io_context& ioService,
+		const typename ProtocolT::endpoint& endpoint)
+		:mClientCreator(clientCreator),
+		 mClientStarter(clientStarter),
+		 mServerName(std::move(serverName)),
+		 mAcceptor(ioService, endpoint) {
+	startAccept();
 }
 
 template<class ProtocolT, typename ClientT>
-CommAsioListener<ProtocolT, ClientT>::~CommAsioListener()
-{
-    mAcceptor.cancel();
+CommAsioListener<ProtocolT, ClientT>::~CommAsioListener() {
+	mAcceptor.cancel();
 }
 
 template<class ProtocolT, typename ClientT>
-void CommAsioListener<ProtocolT, ClientT>::startAccept()
-{
-    auto client = mClientCreator();
-    mAcceptor.async_accept(client->getSocket(),
-                           [this, client](boost::system::error_code ec) {
-                               if (!ec) {
-                                   mClientStarter(*client);
-                                   this->startAccept();
-                               }
-                           });
+void CommAsioListener<ProtocolT, ClientT>::startAccept() {
+	auto client = mClientCreator();
+	mAcceptor.async_accept(client->getSocket(),
+						   [this, client](boost::system::error_code ec) {
+							   if (!ec) {
+								   mClientStarter(*client);
+								   this->startAccept();
+							   }
+						   });
 }
 
 #endif /* COMMASIOLISTENER_IMPL_H_ */

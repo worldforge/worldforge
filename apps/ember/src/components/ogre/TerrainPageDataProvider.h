@@ -25,26 +25,25 @@
 
 #include <memory>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Terrain
-{
+namespace Ember::OgreView {
+
+namespace Terrain {
 class TerrainHandler;
+
 class TerrainPage;
+
 class ITerrainPageBridge;
 }
 
 /**
  * @brief Page data for one page in the terrain rendering system.
  */
-struct IPageData
-{
+struct IPageData {
 	virtual ~IPageData() = default;
 
 	virtual Ogre::MaterialPtr getMaterial() = 0;
+
 	virtual Ogre::MaterialPtr getCompositeMapMaterial() = 0;
 };
 
@@ -52,26 +51,28 @@ struct IPageData
 /**
  * @brief Provides IPageData instances for the terrain rendering system.
  */
-struct IPageDataProvider
-{
+struct IPageDataProvider {
 	virtual ~IPageDataProvider() = default;
+
 	typedef std::pair<long, long> OgreIndex;
+
 	virtual std::unique_ptr<IPageData> getPageData(const OgreIndex& index) = 0;
 };
-
 
 
 /**
  * @brief Page data as provided by the Mercator based terrain system.
  */
-class TerrainPageData : public IPageData
-{
+class TerrainPageData : public IPageData {
 public:
 	explicit TerrainPageData(std::shared_ptr<Terrain::TerrainPage> page);
 
 	~TerrainPageData() override = default;
+
 	Ogre::MaterialPtr getMaterial() override;
+
 	Ogre::MaterialPtr getCompositeMapMaterial() override;
+
 private:
 	std::shared_ptr<Terrain::TerrainPage> mPage;
 
@@ -80,10 +81,10 @@ private:
 /**
  * @brief Provides terrain data from the Mercator based terrain system.
  */
-class TerrainPageDataProvider : public IPageDataProvider
-{
+class TerrainPageDataProvider : public IPageDataProvider {
 public:
 	explicit TerrainPageDataProvider(Terrain::TerrainHandler& hander);
+
 	~TerrainPageDataProvider() override = default;
 
 	std::unique_ptr<IPageData> getPageData(const OgreIndex& ogreIndexPosition) override;
@@ -94,12 +95,12 @@ protected:
 	/**
 	 * @brief Converts the ogre index position to wf local index.
 	 */
-	TerrainIndex convertToWFTerrainIndex(const OgreIndex& ogreIndexPosition);
+	static TerrainIndex convertToWFTerrainIndex(const OgreIndex& ogreIndexPosition);
 
 };
 
 }
 
-}
+
 
 #endif /* TERRAINPAGEDATAPROVIDER_H_ */

@@ -20,56 +20,53 @@
 #define RULESETS_MEM_ENTITY_H
 
 #include "rules/LocatedEntity.h"
+
 /// \brief This class is used to represent entities inside MemMap used
 /// by the mind of an AI.
 ///
 /// It adds a flag to indicate if this entity is currently visible, and
 /// a means of tracking when it was last seen, so garbage entities can
 /// be cleaned up.
-class MemEntity : public LocatedEntity
-{
-    protected:
-        double m_lastSeen;
+class MemEntity : public LocatedEntity {
+protected:
+	double m_lastSeen;
 
-        std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override;
+	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override;
 
-    public:
-        explicit MemEntity(RouterId id);
+public:
+	explicit MemEntity(RouterId id);
 
-        ~MemEntity() override = default;
+	~MemEntity() override = default;
 
-        void setVisible(bool v = true)
-        {
-            if (v) {
-                m_flags.addFlags(entity_visible);
-            } else {
-                m_flags.removeFlags(entity_visible);
-            }
-        }
+	void setVisible(bool v = true) {
+		if (v) {
+			m_flags.addFlags(entity_visible);
+		} else {
+			m_flags.removeFlags(entity_visible);
+		}
+	}
 
-        const double& lastSeen() const
-        {
-            return m_lastSeen;
-        }
+	const double& lastSeen() const {
+		return m_lastSeen;
+	}
 
-        void update(const double& d)
-        {
-            if (d >= m_lastSeen) {
-                m_lastSeen = d;
-            }
-        }
+	void update(const double& d) {
+		if (d >= m_lastSeen) {
+			m_lastSeen = d;
+		}
+	}
 
-        void externalOperation(const Operation& op, Link&) override;
+	void externalOperation(const Operation& op, Link&) override;
 
-        void operation(const Operation&, OpVector&) override;
+	void operation(const Operation&, OpVector&) override;
 
-        void destroy() override;
+	void destroy() override;
 
 //        TransformData m_transform;
 //        MovementData m_movement;
-        //WFMath::AxisBox<3> m_bbox;
-        double m_lastUpdated;
-        //Location m_location;
+	//WFMath::AxisBox<3> m_bbox;
+	double m_lastUpdated;
+	//Location m_location;
 
 };
 

@@ -20,42 +20,55 @@ characters according to settings defined at construction time.
 @see Codec
 */
 
-class Formatter : public Bridge
-{
-  public:
-    
-    Formatter(std::ostream & s, Atlas::Bridge & b);
+class Formatter : public Bridge {
+public:
 
-    void streamBegin() override;
-    void streamMessage() override;
-    void streamEnd() override;
+	Formatter(std::ostream& s, Atlas::Bridge& b);
 
-    void mapMapItem(std::string name) override;
-    void mapListItem(std::string name) override;
-    void mapIntItem(std::string name, std::int64_t) override;
-    void mapFloatItem(std::string name, double) override;
-    void mapStringItem(std::string name, std::string) override;
-    void mapNoneItem(std::string name) override;
-    void mapEnd() override;
+	void streamBegin() override;
 
-    void listMapItem() override;
-    void listListItem() override;
-    void listIntItem(std::int64_t) override;
-    void listFloatItem(double) override;
-    void listStringItem(std::string) override;
-    void listNoneItem() override;
-    void listEnd() override;
+	void streamMessage() override;
 
-    void setSpacing(int s) {
-        m_spacing = s;
-    }
+	void streamEnd() override;
 
-  protected:
+	void mapMapItem(std::string name) override;
 
-    std::ostream & m_stream;
-    Bridge & m_bridge;
-    int m_indent;
-    int m_spacing;
+	void mapListItem(std::string name) override;
+
+	void mapIntItem(std::string name, std::int64_t) override;
+
+	void mapFloatItem(std::string name, double) override;
+
+	void mapStringItem(std::string name, std::string) override;
+
+	void mapNoneItem(std::string name) override;
+
+	void mapEnd() override;
+
+	void listMapItem() override;
+
+	void listListItem() override;
+
+	void listIntItem(std::int64_t) override;
+
+	void listFloatItem(double) override;
+
+	void listStringItem(std::string) override;
+
+	void listNoneItem() override;
+
+	void listEnd() override;
+
+	void setSpacing(int s) {
+		m_spacing = s;
+	}
+
+protected:
+
+	std::ostream& m_stream;
+	Bridge& m_bridge;
+	int m_indent;
+	int m_spacing;
 };
 
 } // Atlas namespace

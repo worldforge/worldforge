@@ -21,20 +21,20 @@
 
 #include <sigc++/signal.h>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
-namespace Terrain
-{
+namespace Terrain {
 class TerrainManager;
 }
 
 class GUIManager;
+
 class MotionManager;
+
 class EmberEntityFactory;
+
 class World;
 
 /**
@@ -43,8 +43,7 @@ class World;
  *
  * These signals are emitted by the EmberOgre class. Since an instance of EmberOgre forms the base of the Ogre component of Ember, many of these signals are of use by subcomponents, both in their lifecycle as well as on frame render basis.
  */
-struct EmberOgreSignals
-{
+struct EmberOgreSignals {
 	/**
 	 * @brief Emitted when the avatar entity has been created.
 	 */

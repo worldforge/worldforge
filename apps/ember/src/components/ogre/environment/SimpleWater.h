@@ -26,13 +26,10 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "IEnvironmentProvider.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Environment
-{
+
+
+namespace Ember::OgreView::Environment {
 
 class WaterAdjustRenderTargetListener;
 
@@ -41,8 +38,7 @@ class WaterAdjustRenderTargetListener;
 
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class SimpleWater: public IWater
-{
+class SimpleWater : public IWater {
 public:
 	/**
 	 * @brief Ctor.
@@ -59,6 +55,7 @@ public:
 	 * @return True if the water technique is supported.
 	 */
 	bool isSupported() const override;
+
 	/**
 	 * @brief Initializes the water. You must call this in order for the water to show up.
 	 * @return True if the water technique could be setup, else false.
@@ -71,7 +68,7 @@ public:
 	 */
 	void setLevel(float height) override;
 
-	bool setUserAny(const Ogre::Any &anything) override;
+	bool setUserAny(const Ogre::Any& anything) override;
 
 	float getLevel() const;
 
@@ -90,12 +87,12 @@ protected:
 	/**
 	 * @brief The node to which the water bobbing node is attached to. Owned by this instance.
 	 */
-	Ogre::SceneNode *mWaterNode;
+	Ogre::SceneNode* mWaterNode;
 
 	/**
 	 * @brief The node to which the water entity is attached to. Owned by this instance.
 	 */
-	Ogre::SceneNode *mWaterBobbingNode;
+	Ogre::SceneNode* mWaterBobbingNode;
 
 	/**
 	 * @brief The entity representing the water plane. Owned by this instance.
@@ -123,8 +120,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

@@ -28,23 +28,23 @@
 
 #include <list>
 
-namespace Ogre
-{
+namespace Ogre {
 class SceneNode;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class BulletWorld;
-namespace Authoring
-{
+namespace Authoring {
 
 class PolygonPointUserObject;
+
 class Polygon;
+
 class PolygonPoint;
+
 struct IPolygonPositionProvider;
+
 class PolygonPointPickListener;
 
 /**
@@ -54,11 +54,12 @@ class PolygonPointPickListener;
  To alter a point, just drag and drop it. To create a new point, drag an existing one and press and hold ctrl.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class Polygon
-{
+class Polygon {
 public:
 	friend class PolygonPoint;
+
 	typedef std::list<PolygonPoint*> PointStore;
+
 	/**
 	 * @brief Ctor.
 	 * @param baseNode The base node to which the polygon will be attached. This node will get new child nodes, which will be removed when the Polygon instance is destroyed.
@@ -209,6 +210,5 @@ protected:
 
 }
 
-}
 
 #endif

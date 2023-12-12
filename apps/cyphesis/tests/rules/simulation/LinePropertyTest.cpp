@@ -29,20 +29,19 @@
 
 using Atlas::Message::ListType;
 
-int main()
-{
-    LineProperty ap;
+int main() {
+	LineProperty ap;
 
-    PropertyChecker<LineProperty> pc(ap);
+	PropertyChecker<LineProperty> pc(ap);
 
-    pc.testDataAppend(ListType(1, ListType(3, 1.f)));
-    pc.testDataAppend(ListType(3, ListType(3, 1.f)));
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	pc.testDataAppend(ListType(1, ListType(3, 1.f)));
+	pc.testDataAppend(ListType(3, ListType(3, 1.f)));
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 #include "../../TestWorld.h"

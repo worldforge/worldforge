@@ -31,8 +31,7 @@
 #include <memory>
 #include <varconf/variable.h>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  @author Erik Ogenvik <erik@ogenvik.org>
@@ -41,8 +40,7 @@ namespace Ember
 
  All listeners will be automatically destroyed when this class is destroyed.
  */
-class ConfigListenerContainer
-{
+class ConfigListenerContainer {
 public:
 
 	virtual ~ConfigListenerContainer();

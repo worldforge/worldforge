@@ -26,70 +26,56 @@
 #include <CEGUI/Window.h>
 #include <CEGUI/Image.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 EntityTextureManipulator::EntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture) :
-		mWindow(window), mTexture(texture)
-{
+		mWindow(window), mTexture(texture) {
 	mButtonDownConnection = window.subscribeEvent(CEGUI::Window::EventMouseButtonDown, CEGUI::Event::Subscriber(&EntityTextureManipulator::image_MouseButtonDown, this));
 	mMoveConnection = window.subscribeEvent(CEGUI::Window::EventMouseWheel, CEGUI::Event::Subscriber(&EntityTextureManipulator::image_MouseWheel, this));
 
 }
 
-EntityTextureManipulator::~EntityTextureManipulator()
-{
+EntityTextureManipulator::~EntityTextureManipulator() {
 	mButtonDownConnection->disconnect();
 	mMoveConnection->disconnect();
 	Input::getSingleton().removeAdapter(this);
 }
 
-bool EntityTextureManipulator::injectMouseButtonUp(Input::MouseButton button)
-{
+bool EntityTextureManipulator::injectMouseButtonUp(Input::MouseButton button) {
 	if (button == Input::MouseButtonLeft) {
 		releaseInput();
 	}
 	return true;
 }
 
-bool EntityTextureManipulator::injectMouseButtonDown(Input::MouseButton button)
-{
+bool EntityTextureManipulator::injectMouseButtonDown(Input::MouseButton button) {
 	return true;
 }
 
-bool EntityTextureManipulator::injectChar(int character)
-{
+bool EntityTextureManipulator::injectChar(int character) {
 	return true;
 }
 
-bool EntityTextureManipulator::injectKeyDown(const SDL_Scancode&)
-{
+bool EntityTextureManipulator::injectKeyDown(const SDL_Scancode&) {
 	return true;
 }
 
-bool EntityTextureManipulator::injectKeyUp(const SDL_Scancode&)
-{
+bool EntityTextureManipulator::injectKeyUp(const SDL_Scancode&) {
 	return true;
 }
 
-void EntityTextureManipulator::catchInput()
-{
+void EntityTextureManipulator::catchInput() {
 	Input::getSingleton().addAdapter(this);
 	EventMovementStarted();
 }
 
-void EntityTextureManipulator::releaseInput()
-{
+void EntityTextureManipulator::releaseInput() {
 	Input::getSingleton().removeAdapter(this);
 	EventMovementStopped();
 }
 
-bool EntityTextureManipulator::image_MouseWheel(const CEGUI::EventArgs& args)
-{
+bool EntityTextureManipulator::image_MouseWheel(const CEGUI::EventArgs& args) {
 	const auto& mouseArgs = static_cast<const CEGUI::MouseEventArgs&>(args);
 
 	if (mouseArgs.wheelChange != 0.0f) {
@@ -101,15 +87,13 @@ bool EntityTextureManipulator::image_MouseWheel(const CEGUI::EventArgs& args)
 	return true;
 }
 
-bool EntityTextureManipulator::image_MouseButtonDown(const CEGUI::EventArgs& args)
-{
+bool EntityTextureManipulator::image_MouseButtonDown(const CEGUI::EventArgs& args) {
 	const auto& mouseArgs = static_cast<const CEGUI::MouseEventArgs&>(args);
 	handleMouseButtonDown(mouseArgs);
 	return true;
 }
 
-void EntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseEventArgs& mouseArgs)
-{
+void EntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseEventArgs& mouseArgs) {
 	if (mouseArgs.button == CEGUI::LeftButton) {
 		catchInput();
 	}
@@ -117,14 +101,13 @@ void EntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseEventArgs
 
 
 DirectEntityTextureManipulator::DirectEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture) :
-		EntityTextureManipulator(window, texture)
-{
+		EntityTextureManipulator(window, texture) {
 
 }
 
 DirectEntityTextureManipulator::~DirectEntityTextureManipulator() = default;
-bool DirectEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse)
-{
+
+bool DirectEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse) {
 
 	if (Input::getSingleton().isKeyDown(SDL_SCANCODE_RSHIFT) || Input::getSingleton().isKeyDown(SDL_SCANCODE_LSHIFT)) {
 		//translate the modelnode
@@ -156,15 +139,13 @@ bool DirectEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, 
 }
 
 CameraEntityTextureManipulator::CameraEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture) :
-		EntityTextureManipulator(window, texture)
-{
+		EntityTextureManipulator(window, texture) {
 
 }
 
 CameraEntityTextureManipulator::~CameraEntityTextureManipulator() = default;
 
-bool CameraEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse)
-{
+bool CameraEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse) {
 
 	if (Input::getSingleton().isKeyDown(SDL_SCANCODE_RSHIFT) || Input::getSingleton().isKeyDown(SDL_SCANCODE_LSHIFT)) {
 		//translate the modelnode
@@ -191,15 +172,13 @@ bool CameraEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, 
 }
 
 CombinedEntityTextureManipulator::CombinedEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture) :
-		EntityTextureManipulator(window, texture), mLeftMouseButtonDown(false)
-{
+		EntityTextureManipulator(window, texture), mLeftMouseButtonDown(false) {
 
 }
 
 CombinedEntityTextureManipulator::~CombinedEntityTextureManipulator() = default;
 
-bool CombinedEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse)
-{
+bool CombinedEntityTextureManipulator::injectMouseMove(const MouseMotion& motion, bool& freezeMouse) {
 	if (mLeftMouseButtonDown) {
 		if (Input::getSingleton().isKeyDown(SDL_SCANCODE_RSHIFT) || Input::getSingleton().isKeyDown(SDL_SCANCODE_LSHIFT)) {
 			//translate the modelnode
@@ -251,8 +230,7 @@ bool CombinedEntityTextureManipulator::injectMouseMove(const MouseMotion& motion
 	return false;
 }
 
-void CombinedEntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseEventArgs& mouseArgs)
-{
+void CombinedEntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseEventArgs& mouseArgs) {
 	if (mouseArgs.button == CEGUI::LeftButton || mouseArgs.button == CEGUI::MiddleButton) {
 		if (mouseArgs.button == CEGUI::LeftButton) {
 			mLeftMouseButtonDown = true;
@@ -265,8 +243,7 @@ void CombinedEntityTextureManipulator::handleMouseButtonDown(const CEGUI::MouseE
 	}
 }
 
-bool CombinedEntityTextureManipulator::injectMouseButtonUp(Input::MouseButton button)
-{
+bool CombinedEntityTextureManipulator::injectMouseButtonUp(Input::MouseButton button) {
 	if (button == Input::MouseButtonLeft || button == Input::MouseButtonMiddle) {
 		releaseInput();
 		if (!mLeftMouseButtonDown) {
@@ -276,5 +253,5 @@ bool CombinedEntityTextureManipulator::injectMouseButtonUp(Input::MouseButton bu
 	return true;
 }
 }
-}
-}
+
+

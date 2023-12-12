@@ -22,29 +22,25 @@
 #include <string>
 #include "components/ogre/OgreIncludes.h"
 
-namespace varconf
-{
+namespace varconf {
 class Variable;
 }
 
-namespace Ember
-{
+namespace Ember {
 
 class ConfigListenerContainer;
-namespace OgreView
-{
+namespace OgreView {
 
 class ShaderManager;
+
 class GraphicalChangeAdapter;
 
-namespace Lod
-{
+namespace Lod {
 /**
  * @brief Handles level of detail changes for the main camera.
  * Acts as a sub-component of the automatic handling of graphics system.
  */
-class LodLevelManager
-{
+class LodLevelManager {
 public:
 	/**
 	 * @brief Constructor.

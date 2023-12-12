@@ -40,9 +40,8 @@
 
 #include <Eris/Task.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 std::string ModelRepresentation::sTypeName("ModelRepresentation");
 
@@ -174,7 +173,7 @@ void ModelRepresentation::setSounds() {
 
 void ModelRepresentation::setClientVisible(bool visible) {
 	//It appears that lights aren't disabled even when they're detached from the node tree (which will happen if the visibity is disabled as the lights are attached to the scale node), so we need to disable them ourselves.
-	for (auto& I : mModel->getLights()) {
+	for (auto& I: mModel->getLights()) {
 		I.light->setVisible(visible);
 	}
 }
@@ -203,7 +202,7 @@ void ModelRepresentation::initFromModel() {
 	//If there are particles, update the bindings.
 	if (mModel->hasParticles()) {
 		auto& bindings = mModel->getAllParticleSystemBindings();
-		for (auto& binding : bindings) {
+		for (auto& binding: bindings) {
 			auto elemPtr = mEntity.ptrOfProperty(binding.mVariableName);
 			if (elemPtr && elemPtr->isNum()) {
 				binding.scaleValue(static_cast<Ogre::Real>(elemPtr->asNum()));
@@ -245,7 +244,7 @@ void ModelRepresentation::model_Resetting() {
 }
 
 void ModelRepresentation::entity_Changed(const std::set<std::string>& attributeIds) {
-	for (const auto& attributeId : attributeIds) {
+	for (const auto& attributeId: attributeIds) {
 		attrChanged(attributeId, mEntity.valueOfProperty(attributeId));
 	}
 }
@@ -256,7 +255,7 @@ void ModelRepresentation::attrChanged(const std::string& str, const Atlas::Messa
 	//TODO: refactor this into a system where the Model instead keeps track of whether any particle systems are in use and if so attaches listeners.
 	if (mModel->hasParticles()) {
 		auto& bindings = mModel->getAllParticleSystemBindings();
-		for (auto& binding : bindings) {
+		for (auto& binding: bindings) {
 			if (binding.mVariableName == str && v.isNum()) {
 				binding.scaleValue(static_cast<Ogre::Real>(v.asNum()));
 			}
@@ -324,7 +323,7 @@ Action* ModelRepresentation::getActionForMovement(const WFMath::Vector<3>& veloc
 }
 
 Action* ModelRepresentation::getFirstAvailableAction(ActivationDefinition::Type type, std::initializer_list<const char* const> actions) const {
-	for (auto& actionName : actions) {
+	for (auto& actionName: actions) {
 		Action* action = mModel->getAction(type, actionName);
 		if (action) {
 			return action;
@@ -400,7 +399,7 @@ void ModelRepresentation::resetAnimations() {
 }
 
 void ModelRepresentation::entity_ActionsChanged(const std::vector<ActionChange>& actionChanges) {
-	for (auto& change : actionChanges) {
+	for (auto& change: actionChanges) {
 		if (change.changeType == ActionChange::ChangeType::Removed) {
 			if (mActiveAction) {
 				mActiveAction->animations.reset();
@@ -408,7 +407,7 @@ void ModelRepresentation::entity_ActionsChanged(const std::vector<ActionChange>&
 			}
 		}
 	}
-	for (auto& change : actionChanges) {
+	for (auto& change: actionChanges) {
 		if (change.changeType == ActionChange::ChangeType::Added) {
 			//TODO: handle transitions
 			if (mActiveAction) {
@@ -483,7 +482,7 @@ void ModelRepresentation::notifyTransformsChanged() {
 void ModelRepresentation::updateCollisionDetection() {
 	mBulletCollisionDetector->clear();
 	if (mModel->getNodeProvider()) {
-		for (auto& subModel : mModel->getSubmodels()) {
+		for (auto& subModel: mModel->getSubmodels()) {
 			auto meshPtr = subModel->getEntity()->getMesh();
 			auto collisionShape = mScene.getBulletWorld().createMeshShape(meshPtr);
 			if (collisionShape) {
@@ -516,5 +515,5 @@ ModelRepresentation* ModelRepresentation::getRepresentationForEntity(EmberEntity
 }
 
 }
-}
-}
+
+

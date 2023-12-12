@@ -23,33 +23,31 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 
-AmountProperty* AmountProperty::copy() const
-{
-    return new AmountProperty(*this);
+AmountProperty* AmountProperty::copy() const {
+	return new AmountProperty(*this);
 }
 
-void AmountProperty::apply(LocatedEntity& entity)
-{
-    auto domainProp = entity.getPropertyClassFixed<DomainProperty>();
-    if (!domainProp || domainProp->data() != "stackable") {
-        //Amount requires that the entity is stackable
-        data() = 1;
-        spdlog::warn("Amount property set on non-stackable entity {}.", entity.describeEntity());
-        return;
-    }
+void AmountProperty::apply(LocatedEntity& entity) {
+	auto domainProp = entity.getPropertyClassFixed<DomainProperty>();
+	if (!domainProp || domainProp->data() != "stackable") {
+		//Amount requires that the entity is stackable
+		data() = 1;
+		spdlog::warn("Amount property set on non-stackable entity {}.", entity.describeEntity());
+		return;
+	}
 
-    if (data() <= 0) {
-        Atlas::Objects::Operation::Delete del;
-        del->setTo(entity.getId());
-        del->setFrom(entity.getId());
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setId(entity.getId());
-        del->setArgs1(ent);
-        //Apply the delete op immediately to avoid an interim time where there's too many entities.
-        OpVector res;
-        entity.operation(del, res);
-        for (const auto& resOp : res) {
-            entity.sendWorld(resOp);
-        }
-    }
+	if (data() <= 0) {
+		Atlas::Objects::Operation::Delete del;
+		del->setTo(entity.getId());
+		del->setFrom(entity.getId());
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setId(entity.getId());
+		del->setArgs1(ent);
+		//Apply the delete op immediately to avoid an interim time where there's too many entities.
+		OpVector res;
+		entity.operation(del, res);
+		for (const auto& resOp: res) {
+			entity.sendWorld(resOp);
+		}
+	}
 }

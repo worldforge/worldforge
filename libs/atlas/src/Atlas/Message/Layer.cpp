@@ -6,7 +6,9 @@
 
 #include <Atlas/Message/Layer.h>
 
-namespace Atlas { namespace Message {
+namespace Atlas {
+namespace Message {
 
 
-} } // namespace Atlas::Message
+}
+} // namespace Atlas::Message

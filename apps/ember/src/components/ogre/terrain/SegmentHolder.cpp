@@ -22,10 +22,8 @@
 
 #include <cassert>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 SegmentHolder::SegmentHolder(std::unique_ptr<Segment> segment, SegmentManager& segmentManager) :
 		mSegment(std::move(segment)),
@@ -47,7 +45,7 @@ std::shared_ptr<Segment> SegmentHolder::getReference() {
 	auto deleter = [&](Segment* ptr) {
 		returnReference();
 	};
-	return std::shared_ptr<Segment>(mSegment.get(), deleter);
+	return {mSegment.get(), deleter};
 }
 
 void SegmentHolder::returnReference() {
@@ -70,5 +68,5 @@ Segment& SegmentHolder::getSegment() {
 
 }
 
-}
-}
+
+

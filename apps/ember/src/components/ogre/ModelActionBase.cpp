@@ -24,8 +24,8 @@
 #include "components/entitymapping/EntityMapping.h"
 #include "components/ogre/Scene.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 /**
@@ -118,4 +118,4 @@ void ModelActionBase::showModel(const std::string& modelName) {
 
 
 }
-}
+

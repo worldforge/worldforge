@@ -1,4 +1,4 @@
- //
+//
 // C++ Implementation: ModelDefinitionManager
 //
 // Description:
@@ -36,9 +36,7 @@
 #include <boost/algorithm/string.hpp>
 
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 ModelDefinitionManager::ModelDefinitionManager(boost::filesystem::path exportDirectory, Eris::EventService& eventService)
 		: ShowModels("showmodels", this, "Show or hide models."),
@@ -85,7 +83,7 @@ std::string ModelDefinitionManager::exportScript(const std::string& name, const 
 std::vector<std::string> ModelDefinitionManager::getAllMeshes() const {
 	std::vector<std::string> meshes;
 	auto meshesVector = Ogre::ResourceGroupManager::getSingleton().findResourceNames("General", "*.mesh");
-	for (auto& meshName : *meshesVector) {
+	for (auto& meshName: *meshesVector) {
 		meshes.emplace_back(meshName);
 	}
 	return meshes;
@@ -97,7 +95,7 @@ ModelDefinitionPtr ModelDefinitionManager::getByName(const Ogre::String& name) {
 	if (I != mEntries.end()) {
 		return I->second;
 	}
-	return ModelDefinitionPtr();
+	return {};
 }
 
 bool ModelDefinitionManager::getShowModels() const {
@@ -142,5 +140,5 @@ const std::unordered_map<std::string, ModelDefinitionPtr>& ModelDefinitionManage
 }
 
 }
-}
-}
+
+

@@ -23,9 +23,8 @@
 #include <vector>
 #include <memory>
 
-namespace Ember {
 
-namespace Tasks {
+namespace Ember::Tasks {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -59,6 +58,5 @@ private:
 
 }
 
-}
 
 #endif /* SERIALTASK_H_ */

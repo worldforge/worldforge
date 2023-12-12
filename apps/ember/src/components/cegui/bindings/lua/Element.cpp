@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Element>(sol::table& space) {
 	auto element = space.new_usertype<Element>("Element", sol::no_constructor,
 											   sol::base_classes, sol::bases<EventSet, PropertySet>());

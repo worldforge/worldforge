@@ -29,101 +29,99 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Message::FloatType;
 
-void TerrainPointsProperty::apply(LocatedEntity& entity)
-{
-    auto terrainProp = entity.modPropertyClassFixed<TerrainProperty>();
-    if (terrainProp) {
-        auto& terrain = terrainProp->getData(entity);
+void TerrainPointsProperty::apply(LocatedEntity& entity) {
+	auto terrainProp = entity.modPropertyClassFixed<TerrainProperty>();
+	if (terrainProp) {
+		auto& terrain = terrainProp->getData(entity);
 
-        auto& base_points = terrain.getPoints();
+		auto& base_points = terrain.getPoints();
 
-        int minX = std::numeric_limits<int>::max();
-        int maxX = std::numeric_limits<int>::min();
-        int minY = std::numeric_limits<int>::max();
-        int maxY = std::numeric_limits<int>::min();
+		int minX = std::numeric_limits<int>::max();
+		int maxX = std::numeric_limits<int>::min();
+		int minY = std::numeric_limits<int>::max();
+		int maxY = std::numeric_limits<int>::min();
 
-        std::vector<WFMath::AxisBox<2>> changedAreas;
+		std::vector<WFMath::AxisBox<2>> changedAreas;
 
-        for (auto& entry : m_data) {
-            auto& val = entry.second;
+		for (auto& entry: m_data) {
+			auto& val = entry.second;
 
-            if (!val.isList()) {
-                continue;
-            }
-            const ListType& point = val.List();
-            if (point.size() < 3) {
-                spdlog::warn("Terrain point must be at least size 3.");
-                continue;
-            }
-            if (!point[0].isNum() || !point[1].isNum() || !point[2].isNum()) {
-                spdlog::warn("Terrain point must be all numbers.");
-                continue;
-            }
+			if (!val.isList()) {
+				continue;
+			}
+			const ListType& point = val.List();
+			if (point.size() < 3) {
+				spdlog::warn("Terrain point must be at least size 3.");
+				continue;
+			}
+			if (!point[0].isNum() || !point[1].isNum() || !point[2].isNum()) {
+				spdlog::warn("Terrain point must be all numbers.");
+				continue;
+			}
 
-            int x = (int) point[0].asNum();
-            int y = (int) point[1].asNum();
-            double h = point[2].asNum();
-            double roughness;
-            double falloff;
-            if (point.size() > 3) {
-                if (!point[3].isNum()) {
-                    spdlog::warn("Terrain point roughness must be a number.");
-                    continue;
-                }
-                roughness = point[3].asNum();
-            } else {
-                roughness = Mercator::BasePoint::ROUGHNESS;
-            }
-            if (point.size() > 4) {
-                if (!point[4].isNum()) {
-                    spdlog::warn("Terrain point falloff must be a number.");
-                    continue;
-                }
-                falloff = point[4].asNum();
-            } else {
-                falloff = Mercator::BasePoint::FALLOFF;
-            }
+			int x = (int) point[0].asNum();
+			int y = (int) point[1].asNum();
+			double h = point[2].asNum();
+			double roughness;
+			double falloff;
+			if (point.size() > 3) {
+				if (!point[3].isNum()) {
+					spdlog::warn("Terrain point roughness must be a number.");
+					continue;
+				}
+				roughness = point[3].asNum();
+			} else {
+				roughness = Mercator::BasePoint::ROUGHNESS;
+			}
+			if (point.size() > 4) {
+				if (!point[4].isNum()) {
+					spdlog::warn("Terrain point falloff must be a number.");
+					continue;
+				}
+				falloff = point[4].asNum();
+			} else {
+				falloff = Mercator::BasePoint::FALLOFF;
+			}
 
-            Mercator::BasePoint bp(h, roughness, falloff);
+			Mercator::BasePoint bp(h, roughness, falloff);
 
-            auto J = base_points.find(x);
-            if (J != base_points.end()) {
-                auto K = J->second.find(y);
-                if (K != J->second.end()) {
-                    auto& existingPoint = K->second;
-                    if (existingPoint == bp) {
-                        //No change
-                        continue;
-                    }
-                }
-            }
+			auto J = base_points.find(x);
+			if (J != base_points.end()) {
+				auto K = J->second.find(y);
+				if (K != J->second.end()) {
+					auto& existingPoint = K->second;
+					if (existingPoint == bp) {
+						//No change
+						continue;
+					}
+				}
+			}
 
-            minX = std::min(minX, x);
-            maxX = std::max(maxX, x);
-            minY = std::min(minY, y);
-            maxY = std::max(maxY, y);
+			minX = std::min(minX, x);
+			maxX = std::max(maxX, x);
+			minY = std::min(minY, y);
+			maxY = std::max(maxY, y);
 
-            terrain.setBasePoint(x, y, bp);
-        }
+			terrain.setBasePoint(x, y, bp);
+		}
 
 
-        if (minX != std::numeric_limits<int>::max()) {
-            float spacing = terrain.getSpacing();
-            WFMath::Point<2> minCorner(((minX - 1) * spacing), ((minY - 1) * spacing));
-            WFMath::Point<2> maxCorner(((maxX + 1) * spacing), ((maxY + 1) * spacing));
-            WFMath::AxisBox<2> changedArea(minCorner, maxCorner);
-            changedAreas.push_back(changedArea);
-        }
-        if (!changedAreas.empty()) {
-            Domain* domain = entity.getDomain();
-            if (domain) {
-                domain->refreshTerrain(changedAreas);
-            }
-        }
-    }
+		if (minX != std::numeric_limits<int>::max()) {
+			float spacing = terrain.getSpacing();
+			WFMath::Point<2> minCorner(((minX - 1) * spacing), ((minY - 1) * spacing));
+			WFMath::Point<2> maxCorner(((maxX + 1) * spacing), ((maxY + 1) * spacing));
+			WFMath::AxisBox<2> changedArea(minCorner, maxCorner);
+			changedAreas.push_back(changedArea);
+		}
+		if (!changedAreas.empty()) {
+			Domain* domain = entity.getDomain();
+			if (domain) {
+				domain->refreshTerrain(changedAreas);
+			}
+		}
+	}
 }
 
-TerrainPointsProperty* TerrainPointsProperty::copy() const
-{
-    return new TerrainPointsProperty(*this);
+TerrainPointsProperty* TerrainPointsProperty::copy() const {
+	return new TerrainPointsProperty(*this);
 }

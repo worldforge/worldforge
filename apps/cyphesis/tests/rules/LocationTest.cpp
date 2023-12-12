@@ -40,12 +40,11 @@
 #include <iostream>
 
 
-void testDistanceFunctions()
-{
-    {
-        Location * l = new Location;
-        delete l;
-    }
+void testDistanceFunctions() {
+	{
+		Location* l = new Location;
+		delete l;
+	}
 
 //    {
 //        Ref<TestEntity> tlve(new TestEntity(0)),ent(new TestEntity(1));
@@ -339,258 +338,257 @@ void testDistanceFunctions()
 
 }
 
-int main()
-{
-    {
-        Location testloc;
+int main() {
+	{
+		Location testloc;
 
-        assert(!testloc.m_parent);
-        assert(!testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
+		assert(!testloc.m_parent);
+		assert(!testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
 
-        testloc.modifyBBox();
-    }
+		testloc.modifyBBox();
+	}
 
-    {
-        Location testloc(0);
+	{
+		Location testloc(0);
 
-        assert(!testloc.m_parent);
-        assert(!testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
-    }
+		assert(!testloc.m_parent);
+		assert(!testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
+	}
 
-    {
-        Point3D testPos;
-        Location testloc(0, testPos);
+	{
+		Point3D testPos;
+		Location testloc(0, testPos);
 
-        assert(!testPos.isValid());
+		assert(!testPos.isValid());
 
-        assert(!testloc.m_parent);
-        assert(!testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
-    }
+		assert(!testloc.m_parent);
+		assert(!testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
+	}
 
-    {
-        Point3D testPos(0,0,0);
-        Location testloc(0, testPos);
+	{
+		Point3D testPos(0, 0, 0);
+		Location testloc(0, testPos);
 
-        assert(testPos.isValid());
+		assert(testPos.isValid());
 
-        assert(!testloc.m_parent);
-        assert(testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
-    }
+		assert(!testloc.m_parent);
+		assert(testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
+	}
 
-    {
-        Point3D testPos(0,0,0);
-        Vector3D testVel;
-        Location testloc(0, testPos, testVel);
+	{
+		Point3D testPos(0, 0, 0);
+		Vector3D testVel;
+		Location testloc(0, testPos, testVel);
 
-        assert(testPos.isValid());
-        assert(!testVel.isValid());
+		assert(testPos.isValid());
+		assert(!testVel.isValid());
 
-        assert(!testloc.m_parent);
-        assert(testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
-    }
+		assert(!testloc.m_parent);
+		assert(testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
+	}
 
-    {
-        Point3D testPos(0,0,0);
-        Vector3D testVel(0,0,0);
-        Location testloc(0, testPos, testVel);
+	{
+		Point3D testPos(0, 0, 0);
+		Vector3D testVel(0, 0, 0);
+		Location testloc(0, testPos, testVel);
 
-        assert(testPos.isValid());
-        assert(testVel.isValid());
+		assert(testPos.isValid());
+		assert(testVel.isValid());
 
-        assert(!testloc.m_parent);
-        assert(testloc.pos().isValid());
-        assert(testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
+		assert(!testloc.m_parent);
+		assert(testloc.pos().isValid());
+		assert(testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
 
-        Quaternion testOrientation(1, 0, 0, 0);
-        assert(testOrientation.isValid());
-        testloc.m_orientation = testOrientation;
-        assert(testloc.orientation().isValid());
-    }
+		Quaternion testOrientation(1, 0, 0, 0);
+		assert(testOrientation.isValid());
+		testloc.m_orientation = testOrientation;
+		assert(testloc.orientation().isValid());
+	}
 
-    {
-        Location testloc;
+	{
+		Location testloc;
 
-        testloc.m_bBox = BBox(Point3D(0,0,0), Point3D(1,1,1));
+		testloc.m_bBox = BBox(Point3D(0, 0, 0), Point3D(1, 1, 1));
 
-        assert(!testloc.m_parent);
-        assert(!testloc.pos().isValid());
-        assert(!testloc.velocity().isValid());
-        assert(!testloc.orientation().isValid());
-        assert(testloc.bBox().isValid());
+		assert(!testloc.m_parent);
+		assert(!testloc.pos().isValid());
+		assert(!testloc.velocity().isValid());
+		assert(!testloc.orientation().isValid());
+		assert(testloc.bBox().isValid());
 
-        testloc.setBBox(BBox(Point3D(1,1,1), Point3D(2,2,2)));
+		testloc.setBBox(BBox(Point3D(1, 1, 1), Point3D(2, 2, 2)));
 
-        assert(testloc.squareRadius() == 12.f);
-        assert(WFMath::Equal(testloc.radius(), std::sqrt(12.f)));
+		assert(testloc.squareRadius() == 12.f);
+		assert(WFMath::Equal(testloc.radius(), std::sqrt(12.f)));
 
-        // Check cached values have been changed
-    }
+		// Check cached values have been changed
+	}
 
-    // Coverage for addToFoo()
-    {
-        Location testLoc;
+	// Coverage for addToFoo()
+	{
+		Location testLoc;
 
-        Atlas::Message::MapType msg;
-        Atlas::Objects::Entity::Anonymous ent;
+		Atlas::Message::MapType msg;
+		Atlas::Objects::Entity::Anonymous ent;
 
-        testLoc.addToMessage(msg);
-        assert(msg.empty());
-        testLoc.addToEntity(ent);
-        assert(ent->getAttrFlags() == 0);
+		testLoc.addToMessage(msg);
+		assert(msg.empty());
+		testLoc.addToEntity(ent);
+		assert(ent->getAttrFlags() == 0);
 
-        Ref<TestEntity> le1(new TestEntity(1));
+		Ref<TestEntity> le1(new TestEntity(1));
 
-        testLoc.m_parent = le1;
-        testLoc.m_pos = Point3D(0,1,0);
-        testLoc.m_velocity = Vector3D(1,0,0);
-        testLoc.m_orientation = Quaternion(1, 0, 1, 0);
-        testLoc.m_bBox = BBox(Point3D(-1,-1,-1), Point3D(1,1,1));
-        testLoc.m_angularVelocity = Vector3D(0,0,1);
+		testLoc.m_parent = le1;
+		testLoc.m_pos = Point3D(0, 1, 0);
+		testLoc.m_velocity = Vector3D(1, 0, 0);
+		testLoc.m_orientation = Quaternion(1, 0, 1, 0);
+		testLoc.m_bBox = BBox(Point3D(-1, -1, -1), Point3D(1, 1, 1));
+		testLoc.m_angularVelocity = Vector3D(0, 0, 1);
 
-        testLoc.addToMessage(msg);
-        testLoc.addToEntity(ent);
+		testLoc.addToMessage(msg);
+		testLoc.addToEntity(ent);
 
-        Atlas::Objects::Entity::Anonymous ret;
-        testLoc.addToEntity(ret);
+		Atlas::Objects::Entity::Anonymous ret;
+		testLoc.addToEntity(ret);
 
-        {
-            Location readLocFromMessage;
+		{
+			Location readLocFromMessage;
 
-            readLocFromMessage.readFromMessage(msg);
+			readLocFromMessage.readFromMessage(msg);
 
-            assert(readLocFromMessage.m_pos.isValid());
-            assert(readLocFromMessage.m_pos == WFMath::Point<3>(0,1,0));
+			assert(readLocFromMessage.m_pos.isValid());
+			assert(readLocFromMessage.m_pos == WFMath::Point<3>(0, 1, 0));
 
-            assert(readLocFromMessage.m_velocity.isValid());
-            assert(readLocFromMessage.m_velocity == WFMath::Vector<3>(1,0,0));
+			assert(readLocFromMessage.m_velocity.isValid());
+			assert(readLocFromMessage.m_velocity == WFMath::Vector<3>(1, 0, 0));
 
-            assert(readLocFromMessage.m_orientation.isValid());
-            assert(readLocFromMessage.m_orientation == WFMath::Quaternion(1, 0, 1, 0));
+			assert(readLocFromMessage.m_orientation.isValid());
+			assert(readLocFromMessage.m_orientation == WFMath::Quaternion(1, 0, 1, 0));
 
-            assert(readLocFromMessage.m_angularVelocity.isValid());
-            assert(readLocFromMessage.m_angularVelocity == Vector3D(0,0,1));
+			assert(readLocFromMessage.m_angularVelocity.isValid());
+			assert(readLocFromMessage.m_angularVelocity == Vector3D(0, 0, 1));
 
 //            assert(readLocFromMessage.m_bBox.isValid());
 //            assert(readLocFromMessage.m_bBox == BBox(Point3D(-1,-1,-1), Point3D(1,1,1)));
 
 
-            assert(msg["pos"].isList());
-            assert(msg["pos"].asList().size() == 3);
+			assert(msg["pos"].isList());
+			assert(msg["pos"].asList().size() == 3);
 
-            assert(msg["velocity"].isList());
-            assert(msg["velocity"].asList().size() == 3);
+			assert(msg["velocity"].isList());
+			assert(msg["velocity"].asList().size() == 3);
 
-            // Make the list too long
-            msg["pos"].asList().push_back(1);
-            assert(msg["pos"].asList().size() == 4);
-            readLocFromMessage.readFromMessage(msg);
-            msg["pos"].asList().pop_back();
-            assert(msg["pos"].asList().size() == 3);
-            // Now it is back to the right size
+			// Make the list too long
+			msg["pos"].asList().push_back(1);
+			assert(msg["pos"].asList().size() == 4);
+			readLocFromMessage.readFromMessage(msg);
+			msg["pos"].asList().pop_back();
+			assert(msg["pos"].asList().size() == 3);
+			// Now it is back to the right size
 
-            // Make the first item in the list a string
-            msg["pos"].asList().front() = "string";
-            assert(msg["pos"].asList().front().isString());
-            readLocFromMessage.readFromMessage(msg);
-            msg["pos"].asList().front() = 0.f;
-            assert(msg["pos"].asList().front().isNum());
-            // Now it is back to the right type
+			// Make the first item in the list a string
+			msg["pos"].asList().front() = "string";
+			assert(msg["pos"].asList().front().isString());
+			readLocFromMessage.readFromMessage(msg);
+			msg["pos"].asList().front() = 0.f;
+			assert(msg["pos"].asList().front().isNum());
+			// Now it is back to the right type
 
-            // Make the list too long
-            msg["orientation"].asList().push_back(1);
-            assert(msg["orientation"].asList().size() == 5);
-            readLocFromMessage.readFromMessage(msg);
-            msg["orientation"].asList().pop_back();
-            assert(msg["orientation"].asList().size() == 4);
-            // Now it is back to the right size
+			// Make the list too long
+			msg["orientation"].asList().push_back(1);
+			assert(msg["orientation"].asList().size() == 5);
+			readLocFromMessage.readFromMessage(msg);
+			msg["orientation"].asList().pop_back();
+			assert(msg["orientation"].asList().size() == 4);
+			// Now it is back to the right size
 
-            // Make the first item in the list a string
-            msg["orientation"].asList().front() = "string";
-            assert(msg["orientation"].asList().front().isString());
-            readLocFromMessage.readFromMessage(msg);
-            msg["orientation"].asList().front() = 1.f;
-            assert(msg["orientation"].asList().front().isNum());
-            // Now it is back to the right type
+			// Make the first item in the list a string
+			msg["orientation"].asList().front() = "string";
+			assert(msg["orientation"].asList().front().isString());
+			readLocFromMessage.readFromMessage(msg);
+			msg["orientation"].asList().front() = 1.f;
+			assert(msg["orientation"].asList().front().isNum());
+			// Now it is back to the right type
 
-            // Make it not a list
-            msg["pos"] = "string";
-            assert(msg["pos"].isString());
-            msg["orientation"] = "string";
-            assert(msg["orientation"].isString());
-            readLocFromMessage.readFromMessage(msg);
-        }
+			// Make it not a list
+			msg["pos"] = "string";
+			assert(msg["pos"].isString());
+			msg["orientation"] = "string";
+			assert(msg["orientation"].isString());
+			readLocFromMessage.readFromMessage(msg);
+		}
 
-        {
-            Location readLocFromEntity;
+		{
+			Location readLocFromEntity;
 
-            readLocFromEntity.readFromEntity(ent);
+			readLocFromEntity.readFromEntity(ent);
 
-            assert(readLocFromEntity.m_pos.isValid());
-            assert(readLocFromEntity.m_pos == WFMath::Point<3>(0,1,0));
+			assert(readLocFromEntity.m_pos.isValid());
+			assert(readLocFromEntity.m_pos == WFMath::Point<3>(0, 1, 0));
 
-            assert(readLocFromEntity.m_velocity.isValid());
-            assert(readLocFromEntity.m_velocity == WFMath::Vector<3>(1,0,0));
+			assert(readLocFromEntity.m_velocity.isValid());
+			assert(readLocFromEntity.m_velocity == WFMath::Vector<3>(1, 0, 0));
 
-            assert(readLocFromEntity.m_orientation.isValid());
-            assert(readLocFromEntity.m_orientation == WFMath::Quaternion(1, 0, 1, 0));
+			assert(readLocFromEntity.m_orientation.isValid());
+			assert(readLocFromEntity.m_orientation == WFMath::Quaternion(1, 0, 1, 0));
 
-            assert(readLocFromEntity.m_angularVelocity.isValid());
-            assert(readLocFromEntity.m_angularVelocity == Vector3D(0,0,1));
+			assert(readLocFromEntity.m_angularVelocity.isValid());
+			assert(readLocFromEntity.m_angularVelocity == Vector3D(0, 0, 1));
 
 //            assert(readLocFromEntity.m_bBox.isValid());
 //            assert(readLocFromEntity.m_bBox == BBox(Point3D(-1,-1,-1), Point3D(1,1,1)));
 
-            assert(!ent->isDefaultPos());
-            assert(ent->getPos().size() == 3);
-            assert(!ent->isDefaultVelocity());
-            assert(ent->getVelocity().size() == 3);
+			assert(!ent->isDefaultPos());
+			assert(ent->getPos().size() == 3);
+			assert(!ent->isDefaultVelocity());
+			assert(ent->getVelocity().size() == 3);
 
-            readLocFromEntity.readFromEntity(ent);
+			readLocFromEntity.readFromEntity(ent);
 
-            Atlas::Message::Element orientation;
-            bool res = ent->copyAttr("orientation", orientation);
-            assert(res == 0);
+			Atlas::Message::Element orientation;
+			bool res = ent->copyAttr("orientation", orientation);
+			assert(res == 0);
 
-            // Make the list too long
-            orientation.asList().push_back(1);
-            assert(orientation.asList().size() == 5);
-            ent->setAttr("orientation", orientation);
-            readLocFromEntity.readFromEntity(ent);
-            orientation.asList().pop_back();
-            assert(orientation.asList().size() == 4);
-            // Now it is back to the right size
+			// Make the list too long
+			orientation.asList().push_back(1);
+			assert(orientation.asList().size() == 5);
+			ent->setAttr("orientation", orientation);
+			readLocFromEntity.readFromEntity(ent);
+			orientation.asList().pop_back();
+			assert(orientation.asList().size() == 4);
+			// Now it is back to the right size
 
-            // Make the first item in the list a string
-            orientation.asList().front() = "string";
-            assert(orientation.asList().front().isString());
-            ent->setAttr("orientation", orientation);
-            readLocFromEntity.readFromEntity(ent);
-            orientation.asList().front() = 1.f;
-            assert(orientation.asList().front().isNum());
-            // Now it is back to the right type
+			// Make the first item in the list a string
+			orientation.asList().front() = "string";
+			assert(orientation.asList().front().isString());
+			ent->setAttr("orientation", orientation);
+			readLocFromEntity.readFromEntity(ent);
+			orientation.asList().front() = 1.f;
+			assert(orientation.asList().front().isNum());
+			// Now it is back to the right type
 
-            // Make it not a list
-            orientation = "string";
-            assert(orientation.isString());
-            ent->setAttr("orientation", orientation);
-            readLocFromEntity.readFromEntity(ent);
-        }
-    }
+			// Make it not a list
+			orientation = "string";
+			assert(orientation.isString());
+			ent->setAttr("orientation", orientation);
+			readLocFromEntity.readFromEntity(ent);
+		}
+	}
 
-    testDistanceFunctions();
+	testDistanceFunctions();
 
-    return 0;
+	return 0;
 }
 
 // stubs

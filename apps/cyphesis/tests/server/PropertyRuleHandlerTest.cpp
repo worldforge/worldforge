@@ -39,155 +39,140 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-struct TestPropertyManager : public PropertyManager
-{
+struct TestPropertyManager : public PropertyManager {
 
-    TestPropertyManager()
-    {
-        m_propertyFactories["int"] = std::make_unique<PropertyFactory<Property<int>>>();
-    }
+	TestPropertyManager() {
+		m_propertyFactories["int"] = std::make_unique<PropertyFactory<Property<int>>>();
+	}
 
-    std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override
-    {
-        return {};
-    }
+	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override {
+		return {};
+	}
 };
 
 
-class PropertyRuleHandlertest : public Cyphesis::TestBase
-{
-    private:
-        PropertyRuleHandler* rh;
-        PropertyManager* propertyManager;
-    public:
-        PropertyRuleHandlertest();
+class PropertyRuleHandlertest : public Cyphesis::TestBase {
+private:
+	PropertyRuleHandler* rh;
+	PropertyManager* propertyManager;
+public:
+	PropertyRuleHandlertest();
 
-        void setup();
+	void setup();
 
-        void teardown();
+	void teardown();
 
-        void test_sequence();
+	void test_sequence();
 
-        void test_check_fail();
+	void test_check_fail();
 
-        void test_check_pass();
+	void test_check_pass();
 
-        void test_install();
+	void test_install();
 
-        void test_install_noparent();
+	void test_install_noparent();
 
-        void test_install_exists();
+	void test_install_exists();
 
-        void test_update();
+	void test_update();
 };
 
-PropertyRuleHandlertest::PropertyRuleHandlertest()
-{
-    ADD_TEST(PropertyRuleHandlertest::test_sequence);
-    ADD_TEST(PropertyRuleHandlertest::test_check_fail);
-    ADD_TEST(PropertyRuleHandlertest::test_check_pass);
-    ADD_TEST(PropertyRuleHandlertest::test_install);
-    ADD_TEST(PropertyRuleHandlertest::test_install_noparent);
-    ADD_TEST(PropertyRuleHandlertest::test_install_exists);
-    ADD_TEST(PropertyRuleHandlertest::test_update);
+PropertyRuleHandlertest::PropertyRuleHandlertest() {
+	ADD_TEST(PropertyRuleHandlertest::test_sequence);
+	ADD_TEST(PropertyRuleHandlertest::test_check_fail);
+	ADD_TEST(PropertyRuleHandlertest::test_check_pass);
+	ADD_TEST(PropertyRuleHandlertest::test_install);
+	ADD_TEST(PropertyRuleHandlertest::test_install_noparent);
+	ADD_TEST(PropertyRuleHandlertest::test_install_exists);
+	ADD_TEST(PropertyRuleHandlertest::test_update);
 }
 
-void PropertyRuleHandlertest::setup()
-{
-    propertyManager = new TestPropertyManager;
-    rh = new PropertyRuleHandler(*propertyManager);
+void PropertyRuleHandlertest::setup() {
+	propertyManager = new TestPropertyManager;
+	rh = new PropertyRuleHandler(*propertyManager);
 }
 
-void PropertyRuleHandlertest::teardown()
-{
-    delete rh;
-    delete propertyManager;
+void PropertyRuleHandlertest::teardown() {
+	delete rh;
+	delete propertyManager;
 }
 
-void PropertyRuleHandlertest::test_sequence()
-{
+void PropertyRuleHandlertest::test_sequence() {
 }
 
 // check() empty description
-void PropertyRuleHandlertest::test_check_fail()
-{
-    Anonymous description;
-    description->setParent("foo");
-    int ret = rh->check(description);
+void PropertyRuleHandlertest::test_check_fail() {
+	Anonymous description;
+	description->setParent("foo");
+	int ret = rh->check(description);
 
-    assert(ret == -1);
+	assert(ret == -1);
 }
 
 // check() description with op_definition objtype
-void PropertyRuleHandlertest::test_check_pass()
-{
-    Anonymous description;
-    description->setObjtype("type");
-    description->setParent("foo");
-    int ret = rh->check(description);
+void PropertyRuleHandlertest::test_check_pass() {
+	Anonymous description;
+	description->setObjtype("type");
+	description->setParent("foo");
+	int ret = rh->check(description);
 
-    assert(ret == 0);
+	assert(ret == 0);
 }
 
-void PropertyRuleHandlertest::test_install()
-{
-    std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+void PropertyRuleHandlertest::test_install() {
+	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-    Anonymous description;
-    description->setObjtype("type");
-    std::string dependent, reason;
+	Anonymous description;
+	description->setObjtype("type");
+	std::string dependent, reason;
 
-    int ret = rh->install("new_int_type", "int", description, dependent, reason, changes);
+	int ret = rh->install("new_int_type", "int", description, dependent, reason, changes);
 
-    assert(ret == 0);
+	assert(ret == 0);
 }
 
-void PropertyRuleHandlertest::test_install_noparent()
-{
-    std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+void PropertyRuleHandlertest::test_install_noparent() {
+	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-    Anonymous description;
-    description->setObjtype("type");
-    std::string dependent, reason;
+	Anonymous description;
+	description->setObjtype("type");
+	std::string dependent, reason;
 
-    int ret = rh->install("new_int_type", "int", description, dependent, reason, changes);
+	int ret = rh->install("new_int_type", "int", description, dependent, reason, changes);
 
-    assert(ret == 0);
+	assert(ret == 0);
 }
 
-void PropertyRuleHandlertest::test_install_exists()
-{
-    std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+void PropertyRuleHandlertest::test_install_exists() {
+	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-    propertyManager->installFactory("existing_int_type",
-                                    Root(),
-                                    std::make_unique<PropertyFactory<Property<int>>>());
+	propertyManager->installFactory("existing_int_type",
+									Root(),
+									std::make_unique<PropertyFactory<Property<int>>>());
 
-    Anonymous description;
-    description->setObjtype("type");
-    std::string dependent, reason;
+	Anonymous description;
+	description->setObjtype("type");
+	std::string dependent, reason;
 
-    int ret = rh->install("existing_int_type", "int", description, dependent, reason, changes);
+	int ret = rh->install("existing_int_type", "int", description, dependent, reason, changes);
 
-    assert(ret == 0);
+	assert(ret == 0);
 }
 
-void PropertyRuleHandlertest::test_update()
-{
-    std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+void PropertyRuleHandlertest::test_update() {
+	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-    Anonymous description;
-    int ret = rh->update("", description, changes);
+	Anonymous description;
+	int ret = rh->update("", description, changes);
 
-    // FIXME Currently does nothing
-    assert(ret == 0);
+	// FIXME Currently does nothing
+	assert(ret == 0);
 }
 
-int main()
-{
-    PropertyRuleHandlertest t;
+int main() {
+	PropertyRuleHandlertest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -200,23 +185,21 @@ int main()
 #ifndef STUB_PropertyManager_getPropertyFactory
 #define STUB_PropertyManager_getPropertyFactory
 
-PropertyKit* PropertyManager::getPropertyFactory(const std::string& name) const
-{
-    auto I = m_propertyFactories.find(name);
-    if (I != m_propertyFactories.end()) {
-        assert(I->second != 0);
-        return I->second.get();
-    }
-    return 0;
+PropertyKit* PropertyManager::getPropertyFactory(const std::string& name) const {
+	auto I = m_propertyFactories.find(name);
+	if (I != m_propertyFactories.end()) {
+		assert(I->second != 0);
+		return I->second.get();
+	}
+	return 0;
 }
 
 #endif //STUB_PropertyManager_getPropertyFactory
 
 #include "../stubs/common/stubPropertyManager.h"
 
-Root atlasOpDefinition(const std::string& name, const std::string& parent)
-{
-    return Root();
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	return Root();
 }
 
 #include "../stubs/common/stublog.h"

@@ -53,10 +53,10 @@ class Scene;
  * @brief Struct used for returning the result of a mouse pick.
  */
 struct EntityPickResult {
-	EmberEntity* entity;
+	EmberEntity* entity = nullptr;
 	Ogre::Vector3 position;
-	Ogre::Real distance;
-	bool isTransparent;
+	Ogre::Real distance = 0;
+	bool isTransparent = false;
 };
 
 /**
@@ -68,8 +68,8 @@ struct EntityPickResult {
 struct PersistentEntityPickResult {
 	EmberEntityRef entityRef;
 	Ogre::Vector3 position;
-	Ogre::Real distance;
-	bool isTransparent;
+	Ogre::Real distance = 0;
+	bool isTransparent = false;
 };
 
 /**

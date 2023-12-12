@@ -18,34 +18,27 @@
 
 #include "CameraSettings.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Camera
-{
-CameraSettings::CameraSettings() : mDegreesPerMouseUnit(180), mInvertCamera(false)
-{
+
+namespace Ember::OgreView::Camera {
+CameraSettings::CameraSettings() : mDegreesPerMouseUnit(180), mInvertCamera(false) {
 	registerConfigListenerWithDefaults("input", "degreespermouseunit", sigc::mem_fun(*this, &CameraSettings::Config_DegreesPerMouseUnit), mDegreesPerMouseUnit);
 	registerConfigListenerWithDefaults("input", "invertcamera", sigc::mem_fun(*this, &CameraSettings::Config_InvertCamera), mInvertCamera);
 }
 
 CameraSettings::~CameraSettings() = default;
 
-void CameraSettings::Config_DegreesPerMouseUnit(const std::string& /*section*/, const std::string& /*key*/, varconf::Variable& variable)
-{
+void CameraSettings::Config_DegreesPerMouseUnit(const std::string& /*section*/, const std::string& /*key*/, varconf::Variable& variable) {
 	if (variable.is_double()) {
-		mDegreesPerMouseUnit = (float)static_cast<double>(variable);
+		mDegreesPerMouseUnit = (float) static_cast<double>(variable);
 	}
 }
 
-void CameraSettings::Config_InvertCamera(const std::string& /*section*/, const std::string& /*key*/, varconf::Variable& variable)
-{
+void CameraSettings::Config_InvertCamera(const std::string& /*section*/, const std::string& /*key*/, varconf::Variable& variable) {
 	if (variable.is_bool()) {
 		mInvertCamera = static_cast<bool>(variable);
 	}
 }
 
 }
-}
-}
+
+

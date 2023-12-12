@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
 	<Window name="Detached" type="EmberLook/IngameChatDetachedWindow">
-		<Property name="Size" value="{{0,250},{0,400}}" />
-		<Property name="Position" value="{{0.0,0.0},{0.0,0.0}}" />
-		<Property name="InheritsAlpha" value="true" />
-		<Property name="Text" value="Dialog with XX" />
-		
+		<Property name="Size" value="{{0,250},{0,400}}"/>
+		<Property name="Position" value="{{0.0,0.0},{0.0,0.0}}"/>
+		<Property name="InheritsAlpha" value="true"/>
+		<Property name="Text" value="Dialog with XX"/>
+
 		<Window name="TradeButton" type="EmberLook/Button">
-			<Property name="Size" value="{{0.0,75.0},{0.0,25}}" />
-			<Property name="Position" value="{{1.0,-75.0},{0.0,0.0}}" />
-			<Property name="Text" value="Trade" />
+			<Property name="Size" value="{{0.0,75.0},{0.0,25}}"/>
+			<Property name="Position" value="{{1.0,-75.0},{0.0,0.0}}"/>
+			<Property name="Text" value="Trade"/>
 		</Window>
 		<Window name="ChatHistory" type="EmberLook/StaticText">
-			<Property name="Size" value="{{1.0,0.0},{0.6,-25.0}}" />
-			<Property name="Position" value="{{0.0,0.0},{0.0,25.0}}" />
-			<Property name="InheritsAlpha" value="true" />
-			<Property name="HorzFormatting" value="WordWrapLeftAligned" />
-			<Property name="VertFormatting" value="TopAligned" />
-			<Property name="HorzScrollbar" value="False" />
-			<Property name="VertScrollbar" value="True" />
+			<Property name="Size" value="{{1.0,0.0},{0.6,-25.0}}"/>
+			<Property name="Position" value="{{0.0,0.0},{0.0,25.0}}"/>
+			<Property name="InheritsAlpha" value="true"/>
+			<Property name="HorzFormatting" value="WordWrapLeftAligned"/>
+			<Property name="VertFormatting" value="TopAligned"/>
+			<Property name="HorzScrollbar" value="False"/>
+			<Property name="VertScrollbar" value="True"/>
 		</Window>
 		<Window name="ResponseContainer" type="EmberLook/ScrollablePane">
-			<Property name="Size" value="{{1.0,0.0},{0.4,-25}}" />
-			<Property name="Position" value="{{0.0,0.0},{0.6,0.0}}" />
-			<Property name="InheritsAlpha" value="true" />
-			
-			
+			<Property name="Size" value="{{1.0,0.0},{0.4,-25}}"/>
+			<Property name="Position" value="{{0.0,0.0},{0.6,0.0}}"/>
+			<Property name="InheritsAlpha" value="true"/>
+
+
 		</Window>
 		<Window name="Editbox" type="EmberLook/Editbox">
-			<Property name="Size" value="{{1.0,0.0},{0.0,25}}" />
-			<Property name="Position" value="{{0.0,0.0},{1.0,-25.0}}" />
+			<Property name="Size" value="{{1.0,0.0},{0.0,25}}"/>
+			<Property name="Position" value="{{0.0,0.0},{1.0,-25.0}}"/>
 		</Window>
 	</Window>
 </GUILayout>

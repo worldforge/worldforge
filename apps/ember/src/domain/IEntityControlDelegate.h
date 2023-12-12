@@ -19,15 +19,17 @@
 #ifndef IENTITYCONTROLDELEGATE_H_
 #define IENTITYCONTROLDELEGATE_H_
 
-namespace WFMath
-{
-template<int> class Point;
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Point;
+
+template<int>
+class Vector;
+
 class Quaternion;
 }
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -36,8 +38,7 @@ namespace Ember
  * Under normal operations the position and orientation for an entity used for displaying ingame graphical representations would be obtained directly from the entity. However, by using an instance of this class it's possible to redirect this.
  *
  */
-struct IEntityControlDelegate
-{
+struct IEntityControlDelegate {
 
 	/**
 	 * @brief Dtor.

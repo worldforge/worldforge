@@ -10,7 +10,8 @@
 #include <Atlas/EncoderBase.h>
 #include <Atlas/Objects/Root.h>
 
-namespace Atlas { namespace Objects {
+
+namespace Atlas::Objects {
 
 /** Objects hierarchy encoder
  *
@@ -23,26 +24,26 @@ namespace Atlas { namespace Objects {
  * @see Atlas::Objects::Decoder
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class ObjectsEncoder : public Atlas::EncoderBase
-{
+class ObjectsEncoder : public Atlas::EncoderBase {
 public:
-    /// The default constructor.
-    /// @param b The Bridge to which objects are to be sent.
-    explicit ObjectsEncoder(Atlas::Bridge & b) : EncoderBase(b) { }
-    /// The default destructor.
-    ~ObjectsEncoder() override = default;
+	/// The default constructor.
+	/// @param b The Bridge to which objects are to be sent.
+	explicit ObjectsEncoder(Atlas::Bridge& b) : EncoderBase(b) {}
 
-    /// Send an object to the bridge.
-    /// @param o The object that is to be sent.
-    template <class ObjectData>
-    void streamObjectsMessage(const Atlas::Objects::SmartPtr<ObjectData> & o)
-    {
-        m_b.streamMessage();
-        o->sendContents(m_b);
-        m_b.mapEnd();
-    }
+	/// The default destructor.
+	~ObjectsEncoder() override = default;
+
+	/// Send an object to the bridge.
+	/// @param o The object that is to be sent.
+	template<class ObjectData>
+	void streamObjectsMessage(const Atlas::Objects::SmartPtr<ObjectData>& o) {
+		m_b.streamMessage();
+		o->sendContents(m_b);
+		m_b.mapEnd();
+	}
 };
 
-} } // namespace Atlas::Objects
+}
+// namespace Atlas::Objects
 
 #endif

@@ -24,13 +24,11 @@
 #include "components/ogre/terrain/Types.h"
 
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 class ShaderManager;
 
-namespace Terrain {
 
-namespace Techniques {
+namespace Terrain::Techniques {
 
 class OnePixelMaterialGenerator;
 
@@ -72,8 +70,8 @@ protected:
 };
 
 }
+
 }
-}
-}
+
 
 #endif /* COMPILERTECHNIQUEPROVIDER_H_ */

@@ -35,37 +35,44 @@
 
 namespace WFMath {
 
-template<> RotBox<3>& RotBox<3>::rotatePoint(const Quaternion& q, const Point<3>& p)
-{
-  m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;
+template<>
+RotBox<3>& RotBox<3>::rotatePoint(const Quaternion& q, const Point<3>& p) {
+	m_orient = m_orient.rotate(q);
+	m_corner0.rotate(q, p);
+	return *this;
 }
 
-template<> RotBox<3>& RotBox<3>::rotateCorner(const Quaternion& q, size_t corner)
-{
-  rotatePoint(q, getCorner(corner)); return *this;
+template<>
+RotBox<3>& RotBox<3>::rotateCorner(const Quaternion& q, size_t corner) {
+	rotatePoint(q, getCorner(corner));
+	return *this;
 }
 
-template<> RotBox<3>& RotBox<3>::rotateCenter(const Quaternion& q)
-{
-  rotatePoint(q, getCenter()); return *this;
+template<>
+RotBox<3>& RotBox<3>::rotateCenter(const Quaternion& q) {
+	rotatePoint(q, getCenter());
+	return *this;
 }
 
-template<> RotBox<3> RotBox<3>::toParentCoords(const Point<3>& origin,
-                                               const Quaternion& rotation) const
-{
-  RotMatrix<3> orient = m_orient;
-  return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size, orient.rotate(rotation));
+template<>
+RotBox<3> RotBox<3>::toParentCoords(const Point<3>& origin,
+									const Quaternion& rotation) const {
+	RotMatrix<3> orient = m_orient;
+	return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size, orient.rotate(rotation));
 }
 
-template<> RotBox<3> RotBox<3>::toLocalCoords(const Point<3>& origin,
-                                              const Quaternion& rotation) const
-{
-  RotMatrix<3> orient = m_orient;
-  return RotBox<3>(m_corner0.toLocalCoords(origin, rotation), m_size, orient.rotate(rotation.inverse()));
+template<>
+RotBox<3> RotBox<3>::toLocalCoords(const Point<3>& origin,
+								   const Quaternion& rotation) const {
+	RotMatrix<3> orient = m_orient;
+	return RotBox<3>(m_corner0.toLocalCoords(origin, rotation), m_size, orient.rotate(rotation.inverse()));
 }
 
-template class RotBox<2>;
-template class RotBox<3>;
+template
+class RotBox<2>;
+
+template
+class RotBox<3>;
 
 static_assert(std::is_standard_layout<RotBox<2>>::value, "RotBox should be standard layout.");
 static_assert(std::is_trivially_copyable<RotBox<2>>::value, "RotBox should be trivially copyable.");
@@ -74,10 +81,12 @@ static_assert(std::is_standard_layout<RotBox<3>>::value, "RotBox should be stand
 static_assert(std::is_trivially_copyable<RotBox<3>>::value, "RotBox should be trivially copyable.");
 
 
-
 template Point<2> Point<2>::toLocalCoords(RotBox<2> const&) const;
+
 template Point<3> Point<3>::toLocalCoords(RotBox<3> const&) const;
+
 template Point<2> Point<2>::toParentCoords(RotBox<2> const&) const;
+
 template Point<3> Point<3>::toParentCoords(RotBox<3> const&) const;
 
 }

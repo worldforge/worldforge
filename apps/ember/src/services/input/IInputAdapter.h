@@ -36,10 +36,10 @@ namespace Ember {
 	Use instances of this if you want to hook into the input system and override the default gui handling.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct IInputAdapter
-{
+struct IInputAdapter {
 
 	virtual ~IInputAdapter() = default;
+
 	/**
 	 *    Injects a mouse move. Returns false if the event shouldn't be processed any more.
 	 * @param x 
@@ -47,30 +47,35 @@ struct IInputAdapter
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
 	virtual bool injectMouseMove(const MouseMotion& motion, bool& freezeMouse) = 0;
+
 	/**
 	 *    Injects a mouse button up event. Returns false if the event shouldn't be processed any more.
 	 * @param button 
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
 	virtual bool injectMouseButtonUp(Input::MouseButton button) = 0;
+
 	/**
 	 *    Injects a mouse button down event. Returns false if the event shouldn't be processed any more.
 	 * @param button 
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
 	virtual bool injectMouseButtonDown(Input::MouseButton button) = 0;
+
 	/**
 	 *    Injects a character. Returns false if the event shouldn't be processed any more.
 	 * @param character 
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
 	virtual bool injectChar(int character) = 0;
+
 	/**
 	 *    Injects a key down event. Returns false if the event shouldn't be processed any more.
 	 * @param key 
 	 * @return true if other IInputAdapters should continue handle the event, false if no more handling should happen
 	 */
 	virtual bool injectKeyDown(const SDL_Scancode& key) = 0;
+
 	/**
 	 *    Injects a key up event. Returns false if the event shouldn't be processed any more.
 	 * @param key 

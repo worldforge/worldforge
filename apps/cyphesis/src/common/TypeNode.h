@@ -33,94 +33,88 @@
 
 
 /// \brief Entry in the type hierarchy for in-game entity classes.
-class TypeNode
-{
+class TypeNode {
 
-    protected:
-        /// \brief name
-        const std::string m_name;
+protected:
+	/// \brief name
+	const std::string m_name;
 
-        /// \brief property defaults
-        std::map<std::string, std::unique_ptr<PropertyBase>> m_defaults;
+	/// \brief property defaults
+	std::map<std::string, std::unique_ptr<PropertyBase>> m_defaults;
 
-        /// \brief type description, complete
-        Atlas::Objects::Root m_privateDescription;
-        /**
-         * \brief type description, with private fields (i.e. starting with "__") removed.
-         * Also "children" and "attributes" have been removed.
-         */
-        Atlas::Objects::Root m_protectedDescription;
-        /**
-         * \brief type description, with private fields (i.e. starting with "__") and
-         * protected fields (i.e. starting with "_") removed.
-         * Also "children" and "attributes" have been removed.
-         */
-        Atlas::Objects::Root m_publicDescription;
+	/// \brief type description, complete
+	Atlas::Objects::Root m_privateDescription;
+	/**
+	 * \brief type description, with private fields (i.e. starting with "__") removed.
+	 * Also "children" and "attributes" have been removed.
+	 */
+	Atlas::Objects::Root m_protectedDescription;
+	/**
+	 * \brief type description, with private fields (i.e. starting with "__") and
+	 * protected fields (i.e. starting with "_") removed.
+	 * Also "children" and "attributes" have been removed.
+	 */
+	Atlas::Objects::Root m_publicDescription;
 
-        /// \brief parent node
-        const TypeNode* m_parent;
-    public:
+	/// \brief parent node
+	const TypeNode* m_parent;
+public:
 
-        struct PropertiesUpdate
-        {
-            std::set<std::string> newProps;
-            std::set<std::string> removedProps;
-            std::set<std::string> changedProps;
-        };
+	struct PropertiesUpdate {
+		std::set<std::string> newProps;
+		std::set<std::string> removedProps;
+		std::set<std::string> changedProps;
+	};
 
 
-        explicit TypeNode(std::string name);
+	explicit TypeNode(std::string name);
 
-        TypeNode(std::string name, const Atlas::Objects::Root& description);
+	TypeNode(std::string name, const Atlas::Objects::Root& description);
 
-        ~TypeNode();
+	~TypeNode();
 
-        /// \brief injects a new property and updated the m_description
-        TypeNode::PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyBase>);
+	/// \brief injects a new property and updated the m_description
+	TypeNode::PropertiesUpdate injectProperty(const std::string&, std::unique_ptr<PropertyBase>);
 
-        /// \brief add the class properties for this type from Atlas attributes
-        void addProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
+	/// \brief add the class properties for this type from Atlas attributes
+	void addProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
 
-        /// \brief update the class properties for this type from Atlas attributes
-        TypeNode::PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
+	/// \brief update the class properties for this type from Atlas attributes
+	TypeNode::PropertiesUpdate updateProperties(const Atlas::Message::MapType& attributes, const PropertyManager& propertyManager);
 
-        /// \brief check if this type inherits from another
-        bool isTypeOf(const std::string& base_type) const;
+	/// \brief check if this type inherits from another
+	bool isTypeOf(const std::string& base_type) const;
 
-        /// \brief check if this type inherits from another
-        bool isTypeOf(const TypeNode* base_type) const;
+	/// \brief check if this type inherits from another
+	bool isTypeOf(const TypeNode* base_type) const;
 
-        /// \brief const accessor for name
-        const std::string& name() const
-        {
-            return m_name;
-        }
+	/// \brief const accessor for name
+	const std::string& name() const {
+		return m_name;
+	}
 
-        /// \brief const accessor for property defaults
-        const std::map<std::string, std::unique_ptr<PropertyBase>>& defaults() const
-        {
-            return m_defaults;
-        }
+	/// \brief const accessor for property defaults
+	const std::map<std::string, std::unique_ptr<PropertyBase>>& defaults() const {
+		return m_defaults;
+	}
 
-        void setDescription(const Atlas::Objects::Root& description);
+	void setDescription(const Atlas::Objects::Root& description);
 
-        /// \brief accessor for type description
-        Atlas::Objects::Root& description(Visibility visibility);
+	/// \brief accessor for type description
+	Atlas::Objects::Root& description(Visibility visibility);
 
-        /// \brief const accessor for type description
-        const Atlas::Objects::Root& description(Visibility visibility) const;
+	/// \brief const accessor for type description
+	const Atlas::Objects::Root& description(Visibility visibility) const;
 
-        /// \brief const accessor for parent node
-        const TypeNode* parent() const
-        {
-            return m_parent;
-        }
+	/// \brief const accessor for parent node
+	const TypeNode* parent() const {
+		return m_parent;
+	}
 
-        /// \brief set the parent node
-        void setParent(const TypeNode* parent)
-        {
-            m_parent = parent;
-        }
+	/// \brief set the parent node
+	void setParent(const TypeNode* parent) {
+		m_parent = parent;
+	}
 };
 
 #endif // COMMON_TYPE_NODE_H

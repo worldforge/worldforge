@@ -23,20 +23,19 @@
 
 /// \brief Keeps track of the status of an entity. It cannot go below 0.
 /// \ingroup PropertyClasses
-class StatusProperty : public Property<double>
-{
-    public:
-        static constexpr const char* property_name = "status";
+class StatusProperty : public Property<double> {
+public:
+	static constexpr const char* property_name = "status";
 
-        /// \brief Constructor
-        StatusProperty() = default;
+	/// \brief Constructor
+	StatusProperty() = default;
 
-        StatusProperty* copy() const override;
+	StatusProperty* copy() const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-    protected:
-        StatusProperty(const StatusProperty& rhs) = default;
+protected:
+	StatusProperty(const StatusProperty& rhs) = default;
 
 };
 

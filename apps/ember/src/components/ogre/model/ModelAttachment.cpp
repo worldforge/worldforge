@@ -42,9 +42,8 @@
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 
 /**
@@ -341,5 +340,5 @@ void ModelAttachment::setPosition(const WFMath::Point<3>& position, const WFMath
 }
 
 }
-}
-}
+
+

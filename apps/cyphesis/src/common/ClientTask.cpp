@@ -18,20 +18,17 @@
 
 #include "ClientTask.h"
 
-ClientTask::ClientTask() : m_complete(false)
-{
+ClientTask::ClientTask() : m_complete(false) {
 }
 
 ClientTask::~ClientTask() = default;
 
-void FunctionClientTask::operation(const Operation& op, OpVector& res)
-{
-    m_complete = m_function(op, res);
+void FunctionClientTask::operation(const Operation& op, OpVector& res) {
+	m_complete = m_function(op, res);
 
 }
 
 FunctionClientTask::FunctionClientTask(std::function<bool(const Operation&, OpVector&)> function)
-    : m_function(std::move(function))
-{
+		: m_function(std::move(function)) {
 
 }

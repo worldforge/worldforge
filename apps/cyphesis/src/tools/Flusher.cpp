@@ -38,123 +38,120 @@ using Atlas::Objects::Operation::Tick;
 
 using std::shared_ptr;
 
-Flusher::Flusher(const shared_ptr<ObjectContext> & c) : m_context(c)
-{
+Flusher::Flusher(const shared_ptr<ObjectContext>& c) : m_context(c) {
 }
 
 Flusher::~Flusher() = default;
 
-void Flusher::setup(const std::string & arg, OpVector & ret)
-{
-    shared_ptr<ObjectContext> flush_context = m_context.lock();
+void Flusher::setup(const std::string& arg, OpVector& ret) {
+	shared_ptr<ObjectContext> flush_context = m_context.lock();
 
-    if (!flush_context) {
-        m_complete = true;
-        return;
-    }
+	if (!flush_context) {
+		m_complete = true;
+		return;
+	}
 
-    type = arg;
+	type = arg;
 
-    m_description = fmt::format("flushing {}", type);
+	m_description = fmt::format("flushing {}", type);
 
-    // Send a look to search by type.
-    Look l;
+	// Send a look to search by type.
+	Look l;
 
-    Anonymous lmap;
-    lmap->setParent(type);
-    l->setArgs1(lmap);
+	Anonymous lmap;
+	lmap->setParent(type);
+	l->setArgs1(lmap);
 
-    flush_context->setFromContext(l);
+	flush_context->setFromContext(l);
 
-    ret.push_back(l);
+	ret.push_back(l);
 }
 
-void Flusher::operation(const Operation & op, OpVector & res)
-{
-    shared_ptr<ObjectContext> flush_context = m_context.lock();
+void Flusher::operation(const Operation& op, OpVector& res) {
+	shared_ptr<ObjectContext> flush_context = m_context.lock();
 
-    if (!flush_context) {
-        m_complete = true;
-        return;
-    }
+	if (!flush_context) {
+		m_complete = true;
+		return;
+	}
 
-    if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
-        // We have a sight op, check if its the sight of an entity we
-        // want to delete.
-        const std::vector<Root> & args = op->getArgs();
-        if (args.empty()) {
-            std::cerr << "Got empty sight" << std::endl;
-            return;
-        }
-        const Root & arg = args.front();
-        assert(arg.isValid());
-        RootEntity sight_ent = smart_dynamic_cast<RootEntity>(arg);
-        if (!sight_ent.isValid()) {
-            return;
-        }
-        if (!sight_ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-            std::cerr << "Got sight no ID" << std::endl;
-            return;
-        }
-        if (!sight_ent->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
-            std::cerr << "Got sight no PARENT" << std::endl;
-            return;
-        }
-        if (sight_ent->getParent() != type) {
-            return;
-        }
-        const std::string & id = sight_ent->getId();
+	if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
+		// We have a sight op, check if its the sight of an entity we
+		// want to delete.
+		const std::vector<Root>& args = op->getArgs();
+		if (args.empty()) {
+			std::cerr << "Got empty sight" << std::endl;
+			return;
+		}
+		const Root& arg = args.front();
+		assert(arg.isValid());
+		RootEntity sight_ent = smart_dynamic_cast<RootEntity>(arg);
+		if (!sight_ent.isValid()) {
+			return;
+		}
+		if (!sight_ent->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
+			std::cerr << "Got sight no ID" << std::endl;
+			return;
+		}
+		if (!sight_ent->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
+			std::cerr << "Got sight no PARENT" << std::endl;
+			return;
+		}
+		if (sight_ent->getParent() != type) {
+			return;
+		}
+		const std::string& id = sight_ent->getId();
 
-        std::cout << "Deleting: " << type << "(" << id << ")"
-                  << std::endl;
+		std::cout << "Deleting: " << type << "(" << id << ")"
+				  << std::endl;
 
-        // Send a delete to the entity we have seen.
-        Delete d;
+		// Send a delete to the entity we have seen.
+		Delete d;
 
-        Anonymous dmap;
-        dmap->setId(id);
-        d->setArgs1(dmap);
+		Anonymous dmap;
+		dmap->setId(id);
+		d->setArgs1(dmap);
 
-        flush_context->setFromContext(d);
+		flush_context->setFromContext(d);
 
-        d->setTo(id);
+		d->setTo(id);
 
-        res.push_back(d);
+		res.push_back(d);
 
-        // Send a tick for a short time in the future so that
-        // we can look again once this entity is definitly gone.
-        Tick t;
+		// Send a tick for a short time in the future so that
+		// we can look again once this entity is definitly gone.
+		Tick t;
 
-        Anonymous tick_arg;
-        tick_arg->setName("flusher");
+		Anonymous tick_arg;
+		tick_arg->setName("flusher");
 
-        flush_context->setFromContext(t);
-        t->setTo(t->getFrom());
-        t->setFutureSeconds(0.1);
-        t->setArgs1(tick_arg);
+		flush_context->setFromContext(t);
+		t->setTo(t->getFrom());
+		t->setFutureSeconds(0.1);
+		t->setArgs1(tick_arg);
 
-        res.push_back(t);
-    } else if (op->getParent() == "tick") {
-        // We have a tick op, check if its the one we sent ourselves
-        // to schedule the next look.
-        if (op->getArgs().empty() ||
-            op->getArgs().front()->getName() != "flusher") {
-            std::cout << "Not for us" << std::endl;
-            return;
-        }
+		res.push_back(t);
+	} else if (op->getParent() == "tick") {
+		// We have a tick op, check if its the one we sent ourselves
+		// to schedule the next look.
+		if (op->getArgs().empty() ||
+			op->getArgs().front()->getName() != "flusher") {
+			std::cout << "Not for us" << std::endl;
+			return;
+		}
 
-        // Send another look by type.
-        Look l;
+		// Send another look by type.
+		Look l;
 
-        Anonymous lmap;
-        lmap->setParent(type);
-        l->setArgs1(lmap);
-        flush_context->setFromContext(l);
+		Anonymous lmap;
+		lmap->setParent(type);
+		l->setArgs1(lmap);
+		flush_context->setFromContext(l);
 
-        res.push_back(l);
-    } else if (op->getParent() == "unseen") {
-        // We have an unseen op, which signals our last look returned
-        // no results.
-        m_complete = true;
-    }
+		res.push_back(l);
+	} else if (op->getParent() == "unseen") {
+		// We have an unseen op, which signals our last look returned
+		// no results.
+		m_complete = true;
+	}
 }

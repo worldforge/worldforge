@@ -24,20 +24,18 @@
 #include <Eris/Entity.h>
 #include <Eris/TypeInfo.h>
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-bool EntityBaseCase::testMatch(Eris::Entity* entity)
-{
+namespace Ember::EntityMapping::Cases {
+
+bool EntityBaseCase::testMatch(Eris::Entity* entity) {
 	//Check for entity types recursively for all of the supplied entity parents.
 	if (entity) {
 		Eris::TypeInfo* type = entity->getType();
-		for (auto& entityType : mEntityTypes) {
+		for (auto& entityType: mEntityTypes) {
 			if (type->isA(entityType)) {
 				_setState(true);
 				return true;
@@ -48,15 +46,13 @@ bool EntityBaseCase::testMatch(Eris::Entity* entity)
 	return false;
 }
 
-void EntityBaseCase::addEntityType(Eris::TypeInfo* typeInfo)
-{
+void EntityBaseCase::addEntityType(Eris::TypeInfo* typeInfo) {
 	mEntityTypes.push_back(typeInfo);
 }
 
 
-
 }
 
-}
 
-}
+
+

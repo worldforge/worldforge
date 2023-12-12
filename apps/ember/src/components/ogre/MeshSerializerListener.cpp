@@ -64,7 +64,7 @@ void MeshSerializerListener::processSkeletonName(Ogre::Mesh* mesh, Ogre::String*
 			}
 			ss << *I;
 		}
-		for (auto& skeletonPathSegment : skeletonPathSegments) {
+		for (auto& skeletonPathSegment: skeletonPathSegments) {
 			ss << "/" << skeletonPathSegment;
 		}
 		name->assign(ss.str());

@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Thumb>(sol::table& space) {
 	auto thumb = space.new_usertype<Thumb>("Thumb",
 										   sol::base_classes, sol::bases<PushButton, Window, NamedElement, Element, PropertySet, EventSet>()
@@ -30,11 +31,11 @@ void registerLua<Thumb>(sol::table& space) {
 	thumb["setVertFree"] = &Thumb::setVertFree;
 	thumb["setHorzFree"] = &Thumb::setHorzFree;
 	thumb["setVertRange"] = sol::resolve<void(float
-	min, float
-	max)>(&Thumb::setVertRange);
+											  min, float
+											  max)>(&Thumb::setVertRange);
 	thumb["setHorzRange"] = sol::resolve<void(float
-	min, float
-	max)>(&Thumb::setHorzRange);
+											  min, float
+											  max)>(&Thumb::setHorzRange);
 	thumb["getVertRange"] = [](Thumb* self) {
 		auto range = self->getVertRange();
 		return std::tuple(range.first, range.second);

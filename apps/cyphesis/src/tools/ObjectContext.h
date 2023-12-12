@@ -26,18 +26,23 @@
 
 class Interactive;
 
-class ObjectContext : public std::enable_shared_from_this<ObjectContext>
-{
-  protected:
-    Interactive & m_client;
-  public:
-    explicit ObjectContext(Interactive & i) : m_client(i) { }
-    virtual ~ObjectContext() = default;
-    virtual bool accept(const Atlas::Objects::Operation::RootOperation&) const = 0;
-    virtual int dispatch(const Atlas::Objects::Operation::RootOperation&) = 0;
-    virtual std::string repr() const = 0;
-    virtual bool checkContextCommand(const struct command *) = 0;
-    virtual void setFromContext(const Atlas::Objects::Operation::RootOperation&) = 0;
+class ObjectContext : public std::enable_shared_from_this<ObjectContext> {
+protected:
+	Interactive& m_client;
+public:
+	explicit ObjectContext(Interactive& i) : m_client(i) {}
+
+	virtual ~ObjectContext() = default;
+
+	virtual bool accept(const Atlas::Objects::Operation::RootOperation&) const = 0;
+
+	virtual int dispatch(const Atlas::Objects::Operation::RootOperation&) = 0;
+
+	virtual std::string repr() const = 0;
+
+	virtual bool checkContextCommand(const struct command*) = 0;
+
+	virtual void setFromContext(const Atlas::Objects::Operation::RootOperation&) = 0;
 };
 
 #endif // TOOLS_OBJECT_CONTEXT_H

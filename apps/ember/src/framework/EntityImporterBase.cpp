@@ -36,19 +36,16 @@ using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Operation::Set;
 using Atlas::Message::Element;
 
-StackEntry::StackEntry(Atlas::Objects::Entity::RootEntity  o, const std::vector<std::string>::const_iterator & c) :
-		obj(std::move(o)), currentChildIterator(c)
-{
+StackEntry::StackEntry(Atlas::Objects::Entity::RootEntity o, const std::vector<std::string>::const_iterator& c) :
+		obj(std::move(o)), currentChildIterator(c) {
 }
 
-StackEntry::StackEntry(Atlas::Objects::Entity::RootEntity  o) :
-		obj(std::move(o))
-{
+StackEntry::StackEntry(Atlas::Objects::Entity::RootEntity o) :
+		obj(std::move(o)) {
 	currentChildIterator = obj->getContains().end();
 }
 
-bool EntityImporterBase::getEntity(const std::string & id, OpVector & res)
-{
+bool EntityImporterBase::getEntity(const std::string& id, OpVector& res) {
 	auto I = mPersistedEntities.find(id);
 	if (I == mPersistedEntities.end()) {
 		Ember::logger->debug("Could not find entity with id {}; this one was probably transient.", id);
@@ -77,12 +74,11 @@ bool EntityImporterBase::getEntity(const std::string & id, OpVector & res)
 	return true;
 }
 
-void EntityImporterBase::extractChildren(const Root& op, std::list<std::string>& children)
-{
+void EntityImporterBase::extractChildren(const Root& op, std::list<std::string>& children) {
 	Element childElem;
 	if (op->copyAttr("children", childElem) == 0) {
 		if (childElem.isList()) {
-			for (auto child : childElem.asList()) {
+			for (auto child: childElem.asList()) {
 				if (child.isString()) {
 					children.push_back(child.asString());
 				}
@@ -91,8 +87,7 @@ void EntityImporterBase::extractChildren(const Root& op, std::list<std::string>&
 	}
 }
 
-bool EntityImporterBase::getRule(const std::string & id, OpVector & res)
-{
+bool EntityImporterBase::getRule(const std::string& id, OpVector& res) {
 	auto I = mPersistedRules.find(id);
 	if (I == mPersistedRules.end()) {
 		Ember::logger->warn("Could not find rule with id {}.", id);
@@ -106,7 +101,7 @@ bool EntityImporterBase::getRule(const std::string & id, OpVector & res)
 	std::list<std::string> children;
 	extractChildren(definition, children);
 
-	RuleStackEntry entry = { id, definition, children, {} };
+	RuleStackEntry entry = {id, definition, children, {}};
 	mRuleStack.push_back(entry);
 
 	Get get;
@@ -125,12 +120,11 @@ bool EntityImporterBase::getRule(const std::string & id, OpVector & res)
 	return true;
 }
 
-void EntityImporterBase::walkRules(OpVector & res)
-{
+void EntityImporterBase::walkRules(OpVector& res) {
 	if (mRuleStack.empty()) {
 		startEntityWalking();
 	} else {
-		auto & current = mRuleStack.back();
+		auto& current = mRuleStack.back();
 		auto definition = current.definition;
 		//Check if there are any children. If not, we should pop the stack and
 
@@ -139,7 +133,7 @@ void EntityImporterBase::walkRules(OpVector & res)
 			assert(!mRuleStack.empty());
 			mRuleStack.pop_back();
 			while (!mRuleStack.empty()) {
-				auto & se = mRuleStack.back();
+				auto& se = mRuleStack.back();
 				//Try to get the next child rule (unless we've reached the end of the list of children).
 				for (; ++se.currentChildIterator, se.currentChildIterator != se.children.end();) {
 					if (getRule(*se.currentChildIterator, res)) {
@@ -166,19 +160,18 @@ void EntityImporterBase::walkRules(OpVector & res)
 	}
 }
 
-void EntityImporterBase::walkEntities(OpVector & res)
-{
+void EntityImporterBase::walkEntities(OpVector& res) {
 	if (mTreeStack.empty()) {
 		sendResolvedEntityReferences();
 	} else {
-		StackEntry & current = mTreeStack.back();
+		StackEntry& current = mTreeStack.back();
 		//Check if there are any children. If not, we should pop the stack and
 		if (current.obj->getContains().empty()) {
 			// Pop: Go back to WALKING parent
 			assert(!mTreeStack.empty());
 			mTreeStack.pop_back();
 			while (!mTreeStack.empty()) {
-				StackEntry & se = mTreeStack.back();
+				StackEntry& se = mTreeStack.back();
 				//Try to get the next child entity (unless we've reached the end of the list of children).
 				//Since some entities are references but not persisted we need to loop until we find one that we know of.
 				for (; ++se.currentChildIterator, se.currentChildIterator != se.obj->getContains().end();) {
@@ -209,12 +202,11 @@ void EntityImporterBase::walkEntities(OpVector & res)
 	}
 }
 
-void EntityImporterBase::sendMinds()
-{
+void EntityImporterBase::sendMinds() {
 	if (!mResolvedMindMapping.empty()) {
 		Atlas::Objects::Factories factories;
 		Ember::logger->info("Sending minds.");
-		for (const auto& mind : mResolvedMindMapping) {
+		for (const auto& mind: mResolvedMindMapping) {
 			Atlas::Message::MapType message;
 			mind.second->addToMessage(message);
 
@@ -224,17 +216,17 @@ void EntityImporterBase::sendMinds()
 			if (thoughtsElem.isList()) {
 				Atlas::Message::ListType thoughtList = thoughtsElem.List();
 
-				for (auto& thought : thoughtList) {
+				for (auto& thought: thoughtList) {
 					//If the thought is a list of things the entity owns, we should adjust it with the new entity ids.
 					if (thought.isMap()) {
 						auto& thoughtMap = thought.Map();
 						if (thoughtMap.count("things") > 0) {
 							auto& thingsElement = thoughtMap.find("things")->second;
 							if (thingsElement.isMap()) {
-								for (auto& thingI : thingsElement.asMap()) {
+								for (auto& thingI: thingsElement.asMap()) {
 									if (thingI.second.isList()) {
 										Atlas::Message::ListType newList;
-										for (auto& thingId : thingI.second.asList()) {
+										for (auto& thingId: thingI.second.asList()) {
 											if (thingId.isString()) {
 												const auto& entityIdLookupI = mEntityIdMap.find(thingId.asString());
 												//Check if the owned entity has been created with a new id. If so, replace the data.
@@ -258,7 +250,7 @@ void EntityImporterBase::sendMinds()
 							auto& pendingThingsElement = thoughtMap.find("pending_things")->second;
 							if (pendingThingsElement.isList()) {
 								Atlas::Message::ListType newList;
-								for (auto& thingId : pendingThingsElement.asList()) {
+								for (auto& thingId: pendingThingsElement.asList()) {
 									if (thingId.isString()) {
 										const auto& entityIdLookupI = mEntityIdMap.find(thingId.asString());
 										//Check if the owned entity has been created with a new id. If so, replace the data.
@@ -326,10 +318,9 @@ void EntityImporterBase::sendMinds()
 	}
 }
 
-void EntityImporterBase::sendResolvedEntityReferences()
-{
+void EntityImporterBase::sendResolvedEntityReferences() {
 	if (!mEntitiesWithReferenceAttributes.empty()) {
-		for (const auto& entryI : mEntitiesWithReferenceAttributes) {
+		for (const auto& entryI: mEntitiesWithReferenceAttributes) {
 			const auto& persistedEntityId = entryI.first;
 			const auto& attributeNames = entryI.second;
 
@@ -345,7 +336,7 @@ void EntityImporterBase::sendResolvedEntityReferences()
 
 			RootEntity entity;
 
-			for (const auto& attributeName : attributeNames) {
+			for (const auto& attributeName: attributeNames) {
 				Element element = persistedEntity->getAttr(attributeName);
 				resolveEntityReferences(element);
 				entity->setAttr(attributeName, element);
@@ -366,8 +357,7 @@ void EntityImporterBase::sendResolvedEntityReferences()
 	}
 }
 
-void EntityImporterBase::resolveEntityReferences(Atlas::Message::Element& element)
-{
+void EntityImporterBase::resolveEntityReferences(Atlas::Message::Element& element) {
 	if (element.isMap()) {
 		auto entityRefI = element.asMap().find("$eid");
 		if (entityRefI != element.asMap().end() && entityRefI->second.isString()) {
@@ -377,19 +367,18 @@ void EntityImporterBase::resolveEntityReferences(Atlas::Message::Element& elemen
 			}
 		}
 		//If it's a map we need to process all child elements too
-		for (auto& I : element.asMap()) {
+		for (auto& I: element.asMap()) {
 			resolveEntityReferences(I.second);
 		}
 	} else if (element.isList()) {
 		//If it's a list we need to process all child elements too
-		for (auto& I : element.asList()) {
+		for (auto& I: element.asList()) {
 			resolveEntityReferences(I);
 		}
 	}
 }
 
-void EntityImporterBase::complete()
-{
+void EntityImporterBase::complete() {
 	Ember::logger->info("Restore done.");
 	Ember::logger->info("Restored {}, created: {}, updated: {}, create errors: {} .",
 						mStats.entitiesProcessedCount,
@@ -399,8 +388,7 @@ void EntityImporterBase::complete()
 	EventCompleted.emit();
 }
 
-void EntityImporterBase::createEntity(const RootEntity & obj, OpVector & res)
-{
+void EntityImporterBase::createEntity(const RootEntity& obj, OpVector& res) {
 	++mStats.entitiesProcessedCount;
 	++mStats.entitiesCreateCount;
 	EventProgress.emit();
@@ -411,7 +399,7 @@ void EntityImporterBase::createEntity(const RootEntity & obj, OpVector & res)
 	auto I = mTreeStack.rbegin();
 	++I;
 	assert(I != mTreeStack.rend());
-	const std::string & loc = I->restored_id;
+	const std::string& loc = I->restored_id;
 
 	RootEntity create_arg = obj.copy();
 
@@ -425,7 +413,7 @@ void EntityImporterBase::createEntity(const RootEntity & obj, OpVector & res)
 	//The attribute will later on be set through a Set op in sendResolvedEntityReferences().
 	auto referenceMapEntryI = mEntitiesWithReferenceAttributes.find(obj->getId());
 	if (referenceMapEntryI != mEntitiesWithReferenceAttributes.end()) {
-		for (const auto& attributeName : referenceMapEntryI->second) {
+		for (const auto& attributeName: referenceMapEntryI->second) {
 			create_arg->removeAttr(attributeName);
 		}
 	}
@@ -440,8 +428,7 @@ void EntityImporterBase::createEntity(const RootEntity & obj, OpVector & res)
 	res.push_back(create);
 }
 
-void EntityImporterBase::createRule(const Atlas::Objects::Root & obj, OpVector & res)
-{
+void EntityImporterBase::createRule(const Atlas::Objects::Root& obj, OpVector& res) {
 	m_state = RULE_CREATING;
 	Atlas::Objects::Operation::Create createOp;
 	createOp->setFrom(mAccountId);
@@ -452,8 +439,7 @@ void EntityImporterBase::createRule(const Atlas::Objects::Root & obj, OpVector &
 	res.push_back(createOp);
 }
 
-void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& newDefinition, OpVector & res)
-{
+void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& newDefinition, OpVector& res) {
 
 	m_state = RULE_UPDATING;
 	Root updatedDefinition = newDefinition.copy();
@@ -463,11 +449,11 @@ void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& 
 	extractChildren(existingDefinition, existingChildren);
 	extractChildren(newDefinition, newChildren);
 
-	for (auto& child : newChildren) {
+	for (auto& child: newChildren) {
 		existingChildren.remove(child);
 	}
 
-	for (auto& child : existingChildren) {
+	for (auto& child: existingChildren) {
 		if (mPersistedRules.find(child) == mPersistedRules.end()) {
 			newChildren.push_back(child);
 		}
@@ -475,7 +461,7 @@ void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& 
 
 	if (!newChildren.empty() && !existingChildren.empty()) {
 		Atlas::Message::ListType childrenElement;
-		for (auto& child : newChildren) {
+		for (auto& child: newChildren) {
 			childrenElement.emplace_back(child);
 		}
 		updatedDefinition->setAttr("children", childrenElement);
@@ -497,8 +483,7 @@ void EntityImporterBase::updateRule(const Root& existingDefinition, const Root& 
 	}
 }
 
-void EntityImporterBase::errorArrived(const Operation & op, OpVector & res)
-{
+void EntityImporterBase::errorArrived(const Operation& op, OpVector& res) {
 	std::string errorMessage;
 	if (!op->getArgs().empty()) {
 		auto arg = op->getArgs().front();
@@ -511,89 +496,83 @@ void EntityImporterBase::errorArrived(const Operation & op, OpVector & res)
 	}
 
 	switch (m_state) {
-	case RULE_WALKING:
-	{
-		//An error here just means that the rule we asked for didn't exist on the server, and we need
-		//to create it. This is an expected result.
-		auto& current = mRuleStack.back();
-		auto definition = current.definition;
-		assert(definition.isValid());
+		case RULE_WALKING: {
+			//An error here just means that the rule we asked for didn't exist on the server, and we need
+			//to create it. This is an expected result.
+			auto& current = mRuleStack.back();
+			auto definition = current.definition;
+			assert(definition.isValid());
 
-		createRule(definition, res);
+			createRule(definition, res);
 
-	}
-		break;
-	case RULE_CREATING:
-	{
-		mStats.rulesProcessedCount++;
-		mStats.rulesCreateErrorCount++;
-		//An error here means that something went wrong when trying to create a rule. This is wrong.
-		//It probably means that there's something wrong with the data we're sending.
-		auto& current = mRuleStack.back();
-
-		std::string ruleId = current.definition->getId();
-		Ember::logger->error("Could not create rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
-		EventProgress.emit();
-		walkRules(res);
-	}
-		break;
-	case RULE_UPDATING:
-	{
-		mStats.rulesProcessedCount++;
-		//An error here means that something went wrong when trying to update a rule. This is wrong.
-		//It probably means that there's something wrong with the data we're sending.
-		auto& current = mRuleStack.back();
-
-		std::string ruleId = current.definition->getId();
-		Ember::logger->error("Could not update rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
-		mStats.rulesCreateErrorCount++;
-		EventProgress.emit();
-		walkRules(res);
-	}
-		break;
-	case ENTITY_WALKING:
-	{
-		//An error here just means that the entity we asked for didn't exist on the server, and we need
-		//to create it. This is an expected result.
-		assert(!mTreeStack.empty());
-		StackEntry & current = mTreeStack.back();
-		const RootEntity& obj = current.obj;
-
-		assert(obj.isValid());
-
-		createEntity(obj, res);
-	}
-		break;
-	case ENTITY_CREATING:
-	{
-		//An error here means that something went wrong when trying to create an entity. This is wrong.
-		//It probably means that there's something wrong with the data we're sending. Either the
-		//persisted data is corrupt, or there have been changes on the server (for example entity types
-		//renamed or removed).
-		std::string entityType = "unknown";
-
-		auto I = mCreateEntityMapping.find(op->getRefno());
-		if (I != mCreateEntityMapping.end()) {
-			auto J = mPersistedEntities.find(I->second);
-			if (J != mPersistedEntities.end()) {
-				auto& entity = J->second;
-				entityType = entity->getParent();
-			}
 		}
-		Ember::logger->error("Could not create entity of type '{}', continuing with next. Server message: {}",entityType , errorMessage);
-		mStats.entitiesCreateErrorCount++;
-		EventProgress.emit();
-		walkEntities(res);
-	}
-		break;
-	default:
-		Ember::logger->error("Unexpected state in state machine. Server message: {}", errorMessage);
-		break;
+			break;
+		case RULE_CREATING: {
+			mStats.rulesProcessedCount++;
+			mStats.rulesCreateErrorCount++;
+			//An error here means that something went wrong when trying to create a rule. This is wrong.
+			//It probably means that there's something wrong with the data we're sending.
+			auto& current = mRuleStack.back();
+
+			std::string ruleId = current.definition->getId();
+			Ember::logger->error("Could not create rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
+			EventProgress.emit();
+			walkRules(res);
+		}
+			break;
+		case RULE_UPDATING: {
+			mStats.rulesProcessedCount++;
+			//An error here means that something went wrong when trying to update a rule. This is wrong.
+			//It probably means that there's something wrong with the data we're sending.
+			auto& current = mRuleStack.back();
+
+			std::string ruleId = current.definition->getId();
+			Ember::logger->error("Could not update rule with id '{}', continuing with next. Server message: {}", ruleId, errorMessage);
+			mStats.rulesCreateErrorCount++;
+			EventProgress.emit();
+			walkRules(res);
+		}
+			break;
+		case ENTITY_WALKING: {
+			//An error here just means that the entity we asked for didn't exist on the server, and we need
+			//to create it. This is an expected result.
+			assert(!mTreeStack.empty());
+			StackEntry& current = mTreeStack.back();
+			const RootEntity& obj = current.obj;
+
+			assert(obj.isValid());
+
+			createEntity(obj, res);
+		}
+			break;
+		case ENTITY_CREATING: {
+			//An error here means that something went wrong when trying to create an entity. This is wrong.
+			//It probably means that there's something wrong with the data we're sending. Either the
+			//persisted data is corrupt, or there have been changes on the server (for example entity types
+			//renamed or removed).
+			std::string entityType = "unknown";
+
+			auto I = mCreateEntityMapping.find(op->getRefno());
+			if (I != mCreateEntityMapping.end()) {
+				auto J = mPersistedEntities.find(I->second);
+				if (J != mPersistedEntities.end()) {
+					auto& entity = J->second;
+					entityType = entity->getParent();
+				}
+			}
+			Ember::logger->error("Could not create entity of type '{}', continuing with next. Server message: {}", entityType, errorMessage);
+			mStats.entitiesCreateErrorCount++;
+			EventProgress.emit();
+			walkEntities(res);
+		}
+			break;
+		default:
+			Ember::logger->error("Unexpected state in state machine. Server message: {}", errorMessage);
+			break;
 	}
 }
 
-void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
-{
+void EntityImporterBase::infoArrived(const Operation& op, OpVector& res) {
 	if (op->isDefaultRefno()) {
 		return;
 	}
@@ -601,7 +580,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 		Ember::logger->error("Info with no arg.");
 		return;
 	}
-	const Root & arg = op->getArgs().front();
+	const Root& arg = op->getArgs().front();
 
 	if (m_state == RULE_WALKING) {
 		auto& current = mRuleStack.back();
@@ -627,7 +606,7 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 			return;
 		}
 		mNewIds.insert(arg->getId());
-		StackEntry & current = mTreeStack.back();
+		StackEntry& current = mTreeStack.back();
 		current.restored_id = arg->getId();
 		Ember::logger->debug("Created: {}({})", arg->getParent(), arg->getId());
 
@@ -654,9 +633,9 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 		if (arg->isDefaultId()) {
 			Ember::logger->error("Corrupted info response: no id.");
 		}
-		const std::string & id = arg->getId();
+		const std::string& id = arg->getId();
 
-		StackEntry & current = mTreeStack.back();
+		StackEntry& current = mTreeStack.back();
 		const RootEntity& obj = current.obj;
 
 		assert(id == obj->getId());
@@ -697,62 +676,58 @@ void EntityImporterBase::infoArrived(const Operation & op, OpVector & res)
 	}
 }
 
-void EntityImporterBase::sightArrived(const Operation & op, OpVector & res)
-{
+void EntityImporterBase::sightArrived(const Operation& op, OpVector& res) {
 	if (op->isDefaultArgs() || op->getArgs().empty()) {
 		Ember::logger->error("No arg");
 		return;
 	}
-	const Root & arg = op->getArgs().front();
+	const Root& arg = op->getArgs().front();
 	switch (m_state) {
-	case ENTITY_WALKSTART:
-		if (op->isDefaultRefno()) {
-			break;
-		}
-		if (arg->isDefaultId()) {
-			Ember::logger->warn("Corrupted top level entity: no id");
-			cancel();
-			return;
-		} else {
-			getEntity(arg->getId(), res);
-		}
+		case ENTITY_WALKSTART:
+			if (op->isDefaultRefno()) {
+				break;
+			}
+			if (arg->isDefaultId()) {
+				Ember::logger->warn("Corrupted top level entity: no id");
+				cancel();
+				return;
+			} else {
+				getEntity(arg->getId(), res);
+			}
 
-		// Expecting sight of world root
-		break;
-	case ENTITY_UPDATING:
-	{
-		const Operation& sub_op = smart_dynamic_cast<Operation>(arg);
-		if (!sub_op.isValid()) {
+			// Expecting sight of world root
 			break;
+		case ENTITY_UPDATING: {
+			const Operation& sub_op = smart_dynamic_cast<Operation>(arg);
+			if (!sub_op.isValid()) {
+				break;
+			}
+			if (sub_op->getClassNo() != Atlas::Objects::Operation::SET_NO || sub_op->getArgs().empty() || sub_op->isDefaultSerialno()) {
+				Ember::logger->error("This is not our entity update response.");
+				break;
+			}
+			walkEntities(res);
 		}
-		if (sub_op->getClassNo() != Atlas::Objects::Operation::SET_NO || sub_op->getArgs().empty() || sub_op->isDefaultSerialno()) {
-			Ember::logger->error("This is not our entity update response.");
 			break;
-		}
-		walkEntities(res);
-	}
-		break;
-	default:
-		Ember::logger->warn("Unexpected state in state machine.");
-		break;
+		default:
+			Ember::logger->warn("Unexpected state in state machine.");
+			break;
 	}
 }
 
 EntityImporterBase::EntityImporterBase(std::string accountId, std::string avatarId) :
 		mAccountId(std::move(accountId)),
 		mAvatarId(std::move(avatarId)),
-		mStats( { }),
+		mStats({}),
 		m_state(INIT),
 		mThoughtOpsInTransit(0),
 		mSetOpsInTransit(0),
-		mResumeWorld(false)
-{
+		mResumeWorld(false) {
 }
 
 EntityImporterBase::~EntityImporterBase() = default;
 
-void EntityImporterBase::start(const std::string& filename)
-{
+void EntityImporterBase::start(const std::string& filename) {
 	Atlas::Objects::Factories factories;
 
 	auto rootObj = loadFromFile(filename);
@@ -774,7 +749,7 @@ void EntityImporterBase::start(const std::string& filename)
 			EventCompleted.emit();
 			return;
 		} else {
-			for (auto& ruleMessage : rulesElem.asList()) {
+			for (auto& ruleMessage: rulesElem.asList()) {
 				if (ruleMessage.isMap()) {
 					auto object = factories.createObject(ruleMessage.asMap());
 					if (object.isValid()) {
@@ -799,7 +774,7 @@ void EntityImporterBase::start(const std::string& filename)
 		return;
 	}
 
-	for (auto& entityMessage : entitiesElem.asList()) {
+	for (auto& entityMessage: entitiesElem.asList()) {
 		if (entityMessage.isMap()) {
 			auto& entityMap = entityMessage.asMap();
 			auto object = factories.createObject(entityMap);
@@ -822,7 +797,7 @@ void EntityImporterBase::start(const std::string& filename)
 			}
 		}
 	}
-	for (auto& mindMessage : mindsElem.asList()) {
+	for (auto& mindMessage: mindsElem.asList()) {
 		if (mindMessage.isMap()) {
 			auto object = factories.createObject(mindMessage.asMap());
 			if (object.isValid()) {
@@ -851,9 +826,8 @@ void EntityImporterBase::start(const std::string& filename)
 
 }
 
-void EntityImporterBase::registerEntityReferences(const std::string& id, const Atlas::Message::MapType& element)
-{
-	for (const auto& I : element) {
+void EntityImporterBase::registerEntityReferences(const std::string& id, const Atlas::Message::MapType& element) {
+	for (const auto& I: element) {
 		const auto& name = I.first;
 		if (name == "id" || name == "parent" || name == "contains") {
 			continue;
@@ -864,28 +838,26 @@ void EntityImporterBase::registerEntityReferences(const std::string& id, const A
 	}
 }
 
-bool EntityImporterBase::hasEntityReference(const Element& element)
-{
+bool EntityImporterBase::hasEntityReference(const Element& element) {
 	if (element.isMap()) {
 		auto entityRefI = element.asMap().find("$eid");
 		if (entityRefI != element.asMap().end() && entityRefI->second.isString()) {
 			return true;
 		}
 		//If it's a map we need to process all child elements too
-		for (auto& I : element.asMap()) {
+		for (auto& I: element.asMap()) {
 			return hasEntityReference(I.second);
 		}
 	} else if (element.isList()) {
 		//If it's a list we need to process all child elements too
-		for (auto& I : element.asList()) {
+		for (auto& I: element.asList()) {
 			return hasEntityReference(I);
 		}
 	}
 	return false;
 }
 
-void EntityImporterBase::startEntityWalking()
-{
+void EntityImporterBase::startEntityWalking() {
 	m_state = ENTITY_WALKSTART;
 	Look l;
 
@@ -896,8 +868,7 @@ void EntityImporterBase::startEntityWalking()
 
 }
 
-void EntityImporterBase::startRuleWalking()
-{
+void EntityImporterBase::startRuleWalking() {
 	auto ruleI = mPersistedRules.find("root");
 	if (ruleI == mPersistedRules.end()) {
 		Ember::logger->warn("Rules exist, but there's no root rule.");
@@ -907,13 +878,12 @@ void EntityImporterBase::startRuleWalking()
 
 	OpVector res;
 	getRule("root", res);
-	for (const auto& op : res) {
+	for (const auto& op: res) {
 		sendOperation(op);
 	}
 }
 
-void EntityImporterBase::sendOperation(const Operation& op)
-{
+void EntityImporterBase::sendOperation(const Operation& op) {
 	if (!op->isDefaultSerialno()) {
 		sigc::slot<void(const Operation&)> slot = sigc::mem_fun(*this, &EntityImporterBase::operation);
 		sendAndAwaitResponse(op, slot);
@@ -922,39 +892,33 @@ void EntityImporterBase::sendOperation(const Operation& op)
 	}
 }
 
-void EntityImporterBase::cancel()
-{
+void EntityImporterBase::cancel() {
 	m_state = CANCEL;
 }
 
-const EntityImporterBase::Stats& EntityImporterBase::getStats() const
-{
+const EntityImporterBase::Stats& EntityImporterBase::getStats() const {
 	return mStats;
 }
 
-void EntityImporterBase::setResume(bool enabled)
-{
+void EntityImporterBase::setResume(bool enabled) {
 	mResumeWorld = enabled;
 }
 
-void EntityImporterBase::operationThinkResult(const Operation &)
-{
+void EntityImporterBase::operationThinkResult(const Operation&) {
 	mThoughtOpsInTransit--;
 	if (mThoughtOpsInTransit == 0) {
 		complete();
 	}
 }
 
-void EntityImporterBase::operationSetResult(const Operation &)
-{
+void EntityImporterBase::operationSetResult(const Operation&) {
 	mSetOpsInTransit--;
 	if (mSetOpsInTransit == 0) {
 		sendMinds();
 	}
 }
 
-void EntityImporterBase::operation(const Operation & op)
-{
+void EntityImporterBase::operation(const Operation& op) {
 	if (m_state == CANCEL) {
 		m_state = CANCELLED;
 		return;
@@ -971,7 +935,7 @@ void EntityImporterBase::operation(const Operation & op)
 		sightArrived(op, res);
 	}
 
-	for (auto& resOp : res) {
+	for (auto& resOp: res) {
 		sendOperation(resOp);
 	}
 

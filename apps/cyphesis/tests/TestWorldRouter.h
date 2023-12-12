@@ -21,40 +21,35 @@
 
 #include <rules/simulation/WorldRouter.h>
 
-struct TestWorldRouter : public WorldRouter
-{
-    struct TestWorldTestWorldRouter
-    {
-        std::function<void(const Operation& op, LocatedEntity& ent)> messageFn;
-        std::function<Ref<LocatedEntity>(const std::string&, const Atlas::Objects::Entity::RootEntity&)> addNewEntityFn;
-    };
+struct TestWorldRouter : public WorldRouter {
+	struct TestWorldTestWorldRouter {
+		std::function<void(const Operation& op, LocatedEntity& ent)> messageFn;
+		std::function<Ref<LocatedEntity>(const std::string&, const Atlas::Objects::Entity::RootEntity&)> addNewEntityFn;
+	};
 
-    TestWorldTestWorldRouter m_extension;
+	TestWorldTestWorldRouter m_extension;
 
-    explicit TestWorldRouter(Ref<LocatedEntity> gw, EntityCreator& entityCreator)
-            : WorldRouter(std::move(gw), entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); })
-    {
-    }
+	explicit TestWorldRouter(Ref<LocatedEntity> gw, EntityCreator& entityCreator)
+			: WorldRouter(std::move(gw), entityCreator, [] { return std::chrono::steady_clock::now().time_since_epoch(); }) {
+	}
 
-    ~TestWorldRouter() override = default;
+	~TestWorldRouter() override = default;
 
-    Ref<LocatedEntity> addNewEntity(const std::string& id, const Atlas::Objects::Entity::RootEntity& op) override
-    {
-        if (m_extension.addNewEntityFn) {
-            return m_extension.addNewEntityFn(id, op);
-        } else {
-            return WorldRouter::addNewEntity(id, op);
-        }
-    }
+	Ref<LocatedEntity> addNewEntity(const std::string& id, const Atlas::Objects::Entity::RootEntity& op) override {
+		if (m_extension.addNewEntityFn) {
+			return m_extension.addNewEntityFn(id, op);
+		} else {
+			return WorldRouter::addNewEntity(id, op);
+		}
+	}
 
-    void message(Operation op, LocatedEntity& ent) override
-    {
-        if (m_extension.messageFn) {
-            m_extension.messageFn(op, ent);
-        } else {
-            WorldRouter::message(op, ent);
-        }
-    }
+	void message(Operation op, LocatedEntity& ent) override {
+		if (m_extension.messageFn) {
+			m_extension.messageFn(op, ent);
+		} else {
+			WorldRouter::message(op, ent);
+		}
+	}
 };
 
 #endif //TESTS_TEST_WORLD_ROUTER_H

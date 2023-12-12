@@ -22,7 +22,7 @@
 #include <boost/noncopyable.hpp>
 #include <memory>
 
-namespace  Eris {
+namespace Eris {
 /**
  *
  * To be used with EventService::runOnMainThread.

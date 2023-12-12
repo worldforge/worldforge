@@ -65,21 +65,17 @@
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 AwarenessVisualizer::AwarenessVisualizer(Navigation::Awareness& awareness, Ogre::SceneManager& sceneManager) :
 		mAwareness(awareness),
 		mSceneManager(sceneManager),
 		mTileSceneNode(sceneManager.getRootSceneNode()->createChildSceneNode()),
 		mPathSceneNode(sceneManager.getRootSceneNode()->createChildSceneNode()),
-		mTileVisualizationEnabled(false)
-{
+		mTileVisualizationEnabled(false) {
 	mPath = mSceneManager.createManualObject("RecastMOPath");
 	mPath->setDynamic(true); //We'll be updating this a lot
 	mPath->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE - 1); //We want to render the lines on top of everything, so that they aren't hidden by anything
@@ -91,11 +87,10 @@ AwarenessVisualizer::AwarenessVisualizer(Navigation::Awareness& awareness, Ogre:
 	mAwareness.EventTileRemoved.connect(sigc::mem_fun(*this, &AwarenessVisualizer::Awareness_TileRemoved));
 }
 
-AwarenessVisualizer::~AwarenessVisualizer()
-{
+AwarenessVisualizer::~AwarenessVisualizer() {
 	//All of the objects attached to the scene node are owned by this instance, so we should destroy them.
 	while (mTileSceneNode->numAttachedObjects()) {
-		auto movable = mTileSceneNode->detachObject((unsigned short int)0);
+		auto movable = mTileSceneNode->detachObject((unsigned short int) 0);
 		mSceneManager.destroyMovableObject(movable);
 	}
 	mSceneManager.destroySceneNode(mTileSceneNode);
@@ -103,8 +98,7 @@ AwarenessVisualizer::~AwarenessVisualizer()
 	mSceneManager.destroyMovableObject(mPath);
 }
 
-void AwarenessVisualizer::setTileVisualizationEnabled(bool enabled)
-{
+void AwarenessVisualizer::setTileVisualizationEnabled(bool enabled) {
 	if (enabled) {
 		if (!mTileVisualizationEnabled) {
 			buildVisualizationForAllTiles();
@@ -112,7 +106,7 @@ void AwarenessVisualizer::setTileVisualizationEnabled(bool enabled)
 	} else {
 		if (mTileVisualizationEnabled) {
 			while (mTileSceneNode->numAttachedObjects()) {
-				auto movable = mTileSceneNode->detachObject((unsigned short int)0);
+				auto movable = mTileSceneNode->detachObject((unsigned short int) 0);
 				mSceneManager.destroyMovableObject(movable);
 			}
 		}
@@ -120,10 +114,12 @@ void AwarenessVisualizer::setTileVisualizationEnabled(bool enabled)
 	mTileVisualizationEnabled = enabled;
 }
 
-void AwarenessVisualizer::Awareness_TileUpdated(int tx, int ty)
-{
+void AwarenessVisualizer::Awareness_TileUpdated(int tx, int ty) {
 	if (mTileVisualizationEnabled) {
-		std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef, dtTileCachePolyMesh& pmesh, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer) {
+		std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef,
+																																							 dtTileCachePolyMesh& pmesh, float* origin,
+																																							 float cellsize, float cellheight,
+																																							 dtTileCacheLayer& layer) {
 			createMesh(tileRef, pmesh, origin, cellsize, cellheight, layer);
 		};
 
@@ -131,8 +127,7 @@ void AwarenessVisualizer::Awareness_TileUpdated(int tx, int ty)
 	}
 }
 
-void AwarenessVisualizer::Awareness_TileRemoved(int tx, int ty, int tlayer)
-{
+void AwarenessVisualizer::Awareness_TileRemoved(int tx, int ty, int tlayer) {
 	if (mTileVisualizationEnabled) {
 
 		std::stringstream ss;
@@ -151,9 +146,11 @@ void AwarenessVisualizer::Awareness_TileRemoved(int tx, int ty, int tlayer)
 	}
 }
 
-void AwarenessVisualizer::buildVisualization(const WFMath::AxisBox<2>& area)
-{
-	std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef, dtTileCachePolyMesh& pmesh, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer) {
+void AwarenessVisualizer::buildVisualization(const WFMath::AxisBox<2>& area) {
+	std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef,
+																																						 dtTileCachePolyMesh& pmesh, float* origin,
+																																						 float cellsize, float cellheight,
+																																						 dtTileCacheLayer& layer) {
 		createMesh(tileRef, pmesh, origin, cellsize, cellheight, layer);
 	};
 
@@ -161,17 +158,18 @@ void AwarenessVisualizer::buildVisualization(const WFMath::AxisBox<2>& area)
 
 }
 
-void AwarenessVisualizer::buildVisualizationForAllTiles()
-{
-	std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef, dtTileCachePolyMesh& pmesh, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer) {
+void AwarenessVisualizer::buildVisualizationForAllTiles() {
+	std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)> processor = [this](unsigned int tileRef,
+																																						 dtTileCachePolyMesh& pmesh, float* origin,
+																																						 float cellsize, float cellheight,
+																																						 dtTileCacheLayer& layer) {
 		createMesh(tileRef, pmesh, origin, cellsize, cellheight, layer);
 	};
 
 	mAwareness.processAllTiles(processor);
 }
 
-void AwarenessVisualizer::createMesh(unsigned int tileRef, dtTileCachePolyMesh& mesh, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)
-{
+void AwarenessVisualizer::createMesh(unsigned int tileRef, dtTileCachePolyMesh& mesh, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer) {
 	std::stringstream ss;
 	ss << layer.header->tx << "_" << layer.header->ty << "_" << layer.header->tlayer;
 	std::string name(ss.str());
@@ -181,7 +179,7 @@ void AwarenessVisualizer::createMesh(unsigned int tileRef, dtTileCachePolyMesh& 
 	const unsigned short* verts = mesh.verts;
 	const unsigned short* polys = mesh.polys;
 	const unsigned char* areas = mesh.areas;
-	const unsigned char *regs = layer.regs;
+	const unsigned char* regs = layer.regs;
 	const int nverts = mesh.nverts;
 	const int npolys = mesh.npolys;
 	const int maxpolys = 256; //m_maxPolysPerTile;
@@ -189,17 +187,16 @@ void AwarenessVisualizer::createMesh(unsigned int tileRef, dtTileCachePolyMesh& 
 	std::vector<unsigned short> regions;
 	regions.resize(npolys);
 	for (int i = 0; i < npolys; ++i) {
-		regions[i] = (unsigned short)regs[i];
+		regions[i] = (unsigned short) regs[i];
 	}
 
 	createRecastPolyMesh(name, verts, nverts, polys, npolys, areas, maxpolys, regions.data(), nvp, cellsize, cellheight, origin, true);
 
 }
 
-void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const unsigned short *verts, int nverts, const unsigned short *polys,
-											   int npolys, const unsigned char *areas, int maxpolys, const unsigned short *regions,
-											   int nvp, float cs, float ch, const float *orig, bool colorRegions)
-{
+void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const unsigned short* verts, int nverts, const unsigned short* polys,
+											   int npolys, const unsigned char* areas, int maxpolys, const unsigned short* regions,
+											   int nvp, float cs, float ch, const float* orig, bool colorRegions) {
 
 	// Demo specific parameters
 	float m_navMeshOffsetFromGround = 0.2f; //ch / 5;         // Distance above ground for drawing navmesh polygons
@@ -243,18 +240,18 @@ void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const un
 
 				std::array<unsigned short, 3> vi{};
 				for (int j = 2; j < nvp; ++j) // go through all verts in the polygon
-						{
+				{
 					if (p[j] == RC_MESH_NULL_IDX)
 						break;
 					vi[0] = p[0];
 					vi[1] = p[j - 1];
 					vi[2] = p[j];
-					for (unsigned short k : vi) // create a 3-vert triangle for each 3 verts in the polygon.
-							{
+					for (unsigned short k: vi) // create a 3-vert triangle for each 3 verts in the polygon.
+					{
 						const unsigned short* v = &verts[k * 3];
-						const float x = orig[0] + (float)v[0] * cs;
-						const float y = orig[1] + (float)v[1] * ch;
-						const float z = orig[2] + (float)v[2] * cs;
+						const float x = orig[0] + (float) v[0] * cs;
+						const float y = orig[1] + (float) v[1] * ch;
+						const float z = orig[2] + (float) v[2] * cs;
 
 						pRecastMOWalk->position(x, y + m_navMeshOffsetFromGround, z);
 
@@ -302,11 +299,11 @@ void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const un
 					vi[1] = p[0];
 				else
 					vi[1] = p[j + 1];
-				for (int k : vi) {
+				for (int k: vi) {
 					const unsigned short* v = &verts[k * 3];
-					const float x = orig[0] + (float)v[0] * cs;
-					const float y = orig[1] + (float)v[1] * ch;
-					const float z = orig[2] + (float)v[2] * cs;
+					const float x = orig[0] + (float) v[0] * cs;
+					const float y = orig[1] + (float) v[1] * ch;
+					const float z = orig[2] + (float) v[2] * cs;
 					//dd->vertex(x, y, z, coln);
 					pRecastMONeighbour->position(x, y + m_navMeshEdgesOffsetFromGround, z);
 					pRecastMONeighbour->colour(m_navmeshNeighbourEdgeCol);
@@ -345,11 +342,11 @@ void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const un
 					vi[1] = p[0];
 				else
 					vi[1] = p[j + 1];
-				for (int k : vi) {
+				for (int k: vi) {
 					const unsigned short* v = &verts[k * 3];
-					const float x = orig[0] + (float)v[0] * cs;
-					const float y = orig[1] + (float)v[1] * ch;
-					const float z = orig[2] + (float)v[2] * cs;
+					const float x = orig[0] + (float) v[0] * cs;
+					const float y = orig[1] + (float) v[1] * ch;
+					const float z = orig[2] + (float) v[2] * cs;
 					//dd->vertex(x, y, z, colb);
 
 					pRecastMOBoundary->position(x, y + m_navMeshEdgesOffsetFromGround, z);
@@ -365,12 +362,11 @@ void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const un
 
 }
 
-void AwarenessVisualizer::visualizePath(const std::list<WFMath::Point<3>>& path)
-{
+void AwarenessVisualizer::visualizePath(const std::list<WFMath::Point<3>>& path) {
 	mPath->clear();
 	if (!path.empty()) {
 		mPath->begin("/common/base/authoring/polygon/line", Ogre::RenderOperation::OT_LINE_STRIP);
-		for (auto& point : path) {
+		for (auto& point: path) {
 			mPath->position(Convert::toOgre(point));
 		}
 		mPath->end();
@@ -378,5 +374,5 @@ void AwarenessVisualizer::visualizePath(const std::list<WFMath::Point<3>>& path)
 }
 
 }
-}
-}
+
+

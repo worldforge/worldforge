@@ -27,51 +27,50 @@
  *
  * \ingroup PythonWrappers
  */
-class CyPy_Steering : public WrapperBase<Ref<AwareMind>, CyPy_Steering>
-{
-    public:
+class CyPy_Steering : public WrapperBase<Ref<AwareMind>, CyPy_Steering> {
+public:
 
-        CyPy_Steering(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+	CyPy_Steering(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Steering(Py::PythonClassInstance* self, Ref<AwareMind> value);
+	CyPy_Steering(Py::PythonClassInstance* self, Ref<AwareMind> value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-    private:
+private:
 
-        Py::Object refreshPath();
+	Py::Object refreshPath();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Steering, refreshPath);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Steering, refreshPath);
 
-        Py::Object setDestination(const Py::Tuple& args);
+	Py::Object setDestination(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, setDestination);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, setDestination);
 
-        Py::Object setSpeed(const Py::Tuple& args);
+	Py::Object setSpeed(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, setSpeed);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, setSpeed);
 
-        Py::Object queryDestination(const Py::Tuple& args);
+	Py::Object queryDestination(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, queryDestination);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, queryDestination);
 
 //        Py::Object isAtLocation(const Py::Tuple& args);
 //
 //        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, isAtLocation);
 
-        Py::Object distanceTo(const Py::Tuple& args);
+	Py::Object distanceTo(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, distanceTo);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, distanceTo);
 
-        Py::Object direction_to(const Py::Tuple& args);
+	Py::Object direction_to(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, direction_to);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Steering, direction_to);
 
-        Py::Object isAtCurrentDestination();
+	Py::Object isAtCurrentDestination();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Steering, isAtCurrentDestination);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Steering, isAtCurrentDestination);
 
 
 };

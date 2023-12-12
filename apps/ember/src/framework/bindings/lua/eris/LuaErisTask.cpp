@@ -22,7 +22,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Task>(sol::table& space) {
 	auto task = space.new_usertype<Task>("Task", sol::no_constructor);
 	task["name"] = &Task::name;

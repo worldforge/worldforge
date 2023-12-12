@@ -19,16 +19,15 @@
 #ifndef ICAMERAMOTIONHANDLER_H_
 #define ICAMERAMOTIONHANDLER_H_
 
-namespace WFMath
-{
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
+
 class Quaternion;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -37,13 +36,12 @@ namespace OgreView
  * Each camera mount can have an instance of this attached to it. When the camera receives instructions to move, it will issue a move request through this interface.
  * It's then up to the implementations of this interface to determine what to do. Some implementations might want to only move the node that the camera is attached to, whilst other might want to move an entity instead.
  */
-struct ICameraMotionHandler
-{
+struct ICameraMotionHandler {
 
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~ICameraMotionHandler()	= default;
+	virtual ~ICameraMotionHandler() = default;
 
 	/**
 	 * @brief Move in the specified direction and using the specified orientation.
@@ -58,6 +56,6 @@ struct ICameraMotionHandler
 };
 
 }
-}
+
 
 #endif /* ICAMERAMOTIONHANDLER_H_ */

@@ -22,10 +22,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<QuaternionAdapter>(sol::table& space) {
 	auto quaternionAdapter = space.new_usertype<QuaternionAdapter>("QuaternionAdapter",
-																 sol::constructors<QuaternionAdapter(CEGUI::Window*, CEGUI::Window*, CEGUI::Window*, CEGUI::Window*)>());
+																   sol::constructors<QuaternionAdapter(CEGUI::Window*, CEGUI::Window*, CEGUI::Window*, CEGUI::Window*)>());
 	quaternionAdapter["getValue"] = &QuaternionAdapter::getValue;
 	quaternionAdapter["getOriginalValue"] = &QuaternionAdapter::getOriginalValue;
 	quaternionAdapter["setValue"] = &QuaternionAdapter::setValue;

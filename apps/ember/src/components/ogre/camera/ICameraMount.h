@@ -21,20 +21,18 @@
 
 #include "components/ogre/OgreIncludes.h"
 
-namespace WFMath
-{
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
+
 class Quaternion;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 struct ICameraMotionHandler;
 
-namespace Camera
-{
+namespace Camera {
 class MainCamera;
 
 /**
@@ -47,13 +45,12 @@ class MainCamera;
  * When the user wants to move, the mount will also receive calls to move(). This allow the different types of mounts to implement different movement styles. A camera which is attached to an entity would for example probably want to try to move the entity within the world, whereas a free flying camera would want to move the camera directly.
  * In most cases the handling of the motion will need to be separated from the actual mount, and therefore the setMotionHandler() method is provided.
  */
-struct ICameraMount
-{
+struct ICameraMount {
 
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~ICameraMount()	= default;
+	virtual ~ICameraMount() = default;
 
 
 	/**
@@ -116,5 +113,5 @@ struct ICameraMount
 };
 }
 }
-}
+
 #endif /* ICAMERAMOUNT_H_ */

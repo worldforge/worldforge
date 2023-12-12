@@ -27,8 +27,6 @@
 namespace Ember {
 struct Session;
 
-class DestroyChildStateEvent;
-
 /**
  * @brief State for when a connection to a server is in progress.
  */

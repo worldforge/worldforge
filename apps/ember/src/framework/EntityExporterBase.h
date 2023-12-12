@@ -35,20 +35,20 @@
 #include <unordered_set>
 #include <memory>
 
-namespace Atlas
-{
+namespace Atlas {
 class Bridge;
+
 class Codec;
-class Encoder;
-namespace Objects
-{
+
+namespace Objects {
 
 class ObjectsEncoder;
 }
-namespace Message
-{
+namespace Message {
 class QueuedDecoder;
+
 class Encoder;
+
 class Element;
 }
 }
@@ -93,8 +93,7 @@ class Element;
  * The reason for this is that this is meant to be shared between both Ember and Cyphesis.
  * NOTE: When included in Cyphesis, do not try to reformat the code to fit the Cyphesis style.
  */
-class EntityExporterBase: public virtual sigc::trackable
-{
+class EntityExporterBase : public virtual sigc::trackable {
 public:
 
 	/**
@@ -102,8 +101,7 @@ public:
 	 *
 	 * Meant to be used in a GUI or debug info.
 	 */
-	struct Stats
-	{
+	struct Stats {
 		/**
 		 * @brief The number of entities queried.
 		 */
@@ -224,18 +222,18 @@ public:
 	 */
 	bool getExportRules() const;
 
-    /**
-     * @brief Sets whether we should export minds.
-     *
-     * @param exportRules Whether we should export minds.
-     */
-    void setExportMinds(bool exportMinds);
+	/**
+	 * @brief Sets whether we should export minds.
+	 *
+	 * @param exportRules Whether we should export minds.
+	 */
+	void setExportMinds(bool exportMinds);
 
-    /**
-     * @brief Gets whether we should export minds.
-     * @return Whether we should export minds.
-     */
-    bool getExportMinds() const;
+	/**
+	 * @brief Gets whether we should export minds.
+	 * @return Whether we should export minds.
+	 */
+	bool getExportMinds() const;
 
 	/**
 	 * @brief Gets stats about the export process.
@@ -369,26 +367,34 @@ protected:
 	 */
 	std::unordered_set<std::string> mTransientTypes;
 
-    /**
-     * @brief Keeps track of all types that have the "mind" property set by default.
-     *
-     * This is required when we're exporting minds in order for us to know which entity to send Commune requests to.
-     */
-    std::unordered_set<std::string> mMindTypes;
+	/**
+	 * @brief Keeps track of all types that have the "mind" property set by default.
+	 *
+	 * This is required when we're exporting minds in order for us to know which entity to send Commune requests to.
+	 */
+	std::unordered_set<std::string> mMindTypes;
 
-    /**
+	/**
 	 * @brief Starts the process of requesting entities and walking the entity hierarchy.
 	 */
 	void startRequestingEntities();
 
 	void dumpEntity(const Atlas::Objects::Entity::RootEntity& ent);
-	void dumpMind(const std::string& entityId, const Operation & op);
+
+	void dumpMind(const std::string& entityId, const Operation& op);
+
 	void infoArrived(const Operation& op);
+
 	void thoughtOpArrived(const Operation& op);
+
 	void operationGetResult(const Operation& op);
+
 	void operationGetThoughtResult(const Operation& op);
-    void operationGetRuleResult(const Operation& op);
+
+	void operationGetRuleResult(const Operation& op);
+
 	void requestThoughts(const std::string& entityId, const std::string& persistedId);
+
 	void requestRule(const std::string& rule);
 
 	/**
@@ -413,13 +419,13 @@ protected:
 	 */
 	void adjustReferencedEntities();
 
-    /**
-     * @brief Resolves any entity references in the element.
-     *
-     * This is done recursively.
-     * @param element The element to resolve entity references in.
-     */
-    void resolveEntityReferences(Atlas::Message::Element& element);
+	/**
+	 * @brief Resolves any entity references in the element.
+	 *
+	 * This is done recursively.
+	 * @param element The element to resolve entity references in.
+	 */
+	void resolveEntityReferences(Atlas::Message::Element& element);
 
 
 	typedef sigc::slot<void(const Atlas::Objects::Operation::RootOperation&)> CallbackFunction;

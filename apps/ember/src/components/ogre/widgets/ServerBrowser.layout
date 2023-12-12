@@ -1,109 +1,112 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
-    <Window name="MainWindow" type="EmberLook/FrameWindow">
-        <Property name="Size" value="{{0.0,600.0},{0.0,400.0}}" />
-        <Property name="Position" value="{{0.50000,-300.0},{0.15,0.0}}" />
-        <Property name="SizingEnabled" value="false" />
-        <Property name="Alpha" value="0.6" />
-        <Property name="Text" value="Server browser" />
-        <Property name="CloseButtonEnabled" value="False" />
-        <Window type="VerticalLayoutContainer">
-            <Window name="ServerList" type="EmberLook/MultiColumnList">
-                <Property name="Position" value="{{0.0,1},{0,0}}" />
-                <Property name="Size" value="{{1.0,-2.0},{1.0,-35.0}}" />
-                <Property name="InheritsAlpha" value="true" />
-                <Property name="SelectionMode" value="RowSingle" />
-                <Property name="ColumnHeader" value="text:   width:{0.05, 0} id:0" />
-                <Property name="ColumnHeader" value="text:Server Name width:{0.30, 0} id:1" />
-                <Property name="ColumnHeader" value="text:Ping width:{0.1, 0} id:2" />
-                <Property name="ColumnHeader" value="text:Clients width:{0.1, 0} id:3" />
-                <Property name="ColumnHeader" value="text:Ruleset width:{0.1, 0} id:4" />
-                <Property name="ColumnHeader" value="text:Server type width:{0.15, 0} id:5" />
-                <Property name="ColumnHeader" value="text:Version width:{0.1, 0} id:6" />
-                <Property name="ColumnHeader" value="text:Address width:{0.15, 0} id:7" />
-            </Window>
-            <Window type="DefaultWindow">
-                <Window type="EmberLook/StaticText">
-                    <Property name="Size" value="{{0.0,95.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{0.0,0.0},{0,0}}" />
-                    <Property name="FrameEnabled" value="false" />
-                    <Property name="BackgroundEnabled" value="false" />
-                    <Property name="Text" value="Manual connect:" />
-                    <Property name="InheritsAlpha" value="true" />
-                    <Property name="TooltipText" value="Enter a server address here to manually connect to it. Press Enter to connect." />
-                </Window>
-                <Window name="ManualServerName" type="EmberLook/Editbox">
-                    <Property name="Size" value="{{0.0,150.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{0.0,100.0},{0,0}}" />
-                    <Property name="Text" value="" />
-                    <Property name="InheritsAlpha" value="true" />
-                    <Property name="TooltipText" value="Enter a server address here to manually connect to it. Press Enter to connect." />
-                </Window>
-                <Window name="HideOldServers" type="EmberLook/Checkbox">
-                    <Property name="Size" value="{{0.0,100.0},{0.00,30.0}}" />
-                    <Property name="Position" value="{{0.0,260.0},{0,0}}" />
-                    <Property name="Text" value="Hide old servers" />
-                    <Property name="TooltipText" value="Hides old and outdated servers from the list." />
-                    <Property name="Selected" value="True" />
-                    <Property name="Visible" value="False" />
-                </Window>
-                <Window name="ConnectLocal" type="EmberLook/Button">
-                    <Property name="Size" value="{{0.0,80.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{1.0,-215.0},{0,0}}" />
-                    <Property name="Text" value="Connect local" />
-                    <Property name="InheritsAlpha" value="True" />
-                    <Property name="TooltipText" value="Connect to the local server." />
-                    <Property name="Visible" value="False" />
-                </Window>
-                <Window name="Refresh" type="EmberLook/Button">
-                    <Property name="Size" value="{{0.0,60.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{1.0,-130.0},{0,0}}" />
-                    <Property name="Text" value="Refresh" />
-                    <Property name="InheritsAlpha" value="True" />
-                    <Property name="TooltipText" value="Refresh the server list." />
-                </Window>
-                <Window name="Connect" type="EmberLook/Button">
-                    <Property name="Size" value="{{0.0,60.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{1.0,-65.0},{0,0}}" />
-                    <Property name="Text" value="Connect" />
-                    <Property name="InheritsAlpha" value="True" />
-                    <Property name="TooltipText" value="Try to connect to either the selected server in the list, or the server entered into the manual text box." />
-                </Window>
-            </Window>
-        </Window>
-        <Window name="ConnectionOverlay" type="EmberLook/StaticText">
-            <Property name="Size" value="{{1,0},{1,0}}" />
-            <Property name="Position" value="{{0,0},{0,0}}" />
-            <Property name="FrameEnabled" value="false" />
-            <Property name="BackgroundEnabled" value="true" />
-            <Property name="Alpha" value="0.6" />
-            <Property name="Visible" value="false" />
-            <Property name="AlwaysOnTop" value="true" />
-            <Window name="ConnectionOverlayBand" type="EmberLook/StaticText">
-                <Property name="Size" value="{{1,0},{0,100}}" />
-                <Property name="Position" value="{{0,0},{0.5,-50}}" />
-                <Property name="FrameEnabled" value="false" />
-                <Property name="BackgroundEnabled" value="true" />
-                <Property name="Alpha" value="1.0" />
-                <Property name="InheritsAlpha" value="false" />
-                <Window name="ConnectionOverlayStatus" type="EmberLook/StaticText">
-                    <Property name="Size" value="{{1,0},{0,25}}" />
-                    <Property name="Position" value="{{0,0},{0.5,-30}}" />
-                    <Property name="FrameEnabled" value="false" />
-                    <Property name="BackgroundEnabled" value="False" />
-                    <Property name="Text" value="Connection status" />
-                    <Property name="HorizontalAlignment" value="Centre" />
-                    <Property name="Alpha" value="1.0" />
-                    <Property name="InheritsAlpha" value="false" />
-                </Window>
-                <Window name="CancelConnection" type="EmberLook/Button">
-                    <Property name="Size" value="{{0.0,80.0},{0.0,25.0}}" />
-                    <Property name="Position" value="{{0.5,-40.0},{0.5,0.0}}" />
-                    <Property name="Text" value="Cancel" />
-                    <Property name="TooltipText" value="Cancel the ongoing connection attempt." />
-                    <Property name="Alpha" value="1.0" />
-                </Window>
-            </Window>
-        </Window>
-    </Window>
+	<Window name="MainWindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.0,600.0},{0.0,400.0}}"/>
+		<Property name="Position" value="{{0.50000,-300.0},{0.15,0.0}}"/>
+		<Property name="SizingEnabled" value="false"/>
+		<Property name="Alpha" value="0.6"/>
+		<Property name="Text" value="Server browser"/>
+		<Property name="CloseButtonEnabled" value="False"/>
+		<Window type="VerticalLayoutContainer">
+			<Window name="ServerList" type="EmberLook/MultiColumnList">
+				<Property name="Position" value="{{0.0,1},{0,0}}"/>
+				<Property name="Size" value="{{1.0,-2.0},{1.0,-35.0}}"/>
+				<Property name="InheritsAlpha" value="true"/>
+				<Property name="SelectionMode" value="RowSingle"/>
+				<Property name="ColumnHeader" value="text:   width:{0.05, 0} id:0"/>
+				<Property name="ColumnHeader" value="text:Server Name width:{0.30, 0} id:1"/>
+				<Property name="ColumnHeader" value="text:Ping width:{0.1, 0} id:2"/>
+				<Property name="ColumnHeader" value="text:Clients width:{0.1, 0} id:3"/>
+				<Property name="ColumnHeader" value="text:Ruleset width:{0.1, 0} id:4"/>
+				<Property name="ColumnHeader" value="text:Server type width:{0.15, 0} id:5"/>
+				<Property name="ColumnHeader" value="text:Version width:{0.1, 0} id:6"/>
+				<Property name="ColumnHeader" value="text:Address width:{0.15, 0} id:7"/>
+			</Window>
+			<Window type="DefaultWindow">
+				<Window type="EmberLook/StaticText">
+					<Property name="Size" value="{{0.0,95.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{0.0,0.0},{0,0}}"/>
+					<Property name="FrameEnabled" value="false"/>
+					<Property name="BackgroundEnabled" value="false"/>
+					<Property name="Text" value="Manual connect:"/>
+					<Property name="InheritsAlpha" value="true"/>
+					<Property name="TooltipText"
+							  value="Enter a server address here to manually connect to it. Press Enter to connect."/>
+				</Window>
+				<Window name="ManualServerName" type="EmberLook/Editbox">
+					<Property name="Size" value="{{0.0,150.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{0.0,100.0},{0,0}}"/>
+					<Property name="Text" value=""/>
+					<Property name="InheritsAlpha" value="true"/>
+					<Property name="TooltipText"
+							  value="Enter a server address here to manually connect to it. Press Enter to connect."/>
+				</Window>
+				<Window name="HideOldServers" type="EmberLook/Checkbox">
+					<Property name="Size" value="{{0.0,100.0},{0.00,30.0}}"/>
+					<Property name="Position" value="{{0.0,260.0},{0,0}}"/>
+					<Property name="Text" value="Hide old servers"/>
+					<Property name="TooltipText" value="Hides old and outdated servers from the list."/>
+					<Property name="Selected" value="True"/>
+					<Property name="Visible" value="False"/>
+				</Window>
+				<Window name="ConnectLocal" type="EmberLook/Button">
+					<Property name="Size" value="{{0.0,80.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{1.0,-215.0},{0,0}}"/>
+					<Property name="Text" value="Connect local"/>
+					<Property name="InheritsAlpha" value="True"/>
+					<Property name="TooltipText" value="Connect to the local server."/>
+					<Property name="Visible" value="False"/>
+				</Window>
+				<Window name="Refresh" type="EmberLook/Button">
+					<Property name="Size" value="{{0.0,60.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{1.0,-130.0},{0,0}}"/>
+					<Property name="Text" value="Refresh"/>
+					<Property name="InheritsAlpha" value="True"/>
+					<Property name="TooltipText" value="Refresh the server list."/>
+				</Window>
+				<Window name="Connect" type="EmberLook/Button">
+					<Property name="Size" value="{{0.0,60.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{1.0,-65.0},{0,0}}"/>
+					<Property name="Text" value="Connect"/>
+					<Property name="InheritsAlpha" value="True"/>
+					<Property name="TooltipText"
+							  value="Try to connect to either the selected server in the list, or the server entered into the manual text box."/>
+				</Window>
+			</Window>
+		</Window>
+		<Window name="ConnectionOverlay" type="EmberLook/StaticText">
+			<Property name="Size" value="{{1,0},{1,0}}"/>
+			<Property name="Position" value="{{0,0},{0,0}}"/>
+			<Property name="FrameEnabled" value="false"/>
+			<Property name="BackgroundEnabled" value="true"/>
+			<Property name="Alpha" value="0.6"/>
+			<Property name="Visible" value="false"/>
+			<Property name="AlwaysOnTop" value="true"/>
+			<Window name="ConnectionOverlayBand" type="EmberLook/StaticText">
+				<Property name="Size" value="{{1,0},{0,100}}"/>
+				<Property name="Position" value="{{0,0},{0.5,-50}}"/>
+				<Property name="FrameEnabled" value="false"/>
+				<Property name="BackgroundEnabled" value="true"/>
+				<Property name="Alpha" value="1.0"/>
+				<Property name="InheritsAlpha" value="false"/>
+				<Window name="ConnectionOverlayStatus" type="EmberLook/StaticText">
+					<Property name="Size" value="{{1,0},{0,25}}"/>
+					<Property name="Position" value="{{0,0},{0.5,-30}}"/>
+					<Property name="FrameEnabled" value="false"/>
+					<Property name="BackgroundEnabled" value="False"/>
+					<Property name="Text" value="Connection status"/>
+					<Property name="HorizontalAlignment" value="Centre"/>
+					<Property name="Alpha" value="1.0"/>
+					<Property name="InheritsAlpha" value="false"/>
+				</Window>
+				<Window name="CancelConnection" type="EmberLook/Button">
+					<Property name="Size" value="{{0.0,80.0},{0.0,25.0}}"/>
+					<Property name="Position" value="{{0.5,-40.0},{0.5,0.0}}"/>
+					<Property name="Text" value="Cancel"/>
+					<Property name="TooltipText" value="Cancel the ongoing connection attempt."/>
+					<Property name="Alpha" value="1.0"/>
+				</Window>
+			</Window>
+		</Window>
+	</Window>
 </GUILayout>

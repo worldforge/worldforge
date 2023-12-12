@@ -9,7 +9,8 @@
 
 #include <Atlas/Message/Encoder.h>
 
-namespace Atlas { namespace Message {
+namespace Atlas {
+namespace Message {
 
 /** Layer that combines Atlas::Message::Encoder and a decoder.
  *
@@ -21,14 +22,15 @@ namespace Atlas { namespace Message {
  * @see Object
 */
 
-template <class Decoder>
-class Layer : public Encoder, public Decoder
-{
+template<class Decoder>
+class Layer : public Encoder, public Decoder {
 public:
-    Layer(Atlas::Bridge* b) : Encoder(b), Decoder() { }
-    virtual ~Layer() { }
+	Layer(Atlas::Bridge* b) : Encoder(b), Decoder() {}
+
+	virtual ~Layer() {}
 };
 
-} } // namespace Atlas::Message
+}
+} // namespace Atlas::Message
 
 #endif

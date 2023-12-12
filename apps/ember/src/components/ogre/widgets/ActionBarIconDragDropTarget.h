@@ -25,23 +25,21 @@
 
 #include <sigc++/signal.h>
 
-namespace boost
-{
-	class any;
+namespace boost {
+class any;
 }
 
-namespace CEGUI
-{
-	class Window;
-	class EventArgs;
+namespace CEGUI {
+class Window;
+
+class EventArgs;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class ActionBarIcon;
+
 class EntityIcon;
 
 /**
@@ -54,8 +52,7 @@ Use this as an easy way to activate entity icon or action bar icon dragging onto
 
 @note Subclasses of this which want to implement their own behaviour should override the handle* methods.
 */
-class ActionBarIconDragDropTarget
-{
+class ActionBarIconDragDropTarget {
 public:
 	/**
 	 * @brief Ctor.
@@ -158,8 +155,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif

@@ -32,8 +32,7 @@ XMLEntityRecipeSerializer::~XMLEntityRecipeSerializer() = default;
 
 std::map<std::string, std::unique_ptr<EntityRecipe>> XMLEntityRecipeSerializer::parseScript(Ogre::DataStreamPtr& stream) {
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
-	if (!xmlHelper.Load(xmlDoc, stream)) {
+	if (!Ember::OgreView::XMLHelper::Load(xmlDoc, stream)) {
 		return {};
 	}
 	TiXmlElement* rootElem = xmlDoc.RootElement();

@@ -27,53 +27,47 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-PropelProperty::PropelProperty() : PropertyBase(prop_flag_persistence_ephem)
-{
+PropelProperty::PropelProperty() : PropertyBase(prop_flag_persistence_ephem) {
 }
 
-int PropelProperty::get(Element& val) const
-{
-    if (mData.isValid()) {
-        val = mData.toAtlas();
-        return 0;
-    }
-    return -1;
+int PropelProperty::get(Element& val) const {
+	if (mData.isValid()) {
+		val = mData.toAtlas();
+		return 0;
+	}
+	return -1;
 }
 
-void PropelProperty::set(const Element& val)
-{
-    if (val.isList()) {
-        try {
-            mData.fromAtlas(val.List());
-        } catch (...) {
-            mData = {};
-            spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
-        }
-    } else if (val.isNone()) {
-        mData = {};
-    } else {
-        mData = {};
-        spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
-    }
+void PropelProperty::set(const Element& val) {
+	if (val.isList()) {
+		try {
+			mData.fromAtlas(val.List());
+		} catch (...) {
+			mData = {};
+			spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
+		}
+	} else if (val.isNone()) {
+		mData = {};
+	} else {
+		mData = {};
+		spdlog::error("PropelProperty::set: Data was not in format which could be parsed into 3d vector.");
+	}
 
 }
 
-void PropelProperty::add(const std::string& key, MapType& map) const
-{
-    if (mData.isValid()) {
-        map[key] = mData.toAtlas();
-    }
+void PropelProperty::add(const std::string& key, MapType& map) const {
+	if (mData.isValid()) {
+		map[key] = mData.toAtlas();
+	}
 }
 
-void PropelProperty::add(const std::string& key, const RootEntity& ent) const
-{
-    if (mData.isValid()) {
-        ent->setAttr(key, mData.toAtlas());
-    }
+void PropelProperty::add(const std::string& key, const RootEntity& ent) const {
+	if (mData.isValid()) {
+		ent->setAttr(key, mData.toAtlas());
+	}
 }
 
-PropelProperty* PropelProperty::copy() const
-{
-    return new PropelProperty(*this);
+PropelProperty* PropelProperty::copy() const {
+	return new PropelProperty(*this);
 }
 

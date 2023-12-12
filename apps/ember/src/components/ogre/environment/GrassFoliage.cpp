@@ -39,10 +39,10 @@
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 GrassFoliage::GrassFoliage(Terrain::TerrainManager& terrainManager,
 						   Terrain::TerrainLayer terrainLayer,
@@ -53,16 +53,16 @@ GrassFoliage::GrassFoliage(Terrain::TerrainManager& terrainManager,
 		  mMinWidth(1.0f),
 		  mMaxWidth(1.5f) {
 	if (mFoliageDefinition.hasParameter("minHeight")) {
-		mMinHeight = atof(mFoliageDefinition.getParameter("minHeight").c_str());
+		mMinHeight = std::stof(mFoliageDefinition.getParameter("minHeight"));
 	}
 	if (mFoliageDefinition.hasParameter("maxHeight")) {
-		mMaxHeight = atof(mFoliageDefinition.getParameter("maxHeight").c_str());
+		mMaxHeight = std::stof(mFoliageDefinition.getParameter("maxHeight"));
 	}
 	if (mFoliageDefinition.hasParameter("minWidth")) {
-		mMinWidth = atof(mFoliageDefinition.getParameter("minWidth").c_str());
+		mMinWidth = std::stof(mFoliageDefinition.getParameter("minWidth"));
 	}
 	if (mFoliageDefinition.hasParameter("maxWidth")) {
-		mMaxWidth = atof(mFoliageDefinition.getParameter("maxWidth").c_str());
+		mMaxWidth = std::stof(mFoliageDefinition.getParameter("maxWidth"));
 	}
 }
 
@@ -92,18 +92,18 @@ void GrassFoliage::initialize() {
 	l->setMaximumSize(mMaxWidth, mMaxHeight);
 	l->setAnimationEnabled(true);        //Enable animations
 	if (mFoliageDefinition.hasParameter("swayDistribution")) {
-		l->setSwayDistribution(atof(mFoliageDefinition.getParameter("swayDistribution").c_str()));
+		l->setSwayDistribution(std::stof(mFoliageDefinition.getParameter("swayDistribution")));
 	} else {
 		l->setSwayDistribution(10.0f);        //Sway fairly unsynchronized
 	}
 	if (mFoliageDefinition.hasParameter("swayLength")) {
-		l->setSwayLength(atof(mFoliageDefinition.getParameter("swayLength").c_str()));
+		l->setSwayLength(std::stof(mFoliageDefinition.getParameter("swayLength")));
 	} else {
 		l->setSwayLength(0.5f);                //Sway back and forth 0.5 units in length
 	}
 
 	if (mFoliageDefinition.hasParameter("swaySpeed")) {
-		l->setSwaySpeed(atof(mFoliageDefinition.getParameter("swaySpeed").c_str()));
+		l->setSwaySpeed(std::stof(mFoliageDefinition.getParameter("swaySpeed")));
 	} else {
 		l->setSwaySpeed(0.5f);                //Sway 1/2 a cycle every second
 	}
@@ -138,7 +138,7 @@ void GrassFoliage::initialize() {
 	l->setMaxSlope(Ogre::Degree(40.0f));
 
 	auto& detailLevels = mPagedGeometry->getDetailLevels();
-	for (auto& detailLevel : detailLevels) {
+	for (auto& detailLevel: detailLevels) {
 		DistanceStore tempDistance = {detailLevel->getFarRange(), detailLevel->getNearRange(), detailLevel->getTransition()};
 		mDistanceStore.push_back(tempDistance);
 	}
@@ -171,5 +171,5 @@ void GrassFoliage::setFarDistance(float factor) {
 
 }
 
-}
-}
+
+

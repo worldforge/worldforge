@@ -22,44 +22,41 @@
 #include <spdlog/spdlog.h>
 #include <fmt/ostream.h>
 
-template <> struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {};
+template<>
+struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {
+};
 
-DataObject::DataObject()
-{
+DataObject::DataObject() {
 	m_serverData.clear();
 	m_clientData.clear();
 	m_clientFilterData.clear();
 	m_handshakeQueue.clear();
 	m_serverListreq.clear();
 	m_listreqExpiry.clear();
-	srand( (unsigned)time(0));
+	srand((unsigned) time(0));
 
 }
 
 
-DataObject::~DataObject()
-{
+DataObject::~DataObject() {
 
 }
 
 bool
-DataObject::addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value )
-{
+DataObject::addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value) {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
-	{
+	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
 		m_serverData[sessionid][name] = value;
-		spdlog::trace("  AddServerAttribute: {}:{}:{}",sessionid, name, value);
+		spdlog::trace("  AddServerAttribute: {}:{}:{}", sessionid, name, value);
 		return true;
 	}
 	return false;
 }
 
 void
-DataObject::removeServerAttribute(const std::string& sessionid, const std::string& name )
-{
+DataObject::removeServerAttribute(const std::string& sessionid, const std::string& name) {
 	/**
 	 * 	Some attributes are protected and must not be removed ... as they are
 	 * 	considered essential to a "session"
@@ -67,10 +64,8 @@ DataObject::removeServerAttribute(const std::string& sessionid, const std::strin
 	 * 	port
 	 * 	expiry
 	 */
-	if ( m_serverData.find(sessionid) != m_serverData.end() )
-	{
-		if ( name != "ip" && name != "expiry" && name != "port" )
-		{
+	if (m_serverData.find(sessionid) != m_serverData.end()) {
+		if (name != "ip" && name != "expiry" && name != "port") {
 			m_serverData[sessionid].erase(name);
 		}
 
@@ -78,12 +73,9 @@ DataObject::removeServerAttribute(const std::string& sessionid, const std::strin
 }
 
 std::string
-DataObject::getServerAttribute( const std::string& sessionid, const std::string& key )
-{
-	if ( m_serverData.find(sessionid) != m_serverData.end() )
-	{
-		if ( m_serverData[sessionid].find(key) != m_serverData[sessionid].end() )
-		{
+DataObject::getServerAttribute(const std::string& sessionid, const std::string& key) {
+	if (m_serverData.find(sessionid) != m_serverData.end()) {
+		if (m_serverData[sessionid].find(key) != m_serverData[sessionid].end()) {
 			return m_serverData[sessionid][key];
 		}
 	}
@@ -91,13 +83,11 @@ DataObject::getServerAttribute( const std::string& sessionid, const std::string&
 }
 
 bool
-DataObject::addClientAttribute( const std::string& sessionid, const std::string& name, const std::string& value )
-{
+DataObject::addClientAttribute(const std::string& sessionid, const std::string& name, const std::string& value) {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
-	{
+	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
 		m_clientData[sessionid][name] = value;
 		return true;
 	}
@@ -105,8 +95,7 @@ DataObject::addClientAttribute( const std::string& sessionid, const std::string&
 }
 
 void
-DataObject::removeClientAttribute( const std::string& sessionid, const std::string& name )
-{
+DataObject::removeClientAttribute(const std::string& sessionid, const std::string& name) {
 	/**
 	 * 	Some attributes are protected and must not be removed ... as they are
 	 * 	considered essential to a "session"
@@ -114,10 +103,8 @@ DataObject::removeClientAttribute( const std::string& sessionid, const std::stri
 	 * 	port
 	 * 	expiry
 	 */
-	if ( m_clientData.find(sessionid) != m_clientData.end() )
-	{
-		if ( name != "ip" && name != "expiry" && name != "port" )
-		{
+	if (m_clientData.find(sessionid) != m_clientData.end()) {
+		if (name != "ip" && name != "expiry" && name != "port") {
 			m_clientData[sessionid].erase(name);
 		}
 
@@ -125,12 +112,9 @@ DataObject::removeClientAttribute( const std::string& sessionid, const std::stri
 }
 
 std::string
-DataObject::getClientAttribute( const std::string& sessionid, const std::string& key )
-{
-	if ( m_clientData.find(sessionid) != m_clientData.end() )
-	{
-		if ( m_clientData[sessionid].find(key) != m_clientData[sessionid].end() )
-		{
+DataObject::getClientAttribute(const std::string& sessionid, const std::string& key) {
+	if (m_clientData.find(sessionid) != m_clientData.end()) {
+		if (m_clientData[sessionid].find(key) != m_clientData[sessionid].end()) {
 			return m_clientData[sessionid][key];
 		}
 	}
@@ -138,15 +122,12 @@ DataObject::getClientAttribute( const std::string& sessionid, const std::string&
 }
 
 bool
-DataObject::addClientFilter( const std::string& sessionid, const std::string& name, const std::string& value )
-{
+DataObject::addClientFilter(const std::string& sessionid, const std::string& name, const std::string& value) {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
 	 */
-	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
-	{
-		if ( keyExists<std::string>(m_clientData, sessionid) )
-		{
+	if (sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "") {
+		if (keyExists<std::string>(m_clientData, sessionid)) {
 			/**
 			 * This serves as both a create and update.  In order to prevent DOS
 			 * style attack on MS, make establishing a session is a requirement
@@ -160,29 +141,25 @@ DataObject::addClientFilter( const std::string& sessionid, const std::string& na
 	return false;
 }
 
-std::map< std::string, std::string >
-DataObject::getClientFilter( const std::string& sessionid )
-{
-	std::map<std::string,std::string> empty;
+std::map<std::string, std::string>
+DataObject::getClientFilter(const std::string& sessionid) {
+	std::map<std::string, std::string> empty;
 	empty.clear();
 
-	if ( keyExists<std::string>(m_clientFilterData, sessionid ) &&
-		 keyExists<std::string>(m_clientData, sessionid ) )
-	{
+	if (keyExists<std::string>(m_clientFilterData, sessionid) &&
+		keyExists<std::string>(m_clientData, sessionid)) {
 		return m_clientFilterData[sessionid];
 	}
 	return empty;
 }
 
 std::string
-DataObject::getClientFilter( const std::string& sessionid, const std::string& key )
-{
+DataObject::getClientFilter(const std::string& sessionid, const std::string& key) {
 
 
-	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() &&
-		 m_clientFilterData[sessionid].find(key) != m_clientFilterData[sessionid].end() &&
-		 m_clientData.find(sessionid) != m_clientData.end() )
-	{
+	if (m_clientFilterData.find(sessionid) != m_clientFilterData.end() &&
+		m_clientFilterData[sessionid].find(key) != m_clientFilterData[sessionid].end() &&
+		m_clientData.find(sessionid) != m_clientData.end()) {
 		return m_clientFilterData[sessionid][key];
 	}
 
@@ -190,25 +167,21 @@ DataObject::getClientFilter( const std::string& sessionid, const std::string& ke
 }
 
 void
-DataObject::removeClientFilter( const std::string& sessionid, const std::string& name )
-{
-	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
-	{
+DataObject::removeClientFilter(const std::string& sessionid, const std::string& name) {
+	if (m_clientFilterData.find(sessionid) != m_clientFilterData.end()) {
 		m_clientFilterData[sessionid].erase(name);
 	}
 }
 
 bool
-DataObject::addServerSession( const std::string& sessionid )
-{
+DataObject::addServerSession(const std::string& sessionid) {
 
 	bool ret = false;
 	/*
 	 *  If the server session does not exist, create it
 	 */
-	if ( ! keyExists<std::string>(m_serverData, sessionid) )
-	{
-		addServerAttribute(sessionid,"ip",sessionid);
+	if (!keyExists<std::string>(m_serverData, sessionid)) {
+		addServerAttribute(sessionid, "ip", sessionid);
 		ret = true;
 	}
 
@@ -216,7 +189,7 @@ DataObject::addServerSession( const std::string& sessionid )
 	 *  If a new structure, this will create the expiry, if existing it will just
 	 *  refresh the timeout
 	 */
-	addServerAttribute(sessionid,"expiry", getNowStr() );
+	addServerAttribute(sessionid, "expiry", getNowStr());
 
 
 	return ret;
@@ -224,8 +197,7 @@ DataObject::addServerSession( const std::string& sessionid )
 }
 
 void
-DataObject::removeServerSession( const std::string& sessionid )
-{
+DataObject::removeServerSession(const std::string& sessionid) {
 
 	/*
 	 * Erase from main data
@@ -240,15 +212,13 @@ DataObject::removeServerSession( const std::string& sessionid )
 }
 
 bool
-DataObject::serverSessionExists( const std::string& sessionid )
-{
-	return keyExists<std::string>( m_serverData, sessionid );
+DataObject::serverSessionExists(const std::string& sessionid) {
+	return keyExists<std::string>(m_serverData, sessionid);
 }
 
-std::map<std::string,std::string>
-DataObject::getServerSession( const std::string& sessionid )
-{
-	if ( keyExists<std::string>(m_serverData, sessionid ))
+std::map<std::string, std::string>
+DataObject::getServerSession(const std::string& sessionid) {
+	if (keyExists<std::string>(m_serverData, sessionid))
 		return m_serverData[sessionid];
 
 	std::map<std::string, std::string> empty;
@@ -256,15 +226,13 @@ DataObject::getServerSession( const std::string& sessionid )
 	return empty;
 }
 
-bool DataObject::addClientSession( const std::string& sessionid )
-{
+bool DataObject::addClientSession(const std::string& sessionid) {
 	bool ret = false;
 	/*
 	 *  If the client session does not exist, create it, and add+uniq the listresp
 	 */
-	if ( ! keyExists<std::string>( m_clientData, sessionid ) )
-	{
-		addClientAttribute(sessionid,"ip",sessionid);
+	if (!keyExists<std::string>(m_clientData, sessionid)) {
+		addClientAttribute(sessionid, "ip", sessionid);
 		ret = true;
 	}
 
@@ -272,18 +240,16 @@ bool DataObject::addClientSession( const std::string& sessionid )
 	 *  If a new structure, this will create the expiry, if existing it will just
 	 *  refresh the timeout
 	 */
-	addClientAttribute(sessionid,"expiry", getNowStr() );
+	addClientAttribute(sessionid, "expiry", getNowStr());
 
 	return ret;
 }
 
 
 void
-DataObject::removeClientSession( const std::string& sessionid )
-{
+DataObject::removeClientSession(const std::string& sessionid) {
 	m_clientFilterData.erase(sessionid);
-	if(  m_clientData.erase(sessionid) == 1 )
-	{
+	if (m_clientData.erase(sessionid) == 1) {
 		// logging if any
 	}
 	/*
@@ -303,30 +269,26 @@ DataObject::removeClientSession( const std::string& sessionid )
 }
 
 bool
-DataObject::clientSessionExists( const std::string& sessionid )
-{
-	return keyExists<std::string>( m_clientData, sessionid );
+DataObject::clientSessionExists(const std::string& sessionid) {
+	return keyExists<std::string>(m_clientData, sessionid);
 }
 
 std::list<std::string>
-DataObject::getClientSessionList()
-{
+DataObject::getClientSessionList() {
 	std::list<std::string> cslist;
 	cslist.clear();
 
-	std::map<std::string, std::map<std::string,std::string> >::iterator it;
+	std::map<std::string, std::map<std::string, std::string> >::iterator it;
 
-	for ( it = m_clientData.begin(); it != m_clientData.end(); it++ )
-	{
-		cslist.push_back( it->first );
+	for (it = m_clientData.begin(); it != m_clientData.end(); it++) {
+		cslist.push_back(it->first);
 	}
 
 	return cslist;
 }
 
 std::list<std::string>
-DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid )
-{
+DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::string sessionid) {
 	std::list<std::string> ss_slice;
 	std::vector<std::string>::iterator ss_itr;
 
@@ -344,54 +306,49 @@ DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items, std::st
 	 * If we're doing the default list and it doesn't match with the current data
 	 * create it
 	 */
-	if ( start_idx == 0 && sessionid == "default" )
-	{
-		spdlog::trace( "Refreshing (default) server list");
+	if (start_idx == 0 && sessionid == "default") {
+		spdlog::trace("Refreshing (default) server list");
 		createServerSessionListresp("default");
 	}
 
-	 /*
-	  * Lets see how things are looking
-	  */
+	/*
+	 * Lets see how things are looking
+	 */
 	spdlog::trace("FULL m_serverData     : {}", m_serverData.size());
 	spdlog::trace("m_serverDataList[{}] : {}", sessionid, getServerSessionCount(sessionid));
 
 	/*
 	 * If we're empty or going out of bounds, just return the big bubkis
 	 */
-	if ( getServerSessionCount(sessionid) == 0 || start_idx>=getServerSessionCount(sessionid))
-	{
+	if (getServerSessionCount(sessionid) == 0 || start_idx >= getServerSessionCount(sessionid)) {
 		return ss_slice;
 	}
 
-	 for ( ss_itr=m_serverListreq[sessionid].begin()+start_idx; ss_itr != m_serverListreq[sessionid].end() ; ++ss_itr )
-	 {
+	for (ss_itr = m_serverListreq[sessionid].begin() + start_idx; ss_itr != m_serverListreq[sessionid].end(); ++ss_itr) {
 
-		 /*
-		  * Early bail out
-		  */
-		 if ( ss_slice.size() >= max_items )
-		 {
-			 spdlog::trace( "ss_slice size({}) is greater than max_items ({})", ss_slice.size(), max_items);
-			 break;
-		 }
-	     ss_slice.push_back(*ss_itr);
-		 spdlog::trace("   I({}): {}",ss_slice.size(), *ss_itr);
+		/*
+		 * Early bail out
+		 */
+		if (ss_slice.size() >= max_items) {
+			spdlog::trace("ss_slice size({}) is greater than max_items ({})", ss_slice.size(), max_items);
+			break;
+		}
+		ss_slice.push_back(*ss_itr);
+		spdlog::trace("   I({}): {}", ss_slice.size(), *ss_itr);
 
-	 }
+	}
 
-	 spdlog::trace("   M: {}", ss_slice.size());
-	 ss_slice.unique();
-	 spdlog::trace( "   N: {}", ss_slice.size());
-	 return ss_slice;
+	spdlog::trace("   M: {}", ss_slice.size());
+	ss_slice.unique();
+	spdlog::trace("   N: {}", ss_slice.size());
+	return ss_slice;
 }
 
 /*
  * TODO: this is a copy of expireHandshakes ... refactor same as keyExists<T>(blah)
  */
 std::vector<std::string>
-DataObject::expireServerSessions( unsigned int expiry )
-{
+DataObject::expireServerSessions(unsigned int expiry) {
 	std::vector<std::string> expiredSS;
 	expiredSS.clear();
 
@@ -404,78 +361,69 @@ DataObject::expireServerSessions( unsigned int expiry )
 	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
 	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
 	 */
-    std::map<std::string,std::map<std::string,std::string> >::iterator itr;
-    for( itr = m_serverData.begin(); itr != m_serverData.end(); )
-    {
-    	std::string key = itr->first;
+	for (auto itr = m_serverData.begin(); itr != m_serverData.end();) {
+		std::string key = itr->first;
 
-		spdlog::trace("  from_iso_string ({}: {}",key, getServerExpiryIso(key));
-    	etime =  boost::posix_time::from_iso_string(getServerExpiryIso(key)) +
-    			 boost::posix_time::seconds(expiry);
+		spdlog::trace("  from_iso_string ({}: {}", key, getServerExpiryIso(key));
+		etime = boost::posix_time::from_iso_string(getServerExpiryIso(key)) +
+				boost::posix_time::seconds(expiry);
 
-    	/**
-    	 * We need to make a copy of the iterator if we modify the
-    	 * underlying container because the iterator becomes invalid
-    	 */
-    	if ( now > etime )
-    	{
-    		std::map<std::string,std::map<std::string,std::string> >::iterator itr_copy = itr;
-    		++itr_copy;
+		/**
+		 * We need to make a copy of the iterator if we modify the
+		 * underlying container because the iterator becomes invalid
+		 */
+		if (now > etime) {
+			auto itr_copy = itr;
+			++itr_copy;
 
-    		/*
-    		 * This also remove listreq cache items as well as the default cache
-    		 */
-    		removeServerSession(key);
-    		itr = itr_copy;
-    		expiredSS.push_back(key);
-    	}
-    	else
-    	{
-    		/**
-    		 * We are not modifying, just increment normally.
-    		 */
-    		++itr;
-    	}
+			/*
+			 * This also remove listreq cache items as well as the default cache
+			 */
+			removeServerSession(key);
+			itr = itr_copy;
+			expiredSS.push_back(key);
+		} else {
+			/**
+			 * We are not modifying, just increment normally.
+			 */
+			++itr;
+		}
 
-    }
-    return expiredSS;
+	}
+	return expiredSS;
 
 
 }
 
 std::list<std::string>
-DataObject::searchServerSessionByAttribute(std::string attr_name,std::string attr_val)
-{
+DataObject::searchServerSessionByAttribute(std::string attr_name, std::string attr_val) {
 	std::list<std::string> matched;
 
 	matched.clear();
-    std::string vattr;
 
-    /*
-     * Loop through all servers
-     */
-    for( auto& vv : m_serverData )
-    {
+	/*
+	 * Loop through all servers
+	 */
+	for (auto& vv: m_serverData) {
 
-    	/*
-    	 * Returns an empty string
-    	 */
-    	std::string vattr = getServerAttribute(vv.first,attr_name);
+		/*
+		 * Returns an empty string
+		 */
+		std::string vattr = getServerAttribute(vv.first, attr_name);
 
-    	/*
-    	 * If the session has the attribute, and the value matches, push it on list
-    	 */
-    	if( boost::iequals(vattr,attr_val))
-    		matched.push_back(vv.first);
+		/*
+		 * If the session has the attribute, and the value matches, push it on list
+		 */
+		if (boost::iequals(vattr, attr_val))
+			matched.push_back(vv.first);
 
-    }
-    return matched;
+	}
+	return matched;
 }
 
-std::map<std::string,std::string>
-DataObject::getClientSession( const std::string& sessionid )
-{
-	if ( keyExists<std::string>( m_clientData, sessionid ) )
+std::map<std::string, std::string>
+DataObject::getClientSession(const std::string& sessionid) {
+	if (keyExists<std::string>(m_clientData, sessionid))
 		return m_clientData[sessionid];
 
 	// @TODO: there has to be a way to do this without polluting the stack
@@ -485,8 +433,7 @@ DataObject::getClientSession( const std::string& sessionid )
 }
 
 std::vector<std::string>
-DataObject::expireClientSessions( unsigned int expiry )
-{
+DataObject::expireClientSessions(unsigned int expiry) {
 	std::vector<std::string> expiredCS;
 	expiredCS.clear();
 
@@ -499,53 +446,47 @@ DataObject::expireClientSessions( unsigned int expiry )
 	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
 	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
 	 */
-    std::map<std::string,std::map<std::string,std::string> >::iterator itr;
-    for( itr = m_clientData.begin(); itr != m_clientData.end(); )
-    {
-    	std::string key = itr->first;
-    	std::string et = itr->second["expiry"];
+	std::map<std::string, std::map<std::string, std::string> >::iterator itr;
+	for (itr = m_clientData.begin(); itr != m_clientData.end();) {
+		std::string key = itr->first;
+		std::string et = itr->second["expiry"];
 
-    	if ( et == "" || et.length() == 0 )
-    	{
-    		/*
-    		 * arbitrary iso string for conversion
-    		 */
-    		et = "20000101T010000.000000";
-    	}
+		if (et == "" || et.length() == 0) {
+			/*
+			 * arbitrary iso string for conversion
+			 */
+			et = "20000101T010000.000000";
+		}
 
 
 		spdlog::trace("  from_iso_string: {}", et);
-    	etime =  boost::posix_time::from_iso_string(et) +
-    			 boost::posix_time::seconds(expiry);
+		etime = boost::posix_time::from_iso_string(et) +
+				boost::posix_time::seconds(expiry);
 
-    	/**
-    	 * We need to make a copy of the iterator if we modify the
-    	 * underlying container because the iterator becomes invalid
-    	 */
-    	if ( now > etime )
-    	{
-    		std::map<std::string,std::map<std::string,std::string> >::iterator itr_copy = itr;
-    		++itr_copy;
-    		removeClientSession(key);
-    		itr = itr_copy;
-    		expiredCS.push_back(key);
-    	}
-    	else
-    	{
-    		/**
-    		 * We are not modifying, just increment normally.
-    		 */
-    		++itr;
-    	}
+		/**
+		 * We need to make a copy of the iterator if we modify the
+		 * underlying container because the iterator becomes invalid
+		 */
+		if (now > etime) {
+			std::map<std::string, std::map<std::string, std::string> >::iterator itr_copy = itr;
+			++itr_copy;
+			removeClientSession(key);
+			itr = itr_copy;
+			expiredCS.push_back(key);
+		} else {
+			/**
+			 * We are not modifying, just increment normally.
+			 */
+			++itr;
+		}
 
-    }
-    return expiredCS;
+	}
+	return expiredCS;
 
 }
 
 std::vector<std::string>
-DataObject::expireClientSessionCache( unsigned int expiry )
-{
+DataObject::expireClientSessionCache(unsigned int expiry) {
 	std::vector<std::string> expiredCSC;
 	expiredCSC.clear();
 	/*
@@ -558,24 +499,21 @@ DataObject::expireClientSessionCache( unsigned int expiry )
 	/*
 	 * Grab our list of expired cache items
 	 */
-	for( auto& f : m_listreqExpiry )
-	{
+	for (auto& f: m_listreqExpiry) {
 		spdlog::trace("  iterate m_listreqExpiry : {}={}", f.first, f.second);
 		etime = boost::posix_time::from_iso_string(f.second)
-		      + boost::posix_time::seconds(expiry);
+				+ boost::posix_time::seconds(expiry);
 
 		spdlog::trace("  evaluate etime : {}", etime);
 		spdlog::trace("  evaluate   now : {}", now);
-		if ( now > etime )
-		{
+		if (now > etime) {
 			spdlog::trace("  expire m_listreqExpiry : {}", f.first);
 			expiredCSC.push_back(f.first);
 		}
 	}
 
 	spdlog::trace("  collected expiredCSC({})", expiredCSC.size());
-	for( auto& f : expiredCSC )
-	{
+	for (auto& f: expiredCSC) {
 		spdlog::trace("  purge expired({})", f);
 		m_listreqExpiry.erase(f);
 		m_serverListreq.erase(f);
@@ -585,8 +523,7 @@ DataObject::expireClientSessionCache( unsigned int expiry )
 
 
 uint32_t
-DataObject::addHandshake(unsigned int def_hs )
-{
+DataObject::addHandshake(unsigned int def_hs) {
 
 	unsigned int handshake = def_hs;
 	unsigned int ret = 0;
@@ -595,8 +532,7 @@ DataObject::addHandshake(unsigned int def_hs )
 	 *  If we pass a value in ( other than 0 ), we set the handshake to that value
 	 *  otherwise we generate a random one
 	 */
-	if ( handshake == 0 )
-	{
+	if (handshake == 0) {
 		handshake = rand();
 	}
 
@@ -605,8 +541,7 @@ DataObject::addHandshake(unsigned int def_hs )
 	m_handshakeQueue[handshake]["expiry"] = getNowStr();
 
 	// if we find said element again, return handshake, otherwise 0
-	if ( m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end() )
-	{
+	if (m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end()) {
 		ret = handshake;
 	}
 
@@ -615,27 +550,24 @@ DataObject::addHandshake(unsigned int def_hs )
 }
 
 uint32_t
-DataObject::removeHandshake( unsigned int hs )
-{
+DataObject::removeHandshake(unsigned int hs) {
 	/*
 	 * There is technically nothing wrong with deleting an element that doesn't exist.
 	 * Thus the return code is semi-superfluous
 	 */
-	if ( m_handshakeQueue.erase(hs) == 1 )
-	{
+	if (m_handshakeQueue.erase(hs) == 1) {
 		return hs;
 	}
 	return 0;
 }
 
 bool
-DataObject::handshakeExists( unsigned int hs )
-{
-	return keyExists<unsigned int>( m_handshakeQueue, hs );
+DataObject::handshakeExists(unsigned int hs) {
+	return keyExists<unsigned int>(m_handshakeQueue, hs);
 }
+
 std::vector<unsigned int>
-DataObject::expireHandshakes( unsigned int expiry )
-{
+DataObject::expireHandshakes(unsigned int expiry) {
 	/**
 	 * Go over handshake queue ... expire any that are older than m_handshakeExpirySeconds
 	 */
@@ -651,61 +583,52 @@ DataObject::expireHandshakes( unsigned int expiry )
 	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
 	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
 	 */
-    std::map<unsigned int,std::map<std::string,std::string> >::iterator itr;
-    for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); )
-    {
-    	unsigned int key = itr->first;
-    	std::string et = itr->second["expiry"];
+	std::map<unsigned int, std::map<std::string, std::string> >::iterator itr;
+	for (itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end();) {
+		unsigned int key = itr->first;
+		std::string et = itr->second["expiry"];
 
-    	if ( et == "" || et.length() == 0 )
-    	{
-    		/*
-    		 * arbitrary iso string for conversion
-    		 */
-    		et = "20000101T010000.000000";
-    	}
+		if (et == "" || et.length() == 0) {
+			/*
+			 * arbitrary iso string for conversion
+			 */
+			et = "20000101T010000.000000";
+		}
 
-    	spdlog::trace("  from_iso_string: {}", et);
-    	etime =  boost::posix_time::from_iso_string(et) +
-    			 boost::posix_time::seconds(expiry);
+		spdlog::trace("  from_iso_string: {}", et);
+		etime = boost::posix_time::from_iso_string(et) +
+				boost::posix_time::seconds(expiry);
 
-    	/**
-    	 * We need to make a copy of the iterator if we modify the
-    	 * underlying container because the iterator becomes invalid
-    	 */
-    	if ( now > etime )
-    	{
-    		std::map<unsigned int,std::map<std::string,std::string> >::iterator itr_copy = itr;
-    		++itr_copy;
-    		removeHandshake(key);
-    		itr = itr_copy;
-    		removedHS.push_back(key);
-    	}
-    	else
-    	{
-    		/**
-    		 * We are not modifying, just increment normally.
-    		 */
-    		++itr;
-    	}
+		/**
+		 * We need to make a copy of the iterator if we modify the
+		 * underlying container because the iterator becomes invalid
+		 */
+		if (now > etime) {
+			std::map<unsigned int, std::map<std::string, std::string> >::iterator itr_copy = itr;
+			++itr_copy;
+			removeHandshake(key);
+			itr = itr_copy;
+			removedHS.push_back(key);
+		} else {
+			/**
+			 * We are not modifying, just increment normally.
+			 */
+			++itr;
+		}
 
-    }
-    return removedHS;
+	}
+	return removedHS;
 }
 
 boost::posix_time::ptime
-DataObject::getHandshakeExpiry( unsigned int hs )
-{
+DataObject::getHandshakeExpiry(unsigned int hs) {
 	/*
 	 *
 	 */
-	if( handshakeExists(hs) )
-	{
+	if (handshakeExists(hs)) {
 		spdlog::trace("  from_iso_string: {}", m_handshakeQueue[hs]["expiry"]);
-		return boost::posix_time::from_iso_string( m_handshakeQueue[hs]["expiry"] );
-	}
-	else
-	{
+		return boost::posix_time::from_iso_string(m_handshakeQueue[hs]["expiry"]);
+	} else {
 		/*
 		 * Handicap it if we can't find it ... 5000ms should be
 		 * sufficient
@@ -715,14 +638,12 @@ DataObject::getHandshakeExpiry( unsigned int hs )
 }
 
 uint32_t
-DataObject::getHandshakeCount()
-{
+DataObject::getHandshakeCount() {
 	return m_handshakeQueue.size();
 }
 
 uint32_t
-DataObject::getServerSessionCount(std::string s)
-{
+DataObject::getServerSessionCount(std::string s) {
 	/*
 	 * If we have a session list cache, push from there
 	 * or fallback on the main data structure  If something
@@ -730,24 +651,20 @@ DataObject::getServerSessionCount(std::string s)
 	 * 0 to indicate that the requested cache is not present
 	 */
 	spdlog::trace("getServerSessionCount({})", s);
-	if ( s == "default" )
-	{
+	if (s == "default") {
 		/*
 		 * Called with the default argument
 		 */
 		spdlog::trace("  default m_serverData.size() count");
 		return m_serverData.size();
 
-	}
-	else
-	{
+	} else {
 
-		if ( m_serverListreq.find(s) != m_serverListreq.end() )
-		{
+		if (m_serverListreq.find(s) != m_serverListreq.end()) {
 			/*
 			 * We've got a custom list defined already, give a count
 			 */
-			spdlog::trace("  m_serverListreq[{}] found of size : {}",s , m_serverListreq[s].size());
+			spdlog::trace("  m_serverListreq[{}] found of size : {}", s, m_serverListreq[s].size());
 			return m_serverListreq[s].size();
 		}
 
@@ -761,31 +678,26 @@ DataObject::getServerSessionCount(std::string s)
 }
 
 uint32_t
-DataObject::getClientSessionCount()
-{
+DataObject::getClientSessionCount() {
 	return m_clientData.size();
 }
 
 boost::posix_time::ptime
-DataObject::getNow()
-{
+DataObject::getNow() {
 	//boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
 	return boost::posix_time::microsec_clock::local_time();
 }
 
 std::string
-DataObject::getNowStr()
-{
-	return boost::posix_time::to_iso_string( getNow() );
+DataObject::getNowStr() {
+	return boost::posix_time::to_iso_string(getNow());
 }
 
 unsigned int
-DataObject::getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2 )
-{
+DataObject::getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t2) {
 	boost::posix_time::time_duration td;
 	td = t2 - t1;
-	if ( td.is_negative() )
-	{
+	if (td.is_negative()) {
 		return 999;
 	}
 
@@ -793,8 +705,7 @@ DataObject::getLatency(boost::posix_time::ptime& t1, boost::posix_time::ptime& t
 }
 
 uint32_t
-DataObject::createServerSessionListresp(std::string ip)
-{
+DataObject::createServerSessionListresp(std::string ip) {
 	std::list<std::string> ip_list;
 	std::vector<std::string> ip_vec;
 
@@ -805,12 +716,11 @@ DataObject::createServerSessionListresp(std::string ip)
 	ip_vec.clear();
 
 	spdlog::trace("createServerSessionListresp({})", ip);
-    spdlog::trace("m_serverData({})", m_serverData.size());
+	spdlog::trace("m_serverData({})", m_serverData.size());
 	/*
 	 * Check if cache exists ... if so erase it
 	 */
-	if ( m_serverListreq.find(ip) != m_serverListreq.end() )
-	{
+	if (m_serverListreq.find(ip) != m_serverListreq.end()) {
 		spdlog::trace("  m_serverListreq[{}] exists, erasing", ip);
 		m_serverListreq.erase(ip);
 //		m_serverListreq[ip].clear();
@@ -820,8 +730,7 @@ DataObject::createServerSessionListresp(std::string ip)
 	 * TODO: this is where we can apply custom per-client sorting and
 	 * filtering.  Perhaps maybe create a sort lambda ?
 	 */
-	for( auto& foo : m_serverData )
-	{
+	for (auto& foo: m_serverData) {
 		spdlog::trace("    Temp Cache[{}] = {}", ip, foo.first);
 		ip_list.push_back(foo.first);
 	}
@@ -831,8 +740,7 @@ DataObject::createServerSessionListresp(std::string ip)
 	 */
 	ip_list.unique();
 
-	for( auto& bar: ip_list )
-	{
+	for (auto& bar: ip_list) {
 		spdlog::trace("    Packing vector ({})", bar);
 		ip_vec.push_back(bar);
 	}
@@ -847,13 +755,11 @@ DataObject::createServerSessionListresp(std::string ip)
 }
 
 std::list<std::string>
-DataObject::getServerSessionCacheList()
-{
+DataObject::getServerSessionCacheList() {
 	std::list<std::string> slist;
 	slist.clear();
 	spdlog::trace("getServerSessionCacheList(): total={}", m_serverListreq.size());
-	for( auto& m : m_serverListreq )
-	{
+	for (auto& m: m_serverListreq) {
 		spdlog::trace("  cache-{}", m.first);
 		slist.push_back(m.first);
 	}
@@ -861,13 +767,11 @@ DataObject::getServerSessionCacheList()
 }
 
 std::string
-DataObject::getServerExpiryIso(std::string& sessionid)
-{
+DataObject::getServerExpiryIso(std::string& sessionid) {
 
 	const std::string etdef = "20000101T010000.000000";
 	std::string et;
-	if( m_serverData.find(sessionid) == m_serverData.end() )
-	{
+	if (m_serverData.find(sessionid) == m_serverData.end()) {
 		/*
 		 * We don't have a session
 		 * Option 1: some list somewhere is iterating over the list and it's
@@ -876,19 +780,14 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 		 */
 		spdlog::trace("session({}) does not exist for expiry request", sessionid);
 		et = getNowStr();
-	}
-	else
-	{
+	} else {
 		/*
 		 * found session, check expiry
 		 *
 		 */
-		if ( m_serverData[sessionid].find("expiry") != m_serverData[sessionid].end() )
-		{
+		if (m_serverData[sessionid].find("expiry") != m_serverData[sessionid].end()) {
 			et = m_serverData[sessionid]["expiry"];
-		}
-		else
-		{
+		} else {
 			spdlog::trace("session({}) does not contain expiry attribute", sessionid);
 			et = getNowStr();
 		}
@@ -898,9 +797,8 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 	 * And just in case because we know for sure we can't have anything that
 	 * is empty
 	 */
-	if ( et.length() == 0 || et == "" )
-	{
-		spdlog::trace("session({}) expiry time empty, defaulting:{}",sessionid, etdef);
+	if (et.empty()) {
+		spdlog::trace("session({}) expiry time empty, defaulting:{}", sessionid, etdef);
 		et = etdef;
 	}
 
@@ -909,20 +807,17 @@ DataObject::getServerExpiryIso(std::string& sessionid)
 	 * if there is an issue here, there will definitely be an issue elsewhere,
 	 * thus we can override that.
 	 */
-	try
-	{
-		boost::posix_time::ptime p = boost::posix_time::from_iso_string(et);
+	try {
+		boost::posix_time::from_iso_string(et);
 	}
-	catch(const boost::exception& bex )
-	{
+	catch (const boost::exception& bex) {
 		/*
 		 * Whoops, date is malformed, we want to reset, unless
 		 * the session is maybe on the way out in which case just
 		 * let it be as it will disappear itself
 		 */
 		spdlog::warn("expiry time for session({}) seems bad, resetting: {}", sessionid, etdef);
-		if ( m_serverData.find(sessionid) != m_serverData.end() )
-		{
+		if (m_serverData.find(sessionid) != m_serverData.end()) {
 			/*
 			 * TODO: rethink this
 			 */

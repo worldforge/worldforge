@@ -27,18 +27,18 @@ class ObjectContext;
 
 /// \brief Task class for flushing the server of character entities
 class Flusher : public ClientTask {
-  protected:
-    std::weak_ptr<ObjectContext> m_context;
-    
-    std::string type;
-  public:
-    explicit Flusher(const std::shared_ptr<ObjectContext> & context);
+protected:
+	std::weak_ptr<ObjectContext> m_context;
 
-    ~Flusher() override;
+	std::string type;
+public:
+	explicit Flusher(const std::shared_ptr<ObjectContext>& context);
 
-    void setup(const std::string & arg, OpVector & ret) override;
+	~Flusher() override;
 
-    void operation(const Operation & op, OpVector & res) override;
+	void setup(const std::string& arg, OpVector& ret) override;
+
+	void operation(const Operation& op, OpVector& res) override;
 };
 
 #endif // TOOLS_FLUSHER_H

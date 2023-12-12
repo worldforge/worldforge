@@ -23,7 +23,7 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Avatar>(sol::table& space) {
 	auto avatar = space.new_usertype<Avatar>("Avatar", sol::no_constructor);
 	avatar["getAvatarSceneNode"] = &Avatar::getAvatarSceneNode;

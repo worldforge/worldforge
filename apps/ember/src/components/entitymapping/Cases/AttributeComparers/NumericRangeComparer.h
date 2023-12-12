@@ -26,14 +26,14 @@
 #include "NumericComparer.h"
 #include <memory>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Test for values being in a certain range. The range is defined by two different NumericComparer instances.
@@ -55,10 +55,10 @@ protected:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

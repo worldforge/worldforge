@@ -24,15 +24,16 @@
 #include <string>
 
 /// \brief This is a class to generate a salt for a hash
-class Shaker
-{
-  public:
-    Shaker();
-    /// \brief Function to generate salt
-    std::string generateSalt(size_t length);	
-  private:
-    /// \brief MTRand Random Number Generator
-    WFMath::MTRand rng;	
+class Shaker {
+public:
+	Shaker();
+
+	/// \brief Function to generate salt
+	std::string generateSalt(size_t length);
+
+private:
+	/// \brief MTRand Random Number Generator
+	WFMath::MTRand rng;
 };
 
 #endif //COMMON_SHAKER_H

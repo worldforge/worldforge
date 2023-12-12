@@ -28,10 +28,9 @@
 #include <CEGUI/WindowManager.h>
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 ActionBarIcon::ActionBarIcon(ActionBarIconManager& manager, UniqueWindowPtr<CEGUI::DragContainer> dragContainer, UniqueWindowPtr<CEGUI::Window> image, Gui::Icons::Icon* icon)
 		: ActionBarIconDragDropTarget(dragContainer.get()),
@@ -135,5 +134,5 @@ bool ActionBarIcon::handleDragEntityIconDropped(const CEGUI::EventArgs& args, En
 }
 
 }
-}
-}
+
+

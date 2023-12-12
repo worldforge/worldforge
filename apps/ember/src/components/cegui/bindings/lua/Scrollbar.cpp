@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Scrollbar>(sol::table& space) {
 	auto scrollBar = space.new_usertype<Scrollbar>("Scrollbar",
 												   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

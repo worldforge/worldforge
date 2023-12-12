@@ -16,7 +16,6 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
-#include <sigc++/bind.h>
 
 #include <Atlas/Codecs/Bach.h>
 

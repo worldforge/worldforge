@@ -25,47 +25,46 @@
 #include <Atlas/Objects/SmartPtr.h>
 
 /// \brief This is a class for handling users with administrative priveleges
-class Admin : public Account
-{
-    protected:
+class Admin : public Account {
+protected:
 
-        void opDispatched(const Operation& op);
+	void opDispatched(const Operation& op);
 
-        /// \brief Sets an attribute on the admin instance itself.
-        void setAttribute(const Atlas::Objects::Root& arg);
+	/// \brief Sets an attribute on the admin instance itself.
+	void setAttribute(const Atlas::Objects::Root& arg);
 
-        /// \brief Connection used to monitor the in-game operations
-        sigc::connection m_monitorConnection;
+	/// \brief Connection used to monitor the in-game operations
+	sigc::connection m_monitorConnection;
 
-        std::unique_ptr<ExternalMind> createMind(const Ref<LocatedEntity>& entity) const override;
+	std::unique_ptr<ExternalMind> createMind(const Ref<LocatedEntity>& entity) const override;
 
-        void processExternalOperation(const Operation& op, OpVector& res) override;
+	void processExternalOperation(const Operation& op, OpVector& res) override;
 
-    public:
-        Admin(Connection* conn, const std::string& username,
-              const std::string& passwd,
-              RouterId id);
+public:
+	Admin(Connection* conn, const std::string& username,
+		  const std::string& passwd,
+		  RouterId id);
 
-        ~Admin() override;
+	~Admin() override;
 
-        const char* getType() const override;
+	const char* getType() const override;
 
-        /**
-         * Allow admin clients to logout other accounts.
-         */
-        void LogoutOperation(const Operation&, OpVector&) override;
+	/**
+	 * Allow admin clients to logout other accounts.
+	 */
+	void LogoutOperation(const Operation&, OpVector&) override;
 
-        void GetOperation(const Operation&, OpVector&) override;
+	void GetOperation(const Operation&, OpVector&) override;
 
-        void CreateOperation(const Operation&, OpVector&) override;
+	void CreateOperation(const Operation&, OpVector&) override;
 
-        void SetOperation(const Operation&, OpVector&) override;
+	void SetOperation(const Operation&, OpVector&) override;
 
-        void OtherOperation(const Operation&, OpVector&) override;
+	void OtherOperation(const Operation&, OpVector&) override;
 
-        void customMonitorOperation(const Operation&, OpVector&);
+	void customMonitorOperation(const Operation&, OpVector&);
 
-        friend class Admintest;
+	friend class Admintest;
 };
 
 #endif // SERVER_ADMIN_H

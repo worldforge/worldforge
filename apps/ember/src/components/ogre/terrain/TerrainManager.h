@@ -39,10 +39,6 @@
 
 #include <memory>
 
-namespace Ogre {
-class TerrainOptions;
-}
-
 namespace Mercator {
 class Area;
 
@@ -307,7 +303,6 @@ protected:
 	 * @brief True if foliage should be shown.
 	 */
 	bool mIsFoliageShown;
-
 
 
 	unsigned int mFoliageBatchSize;

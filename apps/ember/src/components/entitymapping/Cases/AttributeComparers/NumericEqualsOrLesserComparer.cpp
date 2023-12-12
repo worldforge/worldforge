@@ -22,14 +22,14 @@
 //
 #include "NumericEqualsOrLesserComparer.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericEqualsOrLesserComparer::NumericEqualsOrLesserComparer(double value) : NumericValueHolder(value) {
 }
@@ -41,8 +41,8 @@ bool NumericEqualsOrLesserComparer::test(double value) {
 
 }
 
-}
 
-}
 
-}
+
+
+

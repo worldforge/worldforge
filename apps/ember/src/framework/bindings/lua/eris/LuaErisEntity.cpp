@@ -25,7 +25,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Entity>(sol::table& space) {
 	auto entity = space.new_usertype<Entity>("Entity", sol::no_constructor);
 

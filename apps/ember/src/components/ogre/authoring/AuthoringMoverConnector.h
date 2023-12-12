@@ -21,22 +21,21 @@
 
 #include <sigc++/trackable.h>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 
 class AuthoringManager;
+
 class EntityMoveManager;
+
 class EntityMover;
 
-class AuthoringMoverConnector : public virtual sigc::trackable
-{
+class AuthoringMoverConnector : public virtual sigc::trackable {
 public:
 	AuthoringMoverConnector(AuthoringManager& authoringManager, EntityMoveManager& moveManager);
+
 	virtual ~AuthoringMoverConnector() = default;
 
 private:
@@ -45,11 +44,13 @@ private:
 	EntityMoveManager& mMoveManager;
 
 	void moveManager_StartMoving(EmberEntity& entity, EntityMover& mover);
+
 	void moveManager_FinishedMoving();
+
 	void moveManager_CancelledMoving();
 };
 
 }
-}
+
 }
 #endif /* AUTHORINGMOVERCONNECTOR_H_ */

@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<MovableObjectRenderer>(sol::table& space) {
 	auto movableObjectRenderer = space.new_usertype<MovableObjectRenderer>("MovableObjectRenderer", sol::no_constructor);
 	movableObjectRenderer["showFull"] = &MovableObjectRenderer::showFull;

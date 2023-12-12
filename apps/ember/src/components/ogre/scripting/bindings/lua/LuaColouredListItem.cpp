@@ -21,10 +21,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ColouredListItem>(sol::table& space) {
 	auto colouredListItem = space.new_usertype<ColouredListItem>("ColouredListItem",
-															   sol::base_classes, sol::bases<CEGUI::ListboxTextItem, CEGUI::ListboxItem>());
+																 sol::base_classes, sol::bases<CEGUI::ListboxTextItem, CEGUI::ListboxItem>());
 	colouredListItem["new"] = sol::factories(
 			[](const char* text) { return ColouredListItem::createColouredListItem(text); },
 			[](const char* text, unsigned int item_id) { return ColouredListItem::createColouredListItem(text, item_id); },
@@ -36,7 +36,7 @@ void registerLua<ColouredListItem>(sol::table& space) {
 	colouredListItem["tag"] = &ColouredListItem::tag;
 
 	auto colouredTreeItem = space.new_usertype<ColouredTreeItem>("ColouredTreeItem",
-															   sol::base_classes, sol::bases<CEGUI::TreeItem>());
+																 sol::base_classes, sol::bases<CEGUI::TreeItem>());
 	colouredTreeItem["new"] = sol::factories(
 			[](const char* text) { return ColouredTreeItem::create(text); },
 			[](const char* text, unsigned int item_id) { return ColouredTreeItem::create(text, item_id); },

@@ -33,10 +33,8 @@ namespace Mercator {
 class Segment;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 class HeightMap;
 
 class HeightMapBufferProvider;
@@ -68,7 +66,8 @@ public:
 
 private:
 
-	typedef std::vector<std::pair<WFMath::Point<2>, std::unique_ptr<IHeightMapSegment>>> HeightMapSegmentStore;
+	typedef std::vector<std::pair<WFMath::Point < 2>, std::unique_ptr<IHeightMapSegment>>>
+	HeightMapSegmentStore;
 
 	/**
 	 * @brief The provider which is tasked to create the HeightMapBuffer instances.
@@ -105,8 +104,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* HEIGHTMAPUPDATETASK_H_ */

@@ -33,22 +33,20 @@
 
 #include "rules/simulation/GeometryProperty.h"
 
-int main()
-{
-    GeometryProperty ap;
+int main() {
+	GeometryProperty ap;
 
-    PropertyChecker<GeometryProperty> pc(ap);
+	PropertyChecker<GeometryProperty> pc(ap);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 #include "../../TestWorld.h"
-
 
 
 #include "../../stubs/common/stubAssetsManager.h"

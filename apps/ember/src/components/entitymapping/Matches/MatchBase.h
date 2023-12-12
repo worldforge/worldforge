@@ -29,10 +29,10 @@ namespace Eris {
 class Entity;
 }
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 struct IVisitor;
 
@@ -45,7 +45,7 @@ namespace Matches {
 class MatchBase {
 public:
 
-	MatchBase() : mParentCase(0) {}
+	MatchBase() : mParentCase(nullptr) {}
 
 	virtual ~MatchBase() = default;
 
@@ -74,6 +74,6 @@ inline void MatchBase::setParentCase(Cases::CaseBase* aCase) {
 
 }
 
-}
+
 
 #endif

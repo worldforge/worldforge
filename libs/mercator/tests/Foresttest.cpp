@@ -18,130 +18,127 @@
 
 typedef WFMath::Point<2> Point2;
 
-void dumpPlants(const Mercator::Forest::PlantStore & plants)
-{
-    auto I = plants.begin();
-    for(; I != plants.end(); ++I) {
-        auto J = I->second.begin();
-        for(; J != I->second.end(); ++J) {
-            const Mercator::Plant & p = J->second;
-            std::cout << "Query found plant at [" << I->first
-                      << ", " << J->first << "] with height "
-                      << p.m_height;
-            std::cout << " displaced to "
-                      << (WFMath::Vector<2>(I->first, J->first) +
-                          p.m_displacement)
-                      << std::endl;
-        }
-    }
+void dumpPlants(const Mercator::Forest::PlantStore& plants) {
+	auto I = plants.begin();
+	for (; I != plants.end(); ++I) {
+		auto J = I->second.begin();
+		for (; J != I->second.end(); ++J) {
+			const Mercator::Plant& p = J->second;
+			std::cout << "Query found plant at [" << I->first
+					  << ", " << J->first << "] with height "
+					  << p.m_height;
+			std::cout << " displaced to "
+					  << (WFMath::Vector<2>(I->first, J->first) +
+						  p.m_displacement)
+					  << std::endl;
+		}
+	}
 }
 
-int countPlants(const Mercator::Forest::PlantStore & plants)
-{
-    int plant_count = 0;
-    auto I = plants.begin();
-    for(; I != plants.end(); ++I) {
-        plant_count += I->second.size();
-    }
-    return plant_count;
+int countPlants(const Mercator::Forest::PlantStore& plants) {
+	int plant_count = 0;
+	auto I = plants.begin();
+	for (; I != plants.end(); ++I) {
+		plant_count += I->second.size();
+	}
+	return plant_count;
 }
 
-int main()
-{
-    // Test constructor
-    {
-        Mercator::Forest mf;
-    }
+int main() {
+	// Test constructor
+	{
+		Mercator::Forest mf;
+	}
 
-    // Test constructor
-    {
-        Mercator::Forest mf(23);
-    }
+	// Test constructor
+	{
+		Mercator::Forest mf(23);
+	}
 
-    // Test getArea()
-    {
-        Mercator::Forest mf;
+	// Test getArea()
+	{
+		Mercator::Forest mf;
 
-        Mercator::Area * a = mf.getArea();
+		Mercator::Area* a = mf.getArea();
 
-        assert(a == 0);
-    }
+		assert(a == 0);
+	}
 
-    // Test species()
-    {
-        Mercator::Forest mf;
+	// Test species()
+	{
+		Mercator::Forest mf;
 
-        Mercator::Forest::PlantSpecies & mps = mf.species();
+		Mercator::Forest::PlantSpecies& mps = mf.species();
 
-        assert(mps.empty());
-    }
+		assert(mps.empty());
+	}
 
-    {
-        Mercator::Forest forest(4249162ul);
+	{
+		Mercator::Forest forest(4249162ul);
 
-        Mercator::Forest::PlantSpecies & species = forest.species();
+		Mercator::Forest::PlantSpecies& species = forest.species();
 
-        const Mercator::Forest::PlantStore & plants = forest.getPlants();
+		const Mercator::Forest::PlantStore& plants = forest.getPlants();
 
-        // Forest is not yet populated
-        assert(plants.empty());
-        assert(species.empty());
-        forest.populate();
-        // Forest has zero area, so even when populated it is empty
-        assert(plants.empty());
-        assert(species.empty());
+		// Forest is not yet populated
+		assert(plants.empty());
+		assert(species.empty());
+		forest.populate();
+		// Forest has zero area, so even when populated it is empty
+		assert(plants.empty());
+		assert(species.empty());
 
-        Mercator::Area ar(1, false);
-        WFMath::Polygon<2> p;
-        
-        p.addCorner(p.numCorners(), Point2(5, 8));
-        p.addCorner(p.numCorners(), Point2(40, -1));
-        p.addCorner(p.numCorners(), Point2(45, 16));
-        p.addCorner(p.numCorners(), Point2(30, 28));
-        p.addCorner(p.numCorners(), Point2(-2, 26));
-        p.addCorner(p.numCorners(), Point2(1, 5));
-        
-        ar.setShape(p);
-        forest.setArea(&ar);
+		Mercator::Area ar(1, false);
+		WFMath::Polygon<2> p;
 
-        forest.populate();
-        // Forest has no species, so even when populated it is empty
-        assert(plants.empty());
-        assert(species.empty());
+		p.addCorner(p.numCorners(), Point2(5, 8));
+		p.addCorner(p.numCorners(), Point2(40, -1));
+		p.addCorner(p.numCorners(), Point2(45, 16));
+		p.addCorner(p.numCorners(), Point2(30, 28));
+		p.addCorner(p.numCorners(), Point2(-2, 26));
+		p.addCorner(p.numCorners(), Point2(1, 5));
 
-        {
-            Mercator::Species pine;
-            pine.m_probability = 0.04;
-            pine.m_deviation = 1.f;
+		ar.setShape(p);
+		forest.setArea(&ar);
 
-            species.push_back(pine);
-        }
+		forest.populate();
+		// Forest has no species, so even when populated it is empty
+		assert(plants.empty());
+		assert(species.empty());
 
-        forest.populate();
-        // Forest should now contain some plants
-        assert(!plants.empty());
+		{
+			Mercator::Species pine;
+			pine.m_probability = 0.04;
+			pine.m_deviation = 1.f;
 
-        dumpPlants(plants);
+			species.push_back(pine);
+		}
 
-        int plant_count = countPlants(plants);
+		forest.populate();
+		// Forest should now contain some plants
+		assert(!plants.empty());
 
-        {
-            Mercator::Species oak;
-            oak.m_probability = 0.02;
-            oak.m_deviation = 1.f;
+		dumpPlants(plants);
 
-            species.push_back(oak);
-        }
+		int plant_count = countPlants(plants);
 
-        forest.populate();
-        // Forest should now contain some plants
-        assert(!plants.empty());
-        assert(countPlants(plants) > plant_count);
+		{
+			Mercator::Species oak;
+			oak.m_probability = 0.02;
+			oak.m_deviation = 1.f;
 
-        dumpPlants(plants);
+			species.push_back(oak);
+		}
 
-        std::cout << countPlants(plants) << "," << plant_count
-                  << std::endl;
+		forest.populate();
+		// Forest should now contain some plants
+		assert(!plants.empty());
+		assert(countPlants(plants) > plant_count);
 
-    }
+		dumpPlants(plants);
+
+		std::cout << countPlants(plants) << "," << plant_count
+				  << std::endl;
+
+	}
 }

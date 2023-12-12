@@ -41,81 +41,77 @@ using Atlas::Objects::Operation::RootOperation;
 
 Atlas::Objects::Factories factories;
 
-class ClientConnectiontest : public Cyphesis::TestBase
-{
-    boost::asio::io_context io_context;
-    ClientConnection * cc{};
-  public:
-    ClientConnectiontest();
+class ClientConnectiontest : public Cyphesis::TestBase {
+	boost::asio::io_context io_context;
+	ClientConnection* cc{};
+public:
+	ClientConnectiontest();
 
-    void setup() override;
-    void teardown() override;
+	void setup() override;
 
-    void test_sequence();
+	void teardown() override;
+
+	void test_sequence();
 };
 
-ClientConnectiontest::ClientConnectiontest()
-{
-    ADD_TEST(ClientConnectiontest::test_sequence);
+ClientConnectiontest::ClientConnectiontest() {
+	ADD_TEST(ClientConnectiontest::test_sequence);
 }
 
-void ClientConnectiontest::setup()
-{
-    cc = new ClientConnection(io_context, factories);
+void ClientConnectiontest::setup() {
+	cc = new ClientConnection(io_context, factories);
 }
 
-void ClientConnectiontest::teardown()
-{
-    delete cc;
+void ClientConnectiontest::teardown() {
+	delete cc;
 }
 
-void ClientConnectiontest::test_sequence()
-{
-    // Try all the method calls when not connected
+void ClientConnectiontest::test_sequence() {
+	// Try all the method calls when not connected
 
-    cc->login("username", "password");
-    cc->create("player", "username", "password");
-    cc->wait();
+	cc->login("username", "password");
+	cc->create("player", "username", "password");
+	cc->wait();
 
-    {
-        RootOperation op;
-        cc->send(op);
-    }
+	{
+		RootOperation op;
+		cc->send(op);
+	}
 
-    cc->pop();
-    cc->pending();
-    
-    {
-        Root obj;
-        RootOperation op;
-        cc->operation(op);
+	cc->pop();
+	cc->pending();
 
-        Anonymous op_arg;
-        op->setArgs1(op_arg);
+	{
+		Root obj;
+		RootOperation op;
+		cc->operation(op);
 
-        op->setFrom("1");
-        op->setParent("");
-        cc->operation(op);
+		Anonymous op_arg;
+		op->setArgs1(op_arg);
 
-        Info i;
-        cc->operation(i);
+		op->setFrom("1");
+		op->setParent("");
+		cc->operation(op);
 
-        Error e;
-        cc->operation(e);
-    }
+		Info i;
+		cc->operation(i);
+
+		Error e;
+		cc->operation(e);
+	}
 }
 
-int main()
-{
-    ClientConnectiontest t;
+int main() {
+	ClientConnectiontest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
 #define STUB_AtlasStreamClient_poll
-int AtlasStreamClient::poll(const std::chrono::steady_clock::duration& duration)
-{
-    return -1;
+
+int AtlasStreamClient::poll(const std::chrono::steady_clock::duration& duration) {
+	return -1;
 }
+
 #include "../stubs/common/stubAtlasStreamClient.h"

@@ -22,8 +22,8 @@
 #include "components/ogre/terrain/TerrainPage.h"
 #include "Convert.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 TerrainPageData::TerrainPageData(std::shared_ptr<Terrain::TerrainPage> page) :
 		mPage(page) {
 }
@@ -57,4 +57,4 @@ TerrainIndex TerrainPageDataProvider::convertToWFTerrainIndex(const OgreIndex& o
 }
 
 }
-}
+

@@ -31,9 +31,8 @@ namespace Mercator {
 class Segment;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 /**
  * @brief Holds a Mercator::Segment instance as well as a index of this segment in local page coords.
@@ -76,7 +75,7 @@ public:
 	 * @param segmentManager The segment manager from which we'll obtain SegmentReferences.
 	 * @param defaultHeight The default height of any parts of the terrain where no segment has been initialized.
 	 */
-	TerrainPageGeometry(std::shared_ptr<Terrain::TerrainPage> page, SegmentManager& segmentManager, float defaultHeight);
+	TerrainPageGeometry(const std::shared_ptr<Terrain::TerrainPage>& page, SegmentManager& segmentManager, float defaultHeight);
 
 	/**
 	 * @brief Dtor.
@@ -164,12 +163,10 @@ private:
 	 * @param startX The starting x position in Ogre space.
 	 * @param startZ The starting y position in Ogre space.
 	 */
-	void blitSegmentToOgre(float* ogreHeightData, Mercator::Segment& segment, int startX, int startZ);
+	void blitSegmentToOgre(float* ogreHeightData, Mercator::Segment& segment, int startX, int startZ) const;
 
 };
 }
-}
 
-}
 
 #endif

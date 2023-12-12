@@ -27,16 +27,13 @@
 #include <OgreCamera.h>
 #include <OgreRenderTarget.h>
 #include <OgreViewport.h>
-#include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 Map::Map(Ogre::SceneManager& sceneManager)
 		:
-		mRenderTexture(0),
+		mRenderTexture(nullptr),
 		mTexturePixelSize(256),
 		mMetersPerPixel(1.0f),
 		mCamera(*this, sceneManager),
@@ -62,7 +59,8 @@ void Map::setupCamera() {
 
 void Map::createTexture() {
 	//don't use alpha for our map texture
-	mTexture = Ogre::TextureManager::getSingleton().createManual("TerrainMap", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, mTexturePixelSize, mTexturePixelSize, 1, Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
+	mTexture = Ogre::TextureManager::getSingleton().createManual("TerrainMap", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, Ogre::TEX_TYPE_2D, mTexturePixelSize, mTexturePixelSize, 1,
+																 Ogre::PF_R8G8B8, Ogre::TU_RENDERTARGET);
 	mRenderTexture = mTexture->getBuffer()->getRenderTarget();
 	mRenderTexture->removeAllViewports();
 
@@ -326,7 +324,8 @@ MapCameraLightningInstance::~MapCameraLightningInstance() {
 
 
 RenderingInstance::RenderingInstance(Ogre::SceneManager* manager)
-		: mManager(manager), mFogMode(manager->getFogMode()), mFogColour(manager->getFogColour()), mFogDensity(manager->getFogDensity()), mFogStart(manager->getFogStart()), mFogEnd(manager->getFogEnd()), mSpecialCaseRenderQueueMode(manager->getSpecialCaseRenderQueueMode()) {
+		: mManager(manager), mFogMode(manager->getFogMode()), mFogColour(manager->getFogColour()), mFogDensity(manager->getFogDensity()), mFogStart(manager->getFogStart()),
+		  mFogEnd(manager->getFogEnd()), mSpecialCaseRenderQueueMode(manager->getSpecialCaseRenderQueueMode()) {
 
 }
 
@@ -339,5 +338,5 @@ RenderingInstance::~RenderingInstance() {
 
 }
 
-}
-}
+
+

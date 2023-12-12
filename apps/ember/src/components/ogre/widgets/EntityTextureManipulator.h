@@ -22,25 +22,19 @@
 #include "services/input/IInputAdapter.h"
 #include <CEGUI/Event.h>
 
-namespace CEGUI
-{
+namespace CEGUI {
 class Window;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 class EntityCEGUITexture;
 
 /**
  * @brief Allows for easy manipulation of an EntityCEGUITexture instance being shown by a CEGUI Window.
  */
-class EntityTextureManipulator: public IInputAdapter
-{
+class EntityTextureManipulator : public IInputAdapter {
 public:
 	/**
 	 * @brief Ctor.
@@ -48,6 +42,7 @@ public:
 	 * @param texture The entity texture, which contains both the CEGUI Image and the Ogre SceneManager.
 	 */
 	EntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture);
+
 	~EntityTextureManipulator() override;
 
 	/**
@@ -55,10 +50,15 @@ public:
 	 @see IInputAdapter
 	 */
 	bool injectMouseMove(const MouseMotion& motion, bool& freezeMouse) override = 0;
+
 	bool injectMouseButtonUp(Input::MouseButton button) override;
+
 	bool injectMouseButtonDown(Input::MouseButton button) override;
+
 	bool injectChar(int character) override;
+
 	bool injectKeyDown(const SDL_Scancode& key) override;
+
 	bool injectKeyUp(const SDL_Scancode& key) override;
 
 	/**
@@ -111,8 +111,7 @@ protected:
 /**
  * @brief Manipulates the entity directly.
  */
-class DirectEntityTextureManipulator: public EntityTextureManipulator
-{
+class DirectEntityTextureManipulator : public EntityTextureManipulator {
 public:
 	/**
 	 * @brief Ctor.
@@ -120,6 +119,7 @@ public:
 	 * @param texture The entity texture, which contains both the CEGUI Image and the Ogre SceneManager.
 	 */
 	DirectEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture);
+
 	~DirectEntityTextureManipulator() override;
 
 	bool injectMouseMove(const MouseMotion& motion, bool& freezeMouse) override;
@@ -129,8 +129,7 @@ public:
 /**
  * @brief Manipulates the camera.
  */
-class CameraEntityTextureManipulator: public EntityTextureManipulator
-{
+class CameraEntityTextureManipulator : public EntityTextureManipulator {
 public:
 	/**
 	 * @brief Ctor.
@@ -138,6 +137,7 @@ public:
 	 * @param texture The entity texture, which contains both the CEGUI Image and the Ogre SceneManager.
 	 */
 	CameraEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture);
+
 	~CameraEntityTextureManipulator() override;
 
 	bool injectMouseMove(const MouseMotion& motion, bool& freezeMouse) override;
@@ -147,8 +147,7 @@ public:
 /**
  * @brief Manipulates the camera and the entity.
  */
-class CombinedEntityTextureManipulator: public EntityTextureManipulator
-{
+class CombinedEntityTextureManipulator : public EntityTextureManipulator {
 public:
 	/**
 	 * @brief Ctor.
@@ -156,6 +155,7 @@ public:
 	 * @param texture The entity texture, which contains both the CEGUI Image and the Ogre SceneManager.
 	 */
 	CombinedEntityTextureManipulator(CEGUI::Window& window, EntityCEGUITexture& texture);
+
 	~CombinedEntityTextureManipulator() override;
 
 	bool injectMouseMove(const MouseMotion& motion, bool& freezeMouse) override;
@@ -184,6 +184,6 @@ protected:
 
 };
 }
-}
-}
+
+
 #endif /* ENTITYTEXTUREMANIPULATOR_H_ */

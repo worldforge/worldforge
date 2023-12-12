@@ -28,19 +28,16 @@
 #include <memory>
 
 namespace CEGUI {
-	class Combobox;
-	class PushButton;
+class Combobox;
+
+class PushButton;
 }
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
 
-namespace Gui {
 
-namespace Adapters {
-
-namespace Atlas {
+namespace OgreView::Gui::Adapters::Atlas {
 
 class PolygonAdapter;
 
@@ -50,8 +47,7 @@ This adapter will allow the user to edit the areas graphically through the use o
 The polygon editing functionality is handled by an instance of PolygonAdapter, which this class wraps.
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class AreaAdapter : public AdapterBase
-{
+class AreaAdapter : public AdapterBase {
 public:
 	/**
 	 * @brief Ctor.
@@ -66,47 +62,47 @@ public:
 	 * @brief Dtor.
 	 */
 	~AreaAdapter() override = default;
-    
+
 	/**
 	 * @brief Updates the gui with new values.
 	 */
 	void updateGui(const ::Atlas::Message::Element& element) override;
-    
-    /**
-     * @brief Toggles the display of the graphical representation of the polygon.
-     */
-    void toggleDisplayOfPolygon();
-    
-    
-    /**
-     * @brief Creates a new polygon.
-     */
-    void createNewPolygon();
-    
-    /**
-     * @brief Adds an area suggestion.
-     * @param id The id of the area.
-     * @param name The name of the area, to be presented to the user.
-     */
-    void addAreaSuggestion(int id, const std::string& name);
-    
-    /**
-     * @brief Clears all area suggestions.
-     */
-    void clearAreaSuggestions();
-    
+
+	/**
+	 * @brief Toggles the display of the graphical representation of the polygon.
+	 */
+	void toggleDisplayOfPolygon();
+
+
+	/**
+	 * @brief Creates a new polygon.
+	 */
+	void createNewPolygon();
+
+	/**
+	 * @brief Adds an area suggestion.
+	 * @param id The id of the area.
+	 * @param name The name of the area, to be presented to the user.
+	 */
+	void addAreaSuggestion(int id, const std::string& name);
+
+	/**
+	 * @brief Clears all area suggestions.
+	 */
+	void clearAreaSuggestions();
+
 protected:
 
 	/**
 	 * @brief The area layer.
 	 */
 	int mLayer;
-	
+
 	/**
 	 * @brief A combo box used for selecting the area layer to use.
 	 */
 	CEGUI::Combobox* mLayerWindow;
-	
+
 	/**
 	 * @brief An optional entity to which the area belongs.
 	 * Mainly used for height lookups, so that the polygon snaps to the ground.
@@ -119,6 +115,7 @@ protected:
 	std::unique_ptr<PolygonAdapter> mPolygonAdapter;
 
 	bool layerWindow_TextChanged(const CEGUI::EventArgs& e);
+
 	bool layerWindow_ListSelectionChanged(const CEGUI::EventArgs& e);
 
 
@@ -130,17 +127,12 @@ protected:
 	 * @brief Creates a default area polygon for when there's none specified.
 	 * @return A square polygon, 2 meters in each direction.
 	 */
-	WFMath::Polygon<2> getDefaultPolygon() const;
+	static WFMath::Polygon<2> getDefaultPolygon();
 
 };
 
 }
 
-}
-
-}
-
-}
 
 }
 

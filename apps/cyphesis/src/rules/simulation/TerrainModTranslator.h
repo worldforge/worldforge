@@ -37,7 +37,7 @@
 #include <memory>
 
 namespace Mercator {
-    class TerrainMod;
+class TerrainMod;
 }
 
 struct InnerTranslator;
@@ -47,42 +47,41 @@ struct InnerTranslator;
  * @brief Handles translation of terrain mod data into Mercator::TerrainMod instances.
  *
  */
-class TerrainModTranslator
-{
-    public:
+class TerrainModTranslator {
+public:
 
-        explicit TerrainModTranslator(const Atlas::Message::MapType& data);
+	explicit TerrainModTranslator(const Atlas::Message::MapType& data);
 
-        ~TerrainModTranslator() = default;
+	~TerrainModTranslator() = default;
 
-        /**
-         * Creates a TerrainMod instance, if possible.
-         * @param pos
-         * @param orientation
-         * @return A terrain mod instance, or null if none could be created.
-         */
-        std::unique_ptr<Mercator::TerrainMod> parseData(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation);
+	/**
+	 * Creates a TerrainMod instance, if possible.
+	 * @param pos
+	 * @param orientation
+	 * @return A terrain mod instance, or null if none could be created.
+	 */
+	std::unique_ptr<Mercator::TerrainMod> parseData(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation);
 
-        /**
-         * @brief True if there's a valid inner translator.
-         * @return
-         */
-        bool isValid() const;
+	/**
+	 * @brief True if there's a valid inner translator.
+	 * @return
+	 */
+	bool isValid() const;
 
-        /**
-         * Removes any internal translator.
-         */
-        void reset();
+	/**
+	 * Removes any internal translator.
+	 */
+	void reset();
 
-        static float parsePosition(const WFMath::Point<3>& pos, const Atlas::Message::MapType& modElement);
+	static float parsePosition(const WFMath::Point<3>& pos, const Atlas::Message::MapType& modElement);
 
-    protected:
+protected:
 
 
-        template<template<int> class Shape>
-        std::unique_ptr<InnerTranslator> buildTranslator(const Atlas::Message::MapType& modElement, const std::string& typeName, Shape<2>& shape, const Atlas::Message::Element& shapeElement);
+	template<template<int> class Shape>
+	std::unique_ptr<InnerTranslator> buildTranslator(const Atlas::Message::MapType& modElement, const std::string& typeName, Shape<2>& shape, const Atlas::Message::Element& shapeElement);
 
-        std::shared_ptr<InnerTranslator> mInnerTranslator;
+	std::shared_ptr<InnerTranslator> mInnerTranslator;
 };
 
 

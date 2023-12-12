@@ -23,11 +23,12 @@
 /// \brief Handle an internet socket connected to a remote master server.
 /// \ingroup ServerSockets
 class CommMaster : public CommClient {
-  public:
-    CommMaster();
-    virtual ~CommMaster();
+public:
+	CommMaster();
 
-    int connect(const std::string &);
+	virtual ~CommMaster();
+
+	int connect(const std::string&);
 };
 
 #endif // SERVER_COMM_MASTER_H

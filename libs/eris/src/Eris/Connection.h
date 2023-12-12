@@ -42,7 +42,7 @@ a single TCP connection, if re-connections occur. */
 struct ConnectionDecoder;
 
 class Connection :
-		public BaseConnection{
+		public BaseConnection {
 public:
 	friend struct ConnectionDecoder;
 	/// Create an unconnected instance

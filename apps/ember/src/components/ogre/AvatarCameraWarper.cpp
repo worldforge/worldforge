@@ -44,7 +44,7 @@ AvatarCameraWarper::AvatarCameraWarper(MovementController& movementController, c
 AvatarCameraWarper::~AvatarCameraWarper() = default;
 
 void AvatarCameraWarper::setEnabled(bool enabled) {
-	mEnabled = true;
+	mEnabled = enabled;
 }
 
 void AvatarCameraWarper::runCommand(const std::string& command, const std::string& args) {

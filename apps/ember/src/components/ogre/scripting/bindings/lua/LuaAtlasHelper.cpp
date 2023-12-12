@@ -23,7 +23,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<AtlasHelper>(sol::table& space) {
 	auto atlasHelper = space.new_usertype<AtlasHelper>("AtlasHelper", sol::no_constructor);
 	atlasHelper["serialize"] = &AtlasHelper::serialize;

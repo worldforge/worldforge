@@ -27,21 +27,21 @@
 /// It's in map format to allow updating of singular points through the Modifers system ("append" in most cases).
 ///
 /// \ingroup PropertyClasses
-class TerrainPointsProperty : public Property<Atlas::Message::MapType>
-{
+class TerrainPointsProperty : public Property<Atlas::Message::MapType> {
 
-    public:
+public:
 
-        static constexpr const char* property_name = "terrain_points";
-        static constexpr const char* property_atlastype = "map";
+	static constexpr const char* property_name = "terrain_points";
+	static constexpr const char* property_atlastype = "map";
 
-        TerrainPointsProperty() = default;
-        TerrainPointsProperty* copy() const override;
+	TerrainPointsProperty() = default;
 
-        void apply(LocatedEntity& entity) override;
+	TerrainPointsProperty* copy() const override;
 
-    protected:
-        TerrainPointsProperty(const TerrainPointsProperty& rhs) = default;
+	void apply(LocatedEntity& entity) override;
+
+protected:
+	TerrainPointsProperty(const TerrainPointsProperty& rhs) = default;
 
 };
 

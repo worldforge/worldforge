@@ -21,15 +21,10 @@
 #include "components/entitymapping/EntityMapping.h"
 #include "components/ogre/EmberEntityPartAction.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Model
-{
 
-void ModelPartReactivatorVisitor::visit(EntityMapping::Actions::Action& action)
-{
+namespace Ember::OgreView::Model {
+
+void ModelPartReactivatorVisitor::visit(EntityMapping::Actions::Action& action) {
 	auto* partAction = dynamic_cast<EmberEntityPartAction*> (&action);
 	if (partAction) {
 		if (partAction->getCase()->getIsActive()) {
@@ -38,16 +33,14 @@ void ModelPartReactivatorVisitor::visit(EntityMapping::Actions::Action& action)
 	}
 }
 
-void ModelPartReactivatorVisitor::visit(EntityMapping::Matches::MatchBase& match)
-{
+void ModelPartReactivatorVisitor::visit(EntityMapping::Matches::MatchBase& match) {
 
 }
 
-void ModelPartReactivatorVisitor::visit(EntityMapping::Cases::CaseBase& caseBase)
-{
+void ModelPartReactivatorVisitor::visit(EntityMapping::Cases::CaseBase& caseBase) {
 
 }
 
 }
-}
-}
+
+

@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<QuickHelp>(sol::table& space) {
 	auto quickHelp = space.new_usertype<QuickHelp>("QuickHelp", sol::no_constructor);
 	quickHelp["getSingleton"] = &QuickHelp::getSingleton;

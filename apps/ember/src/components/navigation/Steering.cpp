@@ -27,8 +27,8 @@
 #include <wfmath/segment.h>
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
-namespace Navigation {
+
+namespace Ember::Navigation {
 
 Steering::Steering(Awareness& awareness, Eris::Avatar& avatar) :
 		mAwareness(awareness),
@@ -260,5 +260,5 @@ void Steering::setIsExpectingServerMovement(bool expected) {
 }
 
 }
-}
+
 

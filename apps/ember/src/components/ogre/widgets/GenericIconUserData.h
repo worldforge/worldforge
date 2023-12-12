@@ -16,12 +16,8 @@
 #ifndef EMBEROGRE_GUIGENERICICONUSERDATA_H
 #define EMBEROGRE_GUIGENERICICONUSERDATA_H
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 /**
  * @brief A very lightweight class which can be used as a "user data" instance in CEGUI.
@@ -30,9 +26,8 @@ namespace Gui
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @author Tiberiu Paunescu <tpa12@sfu.ca>
  */
-template <class IconType>
-struct GenericIconUserData
-{
+template<class IconType>
+struct GenericIconUserData {
 	/**
 	 * @brief The entity icon to which to which this user data belongs.
 	 */
@@ -40,8 +35,6 @@ struct GenericIconUserData
 };
 
 }
-}
 
-}
 
 #endif

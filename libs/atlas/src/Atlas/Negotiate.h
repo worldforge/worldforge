@@ -12,6 +12,7 @@
 namespace Atlas {
 
 class Bridge;
+
 class Codec;
 
 /** Negotiation of codecs and filters for an Atlas connection
@@ -25,21 +26,21 @@ along with the name of sender and a Socket
 @see Filter
 */
 
-class Negotiate
-{
-    public:
-    virtual ~Negotiate() = default;
+class Negotiate {
+public:
+	virtual ~Negotiate() = default;
 
-    enum State
-    {
-        IN_PROGRESS,
-        SUCCEEDED,
-        FAILED
-    };
+	enum State {
+		IN_PROGRESS,
+		SUCCEEDED,
+		FAILED
+	};
 
-    virtual State getState() = 0;
-    virtual std::unique_ptr<Codec> getCodec(Bridge &) = 0;
-    virtual void poll() = 0;
+	virtual State getState() = 0;
+
+	virtual std::unique_ptr<Codec> getCodec(Bridge&) = 0;
+
+	virtual void poll() = 0;
 };
 
 } // Atlas namespace

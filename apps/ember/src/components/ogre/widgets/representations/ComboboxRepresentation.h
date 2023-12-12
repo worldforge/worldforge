@@ -27,12 +27,8 @@
 #include "../adapters/ComboboxAdapter.h"
 #include <CEGUI/WindowManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief represents given value by a combobox (the underlying value should be a string)
@@ -68,7 +64,7 @@ template<typename ValueType, typename PropertyNativeType>
 ComboboxRepresentation<ValueType, PropertyNativeType>::ComboboxRepresentation(const ValueType& value, bool suggestionOnly):
 		SingleAdapterRepresentationBase<ValueType>() {
 	mLayout = UniqueWindowPtr<CEGUI::Window>(LayoutHelper::loadLayout("representations/ComboboxRepresentation.layout", mPrefix));
-	mCombobox = static_cast<CEGUI::Combobox*>(mLayout->getChild(mPrefix + "String"));
+	mCombobox = dynamic_cast<CEGUI::Combobox*>(mLayout->getChild(mPrefix + "String"));
 	this->setAdapter(std::make_unique<Adapters::ComboboxAdapter<ValueType, PropertyNativeType>>(value, mCombobox));
 
 	mCombobox->setReadOnly(suggestionOnly);
@@ -84,10 +80,5 @@ CEGUI::Window* ComboboxRepresentation<ValueType, PropertyNativeType>::getGuiRoot
 
 }
 
-}
-
-}
-
-}
 
 #endif

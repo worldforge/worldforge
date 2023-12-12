@@ -24,62 +24,57 @@
 
 
 template<typename T>
-class Singleton : private boost::noncopyable
-{
-    protected:
+class Singleton : private boost::noncopyable {
+protected:
 
-        /**
-         * @brief Standard constructor.
-         */
-        explicit Singleton()
-        {
-            assert(!ms_Singleton);
-            ms_Singleton = static_cast<T*>( this );
-        }
+	/**
+	 * @brief Standard constructor.
+	 */
+	explicit Singleton() {
+		assert(!ms_Singleton);
+		ms_Singleton = static_cast<T*>( this );
+	}
 
-        virtual ~Singleton()
-        {
-            assert(ms_Singleton);
-            ms_Singleton = nullptr;
-        }
+	virtual ~Singleton() {
+		assert(ms_Singleton);
+		ms_Singleton = nullptr;
+	}
 
-        /**
-        @brief The static variable holding the singleton instance.
-        Remember to instantiate this to nullptr in your implementation.
-        */
-        static T* ms_Singleton;
+	/**
+	@brief The static variable holding the singleton instance.
+	Remember to instantiate this to nullptr in your implementation.
+	*/
+	static T* ms_Singleton;
 
-    public:
+public:
 
-        /**
-         *       @brief Gets the singleton instance.
-         * @return The singleton instance.
-         */
-        static T& instance()
-        {
-            assert(ms_Singleton);
-            return (*ms_Singleton);
-        }
+	/**
+	 *       @brief Gets the singleton instance.
+	 * @return The singleton instance.
+	 */
+	static T& instance() {
+		assert(ms_Singleton);
+		return (*ms_Singleton);
+	}
 
-        /**
-         *       @brief Gets a pointer to the singleton instance.
-         * @return A pointer to the singleton instance.
-         */
-        static T* instancePtr()
-        {
-            assert(ms_Singleton);
-            return ms_Singleton;
-        }
+	/**
+	 *       @brief Gets a pointer to the singleton instance.
+	 * @return A pointer to the singleton instance.
+	 */
+	static T* instancePtr() {
+		assert(ms_Singleton);
+		return ms_Singleton;
+	}
 
-        /**
-         *       @brief Returns true if there's a singleton registered with the system.
-         * @return True if there's a singleton available.
-         */
-        static bool hasInstance()
-        {
-            return ms_Singleton != nullptr;
-        }
+	/**
+	 *       @brief Returns true if there's a singleton registered with the system.
+	 * @return True if there's a singleton available.
+	 */
+	static bool hasInstance() {
+		return ms_Singleton != nullptr;
+	}
 };
+
 template<typename T> T* Singleton<T>::ms_Singleton = nullptr;
 
 

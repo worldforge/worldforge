@@ -28,17 +28,20 @@
 #include "common/operations/Tick.h"
 #include "common/random.h"
 
-int main()
-{
-    OperationExerciser<Atlas::Objects::Operation::Tick> op_tester;
+int main() {
+	OperationExerciser<Atlas::Objects::Operation::Tick> op_tester;
 
-    Atlas::Objects::Operation::TICK_NO = randint(1, 100);
+	Atlas::Objects::Operation::TICK_NO = randint(1, 100);
 
-    op_tester.runTests("tick", Atlas::Objects::Operation::TICK_NO);
+	op_tester.runTests("tick", Atlas::Objects::Operation::TICK_NO);
 
-    return 0;
+	return 0;
 }
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int TICK_NO = -1;
-} } }
+}
+}
+}

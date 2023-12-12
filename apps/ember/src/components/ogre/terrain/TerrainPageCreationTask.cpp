@@ -28,10 +28,8 @@
 
 #include "framework/tasks/TaskExecutionContext.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainPageCreationTask::TerrainPageCreationTask(TerrainHandler& handler,
 												 std::shared_ptr<Terrain::TerrainPage> page,
@@ -81,5 +79,5 @@ bool TerrainPageCreationTask::executeTaskInMainThread() {
 
 }
 
-}
-}
+
+

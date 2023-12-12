@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
 	<Window name="MapAdapter" type="DefaultWindow">
-		<Property name="Position" value="{{0,0},{0,0}}" />
-		<Property name="Size" value="{{1,0},{1,0}}" />
+		<Property name="Position" value="{{0,0},{0,0}}"/>
+		<Property name="Size" value="{{1,0},{1,0}}"/>
 	</Window>
 </GUILayout>

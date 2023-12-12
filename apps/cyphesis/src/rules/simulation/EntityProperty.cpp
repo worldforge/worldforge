@@ -29,90 +29,84 @@
 
 static const bool debug_flag = false;
 
-int EntityProperty::get(Atlas::Message::Element& val) const
-{
-    if (m_data.get() != nullptr) {
-        Atlas::Message::MapType refMap;
-        refMap["$eid"] = m_data->getId();
-        val = refMap;
-        return 0;
-    } else {
-        return -1;
-    }
+int EntityProperty::get(Atlas::Message::Element& val) const {
+	if (m_data.get() != nullptr) {
+		Atlas::Message::MapType refMap;
+		refMap["$eid"] = m_data->getId();
+		val = refMap;
+		return 0;
+	} else {
+		return -1;
+	}
 }
 
-void EntityProperty::set(const Atlas::Message::Element& val)
-{
-    // INT id?
-    if (val.isString()) {
-        const std::string& id = val.String();
-        if (m_data.get() == nullptr || m_data->getId() != id) {
-            cy_debug_print("Assigning " << id)
-            if (id.empty()) {
-                m_data = WeakEntityRef(nullptr);
-            } else {
-                auto e = BaseWorld::instance().getEntity(id);
-                if (e) {
-                    cy_debug_print("Assigned")
-                    m_data = WeakEntityRef(e);
-                }
-            }
-        }
-    } else if (val.isPtr()) {
-        cy_debug_print("Assigning pointer")
-        auto e = static_cast<LocatedEntity*>(val.Ptr());
-        m_data = WeakEntityRef(e);
-    } else if (val.isMap()) {
-        auto I = val.Map().find("$eid");
-        if (I != val.Map().end()) {
-            set(I->second);
-        }
-    } else if (val.isNone()) {
-        m_data = WeakEntityRef(nullptr);
-    }
-}
-
-void EntityProperty::add(const std::string& s,
-                         Atlas::Message::MapType& map) const
-{
-    if (m_data.get() != nullptr) {
-        //The "id" attribute is special.
-        if (s == "id") {
-            map[s] = m_data->getId();
-        } else {
-            Atlas::Message::MapType refMap;
-            refMap["$eid"] = m_data->getId();
-            map[s] = refMap;
-        }
-    } else {
-        map[s] = "";
-    }
+void EntityProperty::set(const Atlas::Message::Element& val) {
+	// INT id?
+	if (val.isString()) {
+		const std::string& id = val.String();
+		if (m_data.get() == nullptr || m_data->getId() != id) {
+			cy_debug_print("Assigning " << id)
+			if (id.empty()) {
+				m_data = WeakEntityRef(nullptr);
+			} else {
+				auto e = BaseWorld::instance().getEntity(id);
+				if (e) {
+					cy_debug_print("Assigned")
+					m_data = WeakEntityRef(e);
+				}
+			}
+		}
+	} else if (val.isPtr()) {
+		cy_debug_print("Assigning pointer")
+		auto e = static_cast<LocatedEntity*>(val.Ptr());
+		m_data = WeakEntityRef(e);
+	} else if (val.isMap()) {
+		auto I = val.Map().find("$eid");
+		if (I != val.Map().end()) {
+			set(I->second);
+		}
+	} else if (val.isNone()) {
+		m_data = WeakEntityRef(nullptr);
+	}
 }
 
 void EntityProperty::add(const std::string& s,
-                         const Atlas::Objects::Entity::RootEntity& ent) const
-{
-    if (m_data.get() != nullptr) {
-        //The "id" attribute is special.
-        if (s == "id") {
-            ent->setAttr(s, m_data->getId());
-        } else {
-            Atlas::Message::MapType refMap;
-            refMap["$eid"] = m_data->getId();
-            ent->setAttr(s, refMap);
-        }
-    } else {
-        ent->setAttr(s, "");
-    }
+						 Atlas::Message::MapType& map) const {
+	if (m_data.get() != nullptr) {
+		//The "id" attribute is special.
+		if (s == "id") {
+			map[s] = m_data->getId();
+		} else {
+			Atlas::Message::MapType refMap;
+			refMap["$eid"] = m_data->getId();
+			map[s] = refMap;
+		}
+	} else {
+		map[s] = "";
+	}
 }
 
-EntityProperty* EntityProperty::copy() const
-{
-    return new EntityProperty(*this);
+void EntityProperty::add(const std::string& s,
+						 const Atlas::Objects::Entity::RootEntity& ent) const {
+	if (m_data.get() != nullptr) {
+		//The "id" attribute is special.
+		if (s == "id") {
+			ent->setAttr(s, m_data->getId());
+		} else {
+			Atlas::Message::MapType refMap;
+			refMap["$eid"] = m_data->getId();
+			ent->setAttr(s, refMap);
+		}
+	} else {
+		ent->setAttr(s, "");
+	}
+}
+
+EntityProperty* EntityProperty::copy() const {
+	return new EntityProperty(*this);
 }
 
 EntityProperty::EntityProperty(uint32_t flags)
-    : PropertyBase(flags)
-{
+		: PropertyBase(flags) {
 
 }

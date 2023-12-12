@@ -32,12 +32,12 @@ namespace Eris {
 class Entity;
 }
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 
 /**
@@ -94,7 +94,7 @@ AbstractMatch<TCase>::~AbstractMatch() = default;
 
 template<class TCase>
 void AbstractMatch<TCase>::setEntity(Eris::Entity* entity) {
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->setEntity(entity);
 	}
 }
@@ -114,7 +114,7 @@ template<class TCase>
 void AbstractMatch<TCase>::evaluateChanges(ChangeContext& changeContext) {
 
 	///we want to make sure that we start with deactivating actions, and then after that activate those that should be activated
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->evaluateChanges(changeContext);
 	}
 }
@@ -134,7 +134,7 @@ void AbstractMatch<TCase>::evaluateChanges() {
 template<class TCase>
 void AbstractMatch<TCase>::accept(IVisitor& visitor) {
 	visitor.visit(*this);
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->accept(visitor);
 	}
 }
@@ -142,8 +142,8 @@ void AbstractMatch<TCase>::accept(IVisitor& visitor) {
 
 }
 
-}
 
-}
+
+
 
 #endif

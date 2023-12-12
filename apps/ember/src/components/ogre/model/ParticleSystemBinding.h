@@ -27,9 +27,8 @@
 #include "ModelDefinition.h"
 #include <string>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 class ParticleSystem;
 
@@ -51,7 +50,6 @@ struct ParticleSystemBinding {
 
 
 }
-}
-}
+
 
 #endif

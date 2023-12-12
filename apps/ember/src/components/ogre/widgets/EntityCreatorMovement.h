@@ -25,8 +25,8 @@
 
 #include "components/ogre/authoring/MovementAdapter.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Authoring {
 class DetachedEntity;
 }
@@ -74,6 +74,5 @@ protected:
 
 }
 
-}
 
 #endif

@@ -19,7 +19,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<EventSet>(sol::table& space) {
 	auto eventSet = space.new_usertype<EventSet>("EventSet", sol::no_constructor);
 	eventSet["addEvent"] = string_setter(&EventSet::addEvent);
@@ -118,5 +119,5 @@ void registerLua<EventSet>(sol::table& space) {
 	space["toDragDropEventArgs"] = [](EventArgs* self) { return dynamic_cast<DragDropEventArgs*>(self); };
 	space["toTreeEventArgs"] = [](EventArgs* self) { return dynamic_cast<TreeEventArgs*>(self); };
 	space["toRenderQueueEventArgs"] = [](EventArgs* self) { return dynamic_cast<RenderQueueEventArgs*>(self); };
-	
+
 }

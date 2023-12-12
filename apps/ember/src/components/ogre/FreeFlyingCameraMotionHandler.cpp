@@ -22,8 +22,8 @@
 #include "framework/Tokeniser.h"
 #include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 FreeFlyingCameraMotionHandler::FreeFlyingCameraMotionHandler(Ogre::SceneNode& freeFlyingNode)
 		: mFreeFlyingNode(freeFlyingNode),
@@ -53,4 +53,4 @@ void FreeFlyingCameraMotionHandler::setSpeed(float speed) {
 }
 
 }
-}
+

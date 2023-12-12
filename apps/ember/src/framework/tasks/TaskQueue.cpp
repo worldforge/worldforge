@@ -49,7 +49,7 @@ void TaskQueue::deactivate() {
 		}
 		mUnprocessedQueueCond.notify_all();
 		//Join all executors. Since the queue is shutting down they will all exit their main loop if there are no more tasks to process.
-		for (auto& executor : mExecutors) {
+		for (auto& executor: mExecutors) {
 			executor->join();
 		}
 		mExecutors.clear();

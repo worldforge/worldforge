@@ -26,9 +26,8 @@ template<int>
 class Vector;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -59,8 +58,6 @@ struct IHeightMapSegment {
 	virtual void getHeightAndNormal(float x, float y, float& height, WFMath::Vector<3>& normal) const = 0;
 };
 }
-}
 
-}
 
 #endif /* EMBEROGRETERRAINIHEIGHTMAPSEGMENT_H_ */

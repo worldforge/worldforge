@@ -23,22 +23,20 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_CASES_ATTRIBUTECOMPARERSNUMERICCOMPARER_H
 #define EMBEROGRE_MODEL_MAPPING_CASES_ATTRIBUTECOMPARERSNUMERICCOMPARER_H
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Base class for all numeric comparers.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct NumericComparer
-{
+struct NumericComparer {
 	virtual ~NumericComparer() = default;
 
 	/**
@@ -51,10 +49,10 @@ struct NumericComparer
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

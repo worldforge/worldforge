@@ -24,7 +24,7 @@
 using namespace Ember::OgreView::Lod;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<LodManager>(sol::table& space) {
 	auto lodDistance = space.new_usertype<LodDistance>("LodDistance", sol::no_constructor);
 	lodDistance["meshName"] = &LodDistance::meshName;
@@ -32,7 +32,7 @@ void registerLua<LodManager>(sol::table& space) {
 	lodDistance["reductionValue"] = &LodDistance::reductionValue;
 
 	auto lodDefinition = space.new_usertype<LodDefinition>("LodDefinition", sol::no_constructor,
-														 sol::base_classes, sol::bases<Ogre::Resource>()
+														   sol::base_classes, sol::bases<Ogre::Resource>()
 	);
 	lodDefinition["getUseAutomaticLod"] = &LodDefinition::getUseAutomaticLod;
 	lodDefinition["getUseAutomaticLod"] = &LodDefinition::getUseAutomaticLod;
@@ -61,7 +61,7 @@ void registerLua<LodManager>(sol::table& space) {
 	lodDefinition["LodStrategy"] = lodStrategy;
 
 	auto lodDefinitionManager = space.new_usertype<LodDefinitionManager>("LodDefinitionManager", sol::no_constructor,
-																	   sol::base_classes, sol::bases<Ogre::ResourceManager>()
+																		 sol::base_classes, sol::bases<Ogre::ResourceManager>()
 	);
 	lodDefinitionManager["getSingleton"] = &LodDefinitionManager::getSingleton;
 	lodDefinitionManager["exportScript"] = &LodDefinitionManager::exportScript;
@@ -71,9 +71,8 @@ void registerLua<LodManager>(sol::table& space) {
 
 	auto lodManager = space.new_usertype<LodManager>("LodManager", sol::no_constructor);
 	lodManager["getSingleton"] = &LodManager::getSingleton;
-	lodManager["loadLod"] = [](LodManager* self, const Ogre::MeshPtr& mesh, const LodDefinition& def) { self->loadLod(mesh, def); };
+	lodManager["loadLod"] = sol::resolve<Ogre::MeshPtr, const LodDefinition&>(&LodManager::loadLod);
 //	lodManager["loadLod"] = sol::resolve(&LodManager::loadLod;
-
 
 	auto pmInjectorSignaler = space.new_usertype<PMInjectorSignaler>("PMInjectorSignaler", sol::no_constructor);
 	pmInjectorSignaler["LodInjected"] = LuaConnector::make_property(&PMInjectorSignaler::LodInjected);

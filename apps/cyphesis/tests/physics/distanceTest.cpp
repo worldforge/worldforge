@@ -42,9 +42,8 @@
 // RelPos ent3 -> ent4: (-2,-4,0)
 // RelPos ent3 -> ent4: (-4,-2,0)
 
-int main()
-{
-    int ret = 0;
+int main() {
+	int ret = 0;
 
 //    {
 //        Ref<Entity> tlve(new Entity(0)), ent(new Entity(1));
@@ -238,7 +237,7 @@ int main()
 //        ent1->m_parent = 0;
 //        ent2->m_parent = 0;
 //    }
-    return ret;
+	return ret;
 }
 
 // stubs

@@ -34,9 +34,8 @@ class Listbox;
 class Editbox;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 /**
 
@@ -122,8 +121,6 @@ protected:
 
 };
 }
-}
 
-}
 
 #endif

@@ -35,10 +35,10 @@
 
 #include <Eris/Avatar.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 EntityMoveInstance::EntityMoveInstance(EmberEntity& entity,
 									   MovementAdapter& moveAdapter,
@@ -94,7 +94,7 @@ void EntityMoveManager::runCommand(const std::string& command, const std::string
 		std::string entityId = tokeniser.nextToken();
 		if (!entityId.empty()) {
 			EmberEntity* entity = mWorld.getEmberEntity(entityId);
-			if (entity != 0) {
+			if (entity != nullptr) {
 				startMove(*entity);
 			}
 		} else {
@@ -123,7 +123,7 @@ World& EntityMoveManager::getWorld() const {
 	return mWorld;
 }
 
-void EntityMoveManager::delayedUpdatePositionForEntity(std::string entityId) {
+void EntityMoveManager::delayedUpdatePositionForEntity(const std::string& entityId) {
 	MainLoopController::getSingleton().getEventService().runOnMainThreadDelayed([this, entityId] {
 		auto entity = mWorld.getEmberEntity(entityId);
 		if (entity) {
@@ -137,5 +137,5 @@ void EntityMoveManager::delayedUpdatePositionForEntity(std::string entityId) {
 
 }
 
-}
-}
+
+

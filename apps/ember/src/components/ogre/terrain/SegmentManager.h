@@ -32,10 +32,8 @@ class Segment;
 class Terrain;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 class SegmentHolder;
 
 /**
@@ -239,8 +237,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRE_TERRAIN_SEGMENTMANAGER_H_ */

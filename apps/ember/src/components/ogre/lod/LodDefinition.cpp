@@ -23,9 +23,8 @@
 #include "LodDefinition.h"
 #include "LodDefinitionManager.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
+
+namespace Ember::OgreView::Lod {
 
 LodDefinition::LodDefinition(Ogre::ResourceManager* creator,
 							 const Ogre::String& name,
@@ -79,7 +78,7 @@ LodDefinition::~LodDefinition() {
 
 std::vector<float> LodDefinition::createListOfDistances() {
 	std::vector<float> out;
-	for (auto& it : mManualLod) {
+	for (auto& it: mManualLod) {
 		out.push_back(it.first);
 	}
 	return out;
@@ -91,5 +90,5 @@ LodDistance& LodDefinition::createDistance(Ogre::Real distance) {
 }
 
 }
-}
-}
+
+

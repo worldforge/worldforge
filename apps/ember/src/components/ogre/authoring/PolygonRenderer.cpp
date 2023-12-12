@@ -27,25 +27,21 @@
 
 #include <Ogre.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 unsigned int PolygonRenderer::sCounter = 0;
 
 PolygonRenderer::PolygonRenderer(Ogre::SceneNode& sceneNode, const std::list<PolygonPoint*>& points, bool closed) :
-	mNode(sceneNode.createChildSceneNode()),
-	mPoints(points),
-	mManualObject(nullptr),
-	mClosed(closed)
-{
+		mNode(sceneNode.createChildSceneNode()),
+		mPoints(points),
+		mManualObject(nullptr),
+		mClosed(closed) {
 
 	mNode->setInheritScale(false);
-	mNode->setScale(1.0f ,1.0f ,1.0f);
+	mNode->setScale(1.0f, 1.0f, 1.0f);
 
 	std::stringstream ss;
 	ss << "PolygonRenderer" << sCounter++;
@@ -56,8 +52,7 @@ PolygonRenderer::PolygonRenderer(Ogre::SceneNode& sceneNode, const std::list<Pol
 
 }
 
-PolygonRenderer::~PolygonRenderer()
-{
+PolygonRenderer::~PolygonRenderer() {
 	if (mManualObject) {
 		mNode->detachObject(mManualObject);
 		mNode->getCreator()->destroyManualObject(mManualObject);
@@ -65,14 +60,13 @@ PolygonRenderer::~PolygonRenderer()
 	mNode->getParentSceneNode()->removeAndDestroyChild(mNode);
 }
 
-void PolygonRenderer::update()
-{
+void PolygonRenderer::update() {
 	mManualObject->clear();
 
 	if (mPoints.size() > 1) {
 		mManualObject->begin("/common/base/authoring/polygon/line", Ogre::RenderOperation::OT_LINE_STRIP);
 
-		for (auto point : mPoints) {
+		for (auto point: mPoints) {
 			mManualObject->position(point->getNode()->getPosition());
 		}
 		//if there are more than two points we should close the polygon (if mClosed is true)
@@ -87,5 +81,5 @@ void PolygonRenderer::update()
 
 }
 
-}
-}
+
+

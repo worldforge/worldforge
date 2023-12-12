@@ -22,23 +22,24 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityTextureManipulator>(sol::table& space) {
 	auto entityTextureManipulator = space.new_usertype<EntityTextureManipulator>("EntityTextureManipulator");
 	entityTextureManipulator["EventMovementStarted"] = LuaConnector::make_property(&EntityTextureManipulator::EventMovementStarted);
 	entityTextureManipulator["EventMovementStopped"] = LuaConnector::make_property(&EntityTextureManipulator::EventMovementStopped);
 
 	space.new_usertype<DirectEntityTextureManipulator>("DirectEntityTextureManipulator",
-													 sol::constructors<DirectEntityTextureManipulator(CEGUI::Window&, Ember::OgreView::Gui::EntityCEGUITexture&)>(),
-													 sol::base_classes, sol::bases<EntityTextureManipulator>()
+													   sol::constructors<DirectEntityTextureManipulator(CEGUI::Window&, Ember::OgreView::Gui::EntityCEGUITexture&)>(),
+													   sol::base_classes, sol::bases<EntityTextureManipulator>()
 	);
 	space.new_usertype<CameraEntityTextureManipulator>("CameraEntityTextureManipulator",
-													 sol::constructors<CameraEntityTextureManipulator(CEGUI::Window&, Ember::OgreView::Gui::EntityCEGUITexture&)>(),
-													 sol::base_classes, sol::bases<EntityTextureManipulator>()
+													   sol::constructors<CameraEntityTextureManipulator(CEGUI::Window&, Ember::OgreView::Gui::EntityCEGUITexture&)>(),
+													   sol::base_classes, sol::bases<EntityTextureManipulator>()
 	);
 	auto combinedEntityTextureManipulator = space.new_usertype<CombinedEntityTextureManipulator>("CombinedEntityTextureManipulator",
-																							   sol::constructors<CombinedEntityTextureManipulator(CEGUI::Window&, Ember::OgreView::Gui::EntityCEGUITexture&)>(),
-																							   sol::base_classes, sol::bases<EntityTextureManipulator>()
+																								 sol::constructors<CombinedEntityTextureManipulator(CEGUI::Window&,
+																																					Ember::OgreView::Gui::EntityCEGUITexture&)>(),
+																								 sol::base_classes, sol::bases<EntityTextureManipulator>()
 	);
 	combinedEntityTextureManipulator["EventEditingStarted"] = LuaConnector::make_property(&CombinedEntityTextureManipulator::EventEditingStarted);
 	combinedEntityTextureManipulator["EventEditingStopped"] = LuaConnector::make_property(&CombinedEntityTextureManipulator::EventEditingStopped);

@@ -11,7 +11,7 @@
 #include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 /** Base operation for all operators
 
@@ -80,6 +80,6 @@ private:
     static void fillDefaultObjectInstance(GenericData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation
 
 #endif // ATLAS_OBJECTS_OPERATION_GENERIC_H

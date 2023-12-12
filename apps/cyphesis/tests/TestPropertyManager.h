@@ -27,16 +27,17 @@
 
 class PropertyKit;
 
-typedef std::map<std::string, PropertyKit *> PropertyFactoryDict;
+typedef std::map<std::string, PropertyKit*> PropertyFactoryDict;
 
 class TestPropertyManager : public PropertyManager {
-  public:
-    TestPropertyManager();
-    ~TestPropertyManager() override;
+public:
+	TestPropertyManager();
 
-    std::unique_ptr<PropertyBase> addProperty(const std::string & name) const override;
+	~TestPropertyManager() override;
 
-    void installPropertyFactory(const std::string &, std::unique_ptr<PropertyKit>);
+	std::unique_ptr<PropertyBase> addProperty(const std::string& name) const override;
+
+	void installPropertyFactory(const std::string&, std::unique_ptr<PropertyKit>);
 };
 
 
@@ -44,20 +45,18 @@ inline TestPropertyManager::TestPropertyManager() = default;
 
 inline TestPropertyManager::~TestPropertyManager() = default;
 
-inline void TestPropertyManager::installPropertyFactory(const std::string & name,
-                                                        std::unique_ptr<PropertyKit> factory)
-{
-    m_propertyFactories.emplace(name, std::move(factory));
+inline void TestPropertyManager::installPropertyFactory(const std::string& name,
+														std::unique_ptr<PropertyKit> factory) {
+	m_propertyFactories.emplace(name, std::move(factory));
 }
 
-inline std::unique_ptr<PropertyBase> TestPropertyManager::addProperty(const std::string & name) const
-{
-    auto I = m_propertyFactories.find(name);
-    if (I == m_propertyFactories.end()) {
-        return std::make_unique<SoftProperty>();
-    } else {
-        return I->second->newProperty();
-    }
+inline std::unique_ptr<PropertyBase> TestPropertyManager::addProperty(const std::string& name) const {
+	auto I = m_propertyFactories.find(name);
+	if (I == m_propertyFactories.end()) {
+		return std::make_unique<SoftProperty>();
+	} else {
+		return I->second->newProperty();
+	}
 }
 
 

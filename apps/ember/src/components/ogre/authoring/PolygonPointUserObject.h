@@ -25,13 +25,10 @@
 
 #include <sigc++/signal.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 class PolygonPoint;
 
@@ -41,8 +38,7 @@ class PolygonPoint;
  Note that most logic resides in PolygonPointPickListener and PolygonPointMover.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class PolygonPointUserObject
-{
+class PolygonPointUserObject {
 public:
 
 	/**
@@ -87,8 +83,8 @@ private:
 
 }
 
-}
 
-}
+
+
 
 #endif

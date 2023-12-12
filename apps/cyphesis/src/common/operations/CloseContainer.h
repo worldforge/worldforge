@@ -21,19 +21,22 @@
 
 #include <Atlas/Objects/Operation.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int CLOSE_CONTAINER_NO;
 
 /// \brief An operation for closing containers.
 /// \ingroup CustomOperations
-class CloseContainer : public Action
-{
-  public:
-        CloseContainer() {
-    }
+class CloseContainer : public Action {
+public:
+	CloseContainer() {
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_CLOSECONTAINER_H

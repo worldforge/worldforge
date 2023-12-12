@@ -38,6 +38,7 @@ public:
 	ContainerWidget(GUIManager& pickedEntity, EmberEntity& entity, int slotSize = 32);
 
 	~ContainerWidget();
+
 	static WidgetPluginCallback registerWidget(Ember::OgreView::GUIManager& guiManager);
 
 protected:

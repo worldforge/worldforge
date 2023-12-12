@@ -25,19 +25,18 @@
  * Used together with the "stackable" domain to handle amount of stacked entities.
  * \ingroup PropertyClasses
  */
-class AmountProperty : public Property<int>
-{
-    public:
-        static constexpr const char* property_name = "amount";
+class AmountProperty : public Property<int> {
+public:
+	static constexpr const char* property_name = "amount";
 
-        AmountProperty() = default;
+	AmountProperty() = default;
 
-        AmountProperty* copy() const override;
+	AmountProperty* copy() const override;
 
-        void apply(LocatedEntity& entity) override;
+	void apply(LocatedEntity& entity) override;
 
-    protected:
-        AmountProperty(const AmountProperty& rhs) = default;
+protected:
+	AmountProperty(const AmountProperty& rhs) = default;
 
 };
 

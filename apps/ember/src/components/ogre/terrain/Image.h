@@ -22,10 +22,8 @@
 #include "Buffer.h"
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class WFImage;
 
@@ -52,9 +50,9 @@ public:
 	unsigned int getResolution() const;
 
 
-	virtual void blit(const OgreImage& imageToBlit, unsigned int destinationChannel, int widthOffset = 0, int heightOffset = 0) = 0;
+	virtual void blit(const OgreImage& imageToBlit, unsigned int destinationChannel, int widthOffset, int heightOffset) = 0;
 
-	virtual void blit(const WFImage& imageToBlit, unsigned int destinationChannel, int widthOffset = 0, int heightOffset = 0) = 0;
+	virtual void blit(const WFImage& imageToBlit, unsigned int destinationChannel, int widthOffset, int heightOffset) = 0;
 
 protected:
 
@@ -63,8 +61,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* IMAGE_H_ */

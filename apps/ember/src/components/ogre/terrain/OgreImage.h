@@ -22,10 +22,8 @@
 
 #include "Image.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class WFImage;
 
@@ -41,8 +39,5 @@ public:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINOGREIMAGE_H_ */

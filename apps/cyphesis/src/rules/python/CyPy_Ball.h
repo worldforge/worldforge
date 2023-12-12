@@ -27,22 +27,21 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Ball : public WrapperBase<WFMath::Ball<3>, CyPy_Ball>
-{
-    public:
-        CyPy_Ball(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Ball : public WrapperBase<WFMath::Ball<3>, CyPy_Ball> {
+public:
+	CyPy_Ball(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Ball(Py::PythonClassInstance* self, WFMath::Ball<3> value);
+	CyPy_Ball(Py::PythonClassInstance* self, WFMath::Ball<3> value);
 
-        static WFMath::Ball<3> parse(const Py::Object& object);
+	static WFMath::Ball<3> parse(const Py::Object& object);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object repr() override;
+	Py::Object repr() override;
 
-        Py::Object rich_compare(const Py::Object& other, int type) override;
+	Py::Object rich_compare(const Py::Object& other, int type) override;
 
-    protected:
+protected:
 
 
 //Py::Object mag();

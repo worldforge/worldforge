@@ -31,10 +31,7 @@
 #include <sigc++/signal.h>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 const short unsigned int MAXTUTORIALS = 5;
 
@@ -126,7 +123,6 @@ private:
 };
 
 }
-}
-}
+
 
 #endif

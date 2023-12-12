@@ -29,24 +29,23 @@ using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
-ClientPropertyManager::ClientPropertyManager()
-{
-    installFactory(PositionProperty::property_name, std::make_unique<PropertyFactory<PositionProperty>>());
-    installFactory(VelocityProperty::property_name, std::make_unique<PropertyFactory<VelocityProperty>>());
-    installFactory(BBoxProperty::property_name, std::make_unique<PropertyFactory<BBoxProperty>>());
-    installFactory(ScaleProperty::property_name, std::make_unique<PropertyFactory<ScaleProperty>>());
-    installFactory(SolidProperty::property_name, std::make_unique<PropertyFactory<SolidProperty>>());
-    installFactory(AngularVelocityProperty::property_name, std::make_unique<PropertyFactory<AngularVelocityProperty>>());
-    installFactory(OrientationProperty::property_name, std::make_unique<PropertyFactory<OrientationProperty>>());
-    installFactory("_propel", std::make_unique<PropertyFactory<Vector3Property>>());
+
+ClientPropertyManager::ClientPropertyManager() {
+	installFactory(PositionProperty::property_name, std::make_unique<PropertyFactory<PositionProperty>>());
+	installFactory(VelocityProperty::property_name, std::make_unique<PropertyFactory<VelocityProperty>>());
+	installFactory(BBoxProperty::property_name, std::make_unique<PropertyFactory<BBoxProperty>>());
+	installFactory(ScaleProperty::property_name, std::make_unique<PropertyFactory<ScaleProperty>>());
+	installFactory(SolidProperty::property_name, std::make_unique<PropertyFactory<SolidProperty>>());
+	installFactory(AngularVelocityProperty::property_name, std::make_unique<PropertyFactory<AngularVelocityProperty>>());
+	installFactory(OrientationProperty::property_name, std::make_unique<PropertyFactory<OrientationProperty>>());
+	installFactory("_propel", std::make_unique<PropertyFactory<Vector3Property>>());
 }
 
-std::unique_ptr<PropertyBase> ClientPropertyManager::addProperty(const std::string& name) const
-{
-    auto I = m_propertyFactories.find(name);
-    if (I == m_propertyFactories.end()) {
-        return std::make_unique<SoftProperty>();
-    } else {
-        return I->second->newProperty();
-    }
+std::unique_ptr<PropertyBase> ClientPropertyManager::addProperty(const std::string& name) const {
+	auto I = m_propertyFactories.find(name);
+	if (I == m_propertyFactories.end()) {
+		return std::make_unique<SoftProperty>();
+	} else {
+		return I->second->newProperty();
+	}
 }

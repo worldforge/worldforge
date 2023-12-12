@@ -68,23 +68,23 @@ protected:
 };
 
 struct SquallArchiveFactory : public Ogre::ArchiveFactory {
-		Squall::Repository mRepository;
+	Squall::Repository mRepository;
 
-		explicit SquallArchiveFactory(Squall::Repository repository) : mRepository(std::move(repository)) {}
+	explicit SquallArchiveFactory(Squall::Repository repository) : mRepository(std::move(repository)) {}
 
-		~SquallArchiveFactory() override = default;
+	~SquallArchiveFactory() override = default;
 
-		const Ogre::String& getType() const override {
-			static std::string name = "Squall";
-			return name;
-		}
+	const Ogre::String& getType() const override {
+		static std::string name = "Squall";
+		return name;
+	}
 
-		Ogre::Archive* createInstance(const Ogre::String& name, bool readOnly) override {
-			return new SquallArchive(mRepository, Squall::Signature(name));
-		}
+	Ogre::Archive* createInstance(const Ogre::String& name, bool readOnly) override {
+		return new SquallArchive(mRepository, Squall::Signature(name));
+	}
 
-		void destroyInstance(Ogre::Archive* arch) override { delete arch; }
-	};
+	void destroyInstance(Ogre::Archive* arch) override { delete arch; }
+};
 }
 
 #endif //EMBER_SQUALLARCHIVE_H

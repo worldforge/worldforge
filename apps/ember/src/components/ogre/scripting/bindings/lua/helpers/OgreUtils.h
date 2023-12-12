@@ -22,15 +22,16 @@
 //
 #ifndef EMBEROGREOGREUTILS_H
 #define EMBEROGREOGREUTILS_H
+
 #include "components/ogre/EmberOgrePrerequisites.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class OgreUtils{
+class OgreUtils {
 public:
 
 	static const std::string& getSubMeshName(Ogre::Mesh* mesh, unsigned int subMeshIndex);
@@ -39,6 +40,6 @@ public:
 
 }
 
-}
+
 
 #endif

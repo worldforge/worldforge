@@ -28,6 +28,7 @@
 
 namespace Ember {
 class ConsoleBackend;
+
 /**
 @author Erik Ogenvik <erik@ogenvik.org>
 
@@ -38,47 +39,49 @@ class ConsoleCommandWrapper {
 public:
 
 
-    /**
-     * Constructor.
-     * @param command The console command. There are mainly two different kinds of command: normal commands and "toggle" commands. The latter are identified by always starting with "+", such as "+move_forward". If a "toggle" command is used, an "inverse command" will automatically be generated, accessable through getInverseCommand(). This is meant to be used to act as an inverse of the main command.
-     * @param object The object instance. This will receive notifications when the command (and if available the inverse command) is used.
-     * @param description Description of the command, to be presented to the end user.
-     * @param suppressLogging If true, logging of the registration and deregistration will be suppressed. This is useful if you have a command which you'll add and remove often.
-    */
-	ConsoleCommandWrapper(std::string command, ConsoleObject *object, std::string description = "", bool suppressLogging = false);
+	/**
+	 * Constructor.
+	 * @param command The console command. There are mainly two different kinds of command: normal commands and "toggle" commands. The latter are identified by always starting with "+", such as "+move_forward". If a "toggle" command is used, an "inverse command" will automatically be generated, accessable through getInverseCommand(). This is meant to be used to act as an inverse of the main command.
+	 * @param object The object instance. This will receive notifications when the command (and if available the inverse command) is used.
+	 * @param description Description of the command, to be presented to the end user.
+	 * @param suppressLogging If true, logging of the registration and deregistration will be suppressed. This is useful if you have a command which you'll add and remove often.
+	*/
+	ConsoleCommandWrapper(std::string command, ConsoleObject* object, std::string description = "", bool suppressLogging = false);
 
-	ConsoleCommandWrapper(ConsoleBackend& consoleBackend, std::string command, ConsoleObject *object, std::string description = "", bool suppressLogging = false);
+	ConsoleCommandWrapper(ConsoleBackend& consoleBackend, std::string command, ConsoleObject* object, std::string description = "", bool suppressLogging = false);
+
 	ConsoleCommandWrapper(ConsoleBackend& consoleBackend, std::string command, ConsoleCallback callback, const std::string& description = "", bool suppressLogging = false);
 
-    /**
-     * @brief Dtor.
-     */
-    virtual ~ConsoleCommandWrapper();
+	/**
+	 * @brief Dtor.
+	 */
+	virtual ~ConsoleCommandWrapper();
 
-    /**
-     * @brief Gets the command.
-     * @return The command which this wrapper represents.
-     */
-    const std::string& getCommand() const;
+	/**
+	 * @brief Gets the command.
+	 * @return The command which this wrapper represents.
+	 */
+	const std::string& getCommand() const;
 
-    /**
-     * @brief Gets the inverse command, i.e. the command used to invert the action of the command.
-     * This is only relevant when dealing with commands prefixed with "+", i.e. commands that will require a similiar command prefixed by "-" to stop what they're doing. An example of this is the "+move_forward" command which will move the avatar forward until a "-move_forward" command is received.
-     * This is most often used in conjunction with the InputCommandMapper class, but it can of course be used by other mechanisms as well.
-     *
-     * Note that an inverse command is automatically generated whenever a "+" command is used.
-     * @return The inverse command for the current command.
-     */
-    const std::string& getInverseCommand() const;
+	/**
+	 * @brief Gets the inverse command, i.e. the command used to invert the action of the command.
+	 * This is only relevant when dealing with commands prefixed with "+", i.e. commands that will require a similiar command prefixed by "-" to stop what they're doing. An example of this is the "+move_forward" command which will move the avatar forward until a "-move_forward" command is received.
+	 * This is most often used in conjunction with the InputCommandMapper class, but it can of course be used by other mechanisms as well.
+	 *
+	 * Note that an inverse command is automatically generated whenever a "+" command is used.
+	 * @return The inverse command for the current command.
+	 */
+	const std::string& getInverseCommand() const;
 
-    /**
-     * Gets the description of the command.
-     * @return
-     */
-    const std::string& getDescription() const;
+	/**
+	 * Gets the description of the command.
+	 * @return
+	 */
+	const std::string& getDescription() const;
 
-	bool operator==( const std::string& command) const noexcept;
-	bool operator!=( const std::string& command) const noexcept;
+	bool operator==(const std::string& command) const noexcept;
+
+	bool operator!=(const std::string& command) const noexcept;
 
 private:
 
@@ -106,12 +109,15 @@ private:
 };
 
 
-inline const std::string& ConsoleCommandWrapper::getCommand() const {return mCommand;}
-inline const std::string& ConsoleCommandWrapper::getInverseCommand() const {return mInverseCommand;}
-inline const std::string& ConsoleCommandWrapper::getDescription() const {return mDescription;}
-inline bool ConsoleCommandWrapper::operator==( const std::string& command) const noexcept { return command == mCommand; }
-inline bool ConsoleCommandWrapper::operator!=( const std::string& command) const noexcept { return command != mCommand; }
+inline const std::string& ConsoleCommandWrapper::getCommand() const { return mCommand; }
 
+inline const std::string& ConsoleCommandWrapper::getInverseCommand() const { return mInverseCommand; }
+
+inline const std::string& ConsoleCommandWrapper::getDescription() const { return mDescription; }
+
+inline bool ConsoleCommandWrapper::operator==(const std::string& command) const noexcept { return command == mCommand; }
+
+inline bool ConsoleCommandWrapper::operator!=(const std::string& command) const noexcept { return command != mCommand; }
 
 
 }

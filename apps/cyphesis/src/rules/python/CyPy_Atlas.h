@@ -25,12 +25,11 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Atlas : public Py::ExtensionModule<CyPy_Atlas>
-{
-    public:
-        CyPy_Atlas();
+class CyPy_Atlas : public Py::ExtensionModule<CyPy_Atlas> {
+public:
+	CyPy_Atlas();
 
-        static std::string init();
+	static std::string init();
 
 };
 

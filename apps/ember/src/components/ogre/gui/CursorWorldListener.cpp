@@ -37,9 +37,8 @@
 
 #include <Ogre.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 
 CursorWorldListener::CursorWorldListener(MainLoopController& mainLoopController, CEGUI::Window& mainWindow, World& world) :
@@ -72,7 +71,7 @@ CursorWorldListener::CursorWorldListener(MainLoopController& mainLoopController,
 CursorWorldListener::~CursorWorldListener() {
 
 	mConfigListenerContainer.reset();
-	for (auto& connection : mConnections) {
+	for (auto& connection: mConnections) {
 		connection->disconnect();
 	}
 	if (mMouseMovesConnection.isValid()) {
@@ -212,5 +211,5 @@ void CursorWorldListener::Config_ClickThreshold(const std::string& section, cons
 }
 
 }
-}
-}
+
+

@@ -19,12 +19,11 @@
 
 #ifndef GRAPHICALCHANGEADAPTER_H_
 #define GRAPHICALCHANGEADAPTER_H_
+
 #include <sigc++/signal.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @brief This structure is used to accumulate the return values from the slots and then pass a result back to the signal
@@ -32,8 +31,7 @@ namespace OgreView
  * It is used to calculate whether a further change in graphics level is possible.
  */
 template<class T>
-struct FurtherChangePossibleAccumulater
-{
+struct FurtherChangePossibleAccumulater {
 	/**
 	 * The data type of the value returned to the signal. Required by sigc++
 	 */
@@ -48,8 +46,7 @@ struct FurtherChangePossibleAccumulater
 	 * @brief The overloaded () function is called by sigc++ to calculate the value to be returned to the signal from the return values of the slots.
 	 * @return The value to be passed back to the signal
 	 */
-	result_type operator()(T_iterator first, T_iterator last) const
-	{
+	result_type operator()(T_iterator first, T_iterator last) const {
 		result_type endResult = false;
 		for (; first != last; ++first) {
 			endResult = endResult || *first;
@@ -57,12 +54,12 @@ struct FurtherChangePossibleAccumulater
 		return endResult;
 	}
 };
+
 /**
  * @brief Adaptor interface class between the central AutomaticGraphicsLevelManager class and the graphics subsystems
  * This class accepts a change in fps required and translates it into a floating change required value that the subsystems understand
  */
-class GraphicalChangeAdapter
-{
+class GraphicalChangeAdapter {
 public:
 
 	/**
@@ -76,5 +73,5 @@ public:
 };
 
 }
-}
+
 #endif /* GRAPHICALCHANGEADAPTER_H_ */

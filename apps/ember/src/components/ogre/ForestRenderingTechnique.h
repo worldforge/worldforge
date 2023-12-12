@@ -21,10 +21,8 @@
 
 #include "components/ogre/ISceneRenderingTechnique.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 namespace Environment {
 class Forest;
@@ -37,8 +35,7 @@ class Forest;
  * Models rendered with this technique will be handled as forest trees, which means that they will be using imposters when viewed far away.
  * The PagedGeometry will handle the actual rendering through the Forest class.
  */
-class ForestRenderingTechnique : public ISceneRenderingTechnique
-{
+class ForestRenderingTechnique : public ISceneRenderingTechnique {
 public:
 	/**
 	 * @brief Ctor.
@@ -67,6 +64,6 @@ protected:
 
 }
 
-}
+
 
 #endif /* FORESTRENDERINGTECHNIQUE_H_ */

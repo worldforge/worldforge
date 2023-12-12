@@ -32,87 +32,82 @@
  *
  * \ingroup PropertyClasses
  */
-class ModeDataProperty : public PropertyBase
-{
-    public:
+class ModeDataProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_name = "mode_data";
-        static constexpr const char* property_atlastype = "map";
+	static constexpr const char* property_name = "mode_data";
+	static constexpr const char* property_atlastype = "map";
 
-        struct NullData
-        {
-        };
+	struct NullData {
+	};
 
-        struct PlantedOnData
-        {
-            /**
-             * The entity on to which this entity is attached.
-             */
-            boost::optional<long> entityId;
+	struct PlantedOnData {
+		/**
+		 * The entity on to which this entity is attached.
+		 */
+		boost::optional<long> entityId;
 
-            /**
-             * An optional attachment.
-             */
-            boost::optional<std::string> attachment;
+		/**
+		 * An optional attachment.
+		 */
+		boost::optional<std::string> attachment;
 
-            /**
-             * Returns true if either "entity" or "attachment" is set.
-             * @return
-             */
-            explicit operator bool() const
-            {
-                return (entityId || attachment);
-            }
-        };
+		/**
+		 * Returns true if either "entity" or "attachment" is set.
+		 * @return
+		 */
+		explicit operator bool() const {
+			return (entityId || attachment);
+		}
+	};
 
-        struct ProjectileData
-        {
-            Ref<LocatedEntity> entity;
+	struct ProjectileData {
+		Ref<LocatedEntity> entity;
 
-            Atlas::Message::MapType extra;
-        };
+		Atlas::Message::MapType extra;
+	};
 
-        ModeDataProperty();
+	ModeDataProperty();
 
-        ~ModeDataProperty() override = default;
+	~ModeDataProperty() override = default;
 
-        ModeDataProperty::PlantedOnData& getPlantedOnData();
+	ModeDataProperty::PlantedOnData& getPlantedOnData();
 
-        const ModeDataProperty::PlantedOnData& getPlantedOnData() const;
+	const ModeDataProperty::PlantedOnData& getPlantedOnData() const;
 
-        ModeDataProperty::ProjectileData& getProjectileData();
+	ModeDataProperty::ProjectileData& getProjectileData();
 
-        const ModeDataProperty::ProjectileData& getProjectileData() const;
+	const ModeDataProperty::ProjectileData& getProjectileData() const;
 
-        ModeProperty::Mode getMode() const;
+	ModeProperty::Mode getMode() const;
 
-        ModeDataProperty* copy() const override;
+	ModeDataProperty* copy() const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        static ModeDataProperty::PlantedOnData parsePlantedData(const Atlas::Message::MapType& map);
+	static ModeDataProperty::PlantedOnData parsePlantedData(const Atlas::Message::MapType& map);
 
-        void setPlantedData(const Atlas::Message::MapType& map);
+	void setPlantedData(const Atlas::Message::MapType& map);
 
-        void setPlantedData(ModeDataProperty::PlantedOnData data);
+	void setPlantedData(ModeDataProperty::PlantedOnData data);
 
-        void setProjectileData(const Atlas::Message::MapType& map);
+	void setProjectileData(const Atlas::Message::MapType& map);
 
-        void setProjectileData(ModeDataProperty::ProjectileData data);
+	void setProjectileData(ModeDataProperty::ProjectileData data);
 
-        void clearData();
+	void clearData();
 
-    protected:
-        ModeDataProperty(const ModeDataProperty& rhs) = default;
+protected:
+	ModeDataProperty(const ModeDataProperty& rhs) = default;
 
 
-        typedef boost::variant<NullData, PlantedOnData, ProjectileData> ModeData;
+	typedef boost::variant<NullData, PlantedOnData, ProjectileData> ModeData;
 
-        ModeData mData;
+	ModeData mData;
 
-        ModeProperty::Mode mMode;
+	ModeProperty::Mode mMode;
 
 
 };

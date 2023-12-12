@@ -24,28 +24,22 @@
 #include "components/ogre/GUIManager.h"
 #include <CEGUI/WindowManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui::Representations {
 
-namespace Representations {
 
-unsigned int LayoutHelper::mLastPrefixBase = 0;
-
-CEGUI::Window* LayoutHelper::loadLayout(const std::string& layoutFile, CEGUI::String& prefix)
-{
+CEGUI::Window* LayoutHelper::loadLayout(const std::string& layoutFile, CEGUI::String& prefix) {
 	CEGUI::WindowManager& windowManager = CEGUI::WindowManager::getSingleton();
 
-	std::string finalFileName(GUIManager::getSingleton().getLayoutDir() + layoutFile);
-	
+	std::string finalFileName(GUIManager::getLayoutDir() + layoutFile);
+
 	return windowManager.loadLayoutFromFile(finalFileName);
 }
 
 }
-    
-}
 
-}
 
-}
+
+
+
+

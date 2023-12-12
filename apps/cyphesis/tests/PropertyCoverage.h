@@ -25,64 +25,64 @@
 #include <cassert>
 
 class Entity;
+
 class BaseWorld;
 
 class PropertyCoverage {
-  protected:
-    PropertyBase & m_prop;
-    Ref<Entity> m_tlve;
-    BaseWorld * const m_wrld;
-    Ref<Entity> m_ent;
+protected:
+	PropertyBase& m_prop;
+	Ref<Entity> m_tlve;
+	BaseWorld* const m_wrld;
+	Ref<Entity> m_ent;
 
-    Atlas::Message::ListType m_testData;
+	Atlas::Message::ListType m_testData;
 
-    virtual void interfaceCoverage();
-  public:
+	virtual void interfaceCoverage();
 
-    explicit PropertyCoverage(PropertyBase & pb);
+public:
 
-    ~PropertyCoverage();
+	explicit PropertyCoverage(PropertyBase& pb);
 
-    void basicCoverage();
+	~PropertyCoverage();
 
-    Ref<Entity> createCharacterEntity();
+	void basicCoverage();
 
-    void testDataAppend(const Atlas::Message::Element &);
+	Ref<Entity> createCharacterEntity();
 
-    Ref<Entity>& tlve() { return m_tlve; }
+	void testDataAppend(const Atlas::Message::Element&);
+
+	Ref<Entity>& tlve() { return m_tlve; }
 };
 
 template<class PropertyT>
-class PropertyChecker : public PropertyCoverage
-{
-  protected:
-    PropertyT & m_sub_prop;
+class PropertyChecker : public PropertyCoverage {
+protected:
+	PropertyT& m_sub_prop;
 
-    virtual void interfaceCoverage();
-  public:
-    explicit PropertyChecker(PropertyT & p);
+	virtual void interfaceCoverage();
+
+public:
+	explicit PropertyChecker(PropertyT& p);
 };
 
 template<class PropertyT>
-PropertyChecker<PropertyT>::PropertyChecker(PropertyT & p) :
-      PropertyCoverage(p), m_sub_prop(p)
-{
+PropertyChecker<PropertyT>::PropertyChecker(PropertyT& p) :
+		PropertyCoverage(p), m_sub_prop(p) {
 }
 
 // This test works at compile time, by ensuring the copy method returns the
 // subclass type.
 template<class PropertyT>
-void PropertyChecker<PropertyT>::interfaceCoverage()
-{
-    auto copy = m_sub_prop.copy();
-    // The above line generates an unused variable warning without the line
-    // below. The purpose of this test is not to care about the value, just
-    // to ensure the subclass has implemented this method to return its own
-    // type, so we cast the result to void to tell the compiler that we
-    // know its unused.
-    (void)copy;
-    assert(dynamic_cast<PropertyT*>(copy));
-    delete copy;
+void PropertyChecker<PropertyT>::interfaceCoverage() {
+	auto copy = m_sub_prop.copy();
+	// The above line generates an unused variable warning without the line
+	// below. The purpose of this test is not to care about the value, just
+	// to ensure the subclass has implemented this method to return its own
+	// type, so we cast the result to void to tell the compiler that we
+	// know its unused.
+	(void) copy;
+	assert(dynamic_cast<PropertyT*>(copy));
+	delete copy;
 }
 
 #endif // TESTS_PROPERTY_COVERAGE_H

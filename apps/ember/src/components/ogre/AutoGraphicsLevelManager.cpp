@@ -26,8 +26,8 @@
 
 #include <numeric>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 FrameTimeRecorder::FrameTimeRecorder(MainLoopController& mainLoopController) :
 		mRequiredTimeSamples(std::chrono::seconds(2)),
@@ -112,7 +112,7 @@ bool AutomaticGraphicsLevelManager::isEnabled() const {
 	return mEnabled;
 }
 
-void AutomaticGraphicsLevelManager::Config_DefaultFps(const std::string& section, const std::string& key, varconf::Variable& variable) {
+void AutomaticGraphicsLevelManager::Config_DefaultFps(const std::string&, const std::string&, varconf::Variable& variable) {
 	if (variable.is_double()) {
 		auto fps = static_cast<double>(variable);
 		//If set to 0, the fps the manager tries to achieve is 60
@@ -123,7 +123,7 @@ void AutomaticGraphicsLevelManager::Config_DefaultFps(const std::string& section
 	}
 }
 
-void AutomaticGraphicsLevelManager::Config_Enabled(const std::string& section, const std::string& key, varconf::Variable& variable) {
+void AutomaticGraphicsLevelManager::Config_Enabled(const std::string&, const std::string&, varconf::Variable& variable) {
 	if (variable.is_bool() && static_cast<bool>(variable)) {
 		setEnabled(true);
 	} else {
@@ -132,4 +132,4 @@ void AutomaticGraphicsLevelManager::Config_Enabled(const std::string& section, c
 }
 
 }
-}
+

@@ -32,10 +32,7 @@
 #include <Mercator/Terrain.h>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -88,6 +85,6 @@ private:
 };
 
 }
-}
-}
+
+
 #endif /* EMBEROGRETERRAINTERRAINAREAUPDATETASK_H_ */

@@ -32,10 +32,10 @@ class Entity;
 }
 
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 class ChangeContext;
 
@@ -182,6 +182,6 @@ inline bool CaseBase::getIsTrueToRoot() {
 
 }
 
-}
+
 
 #endif

@@ -40,8 +40,8 @@
 #include <Ogre.h>
 #include <components/ogre/OgreInfo.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 ConsoleDevTools::ConsoleDevTools() :
 		mReloadMaterial("reload_material", this, "Reloads the material. Parameters: <material name>. For example \"/reload_material /base/normalmap/specular\""),
@@ -97,18 +97,18 @@ void ConsoleDevTools::showTexture(const std::string& textureName) {
 	CEGUI::Window* root = sys->getDefaultGUIContext().getRootWindow();
 	CEGUI::WindowManager* wmgr = CEGUI::WindowManager::getSingletonPtr();
 	const std::string& scheme = Ember::OgreView::GUIManager::getSingleton().getDefaultScheme();
-	CEGUI::OgreRenderer* renderer = static_cast<CEGUI::OgreRenderer*>(sys->getRenderer());
+	auto* renderer = dynamic_cast<CEGUI::OgreRenderer*>(sys->getRenderer());
 
 	//Create BasicImage wrapper for the Ogre texture.
 	std::string imageName = genUniqueName();
 	CEGUI::Texture& ceguitexture = renderer->createTexture(imageName, texture);
 	CEGUI::BasicImage* image = (CEGUI::BasicImage*) (&CEGUI::ImageManager::getSingleton().create("BasicImage", imageName));
 	image->setTexture(&ceguitexture);
-	image->setArea(CEGUI::Rectf(0, 0, (float)texture->getWidth(), (float)texture->getHeight()));
+	image->setArea(CEGUI::Rectf(0, 0, (float) texture->getWidth(), (float) texture->getHeight()));
 	image->setAutoScaled(CEGUI::ASM_Both);
 
 	// Create staticImage to show the BasicImage.
-	CEGUI::DefaultWindow* staticImage = static_cast<CEGUI::DefaultWindow*>(wmgr->createWindow(scheme + "/StaticImage", genUniqueName()));
+	CEGUI::DefaultWindow* staticImage = dynamic_cast<CEGUI::DefaultWindow*>(wmgr->createWindow(scheme + "/StaticImage", genUniqueName()));
 	staticImage->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
 	staticImage->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
 	staticImage->setVisible(true);
@@ -119,7 +119,7 @@ void ConsoleDevTools::showTexture(const std::string& textureName) {
 	// Create scalable Frame window
 	CEGUI::FrameWindow* mWindow = (CEGUI::FrameWindow*) wmgr->createWindow(scheme + "/DialogWindow", genUniqueName());
 	mWindow->setText(textureName + " texture");
-	mWindow->setSize(CEGUI::USize(CEGUI::UDim(0, texture->getWidth() * widthScale), CEGUI::UDim(0, texture->getHeight() * heightScale)));
+	mWindow->setSize(CEGUI::USize(CEGUI::UDim(0, (float) texture->getWidth() * widthScale), CEGUI::UDim(0, (float) texture->getHeight() * heightScale)));
 
 	mWindow->setPosition(CEGUI::UVector2(CEGUI::UDim(0, left), CEGUI::UDim(0, top)));
 	mWindow->moveToFront();
@@ -153,8 +153,8 @@ void ConsoleDevTools::reloadMaterial(const std::string& materialName) {
 		ConsoleBackend::getSingleton().pushMessage("'" + materialName + "' material not found.", "error");
 		return;
 	}
-	for (const auto* technique : material->getTechniques()) {
-		for (const auto* pass : technique->getPasses()) {
+	for (const auto* technique: material->getTechniques()) {
+		for (const auto* pass: technique->getPasses()) {
 			Ogre::String name;
 			Ogre::GpuProgramPtr vertexProgram;
 			Ogre::GpuProgramPtr fragmentProgram;
@@ -181,7 +181,7 @@ void ConsoleDevTools::reloadMaterial(const std::string& materialName) {
 				fragmentProgram->createParameters();
 				ConsoleBackend::getSingleton().pushMessage("Reloaded fragment program '" + fragmentProgram->getName() + "'.", "info");
 			}
-			for (const auto* tex : pass->getTextureUnitStates()) {
+			for (const auto* tex: pass->getTextureUnitStates()) {
 				const std::string& textureName(tex->getTextureName());
 				if (!textureName.empty()) {
 					mReloadableTextures.insert(textureName);
@@ -189,7 +189,7 @@ void ConsoleDevTools::reloadMaterial(const std::string& materialName) {
 			}
 		}
 	}
-	for (const std::string& textureName : mReloadableTextures) {
+	for (const std::string& textureName: mReloadableTextures) {
 		reloadTexture(textureName);
 	}
 	material->reload();
@@ -285,16 +285,16 @@ void ConsoleDevTools::performBenchmark() {
 
 						//Report results
 						std::chrono::steady_clock::duration totalDuration{};
-						for (auto entry : results) {
+						for (auto entry: results) {
 							totalDuration += entry;
 							auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(entry).count();
-							std::string message = "FPS: " + std::to_string(60 / (microseconds / 1000000.0));
+							std::string message = "FPS: " + std::to_string(60 / ((float) microseconds / 1000000.0f));
 							logger->info(message);
 							ConsoleBackend::getSingleton().pushMessage(message);
 						}
 
 						auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(totalDuration).count();
-						std::string message = "Total FPS: " + std::to_string((float) (60 * results.size()) / (microseconds / 1000000.0));
+						std::string message = "Total FPS: " + std::to_string((float) (60 * results.size()) / ((float) microseconds / 1000000.0f));
 						logger->info(message);
 						ConsoleBackend::getSingleton().pushMessage(message);
 
@@ -330,4 +330,4 @@ void ConsoleDevTools::performBenchmark() {
 }
 
 }
-}
+

@@ -27,22 +27,18 @@
 
 #include <OgreManualObject.h>
 
-namespace Ogre
-{
+namespace Ogre {
 class SceneNode;
 }
 
-namespace WFMath
-{
+namespace WFMath {
 
 template<int>
 class Segment;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  @brief Visualizes a WFMath Shape.
@@ -50,8 +46,7 @@ namespace OgreView
  The shape is rendered using a simple line.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class ShapeVisual
-{
+class ShapeVisual {
 public:
 
 	/**
@@ -92,8 +87,7 @@ protected:
 };
 
 template<typename T>
-inline void ShapeVisual::update(const T& shape)
-{
+inline void ShapeVisual::update(const T& shape) {
 	mManualObject->clear();
 
 	if (shape.isValid() && shape.numCorners() > 1) {
@@ -116,6 +110,6 @@ inline void ShapeVisual::update(const T& shape)
 
 }
 
-}
+
 
 #endif

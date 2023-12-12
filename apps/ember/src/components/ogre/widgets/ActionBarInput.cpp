@@ -25,9 +25,9 @@
 #include "framework/ConsoleBackend.h"
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 ActionBarInput::ActionBarInput(const std::string& actionBarKey) :
 		mHotkey(actionBarKey) {
@@ -42,5 +42,5 @@ ActionBarInput::~ActionBarInput() {
 }
 
 }
-}
-}
+
+

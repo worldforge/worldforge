@@ -39,8 +39,8 @@ class Node;
 class MovableObject;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 struct INodeProvider;
 
@@ -129,6 +129,5 @@ inline Model& ModelMount::getModel() const {
 
 }
 
-}
 
 #endif

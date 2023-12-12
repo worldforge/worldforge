@@ -28,7 +28,7 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EmberOgre>(sol::table& space) {
 	auto emberOgre = space.new_usertype<EmberOgre>("EmberOgre", sol::no_constructor);
 	emberOgre["getSingleton"] = &EmberOgre::getSingleton;

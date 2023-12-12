@@ -29,10 +29,10 @@
 #include <OgreSceneNode.h>
 #include <SDL_keyboard.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 PolygonPointMover::PolygonPointMover(Polygon& polygon, PolygonPoint& point, IMovementListener* listener) :
 		mPolygon(polygon),
@@ -205,7 +205,7 @@ boost::optional<float> PolygonPointMover::getOffset() const {
 }
 
 void PolygonPointMover::processPickResults(const std::vector<PickResult>& results) {
-	for (auto& result : results) {
+	for (auto& result: results) {
 		if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
 			auto& entityCollisionInfo = boost::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
 			//It's a valid entry if it's not transparent and not the entity which is being moved itself.
@@ -219,5 +219,5 @@ void PolygonPointMover::processPickResults(const std::vector<PickResult>& result
 
 }
 
-}
-}
+
+

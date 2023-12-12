@@ -32,39 +32,36 @@ using Atlas::Objects::Operation::Set;
 static const bool debug_flag = false;
 
 
-void DensityProperty::apply(LocatedEntity& entity)
-{
-    updateMass(entity);
+void DensityProperty::apply(LocatedEntity& entity) {
+	updateMass(entity);
 }
 
-void DensityProperty::updateMass(LocatedEntity& entity) const
-{
-    auto bboxProp = entity.getPropertyClassFixed<BBoxProperty>();
-    if (bboxProp && bboxProp->data().isValid()) {
-        auto& bbox = bboxProp->data();
-        WFMath::Vector<3> volumeVector = bbox.highCorner() - bbox.lowCorner();
-        float volume = volumeVector.x() * volumeVector.y() * volumeVector.z();
+void DensityProperty::updateMass(LocatedEntity& entity) const {
+	auto bboxProp = entity.getPropertyClassFixed<BBoxProperty>();
+	if (bboxProp && bboxProp->data().isValid()) {
+		auto& bbox = bboxProp->data();
+		WFMath::Vector<3> volumeVector = bbox.highCorner() - bbox.lowCorner();
+		float volume = volumeVector.x() * volumeVector.y() * volumeVector.z();
 
-        if (!std::isnormal(volume) && volume != 0) {
-            spdlog::warn("Volume of {} is not a normal number.", volume);
-        } else {
-            double mass = volume * m_data;
+		if (!std::isnormal(volume) && volume != 0) {
+			spdlog::warn("Volume of {} is not a normal number.", volume);
+		} else {
+			double mass = volume * m_data;
 
-            auto& massProp = entity.requirePropertyClass<Property<double>>("mass", mass);
+			auto& massProp = entity.requirePropertyClass<Property<double>>("mass", mass);
 
-            if (massProp.data() != mass) {
-                massProp.set(mass);
-                massProp.apply(entity);
-                massProp.removeFlags(prop_flag_persistence_clean);
-                massProp.addFlags(prop_flag_unsent);
-                entity.propertyApplied("mass", massProp);
-            }
-        }
-    }
+			if (massProp.data() != mass) {
+				massProp.set(mass);
+				massProp.apply(entity);
+				massProp.removeFlags(prop_flag_persistence_clean);
+				massProp.addFlags(prop_flag_unsent);
+				entity.propertyApplied("mass", massProp);
+			}
+		}
+	}
 }
 
-DensityProperty* DensityProperty::copy() const
-{
-    return new DensityProperty(*this);
+DensityProperty* DensityProperty::copy() const {
+	return new DensityProperty(*this);
 }
 

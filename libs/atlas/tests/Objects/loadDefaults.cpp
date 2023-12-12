@@ -100,7 +100,7 @@ void LoadDefaultsDecoder::messageArrived(MapType o) {
 void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,
 										const Element& melem,
 										std::set<std::string> used_attributes) {
-	for (auto& entry : melem.asMap()) {
+	for (auto& entry: melem.asMap()) {
 		auto attr_found = used_attributes.find(entry.first);
 		if (attr_found == used_attributes.end()) {
 			//cout<<"    -->"<<I->first<<endl;
@@ -119,7 +119,7 @@ void LoadDefaultsDecoder::setAttributes(Root& obj, //Root &obj_inst,
 
 void LoadDefaultsDecoder::fillDefaults() {
 	std::list<std::string> keys = m_factories.getKeys();
-	for (auto& key : keys) {
+	for (auto& key: keys) {
 		//cout<<(*I)<<endl;
 		//get atlas.xml object
 		const Element& melem = getMessageElement(key);

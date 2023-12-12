@@ -17,7 +17,6 @@
  */
 
 #include <chrono>
-#include <memory>
 #include "TimeFrame.h"
 
 namespace Ember {

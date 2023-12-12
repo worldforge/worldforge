@@ -30,32 +30,33 @@
 ///
 /// @param io_context Reference to the object that manages all socket communication.
 class CommSocket {
-  protected:
-    explicit CommSocket(boost::asio::io_context& io_context)
-    : m_io_context(io_context), m_active(true){
-    }
+protected:
+	explicit CommSocket(boost::asio::io_context& io_context)
+			: m_io_context(io_context), m_active(true) {
+	}
 
-  public:
+public:
 
-    CommSocket(const CommSocket &) = delete;
-    CommSocket & operator=(const CommSocket &) = delete;
+	CommSocket(const CommSocket&) = delete;
 
-    /// Reference to the main IO service.
-    boost::asio::io_context& m_io_context;
+	CommSocket& operator=(const CommSocket&) = delete;
 
-    bool m_active;
+	/// Reference to the main IO service.
+	boost::asio::io_context& m_io_context;
 
-    /// \brief Destructor.
-    virtual ~CommSocket() = default;
+	bool m_active;
 
-    /// \brief Disconnect cleanly
-    ///
-    /// Politely inform the far end that we are done. This is normally done
-    /// by shutting down the TCP connection
-    virtual void disconnect() = 0;
+	/// \brief Destructor.
+	virtual ~CommSocket() = default;
 
-    /// \brief Flush the socket
-    virtual int flush() = 0;
+	/// \brief Disconnect cleanly
+	///
+	/// Politely inform the far end that we are done. This is normally done
+	/// by shutting down the TCP connection
+	virtual void disconnect() = 0;
+
+	/// \brief Flush the socket
+	virtual int flush() = 0;
 };
 
 #endif // COMMON_COMM_SOCKET_H

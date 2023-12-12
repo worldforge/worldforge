@@ -26,43 +26,48 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_BaseMind : public WrapperBase<Ref<BaseMind>, CyPy_BaseMind>
-{
-    public:
-        CyPy_BaseMind(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
-        CyPy_BaseMind(Py::PythonClassInstance* self, Ref<BaseMind> value);
+class CyPy_BaseMind : public WrapperBase<Ref<BaseMind>, CyPy_BaseMind> {
+public:
+	CyPy_BaseMind(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        ~CyPy_BaseMind() override;
+	CyPy_BaseMind(Py::PythonClassInstance* self, Ref<BaseMind> value);
 
-        static void init_type();
+	~CyPy_BaseMind() override;
 
-        Py::Object getattro(const Py::String&) override;
+	static void init_type();
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	Py::Object getattro(const Py::String&) override;
 
-        Py::Object str() override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-    protected:
+	Py::Object str() override;
 
-        Py::Object addPropertyCallback(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, addPropertyCallback);
+protected:
 
-        Py::Object matchEntity(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, matchEntity);
+	Py::Object addPropertyCallback(const Py::Tuple& args);
 
-        Py::Object matchEntities(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, matchEntities);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, addPropertyCallback);
 
-        Py::Object add_hook_set(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, add_hook_set);
+	Py::Object matchEntity(const Py::Tuple& args);
 
-        Py::Object update_hook_set(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, update_hook_set);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, matchEntity);
 
-        Py::Object delete_hook_set(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, delete_hook_set);
+	Py::Object matchEntities(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, matchEntities);
+
+	Py::Object add_hook_set(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, add_hook_set);
+
+	Py::Object update_hook_set(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, update_hook_set);
+
+	Py::Object delete_hook_set(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_BaseMind, delete_hook_set);
 };
-
 
 
 #endif //CYPHESIS_CYPY_BASEMIND_H

@@ -20,11 +20,11 @@
 
 #include <utility>
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 SingleAttributeMatch::SingleAttributeMatch(std::string attributeName)
 		: AttributeMatch(std::move(attributeName)) {
@@ -32,7 +32,7 @@ SingleAttributeMatch::SingleAttributeMatch(std::string attributeName)
 
 
 void SingleAttributeMatch::testAttribute(const Atlas::Message::Element& attribute, bool triggerEvaluation) {
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->testMatch(attribute);
 	}
 	if (triggerEvaluation) {
@@ -61,6 +61,6 @@ void SingleAttributeMatch::setMatchAttributeObserver(std::unique_ptr<Observers::
 
 }
 
-}
 
-}
+
+

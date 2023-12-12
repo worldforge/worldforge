@@ -20,63 +20,58 @@
 #include "rules/LocatedEntity.h"
 
 ModifiersProperty::ModifiersProperty() :
-        PropertyBase(prop_flag_instance | prop_flag_persistence_ephem),
-        m_entity(nullptr)
-{
+		PropertyBase(prop_flag_instance | prop_flag_persistence_ephem),
+		m_entity(nullptr) {
 }
 
-ModifiersProperty* ModifiersProperty::copy() const
-{
-    return new ModifiersProperty(*this);
+ModifiersProperty* ModifiersProperty::copy() const {
+	return new ModifiersProperty(*this);
 }
 
-void ModifiersProperty::install(LocatedEntity& entity, const std::string&)
-{
-    m_entity = &entity;
+void ModifiersProperty::install(LocatedEntity& entity, const std::string&) {
+	m_entity = &entity;
 }
 
-void ModifiersProperty::set(const Atlas::Message::Element& val)
-{
-    //This is read only.
+void ModifiersProperty::set(const Atlas::Message::Element& val) {
+	//This is read only.
 }
 
-int ModifiersProperty::get(Atlas::Message::Element& val) const
-{
-    Atlas::Message::ListType list;
-    if (m_entity) {
-        auto& props = m_entity->getProperties();
-        for (auto& entry: props) {
-            if (!entry.second.modifiers.empty()) {
-                for (auto& modifierEntry : entry.second.modifiers) {
-                    Atlas::Message::MapType map;
-                    map["$eid"] = modifierEntry.second->getId();
-                    //map["property"] = entry.first;
+int ModifiersProperty::get(Atlas::Message::Element& val) const {
+	Atlas::Message::ListType list;
+	if (m_entity) {
+		auto& props = m_entity->getProperties();
+		for (auto& entry: props) {
+			if (!entry.second.modifiers.empty()) {
+				for (auto& modifierEntry: entry.second.modifiers) {
+					Atlas::Message::MapType map;
+					map["$eid"] = modifierEntry.second->getId();
+					//map["property"] = entry.first;
 
-                    Atlas::Message::MapType modifierMap;
-                    switch (modifierEntry.first->getType()) {
-                        case ModifierType::Default:
-                            modifierMap["default"] = modifierEntry.first->mValue;
-                            break;
-                        case ModifierType::Prepend:
-                            modifierMap["prepend"] = modifierEntry.first->mValue;
-                            break;
-                        case ModifierType::Append:
-                            modifierMap["append"] = modifierEntry.first->mValue;
-                            break;
-                        case ModifierType::Subtract:
-                            modifierMap["subtract"] = modifierEntry.first->mValue;
-                            break;
-                        case ModifierType::AddFraction:
-                            modifierMap["add_fraction"] = modifierEntry.first->mValue;
-                            break;
-                    }
+					Atlas::Message::MapType modifierMap;
+					switch (modifierEntry.first->getType()) {
+						case ModifierType::Default:
+							modifierMap["default"] = modifierEntry.first->mValue;
+							break;
+						case ModifierType::Prepend:
+							modifierMap["prepend"] = modifierEntry.first->mValue;
+							break;
+						case ModifierType::Append:
+							modifierMap["append"] = modifierEntry.first->mValue;
+							break;
+						case ModifierType::Subtract:
+							modifierMap["subtract"] = modifierEntry.first->mValue;
+							break;
+						case ModifierType::AddFraction:
+							modifierMap["add_fraction"] = modifierEntry.first->mValue;
+							break;
+					}
 
-                    map["modifier"] = Atlas::Message::MapType{{entry.first, std::move(modifierMap)}};
-                    list.emplace_back(std::move(map));
-                }
-            }
-        }
-    }
-    val = list;
-    return 0;
+					map["modifier"] = Atlas::Message::MapType{{entry.first, std::move(modifierMap)}};
+					list.emplace_back(std::move(map));
+				}
+			}
+		}
+	}
+	val = list;
+	return 0;
 }

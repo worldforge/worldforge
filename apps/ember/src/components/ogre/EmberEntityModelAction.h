@@ -26,8 +26,8 @@
 #include <domain/IEntityAttachment.h>
 #include "ModelActionBase.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * @brief Show a certain Model.
@@ -52,6 +52,6 @@ protected:
 
 }
 
-}
+
 
 #endif

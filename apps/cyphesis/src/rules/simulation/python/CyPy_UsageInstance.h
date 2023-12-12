@@ -25,44 +25,44 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Usage : public WrapperBase<Usage, CyPy_Usage>
-{
-    public:
+class CyPy_Usage : public WrapperBase<Usage, CyPy_Usage> {
+public:
 
-        CyPy_Usage(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+	CyPy_Usage(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Usage(Py::PythonClassInstance* self, Usage value);
+	CyPy_Usage(Py::PythonClassInstance* self, Usage value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
 };
 
 
-class CyPy_UsageInstance : public WrapperBase<UsageInstance, CyPy_UsageInstance>
-{
-    public:
+class CyPy_UsageInstance : public WrapperBase<UsageInstance, CyPy_UsageInstance> {
+public:
 
-        CyPy_UsageInstance(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+	CyPy_UsageInstance(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_UsageInstance(Py::PythonClassInstance* self, UsageInstance value);
+	CyPy_UsageInstance(Py::PythonClassInstance* self, UsageInstance value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object isValid();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_UsageInstance, isValid);
+	Py::Object isValid();
 
-        Py::Object getArg(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_UsageInstance, getArg);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_UsageInstance, isValid);
 
-        static Py::Object getArg(const UsageInstance& instance, const Py::Tuple& args);
+	Py::Object getArg(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_UsageInstance, getArg);
+
+	static Py::Object getArg(const UsageInstance& instance, const Py::Tuple& args);
 
 };
 

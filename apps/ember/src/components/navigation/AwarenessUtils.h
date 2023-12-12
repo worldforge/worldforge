@@ -46,7 +46,7 @@
 #include "DetourCommon.h"
 #include "DetourTileCache.h"
 #include "DetourTileCacheBuilder.h"
-#include <string.h>
+#include <cstring>
 
 
 namespace Ember::Navigation {
@@ -156,7 +156,7 @@ struct RasterizationContext {
 		delete[] triareas;
 		rcFreeHeightfieldLayerSet(lset);
 		rcFreeCompactHeightfield(chf);
-		for (auto & tile : tiles) {
+		for (auto& tile: tiles) {
 			dtFree(tile.data);
 			tile.data = nullptr;
 		}

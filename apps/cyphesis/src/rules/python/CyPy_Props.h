@@ -25,23 +25,22 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Props : public WrapperBase<Ref<LocatedEntity>, CyPy_Props>
-{
-    public:
+class CyPy_Props : public WrapperBase<Ref<LocatedEntity>, CyPy_Props> {
+public:
 
-        CyPy_Props(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+	CyPy_Props(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Props(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
+	CyPy_Props(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object mapping_subscript(const Py::Object&) override;
+	Py::Object mapping_subscript(const Py::Object&) override;
 
-    private:
+private:
 
 };
 

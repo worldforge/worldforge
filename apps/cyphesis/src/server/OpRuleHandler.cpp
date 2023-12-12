@@ -34,67 +34,62 @@ using Atlas::Objects::Root;
 
 static const bool debug_flag = false;
 
-int OpRuleHandler::installOpDefinition(const std::string & class_name,
-                                       const std::string & parent,
-                                       const Atlas::Objects::Root & class_desc,
-                                       std::string & dependent,
-                                       std::string & reason)
-{
-    assert(class_name == class_desc->getId());
+int OpRuleHandler::installOpDefinition(const std::string& class_name,
+									   const std::string& parent,
+									   const Atlas::Objects::Root& class_desc,
+									   std::string& dependent,
+									   std::string& reason) {
+	assert(class_name == class_desc->getId());
 
-    Inheritance & i = Inheritance::instance();
+	Inheritance& i = Inheritance::instance();
 
-    if (!i.hasClass(parent)) {
-        cy_debug_print("op_definition \"" << class_name
-                        << "\" has non existent parent \"" << parent
-                        << "\". Waiting.");
-        dependent = parent;
-        reason = fmt::format("Operation \"{}\" has parent \"{}\" which does "
-                         "not exist.", class_name, parent);
-        return 1;
-    }
+	if (!i.hasClass(parent)) {
+		cy_debug_print("op_definition \"" << class_name
+										  << "\" has non existent parent \"" << parent
+										  << "\". Waiting.");
+		dependent = parent;
+		reason = fmt::format("Operation \"{}\" has parent \"{}\" which does "
+							 "not exist.", class_name, parent);
+		return 1;
+	}
 
-    atlasOpDefinition(class_name, parent);
+	atlasOpDefinition(class_name, parent);
 
-    if (i.addChild(class_desc) == nullptr) {
-        return -1;
-    }
+	if (i.addChild(class_desc) == nullptr) {
+		return -1;
+	}
 
-    Inheritance::instance().getFactories().addFactory(class_name, &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
+	Inheritance::instance().getFactories().addFactory(class_name, &Atlas::Objects::generic_factory, &Atlas::Objects::defaultInstance<Atlas::Objects::RootData>);
 
-    return 0;
+	return 0;
 }
 
-int OpRuleHandler::modifyOpDefinition(const std::string & class_name,
-                                      const Atlas::Objects::Root & class_desc)
-{
-    return 0;
+int OpRuleHandler::modifyOpDefinition(const std::string& class_name,
+									  const Atlas::Objects::Root& class_desc) {
+	return 0;
 }
 
 
-int OpRuleHandler::check(const Atlas::Objects::Root & desc)
-{
-    assert(!desc->getParent().empty());
-    if (desc->getObjtype() != "op_definition") {
-        return -1;
-    }
-    return 0;
+int OpRuleHandler::check(const Atlas::Objects::Root& desc) {
+	assert(!desc->getParent().empty());
+	if (desc->getObjtype() != "op_definition") {
+		return -1;
+	}
+	return 0;
 }
 
-int OpRuleHandler::install(const std::string & name,
-                           const std::string & parent,
-                           const Atlas::Objects::Root & description,
-                           std::string & dependent,
-                           std::string & reason,
-                           std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
-{
-    //Ignore changes, as no other factories are affected.
-    return installOpDefinition(name, parent, description, dependent, reason);
+int OpRuleHandler::install(const std::string& name,
+						   const std::string& parent,
+						   const Atlas::Objects::Root& description,
+						   std::string& dependent,
+						   std::string& reason,
+						   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+	//Ignore changes, as no other factories are affected.
+	return installOpDefinition(name, parent, description, dependent, reason);
 }
 
-int OpRuleHandler::update(const std::string & name,
-                          const Atlas::Objects::Root & desc,
-                          std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
-{
-    return modifyOpDefinition(name, desc);
+int OpRuleHandler::update(const std::string& name,
+						  const Atlas::Objects::Root& desc,
+						  std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) {
+	return modifyOpDefinition(name, desc);
 }

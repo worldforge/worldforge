@@ -29,17 +29,18 @@
 #include <Atlas/Message/Element.h>
 
 class IGEntityExerciser : public EntityExerciser {
-  protected:
-        TestPropertyManager m_propertyManager;
-        std::unique_ptr<TestWorld> m_testWorld;
-    Ref<Entity> m_ent;
-  public:
-    explicit IGEntityExerciser(const Ref<Entity>& e);
-    ~IGEntityExerciser() override;
+protected:
+	TestPropertyManager m_propertyManager;
+	std::unique_ptr<TestWorld> m_testWorld;
+	Ref<Entity> m_ent;
+public:
+	explicit IGEntityExerciser(const Ref<Entity>& e);
 
-    bool checkProperties(const std::set<std::string> & prop_names) override;
+	~IGEntityExerciser() override;
 
-    void runOperations() override;
+	bool checkProperties(const std::set<std::string>& prop_names) override;
+
+	void runOperations() override;
 };
 
 #endif // TESTS_IG_ENTITY_EXERCISER_H

@@ -29,33 +29,31 @@
 
 #include <cassert>
 
-int main(int argc, char ** argv)
-{
-    reportVersion(argv[0]);
+int main(int argc, char** argv) {
+	reportVersion(argv[0]);
 
-    showUsage(argv[0], USAGE_SERVER);
-    showUsage(argv[0], USAGE_CLIENT);
-    showUsage(argv[0], USAGE_CYCMD);
-    showUsage(argv[0], USAGE_DBASE);
+	showUsage(argv[0], USAGE_SERVER);
+	showUsage(argv[0], USAGE_CLIENT);
+	showUsage(argv[0], USAGE_CYCMD);
+	showUsage(argv[0], USAGE_DBASE);
 
-    showUsage(argv[0], 0);
-    showUsage(argv[0], -1);
+	showUsage(argv[0], 0);
+	showUsage(argv[0], -1);
 
-    showUsage(argv[0], USAGE_SERVER, 0);
-    showUsage(argv[0], USAGE_SERVER, "");
-    showUsage(argv[0], USAGE_SERVER, "test usage string");
+	showUsage(argv[0], USAGE_SERVER, 0);
+	showUsage(argv[0], USAGE_SERVER, "");
+	showUsage(argv[0], USAGE_SERVER, "test usage string");
 
-    return 0;
+	return 0;
 }
 
 // stubs
 #include "../stubs/common/stublog.h"
 
 
-void getinstallprefix()
-{
+void getinstallprefix() {
 }
 
 namespace consts {
-  const char * version = "unit_test";
+const char* version = "unit_test";
 }

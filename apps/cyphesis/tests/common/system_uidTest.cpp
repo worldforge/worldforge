@@ -24,7 +24,9 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "common/globals.h"
@@ -46,36 +48,32 @@ static uid_t test_uid = SAFE_UID;
 static uid_t test_euid = SAFE_UID;
 
 
-int main()
-{
-    unsigned magic_res = security_check();
-    assert(magic_res == SECURITY_OKAY);
+int main() {
+	unsigned magic_res = security_check();
+	assert(magic_res == SECURITY_OKAY);
 
-    test_uid = 0;
-    magic_res = security_check();
-    assert(magic_res != SECURITY_OKAY);
-    test_uid = SAFE_UID;
+	test_uid = 0;
+	magic_res = security_check();
+	assert(magic_res != SECURITY_OKAY);
+	test_uid = SAFE_UID;
 
 
-    test_euid = 0;
-    magic_res = security_check();
-    assert(magic_res != SECURITY_OKAY);
+	test_euid = 0;
+	magic_res = security_check();
+	assert(magic_res != SECURITY_OKAY);
 
-    std::string session_name = create_session_username();
-    assert(!session_name.empty());
+	std::string session_name = create_session_username();
+	assert(!session_name.empty());
 }
 
-extern "C" uid_t getuid()
-{
-    return test_uid;
+extern "C" uid_t getuid() {
+	return test_uid;
 }
 
-extern "C" uid_t geteuid()
-{
-    return test_euid;
+extern "C" uid_t geteuid() {
+	return test_euid;
 }
 
 
-void rotateLogger()
-{
+void rotateLogger() {
 }

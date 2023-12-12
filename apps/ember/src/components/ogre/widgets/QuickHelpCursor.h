@@ -27,12 +27,11 @@
 #include <sigc++/signal.h>
 #include <string>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class QuickHelp;
+
 struct HelpMessage;
 
 /**
@@ -45,10 +44,10 @@ It is not for inserting new messages, that is handled by the QuickHelp class.
 
 */
 
-class QuickHelpCursor
-{
+class QuickHelpCursor {
 public:
 	QuickHelpCursor();
+
 	~QuickHelpCursor();
 
 	/**
@@ -71,6 +70,7 @@ public:
 	size_t getCursorLocation() const;
 
 	void setCursorLocation(size_t cursorLocation);
+
 private:
 
 	/**
@@ -96,8 +96,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif

@@ -8,8 +8,8 @@
 
 #include <Atlas/Objects/Factories.h>
 
-namespace Atlas {
-namespace Objects {
+
+namespace Atlas::Objects {
 
 ObjectsDecoder::ObjectsDecoder(const Factories& f)
 		: m_factories(f) {
@@ -22,4 +22,4 @@ void ObjectsDecoder::messageArrived(Atlas::Message::MapType o) {
 }
 
 }
-} // namespace Atlas::Objects
+// namespace Atlas::Objects

@@ -35,173 +35,165 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-struct TestContext
-{
+struct TestContext {
 };
 
-struct TestEntity : ReferenceCounted
-{
-    std::string describeEntity() const
-    {
-        return "";
-    }
+struct TestEntity : ReferenceCounted {
+	std::string describeEntity() const {
+		return "";
+	}
 
-    std::string getId() const
-    {
-        return "1";
-    }
+	std::string getId() const {
+		return "1";
+	}
 };
 
 
-struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
-{
-    Tested()
-    {
-        ADD_TEST(test_dispatchInOrder)
+struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
+	Tested() {
+		ADD_TEST(test_dispatchInOrder)
 
-    }
+	}
 
-    void test_dispatchInOrder(TestContext& context)
-    {
+	void test_dispatchInOrder(TestContext& context) {
 
-        std::chrono::milliseconds time(0);
-        auto processorFn = [](const Operation&, Ref<TestEntity>) {};
-        auto timeProviderFn = [&time]() -> std::chrono::steady_clock::duration { return time; };
+		std::chrono::milliseconds time(0);
+		auto processorFn = [](const Operation&, Ref<TestEntity>) {};
+		auto timeProviderFn = [&time]() -> std::chrono::steady_clock::duration { return time; };
 
-        OperationsDispatcher<TestEntity> dispatcher(processorFn, timeProviderFn);
-        auto& queue = dispatcher.getQueue();
+		OperationsDispatcher<TestEntity> dispatcher(processorFn, timeProviderFn);
+		auto& queue = dispatcher.getQueue();
 
-        Ref<TestEntity> entity(new TestEntity);
+		Ref<TestEntity> entity(new TestEntity);
 
-        {
-            Operation op;
-            op->setSeconds(1.0);
-            op->setRefno(1);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(2.0);
-            op->setRefno(2);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(3.0);
-            op->setRefno(3);
-            dispatcher.addOperationToQueue(op, entity);
-        }
+		{
+			Operation op;
+			op->setSeconds(1.0);
+			op->setRefno(1);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(2.0);
+			op->setRefno(2);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(3.0);
+			op->setRefno(3);
+			dispatcher.addOperationToQueue(op, entity);
+		}
 
-        ASSERT_EQUAL(queue.top().op->getRefno(), 1)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 2)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 3)
-        queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 1)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 2)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 3)
+		queue.pop();
 
-        //Now try with same seconds set.
-        {
-            Operation op;
-            op->setSeconds(1.0);
-            op->setRefno(1);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(1.0);
-            op->setRefno(2);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(1.0);
-            op->setRefno(3);
-            dispatcher.addOperationToQueue(op, entity);
-        }
+		//Now try with same seconds set.
+		{
+			Operation op;
+			op->setSeconds(1.0);
+			op->setRefno(1);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(1.0);
+			op->setRefno(2);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(1.0);
+			op->setRefno(3);
+			dispatcher.addOperationToQueue(op, entity);
+		}
 
-        ASSERT_EQUAL(queue.top().op->getRefno(), 1)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 2)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 3)
-        queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 1)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 2)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 3)
+		queue.pop();
 
 
-        //Now try with same seconds set.
-        {
-            Atlas::Objects::Operation::Update op;
-            op->setSeconds(1.0);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Atlas::Objects::Operation::Appearance op;
-            op->setSeconds(1.0);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Atlas::Objects::Operation::Update op;
-            op->setSeconds(1.0);
-            dispatcher.addOperationToQueue(op, entity);
-        }
+		//Now try with same seconds set.
+		{
+			Atlas::Objects::Operation::Update op;
+			op->setSeconds(1.0);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Atlas::Objects::Operation::Appearance op;
+			op->setSeconds(1.0);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Atlas::Objects::Operation::Update op;
+			op->setSeconds(1.0);
+			dispatcher.addOperationToQueue(op, entity);
+		}
 
-        ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::UPDATE_NO)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::APPEARANCE_NO)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::UPDATE_NO)
-        queue.pop();
+		ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::UPDATE_NO)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::APPEARANCE_NO)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getClassNo(), Atlas::Objects::Operation::UPDATE_NO)
+		queue.pop();
 
-        {
-            Operation op;
-            op->setSeconds(2.0);
-            op->setRefno(2);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(3.0);
-            op->setRefno(3);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setSeconds(1.0);
-            op->setRefno(1);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setRefno(4);
-            op->setSeconds(0);
-            dispatcher.addOperationToQueue(op, entity);
-        }
-        {
-            Operation op;
-            op->setRefno(5);
-            op->setSeconds(0);
-            dispatcher.addOperationToQueue(op, entity);
-        }
+		{
+			Operation op;
+			op->setSeconds(2.0);
+			op->setRefno(2);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(3.0);
+			op->setRefno(3);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setSeconds(1.0);
+			op->setRefno(1);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setRefno(4);
+			op->setSeconds(0);
+			dispatcher.addOperationToQueue(op, entity);
+		}
+		{
+			Operation op;
+			op->setRefno(5);
+			op->setSeconds(0);
+			dispatcher.addOperationToQueue(op, entity);
+		}
 
-        ASSERT_EQUAL(queue.top().op->getRefno(), 4)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 5)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 1)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 2)
-        queue.pop();
-        ASSERT_EQUAL(queue.top().op->getRefno(), 3)
-        queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 4)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 5)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 1)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 2)
+		queue.pop();
+		ASSERT_EQUAL(queue.top().op->getRefno(), 3)
+		queue.pop();
 
-    }
+	}
 
 };
 
-int main()
-{
-    Tested t;
-    Monitors m;
+int main() {
+	Tested t;
+	Monitors m;
 
-    return t.run();
+	return t.run();
 }
 

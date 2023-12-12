@@ -22,17 +22,14 @@
 #include "sigc++/connection.h"
 #include "string"
 
-namespace varconf
-{
+namespace varconf {
 class Variable;
 }
 
-namespace Ember
-{
+namespace Ember {
 
 class ConfigListenerContainer;
-namespace OgreView
-{
+namespace OgreView {
 
 class GraphicalChangeAdapter;
 
@@ -40,8 +37,7 @@ class GraphicalChangeAdapter;
  * @brief Handles changes in shadow detail automatically.
  * Acts as a sub-component of the automatic handling of graphics system.
  */
-class ShadowDetailManager : public boost::noncopyable
-{
+class ShadowDetailManager : public boost::noncopyable {
 public:
 	/**
 	 * @brief Constructor.
@@ -69,12 +65,6 @@ public:
 	 * @note factor cannot be negative or zero. It is still safe to attempt to set these values as the function will default to a factor of 0.1
 	 */
 	bool setShadowCameraLodBias(float factor);
-
-	/**
-	 * @brief Initializes the shadow detail manager.
-	 * The manager starts listening for graphics detail change requests.
-	 */
-	void initialize();
 
 	/**
 	 * @brief This can be used to stop this component responding to change requests.

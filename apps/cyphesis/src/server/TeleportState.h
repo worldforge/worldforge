@@ -21,79 +21,72 @@
 #include <chrono>
 #include <string>
 
-class TeleportState
-{
-    protected:
-        /// \brief Specifies the possess key generated for this specific teleport
-        std::string m_possessKey;
-        enum
-        {
-            TELEPORT_NONE,      /// \brief Initial state
-            TELEPORT_REQUESTED, /// \brief Teleport has been requested
-            TELEPORT_CREATED    /// \brief Teleport has succeeded
-        } m_state;
+class TeleportState {
+protected:
+	/// \brief Specifies the possess key generated for this specific teleport
+	std::string m_possessKey;
+	enum {
+		TELEPORT_NONE,      /// \brief Initial state
+		TELEPORT_REQUESTED, /// \brief Teleport has been requested
+		TELEPORT_CREATED    /// \brief Teleport has succeeded
+	} m_state;
 
-        std::chrono::steady_clock::time_point m_teleportTime;  /// \brief The time the teleport took place
+	std::chrono::steady_clock::time_point m_teleportTime;  /// \brief The time the teleport took place
 
-    public:
-        TeleportState(const TeleportState& rhs) = default;
+public:
+	TeleportState(const TeleportState& rhs) = default;
 
-        explicit TeleportState(std::chrono::steady_clock::time_point time);
+	explicit TeleportState(std::chrono::steady_clock::time_point time);
 
-        TeleportState& operator=(const TeleportState& rhs) = default;
+	TeleportState& operator=(const TeleportState& rhs) = default;
 
-        void setRequested();
+	void setRequested();
 
-        void setCreated();
+	void setCreated();
 
-        void setKey(const std::string& key);
+	void setKey(const std::string& key);
 
-        bool isCreated() const;
+	bool isCreated() const;
 
-        bool isRequested() const;
+	bool isRequested() const;
 
-        bool isMind() const;
+	bool isMind() const;
 
-        const std::string& getPossessKey() const;
+	const std::string& getPossessKey() const;
 
-        std::chrono::steady_clock::time_point getCreateTime() const;
+	std::chrono::steady_clock::time_point getCreateTime() const;
 };
 
 /// \brief Check if the teleported entity has been create on the remote end
 ///
 /// @return Boolean whether entity has been created or not
-inline bool TeleportState::isCreated() const
-{
-    return (m_state == TELEPORT_CREATED);
+inline bool TeleportState::isCreated() const {
+	return (m_state == TELEPORT_CREATED);
 }
 
 /// \brief Check if the teleport state is 'currently requesting'
 ///
 /// @return Whether the state is requesting or not
-inline bool TeleportState::isRequested() const
-{
-    return (m_state == TELEPORT_REQUESTED);
+inline bool TeleportState::isRequested() const {
+	return (m_state == TELEPORT_REQUESTED);
 }
 
 /// \brief Check if a teleported entity has an external mind
 ///
 /// @return Whether the teleported entity has an external mind
-inline bool TeleportState::isMind() const
-{
-    return !m_possessKey.empty();
+inline bool TeleportState::isMind() const {
+	return !m_possessKey.empty();
 }
 
 /// \brief Get the possess key generated for this teleport
 ///
 /// @return The randomly generated possess key for this teleport
-inline const std::string& TeleportState::getPossessKey() const
-{
-    return m_possessKey;
+inline const std::string& TeleportState::getPossessKey() const {
+	return m_possessKey;
 }
 
-inline std::chrono::steady_clock::time_point TeleportState::getCreateTime() const
-{
-    return m_teleportTime;
+inline std::chrono::steady_clock::time_point TeleportState::getCreateTime() const {
+	return m_teleportTime;
 }
 
 #endif // SERVER_TELEPORT_STATE_H

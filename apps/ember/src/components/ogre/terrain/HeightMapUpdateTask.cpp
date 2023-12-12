@@ -32,10 +32,8 @@
 #include <utility>
 #include <cstring>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 HeightMapUpdateTask::HeightMapUpdateTask(HeightMapBufferProvider& provider, HeightMap& heightMap, SegmentStore segments) :
 		mProvider(provider),
@@ -92,5 +90,5 @@ void HeightMapUpdateTask::injectHeightMapSegmentsIntoHeightMap() {
 
 }
 
-}
-}
+
+

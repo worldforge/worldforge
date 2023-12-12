@@ -26,7 +26,6 @@
 #include "EntityTextureManipulator.h"
 #include "adapters/eris/RuleTreeAdapter.h"
 
-#include "../EmberOgre.h"
 #include "../Avatar.h"
 #include "../model/Model.h"
 #include "domain/EmberEntity.h"
@@ -47,9 +46,8 @@
 #include <CEGUI/widgets/ToggleButton.h>
 #include "components/ogre/mapping/ModelActionCreator.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 EntityCreatorTypeHelper::EntityCreatorTypeHelper(Eris::Avatar& avatar,
 												 CEGUI::Tree& typeTree,
@@ -91,7 +89,7 @@ EntityCreatorTypeHelper::EntityCreatorTypeHelper(Eris::Avatar& avatar,
 	mModeCombobox.addItem(Gui::ColouredListItem::createColouredListItem("fixed"));
 	mModeCombobox.addItem(Gui::ColouredListItem::createColouredListItem("floating"));
 
-	filterWindow.subscribeEvent(CEGUI::Editbox::EventTextChanged, [&](){mRuleTreeAdapter->setFilter(filterWindow.getText().c_str());});
+	filterWindow.subscribeEvent(CEGUI::Editbox::EventTextChanged, [&]() { mRuleTreeAdapter->setFilter(filterWindow.getText().c_str()); });
 }
 
 EntityCreatorTypeHelper::~EntityCreatorTypeHelper() = default;
@@ -209,5 +207,5 @@ bool EntityCreatorTypeHelper::createButton_Click(const CEGUI::EventArgs& args) {
 
 }
 
-}
-}
+
+

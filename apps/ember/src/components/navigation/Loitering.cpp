@@ -25,14 +25,11 @@
 #include <wfmath/rotbox.h>
 #include <wfmath/intersect.h>
 
-namespace Ember
-{
-namespace Navigation
-{
+
+namespace Ember::Navigation {
 
 Loitering::Loitering(Awareness& awareness, Eris::Avatar& avatar, const WFMath::Vector<2>& areaSize) :
-		mAwareness(awareness), mAvatar(avatar)
-{
+		mAwareness(awareness), mAvatar(avatar) {
 	mMovedConnection = avatar.getEntity()->Moving.connect(sigc::mem_fun(*this, &Loitering::entity_Moving));
 
 	auto entityViewPosition = mAvatar.getEntity()->getPredictedPos();
@@ -49,13 +46,11 @@ Loitering::Loitering(Awareness& awareness, Eris::Avatar& avatar, const WFMath::V
 
 }
 
-Loitering::~Loitering()
-{
+Loitering::~Loitering() {
 	mMovedConnection.disconnect();
 }
 
-void Loitering::entity_Moving(bool isMoving)
-{
+void Loitering::entity_Moving(bool isMoving) {
 
 	auto entityViewPosition = mAvatar.getEntity()->getPredictedPos();
 
@@ -68,4 +63,4 @@ void Loitering::entity_Moving(bool isMoving)
 }
 
 }
-}
+

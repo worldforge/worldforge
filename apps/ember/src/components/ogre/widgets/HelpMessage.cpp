@@ -24,12 +24,10 @@
 
 
 #include "HelpMessage.h"
-#include <iterator>
 #include <boost/algorithm/string.hpp>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 HelpMessage::HelpMessage(std::string title, std::string message, const std::string& tags, std::string id) :
 		mTitle(std::move(title)),
 		mMessage(std::move(message)),
@@ -38,15 +36,14 @@ HelpMessage::HelpMessage(std::string title, std::string message, const std::stri
 }
 
 
-
 std::string HelpMessage::getTags() const {
 	std::string tags;
-	for (const auto& tag : mTags)
+	for (const auto& tag: mTags)
 		tags += " " + tag;
 	return tags;
 }
 
 }
-}
-}
+
+
 

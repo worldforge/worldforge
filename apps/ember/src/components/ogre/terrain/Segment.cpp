@@ -20,10 +20,8 @@
 #include <Mercator/Segment.h>
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 Segment::Segment(int xIndex, int yIndex, std::function<Mercator::Segment*()>& segmentProvider, std::function<void(Mercator::Segment*)>& segmentInvalidator) :
 		mXIndex(xIndex),
@@ -67,5 +65,5 @@ bool Segment::hasSegment() const {
 
 }
 
-}
-}
+
+

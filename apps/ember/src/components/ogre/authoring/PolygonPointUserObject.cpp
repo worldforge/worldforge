@@ -26,35 +26,28 @@
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 PolygonPointUserObject::PolygonPointUserObject(PolygonPoint& point) :
-	mPoint(point)
-{
+		mPoint(point) {
 }
 
-PolygonPoint& PolygonPointUserObject::getPoint()
-{
+PolygonPoint& PolygonPointUserObject::getPoint() {
 	return mPoint;
 }
 
-void PolygonPointUserObject::markAsMoved()
-{
-	Ogre::Entity* entity = dynamic_cast<Ogre::Entity*> (mPoint.getNode()->getAttachedObject(0));
+void PolygonPointUserObject::markAsMoved() {
+	auto* entity = dynamic_cast<Ogre::Entity*> (mPoint.getNode()->getAttachedObject(0));
 	if (entity) {
 		entity->setMaterialName("/common/base/authoring/polygon/point/moved");
 	}
 }
 
-void PolygonPointUserObject::resetMarking()
-{
-	Ogre::Entity* entity = dynamic_cast<Ogre::Entity*> (mPoint.getNode()->getAttachedObject(0));
+void PolygonPointUserObject::resetMarking() {
+	auto* entity = dynamic_cast<Ogre::Entity*> (mPoint.getNode()->getAttachedObject(0));
 	if (entity) {
 		entity->setMaterialName("/common/base/authoring/polygon/point");
 	}
@@ -62,5 +55,5 @@ void PolygonPointUserObject::resetMarking()
 
 }
 
-}
-}
+
+

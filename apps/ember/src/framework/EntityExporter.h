@@ -23,13 +23,11 @@
 
 #include <unordered_map>
 
-namespace Eris
-{
+namespace Eris {
 class Account;
 }
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik
@@ -37,8 +35,7 @@ namespace Ember
  * @brief Ember specific subclass of EntityExporter.
  *
  */
-class EntityExporter: public EntityExporterBase
-{
+class EntityExporter : public EntityExporterBase {
 public:
 	/**
 	 * @brief Ctor.

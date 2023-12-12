@@ -23,73 +23,66 @@
 #include <memory>
 #include "pycxx/CXX/Objects.hxx"
 
-class DecisionContext
-{
-    public:
+class DecisionContext {
+public:
 };
 
 
-struct InputProvider
-{
-    virtual float getValue(const DecisionContext& context) const = 0;
+struct InputProvider {
+	virtual float getValue(const DecisionContext& context) const = 0;
 };
 
 struct ScriptedInputProvider {
-    Py::Object m_script;
-    float getValue(const DecisionContext& context) const;
+	Py::Object m_script;
+
+	float getValue(const DecisionContext& context) const;
 
 };
 
 
-class ConsiderationInput
-{
-    public:
-        std::unique_ptr<InputProvider> m_provider;
+class ConsiderationInput {
+public:
+	std::unique_ptr <InputProvider> m_provider;
 
-        virtual float getValue(const DecisionContext& context) const = 0;
+	virtual float getValue(const DecisionContext& context) const = 0;
 };
 
-class InputFunction
-{
-    public:
-        virtual float mapInput(float value) const = 0;
+class InputFunction {
+public:
+	virtual float mapInput(float value) const = 0;
 };
 
-class CurveInputFunction : public InputFunction
-{
-    public:
-        enum class CurveType
-        {
-                LINEAR
-        };
+class CurveInputFunction : public InputFunction {
+public:
+	enum class CurveType {
+		LINEAR
+	};
 
-        CurveInputFunction(CurveType type, float m, float k, float b, float c);
+	CurveInputFunction(CurveType type, float m, float k, float b, float c);
 
-        float mapInput(float value) const override;
+	float mapInput(float value) const override;
 
 };
 
-class Consideration
-{
-    public:
+class Consideration {
+public:
 
-        std::unique_ptr<ConsiderationInput> m_input;
-        std::unique_ptr<InputFunction> m_function;
+	std::unique_ptr <ConsiderationInput> m_input;
+	std::unique_ptr <InputFunction> m_function;
 
 };
 
 
-class Action
-{
-    public:
-        std::string description;
-        std::vector<Consideration> m_conditionals;
+class Action {
+public:
+	std::string description;
+	std::vector <Consideration> m_conditionals;
 
 };
 
 class Decision {
-    public:
-        std::vector<Action> m_actions;
+public:
+	std::vector <Action> m_actions;
 
 
 };

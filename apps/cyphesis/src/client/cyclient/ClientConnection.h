@@ -30,25 +30,29 @@
 /// \brief Class to handle socket connection to a cyphesis server from an
 /// an admin client
 class ClientConnection : public AtlasStreamClient {
-  protected:
-    /// \brief Store for operations arrived from the server
-    std::deque<Atlas::Objects::Operation::RootOperation> operationQueue;
+protected:
+	/// \brief Store for operations arrived from the server
+	std::deque<Atlas::Objects::Operation::RootOperation> operationQueue;
 
-    void operation(const Atlas::Objects::Operation::RootOperation&) override;
+	void operation(const Atlas::Objects::Operation::RootOperation&) override;
 
-  public:
+public:
 
-    explicit ClientConnection(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories);
-    ~ClientConnection() override;
+	explicit ClientConnection(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories);
 
-    int wait();
-    int sendAndWaitReply(const Operation & op, OpVector & res);
+	~ClientConnection() override;
 
-    Atlas::Objects::Operation::RootOperation pop();
-    bool pending();
+	int wait();
 
-    friend class ClientConnectionintegration;
-    friend class ClientConnectiontest;
+	int sendAndWaitReply(const Operation& op, OpVector& res);
+
+	Atlas::Objects::Operation::RootOperation pop();
+
+	bool pending();
+
+	friend class ClientConnectionintegration;
+
+	friend class ClientConnectiontest;
 };
 
 #endif // CLIENT_CLIENT_CONNECTION_H

@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityTooltip>(sol::table& space) {
 	auto entityTooltip = space.new_usertype<EntityTooltip>("EntityTooltip", sol::no_constructor);
 	entityTooltip["getTooltipWindow"] = &EntityTooltip::getTooltipWindow;

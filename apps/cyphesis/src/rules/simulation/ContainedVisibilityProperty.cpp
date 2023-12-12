@@ -19,22 +19,19 @@
 #include "ContainedVisibilityProperty.h"
 #include "rules/LocatedEntity.h"
 
-ContainedVisibilityProperty* ContainedVisibilityProperty::copy() const
-{
-    return new ContainedVisibilityProperty(*this);
+ContainedVisibilityProperty* ContainedVisibilityProperty::copy() const {
+	return new ContainedVisibilityProperty(*this);
 }
 
-void ContainedVisibilityProperty::apply(LocatedEntity& ent)
-{
-    if (isTrue()) {
-        ent.addFlags(entity_contained_visible);
-    } else {
-        ent.removeFlags(entity_contained_visible);
-    }
+void ContainedVisibilityProperty::apply(LocatedEntity& ent) {
+	if (isTrue()) {
+		ent.addFlags(entity_contained_visible);
+	} else {
+		ent.removeFlags(entity_contained_visible);
+	}
 }
 
-void ContainedVisibilityProperty::remove(LocatedEntity& ent, const std::string& name)
-{
-    ent.removeFlags(entity_contained_visible);
+void ContainedVisibilityProperty::remove(LocatedEntity& ent, const std::string& name) {
+	ent.removeFlags(entity_contained_visible);
 }
 

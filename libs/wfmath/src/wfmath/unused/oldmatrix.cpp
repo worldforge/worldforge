@@ -28,23 +28,24 @@
 #include "const.h"
 #include <float.h>
 
-namespace WF { namespace Math {
+namespace WF {
+namespace Math {
 
-Matrix<3> SkewSymmetric(const Vector<3>& v)
-{
-  Matrix<3> out;
+Matrix<3> SkewSymmetric(const Vector<3>& v) {
+	Matrix<3> out;
 
-  out.elem(0, 0) = out.elem(1, 1) = out.elem(2, 2) = 0;
+	out.elem(0, 0) = out.elem(1, 1) = out.elem(2, 2) = 0;
 
-  out.elem(0, 1) = v[2];
-  out.elem(1, 0) = -v[2];
-  out.elem(1, 2) = v[0];
-  out.elem(2, 1) = -v[0];
-  out.elem(2, 0) = v[1];
-  out.elem(0, 2) = -v[1];
+	out.elem(0, 1) = v[2];
+	out.elem(1, 0) = -v[2];
+	out.elem(1, 2) = v[0];
+	out.elem(2, 1) = -v[0];
+	out.elem(2, 0) = v[1];
+	out.elem(0, 2) = -v[1];
 
-  return out;
+	return out;
 }
 
 
-}} // namespace WF::Math
+}
+} // namespace WF::Math

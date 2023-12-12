@@ -21,7 +21,7 @@
 
 #endif //EMBER_ASSETSUPDATERRESULT_H
 namespace Ember {
-	enum class UpdateResult {
-		Success, Failure, Cancelled
-	};
+enum class UpdateResult {
+	Success, Failure, Cancelled
+};
 }

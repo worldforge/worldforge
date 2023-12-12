@@ -22,7 +22,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ServerSettings>(sol::table& space) {
 
 

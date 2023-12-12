@@ -22,15 +22,14 @@
 
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
 
-class PhysicalWorld : public btDiscreteDynamicsWorld
-{
-    public:
-        PhysicalWorld(btDispatcher* dispatcher, btBroadphaseInterface* pairCache, btConstraintSolver* constraintSolver, btCollisionConfiguration* collisionConfiguration);
+class PhysicalWorld : public btDiscreteDynamicsWorld {
+public:
+	PhysicalWorld(btDispatcher* dispatcher, btBroadphaseInterface* pairCache, btConstraintSolver* constraintSolver, btCollisionConfiguration* collisionConfiguration);
 
 
-        void synchronizeMotionStates() override;
+	void synchronizeMotionStates() override;
 
-        int stepSimulation(btScalar timeStep, int maxSubSteps = 1, btScalar fixedTimeStep = btScalar(1.) / btScalar(60.)) override;
+	int stepSimulation(btScalar timeStep, int maxSubSteps = 1, btScalar fixedTimeStep = btScalar(1.) / btScalar(60.)) override;
 
 
 };

@@ -34,33 +34,32 @@ namespace Ember {
 class ConsoleBackend;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class ConsoleAdapter{
+class ConsoleAdapter {
 public:
-    explicit ConsoleAdapter(CEGUI::Editbox* inputBox);
+	explicit ConsoleAdapter(CEGUI::Editbox* inputBox);
 
-    ~ConsoleAdapter();
-    
-    /**
-    Emitted when a command has executed.
-    @param the command that was executed
-    */
-    sigc::signal<void(const std::string&)> EventCommandExecuted;
-    
+	~ConsoleAdapter();
+
+	/**
+	Emitted when a command has executed.
+	@param the command that was executed
+	*/
+	sigc::signal<void(const std::string&)> EventCommandExecuted;
+
 protected:
 	CEGUI::Editbox* mInputBox;
 	ConsoleBackend* mBackend;
 
 	bool consoleInputBox_KeyUp(const CEGUI::EventArgs& args);
+
 	bool consoleInputBox_KeyDown(const CEGUI::EventArgs& args);
-	
+
 	// the text of the current command line saved when browsing the history
 	std::string mCommandLine;
 	bool mTabPressed;
@@ -71,8 +70,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

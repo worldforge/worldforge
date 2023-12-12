@@ -27,14 +27,14 @@
 #include "NumericValueHolder.h"
 
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Test for greater.
@@ -54,10 +54,10 @@ protected:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

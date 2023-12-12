@@ -28,14 +28,13 @@
 #include <OgreResourceGroupManager.h>
 #include <boost/filesystem/operations.hpp>
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
 
-void XMLLodDefinitionSerializer::importLodDefinition(const Ogre::DataStreamPtr& stream, LodDefinition& lodDef) const {
+namespace Ember::OgreView::Lod {
+
+void XMLLodDefinitionSerializer::importLodDefinition(const Ogre::DataStreamPtr& stream, LodDefinition& lodDef) {
 	TiXmlDocument xmlDoc;
 	XMLHelper xmlHelper;
-	if (!xmlHelper.Load(xmlDoc, stream)) {
+	if (!Ember::OgreView::XMLHelper::Load(xmlDoc, stream)) {
 		return;
 	}
 
@@ -240,5 +239,5 @@ XMLLodDefinitionSerializer::XMLLodDefinitionSerializer(boost::filesystem::path e
 }
 
 }
-}
-}
+
+

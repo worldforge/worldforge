@@ -35,10 +35,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace Atlas
-{
+namespace Atlas {
 class Bridge;
+
 class Codec;
+
 class Encoder;
 }
 
@@ -48,8 +49,7 @@ typedef std::vector<Atlas::Objects::Operation::RootOperation> OpVector;
 /**
  * @brief Represents one entry on the hierarchy of entities which are to be created on the server.
  */
-class StackEntry
-{
+class StackEntry {
 public:
 	/**
 	 * @brief The persisted entity data.
@@ -71,22 +71,21 @@ public:
 	 */
 	std::vector<std::string>::const_iterator currentChildIterator;
 
-	StackEntry(Atlas::Objects::Entity::RootEntity  o, const std::vector<std::string>::const_iterator & c);
-	explicit StackEntry(Atlas::Objects::Entity::RootEntity  o);
+	StackEntry(Atlas::Objects::Entity::RootEntity o, const std::vector<std::string>::const_iterator& c);
+
+	explicit StackEntry(Atlas::Objects::Entity::RootEntity o);
 };
 
 /**
  * @brief Imports a previously exported entity.
  */
-class EntityImporterBase: public virtual sigc::trackable
-{
+class EntityImporterBase : public virtual sigc::trackable {
 public:
 
 	/**
 	 * @brief Short info about a entity dump file.
 	 */
-	struct ShortInfo
-	{
+	struct ShortInfo {
 		/**
 		 * @brief The full name of the file of the dump.
 		 */
@@ -119,8 +118,7 @@ public:
 	/**
 	 * @brief Contains various stats about the import process, to be shown in an UI or help with debugging.
 	 */
-	struct Stats
-	{
+	struct Stats {
 		/**
 		 * The total number of entities to process.
 		 */
@@ -174,8 +172,7 @@ public:
 	/**
 	 * One entry on the stack of rules processed.
 	 */
-	struct RuleStackEntry
-	{
+	struct RuleStackEntry {
 		/**
 		 * @brief The id of the rule.
 		 */
@@ -200,6 +197,7 @@ public:
 	 * @param avatarId The id of the avatar.
 	 */
 	explicit EntityImporterBase(std::string accountId, std::string avatarId);
+
 	virtual ~EntityImporterBase();
 
 	/**
@@ -306,8 +304,7 @@ protected:
 	 */
 	std::map<std::string, std::vector<std::string>> mEntitiesWithReferenceAttributes;
 
-	enum
-	{
+	enum {
 		INIT, RULE_WALKING, RULE_UPDATING, RULE_CREATING, ENTITY_WALKSTART, ENTITY_UPDATING, ENTITY_CREATING, ENTITY_WALKING, CANCEL, CANCELLED
 	} m_state;
 
@@ -363,7 +360,7 @@ protected:
 	 * @param res
 	 * @return True if the entity id was found amongst the entities, else false. The latter case will occur for transient entities, as they might not have been exported, but are still references from their parent entity.
 	 */
-	bool getEntity(const std::string & id, OpVector & res);
+	bool getEntity(const std::string& id, OpVector& res);
 
 	/**
 	 * @brief Gets a rule from the server.
@@ -371,12 +368,13 @@ protected:
 	 * @param res
 	 * @return
 	 */
-	bool getRule(const std::string & id, OpVector & res);
+	bool getRule(const std::string& id, OpVector& res);
 
 	/**
 	 * @brief Start walking through the entities, updating or creating them.
 	 */
 	void startEntityWalking();
+
 	/**
 	 * @brief Start walking through the rules, updating or creating them.
 	 */
@@ -386,13 +384,13 @@ protected:
 	 * @brief Walks on the next entity in line to be created or updated on the server.
 	 * @param res
 	 */
-	void walkEntities(OpVector & res);
+	void walkEntities(OpVector& res);
 
 	/**
 	 * @brief Walks on the next rule in line to be created or updated on the server.
 	 * @param res
 	 */
-	void walkRules(OpVector & res);
+	void walkRules(OpVector& res);
 
 	/**
 	 * @brief Sends all minds.
@@ -404,14 +402,14 @@ protected:
 	 * @param obj The entity specification.
 	 * @param res
 	 */
-	void createEntity(const Atlas::Objects::Entity::RootEntity & obj, OpVector & res);
+	void createEntity(const Atlas::Objects::Entity::RootEntity& obj, OpVector& res);
 
 	/**
 	 * @brief Creates a new rule on the server.
 	 * @param obj The rule specification.
 	 * @param res
 	 */
-	void createRule(const Atlas::Objects::Root & obj, OpVector & res);
+	void createRule(const Atlas::Objects::Root& obj, OpVector& res);
 
 	/**
 	 * @brief Updates an existing rule.
@@ -421,7 +419,7 @@ protected:
 	 * @param newDefinition The new rule.
 	 * @param res
 	 */
-	void updateRule(const Atlas::Objects::Root& existingDefinition, const Atlas::Objects::Root& newDefinition, OpVector & res);
+	void updateRule(const Atlas::Objects::Root& existingDefinition, const Atlas::Objects::Root& newDefinition, OpVector& res);
 
 	/**
 	 * @brief Register any entity referencing attributes, if found, in mEntitiesWithReferenceAttributes.
@@ -450,9 +448,11 @@ protected:
 	 */
 	void sendResolvedEntityReferences();
 
-	void errorArrived(const Operation &, OpVector & res);
-	void infoArrived(const Operation &, OpVector & res);
-	void sightArrived(const Operation &, OpVector & res);
+	void errorArrived(const Operation&, OpVector& res);
+
+	void infoArrived(const Operation&, OpVector& res);
+
+	void sightArrived(const Operation&, OpVector& res);
 
 	/**
 	 * @brief Called when new data arrives from the server.
@@ -482,7 +482,7 @@ protected:
 	 * @param op
 	 * @param children
 	 */
-	void extractChildren(const Atlas::Objects::Root& op, std::list<std::string>& children);
+	static void extractChildren(const Atlas::Objects::Root& op, std::list<std::string>& children);
 
 	typedef sigc::slot<void(const Atlas::Objects::Operation::RootOperation&)> CallbackFunction;
 

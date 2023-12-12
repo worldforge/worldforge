@@ -30,8 +30,6 @@
 
 #include "components/ogre/EmberOgre.h"
 
-#include "ConfigBoundLogObserver.h"
-
 #include "services/config/ConfigConsoleCommands.h"
 #include "ConsoleInputBinder.h"
 #include "framework/LogExtensions.h"
@@ -257,7 +255,7 @@ Application::~Application() {
 	}
 
 	// before shutting down, we write out the user config to user's ember home directory
-	mConfigService.saveConfig(mConfigService.getHomeDirectory(BaseDirType_CONFIG) / "ember.conf", varconf::USER);
+	mConfigService.saveConfig(mConfigService.getHomeDirectory(BaseDirType_CONFIG) / "ember.conf");
 
 	if (mServices) {
 		mSession->m_event_service.processAllHandlers();

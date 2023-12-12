@@ -33,91 +33,90 @@
  * @brief Cyphesis specific subclass of EntityExporter.
  *
  */
-class EntityExporter: public ClientTask, public EntityExporterBase
-{
-    public:
-        /**
-         * @brief Ctor.
-         */
-        explicit EntityExporter(const std::string & accountId,
-                const std::string & avatarId);
+class EntityExporter : public ClientTask, public EntityExporterBase {
+public:
+	/**
+	 * @brief Ctor.
+	 */
+	explicit EntityExporter(const std::string& accountId,
+							const std::string& avatarId);
 
-        /**
-         * @brief Dtor.
-         */
-        ~EntityExporter() override = default;
+	/**
+	 * @brief Dtor.
+	 */
+	~EntityExporter() override = default;
 
-    protected:
+protected:
 
-        /**
-         * Keeps track of the current OpVector in which operations to be
-         * sent can be placed.
-         *
-         * Note that this setup is a little unintuitive. This is because the
-         * EntityExporterBase class is written for Ember which has a slightly
-         * different way of dispatching ops.
-         * The way we need to do it is to act on the setup() and operation()
-         * methods and while in those methods set this field to point to the
-         * current OpVector.
-         *
-         */
-        OpVector* mCurrentRes;
+	/**
+	 * Keeps track of the current OpVector in which operations to be
+	 * sent can be placed.
+	 *
+	 * Note that this setup is a little unintuitive. This is because the
+	 * EntityExporterBase class is written for Ember which has a slightly
+	 * different way of dispatching ops.
+	 * The way we need to do it is to act on the setup() and operation()
+	 * methods and while in those methods set this field to point to the
+	 * current OpVector.
+	 *
+	 */
+	OpVector* mCurrentRes;
 
-        Atlas::Objects::Root m_server_info;
+	Atlas::Objects::Root m_server_info;
 
-        std::unordered_map<long int, CallbackFunction> mCallbacks;
+	std::unordered_map<long int, CallbackFunction> mCallbacks;
 
-        void setup(const std::string & arg, OpVector & ret) override;
+	void setup(const std::string& arg, OpVector& ret) override;
 
-        void operation(const Operation & op, OpVector & res) override;
+	void operation(const Operation& op, OpVector& res) override;
 
-        /**
-         * @brief Create a new unique serial number for operations.
-         * @return A new serial number.
-         */
-        long int newSerialNumber() override;
+	/**
+	 * @brief Create a new unique serial number for operations.
+	 * @return A new serial number.
+	 */
+	long int newSerialNumber() override;
 
-        /**
-         * @brief Send an object to the server.
-         * @param op An object which is to be sent.
-         */
-        void send(const Atlas::Objects::Operation::RootOperation& op) override;
+	/**
+	 * @brief Send an object to the server.
+	 * @param op An object which is to be sent.
+	 */
+	void send(const Atlas::Objects::Operation::RootOperation& op) override;
 
-        /**
-         * @brief Send an object to the server and await a response.
-         * @param op An object which is to be sent.
-         * @param callback A callback, called when a response is received.
-         */
-        void sendAndAwaitResponse(
-                const Atlas::Objects::Operation::RootOperation& op,
-                CallbackFunction& callback) override;
+	/**
+	 * @brief Send an object to the server and await a response.
+	 * @param op An object which is to be sent.
+	 * @param callback A callback, called when a response is received.
+	 */
+	void sendAndAwaitResponse(
+			const Atlas::Objects::Operation::RootOperation& op,
+			CallbackFunction& callback) override;
 
-        /**
-         * @brief Creates a multi line formatter.
-         * @param s A stream.
-         * @param b A bridge.
-         * @return A formatter instance. Ownership is transferred.
-         */
-        Atlas::Formatter* createMultiLineFormatter(std::iostream& s,
-                Atlas::Bridge& b) override;
+	/**
+	 * @brief Creates a multi line formatter.
+	 * @param s A stream.
+	 * @param b A bridge.
+	 * @return A formatter instance. Ownership is transferred.
+	 */
+	Atlas::Formatter* createMultiLineFormatter(std::iostream& s,
+											   Atlas::Bridge& b) override;
 
-        /**
-         * @brief Gets the current time as a unit timestamp string.
-         * @return A time string.
-         */
-        virtual std::string getCurrentTime();
+	/**
+	 * @brief Gets the current time as a unit timestamp string.
+	 * @return A time string.
+	 */
+	virtual std::string getCurrentTime();
 
-        /**
-         * @brief Fills the supplied map with server meta data.
-         * @param serverMap An empty map.
-         */
-        void fillWithServerData(Atlas::Message::MapType& serverMap) override;
+	/**
+	 * @brief Fills the supplied map with server meta data.
+	 * @param serverMap An empty map.
+	 */
+	void fillWithServerData(Atlas::Message::MapType& serverMap) override;
 
-        /**
-         * Called when server info is received.
-         * @param op
-         */
-        void operationGetServerInfo(const Atlas::Objects::Operation::RootOperation& op);
+	/**
+	 * Called when server info is received.
+	 * @param op
+	 */
+	void operationGetServerInfo(const Atlas::Objects::Operation::RootOperation& op);
 
 };
 

@@ -8,7 +8,9 @@ ActionBarDefaultAction = {}
 function ActionBarDefaultAction:wieldableCommandObject()
 	if self.mCommandObject then
 		self.wearFunction = self.mDefaultActionList:getDefaultWearableFunction()
-		emberOgre:doWithEntity(self.mCommandObject,function(entity) self:wearFunction(entity) end)
+		emberOgre:doWithEntity(self.mCommandObject, function(entity)
+			self:wearFunction(entity)
+		end)
 	end
 end
 
@@ -16,7 +18,9 @@ end
 function ActionBarDefaultAction:edibleCommandObject()
 	if self.mCommandObject then
 		self.eatFunction = self.mDefaultActionList:getDefaultBioMassFunction()
-		emberOgre:doWithEntity(self.mCommandObject,function(entity) self:eatFunction(entity) end)
+		emberOgre:doWithEntity(self.mCommandObject, function(entity)
+			self:eatFunction(entity)
+		end)
 	end
 end
 
@@ -45,10 +49,10 @@ end
 --Create a new action bar action.
 function ActionBarDefaultAction.new(defaultActionList)
 	local actionbarDefaultAction = {
-			mCommandObject = nil,
-			mDefaultFunction = nil,
-			mDefaultActionList = defaultActionList
-		}
-	setmetatable(actionbarDefaultAction,{__index=ActionBarDefaultAction})
+		mCommandObject = nil,
+		mDefaultFunction = nil,
+		mDefaultActionList = defaultActionList
+	}
+	setmetatable(actionbarDefaultAction, { __index = ActionBarDefaultAction })
 	return actionbarDefaultAction
 end

@@ -18,37 +18,30 @@
 
 #include "LabelAction.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 std::function<void(EmberEntity&)> LabelAction::sEnableForEntity;
 std::function<void(EmberEntity&)> LabelAction::sDisableForEntity;
 
 LabelAction::LabelAction(EmberEntity& entity)
-: mEntity(entity)
-{
+		: mEntity(entity) {
 }
 
 LabelAction::~LabelAction() = default;
 
-void LabelAction::activate(EntityMapping::ChangeContext& context)
-{
+void LabelAction::activate(EntityMapping::ChangeContext& context) {
 	if (sEnableForEntity) {
 		sEnableForEntity(mEntity);
 	}
 }
 
-void LabelAction::deactivate(EntityMapping::ChangeContext& context)
-{
+void LabelAction::deactivate(EntityMapping::ChangeContext& context) {
 	if (sDisableForEntity) {
 		sDisableForEntity(mEntity);
 	}
 }
 
 }
-}
-}
+
+

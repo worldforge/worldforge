@@ -22,10 +22,8 @@
 #include <wfmath/point.h>
 #include "domain/Types.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
 @brief Defines the height of a special "base point" in the terrain.
@@ -49,8 +47,6 @@ struct TerrainDefPoint {
 };
 
 }
-}
 
-}
 
 #endif /* TERRAINDEFPOINT_H_ */

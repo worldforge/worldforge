@@ -23,57 +23,51 @@
 
 
 CyPy_Filter::CyPy_Filter(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
-        : WrapperBase(self, args, kwds)
-{
-    args.verify_length(1);
-    auto filterString = verifyString(args.front());
-    EntityFilter::ProviderFactory factory;
-    try {
-        m_value.reset(new EntityFilter::Filter(filterString, factory));
-    } catch (const std::exception& e) {
-        throw Py::TypeError(fmt::format("Error when parsing query: {}", e.what()));
-    }
+		: WrapperBase(self, args, kwds) {
+	args.verify_length(1);
+	auto filterString = verifyString(args.front());
+	EntityFilter::ProviderFactory factory;
+	try {
+		m_value.reset(new EntityFilter::Filter(filterString, factory));
+	} catch (const std::exception& e) {
+		throw Py::TypeError(fmt::format("Error when parsing query: {}", e.what()));
+	}
 }
 
-void CyPy_Filter::init_type()
-{
-    behaviors().name("Filter");
-    behaviors().doc("");
+void CyPy_Filter::init_type() {
+	behaviors().name("Filter");
+	behaviors().doc("");
 
-    behaviors().supportStr();
+	behaviors().supportStr();
 
-    behaviors().readyType();
+	behaviors().readyType();
 }
 
 CyPy_Filter::CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFilter::Filter> value)
-        : WrapperBase(self, std::move(value))
-{
+		: WrapperBase(self, std::move(value)) {
 
 }
 
-Py::Object CyPy_Filter::str()
-{
-    return Py::String(fmt::format("Entity filter: {}", this->m_value->getDeclaration()));
+Py::Object CyPy_Filter::str() {
+	return Py::String(fmt::format("Entity filter: {}", this->m_value->getDeclaration()));
 }
 
 CyPy_EntityFilter::CyPy_EntityFilter()
-        : ExtensionModule("entity_filter")
-{
+		: ExtensionModule("entity_filter") {
 
-    CyPy_Filter::init_type();
+	CyPy_Filter::init_type();
 
 
-    initialize("Entity filtering");
+	initialize("Entity filtering");
 
-    Py::Dict d(moduleDictionary());
-    d["Filter"] = CyPy_Filter::type();
+	Py::Dict d(moduleDictionary());
+	d["Filter"] = CyPy_Filter::type();
 }
 
-std::string CyPy_EntityFilter::init()
-{
-    PyImport_AppendInittab("entity_filter", []() {
-        static auto module = new CyPy_EntityFilter();
-        return module->module().ptr();
-    });
-    return "entity_filter";
+std::string CyPy_EntityFilter::init() {
+	PyImport_AppendInittab("entity_filter", []() {
+		static auto module = new CyPy_EntityFilter();
+		return module->module().ptr();
+	});
+	return "entity_filter";
 }

@@ -32,8 +32,8 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 NodeAttachment::NodeAttachment(EmberEntity& parentEntity, EmberEntity& childEntity, INodeProvider& nodeProvider) :
 		AttachmentBase(&parentEntity, childEntity),
@@ -111,4 +111,4 @@ void NodeAttachment::setControlDelegateImpl(IEntityControlDelegate* controllerDe
 }
 
 }
-}
+

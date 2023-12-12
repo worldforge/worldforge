@@ -21,10 +21,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ConsoleAdapter>(sol::table& space) {
 	auto consoleAdapter = space.new_usertype<ConsoleAdapter>("ConsoleAdapter",
-														   sol::constructors<ConsoleAdapter(CEGUI::Editbox*)>());
+															 sol::constructors<ConsoleAdapter(CEGUI::Editbox*)>());
 	consoleAdapter["EventCommandExecuted"] = LuaConnector::make_property(&ConsoleAdapter::EventCommandExecuted);
 
 }

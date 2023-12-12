@@ -19,32 +19,26 @@
 #include "EntityObserverBase.h"
 #include <Eris/Entity.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 EntityObserverBase::EntityObserverBase(Eris::Entity& entity, bool deleteOurselvesWhenDone) :
-	mDeleteOurselvesWhenDone(deleteOurselvesWhenDone)
-{
+		mDeleteOurselvesWhenDone(deleteOurselvesWhenDone) {
 	entity.BeingDeleted.connect(sigc::mem_fun(*this, &EntityObserverBase::entity_BeingDeleted));
 }
 
-void EntityObserverBase::entity_BeingDeleted()
-{
+void EntityObserverBase::entity_BeingDeleted() {
 	cleanup();
 	if (mDeleteOurselvesWhenDone) {
 		deleteOurselves();
 	}
 }
 
-void EntityObserverBase::cleanup()
-{
+void EntityObserverBase::cleanup() {
 }
 
-void EntityObserverBase::deleteOurselves()
-{
+void EntityObserverBase::deleteOurselves() {
 	delete this;
 }
 }
-}
+

@@ -28,6 +28,6 @@ target_link_libraries(cyclient
         cyphesis-modules
         cyphesis-common
         cyphesis-physics
-        )
+)
 
 install(TARGETS cyclient DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})

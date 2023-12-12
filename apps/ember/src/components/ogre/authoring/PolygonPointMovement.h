@@ -26,8 +26,8 @@
 #include "PolygonPointMover.h"
 #include "MovementAdapter.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 namespace Camera {
 class MainCamera;
@@ -76,6 +76,6 @@ protected:
 
 }
 
-}
+
 
 #endif

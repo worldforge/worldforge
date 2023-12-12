@@ -21,8 +21,7 @@
 
 #include <Eris/Connection.h>
 
-namespace Ember
-{
+namespace Ember {
 struct Session;
 
 struct IConnectionListener;
@@ -31,8 +30,7 @@ struct IConnectionListener;
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief An extension of the base Eris connection type which will interact with IConnectionListener to allow for handing of objects being sent and received.
  */
-class Connection: public Eris::Connection
-{
+class Connection : public Eris::Connection {
 public:
 
 	/**
@@ -43,7 +41,7 @@ public:
 	 * @param debug Whether we should connect in debug mode.
 	 * @param listener An optional listener. Ownership will be transferred to this instance.
 	 */
-	Connection(Session& session, const std::string &clientName, const std::string& host, short port, std::unique_ptr<IConnectionListener> listener);
+	Connection(Session& session, const std::string& clientName, const std::string& host, short port, std::unique_ptr<IConnectionListener> listener);
 
 	/**
 	 * @brief Ctor. for connecting to a local socket.
@@ -52,11 +50,12 @@ public:
 	 * @param debug Whether we should connect in debug mode.
 	 * @param listener An optional listener. Ownership will be transferred to this instance.
 	 */
-	Connection(Session& session, const std::string &clientName, const std::string& socket, std::unique_ptr<IConnectionListener> listener);
+	Connection(Session& session, const std::string& clientName, const std::string& socket, std::unique_ptr<IConnectionListener> listener);
 
 	~Connection() override;
 
-	void send(const Atlas::Objects::Root &obj) override;
+	void send(const Atlas::Objects::Root& obj) override;
+
 protected:
 	void objectArrived(Atlas::Objects::Root obj) override;
 

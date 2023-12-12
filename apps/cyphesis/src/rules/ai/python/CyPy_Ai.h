@@ -25,12 +25,11 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Ai : public Py::ExtensionModule<CyPy_Ai>
-{
-    public:
-        CyPy_Ai();
+class CyPy_Ai : public Py::ExtensionModule<CyPy_Ai> {
+public:
+	CyPy_Ai();
 
-        static std::string init();
+	static std::string init();
 };
 
 

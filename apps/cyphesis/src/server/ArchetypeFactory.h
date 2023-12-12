@@ -42,161 +42,159 @@ class EntityBuilder;
 /// format of an archetype, and will be merged into the parent archetype. This mainly means
 /// that the code will look for entity definitions in the "entities" attribute, and thought
 /// definitions in the "thoughts" attribute.
-class ArchetypeFactory : public EntityKit
-{
-    protected:
+class ArchetypeFactory : public EntityKit {
+protected:
 
-        /**
-         * @brief Represents one entity to be created.
-         */
-        struct EntityCreation
-        {
-            /**
-             * @brief The definition of the entity, as found in the archetype.
-             */
-            Atlas::Objects::Entity::RootEntity definition;
+	/**
+	 * @brief Represents one entity to be created.
+	 */
+	struct EntityCreation {
+		/**
+		 * @brief The definition of the entity, as found in the archetype.
+		 */
+		Atlas::Objects::Entity::RootEntity definition;
 
-            /**
-             * @brief The created entity (might be null if none was created).
-             */
-            Ref<LocatedEntity> createdEntity;
+		/**
+		 * @brief The created entity (might be null if none was created).
+		 */
+		Ref<LocatedEntity> createdEntity;
 
-            /**
-             * Any attributes referring to unresolved entities.
-             * This will be empty is there are no entity referencing attributes.
-             */
-            Atlas::Message::MapType unresolvedAttributes;
-        };
+		/**
+		 * Any attributes referring to unresolved entities.
+		 * This will be empty is there are no entity referencing attributes.
+		 */
+		Atlas::Message::MapType unresolvedAttributes;
+	};
 
-        ArchetypeFactory(ArchetypeFactory& o);
+	ArchetypeFactory(ArchetypeFactory& o);
 
-        Ref<Entity> createEntity(RouterId id,
-                                        EntityCreation& entityCreation,
-                                        std::map<std::string, EntityCreation>& entities);
+	Ref<Entity> createEntity(RouterId id,
+							 EntityCreation& entityCreation,
+							 std::map<std::string, EntityCreation>& entities);
 
-        /**
-         * @brief Sends any thoughts to the entity.
-         * @param entity
-         */
-        void sendThoughts(LocatedEntity& entity, std::vector<Atlas::Message::Element>& thoughts);
+	/**
+	 * @brief Sends any thoughts to the entity.
+	 * @param entity
+	 */
+	void sendThoughts(LocatedEntity& entity, std::vector<Atlas::Message::Element>& thoughts);
 
-        /**
-         * @brief Sends an initial sight of itself to the entity.
-         *
-         * This is required if the entity has thoughts, since if it gets thoughts before
-         * it knows about itself there will be trouble.
-         * @param entity
-         */
-        void sendInitialSight(LocatedEntity& entity);
+	/**
+	 * @brief Sends an initial sight of itself to the entity.
+	 *
+	 * This is required if the entity has thoughts, since if it gets thoughts before
+	 * it knows about itself there will be trouble.
+	 * @param entity
+	 */
+	void sendInitialSight(LocatedEntity& entity);
 
-        /**
-         * @brief Checks if the attribute references an unresolved entity.
-         *
-         * Entities within the archetype can be referenced by using the entity reference
-         * format, whereby a map with a string entry with the key "$eid" is used.
-         * Such attributes however cannot be set until all of the
-         * entities have been created, and their final ids have been resolved. This method
-         * checks if any attribute is referring to an unresolved entity, and thus needs to
-         * be resolved first.
-         * @param attr The attribute to check.
-         * @return True if the attribute contained an unresolved entity ref
-         */
-        bool isEntityRefAttribute(const Atlas::Message::Element& attr) const;
+	/**
+	 * @brief Checks if the attribute references an unresolved entity.
+	 *
+	 * Entities within the archetype can be referenced by using the entity reference
+	 * format, whereby a map with a string entry with the key "$eid" is used.
+	 * Such attributes however cannot be set until all of the
+	 * entities have been created, and their final ids have been resolved. This method
+	 * checks if any attribute is referring to an unresolved entity, and thus needs to
+	 * be resolved first.
+	 * @param attr The attribute to check.
+	 * @return True if the attribute contained an unresolved entity ref
+	 */
+	bool isEntityRefAttribute(const Atlas::Message::Element& attr) const;
 
-        /**
-         * @brief Resolves references to unresolved entities.
-         *
-         * This is done recursively. Any Map element which a string entry with the
-         * key "$eid" will be replaced with
-         * a Ptr element wrapping a LocatedEntity instance (given that the
-         * reference is correct).
-         *
-         * @param entities All processed entities.
-         * @param attr The attribute which will be resolved.
-         */
-        void resolveEntityReference(
-                std::map<std::string, EntityCreation>& entities,
-                Atlas::Message::Element& attr);
+	/**
+	 * @brief Resolves references to unresolved entities.
+	 *
+	 * This is done recursively. Any Map element which a string entry with the
+	 * key "$eid" will be replaced with
+	 * a Ptr element wrapping a LocatedEntity instance (given that the
+	 * reference is correct).
+	 *
+	 * @param entities All processed entities.
+	 * @param attr The attribute which will be resolved.
+	 */
+	void resolveEntityReference(
+			std::map<std::string, EntityCreation>& entities,
+			Atlas::Message::Element& attr);
 
-        /**
-         * @brief Processes all unresolved attributes for all entities.
-         *
-         * Any unresolved reference will be resolved, and the attribute set
-         * on the entity.
-         * @param entities All processed entities.
-         */
-        void processResolvedAttributes(std::map<std::string, EntityCreation>& entities);
+	/**
+	 * @brief Processes all unresolved attributes for all entities.
+	 *
+	 * Any unresolved reference will be resolved, and the attribute set
+	 * on the entity.
+	 * @param entities All processed entities.
+	 */
+	void processResolvedAttributes(std::map<std::string, EntityCreation>& entities);
 
-        /**
-         * @brief Tries to parse entity data from the map.
-         * @param entitiesElement The map containing data.
-         * @param entities Parsed entities will be put here.
-         * @return True if parsing was successful.
-         */
-        bool parseEntities(const std::map<std::string, Atlas::Message::MapType>& entitiesElement,
-                           std::map<std::string, EntityCreation>& entities);
+	/**
+	 * @brief Tries to parse entity data from the map.
+	 * @param entitiesElement The map containing data.
+	 * @param entities Parsed entities will be put here.
+	 * @return True if parsing was successful.
+	 */
+	bool parseEntities(const std::map<std::string, Atlas::Message::MapType>& entitiesElement,
+					   std::map<std::string, EntityCreation>& entities);
 
-        /**
-         * @brief Tries to parse entity data from the list.
-         * @param entitiesElement The list containing data.
-         * @param entities Parsed entities will be put here.
-         * @return True if parsing was successful.
-         */
-        bool parseEntities(const Atlas::Message::ListType& entitiesElement,
-                           std::map<std::string, EntityCreation>& entities);
+	/**
+	 * @brief Tries to parse entity data from the list.
+	 * @param entitiesElement The list containing data.
+	 * @param entities Parsed entities will be put here.
+	 * @return True if parsing was successful.
+	 */
+	bool parseEntities(const Atlas::Message::ListType& entitiesElement,
+					   std::map<std::string, EntityCreation>& entities);
 
-        /**
-         * Creates a Think-Set operation which adds knowledge about the "origin" to the entity.
-         * The "origin" is the position where the entity is created.
-         * This only applies if the position of the entity is valid.
-         * @param entity An entity.
-         * @return A list containing one or zero thoughts.
-         */
-        std::vector<Atlas::Message::Element> createOriginLocationThought(const LocatedEntity& entity);
+	/**
+	 * Creates a Think-Set operation which adds knowledge about the "origin" to the entity.
+	 * The "origin" is the position where the entity is created.
+	 * This only applies if the position of the entity is valid.
+	 * @param entity An entity.
+	 * @return A list containing one or zero thoughts.
+	 */
+	std::vector<Atlas::Message::Element> createOriginLocationThought(const LocatedEntity& entity);
 
 
-    public:
-        explicit ArchetypeFactory(EntityBuilder& entityBuilder);
+public:
+	explicit ArchetypeFactory(EntityBuilder& entityBuilder);
 
-        ~ArchetypeFactory() override;
+	~ArchetypeFactory() override;
 
-        Ref<Entity> newEntity(RouterId id,
-                              const Atlas::Objects::Entity::RootEntity& attributes) override;
+	Ref<Entity> newEntity(RouterId id,
+						  const Atlas::Objects::Entity::RootEntity& attributes) override;
 
-        virtual std::unique_ptr<ArchetypeFactory> duplicateFactory();
+	virtual std::unique_ptr<ArchetypeFactory> duplicateFactory();
 
-        void addProperties(const PropertyManager& propertyManager) override;
+	void addProperties(const PropertyManager& propertyManager) override;
 
-        void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) override;
-
-
-        EntityBuilder& m_entityBuilder;
-        /// Factory for class from which the class handled by this factory
-        /// inherits.
-        ArchetypeFactory* m_parent;
-        /// Set of factories for classes which inherit from the class handled
-        /// by this factory.
-        std::set<ArchetypeFactory*> m_children;
-
-        /// @brief Entity definitions.
-        ///
-        /// This is a combination of the entities defined for this instance
-        /// as well as for all parents.
-        std::map<std::string, Atlas::Message::MapType> m_entities;
-
-        /// @brief Thought definitions.
-        ///
-        /// This is a combination of the thoughts defined for this instance
-        /// as well as for all parents.
-        /// Note that the thoughts, as of now, only are applied to the first
-        /// defined entity.
-        std::vector<Atlas::Message::Element> m_thoughts;
+	void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) override;
 
 
-        /// @brief Instance specific entity definitions.
-        std::map<std::string, Atlas::Message::MapType> m_classEntities;
-        /// @brief Instance specific thought definitions.
-        std::vector<Atlas::Message::Element> m_classThoughts;
+	EntityBuilder& m_entityBuilder;
+	/// Factory for class from which the class handled by this factory
+	/// inherits.
+	ArchetypeFactory* m_parent;
+	/// Set of factories for classes which inherit from the class handled
+	/// by this factory.
+	std::set<ArchetypeFactory*> m_children;
+
+	/// @brief Entity definitions.
+	///
+	/// This is a combination of the entities defined for this instance
+	/// as well as for all parents.
+	std::map<std::string, Atlas::Message::MapType> m_entities;
+
+	/// @brief Thought definitions.
+	///
+	/// This is a combination of the thoughts defined for this instance
+	/// as well as for all parents.
+	/// Note that the thoughts, as of now, only are applied to the first
+	/// defined entity.
+	std::vector<Atlas::Message::Element> m_thoughts;
+
+
+	/// @brief Instance specific entity definitions.
+	std::map<std::string, Atlas::Message::MapType> m_classEntities;
+	/// @brief Instance specific thought definitions.
+	std::vector<Atlas::Message::Element> m_classThoughts;
 };
 
 #endif // SERVER_ARCHETYPE_FACTORY_H

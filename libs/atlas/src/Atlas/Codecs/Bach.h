@@ -12,119 +12,119 @@
 #include <iosfwd>
 #include <stack>
 
-namespace Atlas {
-    namespace Codecs {
+
+namespace Atlas::Codecs {
 
 /** @file Codecs/Bach.h
  * This class implements Bach Codec
  */
 
-        class Bach : public Codec {
-        public:
+class Bach : public Codec {
+public:
 
-            Bach(std::istream &in, std::ostream &out, Atlas::Bridge &b);
+	Bach(std::istream& in, std::ostream& out, Atlas::Bridge& b);
 
-            void poll() override;
+	void poll() override;
 
-            void streamBegin() override;
+	void streamBegin() override;
 
-            void streamMessage() override;
+	void streamMessage() override;
 
-            void streamEnd() override;
+	void streamEnd() override;
 
-            void mapMapItem(std::string name) override;
+	void mapMapItem(std::string name) override;
 
-            void mapListItem(std::string name) override;
+	void mapListItem(std::string name) override;
 
-            void mapIntItem(std::string name, std::int64_t) override;
+	void mapIntItem(std::string name, std::int64_t) override;
 
-            void mapFloatItem(std::string name, double) override;
+	void mapFloatItem(std::string name, double) override;
 
-            void mapStringItem(std::string name, std::string) override;
+	void mapStringItem(std::string name, std::string) override;
 
-            void mapNoneItem(std::string name) override;
+	void mapNoneItem(std::string name) override;
 
-            void mapEnd() override;
+	void mapEnd() override;
 
-            void listMapItem() override;
+	void listMapItem() override;
 
-            void listListItem() override;
+	void listListItem() override;
 
-            void listIntItem(std::int64_t) override;
+	void listIntItem(std::int64_t) override;
 
-            void listFloatItem(double) override;
+	void listFloatItem(double) override;
 
-            void listStringItem(std::string) override;
+	void listStringItem(std::string) override;
 
-            void listNoneItem() override;
+	void listNoneItem() override;
 
-            void listEnd() override;
+	void listEnd() override;
 
-            unsigned linenum() const { return m_linenum; }
+	unsigned linenum() const { return m_linenum; }
 
-        protected:
+protected:
 
-            std::istream &m_istream;
-            std::ostream &m_ostream;
-            Bridge &m_bridge;
-            bool m_comma;
-            unsigned m_linenum;
+	std::istream& m_istream;
+	std::ostream& m_ostream;
+	Bridge& m_bridge;
+	bool m_comma;
+	unsigned m_linenum;
 
-            enum State {
-                PARSE_INIT,
-                PARSE_STREAM,
-                PARSE_MAP,
-                PARSE_LIST,
-                PARSE_NAME,
-                PARSE_DATA,
-                PARSE_INT,
-                PARSE_FLOAT,
-                PARSE_STRING,
-                PARSE_LITERAL, // for literal character escaped with backslash
-                PARSE_COMMENT // for when we're in the middle of a comment field
-            };
+	enum State {
+		PARSE_INIT,
+		PARSE_STREAM,
+		PARSE_MAP,
+		PARSE_LIST,
+		PARSE_NAME,
+		PARSE_DATA,
+		PARSE_INT,
+		PARSE_FLOAT,
+		PARSE_STRING,
+		PARSE_LITERAL, // for literal character escaped with backslash
+		PARSE_COMMENT // for when we're in the middle of a comment field
+	};
 
-            bool stringmode() const;
+	bool stringmode() const;
 
-            std::string m_name, m_data;
-            std::stack<State> m_state;
+	std::string m_name, m_data;
+	std::stack<State> m_state;
 
-            inline void parseInit(char);
+	inline void parseInit(char);
 
-            inline void parseStream(char);
+	inline void parseStream(char);
 
-            inline void parseMap(char);
+	inline void parseMap(char);
 
-            inline void parseList(char);
+	inline void parseList(char);
 
-            inline void parseData(char);
+	inline void parseData(char);
 
-            inline void parseInt(char);
+	inline void parseInt(char);
 
-            inline void parseFloat(char);
+	inline void parseFloat(char);
 
-            inline void parseString(char);
+	inline void parseString(char);
 
-            inline void parseLiteral(char);
+	inline void parseLiteral(char);
 
-            inline void parseName(char);
+	inline void parseName(char);
 
-            inline void parseComment(char);
+	inline void parseComment(char);
 
-            static inline std::string encodeString(std::string);
+	static inline std::string encodeString(std::string);
 
-            static inline std::string decodeString(std::string);
+	static inline std::string decodeString(std::string);
 
-            void writeIntItem(const std::string &, std::int64_t);
+	void writeIntItem(const std::string&, std::int64_t);
 
-            void writeFloatItem(const std::string &, double);
+	void writeFloatItem(const std::string&, double);
 
-            void writeStringItem(const std::string &, std::string);
+	void writeStringItem(const std::string&, std::string);
 
-            void writeLine(const std::string &, bool= true, bool= false);
-        };
+	void writeLine(const std::string&, bool= true, bool= false);
+};
 
-    }
-} // namespace Atlas::Codecs
+}
+// namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_BACH_H

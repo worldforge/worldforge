@@ -33,9 +33,8 @@ Ember::OgreView::IPageDataProvider::OgreIndex calculateTerrainIndex(const Terrai
 }
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 const std::string EmberTerrainProfile::ERROR_MATERIAL = "/common/primitives/texture/error";
 
 
@@ -162,6 +161,6 @@ void OgreTerrainMaterialGeneratorEmber::_renderCompositeMap(size_t size, const O
 		TerrainMaterialGenerator::_renderCompositeMap(size, rect, mat, destCompositeMap);
 	}
 }
-} /* Terrain */
-} /* OgreView */
-} /* Ember */
+} // namespace Ember::OgreView::Terrain
+
+

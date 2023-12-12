@@ -57,7 +57,7 @@ void ConnectedState::runCommand(const std::string& command, const std::string& a
 	}
 }
 
-void ConnectedState::gotFailure(const std::string& msg) {
+void ConnectedState::gotFailure(const std::string&) {
 	//If we got a failure we should release the account directly.
 	//The handling of deleting the connection and so on is handled by the NonConnectedState.
 	if (getChildState()) {

@@ -26,19 +26,16 @@
 #include "EmberOgrePrerequisites.h"
 #include "components/entitymapping/Actions/Action.h"
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
 
 /**
  * @brief Show a certain part of a Model.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class EmberEntityPartAction: public EntityMapping::Actions::Action
-{
+class EmberEntityPartAction : public EntityMapping::Actions::Action {
 public:
 	EmberEntityPartAction(EmberEntity& entity, std::string partName);
 

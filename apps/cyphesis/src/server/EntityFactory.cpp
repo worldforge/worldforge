@@ -35,8 +35,7 @@ using Atlas::Objects::Entity::RootEntity;
 static const bool debug_flag = false;
 
 EntityFactoryBase::EntityFactoryBase()
-    : m_parent(nullptr)
-{
+		: m_parent(nullptr) {
 
 }
 
@@ -45,69 +44,65 @@ EntityFactoryBase::~EntityFactoryBase() = default;
 
 template<>
 Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
-                                                   const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    return nullptr;
+											const Atlas::Objects::Entity::RootEntity& attributes) {
+	return nullptr;
 }
 
 void EntityFactoryBase::initializeEntity(Entity& thing,
-                                         const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    thing.setType(m_type);
+										 const Atlas::Objects::Entity::RootEntity& attributes) {
+	thing.setType(m_type);
 
-    //Only apply attributes if the supplied attributes is valid.
-    //The main use of this is when doing restoration from stored entities and we don't want to apply the default attributes directly when
-    //the entity first is created.
-    if (attributes.isValid()) {
+	//Only apply attributes if the supplied attributes is valid.
+	//The main use of this is when doing restoration from stored entities and we don't want to apply the default attributes directly when
+	//the entity first is created.
+	if (attributes.isValid()) {
 
-        auto attrs = attributes->asMessage();
-        //First make sure that all properties are installed, since Entity::setAttr won't install props if they exist in the type.
-        for (auto& propIter : m_type->defaults()) {
-            auto& prop = propIter.second;
-            prop->install(thing, propIter.first);
-        }
+		auto attrs = attributes->asMessage();
+		//First make sure that all properties are installed, since Entity::setAttr won't install props if they exist in the type.
+		for (auto& propIter: m_type->defaults()) {
+			auto& prop = propIter.second;
+			prop->install(thing, propIter.first);
+		}
 
-        // Apply the attribute values
-        thing.merge(attrs);
-        // Then set up the default class properties
-        for (auto& propIter : m_type->defaults()) {
-            // The property will have been applied if it has an overridden
-            // value, so we only apply if the value is still default.
-            if (thing.getProperties().find(propIter.first) == thing.getProperties().end()) {
-                auto& prop = propIter.second;
-                prop->apply(thing);
-                thing.propertyApplied(propIter.first, *prop);
-            }
-        }
-    }
+		// Apply the attribute values
+		thing.merge(attrs);
+		// Then set up the default class properties
+		for (auto& propIter: m_type->defaults()) {
+			// The property will have been applied if it has an overridden
+			// value, so we only apply if the value is still default.
+			if (thing.getProperties().find(propIter.first) == thing.getProperties().end()) {
+				auto& prop = propIter.second;
+				prop->apply(thing);
+				thing.propertyApplied(propIter.first, *prop);
+			}
+		}
+	}
 
 }
 
-void EntityFactoryBase::addProperties(const PropertyManager& propertyManager)
-{
-    assert(m_type != nullptr);
-    m_type->addProperties(m_attributes, propertyManager);
+void EntityFactoryBase::addProperties(const PropertyManager& propertyManager) {
+	assert(m_type != nullptr);
+	m_type->addProperties(m_attributes, propertyManager);
 }
 
-void EntityFactoryBase::updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager)
-{
-    assert(m_type != nullptr);
-    changes.emplace(m_type, m_type->updateProperties(m_attributes, propertyManager));
+void EntityFactoryBase::updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) {
+	assert(m_type != nullptr);
+	changes.emplace(m_type, m_type->updateProperties(m_attributes, propertyManager));
 
-    for (auto& child_factory : m_children) {
-        child_factory->m_attributes = m_attributes;
-        for (const auto& entry : child_factory->m_classAttributes) {
-            auto existingI = child_factory->m_attributes.find(entry.first);
-            if (existingI != child_factory->m_attributes.end()) {
-                entry.second.combine(existingI->second);
-            } else {
-                Atlas::Message::Element value;
-                entry.second.combine(value);
-                child_factory->m_attributes.emplace(entry.first, std::move(value));
-            }
-        }
-        child_factory->updateProperties(changes, propertyManager);
-    }
+	for (auto& child_factory: m_children) {
+		child_factory->m_attributes = m_attributes;
+		for (const auto& entry: child_factory->m_classAttributes) {
+			auto existingI = child_factory->m_attributes.find(entry.first);
+			if (existingI != child_factory->m_attributes.end()) {
+				entry.second.combine(existingI->second);
+			} else {
+				Atlas::Message::Element value;
+				entry.second.combine(value);
+				child_factory->m_attributes.emplace(entry.first, std::move(value));
+			}
+		}
+		child_factory->updateProperties(changes, propertyManager);
+	}
 }
 
 template
@@ -116,25 +111,24 @@ class EntityFactory<Thing>;
 template
 class EntityFactory<World>;
 
-void ClassAttribute::combine(Atlas::Message::Element& existing) const
-{
-    if (!defaultValue.isNone()) {
-        existing = defaultValue;
-    }
-    if (!add_fraction.isNone()) {
-        AddFractionModifier modifier(add_fraction);
-        modifier.process(existing, existing);
-    }
-    if (!subtract.isNone()) {
-        SubtractModifier modifier(subtract);
-        modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
-    }
-    if (!prepend.isNone()) {
-        PrependModifier modifier(prepend);
-        modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
-    }
-    if (!append.isNone()) {
-        AppendModifier modifier(append);
-        modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
-    }
+void ClassAttribute::combine(Atlas::Message::Element& existing) const {
+	if (!defaultValue.isNone()) {
+		existing = defaultValue;
+	}
+	if (!add_fraction.isNone()) {
+		AddFractionModifier modifier(add_fraction);
+		modifier.process(existing, existing);
+	}
+	if (!subtract.isNone()) {
+		SubtractModifier modifier(subtract);
+		modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
+	}
+	if (!prepend.isNone()) {
+		PrependModifier modifier(prepend);
+		modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
+	}
+	if (!append.isNone()) {
+		AppendModifier modifier(append);
+		modifier.process(existing, existing); //Won't touch baseValue, so ok if we send "existing".
+	}
 }

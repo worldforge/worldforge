@@ -24,21 +24,22 @@
 #include <spdlog/spdlog.h>
 
 
-typedef enum log_event { NONE = 0,
-                         START,          // Server binary started
-                         STOP,           // Server binary stopped
-                         CONNECT,        // Atlas client connected
-                         DISCONNECT,     // Atlas client disconnected
-                         LOGIN,          // Account authenticated
-                         LOGOUT,         // Authenticated account disconnected
-                         TAKE_CHAR,      // Client avatar bound
-                         DROP_CHAR,      // Client avatar unbound
-                         EXPORT_ENT,     // Entity exported to peer
-                         IMPORT_ENT,     // Entity imported from peer
-                         POSSESS_CHAR,   // Imported avatar claimed
+typedef enum log_event {
+	NONE = 0,
+	START,          // Server binary started
+	STOP,           // Server binary stopped
+	CONNECT,        // Atlas client connected
+	DISCONNECT,     // Atlas client disconnected
+	LOGIN,          // Account authenticated
+	LOGOUT,         // Authenticated account disconnected
+	TAKE_CHAR,      // Client avatar bound
+	DROP_CHAR,      // Client avatar unbound
+	EXPORT_ENT,     // Entity exported to peer
+	IMPORT_ENT,     // Entity imported from peer
+	POSSESS_CHAR,   // Imported avatar claimed
 } LogEvent;
 
-void logEvent(LogEvent, const std::string & msg);
+void logEvent(LogEvent, const std::string& msg);
 
 
 #endif // COMMON_LOG_H

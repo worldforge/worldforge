@@ -25,12 +25,12 @@
 #include "../EntityMapping.h"
 #include "../Actions/Action.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 CaseBase::CaseBase()
 		: mParentCase(nullptr), mIsTrue(false), mIsActive(false) {
@@ -55,7 +55,7 @@ void CaseBase::evaluateChanges(ChangeContext& changeContext) {
 		}
 	}
 	//recursively iterate over the child matches
-	for (auto& match : mMatches) {
+	for (auto& match: mMatches) {
 		match->evaluateChanges(changeContext);
 	}
 
@@ -63,23 +63,23 @@ void CaseBase::evaluateChanges(ChangeContext& changeContext) {
 
 void CaseBase::accept(IVisitor& visitor) {
 	visitor.visit(*this);
-	for (auto& action : mActions) {
+	for (auto& action: mActions) {
 		action->accept(visitor);
 	}
-	for (auto& match : mMatches) {
+	for (auto& match: mMatches) {
 		match->accept(visitor);
 	}
 }
 
 void CaseBase::activateActions(ChangeContext& context) {
-	for (auto& action : mActions) {
+	for (auto& action: mActions) {
 		action->activate(context);
 	}
 	mIsActive = true;
 }
 
 void CaseBase::deactivateActions(ChangeContext& context) {
-	for (auto& action : mActions) {
+	for (auto& action: mActions) {
 		action->deactivate(context);
 	}
 	mIsActive = false;
@@ -90,7 +90,7 @@ void CaseBase::addMatch(std::unique_ptr<Matches::MatchBase> match) {
 }
 
 void CaseBase::setEntity(Eris::Entity* entity) {
-	for (auto& match : mMatches) {
+	for (auto& match: mMatches) {
 		match->setEntity(entity);
 	}
 }
@@ -98,6 +98,6 @@ void CaseBase::setEntity(Eris::Entity* entity) {
 
 }
 
-}
 
-}
+
+

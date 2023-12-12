@@ -47,11 +47,9 @@ class PolygonPointPickListener;
 
 class PolygonPointMovement;
 }
-namespace Gui {
 
-namespace Adapters {
 
-namespace Atlas {
+namespace Gui::Adapters::Atlas {
 
 /**
  @brief Provides height positions for a polygon attached to an EmberEntity instance.
@@ -210,9 +208,6 @@ protected:
 
 }
 
-}
-
-}
 
 }
 

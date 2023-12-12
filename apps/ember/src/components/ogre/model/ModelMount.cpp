@@ -28,10 +28,8 @@
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Model {
+namespace Ember::OgreView::Model {
 
 ModelMount::ModelMount(Model& model, std::unique_ptr<INodeProvider> nodeProvider, std::string pose) :
 		mModel(model),
@@ -184,5 +182,5 @@ INodeProvider* ModelMount::getNodeProvider() const {
 
 }
 
-}
-}
+
+

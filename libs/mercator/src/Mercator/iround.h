@@ -7,6 +7,7 @@
 
 
 #include <cmath>
+
 #define I_ROUND(_x) (std::lround(_x))
 
 #endif // MERCATOR_IROUND_H

@@ -22,29 +22,20 @@
 //
 #include "StaticAdapter.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 StaticAdapter::StaticAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* textWindow)
-: AdapterBase(element)
-, mTextWindow(textWindow)
-{
+		: AdapterBase(element), mTextWindow(textWindow) {
 	updateGui(mOriginalValue);
 }
 
 
 StaticAdapter::~StaticAdapter() = default;
 
-void StaticAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void StaticAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
-	
+
 	if (mTextWindow) {
 		if (element.isString()) {
 			mTextWindow->setText(element.asString());
@@ -56,19 +47,17 @@ void StaticAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-void StaticAdapter::fillElementFromGui()
-{
+void StaticAdapter::fillElementFromGui() {
 }
 
-bool StaticAdapter::_hasChanges()
-{
+bool StaticAdapter::_hasChanges() {
 	return false;
 }
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

@@ -25,10 +25,9 @@
 //#include "components/ogre/EmberOgrePrerequisites.h"
 using namespace Ember::EntityMapping;
 using namespace Ember::EntityMapping::Definitions;
-namespace Ember {
-namespace OgreView {
 
-namespace Mapping {
+
+namespace Ember::OgreView::Mapping {
 
 
 XMLEntityMappingDefinitionSerializer::XMLEntityMappingDefinitionSerializer(EntityMappingManager& entitymappingManager)
@@ -43,7 +42,7 @@ void XMLEntityMappingDefinitionSerializer::parseScript(TiXmlDocument xmlDocument
 		if (rootElem->ValueStr() == "entitymapping") {
 			parseSingleMapping(rootElem, path);
 		} else {
-			logger->error("Unrecognized start tag when parsing entity mapping in file '{}': {}",path , rootElem->ValueStr());
+			logger->error("Unrecognized start tag when parsing entity mapping in file '{}': {}", path, rootElem->ValueStr());
 		}
 
 	}
@@ -135,5 +134,5 @@ void XMLEntityMappingDefinitionSerializer::parseSingleMapping(TiXmlElement* root
 }
 
 }
-}
-}
+
+

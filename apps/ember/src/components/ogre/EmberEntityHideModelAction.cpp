@@ -24,8 +24,8 @@
 #include "domain/IGraphicalRepresentation.h"
 #include "domain/IEntityAttachment.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 EmberEntityHideModelAction::EmberEntityHideModelAction(EmberEntity& entity)
 		: mEntity(entity) {
@@ -43,4 +43,4 @@ void EmberEntityHideModelAction::deactivate(EntityMapping::ChangeContext& contex
 }
 
 }
-}
+

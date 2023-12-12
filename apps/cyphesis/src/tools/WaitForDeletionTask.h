@@ -23,19 +23,19 @@
 /**
  * A task which waits until we've received a sight of the specified entity being deleted.
  */
-class WaitForDeletionTask: public ClientTask
-{
-    public:
-        explicit WaitForDeletionTask(const std::string& entityId);
+class WaitForDeletionTask : public ClientTask {
+public:
+	explicit WaitForDeletionTask(const std::string& entityId);
 
-        /// \brief Set up the task processing user arguments
-        void setup(const std::string & arg, OpVector &) override;
-        /// \brief Handle an operation from the server
-        void operation(const Operation &, OpVector &) override;
+	/// \brief Set up the task processing user arguments
+	void setup(const std::string& arg, OpVector&) override;
 
-    protected:
+	/// \brief Handle an operation from the server
+	void operation(const Operation&, OpVector&) override;
 
-        const std::string m_entityId;
+protected:
+
+	const std::string m_entityId;
 
 };
 

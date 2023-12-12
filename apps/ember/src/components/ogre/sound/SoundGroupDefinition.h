@@ -27,8 +27,8 @@
 #include <map>
 #include <list>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 struct SoundDefinition;
 
 /**
@@ -43,6 +43,5 @@ struct SoundGroupDefinition {
 
 }
 
-}
 
 #endif

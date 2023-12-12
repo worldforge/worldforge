@@ -29,23 +29,19 @@
 #include <OgreSceneQuery.h>
 #include <boost/any.hpp>
 
-namespace Ogre
-{
-struct RaySceneQueryResultEntry;
+namespace Ogre {
+
 class Ray;
 }
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
 /**
  The kind of mouse click operation.
  */
-enum MousePickType
-{
+enum MousePickType {
 	/**
 	 * Simple click. This is when the mouse button is pressed and released within a short time (by default 200 ms).
 	 */
@@ -74,8 +70,7 @@ enum MousePickType
 /**
  Mouse picking info from the windowing system.
  */
-struct MousePickerArgs
-{
+struct MousePickerArgs {
 	/**
 	 The x coords in local window space.
 	 */
@@ -120,8 +115,7 @@ struct PickResult {
  Normal operation for an implementation of this is then, if it can handle the object picked, to mark it, but wait with performing the action action until endPickingContext(...) is called (as opposed to performing the action directly when processPickResult(...) is called).
 
  */
-struct IWorldPickListener
-{
+struct IWorldPickListener {
 
 	/**
 	 * @brief Dtor.
@@ -138,8 +132,7 @@ struct IWorldPickListener
 	 * @param queryMask Any optional query masks that should be applied to the query.
 	 * @param pickArgs The base pick arguments.
 	 */
-	virtual void initializePickingContext(bool& willParticipate, const MousePickerArgs& pickArgs)
-	{
+	virtual void initializePickingContext(bool& willParticipate, const MousePickerArgs& pickArgs) {
 		//Default is to participate.
 		willParticipate = true;
 	}
@@ -148,8 +141,7 @@ struct IWorldPickListener
 	 @brief Called when the picking is over, either because one of the processPickResult calls set continuePicking to false, or because there are no more objects to pick.
 	 * @param mousePickerArgs The original mouse picking arguments.
 	 */
-	virtual void endPickingContext(const MousePickerArgs& mousePickerArgs, const std::vector<PickResult>& results)
-	{
+	virtual void endPickingContext(const MousePickerArgs& mousePickerArgs, const std::vector<PickResult>& results) {
 	}
 
 	/**

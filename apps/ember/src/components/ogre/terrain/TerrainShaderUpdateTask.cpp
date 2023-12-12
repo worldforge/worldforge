@@ -29,10 +29,8 @@
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainShaderUpdateTask::TerrainShaderUpdateTask(GeometryPtrVector geometry,
 												 std::vector<TerrainShader> shaders,
@@ -50,17 +48,17 @@ TerrainShaderUpdateTask::~TerrainShaderUpdateTask() = default;
 
 void TerrainShaderUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecutionContext& context) {
 	GeometryPtrVector updatedPages;
-	for (auto& geometry : mGeometry) {
+	for (auto& geometry: mGeometry) {
 		auto page = geometry->getPage();
 		bool shouldUpdate = false;
-		for (const auto& area : mAreas) {
+		for (const auto& area: mAreas) {
 			if (WFMath::Intersect(page->getWorldExtent(), area, true) || WFMath::Contains(page->getWorldExtent(), area, true)) {
 				shouldUpdate = true;
 				break;
 			}
 		}
 		if (shouldUpdate) {
-			for (auto& shader : mShaders) {
+			for (auto& shader: mShaders) {
 				//repopulate the layer
 				page->updateShaderTexture(shader.layer.layerDef, shader.layer.terrainIndex, shader.shader, *geometry, true);
 			}
@@ -74,7 +72,7 @@ void TerrainShaderUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecution
 }
 
 bool TerrainShaderUpdateTask::executeTaskInMainThread() {
-	for (auto& shader : mShaders) {
+	for (auto& shader: mShaders) {
 		mSignal(shader, mAreas);
 	}
 	return true;
@@ -82,5 +80,5 @@ bool TerrainShaderUpdateTask::executeTaskInMainThread() {
 
 }
 
-}
-}
+
+

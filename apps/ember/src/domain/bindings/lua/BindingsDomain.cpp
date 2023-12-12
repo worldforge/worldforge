@@ -33,7 +33,7 @@ void registerBindingsDomain(sol::state_view& lua) {
 	auto emberEntity = Ember.new_usertype<EmberEntity>("EmberEntity", sol::no_constructor,
 													   "getUsages",
 													   [](EmberEntity* self) {
-														   std::vector <std::string> usagesNames;
+														   std::vector<std::string> usagesNames;
 														   for (auto& entry: self->getUsages()) {
 															   usagesNames.emplace_back(entry.first);
 														   }
@@ -49,7 +49,7 @@ void registerBindingsDomain(sol::state_view& lua) {
 													   },
 													   "getUsagesProtected",
 													   [](EmberEntity* self) {
-														   std::vector <std::string> usagesNames;
+														   std::vector<std::string> usagesNames;
 														   for (auto& entry: self->getUsagesProtected()) {
 															   usagesNames.emplace_back(entry.first);
 														   }

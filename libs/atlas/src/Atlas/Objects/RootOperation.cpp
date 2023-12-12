@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 const std::string SERIALNO_ATTR = "serialno";
 const std::string REFNO_ATTR = "refno";
@@ -213,4 +213,4 @@ void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::
     attr_data[ARGS_ATTR] = ARGS_FLAG;
 }
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation

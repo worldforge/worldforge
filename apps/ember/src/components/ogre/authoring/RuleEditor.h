@@ -30,26 +30,21 @@
 #include <unordered_map>
 #include <string>
 
-namespace Eris
-{
+namespace Eris {
 class Avatar;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace Ember::OgreView::Authoring {
 
 /**
  * @brief Allows for easy editing of rules on the server.
  */
-class RuleEditor: public virtual sigc::trackable
-{
+class RuleEditor : public virtual sigc::trackable {
 public:
 
 	explicit RuleEditor(Eris::Avatar& avatar);
+
 	virtual ~RuleEditor() = default;
 
 	/**
@@ -84,15 +79,17 @@ private:
 	std::unordered_map<Atlas::Message::IntType, Atlas::Objects::Root> mQueuedRules;
 
 	void operationGetRuleResult(const Atlas::Objects::Operation::RootOperation& op);
+
 	void operationCreateRuleResult(const Atlas::Objects::Operation::RootOperation& op);
+
 	void operationUpdateRuleResult(const Atlas::Objects::Operation::RootOperation& op);
 
 	void updateRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule);
+
 	void createRule(Atlas::Message::IntType serial, Atlas::Objects::Root& rule);
 };
 
 }
-}
-}
+
 
 #endif /* EMBER_OGRE_AUTHORING_RULEEDITOR_H_ */

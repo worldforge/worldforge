@@ -28,11 +28,11 @@
 #include <vector>
 #include <string>
 
-namespace Atlas {
-namespace Message {
+
+namespace Atlas::Message {
 class Element;
 }
-}
+
 
 namespace Ember {
 class AttributeObserver;

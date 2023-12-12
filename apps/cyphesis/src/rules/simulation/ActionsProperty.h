@@ -23,51 +23,49 @@
 #include "modules/Ref.h"
 #include <boost/optional.hpp>
 
-class ActionsProperty : public PropertyBase
-{
-    public:
+class ActionsProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_atlastype = "map";
-        static constexpr const char* property_name = "actions";
+	static constexpr const char* property_atlastype = "map";
+	static constexpr const char* property_name = "actions";
 
 
-        struct Action
-        {
-            double startTime;
-            boost::optional<double> endTime;
-        };
+	struct Action {
+		double startTime;
+		boost::optional<double> endTime;
+	};
 
-        ActionsProperty();
+	ActionsProperty();
 
-        void install(LocatedEntity&, const std::string&) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        HandlerResult operation(LocatedEntity&,
-                                const Operation&,
-                                OpVector&) override;
+	HandlerResult operation(LocatedEntity&,
+							const Operation&,
+							OpVector&) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        void enqueueTickOp(const LocatedEntity& entity, OpVector& res);
+	void enqueueTickOp(const LocatedEntity& entity, OpVector& res);
 
-        void addAction(LocatedEntity& entity, OpVector& res, std::string actionName, Action action);
+	void addAction(LocatedEntity& entity, OpVector& res, std::string actionName, Action action);
 
-        void removeAction(LocatedEntity& entity, OpVector& res, std::string actionName);
+	void removeAction(LocatedEntity& entity, OpVector& res, std::string actionName);
 
-    protected:
+protected:
 
-        std::map<std::string, Action> m_data;
+	std::map<std::string, Action> m_data;
 
-        boost::optional<double> m_tickOutstanding;
+	boost::optional<double> m_tickOutstanding;
 
-        ActionsProperty(const ActionsProperty& rhs) = default;
+	ActionsProperty(const ActionsProperty& rhs) = default;
 
-        ActionsProperty* copy() const override;
+	ActionsProperty* copy() const override;
 
-        HandlerResult TickOperation(LocatedEntity& owner, const Operation& op, OpVector&);
+	HandlerResult TickOperation(LocatedEntity& owner, const Operation& op, OpVector&);
 
 
 };

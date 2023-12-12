@@ -18,13 +18,14 @@
 
 #include <cassert>
 #include <mutex>
+#include <utility>
 
-namespace Atlas {
+
 
 /// The Atlas high level Objects namespace.
 ///
 /// This namespace contains classes used to handle high level Atlas data.
-namespace Objects {
+namespace Atlas::Objects {
 
 class Factories;
 
@@ -32,32 +33,30 @@ class Factories;
  *
  * This is thrown by Root::getAttr() [and derivatives thereof!]
  */
-class NoSuchAttrException : public Atlas::Exception
-{
-    /// The name of the attribute that does not exist.
-    std::string m_name;
-  public:
-    explicit NoSuchAttrException(const std::string& name) noexcept :
-             Atlas::Exception("No such attribute '" + name + "'."),
-			 m_name(name) {}
+class NoSuchAttrException : public Atlas::Exception {
+	/// The name of the attribute that does not exist.
+	std::string m_name;
+public:
+	explicit NoSuchAttrException(const std::string& name) noexcept:
+			Atlas::Exception("No such attribute '" + name + "'."),
+			m_name(name) {}
 
-	NoSuchAttrException(NoSuchAttrException&& rhs) noexcept :
+	NoSuchAttrException(NoSuchAttrException&& rhs) noexcept:
 			Atlas::Exception(rhs),
-			m_name(rhs.m_name)
-	{ }
+			m_name(rhs.m_name) {}
 
-	NoSuchAttrException& operator=(NoSuchAttrException&& rhs) noexcept
-	{
+	NoSuchAttrException& operator=(NoSuchAttrException&& rhs) noexcept {
 		m_name = std::move(rhs.m_name);
 		Atlas::Exception::operator=(rhs);
 		return *this;
 	}
 
-    ~NoSuchAttrException() noexcept override = default;
-    /// Get the name of the attribute which does not exist.
-    const std::string & getName() const {
-        return m_name;
-    }
+	~NoSuchAttrException() noexcept override = default;
+
+	/// Get the name of the attribute which does not exist.
+	const std::string& getName() const {
+		return m_name;
+	}
 };
 
 class BaseObjectData;
@@ -74,101 +73,98 @@ class BaseObjectData;
  * Any subclass of BaseObject should therefore keep a static instance of this
  * in a field named "allocator".
  */
-template <typename T>
+template<typename T>
 class Allocator {
 protected:
-    /**
-     * The default instance, acting as a prototype for all other instances.
-     */
-    T m_defaults_Data;
+	/**
+	 * The default instance, acting as a prototype for all other instances.
+	 */
+	T m_defaults_Data;
 
 
-    /**
-     * Mutex for whenever the m_being_Data_mutex field need to be accessed.
-     * A std::atomic might be nicer, but the current code requires a mutex.
-     */
-    std::mutex m_begin_Data_mutex;
+	/**
+	 * Mutex for whenever the m_being_Data_mutex field need to be accessed.
+	 * A std::atomic might be nicer, but the current code requires a mutex.
+	 */
+	std::mutex m_begin_Data_mutex;
 
-    /**
-     * The first available instance, not currently in use.
-     *
-     * If this is null, a new instance needs to be created.
-     */
-    T* m_begin_Data;
+	/**
+	 * The first available instance, not currently in use.
+	 *
+	 * If this is null, a new instance needs to be created.
+	 */
+	T* m_begin_Data;
 
 public:
 
-    /**
-     * A map of attributes and their flags.
-     */
-    std::map<std::string, uint32_t> attr_flags_Data;
+	/**
+	 * A map of attributes and their flags.
+	 */
+	std::map<std::string, uint32_t> attr_flags_Data;
 
-    /**
-     * Ctor.
-     */
-    Allocator();
+	/**
+	 * Ctor.
+	 */
+	Allocator();
 
-    /**
-     * Dtor.
-     */
-    ~Allocator();
+	/**
+	 * Dtor.
+	 */
+	~Allocator();
 
-    /**
-     * Gets the default object instance, which acts as a prototype for all
-     * other instances in the system.
-     *
-     * Any alterations made to the prototype instance will reflect on all
-     * other instances of the same class.
-     *
-     * @return The default object instance.
-     */
-    T *getDefaultObjectInstance();
+	/**
+	 * Gets the default object instance, which acts as a prototype for all
+	 * other instances in the system.
+	 *
+	 * Any alterations made to the prototype instance will reflect on all
+	 * other instances of the same class.
+	 *
+	 * @return The default object instance.
+	 */
+	T* getDefaultObjectInstance();
 
-    /**
-     * Allocates a new instance to be used.
-     *
-     * This will either reuse and existing instance or create a new, depending
-     * of whether there's a free unused instance available.
-     * @return An instance ready to be used.
-     */
-    T *alloc();
+	/**
+	 * Allocates a new instance to be used.
+	 *
+	 * This will either reuse and existing instance or create a new, depending
+	 * of whether there's a free unused instance available.
+	 * @return An instance ready to be used.
+	 */
+	T* alloc();
 
-    /**
-     * Frees up an instance.
-     *
-     * This means that the instance will be returned to the pool, ready to be
-     * used again.
-     * @param instance The instance to free.
-     */
-    void free(T *instance);
+	/**
+	 * Frees up an instance.
+	 *
+	 * This means that the instance will be returned to the pool, ready to be
+	 * used again.
+	 * @param instance The instance to free.
+	 */
+	void free(T* instance);
 
-    /**
-     * Deletes all pooled but unused instances.
-     */
-    void release();
+	/**
+	 * Deletes all pooled but unused instances.
+	 */
+	void release();
 
 };
 
-template <typename T>
-Allocator<T>::Allocator() : m_begin_Data(nullptr)
-{
-    T::fillDefaultObjectInstance(m_defaults_Data, attr_flags_Data);
+template<typename T>
+Allocator<T>::Allocator() : m_begin_Data(nullptr) {
+	T::fillDefaultObjectInstance(m_defaults_Data, attr_flags_Data);
 }
 
-template <typename T>
+template<typename T>
 Allocator<T>::~Allocator() {
-    release();
+	release();
 }
 
-template <typename T>
-inline T *Allocator<T>::getDefaultObjectInstance()
-{
-    return &m_defaults_Data;
+template<typename T>
+inline T* Allocator<T>::getDefaultObjectInstance() {
+	return &m_defaults_Data;
 }
 
-template <typename T>
-inline T *Allocator<T>::alloc()
-{
+template<typename T>
+inline T* Allocator<T>::alloc() {
 	{
 		std::unique_lock<std::mutex> lock(m_begin_Data_mutex);
 		if (m_begin_Data) {
@@ -181,13 +177,12 @@ inline T *Allocator<T>::alloc()
 			return res;
 		}
 	}
-    return new T(&m_defaults_Data);
+	return new T(&m_defaults_Data);
 }
 
-template <typename T>
-inline void Allocator<T>::free(T *instance)
-{
-    instance->reset();
+template<typename T>
+inline void Allocator<T>::free(T* instance) {
+	instance->reset();
 	{
 		std::lock_guard<std::mutex> lock(m_begin_Data_mutex);
 		instance->m_next = m_begin_Data;
@@ -195,18 +190,17 @@ inline void Allocator<T>::free(T *instance)
 	}
 }
 
-template <typename T>
-void Allocator<T>::release()
-{
-    //Delete all chained instances. This does not use the mutex as destruction can only happen in one thread,
-    // and trying to use the allocator while it's being destroyed is an illegal state.
+template<typename T>
+void Allocator<T>::release() {
+	//Delete all chained instances. This does not use the mutex as destruction can only happen in one thread,
+	// and trying to use the allocator while it's being destroyed is an illegal state.
 	T* next = m_begin_Data;
 	m_begin_Data = nullptr;
-    while (next) {
-        T* toDelete = next;
-        next = static_cast<T*>(next->m_next);
-        delete toDelete;
-    }
+	while (next) {
+		T* toDelete = next;
+		next = static_cast<T*>(next->m_next);
+		delete toDelete;
+	}
 }
 
 static const int BASE_OBJECT_NO = 0;
@@ -240,126 +234,137 @@ which is used to both create the default prototype instance as well as
 creating any attribute-name-to-flags map.
 
  */
-class BaseObjectData
-{
+class BaseObjectData {
 public:
-    template <typename>
-    friend class Allocator;
-    template <typename>
-    friend class SmartPtr;
+	template<typename>
+	friend
+	class Allocator;
 
-    /// Construct a new BaseObjectData from a subclass.
-    /// Initializes flags to zero, and stores a pointer to the reference
-    /// object that provides default values for all attributes. Subclasses
-    /// must pass in a pointer to their class specific reference object.
-    explicit BaseObjectData(BaseObjectData *defaults);
+	template<typename>
+	friend
+	class SmartPtr;
 
-    virtual ~BaseObjectData();
+	/// Construct a new BaseObjectData from a subclass.
+	/// Initializes flags to zero, and stores a pointer to the reference
+	/// object that provides default values for all attributes. Subclasses
+	/// must pass in a pointer to their class specific reference object.
+	explicit BaseObjectData(BaseObjectData* defaults);
 
-    /// Get class number:
-    int getClassNo() const 
-    {
-        return m_class_no;
-    }
+	virtual ~BaseObjectData();
 
-    uint32_t getAttrFlags() const
-    {
-        return m_attrFlags;
-    }
+	/// Get class number:
+	int getClassNo() const {
+		return m_class_no;
+	}
 
-    virtual BaseObjectData * copy() const = 0;
+	uint32_t getAttrFlags() const {
+		return m_attrFlags;
+	}
 
-    /// Is this instance of some class?
-    virtual bool instanceOf(int classNo) const;
-    
-    /// Check whether the attribute "name" exists.
-    bool hasAttr(const std::string& name) const;
-    /// Check whether the attribute "name" exists.
-    bool hasAttrFlag(uint32_t flag) const;
-    /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
-    /// not exist.
-    Atlas::Message::Element getAttr(const std::string& name) const;
-    /// Retrieve the attribute "name". Return non-zero if it does
-    /// not exist.
-    virtual int copyAttr(const std::string& name,
-                         Atlas::Message::Element & attr) const;
-    /// Set the attribute "name" to the value given by "attr".
-    virtual void setAttr(std::string name,
-                         Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr);
-    /// Remove the attribute "name".
-    virtual void removeAttr(const std::string& name);
-    /// Remove the attribute "name".
-    virtual void removeAttrFlag(uint32_t flag);
+	virtual BaseObjectData* copy() const = 0;
 
-    /// Convert this object to a Object. This is now legacy, and implemented
-    /// using addToMessage.
-    Atlas::Message::MapType asMessage() const;
+	/// Is this instance of some class?
+	virtual bool instanceOf(int classNo) const;
 
-    /// Write this object to an existing Element
-    virtual void addToMessage(Atlas::Message::MapType &) const;
+	/// Check whether the attribute "name" exists.
+	bool hasAttr(const std::string& name) const;
 
-    /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge & b) const;
+	/// Check whether the attribute "name" exists.
+	bool hasAttrFlag(uint32_t flag) const;
+
+	/// Retrieve the attribute "name". Throws NoSuchAttrException if it does
+	/// not exist.
+	Atlas::Message::Element getAttr(const std::string& name) const;
+
+	/// Retrieve the attribute "name". Return non-zero if it does
+	/// not exist.
+	virtual int copyAttr(const std::string& name,
+						 Atlas::Message::Element& attr) const;
+
+	/// Set the attribute "name" to the value given by "attr".
+	virtual void setAttr(std::string name,
+						 Atlas::Message::Element attr, const Atlas::Objects::Factories* factories = nullptr);
+
+
+	/// Remove the attribute "name".
+	virtual void removeAttr(const std::string& name);
+
+	/// Remove the attribute "name".
+	virtual void removeAttrFlag(uint32_t flag);
+
+	/// Convert this object to a Object. This is now legacy, and implemented
+	/// using addToMessage.
+	Atlas::Message::MapType asMessage() const;
+
+	/// Write this object to an existing Element
+	virtual void addToMessage(Atlas::Message::MapType&) const;
+
+	/// Send the contents of this object to a Bridge.
+	virtual void sendContents(Atlas::Bridge& b) const;
 
 protected:
 
-    /// \brief Free an instance of this class, returning it to the memory
-    /// pool.
-    ///
-    /// This function in combination with alloc() handle the memory pool.
-    virtual void free() = 0;
-    virtual void reset() = 0;
-    void incRef();
-    void decRef();
+	/// \brief Free an instance of this class, returning it to the memory
+	/// pool.
+	///
+	/// This function in combination with alloc() handle the memory pool.
+	virtual void free() = 0;
 
-    /// Find the class which contains the attribute "name".
-    virtual int getAttrClass(const std::string& name) const;
+	virtual void reset() = 0;
 
-    /// Find the flag for the attribute "name".
-    virtual bool getAttrFlag(const std::string& name, uint32_t& flag) const;
+	void incRef();
 
-    template<typename T>
-	static T * copyInstance(const T& instance);
+	void decRef();
 
-    int m_class_no; //each class has different enum
-    int m_refCount; //how many instances
+	/// Find the class which contains the attribute "name".
+	virtual int getAttrClass(const std::string& name) const;
 
-    /**
-     * The default instance, acting as a prototype for all other instances.
-     */
-    BaseObjectData *m_defaults;
+	/// Find the flag for the attribute "name".
+	virtual bool getAttrFlag(const std::string& name, uint32_t& flag) const;
 
-    /**
-     * The next instance, if this instance has been freed up.
-     */
-    BaseObjectData *m_next;
-    std::map<std::string, Atlas::Message::Element> m_attributes;
-    // is attribute in this object or in default object?
-    uint32_t m_attrFlags;
+	template<typename T>
+	static T* copyInstance(const T& instance);
+
+	int m_class_no; //each class has different enum
+	int m_refCount; //how many instances
+
+	/**
+	 * The default instance, acting as a prototype for all other instances.
+	 */
+	BaseObjectData* m_defaults;
+
+	/**
+	 * The next instance, if this instance has been freed up.
+	 */
+	BaseObjectData* m_next;
+	std::map<std::string, Atlas::Message::Element> m_attributes;
+	// is attribute in this object or in default object?
+	uint32_t m_attrFlags;
 };
 
 inline void BaseObjectData::incRef() {
-    m_refCount++;
+	m_refCount++;
 }
 
 inline void BaseObjectData::decRef() {
-    //why zero based refCount? avoids one m_refCount-- ;-)
-    assert( m_refCount >= 0 );
-    if(!m_refCount) {
-        free();
-        return;
-    }
-    m_refCount--;
+	//why zero based refCount? avoids one m_refCount-- ;-)
+	assert(m_refCount >= 0);
+	if (!m_refCount) {
+		free();
+		return;
+	}
+	m_refCount--;
 }
 
 template<typename T>
-T * BaseObjectData::copyInstance(const T& instance) {
-	T * copied = T::allocator.alloc();
+T* BaseObjectData::copyInstance(const T& instance) {
+	T* copied = T::allocator.alloc();
 	*copied = instance;
 	copied->m_refCount = -1;
 	return copied;
 }
 
-} } // namespace Atlas::Objects
+}
+// namespace Atlas::Objects
 
 #endif

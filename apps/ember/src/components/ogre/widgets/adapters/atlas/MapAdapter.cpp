@@ -27,14 +27,7 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 
 MapAdapter::MapAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* childContainer)
@@ -69,7 +62,7 @@ void MapAdapter::fillElementFromGui() {
 
 bool MapAdapter::_hasChanges() {
 	bool hasChanges = false;
-	for (auto& item : mAdapters) {
+	for (auto& item: mAdapters) {
 		if (item.second.Adapter) {
 			hasChanges = hasChanges || item.second.Adapter->hasChanges();
 		}
@@ -79,7 +72,7 @@ bool MapAdapter::_hasChanges() {
 
 std::vector<std::string> MapAdapter::getAttributeNames() {
 	std::vector<std::string> attributeNames;
-	for (const auto& attribute : mAttributes) {
+	for (const auto& attribute: mAttributes) {
 		attributeNames.emplace_back(attribute.first);
 	}
 	return attributeNames;
@@ -101,24 +94,24 @@ void MapAdapter::removeAdapters() {
 
 ::Atlas::Message::Element MapAdapter::_getChangedElement() {
 	::Atlas::Message::MapType attributes;
-	for (auto& item : mAdapters) {
+	for (auto& item: mAdapters) {
 		auto& adapter = item.second.Adapter;
 		if (!adapter->isRemoved()) {
 			attributes.emplace(item.first, adapter->getChangedElement());
 		}
 	}
-	return Element(attributes);
+	return {attributes};
 }
 
 ::Atlas::Message::Element MapAdapter::getSelectedChangedElements() {
 	::Atlas::Message::MapType attributes;
-	for (auto& item : mAdapters) {
+	for (auto& item: mAdapters) {
 		auto& adapter = item.second.Adapter;
 		if (adapter && adapter->hasChanges() && !adapter->isRemoved()) {
 			attributes.emplace(item.first, adapter->getChangedElement());
 		}
 	}
-	return Element(attributes);
+	return {attributes};
 }
 
 bool MapAdapter::hasAdapter(const std::string& attr) const {
@@ -128,9 +121,9 @@ bool MapAdapter::hasAdapter(const std::string& attr) const {
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

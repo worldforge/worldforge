@@ -26,29 +26,28 @@
  * This is a read only property which can only be applied on an instance.
  * \ingroup PropertyClasses
  */
-class ModifiersProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_name = "_modifiers";
-        static constexpr const char* property_atlastype = "list";
+class ModifiersProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "_modifiers";
+	static constexpr const char* property_atlastype = "list";
 
-        ModifiersProperty();
+	ModifiersProperty();
 
-        ~ModifiersProperty() override = default;
+	~ModifiersProperty() override = default;
 
-        ModifiersProperty* copy() const override;
+	ModifiersProperty* copy() const override;
 
-         void install(LocatedEntity&, const std::string &) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
 
-    protected:
-        ModifiersProperty(const ModifiersProperty& rhs) = default;
+protected:
+	ModifiersProperty(const ModifiersProperty& rhs) = default;
 
-        LocatedEntity* m_entity;
+	LocatedEntity* m_entity;
 
 
 };

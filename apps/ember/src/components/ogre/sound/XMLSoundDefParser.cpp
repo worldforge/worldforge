@@ -26,15 +26,14 @@
 #include "components/ogre/XMLHelper.h"
 #include "SoundDefinition.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 std::map<std::string, std::unique_ptr<SoundGroupDefinition>> XMLSoundDefParser::parseScript(const Ogre::DataStreamPtr& stream) const {
 	std::map<std::string, std::unique_ptr<SoundGroupDefinition>> defs;
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
-	if (!xmlHelper.Load(xmlDoc, stream)) {
+	if (!XMLHelper::Load(xmlDoc, stream)) {
 		return defs;
 	}
 
@@ -61,14 +60,14 @@ std::map<std::string, std::unique_ptr<SoundGroupDefinition>> XMLSoundDefParser::
 	return defs;
 }
 
-void XMLSoundDefParser::readBuffers(SoundGroupDefinition* grp, TiXmlElement* objNode) const {
+void XMLSoundDefParser::readBuffers(SoundGroupDefinition* grp, TiXmlElement* objNode) {
 	for (TiXmlElement* smElem = objNode->FirstChildElement();
 		 smElem != nullptr; smElem = smElem->NextSiblingElement()) {
 		readBuffer(grp, smElem);
 	}
 }
 
-void XMLSoundDefParser::readBuffer(SoundGroupDefinition* grp, TiXmlElement* objNode) const {
+void XMLSoundDefParser::readBuffer(SoundGroupDefinition* grp, TiXmlElement* objNode) {
 	const char* filename = objNode->Attribute("filename");
 	const char* format = objNode->Attribute("format");
 // 	const char* playsin = objNode->Attribute("playsIn");
@@ -102,4 +101,4 @@ void XMLSoundDefParser::readBuffer(SoundGroupDefinition* grp, TiXmlElement* objN
 }
 
 }
-}
+

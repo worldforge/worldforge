@@ -26,9 +26,8 @@
 #include "framework/IScriptingProvider.h"
 #include "sol2/sol.hpp"
 
-namespace Ember {
 
-namespace Lua {
+namespace Ember::Lua {
 
 /**
  * @brief A scripting call context for lua scripts.
@@ -36,14 +35,12 @@ namespace Lua {
  * Whenever you want to be able to inspect return values from calling lua scripts, you should use an instance of this class and submit it when calling executeCode(...).
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-struct LuaScriptingCallContext : public IScriptingCallContext
-{
+struct LuaScriptingCallContext : public IScriptingCallContext {
 	sol::object ReturnValue;
 };
 
 
 }
 
-}
 
 #endif

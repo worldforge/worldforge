@@ -33,12 +33,12 @@ namespace OgreView {
 class GUIManager;
 namespace Gui {
 
-namespace Icons
-{
+namespace Icons {
 class Icon;
 }
 
 class EntityIconSlot;
+
 class EntityIcon;
 
 /**
@@ -49,8 +49,7 @@ An entity icon is an icon which is connected to an entity. The icons can be drag
 This class is responsible for handling all of them in the UI, creating new and destroying old.
 You normally don't create instances of neither EntityIconSlot nor EntityIcon yourself, but use the create* and destroy* methods in this class instead.
 */
-class EntityIconManager
-{
+class EntityIconManager {
 public:
 
 	/**
@@ -65,7 +64,7 @@ public:
 	 * All icons and slots will be destroyed.
 	 */
 	virtual ~EntityIconManager();
-	
+
 	/**
 	 * @brief Creates a new entity icon slot.
 	 * @param pixelSize The size of the slot in pixels.
@@ -78,7 +77,7 @@ public:
 	 * @param slot The slot to destroy.
 	 */
 	void destroySlot(EntityIconSlot* slot);
-	
+
 	/**
 	 * @brief Creates a new entity icon.
 	 * @param icon An empty icon instance which will be used by the entity icon.
@@ -96,7 +95,7 @@ public:
 	 * @param The entity icon to destroy.
 	 */
 	void destroyIcon(EntityIcon* icon);
-	
+
 	/**
 	 * @brief Emitted when a drag action of an entity icon has started.
 	 */

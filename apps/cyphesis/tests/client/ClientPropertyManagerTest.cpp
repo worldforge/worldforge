@@ -27,20 +27,19 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        ClientPropertyManager * cpm = new ClientPropertyManager;
-        delete cpm;
-    }
+int main() {
+	{
+		ClientPropertyManager* cpm = new ClientPropertyManager;
+		delete cpm;
+	}
 
-    {
-        ClientPropertyManager * cpm = new ClientPropertyManager;
-        assert(cpm->addProperty("foo"));
-        delete cpm;
-    }
+	{
+		ClientPropertyManager* cpm = new ClientPropertyManager;
+		assert(cpm->addProperty("foo"));
+		delete cpm;
+	}
 
-    return 0;
+	return 0;
 }
 
 #include "../stubs/rules/stubBBoxProperty.h"

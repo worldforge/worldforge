@@ -24,14 +24,16 @@
 #include <sigc++/signal.h>
 
 class CommSocket;
+
 class LocatedEntity;
+
 class ServerRouting;
 
 enum PeerAuthState {
-    PEER_INIT,            /// \brief Peer has just been connected to
-    PEER_AUTHENTICATING,  /// \brief Peer is currently authenticating us
-    PEER_AUTHENTICATED,   /// \brief We are authenticated and ready on the peer
-    PEER_FAILED,          /// \brief We have failed to authenticate
+	PEER_INIT,            /// \brief Peer has just been connected to
+	PEER_AUTHENTICATING,  /// \brief Peer is currently authenticating us
+	PEER_AUTHENTICATED,   /// \brief We are authenticated and ready on the peer
+	PEER_FAILED,          /// \brief We have failed to authenticate
 };
 
 /// \brief Class representing connections from another server that is peered to
@@ -41,42 +43,45 @@ enum PeerAuthState {
 /// It also handles the state relating to a specific connection, including
 /// whether it is authenticated.
 class Peer : public Link {
-  protected:
-    /// \brief Name of host we are connected to
-    std::string m_host;
-    /// \brief Port number we are connected to
-    int m_port;
-    /// \brief Account identifier returned after successful login
-    std::string m_accountId;
-    /// \brief Account type returned after login
-    std::string m_accountType;
-    /// The authentication state of the peer object
-    PeerAuthState m_state;
-    /// The states of the various active teleports
-    std::map<long, TeleportState> m_teleports;
-    
-  public:
-    /// The server routing object of this server.
-    ServerRouting & m_server;
+protected:
+	/// \brief Name of host we are connected to
+	std::string m_host;
+	/// \brief Port number we are connected to
+	int m_port;
+	/// \brief Account identifier returned after successful login
+	std::string m_accountId;
+	/// \brief Account type returned after login
+	std::string m_accountType;
+	/// The authentication state of the peer object
+	PeerAuthState m_state;
+	/// The states of the various active teleports
+	std::map<long, TeleportState> m_teleports;
 
-    Peer(CommSocket & client, ServerRouting & svr,
-         const std::string & addr, int port, RouterId id);
+public:
+	/// The server routing object of this server.
+	ServerRouting& m_server;
 
-    ~Peer() override;
+	Peer(CommSocket& client, ServerRouting& svr,
+		 const std::string& addr, int port, RouterId id);
 
-    void setAuthState(PeerAuthState state);
-    PeerAuthState getAuthState();
+	~Peer() override;
 
-    void externalOperation(const Operation & op, Link &) override;
-    void operation(const Operation &, OpVector &) override;
-    
-    int teleportEntity(const LocatedEntity *);
-    void peerTeleportResponse(const Operation &op, OpVector &res);
+	void setAuthState(PeerAuthState state);
 
-    void cleanTeleports();
+	PeerAuthState getAuthState();
 
-    sigc::signal<void()> destroyed;
-    sigc::signal<void(const Operation &)> replied;
+	void externalOperation(const Operation& op, Link&) override;
+
+	void operation(const Operation&, OpVector&) override;
+
+	int teleportEntity(const LocatedEntity*);
+
+	void peerTeleportResponse(const Operation& op, OpVector& res);
+
+	void cleanTeleports();
+
+	sigc::signal<void()> destroyed;
+	sigc::signal<void(const Operation&)> replied;
 };
 
 #endif // SERVER_PEER_H

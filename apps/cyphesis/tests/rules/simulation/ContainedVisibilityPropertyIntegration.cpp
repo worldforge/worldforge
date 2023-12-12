@@ -30,53 +30,46 @@
 
 #include "common/TypeNode.h"
 
-int main()
-{
+int main() {
 
-    struct Test : public Cyphesis::TestBase
-    {
-        Ref<TestEntity> m_char1;
+	struct Test : public Cyphesis::TestBase {
+		Ref<TestEntity> m_char1;
 
-        Test()
-        {
-            ADD_TEST(Test::test_copy)
-            ADD_TEST(Test::test_apply)
-        }
+		Test() {
+			ADD_TEST(Test::test_copy)
+			ADD_TEST(Test::test_apply)
+		}
 
-        void setup()
-        {
-            m_char1 = new TestEntity(1);
-        }
+		void setup() {
+			m_char1 = new TestEntity(1);
+		}
 
-        void teardown()
-        {
-            m_char1.reset();
-        }
+		void teardown() {
+			m_char1.reset();
+		}
 
 
-        void test_copy()
-        {
-            auto prop = std::make_unique<ContainedVisibilityProperty>();
+		void test_copy() {
+			auto prop = std::make_unique<ContainedVisibilityProperty>();
 
-            auto copy = prop->copy();
-            ASSERT_NOT_NULL(copy);
-            ASSERT_NOT_NULL(dynamic_cast<ContainedVisibilityProperty*>(copy));
-            delete copy;
-        }
+			auto copy = prop->copy();
+			ASSERT_NOT_NULL(copy);
+			ASSERT_NOT_NULL(dynamic_cast<ContainedVisibilityProperty*>(copy));
+			delete copy;
+		}
 
-        void test_apply()
-        {
-            auto prop = std::make_unique<ContainedVisibilityProperty>();
-            prop->set(1);
-            auto setProp = m_char1->setProperty(ContainedVisibilityProperty::property_name, std::move(prop));
-            m_char1->applyProperty(ContainedVisibilityProperty::property_name, *setProp);
+		void test_apply() {
+			auto prop = std::make_unique<ContainedVisibilityProperty>();
+			prop->set(1);
+			auto setProp = m_char1->setProperty(ContainedVisibilityProperty::property_name, std::move(prop));
+			m_char1->applyProperty(ContainedVisibilityProperty::property_name, *setProp);
 
-            ASSERT_TRUE(m_char1->hasFlags(entity_contained_visible));
-        }
+			ASSERT_TRUE(m_char1->hasFlags(entity_contained_visible));
+		}
 
-    } t;
+	} t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -99,12 +92,11 @@ int main()
 #include "../../stubs/common/stubTypeNode.h"
 
 
-void addToEntity(const Point3D& p, std::vector<double>& vd)
-{
-    vd.resize(3);
-    vd[0] = p[0];
-    vd[1] = p[1];
-    vd[2] = p[2];
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
+	vd.resize(3);
+	vd[0] = p[0];
+	vd[1] = p[1];
+	vd[2] = p[2];
 }
 
 #include "../../stubs/rules/simulation/stubBaseWorld.h"

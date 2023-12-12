@@ -20,32 +20,23 @@
 
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 EntityRefAdapter::EntityRefAdapter(const ::Atlas::Message::Element& element, Widgets widgets)
-		: AdapterBase(element)
-		, mWidgets(widgets)
-{
-		addGuiEventConnection(mWidgets.text->subscribeEvent(CEGUI::Window::EventTextChanged, [this]() {
-			if (!mSelfUpdate) {
-				EventValueChanged.emit();
-			}
-			return true;
-		}));
+		: AdapterBase(element), mWidgets(widgets) {
+	addGuiEventConnection(mWidgets.text->subscribeEvent(CEGUI::Window::EventTextChanged, [this]() {
+		if (!mSelfUpdate) {
+			EventValueChanged.emit();
+		}
+		return true;
+	}));
 
 	updateGui(mOriginalValue);
 
 }
 
-void EntityRefAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void EntityRefAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
 
 	auto I = element.Map().find("$eid");
@@ -54,22 +45,19 @@ void EntityRefAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-void EntityRefAdapter::fillElementFromGui()
-{
+void EntityRefAdapter::fillElementFromGui() {
 	mEditedValue = ::Atlas::Message::MapType();
 	mEditedValue.Map().emplace("$eid", mWidgets.text->getText().c_str());
 }
 
-bool EntityRefAdapter::_hasChanges()
-{
+bool EntityRefAdapter::_hasChanges() {
 	return mOriginalValue != getValue();
 }
 
 }
 
-}
 
-}
 
-}
-}
+
+
+

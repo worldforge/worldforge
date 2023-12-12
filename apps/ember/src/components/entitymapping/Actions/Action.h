@@ -23,23 +23,20 @@
 #ifndef EMBEROGRE_MODEL_MAPPING_ACTIONSACTION_H
 #define EMBEROGRE_MODEL_MAPPING_ACTIONSACTION_H
 
-namespace Ember
-{
 
 
-namespace EntityMapping
-{
 
-namespace Cases
-{
+namespace Ember::EntityMapping {
+
+namespace Cases {
 class CaseBase;
 }
 
 struct IVisitor;
+
 class ChangeContext;
 
-namespace Actions
-{
+namespace Actions {
 
 /**
  @brief Base class for actions. Applications are requested to implement their own subclasses.
@@ -49,11 +46,9 @@ namespace Actions
 
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class Action
-{
+class Action {
 public:
-	Action(): mOwnerCase(nullptr)
-	{}
+	Action() : mOwnerCase(nullptr) {}
 
 	virtual ~Action() = default;
 
@@ -89,13 +84,11 @@ protected:
 	Cases::CaseBase* mOwnerCase;
 };
 
-inline void Action::setCase(Cases::CaseBase* ownerCase)
-{
+inline void Action::setCase(Cases::CaseBase* ownerCase) {
 	mOwnerCase = ownerCase;
 }
 
-inline Cases::CaseBase* Action::getCase() const
-{
+inline Cases::CaseBase* Action::getCase() const {
 	return mOwnerCase;
 }
 
@@ -103,6 +96,6 @@ inline Cases::CaseBase* Action::getCase() const
 
 }
 
-}
+
 
 #endif

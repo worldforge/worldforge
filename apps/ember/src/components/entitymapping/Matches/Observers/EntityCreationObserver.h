@@ -28,14 +28,14 @@
 #include "../../EntityMapping.h"
 #include <Eris/View.h>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
 
-namespace Observers {
+
+
+
+namespace Ember::EntityMapping::Matches::Observers {
 
 /**
 	Observes for the creation of a specific entity in the world and automatically trigger the Match the observer is attached to when that entity is created.
@@ -62,10 +62,10 @@ protected:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

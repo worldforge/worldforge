@@ -24,23 +24,17 @@
 
 #include <MeshLodGenerator/OgreLodWorkQueueRequest.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Lod
-{
 
-bool PMInjectorSignaler::shouldInject(Ogre::LodWorkQueueRequest* request)
-{
+namespace Ember::OgreView::Lod {
+
+bool PMInjectorSignaler::shouldInject(Ogre::LodWorkQueueRequest* request) {
 	return true;
 }
 
-void PMInjectorSignaler::injectionCompleted(Ogre::LodWorkQueueRequest* request)
-{
+void PMInjectorSignaler::injectionCompleted(Ogre::LodWorkQueueRequest* request) {
 	LodInjected.emit(&request->config);
 }
 
 }
-}
-}
+
+

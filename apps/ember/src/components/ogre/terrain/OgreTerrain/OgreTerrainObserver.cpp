@@ -19,9 +19,8 @@
 #include "OgreTerrainObserver.h"
 #include "components/ogre/Convert.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 OgreTerrainObserver::OgreTerrainObserver(sigc::signal<void(const Ogre::TRect<Ogre::Real>&)>& terrainAreaUpdatedSignal) :
 		mObservedArea(0, 0, 0, 0),
@@ -45,6 +44,6 @@ void OgreTerrainObserver::terrainUpdated(const Ogre::TRect<Ogre::Real>& updatedA
 		EventAreaShown();
 	}
 }
-} /* namespace Terrain */
-} /* namespace OgreView */
-} /* namespace Ember */
+} // namespace Ember::OgreView::Terrain
+
+

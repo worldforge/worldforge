@@ -33,31 +33,30 @@
 #include <cassert>
 #include <physics/Vector3D.h>
 
-int main()
-{
+int main() {
 
-    {
-        WFMath::Point<2> p(2, 2);
-        auto mag = sqrMag(p);
-        assert(mag == 8.0);
-    }
+	{
+		WFMath::Point<2> p(2, 2);
+		auto mag = sqrMag(p);
+		assert(mag == 8.0);
+	}
 
-    {
+	{
 
-        assert(boxSquareSize({{0, 0, 0},
-                              {1, 1, 1}}) != 0);
-    }
+		assert(boxSquareSize({{0, 0, 0},
+							  {1, 1, 1}}) != 0);
+	}
 
-    {
-        boxSquareBoundingRadius({{0, 0, 0},
-                                 {1, 1, 1}});
-    }
+	{
+		boxSquareBoundingRadius({{0, 0, 0},
+								 {1, 1, 1}});
+	}
 
-    {
-        auto radius = std::sqrt(boxSquareHorizontalBoundingRadius({{-1, 0, -1},
-                                                         {1,  1, 1}}));
-        assert(WFMath::Equal(1.414215, radius, 0.001));
-    }
+	{
+		auto radius = std::sqrt(boxSquareHorizontalBoundingRadius({{-1, 0, -1},
+																   {1,  1, 1}}));
+		assert(WFMath::Equal(1.414215, radius, 0.001));
+	}
 
-    return 0;
+	return 0;
 }

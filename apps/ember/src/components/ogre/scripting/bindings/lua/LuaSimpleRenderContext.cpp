@@ -22,13 +22,13 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<SimpleRenderContext>(sol::table& space) {
 	auto simpleRenderContext = space.new_usertype<SimpleRenderContext>("SimpleRenderContext",
-																		  sol::constructors<
-																				  SimpleRenderContext(const std::string&, int, int),
-																				  SimpleRenderContext(const std::string&, Ogre::TexturePtr)
-																		  >());
+																	   sol::constructors<
+																			   SimpleRenderContext(const std::string&, int, int),
+																			   SimpleRenderContext(const std::string&, Ogre::TexturePtr)
+																	   >());
 	simpleRenderContext["getSceneNode"] = &SimpleRenderContext::getSceneNode;
 	simpleRenderContext["getCamera"] = &SimpleRenderContext::getCamera;
 	simpleRenderContext["getDefaultCameraDistance"] = &SimpleRenderContext::getDefaultCameraDistance;

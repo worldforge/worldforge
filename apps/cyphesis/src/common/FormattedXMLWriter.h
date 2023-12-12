@@ -25,36 +25,37 @@
 
 /// \brief Class to output Atlas data in human readable formatted XML-like.
 class FormattedXMLWriter {
-  private:
-    /// Output file
-    std::ostream & m_stream;
+private:
+	/// Output file
+	std::ostream& m_stream;
 
-    /// Counter to keep track of indenting the output
-    int m_indent;
+	/// Counter to keep track of indenting the output
+	int m_indent;
 
-    /// Return a character string corresponding to this atlas element type.
-    const char * typeToStr(Atlas::Message::Element::Type t) const;
+	/// Return a character string corresponding to this atlas element type.
+	const char* typeToStr(Atlas::Message::Element::Type t) const;
 
-    /// Write the contents of this element recursively to the stream.
-    void outputValue(const Atlas::Message::Element &);
+	/// Write the contents of this element recursively to the stream.
+	void outputValue(const Atlas::Message::Element&);
 
-    /// Write the contents of this atlas list recursively to the stream.
-    void outputList(const Atlas::Message::ListType &);
+	/// Write the contents of this atlas list recursively to the stream.
+	void outputList(const Atlas::Message::ListType&);
 
-    /// Write the contents of this atlas map recursively to the stream.
-    void outputMap(const Atlas::Message::MapType &);
-  public:
-    /// Construct a writer object to write to the given ostream.
-    explicit FormattedXMLWriter(std::ostream & stream);
+	/// Write the contents of this atlas map recursively to the stream.
+	void outputMap(const Atlas::Message::MapType&);
 
-    /// Write the atlas header to the stream.
-    void openOutput();
+public:
+	/// Construct a writer object to write to the given ostream.
+	explicit FormattedXMLWriter(std::ostream& stream);
 
-    /// Write the atlas tail to the stream.
-    void closeOutput();
+	/// Write the atlas header to the stream.
+	void openOutput();
 
-    /// Write the contents of this top level object to the stream
-    void outputObject(const Atlas::Message::MapType & o);
+	/// Write the atlas tail to the stream.
+	void closeOutput();
+
+	/// Write the contents of this top level object to the stream
+	void outputObject(const Atlas::Message::MapType& o);
 };
 
 #endif // COMMON_FORMATTED_XML_WRITER_H

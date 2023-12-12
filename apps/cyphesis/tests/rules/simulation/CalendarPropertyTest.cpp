@@ -27,18 +27,17 @@
 
 #include "rules/simulation/CalendarProperty.h"
 
-int main()
-{
-    CalendarProperty ap;
+int main() {
+	CalendarProperty ap;
 
-    PropertyChecker<CalendarProperty> pc(ap);
+	PropertyChecker<CalendarProperty> pc(ap);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 #include "../../TestWorld.h"

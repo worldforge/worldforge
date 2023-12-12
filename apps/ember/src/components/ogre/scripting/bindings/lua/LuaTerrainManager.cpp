@@ -25,13 +25,12 @@
 using namespace Ember::OgreView::Terrain;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<TerrainManager>(sol::table& space) {
 	auto terrainHandler = space.new_usertype<TerrainHandler>("TerrainHandler", sol::no_constructor);
 	terrainHandler["getMax"] = &TerrainHandler::getMax;
 	terrainHandler["getMin"] = &TerrainHandler::getMin;
 	terrainHandler["getPageMetersSize"] = &TerrainHandler::getPageMetersSize;
-
 
 
 	auto terrainManager = space.new_usertype<TerrainManager>("TerrainManager", sol::no_constructor);

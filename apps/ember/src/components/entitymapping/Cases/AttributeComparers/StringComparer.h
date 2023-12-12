@@ -25,14 +25,14 @@
 
 #include <string>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Interface for string comparison.
@@ -76,10 +76,10 @@ public:
 }
 
 
-}
 
-}
 
-}
+
+
+
 
 #endif

@@ -23,12 +23,12 @@
 #include "AttributeCase.h"
 #include "AttributeComparers/StringComparerWrapper.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 AttributeCase::AttributeCase(std::unique_ptr<AttributeComparers::AttributeComparerWrapper> comparerWrapper)
 		: mComparerWrapper(std::move(comparerWrapper)) {
@@ -48,6 +48,6 @@ bool AttributeCase::testMatch(const Atlas::Message::Element& attribute) {
 
 }
 
-}
 
-}
+
+

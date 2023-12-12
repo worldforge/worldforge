@@ -21,10 +21,8 @@
 
 #include <CEGUI/RenderedStringTextComponent.h>
 
-namespace Ember
-{
-namespace Cegui
-{
+
+namespace Ember::Cegui {
 
 /**
  * @brief Overrides colour modulation of CEGUI::RenderedStringTextComponent.
@@ -32,8 +30,7 @@ namespace Cegui
  * Since we use black text colours this means that all our colours will end up black (i.e. it will multiply by zero, which results in zero).
  * This class overrides this behaviour to always disable the mod_colours.
  */
-class RenderedColourStringTextComponent : public CEGUI::RenderedStringTextComponent
-{
+class RenderedColourStringTextComponent : public CEGUI::RenderedStringTextComponent {
 public:
 
 	RenderedColourStringTextComponent();
@@ -41,9 +38,9 @@ public:
 	RenderedColourStringTextComponent(const CEGUI::String& text, const CEGUI::String& font_name);
 
 	void draw(const CEGUI::Window* ref_wnd, CEGUI::GeometryBuffer& buffer,
-	              const CEGUI::Vector2f& position, const CEGUI::ColourRect* mod_colours,
-	              const CEGUI::Rectf* clip_rect, const float vertical_space,
-	              const float space_extra) const override;
+			  const CEGUI::Vector2f& position, const CEGUI::ColourRect* mod_colours,
+			  const CEGUI::Rectf* clip_rect, float vertical_space,
+			  float space_extra) const override;
 
 	CEGUI::RenderedStringTextComponent* clone() const override;
 
@@ -51,5 +48,5 @@ public:
 };
 
 }
-}
+
 #endif /* RENDEREDCOLOURSTRINGTEXTCOMPONENT_H_ */

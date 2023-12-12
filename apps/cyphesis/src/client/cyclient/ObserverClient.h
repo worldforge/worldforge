@@ -28,21 +28,24 @@
 /// In fact the observation code has not yet been implemented, and this
 /// client is mainly used to handle world initialisation.
 class ObserverClient : public BaseClient {
-  protected:
-    std::string m_server;
-  public:
-    explicit ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore& typeStore);
-    ~ObserverClient() override;
+protected:
+	std::string m_server;
+public:
+	explicit ObserverClient(boost::asio::io_context& io_context, Atlas::Objects::Factories& factories, TypeStore& typeStore);
 
-    void setServer(const std::string & server) {
-        m_server = server;
-    }
+	~ObserverClient() override;
 
-    int setup(const std::string & account = "",
-              const std::string & password = "",
-              const std::string & avatar = "creator");
-    int teardown();
-    void idle() override;
+	void setServer(const std::string& server) {
+		m_server = server;
+	}
+
+	int setup(const std::string& account = "",
+			  const std::string& password = "",
+			  const std::string& avatar = "creator");
+
+	int teardown();
+
+	void idle() override;
 };
 
 #endif // CLIENT_OBSERVER_CLIENT_H

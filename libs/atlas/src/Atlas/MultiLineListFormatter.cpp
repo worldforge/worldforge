@@ -18,64 +18,54 @@
 
 #include <iostream>
 
-namespace Atlas
-{
+namespace Atlas {
 
-MultiLineListFormatter::MultiLineListFormatter(std::ostream & s, Bridge & b) :
-	Formatter(s, b)
-{
+MultiLineListFormatter::MultiLineListFormatter(std::ostream& s, Bridge& b) :
+		Formatter(s, b) {
 }
 
-void MultiLineListFormatter::mapListItem(std::string name)
-{
+void MultiLineListFormatter::mapListItem(std::string name) {
 	Formatter::mapListItem(name);
 	m_indent += m_spacing;
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listMapItem()
-{
+void MultiLineListFormatter::listMapItem() {
 	Formatter::listMapItem();
 }
 
-void MultiLineListFormatter::listListItem()
-{
+void MultiLineListFormatter::listListItem() {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listListItem();
 	m_indent += m_spacing;
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listIntItem(std::int64_t l)
-{
+void MultiLineListFormatter::listIntItem(std::int64_t l) {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listIntItem(l);
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listFloatItem(double d)
-{
+void MultiLineListFormatter::listFloatItem(double d) {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listFloatItem(d);
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listStringItem(std::string s)
-{
+void MultiLineListFormatter::listStringItem(std::string s) {
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listStringItem(s);
 	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listNoneItem()
-{
-    m_stream << std::string(m_indent, ' ');
-    Formatter::listNoneItem();
-    m_stream << std::endl;
+void MultiLineListFormatter::listNoneItem() {
+	m_stream << std::string(m_indent, ' ');
+	Formatter::listNoneItem();
+	m_stream << std::endl;
 }
 
-void MultiLineListFormatter::listEnd()
-{
+void MultiLineListFormatter::listEnd() {
 	m_indent -= m_spacing;
 	m_stream << std::string(m_indent, ' ');
 	Formatter::listEnd();

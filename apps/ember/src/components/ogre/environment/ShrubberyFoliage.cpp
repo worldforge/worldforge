@@ -32,7 +32,6 @@
 #include "../Convert.h"
 #include "../terrain/TerrainInfo.h"
 #include "../terrain/TerrainManager.h"
-#include "../terrain/TerrainLayerDefinition.h"
 
 #include "../terrain/ITerrainAdapter.h"
 
@@ -65,7 +64,7 @@ void ShrubberyFoliage::initialize() {
 	mPagedGeometry->setPageLoader(mLoader.get());
 
 	std::list<Forests::GeometryPageManager*> detailLevels = mPagedGeometry->getDetailLevels();
-	for (auto& detailLevel : detailLevels) {
+	for (auto& detailLevel: detailLevels) {
 		DistanceStore tempDistance = {detailLevel->getFarRange(), detailLevel->getNearRange(), detailLevel->getTransition()};
 		mDistanceStore.push_back(tempDistance);
 	}

@@ -11,7 +11,7 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 /** Starting point for entity hierarchy
 
@@ -201,7 +201,7 @@ inline void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
     attr_pos.resize(0);
     for (const auto& entry : val) {
         if(entry.isNum()) {
-            attr_pos.push_back(entry.asNum());
+            attr_pos.emplace_back(entry.asNum());
         }
     }
 }
@@ -220,7 +220,7 @@ inline void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& va
     attr_velocity.resize(0);
     for (const auto& entry : val) {
         if(entry.isNum()) {
-            attr_velocity.push_back(entry.asNum());
+            attr_velocity.emplace_back(entry.asNum());
         }
     }
 }
@@ -239,7 +239,7 @@ inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& va
     attr_contains.resize(0);
     for (const auto& entry : val) {
         if(entry.isString()) {
-            attr_contains.push_back(entry.asString());
+            attr_contains.emplace_back(entry.asString());
         }
     }
 }
@@ -287,7 +287,7 @@ inline Atlas::Message::ListType RootEntityData::getPosAsList() const
     const std::vector<double>& lst_in = getPos();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
-        lst_out.push_back(entry);
+        lst_out.emplace_back(entry);
     }
     return lst_out;
 }
@@ -312,7 +312,7 @@ inline Atlas::Message::ListType RootEntityData::getVelocityAsList() const
     const std::vector<double>& lst_in = getVelocity();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
-        lst_out.push_back(entry);
+        lst_out.emplace_back(entry);
     }
     return lst_out;
 }
@@ -337,7 +337,7 @@ inline Atlas::Message::ListType RootEntityData::getContainsAsList() const
     const std::vector<std::string>& lst_in = getContains();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
-        lst_out.push_back(std::string(entry));
+        lst_out.emplace_back(std::string(entry));
     }
     return lst_out;
 }
@@ -383,6 +383,6 @@ inline bool RootEntityData::isDefaultStampContains() const
 }
 
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity
 
 #endif // ATLAS_OBJECTS_ENTITY_ROOTENTITY_H

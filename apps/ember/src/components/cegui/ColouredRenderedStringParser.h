@@ -18,24 +18,22 @@
 
 #ifndef COLOUREDRENDEREDSTRINGPARSER_H_
 #define COLOUREDRENDEREDSTRINGPARSER_H_
+
 #include <CEGUI/BasicRenderedStringParser.h>
 
-namespace Ember
-{
-namespace Cegui
-{
+
+namespace Ember::Cegui {
 
 /**
  * @brief Overrides the default behaviour of CEGUI::BasicRenderedStringParser to use colour modulation.
  * Since the CEGUI::RenderedStringTextComponent will use colour modulation and this will result in all colours being black if the modulation colour is black we need to use an instance of RenderedColourStringTextComponent whenever a colour different from the base colour is to be used.
  */
-class ColouredRenderedStringParser: public CEGUI::BasicRenderedStringParser
-{
+class ColouredRenderedStringParser : public CEGUI::BasicRenderedStringParser {
 protected:
 	void appendRenderedText(CEGUI::RenderedString& rs, const CEGUI::String& text) const override;
 
 };
 
 }
-}
+
 #endif /* COLOUREDRENDEREDSTRINGPARSER_H_ */

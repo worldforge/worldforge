@@ -36,29 +36,29 @@ class Domain;
  *
  * \ingroup PropertyClasses
  */
-class DomainProperty: public Property<std::string> {
-    public:
+class DomainProperty : public Property<std::string> {
+public:
 
-        static constexpr const char* property_name = "domain";
+	static constexpr const char* property_name = "domain";
 
-        explicit DomainProperty() = default;
+	explicit DomainProperty() = default;
 
-        void install(LocatedEntity&, const std::string &) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void remove(LocatedEntity&, const std::string &) override;
+	void remove(LocatedEntity&, const std::string&) override;
 
-        DomainProperty * copy() const override;
+	DomainProperty* copy() const override;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        HandlerResult operation(LocatedEntity& e, const Operation & op, OpVector & res) override;
+	HandlerResult operation(LocatedEntity& e, const Operation& op, OpVector& res) override;
 
-    protected:
+protected:
 
-        DomainProperty(const DomainProperty& rhs) = default;
+	DomainProperty(const DomainProperty& rhs) = default;
 
-        //void scheduleTick(LocatedEntity& entity, double timeNow);
-        //HandlerResult tick_handler(LocatedEntity& e, const Operation & op, OpVector & res);
+	//void scheduleTick(LocatedEntity& entity, double timeNow);
+	//HandlerResult tick_handler(LocatedEntity& e, const Operation & op, OpVector & res);
 
 };
 

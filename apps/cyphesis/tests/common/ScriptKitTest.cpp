@@ -27,22 +27,23 @@
 
 class LocatedEntity;
 
-class TestScriptKit : public ScriptKit<LocatedEntity>
-{
-  public:
-    std::string m_package;
-    virtual const std::string & package() const { return m_package; }
-    virtual int addScript(LocatedEntity & entity) const { return 0; }
-    virtual int refreshClass() { return 0; }
+class TestScriptKit : public ScriptKit<LocatedEntity> {
+public:
+	std::string m_package;
+
+	virtual const std::string& package() const { return m_package; }
+
+	virtual int addScript(LocatedEntity& entity) const { return 0; }
+
+	virtual int refreshClass() { return 0; }
 };
 
-int main()
-{
-    // The is no code in ScriptKit.cpp to execute, but we need coverage.
-    {
-        ScriptKit<LocatedEntity> * sk = new TestScriptKit;
+int main() {
+	// The is no code in ScriptKit.cpp to execute, but we need coverage.
+	{
+		ScriptKit<LocatedEntity>* sk = new TestScriptKit;
 
-        delete sk;
-    }
-    return 0;
+		delete sk;
+	}
+	return 0;
 }

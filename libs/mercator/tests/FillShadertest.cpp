@@ -18,29 +18,27 @@
 
 typedef WFMath::Point<2> Point2;
 
-void testFillShader()
-{
-    Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
+void testFillShader() {
+	Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
 
-    Mercator::Shader::Parameters params;
-    
-    Mercator::FillShader dshade{params};
-    terrain.addShader(&dshade, 0);
-    
-    terrain.setBasePoint(0, 0, -20);
-    terrain.setBasePoint(0, 1, 1);
-    terrain.setBasePoint(1, 0, 2);
-    terrain.setBasePoint(1, 1, 0.5);
-    
-    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
-    
-    seg->populate();
-    seg->populateSurfaces();
+	Mercator::Shader::Parameters params;
+
+	Mercator::FillShader dshade{params};
+	terrain.addShader(&dshade, 0);
+
+	terrain.setBasePoint(0, 0, -20);
+	terrain.setBasePoint(0, 1, 1);
+	terrain.setBasePoint(1, 0, 2);
+	terrain.setBasePoint(1, 1, 0.5);
+
+	Mercator::Segment* seg = terrain.getSegmentAtIndex(0, 0);
+
+	seg->populate();
+	seg->populateSurfaces();
 }
 
-int main()
-{
-    testFillShader();
+int main() {
+	testFillShader();
 
-    return 0;
+	return 0;
 }

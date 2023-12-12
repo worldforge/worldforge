@@ -66,10 +66,10 @@ public:
 struct TimeTask : public Tasks::ITask {
 
 	TimeHolder& timeHolder;
-	std::unique_ptr<ITask> subtask;
+	std::unique_ptr <ITask> subtask;
 	Tasks::ITaskExecutionListener* listener;
 
-	explicit TimeTask(TimeHolder& timeHolder, std::unique_ptr<ITask> subtask = {}, Tasks::ITaskExecutionListener* listener = nullptr)
+	explicit TimeTask(TimeHolder& timeHolder, std::unique_ptr <ITask> subtask = {}, Tasks::ITaskExecutionListener* listener = nullptr)
 			: timeHolder(timeHolder), subtask(std::move(subtask)), listener(listener) {
 	}
 
@@ -136,16 +136,16 @@ public:
 };
 
 class TaskTestCase : public CppUnit::TestFixture {
-CPPUNIT_TEST_SUITE(TaskTestCase);
-		CPPUNIT_TEST(testSimpleTaskRun);
-		CPPUNIT_TEST(testSimpleTaskRunAndPoll);
-		CPPUNIT_TEST(testSimpleTaskRunTwoExecs);
-		CPPUNIT_TEST(testSimpleTaskRunTwoTasks);
-		CPPUNIT_TEST(testSimpleTaskRunTwoTasksTwoExecs);
-		CPPUNIT_TEST(testListener);
-		CPPUNIT_TEST(testBackgroundException);
-		CPPUNIT_TEST(testTaskOrder);
-		CPPUNIT_TEST(testSubTaskOrder);
+	CPPUNIT_TEST_SUITE(TaskTestCase);
+	CPPUNIT_TEST(testSimpleTaskRun);
+	CPPUNIT_TEST(testSimpleTaskRunAndPoll);
+	CPPUNIT_TEST(testSimpleTaskRunTwoExecs);
+	CPPUNIT_TEST(testSimpleTaskRunTwoTasks);
+	CPPUNIT_TEST(testSimpleTaskRunTwoTasksTwoExecs);
+	CPPUNIT_TEST(testListener);
+	CPPUNIT_TEST(testBackgroundException);
+	CPPUNIT_TEST(testTaskOrder);
+	CPPUNIT_TEST(testSubTaskOrder);
 
 	CPPUNIT_TEST_SUITE_END();
 

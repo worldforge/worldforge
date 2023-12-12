@@ -23,7 +23,6 @@ add_library(ember-framework OBJECT
         tasks/TaskQueue.cpp
         tasks/TaskUnit.cpp
         tasks/SerialTask.cpp
-        tasks/FunctionalTask.cpp
         FileSystemObserver.cpp
         StackChecker.cpp
         LogExtensions.cpp

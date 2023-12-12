@@ -38,245 +38,245 @@
 
 static bool emitted;
 
-static void signal_emitted()
-{
-    emitted = true;
+static void signal_emitted() {
+	emitted = true;
 }
+
 namespace {
-    void checkSignal() {
-        {
-            // Check the assignment operator causes the signal to fire
-            emitted = false;
+void checkSignal() {
+	{
+		// Check the assignment operator causes the signal to fire
+		emitted = false;
 
-            Entity e(1);
-            WeakEntityRef ref;
+		Entity e(1);
+		WeakEntityRef ref;
 
-            assert(emitted == false);
+		assert(emitted == false);
 
-            ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
+		ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
 
-            assert(emitted == false);
+		assert(emitted == false);
 
-            ref = WeakEntityRef(&e);
+		ref = WeakEntityRef(&e);
 
-            assert(ref.get() == &e);
-            assert(emitted == true);
-        }
+		assert(ref.get() == &e);
+		assert(emitted == true);
+	}
 
-        {
-            // Check the assignment operator does not cause the signal to fire
-            // the the pointer is unchanged
-            emitted = false;
+	{
+		// Check the assignment operator does not cause the signal to fire
+		// the the pointer is unchanged
+		emitted = false;
 
-            Entity e(1);
-            WeakEntityRef ref(&e);
+		Entity e(1);
+		WeakEntityRef ref(&e);
 
-            assert(emitted == false);
+		assert(emitted == false);
 
-            ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
+		ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
 
-            assert(emitted == false);
+		assert(emitted == false);
 
-            ref = WeakEntityRef(&e);
+		ref = WeakEntityRef(&e);
 
-            assert(ref.get() == &e);
-            assert(emitted == false);
-        }
+		assert(ref.get() == &e);
+		assert(emitted == false);
+	}
 
-        {
-            // Check that destroying the Entity makes the reference null.
-            emitted = false;
+	{
+		// Check that destroying the Entity makes the reference null.
+		emitted = false;
 
-            Entity e(1);
-            Ref<Entity> container = new Entity(2);
+		Entity e(1);
+		Ref<Entity> container = new Entity(2);
 
-            // Set the location of the entity being tested, as destroy requires it.
-            e.m_parent = container.get();
-            // Make sure the container has a contains structure, as destroy
-            // requires it.
-            container->m_contains.reset(new LocatedEntitySet);
+		// Set the location of the entity being tested, as destroy requires it.
+		e.m_parent = container.get();
+		// Make sure the container has a contains structure, as destroy
+		// requires it.
+		container->m_contains.reset(new LocatedEntitySet);
 
-            WeakEntityRef ref(&e);
+		WeakEntityRef ref(&e);
 
-            assert(ref);
-            assert(emitted == false);
+		assert(ref);
+		assert(emitted == false);
 
-            ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
+		ref.Changed.connect(sigc::ptr_fun(&signal_emitted));
 
-            assert(ref.get() == &e);
-            assert(emitted == false);
+		assert(ref.get() == &e);
+		assert(emitted == false);
 
-            e.destroy();
+		e.destroy();
 
-            assert(ref.get() == 0);
-            assert(emitted == true);
-            assert(!ref);
-        }
-    }
+		assert(ref.get() == 0);
+		assert(emitted == true);
+		assert(!ref);
+	}
 }
-int main()
-{
-    {
-        // Check the default constructor
-        WeakEntityRef ref;
-    }
+}
 
-    {
-        // Check the default constructor initialises to nullptr via get
-        WeakEntityRef ref;
+int main() {
+	{
+		// Check the default constructor
+		WeakEntityRef ref;
+	}
 
-        assert(ref.get() == 0);
-    }
+	{
+		// Check the default constructor initialises to nullptr via get
+		WeakEntityRef ref;
 
-    {
-        // Check the default constructor initialises to nullptr via dereference
-        WeakEntityRef ref;
+		assert(ref.get() == 0);
+	}
 
-        assert(&(*ref) == 0);
-    }
+	{
+		// Check the default constructor initialises to nullptr via dereference
+		WeakEntityRef ref;
 
-    {
-        // Check the default constructor initialises to nullptr via ->
-        WeakEntityRef ref;
+		assert(&(*ref) == 0);
+	}
 
-        assert(ref.operator->() == 0);
-    }
+	{
+		// Check the default constructor initialises to nullptr via ->
+		WeakEntityRef ref;
 
-    {
-        // Check the default constructor initialises to nullptr via ==
-        WeakEntityRef ref;
+		assert(ref.operator->() == 0);
+	}
 
-        assert(ref == 0);
-    }
+	{
+		// Check the default constructor initialises to nullptr via ==
+		WeakEntityRef ref;
 
-    {
-        // Check the initialising constructor via get
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
+		assert(ref == 0);
+	}
 
-        assert(ref.get() == e.get());
-    }
+	{
+		// Check the initialising constructor via get
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
 
-    {
-        // Check the initialising constructor via dereference
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
+		assert(ref.get() == e.get());
+	}
 
-        assert(&(*ref) == e.get());
-    }
+	{
+		// Check the initialising constructor via dereference
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
 
-    {
-        // Check the initialising constructor via ->
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
+		assert(&(*ref) == e.get());
+	}
 
-        assert(ref.operator->() == e.get());
-    }
+	{
+		// Check the initialising constructor via ->
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
 
-    {
-        // Check the initialising constructor via ==
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
+		assert(ref.operator->() == e.get());
+	}
 
-        assert(ref == e.get());
-    }
+	{
+		// Check the initialising constructor via ==
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
 
-    {
-        // Check the copy constructor
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
-        WeakEntityRef ref2(ref);
+		assert(ref == e.get());
+	}
 
-        assert(ref2.get() == e.get());
-    }
+	{
+		// Check the copy constructor
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
+		WeakEntityRef ref2(ref);
 
-    {
-        // Check the comparison operator
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
-        WeakEntityRef ref2(e);
+		assert(ref2.get() == e.get());
+	}
 
-        assert(ref == ref2);
-    }
+	{
+		// Check the comparison operator
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
+		WeakEntityRef ref2(e);
 
-    {
-        // Check the comparison operator
-        Ref<Entity>  e = new Entity(1);
-        Ref<Entity>  e2 = new Entity(2);
-        WeakEntityRef ref(e);
-        WeakEntityRef ref2(e2);
+		assert(ref == ref2);
+	}
 
-        assert(!(ref == ref2));
-    }
+	{
+		// Check the comparison operator
+		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e2 = new Entity(2);
+		WeakEntityRef ref(e);
+		WeakEntityRef ref2(e2);
+
+		assert(!(ref == ref2));
+	}
 
 #if 0
-    // These tests should be included should we add operator!=
-    {
-        // Check the comparison operator
-        Entity e(1);
-        WeakEntityRef ref(&e);
-        WeakEntityRef ref2(&e);
+	// These tests should be included should we add operator!=
+	{
+		// Check the comparison operator
+		Entity e(1);
+		WeakEntityRef ref(&e);
+		WeakEntityRef ref2(&e);
 
-        assert(!(ref != ref2));
-    }
+		assert(!(ref != ref2));
+	}
 
-    {
-        // Check the comparison operator
-        Entity e(1);
-        Entity e2(2);
-        WeakEntityRef ref(&e);
-        WeakEntityRef ref2(&e2);
+	{
+		// Check the comparison operator
+		Entity e(1);
+		Entity e2(2);
+		WeakEntityRef ref(&e);
+		WeakEntityRef ref2(&e2);
 
-        assert(ref != ref2);
-    }
+		assert(ref != ref2);
+	}
 #endif
 
-    {
-        // Check the less than operator
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref(e);
-        WeakEntityRef ref2(e);
+	{
+		// Check the less than operator
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref(e);
+		WeakEntityRef ref2(e);
 
-        assert(!(ref < ref2) && !(ref2 < ref));
-    }
+		assert(!(ref < ref2) && !(ref2 < ref));
+	}
 
-    {
-        // Check the less than operator
-        Ref<Entity>  e = new Entity(1);
-        Ref<Entity>  e2 = new Entity(2);
-        WeakEntityRef ref(e);
-        WeakEntityRef ref2(e2);
+	{
+		// Check the less than operator
+		Ref<Entity> e = new Entity(1);
+		Ref<Entity> e2 = new Entity(2);
+		WeakEntityRef ref(e);
+		WeakEntityRef ref2(e2);
 
-        assert(ref < ref2 || ref2 < ref);
-    }
+		assert(ref < ref2 || ref2 < ref);
+	}
 
-    {
-        // Check the assignment operator
-        Ref<Entity>  e = new Entity(1);
-        WeakEntityRef ref;
+	{
+		// Check the assignment operator
+		Ref<Entity> e = new Entity(1);
+		WeakEntityRef ref;
 
-        ref = WeakEntityRef(e);
+		ref = WeakEntityRef(e);
 
-        assert(ref.get() == e.get());
-    }
+		assert(ref.get() == e.get());
+	}
 
-    {
-        // Check that destroying the Entity makes the reference null.
-        Entity e(1);
-        Ref<Entity>  container = new Entity(2);
+	{
+		// Check that destroying the Entity makes the reference null.
+		Entity e(1);
+		Ref<Entity> container = new Entity(2);
 
-        // Set the location of the entity being tested, as destroy requires it.
-        e.m_parent = container.get();
-        // Make sure the container has a contains structure, as destroy
-        // requires it.
-        container->m_contains.reset(new LocatedEntitySet);
+		// Set the location of the entity being tested, as destroy requires it.
+		e.m_parent = container.get();
+		// Make sure the container has a contains structure, as destroy
+		// requires it.
+		container->m_contains.reset(new LocatedEntitySet);
 
-        WeakEntityRef ref(&e);
+		WeakEntityRef ref(&e);
 
-        assert(ref.get() == &e);
-        e.destroy();
-        assert(ref.get() == 0);
-    }
+		assert(ref.get() == &e);
+		e.destroy();
+		assert(ref.get() == 0);
+	}
 
-    checkSignal();
+	checkSignal();
 }

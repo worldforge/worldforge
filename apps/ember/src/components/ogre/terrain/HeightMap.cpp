@@ -21,10 +21,8 @@
 #include "framework/Log.h"
 #include <wfmath/vector.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 HeightMap::HeightMap(float defaultLevel, int segmentResolution) :
 		mDefaultLevel(defaultLevel),
@@ -124,5 +122,5 @@ std::shared_ptr<IHeightMapSegment> HeightMap::getSegment(int xIndex, int yIndex)
 
 }
 
-}
-}
+
+

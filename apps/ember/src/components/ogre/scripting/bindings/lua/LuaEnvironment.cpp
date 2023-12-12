@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Environment;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Environment>(sol::table& space) {
 	auto iSun = space.new_usertype<ISun>("ISun", sol::no_constructor);
 	iSun["setAmbientLight"] = &ISun::setAmbientLight;

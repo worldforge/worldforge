@@ -51,8 +51,7 @@ Sometimes when you make a call into a scripting environment, from the C++ code, 
 Whenever you then want to act on values returned from a call into a specific scripting environment you have to first create the suitable instance of a subclass of this, and then pass that onto a call to the ScriptingService::executeScript method.
 @author Erik Ogenvik <erik.hjortsber@gmail.com>
 */
-struct IScriptingCallContext
-{
+struct IScriptingCallContext {
 	virtual ~IScriptingCallContext() = default;
 
 };
@@ -65,17 +64,16 @@ Any implementation of this interface is expected to handle setup and teardown of
 Often you want to do it in two separate steps, where a call to stop() forces the scripting environment to unload all allocated objects and structs, and the desctructor then handles destroying the scripting environment completely.
 @author Erik Ogenvik <erik.hjortsber@iteam.se>
 */
-struct IScriptingProvider
-{
+struct IScriptingProvider {
 
 	virtual ~IScriptingProvider() = default;
-	
+
 	/**
 	 * @brief Loads the script from the wrapper.
 	 * @param resourceWrapper A resource wrapper pointing to a valid resource which can be loaded. This should contain a text file with the script contents.
 	 */
 	virtual void loadScript(ResourceWrapper& resourceWrapper, IScriptingCallContext* callContext) = 0;
-	
+
 	/**
 	 * @brief Executes the supplied string directly into the scripting environment.
 	 * Optionally a pointer to a scripting call context can be submitted too, which will then be populated with return values and other scripting environment specific info.
@@ -83,7 +81,7 @@ struct IScriptingProvider
 	 * @param callContext An optional pointer to a scripting call context. This will be populated with return values and other info. If you don't have any need for such info, leave this empty.
 	 */
 	virtual void executeScript(const std::string& scriptCode, IScriptingCallContext* callContext) = 0;
-	
+
 	/**
 	 * @brief Calls a function in the scripting environment.
 	 * @param functionName The fully qualified name of the function.
@@ -96,13 +94,13 @@ struct IScriptingProvider
 	 * @return True if the script can be loaded, else false.
 	 */
 	virtual bool willLoadScript(const std::string& scriptName) = 0;
-	
+
 	/**
 	 * @brief Gets the unique name of the scripting provider.
 	 * @return The name of the scripting provider.
 	 */
 	virtual const std::string& getName() const = 0;
-	
+
 	/**
 	 * @brief Forces a full garbage collection.
 	 */

@@ -35,10 +35,8 @@ class Window;
 class EventArgs;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class EntityIcon;
 
@@ -133,8 +131,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

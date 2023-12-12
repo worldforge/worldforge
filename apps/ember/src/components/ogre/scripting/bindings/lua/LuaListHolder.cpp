@@ -21,10 +21,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ListHolder>(sol::table& space) {
 	auto listHolder = space.new_usertype<ListHolder>("ListHolder",
-												   sol::constructors<ListHolder(CEGUI::Listbox&, CEGUI::Editbox*)>());
+													 sol::constructors<ListHolder(CEGUI::Listbox&, CEGUI::Editbox*)>());
 	listHolder["addItem"] = sol::overload([](ListHolder* self, std::unique_ptr<CEGUI::ListboxItem>& item) { self->addItem(std::move(item)); },
 										  [](ListHolder* self, CEGUI::ListboxItem* item) { self->addItem(item); });
 	listHolder["insertItem"] = &ListHolder::insertItem;

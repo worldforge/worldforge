@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<ItemListBase>(sol::table& space) {
 	auto itemEntry = space.new_usertype<ItemEntry>("ItemEntry",
 												   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

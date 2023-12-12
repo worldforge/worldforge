@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<LayoutContainer>(sol::table& space) {
 	auto layoutContainer = space.new_usertype<LayoutContainer>("LayoutContainer", sol::no_constructor,
 															   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

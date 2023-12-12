@@ -36,61 +36,60 @@
 #include <basedir.h>
 #include <boost/filesystem/path.hpp>
 
-static int install(int argc, char ** argv)
-{
-    if (argc < 2) {
-        std::cerr << "usage: " << argv[0] << " <ruleset> [ <directory> | <zipfile> ]" << std::endl;
-        return 1;
-    }
-    return 0;
+static int install(int argc, char** argv) {
+	if (argc < 2) {
+		std::cerr << "usage: " << argv[0] << " <ruleset> [ <directory> | <zipfile> ]" << std::endl;
+		return 1;
+	}
+	return 0;
 }
 
 /// \brief Entry in the global command table for cyconfig
 struct config_command {
-    const char * cmd_string;
-    int (*cmd_function)(int argc, char ** argv);
-    const char * cmd_descrption;
+	const char* cmd_string;
+
+	int (* cmd_function)(int argc, char** argv);
+
+	const char* cmd_descrption;
 };
 
 static struct config_command commands[] = {
-    { "install", &install, "Install a ruleset", },
-    { 0, }
+		{"install", &install, "Install a ruleset",},
+		{0,}
 };
 
-static int runCommand(int argc, char ** argv)
-{
-    assert(argc > 0);
-    for (struct config_command * i = &commands[0]; i->cmd_string != 0; ++i) {
-        if (strcmp(argv[0], i->cmd_string) == 0) {
-            return i->cmd_function(argc, argv);
-        }
-    }
-    return 1;
+static int runCommand(int argc, char** argv) {
+	assert(argc > 0);
+	for (struct config_command* i = &commands[0]; i->cmd_string != 0; ++i) {
+		if (strcmp(argv[0], i->cmd_string) == 0) {
+			return i->cmd_function(argc, argv);
+		}
+	}
+	return 1;
 }
 
-int main(int argc, char ** argv)
-{
-    const auto* configHome = xdgConfigHome(nullptr);
+int main(int argc, char** argv) {
+	const auto* configHome = xdgConfigHome(nullptr);
 
-    auto homeDirConfig= boost::filesystem::path(configHome) / "cyphesis.vconf";
-    auto config_instance = varconf::Config::inst();
-    config_instance->readFromFile(homeDirConfig.string());
-    int optindex = config_instance->getCmdline(argc, argv);
+	auto homeDirConfig = boost::filesystem::path(configHome) / "cyphesis.vconf";
+	auto config_instance = varconf::Config::inst();
+	config_instance->readFromFile(homeDirConfig.string());
+	int optindex = config_instance->getCmdline(argc, argv);
 
-    if (config_instance->findItem("", "version")) {
-        reportVersion(argv[0]);
-        return 0;
-    }
+	if (config_instance->findItem("", "version")) {
+		reportVersion(argv[0]);
+		return 0;
+	}
 
-    if (config_instance->findItem("", "help")) {
-        showUsage(argv[0], USAGE_SERVER);
-        return 0;
-    }
+	if (config_instance->findItem("", "help")) {
+		showUsage(argv[0], USAGE_SERVER);
+		return 0;
+	}
 
-    if (optindex > 0 && optindex < argc) {
-        runCommand(argc - optindex, &argv[optindex]);
-    }
+	if (optindex > 0 && optindex < argc) {
+		runCommand(argc - optindex, &argv[optindex]);
+	}
 
-    config_instance->writeToFile(homeDirConfig.string(), (varconf::Scope)(varconf::USER | varconf::INSTANCE));
-    return 0;
+	config_instance->writeToFile(homeDirConfig.string(), (varconf::Scope) (varconf::USER | varconf::INSTANCE));
+	return 0;
 }

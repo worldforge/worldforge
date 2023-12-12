@@ -22,7 +22,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ConfigService>(sol::table& space) {
 	space["BaseDirType_DATA"] = Ember::BaseDirType_DATA;
 	space["BaseDirType_CONFIG"] = Ember::BaseDirType_CONFIG;
@@ -36,7 +36,6 @@ void registerLua<ConfigService>(sol::table& space) {
 	configService["itemExists"] = &ConfigService::itemExists;
 	configService["getHomeDirectory"] = [](ConfigService* self, BaseDirType baseDirType) { return self->getHomeDirectory(baseDirType).string(); };
 	configService["EventChangedConfigItem"] = LuaConnector::make_property(&ConfigService::EventChangedConfigItem);
-
 
 
 }

@@ -28,43 +28,41 @@
  * In this domain nothing can move. When viewed from the outside nothing can be seen, except for things that are attached to the entity.
  * Only the entity itself can reach things in the inventory.
  */
-class InventoryDomain : public Domain
-{
-    public:
-        explicit InventoryDomain(LocatedEntity& entity);
+class InventoryDomain : public Domain {
+public:
+	explicit InventoryDomain(LocatedEntity& entity);
 
-        ~InventoryDomain() override;
+	~InventoryDomain() override;
 
-        bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
+	bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
 
-        void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
+	void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
 
-        std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
+	std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
 
-        void addEntity(LocatedEntity& entity) override;
+	void addEntity(LocatedEntity& entity) override;
 
-        void removeEntity(LocatedEntity& entity) override;
+	void removeEntity(LocatedEntity& entity) override;
 
-        bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
-        std::vector<Domain::CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
+	std::vector<Domain::CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
 
-        boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
+	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 
-    private:
+private:
 
-        struct ClosenessObserverEntry
-        {
-            LocatedEntity& target;
-            /**
-             * Callback to call when entries no longer are close.
-             */
-            std::function<void()> callback;
-        };
+	struct ClosenessObserverEntry {
+		LocatedEntity& target;
+		/**
+		 * Callback to call when entries no longer are close.
+		 */
+		std::function<void()> callback;
+	};
 
-        std::map<std::string, std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>>> m_closenessObservations;
+	std::map<std::string, std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>>> m_closenessObservations;
 
-        void removeClosenessObservation(const std::string& entityId);
+	void removeClosenessObservation(const std::string& entityId);
 //        std::map<ClosenessObserverEntry*, std::unique_ptr<ClosenessObserverEntry>> m_closenessObservations;
 
 //        std::multimap<std::string, std::function<void()>> m_closenessObservations;

@@ -37,210 +37,209 @@
 namespace WFMath {
 
 template<int dim>
-inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
-{
-  for(int i = 0; i < dim; ++i) {
-    m_elem[i] = v.elements()[i];
-  }
+inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid()) {
+	for (int i = 0; i < dim; ++i) {
+		m_elem[i] = v.elements()[i];
+	}
 }
 
 template<int dim>
-const Point<dim>& Point<dim>::ZERO()
-{
-  static ZeroPrimitive<Point<dim> > zeroPoint(dim);
-  return zeroPoint.getShape();
+const Point<dim>& Point<dim>::ZERO() {
+	static ZeroPrimitive<Point<dim> > zeroPoint(dim);
+	return zeroPoint.getShape();
 }
 
 
 template<int dim>
-inline Point<dim>& Point<dim>::setToOrigin()
-{
-  for(int i = 0; i < dim; ++i) {
-    m_elem[i] = 0;
-  }
+inline Point<dim>& Point<dim>::setToOrigin() {
+	for (int i = 0; i < dim; ++i) {
+		m_elem[i] = 0;
+	}
 
-  m_valid = true;
+	m_valid = true;
 
-  return *this;
+	return *this;
 }
 
 template<int dim>
-inline bool Point<dim>::isEqualTo(const Point<dim> &p, CoordType epsilon) const
-{
-  //If anyone is invalid they are never equal
-  if (!p.m_valid || !m_valid) {
-    return false;
-  }
+inline bool Point<dim>::isEqualTo(const Point<dim>& p, CoordType epsilon) const {
+	//If anyone is invalid they are never equal
+	if (!p.m_valid || !m_valid) {
+		return false;
+	}
 
-  CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
-  for(int i = 0; i < dim; ++i) {
-    if(std::fabs(m_elem[i] - p.m_elem[i]) > delta) {
-      return false;
-    }
-  }
+	CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
+	for (int i = 0; i < dim; ++i) {
+		if (std::fabs(m_elem[i] - p.m_elem[i]) > delta) {
+			return false;
+		}
+	}
 
-  return true;
+	return true;
 }
 
 template<int dim>
-inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
-{
-  Vector<dim> out;
+inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2) {
+	Vector<dim> out;
 
-  for(int i = 0; i < dim; ++i) {
-    out.m_elem[i] = c1.m_elem[i] - c2.m_elem[i];
-  }
+	for (int i = 0; i < dim; ++i) {
+		out.m_elem[i] = c1.m_elem[i] - c2.m_elem[i];
+	}
 
-  out.m_valid = c1.m_valid && c2.m_valid;
+	out.m_valid = c1.m_valid && c2.m_valid;
 
-  return out;
+	return out;
 }
 
 template<int dim>
-inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
-{
-    for(int i = 0; i < dim; ++i) {
-      p.m_elem[i] += rhs.m_elem[i];
-    }
+inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& rhs) {
+	for (int i = 0; i < dim; ++i) {
+		p.m_elem[i] += rhs.m_elem[i];
+	}
 
-    p.m_valid = p.m_valid && rhs.m_valid;
+	p.m_valid = p.m_valid && rhs.m_valid;
 
-    return p;
+	return p;
 }
 
 template<int dim>
-inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
-{
-    for(int i = 0; i < dim; ++i) {
-      p.m_elem[i] -= rhs.m_elem[i];
-    }
+inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& rhs) {
+	for (int i = 0; i < dim; ++i) {
+		p.m_elem[i] -= rhs.m_elem[i];
+	}
 
-    p.m_valid = p.m_valid && rhs.m_valid;
+	p.m_valid = p.m_valid && rhs.m_valid;
 
-    return p;
+	return p;
 }
 
 template<int dim>
-inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
-{
-  CoordType ans = 0;
+inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2) {
+	CoordType ans = 0;
 
-  for(int i = 0; i < dim; ++i) {
-    CoordType diff = p1.m_elem[i] - p2.m_elem[i];
-    ans += diff * diff;
-  }
+	for (int i = 0; i < dim; ++i) {
+		CoordType diff = p1.m_elem[i] - p2.m_elem[i];
+		ans += diff * diff;
+	}
 
-  return (std::fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
+	return (std::fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
 }
 
 template<int dim, template<class, class> class container,
-			template<class, class> class container2>
+		template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
-		      const container2<CoordType, std::allocator<CoordType> >& weights)
-{
-  // FIXME become friend
+					  const container2<CoordType, std::allocator<CoordType> >& weights) {
+	// FIXME become friend
 
-  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator c_i = c.begin(), c_end = c.end();
-  typename container2<CoordType, std::allocator<CoordType> >::const_iterator w_i = weights.begin(),
-						 w_end = weights.end();
+	typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator c_i = c.begin(), c_end = c.end();
+	typename container2<CoordType, std::allocator<CoordType> >::const_iterator w_i = weights.begin(),
+			w_end = weights.end();
 
-  Point<dim> out;
+	Point<dim> out;
 
-  if (c_i == c_end || w_i == w_end) {
-    return out;
-  }
+	if (c_i == c_end || w_i == w_end) {
+		return out;
+	}
 
-  bool valid = c_i->isValid();
+	bool valid = c_i->isValid();
 
-  CoordType tot_weight = *w_i, max_weight = std::fabs(*w_i);
-  for(int j = 0; j < dim; ++j) {
-    out[j] = (*c_i)[j] * *w_i;
-  }
+	CoordType tot_weight = *w_i, max_weight = std::fabs(*w_i);
+	for (int j = 0; j < dim; ++j) {
+		out[j] = (*c_i)[j] * *w_i;
+	}
 
-  while(++c_i != c_end && ++w_i != w_end) {
-    tot_weight += *w_i;
-    CoordType val = std::fabs(*w_i);
-    if(val > max_weight)
-      max_weight = val;
-    if(!c_i->isValid())
-      valid = false;
-    for(int j = 0; j < dim; ++j)
-      out[j] += (*c_i)[j] * *w_i;
-  }
+	while (++c_i != c_end && ++w_i != w_end) {
+		tot_weight += *w_i;
+		CoordType val = std::fabs(*w_i);
+		if (val > max_weight)
+			max_weight = val;
+		if (!c_i->isValid())
+			valid = false;
+		for (int j = 0; j < dim; ++j)
+			out[j] += (*c_i)[j] * *w_i;
+	}
 
-  // Make sure the weights don't add up to zero
-  if (max_weight <= 0 || std::fabs(tot_weight) <= max_weight * numeric_constants<CoordType>::epsilon()) {
-    return out;
-  }
+	// Make sure the weights don't add up to zero
+	if (max_weight <= 0 || std::fabs(tot_weight) <= max_weight * numeric_constants<CoordType>::epsilon()) {
+		return out;
+	}
 
-  for(int j = 0; j < dim; ++j) {
-    out[j] /= tot_weight;
-  }
+	for (int j = 0; j < dim; ++j) {
+		out[j] /= tot_weight;
+	}
 
-  out.setValid(valid);
+	out.setValid(valid);
 
-  return out;
+	return out;
 }
 
 template<int dim, template<class, class> class container>
-Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c)
-{
-  // FIXME become friend
+Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c) {
+	// FIXME become friend
 
-  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
+	typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
-  if (i == end) {
-    return Point<dim>();
-  }
+	if (i == end) {
+		return Point<dim>();
+	}
 
-  Point<dim> out = *i;
-  CoordType num_points = 1;
+	Point<dim> out = *i;
+	CoordType num_points = 1;
 
-  bool valid = i->isValid();
+	bool valid = i->isValid();
 
-  while(++i != end) {
-    ++num_points;
-    if(!i->isValid())
-      valid = false;
-    for(int j = 0; j < dim; ++j)
-      out[j] += (*i)[j];
-  }
+	while (++i != end) {
+		++num_points;
+		if (!i->isValid())
+			valid = false;
+		for (int j = 0; j < dim; ++j)
+			out[j] += (*i)[j];
+	}
 
-  for(int j = 0; j < dim; ++j) {
-    out[j] /= num_points;
-  }
+	for (int j = 0; j < dim; ++j) {
+		out[j] /= num_points;
+	}
 
-  out.setValid(valid);
+	out.setValid(valid);
 
-  return out;
+	return out;
 }
 
 template<int dim>
-inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
-{
-  Point<dim> out;
-  CoordType conj_dist = 1 - dist;
+inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist) {
+	Point<dim> out;
+	CoordType conj_dist = 1 - dist;
 
-  for(int i = 0; i < dim; ++i) {
-    out.m_elem[i] = p1.m_elem[i] * conj_dist + p2.m_elem[i] * dist;
-  }
+	for (int i = 0; i < dim; ++i) {
+		out.m_elem[i] = p1.m_elem[i] * conj_dist + p2.m_elem[i] * dist;
+	}
 
-  out.m_valid = p1.m_valid && p2.m_valid;
+	out.m_valid = p1.m_valid && p2.m_valid;
 
-  return out;
+	return out;
 }
 
-template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);
-template<> void Point<2>::asPolar(CoordType& r, CoordType& theta) const;
+template<>
+Point<2>& Point<2>::polar(CoordType r, CoordType theta);
 
-template<> Point<3>& Point<3>::polar(CoordType r, CoordType theta,
-				     CoordType z);
-template<> void Point<3>::asPolar(CoordType& r, CoordType& theta,
-				  CoordType& z) const;
-template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
-					 CoordType phi);
-template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
-				      CoordType& phi) const;
+template<>
+void Point<2>::asPolar(CoordType& r, CoordType& theta) const;
+
+template<>
+Point<3>& Point<3>::polar(CoordType r, CoordType theta,
+						  CoordType z);
+
+template<>
+void Point<3>::asPolar(CoordType& r, CoordType& theta,
+					   CoordType& z) const;
+
+template<>
+Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
+							  CoordType phi);
+
+template<>
+void Point<3>::asSpherical(CoordType& r, CoordType& theta,
+						   CoordType& phi) const;
 
 } // namespace WFMath
 

@@ -25,10 +25,8 @@
 #include "framework/Log.h"
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMath::Polygon<2>& poly, int& layer) {
 
@@ -61,7 +59,7 @@ bool TerrainAreaParser::parseArea(const Atlas::Message::MapType& areaData, WFMat
 
 	auto it = areaData.find("layer");
 	if ((it != areaData.end()) && it->second.isInt()) {
-		layer = (int)it->second.Int();
+		layer = (int) it->second.Int();
 	} else {
 		layer = 0;
 	}
@@ -87,5 +85,5 @@ Atlas::Message::Element TerrainAreaParser::createElement(const WFMath::Polygon<2
 
 }
 
-}
-}
+
+

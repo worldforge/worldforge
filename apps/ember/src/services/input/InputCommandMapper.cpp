@@ -58,7 +58,7 @@ void InputCommandMapper::readFromConfigSection(const std::string& sectionName) {
 	//get the mappings from the config service
 	ConfigService::SectionMap section = ConfigService::getSingleton().getSection(sectionName);
 
-	for (auto & I : section) {
+	for (auto& I: section) {
 		bindCommand(std::string(I.first), std::string(I.second));
 	}
 

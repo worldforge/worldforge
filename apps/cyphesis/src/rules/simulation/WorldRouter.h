@@ -37,90 +37,89 @@ class EntityBuilder;
 ///
 /// This class has one instance which manages the game world.
 /// It maintains a list of all in-game (IG) objects in the server.
-class WorldRouter : public BaseWorld
-{
-    private:
+class WorldRouter : public BaseWorld {
+private:
 
-        ///Handles dispatching of operations.
-        OperationsDispatcher<LocatedEntity> m_operationsDispatcher;
-        /// An ordered queue of suspended operations to be dispatched when resumed.
-        std::queue<OpQueEntry<LocatedEntity>> m_suspendedQueue;
-        /// Count of in world entities
-        int m_entityCount;
+	///Handles dispatching of operations.
+	OperationsDispatcher<LocatedEntity> m_operationsDispatcher;
+	/// An ordered queue of suspended operations to be dispatched when resumed.
+	std::queue<OpQueEntry<LocatedEntity>> m_suspendedQueue;
+	/// Count of in world entities
+	int m_entityCount;
 
-        /**
-         * A set of the entities that are registered to be "spawn" entities.
-         * These are the main entry into the world for new players, and are allowed to receive Create operations directly from Account instances.
-         */
-        std::set<std::string> m_spawnEntities;
+	/**
+	 * A set of the entities that are registered to be "spawn" entities.
+	 * These are the main entry into the world for new players, and are allowed to receive Create operations directly from Account instances.
+	 */
+	std::set<std::string> m_spawnEntities;
 
-        /// \brief The top level in-game entity in the world.
-        Ref<LocatedEntity> m_baseEntity;
-        EntityCreator& m_entityCreator;
+	/// \brief The top level in-game entity in the world.
+	Ref<LocatedEntity> m_baseEntity;
+	EntityCreator& m_entityCreator;
 
-    protected:
-        /// \brief Determine if the broadcast is allowed.
-        ///
-        /// Check the type of operation, and work out if broadcasting is allowed.
-        /// @return True if broadcasting is allowed.
-        bool shouldBroadcastPerception(const Atlas::Objects::Operation::RootOperation&) const;
+protected:
+	/// \brief Determine if the broadcast is allowed.
+	///
+	/// Check the type of operation, and work out if broadcasting is allowed.
+	/// @return True if broadcasting is allowed.
+	bool shouldBroadcastPerception(const Atlas::Objects::Operation::RootOperation&) const;
 
-        void deliverTo(const Atlas::Objects::Operation::RootOperation&,
-                       Ref<LocatedEntity>);
+	void deliverTo(const Atlas::Objects::Operation::RootOperation&,
+				   Ref<LocatedEntity>);
 
-        void resumeWorld() override;
+	void resumeWorld() override;
 
-        void resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op);
+	void resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op);
 
-    public:
+public:
 
 
-        explicit WorldRouter(Ref<LocatedEntity> baseEntity,
-                             EntityCreator& entityCreator,
-                             TimeProviderFnType timeProviderFn);
+	explicit WorldRouter(Ref<LocatedEntity> baseEntity,
+						 EntityCreator& entityCreator,
+						 TimeProviderFnType timeProviderFn);
 
-        ~WorldRouter() override;
+	~WorldRouter() override;
 
-        void shutdown() override;
+	void shutdown() override;
 
-        Ref<LocatedEntity> getBaseEntity() const {
-            return m_baseEntity;
-        }
+	Ref<LocatedEntity> getBaseEntity() const {
+		return m_baseEntity;
+	}
 
-        void addEntity(const Ref<LocatedEntity>& obj, const Ref<LocatedEntity>& parent) override;
+	void addEntity(const Ref<LocatedEntity>& obj, const Ref<LocatedEntity>& parent) override;
 
-        Ref<LocatedEntity> addNewEntity(const std::string& type,
-                                        const Atlas::Objects::Entity::RootEntity&) override;
+	Ref<LocatedEntity> addNewEntity(const std::string& type,
+									const Atlas::Objects::Entity::RootEntity&) override;
 
-        void delEntity(LocatedEntity* obj) override;
+	void delEntity(LocatedEntity* obj) override;
 
-        const std::set<std::string>& getSpawnEntities() const override;
+	const std::set<std::string>& getSpawnEntities() const override;
 
-        void registerSpawner(const std::string& id) override;
+	void registerSpawner(const std::string& id) override;
 
-        void unregisterSpawner(const std::string& id) override;
+	void unregisterSpawner(const std::string& id) override;
 
-        void operation(const Atlas::Objects::Operation::RootOperation&,
-                       Ref<LocatedEntity>);
+	void operation(const Atlas::Objects::Operation::RootOperation&,
+				   Ref<LocatedEntity>);
 
-        void message(Atlas::Objects::Operation::RootOperation,
-                     LocatedEntity&) override;
+	void message(Atlas::Objects::Operation::RootOperation,
+				 LocatedEntity&) override;
 
-        Ref<LocatedEntity> findByName(const std::string& name) override;
+	Ref<LocatedEntity> findByName(const std::string& name) override;
 
-        Ref<LocatedEntity> findByType(const std::string& type) override;
+	Ref<LocatedEntity> findByType(const std::string& type) override;
 
-        /// \brief Signal that a new Entity has been inserted.
-        sigc::signal<void(LocatedEntity&)> inserted;
+	/// \brief Signal that a new Entity has been inserted.
+	sigc::signal<void(LocatedEntity&)> inserted;
 
-        friend class WorldRoutertest;
+	friend class WorldRoutertest;
 
-        friend struct WorldRouterintegration;
+	friend struct WorldRouterintegration;
 
-        OperationsDispatcher<LocatedEntity>& getOperationsHandler();
+	OperationsDispatcher<LocatedEntity>& getOperationsHandler();
 
-        /// Count of number of operations handled.
-        int m_operationsCount;
+	/// Count of number of operations handled.
+	int m_operationsCount;
 
 };
 

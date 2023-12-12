@@ -23,7 +23,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityCEGUITexture>(sol::table& space) {
 	auto entityCEGUITexture = space.new_usertype<EntityCEGUITexture>("EntityCEGUITexture", sol::no_constructor);
 	entityCEGUITexture["getImage"] = &EntityCEGUITexture::getImage;

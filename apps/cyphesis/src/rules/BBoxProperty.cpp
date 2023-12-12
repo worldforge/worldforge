@@ -30,53 +30,46 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-void BBoxProperty::apply(LocatedEntity& ent)
-{
-    updateBboxOnEntity(ent);
+void BBoxProperty::apply(LocatedEntity& ent) {
+	updateBboxOnEntity(ent);
 }
 
-int BBoxProperty::get(Element& val) const
-{
-    if (m_data.isValid()) {
-        val = m_data.toAtlas();
-        return 0;
-    }
-    return -1;
+int BBoxProperty::get(Element& val) const {
+	if (m_data.isValid()) {
+		val = m_data.toAtlas();
+		return 0;
+	}
+	return -1;
 }
 
-void BBoxProperty::set(const Element& val)
-{
-    try {
-        m_data.fromAtlas(val.asList());
-    }
-    catch (Atlas::Message::WrongTypeException&) {
-        spdlog::error("BBoxProperty::set: Box bbox data");
-    }
+void BBoxProperty::set(const Element& val) {
+	try {
+		m_data.fromAtlas(val.asList());
+	}
+	catch (Atlas::Message::WrongTypeException&) {
+		spdlog::error("BBoxProperty::set: Box bbox data");
+	}
 }
 
 void BBoxProperty::add(const std::string& key,
-                       MapType& map) const
-{
-    if (m_data.isValid()) {
-        map[key] = m_data.toAtlas();
-    }
+					   MapType& map) const {
+	if (m_data.isValid()) {
+		map[key] = m_data.toAtlas();
+	}
 }
 
 void BBoxProperty::add(const std::string& key,
-                       const RootEntity& ent) const
-{
-    if (m_data.isValid()) {
-        ent->setAttr(key, m_data.toAtlas());
-    }
+					   const RootEntity& ent) const {
+	if (m_data.isValid()) {
+		ent->setAttr(key, m_data.toAtlas());
+	}
 }
 
-BBoxProperty* BBoxProperty::copy() const
-{
-    return new BBoxProperty(*this);
+BBoxProperty* BBoxProperty::copy() const {
+	return new BBoxProperty(*this);
 }
 
-void BBoxProperty::updateBboxOnEntity(LocatedEntity& entity) const
-{
+void BBoxProperty::updateBboxOnEntity(LocatedEntity& entity) const {
 //    auto scaleProp = entity.getPropertyClassFixed<ScaleProperty>();
 //    if (scaleProp && scaleProp->data().isValid()) {
 //        auto& scale = scaleProp->data();

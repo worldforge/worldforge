@@ -31,55 +31,50 @@
 
 #include <cassert>
 
-class PropertyFactorytest : public Cyphesis::TestBase
-{
-  public:
-    PropertyFactorytest();
+class PropertyFactorytest : public Cyphesis::TestBase {
+public:
+	PropertyFactorytest();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    template <class PropertyT>
-    void test_factory();
+	void teardown();
+
+	template<class PropertyT>
+	void test_factory();
 };
 
-PropertyFactorytest::PropertyFactorytest()
-{
-    ADD_TEST(PropertyFactorytest::test_factory<Property<int>>);
-    ADD_TEST(PropertyFactorytest::test_factory<Property<long>>);
-    ADD_TEST(PropertyFactorytest::test_factory<Property<double>>);
-    ADD_TEST(PropertyFactorytest::test_factory<Property<std::string>>);
+PropertyFactorytest::PropertyFactorytest() {
+	ADD_TEST(PropertyFactorytest::test_factory<Property<int>>);
+	ADD_TEST(PropertyFactorytest::test_factory<Property<long>>);
+	ADD_TEST(PropertyFactorytest::test_factory<Property<double>>);
+	ADD_TEST(PropertyFactorytest::test_factory<Property<std::string>>);
 }
 
-void PropertyFactorytest::setup()
-{
+void PropertyFactorytest::setup() {
 }
 
-void PropertyFactorytest::teardown()
-{
+void PropertyFactorytest::teardown() {
 }
 
-template <class PropertyT>
-void PropertyFactorytest::test_factory()
-{
-    PropertyFactory<PropertyT> pf;
+template<class PropertyT>
+void PropertyFactorytest::test_factory() {
+	PropertyFactory<PropertyT> pf;
 
-    auto p = pf.newProperty();
+	auto p = pf.newProperty();
 
-    ASSERT_TRUE(p);
-    ASSERT_NOT_NULL(dynamic_cast<PropertyT *>(p.get()));
+	ASSERT_TRUE(p);
+	ASSERT_NOT_NULL(dynamic_cast<PropertyT*>(p.get()));
 
-    auto pk = pf.duplicateFactory();
+	auto pk = pf.duplicateFactory();
 
-    ASSERT_NOT_NULL(pk.get());
-    ASSERT_NOT_NULL(dynamic_cast<PropertyFactory<PropertyT> *>(pk.get()));
+	ASSERT_NOT_NULL(pk.get());
+	ASSERT_NOT_NULL(dynamic_cast<PropertyFactory<PropertyT>*>(pk.get()));
 }
 
-int main()
-{
-    PropertyFactorytest t;
+int main() {
+	PropertyFactorytest t;
 
-    return t.run();
+	return t.run();
 }
 
 #include "../stubs/common/stublog.h"

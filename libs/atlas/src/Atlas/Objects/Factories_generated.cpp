@@ -11,7 +11,7 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { 
+namespace Atlas::Objects {
 
 int Factories::enumMax = 44;
 
@@ -104,4 +104,4 @@ void Factories::installStandardTypes()
 
     addFactory<Operation::GenericData>("generic", Operation::GENERIC_NO);
 }
-} } // namespace Atlas::Objects
+} // namespace Atlas::Objects

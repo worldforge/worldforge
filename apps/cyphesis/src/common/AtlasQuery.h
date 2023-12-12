@@ -30,72 +30,71 @@
  */
 class AtlasQuery {
 
-    public:
-        template <typename T>
-        static void find(const Atlas::Message::Element& element, const std::string& name, const std::function<void(const T&)>& callback);
-        template <typename T>
-        static void find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const T&)>& callback);
+public:
+	template<typename T>
+	static void find(const Atlas::Message::Element& element, const std::string& name, const std::function<void(const T&)>& callback);
+
+	template<typename T>
+	static void find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const T&)>& callback);
 };
 
-template <typename T>
+template<typename T>
 inline void AtlasQuery::find(const Atlas::Message::Element& element, const std::string& name, const std::function<void(const T&)>& callback) {
-    if (element.isMap()) {
-        find(element.Map(), name, callback);
-    }
+	if (element.isMap()) {
+		find(element.Map(), name, callback);
+	}
 }
 
 
-template <>
+template<>
 inline void AtlasQuery::find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const Atlas::Message::MapType&)>& callback) {
-    auto I = map.find(name);
-    if (I != map.end()) {
-        if (I->second.isMap()) {
-            callback(I->second.Map());
-        }
-    }
+	auto I = map.find(name);
+	if (I != map.end()) {
+		if (I->second.isMap()) {
+			callback(I->second.Map());
+		}
+	}
 }
 
-template <>
+template<>
 inline void AtlasQuery::find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const Atlas::Message::ListType&)>& callback) {
-    auto I = map.find(name);
-    if (I != map.end()) {
-        if (I->second.isList()) {
-            callback(I->second.List());
-        }
-    }
+	auto I = map.find(name);
+	if (I != map.end()) {
+		if (I->second.isList()) {
+			callback(I->second.List());
+		}
+	}
 }
 
-template <>
+template<>
 inline void AtlasQuery::find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const Atlas::Message::IntType&)>& callback) {
-    auto I = map.find(name);
-    if (I != map.end()) {
-        if (I->second.isInt()) {
-            callback(I->second.Int());
-        }
-    }
+	auto I = map.find(name);
+	if (I != map.end()) {
+		if (I->second.isInt()) {
+			callback(I->second.Int());
+		}
+	}
 }
 
-template <>
+template<>
 inline void AtlasQuery::find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const Atlas::Message::StringType&)>& callback) {
-    auto I = map.find(name);
-    if (I != map.end()) {
-        if (I->second.isString()) {
-            callback(I->second.String());
-        }
-    }
+	auto I = map.find(name);
+	if (I != map.end()) {
+		if (I->second.isString()) {
+			callback(I->second.String());
+		}
+	}
 }
 
-template <>
+template<>
 inline void AtlasQuery::find(const Atlas::Message::MapType& map, const std::string& name, const std::function<void(const Atlas::Message::FloatType&)>& callback) {
-    auto I = map.find(name);
-    if (I != map.end()) {
-        if (I->second.isFloat()) {
-            callback(I->second.Float());
-        }
-    }
+	auto I = map.find(name);
+	if (I != map.end()) {
+		if (I->second.isFloat()) {
+			callback(I->second.Float());
+		}
+	}
 }
-
-
 
 
 #endif //ATLASQUERY_H

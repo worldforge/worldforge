@@ -21,18 +21,17 @@
 
 #include "IdContext.h"
 
-class AvatarContext : public IdContext
-{
-  public:
-    AvatarContext(Interactive &, const std::string & id);
+class AvatarContext : public IdContext {
+public:
+	AvatarContext(Interactive&, const std::string& id);
 
-    bool accept(const Atlas::Objects::Operation::RootOperation&) const override;
+	bool accept(const Atlas::Objects::Operation::RootOperation&) const override;
 
-    int dispatch(const Atlas::Objects::Operation::RootOperation&) override;
+	int dispatch(const Atlas::Objects::Operation::RootOperation&) override;
 
-    std::string repr() const override;
+	std::string repr() const override;
 
-    bool checkContextCommand(const struct command *) override;
+	bool checkContextCommand(const struct command*) override;
 };
 
 #endif // TOOLS_AVATAR_CONTEXT_H

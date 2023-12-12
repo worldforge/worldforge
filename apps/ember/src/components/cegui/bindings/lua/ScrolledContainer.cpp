@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<ScrolledContainer>(sol::table& space) {
 	auto scrolledContainer = space.new_usertype<ScrolledContainer>("ScrolledContainer",
 																   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

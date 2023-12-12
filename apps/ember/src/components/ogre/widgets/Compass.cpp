@@ -39,10 +39,8 @@
 
 using namespace Ember::OgreView::Terrain;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 DelayedCompassRenderer::DelayedCompassRenderer(Compass& compass) :
 		mCompass(compass), mRenderNextFrame(false) {
@@ -215,7 +213,8 @@ void RenderedCompassImpl::_setCompass(Compass* compass) {
 					//Make sure that the compass material is using the map texture for the base rendering
 					mCompassMaterialMapTUS->setTexture(mMap->getTexture());
 
-					mTexture = Ogre::TextureManager::getSingleton().createManual("RenderedCompass", originalMaterial->getGroup(), Ogre::TEX_TYPE_2D, 128, 128, 1, Ogre::PF_A8R8G8B8, Ogre::TU_RENDERTARGET);
+					mTexture = Ogre::TextureManager::getSingleton().createManual("RenderedCompass", originalMaterial->getGroup(), Ogre::TEX_TYPE_2D, 128, 128, 1, Ogre::PF_A8R8G8B8,
+																				 Ogre::TU_RENDERTARGET);
 					mRenderTexture = mTexture->getBuffer()->getRenderTarget();
 					mRenderTexture->removeAllViewports();
 					mRenderTexture->setAutoUpdated(false);
@@ -237,8 +236,8 @@ void RenderedCompassImpl::_setCompass(Compass* compass) {
 
 					//We need to maximise the rendered texture to cover the whole screen
 					Ogre::RenderSystem* rs = Ogre::Root::getSingleton().getRenderSystem();
-					Ogre::Real hOffset = rs->getHorizontalTexelOffset() / (0.5f * mViewport->getActualWidth());
-					Ogre::Real vOffset = rs->getVerticalTexelOffset() / (0.5f * mViewport->getActualHeight());
+					Ogre::Real hOffset = rs->getHorizontalTexelOffset() / (0.5f * (float) mViewport->getActualWidth());
+					Ogre::Real vOffset = rs->getVerticalTexelOffset() / (0.5f * (float) mViewport->getActualHeight());
 					mMapRectangle->setCorners(-1 + hOffset, 1 - vOffset, 1 + hOffset, -1 - vOffset);
 
 					//Since a Rectangle2D instance is a moveable object it won't be rendered unless it's in the frustrum. If we set the axis aligned box to be "infinite" it will always be rendered.
@@ -297,5 +296,5 @@ CompassThirdPersonCameraAnchor::CompassThirdPersonCameraAnchor(Compass& compass,
 
 }
 
-}
-}
+
+

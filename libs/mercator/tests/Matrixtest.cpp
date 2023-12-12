@@ -4,12 +4,11 @@
 
 #include <Mercator/Matrix.h>
 
-int main()
-{
-    Mercator::Matrix<2,2> m;
-    Mercator::Matrix<4,4> n;
+int main() {
+	Mercator::Matrix<2, 2> m;
+	Mercator::Matrix<4, 4> n;
 
-    m(0,0) = 1.f;
+	m(0, 0) = 1.f;
 
-    return 0;
+	return 0;
 }

@@ -26,9 +26,8 @@
 #include "Widget.h"
 #include "WidgetPlugin.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 
 /**
@@ -66,8 +65,7 @@ protected:
 
 };
 }
-}
-}
+
 
 #ifdef WF_USE_WIDGET_PLUGINS
 

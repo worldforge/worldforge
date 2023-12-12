@@ -21,20 +21,23 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int POSSESS_NO;
 
 /// \brief An operation used to request that a client should possess an entity.
 /// \ingroup CustomOperations
-class Possess : public Generic
-{
-  public:
-        Possess() {
-        (*this)->setType("possess", POSSESS_NO);
-    }
+class Possess : public Generic {
+public:
+	Possess() {
+		(*this)->setType("possess", POSSESS_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_POSSES_H

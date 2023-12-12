@@ -32,6 +32,7 @@
 
 namespace Forests {
 class PagedGeometry;
+
 class TreeLoader3D;
 }
 
@@ -39,8 +40,7 @@ namespace Ember {
 class EmberEntity;
 namespace OgreView {
 
-namespace Terrain
-{
+namespace Terrain {
 class TerrainManager;
 }
 namespace Model {
@@ -55,22 +55,22 @@ class EmberEntityLoader;
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class Forest : public Ogre::FrameListener, public virtual sigc::trackable
-{
+class Forest : public Ogre::FrameListener, public virtual sigc::trackable {
 public:
-    explicit Forest(Terrain::TerrainManager& terrainManager);
+	explicit Forest(Terrain::TerrainManager& terrainManager);
 
-    ~Forest() override;
+	~Forest() override;
 
-    void initialize();
+	void initialize();
 
-	void addTree(Ogre::Entity *entity, const Ogre::Vector3 &position, Ogre::Degree yaw = Ogre::Degree(0), Ogre::Real scale = 1.0f);
+	void addTree(Ogre::Entity* entity, const Ogre::Vector3& position, Ogre::Degree yaw = Ogre::Degree(0), Ogre::Real scale = 1.0f);
 
-    void addEmberEntity(Model::ModelRepresentation* modelRepresentation);
-    void removeEmberEntity(EmberEntity* entity);
+	void addEmberEntity(Model::ModelRepresentation* modelRepresentation);
+
+	void removeEmberEntity(EmberEntity* entity);
 
 
-	bool frameStarted(const Ogre::FrameEvent & evt) override;
+	bool frameStarted(const Ogre::FrameEvent& evt) override;
 
 protected:
 

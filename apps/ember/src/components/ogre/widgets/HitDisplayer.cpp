@@ -34,10 +34,8 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 HitDisplayer::HitDisplayer(CEGUI::Window& mainSheet,
 						   const UniqueWindowPtr<CEGUI::Window>& textTemplate,
 						   Ogre::Camera& camera,
@@ -46,13 +44,13 @@ HitDisplayer::HitDisplayer(CEGUI::Window& mainSheet,
 		: mCamera(camera),
 		  mView(view),
 		  mSceneManager(sceneManager) {
-    mBackgroundWindow.reset(CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "hit_displayer"));
-    mainSheet.addChild(mBackgroundWindow.get());
-    mBackgroundWindow->moveToBack();
-    mBackgroundWindow->setMousePassThroughEnabled(true);
-    mBackgroundWindow->setDisabled(true);
-    mBackgroundWindow->setRiseOnClickEnabled(false);
-    mTextNodeRenderer = std::make_unique<TextNodeRenderer>(*mBackgroundWindow, textTemplate);
+	mBackgroundWindow.reset(CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "hit_displayer"));
+	mainSheet.addChild(mBackgroundWindow.get());
+	mBackgroundWindow->moveToBack();
+	mBackgroundWindow->setMousePassThroughEnabled(true);
+	mBackgroundWindow->setDisabled(true);
+	mBackgroundWindow->setRiseOnClickEnabled(false);
+	mTextNodeRenderer = std::make_unique<TextNodeRenderer>(*mBackgroundWindow, textTemplate);
 
 	camera.addListener(mTextNodeRenderer.get());
 	Ogre::Root::getSingleton().addFrameListener(this);
@@ -123,5 +121,4 @@ void HitDisplayer::createHit(const Ogre::Vector3& pos, const std::string& text) 
 
 
 }
-}
-}
+

@@ -9,7 +9,7 @@ function HoverEntityOverlay:buildWidget(world)
 	self.widget:hide()
 
 	local entityPickListener = world:getEntityPickListener()
- 	connect(self.connectors, entityPickListener.EventPickedEntity, self.pickedEntity, self)
+	connect(self.connectors, entityPickListener.EventPickedEntity, self.pickedEntity, self)
 
 	self.widget:loadMainSheet("HoverEntityOverlay.layout", "HoverEntityOverlay")
 	self.mainView = self.widget:getMainWindow()
@@ -45,7 +45,6 @@ function HoverEntityOverlay:pickedEntity(results, args)
 		end
 		self.entityName:setText(name)
 
-
 		localPosition.x = localPosition.x - self.widget:getMainWindow():getPixelSize().width * 0.5
 		localPosition.y = localPosition.y - self.widget:getMainWindow():getPixelSize().height - 5
 
@@ -57,16 +56,16 @@ function HoverEntityOverlay:pickedEntity(results, args)
 			localPosition.y = 0
 		end
 
---[[		local mainWindowSize = root:getPixelSize()
-		if localPosition.x + width > mainWindowSize.width then
-			localPosition.x = mainWindowSize.width - width
-		end
-		if localPosition.y + height > mainWindowSize.height then
-			localPosition.y = mainWindowSize.height - height
-		end
-	--]]
+		--[[		local mainWindowSize = root:getPixelSize()
+				if localPosition.x + width > mainWindowSize.width then
+					localPosition.x = mainWindowSize.width - width
+				end
+				if localPosition.y + height > mainWindowSize.height then
+					localPosition.y = mainWindowSize.height - height
+				end
+			--]]
 
-		local uPosition = CEGUI.UVector2.new(CEGUI.UDim.new(0,localPosition.x), CEGUI.UDim.new(0,localPosition.y))
+		local uPosition = CEGUI.UVector2.new(CEGUI.UDim.new(0, localPosition.x), CEGUI.UDim.new(0, localPosition.y))
 		self.widget:getMainWindow():setPosition(uPosition)
 
 		if entity:hasProperty("message") then
@@ -89,7 +88,6 @@ function HoverEntityOverlay:pickedEntity(results, args)
 
 	end
 end
-
 
 function HoverEntityOverlay:input_MouseMoved()
 	if self.overlayShown then

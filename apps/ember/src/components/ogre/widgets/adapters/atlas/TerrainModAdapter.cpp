@@ -27,65 +27,47 @@
 #include "PolygonAdapter.h"
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 
-
-
-
-TerrainModBase::TerrainModBase(std::string  type)
-: mType(std::move(type))
-{
+TerrainModBase::TerrainModBase(std::string type)
+		: mType(std::move(type)) {
 }
 
-const std::string& TerrainModBase::getType() const
-{
+const std::string& TerrainModBase::getType() const {
 	return mType;
 }
 
 LevelTerrainMod::LevelTerrainMod()
-: TerrainModBase("levelmod")
-{
+		: TerrainModBase("levelmod") {
 }
 
 AdjustTerrainMod::AdjustTerrainMod()
-: TerrainModBase("adjustmod")
-{
+		: TerrainModBase("adjustmod") {
 }
 
 
-PositioningBase::PositioningBase(std::string  type)
-: mType(std::move(type))
-{
+PositioningBase::PositioningBase(std::string type)
+		: mType(std::move(type)) {
 }
 
-const std::string& PositioningBase::getType() const
-{
+const std::string& PositioningBase::getType() const {
 	return mType;
 }
 
 FixedPositioning::FixedPositioning()
-: PositioningBase("height")
-{
+		: PositioningBase("height") {
 }
 
 RelativePositioning::RelativePositioning()
-: PositioningBase("heightoffset")
-{
+		: PositioningBase("heightoffset") {
 }
 
 
-TerrainModAdapter::TerrainModAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, EmberEntity* entity, CEGUI::Combobox* posTypeCombobox, CEGUI::Combobox* modTypeCombobox, CEGUI::Editbox* heightTextbox)
-: AdapterBase(element), mEntity(entity), mPolygonAdapter(nullptr), mHeightTextbox(heightTextbox), mTerrainModsBinder(modTypeCombobox), mPositioningsBinder(posTypeCombobox)
-{
-	
+TerrainModAdapter::TerrainModAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, EmberEntity* entity, CEGUI::Combobox* posTypeCombobox, CEGUI::Combobox* modTypeCombobox,
+									 CEGUI::Editbox* heightTextbox)
+		: AdapterBase(element), mEntity(entity), mPolygonAdapter(nullptr), mHeightTextbox(heightTextbox), mTerrainModsBinder(modTypeCombobox), mPositioningsBinder(posTypeCombobox) {
+
 	if (element.isMap()) {
 		const ::Atlas::Message::MapType& areaData(element.asMap());
 		auto I = areaData.find("shape");
@@ -97,24 +79,23 @@ TerrainModAdapter::TerrainModAdapter(const ::Atlas::Message::Element& element, C
 	} else {
 		mPolygonAdapter = std::make_unique<PolygonAdapter>(::Atlas::Message::Element(), showButton, entity);
 	}
-	
+
 	if (heightTextbox) {
-		addGuiEventConnection(heightTextbox->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&TerrainModAdapter::heightTextbox_TextChanged, this))); 
+		addGuiEventConnection(heightTextbox->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&TerrainModAdapter::heightTextbox_TextChanged, this)));
 	}
 	mTerrainModsBinder.addType("levelmod", "Level", LevelTerrainMod());
 	mTerrainModsBinder.addType("adjustmod", "Adjust", AdjustTerrainMod());
-	
+
 	mPositioningsBinder.addType("height", "Fixed", FixedPositioning());
 	mPositioningsBinder.addType("heightoffset", "Relative", RelativePositioning());
-	
+
 	updateGui(element);
 }
 
 
 TerrainModAdapter::~TerrainModAdapter() = default;
 
-void TerrainModAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void TerrainModAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	mPositioningsBinder.sync();
 	mTerrainModsBinder.sync();
 	if (element.isMap()) {
@@ -138,7 +119,7 @@ void TerrainModAdapter::updateGui(const ::Atlas::Message::Element& element)
 		std::stringstream ss;
 		ss << height;
 		mHeightTextbox->setText(ss.str());
-		
+
 		I = mapElement.find("type");
 		if (I != mapElement.end() && I->second.isString()) {
 			mTerrainModsBinder.select(I->second.asString());
@@ -146,20 +127,18 @@ void TerrainModAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-bool TerrainModAdapter::heightTextbox_TextChanged(const CEGUI::EventArgs& e)
-{
+bool TerrainModAdapter::heightTextbox_TextChanged(const CEGUI::EventArgs& e) {
 	return true;
 }
 
-void TerrainModAdapter::fillElementFromGui()
-{
+void TerrainModAdapter::fillElementFromGui() {
 	::Atlas::Message::MapType mapElement;
 	::Atlas::Message::Element shapeElement = mPolygonAdapter->getChangedElement();
 	if (shapeElement.isMap()) {
 		shapeElement.asMap()["type"] = "polygon";
 	}
 	mapElement["shape"] = shapeElement;
-	
+
 	std::pair<const std::string, PositioningBase*> positioning = mPositioningsBinder.getCurrentSelected();
 	if (positioning.second) {
 		mapElement[positioning.first] = ::Atlas::Message::Element(std::stod(mHeightTextbox->getText().c_str()));
@@ -168,19 +147,18 @@ void TerrainModAdapter::fillElementFromGui()
 	if (modType.second) {
 		mapElement["type"] = modType.first;
 	}
-	
+
 	mEditedValue = mapElement;
 }
 
-bool TerrainModAdapter::_hasChanges()
-{
+bool TerrainModAdapter::_hasChanges() {
 	return mOriginalValue != getChangedElement();
 }
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

@@ -18,13 +18,11 @@
 
 #include "StatusProperty.h"
 
-StatusProperty* StatusProperty::copy() const
-{
-    return new StatusProperty(*this);
+StatusProperty* StatusProperty::copy() const {
+	return new StatusProperty(*this);
 }
 
-void StatusProperty::set(const Atlas::Message::Element& e)
-{
-    Property<double>::set(e);
-    m_data = std::max(m_data, 0.0);
+void StatusProperty::set(const Atlas::Message::Element& e) {
+	Property<double>::set(e);
+	m_data = std::max(m_data, 0.0);
 }

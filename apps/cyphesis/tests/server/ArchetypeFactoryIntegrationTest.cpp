@@ -62,79 +62,70 @@ class EntityFactory<Entity>;
 
 Atlas::Objects::Factories factories;
 
-Atlas::Objects::Root fromXml(const std::string& xml)
-{
-    struct ObjectDecoder : Atlas::Objects::ObjectsDecoder
-    {
-        bool m_check;
-        Atlas::Objects::Root m_obj;
+Atlas::Objects::Root fromXml(const std::string& xml) {
+	struct ObjectDecoder : Atlas::Objects::ObjectsDecoder {
+		bool m_check;
+		Atlas::Objects::Root m_obj;
 
-        void objectArrived(Atlas::Objects::Root obj) override
-        {
-            m_check = true;
-            m_obj = obj;
-        }
+		void objectArrived(Atlas::Objects::Root obj) override {
+			m_check = true;
+			m_obj = obj;
+		}
 
 
-        explicit ObjectDecoder(const Atlas::Objects::Factories& factories) :
-                ObjectsDecoder(factories),
-                m_check(false)
-        {
-        }
+		explicit ObjectDecoder(const Atlas::Objects::Factories& factories) :
+				ObjectsDecoder(factories),
+				m_check(false) {
+		}
 
-        bool check() const
-        {
-            return m_check;
-        }
+		bool check() const {
+			return m_check;
+		}
 
-        const Atlas::Objects::Root& get()
-        {
-            m_check = false;
-            return m_obj;
-        }
-    };
+		const Atlas::Objects::Root& get() {
+			m_check = false;
+			return m_obj;
+		}
+	};
 
 
-    std::stringstream ss(xml);
-    ObjectDecoder decoder(factories);
+	std::stringstream ss(xml);
+	ObjectDecoder decoder(factories);
 
-    Atlas::Codecs::XML codec(ss, ss, decoder);
-    codec.poll();
+	Atlas::Codecs::XML codec(ss, ss, decoder);
+	codec.poll();
 
-    assert(decoder.check());
+	assert(decoder.check());
 
-    return decoder.get();
+	return decoder.get();
 
 }
 
-struct Tested : public Cyphesis::TestBase
-{
+struct Tested : public Cyphesis::TestBase {
 
-    struct TestContext
-    {
-        DatabaseNull database;
-        Ref<World> world;
-        Inheritance inheritance;
-        TestWorld testWorld;
+	struct TestContext {
+		DatabaseNull database;
+		Ref<World> world;
+		Inheritance inheritance;
+		TestWorld testWorld;
 
-        TestPropertyManager propertyManager;
-        EntityBuilder eb;
-        EntityRuleHandler entityRuleHandler;
-        ArchetypeRuleHandler archetypeRuleHandler;
+		TestPropertyManager propertyManager;
+		EntityBuilder eb;
+		EntityRuleHandler entityRuleHandler;
+		ArchetypeRuleHandler archetypeRuleHandler;
 
 
-        TestContext() :
-                world(new World()),
-                inheritance(factories),
-                testWorld(world),
-                eb(),
-                entityRuleHandler(eb, propertyManager),
-                archetypeRuleHandler(eb, propertyManager)
-        {
-            eb.installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
-            // Set up a type description for a new type, and install it
-            auto type1Factory = std::make_unique<EntityFactory<Entity>>();
-            auto thing1 = R"("
+		TestContext() :
+				world(new World()),
+				inheritance(factories),
+				testWorld(world),
+				eb(),
+				entityRuleHandler(eb, propertyManager),
+				archetypeRuleHandler(eb, propertyManager) {
+			eb.installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
+			// Set up a type description for a new type, and install it
+			auto type1Factory = std::make_unique<EntityFactory<Entity>>();
+			auto thing1 = R"("
 <atlas>
     <map>
         <string name="id">thing1</string>
@@ -157,42 +148,37 @@ struct Tested : public Cyphesis::TestBase
 </atlas>
 ")";
 
-            std::string dependents;
-            std::string reasons;
-            std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
-            entityRuleHandler.install("thing1", "thing", fromXml(thing1), dependents, reasons, changes);
-        }
+			std::string dependents;
+			std::string reasons;
+			std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+			entityRuleHandler.install("thing1", "thing", fromXml(thing1), dependents, reasons, changes);
+		}
 
-        ~TestContext()
-        {
-            testWorld.shutdown();
-        }
-    };
-
-
-    Tested()
-    {
-        ADD_TEST(Tested::test_createFromArchetypeWithChildren);
-        ADD_TEST(Tested::test_createFromArchetypeWithModifiers);
-        ADD_TEST(Tested::test_createFromArchetype);
-    }
-
-    void setup() override
-    {
-
-    }
-
-    void teardown() override
-    {
-
-    }
-
-    void test_createFromArchetypeWithChildren()
-    {
-        TestContext context;
+		~TestContext() {
+			testWorld.shutdown();
+		}
+	};
 
 
-        auto archetype1 = R"("
+	Tested() {
+		ADD_TEST(Tested::test_createFromArchetypeWithChildren);
+		ADD_TEST(Tested::test_createFromArchetypeWithModifiers);
+		ADD_TEST(Tested::test_createFromArchetype);
+	}
+
+	void setup() override {
+
+	}
+
+	void teardown() override {
+
+	}
+
+	void test_createFromArchetypeWithChildren() {
+		TestContext context;
+
+
+		auto archetype1 = R"("
 <atlas>
     <map>
         <string name="id">archetype1</string>
@@ -222,43 +208,42 @@ struct Tested : public Cyphesis::TestBase
 </atlas>
 ")";
 
-        std::string diagnose;
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::string diagnose;
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
+		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
-        auto obj = fromXml(R"("
+		auto obj = fromXml(R"("
 <atlas>
     <map>
         <string name="parent">archetype1</string>
     </map>
 </atlas>
 ")");
-        auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
+		auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
 
-        auto entity = context.eb.newEntity(1, "archetype1", entityDef);
-        ASSERT_NOT_NULL(entity.get());
-        ASSERT_EQUAL(2UL, entity->m_contains->size());
-        Atlas::Message::Element element;
-        (*entity->m_contains->begin())->getAttr("name", element);
-        ASSERT_EQUAL(element, "first child");
-        (*(++entity->m_contains->begin()))->getAttr("name", element);
-        ASSERT_EQUAL(element, "second child");
+		auto entity = context.eb.newEntity(1, "archetype1", entityDef);
+		ASSERT_NOT_NULL(entity.get());
+		ASSERT_EQUAL(2UL, entity->m_contains->size());
+		Atlas::Message::Element element;
+		(*entity->m_contains->begin())->getAttr("name", element);
+		ASSERT_EQUAL(element, "first child");
+		(*(++entity->m_contains->begin()))->getAttr("name", element);
+		ASSERT_EQUAL(element, "second child");
 
-        auto contains = *entity->m_contains;
-        for (auto child : contains) {
-            child->destroy();
-        }
-        entity->destroy();
+		auto contains = *entity->m_contains;
+		for (auto child: contains) {
+			child->destroy();
+		}
+		entity->destroy();
 
-    }
+	}
 
-    void test_createFromArchetypeWithModifiers()
-    {
-        TestContext context;
+	void test_createFromArchetypeWithModifiers() {
+		TestContext context;
 
 
-        auto archetype1 = R"("
+		auto archetype1 = R"("
 <atlas>
     <map>
         <string name="id">archetype1</string>
@@ -275,12 +260,12 @@ struct Tested : public Cyphesis::TestBase
 </atlas>
 ")";
 
-        std::string diagnose;
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::string diagnose;
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
+		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
-        auto obj = fromXml(R"("
+		auto obj = fromXml(R"("
 <atlas>
     <map>
         <string name="parent">archetype1</string>
@@ -289,26 +274,25 @@ struct Tested : public Cyphesis::TestBase
     </map>
 </atlas>
 ")");
-        auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
+		auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
 
-        auto entity = context.eb.newEntity(1, "archetype1", entityDef);
-        ASSERT_NOT_NULL(entity.get());
-        Atlas::Message::Element element;
+		auto entity = context.eb.newEntity(1, "archetype1", entityDef);
+		ASSERT_NOT_NULL(entity.get());
+		Atlas::Message::Element element;
 
-        entity->getAttr("property1", element);
-        ASSERT_EQUAL(element, 30);
-        entity->getAttr("property2", element);
-        ASSERT_EQUAL(element, 50);
+		entity->getAttr("property1", element);
+		ASSERT_EQUAL(element, 30);
+		entity->getAttr("property2", element);
+		ASSERT_EQUAL(element, 50);
 
-        entity->destroy();
-    }
+		entity->destroy();
+	}
 
-    void test_createFromArchetype()
-    {
-        TestContext context;
+	void test_createFromArchetype() {
+		TestContext context;
 
 
-        auto archetype1 = R"("
+		auto archetype1 = R"("
 <atlas>
     <map>
         <string name="id">archetype1</string>
@@ -328,12 +312,12 @@ struct Tested : public Cyphesis::TestBase
 </atlas>
 ")";
 
-        std::string diagnose;
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		std::string diagnose;
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
+		context.archetypeRuleHandler.install("archetype1", "archetype", fromXml(archetype1), diagnose, diagnose, changes);
 
-        auto obj = fromXml(R"("
+		auto obj = fromXml(R"("
 <atlas>
     <map>
         <string name="parent">archetype1</string>
@@ -342,35 +326,34 @@ struct Tested : public Cyphesis::TestBase
     </map>
 </atlas>
 ")");
-        auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
+		auto entityDef = Atlas::Objects::smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(obj);
 
-        auto entity = context.eb.newEntity(1, "archetype1", entityDef);
-        ASSERT_NOT_NULL(entity.get());
-        Atlas::Message::Element element;
-        entity->getAttr("name", element);
-        ASSERT_EQUAL(element, "foo");
+		auto entity = context.eb.newEntity(1, "archetype1", entityDef);
+		ASSERT_NOT_NULL(entity.get());
+		Atlas::Message::Element element;
+		entity->getAttr("name", element);
+		ASSERT_EQUAL(element, "foo");
 
-        entity->getAttr("property1", element);
-        ASSERT_EQUAL(element, 10);
+		entity->getAttr("property1", element);
+		ASSERT_EQUAL(element, 10);
 
-        entity->getAttr("property2", element);
-        ASSERT_EQUAL(element, 20);
+		entity->getAttr("property2", element);
+		ASSERT_EQUAL(element, 20);
 
-        entity->getAttr("property3", element);
-        ASSERT_EQUAL(element, 30);
-        entity->destroy();
+		entity->getAttr("property3", element);
+		ASSERT_EQUAL(element, 30);
+		entity->destroy();
 
-    }
+	}
 
 };
 
 
-int main()
-{
-    Monitors m;
-    Tested t;
+int main() {
+	Monitors m;
+	Tested t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs

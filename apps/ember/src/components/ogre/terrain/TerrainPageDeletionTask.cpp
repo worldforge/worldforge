@@ -20,9 +20,8 @@
 
 #include "TerrainPage.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainPageDeletionTask::TerrainPageDeletionTask(std::unique_ptr<TerrainPage> page) :
 		mPage(std::move(page)) {
@@ -38,5 +37,5 @@ bool TerrainPageDeletionTask::executeTaskInMainThread() {
 	return true;
 }
 }
-}
-}
+
+

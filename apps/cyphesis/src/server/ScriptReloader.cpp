@@ -22,13 +22,12 @@
 #include "rules/simulation/BaseWorld.h"
 #include "rules/LocatedEntity.h"
 
-ScriptReloader::ScriptReloader(BaseWorld& world)
-{
-    python_reload_scripts.connect([&]() {
+ScriptReloader::ScriptReloader(BaseWorld& world) {
+	python_reload_scripts.connect([&]() {
 
-        ScriptsProperty::reloadAllScriptFactories();
+		ScriptsProperty::reloadAllScriptFactories();
 
-        //TODO: Implement scripts on archetypes and reload them here
+		//TODO: Implement scripts on archetypes and reload them here
 //        std::map<const TypeNode*, EntityFactoryBase*> collector;
 //        for (auto& entry : m_entityFactories) {
 //            auto entityFactory = dynamic_cast<EntityFactoryBase*>(entry.second);
@@ -39,21 +38,21 @@ ScriptReloader::ScriptReloader(BaseWorld& world)
 //            }
 //        }
 
-        auto& entities = world.getEntities();
+		auto& entities = world.getEntities();
 
 
-        //Reload all scripts on all entities. This might be improved to only reload affected scripts.
-        for (auto& entry : entities) {
-            auto scriptsProp = entry.second->getPropertyClass<ScriptsProperty>("__scripts");
-            if (scriptsProp) {
-                scriptsProp->applyScripts(*entry.second);
-            }
-            auto scriptsInstanceProp = entry.second->getPropertyClass<ScriptsProperty>("__scripts_instance");
-            if (scriptsInstanceProp) {
-                scriptsInstanceProp->applyScripts(*entry.second);
-            }
-        }
+		//Reload all scripts on all entities. This might be improved to only reload affected scripts.
+		for (auto& entry: entities) {
+			auto scriptsProp = entry.second->getPropertyClass<ScriptsProperty>("__scripts");
+			if (scriptsProp) {
+				scriptsProp->applyScripts(*entry.second);
+			}
+			auto scriptsInstanceProp = entry.second->getPropertyClass<ScriptsProperty>("__scripts_instance");
+			if (scriptsInstanceProp) {
+				scriptsInstanceProp->applyScripts(*entry.second);
+			}
+		}
 
-    });
+	});
 
 }

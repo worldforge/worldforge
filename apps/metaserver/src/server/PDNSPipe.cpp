@@ -29,48 +29,44 @@
 #include <boost/algorithm/string.hpp>
 #include <spdlog/spdlog.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 
 	/**
 	 * Argument Wrangling
 	 *
 	 */
-	boost::program_options::options_description desc( "MetaServer PDNS Pipe" );
+	boost::program_options::options_description desc("MetaServer PDNS Pipe");
 	boost::program_options::variables_map vm;
 	boost::asio::io_service io_service;
 	std::array<char, MAX_PACKET_BYTES> recvBuffer;
 	boost::asio::ip::udp::endpoint sender_endpoint;
 	size_t bytes_recvd;
-	std::string domain,banner;
+	std::string domain, banner;
 
 	/**
 	 * Note: options inside the configuration file that are NOT listed here
 	 *       become ignored and are not accessible.
 	 */
 	desc.add_options()
-		( "help,h", "Display help message." )
-		( "server", boost::program_options::value<std::string>()->default_value("localhost"), "MetaServer host. \nDefault:localhost" )
-		( "port", boost::program_options::value<int>()->default_value(8453), "MetaServer port. \nDefault:8453" )
-		( "domain", boost::program_options::value<std::string>()->default_value("ms.worldforge.org"), "Domain for processing queries. \nDefault:ms.worldforge.org" )
-		( "banner", boost::program_options::value<std::string>()->default_value("WorldForge Metaserver PDNS Pipe"), "Domain for processing queries. \nDefault:WorldForge Metaserver PDNS Pipe" )
-		( "debug", boost::program_options::value<std::string>()->implicit_value("true"), "Create Logfile for debug in /tmp/")
-		;
+			("help,h", "Display help message.")
+			("server", boost::program_options::value<std::string>()->default_value("localhost"), "MetaServer host. \nDefault:localhost")
+			("port", boost::program_options::value<int>()->default_value(8453), "MetaServer port. \nDefault:8453")
+			("domain", boost::program_options::value<std::string>()->default_value("ms.worldforge.org"), "Domain for processing queries. \nDefault:ms.worldforge.org")
+			("banner", boost::program_options::value<std::string>()->default_value("WorldForge Metaserver PDNS Pipe"), "Domain for processing queries. \nDefault:WorldForge Metaserver PDNS Pipe")
+			("debug", boost::program_options::value<std::string>()->implicit_value("true"), "Create Logfile for debug in /tmp/");
 
-	try
-	{
+	try {
 
 		boost::program_options::store(
 				boost::program_options::parse_command_line(argc, argv, desc),
 				vm
-				);
+		);
 		boost::program_options::notify(vm);
 
 		/**
 		 * Special case for help
 		 */
-		if ( vm.count("help") )
-		{
+		if (vm.count("help")) {
 			std::cout << desc << std::endl;
 			return 0;
 		}
@@ -89,7 +85,7 @@ int main(int argc, char** argv)
 
 		boost::asio::ip::udp::socket s(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 		boost::asio::ip::udp::resolver resolver(io_service);
-		boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), vm["server"].as<std::string>(), port_str.str() );
+		boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), vm["server"].as<std::string>(), port_str.str());
 		boost::asio::ip::udp::resolver::iterator iterator = resolver.resolve(query);
 
 		/*
@@ -104,24 +100,23 @@ int main(int argc, char** argv)
 		 *  	iv) error to stderr
 		 *  	v) exit
 		 */
-		 std::string helo;
-		 int proto;
-		 std::cin >> helo >> proto;
+		std::string helo;
+		int proto;
+		std::cin >> helo >> proto;
 
-		 std::cerr << "Received: " << helo << "\t" << proto << std::endl;
-		 spdlog::info("Received Helo: {}\t{}", helo, proto);
+		std::cerr << "Received: " << helo << "\t" << proto << std::endl;
+		spdlog::info("Received Helo: {}\t{}", helo, proto);
 
-		 if ( !(boost::equals(helo,"HELO")) || proto != 1 )
-		 {
-			 std::cerr << "ERROR: Failure to initialise!" << std::endl;
-			 std::cout << "FAIL" << std::endl;
-			 exit(1);
-		 }
+		if (!(boost::equals(helo, "HELO")) || proto != 1) {
+			std::cerr << "ERROR: Failure to initialise!" << std::endl;
+			std::cout << "FAIL" << std::endl;
+			exit(1);
+		}
 
-		 /*
-		  *  Banner
-		  */
-		 std::cout << "OK " << banner << std::endl;
+		/*
+		 *  Banner
+		 */
+		std::cout << "OK " << banner << std::endl;
 
 
 		/**
@@ -136,238 +131,219 @@ int main(int argc, char** argv)
 		 *      4 = id
 		 *      5 = remote ip
 		 */
-		 std::string fields[6] = {};
-		 std::string line;
+		std::string fields[6] = {};
+		std::string line;
 
-		 while(1)
-		 {
-			 std::string token;
-			 std::stringstream iss;
-			 int field_cnt = 0;
+		while (1) {
+			std::string token;
+			std::stringstream iss;
+			int field_cnt = 0;
 
-			 // read in whole line
-			 std::getline(std::cin,line);
+			// read in whole line
+			std::getline(std::cin, line);
 
-			 if ( line.empty() )
-				 continue;
+			if (line.empty())
+				continue;
 
-			 std::cerr << "Received: " << line << std::endl;
-			 spdlog::info("Received Line: {}", line);
+			std::cerr << "Received: " << line << std::endl;
+			spdlog::info("Received Line: {}", line);
 
-			 iss << line;
+			iss << line;
 
-			 while( std::getline(iss,token,'\t') )
-			 {
-				 //std::cerr << "Read : " << field_cnt << " : " << token << std::endl;
-				 fields[field_cnt] = token;
-				 ++field_cnt;
-			 }
+			while (std::getline(iss, token, '\t')) {
+				//std::cerr << "Read : " << field_cnt << " : " << token << std::endl;
+				fields[field_cnt] = token;
+				++field_cnt;
+			}
 
-			 /*
-			  * PING is a special case
-			  */
-			 if ( boost::iequals(fields[0],"PING") )
-			 {
-				 std::cout << "OK" << std::endl;
-				 continue;
-			 }
+			/*
+			 * PING is a special case
+			 */
+			if (boost::iequals(fields[0], "PING")) {
+				std::cout << "OK" << std::endl;
+				continue;
+			}
 
-			 /*
-			  * EXIT being another special case
-			  */
-			 if ( boost::iequals(fields[0],"EXIT") )
-			 {
-				 std::cout << "OK" << std::endl;
-				 break;
-			 }
+			/*
+			 * EXIT being another special case
+			 */
+			if (boost::iequals(fields[0], "EXIT")) {
+				std::cout << "OK" << std::endl;
+				break;
+			}
 
-			 /*
-			  * AXFR not supported
-			  *
-			  * Instead we will fake it ala:
-			  *
-			  *
-			  */
-			 if ( boost::iequals(fields[0],"AXFR"))
-			 {
+			/*
+			 * AXFR not supported
+			 *
+			 * Instead we will fake it ala:
+			 *
+			 *
+			 */
+			if (boost::iequals(fields[0], "AXFR")) {
 //				 std::cout << "LOG AXFR requests not supported" << std::endl;
 //				 std::cout << "FAIL" << std::endl;
-				 std::cout << "DATA\tdnsfail.worldforge.org\tIN\tSOA\t3600\t1\tdnsfail.worldforge.org\t1.2.3.4" << std::endl;
-				 std::cout << "DATA\tdnsfail.worldforge.org\tIN\tNS\t3600\t1\tnsfail.worldforge.org" << std::endl;
-				 std::cout << "DATA\tnsfail.worldforge.org\tIN\tA\t3600\t1\t127.0.0.1" << std::endl;
-				 std::cout << "END" << std::endl;
-				 continue;
-			 }
+				std::cout << "DATA\tdnsfail.worldforge.org\tIN\tSOA\t3600\t1\tdnsfail.worldforge.org\t1.2.3.4" << std::endl;
+				std::cout << "DATA\tdnsfail.worldforge.org\tIN\tNS\t3600\t1\tnsfail.worldforge.org" << std::endl;
+				std::cout << "DATA\tnsfail.worldforge.org\tIN\tA\t3600\t1\t127.0.0.1" << std::endl;
+				std::cout << "END" << std::endl;
+				continue;
+			}
 
-			 /*
-			  * Check if request looks complete
-			  */
-			 if ( field_cnt < 6 )
-			 {
-				 std::cout << "LOG	Unparsable line: " << field_cnt << ":" << fields[0]
-						   << ":" << fields[1] << ":" << fields[2] << ":" << fields[3]
-						   << ":" << fields[4] << ":" << fields[5] << std::endl;
-				 std::cout << "FAIL" << std::endl;
-				 std::cerr << "field_cnt : " << field_cnt << std::endl;
-				 continue;
-			 }
-
-
-			 /**
-			  * Grab the name
-			  */
-			 std::string name = fields[1];
-
-			 //TODO: maybe add something where we filter the request by domain
-			 //boost::ireplace_last(name,"."+domain,"");
-
-			 MetaServerPacket req;
-
-			 req.addPacketData(NMT_DNSREQ);
-
-			 /**
-			  * Like DNS ... A=forward PTR=reverse
-			  */
-			 if ( boost::iequals(fields[3],"A") )
-			 {
-				 req.addPacketData(DNS_TYPE_A);
-			 }
-			 else if ( boost::iequals(fields[3],"PTR" ) )
-			 {
-				 req.addPacketData(DNS_TYPE_PTR);
-			 }
-			 else if ( boost::iequals(fields[3],"SOA") || boost::iequals(fields[3],"ANY"))
-			 {
-				 /*
-				  * I don't like this
-				  */
-				 req.addPacketData(DNS_TYPE_ALL);
-			 }
-			 else
-			 {
-				 std::cout << "LOG	Query type must be IN or A, not [" << fields[3] << "]" << std::endl;
-				 std::cout << "LOG " << fields[0] << ":" << fields[1] << ":" << fields[2] << ":"
-						   << fields[3] << ":" << fields[4] << ":" << fields[5] << std::endl;
-				 std::cout << "FAIL" << std::endl;
-				 continue;
-			 }
-
-			 /**
-			  * Pack in message
-			  */
-			 req.addPacketData(name.length());
-			 req.addPacketData(name);
-
-			 /*
-			  * Ship it off
-			  */
-			 s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator );
-
-			 /**
-			  * Receive response or timeout
-			  *
-			  * if response, then analyse response
-			  * 	if results
-			  * 		send results
-			  * 	else
-			  * 		fail
-			  * else
-			  * 	fail
-			  */
-			 boost::asio::ip::udp::endpoint sender_endpoint;
-			 bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
+			/*
+			 * Check if request looks complete
+			 */
+			if (field_cnt < 6) {
+				std::cout << "LOG	Unparsable line: " << field_cnt << ":" << fields[0]
+						  << ":" << fields[1] << ":" << fields[2] << ":" << fields[3]
+						  << ":" << fields[4] << ":" << fields[5] << std::endl;
+				std::cout << "FAIL" << std::endl;
+				std::cerr << "field_cnt : " << field_cnt << std::endl;
+				continue;
+			}
 
 
-			 MetaServerPacket resp( recvBuffer, bytes_recvd );
-			 if( resp.getPacketType() == NMT_DNSRESP )
-			 {
-				 uint32_t total_servers = resp.getIntData(4);
-				 //uint32_t packed_servers = resp.getIntData(8);
-				 std::vector<uint32_t> len_arr;
+			/**
+			 * Grab the name
+			 */
+			std::string name = fields[1];
+
+			//TODO: maybe add something where we filter the request by domain
+			//boost::ireplace_last(name,"."+domain,"");
+
+			MetaServerPacket req;
+
+			req.addPacketData(NMT_DNSREQ);
+
+			/**
+			 * Like DNS ... A=forward PTR=reverse
+			 */
+			if (boost::iequals(fields[3], "A")) {
+				req.addPacketData(DNS_TYPE_A);
+			} else if (boost::iequals(fields[3], "PTR")) {
+				req.addPacketData(DNS_TYPE_PTR);
+			} else if (boost::iequals(fields[3], "SOA") || boost::iequals(fields[3], "ANY")) {
+				/*
+				 * I don't like this
+				 */
+				req.addPacketData(DNS_TYPE_ALL);
+			} else {
+				std::cout << "LOG	Query type must be IN or A, not [" << fields[3] << "]" << std::endl;
+				std::cout << "LOG " << fields[0] << ":" << fields[1] << ":" << fields[2] << ":"
+						  << fields[3] << ":" << fields[4] << ":" << fields[5] << std::endl;
+				std::cout << "FAIL" << std::endl;
+				continue;
+			}
+
+			/**
+			 * Pack in message
+			 */
+			req.addPacketData(name.length());
+			req.addPacketData(name);
+
+			/*
+			 * Ship it off
+			 */
+			s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator);
+
+			/**
+			 * Receive response or timeout
+			 *
+			 * if response, then analyse response
+			 * 	if results
+			 * 		send results
+			 * 	else
+			 * 		fail
+			 * else
+			 * 	fail
+			 */
+			boost::asio::ip::udp::endpoint sender_endpoint;
+			bytes_recvd = s.receive_from(boost::asio::buffer(recvBuffer), sender_endpoint);
+
+
+			MetaServerPacket resp(recvBuffer, bytes_recvd);
+			if (resp.getPacketType() == NMT_DNSRESP) {
+				uint32_t total_servers = resp.getIntData(4);
+				//uint32_t packed_servers = resp.getIntData(8);
+				std::vector<uint32_t> len_arr;
 
 //				 std::cout << "LOG name=" << name << "::total_servers=" << total_servers
 //						   << "::packed_servers=" << packed_servers
 //						   << "field1=" << fields[1] << std::endl;
 //
-				 if( !(total_servers>0) )
-				 {
-					 /*
-					  * If we're zero or less than that means we have bubkis
-					  */
+				if (!(total_servers > 0)) {
+					/*
+					 * If we're zero or less than that means we have bubkis
+					 */
 //					 std::cout << "LOG no match found for [" << name << "]" << std::endl;
-					 std::cout << "FAIL" << std::endl;
-					 continue;
-				 }
+					std::cout << "FAIL" << std::endl;
+					continue;
+				}
 
 
 
-				 /*
-				  * We have one or more responses
-				  */
-				 std::cerr << "Servers Matched: " << total_servers << std::endl;
-				 for ( unsigned int i=1; i<=total_servers; ++i )
-				 {
-					 /*
-					  * We know that there are total_servers, and that as a uint that
-					  * is 4 bytes ( or 32 bits =).  The initial offset thus will be 8 bytes
-					  * byte 0 - packet type
-					  * byte 4 - total_servers
-					  * byte 8 - packed servers ( not in use yet )
-					  * byte +4 - one 4byte block per
-					  */
-					 len_arr.push_back( resp.getIntData(((i*4)+8)));
+				/*
+				 * We have one or more responses
+				 */
+				std::cerr << "Servers Matched: " << total_servers << std::endl;
+				for (unsigned int i = 1; i <= total_servers; ++i) {
+					/*
+					 * We know that there are total_servers, and that as a uint that
+					 * is 4 bytes ( or 32 bits =).  The initial offset thus will be 8 bytes
+					 * byte 0 - packet type
+					 * byte 4 - total_servers
+					 * byte 8 - packed servers ( not in use yet )
+					 * byte +4 - one 4byte block per
+					 */
+					len_arr.push_back(resp.getIntData(((i * 4) + 8)));
 
-				 }
-				 /*
-				  * e.g 2 item response
-				  * 0 - packet type
-				  * 4 - total servers
-				  * 8 - packed
-				  * 12 - server 1 length
-				  * 16 - server 2 length
-				  * 20+ - message
-				  */
-				 std::string resp_msg = resp.getPacketMessage( ((total_servers*4)+8+4) );
+				}
+				/*
+				 * e.g 2 item response
+				 * 0 - packet type
+				 * 4 - total servers
+				 * 8 - packed
+				 * 12 - server 1 length
+				 * 16 - server 2 length
+				 * 20+ - message
+				 */
+				std::string resp_msg = resp.getPacketMessage(((total_servers * 4) + 8 + 4));
 
-				 /*
-				  * Starting at 0 index, previous loop needed to start at 1
-				  *      0 = query
-				  *      1 = qname
-				  *      2 = qclass
-				  *      3 = qtype
-				  *      4 = id
-				  *      5 = remote ip
-				  */
-				 int offset = 0;
-				 for ( unsigned int i=0; i < total_servers; ++i )
-				 {
-					 std::cout << "DATA\t" <<
-							      name << "\t" <<
-							      fields[2] << "\t" <<
-							      fields[3] << "\t" <<
-							      "3600" << "\t" <<
-							      "1" << "\t" <<
-							      resp_msg.substr(offset,len_arr[i]) << std::endl;
-					 offset+=len_arr[i];
-				 }
-				 std::cout << "END" << std::endl;
+				/*
+				 * Starting at 0 index, previous loop needed to start at 1
+				 *      0 = query
+				 *      1 = qname
+				 *      2 = qclass
+				 *      3 = qtype
+				 *      4 = id
+				 *      5 = remote ip
+				 */
+				int offset = 0;
+				for (unsigned int i = 0; i < total_servers; ++i) {
+					std::cout << "DATA\t" <<
+							  name << "\t" <<
+							  fields[2] << "\t" <<
+							  fields[3] << "\t" <<
+							  "3600" << "\t" <<
+							  "1" << "\t" <<
+							  resp_msg.substr(offset, len_arr[i]) << std::endl;
+					offset += len_arr[i];
+				}
+				std::cout << "END" << std::endl;
 
-			 }
-			 else
-			 {
-				 /*
-				  * It's not expected .. carry on
-				  */
-				 std::cout << "LOG	Packet response is malformed, ignoring" << std::endl;
-				 std::cout << "FAIL" << std::endl;
-				 continue;
-			 }
+			} else {
+				/*
+				 * It's not expected .. carry on
+				 */
+				std::cout << "LOG	Packet response is malformed, ignoring" << std::endl;
+				std::cout << "FAIL" << std::endl;
+				continue;
+			}
 
 
 
 //			 std::string resp[6];
 
-			 // fake record
+			// fake record
 //			 resp[0] = name;
 //			 resp[1] = fields[2];
 //			 resp[2] = fields[3];
@@ -375,9 +351,9 @@ int main(int argc, char** argv)
 //			 resp[4] = "1";
 //			 resp[5] = "1.2.3.4";
 
-			 /**
-			  * Send DNS Response
-			  */
+			/**
+			 * Send DNS Response
+			 */
 //			 std::cout << "DATA\t"
 //					   << resp[0] << "\t"
 //					   << resp[1] << "\t"
@@ -387,11 +363,10 @@ int main(int argc, char** argv)
 //			           << resp[5] << "\t"
 //			           << std::endl;
 
-		 }
+		}
 
 	}
-	catch (std::exception& e)
-	{
+	catch (std::exception& e) {
 		std::cerr << "Exception: " << e.what() << std::endl;
 	}
 

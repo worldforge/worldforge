@@ -20,14 +20,12 @@
 #include <OgreSkeletonInstance.h>
 #include <OgreManualObject.h>
 #include <OgreEntity.h>
-#include <OgreSceneManager.h>
 #include <OgreBone.h>
-#include <OgreSceneNode.h>
 #include <OgreRoot.h>
 
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 SkeletonDisplay::SkeletonDisplay(Ogre::Entity& entity)
 		: mEntity(entity),
@@ -56,8 +54,8 @@ void SkeletonDisplay::update() {
 	auto skeleton = mEntity.getSkeleton();
 	if (skeleton) {
 		mManualObject->begin("/common/base/authoring/polygon/line", Ogre::RenderOperation::OT_LINE_LIST);
-		for (auto& rootBone : skeleton->getRootBones()) {
-			for (auto& childBone : rootBone->getChildren()) {
+		for (auto& rootBone: skeleton->getRootBones()) {
+			for (auto& childBone: rootBone->getChildren()) {
 				drawChild(rootBone, childBone);
 			}
 		}
@@ -69,11 +67,10 @@ void SkeletonDisplay::drawChild(Ogre::Node* const& parent, Ogre::Node* const& ch
 	mManualObject->position(parent->_getDerivedPosition());
 	mManualObject->position(child->_getDerivedPosition());
 
-	for (auto& childBone : child->getChildren()) {
+	for (auto& childBone: child->getChildren()) {
 		drawChild(child, childBone);
 	}
 }
 
 
-}
 }

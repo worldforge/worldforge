@@ -31,13 +31,13 @@
 #include "components/entitymapping/EntityMappingManager.h"
 #include "XMLEntityMappingDefinitionSerializer.h"
 
-namespace Ember {
-namespace OgreView {
+
+
 
 /**
  * @brief Namespace for the EmberOgre specific integration with the Entity Mapping framework.
  */
-namespace Mapping {
+namespace Ember::OgreView::Mapping {
 
 
 /**
@@ -46,47 +46,45 @@ namespace Mapping {
 @author Erik Ogenvik <erik@ogenvik.org>
 */
 class EmberEntityMappingManager :
-        public Ogre::ScriptLoader,
-        public Singleton<EmberEntityMappingManager> {
+		public Ogre::ScriptLoader,
+		public Singleton<EmberEntityMappingManager> {
 public:
-    EmberEntityMappingManager();
+	EmberEntityMappingManager();
 
-    ~EmberEntityMappingManager() override;
+	~EmberEntityMappingManager() override;
 
-    /**
-    Accessor for the main EntityMappingManager instance.
-    */
-    EntityMapping::EntityMappingManager& getManager();
+	/**
+	Accessor for the main EntityMappingManager instance.
+	*/
+	EntityMapping::EntityMappingManager& getManager();
 
-    /**
-    Method called by Ogre. Will parse the script supplied in the stream object.
-    */
-    void parseScript(Ogre::DataStreamPtr& stream, const Ogre::String& groupName) override;
+	/**
+	Method called by Ogre. Will parse the script supplied in the stream object.
+	*/
+	void parseScript(Ogre::DataStreamPtr& stream, const Ogre::String& groupName) override;
 
-    const Ogre::StringVector& getScriptPatterns() const override;
+	const Ogre::StringVector& getScriptPatterns() const override;
 
-    Ogre::Real getLoadingOrder() const override;
+	Ogre::Real getLoadingOrder() const override;
 
 protected:
-    /**
-    Internal instance of the EntityMappingManager.
-    */
-    EntityMapping::EntityMappingManager mEntityMappingManager;
+	/**
+	Internal instance of the EntityMappingManager.
+	*/
+	EntityMapping::EntityMappingManager mEntityMappingManager;
 
-    /**
-    Serializer for xml.
-    */
-    XMLEntityMappingDefinitionSerializer mXmlSerializer;
+	/**
+	Serializer for xml.
+	*/
+	XMLEntityMappingDefinitionSerializer mXmlSerializer;
 
 };
 
 inline EntityMapping::EntityMappingManager& EmberEntityMappingManager::getManager() {
-    return mEntityMappingManager;
+	return mEntityMappingManager;
 }
 
 }
-}
 
-}
 
 #endif

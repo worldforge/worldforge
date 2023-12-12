@@ -24,16 +24,15 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Rules: public Py::ExtensionModule<CyPy_Rules>
-{
-    public:
-        CyPy_Rules();
+class CyPy_Rules : public Py::ExtensionModule<CyPy_Rules> {
+public:
+	CyPy_Rules();
 
-        Py::Object is_location(const Py::Tuple& args);
+	Py::Object is_location(const Py::Tuple& args);
 
-        Py::Object extract_location(const Py::Tuple& args);
+	Py::Object extract_location(const Py::Tuple& args);
 
-        static std::string init();
+	static std::string init();
 };
 
 

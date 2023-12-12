@@ -25,42 +25,41 @@ class MindKit;
 
 /// \brief Class to handle assigning a mind object to an entity
 /// \ingroup PropertyClasses
-class MindProperty : public PropertyBase
-{
-    protected:
+class MindProperty : public PropertyBase {
+protected:
 
-        /**
-         * The preferred language for this mind. For example "python".
-         */
-        std::string m_language;
+	/**
+	 * The preferred language for this mind. For example "python".
+	 */
+	std::string m_language;
 
-        /**
-         * The preferred script to be run for this mind.
-         */
-        std::string m_script;
+	/**
+	 * The preferred script to be run for this mind.
+	 */
+	std::string m_script;
 
-        MindProperty(const MindProperty&);
+	MindProperty(const MindProperty&);
 
-    public:
-        static constexpr const char* property_name = "mind";
-        static constexpr const char* property_atlastype = "map";
+public:
+	static constexpr const char* property_name = "mind";
+	static constexpr const char* property_atlastype = "map";
 
-        MindProperty() = default;
+	MindProperty() = default;
 
-        ~MindProperty() override = default;
+	~MindProperty() override = default;
 
-        /// \brief Returns true if mind scripting is enabled.
-        bool isMindEnabled() const;
+	/// \brief Returns true if mind scripting is enabled.
+	bool isMindEnabled() const;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        MindProperty* copy() const override;
+	MindProperty* copy() const override;
 
-        void apply(LocatedEntity& entity) override;
+	void apply(LocatedEntity& entity) override;
 
-        void remove(LocatedEntity& entity, const std::string& name) override;
+	void remove(LocatedEntity& entity, const std::string& name) override;
 };
 
 #endif // RULESETS_MIND_PROPERTY_H

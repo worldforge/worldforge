@@ -30,38 +30,38 @@ struct IHeightProvider;
 class Awareness;
 
 class LocatedEntity;
+
 class MemEntity;
 
-class AwarenessStore
-{
-    public:
-        AwarenessStore(float agentRadius,
-                       float agentHeight,
-                       float stepHeight,
-                       IHeightProvider& heightProvider,
-                       int tileSize = 64);
+class AwarenessStore {
+public:
+	AwarenessStore(float agentRadius,
+				   float agentHeight,
+				   float stepHeight,
+				   IHeightProvider& heightProvider,
+				   int tileSize = 64);
 
-        virtual ~AwarenessStore() = default;
+	virtual ~AwarenessStore() = default;
 
-        std::shared_ptr<Awareness> requestAwareness(const MemEntity& domainEntity);
+	std::shared_ptr<Awareness> requestAwareness(const MemEntity& domainEntity);
 
-    private:
-        /**
-         * @brief The radius of the agents.
-         */
-        float mAgentRadius;
-        float mAgentHeight;
-        float mStepHeight;
+private:
+	/**
+	 * @brief The radius of the agents.
+	 */
+	float mAgentRadius;
+	float mAgentHeight;
+	float mStepHeight;
 
-        IHeightProvider& mHeightProvider;
+	IHeightProvider& mHeightProvider;
 
 
-        int mTileSize;
+	int mTileSize;
 
-        /**
-         * @brief A map of existing awarenesses, ordered by the id of the domain entity.
-         */
-        std::unordered_map<long, std::weak_ptr<Awareness>> m_awarenesses;
+	/**
+	 * @brief A map of existing awarenesses, ordered by the id of the domain entity.
+	 */
+	std::unordered_map<long, std::weak_ptr<Awareness>> m_awarenesses;
 };
 
 #endif /* RULESETS_MIND_AWARENESSSTORE_H_ */

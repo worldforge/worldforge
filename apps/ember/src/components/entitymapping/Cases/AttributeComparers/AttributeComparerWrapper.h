@@ -25,22 +25,20 @@
 
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Abtract base class for an wrapper that compares attributes.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct AttributeComparerWrapper
-{
+struct AttributeComparerWrapper {
 	virtual ~AttributeComparerWrapper() = default;
 
 	/**
@@ -51,11 +49,11 @@ struct AttributeComparerWrapper
 
 }
 
-}
-
-}
 
 
-}
+
+
+
+
 
 #endif

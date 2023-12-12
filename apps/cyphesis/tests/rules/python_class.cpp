@@ -30,23 +30,22 @@
 
 #include "common/globals.h"
 
-int main(int argc, char ** argv)
-{
-    loadConfig(argc, argv);
+int main(int argc, char** argv) {
+	loadConfig(argc, argv);
 
-    init_python_api("f5a8a981-e9ac-4f3b-a8f6-528add44da87");
+	init_python_api("f5a8a981-e9ac-4f3b-a8f6-528add44da87");
 
-    PyVector3D * pv = newPyVector3D();
+	PyVector3D* pv = newPyVector3D();
 
-    if (PyErr_Occurred() != 0) {
-        PyErr_Print();
-    }
+	if (PyErr_Occurred() != 0) {
+		PyErr_Print();
+	}
 
-    PyObject * pv2 = PyInstance_New((PyObject*)&PyVector3D_Type, 0, 0);
+	PyObject* pv2 = PyInstance_New((PyObject * ) & PyVector3D_Type, 0, 0);
 
-    if (PyErr_Occurred() != 0) {
-        PyErr_Print();
-    }
+	if (PyErr_Occurred() != 0) {
+		PyErr_Print();
+	}
 
-    shutdown_python_api();
+	shutdown_python_api();
 }

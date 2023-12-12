@@ -24,13 +24,13 @@
 /// \brief Class to handle whether or not an entity is solid for collisions.
 /// \ingroup PropertyClasses
 class SolidProperty : public BoolProperty {
-  public:
+public:
 
-    static constexpr const char* property_name = "solid";
+	static constexpr const char* property_name = "solid";
 
-    SolidProperty * copy() const override;
+	SolidProperty* copy() const override;
 
-    void apply(LocatedEntity &) override;
+	void apply(LocatedEntity&) override;
 };
 
 #endif // RULESETS_SOLID_PROPERTY_H

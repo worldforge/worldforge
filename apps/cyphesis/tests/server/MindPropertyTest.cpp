@@ -30,20 +30,19 @@
 
 #include "server/MindProperty.h"
 
-int main()
-{
-    PossessionAuthenticator possessionAuthenticator;
-    ExternalMindsManager mindsManager(possessionAuthenticator);
-    MindProperty ap;
+int main() {
+	PossessionAuthenticator possessionAuthenticator;
+	ExternalMindsManager mindsManager(possessionAuthenticator);
+	MindProperty ap;
 
-    PropertyChecker<MindProperty> pc(ap);
+	PropertyChecker<MindProperty> pc(ap);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 // stubs
@@ -59,44 +58,39 @@ int main()
 #include "../stubs/pythonbase/stubPythonClass.h"
 
 template<>
-PythonScriptFactory<BaseMind>::PythonScriptFactory(const std::string & package,
-                                                   const std::string & type) :
-                                                   PythonClass(package,
-                                                               type)
-{
+PythonScriptFactory<BaseMind>::PythonScriptFactory(const std::string& package,
+												   const std::string& type) :
+		PythonClass(package,
+					type) {
 }
 
-template <class T>
-int PythonScriptFactory<T>::setup()
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::setup() {
+	return 0;
 }
 
-template <class T>
-const std::string & PythonScriptFactory<T>::package() const
-{
-    return m_package;
+template<class T>
+const std::string& PythonScriptFactory<T>::package() const {
+	return m_package;
 }
 
-template <class T>
-int PythonScriptFactory<T>::addScript(T & entity) const
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::addScript(T& entity) const {
+	return 0;
 }
 
-template <class T>
-int PythonScriptFactory<T>::refreshClass()
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::refreshClass() {
+	return 0;
 }
 
-template class PythonScriptFactory<BaseMind>;
+template
+class PythonScriptFactory<BaseMind>;
 
-int GetScriptDetails(const Atlas::Message::MapType & script,
-                     const std::string & class_name,
-                     const std::string & context,
-                     std::string & script_package,
-                     std::string & script_class)
-{
-    return 0;
+int GetScriptDetails(const Atlas::Message::MapType& script,
+					 const std::string& class_name,
+					 const std::string& context,
+					 std::string& script_package,
+					 std::string& script_class) {
+	return 0;
 }

@@ -28,8 +28,8 @@
 #include <OgreDataStream.h>
 #include <boost/filesystem/path.hpp>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
 @brief A simple helper class for loading tinyxml documents through the ogre resource system.
@@ -37,19 +37,18 @@ Also contains a couple of static method for converting common Ogre structures to
 
 @author Erik Ogenvik <erik@worldforge.org>
 */
-class XMLHelper
-{
+class XMLHelper {
 public:
 
-    /**
-     * Ctor.
-     */
-    XMLHelper() = default;
+	/**
+	 * Ctor.
+	 */
+	XMLHelper() = default;
 
-    /**
-     * Dtor.
-     */
-    ~XMLHelper() = default;
+	/**
+	 * Dtor.
+	 */
+	~XMLHelper() = default;
 
 	/**
 	 Attempts to load the supplied stream into the document. Failures will be logged.
@@ -57,10 +56,10 @@ public:
 	 @param An opened and valid data stream
 	 @returns true if successful, else false
 	 */
-    bool Load(TiXmlDocument& xmlDoc, Ogre::DataStreamPtr stream);
+	static bool Load(TiXmlDocument& xmlDoc, const Ogre::DataStreamPtr& stream);
 
 
-	bool Load(TiXmlDocument& xmlDoc, std::istream& stream, const boost::filesystem::path& path);
+	static bool Load(TiXmlDocument& xmlDoc, std::istream& stream, const boost::filesystem::path& path);
 
 	/**
 	 * @brief Utility method for filling an Ogre Vector3 with data from an xml element.
@@ -94,6 +93,6 @@ public:
 
 }
 
-}
+
 
 #endif

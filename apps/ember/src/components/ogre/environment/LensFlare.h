@@ -26,10 +26,10 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include <OgreColourValue.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 
 /* ------------------------------------------------------------------------- */
@@ -41,39 +41,46 @@ Some functions will allow to change the lensflare color effect, in case of colou
 light, for instance.
 */
 /* ------------------------------------------------------------------------- */
-class LensFlare
-{
+class LensFlare {
 public:
 	LensFlare(Ogre::Camera* camera, Ogre::SceneManager* SceneMgr);
+
 	virtual ~LensFlare();
-	bool    createLensFlare();
-	void    update();
-	void    setVisible(bool visible);
+
+	bool createLensFlare();
+
+	void update();
+
+	void setVisible(bool visible);
+
 // 	void    setLightPosition(Ogre::Vector3 pos);
-	void	setNode(Ogre::SceneNode* node);
-	void    setHaloColour(Ogre::ColourValue color);
-	void    setBurstColour(Ogre::ColourValue color);
-	void    initialize();
+	void setNode(Ogre::SceneNode* node);
+
+	void setHaloColour(Ogre::ColourValue color);
+
+	void setBurstColour(Ogre::ColourValue color);
+
+	void initialize();
 
 
 protected:
 	Ogre::SceneManager* mSceneMgr;
-	Ogre::Camera*       mCamera;
-	Ogre::ColourValue   mColour;
+	Ogre::Camera* mCamera;
+	Ogre::ColourValue mColour;
 	//Ogre::SceneNode*    mNode;
-   	Ogre::BillboardSet* mHaloSet;
-  	Ogre::BillboardSet* mBurstSet;
+	Ogre::BillboardSet* mHaloSet;
+	Ogre::BillboardSet* mBurstSet;
 	//Ogre::Vector3       mLightPosition;
-	Ogre::SceneNode* 	mLightNode;
-	bool          mHidden;
+	Ogre::SceneNode* mLightNode;
+	bool mHidden;
 
 	const Ogre::Vector3& getLightPosition() const;
 };
 
 }
 
-}
 
-}
+
+
 
 #endif

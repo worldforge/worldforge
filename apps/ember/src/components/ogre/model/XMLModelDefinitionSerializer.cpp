@@ -84,8 +84,7 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseDocument(TiXmlDocument& xm
 
 ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& stream, const boost::filesystem::path& path) {
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
-	if (xmlHelper.Load(xmlDoc, stream, path)) {
+	if (XMLHelper::Load(xmlDoc, stream, path)) {
 		return parseDocument(xmlDoc, path.string());
 	}
 	return {};
@@ -93,8 +92,7 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& strea
 
 ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(Ogre::DataStreamPtr& stream) {
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
-	if (xmlHelper.Load(xmlDoc, stream)) {
+	if (XMLHelper::Load(xmlDoc, stream)) {
 		return parseDocument(xmlDoc, stream->getName());
 	}
 	return {};
@@ -890,7 +888,7 @@ bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelD
 		if (renderingDef) {
 			TiXmlElement rendering("rendering");
 			rendering.SetAttribute("scheme", renderingDef->scheme);
-			for (const auto& aParam : renderingDef->params) {
+			for (const auto& aParam: renderingDef->params) {
 				TiXmlElement param("param");
 				param.SetAttribute("key", aParam.first);
 				param.SetValue(aParam.second);
@@ -919,7 +917,7 @@ bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelD
 		if (modelDef->getRenderingDefinition()) {
 			TiXmlElement rendering("rendering");
 			rendering.SetAttribute("scheme", modelDef->getRenderingDefinition()->scheme);
-			for (const auto& aParam : modelDef->getRenderingDefinition()->params) {
+			for (const auto& aParam: modelDef->getRenderingDefinition()->params) {
 				TiXmlElement param("param");
 				param.SetAttribute("key", aParam.first);
 				param.SetValue(aParam.second);
@@ -964,7 +962,7 @@ void XMLModelDefinitionSerializer::exportViews(const ModelDefinitionPtr& modelDe
 	}
 	TiXmlElement viewsElem("views");
 
-	for (const auto& viewDefinition : modelDef->getViewDefinitions()) {
+	for (const auto& viewDefinition: modelDef->getViewDefinitions()) {
 		TiXmlElement viewElem("view");
 		viewElem.SetAttribute("name", viewDefinition.second.Name);
 
@@ -991,14 +989,14 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 	}
 	TiXmlElement actionsElem("actions");
 
-	for (const auto& actionDefinition : modelDef->getActionDefinitions()) {
+	for (const auto& actionDefinition: modelDef->getActionDefinitions()) {
 		TiXmlElement actionElem("action");
 		actionElem.SetAttribute("name", actionDefinition.name);
 		actionElem.SetDoubleAttribute("speed", actionDefinition.animationSpeed);
 
 
 		TiXmlElement activationsElem("activations");
-		for (auto& activationDef : actionDefinition.getActivationDefinitions()) {
+		for (auto& activationDef: actionDefinition.getActivationDefinitions()) {
 			TiXmlElement activationElem("activation");
 			std::string type;
 			switch (activationDef.type) {
@@ -1017,14 +1015,14 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 
 		if (!actionDefinition.getAnimationDefinitions().empty()) {
 			TiXmlElement animationsElem("animations");
-			for (const auto& animDef : actionDefinition.getAnimationDefinitions()) {
+			for (const auto& animDef: actionDefinition.getAnimationDefinitions()) {
 				TiXmlElement animationElem("animation");
 				animationElem.SetAttribute("iterations", animDef.iterations);
 
-				for (const auto& animationPartDefinition : animDef.getAnimationPartDefinitions()) {
+				for (const auto& animationPartDefinition: animDef.getAnimationPartDefinitions()) {
 					TiXmlElement animationPartElem("animationpart");
 					animationPartElem.SetAttribute("name", animationPartDefinition.Name);
-					for (auto& boneGroupRef : animationPartDefinition.BoneGroupRefs) {
+					for (auto& boneGroupRef: animationPartDefinition.BoneGroupRefs) {
 						TiXmlElement boneGroupRefElem("bonegroupref");
 						boneGroupRefElem.SetAttribute("name", boneGroupRef.Name);
 						if (boneGroupRef.Weight != 1.0f) {
@@ -1044,7 +1042,7 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 		if (!actionDefinition.getSoundDefinitions().empty()) {
 			TiXmlElement soundsElem("sounds");
 
-			for (auto& soundDefinition : actionDefinition.getSoundDefinitions()) {
+			for (auto& soundDefinition: actionDefinition.getSoundDefinitions()) {
 				TiXmlElement soundElem("sound");
 				soundElem.SetAttribute("groupName", soundDefinition.groupName);
 				soundElem.SetAttribute("playOrder", (int) soundDefinition.playOrder);
@@ -1063,7 +1061,7 @@ void XMLModelDefinitionSerializer::exportSubModels(const ModelDefinitionPtr& mod
 
 	TiXmlElement submodelsElem("submodels");
 
-	for (const auto& subModelDefinition : modelDef->getSubModelDefinitions()) {
+	for (const auto& subModelDefinition: modelDef->getSubModelDefinitions()) {
 		TiXmlElement submodelElem("submodel");
 		submodelElem.SetAttribute("mesh", subModelDefinition.meshName);
 		if (!subModelDefinition.shadowCaster) {
@@ -1073,7 +1071,7 @@ void XMLModelDefinitionSerializer::exportSubModels(const ModelDefinitionPtr& mod
 		if (!subModelDefinition.getPartDefinitions().empty()) {
 			TiXmlElement partsElem("parts");
 
-			for (const auto& partDefinition : subModelDefinition.getPartDefinitions()) {
+			for (const auto& partDefinition: subModelDefinition.getPartDefinitions()) {
 				TiXmlElement partElem("part");
 				partElem.SetAttribute("name", partDefinition.name);
 				if (!partDefinition.group.empty()) {
@@ -1083,7 +1081,7 @@ void XMLModelDefinitionSerializer::exportSubModels(const ModelDefinitionPtr& mod
 
 				if (!partDefinition.getSubEntityDefinitions().empty()) {
 					TiXmlElement subentitiesElem("subentities");
-					for (const auto& subEntityDefinition : partDefinition.getSubEntityDefinitions()) {
+					for (const auto& subEntityDefinition: partDefinition.getSubEntityDefinitions()) {
 						TiXmlElement subentityElem("subentity");
 						if (!subEntityDefinition.subEntityName.empty()) {
 							subentityElem.SetAttribute("name", subEntityDefinition.subEntityName);
@@ -1113,7 +1111,7 @@ void XMLModelDefinitionSerializer::exportAttachPoints(const ModelDefinitionPtr& 
 	}
 	TiXmlElement attachpointsElem("attachpoints");
 
-	for (const auto& attachPointDef : modelDef->getAttachPointsDefinitions()) {
+	for (const auto& attachPointDef: modelDef->getAttachPointsDefinitions()) {
 		TiXmlElement attachpointElem("attachpoint");
 		attachpointElem.SetAttribute("name", attachPointDef.Name);
 		attachpointElem.SetAttribute("bone", attachPointDef.BoneName);
@@ -1141,7 +1139,7 @@ void XMLModelDefinitionSerializer::exportLights(const ModelDefinitionPtr& modelD
 	}
 	TiXmlElement lightsElem("lights");
 
-	for (auto lightDefinition : modelDef->mLights) {
+	for (auto lightDefinition: modelDef->mLights) {
 		TiXmlElement lightElem("light");
 		std::string type;
 		if (lightDefinition.type == Ogre::Light::LT_POINT) {
@@ -1189,7 +1187,7 @@ void XMLModelDefinitionSerializer::exportPoses(const ModelDefinitionPtr& modelDe
 	if (!modelDef->mPoseDefinitions.empty()) {
 		TiXmlElement elem("poses");
 
-		for (auto& entry :  modelDef->mPoseDefinitions) {
+		for (auto& entry: modelDef->mPoseDefinitions) {
 			TiXmlElement poseElem("pose");
 			poseElem.SetAttribute("name", entry.first);
 
@@ -1218,7 +1216,7 @@ void XMLModelDefinitionSerializer::exportParticleSystems(const ModelDefinitionPt
 	if (!modelDef->mParticleSystems.empty()) {
 		TiXmlElement particleSystemsElem("particlesystems");
 
-		for (const auto& particleDef :modelDef->mParticleSystems) {
+		for (const auto& particleDef: modelDef->mParticleSystems) {
 			TiXmlElement particleSystemElem("particlesystem");
 			particleSystemElem.SetAttribute("script", particleDef.Script);
 			if (shouldExport(particleDef.Direction)) {
@@ -1229,7 +1227,7 @@ void XMLModelDefinitionSerializer::exportParticleSystems(const ModelDefinitionPt
 			if (!particleDef.Bindings.empty()) {
 				TiXmlElement bindingsElem("bindings");
 
-				for (const auto& binding : particleDef.Bindings) {
+				for (const auto& binding: particleDef.Bindings) {
 					TiXmlElement bindingElem("binding");
 					auto emitterVarName = particleSystemSettingToString(binding.EmitterVar);
 					if (!emitterVarName) {
@@ -1242,7 +1240,7 @@ void XMLModelDefinitionSerializer::exportParticleSystems(const ModelDefinitionPt
 			}
 			if (!particleDef.Params.empty()) {
 				TiXmlElement bindingsElem("params");
-				for (const auto& param : particleDef.Params) {
+				for (const auto& param: particleDef.Params) {
 					TiXmlElement bindingElem("param");
 					auto emitterVarName = particleSystemSettingToString(param.first);
 					if (!emitterVarName) {
@@ -1268,12 +1266,12 @@ void XMLModelDefinitionSerializer::exportBoneGroups(const ModelDefinitionPtr& mo
 
 	TiXmlElement boneGroupsElem("bonegroups");
 
-	for (const auto& entry : modelDef->getBoneGroupDefinitions()) {
+	for (const auto& entry: modelDef->getBoneGroupDefinitions()) {
 		TiXmlElement boneGroupElem("bonegroup");
 		boneGroupElem.SetAttribute("name", entry.second.Name);
 
 		TiXmlElement bonesElem("bones");
-		for (auto boneIndex : entry.second.Bones) {
+		for (auto boneIndex: entry.second.Bones) {
 			TiXmlElement boneElem("bone");
 			std::stringstream ss;
 			ss << boneIndex;

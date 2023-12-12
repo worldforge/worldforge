@@ -28,21 +28,19 @@
 #include "common/Property.h"
 #include "common/types.h"
 
-static void test_Property_IdList()
-{
-    Property<IdList> ap;
+static void test_Property_IdList() {
+	Property<IdList> ap;
 
-    PropertyChecker<Property<IdList>> pc(ap);
+	PropertyChecker<Property<IdList>> pc(ap);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 }
 
-int main()
-{
-    test_Property_IdList();
-    return 0;
+int main() {
+	test_Property_IdList();
+	return 0;
 }
 
 // stubs
@@ -50,12 +48,9 @@ int main()
 #include "../TestWorld.h"
 
 
-
-void idListasObject(const IdList & l, Atlas::Message::ListType & ol)
-{
+void idListasObject(const IdList& l, Atlas::Message::ListType& ol) {
 }
 
-int idListFromAtlas(const Atlas::Message::ListType & l, IdList & ol)
-{
-    return 0;
+int idListFromAtlas(const Atlas::Message::ListType& l, IdList& ol) {
+	return 0;
 }

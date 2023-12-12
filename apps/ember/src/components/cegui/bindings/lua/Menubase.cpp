@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<MenuBase>(sol::table& space) {
 	space.new_usertype<Menubar>("Menubar",
 								sol::base_classes, sol::bases<MenuBase, ItemListBase, Window, NamedElement, Element, PropertySet, EventSet>()

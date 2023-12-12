@@ -21,26 +21,29 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
-    extern int RELAY_NO;
+extern int RELAY_NO;
 
-    /**
-     * @brief A relayed operation.
-     *
-     * These operations are used for sending and responding between mainly Minds.
-     * A Mind can send a Relay op to another Entity, directed to one of its Minds,
-     * and get the Mind's response in return.
-     *
-     * @ingroup CustomOperations
-     */
-    class Relay : public Generic
-    {
-        public:
-            Relay() {
-                (*this)->setType("relay", RELAY_NO);
-            }
-    };
+/**
+ * @brief A relayed operation.
+ *
+ * These operations are used for sending and responding between mainly Minds.
+ * A Mind can send a Relay op to another Entity, directed to one of its Minds,
+ * and get the Mind's response in return.
+ *
+ * @ingroup CustomOperations
+ */
+class Relay : public Generic {
+public:
+	Relay() {
+		(*this)->setType("relay", RELAY_NO);
+	}
+};
 
-} } }
+}
+}
+}
 #endif //CYPHESIS_RELAY_H

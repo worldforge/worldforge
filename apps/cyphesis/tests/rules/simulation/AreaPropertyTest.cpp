@@ -30,27 +30,26 @@
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
-int main()
-{
-    AreaProperty ap;
+int main() {
+	AreaProperty ap;
 
-    PropertyChecker<AreaProperty> pc(ap);
+	PropertyChecker<AreaProperty> pc(ap);
 
-    MapType area;
-    area["points"] = ListType(1, ListType(3, 1.f));
-    area["type"] = "foo";
+	MapType area;
+	area["points"] = ListType(1, ListType(3, 1.f));
+	area["type"] = "foo";
 
-    pc.testDataAppend(area);
+	pc.testDataAppend(area);
 
-    area["type"] = "polygon";
-    pc.testDataAppend(area);
+	area["type"] = "polygon";
+	pc.testDataAppend(area);
 
-    // Coverage is complete, but it wouldn't hurt to add some bad data here.
+	// Coverage is complete, but it wouldn't hurt to add some bad data here.
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    // The is no code in operations.cpp to execute, but we need coverage.
-    return 0;
+	// The is no code in operations.cpp to execute, but we need coverage.
+	return 0;
 }
 
 // stubs
@@ -58,15 +57,12 @@ int main()
 #include "../../TestWorld.h"
 
 
-
 #include "physics/Shape.h"
 
-const TerrainProperty * TerrainEffectorProperty::getTerrain(LocatedEntity & owner, LocatedEntity**)
-{
-    return 0;
+const TerrainProperty* TerrainEffectorProperty::getTerrain(LocatedEntity& owner, LocatedEntity**) {
+	return 0;
 }
 
-std::unique_ptr<Shape> Shape::newFromAtlas(const MapType & data)
-{
-    return {};
+std::unique_ptr<Shape> Shape::newFromAtlas(const MapType& data) {
+	return {};
 }

@@ -34,30 +34,29 @@
 #include <components/ogre/BulletCollisionDetector.h>
 
 
-namespace Eris
-{
+namespace Eris {
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace EntityMapping
-{
+namespace EntityMapping {
 class EntityMapping;
 }
-namespace OgreView
-{
+namespace OgreView {
 class SoundEntity;
+
 class Scene;
 
-namespace Model
-{
+namespace Model {
 
 struct ActionDefinition;
 struct SoundDefinition;
+
 class Model;
+
 struct Action;
+
 class ModelMount;
 
 
@@ -69,69 +68,68 @@ class ModelMount;
  * An instance of this binds an EmberEntity instance and a Model instance together. It's normally not meant to be created externally.
  * You can access instances of it attached to an entity through the ModelRepresentationManager class.
  */
-class ModelRepresentation: public IGraphicalRepresentation, public virtual sigc::trackable, public IAnimated
-{
+class ModelRepresentation : public IGraphicalRepresentation, public virtual sigc::trackable, public IAnimated {
 public:
 
 	/**
 	 * @brief The name of the normal standing action.
 	 */
-	static const char * const ACTION_STAND;
+	static const char* const ACTION_STAND;
 
 	/**
 	 * @brief The name of the forward running action.
 	 */
-	static const char * const ACTION_RUN;
+	static const char* const ACTION_RUN;
 
 	/**
 	 * @brief The name of the right side stepping running action.
 	 */
-	static const char * const ACTION_RUN_RIGHT;
+	static const char* const ACTION_RUN_RIGHT;
 
 	/**
 	 * @brief The name of the left side stepping running action.
 	 */
-	static const char * const ACTION_RUN_LEFT;
+	static const char* const ACTION_RUN_LEFT;
 
 	/**
 	 * @brief The name of the backwards running action.
 	 */
-	static const char * const ACTION_RUN_BACKWARDS;
+	static const char* const ACTION_RUN_BACKWARDS;
 
 	/**
 	 * @brief The name of the walking action.
 	 */
-	static const char * const ACTION_WALK;
+	static const char* const ACTION_WALK;
 
 	/**
 	 * @brief The name of the right side stepping action.
 	 */
-	static const char * const ACTION_WALK_RIGHT;
+	static const char* const ACTION_WALK_RIGHT;
 
 	/**
 	 * @brief The name of the left side stepping action.
 	 */
-	static const char * const ACTION_WALK_LEFT;
+	static const char* const ACTION_WALK_LEFT;
 
 	/**
 	 * @brief The name of the backwards walking action.
 	 */
-	static const char * const ACTION_WALK_BACKWARDS;
+	static const char* const ACTION_WALK_BACKWARDS;
 
 	/**
 	 * @brief The name of the swimming action.
 	 */
-	static const char * const ACTION_SWIM;
+	static const char* const ACTION_SWIM;
 
 	/**
 	 * @brief The name of the water treading action.
 	 */
-	static const char * const ACTION_TREAD_WATER;
+	static const char* const ACTION_TREAD_WATER;
 
 	/**
 	 * @brief The name of the float action.
 	 */
-	static const char * const ACTION_FLOAT;
+	static const char* const ACTION_FLOAT;
 
 	/**
 	 * @brief Ctor.
@@ -167,12 +165,12 @@ public:
 	/**
 	 * @brief Gets the entity which this representation is connected to.
 	 */
-	EmberEntity & getEntity() const;
+	EmberEntity& getEntity() const;
 
 	/**
 	 * @brief Gets the model which this representation shows.
 	 */
-	Model & getModel() const;
+	Model& getModel() const;
 
 	//	void attachToPointOnModel(const std::string& point, Model* model, Ogre::Quaternion orientation = Ogre::Quaternion::IDENTITY, Ogre::Vector3 offset = Ogre::Vector3::ZERO);
 	//	void detachFromModel();
@@ -216,8 +214,9 @@ public:
 
 	BulletCollisionDetector& getCollisionDetector();
 
-    Scene& getScene() { return mScene;}
-    const Scene& getScene() const { return mScene;}
+	Scene& getScene() { return mScene; }
+
+	const Scene& getScene() const { return mScene; }
 
 
 	static Model* getModelForEntity(EmberEntity& entity);
@@ -307,7 +306,7 @@ protected:
 	 * @brief Creates a new action for the supplied task (if any is found).
 	 * @param task The task to create an action for.
 	 */
-	void createActionForTask(const Eris::Task& task);
+	//void createActionForTask(const Eris::Task& task);
 
 	/**
 	 *    Overridden from Eris::Entity
@@ -367,7 +366,7 @@ protected:
 	 * @param actions A list of activation names, searched for in order.
 	 * @return An action, or null if none could be found.
 	 */
-	Action* getFirstAvailableAction(ActivationDefinition::Type type, std::initializer_list<const char * const > actions) const;
+	Action* getFirstAvailableAction(ActivationDefinition::Type type, std::initializer_list<const char* const> actions) const;
 
 	void updateCollisionDetection();
 };

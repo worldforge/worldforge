@@ -22,38 +22,31 @@
 #include <Atlas/Message/MEncoder.h>
 #include <Atlas/Message/QueuedDecoder.h>
 
-namespace Ember::OgreView::Authoring
-{
+namespace Ember::OgreView::Authoring {
 GUIAdapterBindings::GUIAdapterBindings() :
-	mElement(nullptr)
-{
+		mElement(nullptr) {
 
 }
 
 GUIAdapterBindings::~GUIAdapterBindings() = default;
 
-const std::string& GUIAdapterBindings::getFunc()
-{
+const std::string& GUIAdapterBindings::getFunc() {
 	return mFunc;
 }
 
-void GUIAdapterBindings::setFunc(std::string func)
-{
+void GUIAdapterBindings::setFunc(std::string func) {
 	mFunc = std::move(func);
 }
 
-void GUIAdapterBindings::addAdapter(std::string adapterName)
-{
+void GUIAdapterBindings::addAdapter(std::string adapterName) {
 	mAdapters.push_back(std::move(adapterName));
 }
 
-std::vector<std::string>& GUIAdapterBindings::getAdapters()
-{
+std::vector<std::string>& GUIAdapterBindings::getAdapters() {
 	return mAdapters;
 }
 
-void GUIAdapterBindings::setValue(Atlas::Message::Element& val, TiXmlNode&)
-{
+void GUIAdapterBindings::setValue(Atlas::Message::Element& val, TiXmlNode&) {
 	TiXmlNode* parent = mElement->Parent();
 	/*
 	 TiXmlNode* newNode;
@@ -113,8 +106,7 @@ void GUIAdapterBindings::setValue(Atlas::Message::Element& val, TiXmlNode&)
 	}
 }
 
-TiXmlDocument GUIAdapterBindings::convertAtlasToXml(Atlas::Message::Element& val)
-{
+TiXmlDocument GUIAdapterBindings::convertAtlasToXml(Atlas::Message::Element& val) {
 	// Print out Atlas node
 	std::stringstream data;
 

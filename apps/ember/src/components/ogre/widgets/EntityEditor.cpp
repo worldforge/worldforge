@@ -60,7 +60,9 @@
 
 using namespace Atlas::Message;
 
-template <> struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {};
+template<>
+struct fmt::formatter<Atlas::Objects::Operation::RootOperation> : ostream_formatter {
+};
 
 namespace Atlas {
 namespace Objects {
@@ -127,7 +129,7 @@ public:
 		//Check if we should adjust to the height of the world
 		WFMath::Point<3> adjustedPoint(mPoint);
 
-		auto height = (float)adjustedPoint.y();
+		auto height = (float) adjustedPoint.y();
 		if (mHeightProvider.getHeight(TerrainPosition(mPoint.x(), mPoint.z()), height)) {
 			adjustedPoint.y() = height;
 		}
@@ -489,7 +491,7 @@ void EntityEditor::operationGetGoalsResult(const Atlas::Objects::Operation::Root
 
 		if (!setOp->getArgs().empty()) {
 			auto thoughts = setOp->getArgsAsList();
-			for (const auto& thought : thoughts) {
+			for (const auto& thought: thoughts) {
 				EventGotGoal(thought);
 			}
 		} else {
@@ -549,7 +551,7 @@ void EntityEditor::operationGetPathResult(const Atlas::Objects::Operation::RootO
 					//Don't show the ball since it will be over the entity itself.
 					polygonPoint->setVisible(false);
 
-					for (auto pathPoint : path) {
+					for (auto pathPoint: path) {
 						if (pathPoint.isList()) {
 							auto& list = pathPoint.List();
 							if (list.size() == 3) {
@@ -618,7 +620,7 @@ void EntityEditor::operationGetThoughtResult(const Atlas::Objects::Operation::Ro
 
 		if (!setOp->getArgs().empty()) {
 			auto thoughts = setOp->getArgsAsList();
-			for (const auto& thought : thoughts) {
+			for (const auto& thought: thoughts) {
 				EventGotThought(thought);
 			}
 		} else {
@@ -670,7 +672,7 @@ void EntityEditor::operationGetGoalInfoResult(const Atlas::Objects::Operation::R
 
 		if (!infoOp->getArgs().empty()) {
 			auto goalInfos = infoOp->getArgsAsList();
-			for (const auto& goalInfo : goalInfos) {
+			for (const auto& goalInfo: goalInfos) {
 				EventGotGoalInfo(goalInfo);
 			}
 		} else {

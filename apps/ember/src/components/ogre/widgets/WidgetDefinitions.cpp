@@ -24,7 +24,6 @@
 #include "WidgetDefinitions.h"
 
 #include "framework/Log.h"
-#include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
 #include "framework/FileSystemObserver.h"
 #include "framework/MainLoopController.h"

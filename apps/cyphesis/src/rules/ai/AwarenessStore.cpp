@@ -26,32 +26,30 @@
 #include "AwarenessStore.h"
 
 AwarenessStore::AwarenessStore(float agentRadius, float agentHeight, float stepHeight, IHeightProvider& heightProvider, int tileSize) :
-        mAgentRadius(agentRadius),
-        mAgentHeight(agentHeight),
-        mStepHeight(stepHeight),
-        mHeightProvider(heightProvider),
-        mTileSize(tileSize)
-{
+		mAgentRadius(agentRadius),
+		mAgentHeight(agentHeight),
+		mStepHeight(stepHeight),
+		mHeightProvider(heightProvider),
+		mTileSize(tileSize) {
 }
 
-std::shared_ptr<Awareness> AwarenessStore::requestAwareness(const MemEntity& domainEntity)
-{
-    //Check if there's already an awareness for the domain entity.
-    auto I = m_awarenesses.find(domainEntity.getIntId());
-    if (I != m_awarenesses.end()) {
-        //check if it's still valid
-        if (!I->second.expired()) {
-            return I->second.lock();
-        }
-        //else remove it
-        m_awarenesses.erase(I);
-    }
+std::shared_ptr<Awareness> AwarenessStore::requestAwareness(const MemEntity& domainEntity) {
+	//Check if there's already an awareness for the domain entity.
+	auto I = m_awarenesses.find(domainEntity.getIntId());
+	if (I != m_awarenesses.end()) {
+		//check if it's still valid
+		if (!I->second.expired()) {
+			return I->second.lock();
+		}
+		//else remove it
+		m_awarenesses.erase(I);
+	}
 
-    auto bboxProp = domainEntity.getPropertyClassFixed<BBoxProperty>();
-    auto bbox = bboxProp ? bboxProp->data() : WFMath::AxisBox<3>{};
+	auto bboxProp = domainEntity.getPropertyClassFixed<BBoxProperty>();
+	auto bbox = bboxProp ? bboxProp->data() : WFMath::AxisBox<3>{};
 
-    auto awareness = std::make_shared<Awareness>(domainEntity.getIntId(), mAgentRadius, mAgentHeight, mStepHeight, mHeightProvider, bbox, mTileSize);
-    m_awarenesses.emplace(domainEntity.getIntId(), std::weak_ptr<Awareness>(awareness));
-    return awareness;
+	auto awareness = std::make_shared<Awareness>(domainEntity.getIntId(), mAgentRadius, mAgentHeight, mStepHeight, mHeightProvider, bbox, mTileSize);
+	m_awarenesses.emplace(domainEntity.getIntId(), std::weak_ptr<Awareness>(awareness));
+	return awareness;
 }
 

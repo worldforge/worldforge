@@ -22,15 +22,14 @@
 #include <vector>
 #include <memory>
 
-namespace Ember
-{
 
-namespace Tasks
-{
+namespace Ember::Tasks {
 
 struct ITask;
 struct ITaskExecutionListener;
+
 class TaskExecutionContext;
+
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Represents both a task, its subtasks, and a listener.
@@ -40,8 +39,7 @@ class TaskExecutionContext;
  *
  * When the task is executed in the main thread this class will make sure to first execute any subtasks in the main thread before executing the main task.
  */
-class TaskUnit
-{
+class TaskUnit {
 public:
 
 	/**
@@ -112,6 +110,5 @@ private:
 
 }
 
-}
 
 #endif /* TASKUNIT_H_ */

@@ -34,10 +34,10 @@
 
 using namespace Ember::OgreView::Terrain;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 FoliageBase::FoliageBase(Terrain::TerrainManager& terrainManager,
 						 Terrain::TerrainLayer terrainLayer,
@@ -64,7 +64,7 @@ void FoliageBase::TerrainHandler_LayerUpdated(const Terrain::TerrainShader& shad
 			isRelevant = true;
 		}
 		if (isRelevant) {
-			for (const auto& area : areas) {
+			for (const auto& area: areas) {
 				const Ogre::TRect<Ogre::Real> ogreExtent(Convert::toOgre(area));
 				mPagedGeometry->reloadGeometryPages(ogreExtent);
 			}
@@ -82,7 +82,7 @@ void FoliageBase::TerrainHandler_EventShaderCreated(const TerrainLayer&) {
 void FoliageBase::TerrainHandler_AfterTerrainUpdate(const std::vector<WFMath::AxisBox<2>>& areas,
 													const std::vector<std::shared_ptr<Terrain::TerrainPageGeometry>>&) {
 	if (mPagedGeometry) {
-		for (const auto& area : areas) {
+		for (const auto& area: areas) {
 			const Ogre::TRect<Ogre::Real> ogreExtent(Convert::toOgre(area));
 
 			mPagedGeometry->reloadGeometryPages(ogreExtent);
@@ -92,7 +92,7 @@ void FoliageBase::TerrainHandler_AfterTerrainUpdate(const std::vector<WFMath::Ax
 
 void FoliageBase::TerrainManager_TerrainShown(const std::vector<Ogre::TRect<Ogre::Real>>& areas) {
 	if (mPagedGeometry) {
-		for (auto& area : areas) {
+		for (auto& area: areas) {
 			mPagedGeometry->reloadGeometryPages(area);
 		}
 	}
@@ -100,7 +100,7 @@ void FoliageBase::TerrainManager_TerrainShown(const std::vector<Ogre::TRect<Ogre
 
 void FoliageBase::reloadAtPosition(const WFMath::Point<2>& worldPosition) {
 	if (mPagedGeometry) {
-		mPagedGeometry->reloadGeometryPage(Ogre::Vector3(worldPosition.x(), 0, worldPosition.y()), true);
+		mPagedGeometry->reloadGeometryPage(Ogre::Vector3((Ogre::Real)worldPosition.x(), 0, (Ogre::Real)worldPosition.y()), true);
 	}
 }
 
@@ -126,5 +126,5 @@ double getTerrainHeight(double x, double z, void* userData) {
 }
 }
 
-}
-}
+
+

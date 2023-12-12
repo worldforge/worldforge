@@ -27,23 +27,23 @@
  * \ingroup PropertyClasses
  *
  */
-class WorldTimeProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_name = "world_time";
-        static constexpr const char* property_atlastype = "float";
+class WorldTimeProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "world_time";
+	static constexpr const char* property_atlastype = "float";
 
-        WorldTimeProperty();
+	WorldTimeProperty();
 
-        ~WorldTimeProperty() override;
+	~WorldTimeProperty() override;
 
-        WorldTimeProperty* copy() const override;
+	WorldTimeProperty* copy() const override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element& val) override;
-    protected:
-        WorldTimeProperty(const WorldTimeProperty& rhs) = default;
+	void set(const Atlas::Message::Element& val) override;
+
+protected:
+	WorldTimeProperty(const WorldTimeProperty& rhs) = default;
 
 };
 

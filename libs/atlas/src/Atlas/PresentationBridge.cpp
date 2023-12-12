@@ -18,77 +18,72 @@
 
 #include "PresentationBridge.h"
 
-namespace Atlas
-{
+namespace Atlas {
 
 PresentationBridge::PresentationBridge(std::ostream& stream) :
-		mStream(stream), mMaxItemsPerLevel(0), mIsSkipEntry(false), mStartFilterLevel(1)
-{
-    mStream.precision(6);
+		mStream(stream), mMaxItemsPerLevel(0), mIsSkipEntry(false), mStartFilterLevel(1) {
+	mStream.precision(6);
 }
 
-void PresentationBridge::streamBegin()
-{
+void PresentationBridge::streamBegin() {
 	addPadding();
 }
-void PresentationBridge::streamMessage()
-{
+
+void PresentationBridge::streamMessage() {
 	addPadding();
 }
-void PresentationBridge::streamEnd()
-{
+
+void PresentationBridge::streamEnd() {
 	removePadding();
 }
 
-void PresentationBridge::mapMapItem(std::string name)
-{
+void PresentationBridge::mapMapItem(std::string name) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << std::endl;
+		mStream << mPadding << name << std::endl;
 	}
 	addPadding();
 }
-void PresentationBridge::mapListItem(std::string name)
-{
+
+void PresentationBridge::mapListItem(std::string name) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << std::endl;
+		mStream << mPadding << name << std::endl;
 	}
 	mMapsInList.push(0);
 	addPadding();
 }
-void PresentationBridge::mapIntItem(std::string name, std::int64_t i)
-{
+
+void PresentationBridge::mapIntItem(std::string name, std::int64_t i) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << ": " << i << std::endl;
+		mStream << mPadding << name << ": " << i << std::endl;
 	}
-}
-void PresentationBridge::mapFloatItem(std::string name, double d)
-{
-	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << ": " << std::fixed << d << std::endl;
-	}
-}
-void PresentationBridge::mapStringItem(std::string name, std::string s)
-{
-	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << ": " << s << std::endl;
-	}
-}
-void PresentationBridge::mapNoneItem(std::string name) {
-    if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << name << ": " << std::endl;
-    }
 }
 
-void PresentationBridge::mapEnd()
-{
+void PresentationBridge::mapFloatItem(std::string name, double d) {
+	if (checkAndUpdateMaxItemCounter()) {
+		mStream << mPadding << name << ": " << std::fixed << d << std::endl;
+	}
+}
+
+void PresentationBridge::mapStringItem(std::string name, std::string s) {
+	if (checkAndUpdateMaxItemCounter()) {
+		mStream << mPadding << name << ": " << s << std::endl;
+	}
+}
+
+void PresentationBridge::mapNoneItem(std::string name) {
+	if (checkAndUpdateMaxItemCounter()) {
+		mStream << mPadding << name << ": " << std::endl;
+	}
+}
+
+void PresentationBridge::mapEnd() {
 	removePadding();
 }
 
-void PresentationBridge::listMapItem()
-{
+void PresentationBridge::listMapItem() {
 	int items = mMapsInList.top();
 	if (checkAndUpdateMaxItemCounter()) {
-        //Check if we've already printed a map for this list, and if so print a separator
+		//Check if we've already printed a map for this list, and if so print a separator
 		if (items) {
 			mStream << mPadding << "---" << std::endl;
 		}
@@ -98,77 +93,73 @@ void PresentationBridge::listMapItem()
 	addPadding();
 }
 
-void PresentationBridge::listListItem()
-{
+void PresentationBridge::listListItem() {
 	mMapsInList.push(0);
 	addPadding();
 }
-void PresentationBridge::listIntItem(std::int64_t i)
-{
+
+void PresentationBridge::listIntItem(std::int64_t i) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << ": " << i << std::endl;
+		mStream << mPadding << ": " << i << std::endl;
 	}
 }
-void PresentationBridge::listFloatItem(double d)
-{
+
+void PresentationBridge::listFloatItem(double d) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << ": " << d << std::endl;
+		mStream << mPadding << ": " << d << std::endl;
 	}
 }
-void PresentationBridge::listStringItem(std::string s)
-{
+
+void PresentationBridge::listStringItem(std::string s) {
 	if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << ": " << s << std::endl;
+		mStream << mPadding << ": " << s << std::endl;
 	}
 }
+
 void PresentationBridge::listNoneItem() {
-    if (checkAndUpdateMaxItemCounter()) {
-        mStream << mPadding << ": " << std::endl;
-    }
+	if (checkAndUpdateMaxItemCounter()) {
+		mStream << mPadding << ": " << std::endl;
+	}
 }
-void PresentationBridge::listEnd()
-{
+
+void PresentationBridge::listEnd() {
 	mMapsInList.pop();
 	removePadding();
 }
-void PresentationBridge::addPadding()
-{
+
+void PresentationBridge::addPadding() {
 	mEntriesPerLevelCounter.push_back(0);
 	mPadding += "  ";
 }
 
-void PresentationBridge::removePadding()
-{
-    size_t itemsThisLevel = mEntriesPerLevelCounter.back();
-    bool wasSkipping = mIsSkipEntry;
+void PresentationBridge::removePadding() {
+	size_t itemsThisLevel = mEntriesPerLevelCounter.back();
+	bool wasSkipping = mIsSkipEntry;
 	mEntriesPerLevelCounter.pop_back();
 	if (mMaxItemsPerLevel) {
-        size_t level = 0;
-		for (size_t entry : mEntriesPerLevelCounter) {
+		size_t level = 0;
+		for (size_t entry: mEntriesPerLevelCounter) {
 			mIsSkipEntry = entry >= mMaxItemsPerLevel && level >= mStartFilterLevel;
-            level++;
+			level++;
 		}
 	}
 
-    if (wasSkipping != mIsSkipEntry) {
-        mStream << mPadding << "... (" << (itemsThisLevel - mMaxItemsPerLevel) << " more items) ..." << std::endl;
-    }
+	if (wasSkipping != mIsSkipEntry) {
+		mStream << mPadding << "... (" << (itemsThisLevel - mMaxItemsPerLevel) << " more items) ..." << std::endl;
+	}
 
 	mPadding.erase(mPadding.end() - 2, mPadding.end());
 }
 
-void PresentationBridge::setMaxItemsPerLevel(size_t maxItems)
-{
+void PresentationBridge::setMaxItemsPerLevel(size_t maxItems) {
 	mMaxItemsPerLevel = maxItems;
 }
 
-void PresentationBridge::setStartFilteringLevel(size_t startFilteringLevel)
-{
-    mStartFilterLevel = startFilteringLevel;
+void PresentationBridge::setStartFilteringLevel(size_t startFilteringLevel) {
+	mStartFilterLevel = startFilteringLevel;
 }
 
-bool PresentationBridge::checkAndUpdateMaxItemCounter()
-{
+bool PresentationBridge::checkAndUpdateMaxItemCounter() {
 
 	if (mMaxItemsPerLevel && !mEntriesPerLevelCounter.empty() && mEntriesPerLevelCounter.size() > mStartFilterLevel) {
 		size_t& itemsInLevel = mEntriesPerLevelCounter.back();
@@ -176,9 +167,9 @@ bool PresentationBridge::checkAndUpdateMaxItemCounter()
 		if (itemsInLevel >= mMaxItemsPerLevel) {
 			mIsSkipEntry = true;
 		}
-        if (mIsSkipEntry) {
-            return false;
-        }
+		if (mIsSkipEntry) {
+			return false;
+		}
 	}
 	return true;
 }

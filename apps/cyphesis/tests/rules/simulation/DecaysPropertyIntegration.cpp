@@ -39,63 +39,58 @@ using Atlas::Objects::Operation::Delete;
 
 #include "../../TestWorld.h"
 
-class DecaysPropertyintegration : public Cyphesis::TestBase
-{
-  private:
-    Ref<Entity> m_world;
-    Ref<Entity> m_entity;
-    PropertyBase * m_property;
-  public:
-    DecaysPropertyintegration();
+class DecaysPropertyintegration : public Cyphesis::TestBase {
+private:
+	Ref <Entity> m_world;
+	Ref <Entity> m_entity;
+	PropertyBase* m_property;
+public:
+	DecaysPropertyintegration();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    void test_handler();
+	void teardown();
+
+	void test_handler();
 };
 
-DecaysPropertyintegration::DecaysPropertyintegration()
-{
-    ADD_TEST(DecaysPropertyintegration::test_handler);
+DecaysPropertyintegration::DecaysPropertyintegration() {
+	ADD_TEST(DecaysPropertyintegration::test_handler);
 }
 
-void DecaysPropertyintegration::setup()
-{
-    m_world = new Entity(0);
-    new TestWorld(m_world);
+void DecaysPropertyintegration::setup() {
+	m_world = new Entity(0);
+	new TestWorld(m_world);
 
-    m_entity = new Entity(1);
-    m_entity->m_parent = m_world;
+	m_entity = new Entity(1);
+	m_entity->m_parent = m_world;
 
-    PropertyFactory<DecaysProperty> decays_property_factory;
+	PropertyFactory <DecaysProperty> decays_property_factory;
 
-    m_property = decays_property_factory.newProperty();
-    m_property->install(m_entity.get(), "decays");
-    m_entity->setProperty("decays", m_property);
+	m_property = decays_property_factory.newProperty();
+	m_property->install(m_entity.get(), "decays");
+	m_entity->setProperty("decays", m_property);
 }
 
-void DecaysPropertyintegration::teardown()
-{
+void DecaysPropertyintegration::teardown() {
 }
 
-void DecaysPropertyintegration::test_handler()
-{
-    Delete d;
+void DecaysPropertyintegration::test_handler() {
+	Delete d;
 
-    OpVector res;
-    m_entity->operation(d, res);
+	OpVector res;
+	m_entity->operation(d, res);
 
-    ASSERT_EQUAL(res.size(), 1u);
-    const Operation & reply = res.front();
-    ASSERT_EQUAL(reply->getClassNo(), Atlas::Objects::Operation::CREATE_NO);
-    ASSERT_EQUAL(reply->getTo(), m_world->getId());
+	ASSERT_EQUAL(res.size(), 1u);
+	const Operation& reply = res.front();
+	ASSERT_EQUAL(reply->getClassNo(), Atlas::Objects::Operation::CREATE_NO);
+	ASSERT_EQUAL(reply->getTo(), m_world->getId());
 }
 
-int main()
-{
-    DecaysPropertyintegration t;
+int main() {
+	DecaysPropertyintegration t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -117,36 +112,34 @@ int main()
 #include "../../stubs/common/stubVariable.h"
 #include "../../stubs/common/stubMonitors.h"
 
-void addToEntity(const Point3D & p, std::vector<double> & vd)
-{
-    vd.resize(3);
-    vd[0] = p[0];
-    vd[1] = p[1];
-    vd[2] = p[2];
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
+	vd.resize(3);
+	vd[0] = p[0];
+	vd[1] = p[1];
+	vd[2] = p[2];
 }
 
 
 #ifndef STUB_BaseWorld_getEntity
 #define STUB_BaseWorld_getEntity
-Ref<LocatedEntity> BaseWorld::getEntity(const std::string & id) const
-{
-    return getEntity(integerId(id));
+
+Ref <LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
+	return getEntity(integerId(id));
 }
 
-Ref<LocatedEntity> BaseWorld::getEntity(long id) const
-{
-    auto I = m_eobjects.find(id);
-    if (I != m_eobjects.end()) {
-        assert(I->second);
-        return I->second;
-    } else {
-        return nullptr;
-    }
+Ref <LocatedEntity> BaseWorld::getEntity(long id) const {
+	auto I = m_eobjects.find(id);
+	if (I != m_eobjects.end()) {
+		assert(I->second);
+		return I->second;
+	} else {
+		return nullptr;
+	}
 }
+
 #endif //STUB_BaseWorld_getEntity
 
 #include "../../stubs/rules/simulation/stubBaseWorld.h"
-
 
 
 #include "../../stubs/rules/stubScript.h"

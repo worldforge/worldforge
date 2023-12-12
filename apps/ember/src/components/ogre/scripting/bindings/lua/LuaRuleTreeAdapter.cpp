@@ -22,10 +22,10 @@
 using namespace Ember::OgreView::Gui::Adapters::Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<RuleTreeAdapter>(sol::table& space) {
 	auto ruleTreeAdapter = space.new_usertype<RuleTreeAdapter>("RuleTreeAdapter",
-																	  sol::constructors<RuleTreeAdapter(Eris::Connection&, std::string, CEGUI::Tree&)>());
+															   sol::constructors<RuleTreeAdapter(Eris::Connection&, std::string, CEGUI::Tree&)>());
 	ruleTreeAdapter["refresh"] = &RuleTreeAdapter::refresh;
 	ruleTreeAdapter["getSelectedRule"] = &RuleTreeAdapter::getSelectedRule;
 	ruleTreeAdapter["EventNewRuleReceived"] = LuaConnector::make_property(&RuleTreeAdapter::EventNewRuleReceived);

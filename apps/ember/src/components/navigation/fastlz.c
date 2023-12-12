@@ -77,13 +77,15 @@
 /*
  * FIXME: use preprocessor magic to set this on different platforms!
  */
-typedef unsigned char  flzuint8;
+typedef unsigned char flzuint8;
 typedef unsigned short flzuint16;
-typedef unsigned int   flzuint32;
+typedef unsigned int flzuint32;
 
 /* prototypes */
 int fastlz_compress(const void* input, int length, void* output);
+
 int fastlz_compress_level(int level, const void* input, int length, void* output);
+
 int fastlz_decompress(const void* input, int length, void* output, int maxout);
 
 #define MAX_COPY       32
@@ -99,7 +101,7 @@ int fastlz_decompress(const void* input, int length, void* output, int maxout);
 #define HASH_LOG  13
 #define HASH_SIZE (1<< HASH_LOG)
 #define HASH_MASK  (HASH_SIZE-1)
-#define HASH_FUNCTION(v,p) { v = FASTLZ_READU16(p); v ^= FASTLZ_READU16(p+1)^(v>>(16-HASH_LOG));v &= HASH_MASK; }
+#define HASH_FUNCTION(v, p) { v = FASTLZ_READU16(p); v ^= FASTLZ_READU16(p+1)^(v>>(16-HASH_LOG));v &= HASH_MASK; }
 
 #undef FASTLZ_LEVEL
 #define FASTLZ_LEVEL 1
@@ -108,8 +110,11 @@ int fastlz_decompress(const void* input, int length, void* output, int maxout);
 #undef FASTLZ_DECOMPRESSOR
 #define FASTLZ_COMPRESSOR fastlz1_compress
 #define FASTLZ_DECOMPRESSOR fastlz1_decompress
+
 static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* output);
+
 static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void* output, int maxout);
+
 #include "fastlz.c"
 
 #undef FASTLZ_LEVEL
@@ -123,42 +128,42 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
 #undef FASTLZ_DECOMPRESSOR
 #define FASTLZ_COMPRESSOR fastlz2_compress
 #define FASTLZ_DECOMPRESSOR fastlz2_decompress
+
 static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* output);
+
 static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void* output, int maxout);
+
 #include "fastlz.c"
 
-int fastlz_compress(const void* input, int length, void* output)
-{
-  /* for short block, choose fastlz1 */
-  if(length < 65536)
-    return fastlz1_compress(input, length, output);
+int fastlz_compress(const void* input, int length, void* output) {
+	/* for short block, choose fastlz1 */
+	if (length < 65536)
+		return fastlz1_compress(input, length, output);
 
-  /* else... */
-  return fastlz2_compress(input, length, output);
+	/* else... */
+	return fastlz2_compress(input, length, output);
 }
 
-int fastlz_decompress(const void* input, int length, void* output, int maxout)
-{
-  /* magic identifier for compression level */
-  int level = ((*(const flzuint8*)input) >> 5) + 1;
+int fastlz_decompress(const void* input, int length, void* output, int maxout) {
+	/* magic identifier for compression level */
+	int level = ((*(const flzuint8*) input) >> 5) + 1;
 
-  if(level == 1)
-    return fastlz1_decompress(input, length, output, maxout);
-  if(level == 2)
-    return fastlz2_decompress(input, length, output, maxout);
+	if (level == 1)
+		return fastlz1_decompress(input, length, output, maxout);
+	if (level == 2)
+		return fastlz2_decompress(input, length, output, maxout);
 
-  /* unknown level, trigger error */
-  return 0;
+	/* unknown level, trigger error */
+	return 0;
 }
 
-int fastlz_compress_level(int level, const void* input, int length, void* output)
-{
-  if(level == 1)
-    return fastlz1_compress(input, length, output);
-  if(level == 2)
-    return fastlz2_compress(input, length, output);
+int fastlz_compress_level(int level, const void* input, int length, void* output) {
+	if (level == 1)
+		return fastlz1_compress(input, length, output);
+	if (level == 2)
+		return fastlz2_compress(input, length, output);
 
-  return 0;
+	return 0;
 }
 
 #else /* !defined(FASTLZ_COMPRESSOR) && !defined(FASTLZ_DECOMPRESSOR) */
@@ -179,22 +184,22 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
   /* sanity check */
   if(FASTLZ_UNEXPECT_CONDITIONAL(length < 4))
   {
-    if(length)
-    {
-      /* create literal copy only */
-      *op++ = length-1;
-      ip_bound++;
-      while(ip <= ip_bound)
-        *op++ = *ip++;
-      return length+1;
-    }
-    else
-      return 0;
+	if(length)
+	{
+	  /* create literal copy only */
+	  *op++ = length-1;
+	  ip_bound++;
+	  while(ip <= ip_bound)
+		*op++ = *ip++;
+	  return length+1;
+	}
+	else
+	  return 0;
   }
 
   /* initializes hash table */
   for (hslot = htab; hslot < htab + HASH_SIZE; hslot++)
-    *hslot = ip;
+	*hslot = ip;
 
   /* we start with literal copy */
   copy = 2;
@@ -205,209 +210,209 @@ static FASTLZ_INLINE int FASTLZ_COMPRESSOR(const void* input, int length, void* 
   /* main loop */
   while(FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit))
   {
-    const flzuint8* ref;
-    flzuint32 distance;
+	const flzuint8* ref;
+	flzuint32 distance;
 
-    /* minimum match length */
-    flzuint32 len = 3;
+	/* minimum match length */
+	flzuint32 len = 3;
 
-    /* comparison starting-point */
-    const flzuint8* anchor = ip;
+	/* comparison starting-point */
+	const flzuint8* anchor = ip;
 
-    /* check for a run */
+	/* check for a run */
 #if FASTLZ_LEVEL==2
-    if(ip[0] == ip[-1] && FASTLZ_READU16(ip-1)==FASTLZ_READU16(ip+1))
-    {
-      distance = 1;
-      ip += 3;
-      ref = anchor - 1 + 3;
-      goto match;
-    }
+	if(ip[0] == ip[-1] && FASTLZ_READU16(ip-1)==FASTLZ_READU16(ip+1))
+	{
+	  distance = 1;
+	  ip += 3;
+	  ref = anchor - 1 + 3;
+	  goto match;
+	}
 #endif
 
-    /* find potential match */
-    HASH_FUNCTION(hval,ip);
-    hslot = htab + hval;
-    ref = htab[hval];
+	/* find potential match */
+	HASH_FUNCTION(hval,ip);
+	hslot = htab + hval;
+	ref = htab[hval];
 
-    /* calculate distance to the match */
-    distance = anchor - ref;
+	/* calculate distance to the match */
+	distance = anchor - ref;
 
-    /* update hash table */
-    *hslot = anchor;
+	/* update hash table */
+	*hslot = anchor;
 
-    /* is this a match? check the first 3 bytes */
-    if(distance==0 || 
+	/* is this a match? check the first 3 bytes */
+	if(distance==0 ||
 #if FASTLZ_LEVEL==1
-    (distance >= MAX_DISTANCE) ||
+	(distance >= MAX_DISTANCE) ||
 #else
-    (distance >= MAX_FARDISTANCE) ||
+	(distance >= MAX_FARDISTANCE) ||
 #endif
-    *ref++ != *ip++ || *ref++!=*ip++ || *ref++!=*ip++)
-      goto literal;
+	*ref++ != *ip++ || *ref++!=*ip++ || *ref++!=*ip++)
+	  goto literal;
 
 #if FASTLZ_LEVEL==2
-    /* far, needs at least 5-byte match */
-    if(distance >= MAX_DISTANCE)
-    {
-      if(*ip++ != *ref++ || *ip++!= *ref++) 
-        goto literal;
-      len += 2;
-    }
-    
-    match:
+	/* far, needs at least 5-byte match */
+	if(distance >= MAX_DISTANCE)
+	{
+	  if(*ip++ != *ref++ || *ip++!= *ref++)
+		goto literal;
+	  len += 2;
+	}
+
+	match:
 #endif
 
-    /* last matched byte */
-    ip = anchor + len;
+	/* last matched byte */
+	ip = anchor + len;
 
-    /* distance is biased */
-    distance--;
+	/* distance is biased */
+	distance--;
 
-    if(!distance)
-    {
-      /* zero distance means a run */
-      flzuint8 x = ip[-1];
-      while(ip < ip_bound)
-        if(*ref++ != x) break; else ip++;
-    }
-    else
-    for(;;)
-    {
-      /* safe because the outer check against ip limit */
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      if(*ref++ != *ip++) break;
-      while(ip < ip_bound)
-        if(*ref++ != *ip++) break;
-      break;
-    }
+	if(!distance)
+	{
+	  /* zero distance means a run */
+	  flzuint8 x = ip[-1];
+	  while(ip < ip_bound)
+		if(*ref++ != x) break; else ip++;
+	}
+	else
+	for(;;)
+	{
+	  /* safe because the outer check against ip limit */
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  if(*ref++ != *ip++) break;
+	  while(ip < ip_bound)
+		if(*ref++ != *ip++) break;
+	  break;
+	}
 
-    /* if we have copied something, adjust the copy count */
-    if(copy)
-      /* copy is biased, '0' means 1 byte copy */
-      *(op-copy-1) = copy-1;
-    else
-      /* back, to overwrite the copy count */
-      op--;
+	/* if we have copied something, adjust the copy count */
+	if(copy)
+	  /* copy is biased, '0' means 1 byte copy */
+	  *(op-copy-1) = copy-1;
+	else
+	  /* back, to overwrite the copy count */
+	  op--;
 
-    /* reset literal counter */
-    copy = 0;
+	/* reset literal counter */
+	copy = 0;
 
-    /* length is biased, '1' means a match of 3 bytes */
-    ip -= 3;
-    len = ip - anchor;
+	/* length is biased, '1' means a match of 3 bytes */
+	ip -= 3;
+	len = ip - anchor;
 
-    /* encode the match */
+	/* encode the match */
 #if FASTLZ_LEVEL==2
-    if(distance < MAX_DISTANCE)
-    {
-      if(len < 7)
-      {
-        *op++ = (len << 5) + (distance >> 8);
-        *op++ = (distance & 255);
-      }
-      else
-      {
-        *op++ = (7 << 5) + (distance >> 8);
-        for(len-=7; len >= 255; len-= 255)
-          *op++ = 255;
-        *op++ = len;
-        *op++ = (distance & 255);
-      }
-    }
-    else
-    {
-      /* far away, but not yet in the another galaxy... */
-      if(len < 7)
-      {
-        distance -= MAX_DISTANCE;
-        *op++ = (len << 5) + 31;
-        *op++ = 255;
-        *op++ = distance >> 8;
-        *op++ = distance & 255;
-      }
-      else
-      {
-        distance -= MAX_DISTANCE;
-        *op++ = (7 << 5) + 31;
-        for(len-=7; len >= 255; len-= 255)
-          *op++ = 255;
-        *op++ = len;
-        *op++ = 255;
-        *op++ = distance >> 8;
-        *op++ = distance & 255;
-      }
-    }
+	if(distance < MAX_DISTANCE)
+	{
+	  if(len < 7)
+	  {
+		*op++ = (len << 5) + (distance >> 8);
+		*op++ = (distance & 255);
+	  }
+	  else
+	  {
+		*op++ = (7 << 5) + (distance >> 8);
+		for(len-=7; len >= 255; len-= 255)
+		  *op++ = 255;
+		*op++ = len;
+		*op++ = (distance & 255);
+	  }
+	}
+	else
+	{
+	  /* far away, but not yet in the another galaxy... */
+	  if(len < 7)
+	  {
+		distance -= MAX_DISTANCE;
+		*op++ = (len << 5) + 31;
+		*op++ = 255;
+		*op++ = distance >> 8;
+		*op++ = distance & 255;
+	  }
+	  else
+	  {
+		distance -= MAX_DISTANCE;
+		*op++ = (7 << 5) + 31;
+		for(len-=7; len >= 255; len-= 255)
+		  *op++ = 255;
+		*op++ = len;
+		*op++ = 255;
+		*op++ = distance >> 8;
+		*op++ = distance & 255;
+	  }
+	}
 #else
 
-    if(FASTLZ_UNEXPECT_CONDITIONAL(len > MAX_LEN-2))
-      while(len > MAX_LEN-2)
-      {
-        *op++ = (7 << 5) + (distance >> 8);
-        *op++ = MAX_LEN - 2 - 7 -2; 
-        *op++ = (distance & 255);
-        len -= MAX_LEN-2;
-      }
+	if(FASTLZ_UNEXPECT_CONDITIONAL(len > MAX_LEN-2))
+	  while(len > MAX_LEN-2)
+	  {
+		*op++ = (7 << 5) + (distance >> 8);
+		*op++ = MAX_LEN - 2 - 7 -2;
+		*op++ = (distance & 255);
+		len -= MAX_LEN-2;
+	  }
 
-    if(len < 7)
-    {
-      *op++ = (len << 5) + (distance >> 8);
-      *op++ = (distance & 255);
-    }
-    else
-    {
-      *op++ = (7 << 5) + (distance >> 8);
-      *op++ = len - 7;
-      *op++ = (distance & 255);
-    }
+	if(len < 7)
+	{
+	  *op++ = (len << 5) + (distance >> 8);
+	  *op++ = (distance & 255);
+	}
+	else
+	{
+	  *op++ = (7 << 5) + (distance >> 8);
+	  *op++ = len - 7;
+	  *op++ = (distance & 255);
+	}
 #endif
 
-    /* update the hash at match boundary */
-    HASH_FUNCTION(hval,ip);
-    htab[hval] = ip++;
-    HASH_FUNCTION(hval,ip);
-    htab[hval] = ip++;
+	/* update the hash at match boundary */
+	HASH_FUNCTION(hval,ip);
+	htab[hval] = ip++;
+	HASH_FUNCTION(hval,ip);
+	htab[hval] = ip++;
 
-    /* assuming literal copy */
-    *op++ = MAX_COPY-1;
+	/* assuming literal copy */
+	*op++ = MAX_COPY-1;
 
-    continue;
+	continue;
 
-    literal:
-      *op++ = *anchor++;
-      ip = anchor;
-      copy++;
-      if(FASTLZ_UNEXPECT_CONDITIONAL(copy == MAX_COPY))
-      {
-        copy = 0;
-        *op++ = MAX_COPY-1;
-      }
+	literal:
+	  *op++ = *anchor++;
+	  ip = anchor;
+	  copy++;
+	  if(FASTLZ_UNEXPECT_CONDITIONAL(copy == MAX_COPY))
+	  {
+		copy = 0;
+		*op++ = MAX_COPY-1;
+	  }
   }
 
   /* left-over as literal copy */
   ip_bound++;
   while(ip <= ip_bound)
   {
-    *op++ = *ip++;
-    copy++;
-    if(copy == MAX_COPY)
-    {
-      copy = 0;
-      *op++ = MAX_COPY-1;
-    }
+	*op++ = *ip++;
+	copy++;
+	if(copy == MAX_COPY)
+	{
+	  copy = 0;
+	  *op++ = MAX_COPY-1;
+	}
   }
 
   /* if we have copied something, adjust the copy length */
   if(copy)
-    *(op-copy-1) = copy-1;
+	*(op-copy-1) = copy-1;
   else
-    op--;
+	op--;
 
 #if FASTLZ_LEVEL==2
   /* marker for fastlz2 */
@@ -428,120 +433,120 @@ static FASTLZ_INLINE int FASTLZ_DECOMPRESSOR(const void* input, int length, void
 
   do
   {
-    const flzuint8* ref = op;
-    flzuint32 len = ctrl >> 5;
-    flzuint32 ofs = (ctrl & 31) << 8;
+	const flzuint8* ref = op;
+	flzuint32 len = ctrl >> 5;
+	flzuint32 ofs = (ctrl & 31) << 8;
 
-    if(ctrl >= 32)
-    {
+	if(ctrl >= 32)
+	{
 #if FASTLZ_LEVEL==2
-      flzuint8 code;
+	  flzuint8 code;
 #endif
-      len--;
-      ref -= ofs;
-      if (len == 7-1)
+	  len--;
+	  ref -= ofs;
+	  if (len == 7-1)
 #if FASTLZ_LEVEL==1
-        len += *ip++;
-      ref -= *ip++;
+		len += *ip++;
+	  ref -= *ip++;
 #else
-        do
-        {
-          code = *ip++;
-          len += code;
-        } while (code==255);
-      code = *ip++;
-      ref -= code;
+		do
+		{
+		  code = *ip++;
+		  len += code;
+		} while (code==255);
+	  code = *ip++;
+	  ref -= code;
 
-      /* match from 16-bit distance */
-      if(FASTLZ_UNEXPECT_CONDITIONAL(code==255))
-      if(FASTLZ_EXPECT_CONDITIONAL(ofs==(31 << 8)))
-      {
-        ofs = (*ip++) << 8;
-        ofs += *ip++;
-        ref = op - ofs - MAX_DISTANCE;
-      }
+	  /* match from 16-bit distance */
+	  if(FASTLZ_UNEXPECT_CONDITIONAL(code==255))
+	  if(FASTLZ_EXPECT_CONDITIONAL(ofs==(31 << 8)))
+	  {
+		ofs = (*ip++) << 8;
+		ofs += *ip++;
+		ref = op - ofs - MAX_DISTANCE;
+	  }
 #endif
-      
+
 #ifdef FASTLZ_SAFE
-      if (FASTLZ_UNEXPECT_CONDITIONAL(op + len + 3 > op_limit))
-        return 0;
+	  if (FASTLZ_UNEXPECT_CONDITIONAL(op + len + 3 > op_limit))
+		return 0;
 
-      if (FASTLZ_UNEXPECT_CONDITIONAL(ref-1 < (flzuint8 *)output))
-        return 0;
+	  if (FASTLZ_UNEXPECT_CONDITIONAL(ref-1 < (flzuint8 *)output))
+		return 0;
 #endif
 
-      if(FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit))
-        ctrl = *ip++;
-      else
-        loop = 0;
+	  if(FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit))
+		ctrl = *ip++;
+	  else
+		loop = 0;
 
-      if(ref == op)
-      {
-        /* optimize copy for a run */
-        flzuint8 b = ref[-1];
-        *op++ = b;
-        *op++ = b;
-        *op++ = b;
-        for(; len; --len)
-          *op++ = b;
-      }
-      else
-      {
+	  if(ref == op)
+	  {
+		/* optimize copy for a run */
+		flzuint8 b = ref[-1];
+		*op++ = b;
+		*op++ = b;
+		*op++ = b;
+		for(; len; --len)
+		  *op++ = b;
+	  }
+	  else
+	  {
 #if !defined(FASTLZ_STRICT_ALIGN)
-        const flzuint16* p;
-        flzuint16* q;
+		const flzuint16* p;
+		flzuint16* q;
 #endif
-        /* copy from reference */
-        ref--;
-        *op++ = *ref++;
-        *op++ = *ref++;
-        *op++ = *ref++;
+		/* copy from reference */
+		ref--;
+		*op++ = *ref++;
+		*op++ = *ref++;
+		*op++ = *ref++;
 
 #if !defined(FASTLZ_STRICT_ALIGN)
-        /* copy a byte, so that now it's word aligned */
-        if(len & 1)
-        {
-          *op++ = *ref++;
-          len--;
-        }
+		/* copy a byte, so that now it's word aligned */
+		if(len & 1)
+		{
+		  *op++ = *ref++;
+		  len--;
+		}
 
-        /* copy 16-bit at once */
-        q = (flzuint16*) op;
-        op += len;
-        p = (const flzuint16*) ref;
-        for(len>>=1; len > 4; len-=4)
-        {
-          *q++ = *p++;
-          *q++ = *p++;
-          *q++ = *p++;
-          *q++ = *p++;
-        }
-        for(; len; --len)
-          *q++ = *p++;
+		/* copy 16-bit at once */
+		q = (flzuint16*) op;
+		op += len;
+		p = (const flzuint16*) ref;
+		for(len>>=1; len > 4; len-=4)
+		{
+		  *q++ = *p++;
+		  *q++ = *p++;
+		  *q++ = *p++;
+		  *q++ = *p++;
+		}
+		for(; len; --len)
+		  *q++ = *p++;
 #else
-        for(; len; --len)
-          *op++ = *ref++;
+		for(; len; --len)
+		  *op++ = *ref++;
 #endif
-      }
-    }
-    else
-    {
-      ctrl++;
+	  }
+	}
+	else
+	{
+	  ctrl++;
 #ifdef FASTLZ_SAFE
-      if (FASTLZ_UNEXPECT_CONDITIONAL(op + ctrl > op_limit))
-        return 0;
-      if (FASTLZ_UNEXPECT_CONDITIONAL(ip + ctrl > ip_limit))
-        return 0;
+	  if (FASTLZ_UNEXPECT_CONDITIONAL(op + ctrl > op_limit))
+		return 0;
+	  if (FASTLZ_UNEXPECT_CONDITIONAL(ip + ctrl > ip_limit))
+		return 0;
 #endif
 
-      *op++ = *ip++; 
-      for(--ctrl; ctrl; ctrl--)
-        *op++ = *ip++;
+	  *op++ = *ip++;
+	  for(--ctrl; ctrl; ctrl--)
+		*op++ = *ip++;
 
-      loop = FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit);
-      if(loop)
-        ctrl = *ip++;
-    }
+	  loop = FASTLZ_EXPECT_CONDITIONAL(ip < ip_limit);
+	  if(loop)
+		ctrl = *ip++;
+	}
   }
   while(FASTLZ_EXPECT_CONDITIONAL(loop));
 

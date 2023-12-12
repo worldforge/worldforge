@@ -25,58 +25,57 @@
 static const bool debug_flag = false;
 
 
-HandlerResult ScriptUtils::processScriptResult(const std::string& scriptName, const Py::Object& ret, OpVector& res, LocatedEntity& e)
-{
-    HandlerResult result = OPERATION_IGNORED;
+HandlerResult ScriptUtils::processScriptResult(const std::string& scriptName, const Py::Object& ret, OpVector& res, LocatedEntity& e) {
+	HandlerResult result = OPERATION_IGNORED;
 
-    auto processPythonResultFn = [&](const Py::Object& pythonResult) {
-        if (pythonResult.isLong()) {
-            auto numRet = Py::Long(pythonResult).as_long();
-            if (numRet == 0) {
-                result = OPERATION_IGNORED;
-            } else if (numRet == 1) {
-                result = OPERATION_HANDLED;
-            } else if (numRet == 2) {
-                result = OPERATION_BLOCKED;
-            } else {
-                spdlog::error("Unrecognized return code {} for script '{}' attached to entity '{}'", numRet, scriptName, e.describeEntity());
-            }
+	auto processPythonResultFn = [&](const Py::Object& pythonResult) {
+		if (pythonResult.isLong()) {
+			auto numRet = Py::Long(pythonResult).as_long();
+			if (numRet == 0) {
+				result = OPERATION_IGNORED;
+			} else if (numRet == 1) {
+				result = OPERATION_HANDLED;
+			} else if (numRet == 2) {
+				result = OPERATION_BLOCKED;
+			} else {
+				spdlog::error("Unrecognized return code {} for script '{}' attached to entity '{}'", numRet, scriptName, e.describeEntity());
+			}
 
-        } else if (CyPy_Operation::check(pythonResult)) {
-            auto operation = CyPy_Operation::value(pythonResult);
-            assert(operation);
-            //If nothing is set the operation is from the entity containing the usages.
-            if (operation->isDefaultFrom()) {
-                operation->setFrom(e.getId());
-            }
-            res.push_back(std::move(operation));
-        } else if (CyPy_Oplist::check(pythonResult)) {
-            auto& o = CyPy_Oplist::value(pythonResult);
-            for (auto& opRes : o) {
-                //If nothing is set the operation is from the entity containing the usages.
-                if (opRes->isDefaultFrom()) {
-                    opRes->setFrom(e.getId());
-                }
-                res.push_back(opRes);
-            }
-        } else {
-            spdlog::error("Python script \"{}\" returned an invalid "
-                                       "result.", scriptName);
-        }
-    };
+		} else if (CyPy_Operation::check(pythonResult)) {
+			auto operation = CyPy_Operation::value(pythonResult);
+			assert(operation);
+			//If nothing is set the operation is from the entity containing the usages.
+			if (operation->isDefaultFrom()) {
+				operation->setFrom(e.getId());
+			}
+			res.push_back(std::move(operation));
+		} else if (CyPy_Oplist::check(pythonResult)) {
+			auto& o = CyPy_Oplist::value(pythonResult);
+			for (auto& opRes: o) {
+				//If nothing is set the operation is from the entity containing the usages.
+				if (opRes->isDefaultFrom()) {
+					opRes->setFrom(e.getId());
+				}
+				res.push_back(opRes);
+			}
+		} else {
+			spdlog::error("Python script \"{}\" returned an invalid "
+						  "result.", scriptName);
+		}
+	};
 
-    if (ret.isNone()) {
-        cy_debug_print("Returned none")
-    } else {
-        //Check if it's a tuple and process it.
-        if (ret.isTuple()) {
-            for (auto item : Py::Tuple(ret)) {
-                processPythonResultFn(item);
-            }
-        } else {
-            processPythonResultFn(ret);
-        }
-    }
+	if (ret.isNone()) {
+		cy_debug_print("Returned none")
+	} else {
+		//Check if it's a tuple and process it.
+		if (ret.isTuple()) {
+			for (auto item: Py::Tuple(ret)) {
+				processPythonResultFn(item);
+			}
+		} else {
+			processPythonResultFn(ret);
+		}
+	}
 
-    return result;
+	return result;
 }

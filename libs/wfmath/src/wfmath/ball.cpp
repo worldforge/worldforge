@@ -36,53 +36,59 @@
 
 namespace WFMath {
 
-template<> Ball<3>& Ball<3>::rotateCorner(const Quaternion&, size_t)
-{
-  return *this;
+template<>
+Ball<3>& Ball<3>::rotateCorner(const Quaternion&, size_t) {
+	return *this;
 }
 
-template<> Ball<3>& Ball<3>::rotateCenter(const Quaternion&)
-{
-  return *this;
+template<>
+Ball<3>& Ball<3>::rotateCenter(const Quaternion&) {
+	return *this;
 }
 
-template<> Ball<3>& Ball<3>::rotatePoint(const Quaternion& q, const Point<3>& p)
-{
-  m_center.rotate(q, p); return *this;
+template<>
+Ball<3>& Ball<3>::rotatePoint(const Quaternion& q, const Point<3>& p) {
+	m_center.rotate(q, p);
+	return *this;
 }
 
-template<> Ball<3> Ball<3>::toParentCoords(const Point<3>& origin,
-                                           const Quaternion& rotation) const
-{
-  return Ball<3>(m_center.toParentCoords(origin, rotation), m_radius);
+template<>
+Ball<3> Ball<3>::toParentCoords(const Point<3>& origin,
+								const Quaternion& rotation) const {
+	return Ball<3>(m_center.toParentCoords(origin, rotation), m_radius);
 }
 
-template<> Ball<3> Ball<3>::toLocalCoords(const Point<3>& origin,
-                                          const Quaternion& rotation) const
-{
-  return Ball<3>(m_center.toLocalCoords(origin, rotation), m_radius);
+template<>
+Ball<3> Ball<3>::toLocalCoords(const Point<3>& origin,
+							   const Quaternion& rotation) const {
+	return Ball<3>(m_center.toLocalCoords(origin, rotation), m_radius);
 }
 
 template Ball<2> BoundingSphere<2, std::vector>(std::vector<Point<2>,
-                                                std::allocator<Point<2> > > const&);
+		std::allocator<Point<2> > > const&);
 
 template Ball<2> BoundingSphereSloppy<2, std::vector>(std::vector<Point<2>,
-                                                      std::allocator<Point<2> > > const&);
+		std::allocator<Point<2> > > const&);
 
 template Ball<3> BoundingSphere<3, std::vector>(std::vector<Point<3>,
-                                                std::allocator<Point<3> > > const&);
+		std::allocator<Point<3> > > const&);
 
 template Ball<3> BoundingSphereSloppy<3, std::vector>(std::vector<Point<3>,
-                                                      std::allocator<Point<3> > > const&);
+		std::allocator<Point<3> > > const&);
 
 template Ball<2> Point<2>::boundingSphere() const;
+
 template Ball<2> Point<2>::boundingSphereSloppy() const;
 
 template Ball<3> Point<3>::boundingSphere() const;
+
 template Ball<3> Point<3>::boundingSphereSloppy() const;
 
-template class Ball<2>;
-template class Ball<3>;
+template
+class Ball<2>;
+
+template
+class Ball<3>;
 
 static_assert(std::is_standard_layout<Ball<3>>::value, "Ball should be standard layout.");
 static_assert(std::is_trivially_copyable<Ball<3>>::value, "Ball should be trivially copyable.");

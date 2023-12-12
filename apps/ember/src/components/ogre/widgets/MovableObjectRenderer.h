@@ -28,14 +28,11 @@
 #include <CEGUI/Event.h>
 #include <OgreFrameListener.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 class EntityCEGUITexture;
+
 class CEGUIWindowUpdater;
 
 /**
@@ -43,8 +40,7 @@ class CEGUIWindowUpdater;
 
  @author Erik Ogenvik
  */
-class MovableObjectRenderer: public Ogre::FrameListener
-{
+class MovableObjectRenderer : public Ogre::FrameListener {
 public:
 
 	~MovableObjectRenderer() override;
@@ -87,12 +83,11 @@ public:
 	 */
 	bool getAutoShowFull() const;
 
-	bool getActive() const
-	{
+	bool getActive() const {
 		return mActive;
 	}
-	void setActive(bool isActive)
-	{
+
+	void setActive(bool isActive) {
 		mActive = isActive;
 	}
 
@@ -159,6 +154,7 @@ public:
 	 * @param colour
 	 */
 	void setBackgroundColour(const Ogre::ColourValue& colour);
+
 	/**
 	 * Sets the background colour.
 	 * @param red
@@ -263,8 +259,6 @@ protected:
 
 };
 }
-}
 
-}
 
 #endif

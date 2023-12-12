@@ -23,9 +23,7 @@
 #include "AnimationSet.h"
 #include <OgreAnimationState.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 AnimationSet::AnimationSet() :
 		mAccumulatedTime(0), mCurrentAnimationSetIndex(0), mSpeed(1.0) {
@@ -69,7 +67,7 @@ void AnimationSet::addTime(Ogre::Real timeSlice, bool& continueAnimation) {
 }
 
 void AnimationSet::reset() {
-	for (auto& animation : mAnimations) {
+	for (auto& animation: mAnimations) {
 		animation.setEnabled(false);
 		animation.setTime(0.0f);
 	}
@@ -114,7 +112,7 @@ void Animation::addTime(Ogre::Real timeSlice) {
 
 void Animation::setTime(Ogre::Real time) {
 
-	for (auto& animationPart : mAnimationParts) {
+	for (auto& animationPart: mAnimationParts) {
 		//we'll get an assert error if we try to add time to an animation with zero length
 		if (animationPart.state->getLength() != 0) {
 			animationPart.state->setTimePosition(time);
@@ -123,7 +121,7 @@ void Animation::setTime(Ogre::Real time) {
 }
 
 void Animation::setEnabled(bool enabled) {
-	for (const auto & animationPart : mAnimationParts) {
+	for (const auto& animationPart: mAnimationParts) {
 		//we'll get an assert error if we try to enable an animation with zero length
 		Ogre::AnimationState* state = animationPart.state;
 		if (state->getLength() != 0) {
@@ -132,13 +130,13 @@ void Animation::setEnabled(bool enabled) {
 				state->destroyBlendMask();
 				if (enabled) {
 					const std::vector<BoneGroupRef>& boneGroupRefs = animationPart.boneGroupRefs;
-					for (const auto& boneGroupRef : boneGroupRefs) {
+					for (const auto& boneGroupRef: boneGroupRefs) {
 						auto& boneGroupDef = boneGroupRef.boneGroupDefinition;
 						if (!state->hasBlendMask()) {
 							state->createBlendMask(mBoneNumber, 0.0f);
 						}
 						auto& boneIndices = boneGroupDef.Bones;
-						for (size_t boneIndex : boneIndices) {
+						for (size_t boneIndex: boneIndices) {
 							state->setBlendMaskEntry(boneIndex, boneGroupRef.weight);
 						}
 					}
@@ -160,5 +158,5 @@ void Animation::setEnabled(bool enabled) {
 // }
 
 }
-}
-}
+
+

@@ -25,7 +25,6 @@
 #include <unordered_map>
 
 
-
 /// \brief This is the in-game entity class used to represent the world.
 ///
 /// I added this because I was not happy with the way the old object model
@@ -42,56 +41,59 @@
 /// \ingroup EntityClasses
 class World : public Thing {
 
-    /// \brief Keeps track of relayed operations.
-    struct Relay {
-        /// \brief The entity to which the operation was relayed.
-        std::string entityId;
-        /// \brief A callback to call when a response is received.
-        sigc::slot<void(const Operation&, const std::string&)> callback;
-    };
+	/// \brief Keeps track of relayed operations.
+	struct Relay {
+		/// \brief The entity to which the operation was relayed.
+		std::string entityId;
+		/// \brief A callback to call when a response is received.
+		sigc::slot<void(const Operation&, const std::string&)> callback;
+	};
 
 public:
-    explicit World();
+	explicit World();
 
-    ~World() override;
+	~World() override;
 
-    void LookOperation(const Operation &, OpVector &) override;
-    void DeleteOperation(const Operation &, OpVector &) override;
-    void MoveOperation(const Operation &, OpVector &) override;
-    void RelayOperation(const Operation & op, OpVector & res) override;
+	void LookOperation(const Operation&, OpVector&) override;
 
-    /// \brief Relays an operation to an in game entity.
-    ///
-    /// When a response is received, or if the timeout is exceeded,
-    ///  the callback is called.
-    ///
-    /// \param entity The destination entity.
-    /// \param op The operation to send.
-    /// \param callback A callback which will be called when either a
-    ///             response is received or a timeout is reached.
-    void sendRelayToEntity(const LocatedEntity& entity, const Operation& op,
-            sigc::slot<void(const Operation&, const std::string&)> callback);
+	void DeleteOperation(const Operation&, OpVector&) override;
 
-  protected:
+	void MoveOperation(const Operation&, OpVector&) override;
 
-    /// \brief Keeps track of serial numbers for relayed ops.
-    long int m_serialNumber;
+	void RelayOperation(const Operation& op, OpVector& res) override;
 
-    /**
-     * \brief A store of registered outgoing relays for the world.
-     *
-     * Key is the serialno/refno of the Relay op.
-     */
-    std::unordered_map<long int, Relay> m_relays;
+	/// \brief Relays an operation to an in game entity.
+	///
+	/// When a response is received, or if the timeout is exceeded,
+	///  the callback is called.
+	///
+	/// \param entity The destination entity.
+	/// \param op The operation to send.
+	/// \param callback A callback which will be called when either a
+	///             response is received or a timeout is reached.
+	void sendRelayToEntity(const LocatedEntity& entity, const Operation& op,
+						   sigc::slot<void(const Operation&, const std::string&)> callback);
 
-    /**
-     * @brief Clears the world of all entities and properties.
-     *
-     * Once this method has been run the server should be reset back to
-     * a "clean" state.
-     * @param res
-     */
-    void clearWorld(OpVector & res);
+protected:
+
+	/// \brief Keeps track of serial numbers for relayed ops.
+	long int m_serialNumber;
+
+	/**
+	 * \brief A store of registered outgoing relays for the world.
+	 *
+	 * Key is the serialno/refno of the Relay op.
+	 */
+	std::unordered_map<long int, Relay> m_relays;
+
+	/**
+	 * @brief Clears the world of all entities and properties.
+	 *
+	 * Once this method has been run the server should be reset back to
+	 * a "clean" state.
+	 * @param res
+	 */
+	void clearWorld(OpVector& res);
 
 };
 

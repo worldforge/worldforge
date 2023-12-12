@@ -25,20 +25,13 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class SizeAdapter : public AdapterBase
-{
+class SizeAdapter : public AdapterBase {
 public:
 
 	struct Widgets {
@@ -53,10 +46,10 @@ public:
 		CEGUI::ToggleButton& editable;
 	};
 
-    SizeAdapter(const ::Atlas::Message::Element& element, const Widgets& widgets);
+	SizeAdapter(const ::Atlas::Message::Element& element, const Widgets& widgets);
 
 	~SizeAdapter() override;
-	
+
 	/**
 	Updates the gui with new values.
 	*/
@@ -64,13 +57,14 @@ public:
 
 protected:
 	Widgets mWidgets;
-	
+
 	/**
 	Updates the info window with measurement information.
 	*/
 	void updateInfo();
-	
+
 	bool window_TextChanged(const CEGUI::EventArgs& e);
+
 	bool slider_ValueChanged(const CEGUI::EventArgs& e);
 
 	void fillElementFromGui() override;
@@ -80,12 +74,5 @@ protected:
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

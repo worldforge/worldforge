@@ -21,14 +21,8 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 class EntityRefAdapter : public AdapterBase {
 public:
 
@@ -53,9 +47,6 @@ protected:
 };
 
 }
-}
-}
-}
-}
+
 
 #endif //EMBER_ENTITYREFADAPTER_H

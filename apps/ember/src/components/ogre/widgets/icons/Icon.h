@@ -27,17 +27,12 @@
 #include <sigc++/signal.h>
 
 namespace CEGUI {
-class Imageset;
 
 class Image;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 class IconImageStoreEntry;
 
@@ -104,10 +99,5 @@ private:
 
 }
 
-}
-
-}
-
-}
 
 #endif

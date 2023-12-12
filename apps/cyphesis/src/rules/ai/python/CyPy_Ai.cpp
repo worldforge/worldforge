@@ -22,24 +22,23 @@
 #include "CyPy_MemEntity.h"
 #include "CyPy_Steering.h"
 
-CyPy_Ai::CyPy_Ai() : ExtensionModule("ai")
-{
+CyPy_Ai::CyPy_Ai() : ExtensionModule("ai") {
 
-    CyPy_BaseMind::init_type();
-    CyPy_MemMap::init_type();
-    CyPy_Steering::init_type();
-    CyPy_MemEntity::init_type();
+	CyPy_BaseMind::init_type();
+	CyPy_MemMap::init_type();
+	CyPy_Steering::init_type();
+	CyPy_MemEntity::init_type();
 
-    initialize("Responsible for handling AI behaviour.");
+	initialize("Responsible for handling AI behaviour.");
 
-    Py::Dict d(moduleDictionary());
-    d["Mind"] = CyPy_BaseMind::type();
-    d["MemMap"] = CyPy_MemMap::type();
-    d["Steering"] = CyPy_Steering::type();
-    d["MemEntity"] = CyPy_MemEntity::type();
+	Py::Dict d(moduleDictionary());
+	d["Mind"] = CyPy_BaseMind::type();
+	d["MemMap"] = CyPy_MemMap::type();
+	d["Steering"] = CyPy_Steering::type();
+	d["MemEntity"] = CyPy_MemEntity::type();
 
-    d["CENTER"] = Py::Long(0);
-    d["EDGE"] = Py::Long(1);
+	d["CENTER"] = Py::Long(0);
+	d["EDGE"] = Py::Long(1);
 //    Py::Dict measureType;
 //    measureType.setAttrValue("CENTER", Py::Long(0));
 //    measureType.setAttrValue("EDGE", Py::Long(1));
@@ -48,11 +47,10 @@ CyPy_Ai::CyPy_Ai() : ExtensionModule("ai")
 }
 
 
-std::string CyPy_Ai::init()
-{
-    PyImport_AppendInittab("ai", []() {
-        static auto server = new CyPy_Ai();
-        return server->module().ptr();
-    });
-    return "ai";
+std::string CyPy_Ai::init() {
+	PyImport_AppendInittab("ai", []() {
+		static auto server = new CyPy_Ai();
+		return server->module().ptr();
+	});
+	return "ai";
 }

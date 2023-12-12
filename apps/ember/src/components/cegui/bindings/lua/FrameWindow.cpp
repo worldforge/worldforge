@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<FrameWindow>(sol::table& space) {
 	auto frameWindow = space.new_usertype<FrameWindow>("FrameWindow",
 													   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

@@ -27,31 +27,30 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Root: public WrapperBase<Atlas::Objects::Root, CyPy_Root>
-{
-    public:
-        CyPy_Root(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Root : public WrapperBase<Atlas::Objects::Root, CyPy_Root> {
+public:
+	CyPy_Root(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Root(Py::PythonClassInstance* self, Atlas::Objects::Root value);
+	CyPy_Root(Py::PythonClassInstance* self, Atlas::Objects::Root value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object mapping_subscript(const Py::Object&) override;
+	Py::Object mapping_subscript(const Py::Object&) override;
 
-        int sequence_contains(const Py::Object&) override;
+	int sequence_contains(const Py::Object&) override;
 
-        int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
+	int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
 
-        Py::Object get_name();
+	Py::Object get_name();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Root, get_name)
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Root, get_name)
 
-    protected:
+protected:
 
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 };
 
 

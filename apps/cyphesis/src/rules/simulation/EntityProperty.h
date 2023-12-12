@@ -25,34 +25,31 @@
 
 /// \brief Class to handle an Entity property that references another entity
 /// \ingroup PropertyClasses
-class EntityProperty : public PropertyBase
-{
-    protected:
-        WeakEntityRef m_data;
+class EntityProperty : public PropertyBase {
+protected:
+	WeakEntityRef m_data;
 
-        EntityProperty(const EntityProperty& rhs) = default;
+	EntityProperty(const EntityProperty& rhs) = default;
 
-    public:
+public:
 
-        static constexpr const char* property_atlastype = "string";
+	static constexpr const char* property_atlastype = "string";
 
-        explicit EntityProperty(std::uint32_t flags = 0);
+	explicit EntityProperty(std::uint32_t flags = 0);
 
-        WeakEntityRef& data()
-        { return m_data; }
+	WeakEntityRef& data() { return m_data; }
 
-        const WeakEntityRef& data() const
-        { return m_data; }
+	const WeakEntityRef& data() const { return m_data; }
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        void add(const std::string& val, Atlas::Message::MapType& map) const override;
+	void add(const std::string& val, Atlas::Message::MapType& map) const override;
 
-        void add(const std::string& val, const Atlas::Objects::Entity::RootEntity& ent) const override;
+	void add(const std::string& val, const Atlas::Objects::Entity::RootEntity& ent) const override;
 
-        EntityProperty* copy() const override;
+	EntityProperty* copy() const override;
 };
 
 #endif // RULESETS_ENTITY_PROPERTY_H

@@ -42,49 +42,43 @@ using Atlas::Objects::Root;
 ///
 TerrainModProperty::TerrainModProperty() = default;
 
-TerrainModProperty::TerrainModProperty(const TerrainModProperty& rhs) : TerrainEffectorProperty(rhs)
-{
-    if (rhs.m_translator) {
-        m_translator = std::make_unique<TerrainModTranslator>(*rhs.m_translator);
-    }
+TerrainModProperty::TerrainModProperty(const TerrainModProperty& rhs) : TerrainEffectorProperty(rhs) {
+	if (rhs.m_translator) {
+		m_translator = std::make_unique<TerrainModTranslator>(*rhs.m_translator);
+	}
 }
 
 
 TerrainModProperty::~TerrainModProperty() = default;
 
-TerrainModProperty* TerrainModProperty::copy() const
-{
-    // This is for instantiation of a class property.
-    // This is complex here, as is it not yet clear if this
-    // class can be a class property.
-    return new TerrainModProperty(*this);
+TerrainModProperty* TerrainModProperty::copy() const {
+	// This is for instantiation of a class property.
+	// This is complex here, as is it not yet clear if this
+	// class can be a class property.
+	return new TerrainModProperty(*this);
 }
 
-void TerrainModProperty::apply(LocatedEntity& owner)
-{
-    m_translator = std::make_unique<TerrainModTranslator>(m_data);
+void TerrainModProperty::apply(LocatedEntity& owner) {
+	m_translator = std::make_unique<TerrainModTranslator>(m_data);
 }
 
-std::unique_ptr<Mercator::TerrainMod> TerrainModProperty::parseModData(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation) const
-{
-    if (m_translator) {
-        return m_translator->parseData(pos, orientation);
-    }
-    return nullptr;
+std::unique_ptr<Mercator::TerrainMod> TerrainModProperty::parseModData(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation) const {
+	if (m_translator) {
+		return m_translator->parseData(pos, orientation);
+	}
+	return nullptr;
 }
 
-int TerrainModProperty::getAttr(const std::string& name, Element& val) const
-{
-    auto I = m_data.find(name);
-    if (I != m_data.end()) {
-        val = I->second;
-        return 0;
-    }
-    return -1;
+int TerrainModProperty::getAttr(const std::string& name, Element& val) const {
+	auto I = m_data.find(name);
+	if (I != m_data.end()) {
+		val = I->second;
+		return 0;
+	}
+	return -1;
 }
 
-void TerrainModProperty::setAttr(const std::string& name, const Element& val)
-{
-    m_data[name] = val;
+void TerrainModProperty::setAttr(const std::string& name, const Element& val) {
+	m_data[name] = val;
 }
 

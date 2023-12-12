@@ -23,10 +23,8 @@
 #include "EntityCreatorMovement.h"
 #include "EntityCreatorMovementBridge.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 EntityCreatorMovement::EntityCreatorMovement(EntityCreatorCreationInstance& creationInstance,
 											 Camera::MainCamera& camera,
@@ -51,5 +49,5 @@ const std::shared_ptr<EntityCreatorMovementBridge>& EntityCreatorMovement::getBr
 
 }
 
-}
-}
+
+

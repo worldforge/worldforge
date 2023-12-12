@@ -17,15 +17,16 @@
 
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "system.h"
 #include <boost/asio.hpp>
 
-std::string get_hostname()
-{
-    return boost::asio::ip::host_name();
+std::string get_hostname() {
+	return boost::asio::ip::host_name();
 }
 
 

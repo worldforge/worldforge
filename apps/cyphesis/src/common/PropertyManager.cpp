@@ -28,28 +28,25 @@ PropertyManager::PropertyManager() = default;
 
 PropertyManager::~PropertyManager() = default;
 
-PropertyKit * PropertyManager::getPropertyFactory(const std::string & name) const
-{
-    auto I = m_propertyFactories.find(name);
-    if (I != m_propertyFactories.end()) {
-        assert(I->second);
-        return I->second.get();
-    }
-    return nullptr;
+PropertyKit* PropertyManager::getPropertyFactory(const std::string& name) const {
+	auto I = m_propertyFactories.find(name);
+	if (I != m_propertyFactories.end()) {
+		assert(I->second);
+		return I->second.get();
+	}
+	return nullptr;
 }
 
-void PropertyManager::installFactory(const std::string & name,
-                                     std::unique_ptr<PropertyKit> factory)
-{
-    m_propertyFactories.emplace(name, std::move(factory));
+void PropertyManager::installFactory(const std::string& name,
+									 std::unique_ptr<PropertyKit> factory) {
+	m_propertyFactories.emplace(name, std::move(factory));
 }
 
-int PropertyManager::installFactory(const std::string & type_name,
-                                    const Root & type_desc,
-                                    std::unique_ptr<PropertyKit> factory)
-{
-    installFactory(type_name, std::move(factory));
+int PropertyManager::installFactory(const std::string& type_name,
+									const Root& type_desc,
+									std::unique_ptr<PropertyKit> factory) {
+	installFactory(type_name, std::move(factory));
 
-    return 0;
+	return 0;
 }
 

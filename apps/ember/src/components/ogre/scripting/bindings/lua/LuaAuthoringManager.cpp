@@ -27,7 +27,7 @@ using namespace Ember::OgreView::Authoring;
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<AuthoringManager>(sol::table& space) {
 	auto authoringManager = space.new_usertype<AuthoringManager>("AuthoringManager", sol::no_constructor);
 	authoringManager["displayAuthoringVisualization"] = &AuthoringManager::displayAuthoringVisualization;

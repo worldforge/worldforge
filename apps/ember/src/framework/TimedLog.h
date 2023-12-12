@@ -20,16 +20,18 @@
 #define TIMEDLOG_H_
 
 #include <string>
+
 #ifndef ENABLE_TIMED_LOG
 #define ENABLE_TIMED_LOG 1
 #endif
 
-#if ENABLE_TIMED_LOG==1
+#if ENABLE_TIMED_LOG == 1
+
 #include <chrono>
+
 #endif
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @brief Utility class for timing tasks.
@@ -37,15 +39,14 @@ namespace Ember
  * Use this class when you need to time a specific task. The time the task took will be printed when the object is destroyed.
  * If you want to report time before this happens, use the report() methods.
  */
-class TimedLog
-{
+class TimedLog {
 public:
 	/**
 	 * @brief Ctor.
 	 * @param logName The name of the log.
 	 * @param reportStart Whether to also log the start of the task.
 	 */
-	explicit TimedLog(std::string  logName, bool reportStart = false);
+	explicit TimedLog(std::string logName, bool reportStart = false);
 
 	/**
 	 * @brief Dtor.
@@ -66,7 +67,7 @@ public:
 
 private:
 
-#if ENABLE_TIMED_LOG==1
+#if ENABLE_TIMED_LOG == 1
 	/**
 	 * @brief The name of the log.
 	 */

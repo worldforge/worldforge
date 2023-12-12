@@ -22,7 +22,6 @@
 //
 #include "MaterialEditor.h"
 #include "framework/Tokeniser.h"
-#include <OgreMaterial.h>
 #include <OgreStringConverter.h>
 #include <OgreTechnique.h>
 #include <OgreMaterialManager.h>

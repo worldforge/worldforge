@@ -24,59 +24,49 @@
 
 #include "SubModelPart.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Model {
+namespace Ember::OgreView::Model {
 
-ModelPart::ModelPart() : mVisible(false)
-{
+ModelPart::ModelPart() : mVisible(false) {
 }
 
 
-void ModelPart::show()
-{
+void ModelPart::show() {
 	mVisible = true;
-	for (auto& subModelPart : mSubModelParts) {
+	for (auto& subModelPart: mSubModelParts) {
 		subModelPart->show();
 	}
 }
 
-void ModelPart::hide()
-{
-	for (auto& subModelPart : mSubModelParts) {
+void ModelPart::hide() {
+	for (auto& subModelPart: mSubModelParts) {
 		subModelPart->hide();
 	}
 }
 
-bool ModelPart::getVisible() const
-{
+bool ModelPart::getVisible() const {
 	return mVisible;
 }
 
-void ModelPart::setVisible(bool visible)
-{
+void ModelPart::setVisible(bool visible) {
 	mVisible = visible;
 }
 
 
-const std::string& ModelPart::getGroupName() const
-{
+const std::string& ModelPart::getGroupName() const {
 	return mGroupName;
 }
 
-void ModelPart::setGroupName(const std::string& groupName)
-{
+void ModelPart::setGroupName(const std::string& groupName) {
 	mGroupName = groupName;
 }
 
-void ModelPart::addSubModelPart(SubModelPart* part)
-{
+void ModelPart::addSubModelPart(SubModelPart* part) {
 	mSubModelParts.push_back(part);
 }
 
 
 }
 
-}
-}
+
+

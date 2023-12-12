@@ -13,7 +13,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 
-int main()
-{
-    return 0;
+int main() {
+	return 0;
 }

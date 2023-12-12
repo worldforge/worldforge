@@ -25,30 +25,23 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class Position2DAdapter : public AdapterBase
-{
+class Position2DAdapter : public AdapterBase {
 public:
-    Position2DAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow);
+	Position2DAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow);
 
-    virtual ~Position2DAdapter();
+	~Position2DAdapter() override;
 
 	/**
 	Updates the gui with new values.
 	*/
-	virtual void updateGui(const ::Atlas::Message::Element& element);
-    
+	void updateGui(const ::Atlas::Message::Element& element) override;
+
 protected:
 
 	CEGUI::Window* mXWindow;
@@ -56,18 +49,12 @@ protected:
 
 	bool window_TextChanged(const CEGUI::EventArgs& e);
 
-	virtual void fillElementFromGui();
-	virtual bool _hasChanges();
+	void fillElementFromGui() override;
+
+	bool _hasChanges() override;
 };
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

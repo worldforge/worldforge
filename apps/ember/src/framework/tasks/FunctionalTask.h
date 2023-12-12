@@ -39,7 +39,7 @@ struct FunctionalTask : public ITask {
 
 	bool executeTaskInMainThread() override { return foregroundFn(*result); };
 
-	std::string getName() const override { return "FunctionalTask"; }
+	[[nodiscard]] std::string getName() const override { return "FunctionalTask"; }
 };
 
 template<typename T>
@@ -50,7 +50,6 @@ void enqeueFunctionalTask(TaskQueue& queue, std::function<T(TaskExecutionContext
 
 
 }
-
 
 
 #endif //EMBER_FUNCTIONALTASK_H

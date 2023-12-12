@@ -30,11 +30,11 @@
 #include "rules/simulation/Entity.h"
 
 namespace Atlas {
-    namespace Message {
-        class Element;
+namespace Message {
+class Element;
 
-        typedef std::map<std::string, Element> MapType;
-    }
+typedef std::map<std::string, Element> MapType;
+}
 }
 
 class Entity;
@@ -47,33 +47,31 @@ class ScriptKit;
 /// An Entity consists of an instance of one of a number of C++ classes
 /// optionally with a script. Stores information about default attributes,
 /// script language and class name.
-class EntityKit
-{
-    protected:
-        EntityKit() : m_type(nullptr),
-                      m_createdCount(0)
-        {
-        }
+class EntityKit {
+protected:
+	EntityKit() : m_type(nullptr),
+				  m_createdCount(0) {
+	}
 
-    public:
-        /// Inheritance type of this class.
-        TypeNode* m_type;
-        /// Number of times this factory has created an entity
-        int m_createdCount;
+public:
+	/// Inheritance type of this class.
+	TypeNode* m_type;
+	/// Number of times this factory has created an entity
+	int m_createdCount;
 
-        virtual ~EntityKit() = default;
+	virtual ~EntityKit() = default;
 
-        /// \brief Create a new Entity and make it persistent.
-        ///
-        /// @param id an identifier of the Entity.
-        /// @param attributes custom attributes set for the new instance
-        /// @param attributes the location of the entity
-        virtual Ref<Entity> newEntity(RouterId id,
-                                      const Atlas::Objects::Entity::RootEntity& attributes) = 0;
+	/// \brief Create a new Entity and make it persistent.
+	///
+	/// @param id an identifier of the Entity.
+	/// @param attributes custom attributes set for the new instance
+	/// @param attributes the location of the entity
+	virtual Ref<Entity> newEntity(RouterId id,
+								  const Atlas::Objects::Entity::RootEntity& attributes) = 0;
 
-        virtual void addProperties(const PropertyManager& propertyManager) = 0;
+	virtual void addProperties(const PropertyManager& propertyManager) = 0;
 
-        virtual void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) = 0;
+	virtual void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager& propertyManager) = 0;
 
 };
 

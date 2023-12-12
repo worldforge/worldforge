@@ -21,12 +21,8 @@
 
 #include "services/config/ConfigListenerContainer.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Camera
-{
+
+namespace Ember::OgreView::Camera {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -35,8 +31,7 @@ namespace Camera
  *
  * An instance of this is shared between multiple camera mounts and other camera functionality to handle common settings.
  */
-class CameraSettings : ConfigListenerContainer
-{
+class CameraSettings : ConfigListenerContainer {
 public:
 
 	/**
@@ -97,18 +92,15 @@ private:
 };
 
 
-inline float CameraSettings::getDegreesPerMouseUnit() const
-{
+inline float CameraSettings::getDegreesPerMouseUnit() const {
 	return mDegreesPerMouseUnit;
 }
 
-inline bool CameraSettings::getInvertCamera() const
-{
+inline bool CameraSettings::getInvertCamera() const {
 	return mInvertCamera;
 }
 
 }
-}
-}
+
 
 #endif /* CAMERASETTINGS_H_ */

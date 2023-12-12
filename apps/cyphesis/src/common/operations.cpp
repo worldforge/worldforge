@@ -23,7 +23,9 @@
 /// the Atlas-C++ library.
 /// \defgroup CustomOperations Custom Operation Classes
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 int CONNECT_NO = -1;
 int MONITOR_NO = -1;
@@ -39,4 +41,6 @@ int RELAY_NO = -1;
 int POSSESS_NO = -1;
 int CLOSE_CONTAINER_NO = -1;
 
-} } }
+}
+}
+}

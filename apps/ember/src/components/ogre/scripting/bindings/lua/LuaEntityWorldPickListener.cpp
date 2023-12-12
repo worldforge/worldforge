@@ -23,7 +23,7 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityWorldPickListener>(sol::table& space) {
 	auto entityPickResult = space.new_usertype<EntityPickResult>("EntityPickResult", sol::no_constructor);
 	entityPickResult["entity"] = &EntityPickResult::entity;

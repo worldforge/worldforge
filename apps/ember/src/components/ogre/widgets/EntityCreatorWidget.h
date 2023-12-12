@@ -33,9 +33,8 @@
 #include <Eris/TypeInfo.h>
 #include <components/ogre/OutlineEffect.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 class ModelRenderer;
 
@@ -138,8 +137,7 @@ private:
 };
 
 }
-}
-}
+
 
 #ifdef WF_USE_WIDGET_PLUGINS
 BOOST_DLL_ALIAS(

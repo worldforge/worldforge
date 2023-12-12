@@ -21,66 +21,61 @@
 std::vector<LocatedEntityScriptProvider> CyPy_LocatedEntity::entityPythonProviders;
 
 
-Py::Object wrapLocatedEntity(Ref<LocatedEntity> le)
-{
-    //If there's already a script entity use that (as a cache mechanism)
-    if (!le->m_scriptEntity.empty()) {
-        auto wrapper = boost::any_cast<Py::Object>(le->m_scriptEntity);
-        if (!wrapper.isNone()) {
-            auto object = PyWeakref_GetObject(wrapper.ptr());
-            if (object) {
-                Py::Object pythonObj(object);
-                if (!pythonObj.isNone()) {
-                    return pythonObj;
-                }
-            }
-        }
-    }
-    for (auto& provider : CyPy_LocatedEntity::entityPythonProviders) {
-        auto wrapped = provider.wrapFn(le);
-        if (!wrapped.isNone()) {
+Py::Object wrapLocatedEntity(Ref<LocatedEntity> le) {
+	//If there's already a script entity use that (as a cache mechanism)
+	if (!le->m_scriptEntity.empty()) {
+		auto wrapper = boost::any_cast<Py::Object>(le->m_scriptEntity);
+		if (!wrapper.isNone()) {
+			auto object = PyWeakref_GetObject(wrapper.ptr());
+			if (object) {
+				Py::Object pythonObj(object);
+				if (!pythonObj.isNone()) {
+					return pythonObj;
+				}
+			}
+		}
+	}
+	for (auto& provider: CyPy_LocatedEntity::entityPythonProviders) {
+		auto wrapped = provider.wrapFn(le);
+		if (!wrapped.isNone()) {
 
-            auto weakPtr = PyWeakref_NewRef(wrapped.ptr(), nullptr);
-            le->m_scriptEntity = boost::any(Py::Object(weakPtr, true));
+			auto weakPtr = PyWeakref_NewRef(wrapped.ptr(), nullptr);
+			le->m_scriptEntity = boost::any(Py::Object(weakPtr, true));
 
-            return wrapped;
-        }
-    }
-    throw Py::TypeError(fmt::format("Tried to wrap located entity '{}' but could not find any wrapper provider.", le->describeEntity()));
+			return wrapped;
+		}
+	}
+	throw Py::TypeError(fmt::format("Tried to wrap located entity '{}' but could not find any wrapper provider.", le->describeEntity()));
 
 }
 
 
-Py::Object CyPy_LocatedEntity::wrap(Ref<LocatedEntity> value)
-{
-    return wrapLocatedEntity(std::move(value));
+Py::Object CyPy_LocatedEntity::wrap(Ref<LocatedEntity> value) {
+	return wrapLocatedEntity(std::move(value));
 }
 
-Ref<LocatedEntity>& CyPy_LocatedEntity::value(const Py::Object& object)
-{
-    for (auto& provider : entityPythonProviders) {
-        auto value = provider.valueFn(object);
-        if (value) {
-            return *value;
-        }
-    }
+Ref<LocatedEntity>& CyPy_LocatedEntity::value(const Py::Object& object) {
+	for (auto& provider: entityPythonProviders) {
+		auto value = provider.valueFn(object);
+		if (value) {
+			return *value;
+		}
+	}
 
-    throw std::invalid_argument("Supplied value is not a LocatedEntity");
+	throw std::invalid_argument("Supplied value is not a LocatedEntity");
 }
 
-bool CyPy_LocatedEntity::check(const Py::Object& object)
-{
-    return check(object.ptr());
+bool CyPy_LocatedEntity::check(const Py::Object& object) {
+	return check(object.ptr());
 }
 
-bool CyPy_LocatedEntity::check(PyObject* object)
-{
-    for (auto& provider : entityPythonProviders) {
-        auto value = provider.checkFn(object);
-        if (value) {
-            return value;
-        }
-    }
-    return false;
+bool CyPy_LocatedEntity::check(PyObject* object) {
+	for (auto& provider: entityPythonProviders) {
+		auto value = provider.checkFn(object);
+		if (value) {
+			return value;
+		}
+	}
+	return false;
 }
 

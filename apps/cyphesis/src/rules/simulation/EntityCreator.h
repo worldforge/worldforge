@@ -23,11 +23,10 @@
 
 class Entity;
 
-struct EntityCreator
-{
-    virtual Ref<Entity> newEntity(RouterId id,
-                                         const std::string& type,
-                                         const Atlas::Objects::Entity::RootEntity& attrs) const = 0;
+struct EntityCreator {
+	virtual Ref<Entity> newEntity(RouterId id,
+								  const std::string& type,
+								  const Atlas::Objects::Entity::RootEntity& attrs) const = 0;
 };
 
 #endif //CYPHESIS_ENTITYCREATOR_H

@@ -8,21 +8,18 @@
 
 #include <chrono>
 #include <thread>
-namespace Ember
-{
 
-class TimeFrameTestCase: public CppUnit::TestFixture
-{
-CPPUNIT_TEST_SUITE(TimeFrameTestCase);
+namespace Ember {
+
+class TimeFrameTestCase : public CppUnit::TestFixture {
+	CPPUNIT_TEST_SUITE(TimeFrameTestCase);
 	CPPUNIT_TEST(testElapsedTime);
 	CPPUNIT_TEST(testRemainingTime);
 
-	CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void testElapsedTime()
-	{
+	void testElapsedTime() {
 		TimeFrame tested = TimeFrame(std::chrono::microseconds(10));
 		auto start = std::chrono::steady_clock::now();
 		std::this_thread::sleep_for(std::chrono::microseconds(5));
@@ -32,8 +29,7 @@ public:
 		CPPUNIT_ASSERT(elapsed >= local_elapsed);
 	}
 
-	void testRemainingTime()
-	{
+	void testRemainingTime() {
 		TimeFrame tested = TimeFrame(std::chrono::microseconds(10));
 		std::this_thread::sleep_for(std::chrono::microseconds(5));
 
@@ -41,8 +37,7 @@ public:
 		CPPUNIT_ASSERT(remaining <= std::chrono::microseconds(5));
 	}
 
-	void testRemainingTimeTruncAtZero()
-	{
+	void testRemainingTimeTruncAtZero() {
 		TimeFrame tested = TimeFrame(std::chrono::microseconds(2));
 		std::this_thread::sleep_for(std::chrono::microseconds(5));
 
@@ -55,10 +50,9 @@ public:
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Ember::TimeFrameTestCase);
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
 	CppUnit::TextUi::TestRunner runner;
-	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+	CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	runner.addTest(registry.makeTest());
 
 	// Shows a message as each test starts

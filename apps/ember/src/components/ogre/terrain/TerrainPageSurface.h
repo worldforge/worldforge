@@ -38,17 +38,14 @@ class Surface;
 class Segment;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 class TerrainPageSurfaceLayer;
 
 class TerrainPage;
 
 class TerrainPageSurfaceCompiler;
-
-class TerrainPageShadow;
 
 class TerrainPageGeometry;
 
@@ -111,6 +108,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif

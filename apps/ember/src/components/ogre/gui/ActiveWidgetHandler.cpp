@@ -26,10 +26,9 @@
 #include <CEGUI/CEGUI.h>
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 ActiveWidgetHandler::ActiveWidgetHandler(GUIManager& guiManager)
 		: mLastActiveWindow(nullptr),
@@ -56,7 +55,8 @@ void ActiveWidgetHandler::Input_InputModeChanged(Input::InputMode mode) {
 		CEGUI::Window* window = mGuiManager.getMainSheet()->getActiveChild();
 		if (window) {
 			mLastActiveWindow = window;
-			mLastActiveWindowDestructionStartedConnection = window->subscribeEvent(CEGUI::Window::EventDestructionStarted, CEGUI::Event::Subscriber(&ActiveWidgetHandler::lastActiveWindowDestructionStarted, this));
+			mLastActiveWindowDestructionStartedConnection = window->subscribeEvent(CEGUI::Window::EventDestructionStarted,
+																				   CEGUI::Event::Subscriber(&ActiveWidgetHandler::lastActiveWindowDestructionStarted, this));
 			window->deactivate();
 			//deactivate all parents
 			while ((window = window->getParent())) {
@@ -84,5 +84,5 @@ void ActiveWidgetHandler::Input_InputModeChanged(Input::InputMode mode) {
 
 }
 
-}
-}
+
+

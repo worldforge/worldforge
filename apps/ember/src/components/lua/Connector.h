@@ -81,6 +81,7 @@ inline auto make_accessor(ReturnT& v()) {
 		return (v());
 	};
 }
+
 /**
  * Wraps a member method returning a reference into one returning a pointer.
  * This is useful because SOL will apply memory ownership on references, but not on pointers.
@@ -100,7 +101,7 @@ inline auto make_accessor(ReturnT& (T::* v)()) {
  */
 template<typename T, typename ReturnT>
 inline auto make_accessor(ReturnT& (T::* v)() const) {
-	return [=](T* self) -> ReturnT&{
+	return [=](T* self) -> ReturnT& {
 		return (((*self).*v)());
 	};
 }

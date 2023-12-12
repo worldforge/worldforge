@@ -24,14 +24,14 @@
 
 #include <utility>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 StringValueComparer::StringValueComparer(std::string value)
 		: mValue(std::move(value)) {
@@ -47,8 +47,8 @@ bool StringNotEmptyComparer::test(const std::string& value) {
 }
 }
 
-}
 
-}
 
-}
+
+
+

@@ -22,55 +22,47 @@
 //
 #include "EmberEntityMappingManager.h"
 
-#include "services/EmberServices.h"
-#include "services/server/ServerService.h"
 #include "components/ogre/XMLHelper.h"
-
-#include <Eris/Connection.h>
 
 using namespace Ember::EntityMapping;
 
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView::Mapping {
 
-namespace Mapping {
+EmberEntityMappingManager::EmberEntityMappingManager()
+		: mEntityMappingManager(), mXmlSerializer(mEntityMappingManager) {
 
-EmberEntityMappingManager::EmberEntityMappingManager() : mEntityMappingManager(), mXmlSerializer(mEntityMappingManager) {
-
-    Ogre::ResourceGroupManager::getSingleton()._registerScriptLoader(this);
+	Ogre::ResourceGroupManager::getSingleton()._registerScriptLoader(this);
 
 }
 
 EmberEntityMappingManager::~EmberEntityMappingManager() {
-    Ogre::ResourceGroupManager::getSingleton()._unregisterScriptLoader(this);
+	Ogre::ResourceGroupManager::getSingleton()._unregisterScriptLoader(this);
 }
 
 
 const Ogre::StringVector& EmberEntityMappingManager::getScriptPatterns() const {
-    static Ogre::StringVector patterns{"*.entitymap", "*.entitymap.xml"};
-    return patterns;
+	static Ogre::StringVector patterns{"*.entitymap", "*.entitymap.xml"};
+	return patterns;
 }
 
 Ogre::Real EmberEntityMappingManager::getLoadingOrder() const {
-    return 300;
+	return 300;
 }
 
 
 void EmberEntityMappingManager::parseScript(Ogre::DataStreamPtr& stream, const Ogre::String& groupName) {
-    TiXmlDocument xmlDoc;
-    XMLHelper xmlHelper;
-    if (!xmlHelper.Load(xmlDoc, stream)) {
-        return;
-    }
+	TiXmlDocument xmlDoc;
+	XMLHelper xmlHelper;
+	if (!xmlHelper.Load(xmlDoc, stream)) {
+		return;
+	}
 
-    mXmlSerializer.parseScript(xmlDoc, stream->getName());
+	mXmlSerializer.parseScript(xmlDoc, stream->getName());
+}
+
+
 }
 
 
 
-
-}
-
-}
-}

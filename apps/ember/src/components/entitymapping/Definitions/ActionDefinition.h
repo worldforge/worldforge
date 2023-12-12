@@ -25,26 +25,24 @@
 
 #include "DefinitionBase.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Definitions {
+
+namespace Ember::EntityMapping::Definitions {
 
 /**
 	A definition for an Action.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct ActionDefinition : public DefinitionBase
-{
+struct ActionDefinition : public DefinitionBase {
 	std::string Value;
 };
 }
 
-}
 
-}
+
+
 
 #endif

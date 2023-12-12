@@ -103,8 +103,6 @@ class FileSystemObserver;
 
 class EmberServices;
 
-class LogObserver;
-
 struct IResourceProvider;
 
 class ConfigConsoleCommands;

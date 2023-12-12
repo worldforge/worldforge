@@ -30,38 +30,44 @@ offer a completely different interface from that of bridge.
 class EncoderBase { // : public Atlas::Bridge {
 public:
 
-    /// You will need to implement this in subclasses
-    explicit EncoderBase(Atlas::Bridge & b) : m_b(b) { }
+	/// You will need to implement this in subclasses
+	explicit EncoderBase(Atlas::Bridge& b) : m_b(b) {}
 
-    virtual ~EncoderBase() = default;
+	virtual ~EncoderBase() = default;
 
-    void streamBegin() { m_b.streamBegin(); }
-    void streamMessage() { m_b.streamMessage(); }
-    void streamEnd() { m_b.streamEnd(); }
-    
-    void mapMapItem(const std::string& name)
-    { m_b.mapMapItem(name); }
-    void mapListItem(const std::string& name)
-    { m_b.mapListItem(name); }
-    void mapIntItem(const std::string& name, std::int64_t i)
-    { m_b.mapIntItem(name, i); }
-    void mapFloatItem(const std::string& name, double d)
-    { m_b.mapFloatItem(name, d); }
-    void mapStringItem(const std::string& name, const std::string& s)
-    { m_b.mapStringItem(name, s); }
-    void mapEnd()
-    { m_b.mapEnd(); }
-    
-    void listMapItem() { m_b.listMapItem(); }
-    void listListItem() { m_b.listListItem(); }
-    void listIntItem(std::int64_t i) { m_b.listIntItem(i); }
-    void listFloatItem(double d) { m_b.listFloatItem(d); }
-    void listStringItem(const std::string& s) { m_b.listStringItem(s); }
-    void listEnd() { m_b.listEnd(); }
+	void streamBegin() { m_b.streamBegin(); }
+
+	void streamMessage() { m_b.streamMessage(); }
+
+	void streamEnd() { m_b.streamEnd(); }
+
+	void mapMapItem(const std::string& name) { m_b.mapMapItem(name); }
+
+	void mapListItem(const std::string& name) { m_b.mapListItem(name); }
+
+	void mapIntItem(const std::string& name, std::int64_t i) { m_b.mapIntItem(name, i); }
+
+	void mapFloatItem(const std::string& name, double d) { m_b.mapFloatItem(name, d); }
+
+	void mapStringItem(const std::string& name, const std::string& s) { m_b.mapStringItem(name, s); }
+
+	void mapEnd() { m_b.mapEnd(); }
+
+	void listMapItem() { m_b.listMapItem(); }
+
+	void listListItem() { m_b.listListItem(); }
+
+	void listIntItem(std::int64_t i) { m_b.listIntItem(i); }
+
+	void listFloatItem(double d) { m_b.listFloatItem(d); }
+
+	void listStringItem(const std::string& s) { m_b.listStringItem(s); }
+
+	void listEnd() { m_b.listEnd(); }
 
 protected:
-    /// The bridge that requests are forwarded to.
-    Atlas::Bridge & m_b;
+	/// The bridge that requests are forwarded to.
+	Atlas::Bridge& m_b;
 };
 
 } // namespace Atlas 

@@ -25,16 +25,13 @@
 
 #include <string>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @brief Provides a Window interface for the Input class.
  */
-class OgreWindowProvider: public IWindowProvider
-{
+class OgreWindowProvider : public IWindowProvider {
 public:
 
 	explicit OgreWindowProvider(Ogre::RenderWindow& window);
@@ -70,6 +67,6 @@ private:
 };
 
 }
-}
+
 
 #endif

@@ -28,24 +28,23 @@
 #include "common/Property.h"
 #include "common/PropertyManager.h"
 
-int main()
-{
-    TypeNode foo("thing");
+int main() {
+	TypeNode foo("thing");
 
-    TypeNode bar("entity");
+	TypeNode bar("entity");
 
-    assert(foo.isTypeOf(&foo));
-    assert(!foo.isTypeOf(&bar));
-    assert(!bar.isTypeOf(&foo));
-    assert(bar.isTypeOf(&bar));
+	assert(foo.isTypeOf(&foo));
+	assert(!foo.isTypeOf(&bar));
+	assert(!bar.isTypeOf(&foo));
+	assert(bar.isTypeOf(&bar));
 
-    bar.setParent(&foo);
+	bar.setParent(&foo);
 
-    assert(!foo.isTypeOf(&bar));
-    assert(bar.isTypeOf(&foo));
+	assert(!foo.isTypeOf(&bar));
+	assert(bar.isTypeOf(&foo));
 
-    foo.defaults();
-    return 0;
+	foo.defaults();
+	return 0;
 }
 
 // stub functions

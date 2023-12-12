@@ -21,18 +21,15 @@
 
 #include "ImpostorPage.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 
 namespace Model {
 class Model;
 }
 
-namespace Environment
-{
+namespace Environment {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -45,8 +42,7 @@ namespace Environment
  *
  * @note Any entity added to this page can't be transient as a reference to it is stored.
  */
-class ExclusiveImposterPage : public Forests::ImpostorPage
-{
+class ExclusiveImposterPage : public Forests::ImpostorPage {
 public:
 
 	/**
@@ -56,10 +52,12 @@ public:
 
 	~ExclusiveImposterPage() override = default;
 
-	void addEntity(Ogre::Entity *ent, const Ogre::Vector3 &position, const Ogre::Quaternion &rotation, const Ogre::Vector3 &scale, const Ogre::ColourValue &color) override;
-	void addModel(Ember::OgreView::Model::Model *model, const Ogre::Vector3 &position, const Ogre::Quaternion &rotation, const Ogre::Vector3 &scale, const Ogre::ColourValue &color) override;
+	void addEntity(Ogre::Entity* ent, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) override;
+
+	void addModel(Ember::OgreView::Model::Model* model, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) override;
 
 	void setVisible(bool visible) override;
+
 	void removeEntities() override;
 
 protected:
@@ -74,6 +72,6 @@ protected:
 
 }
 
-}
+
 
 #endif /* EXCLUSIVEIMPOSTERPAGE_H_ */

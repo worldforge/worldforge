@@ -36,10 +36,10 @@
 #include <OgrePredefinedControllers.h>
 #include <OgreMaterialManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 /**
  * @brief Animates a node in the vertical axis.
@@ -202,5 +202,5 @@ float SimpleWater::getLevel() const {
 
 }
 
-}
-}
+
+

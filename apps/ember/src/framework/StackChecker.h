@@ -51,6 +51,7 @@ public:
 
 protected:
 	class StackCheckerInstance;
+
 	friend class StackCheckerInstance;
 
 	static std::unique_ptr<StackCheckerInstance> sInstance;

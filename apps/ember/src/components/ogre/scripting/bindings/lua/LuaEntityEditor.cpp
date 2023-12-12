@@ -23,10 +23,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityEditor>(sol::table& space) {
 	auto entityEditor = space.new_usertype<EntityEditor>("EntityEditor",
-													   sol::constructors<EntityEditor(Ember::OgreView::World&, Eris::Entity&, Ember::OgreView::Gui::Adapters::Atlas::MapAdapter*)>());
+														 sol::constructors<EntityEditor(Ember::OgreView::World&, Eris::Entity&, Ember::OgreView::Gui::Adapters::Atlas::MapAdapter*)>());
 	entityEditor["submitChanges"] = &EntityEditor::submitChanges;
 	entityEditor["createMapElement"] = &EntityEditor::createMapElement;
 	entityEditor["createListElement"] = &EntityEditor::createListElement;

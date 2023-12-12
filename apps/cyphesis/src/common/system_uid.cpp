@@ -17,7 +17,9 @@
 
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "system.h"
@@ -25,16 +27,14 @@
 #include "common/log.h"
 
 
-unsigned int security_check()
-{
-    if (getuid() == 0 || geteuid() == 0) {
-        spdlog::error("Running cyphesis as the superuser is dangerous.");
-        return 0;
-    }
-    return SECURITY_OKAY;
+unsigned int security_check() {
+	if (getuid() == 0 || geteuid() == 0) {
+		spdlog::error("Running cyphesis as the superuser is dangerous.");
+		return 0;
+	}
+	return SECURITY_OKAY;
 }
 
-std::string create_session_username()
-{
-    return fmt::format("admin_{}_{}", getpid(), getuid());
+std::string create_session_username() {
+	return fmt::format("admin_{}_{}", getpid(), getuid());
 }

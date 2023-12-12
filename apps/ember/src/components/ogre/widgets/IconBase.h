@@ -28,9 +28,8 @@
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/Size.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 /**
 Use this class as base for more advanced buttons where you want a "roll over" effect.
@@ -77,8 +76,6 @@ protected:
 	UniqueWindowPtr<CEGUI::PushButton> mButton;
 };
 }
-}
 
-}
 
 #endif

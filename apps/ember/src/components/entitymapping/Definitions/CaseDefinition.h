@@ -50,7 +50,4 @@ struct CaseDefinition : public DefinitionBase {
 }
 
 
-
-
-
 #endif

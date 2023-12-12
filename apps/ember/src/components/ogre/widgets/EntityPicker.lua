@@ -46,7 +46,6 @@ function EntityPicker:buildWidget(world)
 		showButton(usage.name, usage.description, clickedHandler)
 	end
 
-
 	local function entityNameOrType(entity)
 		if entity:getName() ~= "" then
 			return entity:getName()
@@ -342,7 +341,6 @@ function EntityPicker:buildWidget(world)
 	self.widget:loadMainSheet("EntityPicker.layout", "EntityPicker")
 	self.selectorWidget = self.widget:getWindow("Selector")
 
-
 	local function previousButton_MouseEnters()
 		self.currentPickedEntityIndex = self.currentPickedEntityIndex - 1
 		updateSelector()
@@ -356,7 +354,6 @@ function EntityPicker:buildWidget(world)
 		pickedOneEntity(self.pickedEntities[self.currentPickedEntityIndex])
 		return true
 	end
-
 
 	local function handleAction(action, entity)
 

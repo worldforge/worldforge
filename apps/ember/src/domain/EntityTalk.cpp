@@ -22,11 +22,9 @@
 #include <Atlas/Objects/RootOperation.h>
 #include <algorithm>
 
-namespace Ember
-{
+namespace Ember {
 
-EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
-{
+EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs) {
 	const std::vector<Atlas::Objects::Root>& args = talkArgs->getArgs();
 	if (!args.empty()) {
 
@@ -40,7 +38,7 @@ EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
 		Atlas::Message::Element responseAttrib;
 		//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
 		if (!talk->copyAttr("responses", responseAttrib) && responseAttrib.isList()) {
-			const Atlas::Message::ListType & responseList = responseAttrib.asList();
+			const Atlas::Message::ListType& responseList = responseAttrib.asList();
 			auto I = responseList.begin();
 			for (; I != responseList.end(); ++I) {
 				if (I->isString()) {
@@ -52,7 +50,7 @@ EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
 		Atlas::Message::Element addressAttrib;
 		//some talk operations come with a predefined set of suitable responses, so we'll store those so that they can later on be queried by the GUI for example
 		if (!talk->copyAttr("address", addressAttrib) && addressAttrib.isList()) {
-			const Atlas::Message::ListType & addressList = addressAttrib.asList();
+			const Atlas::Message::ListType& addressList = addressAttrib.asList();
 			auto I = addressList.begin();
 			for (; I != addressList.end(); ++I) {
 				if (I->isString()) {
@@ -64,33 +62,27 @@ EntityTalk::EntityTalk(const Atlas::Objects::Operation::RootOperation& talkArgs)
 
 }
 
-const std::string& EntityTalk::getMessage() const
-{
+const std::string& EntityTalk::getMessage() const {
 	return mMessage;
 }
 
-bool EntityTalk::isAddressedToNone() const
-{
+bool EntityTalk::isAddressedToNone() const {
 	return mAddressedEntityIds.empty();
 }
 
-bool EntityTalk::isAddressedToEntity(const std::string& entityId) const
-{
+bool EntityTalk::isAddressedToEntity(const std::string& entityId) const {
 	return std::find(mAddressedEntityIds.begin(), mAddressedEntityIds.end(), entityId) != mAddressedEntityIds.end();
 }
 
-bool EntityTalk::isAddressedToEntityOrNone(const std::string& entityId) const
-{
+bool EntityTalk::isAddressedToEntityOrNone(const std::string& entityId) const {
 	return isAddressedToNone() || isAddressedToEntity(entityId);
 }
 
-const std::vector<std::string>& EntityTalk::getAddressedEntityIds() const
-{
+const std::vector<std::string>& EntityTalk::getAddressedEntityIds() const {
 	return mAddressedEntityIds;
 }
 
-const std::vector<std::string>& EntityTalk::getSuggestedResponses() const
-{
+const std::vector<std::string>& EntityTalk::getSuggestedResponses() const {
 	return mSuggestedResponses;
 }
 

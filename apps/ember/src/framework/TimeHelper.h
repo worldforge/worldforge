@@ -21,15 +21,13 @@
 
 #include <string>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Provides basic time services.
  */
-struct TimeHelper
-{
+struct TimeHelper {
 	/**
 	 * @brief Gets the local time of the client machine.
 	 *

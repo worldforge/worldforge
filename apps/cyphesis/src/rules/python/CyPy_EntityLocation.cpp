@@ -25,75 +25,69 @@
 #include "CyPy_Axisbox.h"
 
 CyPy_EntityLocation::CyPy_EntityLocation(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
-    : WrapperBase(self, args, kwds)
-{
+		: WrapperBase(self, args, kwds) {
 
-    if (args.length() > 0) {
+	if (args.length() > 0) {
 
-        m_value.m_parent = verifyObject<CyPy_LocatedEntity>(args[0]);
+		m_value.m_parent = verifyObject<CyPy_LocatedEntity>(args[0]);
 
-        if (args.length() == 2) {
-            m_value.m_pos = CyPy_Point3D::parse(args[1]);
-        }
-    }
+		if (args.length() == 2) {
+			m_value.m_pos = CyPy_Point3D::parse(args[1]);
+		}
+	}
 }
 
 CyPy_EntityLocation::CyPy_EntityLocation(Py::PythonClassInstance* self, EntityLocation value)
-    : WrapperBase(self, std::move(value))
-{
+		: WrapperBase(self, std::move(value)) {
 
 }
 
-void CyPy_EntityLocation::init_type()
-{
-    behaviors().name("EntityLocation");
-    behaviors().doc("");
-    PYCXX_ADD_NOARGS_METHOD(copy, copy, "");
+void CyPy_EntityLocation::init_type() {
+	behaviors().name("EntityLocation");
+	behaviors().doc("");
+	PYCXX_ADD_NOARGS_METHOD(copy, copy, "");
 
-    //behaviors().supportNumberType(Py::PythonType::support_number_subtract);
+	//behaviors().supportNumberType(Py::PythonType::support_number_subtract);
 
-    behaviors().readyType();
+	behaviors().readyType();
 
 }
 
-Py::Object CyPy_EntityLocation::copy()
-{
-    return wrap(m_value);
+Py::Object CyPy_EntityLocation::copy() {
+	return wrap(m_value);
 }
 
-Py::Object CyPy_EntityLocation::getattro(const Py::String& name)
-{
-    auto nameStr = name.as_string();
-    if ("parent" == nameStr || "entity" == nameStr) {
-        if (!m_value.m_parent) {
-            return Py::None();
-        }
-        return CyPy_LocatedEntity::wrap(m_value.m_parent);
-    }
-    if ("pos" == nameStr) {
-        return CyPy_Point3D::wrap(m_value.m_pos);
-    }
-    return PythonExtensionBase::getattro(name);
+Py::Object CyPy_EntityLocation::getattro(const Py::String& name) {
+	auto nameStr = name.as_string();
+	if ("parent" == nameStr || "entity" == nameStr) {
+		if (!m_value.m_parent) {
+			return Py::None();
+		}
+		return CyPy_LocatedEntity::wrap(m_value.m_parent);
+	}
+	if ("pos" == nameStr) {
+		return CyPy_Point3D::wrap(m_value.m_pos);
+	}
+	return PythonExtensionBase::getattro(name);
 }
 
-int CyPy_EntityLocation::setattro(const Py::String& name, const Py::Object& attr)
-{
+int CyPy_EntityLocation::setattro(const Py::String& name, const Py::Object& attr) {
 
-    auto nameStr = name.as_string();
-    if ("parent" == nameStr || "entity" == nameStr) {
-        if (!CyPy_LocatedEntity::check(attr)) {
-            throw Py::TypeError("parent must be an entity");
-        }
-        m_value.m_parent = verifyObject<CyPy_LocatedEntity>(attr);
+	auto nameStr = name.as_string();
+	if ("parent" == nameStr || "entity" == nameStr) {
+		if (!CyPy_LocatedEntity::check(attr)) {
+			throw Py::TypeError("parent must be an entity");
+		}
+		m_value.m_parent = verifyObject<CyPy_LocatedEntity>(attr);
 
-        return 0;
-    }
+		return 0;
+	}
 
-    if ("pos" == nameStr) {
-        m_value.m_pos = CyPy_Point3D::parse(attr);
-        return 0;
-    }
-    throw Py::AttributeError("unknown attribute");
+	if ("pos" == nameStr) {
+		m_value.m_pos = CyPy_Point3D::parse(attr);
+		return 0;
+	}
+	throw Py::AttributeError("unknown attribute");
 }
 
 //Py::Object CyPy_EntityLocation::repr()

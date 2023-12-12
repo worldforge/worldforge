@@ -3,23 +3,23 @@
 
 #include <Atlas/Objects/ObjectsFwd.h>
 
-namespace Eris
-{
+namespace Eris {
 
 /** abstract interface for objects that can route Atlas data. */
-class Router
-{
+class Router {
 public:
-    typedef enum {
-        IGNORED = 0,
-        HANDLED
-    } RouterResult;
-    virtual ~Router();
+	typedef enum {
+		IGNORED = 0,
+		HANDLED
+	} RouterResult;
 
-    virtual RouterResult handleObject(const Atlas::Objects::Root& obj);
+	virtual ~Router();
 
-    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
-    virtual RouterResult handleEntity(const Atlas::Objects::Entity::RootEntity& ent);
+	virtual RouterResult handleObject(const Atlas::Objects::Root& obj);
+
+	virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
+
+	virtual RouterResult handleEntity(const Atlas::Objects::Entity::RootEntity& ent);
 };
 
 } // of namespace Eris

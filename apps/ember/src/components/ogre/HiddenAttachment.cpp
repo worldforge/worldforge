@@ -19,8 +19,8 @@
 #include "HiddenAttachment.h"
 #include "domain/EmberEntity.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 HiddenAttachment::HiddenAttachment(EmberEntity* parentEntity, EmberEntity& childEntity)
 		: AttachmentBase(parentEntity, childEntity) {
@@ -34,4 +34,4 @@ void HiddenAttachment::attachEntity(EmberEntity& entity) {
 
 
 }
-}
+

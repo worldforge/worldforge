@@ -26,15 +26,12 @@
 
 #include <sigc++/connection.h>
 
-namespace Eris
-{
+namespace Eris {
 class Avatar;
 }
 
-namespace Ember
-{
-namespace Navigation
-{
+
+namespace Ember::Navigation {
 
 class Awareness;
 
@@ -44,8 +41,7 @@ class Awareness;
  * The idea behind this is that in many cases the avatar will loiter around a bit until issuing a new movement command.
  * Therefore we should keep the surrounding area in the awareness until we've moved out from it.
  */
-class Loitering
-{
+class Loitering {
 public:
 	/**
 	 * @brief Ctor.
@@ -84,5 +80,5 @@ protected:
 };
 
 }
-}
+
 #endif /* LOITERING_H_ */

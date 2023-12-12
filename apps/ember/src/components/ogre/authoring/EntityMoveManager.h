@@ -32,16 +32,13 @@
 #include "framework/ConsoleObject.h"
 #include <Eris/ActiveMarker.h>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
 class World;
 
-namespace Authoring
-{
+namespace Authoring {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -49,11 +46,12 @@ namespace Authoring
  * It's main purpose is to make sure that all structures are correctly cleaned up if the entity is deleted while being moved.
  *
  */
-class EntityMoveInstance: public EntityObserverBase
-{
+class EntityMoveInstance : public EntityObserverBase {
 public:
 	EntityMoveInstance(EmberEntity& entity, MovementAdapter& moveAdapter, sigc::signal<void()>& eventFinishedMoving, sigc::signal<void()>& eventCancelledMoving);
+
 	~EntityMoveInstance() override = default;
+
 private:
 	void cleanup() override;
 
@@ -66,8 +64,7 @@ private:
  * While entities normally get moved as a result of data sent from the server, we also want to allow the user to move entities independently.
  * The two main situations for this is either when the user is rearranging entities in the world, or when the user is a world author and needs to change the world.
  */
-class EntityMoveManager: public ConsoleObject, public virtual sigc::trackable
-{
+class EntityMoveManager : public ConsoleObject, public virtual sigc::trackable {
 public:
 	explicit EntityMoveManager(World& world);
 
@@ -88,7 +85,7 @@ public:
 	 * @param command
 	 * @param args
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	/**
 	 * @brief Accessor for the World instance that this manager operates within.
@@ -101,9 +98,9 @@ public:
 	 * This is useful when an entity has been moved, and we want to make sure that it actually got moved.
 	 * @param entityId
 	 */
-	void delayedUpdatePositionForEntity(std::string entityId);
+	void delayedUpdatePositionForEntity(const std::string& entityId);
 
-	void place(const std::string &args);
+	void place(const std::string& args);
 
 	/**
 	 * @brief Emitted when the movement of an entity starts

@@ -24,9 +24,8 @@
 #include <typeinfo>
 #include <string>
 
-namespace Ember {
 
-namespace Tasks {
+namespace Ember::Tasks {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -43,6 +42,6 @@ struct TemplateNamedTask : public ITask {
 };
 
 }
-}
+
 
 #endif /* TEMPLATENAMEDTASK_H_ */

@@ -53,95 +53,82 @@ using Atlas::Objects::Entity::RootEntity;
 
 Atlas::Objects::Factories factories;
 
-class MinimalProperty : public PropertyBase
-{
-    public:
-        MinimalProperty()
-        {}
+class MinimalProperty : public PropertyBase {
+public:
+	MinimalProperty() {}
 
-        virtual int get(Atlas::Message::Element& val) const
-        { return 0; }
+	virtual int get(Atlas::Message::Element& val) const { return 0; }
 
-        virtual void set(const Atlas::Message::Element& val)
-        {}
+	virtual void set(const Atlas::Message::Element& val) {}
 
-        virtual MinimalProperty* copy() const
-        { return 0; }
+	virtual MinimalProperty* copy() const { return 0; }
 };
 
-class CorePropertyManagertest : public Cyphesis::TestBase
-{
-        CorePropertyManager* m_propertyManager;
+class CorePropertyManagertest : public Cyphesis::TestBase {
+	CorePropertyManager* m_propertyManager;
 
-    public:
-        CorePropertyManagertest();
+public:
+	CorePropertyManagertest();
 
-        void setup();
+	void setup();
 
-        void teardown();
+	void teardown();
 
-        void test_addProperty();
+	void test_addProperty();
 
-        void test_addProperty_named();
+	void test_addProperty_named();
 
-        void test_installFactory();
+	void test_installFactory();
 
-        Inheritance* m_inheritance;
+	Inheritance* m_inheritance;
 };
 
-CorePropertyManagertest::CorePropertyManagertest()
-{
-    ADD_TEST(CorePropertyManagertest::test_addProperty);
-    ADD_TEST(CorePropertyManagertest::test_addProperty_named);
-    ADD_TEST(CorePropertyManagertest::test_installFactory);
+CorePropertyManagertest::CorePropertyManagertest() {
+	ADD_TEST(CorePropertyManagertest::test_addProperty);
+	ADD_TEST(CorePropertyManagertest::test_addProperty_named);
+	ADD_TEST(CorePropertyManagertest::test_installFactory);
 }
 
-void CorePropertyManagertest::setup()
-{
-    m_inheritance = new Inheritance(factories);
-    m_propertyManager = new CorePropertyManager(*m_inheritance);
-    m_propertyManager->installFactory(
-            "named_type", {}, std::make_unique<PropertyFactory<MinimalProperty>>()
-    );
+void CorePropertyManagertest::setup() {
+	m_inheritance = new Inheritance(factories);
+	m_propertyManager = new CorePropertyManager(*m_inheritance);
+	m_propertyManager->installFactory(
+			"named_type", {}, std::make_unique<PropertyFactory<MinimalProperty>>()
+	);
 
 }
 
-void CorePropertyManagertest::teardown()
-{
-    delete m_inheritance;
-    delete m_propertyManager;
+void CorePropertyManagertest::teardown() {
+	delete m_inheritance;
+	delete m_propertyManager;
 }
 
-void CorePropertyManagertest::test_addProperty()
-{
-    auto p = m_propertyManager->addProperty("non_existant_type");
-    ASSERT_TRUE(p);
-    ASSERT_NOT_NULL(dynamic_cast<SoftProperty*>(p.get()));
+void CorePropertyManagertest::test_addProperty() {
+	auto p = m_propertyManager->addProperty("non_existant_type");
+	ASSERT_TRUE(p);
+	ASSERT_NOT_NULL(dynamic_cast<SoftProperty*>(p.get()));
 }
 
-void CorePropertyManagertest::test_addProperty_named()
-{
-    auto p = m_propertyManager->addProperty("named_type");
-    ASSERT_TRUE(p);
-    ASSERT_NOT_NULL(dynamic_cast<MinimalProperty*>(p.get()));
+void CorePropertyManagertest::test_addProperty_named() {
+	auto p = m_propertyManager->addProperty("named_type");
+	ASSERT_TRUE(p);
+	ASSERT_NOT_NULL(dynamic_cast<MinimalProperty*>(p.get()));
 }
 
-void CorePropertyManagertest::test_installFactory()
-{
-    int ret = m_propertyManager->installFactory(
-            "new_named_type",
-            Root(),
-            std::make_unique<PropertyFactory<MinimalProperty>>()
-    );
+void CorePropertyManagertest::test_installFactory() {
+	int ret = m_propertyManager->installFactory(
+			"new_named_type",
+			Root(),
+			std::make_unique<PropertyFactory<MinimalProperty>>()
+	);
 
-    ASSERT_EQUAL(ret, 0);
+	ASSERT_EQUAL(ret, 0);
 }
 
-int main()
-{
-    CorePropertyManagertest t;
+int main() {
+	CorePropertyManagertest t;
 
-    return t.run();
+	return t.run();
 }
 
 
@@ -234,9 +221,8 @@ int main()
 #define STUB_EntityFactory_newEntity
 
 template<typename T>
-Ref<Entity> EntityFactory<T>::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    return new Entity(id);
+Ref<Entity> EntityFactory<T>::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes) {
+	return new Entity(id);
 }
 
 class Stackable;
@@ -245,9 +231,8 @@ class World;
 
 template<>
 Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
-                                                   const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    return 0;
+											const Atlas::Objects::Entity::RootEntity& attributes) {
+	return 0;
 }
 
 
@@ -282,21 +267,17 @@ class EntityFactory<World>;
 #include "../stubs/rules/simulation/stubModifySelfProperty.h"
 
 template<class T>
-std::unique_ptr<PropertyBase> PropertyFactory<T>::newProperty()
-{
-    return std::unique_ptr<PropertyBase>(new T());
+std::unique_ptr<PropertyBase> PropertyFactory<T>::newProperty() {
+	return std::unique_ptr<PropertyBase>(new T());
 }
 
 template<class T>
-std::unique_ptr<PropertyKit> PropertyFactory<T>::duplicateFactory() const
-{
-    return std::make_unique<PropertyFactory<T>>();
+std::unique_ptr<PropertyKit> PropertyFactory<T>::duplicateFactory() const {
+	return std::make_unique<PropertyFactory<T>>();
 }
 
 template
 class PropertyFactory<MinimalProperty>;
-
-
 
 
 #include "../stubs/server/stubTeleportProperty.h"
@@ -312,10 +293,9 @@ class PropertyFactory<MinimalProperty>;
 #include "../stubs/rules/simulation/stubBaseWorld.h"
 
 bool_config_register::bool_config_register(bool& var,
-                                           const char* section,
-                                           const char* setting,
-                                           const char* help)
-{
+										   const char* section,
+										   const char* setting,
+										   const char* help) {
 }
 
 
@@ -325,38 +305,33 @@ bool_config_register::bool_config_register(bool& var,
 
 
 Root atlasType(const std::string& name,
-               const std::string& parent,
-               bool abstract)
-{
-    return Atlas::Objects::Root();
+			   const std::string& parent,
+			   bool abstract) {
+	return Atlas::Objects::Root();
 }
 
 #define STUB_PropertyManager_installFactory
 
-void PropertyManager::installFactory(const std::string& name, std::unique_ptr<PropertyKit> factory)
-{
-    m_propertyFactories.emplace(name, std::move(factory));
+void PropertyManager::installFactory(const std::string& name, std::unique_ptr<PropertyKit> factory) {
+	m_propertyFactories.emplace(name, std::move(factory));
 }
 
-int PropertyManager::installFactory(const std::string& type_name, const Atlas::Objects::Root& type_desc, std::unique_ptr<PropertyKit> factory)
-{
-    installFactory(type_name, std::move(factory));
-    return 0;
+int PropertyManager::installFactory(const std::string& type_name, const Atlas::Objects::Root& type_desc, std::unique_ptr<PropertyKit> factory) {
+	installFactory(type_name, std::move(factory));
+	return 0;
 }
 
 #define STUB_Inheritance_getClass
 
-const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const
-{
-    return noClass;
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
+	return noClass;
 }
 
 #define STUB_Inheritance_addChild
 
-TypeNode* Inheritance::addChild(const Root& obj)
-{
-    auto result = atlasObjects.emplace(obj->getId(), std::make_unique<TypeNode>(obj->getId()));
-    return result.first->second.get();
+TypeNode* Inheritance::addChild(const Root& obj) {
+	auto result = atlasObjects.emplace(obj->getId(), std::make_unique<TypeNode>(obj->getId()));
+	return result.first->second.get();
 }
 
 
@@ -370,11 +345,10 @@ TypeNode* Inheritance::addChild(const Root& obj)
 #define STUB_Router_error
 
 void Router::error(const Operation& op,
-                   const std::string& errstring,
-                   OpVector& res,
-                   const std::string& to) const
-{
-    res.push_back(Atlas::Objects::Operation::Error());
+				   const std::string& errstring,
+				   OpVector& res,
+				   const std::string& to) const {
+	res.push_back(Atlas::Objects::Operation::Error());
 }
 
 #include "../stubs/common/stubRouter.h"
@@ -394,10 +368,9 @@ bool database_flag = false;
 
 static long idGenerator = 0;
 
-RouterId newId()
-{
-    long new_id = ++idGenerator;
-    return {new_id};
+RouterId newId() {
+	long new_id = ++idGenerator;
+	return {new_id};
 }
 
 #include "../stubs/common/stublog.h"
@@ -405,21 +378,17 @@ RouterId newId()
 #include "../stubs/rules/stubPhysicalProperties.h"
 
 
-Root atlasClass(const std::string& name, const std::string& parent)
-{
-    return Root();
+Root atlasClass(const std::string& name, const std::string& parent) {
+	return Root();
 }
 
 void hash_password(const std::string& pwd, const std::string& salt,
-                   std::string& hash)
-{
+				   std::string& hash) {
 }
 
-int check_password(const std::string& pwd, const std::string& hash)
-{
-    return -1;
+int check_password(const std::string& pwd, const std::string& hash) {
+	return -1;
 }
 
-void addToEntity(const Point3D& p, std::vector<double>& vd)
-{
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
 }

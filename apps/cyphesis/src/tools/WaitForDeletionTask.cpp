@@ -25,31 +25,28 @@
 #include <Atlas/Objects/Entity.h>
 
 WaitForDeletionTask::WaitForDeletionTask(const std::string& entityId)
-: m_entityId(entityId)
-{
+		: m_entityId(entityId) {
 
 }
 
-void WaitForDeletionTask::setup(const std::string & arg, OpVector & res)
-{
-    //No need for setup here.
+void WaitForDeletionTask::setup(const std::string& arg, OpVector& res) {
+	//No need for setup here.
 }
 
-void WaitForDeletionTask::operation(const Operation & op, OpVector & res)
-{
-    if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
-        if (!op->getArgs().empty()) {
-            auto& innerOp = op->getArgs().front();
-            if (innerOp->getClassNo() == Atlas::Objects::Operation::DELETE_NO) {
-                auto deleteOp = Atlas::Objects::smart_dynamic_cast<Operation>(innerOp);
-                if (!deleteOp->getArgs().empty()) {
-                    auto args = deleteOp->getArgs().front();
-                    if (args->getId() == m_entityId) {
-                        m_complete = true;
-                    }
-                }
-            }
-        }
-    }
+void WaitForDeletionTask::operation(const Operation& op, OpVector& res) {
+	if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
+		if (!op->getArgs().empty()) {
+			auto& innerOp = op->getArgs().front();
+			if (innerOp->getClassNo() == Atlas::Objects::Operation::DELETE_NO) {
+				auto deleteOp = Atlas::Objects::smart_dynamic_cast<Operation>(innerOp);
+				if (!deleteOp->getArgs().empty()) {
+					auto args = deleteOp->getArgs().front();
+					if (args->getId() == m_entityId) {
+						m_complete = true;
+					}
+				}
+			}
+		}
+	}
 }
 

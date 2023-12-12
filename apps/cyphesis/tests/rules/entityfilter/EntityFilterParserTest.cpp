@@ -41,197 +41,186 @@ using namespace boost::spirit;
 Atlas::Objects::Factories factories;
 
 
-
 namespace std {
 
-    std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v);
+std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v);
 
-    std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v)
-    {
-        os << "[Atlas vector]";
-        return os;
-    }
+std::ostream& operator<<(std::ostream& os, const std::vector<Atlas::Message::Element>& v) {
+	os << "[Atlas vector]";
+	return os;
+}
 
-    std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v);
-    std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v)
-    {
-        os << "[Atlas Element]";
-        return os;
-    }
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v);
 
-    std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v);
-    std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v)
-    {
-        os << "[Comparator]";
-        return os;
-    }
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& v) {
+	os << "[Atlas Element]";
+	return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v);
+
+std::ostream& operator<<(std::ostream& os, const EntityFilter::ComparePredicate::Comparator& v) {
+	os << "[Comparator]";
+	return os;
+}
 }
 
 ///\These tests aim at verifying that entity filter parser builds
 ///correct predicates for given queries
-struct ParserTest : public Cyphesis::TestBase
-{
-    //A helper function to build a predicate for a given query
-    std::shared_ptr<Predicate> ConstructPredicate(const std::string& query);
+struct ParserTest : public Cyphesis::TestBase {
+	//A helper function to build a predicate for a given query
+	std::shared_ptr<Predicate> ConstructPredicate(const std::string& query);
 
-    ParserTest()
-    {
-        ADD_TEST(ParserTest::test_parsePredicate);
-        ADD_TEST(ParserTest::test_ComparisonOperators);
-        ADD_TEST(ParserTest::test_LogicalOperators);
-        ADD_TEST(ParserTest::test_Literals);
-    }
+	ParserTest() {
+		ADD_TEST(ParserTest::test_parsePredicate);
+		ADD_TEST(ParserTest::test_ComparisonOperators);
+		ADD_TEST(ParserTest::test_LogicalOperators);
+		ADD_TEST(ParserTest::test_Literals);
+	}
 
-    void setup()
-    {
-        m_inheritance = new Inheritance(factories);
-    }
+	void setup() {
+		m_inheritance = new Inheritance(factories);
+	}
 
 
-    void teardown()
-    {
-        delete m_inheritance;
-    }
+	void teardown() {
+		delete m_inheritance;
+	}
 
-    void test_ComparisonOperators()
-    {
-        std::shared_ptr<Predicate> pred;
+	void test_ComparisonOperators() {
+		std::shared_ptr<Predicate> pred;
 
-        pred = ConstructPredicate("1 = 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
+		pred = ConstructPredicate("1 = 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
 
-        pred = ConstructPredicate("1 != 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::NOT_EQUALS);
+		pred = ConstructPredicate("1 != 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::NOT_EQUALS);
 
-        pred = ConstructPredicate("1 > 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER);
+		pred = ConstructPredicate("1 > 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER);
 
-        pred = ConstructPredicate("1 < 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS);
+		pred = ConstructPredicate("1 < 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS);
 
-        pred = ConstructPredicate("1 <= 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS_EQUAL);
+		pred = ConstructPredicate("1 <= 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::LESS_EQUAL);
 
-        pred = ConstructPredicate("1 >= 2");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER_EQUAL);
+		pred = ConstructPredicate("1 >= 2");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::GREATER_EQUAL);
 
-        pred = ConstructPredicate("entity.container includes 1");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::INCLUDES);
+		pred = ConstructPredicate("entity.container includes 1");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::INCLUDES);
 
-        pred = ConstructPredicate("1 in entity.container");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::IN);
+		pred = ConstructPredicate("1 in entity.container");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::IN);
 
-        pred = ConstructPredicate("entity can_reach entity");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
+		pred = ConstructPredicate("entity can_reach entity");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
 
-        pred = ConstructPredicate("entity can_reach entity with entity");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
+		pred = ConstructPredicate("entity can_reach entity with entity");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::CAN_REACH);
 
-        //Instance_of can only be created for existing types
-        TypeNode* thingType = new TypeNode("thing");
-        types["thing"] = thingType;
-        pred = ConstructPredicate(
-                "types.thing = entity.type");
-        assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
-        types["thing"] = nullptr;
-        delete thingType;
+		//Instance_of can only be created for existing types
+		TypeNode* thingType = new TypeNode("thing");
+		types["thing"] = thingType;
+		pred = ConstructPredicate(
+				"types.thing = entity.type");
+		assert(static_cast<ComparePredicate*>(pred.get())->m_comparator == ComparePredicate::Comparator::EQUALS);
+		types["thing"] = nullptr;
+		delete thingType;
 
-        //Should not throw an exception for nonexisting type
-        ConstructPredicate("types.nonexistant = entity.type");
-    }
+		//Should not throw an exception for nonexisting type
+		ConstructPredicate("types.nonexistant = entity.type");
+	}
 
-    void test_LogicalOperators()
-    {
-        std::shared_ptr<Predicate> pred;
+	void test_LogicalOperators() {
+		std::shared_ptr<Predicate> pred;
 
-        pred = ConstructPredicate("1 = 2 or 3 = 4");
-        assert(typeid(*pred) == typeid(OrPredicate));
+		pred = ConstructPredicate("1 = 2 or 3 = 4");
+		assert(typeid(*pred) == typeid(OrPredicate));
 
-        pred = ConstructPredicate("1 = 2 and 3 = 4");
-        assert(typeid(*pred) == typeid(AndPredicate));
+		pred = ConstructPredicate("1 = 2 and 3 = 4");
+		assert(typeid(*pred) == typeid(AndPredicate));
 
-        pred = ConstructPredicate("!5 = 6");
-        assert(typeid(*pred) == typeid(NotPredicate));
+		pred = ConstructPredicate("!5 = 6");
+		assert(typeid(*pred) == typeid(NotPredicate));
 
-        pred = ConstructPredicate("not 7 = 8");
-        assert(typeid(*pred) == typeid(NotPredicate));
+		pred = ConstructPredicate("not 7 = 8");
+		assert(typeid(*pred) == typeid(NotPredicate));
 
-        //Test precedence. not should be applied to 1 = 2, not the whole expression
-        pred = ConstructPredicate("not 1 = 2 and 3 = 4");
-        assert(typeid(*pred) == typeid(AndPredicate));
-    }
+		//Test precedence. not should be applied to 1 = 2, not the whole expression
+		pred = ConstructPredicate("not 1 = 2 and 3 = 4");
+		assert(typeid(*pred) == typeid(AndPredicate));
+	}
 
-    void test_Literals()
-    {
-        std::shared_ptr<Predicate> pred;
-        using Atlas::Message::Element;
+	void test_Literals() {
+		std::shared_ptr<Predicate> pred;
+		using Atlas::Message::Element;
 
-        //Test int and single quote string
-        pred = ConstructPredicate("1 = '1'");
-        FixedElementProvider* lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-        FixedElementProvider* rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		//Test int and single quote string
+		pred = ConstructPredicate("1 = '1'");
+		FixedElementProvider* lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
+		FixedElementProvider* rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
 
-        ASSERT_TRUE(lhs->m_element == Element(1));
-        ASSERT_TRUE(rhs->m_element == Element("1"));
+		ASSERT_TRUE(lhs->m_element == Element(1));
+		ASSERT_TRUE(rhs->m_element == Element("1"));
 
-        //Test double and bool
-        pred = ConstructPredicate("1.25 = true");
-        lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-        rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		//Test double and bool
+		pred = ConstructPredicate("1.25 = true");
+		lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
+		rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
 
-        ASSERT_TRUE(lhs->m_element == Element(1.25));
-        ASSERT_TRUE(rhs->m_element == Element(true));
+		ASSERT_TRUE(lhs->m_element == Element(1.25));
+		ASSERT_TRUE(rhs->m_element == Element(true));
 
-        //Test list and double quoted string
-        pred = ConstructPredicate("[1, 2, 3] = '\"literal\"'");
-        lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
-        rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
+		//Test list and double quoted string
+		pred = ConstructPredicate("[1, 2, 3] = '\"literal\"'");
+		lhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_lhs.get();
+		rhs = (FixedElementProvider*) static_cast<ComparePredicate*>(pred.get())->m_rhs.get();
 
-        ASSERT_TRUE(lhs->m_element == Element(std::vector<Element>{1, 2, 3}));
-        ASSERT_TRUE(rhs->m_element == Element("\"literal\""));
+		ASSERT_TRUE(lhs->m_element == Element(std::vector<Element>{1, 2, 3}));
+		ASSERT_TRUE(rhs->m_element == Element("\"literal\""));
 
-    }
+	}
 
-    void test_parsePredicate() {
-        std::shared_ptr<Predicate> pred;
-        pred = ConstructPredicate("describe('One is one', 1 = 1)");
-        ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
-        pred = ConstructPredicate("describe(\"One is one\", 1 = 1)");
-        ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
-        pred = ConstructPredicate("describe(\"False\", false)");
-        ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
-    }
+	void test_parsePredicate() {
+		std::shared_ptr<Predicate> pred;
+		pred = ConstructPredicate("describe('One is one', 1 = 1)");
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+		pred = ConstructPredicate("describe(\"One is one\", 1 = 1)");
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+		pred = ConstructPredicate("describe(\"False\", false)");
+		ASSERT_NOT_NULL(dynamic_cast<const DescribePredicate*>(pred.get()));
+	}
 
-    Inheritance* m_inheritance;
+	Inheritance* m_inheritance;
 };
 
-std::shared_ptr<Predicate> ParserTest::ConstructPredicate(const std::string& query)
-{
-    auto iter_begin = query.begin();
-    auto iter_end = query.end();
-    ProviderFactory factory{};
-    parser::query_parser<std::string::const_iterator> grammar(factory);
+std::shared_ptr<Predicate> ParserTest::ConstructPredicate(const std::string& query) {
+	auto iter_begin = query.begin();
+	auto iter_end = query.end();
+	ProviderFactory factory{};
+	parser::query_parser<std::string::const_iterator> grammar(factory);
 
-    std::shared_ptr<Predicate> pred;
+	std::shared_ptr<Predicate> pred;
 
-    bool parse_success = qi::phrase_parse(iter_begin, iter_end, grammar,
-                                          boost::spirit::qi::space, pred);
+	bool parse_success = qi::phrase_parse(iter_begin, iter_end, grammar,
+										  boost::spirit::qi::space, pred);
 
-    if (!(parse_success && iter_begin == iter_end)) {
-        throw std::invalid_argument(
-                fmt::format("Attempted creating entity filter with invalid query: {}", query));
-    }
-    assert(pred.get());
+	if (!(parse_success && iter_begin == iter_end)) {
+		throw std::invalid_argument(
+				fmt::format("Attempted creating entity filter with invalid query: {}", query));
+	}
+	assert(pred.get());
 
-    return pred;
+	return pred;
 
 }
 
-int main(int argc, char** argv)
-{
-    ParserTest t;
+int main(int argc, char** argv) {
+	ParserTest t;
 
-    return t.run();
+	return t.run();
 }
 
 //Stubs
@@ -250,13 +239,12 @@ int main(int argc, char** argv)
 
 #define STUB_Inheritance_getType
 
-const TypeNode* Inheritance::getType(const std::string& parent) const
-{
-    auto I = types.find(parent);
-    if (I == types.end()) {
-        return nullptr;
-    }
-    return I->second;
+const TypeNode* Inheritance::getType(const std::string& parent) const {
+	auto I = types.find(parent);
+	if (I == types.end()) {
+		return nullptr;
+	}
+	return I->second;
 }
 
 #include "../../stubs/common/stubInheritance.h"

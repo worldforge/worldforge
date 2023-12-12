@@ -28,17 +28,20 @@
 #include "common/operations/Connect.h"
 #include "common/random.h"
 
-int main()
-{
-    OperationExerciser<Atlas::Objects::Operation::Connect> op_tester;
+int main() {
+	OperationExerciser<Atlas::Objects::Operation::Connect> op_tester;
 
-    Atlas::Objects::Operation::CONNECT_NO = randint(1, 100);
+	Atlas::Objects::Operation::CONNECT_NO = randint(1, 100);
 
-    op_tester.runTests("connect", Atlas::Objects::Operation::CONNECT_NO);
+	op_tester.runTests("connect", Atlas::Objects::Operation::CONNECT_NO);
 
-    return 0;
+	return 0;
 }
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int CONNECT_NO = -1;
-} } }
+}
+}
+}

@@ -26,14 +26,14 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include <memory>
 
-namespace CEGUI
-{
-	class Image;
-	class Texture;
+namespace CEGUI {
+class Image;
+
+class Texture;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class SimpleRenderContext;
 
@@ -45,48 +45,47 @@ namespace Gui {
 Useful class for rendering a single scene node to a CEGUI texture.
 
 */
-class EntityCEGUITexture
-{
+class EntityCEGUITexture {
 public:
-    
-    /**
-     * Constructor.
-     * @param imageSetName The name of the imageset.
-     * @param width The width of the image created.
-     * @param height The height of the image created.
-     * @return 
-     */
-    EntityCEGUITexture(const std::string& imageSetName, int width, int height);
 
-    virtual ~EntityCEGUITexture();
-    
-    /**
-     * Gets the rendered image.
-     * @return 
-     */
-    const CEGUI::Image* getImage() const;
-    
-    
-    SimpleRenderContext* getRenderContext();
-    
+	/**
+	 * Constructor.
+	 * @param imageSetName The name of the imageset.
+	 * @param width The width of the image created.
+	 * @param height The height of the image created.
+	 * @return
+	 */
+	EntityCEGUITexture(const std::string& imageSetName, int width, int height);
+
+	virtual ~EntityCEGUITexture();
+
+	/**
+	 * Gets the rendered image.
+	 * @return
+	 */
+	const CEGUI::Image* getImage() const;
+
+
+	SimpleRenderContext* getRenderContext();
+
 private:
 
 	/**
 	The rendered image.
 	*/
 	CEGUI::Image* mImage;
-	
+
 	/**
 	 *    Creates the imageset and image and sets up the rendering.
 	 * @param imageSetName 
 	 */
 	void createImage(const std::string& imageSetName);
-	
+
 	/**
 	Width and height of the image.
 	*/
 	int mWidth, mHeight;
-		
+
 	std::unique_ptr<SimpleRenderContext> mRenderContext;
 	CEGUI::Texture* mCeguiTexture;
 };
@@ -95,6 +94,5 @@ private:
 }
 }
 
-}
 
 #endif

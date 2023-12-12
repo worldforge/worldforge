@@ -29,12 +29,8 @@
 #include <OgreGpuProgramManager.h>
 #include <OgreTextureManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Techniques {
+namespace Ember::OgreView::Terrain::Techniques {
 CompilerTechniqueProvider::CompilerTechniqueProvider(ShaderManager& shaderManager, Ogre::SceneManager& sceneManager) :
 		mShaderManager(shaderManager),
 		mSceneManager(sceneManager),
@@ -80,6 +76,6 @@ std::unique_ptr<TerrainPageSurfaceCompilerTechnique> CompilerTechniqueProvider::
 }
 
 }
-}
-}
-}
+
+
+

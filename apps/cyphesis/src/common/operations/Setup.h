@@ -21,21 +21,24 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int SETUP_NO;
 
 /// \brief An operation used to trigger initialisation of an entity once
 /// it is in the world.
 /// \ingroup CustomOperations
-class Setup : public Generic
-{
-  public:
-    Setup() {
-        (*this)->setType("setup", SETUP_NO);
-    }
+class Setup : public Generic {
+public:
+	Setup() {
+		(*this)->setType("setup", SETUP_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_SETUP_H

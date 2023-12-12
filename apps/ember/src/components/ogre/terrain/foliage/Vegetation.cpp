@@ -11,12 +11,8 @@
 #include "ClusterPopulator.h"
 #include "components/ogre/terrain/TerrainLayerDefinition.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Foliage {
+namespace Ember::OgreView::Terrain::Foliage {
 
 
 Vegetation::~Vegetation() = default;
@@ -66,7 +62,7 @@ PlantPopulator* Vegetation::getPopulator(const std::string& plantType) {
 
 }
 
-}
 
-}
-}
+
+
+

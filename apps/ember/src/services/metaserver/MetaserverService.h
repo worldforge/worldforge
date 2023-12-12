@@ -33,6 +33,7 @@ namespace Ember {
 struct Session;
 
 class ConfigService;
+
 /**
  * Ember Metaserver Service
  *
@@ -50,7 +51,6 @@ private:
 	std::unique_ptr<Eris::Meta> mMetaserver;
 	const ConsoleCommandWrapper MetaRefresh;
 	const ConsoleCommandWrapper MetaAbort;
-
 
 
 public:

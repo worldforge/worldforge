@@ -37,35 +37,31 @@ namespace WFMath {
 // so we don't install this in $(includedir)/wfmath.
 
 // Expects (r, theta) for polar, (x, y) for cart
-inline void _CartToPolar(const CoordType *in, CoordType *out)
-{
-  out[0] = std::sqrt(in[0] * in[0] + in[1] * in[1]);
-  out[1] = std::atan2(in[0], in[1]);
+inline void _CartToPolar(const CoordType* in, CoordType* out) {
+	out[0] = std::sqrt(in[0] * in[0] + in[1] * in[1]);
+	out[1] = std::atan2(in[0], in[1]);
 }
 
 // Expects (r, theta) for polar, (x, y) for cart
-inline void _PolarToCart(const CoordType *in, CoordType *out)
-{
-  out[0] = in[0] * std::cos(in[1]);
-  out[1] = in[0] * std::sin(in[1]);
+inline void _PolarToCart(const CoordType* in, CoordType* out) {
+	out[0] = in[0] * std::cos(in[1]);
+	out[1] = in[0] * std::sin(in[1]);
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
-inline void _CartToSpherical(const CoordType *in, CoordType *out)
-{
-  out[0] = std::sqrt(in[0] * in[0] + in[1] * in[1] + in[2] * in[2]);
-  out[1] = std::atan2(in[2], std::sqrt(in[0] * in[0] + in[1] * in[1]));
-  out[2] = std::atan2(in[0], in[1]);
+inline void _CartToSpherical(const CoordType* in, CoordType* out) {
+	out[0] = std::sqrt(in[0] * in[0] + in[1] * in[1] + in[2] * in[2]);
+	out[1] = std::atan2(in[2], std::sqrt(in[0] * in[0] + in[1] * in[1]));
+	out[2] = std::atan2(in[0], in[1]);
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
-inline void _SphericalToCart(const CoordType *in, CoordType *out)
-{
-  CoordType stheta = std::sin(in[1]);
+inline void _SphericalToCart(const CoordType* in, CoordType* out) {
+	CoordType stheta = std::sin(in[1]);
 
-  out[0] = in[0] * stheta * std::cos(in[2]);
-  out[1] = in[0] * stheta * std::sin(in[2]);
-  out[2] = in[0] * std::cos(in[1]);
+	out[0] = in[0] * stheta * std::cos(in[2]);
+	out[1] = in[0] * stheta * std::sin(in[2]);
+	out[2] = in[0] * std::cos(in[1]);
 }
 
 } // namespace WFMath

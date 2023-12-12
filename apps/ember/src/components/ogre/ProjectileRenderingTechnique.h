@@ -23,8 +23,8 @@
 #include "OgreIncludes.h"
 #include <OgreFrameListener.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class ProjectileRenderingTechnique : public ISceneRenderingTechnique, Ogre::FrameListener {
 public:
@@ -64,6 +64,6 @@ protected:
 };
 
 }
-}
+
 
 #endif //EMBER_PROJECTILERENDERINGTECHNIQUE_H

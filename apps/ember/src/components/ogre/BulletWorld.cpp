@@ -25,8 +25,7 @@
 #include <BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h>
 #include <BulletCollision/BroadphaseCollision/btAxisSweep3.h>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 BulletWorld::BulletWorld() :
 		mConfig(std::make_unique<btDefaultCollisionConfiguration>()),
@@ -212,4 +211,4 @@ void BulletWorld::getMeshInformation(const Ogre::MeshPtr& mesh,
 }
 
 }
-}
+

@@ -18,8 +18,8 @@
 #include "FrameListener.h"
 #include <OgreRoot.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 FrameListener::FrameListener() {
 	Ogre::Root::getSingleton().addFrameListener(this);
@@ -27,6 +27,5 @@ FrameListener::FrameListener() {
 
 FrameListener::~FrameListener() {
 	Ogre::Root::getSingleton().removeFrameListener(this);
-}
 }
 }

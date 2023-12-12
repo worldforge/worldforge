@@ -33,9 +33,7 @@
 #include "../SimpleRenderContext.h"
 
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 
 EntityCEGUITexture::EntityCEGUITexture(const std::string& imageSetName, int width, int height)
@@ -66,7 +64,7 @@ void EntityCEGUITexture::createImage(const std::string& imageSetName) {
 //	//we need a imageset in order to create GUI elements from the ceguiTexture
 //	logger->debug("Creating new CEGUI imageset with name " << imageSetName + "_EntityCEGUITextureImageset");
 	mImage = &CEGUI::ImageManager::getSingleton().create("BasicImage", imageSetName + "_EntityCEGUITextureImageset");
-	auto* basicImage = static_cast<CEGUI::BasicImage*>(mImage);
+	auto* basicImage = dynamic_cast<CEGUI::BasicImage*>(mImage);
 	basicImage->setTexture(mCeguiTexture);
 	basicImage->setArea(CEGUI::Rectf(0, 0, mCeguiTexture->getSize().d_width, mCeguiTexture->getSize().d_height));
 	basicImage->setNativeResolution(mCeguiTexture->getSize());
@@ -96,5 +94,5 @@ SimpleRenderContext* EntityCEGUITexture::getRenderContext() {
 
 
 }
-}
-}
+
+

@@ -27,9 +27,8 @@
 #include "EntityTooltip.h"
 #include <CEGUI/widgets/DragContainer.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 ContainerView::ContainerView(EntityIconManager& entityIconManager,
 							 Icons::IconManager& iconManager,
@@ -142,7 +141,7 @@ EntityIconSlot* ContainerView::addSlot() {
 }
 
 EntityIconSlot* ContainerView::getFreeSlot() {
-	for (auto& slot : mSlots) {
+	for (auto& slot: mSlots) {
 		if (slot->getEntityIcon() == nullptr) {
 			return slot.get();
 		}
@@ -187,7 +186,7 @@ void ContainerView::layoutSlots() {
 
 	for (size_t i = 0; i < mSlots.size(); ++i) {
 		auto& slot = mSlots[i];
-		auto yPosition = (int)std::floor(i / columns);
+		auto yPosition = (int) std::floor(i / columns);
 		auto xPosition = i % columns;
 		slot->getWindow()->setPosition({{0, (float) (xPosition * 32)},
 										{0, (float) (yPosition * 32)}});
@@ -214,5 +213,4 @@ void ContainerView::addEntityIcon(EntityIcon* entityIcon) {
 
 
 }
-}
-}
+

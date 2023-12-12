@@ -29,35 +29,34 @@
  * @brief A terrain representation that's shared between multiple entities.
  *
  */
-class SharedTerrain : public IHeightProvider
-{
-    public:
+class SharedTerrain : public IHeightProvider {
+public:
 
-        struct BasePointDefinition {
-            int x;
-            int y;
-            Mercator::BasePoint basePoint;
-        };
+	struct BasePointDefinition {
+		int x;
+		int y;
+		Mercator::BasePoint basePoint;
+	};
 
-        SharedTerrain();
+	SharedTerrain();
 
-        ~SharedTerrain() override = default;
+	~SharedTerrain() override = default;
 
-        /**
-         * @brief Sets base points.
-         *
-         * Only those that have changed are processed. It's thus safe to call this from each entity sharing this instance.
-         * @param basepoints
-         */
-        std::vector<BasePointDefinition> setBasePoints(const std::vector<BasePointDefinition>& basepoints);
+	/**
+	 * @brief Sets base points.
+	 *
+	 * Only those that have changed are processed. It's thus safe to call this from each entity sharing this instance.
+	 * @param basepoints
+	 */
+	std::vector<BasePointDefinition> setBasePoints(const std::vector<BasePointDefinition>& basepoints);
 
-        void blitHeights(int xMin, int xMax, int yMin, int yMax, std::vector<float>& heights) const override;
+	void blitHeights(int xMin, int xMax, int yMin, int yMax, std::vector<float>& heights) const override;
 
-        const Mercator::Terrain& getTerrain() const;
+	const Mercator::Terrain& getTerrain() const;
 
-    private:
+private:
 
-        std::unique_ptr<Mercator::Terrain> m_terrain;
+	std::unique_ptr<Mercator::Terrain> m_terrain;
 };
 
 #endif /* RULESETS_MIND_SHAREDTERRAIN_H_ */

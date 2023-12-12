@@ -35,6 +35,7 @@ const int DATA_BUFFER_SIZE = 4096;
 /// Storage of server information
 typedef std::list<ServerInfo> ServerList;
 struct MetaDecoder;
+
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
 class Meta : virtual public sigc::trackable {
 	friend struct MetaDecoder;
@@ -59,9 +60,9 @@ public:
 	take a long time, too high and .... I'm not sure.
 	*/
 	Meta(boost::asio::io_service& io_service,
-			EventService& eventService,
-			std::string msv,
-			unsigned int maxQueries);
+		 EventService& eventService,
+		 std::string msv,
+		 unsigned int maxQueries);
 
 	~Meta();
 
@@ -141,6 +142,7 @@ protected:
 private:
 
 	std::unique_ptr<Atlas::Objects::Factories> m_factories;
+
 	void connect(const boost::asio::ip::udp::endpoint& endpoint);
 
 	void write();
@@ -210,7 +212,7 @@ private:
 
 	std::streamsize m_bytesToRecv; ///< The number of bytes to read before processing / dispatch
 	unsigned int m_totalServers,        ///< Total number of servers the Meta knows of
-			m_packed;        ///< The servers in the curent LIST_RESP
+	m_packed;        ///< The servers in the curent LIST_RESP
 
 	bool m_recvCmd;        ///< true if the next block is a new command
 	uint32_t m_gotCmd;    ///< the curent command being processed

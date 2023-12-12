@@ -25,24 +25,27 @@
 
 /// \brief Kit interface for factories to create Property objects.
 class PropertyKit {
-  public:
-    virtual ~PropertyKit() = default;
+public:
+	virtual ~PropertyKit() = default;
 
-    /// \brief Create a new Property instance
-    virtual std::unique_ptr<PropertyBase> newProperty() = 0;
+	/// \brief Create a new Property instance
+	virtual std::unique_ptr<PropertyBase> newProperty() = 0;
 
-    /// \brief Create a copy of this factory.
-    virtual std::unique_ptr<PropertyKit> duplicateFactory() const = 0;
+	/// \brief Create a copy of this factory.
+	virtual std::unique_ptr<PropertyKit> duplicateFactory() const = 0;
 };
 
 /// \brief Factory template to create standard Property objects.
-template <class T>
+template<class T>
 class PropertyFactory : public PropertyKit {
-  public:
-    std::uint32_t m_flags;
-    PropertyFactory() : m_flags(0) {}
-    std::unique_ptr<PropertyBase> newProperty() override;
-    std::unique_ptr<PropertyKit> duplicateFactory() const override;
+public:
+	std::uint32_t m_flags;
+
+	PropertyFactory() : m_flags(0) {}
+
+	std::unique_ptr<PropertyBase> newProperty() override;
+
+	std::unique_ptr<PropertyKit> duplicateFactory() const override;
 };
 
 #endif // COMMON_PROPERTY_FACTORY_H

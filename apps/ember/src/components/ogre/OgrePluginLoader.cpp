@@ -18,7 +18,6 @@
 
 #include "OgrePluginLoader.h"
 
-#include "services/config/ConfigService.h"
 
 #include <OgreRoot.h>
 #include <OgreBuildSettings.h>
@@ -27,10 +26,14 @@
 #ifdef OGRE_STATIC_LIB
 
 #ifdef OGRE_BUILD_PLUGIN_PFX
+
 #include <Plugins/ParticleFX/OgreParticleFXPlugin.h>
+
 #endif
 #ifdef OGRE_BUILD_RENDERSYSTEM_GL3PLUS
+
 #include <RenderSystems/GL3Plus/OgreGL3PlusPlugin.h>
+
 #endif
 #ifdef OGRE_BUILD_RENDERSYSTEM_GLES
 #include <RenderSystems/GLES/OgreGLESPlugin.h>
@@ -47,8 +50,8 @@
 
 #endif //ifdef OGRE_STATIC_LIB
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 OgrePluginLoader::OgrePluginLoader() {
 #ifdef OGRE_STATIC_LIB
 #ifdef OGRE_BUILD_RENDERSYSTEM_GL3PLUS
@@ -129,7 +132,7 @@ bool OgrePluginLoader::loadPlugin(const std::string& pluginName) {
 
 void OgrePluginLoader::unloadPlugins() {
 	auto plugins = Ogre::Root::getSingleton().getInstalledPlugins();
-	for (Ogre::Plugin* plugin : plugins) {
+	for (Ogre::Plugin* plugin: plugins) {
 		plugin->uninstall();
 	}
 }
@@ -157,4 +160,4 @@ bool OgrePluginLoader::loadDynPlugin(const std::string& pluginName) {
 }
 
 }
-}
+

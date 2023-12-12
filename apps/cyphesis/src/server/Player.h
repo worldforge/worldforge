@@ -25,19 +25,20 @@
 
 /// \brief This is a class for handling users who are regular players
 class Player : public Account {
-  protected:
+protected:
 
-  public:
-    Player(Connection * conn, const std::string & username,
-                              const std::string & passwd,
-                                 RouterId id);
-    ~Player() override;
+public:
+	Player(Connection* conn, const std::string& username,
+		   const std::string& passwd,
+		   RouterId id);
 
-    const char * getType() const override;
+	~Player() override;
 
-    friend class Playertest;
+	const char* getType() const override;
 
-    static int s_numberOfPlayers;
+	friend class Playertest;
+
+	static int s_numberOfPlayers;
 };
 
 #endif // SERVER_PLAYER_H

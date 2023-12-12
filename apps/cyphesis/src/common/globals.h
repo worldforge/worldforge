@@ -22,13 +22,13 @@
 #include <string>
 
 namespace varconf {
-  class Config;
+class Config;
 }
 
-extern const char * const CYPHESIS;
-extern const char * const SLAVE;
+extern const char* const CYPHESIS;
+extern const char* const SLAVE;
 
-extern varconf::Config * global_conf;
+extern varconf::Config* global_conf;
 extern std::string instance;
 extern std::string bin_directory;
 extern std::string share_directory;
@@ -105,35 +105,38 @@ unixsock_config_register _var ## _register(_var, _section, _setting, _help, _for
 
 /// \brief Object to register an integer varconf option on construction
 class int_config_register {
-  public:
-    int_config_register(int &, const char *, const char *, const char *);
+public:
+	int_config_register(int&, const char*, const char*, const char*);
 };
 
 /// \brief Object to register a bool varconf option on construction
 class bool_config_register {
-  public:
-    bool_config_register(bool &, const char *, const char *, const char *);
+public:
+	bool_config_register(bool&, const char*, const char*, const char*);
 };
 
 /// \brief Object to register a string varconf option on construction
 class string_config_register {
-  public:
-    string_config_register(std::string &, const char *, const char *, const char *);
+public:
+	string_config_register(std::string&, const char*, const char*, const char*);
 };
 
 /// \brief Object to register a socket varconf option on construction
 class unixsock_config_register {
-  public:
-    unixsock_config_register(std::string &, const char *, const char *, const char *, const char *);
+public:
+	unixsock_config_register(std::string&, const char*, const char*, const char*, const char*);
 };
 
-template <typename T>
-int readConfigItem(const std::string & section, const std::string & key,
-                   T & storage);
+template<typename T>
+int readConfigItem(const std::string& section, const std::string& key,
+				   T& storage);
 
-int loadConfig(int argc, char ** argv, int usage = USAGE_CLIENT);
-void reportVersion(const char * prgname);
-void showUsage(const char * prgname, unsigned int usage_flags, const char * extras = nullptr);
+int loadConfig(int argc, char** argv, int usage = USAGE_CLIENT);
+
+void reportVersion(const char* prgname);
+
+void showUsage(const char* prgname, unsigned int usage_flags, const char* extras = nullptr);
+
 void updateUserConfiguration();
 
 #endif // COMMON_GLOBALS_H

@@ -61,9 +61,9 @@
 #include <boost/algorithm/string.hpp>
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 WidgetPluginCallback IngameChatWidget::registerWidget(GUIManager& guiManager) {
 
@@ -503,7 +503,7 @@ void IngameChatWidget::Label::showDetachedChatText() {
 
 IngameChatWidget::LabelCreator::LabelCreator(IngameChatWidget& ingameChatWidget) :
 		mIngameChatWidget(ingameChatWidget),
-		mLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getSingleton().getLayoutDir() + "Label.layout")) {
+		mLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getLayoutDir() + "Label.layout")) {
 }
 
 IngameChatWidget::LabelCreator::~LabelCreator() = default;
@@ -742,7 +742,7 @@ bool IngameChatWidget::ChatText::editboxDetachedKey_Event(const EventArgs& args)
 
 	if (kargs.scancode == Key::Return || kargs.scancode == Key::NumpadEnter) {
 		// do not say empty messages
-		if (mDetachedEditbox->getText().length() > 0) {
+		if (!mDetachedEditbox->getText().empty()) {
 			respondWithMessage(mDetachedEditbox->getText().c_str());
 			// clear the editbox (this message has been sent by now)
 			mDetachedEditbox->setText("");
@@ -809,8 +809,8 @@ void IngameChatWidget::ChatText::attachToLabel(Label* label) {
 
 IngameChatWidget::ChatTextCreator::ChatTextCreator(IngameChatWidget& ingameChatWidget) :
 		mIngameChatWidget(ingameChatWidget),
-		mAttachedLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getSingleton().getLayoutDir() + "IngameChatWidgetAttached.layout")),
-		mDetachedLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getSingleton().getLayoutDir() + "IngameChatWidgetDetached.layout")) {
+		mAttachedLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getLayoutDir() + "IngameChatWidgetAttached.layout")),
+		mDetachedLayout(WindowManager::getSingleton().loadLayoutFromFile(GUIManager::getLayoutDir() + "IngameChatWidgetDetached.layout")) {
 }
 
 IngameChatWidget::ChatTextCreator::~ChatTextCreator() = default;
@@ -827,6 +827,6 @@ std::unique_ptr<IngameChatWidget::ChatText> IngameChatWidget::ChatTextCreator::c
 
 }
 
-}
 
-}
+
+

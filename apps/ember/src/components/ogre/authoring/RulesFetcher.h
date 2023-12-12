@@ -31,17 +31,13 @@
 #include <deque>
 #include <string>
 
-namespace Eris
-{
+namespace Eris {
 class Connection;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 /**
  * @brief Fetches rules from the server.
@@ -49,8 +45,7 @@ namespace Authoring
  * Listen for the EventAllRulesReceived signal to know when all rules have been received.
  *
  */
-class RulesFetcher: public virtual sigc::trackable
-{
+class RulesFetcher : public virtual sigc::trackable {
 public:
 	struct RuleEntry {
 		Atlas::Objects::Root rule;
@@ -58,6 +53,7 @@ public:
 	};
 
 	explicit RulesFetcher(Eris::Connection& connection, std::string mindId);
+
 	virtual ~RulesFetcher() = default;
 
 	/**
@@ -95,8 +91,7 @@ public:
 
 private:
 
-	struct StackEntry
-	{
+	struct StackEntry {
 		std::string id;
 		std::vector<std::string> children;
 		std::string currentChild;
@@ -107,7 +102,6 @@ private:
 	std::string mMindId;
 
 
-
 	std::unordered_map<std::string, RuleEntry> mRules;
 
 	std::deque<StackEntry> mRulesStack;
@@ -115,11 +109,12 @@ private:
 	std::string mRootRule;
 
 	void fetchRule(const std::string& id);
+
 	void operationGetRuleResult(const Atlas::Objects::Operation::RootOperation& op);
 
 };
 
 }
-}
-}
+
+
 #endif /* RULESFETCHER_H_ */

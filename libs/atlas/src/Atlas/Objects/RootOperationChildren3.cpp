@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 Allocator<SniffData> SniffData::allocator;
         
@@ -240,4 +240,4 @@ void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, u
         data.attr_parent = default_parent;
 }
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation

@@ -23,8 +23,8 @@
 
 #include <OgreNode.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 namespace {
 //btVector3 toBullet(const Ogre::Vector3& p) {
@@ -57,7 +57,7 @@ BulletCollisionDetector::BulletCollisionDetector(BulletWorld& bulletWorld)
 
 BulletCollisionDetector::~BulletCollisionDetector() {
 
-	for (auto& collisionObject : mCollisionObjects) {
+	for (auto& collisionObject: mCollisionObjects) {
 		mBulletWorld.getCollisionWorld().removeCollisionObject(collisionObject.get());
 	}
 
@@ -76,14 +76,14 @@ void BulletCollisionDetector::updateTransforms(const WFMath::Point<3>& position,
 		transform.setBasis(btMatrix3x3::getIdentity());
 	}
 
-	for (auto& collisionObject : mCollisionObjects) {
+	for (auto& collisionObject: mCollisionObjects) {
 		collisionObject->setWorldTransform(transform);
 		mBulletWorld.getCollisionWorld().updateSingleAabb(collisionObject.get());
 	}
 }
 
 void BulletCollisionDetector::updateScale(const WFMath::Vector<3>& scale) {
-	for (auto& collisionObject : mCollisionObjects) {
+	for (auto& collisionObject: mCollisionObjects) {
 		collisionObject->getCollisionShape()->setLocalScaling(toBullet(scale));
 		mBulletWorld.getCollisionWorld().updateSingleAabb(collisionObject.get());
 	}
@@ -102,7 +102,7 @@ void BulletCollisionDetector::addCollisionShape(std::shared_ptr<btCollisionShape
 }
 
 void BulletCollisionDetector::clear() {
-	for (auto& collisionObject : mCollisionObjects) {
+	for (auto& collisionObject: mCollisionObjects) {
 		mBulletWorld.getCollisionWorld().removeCollisionObject(collisionObject.get());
 	}
 	mCollisionObjects.clear();
@@ -111,12 +111,12 @@ void BulletCollisionDetector::clear() {
 
 void BulletCollisionDetector::setMask(short mask) {
 	mMask = mask;
-	for (auto& collisionObject : mCollisionObjects) {
+	for (auto& collisionObject: mCollisionObjects) {
 		collisionObject->getBroadphaseHandle()->m_collisionFilterGroup = mask;
 	}
 }
 
 
 }
-}
+
 

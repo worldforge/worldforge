@@ -28,161 +28,153 @@
 
 namespace WFMath {
 
-void Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
-{
-  size_t end = poly.numCorners();
+void Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const {
+	size_t end = poly.numCorners();
 
-  switch(m_type) {
-    case WFMATH_POLY2REORIENT_NONE:
-      return;
-    case WFMATH_POLY2REORIENT_CLEAR_AXIS2:
-      for(size_t i = 0; i != end; ++i) {
-        if(i == skip)
-          continue;
-        (poly[i])[1] = 0;
-      }
-      return;
-    case WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES:
-      for(size_t i = 0; i != end; ++i) {
-        if(i == skip)
-          continue;
-        (poly[i])[0] = 0;
-        (poly[i])[1] = 0;
-      }
-      return;
-    case WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1:
-      for(size_t i = 0; i != end; ++i) {
-        if(i == skip)
-           continue;
-        (poly[i])[0] = (poly[i])[1];
-        (poly[i])[1] = 0;
-      }
-      return;
-    case WFMATH_POLY2REORIENT_SCALE1_CLEAR2:
-      for(size_t i = 0; i != end; ++i) {
-        if(i == skip)
-          continue;
-        (poly[i])[0] *= m_scale;
-        (poly[i])[1] = 0;
-      }
-      return;
-    default:
-      assert(false);
-      return;
-  }
+	switch (m_type) {
+		case WFMATH_POLY2REORIENT_NONE:
+			return;
+		case WFMATH_POLY2REORIENT_CLEAR_AXIS2:
+			for (size_t i = 0; i != end; ++i) {
+				if (i == skip)
+					continue;
+				(poly[i])[1] = 0;
+			}
+			return;
+		case WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES:
+			for (size_t i = 0; i != end; ++i) {
+				if (i == skip)
+					continue;
+				(poly[i])[0] = 0;
+				(poly[i])[1] = 0;
+			}
+			return;
+		case WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1:
+			for (size_t i = 0; i != end; ++i) {
+				if (i == skip)
+					continue;
+				(poly[i])[0] = (poly[i])[1];
+				(poly[i])[1] = 0;
+			}
+			return;
+		case WFMATH_POLY2REORIENT_SCALE1_CLEAR2:
+			for (size_t i = 0; i != end; ++i) {
+				if (i == skip)
+					continue;
+				(poly[i])[0] *= m_scale;
+				(poly[i])[1] = 0;
+			}
+			return;
+		default:
+			assert(false);
+			return;
+	}
 }
 
 //template<>
-bool Polygon<2>::isEqualTo(const Polygon<2>& p, CoordType epsilon) const
-{
-  if(m_points.size() != p.m_points.size())
-    return false;
+bool Polygon<2>::isEqualTo(const Polygon<2>& p, CoordType epsilon) const {
+	if (m_points.size() != p.m_points.size())
+		return false;
 
-  auto i1 = m_points.begin(), i2 = p.m_points.begin(),
-			   end = m_points.end();
+	auto i1 = m_points.begin(), i2 = p.m_points.begin(),
+			end = m_points.end();
 
-  while(i1 != end) {
-    if(!Equal(*i1, *i2, epsilon))
-      return false;
-    ++i1;
-    ++i2;
-  }
+	while (i1 != end) {
+		if (!Equal(*i1, *i2, epsilon))
+			return false;
+		++i1;
+		++i2;
+	}
 
-  return true;
+	return true;
 }
 
-bool Polygon<2>::isValid() const
-{
-  for(const auto & m_point : m_points) {
-	  if (!m_point.isValid()) {
-		  return false;
-	  }
-  }
-  return true;
-}
-
-//template<>
-Polygon<2>& Polygon<2>::shift(const Vector<2>& v)
-{
-  for(auto & point : m_points)
-	  point += v;
-
-  return *this;
+bool Polygon<2>::isValid() const {
+	for (const auto& m_point: m_points) {
+		if (!m_point.isValid()) {
+			return false;
+		}
+	}
+	return true;
 }
 
 //template<>
-Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
-{
-  for(auto & point : m_points)
-    point.rotate(m, p);
+Polygon<2>& Polygon<2>::shift(const Vector<2>& v) {
+	for (auto& point: m_points)
+		point += v;
 
-  return *this;
+	return *this;
+}
+
+//template<>
+Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p) {
+	for (auto& point: m_points)
+		point.rotate(m, p);
+
+	return *this;
 }
 
 //template<>
 Polygon<2> Polygon<2>::toParentCoords(const Point<2>& origin,
-    const RotMatrix<2>& rotation) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toParentCoords(origin, rotation);
-  return out;
+									  const RotMatrix<2>& rotation) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toParentCoords(origin, rotation);
+	return out;
 }
 
 //template<>
-Polygon<2> Polygon<2>::toParentCoords(const AxisBox<2>& coords) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toParentCoords(coords);
-  return out;
+Polygon<2> Polygon<2>::toParentCoords(const AxisBox<2>& coords) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toParentCoords(coords);
+	return out;
 }
 
 //template<>
-Polygon<2> Polygon<2>::toParentCoords(const RotBox<2>& coords) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toParentCoords(coords);
-  return out;
+Polygon<2> Polygon<2>::toParentCoords(const RotBox<2>& coords) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toParentCoords(coords);
+	return out;
 }
 
 //template<>
 Polygon<2> Polygon<2>::toLocalCoords(const Point<2>& origin,
-    const RotMatrix<2>& rotation) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toLocalCoords(origin, rotation);
-  return out;
+									 const RotMatrix<2>& rotation) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toLocalCoords(origin, rotation);
+	return out;
 }
 
 //template<>
-Polygon<2> Polygon<2>::toLocalCoords(const AxisBox<2>& coords) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toLocalCoords(coords);
-  return out;
+Polygon<2> Polygon<2>::toLocalCoords(const AxisBox<2>& coords) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toLocalCoords(coords);
+	return out;
 }
 
 //template<>
-Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
-{
-  Polygon out;
-  out.m_points.resize(m_points.size());
-  for(unsigned i = 0; i < m_points.size(); ++i)
-    out.m_points[i] = m_points[i].toLocalCoords(coords);
-  return out;
+Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const {
+	Polygon out;
+	out.m_points.resize(m_points.size());
+	for (unsigned i = 0; i < m_points.size(); ++i)
+		out.m_points[i] = m_points[i].toLocalCoords(coords);
+	return out;
 }
 
-template class Polygon<3>;
-template class Poly2Orient<3>;
+template
+class Polygon<3>;
+
+template
+class Poly2Orient<3>;
 
 static_assert(std::is_standard_layout<Polygon<3>>::value, "Polygon should be standard layout.");
 static_assert(std::is_standard_layout<Polygon<2>>::value, "Polygon should be standard layout.");

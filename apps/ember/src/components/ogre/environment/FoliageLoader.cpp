@@ -34,10 +34,10 @@
 #include <Ogre.h>
 
 using namespace Ember::OgreView::Terrain;
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 FoliageLoader::FoliageLoader(Ogre::SceneManager& sceneMgr,
 							 Terrain::TerrainManager& terrainManager,
@@ -85,11 +85,12 @@ void FoliageLoader::loadPage(::Forests::PageInfo&) {
 	const PlantAreaQueryResult::PlantStore& store = mLatestPlantsResult->mStore;
 	const int maxCount = (int) (store.size() * mDensityFactor);
 
-	for (const auto& plantInstance : store) {
+	for (const auto& plantInstance: store) {
 		if (plantNo == maxCount) {
 			break;
 		}
-		addEntity(mEntity, plantInstance.position, Ogre::Quaternion(Ogre::Degree(plantInstance.orientation), Ogre::Vector3::UNIT_Y), Ogre::Vector3(plantInstance.scale.x, plantInstance.scale.y, plantInstance.scale.x), colour);
+		addEntity(mEntity, plantInstance.position, Ogre::Quaternion(Ogre::Degree(plantInstance.orientation), Ogre::Vector3::UNIT_Y),
+				  Ogre::Vector3(plantInstance.scale.x, plantInstance.scale.y, plantInstance.scale.x), colour);
 		plantNo++;
 	}
 }
@@ -114,5 +115,5 @@ void FoliageLoader::setDensityFactor(float density) {
 
 }
 
-}
-}
+
+

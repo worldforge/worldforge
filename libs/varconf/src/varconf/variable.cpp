@@ -23,7 +23,7 @@
  *            189 Reese St.
  *            Old Forge, PA 18518
  */
- 
+
 #include "variable.h"
 
 #include <string>
@@ -33,184 +33,185 @@
 namespace varconf {
 
 VarBase::VarBase()
- : m_have_bool(false), m_have_int(false), m_have_double(false),
-   m_have_string(false), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_scope(GLOBAL)
-{
+		: m_have_bool(false), m_have_int(false), m_have_double(false),
+		  m_have_string(false), m_val_bool(false), m_val_int(0), m_val_double(0.0),
+		  m_scope(GLOBAL) {
 }
 
 VarBase::VarBase(const VarBase& c)
- : sigc::trackable(c), m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
-   m_have_double(c.m_have_double), m_have_string(c.m_have_string),
-   m_val_bool(c.m_val_bool), m_val_int(c.m_val_int),
-   m_val_double(c.m_val_double), m_val(c.m_val), m_scope(GLOBAL)
-{
+		: sigc::trackable(c), m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
+		  m_have_double(c.m_have_double), m_have_string(c.m_have_string),
+		  m_val_bool(c.m_val_bool), m_val_int(c.m_val_int),
+		  m_val_double(c.m_val_double), m_val(c.m_val), m_scope(GLOBAL) {
 }
 
 VarBase::VarBase(bool b)
- : m_have_bool(true), m_have_int(false), m_have_double(false),
-   m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0),
-   m_scope(GLOBAL)
-{
-  m_val = (b ? "true" : "false");
+		: m_have_bool(true), m_have_int(false), m_have_double(false),
+		  m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0),
+		  m_scope(GLOBAL) {
+	m_val = (b ? "true" : "false");
 }
 
 VarBase::VarBase(int i)
- : m_have_bool(false), m_have_int(true), m_have_double(false),
-   m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
-   m_val(std::to_string(i)), m_scope(GLOBAL)
-{
+		: m_have_bool(false), m_have_int(true), m_have_double(false),
+		  m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
+		  m_val(std::to_string(i)), m_scope(GLOBAL) {
 }
 
 
 VarBase::VarBase(double d)
- : m_have_bool(false), m_have_int(false), m_have_double(true),
-   m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
-   m_val(std::to_string(d)), m_scope(GLOBAL)
-{
+		: m_have_bool(false), m_have_int(false), m_have_double(true),
+		  m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
+		  m_val(std::to_string(d)), m_scope(GLOBAL) {
 }
 
 VarBase::VarBase(std::string s)
- : m_have_bool(false), m_have_int(false), m_have_double(false),
-   m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(std::move(s)), m_scope(GLOBAL)
-{
+		: m_have_bool(false), m_have_int(false), m_have_double(false),
+		  m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
+		  m_val(std::move(s)), m_scope(GLOBAL) {
 }
 
 VarBase::VarBase(const char* s)
- : m_have_bool(false), m_have_int(false), m_have_double(false),
-   m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(s), m_scope(GLOBAL)
-{
+		: m_have_bool(false), m_have_int(false), m_have_double(false),
+		  m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
+		  m_val(s), m_scope(GLOBAL) {
 }
 
 VarBase::~VarBase() = default;
 
-std::ostream& operator<<( std::ostream& out, const VarBase& v)
-{
-    for (char i : v.m_val) {
-      if (i == '"' || i == '\\') {
-		  out << '\\';
-	  }
-      out << i;
-    }
-    return out;
+std::ostream& operator<<(std::ostream& out, const VarBase& v) {
+	for (char i: v.m_val) {
+		if (i == '"' || i == '\\') {
+			out << '\\';
+		}
+		out << i;
+	}
+	return out;
 }
 
-bool operator ==( const VarBase& one, const VarBase& two)
-{
+bool operator==(const VarBase& one, const VarBase& two) {
 	return one.m_val == two.m_val;
-  // scope is explicitly excluded as its nothing to do with value comparisons
+	// scope is explicitly excluded as its nothing to do with value comparisons
 
 }
 
-bool operator !=(const VarBase& one, const VarBase& two)
-{
-  return !(one == two);
+bool operator!=(const VarBase& one, const VarBase& two) {
+	return !(one == two);
 }
 
-VarBase& VarBase::operator=(const VarBase& c)
-{
-  if (&c == this) return (*this);
-  m_have_bool = c.m_have_bool; m_have_int = c.m_have_int;
-  m_have_double = c.m_have_double; m_have_string = c.m_have_string;
-  m_val_bool = c.m_val_bool; m_val_int = c.m_val_int;
-  m_val_double = c.m_val_double; m_val = c.m_val;
-  m_scope = c.m_scope;
-  return (*this);
+VarBase& VarBase::operator=(const VarBase& c) {
+	if (&c == this) return (*this);
+	m_have_bool = c.m_have_bool;
+	m_have_int = c.m_have_int;
+	m_have_double = c.m_have_double;
+	m_have_string = c.m_have_string;
+	m_val_bool = c.m_val_bool;
+	m_val_int = c.m_val_int;
+	m_val_double = c.m_val_double;
+	m_val = c.m_val;
+	m_scope = c.m_scope;
+	return (*this);
 }
 
-VarBase& VarBase::operator=(bool b)
-{
-  m_have_bool = true; m_have_int = false;
-  m_have_double = false; m_have_string = true;
-  m_val_bool = b; m_val_int = 0;
-  m_val_double = 0.0; m_val = (b ? "true" : "false");
-  m_scope = INSTANCE;
-  return (*this);
+VarBase& VarBase::operator=(bool b) {
+	m_have_bool = true;
+	m_have_int = false;
+	m_have_double = false;
+	m_have_string = true;
+	m_val_bool = b;
+	m_val_int = 0;
+	m_val_double = 0.0;
+	m_val = (b ? "true" : "false");
+	m_scope = INSTANCE;
+	return (*this);
 }
 
-VarBase& VarBase::operator=(int i)
-{
-  m_have_bool = false; m_have_int = true;
-  m_have_double = false; m_have_string = true;
-  m_val_bool = false; m_val_int = i;
-  m_val_double = 0.0;
-  m_val = std::to_string(i);
-  m_scope = INSTANCE;
-  return (*this);
+VarBase& VarBase::operator=(int i) {
+	m_have_bool = false;
+	m_have_int = true;
+	m_have_double = false;
+	m_have_string = true;
+	m_val_bool = false;
+	m_val_int = i;
+	m_val_double = 0.0;
+	m_val = std::to_string(i);
+	m_scope = INSTANCE;
+	return (*this);
 }
 
-VarBase& VarBase::operator=(double d)
-{
-  m_have_bool = false; m_have_int = false;
-  m_have_double = true; m_have_string = true;
-  m_val_bool = false; m_val_int = 0;
-  m_val_double = d;
-  m_val = std::to_string(d);
-  m_scope = INSTANCE;
-  return (*this);
+VarBase& VarBase::operator=(double d) {
+	m_have_bool = false;
+	m_have_int = false;
+	m_have_double = true;
+	m_have_string = true;
+	m_val_bool = false;
+	m_val_int = 0;
+	m_val_double = d;
+	m_val = std::to_string(d);
+	m_scope = INSTANCE;
+	return (*this);
 }
 
-VarBase& VarBase::operator=(const std::string& s)
-{
-  m_have_bool = false; m_have_int = false;
-  m_have_double = false; m_have_string = true;
-  m_val_bool = false; m_val_int = 0;
-  m_val_double = 0.0; m_val = s;
-  m_scope = INSTANCE;
-  return (*this);
+VarBase& VarBase::operator=(const std::string& s) {
+	m_have_bool = false;
+	m_have_int = false;
+	m_have_double = false;
+	m_have_string = true;
+	m_val_bool = false;
+	m_val_int = 0;
+	m_val_double = 0.0;
+	m_val = s;
+	m_scope = INSTANCE;
+	return (*this);
 }
 
-VarBase& VarBase::operator=(const char* s)
-{
-  m_have_bool = false; m_have_int = false;
-  m_have_double = false; m_have_string = true;
-  m_val_bool = false; m_val_int = 0;
-  m_val_double = 0.0; m_val = s;
-  m_scope = INSTANCE;
-  return (*this);
+VarBase& VarBase::operator=(const char* s) {
+	m_have_bool = false;
+	m_have_int = false;
+	m_have_double = false;
+	m_have_string = true;
+	m_val_bool = false;
+	m_val_int = 0;
+	m_val_double = 0.0;
+	m_val = s;
+	m_scope = INSTANCE;
+	return (*this);
 }
 
-VarBase::operator bool() const
-{
-  if (!m_have_bool) {
-	m_val_bool = (m_val == "on") ||
-			(m_val == "1") ||
-			(m_val == "true") ||
-			(m_val =="yes") ||
-			(m_val == "y");
-    m_have_bool = true;
-  }
-  return m_val_bool;
+VarBase::operator bool() const {
+	if (!m_have_bool) {
+		m_val_bool = (m_val == "on") ||
+					 (m_val == "1") ||
+					 (m_val == "true") ||
+					 (m_val == "yes") ||
+					 (m_val == "y");
+		m_have_bool = true;
+	}
+	return m_val_bool;
 }
 
-VarBase::operator int() const
-{
-  if (!m_have_int) {
-    m_val_int = std::stoi(m_val);
-    m_have_int = true;
-  }
-  return m_val_int;
+VarBase::operator int() const {
+	if (!m_have_int) {
+		m_val_int = std::stoi(m_val);
+		m_have_int = true;
+	}
+	return m_val_int;
 }
 
-VarBase::operator double() const
-{
-  if (!m_have_double) {
-    m_val_double = std::stod(m_val);
-    m_have_double = true;
-  }
-  return m_val_double;
+VarBase::operator double() const {
+	if (!m_have_double) {
+		m_val_double = std::stod(m_val);
+		m_have_double = true;
+	}
+	return m_val_double;
 }
 
-VarBase::operator std::string() const
-{
-  return m_val;
+VarBase::operator std::string() const {
+	return m_val;
 }
 
-bool VarBase::is_bool()
-{
-  if (!is_string()) return false;
+bool VarBase::is_bool() {
+	if (!is_string()) return false;
 	return (m_val == "on") || (m_val == "off")
 		   || (m_val == "1") || (m_val == "0")
 		   || (m_val == "true") || (m_val == "false")
@@ -218,79 +219,68 @@ bool VarBase::is_bool()
 		   || (m_val == "y") || (m_val == "n");
 }
 
-bool VarBase::is_int()
-{
-  if (!is_string()) return false;
-  for (char i : m_val) if (!isdigit(i))
-    return false;
-  return true;
+bool VarBase::is_int() {
+	if (!is_string()) return false;
+	for (char i: m_val)
+		if (!isdigit(i))
+			return false;
+	return true;
 }
 
-bool VarBase::is_double()
-{
-  if (!is_string()) return false;
+bool VarBase::is_double() {
+	if (!is_string()) return false;
 
-  char* p;
+	char* p;
 
-  // strtod() points p to the first character
-  // in the string that doesn't look like
-  // part of a double
-  strtod(m_val.c_str(), &p); //-V530
+	// strtod() points p to the first character
+	// in the string that doesn't look like
+	// part of a double
+	strtod(m_val.c_str(), &p); //-V530
 
-  return p == m_val.c_str() + m_val.size();
+	return p == m_val.c_str() + m_val.size();
 }
 
-bool VarBase::is_string()
-{
-  return m_have_string;
+bool VarBase::is_string() {
+	return m_have_string;
 }
 
-Variable::Variable (const Variable& c) : VarPtr( static_cast<const VarPtr&>(c))
-{
+Variable::Variable(const Variable& c) : VarPtr(static_cast<const VarPtr&>(c)) {
 
 }
-
-
 
 
 Variable::~Variable() = default;
 
-Variable& Variable::operator=( const Variable& c) = default;
+Variable& Variable::operator=(const Variable& c) = default;
 
-Variable& Variable::operator=( VarBase* vb)
-{
-  VarPtr::operator=(vb);
-  return *this;
+Variable& Variable::operator=(VarBase* vb) {
+	VarPtr::operator=(vb);
+	return *this;
 }
 
-Variable& Variable::operator=( const bool b)
-{
-  VarPtr::operator=(new VarBase(b));
-  return *this;
+Variable& Variable::operator=(const bool b) {
+	VarPtr::operator=(new VarBase(b));
+	return *this;
 }
 
-Variable& Variable::operator=( const int i)
-{
-  VarPtr::operator=(new VarBase(i));
-  return *this;
+Variable& Variable::operator=(const int i) {
+	VarPtr::operator=(new VarBase(i));
+	return *this;
 }
 
-Variable& Variable::operator=( const double d)
-{
-  VarPtr::operator=(new VarBase(d));
-  return *this;
+Variable& Variable::operator=(const double d) {
+	VarPtr::operator=(new VarBase(d));
+	return *this;
 }
 
-Variable& Variable::operator=( const std::string& s)
-{
-  VarPtr::operator=(new VarBase(s));
-  return *this;
+Variable& Variable::operator=(const std::string& s) {
+	VarPtr::operator=(new VarBase(s));
+	return *this;
 }
 
-Variable& Variable::operator=( const char* s)
-{
-  VarPtr::operator=(new VarBase(s));
-  return *this;
+Variable& Variable::operator=(const char* s) {
+	VarPtr::operator=(new VarBase(s));
+	return *this;
 }
 
 } // namespace varconf

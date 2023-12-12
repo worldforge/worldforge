@@ -27,10 +27,11 @@
 #include <memory>
 #include <OgreRoot.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Model {
 class ModelMount;
+
 class ModelBoneProvider;
 }
 namespace Gui {
@@ -72,7 +73,7 @@ public:
 	/**
 	 * @brief Dtor.
 	 */
-	~ModelAttachPointHelper() ;
+	~ModelAttachPointHelper();
 
 	//Ogre::Quaternion getOrientation() const ;
 
@@ -135,7 +136,7 @@ public:
 protected:
 	SimpleRenderContext& mRenderContext;
 	std::function<void(Ogre::Quaternion)> mRotateCallback;
-	 std::function<void()> mStopCallback;
+	std::function<void()> mStopCallback;
 };
 
 /**
@@ -149,7 +150,7 @@ public:
 	 * @param modelDefinition The model definition for the currently edited model.
 	 * @param renderContext The render context which contains the model.
 	 */
-	TranslateMouseMover2( SimpleRenderContext& renderContext,std::function<void(const Ogre::Vector3&)> translateCallback, std::function<void()> stopCallback);
+	TranslateMouseMover2(SimpleRenderContext& renderContext, std::function<void(const Ogre::Vector3&)> translateCallback, std::function<void()> stopCallback);
 
 	void injectMouseMove(const MouseMotion& motion, bool& freezeMouse) override;
 
@@ -158,7 +159,7 @@ public:
 private:
 	SimpleRenderContext& mRenderContext;
 	std::function<void(const Ogre::Vector3&)> mTranslateCallback;
-	 std::function<void()> mStopCallback;
+	std::function<void()> mStopCallback;
 };
 
 
@@ -276,5 +277,5 @@ private:
 
 }
 }
-}
+
 #endif /* MODELEDITHELPER_H_ */

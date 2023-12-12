@@ -23,8 +23,8 @@
 #include "OgreUtils.h"
 #include <OgreMesh.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * Returns the name of the submesh at the specified index.
@@ -32,19 +32,18 @@ namespace OgreView {
  * @param subMeshIndex
  * @return
  */
-const std::string& OgreUtils::getSubMeshName(Ogre::Mesh* mesh, unsigned int subMeshIndex)
-{
+const std::string& OgreUtils::getSubMeshName(Ogre::Mesh* mesh, unsigned int subMeshIndex) {
 	if (mesh) {
-		for(Ogre::Mesh::SubMeshNameMap::const_iterator I = mesh->getSubMeshNameMap().begin(); I != mesh->getSubMeshNameMap().end(); ++I) {
-			if (subMeshIndex == I->second) {
-				return I->first;
+		for (const auto & I : mesh->getSubMeshNameMap()) {
+			if (subMeshIndex == I.second) {
+				return I.first;
 			}
 		}
 	}
-	static const std::string noneFound("");
+	static const std::string noneFound;
 	return noneFound;
 }
 
 
 }
-}
+

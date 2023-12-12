@@ -27,13 +27,12 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        TerrainContext * tc = new TerrainContext;
-        delete tc;
-    }
-    return 0;
+int main() {
+	{
+		TerrainContext* tc = new TerrainContext;
+		delete tc;
+	}
+	return 0;
 }
 
 // stubs

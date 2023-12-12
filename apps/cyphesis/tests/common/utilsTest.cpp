@@ -27,25 +27,24 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        std::vector<std::string> res;
-        tokenize("foobarbaz", res);
-        assert(res.size() == 1);
-    }
+int main() {
+	{
+		std::vector<std::string> res;
+		tokenize("foobarbaz", res);
+		assert(res.size() == 1);
+	}
 
-    {
-        std::vector<std::string> res;
-        tokenize("foo bar baz", res);
-        assert(res.size() == 3);
-    }
+	{
+		std::vector<std::string> res;
+		tokenize("foo bar baz", res);
+		assert(res.size() == 3);
+	}
 
-    {
-        std::vector<std::string> res;
-        tokenize("foo:bar:baz", res, ":");
-        assert(res.size() == 3);
-    }
+	{
+		std::vector<std::string> res;
+		tokenize("foo:bar:baz", res, ":");
+		assert(res.size() == 3);
+	}
 
-    return 0;
+	return 0;
 }

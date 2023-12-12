@@ -23,16 +23,13 @@
 #include <Eris/ActiveMarker.h>
 #include "components/ogre/OgreIncludes.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class ListHolder;
 
-namespace Adapters {
 
-namespace Ogre {
+namespace Adapters::Ogre {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -84,10 +81,8 @@ private:
 };
 
 }
-}
-}
-}
 
 }
+
 
 #endif /* RESOURCELISTADAPTER_H_ */

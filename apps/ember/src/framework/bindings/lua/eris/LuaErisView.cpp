@@ -23,7 +23,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<View>(sol::table& space) {
 	auto view = space.new_usertype<View>("View", sol::no_constructor);
 	view["getAvatar"] = &View::getAvatar;

@@ -32,32 +32,27 @@
 #include <memory>
 
 /// \brief Class to handle decoding Atlas encoded database records
-class Decoder : public Atlas::Message::DecoderBase
-{
-    private:
-        void messageArrived(Atlas::Message::MapType msg) override
-        {
-            m_check = true;
-            m_msg = std::move(msg);
-        }
+class Decoder : public Atlas::Message::DecoderBase {
+private:
+	void messageArrived(Atlas::Message::MapType msg) override {
+		m_check = true;
+		m_msg = std::move(msg);
+	}
 
-        bool m_check;
-        Atlas::Message::MapType m_msg;
-    public:
-        Decoder() : m_check(false)
-        {
-        }
+	bool m_check;
+	Atlas::Message::MapType m_msg;
+public:
+	Decoder() : m_check(false) {
+	}
 
-        bool check() const
-        {
-            return m_check;
-        }
+	bool check() const {
+		return m_check;
+	}
 
-        const Atlas::Message::MapType& get()
-        {
-            m_check = false;
-            return m_msg;
-        }
+	const Atlas::Message::MapType& get() {
+		m_check = false;
+		return m_msg;
+	}
 };
 //
 ///// \brief Class to handle decoding Atlas encoded database records
@@ -97,149 +92,146 @@ typedef std::set<std::string> TableSet;
 ///
 /// Most SQL is generated from here, including queries for handling all
 /// table creation, queries to simple non-inherited tables and more
-class Database : public Singleton<Database>
-{
-    protected:
+class Database : public Singleton<Database> {
+protected:
 
-        bool m_queryInProgress;
+	bool m_queryInProgress;
 
-        Decoder m_d;
+	Decoder m_d;
 
-    public:
-        typedef enum
-        {
-            OneToMany, ManyToMany, ManyToOne, OneToOne
-        } RelationType;
+public:
+	typedef enum {
+		OneToMany, ManyToMany, ManyToOne, OneToOne
+	} RelationType;
 
-        typedef std::map<std::string, std::string> KeyValues;
+	typedef std::map<std::string, std::string> KeyValues;
 
-        Database();
+	Database();
 
-        ~Database() override;
+	~Database() override;
 
-        bool queryInProgress() const
-        { return m_queryInProgress; }
+	bool queryInProgress() const { return m_queryInProgress; }
 
-        virtual size_t queryQueueSize() const = 0;
+	virtual size_t queryQueueSize() const = 0;
 
-        int decodeMessage(const std::string& data,
-                          Atlas::Message::MapType&);
+	int decodeMessage(const std::string& data,
+					  Atlas::Message::MapType&);
 
-        virtual int encodeObject(const Atlas::Message::MapType&,
-                                 std::string&) = 0;
+	virtual int encodeObject(const Atlas::Message::MapType&,
+							 std::string&) = 0;
 
-        virtual int getObject(const std::string& table,
-                              const std::string& key,
-                              Atlas::Message::MapType&) = 0;
+	virtual int getObject(const std::string& table,
+						  const std::string& key,
+						  Atlas::Message::MapType&) = 0;
 
-        virtual int connect(const std::string& context, std::string& error_msg) = 0;
+	virtual int connect(const std::string& context, std::string& error_msg) = 0;
 
-        virtual int initConnection() = 0;
+	virtual int initConnection() = 0;
 
-        int createInstanceDatabase();
+	int createInstanceDatabase();
 
-        virtual void shutdownConnection() = 0;
+	virtual void shutdownConnection() = 0;
 
-        virtual DatabaseResult runSimpleSelectQuery(const std::string& query) = 0;
+	virtual DatabaseResult runSimpleSelectQuery(const std::string& query) = 0;
 
-        virtual int runCommandQuery(const std::string& query) = 0;
+	virtual int runCommandQuery(const std::string& query) = 0;
 
-        // Interface for relations between tables.
+	// Interface for relations between tables.
 
-        virtual int registerRelation(std::string& tablename,
-                                     const std::string& sourcetable,
-                                     const std::string& targettable,
-                                     RelationType kind) = 0;
+	virtual int registerRelation(std::string& tablename,
+								 const std::string& sourcetable,
+								 const std::string& targettable,
+								 RelationType kind) = 0;
 
-        DatabaseResult selectRelation(const std::string& name,
-                                      const std::string& id);
+	DatabaseResult selectRelation(const std::string& name,
+								  const std::string& id);
 
-        int createRelationRow(const std::string& name,
-                              const std::string& id,
-                              const std::string& other);
+	int createRelationRow(const std::string& name,
+						  const std::string& id,
+						  const std::string& other);
 
-        int removeRelationRowByOther(const std::string& name,
-                                     const std::string& other);
+	int removeRelationRowByOther(const std::string& name,
+								 const std::string& other);
 
-        // Interface for simple tables that mainly just store Atlasish data.
+	// Interface for simple tables that mainly just store Atlasish data.
 
-        virtual int registerSimpleTable(const std::string& name,
-                                        const Atlas::Message::MapType& row) = 0;
+	virtual int registerSimpleTable(const std::string& name,
+									const Atlas::Message::MapType& row) = 0;
 
-        DatabaseResult selectSimpleRowBy(const std::string& name,
-                                         const std::string& column,
-                                         const std::string& value);
+	DatabaseResult selectSimpleRowBy(const std::string& name,
+									 const std::string& column,
+									 const std::string& value);
 
-        int createSimpleRow(const std::string& name,
-                            const std::string& id,
-                            const std::string& columns,
-                            const std::string& values);
+	int createSimpleRow(const std::string& name,
+						const std::string& id,
+						const std::string& columns,
+						const std::string& values);
 
-        int updateSimpleRow(const std::string& name,
-                            const std::string& key,
-                            const std::string& value,
-                            const std::string& columns);
+	int updateSimpleRow(const std::string& name,
+						const std::string& key,
+						const std::string& value,
+						const std::string& columns);
 
-        // Interface for the ID generation sequence.
+	// Interface for the ID generation sequence.
 
-        virtual int registerEntityIdGenerator() = 0;
+	virtual int registerEntityIdGenerator() = 0;
 
-        /// Creates a new unique id for the database.
-        /// Note that this method will access the database, so it's a fairly expensive method.
-        virtual long newId() = 0;
+	/// Creates a new unique id for the database.
+	/// Note that this method will access the database, so it's a fairly expensive method.
+	virtual long newId() = 0;
 
-        // Interface for Entity and Property tables.
+	// Interface for Entity and Property tables.
 
-        virtual int registerEntityTable(const std::map<std::string, int>& chunks) = 0;
+	virtual int registerEntityTable(const std::map<std::string, int>& chunks) = 0;
 
-        int insertEntity(const std::string& id,
-                         const std::string& loc,
-                         const std::string& type,
-                         int seq,
-                         const std::string& value);
+	int insertEntity(const std::string& id,
+					 const std::string& loc,
+					 const std::string& type,
+					 int seq,
+					 const std::string& value);
 
-        int updateEntityWithoutLoc(const std::string& id,
-                                   int seq,
-                                   const std::string& location_data);
+	int updateEntityWithoutLoc(const std::string& id,
+							   int seq,
+							   const std::string& location_data);
 
-        int updateEntity(const std::string& id,
-                         int seq,
-                         const std::string& location_data,
-                         const std::string& location_entity_id);
+	int updateEntity(const std::string& id,
+					 int seq,
+					 const std::string& location_data,
+					 const std::string& location_entity_id);
 
-        DatabaseResult selectEntities(const std::string& loc);
+	DatabaseResult selectEntities(const std::string& loc);
 
-        int dropEntity(long id);
+	int dropEntity(long id);
 
-        virtual int registerPropertyTable() = 0;
+	virtual int registerPropertyTable() = 0;
 
-        int insertProperties(const std::string& id,
-                             const KeyValues& tuples);
+	int insertProperties(const std::string& id,
+						 const KeyValues& tuples);
 
-        DatabaseResult selectProperties(const std::string& loc);
+	DatabaseResult selectProperties(const std::string& loc);
 
-        int updateProperties(const std::string& id,
-                             const KeyValues& tuples);
+	int updateProperties(const std::string& id,
+						 const KeyValues& tuples);
 
-        virtual int registerThoughtsTable() = 0;
+	virtual int registerThoughtsTable() = 0;
 
-        DatabaseResult selectThoughts(const std::string& loc);
+	DatabaseResult selectThoughts(const std::string& loc);
 
-        int replaceThoughts(const std::string& id,
-                            const std::vector<std::string>& thoughts);
+	int replaceThoughts(const std::string& id,
+						const std::vector<std::string>& thoughts);
 
-        // Interface for CommPSQLSocket, so it can give us feedback
+	// Interface for CommPSQLSocket, so it can give us feedback
 
-        virtual int launchNewQuery() = 0;
+	virtual int launchNewQuery() = 0;
 
-        virtual int clearPendingQuery() = 0;
+	virtual int clearPendingQuery() = 0;
 
-        /**
-         * Blocks the current thread until all queries have completed.
-         */
-        virtual void blockUntilAllQueriesComplete() = 0;
+	/**
+	 * Blocks the current thread until all queries have completed.
+	 */
+	virtual void blockUntilAllQueriesComplete() = 0;
 
-        virtual int scheduleCommand(const std::string& query) = 0;
+	virtual int scheduleCommand(const std::string& query) = 0;
 
 
 };
@@ -249,123 +241,109 @@ class Database : public Singleton<Database>
 ///
 /// This allows the result to be used in the upper layers in a database
 /// independant way.
-class DatabaseResult
-{
-    public:
-        struct DatabaseResultWorker;
-    private:
+class DatabaseResult {
+public:
+	struct DatabaseResultWorker;
+private:
 
-        std::unique_ptr<DatabaseResultWorker> m_worker;
+	std::unique_ptr<DatabaseResultWorker> m_worker;
 
 
-    public:
-        DatabaseResult(DatabaseResult&& dr) noexcept;
+public:
+	DatabaseResult(DatabaseResult&& dr) noexcept;
 
-        explicit DatabaseResult(std::unique_ptr<DatabaseResultWorker>&& worker)
-            : m_worker(std::move(worker))
-        {
+	explicit DatabaseResult(std::unique_ptr<DatabaseResultWorker>&& worker)
+			: m_worker(std::move(worker)) {
 
-        }
+	}
 
-        struct const_iterator_worker
-        {
+	struct const_iterator_worker {
 
-            virtual ~const_iterator_worker() = default;
+		virtual ~const_iterator_worker() = default;
 
-            virtual const char* column(int column) const = 0;
+		virtual const char* column(int column) const = 0;
 
-            virtual const char* column(const char* column) const = 0;
+		virtual const char* column(const char* column) const = 0;
 
-            virtual const_iterator_worker& operator++() = 0;
+		virtual const_iterator_worker& operator++() = 0;
 
-            virtual bool operator==(const const_iterator_worker& other) const noexcept = 0;
-            bool operator!=(const const_iterator_worker& other) const noexcept { return !operator==(other);}
-        };
+		virtual bool operator==(const const_iterator_worker& other) const noexcept = 0;
 
-        /// \brief Iterator for DatabaseResult
-        ///
-        /// Mimics STL iterator API
-        class const_iterator
-        {
-            private:
-                std::unique_ptr<const_iterator_worker> m_worker;
-                const DatabaseResultWorker& m_dr;
+		bool operator!=(const const_iterator_worker& other) const noexcept { return !operator==(other); }
+	};
 
-            public:
-                explicit const_iterator(std::unique_ptr<const_iterator_worker>&& worker, const DatabaseResultWorker& dr);
+	/// \brief Iterator for DatabaseResult
+	///
+	/// Mimics STL iterator API
+	class const_iterator {
+	private:
+		std::unique_ptr<const_iterator_worker> m_worker;
+		const DatabaseResultWorker& m_dr;
 
-                const_iterator(const_iterator&& ci) noexcept;
+	public:
+		explicit const_iterator(std::unique_ptr<const_iterator_worker>&& worker, const DatabaseResultWorker& dr);
 
-                bool operator==(const const_iterator& other) const
-                {
-                    return (*m_worker == *other.m_worker);
-                }
+		const_iterator(const_iterator&& ci) noexcept;
 
-                bool operator!=(const const_iterator& other) const
-                {
-                    return !(*this == other);
-                }
+		bool operator==(const const_iterator& other) const {
+			return (*m_worker == *other.m_worker);
+		}
 
-                const_iterator& operator++();
+		bool operator!=(const const_iterator& other) const {
+			return !(*this == other);
+		}
 
-                const char* column(int column) const
-                {
-                    return m_worker->column(column);
-                }
+		const_iterator& operator++();
 
-                const char* column(const char* column) const
-                {
-                    return m_worker->column(column);
-                }
+		const char* column(int column) const {
+			return m_worker->column(column);
+		}
 
-                friend class DatabaseResult;
-        };
+		const char* column(const char* column) const {
+			return m_worker->column(column);
+		}
 
-        struct DatabaseResultWorker
-        {
-            virtual ~DatabaseResultWorker() = default;
+		friend class DatabaseResult;
+	};
 
-            virtual int size() const = 0;
+	struct DatabaseResultWorker {
+		virtual ~DatabaseResultWorker() = default;
 
-            virtual int columns() const = 0;
+		virtual int size() const = 0;
 
-            virtual bool error() const = 0;
+		virtual int columns() const = 0;
 
-            virtual const_iterator begin() const = 0;
+		virtual bool error() const = 0;
 
-            virtual const_iterator end() const = 0;
+		virtual const_iterator begin() const = 0;
 
-        };
+		virtual const_iterator end() const = 0;
 
-        int size() const
-        {
-            return m_worker->size();
-        }
+	};
 
-        bool empty() const
-        {
-            return (size() == 0);
-        }
+	int size() const {
+		return m_worker->size();
+	}
 
-        int columns() const
-        {
-            return m_worker->columns();
-        }
+	bool empty() const {
+		return (size() == 0);
+	}
 
-        bool error() const
-        {
-            return m_worker->error();
-        }
+	int columns() const {
+		return m_worker->columns();
+	}
 
-        const_iterator begin() const
-        {
-            return m_worker->begin();
-        }
+	bool error() const {
+		return m_worker->error();
+	}
 
-        const_iterator end() const
-        {
-            return m_worker->end();
-        }
+	const_iterator begin() const {
+		return m_worker->begin();
+	}
+
+	const_iterator end() const {
+		return m_worker->end();
+	}
 
 };
 

@@ -26,12 +26,8 @@
 #include "framework/Log.h"
 #include "components/ogre/GUIManager.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 IconImageStoreEntry::IconImageStoreEntry(IconImageStore& iconImageStore, PixelPos pixelPosInImageset)
 		: mImage(nullptr),
@@ -125,7 +121,7 @@ IconImageStore::IconImageStore(std::string imagesetName)
 /**
 Constructor for when we already have a texture of the whole icon.
 */
-IconImageStore::IconImageStore(const std::string& imagesetName, Ogre::TexturePtr texPtr)
+IconImageStore::IconImageStore(const std::string& imagesetName, const Ogre::TexturePtr& texPtr)
 		: mImagesetName(imagesetName),
 		  mTexPtr(texPtr),
 		//mImageDataStream(nullptr),
@@ -135,7 +131,7 @@ IconImageStore::IconImageStore(const std::string& imagesetName, Ogre::TexturePtr
 
 	//we'll assume that height and width are the same
 	mImageSize = mTexPtr->getWidth();
-	mIconSize = (int)mImageSize;
+	mIconSize = (int) mImageSize;
 
 	//this will only create one entry
 	createEntries();
@@ -217,7 +213,7 @@ void IconImageStore::returnImageEntry(IconImageStoreEntry* imageEntry) {
 
 }
 
-}
 
-}
-}
+
+
+

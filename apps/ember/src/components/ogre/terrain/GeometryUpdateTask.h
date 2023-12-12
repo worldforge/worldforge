@@ -25,10 +25,8 @@
 #include <wfmath/vector.h>
 #include <set>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 class TerrainPage;
 
 class TerrainHandler;
@@ -68,8 +66,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* GEOMETRYUPDATETASK_H_ */

@@ -20,31 +20,31 @@
 #include "components/entitymapping/Matches/EntityRefMatch.h"
 #include "EntityBaseCase.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+namespace Ember::EntityMapping::Cases {
 
 /**
 	A case that is a child of an EntityRefMatch.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class EntityRefCase : public Case<Matches::EntityRefMatch>, public EntityBaseCase
-{
+class EntityRefCase : public Case<Matches::EntityRefMatch>, public EntityBaseCase {
 public:
 	EntityRefCase() = default;
+
 	~EntityRefCase() override = default;
+
 protected:
 	void _setState(bool state) override;
 };
 
 }
 
-}
 
-}
+
+
 
 #endif

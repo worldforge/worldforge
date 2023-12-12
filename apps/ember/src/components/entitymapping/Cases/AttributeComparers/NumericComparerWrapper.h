@@ -26,14 +26,14 @@
 #include <memory>
 #include "AttributeComparerWrapper.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 struct NumericComparer;
 
@@ -54,10 +54,10 @@ private:
 
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

@@ -18,17 +18,14 @@
 
 #include "TinyXmlCodec.h"
 
-namespace Ember
-{
+namespace Ember {
 
-class AtlasXmlVisitor: public TiXmlVisitor
-{
+class AtlasXmlVisitor : public TiXmlVisitor {
 protected:
 	TiXmlNode& mRootNode;
 	Atlas::Bridge& mBridge;
 
-	enum State
-	{
+	enum State {
 		PARSE_NOTHING, PARSE_STREAM, PARSE_MAP, PARSE_LIST, PARSE_INT, PARSE_FLOAT, PARSE_STRING
 	};
 
@@ -40,224 +37,213 @@ protected:
 public:
 
 	AtlasXmlVisitor(TiXmlNode& doc, Atlas::Bridge& bridge) :
-			mRootNode(doc), mBridge(bridge)
-	{
+			mRootNode(doc), mBridge(bridge) {
 		mState.push(PARSE_NOTHING);
 	}
 
 	~AtlasXmlVisitor() override = default;
 
-	bool VisitEnter(const TiXmlElement& element, const TiXmlAttribute* firstAttribute) override
-	{
+	bool VisitEnter(const TiXmlElement& element, const TiXmlAttribute* firstAttribute) override {
 		const std::string& tag = element.ValueStr();
 		switch (mState.top()) {
-		case PARSE_NOTHING:
-			if (tag == "atlas") {
-				mBridge.streamBegin();
-				mState.push(PARSE_STREAM);
-			} else {
+			case PARSE_NOTHING:
+				if (tag == "atlas") {
+					mBridge.streamBegin();
+					mState.push(PARSE_STREAM);
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
+
+			case PARSE_STREAM:
+				if (tag == "map") {
+					mBridge.streamMessage();
+					mState.push(PARSE_MAP);
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
+
+			case PARSE_MAP: {
+				const std::string* name = element.Attribute(std::string("name"));
+				mName = *name;
+				if (tag == "map") {
+					mBridge.mapMapItem(*name);
+					mState.push(PARSE_MAP);
+				} else if (tag == "list") {
+					mBridge.mapListItem(*name);
+					mState.push(PARSE_LIST);
+				} else if (tag == "int") {
+					mState.push(PARSE_INT);
+				} else if (tag == "float") {
+					mState.push(PARSE_FLOAT);
+				} else if (tag == "string") {
+					mState.push(PARSE_STRING);
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+			}
+				break;
+
+			case PARSE_LIST:
+				if (tag == "map") {
+					mBridge.listMapItem();
+					mState.push(PARSE_MAP);
+				} else if (tag == "list") {
+					mBridge.listListItem();
+					mState.push(PARSE_LIST);
+				} else if (tag == "int") {
+					mState.push(PARSE_INT);
+				} else if (tag == "float") {
+					mState.push(PARSE_FLOAT);
+				} else if (tag == "string") {
+					mState.push(PARSE_STRING);
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
+
+			case PARSE_INT:
+			case PARSE_FLOAT:
+			case PARSE_STRING:
 				// FIXME signal error here
 				// unexpected tag
-			}
-			break;
-
-		case PARSE_STREAM:
-			if (tag == "map") {
-				mBridge.streamMessage();
-				mState.push(PARSE_MAP);
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
-
-		case PARSE_MAP:
-		{
-			const std::string* name = element.Attribute(std::string("name"));
-			mName = *name;
-			if (tag == "map") {
-				mBridge.mapMapItem(*name);
-				mState.push(PARSE_MAP);
-			} else if (tag == "list") {
-				mBridge.mapListItem(*name);
-				mState.push(PARSE_LIST);
-			} else if (tag == "int") {
-				mState.push(PARSE_INT);
-			} else if (tag == "float") {
-				mState.push(PARSE_FLOAT);
-			} else if (tag == "string") {
-				mState.push(PARSE_STRING);
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-		}
-			break;
-
-		case PARSE_LIST:
-			if (tag == "map") {
-				mBridge.listMapItem();
-				mState.push(PARSE_MAP);
-			} else if (tag == "list") {
-				mBridge.listListItem();
-				mState.push(PARSE_LIST);
-			} else if (tag == "int") {
-				mState.push(PARSE_INT);
-			} else if (tag == "float") {
-				mState.push(PARSE_FLOAT);
-			} else if (tag == "string") {
-				mState.push(PARSE_STRING);
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
-
-		case PARSE_INT:
-		case PARSE_FLOAT:
-		case PARSE_STRING:
-			// FIXME signal error here
-			// unexpected tag
-			break;
+				break;
 		}
 		return true;
 	}
+
 	/// Visit an element.
-	bool VisitExit(const TiXmlElement& element) override
-	{
+	bool VisitExit(const TiXmlElement& element) override {
 		const std::string& tag = element.ValueStr();
 		switch (mState.top()) {
-		case PARSE_NOTHING:
-			// FIXME signal error here
-			// unexpected tag
-			break;
-
-		case PARSE_STREAM:
-			if (tag == "atlas") {
-				mBridge.streamEnd();
-				mState.pop();
-			} else {
+			case PARSE_NOTHING:
 				// FIXME signal error here
 				// unexpected tag
-			}
-			break;
+				break;
 
-		case PARSE_MAP:
-			if (tag == "map") {
-				mBridge.mapEnd();
-				mState.pop();
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
-
-		case PARSE_LIST:
-			if (tag == "list") {
-				mBridge.listEnd();
-				mState.pop();
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
-
-		case PARSE_INT:
-			if (tag == "int") {
-				mState.pop();
-				if (mState.top() == PARSE_MAP) {
-					mBridge.mapIntItem(mName, atol(mData.c_str()));
+			case PARSE_STREAM:
+				if (tag == "atlas") {
+					mBridge.streamEnd();
+					mState.pop();
 				} else {
-					mBridge.listIntItem(atol(mData.c_str()));
+					// FIXME signal error here
+					// unexpected tag
 				}
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
+				break;
 
-		case PARSE_FLOAT:
-			if (tag == "float") {
-				mState.pop();
-				if (mState.top() == PARSE_MAP) {
-					mBridge.mapFloatItem(mName, atof(mData.c_str()));
+			case PARSE_MAP:
+				if (tag == "map") {
+					mBridge.mapEnd();
+					mState.pop();
 				} else {
-					mBridge.listFloatItem(atof(mData.c_str()));
+					// FIXME signal error here
+					// unexpected tag
 				}
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
+				break;
 
-		case PARSE_STRING:
-			if (tag == "string") {
-				mState.pop();
-				if (mState.top() == PARSE_MAP) {
-					mBridge.mapStringItem(mName, mData);
+			case PARSE_LIST:
+				if (tag == "list") {
+					mBridge.listEnd();
+					mState.pop();
 				} else {
-					mBridge.listStringItem(mData);
+					// FIXME signal error here
+					// unexpected tag
 				}
-			} else {
-				// FIXME signal error here
-				// unexpected tag
-			}
-			break;
+				break;
+
+			case PARSE_INT:
+				if (tag == "int") {
+					mState.pop();
+					if (mState.top() == PARSE_MAP) {
+						mBridge.mapIntItem(mName, std::stoll(mData));
+					} else {
+						mBridge.listIntItem(std::stoll(mData));
+					}
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
+
+			case PARSE_FLOAT:
+				if (tag == "float") {
+					mState.pop();
+					if (mState.top() == PARSE_MAP) {
+						mBridge.mapFloatItem(mName, std::stod(mData));
+					} else {
+						mBridge.listFloatItem(std::stod(mData));
+					}
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
+
+			case PARSE_STRING:
+				if (tag == "string") {
+					mState.pop();
+					if (mState.top() == PARSE_MAP) {
+						mBridge.mapStringItem(mName, mData);
+					} else {
+						mBridge.listStringItem(mData);
+					}
+				} else {
+					// FIXME signal error here
+					// unexpected tag
+				}
+				break;
 		}
 
 		return true;
 	}
-	bool Visit(const TiXmlText& text) override
-	{
+
+	bool Visit(const TiXmlText& text) override {
 		mData = text.ValueStr();
 		return true;
 	}
 };
 
 TinyXmlCodec::TinyXmlCodec(TiXmlNode& rootElement, Atlas::Bridge& bridge) :
-		mRootNode(rootElement), mBridge(bridge), mCurrentNode(0)
-{
+		mRootNode(rootElement), mBridge(bridge), mCurrentNode(nullptr) {
 }
 
 TinyXmlCodec::~TinyXmlCodec() = default;
 
-void TinyXmlCodec::poll()
-{
+void TinyXmlCodec::poll() {
 	AtlasXmlVisitor visitor(mRootNode, mBridge);
 	mRootNode.Accept(&visitor);
 }
 
-void TinyXmlCodec::streamBegin()
-{
+void TinyXmlCodec::streamBegin() {
 	mCurrentNode = mRootNode.InsertEndChild(TiXmlElement("atlas"));
 }
 
-void TinyXmlCodec::streamEnd()
-{
+void TinyXmlCodec::streamEnd() {
 	mCurrentNode = nullptr;
 }
 
-void TinyXmlCodec::streamMessage()
-{
+void TinyXmlCodec::streamMessage() {
 	mCurrentNode = mCurrentNode->InsertEndChild(TiXmlElement("map"));
 }
 
-void TinyXmlCodec::mapMapItem(std::string name)
-{
+void TinyXmlCodec::mapMapItem(std::string name) {
 	TiXmlElement element("map");
 	element.SetAttribute("name", name);
 	mCurrentNode = mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::mapListItem(std::string name)
-{
+void TinyXmlCodec::mapListItem(std::string name) {
 	TiXmlElement element("list");
 	element.SetAttribute("name", name);
 	mCurrentNode = mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::mapIntItem(std::string name, Atlas::Message::IntType data)
-{
+void TinyXmlCodec::mapIntItem(std::string name, Atlas::Message::IntType data) {
 	std::stringstream ss;
 	ss << data;
 	TiXmlElement element("int");
@@ -266,8 +252,7 @@ void TinyXmlCodec::mapIntItem(std::string name, Atlas::Message::IntType data)
 	mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::mapFloatItem(std::string name, Atlas::Message::FloatType data)
-{
+void TinyXmlCodec::mapFloatItem(std::string name, Atlas::Message::FloatType data) {
 	std::stringstream ss;
 	ss << data;
 	TiXmlElement element("float");
@@ -276,8 +261,7 @@ void TinyXmlCodec::mapFloatItem(std::string name, Atlas::Message::FloatType data
 	mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::mapStringItem(std::string name, std::string data)
-{
+void TinyXmlCodec::mapStringItem(std::string name, std::string data) {
 	TiXmlElement element("string");
 	element.InsertEndChild(TiXmlText(data));
 	element.SetAttribute("name", name);
@@ -285,29 +269,25 @@ void TinyXmlCodec::mapStringItem(std::string name, std::string data)
 }
 
 void TinyXmlCodec::mapNoneItem(std::string name) {
-    TiXmlElement element("none");
-    element.SetAttribute("name", name);
-    mCurrentNode->InsertEndChild(element);
+	TiXmlElement element("none");
+	element.SetAttribute("name", name);
+	mCurrentNode->InsertEndChild(element);
 }
 
 
-void TinyXmlCodec::mapEnd()
-{
+void TinyXmlCodec::mapEnd() {
 	mCurrentNode = mCurrentNode->Parent();
 }
 
-void TinyXmlCodec::listMapItem()
-{
+void TinyXmlCodec::listMapItem() {
 	mCurrentNode = mCurrentNode->InsertEndChild(TiXmlElement("map"));
 }
 
-void TinyXmlCodec::listListItem()
-{
+void TinyXmlCodec::listListItem() {
 	mCurrentNode = mCurrentNode->InsertEndChild(TiXmlElement("list"));
 }
 
-void TinyXmlCodec::listIntItem(Atlas::Message::IntType data)
-{
+void TinyXmlCodec::listIntItem(Atlas::Message::IntType data) {
 	std::stringstream ss;
 	ss << data;
 	TiXmlElement element("int");
@@ -315,8 +295,7 @@ void TinyXmlCodec::listIntItem(Atlas::Message::IntType data)
 	mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::listFloatItem(Atlas::Message::FloatType data)
-{
+void TinyXmlCodec::listFloatItem(Atlas::Message::FloatType data) {
 	std::stringstream ss;
 	ss << data;
 	TiXmlElement element("float");
@@ -324,20 +303,18 @@ void TinyXmlCodec::listFloatItem(Atlas::Message::FloatType data)
 	mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::listStringItem(std::string data)
-{
+void TinyXmlCodec::listStringItem(std::string data) {
 	TiXmlElement element("string");
 	element.InsertEndChild(TiXmlText(data));
 	mCurrentNode->InsertEndChild(element);
 }
 
 void TinyXmlCodec::listNoneItem() {
-    TiXmlElement element("none");
-    mCurrentNode->InsertEndChild(element);
+	TiXmlElement element("none");
+	mCurrentNode->InsertEndChild(element);
 }
 
-void TinyXmlCodec::listEnd()
-{
+void TinyXmlCodec::listEnd() {
 	mCurrentNode = mCurrentNode->Parent();
 }
 }

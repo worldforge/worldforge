@@ -24,14 +24,14 @@
 #include "NumericComparer.h"
 #include <Eris/Entity.h>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 HeightComparerWrapper::HeightComparerWrapper(std::unique_ptr<NumericComparer> comparer, Eris::Entity& entity)
 		: mNumericComparer(std::move(comparer)), mEntity(entity) {
@@ -44,8 +44,8 @@ bool HeightComparerWrapper::testAttribute(const Atlas::Message::Element&) {
 
 }
 
-}
 
-}
 
-}
+
+
+

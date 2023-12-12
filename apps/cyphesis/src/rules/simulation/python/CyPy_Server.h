@@ -22,22 +22,23 @@
 #include "pycxx/CXX/Extensions.hxx"
 
 class BaseWorld;
+
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Server : public Py::ExtensionModule<CyPy_Server>
-{
-    public:
-        CyPy_Server();
+class CyPy_Server : public Py::ExtensionModule<CyPy_Server> {
+public:
+	CyPy_Server();
 
-        static void registerWorld(BaseWorld* world);
+	static void registerWorld(BaseWorld* world);
 
-        static std::string init();
+	static std::string init();
 
-    private:
+private:
 
-        Py::Object get_alias_entity(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Server, get_alias_entity);
+	Py::Object get_alias_entity(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Server, get_alias_entity);
 
 };
 

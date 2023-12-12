@@ -21,24 +21,19 @@
 
 #include <OgreTexture.h>
 
-namespace CEGUI
-{
-class OgreCEGUITexture;
+namespace CEGUI {
+
 class Image;
+
 class Texture;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Gui
-{
+namespace Ember::OgreView::Gui {
 
-struct TexturePair
-{
+struct TexturePair {
 	TexturePair(const Ogre::TexturePtr& _ogreTexture, const CEGUI::Image* _textureImage);
+
 	TexturePair();
 
 	bool hasData() const;
@@ -49,8 +44,5 @@ struct TexturePair
 
 }
 
-}
-
-}
 
 #endif /* TEXTUREPAIR_H_ */

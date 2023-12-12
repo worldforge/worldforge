@@ -39,7 +39,7 @@ class Variable;
 }
 
 namespace Ogre {
-class SceneManagerFactory;
+
 class MeshLodGenerator;
 }
 
@@ -66,7 +66,7 @@ public:
 	 * Creates the Ogre base system.
 	 * @return The new Ogre Root object.
 	 */
-	void createOgreSystem();
+	static void createOgreSystem();
 
 	/**
 	 * @brief Configures the application - returns false if the user chooses to abandon configuration.
@@ -144,7 +144,7 @@ private:
 	 */
 	void setStandardValues();
 
-	void parseWindowGeometry(const Ogre::ConfigOptionMap& config, unsigned int& width, unsigned int& height, bool& fullscreen);
+	static void parseWindowGeometry(const Ogre::ConfigOptionMap& config, unsigned int& width, unsigned int& height, bool& fullscreen);
 
 	void input_SizeChanged(unsigned int width, unsigned int height);
 

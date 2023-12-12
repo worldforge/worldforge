@@ -27,10 +27,8 @@
 #include "components/ogre/EntityCollisionInfo.h"
 #include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 EntityCreatorMovementBridge::EntityCreatorMovementBridge(EntityCreatorCreationInstance& creationInstance,
 														 Authoring::DetachedEntity* entity,
@@ -51,7 +49,7 @@ void EntityCreatorMovementBridge::cancelMovement() {
 
 void EntityCreatorMovementBridge::processPickResults(const std::vector<PickResult>& results) {
 	if (mEntity) {
-		for (auto& result : results) {
+		for (auto& result: results) {
 			if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
 				auto& entityCollisionInfo = boost::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
 				//It's a valid entry if it's not transparent and not the entity which is being moved itself.
@@ -73,5 +71,5 @@ void EntityCreatorMovementBridge::processPickResults(const std::vector<PickResul
 
 }
 
-}
-}
+
+

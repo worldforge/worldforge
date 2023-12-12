@@ -18,8 +18,8 @@
  http://www.gnu.org/copyleft/lesser.txt.
  */
 
-#ifndef __EmberOgre_H__
-#define __EmberOgre_H__
+#ifndef EmberOgre_H
+#define EmberOgre_H
 
 #include "EmberOgrePrerequisites.h"
 
@@ -40,16 +40,6 @@ class View;
 class Connection;
 
 class Entity;
-}
-
-namespace Carpenter {
-class Carpenter;
-
-class BluePrint;
-}
-
-namespace OgreOpcode {
-class CollisionManager;
 }
 
 /**
@@ -113,7 +103,6 @@ class MaterialEditor;
 class EntityRecipeManager;
 
 }
-
 
 
 class ConsoleDevTools;

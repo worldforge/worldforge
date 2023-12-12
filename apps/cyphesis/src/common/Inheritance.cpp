@@ -49,173 +49,159 @@ using Atlas::Objects::Operation::Error;
 using Atlas::Objects::Operation::Use;
 using Atlas::Objects::Operation::Wield;
 
-Root atlasOpDefinition(const std::string& name, const std::string& parent)
-{
-    Atlas::Objects::Entity::Anonymous r;
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(parent);
-    r->setObjtype("op_definition");
-    r->setId(name);
+	r->setParent(parent);
+	r->setObjtype("op_definition");
+	r->setId(name);
 
-    return r;
+	return r;
 }
 
-Root atlasClass(const std::string& name, const std::string& parent)
-{
-    Atlas::Objects::Entity::Anonymous r;
+Root atlasClass(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(parent);
-    r->setObjtype("class");
-    r->setId(name);
+	r->setParent(parent);
+	r->setObjtype("class");
+	r->setId(name);
 
-    return r;
+	return r;
 }
 
 Root atlasType(const std::string& name,
-               const std::string& parent,
-               bool abstract)
-{
-    Atlas::Objects::Entity::Anonymous r;
+			   const std::string& parent,
+			   bool abstract) {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(parent);
-    r->setObjtype(abstract ? "data_type" : "type");
-    r->setId(name);
+	r->setParent(parent);
+	r->setObjtype(abstract ? "data_type" : "type");
+	r->setId(name);
 
-    return r;
+	return r;
 }
 
 Inheritance::Inheritance(Atlas::Objects::Factories& factories)
-    : noClass(nullptr),
-      m_factories(factories)
-{
-    Atlas::Objects::Entity::Anonymous root_desc;
+		: noClass(nullptr),
+		  m_factories(factories) {
+	Atlas::Objects::Entity::Anonymous root_desc;
 
-    root_desc->setObjtype("meta");
-    root_desc->setId(Atlas::Objects::RootData::default_parent);
+	root_desc->setObjtype("meta");
+	root_desc->setId(Atlas::Objects::RootData::default_parent);
 
-    auto root = std::make_unique<TypeNode>(root_desc->getId(), root_desc);
+	auto root = std::make_unique<TypeNode>(root_desc->getId(), root_desc);
 
-    atlasObjects.emplace("root", std::move(root));
+	atlasObjects.emplace("root", std::move(root));
 
-    installStandardObjects(*this);
-    installCustomOperations(*this);
-    installCustomEntities(*this);
+	installStandardObjects(*this);
+	installCustomOperations(*this);
+	installCustomEntities(*this);
 }
 
 
-Inheritance::~Inheritance()
-{
-    flush();
+Inheritance::~Inheritance() {
+	flush();
 }
 
-void Inheritance::flush()
-{
-    atlasObjects.clear();
+void Inheritance::flush() {
+	atlasObjects.clear();
 }
 
-const Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return noClass;
-    }
-    return I->second->description(visibility);
+const Root& Inheritance::getClass(const std::string& parent, Visibility visibility) const {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return noClass;
+	}
+	return I->second->description(visibility);
 }
 
 int Inheritance::updateClass(const std::string& parent,
-                             const Root& description)
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return -1;
-    }
-    auto& tn = I->second;
-    if (tn->description(Visibility::PRIVATE)->getParent() != description->getParent()) {
-        return -1;
-    }
-    tn->setDescription(description);
-    return 0;
+							 const Root& description) {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return -1;
+	}
+	auto& tn = I->second;
+	if (tn->description(Visibility::PRIVATE)->getParent() != description->getParent()) {
+		return -1;
+	}
+	tn->setDescription(description);
+	return 0;
 }
 
-const TypeNode* Inheritance::getType(const std::string& parent) const
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return nullptr;
-    }
-    return I->second.get();
+const TypeNode* Inheritance::getType(const std::string& parent) const {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return nullptr;
+	}
+	return I->second.get();
 }
 
-bool Inheritance::hasClass(const std::string& parent)
-{
-    auto I = atlasObjects.find(parent);
-    return !(I == atlasObjects.end());
+bool Inheritance::hasClass(const std::string& parent) {
+	auto I = atlasObjects.find(parent);
+	return !(I == atlasObjects.end());
 }
 
-TypeNode* Inheritance::addChild(const Root& obj)
-{
-    assert(obj.isValid() && !obj->getParent().empty());
-    const std::string& child = obj->getId();
-    const std::string& parent = obj->getParent();
-    auto I = atlasObjects.find(child);
-    auto Iend = atlasObjects.end();
-    if (I != Iend) {
+TypeNode* Inheritance::addChild(const Root& obj) {
+	assert(obj.isValid() && !obj->getParent().empty());
+	const std::string& child = obj->getId();
+	const std::string& parent = obj->getParent();
+	auto I = atlasObjects.find(child);
+	auto Iend = atlasObjects.end();
+	if (I != Iend) {
 
-        const TypeNode* existingParent = I->second->parent();
-        spdlog::error("Installing {} \"{}\"(parent \"{}\") "
-                                   "which was already installed as a {} with parent \"{}\"",
-                                   obj->getObjtype(), child, parent,
-                                   I->second->description(Visibility::PRIVATE)->getObjtype(),
-                                   existingParent ? existingParent->name() : "NON");
-        return nullptr;
-    }
-    I = atlasObjects.find(parent);
-    if (I == Iend) {
-        spdlog::error("Installing {} \"{}\" "
-                                   "which has unknown parent \"{}\".",
-                                   obj->getObjtype(), child, parent);
-        return nullptr;
-    }
-    Element children(ListType(1, child));
+		const TypeNode* existingParent = I->second->parent();
+		spdlog::error("Installing {} \"{}\"(parent \"{}\") "
+					  "which was already installed as a {} with parent \"{}\"",
+					  obj->getObjtype(), child, parent,
+					  I->second->description(Visibility::PRIVATE)->getObjtype(),
+					  existingParent ? existingParent->name() : "NON");
+		return nullptr;
+	}
+	I = atlasObjects.find(parent);
+	if (I == Iend) {
+		spdlog::error("Installing {} \"{}\" "
+					  "which has unknown parent \"{}\".",
+					  obj->getObjtype(), child, parent);
+		return nullptr;
+	}
+	Element children(ListType(1, child));
 
-    auto description = I->second->description(Visibility::PRIVATE);
+	auto description = I->second->description(Visibility::PRIVATE);
 
-    if (description->copyAttr("children", children) == 0) {
-        assert(children.isList());
-        children.asList().emplace_back(child);
-    }
-    description->setAttr("children", children);
-    I->second->setDescription(description);
+	if (description->copyAttr("children", children) == 0) {
+		assert(children.isList());
+		children.asList().emplace_back(child);
+	}
+	description->setAttr("children", children);
+	I->second->setDescription(description);
 
-    auto type = std::make_unique<TypeNode>(child, obj);
-    type->setParent(I->second.get());
+	auto type = std::make_unique<TypeNode>(child, obj);
+	type->setParent(I->second.get());
 
-    auto result = atlasObjects.emplace(child, std::move(type));
+	auto result = atlasObjects.emplace(child, std::move(type));
 
-    return result.first->second.get();
+	return result.first->second.get();
 }
 
 bool Inheritance::isTypeOf(const std::string& instance,
-                           const std::string& base_type) const
-{
-    auto I = atlasObjects.find(instance);
-    auto Iend = atlasObjects.end();
-    if (I == Iend) {
-        return false;
-    }
-    return I->second->isTypeOf(base_type);
+						   const std::string& base_type) const {
+	auto I = atlasObjects.find(instance);
+	auto Iend = atlasObjects.end();
+	if (I == Iend) {
+		return false;
+	}
+	return I->second->isTypeOf(base_type);
 }
 
 bool Inheritance::isTypeOf(const TypeNode* instance,
-                           const std::string& base_type) const
-{
-    return instance->isTypeOf(base_type);
+						   const std::string& base_type) const {
+	return instance->isTypeOf(base_type);
 }
 
 bool Inheritance::isTypeOf(const TypeNode* instance,
-                           const TypeNode* base_type) const
-{
-    return instance->isTypeOf(base_type);
+						   const TypeNode* base_type) const {
+	return instance->isTypeOf(base_type);
 }
 
 using Atlas::Objects::Operation::RootOperation;
@@ -233,74 +219,72 @@ using Atlas::Objects::Entity::Game;
 using Atlas::Objects::Entity::GameEntity;
 
 template<typename T>
-Atlas::Objects::Root atlasObjDefinition()
-{
-    Atlas::Objects::Entity::Anonymous r;
+Atlas::Objects::Root atlasObjDefinition() {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(T::super_parent);
-    r->setObjtype(std::string(T::default_objtype) == "op" ? "op_definition" : "class");
-    r->setId(T::default_parent);
+	r->setParent(T::super_parent);
+	r->setObjtype(std::string(T::default_objtype) == "op" ? "op_definition" : "class");
+	r->setId(T::default_parent);
 
-    return r;
+	return r;
 }
 
 
-void installStandardObjects(TypeStore& i)
-{
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::RootOperationData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ActionData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::CreateData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::DeleteData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::InfoData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SetData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::GetData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::PerceptionData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ErrorData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::CommunicateData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::MoveData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::AffectData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::PerceiveData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LoginData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LogoutData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SightData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SoundData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SmellData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::FeelData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ImaginaryData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::TalkData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LookData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ListenData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SniffData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::TouchData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::AppearanceData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::DisappearanceData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::UseData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::WieldData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::HitData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ChangeData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::UnseenData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ActivityData>());
+void installStandardObjects(TypeStore& i) {
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::RootOperationData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ActionData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::CreateData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::DeleteData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::InfoData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SetData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::GetData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::PerceptionData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ErrorData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::CommunicateData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::MoveData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::AffectData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::PerceiveData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LoginData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LogoutData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SightData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SoundData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SmellData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::FeelData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ImaginaryData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::TalkData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::LookData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ListenData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::SniffData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::TouchData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::AppearanceData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::DisappearanceData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::UseData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::WieldData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::HitData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ChangeData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::UnseenData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Operation::ActivityData>());
 
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::RootEntityData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AdminEntityData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AccountData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::PlayerData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AdminData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameData>());
-    i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameEntityData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::RootEntityData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AdminEntityData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AccountData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::PlayerData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AdminData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameEntityData>());
 
-    //We should now have just as many types registered as there are standard types in Atlas.
-    auto typeCount = i.getTypeCount();
-    auto anonymousTypeCount = 2; //Anonymous and Generic shouldn't be included
-    auto atlasTypeCount = i.getFactories().getKeys().size() - anonymousTypeCount;
-    if (typeCount != atlasTypeCount) {
-        spdlog::error("There are {} Atlas types, but there are only {} types registered in Cyphesis.", atlasTypeCount, typeCount);
-    }
+	//We should now have just as many types registered as there are standard types in Atlas.
+	auto typeCount = i.getTypeCount();
+	auto anonymousTypeCount = 2; //Anonymous and Generic shouldn't be included
+	auto atlasTypeCount = i.getFactories().getKeys().size() - anonymousTypeCount;
+	if (typeCount != atlasTypeCount) {
+		spdlog::error("There are {} Atlas types, but there are only {} types registered in Cyphesis.", atlasTypeCount, typeCount);
+	}
 
 
-    i.addChild(atlasClass("root_type", "root"));
+	i.addChild(atlasClass("root_type", "root"));
 
-    // And from here on we need to define the hierarchy as found in the C++
-    // base classes. Script classes defined in rulesets need to be added
-    // at runtime.
+	// And from here on we need to define the hierarchy as found in the C++
+	// base classes. Script classes defined in rulesets need to be added
+	// at runtime.
 }

@@ -18,16 +18,15 @@
 
 #include "EntityConsoleEditor.h"
 
-#include "services/EmberServices.h"
 #include "framework/Tokeniser.h"
 #include <Eris/Avatar.h>
 #include <boost/algorithm/string.hpp>
 #include <components/ogre/Avatar.h>
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 EntityConsoleEditor::EntityConsoleEditor(Ember::OgreView::Avatar* avatar) :
 		SetProperty("set_property", this, "Sets a property on the avatar."),
@@ -76,5 +75,5 @@ void EntityConsoleEditor::runCommand(const std::string& command, const std::stri
 }
 
 }
-}
-}
+
+

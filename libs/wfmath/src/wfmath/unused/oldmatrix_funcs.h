@@ -30,329 +30,306 @@
 #include <wfmath/matrix.h>
 #include <wfmath/error.h>
 
-namespace WF { namespace Math {
+namespace WF {
+namespace Math {
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns>::Matrix(const Matrix<rows,columns>& m)
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] = m.m_elem[i][j];
+inline Matrix<rows, columns>::Matrix(const Matrix <rows, columns>& m) {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] = m.m_elem[i][j];
 }
 
 template<const int rows, const int columns>
-inline bool Matrix<rows,columns>::operator==(const Matrix<rows,columns>& m) const
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      if(m_elem[i][j] != m.m_elem[i][j])
-        return false;
+inline bool Matrix<rows, columns>::operator==(const Matrix <rows, columns>& m) const {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			if (m_elem[i][j] != m.m_elem[i][j])
+				return false;
 
-  return true;
+	return true;
 }
 
 template<const int rows, const int columns>
-bool Matrix<rows,columns>::operator< (const Matrix<rows,columns>& m) const
-{
-  for(int i = 0; i < rows; ++i) {
-    for(int j = 0; j < columns; ++j) {
-      if(m_elem[i][j] < m.m_elem[i][j])
-        return true;
-      if(m_elem[i][j] > m.m_elem[i][j])
-        return false;
-    }
-  }
+bool Matrix<rows, columns>::operator<(const Matrix <rows, columns>& m) const {
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < columns; ++j) {
+			if (m_elem[i][j] < m.m_elem[i][j])
+				return true;
+			if (m_elem[i][j] > m.m_elem[i][j])
+				return false;
+		}
+	}
 
-  return false;
+	return false;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns> Matrix<rows,columns>::operator+(const Matrix<rows,columns>& m) const
-{
-  Matrix<rows,columns> out;
+inline Matrix <rows, columns> Matrix<rows, columns>::operator+(const Matrix <rows, columns>& m) const {
+	Matrix <rows, columns> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = this->m_elem[i][j] + m.m_elem[i][j];
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = this->m_elem[i][j] + m.m_elem[i][j];
 
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns> Matrix<rows,columns>::operator-(const Matrix<rows,columns>& m) const
-{
-  Matrix<rows,columns> out;
+inline Matrix <rows, columns> Matrix<rows, columns>::operator-(const Matrix <rows, columns>& m) const {
+	Matrix <rows, columns> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = m_elem[i][j] - m.m_elem[i][j];
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = m_elem[i][j] - m.m_elem[i][j];
 
-  return out;
-}
-
-template<const int rows, const int columns> template<const int i>
-inline Matrix<rows,i> Matrix<rows,columns>::operator*(const Matrix<columns, i>& m) const
-{
-  Matrix<columns, i> out;
-
-  for(int j = 0; j < rows; ++j) {
-    for(int k = 0; k < i; ++k) {
-      out.m_elem[j][k] = 0;
-      for(int l = 0; l < columns; ++l)
-        out.m_elem[j][k] += m_elem[j][l] * m.m_elem[l][k];
-    }
-  }
-
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-Matrix<rows,columns> Matrix<rows,columns>::operator*(const double& d) const
-{
-  Matrix<rows,columns> out;
+template<const int i>
+inline Matrix <rows, i> Matrix<rows, columns>::operator*(const Matrix <columns, i>& m) const {
+	Matrix <columns, i> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = m_elem[i][j] * d;
+	for (int j = 0; j < rows; ++j) {
+		for (int k = 0; k < i; ++k) {
+			out.m_elem[j][k] = 0;
+			for (int l = 0; l < columns; ++l)
+				out.m_elem[j][k] += m_elem[j][l] * m.m_elem[l][k];
+		}
+	}
 
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-Matrix<rows,columns> operator*(const double& d, const Matrix<rows,columns>& m)
-{
-  Matrix<rows,columns> out;
+Matrix <rows, columns> Matrix<rows, columns>::operator*(const double& d) const {
+	Matrix <rows, columns> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = m.m_elem[i][j] * d;
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = m_elem[i][j] * d;
 
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-Matrix<rows,columns> Matrix<rows,columns>::operator/(const double& d) const
-{
-  Matrix<rows,columns> out;
+Matrix <rows, columns> operator*(const double& d, const Matrix <rows, columns>& m) {
+	Matrix <rows, columns> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = m_elem[i][j] / d;
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = m.m_elem[i][j] * d;
 
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns> Matrix<rows,columns>::operator-() const // Unary minus
-{
-  Matrix<rows,columns> out;
+Matrix <rows, columns> Matrix<rows, columns>::operator/(const double& d) const {
+	Matrix <rows, columns> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = -m_elem[i][j];
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = m_elem[i][j] / d;
 
-  return out;
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns>& Matrix<rows,columns>::operator+=(const Matrix<rows,columns>& m)
+inline Matrix <rows, columns> Matrix<rows, columns>::operator-() const // Unary minus
 {
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] += m.m_elem[i][j];
+	Matrix <rows, columns> out;
 
-  return *this;
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = -m_elem[i][j];
+
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns>& Matrix<rows,columns>::operator-=(const Matrix<rows,columns>& m)
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] -= m.m_elem[i][j];
+inline Matrix <rows, columns>& Matrix<rows, columns>::operator+=(const Matrix <rows, columns>& m) {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] += m.m_elem[i][j];
 
-  return *this;
+	return *this;
 }
 
 template<const int rows, const int columns>
-Matrix<rows,columns>& Matrix<rows,columns>::operator*=(const double& d)
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] *= d;
+inline Matrix <rows, columns>& Matrix<rows, columns>::operator-=(const Matrix <rows, columns>& m) {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] -= m.m_elem[i][j];
 
-  return *this;
+	return *this;
 }
 
 template<const int rows, const int columns>
-Matrix<rows,columns>& Matrix<rows,columns>::operator/=(const double& d)
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] /= d;
+Matrix <rows, columns>& Matrix<rows, columns>::operator*=(const double& d) {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] *= d;
 
-  return *this;
+	return *this;
 }
 
 template<const int rows, const int columns>
-inline Vector<rows> Matrix<rows,columns>::operator*(const Vector<columns>& v) const
-{
-  Vector<rows> out;
+Matrix <rows, columns>& Matrix<rows, columns>::operator/=(const double& d) {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] /= d;
 
-  for(int i = 0; i < rows; ++i) {
-    out[i] = 0;
-    for(int j = 0; j < columns; ++j)
-      out[i] += m_elem[i][j] * v[j];
-  }
-
-  return out;
+	return *this;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns> OuterProduct(const Vector<rows>& v1, const Vector<columns>& v2)
-{
-  Matrix<rows,columns> out;
+inline Vector <rows> Matrix<rows, columns>::operator*(const Vector <columns>& v) const {
+	Vector <rows> out;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      out.m_elem[i][j] = v1[i] * v2[j];
+	for (int i = 0; i < rows; ++i) {
+		out[i] = 0;
+		for (int j = 0; j < columns; ++j)
+			out[i] += m_elem[i][j] * v[j];
+	}
+
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Vector<columns> Matrix<rows,columns>::row(const int i) const
-{
-  Vector<columns> out;
+inline Matrix <rows, columns> OuterProduct(const Vector <rows>& v1, const Vector <columns>& v2) {
+	Matrix <rows, columns> out;
 
-  for(int j = 0; j < columns; ++j)
-    out[j] = m_elem[i][j];
-
-  return out;
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			out.m_elem[i][j] = v1[i] * v2[j];
 }
 
 template<const int rows, const int columns>
-void Matrix<rows,columns>::setRow(const int i, const Vector<columns>& v)
-{
-  for(int j = 0; j < columns; ++j)
-    m_elem[i][j] = v[j];
+inline Vector <columns> Matrix<rows, columns>::row(const int i) const {
+	Vector <columns> out;
+
+	for (int j = 0; j < columns; ++j)
+		out[j] = m_elem[i][j];
+
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Vector<rows> Matrix<rows,columns>::column(const int i) const
-{
-  Vector<columns> out;
-
-  for(int j = 0; j < rows; ++j)
-    out[j] = m_elem[j][i];
-
-  return out;
+void Matrix<rows, columns>::setRow(const int i, const Vector <columns>& v) {
+	for (int j = 0; j < columns; ++j)
+		m_elem[i][j] = v[j];
 }
 
 template<const int rows, const int columns>
-void Matrix<rows,columns>::setColumn(const int i, const Vector<rows>& v)
-{
-  for(int j = 0; j < rows; ++j)
-    m_elem[j][i] = v[j];
+inline Vector <rows> Matrix<rows, columns>::column(const int i) const {
+	Vector <columns> out;
+
+	for (int j = 0; j < rows; ++j)
+		out[j] = m_elem[j][i];
+
+	return out;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns>& Matrix<rows,columns>::zero()
-{
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m_elem[i][j] = 0;
-
-  return *this;
+void Matrix<rows, columns>::setColumn(const int i, const Vector <rows>& v) {
+	for (int j = 0; j < rows; ++j)
+		m_elem[j][i] = v[j];
 }
 
 template<const int rows, const int columns>
-inline Matrix<columns,rows> Matrix<rows,columns>::transpose() const
-{
-  Matrix<columns,rows> m;
+inline Matrix <rows, columns>& Matrix<rows, columns>::zero() {
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m_elem[i][j] = 0;
 
-  for(int i = 0; i < rows; ++i)
-    for(int j = 0; j < columns; ++j)
-      m.m_elem[j][i] = m_elem[i][j];
-
-  return m;
+	return *this;
 }
 
 template<const int rows, const int columns>
-inline Matrix<rows,columns>& Matrix<rows,columns>::identity()
-{
-  Vector<rows> v;
+inline Matrix <columns, rows> Matrix<rows, columns>::transpose() const {
+	Matrix <columns, rows> m;
 
-  for(int i = 0; i < rows; ++i)
-    v[i] = 1;
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < columns; ++j)
+			m.m_elem[j][i] = m_elem[i][j];
 
-  this->diagonal(v);
+	return m;
+}
 
-  return *this;
+template<const int rows, const int columns>
+inline Matrix <rows, columns>& Matrix<rows, columns>::identity() {
+	Vector <rows> v;
+
+	for (int i = 0; i < rows; ++i)
+		v[i] = 1;
+
+	this->diagonal(v);
+
+	return *this;
 }
 
 template<const int size>
-inline Matrix<size> DiagonalMatrix(const Vector<size>& v)
-{
-  Matrix<size> out;
+inline Matrix <size> DiagonalMatrix(const Vector <size>& v) {
+	Matrix <size> out;
 
-  out.zero();
+	out.zero();
 
-  for(int i = 0; i < size; ++i)
-    out.m_elem[i][i] = v[i];
+	for (int i = 0; i < size; ++i)
+		out.m_elem[i][i] = v[i];
 
-  return out;
+	return out;
 }
 
 template<const int size>
-inline double Trace(const Matrix<size>& m)
-{
-  double out = 0;
+inline double Trace(const Matrix <size>& m) {
+	double out = 0;
 
-  for(int i = 0; i < size; ++i)
-    out += m.m_elem[i][i];
+	for (int i = 0; i < size; ++i)
+		out += m.m_elem[i][i];
 
-  return out;
+	return out;
 }
 
 double _MatrixDeterminantImpl(const int size, double* m);
 
 template<const int size>
-inline double Determinant(const Matrix<size>& m)
-{
-  double mtmp[size*size]; // Scratch space
+inline double Determinant(const Matrix <size>& m) {
+	double mtmp[size * size]; // Scratch space
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      mtmp[i*size+j] = m.elem(i, j);
+	for (int i = 0; i < size; ++i)
+		for (int j = 0; j < size; ++j)
+			mtmp[i * size + j] = m.elem(i, j);
 
-  return _MatrixDeterminantImpl(size, mtmp);
+	return _MatrixDeterminantImpl(size, mtmp);
 }
 
 int _MatrixInverseImpl(const int size, double* in, double* out);
 
 template<const int size>
-inline Matrix<size> Inverse(const Matrix<size>& m)
-{
-  double in[size*size], out[size*size]; // Scratch space
+inline Matrix <size> Inverse(const Matrix <size>& m) {
+	double in[size * size], out[size * size]; // Scratch space
 
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
-      in[i*size+j] = m.elem(i, j);
-      out[i*size+j] = (i == j) ? 1 : 0;
-    }
-  }
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j < size; ++j) {
+			in[i * size + j] = m.elem(i, j);
+			out[i * size + j] = (i == j) ? 1 : 0;
+		}
+	}
 
-  if(_MatrixInverseImpl(size, in, out) != 0)
-    throw DegenerateMatrix<size>(m);
+	if (_MatrixInverseImpl(size, in, out) != 0)
+		throw DegenerateMatrix<size>(m);
 
-  Matrix<size> mout;
+	Matrix <size> mout;
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      mout.elem(i, j) = out[i*size+j];
+	for (int i = 0; i < size; ++i)
+		for (int j = 0; j < size; ++j)
+			mout.elem(i, j) = out[i * size + j];
 
-  return mout;
+	return mout;
 }
 
-}} // namespace WF::Math
+}
+} // namespace WF::Math
 
 #endif // WFMATH_MATRIX_FUNCS_H

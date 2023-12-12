@@ -19,36 +19,31 @@
 #include "AuthoringMoverConnector.h"
 #include "AuthoringManager.h"
 #include "EntityMoveManager.h"
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+
+namespace Ember::OgreView::Authoring {
 AuthoringMoverConnector::AuthoringMoverConnector(AuthoringManager& authoringManager, EntityMoveManager& moveManager) :
-	mAuthoringManager(authoringManager),
-	mMoveManager(moveManager)
-{
+		mAuthoringManager(authoringManager),
+		mMoveManager(moveManager) {
 	mMoveManager.EventStartMoving.connect(sigc::mem_fun(*this, &AuthoringMoverConnector::moveManager_StartMoving));
 	mMoveManager.EventFinishedMoving.connect(sigc::mem_fun(*this, &AuthoringMoverConnector::moveManager_FinishedMoving));
 	mMoveManager.EventCancelledMoving.connect(sigc::mem_fun(*this, &AuthoringMoverConnector::moveManager_CancelledMoving));
 }
 
-void AuthoringMoverConnector::moveManager_StartMoving(EmberEntity& entity, EntityMover& mover)
-{
+void AuthoringMoverConnector::moveManager_StartMoving(EmberEntity& entity, EntityMover& mover) {
 	mAuthoringManager.startMovement(entity, mover);
 }
 
-void AuthoringMoverConnector::moveManager_FinishedMoving()
-{
+void AuthoringMoverConnector::moveManager_FinishedMoving() {
 	mAuthoringManager.stopMovement();
 }
-void AuthoringMoverConnector::moveManager_CancelledMoving()
-{
+
+void AuthoringMoverConnector::moveManager_CancelledMoving() {
 	mAuthoringManager.stopMovement();
 }
 
 }
-}
-}
+
+

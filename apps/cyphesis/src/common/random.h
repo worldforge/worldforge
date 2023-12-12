@@ -21,18 +21,16 @@
 
 #include <cstdlib>
 
-static inline int randint(int min, int max)
-{
-    if (max == min) {
-        return min;
-    } else {
-        return ::rand() % (max - min) + min;
-    }
+static inline int randint(int min, int max) {
+	if (max == min) {
+		return min;
+	} else {
+		return ::rand() % (max - min) + min;
+	}
 }
 
-static inline float uniform(float min, float max)
-{
-    return ((float)::rand() / RAND_MAX) * (max - min) + min;
+static inline float uniform(float min, float max) {
+	return ((float) ::rand() / RAND_MAX) * (max - min) + min;
 }
 
 #endif // COMMON_RANDOM_H

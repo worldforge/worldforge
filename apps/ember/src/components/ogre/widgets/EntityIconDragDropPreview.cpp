@@ -45,10 +45,9 @@
 using namespace Ember;
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
 
 
-namespace Gui {
+namespace OgreView::Gui {
 
 EntityIconDragDropPreview::EntityIconDragDropPreview(World& world) :
 		mWorld(world),
@@ -64,7 +63,8 @@ void EntityIconDragDropPreview::createPreview(EntityIcon* icon) {
 	if (!mModelPreviewWorker) {
 		if (icon && icon->getEntity()) {
 			mIconEntity = icon->getEntity();
-			Gui::HelpMessage message("Entity Drag Preview", "Release the left mouse button to place the entity at the selected location. Press Escape to cancel.", "entity icon drag drop preview", "dragDropMessage");
+			Gui::HelpMessage message("Entity Drag Preview", "Release the left mouse button to place the entity at the selected location. Press Escape to cancel.", "entity icon drag drop preview",
+									 "dragDropMessage");
 			Gui::QuickHelp::getSingleton().updateText(message);
 			mModelPreviewWorker = std::make_unique<ModelPreviewWorker>(mWorld, *mIconEntity);
 			mModelPreviewWorker->EventCleanupCreation.connect(sigc::mem_fun(*this, &EntityIconDragDropPreview::cleanupCreation));
@@ -232,5 +232,5 @@ ModelPreviewWorkerMovement::~ModelPreviewWorkerMovement() {
 }
 
 }
-}
+
 }

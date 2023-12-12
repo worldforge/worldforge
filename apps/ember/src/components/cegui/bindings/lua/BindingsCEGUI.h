@@ -25,5 +25,4 @@
 void registerBindingsCEGUI(sol::state_view& lua);
 
 
-
 #endif //EMBER_BINDINGSCEGUI_H

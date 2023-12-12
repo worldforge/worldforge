@@ -9,10 +9,8 @@
 #include "iround.h"
 
 #include "Segment.h"
-#include "Terrain.h"
 #include "TerrainMod.h"
 #include "Surface.h"
-#include "BasePoint.h"
 #include "Area.h"
 #include "Shader.h"
 
@@ -20,7 +18,6 @@
 
 #include <cmath>
 #include <cassert>
-#include <algorithm>
 
 namespace Mercator {
 
@@ -35,10 +32,9 @@ namespace Mercator {
 /// possible after construction. Similarly the control points should be
 /// set soon after construction.
 Segment::Segment(int x, int z, int resolution) :
-                            m_res(resolution), m_size(m_res+1),
-                            m_xRef(x), m_zRef(z),
-                            m_heightMap(resolution)
-{
+		m_res(resolution), m_size(m_res + 1),
+		m_xRef(x), m_zRef(z),
+		m_heightMap(resolution) {
 }
 
 /// \brief Destruct the Segment.
@@ -47,9 +43,8 @@ Segment::Segment(int x, int z, int resolution) :
 /// code, as Segment instances are owned by the Terrain object.
 /// Storage allocated for heightfield and surface normals is implicitly
 /// deleted as well as all surfaces.
-Segment::~Segment()
-{
-    clearMods();
+Segment::~Segment() {
+	clearMods();
 }
 
 /// \brief Populate the Segment with heightfield data.
@@ -59,18 +54,17 @@ Segment::~Segment()
 /// required modifications are applied.
 void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
-    m_heightMap.allocate();
-    populateHeightMap(m_heightMap);
+	m_heightMap.allocate();
+	populateHeightMap(m_heightMap);
 
-    for (auto& entry : m_terrainMods) {
-        applyMod(entry.second);
-    }
+	for (auto& entry: m_terrainMods) {
+		applyMod(entry.second);
+	}
 }
 
-void Segment::populateHeightMap(HeightMap& heightMap)
-{
-    heightMap.fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0),
-           m_controlPoints(1, 1), m_controlPoints(0, 1));
+void Segment::populateHeightMap(HeightMap& heightMap) {
+	heightMap.fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0),
+					 m_controlPoints(1, 1), m_controlPoints(0, 1));
 }
 
 
@@ -80,14 +74,13 @@ void Segment::populateHeightMap(HeightMap& heightMap)
 /// heightfield and surface normal data are no longer valid.
 /// If surface normal storage is deallocated, and if the points argument
 /// is true the heightfield storage is also deallocated.
-void Segment::invalidate(bool points)
-{
-    if (points) {
-        m_heightMap.invalidate();
-    }
-    m_normals = {};
+void Segment::invalidate(bool points) {
+	if (points) {
+		m_heightMap.invalidate();
+	}
+	m_normals = {};
 
-    invalidateSurfaces();
+	invalidateSurfaces();
 }
 
 /// \brief Mark surfaces as stale.
@@ -95,11 +88,10 @@ void Segment::invalidate(bool points)
 /// This is called internally from Segment::invalidate() when changes occur
 /// that mean the surface data is no longer valid. The Surface::invalidate()
 /// method is called for each surface.
-void Segment::invalidateSurfaces()
-{
-    for(auto& entry : m_surfaces) {
-        entry.second->invalidate();
-    }
+void Segment::invalidateSurfaces() {
+	for (auto& entry: m_surfaces) {
+		entry.second->invalidate();
+	}
 }
 
 /// \brief Populate the Segment with surface normal data.
@@ -108,104 +100,101 @@ void Segment::invalidateSurfaces()
 /// normal at each heightpoint is calculated. The middle normals are
 /// calculated first, followed by the boundaries which are done in
 /// 2 dimensions to ensure that there is no visible seam between segments.
-void Segment::populateNormals()
-{
-    assert(m_heightMap.isValid());
+void Segment::populateNormals() {
+	assert(m_heightMap.isValid());
 	assert(m_size != 0);
 	assert(m_res == m_size - 1);
 
-    if (m_normals.empty()) {
-        m_normals.reserve(m_size * m_size * 3);
-    }
+	if (m_normals.empty()) {
+		m_normals.reserve(m_size * m_size * 3);
+	}
 
-    auto * np = m_normals.data();
-    
-    // Fill in the damn normals
-    float h1,h2,h3,h4;
-    for (int j = 1; j < m_res; ++j) {
-        for (int i = 1; i < m_res; ++i) {
-           h1 = get(i - 1, j);
-           h2 = get(i, j + 1);
-           h3 = get(i + 1, j);
-           h4 = get(i, j - 1);
-           
-           // Caclulate the normal vector.
-           np[j * m_size * 3 + i * 3]     = (h1 - h3) / 2.f;
-           np[j * m_size * 3 + i * 3 + 1] = 1.0;
-           np[j * m_size * 3 + i * 3 + 2] = (h4 - h2) / 2.f;
-        }
-    }
+	auto* np = m_normals.data();
 
-    //edges have one axis pegged to 0
-    
-    //top and bottom boundary
-    for (int i=1; i < m_res; ++i) {
-        h1 = m_heightMap.get(i - 1, 0);
-        h2 = m_heightMap.get(i + 1, 0);
-        
-        np[i * 3]     = (h1 - h2) / 2.f;
-        np[i * 3 + 1] = 1.0;
-        np[i * 3 + 2] = 0.0;
- 
-        h1 = m_heightMap.get(i - 1, m_res);
-        h2 = m_heightMap.get(i + 1, m_res);
-        
-        np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
-        np[m_res * m_size * 3 + i * 3 + 1] = 1.0f;
-        np[m_res * m_size * 3 + i * 3 + 2] = 0.0f;
-    }
-    
-    //left and right boundary
-    for (int j=1; j < m_res; ++j) {
-        h1 = m_heightMap.get(0, j - 1);
-        h2 = m_heightMap.get(0, j + 1);
-        
-        np[j * m_size * 3]     = 0;
-        np[j * m_size * 3 + 1] = 1.f;
-        np[j * m_size * 3 + 2] = (h1 - h2) / 2.f;
- 
-        h1 = m_heightMap.get(m_res, j - 1);
-        h2 = m_heightMap.get(m_res, j + 1);
+	// Fill in the damn normals
+	float h1, h2, h3, h4;
+	for (int j = 1; j < m_res; ++j) {
+		for (int i = 1; i < m_res; ++i) {
+			h1 = get(i - 1, j);
+			h2 = get(i, j + 1);
+			h3 = get(i + 1, j);
+			h4 = get(i, j - 1);
 
-        np[j * m_size * 3 + m_res * 3]     = 0.f;
-        np[j * m_size * 3 + m_res * 3 + 1] = 1.f;
-        np[j * m_size * 3 + m_res * 3 + 2] = (h1 - h2) / 2.f;
-    }
+			// Caclulate the normal vector.
+			np[j * m_size * 3 + i * 3] = (h1 - h3) / 2.f;
+			np[j * m_size * 3 + i * 3 + 1] = 1.0;
+			np[j * m_size * 3 + i * 3 + 2] = (h4 - h2) / 2.f;
+		}
+	}
 
-    //corners - these are all treated as flat
-    //so the normal points straight up
-    np[0] = 0.f;
-    np[1] = 1.f;
-    np[2] = 0.f;
+	//edges have one axis pegged to 0
 
-    np[m_res * m_size * 3]     = 0.f;
-    np[m_res * m_size * 3 + 1] = 1.f;
-    np[m_res * m_size * 3 + 2] = 0.f;
+	//top and bottom boundary
+	for (int i = 1; i < m_res; ++i) {
+		h1 = m_heightMap.get(i - 1, 0);
+		h2 = m_heightMap.get(i + 1, 0);
 
-    np[m_res * 3]     = 0.f;
-    np[m_res * 3 + 1] = 1.f;
-    np[m_res * 3 + 2] = 0.f;
-    
-    np[m_res * m_size * 3 + m_res * 3]     = 0.f;
-    np[m_res * m_size * 3 + m_res * 3 + 1] = 1.f;
-    np[m_res * m_size * 3 + m_res * 3 + 2] = 0.f;
+		np[i * 3] = (h1 - h2) / 2.f;
+		np[i * 3 + 1] = 1.0;
+		np[i * 3 + 2] = 0.0;
+
+		h1 = m_heightMap.get(i - 1, m_res);
+		h2 = m_heightMap.get(i + 1, m_res);
+
+		np[m_res * m_size * 3 + i * 3] = (h1 - h2) / 2.f;
+		np[m_res * m_size * 3 + i * 3 + 1] = 1.0f;
+		np[m_res * m_size * 3 + i * 3 + 2] = 0.0f;
+	}
+
+	//left and right boundary
+	for (int j = 1; j < m_res; ++j) {
+		h1 = m_heightMap.get(0, j - 1);
+		h2 = m_heightMap.get(0, j + 1);
+
+		np[j * m_size * 3] = 0;
+		np[j * m_size * 3 + 1] = 1.f;
+		np[j * m_size * 3 + 2] = (h1 - h2) / 2.f;
+
+		h1 = m_heightMap.get(m_res, j - 1);
+		h2 = m_heightMap.get(m_res, j + 1);
+
+		np[j * m_size * 3 + m_res * 3] = 0.f;
+		np[j * m_size * 3 + m_res * 3 + 1] = 1.f;
+		np[j * m_size * 3 + m_res * 3 + 2] = (h1 - h2) / 2.f;
+	}
+
+	//corners - these are all treated as flat
+	//so the normal points straight up
+	np[0] = 0.f;
+	np[1] = 1.f;
+	np[2] = 0.f;
+
+	np[m_res * m_size * 3] = 0.f;
+	np[m_res * m_size * 3 + 1] = 1.f;
+	np[m_res * m_size * 3 + 2] = 0.f;
+
+	np[m_res * 3] = 0.f;
+	np[m_res * 3 + 1] = 1.f;
+	np[m_res * 3 + 2] = 0.f;
+
+	np[m_res * m_size * 3 + m_res * 3] = 0.f;
+	np[m_res * m_size * 3 + m_res * 3 + 1] = 1.f;
+	np[m_res * m_size * 3 + m_res * 3 + 2] = 0.f;
 }
 
 /// \brief Populate the surfaces associated with this Segment.
 ///
 /// Call Surface::populate() for each Surface in turn.
-void Segment::populateSurfaces()
-{
-    for (const auto& entry : m_surfaces) {
-        if (entry.second->m_shader.checkIntersect(*this)) {
-            entry.second->populate();
-        }
-    }
+void Segment::populateSurfaces() {
+	for (const auto& entry: m_surfaces) {
+		if (entry.second->m_shader.checkIntersect(*this)) {
+			entry.second->populate();
+		}
+	}
 }
 
-void Segment::getHeight(float x, float y, float &h) const
-{
-    m_heightMap.getHeight(x, y, h);
+void Segment::getHeight(float x, float y, float& h) const {
+	m_heightMap.getHeight(x, y, h);
 }
 
 /// \brief Get an accurate height and normal vector at a given coordinate
@@ -221,9 +210,8 @@ void Segment::getHeight(float x, float y, float &h) const
 /// triangle has relative vertex coordinates (0,0) (1,0) (1,1) and
 /// the second triangle has vertex coordinates (0,0) (0,1) (1,1).
 void Segment::getHeightAndNormal(float x, float z, float& h,
-                                 WFMath::Vector<3> &normal) const
-{
-    m_heightMap.getHeightAndNormal(x, z, h, normal);
+								 WFMath::Vector<3>& normal) const {
+	m_heightMap.getHeightAndNormal(x, z, h, normal);
 }
 
 /// \brief Determine the intersection between an axis aligned box and
@@ -235,48 +223,45 @@ void Segment::getHeightAndNormal(float x, float z, float& h,
 /// @param lz lower z coordinate of intersection area.
 /// @param hz upper z coordinate of intersection area.
 /// @return true if the box intersects with this Segment, false otherwise.
-bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
-                            int &lx, int &hx, int &lz, int &hz) const
-{
-    lx = I_ROUND(bbox.lowCorner()[0]); 
-    if (lx > m_res) return false;
-    if (lx < 0) lx = 0;
-    
-    hx = I_ROUND(bbox.highCorner()[0]); 
-    if (hx < 0) return false;
-    if (hx > m_res) hx = m_res;
-    
-    lz = I_ROUND(bbox.lowCorner()[1]);
-    if (lz > m_res) return false;
-    if (lz < 0) lz = 0;
-    
-    hz = I_ROUND(bbox.highCorner()[1]);
-    if (hz < 0) return false;
-    if (hz > m_res) hz = m_res;
+bool Segment::clipToSegment(const WFMath::AxisBox<2>& bbox,
+							int& lx, int& hx, int& lz, int& hz) const {
+	lx = I_ROUND(bbox.lowCorner()[0]);
+	if (lx > m_res) return false;
+	if (lx < 0) lx = 0;
 
-    return true;
+	hx = I_ROUND(bbox.highCorner()[0]);
+	if (hx < 0) return false;
+	if (hx > m_res) hx = m_res;
+
+	lz = I_ROUND(bbox.lowCorner()[1]);
+	if (lz > m_res) return false;
+	if (lz < 0) lz = 0;
+
+	hz = I_ROUND(bbox.highCorner()[1]);
+	if (hz < 0) return false;
+	if (hz > m_res) hz = m_res;
+
+	return true;
 }
 
-void Segment::updateMod(long id, const TerrainMod *t)
-{
-    if (t) {
-        m_terrainMods[id] = t;
-    } else {
-        m_terrainMods.erase(id);
-    }
-    invalidate();
+void Segment::updateMod(long id, const TerrainMod* t) {
+	if (t) {
+		m_terrainMods[id] = t;
+	} else {
+		m_terrainMods.erase(id);
+	}
+	invalidate();
 }
 
 /// \brief Delete all the modifications applied to this Segment.
 ///
 /// Usually called from the destructor. It is not normally necessary to call
 /// this function from the application.
-void Segment::clearMods() 
-{
-    if (!m_terrainMods.empty()) {
-        m_terrainMods.clear();
-        invalidate();
-    }
+void Segment::clearMods() {
+	if (!m_terrainMods.empty()) {
+		m_terrainMods.clear();
+		invalidate();
+	}
 }
 
 /// \brief Modify the heightfield data using the TerrainMod objects which
@@ -284,28 +269,26 @@ void Segment::clearMods()
 ///
 /// Usually called from Segment::populate(). It is not normally necessary to
 /// call this function from the application.
-void Segment::applyMod(const TerrainMod *t) 
-{
-    int lx,hx,lz,hz;
-    float* points = m_heightMap.getData();
-    WFMath::AxisBox<2> bbox=t->bbox();
-    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_zRef));
-    if (clipToSegment(bbox, lx, hx, lz, hz)) {
-        for (int i=lz; i<=hz; i++) {
-            for (int j=lx; j<=hx; j++) {
-                float& h = points[i * m_size + j];
-                t->apply(h, j + m_xRef, i + m_zRef);
-                m_heightMap.checkMaxMin(h);
-            }
-        }
-    }
+void Segment::applyMod(const TerrainMod* t) {
+	int lx, hx, lz, hz;
+	float* points = m_heightMap.getData();
+	WFMath::AxisBox<2> bbox = t->bbox();
+	bbox.shift(WFMath::Vector<2>(-m_xRef, -m_zRef));
+	if (clipToSegment(bbox, lx, hx, lz, hz)) {
+		for (int i = lz; i <= hz; i++) {
+			for (int j = lx; j <= hx; j++) {
+				float& h = points[i * m_size + j];
+				t->apply(h, j + m_xRef, i + m_zRef);
+				m_heightMap.checkMaxMin(h);
+			}
+		}
+	}
 
-    //currently mods dont fix the normals
-    invalidate(false);
+	//currently mods dont fix the normals
+	invalidate(false);
 }
 
-void Segment::updateArea(long id, const Area* area, const Shader* shader)
-{
+void Segment::updateArea(long id, const Area* area, const Shader* shader) {
 	auto areaLookupI = m_areaLookup.find(id);
 	if (areaLookupI != m_areaLookup.end()) {
 		auto& areaEntry = areaLookupI->second->second;
@@ -320,7 +303,7 @@ void Segment::updateArea(long id, const Area* area, const Shader* shader)
 	}
 
 
-    if (area) {
+	if (area) {
 		auto result = m_areas.emplace(area->getLayer(), AreaEntry{id, area});
 		m_areaLookup.emplace(id, result);
 		auto J = m_surfaces.find(area->getLayer());
@@ -334,11 +317,10 @@ void Segment::updateArea(long id, const Area* area, const Shader* shader)
 	}
 }
 
-WFMath::AxisBox<2> Segment::getRect() const
-{
-    WFMath::Point<2> lp(m_xRef, m_zRef),
-        hp(lp.x() + m_res, lp.y() + m_res);
-    return WFMath::AxisBox<2>(lp, hp);
+WFMath::AxisBox<2> Segment::getRect() const {
+	WFMath::Point<2> lp(m_xRef, m_zRef),
+			hp(lp.x() + m_res, lp.y() + m_res);
+	return {lp, hp};
 }
 
 } // namespace Mercator

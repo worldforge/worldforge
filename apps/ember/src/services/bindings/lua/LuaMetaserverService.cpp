@@ -22,7 +22,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<MetaserverService>(sol::table& space) {
 	auto metaServerService = space.new_usertype<MetaserverService>("MetaserverService", sol::no_constructor);
 	metaServerService["getMetaServer"] = &MetaserverService::getMetaServer;

@@ -30,12 +30,8 @@
 #include <OgreMeshManager.h>
 #include <OgreTextureManager.h>
 
-#include <OgreTechnique.h>
-
-#include <Eris/EventService.h>
 #include <framework/MainLoopController.h>
 #include <Ogre.h>
-#include <framework/TimedLog.h>
 
 namespace Ember::OgreView::Model {
 
@@ -56,7 +52,7 @@ ModelBackgroundLoader::ModelBackgroundLoader(ModelDefinition& modelDefinition) :
 }
 
 ModelBackgroundLoader::~ModelBackgroundLoader() {
-	for (auto& ticket : mTickets) {
+	for (auto& ticket: mTickets) {
 		Ogre::ResourceBackgroundQueue::getSingleton().abortRequest(ticket);
 	}
 }
@@ -84,7 +80,8 @@ void ModelBackgroundLoader::prepareMaterialInBackground(const std::string& mater
 			mMaterialsToLoad.insert(materialPtr);
 			if (!materialPtr->isPrepared() && !materialPtr->isLoading() && !materialPtr->isLoaded()) {
 				Ogre::ResourceBackgroundQueue& queue = Ogre::ResourceBackgroundQueue::getSingleton();
-				Ogre::BackgroundProcessTicket ticket = queue.prepare(Ogre::MaterialManager::getSingleton().getResourceType(), materialName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, false, nullptr, nullptr, &mListener);
+				Ogre::BackgroundProcessTicket ticket = queue.prepare(Ogre::MaterialManager::getSingleton().getResourceType(), materialName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+																	 false, nullptr, nullptr, &mListener);
 				if (ticket) {
 					addTicket(ticket);
 				}
@@ -99,16 +96,18 @@ bool ModelBackgroundLoader::performLoading() {
 //	TimedLog log("performLoading " + mModelDefinition.getName() + " state: " + std::to_string(mState));
 	if (mState == LS_UNINITIALIZED) {
 		//Start to load the meshes
-		for (auto& subModel : mModelDefinition.getSubModelDefinitions()) {
+		for (auto& subModel: mModelDefinition.getSubModelDefinitions()) {
 			Ogre::MeshPtr meshPtr = static_cast<Ogre::MeshPtr>(Ogre::MeshManager::getSingleton().getByName(subModel.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
 			if (!meshPtr || (!meshPtr->isPrepared() && !meshPtr->isLoading() && !meshPtr->isLoaded())) {
 				try {
-					Ogre::BackgroundProcessTicket ticket = Ogre::ResourceBackgroundQueue::getSingleton().prepare(Ogre::MeshManager::getSingleton().getResourceType(), subModel.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, false, nullptr, nullptr, &mListener);
+					Ogre::BackgroundProcessTicket ticket = Ogre::ResourceBackgroundQueue::getSingleton().prepare(Ogre::MeshManager::getSingleton().getResourceType(), subModel.meshName,
+																												 Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, false, nullptr, nullptr,
+																												 &mListener);
 					if (ticket) {
 						addTicket(ticket);
 					}
 				} catch (const std::exception& ex) {
-					logger->error("Could not load the mesh {} when loading model {}: {}",subModel.meshName,mModelDefinition.getOrigin(), ex.what());
+					logger->error("Could not load the mesh {} when loading model {}: {}", subModel.meshName, mModelDefinition.getOrigin(), ex.what());
 					continue;
 				}
 			}
@@ -125,7 +124,8 @@ bool ModelBackgroundLoader::performLoading() {
 		while (mSubModelLoadingIndex < submodelDefinitions.size()) {
 			auto submodelDef = submodelDefinitions.at(mSubModelLoadingIndex);
 			mSubModelLoadingIndex++;
-			Ogre::MeshPtr meshPtr = Ogre::static_pointer_cast<Ogre::Mesh>(Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
+			Ogre::MeshPtr meshPtr = Ogre::static_pointer_cast<Ogre::Mesh>(
+					Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
 			if (meshPtr) {
 				if (!meshPtr->isLoaded()) {
 #if OGRE_THREAD_SUPPORT == 1
@@ -137,7 +137,7 @@ bool ModelBackgroundLoader::performLoading() {
 #else
 					try {
 						meshPtr->load();
-						logger->debug("Loaded mesh in main thread: {} Memory used: {} Mb", meshPtr->getName(), ((float)(meshPtr->getSize()) / 1000000.f));
+						logger->debug("Loaded mesh in main thread: {} Memory used: {} Mb", meshPtr->getName(), ((float) (meshPtr->getSize()) / 1000000.f));
 					} catch (const std::exception& ex) {
 						logger->error("Could not load the mesh {} when loading model {}: {}", meshPtr->getName(), mModelDefinition.getOrigin(), ex.what());
 					}
@@ -155,19 +155,20 @@ bool ModelBackgroundLoader::performLoading() {
 		}
 	} else if (mState == LS_MESH_LOADED) {
 
-		for (auto& submodelDef : mModelDefinition.getSubModelDefinitions()) {
+		for (auto& submodelDef: mModelDefinition.getSubModelDefinitions()) {
 
-			Ogre::MeshPtr meshPtr = Ogre::static_pointer_cast<Ogre::Mesh>(Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
+			Ogre::MeshPtr meshPtr = Ogre::static_pointer_cast<Ogre::Mesh>(
+					Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME));
 			if (meshPtr) {
 				if (meshPtr->isLoaded()) {
-					for (auto submesh : meshPtr->getSubMeshes()) {
+					for (auto submesh: meshPtr->getSubMeshes()) {
 						prepareMaterialInBackground(submesh->getMaterialName());
 					}
 				}
 			}
-			for (auto& partDef : submodelDef.getPartDefinitions()) {
+			for (auto& partDef: submodelDef.getPartDefinitions()) {
 				if (!partDef.getSubEntityDefinitions().empty()) {
-					for (auto& subEntityDef : partDef.getSubEntityDefinitions()) {
+					for (auto& subEntityDef: partDef.getSubEntityDefinitions()) {
 						prepareMaterialInBackground(subEntityDef.materialName);
 					}
 				}
@@ -176,7 +177,7 @@ bool ModelBackgroundLoader::performLoading() {
 		mState = LS_PARTICLE_SYSTEM_PREPARING;
 		return false;
 	} else if (mState == LS_PARTICLE_SYSTEM_PREPARING) {
-		for (auto& particleSystemDef : mModelDefinition.mParticleSystems) {
+		for (auto& particleSystemDef: mModelDefinition.mParticleSystems) {
 			auto particleSystemTemplate = Ogre::ParticleSystemManager::getSingleton().getTemplate(particleSystemDef.Script);
 			if (particleSystemTemplate) {
 				prepareMaterialInBackground(particleSystemTemplate->getMaterialName());
@@ -191,7 +192,7 @@ bool ModelBackgroundLoader::performLoading() {
 		}
 		return false;
 	} else if (mState == LS_MATERIAL_PREPARED) {
-		for (auto& materialPtr : mMaterialsToLoad) {
+		for (auto& materialPtr: mMaterialsToLoad) {
 			if (materialPtr) {
 
 #if OGRE_THREAD_SUPPORT == 1
@@ -201,15 +202,18 @@ bool ModelBackgroundLoader::performLoading() {
 					addTicket(ticket);
 				}
 #else
-				for (auto* tech : materialPtr->getSupportedTechniques()) {
-					for (auto* pass : tech->getPasses()) {
-						for (auto* tus : pass->getTextureUnitStates()) {
+				for (auto* tech: materialPtr->getSupportedTechniques()) {
+					for (auto* pass: tech->getPasses()) {
+						for (auto* tus: pass->getTextureUnitStates()) {
 							if (tus->getContentType() == Ogre::TextureUnitState::ContentType::CONTENT_NAMED) {
 								unsigned int frames = tus->getNumFrames();
 								for (unsigned int i = 0; i < frames; ++i) {
 									const auto& textureName = tus->getFrameTextureName(i);
 									mTexturesToLoad.insert(textureName);
-									Ogre::BackgroundProcessTicket ticket = Ogre::ResourceBackgroundQueue::getSingleton().prepare(Ogre::TextureManager::getSingleton().getResourceType(), textureName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, false, 0, 0, &mListener);
+									Ogre::BackgroundProcessTicket ticket = Ogre::ResourceBackgroundQueue::getSingleton().prepare(Ogre::TextureManager::getSingleton().getResourceType(), textureName,
+																																 Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME, false,
+																																 nullptr,
+																																 nullptr, &mListener);
 									if (ticket) {
 										addTicket(ticket);
 									}
@@ -231,7 +235,7 @@ bool ModelBackgroundLoader::performLoading() {
 	} else if (mState == LS_TEXTURE_PREPARED) {
 		if (!mTexturesToLoad.empty()) {
 			auto I = mTexturesToLoad.begin();
-			std::string textureName = *I;
+			const std::string& textureName = *I;
 			mTexturesToLoad.erase(I);
 			auto texture = Ogre::TextureManager::getSingleton().getByName(textureName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
 			if (texture && !texture->isLoaded()) {
@@ -240,7 +244,7 @@ bool ModelBackgroundLoader::performLoading() {
 						logger->warn("Texture was not prepared: {}", texture->getName());
 					}
 					texture->load();
-					logger->debug("Loaded texture in main thread: {} Memory used: {} Mb", texture->getName(), ((float)(texture->getSize()) / 1000000.f));
+					logger->debug("Loaded texture in main thread: {} Memory used: {} Mb", texture->getName(), ((float) (texture->getSize()) / 1000000.f));
 				} catch (const std::exception& e) {
 					logger->warn("Error when loading texture {}: {}", texture->getName(), e.what());
 				}

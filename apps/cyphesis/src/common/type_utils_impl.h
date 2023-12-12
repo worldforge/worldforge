@@ -23,29 +23,27 @@
 
 // This will work on any type which implements toAtlas()
 template<typename List_T>
-void objectListAsMessage(const List_T & l, Atlas::Message::ListType & ol)
-{
-    ol.clear();
-    for (auto& entry : l) {
-        ol.push_back(entry.toAtlas());
-    }
+void objectListAsMessage(const List_T& l, Atlas::Message::ListType& ol) {
+	ol.clear();
+	for (auto& entry: l) {
+		ol.push_back(entry.toAtlas());
+	}
 }
 
 template<typename T, typename List_T>
-inline int objectListFromMessage(const Atlas::Message::ListType & l,
-                                 List_T & ol)
-{
-    ol.clear();
+inline int objectListFromMessage(const Atlas::Message::ListType& l,
+								 List_T& ol) {
+	ol.clear();
 
-    for (auto& entry : l) {
-        try {
-            ol.push_back(T(entry.asList()));
-        }
-        catch (const Atlas::Message::WrongTypeException&) {
-            return -1;
-        }
-    }
-    return 0;
+	for (auto& entry: l) {
+		try {
+			ol.push_back(T(entry.asList()));
+		}
+		catch (const Atlas::Message::WrongTypeException&) {
+			return -1;
+		}
+	}
+	return 0;
 }
 
 #endif // COMMON_TYPE_UTILS_IMPL_H

@@ -26,10 +26,8 @@
 
 #include <OgreRoot.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainMaterialCompilationTask::TerrainMaterialCompilationTask(GeometryPtrVector geometry,
 															   sigc::signal<void(TerrainPage&)>& signal) :
@@ -44,7 +42,7 @@ TerrainMaterialCompilationTask::TerrainMaterialCompilationTask(TerrainPageGeomet
 }
 
 void TerrainMaterialCompilationTask::executeTaskInBackgroundThread(Tasks::TaskExecutionContext& context) {
-	for (auto& geometry : mGeometry) {
+	for (auto& geometry: mGeometry) {
 		geometry->repopulate();
 		auto page = geometry->getPage();
 		auto compilationInstance = page->getSurface()->createSurfaceCompilationInstance(geometry);
@@ -81,12 +79,12 @@ bool TerrainMaterialCompilationTask::executeTaskInMainThread() {
 void TerrainMaterialCompilationTask::updateSceneManagersAfterMaterialsChange() {
 	//We need to do this to prevent stale hashes in Ogre, which will lead to crashes during rendering.
 	if (!Ogre::Pass::getDirtyHashList().empty() || !Ogre::Pass::getPassGraveyard().empty()) {
-		for (const auto& entry : Ogre::Root::getSingleton().getSceneManagers()) {
+		for (const auto& entry: Ogre::Root::getSingleton().getSceneManagers()) {
 			Ogre::SceneManager* pScene = entry.second;
 			if (pScene) {
 				Ogre::RenderQueue* pQueue = pScene->getRenderQueue();
 				if (pQueue) {
-					for (auto& groupEntry : pQueue->_getQueueGroups()) {
+					for (auto& groupEntry: pQueue->_getQueueGroups()) {
 						if (groupEntry) {
 							groupEntry->clear(false);
 						}
@@ -103,5 +101,5 @@ void TerrainMaterialCompilationTask::updateSceneManagersAfterMaterialsChange() {
 
 }
 
-}
-}
+
+

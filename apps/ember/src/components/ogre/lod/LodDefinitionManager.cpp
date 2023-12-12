@@ -21,18 +21,19 @@
  */
 
 #include "LodDefinitionManager.h"
+
+#include <utility>
 #include "LodManager.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
+
+namespace Ember::OgreView::Lod {
 
 LodDefinitionManager::LodDefinitionManager(const boost::filesystem::path& exportDirectory) :
 		mLodDefinitionSerializer(exportDirectory) {
 	// MeshManager has a load order of 350, so this should be bigger then that.
 	mLoadOrder = 400.0f;
 	mResourceType = "LodDefinition";
-	mScriptPatterns.push_back("*.loddef");
+	mScriptPatterns.emplace_back("*.loddef");
 	Ogre::ResourceGroupManager::getSingleton()._registerScriptLoader(this);
 }
 
@@ -73,14 +74,14 @@ void LodDefinitionManager::parseScript(Ogre::DataStreamPtr& stream, const Ogre::
 	// Set origin of resource.
 	resource->_notifyOrigin(stream->getName());
 
-	mLodDefinitionSerializer.importLodDefinition(stream, *resource.get());
+	Ember::OgreView::Lod::XMLLodDefinitionSerializer::importLodDefinition(stream, *resource.get());
 }
 
-void LodDefinitionManager::exportScript(std::string meshName, LodDefinitionPtr definition) {
-	std::string lodName = LodManager::getSingleton().convertMeshNameToLodName(meshName);
+void LodDefinitionManager::exportScript(std::string meshName, const LodDefinitionPtr& definition) {
+	std::string lodName = LodManager::convertMeshNameToLodName(std::move(meshName));
 	mLodDefinitionSerializer.exportScript(definition, lodName);
 }
 
 }
-}
-}
+
+

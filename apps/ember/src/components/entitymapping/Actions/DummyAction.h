@@ -24,18 +24,18 @@
 #define EMBEROGRE_MODEL_MAPPING_ACTIONSDUMMYACTION_H
 
 #include "Action.h"
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Actions {
+
+
+
+namespace Ember::EntityMapping::Actions {
 
 /**
 	@brief Dummy action for testing purposes.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class DummyAction : public Action
-{
+class DummyAction : public Action {
 public:
 	void activate(ChangeContext& context) override;
 
@@ -46,9 +46,9 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 
 #endif

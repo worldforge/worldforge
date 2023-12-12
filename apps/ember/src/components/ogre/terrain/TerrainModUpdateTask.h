@@ -31,10 +31,8 @@ class Terrain;
 class TerrainMod;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 class TerrainHandler;
 
 
@@ -79,8 +77,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* TERRAINMODADDTASK_H_ */

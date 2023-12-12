@@ -19,13 +19,10 @@
 #include "ColouredRenderedStringParser.h"
 #include "RenderedColourStringTextComponent.h"
 
-namespace Ember
-{
-namespace Cegui
-{
 
-void ColouredRenderedStringParser::appendRenderedText(CEGUI::RenderedString& rs, const CEGUI::String& text) const
-{
+namespace Ember::Cegui {
+
+void ColouredRenderedStringParser::appendRenderedText(CEGUI::RenderedString& rs, const CEGUI::String& text) const {
 	size_t cpos = 0;
 	// split the given string into lines based upon the newline character
 	while (text.length() > cpos) {
@@ -37,7 +34,8 @@ void ColouredRenderedStringParser::appendRenderedText(CEGUI::RenderedString& rs,
 		// construct new text component and append it.
 		if (len > 0) {
 			//If we're using colours different from those of the default colours we'll also use our own implementation which doesn't do modulation.
-			if (d_initialColours.d_bottom_left != d_colours.d_bottom_left || d_initialColours.d_top_left != d_colours.d_top_left || d_initialColours.d_top_right != d_colours.d_top_right || d_initialColours.d_bottom_right != d_colours.d_bottom_right) {
+			if (d_initialColours.d_bottom_left != d_colours.d_bottom_left || d_initialColours.d_top_left != d_colours.d_top_left || d_initialColours.d_top_right != d_colours.d_top_right ||
+				d_initialColours.d_bottom_right != d_colours.d_bottom_right) {
 				RenderedColourStringTextComponent rtc(text.substr(cpos, len), d_fontName);
 				rtc.setPadding(d_padding);
 				rtc.setColours(d_colours);
@@ -63,4 +61,4 @@ void ColouredRenderedStringParser::appendRenderedText(CEGUI::RenderedString& rs,
 	}
 }
 }
-}
+

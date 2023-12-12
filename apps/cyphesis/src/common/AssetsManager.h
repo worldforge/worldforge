@@ -31,33 +31,34 @@ class FileSystemObserver;
 /**
  * Observes a series of paths. By calling "observeFile" and "observeDirectory" you can then install callbacks for when files are changed.
  */
-class AssetsManager : public Singleton<AssetsManager>
-{
-    public:
+class AssetsManager : public Singleton<AssetsManager> {
+public:
 
-        explicit AssetsManager(std::unique_ptr<FileSystemObserver> file_system_observer);
-        ~AssetsManager() override;
+	explicit AssetsManager(std::unique_ptr<FileSystemObserver> file_system_observer);
 
-		/**
-		 * Tell the assets manager to observe the "assets" directory, which contains all assets that we serve to the clients.
-		 */
-		void observeAssetsDirectory();
+	~AssetsManager() override;
 
-        void observeFile(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
-        void observeDirectory(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
+	/**
+	 * Tell the assets manager to observe the "assets" directory, which contains all assets that we serve to the clients.
+	 */
+	void observeAssetsDirectory();
 
-        std::filesystem::path getAssetsPath() const { return mAssetsPath;}
+	void observeFile(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
 
-		void stopFileObserver();
+	void observeDirectory(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback);
 
-    private:
+	std::filesystem::path getAssetsPath() const { return mAssetsPath; }
 
-        std::unique_ptr<FileSystemObserver> m_file_system_observer;
+	void stopFileObserver();
 
-        std::filesystem::path mAssetsPath;
+private:
 
-        std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>> m_callbacks;
-        std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>> m_directoryCallbacks;
+	std::unique_ptr<FileSystemObserver> m_file_system_observer;
+
+	std::filesystem::path mAssetsPath;
+
+	std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>> m_callbacks;
+	std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>> m_directoryCallbacks;
 
 };
 

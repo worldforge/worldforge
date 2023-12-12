@@ -25,10 +25,10 @@
 #include <components/ogre/EntityCollisionInfo.h>
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 const std::string OceanRepresentation::sTypeName("OceanRepresentation");
 
@@ -82,7 +82,7 @@ void OceanRepresentation::updateWaterPosition() {
 			if (mEntity.getBBox().isValid()) {
 				waterYPos += mEntity.getBBox().highCorner().y();
 			}
-			mEnvironment.getWater()->setLevel((float)waterYPos);
+			mEnvironment.getWater()->setLevel((float) waterYPos);
 
 			mBulletCollisionDetector->updateTransforms({0, waterYPos, 0}, WFMath::Quaternion::IDENTITY());
 		}
@@ -95,6 +95,6 @@ void OceanRepresentation::createCollisionGeometry() {
 }
 
 }
-}
-}
+
+
 

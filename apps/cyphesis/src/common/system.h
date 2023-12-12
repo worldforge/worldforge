@@ -41,21 +41,29 @@
 std::string get_hostname();
 
 unsigned int security_init();
+
 unsigned int security_check();
+
 unsigned int security_setup();
+
 void reduce_priority(int);
+
 void interactive_signals();
+
 void daemon_signals();
+
 int daemonise();
+
 void running();
 
 std::string create_session_username();
 
-void hash_password(const std::string & pwd, const std::string & salt,
-                   std::string & hash);
+void hash_password(const std::string& pwd, const std::string& salt,
+				   std::string& hash);
 
-void encrypt_password(const std::string & pwd, std::string & hash);
-int check_password(const std::string & pwd, const std::string & hash);
+void encrypt_password(const std::string& pwd, std::string& hash);
+
+int check_password(const std::string& pwd, const std::string& hash);
 
 void getinstallprefix();
 

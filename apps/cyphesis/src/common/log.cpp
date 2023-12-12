@@ -31,66 +31,64 @@
 #include <ctime>
 
 
-static void logDate(std::ostream& log_stream)
-{
-    auto t = std::time(nullptr);
-    char buf[32];
-    if (std::strftime(buf, sizeof(buf), "%FT%T", std::localtime(&t))) {
-        log_stream << buf;
-    } else {
-        log_stream << "[TIME_ERROR]";
-    }
+static void logDate(std::ostream& log_stream) {
+	auto t = std::time(nullptr);
+	char buf[32];
+	if (std::strftime(buf, sizeof(buf), "%FT%T", std::localtime(&t))) {
+		log_stream << buf;
+	} else {
+		log_stream << "[TIME_ERROR]";
+	}
 }
 
 static std::ofstream event_log;
 
-void logEvent(LogEvent lev, const std::string& msg)
-{
-    if (!event_log.is_open()) {
-        return;
-    }
+void logEvent(LogEvent lev, const std::string& msg) {
+	if (!event_log.is_open()) {
+		return;
+	}
 
-    const char* type;
-    switch (lev) {
-        case START:
-            type = "START";
-            break;
-        case STOP:
-            type = "STOP";
-            break;
-        case CONNECT:
-            type = "CONNECT";
-            break;
-        case DISCONNECT:
-            type = "DISCONNECT";
-            break;
-        case LOGIN:
-            type = "LOGIN";
-            break;
-        case LOGOUT:
-            type = "LOGOUT";
-            break;
-        case TAKE_CHAR:
-            type = "TAKE_CHAR";
-            break;
-        case DROP_CHAR:
-            type = "DROP_CHAR";
-            break;
-        case EXPORT_ENT:
-            type = "EXPORT_ENT";
-            break;
-        case IMPORT_ENT:
-            type = "IMPORT_ENT";
-            break;
-        case POSSESS_CHAR:
-            type = "POSSESS_CHAR";
-            break;
-        default:
-            type = "UNKNOWN";
-            break;
-    }
+	const char* type;
+	switch (lev) {
+		case START:
+			type = "START";
+			break;
+		case STOP:
+			type = "STOP";
+			break;
+		case CONNECT:
+			type = "CONNECT";
+			break;
+		case DISCONNECT:
+			type = "DISCONNECT";
+			break;
+		case LOGIN:
+			type = "LOGIN";
+			break;
+		case LOGOUT:
+			type = "LOGOUT";
+			break;
+		case TAKE_CHAR:
+			type = "TAKE_CHAR";
+			break;
+		case DROP_CHAR:
+			type = "DROP_CHAR";
+			break;
+		case EXPORT_ENT:
+			type = "EXPORT_ENT";
+			break;
+		case IMPORT_ENT:
+			type = "IMPORT_ENT";
+			break;
+		case POSSESS_CHAR:
+			type = "POSSESS_CHAR";
+			break;
+		default:
+			type = "UNKNOWN";
+			break;
+	}
 
-    logDate(event_log);
-    event_log << " " << instance << " " << type << " " << msg
-              << std::endl;
+	logDate(event_log);
+	event_log << " " << instance << " " << type << " " << msg
+			  << std::endl;
 }

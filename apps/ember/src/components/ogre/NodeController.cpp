@@ -22,34 +22,28 @@
 #include "components/ogre/MotionManager.h"
 #include "components/ogre/NodeAttachment.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 NodeController::NodeController(NodeAttachment& attachment) :
-	mAttachment(attachment)
-{
+		mAttachment(attachment) {
 	mAttachment.getAttachedEntity().Moved.connect(sigc::mem_fun(*this, &NodeController::entity_Moved));
 	updatePosition();
 }
 
-NodeController::~NodeController()
-{
+NodeController::~NodeController() {
 	MotionManager::getSingleton().removeMovable(this);
 }
 
-void NodeController::entity_Moved()
-{
+void NodeController::entity_Moved() {
 	movementUpdate();
 }
 
-void NodeController::forceMovementUpdate()
-{
+void NodeController::forceMovementUpdate() {
 	movementUpdate();
 }
-void NodeController::movementUpdate()
-{
+
+void NodeController::movementUpdate() {
 	updatePosition();
 	MotionManager& motionManager = MotionManager::getSingleton();
 	if (mAttachment.getAttachedEntity().isMoving()) {
@@ -59,23 +53,21 @@ void NodeController::movementUpdate()
 	}
 }
 
-void NodeController::updateMotion(float timeSlice)
-{
+void NodeController::updateMotion(float timeSlice) {
 	updatePosition();
 }
 
-void NodeController::updatePosition()
-{
+void NodeController::updatePosition() {
 	const WFMath::Point<3>& pos = mAttachment.getAttachedEntity().getPredictedPos();
 	const WFMath::Quaternion& orientation = mAttachment.getAttachedEntity().getPredictedOrientation();
 	const WFMath::Vector<3>& velocity = mAttachment.getAttachedEntity().getPredictedVelocity();
-	mAttachment.setPosition(pos.isValid() ? pos : WFMath::Point<3>::ZERO(), orientation.isValid() ? orientation : WFMath::Quaternion::IDENTITY(), velocity.isValid() ? velocity : WFMath::Vector<3>::ZERO());
+	mAttachment.setPosition(pos.isValid() ? pos : WFMath::Point<3>::ZERO(), orientation.isValid() ? orientation : WFMath::Quaternion::IDENTITY(),
+							velocity.isValid() ? velocity : WFMath::Vector<3>::ZERO());
 }
 
-IEntityControlDelegate* NodeController::getControlDelegate() const
-{
+IEntityControlDelegate* NodeController::getControlDelegate() const {
 	return nullptr;
 }
 
 }
-}
+

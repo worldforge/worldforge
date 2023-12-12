@@ -29,13 +29,12 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        Course<2, WFMath::Line> * linear_course = new Course<2, WFMath::Line>;
-        assert(linear_course != 0);
-        delete linear_course;
-    }
+int main() {
+	{
+		Course<2, WFMath::Line>* linear_course = new Course<2, WFMath::Line>;
+		assert(linear_course != 0);
+		delete linear_course;
+	}
 
-    return 0;
+	return 0;
 }

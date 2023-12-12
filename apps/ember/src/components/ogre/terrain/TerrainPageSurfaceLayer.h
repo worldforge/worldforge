@@ -38,9 +38,7 @@ class Image;
 }
 
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainPageSurface;
 
@@ -116,8 +114,6 @@ protected:
 
 
 }
-}
 
-}
 
 #endif

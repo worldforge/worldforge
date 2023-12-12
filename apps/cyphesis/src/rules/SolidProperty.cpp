@@ -29,12 +29,10 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Message::FloatType;
 
-SolidProperty * SolidProperty::copy() const
-{
-    return new SolidProperty(*this);
+SolidProperty* SolidProperty::copy() const {
+	return new SolidProperty(*this);
 }
 
-void SolidProperty::apply(LocatedEntity & owner)
-{
+void SolidProperty::apply(LocatedEntity& owner) {
 //    owner.m_location.setSolid(isTrue());
 }

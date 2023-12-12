@@ -25,18 +25,17 @@
 /**
  * This mind subclass has additional capabilities and is allowed to directly alter the simulation.
  */
-class AdminMind : public ExternalMind
-{
-    public:
-        explicit AdminMind(RouterId id, Ref<LocatedEntity> entity);
+class AdminMind : public ExternalMind {
+public:
+	explicit AdminMind(RouterId id, Ref<LocatedEntity> entity);
 
-        ~AdminMind() override = default;
+	~AdminMind() override = default;
 
-        void externalOperation(const Operation& op, Link&) override;
+	void externalOperation(const Operation& op, Link&) override;
 
-        void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
-        void GetOperation(const Operation& smartPtr, OpVector& res) override;
+	void GetOperation(const Operation& smartPtr, OpVector& res) override;
 
 };
 

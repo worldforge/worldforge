@@ -39,16 +39,8 @@
 
 using namespace CEGUI;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
-
-unsigned long AdapterFactory::msAutoGenId = 0;
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 AdapterFactory::AdapterFactory(std::string prefix) :
 		mPrefix(std::move(prefix)) {
@@ -153,14 +145,14 @@ bool AdapterFactory::verifyCorrectType<EntityRefAdapter>(const ::Atlas::Message:
 template<>
 StringAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/StringAdapter.layout");
-	Combobox* stringWindow = static_cast<Combobox*> (container->getChildRecursive("String"));
+	Combobox* stringWindow = dynamic_cast<Combobox*> (container->getChildRecursive("String"));
 	return new StringAdapter(element, stringWindow);
 }
 
 template<>
 NumberAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/NumberAdapter.layout");
-	Combobox* numberWindow = static_cast<Combobox*> (container->getChildRecursive("Number"));
+	Combobox* numberWindow = dynamic_cast<Combobox*> (container->getChildRecursive("Number"));
 	return new NumberAdapter(element, numberWindow);
 }
 
@@ -173,9 +165,9 @@ SizeAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, con
 	Window* upperX = container->getChildRecursive("upperX");
 	Window* upperY = container->getChildRecursive("upperY");
 	Window* upperZ = container->getChildRecursive("upperZ");
-	Slider* scaler = static_cast<Slider*> (container->getChildRecursive("scaler"));
+	Slider* scaler = dynamic_cast<Slider*> (container->getChildRecursive("scaler"));
 	Window* info = container->getChildRecursive("info");
-	ToggleButton* editable = static_cast<ToggleButton*>(container->getChildRecursive("editable"));
+	ToggleButton* editable = dynamic_cast<ToggleButton*>(container->getChildRecursive("editable"));
 	return new SizeAdapter(element, {*lowerX, *lowerY, *lowerZ, *upperX, *upperY, *upperZ, *scaler, *info, *editable});
 }
 
@@ -207,7 +199,7 @@ PositionAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container,
 	Window* x = container->getChildRecursive("x");
 	Window* y = container->getChildRecursive("y");
 	Window* z = container->getChildRecursive("z");
-	PushButton* moveButton = static_cast<PushButton*> (container->getChildRecursive("moveButton"));
+	PushButton* moveButton = dynamic_cast<PushButton*> (container->getChildRecursive("moveButton"));
 	return new PositionAdapter(element, x, y, z, moveButton);
 }
 
@@ -240,42 +232,42 @@ StaticAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, c
 template<>
 AreaAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/AreaAdapter.layout");
-	PushButton* button = static_cast<PushButton*> (container->getChildRecursive("showButton"));
-	Combobox* layerWindow = static_cast<Combobox*> (container->getChildRecursive("Layer"));
+	PushButton* button = dynamic_cast<PushButton*> (container->getChildRecursive("showButton"));
+	Combobox* layerWindow = dynamic_cast<Combobox*> (container->getChildRecursive("Layer"));
 	return new AreaAdapter(element, button, layerWindow, entity);
 }
 
 template<>
 PolygonAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/PolygonAdapter.layout");
-	PushButton* button = static_cast<PushButton*> (container->getChildRecursive("showButton"));
+	PushButton* button = dynamic_cast<PushButton*> (container->getChildRecursive("showButton"));
 	return new PolygonAdapter(element, button, entity);
 }
 
 template<>
 TerrainModAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/TerrainModAdapter.layout");
-	PushButton* button = static_cast<PushButton*> (container->getChildRecursive("showButton"));
-	Combobox* posType = static_cast<Combobox*> (container->getChildRecursive("posType"));
-	Combobox* modType = static_cast<Combobox*> (container->getChildRecursive("modType"));
-	Editbox* heightEditbox = static_cast<Editbox*> (container->getChildRecursive("height"));
+	PushButton* button = dynamic_cast<PushButton*> (container->getChildRecursive("showButton"));
+	Combobox* posType = dynamic_cast<Combobox*> (container->getChildRecursive("posType"));
+	Combobox* modType = dynamic_cast<Combobox*> (container->getChildRecursive("modType"));
+	Editbox* heightEditbox = dynamic_cast<Editbox*> (container->getChildRecursive("height"));
 	return new TerrainModAdapter(element, button, entity, posType, modType, heightEditbox);
 }
 
 template<>
 EntityRefAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/EntityRefAdapter.layout");
-	Editbox* text = static_cast<Editbox*> (container->getChildRecursive("EntityRef"));
+	Editbox* text = dynamic_cast<Editbox*> (container->getChildRecursive("EntityRef"));
 	return new EntityRefAdapter(element, {text});
 }
 
 template<>
 NumberRangeAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/NumberRangeAdapter.layout");
-	auto min = static_cast<Editbox*> (container->getChildRecursive("Min"));
-	auto max = static_cast<Editbox*> (container->getChildRecursive("Max"));
-	auto value = static_cast<Editbox*> (container->getChildRecursive("Value"));
-	auto randomize = static_cast<PushButton*> (container->getChildRecursive("Randomize"));
+	auto min = dynamic_cast<Editbox*> (container->getChildRecursive("Min"));
+	auto max = dynamic_cast<Editbox*> (container->getChildRecursive("Max"));
+	auto value = dynamic_cast<Editbox*> (container->getChildRecursive("Value"));
+	auto randomize = dynamic_cast<PushButton*> (container->getChildRecursive("Randomize"));
 	return new NumberRangeAdapter(element, {*min, *max, *value, *randomize});
 }
 
@@ -349,7 +341,8 @@ NumberRangeAdapter* AdapterFactory::createNumberRangeAdapter(CEGUI::Window* cont
 }
 
 
-std::unique_ptr<AdapterBase> AdapterFactory::createAdapterByType(const std::string& type, CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
+std::unique_ptr<AdapterBase>
+AdapterFactory::createAdapterByType(const std::string& type, CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity) {
 	::Atlas::Message::Element newElement(element);
 	if (type == "string") {
 		if (newElement.isNone()) {
@@ -376,17 +369,17 @@ std::unique_ptr<AdapterBase> AdapterFactory::createAdapterByType(const std::stri
 	} else if (type == "position") {
 		if (newElement.isNone()) {
 			::Atlas::Message::ListType list;
-			list.push_back(::Atlas::Message::Element(0.0f));
-			list.push_back(::Atlas::Message::Element(0.0f));
-			list.push_back(::Atlas::Message::Element(0.0f));
+			list.emplace_back(0.0f);
+			list.emplace_back(0.0f);
+			list.emplace_back(0.0f);
 			newElement = list;
 		}
 		return std::unique_ptr<AdapterBase>(createPositionAdapter(container, adapterPrefix, newElement));
 	} else if (type == "position2d") {
 		if (newElement.isNone()) {
 			::Atlas::Message::ListType list;
-			list.push_back(::Atlas::Message::Element(0.0f));
-			list.push_back(::Atlas::Message::Element(0.0f));
+			list.emplace_back(0.0f);
+			list.emplace_back(0.0f);
 			newElement = list;
 		}
 		return std::unique_ptr<AdapterBase>(createPosition2DAdapter(container, adapterPrefix, newElement));
@@ -432,7 +425,7 @@ CEGUI::Window* AdapterFactory::loadLayoutIntoContainer(CEGUI::Window* container,
 	if (prototypeI != mAdapterPrototypes.end()) {
 		window = prototypeI->second->clone(true);
 	} else {
-		std::string finalFileName(GUIManager::getSingleton().getLayoutDir() + layoutfile);
+		std::string finalFileName(GUIManager::getLayoutDir() + layoutfile);
 		CEGUI::WindowManager& windowManager = CEGUI::WindowManager::getSingleton();
 		auto windowNew = windowManager.loadLayoutFromFile(finalFileName);
 		if (windowNew) {
@@ -456,9 +449,9 @@ CEGUI::Window* AdapterFactory::loadLayoutIntoContainer(CEGUI::Window* container,
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

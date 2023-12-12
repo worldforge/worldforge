@@ -37,80 +37,77 @@
 
 using Atlas::Message::MapType;
 
-class TestEntityKit : public EntityKit
-{
-  public:
-    virtual ~TestEntityKit() { }
+class TestEntityKit : public EntityKit {
+public:
+	virtual ~TestEntityKit() {}
 
-    Ref<Entity> newEntity(RouterId id,
-                          const Atlas::Objects::Entity::RootEntity & attributes) override { return nullptr; }
+	Ref<Entity> newEntity(RouterId id,
+						  const Atlas::Objects::Entity::RootEntity& attributes) override { return nullptr; }
 
-    static EntityKit * duplicateFactory() { return nullptr; }
-    void addProperties(const PropertyManager&) override{}
+	static EntityKit* duplicateFactory() { return nullptr; }
 
-    void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager&) override {
-    }
+	void addProperties(const PropertyManager&) override {}
+
+	void updateProperties(std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes, const PropertyManager&) override {
+	}
 };
 
-class TestScriptKit : public ScriptKit<LocatedEntity>
-{
-  public:
-    std::string m_package;
-    virtual const std::string & package() const { return m_package; }
-    virtual int addScript(LocatedEntity * entity) const { return 0; }
-    virtual int refreshClass() { return 0; }
+class TestScriptKit : public ScriptKit<LocatedEntity> {
+public:
+	std::string m_package;
+
+	virtual const std::string& package() const { return m_package; }
+
+	virtual int addScript(LocatedEntity* entity) const { return 0; }
+
+	virtual int refreshClass() { return 0; }
 };
 
-class EntityKittest : public Cyphesis::TestBase
-{
-  private:
-    EntityKit * m_ek;
-  public:
-    EntityKittest();
+class EntityKittest : public Cyphesis::TestBase {
+private:
+	EntityKit* m_ek;
+public:
+	EntityKittest();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    void test_addProperties();
-    void test_updateProperties();
+	void teardown();
+
+	void test_addProperties();
+
+	void test_updateProperties();
 };
 
-EntityKittest::EntityKittest()
-{
-    ADD_TEST(EntityKittest::test_addProperties);
-    ADD_TEST(EntityKittest::test_updateProperties);
+EntityKittest::EntityKittest() {
+	ADD_TEST(EntityKittest::test_addProperties);
+	ADD_TEST(EntityKittest::test_updateProperties);
 }
 
-void EntityKittest::setup()
-{
-    m_ek = new TestEntityKit;
-    m_ek->m_type = new TypeNode("foo");
+void EntityKittest::setup() {
+	m_ek = new TestEntityKit;
+	m_ek->m_type = new TypeNode("foo");
 }
 
-void EntityKittest::teardown()
-{
-    delete m_ek->m_type;
-    delete m_ek;
+void EntityKittest::teardown() {
+	delete m_ek->m_type;
+	delete m_ek;
 }
 
-void EntityKittest::test_addProperties()
-{
-    TestPropertyManager propertyManager{};
-    m_ek->addProperties(propertyManager);
+void EntityKittest::test_addProperties() {
+	TestPropertyManager propertyManager{};
+	m_ek->addProperties(propertyManager);
 }
 
-void EntityKittest::test_updateProperties()
-{
-    TestPropertyManager propertyManager{};
-    std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
-    m_ek->updateProperties(changes, propertyManager);
+void EntityKittest::test_updateProperties() {
+	TestPropertyManager propertyManager{};
+	std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	m_ek->updateProperties(changes, propertyManager);
 }
 
-int main()
-{
-    EntityKittest t;
+int main() {
+	EntityKittest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs

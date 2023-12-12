@@ -1237,7 +1237,7 @@ function ModelEdit:buildWidget()
 			return true
 		end)
 
-		local playEndFunction = nil
+		local playEndFunction
 		self.widget:getWindow("PlayAction"):subscribeEvent("Clicked", function(args)
 
 
@@ -1303,7 +1303,7 @@ function ModelEdit:buildWidget()
 		self:fillMeshList()
 		self:fillScaleTypesList()
 		self:fillCollisionTypesList()
-		--def:setValid(true)	
+		--def:setValid(true)
 		--model = self.renderer:getModel()
 		--def = model:getDefinition():get()
 

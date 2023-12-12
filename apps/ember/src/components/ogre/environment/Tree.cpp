@@ -25,10 +25,10 @@
 #include "meshtree/MeshTree.h"
 #include "Tree.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 using namespace Ogre;
 
@@ -86,5 +86,5 @@ void Tree::makeMesh(Ogre::String meshName, Ogre::TParameters::TreeType type) {
 
 }
 
-}
-}
+
+

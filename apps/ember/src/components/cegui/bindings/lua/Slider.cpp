@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Slider>(sol::table& space) {
 	auto slider = space.new_usertype<Slider>("Slider",
 											 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

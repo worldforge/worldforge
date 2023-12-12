@@ -31,9 +31,7 @@
 
 namespace Ember {
 SoundService::SoundService(ConfigService& configService)
-		: Service("Sound")
-		, mContext(nullptr), mDevice(nullptr), mResourceProvider(nullptr)
-		, mEnabled(false) {
+		: Service("Sound"), mContext(nullptr), mDevice(nullptr), mResourceProvider(nullptr), mEnabled(false) {
 	logger->info("Sound Service starting");
 
 	if (configService.hasItem("audio", "enabled")
@@ -83,7 +81,8 @@ SoundService::SoundService(ConfigService& configService)
 
 SoundService::~SoundService() {
 	if (!mInstances.empty()) {
-		logger->warn("Found a still registered SoundInstance when shutting down sound service. This shouldn't normally happen, since all instances should be handled by their proper owners and removed well in advance of the SoundService shutting down. We'll now delete the instance, which might lead to a segfault or similar problem as the instance owner might still expect it to be existing.");
+		logger->warn(
+				"Found a still registered SoundInstance when shutting down sound service. This shouldn't normally happen, since all instances should be handled by their proper owners and removed well in advance of the SoundService shutting down. We'll now delete the instance, which might lead to a segfault or similar problem as the instance owner might still expect it to be existing.");
 	}
 	mInstances.clear();
 
@@ -147,18 +146,18 @@ void SoundService::updateListenerPosition(const WFMath::Point<3>& pos, const WFM
 		return;
 	}
 
-	alListener3f(AL_POSITION, (ALfloat)pos.x(), (ALfloat)pos.y(), (ALfloat)pos.z());
+	alListener3f(AL_POSITION, (ALfloat) pos.x(), (ALfloat) pos.y(), (ALfloat) pos.z());
 	SoundGeneral::checkAlError("Setting the listener position.");
 
 	//Set the direction of the listener.
 
 	ALfloat aluVectors[6];
-	aluVectors[0] = (ALfloat)direction.x();
-	aluVectors[1] = (ALfloat)direction.y();
-	aluVectors[2] = (ALfloat)direction.z();
-	aluVectors[3] = (ALfloat)up.x();
-	aluVectors[4] = (ALfloat)up.y();
-	aluVectors[5] = (ALfloat)up.z();
+	aluVectors[0] = (ALfloat) direction.x();
+	aluVectors[1] = (ALfloat) direction.y();
+	aluVectors[2] = (ALfloat) direction.z();
+	aluVectors[3] = (ALfloat) up.x();
+	aluVectors[4] = (ALfloat) up.y();
+	aluVectors[5] = (ALfloat) up.z();
 
 	alListenerfv(AL_ORIENTATION, aluVectors);
 	SoundGeneral::checkAlError("Setting the listener orientation.");

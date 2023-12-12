@@ -27,24 +27,22 @@
 
 #include "common/globals.h"
 
-int main()
-{
-    // Reference the globals to ensure they get linked.
-    (void)client_socket_name;
-    (void)python_socket_name;
-    (void)slave_socket_name;
+int main() {
+	// Reference the globals to ensure they get linked.
+	(void) client_socket_name;
+	(void) python_socket_name;
+	(void) slave_socket_name;
 
-    return 0;
+	return 0;
 }
 
 // stubs
 
-const char * const CYPHESIS = "cyphesis";
+const char* const CYPHESIS = "cyphesis";
 
-unixsock_config_register::unixsock_config_register(std::string & var,
-                                                   const char * section,
-                                                   const char * setting,
-                                                   const char * help,
-                                                   const char * format)
-{
+unixsock_config_register::unixsock_config_register(std::string& var,
+												   const char* section,
+												   const char* setting,
+												   const char* help,
+												   const char* format) {
 }

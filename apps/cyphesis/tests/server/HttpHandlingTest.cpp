@@ -31,123 +31,120 @@
 
 #include <cassert>
 
-class TestHttpCache : public HttpHandling
-{
-  public:
-        TestHttpCache(const Monitors& m): HttpHandling(m)
-        { }
+class TestHttpCache : public HttpHandling {
+public:
+	TestHttpCache(const Monitors& m) : HttpHandling(m) {}
 
-    void test_sendHeaders(std::ostream & io,
-                          int status,
-                          const std::string & type,
-                          const std::string & msg) {
-        sendHeaders(io, status, type, msg);
-    }
+	void test_sendHeaders(std::ostream& io,
+						  int status,
+						  const std::string& type,
+						  const std::string& msg) {
+		sendHeaders(io, status, type, msg);
+	}
 
-    void test_reportBadRequest(std::ostream & io,
-                               int status,
-                               const std::string & mesg) {
-        reportBadRequest(io, status, mesg);
-    }
+	void test_reportBadRequest(std::ostream& io,
+							   int status,
+							   const std::string& mesg) {
+		reportBadRequest(io, status, mesg);
+	}
 };
 
-int main()
-{
-    global_conf = varconf::Config::inst();
+int main() {
+	global_conf = varconf::Config::inst();
 
-    {
-        HttpHandling httpCache(Monitors::instance());
-    }
+	{
+		HttpHandling httpCache(Monitors::instance());
+	}
 
-    // No header, invalid
-    {
-        HttpHandling hc(Monitors::instance());
+	// No header, invalid
+	{
+		HttpHandling hc(Monitors::instance());
 
-        hc.processQuery(std::cout, std::list<std::string>());
+		hc.processQuery(std::cout, std::list<std::string>());
 
-    }
+	}
 
-    // Bad request header
-    {
-        HttpHandling hc(Monitors::instance());
+	// Bad request header
+	{
+		HttpHandling hc(Monitors::instance());
 
-        std::list<std::string> headers;
-        headers.push_back("boo");
+		std::list<std::string> headers;
+		headers.push_back("boo");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    // Legacy HTTP (0.9??)
-    {
-        HttpHandling hc(Monitors::instance());
+	// Legacy HTTP (0.9??)
+	{
+		HttpHandling hc(Monitors::instance());
 
-        std::list<std::string> headers;
-        headers.push_back("GET foo");
+		std::list<std::string> headers;
+		headers.push_back("GET foo");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    // HTTP (n.m??)
-    {
-        HttpHandling hc(Monitors::instance());
+	// HTTP (n.m??)
+	{
+		HttpHandling hc(Monitors::instance());
 
-        std::list<std::string> headers;
-        headers.push_back("GET foo HTTP/1.0");
+		std::list<std::string> headers;
+		headers.push_back("GET foo HTTP/1.0");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    // HTTP get /config
-    {
-        HttpHandling hc(Monitors::instance());
+	// HTTP get /config
+	{
+		HttpHandling hc(Monitors::instance());
 
-        std::list<std::string> headers;
-        headers.push_back("GET /config HTTP/1.0");
+		std::list<std::string> headers;
+		headers.push_back("GET /config HTTP/1.0");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    // HTTP get /config with some config
-    {
-        HttpHandling hc(Monitors::instance());
+	// HTTP get /config with some config
+	{
+		HttpHandling hc(Monitors::instance());
 
-        global_conf->setItem(instance, "bar", "value");
+		global_conf->setItem(instance, "bar", "value");
 
-        std::list<std::string> headers;
-        headers.push_back("GET /config HTTP/1.0");
+		std::list<std::string> headers;
+		headers.push_back("GET /config HTTP/1.0");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    // HTTP get /monitors
-    {
-        HttpHandling hc(Monitors::instance());
+	// HTTP get /monitors
+	{
+		HttpHandling hc(Monitors::instance());
 
-        std::list<std::string> headers;
-        headers.push_back("GET /monitors HTTP/1.0");
+		std::list<std::string> headers;
+		headers.push_back("GET /monitors HTTP/1.0");
 
-        hc.processQuery(std::cout, headers);
+		hc.processQuery(std::cout, headers);
 
-    }
+	}
 
-    {
-        TestHttpCache hc(Monitors::instance());
+	{
+		TestHttpCache hc(Monitors::instance());
 
-        hc.test_sendHeaders(std::cout, 200, "test/html", "OK");
-    }
+		hc.test_sendHeaders(std::cout, 200, "test/html", "OK");
+	}
 
-    {
-        TestHttpCache hc(Monitors::instance());
+	{
+		TestHttpCache hc(Monitors::instance());
 
-        hc.test_reportBadRequest(std::cout, 200, "Bad request");
-    }
+		hc.test_reportBadRequest(std::cout, 200, "Bad request");
+	}
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -156,12 +153,12 @@ int main()
 #include "../stubs/common/stublog.h"
 
 
-varconf::Config * global_conf = nullptr;
+varconf::Config* global_conf = nullptr;
 
 std::string instance("test_instance");
 
 namespace consts {
 
-  // Version of the software we are running
-  const char * version = "test_version";
+// Version of the software we are running
+const char* version = "test_version";
 }

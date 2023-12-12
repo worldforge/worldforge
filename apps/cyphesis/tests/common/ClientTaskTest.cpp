@@ -28,20 +28,20 @@
 #include <cassert>
 
 class TestClientTask : public ClientTask {
-  public:
-    virtual void setup(const std::string & arg, OpVector & res) {
-    }
-    /// \brief Handle an operation from the server
-    virtual void operation(const Operation &, OpVector & res) {
-    }
+public:
+	virtual void setup(const std::string& arg, OpVector& res) {
+	}
+
+	/// \brief Handle an operation from the server
+	virtual void operation(const Operation&, OpVector& res) {
+	}
 };
 
-int main()
-{
-    ClientTask * ct = new TestClientTask();
+int main() {
+	ClientTask* ct = new TestClientTask();
 
-    bool complete = ct->isComplete();
-    assert(!complete);
+	bool complete = ct->isComplete();
+	assert(!complete);
 
-    delete ct;
+	delete ct;
 }

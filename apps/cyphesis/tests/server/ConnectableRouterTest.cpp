@@ -28,25 +28,25 @@
 #include <cassert>
 
 class TestConnectableRouter : public ConnectableRouter {
-  public:
-    TestConnectableRouter() : ConnectableRouter(1) { }
+public:
+	TestConnectableRouter() : ConnectableRouter(1) {}
 
-    virtual void externalOperation(const Operation&, Link &) { }
-    virtual void operation(const Operation&, OpVector&) { }
+	virtual void externalOperation(const Operation&, Link&) {}
 
-        virtual void setConnection(Connection* connection) {}
+	virtual void operation(const Operation&, OpVector&) {}
 
-        virtual Connection* getConnection() const {return nullptr;}
+	virtual void setConnection(Connection* connection) {}
+
+	virtual Connection* getConnection() const { return nullptr; }
 };
 
-int main()
-{
-    {
-        TestConnectableRouter * cr = new TestConnectableRouter{};
+int main() {
+	{
+		TestConnectableRouter* cr = new TestConnectableRouter{};
 
-        delete cr;
-    }
-    return 0;
+		delete cr;
+	}
+	return 0;
 }
 
 // stubs

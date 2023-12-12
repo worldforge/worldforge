@@ -25,29 +25,28 @@
 
 /// \brief Handle an internet socket connected to a remote peer server.
 /// \ingroup ServerSockets
-class CommPeer : public CommAsioClient<boost::asio::ip::tcp>
-{
-    public:
-        CommPeer(const std::string& name,
-                 boost::asio::io_context& io_context,
-                 Atlas::Objects::Factories& factories);
+class CommPeer : public CommAsioClient<boost::asio::ip::tcp> {
+public:
+	CommPeer(const std::string& name,
+			 boost::asio::io_context& io_context,
+			 Atlas::Objects::Factories& factories);
 
-        ~CommPeer() override;
+	~CommPeer() override;
 
-        void connect(const std::string&, int);
+	void connect(const std::string&, int);
 
-        void connect(const boost::asio::ip::tcp::endpoint&);
+	void connect(const boost::asio::ip::tcp::endpoint&);
 
-        void setup(std::unique_ptr<Link>);
+	void setup(std::unique_ptr<Link>);
 
-        sigc::signal<void()> connected;
-        sigc::signal<void()> failed;
+	sigc::signal<void()> connected;
+	sigc::signal<void()> failed;
 
-    protected:
-        boost::asio::steady_timer m_auth_timer;
-        std::chrono::steady_clock::time_point m_start_auth;
+protected:
+	boost::asio::steady_timer m_auth_timer;
+	std::chrono::steady_clock::time_point m_start_auth;
 
-        void checkAuth();
+	void checkAuth();
 
 };
 

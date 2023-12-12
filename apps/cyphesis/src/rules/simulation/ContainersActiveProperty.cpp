@@ -25,38 +25,32 @@ using Atlas::Message::ListType;
 using Atlas::Message::FloatType;
 
 ContainersActiveProperty::ContainersActiveProperty()
-        : PropertyBase(prop_flag_persistence_ephem)
-{
+		: PropertyBase(prop_flag_persistence_ephem) {
 
 }
 
-int ContainersActiveProperty::get(Atlas::Message::Element& element) const
-{
-    ListType list;
-    for (auto& entity: m_activeContainers) {
-        list.emplace_back(entity);
-    }
-    element = list;
-    return 0;
+int ContainersActiveProperty::get(Atlas::Message::Element& element) const {
+	ListType list;
+	for (auto& entity: m_activeContainers) {
+		list.emplace_back(entity);
+	}
+	element = list;
+	return 0;
 }
 
-void ContainersActiveProperty::set(const Atlas::Message::Element& element)
-{
+void ContainersActiveProperty::set(const Atlas::Message::Element& element) {
 }
 
-ContainersActiveProperty* ContainersActiveProperty::copy() const
-{
-    //Don't copy values
-    return new ContainersActiveProperty();
+ContainersActiveProperty* ContainersActiveProperty::copy() const {
+	//Don't copy values
+	return new ContainersActiveProperty();
 }
 
-void ContainersActiveProperty::apply(LocatedEntity&)
-{
+void ContainersActiveProperty::apply(LocatedEntity&) {
 }
 
 
-bool ContainersActiveProperty::hasContainer(const std::string& containerId) const
-{
-    auto I = m_activeContainers.find(containerId);
-    return I != m_activeContainers.end();
+bool ContainersActiveProperty::hasContainer(const std::string& containerId) const {
+	auto I = m_activeContainers.find(containerId);
+	return I != m_activeContainers.end();
 }

@@ -31,41 +31,38 @@
 namespace WFMath {
 
 template<int dim>
-inline bool Line<dim>::isEqualTo(const Line<dim> & l, CoordType epsilon) const
-{
-  size_type size = m_points.size();
-  if (size != l.m_points.size()) {
-    return false;
-  }
+inline bool Line<dim>::isEqualTo(const Line<dim>& l, CoordType epsilon) const {
+	size_type size = m_points.size();
+	if (size != l.m_points.size()) {
+		return false;
+	}
 
-  for (size_type i = 0; i < size; ++i) {
-    if (!Equal(m_points[i], l.m_points[i], epsilon)) {
-      return false;
-    }
-  }
+	for (size_type i = 0; i < size; ++i) {
+		if (!Equal(m_points[i], l.m_points[i], epsilon)) {
+			return false;
+		}
+	}
 
-  return true;
+	return true;
 }
 
 template<int dim>
-inline Line<dim>& Line<dim>::shift(const Vector<dim>& v)
-{
-  for (iterator i = m_points.begin(); i != m_points.end(); ++i) {
-    *i += v;
-  }
+inline Line<dim>& Line<dim>::shift(const Vector<dim>& v) {
+	for (iterator i = m_points.begin(); i != m_points.end(); ++i) {
+		*i += v;
+	}
 
-  return *this;
+	return *this;
 }
 
 template<int dim>
 inline Line<dim>& Line<dim>::rotatePoint(const RotMatrix<dim>& m,
-                                         const Point<dim>& p)
-{
-  for (iterator i = m_points.begin(); i != m_points.end(); ++i) {
-    i->rotate(m, p);
-  }
+										 const Point<dim>& p) {
+	for (iterator i = m_points.begin(); i != m_points.end(); ++i) {
+		i->rotate(m, p);
+	}
 
-  return *this;
+	return *this;
 }
 
 } // namespace WFMath

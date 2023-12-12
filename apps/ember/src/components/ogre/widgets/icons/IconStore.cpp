@@ -25,12 +25,8 @@
 #include "Icon.h"
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 
 IconStore::~IconStore() = default;
@@ -67,7 +63,7 @@ void IconStore::destroyIcon(Icon* icon) {
 }
 
 IconImageStoreEntry* IconStore::getImageStoreEntry() {
-	for (auto& iconImageStore : mIconImageStores) {
+	for (auto& iconImageStore: mIconImageStores) {
 		if (iconImageStore->getNumberOfUnclaimedIcons()) {
 			return iconImageStore->claimImageEntry();
 		}
@@ -81,7 +77,7 @@ IconImageStoreEntry* IconStore::getImageStoreEntry() {
 
 }
 
-}
 
-}
-}
+
+
+

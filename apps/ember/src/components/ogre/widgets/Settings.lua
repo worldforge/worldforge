@@ -2,7 +2,7 @@
 
 SettingsRestartDialog = {}
 
-function 	SettingsRestartDialog.new()
+function SettingsRestartDialog.new()
 	local ret = {}
 	setmetatable(ret, { __index = SettingsRestartDialog })
 
@@ -294,10 +294,10 @@ function SettingsWidget:buildSettingsUi()
 				--[[{
 					label = "Fresnel water",
 					helpString = "More realistic and performance demanding water",
-					
+
 					section = "graphics",
 					key = "fresnelwater",
-					
+
 					representationFactory = function(value) return Representations["CheckboxRepresentation<varconf::Variable>"].new(value) end,
 				},--]]
 				{
@@ -338,10 +338,10 @@ function SettingsWidget:buildSettingsUi()
 				--[[{
 					label = "Double buffered",
 					helpString = "If set to true, the application will be double buffered, which means that everything is rendered into a separate backbuffer, which is then copied to the main screen buffer when appropriate. This will in some cases reduce tearing.",
-					
+
 					section = "graphics",
 					key = "doublebuffered",
-					
+
 					representationFactory = function(value) return Representations["CheckboxRepresentation<varconf::Variable>"].new(value) end,
 				},--]]
 				{

@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Tooltip>(sol::table& space) {
 	auto tooltip = space.new_usertype<Tooltip>("Tooltip",
 											   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

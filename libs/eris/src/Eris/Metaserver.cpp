@@ -13,12 +13,10 @@
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
-#include <sigc++/slot.h>
 
 #include <algorithm>
 
 #include <cassert>
-#include <cstdio>
 #include <cstring>
 #include <memory>
 #include <utility>
@@ -86,6 +84,7 @@ Meta::Meta(boost::asio::io_service& io_service,
 		m_receive_stream(&m_receive_buffer),
 		m_send_buffer(new boost::asio::streambuf()),
 		m_send_stream(m_send_buffer.get()),
+		m_data{},
 		m_dataPtr(nullptr),
 		m_bytesToRecv(0),
 		m_totalServers(0),
@@ -281,7 +280,7 @@ void Meta::gotData() {
 }
 
 void Meta::deleteQuery(MetaQuery* query) {
-	auto I = std::find_if(m_activeQueries.begin(), m_activeQueries.end(), [&](const std::unique_ptr<MetaQuery>& entry){return entry.get() == query;});
+	auto I = std::find_if(m_activeQueries.begin(), m_activeQueries.end(), [&](const std::unique_ptr<MetaQuery>& entry) { return entry.get() == query; });
 
 	if (I != m_activeQueries.end()) {
 		auto containedQuery = I->release();
@@ -299,8 +298,8 @@ void Meta::deleteQuery(MetaQuery* query) {
 		}
 	} else {
 		logger->error("Tried to delete meta server query which wasn't "
-				   "among the active queries. This indicates an error "
-				   "with the flow in Metaserver.");
+					  "among the active queries. This indicates an error "
+					  "with the flow in Metaserver.");
 	}
 }
 
@@ -392,7 +391,7 @@ void Meta::processCmd() {
 			m_dataPtr = unpack_uint32(total_servers, m_data.data());
 			if (!m_gameServers.empty()) {
 				if (total_servers != m_totalServers) {
-					logger->warn("Server total in new packet has changed. {}:{}",total_servers, m_totalServers);
+					logger->warn("Server total in new packet has changed. {}:{}", total_servers, m_totalServers);
 				}
 			} else {
 				m_totalServers = total_servers;
@@ -568,7 +567,7 @@ void Meta::metaTimeout() {
 	doFailure("Connection to the meta-server timed out");
 }
 
-void Meta::queryFailure(MetaQuery* q, const std::string& msg) {
+void Meta::queryFailure(MetaQuery* q, const std::string&) {
 	// we do NOT emit a failure signal here (because that would probably cause the
 	// host app to pop up a dialog or something) since query failures are likely to
 	// be very frequent.

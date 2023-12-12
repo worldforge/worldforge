@@ -24,16 +24,14 @@
 #include <Atlas/Objects/Decoder.h>
 #include <sigc++/signal.h>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A simple Atlas decoder which will emit a signal each time a new object is decodes, as well as retain the last decoded object.
  * Use this when you want to decode atlas data into objects.
  */
-class AtlasObjectDecoder : public Atlas::Objects::ObjectsDecoder
-{
+class AtlasObjectDecoder : public Atlas::Objects::ObjectsDecoder {
 public:
 	/**
 	 * @brief Ctor.
@@ -58,12 +56,12 @@ public:
 
 private:
 
-    void objectArrived(Atlas::Objects::Root obj) override;
+	void objectArrived(Atlas::Objects::Root obj) override;
 
-    /**
-     * @brief Retain a copy of the last decoded object.
-     */
-    Atlas::Objects::Root mLastObject;
+	/**
+	 * @brief Retain a copy of the last decoded object.
+	 */
+	Atlas::Objects::Root mLastObject;
 };
 
 }

@@ -34,19 +34,26 @@
 
 namespace WFMath {
 
-template class AxisBox<3>;
-template class AxisBox<2>;
+template
+class AxisBox<3>;
+
+template
+class AxisBox<2>;
 
 template bool Intersection<3>(const AxisBox<3>&, const AxisBox<3>&, AxisBox<3>&);
+
 template bool Intersection<2>(const AxisBox<2>&, const AxisBox<2>&, AxisBox<2>&);
 
-template AxisBox<3> Union<3>(const AxisBox<3> &, const AxisBox<3> &);
+template AxisBox<3> Union<3>(const AxisBox<3>&, const AxisBox<3>&);
+
 template AxisBox<2> Union<2>(const AxisBox<2>&, const AxisBox<2>&);
 
-template AxisBox<3> BoundingBox<3, std::vector>(const std::vector<AxisBox<3>, std::allocator<AxisBox<3> > > &);
-template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<AxisBox<2>, std::allocator<AxisBox<2> > > &);
+template AxisBox<3> BoundingBox<3, std::vector>(const std::vector<AxisBox<3>, std::allocator<AxisBox<3> > >&);
+
+template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<AxisBox<2>, std::allocator<AxisBox<2> > >&);
 
 template AxisBox<3> BoundingBox<3, std::vector>(const std::vector<Point<3>, std::allocator<Point<3> > >&);
+
 template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<Point<2>, std::allocator<Point<2> > >&);
 
 static_assert(std::is_standard_layout<AxisBox<3>>::value, "AxisBox should be standard layout.");

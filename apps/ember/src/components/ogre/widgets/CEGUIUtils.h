@@ -23,10 +23,8 @@
 #include <CEGUI/WindowManager.h>
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 template<typename T>
 struct WindowDestroyer {
@@ -39,9 +37,9 @@ struct WindowDestroyer {
  * A specialization of std::unique_ptr which will destroy the contained window through the CEGUI::WindowManager upon destruction.
  */
 template<typename T>
-using UniqueWindowPtr= std::unique_ptr<T, WindowDestroyer<T>>;
+using UniqueWindowPtr = std::unique_ptr<T, WindowDestroyer<T>>;
 
 }
-}
-}
+
+
 #endif //EMBER_CEGUIUTILS_H

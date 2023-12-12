@@ -19,7 +19,8 @@ namespace Eris {
  * a new class which inherits Eris::Entity.
  */
 class ViewEntity : public Entity {
-friend class EntityRouter;
+	friend class EntityRouter;
+
 public:
 
 	/**
@@ -32,36 +33,35 @@ public:
 
 	~ViewEntity() override;
 
-    /**
-     * @brief Gets the view to which this entity belongs, if any.
-     * @return The view to which this entity belongs, or null if
-     * this entity isn't connected to any view.
-     */
-    virtual View* getView() const;
+	/**
+	 * @brief Gets the view to which this entity belongs, if any.
+	 * @return The view to which this entity belongs, or null if
+	 * this entity isn't connected to any view.
+	 */
+	virtual View* getView() const;
 
 protected:
 
-    /**
-     * @brief The View which owns this Entity.
-     */
-    View& m_view;
+	/**
+	 * @brief The View which owns this Entity.
+	 */
+	View& m_view;
 
-    void onTaskAdded(const std::string& id, Task* task) override;
+	void onTaskAdded(const std::string& id, Task* task) override;
 
-    Entity* getEntity(const std::string& id) override;
+	Entity* getEntity(const std::string& id) override;
 
-    /**
-     * @brief Listen to task progress rates updates and send to the view.
-     * @param task The task which is changed.
-     */
-    void task_ProgressRateChanged(Task* task);
+	/**
+	 * @brief Listen to task progress rates updates and send to the view.
+	 * @param task The task which is changed.
+	 */
+	void task_ProgressRateChanged(Task* task);
 
 
 };
 
-inline View* ViewEntity::getView() const
-{
-    return &m_view;
+inline View* ViewEntity::getView() const {
+	return &m_view;
 }
 }
 

@@ -28,39 +28,37 @@
  * While the ContainerAccessProperty acts on the container itself, this property is placed on the entity
  * that has it opened. Thus it's mainly meant for clients, to allow them to see which containers are open.
  */
-class ContainersActiveProperty : public PropertyBase
-{
-    public:
+class ContainersActiveProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_name = "_containers_active";
-        static constexpr const char* property_atlastype = "list";
+	static constexpr const char* property_name = "_containers_active";
+	static constexpr const char* property_atlastype = "list";
 
-        ContainersActiveProperty();
+	ContainersActiveProperty();
 
-        int get(Atlas::Message::Element&) const override;
+	int get(Atlas::Message::Element&) const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        ContainersActiveProperty* copy() const override;
+	ContainersActiveProperty* copy() const override;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        const std::set<std::string>& getActiveContainers() const
-        {
-            return m_activeContainers;
-        };
+	const std::set<std::string>& getActiveContainers() const {
+		return m_activeContainers;
+	};
 
-        std::set<std::string>& getActiveContainers()
-        {
-            return m_activeContainers;
-        };
+	std::set<std::string>& getActiveContainers() {
+		return m_activeContainers;
+	};
 
-        bool hasContainer(const std::string& containerId) const;
-    protected:
+	bool hasContainer(const std::string& containerId) const;
 
-        ContainersActiveProperty(const ContainersActiveProperty& rhs) = default;
+protected:
 
-        std::set<std::string> m_activeContainers;
+	ContainersActiveProperty(const ContainersActiveProperty& rhs) = default;
+
+	std::set<std::string> m_activeContainers;
 
 };
 

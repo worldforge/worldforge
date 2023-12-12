@@ -27,22 +27,21 @@
  *
  * \ingroup PropertyClasses
  */
-class DensityProperty: public Property<double>
-{
-    public:
+class DensityProperty : public Property<double> {
+public:
 
-        static constexpr const char* property_name = "density";
+	static constexpr const char* property_name = "density";
 
-        explicit DensityProperty() = default;
+	explicit DensityProperty() = default;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        DensityProperty * copy() const override;
+	DensityProperty* copy() const override;
 
-        void updateMass(LocatedEntity& entity) const;
+	void updateMass(LocatedEntity& entity) const;
 
-    protected:
-        DensityProperty(const DensityProperty& rhs) = default;
+protected:
+	DensityProperty(const DensityProperty& rhs) = default;
 };
 
 #endif // RULESETS_DENSITY_PROPERTY_H

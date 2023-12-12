@@ -65,18 +65,17 @@ namespace WFMath {
 // this line separates b from B(a), and they do not intersect. QED.
 
 template<>
-bool Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
-{
-  const AxisBox<2> b2 = r.boundingBox();
-  if(!Intersect(b2, b, proper))
-    return false;
+bool Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper) {
+	const AxisBox<2> b2 = r.boundingBox();
+	if (!Intersect(b2, b, proper))
+		return false;
 
-  RotMatrix<2> m = r.m_orient.inverse();
+	RotMatrix<2> m = r.m_orient.inverse();
 
-  const AxisBox<2> b3 = RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
-                             b.m_high - b.m_low, m).boundingBox();
-  const AxisBox<2> b4(r.m_corner0, r.m_corner0 + r.m_size);
-  return Intersect(b3, b4, proper);
+	const AxisBox<2> b3 = RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
+									b.m_high - b.m_low, m).boundingBox();
+	const AxisBox<2> b4(r.m_corner0, r.m_corner0 + r.m_size);
+	return Intersect(b3, b4, proper);
 }
 
 // The 3d implementation is based on the following theorem:
@@ -110,256 +109,335 @@ bool Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
 // 1996
 
 template<>
-bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
-{
-  // Checking intersection of each with the bounding box of
-  // the other in the coordinate system of the first will take care
-  // of the "plane parallel to face" case
+bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper) {
+	// Checking intersection of each with the bounding box of
+	// the other in the coordinate system of the first will take care
+	// of the "plane parallel to face" case
 
-  const AxisBox<3> b2 = r.boundingBox();
-  if(!Intersect(b2, b, proper))
-    return false;
+	const AxisBox<3> b2 = r.boundingBox();
+	if (!Intersect(b2, b, proper))
+		return false;
 
-  RotMatrix<3> minv = r.m_orient.inverse();
-  Vector<3> b_size = b.m_high - b.m_low;
+	RotMatrix<3> minv = r.m_orient.inverse();
+	Vector<3> b_size = b.m_high - b.m_low;
 
-  const AxisBox<3> b3 = RotBox<3>(Point<3>(b.m_low).rotate(minv, r.m_corner0),
-                             b_size, minv).boundingBox();
-  const AxisBox<3> b4(r.m_corner0, r.m_corner0 + r.m_size);
-  if(!Intersect(b3, b4, proper))
-    return false;
+	const AxisBox<3> b3 = RotBox<3>(Point<3>(b.m_low).rotate(minv, r.m_corner0),
+									b_size, minv).boundingBox();
+	const AxisBox<3> b4(r.m_corner0, r.m_corner0 + r.m_size);
+	if (!Intersect(b3, b4, proper))
+		return false;
 
-  // Now for the "plane parallel to at least one edge of each" case
+	// Now for the "plane parallel to at least one edge of each" case
 
-  Vector<3> sep =  b.m_low - r.m_corner0;
-  const RotMatrix<3> &m = r.m_orient;
+	Vector<3> sep = b.m_low - r.m_corner0;
+	const RotMatrix<3>& m = r.m_orient;
 
-  // Generate normals to the 9 possible separating planes
+	// Generate normals to the 9 possible separating planes
 
-  for(int i = 0; i < 3; ++i) {
-    // Generate edge vectors for the RotBox, ignore size, only care about direction
+	for (int i = 0; i < 3; ++i) {
+		// Generate edge vectors for the RotBox, ignore size, only care about direction
 // Just access m_orient directly below instead of using r_vec
 //    Vector<3> r_vec = m.row(i);
 
-    for(int j = 0; j < 3; ++j) {
-      Vector<3> axis;
+		for (int j = 0; j < 3; ++j) {
+			Vector<3> axis;
 
-      // Cross product, ignore size of b since we only care about direction
+			// Cross product, ignore size of b since we only care about direction
 
-      switch(j) {
-        case 0:
-          axis[0] = 0;
-          axis[1] = -m.elem(i, 2);
-          axis[2] =  m.elem(i, 1);
-          break;
-        case 1:
-          axis[0] =  m.elem(i, 2);
-          axis[1] = 0;
-          axis[2] = -m.elem(i, 0);
-          break;
-        case 2:
-          axis[0] = -m.elem(i, 1);
-          axis[1] =  m.elem(i, 0);
-          axis[2] = 0;
-          break;
-        default:
-          assert(false);
-      }
+			switch (j) {
+				case 0:
+					axis[0] = 0;
+					axis[1] = -m.elem(i, 2);
+					axis[2] = m.elem(i, 1);
+					break;
+				case 1:
+					axis[0] = m.elem(i, 2);
+					axis[1] = 0;
+					axis[2] = -m.elem(i, 0);
+					break;
+				case 2:
+					axis[0] = -m.elem(i, 1);
+					axis[1] = m.elem(i, 0);
+					axis[2] = 0;
+					break;
+				default:
+					assert(false);
+			}
 
-      if(axis.sqrMag() < numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon()) {
-        // Parallel edges, this reduces to the 2d case above. We've already
-        // checked the bounding box intersections, so we know they intersect.
-        // We don't need to scale WFMATH_EPSILON, det(m_orient) = 1
-        // essentially takes care of that.
-        return true;
-      }
+			if (axis.sqrMag() < numeric_constants<CoordType>::epsilon() * numeric_constants<CoordType>::epsilon()) {
+				// Parallel edges, this reduces to the 2d case above. We've already
+				// checked the bounding box intersections, so we know they intersect.
+				// We don't need to scale WFMATH_EPSILON, det(m_orient) = 1
+				// essentially takes care of that.
+				return true;
+			}
 
-      // Project both boxes on this axis, check for separating plane.
+			// Project both boxes on this axis, check for separating plane.
 
-      // We only need to project two axes per box, the one parallel
-      // to the plane doesn't contribute
+			// We only need to project two axes per box, the one parallel
+			// to the plane doesn't contribute
 
-      const int next[] = {1, 2, 0};
-      CoordType val;
-      CoordType b_low, b_high, r_low, r_high, dist;
-      int k;
+			const int next[] = {1, 2, 0};
+			CoordType val;
+			CoordType b_low, b_high, r_low, r_high, dist;
+			int k;
 
-      // AxisBox projection
+			// AxisBox projection
 
-      k = next[j];
+			k = next[j];
 
-      val = axis[k] * b_size[k];
+			val = axis[k] * b_size[k];
 
-      if(val > 0) {
-        b_high = val;
-        b_low = 0;
-      }
-      else {
-        b_low = val;
-        b_high = 0;
-      }
+			if (val > 0) {
+				b_high = val;
+				b_low = 0;
+			} else {
+				b_low = val;
+				b_high = 0;
+			}
 
-      k = next[k];
+			k = next[k];
 
-      val = axis[k] * b_size[k];
+			val = axis[k] * b_size[k];
 
-      if(val > 0)
-        b_high += val;
-      else
-        b_low += val;
+			if (val > 0)
+				b_high += val;
+			else
+				b_low += val;
 
-      // RotBox projection
+			// RotBox projection
 
-      k = next[i];
+			k = next[i];
 
-      val = Dot(m.row(k), axis) * r.m_size[k];
+			val = Dot(m.row(k), axis) * r.m_size[k];
 
-      if(val > 0) {
-        r_high = val;
-        r_low = 0;
-      }
-      else {
-        r_low = val;
-        r_high = 0;
-      }
+			if (val > 0) {
+				r_high = val;
+				r_low = 0;
+			} else {
+				r_low = val;
+				r_high = 0;
+			}
 
-      k = next[k];
+			k = next[k];
 
-      val = Dot(m.row(k), axis) * r.m_size[k];
+			val = Dot(m.row(k), axis) * r.m_size[k];
 
-      if(val > 0)
-        r_high += val;
-      else
-        r_low += val;
+			if (val > 0)
+				r_high += val;
+			else
+				r_low += val;
 
-      // Distance between basepoints for boxes along this axis
+			// Distance between basepoints for boxes along this axis
 
-      dist = Dot(sep, axis);
+			dist = Dot(sep, axis);
 
-      if(_Greater(r_low - dist, b_high, proper)
-        || _Less(r_high - dist, b_low, proper))
-        return false;
-    }
-  }
+			if (_Greater(r_low - dist, b_high, proper)
+				|| _Less(r_high - dist, b_low, proper))
+				return false;
+		}
+	}
 
-  return true;
+	return true;
 }
 
 // force a bunch of instantiations
 
 template bool Intersect<2>(const Point<2>&, const Point<2>&, bool);
+
 template bool Intersect<3>(const Point<3>&, const Point<3>&, bool);
+
 template bool Contains<2>(const Point<2>&, const Point<2>&, bool);
+
 template bool Contains<3>(const Point<3>&, const Point<3>&, bool);
 
-template bool Intersect<Point<2>,AxisBox<2> >(const Point<2>&, const AxisBox<2>&, bool);
-template bool Intersect<Point<3>,AxisBox<3> >(const Point<3>&, const AxisBox<3>&, bool);
+template bool Intersect<Point<2>, AxisBox<2> >(const Point<2>&, const AxisBox<2>&, bool);
+
+template bool Intersect<Point<3>, AxisBox<3> >(const Point<3>&, const AxisBox<3>&, bool);
+
 template bool Contains<2>(const Point<2>&, const AxisBox<2>&, bool);
+
 template bool Contains<3>(const Point<3>&, const AxisBox<3>&, bool);
+
 template bool Intersect<2>(const AxisBox<2>&, const Point<2>&, bool);
+
 template bool Intersect<3>(const AxisBox<3>&, const Point<3>&, bool);
+
 template bool Contains<2>(const AxisBox<2>&, const Point<2>&, bool);
+
 template bool Contains<3>(const AxisBox<3>&, const Point<3>&, bool);
 
 template bool Intersect<2>(const AxisBox<2>&, const AxisBox<2>&, bool);
+
 template bool Intersect<3>(const AxisBox<3>&, const AxisBox<3>&, bool);
+
 template bool Contains<2>(const AxisBox<2>&, const AxisBox<2>&, bool);
+
 template bool Contains<3>(const AxisBox<3>&, const AxisBox<3>&, bool);
 
-template bool Intersect<Point<2>,Ball<2> >(const Point<2>&, const Ball<2>&, bool);
-template bool Intersect<Point<3>,Ball<3> >(const Point<3>&, const Ball<3>&, bool);
+template bool Intersect<Point<2>, Ball<2> >(const Point<2>&, const Ball<2>&, bool);
+
+template bool Intersect<Point<3>, Ball<3> >(const Point<3>&, const Ball<3>&, bool);
+
 template bool Contains<2>(const Point<2>&, const Ball<2>&, bool);
+
 template bool Contains<3>(const Point<3>&, const Ball<3>&, bool);
+
 template bool Intersect<2>(const Ball<2>&, const Point<2>&, bool);
+
 template bool Intersect<3>(const Ball<3>&, const Point<3>&, bool);
+
 template bool Contains<2>(const Ball<2>&, const Point<2>&, bool);
+
 template bool Contains<3>(const Ball<3>&, const Point<3>&, bool);
 
-template bool Intersect<AxisBox<2>,Ball<2> >(const AxisBox<2>&, const Ball<2>&, bool);
-template bool Intersect<AxisBox<3>,Ball<3> >(const AxisBox<3>&, const Ball<3>&, bool);
+template bool Intersect<AxisBox<2>, Ball<2> >(const AxisBox<2>&, const Ball<2>&, bool);
+
+template bool Intersect<AxisBox<3>, Ball<3> >(const AxisBox<3>&, const Ball<3>&, bool);
+
 template bool Contains<2>(const AxisBox<2>&, const Ball<2>&, bool);
+
 template bool Contains<3>(const AxisBox<3>&, const Ball<3>&, bool);
+
 template bool Intersect<2>(const Ball<2>&, const AxisBox<2>&, bool);
+
 template bool Intersect<3>(const Ball<3>&, const AxisBox<3>&, bool);
+
 template bool Contains<2>(const Ball<2>&, const AxisBox<2>&, bool);
+
 template bool Contains<3>(const Ball<3>&, const AxisBox<3>&, bool);
 
 template bool Intersect<2>(const Ball<2>&, const Ball<2>&, bool);
+
 template bool Intersect<3>(const Ball<3>&, const Ball<3>&, bool);
+
 template bool Contains<2>(const Ball<2>&, const Ball<2>&, bool);
+
 template bool Contains<3>(const Ball<3>&, const Ball<3>&, bool);
 
-template bool Intersect<Point<2>,Segment<2> >(const Point<2>&, const Segment<2>&, bool);
-template bool Intersect<Point<3>,Segment<3> >(const Point<3>&, const Segment<3>&, bool);
+template bool Intersect<Point<2>, Segment<2> >(const Point<2>&, const Segment<2>&, bool);
+
+template bool Intersect<Point<3>, Segment<3> >(const Point<3>&, const Segment<3>&, bool);
+
 template bool Contains<2>(const Point<2>&, const Segment<2>&, bool);
+
 template bool Contains<3>(const Point<3>&, const Segment<3>&, bool);
+
 template bool Intersect<2>(const Segment<2>&, const Point<2>&, bool);
+
 template bool Intersect<3>(const Segment<3>&, const Point<3>&, bool);
+
 template bool Contains<2>(const Segment<2>&, const Point<2>&, bool);
+
 template bool Contains<3>(const Segment<3>&, const Point<3>&, bool);
 
-template bool Intersect<AxisBox<2>,Segment<2> >(const AxisBox<2>&, const Segment<2>&, bool);
-template bool Intersect<AxisBox<3>,Segment<3> >(const AxisBox<3>&, const Segment<3>&, bool);
+template bool Intersect<AxisBox<2>, Segment<2> >(const AxisBox<2>&, const Segment<2>&, bool);
+
+template bool Intersect<AxisBox<3>, Segment<3> >(const AxisBox<3>&, const Segment<3>&, bool);
+
 template bool Contains<2>(const AxisBox<2>&, const Segment<2>&, bool);
+
 template bool Contains<3>(const AxisBox<3>&, const Segment<3>&, bool);
+
 template bool Intersect<2>(const Segment<2>&, const AxisBox<2>&, bool);
+
 template bool Intersect<3>(const Segment<3>&, const AxisBox<3>&, bool);
+
 template bool Contains<2>(const Segment<2>&, const AxisBox<2>&, bool);
+
 template bool Contains<3>(const Segment<3>&, const AxisBox<3>&, bool);
 
-template bool Intersect<Ball<2>,Segment<2> >(const Ball<2>&, const Segment<2>&, bool);
-template bool Intersect<Ball<3>,Segment<3> >(const Ball<3>&, const Segment<3>&, bool);
+template bool Intersect<Ball<2>, Segment<2> >(const Ball<2>&, const Segment<2>&, bool);
+
+template bool Intersect<Ball<3>, Segment<3> >(const Ball<3>&, const Segment<3>&, bool);
+
 template bool Contains<2>(const Ball<2>&, const Segment<2>&, bool);
+
 template bool Contains<3>(const Ball<3>&, const Segment<3>&, bool);
+
 template bool Intersect<2>(const Segment<2>&, const Ball<2>&, bool);
+
 template bool Intersect<3>(const Segment<3>&, const Ball<3>&, bool);
+
 template bool Contains<2>(const Segment<2>&, const Ball<2>&, bool);
+
 template bool Contains<3>(const Segment<3>&, const Ball<3>&, bool);
 
 template bool Intersect<2>(const Segment<2>&, const Segment<2>&, bool);
+
 template bool Intersect<3>(const Segment<3>&, const Segment<3>&, bool);
+
 template bool Contains<2>(const Segment<2>&, const Segment<2>&, bool);
+
 template bool Contains<3>(const Segment<3>&, const Segment<3>&, bool);
 
-template bool Intersect<Point<2>,RotBox<2> >(const Point<2>&, const RotBox<2>&, bool);
-template bool Intersect<Point<3>,RotBox<3> >(const Point<3>&, const RotBox<3>&, bool);
+template bool Intersect<Point<2>, RotBox<2> >(const Point<2>&, const RotBox<2>&, bool);
+
+template bool Intersect<Point<3>, RotBox<3> >(const Point<3>&, const RotBox<3>&, bool);
+
 template bool Contains<2>(const Point<2>&, const RotBox<2>&, bool);
+
 template bool Contains<3>(const Point<3>&, const RotBox<3>&, bool);
+
 template bool Intersect<2>(const RotBox<2>&, const Point<2>&, bool);
+
 template bool Intersect<3>(const RotBox<3>&, const Point<3>&, bool);
+
 template bool Contains<2>(const RotBox<2>&, const Point<2>&, bool);
+
 template bool Contains<3>(const RotBox<3>&, const Point<3>&, bool);
 
-template bool Intersect<AxisBox<2>,RotBox<2> >(const AxisBox<2>&, const RotBox<2>&, bool);
-template bool Intersect<AxisBox<3>,RotBox<3> >(const AxisBox<3>&, const RotBox<3>&, bool);
+template bool Intersect<AxisBox<2>, RotBox<2> >(const AxisBox<2>&, const RotBox<2>&, bool);
+
+template bool Intersect<AxisBox<3>, RotBox<3> >(const AxisBox<3>&, const RotBox<3>&, bool);
+
 template bool Contains<2>(const AxisBox<2>&, const RotBox<2>&, bool);
+
 template bool Contains<3>(const AxisBox<3>&, const RotBox<3>&, bool);
+
 template bool Contains<2>(const RotBox<2>&, const AxisBox<2>&, bool);
+
 template bool Contains<3>(const RotBox<3>&, const AxisBox<3>&, bool);
 
-template bool Intersect<Ball<2>,RotBox<2> >(const Ball<2>&, const RotBox<2>&, bool);
-template bool Intersect<Ball<3>,RotBox<3> >(const Ball<3>&, const RotBox<3>&, bool);
+template bool Intersect<Ball<2>, RotBox<2> >(const Ball<2>&, const RotBox<2>&, bool);
+
+template bool Intersect<Ball<3>, RotBox<3> >(const Ball<3>&, const RotBox<3>&, bool);
+
 template bool Contains<2>(const Ball<2>&, const RotBox<2>&, bool);
+
 template bool Contains<3>(const Ball<3>&, const RotBox<3>&, bool);
+
 template bool Intersect<2>(const RotBox<2>&, const Ball<2>&, bool);
+
 template bool Intersect<3>(const RotBox<3>&, const Ball<3>&, bool);
+
 template bool Contains<2>(const RotBox<2>&, const Ball<2>&, bool);
+
 template bool Contains<3>(const RotBox<3>&, const Ball<3>&, bool);
 
-template bool Intersect<Segment<2>,RotBox<2> >(const Segment<2>&, const RotBox<2>&, bool);
-template bool Intersect<Segment<3>,RotBox<3> >(const Segment<3>&, const RotBox<3>&, bool);
+template bool Intersect<Segment<2>, RotBox<2> >(const Segment<2>&, const RotBox<2>&, bool);
+
+template bool Intersect<Segment<3>, RotBox<3> >(const Segment<3>&, const RotBox<3>&, bool);
+
 template bool Contains<2>(const Segment<2>&, const RotBox<2>&, bool);
+
 template bool Contains<3>(const Segment<3>&, const RotBox<3>&, bool);
+
 template bool Intersect<2>(const RotBox<2>&, const Segment<2>&, bool);
+
 template bool Intersect<3>(const RotBox<3>&, const Segment<3>&, bool);
+
 template bool Contains<2>(const RotBox<2>&, const Segment<2>&, bool);
+
 template bool Contains<3>(const RotBox<3>&, const Segment<3>&, bool);
 
 template bool Intersect<2>(const RotBox<2>&, const RotBox<2>&, bool);
-template bool Intersect<3>(const RotBox<3>&, const RotBox<3>&, bool);
-template bool Contains<2>(const RotBox<2>&, const RotBox<2>&, bool);
-template bool Contains<3>(const RotBox<3>&, const RotBox<3>&, bool);
 
+template bool Intersect<3>(const RotBox<3>&, const RotBox<3>&, bool);
+
+template bool Contains<2>(const RotBox<2>&, const RotBox<2>&, bool);
+
+template bool Contains<3>(const RotBox<3>&, const RotBox<3>&, bool);
 
 
 }

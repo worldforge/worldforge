@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<ScrollablePane>(sol::table& space) {
 	auto scrollablePane = space.new_usertype<ScrollablePane>("ScrollablePane",
 															 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

@@ -25,14 +25,11 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 ShapeVisual::ShapeVisual(Ogre::SceneNode& baseNode, bool closed) :
-		mBaseNode(baseNode), mClosed(closed), mManualObject(nullptr)
-{
+		mBaseNode(baseNode), mClosed(closed), mManualObject(nullptr) {
 	mManualObject = mBaseNode.getCreator()->createManualObject();
 	mManualObject->setDynamic(true); //We'll be updating this a lot if the user alters the polygon
 	mManualObject->setRenderQueueGroup(Ogre::RENDER_QUEUE_SKIES_LATE - 1); //We want to render the lines on top of everything, so that they aren't hidden by anything
@@ -40,8 +37,7 @@ ShapeVisual::ShapeVisual(Ogre::SceneNode& baseNode, bool closed) :
 
 }
 
-ShapeVisual::~ShapeVisual()
-{
+ShapeVisual::~ShapeVisual() {
 	if (mManualObject) {
 		mBaseNode.detachObject(mManualObject);
 		mBaseNode.getCreator()->destroyManualObject(mManualObject);
@@ -50,4 +46,4 @@ ShapeVisual::~ShapeVisual()
 
 }
 
-}
+

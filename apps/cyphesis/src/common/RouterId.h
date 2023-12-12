@@ -26,48 +26,45 @@
  * We therefore store both the int and string representation in this instance.
  * This allows us to revisit this setup if the need arises (for example if we want decentralized ids, such as GUIDs or similar).
  */
-struct RouterId
-{
-    /**
-     * Implicit ctor by design here.
-     * @param intId
-     */
-    RouterId(long intId);
-    explicit RouterId(std::string id);
-    explicit RouterId(std::string id, long intId);
+struct RouterId {
+	/**
+	 * Implicit ctor by design here.
+	 * @param intId
+	 */
+	RouterId(long intId);
 
-    RouterId(RouterId&&) = default;
-    RouterId(const RouterId&) = default;
+	explicit RouterId(std::string id);
 
-    /// \brief String identifier
-    const std::string m_id;
-    /// \brief Integer identifier
-    const long m_intId;
+	explicit RouterId(std::string id, long intId);
 
-    /**
-     * Checks if the router id is valid, i.e. it's 0 or more.
-     * @return
-     */
-    bool isValid() const {
-        return m_intId >= 0;
-    }
+	RouterId(RouterId&&) = default;
+
+	RouterId(const RouterId&) = default;
+
+	/// \brief String identifier
+	const std::string m_id;
+	/// \brief Integer identifier
+	const long m_intId;
+
+	/**
+	 * Checks if the router id is valid, i.e. it's 0 or more.
+	 * @return
+	 */
+	bool isValid() const {
+		return m_intId >= 0;
+	}
 };
 
 inline RouterId::RouterId(long intId)
-    : m_id(std::to_string(intId))
-    , m_intId(intId)
-{
+		: m_id(std::to_string(intId)), m_intId(intId) {
 }
 
 inline RouterId::RouterId(std::string id)
-    : m_id(std::move(id))
-    , m_intId(std::stol(m_id))
-{
+		: m_id(std::move(id)), m_intId(std::stol(m_id)) {
 }
 
 inline RouterId::RouterId(std::string id, long intId)
-    : m_id(std::move(id))
-    , m_intId(intId)
-{
+		: m_id(std::move(id)), m_intId(intId) {
 }
+
 #endif  // CYPHESIS_ROUTERID_H

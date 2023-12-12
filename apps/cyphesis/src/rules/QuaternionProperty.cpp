@@ -21,32 +21,28 @@
 
 QuaternionProperty::QuaternionProperty(const QuaternionProperty& rhs) = default;
 
-int QuaternionProperty::get(Atlas::Message::Element& val) const
-{
-    if (m_data.isValid()) {
-        val = m_data.toAtlas();
-        return 0;
-    }
-    return 1;
+int QuaternionProperty::get(Atlas::Message::Element& val) const {
+	if (m_data.isValid()) {
+		val = m_data.toAtlas();
+		return 0;
+	}
+	return 1;
 
 }
 
-void QuaternionProperty::set(const Atlas::Message::Element& val)
-{
-    if (val.isList()) {
-        m_data.fromAtlas(val.List());
-    }
+void QuaternionProperty::set(const Atlas::Message::Element& val) {
+	if (val.isList()) {
+		m_data.fromAtlas(val.List());
+	}
 }
 
-QuaternionProperty* QuaternionProperty::copy() const
-{
-    return new QuaternionProperty(*this);
+QuaternionProperty* QuaternionProperty::copy() const {
+	return new QuaternionProperty(*this);
 }
 
-void QuaternionProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
-{
-    if (m_data.isValid()) {
-        PropertyBase::add(key, ent);
-    }
+void QuaternionProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const {
+	if (m_data.isValid()) {
+		PropertyBase::add(key, ent);
+	}
 }
 

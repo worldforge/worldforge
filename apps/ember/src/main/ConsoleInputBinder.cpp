@@ -24,13 +24,15 @@ namespace Ember {
 
 ConsoleInputBinder::ConsoleInputBinder(Ember::Input& input, ConsoleBackend& consoleBackend) :
 		mInput(input),
-		mBind(consoleBackend, "bind", std::bind(&ConsoleInputBinder::bindCommand, this, std::placeholders::_1, std::placeholders::_2)),
-		mUnbind(consoleBackend, "unbind", std::bind(&ConsoleInputBinder::unbindCommand, this, std::placeholders::_1, std::placeholders::_2)),
-		mToggleFullscreen(consoleBackend, "toggle_fullscreen", std::bind(&ConsoleInputBinder::toggleFullscreenCommand, this, std::placeholders::_1, std::placeholders::_2), "Switch between windowed and full screen mode.") {
+		mBind(consoleBackend, "bind", [this](auto&& command, auto&& args) { bindCommand(std::forward<decltype(command)>(command), std::forward<decltype(args)>(args)); }),
+		mUnbind(consoleBackend, "unbind", [this](auto&& command, auto&& args) { unbindCommand(std::forward<decltype(command)>(command), std::forward<decltype(args)>(args)); }),
+		mToggleFullscreen(consoleBackend, "toggle_fullscreen",
+						  [this](auto&& command, auto&& args) { toggleFullscreenCommand(std::forward<decltype(command)>(command), std::forward<decltype(args)>(args)); },
+						  "Switch between windowed and full screen mode.") {
 
 }
 
-void ConsoleInputBinder::bindCommand(const std::string& command, const std::string& args) {
+void ConsoleInputBinder::bindCommand(const std::string&, const std::string& args) {
 	Tokeniser tokeniser;
 	tokeniser.initTokens(args);
 	std::string state("general");
@@ -49,7 +51,7 @@ void ConsoleInputBinder::bindCommand(const std::string& command, const std::stri
 	}
 }
 
-void ConsoleInputBinder::unbindCommand(const std::string& command, const std::string& args) {
+void ConsoleInputBinder::unbindCommand(const std::string&, const std::string& args) {
 	Tokeniser tokeniser;
 	tokeniser.initTokens(args);
 	std::string state("general");
@@ -65,7 +67,7 @@ void ConsoleInputBinder::unbindCommand(const std::string& command, const std::st
 	}
 }
 
-void ConsoleInputBinder::toggleFullscreenCommand(const std::string& command, const std::string& args) {
+void ConsoleInputBinder::toggleFullscreenCommand(const std::string&, const std::string&) {
 	mInput.toggleFullscreen();
 }
 

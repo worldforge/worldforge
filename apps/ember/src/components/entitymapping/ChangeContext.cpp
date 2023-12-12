@@ -23,33 +23,27 @@
 #include "ChangeContext.h"
 #include "Cases/CaseBase.h"
 
-namespace Ember
-{
 
-namespace EntityMapping
-{
 
-ChangeContext::~ChangeContext()
-{
+namespace Ember::EntityMapping {
+
+ChangeContext::~ChangeContext() {
 	EventContextComplete();
 }
 
-void ChangeContext::addCaseToActivate(Cases::CaseBase* aCase)
-{
+void ChangeContext::addCaseToActivate(Cases::CaseBase* aCase) {
 	mActivateQueue.push_back(aCase);
 }
 
-void ChangeContext::addCaseToDeactivate(Cases::CaseBase* aCase)
-{
+void ChangeContext::addCaseToDeactivate(Cases::CaseBase* aCase) {
 	mDeactivateQueue.push_back(aCase);
 }
 
-void ChangeContext::performActions()
-{
-	for (auto& aCase : mDeactivateQueue) {
+void ChangeContext::performActions() {
+	for (auto& aCase: mDeactivateQueue) {
 		aCase->deactivateActions(*this);
 	}
-	for (auto& aCase : mActivateQueue) {
+	for (auto& aCase: mActivateQueue) {
 		aCase->activateActions(*this);
 	}
 
@@ -57,4 +51,4 @@ void ChangeContext::performActions()
 
 }
 
-}
+

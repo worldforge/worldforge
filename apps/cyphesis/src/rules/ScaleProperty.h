@@ -31,34 +31,31 @@ class BBoxProperty;
  *
  * \ingroup PropertyClasses
  */
-class ScaleProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_name = "scale";
-        static constexpr const char* property_atlastype = "list";
+class ScaleProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "scale";
+	static constexpr const char* property_atlastype = "list";
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        const WFMath::Vector<3>& data() const
-        { return m_data; }
+	const WFMath::Vector<3>& data() const { return m_data; }
 
-        WFMath::Vector<3>& data()
-        { return m_data; }
+	WFMath::Vector<3>& data() { return m_data; }
 
-        ScaleProperty* copy() const override;
+	ScaleProperty* copy() const override;
 
-        static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity);
+	static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity);
 
-        static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity, const BBoxProperty& bboxProperty);
+	static WFMath::AxisBox<3> scaledBbox(const LocatedEntity& entity, const BBoxProperty& bboxProperty);
 
-        static WFMath::AxisBox<3> scaledBbox(const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& scale);
+	static WFMath::AxisBox<3> scaledBbox(const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& scale);
 
-    protected:
-        WFMath::Vector<3> m_data;
+protected:
+	WFMath::Vector<3> m_data;
 
 
 };

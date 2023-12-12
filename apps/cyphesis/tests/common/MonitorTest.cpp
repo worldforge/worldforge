@@ -28,17 +28,20 @@
 #include "common/operations/Monitor.h"
 #include "common/random.h"
 
-int main()
-{
-    OperationExerciser<Atlas::Objects::Operation::Monitor> op_tester;
+int main() {
+	OperationExerciser<Atlas::Objects::Operation::Monitor> op_tester;
 
-    Atlas::Objects::Operation::MONITOR_NO = randint(1, 100);
+	Atlas::Objects::Operation::MONITOR_NO = randint(1, 100);
 
-    op_tester.runTests("monitor", Atlas::Objects::Operation::MONITOR_NO);
+	op_tester.runTests("monitor", Atlas::Objects::Operation::MONITOR_NO);
 
-    return 0;
+	return 0;
 }
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int MONITOR_NO = -1;
-} } }
+}
+}
+}

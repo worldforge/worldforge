@@ -27,26 +27,26 @@
 #include "IEnvironmentProvider.h"
 #include <OgrePlane.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 class RefractionTextureListener;
+
 class ReflectionTextureListener;
 
 
 /**
 @author Erik Ogenvik
 */
-class Water : public IWater
-{
+class Water : public IWater {
 
 
 public:
-    Water(Ogre::Camera& camera, Ogre::SceneManager& sceneMgr);
+	Water(Ogre::Camera& camera, Ogre::SceneManager& sceneMgr);
 
-    ~Water() override;
+	~Water() override;
 
 	/**
 	 * @brief Performs checks to see whether this technique is supported on the current hardware.
@@ -75,13 +75,13 @@ protected:
 	 */
 	Ogre::SceneManager& mSceneMgr;
 
-    std::unique_ptr<RefractionTextureListener> mRefractionListener;
-    std::unique_ptr<ReflectionTextureListener> mReflectionListener;
+	std::unique_ptr<RefractionTextureListener> mRefractionListener;
+	std::unique_ptr<ReflectionTextureListener> mReflectionListener;
 
 	/**
 	 * @brief The node to which the water entity is attached to. Owned by this instance-
 	 */
-	Ogre::SceneNode *mWaterNode;
+	Ogre::SceneNode* mWaterNode;
 
 	/**
 	 * @brief The entity representing the water plane. Owned by this instance-
@@ -92,8 +92,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

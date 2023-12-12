@@ -35,9 +35,9 @@
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 EntityMover::EntityMover(NodeAttachment& nodeAttachment, EntityMoveManager& manager) :
 		EntityMoverBase(&nodeAttachment.getAttachedEntity(), nodeAttachment.getNode(), manager.getWorld().getScene().getSceneManager()),
 		mNodeAttachment(nodeAttachment),
@@ -121,5 +121,5 @@ const WFMath::Vector<3>& EntityMoverControlDelegate::getVelocity() const {
 
 }
 
-}
-}
+
+

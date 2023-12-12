@@ -22,6 +22,7 @@
 //
 #ifndef EMBEROGRE_GUI_ADAPTERS_ATLASTERRAINMODADAPTER_H
 #define EMBEROGRE_GUI_ADAPTERS_ATLASTERRAINMODADAPTER_H
+
 #include "AdapterBase.h"
 
 #include <memory>
@@ -29,13 +30,9 @@
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
 
-namespace Gui {
 
-namespace Adapters {
-
-namespace Atlas {
+namespace OgreView::Gui::Adapters::Atlas {
 
 class PolygonAdapter;
 
@@ -46,44 +43,39 @@ public:
 	const std::string& getType() const;
 
 protected:
-	TerrainModBase(std::string  type);
-	
+	explicit TerrainModBase(std::string type);
+
 	std::string mType;
 };
 
-class LevelTerrainMod : public TerrainModBase
-{
+class LevelTerrainMod : public TerrainModBase {
 public:
 	LevelTerrainMod();
 };
 
-class AdjustTerrainMod : public TerrainModBase
-{
+class AdjustTerrainMod : public TerrainModBase {
 public:
 	AdjustTerrainMod();
 };
 
-class PositioningBase 
-{
+class PositioningBase {
 public:
 
 	const std::string& getType() const;
 
 protected:
-	PositioningBase(std::string  type);
-	
+	explicit PositioningBase(std::string type);
+
 	std::string mType;
 
 };
 
-class FixedPositioning : public PositioningBase
-{
+class FixedPositioning : public PositioningBase {
 public:
 	FixedPositioning();
 };
 
-class RelativePositioning : public PositioningBase
-{
+class RelativePositioning : public PositioningBase {
 public:
 	RelativePositioning();
 };
@@ -94,10 +86,9 @@ This adapter will allow the user to edit the mods graphically through the use of
 The polygon editing functionality is handled by an instance of PolygonAdapter, which this class wraps.
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class TerrainModAdapter : public AdapterBase
-{
+class TerrainModAdapter : public AdapterBase {
 public:
-	
+
 	/**
 	 * @brief Ctor.
 	 * @param element The existing element.
@@ -107,51 +98,48 @@ public:
 	 * @param modTypeCombobox A combobox for the terrain mod types.
 	 * @param heightTextbox An editbox for the height.
 	 */
-	TerrainModAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, EmberEntity* entity, CEGUI::Combobox* posTypeCombobox, CEGUI::Combobox* modTypeCombobox, CEGUI::Editbox* heightTextbox);
+	TerrainModAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, EmberEntity* entity, CEGUI::Combobox* posTypeCombobox, CEGUI::Combobox* modTypeCombobox,
+					  CEGUI::Editbox* heightTextbox);
 
 	/**
 	 * @brief Dtor.
 	 */
 	~TerrainModAdapter() override;
-	
+
 	/**
 	 * @brief Updates the gui with new values.
 	 */
 	void updateGui(const ::Atlas::Message::Element& element) override;
 
 protected:
-	
+
 	/**
 	 * @brief An optional entity to which the area belongs.
 	 * Mainly used for height lookups, so that the polygon snaps to the ground.
 	 */
 	EmberEntity* mEntity;
-	
-	
+
+
 	/**
 	 * @brief The polygon adapter, which handles the actual polygon editing.
 	 */
 	std::unique_ptr<PolygonAdapter> mPolygonAdapter;
-	
+
 	CEGUI::Editbox* mHeightTextbox;
-	
+
 	ListBinder<TerrainModBase, CEGUI::Combobox> mTerrainModsBinder;
 	ListBinder<PositioningBase, CEGUI::Combobox> mPositioningsBinder;
-	
-	
+
+
 	bool heightTextbox_TextChanged(const CEGUI::EventArgs& e);
-	
+
 	void fillElementFromGui() override;
+
 	bool _hasChanges() override;
 };
 
 }
 
-}
-
-}
-
-}
 
 }
 

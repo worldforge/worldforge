@@ -26,6 +26,7 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 
 class LocatedEntity;
+
 class Location;
 
 /// \brief Base class for handling Character movement
@@ -33,55 +34,60 @@ class Location;
 /// This class should be replaced by a base class for handling all entity
 /// movement.
 class Movement {
-  protected:
-    /// The Entity this Movement is tracking.
-    LocatedEntity & m_body;
-    /// The destination position.
-    Point3D m_targetPos;
-    int m_serialno;
+protected:
+	/// The Entity this Movement is tracking.
+	LocatedEntity& m_body;
+	/// The destination position.
+	Point3D m_targetPos;
+	int m_serialno;
 
-  public:
-    Movement(const Movement &) = delete;
-    explicit Movement(LocatedEntity & body);
-    virtual ~Movement() = default;
+public:
+	Movement(const Movement&) = delete;
 
-    Movement & operator=(const Movement &) = delete;
+	explicit Movement(LocatedEntity& body);
 
-    int serialno() const {
-        return m_serialno;
-    }
+	virtual ~Movement() = default;
 
-    bool hasTarget() const {
-        return m_targetPos.isValid();
-    }
+	Movement& operator=(const Movement&) = delete;
 
-    void setTarget(const Point3D & target) {
-        m_targetPos = target;
-    }
+	int serialno() const {
+		return m_serialno;
+	}
 
-    void reset();
-    bool updateNeeded(const Location & location) const;
+	bool hasTarget() const {
+		return m_targetPos.isValid();
+	}
 
-    /// \brief Determine the time before the next update is required.
-    ///
-    /// Calculate how long before the Entity will reach its intended target.
-    /// If there is no target, or the target is some distance away, then
-    /// the default tick is returned.
-    /// @param coordinates the current position.
-    /// @param velocity the current velocity.
-    virtual double getTickAddition(const Point3D & coordinates,
-                                   const Vector3D & velocity) const = 0;
-    /// \brief Calculate the update position of the entity.
-    ///
-    /// @param return_location the returned Location data.
-    virtual int getUpdatedLocation(Location & return_location) = 0;
-    /// \brief Generate a new Move operation to implement the movement.
-    ///
-    /// Create a Move operation object, and set up the argument to describe
-    /// how the Entity is moving.
-    /// @param new_location Location data about the entity once movement has
-    /// changed.
-    virtual Atlas::Objects::Operation::RootOperation generateMove(const Location & new_location) = 0;
+	void setTarget(const Point3D& target) {
+		m_targetPos = target;
+	}
+
+	void reset();
+
+	bool updateNeeded(const Location& location) const;
+
+	/// \brief Determine the time before the next update is required.
+	///
+	/// Calculate how long before the Entity will reach its intended target.
+	/// If there is no target, or the target is some distance away, then
+	/// the default tick is returned.
+	/// @param coordinates the current position.
+	/// @param velocity the current velocity.
+	virtual double getTickAddition(const Point3D& coordinates,
+								   const Vector3D& velocity) const = 0;
+
+	/// \brief Calculate the update position of the entity.
+	///
+	/// @param return_location the returned Location data.
+	virtual int getUpdatedLocation(Location& return_location) = 0;
+
+	/// \brief Generate a new Move operation to implement the movement.
+	///
+	/// Create a Move operation object, and set up the argument to describe
+	/// how the Entity is moving.
+	/// @param new_location Location data about the entity once movement has
+	/// changed.
+	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location& new_location) = 0;
 };
 
 #endif // RULESETS_MOVEMENT_H

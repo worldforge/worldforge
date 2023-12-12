@@ -23,17 +23,15 @@
 #include "domain/EmberEntity.h"
 #include <sigc++/trackable.h>
 
-namespace Ogre
-{
+namespace Ogre {
 class Node;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 struct INodeProvider;
+
 class NodeController;
 
 /**
@@ -45,8 +43,7 @@ class NodeController;
  * Most entities in the game are expected to be represented by this class, or any subclass of it.
  * The node will be moved and rotated either by using the values from the entity to which it's attached, or through an instance of IEntityControlDelegate set through the setControlDelegate() method.
  */
-class NodeAttachment: public AttachmentBase, public virtual sigc::trackable
-{
+class NodeAttachment : public AttachmentBase, public virtual sigc::trackable {
 public:
 
 	/**
@@ -137,5 +134,5 @@ protected:
 };
 
 }
-}
+
 #endif /* EMBEROGRENodeAttachment_H_ */

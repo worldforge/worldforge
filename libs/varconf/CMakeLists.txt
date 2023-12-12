@@ -39,9 +39,6 @@ macro(wf_add_test TEST_FILE)
     add_dependencies(check ${TEST_NAME})
 endmacro()
 
-# Populate for pkg-config
-set(REQUIRES "sigc++-3.0")
-
 # Check for deps
 
 find_package(sigc++-3 3.0 REQUIRED)

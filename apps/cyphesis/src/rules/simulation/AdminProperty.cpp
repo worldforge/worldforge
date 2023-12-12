@@ -20,17 +20,15 @@
 
 #include "rules/LocatedEntity.h"
 
-void AdminProperty::apply(LocatedEntity& entity)
-{
-    if (isTrue()) {
-        entity.flags().addFlags(entity_admin);
-    } else {
-        entity.flags().removeFlags(entity_admin);
-    }
+void AdminProperty::apply(LocatedEntity& entity) {
+	if (isTrue()) {
+		entity.flags().addFlags(entity_admin);
+	} else {
+		entity.flags().removeFlags(entity_admin);
+	}
 }
 
-AdminProperty * AdminProperty::copy() const
-{
-    return new AdminProperty(*this);
+AdminProperty* AdminProperty::copy() const {
+	return new AdminProperty(*this);
 }
 

@@ -10,8 +10,8 @@
 
 #include <Atlas/Message/DecoderBase.h>
 
-namespace Atlas {
-namespace Objects {
+
+namespace Atlas::Objects {
 
 template<class T>
 class SmartPtr;
@@ -56,6 +56,6 @@ protected:
 };
 
 }
-} // namespace Atlas::Objects
+// namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_DECODER_H

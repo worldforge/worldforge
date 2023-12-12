@@ -23,8 +23,6 @@
 #include "../../ComboboxRepresentation.h"
 #include "../../EditboxRepresentation.h"
 #include "../../SliderRepresentation.h"
-#include "../../SingleAdapterRepresentationBase.h"
-#include "components/ogre/widgets/ListHolder.h"
 
 using namespace Ember::OgreView::Gui::Representations;
 using namespace Ember::OgreView::Gui;
@@ -75,7 +73,8 @@ void registerBindingsRepresentations(sol::state_view& lua) {
 	);
 
 	Representations.new_usertype<ComboboxRepresentation<Atlas::Message::Element, std::string>>("ComboboxRepresentation<Atlas::Message::Element, std::string>",
-																							   sol::constructors<ComboboxRepresentation<Atlas::Message::Element, std::string>(const Atlas::Message::Element&, bool)>(),
+																							   sol::constructors<ComboboxRepresentation<Atlas::Message::Element, std::string>(
+																									   const Atlas::Message::Element&, bool)>(),
 																							   sol::base_classes, sol::bases<RepresentationBase<Atlas::Message::Element>>()
 	);
 	Representations.new_usertype<ComboboxRepresentation<varconf::Variable, std::string>>("ComboboxRepresentation<varconf::Variable, std::string>",
@@ -87,7 +86,8 @@ void registerBindingsRepresentations(sol::state_view& lua) {
 																				 sol::base_classes, sol::bases<RepresentationBase<varconf::Variable>>()
 	);
 	Representations.new_usertype<EditboxRepresentation<Atlas::Message::Element, std::string>>("EditboxRepresentation<Atlas::Message::Element, std::string>",
-																							  sol::constructors<EditboxRepresentation<Atlas::Message::Element, std::string>(const Atlas::Message::Element&)>(),
+																							  sol::constructors<EditboxRepresentation<Atlas::Message::Element, std::string>(
+																									  const Atlas::Message::Element&)>(),
 																							  sol::base_classes, sol::bases<RepresentationBase<Atlas::Message::Element>>()
 	);
 	Representations.new_usertype<EditboxRepresentation<varconf::Variable, std::string>>("EditboxRepresentation<varconf::Variable, std::string>",

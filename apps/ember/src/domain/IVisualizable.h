@@ -21,8 +21,7 @@
 
 #include <string>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -31,8 +30,7 @@ namespace Ember
  * Typical features would be debug visualizations.
  *
  */
-struct IVisualizable
-{
+struct IVisualizable {
 
 	/**
 	 * @brief Dtor.

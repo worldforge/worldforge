@@ -30,21 +30,20 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        Master * p = new Master(*(CommClient*)0, *(ServerRouting*)0, "1");
-        delete p;
-    }
+int main() {
+	{
+		Master* p = new Master(*(CommClient*) 0, *(ServerRouting*) 0, "1");
+		delete p;
+	}
 
-    {
-        Master * p = new Master(*(CommClient*)0, *(ServerRouting*)0, "1");
+	{
+		Master* p = new Master(*(CommClient*) 0, *(ServerRouting*) 0, "1");
 
-        Atlas::Objects::Operation::RootOperation op;
-        OpVector res;
-        p->operation(op, res);
+		Atlas::Objects::Operation::RootOperation op;
+		OpVector res;
+		p->operation(op, res);
 
-        delete p;
-    }
-    return 0;
+		delete p;
+	}
+	return 0;
 }

@@ -27,8 +27,8 @@
 
 #include <CEGUI/Event.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 class GUIManager;
 
 namespace Gui {
@@ -70,6 +70,5 @@ protected:
 
 }
 
-}
 
 #endif

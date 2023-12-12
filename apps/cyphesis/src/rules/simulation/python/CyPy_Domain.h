@@ -26,34 +26,32 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Domain : public WrapperBase<Ref<LocatedEntity>, CyPy_Domain>
-{
-    public:
-        CyPy_Domain(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Domain : public WrapperBase<Ref<LocatedEntity>, CyPy_Domain> {
+public:
+	CyPy_Domain(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Domain(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
+	CyPy_Domain(Py::PythonClassInstance* self, Ref<LocatedEntity> value);
 
-        ~CyPy_Domain() override;
+	~CyPy_Domain() override;
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object query_collisions(const Py::Tuple& args);
+	Py::Object query_collisions(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Domain, query_collisions);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Domain, query_collisions);
 
 };
 
-struct CyPy_CollisionEntry : public WrapperBase<Domain::CollisionEntry, CyPy_CollisionEntry>
-{
-    CyPy_CollisionEntry(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+struct CyPy_CollisionEntry : public WrapperBase<Domain::CollisionEntry, CyPy_CollisionEntry> {
+	CyPy_CollisionEntry(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-    CyPy_CollisionEntry(Py::PythonClassInstance* self, Domain::CollisionEntry value);
+	CyPy_CollisionEntry(Py::PythonClassInstance* self, Domain::CollisionEntry value);
 
-    ~CyPy_CollisionEntry() override;
+	~CyPy_CollisionEntry() override;
 
-    static void init_type();
+	static void init_type();
 
-    Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
 };
 

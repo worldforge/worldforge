@@ -17,15 +17,12 @@
  */
 
 #include "TerrainAreaUpdateTask.h"
-#include "TerrainLayerDefinition.h"
 #include <Mercator/Terrain.h>
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 TerrainAreaUpdateTask::TerrainAreaUpdateTask(Mercator::Terrain& terrain,
 											 long id,
 											 std::unique_ptr<Mercator::Area> area,
@@ -54,12 +51,12 @@ bool TerrainAreaUpdateTask::executeTaskInMainThread() {
 		if (mNewShape.isValid()) {
 			//mark the shader for update
 			//we'll not update immediately, we try to batch many area updates and then only update once per frame
-			mShaderUpdateSlot(mLayerId, mNewShape);
+			mShaderUpdateSlot((int) mLayerId, mNewShape);
 		}
 
 		if (mOldShape.isValid()) {
 			//Also mark the old shape, in case it resided on a different page.
-			mShaderUpdateSlot(mLayerId, mOldShape);
+			mShaderUpdateSlot((int) mLayerId, mOldShape);
 		}
 	}
 	return true;
@@ -67,5 +64,5 @@ bool TerrainAreaUpdateTask::executeTaskInMainThread() {
 
 }
 
-}
-}
+
+

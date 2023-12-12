@@ -25,13 +25,10 @@
 
 #include "components/ogre/terrain/Types.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 struct TerrainPageSurfaceCompilerTechnique;
-
-class TerrainPageShadow;
 
 /**
  *
@@ -62,6 +59,6 @@ struct ICompilerTechniqueProvider {
 
 
 }
-}
-}
+
+
 #endif

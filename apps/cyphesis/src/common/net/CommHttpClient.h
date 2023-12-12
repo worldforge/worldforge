@@ -25,43 +25,41 @@
 #include <memory>
 #include <Atlas/Objects/Factories.h>
 
-struct HttpRequestProcessor
-{
-    virtual void processQuery(std::ostream& body, const std::list<std::string>& headers) = 0;
+struct HttpRequestProcessor {
+	virtual void processQuery(std::ostream& body, const std::list<std::string>& headers) = 0;
 };
 
 /// \brief Handle an internet socket connected to a remote web browser.
 /// \ingroup ServerSockets
-class CommHttpClient : public std::enable_shared_from_this<CommHttpClient>
-{
-    protected:
+class CommHttpClient : public std::enable_shared_from_this<CommHttpClient> {
+protected:
 
-        boost::asio::ip::tcp::socket mSocket;
+	boost::asio::ip::tcp::socket mSocket;
 
-        boost::asio::streambuf mBuffer;
-        std::iostream mStream;
+	boost::asio::streambuf mBuffer;
+	std::iostream mStream;
 
-        std::string m_incoming;
-        std::list<std::string> m_headers;
+	std::string m_incoming;
+	std::list<std::string> m_headers;
 
-        HttpRequestProcessor& m_requestProcessor;
+	HttpRequestProcessor& m_requestProcessor;
 
-        void do_read();
+	void do_read();
 
-        bool read();
+	bool read();
 
-        void write();
+	void write();
 
-    public:
-        CommHttpClient(const std::string& name,
-                       boost::asio::io_context& io_context,
-                       HttpRequestProcessor& requestProcessor);
+public:
+	CommHttpClient(const std::string& name,
+				   boost::asio::io_context& io_context,
+				   HttpRequestProcessor& requestProcessor);
 
-        virtual ~CommHttpClient();
+	virtual ~CommHttpClient();
 
-        void serveRequest();
+	void serveRequest();
 
-        boost::asio::ip::tcp::socket& getSocket();
+	boost::asio::ip::tcp::socket& getSocket();
 
 };
 

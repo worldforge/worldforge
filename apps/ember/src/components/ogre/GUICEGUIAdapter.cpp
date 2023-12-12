@@ -23,12 +23,11 @@
 #include "GUICEGUIAdapter.h"
 
 #include <CEGUI/Exceptions.h>
-#include <CEGUI/GlobalEventSet.h>
 #include <CEGUI/widgets/Editbox.h>
 #include <CEGUI/widgets/MultiLineEditbox.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 GUICEGUIAdapter::GUICEGUIAdapter(CEGUI::System& system, CEGUI::OgreRenderer& renderer) :
 		mGuiSystem(system), mGuiRenderer(renderer), mGuiContext(system.getDefaultGUIContext()) {
@@ -236,7 +235,7 @@ bool GUICEGUIAdapter::injectChar(int character) {
 
 bool GUICEGUIAdapter::injectKeyDown(const SDL_Scancode& key) {
 	try {
-		SDLKeyMap::const_iterator I = mKeyMap.find(key);
+		auto I = mKeyMap.find(key);
 		if (I != mKeyMap.end()) {
 			const auto& scanCode = I->second;
 			mGuiContext.injectKeyDown(scanCode);
@@ -250,7 +249,7 @@ bool GUICEGUIAdapter::injectKeyDown(const SDL_Scancode& key) {
 
 bool GUICEGUIAdapter::injectKeyUp(const SDL_Scancode& key) {
 	try {
-		SDLKeyMap::const_iterator I = mKeyMap.find(key);
+		auto I = mKeyMap.find(key);
 		if (I != mKeyMap.end()) {
 			const auto& scanCode = I->second;
 			mGuiContext.injectKeyUp(scanCode);
@@ -264,4 +263,4 @@ bool GUICEGUIAdapter::injectKeyUp(const SDL_Scancode& key) {
 
 
 }
-}
+

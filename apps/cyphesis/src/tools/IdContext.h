@@ -21,15 +21,15 @@
 
 #include "ObjectContext.h"
 
-class IdContext : public ObjectContext
-{
-  protected:
-    const std::string m_id;
-    long m_refNo;
-  public:
-    explicit IdContext(Interactive & i, std::string id) :
-          ObjectContext(i), m_id(std::move(id)), m_refNo(0L) { }
-    void setFromContext(const Atlas::Objects::Operation::RootOperation&) override;
+class IdContext : public ObjectContext {
+protected:
+	const std::string m_id;
+	long m_refNo;
+public:
+	explicit IdContext(Interactive& i, std::string id) :
+			ObjectContext(i), m_id(std::move(id)), m_refNo(0L) {}
+
+	void setFromContext(const Atlas::Objects::Operation::RootOperation&) override;
 };
 
 #endif // TOOLS_ID_CONTEXT_H

@@ -33,41 +33,40 @@
 #include <cassert>
 #include <Atlas/Objects/Factories.h>
 
-int main()
-{
-    Atlas::Objects::Factories factories;
-    {
-        // Test constructor
-        std::map<std::string, Atlas::Objects::Root> data;
-        AtlasFileLoader loader(factories, "foo", data);
-    }
+int main() {
+	Atlas::Objects::Factories factories;
+	{
+		// Test constructor
+		std::map<std::string, Atlas::Objects::Root> data;
+		AtlasFileLoader loader(factories, "foo", data);
+	}
 
-    {
-        // Test destructor
-        std::map<std::string, Atlas::Objects::Root> data;
-        AtlasFileLoader * loader = new AtlasFileLoader(factories, "foo", data);
+	{
+		// Test destructor
+		std::map<std::string, Atlas::Objects::Root> data;
+		AtlasFileLoader* loader = new AtlasFileLoader(factories, "foo", data);
 
-        delete loader;
-    }
+		delete loader;
+	}
 
-    {
-        // Test isOpen
-        std::map<std::string, Atlas::Objects::Root> data;
-        AtlasFileLoader loader(factories, "foo", data);
+	{
+		// Test isOpen
+		std::map<std::string, Atlas::Objects::Root> data;
+		AtlasFileLoader loader(factories, "foo", data);
 
-        assert(!loader.isOpen());
-    }
+		assert(!loader.isOpen());
+	}
 
-    {
-        // Test count
-        std::map<std::string, Atlas::Objects::Root> data;
-        AtlasFileLoader loader(factories, "foo", data);
+	{
+		// Test count
+		std::map<std::string, Atlas::Objects::Root> data;
+		AtlasFileLoader loader(factories, "foo", data);
 
-        assert(loader.count() == 0);
-        assert((unsigned int)loader.count() == data.size());
-    }
+		assert(loader.count() == 0);
+		assert((unsigned int) loader.count() == data.size());
+	}
 
-    return 0;
+	return 0;
 }
 
 #include "../stubs/common/stublog.h"

@@ -23,10 +23,8 @@
 #include "QuickHelp.h"
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 QuickHelp::QuickHelp() = default;
 
@@ -85,5 +83,5 @@ void QuickHelp::showWidget() const {
 }
 
 }
-}
-}
+
+

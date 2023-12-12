@@ -25,23 +25,22 @@
 #include <cstring>      // memcpy
 
 MetaServerPacket::MetaServerPacket() :
-		  m_packetType(NMT_NULL),
-		  m_AddressInt(0),
-		  m_Port(0),
-		  m_Bytes(0),
-		  m_packetPayload{},
-		  m_needFree(true),
-		  m_outBound(false),
-		  m_Sequence(0),
-		  m_TimeOffset(0)
-{
+		m_packetType(NMT_NULL),
+		m_AddressInt(0),
+		m_Port(0),
+		m_Bytes(0),
+		m_packetPayload{},
+		m_needFree(true),
+		m_outBound(false),
+		m_Sequence(0),
+		m_TimeOffset(0) {
 	m_packetPayload.fill(0);
-	m_readPtr  = m_packetPayload.data();
-	m_headPtr  = m_packetPayload.data();
+	m_readPtr = m_packetPayload.data();
+	m_headPtr = m_packetPayload.data();
 	m_writePtr = m_packetPayload.data();
 }
 
-MetaServerPacket::MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
+MetaServerPacket::MetaServerPacket(const std::array<char, MAX_PACKET_BYTES>& pl, std::size_t bytes)
 		: m_packetType(NMT_NULL),
 		  m_AddressInt(0),
 		  m_Port(0),
@@ -50,29 +49,24 @@ MetaServerPacket::MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, 
 		  m_needFree(false),
 		  m_outBound(false),
 		  m_Sequence(0),
-		  m_TimeOffset(0)
-{
-		m_readPtr  = m_packetPayload.data();
-		m_headPtr  = m_packetPayload.data();
-		m_writePtr = m_packetPayload.data();
+		  m_TimeOffset(0) {
+	m_readPtr = m_packetPayload.data();
+	m_headPtr = m_packetPayload.data();
+	m_writePtr = m_packetPayload.data();
 
-		if ( bytes > 0 )
-		{
-			// if we have data ... parse out type
-			parsePacketType();
-		}
-		else
-		{
-			// otherwise assume a construction and zero it out
-			m_packetPayload.fill(0);
-		}
+	if (bytes > 0) {
+		// if we have data ... parse out type
+		parsePacketType();
+	} else {
+		// otherwise assume a construction and zero it out
+		m_packetPayload.fill(0);
+	}
 }
 
 MetaServerPacket::~MetaServerPacket() = default;
 
 void
-MetaServerPacket::setPacketType(const NetMsgType& nmt)
-{
+MetaServerPacket::setPacketType(const NetMsgType& nmt) {
 
 	/**
 	 *
@@ -89,8 +83,7 @@ MetaServerPacket::setPacketType(const NetMsgType& nmt)
 }
 
 void
-MetaServerPacket::setAddress(const std::string& address, uint32_t addressInt)
-{
+MetaServerPacket::setAddress(const std::string& address, uint32_t addressInt) {
 
 	/*
 	 *   NOTE: this is a compat problem, as it is basically a hack
@@ -102,42 +95,38 @@ MetaServerPacket::setAddress(const std::string& address, uint32_t addressInt)
 	 *   cosmetic.
 	 */
 
-		m_AddressStr = address;
-		m_AddressInt = addressInt;
+	m_AddressStr = address;
+	m_AddressInt = addressInt;
 
 }
 
 unsigned int
-MetaServerPacket::addPacketData(uint32_t i)
-{
+MetaServerPacket::addPacketData(uint32_t i) {
 	unsigned int ret_off = m_writePtr - m_headPtr;
-	m_writePtr = pack_uint32(i,m_writePtr);
+	m_writePtr = pack_uint32(i, m_writePtr);
 	return ret_off;
 }
 
 unsigned int
-MetaServerPacket::addPacketData(const std::string& s)
-{
+MetaServerPacket::addPacketData(const std::string& s) {
 	unsigned int ret_off = m_writePtr - m_headPtr;
-	m_writePtr = pack_string( s , m_writePtr );
+	m_writePtr = pack_string(s, m_writePtr);
 	return ret_off;
 }
 
 std::string
-MetaServerPacket::getPacketMessage(unsigned int offset) const
-{
+MetaServerPacket::getPacketMessage(unsigned int offset) const {
 	// Just initialise local variable for debug purposes
 	std::string tmpstr = "0xDEADBEEF";
-	unpack_string(&tmpstr, m_headPtr + offset , (m_Bytes - offset) );
+	unpack_string(&tmpstr, m_headPtr + offset, (m_Bytes - offset));
 	return tmpstr;
 }
 
 uint32_t
-MetaServerPacket::getIntData(unsigned int offset) const
-{
+MetaServerPacket::getIntData(unsigned int offset) const {
 	// initial int to arbitrary value for potential debugging purposes
 	uint32_t tmpint = 222;
-	unpack_uint32(&tmpint, m_readPtr + offset );
+	unpack_uint32(&tmpint, m_readPtr + offset);
 	return tmpint;
 }
 
@@ -172,10 +161,8 @@ MetaServerPacket::IpAsciiToNet(const char *buffer) {
  * @return NetMsgType
  */
 void
-MetaServerPacket::parsePacketType()
-{
-	if ( m_Bytes > 0 )
-	{
+MetaServerPacket::parsePacketType() {
+	if (m_Bytes > 0) {
 		m_readPtr = m_packetPayload.data();
 		m_packetType = getIntData(0);
 	}
@@ -191,44 +178,40 @@ MetaServerPacket::parsePacketType()
  * @return
  */
 char*
-MetaServerPacket::pack_uint32(uint32_t data, char *buffer)
-{
-    uint32_t netorder;
+MetaServerPacket::pack_uint32(uint32_t data, char* buffer) {
+	uint32_t netorder;
 
-    netorder = htonl(data);
+	netorder = htonl(data);
 
-    memcpy(buffer, &netorder, sizeof(uint32_t));
-    m_Bytes += sizeof(uint32_t);
+	memcpy(buffer, &netorder, sizeof(uint32_t));
+	m_Bytes += sizeof(uint32_t);
 
-    return buffer+sizeof(uint32_t);
+	return buffer + sizeof(uint32_t);
 
 }
 
 char*
-MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer) const
-{
-    uint32_t netorder;
+MetaServerPacket::unpack_uint32(uint32_t* dest, char* buffer) const {
+	uint32_t netorder;
 
-    memcpy(&netorder, buffer, sizeof(uint32_t));
-    *dest = ntohl(netorder);
-    return buffer+sizeof(uint32_t);
+	memcpy(&netorder, buffer, sizeof(uint32_t));
+	*dest = ntohl(netorder);
+	return buffer + sizeof(uint32_t);
 
 }
 
 
 char*
-MetaServerPacket::pack_string( std::string str, char *buffer )
-{
+MetaServerPacket::pack_string(std::string str, char* buffer) {
 	unsigned int ss = str.size();
-	memcpy(buffer, str.data() , ss );
+	memcpy(buffer, str.data(), ss);
 	m_Bytes += ss;
-	return buffer+ss;
+	return buffer + ss;
 }
 
-char *
-MetaServerPacket::unpack_string(std::string *dest, char* buffer, unsigned int length ) const
-{
-	std::string s(buffer,length);
+char*
+MetaServerPacket::unpack_string(std::string* dest, char* buffer, unsigned int length) const {
+	std::string s(buffer, length);
 	*dest = s;
-	return buffer+length;
+	return buffer + length;
 }

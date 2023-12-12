@@ -23,12 +23,8 @@
 #include "Base.h"
 #include "components/ogre/OgreIncludes.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Techniques {
+namespace Ember::OgreView::Terrain::Techniques {
 
 class ShaderPass;
 
@@ -144,10 +140,5 @@ protected:
 
 }
 
-}
-
-}
-
-}
 
 #endif /* EMBEROGRETERRAINTECHNIQUESSHADER_H_ */

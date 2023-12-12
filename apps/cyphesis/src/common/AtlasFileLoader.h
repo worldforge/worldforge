@@ -27,36 +27,34 @@
 
 /// Class to read old cyphesis rules on standard input, and output in new
 /// standard format.
-class AtlasFileLoader : public Atlas::Objects::ObjectsDecoder
-{
-    private:
-        /// Input file
-        std::fstream m_file;
-        /// Atlas codec for decoding input.
-        std::unique_ptr<Atlas::Codec> m_codec;
-        /// Counter for messages read from input
-        int m_count;
-        /// Store for the messages loaded
-        std::map<std::string, Atlas::Objects::Root>& m_messages;
+class AtlasFileLoader : public Atlas::Objects::ObjectsDecoder {
+private:
+	/// Input file
+	std::fstream m_file;
+	/// Atlas codec for decoding input.
+	std::unique_ptr<Atlas::Codec> m_codec;
+	/// Counter for messages read from input
+	int m_count;
+	/// Store for the messages loaded
+	std::map<std::string, Atlas::Objects::Root>& m_messages;
 
-        std::string m_filename;
+	std::string m_filename;
 
-        void objectArrived(Atlas::Objects::Root obj) override;
+	void objectArrived(Atlas::Objects::Root obj) override;
 
-    public:
-        AtlasFileLoader(const Atlas::Objects::Factories& factories,
-                        const std::string& filename,
-                        std::map<std::string, Atlas::Objects::Root>& m);
+public:
+	AtlasFileLoader(const Atlas::Objects::Factories& factories,
+					const std::string& filename,
+					std::map<std::string, Atlas::Objects::Root>& m);
 
-        ~AtlasFileLoader() override;
+	~AtlasFileLoader() override;
 
-        bool isOpen();
+	bool isOpen();
 
-        void read();
+	void read();
 
-        /// \brief Read only accessor for the number of messages loaded
-        int count()
-        { return m_count; }
+	/// \brief Read only accessor for the number of messages loaded
+	int count() { return m_count; }
 };
 
 #endif // COMMON_ATLAS_FILE_LOADER_H

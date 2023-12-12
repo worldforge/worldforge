@@ -126,7 +126,6 @@ function QuickHelp:frameStarted(timeSinceLastUpdate)
 
 	else
 		self.timeBlurbShown = timeSinceLastUpdate + self.timeBlurbShown
-		local timeLeft = math.floor(math.max(self.timeToShowBlurb - self.timeBlurbShown, 0))
 
 		if self.timeBlurbShown > self.timeToShowBlurb then
 			if not self.hideTransitionStarted then
@@ -146,11 +145,11 @@ function QuickHelp:updateText(helpMessage)
 	if not self.hidden then
 		--Adapt the time the help widget is shown to how many words there are in the text
 		local words = 0
-		for word in string.gmatch(text, "[^%s]+") do
+		for _ in string.gmatch(text, "[^%s]+") do
 			words = words + 1
 		end
 		--a normal human reads about 250 words per minute, which is ~4 words per second. We'll go for two words per second
-		--as the user might not concentrate on the help message at first. Show it no lesser than four seconds 
+		--as the user might not concentrate on the help message at first. Show it no lesser than four seconds
 		self.timeToShowBlurb = math.max(words / 2.0, 4)
 		self.timeBlurbLastUpdate = -1
 		self.timeBlurbShown = 0

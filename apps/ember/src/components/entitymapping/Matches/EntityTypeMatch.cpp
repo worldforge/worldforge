@@ -22,12 +22,12 @@
 //
 #include "EntityTypeMatch.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 void EntityTypeMatch::setEntity(Eris::Entity* entity) {
 	AbstractMatch<Cases::EntityTypeCase>::setEntity(entity);
@@ -35,13 +35,13 @@ void EntityTypeMatch::setEntity(Eris::Entity* entity) {
 }
 
 void EntityTypeMatch::testEntity(Eris::Entity* entity) {
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->testMatch(entity);
 	}
 }
 
 }
 
-}
 
-}
+
+

@@ -9,12 +9,8 @@
 #include <wfmath/randgen.h>
 #include <OgreVector.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
-
-namespace Foliage {
+namespace Ember::OgreView::Terrain::Foliage {
 
 PlantPopulator::PlantPopulator(int layerIndex, std::unique_ptr<IScaler> scaler, size_t plantIndex)
 		: mLayerIndex(layerIndex),
@@ -49,7 +45,7 @@ void Scaler::scale(WFMath::MTRand& rnd, const WFMath::Point<2>& pos, Ogre::Vecto
 
 }
 
-}
 
-}
-}
+
+
+

@@ -18,22 +18,20 @@
 
 #include "common/type_utils_impl.h"
 
-void idListasObject(const IdList & l, Atlas::Message::ListType & ol)
-{
-    ol.clear();
-    for (auto& entry : l) {
-        ol.push_back(entry);
-    }
+void idListasObject(const IdList& l, Atlas::Message::ListType& ol) {
+	ol.clear();
+	for (auto& entry: l) {
+		ol.push_back(entry);
+	}
 }
 
-int idListFromAtlas(const Atlas::Message::ListType & l, IdList & ol)
-{
-    ol.clear();
-    for (auto& entry : l) {
-        if (!entry.isString()) {
-            return -1;
-        }
-        ol.push_back(entry.asString());
-    }
-    return 0;
+int idListFromAtlas(const Atlas::Message::ListType& l, IdList& ol) {
+	ol.clear();
+	for (auto& entry: l) {
+		if (!entry.isString()) {
+			return -1;
+		}
+		ol.push_back(entry.asString());
+	}
+	return 0;
 }

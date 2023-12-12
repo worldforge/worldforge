@@ -28,10 +28,8 @@ class Terrain;
 class BasePoint;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainHandler;
 
@@ -71,8 +69,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* TERRAINUPDATETASK_H_ */

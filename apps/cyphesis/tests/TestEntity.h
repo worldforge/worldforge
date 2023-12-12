@@ -21,47 +21,40 @@
 
 #include "rules/LocatedEntity.h"
 
-struct TestEntity : LocatedEntity
-{
-    static long idGenerator;
+struct TestEntity : LocatedEntity {
+	static long idGenerator;
 
-    static std::function<void(TestEntity&, const Operation&, Link&)> externalOperationFn;
-    static std::function<void(TestEntity&, const Operation&, OpVector&)> operationFn;
-    static std::function<void(TestEntity&)> destroyFn;
+	static std::function<void(TestEntity&, const Operation&, Link&)> externalOperationFn;
+	static std::function<void(TestEntity&, const Operation&, OpVector&)> operationFn;
+	static std::function<void(TestEntity&)> destroyFn;
 
-    TestEntity() : TestEntity(idGenerator++)
-    {
-    }
+	TestEntity() : TestEntity(idGenerator++) {
+	}
 
-    TestEntity(RouterId id) : LocatedEntity(id)
-    {
-    }
+	TestEntity(RouterId id) : LocatedEntity(id) {
+	}
 
-    std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override
-    {
-        return {};
-    }
+	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override {
+		return {};
+	}
 
-    void externalOperation(const Operation& op, Link& link) override
-    {
-        if (externalOperationFn) {
-            externalOperationFn(*this, op, link);
-        }
-    }
+	void externalOperation(const Operation& op, Link& link) override {
+		if (externalOperationFn) {
+			externalOperationFn(*this, op, link);
+		}
+	}
 
-    void operation(const Operation& op, OpVector& res) override
-    {
-        if (operationFn) {
-            operationFn(*this, op, res);
-        }
-    }
+	void operation(const Operation& op, OpVector& res) override {
+		if (operationFn) {
+			operationFn(*this, op, res);
+		}
+	}
 
-    void destroy() override
-    {
-        if (destroyFn) {
-            destroyFn(*this);
-        }
-    }
+	void destroy() override {
+		if (destroyFn) {
+			destroyFn(*this);
+		}
+	}
 };
 
 long TestEntity::idGenerator = 0;

@@ -23,9 +23,13 @@ class MTRand;
 namespace Mercator {
 
 class Terrain;
+
 class Surface;
+
 class TerrainMod;
+
 class Area;
+
 class Shader;
 
 // This class will need to be reference counted if we want the code to
@@ -35,182 +39,187 @@ class Shader;
 /// \brief Class storing heightfield and other data for a single fixed size
 /// square area of terrain defined by four adjacent BasePoint objects.
 class Segment {
-  public:
-    /// STL map of pointers to Surface objects.
-    typedef std::map<int, std::unique_ptr<Surface>> Surfacestore;
+public:
+	/// STL map of pointers to Surface objects.
+	typedef std::map<int, std::unique_ptr<Surface>> Surfacestore;
 
-    struct AreaEntry {
-    	long id;
-    	const Area* area;
-    };
+	struct AreaEntry {
+		long id;
+		const Area* area;
+	};
 
-    /// STL multimap of pointers to Area objects affecting this segment.
-    typedef std::multimap<int, AreaEntry> Areastore;
-  private:
-    /// Distance between segments
-    const int m_res;
-    /// Size of segment, m_res + 1
-    const int m_size;
-    /// Global x reference of this segment
-    const int m_xRef;
-    /// Global z reference of this segment
-    const int m_zRef;
-    /// 2x2 matrix of points which control this segment
-    Matrix<2, 2, BasePoint> m_controlPoints;
-    /// Pointer to buffer containing height points
-    HeightMap m_heightMap;
-    /// Pointer to buffer containing normals for height points
-    std::vector<float> m_normals;
+	/// STL multimap of pointers to Area objects affecting this segment.
+	typedef std::multimap<int, AreaEntry> Areastore;
+private:
+	/// Distance between segments
+	const int m_res;
+	/// Size of segment, m_res + 1
+	const int m_size;
+	/// Global x reference of this segment
+	const int m_xRef;
+	/// Global z reference of this segment
+	const int m_zRef;
+	/// 2x2 matrix of points which control this segment
+	Matrix<2, 2, BasePoint> m_controlPoints;
+	/// Pointer to buffer containing height points
+	HeightMap m_heightMap;
+	/// Pointer to buffer containing normals for height points
+	std::vector<float> m_normals;
 
-    /// Store of surfaces which can be rendered on this terrain
-    Surfacestore m_surfaces;
-    
-    /// Areas which intersect this segment
-    Areastore m_areas;
+	/// Store of surfaces which can be rendered on this terrain
+	Surfacestore m_surfaces;
 
-    /**
-     * A lookup table into m_areas used when areas are removed.
-     */
-    std::map<long, std::multimap<int, AreaEntry>::iterator> m_areaLookup;
+	/// Areas which intersect this segment
+	Areastore m_areas;
 
-    /// \brief Map of TerrainMod objects that are applied to this Segment.
-    std::map<long, const TerrainMod*> m_terrainMods;
-  public:
-    explicit Segment(int x, int z, int resolution);
-    ~Segment();
+	/**
+	 * A lookup table into m_areas used when areas are removed.
+	 */
+	std::map<long, std::multimap<int, AreaEntry>::iterator> m_areaLookup;
 
-    /// \brief Accessor for resolution of this segment.
-    int getResolution() const {
-        return m_res;
-    }
+	/// \brief Map of TerrainMod objects that are applied to this Segment.
+	std::map<long, const TerrainMod*> m_terrainMods;
+public:
+	explicit Segment(int x, int z, int resolution);
 
-    /// \brief Accessor for array size of this segment.
-    int getSize() const {
-        return m_size;
-    }
+	~Segment();
 
-    /// \brief Accessor for Global x reference of this segment
-    int getXRef() const {
-        return m_xRef;
-    }
+	/// \brief Accessor for resolution of this segment.
+	int getResolution() const {
+		return m_res;
+	}
 
-    /// \brief Accessor for Global y reference of this segment
-    int getZRef() const {
-        return m_zRef;
-    }
+	/// \brief Accessor for array size of this segment.
+	int getSize() const {
+		return m_size;
+	}
 
-    /// \brief Check whether this Segment contains valid point data.
-    ///
-    /// @return true if this Segment is valid, false otherwise.
-    bool isValid() const {
-        return m_heightMap.isValid();
-    }
+	/// \brief Accessor for Global x reference of this segment
+	int getXRef() const {
+		return m_xRef;
+	}
 
-    void invalidate(bool points = true);
+	/// \brief Accessor for Global y reference of this segment
+	int getZRef() const {
+		return m_zRef;
+	}
 
-    /// \brief Set the BasePoint data for one of the four that define this
-    /// Segment.
-    ///
-    /// @param x relative x coord of base point. Must be 0 or 1.
-    /// @param z relative z coord of base point. Must be 0 or 1.
-    /// @param bp BasePoint data to be used.
-    void setCornerPoint(unsigned int x, unsigned int z, const BasePoint & bp) {
-        m_controlPoints(x, z) = bp;
-        invalidate();
-    }
-    
-    /// \brief Accessor for 2D matrix of base points.
-    const Matrix<2, 2, BasePoint> & getControlPoints() const {
-        return m_controlPoints;
-    }
+	/// \brief Check whether this Segment contains valid point data.
+	///
+	/// @return true if this Segment is valid, false otherwise.
+	bool isValid() const {
+		return m_heightMap.isValid();
+	}
 
-    /// \brief Accessor for modifying 2D matrix of base points.
-    Matrix<2, 2, BasePoint> & getControlPoints() {
-        return m_controlPoints;
-    }
+	void invalidate(bool points = true);
 
-    /// \brief Accessor for list of attached Surface objects.
-    const Surfacestore & getSurfaces() const {
-        return m_surfaces;
-    }
+	/// \brief Set the BasePoint data for one of the four that define this
+	/// Segment.
+	///
+	/// @param x relative x coord of base point. Must be 0 or 1.
+	/// @param z relative z coord of base point. Must be 0 or 1.
+	/// @param bp BasePoint data to be used.
+	void setCornerPoint(unsigned int x, unsigned int z, const BasePoint& bp) {
+		m_controlPoints(x, z) = bp;
+		invalidate();
+	}
 
-    /// \brief Accessor for modifying list of attached Surface objects.
-    Surfacestore & getSurfaces() {
-        return m_surfaces;
-    }
+	/// \brief Accessor for 2D matrix of base points.
+	const Matrix<2, 2, BasePoint>& getControlPoints() const {
+		return m_controlPoints;
+	}
 
-    /// \brief Accessor for buffer containing height points.
-    const float * getPoints() const {
-        return m_heightMap.getData();
-    }
+	/// \brief Accessor for modifying 2D matrix of base points.
+	Matrix<2, 2, BasePoint>& getControlPoints() {
+		return m_controlPoints;
+	}
 
-    /// \brief Accessor for write access to buffer containing height points.
-    float * getPoints() {
-        return m_heightMap.getData();
-    }
+	/// \brief Accessor for list of attached Surface objects.
+	const Surfacestore& getSurfaces() const {
+		return m_surfaces;
+	}
 
-    /// \brief Accessor for height map.
-    const HeightMap& getHeightMap() const {
-        return m_heightMap;
-    }
+	/// \brief Accessor for modifying list of attached Surface objects.
+	Surfacestore& getSurfaces() {
+		return m_surfaces;
+	}
 
-    /// \brief Accessor for write access to height map.
-    HeightMap& getHeightMap() {
-        return m_heightMap;
-    }
+	/// \brief Accessor for buffer containing height points.
+	const float* getPoints() const {
+		return m_heightMap.getData();
+	}
 
-    /// \brief Accessor for buffer containing surface normals.
-    const float * getNormals() const {
-        return m_normals.data();
-    }
+	/// \brief Accessor for write access to buffer containing height points.
+	float* getPoints() {
+		return m_heightMap.getData();
+	}
 
-    /// \brief Accessor for write access to buffer containing surface normals.
-    float * getNormals() {
-        return m_normals.data();
-    }
+	/// \brief Accessor for height map.
+	const HeightMap& getHeightMap() const {
+		return m_heightMap;
+	}
 
-    /// \brief Get the height at a relative integer position in the Segment.
-    float get(int x, int z) const {
-        return m_heightMap.get(x, z);
-    }
+	/// \brief Accessor for write access to height map.
+	HeightMap& getHeightMap() {
+		return m_heightMap;
+	}
 
-    void getHeight(float x, float y, float &h) const;
-    void getHeightAndNormal(float x, float z, float &h,
-                    WFMath::Vector<3> &normal) const;
-    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &lz, int &hz) const;
+	/// \brief Accessor for buffer containing surface normals.
+	const float* getNormals() const {
+		return m_normals.data();
+	}
+
+	/// \brief Accessor for write access to buffer containing surface normals.
+	float* getNormals() {
+		return m_normals.data();
+	}
+
+	/// \brief Get the height at a relative integer position in the Segment.
+	float get(int x, int z) const {
+		return m_heightMap.get(x, z);
+	}
+
+	void getHeight(float x, float y, float& h) const;
+
+	void getHeightAndNormal(float x, float z, float& h,
+							WFMath::Vector<3>& normal) const;
+
+	bool clipToSegment(const WFMath::AxisBox<2>& bbox, int& lx, int& hx, int& lz, int& hz) const;
 
 
-    void populate();
-    void populateNormals();
-    void populateSurfaces();
-    void populateHeightMap(HeightMap& heightMap);
+	void populate();
 
-    /// \brief Accessor for the maximum height value in this Segment.
-    float getMax() const { return m_heightMap.getMax(); }
-    /// \brief Accessor for the minimum height value in this Segment.
-    float getMin() const { return m_heightMap.getMin(); }
+	void populateNormals();
 
-    /// \brief The 2d area covered by this segment
-    WFMath::AxisBox<2> getRect() const;
+	void populateSurfaces();
 
-    void updateMod(long id, const TerrainMod *t);
+	void populateHeightMap(HeightMap& heightMap);
 
-    void clearMods();
-    
-    /// \brief Accessor for multimap of Area objects.
-    const Areastore& getAreas() const
-    { return m_areas; }
+	/// \brief Accessor for the maximum height value in this Segment.
+	float getMax() const { return m_heightMap.getMax(); }
 
-    const std::map<long, const TerrainMod*>& getMods() const
-    { return m_terrainMods; }
-    
+	/// \brief Accessor for the minimum height value in this Segment.
+	float getMin() const { return m_heightMap.getMin(); }
+
+	/// \brief The 2d area covered by this segment
+	WFMath::AxisBox<2> getRect() const;
+
+	void updateMod(long id, const TerrainMod* t);
+
+	void clearMods();
+
+	/// \brief Accessor for multimap of Area objects.
+	const Areastore& getAreas() const { return m_areas; }
+
+	const std::map<long, const TerrainMod*>& getMods() const { return m_terrainMods; }
+
 	void updateArea(long id, const Area* area, const Shader* shader);
 
-  private:
+private:
 
-    void applyMod(const TerrainMod *t);
+	void applyMod(const TerrainMod* t);
 
-    void invalidateSurfaces();
+	void invalidateSurfaces();
 
 };
 

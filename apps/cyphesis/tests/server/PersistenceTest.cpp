@@ -37,13 +37,12 @@
 using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 
-int main()
-{
-    {
-        DatabaseNull database;
-        Persistence p(database);
-    }
-    return 0;
+int main() {
+	{
+		DatabaseNull database;
+		Persistence p(database);
+	}
+	return 0;
 }
 
 // stubs
@@ -60,34 +59,32 @@ int main()
 
 
 #define STUB_Database_selectSimpleRowBy
+
 DatabaseResult Database::selectSimpleRowBy(const std::string& name,
-                                           const std::string& column,
-                                           const std::string& value)
-{
-    return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
+										   const std::string& column,
+										   const std::string& value) {
+	return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 }
 
 
 #include "../stubs/common/stubDatabase.h"
 
-const char * const CYPHESIS = "cyphesis";
+const char* const CYPHESIS = "cyphesis";
 
 std::string instance("deeds");
 
 #include "../stubs/common/stubRouter.h"
 #include "../stubs/server/stubAccount.h"
 
-ServerAccount::ServerAccount(Connection * conn,
-             const std::string & username,
-             const std::string & passwd,
-             RouterId id) :
-       Account(conn, username, passwd, id)
-{
+ServerAccount::ServerAccount(Connection* conn,
+							 const std::string& username,
+							 const std::string& passwd,
+							 RouterId id) :
+		Account(conn, username, passwd, id) {
 }
 
-const char * ServerAccount::getType() const
-{
-    return "server";
+const char* ServerAccount::getType() const {
+	return "server";
 }
 
 
@@ -98,9 +95,9 @@ const char * ServerAccount::getType() const
 
 Shaker::Shaker() {}
 
-std::string Shaker::generateSalt(size_t)
-{
-    return "";
+std::string Shaker::generateSalt(size_t) {
+	return "";
 }
+
 #include "../stubs/common/stublog.h"
 #include "../stubs/common/stubid.h"

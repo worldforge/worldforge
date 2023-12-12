@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<ProgressBar>(sol::table& space) {
 	auto progressBar = space.new_usertype<ProgressBar>("ProgressBar",
 													   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

@@ -24,14 +24,12 @@
 
 #include <iostream>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @brief Loads messages from a codec into a map.
  */
-class AtlasMessageLoader: public Atlas::Objects::ObjectsDecoder
-{
+class AtlasMessageLoader : public Atlas::Objects::ObjectsDecoder {
 private:
 
 	/**
@@ -42,7 +40,7 @@ private:
 	/**
 	 * @brief Store for the messages loaded.
 	 */
-	std::map<std::string, Atlas::Objects::Root> & mMessages;
+	std::map<std::string, Atlas::Objects::Root>& mMessages;
 
 	/**
 	 * @brief Called from the base class when a complete message has been decoded.
@@ -50,13 +48,14 @@ private:
 	 * @param obj
 	 */
 	void objectArrived(Atlas::Objects::Root obj) override;
+
 public:
 
 	/**
 	 * @brief Ctor.
 	 * @param messages The map into which decoded messages will be put.
 	 */
-	AtlasMessageLoader(const Atlas::Objects::Factories& factories, std::map<std::string, Atlas::Objects::Root> & messages);
+	AtlasMessageLoader(const Atlas::Objects::Factories& factories, std::map<std::string, Atlas::Objects::Root>& messages);
 
 	/**
 	 * @brief Dtor.
@@ -66,7 +65,7 @@ public:
 	/**
 	 * @brief Read only accessor for the number of messages loaded
 	 */
-	int count();
+	int count() const;
 };
 }
 

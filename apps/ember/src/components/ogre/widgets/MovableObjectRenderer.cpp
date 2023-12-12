@@ -30,15 +30,13 @@
 #include <OgreEntity.h>
 #include <OgreRenderTargetListener.h>
 #include <OgreRenderTexture.h>
-#include <OgreSceneNode.h>
-#include <OgreCamera.h>
 #include <OgreAnimation.h>
 #include <OgreKeyFrame.h>
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -294,5 +292,5 @@ void MovableObjectRenderer::setShowMovingLight(bool showMovingLight) {
 }
 
 }
-}
-}
+
+

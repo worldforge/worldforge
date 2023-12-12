@@ -39,10 +39,11 @@ class EventService;
 
 namespace Ember {
 class TimeFrame;
-namespace OgreView {
-namespace Model {
+
+namespace OgreView::Model {
 
 class ModelFactory;
+
 class ModelBackgroundLoader;
 
 
@@ -54,8 +55,7 @@ class ModelBackgroundLoader;
  *
  * @author Erik Ogenvik
  */
-class ModelDefinitionManager: public Ogre::ScriptLoader, public Singleton<ModelDefinitionManager>, public ConsoleObject
-{
+class ModelDefinitionManager : public Ogre::ScriptLoader, public Singleton<ModelDefinitionManager>, public ConsoleObject {
 public:
 	/**
 	 * @brief Ctor.
@@ -126,7 +126,7 @@ public:
 	 * @param command
 	 * @param args
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	/**
 	 Command for setting whether models should be shown or not.
@@ -154,7 +154,7 @@ protected:
 };
 
 }
-}
+
 }
 
 #endif

@@ -60,7 +60,7 @@ private:
 	 */
 	std::vector<std::string> mSyncedTextures;
 
-	void assignCombinedBlendMapTexture(Ogre::TexturePtr texture);
+	void assignCombinedBlendMapTexture(const Ogre::TexturePtr& texture);
 
 	void addBlendMap(const TerrainPageGeometry& geometry, const TerrainPageSurfaceLayer* layer, unsigned int channel);
 
@@ -69,9 +69,6 @@ private:
 }
 
 }
-
-
-
 
 
 #endif /* EMBEROGRETERRAINTECHNIQUESSHADERPASSBLENDMAPBATCH_H_ */

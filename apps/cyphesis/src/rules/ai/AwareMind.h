@@ -34,55 +34,54 @@ class SharedTerrain;
 /**
  * @brief A Mind which is aware of its surroundings and thus can steer and navigate in the world.
  */
-class AwareMind : public BaseMind
-{
-    public:
-        AwareMind(RouterId mind_id,
-                  std::string entity_id,
-                  TypeStore& typeStore,
-                  SharedTerrain& sharedTerrain,
-                  AwarenessStoreProvider& awarenessStoreProvider);
+class AwareMind : public BaseMind {
+public:
+	AwareMind(RouterId mind_id,
+			  std::string entity_id,
+			  TypeStore& typeStore,
+			  SharedTerrain& sharedTerrain,
+			  AwarenessStoreProvider& awarenessStoreProvider);
 
-        ~AwareMind() override;
+	~AwareMind() override;
 
-        void entityAdded(MemEntity& entity) override;
+	void entityAdded(MemEntity& entity) override;
 
-        void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) override;
+	void entityUpdated(MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, LocatedEntity* oldLocation) override;
 
-        void entityDeleted(MemEntity& entity) override;
+	void entityDeleted(MemEntity& entity) override;
 
-        int updatePath();
+	int updatePath();
 
-        Steering* getSteering();
+	Steering* getSteering();
 
-        const std::shared_ptr<Awareness>& getAwareness() const;
+	const std::shared_ptr<Awareness>& getAwareness() const;
 
-        double getCurrentServerTime() const;
+	double getCurrentServerTime() const;
 
-    protected:
+protected:
 
-        SharedTerrain& mSharedTerrain;
-        AwarenessStoreProvider& mAwarenessStoreProvider;
+	SharedTerrain& mSharedTerrain;
+	AwarenessStoreProvider& mAwarenessStoreProvider;
 
-        AwarenessStore* mAwarenessStore;
-        std::shared_ptr<Awareness> mAwareness;
-        std::unique_ptr<Steering> mSteering;
+	AwarenessStore* mAwarenessStore;
+	std::shared_ptr<Awareness> mAwareness;
+	std::unique_ptr<Steering> mSteering;
 
-        /**
-         * Keep track of the last queued move tick, so that we only ever act on the latest.
-         * This helps with when new steering goals are added, and old scheduled ticks should be ignored.
-         */
-        Atlas::Message::IntType mMoveTickSerialNumber;
+	/**
+	 * Keep track of the last queued move tick, so that we only ever act on the latest.
+	 * This helps with when new steering goals are added, and old scheduled ticks should be ignored.
+	 */
+	Atlas::Message::IntType mMoveTickSerialNumber;
 
-        void setOwnEntity(OpVector& res, Ref<MemEntity> ownEntity) override;
+	void setOwnEntity(OpVector& res, Ref<MemEntity> ownEntity) override;
 
-        void processMove(OpVector& res) override;
+	void processMove(OpVector& res) override;
 
-        void processNavmesh() override;
+	void processNavmesh() override;
 
-        void requestAwareness(const MemEntity& entity);
+	void requestAwareness(const MemEntity& entity);
 
-        void parseTerrain(const Atlas::Message::Element& terrainElement);
+	void parseTerrain(const Atlas::Message::Element& terrainElement);
 };
 
 #endif /* RULESETS_MIND_AWAREMIND_H_ */

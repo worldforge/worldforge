@@ -25,31 +25,32 @@
 
 #include "IEnvironmentProvider.h"
 
-namespace Ogre
-{
+namespace Ogre {
 class SceneManager;
+
 class RenderWindow;
+
 class Camera;
+
 class Light;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Environment
-{
+
+
+namespace Ember::OgreView::Environment {
 
 /**
  A very simple sun which always will return the same direction.
  */
-class SimpleSun: public ISun
-{
+class SimpleSun : public ISun {
 public:
-	explicit SimpleSun(Ogre::SceneManager *sceneMgr);
+	explicit SimpleSun(Ogre::SceneManager* sceneMgr);
+
 	void setAmbientLight(const Ogre::ColourValue& colour) override;
+
 	Ogre::Vector3 getSunDirection() const override;
+
 	WFMath::Vector<3> getMainLightDirection() const override;
 
 	Ogre::ColourValue getAmbientLightColour() const override;
@@ -61,8 +62,7 @@ protected:
 /**
  A very simple sky which won't do anything currently.
  */
-class SimpleSky: public ISky
-{
+class SimpleSky : public ISky {
 public:
 protected:
 };
@@ -70,12 +70,14 @@ protected:
 /**
  A very simple fog which will always return a density of 1.0
  */
-class SimpleFog: public IFog
-{
+class SimpleFog : public IFog {
 public:
-	explicit SimpleFog(Ogre::SceneManager *sceneMgr);
+	explicit SimpleFog(Ogre::SceneManager* sceneMgr);
+
 	void setDensity(float density) override;
+
 	float getDensity() const override;
+
 protected:
 };
 
@@ -86,24 +88,28 @@ class Water;
 
  A very simple environment which can be used as a fallback environment if a more advanced environment fails to load.
  */
-class SimpleEnvironment: public IEnvironmentProvider
-{
+class SimpleEnvironment : public IEnvironmentProvider {
 public:
-	SimpleEnvironment(Ogre::SceneManager *sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera);
+	SimpleEnvironment(Ogre::SceneManager* sceneMgr, Ogre::RenderWindow* window, Ogre::Camera& camera);
 
 	~SimpleEnvironment() override;
 
 	void createFirmament() override;
+
 	void destroyFirmament() override;
 
 	void setWaterEnabled(bool enabled) override;
 
 	ISun* getSun() override;
+
 	ISky* getSky() override;
+
 	IFog* getFog() override;
+
 	IWater* getWater() override;
 
-	void setTime(int hour, int minute, int second = 0) override;
+	void setTime(int hour, int minute, int second) override;
+
 	void setTime(int seconds) override;
 
 	void setTimeMultiplier(float multiplier) override;
@@ -118,7 +124,7 @@ public:
 	void setWorldPosition(float longitudeDegrees, float latitudeDegrees) override;
 
 protected:
-	Ogre::SceneManager *mSceneMgr;
+	Ogre::SceneManager* mSceneMgr;
 	Ogre::RenderWindow* mWindow;
 	Ogre::Camera& mCamera;
 
@@ -131,8 +137,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

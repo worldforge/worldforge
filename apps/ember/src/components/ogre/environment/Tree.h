@@ -26,26 +26,25 @@
 /**
 @author Erik Ogenvik
 */
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
 
-class TreeType;
-class Tree{
+
+namespace Ember::OgreView::Environment {
+
+class Tree {
 public:
-    Tree();
+	Tree();
 
-    ~Tree();
-	
+	~Tree();
+
 	void makeMesh(Ogre::String meshName, Ogre::TParameters::TreeType type);
 
 };
 
 }
 
-}
 
-}
+
+
 
 #endif

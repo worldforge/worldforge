@@ -28,10 +28,8 @@
 #include "framework/Singleton.h"
 #include <OgreResourceManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 struct TerrainLayerDefinition;
 
@@ -63,8 +61,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

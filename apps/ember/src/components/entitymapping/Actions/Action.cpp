@@ -23,20 +23,19 @@
 #include "Action.h"
 #include "../IVisitor.h"
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Actions {
 
-void Action::accept(IVisitor& visitor)
-{
+
+namespace Ember::EntityMapping::Actions {
+
+void Action::accept(IVisitor& visitor) {
 	visitor.visit(*this);
 }
 
 
 }
 
-}
 
-}
+
+

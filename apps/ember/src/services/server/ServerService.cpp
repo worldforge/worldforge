@@ -145,10 +145,10 @@ void ServerService::setupLocalServerObservation(ConfigService& configService) {
 
 	mLocalSocketPath = configService.getHomeDirectory(BaseDirType_DATA).remove_filename() / "cyphesis" / "tmp" / "cyphesis_cyphesis.sock";
 
-    auto snapDataEnv = std::getenv("SNAP_DATA");
+	auto snapDataEnv = std::getenv("SNAP_DATA");
 	if (snapDataEnv) {
 		mLocalSocketPath = boost::filesystem::path(snapDataEnv) / "cyphesis_cyphesis.sock";
-        logger->info("Running in Snap detected, setting local socket listener to {}.", mLocalSocketPath.string());
+		logger->info("Running in Snap detected, setting local socket listener to {}.", mLocalSocketPath.string());
 	}
 
 	if (configService.itemExists("general", "socket")) {

@@ -21,14 +21,8 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 class ScaleAdapter : public AdapterBase {
 public:
 
@@ -60,9 +54,6 @@ protected:
 };
 
 }
-}
-}
-}
-}
+
 
 #endif //EMBER_SCALEADAPTER_H

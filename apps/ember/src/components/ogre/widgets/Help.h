@@ -38,15 +38,15 @@ class Widget;
 /**
 @author Erik Ogenvik
 */
-class Help : public Widget
-{
+class Help : public Widget {
 public:
 	static WidgetPluginCallback registerWidget(Ember::OgreView::GUIManager& guiManager);
 
 	explicit Help(GUIManager& guiManager);
 
-    ~Help() override;
-	void runCommand(const std::string &command, const std::string &args) override;
+	~Help() override;
+
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	const ConsoleCommandWrapper HelpCommand;
 

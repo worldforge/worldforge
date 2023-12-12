@@ -23,6 +23,7 @@
 #include "ConnectableRouter.h"
 
 class Account;
+
 class ServerRouting;
 
 /// \brief This class handles the default out-of-game chat area that all
@@ -31,27 +32,30 @@ class ServerRouting;
 /// This allows chat between all connected players, and provides a forum for
 /// discusion out of the context of the game.
 class Lobby : public Router {
-  private:
-    std::map<std::string, ConnectableRouter *> m_accounts;
-    ServerRouting & m_server;
-  public:
-    explicit Lobby(ServerRouting & serverRouting, RouterId id);
+private:
+	std::map<std::string, ConnectableRouter*> m_accounts;
+	ServerRouting& m_server;
+public:
+	explicit Lobby(ServerRouting& serverRouting, RouterId id);
 
-    ~Lobby() override;
+	~Lobby() override;
 
-    void addAccount(ConnectableRouter * a);
-    void removeAccount(ConnectableRouter * a);
+	void addAccount(ConnectableRouter* a);
 
-    /// Accessor for Accounts map.
-    const std::map<std::string, ConnectableRouter *> & getAccounts() const {
-        return m_accounts;
-    }
+	void removeAccount(ConnectableRouter* a);
 
-    void externalOperation(const Operation & op, Link &) override;
-    void operation(const Operation &, OpVector &) override;
+	/// Accessor for Accounts map.
+	const std::map<std::string, ConnectableRouter*>& getAccounts() const {
+		return m_accounts;
+	}
 
-    void addToMessage(Atlas::Message::MapType &) const override;
-    void addToEntity(const Atlas::Objects::Entity::RootEntity &) const override;
+	void externalOperation(const Operation& op, Link&) override;
+
+	void operation(const Operation&, OpVector&) override;
+
+	void addToMessage(Atlas::Message::MapType&) const override;
+
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 };
 
 #endif // SERVER_LOBBY_H

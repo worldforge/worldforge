@@ -24,39 +24,42 @@
 
 #include <sigc++/signal.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
+
+namespace Ember::OgreView::Gui {
 
 class MeshInfoProvider :
-	public Ogre::LodListener
-{
+		public Ogre::LodListener {
 public:
 
 	sigc::signal<void()> EventLodChanged;
 
 	explicit MeshInfoProvider(OgreEntityRenderer* entityRenderer);
+
 	~MeshInfoProvider() override;
+
 	std::string getInfo(int submeshIndex);
+
 	std::string getPreviewInfo();
+
 	bool prequeueEntityMeshLodChanged(Ogre::EntityMeshLodChangedEvent& evt) override;
-	int getLodIndex();
+
+	int getLodIndex() const;
 
 	static size_t calcUniqueVertexCount(const Ogre::Mesh* mesh);
+
 	static size_t calcUniqueVertexCount(const Ogre::VertexData& data);
+
 private:
 
 	// Hash function for UniqueVertexSet.
 	struct UniqueVertexHash {
-		size_t operator() (const Ogre::Vector3& v) const;
+		size_t operator()(const Ogre::Vector3& v) const;
 	};
 
 	typedef boost::unordered_set<Ogre::Vector3, UniqueVertexHash> UniqueVertexSet;
 
 	static size_t getVertexSize(const Ogre::VertexData* data);
+
 	static void calcUniqueVertexCount(UniqueVertexSet& uniqueVertexSet, const Ogre::VertexData& data);
 
 	OgreEntityRenderer* mEntityRenderer;
@@ -64,5 +67,5 @@ private:
 };
 
 }
-}
-}
+
+

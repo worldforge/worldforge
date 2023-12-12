@@ -26,18 +26,18 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_MemEntity : public CyPy_LocatedEntityBase<Ref<MemEntity>, CyPy_MemEntity>
-{
-    public:
-        CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds);
-        CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Ref<MemEntity> value);
+class CyPy_MemEntity : public CyPy_LocatedEntityBase<Ref<MemEntity>, CyPy_MemEntity> {
+public:
+	CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Py::Tuple& args, Py::Dict& kwds);
 
-        ~CyPy_MemEntity() override;
+	CyPy_MemEntity(Py::PythonClassInstanceWeak* self, Ref<MemEntity> value);
 
-        static void init_type();
+	~CyPy_MemEntity() override;
+
+	static void init_type();
 
 
-    protected:
+protected:
 
 };
 

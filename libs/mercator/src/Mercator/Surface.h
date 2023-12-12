@@ -21,23 +21,24 @@ static const ColorT colorMin = 0;
 
 /// \brief Data store for terrain surface data.
 class Surface : public Buffer<ColorT> {
-  public:
-    /// \brief The shader that populates this surface.
-    const Shader & m_shader;
-    /// The terrain height segment this buffer is associated with.
-    const Segment & m_segment;
+public:
+	/// \brief The shader that populates this surface.
+	const Shader& m_shader;
+	/// The terrain height segment this buffer is associated with.
+	const Segment& m_segment;
 
-    explicit Surface(const Segment & segment, const Shader & shader,
-                     bool colors = true, bool alpha = true);
-    ~Surface() override = default;
+	explicit Surface(const Segment& segment, const Shader& shader,
+					 bool colors = true, bool alpha = true);
 
-    void populate();
+	~Surface() override = default;
 
-    /// Accessor for the terrain height segment this surface is associated with.
-    const Segment & getSegment() const {
-        return m_segment;
-    }
-    // Do we need an accessor presenting the array in colour form?
+	void populate();
+
+	/// Accessor for the terrain height segment this surface is associated with.
+	const Segment& getSegment() const {
+		return m_segment;
+	}
+	// Do we need an accessor presenting the array in colour form?
 };
 
 } // namespace Mercator

@@ -23,41 +23,37 @@
 
 Vector3Property::Vector3Property(const Vector3Property& rhs) = default;
 
-int Vector3Property::get(Atlas::Message::Element& val) const
-{
-    if (m_data.isValid()) {
-        val = m_data.toAtlas();
-        return 0;
-    }
-    return 1;
+int Vector3Property::get(Atlas::Message::Element& val) const {
+	if (m_data.isValid()) {
+		val = m_data.toAtlas();
+		return 0;
+	}
+	return 1;
 
 }
 
-void Vector3Property::set(const Atlas::Message::Element& val)
-{
-    if (val.isList()) {
-        try {
-            m_data.fromAtlas(val.List());
-        } catch (...) {
-            m_data = {};
-            spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
-        }
-    } else if (val.isNone()) {
-        m_data = {};
-    } else {
-        m_data = {};
-        spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
-    }
+void Vector3Property::set(const Atlas::Message::Element& val) {
+	if (val.isList()) {
+		try {
+			m_data.fromAtlas(val.List());
+		} catch (...) {
+			m_data = {};
+			spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
+		}
+	} else if (val.isNone()) {
+		m_data = {};
+	} else {
+		m_data = {};
+		spdlog::error("Vector3Property::set: Data was not in format which could be parsed into 3d vector.");
+	}
 }
 
-Vector3Property* Vector3Property::copy() const
-{
-    return new Vector3Property(*this);
+Vector3Property* Vector3Property::copy() const {
+	return new Vector3Property(*this);
 }
 
-void Vector3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
-{
-    if (m_data.isValid()) {
-        PropertyBase::add(key, ent);
-    }
+void Vector3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const {
+	if (m_data.isValid()) {
+		PropertyBase::add(key, ent);
+	}
 }

@@ -37,16 +37,19 @@
 
 namespace CEGUI {
 class DragContainer;
+
 class Window;
+
 class EventArgs;
 }
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
-namespace Gui {
+
+namespace OgreView::Gui {
 
 class EntityIconSlot;
+
 class EntityIcon;
 
 /**
@@ -57,9 +60,9 @@ class EntityIcon;
 	Additionally, another entity icon can be dragged and dropped onto an instance of this class. When this happens the EvenIcon* events are emitted. This allows you to implement functionality for combining different entities.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class EntityIcon : public EntityIconDragDropTarget, public virtual sigc::trackable
-{
-friend class EntityIconManager;
+class EntityIcon : public EntityIconDragDropTarget, public virtual sigc::trackable {
+	friend class EntityIconManager;
+
 public:
 
 	/**
@@ -89,39 +92,39 @@ public:
 	 * @return The image displaying the entity in the CEGUI system.
 	 */
 	CEGUI::Window& getImage();
-	
+
 	/**
 	 * @brief Gets the CEGUI drag container which allows this entity to be dragged and dropped.
 	 * @return The CEGUI drag container instance for this entity icon.
 	 */
 	CEGUI::DragContainer* getDragContainer();
-	
+
 	/**
 	 * @brief Gets the icon instance which is responsible for providing the graphical representation (for example a live render, or a prerendered texture).
 	 * @return The icon instance responsible for providing the graphical representation of the entity.
 	 */
 	Gui::Icons::Icon* getIcon();
-	
+
 	/**
 	 * @brief Sets the slot to which this entity icon is attached. This will make the entity icon appear within the slot.
 	 * Calling this on an entity which is already connected to a slot will make the icon first disconnect from that slot.
 	 * @param slot The slot to which the entity icon should be connected.
 	 */
 	void setSlot(EntityIconSlot* slot);
-	
+
 	/**
 	 * @brief Gets the icon entity slot to which this entity currently is attached to.
 	 * @return The entity slot to which this entity icon is attached, or null if it's not connected to any slot.
 	 */
 	EntityIconSlot* getSlot();
-	
+
 	/**
 	 * @brief Sets the tool tip for this entity icon.
 	 * The tooltip will be displayed when the user hovers the mouse over the icon.
 	 * @param text A text to show when the user hovers the mouse over the icon.
 	 */
 	void setTooltipText(const std::string& text);
-	
+
 	/**
 	 * @brief Gets the entity which this icon represents.
 	 * @return The entity which this icon represents.
@@ -145,28 +148,29 @@ public:
 	 * @brief Emitted when another EntityIcon instance is dragged and enters this icon.
 	 */
 	sigc::signal<void(EntityIcon*)> EventIconEntered;
-	
+
 	/**
 	 * @brief Emitted when another EntityIcon instance is dragged and leaves this icon.
 	 */
 	sigc::signal<void(EntityIcon*)> EventIconLeaves;
-	
+
 	/**
 	 * @brief Emitted when another EntityIcon instance is dragged and dropped on this icon.
 	 */
 	sigc::signal<void(EntityIcon*)> EventIconDropped;
-	
+
 	/**
 	 * @brief The main reason for having this is an issue in the lua bindings where comparisons of two EntityIcon instances always generated a lua error.
 	 * @param value Another object to compare to.
 	 * @return True if the objects are identical.
 	 */
-	bool operator==(const EntityIcon& value) const noexcept {return this == &value;}
-	bool operator!=(const EntityIcon& value) const noexcept {return this != &value;}
+	bool operator==(const EntityIcon& value) const noexcept { return this == &value; }
+
+	bool operator!=(const EntityIcon& value) const noexcept { return this != &value; }
 
 protected:
 
-	
+
 	/**
 	 * @brief The main entity icon manager.
 	 */
@@ -220,7 +224,7 @@ protected:
 	 * An arbitrary tag set on the icon.
 	 */
 	std::string mTag;
-	
+
 	/**
 	 * @brief Handler for CEGUI drag start event.
 	 * @param args Event args.
@@ -232,9 +236,11 @@ protected:
 	 * @param args Event args.
 	 */
 	bool dragContainer_DragStopped(const CEGUI::EventArgs& args);
-	
+
 	bool handleDragEnter(const CEGUI::EventArgs& args, EntityIcon* icon) override;
+
 	bool handleDragLeave(const CEGUI::EventArgs& args, EntityIcon* icon) override;
+
 	bool handleDragDropped(const CEGUI::EventArgs& args, EntityIcon* icon) override;
 
 	void icon_Updated();
@@ -245,7 +251,6 @@ protected:
 
 }
 
-}
 
 }
 

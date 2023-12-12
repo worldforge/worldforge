@@ -220,7 +220,7 @@ Result Account::refreshCharacterInfo() {
 	Anonymous obj;
 	lk->setFrom(m_accountId);
 
-	for (const auto& id : m_characterIds) {
+	for (const auto& id: m_characterIds) {
 		obj->setId(id);
 		lk->setArgs1(obj);
 		lk->setSerialno(getNewSerialno());
@@ -432,7 +432,7 @@ void Account::updateFromObject(const AtlasAccount& p) {
 	std::string createdCharacterId;
 	if (m_status == Status::CREATING_CHAR) {
 		//See which character was added
-		for (auto& character : characters) {
+		for (auto& character: characters) {
 			if (m_characterIds.find(character) == m_characterIds.end()) {
 				createdCharacterId = character;
 				break;
@@ -448,7 +448,7 @@ void Account::updateFromObject(const AtlasAccount& p) {
 
 		if (spawns.isList()) {
 			auto& spawnsList = spawns.List();
-			for (const auto& spawnElement : spawnsList) {
+			for (const auto& spawnElement: spawnsList) {
 				if (spawnElement.isMap()) {
 					auto& spawnMap = spawnElement.Map();
 					std::string name;
@@ -477,7 +477,7 @@ void Account::updateFromObject(const AtlasAccount& p) {
 						auto I = spawnMap.find("properties");
 						if (I != spawnMap.end() && I->second.isList()) {
 							auto propList = I->second.List();
-							for (auto& entry : propList) {
+							for (auto& entry: propList) {
 								if (entry.isMap()) {
 									auto& entryMap = entry.Map();
 									std::string propName;

@@ -25,7 +25,6 @@
 #include <sigc++/signal.h>
 
 
-
 namespace Ember {
 
 class TimeFrame;
@@ -47,22 +46,22 @@ public:
 		/**
 		 * Graphics was updated.
 		 */
-				FA_GRAPHICS = 1u << 0u,
+		FA_GRAPHICS = 1u << 0u,
 
 		/**
 		 * Eris was polled.
 		 */
-				FA_ERIS = 1u << 1u,
+		FA_ERIS = 1u << 1u,
 
 		/**
 		 * Sound was updated.
 		 */
-				FA_SOUND = 1u << 2u,
+		FA_SOUND = 1u << 2u,
 
 		/**
 		 * Input was handled.
 		 */
-				FA_INPUT = 1u << 3u
+		FA_INPUT = 1u << 3u
 	};
 
 	/**

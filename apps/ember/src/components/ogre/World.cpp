@@ -72,8 +72,8 @@
 #include <memory>
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 World::World(Eris::View& view,
 			 Ogre::RenderWindow& renderWindow,
@@ -188,7 +188,7 @@ MovementController* World::getMovementController() const {
 }
 
 EmberEntity* World::getEmberEntity(const std::string& eid) const {
-	return static_cast<EmberEntity*>(mView.getEntity(eid));
+	return dynamic_cast<EmberEntity*>(mView.getEntity(eid));
 }
 
 void World::View_topLevelEntityChanged() {
@@ -196,7 +196,7 @@ void World::View_topLevelEntityChanged() {
 		mTopLevelEntity->setAttachment({});
 	}
 	EmberEntity* nearestPhysicalDomainEntity = nullptr;
-	EmberEntity* currentEntity = dynamic_cast<EmberEntity*>(mView.getAvatar().getEntity());
+	auto* currentEntity = dynamic_cast<EmberEntity*>(mView.getAvatar().getEntity());
 
 	//Find any parent entity with a physical domain. If so, create a WorldAttachment to
 	if (currentEntity) {
@@ -266,7 +266,7 @@ Eris::Calendar& World::getCalendar() const {
 }
 
 void World::terrainManager_AfterTerrainUpdate(const std::vector<WFMath::AxisBox<2>>& areas, const std::vector<std::shared_ptr<Terrain::TerrainPageGeometry>>&) {
-	auto* emberEntity = static_cast<EmberEntity*>(mView.getTopLevel());
+	auto* emberEntity = dynamic_cast<EmberEntity*>(mView.getTopLevel());
 	if (emberEntity) {
 		updateEntityPosition(emberEntity, areas);
 	}
@@ -275,14 +275,14 @@ void World::terrainManager_AfterTerrainUpdate(const std::vector<WFMath::AxisBox<
 void World::updateEntityPosition(EmberEntity* entity, const std::vector<WFMath::AxisBox<2>>& areas) {
 	entity->adjustPosition();
 	for (size_t i = 0; i < entity->numContained(); ++i) {
-		auto* containedEntity = static_cast<EmberEntity*>(entity->getContained(i));
+		auto* containedEntity = dynamic_cast<EmberEntity*>(entity->getContained(i));
 		updateEntityPosition(containedEntity, areas);
 	}
 }
 
 void World::View_gotAvatarCharacter(Eris::Entity* entity) {
 	if (entity) {
-		auto& emberEntity = static_cast<EmberEntity&>(*entity);
+		auto& emberEntity = dynamic_cast<EmberEntity&>(*entity);
 		//Set up the third person avatar camera and switch to it.
 		mAvatar = std::make_unique<Avatar>(mView.getAvatar(), emberEntity, *mScene, mMainCamera->getCameraSettings(), *(mTerrainManager->getTerrainAdapter()));
 		mAvatarCameraMotionHandler = std::make_unique<AvatarCameraMotionHandler>(*mAvatar);
@@ -318,4 +318,4 @@ void World::avatarEntity_BeingDeleted() {
 
 
 }
-}
+

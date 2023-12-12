@@ -18,20 +18,20 @@
 
 #ifndef FREEFLYINGCAMERAMOTIONHANDLER_H_
 #define FREEFLYINGCAMERAMOTIONHANDLER_H_
+
 #include "ICameraMotionHandler.h"
 
 #include "components/ogre/OgreIncludes.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A motion handler for a free flying camera.
  * The handler is attached to an Ogre::SceneNode which is moved without constraints.
  */
-class FreeFlyingCameraMotionHandler : public ICameraMotionHandler
-{
+class FreeFlyingCameraMotionHandler : public ICameraMotionHandler {
 public:
 	explicit FreeFlyingCameraMotionHandler(Ogre::SceneNode& freeFlyingNode);
 
@@ -50,6 +50,6 @@ private:
 
 }
 
-}
+
 
 #endif /* FREEFLYINGCAMERAMOTIONHANDLER_H_ */

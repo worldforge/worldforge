@@ -4,12 +4,14 @@
 #include <memory>
 #include "Room.h"
 
-namespace Eris
-{
-	
+namespace Eris {
+
 class Account;
+
 class Person;
+
 class Connection;
+
 class OOGRouter;
 
 /**
@@ -23,76 +25,79 @@ for accessing the OOG system if it wants.
 Of course, nothing requries to create a Lobby at all, Account and the in-game
 structure will work perfectly well without one.
 */
-class Lobby : public Room
-{
-public:	
-    /** Create a Lobby for the specified account, and retrieve the initial
-    OOG structure if the Account is logged in and connected. */
-    explicit Lobby(Account &acc);
-    
-    /** Delete the Lobby, including all it's Rooms and Persons. */
-    ~Lobby() override;
+class Lobby : public Room {
+public:
+	/** Create a Lobby for the specified account, and retrieve the initial
+	OOG structure if the Account is logged in and connected. */
+	explicit Lobby(Account& acc);
 
-    /** Join the specified room, or return nullptr if an error occurs. Note
-    the Room will not be valid until it emits the Entered signal. */
-    Room* join(const std::string &roomID);
+	/** Delete the Lobby, including all it's Rooms and Persons. */
+	~Lobby() override;
 
-    /// obtain a person's info, given their account ID; may return nullptr
-    Person* getPerson(const std::string &acc);
-		
-    /**
-    Obtain a Room object, given the rooms' id. This will return nullptr if the
-    id is invalid.
-    */
-    Room* getRoom(const std::string &id);
+	/** Join the specified room, or return nullptr if an error occurs. Note
+	the Room will not be valid until it emits the Entered signal. */
+	Room* join(const std::string& roomID);
 
-    /// Retrive the Account which this lobbby is bound to
-    Account& getAccount() const
-    {
-        return m_account;
-    }
-    
-    /// Helper method to access the underlying Connection from the Account
-    Connection& getConnection() const;
+	/// obtain a person's info, given their account ID; may return nullptr
+	Person* getPerson(const std::string& acc);
+
+	/**
+	Obtain a Room object, given the rooms' id. This will return nullptr if the
+	id is invalid.
+	*/
+	Room* getRoom(const std::string& id);
+
+	/// Retrive the Account which this lobbby is bound to
+	Account& getAccount() const {
+		return m_account;
+	}
+
+	/// Helper method to access the underlying Connection from the Account
+	Connection& getConnection() const;
 
 // callbacks
-    /// Emitted when sight of a person is received
-    sigc::signal<void(Person*)> SightPerson;
-    
-    /**
-    Emitted when some person sends a private (one-to-one) chat message
-    to the client's account. The first argument is the sender, which will
-    always be a valid Person object, and the second is the message text.
-    */
-    sigc::signal<void(Person*, const std::string&)> PrivateTalk;
-	
+	/// Emitted when sight of a person is received
+	sigc::signal<void(Person*)> SightPerson;
+
+	/**
+	Emitted when some person sends a private (one-to-one) chat message
+	to the client's account. The first argument is the sender, which will
+	always be a valid Person object, and the second is the message text.
+	*/
+	sigc::signal<void(Person*, const std::string&)> PrivateTalk;
+
 protected:
-    friend class Room;
-    friend class OOGRouter;
-    
-    void look(const std::string &id);
-		
-    void sightPerson(const Atlas::Objects::Entity::Account &ac);
-    Router::RouterResult recvTalk(const Atlas::Objects::Operation::Talk& tk);
-    void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);
-        
-    void recvAppearance(const Atlas::Objects::Root& obj);
-    void recvDisappearance(const Atlas::Objects::Root& obj);
-    
-    Router::RouterResult recvImaginary(const Atlas::Objects::Operation::Imaginary& im);
-    
+	friend class Room;
+
+	friend class OOGRouter;
+
+	void look(const std::string& id);
+
+	void sightPerson(const Atlas::Objects::Entity::Account& ac);
+
+	Router::RouterResult recvTalk(const Atlas::Objects::Operation::Talk& tk);
+
+	void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);
+
+	void recvAppearance(const Atlas::Objects::Root& obj);
+
+	void recvDisappearance(const Atlas::Objects::Root& obj);
+
+	Router::RouterResult recvImaginary(const Atlas::Objects::Operation::Imaginary& im);
+
 private:
-    void onLoggedIn();
-    void onLogout(bool clean);
-    
-    Account& m_account;
-    IdPersonMap m_people;
-	
+	void onLoggedIn();
+
+	void onLogout(bool clean);
+
+	Account& m_account;
+	IdPersonMap m_people;
+
 	std::unordered_map<std::string, std::unique_ptr<Room>> m_rooms;
 
-    std::unique_ptr<OOGRouter> m_router;
+	std::unique_ptr<OOGRouter> m_router;
 };
-	
+
 } // of namespace Eris
 
 #endif

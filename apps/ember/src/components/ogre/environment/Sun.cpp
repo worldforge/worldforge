@@ -30,10 +30,10 @@
 #include <OgreRoot.h>
 #include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 
 Sun::Sun(Ogre::Camera* camera, Ogre::SceneManager* sceneMgr) :
@@ -139,7 +139,7 @@ void Sun::setSunPosition(const Ogre::Vector3& position) {
 	mSunNode->setPosition(position);
 	Ogre::Vector3 dir = -mSunNode->getPosition();
 	dir.normalise();
-    mSunNode->setDirection(dir, Ogre::Node::TS_WORLD);
+	mSunNode->setDirection(dir, Ogre::Node::TS_WORLD);
 	EventUpdatedSunPosition.emit(this, position);
 }
 
@@ -159,5 +159,5 @@ void Sun::setAmbientLight(const Ogre::ColourValue& colour) {
 
 }
 
-}
-}
+
+

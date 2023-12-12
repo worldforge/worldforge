@@ -87,45 +87,56 @@
  *	   that cover both aspects.
  *
  */
-class MetaServerPacket
-{
+class MetaServerPacket {
 
 public:
 	MetaServerPacket();
-	MetaServerPacket(const std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
+
+	MetaServerPacket(const std::array<char, MAX_PACKET_BYTES>& pl, std::size_t bytes = 0);
+
 	~MetaServerPacket();
 
 	NetMsgType getPacketType() const { return m_packetType; }
+
 	void setPacketType(const NetMsgType& nmt);
 
 	std::string getAddressStr() const { return m_AddressStr; }
+
 	uint32_t getAddressInt() const { return m_AddressInt; }
+
 	std::string getAddress() const { return m_AddressStr; }
+
 	void setAddress(const std::string& address, uint32_t addressInt);
 
 	void setSequence(const unsigned long long seq = 0) { m_Sequence = seq; }
+
 	unsigned long long getSequence() const { return m_Sequence; }
 
-	void setTimeOffset(const unsigned long long to = 0 ) { m_TimeOffset = to; }
+	void setTimeOffset(const unsigned long long to = 0) { m_TimeOffset = to; }
+
 	unsigned long long getTimeOffset() const { return m_TimeOffset; }
 
 	unsigned int getPort() const { return m_Port; }
+
 	void setPort(unsigned int p) { m_Port = p; }
 
 	bool getOutBound() { return m_outBound; }
+
 	void setOutBound(bool s) { m_outBound = s; }
 
 	std::size_t getSize() const { return m_Bytes; }
 
 	unsigned int addPacketData(uint32_t i);
+
 	unsigned int addPacketData(const std::string& s);
 
 	std::string getPacketMessage(unsigned int offset) const;
+
 	uint32_t getIntData(unsigned int offset) const;
 
-	std::array<char,MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
-	void setBuffer( std::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )
-	{
+	std::array<char, MAX_PACKET_BYTES> getBuffer() const { return m_packetPayload; }
+
+	void setBuffer(std::array<char, MAX_PACKET_BYTES>& pl, std::size_t bytes = 0) {
 		m_packetPayload = pl;
 		m_Bytes = bytes;
 	}
@@ -135,20 +146,23 @@ public:
 private:
 
 
-	char *pack_uint32(uint32_t data, char* buffer );
-	char *unpack_uint32(uint32_t *dest, char* buffer ) const;
-	char *pack_string(std::string str, char *buffer );
-	char *unpack_string(std::string *dest, char* buffer, unsigned int length ) const;
+	char* pack_uint32(uint32_t data, char* buffer);
+
+	char* unpack_uint32(uint32_t* dest, char* buffer) const;
+
+	char* pack_string(std::string str, char* buffer);
+
+	char* unpack_string(std::string* dest, char* buffer, unsigned int length) const;
 
 	NetMsgType m_packetType;
 	uint32_t m_AddressInt;
 	std::string m_AddressStr;
 	unsigned int m_Port;
 	std::size_t m_Bytes;
-	char * m_headPtr;
-	char * m_writePtr;
-	char * m_readPtr;
-	std::array<char,MAX_PACKET_BYTES> m_packetPayload;
+	char* m_headPtr;
+	char* m_writePtr;
+	char* m_readPtr;
+	std::array<char, MAX_PACKET_BYTES> m_packetPayload;
 	bool m_needFree;
 	bool m_outBound;
 	unsigned long long m_Sequence;

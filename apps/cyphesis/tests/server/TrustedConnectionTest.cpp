@@ -59,131 +59,127 @@ using Atlas::Objects::Operation::Login;
 using Atlas::Objects::Operation::Logout;
 using Atlas::Objects::Operation::Move;
 
-class TestCommSocket : public CommSocket
-{
-  public:
-    TestCommSocket() : CommSocket(*(boost::asio::io_context*)0)
-    {
-    }
+class TestCommSocket : public CommSocket {
+public:
+	TestCommSocket() : CommSocket(*(boost::asio::io_context*) 0) {
+	}
 
-    virtual void disconnect()
-    {
-    }
+	virtual void disconnect() {
+	}
 
-    virtual int flush()
-    {
-        return 0;
-    }
+	virtual int flush() {
+		return 0;
+	}
 
 };
 
 class TestConnection : public TrustedConnection {
-  public:
-    TestConnection(CommSocket & cc, ServerRouting & svr,
-                   const std::string & addr, RouterId id) :
-        TrustedConnection(cc, svr, addr, id) {
-      
-    }
+public:
+	TestConnection(CommSocket& cc, ServerRouting& svr,
+				   const std::string& addr, RouterId id) :
+			TrustedConnection(cc, svr, addr, id) {
 
-    std::unique_ptr<Account> test_newAccount(const std::string & type,
-                              const std::string & username,
-                              const std::string & passwd,
-                              RouterId id)
-    {
-        return newAccount(type, username, passwd, id);
-    }
+	}
 
-    int test_verifyCredentials(const Account & ac,
-                               const Atlas::Objects::Root & arg) const
-    {
-        return verifyCredentials(ac, arg);
-    }
+	std::unique_ptr<Account> test_newAccount(const std::string& type,
+											 const std::string& username,
+											 const std::string& passwd,
+											 RouterId id) {
+		return newAccount(type, username, passwd, id);
+	}
 
-    size_t numObjects() const {
-        return m_routers.size();
-    }
+	int test_verifyCredentials(const Account& ac,
+							   const Atlas::Objects::Root& arg) const {
+		return verifyCredentials(ac, arg);
+	}
 
-    const std::map<long, RouterWithQueue> & getObjects() const {
-        return m_routers;
-    }
+	size_t numObjects() const {
+		return m_routers.size();
+	}
 
-    void removeObject(Router * obj) {
-        auto I = m_routers.find(obj->getIntId());
-        if (I != m_routers.end()) {
-            m_routers.erase(I);
-        }
-    }
+	const std::map<long, RouterWithQueue>& getObjects() const {
+		return m_routers;
+	}
+
+	void removeObject(Router* obj) {
+		auto I = m_routers.find(obj->getIntId());
+		if (I != m_routers.end()) {
+			m_routers.erase(I);
+		}
+	}
 };
 
-int main()
-{
-    // WorldRouter world(SystemTime());
-    // Entity & e = world.m_gameWorld;
+int main() {
+	// WorldRouter world(SystemTime());
+	// Entity & e = world.m_gameWorld;
 
-    ServerRouting server(*(BaseWorld*)0, *(Persistence*)nullptr, "noruleset", "unittesting", 2);
+	ServerRouting server(*(BaseWorld*) 0, *(Persistence*) nullptr, "noruleset", "unittesting", 2);
 
-    TestCommSocket tcc{};
-    TestConnection tc(tcc, server, "addr", 3);
+	TestCommSocket tcc{};
+	TestConnection tc(tcc, server, "addr", 3);
 
-    {
-        auto ac = tc.test_newAccount("_non_type_",
-                                           "bob",
-                                           "unit_test_hash",
-                                           1);
+	{
+		auto ac = tc.test_newAccount("_non_type_",
+									 "bob",
+									 "unit_test_hash",
+									 1);
 
-        assert(ac.get() != 0);
-    }
-    
-    {
-        auto ac = tc.test_newAccount("sys",
-                                           "bob",
-                                           "unit_test_hash",
-                                           1);
+		assert(ac.get() != 0);
+	}
 
-        assert(ac.get() != 0);
-    }
-    
-    {
-        auto ac = tc.test_newAccount("admin",
-                                           "bob",
-                                           "unit_test_hash",
-                                           1);
+	{
+		auto ac = tc.test_newAccount("sys",
+									 "bob",
+									 "unit_test_hash",
+									 1);
 
-        assert(ac.get() != 0);
-    }
-    
-    {
-        auto ac = tc.test_newAccount("player",
-                                           "bob",
-                                           "unit_test_hash",
-                                           1);
+		assert(ac.get() != 0);
+	}
 
-        assert(ac.get() != 0);
-    }
+	{
+		auto ac = tc.test_newAccount("admin",
+									 "bob",
+									 "unit_test_hash",
+									 1);
 
-    {
-        Account * ac = new Player(0, "bill", "unit_test_password", 2);
-        Atlas::Objects::Root creds;
+		assert(ac.get() != 0);
+	}
 
-        int ret = tc.test_verifyCredentials(*ac, creds);
+	{
+		auto ac = tc.test_newAccount("player",
+									 "bob",
+									 "unit_test_hash",
+									 1);
 
-        assert(ret == 0);
-        delete ac;
-    }
+		assert(ac.get() != 0);
+	}
+
+	{
+		Account* ac = new Player(0, "bill", "unit_test_password", 2);
+		Atlas::Objects::Root creds;
+
+		int ret = tc.test_verifyCredentials(*ac, creds);
+
+		assert(ret == 0);
+		delete ac;
+	}
 }
 
 // Stubs
 
 bool restricted_flag;
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int UPDATE_NO = -1;
-} } }
+}
+}
+}
 
 
-int CommSocket::flush()
-{
-    return 0;
+int CommSocket::flush() {
+	return 0;
 }
 
 #include "../stubs/server/stubAdmin.h"
@@ -196,16 +192,16 @@ int CommSocket::flush()
 #include "../stubs/server/stubLobby.h"
 
 #define STUB_ExternalMind_connectionId
-const std::string & ExternalMind::connectionId()
-{
-    assert(m_link != 0);
-    return m_link->getId();
+
+const std::string& ExternalMind::connectionId() {
+	assert(m_link != 0);
+	return m_link->getId();
 }
 
 #define STUB_ExternalMind_linkUp
-void ExternalMind::linkUp(Link * c)
-{
-    m_link = c;
+
+void ExternalMind::linkUp(Link* c) {
+	m_link = c;
 }
 
 #include "../stubs/rules/simulation/stubExternalMind.h"
@@ -224,30 +220,31 @@ void ExternalMind::linkUp(Link * c)
 
 #ifndef STUB_Inheritance_getClass
 #define STUB_Inheritance_getClass
-const Atlas::Objects::Root& Inheritance::getClass(const std::string & parent, Visibility) const
-{
-    return noClass;
+
+const Atlas::Objects::Root& Inheritance::getClass(const std::string& parent, Visibility) const {
+	return noClass;
 }
+
 #endif //STUB_Inheritance_getClass
 
 
 #ifndef STUB_Inheritance_getType
 #define STUB_Inheritance_getType
-const TypeNode* Inheritance::getType(const std::string & parent) const
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return 0;
-    }
-    return I->second.get();
+
+const TypeNode* Inheritance::getType(const std::string& parent) const {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return 0;
+	}
+	return I->second.get();
 }
+
 #endif //STUB_Inheritance_getType
 
 #include "../stubs/common/stubInheritance.h"
 
 
-void encrypt_password(const std::string & pwd, std::string & hash)
-{
+void encrypt_password(const std::string& pwd, std::string& hash) {
 }
 
 #include "../stubs/common/stublog.h"
@@ -255,32 +252,27 @@ void encrypt_password(const std::string & pwd, std::string & hash)
 
 static long idGenerator = 0;
 
-RouterId newId()
-{
-    long new_id = ++idGenerator;
-    return {new_id};
+RouterId newId() {
+	long new_id = ++idGenerator;
+	return {new_id};
 }
 
-void addToEntity(const Vector3D & v, std::vector<double> & vd)
-{
-    vd.resize(3);
-    vd[0] = v[0];
-    vd[1] = v[1];
-    vd[2] = v[2];
+void addToEntity(const Vector3D& v, std::vector<double>& vd) {
+	vd.resize(3);
+	vd[0] = v[0];
+	vd[1] = v[1];
+	vd[2] = v[2];
 }
 
-int check_password(const std::string & pwd, const std::string & hash)
-{
-    return 0;
+int check_password(const std::string& pwd, const std::string& hash) {
+	return 0;
 }
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Terrain;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<TerrainLayerDefinitionManager>(sol::table& space) {
 	auto terrainLayerDefinition = space.new_usertype<TerrainLayerDefinition>("TerrainLayerDefinition");
 	terrainLayerDefinition["mAreaId"] = &TerrainLayerDefinition::mAreaId;

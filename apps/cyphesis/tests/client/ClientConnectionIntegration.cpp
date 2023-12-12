@@ -40,86 +40,81 @@ using Atlas::Objects::Operation::RootOperation;
 
 Atlas::Objects::Factories factories;
 
-class ClientConnectionintegration : public Cyphesis::TestBase
-{
-    ClientConnection * cc;
-    boost::asio::io_context m_io_context;
-  public:
-    ClientConnectionintegration();
+class ClientConnectionintegration : public Cyphesis::TestBase {
+	ClientConnection* cc;
+	boost::asio::io_context m_io_context;
+public:
+	ClientConnectionintegration();
 
-    void setup();
-    void teardown();
+	void setup();
 
-    void test_sequence();
+	void teardown();
+
+	void test_sequence();
 };
 
-ClientConnectionintegration::ClientConnectionintegration()
-{
-    ADD_TEST(ClientConnectionintegration::test_sequence);
+ClientConnectionintegration::ClientConnectionintegration() {
+	ADD_TEST(ClientConnectionintegration::test_sequence);
 }
 
-void ClientConnectionintegration::setup()
-{
-    cc = new ClientConnection(m_io_context, factories);
+void ClientConnectionintegration::setup() {
+	cc = new ClientConnection(m_io_context, factories);
 }
 
-void ClientConnectionintegration::teardown()
-{
-    delete cc;
+void ClientConnectionintegration::teardown() {
+	delete cc;
 }
 
-void ClientConnectionintegration::test_sequence()
-{
-    // Try all the method calls when not connected
+void ClientConnectionintegration::test_sequence() {
+	// Try all the method calls when not connected
 
-    cc->login("username", "password");
-    cc->create("player", "username", "password");
-    cc->wait();
+	cc->login("username", "password");
+	cc->create("player", "username", "password");
+	cc->wait();
 
-    {
-        RootOperation op;
-        cc->send(op);
-    }
+	{
+		RootOperation op;
+		cc->send(op);
+	}
 
-    cc->pop();
-    cc->pending();
+	cc->pop();
+	cc->pending();
 
-    {
-        Root obj;
-        RootOperation op;
-        cc->operation(op);
-        cc->errorArrived(op);
-        cc->infoArrived(op);
-        cc->objectArrived(op);
+	{
+		Root obj;
+		RootOperation op;
+		cc->operation(op);
+		cc->errorArrived(op);
+		cc->infoArrived(op);
+		cc->objectArrived(op);
 
-        Anonymous op_arg;
-        op->setArgs1(op_arg);
-        cc->infoArrived(op);
+		Anonymous op_arg;
+		op->setArgs1(op_arg);
+		cc->infoArrived(op);
 
-        op->setFrom("1");
-        cc->infoArrived(op);
+		op->setFrom("1");
+		cc->infoArrived(op);
 
-        op->setParent("");
-        cc->operation(op);
-        cc->objectArrived(op);
+		op->setParent("");
+		cc->operation(op);
+		cc->objectArrived(op);
 
-        Info i;
-        cc->objectArrived(i);
+		Info i;
+		cc->objectArrived(i);
 
-        Error e;
-        cc->objectArrived(e);
+		Error e;
+		cc->objectArrived(e);
 
-        cc->objectArrived(obj);
-        obj->setParent("");
-        cc->objectArrived(obj);
-    }
+		cc->objectArrived(obj);
+		obj->setParent("");
+		cc->objectArrived(obj);
+	}
 }
 
-int main()
-{
-    ClientConnectionintegration t;
+int main() {
+	ClientConnectionintegration t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs

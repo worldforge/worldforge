@@ -33,6 +33,7 @@ namespace WFMath {
 
 template<int dim>
 std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
+
 template<int dim>
 std::istream& operator>>(std::istream& is, Segment<dim>& s);
 
@@ -42,127 +43,156 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s);
  * the fake class Shape.
  **/
 template<int dim = 3>
-class Segment
-{
- public:
-  /// construct an uninitialized segment
-  Segment() : m_p1{}, m_p2{} {}
-  /// construct a segment with endpoints p1 and p2
-  Segment(const Point<dim>& p1, const Point<dim>& p2) : m_p1(p1), m_p2(p2) {}
-  /// construct a copy of a segment
-  Segment(const Segment& s) = default;
+class Segment {
+public:
+	/// construct an uninitialized segment
+	Segment() : m_p1{}, m_p2{} {}
 
-  ~Segment() = default;
+	/// construct a segment with endpoints p1 and p2
+	Segment(const Point<dim>& p1, const Point<dim>& p2) : m_p1(p1), m_p2(p2) {}
 
-  friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
-  friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
+	/// construct a copy of a segment
+	Segment(const Segment& s) = default;
 
-  Segment& operator=(const Segment& s) = default;
+	~Segment() = default;
 
-  bool isEqualTo(const Segment& s, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
+	friend std::ostream& operator<<<dim>(std::ostream& os, const Segment& s);
 
-  bool operator==(const Segment& b) const	{return isEqualTo(b);}
-  bool operator!=(const Segment& b) const	{return !isEqualTo(b);}
+	friend std::istream& operator>><dim>(std::istream& is, Segment& s);
 
-  bool isValid() const {return m_p1.isValid() && m_p2.isValid();}
+	Segment& operator=(const Segment& s) = default;
 
-  // Descriptive characteristics
+	bool isEqualTo(const Segment& s, CoordType epsilon = numeric_constants<CoordType>::epsilon()) const;
 
-  size_t numCorners() const {return 2;}
-  Point<dim> getCorner(size_t i) const {return i ? m_p2 : m_p1;}
-  Point<dim> getCenter() const {return Midpoint(m_p1, m_p2);}
+	bool operator==(const Segment& b) const { return isEqualTo(b); }
 
-  /// get one end of the segment
-  const Point<dim>& endpoint(const int i) const	{return i ? m_p2 : m_p1;}
-  /// get one end of the segment
-  Point<dim>& endpoint(const int i)		{return i ? m_p2 : m_p1;}
+	bool operator!=(const Segment& b) const { return !isEqualTo(b); }
 
-  // Movement functions
+	bool isValid() const { return m_p1.isValid() && m_p2.isValid(); }
 
-  Segment& shift(const Vector<dim>& v)
-	{m_p1 += v; m_p2 += v; return *this;}
-  Segment& moveCornerTo(const Point<dim>& p, size_t corner);
-  Segment& moveCenterTo(const Point<dim>& p)
-	{return shift(p - getCenter());}
+	// Descriptive characteristics
 
-  Segment& rotateCorner(const RotMatrix<dim>& m, size_t corner);
-  Segment& rotateCenter(const RotMatrix<dim>& m)
-	{rotatePoint(m, getCenter()); return *this;}
-  Segment<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-	{m_p1.rotate(m, p); m_p2.rotate(m, p); return *this;}
+	size_t numCorners() const { return 2; }
 
-  // 3D rotation functions
-  Segment& rotateCorner(const Quaternion& q, size_t corner);
-  Segment& rotateCenter(const Quaternion& q);
-  Segment& rotatePoint(const Quaternion& q, const Point<dim>& p);
+	Point<dim> getCorner(size_t i) const { return i ? m_p2 : m_p1; }
 
-  // Intersection functions
+	Point<dim> getCenter() const { return Midpoint(m_p1, m_p2); }
 
-  AxisBox<dim> boundingBox() const {return AxisBox<dim>(m_p1, m_p2);}
-  Ball<dim> boundingSphere() const
-	{return Ball<dim>(getCenter(), Distance(m_p1, m_p2) / 2);}
-  Ball<dim> boundingSphereSloppy() const
-	{return Ball<dim>(getCenter(), SloppyDistance(m_p1, m_p2) / 2);}
+	/// get one end of the segment
+	const Point<dim>& endpoint(const int i) const { return i ? m_p2 : m_p1; }
 
-  Segment toParentCoords(const Point<dim>& origin,
-      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-        {return Segment(m_p1.toParentCoords(origin, rotation),
-		m_p2.toParentCoords(origin, rotation));}
-  Segment toParentCoords(const AxisBox<dim>& coords) const
-        {return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords));}
-  Segment toParentCoords(const RotBox<dim>& coords) const
-        {return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords));}
+	/// get one end of the segment
+	Point<dim>& endpoint(const int i) { return i ? m_p2 : m_p1; }
 
-  // toLocal is just like toParent, expect we reverse the order of
-  // translation and rotation and use the opposite sense of the rotation
-  // matrix
+	// Movement functions
 
-  Segment toLocalCoords(const Point<dim>& origin,
-      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-        {return Segment(m_p1.toLocalCoords(origin, rotation),
-		m_p2.toLocalCoords(origin, rotation));}
-  Segment toLocalCoords(const AxisBox<dim>& coords) const
-        {return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords));}
-  Segment toLocalCoords(const RotBox<dim>& coords) const
-        {return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords));}
+	Segment& shift(const Vector<dim>& v) {
+		m_p1 += v;
+		m_p2 += v;
+		return *this;
+	}
 
-  // 3D only
-  Segment toParentCoords(const Point<dim>& origin,
-                         const Quaternion& rotation) const;
-  Segment toLocalCoords(const Point<dim>& origin,
-                        const Quaternion& rotation) const;
+	Segment& moveCornerTo(const Point<dim>& p, size_t corner);
 
-  friend bool Intersect<dim>(const Segment& s, const Point<dim>& p, bool proper);
-  friend bool Contains<dim>(const Point<dim>& p, const Segment& s, bool proper);
+	Segment& moveCenterTo(const Point<dim>& p) { return shift(p - getCenter()); }
 
-  friend bool Intersect<dim>(const Segment& s, const AxisBox<dim>& b, bool proper);
-  friend bool Contains<dim>(const AxisBox<dim>& b, const Segment& s, bool proper);
+	Segment& rotateCorner(const RotMatrix<dim>& m, size_t corner);
 
-  friend bool Intersect<dim>(const Segment& s, const Ball<dim>& b, bool proper);
-  friend bool Contains<dim>(const Ball<dim>& b, const Segment& s, bool proper);
+	Segment& rotateCenter(const RotMatrix<dim>& m) {
+		rotatePoint(m, getCenter());
+		return *this;
+	}
 
-  friend bool Intersect<dim>(const Segment& s1, const Segment& s2, bool proper);
-  friend bool Contains<dim>(const Segment& s1, const Segment& s2, bool proper);
+	Segment<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p) {
+		m_p1.rotate(m, p);
+		m_p2.rotate(m, p);
+		return *this;
+	}
 
-  friend bool Intersect<dim>(const RotBox<dim>& r, const Segment& s, bool proper);
-  friend bool Contains<dim>(const RotBox<dim>& r, const Segment& s, bool proper);
-  friend bool Contains<dim>(const Segment& s, const RotBox<dim>& r, bool proper);
+	// 3D rotation functions
+	Segment& rotateCorner(const Quaternion& q, size_t corner);
 
-  friend bool Intersect<dim>(const Polygon<dim>& r, const Segment& s, bool proper);
-  friend bool Contains<dim>(const Polygon<dim>& p, const Segment& s, bool proper);
-  friend bool Contains<dim>(const Segment& s, const Polygon<dim>& p, bool proper);
+	Segment& rotateCenter(const Quaternion& q);
 
- private:
+	Segment& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
-  Point<dim> m_p1, m_p2;
+	// Intersection functions
+
+	AxisBox<dim> boundingBox() const { return AxisBox<dim>(m_p1, m_p2); }
+
+	Ball<dim> boundingSphere() const { return Ball<dim>(getCenter(), Distance(m_p1, m_p2) / 2); }
+
+	Ball<dim> boundingSphereSloppy() const { return Ball<dim>(getCenter(), SloppyDistance(m_p1, m_p2) / 2); }
+
+	Segment toParentCoords(const Point<dim>& origin,
+						   const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const {
+		return Segment(m_p1.toParentCoords(origin, rotation),
+					   m_p2.toParentCoords(origin, rotation));
+	}
+
+	Segment toParentCoords(const AxisBox<dim>& coords) const { return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords)); }
+
+	Segment toParentCoords(const RotBox<dim>& coords) const { return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords)); }
+
+	// toLocal is just like toParent, expect we reverse the order of
+	// translation and rotation and use the opposite sense of the rotation
+	// matrix
+
+	Segment toLocalCoords(const Point<dim>& origin,
+						  const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const {
+		return Segment(m_p1.toLocalCoords(origin, rotation),
+					   m_p2.toLocalCoords(origin, rotation));
+	}
+
+	Segment toLocalCoords(const AxisBox<dim>& coords) const { return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords)); }
+
+	Segment toLocalCoords(const RotBox<dim>& coords) const { return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords)); }
+
+	// 3D only
+	Segment toParentCoords(const Point<dim>& origin,
+						   const Quaternion& rotation) const;
+
+	Segment toLocalCoords(const Point<dim>& origin,
+						  const Quaternion& rotation) const;
+
+	friend bool Intersect<dim>(const Segment& s, const Point<dim>& p, bool proper);
+
+	friend bool Contains<dim>(const Point<dim>& p, const Segment& s, bool proper);
+
+	friend bool Intersect<dim>(const Segment& s, const AxisBox<dim>& b, bool proper);
+
+	friend bool Contains<dim>(const AxisBox<dim>& b, const Segment& s, bool proper);
+
+	friend bool Intersect<dim>(const Segment& s, const Ball<dim>& b, bool proper);
+
+	friend bool Contains<dim>(const Ball<dim>& b, const Segment& s, bool proper);
+
+	friend bool Intersect<dim>(const Segment& s1, const Segment& s2, bool proper);
+
+	friend bool Contains<dim>(const Segment& s1, const Segment& s2, bool proper);
+
+	friend bool Intersect<dim>(const RotBox<dim>& r, const Segment& s, bool proper);
+
+	friend bool Contains<dim>(const RotBox<dim>& r, const Segment& s, bool proper);
+
+	friend bool Contains<dim>(const Segment& s, const RotBox<dim>& r, bool proper);
+
+	friend bool Intersect<dim>(const Polygon<dim>& r, const Segment& s, bool proper);
+
+	friend bool Contains<dim>(const Polygon<dim>& p, const Segment& s, bool proper);
+
+	friend bool Contains<dim>(const Segment& s, const Polygon<dim>& p, bool proper);
+
+private:
+
+	Point<dim> m_p1, m_p2;
 };
 
 template<int dim>
 inline bool Segment<dim>::isEqualTo(const Segment<dim>& s,
-                                    CoordType epsilon) const
-{
-  return Equal(m_p1, s.m_p1, epsilon)
-      && Equal(m_p2, s.m_p2, epsilon);
+									CoordType epsilon) const {
+	return Equal(m_p1, s.m_p1, epsilon)
+		   && Equal(m_p2, s.m_p2, epsilon);
 }
 
 } // namespace WFMath

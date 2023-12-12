@@ -47,118 +47,107 @@ int_config_register _var ## _register(_var, _section, _setting, _help);
 
 const time_t reference_seconds = 1000000000; // Some time in the early 21st
 Atlas::Objects::Factories atlasFactories;
-class TestNegotiate : public Atlas::Negotiate
-{
-  public:
-    Atlas::Negotiate::State m_state;
 
-    explicit TestNegotiate(Atlas::Negotiate::State state) : m_state(state)
-    {
-    }
+class TestNegotiate : public Atlas::Negotiate {
+public:
+	Atlas::Negotiate::State m_state;
 
-    Atlas::Negotiate::State getState() override
-    {
-        return m_state;
-    }
+	explicit TestNegotiate(Atlas::Negotiate::State state) : m_state(state) {
+	}
 
-    std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge &) override
-    {
-        return {};
-    }
+	Atlas::Negotiate::State getState() override {
+		return m_state;
+	}
 
-    void poll() override
-    {
-    }
+	std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge&) override {
+		return {};
+	}
+
+	void poll() override {
+	}
 };
 
-class TestCommPeer : public CommPeer
-{
-  public:
-    explicit TestCommPeer(boost::asio::io_context & svr) : CommPeer("", svr, atlasFactories)
-    {
-    }
+class TestCommPeer : public CommPeer {
+public:
+	explicit TestCommPeer(boost::asio::io_context& svr) : CommPeer("", svr, atlasFactories) {
+	}
 
-    void test_setNegotiateState(Atlas::Negotiate::State state)
-    {
-        m_negotiate.reset(new TestNegotiate(state));
-    }
+	void test_setNegotiateState(Atlas::Negotiate::State state) {
+		m_negotiate.reset(new TestNegotiate(state));
+	}
 
 };
 
-class TestPeer : public Peer
-{
-  public:
-    TestPeer(CommSocket & c, ServerRouting & s) : Peer(c, s, "test_addr", 6767, 5)
-    {
-    }
+class TestPeer : public Peer {
+public:
+	TestPeer(CommSocket& c, ServerRouting& s) : Peer(c, s, "test_addr", 6767, 5) {
+	}
 };
 
-int main()
-{
-    ServerRouting server(*(BaseWorld*)0, *(Persistence*)nullptr, "deeds", "test_server",
-                         2);
+int main() {
+	ServerRouting server(*(BaseWorld*) 0, *(Persistence*) nullptr, "deeds", "test_server",
+						 2);
 
-    boost::asio::io_context comm_server;
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	boost::asio::io_context comm_server;
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        comm_server.poll();
-    }
+		comm_server.poll();
+	}
 
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        cs->test_setNegotiateState(Atlas::Negotiate::SUCCEEDED);
-        comm_server.poll();
+		cs->test_setNegotiateState(Atlas::Negotiate::SUCCEEDED);
+		comm_server.poll();
 
-    }
+	}
 
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        cs->test_setNegotiateState(Atlas::Negotiate::SUCCEEDED);
-        comm_server.poll();
+		cs->test_setNegotiateState(Atlas::Negotiate::SUCCEEDED);
+		comm_server.poll();
 
-    }
+	}
 
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        cs->setup(std::make_unique<TestPeer>(*cs, server));
-        comm_server.poll();
+		cs->setup(std::make_unique<TestPeer>(*cs, server));
+		comm_server.poll();
 
-    }
+	}
 
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        TestPeer * tr = new TestPeer(*cs, server);
-        cs->setup(std::unique_ptr<TestPeer>(tr));
-        tr->setAuthState(PEER_AUTHENTICATED);
-        comm_server.poll();
+		TestPeer* tr = new TestPeer(*cs, server);
+		cs->setup(std::unique_ptr<TestPeer>(tr));
+		tr->setAuthState(PEER_AUTHENTICATED);
+		comm_server.poll();
 
-    }
+	}
 
-    {
-        auto cs = std::make_shared<TestCommPeer>(comm_server);
+	{
+		auto cs = std::make_shared<TestCommPeer>(comm_server);
 
-        TestPeer * tr = new TestPeer(*cs, server);
-        cs->setup(std::unique_ptr<TestPeer>(tr));
-        tr->setAuthState(PEER_FAILED);
-        comm_server.poll();
+		TestPeer* tr = new TestPeer(*cs, server);
+		cs->setup(std::unique_ptr<TestPeer>(tr));
+		tr->setAuthState(PEER_FAILED);
+		comm_server.poll();
 
-    }
+	}
 
-    return 0;
+	return 0;
 }
 
 // Stub functions
 
 #include <Atlas/Net/Stream.h>
 
-int CommSocket::flush()
-{
-    return 0;
+int CommSocket::flush() {
+	return 0;
 }
 
 #include "../stubs/server/stubServerRouting.h"
@@ -166,68 +155,58 @@ int CommSocket::flush()
 #include "../stubs/common/stubRouter.h"
 #include "../stubs/common/stubLink.h"
 
-Peer::Peer(CommSocket & client,
-           ServerRouting & svr,
-           const std::string & addr,
-           int port,
-           RouterId id) :
-      Link(client, id),
-      m_state(PEER_INIT),
-      m_server(svr)
-{
+Peer::Peer(CommSocket& client,
+		   ServerRouting& svr,
+		   const std::string& addr,
+		   int port,
+		   RouterId id) :
+		Link(client, id),
+		m_state(PEER_INIT),
+		m_server(svr) {
 }
 
-Peer::~Peer()
-{
+Peer::~Peer() {
 }
 
-PeerAuthState Peer::getAuthState()
-{
-    return m_state;
+PeerAuthState Peer::getAuthState() {
+	return m_state;
 }
 
-void Peer::setAuthState(PeerAuthState state)
-{
-    m_state = state;
+void Peer::setAuthState(PeerAuthState state) {
+	m_state = state;
 }
 
-void Peer::externalOperation(const Operation &op, Link &)
-{
+void Peer::externalOperation(const Operation& op, Link&) {
 }
 
-void Peer::operation(const Operation &op, OpVector &res)
-{
+void Peer::operation(const Operation& op, OpVector& res) {
 }
 
-void Peer::cleanTeleports()
-{
+void Peer::cleanTeleports() {
 }
 
 int opSerialCount = 0;
 
-const char * const CYPHESIS = "cyphesis";
+const char* const CYPHESIS = "cyphesis";
 
 class int_config_register {
-  public:
-    int_config_register(int &, const char *, const char *, const char *);
+public:
+	int_config_register(int&, const char*, const char*, const char*);
 };
 
-int_config_register::int_config_register(int & var,
-                                         const char * section,
-                                         const char * setting,
-                                         const char * help)
-{
+int_config_register::int_config_register(int& var,
+										 const char* section,
+										 const char* setting,
+										 const char* help) {
 }
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }
 
 

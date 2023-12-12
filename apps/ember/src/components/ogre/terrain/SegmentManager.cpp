@@ -20,8 +20,6 @@
 #include "Segment.h"
 #include "SegmentHolder.h"
 
-#include "framework/Log.h"
-
 #include <Mercator/Shader.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/Surface.h>
@@ -30,10 +28,8 @@
 #include <sstream>
 #include <algorithm>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 SegmentManager::SegmentManager(Mercator::Terrain& terrain, unsigned int desiredSegmentBuffer) :
 		mTerrain(terrain),
@@ -65,8 +61,8 @@ size_t SegmentManager::getSegmentReferences(const SegmentManager::IndexMap& indi
 	size_t count = 0;
 	std::unique_lock<std::mutex> l(mSegmentsMutex);
 
-	for (const auto& index : indices) {
-		for (auto entry : index.second) {
+	for (const auto& index: indices) {
+		for (auto entry: index.second) {
 
 			const std::pair<int, int>& worldIndex = entry.second;
 			std::stringstream ss;
@@ -103,7 +99,7 @@ std::shared_ptr<Segment> SegmentManager::createFakeSegment(const std::string& ke
 			} else {
 				//Use a predictive way of generating a random height.
 				auto seed = xIndex + x + ((zIndex + z) * 10000);
-				rand.seed((uint32_t)seed);
+				rand.seed((uint32_t) seed);
 				segment->setCornerPoint(x, z, Mercator::BasePoint(mFakeSegmentHeight - (rand.rand<float>() * mFakeSegmentHeightVariation)));
 			}
 		};
@@ -114,7 +110,7 @@ std::shared_ptr<Segment> SegmentManager::createFakeSegment(const std::string& ke
 		setPoint(1, 1);
 
 		auto& surfaces = segment->getSurfaces();
-		for (auto& entry : mTerrain.getShaders()) {
+		for (auto& entry: mTerrain.getShaders()) {
 			auto surface = entry.second->newSurface(*segment);
 			surfaces[entry.first] = std::move(surface);
 		}
@@ -160,8 +156,8 @@ void SegmentManager::syncWithTerrain() {
 //There's currently no way to remove segments from the terrain, so we don't have to worry about that for now.
 
 	auto& segmentStore = mTerrain.getTerrain();
-	for (auto& segmentEntry : segmentStore) {
-		for (auto& entry : segmentEntry.second) {
+	for (auto& segmentEntry: segmentStore) {
+		for (auto& entry: segmentEntry.second) {
 			auto& segment = entry.second;
 			addSegment(*segment);
 		}
@@ -214,5 +210,5 @@ float SegmentManager::getDefaultHeightVariation() const {
 }
 
 }
-}
-}
+
+

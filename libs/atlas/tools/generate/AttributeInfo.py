@@ -220,7 +220,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
             else:
                 res = '        %s.clear();\n' % (var)
                 for val in self.value:
-                    res = res + '        %s.push_back("%s");\n' \
+                    res = res + '        %s.emplace_back("%s");\n' \
                           % (var, val)
                 return res
         elif self.type == "int_list_length" or self.type == "int_list" or \
@@ -233,7 +233,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
             else:
                 res = '        %s.clear();\n' % (var)
                 for val in self.value:
-                    res = res + '        %s.push_back(%s);\n' \
+                    res = res + '        %s.emplace_back(%s);\n' \
                           % (var, val)
                 return res
         else:
@@ -255,7 +255,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                 res = res + self.default_list("%s_%s" % (name, sub.name), sub)
             if sub.type == "map":
                 res = res + self.default_map("%s_%s" % (name, sub.name), sub)
-            res = res + "        %s.push_back(" % name
+            res = res + "        %s.emplace_back(" % name
             if sub.type == "list" or sub.type == "map":
                 res = res + "%s_%s" % (name, sub.name)
             elif sub.type == "string":
@@ -275,7 +275,7 @@ inline %(cpp_param_type2)s %(classname)s::modify%(cname)s()
                 res = res + self.default_list("%s_%d" % (name, ++i), sub)
             elif sub_type == "map":
                 res = res + self.default_map("%s_%d" % (name, ++i), sub)
-            res = res + "        %s.push_back(" % name
+            res = res + "        %s.emplace_back(" % name
             if sub_type == "list" or sub_type == "map":
                 res = res + "%s_%d" % (name, i)
             elif sub_type == "string":
@@ -384,7 +384,7 @@ inline void %(classname)s::set%(cname)s1(SmartPtr<ObjectData> val)
     %(cpp_param_type)s args_in = get%(cname)s();
     Atlas::Message::ListType args_out;
     for (const auto& entry : args_in) {
-        args_out.push_back(Atlas::Message::MapType());
+        args_out.emplace_back(Atlas::Message::MapType());
         entry->addToMessage(args_out.back().Map());
     }
     return args_out;
@@ -429,7 +429,7 @@ class TypedList(AttributeInfo):
     attr_%(name)s.resize(0);
     for (const auto& entry : val) {
         if(entry.is%(element_type_as_object)s()) {
-            attr_%(name)s.push_back(entry.as%(element_type_as_object)s());
+            attr_%(name)s.emplace_back(entry.as%(element_type_as_object)s());
         }
     }
 }
@@ -443,7 +443,7 @@ class TypedList(AttributeInfo):
     %(cpp_param_type)s lst_in = get%(cname)s();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
-        lst_out.push_back(%(cpp_element_type_begin)sentry%(cpp_element_type_end)s);
+        lst_out.emplace_back(%(cpp_element_type_begin)sentry%(cpp_element_type_end)s);
     }
     return lst_out;
 }

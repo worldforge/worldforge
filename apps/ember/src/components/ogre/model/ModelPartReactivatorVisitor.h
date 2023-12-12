@@ -22,12 +22,8 @@
 #include "components/entitymapping/ChangeContext.h"
 #include "components/entitymapping/IVisitor.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Model
-{
+
+namespace Ember::OgreView::Model {
 
 /**
  *
@@ -37,20 +33,20 @@ namespace Model
  * This is done by visiting all the actions of the mapping and reactivating those part actions which already are active.
  *
  */
-class ModelPartReactivatorVisitor: public EntityMapping::IVisitor
-{
+class ModelPartReactivatorVisitor : public EntityMapping::IVisitor {
 public:
 	void visit(EntityMapping::Actions::Action& action) override;
 
 	void visit(EntityMapping::Matches::MatchBase& match) override;
 
 	void visit(EntityMapping::Cases::CaseBase& caseBase) override;
+
 private:
 	EntityMapping::ChangeContext mChangeContext;
 
 };
 
 }
-}
-}
+
+
 #endif /* MODELPARTREACTIVATORVISITOR_H_ */

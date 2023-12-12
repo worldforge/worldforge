@@ -33,73 +33,72 @@
  * function for every entity it receives, until either all entities have been
  * visited or it's told to stop.
  */
-class EntityTraversalTask: public ClientTask
-{
-    public:
+class EntityTraversalTask : public ClientTask {
+public:
 
-        /**
-         * \brief Ctor.
-         *
-         * A function must be supplied. The signature of the function is
-         * bool(const RootEntity&)
-         * The supplied entity is a representation of an entity on the server.
-         * If the function returns true if the traversal should continue.
-         * \param accountId An account id.
-         * \param visitor A visitor function.
-         */
-        EntityTraversalTask(const std::string& accountId,
-                std::function<bool(const Atlas::Objects::Entity::RootEntity&)>& visitor);
+	/**
+	 * \brief Ctor.
+	 *
+	 * A function must be supplied. The signature of the function is
+	 * bool(const RootEntity&)
+	 * The supplied entity is a representation of an entity on the server.
+	 * If the function returns true if the traversal should continue.
+	 * \param accountId An account id.
+	 * \param visitor A visitor function.
+	 */
+	EntityTraversalTask(const std::string& accountId,
+						std::function<bool(const Atlas::Objects::Entity::RootEntity&)>& visitor);
 
-        ~EntityTraversalTask() override;
+	~EntityTraversalTask() override;
 
-        /// \brief Set up the task processing user arguments
-        void setup(const std::string & arg, OpVector &) override;
-        /// \brief Handle an operation from the server
-        void operation(const Operation &, OpVector &) override;
+	/// \brief Set up the task processing user arguments
+	void setup(const std::string& arg, OpVector&) override;
 
-    private:
+	/// \brief Handle an operation from the server
+	void operation(const Operation&, OpVector&) override;
 
-        /**
-         * \brief Represents one entry on the traversal stack.
-         */
-        struct StackEntry
-        {
-                /**
-                 * @brief The ids of the children of the rule.
-                 */
-                std::vector<std::string> children;
-                /**
-                 * @brief The current children iterator. This is an iterator of the "children" field.
-                 */
-                std::vector<std::string>::const_iterator currentChildIterator;
-        };
+private:
 
-        /**
-         * \brief A logged in account id.
-         */
-        const std::string mAccountId;
+	/**
+	 * \brief Represents one entry on the traversal stack.
+	 */
+	struct StackEntry {
+		/**
+		 * @brief The ids of the children of the rule.
+		 */
+		std::vector<std::string> children;
+		/**
+		 * @brief The current children iterator. This is an iterator of the "children" field.
+		 */
+		std::vector<std::string>::const_iterator currentChildIterator;
+	};
 
-        /**
-         * \brief A visitor function applied to each entity.
-         */
-        std::function<bool(const Atlas::Objects::Entity::RootEntity&)> mVisitor;
+	/**
+	 * \brief A logged in account id.
+	 */
+	const std::string mAccountId;
 
-        /**
-         * \brief The last serial number used.
-         */
-        long int mSerial;
+	/**
+	 * \brief A visitor function applied to each entity.
+	 */
+	std::function<bool(const Atlas::Objects::Entity::RootEntity&)> mVisitor;
 
-        /**
-         * \brief A stack keeping track of the traversal.
-         */
-        std::list<StackEntry> mStack;
+	/**
+	 * \brief The last serial number used.
+	 */
+	long int mSerial;
 
-        /**
-         * \brief Requests a new entity from the server.
-         * \param id The id of the entity.
-         * \param res
-         */
-        void getEntity(const std::string & id, OpVector & res);
+	/**
+	 * \brief A stack keeping track of the traversal.
+	 */
+	std::list<StackEntry> mStack;
+
+	/**
+	 * \brief Requests a new entity from the server.
+	 * \param id The id of the entity.
+	 * \param res
+	 */
+	void getEntity(const std::string& id, OpVector& res);
 
 };
 

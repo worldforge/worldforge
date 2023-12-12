@@ -25,23 +25,21 @@
 #include <sstream>
 
 //debug.cpp is linked to all tests, but we don't want to include debug.h since the "debug" macro creates conflicts.
-template <typename T>
-void debug_dump(const T & t, std::ostream &);
+template<typename T>
+void debug_dump(const T& t, std::ostream&);
 
 
-namespace Atlas::Message
-{
-inline std::ostream& operator<<(std::ostream& os, const Atlas::Message::MapType& v)
-{
-    os << "[ATLAS_MAP]";
-    return os;
+namespace Atlas::Message {
+inline std::ostream& operator<<(std::ostream& os, const Atlas::Message::MapType& v) {
+	os << "[ATLAS_MAP]";
+	return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& e)
-{
-    debug_dump(e, os);
-    return os;
+inline std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& e) {
+	debug_dump(e, os);
+	return os;
 }
+
 //For the fmt library.
 //See https://fmt.dev/latest/api.html#udt
 auto format_as(const Element& f) {
@@ -50,8 +48,6 @@ auto format_as(const Element& f) {
 	return ss.str();
 }
 }
-
-
 
 
 #endif  // TESTS_STREAM_OPERATORS_H

@@ -29,7 +29,7 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<GUIManager>(sol::table& space) {
 	auto guiManager = space.new_usertype<GUIManager>("GUIManager", sol::no_constructor);
 	guiManager["getSingleton"] = &GUIManager::getSingleton;

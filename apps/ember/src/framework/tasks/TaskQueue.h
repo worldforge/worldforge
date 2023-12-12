@@ -27,23 +27,22 @@
 #include <mutex>
 #include <Eris/ActiveMarker.h>
 
-namespace Eris
-{
+namespace Eris {
 class EventService;
 }
 
-namespace Ember
-{
+
 
 /**
  * @brief Namespace for tasks, which is a mechanism for better separate and field data for threading purposes.
  */
-namespace Tasks
-{
+namespace Ember::Tasks {
 
 struct ITask;
 struct ITaskExecutionListener;
+
 class TaskExecutor;
+
 class TaskUnit;
 
 /**
@@ -55,9 +54,9 @@ class TaskUnit;
  * Create an instance of this in your main thread, and then call pollProcessedTasks() from the same thread at a regular interval.
  * You must also make sure that you delete this instance in the main thread.
  */
-class TaskQueue
-{
+class TaskQueue {
 	friend class TaskExecutor;
+
 public:
 
 	/**
@@ -79,7 +78,7 @@ public:
 	 * @param listener An optional listener. Note that ownership won't be transferred.
 	 * @return False if the task couldn't be enqueued, probably because the task queue is inactive.
 	 */
-	bool enqueueTask(std::unique_ptr<ITask> task, ITaskExecutionListener* listener = 0);
+	bool enqueueTask(std::unique_ptr<ITask> task, ITaskExecutionListener* listener = nullptr);
 
 	/**
 	 * @brief Deactivates the queue.
@@ -172,6 +171,5 @@ protected:
 
 }
 
-}
 
 #endif /* TASKQUEUE_H_ */

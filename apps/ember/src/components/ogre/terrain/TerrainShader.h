@@ -22,9 +22,8 @@
 #include "TerrainLayerDefinition.h"
 #include <Mercator/Shader.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 struct TerrainLayerDefinition;
 
@@ -40,10 +39,7 @@ struct TerrainShader {
 };
 
 
-
-}
 }
 
-}
 
 #endif // TERRAINSHADER_H

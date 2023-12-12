@@ -44,10 +44,8 @@
 #include <boost/filesystem/operations.hpp>
 #include <MeshLodGenerator/OgreLodWorkQueueInjector.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 AssetsManager::AssetsManager() : mPMInjectorSignaler(std::make_unique<Lod::PMInjectorSignaler>()) {
 	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(mPMInjectorSignaler.get());
@@ -96,7 +94,7 @@ TexturePair AssetsManager::createTextureImage(Ogre::TexturePtr& texturePtr, cons
 	CEGUI::Texture* ogreCEGUITexture;
 	if (renderer->isTextureDefined(texturePtr->getName())) {
 		ogreCEGUITexture = &renderer->getTexture(texturePtr->getName());
-		static_cast<CEGUI::OgreTexture*>(ogreCEGUITexture)->setOgreTexture(texturePtr);
+		dynamic_cast<CEGUI::OgreTexture*>(ogreCEGUITexture)->setOgreTexture(texturePtr);
 	} else {
 		//create a CEGUI texture from our Ogre texture
 		logger->debug("Creating new CEGUI texture from Ogre texture.");
@@ -111,7 +109,7 @@ TexturePair AssetsManager::createTextureImage(Ogre::TexturePtr& texturePtr, cons
 		textureImage = &CEGUI::ImageManager::getSingleton().create("BasicImage", imageName);
 	}
 
-	auto* basicImage = static_cast<CEGUI::BasicImage*>(textureImage);
+	auto* basicImage = dynamic_cast<CEGUI::BasicImage*>(textureImage);
 	basicImage->setTexture(ogreCEGUITexture);
 	auto area = CEGUI::Rectf(0, 0, ogreCEGUITexture->getSize().d_width, ogreCEGUITexture->getSize().d_height);
 	basicImage->setArea(area);
@@ -212,5 +210,5 @@ void AssetsManager::createModel(const Ogre::MeshPtr& mesh) {
 
 }
 
-}
-}
+
+

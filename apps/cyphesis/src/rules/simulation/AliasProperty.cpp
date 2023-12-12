@@ -19,18 +19,15 @@
 #include "AliasProperty.h"
 #include "BaseWorld.h"
 
-AliasProperty* AliasProperty::copy() const
-{
-    return new AliasProperty(*this);
+AliasProperty* AliasProperty::copy() const {
+	return new AliasProperty(*this);
 }
 
-void AliasProperty::apply(LocatedEntity& entity)
-{
-    BaseWorld::instance().registerAlias(m_data, entity);
+void AliasProperty::apply(LocatedEntity& entity) {
+	BaseWorld::instance().registerAlias(m_data, entity);
 }
 
-void AliasProperty::remove(LocatedEntity& entity, const std::string& name)
-{
-    BaseWorld::instance().deregisterAlias(m_data, entity);
+void AliasProperty::remove(LocatedEntity& entity, const std::string& name) {
+	BaseWorld::instance().deregisterAlias(m_data, entity);
 }
 

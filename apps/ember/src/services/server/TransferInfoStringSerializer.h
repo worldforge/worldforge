@@ -41,7 +41,7 @@ public:
 	 * @param ostream A stream to which the serialized objects should be written. This needs to be valid.
 	 * @return True if the serialization was successful.
 	 */
-	bool serialize(const TransferInfoStore& infoObjects, std::iostream& ostream);
+	static bool serialize(const TransferInfoStore& infoObjects, std::iostream& ostream);
 
 	/**
 	 * @brief Deserializes an input stream into transfer info objects.
@@ -49,7 +49,7 @@ public:
 	 * @param ostream A valid input stream of serialized transfer info data.
 	 * @return True if the deserialization was successful.
 	 */
-	bool deserialize(TransferInfoStore& infoObjects, std::iostream& istream);
+	static bool deserialize(TransferInfoStore& infoObjects, std::iostream& istream);
 };
 
 }

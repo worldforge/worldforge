@@ -20,19 +20,17 @@
 
 #include "string"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class GraphicalChangeAdapter;
+
 class ShaderManager;
 
 /**
  * @brief Handles changes in shader level.
  * Acts as a subcomponent of the automatic handling of graphics system.
  */
-class ShaderDetailManager
-{
+class ShaderDetailManager {
 public:
 	/**
 	 * @brief Constructor.
@@ -43,13 +41,6 @@ public:
 	 * @brief Destructor.
 	 */
 	~ShaderDetailManager();
-
-	/**
-	 * @brief Sets the shader scheme to the required level.
-	 * @param level The needed shader level (high, medium, low).
-	 * If the level doesn't exist, it will switch to default.
-	 */
-	void changeShaderLevel(const std::string& level);
 
 	/**
 	 * @brief This can be used to stop this component responding to change requests.
@@ -86,11 +77,6 @@ protected:
 	float mShaderThresholdLevel;
 
 	/**
-	 * Holds the reference to the connection to the changeRequired signal. Used to disconnect the signal on destruction of this class or to pause the functioning of this component.
-	 */
-	sigc::connection mChangeRequiredConnection;
-
-	/**
 	 * Reference to the graphical change adapter through which graphics detail changes are requested.
 	 */
 	GraphicalChangeAdapter& mGraphicalChangeAdapter;
@@ -103,4 +89,4 @@ protected:
 };
 
 }
-}
+

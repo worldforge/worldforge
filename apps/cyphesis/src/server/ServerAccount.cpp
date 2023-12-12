@@ -48,19 +48,17 @@ using Atlas::Objects::smart_dynamic_cast;
 static const bool debug_flag = false;
 
 /// \brief ServerAccount constructor
-ServerAccount::ServerAccount(Connection * conn,
-             const std::string & username,
-             const std::string & passwd,
-             RouterId id) :
-       Account(conn, username, passwd, std::move(id))
-{
+ServerAccount::ServerAccount(Connection* conn,
+							 const std::string& username,
+							 const std::string& passwd,
+							 RouterId id) :
+		Account(conn, username, passwd, std::move(id)) {
 }
 
 
 /// \brief Get the type of account ("server" in this case)
 ///
 /// \return The type string
-const char * ServerAccount::getType() const
-{
-    return "server";
+const char* ServerAccount::getType() const {
+	return "server";
 }

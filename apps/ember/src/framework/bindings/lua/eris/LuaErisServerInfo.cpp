@@ -22,7 +22,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ServerInfo>(sol::table& space) {
 
 	auto serverInfo = space.new_usertype<ServerInfo>("ServerInfo");

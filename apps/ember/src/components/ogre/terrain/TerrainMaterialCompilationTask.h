@@ -25,10 +25,8 @@
 #include <sigc++/signal.h>
 #include <vector>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainPageSurfaceCompilationInstance;
 
@@ -101,8 +99,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINTERRAINMATERIALCOMPILATIONTASK_H_ */

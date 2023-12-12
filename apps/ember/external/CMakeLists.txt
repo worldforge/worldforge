@@ -1,3 +1,5 @@
+#Disable warnings for external stuff
+add_compile_options("-w")
 add_subdirectory(caelum)
 add_subdirectory(CEGUIOgreRenderer)
 add_subdirectory(CEGUITinyXMLParser)

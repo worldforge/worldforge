@@ -24,7 +24,9 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "common/globals.h"
@@ -40,8 +42,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
-int main()
-{
-    std::string hostname = get_hostname();
-    assert(!hostname.empty());
+int main() {
+	std::string hostname = get_hostname();
+	assert(!hostname.empty());
 }

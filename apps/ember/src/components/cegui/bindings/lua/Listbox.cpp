@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Listbox>(sol::table& space) {
 	auto listbox = space.new_usertype<Listbox>("Listbox",
 											   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()
@@ -50,8 +51,8 @@ void registerLua<Listbox>(sol::table& space) {
 												  sol::resolve<size_t, bool>(&Listbox::setItemSelectState));
 	listbox["handleUpdatedItemData"] = &Listbox::handleUpdatedItemData;
 	listbox["ensureItemIsVisible"] = sol::overload(sol::resolve<void(
-	const ListboxItem*)>(&Listbox::ensureItemIsVisible),
-			sol::resolve<void(size_t)>(&Listbox::ensureItemIsVisible));
+														   const ListboxItem*)>(&Listbox::ensureItemIsVisible),
+												   sol::resolve<void(size_t)>(&Listbox::ensureItemIsVisible));
 	listbox["getListRenderArea"] = &Listbox::getListRenderArea;
 	listbox["getVertScrollbar"] = &Listbox::getVertScrollbar;
 	listbox["getHorzScrollbar"] = &Listbox::getHorzScrollbar;
@@ -79,12 +80,12 @@ void registerLua<Listbox>(sol::table& space) {
 	listboxItem["setSelected"] = &ListboxItem::setSelected;
 	listboxItem["setAutoDeleted"] = &ListboxItem::setAutoDeleted;
 	listboxItem["setSelectionColours"] = sol::overload(sol::resolve<void(
-	const ColourRect&)>(&ListboxItem::setSelectionColours),
-			sol::resolve<void(Colour, Colour, Colour, Colour)>(&ListboxItem::setSelectionColours),
-			sol::resolve<void(Colour)>(&ListboxItem::setSelectionColours));
+															   const ColourRect&)>(&ListboxItem::setSelectionColours),
+													   sol::resolve<void(Colour, Colour, Colour, Colour)>(&ListboxItem::setSelectionColours),
+													   sol::resolve<void(Colour)>(&ListboxItem::setSelectionColours));
 	listboxItem["setSelectionBrushImage"] = sol::overload(sol::resolve<void(
-	const Image*)>(&ListboxItem::setSelectionBrushImage),
-			[](ListboxItem* self, const char* name) { self->setSelectionBrushImage(name); });
+																  const Image*)>(&ListboxItem::setSelectionBrushImage),
+														  [](ListboxItem* self, const char* name) { self->setSelectionBrushImage(name); });
 	listboxItem["getPixelSize"] = &ListboxItem::getPixelSize;
 
 	auto listboxTextItem = space.new_usertype<ListboxTextItem>("ListboxTextItem",
@@ -95,9 +96,9 @@ void registerLua<Listbox>(sol::table& space) {
 	listboxTextItem["setFont"] = sol::overload(sol::resolve<void(Font*)>(&ListboxTextItem::setFont),
 											   [](ListboxTextItem* self, const char* font) { self->setFont(font); });
 	listboxTextItem["setTextColours"] = sol::overload(sol::resolve<void(
-	const ColourRect&)>(&ListboxTextItem::setTextColours),
-			sol::resolve<void(Colour, Colour, Colour, Colour)>(&ListboxTextItem::setTextColours),
-			sol::resolve<void(Colour)>(&ListboxTextItem::setTextColours));
+															  const ColourRect&)>(&ListboxTextItem::setTextColours),
+													  sol::resolve<void(Colour, Colour, Colour, Colour)>(&ListboxTextItem::setTextColours),
+													  sol::resolve<void(Colour)>(&ListboxTextItem::setTextColours));
 	listboxTextItem["setTextParsingEnabled"] = &ListboxTextItem::setTextParsingEnabled;
 	listboxTextItem["isTextParsingEnabled"] = &ListboxTextItem::isTextParsingEnabled;
 }

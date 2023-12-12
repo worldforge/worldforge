@@ -28,26 +28,26 @@
 #include <Atlas/Message/Element.h>
 #include "AttributeComparers/AttributeComparerWrapper.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 class AttributeMatch;
 }
-}
-}
+
+
 
 #include "../Matches/AttributeMatch.h"
 
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 
 /**
@@ -67,8 +67,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

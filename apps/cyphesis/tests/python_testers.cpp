@@ -42,37 +42,36 @@
 // and fail in the case of a parse error in the code text. The unit tests
 // do contain code which should fail, but never any code that fails because
 // it won't parse.
-int CyPyRun_SimpleString(const char* command, PyObject* exception)
-{
-    Py::Module m("__main__");
-    if (m.isNull()) {
-        return -1;
-    }
-    Py::Dict d = m.getDict();
+int CyPyRun_SimpleString(const char* command, PyObject* exception) {
+	Py::Module m("__main__");
+	if (m.isNull()) {
+		return -1;
+	}
+	Py::Dict d = m.getDict();
 
-    Py::String filename("<string>");
-    Py::Object parsed(Py_CompileStringObject(command, *filename, Py_file_input, nullptr, 0), true);
+	Py::String filename("<string>");
+	Py::Object parsed(Py_CompileStringObject(command, *filename, Py_file_input, nullptr, 0), true);
 
-    if (PyErr_Occurred()) {
-        PyErr_Print();
-        return -2;
-    }
-    Py::Object ret(PyEval_EvalCode(*parsed, *d, *d), true);
+	if (PyErr_Occurred()) {
+		PyErr_Print();
+		return -2;
+	}
+	Py::Object ret(PyEval_EvalCode(*parsed, *d, *d), true);
 
-    if (ret.isNull()) {
-        int errcode = -1;
-        if (exception != nullptr) {
-            if (PyErr_ExceptionMatches(exception)) {
-                errcode = -3;
-            }
-        }
-        PyErr_Print();
-        return errcode;
-    }
+	if (ret.isNull()) {
+		int errcode = -1;
+		if (exception != nullptr) {
+			if (PyErr_ExceptionMatches(exception)) {
+				errcode = -3;
+			}
+		}
+		PyErr_Print();
+		return errcode;
+	}
 
-    PyObject* f = PySys_GetObject("stdout");
-    if (PyFile_WriteString((std::string("Exec: ") + command + "\n").c_str(), f)) {
-        PyErr_Clear();
-    }
-    return 0;
+	PyObject* f = PySys_GetObject("stdout");
+	if (PyFile_WriteString((std::string("Exec: ") + command + "\n").c_str(), f)) {
+		PyErr_Clear();
+	}
+	return 0;
 }

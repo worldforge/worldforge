@@ -36,9 +36,8 @@ template<int>
 class AxisBox;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 /**
  * Listener interface for an terrain observer, which is observes a particular terrain area.
@@ -67,6 +66,6 @@ struct ITerrainObserver {
 
 };
 }
-}
-}
+
+
 #endif /* end of include guard: ITERRAINOBSERVER_H */

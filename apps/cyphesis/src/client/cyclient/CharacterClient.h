@@ -22,29 +22,29 @@
 #include "rules/ai/BaseMind.h"
 
 class ClientConnection;
+
 struct TypeStore;
 
 /// \brief Class to implement a character entity in an admin client
-class CharacterClient : public BaseMind
-{
-    protected:
-        ClientConnection& m_connection;
+class CharacterClient : public BaseMind {
+protected:
+	ClientConnection& m_connection;
 
-        int sendAndWaitReply(const Operation&, OpVector&);
+	int sendAndWaitReply(const Operation&, OpVector&);
 
-        Ref<LocatedEntity> sendLook(const Operation& op);
+	Ref<LocatedEntity> sendLook(const Operation& op);
 
-    public:
-        CharacterClient(RouterId mindId,
-                        const std::string& entityId,
-                        ClientConnection&,
-                        TypeStore& typeStore);
+public:
+	CharacterClient(RouterId mindId,
+					const std::string& entityId,
+					ClientConnection&,
+					TypeStore& typeStore);
 
-        void send(const Operation& op);
+	void send(const Operation& op);
 
-        Ref<LocatedEntity> look(const std::string&);
+	Ref<LocatedEntity> look(const std::string&);
 
-        Ref<LocatedEntity> lookFor(const Atlas::Objects::Entity::RootEntity&);
+	Ref<LocatedEntity> lookFor(const Atlas::Objects::Entity::RootEntity&);
 };
 
 #endif // CLIENT_CHARACTER_CLIENT_H

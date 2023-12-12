@@ -29,9 +29,9 @@
 #include "EntityMappingCreator.h"
 #include <Eris/View.h>
 
-namespace Ember {
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 using namespace Definitions;
 
@@ -64,7 +64,8 @@ std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity&
 		auto mapping = std::make_unique<EntityMapping>(entity);
 
 		auto attributeMatch = std::make_unique<Matches::SingleAttributeMatch>("present");
-		auto attributeCase = std::make_unique<Cases::AttributeCase>(std::make_unique<Cases::AttributeComparers::StringComparerWrapper>(std::make_unique<Cases::AttributeComparers::StringNotEmptyComparer>()));
+		auto attributeCase = std::make_unique<Cases::AttributeCase>(
+				std::make_unique<Cases::AttributeComparers::StringComparerWrapper>(std::make_unique<Cases::AttributeComparers::StringNotEmptyComparer>()));
 		auto observer = std::make_unique<Matches::Observers::MatchAttributeObserver>(*attributeMatch, "present");
 		attributeMatch->setMatchAttributeObserver(std::move(observer));
 
@@ -84,4 +85,4 @@ std::unique_ptr<EntityMapping> EntityMappingManager::createMapping(Eris::Entity&
 
 }
 
-}
+

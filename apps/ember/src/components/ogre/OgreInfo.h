@@ -25,8 +25,8 @@
 
 #include <string>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
 
@@ -34,31 +34,30 @@ namespace OgreView {
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class OgreInfo
-{
+class OgreInfo {
 public:
 
-    /**
-     * @brief Checks if the rendering is indirect, for example when using Mesa drivers on Linux. This will result in _very_ bad performance, and is usually caused by the user not having vendor drivers installed.
-     * @return True if rendering is indirect.
-     */
-    static bool isIndirect();
+	/**
+	 * @brief Checks if the rendering is indirect, for example when using Mesa drivers on Linux. This will result in _very_ bad performance, and is usually caused by the user not having vendor drivers installed.
+	 * @return True if rendering is indirect.
+	 */
+	static bool isIndirect();
 
-    /**
-     * @brief Creates a "unique" resource name.
-     * The way this is done is by appending the value of an internal counter on the supplied name.
-     * This of course doesn't guarantee that the name is unique, but with the counter being a long long int it should be fairly safe.
-     * @param resourceName The name of the resource.
-     * @return The supplied name with the value of an internal counter suffixed.
-     */
-    static std::string createUniqueResourceName(const std::string& resourceName);
+	/**
+	 * @brief Creates a "unique" resource name.
+	 * The way this is done is by appending the value of an internal counter on the supplied name.
+	 * This of course doesn't guarantee that the name is unique, but with the counter being a long long int it should be fairly safe.
+	 * @param resourceName The name of the resource.
+	 * @return The supplied name with the value of an internal counter suffixed.
+	 */
+	static std::string createUniqueResourceName(const std::string& resourceName);
 
-    /**
-     * @brief Performs simple diagnosis of the current state of the Ogre system and writes to the supplied stream.
-     *
-     * @param outputStream Stream to which the diagnosis information will be written.
-     */
-    static void diagnose(std::ostream& outputStream);
+	/**
+	 * @brief Performs simple diagnosis of the current state of the Ogre system and writes to the supplied stream.
+	 *
+	 * @param outputStream Stream to which the diagnosis information will be written.
+	 */
+	static void diagnose(std::ostream& outputStream);
 
 private:
 
@@ -71,6 +70,6 @@ private:
 
 }
 
-}
+
 
 #endif

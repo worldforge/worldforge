@@ -19,13 +19,12 @@
 #include "components/ogre/terrain/TerrainEditor.h"
 #include "components/ogre/terrain/TerrainEditorOverlay.h"
 #include "components/ogre/terrain/TerrainManager.h"
-#include "components/ogre/terrain/TerrainLayerDefinition.h"
 #include "components/ogre/camera/MainCamera.h"
 
 using namespace Ember::OgreView::Terrain;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<TerrainEditor>(sol::table& space) {
 	auto basePointUserObject = space.new_usertype<BasePointUserObject>("BasePointUserObject", sol::no_constructor);
 	basePointUserObject["getBasePoint"] = &BasePointUserObject::getBasePoint;
@@ -42,7 +41,7 @@ void registerLua<TerrainEditor>(sol::table& space) {
 	terrainEditBasePointMovement["mPosition"] = &TerrainEditBasePointMovement::mPosition;
 
 	auto terrainEditor = space.new_usertype<TerrainEditor>("TerrainEditor",
-															 sol::constructors<TerrainEditor(Ember::OgreView::Terrain::TerrainManager&, Ember::OgreView::Camera::MainCamera&)>());
+														   sol::constructors<TerrainEditor(Ember::OgreView::Terrain::TerrainManager&, Ember::OgreView::Camera::MainCamera&)>());
 	terrainEditor["showOverlay"] = &TerrainEditor::showOverlay;
 	terrainEditor["hideOverlay"] = &TerrainEditor::hideOverlay;
 	terrainEditor["isOverlayShown"] = &TerrainEditor::isOverlayShown;

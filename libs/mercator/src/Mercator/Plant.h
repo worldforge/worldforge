@@ -17,12 +17,12 @@ namespace Mercator {
 /// It is used in instances of class Forest to represent each instance
 /// of vegetation created when the Forest is populated.
 struct Plant {
-    /// Position of the vegetation relative to its grid point.
-    WFMath::Point<2> m_displacement;
-    /// Orientation of the vegetation.
-    WFMath::Quaternion m_orientation;
-    /// Height of the vegetation.
-    float m_height;
+	/// Position of the vegetation relative to its grid point.
+	WFMath::Point<2> m_displacement;
+	/// Orientation of the vegetation.
+	WFMath::Quaternion m_orientation;
+	/// Height of the vegetation.
+	float m_height;
 
 };
 

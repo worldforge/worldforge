@@ -65,7 +65,7 @@
 #include <climits>
 
 #ifdef HAVE_CONFIG_H
-  #include "config.h"
+#include "config.h"
 #endif
 
 namespace WFMath {
@@ -80,144 +80,137 @@ static const MTRand::uint32 UPPER_MASK = 0x80000000;
 static const MTRand::uint32 LOWER_MASK = 0x7fffffff;
 
 
-static MTRand::uint32 hash( time_t t, clock_t c )
-{
-  // Get a uint32 from t and c
-  // Better than uint32(x) in case x is floating point in [0,1]
-  // Based on code by Lawrence Kirby (fred@genesis.demon.co.uk)
+static MTRand::uint32 hash(time_t t, clock_t c) {
+	// Get a uint32 from t and c
+	// Better than uint32(x) in case x is floating point in [0,1]
+	// Based on code by Lawrence Kirby (fred@genesis.demon.co.uk)
 
-  typedef MTRand::uint32 uint32;
+	typedef MTRand::uint32 uint32;
 
-  // guarantee time-based seeds will change
-  static uint32 differ = 0;
+	// guarantee time-based seeds will change
+	static uint32 differ = 0;
 
-  uint32 h1 = 0;
-  auto *p = (unsigned char *) &t;
-  for( size_t i = 0; i < sizeof(t); ++i )
-  {
-    h1 *= UCHAR_MAX + 2U;
-    h1 += p[i];
-  }
-  uint32 h2 = 0;
-  p = (unsigned char *) &c;
-  for( size_t j = 0; j < sizeof(c); ++j )
-  {
-    h2 *= UCHAR_MAX + 2U;
-    h2 += p[j];
-  }
-  return ( h1 + differ++ ) ^ h2;
+	uint32 h1 = 0;
+	auto* p = (unsigned char*) &t;
+	for (size_t i = 0; i < sizeof(t); ++i) {
+		h1 *= UCHAR_MAX + 2U;
+		h1 += p[i];
+	}
+	uint32 h2 = 0;
+	p = (unsigned char*) &c;
+	for (size_t j = 0; j < sizeof(c); ++j) {
+		h2 *= UCHAR_MAX + 2U;
+		h2 += p[j];
+	}
+	return (h1 + differ++) ^ h2;
 }
 
 
-void MTRand::seed()
-{
-  // First try getting an array from /dev/urandom
-  FILE* urandom = fopen( "/dev/urandom", "rb" );
-  if( urandom )
-  {
-    uint32 init_vector[state_size];
-    uint32 *s = init_vector;
-    int i = state_size;
-    bool success = true;
-    while( success && i-- )
-      success = fread( s++, sizeof(uint32), 1, urandom );
-    fclose(urandom);
-    if( success ) { seed( init_vector, state_size );  return; }
-  }
+void MTRand::seed() {
+	// First try getting an array from /dev/urandom
+	FILE* urandom = fopen("/dev/urandom", "rb");
+	if (urandom) {
+		uint32 init_vector[state_size];
+		uint32* s = init_vector;
+		int i = state_size;
+		bool success = true;
+		while (success && i--)
+			success = fread(s++, sizeof(uint32), 1, urandom);
+		fclose(urandom);
+		if (success) {
+			seed(init_vector, state_size);
+			return;
+		}
+	}
 
-  // Was not successful, so use time() and clock() instead
-  seed( hash( time(nullptr), clock() ) );
+	// Was not successful, so use time() and clock() instead
+	seed(hash(time(nullptr), clock()));
 }
 
 
-void MTRand::seed(uint32 s)
-{
-  state[0] = s;
-  for (index = 1; index < state_size; ++index)
-  {
-    state[index] = (1812433253UL * (state[index-1] ^ (state[index-1] >> 30u)) + index);
-  }
+void MTRand::seed(uint32 s) {
+	state[0] = s;
+	for (index = 1; index < state_size; ++index) {
+		state[index] = (1812433253UL * (state[index - 1] ^ (state[index - 1] >> 30u)) + index);
+	}
 }
 
 
-void MTRand::seed(const uint32 init_vector[], const uint32 init_vector_length)
-{
-  seed(19650218UL);
-  uint32 i = 1;
-  uint32 j = 0;
-  uint32 k = (state_size > init_vector_length ? state_size : init_vector_length);
-  for( ; k; --k )
-  {
-    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30u)) * 1664525UL);
-    state[i] += (init_vector[j] & 0xffffffffUL) + j;
-    ++i;  ++j;
-    if (i >= state_size) { state[0] = state[state_size-1];  i = 1; }
-    if (j >= init_vector_length) j = 0;
-  }
-  for (k = state_size - 1; k; --k)
-  {
-    state[i] ^= ((state[i-1] ^ (state[i-1] >> 30u)) * 1566083941UL);
-    state[i] -= i;
-    ++i;
-    if (i >= state_size) { state[0] = state[state_size-1];  i = 1; }
-  }
-  state[0] = 0x80000000UL;  // MSB is 1, assuring non-zero initial array
+void MTRand::seed(const uint32 init_vector[], const uint32 init_vector_length) {
+	seed(19650218UL);
+	uint32 i = 1;
+	uint32 j = 0;
+	uint32 k = (state_size > init_vector_length ? state_size : init_vector_length);
+	for (; k; --k) {
+		state[i] ^= ((state[i - 1] ^ (state[i - 1] >> 30u)) * 1664525UL);
+		state[i] += (init_vector[j] & 0xffffffffUL) + j;
+		++i;
+		++j;
+		if (i >= state_size) {
+			state[0] = state[state_size - 1];
+			i = 1;
+		}
+		if (j >= init_vector_length) j = 0;
+	}
+	for (k = state_size - 1; k; --k) {
+		state[i] ^= ((state[i - 1] ^ (state[i - 1] >> 30u)) * 1566083941UL);
+		state[i] -= i;
+		++i;
+		if (i >= state_size) {
+			state[0] = state[state_size - 1];
+			i = 1;
+		}
+	}
+	state[0] = 0x80000000UL;  // MSB is 1, assuring non-zero initial array
 }
 
 
-MTRand::uint32 MTRand::randInt()
-{
-  uint32 y;
-  static unsigned long mag01[2]={0x0UL, MATRIX_A};
+MTRand::uint32 MTRand::randInt() {
+	uint32 y;
+	static unsigned long mag01[2] = {0x0UL, MATRIX_A};
 
-  /* generate state_size words at one time */
-  if (index >= state_size)
-  {
-    uint32 kk;
-    for (kk=0; kk < state_size - period; kk++)
-    {
-      y = (state[kk]&UPPER_MASK) | (state[kk+1]&LOWER_MASK);
-      state[kk] = state[kk + period] ^ (y >> 1u) ^ mag01[y & 0x01u];
-    }
-    for (; kk < state_size-1; kk++)
-    {
-        y = (state[kk]&UPPER_MASK) | (state[kk+1]&LOWER_MASK);
-        state[kk] = state[kk+(period - state_size)] ^ (y >> 1u) ^ mag01[y & 0x01u];
-    }
-    y = (state[state_size-1]&UPPER_MASK) | (state[0]&LOWER_MASK);
-    state[state_size-1] = state[period-1] ^ (y >> 1u) ^ mag01[y & 0x1UL];
+	/* generate state_size words at one time */
+	if (index >= state_size) {
+		uint32 kk;
+		for (kk = 0; kk < state_size - period; kk++) {
+			y = (state[kk] & UPPER_MASK) | (state[kk + 1] & LOWER_MASK);
+			state[kk] = state[kk + period] ^ (y >> 1u) ^ mag01[y & 0x01u];
+		}
+		for (; kk < state_size - 1; kk++) {
+			y = (state[kk] & UPPER_MASK) | (state[kk + 1] & LOWER_MASK);
+			state[kk] = state[kk + (period - state_size)] ^ (y >> 1u) ^ mag01[y & 0x01u];
+		}
+		y = (state[state_size - 1] & UPPER_MASK) | (state[0] & LOWER_MASK);
+		state[state_size - 1] = state[period - 1] ^ (y >> 1u) ^ mag01[y & 0x1UL];
 
-    index = 0;
-  }
+		index = 0;
+	}
 
-  y = state[index++];
+	y = state[index++];
 
-  /* Tempering */
-  y ^= (y >> 11u);
-  y ^= (y << 7u) & 0x9d2c5680UL;
-  y ^= (y << 15u) & 0xefc60000UL;
-  y ^= (y >> 18u);
+	/* Tempering */
+	y ^= (y >> 11u);
+	y ^= (y << 7u) & 0x9d2c5680UL;
+	y ^= (y << 15u) & 0xefc60000UL;
+	y ^= (y >> 18u);
 
-  return y;
+	return y;
 }
 
 
-std::ostream& MTRand::save(std::ostream& ostr) const
-{
-  for (auto i : state)
-  {
-    ostr << i << '\t';
-  }
-  return ostr << index;
+std::ostream& MTRand::save(std::ostream& ostr) const {
+	for (auto i: state) {
+		ostr << i << '\t';
+	}
+	return ostr << index;
 }
 
 
-std::istream& MTRand::load(std::istream& istr)
-{
-  for (auto & i : state)
-    istr >> i;
-  istr >> index;
-  return istr;
+std::istream& MTRand::load(std::istream& istr) {
+	for (auto& i: state)
+		istr >> i;
+	istr >> index;
+	return istr;
 }
 
 }

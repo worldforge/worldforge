@@ -22,17 +22,15 @@
 //
 #ifndef EMBEROGRE_MODEL_MAPPINGCHANGECONTEXT_H
 #define EMBEROGRE_MODEL_MAPPINGCHANGECONTEXT_H
+
 #include <vector>
 #include <sigc++/signal.h>
 
-namespace Ember
-{
 
-namespace EntityMapping
-{
 
-namespace Cases
-{
+namespace Ember::EntityMapping {
+
+namespace Cases {
 class CaseBase;
 }
 
@@ -40,8 +38,7 @@ class CaseBase;
  Whenever something has changed in the values that affects the Model, cases will need to be reevaluated and actions may be activated or deactivated. A ChangeContext wraps these events into one class. This is an internal class which will be created and acted upon by the mapping framework.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class ChangeContext
-{
+class ChangeContext {
 public:
 
 	typedef std::vector<Cases::CaseBase*> CaseStore;
@@ -88,6 +85,6 @@ protected:
 
 }
 
-}
+
 
 #endif

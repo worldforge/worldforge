@@ -35,219 +35,218 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-int main()
-{
+int main() {
 
-    {
-        // Test debug dumping an empty map
-        MapType empty;
+	{
+		// Test debug dumping an empty map
+		MapType empty;
 
-        debug_dump(empty, std::cout);
-    }
+		debug_dump(empty, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["number"] = 1).isInt());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["number"] = 1).isInt());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = 1.1).isFloat());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = 1.1).isFloat());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = (void*)0).isPtr());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = (void*) 0).isPtr());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = "string").isString());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = "string").isString());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = ListType()).isList());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = ListType()).isList());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = MapType()).isMap());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = MapType()).isMap());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
+	{
+		// Test debug dumping some data
+		MapType one;
 
-        MapType member;
-        assert((member["foo"] = 1).isInt());
-        assert((member["bar"] = 1.1).isFloat());
-        assert((member["baz"] = (void*)0).isPtr());
-        assert((member["quz"] = "string").isString());
-        assert((member["mim"] = ListType()).isList());
-        assert((member["woz"] = MapType()).isMap());
-        assert(member.size() == 6);
+		MapType member;
+		assert((member["foo"] = 1).isInt());
+		assert((member["bar"] = 1.1).isFloat());
+		assert((member["baz"] = (void*) 0).isPtr());
+		assert((member["quz"] = "string").isString());
+		assert((member["mim"] = ListType()).isList());
+		assert((member["woz"] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        assert((one["foo"] = member).isMap());
+		assert((one["foo"] = member).isMap());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
+	{
+		// Test debug dumping some data
+		MapType one;
 
-        ListType member(6);
-        assert((member[0] = 1).isInt());
-        assert((member[1] = 1.1).isFloat());
-        assert((member[2] = (void*)0).isPtr());
-        assert((member[3] = "string").isString());
-        assert((member[4] = ListType()).isList());
-        assert((member[5] = MapType()).isMap());
-        assert(member.size() == 6);
+		ListType member(6);
+		assert((member[0] = 1).isInt());
+		assert((member[1] = 1.1).isFloat());
+		assert((member[2] = (void*) 0).isPtr());
+		assert((member[3] = "string").isString());
+		assert((member[4] = ListType()).isList());
+		assert((member[5] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        assert((one["foo"] = member).isList());
+		assert((one["foo"] = member).isList());
 
-        debug_dump(one, std::cout);
-    }
+		debug_dump(one, std::cout);
+	}
 
-    {
-        // Test debug dumping some data
-        ListType member(6);
-        assert((member[0] = 1).isInt());
-        assert((member[1] = 1.1).isFloat());
-        assert((member[2] = (void*)0).isPtr());
-        assert((member[3] = "string").isString());
-        assert((member[4] = ListType()).isList());
-        assert((member[5] = MapType()).isMap());
-        assert(member.size() == 6);
+	{
+		// Test debug dumping some data
+		ListType member(6);
+		assert((member[0] = 1).isInt());
+		assert((member[1] = 1.1).isFloat());
+		assert((member[2] = (void*) 0).isPtr());
+		assert((member[3] = "string").isString());
+		assert((member[4] = ListType()).isList());
+		assert((member[5] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        debug_dump(member, std::cout);
-    }
+		debug_dump(member, std::cout);
+	}
 
-    // FIXME Check the result - should be moslty deterministic
-    {
-        // Test debug dumping an empty map
-        MapType empty;
+	// FIXME Check the result - should be moslty deterministic
+	{
+		// Test debug dumping an empty map
+		MapType empty;
 
-        std::string out = debug_tostring(empty);
-    }
+		std::string out = debug_tostring(empty);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["number"] = 1).isInt());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["number"] = 1).isInt());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = 1.1).isFloat());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = 1.1).isFloat());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = (void*)0).isPtr());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = (void*) 0).isPtr());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = "string").isString());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = "string").isString());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = ListType()).isList());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = ListType()).isList());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
-        assert((one["foo"] = MapType()).isMap());
+	{
+		// Test debug dumping some data
+		MapType one;
+		assert((one["foo"] = MapType()).isMap());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
+	{
+		// Test debug dumping some data
+		MapType one;
 
-        MapType member;
-        assert((member["foo"] = 1).isInt());
-        assert((member["bar"] = 1.1).isFloat());
-        assert((member["baz"] = (void*)0).isPtr());
-        assert((member["quz"] = "string").isString());
-        assert((member["mim"] = ListType()).isList());
-        assert((member["woz"] = MapType()).isMap());
-        assert(member.size() == 6);
+		MapType member;
+		assert((member["foo"] = 1).isInt());
+		assert((member["bar"] = 1.1).isFloat());
+		assert((member["baz"] = (void*) 0).isPtr());
+		assert((member["quz"] = "string").isString());
+		assert((member["mim"] = ListType()).isList());
+		assert((member["woz"] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        assert((one["foo"] = member).isMap());
+		assert((one["foo"] = member).isMap());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        MapType one;
+	{
+		// Test debug dumping some data
+		MapType one;
 
-        ListType member(6);
-        assert((member[0] = 1).isInt());
-        assert((member[1] = 1.1).isFloat());
-        assert((member[2] = (void*)0).isPtr());
-        assert((member[3] = "string").isString());
-        assert((member[4] = ListType()).isList());
-        assert((member[5] = MapType()).isMap());
-        assert(member.size() == 6);
+		ListType member(6);
+		assert((member[0] = 1).isInt());
+		assert((member[1] = 1.1).isFloat());
+		assert((member[2] = (void*) 0).isPtr());
+		assert((member[3] = "string").isString());
+		assert((member[4] = ListType()).isList());
+		assert((member[5] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        assert((one["foo"] = member).isList());
+		assert((one["foo"] = member).isList());
 
-        std::string out = debug_tostring(one);
-    }
+		std::string out = debug_tostring(one);
+	}
 
-    {
-        // Test debug dumping some data
-        ListType member(6);
-        assert((member[0] = 1).isInt());
-        assert((member[1] = 1.1).isFloat());
-        assert((member[2] = (void*)0).isPtr());
-        assert((member[3] = "string").isString());
-        assert((member[4] = ListType()).isList());
-        assert((member[5] = MapType()).isMap());
-        assert(member.size() == 6);
+	{
+		// Test debug dumping some data
+		ListType member(6);
+		assert((member[0] = 1).isInt());
+		assert((member[1] = 1.1).isFloat());
+		assert((member[2] = (void*) 0).isPtr());
+		assert((member[3] = "string").isString());
+		assert((member[4] = ListType()).isList());
+		assert((member[5] = MapType()).isMap());
+		assert(member.size() == 6);
 
-        std::string out = debug_tostring(member);
-    }
+		std::string out = debug_tostring(member);
+	}
 
-    return 0;
+	return 0;
 }

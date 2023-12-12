@@ -19,16 +19,16 @@
 #include "sockets.h"
 #include "globals.h"
 
-static const char * DEFAULT_CLIENT_SOCKET = "cyphesis.sock";
-static const char * DEFAULT_PYTHON_SOCKET = "cypython.sock";
-static const char * DEFAULT_SLAVE_SOCKET = "cyslave.sock";
+static const char* DEFAULT_CLIENT_SOCKET = "cyphesis.sock";
+static const char* DEFAULT_PYTHON_SOCKET = "cypython.sock";
+static const char* DEFAULT_SLAVE_SOCKET = "cyslave.sock";
 
 UNIXSOCK_OPTION(client_socket_name, DEFAULT_CLIENT_SOCKET, CYPHESIS,
-                "unixport", "Local listen socket for admin connections",
-                "cyphesis_{}.sock")
+				"unixport", "Local listen socket for admin connections",
+				"cyphesis_{}.sock")
 UNIXSOCK_OPTION(python_socket_name, DEFAULT_PYTHON_SOCKET, CYPHESIS,
-                "pythonport", "Local listen socket for python connections",
-                "cypython_{}.sock")
+				"pythonport", "Local listen socket for python connections",
+				"cypython_{}.sock")
 UNIXSOCK_OPTION(slave_socket_name, DEFAULT_SLAVE_SOCKET, "slave", "unixport",
-                "Local listen socket for admin connections to the slave server",
-                "cyslave_{}.sock")
+				"Local listen socket for admin connections to the slave server",
+				"cyslave_{}.sock")

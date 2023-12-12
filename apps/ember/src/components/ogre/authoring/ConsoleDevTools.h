@@ -25,8 +25,8 @@
 
 #include <string>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * @brief Adds developer console commands.
@@ -71,9 +71,9 @@ protected:
 	 */
 	void runCommand(const std::string& command, const std::string& args) override;
 
-	std::string genUniqueName();
+	static std::string genUniqueName();
 };
 
 }
-}
+
 #endif

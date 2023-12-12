@@ -28,16 +28,15 @@
 #include <OgreColourValue.h>
 #include <OgreTexture.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class SimpleRenderContext;
 
 /**
 Responsible for making sure that the texture is rerendered when the texture resource needs to be reloaded.
 */
-class SimpleRenderContextResourceLoader : public Ogre::ManualResourceLoader
-{
+class SimpleRenderContextResourceLoader : public Ogre::ManualResourceLoader {
 public:
 	/**
 	 *    Ctor.
@@ -50,7 +49,8 @@ public:
 	 *    At load time the texture will be rerendered.
 	 * @param resource
 	 */
-	void loadResource(Ogre::Resource *resource) override;
+	void loadResource(Ogre::Resource* resource) override;
+
 protected:
 	SimpleRenderContext& mRenderContext;
 };
@@ -61,15 +61,13 @@ protected:
 Useful class for rendering a single scene node.
 
 */
-class SimpleRenderContext
-{
+class SimpleRenderContext {
 public:
 
-    /**
-    Specifices how the camera will be positioned.
-    */
-    enum CameraPositioningMode
-	{
+	/**
+	Specifices how the camera will be positioned.
+	*/
+	enum CameraPositioningMode {
 		/**
 		Centers the camera on the object.
 		*/
@@ -84,47 +82,48 @@ public:
 		CPM_FREE = 2,
 	};
 
-    /**
-     * Constructor.
-     * @param prefix A unique prefix for the scene manager.
-     * @param width The width of the image created.
-     * @param height The height of the image created.
-     * @return
-     */
-    SimpleRenderContext(const std::string& prefix, int width, int height);
-    SimpleRenderContext(const std::string& prefix, Ogre::TexturePtr texturePtr);
+	/**
+	 * Constructor.
+	 * @param prefix A unique prefix for the scene manager.
+	 * @param width The width of the image created.
+	 * @param height The height of the image created.
+	 * @return
+	 */
+	SimpleRenderContext(const std::string& prefix, int width, int height);
 
-    ~SimpleRenderContext();
+	SimpleRenderContext(const std::string& prefix, const Ogre::TexturePtr& texturePtr);
 
-    /**
-     * Gets the scene node which is being rendered.
-     * @return
-     */
-    Ogre::SceneNode* getSceneNode() const;
+	~SimpleRenderContext();
+
+	/**
+	 * Gets the scene node which is being rendered.
+	 * @return
+	 */
+	Ogre::SceneNode* getSceneNode() const;
 
 
-    /**
-     * Gets the camera used for rendering.
-     * @return
-     */
-    Ogre::Camera* getCamera() const;
+	/**
+	 * Gets the camera used for rendering.
+	 * @return
+	 */
+	Ogre::Camera* getCamera() const;
 
-    /**
-     * Gets the default distance of the camera from the base, most likely somewhere where the whole scene is shown
-     * @return
-     */
-    Ogre::Real getDefaultCameraDistance() const;
+	/**
+	 * Gets the default distance of the camera from the base, most likely somewhere where the whole scene is shown
+	 * @return
+	 */
+	Ogre::Real getDefaultCameraDistance() const;
 
-    /**
-     * Sets whether the rendering should be active or not.
-     * @param active
-     */
-    void setActive(bool active);
+	/**
+	 * Sets whether the rendering should be active or not.
+	 * @param active
+	 */
+	void setActive(bool active);
 
-    /**
-     * Adjusts the camera distance so that the full scene is shown
-     */
-    void showFull(float renderableBoundingRadius);
+	/**
+	 * Adjusts the camera distance so that the full scene is shown
+	 */
+	void showFull(float renderableBoundingRadius);
 
 
 	/**
@@ -138,19 +137,19 @@ public:
 	 *    Pitches the camera.
 	 * @param degrees The amount of degrees to pitch.
 	 */
-	void pitchCamera(Ogre::Degree degrees);
+	void pitchCamera(const Ogre::Degree& degrees);
 
 	/**
 	 *    Yaws the camera.
 	 * @param degrees The amount of degree to yaw.
 	 */
-	void yawCamera(Ogre::Degree degrees);
+	void yawCamera(const Ogre::Degree& degrees);
 
 	/**
 	 *    Rolls the camera.
 	 * @param degrees The amount of degree to roll.
 	 */
-    void rollCamera(Ogre::Degree degrees);
+	void rollCamera(const Ogre::Degree& degrees);
 
 
 	/**
@@ -190,41 +189,42 @@ public:
 	void resetCameraOrientation();
 
 
-    Ogre::SceneManager* getSceneManager() const;
+	Ogre::SceneManager* getSceneManager() const;
 
-    Ogre::RenderTexture* getRenderTexture();
+	Ogre::RenderTexture* getRenderTexture();
 
-    Ogre::TexturePtr getTexture();
+	Ogre::TexturePtr getTexture();
 
-    Ogre::SceneNode* getCameraRootNode() const;
+	Ogre::SceneNode* getCameraRootNode() const;
 
-    Ogre::Viewport* getViewport() const;
+	Ogre::Viewport* getViewport() const;
 
-    /**
-     * Gets the main light.
-     * @return
-     */
-    Ogre::Light* getLight();
+	/**
+	 * Gets the main light.
+	 * @return
+	 */
+	Ogre::Light* getLight();
 
 
-    /**
-     * Sets the background colour.
-     * @param colour
-     */
-    void setBackgroundColour(const Ogre::ColourValue& colour);
-    /**
-     * Sets the background colour.
-     * @param red
-     * @param green
-     * @param blue
-     * @param
-     */
-    void setBackgroundColour(float red, float green, float blue, float alpha);
+	/**
+	 * Sets the background colour.
+	 * @param colour
+	 */
+	void setBackgroundColour(const Ogre::ColourValue& colour);
 
-    /**
-    Sets the render texture to which the scene will be rendered. By default an instance of this class will create it's own Render Texture instance, but this allows you to use a preexisting one if you want.
-    */
-    void setTexture(Ogre::TexturePtr texture);
+	/**
+	 * Sets the background colour.
+	 * @param red
+	 * @param green
+	 * @param blue
+	 * @param
+	 */
+	void setBackgroundColour(float red, float green, float blue, float alpha);
+
+	/**
+	Sets the render texture to which the scene will be rendered. By default an instance of this class will create it's own Render Texture instance, but this allows you to use a preexisting one if you want.
+	*/
+	void setTexture(const Ogre::TexturePtr& texture);
 
 	/**
 	 *    Gets the current camera positioning mode. The default is CPM_OBJECTCENTER which centers the camera on the current displayed object.
@@ -282,7 +282,7 @@ private:
 	/**
 	The node to which the camera is attached.
 	*/
-	Ogre::SceneNode *mCameraNode, *mCameraPitchNode, *mCameraDistanceNode;
+	Ogre::SceneNode* mCameraNode, * mCameraPitchNode, * mCameraDistanceNode;
 
 	/**
 	The node to which the rendered entities are attched.
@@ -319,18 +319,16 @@ private:
 
 };
 
-inline Ogre::Real SimpleRenderContext::getDefaultCameraDistance() const
-{
+inline Ogre::Real SimpleRenderContext::getDefaultCameraDistance() const {
 	return mDefaultCameraDistance;
 }
 
-inline Ogre::SceneManager* SimpleRenderContext::getSceneManager() const
-{
+inline Ogre::SceneManager* SimpleRenderContext::getSceneManager() const {
 	return mSceneManager;
 }
 
 }
 
-}
+
 
 #endif

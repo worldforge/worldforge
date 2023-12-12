@@ -24,35 +24,31 @@
 #include "rules/LocatedEntity.h"
 
 SystemAccount::SystemAccount(Connection* conn,
-                             const std::string& username,
-                             const std::string& passwd,
-                             RouterId id) :
-        Admin(conn, username, passwd, std::move(id))
-{
+							 const std::string& username,
+							 const std::string& passwd,
+							 RouterId id) :
+		Admin(conn, username, passwd, std::move(id)) {
 }
 
 SystemAccount::~SystemAccount() = default;
 
-const char* SystemAccount::getType() const
-{
-    return "sys";
+const char* SystemAccount::getType() const {
+	return "sys";
 }
 
-bool SystemAccount::isPersisted() const
-{
-    return false;
+bool SystemAccount::isPersisted() const {
+	return false;
 }
 
-void SystemAccount::processExternalOperation(const Operation& op, OpVector& res)
-{
-    //Allow system accounts to send operations directly to other entities.
-    if (!op->isDefaultTo() && op->getTo() != getId()) {
-            auto entity = m_connection->m_server.getWorld().getEntity(op->getTo());
-            if (entity) {
-                entity->operation(op, res);
-            }
-            return;
-    } else {
-        Account::processExternalOperation(op, res);
-    }
+void SystemAccount::processExternalOperation(const Operation& op, OpVector& res) {
+	//Allow system accounts to send operations directly to other entities.
+	if (!op->isDefaultTo() && op->getTo() != getId()) {
+		auto entity = m_connection->m_server.getWorld().getEntity(op->getTo());
+		if (entity) {
+			entity->operation(op, res);
+		}
+		return;
+	} else {
+		Account::processExternalOperation(op, res);
+	}
 }

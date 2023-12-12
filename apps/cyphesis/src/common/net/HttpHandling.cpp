@@ -27,87 +27,87 @@
 #include <fstream>
 
 HttpHandling::HttpHandling(const Monitors& monitors)
-        : m_monitors(monitors) {
+		: m_monitors(monitors) {
 
-    //Should we perhaps make this something the caller has to register?
-    mHandlers.emplace_back([this](HttpHandleContext
-                                  context) -> HandleResult {
-        if (context.path == "/config") {
-            sendHeaders(context.io);
-            auto& conf = global_conf->getSection(::instance);
+	//Should we perhaps make this something the caller has to register?
+	mHandlers.emplace_back([this](HttpHandleContext
+								  context) -> HandleResult {
+		if (context.path == "/config") {
+			sendHeaders(context.io);
+			auto& conf = global_conf->getSection(::instance);
 
-            for (auto& entry: conf) {
-                context.io << entry.first << " " << entry.second << "\n";
-            }
-            return HandleResult::Handled;
-        } else if (context.path == "/monitors") {
-            sendHeaders(context.io);
-            m_monitors.send(context.io);
-            return HandleResult::Handled;
-        } else if (context.path == "/monitors/numerics") {
-            sendHeaders(context.io);
-            m_monitors.sendNumerics(context.io);
-            return HandleResult::Handled;
-        } else {
-            return HandleResult::Ignored;
-        }
-    });
+			for (auto& entry: conf) {
+				context.io << entry.first << " " << entry.second << "\n";
+			}
+			return HandleResult::Handled;
+		} else if (context.path == "/monitors") {
+			sendHeaders(context.io);
+			m_monitors.send(context.io);
+			return HandleResult::Handled;
+		} else if (context.path == "/monitors/numerics") {
+			sendHeaders(context.io);
+			m_monitors.sendNumerics(context.io);
+			return HandleResult::Handled;
+		} else {
+			return HandleResult::Ignored;
+		}
+	});
 }
 
 void HttpHandling::sendHeaders(std::ostream& io,
-                               int status,
-                               const std::string& type,
-                               const std::string& msg,
-                               std::vector<std::string> extraHeaders) {
-    io << "HTTP/1.1 " << status << " " << msg << "\n";
-    io << "Content-Type: " << type << "\n";
-    io << "Server: cyphesis/" << consts::version << "\n";
-    for (auto& header: extraHeaders) {
-        io << header << "\n";
-    }
-    io << "\n";
+							   int status,
+							   const std::string& type,
+							   const std::string& msg,
+							   std::vector<std::string> extraHeaders) {
+	io << "HTTP/1.1 " << status << " " << msg << "\n";
+	io << "Content-Type: " << type << "\n";
+	io << "Server: cyphesis/" << consts::version << "\n";
+	for (auto& header: extraHeaders) {
+		io << header << "\n";
+	}
+	io << "\n";
 }
 
 void HttpHandling::reportBadRequest(std::ostream& io,
-                                    int status,
-                                    const std::string& msg) {
-    sendHeaders(io, status, "text/html", msg);
-    io << "<html><head><title>" << status << " " << msg
-       << "</title></head><body><h1>" << status << " - " << msg
-       << "</h1></body></html>\n";
+									int status,
+									const std::string& msg) {
+	sendHeaders(io, status, "text/html", msg);
+	io << "<html><head><title>" << status << " " << msg
+	   << "</title></head><body><h1>" << status << " - " << msg
+	   << "</h1></body></html>\n";
 }
 
 void HttpHandling::processQuery(std::ostream& io,
-                                const std::list<std::string>& headers) {
-    if (headers.empty()) {
-        reportBadRequest(io);
-        return;
-    }
-    const std::string& request = headers.front();
-    std::string::size_type i = request.find(" ");
+								const std::list<std::string>& headers) {
+	if (headers.empty()) {
+		reportBadRequest(io);
+		return;
+	}
+	const std::string& request = headers.front();
+	std::string::size_type i = request.find(" ");
 
-    if (i == std::string::npos) {
-        reportBadRequest(io);
-        return;
-    }
+	if (i == std::string::npos) {
+		reportBadRequest(io);
+		return;
+	}
 
-    std::string path;
-    ++i;
+	std::string path;
+	++i;
 
-    std::string::size_type j = request.find(" ", i + 1);
+	std::string::size_type j = request.find(" ", i + 1);
 
-    if (j != std::string::npos) {
-        path = request.substr(i, j - i);
-    } else {
-        path = request.substr(i);
-    }
+	if (j != std::string::npos) {
+		path = request.substr(i, j - i);
+	} else {
+		path = request.substr(i);
+	}
 
-    for (auto& handler: mHandlers) {
-        auto result = handler({io, headers, path});
-        if (result == HandleResult::Handled) {
-            return;
-        }
-    }
-    spdlog::debug("Path '{}'not found.", path);
-    reportBadRequest(io, 404, "Not Found");
+	for (auto& handler: mHandlers) {
+		auto result = handler({io, headers, path});
+		if (result == HandleResult::Handled) {
+			return;
+		}
+	}
+	spdlog::debug("Path '{}'not found.", path);
+	reportBadRequest(io, 404, "Not Found");
 }

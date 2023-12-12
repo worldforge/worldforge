@@ -6,11 +6,13 @@
 
 #include <Atlas/Funky/FEncoder.h>
 
-namespace Atlas { namespace Funky {
+namespace Atlas {
+namespace Funky {
 
 BeginMap Tokens::begin_map;
 EndMap Tokens::end_map;
 BeginList Tokens::begin_list;
 EndList Tokens::end_list;
 
-} } // namespace Atlas::Funky
+}
+} // namespace Atlas::Funky

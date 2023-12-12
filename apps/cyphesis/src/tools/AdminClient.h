@@ -28,39 +28,43 @@
 typedef std::multimap<std::string, std::pair<std::pair<std::string, std::string>, Atlas::Message::MapType> > RuleWaitList;
 
 /// \brief Client class to encapsulate functionality of an administrative client
-class AdminClient : public AtlasStreamClient
-{
-  protected:
-    /// \brief Password used to log into the server
-    std::string m_password;
-    /// \brief Store of rules which can't be uploaded until their parent has
-    /// been uploaded
-    RuleWaitList m_waitingRules;
-    /// \brief List of names of rules already uploaded
-    std::set<std::string> m_uploadedRules;
+class AdminClient : public AtlasStreamClient {
+protected:
+	/// \brief Password used to log into the server
+	std::string m_password;
+	/// \brief Store of rules which can't be uploaded until their parent has
+	/// been uploaded
+	RuleWaitList m_waitingRules;
+	/// \brief List of names of rules already uploaded
+	std::set<std::string> m_uploadedRules;
 
-    void waitForInfo();
-    int checkRule(const std::string & id);
-  public:
-    explicit AdminClient(Atlas::Objects::Factories& factories, boost::asio::io_context& io_context);
-    ~AdminClient() override;
+	void waitForInfo();
 
-    int login();
-    void getLogin();
-    int uploadRule(const std::string & id, const std::string & set,
-                   const Atlas::Message::MapType &);
+	int checkRule(const std::string& id);
 
-    /// \brief Set the password used to log into the server
-    void setPassword(const std::string & passwd) {
-        m_password = passwd;
-    }
+public:
+	explicit AdminClient(Atlas::Objects::Factories& factories, boost::asio::io_context& io_context);
 
-    /// \brief Set the username used to log into the server
-    void setUsername(const std::string & uname) {
-        m_username = uname;
-    }
+	~AdminClient() override;
 
-    void report();
+	int login();
+
+	void getLogin();
+
+	int uploadRule(const std::string& id, const std::string& set,
+				   const Atlas::Message::MapType&);
+
+	/// \brief Set the password used to log into the server
+	void setPassword(const std::string& passwd) {
+		m_password = passwd;
+	}
+
+	/// \brief Set the username used to log into the server
+	void setUsername(const std::string& uname) {
+		m_username = uname;
+	}
+
+	void report();
 };
 
 #endif // TOOLS_ADMIN_CLIENT_H

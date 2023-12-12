@@ -26,10 +26,8 @@
 #include <string>
 #include <vector>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
 @author Tiberiu Paunescu <tpa12@sfu.ca>
@@ -74,8 +72,6 @@ public:
 	std::string mId;
 };
 }
-}
 
-}
 
 #endif

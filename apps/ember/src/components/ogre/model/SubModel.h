@@ -23,9 +23,8 @@
 
 #include <map>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 class Model;
 
@@ -58,8 +57,6 @@ protected:
 };
 
 }
-}
 
-}
 
 #endif // SUBMODEL_H

@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace Mercator { 
+namespace Mercator {
 
 /// \brief Point on the fundamental grid that is used as the basis for terrain.
 ///
@@ -17,54 +17,58 @@ namespace Mercator {
 /// used to seed the random number generators. Additional parameters for
 /// roughness and falloff are often specified.
 class BasePoint {
-  private:
-    /// The height at the base point.
-    float m_height;
-    /// The roughness at the base point.
-    float m_roughness;
-    /// The falloff at the base point.
-    float m_falloff;
+private:
+	/// The height at the base point.
+	float m_height;
+	/// The roughness at the base point.
+	float m_roughness;
+	/// The falloff at the base point.
+	float m_falloff;
 
-  public:
-    /// Default height at the base point.
-    static constexpr float HEIGHT = 8.0;
-    /// Default roughness at the base point.
-    static constexpr float ROUGHNESS = 1.25;
-    /// Default falloff at the base point.
-    static constexpr float FALLOFF = 0.25;
+public:
+	/// Default height at the base point.
+	static constexpr float HEIGHT = 8.0;
+	/// Default roughness at the base point.
+	static constexpr float ROUGHNESS = 1.25;
+	/// Default falloff at the base point.
+	static constexpr float FALLOFF = 0.25;
 
-    /// \brief Constructor
-    ///
-    /// @param h height at the base point.
-    /// @param r roughness at the base point.
-    /// @param f falloff at the base point.
-    explicit BasePoint(float h = HEIGHT,
-                       float r = ROUGHNESS,
-                       float f = FALLOFF) :
-             m_height(h), m_roughness(r), m_falloff(f) {}
+	/// \brief Constructor
+	///
+	/// @param h height at the base point.
+	/// @param r roughness at the base point.
+	/// @param f falloff at the base point.
+	explicit BasePoint(float h = HEIGHT,
+					   float r = ROUGHNESS,
+					   float f = FALLOFF) :
+			m_height(h), m_roughness(r), m_falloff(f) {}
 
 
 	bool operator==(const BasePoint& rhs) const noexcept;
+
 	bool operator!=(const BasePoint& rhs) const noexcept;
 
-    /// Accessor for the height at the base point.
-    float height() const { return m_height; }
-    /// Accessor for the height at the base point.
-    float & height() { return m_height; }
+	/// Accessor for the height at the base point.
+	float height() const { return m_height; }
 
-    /// Accessor for the roughness at the base point.
-    float roughness() const { return m_roughness; }
-    /// Accessor for the roughness at the base point.
-    float & roughness() { return m_roughness; }
+	/// Accessor for the height at the base point.
+	float& height() { return m_height; }
 
-    /// Accessor for the falloff at the base point.
-    float falloff() const { return m_falloff; }
-    /// Accessor for the falloff at the base point.
-    float & falloff() { return m_falloff; }
+	/// Accessor for the roughness at the base point.
+	float roughness() const { return m_roughness; }
 
-    /// Calculate the random seed used at this base point.
-    //unsigned int seed() const { return (unsigned int)(m_height * 1000.0);}
-    unsigned int seed() const;
+	/// Accessor for the roughness at the base point.
+	float& roughness() { return m_roughness; }
+
+	/// Accessor for the falloff at the base point.
+	float falloff() const { return m_falloff; }
+
+	/// Accessor for the falloff at the base point.
+	float& falloff() { return m_falloff; }
+
+	/// Calculate the random seed used at this base point.
+	//unsigned int seed() const { return (unsigned int)(m_height * 1000.0);}
+	unsigned int seed() const;
 };
 
 } //namespace Mercator

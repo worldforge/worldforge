@@ -25,100 +25,99 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Vector3D : public WrapperBase<WFMath::Vector<3>, CyPy_Vector3D>
-{
-    public:
-        CyPy_Vector3D(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Vector3D : public WrapperBase<WFMath::Vector<3>, CyPy_Vector3D> {
+public:
+	CyPy_Vector3D(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Vector3D(Py::PythonClassInstance* self, WFMath::Vector<3> value);
+	CyPy_Vector3D(Py::PythonClassInstance* self, WFMath::Vector<3> value);
 
-        static WFMath::Vector<3> parse(const Py::Object& object);
+	static WFMath::Vector<3> parse(const Py::Object& object);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object repr() override;
+	Py::Object repr() override;
 
-        Py::Object iter() override;
+	Py::Object iter() override;
 
-        Py::Object rich_compare(const Py::Object&, int) override;
+	Py::Object rich_compare(const Py::Object&, int) override;
 
-        PyCxx_ssize_t sequence_length() override;
+	PyCxx_ssize_t sequence_length() override;
 
-        Py::Object sequence_item(Py_ssize_t) override;
+	Py::Object sequence_item(Py_ssize_t) override;
 
-        int sequence_ass_item(Py_ssize_t, const Py::Object&) override;
+	int sequence_ass_item(Py_ssize_t, const Py::Object&) override;
 
-        Py::Object number_add(const Py::Object& other) override;
+	Py::Object number_add(const Py::Object& other) override;
 
-        Py::Object number_subtract(const Py::Object& other) override;
+	Py::Object number_subtract(const Py::Object& other) override;
 
-        Py::Object number_multiply(const Py::Object& other) override;
+	Py::Object number_multiply(const Py::Object& other) override;
 
-        Py::Object number_floor_divide(const Py::Object& other) override;
+	Py::Object number_floor_divide(const Py::Object& other) override;
 
-        Py::Object number_true_divide(const Py::Object& other) override;
+	Py::Object number_true_divide(const Py::Object& other) override;
 
-        Py::Object number_negative() override;
-
-
-    protected:
+	Py::Object number_negative() override;
 
 
-        Py::Object dot(const Py::Tuple& args);
+protected:
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, dot);
 
-        Py::Object cross(const Py::Tuple& args);
+	Py::Object dot(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, cross);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, dot);
 
-        Py::Object rotatex(const Py::Tuple& args);
+	Py::Object cross(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatex);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, cross);
 
-        Py::Object rotatey(const Py::Tuple& args);
+	Py::Object rotatex(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatey);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatex);
 
-        Py::Object rotatez(const Py::Tuple& args);
+	Py::Object rotatey(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatez);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatey);
 
-        Py::Object rotate(const Py::Tuple& args);
+	Py::Object rotatez(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotate);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotatez);
 
-        Py::Object angle(const Py::Tuple& args);
+	Py::Object rotate(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, angle);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, rotate);
 
-        Py::Object normalize(const Py::Tuple& args);
+	Py::Object angle(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, normalize);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, angle);
 
-        Py::Object sqr_mag();
+	Py::Object normalize(const Py::Tuple& args);
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, sqr_mag);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, normalize);
 
-        Py::Object mag();
+	Py::Object sqr_mag();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, mag);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, sqr_mag);
 
-        Py::Object is_valid();
+	Py::Object mag();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, is_valid);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, mag);
 
-        Py::Object unit_vector();
+	Py::Object is_valid();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, unit_vector);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, is_valid);
 
-        Py::Object unit_vector_to(const Py::Tuple& args);
+	Py::Object unit_vector();
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, unit_vector_to);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Vector3D, unit_vector);
+
+	Py::Object unit_vector_to(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Vector3D, unit_vector_to);
 };
 
 

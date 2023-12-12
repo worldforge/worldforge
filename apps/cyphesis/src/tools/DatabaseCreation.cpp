@@ -12,19 +12,18 @@
 #include "common/DatabasePostgres.h"
 #endif
 
-std::unique_ptr<Database> createDatabase()
-{
-    std::string databaseBackend;
-    readConfigItem(instance, "database", databaseBackend);
+std::unique_ptr<Database> createDatabase() {
+	std::string databaseBackend;
+	readConfigItem(instance, "database", databaseBackend);
 
-    if (databaseBackend == "postgres") {
+	if (databaseBackend == "postgres") {
 #ifdef CYPHESIS_USE_POSTGRES
-        return std::make_unique<DatabasePostgres>();
+		return std::make_unique<DatabasePostgres>();
 #else
-        spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
-        throw std::runtime_error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
+		spdlog::error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
+		throw std::runtime_error("Database specified as 'postgres', but this server is not built with Postgres SQL support.");
 #endif
-    } else {
-        return std::make_unique<DatabaseSQLite>();
-    }
+	} else {
+		return std::make_unique<DatabaseSQLite>();
+	}
 }

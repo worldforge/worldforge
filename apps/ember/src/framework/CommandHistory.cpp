@@ -18,31 +18,26 @@
 
 #include "CommandHistory.h"
 
-namespace Ember
-{
+namespace Ember {
 
 CommandHistory::CommandHistory() :
-	mHistoryPosition(0)
-{
+		mHistoryPosition(0) {
 }
 
-void CommandHistory::moveBackwards(void)
-{
+void CommandHistory::moveBackwards() {
 	if (mHistoryPosition < mHistory.size()) {
 		mHistoryPosition++;
 	}
 }
 
-void CommandHistory::moveForwards(void)
-{
+void CommandHistory::moveForwards() {
 	if (mHistoryPosition > 0) {
 		mHistoryPosition--;
 	}
 }
 
-const std::string& CommandHistory::getHistoryString()
-{
-	static std::string sEmpty("");
+const std::string& CommandHistory::getHistoryString() {
+	static std::string sEmpty;
 
 	if (mHistoryPosition == 0) {
 		return sEmpty;
@@ -51,20 +46,17 @@ const std::string& CommandHistory::getHistoryString()
 	}
 }
 
-void CommandHistory::changeHistory(size_t historyIndex, const std::string & command)
-{
+void CommandHistory::changeHistory(size_t historyIndex, const std::string& command) {
 	if (historyIndex < mHistory.size()) {
 		mHistory[historyIndex - 1] = command;
 	}
 }
 
-size_t CommandHistory::getHistoryPosition() const
-{
+size_t CommandHistory::getHistoryPosition() const {
 	return mHistoryPosition;
 }
 
-void CommandHistory::addToHistory(const std::string& command)
-{
+void CommandHistory::addToHistory(const std::string& command) {
 	mHistory.push_front(command);
 	mHistoryPosition = 0;
 }

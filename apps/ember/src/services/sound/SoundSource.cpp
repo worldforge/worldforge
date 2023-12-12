@@ -32,17 +32,15 @@
 namespace Ember {
 
 SoundSource::SoundSource()
-: mALSource(0)
-{
+		: mALSource(0) {
 	alGetError();
 	// Bind the buffer with the source.
 	alGenSources(1, &mALSource);
-	if (!SoundGeneral::checkAlError("Creating new sound source."))
-	{
+	if (!SoundGeneral::checkAlError("Creating new sound source.")) {
 		alDeleteSources(1, &mALSource);
 		throw Exception("Failed to generate a new sound source.");
 	}
-	
+
 	alSourcef(mALSource, AL_PITCH, 1.0f);
 	SoundGeneral::checkAlError("Setting sound source pitch.");
 	alSourcef(mALSource, AL_GAIN, 1.0f);
@@ -56,28 +54,24 @@ SoundSource::SoundSource()
 
 }
 
-SoundSource::~SoundSource()
-{
+SoundSource::~SoundSource() {
 	alDeleteSources(1, &mALSource);
 	SoundGeneral::checkAlError("Deleting sound source.");
 }
 
-void SoundSource::setPosition(const WFMath::Point<3>& pos)
-{
+void SoundSource::setPosition(const WFMath::Point<3>& pos) {
 	assert(pos.isValid());
-	alSource3f(mALSource, AL_POSITION, (ALfloat)pos.x(), (ALfloat)pos.y(), (ALfloat)pos.z());
+	alSource3f(mALSource, AL_POSITION, (ALfloat) pos.x(), (ALfloat) pos.y(), (ALfloat) pos.z());
 	SoundGeneral::checkAlError("Setting sound source position.");
 }
 
-void SoundSource::setVelocity(const WFMath::Vector<3>& vel)
-{
+void SoundSource::setVelocity(const WFMath::Vector<3>& vel) {
 	assert(vel.isValid());
-	alSource3f(mALSource, AL_VELOCITY, (ALfloat)vel.x(), (ALfloat)vel.y(), (ALfloat)vel.z());
+	alSource3f(mALSource, AL_VELOCITY, (ALfloat) vel.x(), (ALfloat) vel.y(), (ALfloat) vel.z());
 	SoundGeneral::checkAlError("Setting sound source velocity.");
 }
 
-void SoundSource::setOrientation(const WFMath::Quaternion& orientation)
-{
+void SoundSource::setOrientation(const WFMath::Quaternion& orientation) {
 	//TODO: implement this
 }
 

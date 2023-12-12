@@ -22,8 +22,8 @@
 -------------------------------------------------------------------------------
 */
 
-#ifndef __XMLModelDefinitionSerializer__
-#define __XMLModelDefinitionSerializer__
+#ifndef XMLModelDefinitionSerializer_
+#define XMLModelDefinitionSerializer_
 
 
 #include <boost/filesystem/path.hpp>
@@ -33,9 +33,8 @@
 #include "ModelDefinition.h"
 #include "tinyxml/tinyxml.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 class ModelDefinitionManager;
 
@@ -66,75 +65,75 @@ private:
 
 	void readSubModels(const ModelDefinitionPtr& modelDef, TiXmlElement* mSubModelNode);
 
-	void readParts(TiXmlElement* mPartNode, SubModelDefinition* def);
+	static void readParts(TiXmlElement* mPartNode, SubModelDefinition* def);
 
-	void readSubEntities(TiXmlElement* mSubEntNode, PartDefinition* def);
+	static void readSubEntities(TiXmlElement* mSubEntNode, PartDefinition* def);
 
 	void readActions(const ModelDefinitionPtr& modelDef, TiXmlElement* mAnimNode);
 
-	void readAnimations(TiXmlElement* mAnimationsNode, ActionDefinition* action);
+	static void readAnimations(TiXmlElement* mAnimationsNode, ActionDefinition* action);
 
-	void readAnimationParts(TiXmlElement* mAnimPartNode, AnimationDefinition* animDef);
+	static void readAnimationParts(TiXmlElement* mAnimPartNode, AnimationDefinition* animDef);
 
-	void readAttachPoints(const ModelDefinitionPtr& modelDef, TiXmlElement* mAnimPartNode);
+	static void readAttachPoints(const ModelDefinitionPtr& modelDef, TiXmlElement* mAnimPartNode);
 
-	void readParticleSystems(const ModelDefinitionPtr& modelDef, TiXmlElement* mParticleSystemsNode);
+	static void readParticleSystems(const ModelDefinitionPtr& modelDef, TiXmlElement* mParticleSystemsNode);
 
-	void readParticleSystemsBindings(ModelDefinition::ParticleSystemDefinition& def, TiXmlElement* mParticleSystemsNode);
+	static void readParticleSystemsBindings(ModelDefinition::ParticleSystemDefinition& def, TiXmlElement* mParticleSystemsNode);
 
-	void readParticleSystemsParams(ModelDefinition::ParticleSystemDefinition& def, TiXmlElement* mParticleSystemsNode);
+	static void readParticleSystemsParams(ModelDefinition::ParticleSystemDefinition& def, TiXmlElement* mParticleSystemsNode);
 
-	void readViews(const ModelDefinitionPtr& modelDef, TiXmlElement* viewsNode);
+	static void readViews(const ModelDefinitionPtr& modelDef, TiXmlElement* viewsNode);
 
-	void readSounds(TiXmlElement* mAnimationsNode, ActionDefinition* action);
+	static void readSounds(TiXmlElement* mAnimationsNode, ActionDefinition* action);
 
-	void readActivations(TiXmlElement* activationsNode, ActionDefinition* action);
+	static void readActivations(TiXmlElement* activationsNode, ActionDefinition* action);
 
-	void readLights(const ModelDefinitionPtr& modelDef, TiXmlElement* mLightsNode);
+	static void readLights(const ModelDefinitionPtr& modelDef, TiXmlElement* mLightsNode);
 
-	void readPoses(const ModelDefinitionPtr& modelDef, TiXmlElement* mPoseNode);
+	static void readPoses(const ModelDefinitionPtr& modelDef, TiXmlElement* mPoseNode);
 
 	/**
 	 * @brief Reads bone groups data.
 	 * @param modelDef The modeldefinition node.
 	 * @param boneGroupsNode The bone groups node.
 	 */
-	void readBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement* boneGroupsNode);
+	static void readBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement* boneGroupsNode);
 
 
-	void exportSubModels(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportSubModels(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	void exportActions(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportActions(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	void exportAttachPoints(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportAttachPoints(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	void exportViews(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportViews(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	void exportParticleSystems(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportParticleSystems(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	void exportPoses(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportPoses(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
 	/**
 	 * @brief Exports the light data.
 	 * @param modelDef The model definition.
 	 * @param modelElem The model xml element.
 	 */
-	void exportLights(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportLights(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
 	/**
 	 * @brief Exports bone groups data.
 	 * @param modelDef The model definition.
 	 * @param modelElem The model xml element.
 	 */
-	void exportBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
+	static void exportBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
 	static boost::optional<ModelDefinition::ParticleSystemSetting> parseParticleSystemSetting(const std::string& setting);
 
-	boost::optional<std::string> particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting);
+	static boost::optional<std::string> particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting);
 
 };
 
 }
-}
-}
+
+
 #endif

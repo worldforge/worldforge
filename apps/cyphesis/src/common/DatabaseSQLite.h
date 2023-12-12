@@ -27,38 +27,37 @@
 
 
 namespace sqlite3pp {
-    class database;
+class database;
 
-    class query;
+class query;
 }
 
-class DatabaseSQLite : public Database
-{
-    protected:
+class DatabaseSQLite : public Database {
+protected:
 
-        std::deque<std::string> pendingQueries;
-        std::unique_ptr<sqlite3pp::database> m_database;
+	std::deque<std::string> pendingQueries;
+	std::unique_ptr<sqlite3pp::database> m_database;
 
-        std::atomic<bool> m_active;
-        std::condition_variable m_workerCondition;
-        /**
-         * Emitted when the queue is emptied, which is used when the method blockUntilAllQueriesComplete is called.
-         */
-        std::condition_variable m_queueEmptyCondition;
-        std::mutex m_pendingQueriesMutex;
-        std::thread m_workerThread;
+	std::atomic<bool> m_active;
+	std::condition_variable m_workerCondition;
+	/**
+	 * Emitted when the queue is emptied, which is used when the method blockUntilAllQueriesComplete is called.
+	 */
+	std::condition_variable m_queueEmptyCondition;
+	std::mutex m_pendingQueriesMutex;
+	std::thread m_workerThread;
 
-        void poll_tasks();
+	void poll_tasks();
 
-    public:
+public:
 
-        DatabaseSQLite();
+	DatabaseSQLite();
 
-        ~DatabaseSQLite() override;
+	~DatabaseSQLite() override;
 
-        int initConnection() override;
+	int initConnection() override;
 
-        void shutdownConnection() override;
+	void shutdownConnection() override;
 
 //        sqlite3* getConnection() const
 //        {
@@ -66,66 +65,63 @@ class DatabaseSQLite : public Database
 //        }
 
 
-        size_t queryQueueSize() const override
-        {
-            return pendingQueries.size();
-        }
+	size_t queryQueueSize() const override {
+		return pendingQueries.size();
+	}
 
 
-        int getObject(const std::string& table,
-                      const std::string& key,
-                      Atlas::Message::MapType&) override;
+	int getObject(const std::string& table,
+				  const std::string& key,
+				  Atlas::Message::MapType&) override;
 
-        int encodeObject(const Atlas::Message::MapType&,
-                         std::string&) override;
+	int encodeObject(const Atlas::Message::MapType&,
+					 std::string&) override;
 
-        void reportError(const char* errorMsg);
+	void reportError(const char* errorMsg);
 
-        int connect(const std::string& context, std::string& error_msg) override;
-
-
-        DatabaseResult runSimpleSelectQuery(const std::string& query) override;
-
-        int runCommandQuery(const std::string& query) override;
+	int connect(const std::string& context, std::string& error_msg) override;
 
 
-        int registerRelation(std::string& tablename,
-                             const std::string& sourcetable,
-                             const std::string& targettable,
-                             RelationType kind) override;
+	DatabaseResult runSimpleSelectQuery(const std::string& query) override;
 
-        int registerThoughtsTable() override;
-
-        int registerEntityTable(const std::map<std::string, int>& chunks) override;
-
-        int registerPropertyTable() override;
+	int runCommandQuery(const std::string& query) override;
 
 
-        /// Creates a new unique id for the database.
-        /// Note that this method will access the database, so it's a fairly expensive method.
-        long newId() override;
+	int registerRelation(std::string& tablename,
+						 const std::string& sourcetable,
+						 const std::string& targettable,
+						 RelationType kind) override;
 
-        int registerEntityIdGenerator() override;
+	int registerThoughtsTable() override;
+
+	int registerEntityTable(const std::map<std::string, int>& chunks) override;
+
+	int registerPropertyTable() override;
 
 
-        int registerSimpleTable(const std::string& name,
-                                const Atlas::Message::MapType& row) override;
+	/// Creates a new unique id for the database.
+	/// Note that this method will access the database, so it's a fairly expensive method.
+	long newId() override;
 
-        int scheduleCommand(const std::string& query) override;
+	int registerEntityIdGenerator() override;
 
-        int runMaintainance();
 
-        int launchNewQuery() override
-        {
-            return 0;
-        }
+	int registerSimpleTable(const std::string& name,
+							const Atlas::Message::MapType& row) override;
 
-        int clearPendingQuery() override
-        {
-            return 0;
-        }
+	int scheduleCommand(const std::string& query) override;
 
-        void blockUntilAllQueriesComplete() override;
+	int runMaintainance();
+
+	int launchNewQuery() override {
+		return 0;
+	}
+
+	int clearPendingQuery() override {
+		return 0;
+	}
+
+	void blockUntilAllQueriesComplete() override;
 
 
 };
@@ -134,46 +130,42 @@ class DatabaseSQLite : public Database
 ///
 /// This allows the result to be used in the upper layers in a database
 /// independant way.
-struct DatabaseResultWorkerSqlite : public DatabaseResult::DatabaseResultWorker
-{
+struct DatabaseResultWorkerSqlite : public DatabaseResult::DatabaseResultWorker {
 
-    std::unique_ptr<sqlite3pp::query> m_res;
+	std::unique_ptr<sqlite3pp::query> m_res;
 
-    explicit DatabaseResultWorkerSqlite(std::unique_ptr<sqlite3pp::query>&& r) : m_res(std::move(r))
-    {}
+	explicit DatabaseResultWorkerSqlite(std::unique_ptr<sqlite3pp::query>&& r) : m_res(std::move(r)) {}
 
-    ~DatabaseResultWorkerSqlite() override = default;
+	~DatabaseResultWorkerSqlite() override = default;
 
-    struct const_iterator_worker_sqlite : public DatabaseResult::const_iterator_worker
-    {
-        const DatabaseResultWorkerSqlite& m_dr;
-        sqlite3pp::query::query_iterator m_iterator;
+	struct const_iterator_worker_sqlite : public DatabaseResult::const_iterator_worker {
+		const DatabaseResultWorkerSqlite& m_dr;
+		sqlite3pp::query::query_iterator m_iterator;
 
-        const_iterator_worker_sqlite(const DatabaseResultWorkerSqlite& dr, sqlite3pp::query::query_iterator iterator)
-            : m_dr(dr),
-              m_iterator(iterator)
-        {
-        }
+		const_iterator_worker_sqlite(const DatabaseResultWorkerSqlite& dr, sqlite3pp::query::query_iterator iterator)
+				: m_dr(dr),
+				  m_iterator(iterator) {
+		}
 
-        const char* column(int column) const override;
+		const char* column(int column) const override;
 
-        const char* column(const char* column) const override;
+		const char* column(const char* column) const override;
 
-        const_iterator_worker& operator++() override;
+		const_iterator_worker& operator++() override;
 
-        bool operator==(const const_iterator_worker& other) const noexcept override;
-    };
+		bool operator==(const const_iterator_worker& other) const noexcept override;
+	};
 
 
-    int size() const override;
+	int size() const override;
 
-    int columns() const override;
+	int columns() const override;
 
-    bool error() const override;
+	bool error() const override;
 
-    DatabaseResult::const_iterator begin() const override;
+	DatabaseResult::const_iterator begin() const override;
 
-    DatabaseResult::const_iterator end() const override;
+	DatabaseResult::const_iterator end() const override;
 
 };
 

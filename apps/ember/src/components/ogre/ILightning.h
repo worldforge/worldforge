@@ -19,24 +19,23 @@
 #ifndef EMBEROGREILIGHTNING_H_
 #define EMBEROGREILIGHTNING_H_
 
-namespace WFMath
-{
-	template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
 }
 
 namespace Ogre {
-	class ColourValue;
+class ColourValue;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * @brief Provider of main light (like a sun or moon) lightning information.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-struct ILightning
-{
+struct ILightning {
 	virtual ~ILightning() = default;
 
 	/**
@@ -54,6 +53,6 @@ struct ILightning
 };
 }
 
-}
+
 
 #endif /* EMBEROGREILIGHTNING_H_ */

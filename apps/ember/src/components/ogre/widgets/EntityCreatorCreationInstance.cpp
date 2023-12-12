@@ -20,7 +20,6 @@
 
 #include "EntityCreatorMovement.h"
 #include "EntityCreatorMovementBridge.h"
-#include "AtlasHelper.h"
 
 #include "components/ogre/Avatar.h"
 #include "domain/EmberEntity.h"
@@ -48,9 +47,8 @@
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 EntityCreatorCreationInstance::EntityCreatorCreationInstance(World& world,
 															 Eris::TypeService& typeService,
@@ -61,7 +59,7 @@ EntityCreatorCreationInstance::EntityCreatorCreationInstance(World& world,
 		mEntityNode(nullptr),
 		mAxisMarker(nullptr) {
 
-	for (auto& entityMap : entityMaps) {
+	for (auto& entityMap: entityMaps) {
 		mEntityPreviews.emplace_back(EntityPreview{std::move(entityMap)});
 	}
 
@@ -112,7 +110,7 @@ void EntityCreatorCreationInstance::createEntity() {
 
 	EmberEntity& avatar = mWorld.getAvatar()->getEmberEntity();
 
-	for (auto& entry : mEntityPreviews) {
+	for (auto& entry: mEntityPreviews) {
 
 		auto& entityMap = entry.entityMap;
 		// Creating entity data
@@ -147,7 +145,9 @@ void EntityCreatorCreationInstance::createEntity() {
 			showModelPart(entry, partName);
 		});
 
-		std::unique_ptr<EntityMapping::EntityMapping> modelMapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(*entry.mEntity, actionCreator, mWorld.getView().getTypeService(), &mWorld.getView());
+		std::unique_ptr<EntityMapping::EntityMapping> modelMapping = Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(*entry.mEntity, actionCreator,
+																																				   mWorld.getView().getTypeService(),
+																																				   &mWorld.getView());
 		if (modelMapping) {
 			modelMapping->initialize();
 		}
@@ -240,5 +240,5 @@ EntityCreatorMovement* EntityCreatorCreationInstance::getMovement() {
 }
 
 }
-}
-}
+
+

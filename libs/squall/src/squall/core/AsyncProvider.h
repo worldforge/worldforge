@@ -25,8 +25,10 @@ namespace Squall {
 class AsyncProvider : public Provider {
 public:
 	AsyncProvider(std::unique_ptr<Provider> provider);
-	 std::future<ProviderResult> fetch(Signature signature,
-											  std::filesystem::path destination) override;
+
+	std::future<ProviderResult> fetch(Signature signature,
+									  std::filesystem::path destination) override;
+
 private:
 	std::unique_ptr<Provider> mProvider;
 };

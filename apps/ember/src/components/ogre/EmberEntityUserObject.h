@@ -27,20 +27,16 @@
 #include <OgreVector.h>
 #include <memory>
 
-namespace Ogre
-{
+namespace Ogre {
 class Entity;
 }
 
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
-namespace Model
-{
+namespace Model {
 class Model;
 }
 
@@ -51,8 +47,7 @@ class Model;
  * Instances of this class can be attached to movable objects in the ogre system. They will allow for the Ember system to be accessed directly from Ogre, without having to do lookups.
  * This is generally mostly used for mouse picking and collision handling.
  */
-struct EmberEntityUserObject
-{
+struct EmberEntityUserObject {
 	typedef std::shared_ptr<EmberEntityUserObject> SharedPtr;
 	/**
 	 * @brief The entity to which this user object belongs.

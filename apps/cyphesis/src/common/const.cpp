@@ -21,12 +21,12 @@
 
 namespace consts {
 
-  // Id of root world entity
-  const char * rootWorldId = "0";
-  // Integer id of root world entity
-  const long rootWorldIntId = 0L;
-  // Version of the software we are running
-  const char * version = VERSION;
-  // Bump this whenever there's a client breaking change to the protocol. Use the current date (ISO format).
-  const long protocol_version = 20210722;
+// Id of root world entity
+const char* rootWorldId = "0";
+// Integer id of root world entity
+const long rootWorldIntId = 0L;
+// Version of the software we are running
+const char* version = VERSION;
+// Bump this whenever there's a client breaking change to the protocol. Use the current date (ISO format).
+const long protocol_version = 20210722;
 }

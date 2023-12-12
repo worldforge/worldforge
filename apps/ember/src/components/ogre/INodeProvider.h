@@ -22,8 +22,8 @@
 #include "domain/IVisualizable.h"
 #include "components/ogre/OgreIncludes.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Model {
 class Model;
 }
@@ -87,6 +87,6 @@ struct INodeProvider : public IVisualizable {
 };
 }
 
-}
+
 
 #endif /* INODEPROVIDER_H_ */

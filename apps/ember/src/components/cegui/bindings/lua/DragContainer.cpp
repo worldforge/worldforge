@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<DragContainer>(sol::table& space) {
 	auto dragContainer = space.new_usertype<DragContainer>("DragContainer",
 														   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

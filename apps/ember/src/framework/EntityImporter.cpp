@@ -85,7 +85,7 @@ Atlas::Objects::Root EntityImporter::loadFromFile(const std::string& filename) {
 
 std::vector<EntityImporter::ShortInfo> EntityImporter::getInfoFromDirectory(const boost::filesystem::path& directoryPath) {
 	std::vector<ShortInfo> infos;
-	for (auto& dir_entry : boost::filesystem::directory_iterator(directoryPath)) {
+	for (auto& dir_entry: boost::filesystem::directory_iterator(directoryPath)) {
 		auto& file_path = dir_entry.path();
 		try {
 			ShortInfo info;

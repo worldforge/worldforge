@@ -20,20 +20,17 @@
 #include "ServerServiceSignals.h"
 #include <Atlas/Objects/Root.h>
 
-namespace Ember
-{
+namespace Ember {
 ServerServiceConnectionListener::ServerServiceConnectionListener(ServerServiceSignals& signals) :
-	mSignals(signals)
-{
+		mSignals(signals) {
 }
 
-void ServerServiceConnectionListener::sendingObject(const Atlas::Objects::Root& obj)
-{
+void ServerServiceConnectionListener::sendingObject(const Atlas::Objects::Root& obj) {
 	mSignals.EventSendingObject.emit(obj);
 
 }
-void ServerServiceConnectionListener::receivedObject(const Atlas::Objects::Root& obj)
-{
+
+void ServerServiceConnectionListener::receivedObject(const Atlas::Objects::Root& obj) {
 	mSignals.EventReceivedObject.emit(obj);
 
 }

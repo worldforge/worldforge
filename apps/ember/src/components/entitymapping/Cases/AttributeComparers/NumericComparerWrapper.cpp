@@ -23,14 +23,14 @@
 #include "NumericComparerWrapper.h"
 #include "NumericComparer.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericComparerWrapper::NumericComparerWrapper(std::unique_ptr<NumericComparer> comparer)
 		: mNumericComparer(std::move(comparer)) {
@@ -46,8 +46,8 @@ bool NumericComparerWrapper::testAttribute(const Atlas::Message::Element& attrib
 
 }
 
-}
 
-}
 
-}
+
+
+

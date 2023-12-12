@@ -6,7 +6,10 @@
 
 namespace Mercator {
 
-template class Buffer<float>;
-template class Buffer<unsigned char>;
+template
+class Buffer<float>;
+
+template
+class Buffer<unsigned char>;
 
 } // namespace Mercator

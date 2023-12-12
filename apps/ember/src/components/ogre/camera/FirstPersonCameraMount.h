@@ -21,20 +21,16 @@
 
 #include "CameraMountBase.h"
 #include <OgreMath.h>
-namespace Ember
-{
-namespace OgreView
-{
-namespace Camera
-{
+
+
+namespace Ember::OgreView::Camera {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  *
  * @brief A first person camera mount, where the mount is directly attached to something.
  */
-class FirstPersonCameraMount : public CameraMountBase
-{
+class FirstPersonCameraMount : public CameraMountBase {
 public:
 
 	/**
@@ -105,8 +101,6 @@ private:
 };
 
 }
-}
 
-}
 
 #endif /* FIRSTPERSONCAMERAMOUNT_H_ */

@@ -11,10 +11,10 @@
 // This is used to store astronomical information about the world
 
 class World : public Planet {
-  private:
-    double m_rotation_eccentricity;
-  public:
-    World(double p, double r, double e=0, double a=0) : Planet(p, r, e, a) { }
+private:
+	double m_rotation_eccentricity;
+public:
+	World(double p, double r, double e = 0, double a = 0) : Planet(p, r, e, a) {}
 };
 
 #endif // ASTRONOMY_WORLD_H

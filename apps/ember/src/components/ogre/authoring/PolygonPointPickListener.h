@@ -26,16 +26,15 @@
 #include "../IWorldPickListener.h"
 #include <sigc++/signal.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 class PolygonPointUserObject;
+
 class Polygon;
+
 class PolygonPoint;
 
 /**
@@ -44,8 +43,7 @@ class PolygonPoint;
  This listener class will take care of recognizing mouse clicking and initializing movements of the point.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class PolygonPointPickListener: public IWorldPickListener
-{
+class PolygonPointPickListener : public IWorldPickListener {
 public:
 	/**
 	 * @brief Ctor.
@@ -82,8 +80,8 @@ private:
 
 }
 
-}
 
-}
+
+
 
 #endif

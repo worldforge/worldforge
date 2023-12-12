@@ -25,14 +25,11 @@
 #include <string>
 #include <memory>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 class BulletWorld;
-namespace Terrain
-{
+namespace Terrain {
 struct ITerrainAdapter;
 }
 struct ISceneRenderingTechnique;
@@ -42,8 +39,7 @@ struct IPageDataProvider;
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Represents the main scene of the world, where entities are placed.
  */
-class Scene
-{
+class Scene {
 public:
 
 	/**

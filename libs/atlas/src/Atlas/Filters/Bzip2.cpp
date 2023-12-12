@@ -13,7 +13,9 @@
 #include <Atlas/Filters/Bzip2.h>
 
 #ifndef ASSERT
+
 #include <cassert>
+
 #define ASSERT(exp) assert(exp)
 #endif
 
@@ -22,81 +24,75 @@ using Atlas::Filters::Bzip2;
 const int BS100K = 6;
 const int WORKFACTOR = 30;
 
-void Bzip2::begin()
-{
-    incoming.next_in = nullptr;
-    incoming.avail_in = 0;
-    incoming.bzalloc = nullptr;
-    incoming.bzfree = nullptr;
-    incoming.opaque = nullptr;
-  
-    outgoing.bzalloc = nullptr;
-    outgoing.bzfree = nullptr;
-    outgoing.opaque = nullptr;
-  
-    BZ2_bzCompressInit(&outgoing, BS100K, 0, WORKFACTOR);
-    BZ2_bzDecompressInit(&incoming, 0, 0);
+void Bzip2::begin() {
+	incoming.next_in = nullptr;
+	incoming.avail_in = 0;
+	incoming.bzalloc = nullptr;
+	incoming.bzfree = nullptr;
+	incoming.opaque = nullptr;
+
+	outgoing.bzalloc = nullptr;
+	outgoing.bzfree = nullptr;
+	outgoing.opaque = nullptr;
+
+	BZ2_bzCompressInit(&outgoing, BS100K, 0, WORKFACTOR);
+	BZ2_bzDecompressInit(&incoming, 0, 0);
 }
-  
-void Bzip2::end()
-{
-    BZ2_bzCompressEnd(&outgoing);
-    BZ2_bzDecompressEnd(&incoming);
+
+void Bzip2::end() {
+	BZ2_bzCompressEnd(&outgoing);
+	BZ2_bzDecompressEnd(&incoming);
 }
-    
-std::string Bzip2::encode(const std::string& data)
-{
-    std::string out_string;
-    int status;
-    
-    buf[0] = 0;
 
-    outgoing.next_in = const_cast<char*>(data.data());
-    outgoing.avail_in = (unsigned int)data.size();
+std::string Bzip2::encode(const std::string& data) {
+	std::string out_string;
+	int status;
 
-    do 
-    {       
-        outgoing.next_out = buf;
-        outgoing.avail_out = sizeof(buf);
-  
-        status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
-  
-        ASSERT(status != BZ_SEQUENCE_ERROR);
+	buf[0] = 0;
 
-        if (status != BZ_SEQUENCE_ERROR) {
-            out_string.append((char*)buf, sizeof(buf) - outgoing.avail_out);
-        }
-        // FIXME do something else in case of error?
-    } while (outgoing.avail_out == 0);
-    
-    return out_string;
+	outgoing.next_in = const_cast<char*>(data.data());
+	outgoing.avail_in = (unsigned int) data.size();
+
+	do {
+		outgoing.next_out = buf;
+		outgoing.avail_out = sizeof(buf);
+
+		status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
+
+		ASSERT(status != BZ_SEQUENCE_ERROR);
+
+		if (status != BZ_SEQUENCE_ERROR) {
+			out_string.append((char*) buf, sizeof(buf) - outgoing.avail_out);
+		}
+		// FIXME do something else in case of error?
+	} while (outgoing.avail_out == 0);
+
+	return out_string;
 }
-    
-std::string Bzip2::decode(const std::string& data)
-{
-    std::string out_string;
 
-    buf[0] = 0;
+std::string Bzip2::decode(const std::string& data) {
+	std::string out_string;
 
-    incoming.next_in = const_cast<char*>(data.data());
-    incoming.avail_in = (unsigned int)data.size();
+	buf[0] = 0;
 
-    do
-    {
-        incoming.next_out = buf;
-        incoming.avail_out = sizeof(buf);
+	incoming.next_in = const_cast<char*>(data.data());
+	incoming.avail_in = (unsigned int) data.size();
 
-        int status = BZ2_bzDecompress(&incoming);
+	do {
+		incoming.next_out = buf;
+		incoming.avail_out = sizeof(buf);
 
-        ASSERT(status == BZ_OK);
+		int status = BZ2_bzDecompress(&incoming);
 
-        if (status != BZ_SEQUENCE_ERROR) {
-            out_string.append((char*)buf, sizeof(buf) - incoming.avail_out);
-        }
+		ASSERT(status == BZ_OK);
 
-    } while(incoming.avail_out == 0);
+		if (status != BZ_SEQUENCE_ERROR) {
+			out_string.append((char*) buf, sizeof(buf) - incoming.avail_out);
+		}
 
-    return out_string;
+	} while (incoming.avail_out == 0);
+
+	return out_string;
 }
 
 #endif // HAVE_BZLIB_H && HAVE_LIBBZ2

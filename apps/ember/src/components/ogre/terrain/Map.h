@@ -34,10 +34,8 @@
 
 #include <sigc++/signal.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class Map;
 
@@ -343,8 +341,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

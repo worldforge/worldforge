@@ -33,10 +33,10 @@
 #include "LensFlare.h"
 #include <OgreFrameListener.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 /**
 @author Erik Ogenvik
@@ -108,8 +108,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

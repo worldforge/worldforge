@@ -19,7 +19,6 @@
 #include "WorldAttachment.h"
 
 #include "domain/EmberEntity.h"
-#include "components/ogre/NodeAttachment.h"
 #include "components/ogre/SceneNodeProvider.h"
 #include "components/ogre/model/ModelRepresentation.h"
 #include "components/ogre/model/ModelAttachment.h"
@@ -34,8 +33,8 @@
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 WorldAttachment::WorldAttachment(World& world, EmberEntity& worldEntity, Ogre::SceneNode* worldNode, Scene& scene) :
 		mWorld(world),
@@ -99,7 +98,7 @@ void WorldAttachment::attachEntity(EmberEntity& entity) {
 	}
 }
 
-void WorldAttachment::detachEntity(EmberEntity& entity)   {
+void WorldAttachment::detachEntity(EmberEntity& entity) {
 	mMappings.erase(&entity);
 }
 
@@ -131,5 +130,5 @@ bool WorldAttachment::getVisualize(const std::string& visualization) const {
 }
 
 }
-}
+
 

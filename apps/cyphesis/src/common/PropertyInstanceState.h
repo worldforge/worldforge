@@ -36,66 +36,66 @@ class LocatedEntity;
  * on the entity addState should be called, and when it's removed removeState must be called.
  * Failing to call removeState properly will lead to an assert error on shutdown.
  */
-template <typename T>
+template<typename T>
 class PropertyInstanceState {
-    private:
-        std::unordered_map<const LocatedEntity*, std::unique_ptr<T>> mStates;
+private:
+	std::unordered_map<const LocatedEntity*, std::unique_ptr<T>> mStates;
 
-    public:
+public:
 
-        ~PropertyInstanceState() {
-            //When an instance of this is destroyed, all entities should already have deregistered themselves from it.
-            if (!mStates.empty()) {
-                spdlog::warn("Property instance state wasn't empty as is should be at shutdown.");
-            }
-            //assert(mStates.empty());
-        }
+	~PropertyInstanceState() {
+		//When an instance of this is destroyed, all entities should already have deregistered themselves from it.
+		if (!mStates.empty()) {
+			spdlog::warn("Property instance state wasn't empty as is should be at shutdown.");
+		}
+		//assert(mStates.empty());
+	}
 
-        /**
-         * Adds a new state for the specified entity.
-         * @param entity An entity.
-         * @param state A new state instance.
-         */
-        void addState(const LocatedEntity& entity, std::unique_ptr<T> state) {
-            mStates.emplace(&entity, std::move(state));
-        }
+	/**
+	 * Adds a new state for the specified entity.
+	 * @param entity An entity.
+	 * @param state A new state instance.
+	 */
+	void addState(const LocatedEntity& entity, std::unique_ptr<T> state) {
+		mStates.emplace(&entity, std::move(state));
+	}
 
-        /**
-         * Gets the state for the supplied entity.
-         * @param entity An entity.
-         * @return The registered state, or null.
-         */
-        T* getState(const LocatedEntity& entity) const {
-            auto I = mStates.find(&entity);
-            if (I != mStates.end()) {
-                return I->second.get();
-            }
-            return nullptr;
-        }
+	/**
+	 * Gets the state for the supplied entity.
+	 * @param entity An entity.
+	 * @return The registered state, or null.
+	 */
+	T* getState(const LocatedEntity& entity) const {
+		auto I = mStates.find(&entity);
+		if (I != mStates.end()) {
+			return I->second.get();
+		}
+		return nullptr;
+	}
 
-        /**
-         * Removes the state for the supplied entity.
-         *
-         * Calling this will delete the state instance.
-         * @param entity An entity.
-         */
-        void removeState(const LocatedEntity& entity) {
-            auto I = mStates.find(&entity);
-            if (I != mStates.end()) {
-                mStates.erase(I);
-            }
-        }
+	/**
+	 * Removes the state for the supplied entity.
+	 *
+	 * Calling this will delete the state instance.
+	 * @param entity An entity.
+	 */
+	void removeState(const LocatedEntity& entity) {
+		auto I = mStates.find(&entity);
+		if (I != mStates.end()) {
+			mStates.erase(I);
+		}
+	}
 
-        /**
-         * Replaces the existing state registered for the entity with a new state.
-         *
-         * The existing state instance will be deleted.
-         * @param entity An entity.
-         * @param state A new state.
-         */
-        void replaceState(const LocatedEntity& entity, std::unique_ptr<T> state) {
-            mStates[&entity] = std::move(state);
-        }
+	/**
+	 * Replaces the existing state registered for the entity with a new state.
+	 *
+	 * The existing state instance will be deleted.
+	 * @param entity An entity.
+	 * @param state A new state.
+	 */
+	void replaceState(const LocatedEntity& entity, std::unique_ptr<T> state) {
+		mStates[&entity] = std::move(state);
+	}
 };
 
 

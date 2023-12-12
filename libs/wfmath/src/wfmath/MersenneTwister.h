@@ -30,81 +30,81 @@ namespace WFMath {
 
 class MTRand {
 public:
-  typedef uint32_t uint32;
+	typedef uint32_t uint32;
 
-  static const uint32 state_size = 624;
+	static const uint32 state_size = 624;
 
 public:
-  MTRand();
-  explicit MTRand(uint32 oneSeed);
-  explicit MTRand(uint32 bigSeed[], uint32 seedLength = state_size);
+	MTRand();
 
-  // real-valued random numbers on [0, 1] or [0, n]
-  template<typename FloatT>
-    FloatT rand();
-  double rand();
-  double rand(const double& n);
+	explicit MTRand(uint32 oneSeed);
 
-  // integer-valued random numbers on [0, 2^32-1] or [0, n]
-  uint32 randInt();
-  uint32 randInt(uint32 n);
+	explicit MTRand(uint32 bigSeed[], uint32 seedLength = state_size);
 
-  void seed();
-  void seed(uint32 oneSeed);
-  void seed(const uint32 init_vector[], uint32 init_vector_length = state_size);
+	// real-valued random numbers on [0, 1] or [0, n]
+	template<typename FloatT>
+	FloatT rand();
 
-  std::ostream& save(std::ostream&) const;
-  std::istream& load(std::istream&);
+	double rand();
 
-  static MTRand instance;
+	double rand(const double& n);
+
+	// integer-valued random numbers on [0, 2^32-1] or [0, n]
+	uint32 randInt();
+
+	uint32 randInt(uint32 n);
+
+	void seed();
+
+	void seed(uint32 oneSeed);
+
+	void seed(const uint32 init_vector[], uint32 init_vector_length = state_size);
+
+	std::ostream& save(std::ostream&) const;
+
+	std::istream& load(std::istream&);
+
+	static MTRand instance;
 
 private:
-  uint32 state[state_size];
-  uint32 index;
+	uint32 state[state_size];
+	uint32 index;
 };
 
 
 inline MTRand::MTRand(uint32 oneSeed)
-: index(0)
-{ seed(oneSeed); }
+		: index(0) { seed(oneSeed); }
 
 inline MTRand::MTRand(uint32 bigSeed[], uint32 seedLength)
-: index(0)
-{ seed(bigSeed, seedLength); }
+		: index(0) { seed(bigSeed, seedLength); }
 
 inline MTRand::MTRand()
-: index(0)
-{ seed(); }
+		: index(0) { seed(); }
 
 template<>
-inline float MTRand::rand<float>()
-{ return float(randInt()) * (1.0f/4294967295.0f); }
+inline float MTRand::rand<float>() { return float(randInt()) * (1.0f / 4294967295.0f); }
 
 template<>
-inline double MTRand::rand<double>()
-{ return double(randInt()) * (1.0/4294967295.0); }
+inline double MTRand::rand<double>() { return double(randInt()) * (1.0 / 4294967295.0); }
 
-inline double MTRand::rand()
-{ return double(randInt()) * (1.0/4294967295.0); }
+inline double MTRand::rand() { return double(randInt()) * (1.0 / 4294967295.0); }
 
-inline double MTRand::rand( const double& n )
-{ return rand() * n; }
+inline double MTRand::rand(const double& n) { return rand() * n; }
 
 
-inline MTRand::uint32 MTRand::randInt(uint32 n)
-{
-  uint32 used = n;
-  used |= used >> 1u;
-  used |= used >> 2u;
-  used |= used >> 4u;
-  used |= used >> 8u;
-  used |= used >> 16u;
+inline MTRand::uint32 MTRand::randInt(uint32 n) {
+	uint32 used = n;
+	used |= used >> 1u;
+	used |= used >> 2u;
+	used |= used >> 4u;
+	used |= used >> 8u;
+	used |= used >> 16u;
 
-  uint32 i;
-  do
-    i = randInt() & used;
-  while( i > n );
-  return i;
+	uint32 i;
+	do
+		i = randInt() & used;
+	while (i > n);
+	return i;
 }
 
 
@@ -131,6 +131,7 @@ inline void MTRand::load(uint32 *const loadArray)
 #endif
 
 std::ostream& operator<<(std::ostream& os, MTRand const& mtrand);
+
 std::istream& operator>>(std::istream& is, MTRand& mtrand);
 
 } // namespace

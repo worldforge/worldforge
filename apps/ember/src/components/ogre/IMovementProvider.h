@@ -19,23 +19,20 @@
 #ifndef IMOVEMENTPROVIDER_H_
 #define IMOVEMENTPROVIDER_H_
 
-namespace WFMath
-{
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Provides movement updates for a frame.
  * A typical user of this interface would be a camera which needs to get movement updates each frame.
  */
-struct IMovementProvider
-{
+struct IMovementProvider {
 	/**
 	 * @brief Dtor.
 	 */
@@ -50,6 +47,6 @@ struct IMovementProvider
 
 }
 
-}
+
 
 #endif /* IMOVEMENTPROVIDER_H_ */

@@ -24,10 +24,8 @@
 #include <memory>
 #include <mutex>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 template<typename>
 class Buffer;
@@ -103,8 +101,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* HEIGHTMAPBUFFERPROVIDER_H_ */

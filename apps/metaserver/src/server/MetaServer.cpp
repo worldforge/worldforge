@@ -43,49 +43,49 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <fmt/ostream.h>
 
-template <> struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {};
-
+template<>
+struct fmt::formatter<boost::posix_time::ptime> : ostream_formatter {
+};
 
 
 MetaServer::MetaServer()
-	: m_handshakeExpirySeconds(30),
-	  m_expiryTimer(0),
-	  m_updateTimer(0),
-	  m_scoreTimer(0),
-	  m_expiryDelayMilliseconds(3000),
-	  m_updateDelayMilliseconds(5000),
-	  m_scoreDelayMilliseconds(60000),
-	  m_sessionExpirySeconds(3600),
-	  m_clientExpirySeconds(300),
-	  m_packetLoggingFlushSeconds(10),
-	  m_loggingFlushSeconds(10),
-	  m_maxServerSessions(1024),
-	  m_maxClientSessions(4096),
-	  m_startTime(boost::posix_time::microsec_clock::local_time()),
-	  m_keepServerStats(false),
-	  m_keepClientStats(false),
-	  m_logServerSessions(false),
-	  m_logClientSessions(false),
-	  m_logPackets(false),
-	  m_isDaemon(false),
-	  m_PacketSequence(0),
-	  m_PacketLogger(0),
-	  m_Logfile(""),
-	  m_PacketLogfile(""),
-	  m_isShutdown(false),
-	  m_logPacketAllow(false),
-	  m_logPacketDeny(false),
-	  m_serverClientCacheExpirySeconds(60)
-{
+		: m_handshakeExpirySeconds(30),
+		  m_expiryTimer(0),
+		  m_updateTimer(0),
+		  m_scoreTimer(0),
+		  m_expiryDelayMilliseconds(3000),
+		  m_updateDelayMilliseconds(5000),
+		  m_scoreDelayMilliseconds(60000),
+		  m_sessionExpirySeconds(3600),
+		  m_clientExpirySeconds(300),
+		  m_packetLoggingFlushSeconds(10),
+		  m_loggingFlushSeconds(10),
+		  m_maxServerSessions(1024),
+		  m_maxClientSessions(4096),
+		  m_startTime(boost::posix_time::microsec_clock::local_time()),
+		  m_keepServerStats(false),
+		  m_keepClientStats(false),
+		  m_logServerSessions(false),
+		  m_logClientSessions(false),
+		  m_logPackets(false),
+		  m_isDaemon(false),
+		  m_PacketSequence(0),
+		  m_PacketLogger(0),
+		  m_Logfile(""),
+		  m_PacketLogfile(""),
+		  m_isShutdown(false),
+		  m_logPacketAllow(false),
+		  m_logPacketDeny(false),
+		  m_serverClientCacheExpirySeconds(60) {
 
 	/*
 	 * Enumerate the ADMINISTRATIVE command set
 	 * Note: this is intentionally specific to force agreement with the unittest
 	 */
-	m_adminCommandSet = { "NMT_ADMINREQ_ENUMERATE", "NMT_ADMINREQ_ADDSERVER" };
+	m_adminCommandSet = {"NMT_ADMINREQ_ENUMERATE", "NMT_ADMINREQ_ADDSERVER"};
 
 	m_loggingFlushTime = msdo.getNow();
-	srand( (unsigned)time(0));
+	srand((unsigned) time(0));
 
 	/*
 	 * Construct Stats map
@@ -99,46 +99,41 @@ MetaServer::MetaServer()
 
 }
 
-MetaServer::~MetaServer()
-{
+MetaServer::~MetaServer() {
 	spdlog::info("Shutting down metaserver-ng");
 }
 
 void
-MetaServer::expiry_timer(const boost::system::error_code& error)
-{
+MetaServer::expiry_timer(const boost::system::error_code& error) {
 
 	spdlog::trace("Tick expiry_timer");
 
 	boost::posix_time::ptime now = msdo.getNow();
 	boost::posix_time::ptime etime;
-	std::map<std::string,std::string>::iterator attr_iter;
+	std::map<std::string, std::string>::iterator attr_iter;
 
 	/*
 	 * Remove handshakes that are older than threshold
 	 * TODO: returned vector shows removed
 	 */
 	std::vector<unsigned int> expiredHS = msdo.expireHandshakes(m_handshakeExpirySeconds);
-	if ( expiredHS.size() > 0 )
-	{
+	if (expiredHS.size() > 0) {
 		spdlog::trace("Expiry Handshakes: {}", expiredHS.size());
 	}
 
-    /*
-     * Sweep for server sessions ... expire any that are older than m_sessionExpirySeconds
-     */
+	/*
+	 * Sweep for server sessions ... expire any that are older than m_sessionExpirySeconds
+	 */
 	std::vector<std::string> expiredSS = msdo.expireServerSessions(m_sessionExpirySeconds);
-	if ( expiredSS.size() > 0 )
-	{
+	if (expiredSS.size() > 0) {
 		spdlog::trace("Expiry ServerSessions: {}", expiredSS.size());
 	}
 
-    /**
-     *  Remove client sessions that are expired
-     */
+	/**
+	 *  Remove client sessions that are expired
+	 */
 	std::vector<std::string> expiredCS = msdo.expireClientSessions(m_clientExpirySeconds);
-	if ( expiredCS.size() > 0 )
-	{
+	if (expiredCS.size() > 0) {
 		spdlog::trace("Expiry ClientSessions: {}", expiredCS.size());
 	}
 
@@ -146,31 +141,28 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	 * We want to purge any cache items that are missing
 	 */
 	std::vector<std::string> expiredCSC = msdo.expireClientSessionCache(m_serverClientCacheExpirySeconds);
-	if ( expiredCS.size() > 0 )
-	{
+	if (expiredCS.size() > 0) {
 		spdlog::trace("Expiry ClientSession Cache: {}", expiredCS.size());
 	}
 
 	/**
      * Display Server Sessions and Attributes
      */
-	std::map< std::string, std::map<std::string,std::string> > itr_outer;
+	std::map<std::string, std::map<std::string, std::string> > itr_outer;
 	std::map<std::string, std::string>::iterator itr_inner;
-	if ( m_logServerSessions )
-	{
+	if (m_logServerSessions) {
 		/*
 		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
 		 */
-		std::list<std::string> slist = msdo.getServerSessionList(0,msdo.getServerSessionCount());
+		std::list<std::string> slist = msdo.getServerSessionList(0, msdo.getServerSessionCount());
 		spdlog::trace(" Total Server Sessions: {}", slist.size());
-		while ( ! slist.empty() )
-		{
-			std::string key = slist.front(); slist.pop_front();
+		while (!slist.empty()) {
+			std::string key = slist.front();
+			slist.pop_front();
 
-			std::map<std::string,std::string> item = msdo.getServerSession(key);
+			std::map<std::string, std::string> item = msdo.getServerSession(key);
 			spdlog::trace(" Server Session: {}", key);
-			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
-			{
+			for (itr_inner = item.begin(); itr_inner != item.end(); itr_inner++) {
 				spdlog::trace("    {} == {}", itr_inner->first, itr_inner->second);
 			}
 		}
@@ -179,27 +171,23 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	/**
 	 * Display Client Sessions and Attributes
 	 */
-	if ( m_logClientSessions )
-	{
+	if (m_logClientSessions) {
 		/*
 		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
 		 */
 		std::list<std::string> slist = msdo.getClientSessionList();
-		while ( ! slist.empty() )
-		{
-			std::string key = slist.front(); slist.pop_front();
-			std::map<std::string,std::string> item = msdo.getClientSession(key);
+		while (!slist.empty()) {
+			std::string key = slist.front();
+			slist.pop_front();
+			std::map<std::string, std::string> item = msdo.getClientSession(key);
 			spdlog::trace(" Client Session: {}", key);
-			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
-			{
+			for (itr_inner = item.begin(); itr_inner != item.end(); itr_inner++) {
 				spdlog::trace("    {} == {}", itr_inner->first, itr_inner->second);
 			}
 			item = msdo.getClientFilter(key);
-			if ( item.size() > 0 )
-			{
+			if (item.size() > 0) {
 				spdlog::trace("    Filters:");
-				for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
-				{
+				for (itr_inner = item.begin(); itr_inner != item.end(); itr_inner++) {
 					spdlog::trace("        {} == {}", itr_inner->first, itr_inner->second);
 				}
 			}
@@ -211,10 +199,9 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	/*
 	 * Flush the packet logger
 	 */
-	int i=1;
-	if ( m_logPackets )
-	{
-		if ( i > 0 )
+	int i = 1;
+	if (m_logPackets) {
+		if (i > 0)
 			spdlog::trace("     PacketLogger Flushed : {}", i);
 	}
 
@@ -224,23 +211,21 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	etime = m_loggingFlushTime + boost::posix_time::seconds(m_loggingFlushSeconds);
 	spdlog::trace("   logginfFlushTime: {}", m_loggingFlushTime);
 	spdlog::trace("   etime           : {}", etime);
-	if ( etime > now )
-	{
+	if (etime > now) {
 		m_loggingFlushTime = now;
 		spdlog::default_logger()->flush();
 	}
 
 
-    /**
-     * Set the next timer trigger
-     */
-    m_expiryTimer->expires_from_now(boost::posix_time::milliseconds(m_expiryDelayMilliseconds));
-    m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+	/**
+	 * Set the next timer trigger
+	 */
+	m_expiryTimer->expires_from_now(boost::posix_time::milliseconds(m_expiryDelayMilliseconds));
+	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 }
 
 void
-MetaServer::update_timer(const boost::system::error_code& error)
-{
+MetaServer::update_timer(const boost::system::error_code& error) {
 
 	spdlog::trace("Tick update_timer");
 
@@ -282,13 +267,12 @@ MetaServer::update_timer(const boost::system::error_code& error)
 	/*
 	 * Reset Timer
 	 */
-    m_updateTimer->expires_from_now(boost::posix_time::milliseconds(m_updateDelayMilliseconds));
-    m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+	m_updateTimer->expires_from_now(boost::posix_time::milliseconds(m_updateDelayMilliseconds));
+	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 }
 
 void
-MetaServer::score_timer(const boost::system::error_code& error)
-{
+MetaServer::score_timer(const boost::system::error_code& error) {
 //	spdlog::trace("Tick score_timer({})", m_scoreDelayMilliseconds);
 //
 //	if(!error)
@@ -482,8 +466,7 @@ MetaServer::score_timer(const boost::system::error_code& error)
  * @param rsp outgoing metaserver packet to be filled
  */
 void
-MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp)
-{
+MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp) {
 
 	/*
 	 * Packet Sequence: store this so that we can replay the packets in the
@@ -493,51 +476,51 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	 *              it will be possible to replay the packets in the correct order, at
 	 *              exactly the same rate, relative to the start of the first packet
 	 */
-	if ( m_PacketSequence == 0 )
+	if (m_PacketSequence == 0)
 		m_startTime = boost::posix_time::microsec_clock::local_time();
 
 	++m_PacketSequence;
 	msp.setSequence(m_PacketSequence);
-	msp.setTimeOffset( getDeltaMillis() );
+	msp.setTimeOffset(getDeltaMillis());
 
-	switch(msp.getPacketType())
-	{
-	case NMT_SERVERKEEPALIVE:
-		processSERVERKEEPALIVE(msp,rsp);
-		break;
-	case NMT_SERVERSHAKE:
-		processSERVERSHAKE(msp,rsp);
-		break;
-	case NMT_TERMINATE:
-		processTERMINATE(msp,rsp);
-		break;
-	case NMT_CLIENTKEEPALIVE:
-		processCLIENTKEEPALIVE(msp,rsp);
-		break;
-	case NMT_CLIENTSHAKE:
-		processCLIENTSHAKE(msp,rsp);
-		break;
-	case NMT_LISTREQ:
-		processLISTREQ(msp,rsp);
-		break;
-	case NMT_SERVERATTR:
-		processSERVERATTR(msp,rsp);
-		break;
-	case NMT_CLIENTATTR:
-		processCLIENTATTR(msp,rsp);
-		break;
-	case NMT_CLIENTFILTER:
-		processCLIENTFILTER(msp,rsp);
-		break;
-	case NMT_DNSREQ:
-		processDNSREQ(msp,rsp);
-		break;
-	case NMT_ADMINREQ:
-		processADMINREQ(msp,rsp);
-	default:
+	switch (msp.getPacketType()) {
+		case NMT_SERVERKEEPALIVE:
+			processSERVERKEEPALIVE(msp, rsp);
+			break;
+		case NMT_SERVERSHAKE:
+			processSERVERSHAKE(msp, rsp);
+			break;
+		case NMT_TERMINATE:
+			processTERMINATE(msp, rsp);
+			break;
+		case NMT_CLIENTKEEPALIVE:
+			processCLIENTKEEPALIVE(msp, rsp);
+			break;
+		case NMT_CLIENTSHAKE:
+			processCLIENTSHAKE(msp, rsp);
+			break;
+		case NMT_LISTREQ:
+			processLISTREQ(msp, rsp);
+			break;
+		case NMT_SERVERATTR:
+			processSERVERATTR(msp, rsp);
+			break;
+		case NMT_CLIENTATTR:
+			processCLIENTATTR(msp, rsp);
+			break;
+		case NMT_CLIENTFILTER:
+			processCLIENTFILTER(msp, rsp);
+			break;
+		case NMT_DNSREQ:
+			processDNSREQ(msp, rsp);
+			break;
+		case NMT_ADMINREQ:
+			processADMINREQ(msp, rsp);
+			break;
+		default:
 //		--m_PacketSequence;
-		spdlog::trace("Packet Type [] not supported.", msp.getPacketType());
-		break;
+			spdlog::trace("Packet Type [] not supported.", msp.getPacketType());
+			break;
 	}
 
 	/*
@@ -545,14 +528,13 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	 */
 	++m_PacketSequence;
 	rsp.setSequence(m_PacketSequence);
-	rsp.setTimeOffset( getDeltaMillis() );
+	rsp.setTimeOffset(getDeltaMillis());
 	rsp.setOutBound(true);
 
 	/*
 	 * Packet Logging
 	 */
-	if ( m_logPackets )
-	{
+	if (m_logPackets) {
 		// log some packets
 	}
 
@@ -567,17 +549,15 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
  * 	- pack random number
  */
 void
-MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out) {
 
 	uint32_t i = msdo.addHandshake();
 
-	if ( i > 0 )
-	{
+	if (i > 0) {
 		spdlog::trace("processSERVERKEEPALIVE(): {}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
-		out.setAddress( in.getAddress() , in.getAddressInt());
+		out.setAddress(in.getAddress(), in.getAddressInt());
 	}
 }
 
@@ -588,8 +568,7 @@ MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket&
  * @param out
  */
 void
-MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out) {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
 	uint32_t packed_ip = 0;
@@ -604,20 +583,18 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 	 * 1) register a server session
 	 * 2) de-register the handshake ( maybe we just let it expire ? )
 	 */
-	if( msdo.handshakeExists(shake) )
-	{
+	if (msdo.handshakeExists(shake)) {
 		/*
 		 * Grab the in packet default values
 		 */
-		std::stringstream ss,ss2,ss3;
+		std::stringstream ss, ss2, ss3;
 		ss << in.getPort();
 		ss2 << in.getAddressInt();
 
 		/*
 		 * If it's larger than 8 bytes, it's got an IP
 		 */
-		if ( in.getSize() > 8 )
-		{
+		if (in.getSize() > 8) {
 			packed_ip = in.getIntData(8);
 			ip = IpNetToAscii(packed_ip);
 
@@ -628,8 +605,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		/*
 		 * If it's larger than 12 bytes, it also includes port
 		 */
-		if ( in.getSize() > 12 )
-		{
+		if (in.getSize() > 12) {
 			ss.str("");
 			ss << in.getIntData(12);
 		}
@@ -644,7 +620,7 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		boost::posix_time::ptime t2 = msdo.getNow();
 		spdlog::trace("{}-handShakeExpiry(now): {}", ip, t2);
 
-		unsigned int latency = msdo.getLatency(t1,t2);
+		unsigned int latency = msdo.getLatency(t1, t2);
 		spdlog::trace("  {}-latency : {}", ip, latency);
 
 		ss3 << latency;
@@ -653,48 +629,41 @@ MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out
 		 * Put it into state
 		 */
 		msdo.addServerSession(ip);
-		msdo.addServerAttribute(ip,"port", ss.str() );
-		msdo.addServerAttribute(ip,"ip_int", ss2.str() );
-		msdo.addServerAttribute(ip,"latency",ss3.str() );
+		msdo.addServerAttribute(ip, "port", ss.str());
+		msdo.addServerAttribute(ip, "ip_int", ss2.str());
+		msdo.addServerAttribute(ip, "latency", ss3.str());
 
 	}
 
 }
 
 void
-MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out) {
 
 	/**
 	 *  For backwards compat, we make a regular "TERM" packet end a server session
 	 *  and a TERM packet with any additional data sent signifies a client session.
 	 */
-	if ( in.getSize() > (sizeof(uint32_t)) )
-	{
+	if (in.getSize() > (sizeof(uint32_t))) {
 		/*
 		 * Grab the "extra" bit.
 		 * Use Case 1: 0 value padding indicates client terminate
 		 * Use Case 2: non-zero value padding is an IP by proxy
 		 */
 		uint32_t key = in.getIntData(4);
-		if ( key == 0 )
-		{
+		if (key == 0) {
 			spdlog::trace("processTERMINATE-client(): {}", in.getAddressStr());
 			/*
 			 * Normally want to terminate sessions and may turn this back
 			 * on, but generally speaking we want client sessions to expire out
 			 */
 //			msdo.removeClientSession(in.getAddressStr());
-		}
-		else
-		{
+		} else {
 			std::string skey = IpNetToAscii(key);
 			spdlog::trace("processTERMINATE-server({})({})", key, skey);
 			msdo.removeServerSession(skey);
 		}
-	}
-	else
-	{
+	} else {
 		spdlog::trace("processTERMINATE-server(): {}", in.getAddressStr());
 		msdo.removeServerSession(in.getAddressStr());
 	}
@@ -702,35 +671,31 @@ MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out) {
 
 	uint32_t i = msdo.addHandshake();
 
-	if ( i > 0 )
-	{
+	if (i > 0) {
 		spdlog::trace("processCLIENTKEEPALIVE(){}", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
-		out.setAddress( in.getAddress(), in.getAddressInt() );
+		out.setAddress(in.getAddress(), in.getAddressInt());
 	}
 
 }
 
 void
-MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out) {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
 	spdlog::trace("processCLIENTSHAKE(){}", shake);
 
-	if( msdo.handshakeExists(shake) )
-	{
+	if (msdo.handshakeExists(shake)) {
 		std::stringstream ss;
 		ss << in.getPort();
 
 		msdo.addClientSession(ip);
-		msdo.addClientAttribute(ip,"port", ss.str() );
+		msdo.addClientAttribute(ip, "port", ss.str());
 	}
 
 }
@@ -751,8 +716,7 @@ MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out
  *
  */
 void
-MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processLISTREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 	uint32_t server_index = in.getIntData(4);
 	uint32_t packed = 0;
 	uint32_t temp_int = 0;
@@ -765,8 +729,7 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	/*
 	 * Trigger the creation of a listreq cache creation
 	 */
-	if ( server_index == 0 )
-	{
+	if (server_index == 0) {
 		spdlog::trace("Initial LISTREQ Request, creating lookup cache ({})", ip_str);
 		total = msdo.createServerSessionListresp(ip_str);
 		spdlog::trace("  Total: {}", total);
@@ -776,12 +739,11 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	/*
 	 * If we are unable to pack the entire list into 1 packet
 	 */
-	if ( (total*sizeof(uint32_t) - (server_index*sizeof(uint32_t)) ) > (MAX_UDP_OUT_BYTES-4-4-4) )
-	{
+	if ((total * sizeof(uint32_t) - (server_index * sizeof(uint32_t))) > (MAX_UDP_OUT_BYTES - 4 - 4 - 4)) {
 		/*
 		 * We want it to round ... just like the price is right, the goal is not to go over
 		 */
-		packed_max = (MAX_UDP_OUT_BYTES-4-4-4) / sizeof(uint32_t);
+		packed_max = (MAX_UDP_OUT_BYTES - 4 - 4 - 4) / sizeof(uint32_t);
 	}
 
 
@@ -789,50 +751,47 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	 * We hide the craziness of what goes on here inside the single method.
 	 * The goal, is to get the list of servers constrained by packed_max
 	 */
-	std::list<std::string> sess_list = msdo.getServerSessionList(server_index,packed_max,ip_str);
-    std::list<std::string>::iterator list_itr;
+	std::list<std::string> sess_list = msdo.getServerSessionList(server_index, packed_max, ip_str);
+	std::list<std::string>::iterator list_itr;
 
 	spdlog::trace("server_index:{} ** total: {} ** packed_max: {} ** sess_list: {}", server_index, total, packed_max, sess_list.size());
 
-    for ( list_itr = sess_list.begin(); list_itr != sess_list.end() ; list_itr++ )
-    {
-    	/*
-    	 * Defensive to make sure we're not going to exceed our max
-    	 */
-    	if ( packed >= packed_max )
-    		break;
+	for (list_itr = sess_list.begin(); list_itr != sess_list.end(); list_itr++) {
+		/*
+		 * Defensive to make sure we're not going to exceed our max
+		 */
+		if (packed >= packed_max)
+			break;
 
-    	/*
-    	 * Defensive to make sure that the item in the list is
-    	 * actually a valid data item we can send ( orthogonal processes
-    	 * such as expiry could invalidate at any time ).
-    	 *
-    	 * Thus we can iterate over as much of the server list as we need to
-    	 * and dead items won't count, only those added to the response packet.
-    	 */
-    	if ( msdo.serverSessionExists( *list_itr ))
-    	{
-    		/*
-    		 * Pack the int IP
-    		 */
-    		std::istringstream( msdo.getServerSession(*list_itr)["ip_int"] ) >> temp_int;
+		/*
+		 * Defensive to make sure that the item in the list is
+		 * actually a valid data item we can send ( orthogonal processes
+		 * such as expiry could invalidate at any time ).
+		 *
+		 * Thus we can iterate over as much of the server list as we need to
+		 * and dead items won't count, only those added to the response packet.
+		 */
+		if (msdo.serverSessionExists(*list_itr)) {
+			/*
+			 * Pack the int IP
+			 */
+			std::istringstream(msdo.getServerSession(*list_itr)["ip_int"]) >> temp_int;
 
-    		spdlog::trace("Packing Session Itr[{}] Session Int[{}] Session IP[{}] SS Int[{}]",
-						  *list_itr, msdo.getServerSession(*list_itr)["ip_int"],msdo.getServerSession(*list_itr)["ip"],temp_int);
-    		resp_list.push_back( temp_int );
+			spdlog::trace("Packing Session Itr[{}] Session Int[{}] Session IP[{}] SS Int[{}]",
+						  *list_itr, msdo.getServerSession(*list_itr)["ip_int"], msdo.getServerSession(*list_itr)["ip"], temp_int);
+			resp_list.push_back(temp_int);
 
-    		//resp_list.push_back( atoi( msdo.getServerSession(*list_itr)["ip_int"].c_str() ) );
-    		++packed;
-    	}
+			//resp_list.push_back( atoi( msdo.getServerSession(*list_itr)["ip_int"].c_str() ) );
+			++packed;
+		}
 
-    }
+	}
 
-    if ( packed != resp_list.size() )
-    {
-    	spdlog::warn("Packed: {} vs Response: {}MISMATCH!", packed,resp_list.size());
-    }
+	if (packed != resp_list.size()) {
+		spdlog::warn("Packed: {} vs Response: {}MISMATCH!", packed, resp_list.size());
+	}
 
-	out.setAddress( in.getAddress(), in.getAddressInt() );
+	out.setAddress(in.getAddress(), in.getAddressInt());
 	out.setPacketType(NMT_LISTRESP);
 
 	/**
@@ -840,70 +799,63 @@ MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 	 * NOTE: I think this logic is a bug in the protocol, as the
 	 * 		original MS code looks as if this was just not working correctly.
 	 */
-	if ( resp_list.size() > 0 )
-	{
-		out.addPacketData( msdo.getServerSessionCount() );
-		out.addPacketData( (uint32_t)resp_list.size() );
-		while ( ! resp_list.empty() )
-		{
+	if (resp_list.size() > 0) {
+		out.addPacketData(msdo.getServerSessionCount());
+		out.addPacketData((uint32_t) resp_list.size());
+		while (!resp_list.empty()) {
 			spdlog::trace("processLISTRESP() - Adding : {}", resp_list.front());
 			out.addPacketData(resp_list.front());
 			resp_list.pop_front();
 		}
-	}
-	else
-	{
+	} else {
 		/*
 		 *  For the record, I think this is a stupid protocol construct
 		 */
 		spdlog::trace("processLISTRESP(0,0) - Empty");
-		out.addPacketData( 0 );
-		out.addPacketData( 0 );
+		out.addPacketData(0);
+		out.addPacketData(0);
 	}
 
 }
 
 void
-MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out) {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
-	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length,value_length);
+	std::string name = msg.substr(0, name_length);
+	std::string value = msg.substr(name_length, value_length);
 	std::string ip = in.getAddressStr();
 	spdlog::info("processSERVERATTR() : {},{}", name, value);
-	msdo.addServerAttribute(ip,name,value);
+	msdo.addServerAttribute(ip, name, value);
 
 	out.setPacketType(NMT_NULL);
 }
 
 void
-MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out) {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
-	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length,value_length);
+	std::string name = msg.substr(0, name_length);
+	std::string value = msg.substr(name_length, value_length);
 	std::string ip = in.getAddressStr();
 	spdlog::trace("processCLIENTATTR() : {},{}", name, value);
-	msdo.addClientAttribute(ip,name,value);
+	msdo.addClientAttribute(ip, name, value);
 
 	out.setPacketType(NMT_NULL);
 }
 
 void
-MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out) {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
-	std::string name = msg.substr(0,name_length);
-	std::string value = msg.substr(name_length,value_length);
+	std::string name = msg.substr(0, name_length);
+	std::string value = msg.substr(name_length, value_length);
 	std::string ip = in.getAddressStr();
-	spdlog::trace("processCLIENTFILTER() : {},{}",name, value);
-	msdo.addClientFilter(ip,name,value);
+	spdlog::trace("processCLIENTFILTER() : {},{}", name, value);
+	msdo.addClientFilter(ip, name, value);
 
 	out.setPacketType(NMT_NULL);
 }
@@ -932,15 +884,14 @@ MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& ou
  * 	on any of the metaserver data.  Unauthenticated data modification is Bad(tm).
  */
 void
-MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 	uint32_t dns_type = in.getIntData(4);
 	uint32_t msg_length = in.getIntData(8);
 	std::string msg = in.getPacketMessage(12);
-	std::list<std::string> resp_list,temp_list;
+	std::list<std::string> resp_list, temp_list;
 	std::string outmsg;
 
-	std::string name = msg.substr(0,msg_length);
+	std::string name = msg.substr(0, msg_length);
 
 	spdlog::trace("processDNSREQ-type: {} : {}", dns_type, name);
 	spdlog::trace("processDNSREQ-msg_length : {}", msg_length);
@@ -949,19 +900,19 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 	/**
 	 * Determine packet search type and get results
 	 */
-	switch(dns_type) {
+	switch (dns_type) {
 		case DNS_TYPE_A:
 			/*
 			 * Forward lookup
 			 */
-			resp_list = msdo.searchServerSessionByAttribute( "name", name );
+			resp_list = msdo.searchServerSessionByAttribute("name", name);
 			spdlog::trace("processDNSREQ: DNS_TYPE_A request : {}", resp_list.size());
 			break;
 		case DNS_TYPE_PTR:
 			/*
 			 * Reverse Lookup
 			 */
-			resp_list = msdo.searchServerSessionByAttribute( "ip", name );
+			resp_list = msdo.searchServerSessionByAttribute("ip", name);
 			spdlog::trace("processDNSREQ: DNS_TYPE_PTR request : {}", resp_list.size());
 			break;
 		case DNS_TYPE_ALL:
@@ -970,7 +921,7 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			 */
 			temp_list = msdo.searchServerSessionByAttribute("name", name);
 			resp_list = msdo.searchServerSessionByAttribute("ip", name);
-			spdlog::trace("processDNSREQ: DNS_TYPE_ALL request : {}:{}" , temp_list.size(), resp_list.size());
+			spdlog::trace("processDNSREQ: DNS_TYPE_ALL request : {}:{}", temp_list.size(), resp_list.size());
 			resp_list.merge(temp_list);
 			break;
 
@@ -997,8 +948,7 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 	 *	if large/full listings are expected, we'll need to breakup
 	 *	similar to a LISTRESP
 	 */
-	if ( resp_list.size() > 0 )
-	{
+	if (resp_list.size() > 0) {
 		/*
 		 * pseudo:
 		 * 	    for each resp_list item
@@ -1028,21 +978,18 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 		 */
 		std::list<std::string>::iterator itr;
 		unsigned int rlength = 0;
-		for ( itr = resp_list.begin(); itr!=resp_list.end(); itr++ )
-		{
+		for (itr = resp_list.begin(); itr != resp_list.end(); itr++) {
 			rlength = itr->length();
 			spdlog::trace("Stuffing DNSRESP Packet [{}] {}", rlength, *itr);
 			out.addPacketData(rlength);
-			outmsg+=*itr;
+			outmsg += *itr;
 		}
 
 		spdlog::trace("Stuffing DNSRESP Message [{}]", outmsg);
 
 		out.addPacketData(outmsg);
 
-	}
-	else
-	{
+	} else {
 
 		spdlog::trace("processDNSREQ: packing null packet");
 		/*
@@ -1059,10 +1006,9 @@ MetaServer::processDNSREQ(const MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
-{
+MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out) {
 
-	uint32_t sub_type  = in.getIntData(4);
+	uint32_t sub_type = in.getIntData(4);
 	uint32_t in_addr;
 	unsigned int in_port;
 	std::stringstream ss;
@@ -1077,21 +1023,20 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 
 	out.setPacketType(NMT_ADMINRESP);
 
-	switch(sub_type) {
+	switch (sub_type) {
 		case NMT_ADMINREQ_ENUMERATE:
 			spdlog::trace("NMT_ADMINREQ_ENUMERATE : {}", m_adminCommandSet.size());
 			out.addPacketData(NMT_ADMINRESP_ENUMERATE);
 			out.addPacketData(m_adminCommandSet.size());
-			for(auto& p: m_adminCommandSet)
-			{
+			for (auto& p: m_adminCommandSet) {
 				out.addPacketData(p.length());
 				out_msg.append(p);
 			}
 			out.addPacketData(out_msg);
 			break;
 		case NMT_ADMINREQ_ADDSERVER:
-			in_addr   = in.getIntData(8);
-			in_port   = in.getIntData(12);
+			in_addr = in.getIntData(8);
+			in_port = in.getIntData(12);
 
 			/*
 			 * Convert IP
@@ -1101,10 +1046,10 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 			msdo.addServerSession(out.getAddress());
 
 			ss << in_port;
-			msdo.addServerAttribute(out.getAddress(),"port", ss.str() );
+			msdo.addServerAttribute(out.getAddress(), "port", ss.str());
 			ss.str("");
 			ss << in_addr;
-			msdo.addServerAttribute(out.getAddress(),"ip_int", ss.str() );
+			msdo.addServerAttribute(out.getAddress(), "ip_int", ss.str());
 			out.addPacketData(NMT_ADMINRESP_ADDSERVER);
 			out.addPacketData(in_addr);
 			out.addPacketData(in_port);
@@ -1117,8 +1062,7 @@ MetaServer::processADMINREQ(const MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::registerConfig( boost::program_options::variables_map & vm )
-{
+MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 
 	/*
 	 * All configuration items passed in must be converted to local type
@@ -1126,190 +1070,149 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	 * variable_map during operation as a bad_cast exception could cause
 	 * server failure during the run loop.
 	 */
-	if( vm.count("performance.server_session_expiry_seconds") )
+	if (vm.count("performance.server_session_expiry_seconds"))
 		m_sessionExpirySeconds = vm["performance.server_session_expiry_seconds"].as<int>();
 
-	if( vm.count("performance.client_session_expiry_seconds") )
+	if (vm.count("performance.client_session_expiry_seconds"))
 		m_clientExpirySeconds = vm["performance.client_session_expiry_seconds"].as<int>();
 
-	if ( vm.count("performance.max_client_sessions") )
+	if (vm.count("performance.max_client_sessions"))
 		m_maxClientSessions = vm["performance.max_client_sessions"].as<int>();
 
-	if ( vm.count("performance.max_server_sessions") )
+	if (vm.count("performance.max_server_sessions"))
 		m_maxServerSessions = vm["performance.max_server_sessions"].as<int>();
 
-	if ( vm.count("performance.server_client_cache_expiry_seconds") )
+	if (vm.count("performance.server_client_cache_expiry_seconds"))
 		m_serverClientCacheExpirySeconds = vm["performance.server_client_cache_expiry_seconds"].as<int>();
 
-	if ( vm.count("performance.tick_expiry_milliseconds") )
+	if (vm.count("performance.tick_expiry_milliseconds"))
 		m_expiryDelayMilliseconds = vm["performance.tick_expiry_milliseconds"].as<int>();
 
-	if ( vm.count("performance.tick_update_milliseconds") )
+	if (vm.count("performance.tick_update_milliseconds"))
 		m_updateDelayMilliseconds = vm["performance.tick_update_milliseconds"].as<int>();
 
-	if ( vm.count("performance.tick_score_milliseconds") )
+	if (vm.count("performance.tick_score_milliseconds"))
 		m_scoreDelayMilliseconds = vm["performance.tick_score_milliseconds"].as<int>();
 
 
-	if( vm.count("server.client_stats") )
-	{
+	if (vm.count("server.client_stats")) {
 		std::string s = vm["server.client_stats"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_keepClientStats = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_keepClientStats = false;
 		}
 
 	}
 
-	if( vm.count("server.server_stats") )
-	{
+	if (vm.count("server.server_stats")) {
 		std::string s = vm["server.server_stats"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_keepServerStats = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_keepServerStats = false;
 		}
 
 	}
 
-	if( vm.count("server.daemon") )
-	{
+	if (vm.count("server.daemon")) {
 		std::string s = vm["server.daemon"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_isDaemon = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_isDaemon = false;
 		}
 
 	}
 
-	if ( vm.count("server.domain"))
-	{
+	if (vm.count("server.domain")) {
 		m_Domain = vm["server.domain"].as<std::string>();
-		if ( m_Domain.length() == 0 )
+		if (m_Domain.length() == 0)
 			m_Domain = "ms.worldforge.org";
 	}
 
-	if( vm.count("logging.server_sessions") )
-	{
+	if (vm.count("logging.server_sessions")) {
 		std::string s = vm["logging.server_sessions"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_logServerSessions = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_logServerSessions = false;
 		}
 
 	}
 
-	if( vm.count("logging.client_sessions") )
-	{
+	if (vm.count("logging.client_sessions")) {
 		std::string s = vm["logging.client_sessions"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_logClientSessions = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_logClientSessions = false;
 		}
 
 	}
 
-	if ( vm.count("logging.packet_logging") )
-	{
+	if (vm.count("logging.packet_logging")) {
 		std::string s = vm["logging.packet_logging"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_logPackets = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_logPackets = false;
 		}
 
 	}
 
-	if ( vm.count("logging.packet_allow") )
-	{
+	if (vm.count("logging.packet_allow")) {
 		std::string s = vm["logging.packet_allow"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_logPacketAllow = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_logPacketAllow = false;
 		}
 
 	}
 
-	if ( vm.count("logging.packet_deny") )
-	{
+	if (vm.count("logging.packet_deny")) {
 		std::string s = vm["logging.packet_deny"].as<std::string>();
-		if ( boost::iequals(s,"true") )
-		{
+		if (boost::iequals(s, "true")) {
 			m_logPacketDeny = true;
-		}
-		else if ( boost::iequals(s,"false") )
-		{
+		} else if (boost::iequals(s, "false")) {
 			m_logPacketDeny = false;
 		}
 
 	}
 
 
-	if( vm.count("logging.packet_logfile") )
-	{
+	if (vm.count("logging.packet_logfile")) {
 		m_PacketLogfile = vm["logging.packet_logfile"].as<std::string>();
 		/*
 		 *  Set a hard default if it's not specified
 		 */
-		if( m_PacketLogfile.length() == 0 )
-		{
+		if (m_PacketLogfile.length() == 0) {
 			m_PacketLogfile = "~/.metaserver-ng/packetdefault.bin";
 		}
 
-		if ( m_PacketLogfile.substr(0,1) == "~")
-		{
-			m_PacketLogfile.replace(0,1, std::getenv("HOME") );
+		if (m_PacketLogfile.substr(0, 1) == "~") {
+			m_PacketLogfile.replace(0, 1, std::getenv("HOME"));
 		}
 
 	}
 
-	if ( vm.count("logging.packet_logging_flush_seconds"))
+	if (vm.count("logging.packet_logging_flush_seconds"))
 		m_packetLoggingFlushSeconds = vm["logging.packet_logging_flush_seconds"].as<unsigned int>();
 
-	if ( vm.count("logging.logging_flush_seconds"))
+	if (vm.count("logging.logging_flush_seconds"))
 		m_loggingFlushSeconds = vm["logging.logging_flush_seconds"].as<unsigned int>();
 
-    //std::cout << "DEBUG: " << vm["server.port"].as<std::string>() << std::endl;
-	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
-	{
-		if ( it->second.value().type() == typeid(int) )
-		{
+	//std::cout << "DEBUG: " << vm["server.port"].as<std::string>() << std::endl;
+	for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
+		if (it->second.value().type() == typeid(int)) {
 			std::cout << "  " << it->first.c_str() << " = " << it->second.as<int>() << std::endl;
-		}
-		else if (it->second.value().type() == typeid(std::string) )
-		{
+		} else if (it->second.value().type() == typeid(std::string)) {
 			std::cout << "  " << it->first.c_str() << " = " << it->second.as<std::string>().c_str() << std::endl;
 		}
 	}
 
-	if( vm.count("server.logfile") )
-	{
+	if (vm.count("server.logfile")) {
 		m_Logfile = vm["server.logfile"].as<std::string>();
 		std::cout << "Assigning m_Logfile : " << m_Logfile << std::endl;
 		/**
@@ -1318,14 +1221,12 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		 *
 		 * TODO: add ifdef WIN32 here if/when metserver needs to run on windows
 		 */
-		if ( m_Logfile.substr(0,1) == "~")
-		{
-			m_Logfile.replace(0,1, std::getenv("HOME") );
+		if (m_Logfile.substr(0, 1) == "~") {
+			m_Logfile.replace(0, 1, std::getenv("HOME"));
 		}
 	}
 
-	if( vm.count("server.pidfile") )
-	{
+	if (vm.count("server.pidfile")) {
 		m_pidFile = vm["server.pidfile"].as<std::string>();
 		std::cout << "Assigning m_pidFile : " << m_pidFile.string() << std::endl;
 	}
@@ -1333,27 +1234,23 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	/*
 	 * Scoreboard files
 	 */
-	if ( vm.count("scoreboard.server") )
-	{
+	if (vm.count("scoreboard.server")) {
 		m_scoreServer = vm["scoreboard.server"].as<std::string>();
 		std::cout << "Assigning m_scoreServer : " << m_scoreServer.string() << std::endl;
 	}
 
-	if ( vm.count("scoreboard.client") )
-	{
+	if (vm.count("scoreboard.client")) {
 		m_scoreClient = vm["scoreboard.client"].as<std::string>();
 		std::cout << "Assigning m_scoreClient : " << m_scoreClient.string() << std::endl;
 	}
 
 
-	if ( vm.count("scoreboard.stats") )
-	{
+	if (vm.count("scoreboard.stats")) {
 		m_scoreStats = vm["scoreboard.stats"].as<std::string>();
 		std::cout << "Assigning m_scoreStats : " << m_scoreStats.string() << std::endl;
 	}
 
-	if ( vm.count("scoreboard.ccache") )
-	{
+	if (vm.count("scoreboard.ccache")) {
 		m_scoreCCache = vm["scoreboard.ccache"].as<std::string>();
 		std::cout << "Assigning m_scoreCCache : " << m_scoreCCache.string() << std::endl;
 	}
@@ -1366,8 +1263,7 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	/**
 	 * Initialise the packet logger
 	 */
-	if ( m_logPackets )
-	{
+	if (m_logPackets) {
 		// init packet
 	}
 
@@ -1377,29 +1273,23 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	spdlog::info("WorldForge MetaServer Runtime Configuration");
 	spdlog::info("Server Version: {}", SERVER_VERSION);
 	spdlog::info("API    Version: {}", API_VERSION);
-	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
-	{
-		if ( it->second.value().type() == typeid(int) )
-		{
+	for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
+		if (it->second.value().type() == typeid(int)) {
 			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<int>());
-		}
-		else if (it->second.value().type() == typeid(std::string) )
-		{
+		} else if (it->second.value().type() == typeid(std::string)) {
 			spdlog::info("  {} = {}", it->first.c_str(), it->second.as<std::string>().c_str());
 		}
 	}
 }
 
 void
-MetaServer::initLogger()
-{
+MetaServer::initLogger() {
 
 	/**
 	 * If a logfile is specified, use it
 	 */
 	std::cout << "m_Logfile: " << m_Logfile << std::endl;
-	if ( !m_Logfile.empty() )
-	{
+	if (!m_Logfile.empty()) {
 		/*
 		 * Create the log directory if it does not exist
 		 */
@@ -1408,8 +1298,7 @@ MetaServer::initLogger()
 		std::cout << "Log File: " << p.filename().string() << std::endl;
 		std::cout << "Log Directory Root Path: " << p.parent_path().string() << std::endl;
 
-		if ( ! boost::filesystem::is_directory(p.parent_path().string()))
-		{
+		if (!boost::filesystem::is_directory(p.parent_path().string())) {
 			spdlog::info("Creating Log Directory : {}", p.parent_path().string());
 			std::cout << "Creating Log Directory : " << p.parent_path().string() << std::endl;
 			boost::filesystem::create_directory(p.parent_path());
@@ -1438,27 +1327,23 @@ MetaServer::initLogger()
 }
 
 void
-MetaServer::initTimers(boost::asio::io_service& ios)
-{
+MetaServer::initTimers(boost::asio::io_service& ios) {
 	spdlog::info("Timer initiation");
 
-	if(m_expiryTimer)
-	{
+	if (m_expiryTimer) {
 		spdlog::warn("Purging m_expiryTimer");
 		m_expiryTimer->cancel();
 		delete m_expiryTimer;
 		m_expiryTimer = 0;
 	}
 
-	if(m_updateTimer)
-	{
+	if (m_updateTimer) {
 		spdlog::warn("Purging m_updateTimer");
 		m_updateTimer->cancel();
 		delete m_updateTimer;
 	}
 
-	if(m_scoreTimer)
-	{
+	if (m_scoreTimer) {
 		spdlog::warn("Purging m_scoreTimer");
 		m_scoreTimer->cancel();
 		delete m_scoreTimer;
@@ -1472,9 +1357,9 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 	m_updateTimer->expires_from_now(boost::posix_time::seconds(6));
 	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 
-	m_scoreTimer  = new boost::asio::deadline_timer(ios);
+	m_scoreTimer = new boost::asio::deadline_timer(ios);
 	m_scoreTimer->expires_from_now(boost::posix_time::seconds(8));
-    m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
+	m_scoreTimer->async_wait(boost::bind(&MetaServer::score_timer, this, boost::asio::placeholders::error));
 
 
 //	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
@@ -1489,54 +1374,43 @@ MetaServer::initTimers(boost::asio::io_service& ios)
 }
 
 unsigned long long
-MetaServer::getDeltaMillis()
-{
-    boost::posix_time::ptime ntime = msdo.getNow();
-    boost::posix_time::time_duration dur = ntime - m_startTime;
-    return dur.total_milliseconds();
+MetaServer::getDeltaMillis() {
+	boost::posix_time::ptime ntime = msdo.getNow();
+	boost::posix_time::time_duration dur = ntime - m_startTime;
+	return dur.total_milliseconds();
 }
 
 bool
-MetaServer::isDaemon()
-{
+MetaServer::isDaemon() {
 	return m_isDaemon;
 }
 
 void
-MetaServer::getMSStats( std::map<std::string,std::string>& req_stats )
-{
-	if( req_stats.size() == 0 )
-	{
+MetaServer::getMSStats(std::map<std::string, std::string>& req_stats) {
+	if (req_stats.size() == 0) {
 		/*
 		 * If you've specified nothing, you get everything
 		 */
 		spdlog::trace("Full Stats Request");
-		for(auto& x: m_metaStats)
-		{
+		for (auto& x: m_metaStats) {
 			req_stats[x.first] = x.second;
 			spdlog::trace("   Set {} to {}", x.first, x.second);
 		}
-	}
-	else
-	{
+	} else {
 		/*
 		 * Check all elements of the requesting map
 		 */
 		spdlog::trace("Partial Stats Request");
 		auto statsCopy = req_stats;
-		for(auto& x: statsCopy)
-		{
+		for (auto& x: statsCopy) {
 
 			/*
 			 * If it exists, fill it with the value
 			 */
-			if ( m_metaStats.count(x.first) > 0 )
-			{
+			if (m_metaStats.count(x.first) > 0) {
 				req_stats[x.first] = m_metaStats[x.first];
 				spdlog::trace("   Set {} to {}", x.first, m_metaStats[x.first]);
-			}
-			else
-			{
+			} else {
 				/*
 				 * If not present, remove the entry
 				 */

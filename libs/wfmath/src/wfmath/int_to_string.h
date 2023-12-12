@@ -31,11 +31,16 @@
 namespace WFMath {
 
 std::string IntToString(unsigned long);
+
 std::string IntToString(long);
-inline std::string IntToString(unsigned int val) {return IntToString((unsigned long) val);}
-inline std::string IntToString(int val) {return IntToString((long) val);}
-inline std::string IntToString(unsigned short val) {return IntToString((unsigned long) val);}
-inline std::string IntToString(short val) {return IntToString((long) val);}
+
+inline std::string IntToString(unsigned int val) { return IntToString((unsigned long) val); }
+
+inline std::string IntToString(int val) { return IntToString((long) val); }
+
+inline std::string IntToString(unsigned short val) { return IntToString((unsigned long) val); }
+
+inline std::string IntToString(short val) { return IntToString((long) val); }
 
 } // namespace WFMath
 

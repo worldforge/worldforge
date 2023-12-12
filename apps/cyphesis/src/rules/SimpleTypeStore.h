@@ -22,32 +22,31 @@
 #include "common/TypeStore.h"
 #include <memory>
 
-class SimpleTypeStore : public TypeStore
-{
-    public:
+class SimpleTypeStore : public TypeStore {
+public:
 
-        explicit SimpleTypeStore(const PropertyManager& propertyManager);
+	explicit SimpleTypeStore(const PropertyManager& propertyManager);
 
-        const TypeNode* getType(const std::string& parent) const override;
+	const TypeNode* getType(const std::string& parent) const override;
 
-        TypeNode* addChild(const Atlas::Objects::Root& obj) override;
+	TypeNode* addChild(const Atlas::Objects::Root& obj) override;
 
-        size_t getTypeCount() const override;
+	size_t getTypeCount() const override;
 
-        Atlas::Objects::Factories& getFactories() override;
+	Atlas::Objects::Factories& getFactories() override;
 
-        const Atlas::Objects::Factories& getFactories() const override;
+	const Atlas::Objects::Factories& getFactories() const override;
 
 
-    private:
+private:
 
-        const PropertyManager& m_propertyManager;
+	const PropertyManager& m_propertyManager;
 
-        std::map<std::string, std::unique_ptr<TypeNode>> m_types;
+	std::map<std::string, std::unique_ptr<TypeNode>> m_types;
 
-        void readAttributesIntoType(TypeNode& type, const Atlas::Objects::Root& obj);
+	void readAttributesIntoType(TypeNode& type, const Atlas::Objects::Root& obj);
 
-        std::unique_ptr<Atlas::Objects::Factories> m_factories;
+	std::unique_ptr<Atlas::Objects::Factories> m_factories;
 
 };
 

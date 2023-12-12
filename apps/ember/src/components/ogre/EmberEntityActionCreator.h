@@ -49,9 +49,9 @@ class WorldAttachment;
 class EmberEntityActionCreator : public EntityMapping::IActionCreator {
 public:
 	EmberEntityActionCreator(EmberEntity& entity,
-			Scene& scene,
-			AttachmentFunction modelAttachmentFunction,
-			std::function<void(bool)> oceanAttachmentFunction);
+							 Scene& scene,
+							 AttachmentFunction modelAttachmentFunction,
+							 std::function<void(bool)> oceanAttachmentFunction);
 
 	~EmberEntityActionCreator() override = default;
 

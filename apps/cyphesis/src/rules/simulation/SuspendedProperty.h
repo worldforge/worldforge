@@ -36,31 +36,30 @@
  *
  * \ingroup PropertyClasses
  */
-class SuspendedProperty : public BoolProperty
-{
-    public:
-        static constexpr const char* property_name = "suspended";
+class SuspendedProperty : public BoolProperty {
+public:
+	static constexpr const char* property_name = "suspended";
 
-        explicit SuspendedProperty() = default;
+	explicit SuspendedProperty() = default;
 
-        SuspendedProperty* copy() const override;
+	SuspendedProperty* copy() const override;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        void install(LocatedEntity&, const std::string&) override;
+	void install(LocatedEntity&, const std::string&) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        HandlerResult operation(LocatedEntity& e,
-                                const Operation& op, OpVector& res) override;
+	HandlerResult operation(LocatedEntity& e,
+							const Operation& op, OpVector& res) override;
 
-    protected:
-        SuspendedProperty(const SuspendedProperty& rhs) = default;
+protected:
+	SuspendedProperty(const SuspendedProperty& rhs) = default;
 
-        /**
-         * \brief Store ops that needs to be sent again when the entity is resumed.
-         */
-        OpVector m_suspendedOps;
+	/**
+	 * \brief Store ops that needs to be sent again when the entity is resumed.
+	 */
+	OpVector m_suspendedOps;
 
 };
 

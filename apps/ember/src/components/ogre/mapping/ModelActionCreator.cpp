@@ -23,9 +23,8 @@
 #include <Atlas/Message/Element.h>
 #include <boost/algorithm/string.hpp>
 
-namespace Ember {
-namespace OgreView {
-namespace Mapping {
+
+namespace Ember::OgreView::Mapping {
 
 ModelActionCreator::DisplayModelAction::DisplayModelAction(ModelActionCreator* creator, std::string modelName)
 		: mCreator(creator),
@@ -86,7 +85,7 @@ ModelActionCreator::ModelActionCreator(Eris::Entity& entity,
 }
 
 void ModelActionCreator::createActions(EntityMapping::EntityMapping& modelMapping, EntityMapping::Cases::CaseBase& aCase, EntityMapping::Definitions::CaseDefinition& caseDefinition) {
-	for (auto& actionDef : caseDefinition.Actions) {
+	for (auto& actionDef: caseDefinition.Actions) {
 		if (actionDef.Type == "display-part") {
 			aCase.addAction(std::make_unique<DisplayPartAction>(this, actionDef.Value));
 		} else if (actionDef.Type == "display-model") {
@@ -98,5 +97,4 @@ void ModelActionCreator::createActions(EntityMapping::EntityMapping& modelMappin
 }
 
 }
-}
-}
+

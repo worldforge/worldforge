@@ -33,25 +33,20 @@ namespace varconf {
 class Variable;
 }
 
-namespace Ember
-{
+namespace Ember {
 class ConfigListenerContainer;
-namespace OgreView
-{
+namespace OgreView {
 class Scene;
-namespace Terrain
-{
+namespace Terrain {
 struct ITerrainAdapter;
 }
-namespace Camera
-{
+namespace Camera {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A third person camera mount, where the camera is circling a node. This node is then in most cases attached to an entity.
  */
-class ThirdPersonCameraMount: public CameraMountBase, public ConsoleObject, public virtual sigc::trackable
-{
+class ThirdPersonCameraMount : public CameraMountBase, public ConsoleObject, public virtual sigc::trackable {
 public:
 
 	/**
@@ -107,7 +102,7 @@ public:
 	/**
 	 * @copydoc ConsoleObject::runCommand method
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	void update() override;
 

@@ -24,9 +24,9 @@
 #include "domain/EmberEntity.h"
 #include "EntityMoveManager.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 EntityMoveAdjustmentInstance::EntityMoveAdjustmentInstance(EntityMoveAdjuster* moveAdjuster, EmberEntity* entity, Eris::EventService& eventService) :
 		mEntity(entity),
 		mTimeout(eventService, std::chrono::milliseconds(1500), [&]() { this->timout_Expired(); }),
@@ -68,5 +68,5 @@ void EntityMoveAdjuster::EntityMoveManager_StartMoving(EmberEntity& entity, Enti
 }
 
 }
-}
-}
+
+

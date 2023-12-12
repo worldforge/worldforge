@@ -25,7 +25,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<TypeService>(sol::table& space) {
 	auto typeService = space.new_usertype<TypeService>("TypeService", sol::no_constructor);
 

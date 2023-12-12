@@ -29,14 +29,11 @@
 
 #include <wfmath/point.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class NodeAttachment;
 
-namespace Authoring
-{
+namespace Authoring {
 
 class SnapToMovement;
 
@@ -47,8 +44,7 @@ class EntityMoveManager;
 
  @brief An implementation of IEntityMoveBridge which allows for EmberEntity instances to be moved.
  */
-class EntityMover: public Authoring::EntityMoverBase
-{
+class EntityMover : public Authoring::EntityMoverBase {
 public:
 
 	EntityMover(NodeAttachment& NodeAttachment, EntityMoveManager& manager);
@@ -77,8 +73,7 @@ private:
 
 };
 
-class EntityMoverControlDelegate: public IEntityControlDelegate
-{
+class EntityMoverControlDelegate : public IEntityControlDelegate {
 public:
 
 	explicit EntityMoverControlDelegate(EntityMover& entityMover);
@@ -97,6 +92,6 @@ protected:
 }
 }
 
-}
+
 
 #endif

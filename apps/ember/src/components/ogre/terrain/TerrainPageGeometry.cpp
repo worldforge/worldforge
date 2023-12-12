@@ -29,11 +29,10 @@
 #include <wfmath/stream.h>
 #include <sstream>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
 
-TerrainPageGeometry::TerrainPageGeometry(std::shared_ptr<Terrain::TerrainPage> page,
+namespace Ember::OgreView::Terrain {
+
+TerrainPageGeometry::TerrainPageGeometry(const std::shared_ptr<Terrain::TerrainPage>& page,
 										 SegmentManager& segmentManager,
 										 float defaultHeight) :
 		mPageIndex(page->getWFIndex()),
@@ -114,7 +113,7 @@ void TerrainPageGeometry::updateOgreHeightData(float* heightData) {
 	}
 }
 
-void TerrainPageGeometry::blitSegmentToOgre(float* ogreHeightData, Mercator::Segment& segment, int startX, int startZ) {
+void TerrainPageGeometry::blitSegmentToOgre(float* ogreHeightData, Mercator::Segment& segment, int startX, int startZ) const {
 	int segmentWidth = segment.getSize();
 	int ogreDataSize = mPageWidth * mPageWidth;
 
@@ -200,5 +199,5 @@ bool TerrainPageGeometry::getNormal(const TerrainPosition& localPosition, WFMath
 	}
 }
 }
-}
-}
+
+

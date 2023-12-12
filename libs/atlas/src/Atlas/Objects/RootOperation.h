@@ -13,7 +13,7 @@
 
 #include <Atlas/Objects/Factories.h>
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 /** Base operation for all operators
 
@@ -404,7 +404,7 @@ inline Atlas::Message::ListType RootOperationData::getArgsAsList() const
     const std::vector<Root>& args_in = getArgs();
     Atlas::Message::ListType args_out;
     for (const auto& entry : args_in) {
-        args_out.push_back(Atlas::Message::MapType());
+        args_out.emplace_back(Atlas::Message::MapType());
         entry->addToMessage(args_out.back().Map());
     }
     return args_out;
@@ -446,6 +446,6 @@ inline bool RootOperationData::isDefaultArgs() const
 }
 
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation
 
 #endif // ATLAS_OBJECTS_OPERATION_ROOTOPERATION_H

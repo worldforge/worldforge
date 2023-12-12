@@ -23,49 +23,49 @@
 
 #include <cassert>
 
-template <class Op>
+template<class Op>
 class OperationExerciser {
-  protected:
-    void testPlainConstructor() {
-        {
-            Op op;
-        }
+protected:
+	void testPlainConstructor() {
+		{
+			Op op;
+		}
 
-        {
-            auto op = new Op();
-            delete op;
-        }
-    }
+		{
+			auto op = new Op();
+			delete op;
+		}
+	}
 
-    void testClassNo(const int class_no) {
-        {
-            Op op;
-            assert(class_no == op->getClassNo());
-        }
-    }
+	void testClassNo(const int class_no) {
+		{
+			Op op;
+			assert(class_no == op->getClassNo());
+		}
+	}
 
-    void testTypeString(const std::string & type) {
-        {
-            Op op;
-            assert(!op->isDefaultParent());
-        }
+	void testTypeString(const std::string& type) {
+		{
+			Op op;
+			assert(!op->isDefaultParent());
+		}
 
-        {
-            Op op;
-            assert(type == op->getParent());
-        }
-    }
+		{
+			Op op;
+			assert(type == op->getParent());
+		}
+	}
 
-  public:
-    OperationExerciser() { }
+public:
+	OperationExerciser() {}
 
-    ~OperationExerciser() { }
+	~OperationExerciser() {}
 
-    void runTests(const std::string & type, const int class_no) {
-        testPlainConstructor();
-        testClassNo(class_no);
-        testTypeString(type);
-    }
+	void runTests(const std::string& type, const int class_no) {
+		testPlainConstructor();
+		testClassNo(class_no);
+		testTypeString(type);
+	}
 };
 
 #endif // TESTS_OPERATION_EXERCISER_H

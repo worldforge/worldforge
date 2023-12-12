@@ -21,11 +21,11 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<MeshInfoProvider>(sol::table& space) {
 
 	auto meshInfoProvider = space.new_usertype<MeshInfoProvider>("MeshInfoProvider",
-															   sol::constructors<MeshInfoProvider(OgreEntityRenderer*)>());
+																 sol::constructors<MeshInfoProvider(OgreEntityRenderer*)>());
 	meshInfoProvider["getInfo"] = &MeshInfoProvider::getInfo;
 	meshInfoProvider["getPreviewInfo"] = &MeshInfoProvider::getPreviewInfo;
 	meshInfoProvider["postqueueEntityMeshLodChanged"] = &MeshInfoProvider::postqueueEntityMeshLodChanged;

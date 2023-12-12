@@ -29,18 +29,17 @@ class TypeNode;
 
 struct IHeightProvider;
 
-class AwarenessStoreProvider
-{
-    public:
-        explicit AwarenessStoreProvider(IHeightProvider& heightProvider);
+class AwarenessStoreProvider {
+public:
+	explicit AwarenessStoreProvider(IHeightProvider& heightProvider);
 
-        virtual ~AwarenessStoreProvider() = default;
+	virtual ~AwarenessStoreProvider() = default;
 
-        AwarenessStore& getStore(const TypeNode* type, int tileSize = 64);
+	AwarenessStore& getStore(const TypeNode* type, int tileSize = 64);
 
-    protected:
-        std::unordered_map<std::string, AwarenessStore> m_awarenessStores;
-        IHeightProvider& m_heightProvider;
+protected:
+	std::unordered_map<std::string, AwarenessStore> m_awarenessStores;
+	IHeightProvider& m_heightProvider;
 
 };
 

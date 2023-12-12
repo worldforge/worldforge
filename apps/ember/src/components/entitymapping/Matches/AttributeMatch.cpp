@@ -24,11 +24,11 @@
 
 #include <utility>
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 AttributeMatch::AttributeMatch(std::string attributeName)
 		: mAttributeName(std::move(attributeName)) {
@@ -36,7 +36,7 @@ AttributeMatch::AttributeMatch(std::string attributeName)
 
 
 void AttributeMatch::testAttribute(const Atlas::Message::Element& attribute, bool triggerEvaluation) {
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->testMatch(attribute);
 	}
 	if (triggerEvaluation) {
@@ -46,6 +46,6 @@ void AttributeMatch::testAttribute(const Atlas::Message::Element& attribute, boo
 
 }
 
-}
 
-}
+
+

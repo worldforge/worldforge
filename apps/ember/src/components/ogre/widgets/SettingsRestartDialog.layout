@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
 	<Window name="MainWindow" type="EmberLook/DialogWindow">
-		<Property name="Size" value="{{0.0,300.0},{0.0,200.0}}" />
-		<Property name="Position" value="{{0.5,-150.0},{0.5,-100.0}}" />
-		<Property name="Text" value="Requires Ember restart!" />
-		<Property name="CloseButtonEnabled" value="false" />
-		
+		<Property name="Size" value="{{0.0,300.0},{0.0,200.0}}"/>
+		<Property name="Position" value="{{0.5,-150.0},{0.5,-100.0}}"/>
+		<Property name="Text" value="Requires Ember restart!"/>
+		<Property name="CloseButtonEnabled" value="false"/>
+
 		<Window name="Text" type="EmberLook/StaticText">
-			<Property name="Size" value="{{1.0, 0.0}, {1.0, -35.0}}" />
-			<Property name="Position" value="{{0.0, 0.0}, {0.0, 0.0}}" />
-			
-			<Property name="Text" value="Changes made in the settings window requires a restart of the whole Ember client to fully apply. Please exit the client and start it again." />
-			<Property name="HorzFormatting" value="WordWrapLeftAligned" />
+			<Property name="Size" value="{{1.0, 0.0}, {1.0, -35.0}}"/>
+			<Property name="Position" value="{{0.0, 0.0}, {0.0, 0.0}}"/>
+
+			<Property name="Text"
+					  value="Changes made in the settings window requires a restart of the whole Ember client to fully apply. Please exit the client and start it again."/>
+			<Property name="HorzFormatting" value="WordWrapLeftAligned"/>
 		</Window>
 		<Window name="OKButton" type="EmberLook/Button">
-			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}" />
-			<Property name="Position" value="{{1.0, -80.0}, {1.0, -30.0}}" />
-			
-			<Property name="Text" value="OK" />
+			<Property name="Size" value="{{0.0, 70.0}, {0.0, 25.0}}"/>
+			<Property name="Position" value="{{1.0, -80.0}, {1.0, -30.0}}"/>
+
+			<Property name="Text" value="OK"/>
 		</Window>
 	</Window>
 </GUILayout>

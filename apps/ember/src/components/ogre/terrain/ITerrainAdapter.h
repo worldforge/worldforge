@@ -126,6 +126,7 @@ struct ITerrainAdapter {
 	virtual bool isPageShown(const TerrainIndex& index) = 0;
 
 	virtual void removePage(const TerrainIndex& index) = 0;
+
 	/**
 	 * @brief Reloads the material of a single page.
 	 *
@@ -152,7 +153,7 @@ struct ITerrainAdapter {
 	 * @param ray The Ogre ray to be tested for intersection with the terrain.
 	 * @return A pair of an intersection bool and a intersection position.
 	 */
-	virtual std::pair<EmberEntity*, Ogre::Vector3> rayIntersects(const Ogre::Ray& ray) const = 0;
+	[[nodiscard]] virtual std::pair<EmberEntity*, Ogre::Vector3> rayIntersects(const Ogre::Ray& ray) const = 0;
 
 	/**
 	 * Sets the provider used to retrieve terrain page data.

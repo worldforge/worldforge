@@ -20,13 +20,15 @@
 #define FRAMELISTENER_H_
 
 #include <OgreFrameListener.h>
-namespace Ember {
-namespace OgreView {
-	struct FrameListener : public Ogre::FrameListener {
-		FrameListener();
-		~FrameListener() override;
-	};
+
+
+namespace Ember::OgreView {
+struct FrameListener : public Ogre::FrameListener {
+	FrameListener();
+
+	~FrameListener() override;
+};
 }
-}
+
 
 #endif

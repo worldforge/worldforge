@@ -26,52 +26,39 @@
 #include "AdapterBase.h"
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class CustomAdapter : public AdapterBase, public virtual sigc::trackable
-{
+class CustomAdapter : public AdapterBase, public virtual sigc::trackable {
 public:
-    CustomAdapter(const ::Atlas::Message::Element& element);
+	explicit CustomAdapter(const ::Atlas::Message::Element& element);
 
-    virtual ~CustomAdapter();
-    
+	~CustomAdapter() override;
+
 	/**
 	Updates the gui with new values.
 	*/
-	virtual void updateGui(const ::Atlas::Message::Element& element);
-    
-    sigc::signal<void(bool&)> QueryHasChanges;
-    sigc::signal<void(const ::Atlas::Message::Element*)> QueryUpdateGui;
-    sigc::signal<void(::Atlas::Message::Element*)> QueryFillElementFromGui;
-    sigc::signal<void(::Atlas::Message::Element*)> QueryGetChangedElement;
-    
+	void updateGui(const ::Atlas::Message::Element& element) override;
+
+	sigc::signal<void(bool&)> QueryHasChanges;
+	sigc::signal<void(const ::Atlas::Message::Element*)> QueryUpdateGui;
+	sigc::signal<void(::Atlas::Message::Element * )> QueryFillElementFromGui;
+	sigc::signal<void(::Atlas::Message::Element * )> QueryGetChangedElement;
+
 protected:
-	
-	virtual void fillElementFromGui();
-	virtual bool _hasChanges();
-	virtual ::Atlas::Message::Element _getChangedElement();
+
+	void fillElementFromGui() override;
+
+	bool _hasChanges() override;
+
+	::Atlas::Message::Element _getChangedElement() override;
 
 
 };
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

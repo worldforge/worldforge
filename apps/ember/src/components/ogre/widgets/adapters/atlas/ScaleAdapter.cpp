@@ -17,26 +17,18 @@
  */
 
 #include "ScaleAdapter.h"
-#include "MapAdapter.h"
 
 #include <wfmath/vector.h>
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
 
-namespace OgreView {
-
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 ScaleAdapter::ScaleAdapter(const ::Atlas::Message::Element& element, const Widgets& widgets)
 		: AdapterBase(element), mWidgets(widgets) {
 
 	if (mOriginalValue.List().empty()) {
-		mOriginalValue.List().push_back(1.0f);
+		mOriginalValue.List().emplace_back(1.0f);
 	}
 
 	addGuiEventConnection(mWidgets.x->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&ScaleAdapter::window_TextChanged, this)));
@@ -63,8 +55,8 @@ ScaleAdapter::ScaleAdapter(const ::Atlas::Message::Element& element, const Widge
 
 		::Atlas::Message::ListType scaledValue;
 
-		for (auto& elem : mOriginalValue.List()) {
-			scaledValue.push_back(elem.asNum() * value);
+		for (auto& elem: mOriginalValue.List()) {
+			scaledValue.emplace_back(elem.asNum() * value);
 		}
 		updateGui(scaledValue);
 		return true;
@@ -120,9 +112,9 @@ bool ScaleAdapter::_hasChanges() {
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

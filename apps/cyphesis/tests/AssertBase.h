@@ -28,207 +28,194 @@ namespace {
 //	std::string stringify(const T* ptr) {
 //		return fmt::to_string(fmt::ptr(ptr));
 //	}
-	template <typename T>
-	std::string stringify(const T& value) {
-		if constexpr (std::is_pointer<T>()) {
-			return fmt::to_string(fmt::ptr(value));
-		} else {
-			return fmt::to_string(value);
-		}
+template<typename T>
+std::string stringify(const T& value) {
+	if constexpr (std::is_pointer<T>()) {
+		return fmt::to_string(fmt::ptr(value));
+	} else {
+		return fmt::to_string(value);
 	}
+}
 }
 
 namespace Cyphesis {
 
-    struct AssertBase
-    {
-        int m_error_count;
-        // Need to track not just counts, but also details of the failures,
-        // which basically requires macros.
-        std::list <std::string> m_errorReports;
+struct AssertBase {
+	int m_error_count;
+	// Need to track not just counts, but also details of the failures,
+	// which basically requires macros.
+	std::list<std::string> m_errorReports;
 
-        void addFailure(const std::string& s)
-        {
-            m_errorReports.push_back(s);
-        }
+	void addFailure(const std::string& s) {
+		m_errorReports.push_back(s);
+	}
 
-        std::size_t errorCount() const;
+	std::size_t errorCount() const;
 
-        const std::list <std::string>& errorReports() const;
+	const std::list<std::string>& errorReports() const;
 
-        template<typename V>
-        int assertTrue(const char* n, const V& val,
-                       const char* func, const char* file, int line);
+	template<typename V>
+	int assertTrue(const char* n, const V& val,
+				   const char* func, const char* file, int line);
 
-        template<typename V>
-        int assertFalse(const char* n, const V& val,
-                        const char* func, const char* file, int line);
+	template<typename V>
+	int assertFalse(const char* n, const V& val,
+					const char* func, const char* file, int line);
 
-        template<typename L, typename R>
-        int assertEqual(const char* l, const L& lval,
-                        const char* r, const R& rval,
-                        const char* func, const char* file, int line);
+	template<typename L, typename R>
+	int assertEqual(const char* l, const L& lval,
+					const char* r, const R& rval,
+					const char* func, const char* file, int line);
 
-        template<typename L, typename R, typename E>
-        int assertFuzzyEqual(const char* l, const L& lval,
-                             const char* r, const R& rval,
-                             const char* e, const E& epsilon,
-                             const char* func, const char* file, int line);
+	template<typename L, typename R, typename E>
+	int assertFuzzyEqual(const char* l, const L& lval,
+						 const char* r, const R& rval,
+						 const char* e, const E& epsilon,
+						 const char* func, const char* file, int line);
 
-        template<typename L, typename R>
-        int assertNotEqual(const char* l, const L& lval,
-                           const char* r, const R& rval,
-                           const char* func, const char* file, int line);
+	template<typename L, typename R>
+	int assertNotEqual(const char* l, const L& lval,
+					   const char* r, const R& rval,
+					   const char* func, const char* file, int line);
 
-        template<typename L, typename R>
-        int assertGreater(const char* l, const L& lval,
-                          const char* r, const R& rval,
-                          const char* func, const char* file, int line);
+	template<typename L, typename R>
+	int assertGreater(const char* l, const L& lval,
+					  const char* r, const R& rval,
+					  const char* func, const char* file, int line);
 
-        template<typename L, typename R>
-        int assertLess(const char* l, const L& lval,
-                       const char* r, const R& rval,
-                       const char* func, const char* file, int line);
+	template<typename L, typename R>
+	int assertLess(const char* l, const L& lval,
+				   const char* r, const R& rval,
+				   const char* func, const char* file, int line);
 
-        template<typename T>
-        int assertNull(const char* n, const T* ptr,
-                       const char* func, const char* file, int line);
+	template<typename T>
+	int assertNull(const char* n, const T* ptr,
+				   const char* func, const char* file, int line);
 
-        template<typename T>
-        int assertNotNull(const char* n, const T* ptr,
-                          const char* func, const char* file, int line);
-    };
+	template<typename T>
+	int assertNotNull(const char* n, const T* ptr,
+					  const char* func, const char* file, int line);
+};
 
 
-    std::size_t AssertBase::errorCount() const
-    {
-        return m_errorReports.size();
-    }
+std::size_t AssertBase::errorCount() const {
+	return m_errorReports.size();
+}
 
-    const std::list<std::string> & AssertBase::errorReports() const
-    {
-        return m_errorReports;
-    }
+const std::list<std::string>& AssertBase::errorReports() const {
+	return m_errorReports;
+}
 
 
-    template <typename V>
-    int AssertBase::assertTrue(const char * n, const V & val,
-                               const char * func, const char * file, int line)
-    {
-        if (!val) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
-                                       file, line, func, n));
-            return -1;
-        }
-        return 0;
-    }
+template<typename V>
+int AssertBase::assertTrue(const char* n, const V& val,
+						   const char* func, const char* file, int line) {
+	if (!val) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
+							   file, line, func, n));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename V>
-    int AssertBase::assertFalse(const char * n, const V & val,
-                                const char * func, const char * file, int line)
-    {
-        if (val) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
-                                       file, line, func, n));
-            return -1;
-        }
-        return 0;
-    }
+template<typename V>
+int AssertBase::assertFalse(const char* n, const V& val,
+							const char* func, const char* file, int line) {
+	if (val) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{}' failed.",
+							   file, line, func, n));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename L, typename R>
-    int AssertBase::assertEqual(const char * l, const L & lval,
-                                const char * r, const R & rval,
-                                const char * func, const char * file, int line)
-    {
-        if (lval != rval) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{} == {}' failed. "
-                                       "{} != {}",
-                                       file, line, func, l, r, stringify(lval), stringify(rval)));
-            return -1;
-        }
-        return 0;
-    }
+template<typename L, typename R>
+int AssertBase::assertEqual(const char* l, const L& lval,
+							const char* r, const R& rval,
+							const char* func, const char* file, int line) {
+	if (lval != rval) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{} == {}' failed. "
+							   "{} != {}",
+							   file, line, func, l, r, stringify(lval), stringify(rval)));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename L, typename R, typename E>
-    int AssertBase::assertFuzzyEqual(const char * l, const L & lval,
-                                     const char * r, const R & rval,
-                                     const char * e, const E & epsilon,
-                                     const char * func, const char * file, int line)
-    {
-        if (std::abs(lval - rval) > epsilon) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{} ~= {}' failed. "
-                                       "{} != {}",
-                                       file, line, func, l, r, stringify(lval), stringify(rval)));
-            return -1;
-        }
-        return 0;
-    }
+template<typename L, typename R, typename E>
+int AssertBase::assertFuzzyEqual(const char* l, const L& lval,
+								 const char* r, const R& rval,
+								 const char* e, const E& epsilon,
+								 const char* func, const char* file, int line) {
+	if (std::abs(lval - rval) > epsilon) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{} ~= {}' failed. "
+							   "{} != {}",
+							   file, line, func, l, r, stringify(lval), stringify(rval)));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename L, typename R>
-    int AssertBase::assertNotEqual(const char * l, const L & lval,
-                                   const char * r, const R & rval,
-                                   const char * func, const char * file, int line)
-    {
-        if (lval == rval) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{} != {}' failed. "
-                                       "{} == {}",
-                                       file, line, func, l, r, stringify(lval), stringify(rval)));
-            return -1;
-        }
-        return 0;
-    }
+template<typename L, typename R>
+int AssertBase::assertNotEqual(const char* l, const L& lval,
+							   const char* r, const R& rval,
+							   const char* func, const char* file, int line) {
+	if (lval == rval) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{} != {}' failed. "
+							   "{} == {}",
+							   file, line, func, l, r, stringify(lval), stringify(rval)));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename L, typename R>
-    int AssertBase::assertGreater(const char * l, const L & lval,
-                                  const char * r, const R & rval,
-                                  const char * func, const char * file, int line)
-    {
-        if (lval <= rval) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{} > {}' failed. "
-                                       "{} <= {}",
-                                       file, line, func, l, r, lval, rval));
-            return -1;
-        }
-        return 0;
-    }
+template<typename L, typename R>
+int AssertBase::assertGreater(const char* l, const L& lval,
+							  const char* r, const R& rval,
+							  const char* func, const char* file, int line) {
+	if (lval <= rval) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{} > {}' failed. "
+							   "{} <= {}",
+							   file, line, func, l, r, lval, rval));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename L, typename R>
-    int AssertBase::assertLess(const char * l, const L & lval,
-                               const char * r, const R & rval,
-                               const char * func, const char * file, int line)
-    {
-        if (lval >= rval) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{} < {}' failed. "
-                                       "{} >= {}",
-                                       file, line, func, l, r, lval, rval));
-            return -1;
-        }
-        return 0;
-    }
+template<typename L, typename R>
+int AssertBase::assertLess(const char* l, const L& lval,
+						   const char* r, const R& rval,
+						   const char* func, const char* file, int line) {
+	if (lval >= rval) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{} < {}' failed. "
+							   "{} >= {}",
+							   file, line, func, l, r, lval, rval));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename T>
-    int AssertBase::assertNull(const char * n, const T * ptr,
-                               const char * func, const char * file, int line)
-    {
-        if (ptr != 0) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{}' null failed.",
-                                       file, line, func, n));
-            return -1;
-        }
-        return 0;
-    }
+template<typename T>
+int AssertBase::assertNull(const char* n, const T* ptr,
+						   const char* func, const char* file, int line) {
+	if (ptr != 0) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{}' null failed.",
+							   file, line, func, n));
+		return -1;
+	}
+	return 0;
+}
 
-    template <typename T>
-    int AssertBase::assertNotNull(const char * n, const T * ptr,
-                                  const char * func, const char * file, int line)
-    {
-        if (ptr == 0) {
-            addFailure(fmt::format("{}:{}: {}: Assertion '{}' not null failed.",
-                                       file, line, func, n));
-            return -1;
-        }
-        return 0;
-    }
+template<typename T>
+int AssertBase::assertNotNull(const char* n, const T* ptr,
+							  const char* func, const char* file, int line) {
+	if (ptr == 0) {
+		addFailure(fmt::format("{}:{}: {}: Assertion '{}' not null failed.",
+							   file, line, func, n));
+		return -1;
+	}
+	return 0;
+}
 }
 
 

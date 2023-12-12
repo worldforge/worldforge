@@ -38,44 +38,46 @@
 #include <framework/AutoCloseConnection.h>
 
 class dtNavMeshQuery;
+
 class dtNavMesh;
+
 class dtTileCache;
+
 struct dtTileCachePolyMesh;
 struct dtTileCacheLayer;
 struct dtCompressedTile;
+
 class dtQueryFilter;
+
 class dtObstacleAvoidanceQuery;
+
 struct dtObstacleAvoidanceParams;
 
-namespace Eris
-{
+namespace Eris {
 class View;
+
 class Entity;
 }
 
-namespace Ember
-{
+namespace Ember {
 struct IHeightProvider;
+
 class EmberEntity;
-namespace Navigation
-{
-template <typename T>
+namespace Navigation {
+template<typename T>
 class MRUList;
 
 struct TileCacheData;
-struct InputGeometry;
 
-enum PolyAreas
-{
+enum PolyAreas {
 	POLYAREA_GROUND, POLYAREA_WATER, POLYAREA_ROAD, POLYAREA_DOOR, POLYAREA_GRASS, POLYAREA_JUMP,
 };
-enum PolyFlags
-{
+enum PolyFlags {
 	POLYFLAGS_WALK = 0x01,      // Ability to walk (ground, grass, road)
 	POLYFLAGS_SWIM = 0x02,      // Ability to swim (water).
 	POLYFLAGS_DOOR = 0x04,      // Ability to move through doors.
 	POLYFLAGS_JUMP = 0x08,      // Ability to jump.
-	POLYFLAGS_DISABLED = 0x10,		// Disabled polygon
+	POLYFLAGS_DISABLED = 0x10,        // Disabled polygon
 	POLYFLAGS_ALL = 0xffff      // All abilities.
 };
 
@@ -86,8 +88,7 @@ enum PolyFlags
  * We don't need to observe all entities in the same way; some are ignored, and some are moving.
  * Instances of this keep track of this information.
  */
-struct EntityConnections
-{
+struct EntityConnections {
 	Ember::AutoCloseConnection moved;
 	Ember::AutoCloseConnection bboxChanged;
 	bool isMoving;
@@ -111,8 +112,7 @@ struct EntityConnections
  * Internally this class uses a dtTileCache to manage the tiles. Since the world is dynamic we need to manage the
  * navmeshes through tiles in order to keep the resource usage down.
  */
-class Awareness : public virtual sigc::trackable
-{
+class Awareness : public virtual sigc::trackable {
 public:
 	/**
 	 * A callback function for processing tiles.
@@ -126,6 +126,7 @@ public:
 	 * @param tileSize The size, in voxels, of one side of a tile. The larger this is the longer each tile takes to generate, but the overhead of managing tiles is decreased.
 	 */
 	Awareness(EmberEntity& avatarEntity, IHeightProvider& heightProvider, int tileSize = 64);
+
 	virtual ~Awareness();
 
 	/**
@@ -362,7 +363,7 @@ protected:
 	 * @param entity An entity.
 	 * @param entityAreas A map of areas.
 	 */
-	void buildEntityAreas(Eris::Entity& entity, std::map<Eris::Entity*, WFMath::RotBox<2>>& entityAreas);
+	void buildEntityAreas(Eris::Entity& entity, std::map<Eris::Entity*, WFMath::RotBox<2>>& entityAreas) const;
 
 	/**
 	 * Find entity 2d rotbox areas within the supplied extent.
@@ -387,7 +388,8 @@ protected:
 	 * @param tiles A collection of tile references.
 	 * @param processor A processor function.
 	 */
-	void processTiles(std::vector<const dtCompressedTile*> tiles, const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const;
+	void processTiles(std::vector<const dtCompressedTile*> tiles,
+					  const std::function<void(unsigned int, dtTileCachePolyMesh&, float* origin, float cellsize, float cellheight, dtTileCacheLayer& layer)>& processor) const;
 
 	/**
 	 * @brief Marks all tiles within the area as dirty.
@@ -396,6 +398,7 @@ protected:
 	 * @param area An area.
 	 */
 	void markTilesAsDirty(const WFMath::AxisBox<2>& area);
+
 	/**
 	 * @brief Marks all tiles within an indexed area as dirty.
 	 *
@@ -419,7 +422,9 @@ protected:
 	void findAffectedTiles(const WFMath::AxisBox<2>& area, int& tileMinXIndex, int& tileMaxXIndex, int& tileMinYIndex, int& tileMaxYIndex) const;
 
 	void Entity_Moved(Eris::Entity* entity);
+
 	void Domain_ChildAdded(Eris::Entity* entity);
+
 	void Domain_ChildRemoved(Eris::Entity* entity);
 
 };

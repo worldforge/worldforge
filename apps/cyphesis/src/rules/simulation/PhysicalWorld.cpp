@@ -21,30 +21,27 @@
 #include "Remotery.h"
 
 PhysicalWorld::PhysicalWorld(btDispatcher* dispatcher,
-                             btBroadphaseInterface* pairCache,
-                             btConstraintSolver* constraintSolver,
-                             btCollisionConfiguration* collisionConfiguration)
-        : btDiscreteDynamicsWorld(dispatcher, pairCache, constraintSolver, collisionConfiguration)
-{}
+							 btBroadphaseInterface* pairCache,
+							 btConstraintSolver* constraintSolver,
+							 btCollisionConfiguration* collisionConfiguration)
+		: btDiscreteDynamicsWorld(dispatcher, pairCache, constraintSolver, collisionConfiguration) {}
 
-void PhysicalWorld::synchronizeMotionStates()
-{
-    //Don't do anything here
+void PhysicalWorld::synchronizeMotionStates() {
+	//Don't do anything here
 }
 
-int PhysicalWorld::stepSimulation(btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep)
-{
-    rmt_ScopedCPUSample(PhysicalWorld_stepSimulation, 0)
+int PhysicalWorld::stepSimulation(btScalar timeStep, int maxSubSteps, btScalar fixedTimeStep) {
+	rmt_ScopedCPUSample(PhysicalWorld_stepSimulation, 0)
 
-    int steps = btDiscreteDynamicsWorld::stepSimulation(timeStep, maxSubSteps, fixedTimeStep);
+	int steps = btDiscreteDynamicsWorld::stepSimulation(timeStep, maxSubSteps, fixedTimeStep);
 
-    rmt_ScopedCPUSample(PhysicalWorld_synchronizeMotionStates, 0)
-    //iterate over all active rigid bodies
-    for (int i = 0; i < m_nonStaticRigidBodies.size(); i++) {
-        btRigidBody* body = m_nonStaticRigidBodies[i];
-        if (body->isActive()) {
-            synchronizeSingleMotionState(body);
-        }
-    }
-    return steps;
+	rmt_ScopedCPUSample(PhysicalWorld_synchronizeMotionStates, 0)
+	//iterate over all active rigid bodies
+	for (int i = 0; i < m_nonStaticRigidBodies.size(); i++) {
+		btRigidBody* body = m_nonStaticRigidBodies[i];
+		if (body->isActive()) {
+			synchronizeSingleMotionState(body);
+		}
+	}
+	return steps;
 }

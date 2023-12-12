@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "Factory.h"
@@ -8,9 +8,8 @@ namespace Eris {
 
 Factory::~Factory() = default;
 
-int Factory::priority()
-{
-    return 0;
+int Factory::priority() {
+	return 0;
 }
 
 } // of namespace Eris

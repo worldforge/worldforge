@@ -25,9 +25,9 @@
 #include "../GUIManager.h"
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+
+namespace Ember::OgreView::Gui {
 
 IconBase::IconBase(const std::string& name, const Image* background, const Image* foreground, const Image* borderInactive, const Image* borderActive, USize size)
 		: mContainer(nullptr),
@@ -41,7 +41,8 @@ IconBase::IconBase(const std::string& name, const Image* background, const Image
 //	mContainer->setBackgroundEnabled(false);
 //	mContainer->setBackgroundColours(colour(1,1,1,0));
 
-	mButton = UniqueWindowPtr<CEGUI::PushButton>(dynamic_cast<PushButton*>(WindowManager::getSingleton().createWindow(OgreView::GUIManager::getSingleton().getDefaultScheme() + "/BorderIconButton", "icons/" + name + "/button")));
+	mButton = UniqueWindowPtr<CEGUI::PushButton>(
+			dynamic_cast<PushButton*>(WindowManager::getSingleton().createWindow(OgreView::GUIManager::getSingleton().getDefaultScheme() + "/BorderIconButton", "icons/" + name + "/button")));
 	mButton->setSize(USize(UDim(1, 0), UDim(1, 0)));
 	mButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
 	mButton->setVisible(true);
@@ -88,5 +89,5 @@ const Image* IconBase::loadImageFromImageset(const std::string& imagesetName, co
 }
 }
 
-}
-}
+
+

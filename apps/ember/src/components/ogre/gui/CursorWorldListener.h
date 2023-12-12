@@ -29,32 +29,32 @@
 #include <Eris/EntityRef.h>
 #include <domain/EmberEntityRef.h>
 
-namespace CEGUI
-{
+namespace CEGUI {
 class Window;
-template <typename> class Vector2;
+
+template<typename>
+class Vector2;
+
 typedef class Vector2<float> Vector2f;
 
 }
 
-namespace Ember
-{
+namespace Ember {
 class MainLoopController;
+
 class ConfigListenerContainer;
+
 class TimeFrame;
 
-namespace OgreView
-{
+namespace OgreView {
 class World;
 namespace Model {
 class Model;
 }
-namespace Camera
-{
+namespace Camera {
 class MainCamera;
 }
-namespace Gui
-{
+namespace Gui {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -71,8 +71,7 @@ namespace Gui
  * In addition, if the mouse cursors linger too long, a "hover" event will be emitted.
  *
  */
-class CursorWorldListener: public virtual sigc::trackable
-{
+class CursorWorldListener : public virtual sigc::trackable {
 public:
 
 	/**
@@ -152,10 +151,15 @@ protected:
 	void afterEventProcessing(float timeslice);
 
 	bool windowMouseEnters(const CEGUI::EventArgs& args);
+
 	bool windowMouseLeaves(const CEGUI::EventArgs& args);
+
 	bool windowMouseMoves(const CEGUI::EventArgs& args);
+
 	bool windowMouseButtonDown(const CEGUI::EventArgs& args);
+
 	bool windowMouseButtonUp(const CEGUI::EventArgs& args);
+
 	bool windowMouseDoubleClick(const CEGUI::EventArgs& args);
 
 	/**

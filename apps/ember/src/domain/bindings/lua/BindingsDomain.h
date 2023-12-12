@@ -25,5 +25,4 @@
 void registerBindingsDomain(sol::state_view& lua);
 
 
-
 #endif //EMBER_BINDINGSDOMAIN_H

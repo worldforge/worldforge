@@ -30,8 +30,8 @@
 #include <OgreCamera.h>
 #include <OgreSceneManager.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 AvatarTerrainCursor::AvatarTerrainCursor(Ogre::Camera& camera, Terrain::ITerrainAdapter& terrainAdapter)
 		: mLastUpdated(0),
@@ -107,5 +107,5 @@ void AvatarTerrainCursor::Config_TerrainCheckInterval(const std::string& section
 }
 
 }
-}
+
 

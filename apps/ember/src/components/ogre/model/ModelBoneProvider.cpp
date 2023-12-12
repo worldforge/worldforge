@@ -23,9 +23,8 @@
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 ModelBoneProvider::ModelBoneProvider(Ogre::Node* parentSceneNode, Model& parentModel, bool deleteMovableWhenDone) :
 		mNode(parentSceneNode),
 		mParentModel(parentModel),
@@ -79,7 +78,7 @@ std::unique_ptr<INodeProvider> ModelBoneProvider::createChildProvider(const std:
 
 void ModelBoneProvider::setVisible(bool visible) {
 	mVisible = visible;
-	for (auto& tagPoint : mTagPoints) {
+	for (auto& tagPoint: mTagPoints) {
 		tagPoint->getChildObject()->setVisible(visible);
 	}
 }
@@ -114,7 +113,7 @@ void ModelBoneProvider::setOffsets(const Ogre::Vector3& translate, const Ogre::Q
 
 void ModelBoneProvider::setScale(const Ogre::Vector3& scale) {
 	mScale = scale;
-	for (auto tagpoint : mTagPoints) {
+	for (auto tagpoint: mTagPoints) {
 		tagpoint->setScale(scale);
 	}
 }
@@ -126,16 +125,16 @@ Ogre::Vector3 ModelBoneProvider::getScale() const {
 void ModelBoneProvider::updatePositionAndOrientation() {
 	if (!mParent) {
 		mOrientation = mAttachPointDefinition.Rotation * mOffsetRotation;
-		mPosition = (mAttachPointDefinition.Rotation * mAttachPointDefinition.Translation) + (mOffsetRotation *  mOffsetTranslation);
+		mPosition = (mAttachPointDefinition.Rotation * mAttachPointDefinition.Translation) + (mOffsetRotation * mOffsetTranslation);
 	} else {
 		mOrientation = mOffsetRotation;
 		mPosition = mOffsetRotation * mOffsetTranslation;
 	}
-	for (auto tagpoint : mTagPoints) {
+	for (auto tagpoint: mTagPoints) {
 		tagpoint->setPosition(getDerivedPosition());
 		tagpoint->setOrientation(getDerivedOrientation());
 	}
-	for (auto child : mChildren) {
+	for (auto child: mChildren) {
 		child->updatePositionAndOrientation();
 	}
 }
@@ -190,5 +189,5 @@ void ModelBoneProvider::setAttachPointDefinition(AttachPointDefinition attachPoi
 
 
 }
-}
-}
+
+

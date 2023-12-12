@@ -21,24 +21,21 @@
 #include "framework/Log.h"
 
 #include "framework/Session.h"
-namespace Ember
-{
+
+namespace Ember {
 Connection::Connection(Session& session, const std::string& clientName, const std::string& host, short port, std::unique_ptr<IConnectionListener> listener) :
 		Eris::Connection(session.m_io_service, session.m_event_service, clientName, host, port),
-		mListener(std::move(listener))
-{
+		mListener(std::move(listener)) {
 }
 
 Connection::Connection(Session& session, const std::string& clientName, const std::string& socket, std::unique_ptr<IConnectionListener> listener) :
 		Eris::Connection(session.m_io_service, session.m_event_service, clientName, socket),
-		mListener(std::move(listener))
-{
+		mListener(std::move(listener)) {
 }
 
 Connection::~Connection() = default;
 
-void Connection::send(const Atlas::Objects::Root &obj)
-{
+void Connection::send(const Atlas::Objects::Root& obj) {
 	if (mListener) {
 		try {
 			mListener->sendingObject(obj);
@@ -49,8 +46,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
 	Eris::Connection::send(obj);
 }
 
-void Connection::objectArrived(Atlas::Objects::Root obj)
-{
+void Connection::objectArrived(Atlas::Objects::Root obj) {
 	if (mListener) {
 		try {
 			mListener->receivedObject(obj);

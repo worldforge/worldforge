@@ -43,11 +43,13 @@ EmberEntityRef::~EmberEntityRef() {
 }
 
 EmberEntityRef& EmberEntityRef::operator=(const EmberEntityRef& ref) noexcept {
-	mConnection.disconnect();
-	mEntity = ref.mEntity;
+	if (this != &ref) {
+		mConnection.disconnect();
+		mEntity = ref.mEntity;
 
-	if (mEntity) {
-		mConnection = mEntity->BeingDeleted.connect(sigc::mem_fun(*this, &EmberEntityRef::onEntityDeleted));
+		if (mEntity) {
+			mConnection = mEntity->BeingDeleted.connect(sigc::mem_fun(*this, &EmberEntityRef::onEntityDeleted));
+		}
 	}
 
 	return *this;

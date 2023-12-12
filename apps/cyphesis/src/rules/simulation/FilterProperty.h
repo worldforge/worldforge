@@ -29,27 +29,26 @@
  *
  * \ingroup PropertyClasses
  */
-class FilterProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_atlastype = "string";
+class FilterProperty : public PropertyBase {
+public:
+	static constexpr const char* property_atlastype = "string";
 
-        explicit FilterProperty() = default;
+	explicit FilterProperty() = default;
 
-        FilterProperty* copy() const override;
+	FilterProperty* copy() const override;
 
-        const EntityFilter::Filter* getData() const;
+	const EntityFilter::Filter* getData() const;
 
-        int get(Atlas::Message::Element& val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        /// \brief Read the value of the property from an Atlas Message
-        void set(const Atlas::Message::Element& val) override;
+	/// \brief Read the value of the property from an Atlas Message
+	void set(const Atlas::Message::Element& val) override;
 
-    protected:
+protected:
 
-        FilterProperty(const FilterProperty& rhs);
+	FilterProperty(const FilterProperty& rhs);
 
-        std::unique_ptr<EntityFilter::Filter> m_data;
+	std::unique_ptr<EntityFilter::Filter> m_data;
 };
 
 

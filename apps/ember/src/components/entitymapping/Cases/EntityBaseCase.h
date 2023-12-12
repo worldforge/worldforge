@@ -31,13 +31,13 @@ class TypeInfo;
 }
 
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 /**
 	A Case which triggers on the type of the entity.
@@ -65,8 +65,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

@@ -38,12 +38,15 @@
 
 namespace Ember {
 class EmberEntity;
+
 struct IHeightProvider;
+
 class ConfigListenerContainer;
+
 class TimeFrame;
-namespace Navigation
-{
+namespace Navigation {
 class Awareness;
+
 class Steering;
 }
 namespace OgreView {
@@ -53,24 +56,23 @@ class AwarenessVisualizer;
 }
 namespace Camera {
 class FirstPersonCameraMount;
+
 class MainCamera;
 }
 class FreeFlyingCameraMotionHandler;
+
 class Avatar;
 
 class GUIManager;
 
-class InputManager;
 class MovementController;
 
 /**
 The movement mode of the avatar, run or walk.
 */
-class MovementControllerMode
-{
+class MovementControllerMode {
 public:
-	enum Mode
-	{
+	enum Mode {
 		MM_WALK = 0,
 		MM_RUN = 1
 	};
@@ -79,15 +81,16 @@ public:
 /**
 Listens for left mouse button pressed in movement mode and moves the character forward.
 */
-class MovementControllerInputListener : public virtual sigc::trackable
-{
+class MovementControllerInputListener : public virtual sigc::trackable {
 public:
 	explicit MovementControllerInputListener(MovementController& controller);
 
 protected:
 
 	void input_MouseButtonPressed(Input::MouseButton button, Input::InputMode mode);
+
 	void input_MouseButtonReleased(Input::MouseButton button, Input::InputMode mode);
+
 	MovementController& mController;
 };
 
@@ -95,19 +98,18 @@ protected:
 Controls the avatar. All avatar movement is handled by an instance of this class.
 */
 class MovementController
-: public virtual sigc::trackable,
-public ConsoleObject,
-public IMovementProvider
-{
+		: public virtual sigc::trackable,
+		  public ConsoleObject,
+		  public IMovementProvider {
 public:
-    friend class MovementControllerInputListener;
+	friend class MovementControllerInputListener;
 
-    /**
-     * @brief Ctor.
-     * @param avatar The main avatar.
-     * @param camera The main camera.
-     */
-    MovementController(Avatar& avatar, Camera::MainCamera& camera, IHeightProvider& heightProvider);
+	/**
+	 * @brief Ctor.
+	 * @param avatar The main avatar.
+	 * @param camera The main camera.
+	 */
+	MovementController(Avatar& avatar, Camera::MainCamera& camera, IHeightProvider& heightProvider);
 
 	~MovementController() override;
 
@@ -149,7 +151,7 @@ public:
 	 * @param command
 	 * @param args
 	 */
-		void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	/**
 	Moves the avatar to the specified point.
@@ -194,7 +196,7 @@ protected:
 	/**
 	Listen for double clicks and send the avatar to the double clicked position.
 	*/
-	void entityPicker_PickedEntity(const EntityPickResult& result, const MousePickerArgs& args);
+	//void entityPicker_PickedEntity(const EntityPickResult& result, const MousePickerArgs& args);
 
 	/**
 	Creates the terrain decal needed for displaying where the avatar is heading.
@@ -273,7 +275,6 @@ protected:
 
 	AutoCloseConnection mParentBboxConnection;
 };
-
 
 
 }

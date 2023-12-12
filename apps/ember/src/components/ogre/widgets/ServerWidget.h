@@ -130,7 +130,7 @@ private:
 	bool EntityDestroyedOkButton_Click(const CEGUI::EventArgs& args);
 
 
-	bool fetchCredentials(Eris::Connection& connection, std::string& user, std::string& pass);
+	static bool fetchCredentials(Eris::Connection& connection, std::string& user, std::string& pass);
 
 	bool saveCredentials();
 

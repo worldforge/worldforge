@@ -30,56 +30,52 @@
 #include <cassert>
 #include <common/PropertyManager.h>
 
-struct LocatedEntityTest : public LocatedEntity
-{
-    static PropertyManager* propertyManager;
+struct LocatedEntityTest : public LocatedEntity {
+	static PropertyManager* propertyManager;
 
-    LocatedEntityTest(RouterId id) :
-            LocatedEntity(id)
-    {}
+	LocatedEntityTest(RouterId id) :
+			LocatedEntity(id) {}
 
-    void externalOperation(const Operation&, Link&) override;
+	void externalOperation(const Operation&, Link&) override;
 
-    void operation(const Operation&, OpVector&) override;
+	void operation(const Operation&, OpVector&) override;
 
-    std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const
-    {
-        if (propertyManager) {
-            return propertyManager->addProperty(propertyName);
-        }
-        return {};
-    }
+	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const {
+		if (propertyManager) {
+			return propertyManager->addProperty(propertyName);
+		}
+		return {};
+	}
 
 };
 
 
-class EntityExerciser
-{
-    protected:
-        std::unique_ptr<TypeNode> test_type;
-        Ref<LocatedEntity> m_parentEntity;
-        Ref<LocatedEntity> m_ent;
-        std::set<int> attr_types;
-    public:
-        explicit EntityExerciser(Ref<LocatedEntity> e);
+class EntityExerciser {
+protected:
+	std::unique_ptr<TypeNode> test_type;
+	Ref<LocatedEntity> m_parentEntity;
+	Ref<LocatedEntity> m_ent;
+	std::set<int> attr_types;
+public:
+	explicit EntityExerciser(Ref<LocatedEntity> e);
 
-        virtual ~EntityExerciser();
+	virtual ~EntityExerciser();
 
-        bool checkAttributes(const std::set<std::string>& attr_names);
+	bool checkAttributes(const std::set<std::string>& attr_names);
 
-        virtual bool checkProperties(const std::set<std::string>& prop_names);
+	virtual bool checkProperties(const std::set<std::string>& prop_names);
 
-        bool fullAttributeTest(const Atlas::Message::MapType& attr_data);
+	bool fullAttributeTest(const Atlas::Message::MapType& attr_data);
 
-        virtual void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
+	virtual void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
 
-        void addAllOperations(std::set<std::string>& ops);
+	void addAllOperations(std::set<std::string>& ops);
 
-        virtual void runOperations();
+	virtual void runOperations();
 
-        void runConversions();
+	void runConversions();
 
-        void flushOperations(OpVector& ops);
+	void flushOperations(OpVector& ops);
 };
 
 #endif // TESTS_ENTITY_EXERCISER_H

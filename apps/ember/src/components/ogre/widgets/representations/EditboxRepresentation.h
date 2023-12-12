@@ -27,12 +27,8 @@
 #include "../adapters/GenericPropertyAdapter.h"
 #include <CEGUI/WindowManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief represents given value by an editbox
@@ -57,7 +53,7 @@ public:
 	virtual CEGUI::Window* getGuiRoot();
 
 protected:
-	UniqueWindowPtr <CEGUI::Window> mLayout;
+	UniqueWindowPtr<CEGUI::Window> mLayout;
 	CEGUI::String mPrefix;
 };
 
@@ -79,10 +75,5 @@ CEGUI::Window* EditboxRepresentation<ValueType, PropertyNativeType>::getGuiRoot(
 
 }
 
-}
-
-}
-
-}
 
 #endif

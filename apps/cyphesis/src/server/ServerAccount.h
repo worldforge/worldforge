@@ -29,21 +29,21 @@
 
 /// \brief This is a class for handling users with administrative priveleges
 class ServerAccount : public Account {
-  protected:
+protected:
 
 //    Ref<LocatedEntity> addNewEntity(const Atlas::Objects::Entity::RootEntity &,
 //                                 const Atlas::Objects::Root &);
 
-  public:
-    ServerAccount(Connection * conn, const std::string & username,
-                  const std::string & passwd,
-                  RouterId id);
+public:
+	ServerAccount(Connection* conn, const std::string& username,
+				  const std::string& passwd,
+				  RouterId id);
 
-    ~ServerAccount() override = default;
+	~ServerAccount() override = default;
 
-    const char * getType() const override;
+	const char* getType() const override;
 
-    friend class ServerAccounttest;
+	friend class ServerAccounttest;
 };
 
 #endif // SERVER_SERVER_ACCOUNT_H

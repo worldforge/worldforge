@@ -27,34 +27,36 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Quaternion : public WrapperBase<WFMath::Quaternion, CyPy_Quaternion>
-{
-    public:
-        CyPy_Quaternion(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Quaternion : public WrapperBase<WFMath::Quaternion, CyPy_Quaternion> {
+public:
+	CyPy_Quaternion(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Quaternion(Py::PythonClassInstance* self, WFMath::Quaternion value);
+	CyPy_Quaternion(Py::PythonClassInstance* self, WFMath::Quaternion value);
 
-        static void init_type();
+	static void init_type();
 
-    protected:
+protected:
 
 
-        Py::Object is_valid();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Quaternion, is_valid);
+	Py::Object is_valid();
 
-        Py::Object as_list();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Quaternion, as_list);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Quaternion, is_valid);
 
-        Py::Object rotation(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Quaternion, rotation);
+	Py::Object as_list();
 
-        Py::Object getattro(const Py::String& name) override;
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Quaternion, as_list);
 
-        Py::Object repr() override;
+	Py::Object rotation(const Py::Tuple& args);
 
-        Py::Object rich_compare(const Py::Object& other, int type) override;
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Quaternion, rotation);
 
-        Py::Object number_multiply(const Py::Object& other) override;
+	Py::Object getattro(const Py::String& name) override;
+
+	Py::Object repr() override;
+
+	Py::Object rich_compare(const Py::Object& other, int type) override;
+
+	Py::Object number_multiply(const Py::Object& other) override;
 };
 
 

@@ -31,35 +31,32 @@ In order for it to access the m_elem structure it must be declared as a friend c
 @author Erik Hjortsberg <erik@worldforge.org>
 */
 template<typename Shape>
-class ZeroPrimitive
-{
+class ZeroPrimitive {
 public:
 /**
 @brief Ctor.
 An instance of Shape with zero values will be created at construction time.
 @param dim The dimensions of the shape.
 */
-explicit ZeroPrimitive(int dim) : m_shape()
-{
-  for (int i = 0; i < dim; ++i) {
-    m_shape.m_elem[i] = 0;
-  }
-  m_shape.m_valid = true;
-}
+	explicit ZeroPrimitive(int dim) : m_shape() {
+		for (int i = 0; i < dim; ++i) {
+			m_shape.m_elem[i] = 0;
+		}
+		m_shape.m_valid = true;
+	}
 
 /**
 @brief Gets the zeroed shape.
 */
-const Shape& getShape() const
-{
-	return m_shape;
-}
+	const Shape& getShape() const {
+		return m_shape;
+	}
 
 private:
 /**
 @brief The interal zeroed shape.
 */
-Shape m_shape;
+	Shape m_shape;
 };
 }
 

@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 Allocator<GenericData> GenericData::allocator;
         
@@ -55,4 +55,4 @@ void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::str
         data.attr_stamp = 0.0;
 }
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation

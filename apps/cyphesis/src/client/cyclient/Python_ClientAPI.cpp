@@ -31,70 +31,67 @@
 #include "pycxx/CXX/Objects.hxx"
 
 int python_client_script(const std::string& package,
-                         const std::string& func,
-                         ObserverClient& client)
-{
-    auto module = Get_PyModule(package);
-    if (module.isNull()) {
-        return -1;
-    }
+						 const std::string& func,
+						 ObserverClient& client) {
+	auto module = Get_PyModule(package);
+	if (module.isNull()) {
+		return -1;
+	}
 
-    auto function = module.getAttr(func);
-    if (function.isNull()) {
-        std::cerr << "Could not find " << func << " function" << std::endl
-                  << std::flush;
-        PyErr_Print();
-        return -1;
-    }
-    if (!function.isCallable()) {
-        std::cerr << "It does not seem to be a function at all" << std::endl
-                  << std::flush;
-        return -1;
-    }
-    Py::Callable callable(function);
-    Py::Dict kwds;
-    Py::TupleN args(CyPy_ObserverClient::wrap(& client));
-    try {
-        auto ret = callable.apply(args, kwds);
-    } catch (...) {
-        if (PyErr_Occurred() == nullptr) {
-            spdlog::error("Could not call function");
-        } else {
-            spdlog::error("Reporting python error");
-            PyErr_Print();
-        }
-        return -1;
-    }
+	auto function = module.getAttr(func);
+	if (function.isNull()) {
+		std::cerr << "Could not find " << func << " function" << std::endl
+				  << std::flush;
+		PyErr_Print();
+		return -1;
+	}
+	if (!function.isCallable()) {
+		std::cerr << "It does not seem to be a function at all" << std::endl
+				  << std::flush;
+		return -1;
+	}
+	Py::Callable callable(function);
+	Py::Dict kwds;
+	Py::TupleN args(CyPy_ObserverClient::wrap(& client));
+	try {
+		auto ret = callable.apply(args, kwds);
+	} catch (...) {
+		if (PyErr_Occurred() == nullptr) {
+			spdlog::error("Could not call function");
+		} else {
+			spdlog::error("Reporting python error");
+			PyErr_Print();
+		}
+		return -1;
+	}
 
-    return 0;
-
-}
-
-void extend_client_python_api()
-{
-    Py::Module server("server");
-    if (server.isNull()) {
-        return;
-    }
-    CyPy_CreatorClient::init_type();
-    CyPy_ObserverClient::init_type();
-
-    server.setAttr("CreatorClient", CyPy_CreatorClient::type());
-    server.setAttr("ObserverClient", CyPy_ObserverClient::type());
+	return 0;
 
 }
 
-void python_prompt()
-{
+void extend_client_python_api() {
+	Py::Module server("server");
+	if (server.isNull()) {
+		return;
+	}
+	CyPy_CreatorClient::init_type();
+	CyPy_ObserverClient::init_type();
 
-    std::wstring prgname = L"python";
+	server.setAttr("CreatorClient", CyPy_CreatorClient::type());
+	server.setAttr("ObserverClient", CyPy_ObserverClient::type());
 
-    auto bytes = (prgname.size() * sizeof(wchar_t)) + 1;
-    auto mem = new wchar_t[bytes];
-    memcpy(mem, prgname.c_str(), bytes);
+}
 
-    Py_Main(1, &mem);
+void python_prompt() {
 
-    delete[] mem;
+	std::wstring prgname = L"python";
+
+	auto bytes = (prgname.size() * sizeof(wchar_t)) + 1;
+	auto mem = new wchar_t[bytes];
+	memcpy(mem, prgname.c_str(), bytes);
+
+	Py_Main(1, &mem);
+
+	delete[] mem;
 
 }

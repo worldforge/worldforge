@@ -43,8 +43,8 @@
 #include <Eris/Avatar.h>
 #include <Ogre.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 EntityWorldPickListenerVisualizer::EntityWorldPickListenerVisualizer(EntityWorldPickListener& pickListener, Ogre::SceneManager& sceneManager) :
 		mEntity(nullptr),
@@ -312,4 +312,4 @@ void EntityWorldPickListener::highlightSelectedEntity() {
 
 
 }
-}
+

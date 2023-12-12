@@ -18,11 +18,11 @@
 
 #include "StackChecker.h"
 #include "Log.h"
-#include <array>
 
 #ifdef UNWIND_ENABLED
 
 #define UNW_LOCAL_ONLY
+#include <array>
 
 #include <libunwind.h>
 #include <cxxabi.h>

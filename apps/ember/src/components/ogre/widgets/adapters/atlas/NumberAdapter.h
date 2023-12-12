@@ -25,14 +25,8 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
@@ -63,12 +57,5 @@ protected:
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

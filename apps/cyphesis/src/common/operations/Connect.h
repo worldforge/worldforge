@@ -21,21 +21,24 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int CONNECT_NO;
 
 /// \brief An operation used to establish a connection from this server
 /// to another.
 /// \ingroup CustomOperations
-class Connect : public Generic
-{
-  public:
-    Connect() {
-        (*this)->setType("connect", CONNECT_NO);
-    }
+class Connect : public Generic {
+public:
+	Connect() {
+		(*this)->setType("connect", CONNECT_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_CONNECT_H

@@ -25,7 +25,7 @@
 #include <memory>
 
 namespace Mercator {
-    class TerrainMod;
+class TerrainMod;
 }
 
 class TerrainProperty;
@@ -34,37 +34,36 @@ class TerrainModTranslator;
 
 /// \brief Class to handle Entity terrain modifier property
 /// \ingroup PropertyClasses
-class TerrainModProperty : public TerrainEffectorProperty
-{
-    public:
-        static constexpr const char* property_name = "terrainmod";
+class TerrainModProperty : public TerrainEffectorProperty {
+public:
+	static constexpr const char* property_name = "terrainmod";
 
-        TerrainModProperty();
+	TerrainModProperty();
 
-        TerrainModProperty(const TerrainModProperty& rhs);
+	TerrainModProperty(const TerrainModProperty& rhs);
 
-        ~TerrainModProperty() override;
+	~TerrainModProperty() override;
 
-        TerrainModProperty* copy() const override;
+	TerrainModProperty* copy() const override;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        /// \brief Constructs a Mercator::TerrainMod from Atlas data
-        std::unique_ptr<Mercator::TerrainMod> parseModData(const WFMath::Point<3>& pos,
-                                           const WFMath::Quaternion& orientation) const;
+	/// \brief Constructs a Mercator::TerrainMod from Atlas data
+	std::unique_ptr<Mercator::TerrainMod> parseModData(const WFMath::Point<3>& pos,
+													   const WFMath::Quaternion& orientation) const;
 
-        /// \brief Retrieve a sub attribute of the property
-        int getAttr(const std::string&,
-                    Atlas::Message::Element&) const;
+	/// \brief Retrieve a sub attribute of the property
+	int getAttr(const std::string&,
+				Atlas::Message::Element&) const;
 
-        /// \brief Modify a sub attribute of the property
-        void setAttr(const std::string&,
-                     const Atlas::Message::Element&);
+	/// \brief Modify a sub attribute of the property
+	void setAttr(const std::string&,
+				 const Atlas::Message::Element&);
 
 
-    protected:
+protected:
 
-        std::unique_ptr<TerrainModTranslator> m_translator;
+	std::unique_ptr<TerrainModTranslator> m_translator;
 
 };
 

@@ -32,15 +32,13 @@
 namespace Ember::OgreView {
 
 EmberEntityPartAction::EmberEntityPartAction(EmberEntity& entity, std::string partName)
-: mEntity(entity), mPartName(std::move(partName))
-{
+		: mEntity(entity), mPartName(std::move(partName)) {
 }
 
 
 EmberEntityPartAction::~EmberEntityPartAction() = default;
 
-void EmberEntityPartAction::activate(EntityMapping::ChangeContext& context)
-{
+void EmberEntityPartAction::activate(EntityMapping::ChangeContext& context) {
 	logger->debug("Showing part {}", mPartName);
 	Model::ModelRepresentation* representation = Model::ModelRepresentation::getRepresentationForEntity(mEntity);
 	if (representation) {
@@ -48,8 +46,7 @@ void EmberEntityPartAction::activate(EntityMapping::ChangeContext& context)
 	}
 }
 
-void EmberEntityPartAction::deactivate(EntityMapping::ChangeContext& context)
-{
+void EmberEntityPartAction::deactivate(EntityMapping::ChangeContext& context) {
 	logger->debug("Hiding part {}", mPartName);
 	Model::ModelRepresentation* representation = Model::ModelRepresentation::getRepresentationForEntity(mEntity);
 	if (representation) {

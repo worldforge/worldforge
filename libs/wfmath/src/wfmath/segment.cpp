@@ -37,37 +37,40 @@
 
 namespace WFMath {
 
-template<> Segment<3>& Segment<3>::rotatePoint(const Quaternion& q,
-                                               const Point<3>& p)
-{
-  m_p1.rotate(q, p);
-  m_p2.rotate(q, p);
-  return *this;
+template<>
+Segment<3>& Segment<3>::rotatePoint(const Quaternion& q,
+									const Point<3>& p) {
+	m_p1.rotate(q, p);
+	m_p2.rotate(q, p);
+	return *this;
 }
 
-template<> Segment<3>& Segment<3>::rotateCenter(const Quaternion& q)
-{
-  rotatePoint(q, getCenter());
-  return *this;
+template<>
+Segment<3>& Segment<3>::rotateCenter(const Quaternion& q) {
+	rotatePoint(q, getCenter());
+	return *this;
 }
 
-template<> Segment<3> Segment<3>::toParentCoords(const Point<3>& origin,
-                                                 const Quaternion& rotation) const
-{
-  return Segment(m_p1.toParentCoords(origin, rotation),
-                 m_p2.toParentCoords(origin, rotation));
+template<>
+Segment<3> Segment<3>::toParentCoords(const Point<3>& origin,
+									  const Quaternion& rotation) const {
+	return Segment(m_p1.toParentCoords(origin, rotation),
+				   m_p2.toParentCoords(origin, rotation));
 }
 
-template<> Segment<3> Segment<3>::toLocalCoords(const Point<3>& origin,
-                                                const Quaternion& rotation) const
-{
-  return Segment(m_p1.toLocalCoords(origin, rotation),
-                 m_p2.toLocalCoords(origin, rotation));
+template<>
+Segment<3> Segment<3>::toLocalCoords(const Point<3>& origin,
+									 const Quaternion& rotation) const {
+	return Segment(m_p1.toLocalCoords(origin, rotation),
+				   m_p2.toLocalCoords(origin, rotation));
 }
 
 
-template class Segment<2>;
-template class Segment<3>;
+template
+class Segment<2>;
+
+template
+class Segment<3>;
 
 static_assert(std::is_standard_layout<Segment<2>>::value, "Segment should be standard layout.");
 static_assert(std::is_trivially_copyable<Segment<2>>::value, "Segment should be trivially copyable.");

@@ -26,22 +26,20 @@
 #include "NumericComparer.h"
 #include "NumericValueHolder.h"
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 /**
 	Test for numeric equality.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class NumericEqualsComparer : public NumericComparer, private NumericValueHolder
-{
+class NumericEqualsComparer : public NumericComparer, private NumericValueHolder {
 public:
 	explicit NumericEqualsComparer(double value);
 
@@ -54,10 +52,10 @@ protected:
 };
 }
 
-}
 
-}
 
-}
+
+
+
 
 #endif

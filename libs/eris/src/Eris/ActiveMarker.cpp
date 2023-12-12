@@ -18,7 +18,7 @@
 
 #include "ActiveMarker.h"
 
-namespace  Eris {
+namespace Eris {
 
 ActiveMarker::ActiveMarker()
 		: m_marker(std::make_shared<bool>(true)) {

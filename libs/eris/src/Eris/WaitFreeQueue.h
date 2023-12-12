@@ -29,57 +29,50 @@ DEALINGS IN THE SOFTWARE.
 
 #include <atomic>
 
-namespace Eris
-{
+namespace Eris {
 
 /**
  * @brief A queue optimized for insertion from background threads and consumption from one main thread.
  */
 template<typename T>
-class WaitFreeQueue
-{
+class WaitFreeQueue {
 public:
-    struct node
-    {
-        T data;
-        node * next;
-    };
+	struct node {
+		T data;
+		node* next;
+	};
 
-    WaitFreeQueue() :
-            _head(nullptr)
-    {
-    }
+	WaitFreeQueue() :
+			_head(nullptr) {
+	}
 
-    void push(const T& data)
-    {
-        node* n = new node;
-        n->data = data;
-        node * stale_head = _head.load(std::memory_order_relaxed);
-        do {
-            n->next = stale_head;
-        } while (!_head.compare_exchange_weak(stale_head, n,
-                std::memory_order_release));
-    }
+	void push(const T& data) {
+		node* n = new node;
+		n->data = data;
+		node* stale_head = _head.load(std::memory_order_relaxed);
+		do {
+			n->next = stale_head;
+		} while (!_head.compare_exchange_weak(stale_head, n,
+											  std::memory_order_release));
+	}
 
-    node* pop_all(void)
-    {
-        node* last = pop_all_reverse(), *first = nullptr;
-        while (last) {
-            node * tmp = last;
-            last = last->next;
-            tmp->next = first;
-            first = tmp;
-        }
-        return first;
-    }
+	node* pop_all(void) {
+		node* last = pop_all_reverse(), * first = nullptr;
+		while (last) {
+			node* tmp = last;
+			last = last->next;
+			tmp->next = first;
+			first = tmp;
+		}
+		return first;
+	}
 
-    node * pop_all_reverse(void)
-    {
-        return _head.exchange(nullptr, std::memory_order_acquire);
-    }
+	node* pop_all_reverse(void) {
+		return _head.exchange(nullptr, std::memory_order_acquire);
+	}
 
 private:
-    std::atomic<node*> _head;
+	std::atomic<node*> _head;
 };
 
 }

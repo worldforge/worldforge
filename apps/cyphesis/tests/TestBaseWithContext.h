@@ -36,85 +36,78 @@
 #include <cmath>
 
 
-
 namespace Cyphesis {
 
-    template<typename ContextT>
-    struct Test
-    {
-        const char* name;
-        std::function<void(ContextT&)> method;
-    };
+template<typename ContextT>
+struct Test {
+	const char* name;
+	std::function<void(ContextT&)> method;
+};
 
-    /**
-     * Base class for tests. The template parameter ContextT declares a "context" class.
-     * Before each test is invoked an instance of ContextT will be created, and destroyed after invokation.
-     * The intent is that ContextT should contain all structures that are relevant to the tests.
-     * @tparam ContextT
-     */
-    template<typename ContextT>
-    class TestBaseWithContext : public AssertBase
-    {
-        protected:
+/**
+ * Base class for tests. The template parameter ContextT declares a "context" class.
+ * Before each test is invoked an instance of ContextT will be created, and destroyed after invokation.
+ * The intent is that ContextT should contain all structures that are relevant to the tests.
+ * @tparam ContextT
+ */
+template<typename ContextT>
+class TestBaseWithContext : public AssertBase {
+protected:
 
-            std::list<Test<ContextT>> m_tests;
+	std::list<Test<ContextT>> m_tests;
 
-        public:
-            virtual ~TestBaseWithContext();
+public:
+	virtual ~TestBaseWithContext();
 
-            void addTest(Test<ContextT> t);
+	void addTest(Test<ContextT> t);
 
-            void addTest(const char* test_name, std::function<void(ContextT&)> method);
+	void addTest(const char* test_name, std::function<void(ContextT&)> method);
 
-            int run();
+	int run();
 
-    };
+};
 
-    template<typename ContextT>
-    inline TestBaseWithContext<ContextT>::~TestBaseWithContext()
-    {
-    }
+template<typename ContextT>
+inline TestBaseWithContext<ContextT>::~TestBaseWithContext() {
+}
 
-    template<typename ContextT>
-    void TestBaseWithContext<ContextT>::addTest(Test<ContextT> t)
-    {
-        m_tests.emplace_back(t);
-    }
+template<typename ContextT>
+void TestBaseWithContext<ContextT>::addTest(Test<ContextT> t) {
+	m_tests.emplace_back(t);
+}
 
-    template<typename ContextT>
-    void TestBaseWithContext<ContextT>::addTest(const char* test_name, std::function<void(ContextT&)> method)
-    {
-        m_tests.emplace_back(Test<ContextT>{test_name, method});
-    }
+template<typename ContextT>
+void TestBaseWithContext<ContextT>::addTest(const char* test_name, std::function<void(ContextT&)> method) {
+	m_tests.emplace_back(Test<ContextT>{test_name, method});
+}
 
-    template<typename ContextT>
-    int TestBaseWithContext<ContextT>::run()
-    {
-        int error_count = 0;
+template<typename ContextT>
+int TestBaseWithContext<ContextT>::run() {
+	int error_count = 0;
 
-        for (auto& test : m_tests) {
-            std::cerr << "Starting test " << test.name << std::endl;
-            {
-                ContextT context{};
-                test.method(context);
-            }
-            std::cerr << "Completed test " << test.name << std::endl;
+	for (auto& test: m_tests) {
+		std::cerr << "Starting test " << test.name << std::endl;
+		{
+			ContextT context{};
+			test.method(context);
+		}
+		std::cerr << "Completed test " << test.name << std::endl;
 
-            if (!m_errorReports.empty()) {
-                ++error_count;
+		if (!m_errorReports.empty()) {
+			++error_count;
 
-                std::cerr << "Test \"" << test.name << "\" failed:" << std::endl;
+			std::cerr << "Test \"" << test.name << "\" failed:" << std::endl;
 
-                for (auto& report : m_errorReports) {
-                    std::cerr << report << std::endl;
-                }
+			for (auto& report: m_errorReports) {
+				std::cerr << report << std::endl;
+			}
 
-                m_errorReports.clear();
-            }
-        }
+			m_errorReports.clear();
+		}
+	}
 
-        return error_count;
-    }
+	return error_count;
+}
 }
 
 #define ADD_TEST(_function) {\

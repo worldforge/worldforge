@@ -65,273 +65,261 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Root;
 namespace {
-    Atlas::Objects::Factories factories;
+Atlas::Objects::Factories factories;
 }
-class EntityBuildertest : public Cyphesis::TestBase
-{
-    private:
-        Ref<Entity> e;
-        BaseWorld* test_world;
-        EntityBuilder* eb;
-    public:
-        EntityBuildertest();
+class EntityBuildertest : public Cyphesis::TestBase {
+private:
+	Ref<Entity> e;
+	BaseWorld* test_world;
+	EntityBuilder* eb;
+public:
+	EntityBuildertest();
 
-        void setup();
+	void setup();
 
-        void teardown();
+	void teardown();
 
-        void test_sequence1();
+	void test_sequence1();
 
-        void test_sequence2();
+	void test_sequence2();
 
-        void test_sequence3();
+	void test_sequence3();
 
-        void test_sequence4();
+	void test_sequence4();
 
-        void test_sequence5();
+	void test_sequence5();
 
-        void test_installFactory_duplicate();
+	void test_installFactory_duplicate();
 
-        Inheritance* inheritance;
+	Inheritance* inheritance;
 };
 
-EntityBuildertest::EntityBuildertest()
-{
-    ADD_TEST(EntityBuildertest::test_sequence1);
-    ADD_TEST(EntityBuildertest::test_sequence2);
-    ADD_TEST(EntityBuildertest::test_sequence3);
-    ADD_TEST(EntityBuildertest::test_sequence4);
-    ADD_TEST(EntityBuildertest::test_sequence5);
-    ADD_TEST(EntityBuildertest::test_installFactory_duplicate);
+EntityBuildertest::EntityBuildertest() {
+	ADD_TEST(EntityBuildertest::test_sequence1);
+	ADD_TEST(EntityBuildertest::test_sequence2);
+	ADD_TEST(EntityBuildertest::test_sequence3);
+	ADD_TEST(EntityBuildertest::test_sequence4);
+	ADD_TEST(EntityBuildertest::test_sequence5);
+	ADD_TEST(EntityBuildertest::test_installFactory_duplicate);
 }
 
-void EntityBuildertest::setup()
-{
-    inheritance = new Inheritance(factories);
-    e = new Entity(1);
-    test_world = new TestWorld(e);
-    eb = new EntityBuilder();
+void EntityBuildertest::setup() {
+	inheritance = new Inheritance(factories);
+	e = new Entity(1);
+	test_world = new TestWorld(e);
+	eb = new EntityBuilder();
 
-    eb->installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
+	eb->installBaseFactory("thing", "game_entity", std::make_unique<EntityFactory<Thing>>());
 }
 
-void EntityBuildertest::teardown()
-{
-    delete test_world;
-    e = nullptr;
-    delete eb;
-    delete inheritance;
+void EntityBuildertest::teardown() {
+	delete test_world;
+	e = nullptr;
+	delete eb;
+	delete inheritance;
 }
 
-enum action
-{
-    DO_NOTHING,
-    SET_POS,
-    SET_VELOCITY
+enum action {
+	DO_NOTHING,
+	SET_POS,
+	SET_VELOCITY
 } LocatedEntity_merge_action = DO_NOTHING;
 
-void EntityBuildertest::test_sequence1()
-{
-    Anonymous attributes;
+void EntityBuildertest::test_sequence1() {
+	Anonymous attributes;
 
-    assert(eb->newEntity(1, "world", attributes) == nullptr);
-    assert(eb->newEntity(1, "nonexistant", attributes) == nullptr);
-    assert(eb->newEntity(1, "thing", attributes) != nullptr);
+	assert(eb->newEntity(1, "world", attributes) == nullptr);
+	assert(eb->newEntity(1, "nonexistant", attributes) == nullptr);
+	assert(eb->newEntity(1, "thing", attributes) != nullptr);
 }
 
-void EntityBuildertest::test_sequence2()
-{
-    Anonymous attributes;
+void EntityBuildertest::test_sequence2() {
+	Anonymous attributes;
 
-    // Create a normal Entity
-    auto test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	// Create a normal Entity
+	auto test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 
-    // Create an entity specifying an attrbute
-    attributes->setAttr("funky", "true");
+	// Create an entity specifying an attrbute
+	attributes->setAttr("funky", "true");
 
-    test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 
-    // Create an entity causing VELOCITY to be set
-    attributes = Anonymous();
+	// Create an entity causing VELOCITY to be set
+	attributes = Anonymous();
 
-    attributes->setVelocity(std::vector<double>(3, 1.5));
+	attributes->setVelocity(std::vector<double>(3, 1.5));
 
-    LocatedEntity_merge_action = SET_VELOCITY;
+	LocatedEntity_merge_action = SET_VELOCITY;
 
-    test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 
-    LocatedEntity_merge_action = DO_NOTHING;
+	LocatedEntity_merge_action = DO_NOTHING;
 
-    // Create an entity causing VELOCITY to be set for no obvious reason
-    attributes = Anonymous();
+	// Create an entity causing VELOCITY to be set for no obvious reason
+	attributes = Anonymous();
 
-    LocatedEntity_merge_action = SET_VELOCITY;
+	LocatedEntity_merge_action = SET_VELOCITY;
 
-    test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 
-    LocatedEntity_merge_action = DO_NOTHING;
+	LocatedEntity_merge_action = DO_NOTHING;
 
-    // Create an entity specifying a LOC
-    attributes = Anonymous();
+	// Create an entity specifying a LOC
+	attributes = Anonymous();
 
-    attributes->setLoc("1");
+	attributes->setLoc("1");
 
-    test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 }
 
-void EntityBuildertest::test_sequence3()
-{
-    // Attributes for test entities being created
-    Anonymous attributes;
+void EntityBuildertest::test_sequence3() {
+	// Attributes for test entities being created
+	Anonymous attributes;
 
-    // Create an entity which is an instance of one of the core classes
-    auto test_ent = eb->newEntity(1, "thing", attributes);
-    assert(test_ent);
+	// Create an entity which is an instance of one of the core classes
+	auto test_ent = eb->newEntity(1, "thing", attributes);
+	assert(test_ent);
 }
 
-void EntityBuildertest::test_sequence4()
-{
-    TypeNode factoryType("custom_type");
-    // Attributes for test entities being created
-    Anonymous attributes;
+void EntityBuildertest::test_sequence4() {
+	TypeNode factoryType("custom_type");
+	// Attributes for test entities being created
+	Anonymous attributes;
 
-    // Check that creating an entity of a type we know we have not yet
-    // installed results in a null pointer.
-    assert(eb->newEntity(1, "custom_type", attributes) == nullptr);
+	// Check that creating an entity of a type we know we have not yet
+	// installed results in a null pointer.
+	assert(eb->newEntity(1, "custom_type", attributes) == nullptr);
 
-    // Get a reference to the internal dictionary of entity factories.
-    const auto& factory_dict = eb->getFactories();
+	// Get a reference to the internal dictionary of entity factories.
+	const auto& factory_dict = eb->getFactories();
 
-    // Make sure it has some factories in it already.
-    assert(!factory_dict.empty());
+	// Make sure it has some factories in it already.
+	assert(!factory_dict.empty());
 
-    // Assert the dictionary does not contain the factory we know we have
-    // have not yet installed.
-    assert(factory_dict.find("custom_type") == factory_dict.end());
+	// Assert the dictionary does not contain the factory we know we have
+	// have not yet installed.
+	assert(factory_dict.find("custom_type") == factory_dict.end());
 
-    // Set up a type description for a new type, and install it
-    EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
-    custom_type_factory->m_attributes["test_custom_type_attr"] =
-        "test_value";
-    {
-        int ret;
-        ret = eb->installFactory("custom_type",
-                                 atlasClass("custom_type", "thing"),
-                                 std::unique_ptr<EntityFactoryBase>(custom_type_factory));
-        custom_type_factory->m_type = &factoryType;
+	// Set up a type description for a new type, and install it
+	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	custom_type_factory->m_attributes["test_custom_type_attr"] =
+			"test_value";
+	{
+		int ret;
+		ret = eb->installFactory("custom_type",
+								 atlasClass("custom_type", "thing"),
+								 std::unique_ptr<EntityFactoryBase>(custom_type_factory));
+		custom_type_factory->m_type = &factoryType;
 
-        ASSERT_EQUAL(ret, 0);
-    }
+		ASSERT_EQUAL(ret, 0);
+	}
 
-    PropertyBase* p = new Property<std::string>;
-    p->set("test_value");
-    custom_type_factory->m_type->injectProperty("test_custom_type_attr", std::unique_ptr<PropertyBase>(p));
+	PropertyBase* p = new Property<std::string>;
+	p->set("test_value");
+	custom_type_factory->m_type->injectProperty("test_custom_type_attr", std::unique_ptr<PropertyBase>(p));
 
-    // Check that the factory dictionary now contains a factory for
-    // the custom type we just installed.
-    auto I = factory_dict.find("custom_type");
-    assert(I != factory_dict.end());
-    assert(custom_type_factory == I->second.get());
+	// Check that the factory dictionary now contains a factory for
+	// the custom type we just installed.
+	auto I = factory_dict.find("custom_type");
+	assert(I != factory_dict.end());
+	assert(custom_type_factory == I->second.get());
 
-    MapType::const_iterator J;
-    // Check the factory has the attributes we described on the custom
-    // type.
-    J = custom_type_factory->m_attributes.find("test_custom_type_attr");
-    assert(J != custom_type_factory->m_attributes.end());
-    assert(J->second.isString());
-    assert(J->second.String() == "test_value");
+	MapType::const_iterator J;
+	// Check the factory has the attributes we described on the custom
+	// type.
+	J = custom_type_factory->m_attributes.find("test_custom_type_attr");
+	assert(J != custom_type_factory->m_attributes.end());
+	assert(J->second.isString());
+	assert(J->second.String() == "test_value");
 
-    // Create an instance of our custom type, ensuring that it works.
-    auto test_ent = eb->newEntity(1, "custom_type", attributes);
-    assert(test_ent);
+	// Create an instance of our custom type, ensuring that it works.
+	auto test_ent = eb->newEntity(1, "custom_type", attributes);
+	assert(test_ent);
 
-    assert(test_ent->getType() == custom_type_factory->m_type);
+	assert(test_ent->getType() == custom_type_factory->m_type);
 
-    // Check that creating an entity of a type we know we have not yet
-    // installed results in a null pointer.
-    assert(eb->newEntity(1, "custom_inherited_type", attributes) == nullptr);
+	// Check that creating an entity of a type we know we have not yet
+	// installed results in a null pointer.
+	assert(eb->newEntity(1, "custom_inherited_type", attributes) == nullptr);
 
-    // Assert the dictionary does not contain the factory we know we have
-    // have not yet installed.
-    assert(factory_dict.find("custom_inherited_type") == factory_dict.end());
+	// Assert the dictionary does not contain the factory we know we have
+	// have not yet installed.
+	assert(factory_dict.find("custom_inherited_type") == factory_dict.end());
 }
 
-void EntityBuildertest::test_sequence5()
-{
-    TypeNode factoryType("custom_scripted_type");
-    Anonymous attributes;
+void EntityBuildertest::test_sequence5() {
+	TypeNode factoryType("custom_scripted_type");
+	Anonymous attributes;
 
-    // Get a reference to the internal dictionary of entity factories.
-    const auto& factory_dict = eb->getFactories();
+	// Get a reference to the internal dictionary of entity factories.
+	const auto& factory_dict = eb->getFactories();
 
-    // Make sure it has some factories in it already.
-    assert(!factory_dict.empty());
+	// Make sure it has some factories in it already.
+	assert(!factory_dict.empty());
 
-    // Assert the dictionary does not contain the factory we know we have
-    // have not yet installed.
-    assert(factory_dict.find("custom_scripted_type") == factory_dict.end());
+	// Assert the dictionary does not contain the factory we know we have
+	// have not yet installed.
+	assert(factory_dict.find("custom_scripted_type") == factory_dict.end());
 
-    // Set up a type description for a new type, and install it
-    EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
-    custom_type_factory->m_attributes["test_custom_type_attr"] =
-        "test_value";
+	// Set up a type description for a new type, and install it
+	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	custom_type_factory->m_attributes["test_custom_type_attr"] =
+			"test_value";
 
-    {
-        eb->installFactory("custom_scripted_type",
-                           atlasClass("custom_scripted_type", "thing"),
-                           std::unique_ptr<EntityFactoryBase>(custom_type_factory));
-        custom_type_factory->m_type = &factoryType;
-    }
+	{
+		eb->installFactory("custom_scripted_type",
+						   atlasClass("custom_scripted_type", "thing"),
+						   std::unique_ptr<EntityFactoryBase>(custom_type_factory));
+		custom_type_factory->m_type = &factoryType;
+	}
 
-    // Check that the factory dictionary now contains a factory for
-    // the custom type we just installed.
-    auto I = factory_dict.find("custom_scripted_type");
-    assert(I != factory_dict.end());
-    assert(custom_type_factory == I->second.get());
+	// Check that the factory dictionary now contains a factory for
+	// the custom type we just installed.
+	auto I = factory_dict.find("custom_scripted_type");
+	assert(I != factory_dict.end());
+	assert(custom_type_factory == I->second.get());
 
-    // Create an instance of our custom type, ensuring that it works.
-    auto test_ent = eb->newEntity(1, "custom_scripted_type", attributes);
-    assert(test_ent);
+	// Create an instance of our custom type, ensuring that it works.
+	auto test_ent = eb->newEntity(1, "custom_scripted_type", attributes);
+	assert(test_ent);
 
-    assert(test_ent->getType() == custom_type_factory->m_type);
-    test_ent->destroy();
+	assert(test_ent->getType() == custom_type_factory->m_type);
+	test_ent->destroy();
 }
 
-void EntityBuildertest::test_installFactory_duplicate()
-{
-    auto& factory_dict = eb->getFactories();
+void EntityBuildertest::test_installFactory_duplicate() {
+	auto& factory_dict = eb->getFactories();
 
-    EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory = new EntityFactory<Entity>();
 
-    int ret = eb->installFactory("custom_type",
-                                 atlasClass("custom_type", "thing"),
-                                 std::unique_ptr<EntityFactoryBase>(custom_type_factory));
+	int ret = eb->installFactory("custom_type",
+								 atlasClass("custom_type", "thing"),
+								 std::unique_ptr<EntityFactoryBase>(custom_type_factory));
 
-    ASSERT_EQUAL(ret, 0);
-    ASSERT_TRUE(factory_dict.find("custom_type") != factory_dict.end());
-    ASSERT_EQUAL(factory_dict.find("custom_type")->second.get(), custom_type_factory);
+	ASSERT_EQUAL(ret, 0);
+	ASSERT_TRUE(factory_dict.find("custom_type") != factory_dict.end());
+	ASSERT_EQUAL(factory_dict.find("custom_type")->second.get(), custom_type_factory);
 
-    EntityFactoryBase* custom_type_factory2 = new EntityFactory<Entity>();
+	EntityFactoryBase* custom_type_factory2 = new EntityFactory<Entity>();
 
-    ret = eb->installFactory("custom_type",
-                             atlasClass("custom_type", "thing"),
-                             std::unique_ptr<EntityFactoryBase>(custom_type_factory2));
+	ret = eb->installFactory("custom_type",
+							 atlasClass("custom_type", "thing"),
+							 std::unique_ptr<EntityFactoryBase>(custom_type_factory2));
 
-    ASSERT_EQUAL(ret, -1);
-    ASSERT_TRUE(factory_dict.find("custom_type") != factory_dict.end());
-    ASSERT_EQUAL(factory_dict.find("custom_type")->second.get(), custom_type_factory);
+	ASSERT_EQUAL(ret, -1);
+	ASSERT_TRUE(factory_dict.find("custom_type") != factory_dict.end());
+	ASSERT_EQUAL(factory_dict.find("custom_type")->second.get(), custom_type_factory);
 }
 
-int main(int argc, char** argv)
-{
-    EntityBuildertest t;
+int main(int argc, char** argv) {
+	EntityBuildertest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -344,44 +332,38 @@ int main(int argc, char** argv)
 
 template<class T>
 Ref<Entity> EntityFactory<T>::newEntity(RouterId id,
-                                               const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    ++m_createdCount;
-    auto* e = new Entity(id);
-    e->setType(m_type);
-    return e;
+										const Atlas::Objects::Entity::RootEntity& attributes) {
+	++m_createdCount;
+	auto* e = new Entity(id);
+	e->setType(m_type);
+	return e;
 }
 
 #define STUB_EntityFactory_duplicateFactory
 
 template<typename T>
-std::unique_ptr<EntityFactoryBase> EntityFactory<T>::duplicateFactory()
-{
-    auto f = std::unique_ptr<EntityFactory<T>>(new EntityFactory<T>(*this));
-    f->m_parent = this;
-    return f;
+std::unique_ptr<EntityFactoryBase> EntityFactory<T>::duplicateFactory() {
+	auto f = std::unique_ptr<EntityFactory<T>>(new EntityFactory<T>(*this));
+	f->m_parent = this;
+	return f;
 }
 
 
 #define STUB_ArchetypeFactory_duplicateFactory
 
-std::unique_ptr<ArchetypeFactory> ArchetypeFactory::duplicateFactory()
-{
-    auto f = std::unique_ptr<ArchetypeFactory>(new ArchetypeFactory(*this));
-    f->m_parent = this;
-    return f;
+std::unique_ptr<ArchetypeFactory> ArchetypeFactory::duplicateFactory() {
+	auto f = std::unique_ptr<ArchetypeFactory>(new ArchetypeFactory(*this));
+	f->m_parent = this;
+	return f;
 }
-
-
 
 
 class World;
 
 template<>
 Ref<Entity> EntityFactory<World>::newEntity(RouterId id,
-                                                   const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    return 0;
+											const Atlas::Objects::Entity::RootEntity& attributes) {
+	return 0;
 }
 
 class Thing;
@@ -417,45 +399,42 @@ class EntityFactory<World>;
 
 #define STUB_LocatedEntity_makeContainer
 
-void LocatedEntity::makeContainer()
-{
-    if (m_contains == 0) {
-        m_contains.reset(new LocatedEntitySet);
-    }
+void LocatedEntity::makeContainer() {
+	if (m_contains == 0) {
+		m_contains.reset(new LocatedEntitySet);
+	}
 }
 
 #define STUB_LocatedEntity_merge
 
-void LocatedEntity::merge(const MapType& ent)
-{
-    switch (LocatedEntity_merge_action) {
-        case SET_POS:
-            this->requirePropertyClassFixed<PositionProperty>().data().setValid();
-            break;
-        case SET_VELOCITY:
-            this->requirePropertyClassFixed<VelocityProperty>().data().setValid();
-            break;
-        case DO_NOTHING:
-        default:
-            break;
-    };
+void LocatedEntity::merge(const MapType& ent) {
+	switch (LocatedEntity_merge_action) {
+		case SET_POS:
+			this->requirePropertyClassFixed<PositionProperty>().data().setValid();
+			break;
+		case SET_VELOCITY:
+			this->requirePropertyClassFixed<VelocityProperty>().data().setValid();
+			break;
+		case DO_NOTHING:
+		default:
+			break;
+	};
 
 }
 
 #ifndef STUB_Inheritance_Inheritance
 #define STUB_Inheritance_Inheritance
 
-Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_factories(factories)
-{
-    Atlas::Objects::Entity::Anonymous root_desc;
+Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_factories(factories) {
+	Atlas::Objects::Entity::Anonymous root_desc;
 
-    root_desc->setObjtype("meta");
-    root_desc->setId("root");
+	root_desc->setObjtype("meta");
+	root_desc->setId("root");
 
-    TypeNode* root = new TypeNode("root", root_desc);
+	TypeNode* root = new TypeNode("root", root_desc);
 
-    atlasObjects["root"].reset(root);
-    installStandardObjects(*this);
+	atlasObjects["root"].reset(root);
+	installStandardObjects(*this);
 }
 
 #endif //STUB_Inheritance_Inheritance
@@ -463,13 +442,12 @@ Inheritance::Inheritance(Atlas::Objects::Factories& factories) : noClass(0), m_f
 #ifndef STUB_Inheritance_getType
 #define STUB_Inheritance_getType
 
-const TypeNode* Inheritance::getType(const std::string& parent) const
-{
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        return 0;
-    }
-    return I->second.get();
+const TypeNode* Inheritance::getType(const std::string& parent) const {
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		return 0;
+	}
+	return I->second.get();
 }
 
 #endif //STUB_Inheritance_getType
@@ -477,79 +455,74 @@ const TypeNode* Inheritance::getType(const std::string& parent) const
 #ifndef STUB_Inheritance_addChild
 #define STUB_Inheritance_addChild
 
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj)
-{
-    const std::string& child = obj->getId();
-    const std::string& parent = obj->getParent();
-    if (atlasObjects.find(child) != atlasObjects.end()) {
-        std::cerr << fmt::format("Installing type \"{}\"(\"{}\") "
-                                     "which was already installed",
-                                     child, parent) << std::endl;
-        return 0;
-    }
-    auto I = atlasObjects.find(parent);
-    if (I == atlasObjects.end()) {
-        std::cerr << fmt::format("Installing type \"{}\" "
-                                     "which has unknown parent \"{}\".",
-                                     child, parent) << std::endl;
-        return 0;
-    }
-    Element children(ListType(1, child));
-    if (I->second->description(Visibility::PRIVATE)->copyAttr("children", children) == 0) {
-        assert(children.isList());
-        children.asList().push_back(child);
-    }
-    I->second->description(Visibility::PRIVATE)->setAttr("children", children);
+TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+	const std::string& child = obj->getId();
+	const std::string& parent = obj->getParent();
+	if (atlasObjects.find(child) != atlasObjects.end()) {
+		std::cerr << fmt::format("Installing type \"{}\"(\"{}\") "
+								 "which was already installed",
+								 child, parent) << std::endl;
+		return 0;
+	}
+	auto I = atlasObjects.find(parent);
+	if (I == atlasObjects.end()) {
+		std::cerr << fmt::format("Installing type \"{}\" "
+								 "which has unknown parent \"{}\".",
+								 child, parent) << std::endl;
+		return 0;
+	}
+	Element children(ListType(1, child));
+	if (I->second->description(Visibility::PRIVATE)->copyAttr("children", children) == 0) {
+		assert(children.isList());
+		children.asList().push_back(child);
+	}
+	I->second->description(Visibility::PRIVATE)->setAttr("children", children);
 
-    TypeNode* type = new TypeNode(child, obj);
-    type->setParent(I->second.get());
+	TypeNode* type = new TypeNode(child, obj);
+	type->setParent(I->second.get());
 
-    atlasObjects[child].reset(type);
+	atlasObjects[child].reset(type);
 
-    return type;
+	return type;
 }
 
 #endif //STUB_Inheritance_addChild
 
-void installStandardObjects(TypeStore& i)
-{
+void installStandardObjects(TypeStore& i) {
 
-    i.addChild(atlasClass("root_entity", "root"));
-    i.addChild(atlasClass("admin_entity", "root_entity"));
-    i.addChild(atlasClass("account", "admin_entity"));
-    i.addChild(atlasClass("player", "account"));
-    i.addChild(atlasClass("admin", "account"));
-    i.addChild(atlasClass("game", "admin_entity"));
-    i.addChild(atlasClass("game_entity", "root_entity"));
+	i.addChild(atlasClass("root_entity", "root"));
+	i.addChild(atlasClass("admin_entity", "root_entity"));
+	i.addChild(atlasClass("account", "admin_entity"));
+	i.addChild(atlasClass("player", "account"));
+	i.addChild(atlasClass("admin", "account"));
+	i.addChild(atlasClass("game", "admin_entity"));
+	i.addChild(atlasClass("game_entity", "root_entity"));
 }
 
 
 #define STUB_TypeNode_injectProperty
 
 TypeNode::PropertiesUpdate TypeNode::injectProperty(const std::string& name,
-                                                    std::unique_ptr<PropertyBase> p)
-{
-    m_defaults[name] = std::move(p);
-    return {};
+													std::unique_ptr<PropertyBase> p) {
+	m_defaults[name] = std::move(p);
+	return {};
 }
 
 #ifndef STUB_BaseWorld_getEntity
 #define STUB_BaseWorld_getEntity
 
-Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const
-{
-    return getEntity(integerId(id));
+Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
+	return getEntity(integerId(id));
 }
 
-Ref<LocatedEntity> BaseWorld::getEntity(long id) const
-{
-    auto I = m_eobjects.find(id);
-    if (I != m_eobjects.end()) {
-        assert(I->second);
-        return I->second;
-    } else {
-        return nullptr;
-    }
+Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
+	auto I = m_eobjects.find(id);
+	if (I != m_eobjects.end()) {
+		assert(I->second);
+		return I->second;
+	} else {
+		return nullptr;
+	}
 }
 
 #endif //STUB_BaseWorld_getEntity
@@ -570,15 +543,15 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const
 #include "../stubs/server/stubEntityFactory.h"
 #include "../stubs/server/stubEntityKit.h"
 
-Root atlasClass(const std::string& name, const std::string& parent)
-{
-    Atlas::Objects::Entity::Anonymous r;
-    r->setParent(parent);
-    r->setObjtype("class");
-    r->setId(name);
-    return r;
+Root atlasClass(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
+	r->setParent(parent);
+	r->setObjtype("class");
+	r->setId(name);
+	return r;
 }
 
 sigc::signal<void()> python_reload_scripts;
+
 #include "../stubs/rules/stubPhysicalProperties.h"
 #include "../stubs/common/stubProperty.h"

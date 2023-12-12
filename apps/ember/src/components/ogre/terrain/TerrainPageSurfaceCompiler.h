@@ -32,13 +32,10 @@
 #include <map>
 #include <set>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 class TerrainPageSurfaceLayer;
-
-class TerrainPageShadow;
 
 class TerrainPage;
 
@@ -201,8 +198,6 @@ private:
 };
 
 }
-}
 
-}
 
 #endif

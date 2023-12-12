@@ -6,13 +6,12 @@
 
 namespace Mercator {
 
-template <typename DataType>
+template<typename DataType>
 Buffer<DataType>::Buffer(unsigned int size, unsigned int channels) :
-         m_channels(channels), m_size(size)
-{
+		m_channels(channels), m_size(size) {
 }
 
-template <typename DataType>
+template<typename DataType>
 Buffer<DataType>::~Buffer() = default;
 
 } // namespace Mercator

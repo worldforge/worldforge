@@ -30,8 +30,8 @@
 
 using namespace Ember::EntityMapping;
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 EmberEntityActionCreator::EmberEntityActionCreator(EmberEntity& entity,
 												   Scene& scene,
@@ -44,7 +44,7 @@ EmberEntityActionCreator::EmberEntityActionCreator(EmberEntity& entity,
 }
 
 void EmberEntityActionCreator::createActions(EntityMapping::EntityMapping& modelMapping, Cases::CaseBase& aCase, Definitions::CaseDefinition& caseDefinition) {
-	for (auto& actionDef : caseDefinition.Actions) {
+	for (auto& actionDef: caseDefinition.Actions) {
 		if (actionDef.Type == "display-part") {
 			aCase.addAction(std::make_unique<EmberEntityPartAction>(mEntity, actionDef.Value));
 		} else if (actionDef.Type == "display-model") {
@@ -65,4 +65,4 @@ void EmberEntityActionCreator::createActions(EntityMapping::EntityMapping& model
 }
 
 }
-}
+

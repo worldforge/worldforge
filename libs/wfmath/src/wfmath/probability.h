@@ -39,6 +39,7 @@ namespace WFMath {
  **/
 template<typename FloatT>
 FloatT GaussianConditional(FloatT mean, FloatT stddev, FloatT val);
+
 /// Gives the value of the Gaussian distribution at position val
 template<typename FloatT>
 FloatT Gaussian(FloatT mean, FloatT stddev, FloatT val);
@@ -50,6 +51,7 @@ FloatT Gaussian(FloatT mean, FloatT stddev, FloatT val);
  **/
 template<typename FloatT>
 FloatT PoissonConditional(FloatT mean, unsigned int step);
+
 /// Gives the value of the Poisson distribution at position step
 template<typename FloatT>
 FloatT Poisson(FloatT mean, unsigned int step);
@@ -57,6 +59,7 @@ FloatT Poisson(FloatT mean, unsigned int step);
 /// Gives the natural log of n!
 template<typename FloatT>
 FloatT LogFactorial(unsigned int n);
+
 /// Gives n!
 template<typename FloatT>
 FloatT Factorial(unsigned int n);
@@ -64,6 +67,7 @@ FloatT Factorial(unsigned int n);
 /// The natural log of Euler's Gamma function
 template<typename FloatT>
 FloatT LogGamma(FloatT z);
+
 /// Euler's Gamma function
 template<typename FloatT>
 FloatT Gamma(FloatT z);

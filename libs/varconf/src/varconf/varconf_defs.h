@@ -22,13 +22,13 @@
 
 #ifndef VARCONF_API
 #if defined _WIN32 || defined __CYGWIN__
-  #define VARCONF_API
+#define VARCONF_API
 #else
-  #if __GNUC__ >= 4
-    #define VARCONF_API __attribute__ ((visibility ("default")))
-  #else
-    #define VARCONF_API
-  #endif
+#if __GNUC__ >= 4
+#define VARCONF_API __attribute__ ((visibility ("default")))
+#else
+#define VARCONF_API
+#endif
 #endif
 #endif
 

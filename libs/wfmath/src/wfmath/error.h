@@ -35,7 +35,7 @@ namespace WFMath {
 /// An error thrown by certain functions when passed parallel vectors.
 template<int dim>
 struct ColinearVectors : virtual public std::exception {
-	ColinearVectors(const Vector <dim>& v1_in, const Vector <dim>& v2_in)
+	ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
 			: v1(v1_in), v2(v2_in) {}
 
 	ColinearVectors(const ColinearVectors& rhs) noexcept
@@ -43,7 +43,7 @@ struct ColinearVectors : virtual public std::exception {
 
 	~ColinearVectors() noexcept override = default;
 
-	Vector <dim> v1, v2;
+	Vector<dim> v1, v2;
 
 	const char* what() const noexcept override {
 		return "WFMath::ColinearVectors exception. Supplied vectors are parallel.";

@@ -35,18 +35,22 @@
 
 namespace Eris {
 class ViewEntity;
+
 class Entity;
+
 class Connection;
+
 class TypeInfo;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class World;
 
 namespace Model {
 class Model;
+
 class ModelMount;
 }
 
@@ -57,7 +61,9 @@ class DetachedEntity;
 namespace Gui {
 
 class EntityIcon;
+
 class ModelPreviewWorkerMovement;
+
 class ModelPreviewWorker;
 
 /**
@@ -144,13 +150,12 @@ private:
 	 */
 	std::unique_ptr<ModelPreviewWorker> mModelPreviewWorker;
 
-    sigc::connection mEntityDeleteConnection;
-    sigc::connection mEntityLocationChangeConnection;
+	sigc::connection mEntityDeleteConnection;
+	sigc::connection mEntityLocationChangeConnection;
 
 };
 
-class ModelPreviewWorker
-{
+class ModelPreviewWorker {
 public:
 	/**
 	 * @brief Ctor.
@@ -158,7 +163,9 @@ public:
 	 * @param entity The entity being moved.
 	 */
 	ModelPreviewWorker(World& world, Eris::ViewEntity& entity);
+
 	~ModelPreviewWorker();
+
 	/**
 	 * @brief Sets model information based on the entity type.
 	 * @param modelName The name of the model.
@@ -218,7 +225,7 @@ protected:
 	 * @brief Returns the bounding box our detached entity.
 	 * @return The bounding box.
 	 */
-	const WFMath::AxisBox<3> & getBBox();
+	const WFMath::AxisBox<3>& getBBox();
 
 private:
 
@@ -261,8 +268,7 @@ private:
 	std::unique_ptr<ModelPreviewWorkerMovement> mMovement;
 };
 
-class ModelPreviewWorkerMovementBridge : public Authoring::EntityMoverBase
-{
+class ModelPreviewWorkerMovementBridge : public Authoring::EntityMoverBase {
 public:
 
 	ModelPreviewWorkerMovementBridge(ModelPreviewWorker& creator, Eris::Entity& entity, Ogre::SceneNode* node);
@@ -278,11 +284,11 @@ private:
 
 };
 
-class ModelPreviewWorkerMovement
-{
+class ModelPreviewWorkerMovement {
 public:
 
 	ModelPreviewWorkerMovement(ModelPreviewWorker& mModelPreviewWorker, Camera::MainCamera& camera, Eris::Entity& entity, Ogre::SceneNode* node);
+
 	~ModelPreviewWorkerMovement();
 
 protected:
@@ -292,6 +298,5 @@ protected:
 }
 }
 
-}
 
 #endif

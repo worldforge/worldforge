@@ -31,67 +31,65 @@
  * 
  * It only handles meshes in the 1.100 format (1.10+).
  */
-class OgreMeshDeserializer
-{
-    public:
-        explicit OgreMeshDeserializer(std::ifstream& stream);
+class OgreMeshDeserializer {
+public:
+	explicit OgreMeshDeserializer(std::ifstream& stream);
 
-        void deserialize();
+	void deserialize();
 
-        std::vector<btScalar> m_vertices;
-        std::vector<unsigned int> m_indices;
-        WFMath::AxisBox<3> m_bounds;
-        float m_radius;
+	std::vector<btScalar> m_vertices;
+	std::vector<unsigned int> m_indices;
+	WFMath::AxisBox<3> m_bounds;
+	float m_radius;
 
-    protected:
+protected:
 
 
-        struct VertexElement
-        {
-            unsigned short source, offset, index, vType, vSemantic;
-        };
+	struct VertexElement {
+		unsigned short source, offset, index, vType, vSemantic;
+	};
 
-        std::ifstream& m_stream;
-        bool m_flipEndian;
-        std::uint32_t mCurrentstreamLen;
+	std::ifstream& m_stream;
+	bool m_flipEndian;
+	std::uint32_t mCurrentstreamLen;
 
-        void determineEndianness(std::istream& stream);
+	void determineEndianness(std::istream& stream);
 
-        void readFileHeader(std::istream& stream);
+	void readFileHeader(std::istream& stream);
 
-        unsigned short readChunk(std::istream& stream);
+	unsigned short readChunk(std::istream& stream);
 
-        void readBools(std::istream& stream, bool* pDest, size_t count);
+	void readBools(std::istream& stream, bool* pDest, size_t count);
 
-        void readFloats(std::istream& stream, float* pDest, size_t count);
+	void readFloats(std::istream& stream, float* pDest, size_t count);
 
-        void readShorts(std::istream& stream, unsigned short* pDest, size_t count);
+	void readShorts(std::istream& stream, unsigned short* pDest, size_t count);
 
-        void readInts(std::istream& stream, std::uint32_t* pDest, size_t count);
+	void readInts(std::istream& stream, std::uint32_t* pDest, size_t count);
 
-        std::string readString(std::istream& stream);
+	std::string readString(std::istream& stream);
 
-        void flipFromLittleEndian(void* pData, size_t size, size_t count);
+	void flipFromLittleEndian(void* pData, size_t size, size_t count);
 
-        size_t calcChunkHeaderSize();
+	size_t calcChunkHeaderSize();
 
-        void backpedalChunkHeader(std::istream& stream);
+	void backpedalChunkHeader(std::istream& stream);
 
-        void skipChunk(std::istream& stream);
+	void skipChunk(std::istream& stream);
 
-        void readMesh();
+	void readMesh();
 
-        void readSubMesh();
+	void readSubMesh();
 
-        void readGeometry();
+	void readGeometry();
 
-        std::vector<OgreMeshDeserializer::VertexElement> readGeometryVertexDeclaration();
+	std::vector<OgreMeshDeserializer::VertexElement> readGeometryVertexDeclaration();
 
-        OgreMeshDeserializer::VertexElement readGeometryVertexElement();
+	OgreMeshDeserializer::VertexElement readGeometryVertexElement();
 
-        std::vector<char> readGeometryVertexBuffer(unsigned int vertexCount);
+	std::vector<char> readGeometryVertexBuffer(unsigned int vertexCount);
 
-        void readBoundsInfo();
+	void readBoundsInfo();
 
 
 };

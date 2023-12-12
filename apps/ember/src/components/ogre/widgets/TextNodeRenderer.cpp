@@ -19,14 +19,13 @@
 #include "TextNodeRenderer.h"
 #include "components/ogre/camera/MainCamera.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
 
-TextNodeRenderer::TextNodeRenderer(CEGUI::Window& mainSheet, const UniqueWindowPtr <CEGUI::Window>& windowTemplate) : mMainSheet(mainSheet) {
+namespace Ember::OgreView::Gui {
+
+TextNodeRenderer::TextNodeRenderer(CEGUI::Window& mainSheet, const UniqueWindowPtr<CEGUI::Window>& windowTemplate) : mMainSheet(mainSheet) {
 
 	for (int i = 0; i < 20; ++i) {
-		UniqueWindowPtr <CEGUI::Window> window(windowTemplate->clone(true));
+		UniqueWindowPtr<CEGUI::Window> window(windowTemplate->clone(true));
 		window->setMousePassThroughEnabled(true);
 		window->setRiseOnClickEnabled(false);
 		window->setName("TextNode_" + std::to_string(i));
@@ -37,7 +36,7 @@ TextNodeRenderer::TextNodeRenderer(CEGUI::Window& mainSheet, const UniqueWindowP
 	}
 }
 
-void TextNodeRenderer::attachTextToNode(Ogre::SceneNode* node, const std::string& text, std::function<void(Ogre::Vector2 & )> adjustFn) {
+void TextNodeRenderer::attachTextToNode(Ogre::SceneNode* node, const std::string& text, std::function<void(Ogre::Vector2&)> adjustFn) {
 	if (!mFreeTextNodes.empty()) {
 		auto textNode = std::move(mFreeTextNodes.back());
 		mFreeTextNodes.pop_back();
@@ -45,7 +44,7 @@ void TextNodeRenderer::attachTextToNode(Ogre::SceneNode* node, const std::string
 		textNode.mAdjustFn = std::move(adjustFn);
 		textNode.mWindow->setText(text);
 		mMainSheet.addChild(textNode.mWindow.get());
-       // textNode.mWindow->moveToBack();
+		// textNode.mWindow->moveToBack();
 		mActiveTextNodes.emplace_back(std::move(textNode));
 	}
 };
@@ -61,7 +60,7 @@ void TextNodeRenderer::detachTextNode(Ogre::SceneNode* node) {
 
 void TextNodeRenderer::cameraPreRenderScene(Ogre::Camera* cam) {
 
-	for (const auto& textNode : mActiveTextNodes) {
+	for (const auto& textNode: mActiveTextNodes) {
 		renderTextNode(cam, textNode);
 	}
 
@@ -86,5 +85,4 @@ void TextNodeRenderer::renderTextNode(Ogre::Camera* camera, const TextNode& text
 }
 
 }
-}
-}
+

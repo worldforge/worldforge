@@ -22,20 +22,22 @@
 //
 #include "MatchAttributeObserver.h"
 
+#include <utility>
+
 #include "../AttributeDependentMatch.h"
 #include "../AttributeMatch.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
 
-namespace Observers {
 
-MatchAttributeObserver::MatchAttributeObserver(Matches::AttributeDependentMatch& match, const std::string& attributeName)
-		: mMatch(match), mAttributeName(attributeName) {
+
+
+namespace Ember::EntityMapping::Matches::Observers {
+
+MatchAttributeObserver::MatchAttributeObserver(Matches::AttributeDependentMatch& match, std::string attributeName)
+		: mMatch(match), mAttributeName(std::move(attributeName)) {
 }
 
 MatchAttributeObserver::MatchAttributeObserver(Matches::AttributeMatch& match)
@@ -61,8 +63,8 @@ void MatchAttributeObserver::observeEntity(Eris::Entity* entity) {
 
 }
 
-}
 
-}
 
-}
+
+
+

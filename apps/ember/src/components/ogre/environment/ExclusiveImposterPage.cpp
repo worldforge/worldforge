@@ -20,43 +20,37 @@
 #include <components/ogre/model/Model.h>
 #include "ExclusiveImposterPage.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Environment
-{
 
-void ExclusiveImposterPage::addEntity(Ogre::Entity *ent, const Ogre::Vector3 &position, const Ogre::Quaternion &rotation, const Ogre::Vector3 &scale, const Ogre::ColourValue &color)
-{
+
+namespace Ember::OgreView::Environment {
+
+void ExclusiveImposterPage::addEntity(Ogre::Entity* ent, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) {
 	Forests::ImpostorPage::addEntity(ent, position, rotation, scale, color);
 	auto* model = Ogre::any_cast<Ember::OgreView::Model::Model*>(ent->getUserObjectBindings().getUserAny("model"));
 	mModels.push_back(model);
 }
 
-void ExclusiveImposterPage::addModel(Ember::OgreView::Model::Model* model, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) {
+void
+ExclusiveImposterPage::addModel(Ember::OgreView::Model::Model* model, const Ogre::Vector3& position, const Ogre::Quaternion& rotation, const Ogre::Vector3& scale, const Ogre::ColourValue& color) {
 	Forests::ImpostorPage::addModel(model, position, rotation, scale, color);
 	mModels.push_back(model);
 }
 
-void ExclusiveImposterPage::setVisible(bool visible)
-{
+void ExclusiveImposterPage::setVisible(bool visible) {
 	Forests::ImpostorPage::setVisible(visible);
-	for (auto model : mModels) {
+	for (auto model: mModels) {
 		model->setVisible(!visible);
 	}
 }
 
-void ExclusiveImposterPage::removeEntities()
-{
+void ExclusiveImposterPage::removeEntities() {
 	Forests::ImpostorPage::removeEntities();
 	mModels.clear();
 }
 
 
-
 }
 
-}
-}
+
+

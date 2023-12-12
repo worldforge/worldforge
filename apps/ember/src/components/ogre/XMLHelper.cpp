@@ -23,10 +23,10 @@
 #include "XMLHelper.h"
 #include <OgreVector.h>
 
-namespace Ember {
-namespace OgreView {
 
-bool XMLHelper::Load(TiXmlDocument& xmlDoc, Ogre::DataStreamPtr stream) {
+namespace Ember::OgreView {
+
+bool XMLHelper::Load(TiXmlDocument& xmlDoc, const Ogre::DataStreamPtr& stream) {
 	size_t length(stream->size());
 
 	if (length) {
@@ -118,4 +118,4 @@ void XMLHelper::fillElementFromQuaternion(TiXmlElement& elem, const Ogre::Quater
 }
 
 }
-}
+

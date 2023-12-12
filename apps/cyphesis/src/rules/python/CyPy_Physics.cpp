@@ -24,32 +24,30 @@
 #include "CyPy_Axisbox.h"
 #include "CyPy_Ball.h"
 
-CyPy_Physics::CyPy_Physics() : ExtensionModule("physics")
-{
-    CyPy_Vector3D::init_type();
-    CyPy_Point3D::init_type();
-    CyPy_Quaternion::init_type();
-    CyPy_Axisbox::init_type();
-    CyPy_Ball::init_type();
+CyPy_Physics::CyPy_Physics() : ExtensionModule("physics") {
+	CyPy_Vector3D::init_type();
+	CyPy_Point3D::init_type();
+	CyPy_Quaternion::init_type();
+	CyPy_Axisbox::init_type();
+	CyPy_Ball::init_type();
 
-    initialize("Physics");
+	initialize("Physics");
 
-    Py::Dict d(moduleDictionary());
+	Py::Dict d(moduleDictionary());
 
-    d["Vector3D"] = CyPy_Vector3D::type();
-    d["Point3D"] = CyPy_Point3D::type();
-    d["Quaternion"] = CyPy_Quaternion::type();
-    d["BBox"] = CyPy_Axisbox::type();
-    d["Ball"] = CyPy_Ball::type();
+	d["Vector3D"] = CyPy_Vector3D::type();
+	d["Point3D"] = CyPy_Point3D::type();
+	d["Quaternion"] = CyPy_Quaternion::type();
+	d["BBox"] = CyPy_Axisbox::type();
+	d["Ball"] = CyPy_Ball::type();
 
 }
 
 
-std::string CyPy_Physics::init()
-{
-    PyImport_AppendInittab("physics", []() {
-        static auto module = new CyPy_Physics();
-        return module->module().ptr();
-    });
-    return "physics";
+std::string CyPy_Physics::init() {
+	PyImport_AppendInittab("physics", []() {
+		static auto module = new CyPy_Physics();
+		return module->module().ptr();
+	});
+	return "physics";
 }

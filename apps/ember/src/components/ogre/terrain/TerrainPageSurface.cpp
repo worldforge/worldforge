@@ -29,9 +29,8 @@
 #include <OgreMaterialManager.h>
 #include <OgreRoot.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainPageSurface::TerrainPageSurface(const TerrainPosition& terrainPosition,
 									   ICompilerTechniqueProvider& compilerTechniqueProvider) :
@@ -93,5 +92,5 @@ void TerrainPageSurface::createSurfaceLayer(const TerrainLayerDefinition& defini
 
 }
 
-}
-}
+
+

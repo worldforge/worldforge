@@ -19,15 +19,13 @@
 #include "ModelEditHelper.h"
 #include "components/ogre/model/ModelBoneProvider.h"
 #include "components/ogre/model/ModelMount.h"
-#include <OgreSceneManager.h>
 #include <OgreTagPoint.h>
 #include <components/ogre/model/ModelDefinitionManager.h>
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 RotateMouseMover2::RotateMouseMover2(SimpleRenderContext& renderContext,
 									 std::function<void(const Ogre::Quaternion&)> rotateCallback,
@@ -135,7 +133,7 @@ ModelEditHelper::~ModelEditHelper() {
 void ModelEditHelper::showAttachPointHelperEntity(const std::string& attachPointName, const std::string& meshName) {
 	hideAttachPointHelper();
 	auto& attachpoints = mModel->getDefinition()->getAttachPointsDefinitions();
-	for (const auto& attachpoint : attachpoints) {
+	for (const auto& attachpoint: attachpoints) {
 		if (attachpoint.Name == attachPointName) {
 			//We'll automatically create a model which shows just the specified mesh.
 			auto modelDef = std::make_shared<Model::ModelDefinition>();
@@ -160,7 +158,7 @@ void ModelEditHelper::showAttachPointHelperEntity(const std::string& attachPoint
 void ModelEditHelper::showAttachPointHelperModel(const std::string& attachPointName, const std::string& modelName) {
 	hideAttachPointHelper();
 	auto& attachpoints = mModel->getDefinition()->getAttachPointsDefinitions();
-	for (const auto& attachpoint : attachpoints) {
+	for (const auto& attachpoint: attachpoints) {
 		if (attachpoint.Name == attachPointName) {
 
 			auto definition = Model::ModelDefinitionManager::getSingleton().getByName(modelName);
@@ -262,5 +260,5 @@ bool ModelEditHelper::injectKeyUp(const SDL_Scancode&) {
 }
 
 }
-}
-}
+
+

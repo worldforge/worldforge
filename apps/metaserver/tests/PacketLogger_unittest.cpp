@@ -36,57 +36,55 @@
 
 #include <cassert>
 
-class PacketLogger_unittest : public CppUnit::TestCase
-{
-    CPPUNIT_TEST_SUITE(PacketLogger_unittest);
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST_SUITE_END();
-  public:
-    PacketLogger_unittest() { }
+class PacketLogger_unittest : public CppUnit::TestCase {
+	CPPUNIT_TEST_SUITE(PacketLogger_unittest);
+	CPPUNIT_TEST(testConstructor);
 
-    PacketLogger* p;
-    std::string fn;
+	CPPUNIT_TEST_SUITE_END();
 
-    void setUp()
-    {
-    	fn = "/tmp/pllist";
+public:
+	PacketLogger_unittest() {}
+
+	PacketLogger* p;
+	std::string fn;
+
+	void setUp() {
+		fn = "/tmp/pllist";
 		p = new PacketLogger(fn);
-    }
+	}
 
-    void tearDown()
-    {
-    	p->close();
-    	delete p;
-    }
+	void tearDown() {
+		p->close();
+		delete p;
+	}
 
-    void testConstructor()
-    {
-    	CPPUNIT_ASSERT(p);
-    }
+	void testConstructor() {
+		CPPUNIT_ASSERT(p);
+	}
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PacketLogger_unittest);
 
 
-int main()
-{
-    CppUnit::TextTestRunner runner;
-    CppUnit::Test* tp =
-            CppUnit::TestFactoryRegistry::getRegistry().makeTest();
+int main() {
+	CppUnit::TextTestRunner runner;
+	CppUnit::Test* tp =
+			CppUnit::TestFactoryRegistry::getRegistry().makeTest();
 
-    runner.addTest(tp);
+	runner.addTest(tp);
 
-    if (runner.run()) {
-        return 0;
-    } else {
-        return 1;
-    }
+	if (runner.run()) {
+		return 0;
+	} else {
+		return 1;
+	}
 }
 
 /*
  * Mock Stubs
  */
 MetaServerPacket::~MetaServerPacket() {}
-std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp) { return os; }
+
+std::ostream& operator<<(std::ostream& os, const MetaServerPacket& mp) { return os; }
 
 

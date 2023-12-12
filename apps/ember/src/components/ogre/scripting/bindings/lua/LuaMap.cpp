@@ -21,7 +21,7 @@
 using namespace Ember::OgreView::Terrain;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Map>(sol::table& space) {
 	auto map = space.new_usertype<Map>("Map", sol::no_constructor);
 	map["initialize"] = &Map::initialize;

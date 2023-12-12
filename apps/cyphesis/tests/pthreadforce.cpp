@@ -21,6 +21,7 @@
 //The cause appears to be that the pthreads library isn't recognized as needed. We therefore need to force its inclusion, which
 //we'll do by calling the below function.
 #include <pthread.h>
+
 extern "C" {
 pthread_t selfthread = pthread_self();
 }

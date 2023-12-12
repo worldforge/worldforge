@@ -26,29 +26,31 @@
  * "protected" means that only parent entities can see it.
  * "private" means that only the simulation or admins can see it.
  */
-class VisibilityProperty : public PropertyBase
-{
-  public:
-    static constexpr const char* property_name = "visibility";
-    static constexpr const char* property_atlastype = "string";
+class VisibilityProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "visibility";
+	static constexpr const char* property_atlastype = "string";
 
-    VisibilityProperty();
+	VisibilityProperty();
 
-    ~VisibilityProperty() override = default;
+	~VisibilityProperty() override = default;
 
-    VisibilityProperty* copy() const override;
+	VisibilityProperty* copy() const override;
 
-    int get(Atlas::Message::Element&) const override;
+	int get(Atlas::Message::Element&) const override;
 
-    void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-    void apply(LocatedEntity& entity) override;
+	void apply(LocatedEntity& entity) override;
 
-  protected:
-    VisibilityProperty(const VisibilityProperty& rhs) = default;
-    enum class Visibility { Public, Protected, Private };
+protected:
+	VisibilityProperty(const VisibilityProperty& rhs) = default;
 
-    Visibility mData;
+	enum class Visibility {
+		Public, Protected, Private
+	};
+
+	Visibility mData;
 };
 
 #endif  // RULESETS_VISIBILITY_PROPERTY_H

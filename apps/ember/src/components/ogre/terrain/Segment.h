@@ -26,10 +26,8 @@ namespace Mercator {
 class Segment;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -131,8 +129,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRE_TERRAIN_SEGMENT_H_ */

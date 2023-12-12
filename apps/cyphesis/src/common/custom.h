@@ -19,7 +19,9 @@
 #ifndef COMMON_CUSTOM_H
 #define COMMON_CUSTOM_H
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int CONNECT_NO;
 extern int GOAL_INFO_NO;
@@ -35,6 +37,8 @@ extern int RELAY_NO;
 extern int POSSESS_NO;
 extern int CLOSE_CONTAINER_NO;
 
-} } }
+}
+}
+}
 
 #endif // COMMON_CUSTOM_H

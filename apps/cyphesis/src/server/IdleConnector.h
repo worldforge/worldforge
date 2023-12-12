@@ -27,19 +27,20 @@
 ///
 /// Emits a sigc signal every time it is called, so can be connected to
 /// anything that needs calling.
-class IdleConnector  {
-  public:
-    explicit IdleConnector(boost::asio::io_context & io_context);
-    virtual ~IdleConnector();
+class IdleConnector {
+public:
+	explicit IdleConnector(boost::asio::io_context& io_context);
+
+	virtual ~IdleConnector();
 
 
-    sigc::signal<void()> idling;
+	sigc::signal<void()> idling;
 
-  protected:
-    boost::asio::steady_timer m_timer;
+protected:
+	boost::asio::steady_timer m_timer;
 
-    /// \brief Perform idle tasks once per second.
-    void idle();
+	/// \brief Perform idle tasks once per second.
+	void idle();
 };
 
 #endif // SERVER_IDLE_CONNECTOR_H

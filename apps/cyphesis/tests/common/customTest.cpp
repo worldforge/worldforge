@@ -31,40 +31,37 @@
 using Atlas::Objects::Root;
 
 namespace {
-    Atlas::Objects::Factories factories;
+Atlas::Objects::Factories factories;
 }
 
-int main()
-{
-    Inheritance inheritance(factories);
-    installCustomOperations(inheritance);
-    installCustomEntities(inheritance);
-    return 0;
+int main() {
+	Inheritance inheritance(factories);
+	installCustomOperations(inheritance);
+	installCustomEntities(inheritance);
+	return 0;
 }
 
 // stubs
 #include "../stubs/common/stubInheritance.h"
 
-Root atlasOpDefinition(const std::string & name, const std::string & parent)
-{
-    Atlas::Objects::Entity::Anonymous r;
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(parent);
-    r->setObjtype("op_definition");
-    r->setId(name);
+	r->setParent(parent);
+	r->setObjtype("op_definition");
+	r->setId(name);
 
-    return r;
+	return r;
 }
 
-Root atlasClass(const std::string & name, const std::string & parent)
-{
-    Atlas::Objects::Entity::Anonymous r;
+Root atlasClass(const std::string& name, const std::string& parent) {
+	Atlas::Objects::Entity::Anonymous r;
 
-    r->setParent(parent);
-    r->setObjtype("class");
-    r->setId(name);
+	r->setParent(parent);
+	r->setObjtype("class");
+	r->setId(name);
 
-    return r;
+	return r;
 }
 
 #include "../stubs/common/stubcustom.h"

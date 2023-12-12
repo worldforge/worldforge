@@ -28,74 +28,69 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
 AreaProperty::AreaProperty(const AreaProperty& other)
-    : TerrainEffectorProperty(other),
-      m_layer(other.m_layer)
-{
-    if (other.m_shape) {
-        m_shape.reset(other.m_shape->copy());
-    }
+		: TerrainEffectorProperty(other),
+		  m_layer(other.m_layer) {
+	if (other.m_shape) {
+		m_shape.reset(other.m_shape->copy());
+	}
 }
 
 /// \brief AreaProperty constructor
 ///
 /// @param flags Flags used to persist this property
 AreaProperty::AreaProperty() : TerrainEffectorProperty(),
-    m_layer(0)
-{
+							   m_layer(0) {
 }
 
 AreaProperty::~AreaProperty() = default;
 
-void AreaProperty::apply(LocatedEntity& owner)
-{
-    if (!m_shape) {
-        spdlog::error("Terrain area has no shape to apply");
-        return;
-    }
+void AreaProperty::apply(LocatedEntity& owner) {
+	if (!m_shape) {
+		spdlog::error("Terrain area has no shape to apply");
+		return;
+	}
 
-    const TerrainProperty* terrain = getTerrain(owner);
+	const TerrainProperty* terrain = getTerrain(owner);
 
-    if (!terrain) {
-        spdlog::error("Terrain area could not find terrain");
-        return;
-    }
+	if (!terrain) {
+		spdlog::error("Terrain area could not find terrain");
+		return;
+	}
 
-    /// TODO: Write the code to handle all the Mercator stuff
+	/// TODO: Write the code to handle all the Mercator stuff
 }
 
-void AreaProperty::set(const Element& ent)
-{
-    if (!ent.isMap()) {
-        return;
-    }
-    m_data = ent.Map();
+void AreaProperty::set(const Element& ent) {
+	if (!ent.isMap()) {
+		return;
+	}
+	m_data = ent.Map();
 
-    MapType::const_iterator I = m_data.find("shape");
-    MapType::const_iterator Iend = m_data.end();
+	MapType::const_iterator I = m_data.find("shape");
+	MapType::const_iterator Iend = m_data.end();
 
-    if (I == m_data.end() || !I->second.isMap()) {
-        spdlog::error("Area shape data missing or is not map");
-        return;
-    }
-    auto shape = Shape::newFromAtlas(I->second.Map());
-    auto formShape =dynamic_cast<Form<2>*>(shape.get());
-    if (!formShape) {
-        //Make sure we reset the data.
-        m_shape.reset();
-    } else {
-        shape.release();
-        m_shape.reset(formShape);
-    }
+	if (I == m_data.end() || !I->second.isMap()) {
+		spdlog::error("Area shape data missing or is not map");
+		return;
+	}
+	auto shape = Shape::newFromAtlas(I->second.Map());
+	auto formShape = dynamic_cast<Form<2>*>(shape.get());
+	if (!formShape) {
+		//Make sure we reset the data.
+		m_shape.reset();
+	} else {
+		shape.release();
+		m_shape.reset(formShape);
+	}
 
-    I = m_data.find("layer");
-    if (I != Iend && I->second.isInt()) {
-        m_layer = static_cast<int>(I->second.Int());
-    } else {
-        m_layer = 0;
-    }
+	I = m_data.find("layer");
+	if (I != Iend && I->second.isInt()) {
+		m_layer = static_cast<int>(I->second.Int());
+	} else {
+		m_layer = 0;
+	}
 }
 
-AreaProperty* AreaProperty::copy() const
-{
-    return new AreaProperty(*this);
+AreaProperty* AreaProperty::copy() const {
+	return new AreaProperty(*this);
 }

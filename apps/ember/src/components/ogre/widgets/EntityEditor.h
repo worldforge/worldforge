@@ -33,51 +33,32 @@
 #include <Eris/ActiveMarker.h>
 #include <wfmath/segment.h>
 
-namespace Eris
-{
+namespace Eris {
 class Entity;
 }
 
-namespace CEGUI
-{
+namespace CEGUI {
 class Window;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class World;
 namespace Authoring {
 class Polygon;
 }
 
-namespace Gui
-{
+namespace Gui {
 
-namespace Adapters
-{
 
-namespace Atlas
-{
+namespace Adapters::Atlas {
 
 class MapAdapter;
 
 }
 
-}
 
-
-
-/**
- @brief Helper class for the entity editor widget.
- The main logic of the entity editor is in the lua file. This class acts like a helper class, implementing C++ functionality that might be cumbersome to code in Lua.
- Normally an instance of this is created by the lua widget for each entity that's being edited.
-
- @author Erik Ogenvik <erik@ogenvik.org>
- */
-class EntityEditor: public sigc::trackable
-{
+class EntityEditor : public sigc::trackable {
 public:
 	/**
 	 * @brief Ctor.
@@ -100,10 +81,15 @@ public:
 	void submitChanges();
 
 	Atlas::Message::Element createMapElement();
+
 	Atlas::Message::Element createListElement();
+
 	Atlas::Message::Element createStringElement();
+
 	Atlas::Message::Element createIntElement();
+
 	Atlas::Message::Element createFloatElement();
+
 	Atlas::Message::Element createPosition2dElement();
 
 	/**
@@ -253,9 +239,11 @@ protected:
 	Eris::ActiveMarker mActiveMarker;
 
 	void operationGetThoughtResult(const Atlas::Objects::Operation::RootOperation& op);
+
 	void operationGetGoalsResult(const Atlas::Objects::Operation::RootOperation& op);
 
 	void operationGetPathResult(const Atlas::Objects::Operation::RootOperation& op);
+
 	void operationGetGoalInfoResult(const Atlas::Objects::Operation::RootOperation& op);
 
 	/**
@@ -273,6 +261,5 @@ protected:
 
 }
 
-}
 
 #endif

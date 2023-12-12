@@ -9,10 +9,12 @@
 
 #include <Atlas/Bridge.h>
 
-namespace Atlas { namespace Net {
+
+namespace Atlas::Net {
 
 void loopback(Bridge*, Bridge*, Bridge*&, Bridge*&);
 
-} } // namespace Atlas::Net
+}
+// namespace Atlas::Net
 
 #endif

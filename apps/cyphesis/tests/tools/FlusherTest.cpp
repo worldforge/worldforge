@@ -35,206 +35,202 @@
 #include <cassert>
 
 class test_ObjectContext : public ObjectContext {
-  public:
-    std::string m_id;
-    test_ObjectContext(const std::string & id) :
-          ObjectContext(*(Interactive*)0), m_id(id) { }
-    virtual bool accept(const Atlas::Objects::Operation::RootOperation&) const
-    {
-        return false;
-    }
+public:
+	std::string m_id;
 
-    virtual int dispatch(const Atlas::Objects::Operation::RootOperation&)
-    {
-        return 0;
-    }
+	test_ObjectContext(const std::string& id) :
+			ObjectContext(*(Interactive*) 0), m_id(id) {}
 
-    virtual std::string repr() const
-    {
-        return "test_context";
-    }
+	virtual bool accept(const Atlas::Objects::Operation::RootOperation&) const {
+		return false;
+	}
 
-    virtual bool checkContextCommand(const struct command *)
-    {
-        return false;
-    }
+	virtual int dispatch(const Atlas::Objects::Operation::RootOperation&) {
+		return 0;
+	}
 
-    virtual void setFromContext(const Atlas::Objects::Operation::RootOperation&op)
-    {
-        op->setFrom(m_id);
-    }
+	virtual std::string repr() const {
+		return "test_context";
+	}
+
+	virtual bool checkContextCommand(const struct command*) {
+		return false;
+	}
+
+	virtual void setFromContext(const Atlas::Objects::Operation::RootOperation& op) {
+		op->setFrom(m_id);
+	}
 };
 
 using std::shared_ptr;
 
-int main()
-{
-    shared_ptr<ObjectContext> test_context(new test_ObjectContext("1"));
+int main() {
+	shared_ptr<ObjectContext> test_context(new test_ObjectContext("1"));
 
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        tf->setup("oak", ret);
-        assert(!ret.empty());
+		OpVector ret;
+		tf->setup("oak", ret);
+		assert(!ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Get op;
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Get op;
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Sight op;
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Sight op;
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Sight op;
-        op->setArgs1(Atlas::Objects::Entity::Anonymous());
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Sight op;
+		op->setArgs1(Atlas::Objects::Entity::Anonymous());
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Sight op;
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setId("2");
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Sight op;
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setId("2");
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Sight op;
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setId("2");
-        ent->setParent("oak");
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Sight op;
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setId("2");
+		ent->setParent("oak");
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        tf->setup("oak", ret);
-        assert(!ret.empty());
-        assert(ret.size() == 1);
-        ret.clear();
-        Atlas::Objects::Operation::Sight op;
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setId("2");
-        ent->setParent("oak");
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(!ret.empty());
-        assert(ret.size() == 2);
+		OpVector ret;
+		tf->setup("oak", ret);
+		assert(!ret.empty());
+		assert(ret.size() == 1);
+		ret.clear();
+		Atlas::Objects::Operation::Sight op;
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setId("2");
+		ent->setParent("oak");
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(!ret.empty());
+		assert(ret.size() == 2);
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Tick op;
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Tick op;
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Tick op;
-        Atlas::Objects::Entity::Anonymous ent;
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Tick op;
+		Atlas::Objects::Entity::Anonymous ent;
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Tick op;
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setName("725e66b2-2e35-4eb8-b3af-3de5691bf48a");
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Tick op;
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setName("725e66b2-2e35-4eb8-b3af-3de5691bf48a");
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
+	{
+		ClientTask* tf = new Flusher(test_context);
 
-        OpVector ret;
-        Atlas::Objects::Operation::Tick op;
-        Atlas::Objects::Entity::Anonymous ent;
-        ent->setName("flusher");
-        op->setArgs1(ent);
-        tf->operation(op, ret);
-        assert(!ret.empty());
+		OpVector ret;
+		Atlas::Objects::Operation::Tick op;
+		Atlas::Objects::Entity::Anonymous ent;
+		ent->setName("flusher");
+		op->setArgs1(ent);
+		tf->operation(op, ret);
+		assert(!ret.empty());
 
-        delete tf;
-    }
+		delete tf;
+	}
 
-    {
-        ClientTask * tf = new Flusher(test_context);
-        assert(!tf->isComplete());
+	{
+		ClientTask* tf = new Flusher(test_context);
+		assert(!tf->isComplete());
 
-        OpVector ret;
-        Atlas::Objects::Operation::Unseen op;
-        tf->operation(op, ret);
-        assert(ret.empty());
-        assert(tf->isComplete());
+		OpVector ret;
+		Atlas::Objects::Operation::Unseen op;
+		tf->operation(op, ret);
+		assert(ret.empty());
+		assert(tf->isComplete());
 
-        delete tf;
-    }
+		delete tf;
+	}
 }
 
 // stubs
@@ -242,8 +238,12 @@ int main()
 #include "common/log.h"
 
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int TICK_NO = 1000;
-} } }
+}
+}
+}
 
 #include "../stubs/common/stublog.h"

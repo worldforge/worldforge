@@ -28,8 +28,8 @@
 #include "components/ogre/IWorldPickListener.h"
 #include <OgreFrameListener.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Camera {
 class MainCamera;
 }
@@ -227,6 +227,6 @@ protected:
 
 }
 
-}
+
 
 #endif

@@ -27,10 +27,8 @@
 
 #include <CEGUI/CEGUI.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 EntityIconManager::EntityIconManager(GUIManager& guiManager)
 		: mGuiManager(guiManager),
@@ -46,7 +44,7 @@ EntityIconSlot* EntityIconManager::createSlot(unsigned int pixelSize) {
 	ss << "entityIconSlot" << mSlotsCounter++;
 	//Make the slot more visible.
 	UniqueWindowPtr<CEGUI::Window> container(mGuiManager.createWindow("EmberLook/StaticImage", ss.str()));
-	container->setSize(CEGUI::USize(CEGUI::UDim(0, (float)pixelSize), CEGUI::UDim(0, (float)pixelSize)));
+	container->setSize(CEGUI::USize(CEGUI::UDim(0, (float) pixelSize), CEGUI::UDim(0, (float) pixelSize)));
 	auto slot = std::make_unique<EntityIconSlot>(std::move(container));
 	mSlots.emplace_back(std::move(slot));
 	return mSlots.back().get();
@@ -67,7 +65,7 @@ std::unique_ptr<EntityIcon> EntityIconManager::createIconInstance(Gui::Icons::Ic
 	UniqueWindowPtr<CEGUI::Window> amountWindow(mGuiManager.createWindow("EmberLook/StaticText", ss.str()));
 
 	if (item && iconWindow && amountWindow) {
-		item->setSize(CEGUI::USize(CEGUI::UDim(0, (float)pixelSize), CEGUI::UDim(0, (float)pixelSize)));
+		item->setSize(CEGUI::USize(CEGUI::UDim(0, (float) pixelSize), CEGUI::UDim(0, (float) pixelSize)));
 		//item->setTooltipText(name);
 
 		iconWindow->setProperty("BackgroundEnabled", "false");
@@ -121,5 +119,5 @@ void EntityIconManager::destroySlot(EntityIconSlot* slot) {
 
 }
 
-}
-}
+
+

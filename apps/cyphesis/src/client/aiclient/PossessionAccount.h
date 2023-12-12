@@ -33,58 +33,56 @@ class TypeNode;
 
 class PossessionClient;
 
-class PossessionAccount : public Router
-{
-    public:
-        PossessionAccount(RouterId id, const MindKit& mindFactory, PossessionClient& client);
+class PossessionAccount : public Router {
+public:
+	PossessionAccount(RouterId id, const MindKit& mindFactory, PossessionClient& client);
 
-        ~PossessionAccount() override;
+	~PossessionAccount() override;
 
-        /**
-         * Notify the server that we are able to possess minds.
-         */
-        void enablePossession(OpVector& res);
+	/**
+	 * Notify the server that we are able to possess minds.
+	 */
+	void enablePossession(OpVector& res);
 
-        void operation(const Operation& op, OpVector& res) override;
+	void operation(const Operation& op, OpVector& res) override;
 
-        void externalOperation(const Operation& op, Link&) override;
+	void externalOperation(const Operation& op, Link&) override;
 
-        const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const
-        {
-            return m_minds;
-        };
+	const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const {
+		return m_minds;
+	};
 
-        Ref<BaseMind> findMindForId(const std::string& id);
+	Ref<BaseMind> findMindForId(const std::string& id);
 
-        static long account_count;
-        static long mind_count;
+	static long account_count;
+	static long mind_count;
 
-    protected:
-        PossessionClient& m_client;
+protected:
+	PossessionClient& m_client;
 
-        /**
-         * Map of minds, with the key being the id of the actual mind.
-         * This is separated from the m_entitiesWithMinds map, which contains mapping between the actual entity and the mind.
-         * The idea is that we might want to do some differentiation between messages sent to the mind or the entity.
-         */
-        std::unordered_map<std::string, Ref<BaseMind>> m_minds;
-        /**
-         * Map of minds, with the key being the id of the entity to which the mind belongs to.
-         * This is used to send ops that are directed to the entity itself to the mind that controls it.
-         * Note that the current setup doesn't allow for multiple minds to control one entity.
-         */
-        std::unordered_map<std::string, Ref<BaseMind>> m_entitiesWithMinds;
+	/**
+	 * Map of minds, with the key being the id of the actual mind.
+	 * This is separated from the m_entitiesWithMinds map, which contains mapping between the actual entity and the mind.
+	 * The idea is that we might want to do some differentiation between messages sent to the mind or the entity.
+	 */
+	std::unordered_map<std::string, Ref<BaseMind>> m_minds;
+	/**
+	 * Map of minds, with the key being the id of the entity to which the mind belongs to.
+	 * This is used to send ops that are directed to the entity itself to the mind that controls it.
+	 * Note that the current setup doesn't allow for multiple minds to control one entity.
+	 */
+	std::unordered_map<std::string, Ref<BaseMind>> m_entitiesWithMinds;
 
-        const MindKit& m_mindFactory;
+	const MindKit& m_mindFactory;
 
-        sigc::connection m_python_connection;
+	sigc::connection m_python_connection;
 
 
-        void PossessOperation(const Operation& op, OpVector& res);
+	void PossessOperation(const Operation& op, OpVector& res);
 
-        void takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey);
+	void takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey);
 
-        void createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId);
+	void createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId);
 
 };
 

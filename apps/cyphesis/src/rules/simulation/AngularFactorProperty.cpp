@@ -31,44 +31,39 @@ using Atlas::Objects::Entity::RootEntity;
 
 static const bool debug_flag = false;
 
-int AngularFactorProperty::get(Element & val) const
-{
-    if (m_data.isValid()) {
-        val = m_data.toAtlas();
-        return 0;
-    }
-    return -1;
+int AngularFactorProperty::get(Element& val) const {
+	if (m_data.isValid()) {
+		val = m_data.toAtlas();
+		return 0;
+	}
+	return -1;
 }
 
-void AngularFactorProperty::set(const Element & val)
-{
-    try {
-        m_data.fromAtlas(val.asList());
-    }
-    catch (Atlas::Message::WrongTypeException &) {
-        spdlog::error("BBoxProperty::set: Box bbox data");
-    }
+void AngularFactorProperty::set(const Element& val) {
+	try {
+		m_data.fromAtlas(val.asList());
+	}
+	catch (Atlas::Message::WrongTypeException&) {
+		spdlog::error("BBoxProperty::set: Box bbox data");
+	}
 }
 
-void AngularFactorProperty::add(const std::string & key,
-                       MapType & map) const
-{
-    if (m_data.isValid()) {
-        map[key] = m_data.toAtlas();
-    }
+void AngularFactorProperty::add(const std::string& key,
+								MapType& map) const {
+	if (m_data.isValid()) {
+		map[key] = m_data.toAtlas();
+	}
 }
 
-void AngularFactorProperty::add(const std::string & key,
-                       const RootEntity & ent) const
-{
-    if (m_data.isValid()) {
-        ent->setAttr(key, m_data.toAtlas());
-    }
+void AngularFactorProperty::add(const std::string& key,
+								const RootEntity& ent) const {
+	if (m_data.isValid()) {
+		ent->setAttr(key, m_data.toAtlas());
+	}
 }
 
 
-AngularFactorProperty * AngularFactorProperty::copy() const
-{
-    return new AngularFactorProperty(*this);
+AngularFactorProperty* AngularFactorProperty::copy() const {
+	return new AngularFactorProperty(*this);
 }
 

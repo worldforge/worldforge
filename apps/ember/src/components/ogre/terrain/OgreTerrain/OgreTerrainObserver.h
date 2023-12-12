@@ -28,9 +28,7 @@
 #include <memory>
 
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
  * @brief An ITerrainObserver implementation which can be used to observe the Ogre Terrain component.
@@ -71,7 +69,7 @@ private:
 
 };
 
-} /* namespace Terrain */
-} /* namespace OgreView */
-} /* namespace Ember */
+} // namespace Ember::OgreView::Terrain
+
+
 #endif /* OGRETERRAINOBSERVER_H_ */

@@ -21,10 +21,9 @@
 
 class BaseWorld;
 
-class ScriptReloader
-{
-    public:
-        ScriptReloader(BaseWorld& world);
+class ScriptReloader {
+public:
+	ScriptReloader(BaseWorld& world);
 
 };
 

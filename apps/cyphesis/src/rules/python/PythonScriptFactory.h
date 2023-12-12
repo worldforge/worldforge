@@ -26,21 +26,24 @@
 
 /// \brief Factory implementation for creating python script objects to attach
 /// to in game objects.
-template <class T>
+template<class T>
 class PythonScriptFactory : public ScriptKit<T>, private PythonClass {
-  public:
-    PythonScriptFactory(const std::string & package, const std::string & type);
-    ~PythonScriptFactory() override = default;
+public:
+	PythonScriptFactory(const std::string& package, const std::string& type);
 
-    int setup();
+	~PythonScriptFactory() override = default;
 
-    const std::string & package() const;
-    int addScript(T& entity) const;
-    int refreshClass();
+	int setup();
 
-  protected:
+	const std::string& package() const;
 
-    Py::Object createScript(T& entity) const;
+	int addScript(T& entity) const;
+
+	int refreshClass();
+
+protected:
+
+	Py::Object createScript(T& entity) const;
 };
 
 #endif // RULESETS_PYTHON_SCRIPT_FACTORY_H

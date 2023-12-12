@@ -24,9 +24,8 @@
 #include <OgreSceneManager.h>
 #include <OgreSubEntity.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 SubModel::SubModel(Ogre::Entity& entity, Model& model) :
 		mEntity(entity), mModel(model) {
@@ -39,7 +38,7 @@ SubModel::SubModel(Ogre::Entity& entity, Model& model) :
 }
 
 SubModel::~SubModel() {
-	for (auto& entry : mSubModelParts) {
+	for (auto& entry: mSubModelParts) {
 		entry.second.destroy();
 	}
 
@@ -64,5 +63,5 @@ Ogre::Entity* SubModel::getEntity() const {
 
 
 }
-}
-}
+
+

@@ -32,12 +32,7 @@
 #include <iostream>
 
 
-
-
-
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 WidgetPluginCallback Quit::registerWidget(GUIManager& guiManager) {
 
@@ -58,9 +53,9 @@ Quit::Quit(GUIManager& guiManager) :
 
 	MainLoopController::getSingleton().EventRequestQuit.connect(sigc::mem_fun(*this, &Quit::EmberOgre_RequestQuit));
 
-	CEGUI::PushButton* shutdownButton = static_cast<CEGUI::PushButton*>(getWindow("ShutdownButton"));
-	CEGUI::PushButton* logoutButton = static_cast<CEGUI::PushButton*>(getWindow("LogoutButton"));
-	CEGUI::PushButton* cancelButton = static_cast<CEGUI::PushButton*>(getWindow("CancelButton"));
+	CEGUI::PushButton* shutdownButton = dynamic_cast<CEGUI::PushButton*>(getWindow("ShutdownButton"));
+	CEGUI::PushButton* logoutButton = dynamic_cast<CEGUI::PushButton*>(getWindow("LogoutButton"));
+	CEGUI::PushButton* cancelButton = dynamic_cast<CEGUI::PushButton*>(getWindow("CancelButton"));
 
 	BIND_CEGUI_EVENT(cancelButton, CEGUI::PushButton::EventClicked, Quit::Cancel_Click);
 	BIND_CEGUI_EVENT(shutdownButton, CEGUI::PushButton::EventClicked, Quit::Shutdown_Click);
@@ -127,5 +122,5 @@ void Quit::runCommand(const std::string& command, const std::string& args) {
 
 }
 }
-}
-}
+
+

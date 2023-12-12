@@ -18,41 +18,37 @@
 #include "common/id.h"
 #include "common/log.h"
 
-long integerId(const std::string& id)
-{
-    try {
-        return std::stol(id);
-    } catch (...) {
-        return -1L;
-    }
+long integerId(const std::string& id) {
+	try {
+		return std::stol(id);
+	} catch (...) {
+		return -1L;
+	}
 }
 
-RouterId idFromString(const std::string& id)
-{
-    return {integerId(id)};
+RouterId idFromString(const std::string& id) {
+	return {integerId(id)};
 }
 
-long forceIntegerId(const std::string& id)
-{
-    try {
-        return std::stol(id);
-    } catch (...) {
-        spdlog::critical("Unable to convert ID \"{}\" to an integer", id);
-        abort();
-    }
+long forceIntegerId(const std::string& id) {
+	try {
+		return std::stol(id);
+	} catch (...) {
+		spdlog::critical("Unable to convert ID \"{}\" to an integer", id);
+		abort();
+	}
 }
 
 RouterId forceIdFromString(const std::string& id) {
-    return {forceIntegerId(id)};
+	return {forceIntegerId(id)};
 }
 
 
-int integerIdCheck(const std::string& id)
-{
-    try {
-        std::stoi(id);
-        return 0;
-    } catch (...) {
-        return -1;
-    }
+int integerIdCheck(const std::string& id) {
+	try {
+		std::stoi(id);
+		return 0;
+	} catch (...) {
+		return -1;
+	}
 }

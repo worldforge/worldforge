@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Widget>(sol::table& space) {
 	auto widget = space.new_usertype<Widget>("Widget", sol::no_constructor);
 	widget["show"] = &Widget::show;

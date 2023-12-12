@@ -23,8 +23,8 @@
 #include "OgreResourceProvider.h"
 #include <OgreResourceGroupManager.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 OgreResourceWrapper::OgreResourceWrapper(const Ogre::DataStreamPtr& dataStream)
 		: mBuffer(dataStream->size()) {
@@ -62,9 +62,9 @@ ResourceWrapper OgreResourceProvider::getResource(const std::string& name) {
 	}
 	auto wrapper = std::make_shared<OgreResourceWrapper>(input);
 	input->close();
-	return ResourceWrapper(std::move(wrapper), name);
+	return {std::move(wrapper), name};
 }
 
 
 }
-}
+

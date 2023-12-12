@@ -29,10 +29,9 @@
 #include <utility>
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 EntityIcon::EntityIcon(EntityIconManager& manager,
 					   UniqueWindowPtr<CEGUI::DragContainer> dragContainer,
@@ -169,5 +168,5 @@ const std::string& EntityIcon::getTag() const {
 }
 }
 
-}
-}
+
+

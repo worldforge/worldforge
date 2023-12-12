@@ -23,7 +23,7 @@
 #define METASERVERVERSION_HPP
 
 const char SERVER_VERSION[] = "1.0.5";
-const char API_VERSION[] =  "1.0.0";
+const char API_VERSION[] = "1.0.0";
 
 
 #endif /* METASERVERVERSION_HPP */

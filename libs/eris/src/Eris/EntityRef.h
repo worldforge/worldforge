@@ -5,24 +5,23 @@
 #include <sigc++/signal.h>
 #include <string>
 
-namespace Eris
-{
+namespace Eris {
 
 class Entity;
+
 class View;
+
 class ViewEntity;
 
-class EntityRef : public sigc::trackable
-{
+class EntityRef : public sigc::trackable {
 public:
-	EntityRef() : m_inner(nullptr)
-	{
+	EntityRef() : m_inner(nullptr) {
 	}
 
 	EntityRef(View& v, const std::string& eid);
-	
-    explicit EntityRef(Entity*);
-    
+
+	explicit EntityRef(Entity*);
+
 	~EntityRef() = default;
 
 	EntityRef(const EntityRef& ref);
@@ -30,66 +29,57 @@ public:
 	EntityRef(EntityRef&& ref) noexcept;
 
 	EntityRef& operator=(const EntityRef& ref);
-    
-	const Entity& operator*() const
-	{
+
+	const Entity& operator*() const {
 		return *m_inner;
 	}
 
-	Entity& operator*()
-	{
+	Entity& operator*() {
 		return *m_inner;
 	}
 
-	const Entity* operator->() const
-	{
+	const Entity* operator->() const {
 		return m_inner;
 	}
 
-	Entity* operator->()
-	{
+	Entity* operator->() {
 		return m_inner;
 	}
 
-	Entity* get() const
-	{
+	Entity* get() const {
 		return m_inner;
 	}
-    
-    operator bool() const
-	{
+
+	operator bool() const {
 		return (m_inner != nullptr);
 	}
-	
-	bool operator!() const
-	{
+
+	bool operator!() const {
 		return (m_inner == nullptr);
 	}
 
-    bool operator==(const EntityRef& e) const noexcept
-    {
-        return (m_inner == e.m_inner);
-    }
+	bool operator==(const EntityRef& e) const noexcept {
+		return (m_inner == e.m_inner);
+	}
 
-    bool operator==(const Entity* e) const noexcept
-    {
-        return (m_inner == e);
-    }
+	bool operator==(const Entity* e) const noexcept {
+		return (m_inner == e);
+	}
 
-    bool operator<(const EntityRef& e) const noexcept
-    {
-        return (m_inner < e.m_inner);
-    }
+	bool operator<(const EntityRef& e) const noexcept {
+		return (m_inner < e.m_inner);
+	}
 
-    /**
-     * Emitted when value changes.
-     * First parameter is new value, second is old value.
-     */
+	/**
+	 * Emitted when value changes.
+	 * First parameter is new value, second is old value.
+	 */
 	sigc::signal<void(Entity*, Entity*)> Changed;
 private:
 	void onEntityDeleted();
+
 	void onEntitySeen(ViewEntity* e);
-	
+
 	Entity* m_inner;
 };
 

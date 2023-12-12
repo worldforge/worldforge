@@ -38,49 +38,47 @@ using namespace WF::Math;
 //TODO tests for non-square matrices
 
 template<const int size>
-void test_matrix(const Matrix<size>& m)
-{
-  cout << "Testing matrix: " << m << std::endl;
+void test_matrix(const Matrix <size>& m) {
+	cout << "Testing matrix: " << m << std::endl;
 
-  cout << "Transpose is: " << m.transpose() << std::endl;
+	cout << "Transpose is: " << m.transpose() << std::endl;
 
-  Matrix<size> minv = m.inverse();
+	Matrix <size> minv = m.inverse();
 
-  double mdet = m.determinant(), minvdet = minv.determinant();
+	double mdet = m.determinant(), minvdet = minv.determinant();
 
-  cout << "Inverse is: " << minv << std::endl;
+	cout << "Inverse is: " << minv << std::endl;
 
-  assert(fabs(mdet * minvdet - 1) < WFMATH_EPSILON);
+	assert(fabs(mdet * minvdet - 1) < WFMATH_EPSILON);
 
-  Matrix<size> nothing;
+	Matrix <size> nothing;
 
-  nothing.identity();
+	nothing.identity();
 
-  nothing -= m * minv;
+	nothing -= m * minv;
 
-  cout << "This should be zero: " << nothing << std::endl;
+	cout << "This should be zero: " << nothing << std::endl;
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      assert(fabs(nothing.elem(i, j)) < WFMATH_EPSILON);
+	for (int i = 0; i < size; ++i)
+		for (int j = 0; j < size; ++j)
+			assert(fabs(nothing.elem(i, j)) < WFMATH_EPSILON);
 }
 
-int main()
-{
-  Matrix<2> m2;
-  Matrix<3> m3;
+int main() {
+	Matrix<2> m2;
+	Matrix<3> m3;
 
-  m2.identity();
-  m2.elem(1, 0) = 1;
+	m2.identity();
+	m2.elem(1, 0) = 1;
 
-  test_matrix(m2);
+	test_matrix(m2);
 
-  m3.identity();
-  m3.elem(1, 0) = 1;
-  m3.elem(0, 2) = WFMATH_CONST_SQRT2;
-  m3.elem(2, 0) = WFMATH_CONST_SQRT3;
+	m3.identity();
+	m3.elem(1, 0) = 1;
+	m3.elem(0, 2) = WFMATH_CONST_SQRT2;
+	m3.elem(2, 0) = WFMATH_CONST_SQRT3;
 
-  test_matrix(m3);
+	test_matrix(m3);
 
-  return 0;
+	return 0;
 }

@@ -20,19 +20,15 @@
 #include "environment/Forest.h"
 #include "model/ModelRepresentation.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+namespace Ember {
+namespace OgreView {
 
 ForestRenderingTechnique::ForestRenderingTechnique(Environment::Forest& forest) :
-	mForest(forest)
-{
+		mForest(forest) {
 
 }
 
-void ForestRenderingTechnique::registerEntity(EmberEntity& entity)
-{
+void ForestRenderingTechnique::registerEntity(EmberEntity& entity) {
 	Model::ModelRepresentation* modelRepresentation = Model::ModelRepresentation::getRepresentationForEntity(entity);
 	if (modelRepresentation) {
 		mForest.addEmberEntity(modelRepresentation);

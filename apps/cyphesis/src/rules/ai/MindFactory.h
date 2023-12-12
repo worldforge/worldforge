@@ -30,15 +30,15 @@ template<class T>
 class ScriptKit;
 
 class MindKit {
-  protected:
-    MindKit() = default;
+protected:
+	MindKit() = default;
 
-  public:
-    std::unique_ptr<ScriptKit<BaseMind>> m_scriptFactory;
+public:
+	std::unique_ptr<ScriptKit<BaseMind>> m_scriptFactory;
 
-    virtual ~MindKit() = default;
+	virtual ~MindKit() = default;
 
-    virtual BaseMind * newMind(RouterId mind_id, const std::string & entity_id) const = 0;
+	virtual BaseMind* newMind(RouterId mind_id, const std::string& entity_id) const = 0;
 };
 
 

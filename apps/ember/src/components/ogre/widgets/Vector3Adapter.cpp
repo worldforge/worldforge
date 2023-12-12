@@ -27,10 +27,7 @@
 #include <OgreStringConverter.h>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 Vector3Adapter::Vector3Adapter(CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow)
 		: mVector(Ogre::Vector3::ZERO),
@@ -51,8 +48,7 @@ Vector3Adapter::Vector3Adapter(CEGUI::Window* xWindow, CEGUI::Window* yWindow, C
 }
 
 
-Vector3Adapter::~Vector3Adapter() {
-}
+Vector3Adapter::~Vector3Adapter() = default;
 
 void Vector3Adapter::setValue(const Ogre::Vector3& vector) {
 	updateGui(vector);
@@ -111,5 +107,5 @@ bool Vector3Adapter::window_TextChanged(const CEGUI::EventArgs& e) {
 
 }
 
-}
-}
+
+

@@ -30,45 +30,51 @@
 /// \brief Handle a socket used to communicate with the metaserver.
 /// \ingroup ServerSockets
 class CommMetaClient {
-  private:
+private:
 
-    boost::asio::ip::udp::socket mSocket;
-    boost::asio::steady_timer mKeepaliveTimer;
-    boost::asio::ip::udp::resolver mResolver;
-    boost::asio::ip::udp::endpoint mDestination;
-    /// \brief True if an endpoint has been resolved.
-    bool mHasEndpoint;
+	boost::asio::ip::udp::socket mSocket;
+	boost::asio::steady_timer mKeepaliveTimer;
+	boost::asio::ip::udp::resolver mResolver;
+	boost::asio::ip::udp::endpoint mDestination;
+	/// \brief True if an endpoint has been resolved.
+	bool mHasEndpoint;
 
-    std::array<char, MAX_PACKET_BYTES> mReadBuffer;
+	std::array<char, MAX_PACKET_BYTES> mReadBuffer;
 
-    /// The domain of the metaserver to use.
-    std::string m_server;
+	/// The domain of the metaserver to use.
+	std::string m_server;
 
-    /// The interval between refreshing handshaking with ms
-    int m_heartbeatTime;
+	/// The interval between refreshing handshaking with ms
+	int m_heartbeatTime;
 
-    /// Port number used to talk to the metaserver.
-    static const int m_metaserverPort = 8453;
+	/// Port number used to talk to the metaserver.
+	static const int m_metaserverPort = 8453;
 
-    /// List of attributes to register with the metaserver
-    std::map<std::string,std::string> m_serverAttributes;
+	/// List of attributes to register with the metaserver
+	std::map<std::string, std::string> m_serverAttributes;
 
-    void keepalive();
-    void do_receive();
+	void keepalive();
 
-  public:
-    explicit CommMetaClient(boost::asio::io_context& ioService);
+	void do_receive();
 
-    virtual ~CommMetaClient();
+public:
+	explicit CommMetaClient(boost::asio::io_context& ioService);
 
-    void metaserverKeepalive();
-    void metaserverReply(size_t packet_size);
-    void metaserverTerminate();
-    void metaserverAttribute(const std::string & k, const std::string & v );
-    void updateAttributes();
-    void sendAllAttributes();
+	virtual ~CommMetaClient();
 
-    int setup(const std::string &);
+	void metaserverKeepalive();
+
+	void metaserverReply(size_t packet_size);
+
+	void metaserverTerminate();
+
+	void metaserverAttribute(const std::string& k, const std::string& v);
+
+	void updateAttributes();
+
+	void sendAllAttributes();
+
+	int setup(const std::string&);
 };
 
 #endif // SERVER_COMM_META_CLIENT_H

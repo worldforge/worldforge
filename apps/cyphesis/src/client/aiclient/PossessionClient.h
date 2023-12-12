@@ -35,59 +35,58 @@ class Inheritance;
 /**
  * Manages possession requests from the server and spawns new AI clients.
  */
-class PossessionClient : public BaseClient
-{
-    public:
-        explicit PossessionClient(CommSocket& commSocket,
-                                  MindKit& mindFactory,
-                                  std::unique_ptr<Inheritance> inheritance,
-                                  std::function<void()> reconnectFn);
+class PossessionClient : public BaseClient {
+public:
+	explicit PossessionClient(CommSocket& commSocket,
+							  MindKit& mindFactory,
+							  std::unique_ptr<Inheritance> inheritance,
+							  std::function<void()> reconnectFn);
 
-        ~PossessionClient() override;
+	~PossessionClient() override;
 
-        const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const;
+	const std::unordered_map<std::string, Ref<BaseMind>>& getMinds() const;
 
-        void processResponses(const OpVector& incomingRes, OpVector& outgoingRes);
+	void processResponses(const OpVector& incomingRes, OpVector& outgoingRes);
 
-        static long operations_in;
-        static long operations_out;
+	static long operations_in;
+	static long operations_out;
 
-    protected:
+protected:
 
-        void operation(const Operation& op, OpVector& res) override;
+	void operation(const Operation& op, OpVector& res) override;
 
-        void processOperation(const Operation& op, OpVector& res);
+	void processOperation(const Operation& op, OpVector& res);
 
-        void operationFromEntity(const Operation& op, Ref<BaseMind> locatedEntity);
+	void operationFromEntity(const Operation& op, Ref<BaseMind> locatedEntity);
 
-        std::chrono::steady_clock::duration getTime() const;
+	std::chrono::steady_clock::duration getTime() const;
 
-        std::chrono::steady_clock::time_point m_startTime;
+	std::chrono::steady_clock::time_point m_startTime;
 
-        void scheduleDispatch();
+	void scheduleDispatch();
 
-        void notifyAccountCreated(RouterId accountId) override;
+	void notifyAccountCreated(RouterId accountId) override;
 
-        void resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op);
+	void resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op);
 
-        MindKit& m_mindFactory;
+	MindKit& m_mindFactory;
 
-        std::function<void()> m_reconnectFn;
+	std::function<void()> m_reconnectFn;
 
-        std::unique_ptr<PossessionAccount> m_account;
+	std::unique_ptr<PossessionAccount> m_account;
 
-        OperationsDispatcher<BaseMind> m_operationsDispatcher;
+	OperationsDispatcher<BaseMind> m_operationsDispatcher;
 
-        std::unique_ptr<Inheritance> m_inheritance;
+	std::unique_ptr<Inheritance> m_inheritance;
 
-        boost::asio::steady_timer m_dispatcherTimer;
+	boost::asio::steady_timer m_dispatcherTimer;
 
-        /**
-         * Keep track of the difference between the server time and our local time.
-         * This is needed when scheduling operations locally. When they are later dispatched
-         * their "seconds" needs to match the time it would be on the server.
-         */
-        double m_serverLocalTimeDiff;
+	/**
+	 * Keep track of the difference between the server time and our local time.
+	 * This is needed when scheduling operations locally. When they are later dispatched
+	 * their "seconds" needs to match the time it would be on the server.
+	 */
+	double m_serverLocalTimeDiff;
 
 
 };

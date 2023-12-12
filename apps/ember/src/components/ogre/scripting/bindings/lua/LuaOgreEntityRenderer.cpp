@@ -21,11 +21,11 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<OgreEntityRenderer>(sol::table& space) {
 	auto ogreEntityRenderer = space.new_usertype<OgreEntityRenderer>("OgreEntityRenderer",
-																   sol::constructors<OgreEntityRenderer(CEGUI::Window*)>(),
-																   sol::base_classes, sol::bases<MovableObjectRenderer>()
+																	 sol::constructors<OgreEntityRenderer(CEGUI::Window*)>(),
+																	 sol::base_classes, sol::bases<MovableObjectRenderer>()
 	);
 	ogreEntityRenderer["showEntity"] = &OgreEntityRenderer::showEntity;
 	ogreEntityRenderer["unloadEntity"] = &OgreEntityRenderer::unloadEntity;

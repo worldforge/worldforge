@@ -36,60 +36,50 @@
 using namespace Ember::OgreView;
 using namespace Ember::OgreView::Terrain;
 
-namespace Ember
-{
+namespace Ember {
 
-class DummyTerrainTechnique : public TerrainPageSurfaceCompilerTechnique
-{
-    virtual bool prepareMaterial()
-    {
-    	return true;
-    }
+class DummyTerrainTechnique : public TerrainPageSurfaceCompilerTechnique {
+	virtual bool prepareMaterial() {
+		return true;
+	}
 
-    virtual bool compileMaterial(Ogre::MaterialPtr material, std::set<std::string>& managedTextures) const
-    {
-    	return true;
-    }
+	virtual bool compileMaterial(Ogre::MaterialPtr material, std::set <std::string>& managedTextures) const {
+		return true;
+	}
 
-    virtual bool compileCompositeMapMaterial(Ogre::MaterialPtr material, std::set<std::string>& managedTextures) const
-    {
-    	return true;
-    }
+	virtual bool compileCompositeMapMaterial(Ogre::MaterialPtr material, std::set <std::string>& managedTextures) const {
+		return true;
+	}
 
 
-	virtual std::string getShadowTextureName(const Ogre::MaterialPtr& material) const
-    {
-    	return "";
-    }
+	virtual std::string getShadowTextureName(const Ogre::MaterialPtr& material) const {
+		return "";
+	}
 
 
-	virtual bool requiresPregenShadow() const
-	{
-    	return false;
-    }
+	virtual bool requiresPregenShadow() const {
+		return false;
+	}
 
 
 };
 
-class DummyCompilerTechniqueProvider: public ICompilerTechniqueProvider
-{
+class DummyCompilerTechniqueProvider : public ICompilerTechniqueProvider {
 public:
-	virtual TerrainPageSurfaceCompilerTechnique* createTechnique(const TerrainPageGeometryPtr& geometry, const SurfaceLayerStore& terrainPageSurfaces, const TerrainPageShadow* terrainPageShadow) const
-	{
+	virtual TerrainPageSurfaceCompilerTechnique*
+	createTechnique(const TerrainPageGeometryPtr& geometry, const SurfaceLayerStore& terrainPageSurfaces, const TerrainPageShadow* terrainPageShadow) const {
 		return new DummyTerrainTechnique();
 	}
 
 };
 
-class DummyTerrainBridge: public ITerrainPageBridge
-{
+class DummyTerrainBridge : public ITerrainPageBridge {
 public:
 
 	bool pageReady;
 
 	DummyTerrainBridge() :
-		pageReady(false)
-	{
+			pageReady(false) {
 	}
 
 	/**
@@ -97,20 +87,17 @@ public:
 	 *
 	 * Call this when the heightdata has changed and you want the Ogre representation to be updated to reflect this.
 	 */
-	virtual void updateTerrain(TerrainPageGeometry& geometry)
-	{
+	virtual void updateTerrain(TerrainPageGeometry& geometry) {
 	}
 
 	/**
 	 *    @brief Notifies class in the ogre side about the page being ready (after being created or so).
 	 */
-	virtual void terrainPageReady()
-	{
+	virtual void terrainPageReady() {
 		pageReady = true;
 	}
 
-	virtual bool isPageShown() const
-	{
+	virtual bool isPageShown() const {
 		return true;
 	}
 
@@ -123,8 +110,7 @@ public:
 	 * @brief Gets the direction of the main light, in world space.
 	 * @returns The direction of the main light, in world space.
 	 */
-	virtual WFMath::Vector<3> getMainLightDirection() const
-	{
+	virtual WFMath::Vector<3> getMainLightDirection() const {
 		return WFMath::Vector<3>::ZERO();
 	}
 
@@ -132,45 +118,36 @@ public:
 	 * @brief Gets the default ambient light colour.
 	 * @returns The default ambient light colour.
 	 */
-	virtual Ogre::ColourValue getAmbientLightColour() const
-	{
+	virtual Ogre::ColourValue getAmbientLightColour() const {
 		return Ogre::ColourValue::Black;
 	}
 };
 
-class DummyEntity: public Eris::Entity
-{
+class DummyEntity : public Eris::Entity {
 public:
 	DummyEntity() :
-		Eris::Entity("0", 0)
-	{
+			Eris::Entity("0", 0) {
 	}
 
-	Eris::TypeService* getTypeService() const
-	{
+	Eris::TypeService* getTypeService() const {
 		return 0;
 	}
 
-	void removeFromMovementPrediction()
-	{
+	void removeFromMovementPrediction() {
 	}
 
-	void addToMovementPrediction()
-	{
+	void addToMovementPrediction() {
 	}
 
-	Eris::Entity* getEntity(const std::string& id)
-	{
+	Eris::Entity* getEntity(const std::string& id) {
 		return 0;
 	}
 
-	void setAttr(const std::string &p, const Atlas::Message::Element &v)
-	{
+	void setAttr(const std::string& p, const Atlas::Message::Element& v) {
 		Eris::Entity::setAttr(p, v);
 	}
 
-	void setFromMessage(const Atlas::Message::MapType& attrs)
-	{
+	void setFromMessage(const Atlas::Message::MapType& attrs) {
 		beginUpdate();
 
 		Atlas::Message::MapType::const_iterator A;
@@ -191,35 +168,31 @@ public:
 
 };
 
-class EntityHolder
-{
+class EntityHolder {
 public:
 	Eris::Entity& entity;
+
 	EntityHolder(Eris::Entity& entity) :
-		entity(entity)
-	{
+			entity(entity) {
 
 	}
-	~EntityHolder()
-	{
+
+	~EntityHolder() {
 		entity.shutdown();
 	}
 };
 
-class Timer
-{
+class Timer {
 public:
 
 	WFMath::TimeStamp startTime;
 
 	Timer() :
-		startTime(WFMath::TimeStamp::now())
-	{
+			startTime(WFMath::TimeStamp::now()) {
 
 	}
 
-	bool hasElapsed(long milliseconds)
-	{
+	bool hasElapsed(long milliseconds) {
 		return (WFMath::TimeStamp::now() - startTime).milliseconds() > milliseconds;
 	}
 
@@ -230,17 +203,15 @@ public:
  *
  * For background events, call waitForCompletion(...).
  */
-class CompleteEventListener: public virtual sigc::trackable
-{
+class CompleteEventListener : public virtual sigc::trackable {
 protected:
 	std::condition_variable mCondition;
 	std::mutex mMutex;
 	int mCompletedCount;
 
-	void handleEvent()
-	{
+	void handleEvent() {
 		{
-			std::lock_guard < std::mutex > lock(mMutex);
+			std::lock_guard <std::mutex> lock(mMutex);
 			mCompletedCount++;
 		}
 		mCondition.notify_all();
@@ -248,13 +219,11 @@ protected:
 
 public:
 	CompleteEventListener() :
-		mCompletedCount(0)
-	{
+			mCompletedCount(0) {
 	}
 
-	int waitForCompletion(long milliseconds)
-	{
-		std::unique_lock < std::mutex > lock(mMutex);
+	int waitForCompletion(long milliseconds) {
+		std::unique_lock <std::mutex> lock(mMutex);
 		if (mCompletedCount) {
 			return true;
 		}
@@ -262,56 +231,46 @@ public:
 		return mCompletedCount;
 	}
 
-	int getCompletedCount()
-	{
+	int getCompletedCount() {
 		return mCompletedCount;
 	}
 };
 
-class WorldSizeChangedListener: public CompleteEventListener
-{
+class WorldSizeChangedListener : public CompleteEventListener {
 protected:
 
-	void eventListener()
-	{
+	void eventListener() {
 		handleEvent();
 	}
 
 public:
-	WorldSizeChangedListener(sigc::signal<void()>& event)
-	{
+	WorldSizeChangedListener(sigc::signal<void()>& event) {
 		event.connect(sigc::mem_fun(*this, &WorldSizeChangedListener::eventListener));
 	}
 };
 
-class AfterTerrainUpdateListener: public CompleteEventListener
-{
+class AfterTerrainUpdateListener : public CompleteEventListener {
 protected:
 
-	void eventListener(const std::vector<WFMath::AxisBox<2>>& areas, const std::set<TerrainPage*>& pages)
-	{
+	void eventListener(const std::vector <WFMath::AxisBox<2>>& areas, const std::set<TerrainPage*>& pages) {
 		handleEvent();
 	}
 
 public:
-	AfterTerrainUpdateListener(sigc::signal<void(const std::vector<WFMath::AxisBox<2>>&, const std::set<TerrainPage*>&)>& event)
-	{
+	AfterTerrainUpdateListener(sigc::signal<void(const std::vector <WFMath::AxisBox<2>>&, const std::set<TerrainPage*>&)>& event) {
 		event.connect(sigc::mem_fun(*this, &AfterTerrainUpdateListener::eventListener));
 	}
 };
 
-class TestTerrainHandler: public Terrain::TerrainHandler
-{
+class TestTerrainHandler : public Terrain::TerrainHandler {
 public:
 
 	TestTerrainHandler(int pageIndexSize, ICompilerTechniqueProvider& compilerTechniqueProvider, Eris::EventService& es) :
-		Terrain::TerrainHandler(pageIndexSize, compilerTechniqueProvider, es)
-	{
+			Terrain::TerrainHandler(pageIndexSize, compilerTechniqueProvider, es) {
 		mLightning = new DummyLightning();
 	}
 
-	Mercator::Terrain* getTerrain()
-	{
+	Mercator::Terrain* getTerrain() {
 		return mTerrain;
 	}
 
@@ -319,16 +278,14 @@ public:
 	 * Checks the height, using an integer.
 	 * This is because of the floats being used, we can't be 100% certain that a piece of terrain should be exactly the specified height.
 	 */
-	bool checkTerrainHeight(float x, float y, int height)
-	{
+	bool checkTerrainHeight(float x, float y, int height) {
 		float realHeight = 0;
-		getHeight(TerrainPosition(x,y), realHeight);
-		return (int)(realHeight) == height;
+		getHeight(TerrainPosition(x, y), realHeight);
+		return (int) (realHeight) == height;
 	}
 };
 
-class TerrainSetup
-{
+class TerrainSetup {
 public:
 	boost::asio::io_service io_service;
 	Eris::EventService es;
@@ -337,12 +294,10 @@ public:
 
 
 	TerrainSetup() :
-		es(io_service), terrainHandler(513, compilerTechniqueProvider, es)
-	{
+			es(io_service), terrainHandler(513, compilerTechniqueProvider, es) {
 	}
 
-	bool createBaseTerrain(float height)
-	{
+	bool createBaseTerrain(float height) {
 		WorldSizeChangedListener worldSizeChangedListener(terrainHandler.EventWorldSizeChanged);
 
 		TerrainDefPointStore terrainDefPoints;
@@ -364,8 +319,7 @@ public:
 		return worldSizeChangedListener.getCompletedCount() > 0;
 	}
 
-	bool createPages()
-	{
+	bool createPages() {
 		DummyTerrainBridge* bridge1 = new DummyTerrainBridge();
 		DummyTerrainBridge* bridge2 = new DummyTerrainBridge();
 		DummyTerrainBridge* bridge3 = new DummyTerrainBridge();
@@ -389,10 +343,9 @@ public:
 		return true;
 	}
 
-	bool reloadTerrain()
-	{
+	bool reloadTerrain() {
 		AfterTerrainUpdateListener afterTerrainUpdateListener(terrainHandler.EventAfterTerrainUpdate);
-		std::vector<TerrainPosition> positions;
+		std::vector <TerrainPosition> positions;
 		positions.push_back(TerrainPosition(-32, -32));
 		positions.push_back(TerrainPosition(-32, 32));
 		positions.push_back(TerrainPosition(32, 32));
@@ -411,21 +364,19 @@ public:
 	}
 };
 
-class TerrainTestCase: public CppUnit::TestFixture
-{
+class TerrainTestCase : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE( TerrainTestCase);
 //	CPPUNIT_TEST( testCreateTerrain);
 //	CPPUNIT_TEST( testAlterTerrain);
 	CPPUNIT_TEST( testApplyMod);
 //	CPPUNIT_TEST( testUpdateMod);
 
-CPPUNIT_TEST_SUITE_END();
+	CPPUNIT_TEST_SUITE_END();
 
 protected:
 
 public:
-	void testCreateTerrain()
-	{
+	void testCreateTerrain() {
 
 		Ogre::Root root;
 
@@ -445,8 +396,7 @@ public:
 
 	}
 
-	void testAlterTerrain()
-	{
+	void testAlterTerrain() {
 
 		Ogre::Root root;
 		TerrainSetup terrainSetup;
@@ -480,8 +430,7 @@ public:
 		CPPUNIT_ASSERT(height == -200);
 	}
 
-	void testApplyMod()
-	{
+	void testApplyMod() {
 
 		bool shouldQuit, pollEris;
 		MainLoopController loopController(shouldQuit, pollEris);
@@ -523,8 +472,7 @@ public:
 
 	}
 
-	void testUpdateMod()
-	{
+	void testUpdateMod() {
 
 		Ogre::Root root;
 
@@ -631,10 +579,9 @@ public:
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Ember::TerrainTestCase);
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
 	CppUnit::TextUi::TestRunner runner;
-	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+	CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	runner.addTest(registry.makeTest());
 
 	// Shows a message as each test starts

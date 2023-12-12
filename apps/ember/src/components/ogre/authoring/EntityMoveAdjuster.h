@@ -26,15 +26,14 @@
 #include <Eris/EventService.h>
 #include <vector>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 class EntityMoveAdjuster;
+
 class EntityMoveManager;
+
 class EntityMover;
 
 /**
@@ -42,8 +41,7 @@ class EntityMover;
  @see EntityMoveAdjuster
  An instance of a adjustment operation. After time out, the entity encapsulated by this instance will be synchronized with the server.
  */
-class EntityMoveAdjustmentInstance
-{
+class EntityMoveAdjustmentInstance {
 public:
 	/**
 	 *    Default ctor.
@@ -81,9 +79,9 @@ private:
  Basically, when an entity is moved the client sends the updates to the server, but it's not clear at that time whether the movement is allowed. This can only be seen by waiting to see whether the movement went through, i.e. if the entity was updated.
  So what this class does, together with EntityMoveAdjustmentInstance, waiting a couple of milleseconds and then telling the entity that  was moved to synchronize with the server. If the movement didn't go through, this will lead to the entity "snapping" back to the original position. If it did go through nothing will happen.
  */
-class EntityMoveAdjuster
-{
+class EntityMoveAdjuster {
 	friend class EntityMoveAdjustmentInstance;
+
 public:
 	/**
 	 *    Default ctor.
@@ -91,12 +89,13 @@ public:
 	 * @return
 	 */
 	EntityMoveAdjuster(EntityMoveManager* manager, Eris::EventService& eventService);
+
 private:
 
 	/**
 	 Holds all instances of EntityMoveAdjustmentInstance.
 	 */
-	std::vector<std::unique_ptr<EntityMoveAdjustmentInstance>>  mInstances;
+	std::vector<std::unique_ptr<EntityMoveAdjustmentInstance>> mInstances;
 
 	/**
 	 *    Removes the supplied instance from the list of instances.
@@ -134,6 +133,6 @@ private:
 };
 
 }
-}
+
 }
 #endif

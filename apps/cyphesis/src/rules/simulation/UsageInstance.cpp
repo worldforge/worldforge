@@ -35,172 +35,169 @@ using Atlas::Objects::Entity::RootEntity;
 
 std::function<Py::Object(UsageInstance&& usageInstance)> UsageInstance::scriptCreator;
 
-UsageParameter UsageParameter::parse(const Atlas::Message::Element& element)
-{
-    UsageParameter parameter{};
+UsageParameter UsageParameter::parse(const Atlas::Message::Element& element) {
+	UsageParameter parameter{};
 
-    if (!element.isMap()) {
-        throw std::invalid_argument("Parameter must be a map.");
-    }
-    auto& paramMap = element.Map();
+	if (!element.isMap()) {
+		throw std::invalid_argument("Parameter must be a map.");
+	}
+	auto& paramMap = element.Map();
 
-    auto I = paramMap.find("type");
-    if (I == paramMap.end() || !I->second.isString()) {
-        throw std::invalid_argument("Parameter must define a string 'type'.");
-    }
-    if (I->second.String() == "entity") {
-        parameter.type = UsageParameter::Type::ENTITY;
-    } else if (I->second.String() == "entity_location") {
-        parameter.type = UsageParameter::Type::ENTITYLOCATION;
-    } else if (I->second.String() == "direction") {
-        parameter.type = UsageParameter::Type::DIRECTION;
-    } else if (I->second.String() == "position") {
-        parameter.type = UsageParameter::Type::POSITION;
-    } else {
-        throw std::invalid_argument(fmt::format("Parameter type not recognized: {}.", I->second.String()));
-    }
+	auto I = paramMap.find("type");
+	if (I == paramMap.end() || !I->second.isString()) {
+		throw std::invalid_argument("Parameter must define a string 'type'.");
+	}
+	if (I->second.String() == "entity") {
+		parameter.type = UsageParameter::Type::ENTITY;
+	} else if (I->second.String() == "entity_location") {
+		parameter.type = UsageParameter::Type::ENTITYLOCATION;
+	} else if (I->second.String() == "direction") {
+		parameter.type = UsageParameter::Type::DIRECTION;
+	} else if (I->second.String() == "position") {
+		parameter.type = UsageParameter::Type::POSITION;
+	} else {
+		throw std::invalid_argument(fmt::format("Parameter type not recognized: {}.", I->second.String()));
+	}
 
 
-    AtlasQuery::find<std::string>(paramMap, "constraint", [&](const std::string& constraint) {
-        //TODO: should be a usage constraint provider factory
-        parameter.constraint.reset(new EntityFilter::Filter(constraint, EntityFilter::ProviderFactory()));
-    });
-    AtlasQuery::find<Atlas::Message::IntType>(paramMap, "min", [&](const Atlas::Message::IntType& min) {
-        parameter.min = static_cast<int>(min);
-    });
-    AtlasQuery::find<Atlas::Message::IntType>(paramMap, "max", [&](const Atlas::Message::IntType& max) {
-        parameter.max = static_cast<int>(max);
-    });
+	AtlasQuery::find<std::string>(paramMap, "constraint", [&](const std::string& constraint) {
+		//TODO: should be a usage constraint provider factory
+		parameter.constraint.reset(new EntityFilter::Filter(constraint, EntityFilter::ProviderFactory()));
+	});
+	AtlasQuery::find<Atlas::Message::IntType>(paramMap, "min", [&](const Atlas::Message::IntType& min) {
+		parameter.min = static_cast<int>(min);
+	});
+	AtlasQuery::find<Atlas::Message::IntType>(paramMap, "max", [&](const Atlas::Message::IntType& max) {
+		parameter.max = static_cast<int>(max);
+	});
 
-    return parameter;
+	return parameter;
 }
 
-int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<LocatedEntity>& actor, const Ref<LocatedEntity>& tool, std::vector<std::string>& errorMessages) const
-{
-    int count = 0;
-    for (auto& arg : args) {
-        bool is_valid = false;
+int UsageParameter::countValidArgs(const std::vector<UsageArg>& args, const Ref<LocatedEntity>& actor, const Ref<LocatedEntity>& tool, std::vector<std::string>& errorMessages) const {
+	int count = 0;
+	for (auto& arg: args) {
+		bool is_valid = false;
 
-        switch (type) {
-            case UsageParameter::Type::DIRECTION: {
+		switch (type) {
+			case UsageParameter::Type::DIRECTION: {
 
-                auto visitor = compose(
-                        [&](const EntityLocation& value) {},
-                        [&](const WFMath::Point<3>& value) {},
-                        [&](const WFMath::Vector<3>& value) {
-                            is_valid = value.isValid();
-                        }
-                );
+				auto visitor = compose(
+						[&](const EntityLocation& value) {},
+						[&](const WFMath::Point<3>& value) {},
+						[&](const WFMath::Vector<3>& value) {
+							is_valid = value.isValid();
+						}
+				);
 
-                boost::apply_visitor(visitor, arg);
+				boost::apply_visitor(visitor, arg);
 
-                break;
-            }
-            case UsageParameter::Type::POSITION: {
-                auto visitor = compose(
-                        [&](const EntityLocation& value) {},
-                        [&](const WFMath::Point<3>& value) {
-                            is_valid = value.isValid();
-                        },
-                        [&](const WFMath::Vector<3>& value) {}
-                );
+				break;
+			}
+			case UsageParameter::Type::POSITION: {
+				auto visitor = compose(
+						[&](const EntityLocation& value) {},
+						[&](const WFMath::Point<3>& value) {
+							is_valid = value.isValid();
+						},
+						[&](const WFMath::Vector<3>& value) {}
+				);
 
-                boost::apply_visitor(visitor, arg);
+				boost::apply_visitor(visitor, arg);
 
-                break;
-            }
-            case UsageParameter::Type::ENTITY: {
+				break;
+			}
+			case UsageParameter::Type::ENTITY: {
 
-                auto visitor = compose(
-                        [&](const EntityLocation& value) -> void {
-                            if (value.m_parent && !value.m_parent->isDestroyed()) {
-                                if (constraint) {
-                                    EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
-                                    queryContext.entityLoc.pos = &value.m_pos;
-                                    queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
-                                    queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
-                                    queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
-                                    is_valid = constraint->match(queryContext);
-                                } else {
-                                    is_valid = true;
-                                }
-                            } else {
-                                is_valid = false;
-                            }
-                        },
-                        [&](const WFMath::Point<3>& value) {},
-                        [&](const WFMath::Vector<3>& value) {}
-                );
-                boost::apply_visitor(visitor, arg);
-                break;
-            }
-            case UsageParameter::Type::ENTITYLOCATION: {
-                auto visitor = compose(
-                        [&](const EntityLocation& value) -> void {
-                            if (value.isValid() && !value.m_parent->isDestroyed()) {
-                                if (constraint) {
-                                    EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
-                                    queryContext.entityLoc.pos = &value.m_pos;
-                                    queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
-                                    queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
-                                    queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
-                                    is_valid = constraint->match(queryContext);
-                                } else {
-                                    is_valid = true;
-                                }
-                            } else {
-                                is_valid = false;
-                            }
-                        },
-                        [&](const WFMath::Point<3>& value) {},
-                        [&](const WFMath::Vector<3>& value) {}
-                );
-                boost::apply_visitor(visitor, arg);
-            }
-        }
-        if (is_valid) {
-            count++;
-        }
-    }
-    return count;
+				auto visitor = compose(
+						[&](const EntityLocation& value) -> void {
+							if (value.m_parent && !value.m_parent->isDestroyed()) {
+								if (constraint) {
+									EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
+									queryContext.entityLoc.pos = &value.m_pos;
+									queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
+									queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
+									queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
+									is_valid = constraint->match(queryContext);
+								} else {
+									is_valid = true;
+								}
+							} else {
+								is_valid = false;
+							}
+						},
+						[&](const WFMath::Point<3>& value) {},
+						[&](const WFMath::Vector<3>& value) {}
+				);
+				boost::apply_visitor(visitor, arg);
+				break;
+			}
+			case UsageParameter::Type::ENTITYLOCATION: {
+				auto visitor = compose(
+						[&](const EntityLocation& value) -> void {
+							if (value.isValid() && !value.m_parent->isDestroyed()) {
+								if (constraint) {
+									EntityFilter::QueryContext queryContext{*value.m_parent, actor.get(), tool.get()};
+									queryContext.entityLoc.pos = &value.m_pos;
+									queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
+									queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
+									queryContext.report_error_fn = [&errorMessages](const std::string& message) { errorMessages.emplace_back(message); };
+									is_valid = constraint->match(queryContext);
+								} else {
+									is_valid = true;
+								}
+							} else {
+								is_valid = false;
+							}
+						},
+						[&](const WFMath::Point<3>& value) {},
+						[&](const WFMath::Vector<3>& value) {}
+				);
+				boost::apply_visitor(visitor, arg);
+			}
+		}
+		if (is_valid) {
+			count++;
+		}
+	}
+	return count;
 }
 
-std::pair<bool, std::string> UsageInstance::isValid() const
-{
+std::pair<bool, std::string> UsageInstance::isValid() const {
 
-    if (definition.constraint) {
-        std::vector<std::string> errors;
-        EntityFilter::QueryContext queryContext{*tool, actor.get(), tool.get()};
-        queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
-        queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
-        queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
+	if (definition.constraint) {
+		std::vector<std::string> errors;
+		EntityFilter::QueryContext queryContext{*tool, actor.get(), tool.get()};
+		queryContext.report_error_fn = [&](const std::string& error) { errors.push_back(error); };
+		queryContext.entity_lookup_fn = [](const std::string& id) { return BaseWorld::instance().getEntity(id); };
+		queryContext.type_lookup_fn = [](const std::string& id) { return Inheritance::instance().getType(id); };
 
-        if (!definition.constraint->match(queryContext)) {
-            return {false, errors.empty() ? "Constraint does not match." : errors.front()};
-        }
-    }
+		if (!definition.constraint->match(queryContext)) {
+			return {false, errors.empty() ? "Constraint does not match." : errors.front()};
+		}
+	}
 
-    for (auto& param : definition.params) {
-        auto I = args.find(param.first);
-        if (I == args.end()) {
-            return {false, fmt::format("Could not find required '{}' argument.", param.first)};
-        }
-        std::vector<std::string> errorMessages;
-        int count = param.second.countValidArgs(I->second, actor, tool, errorMessages);
+	for (auto& param: definition.params) {
+		auto I = args.find(param.first);
+		if (I == args.end()) {
+			return {false, fmt::format("Could not find required '{}' argument.", param.first)};
+		}
+		std::vector<std::string> errorMessages;
+		int count = param.second.countValidArgs(I->second, actor, tool, errorMessages);
 
-        if (count < param.second.min) {
-            if (!errorMessages.empty()) {
-                return {false, *errorMessages.begin()};
-            } else {
-                return {false, fmt::format("Too few '{}' arguments. Should be minimum {}, got {}.", param.first, param.second.min, count)};
-            }
-        }
-        if (count > param.second.max) {
-            return {false, fmt::format("Too many '{}' arguments. Should be maximum {}, got {}.", param.first, param.second.max, count)};
-        }
+		if (count < param.second.min) {
+			if (!errorMessages.empty()) {
+				return {false, *errorMessages.begin()};
+			} else {
+				return {false, fmt::format("Too few '{}' arguments. Should be minimum {}, got {}.", param.first, param.second.min, count)};
+			}
+		}
+		if (count > param.second.max) {
+			return {false, fmt::format("Too many '{}' arguments. Should be maximum {}, got {}.", param.first, param.second.max, count)};
+		}
 
-    }
+	}
 
 
-    return {true, ""};
+	return {true, ""};
 }

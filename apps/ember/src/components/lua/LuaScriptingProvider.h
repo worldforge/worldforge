@@ -28,8 +28,7 @@
 
 struct lua_State;
 
-namespace Ember
-{
+namespace Ember {
 class ScriptingService;
 
 /**
@@ -47,10 +46,9 @@ This acts as a bridge between Ember and the Lua scripting environment. Opon crea
 If you want to inspect the return values from calls to lua scripts, pass a pointer to LuaScriptingCallContext to the executeScript methods.
 @author Erik Ogenvik
 */
-class LuaScriptingProvider : public IScriptingProvider
-{
+class LuaScriptingProvider : public IScriptingProvider {
 public:
-    LuaScriptingProvider();
+	LuaScriptingProvider();
 
 	~LuaScriptingProvider() override;
 

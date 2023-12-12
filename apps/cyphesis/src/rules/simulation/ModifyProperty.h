@@ -30,23 +30,22 @@
 /**
 * Containing information about how to modify a parent.
 */
-struct ModifyEntry
-{
-    /**
-     * An optional constraint.
-     */
-    std::unique_ptr<EntityFilter::Filter> constraint;
+struct ModifyEntry {
+	/**
+	 * An optional constraint.
+	 */
+	std::unique_ptr<EntityFilter::Filter> constraint;
 
-    /**
-     * The modifiers which will be applied.
-     */
-    std::map<std::string, std::unique_ptr<Modifier>> modifiers;
-    /**
-     * A list of observed properties of the parent entity. Whenever one of the properties changes the modification should be re-evaluated.
-     */
-    std::set<std::string> observedProperties;
+	/**
+	 * The modifiers which will be applied.
+	 */
+	std::map<std::string, std::unique_ptr<Modifier>> modifiers;
+	/**
+	 * A list of observed properties of the parent entity. Whenever one of the properties changes the modification should be re-evaluated.
+	 */
+	std::set<std::string> observedProperties;
 
-    static ModifyEntry parseEntry(const Atlas::Message::MapType& observedPropertiesEntry);
+	static ModifyEntry parseEntry(const Atlas::Message::MapType& observedPropertiesEntry);
 
 };
 
@@ -57,55 +56,53 @@ struct ModifyEntry
  * This allows us to model various effects, such as armor and weapons affecting the character which wears them.
  * \ingroup PropertyClasses
  */
-class ModifyProperty : public PropertyBase
-{
-    public:
-        static constexpr const char* property_name = "modify";
-        static constexpr const char* property_atlastype = "list";
+class ModifyProperty : public PropertyBase {
+public:
+	static constexpr const char* property_name = "modify";
+	static constexpr const char* property_atlastype = "list";
 
-        ModifyProperty();
+	ModifyProperty();
 
-        ModifyProperty(const ModifyProperty& rhs);
+	ModifyProperty(const ModifyProperty& rhs);
 
-        ~ModifyProperty() override = default;
+	~ModifyProperty() override = default;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        void install(LocatedEntity& owner, const std::string& name) override;
+	void install(LocatedEntity& owner, const std::string& name) override;
 
-        ModifyProperty* copy() const override;
+	ModifyProperty* copy() const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element& val) const override;
-
-
-    protected:
+	int get(Atlas::Message::Element& val) const override;
 
 
-        std::vector<ModifyEntry> m_modifyEntries;
+protected:
 
-        /**
-         * Entity specific state. Since we need to listen to both changes in properties as well as in the parent location we need to also keep track of connections for these signals.
-         */
-        struct State
-        {
-            sigc::connection containeredConnection;
-            sigc::connection parentEntityPropertyUpdateConnection;
-            LocatedEntity* parentEntity; //Need to keep track of latest parent as there's no specific signal for when location changes.
-        };
 
-        static PropertyInstanceState<State> sInstanceState;
+	std::vector<ModifyEntry> m_modifyEntries;
 
-        Atlas::Message::Element m_data;
+	/**
+	 * Entity specific state. Since we need to listen to both changes in properties as well as in the parent location we need to also keep track of connections for these signals.
+	 */
+	struct State {
+		sigc::connection containeredConnection;
+		sigc::connection parentEntityPropertyUpdateConnection;
+		LocatedEntity* parentEntity; //Need to keep track of latest parent as there's no specific signal for when location changes.
+	};
 
-        void newLocation(State& state, LocatedEntity& entity, LocatedEntity* parent);
+	static PropertyInstanceState<State> sInstanceState;
 
-        void checkIfActive(State& state, LocatedEntity& entity);
+	Atlas::Message::Element m_data;
 
-        void setData(const Atlas::Message::Element& val);
+	void newLocation(State& state, LocatedEntity& entity, LocatedEntity* parent);
+
+	void checkIfActive(State& state, LocatedEntity& entity);
+
+	void setData(const Atlas::Message::Element& val);
 
 };
 

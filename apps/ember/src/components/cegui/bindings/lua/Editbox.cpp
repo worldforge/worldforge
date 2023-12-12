@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Editbox>(sol::table& space) {
 	auto editBox = space.new_usertype<Editbox>("Editbox",
 											   sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

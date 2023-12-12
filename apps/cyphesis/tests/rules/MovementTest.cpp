@@ -35,34 +35,35 @@
 #include <cassert>
 
 class TestMovement : public Movement {
-  public:
-    TestMovement(Entity & body) : Movement(body) { }
+public:
+	TestMovement(Entity& body) : Movement(body) {}
 
-    virtual double getTickAddition(const Point3D & coordinates,
-                                   const Vector3D & velocity) const {
-        return 0.;
-    }
-    virtual int getUpdatedLocation(Location & return_location) {
-        return 0;
-    }
-    virtual Atlas::Objects::Operation::RootOperation generateMove(const Location & new_location) {
-        return Atlas::Objects::Operation::Move();
-    }
+	virtual double getTickAddition(const Point3D& coordinates,
+								   const Vector3D& velocity) const {
+		return 0.;
+	}
+
+	virtual int getUpdatedLocation(Location& return_location) {
+		return 0;
+	}
+
+	virtual Atlas::Objects::Operation::RootOperation generateMove(const Location& new_location) {
+		return Atlas::Objects::Operation::Move();
+	}
 
 };
 
-int main()
-{
-    TestMovement * m = new TestMovement(*(Entity*)0);
+int main() {
+	TestMovement* m = new TestMovement(*(Entity*) 0);
 
-    Location loc;
-    m->updateNeeded(loc);
+	Location loc;
+	m->updateNeeded(loc);
 
-    m->reset();
+	m->reset();
 
-    delete m;
+	delete m;
 
-    return 0;
+	return 0;
 }
 
 #include "../stubs/rules/stubLocation.h"

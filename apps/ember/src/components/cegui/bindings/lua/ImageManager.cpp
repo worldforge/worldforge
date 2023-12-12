@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<ImageManager>(sol::table& space) {
 	auto imagePair = space.new_usertype<ImageManager::ImagePair>("ImagePair", sol::no_constructor);
 	imagePair["first"] = &ImageManager::ImagePair::first;

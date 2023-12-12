@@ -25,10 +25,7 @@
 #include <atomic>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class Segment;
 
@@ -42,8 +39,6 @@ class SegmentManager;
  * This class is internal to the SegmentManager system and shouldn't be used outside of it.
  */
 class SegmentHolder {
-	friend class SegmentReference;
-
 public:
 
 	/**
@@ -103,8 +98,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRE_TERRAIN_SEGMENTHOLDER_H_ */

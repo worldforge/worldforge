@@ -29,18 +29,13 @@
 #include <string>
 #include <boost/filesystem/path.hpp>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Lod
-{
+
+namespace Ember::OgreView::Lod {
 
 /**
  * @brief Helper class to import and export LodDefinition files.
  */
-class XMLLodDefinitionSerializer
-{
+class XMLLodDefinitionSerializer {
 public:
 
 	/**
@@ -54,7 +49,7 @@ public:
 	 * @param stream The DataStream containing XML data.(input)
 	 * @param lodDef The Lod definition to configure.(output)
 	 */
-	void importLodDefinition(const Ogre::DataStreamPtr& stream, LodDefinition& lodDef) const;
+	static void importLodDefinition(const Ogre::DataStreamPtr& stream, LodDefinition& lodDef);
 
 	/**
 	 * @brief Exports the Lod definition to a file.
@@ -64,11 +59,12 @@ public:
 	 * @return True if the script was successfully written.
 	 */
 	bool exportScript(const LodDefinitionPtr& lodDef, const std::string& fileName) const;
+
 private:
 	const boost::filesystem::path mExportDirectory;
 };
 
 }
-}
-}
+
+
 #endif // ifndef XMLLODDEFINITIONSERIALIZER_H

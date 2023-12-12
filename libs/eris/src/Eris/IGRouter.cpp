@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "IGRouter.h"
@@ -25,34 +25,31 @@ using Atlas::Message::Element;
 namespace Eris {
 
 IGRouter::IGRouter(Avatar& av, View& view) :
-    m_avatar(av),
-    m_view(view)
-{
-    m_avatar.getConnection().registerRouterForTo(this, m_avatar.getEntityId());
-    m_actionType = m_avatar.getConnection().getTypeService().getTypeByName("action");
+		m_avatar(av),
+		m_view(view) {
+	m_avatar.getConnection().registerRouterForTo(this, m_avatar.getEntityId());
+	m_actionType = m_avatar.getConnection().getTypeService().getTypeByName("action");
 }
 
-IGRouter::~IGRouter()
-{
-    m_avatar.getConnection().unregisterRouterForTo(this, m_avatar.getEntityId());
+IGRouter::~IGRouter() {
+	m_avatar.getConnection().unregisterRouterForTo(this, m_avatar.getEntityId());
 }
 
-Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
-{
-    if (!op->isDefaultSeconds()) {
-        // grab out world time
-        m_avatar.updateWorldTime(op->getSeconds());
-    }
+Router::RouterResult IGRouter::handleOperation(const RootOperation& op) {
+	if (!op->isDefaultSeconds()) {
+		// grab out world time
+		m_avatar.updateWorldTime(op->getSeconds());
+	}
 
-    const std::vector<Root>& args = op->getArgs();
+	const std::vector<Root>& args = op->getArgs();
 
-    if (op->getClassNo() == SIGHT_NO) {
-        if (args.empty()) {
-            logger->warn("Avatar received sight with empty args");
-            return IGNORED;
-        }
+	if (op->getClassNo() == SIGHT_NO) {
+		if (args.empty()) {
+			logger->warn("Avatar received sight with empty args");
+			return IGNORED;
+		}
 
-		for (const auto& arg : args) {
+		for (const auto& arg: args) {
 			if (arg->instanceOf(ROOT_OPERATION_NO)) {
 				handleSightOp(op, smart_dynamic_cast<RootOperation>(arg));
 			} else {
@@ -77,113 +74,110 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 		return HANDLED;
 
 
-    }
+	}
 
-    if (op->getClassNo() == APPEARANCE_NO) {
-        for (const auto& arg : args) {
-            double stamp = -1;
-            if (!arg->isDefaultStamp()) {
-                stamp = arg->getStamp();
-            }
+	if (op->getClassNo() == APPEARANCE_NO) {
+		for (const auto& arg: args) {
+			double stamp = -1;
+			if (!arg->isDefaultStamp()) {
+				stamp = arg->getStamp();
+			}
 
 			if (!arg->isDefaultId()) {
 				m_view.appear(arg->getId(), stamp);
 			}
-        }
+		}
 
-        return HANDLED;
-    }
+		return HANDLED;
+	}
 
-    if (op->getClassNo() == DISAPPEARANCE_NO) {
-        for (const auto& arg : args) {
-        	if (!arg->isDefaultId()) {
+	if (op->getClassNo() == DISAPPEARANCE_NO) {
+		for (const auto& arg: args) {
+			if (!arg->isDefaultId()) {
 				m_view.disappear(arg->getId());
 			}
-        }
+		}
 
-        return HANDLED;
-    }
+		return HANDLED;
+	}
 
-    if (op->getClassNo() == UNSEEN_NO)
-    {
-        if (args.empty()) {
-            logger->warn("Avatar received unseen with empty args");
-            return IGNORED;
-        }
-		for (const auto& arg : args) {
+	if (op->getClassNo() == UNSEEN_NO) {
+		if (args.empty()) {
+			logger->warn("Avatar received unseen with empty args");
+			return IGNORED;
+		}
+		for (const auto& arg: args) {
 			if (!arg->isDefaultId()) {
 				m_view.unseen(arg->getId());
 			}
 		}
-        return HANDLED;
-    }
+		return HANDLED;
+	}
 
-    // logout
-    if (op->getClassNo() == LOGOUT_NO) {
-        logger->debug("Avatar received forced logout from server");
+	// logout
+	if (op->getClassNo() == LOGOUT_NO) {
+		logger->debug("Avatar received forced logout from server");
 
-        if(args.size() >= 2) {
-            bool gotArgs = true;
-            // Teleport logout op. The second attribute is the payload for the teleport host data.
-            const Root & arg = args[1];
-            Element tp_host_attr;
-            Element tp_port_attr;
-            Element pkey_attr;
-            Element pentity_id_attr;
-            if(arg->copyAttr("teleport_host", tp_host_attr) != 0
-                    || !tp_host_attr.isString()) {
-                logger->debug("No teleport host specified. Doing normal logout.");
-                gotArgs = false;
-            } else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
-                    || !tp_port_attr.isInt()) {
-                logger->debug("No teleport port specified. Doing normal logout.");
-                gotArgs = false;
-            } else if (arg->copyAttr("possess_key", pkey_attr) != 0
-                    || !pkey_attr.isString()) {
-                logger->debug("No possess key specified. Doing normal logout.");
-                gotArgs = false;
-            } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
-                    || !pentity_id_attr.isString()) {
-                logger->debug("No entity ID specified. Doing normal logout.");
-                gotArgs = false;
-            }
+		if (args.size() >= 2) {
+			bool gotArgs = true;
+			// Teleport logout op. The second attribute is the payload for the teleport host data.
+			const Root& arg = args[1];
+			Element tp_host_attr;
+			Element tp_port_attr;
+			Element pkey_attr;
+			Element pentity_id_attr;
+			if (arg->copyAttr("teleport_host", tp_host_attr) != 0
+				|| !tp_host_attr.isString()) {
+				logger->debug("No teleport host specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
+					   || !tp_port_attr.isInt()) {
+				logger->debug("No teleport port specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("possess_key", pkey_attr) != 0
+					   || !pkey_attr.isString()) {
+				logger->debug("No possess key specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
+					   || !pentity_id_attr.isString()) {
+				logger->debug("No entity ID specified. Doing normal logout.");
+				gotArgs = false;
+			}
 
-            // Extract argument data and request transfer only if we
-            // succeed in extracting them all
-            if (gotArgs) {
-                std::string teleport_host = tp_host_attr.String();
-                int teleport_port = static_cast<int>(tp_port_attr.Int());
-                std::string possess_key = pkey_attr.String();
-                std::string possess_entity_id = pentity_id_attr.String();
-                logger->debug("Server transfer data: Host: {}, Port: {}, Key: {}, ID: {}", teleport_host, teleport_port, possess_key, possess_entity_id);
-                // Now do a transfer request
-                TransferInfo transfer(teleport_host, teleport_port, possess_key
-                        , possess_entity_id);
-                m_avatar.logoutRequested(transfer);
-            } else {
-                m_avatar.logoutRequested();
-            }
+			// Extract argument data and request transfer only if we
+			// succeed in extracting them all
+			if (gotArgs) {
+				std::string teleport_host = tp_host_attr.String();
+				int teleport_port = static_cast<int>(tp_port_attr.Int());
+				std::string possess_key = pkey_attr.String();
+				std::string possess_entity_id = pentity_id_attr.String();
+				logger->debug("Server transfer data: Host: {}, Port: {}, Key: {}, ID: {}", teleport_host, teleport_port, possess_key, possess_entity_id);
+				// Now do a transfer request
+				TransferInfo transfer(teleport_host, teleport_port, possess_key, possess_entity_id);
+				m_avatar.logoutRequested(transfer);
+			} else {
+				m_avatar.logoutRequested();
+			}
 
-        } else {
-            // Regular force logout op
-            m_avatar.logoutRequested();
-        }
+		} else {
+			// Regular force logout op
+			m_avatar.logoutRequested();
+		}
 
-        return HANDLED;
-    }
+		return HANDLED;
+	}
 
-    return IGNORED;
+	return IGNORED;
 }
 
-Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const RootOperation& op)
-{
-    const auto& args = op->getArgs();
+Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const RootOperation& op) {
+	const auto& args = op->getArgs();
 
-    // because a SET op can potentially (legally) update multiple entities,
-    // we decode it here, not in the entity router
-    if (op->getClassNo() == SET_NO) {
-        for (const auto& arg : args) {
-        	if (!arg->isDefaultId()) {
+	// because a SET op can potentially (legally) update multiple entities,
+	// we decode it here, not in the entity router
+	if (op->getClassNo() == SET_NO) {
+		for (const auto& arg: args) {
+			if (!arg->isDefaultId()) {
 				auto ent = m_view.getEntity(arg->getId());
 				if (!ent) {
 					if (m_view.isPending(arg->getId())) {
@@ -210,11 +204,11 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 					ent->setFromRoot(arg, false);
 				}
 			}
-        }
-        return HANDLED;
-    }
+		}
+		return HANDLED;
+	}
 
-    if (!op->isDefaultParent()) {
+	if (!op->isDefaultParent()) {
 		// we have to handle generic 'actions' late, to avoid trapping interesting
 		// such as create or divide
 		TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(op);
@@ -253,7 +247,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const
 		}
 	}
 
-    return IGNORED;
+	return IGNORED;
 }
 
 } // of namespace Eris

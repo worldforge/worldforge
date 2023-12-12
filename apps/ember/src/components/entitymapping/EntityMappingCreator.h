@@ -34,10 +34,10 @@ class TypeService;
 class View;
 }
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 namespace Definitions {
 struct EntityMappingDefinition;
@@ -182,6 +182,6 @@ protected:
 
 }
 
-}
+
 
 #endif

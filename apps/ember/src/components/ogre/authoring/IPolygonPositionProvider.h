@@ -23,21 +23,17 @@
 #ifndef EMBEROGRE_MANIPULATIONIPOLYGONPOSITIONPROVIDER_H
 #define EMBEROGRE_MANIPULATIONIPOLYGONPOSITIONPROVIDER_H
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 /**
  @brief Provides the ability to provide a height value to the otherwise 2d polygons.
  For example, if a polygon is placed on terrain we want the height to be adjusted so that it snaps to the ground.
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-struct IPolygonPositionProvider
-{
+struct IPolygonPositionProvider {
 	/**
 	 * @brief Dtor.
 	 */
@@ -54,8 +50,8 @@ struct IPolygonPositionProvider
 
 }
 
-}
 
-}
+
+
 
 #endif

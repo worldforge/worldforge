@@ -59,7 +59,7 @@ function Compass:buildWidget(terrainManager)
 
 
 
-	--don't show the compass here, instead wait until we've gotten some terrain (by listening 
+	--don't show the compass here, instead wait until we've gotten some terrain (by listening
 	connect(self.connectors, emberOgre.EventCreatedAvatarEntity, function()
 		connect(self.connectors, self.widget.EventFrameStarted, function()
 			if self.updateFrameCountDown > 0 then

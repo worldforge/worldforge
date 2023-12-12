@@ -29,10 +29,8 @@
 
 #include <vector>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Mapping {
+namespace Ember::OgreView::Mapping {
 
 /**
 	Serialized model definitions from xml files.
@@ -55,7 +53,7 @@ protected:
 
 	void parseCaseElement(EntityMapping::Definitions::EntityMappingDefinition& definition, EntityMapping::Definitions::CaseDefinition& caseDef, TiXmlElement* element);
 
-	void parseActionElement(EntityMapping::Definitions::EntityMappingDefinition& definition, EntityMapping::Definitions::ActionDefinition& actionDef, TiXmlElement* element);
+	static void parseActionElement(EntityMapping::Definitions::EntityMappingDefinition& definition, EntityMapping::Definitions::ActionDefinition& actionDef, TiXmlElement* element);
 
 	EntityMapping::EntityMappingManager& mEntityMappingManager;
 
@@ -64,8 +62,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

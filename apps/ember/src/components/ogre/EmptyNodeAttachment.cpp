@@ -20,13 +20,13 @@
 #include "INodeProvider.h"
 #include "domain/IGraphicalRepresentation.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 EmptyNodeAttachment::EmptyNodeAttachment(Ember::EmberEntity& parentEntity,
 										 Ember::EmberEntity& childEntity,
 										 std::unique_ptr<INodeProvider> nodeProvider,
 										 std::unique_ptr<IGraphicalRepresentation> graphicalRepresentation)
-		: NodeAttachment(parentEntity, childEntity, *nodeProvider.get()),
+		: NodeAttachment(parentEntity, childEntity, *nodeProvider),
 		  mNodeProvider(std::move(nodeProvider)),
 		  mGraphicalRepresentation(std::move(graphicalRepresentation)) {
 
@@ -49,4 +49,4 @@ IGraphicalRepresentation* EmptyNodeAttachment::getGraphicalRepresentation() cons
 
 
 }
-}
+

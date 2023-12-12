@@ -13,7 +13,8 @@
 #include <vector>
 #include <string>
 
-namespace Atlas { namespace Message {
+
+namespace Atlas::Message {
 
 class Element;
 
@@ -30,25 +31,31 @@ typedef std::vector<Element> ListType;
  * @see Atlas::EncoderBase
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class Encoder : public Atlas::EncoderBase
-{
+class Encoder : public Atlas::EncoderBase {
 public:
-    explicit Encoder(Atlas::Bridge &);
+	explicit Encoder(Atlas::Bridge&);
 
-    ~Encoder() override = default;
+	~Encoder() override = default;
 
-    /// Send a message (must be a map!) in stream state.
-    void streamMessageElement(const MapType & obj);
-    /// Send an object as a map item.
-    void mapElementItem(const std::string&, const Element&);
-    void mapElementMapItem(const std::string&, const MapType&);
-    void mapElementListItem(const std::string&, const ListType&);
-    /// Send an object as a list item.
-    void listElementItem(const Element&);
-    void listElementMapItem(const MapType&);
-    void listElementListItem(const ListType&);
+	/// Send a message (must be a map!) in stream state.
+	void streamMessageElement(const MapType& obj);
+
+	/// Send an object as a map item.
+	void mapElementItem(const std::string&, const Element&);
+
+	void mapElementMapItem(const std::string&, const MapType&);
+
+	void mapElementListItem(const std::string&, const ListType&);
+
+	/// Send an object as a list item.
+	void listElementItem(const Element&);
+
+	void listElementMapItem(const MapType&);
+
+	void listElementListItem(const ListType&);
 };
 
-} } // namespace Atlas::Message
+}
+// namespace Atlas::Message
 
 #endif

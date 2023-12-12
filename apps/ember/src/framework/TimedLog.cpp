@@ -21,26 +21,23 @@
 
 #include "Log.h"
 
-namespace Ember
-{
-#if ENABLE_TIMED_LOG==1
+namespace Ember {
+#if ENABLE_TIMED_LOG == 1
+
 TimedLog::TimedLog(std::string logName, bool reportStart) :
-	mLogName(std::move(logName)), mStart(std::chrono::steady_clock::now())
-{
+		mLogName(std::move(logName)), mStart(std::chrono::steady_clock::now()) {
 	if (reportStart) {
 		logger->debug("Started task '{}'.", mLogName);
 	}
 }
 
-TimedLog::~TimedLog()
-{
+TimedLog::~TimedLog() {
 	auto currentTime = std::chrono::steady_clock::now();
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
 	logger->debug("Ended task '{}' after {} microseconds.", mLogName, microDuration.count());
 }
 
-void TimedLog::report()
-{
+void TimedLog::report() {
 	auto currentTime = std::chrono::steady_clock::now();
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
 	if (mLastReport.time_since_epoch().count()) {
@@ -51,8 +48,8 @@ void TimedLog::report()
 	}
 	mLastReport = currentTime;
 }
-void TimedLog::report(const std::string& reportName)
-{
+
+void TimedLog::report(const std::string& reportName) {
 	auto currentTime = std::chrono::steady_clock::now();
 	auto microDuration = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - mStart);
 	if (mLastReport.time_since_epoch().count()) {
@@ -63,6 +60,7 @@ void TimedLog::report(const std::string& reportName)
 	}
 	mLastReport = currentTime;
 }
+
 #else
 TimedLog::TimedLog(const std::string& logName, bool reportStart)
 {

@@ -12,7 +12,8 @@
 
 #include <queue>
 
-namespace Atlas { namespace Message {
+
+namespace Atlas::Message {
 
 class Element;
 
@@ -30,38 +31,40 @@ typedef std::map<std::string, Element> MapType;
  * @author Stefanus Du Toit <sdt@gmx.net>
  *
  */
-    
-class QueuedDecoder : public DecoderBase
-{
+
+class QueuedDecoder : public DecoderBase {
 public:
 
-    QueuedDecoder() = default;
+	QueuedDecoder() = default;
 
-    /// Retrieve the current size of the message queue.    
-    size_t queueSize() {
-        return m_objectQueue.size();
-    }
-    /// Pop an object from the front of the message queue.
-    MapType popMessage() {
-        MapType r = std::move(m_objectQueue.front());
-        m_objectQueue.pop();
-        return r;
-    }
-    /// Peek at the object at the front of the queue.
-    const MapType& frontMessage() {
-        return m_objectQueue.front();
-    }
+	/// Retrieve the current size of the message queue.
+	size_t queueSize() {
+		return m_objectQueue.size();
+	}
+
+	/// Pop an object from the front of the message queue.
+	MapType popMessage() {
+		MapType r = std::move(m_objectQueue.front());
+		m_objectQueue.pop();
+		return r;
+	}
+
+	/// Peek at the object at the front of the queue.
+	const MapType& frontMessage() {
+		return m_objectQueue.front();
+	}
 
 protected:
 
-    /// This adds a message to the queue.
-    void messageArrived(MapType obj) override;
-    
+	/// This adds a message to the queue.
+	void messageArrived(MapType obj) override;
+
 private:
-    
-    std::queue<MapType> m_objectQueue;
+
+	std::queue<MapType> m_objectQueue;
 };
 
-} } // namespace Atlas::Message
+}
+// namespace Atlas::Message
 
 #endif

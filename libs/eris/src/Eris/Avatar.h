@@ -269,9 +269,8 @@ inline Account& Avatar::getAccount() const {
 }
 
 inline const std::map<std::string, std::unique_ptr<EntityRef>>& Avatar::getActiveContainers() const {
-    return m_activeContainers;
+	return m_activeContainers;
 }
-
 
 
 } // of namespace Eris

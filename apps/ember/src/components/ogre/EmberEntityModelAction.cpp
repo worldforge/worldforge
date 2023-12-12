@@ -31,8 +31,8 @@
 #include "components/entitymapping/ChangeContext.h"
 #include "components/entitymapping/EntityMapping.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 EmberEntityModelAction::EmberEntityModelAction(EmberEntity& entity,
 											   std::string modelName,
@@ -49,4 +49,4 @@ void EmberEntityModelAction::activate(EntityMapping::ChangeContext& context) {
 
 
 }
-}
+

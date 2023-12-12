@@ -27,10 +27,10 @@
 #include "CaelumEnvironment.h"
 #include "services/config/ConfigListenerContainer.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 
 /**
@@ -63,8 +63,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

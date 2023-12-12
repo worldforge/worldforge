@@ -37,9 +37,8 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Shader.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 TerrainPage::TerrainPage(const TerrainIndex& index, int pageSize, ICompilerTechniqueProvider& compilerTechniqueProvider) :
 		mIndex(index),
@@ -138,5 +137,5 @@ void TerrainPage::updateShaderTexture(const TerrainLayerDefinition& definition,
 
 
 }
-}
-}
+
+

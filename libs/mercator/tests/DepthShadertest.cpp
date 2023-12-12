@@ -18,37 +18,35 @@
 
 typedef WFMath::Point<2> Point2;
 
-void testDepthShader()
-{
-    Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
+void testDepthShader() {
+	Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
 
-    Mercator::Shader::Parameters params;
-    params[Mercator::DepthShader::key_waterLevel] = 0.f;
-    params[Mercator::DepthShader::key_murkyDepth] = -12.f;
-    
-    Mercator::DepthShader dshade(params);
-    terrain.addShader(&dshade, 0);
-    
-    terrain.setBasePoint(0, 0, -20);
-    terrain.setBasePoint(0, 1, 1);
-    terrain.setBasePoint(1, 0, 2);
-    terrain.setBasePoint(1, 1, 0.5);
-    terrain.setBasePoint(2, 0, 2);
-    terrain.setBasePoint(2, 1, 0.5);
-    
-    Mercator::Segment* seg = terrain.getSegmentAtIndex(0,0);
-    
-    seg->populateSurfaces();
-    seg->populate();
-    seg->populateSurfaces();
+	Mercator::Shader::Parameters params;
+	params[Mercator::DepthShader::key_waterLevel] = 0.f;
+	params[Mercator::DepthShader::key_murkyDepth] = -12.f;
 
-    seg = terrain.getSegmentAtIndex(1,0);
-    dshade.checkIntersect(*seg);
+	Mercator::DepthShader dshade(params);
+	terrain.addShader(&dshade, 0);
+
+	terrain.setBasePoint(0, 0, -20);
+	terrain.setBasePoint(0, 1, 1);
+	terrain.setBasePoint(1, 0, 2);
+	terrain.setBasePoint(1, 1, 0.5);
+	terrain.setBasePoint(2, 0, 2);
+	terrain.setBasePoint(2, 1, 0.5);
+
+	Mercator::Segment* seg = terrain.getSegmentAtIndex(0, 0);
+
+	seg->populateSurfaces();
+	seg->populate();
+	seg->populateSurfaces();
+
+	seg = terrain.getSegmentAtIndex(1, 0);
+	dshade.checkIntersect(*seg);
 }
 
-int main()
-{
-    testDepthShader();
+int main() {
+	testDepthShader();
 
-    return 0;
+	return 0;
 }

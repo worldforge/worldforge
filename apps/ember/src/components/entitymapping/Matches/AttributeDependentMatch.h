@@ -26,12 +26,12 @@
 #include <Atlas/Message/Element.h>
 #include "Observers/MatchAttributeObserver.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 
 /**
@@ -53,8 +53,8 @@ public:
 };
 }
 
-}
 
-}
+
+
 
 #endif

@@ -29,9 +29,9 @@
 #include "framework/Singleton.h"
 #include "XMLEntityRecipeSerializer.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 /**
  * Resource manager for entity recipes.
  */
@@ -71,6 +71,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif

@@ -33,84 +33,77 @@ struct TypeStore;
 /// \brief Base class for classes that implement clients used to connect to a
 /// cyphesis server
 /// TODO: remove in favour of common/BaseClient which uses the asio event loop
-class BaseClient
-{
-    protected:
-        TypeStore& m_typeStore;
-        /// \brief Low level connection to the server
-        ClientConnection m_connection;
-        /// \brief Client object that manages the creator avatar
-        Ref<CreatorClient> m_character;
-        /// \brief Store for details of the account after login
-        Atlas::Objects::Root m_player;
-        /// \brief Name used for the username of the account and the name of avatars
-        std::string m_playerName;
-        /// \brief Identifier of the Account on the server after login
-        std::string m_playerId;
+class BaseClient {
+protected:
+	TypeStore& m_typeStore;
+	/// \brief Low level connection to the server
+	ClientConnection m_connection;
+	/// \brief Client object that manages the creator avatar
+	Ref<CreatorClient> m_character;
+	/// \brief Store for details of the account after login
+	Atlas::Objects::Root m_player;
+	/// \brief Name used for the username of the account and the name of avatars
+	std::string m_playerName;
+	/// \brief Identifier of the Account on the server after login
+	std::string m_playerId;
 
-        Atlas::Objects::Entity::RootEntity extractFirstArg(Atlas::Objects::Operation::RootOperation op);
+	Atlas::Objects::Entity::RootEntity extractFirstArg(Atlas::Objects::Operation::RootOperation op);
 
-    public:
-        explicit BaseClient(boost::asio::io_context& io_context,
-                            Atlas::Objects::Factories& factories,
-                            TypeStore& typeStore);
+public:
+	explicit BaseClient(boost::asio::io_context& io_context,
+						Atlas::Objects::Factories& factories,
+						TypeStore& typeStore);
 
-        virtual ~BaseClient();
+	virtual ~BaseClient();
 
-        CreatorClient* character()
-        {
-            return m_character.get();
-        }
+	CreatorClient* character() {
+		return m_character.get();
+	}
 
-        const std::string& id() const
-        {
-            return m_playerId;
-        }
+	const std::string& id() const {
+		return m_playerId;
+	}
 
-        Atlas::Objects::Root createSystemAccount();
+	Atlas::Objects::Root createSystemAccount();
 
-        Atlas::Objects::Root createAccount(const std::string& name,
-                                           const std::string& pword);
+	Atlas::Objects::Root createAccount(const std::string& name,
+									   const std::string& pword);
 
-        Ref<CreatorClient> createCharacter(const std::string& name);
+	Ref<CreatorClient> createCharacter(const std::string& name);
 
-        void logout();
+	void logout();
 
-        void handleNet();
+	void handleNet();
 
-        /// \brief Function called when nothing else is going on
-        virtual void idle() = 0;
+	/// \brief Function called when nothing else is going on
+	virtual void idle() = 0;
 
-        /// \brief Connect to a local server via a unix socket
-        int connectLocal(const std::string& socket)
-        {
-            return m_connection.connectLocal(socket);
-        }
+	/// \brief Connect to a local server via a unix socket
+	int connectLocal(const std::string& socket) {
+		return m_connection.connectLocal(socket);
+	}
 
-        /// \brief Connect to a remote server using a network socket
-        int connect(const std::string& server, int port)
-        {
-            return m_connection.connect(server, static_cast<unsigned short>(port));
-        }
+	/// \brief Connect to a remote server using a network socket
+	int connect(const std::string& server, int port) {
+		return m_connection.connect(server, static_cast<unsigned short>(port));
+	}
 
-        /// \brief Send an operation to the server
-        void send(const Atlas::Objects::Operation::RootOperation& op);
+	/// \brief Send an operation to the server
+	void send(const Atlas::Objects::Operation::RootOperation& op);
 
-        int wait()
-        {
-            return m_connection.wait();
-        }
+	int wait() {
+		return m_connection.wait();
+	}
 
-        Atlas::Objects::Operation::RootOperation sendAndWaitReply(const Operation& op)
-        {
-            OpVector res;
-            m_connection.sendAndWaitReply(op, res);
-            if (res.empty()) {
-                return {};
-            } else {
-                return res.front();
-            }
-        }
+	Atlas::Objects::Operation::RootOperation sendAndWaitReply(const Operation& op) {
+		OpVector res;
+		m_connection.sendAndWaitReply(op, res);
+		if (res.empty()) {
+			return {};
+		} else {
+			return res.front();
+		}
+	}
 
 };
 

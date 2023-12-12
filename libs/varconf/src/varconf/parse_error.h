@@ -23,7 +23,7 @@
  *            189 Reese St.
  *            Old Forge, PA 18518
  */
- 
+
 #ifndef VARCONF_PARSEERROR_H
 #define VARCONF_PARSEERROR_H
 
@@ -36,10 +36,11 @@ namespace varconf {
 
 class VARCONF_API ParseError : public std::runtime_error {
 public:
-  ParseError(const ParseError& p) = default;
-  ParseError(const std::string& exp, int line, int col);
+	ParseError(const ParseError& p) = default;
 
-  ~ParseError() override;
+	ParseError(const std::string& exp, int line, int col);
+
+	~ParseError() override;
 
 };
 

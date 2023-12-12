@@ -50,15 +50,12 @@
 #include "platform/platform_windows.h"
 #endif
 
-#include <OgreRenderWindow.h>
 #include <OgreMeshManager.h>
 #include <OgreStringConverter.h>
-#include <OgreSceneManager.h>
 #include <Overlay/OgreOverlaySystem.h>
 #include <OgreLogManager.h>
 #include <OgreRoot.h>
 #include <OgreConfigDialog.h>
-#include <OgreTextureManager.h>
 #include <OgreLodStrategyManager.h>
 
 #ifdef OGRE_STATIC_LIB

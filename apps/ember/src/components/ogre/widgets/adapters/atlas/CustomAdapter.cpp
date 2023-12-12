@@ -21,45 +21,43 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "CustomAdapter.h"
+
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
 
-namespace Adapters {
 
-namespace Atlas {
+
+
+
+
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 CustomAdapter::CustomAdapter(const ::Atlas::Message::Element& element)
-: AdapterBase(element)
-{
+		: AdapterBase(element) {
 }
 
 
 CustomAdapter::~CustomAdapter() = default;
 
-void CustomAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void CustomAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	QueryUpdateGui(&element);
 }
 
-void CustomAdapter::fillElementFromGui()
-{
+void CustomAdapter::fillElementFromGui() {
 	Element element;
 	QueryFillElementFromGui(&element);
 }
-bool CustomAdapter::_hasChanges()
-{
+
+bool CustomAdapter::_hasChanges() {
 	bool hasChanges;
 	QueryHasChanges(hasChanges);
 	return hasChanges;
 }
-::Atlas::Message::Element CustomAdapter::_getChangedElement()
-{
+
+::Atlas::Message::Element CustomAdapter::_getChangedElement() {
 	Element element;
 	QueryGetChangedElement(&element);
 	return element;
@@ -68,9 +66,9 @@ bool CustomAdapter::_hasChanges()
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

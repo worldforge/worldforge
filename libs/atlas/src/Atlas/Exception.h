@@ -14,14 +14,13 @@ namespace Atlas {
 
 /// Base class for all exceptions thrown by Atlas-C++. All subclasses
 /// should pass in a description of the exceptional circumstance encountered.
-class Exception : public std::runtime_error
-{
+class Exception : public std::runtime_error {
 
-  public:
-    explicit Exception(const std::string & d = "UNKNOWN ERROR") noexcept
-			: std::runtime_error(d) { }
+public:
+	explicit Exception(const std::string& d = "UNKNOWN ERROR") noexcept
+			: std::runtime_error(d) {}
 
-    ~Exception() noexcept override = default;
+	~Exception() noexcept override = default;
 
 };
 

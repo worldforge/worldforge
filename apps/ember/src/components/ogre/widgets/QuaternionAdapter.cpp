@@ -26,57 +26,48 @@
 #include <CEGUI/Window.h>
 #include <OgreStringConverter.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
-QuaternionAdapter::QuaternionAdapter(CEGUI::Window *degreeWindow, CEGUI::Window *xWindow, CEGUI::Window *yWindow, CEGUI::Window *zWindow, const Ogre::Quaternion& quaternion)
-: mQuaternion(quaternion), mOriginalQuaternion(quaternion), mVectorAdapter(xWindow, yWindow, zWindow), mDegreeWindow(degreeWindow), mSelfUpdate(false)
-{
+QuaternionAdapter::QuaternionAdapter(CEGUI::Window* degreeWindow, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, const Ogre::Quaternion& quaternion)
+		: mQuaternion(quaternion), mOriginalQuaternion(quaternion), mVectorAdapter(xWindow, yWindow, zWindow), mDegreeWindow(degreeWindow), mSelfUpdate(false) {
 	if (degreeWindow) {
-		BIND_CEGUI_EVENT(degreeWindow, CEGUI::Window::EventTextChanged, QuaternionAdapter::window_TextChanged);
+		degreeWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&QuaternionAdapter::window_TextChanged, this));
 	}
 	mVectorAdapter.EventValueChanged.connect(sigc::mem_fun(*this, &QuaternionAdapter::vectorAdapter_ValueChanged));
 
 }
 
-QuaternionAdapter::~QuaternionAdapter()
-{
-}
+QuaternionAdapter::~QuaternionAdapter() = default;
 
-void QuaternionAdapter::setValue(const Ogre::Quaternion& quaternion)
-{
+void QuaternionAdapter::setValue(const Ogre::Quaternion& quaternion) {
 	updateGui(quaternion);
 	EventValueChanged.emit();
 }
 
 
-const Ogre::Quaternion& QuaternionAdapter::getValue() const
-{
+const Ogre::Quaternion& QuaternionAdapter::getValue() const {
 	const Ogre::Vector3& axis = mVectorAdapter.getValue();
 	float degrees = 0;
 	if (mDegreeWindow) {
-		degrees = Ogre::StringConverter::parseReal( mDegreeWindow->getText().c_str());
+		degrees = Ogre::StringConverter::parseReal(mDegreeWindow->getText().c_str());
 	}
 
 	mQuaternion.FromAngleAxis(Ogre::Degree(degrees), axis);
 	return mQuaternion;
 }
 
-const Ogre::Quaternion& QuaternionAdapter::getOriginalValue() const
-{
+const Ogre::Quaternion& QuaternionAdapter::getOriginalValue() const {
 	return mOriginalQuaternion;
 }
 
-void QuaternionAdapter::updateGui(const Ogre::Quaternion& quaternion)
-{
+void QuaternionAdapter::updateGui(const Ogre::Quaternion& quaternion) {
 	mSelfUpdate = true;
 
 	if (!quaternion.isNaN()) {
 		Ogre::Vector3 axis;
 		Ogre::Degree angle;
-		quaternion.ToAngleAxis( angle, axis);
+		quaternion.ToAngleAxis(angle, axis);
 		mVectorAdapter.updateGui(axis);
 		if (mDegreeWindow) {
 			mDegreeWindow->setText(Ogre::StringConverter::toString(angle.valueDegrees()));
@@ -90,16 +81,14 @@ void QuaternionAdapter::updateGui(const Ogre::Quaternion& quaternion)
 	mSelfUpdate = false;
 }
 
-bool QuaternionAdapter::window_TextChanged(const CEGUI::EventArgs& e)
-{
+bool QuaternionAdapter::window_TextChanged(const CEGUI::EventArgs& e) {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
 	return true;
 }
 
-void QuaternionAdapter::vectorAdapter_ValueChanged()
-{
+void QuaternionAdapter::vectorAdapter_ValueChanged() {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
@@ -107,5 +96,5 @@ void QuaternionAdapter::vectorAdapter_ValueChanged()
 
 }
 
-}
-}
+
+

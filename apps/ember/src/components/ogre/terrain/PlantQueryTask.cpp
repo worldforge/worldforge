@@ -23,10 +23,8 @@
 #include "foliage/PlantPopulator.h"
 #include "components/ogre/Convert.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 PlantQueryTask::PlantQueryTask(SegmentRefPtr segmentRef,
 							   Foliage::PlantPopulator& plantPopulator,
@@ -52,5 +50,5 @@ bool PlantQueryTask::executeTaskInMainThread() {
 }
 }
 
-}
-}
+
+

@@ -23,7 +23,6 @@
 #include "framework/ConsoleBackend.h"
 #include "framework/Log.h"
 
-#include "services/config/ConfigService.h"
 #include <Eris/Connection.h>
 
 
@@ -85,9 +84,6 @@ void AccountAvailableState::runCommand(const std::string& command, const std::st
 		std::string uname = tokeniser.nextToken();
 		std::string password = tokeniser.nextToken();
 		std::string realname = tokeniser.remainingTokens();
-
-		std::string msg;
-		msg = "Creating account: Name: [" + uname + "], Password: [" + password + "], Real Name: [" + realname + "]";
 
 		try {
 			mAccount.createAccount(uname, realname, password);

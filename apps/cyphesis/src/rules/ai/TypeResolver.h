@@ -30,35 +30,34 @@
 
 class TypeNode;
 
-class TypeResolver
-{
-    public:
+class TypeResolver {
+public:
 
-        explicit TypeResolver(TypeStore& typeStore);
+	explicit TypeResolver(TypeStore& typeStore);
 
-        boost::optional<std::string> m_typeProviderId;
+	boost::optional<std::string> m_typeProviderId;
 
-        std::set<const TypeNode*> InfoOperation(const Operation& op, OpVector& res);
+	std::set<const TypeNode*> InfoOperation(const Operation& op, OpVector& res);
 
-        const TypeNode* requestType(const std::string& id, OpVector& res);
+	const TypeNode* requestType(const std::string& id, OpVector& res);
 
-        const TypeStore& getTypeStore() const;
+	const TypeStore& getTypeStore() const;
 
-    private:
+private:
 
-        TypeStore& m_typeStore;
+	TypeStore& m_typeStore;
 
-        struct PendingType {
-            Atlas::Objects::Root ent;
-            std::set<std::string> childTypes;
-        };
+	struct PendingType {
+		Atlas::Objects::Root ent;
+		std::set<std::string> childTypes;
+	};
 
-        std::map<std::string, PendingType> m_pendingTypes;
+	std::map<std::string, PendingType> m_pendingTypes;
 
-        std::set<const TypeNode*> processTypeData(const Atlas::Objects::Root& data, OpVector& res);
+	std::set<const TypeNode*> processTypeData(const Atlas::Objects::Root& data, OpVector& res);
 
 
-        std::set<const TypeNode*> resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res);
+	std::set<const TypeNode*> resolveType(const std::string& id, const Atlas::Objects::Root& ent, OpVector& res);
 };
 
 

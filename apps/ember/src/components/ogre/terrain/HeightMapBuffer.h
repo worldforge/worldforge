@@ -21,10 +21,8 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class HeightMapBufferProvider;
 
@@ -90,8 +88,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* HEIGHTMAPBUFFER_H_ */

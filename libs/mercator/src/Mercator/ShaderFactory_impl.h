@@ -9,16 +9,15 @@
 
 namespace Mercator {
 
-template <class T>
+template<class T>
 ShaderFactory<T>::ShaderFactory() = default;
 
-template <class T>
+template<class T>
 ShaderFactory<T>::~ShaderFactory() = default;
 
-template <class T>
-std::unique_ptr<Shader> ShaderFactory<T>::newShader(const Shader::Parameters & params) const
-{
-    return std::make_unique<T>(params);
+template<class T>
+std::unique_ptr<Shader> ShaderFactory<T>::newShader(const Shader::Parameters& params) const {
+	return std::make_unique<T>(params);
 }
 
 } // namespace Mercator

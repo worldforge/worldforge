@@ -18,34 +18,32 @@
 
 #ifndef IENVIRONMENTPROVIDER_H_
 #define IENVIRONMENTPROVIDER_H_
+
 #include "components/ogre/ILightning.h"
 #include "components/ogre/OgreIncludes.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Environment
-{
 
-struct ISun: public ILightning
-{
+
+namespace Ember::OgreView::Environment {
+
+struct ISun : public ILightning {
 	~ISun() override = default;
 
 	virtual void setAmbientLight(const Ogre::ColourValue& colour) = 0;
+
 	virtual Ogre::Vector3 getSunDirection() const = 0;
 
 };
 
-struct ISky
-{
+struct ISky {
 };
 
-struct IFog
-{
-	virtual ~IFog()	= default;
+struct IFog {
+	virtual ~IFog() = default;
+
 	virtual void setDensity(float density) = 0;
+
 	virtual float getDensity() const = 0;
 };
 
@@ -53,8 +51,7 @@ struct IFog
  @brief Interface for all water techniques. Call isSupported() first to see if the water can be created, and then initialize() to set it all up.
  @author Erik Ogenvik <erik@worldforge.org>
  */
-struct IWater
-{
+struct IWater {
 	virtual ~IWater() = default;
 
 	/**
@@ -62,6 +59,7 @@ struct IWater
 	 * @return True if the water technique is supported.
 	 */
 	virtual bool isSupported() const = 0;
+
 	/**
 	 * @brief Initializes the water. You must call this in order for the water to show up.
 	 * @return True if the water technique could be setup, else false.
@@ -80,7 +78,7 @@ struct IWater
 	 * @note If the object could be attached, ownership is transferred to the water entity. If however it couldn't be attached, it's responsibility of the calling method to make sure that the object is destroyed.
 	 * @return True if the user object was successfully attached. This means that ownership transfers to the water instance.
 	 */
-	virtual bool setUserAny(const Ogre::Any &anything) = 0;
+	virtual bool setUserAny(const Ogre::Any& anything) = 0;
 };
 
 /**
@@ -88,10 +86,9 @@ struct IWater
  *
  * An implementation of this is expected to be able to supply the instances which make up the environment.
  */
-struct IEnvironmentProvider
-{
+struct IEnvironmentProvider {
 
-	virtual ~IEnvironmentProvider()	= default;
+	virtual ~IEnvironmentProvider() = default;
 
 	/**
 	 * @brief Creates the firmament (sky, sun, moon, starfield etc.).
@@ -104,8 +101,11 @@ struct IEnvironmentProvider
 	virtual void destroyFirmament() = 0;
 
 	virtual ISun* getSun() = 0;
+
 	virtual ISky* getSky() = 0;
+
 	virtual IFog* getFog() = 0;
+
 	virtual IWater* getWater() = 0;
 
 	/**
@@ -120,7 +120,7 @@ struct IEnvironmentProvider
 	 * @param minute The minute.
 	 * @param second The second.
 	 */
-	virtual void setTime(int hour, int minute, int second = 0) = 0;
+	virtual void setTime(int hour, int minute, int second) = 0;
 
 	/**
 	 * @brief Sets the current time.
@@ -150,7 +150,7 @@ struct IEnvironmentProvider
 };
 
 }
-}
-}
+
+
 
 #endif /* IENVIRONMENTPROVIDER_H_ */

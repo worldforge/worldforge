@@ -18,18 +18,17 @@
 
 #ifndef AUTHORINGVISUALIZATION_H_
 #define AUTHORINGVISUALIZATION_H_
+
 #include "components/ogre/OgreIncludes.h"
 #include <sigc++/trackable.h>
 #include <components/ogre/BulletCollisionDetector.h>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
+
 struct IEntityControlDelegate;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -37,8 +36,7 @@ namespace Authoring
  * The main use of this is for entities which doesn't have a graphical visualization (like an area) or entities for which the graphical representation is hard to graphically select.
  * The entity is represented by three axes, which are clickable.
  */
-class AuthoringVisualization: public virtual sigc::trackable
-{
+class AuthoringVisualization : public virtual sigc::trackable {
 public:
 	/**
 	 * @brief Ctor.
@@ -106,6 +104,6 @@ protected:
 };
 
 }
-}
+
 }
 #endif /* AUTHORINGVISUALIZATION_H_ */

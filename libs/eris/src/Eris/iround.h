@@ -11,7 +11,9 @@
 #define I_ROUND(_x) (lroundf(_x))
 #define L_ROUND(_x) (llround(_x))
 #else
+
 #include <cmath>
+
 #define I_ROUND(_x) (std::lround(_x))
 #define L_ROUND(_x) (std::llround(_x))
 #endif

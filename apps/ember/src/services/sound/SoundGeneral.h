@@ -23,13 +23,10 @@
 #include <string>
 
 
-namespace Ember 
-{
-class SoundGeneral
-{
+namespace Ember {
+class SoundGeneral {
 public:
-	enum SoundSampleType
-	{
+	enum SoundSampleType {
 		SAMPLE_NONE, // Try To guess by file extension
 		SAMPLE_PCM,
 		SAMPLE_WAV,

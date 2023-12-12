@@ -27,18 +27,18 @@
  * This sets the LocatedEntity::entity_admin flag on the entity.
  * \ingroup PropertyClasses
  */
-class AdminProperty : public BoolProperty
-{
-    public:
-        static constexpr const char* property_name = "is_admin";
+class AdminProperty : public BoolProperty {
+public:
+	static constexpr const char* property_name = "is_admin";
 
-        explicit AdminProperty() = default;
+	explicit AdminProperty() = default;
 
-        void apply(LocatedEntity& entity) override;
-        AdminProperty * copy() const override;
+	void apply(LocatedEntity& entity) override;
 
-    protected:
-        AdminProperty(const AdminProperty& rhs) = default;
+	AdminProperty* copy() const override;
+
+protected:
+	AdminProperty(const AdminProperty& rhs) = default;
 
 };
 

@@ -31,33 +31,27 @@
 
 #include <cassert>
 
-class buildidtest : public Cyphesis::TestBase
-{
-  public:
-    buildidtest()
-    {
-        ADD_TEST(buildidtest::test_id);
-    }
+class buildidtest : public Cyphesis::TestBase {
+public:
+	buildidtest() {
+		ADD_TEST(buildidtest::test_id);
+	}
 
-    void setup()
-    {
-    }
+	void setup() {
+	}
 
-    void teardown()
-    {
-    }
+	void teardown() {
+	}
 
-    void test_id();
+	void test_id();
 };
 
-void buildidtest::test_id()
-{
-    ASSERT_GREATER(strlen(consts::buildId), 0u);
+void buildidtest::test_id() {
+	ASSERT_GREATER(strlen(consts::buildId), 0u);
 }
 
-int main()
-{
-    buildidtest t;
+int main() {
+	buildidtest t;
 
-    return t.run();
+	return t.run();
 }

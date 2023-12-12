@@ -1,3 +1,5 @@
+#Disable warnings for external stuff
+add_compile_options("-w")
 add_subdirectory(binreloc)
 add_subdirectory(dir_monitor)
 add_subdirectory(RecastDetour)

@@ -28,57 +28,52 @@ using Atlas::Message::Element;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-SuspendedProperty* SuspendedProperty::copy() const
-{
-    return new SuspendedProperty(*this);
+SuspendedProperty* SuspendedProperty::copy() const {
+	return new SuspendedProperty(*this);
 }
 
-void SuspendedProperty::apply(LocatedEntity& ent)
-{
-    //If this property is applied to the world entity, it's a special case.
-    if (ent.getIntId() == 0) {
-        BaseWorld::instance().setIsSuspended(isTrue());
-    } else {
-        if (!isTrue()) {
-            //suspension is disabled; we should send any stored ops
-            for (auto& op : m_suspendedOps) {
-                BaseWorld::instance().message(op, ent);
-            }
-            m_suspendedOps.clear();
-        }
-    }
+void SuspendedProperty::apply(LocatedEntity& ent) {
+	//If this property is applied to the world entity, it's a special case.
+	if (ent.getIntId() == 0) {
+		BaseWorld::instance().setIsSuspended(isTrue());
+	} else {
+		if (!isTrue()) {
+			//suspension is disabled; we should send any stored ops
+			for (auto& op: m_suspendedOps) {
+				BaseWorld::instance().message(op, ent);
+			}
+			m_suspendedOps.clear();
+		}
+	}
 }
 
-void SuspendedProperty::install(LocatedEntity& owner, const std::string& name)
-{
-    //Regard the world as a special case.
-    if (owner.getIntId() != 0) {
-        owner.installDelegate(Atlas::Objects::Operation::TICK_NO, name);
-    }
+void SuspendedProperty::install(LocatedEntity& owner, const std::string& name) {
+	//Regard the world as a special case.
+	if (owner.getIntId() != 0) {
+		owner.installDelegate(Atlas::Objects::Operation::TICK_NO, name);
+	}
 }
 
-void SuspendedProperty::remove(LocatedEntity& owner, const std::string& name)
-{
-    //Regard the world as a special case.
-    if (owner.getIntId() != 0) {
-        owner.removeDelegate(Atlas::Objects::Operation::TICK_NO, name);
-    } else {
-        if (!owner.isDestroyed()) {
-            for (auto& op : m_suspendedOps) {
-                BaseWorld::instance().message(op, owner);
-            }
-            m_suspendedOps.clear();
-        }
-    }
+void SuspendedProperty::remove(LocatedEntity& owner, const std::string& name) {
+	//Regard the world as a special case.
+	if (owner.getIntId() != 0) {
+		owner.removeDelegate(Atlas::Objects::Operation::TICK_NO, name);
+	} else {
+		if (!owner.isDestroyed()) {
+			for (auto& op: m_suspendedOps) {
+				BaseWorld::instance().message(op, owner);
+			}
+			m_suspendedOps.clear();
+		}
+	}
 }
 
 HandlerResult SuspendedProperty::operation(LocatedEntity& e,
-                                           const Operation& op, OpVector& res)
-{
-    if (isTrue()) {
-        m_suspendedOps.push_back(op);
-        return OPERATION_BLOCKED;
-    } else {
-        return OPERATION_IGNORED;
-    }
+										   const Operation& op, OpVector& res) {
+	if (isTrue()) {
+		m_suspendedOps.push_back(op);
+		return OPERATION_BLOCKED;
+	} else {
+		return OPERATION_IGNORED;
+	}
 }

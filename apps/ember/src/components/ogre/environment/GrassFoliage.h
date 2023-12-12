@@ -31,8 +31,8 @@ namespace Forests {
 class PagedGeometry;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 namespace Terrain {
 struct TerrainFoliageDefinition;
@@ -80,6 +80,6 @@ protected:
 
 }
 
-}
+
 
 #endif

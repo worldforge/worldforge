@@ -25,9 +25,9 @@
 
 #include <utility>
 
-namespace WFMath
-{
-template<int> class Point;
+namespace WFMath {
+template<int>
+class Point;
 }
 
 namespace Ember {

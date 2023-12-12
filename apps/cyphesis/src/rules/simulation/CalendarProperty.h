@@ -23,23 +23,22 @@
 
 /// \brief Class to handle World calendar property
 /// \ingroup PropertyClasses
-class CalendarProperty : public PropertyBase
-{
-    public:
+class CalendarProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_name = "calendar";
-        static constexpr const char* property_atlastype = "map";
+	static constexpr const char* property_name = "calendar";
+	static constexpr const char* property_atlastype = "map";
 
-        CalendarProperty();
+	CalendarProperty();
 
-        int get(Atlas::Message::Element&) const override;
+	int get(Atlas::Message::Element&) const override;
 
-        void set(const Atlas::Message::Element&) override;
+	void set(const Atlas::Message::Element&) override;
 
-        CalendarProperty* copy() const override;
+	CalendarProperty* copy() const override;
 
-    protected:
-        CalendarProperty(const CalendarProperty& rhs) = default;
+protected:
+	CalendarProperty(const CalendarProperty& rhs) = default;
 
 };
 

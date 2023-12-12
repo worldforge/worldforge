@@ -46,116 +46,111 @@ typedef std::map<long, Ref<LocatedEntity>> EntityRefDict;
 /// This base class provides the common features required by cyphesis
 /// for the object which encapsulates the game world. Other classes
 /// inherit from this provide the core game world system.
-class BaseWorld : public Singleton<BaseWorld>
-{
-    public:
-        typedef std::function<std::chrono::steady_clock::duration()> TimeProviderFnType;
+class BaseWorld : public Singleton<BaseWorld> {
+public:
+	typedef std::function<std::chrono::steady_clock::duration()> TimeProviderFnType;
 
-    protected:
+protected:
 
-        TimeProviderFnType m_timeProviderFn;
-        /// The system time when the server was started.
-        std::chrono::steady_clock::time_point m_initTime;
+	TimeProviderFnType m_timeProviderFn;
+	/// The system time when the server was started.
+	std::chrono::steady_clock::time_point m_initTime;
 
-        /// \brief Dictionary of all the objects in the world.
-        ///
-        /// Pointers to all in-game entities in the world are stored keyed to
-        /// their integer ID.
-        EntityRefDict m_eobjects;
+	/// \brief Dictionary of all the objects in the world.
+	///
+	/// Pointers to all in-game entities in the world are stored keyed to
+	/// their integer ID.
+	EntityRefDict m_eobjects;
 
-        /// \brief Whether the base world is suspended or not.
-        ///
-        /// If this is set to true, the world is "suspended". In this state no
-        /// Tick ops are sent.
-        /// This is useful for when a world author wants to edit the world
-        /// without the simulation altering it.
-        bool m_isSuspended;
+	/// \brief Whether the base world is suspended or not.
+	///
+	/// If this is set to true, the world is "suspended". In this state no
+	/// Tick ops are sent.
+	/// This is useful for when a world author wants to edit the world
+	/// without the simulation altering it.
+	bool m_isSuspended;
 
-        std::map<std::string, LocatedEntity*> m_entityAliases;
+	std::map<std::string, LocatedEntity*> m_entityAliases;
 
-        explicit BaseWorld(TimeProviderFnType timeProviderFn);
+	explicit BaseWorld(TimeProviderFnType timeProviderFn);
 
-        /// \brief Called when the world is resumed.
-        virtual void resumeWorld()
-        {}
+	/// \brief Called when the world is resumed.
+	virtual void resumeWorld() {}
 
-    public:
+public:
 
-        ~BaseWorld() override;
+	~BaseWorld() override;
 
-        /**
-         * Shuts down the simulation and frees up all entities.
-         */
-        virtual void shutdown();
+	/**
+	 * Shuts down the simulation and frees up all entities.
+	 */
+	virtual void shutdown();
 
-        Ref<LocatedEntity> getEntity(const std::string& id) const;
+	Ref<LocatedEntity> getEntity(const std::string& id) const;
 
-        Ref<LocatedEntity> getEntity(long id) const;
+	Ref<LocatedEntity> getEntity(long id) const;
 
-        /// \brief Read only accessor for the in-game objects dictionary.
-        const EntityRefDict& getEntities() const
-        {
-            return m_eobjects;
-        }
+	/// \brief Read only accessor for the in-game objects dictionary.
+	const EntityRefDict& getEntities() const {
+		return m_eobjects;
+	}
 
-        void registerAlias(std::string alias, LocatedEntity& entity);
+	void registerAlias(std::string alias, LocatedEntity& entity);
 
-        void deregisterAlias(const std::string& alias, LocatedEntity& entity);
+	void deregisterAlias(const std::string& alias, LocatedEntity& entity);
 
-        LocatedEntity* getAliasEntity(const std::string& alias) const;
+	LocatedEntity* getAliasEntity(const std::string& alias) const;
 
-        /// \brief Read only accessor for the in-game time.
-        std::chrono::steady_clock::duration getTime() const;
+	/// \brief Read only accessor for the in-game time.
+	std::chrono::steady_clock::duration getTime() const;
 
-        float getTimeAsSeconds() const;
+	float getTimeAsSeconds() const;
 
-        /// \brief Get the time the world has been running since the server started.
-        double upTime() const
-        {
-            return getTimeAsSeconds();
-        }
+	/// \brief Get the time the world has been running since the server started.
+	double upTime() const {
+		return getTimeAsSeconds();
+	}
 
-        /// \brief Gets whether the world is suspended or not.
-        const bool& getIsSuspended() const
-        {
-            return m_isSuspended;
-        }
+	/// \brief Gets whether the world is suspended or not.
+	const bool& getIsSuspended() const {
+		return m_isSuspended;
+	}
 
-        /// \brief Sets whether the world is suspended or not.
-        /// If this is set to true, the world is "suspended". In this state no
-        /// Tick ops are sent.
-        /// This is useful for when a world author wants to edit the world
-        /// without the simulation altering it.
-        void setIsSuspended(bool suspended);
+	/// \brief Sets whether the world is suspended or not.
+	/// If this is set to true, the world is "suspended". In this state no
+	/// Tick ops are sent.
+	/// This is useful for when a world author wants to edit the world
+	/// without the simulation altering it.
+	void setIsSuspended(bool suspended);
 
-        /// \brief Add a new entity to the world.
-        virtual void addEntity(const Ref<LocatedEntity>& obj, const Ref<LocatedEntity>& parent) = 0;
+	/// \brief Add a new entity to the world.
+	virtual void addEntity(const Ref<LocatedEntity>& obj, const Ref<LocatedEntity>& parent) = 0;
 
-        /// \brief Create a new entity and add to the world.
-        virtual Ref<LocatedEntity> addNewEntity(const std::string& type,
-                                                const Atlas::Objects::Entity::RootEntity&) = 0;
+	/// \brief Create a new entity and add to the world.
+	virtual Ref<LocatedEntity> addNewEntity(const std::string& type,
+											const Atlas::Objects::Entity::RootEntity&) = 0;
 
-        /// \brief Deletes an entity from the world.
-        virtual void delEntity(LocatedEntity* obj) = 0;
+	/// \brief Deletes an entity from the world.
+	virtual void delEntity(LocatedEntity* obj) = 0;
 
-        virtual const std::set<std::string>& getSpawnEntities() const = 0;
+	virtual const std::set<std::string>& getSpawnEntities() const = 0;
 
-        virtual void registerSpawner(const std::string& id) = 0;
+	virtual void registerSpawner(const std::string& id) = 0;
 
-        virtual void unregisterSpawner(const std::string& id) = 0;
+	virtual void unregisterSpawner(const std::string& id) = 0;
 
-        /// \brief Pass an operation to the world.
-        virtual void message(Atlas::Objects::Operation::RootOperation,
-                             LocatedEntity& obj) = 0;
+	/// \brief Pass an operation to the world.
+	virtual void message(Atlas::Objects::Operation::RootOperation,
+						 LocatedEntity& obj) = 0;
 
-        /// \brief Find an entity of the given name.
-        virtual Ref<LocatedEntity> findByName(const std::string& name) = 0;
+	/// \brief Find an entity of the given name.
+	virtual Ref<LocatedEntity> findByName(const std::string& name) = 0;
 
-        /// \brief Find an entity of the given type.
-        virtual Ref<LocatedEntity> findByType(const std::string& type) = 0;
+	/// \brief Find an entity of the given type.
+	virtual Ref<LocatedEntity> findByType(const std::string& type) = 0;
 
-        /// \brief Signal that an operation is being dispatched.
-        sigc::signal<void(Atlas::Objects::Operation::RootOperation)> Dispatching;
+	/// \brief Signal that an operation is being dispatched.
+	sigc::signal<void(Atlas::Objects::Operation::RootOperation)> Dispatching;
 };
 
 #endif // RULESETS_BASE_WORLD_H

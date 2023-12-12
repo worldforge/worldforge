@@ -21,21 +21,20 @@
 
 #include <sigc++/trackable.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 class AuthoringVisualization;
+
 class EntityMover;
 
-class AuthoringVisualizationMover: public virtual sigc::trackable
-{
+class AuthoringVisualizationMover : public virtual sigc::trackable {
 public:
 	AuthoringVisualizationMover(AuthoringVisualization& visualization, EntityMover& mover);
+
 	virtual ~AuthoringVisualizationMover();
+
 private:
 	AuthoringVisualization& mVisualization;
 	EntityMover& mMover;
@@ -43,8 +42,8 @@ private:
 	void mover_Moved();
 };
 }
-}
 
-}
+
+
 
 #endif /* AUTHORINGVISUALIZATIONMOVER_H_ */

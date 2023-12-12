@@ -35,8 +35,8 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 using Atlas::Message::FloatType;
 
-namespace Ember {
-namespace Terrain {
+
+namespace Ember::Terrain {
 /**
  * @brief Templated translator which creates concrete mod instances.
  */
@@ -46,7 +46,7 @@ class InnerTranslatorImpl : public TerrainModTranslator::InnerTranslator {
 public:
 	InnerTranslatorImpl(const ShapeT<2>& shape, const Atlas::Message::MapType& data);
 
-	virtual ~InnerTranslatorImpl() = default;
+	~InnerTranslatorImpl() override = default;
 
 	std::unique_ptr<Mercator::TerrainMod> createInstance(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation) override;
 
@@ -65,7 +65,7 @@ class InnerTranslatorSlope : public TerrainModTranslator::InnerTranslator {
 public:
 	InnerTranslatorSlope(const ShapeT<2>& shape, const Atlas::Message::MapType& data, float dx, float dz);
 
-	virtual ~InnerTranslatorSlope() = default;
+	~InnerTranslatorSlope() override = default;
 
 	std::unique_ptr<Mercator::TerrainMod> createInstance(const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation) override;
 
@@ -211,7 +211,8 @@ void TerrainModTranslator::reset() {
 }
 
 template<template<int> class Shape>
-std::unique_ptr<TerrainModTranslator::InnerTranslator> TerrainModTranslator::buildTranslator(const Atlas::Message::MapType& modElement, const std::string& typeName, Shape<2>& shape, const Atlas::Message::Element& shapeElement) {
+std::unique_ptr<TerrainModTranslator::InnerTranslator>
+TerrainModTranslator::buildTranslator(const Atlas::Message::MapType& modElement, const std::string& typeName, Shape<2>& shape, const Atlas::Message::Element& shapeElement) {
 	try {
 		shape.fromAtlas(shapeElement);
 	} catch (...) {
@@ -276,4 +277,4 @@ bool TerrainModTranslator::isValid() const {
 
 
 }
-}
+

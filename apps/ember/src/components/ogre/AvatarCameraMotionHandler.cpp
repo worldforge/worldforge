@@ -19,20 +19,16 @@
 #include "AvatarCameraMotionHandler.h"
 #include "components/ogre/Avatar.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 AvatarCameraMotionHandler::AvatarCameraMotionHandler(Avatar& avatar) :
-	mAvatar(avatar)
-{
+		mAvatar(avatar) {
 }
 
-void AvatarCameraMotionHandler::move(const WFMath::Quaternion& orientation, const WFMath::Vector<3>& movement, float timeslice)
-{
+void AvatarCameraMotionHandler::move(const WFMath::Quaternion& orientation, const WFMath::Vector<3>& movement, float timeslice) {
 	mAvatar.moveClientSide(orientation, movement, timeslice);
 }
 
 }
-}
+

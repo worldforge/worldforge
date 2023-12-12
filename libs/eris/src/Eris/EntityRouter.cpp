@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "EntityRouter.h"
@@ -22,9 +22,8 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris {
 
 EntityRouter::EntityRouter(Entity& ent, View& view) :
-    m_entity(ent),
-    m_view(view)
-{
+		m_entity(ent),
+		m_view(view) {
 	m_view.getConnection().registerRouterForFrom(this, m_entity.getId());
 }
 
@@ -32,26 +31,24 @@ EntityRouter::~EntityRouter() {
 	m_view.getConnection().unregisterRouterForFrom(m_entity.getId());
 }
 
-Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
-{
-    assert(op->getFrom() == m_entity.getId());
-    const std::vector<Root>& args = op->getArgs();
+Router::RouterResult EntityRouter::handleOperation(const RootOperation& op) {
+	assert(op->getFrom() == m_entity.getId());
+	const std::vector<Root>& args = op->getArgs();
 
-    // note it's important we match exactly on sight here, and not derived ops
-    // like appearance and disappearance
-    if (op->getClassNo() == SIGHT_NO) {
-    	for (const auto& arg : args) {
+	// note it's important we match exactly on sight here, and not derived ops
+	// like appearance and disappearance
+	if (op->getClassNo() == SIGHT_NO) {
+		for (const auto& arg: args) {
 			auto sop = smart_dynamic_cast<RootOperation>(arg);
 			if (sop.isValid()) {
 				return handleSightOp(sop);
 			}
-    	}
-    }
+		}
+	}
 
-    if (op->getClassNo() == SOUND_NO) {
-		for (const auto& arg : args) {
-			if (arg->getClassNo() == TALK_NO)
-			{
+	if (op->getClassNo() == SOUND_NO) {
+		for (const auto& arg: args) {
+			if (arg->getClassNo() == TALK_NO) {
 				auto talk = smart_dynamic_cast<RootOperation>(arg);
 				m_entity.onTalk(talk);
 			} else {
@@ -73,15 +70,14 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 		}
 
 		return HANDLED;
-        // other sounds !
-    }
+		// other sounds !
+	}
 
-    return IGNORED;
+	return IGNORED;
 }
 
-Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
-{
-    const std::vector<Root>& args = op->getArgs();
+Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op) {
+	const std::vector<Root>& args = op->getArgs();
 
 //    if (op->getClassNo() == SET_NO) {
 //
@@ -103,21 +99,21 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 //        return HANDLED;
 //    }
 
-    if (op->instanceOf(IMAGINARY_NO)) {
-        if (args.empty()) {
+	if (op->instanceOf(IMAGINARY_NO)) {
+		if (args.empty()) {
 			logger->error("entity {} sent imaginary with no args: {}", m_entity.getId(), op);
 		} else {
-			for (const auto& arg : args) {
+			for (const auto& arg: args) {
 				m_entity.onImaginary(arg);
 			}
 		}
-        return HANDLED;
-    }
+		return HANDLED;
+	}
 
-    // explicitly do NOT handle set ops here, since they can
-    // validly change multiple entities - handled by the IGRouter
+	// explicitly do NOT handle set ops here, since they can
+	// validly change multiple entities - handled by the IGRouter
 
-    return IGNORED;
+	return IGNORED;
 }
 
 

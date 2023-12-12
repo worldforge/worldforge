@@ -23,17 +23,19 @@
 
 /// \brief Factory interface for creating scripts to attach to in game
 /// entity objects.
-template <class T>
+template<class T>
 class ScriptKit {
-  public:
-    virtual ~ScriptKit() = default;
+public:
+	virtual ~ScriptKit() = default;
 
-    /// \brief Accessor for package name
-    virtual const std::string & package() const = 0;
-    /// \brief Add a script to an entity
-    virtual int addScript(T& entity) const = 0;
-    /// \brief Reload the underlying class object from the script on disk
-    virtual int refreshClass() = 0;
+	/// \brief Accessor for package name
+	virtual const std::string& package() const = 0;
+
+	/// \brief Add a script to an entity
+	virtual int addScript(T& entity) const = 0;
+
+	/// \brief Reload the underlying class object from the script on disk
+	virtual int refreshClass() = 0;
 };
 
 

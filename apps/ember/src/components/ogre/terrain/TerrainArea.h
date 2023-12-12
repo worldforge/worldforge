@@ -33,8 +33,8 @@ class Area;
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
-namespace Terrain {
+
+namespace OgreView::Terrain {
 
 
 /**
@@ -99,7 +99,7 @@ protected:
 
 
 }
-}
+
 }
 
 #endif

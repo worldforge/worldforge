@@ -28,78 +28,77 @@
  * For entities that should react to physics, use "free".
  * \ingroup PropertyClasses
  */
-class ModeProperty : public PropertyBase
-{
-    public:
+class ModeProperty : public PropertyBase {
+public:
 
-        enum class Mode
-        {
-                /**
-                 * Planted entities are stuck to the terrain. Their y-position is determined by the terrain at their origo.
-                 * They can optionally also have an offset, specified in "planted_offset" or "planted_scaled_offset".
-                 * Planted entities are not affected by physics, but other free entities will react with them.
-                 * If an entity is planted on a water body, it's considered to be "floating", i.e. it will be planted on top
-                 * of the water body.
-                 * The attribute "mode_data" contains a reference to the other entity on which an entity is planted on.
-                 */
-                    Planted,
+	enum class Mode {
+		/**
+		 * Planted entities are stuck to the terrain. Their y-position is determined by the terrain at their origo.
+		 * They can optionally also have an offset, specified in "planted_offset" or "planted_scaled_offset".
+		 * Planted entities are not affected by physics, but other free entities will react with them.
+		 * If an entity is planted on a water body, it's considered to be "floating", i.e. it will be planted on top
+		 * of the water body.
+		 * The attribute "mode_data" contains a reference to the other entity on which an entity is planted on.
+		 */
+		Planted,
 
-                /**
-                 * Fixed entities are fixed in the world. They are not affected by terrain.
-                 * Fixed entities are not affected by physics, but other free entities will react with them.
-                 */
-                    Fixed,
+		/**
+		 * Fixed entities are fixed in the world. They are not affected by terrain.
+		 * Fixed entities are not affected by physics, but other free entities will react with them.
+		 */
+		Fixed,
 
-                /**
-                 * Free entities are handled by the physics engine.
-                 */
-                    Free,
+		/**
+		 * Free entities are handled by the physics engine.
+		 */
+		Free,
 
-                /**
-                 * Submerged entities are like Free, but are submerged in liquid (such as an ocean).
-                 */
-                    Submerged,
-                /**
-                 * Like a free entity, but will emit Hit operations when it hits another entity.
-                 *
-                 * The "mode_data" property can be used to keep information about which entity caused the projectile to get moving.
-                 */
-                    Projectile,
-                /**
-                 * This mode is used when the mode string isn't recognized.
-                 */
-                    Unknown
+		/**
+		 * Submerged entities are like Free, but are submerged in liquid (such as an ocean).
+		 */
+		Submerged,
+		/**
+		 * Like a free entity, but will emit Hit operations when it hits another entity.
+		 *
+		 * The "mode_data" property can be used to keep information about which entity caused the projectile to get moving.
+		 */
+		Projectile,
+		/**
+		 * This mode is used when the mode string isn't recognized.
+		 */
+		Unknown
 
-        };
+	};
 
-        static constexpr const char* property_name = "mode";
-        static constexpr const char* property_atlastype = "string";
+	static constexpr const char* property_name = "mode";
+	static constexpr const char* property_atlastype = "string";
 
-        ModeProperty();
+	ModeProperty();
 
-        ~ModeProperty() override = default;
+	~ModeProperty() override = default;
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        ModeProperty* copy() const override;
+	ModeProperty* copy() const override;
 
-        void set(const Atlas::Message::Element& val) override;
+	void set(const Atlas::Message::Element& val) override;
 
-        int get(Atlas::Message::Element & val) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        ModeProperty::Mode getMode() const
-        {
-            return m_mode;
-        }
+	ModeProperty::Mode getMode() const {
+		return m_mode;
+	}
 
-        std::string data() const;
+	std::string data() const;
 
-        static ModeProperty::Mode parseMode(const std::string& mode);
-        static std::string encodeMode(ModeProperty::Mode mode);
+	static ModeProperty::Mode parseMode(const std::string& mode);
 
-    protected:
-        ModeProperty(const ModeProperty& rhs) = default;
-        Mode m_mode;
+	static std::string encodeMode(ModeProperty::Mode mode);
+
+protected:
+	ModeProperty(const ModeProperty& rhs) = default;
+
+	Mode m_mode;
 
 };
 

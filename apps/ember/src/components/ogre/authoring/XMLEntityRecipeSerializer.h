@@ -29,9 +29,9 @@
 #include "tinyxml/tinyxml.h"
 #include <OgreDataStream.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 /**
  * Serialize entity recipe from xml files.
  */
@@ -51,27 +51,27 @@ protected:
 	/**
 	 * Parses xml tree with entity recipe.
 	 */
-	void readRecipe(EntityRecipe& entRecipe, TiXmlElement* recipeNode);
+	static void readRecipe(EntityRecipe& entRecipe, TiXmlElement* recipeNode);
 
 	/**
 	 * Parses xml GUI adapters.
 	 */
-	void readAdapters(EntityRecipe& entRecipe, TiXmlElement* adaptersNode);
+	static void readAdapters(EntityRecipe& entRecipe, TiXmlElement* adaptersNode);
 
 	/**
 	 * Parses adapters in individual script binding.
 	 */
-	void readBindAdapters(EntityRecipe& entRecipe, GUIAdapterBindings* bindings, TiXmlElement* bindAdaptersNode);
+	static void readBindAdapters(EntityRecipe& entRecipe, GUIAdapterBindings* bindings, TiXmlElement* bindAdaptersNode);
 
 	/**
 	 * Parses xml with Lua script.
 	 */
-	void readScript(EntityRecipe& entRecipe, TiXmlElement* scriptNode);
+	static void readScript(EntityRecipe& entRecipe, TiXmlElement* scriptNode);
 };
 
 }
-}
 
-}
+
+
 
 #endif

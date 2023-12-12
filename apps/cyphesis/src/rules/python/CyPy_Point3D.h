@@ -27,51 +27,54 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Point3D : public WrapperBase<WFMath::Point<3>, CyPy_Point3D>
-{
-    public:
-        CyPy_Point3D(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Point3D : public WrapperBase<WFMath::Point<3>, CyPy_Point3D> {
+public:
+	CyPy_Point3D(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Point3D(Py::PythonClassInstance* self, WFMath::Point<3> value);
+	CyPy_Point3D(Py::PythonClassInstance* self, WFMath::Point<3> value);
 
-        static WFMath::Point<3> parse(const Py::Object& object);
+	static WFMath::Point<3> parse(const Py::Object& object);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String&) override;
+	Py::Object getattro(const Py::String&) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object repr() override;
+	Py::Object repr() override;
 
-        Py::Object rich_compare(const Py::Object& other, int type) override;
+	Py::Object rich_compare(const Py::Object& other, int type) override;
 
-        PyCxx_ssize_t sequence_length() override;
+	PyCxx_ssize_t sequence_length() override;
 
-        Py::Object sequence_item(Py_ssize_t pos) override;
+	Py::Object sequence_item(Py_ssize_t pos) override;
 
-        int sequence_ass_item(Py_ssize_t pos, const Py::Object& other) override;
+	int sequence_ass_item(Py_ssize_t pos, const Py::Object& other) override;
 
-        Py::Object number_add(const Py::Object& other) override;
+	Py::Object number_add(const Py::Object& other) override;
 
-        Py::Object number_subtract(const Py::Object& other) override;
+	Py::Object number_subtract(const Py::Object& other) override;
 
-        Py::Object iter() override;
+	Py::Object iter() override;
 
-    protected:
+protected:
 
 
-        Py::Object mag();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Point3D, mag);
+	Py::Object mag();
 
-        Py::Object unit_vector_to(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Point3D, unit_vector_to);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Point3D, mag);
 
-        Py::Object is_valid();
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Point3D, is_valid);
+	Py::Object unit_vector_to(const Py::Tuple& args);
 
-        Py::Object distance(const Py::Tuple& args);
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Point3D, distance);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Point3D, unit_vector_to);
+
+	Py::Object is_valid();
+
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Point3D, is_valid);
+
+	Py::Object distance(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Point3D, distance);
 
 
 };

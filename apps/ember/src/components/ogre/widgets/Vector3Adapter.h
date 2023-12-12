@@ -22,21 +22,20 @@
 //
 #ifndef EMBEROGRE_CEGUIVECTOR3ADAPTER_H
 #define EMBEROGRE_CEGUIVECTOR3ADAPTER_H
+
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include <sigc++/signal.h>
 #include <OgreVector.h>
 
-namespace CEGUI
-{
-	class Window;
-	class EventArgs;
+namespace CEGUI {
+class Window;
+
+class EventArgs;
 
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
@@ -44,11 +43,12 @@ namespace Gui {
 class Vector3Adapter {
 public:
 //	Vector3Adapter(CEGUI::Window *xWindow, CEGUI::Window *yWindow, CEGUI::Window *zWindow, const Ogre::Vector3& vector = Ogre::Vector3::ZERO);
-	Vector3Adapter(CEGUI::Window *xWindow, CEGUI::Window *yWindow, CEGUI::Window *zWindow);
+	Vector3Adapter(CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow);
 
 	~Vector3Adapter();
 
 	const Ogre::Vector3& getValue() const;
+
 	const Ogre::Vector3& getOriginalValue() const;
 
 	/**
@@ -73,7 +73,7 @@ protected:
 	/**
 	The windows which holds the values.
 	*/
-	CEGUI::Window *mXWindow, *mYWindow, *mZWindow;
+	CEGUI::Window* mXWindow, * mYWindow, * mZWindow;
 
 	bool window_TextChanged(const CEGUI::EventArgs& e);
 
@@ -83,8 +83,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

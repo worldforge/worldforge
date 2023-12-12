@@ -13,7 +13,7 @@
 #include <string>
 #include <list>
 
-namespace Atlas { 
+namespace Atlas {
 
 class Bridge;
 
@@ -33,20 +33,21 @@ along with the name of sender and a Socket
 @see Filter
 */
 
-  class NegotiateHelper {
+class NegotiateHelper {
 
-  public:
+public:
 
-	explicit NegotiateHelper(std::list<std::string> & names);
+	explicit NegotiateHelper(std::list<std::string>& names);
 
-    bool get(std::string &buf, const std::string & header);
-    void put(std::string &buf, const std::string & header);
+	bool get(std::string& buf, const std::string& header);
 
-  private:
+	void put(std::string& buf, const std::string& header);
 
-    std::list<std::string> & m_names;
+private:
 
-  };
+	std::list<std::string>& m_names;
+
+};
 
 /// Negotiation of clients building a connection to a remote system.
 ///
@@ -55,11 +56,10 @@ along with the name of sender and a Socket
 /// client can understand, and then listens for the servers decision.
 /// Once the server has told the client which Atlas::Codec to use,
 /// negotiation is flagged as complete, and this object can be deleted.
-class StreamConnect : public Atlas::Negotiate
-{
-    public:
+class StreamConnect : public Atlas::Negotiate {
+public:
 
-    StreamConnect(std::string  name, std::istream& inStream, std::ostream& outStream);
+	StreamConnect(std::string name, std::istream& inStream, std::ostream& outStream);
 
 	~StreamConnect() override = default;
 
@@ -69,46 +69,46 @@ class StreamConnect : public Atlas::Negotiate
 
 	std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge&) override;
 
-    private:
+private:
 
-    enum
-    {
-	SERVER_GREETING,
-	CLIENT_GREETING,
-	CLIENT_CODECS,
-	SERVER_CODECS,
-	// CLIENT_FILTERS,
-	// SERVER_FILTERS,
-	DONE
-    };
+	enum {
+		SERVER_GREETING,
+		CLIENT_GREETING,
+		CLIENT_CODECS,
+		SERVER_CODECS,
+		// CLIENT_FILTERS,
+		// SERVER_FILTERS,
+		DONE
+	};
 
-    int m_state;
+	int m_state;
 
-    std::string m_outName;
-    std::string m_inName;
-    std::istream& m_inStream;
-    std::ostream& m_outStream;
-    std::list<std::string> m_inCodecs;
-    std::list<std::string> m_inFilters;
-  
-    NegotiateHelper m_codecHelper;
-    NegotiateHelper m_filterHelper;
-    std::string m_buf;
+	std::string m_outName;
+	std::string m_inName;
+	std::istream& m_inStream;
+	std::ostream& m_outStream;
+	std::list<std::string> m_inCodecs;
+	std::list<std::string> m_inFilters;
 
-    void processServerCodecs();
-    void processServerFilters();
+	NegotiateHelper m_codecHelper;
+	NegotiateHelper m_filterHelper;
+	std::string m_buf;
 
-    //void processClientCodecs();
-    //void processClientFilters();
+	void processServerCodecs();
 
-    bool m_canPacked;
-    bool m_canXML;
-    bool m_canBach;
+	void processServerFilters();
 
-    bool m_canGzip;
-    bool m_canBzip2;
+	//void processClientCodecs();
+	//void processClientFilters();
+
+	bool m_canPacked;
+	bool m_canXML;
+	bool m_canBach;
+
+	bool m_canGzip;
+	bool m_canBzip2;
 };
- 
+
 /// Negotiation of servers accepting a connection from a remote system.
 ///
 /// Used once a stream connection has been established by a client.
@@ -117,11 +117,10 @@ class StreamConnect : public Atlas::Negotiate
 /// which it thinks is most suitable.
 /// Once the server has told the client which Atlas::Codec to use,
 /// negotiation is flagged as complete, and this object can be deleted.
-class StreamAccept : public Atlas::Negotiate
-{
-    public:
+class StreamAccept : public Atlas::Negotiate {
+public:
 
-    StreamAccept(std::string name, std::istream& inStream, std::ostream& outStream);
+	StreamAccept(std::string name, std::istream& inStream, std::ostream& outStream);
 
 	~StreamAccept() override = default;
 
@@ -131,47 +130,48 @@ class StreamAccept : public Atlas::Negotiate
 
 	std::unique_ptr<Atlas::Codec> getCodec(Atlas::Bridge&) override;
 
-    private:
+private:
 
-    enum
-    {
-	SERVER_GREETING,
-	CLIENT_GREETING,
-	CLIENT_CODECS,
-	SERVER_CODECS,
-	CLIENT_FILTERS,
-	SERVER_FILTERS,
-	DONE
-    };
+	enum {
+		SERVER_GREETING,
+		CLIENT_GREETING,
+		CLIENT_CODECS,
+		SERVER_CODECS,
+		CLIENT_FILTERS,
+		SERVER_FILTERS,
+		DONE
+	};
 
-    int m_state;
+	int m_state;
 
-    std::string m_outName;
-    std::string m_inName;
-    std::istream& m_inStream;
-    std::ostream& m_outStream;
-    std::list<std::string> m_inCodecs;
-    std::list<std::string> m_inFilters;
-  
-    NegotiateHelper m_codecHelper;
-    NegotiateHelper m_filterHelper;
-    std::string m_buf;
+	std::string m_outName;
+	std::string m_inName;
+	std::istream& m_inStream;
+	std::ostream& m_outStream;
+	std::list<std::string> m_inCodecs;
+	std::list<std::string> m_inFilters;
 
-    //void processServerCodecs();
-    //void processServerFilters();
+	NegotiateHelper m_codecHelper;
+	NegotiateHelper m_filterHelper;
+	std::string m_buf;
 
-    void processClientCodecs();
-    void processClientFilters();
+	//void processServerCodecs();
+	//void processServerFilters();
 
-    bool m_canPacked;
-    bool m_canXML;
-    bool m_canBach;
+	void processClientCodecs();
 
-    bool m_canGzip;
-    bool m_canBzip2;
+	void processClientFilters();
+
+	bool m_canPacked;
+	bool m_canXML;
+	bool m_canBach;
+
+	bool m_canGzip;
+	bool m_canBzip2;
 };
 
-} } // namespace Atlas::Net
+}
+} // namespace Atlas::Net
 
 #endif
 

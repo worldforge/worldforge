@@ -28,8 +28,8 @@
 
 #include <OgreMeshManager.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 PresentAction::PresentAction(EmberEntity& entity,
 							 Scene& scene,
@@ -64,5 +64,4 @@ void PresentAction::activate(EntityMapping::ChangeContext& context) {
 
 }
 
-}
 }

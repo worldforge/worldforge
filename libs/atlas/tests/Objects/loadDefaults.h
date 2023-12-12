@@ -15,7 +15,7 @@ namespace Objects {
 
 class DefaultLoadingException : public Atlas::Exception {
 public:
-	explicit DefaultLoadingException(const std::string& a_msg) noexcept :
+	explicit DefaultLoadingException(const std::string& a_msg) noexcept:
 			Atlas::Exception(a_msg) {}
 };
 

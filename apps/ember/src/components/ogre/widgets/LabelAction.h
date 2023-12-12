@@ -22,16 +22,12 @@
 #include "components/entitymapping/Actions/Action.h"
 #include <functional>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Gui
-{
 
-class LabelAction: public EntityMapping::Actions::Action
-{
+namespace OgreView::Gui {
+
+class LabelAction : public EntityMapping::Actions::Action {
 public:
 
 
@@ -49,6 +45,7 @@ public:
 
 
 	explicit LabelAction(EmberEntity& entity);
+
 	~LabelAction() override;
 
 	/**
@@ -67,6 +64,6 @@ private:
 };
 
 }
-}
+
 }
 #endif /* LABELACTION_H_ */

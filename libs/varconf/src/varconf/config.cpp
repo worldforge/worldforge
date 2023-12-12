@@ -23,10 +23,9 @@
  *            189 Reese St.
  *            Old Forge, PA 18518
  */
- 
+
 #include "config.h"
 
-#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -41,571 +40,544 @@ extern char** environ;
 // code (found on Google) provides a value to link against, and a
 // further tweak in getEnv gets the actual value using _NS evil.
 #if defined(__APPLE__)
-    #include <crt_externs.h>
-    char **environ = NULL;
+#include <crt_externs.h>
+char **environ = NULL;
 #endif
 
 #endif // _WIN32
 
 namespace {
-  enum state_t {
-    S_EXPECT_NAME, // Expect the start of a name/section/comment
-    S_SECTION, // Parsing a section name
-    S_NAME, // Parsing an item name
-    S_COMMENT, // Parsing a comment
-    S_EXPECT_EQ, // Expect an equal sign
-    S_EXPECT_VALUE, // Expect the start of a value
-    S_VALUE, // Parsing a value
-    S_QUOTED_VALUE, // Parsing a "quoted" value
-    S_EXPECT_EOL // Expect the end of the line
-  };
+enum state_t {
+	S_EXPECT_NAME, // Expect the start of a name/section/comment
+	S_SECTION, // Parsing a section name
+	S_NAME, // Parsing an item name
+	S_COMMENT, // Parsing a comment
+	S_EXPECT_EQ, // Expect an equal sign
+	S_EXPECT_VALUE, // Expect the start of a value
+	S_VALUE, // Parsing a value
+	S_QUOTED_VALUE, // Parsing a "quoted" value
+	S_EXPECT_EOL // Expect the end of the line
+};
 
-  enum ctype_t {
-    C_SPACE, // Whitespace
-    C_NUMERIC, // 0-9
-    C_ALPHA, // a-z, A-Z
-    C_DASH, // '-' and '_'
-    C_EQ, // '='
-    C_QUOTE, // '"'
-    C_SQUARE_OPEN, // '['
-    C_SQUARE_CLOSE, // ']'
-    C_HASH, // '#'
-    C_ESCAPE, // '\' (an "escape")
-    C_EOL, // End of the line
-    C_OTHER // Anything else
-  };
+enum ctype_t {
+	C_SPACE, // Whitespace
+	C_NUMERIC, // 0-9
+	C_ALPHA, // a-z, A-Z
+	C_DASH, // '-' and '_'
+	C_EQ, // '='
+	C_QUOTE, // '"'
+	C_SQUARE_OPEN, // '['
+	C_SQUARE_CLOSE, // ']'
+	C_HASH, // '#'
+	C_ESCAPE, // '\' (an "escape")
+	C_EOL, // End of the line
+	C_OTHER // Anything else
+};
 
-  ctype_t ctype(char c)
-  {
-    if (c=='\n') return C_EOL;
-    if (isspace(c)) return C_SPACE;
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) return C_ALPHA;
-    if (isdigit(c)) return C_NUMERIC;
-    if (c == '-' || c == '_') return C_DASH;
-    if (c == '=') return C_EQ;
-    if (c == '"') return C_QUOTE;
-    if (c == '[') return C_SQUARE_OPEN;
-    if (c == ']') return C_SQUARE_CLOSE;
-    if (c == '#') return C_HASH;
-    if (c == '\\') return C_ESCAPE;
-    return C_OTHER;
-  }
+ctype_t ctype(char c) {
+	if (c == '\n') return C_EOL;
+	if (isspace(c)) return C_SPACE;
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) return C_ALPHA;
+	if (isdigit(c)) return C_NUMERIC;
+	if (c == '-' || c == '_') return C_DASH;
+	if (c == '=') return C_EQ;
+	if (c == '"') return C_QUOTE;
+	if (c == '[') return C_SQUARE_OPEN;
+	if (c == ']') return C_SQUARE_CLOSE;
+	if (c == '#') return C_HASH;
+	if (c == '\\') return C_ESCAPE;
+	return C_OTHER;
+}
 }
 
 namespace varconf {
 
 Config* Config::m_instance = nullptr;
 
-Config* Config::inst()
-{
-  if (m_instance == nullptr)
-    m_instance = new Config;
-  
-  return m_instance;
+Config* Config::inst() {
+	if (m_instance == nullptr)
+		m_instance = new Config;
+
+	return m_instance;
 }
 
-Config::Config(const Config & conf)
- : trackable(conf) {
-  m_conf = conf.m_conf;
-  m_par_lookup = conf.m_par_lookup;
+Config::Config(const Config& conf)
+		: trackable(conf) {
+	m_conf = conf.m_conf;
+	m_par_lookup = conf.m_par_lookup;
 }
 
-Config::~Config()
-{
-  if (m_instance == this)
-    m_instance = nullptr;
+Config::~Config() {
+	if (m_instance == this)
+		m_instance = nullptr;
 }
 
-std::ostream & operator <<(std::ostream & out, Config & conf)
-{
-  if (!conf.writeToStream(out, USER)) {
-    conf.sige.emit("\nVarconf Error: error while trying to write "
-                    "configuration data to output stream.\n");
-  }
- 
-  return out;
+std::ostream& operator<<(std::ostream& out, Config& conf) {
+	if (!conf.writeToStream(out, USER)) {
+		conf.sige.emit("\nVarconf Error: error while trying to write "
+					   "configuration data to output stream.\n");
+	}
+
+	return out;
 }
 
-std::istream & operator >>(std::istream & in, Config & conf)
-{
-  try {
-    conf.parseStream(in, USER);
-  }
-  catch (const ParseError& p) {
-  	std::stringstream ss;
-  	ss << "Varconf Error: parser exception throw while parsing input stream.\n" << p.what();
-    conf.sige.emit(ss.str().c_str());
-  }
+std::istream& operator>>(std::istream& in, Config& conf) {
+	try {
+		conf.parseStream(in, USER);
+	}
+	catch (const ParseError& p) {
+		std::stringstream ss;
+		ss << "Varconf Error: parser exception throw while parsing input stream.\n" << p.what();
+		conf.sige.emit(ss.str().c_str());
+	}
 
-  return in;
-} 
+	return in;
+}
 
-bool operator ==(const Config & one, const Config & two)
-{
+bool operator==(const Config& one, const Config& two) {
 	return one.m_conf == two.m_conf && one.m_par_lookup == two.m_par_lookup;
 }
 
-void Config::clean(std::string & str)
-{
-  ctype_t c;
+void Config::clean(std::string& str) {
+	ctype_t c;
 
-  for (char & i : str) {
-    c = ctype(i);
+	for (char& i: str) {
+		c = ctype(i);
 
-    if (c != C_NUMERIC && c != C_ALPHA && c != C_DASH) {
-      i = '_';
-    } else {
-      i = (char) tolower(i);
-    }
-  } 
+		if (c != C_NUMERIC && c != C_ALPHA && c != C_DASH) {
+			i = '_';
+		} else {
+			i = (char) tolower(i);
+		}
+	}
 }
 
-bool Config::erase(const std::string & section, const std::string & key)
-{
-  if (find(section)) {
-    if (key.empty()) {
-      m_conf.erase(section);
-      return true;
-    } else if (find(section, key)) {
-      m_conf[section].erase(key);
-      return true;
-    }
-  }
- 
-  return false;
+bool Config::erase(const std::string& section, const std::string& key) {
+	if (find(section)) {
+		if (key.empty()) {
+			m_conf.erase(section);
+			return true;
+		} else if (find(section, key)) {
+			m_conf[section].erase(key);
+			return true;
+		}
+	}
+
+	return false;
 }
 
-bool Config::find(const std::string & section, const std::string & key) const
-{
-  auto I = m_conf.find(section);
-  if (I != m_conf.end()) {
-    if (key.empty()) {
-      return true;
-    } 
-    const sec_map & sectionRef = I->second;
-    auto J = sectionRef.find(key);
-    if (J != sectionRef.end()) {
-      return true;
-    }
-  }
+bool Config::find(const std::string& section, const std::string& key) const {
+	auto I = m_conf.find(section);
+	if (I != m_conf.end()) {
+		if (key.empty()) {
+			return true;
+		}
+		const sec_map& sectionRef = I->second;
+		auto J = sectionRef.find(key);
+		if (J != sectionRef.end()) {
+			return true;
+		}
+	}
 
-  return false;
+	return false;
 }
 
-bool Config::findSection(const std::string & section) const
-{
-  return find(section);
+bool Config::findSection(const std::string& section) const {
+	return find(section);
 }
 
-bool Config::findItem(const std::string & section, const std::string & key) const
-{
-  return find(section, key);
+bool Config::findItem(const std::string& section, const std::string& key) const {
+	return find(section, key);
 }
 
-int Config::getCmdline(int argc, char** argv, Scope scope)
-{
-  int optind = 1;
+int Config::getCmdline(int argc, char** argv, Scope scope) {
+	int optind = 1;
 
-  for (int i = 1; i < argc; i++) {
-    if (argv[i][0] != '-' ) {
-       continue;
-    }
+	for (int i = 1; i < argc; i++) {
+		if (argv[i][0] != '-') {
+			continue;
+		}
 
-    std::string section, name, value, arg;
-    bool fnd_sec = false, fnd_nam = false;
-    size_t mark = 2;
-    if (argv[i][1] == '-' && argv[i][2] != '\0') {
-      // long argument
-      arg = argv[i];
-       
-      for (size_t j = 2; j < arg.size(); j++) {
-        if (arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
-          section = arg.substr(mark, (j - mark));
-          fnd_sec = true;
-          mark = j + 1;
-        }
-        else if (arg[j] == '=' && (j - mark) > 1) {
-          name = arg.substr(mark, (j - mark));
-          fnd_nam = true;
-          value = arg.substr((j + 1), (arg.size() - (j + 1)));
-          break;
-        }
-      }
+		std::string section, name, value, arg;
+		bool fnd_sec = false, fnd_nam = false;
+		size_t mark = 2;
+		if (argv[i][1] == '-' && argv[i][2] != '\0') {
+			// long argument
+			arg = argv[i];
 
-      if (!fnd_nam && arg.size() != mark)  {
-        name = arg.substr(mark, (arg.size() - mark));
-      }
-
-    } else if (argv[i][1] != '-' && argv[i][1] != '\0') {
-      // short argument
-      auto I = m_par_lookup.find(argv[i][1]);
-
-      if (I != m_par_lookup.end()) {
-        name = ((*I).second).first;
-        bool needs_value = ((*I).second).second;
-
-		if (needs_value) {
-			if ((i+1) < argc && argv[i+1][0] != 0 && argv[i+1][0] != '-') {
-				value = argv[++i];
+			for (size_t j = 2; j < arg.size(); j++) {
+				if (arg[j] == ':' && arg[j + 1] != '\0' && !fnd_sec && !fnd_nam) {
+					section = arg.substr(mark, (j - mark));
+					fnd_sec = true;
+					mark = j + 1;
+				} else if (arg[j] == '=' && (j - mark) > 1) {
+					name = arg.substr(mark, (j - mark));
+					fnd_nam = true;
+					value = arg.substr((j + 1), (arg.size() - (j + 1)));
+					break;
+				}
 			}
-			else {
+
+			if (!fnd_nam && arg.size() != mark) {
+				name = arg.substr(mark, (arg.size() - mark));
+			}
+
+		} else if (argv[i][1] != '-' && argv[i][1] != '\0') {
+			// short argument
+			auto I = m_par_lookup.find(argv[i][1]);
+
+			if (I != m_par_lookup.end()) {
+				name = ((*I).second).first;
+				bool needs_value = ((*I).second).second;
+
+				if (needs_value) {
+					if ((i + 1) < argc && argv[i + 1][0] != 0 && argv[i + 1][0] != '-') {
+						value = argv[++i];
+					} else {
+						std::stringstream ss;
+						ss << "Varconf Warning: short argument \"" << argv[i] << "\""
+																				 " given on command-line expects a value"
+																				 " but none was given.";
+						sige.emit(ss.str().c_str());
+					}
+				}
+			} else {
 				std::stringstream ss;
-				ss << "Varconf Warning: short argument \""<< argv[i] <<"\""
-																	   " given on command-line expects a value"
-																	   " but none was given.";
+				ss << "Varconf Warning: short argument \"" << argv[i] << "\""
+																		 " given on command-line does not exist in"
+																		 " the lookup table.";
 				sige.emit(ss.str().c_str());
 			}
 		}
-      }
-      else {
-		  std::stringstream ss;
-		  ss << "Varconf Warning: short argument \""<<argv[i]<<"\""
-				" given on command-line does not exist in"
-				" the lookup table.";
-        sige.emit(ss.str().c_str());
-      }
-    }
 
-    if (!name.empty()) {
-      setItem(section, name, value, scope);
-      optind = i + 1;
-    }
-  }
-  return optind;
+		if (!name.empty()) {
+			setItem(section, name, value, scope);
+			optind = i + 1;
+		}
+	}
+	return optind;
 }
 
-void Config::getEnv(const std::string & prefix, Scope scope)
-{
-  std::string name, value, section, env;
-  size_t eq_pos = 0;
+void Config::getEnv(const std::string& prefix, Scope scope) {
+	std::string name, value, section, env;
+	size_t eq_pos = 0;
 
 #if defined(__APPLE__)
-  if (environ == NULL)
-      environ = *_NSGetEnviron();
+	if (environ == NULL)
+		environ = *_NSGetEnviron();
 #endif
-  
-  for (size_t i = 0; environ[i] != nullptr; i++) {
-    env = environ[i];
 
-    if (env.substr(0, prefix.size()) == prefix) {
-      eq_pos = env.find('='); 
+	for (size_t i = 0; environ[i] != nullptr; i++) {
+		env = environ[i];
 
-      if (eq_pos != std::string::npos) {
-        name = env.substr(prefix.size(), (eq_pos - prefix.size()));
-        value = env.substr((eq_pos + 1), (env.size() - (eq_pos + 1)));
-      }
-      else {
-        name = env.substr(prefix.size(), (env.size() - prefix.size()));
-        value = "";
-      }   
-      
-      setItem(section, name, value, scope);
-    }
-  }
+		if (env.substr(0, prefix.size()) == prefix) {
+			eq_pos = env.find('=');
+
+			if (eq_pos != std::string::npos) {
+				name = env.substr(prefix.size(), (eq_pos - prefix.size()));
+				value = env.substr((eq_pos + 1), (env.size() - (eq_pos + 1)));
+			} else {
+				name = env.substr(prefix.size(), (env.size() - prefix.size()));
+				value = "";
+			}
+
+			setItem(section, name, value, scope);
+		}
+	}
 }
 
-const sec_map & Config::getSection(const std::string & section)
-{
-  // TODO: This will create a new section in the config file. Is really the 
-  //  desired behaviour?
-  return m_conf[section];
+const sec_map& Config::getSection(const std::string& section) {
+	// TODO: This will create a new section in the config file. Is really the
+	//  desired behaviour?
+	return m_conf[section];
 }
 
-Variable Config::getItem(const std::string & section, const std::string & key) const
-{
-  auto I = m_conf.find(section);
-  if (I != m_conf.end()) {
-    auto J = I->second.find(key);
-    if (J != I->second.end()) {
-      return J->second;
-    }
-  }
-  return Variable();
+Variable Config::getItem(const std::string& section, const std::string& key) const {
+	auto I = m_conf.find(section);
+	if (I != m_conf.end()) {
+		auto J = I->second.find(key);
+		if (J != I->second.end()) {
+			return J->second;
+		}
+	}
+	return Variable();
 }
 
-const conf_map& Config::getSections() const
-{
+const conf_map& Config::getSections() const {
 	return m_conf;
 }
 
 
-void Config::parseStream(std::istream & in, Scope scope)
-{
-  char c; 
-  bool escaped = false;
-  size_t line = 1, col = 0;
-  std::string name, value, section;
-  state_t state = S_EXPECT_NAME;
+void Config::parseStream(std::istream& in, Scope scope) {
+	char c;
+	bool escaped = false;
+	size_t line = 1, col = 0;
+	std::string name, value, section;
+	state_t state = S_EXPECT_NAME;
 
-  while (in.get(c)) {
-    col++;
-    switch (state) {
-      case S_EXPECT_NAME : 
-        switch (ctype(c)) {
-          case C_ALPHA:
-          case C_NUMERIC:
-          case C_DASH:
-            state = S_NAME;
-            name = c;
-            break;
-          case C_SQUARE_OPEN:
-            section = "";
-            state = S_SECTION;
-            break;
-          case C_SPACE:
-          case C_EOL:
-            break;
-          case C_HASH:
-            state = S_COMMENT;
-            break;
-          default:
-            throw ParseError("item name", (int) line, (int) col);
-        }
-        break;
-      case S_SECTION :
-        switch (ctype(c)) {
-          case C_ALPHA:
-          case C_NUMERIC:
-          case C_DASH:
-            section += c;
-            break;
-          case C_SQUARE_CLOSE:
-            state = S_EXPECT_EOL;
-            break;
-          default:
-            throw ParseError("']'", (int) line, (int) col);
-        }
-        break;
-      case S_NAME :
-        switch (ctype(c)) {
-          case C_ALPHA:
-          case C_NUMERIC:
-          case C_DASH:
-            name += c;
-            break;
-          case C_EQ:
-            state = S_EXPECT_VALUE;
-            break;
-          case C_SPACE:
-            state = S_EXPECT_EQ;
-            break;
-          default:
-            throw ParseError("'='", (int) line, (int) col);
-        }
-        break;
-      case S_COMMENT :
-        switch (ctype(c)) {
-          case C_EOL:
-            state = S_EXPECT_NAME;
-            break;
-          default:
-            break;
-        }
-        break;
-      case S_EXPECT_EQ:
-        switch (ctype(c)) {
-          case C_SPACE:
-            break;
-          case C_EQ:
-            state = S_EXPECT_VALUE;
-            break;
-          default:
-            throw ParseError("'='", (int) line, (int) col);
-        }
-        break;
-      case S_EXPECT_VALUE:
-        switch (ctype(c)) {
-          case C_ALPHA:
-          case C_NUMERIC:
-          case C_DASH:
-            state = S_VALUE;
-            value = c;
-            break;
-          case C_QUOTE:
-            value = "";
-            state = S_QUOTED_VALUE;
-            break;
-          case C_EOL:
-            value = "";
-            state = S_EXPECT_NAME;
-            setItem(section, name, value, scope);
-            break;
-          case C_SPACE:
-            break;
-          default:
-            throw ParseError("value", (int) line, (int) col);
-        }
-        break;
-      case S_VALUE:
-        switch (ctype(c)) {
-          case C_QUOTE:
-            throw ParseError("value", (int) line, (int) col);
-          case C_SPACE:
-            state = S_EXPECT_EOL;
-            setItem(section, name, value, scope);
-            break;
-          case C_EOL:
-            state = S_EXPECT_NAME;
-            setItem(section, name, value, scope);
-            break;
-          case C_HASH:
-            state = S_COMMENT;
-            setItem(section, name, value, scope);
-            break;
-          default:
-            value += c;
-            break;
-        }
-        break;
-      case S_QUOTED_VALUE:
-        if (escaped) {
-          value += c;
-          escaped = false;
-        } else {
-          switch (ctype(c)) {
-            case C_QUOTE:
-              state = S_EXPECT_EOL;
-              setItem(section, name, value, scope);
-              break;
-            case C_ESCAPE:
-              escaped = true;
-              break;
-            default:
-              value += c;
-              break;
-          }
-        }
-        break;
-      case S_EXPECT_EOL:
-        switch (ctype(c)) {
-          case C_HASH:
-            state = S_COMMENT;
-            break;
-          case C_EOL:
-            state = S_EXPECT_NAME;
-            break;
-          case C_SPACE:
-            break;
-          default:
-            throw ParseError("end of line", (int) line, (int) col);
-            break;
-        }
-        break;
-      default:
-        break;
-    }
-    if (c == '\n') {
-      line++;
-      col = 0;
-    }
-  } // while (in.get(c))
+	while (in.get(c)) {
+		col++;
+		switch (state) {
+			case S_EXPECT_NAME :
+				switch (ctype(c)) {
+					case C_ALPHA:
+					case C_NUMERIC:
+					case C_DASH:
+						state = S_NAME;
+						name = c;
+						break;
+					case C_SQUARE_OPEN:
+						section = "";
+						state = S_SECTION;
+						break;
+					case C_SPACE:
+					case C_EOL:
+						break;
+					case C_HASH:
+						state = S_COMMENT;
+						break;
+					default:
+						throw ParseError("item name", (int) line, (int) col);
+				}
+				break;
+			case S_SECTION :
+				switch (ctype(c)) {
+					case C_ALPHA:
+					case C_NUMERIC:
+					case C_DASH:
+						section += c;
+						break;
+					case C_SQUARE_CLOSE:
+						state = S_EXPECT_EOL;
+						break;
+					default:
+						throw ParseError("']'", (int) line, (int) col);
+				}
+				break;
+			case S_NAME :
+				switch (ctype(c)) {
+					case C_ALPHA:
+					case C_NUMERIC:
+					case C_DASH:
+						name += c;
+						break;
+					case C_EQ:
+						state = S_EXPECT_VALUE;
+						break;
+					case C_SPACE:
+						state = S_EXPECT_EQ;
+						break;
+					default:
+						throw ParseError("'='", (int) line, (int) col);
+				}
+				break;
+			case S_COMMENT :
+				switch (ctype(c)) {
+					case C_EOL:
+						state = S_EXPECT_NAME;
+						break;
+					default:
+						break;
+				}
+				break;
+			case S_EXPECT_EQ:
+				switch (ctype(c)) {
+					case C_SPACE:
+						break;
+					case C_EQ:
+						state = S_EXPECT_VALUE;
+						break;
+					default:
+						throw ParseError("'='", (int) line, (int) col);
+				}
+				break;
+			case S_EXPECT_VALUE:
+				switch (ctype(c)) {
+					case C_ALPHA:
+					case C_NUMERIC:
+					case C_DASH:
+						state = S_VALUE;
+						value = c;
+						break;
+					case C_QUOTE:
+						value = "";
+						state = S_QUOTED_VALUE;
+						break;
+					case C_EOL:
+						value = "";
+						state = S_EXPECT_NAME;
+						setItem(section, name, value, scope);
+						break;
+					case C_SPACE:
+						break;
+					default:
+						throw ParseError("value", (int) line, (int) col);
+				}
+				break;
+			case S_VALUE:
+				switch (ctype(c)) {
+					case C_QUOTE:
+						throw ParseError("value", (int) line, (int) col);
+					case C_SPACE:
+						state = S_EXPECT_EOL;
+						setItem(section, name, value, scope);
+						break;
+					case C_EOL:
+						state = S_EXPECT_NAME;
+						setItem(section, name, value, scope);
+						break;
+					case C_HASH:
+						state = S_COMMENT;
+						setItem(section, name, value, scope);
+						break;
+					default:
+						value += c;
+						break;
+				}
+				break;
+			case S_QUOTED_VALUE:
+				if (escaped) {
+					value += c;
+					escaped = false;
+				} else {
+					switch (ctype(c)) {
+						case C_QUOTE:
+							state = S_EXPECT_EOL;
+							setItem(section, name, value, scope);
+							break;
+						case C_ESCAPE:
+							escaped = true;
+							break;
+						default:
+							value += c;
+							break;
+					}
+				}
+				break;
+			case S_EXPECT_EOL:
+				switch (ctype(c)) {
+					case C_HASH:
+						state = S_COMMENT;
+						break;
+					case C_EOL:
+						state = S_EXPECT_NAME;
+						break;
+					case C_SPACE:
+						break;
+					default:
+						throw ParseError("end of line", (int) line, (int) col);
+						break;
+				}
+				break;
+			default:
+				break;
+		}
+		if (c == '\n') {
+			line++;
+			col = 0;
+		}
+	} // while (in.get(c))
 
-  if (state == S_QUOTED_VALUE) {
-    throw ParseError("\"", (int) line, (int) col);
-  }
+	if (state == S_QUOTED_VALUE) {
+		throw ParseError("\"", (int) line, (int) col);
+	}
 
-  if (state == S_VALUE) {
-    setItem(section, name, value, scope);
-  } else if (state == S_EXPECT_VALUE) {
-    setItem(section, name, "", scope);
-  }
+	if (state == S_VALUE) {
+		setItem(section, name, value, scope);
+	} else if (state == S_EXPECT_VALUE) {
+		setItem(section, name, "", scope);
+	}
 }
 
-bool Config::readFromFile(const std::string & filename, Scope scope)
-{
-  std::ifstream fin(filename.c_str());
-  
-  if (fin.fail()) {
-	  std::stringstream ss;
-	  ss << "Varconf Error: could not open configuration file"
-                         " \""<<filename<<"\" for input.";
-    sige.emit(ss.str().c_str());
-    
-    return false;
-  }
+bool Config::readFromFile(const std::string& filename, Scope scope) {
+	std::ifstream fin(filename.c_str());
 
-  try {
-    parseStream(fin, scope);
-  }
-  catch (const ParseError& p) {
-	  std::stringstream ss;
-	  ss << "Varconf Error: parsing exception thrown while "
-			"parsing \""<<filename<<"\".\n"<< p.what();
-    sige.emit(ss.str().c_str());
-    return false;
-  }
-  
-  return true;
+	if (fin.fail()) {
+		std::stringstream ss;
+		ss << "Varconf Error: could not open configuration file"
+			  " \"" << filename << "\" for input.";
+		sige.emit(ss.str().c_str());
+
+		return false;
+	}
+
+	try {
+		parseStream(fin, scope);
+	}
+	catch (const ParseError& p) {
+		std::stringstream ss;
+		ss << "Varconf Error: parsing exception thrown while "
+			  "parsing \"" << filename << "\".\n" << p.what();
+		sige.emit(ss.str().c_str());
+		return false;
+	}
+
+	return true;
 }
 
-void Config::setItem(const std::string & section,
-                     const std::string & key,
-                     const Variable & item,
-                     Scope scope)
-{
-  if (key.empty()) {
-  	std::stringstream ss;
-  	ss << "Varconf Warning: blank key under section \""<<section<<"\""
-                         " sent to setItem() method.";
-    sige.emit(ss.str().c_str());
-  }
-  else {
-    std::string sec_clean = section; 
-    std::string key_clean = key; 
+void Config::setItem(const std::string& section,
+					 const std::string& key,
+					 const Variable& item,
+					 Scope scope) {
+	if (key.empty()) {
+		std::stringstream ss;
+		ss << "Varconf Warning: blank key under section \"" << section << "\""
+																		  " sent to setItem() method.";
+		sige.emit(ss.str().c_str());
+	} else {
+		std::string sec_clean = section;
+		std::string key_clean = key;
 
-    clean(sec_clean);
-    clean(key_clean);
+		clean(sec_clean);
+		clean(key_clean);
 
-    item->setScope(scope);
-    std::map<std::string, Variable> & section_map = m_conf[sec_clean];
-    std::map<std::string, Variable>::const_iterator I = section_map.find(key_clean);
-    if (I == section_map.end() || I->second != item) {
-      section_map[key_clean] = item;
-    }
- 
-    sig.emit(); 
-    sigv.emit(sec_clean, key_clean);
-    sigsv.emit(sec_clean, key_clean, *this);
-  }
+		item->setScope(scope);
+		std::map<std::string, Variable>& section_map = m_conf[sec_clean];
+		auto I = section_map.find(key_clean);
+		if (I == section_map.end() || I->second != item) {
+			section_map[key_clean] = item;
+		}
+
+		sig.emit();
+		sigv.emit(sec_clean, key_clean);
+		sigsv.emit(sec_clean, key_clean, *this);
+	}
 }
 
-void Config::setParameterLookup(char s_name, const std::string & l_name, bool value)
-{
-    m_par_lookup[s_name] = std::pair<std::string, bool>(l_name, value);  
+void Config::setParameterLookup(char s_name, const std::string& l_name, bool value) {
+	m_par_lookup[s_name] = std::pair<std::string, bool>(l_name, value);
 }
 
-bool Config::writeToFile(const std::string & filename, Scope scope_mask) const
-{
-  std::ofstream fout(filename.c_str());
+bool Config::writeToFile(const std::string& filename, Scope scope_mask) const {
+	std::ofstream fout(filename.c_str());
 
-  if (fout.fail()) {
-	  std::stringstream ss;
-	  ss << "Varconf Error: could not open configuration file"
-			" \""<< filename <<"\" for output.";
-    sige.emit(ss.str().c_str());
+	if (fout.fail()) {
+		std::stringstream ss;
+		ss << "Varconf Error: could not open configuration file"
+			  " \"" << filename << "\" for output.";
+		sige.emit(ss.str().c_str());
 
-    return false;
-  }
+		return false;
+	}
 
-  return writeToStream(fout, scope_mask);
+	return writeToStream(fout, scope_mask);
 }
 
-bool Config::writeToStream(std::ostream & out, Scope scope_mask) const
-{
-  conf_map::const_iterator I;
-  sec_map::const_iterator J;
- 
-  for (I = m_conf.begin(); I != m_conf.end(); I++) {
-    out << std::endl << "[" << (*I).first << "]\n\n";
+bool Config::writeToStream(std::ostream& out, Scope scope_mask) const {
+	conf_map::const_iterator I;
+	sec_map::const_iterator J;
 
-    for (J = (*I).second.begin(); J != (*I).second.end(); J++) {
-      if (J->second->scope() & scope_mask) {
-        out << (*J).first << " = \"" << (*J).second << "\"\n";
-      }
-    }
-  }
-  
-  return true;
+	for (I = m_conf.begin(); I != m_conf.end(); I++) {
+		out << std::endl << "[" << (*I).first << "]\n\n";
+
+		for (J = (*I).second.begin(); J != (*I).second.end(); J++) {
+			if (J->second->scope() & scope_mask) {
+				out << (*J).first << " = \"" << (*J).second << "\"\n";
+			}
+		}
+	}
+
+	return true;
 }
 
 } // namespace varconf

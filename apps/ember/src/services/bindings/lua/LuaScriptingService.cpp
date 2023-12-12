@@ -23,7 +23,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ScriptingService>(sol::table& space) {
 	auto scriptingService = space.new_usertype<ScriptingService>("ScriptingService", sol::no_constructor);
 	scriptingService["loadScript"] = &ScriptingService::loadScript;

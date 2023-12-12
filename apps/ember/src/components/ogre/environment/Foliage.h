@@ -30,22 +30,22 @@
 #include <OgreFrameListener.h>
 #include <components/ogre/terrain/TerrainShader.h>
 
-namespace WFMath
-{
-	template<int> class Point;
+namespace WFMath {
+template<int>
+class Point;
 }
 
 namespace Forests {
-	class PagedGeometry;
+class PagedGeometry;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain
-{
+namespace Ember::OgreView {
+
+namespace Terrain {
 struct TerrainFoliageDefinition;
 struct TerrainLayerDefinition;
+
 class TerrainManager;
 }
 
@@ -56,15 +56,14 @@ class FoliageBase;
 /**
 @author Erik Ogenvik
 */
-class Foliage : public Singleton<Foliage>, public Ogre::FrameListener, public ConsoleObject
-{
+class Foliage : public Singleton<Foliage>, public Ogre::FrameListener, public ConsoleObject {
 
 public:
 
 	explicit Foliage(Terrain::TerrainManager& terrainManager);
 
 	~Foliage() override;
-	
+
 	void initializeLayer(const Terrain::TerrainLayer& terrainLayer);
 
 	bool frameStarted(const Ogre::FrameEvent& evt) override;
@@ -74,17 +73,17 @@ public:
 	/**
 	 * @copydoc ConsoleObject::runCommand
 	 */
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	const ConsoleCommandWrapper ReloadFoliage;
-	
+
 	/**
 	 * @brief Sets the density of all foliage in a factor of default density.
 	 * eg. passing 0.1 will make all foliage density = (the default defined layer density) * 0.1;
 	 * @param newDensity the new density percentage in float, where 1 implies normal or full density and 0 implies no density or no foliage. 
 	 */
 	void setDensity(float newDensity);
-	
+
 	/**
 	 * @brief Sets the max far distance of all foliage in a factor of default distance.
 	 * eg. passing 0.1 will make the furthest distance foliage appears at = default far distance * 0.1;
@@ -105,6 +104,6 @@ protected:
 
 }
 
-}
+
 
 #endif

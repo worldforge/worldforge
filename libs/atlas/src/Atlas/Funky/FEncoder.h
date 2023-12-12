@@ -11,7 +11,8 @@
 
 #include <string>
 
-namespace Atlas { namespace Funky {
+namespace Atlas {
+namespace Funky {
 
 /** @defgroup funky_encoder Atlas Funky Encoder
  *
@@ -50,42 +51,60 @@ namespace Atlas { namespace Funky {
  *  @ingroup funky_encoder
  * @see funky_encoder
  */
-class BeginMessage {};
+class BeginMessage {
+};
+
 /** Token class representing the end of a message.
  *
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-class EndMessage {};
+class EndMessage {
+};
+
 /** Token class representing the beginning of a map.
  *
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-class BeginMap {};
+class BeginMap {
+};
+
 /** Token class representing the end of a map.
  *
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-class EndMap {};
+class EndMap {
+};
+
 /** Token class representing the beginning of a list.
  *
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-class BeginList {};
+class BeginList {
+};
+
 /** Token class representing the end of a list.
  *
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-class EndList {};
+class EndList {
+};
 
-template<class B> class FunkyEncoder;
-template<class B, class T> class EncMap;
-template<class B, class T> class EncList;
-template<class B, class T> class EncMapValue;
+template<class B>
+class FunkyEncoder;
+
+template<class B, class T>
+class EncMap;
+
+template<class B, class T>
+class EncList;
+
+template<class B, class T>
+class EncMapValue;
 
 /** Encoder in map value state
  *
@@ -95,56 +114,50 @@ template<class B, class T> class EncMapValue;
 template<class B, class T>
 class EncMapValue {
 public:
-    EncMapValue(B& b, const std::string& name) : b(b), name(name) { }
-    
-    /// Begin a map.
-    EncMap<B, T> operator<<(const BeginMap&)
-    {
-        b.mapMapItem(name);
-        return EncMap<B, T>(b);
-    }
+	EncMapValue(B& b, const std::string& name) : b(b), name(name) {}
 
-    /// Begin a list.
-    EncList<B, T> operator<<(const BeginList&)
-    {
-        b.mapListItem(name);
-        return EncList<B, T>(b);
-    }
+	/// Begin a map.
+	EncMap<B, T> operator<<(const BeginMap&) {
+		b.mapMapItem(name);
+		return EncMap<B, T>(b);
+	}
 
-    /// Send an integer value.
-    T operator<<(std::int64_t i)
-    {
-        b.mapIntItem(name, i);
-        return T(b);
-    }
+	/// Begin a list.
+	EncList<B, T> operator<<(const BeginList&) {
+		b.mapListItem(name);
+		return EncList<B, T>(b);
+	}
 
-    /// Send a double value.
-    T operator<<(double d)
-    {
-        b.mapFloatItem(name, d);
-        return T(b);
-    }
+	/// Send an integer value.
+	T operator<<(std::int64_t i) {
+		b.mapIntItem(name, i);
+		return T(b);
+	}
 
-    /// Send a string value.
-    T operator<<(const std::string& s)
-    {
-        b.mapStringItem(name, s);
-        return T(b);
-    }
+	/// Send a double value.
+	T operator<<(double d) {
+		b.mapFloatItem(name, d);
+		return T(b);
+	}
 
-    /// If the encoder supports it, send any kind of value.
-    template<typename Arg>
-    T operator<<(const Arg& a)
-    {
-        b.mapItem(name, a);
-        return T(b);
-    }
+	/// Send a string value.
+	T operator<<(const std::string& s) {
+		b.mapStringItem(name, s);
+		return T(b);
+	}
+
+	/// If the encoder supports it, send any kind of value.
+	template<typename Arg>
+	T operator<<(const Arg& a) {
+		b.mapItem(name, a);
+		return T(b);
+	}
 
 protected:
-    /// The bridge or encoder that is written to.
-    B& b;
-    /// The name of this item
-    std::string name;
+	/// The bridge or encoder that is written to.
+	B& b;
+	/// The name of this item
+	std::string name;
 };
 
 /** Encoder in Map state
@@ -155,24 +168,22 @@ protected:
 template<class B, class T>
 class EncMap {
 public:
-    EncMap(B& b) : b(b) { }
+	EncMap(B& b) : b(b) {}
 
-    /// Start a value with its name
-    EncMapValue< B, EncMap<B, T> > operator<<(const std::string& name)
-    {
-        return EncMapValue< B, EncMap<B, T> >(b, name);
-    }
+	/// Start a value with its name
+	EncMapValue<B, EncMap<B, T> > operator<<(const std::string& name) {
+		return EncMapValue<B, EncMap<B, T> >(b, name);
+	}
 
-    /// End this map
-    T operator<<(EndMap)
-    {
-        b.mapEnd();
-        return T(b);
-    }
-    
+	/// End this map
+	T operator<<(EndMap) {
+		b.mapEnd();
+		return T(b);
+	}
+
 protected:
-    /// The bridge or encoder that is written to.
-    B& b;
+	/// The bridge or encoder that is written to.
+	B& b;
 };
 
 /** Encoder in List state
@@ -183,61 +194,54 @@ protected:
 template<class B, class T>
 class EncList {
 public:
-    EncList(B& b) : b(b) { }
+	EncList(B& b) : b(b) {}
 
-    /// Start a map.
-    EncMap<B, EncList<B, T> > operator<<(const BeginMap&)
-    {
-        b.listMapItem();
-        return EncMap<B, EncList<B, T> >(b);
-    }
+	/// Start a map.
+	EncMap<B, EncList<B, T> > operator<<(const BeginMap&) {
+		b.listMapItem();
+		return EncMap<B, EncList<B, T> >(b);
+	}
 
-    /// Start a list.
-    EncList<B, EncList<B, T> > operator<<(const BeginList&)
-    {
-        b.listListItem();
-        return EncList<B, EncList<B, T> >(b);
-    }
+	/// Start a list.
+	EncList<B, EncList<B, T> > operator<<(const BeginList&) {
+		b.listListItem();
+		return EncList<B, EncList<B, T> >(b);
+	}
 
-    /// Send an integer value.
-    EncList<B, T> operator<<(std::int64_t i)
-    {
-        b.listIntItem(i);
-        return *this;
-    }
+	/// Send an integer value.
+	EncList<B, T> operator<<(std::int64_t i) {
+		b.listIntItem(i);
+		return *this;
+	}
 
-    /// Send a double value.
-    EncList<B, T> operator<<(double d)
-    {
-        b.listFloatItem(d);
-        return *this;
-    }
+	/// Send a double value.
+	EncList<B, T> operator<<(double d) {
+		b.listFloatItem(d);
+		return *this;
+	}
 
-    /// Send a string value.
-    EncList<B, T> operator<<(const std::string& s)
-    {
-        b.listStringItem(s);
-        return *this;
-    }
+	/// Send a string value.
+	EncList<B, T> operator<<(const std::string& s) {
+		b.listStringItem(s);
+		return *this;
+	}
 
-    /// If the encoder supports it, send any kind of value.
-    template<typename Arg>
-    EncList<B, T> operator<<(const Arg& a)
-    {
-        b.listItem(a);
-        return *this;
-    }
-    
-    /// End this list.
-    T operator<<(EndList)
-    {
-        b.listEnd();
-        return T(b);
-    }
-    
+	/// If the encoder supports it, send any kind of value.
+	template<typename Arg>
+	EncList<B, T> operator<<(const Arg& a) {
+		b.listItem(a);
+		return *this;
+	}
+
+	/// End this list.
+	T operator<<(EndList) {
+		b.listEnd();
+		return T(b);
+	}
+
 protected:
-    /// The bridge or encoder that is written to.
-    B& b;
+	/// The bridge or encoder that is written to.
+	B& b;
 };
 
 /** The root encoder in "stream" state.
@@ -245,29 +249,27 @@ protected:
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-template <class B>
-class FunkyEncoder
-{
+template<class B>
+class FunkyEncoder {
 public:
-    FunkyEncoder(B& b) : b(b) { }
-    
-    /// Start a message (as a map).
-    EncMap<B, FunkyEncoder> operator<<(const BeginMap&) {
-        b.streamMessage();
-        return EncMap<B, FunkyEncoder>(b);
-    }
+	FunkyEncoder(B& b) : b(b) {}
 
-    /// If the encoder supports it, send a different kind of message.
-    template<typename Arg>
-    FunkyEncoder<B> operator<<(const Arg& a)
-    {
-        b.streamObjectsMessage(a);
-        return *this;
-    }
+	/// Start a message (as a map).
+	EncMap<B, FunkyEncoder> operator<<(const BeginMap&) {
+		b.streamMessage();
+		return EncMap<B, FunkyEncoder>(b);
+	}
+
+	/// If the encoder supports it, send a different kind of message.
+	template<typename Arg>
+	FunkyEncoder<B> operator<<(const Arg& a) {
+		b.streamObjectsMessage(a);
+		return *this;
+	}
 
 protected:
-    /// The bridge or encoder that is written to.
-    B& b;
+	/// The bridge or encoder that is written to.
+	B& b;
 };
 
 /** Tokens representing beginnings and ends of maps/lists.
@@ -279,13 +281,14 @@ protected:
  */
 class Tokens {
 public:
-    static BeginMap begin_map;
-    static EndMap end_map;
-    static BeginList begin_list;
-    static EndList end_list;
+	static BeginMap begin_map;
+	static EndMap end_map;
+	static BeginList begin_list;
+	static EndList end_list;
 };
 
 
-} } // Atlas::Funky namespace
+}
+} // Atlas::Funky namespace
 
 #endif

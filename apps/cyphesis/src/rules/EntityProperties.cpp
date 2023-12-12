@@ -27,39 +27,36 @@ using Atlas::Message::ListType;
 using Atlas::Objects::Entity::RootEntity;
 
 template<>
-int Property<IdList>::get(Element & e) const
-{
-    e = Atlas::Message::ListType();
-    idListasObject(m_data, e.asList());
-    return 0;
+int Property<IdList>::get(Element& e) const {
+	e = Atlas::Message::ListType();
+	idListasObject(m_data, e.asList());
+	return 0;
 }
 
 template<>
-void Property<IdList>::set(const Element & e)
-{
-    if (e.isList()) {
-        if (idListFromAtlas(e.asList(), this->m_data) != 0) {
-            this->m_data.clear();
-        }
-    }
+void Property<IdList>::set(const Element& e) {
+	if (e.isList()) {
+		if (idListFromAtlas(e.asList(), this->m_data) != 0) {
+			this->m_data.clear();
+		}
+	}
 }
 
 template<>
-void Property<IdList>::add(const std::string & s, MapType & ent) const
-{
-    if (!m_data.empty()) {
-        get(ent[s]);
-    }
+void Property<IdList>::add(const std::string& s, MapType& ent) const {
+	if (!m_data.empty()) {
+		get(ent[s]);
+	}
 }
 
 template<>
-void Property<IdList>::add(const std::string & s, const RootEntity & ent) const
-{
-    if (!m_data.empty()) {
-        ListType list;
-        idListasObject(m_data, list);
-        ent->setAttr(s, list);
-    }
+void Property<IdList>::add(const std::string& s, const RootEntity& ent) const {
+	if (!m_data.empty()) {
+		ListType list;
+		idListasObject(m_data, list);
+		ent->setAttr(s, list);
+	}
 }
 
-template class Property<IdList>;
+template
+class Property<IdList>;

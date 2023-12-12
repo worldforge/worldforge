@@ -20,25 +20,21 @@
 
 Atlas::Objects::Factories factories;
 
-namespace Ember
-{
+namespace Ember {
 
-class FrameworkTestCase: public CppUnit::TestFixture
-{
-CPPUNIT_TEST_SUITE(FrameworkTestCase);
+class FrameworkTestCase : public CppUnit::TestFixture {
+	CPPUNIT_TEST_SUITE(FrameworkTestCase);
 	CPPUNIT_TEST(testTinyXmlCodec);
 
-	CPPUNIT_TEST_SUITE_END()
-	;
+	CPPUNIT_TEST_SUITE_END();
 
 public:
-	void testTinyXmlCodec()
-	{
+	void testTinyXmlCodec() {
 		TiXmlDocument xmlDoc;
 		bool result = xmlDoc.LoadFile(std::string(SRCDIR) + "/atlas.xml", TIXML_DEFAULT_ENCODING);
 		CPPUNIT_ASSERT(result);
 
-		std::map<std::string, Atlas::Objects::Root> messages;
+		std::map <std::string, Atlas::Objects::Root> messages;
 
 		{
 			AtlasMessageLoader loader(factories, messages);
@@ -80,10 +76,9 @@ public:
 
 CPPUNIT_TEST_SUITE_REGISTRATION( Ember::FrameworkTestCase);
 
-int main(int argc, char **argv)
-{
+int main(int argc, char** argv) {
 	CppUnit::TextUi::TestRunner runner;
-	CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
+	CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	runner.addTest(registry.makeTest());
 
 	// Shows a message as each test starts

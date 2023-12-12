@@ -35,40 +35,40 @@
  * Deleting a stackable entity will decrease it's "amount" by one, or by a value specified in the "amount"
  * attribute in the Delete ops first arg.
  */
-class StackableDomain : public Domain
-{
-    public:
-        explicit StackableDomain(LocatedEntity& entity);
+class StackableDomain : public Domain {
+public:
+	explicit StackableDomain(LocatedEntity& entity);
 
-        ~StackableDomain() override = default;
+	~StackableDomain() override = default;
 
-        bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
+	bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
 
-        void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
+	void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
 
-        std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
+	std::vector<LocatedEntity*> getObservingEntitiesFor(const LocatedEntity& observedEntity) const override;
 
-        void addEntity(LocatedEntity& entity) override;
+	void addEntity(LocatedEntity& entity) override;
 
-        void removeEntity(LocatedEntity& entity) override;
+	void removeEntity(LocatedEntity& entity) override;
 
-        bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
-        void installDelegates(LocatedEntity& entity, const std::string& propertyName) override;
+	void installDelegates(LocatedEntity& entity, const std::string& propertyName) override;
 
-        HandlerResult operation(LocatedEntity& entity, const Operation& op, OpVector& res) override;
+	HandlerResult operation(LocatedEntity& entity, const Operation& op, OpVector& res) override;
 
-        static bool checkEntitiesStackable(const LocatedEntity& first, const LocatedEntity& second);
+	static bool checkEntitiesStackable(const LocatedEntity& first, const LocatedEntity& second);
 
-        static bool stackIfPossible(const LocatedEntity& domainEntity, LocatedEntity& entity);
+	static bool stackIfPossible(const LocatedEntity& domainEntity, LocatedEntity& entity);
 
-        boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
+	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 
-    protected:
-        static std::vector<std::string> sIgnoredProps;
+protected:
+	static std::vector<std::string> sIgnoredProps;
 
-        HandlerResult DeleteOperation(LocatedEntity& owner, const Operation& op, OpVector& res);
-        HandlerResult MoveOperation(LocatedEntity& owner, const Operation& op, OpVector& res);
+	HandlerResult DeleteOperation(LocatedEntity& owner, const Operation& op, OpVector& res);
+
+	HandlerResult MoveOperation(LocatedEntity& owner, const Operation& op, OpVector& res);
 };
 
 

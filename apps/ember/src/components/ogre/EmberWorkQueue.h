@@ -24,8 +24,8 @@
 
 #include <set>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * A specialization of the default Ogre Workqueue which uses the Eris EventService for
@@ -54,5 +54,5 @@ private:
 };
 
 }
-}
+
 #endif //EMBER_EMBERWORKQUEUE_H

@@ -31,30 +31,33 @@ class PythonContext;
 /// \brief Handle an internet socket connected to a remote python commandline.
 /// \ingroup ServerSockets
 class CommPythonClient : public std::enable_shared_from_this<CommPythonClient> {
-  protected:
+protected:
 
-    boost::asio::local::stream_protocol::socket mSocket;
+	boost::asio::local::stream_protocol::socket mSocket;
 
-    /**
-     * \brief Receiving buffer.
-     *
-     * Note that std::array isn't used to keep compatibility with older versions of boost.
-     */
-    boost::array<char, 256> mBuffer;
+	/**
+	 * \brief Receiving buffer.
+	 *
+	 * Note that std::array isn't used to keep compatibility with older versions of boost.
+	 */
+	boost::array<char, 256> mBuffer;
 
-    std::unique_ptr<PythonContext> m_pyContext;
-    std::string m_incoming;
+	std::unique_ptr<PythonContext> m_pyContext;
+	std::string m_incoming;
 
-    void read(size_t bytes);
-    void do_read();
+	void read(size_t bytes);
 
-  public:
-    CommPythonClient(const std::string & name,
-            boost::asio::io_context& io_context);
-    virtual ~CommPythonClient();
+	void do_read();
 
-    void startAccept();
-    boost::asio::local::stream_protocol::socket& getSocket();
+public:
+	CommPythonClient(const std::string& name,
+					 boost::asio::io_context& io_context);
+
+	virtual ~CommPythonClient();
+
+	void startAccept();
+
+	boost::asio::local::stream_protocol::socket& getSocket();
 };
 
 #endif // SERVER_COMM_PYTHON_CLIENT_H

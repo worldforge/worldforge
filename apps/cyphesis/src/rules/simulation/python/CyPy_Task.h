@@ -27,49 +27,48 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Task : public WrapperBase<Ref<Task>, CyPy_Task>
-{
-    public:
-        CyPy_Task(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Task : public WrapperBase<Ref<Task>, CyPy_Task> {
+public:
+	CyPy_Task(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Task(Py::PythonClassInstance* self, Ref<Task> value);
+	CyPy_Task(Py::PythonClassInstance* self, Ref<Task> value);
 
-        ~CyPy_Task() override;
+	~CyPy_Task() override;
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-        Py::Object irrelevant(const Py::Tuple& args);
+	Py::Object irrelevant(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Task, irrelevant);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Task, irrelevant);
 
-        Py::Object start_action(const Py::Tuple& args);
+	Py::Object start_action(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Task, start_action);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Task, start_action);
 
-        Py::Object stop_action(const Py::Tuple& args);
+	Py::Object stop_action(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Task, stop_action);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Task, stop_action);
 
-        Py::Object obsolete();
+	Py::Object obsolete();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Task, obsolete);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Task, obsolete);
 
-        Py::Object rich_compare(const Py::Object& other, int type) override;
+	Py::Object rich_compare(const Py::Object& other, int type) override;
 
-        Py::Object getArg(const Py::Tuple& args);
+	Py::Object getArg(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Task, getArg);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Task, getArg);
 
-        /**
-         * Allow storing random Python objects in the "temporaries" map.
-         * Otherwise only Atlas::Message::Element types are allowed to be stored.
-         * This is meant to be used for instance specific temporary data which can be recreated at instance creation time.
-         */
-        Py::Dict mTemporaries;
+	/**
+	 * Allow storing random Python objects in the "temporaries" map.
+	 * Otherwise only Atlas::Message::Element types are allowed to be stored.
+	 * This is meant to be used for instance specific temporary data which can be recreated at instance creation time.
+	 */
+	Py::Dict mTemporaries;
 
 };
 

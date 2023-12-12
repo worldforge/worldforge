@@ -33,20 +33,15 @@
 #include <string>
 #include <boost/filesystem/path.hpp>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Lod
-{
+
+namespace Ember::OgreView::Lod {
 
 /**
  * @brief LodDefinitionManager is managing all *.loddef resource files.
  */
 class LodDefinitionManager :
-	public Ember::Singleton<LodDefinitionManager>,
-	public Ogre::ResourceManager
-{
+		public Ember::Singleton<LodDefinitionManager>,
+		public Ogre::ResourceManager {
 public:
 	/**
 	 * @brief Ctor.
@@ -61,9 +56,9 @@ public:
 
 	/// Create a new LodDefinition
 	/// @see ResourceManager::createResource
-	LodDefinitionPtr create (const Ogre::String& name, const Ogre::String& group,
-			bool isManual = false, Ogre::ManualResourceLoader* loader = 0,
-			const Ogre::NameValuePairList* createParams = 0);
+	LodDefinitionPtr create(const Ogre::String& name, const Ogre::String& group,
+							bool isManual = false, Ogre::ManualResourceLoader* loader = nullptr,
+							const Ogre::NameValuePairList* createParams = nullptr);
 
 	/**
 	 * @brief Instantiates the LodDefinition. Parameters are passed directly to LodDefinition ctor.
@@ -71,8 +66,8 @@ public:
 	 * This is called from Ogre::ResourceManager. You should not call this!
 	 */
 	Ogre::Resource* createImpl(const Ogre::String& name, Ogre::ResourceHandle handle,
-	                           const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader,
-	                           const Ogre::NameValuePairList* createParams) override;
+							   const Ogre::String& group, bool isManual, Ogre::ManualResourceLoader* loader,
+							   const Ogre::NameValuePairList* createParams) override;
 
 	/// Get a LodDefinition by name
 	/// @see ResourceManager::getResourceByName
@@ -88,7 +83,7 @@ public:
 	 * @param definition The definition to export.
 	 * @return The path to the exported script. If the export failed, the string will be empty.
 	 */
-	void exportScript(std::string meshName, LodDefinitionPtr definition);
+	void exportScript(std::string meshName, const LodDefinitionPtr& definition);
 
 	/**
 	 * @brief Returns an instance of the default Serializer.
@@ -99,12 +94,11 @@ private:
 	const XMLLodDefinitionSerializer mLodDefinitionSerializer;
 };
 
-inline const XMLLodDefinitionSerializer& LodDefinitionManager::getSerializer() const
-{
+inline const XMLLodDefinitionSerializer& LodDefinitionManager::getSerializer() const {
 	return mLodDefinitionSerializer;
 }
 
 }
-}
-}
+
+
 #endif // ifndef LODDEFINITIONMANAGER_H

@@ -45,202 +45,194 @@ static bool stub_generate_accounts = false;
 
 #include "../TestWorld.h"
 
-class TestRouter : public ConnectableRouter
-{
-    public:
-        TestRouter(RouterId id) : ConnectableRouter(id)
-        {}
+class TestRouter : public ConnectableRouter {
+public:
+	TestRouter(RouterId id) : ConnectableRouter(id) {}
 
-        void externalOperation(const Operation&, Link&) override
-        {}
+	void externalOperation(const Operation&, Link&) override {}
 
-        void operation(const Operation&, OpVector&) override
-        {}
+	void operation(const Operation&, OpVector&) override {}
 
-        void setConnection(Connection* connection) override
-        {}
+	void setConnection(Connection* connection) override {}
 
-        Connection* getConnection() const override
-        {
-            return nullptr;
-        }
+	Connection* getConnection() const override {
+		return nullptr;
+	}
 };
 
-class TestAccount : public Account
-{
-    public:
-        TestAccount(Connection* conn, const std::string& username,
-                    const std::string& passwd,
-                    RouterId id) :
-            Account(conn, username, passwd, std::move(id))
-        {
-        }
+class TestAccount : public Account {
+public:
+	TestAccount(Connection* conn, const std::string& username,
+				const std::string& passwd,
+				RouterId id) :
+			Account(conn, username, passwd, std::move(id)) {
+	}
 
-        virtual int characterError(const Operation& op,
-                                   const Atlas::Objects::Root& ent,
-                                   OpVector& res) const
-        {
-            return 0;
-        }
+	virtual int characterError(const Operation& op,
+							   const Atlas::Objects::Root& ent,
+							   OpVector& res) const {
+		return 0;
+	}
 };
 
-int main()
-{
-    TestWorld world;
+int main() {
+	TestWorld world;
 
-    std::string ruleset = "test_rules";
-    std::string server_name = "test_svr";
-    auto lobbyId = newId();
+	std::string ruleset = "test_rules";
+	std::string server_name = "test_svr";
+	auto lobbyId = newId();
 
-    if (!lobbyId.isValid()) {
-        std::cerr << "Unable to get server IDs newid";
-        return 1;
-    }
+	if (!lobbyId.isValid()) {
+		std::cerr << "Unable to get server IDs newid";
+		return 1;
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
-    }
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        server.addRouter(std::make_unique<TestRouter>(id));
-        assert(server.getObjects().size() == 1);
-    }
+		server.addRouter(std::make_unique<TestRouter>(id));
+		assert(server.getObjects().size() == 1);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        auto r = new TestRouter(id);
-        server.addRouter(std::unique_ptr<TestRouter>(r));
-        assert(server.getObjects().size() == 1);
-    }
+		auto r = new TestRouter(id);
+		server.addRouter(std::unique_ptr<TestRouter>(r));
+		assert(server.getObjects().size() == 1);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        auto id2 = newId();
+		auto id2 = newId();
 
-        ConnectableRouter* r = new TestRouter(id);
-        server.addRouter(std::unique_ptr<ConnectableRouter>(r));
-        assert(server.getObjects().size() == 1);
+		ConnectableRouter* r = new TestRouter(id);
+		server.addRouter(std::unique_ptr<ConnectableRouter>(r));
+		assert(server.getObjects().size() == 1);
 
-        ConnectableRouter* r2 = server.getObject(id.m_id);
-        assert(r == r2);
+		ConnectableRouter* r2 = server.getObject(id.m_id);
+		assert(r == r2);
 
-        r2 = server.getObject(id2.m_id);
-        assert(nullptr == r2);
-    }
+		r2 = server.getObject(id2.m_id);
+		assert(nullptr == r2);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        server.addAccount(std::make_unique<TestAccount>(nullptr, "bob", "", id));
-        assert(server.getObjects().size() == 1);
-    }
+		server.addAccount(std::make_unique<TestAccount>(nullptr, "bob", "", id));
+		assert(server.getObjects().size() == 1);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        Account* ac = new TestAccount(0, "bob", "", id);
-        server.addAccount(std::unique_ptr<Account>(ac));
-        assert(server.getObjects().size() == 1);
-        Account* rac = server.getAccountByName("bob");
-        assert(rac == ac);
-    }
+		Account* ac = new TestAccount(0, "bob", "", id);
+		server.addAccount(std::unique_ptr<Account>(ac));
+		assert(server.getObjects().size() == 1);
+		Account* rac = server.getAccountByName("bob");
+		assert(rac == ac);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
 
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        Account* ac = new TestAccount(0, "bob", "", id);
-        server.addAccount(std::unique_ptr<Account>(ac));
-        assert(server.getObjects().size() == 1);
-        Account* rac = server.getAccountByName("alice");
-        assert(rac == 0);
-    }
+		Account* ac = new TestAccount(0, "bob", "", id);
+		server.addAccount(std::unique_ptr<Account>(ac));
+		assert(server.getObjects().size() == 1);
+		Account* rac = server.getAccountByName("alice");
+		assert(rac == 0);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        Account* rac = server.getAccountByName("alice");
-        assert(rac == 0);
-    }
+		Account* rac = server.getAccountByName("alice");
+		assert(rac == 0);
+	}
 
-    {
-        stub_generate_accounts = true;
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		stub_generate_accounts = true;
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        auto id = newId();
-        assert(id.isValid());
+		auto id = newId();
+		assert(id.isValid());
 
-        Account* rac = server.getAccountByName("alice");
-        assert(rac != 0);
-    }
+		Account* rac = server.getAccountByName("alice");
+		assert(rac != 0);
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        Atlas::Message::MapType map;
-        server.addToMessage(map);
-        restricted_flag = true;
-        server.addToMessage(map);
-        restricted_flag = false;
-    }
+		Atlas::Message::MapType map;
+		server.addToMessage(map);
+		restricted_flag = true;
+		server.addToMessage(map);
+		restricted_flag = false;
+	}
 
-    {
-        DatabaseNull database;
-        Persistence persistence(database);
-        ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
+	{
+		DatabaseNull database;
+		Persistence persistence(database);
+		ServerRouting server(world, persistence, ruleset, server_name, lobbyId);
 
-        Atlas::Objects::Entity::Anonymous ent;
-        server.addToEntity(ent);
-        restricted_flag = true;
-        server.addToEntity(ent);
-        restricted_flag = false;
-    }
+		Atlas::Objects::Entity::Anonymous ent;
+		server.addToEntity(ent);
+		restricted_flag = true;
+		server.addToEntity(ent);
+		restricted_flag = false;
+	}
 
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -262,16 +254,15 @@ int main()
 
 #define STUB_Persistence_getAccount
 
-std::unique_ptr<Account> Persistence::getAccount(const std::string& name)
-{
-    if (!stub_generate_accounts) {
-        return 0;
-    }
+std::unique_ptr<Account> Persistence::getAccount(const std::string& name) {
+	if (!stub_generate_accounts) {
+		return 0;
+	}
 
-    auto id = newId();
-    assert(id.isValid());
+	auto id = newId();
+	assert(id.isValid());
 
-    return std::make_unique<TestAccount>(nullptr, name, "", id);
+	return std::make_unique<TestAccount>(nullptr, name, "", id);
 }
 
 #include "../stubs/server/stubPersistence.h"
@@ -283,10 +274,9 @@ std::unique_ptr<Account> Persistence::getAccount(const std::string& name)
 #include "../stubs/server/stubBuildid.h"
 
 bool_config_register::bool_config_register(bool& var,
-                                           const char* section,
-                                           const char* setting,
-                                           const char* help)
-{
+										   const char* section,
+										   const char* setting,
+										   const char* help) {
 }
 
 #include "../stubs/common/stubRouter.h"
@@ -294,20 +284,18 @@ bool_config_register::bool_config_register(bool& var,
 #ifndef STUB_BaseWorld_getEntity
 #define STUB_BaseWorld_getEntity
 
-Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const
-{
-    return getEntity(integerId(id));
+Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
+	return getEntity(integerId(id));
 }
 
-Ref<LocatedEntity> BaseWorld::getEntity(long id) const
-{
-    auto I = m_eobjects.find(id);
-    if (I != m_eobjects.end()) {
-        assert(I->second);
-        return I->second;
-    } else {
-        return nullptr;
-    }
+Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
+	auto I = m_eobjects.find(id);
+	if (I != m_eobjects.end()) {
+		assert(I->second);
+		return I->second;
+	} else {
+		return nullptr;
+	}
 }
 
 #endif //STUB_BaseWorld_getEntity
@@ -328,11 +316,9 @@ std::string assets_directory = "";
 
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

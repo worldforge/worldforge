@@ -2,11 +2,11 @@
  * @file This header is defining startup symbols and calls the main automatically.
  */
 
-#ifndef _MAINWRAPPER_H
-#define _MAINWRAPPER_H
+#ifndef MAINWRAPPER_H
+#define MAINWRAPPER_H
 
 extern "C"
-int main (int argc, char* argv[]);
+int main(int argc, char* argv[]);
 
 #ifdef _MSC_VER
 //include these for __argc and __argv variables.

@@ -52,16 +52,14 @@ class Connection;
 class Entity;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
-namespace Adapters {
-namespace Eris {
+
+namespace Adapters::Eris {
 class RuleTreeAdapter;
 }
-}
+
 
 class ModelRenderer;
 
@@ -139,7 +137,5 @@ protected:
 };
 }
 
-}
-}
 
 #endif

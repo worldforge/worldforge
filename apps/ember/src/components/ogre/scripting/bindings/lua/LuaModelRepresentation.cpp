@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Model;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<ModelRepresentation>(sol::table& space) {
 	auto modelRepresentation = space.new_usertype<ModelRepresentation>("ModelRepresentation", sol::no_constructor);
 	modelRepresentation["getTypeNameForClass"] = &ModelRepresentation::getTypeNameForClass;

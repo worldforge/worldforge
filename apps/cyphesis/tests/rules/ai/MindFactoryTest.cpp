@@ -29,15 +29,14 @@
 
 #include <cassert>
 
-int main()
-{
-    MindFactory * mf = new MindFactory;
+int main() {
+	MindFactory* mf = new MindFactory;
 
-    mf->newMind(1);
+	mf->newMind(1);
 
-    mf->newMind(2);
+	mf->newMind(2);
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -49,10 +48,8 @@ int main()
 #include "../../stubs/common/stubRouter.h"
 #include "../../stubs/rules/stubLocation.h"
 
-void WorldTime::initTimeInfo()
-{
+void WorldTime::initTimeInfo() {
 }
 
-DateTime::DateTime(int t)
-{
+DateTime::DateTime(int t) {
 }

@@ -35,9 +35,8 @@
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Camera {
+
+namespace Ember::OgreView::Camera {
 
 ThirdPersonCameraMount::ThirdPersonCameraMount(const CameraSettings& cameraSettings, Scene& scene, Terrain::ITerrainAdapter& terrainAdapter) :
 		CameraMountBase(cameraSettings),
@@ -236,5 +235,5 @@ void ThirdPersonCameraMount::update() {
 }
 
 }
-}
-}
+
+

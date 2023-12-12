@@ -31,21 +31,20 @@
 using Atlas::Objects::Root;
 
 /// \brief Called from the base class when a complete message has been decoded
-void AtlasFileLoader::objectArrived(Root obj)
-{
-    if (obj->isDefaultId()) {
-        spdlog::error("Object without ID read from file {}", m_filename);
-        std::stringstream ss;
-        debug_dump(obj, ss);
-        spdlog::error("Object: " + ss.str());
-        return;
-    }
-    const std::string& id = obj->getId();
-    if (m_messages.find(id) != m_messages.end()) {
-        spdlog::warn("Duplicate object ID \"{}\" loaded from file {}.", id, m_filename);
-    }
-    m_messages[id] = std::move(obj);
-    ++m_count;
+void AtlasFileLoader::objectArrived(Root obj) {
+	if (obj->isDefaultId()) {
+		spdlog::error("Object without ID read from file {}", m_filename);
+		std::stringstream ss;
+		debug_dump(obj, ss);
+		spdlog::error("Object: " + ss.str());
+		return;
+	}
+	const std::string& id = obj->getId();
+	if (m_messages.find(id) != m_messages.end()) {
+		spdlog::warn("Duplicate object ID \"{}\" loaded from file {}.", id, m_filename);
+	}
+	m_messages[id] = std::move(obj);
+	++m_count;
 }
 
 /// \brief AtlasFileLoader constructor
@@ -53,28 +52,25 @@ void AtlasFileLoader::objectArrived(Root obj)
 /// @param filename Name of the file to be loaded
 /// @param m Data store for the data loaded from the file
 AtlasFileLoader::AtlasFileLoader(const Atlas::Objects::Factories& factories,
-                                 const std::string& filename,
-                                 std::map<std::string, Root>& m) :
-    ObjectsDecoder(factories),
-    m_file(filename.c_str(), std::ios::in),
-    m_count(0), m_messages(m), m_filename(filename)
-{
-    m_codec = std::make_unique<Atlas::Codecs::XML>(m_file, m_file, *this);
+								 const std::string& filename,
+								 std::map<std::string, Root>& m) :
+		ObjectsDecoder(factories),
+		m_file(filename.c_str(), std::ios::in),
+		m_count(0), m_messages(m), m_filename(filename) {
+	m_codec = std::make_unique<Atlas::Codecs::XML>(m_file, m_file, *this);
 }
 
 AtlasFileLoader::~AtlasFileLoader() = default;
 
 /// Indicate if the input file has been opened successfully
-bool AtlasFileLoader::isOpen()
-{
-    return m_file.is_open();
+bool AtlasFileLoader::isOpen() {
+	return m_file.is_open();
 }
 
 /// Read input file to atlas codec.
-void AtlasFileLoader::read()
-{
-    while (!m_file.eof()) {
-        m_codec->poll();
-    }
+void AtlasFileLoader::read() {
+	while (!m_file.eof()) {
+		m_codec->poll();
+	}
 }
 

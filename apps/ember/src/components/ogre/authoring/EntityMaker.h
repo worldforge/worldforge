@@ -22,17 +22,18 @@
 #include "framework/ConsoleCommandWrapper.h"
 #include "framework/ConsoleObject.h"
 
-namespace Eris
-{
+namespace Eris {
 class TypeInfo;
+
 class Connection;
+
 class Entity;
+
 class Avatar;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+namespace Ember::OgreView::Authoring {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -41,8 +42,7 @@ namespace Authoring {
  * The entity will be created in front of the avatar.
  *
  */
-class EntityMaker : public ConsoleObject
-{
+class EntityMaker : public ConsoleObject {
 public:
 
 	/**
@@ -57,7 +57,7 @@ public:
 	 */
 	~EntityMaker() override = default;
 
-	void runCommand(const std::string &command, const std::string &args) override;
+	void runCommand(const std::string& command, const std::string& args) override;
 
 	/**
 	 * @brief Console command "/createentity <entitytype>".
@@ -103,6 +103,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif /* ENTITYMAKER_H_ */

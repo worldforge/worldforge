@@ -37,15 +37,12 @@
 #endif
 #endif
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 long long int OgreInfo::sResourceCounter(1);
 
-bool OgreInfo::isIndirect()
-{
+bool OgreInfo::isIndirect() {
 #ifdef WIN32
 	//TODO: add checks for win32 too
 	return false;
@@ -62,8 +59,7 @@ bool OgreInfo::isIndirect()
 
 }
 
-std::string OgreInfo::createUniqueResourceName(const std::string& resourceName)
-{
+std::string OgreInfo::createUniqueResourceName(const std::string& resourceName) {
 	std::stringstream ss;
 	ss << resourceName << "_" << sResourceCounter++;
 	return ss.str();
@@ -78,15 +74,15 @@ unsigned int countNodes(Ogre::Node* node) {
 	return counter;
 }
 }
-void OgreInfo::diagnose(std::ostream& outputStream)
-{
-	for (const auto& sceneManagerEntry : Ogre::Root::getSingleton().getSceneManagers()) {
+
+void OgreInfo::diagnose(std::ostream& outputStream) {
+	for (const auto& sceneManagerEntry: Ogre::Root::getSingleton().getSceneManagers()) {
 		Ogre::SceneManager* sceneManager = sceneManagerEntry.second;
 		outputStream << "Scenemanager(" << sceneManager->getTypeName() << ") " << sceneManager->getName() << std::endl;
 		outputStream << " Number of scene nodes: " << countNodes(sceneManager->getRootSceneNode()) << std::endl;
 		outputStream << " Movable objects:" << std::endl;
 		unsigned int movableObjectCounter = 0;
-		for (auto& movableFactoryEntry : Ogre::Root::getSingleton().getMovableObjectFactories()) {
+		for (auto& movableFactoryEntry: Ogre::Root::getSingleton().getMovableObjectFactories()) {
 			Ogre::MovableObjectFactory* factory = movableFactoryEntry.second;
 			const std::string& type = factory->getType();
 			{
@@ -116,7 +112,7 @@ void OgreInfo::diagnose(std::ostream& outputStream)
 
 		outputStream << " Cameras:" << std::endl;
 		{
-			for (const auto& entry : sceneManager->getCameras()) {
+			for (const auto& entry: sceneManager->getCameras()) {
 				Ogre::Camera* camera = entry.second;
 				outputStream << "  Camera " << camera->getName() << "(" << (camera->isInScene() ? "in scene" : "not in scene") << ")" << std::endl;
 				outputStream << "  Pos: " << camera->getDerivedPosition() << std::endl;
@@ -129,7 +125,7 @@ void OgreInfo::diagnose(std::ostream& outputStream)
 
 	size_t resourceMemoryUsage = 0;
 	outputStream << "Resource Managers:" << std::endl;
-	for (auto& entry : Ogre::ResourceGroupManager::getSingleton().getResourceManagers()) {
+	for (auto& entry: Ogre::ResourceGroupManager::getSingleton().getResourceManagers()) {
 		auto& name = entry.first;
 		Ogre::ResourceManager* manager = entry.second;
 		outputStream << " Resource Manager: " << name << std::endl;
@@ -171,4 +167,4 @@ void OgreInfo::diagnose(std::ostream& outputStream)
 }
 
 }
-}
+

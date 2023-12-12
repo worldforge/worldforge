@@ -23,7 +23,7 @@
  *            189 Reese St.
  *            Old Forge, PA 18518
  */
- 
+
 #include "parse_error.h"
 
 #include <iostream>
@@ -33,16 +33,15 @@ namespace {
 std::string compose(const std::string& exp, int line, int col) {
 	std::stringstream ss;
 	ss << "ParseError: Expected " << exp << " at line " << line
-		  << ", column " << col << ".";
+	   << ", column " << col << ".";
 	return ss.str();
 }
 }
 
 namespace varconf {
 
-ParseError::ParseError( const std::string& exp, int line, int col)
-: std::runtime_error(compose(exp, line, col))
-{
+ParseError::ParseError(const std::string& exp, int line, int col)
+		: std::runtime_error(compose(exp, line, col)) {
 }
 
 ParseError::~ParseError() = default;

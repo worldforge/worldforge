@@ -60,18 +60,17 @@ LoggedInState::LoggedInState(IState& parentState, Eris::Account& account) :
 LoggedInState::~LoggedInState() = default;
 
 void LoggedInState::checkTransfer() {
-	TransferInfoStringSerializer serializer;
 	auto teleportFilePath = ConfigService::getSingleton().getHomeDirectory(BaseDirType_DATA) / "teleports";
 	std::fstream teleportsFile(teleportFilePath.c_str(), std::ios_base::in);
 	TransferInfoStringSerializer::TransferInfoStore transferObjects;
 	if (teleportsFile.good()) {
-		serializer.deserialize(transferObjects, teleportsFile);
+		TransferInfoStringSerializer::deserialize(transferObjects, teleportsFile);
 	}
 	teleportsFile.close();
 
 	mTransferInfos.clear();
 
-	for (const auto& avatarTransferInfo : transferObjects) {
+	for (const auto& avatarTransferInfo: transferObjects) {
 		const Eris::TransferInfo& transferInfo(avatarTransferInfo.getTransferInfo());
 		if (transferInfo.getHost() == mAccount.getConnection().getHost() && transferInfo.getPort() == mAccount.getConnection().getPort()) {
 			mTransferInfos.push_back(avatarTransferInfo);
@@ -114,7 +113,7 @@ void LoggedInState::gotAvatarSuccess(Eris::Avatar* avatar) {
 	//First check if there are any transfer infos for this server, and if this login operation means that one of them successfully has been used.
 	//If so, it should be removed from the persistent storage.
 	if (!mTransferInfos.empty()) {
-		for (auto& info : mTransferInfos) {
+		for (auto& info: mTransferInfos) {
 			if (info.getTransferInfo().getPossessEntityId() == avatar->getEntity()->getId()) {
 				removeTransferInfo(info);
 
@@ -130,12 +129,11 @@ void LoggedInState::gotAvatarSuccess(Eris::Avatar* avatar) {
 }
 
 void LoggedInState::removeTransferInfo(const AvatarTransferInfo& transferInfo) {
-	TransferInfoStringSerializer serializer;
 	auto teleportFilePath = ConfigService::getSingleton().getHomeDirectory(BaseDirType_DATA) / "teleports";
 	std::fstream teleportsFile(teleportFilePath.c_str(), std::ios_base::in);
 	TransferInfoStringSerializer::TransferInfoStore transferObjects;
 	if (teleportsFile.good()) {
-		serializer.deserialize(transferObjects, teleportsFile);
+		TransferInfoStringSerializer::deserialize(transferObjects, teleportsFile);
 	} else {
 		return;
 	}
@@ -152,7 +150,7 @@ void LoggedInState::removeTransferInfo(const AvatarTransferInfo& transferInfo) {
 
 	std::fstream teleportsOutputFile(teleportFilePath.c_str(), std::ios_base::out);
 	if (teleportsOutputFile.good()) {
-		serializer.serialize(transferObjects, teleportsOutputFile);
+		TransferInfoStringSerializer::serialize(transferObjects, teleportsOutputFile);
 	} else {
 		logger->critical("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
 	}
@@ -161,12 +159,11 @@ void LoggedInState::removeTransferInfo(const AvatarTransferInfo& transferInfo) {
 }
 
 void LoggedInState::avatar_transferRequest(const Eris::TransferInfo& transferInfo, const Eris::Avatar* avatar) {
-	TransferInfoStringSerializer serializer;
 	auto teleportFilePath = ConfigService::getSingleton().getHomeDirectory(BaseDirType_DATA) / "teleports";
 	std::fstream teleportsFile(teleportFilePath.c_str(), std::ios_base::in);
 	TransferInfoStringSerializer::TransferInfoStore transferObjects;
 	if (teleportsFile.good()) {
-		serializer.deserialize(transferObjects, teleportsFile);
+		TransferInfoStringSerializer::deserialize(transferObjects, teleportsFile);
 	}
 	teleportsFile.close();
 	AvatarTransferInfo avatarTransferInfo(avatar->getEntity()->getName(), WFMath::TimeStamp::now(), transferInfo);
@@ -174,7 +171,7 @@ void LoggedInState::avatar_transferRequest(const Eris::TransferInfo& transferInf
 
 	std::fstream teleportsOutputFile(teleportFilePath.c_str(), std::ios_base::out);
 	if (teleportsOutputFile.good()) {
-		serializer.serialize(transferObjects, teleportsOutputFile);
+		TransferInfoStringSerializer::serialize(transferObjects, teleportsOutputFile);
 	} else {
 		logger->critical("Could not write teleports info to file. This means that the teleported character cannot be claimed.");
 	}

@@ -34,8 +34,8 @@ namespace Eris {
 class TypeService;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class World;
 
@@ -50,7 +50,6 @@ class ModelMount;
 class Model;
 }
 namespace Gui {
-class EntityCreatorInputAdapter;
 
 class EntityCreatorMovement;
 
@@ -134,7 +133,7 @@ protected:
 		/**
 		 * @brief Message that is composed from recipe entity spec with placeholders substituted with adapters values.
 		 */
-	 	Atlas::Message::MapType entityMap;
+		Atlas::Message::MapType entityMap;
 
 		/**
 		 * @brief Detached entity that is used in process of creating preview.
@@ -193,21 +192,21 @@ protected:
 	/**
 	 * @brief Sets preview model name
 	 */
-	void setModel(EntityPreview& entry,const std::string& modelName);
+	void setModel(EntityPreview& entry, const std::string& modelName);
 
 	/**
 	 * Shows preview model part
 	 */
-	void showModelPart(EntityPreview& entry,const std::string& partName);
+	void showModelPart(EntityPreview& entry, const std::string& partName);
 
 	/**
 	 * Hide preview model part
 	 */
-	void hideModelPart(EntityPreview& entry,const std::string& partName);
+	void hideModelPart(EntityPreview& entry, const std::string& partName);
 
 };
 }
 }
-}
+
 
 #endif /* ENTITYCREATORCREATIONINSTANCE_H_ */

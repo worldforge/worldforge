@@ -1,318 +1,318 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
-    <Window name="Mainwindow" type="EmberLook/FrameWindow">
-        <Property name="Size" value="{{0.00,400.0},{0.00,500.0}}" />
-        <Property name="Position" value="{{0.0,0.0},{0,0.0}}" />
-        <Property name="Alpha" value="0.6" />
-        <Property name="Text" value="Entity editor" />
-        <Property name="Visible" value="false" />
-        
-        <Property name="AutoRenderingSurface" value="False" />
-        <Window name="MainInnerWindow" type="DefaultWindow">
-            <Property name="Position" value="{{0.0,4},{0,0}}" />
-            <Property name="Size" value="{{1,-8},{1,0}}" />
-            <Property name="InheritsAlpha" value="True" />
-            <Window name="EntityInfo" type="EmberLook/StaticText">
-                <Property name="Position" value="{{0,0},{0,0}}" />
-                <Property name="Size" value="{{1,0},{0,30}}" />
-                <Property name="InheritsAlpha" value="True" />
-                <Property name="FrameEnabled" value="false" />
-                <Property name="BackgroundEnabled" value="false" />
-            </Window>
-            <Window name="MainTabControl" type="EmberLook/TabControl">
-                <Property name="Size" value="{{1.0,0.0},{1.00,-70.0}}" />
-                <Property name="Position" value="{{0.0,0.0},{0.0,30.0}}" />
-                <Property name="InheritsAlpha" value="false" />
-                <Window name="AttributesPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Attributes" />
-                    <Property name="InheritsAlpha" value="false" />
-                    <Property name="Visible" value="true" />
-                    <Window name="AttributesContainer" type="EmberLook/ScrollablePane">
-                        <Property name="Size" value="{{1,0.0},{1,0.0}}" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                </Window>
-                <Window name="KnowledgePanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Knowledge" />
-                    <Property name="InheritsAlpha" value="false" />
-                    
-                    <Window name="KnowledgeList" type="EmberLook/ItemListbox">
-                        <Property name="Position" value="{{0,0},{0,0}}" />
-                        <Property name="Size" value="{{1,0},{1,-110}}" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                    <Window name="RefreshKnowledge" type="EmberLook/Button">
-                        <Property name="Position" value="{{0,5},{1.0,-70}}" />
-                        <Property name="Size" value="{{0,75},{0,20}}" />
-                        <Property name="Text" value="Refresh" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                    <Window name="KnowledgeHelp" type="EmberLook/StaticText">
-                        <Property name="Position" value="{{0,5},{1.0,-110}}" />
-                        <Property name="Size" value="{{1,-10},{0,40}}" />
-                        <Property name="Visible" value="False" />
-                        <Property name="BackgroundEnabled" value="True" />
-                        <Property name="FrameEnabled" value="True" />
-                        <Property name="HorzFormatting" value="WordWrapLeftAligned" />
-                        <Property name="VertFormatting" value="TopAligned" />
-                    </Window>
-                    <Window type="HorizontalLayoutContainer">
-                        <Property name="Position" value="{{0,5},{1.0,-30}}" />
-                        <Property name="Size" value="{{1,-10},{0,25}}" />
-                        <Window name="NewKnowledgePredicate" type="EmberLook/Combobox">
-                            <Property name="Size" value="{{0,70},{0,200}}" />
-                            <Property name="InheritsAlpha" value="True" />
-                            <Property name="TooltipText" value="The predicate." />
-                        </Window>
-                        <Window name="NewKnowledgeSubject" type="EmberLook/Editbox">
-                            <Property name="Size" value="{{0,70},{0,25}}" />
-                            <Property name="InheritsAlpha" value="True" />
-                            <Property name="TooltipText" value="The subject." />
-                        </Window>
-                        <Window name="NewKnowledgeKnowledge" type="EmberLook/Editbox">
-                            <Property name="Size" value="{{1,-185},{0,25}}" />
-                            <Property name="InheritsAlpha" value="True" />
-                            <Property name="TooltipText" value="The object" />
-                        </Window>
-                        <Window name="NewKnowledgeAdd" type="EmberLook/Button">
-                            <Property name="Size" value="{{0,35},{0,20}}" />
-                            <Property name="Text" value="Add" />
-                            <Property name="InheritsAlpha" value="True" />
-                        </Window>
-                    </Window>
-                </Window>
-                <Window name="GoalsPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Goals" />
-                    
-                    <Window name="GoalList" type="EmberLook/ItemListbox">
-                        <Property name="Position" value="{{0,0},{0,0}}" />
-                        <Property name="Size" value="{{1,0},{1,-310}}" />
-                    </Window>
-                    <Window name="GoalInfo" type="EmberLook/StaticText">
-                        <Property name="Position" value="{{0,0},{1,-310}}" />
-                        <Property name="Size" value="{{1,0},{0,200}}" />
-                        <Property name="HorzFormatting" value="WordWrapLeftAligned" />
-                        <Property name="VertFormatting" value="TopAligned" />
-                        <Property name="HorzScrollbar" value="False" />
-                        <Property name="VertScrollbar" value="True" />
-                    </Window>
-                    <Window name="RefreshGoals" type="EmberLook/Button">
-                        <Property name="Position" value="{{0,5},{1.0,-105}}" />
-                        <Property name="Size" value="{{0,75},{0,20}}" />
-                        <Property name="Text" value="Refresh" />
-                    </Window>
-                    <Window name="GoalHelp" type="EmberLook/StaticText">
-                        <Property name="Position" value="{{0,5},{1.0,-120}}" />
-                        <Property name="Size" value="{{1,-10},{0,40}}" />
-                        <Property name="Visible" value="False" />
-                        <Property name="BackgroundEnabled" value="True" />
-                        <Property name="HorzFormatting" value="WordWrapLeftAligned" />
-                        <Property name="VertFormatting" value="TopAligned" />
-                        <Property name="FrameEnabled" value="True" />
-                    </Window>
-                    <Window type="HorizontalLayoutContainer">
-                        <Property name="Position" value="{{0,5},{1.0,-80}}" />
-                        <Property name="Size" value="{{1,-10},{0,75}}" />
-                        <Window name="GoalVerb" type="EmberLook/Combobox">
-                            <Property name="Size" value="{{0,100},{0,200}}" />
-                            <Property name="TooltipText" value="The verb which will be associated with the goal." />
-                        </Window>
-                        <Window name="GoalDefinition" type="EmberLook/MultiLineEditbox">
-                            <Property name="Size" value="{{1,-160},{0,75}}" />
-                            <Property name="TooltipText" value="The goal definition." />
-                        </Window>
-                        <Window type="VerticalLayoutContainer">
-                            <Property name="Size" value="{{0,50},{0,60}}" />
-                            <Window name="GoalAdd" type="EmberLook/Button">
-                                <Property name="Size" value="{{0,50},{0,20}}" />
-                                <Property name="Text" value="Add" />
-                            </Window>
-                            <Window name="GoalUpdate" type="EmberLook/Button">
-                                <Property name="Size" value="{{0,50},{0,20}}" />
-                                <Property name="Text" value="Update" />
-                            </Window>
-                            <Window name="GoalRemove" type="EmberLook/Button">
-                                <Property name="Size" value="{{0,50},{0,20}}" />
-                                <Property name="Text" value="Remove" />
-                            </Window>
-                        </Window>
-                    </Window>
-                </Window>
-                <Window name="ChildrenPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Children" />
-                    <Property name="InheritsAlpha" value="false" />
-                    
-                    <Window name="ChildList" type="EmberLook/Listbox">
-                        <Property name="Position" value="{{0,0},{0,0}}" />
-                        <Property name="Size" value="{{0,200},{1,-25}}" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                    <Window name="FilterChildren" type="EmberLook/Editbox">
-                        <Property name="Position" value="{{0,0},{1.0,-25}}" />
-                        <Property name="Size" value="{{0,75},{0,25}}" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                </Window>
-                <Window name="ModelPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Model" />
-                    <Property name="InheritsAlpha" value="false" />
-                    
-                    <Window name="ModelInfo" type="EmberLook/StaticText">
-                        <Property name="Position" value="{{0.0},{0,0}}" />
-                        <Property name="Size" value="{{1,0},{0,100}}" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                    <Window name="ShowOgreBbox" type="EmberLook/Checkbox">
-                        <Property name="Position" value="{{0,0},{0,100}}" />
-                        <Property name="Size" value="{{1,0},{0,20}}" />
-                        <Property name="Text" value="Show Ogre bbox" />
-                    </Window>
-                    <Window name="ShowErisBbox" type="EmberLook/Checkbox">
-                        <Property name="Position" value="{{0,0},{0,120}}" />
-                        <Property name="Size" value="{{1,0},{0,20}}" />
-                        <Property name="Text" value="Show Eris bbox" />
-                    </Window>
-                </Window>
-                <Window name="AtlasPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Atlas" />
-                    <Property name="InheritsAlpha" value="false" />
-                    
-                    <Window name="AtlasTextbox" type="EmberLook/MultiLineEditbox">
-                        <Property name="Size" value="{{1.0,-10.0},{1.0,-40.0}}" />
-                        <Property name="Position" value="{{0.0,5.0},{0.0,5.0}}" />
-                        <Property name="Text" value="" />
-                        <Property name="InheritsAlpha" value="false" />
-                        <Property name="ReadOnly" value="true" />
-                    </Window>
-                    <Window name="RefreshAtlas" type="EmberLook/Button">
-                        <Property name="Position" value="{{0,5},{1.0,-30}}" />
-                        <Property name="Size" value="{{0,75},{0,20}}" />
-                        <Property name="Text" value="Refresh" />
-                        <Property name="InheritsAlpha" value="True" />
-                    </Window>
-                </Window>
-                <Window name="DumpPanel" type="DefaultWindow">
-                    <Property name="Size" value="{{1.0,0.0},{1.0,0.0}}" />
-                    <Property name="Text" value="Export/Import" />
-                    <Property name="InheritsAlpha" value="false" />
-                    <Window type="DefaultWindow">
-                        <Window type="VerticalLayoutContainer">
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">The name of the file which will be created.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">File name</Property>
-                                </Window>
-                                <Window name="ExportFileName" type="EmberLook/Editbox">
-                                    <Property name="Size" value="{{0,150.0},{0,25}}" />
-                                </Window>
-                            </Window>
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">An optional name of the export.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">Name (optional)</Property>
-                                </Window>
-                                <Window name="ExportName" type="EmberLook/Editbox">
-                                    <Property name="Size" value="{{0,150.0},{0,25}}" />
-                                </Window>
-                            </Window>
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">An optional description of the export.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">Description (optional)</Property>
-                                </Window>
-                                <Window name="ExportDescription" type="EmberLook/MultiLineEditbox">
-                                    <Property name="Size" value="{{1,-120.0},{0,80.0}}" />
-                                </Window>
-                            </Window>
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">If entity id values should be preserved.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">Preserve ids</Property>
-                                </Window>
-                                <Window name="ExportPreserveIds" type="EmberLook/Checkbox">
-                                    <Property name="Size" value="{{1,-120.0},{0,25.0}}" />
-                                </Window>
-                            </Window>
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">If transient entities should also be included.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">Include transients</Property>
-                                </Window>
-                                <Window name="ExportIncludeTransients" type="EmberLook/Checkbox">
-                                    <Property name="Size" value="{{1,-120.0},{0,25.0}}" />
-                                </Window>
-                            </Window>
-                            <Window type="HorizontalLayoutContainer">
-                                <Property name="TooltipText">If we also should export all rules.</Property>
-                                <Window type="EmberLook/StaticText">
-                                    <Property name="Size" value="{{0,120.0},{0,25}}" />
-                                    <Property name="Text">Export rules</Property>
-                                </Window>
-                                <Window name="ExportIncludeRules" type="EmberLook/Checkbox">
-                                    <Property name="Size" value="{{1,-120.0},{0,25.0}}" />
-                                </Window>
-                            </Window>
-                        </Window>
-                        <Window name="DumpWorld" type="EmberLook/Button">
-                            <Property name="Text" value="Export entity" />
-                            <Property name="TooltipText" value="Exports the entity to a file on disk." />
-                            <Property name="Position" value="{{0,5},{1,-25}}" />
-                            <Property name="Size" value="{{0,90},{0,20}}" />
-                        </Window>
-                    </Window>
-                    <Window name="ExportsOverlay" type="EmberLook/Static">
-                        <Property name="Visible" value="false" />
-                        <Property name="BackgroundEnabled" value="true" />
-                        <Property name="AlwaysOnTop" value="true" />
-                        <Window name="DumpStatus" type="EmberLook/StaticText">
-                            <Property name="Size" value="{{1.0,0.0},{0.0,20.0}}" />
-                            <Property name="Position" value="{{0,0},{0,20}}" />
-                            <Property name="HorzFormatting" value="CentreAligned" />
-                        </Window>
-                        <Window name="DumpCancel" type="EmberLook/Button">
-                            <Property name="Text" value="Cancel" />
-                            <Property name="TooltipText" value="Cancels the ongoing action." />
-                            <Property name="Position" value="{{0.5,-45},{0,45}}" />
-                            <Property name="Size" value="{{0,70},{0,20}}" />
-                        </Window>
-                        <Window name="DumpOk" type="EmberLook/Button">
-                            <Property name="Text" value="Ok" />
-                            <Property name="TooltipText" value="Dismiss this window." />
-                            <Property name="Position" value="{{0.5,-45},{0,45}}" />
-                            <Property name="Size" value="{{0,70},{0,20}}" />
-                        </Window>
-                    </Window>
-                </Window>
-            </Window>
-            <Window name="Submit" type="EmberLook/Button">
-                <Property name="Position" value="{{0,0},{1.0,-20}}" />
-                <Property name="Size" value="{{0,75},{0,20}}" />
-                <Property name="Text" value="Submit" />
-                <Property name="InheritsAlpha" value="True" />
-            </Window>
-            <Window name="DeleteButton" type="EmberLook/Button">
-                <Property name="Position" value="{{0,80},{1.0,-20}}" />
-                <Property name="Size" value="{{0,75},{0,20}}" />
-                <Property name="Text" value="Delete" />
-                <Property name="InheritsAlpha" value="True" />
-            </Window>
-            <Window name="RefreshButton" type="EmberLook/Button">
-                <Property name="Position" value="{{0,160},{1.0,-20}}" />
-                <Property name="Size" value="{{0,75},{0,20}}" />
-                <Property name="Text" value="Refresh" />
-                <Property name="InheritsAlpha" value="True" />
-            </Window>
-        </Window>
-    </Window>
+	<Window name="Mainwindow" type="EmberLook/FrameWindow">
+		<Property name="Size" value="{{0.00,400.0},{0.00,500.0}}"/>
+		<Property name="Position" value="{{0.0,0.0},{0,0.0}}"/>
+		<Property name="Alpha" value="0.6"/>
+		<Property name="Text" value="Entity editor"/>
+		<Property name="Visible" value="false"/>
+
+		<Property name="AutoRenderingSurface" value="False"/>
+		<Window name="MainInnerWindow" type="DefaultWindow">
+			<Property name="Position" value="{{0.0,4},{0,0}}"/>
+			<Property name="Size" value="{{1,-8},{1,0}}"/>
+			<Property name="InheritsAlpha" value="True"/>
+			<Window name="EntityInfo" type="EmberLook/StaticText">
+				<Property name="Position" value="{{0,0},{0,0}}"/>
+				<Property name="Size" value="{{1,0},{0,30}}"/>
+				<Property name="InheritsAlpha" value="True"/>
+				<Property name="FrameEnabled" value="false"/>
+				<Property name="BackgroundEnabled" value="false"/>
+			</Window>
+			<Window name="MainTabControl" type="EmberLook/TabControl">
+				<Property name="Size" value="{{1.0,0.0},{1.00,-70.0}}"/>
+				<Property name="Position" value="{{0.0,0.0},{0.0,30.0}}"/>
+				<Property name="InheritsAlpha" value="false"/>
+				<Window name="AttributesPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Attributes"/>
+					<Property name="InheritsAlpha" value="false"/>
+					<Property name="Visible" value="true"/>
+					<Window name="AttributesContainer" type="EmberLook/ScrollablePane">
+						<Property name="Size" value="{{1,0.0},{1,0.0}}"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+				</Window>
+				<Window name="KnowledgePanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Knowledge"/>
+					<Property name="InheritsAlpha" value="false"/>
+
+					<Window name="KnowledgeList" type="EmberLook/ItemListbox">
+						<Property name="Position" value="{{0,0},{0,0}}"/>
+						<Property name="Size" value="{{1,0},{1,-110}}"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+					<Window name="RefreshKnowledge" type="EmberLook/Button">
+						<Property name="Position" value="{{0,5},{1.0,-70}}"/>
+						<Property name="Size" value="{{0,75},{0,20}}"/>
+						<Property name="Text" value="Refresh"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+					<Window name="KnowledgeHelp" type="EmberLook/StaticText">
+						<Property name="Position" value="{{0,5},{1.0,-110}}"/>
+						<Property name="Size" value="{{1,-10},{0,40}}"/>
+						<Property name="Visible" value="False"/>
+						<Property name="BackgroundEnabled" value="True"/>
+						<Property name="FrameEnabled" value="True"/>
+						<Property name="HorzFormatting" value="WordWrapLeftAligned"/>
+						<Property name="VertFormatting" value="TopAligned"/>
+					</Window>
+					<Window type="HorizontalLayoutContainer">
+						<Property name="Position" value="{{0,5},{1.0,-30}}"/>
+						<Property name="Size" value="{{1,-10},{0,25}}"/>
+						<Window name="NewKnowledgePredicate" type="EmberLook/Combobox">
+							<Property name="Size" value="{{0,70},{0,200}}"/>
+							<Property name="InheritsAlpha" value="True"/>
+							<Property name="TooltipText" value="The predicate."/>
+						</Window>
+						<Window name="NewKnowledgeSubject" type="EmberLook/Editbox">
+							<Property name="Size" value="{{0,70},{0,25}}"/>
+							<Property name="InheritsAlpha" value="True"/>
+							<Property name="TooltipText" value="The subject."/>
+						</Window>
+						<Window name="NewKnowledgeKnowledge" type="EmberLook/Editbox">
+							<Property name="Size" value="{{1,-185},{0,25}}"/>
+							<Property name="InheritsAlpha" value="True"/>
+							<Property name="TooltipText" value="The object"/>
+						</Window>
+						<Window name="NewKnowledgeAdd" type="EmberLook/Button">
+							<Property name="Size" value="{{0,35},{0,20}}"/>
+							<Property name="Text" value="Add"/>
+							<Property name="InheritsAlpha" value="True"/>
+						</Window>
+					</Window>
+				</Window>
+				<Window name="GoalsPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Goals"/>
+
+					<Window name="GoalList" type="EmberLook/ItemListbox">
+						<Property name="Position" value="{{0,0},{0,0}}"/>
+						<Property name="Size" value="{{1,0},{1,-310}}"/>
+					</Window>
+					<Window name="GoalInfo" type="EmberLook/StaticText">
+						<Property name="Position" value="{{0,0},{1,-310}}"/>
+						<Property name="Size" value="{{1,0},{0,200}}"/>
+						<Property name="HorzFormatting" value="WordWrapLeftAligned"/>
+						<Property name="VertFormatting" value="TopAligned"/>
+						<Property name="HorzScrollbar" value="False"/>
+						<Property name="VertScrollbar" value="True"/>
+					</Window>
+					<Window name="RefreshGoals" type="EmberLook/Button">
+						<Property name="Position" value="{{0,5},{1.0,-105}}"/>
+						<Property name="Size" value="{{0,75},{0,20}}"/>
+						<Property name="Text" value="Refresh"/>
+					</Window>
+					<Window name="GoalHelp" type="EmberLook/StaticText">
+						<Property name="Position" value="{{0,5},{1.0,-120}}"/>
+						<Property name="Size" value="{{1,-10},{0,40}}"/>
+						<Property name="Visible" value="False"/>
+						<Property name="BackgroundEnabled" value="True"/>
+						<Property name="HorzFormatting" value="WordWrapLeftAligned"/>
+						<Property name="VertFormatting" value="TopAligned"/>
+						<Property name="FrameEnabled" value="True"/>
+					</Window>
+					<Window type="HorizontalLayoutContainer">
+						<Property name="Position" value="{{0,5},{1.0,-80}}"/>
+						<Property name="Size" value="{{1,-10},{0,75}}"/>
+						<Window name="GoalVerb" type="EmberLook/Combobox">
+							<Property name="Size" value="{{0,100},{0,200}}"/>
+							<Property name="TooltipText" value="The verb which will be associated with the goal."/>
+						</Window>
+						<Window name="GoalDefinition" type="EmberLook/MultiLineEditbox">
+							<Property name="Size" value="{{1,-160},{0,75}}"/>
+							<Property name="TooltipText" value="The goal definition."/>
+						</Window>
+						<Window type="VerticalLayoutContainer">
+							<Property name="Size" value="{{0,50},{0,60}}"/>
+							<Window name="GoalAdd" type="EmberLook/Button">
+								<Property name="Size" value="{{0,50},{0,20}}"/>
+								<Property name="Text" value="Add"/>
+							</Window>
+							<Window name="GoalUpdate" type="EmberLook/Button">
+								<Property name="Size" value="{{0,50},{0,20}}"/>
+								<Property name="Text" value="Update"/>
+							</Window>
+							<Window name="GoalRemove" type="EmberLook/Button">
+								<Property name="Size" value="{{0,50},{0,20}}"/>
+								<Property name="Text" value="Remove"/>
+							</Window>
+						</Window>
+					</Window>
+				</Window>
+				<Window name="ChildrenPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Children"/>
+					<Property name="InheritsAlpha" value="false"/>
+
+					<Window name="ChildList" type="EmberLook/Listbox">
+						<Property name="Position" value="{{0,0},{0,0}}"/>
+						<Property name="Size" value="{{0,200},{1,-25}}"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+					<Window name="FilterChildren" type="EmberLook/Editbox">
+						<Property name="Position" value="{{0,0},{1.0,-25}}"/>
+						<Property name="Size" value="{{0,75},{0,25}}"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+				</Window>
+				<Window name="ModelPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Model"/>
+					<Property name="InheritsAlpha" value="false"/>
+
+					<Window name="ModelInfo" type="EmberLook/StaticText">
+						<Property name="Position" value="{{0.0},{0,0}}"/>
+						<Property name="Size" value="{{1,0},{0,100}}"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+					<Window name="ShowOgreBbox" type="EmberLook/Checkbox">
+						<Property name="Position" value="{{0,0},{0,100}}"/>
+						<Property name="Size" value="{{1,0},{0,20}}"/>
+						<Property name="Text" value="Show Ogre bbox"/>
+					</Window>
+					<Window name="ShowErisBbox" type="EmberLook/Checkbox">
+						<Property name="Position" value="{{0,0},{0,120}}"/>
+						<Property name="Size" value="{{1,0},{0,20}}"/>
+						<Property name="Text" value="Show Eris bbox"/>
+					</Window>
+				</Window>
+				<Window name="AtlasPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Atlas"/>
+					<Property name="InheritsAlpha" value="false"/>
+
+					<Window name="AtlasTextbox" type="EmberLook/MultiLineEditbox">
+						<Property name="Size" value="{{1.0,-10.0},{1.0,-40.0}}"/>
+						<Property name="Position" value="{{0.0,5.0},{0.0,5.0}}"/>
+						<Property name="Text" value=""/>
+						<Property name="InheritsAlpha" value="false"/>
+						<Property name="ReadOnly" value="true"/>
+					</Window>
+					<Window name="RefreshAtlas" type="EmberLook/Button">
+						<Property name="Position" value="{{0,5},{1.0,-30}}"/>
+						<Property name="Size" value="{{0,75},{0,20}}"/>
+						<Property name="Text" value="Refresh"/>
+						<Property name="InheritsAlpha" value="True"/>
+					</Window>
+				</Window>
+				<Window name="DumpPanel" type="DefaultWindow">
+					<Property name="Size" value="{{1.0,0.0},{1.0,0.0}}"/>
+					<Property name="Text" value="Export/Import"/>
+					<Property name="InheritsAlpha" value="false"/>
+					<Window type="DefaultWindow">
+						<Window type="VerticalLayoutContainer">
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">The name of the file which will be created.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">File name</Property>
+								</Window>
+								<Window name="ExportFileName" type="EmberLook/Editbox">
+									<Property name="Size" value="{{0,150.0},{0,25}}"/>
+								</Window>
+							</Window>
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">An optional name of the export.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">Name (optional)</Property>
+								</Window>
+								<Window name="ExportName" type="EmberLook/Editbox">
+									<Property name="Size" value="{{0,150.0},{0,25}}"/>
+								</Window>
+							</Window>
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">An optional description of the export.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">Description (optional)</Property>
+								</Window>
+								<Window name="ExportDescription" type="EmberLook/MultiLineEditbox">
+									<Property name="Size" value="{{1,-120.0},{0,80.0}}"/>
+								</Window>
+							</Window>
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">If entity id values should be preserved.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">Preserve ids</Property>
+								</Window>
+								<Window name="ExportPreserveIds" type="EmberLook/Checkbox">
+									<Property name="Size" value="{{1,-120.0},{0,25.0}}"/>
+								</Window>
+							</Window>
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">If transient entities should also be included.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">Include transients</Property>
+								</Window>
+								<Window name="ExportIncludeTransients" type="EmberLook/Checkbox">
+									<Property name="Size" value="{{1,-120.0},{0,25.0}}"/>
+								</Window>
+							</Window>
+							<Window type="HorizontalLayoutContainer">
+								<Property name="TooltipText">If we also should export all rules.</Property>
+								<Window type="EmberLook/StaticText">
+									<Property name="Size" value="{{0,120.0},{0,25}}"/>
+									<Property name="Text">Export rules</Property>
+								</Window>
+								<Window name="ExportIncludeRules" type="EmberLook/Checkbox">
+									<Property name="Size" value="{{1,-120.0},{0,25.0}}"/>
+								</Window>
+							</Window>
+						</Window>
+						<Window name="DumpWorld" type="EmberLook/Button">
+							<Property name="Text" value="Export entity"/>
+							<Property name="TooltipText" value="Exports the entity to a file on disk."/>
+							<Property name="Position" value="{{0,5},{1,-25}}"/>
+							<Property name="Size" value="{{0,90},{0,20}}"/>
+						</Window>
+					</Window>
+					<Window name="ExportsOverlay" type="EmberLook/Static">
+						<Property name="Visible" value="false"/>
+						<Property name="BackgroundEnabled" value="true"/>
+						<Property name="AlwaysOnTop" value="true"/>
+						<Window name="DumpStatus" type="EmberLook/StaticText">
+							<Property name="Size" value="{{1.0,0.0},{0.0,20.0}}"/>
+							<Property name="Position" value="{{0,0},{0,20}}"/>
+							<Property name="HorzFormatting" value="CentreAligned"/>
+						</Window>
+						<Window name="DumpCancel" type="EmberLook/Button">
+							<Property name="Text" value="Cancel"/>
+							<Property name="TooltipText" value="Cancels the ongoing action."/>
+							<Property name="Position" value="{{0.5,-45},{0,45}}"/>
+							<Property name="Size" value="{{0,70},{0,20}}"/>
+						</Window>
+						<Window name="DumpOk" type="EmberLook/Button">
+							<Property name="Text" value="Ok"/>
+							<Property name="TooltipText" value="Dismiss this window."/>
+							<Property name="Position" value="{{0.5,-45},{0,45}}"/>
+							<Property name="Size" value="{{0,70},{0,20}}"/>
+						</Window>
+					</Window>
+				</Window>
+			</Window>
+			<Window name="Submit" type="EmberLook/Button">
+				<Property name="Position" value="{{0,0},{1.0,-20}}"/>
+				<Property name="Size" value="{{0,75},{0,20}}"/>
+				<Property name="Text" value="Submit"/>
+				<Property name="InheritsAlpha" value="True"/>
+			</Window>
+			<Window name="DeleteButton" type="EmberLook/Button">
+				<Property name="Position" value="{{0,80},{1.0,-20}}"/>
+				<Property name="Size" value="{{0,75},{0,20}}"/>
+				<Property name="Text" value="Delete"/>
+				<Property name="InheritsAlpha" value="True"/>
+			</Window>
+			<Window name="RefreshButton" type="EmberLook/Button">
+				<Property name="Position" value="{{0,160},{1.0,-20}}"/>
+				<Property name="Size" value="{{0,75},{0,20}}"/>
+				<Property name="Text" value="Refresh"/>
+				<Property name="InheritsAlpha" value="True"/>
+			</Window>
+		</Window>
+	</Window>
 </GUILayout>

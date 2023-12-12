@@ -24,13 +24,12 @@ a user specified Bridge callback class.
 @see Negotiate
 */
 
-class Codec : public Bridge
-{
-    public:
+class Codec : public Bridge {
+public:
 
 	~Codec() override = default;
 
-    virtual void poll() = 0;
+	virtual void poll() = 0;
 };
 
 } // Atlas namespace

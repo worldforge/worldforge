@@ -41,10 +41,9 @@
 #endif
 
 using namespace Atlas::Message;
-namespace Ember {
-namespace OgreView {
 
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 Atlas::Message::MapType ModelDefinitionAtlasComposer::compose(Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
 	MapType mainMap;
@@ -93,7 +92,7 @@ Atlas::Message::Element ModelDefinitionAtlasComposer::composeGeometry(Model* mod
 		std::vector<Atlas::Message::Element> vertices;
 		std::vector<Atlas::Message::Element> indices;
 
-		for (auto& submodel : model->getSubmodels()) {
+		for (auto& submodel: model->getSubmodels()) {
 			auto mesh = submodel->getEntity()->getMesh();
 			if (mesh->sharedVertexData) {
 				copyVertexData(vertices, *mesh->sharedVertexData);
@@ -141,7 +140,7 @@ Atlas::Message::Element ModelDefinitionAtlasComposer::composeGeometry(Model* mod
 }
 
 
-void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::Element>& vertices, Ogre::VertexData& vertexData) const {
+void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::Element>& vertices, Ogre::VertexData& vertexData) {
 
 
 	// Locate position element and the buffer to go with it.
@@ -168,7 +167,8 @@ void ModelDefinitionAtlasComposer::copyVertexData(std::vector<Atlas::Message::El
 	vbuf->unlock();
 }
 
-void ModelDefinitionAtlasComposer::composeToStream(std::iostream& outstream, Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
+void
+ModelDefinitionAtlasComposer::composeToStream(std::iostream& outstream, Model* model, const std::string& typeName, const std::string& parentTypeName, float scale, const std::string& collisionType) {
 	Atlas::Message::QueuedDecoder decoder;
 
 	Atlas::Codecs::XML codec(outstream, outstream, decoder);
@@ -214,5 +214,5 @@ std::string ModelDefinitionAtlasComposer::composeToFile(Model* model, const std:
 
 }
 
-}
-}
+
+

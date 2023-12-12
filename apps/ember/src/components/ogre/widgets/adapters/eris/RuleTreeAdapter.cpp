@@ -27,14 +27,8 @@
 
 using ::Atlas::Objects::Root;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Eris {
+namespace Ember::OgreView::Gui::Adapters::Eris {
 
 RuleTreeAdapter::RuleTreeAdapter(::Eris::Connection& connection, std::string mindId, CEGUI::Tree& treeWidget) :
 		mConnection(connection),
@@ -49,7 +43,7 @@ void RuleTreeAdapter::refresh(const std::string& rootRule) {
 void RuleTreeAdapter::refreshRules(const std::vector<std::string>& rootRules) {
 	mFetchers.clear();
 
-	for (auto& rootRule : rootRules) {
+	for (auto& rootRule: rootRules) {
 		auto entry = mFetchers.emplace(rootRule, std::make_unique<Authoring::RulesFetcher>(mConnection, mMindId));
 		entry.first->second->EventAllRulesReceived.connect([this, rootRule] { fetcherAllRulesReceived(rootRule); });
 		entry.first->second->EventNewRuleReceived.connect(EventNewRuleReceived);
@@ -84,7 +78,7 @@ void RuleTreeAdapter::fetcherAllRulesReceived(const std::string& rootRule) {
 	if (I != mRules.end()) {
 		return I->second.rule;
 	}
-	return ::Atlas::Objects::Root();
+	return {};
 }
 
 std::list<std::string> RuleTreeAdapter::extractChildren(const Root& op) {
@@ -92,7 +86,7 @@ std::list<std::string> RuleTreeAdapter::extractChildren(const Root& op) {
 	Atlas::Message::Element childElem;
 	if (op->copyAttr("children", childElem) == 0) {
 		if (childElem.isList()) {
-			for (auto child : childElem.asList()) {
+			for (auto child: childElem.asList()) {
 				if (child.isString()) {
 					children.push_back(child.asString());
 				}
@@ -126,7 +120,7 @@ void RuleTreeAdapter::addToTree(const Entry& entry, CEGUI::TreeItem* parent) {
 		parent->addItem(item);
 	}
 
-	for (auto& child : entry.children) {
+	for (auto& child: entry.children) {
 		addToTree(child, item);
 	}
 }
@@ -139,10 +133,10 @@ Atlas::Objects::Root RuleTreeAdapter::getSelectedRule() {
 			return itemData;
 		}
 	}
-	return Atlas::Objects::Root();
+	return {};
 }
 
-void RuleTreeAdapter::setFilter(std::string filter) {
+void RuleTreeAdapter::setFilter(const std::string& filter) {
 	if (!filter.empty()) {
 		auto item = mTreeWidget.findFirstItemWithText(filter);
 		if (item) {
@@ -163,7 +157,7 @@ void RuleTreeAdapter::rebuildTree() {
 }
 
 }
-}
-}
-}
-}
+
+
+
+

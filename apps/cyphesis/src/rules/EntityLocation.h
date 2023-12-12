@@ -29,41 +29,38 @@ class LocatedEntity;
  * Represents a location in an entity. The position is optional; if it's invalid the location only
  * refers to the entity.
  */
-struct EntityLocation
-{
-    /**
-     * The parent entity.
-     */
-    Ref<LocatedEntity> m_parent;
-    /**
-     * Coords relative to the entity
-     */
-    WFMath::Point<3> m_pos;
+struct EntityLocation {
+	/**
+	 * The parent entity.
+	 */
+	Ref<LocatedEntity> m_parent;
+	/**
+	 * Coords relative to the entity
+	 */
+	WFMath::Point<3> m_pos;
 
-    EntityLocation();
+	EntityLocation();
 
-    explicit EntityLocation(Ref<LocatedEntity> loc);
+	explicit EntityLocation(Ref<LocatedEntity> loc);
 
-    EntityLocation(Ref<LocatedEntity> loc, const WFMath::Point<3>& pos);
+	EntityLocation(Ref<LocatedEntity> loc, const WFMath::Point<3>& pos);
 
-    const WFMath::Point<3>& pos() const;
+	const WFMath::Point<3>& pos() const;
 
-    /**
-     * True if there's both an entity as well as a valid position.
-     * @return 
-     */
-    bool isValid() const;
+	/**
+	 * True if there's both an entity as well as a valid position.
+	 * @return
+	 */
+	bool isValid() const;
 
-    bool operator==(const EntityLocation& rhs) const noexcept
-    {
-        return m_parent == rhs.m_parent
-               && m_pos == rhs.m_pos;
-    }
+	bool operator==(const EntityLocation& rhs) const noexcept {
+		return m_parent == rhs.m_parent
+			   && m_pos == rhs.m_pos;
+	}
 
-    bool operator!=(const EntityLocation& rhs) const noexcept
-    {
-        return !(*this == rhs);
-    }
+	bool operator!=(const EntityLocation& rhs) const noexcept {
+		return !(*this == rhs);
+	}
 };
 
 

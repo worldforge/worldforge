@@ -25,50 +25,37 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class OrientationAdapter : public AdapterBase
-{
+class OrientationAdapter : public AdapterBase {
 public:
-    OrientationAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::Window* scalarWindow);
+	OrientationAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::Window* scalarWindow);
 
-    virtual ~OrientationAdapter();
-	
+	~OrientationAdapter() override;
+
 	/**
 	Updates the gui with new values.
 	*/
-	virtual void updateGui(const ::Atlas::Message::Element& element);
-	
+	void updateGui(const ::Atlas::Message::Element& element) override;
+
 protected:
 	CEGUI::Window* mXWindow;
 	CEGUI::Window* mYWindow;
 	CEGUI::Window* mZWindow;
 	CEGUI::Window* mScalarWindow;
-	
+
 	bool window_TextChanged(const CEGUI::EventArgs& e);
 
-	virtual void fillElementFromGui();
-	virtual bool _hasChanges();
+	void fillElementFromGui() override;
+
+	bool _hasChanges() override;
 };
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

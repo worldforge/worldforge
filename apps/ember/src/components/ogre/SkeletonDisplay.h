@@ -27,8 +27,8 @@ class ManualObject;
 class Entity;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * Shows the skeleton of an entity, if such exists.
@@ -54,5 +54,5 @@ private:
 };
 
 }
-}
+
 #endif //EMBER_SKELETONDISPLAY_H

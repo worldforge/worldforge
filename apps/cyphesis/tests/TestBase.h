@@ -36,68 +36,65 @@
 
 namespace Cyphesis {
 
-class Test
-{
-  public:
-    const char * name;
-    boost::function<void()> method;
+class Test {
+public:
+	const char* name;
+	boost::function<void()> method;
 };
 
-class TestBase : public AssertBase
-{
-  protected:
+class TestBase : public AssertBase {
+protected:
 
-    std::list<Test> m_tests;
+	std::list<Test> m_tests;
 
 
-  public:
-    virtual ~TestBase();
+public:
+	virtual ~TestBase();
 
-    virtual void setup() = 0;
-    virtual void teardown() = 0;
+	virtual void setup() = 0;
 
-    void addTest(const Test& t);
+	virtual void teardown() = 0;
 
-    int run();
+	void addTest(const Test& t);
+
+	int run();
 
 
 };
 
-inline TestBase::~TestBase()= default;
+inline TestBase::~TestBase() = default;
 
-void TestBase::addTest(const Test& t)
-{
-    m_tests.push_back(t);
+void TestBase::addTest(const Test& t) {
+	m_tests.push_back(t);
 }
 
-int TestBase::run()
-{
-    int error_count = 0;
+int TestBase::run() {
+	int error_count = 0;
 
-    auto Iend = m_tests.end();
-    auto I = m_tests.begin();
-    for (; I != Iend; ++I) {
-        setup();
+	auto Iend = m_tests.end();
+	auto I = m_tests.begin();
+	for (; I != Iend; ++I) {
+		setup();
 		spdlog::info("Starting test {}", I->name);
-        (*I).method();
-        teardown();
+		(*I).method();
+		teardown();
 		spdlog::info("Completed test {}", I->name);
 
-        if (!m_errorReports.empty()) {
-            ++error_count;
+		if (!m_errorReports.empty()) {
+			++error_count;
 
 			spdlog::error("Test \"{}\" failed:", I->name);
 
 
-            for (const auto& report : m_errorReports) {
+			for (const auto& report: m_errorReports) {
 				spdlog::error(report);
-            }
+			}
 
-            m_errorReports.clear();
-        }
-    }
+			m_errorReports.clear();
+		}
+	}
 
-    return error_count;
+	return error_count;
 }
 
 

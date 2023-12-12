@@ -29,29 +29,29 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Filter : public WrapperBase<std::shared_ptr<EntityFilter::Filter>, CyPy_Filter>
-{
-    public:
+class CyPy_Filter : public WrapperBase<std::shared_ptr<EntityFilter::Filter>, CyPy_Filter> {
+public:
 
-        CyPy_Filter(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
-        CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFilter::Filter> value);
+	CyPy_Filter(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        static void init_type();
+	CyPy_Filter(Py::PythonClassInstance* self, std::shared_ptr<EntityFilter::Filter> value);
 
-        Py::Object str() override;
+	static void init_type();
 
-    private:
+	Py::Object str() override;
+
+private:
 
 };
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_EntityFilter : public Py::ExtensionModule<CyPy_EntityFilter>
-{
-    public:
-        CyPy_EntityFilter();
-        static std::string init();
+class CyPy_EntityFilter : public Py::ExtensionModule<CyPy_EntityFilter> {
+public:
+	CyPy_EntityFilter();
+
+	static std::string init();
 
 };
 

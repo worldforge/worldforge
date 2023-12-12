@@ -30,39 +30,44 @@
 /// non trivial time and will typically require the user to be able to
 /// continue issuing commands.
 class ClientTask {
-  protected:
-    /// \brief Flag that indicates when the task is complete
-    bool m_complete;
-    /// \brief Description of the task running
-    std::string m_description;
+protected:
+	/// \brief Flag that indicates when the task is complete
+	bool m_complete;
+	/// \brief Description of the task running
+	std::string m_description;
 
-    ///\brief ClientTask constructor
-    ClientTask();
-  public:
-    virtual ~ClientTask();
+	///\brief ClientTask constructor
+	ClientTask();
 
-    /// \brief Set up the task processing user arguments
-    virtual void setup(const std::string & arg, OpVector &) = 0;
-    /// \brief Handle an operation from the server
-    virtual void operation(const Operation &, OpVector &) = 0;
+public:
+	virtual ~ClientTask();
 
-    /// \brief Check whether the task is complete
-    ///
-    /// @return true if the task is complete, false otherwise
-    bool isComplete() const { return m_complete; }
+	/// \brief Set up the task processing user arguments
+	virtual void setup(const std::string& arg, OpVector&) = 0;
 
-    /// \brief Accessor for task description
-    const std::string & description() { return m_description; }
+	/// \brief Handle an operation from the server
+	virtual void operation(const Operation&, OpVector&) = 0;
+
+	/// \brief Check whether the task is complete
+	///
+	/// @return true if the task is complete, false otherwise
+	bool isComplete() const { return m_complete; }
+
+	/// \brief Accessor for task description
+	const std::string& description() { return m_description; }
 };
 
 class FunctionClientTask : public ClientTask {
-    protected:
-        std::function<bool(const Operation &, OpVector &)> m_function;
-    public:
-        explicit FunctionClientTask(std::function<bool(const Operation &, OpVector &)> function);
-        /// \brief Set up the task processing user arguments
-        void setup(const std::string & arg, OpVector &) override {}
-        /// \brief Handle an operation from the server
-        void operation(const Operation &, OpVector &) override;
+protected:
+	std::function<bool(const Operation&, OpVector&)> m_function;
+public:
+	explicit FunctionClientTask(std::function<bool(const Operation&, OpVector&)> function);
+
+	/// \brief Set up the task processing user arguments
+	void setup(const std::string& arg, OpVector&) override {}
+
+	/// \brief Handle an operation from the server
+	void operation(const Operation&, OpVector&) override;
 };
+
 #endif // COMMON_CLIENT_TASK_H

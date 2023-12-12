@@ -162,7 +162,8 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 	mCaelumSystem->setMinimumAmbientLight(Ogre::ColourValue(0.2f, 0.2f, 0.2f, 1.0f));
 
 	mCaelumSystem->setEnsureSingleShadowSource(true); //we want to use only one shadow caster source, for now at least
-	mCaelumSystem->setEnsureSingleLightSource(true); //We want to only use the brightest light source only, even if another is closer. This is to make sure the main light is taken from the sun instead of the moon (which will result in a dark landscape).
+	mCaelumSystem->setEnsureSingleLightSource(
+			true); //We want to only use the brightest light source only, even if another is closer. This is to make sure the main light is taken from the sun instead of the moon (which will result in a dark landscape).
 
 	mSky = std::make_unique<CaelumSky>(*this);
 
@@ -175,7 +176,8 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 
 	Eris::DateTime currentServerTime = mCalendar.now();
 	if (currentServerTime.valid()) {
-		mCaelumSystem->getUniversalClock()->setGregorianDateTime(TIME_FIXED_YEAR, TIME_FIXED_MONTH, TIME_FIXED_DAY, currentServerTime.hours(), currentServerTime.minutes(), currentServerTime.seconds());
+		mCaelumSystem->getUniversalClock()->setGregorianDateTime(TIME_FIXED_YEAR, TIME_FIXED_MONTH, TIME_FIXED_DAY, currentServerTime.hours(), currentServerTime.minutes(),
+																 currentServerTime.seconds());
 	} else {
 		logger->warn("Could not get server time, using local time for environment.");
 		int year, month, day, hour, minute, second;

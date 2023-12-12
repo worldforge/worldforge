@@ -23,7 +23,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<Meta>(sol::table& space) {
 	auto meta = space.new_usertype<Meta>("Meta");
 	meta["getGameServerCount"] = &Meta::getGameServerCount;

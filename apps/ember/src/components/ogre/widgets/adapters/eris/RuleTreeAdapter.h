@@ -40,16 +40,14 @@ class Tree;
 class TreeItem;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 namespace Authoring {
 class RulesFetcher;
 }
-namespace Gui {
 
-namespace Adapters {
 
-namespace Eris {
+namespace Gui::Adapters::Eris {
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief An adapter which binds the server rule tree to a cegui tree widget.
@@ -80,7 +78,7 @@ public:
 	 */
 	::Atlas::Objects::Root getSelectedRule();
 
-	void setFilter(std::string filter);
+	void setFilter(const std::string& filter);
 
 	/**
 	 * @brief Emitted when a new rule has been received.
@@ -144,10 +142,9 @@ private:
 };
 
 }
-}
-}
-}
+
 
 }
+
 
 #endif /* RULETREEADAPTER_H_ */

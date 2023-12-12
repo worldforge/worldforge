@@ -53,10 +53,9 @@
 #endif
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
 
-namespace Camera {
+
+namespace Ember::OgreView::Camera {
 
 MainCamera::MainCamera(Scene& scene, Ogre::RenderWindow& window, Input& input, Terrain::ITerrainAdapter& terrainAdapter) :
 		mScene(scene),
@@ -112,7 +111,7 @@ void MainCamera::Config_ClipDistances(const std::string& /*section*/, const std:
 		float nearDistance = std::stof(tokeniser.nextToken());
 		float farDistance = std::stof(tokeniser.nextToken());
 
-		logger->info("Setting main camera clip distances to near: {} far: {}",nearDistance, farDistance);
+		logger->info("Setting main camera clip distances to near: {} far: {}", nearDistance, farDistance);
 
 		mScene.getMainCamera().setNearClipDistance(nearDistance);
 
@@ -437,5 +436,5 @@ ICameraMount* MainCamera::attachToMount(ICameraMount* newCameraMount) {
 
 }
 
-}
-}
+
+

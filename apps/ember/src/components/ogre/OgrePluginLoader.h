@@ -28,18 +28,16 @@
 #include <map>
 #include <vector>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @brief Loads Ogre plugins! Hides OS and build differences.
  */
-class OgrePluginLoader
-{
+class OgrePluginLoader {
 public:
 	OgrePluginLoader();
+
 	virtual ~OgrePluginLoader() = default;
 
 	/// @brief Adds a directory to the plugin search path list. It will be ignored on static builds.
@@ -52,6 +50,7 @@ public:
 
 	/// @brief Unloads all plugins.
 	void unloadPlugins();
+
 private:
 
 	bool loadDynPlugin(const std::string& pluginName);
@@ -66,5 +65,5 @@ private:
 };
 
 }
-}
+
 #endif // ifndef OGREPLUGINLOADER_H

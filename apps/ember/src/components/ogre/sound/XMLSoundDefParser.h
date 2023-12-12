@@ -16,15 +16,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef _XML_SOUND_DEF_PARSER_
-#define _XML_SOUND_DEF_PARSER_
+#ifndef XML_SOUND_DEF_PARSER_
+#define XML_SOUND_DEF_PARSER_
 
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "tinyxml/tinyxml.h"
 #include <OgreDataStream.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 struct SoundGroupDefinition;
 
 class SoundDefinitionManager;
@@ -39,13 +39,13 @@ public:
 
 private:
 
-	void readBuffers(SoundGroupDefinition* act, TiXmlElement* objNode) const;
+	static void readBuffers(SoundGroupDefinition* act, TiXmlElement* objNode);
 
-	void readBuffer(SoundGroupDefinition* act, TiXmlElement* objNode) const;
+	static void readBuffer(SoundGroupDefinition* act, TiXmlElement* objNode);
 };
 
 }
-}
+
 
 #endif
 

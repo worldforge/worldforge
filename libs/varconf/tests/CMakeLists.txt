@@ -1,2 +1,2 @@
 wf_add_test(conftest.cpp)
-add_definitions(-DSRCDIR="${PROJECT_SOURCE_DIR}/tests")
+add_compile_definitions(SRCDIR="${PROJECT_SOURCE_DIR}/tests")

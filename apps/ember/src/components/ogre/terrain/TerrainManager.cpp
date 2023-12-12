@@ -53,9 +53,9 @@
 #include <utility>
 
 using namespace Ogre;
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+
+namespace Ember::OgreView::Terrain {
 
 
 TerrainManager::TerrainManager(std::unique_ptr<ITerrainAdapter> adapter,
@@ -319,5 +319,5 @@ bool TerrainManager::FrameListener::frameStarted(const FrameEvent& evt) {
 	return true;
 }
 }
-}
-}
+
+

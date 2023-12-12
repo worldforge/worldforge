@@ -21,15 +21,12 @@
 
 #include <sigc++/trackable.h>
 
-namespace Eris
-{
+namespace Eris {
 class Entity;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -40,8 +37,7 @@ namespace OgreView
  * Depending on whether mDeleteOurselvesWhenDone is true of false the instance can then take care of deleting itself.
  * Any subclass should want to implement cleanup(), to perform cleanup functionality when the entity is deleted.
  */
-class EntityObserverBase: public virtual sigc::trackable
-{
+class EntityObserverBase : public virtual sigc::trackable {
 public:
 	/**
 	 * @brief Ctor.
@@ -87,6 +83,5 @@ private:
 
 }
 
-}
 
 #endif /* ENTITYOBSERVERBASE_H_ */

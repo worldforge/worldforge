@@ -23,8 +23,6 @@
 
 // Author: Ron Steinke
 
-#include "float.h"
-
 #include <cmath>
 
 
@@ -68,22 +66,20 @@ float _ScaleEpsilon(float x1, float x2, float epsilon) {
 	return std::ldexp(epsilon, exponent);
 }
 }
-bool Equal(double x1, double x2, double epsilon)
-{
-    // If the difference between the numbers is smaller than the
-    // scaled epsilon we'll consider the numbers to be equal.
 
-    return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+bool Equal(double x1, double x2, double epsilon) {
+	// If the difference between the numbers is smaller than the
+	// scaled epsilon we'll consider the numbers to be equal.
+
+	return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
-bool Equal(float x1, float x2, float epsilon)
-{
-    // If the difference between the numbers is smaller than the
-    // scaled epsilon we'll consider the numbers to be equal.
+bool Equal(float x1, float x2, float epsilon) {
+	// If the difference between the numbers is smaller than the
+	// scaled epsilon we'll consider the numbers to be equal.
 
-    return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+	return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
-
 
 
 }

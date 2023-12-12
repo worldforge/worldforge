@@ -22,14 +22,14 @@
 //
 #include "NumericRangeComparer.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
+
+
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
 
 NumericRangeComparer::NumericRangeComparer(std::unique_ptr<NumericComparer> minComparer, std::unique_ptr<NumericComparer> maxComparer)
 		: mMinComparer(std::move(minComparer)),
@@ -44,8 +44,8 @@ bool NumericRangeComparer::test(double value) {
 
 }
 
-}
 
-}
 
-}
+
+
+

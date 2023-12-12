@@ -26,9 +26,9 @@
 
 class AssetsHandler {
 public:
-    explicit AssetsHandler(std::filesystem::path squallRepositoryPath);
+	explicit AssetsHandler(std::filesystem::path squallRepositoryPath);
 
-    std::string resolveAssetsUrl() const;
+	std::string resolveAssetsUrl() const;
 
 	std::optional<Squall::Signature> refreshSquallRepository(std::filesystem::path pathToAssets);
 
@@ -36,7 +36,7 @@ private:
 
 	std::filesystem::path mSquallRepositoryPath;
 
-    std::optional<Squall::Signature> mSquallSignature;
+	std::optional<Squall::Signature> mSquallSignature;
 };
 
 #endif  // CYPHESIS_ASSETSHANDLER_H

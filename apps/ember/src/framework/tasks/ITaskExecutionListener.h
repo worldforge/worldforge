@@ -21,23 +21,19 @@
 
 #include "framework/Exception.h"
 
-namespace Ember
-{
 
-namespace Tasks
-{
+namespace Ember::Tasks {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A listener for tasks being executed.
  */
-struct ITaskExecutionListener
-{
+struct ITaskExecutionListener {
 public:
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~ITaskExecutionListener()= default;
+	virtual ~ITaskExecutionListener() = default;
 
 	/**
 	 * @brief Called when execution has started.
@@ -58,6 +54,5 @@ public:
 
 }
 
-}
 
 #endif /* TASKEXECUTIONLISTENER_H_ */

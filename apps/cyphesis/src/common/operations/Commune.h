@@ -21,7 +21,9 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int COMMUNE_NO;
 
@@ -31,14 +33,15 @@ extern int COMMUNE_NO;
 /// The "commune" op is used to let an author inspect the mind of an entity.
 /// \see Think
 /// \ingroup CustomOperations
-class Commune : public Generic
-{
-  public:
-        Commune() {
-        (*this)->setType("commune", COMMUNE_NO);
-    }
+class Commune : public Generic {
+public:
+	Commune() {
+		(*this)->setType("commune", COMMUNE_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_COMMUNE_H

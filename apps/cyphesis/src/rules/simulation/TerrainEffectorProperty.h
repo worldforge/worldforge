@@ -26,13 +26,15 @@ class TerrainProperty;
 /// \brief Class to handle Entity terrain modifier property
 /// \ingroup PropertyClasses
 class TerrainEffectorProperty : public Property<Atlas::Message::MapType> {
-  protected:
-    TerrainEffectorProperty(const TerrainEffectorProperty& rhs) = default;
-    const TerrainProperty* getTerrain(LocatedEntity& owner, LocatedEntity** terrainHolder = nullptr);
+protected:
+	TerrainEffectorProperty(const TerrainEffectorProperty& rhs) = default;
 
-    friend class TerrainEffectorPropertytest;
-  public:
-    TerrainEffectorProperty() = default;
+	const TerrainProperty* getTerrain(LocatedEntity& owner, LocatedEntity** terrainHolder = nullptr);
+
+	friend class TerrainEffectorPropertytest;
+
+public:
+	TerrainEffectorProperty() = default;
 
 };
 

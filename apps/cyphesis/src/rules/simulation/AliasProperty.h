@@ -27,21 +27,20 @@
  * The alias is global for the whole system.
  * \ingroup PropertyClasses
  */
-class AliasProperty : public Property<std::string>
-{
-    public:
-        static constexpr const char* property_name = "__alias";
+class AliasProperty : public Property<std::string> {
+public:
+	static constexpr const char* property_name = "__alias";
 
-        AliasProperty() = default;
+	AliasProperty() = default;
 
-        AliasProperty* copy() const override;
+	AliasProperty* copy() const override;
 
-        void apply(LocatedEntity& entity) override;
+	void apply(LocatedEntity& entity) override;
 
-        void remove(LocatedEntity&, const std::string& name) override;
+	void remove(LocatedEntity&, const std::string& name) override;
 
-        protected:
-            AliasProperty(const AliasProperty& rhs) = default;
+protected:
+	AliasProperty(const AliasProperty& rhs) = default;
 
 };
 

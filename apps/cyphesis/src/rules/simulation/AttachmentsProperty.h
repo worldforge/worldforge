@@ -36,44 +36,42 @@
  * and making the required changes on all involved entities.
  * \ingroup PropertyClasses
  */
-class AttachmentsProperty : public PropertyBase
-{
-    public:
+class AttachmentsProperty : public PropertyBase {
+public:
 
-        static constexpr const char* property_atlastype = "map";
-        static constexpr const char* property_name = "attachments";
-
-
-        struct Attachment
-        {
-            std::string contraint;
-            std::unique_ptr<EntityFilter::Filter> filter;
-        };
-
-        explicit AttachmentsProperty(std::uint32_t flags = 0);
-
-        AttachmentsProperty(const AttachmentsProperty& rhs) = delete;
-
-        void install(LocatedEntity&, const std::string&) override;
-
-        void remove(LocatedEntity&, const std::string& name) override;
-
-        HandlerResult operation(LocatedEntity&,
-                                const Operation&,
-                                OpVector&) override;
-
-        int get(Atlas::Message::Element& val) const override;
-
-        void set(const Atlas::Message::Element& val) override;
+	static constexpr const char* property_atlastype = "map";
+	static constexpr const char* property_name = "attachments";
 
 
-    protected:
+	struct Attachment {
+		std::string contraint;
+		std::unique_ptr<EntityFilter::Filter> filter;
+	};
 
-        std::map<std::string, Attachment> m_data;
+	explicit AttachmentsProperty(std::uint32_t flags = 0);
 
-        AttachmentsProperty* copy() const override;
+	AttachmentsProperty(const AttachmentsProperty& rhs) = delete;
 
-        static Ref<LocatedEntity> extractEntityRef(const Atlas::Message::Element& val);
+	void install(LocatedEntity&, const std::string&) override;
+
+	void remove(LocatedEntity&, const std::string& name) override;
+
+	HandlerResult operation(LocatedEntity&,
+							const Operation&,
+							OpVector&) override;
+
+	int get(Atlas::Message::Element& val) const override;
+
+	void set(const Atlas::Message::Element& val) override;
+
+
+protected:
+
+	std::map<std::string, Attachment> m_data;
+
+	AttachmentsProperty* copy() const override;
+
+	static Ref<LocatedEntity> extractEntityRef(const Atlas::Message::Element& val);
 
 };
 

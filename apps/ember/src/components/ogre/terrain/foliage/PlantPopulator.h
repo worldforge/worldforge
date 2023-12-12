@@ -15,10 +15,8 @@ namespace WFMath {
 class MTRand;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 struct PlantAreaQueryResult;
 
 namespace Foliage {
@@ -77,8 +75,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* PLANTPOPULATOR_H_ */

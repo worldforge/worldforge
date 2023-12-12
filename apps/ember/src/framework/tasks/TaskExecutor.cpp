@@ -22,9 +22,8 @@
 #include "TaskUnit.h"
 #include "framework/Log.h"
 
-namespace Ember {
 
-namespace Tasks {
+namespace Ember::Tasks {
 TaskExecutor::TaskExecutor(TaskQueue& taskQueue) :
 		mTaskQueue(taskQueue),
 		mActive(true),
@@ -67,4 +66,4 @@ void TaskExecutor::join() {
 }
 
 }
-}
+

@@ -24,20 +24,14 @@
 #include <OgreResourceManager.h>
 #include <framework/MainLoopController.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Ogre {
+namespace Ember::OgreView::Gui::Adapters::Ogre {
 
 
 ResourceListAdapter::ResourceListAdapter(ListHolder* listHolder, ::Ogre::ResourceManager* resourceManager)
 		: mListHolder(listHolder),
-		mResourceManager(resourceManager),
-		mIndex(0){
+		  mResourceManager(resourceManager),
+		  mIndex(0) {
 }
 
 void ResourceListAdapter::update() {
@@ -77,7 +71,7 @@ void ResourceListAdapter::populate() {
 }
 
 }
-}
-}
-}
-}
+
+
+
+

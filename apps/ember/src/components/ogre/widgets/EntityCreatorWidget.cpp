@@ -30,7 +30,6 @@
 #include <components/ogre/mapping/ModelActionCreator.h>
 #include <components/ogre/widgets/adapters/atlas/AdapterFactory.h>
 #include "components/ogre/mapping/EmberEntityMappingManager.h"
-#include "components/ogre/model/Model.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Avatar.h"
 #include "AtlasHelper.h"
@@ -43,9 +42,8 @@
 
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 
 WidgetPluginCallback EntityCreatorWidget::registerWidget(GUIManager& guiManager) {
@@ -65,13 +63,14 @@ WidgetPluginCallback EntityCreatorWidget::registerWidget(GUIManager& guiManager)
 		});
 		state->connections.emplace_back(worldDestroyedConn);
 
-		state->showConsoleWrapper = std::make_unique<ConsoleCommandWrapper>(ConsoleBackend::getSingleton(), "show_entityCreator", [=, &world, &guiManager](const std::string& command, const std::string& args) {
-			if (!state->instance) {
-				state->instance = std::make_unique<Gui::EntityCreatorWidget>(guiManager, world);
-			} else {
-				state->instance->show();
-			}
-		});
+		state->showConsoleWrapper = std::make_unique<ConsoleCommandWrapper>(ConsoleBackend::getSingleton(), "show_entityCreator",
+																			[=, &world, &guiManager](const std::string& command, const std::string& args) {
+																				if (!state->instance) {
+																					state->instance = std::make_unique<Gui::EntityCreatorWidget>(guiManager, world);
+																				} else {
+																					state->instance->show();
+																				}
+																			});
 	};
 
 	auto gotWorldConn = EmberOgre::getSingleton().EventWorldCreated.connect(gotWorldFn);
@@ -617,5 +616,4 @@ void EntityCreatorWidget::show() {
 }
 
 }
-}
-}
+

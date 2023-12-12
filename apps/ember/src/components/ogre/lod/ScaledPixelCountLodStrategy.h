@@ -26,8 +26,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-#ifndef __ScaledPixel_Count_Lod_Strategy_H__
-#define __ScaledPixel_Count_Lod_Strategy_H__
+#ifndef ScaledPixel_Count_Lod_Strategy_H
+#define ScaledPixel_Count_Lod_Strategy_H
 
 #include <OgrePrerequisites.h>
 
@@ -35,88 +35,87 @@ THE SOFTWARE.
 #include <OgreSingleton.h>
 #include <OgreNode.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
 
-	/**
-	 * @brief LOD strategy which acts very much like the Ogre::PixelCountLodStrategy with the addition of taking scale into account.
-	 *
-	 * The reason for this is that we
-	 * 1) have many scaled meshes
-	 * 2) most of the scaled meshes are uniformly scaled
-	 *
-	 * This allows us to take scale of the parent node into account when determining LOD level, at the expense of some more processing per frame.
-	 */
-    class ScaledPixelCountLodStrategy : public Ogre::LodStrategy, public Ogre::Singleton<ScaledPixelCountLodStrategy>
-    {
-    protected:
-        /// @copydoc Ogre::LodStrategy::getValueImpl
-        Ogre::Real getValueImpl(const Ogre::MovableObject *movableObject, const Ogre::Camera *camera) const override;
+namespace Ember::OgreView::Lod {
 
-    public:
-        /** Default constructor. */
-        explicit ScaledPixelCountLodStrategy();
+/**
+ * @brief LOD strategy which acts very much like the Ogre::PixelCountLodStrategy with the addition of taking scale into account.
+ *
+ * The reason for this is that we
+ * 1) have many scaled meshes
+ * 2) most of the scaled meshes are uniformly scaled
+ *
+ * This allows us to take scale of the parent node into account when determining LOD level, at the expense of some more processing per frame.
+ */
+class ScaledPixelCountLodStrategy : public Ogre::LodStrategy, public Ogre::Singleton<ScaledPixelCountLodStrategy> {
+protected:
+	/// @copydoc Ogre::LodStrategy::getValueImpl
+	Ogre::Real getValueImpl(const Ogre::MovableObject* movableObject, const Ogre::Camera* camera) const override;
 
-        ~ScaledPixelCountLodStrategy() override {}
+public:
+	/** Default constructor. */
+	explicit ScaledPixelCountLodStrategy();
 
-        /// @copydoc Ogre::LodStrategy::getBaseValue
-        Ogre::Real getBaseValue() const override;
+	~ScaledPixelCountLodStrategy() override = default;
 
-        /// @copydoc Ogre::LodStrategy::transformBias
-        Ogre::Real transformBias(Ogre::Real factor) const override;
+	/// @copydoc Ogre::LodStrategy::getBaseValue
+	Ogre::Real getBaseValue() const override;
 
-        /// @copydoc Ogre::LodStrategy::getIndex
-        Ogre::ushort getIndex(Ogre::Real value, const Ogre::Mesh::MeshLodUsageList& meshLodUsageList) const override;
+	/// @copydoc Ogre::LodStrategy::transformBias
+	Ogre::Real transformBias(Ogre::Real factor) const override;
 
-        /// @copydoc Ogre::LodStrategy::getIndex
-        Ogre::ushort getIndex(Ogre::Real value, const Ogre::Material::LodValueList& materialLodValueList) const override;
+	/// @copydoc Ogre::LodStrategy::getIndex
+	Ogre::ushort getIndex(Ogre::Real value, const Ogre::Mesh::MeshLodUsageList& meshLodUsageList) const override;
 
-        /// @copydoc Ogre::LodStrategy::sort
-        void sort(Ogre::Mesh::MeshLodUsageList& meshLodUsageList) const override;
+	/// @copydoc Ogre::LodStrategy::getIndex
+	Ogre::ushort getIndex(Ogre::Real value, const Ogre::Material::LodValueList& materialLodValueList) const override;
 
-        /// @copydoc Ogre::LodStrategy::isSorted
-        bool isSorted(const Ogre::Mesh::LodValueList& values) const override;
+	/// @copydoc Ogre::LodStrategy::sort
+	void sort(Ogre::Mesh::MeshLodUsageList& meshLodUsageList) const override;
 
-        /** Override standard Singleton retrieval.
-        @remarks
-        Why do we do this? Well, it's because the Singleton
-        implementation is in a .h file, which means it gets compiled
-        into anybody who includes it. This is needed for the
-        Singleton template to work, but we actually only want it
-        compiled into the implementation of the class based on the
-        Singleton, not all of them. If we don't change this, we get
-        link errors when trying to use the Singleton-based class from
-        an outside dll.
-        @par
-        This method just delegates to the template version anyway,
-        but the implementation stays in this single compilation unit,
-        preventing link errors.
-        */
-        static ScaledPixelCountLodStrategy& getSingleton();
-        /** Override standard Singleton retrieval.
-        @remarks
-        Why do we do this? Well, it's because the Singleton
-        implementation is in a .h file, which means it gets compiled
-        into anybody who includes it. This is needed for the
-        Singleton template to work, but we actually only want it
-        compiled into the implementation of the class based on the
-        Singleton, not all of them. If we don't change this, we get
-        link errors when trying to use the Singleton-based class from
-        an outside dll.
-        @par
-        This method just delegates to the template version anyway,
-        but the implementation stays in this single compilation unit,
-        preventing link errors.
-        */
-        static ScaledPixelCountLodStrategy* getSingletonPtr();
+	/// @copydoc Ogre::LodStrategy::isSorted
+	bool isSorted(const Ogre::Mesh::LodValueList& values) const override;
 
-    };
-	/** @} */
-	/** @} */
+	/** Override standard Singleton retrieval.
+	@remarks
+	Why do we do this? Well, it's because the Singleton
+	implementation is in a .h file, which means it gets compiled
+	into anybody who includes it. This is needed for the
+	Singleton template to work, but we actually only want it
+	compiled into the implementation of the class based on the
+	Singleton, not all of them. If we don't change this, we get
+	link errors when trying to use the Singleton-based class from
+	an outside dll.
+	@par
+	This method just delegates to the template version anyway,
+	but the implementation stays in this single compilation unit,
+	preventing link errors.
+	*/
+	static ScaledPixelCountLodStrategy& getSingleton();
+
+	/** Override standard Singleton retrieval.
+	@remarks
+	Why do we do this? Well, it's because the Singleton
+	implementation is in a .h file, which means it gets compiled
+	into anybody who includes it. This is needed for the
+	Singleton template to work, but we actually only want it
+	compiled into the implementation of the class based on the
+	Singleton, not all of them. If we don't change this, we get
+	link errors when trying to use the Singleton-based class from
+	an outside dll.
+	@par
+	This method just delegates to the template version anyway,
+	but the implementation stays in this single compilation unit,
+	preventing link errors.
+	*/
+	static ScaledPixelCountLodStrategy* getSingletonPtr();
+
+};
+/** @} */
+/** @} */
 
 } // namespace
-} // namespace
-} // namespace
+// namespace
+// namespace
 
 #endif

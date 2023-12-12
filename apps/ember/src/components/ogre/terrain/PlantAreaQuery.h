@@ -32,10 +32,8 @@ namespace Ogre {
 class MemoryDataStream;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 struct TerrainLayerDefinition;
 
@@ -46,8 +44,6 @@ struct PlantAreaQuery {
 	Ogre::Vector2 mCenter;
 };
 }
-}
 
-}
 
 #endif /* PLANTAREAQUERY_H_ */

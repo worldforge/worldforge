@@ -46,10 +46,8 @@ template<int>
 class AxisBox;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainPage;
 
@@ -101,8 +99,6 @@ typedef std::vector<TerrainPageGeometryPtr> GeometryPtrVector;
 
 typedef std::map<int, const TerrainPageSurfaceLayer*> SurfaceLayerStore;
 }
-}
 
-}
 
 #endif /* EMBEROGRETERRAINTYPES_H_ */

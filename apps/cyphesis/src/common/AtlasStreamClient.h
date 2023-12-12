@@ -35,170 +35,196 @@
 #include <list>
 
 namespace Atlas {
-  class Codec;
+class Codec;
 } // namespace Atlas
 
 class ClientTask;
 
-class StreamClientSocketBase
-{
-    public:
-        StreamClientSocketBase(boost::asio::io_context& io_context, std::function<void()>& dispatcher);
-        virtual ~StreamClientSocketBase();
+class StreamClientSocketBase {
+public:
+	StreamClientSocketBase(boost::asio::io_context& io_context, std::function<void()>& dispatcher);
 
-        int negotiate(Atlas::Objects::ObjectsDecoder& decoder);
-        std::iostream& getIos();
+	virtual ~StreamClientSocketBase();
 
-        Atlas::Codec& getCodec();
-        Atlas::Objects::ObjectsEncoder& getEncoder();
+	int negotiate(Atlas::Objects::ObjectsDecoder& decoder);
 
-        virtual size_t write() = 0;
-        int poll(const std::chrono::steady_clock::duration& duration);
-        int poll(const std::chrono::steady_clock::duration& duration, const std::function<bool()>& exitCheckerFn);
+	std::iostream& getIos();
 
-        bool isConnected() const;
-    protected:
-        enum
-        {
-            read_buffer_size = 16384
-        };
-        boost::asio::io_context& m_io_context;
-        std::function<void()> mDispatcher;
+	Atlas::Codec& getCodec();
 
-        boost::asio::streambuf mBuffer;
-        boost::asio::streambuf mReadBuffer;
-        std::iostream m_ios;
-        std::unique_ptr<Atlas::Codec> m_codec;
-        std::unique_ptr<Atlas::Objects::ObjectsEncoder> m_encoder;
-        bool m_is_connected;
+	Atlas::Objects::ObjectsEncoder& getEncoder();
 
-        virtual size_t read_blocking() = 0;
-        virtual void do_read() = 0;
+	virtual size_t write() = 0;
+
+	int poll(const std::chrono::steady_clock::duration& duration);
+
+	int poll(const std::chrono::steady_clock::duration& duration, const std::function<bool()>& exitCheckerFn);
+
+	bool isConnected() const;
+
+protected:
+	enum {
+		read_buffer_size = 16384
+	};
+	boost::asio::io_context& m_io_context;
+	std::function<void()> mDispatcher;
+
+	boost::asio::streambuf mBuffer;
+	boost::asio::streambuf mReadBuffer;
+	std::iostream m_ios;
+	std::unique_ptr<Atlas::Codec> m_codec;
+	std::unique_ptr<Atlas::Objects::ObjectsEncoder> m_encoder;
+	bool m_is_connected;
+
+	virtual size_t read_blocking() = 0;
+
+	virtual void do_read() = 0;
 };
 
-class TcpStreamClientSocket : public StreamClientSocketBase
-{
-    public:
-        TcpStreamClientSocket(boost::asio::io_context& io_context, std::function<void()>& dispatcher, boost::asio::ip::tcp::endpoint endpoint);
-        size_t write() override;
-   protected:
-        boost::asio::ip::tcp::socket m_socket;
-        size_t read_blocking() override;
-        void do_read() override;
+class TcpStreamClientSocket : public StreamClientSocketBase {
+public:
+	TcpStreamClientSocket(boost::asio::io_context& io_context, std::function<void()>& dispatcher, boost::asio::ip::tcp::endpoint endpoint);
+
+	size_t write() override;
+
+protected:
+	boost::asio::ip::tcp::socket m_socket;
+
+	size_t read_blocking() override;
+
+	void do_read() override;
 };
 
-class LocalStreamClientSocket : public StreamClientSocketBase
-{
-    public:
-        LocalStreamClientSocket(boost::asio::io_context& io_context, std::function<void()>& dispatcher, boost::asio::local::stream_protocol::endpoint endpoint);
-        size_t write() override;
-    protected:
-        boost::asio::local::stream_protocol::socket m_socket;
-        size_t read_blocking() override;
-        void do_read() override;
+class LocalStreamClientSocket : public StreamClientSocketBase {
+public:
+	LocalStreamClientSocket(boost::asio::io_context& io_context, std::function<void()>& dispatcher, boost::asio::local::stream_protocol::endpoint endpoint);
+
+	size_t write() override;
+
+protected:
+	boost::asio::local::stream_protocol::socket m_socket;
+
+	size_t read_blocking() override;
+
+	void do_read() override;
 };
 
 
-class AtlasStreamClient : public Atlas::Objects::ObjectsDecoder
-{
-  protected:
-    boost::asio::io_context& m_io_context;
+class AtlasStreamClient : public Atlas::Objects::ObjectsDecoder {
+protected:
+	boost::asio::io_context& m_io_context;
 
-    /// \brief Flag to indicate that a reply has been received from the server
-    bool reply_flag;
-    /// \brief Flag to indicate that an error has been received from the server
-    bool error_flag;
-    /// \brief Counter used to track serial numbers sent to the server
-    int serialNo;
+	/// \brief Flag to indicate that a reply has been received from the server
+	bool reply_flag;
+	/// \brief Flag to indicate that an error has been received from the server
+	bool error_flag;
+	/// \brief Counter used to track serial numbers sent to the server
+	int serialNo;
 
-    std::unique_ptr<StreamClientSocketBase> m_socket;
-    std::shared_ptr<ClientTask> m_currentTask;
+	std::unique_ptr<StreamClientSocketBase> m_socket;
+	std::shared_ptr<ClientTask> m_currentTask;
 
-    std::string m_username;
-    size_t m_spacing;
+	std::string m_username;
+	size_t m_spacing;
 
-    /// \brief Store for reply data from the server
-    Atlas::Objects::Root m_infoReply;
+	/// \brief Store for reply data from the server
+	Atlas::Objects::Root m_infoReply;
 
-    /// \brief Account identifier returned after successful login
-    std::string m_accountId;
-    /// \brief Account type returned after login
-    std::string m_accountType;
-    /// \brief Stored error message from the last received Error operation
-    std::string m_errorMessage;
+	/// \brief Account identifier returned after successful login
+	std::string m_accountId;
+	/// \brief Account type returned after login
+	std::string m_accountType;
+	/// \brief Stored error message from the last received Error operation
+	std::string m_errorMessage;
 
-    std::list<Atlas::Objects::Operation::RootOperation> mOps;
+	std::list<Atlas::Objects::Operation::RootOperation> mOps;
 
-    // void objectArrived(const Atlas::Objects::Root &);
-    int waitForLoginResponse();
-    void dispatch();
+	// void objectArrived(const Atlas::Objects::Root &);
+	int waitForLoginResponse();
 
-    void objectArrived(Atlas::Objects::Root) override;
+	void dispatch();
 
-    virtual void operation(const Atlas::Objects::Operation::RootOperation &);
+	void objectArrived(Atlas::Objects::Root) override;
 
-    virtual void infoArrived(const Atlas::Objects::Operation::RootOperation &);
-    virtual void errorArrived(const Atlas::Objects::Operation::RootOperation &);
-    virtual void appearanceArrived(const Operation &);
-    virtual void disappearanceArrived(const Operation &);
-    virtual void sightArrived(const Operation &);
-    virtual void soundArrived(const Operation &);
+	virtual void operation(const Atlas::Objects::Operation::RootOperation&);
 
-    virtual void loginSuccess(const Atlas::Objects::Root & arg);
+	virtual void infoArrived(const Atlas::Objects::Operation::RootOperation&);
 
-  public:
-     explicit AtlasStreamClient(boost::asio::io_context& io_context,
-         const Atlas::Objects::Factories& factories);
+	virtual void errorArrived(const Atlas::Objects::Operation::RootOperation&);
 
-    ~AtlasStreamClient() override;
+	virtual void appearanceArrived(const Operation&);
 
-    int newSerialNo() {
-        return ++serialNo;
-    }
+	virtual void disappearanceArrived(const Operation&);
 
-    const Atlas::Objects::Root & getInfoReply() const {
-        return m_infoReply;
-    }
+	virtual void sightArrived(const Operation&);
 
-    Atlas::Objects::Root & getInfoReply() {
-        return m_infoReply;
-    }
+	virtual void soundArrived(const Operation&);
 
-    const std::string & errorMessage() const {
-        return m_errorMessage;
-    }
+	virtual void loginSuccess(const Atlas::Objects::Root& arg);
 
-    size_t spacing() const {
-        return m_spacing;
-    }
+public:
+	explicit AtlasStreamClient(boost::asio::io_context& io_context,
+							   const Atlas::Objects::Factories& factories);
 
-    virtual void send(const Atlas::Objects::Operation::RootOperation & op);
-    int connect(const std::string & host, unsigned short port = 6767);
-    int connectLocal(const std::string & host);
-    int cleanDisconnect();
-    int login(const std::string & username, const std::string & password);
-    int create(const std::string & type,
-               const std::string & username,
-               const std::string & password);
-    int pollOne(const std::chrono::steady_clock::duration& duration);
-    int poll(const std::chrono::steady_clock::duration& duration);
-    void output(const Atlas::Message::Element & item, size_t depth = 0) const;
-    void output(const Atlas::Objects::Root & item) const;
+	~AtlasStreamClient() override;
 
-    int runTask(std::shared_ptr<ClientTask> task, const std::string & arg);
-    int endTask();
+	int newSerialNo() {
+		return ++serialNo;
+	}
 
-    /**
-     * Checks if there's an active task.
-     * @return True if there's a task set.
-     */
-    bool hasTask() const;
+	const Atlas::Objects::Root& getInfoReply() const {
+		return m_infoReply;
+	}
 
-    /**
-     * Poll the server until the current task has completed.
-     * @return 0 if successful
-     */
-    int pollUntilTaskComplete();
+	Atlas::Objects::Root& getInfoReply() {
+		return m_infoReply;
+	}
+
+	const std::string& errorMessage() const {
+		return m_errorMessage;
+	}
+
+	size_t spacing() const {
+		return m_spacing;
+	}
+
+	virtual void send(const Atlas::Objects::Operation::RootOperation& op);
+
+	int connect(const std::string& host, unsigned short port = 6767);
+
+	int connectLocal(const std::string& host);
+
+	int cleanDisconnect();
+
+	int login(const std::string& username, const std::string& password);
+
+	int create(const std::string& type,
+			   const std::string& username,
+			   const std::string& password);
+
+	int pollOne(const std::chrono::steady_clock::duration& duration);
+
+	int poll(const std::chrono::steady_clock::duration& duration);
+
+	void output(const Atlas::Message::Element& item, size_t depth = 0) const;
+
+	void output(const Atlas::Objects::Root& item) const;
+
+	int runTask(std::shared_ptr<ClientTask> task, const std::string& arg);
+
+	int endTask();
+
+	/**
+	 * Checks if there's an active task.
+	 * @return True if there's a task set.
+	 */
+	bool hasTask() const;
+
+	/**
+	 * Poll the server until the current task has completed.
+	 * @return 0 if successful
+	 */
+	int pollUntilTaskComplete();
 
 };
 

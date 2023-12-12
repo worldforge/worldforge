@@ -27,12 +27,15 @@
 #include <boost/asio/ip/tcp.hpp>
 
 class CommPeer;
+
 class Connection;
+
 class LocatedEntity;
+
 class Peer;
 
 struct PeerAddress {
-    boost::asio::ip::tcp::resolver::iterator i;
+	boost::asio::ip::tcp::resolver::iterator i;
 };
 
 /// \brief Class managing and persisting connections to another server that
@@ -44,47 +47,52 @@ struct PeerAddress {
 /// the Peer object, which this object holds a reference to, but does not
 /// own.
 class Juncture : public ConnectableRouter, virtual public sigc::trackable {
-  protected:
+protected:
 
-    /// \brief The network connection currently subscribed to this object
-    Connection * m_connection;
-    PeerAddress m_address;
+	/// \brief The network connection currently subscribed to this object
+	Connection* m_connection;
+	PeerAddress m_address;
 
-    std::weak_ptr<CommPeer> m_socket;
-    Peer * m_peer;
-    long m_connectRef;
-    std::string m_host;
-    int m_port;
+	std::weak_ptr<CommPeer> m_socket;
+	Peer* m_peer;
+	long m_connectRef;
+	std::string m_host;
+	int m_port;
 
-    void onSocketConnected();
-    void onSocketFailed();
-    void onPeerLost();
-    void onPeerReplied(const Operation &);
+	void onSocketConnected();
 
-    int attemptConnect(const std::string &, int);
-  public:
-    Juncture(Connection *, RouterId id);
+	void onSocketFailed();
 
-    ~Juncture() override;
+	void onPeerLost();
 
-    void externalOperation(const Operation & op, Link &) override;
+	void onPeerReplied(const Operation&);
 
-    void operation(const Operation &, OpVector &) override;
+	int attemptConnect(const std::string&, int);
 
-    void addToMessage(Atlas::Message::MapType &) const override;
+public:
+	Juncture(Connection*, RouterId id);
 
-    void addToEntity(const Atlas::Objects::Entity::RootEntity &) const override;
+	~Juncture() override;
 
-    void LoginOperation(const Operation &, OpVector &);
-    void OtherOperation(const Operation &, OpVector &);
+	void externalOperation(const Operation& op, Link&) override;
 
-    void customConnectOperation(const Operation &, OpVector &);
+	void operation(const Operation&, OpVector&) override;
 
-    int teleportEntity(const LocatedEntity *);
+	void addToMessage(Atlas::Message::MapType&) const override;
 
-    void setConnection(Connection* connection) override;
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const override;
 
-    Connection* getConnection() const override;
+	void LoginOperation(const Operation&, OpVector&);
+
+	void OtherOperation(const Operation&, OpVector&);
+
+	void customConnectOperation(const Operation&, OpVector&);
+
+	int teleportEntity(const LocatedEntity*);
+
+	void setConnection(Connection* connection) override;
+
+	Connection* getConnection() const override;
 };
 
 #endif // SERVER_JUNCTURE_H

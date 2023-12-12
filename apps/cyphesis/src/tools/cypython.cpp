@@ -39,6 +39,7 @@ extern "C" {
 #ifndef READLINE_CXX_SANE
 }
 #endif
+
 #include <boost/asio.hpp>
 
 #ifdef ERROR
@@ -47,51 +48,50 @@ extern "C" {
 
 using namespace boost::asio;
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char** argv) {
 	spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [python] [%^%l%$] %v");
 
-    int config_status = loadConfig(argc, argv, 0); 
-    if (config_status < 0) {
-        if (config_status == CONFIG_VERSION) {
-            reportVersion(argv[0]);
-            return 0;
-        } else if (config_status == CONFIG_HELP) {
-            showUsage(argv[0], USAGE_CYPYTHON, "");
-            return 0;
-        } else if (config_status != CONFIG_ERROR) {
-            spdlog::error("Unknown error reading configuration.");
-        }
-        // Fatal error loading config file
-        return 1;
-    }
+	int config_status = loadConfig(argc, argv, 0);
+	if (config_status < 0) {
+		if (config_status == CONFIG_VERSION) {
+			reportVersion(argv[0]);
+			return 0;
+		} else if (config_status == CONFIG_HELP) {
+			showUsage(argv[0], USAGE_CYPYTHON, "");
+			return 0;
+		} else if (config_status != CONFIG_ERROR) {
+			spdlog::error("Unknown error reading configuration.");
+		}
+		// Fatal error loading config file
+		return 1;
+	}
 
-    if (config_status > argc) {
-        showUsage(argv[0], USAGE_CYPYTHON, "");
-        return 1;
-    }
+	if (config_status > argc) {
+		showUsage(argv[0], USAGE_CYPYTHON, "");
+		return 1;
+	}
 
-    io_context io_context;
-    local::stream_protocol::socket sk(io_context);
-    sk.connect(local::stream_protocol::endpoint(python_socket_name));
+	io_context io_context;
+	local::stream_protocol::socket sk(io_context);
+	sk.connect(local::stream_protocol::endpoint(python_socket_name));
 
-    if (!sk.is_open()) {
-        std::cerr << "Connection to " << python_socket_name
-                  << " failed" << std::endl;
-        return 1;
-    }
+	if (!sk.is_open()) {
+		std::cerr << "Connection to " << python_socket_name
+				  << " failed" << std::endl;
+		return 1;
+	}
 
-    while (!exit_flag) {
-        const char * line = readline(">>> ");
-        if (line == 0) {
-            exit_flag = true;
-            std::cout << std::endl;
-        } else {
-            add_history(line);
-            sk.write_some(buffer(std::string(line) + "\n"));
-        }
-    }
+	while (!exit_flag) {
+		const char* line = readline(">>> ");
+		if (line == 0) {
+			exit_flag = true;
+			std::cout << std::endl;
+		} else {
+			add_history(line);
+			sk.write_some(buffer(std::string(line) + "\n"));
+		}
+	}
 
-    delete global_conf;
-    return 0;
+	delete global_conf;
+	return 0;
 }

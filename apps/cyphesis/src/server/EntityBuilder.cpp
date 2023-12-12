@@ -39,9 +39,8 @@ using Atlas::Objects::Entity::RootEntity;
 
 static const bool debug_flag = false;
 
-EntityBuilder::EntityBuilder()
-{
-    installBaseFactory("archetype", "root_entity", std::make_unique<ArchetypeFactory>(*this));
+EntityBuilder::EntityBuilder() {
+	installBaseFactory("archetype", "root_entity", std::make_unique<ArchetypeFactory>(*this));
 }
 
 EntityBuilder::~EntityBuilder() = default;
@@ -57,69 +56,63 @@ EntityBuilder::~EntityBuilder() = default;
 /// @param intId The integer identifier of the new entity.
 /// @param type The string specifying the type of entity.
 /// @param attributes A mapping of attribute values to set on the entity.
-Ref<Entity> EntityBuilder::newEntity(RouterId id, const std::string& type, const RootEntity& attributes) const
-{
-    try {
-        return newChildEntity(id, type, attributes);
-    } catch (const std::exception& ex) {
-        spdlog::error("Error when creating entity of type {}."
-                                   " Message: {}", type, ex.what());
-        return nullptr;
-    }
+Ref<Entity> EntityBuilder::newEntity(RouterId id, const std::string& type, const RootEntity& attributes) const {
+	try {
+		return newChildEntity(id, type, attributes);
+	} catch (const std::exception& ex) {
+		spdlog::error("Error when creating entity of type {}."
+					  " Message: {}", type, ex.what());
+		return nullptr;
+	}
 }
 
 Ref<Entity> EntityBuilder::newChildEntity(RouterId id,
-                                                 const std::string& type,
-                                                 const Atlas::Objects::Entity::RootEntity& attributes) const
-{
-    cy_debug_print("EntityFactor::newEntity()")
-    auto I = m_entityFactories.find(type);
-    if (I == m_entityFactories.end()) {
-        return nullptr;
-    }
+										  const std::string& type,
+										  const Atlas::Objects::Entity::RootEntity& attributes) const {
+	cy_debug_print("EntityFactor::newEntity()")
+	auto I = m_entityFactories.find(type);
+	if (I == m_entityFactories.end()) {
+		return nullptr;
+	}
 
-    auto& factory = I->second;
-    cy_debug_print("[" << type << "]")
-    if (attributes) {
-        attributes->removeAttr("parent");
-    }
-    return factory->newEntity(std::move(id), attributes);
+	auto& factory = I->second;
+	cy_debug_print("[" << type << "]")
+	if (attributes) {
+		attributes->removeAttr("parent");
+	}
+	return factory->newEntity(std::move(id), attributes);
 
 }
 
 /// \brief Clear out all the factory objects owned by the entity builder.
-void EntityBuilder::flushFactories()
-{
-    m_entityFactories.clear();
+void EntityBuilder::flushFactories() {
+	m_entityFactories.clear();
 }
 
-void EntityBuilder::installBaseFactory(const std::string& class_name, const std::string& parent, std::unique_ptr<EntityKit> factory)
-{
-    installFactory(class_name, atlasClass(class_name, parent), std::move(factory));
+void EntityBuilder::installBaseFactory(const std::string& class_name, const std::string& parent, std::unique_ptr<EntityKit> factory) {
+	installFactory(class_name, atlasClass(class_name, parent), std::move(factory));
 }
 
-int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory)
-{
-    Inheritance& i = Inheritance::instance();
-    factory->m_type = i.addChild(class_desc);
+int EntityBuilder::installFactory(const std::string& class_name, const Root& class_desc, std::unique_ptr<EntityKit> factory) {
+	Inheritance& i = Inheritance::instance();
+	factory->m_type = i.addChild(class_desc);
 
-    if (factory->m_type == nullptr) {
-        return -1;
-    }
+	if (factory->m_type == nullptr) {
+		return -1;
+	}
 
-    Monitors::instance().watch(fmt::format(R"(created_count{{type="{}"}})", class_name), std::make_unique<Variable<int>>(factory->m_createdCount));
+	Monitors::instance().watch(fmt::format(R"(created_count{{type="{}"}})", class_name), std::make_unique<Variable<int>>(factory->m_createdCount));
 
-    m_entityFactories.emplace(class_name, std::move(factory));
+	m_entityFactories.emplace(class_name, std::move(factory));
 
-    return 0;
+	return 0;
 }
 
-EntityKit* EntityBuilder::getClassFactory(const std::string& class_name) const
-{
-    auto I = m_entityFactories.find(class_name);
-    if (I == m_entityFactories.end()) {
-        return nullptr;
-    }
-    return I->second.get();
+EntityKit* EntityBuilder::getClassFactory(const std::string& class_name) const {
+	auto I = m_entityFactories.find(class_name);
+	if (I == m_entityFactories.end()) {
+		return nullptr;
+	}
+	return I->second.get();
 }
 

@@ -32,11 +32,9 @@ class TypeInfo;
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
 
-namespace Gui {
 
-namespace Icons {
+namespace OgreView::Gui::Icons {
 
 
 /**
@@ -69,9 +67,6 @@ protected:
 
 }
 
-}
-
-}
 
 }
 

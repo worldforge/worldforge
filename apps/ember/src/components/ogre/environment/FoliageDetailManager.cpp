@@ -24,12 +24,9 @@
 
 #include "services/config/ConfigListenerContainer.h"
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Environment
-{
+
+
+namespace Ember::OgreView::Environment {
 
 FoliageDetailManager::FoliageDetailManager(Foliage& foliage, GraphicalChangeAdapter& graphicalChangeAdapter) :
 		mFoliage(foliage),
@@ -42,19 +39,16 @@ FoliageDetailManager::FoliageDetailManager(Foliage& foliage, GraphicalChangeAdap
 		mMinFarDistance(0.3f),
 		mGraphicalChangeAdapter(graphicalChangeAdapter),
 		mChangeRequiredConnection(mGraphicalChangeAdapter.EventChangeRequired.connect(sigc::mem_fun(*this, &FoliageDetailManager::changeLevel))),
-		mConfigListenerContainer(std::make_unique<ConfigListenerContainer>())
-{
+		mConfigListenerContainer(std::make_unique<ConfigListenerContainer>()) {
 	mConfigListenerContainer->registerConfigListener("graphics", "foliagedensity", sigc::mem_fun(*this, &FoliageDetailManager::Config_FoliageDensity));
 	mConfigListenerContainer->registerConfigListener("graphics", "foliagefardistance", sigc::mem_fun(*this, &FoliageDetailManager::Config_FoliageFarDistance));
 }
 
-FoliageDetailManager::~FoliageDetailManager()
-{
+FoliageDetailManager::~FoliageDetailManager() {
 	mChangeRequiredConnection.disconnect();
 }
 
-bool FoliageDetailManager::changeLevel(float level)
-{
+bool FoliageDetailManager::changeLevel(float level) {
 	if (std::abs(level) < mThresholdLevel) {
 		return false;
 	}
@@ -71,8 +65,7 @@ bool FoliageDetailManager::changeLevel(float level)
 	return changeMade;
 }
 
-bool FoliageDetailManager::stepDownFoliageDensity(float step)
-{
+bool FoliageDetailManager::stepDownFoliageDensity(float step) {
 	if (mUpdatedDensity > step) { //step down only if existing density is greater than step
 		mUpdatedDensity -= step;
 		mFoliage.setDensity(mUpdatedDensity);
@@ -86,8 +79,7 @@ bool FoliageDetailManager::stepDownFoliageDensity(float step)
 	}
 }
 
-bool FoliageDetailManager::stepUpFoliageDensity(float step)
-{
+bool FoliageDetailManager::stepUpFoliageDensity(float step) {
 	if (mUpdatedDensity + step <= 1.0f) { //step up only if the step doesn't cause density to go over default density
 		mUpdatedDensity += step;
 		mFoliage.setDensity(mUpdatedDensity);
@@ -101,8 +93,7 @@ bool FoliageDetailManager::stepUpFoliageDensity(float step)
 	}
 }
 
-bool FoliageDetailManager::stepDownFoliageDistance(float step)
-{
+bool FoliageDetailManager::stepDownFoliageDistance(float step) {
 	if (mFarDistance > step) { //step down only if existing far distance is greater than step
 		mFarDistance -= step;
 		mFoliage.setFarDistance(mFarDistance);
@@ -116,8 +107,7 @@ bool FoliageDetailManager::stepDownFoliageDistance(float step)
 	}
 }
 
-bool FoliageDetailManager::stepUpFoliageDistance(float step)
-{
+bool FoliageDetailManager::stepUpFoliageDistance(float step) {
 	if (mFarDistance + step <= mMaxFarDistance) { //step up only if the step doesn't cause distance to go over max distance.
 		mFarDistance += step;
 		mFoliage.setFarDistance(mFarDistance);
@@ -131,25 +121,23 @@ bool FoliageDetailManager::stepUpFoliageDistance(float step)
 	}
 }
 
-bool FoliageDetailManager::setFoliageDistance(float distance)
-{
+bool FoliageDetailManager::setFoliageDistance(float distance) {
 	pause(); //pause the component to prevent instability if value is changed manually during signaled automatic adjustment.
-	
+
 	if (distance < 0) { //set the distance as long as it's not negative.
 		mFarDistance = 0;
 	} else {
 		mFarDistance = distance;
 	}
 	mFoliage.setFarDistance(mFarDistance);
-	
+
 	unpause();
 	return true;
 }
 
-bool FoliageDetailManager::setFoliageDensity(float density)
-{
+bool FoliageDetailManager::setFoliageDensity(float density) {
 	pause(); //pause the listening for change requests to prevent instability if value is changed manually during signaled automatic adjustment.
-	
+
 	if (density < 0.0f) { //check if density negative
 		mUpdatedDensity = 0.0f;
 	} else if (density > 1.0f) {
@@ -158,38 +146,34 @@ bool FoliageDetailManager::setFoliageDensity(float density)
 		mUpdatedDensity = density;
 	}
 	mFoliage.setDensity(mUpdatedDensity);
-	
+
 	unpause();
 
 	return true;
 }
 
-void FoliageDetailManager::Config_FoliageDensity(const std::string&, const std::string&, varconf::Variable& variable)
-{
+void FoliageDetailManager::Config_FoliageDensity(const std::string&, const std::string&, varconf::Variable& variable) {
 	if (variable.is_double()) {
 		auto density = static_cast<double>(variable);
-		setFoliageDensity((float)density / 100.0f);
+		setFoliageDensity((float) density / 100.0f);
 	}
 }
 
-void FoliageDetailManager::Config_FoliageFarDistance(const std::string&, const std::string&, varconf::Variable& variable)
-{
+void FoliageDetailManager::Config_FoliageFarDistance(const std::string&, const std::string&, varconf::Variable& variable) {
 	if (variable.is_double()) {
 		auto distanceFactor = static_cast<double>(variable);
-		setFoliageDistance((float)distanceFactor / 100.0f);
+		setFoliageDistance((float) distanceFactor / 100.0f);
 	}
 }
 
-void FoliageDetailManager::pause()
-{
+void FoliageDetailManager::pause() {
 	mChangeRequiredConnection.block();
 }
 
-void FoliageDetailManager::unpause()
-{
+void FoliageDetailManager::unpause() {
 	mChangeRequiredConnection.unblock();
 }
 
 }
-}
-}
+
+

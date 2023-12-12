@@ -23,8 +23,8 @@
 #include <boost/any.hpp>
 #include "BulletWorld.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 struct INodeProvider;
 namespace Model {
 class Model;
@@ -71,7 +71,7 @@ private:
 
 };
 }
-}
+
 
 
 #endif //EMBER_BULLETCOLLISIONDETECTOR_H

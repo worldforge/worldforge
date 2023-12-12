@@ -28,28 +28,27 @@
 #include <unordered_map>
 
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Definitions {
+
+
+namespace Ember::EntityMapping::Definitions {
 
 
 /**
 	Base class for all Definitions.
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-struct DefinitionBase
-{
+struct DefinitionBase {
 	std::unordered_map<std::string, std::string> Properties;
 	std::string Type;
 };
 
 }
 
-}
 
-}
+
+
 
 
 #endif

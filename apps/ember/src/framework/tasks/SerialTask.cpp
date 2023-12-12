@@ -21,16 +21,14 @@
 #include <utility>
 #include "TaskExecutionContext.h"
 
-namespace Ember {
 
-namespace Tasks {
+namespace Ember::Tasks {
 
 SerialTask::SerialTask(TaskStore subTasks)
 		: mSubTasks(std::move(subTasks)) {
 }
 
-SerialTask::SerialTask(std::unique_ptr<ITask> firstTask, std::unique_ptr<ITask> secondTask, std::unique_ptr<ITask> thirdTask, std::unique_ptr<ITask> fourthTask)
-{
+SerialTask::SerialTask(std::unique_ptr<ITask> firstTask, std::unique_ptr<ITask> secondTask, std::unique_ptr<ITask> thirdTask, std::unique_ptr<ITask> fourthTask) {
 	if (firstTask) {
 		mSubTasks.push_back(std::move(firstTask));
 	}
@@ -53,4 +51,4 @@ void SerialTask::executeTaskInBackgroundThread(TaskExecutionContext& context) {
 
 }
 
-}
+

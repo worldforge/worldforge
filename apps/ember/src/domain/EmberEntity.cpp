@@ -36,8 +36,12 @@
 #include <sstream>
 #include <iostream>
 
-template <> struct fmt::formatter<Eris::Entity> : ostream_formatter {};
-template <> struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {};
+template<>
+struct fmt::formatter<Eris::Entity> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {
+};
 
 namespace Ember {
 
@@ -194,7 +198,7 @@ void EmberEntity::onSoundAction(const Atlas::Objects::Operation::RootOperation& 
 
 	std::string message = getNameOrType() + " emits a " + op->getParent() + ".";
 	ConsoleBackend::getSingletonPtr()->pushMessage(message, "info");
-	logger->debug("Entity: {} ({}) sound action: {}",this->getId(), this->getName(), op->getParent());
+	logger->debug("Entity: {} ({}) sound action: {}", this->getId(), this->getName(), op->getParent());
 
 	Eris::ViewEntity::onSoundAction(op, typeInfo);
 }
@@ -322,7 +326,7 @@ std::vector<ActionChange> EmberEntity::processActionsChange(const Atlas::Message
 	if (!v.isMap()) {
 		//Remove all existing actions
 		for (auto& entry: mActionsData) {
-			actionChanges.emplace_back(ActionChange{ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0}});
+			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0});
 		}
 		mActionsData.clear();
 	} else if (mActionsData.empty()) {
@@ -331,7 +335,7 @@ std::vector<ActionChange> EmberEntity::processActionsChange(const Atlas::Message
 		for (auto& newEntry: newMap) {
 			AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
 				ActionEntry actionEntry{newEntry.first, startTime, 0};
-				actionChanges.emplace_back(ActionChange{ActionChange::ChangeType::Added, std::move(actionEntry)});
+				actionChanges.emplace_back(ActionChange::ChangeType::Added, std::move(actionEntry));
 			});
 		}
 		mActionsData = newMap;
@@ -343,18 +347,18 @@ std::vector<ActionChange> EmberEntity::processActionsChange(const Atlas::Message
 			if (existingI == existingMap.end()) {
 				AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
 					ActionEntry actionEntry{newEntry.first, startTime, 0};
-					actionChanges.emplace_back(ActionChange{ActionChange::ChangeType::Added, std::move(actionEntry)});
+					actionChanges.emplace_back(ActionChange::ChangeType::Added, std::move(actionEntry));
 				});
 			} else {
 				AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
 					ActionEntry actionEntry{newEntry.first, startTime, 0};
-					actionChanges.emplace_back(ActionChange{ActionChange::ChangeType::Updated, std::move(actionEntry)});
+					actionChanges.emplace_back(ActionChange::ChangeType::Updated, std::move(actionEntry));
 				});
 				existingMap.erase(existingI);
 			}
 		}
 		for (auto& entry: existingMap) {
-			actionChanges.emplace_back(ActionChange{ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0}});
+			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0});
 		}
 		mActionsData = newMap;
 	}

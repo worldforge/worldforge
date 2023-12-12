@@ -46,224 +46,219 @@ using Atlas::Objects::Entity::RootEntity;
 
 using Atlas::Objects::smart_dynamic_cast;
 
-void UsagesProperty::set(const Atlas::Message::Element& val)
-{
-    Property::set(val);
+void UsagesProperty::set(const Atlas::Message::Element& val) {
+	Property::set(val);
 
-    m_usages.clear();
+	m_usages.clear();
 
-    for (auto& usageEntry : m_data) {
-        if (!usageEntry.first.empty()) {
-            try {
-                //TODO: check that the op is a subtype of "action"?
-                if (usageEntry.second.isMap()) {
-                    auto& map = usageEntry.second.Map();
+	for (auto& usageEntry: m_data) {
+		if (!usageEntry.first.empty()) {
+			try {
+				//TODO: check that the op is a subtype of "action"?
+				if (usageEntry.second.isMap()) {
+					auto& map = usageEntry.second.Map();
 
-                    Usage usage;
+					Usage usage;
 
-                    AtlasQuery::find<std::string>(map, "handler", [&](const std::string& value) {
-                        usage.handler = value;
-                    });
-                    if (usage.handler.empty()) {
-                        continue;
-                    }
+					AtlasQuery::find<std::string>(map, "handler", [&](const std::string& value) {
+						usage.handler = value;
+					});
+					if (usage.handler.empty()) {
+						continue;
+					}
 
-                    AtlasQuery::find<std::string>(map, "description", [&](const std::string& value) {
-                        usage.description = value;
-                    });
-                    AtlasQuery::find<std::string>(map, "constraint", [&](const std::string& value) {
-                        //TODO: should be a usage constraint provider factory
-                        usage.constraint.reset(new EntityFilter::Filter(value, EntityFilter::ProviderFactory()));
-                    });
-                    AtlasQuery::find<Atlas::Message::MapType>(map, "params", [&](const Atlas::Message::MapType& value) {
-                        for (auto& entry : value) {
-                            auto parameter = UsageParameter::parse(entry.second);
-                            usage.params.emplace(entry.first, std::move(parameter));
-                        }
-                    });
+					AtlasQuery::find<std::string>(map, "description", [&](const std::string& value) {
+						usage.description = value;
+					});
+					AtlasQuery::find<std::string>(map, "constraint", [&](const std::string& value) {
+						//TODO: should be a usage constraint provider factory
+						usage.constraint.reset(new EntityFilter::Filter(value, EntityFilter::ProviderFactory()));
+					});
+					AtlasQuery::find<Atlas::Message::MapType>(map, "params", [&](const Atlas::Message::MapType& value) {
+						for (auto& entry: value) {
+							auto parameter = UsageParameter::parse(entry.second);
+							usage.params.emplace(entry.first, std::move(parameter));
+						}
+					});
 
-                    m_usages.emplace(usageEntry.first, std::move(usage));
-                }
-            } catch (const std::invalid_argument& e) {
-                spdlog::error("Could not install usage '{}' : {}", usageEntry.first, e.what());
-            }
-        }
-    }
+					m_usages.emplace(usageEntry.first, std::move(usage));
+				}
+			} catch (const std::invalid_argument& e) {
+				spdlog::error("Could not install usage '{}' : {}", usageEntry.first, e.what());
+			}
+		}
+	}
 }
 
-void UsagesProperty::install(LocatedEntity& owner, const std::string& name)
-{
-    owner.installDelegate(Atlas::Objects::Operation::USE_NO, name);
+void UsagesProperty::install(LocatedEntity& owner, const std::string& name) {
+	owner.installDelegate(Atlas::Objects::Operation::USE_NO, name);
 }
 
 
-void UsagesProperty::remove(LocatedEntity& owner, const std::string& name)
-{
-    owner.removeDelegate(Atlas::Objects::Operation::USE_NO, name);
+void UsagesProperty::remove(LocatedEntity& owner, const std::string& name) {
+	owner.removeDelegate(Atlas::Objects::Operation::USE_NO, name);
 }
 
 HandlerResult UsagesProperty::operation(LocatedEntity& e,
-                                        const Operation& op, OpVector& res)
-{
-    return use_handler(e, op, res);
+										const Operation& op, OpVector& res) {
+	return use_handler(e, op, res);
 }
 
 HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
-                                          const Operation& op, OpVector& res)
-{
+										  const Operation& op, OpVector& res) {
 
-    if (!op->getArgs().empty()) {
-        auto& arg = op->getArgs().front();
-        auto argOp = smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(arg);
-        if (!argOp) {
-            //This op is not for us
-            return OPERATION_IGNORED;
-        }
+	if (!op->getArgs().empty()) {
+		auto& arg = op->getArgs().front();
+		auto argOp = smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(arg);
+		if (!argOp) {
+			//This op is not for us
+			return OPERATION_IGNORED;
+		}
 
-        auto actor = BaseWorld::instance().getEntity(op->getFrom());
-        if (!actor) {
-            e.error(op, "Could not find 'from' entity.", res, e.getId());
-            return OPERATION_IGNORED;
-        }
+		auto actor = BaseWorld::instance().getEntity(op->getFrom());
+		if (!actor) {
+			e.error(op, "Could not find 'from' entity.", res, e.getId());
+			return OPERATION_IGNORED;
+		}
 
-        if (op->isDefaultFrom()) {
-            actor->error(op, "Top op has no 'from' attribute.", res, actor->getId());
-            return OPERATION_IGNORED;
-        }
+		if (op->isDefaultFrom()) {
+			actor->error(op, "Top op has no 'from' attribute.", res, actor->getId());
+			return OPERATION_IGNORED;
+		}
 
-        if (!argOp->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
-            actor->error(op, "Use arg op has malformed parent", res, actor->getId());
-            return OPERATION_IGNORED;
-        }
-        auto op_type = argOp->getParent();
-        cy_debug_print("Got op type " << op_type << " from arg")
+		if (!argOp->hasAttrFlag(Atlas::Objects::PARENT_FLAG)) {
+			actor->error(op, "Use arg op has malformed parent", res, actor->getId());
+			return OPERATION_IGNORED;
+		}
+		auto op_type = argOp->getParent();
+		cy_debug_print("Got op type " << op_type << " from arg")
 
-        auto obj = Inheritance::instance().getFactories().createObject(op_type);
-        if (!obj.isValid()) {
-            spdlog::error("Character::UseOperation Unknown op type "
-                                       "\"{}\".", op_type);
-            return OPERATION_IGNORED;
-        }
+		auto obj = Inheritance::instance().getFactories().createObject(op_type);
+		if (!obj.isValid()) {
+			spdlog::error("Character::UseOperation Unknown op type "
+						  "\"{}\".", op_type);
+			return OPERATION_IGNORED;
+		}
 
-        auto rop = smart_dynamic_cast<Operation>(obj);
-        if (!rop.isValid()) {
-            spdlog::error("Character::UseOperation Op type "
-                                       "\"{}\" but it is not an operation type. ", op_type);
-            return OPERATION_IGNORED;
-        }
-        rop->setFrom(actor->getId());
-        rop->setTo(e.getId());
-        rop->setSeconds(op->getSeconds());
+		auto rop = smart_dynamic_cast<Operation>(obj);
+		if (!rop.isValid()) {
+			spdlog::error("Character::UseOperation Op type "
+						  "\"{}\" but it is not an operation type. ", op_type);
+			return OPERATION_IGNORED;
+		}
+		rop->setFrom(actor->getId());
+		rop->setTo(e.getId());
+		rop->setSeconds(op->getSeconds());
 
-        if (argOp->getArgs().empty()) {
-            actor->error(op, "Use arg op has no arguments; one expected.", res, actor->getId());
-            return OPERATION_IGNORED;
-        }
+		if (argOp->getArgs().empty()) {
+			actor->error(op, "Use arg op has no arguments; one expected.", res, actor->getId());
+			return OPERATION_IGNORED;
+		}
 
-        auto arguments = argOp->getArgs().front();
+		auto arguments = argOp->getArgs().front();
 
-        //Check that there's an action registered for this operation
-        auto usagesI = m_usages.find(op_type);
-        if (usagesI != m_usages.end()) {
-            auto& usage = usagesI->second;
+		//Check that there's an action registered for this operation
+		auto usagesI = m_usages.find(op_type);
+		if (usagesI != m_usages.end()) {
+			auto& usage = usagesI->second;
 
-            //Populate the usage arguments
-            std::map<std::string, std::vector<UsageParameter::UsageArg>> usage_instance_args;
+			//Populate the usage arguments
+			std::map<std::string, std::vector<UsageParameter::UsageArg>> usage_instance_args;
 
-            for (auto& param : usage.params) {
-                Atlas::Message::Element element;
-                if (arguments->copyAttr(param.first, element) != 0 || !element.isList()) {
-                    actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
-                    return OPERATION_IGNORED;
-                }
+			for (auto& param: usage.params) {
+				Atlas::Message::Element element;
+				if (arguments->copyAttr(param.first, element) != 0 || !element.isList()) {
+					actor->clientError(op, fmt::format("Could not find required list argument '{}'.", param.first), res, actor->getId());
+					return OPERATION_IGNORED;
+				}
 
-                auto& argVector = usage_instance_args[param.first];
+				auto& argVector = usage_instance_args[param.first];
 
-                for (auto& argElement : element.List()) {
-                    switch (param.second.type) {
-                        case UsageParameter::Type::ENTITY:
-                        case UsageParameter::Type::ENTITYLOCATION: {
-                            if (!argElement.isMap()) {
-                                actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
-                                return OPERATION_IGNORED;
-                            }
-                            //The arg is for an RootEntity, expressed as a message. Extract id and pos.
-                            auto idI = argElement.Map().find("id");
-                            if (idI == argElement.Map().end() || !idI->second.isString()) {
-                                actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
-                                return OPERATION_IGNORED;
-                            }
+				for (auto& argElement: element.List()) {
+					switch (param.second.type) {
+						case UsageParameter::Type::ENTITY:
+						case UsageParameter::Type::ENTITYLOCATION: {
+							if (!argElement.isMap()) {
+								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' was not a map.", param.first), res, actor->getId());
+								return OPERATION_IGNORED;
+							}
+							//The arg is for an RootEntity, expressed as a message. Extract id and pos.
+							auto idI = argElement.Map().find("id");
+							if (idI == argElement.Map().end() || !idI->second.isString()) {
+								actor->clientError(op, fmt::format("Inner argument in list of arguments for '{}' had no id string.", param.first), res, actor->getId());
+								return OPERATION_IGNORED;
+							}
 
-                            auto involved = BaseWorld::instance().getEntity(idI->second.String());
-                            if (!involved) {
-                                actor->error(op, "Involved entity does not exist", res, actor->getId());
-                                return OPERATION_IGNORED;
-                            }
+							auto involved = BaseWorld::instance().getEntity(idI->second.String());
+							if (!involved) {
+								actor->error(op, "Involved entity does not exist", res, actor->getId());
+								return OPERATION_IGNORED;
+							}
 
-                            auto posI = argElement.Map().find("pos");
-                            if (posI != argElement.Map().end() && posI->second.isList()) {
-                                argVector.emplace_back(EntityLocation(involved, WFMath::Point<3>(posI->second)));
-                            } else {
-                                argVector.emplace_back(EntityLocation(involved));
-                            }
-                        }
-                            break;
-                        case UsageParameter::Type::POSITION:
-                            argVector.emplace_back(WFMath::Point<3>(argElement));
-                            break;
-                        case UsageParameter::Type::DIRECTION:
-                            //Normalize the entry just to make sure.
-                            argVector.emplace_back(WFMath::Vector<3>(argElement).normalize());
-                            break;
-                    }
-                }
+							auto posI = argElement.Map().find("pos");
+							if (posI != argElement.Map().end() && posI->second.isList()) {
+								argVector.emplace_back(EntityLocation(involved, WFMath::Point<3>(posI->second)));
+							} else {
+								argVector.emplace_back(EntityLocation(involved));
+							}
+						}
+							break;
+						case UsageParameter::Type::POSITION:
+							argVector.emplace_back(WFMath::Point<3>(argElement));
+							break;
+						case UsageParameter::Type::DIRECTION:
+							//Normalize the entry just to make sure.
+							argVector.emplace_back(WFMath::Vector<3>(argElement).normalize());
+							break;
+					}
+				}
 
-            }
+			}
 
 
-            UsageInstance usageInstance{usage, actor, &e, std::move(usage_instance_args), rop};
-            //Check that the usage is valid before continuing
-            auto validRes = usageInstance.isValid();
-            if (!validRes.first) {
-                actor->clientError(op, validRes.second, res, actor->getId());
-            } else {
-                auto lastSeparatorPos = usage.handler.find_last_of('.');
-                if (lastSeparatorPos != std::string::npos) {
-                    auto moduleName = usage.handler.substr(0, lastSeparatorPos);
-                    auto functionName = usage.handler.substr(lastSeparatorPos + 1);
-                    //Py::Module module(moduleName);
-                    Py::Module module(PyImport_Import(Py::String(moduleName).ptr()));
-                    //PyImport_ReloadModule(module.ptr());
-                    auto functionObject = module.getDict()[functionName];
-                    if (!functionObject.isCallable()) {
-                        actor->error(op, fmt::format("Could not find Python function {}", usage.handler), res, actor->getId());
-                        return OPERATION_IGNORED;
-                    }
+			UsageInstance usageInstance{usage, actor, &e, std::move(usage_instance_args), rop};
+			//Check that the usage is valid before continuing
+			auto validRes = usageInstance.isValid();
+			if (!validRes.first) {
+				actor->clientError(op, validRes.second, res, actor->getId());
+			} else {
+				auto lastSeparatorPos = usage.handler.find_last_of('.');
+				if (lastSeparatorPos != std::string::npos) {
+					auto moduleName = usage.handler.substr(0, lastSeparatorPos);
+					auto functionName = usage.handler.substr(lastSeparatorPos + 1);
+					//Py::Module module(moduleName);
+					Py::Module module(PyImport_Import(Py::String(moduleName).ptr()));
+					//PyImport_ReloadModule(module.ptr());
+					auto functionObject = module.getDict()[functionName];
+					if (!functionObject.isCallable()) {
+						actor->error(op, fmt::format("Could not find Python function {}", usage.handler), res, actor->getId());
+						return OPERATION_IGNORED;
+					}
 
-                    try {
+					try {
 
-                        PythonLogGuard logGuard([functionName, actor]() {
-                            return fmt::format("Usage '{}', entity {}: ", functionName, actor->describeEntity());
-                        });
-                        auto ret = Py::Callable(functionObject).apply(Py::TupleN(UsageInstance::scriptCreator(std::move(usageInstance))));
-                        return ScriptUtils::processScriptResult(usage.handler, ret, res, e);
-                    } catch (const Py::BaseException& py_ex) {
-                        spdlog::error("Python error calling \"{}\" for entity {}", usage.handler, e.describeEntity());
-                        if (PyErr_Occurred()) {
-                            PyErr_Print();
-                        }
-                    }
-                }
-            }
-            return OPERATION_BLOCKED;
+						PythonLogGuard logGuard([functionName, actor]() {
+							return fmt::format("Usage '{}', entity {}: ", functionName, actor->describeEntity());
+						});
+						auto ret = Py::Callable(functionObject).apply(Py::TupleN(UsageInstance::scriptCreator(std::move(usageInstance))));
+						return ScriptUtils::processScriptResult(usage.handler, ret, res, e);
+					} catch (const Py::BaseException& py_ex) {
+						spdlog::error("Python error calling \"{}\" for entity {}", usage.handler, e.describeEntity());
+						if (PyErr_Occurred()) {
+							PyErr_Print();
+						}
+					}
+				}
+			}
+			return OPERATION_BLOCKED;
 
-        }
-    }
-    //We couldn't find any suitable task.
-    return OPERATION_IGNORED;
+		}
+	}
+	//We couldn't find any suitable task.
+	return OPERATION_IGNORED;
 }
 
 UsagesProperty* UsagesProperty::copy() const {
-    return new UsagesProperty(*this);
+	return new UsagesProperty(*this);
 }
 

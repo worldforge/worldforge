@@ -25,10 +25,8 @@
 #include <boost/noncopyable.hpp>
 #include <functional>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
  * Renders a CEGUI window on top of a SceneNode.
@@ -53,7 +51,7 @@ protected:
 	 * The text window will be attached to the scene node, so that when either it or the camera moves the
 	 * window is adjusted accordingly.
 	 */
-	struct TextNode : boost::noncopyable {
+	struct TextNode {
 		UniqueWindowPtr<CEGUI::Window> mWindow;
 		Ogre::SceneNode* mNode;
 		std::function<void(Ogre::Vector2&)> mAdjustFn;
@@ -86,8 +84,6 @@ protected:
 
 
 };
-}
-}
 }
 
 

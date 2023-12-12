@@ -27,16 +27,14 @@
 #include <sigc++/signal.h>
 #include <vector>
 
-namespace CEGUI
-{
-	class Window;
-	class EventArgs;
+namespace CEGUI {
+class Window;
+
+class EventArgs;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class EntityIcon;
 
@@ -50,8 +48,7 @@ Use this as an easy way to activate entity icon dragging onto arbitrary CEGUI wi
 
 @note Subclasses of this which want to implement their own behaviour should override the handle* methods.
 */
-class EntityIconDragDropTarget
-{
+class EntityIconDragDropTarget {
 public:
 	/**
 	 * @brief Ctor.
@@ -122,13 +119,13 @@ private:
 	 * @param args Event args.
 	 */
 	bool dragContainer_DragDropped(const CEGUI::EventArgs& args);
-	
+
 	/**
 	 * @brief Inspect the event args and extract the entity icon instance.
 	 * @param args Event args.
 	 * @returns An entity icon instance, or null if none could be found.
 	 */
-	EntityIcon* parseIcon(const CEGUI::EventArgs& args);
+	static EntityIcon* parseIcon(const CEGUI::EventArgs& args);
 
 	/**
 	 * @brief Stores connections so that they can easily be disconnected when destroyed.
@@ -139,8 +136,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif

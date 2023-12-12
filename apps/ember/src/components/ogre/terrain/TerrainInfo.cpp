@@ -23,9 +23,8 @@
 #include "TerrainInfo.h"
 #include <Mercator/BasePoint.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+namespace Ember::OgreView::Terrain {
 
 
 TerrainInfo::TerrainInfo(int pageIndicesSize)
@@ -144,5 +143,5 @@ void TerrainInfo::setPageIndicesSize(int size) {
 }
 
 }
-}
-}
+
+

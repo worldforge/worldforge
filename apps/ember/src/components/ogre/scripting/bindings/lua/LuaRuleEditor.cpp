@@ -23,10 +23,10 @@ using namespace Ember::OgreView;
 using namespace Ember::OgreView::Authoring;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<RuleEditor>(sol::table& space) {
 	auto ruleEditor = space.new_usertype<RuleEditor>("RuleEditor",
-														 sol::constructors<RuleEditor(Eris::Avatar&)>());
+													 sol::constructors<RuleEditor(Eris::Avatar&)>());
 	ruleEditor["updateOrCreateRule"] = &RuleEditor::updateOrCreateRule;
 	ruleEditor["EventRuleCreated"] = LuaConnector::make_property(&RuleEditor::EventRuleCreated);
 	ruleEditor["EventRuleUpdated"] = LuaConnector::make_property(&RuleEditor::EventRuleUpdated);

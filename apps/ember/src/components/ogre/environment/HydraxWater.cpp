@@ -34,26 +34,22 @@ namespace OgreView {
 namespace Environment {
 
 HydraxWater::HydraxWater(Ogre::Camera& camera, Ogre::SceneManager& sceneMgr)
-: mCamera(camera), mSceneMgr(sceneMgr), mHydrax(0)
-{
+		: mCamera(camera), mSceneMgr(sceneMgr), mHydrax(0) {
 }
 
 
-HydraxWater::~HydraxWater()
-{
+HydraxWater::~HydraxWater() {
 	Ogre::Root::getSingleton().removeFrameListener(this);
 
 	delete mHydrax;
 }
 
-bool HydraxWater::isSupported() const
-{
+bool HydraxWater::isSupported() const {
 	//TODO: check that it's supported
 	return true;
 }
 
-bool HydraxWater::initialize()
-{
+bool HydraxWater::initialize() {
 	//TODO: reactivate if we get hydrax to perform better
 //	try {
 //	// Init Hydrax
@@ -128,8 +124,7 @@ bool HydraxWater::initialize()
 	return true;
 }
 
-bool HydraxWater::frameStarted(const Ogre::FrameEvent& event)
-{
+bool HydraxWater::frameStarted(const Ogre::FrameEvent& event) {
 //	mHydrax->update(event.timeSinceLastFrame);
 	return true;
 }

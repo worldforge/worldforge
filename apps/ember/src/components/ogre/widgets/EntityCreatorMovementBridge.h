@@ -30,8 +30,8 @@
 namespace Ogre {
 class SceneNode;
 }
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 namespace Authoring {
 class DetachedEntity;
@@ -82,6 +82,5 @@ private:
 
 }
 
-}
 
 #endif

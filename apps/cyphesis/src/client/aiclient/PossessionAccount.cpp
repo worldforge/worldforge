@@ -56,210 +56,201 @@ long PossessionAccount::mind_count = 0;
 
 
 PossessionAccount::PossessionAccount(RouterId id, const MindKit& mindFactory, PossessionClient& client) :
-        Router(std::move(id)),
-        m_client(client),
-        m_mindFactory(mindFactory)
-{
-    assert(m_mindFactory.m_scriptFactory);
+		Router(std::move(id)),
+		m_client(client),
+		m_mindFactory(mindFactory) {
+	assert(m_mindFactory.m_scriptFactory);
 
-    m_python_connection = python_reload_scripts.connect([&]() {
-        for (auto& entry : m_minds) {
-            auto entity = entry.second;
-            m_mindFactory.m_scriptFactory->addScript(*entity);
-        }
+	m_python_connection = python_reload_scripts.connect([&]() {
+		for (auto& entry: m_minds) {
+			auto entity = entry.second;
+			m_mindFactory.m_scriptFactory->addScript(*entity);
+		}
 
-    });
-    account_count++;
+	});
+	account_count++;
 }
 
-PossessionAccount::~PossessionAccount()
-{
-    m_python_connection.disconnect();
-    account_count--;
+PossessionAccount::~PossessionAccount() {
+	m_python_connection.disconnect();
+	account_count--;
 }
 
 
-void PossessionAccount::enablePossession(OpVector& res)
-{
+void PossessionAccount::enablePossession(OpVector& res) {
 
-    Atlas::Objects::Operation::Set set;
-    set->setTo(getId());
-    set->setFrom(getId());
+	Atlas::Objects::Operation::Set set;
+	set->setTo(getId());
+	set->setFrom(getId());
 
-    Atlas::Objects::Entity::Anonymous args;
-    args->setId(getId());
-    args->setAttr("possessive", 1);
-    args->setObjtype("object");
+	Atlas::Objects::Entity::Anonymous args;
+	args->setId(getId());
+	args->setAttr("possessive", 1);
+	args->setObjtype("object");
 
-    set->setArgs1(args);
+	set->setArgs1(args);
 
-    res.push_back(set);
+	res.push_back(set);
 }
 
-void PossessionAccount::operation(const Operation& op, OpVector& res)
-{
-    if (!op->isDefaultTo() && op->getTo() != getId()) {
-        auto I = m_minds.find(op->getTo());
-        if (I != m_minds.end()) {
-            I->second->operation(op, res);
+void PossessionAccount::operation(const Operation& op, OpVector& res) {
+	if (!op->isDefaultTo() && op->getTo() != getId()) {
+		auto I = m_minds.find(op->getTo());
+		if (I != m_minds.end()) {
+			I->second->operation(op, res);
 
-            if (I->second->isDestroyed()) {
-                spdlog::debug("Deleting mind {}.", I->second->describeEntity());
-                m_entitiesWithMinds.erase(I->second->getEntity()->getId());
-                m_minds.erase(I);
-                mind_count--;
-            }
+			if (I->second->isDestroyed()) {
+				spdlog::debug("Deleting mind {}.", I->second->describeEntity());
+				m_entitiesWithMinds.erase(I->second->getEntity()->getId());
+				m_minds.erase(I);
+				mind_count--;
+			}
 
-            return;
-        }
+			return;
+		}
 
-        I = m_entitiesWithMinds.find(op->getTo());
-        if (I != m_entitiesWithMinds.end()) {
-            I->second->operation(op, res);
-            if (I->second->isDestroyed()) {
-                spdlog::debug("Deleting mind {}.", I->second->describeEntity());
-                m_minds.erase(I->second->getId());
-                mind_count--;
-                m_entitiesWithMinds.erase(I);
-            }
+		I = m_entitiesWithMinds.find(op->getTo());
+		if (I != m_entitiesWithMinds.end()) {
+			I->second->operation(op, res);
+			if (I->second->isDestroyed()) {
+				spdlog::debug("Deleting mind {}.", I->second->describeEntity());
+				m_minds.erase(I->second->getId());
+				mind_count--;
+				m_entitiesWithMinds.erase(I);
+			}
 
-            return;
-        }
+			return;
+		}
 
-        spdlog::warn("Received operation {} directed at {} which isn't anything recognized by the account {}.", op->getParent(), op->getTo(), getId());
+		spdlog::warn("Received operation {} directed at {} which isn't anything recognized by the account {}.", op->getParent(), op->getTo(), getId());
 
-    } else {
+	} else {
 
-        //The operation had no id, or the id was this account, so it's directed at this account.
-        if (op->getClassNo() == Atlas::Objects::Operation::POSSESS_NO) {
-            PossessOperation(op, res);
-        } else if (op->getClassNo() == Atlas::Objects::Operation::APPEARANCE_NO) {
-            //Ignore appearance ops, since they just signal other accounts being connected
-        } else if (op->getClassNo() == Atlas::Objects::Operation::DISAPPEARANCE_NO) {
-            //Ignore disappearance ops, since they just signal other accounts being disconnected
-        } else if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
+		//The operation had no id, or the id was this account, so it's directed at this account.
+		if (op->getClassNo() == Atlas::Objects::Operation::POSSESS_NO) {
+			PossessOperation(op, res);
+		} else if (op->getClassNo() == Atlas::Objects::Operation::APPEARANCE_NO) {
+			//Ignore appearance ops, since they just signal other accounts being connected
+		} else if (op->getClassNo() == Atlas::Objects::Operation::DISAPPEARANCE_NO) {
+			//Ignore disappearance ops, since they just signal other accounts being disconnected
+		} else if (op->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
 
-            rmt_ScopedCPUSample(opInfo, 0)
-            //Send info ops on to all minds
-            for (auto& entry : m_minds) {
-                entry.second->operation(op, res);
-            }
-        } else {
-            spdlog::debug("Unknown operation {} in PossessionAccount {}", op->getParent(), getId());
-        }
-    }
+			rmt_ScopedCPUSample(opInfo, 0)
+			//Send info ops on to all minds
+			for (auto& entry: m_minds) {
+				entry.second->operation(op, res);
+			}
+		} else {
+			spdlog::debug("Unknown operation {} in PossessionAccount {}", op->getParent(), getId());
+		}
+	}
 }
 
-Ref<BaseMind> PossessionAccount::findMindForId(const std::string& id)
-{
+Ref<BaseMind> PossessionAccount::findMindForId(const std::string& id) {
 
-    auto I = m_minds.find(id);
-    if (I != m_minds.end()) {
-        return I->second;
-    }
-    I = m_entitiesWithMinds.find(id);
-    if (I != m_entitiesWithMinds.end()) {
-        return I->second;
-    }
+	auto I = m_minds.find(id);
+	if (I != m_minds.end()) {
+		return I->second;
+	}
+	I = m_entitiesWithMinds.find(id);
+	if (I != m_entitiesWithMinds.end()) {
+		return I->second;
+	}
 
-    return {};
+	return {};
 
 }
 
 
-void PossessionAccount::externalOperation(const Operation& op, Link&)
-{
+void PossessionAccount::externalOperation(const Operation& op, Link&) {
 
 }
 
-void PossessionAccount::PossessOperation(const Operation& op, OpVector& res)
-{
-    spdlog::trace("Got possession request.");
+void PossessionAccount::PossessOperation(const Operation& op, OpVector& res) {
+	spdlog::trace("Got possession request.");
 
-    auto args = op->getArgs();
-    if (!args.empty()) {
-        const Root& arg = args.front();
+	auto args = op->getArgs();
+	if (!args.empty()) {
+		const Root& arg = args.front();
 
-        Element possessKeyElement;
-        if (arg->copyAttr("possess_key", possessKeyElement) == 0 && possessKeyElement.isString()) {
-            Element possessionEntityIdElement;
-            if (arg->copyAttr("possess_entity_id", possessionEntityIdElement) == 0 && possessionEntityIdElement.isString()) {
+		Element possessKeyElement;
+		if (arg->copyAttr("possess_key", possessKeyElement) == 0 && possessKeyElement.isString()) {
+			Element possessionEntityIdElement;
+			if (arg->copyAttr("possess_entity_id", possessionEntityIdElement) == 0 && possessionEntityIdElement.isString()) {
 
-                const std::string& possessKey = possessKeyElement.String();
-                const std::string& possessionEntityId = possessionEntityIdElement.String();
-                takePossession(res, possessionEntityId, possessKey);
-            }
-        }
-    }
+				const std::string& possessKey = possessKeyElement.String();
+				const std::string& possessionEntityId = possessionEntityIdElement.String();
+				takePossession(res, possessionEntityId, possessKey);
+			}
+		}
+	}
 }
 
-void PossessionAccount::takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey)
-{
-    spdlog::info("Taking possession of entity with id {}.", possessEntityId);
+void PossessionAccount::takePossession(OpVector& res, const std::string& possessEntityId, const std::string& possessKey) {
+	spdlog::info("Taking possession of entity with id {}.", possessEntityId);
 
-    Anonymous what;
-    what->setId(possessEntityId);
-    what->setAttr("possess_key", possessKey);
+	Anonymous what;
+	what->setId(possessEntityId);
+	what->setAttr("possess_key", possessKey);
 
-    Possess possess;
-    possess->setFrom(getId());
-    possess->setArgs1(what);
-    m_client.sendWithCallback(possess, [this](const Operation& op, OpVector& resInner) {
+	Possess possess;
+	possess->setFrom(getId());
+	possess->setArgs1(what);
+	m_client.sendWithCallback(possess, [this](const Operation& op, OpVector& resInner) {
 
-        if (op->getClassNo() != Atlas::Objects::Operation::INFO_NO) {
-            spdlog::error("Malformed possession response: not an info.");
-        }
+		if (op->getClassNo() != Atlas::Objects::Operation::INFO_NO) {
+			spdlog::error("Malformed possession response: not an info.");
+		}
 
-        const std::vector<Root>& args = op->getArgs();
-        if (args.empty()) {
-            spdlog::error("no args character possession response");
-            return;
-        }
+		const std::vector<Root>& args = op->getArgs();
+		if (args.empty()) {
+			spdlog::error("no args character possession response");
+			return;
+		}
 
-        RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(args.front());
-        if (!ent.isValid()) {
-            spdlog::error("malformed character possession response");
-            return;
-        }
+		RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(args.front());
+		if (!ent.isValid()) {
+			spdlog::error("malformed character possession response");
+			return;
+		}
 
-        if (!ent->hasAttr("entity")) {
-            spdlog::error("malformed character possession response");
-            return;
-        }
-        auto entityElem = ent->getAttr("entity");
-        if (!entityElem.isMap()) {
-            spdlog::error("malformed character possession response");
-            return;
-        }
+		if (!ent->hasAttr("entity")) {
+			spdlog::error("malformed character possession response");
+			return;
+		}
+		auto entityElem = ent->getAttr("entity");
+		if (!entityElem.isMap()) {
+			spdlog::error("malformed character possession response");
+			return;
+		}
 
-        auto I = entityElem.Map().find("id");
-        if (I == entityElem.Map().end() || !I->second.isString()) {
-            spdlog::error("malformed character possession response");
-            return;
-        }
+		auto I = entityElem.Map().find("id");
+		if (I == entityElem.Map().end() || !I->second.isString()) {
+			spdlog::error("malformed character possession response");
+			return;
+		}
 
-        auto entityId = I->second.String();
+		auto entityId = I->second.String();
 
-        createMindInstance(resInner, RouterId(ent->getId()), entityId);
+		createMindInstance(resInner, RouterId(ent->getId()), entityId);
 
-    }, [=]() {
-        spdlog::warn("Could not take possession of entity with id {}", possessEntityId);
-    });
+	}, [=]() {
+		spdlog::warn("Could not take possession of entity with id {}", possessEntityId);
+	});
 
 
-    //res.push_back(possess);
+	//res.push_back(possess);
 }
 
-void PossessionAccount::createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId)
-{
-    spdlog::info("Creating mind instance for entity id {} with mind id {}, number of minds: {}.", entityId, mindId.m_id, m_minds.size() + 1);
-    Ref<BaseMind> mind = m_mindFactory.newMind(mindId, entityId);
-    m_minds.emplace(mindId.m_id, mind);
-    mind_count++;
-    m_entitiesWithMinds.emplace(entityId, mind);
+void PossessionAccount::createMindInstance(OpVector& res, RouterId mindId, const std::string& entityId) {
+	spdlog::info("Creating mind instance for entity id {} with mind id {}, number of minds: {}.", entityId, mindId.m_id, m_minds.size() + 1);
+	Ref<BaseMind> mind = m_mindFactory.newMind(mindId, entityId);
+	m_minds.emplace(mindId.m_id, mind);
+	mind_count++;
+	m_entitiesWithMinds.emplace(entityId, mind);
 
-    mind->m_scriptFactory = m_mindFactory.m_scriptFactory.get();
-    OpVector mindRes;
-    mind->init(mindRes);
-    m_client.processResponses(mindRes, res);
+	mind->m_scriptFactory = m_mindFactory.m_scriptFactory.get();
+	OpVector mindRes;
+	mind->init(mindRes);
+	m_client.processResponses(mindRes, res);
 }

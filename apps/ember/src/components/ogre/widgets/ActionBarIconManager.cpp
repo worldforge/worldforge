@@ -29,14 +29,10 @@
 #include "services/serversettings/ServerSettings.h"
 #include "services/serversettings/ServerSettingsCredentials.h"
 
-#include <Eris/ServerInfo.h>
-
 #include <CEGUI/CEGUI.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 ActionBarIconManager::ActionBarIconManager(GUIManager& guiManager)
 		: mGuiManager(guiManager),
@@ -52,7 +48,7 @@ ActionBarIconSlot* ActionBarIconManager::createSlot(unsigned int pixelSize) {
 	ss << "actionBarIconSlot" << mSlotsCounter++;
 	//Make the slot more visible.
 	UniqueWindowPtr<CEGUI::Window> container(mGuiManager.createWindow("EmberLook/StaticImage", ss.str()));
-	container->setSize(CEGUI::USize(CEGUI::UDim(0.f, (float)pixelSize), CEGUI::UDim(0.f, (float)pixelSize)));
+	container->setSize(CEGUI::USize(CEGUI::UDim(0.f, (float) pixelSize), CEGUI::UDim(0.f, (float) pixelSize)));
 	auto slot = std::make_unique<ActionBarIconSlot>(std::move(container));
 	mSlots.emplace_back(std::move(slot));
 	return mSlots.back().get();
@@ -72,7 +68,7 @@ ActionBarIcon* ActionBarIconManager::createIcon(Gui::Icons::Icon* icon, unsigned
 	UniqueWindowPtr<CEGUI::Window> iconWindow(mGuiManager.createWindow("EmberLook/StaticImage", ss.str()));
 
 	if (item && iconWindow) {
-		item->setSize(CEGUI::USize(CEGUI::UDim(0.f, (float)pixelSize), CEGUI::UDim(0.f, (float)pixelSize)));
+		item->setSize(CEGUI::USize(CEGUI::UDim(0.f, (float) pixelSize), CEGUI::UDim(0.f, (float) pixelSize)));
 		//item->setTooltipText(name);
 
 		iconWindow->setProperty("BackgroundEnabled", "false");
@@ -148,5 +144,5 @@ void ActionBarIconManager::destroySlot(ActionBarIconSlot* slot) {
 
 }
 
-}
-}
+
+

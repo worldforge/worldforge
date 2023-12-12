@@ -21,10 +21,8 @@
 
 #include <OgreResource.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
-namespace Techniques {
+
+namespace Ember::OgreView::Terrain::Techniques {
 
 /**
  * @brief Generates a one pixel texture used as normal map placeholder.
@@ -37,7 +35,6 @@ public:
 };
 
 }
-}
-}
-}
+
+
 #endif /* ONEPIXELMATERIALGENERATOR_H_ */

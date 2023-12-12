@@ -33,10 +33,7 @@ class AxisBox;
 }
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 struct TerrainShader;
 
@@ -104,8 +101,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* TERRAINSHADERUPDATETASK_H_ */

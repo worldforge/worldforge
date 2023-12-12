@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<TabControl>(sol::table& space) {
 	auto tabButton = space.new_usertype<TabButton>("TabButton",
 												   sol::base_classes, sol::bases<ButtonBase, Window, NamedElement, Element, PropertySet, EventSet>()

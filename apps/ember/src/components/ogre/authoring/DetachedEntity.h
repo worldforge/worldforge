@@ -26,12 +26,9 @@
 #include <string>
 
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 /**
  * @brief Entity that doesn't belong to entity hierarchy.
  *
@@ -39,8 +36,7 @@ namespace Authoring
  *
  * @author Alexey Torkhov <atorkhov@gmail.com>
  */
-class DetachedEntity: public Eris::Entity
-{
+class DetachedEntity : public Eris::Entity {
 public:
 	DetachedEntity(const std::string& id, Eris::TypeInfo* ty);
 
@@ -61,17 +57,17 @@ public:
 protected:
 
 
-    /**
-     * @brief Gets an entity with the supplied id from the system.
-     * @param id The id of the entity to get.
-     */
+	/**
+	 * @brief Gets an entity with the supplied id from the system.
+	 * @param id The id of the entity to get.
+	 */
 	Eris::Entity* getEntity(const std::string& id) override;
 
 };
 
 }
-}
 
-}
+
+
 
 #endif

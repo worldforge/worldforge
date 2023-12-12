@@ -22,34 +22,37 @@
 #include "TerrainEffectorProperty.h"
 #include <memory>
 
-template <int dim>
+template<int dim>
 class Form;
 
 /// \brief Class to handle Entity terrain property
 /// \ingroup PropertyClasses
 class AreaProperty : public TerrainEffectorProperty {
-  protected:
-    int m_layer;
-    std::unique_ptr<Form<2>> m_shape;
+protected:
+	int m_layer;
+	std::unique_ptr<Form<2>> m_shape;
 
-    AreaProperty(const AreaProperty & other);
-  public:
+	AreaProperty(const AreaProperty& other);
 
-    static constexpr const char* property_name = "area";
+public:
 
-    explicit AreaProperty();
-    ~AreaProperty() override;
+	static constexpr const char* property_name = "area";
 
-    const Form<2> * shape() const { return m_shape.get(); }
+	explicit AreaProperty();
 
-    void apply(LocatedEntity&) override;
+	~AreaProperty() override;
 
-    void set(const Atlas::Message::Element & val) override;
-    AreaProperty * copy() const override;
+	const Form<2>* shape() const { return m_shape.get(); }
 
-    // Assignment isn't banned, but it's gotta be implemented before it'll
-    // work. Default should not be used.
-    AreaProperty & operator=(const AreaProperty &) = delete;
+	void apply(LocatedEntity&) override;
+
+	void set(const Atlas::Message::Element& val) override;
+
+	AreaProperty* copy() const override;
+
+	// Assignment isn't banned, but it's gotta be implemented before it'll
+	// work. Default should not be used.
+	AreaProperty& operator=(const AreaProperty&) = delete;
 };
 
 #endif // RULESETS_AREA_PROPERTY_H

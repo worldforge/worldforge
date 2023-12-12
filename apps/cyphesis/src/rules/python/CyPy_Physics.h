@@ -25,13 +25,12 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Physics : public Py::ExtensionModule<CyPy_Physics>
-{
+class CyPy_Physics : public Py::ExtensionModule<CyPy_Physics> {
 
-    public:
-        CyPy_Physics();
+public:
+	CyPy_Physics();
 
-        static std::string init();
+	static std::string init();
 };
 
 

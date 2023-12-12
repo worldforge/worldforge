@@ -26,10 +26,11 @@
 #include <map>
 
 namespace Atlas {
-    namespace Message {
-        class Element;
-        typedef std::map<std::string, Element> MapType;
-    }
+namespace Message {
+class Element;
+
+typedef std::map<std::string, Element> MapType;
+}
 }
 
 class Link;
@@ -38,39 +39,46 @@ class Link;
 /// compatible identifier.
 ///
 class Router {
-  protected:
-    explicit Router(RouterId id);
-  public:
-    Router(const Router &) = delete;
-    virtual ~Router();
+protected:
+	explicit Router(RouterId id);
 
-    const RouterId m_id;
-    /// \brief Read only accessor for string identity
-    const std::string & getId() const {
-        return m_id.m_id;
-    }
+public:
+	Router(const Router&) = delete;
 
-    /// \brief Read only accessor for Integer identity
-    long getIntId() const {
-        return m_id.m_intId;
-    }
+	virtual ~Router();
 
-    void buildError(const Operation &,
-                    const std::string & errstring,
-                    const Operation &,
-                    const std::string & to) const;
-    void error(const Operation &, const std::string & errstring, OpVector &,
-               const std::string & to = "") const;
-    void clientError(const Operation &, const std::string & errstring,
-                     OpVector &, const std::string & to = "") const;
+	const RouterId m_id;
 
-    virtual void externalOperation(const Operation & op, Link &) = 0;
-    virtual void operation(const Operation &, OpVector &) = 0;
+	/// \brief Read only accessor for string identity
+	const std::string& getId() const {
+		return m_id.m_id;
+	}
 
-    virtual void addToMessage(Atlas::Message::MapType &) const;
-    virtual void addToEntity(const Atlas::Objects::Entity::RootEntity &) const;
+	/// \brief Read only accessor for Integer identity
+	long getIntId() const {
+		return m_id.m_intId;
+	}
 
-    friend class Routertest;
+	void buildError(const Operation&,
+					const std::string& errstring,
+					const Operation&,
+					const std::string& to) const;
+
+	void error(const Operation&, const std::string& errstring, OpVector&,
+			   const std::string& to = "") const;
+
+	void clientError(const Operation&, const std::string& errstring,
+					 OpVector&, const std::string& to = "") const;
+
+	virtual void externalOperation(const Operation& op, Link&) = 0;
+
+	virtual void operation(const Operation&, OpVector&) = 0;
+
+	virtual void addToMessage(Atlas::Message::MapType&) const;
+
+	virtual void addToEntity(const Atlas::Objects::Entity::RootEntity&) const;
+
+	friend class Routertest;
 };
 
 #endif // COMMON_ROUTER_H

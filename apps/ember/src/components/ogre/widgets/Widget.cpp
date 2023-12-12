@@ -24,7 +24,6 @@
 #include "Widget.h"
 
 #include "../GUIManager.h"
-#include "../EmberOgre.h"
 
 #include "framework/ConsoleBackend.h"
 
@@ -35,18 +34,18 @@
 
 
 using namespace CEGUI;
-namespace Ember {
-namespace OgreView {
-namespace Gui {
 
-Widget::Widget(GUIManager& guiManager) : mCommandSuffix(""),
-										 mMainWindow(nullptr),
-										 mGuiManager(guiManager),
-										 mOriginalWindowAlpha(1.0f),
-										 mActiveWindowIsOpaque(true),
-										 mFirstTabWindow(nullptr),
-										 mLastTabWindow(nullptr),
-										 mWindowHasBeenShown(false) {
+
+namespace Ember::OgreView::Gui {
+
+Widget::Widget(GUIManager& guiManager) :
+		mMainWindow(nullptr),
+		mGuiManager(guiManager),
+		mOriginalWindowAlpha(1.0f),
+		mActiveWindowIsOpaque(true),
+		mFirstTabWindow(nullptr),
+		mLastTabWindow(nullptr),
+		mWindowHasBeenShown(false) {
 }
 
 
@@ -68,7 +67,7 @@ CEGUI::Window* Widget::getMainSheet() {
 
 CEGUI::Window* Widget::loadMainSheet(const std::string& filename, const std::string& prefix) {
 	mPrefix = prefix;
-	std::string finalFileName(mGuiManager.getLayoutDir() + filename);
+	std::string finalFileName(Ember::OgreView::GUIManager::getLayoutDir() + filename);
 	try {
 		mMainWindow = UniqueWindowPtr<CEGUI::Window>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(finalFileName));
 	} catch (const std::exception& ex) {
@@ -259,7 +258,7 @@ bool Widget::TabbableWindow_KeyDown(const CEGUI::EventArgs& args) {
 		}
 	} else if (keyEventArgs.scancode == CEGUI::Key::Return) {
 		//iterate through all enter buttons, and if anyone is visible, activate it
-		for (auto& enterButton : mEnterButtons) {
+		for (auto& enterButton: mEnterButtons) {
 			if (enterButton->isVisible()) {
 				CEGUI::Window* window = enterButton;
 				WindowEventArgs eventArgs(window);
@@ -311,5 +310,5 @@ void Widget::closeTabGroup() {
 
 
 }
-}
-}
+
+

@@ -20,56 +20,57 @@
 #include "rules/LocatedEntity.h"
 
 VisibilityProperty::VisibilityProperty()
-    : mData(Visibility::Public)
-{
+		: mData(Visibility::Public) {
 }
 
-VisibilityProperty* VisibilityProperty::copy() const
-{
-    return new VisibilityProperty(*this);
+VisibilityProperty* VisibilityProperty::copy() const {
+	return new VisibilityProperty(*this);
 }
 
-int VisibilityProperty::get(Atlas::Message::Element& e) const
-{
-    switch (mData) {
-        case Visibility::Public: {
-            // no-op
-        } break;
-        case Visibility::Protected: {
-            e = "protected";
-        } break;
-        case Visibility::Private: {
-            e = "private";
-        } break;
-    }
-    return 0;
+int VisibilityProperty::get(Atlas::Message::Element& e) const {
+	switch (mData) {
+		case Visibility::Public: {
+			// no-op
+		}
+			break;
+		case Visibility::Protected: {
+			e = "protected";
+		}
+			break;
+		case Visibility::Private: {
+			e = "private";
+		}
+			break;
+	}
+	return 0;
 }
 
-void VisibilityProperty::set(const Atlas::Message::Element& e)
-{
-    if (e.isString()) {
-        if (e.String() == "protected") {
-            mData = Visibility::Protected;
-        } else if (e.String() == "private") {
-            mData = Visibility::Private;
-        }
-    }
+void VisibilityProperty::set(const Atlas::Message::Element& e) {
+	if (e.isString()) {
+		if (e.String() == "protected") {
+			mData = Visibility::Protected;
+		} else if (e.String() == "private") {
+			mData = Visibility::Private;
+		}
+	}
 }
 
-void VisibilityProperty::apply(LocatedEntity& entity)
-{
-    switch (mData) {
-        case Visibility::Public: {
-            entity.removeFlags(entity_visibility_private);
-            entity.removeFlags(entity_visibility_protected);
-        } break;
-        case Visibility::Protected: {
-            entity.removeFlags(entity_visibility_private);
-            entity.addFlags(entity_visibility_protected);
-        } break;
-        case Visibility::Private: {
-            entity.addFlags(entity_visibility_private);
-            entity.removeFlags(entity_visibility_protected);
-        } break;
-    }
+void VisibilityProperty::apply(LocatedEntity& entity) {
+	switch (mData) {
+		case Visibility::Public: {
+			entity.removeFlags(entity_visibility_private);
+			entity.removeFlags(entity_visibility_protected);
+		}
+			break;
+		case Visibility::Protected: {
+			entity.removeFlags(entity_visibility_private);
+			entity.addFlags(entity_visibility_protected);
+		}
+			break;
+		case Visibility::Private: {
+			entity.addFlags(entity_visibility_private);
+			entity.removeFlags(entity_visibility_protected);
+		}
+			break;
+	}
 }

@@ -23,19 +23,18 @@
 /// \brief Allows overriding the default visibility calculations.
 
 /// \ingroup PropertyClasses
-class VisibilityDistanceProperty : public Property<float>
-{
-  public:
-    static constexpr const char* property_name = "vis_dist";
+class VisibilityDistanceProperty : public Property<float> {
+public:
+	static constexpr const char* property_name = "vis_dist";
 
-    VisibilityDistanceProperty() = default;
+	VisibilityDistanceProperty() = default;
 
-    ~VisibilityDistanceProperty() override = default;
+	~VisibilityDistanceProperty() override = default;
 
-    VisibilityDistanceProperty* copy() const override;
+	VisibilityDistanceProperty* copy() const override;
 
-    protected:
-        VisibilityDistanceProperty(const VisibilityDistanceProperty& rhs) = default;
+protected:
+	VisibilityDistanceProperty(const VisibilityDistanceProperty& rhs) = default;
 
 };
 

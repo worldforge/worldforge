@@ -30,24 +30,23 @@
 
 #include <cassert>
 
-int main()
-{
-    WFMath::Vector<3> east(1,0,0), north(0,1,0), west(-1,0,0);
-    WFMath::Vector<3> up(0,0,1), down(0,0,-1);
+int main() {
+	WFMath::Vector<3> east(1, 0, 0), north(0, 1, 0), west(-1, 0, 0);
+	WFMath::Vector<3> up(0, 0, 1), down(0, 0, -1);
 
-    Quaternion rotation;
+	Quaternion rotation;
 
-    // Normal 90 degree rotation
-    rotation = quaternionFromTo(east, north, up);
+	// Normal 90 degree rotation
+	rotation = quaternionFromTo(east, north, up);
 
-    // No rotation to cover special case
-    rotation = quaternionFromTo(east, east, up);
+	// No rotation to cover special case
+	rotation = quaternionFromTo(east, east, up);
 
-    // Exact 180 to cover special case
-    rotation = quaternionFromTo(east, west, up);
+	// Exact 180 to cover special case
+	rotation = quaternionFromTo(east, west, up);
 
-    // Exact 180 to cover other part of same case
-    rotation = quaternionFromTo(up, down, west);
+	// Exact 180 to cover other part of same case
+	rotation = quaternionFromTo(up, down, west);
 
-    return 0;
+	return 0;
 }

@@ -23,25 +23,19 @@
 #include "PolygonPointPickListener.h"
 #include "PolygonPointUserObject.h"
 #include "PolygonPoint.h"
-#include "components/ogre/MousePicker.h"
 #include <OgreMovableObject.h>
 #include <OgreSceneQuery.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 
 PolygonPointPickListener::PolygonPointPickListener(Polygon& polygon) :
-		mPolygon(polygon), mPickedUserObject(nullptr)
-{
+		mPolygon(polygon), mPickedUserObject(nullptr) {
 }
 
-void PolygonPointPickListener::processPickResult(bool& continuePicking, PickResult& result, Ogre::Ray& /*cameraRay */, const MousePickerArgs& mousePickerArgs)
-{
+void PolygonPointPickListener::processPickResult(bool& continuePicking, PickResult& result, Ogre::Ray& /*cameraRay */, const MousePickerArgs& mousePickerArgs) {
 	if (result.collisionInfo.type() == typeid(PolygonPointUserObject*)) {
 		continuePicking = false;
 		if (mousePickerArgs.pickType == MPT_PRESS) {
@@ -56,8 +50,7 @@ void PolygonPointPickListener::processDelayedPick(const MousePickerArgs& /*mouse
 }
 
 
-void PolygonPointPickListener::initializePickingContext(bool& willParticipate, const MousePickerArgs& pickArgs)
-{
+void PolygonPointPickListener::initializePickingContext(bool& willParticipate, const MousePickerArgs& pickArgs) {
 	//We will only react on press events, but we want do silence click and pressed events if they happen with our markers too.
 	if (pickArgs.pickType == MPT_PRESS || pickArgs.pickType == MPT_CLICK || pickArgs.pickType == MPT_PRESSED) {
 		willParticipate = true;
@@ -66,8 +59,7 @@ void PolygonPointPickListener::initializePickingContext(bool& willParticipate, c
 
 }
 
-void PolygonPointPickListener::endPickingContext(const MousePickerArgs& /*mousePickerArgs*/, const std::vector<PickResult>& results)
-{
+void PolygonPointPickListener::endPickingContext(const MousePickerArgs& /*mousePickerArgs*/, const std::vector<PickResult>& results) {
 	if (mPickedUserObject) {
 		EventPickedPoint.emit(mPickedUserObject->getPoint());
 		mPickedUserObject = nullptr;
@@ -76,5 +68,5 @@ void PolygonPointPickListener::endPickingContext(const MousePickerArgs& /*mouseP
 
 }
 
-}
-}
+
+

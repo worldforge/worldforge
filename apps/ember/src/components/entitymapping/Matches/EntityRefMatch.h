@@ -23,12 +23,12 @@
 #include <Eris/View.h>
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 namespace Observers {
 class EntityCreationObserver;
@@ -71,8 +71,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

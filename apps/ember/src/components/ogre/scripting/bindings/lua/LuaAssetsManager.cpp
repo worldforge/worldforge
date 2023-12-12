@@ -23,7 +23,7 @@ using namespace Ember::OgreView;
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<AssetsManager>(sol::table& space) {
 	auto texturePair = space.new_usertype<TexturePair>("TexturePair", sol::no_constructor);
 	texturePair["hasData"] = &TexturePair::hasData;

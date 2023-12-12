@@ -19,18 +19,16 @@
 #include "PerceptionSightProperty.h"
 #include "rules/LocatedEntity.h"
 
-void PerceptionSightProperty::apply(LocatedEntity& entity)
-{
-    PropertyBase::apply(entity);
+void PerceptionSightProperty::apply(LocatedEntity& entity) {
+	PropertyBase::apply(entity);
 
-    if (m_data > 0) {
-        entity.addFlags(entity_perceptive);
-    } else {
-        entity.removeFlags(entity_perceptive);
-    }
+	if (m_data > 0) {
+		entity.addFlags(entity_perceptive);
+	} else {
+		entity.removeFlags(entity_perceptive);
+	}
 }
 
-PerceptionSightProperty* PerceptionSightProperty::copy() const
-{
-    return new PerceptionSightProperty(*this);
+PerceptionSightProperty* PerceptionSightProperty::copy() const {
+	return new PerceptionSightProperty(*this);
 }

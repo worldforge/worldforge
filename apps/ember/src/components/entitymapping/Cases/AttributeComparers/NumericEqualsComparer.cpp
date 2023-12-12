@@ -23,31 +23,27 @@
 #include "NumericEqualsComparer.h"
 #include <wfmath/const.h>
 
-namespace Ember {
 
 
 
-namespace EntityMapping {
 
-namespace Cases {
 
-namespace AttributeComparers {
 
-NumericEqualsComparer::NumericEqualsComparer(double value) : NumericValueHolder(value)
-{
+
+namespace Ember::EntityMapping::Cases::AttributeComparers {
+
+NumericEqualsComparer::NumericEqualsComparer(double value) : NumericValueHolder(value) {
 }
 
-bool NumericEqualsComparer::test(double value)
-{
+bool NumericEqualsComparer::test(double value) {
 	return WFMath::Equal(value, mValue);
 }
 
 
-
 }
 
-}
 
-}
 
-}
+
+
+

@@ -26,8 +26,7 @@
 #include <sigc++/trackable.h>
 #include <memory>
 
-namespace Ember
-{
+namespace Ember {
 struct Session;
 
 class ConnectingState;
@@ -35,8 +34,7 @@ class ConnectingState;
 /**
  * @brief State for when no connection yet has been made.
  */
-class NonConnectedState: public virtual sigc::trackable, public IState, public ConsoleObject
-{
+class NonConnectedState : public virtual sigc::trackable, public IState, public ConsoleObject {
 public:
 	NonConnectedState(ServerServiceSignals& signals, Session& session);
 
@@ -56,7 +54,7 @@ public:
 
 	void transfer(const Eris::TransferInfo& transferInfo) override;
 
-	void runCommand(const std::string &, const std::string &) override;
+	void runCommand(const std::string&, const std::string&) override;
 
 	/**
 	 * @brief Connects to a remote host.

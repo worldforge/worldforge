@@ -28,10 +28,11 @@
 #include <OgreSharedPtr.h>
 #include <OgreShadowCameraSetup.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 class GraphicalChangeAdapter;
+
 class ShadowDetailManager;
 
 /**
@@ -42,43 +43,42 @@ class ShadowDetailManager;
  *
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class ShadowCameraSetup : ConfigListenerContainer
-{
+class ShadowCameraSetup : ConfigListenerContainer {
 public:
-    /**
-     * @brief Ctor.
-     * @param sceneMgr The scene manager to which we want to apply our shadow camera.
-     */
-    ShadowCameraSetup(Ogre::SceneManager& sceneMgr, GraphicalChangeAdapter& graphicalChangeAdapter);
+	/**
+	 * @brief Ctor.
+	 * @param sceneMgr The scene manager to which we want to apply our shadow camera.
+	 */
+	ShadowCameraSetup(Ogre::SceneManager& sceneMgr, GraphicalChangeAdapter& graphicalChangeAdapter);
 
-    /**
-     * @brief Dtor.
-     * This will actually not reset the shadows.
-     */
-    ~ShadowCameraSetup() override;
+	/**
+	 * @brief Dtor.
+	 * This will actually not reset the shadows.
+	 */
+	~ShadowCameraSetup() override;
 
 protected:
 
-    /**
-     * @brief The scene manager which we want to apply our shadow camera to.
-     */
-    Ogre::SceneManager& mSceneMgr;
+	/**
+	 * @brief The scene manager which we want to apply our shadow camera to.
+	 */
+	Ogre::SceneManager& mSceneMgr;
 
-    /**
-     * @brief The pssm shadow camera setup.
-     */
-    Ogre::PSSMShadowCameraSetup* mPssmSetup;
+	/**
+	 * @brief The pssm shadow camera setup.
+	 */
+	Ogre::PSSMShadowCameraSetup* mPssmSetup;
 
-    /**
-     * @brief A reference to the shared pointer, which guarantees that the mPssmSetup field isn't deleted inside Ogre.
-     */
-    Ogre::ShadowCameraSetupPtr mSharedCameraPtr;
-    
-    /**
-     * @brief Object that handles shadow detail automatically.
-     */
+	/**
+	 * @brief A reference to the shared pointer, which guarantees that the mPssmSetup field isn't deleted inside Ogre.
+	 */
+	Ogre::ShadowCameraSetupPtr mSharedCameraPtr;
+
+	/**
+	 * @brief Object that handles shadow detail automatically.
+	 */
 	std::unique_ptr<ShadowDetailManager> mShadowDetailManager;
-    
+
 private:
 
 	/**
@@ -141,6 +141,6 @@ private:
 
 }
 
-}
+
 
 #endif

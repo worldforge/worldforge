@@ -42,386 +42,382 @@
 class BaseWorld;
 
 Atlas::Objects::Factories factories;
-class StubSocket : public CommSocket
-{
-  public:
-    StubSocket(boost::asio::io_context& io_context) : CommSocket(io_context)
-    {
-    }
 
-    virtual void disconnect()
-    {
-    }
+class StubSocket : public CommSocket {
+public:
+	StubSocket(boost::asio::io_context& io_context) : CommSocket(io_context) {
+	}
 
-    virtual int flush()
-    {
-        return 0;
-    }
+	virtual void disconnect() {
+	}
+
+	virtual int flush() {
+		return 0;
+	}
 
 };
 
 // Test class to expose protected methods.
-class TestJuncture : public Juncture
-{
-  public:
-    TestJuncture(Connection * c = 0) : Juncture(c, 1) { }
+class TestJuncture : public Juncture {
+public:
+	TestJuncture(Connection* c = 0) : Juncture(c, 1) {}
 
-    void test_onPeerLost() { onPeerLost(); }
-    void test_onPeerReplied(const Operation & op) { onPeerReplied(op); }
+	void test_onPeerLost() { onPeerLost(); }
 
-    void test_addPeer(Peer * p) { m_peer = p; }
+	void test_onPeerReplied(const Operation& op) { onPeerReplied(op); }
+
+	void test_addPeer(Peer* p) { m_peer = p; }
 //    void test_addSocket(CommPeer * cp) { m_socket = cp; }
 };
 
 int stub_CommPeer_connect_return = 0;
 
-int main()
-{
-    {
-        Juncture j(0, 1);
+int main() {
+	{
+		Juncture j(0, 1);
 
-    }
+	}
 
-    {
-        Juncture j(0, 1);
+	{
+		Juncture j(0, 1);
 
-        OpVector res;
-        Operation op;
-        j.operation(op, res);
+		OpVector res;
+		Operation op;
+		j.operation(op, res);
 
-    }
+	}
 
-    {
-        Juncture j(0, 1);
+	{
+		Juncture j(0, 1);
 
-        OpVector res;
-        Atlas::Objects::Operation::Login op;
-        j.operation(op, res);
+		OpVector res;
+		Atlas::Objects::Operation::Login op;
+		j.operation(op, res);
 
-    }
+	}
 
-    // Login op, no args
-    {
-        Juncture j(0, 1);
+	// Login op, no args
+	{
+		Juncture j(0, 1);
 
-        OpVector res;
-        Operation op;
-        j.LoginOperation(op, res);
+		OpVector res;
+		Operation op;
+		j.LoginOperation(op, res);
 
-    }
+	}
 
-    // Login op, empty arg
-    {
-        Juncture j(0, 1);
+	// Login op, empty arg
+	{
+		Juncture j(0, 1);
 
-        OpVector res;
+		OpVector res;
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+		Operation op;
+		Atlas::Objects::Root arg;
+		op->setArgs1(arg);
 
-    }
+		j.LoginOperation(op, res);
 
-    // Login op, username in arg
-    {
-        Juncture j(0, 1);
+	}
 
-        OpVector res;
+	// Login op, username in arg
+	{
+		Juncture j(0, 1);
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+		OpVector res;
 
-    }
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		op->setArgs1(arg);
 
-    // Login op, bad username in arg
-    {
-        Juncture j(0, 1);
+		j.LoginOperation(op, res);
 
-        OpVector res;
+	}
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", 0x69e362c6);
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+	// Login op, bad username in arg
+	{
+		Juncture j(0, 1);
 
-    }
+		OpVector res;
 
-    // Login op, username & password in arg
-    {
-        Juncture j(0, 1);
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", 0x69e362c6);
+		op->setArgs1(arg);
 
-        OpVector res;
+		j.LoginOperation(op, res);
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+	}
 
-    }
+	// Login op, username & password in arg
+	{
+		Juncture j(0, 1);
 
-    // Login op, username & bad password in arg
-    {
-        Juncture j(0, 1);
+		OpVector res;
 
-        OpVector res;
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
+		op->setArgs1(arg);
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        arg->setAttr("password", 0x12a2f3aL);
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+		j.LoginOperation(op, res);
 
-    }
+	}
 
-    // Login op, username & password in arg, connected
-    {
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
-        TestJuncture j(0);
-        boost::asio::io_context io_context;
-        CommPeer cp("", io_context, factories);
-        Peer peer(cp, sr, "", 6767, 4);
-        j.test_addPeer(&peer);
+	// Login op, username & bad password in arg
+	{
+		Juncture j(0, 1);
 
-        OpVector res;
+		OpVector res;
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		arg->setAttr("password", 0x12a2f3aL);
+		op->setArgs1(arg);
 
-    }
+		j.LoginOperation(op, res);
 
-    // Login op, username & password in arg, connected already authenticating
-    {
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
+	}
 
-        TestJuncture j(0);
+	// Login op, username & password in arg, connected
+	{
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		TestJuncture j(0);
+		boost::asio::io_context io_context;
+		CommPeer cp("", io_context, factories);
+		Peer peer(cp, sr, "", 6767, 4);
+		j.test_addPeer(&peer);
 
-        boost::asio::io_context io_context;
-        CommPeer cp("", io_context, factories);
-        Peer p(cp, sr, "", 6767, 4);
-        j.test_addPeer(&p);
+		OpVector res;
 
-        p.setAuthState(PEER_AUTHENTICATING);
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
+		op->setArgs1(arg);
 
-        OpVector res;
+		j.LoginOperation(op, res);
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
-        op->setArgs1(arg);
-        
-        j.LoginOperation(op, res);
+	}
 
-    }
+	// Login op, username & password in arg, connected already authenticating
+	{
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
 
-    // Login op, username & password in arg, connected, with serialno
-    {
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
+		TestJuncture j(0);
 
-        TestJuncture j(0);
+		boost::asio::io_context io_context;
+		CommPeer cp("", io_context, factories);
+		Peer p(cp, sr, "", 6767, 4);
+		j.test_addPeer(&p);
 
-        boost::asio::io_context io_context;
-        CommPeer cp("", io_context, factories);
-        Peer p(cp, sr, "", 6767, 4);
-        j.test_addPeer(&p);
+		p.setAuthState(PEER_AUTHENTICATING);
 
-        OpVector res;
+		OpVector res;
 
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
-        arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
-        op->setArgs1(arg);
-        op->setSerialno(0x6dc5b5eaL);
-        
-        j.LoginOperation(op, res);
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
+		op->setArgs1(arg);
 
-    }
+		j.LoginOperation(op, res);
 
-    {
-        Juncture j(0, 1);
+	}
 
-        OpVector res;
-        Operation op;
-        j.OtherOperation(op, res);
+	// Login op, username & password in arg, connected, with serialno
+	{
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
 
-    }
+		TestJuncture j(0);
 
-    {
-        Juncture j(0, 1);
+		boost::asio::io_context io_context;
+		CommPeer cp("", io_context, factories);
+		Peer p(cp, sr, "", 6767, 4);
+		j.test_addPeer(&p);
 
-        OpVector res;
-        Atlas::Objects::Operation::Connect op;
-        j.OtherOperation(op, res);
+		OpVector res;
 
-    }
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("username", "69e362c6-03a4-11e0-9608-001ec93e7c08");
+		arg->setAttr("password", "a12a2f3a-03a4-11e0-8379-001ec93e7c08");
+		op->setArgs1(arg);
+		op->setSerialno(0x6dc5b5eaL);
 
-    // Connect op, no args
-    {
-        Juncture j(0, 1);
+		j.LoginOperation(op, res);
 
-        OpVector res;
-        Operation op;
-        j.customConnectOperation(op, res);
+	}
 
-    }
+	{
+		Juncture j(0, 1);
 
-    // Connect op, no args, already connected
-    {
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
-        TestJuncture j(0);
+		OpVector res;
+		Operation op;
+		j.OtherOperation(op, res);
 
-        boost::asio::io_context io_context;
-        CommPeer cp("", io_context, factories);
-        Peer p(cp, sr, "", 6767, 4);
-        j.test_addPeer(&p);
+	}
 
-        OpVector res;
-        Operation op;
-        j.customConnectOperation(op, res);
+	{
+		Juncture j(0, 1);
 
-    }
+		OpVector res;
+		Atlas::Objects::Operation::Connect op;
+		j.OtherOperation(op, res);
 
-    // Connect op, hostname in arg
-    {
-        Juncture j(0, 1);
+	}
 
-        OpVector res;
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
+	// Connect op, no args
+	{
+		Juncture j(0, 1);
 
-        op->setArgs1(arg);
+		OpVector res;
+		Operation op;
+		j.customConnectOperation(op, res);
 
-        j.customConnectOperation(op, res);
+	}
 
-    }
+	// Connect op, no args, already connected
+	{
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		TestJuncture j(0);
 
-    // Connect op, bad hostname in arg
-    {
-        Juncture j(0, 1);
+		boost::asio::io_context io_context;
+		CommPeer cp("", io_context, factories);
+		Peer p(cp, sr, "", 6767, 4);
+		j.test_addPeer(&p);
 
-        OpVector res;
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("hostname", 0x3752ca4aL);
+		OpVector res;
+		Operation op;
+		j.customConnectOperation(op, res);
 
-        op->setArgs1(arg);
+	}
 
-        j.customConnectOperation(op, res);
+	// Connect op, hostname in arg
+	{
+		Juncture j(0, 1);
 
-    }
+		OpVector res;
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
 
-    // Connect op, hostname and port in arg, connected this end
-    {
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
-        boost::asio::io_context io_context;
-        StubSocket cc(io_context);
-        Connection c(cc, sr, "", 4);
+		op->setArgs1(arg);
 
-        Juncture j(&c, 1);
+		j.customConnectOperation(op, res);
 
-        OpVector res;
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
-        arg->setAttr("port", 0x03a9);
+	}
 
-        op->setArgs1(arg);
+	// Connect op, bad hostname in arg
+	{
+		Juncture j(0, 1);
 
-        j.customConnectOperation(op, res);
+		OpVector res;
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("hostname", 0x3752ca4aL);
 
-    }
+		op->setArgs1(arg);
 
-    // Connect op, hostname and port in arg, connected this end, connect fails
-    {
-        stub_CommPeer_connect_return = -1;
+		j.customConnectOperation(op, res);
 
-        ServerRouting sr(*(BaseWorld*)0, *(Persistence*)nullptr, "", "", 3);
-        boost::asio::io_context io_context;
-        StubSocket cc(io_context);
-        Connection c(cc, sr, "", 4);
+	}
 
-        Juncture j(&c, 1);
+	// Connect op, hostname and port in arg, connected this end
+	{
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		boost::asio::io_context io_context;
+		StubSocket cc(io_context);
+		Connection c(cc, sr, "", 4);
 
-        OpVector res;
-        Operation op;
-        Atlas::Objects::Root arg;
-        arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
-        arg->setAttr("port", 0x03a9);
+		Juncture j(&c, 1);
 
-        op->setArgs1(arg);
+		OpVector res;
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
+		arg->setAttr("port", 0x03a9);
 
-        j.customConnectOperation(op, res);
+		op->setArgs1(arg);
 
-        stub_CommPeer_connect_return = 0;
+		j.customConnectOperation(op, res);
 
-    }
+	}
 
-    // Teleport unconnected
-    {
-        TestJuncture j(0);
+	// Connect op, hostname and port in arg, connected this end, connect fails
+	{
+		stub_CommPeer_connect_return = -1;
 
-        j.teleportEntity(0);
+		ServerRouting sr(*(BaseWorld*) 0, *(Persistence*) nullptr, "", "", 3);
+		boost::asio::io_context io_context;
+		StubSocket cc(io_context);
+		Connection c(cc, sr, "", 4);
 
-    }
+		Juncture j(&c, 1);
 
-    // Teleport connected
-    {
-        TestJuncture j(0);
-        Peer peer(*(CommPeer*)0, *(ServerRouting*)0, "", 6767, 4);
-        j.test_addPeer(&peer);
-        j.teleportEntity(0);
+		OpVector res;
+		Operation op;
+		Atlas::Objects::Root arg;
+		arg->setAttr("hostname", "3752ca4a-03a9-11e0-bd8a-001ec93e7c08");
+		arg->setAttr("port", 0x03a9);
 
-    }
+		op->setArgs1(arg);
 
-    {
-        TestJuncture j(0);
+		j.customConnectOperation(op, res);
 
-        j.test_onPeerLost();
+		stub_CommPeer_connect_return = 0;
 
-    }
+	}
 
-    // Peer replied, unconnected this end
-    {
-        TestJuncture j(0);
+	// Teleport unconnected
+	{
+		TestJuncture j(0);
 
-        Operation op;
-        j.test_onPeerReplied(op);
+		j.teleportEntity(0);
 
-    }
+	}
 
-    // Peer replied, connected this end
-    {
-        Connection c(*(CommSocket*)0,
-                                        *(ServerRouting*)0, "", 4);
+	// Teleport connected
+	{
+		TestJuncture j(0);
+		Peer peer(*(CommPeer*) 0, *(ServerRouting*) 0, "", 6767, 4);
+		j.test_addPeer(&peer);
+		j.teleportEntity(0);
 
-        TestJuncture j(&c);
+	}
 
-        Operation op;
-        j.test_onPeerReplied(op);
+	{
+		TestJuncture j(0);
 
-    }
+		j.test_onPeerLost();
 
-    return 0;
+	}
+
+	// Peer replied, unconnected this end
+	{
+		TestJuncture j(0);
+
+		Operation op;
+		j.test_onPeerReplied(op);
+
+	}
+
+	// Peer replied, connected this end
+	{
+		Connection c(*(CommSocket*) 0,
+					 *(ServerRouting*) 0, "", 4);
+
+		TestJuncture j(&c);
+
+		Operation op;
+		j.test_onPeerReplied(op);
+
+	}
+
+	return 0;
 }
 
 // stubs
@@ -431,11 +427,16 @@ int main()
 #include <Atlas/Negotiate.h>
 #include "../stubs/common/stubLink.h"
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 int CONNECT_NO = 500;
 
-} } }
+}
+}
+}
+
 #include "../stubs/server/stubServerRouting.h"
 #include "../stubs/server/stubLobby.h"
 #include "../stubs/common/stubInheritance.h"
@@ -443,46 +444,38 @@ int CONNECT_NO = 500;
 #include "../stubs/common/stubProperty.h"
 #include "../stubs/server/stubCommPeer.h"
 
-Peer::Peer(CommSocket & client,
-           ServerRouting & svr,
-           const std::string & addr,
-           int port,
-           RouterId id) :
-      Link(client, id),
-      m_state(PEER_INIT),
-      m_server(svr)
-{
+Peer::Peer(CommSocket& client,
+		   ServerRouting& svr,
+		   const std::string& addr,
+		   int port,
+		   RouterId id) :
+		Link(client, id),
+		m_state(PEER_INIT),
+		m_server(svr) {
 }
 
-Peer::~Peer()
-{
+Peer::~Peer() {
 }
 
-PeerAuthState Peer::getAuthState()
-{
-    return m_state;
+PeerAuthState Peer::getAuthState() {
+	return m_state;
 }
 
-void Peer::setAuthState(PeerAuthState state)
-{
-    m_state = state;
+void Peer::setAuthState(PeerAuthState state) {
+	m_state = state;
 }
 
-void Peer::externalOperation(const Operation & op, Link &)
-{
+void Peer::externalOperation(const Operation& op, Link&) {
 }
 
-void Peer::operation(const Operation &op, OpVector &res)
-{
+void Peer::operation(const Operation& op, OpVector& res) {
 }
 
-int Peer::teleportEntity(const LocatedEntity * ent)
-{
-    return 0;
+int Peer::teleportEntity(const LocatedEntity* ent) {
+	return 0;
 }
 
-void Peer::cleanTeleports()
-{
+void Peer::cleanTeleports() {
 }
 
 #include "../stubs/server/stubConnection.h"
@@ -491,11 +484,9 @@ void Peer::cleanTeleports()
 #include "../stubs/common/stublog.h"
 #include <common/Shaker.h>
 
-Shaker::Shaker()
-{
+Shaker::Shaker() {
 }
 
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }

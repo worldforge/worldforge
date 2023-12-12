@@ -28,10 +28,7 @@
 #include <vector>
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 struct TerrainFoliageDefinition {
 	std::map<std::string, std::string> mParameters;
@@ -71,8 +68,5 @@ struct TerrainLayerDefinition {
 
 }
 
-}
-
-}
 
 #endif

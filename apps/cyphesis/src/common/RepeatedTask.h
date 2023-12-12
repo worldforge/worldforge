@@ -26,19 +26,18 @@
 /**
  * Repeats a task with a specified interval.
  */
-class RepeatedTask
-{
-    public:
-        RepeatedTask(boost::asio::io_context& io_context, std::chrono::steady_clock::duration interval, std::function<void()> function);
+class RepeatedTask {
+public:
+	RepeatedTask(boost::asio::io_context& io_context, std::chrono::steady_clock::duration interval, std::function<void()> function);
 
-        void cancel();
+	void cancel();
 
-    private:
-        std::chrono::steady_clock::duration mInterval;
-        boost::asio::steady_timer mTimer;
-        std::function<void()> mFunction;
+private:
+	std::chrono::steady_clock::duration mInterval;
+	boost::asio::steady_timer mTimer;
+	std::function<void()> mFunction;
 
-        void executeTask();
+	void executeTask();
 
 };
 

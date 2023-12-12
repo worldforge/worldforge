@@ -16,6 +16,7 @@
 namespace Mercator {
 
 struct Plant;
+
 class Area;
 
 class SpeciesParameter;
@@ -24,11 +25,11 @@ typedef std::map<std::string, SpeciesParameter> ParameterDict;
 
 /// \brief A set of constraints on a plant parameter.
 class SpeciesParameter {
-  public:
-    /// \brief The minimum value a parameter should take.
-    float min;
-    /// \brief The range of values a parameter should take.
-    float range;
+public:
+	/// \brief The minimum value a parameter should take.
+	float min;
+	/// \brief The range of values a parameter should take.
+	float range;
 };
 
 /// \brief Data about a species of plant in a Forest.
@@ -37,15 +38,15 @@ class SpeciesParameter {
 /// where instances of a given species occur, and how they are scattered
 /// in a Forest.
 class Species {
-  public:
-    /// Probability that this species will occur at each grid node.
-    float m_probability;
+public:
+	/// Probability that this species will occur at each grid node.
+	float m_probability;
 
-    /// Multiplyer for how deviated from the grid items should be.
-    float m_deviation;
+	/// Multiplyer for how deviated from the grid items should be.
+	float m_deviation;
 
-    /// Arbitrary parameters.
-    ParameterDict m_parameters;
+	/// Arbitrary parameters.
+	ParameterDict m_parameters;
 };
 
 /// \brief This is the core class for any area to be populated with vegetation.
@@ -55,57 +56,58 @@ class Species {
 /// the entire contents to be iterated, or a given square two dimenstional
 /// area to be examined using the STL map API.
 class Forest {
-  public:
-    /// \brief STL map to store a sparse array of Plant objects.
-    ///
-    /// Integer key is effectively used as an index.
-    typedef std::map<int, Plant> PlantColumn;
+public:
+	/// \brief STL map to store a sparse array of Plant objects.
+	///
+	/// Integer key is effectively used as an index.
+	typedef std::map<int, Plant> PlantColumn;
 
-    /// \brief STL map to store a sparse array of PlantColumn objects.
-    ///
-    /// The end effect is a sparse two dimensional array of plant objects
-    /// which can be efficiently queried and scanned using STL iterators.
-    typedef std::map<int, PlantColumn> PlantStore;
+	/// \brief STL map to store a sparse array of PlantColumn objects.
+	///
+	/// The end effect is a sparse two dimensional array of plant objects
+	/// which can be efficiently queried and scanned using STL iterators.
+	typedef std::map<int, PlantColumn> PlantStore;
 
-    /// STL vector of plant species in this forest.
-    typedef std::vector<Species> PlantSpecies;
-  private:
+	/// STL vector of plant species in this forest.
+	typedef std::vector<Species> PlantSpecies;
+private:
 	//TODO: store as value, not pointer
-    /// Area of terrain affected by the presence of this forest.
-    Area* m_area;
-    
-    /// List of species in this forest.
-    PlantSpecies m_species;
-    /// 2D spatial container with all the vegetation instances in.
-    PlantStore m_plants;
-    /// Seed value used to initialise the random number generator.
-    unsigned long m_seed;
-    /// Cache for optimising random number generation.
-    RandCache m_randCache;
+	/// Area of terrain affected by the presence of this forest.
+	Area* m_area;
 
-  public:
-    explicit Forest(unsigned long seed = 0);
-    ~Forest();
+	/// List of species in this forest.
+	PlantSpecies m_species;
+	/// 2D spatial container with all the vegetation instances in.
+	PlantStore m_plants;
+	/// Seed value used to initialise the random number generator.
+	unsigned long m_seed;
+	/// Cache for optimising random number generation.
+	RandCache m_randCache;
 
-    /// \brief Accessor for polygonal area.
-    Area* getArea() const {
-        return m_area;
-    }
+public:
+	explicit Forest(unsigned long seed = 0);
 
-    /// Accessor for list of species in this forest.
-    PlantSpecies & species() {
-        return m_species;
-    }
+	~Forest();
 
-    /// \brief Accessor for container of vegetation.
-    /// @return A const reference to the container.
-    const PlantStore & getPlants() const {
-        return m_plants;
-    }
+	/// \brief Accessor for polygonal area.
+	Area* getArea() const {
+		return m_area;
+	}
 
-    void setArea(Area* a);
+	/// Accessor for list of species in this forest.
+	PlantSpecies& species() {
+		return m_species;
+	}
 
-    void populate();
+	/// \brief Accessor for container of vegetation.
+	/// @return A const reference to the container.
+	const PlantStore& getPlants() const {
+		return m_plants;
+	}
+
+	void setArea(Area* a);
+
+	void populate();
 };
 
 }

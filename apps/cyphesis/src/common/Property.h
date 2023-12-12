@@ -26,28 +26,29 @@
 #include <Atlas/Message/Element.h>
 
 class LocatedEntity;
+
 class TypeNode;
 
 struct PropertyUtil {
 
-    /**
-     * Extract the property visibility flags from the name.
-     * Names that starts with "__" are "private". Only visible to the simulation and to administrators.
-     * Names that starts with "_" are "protected". Only visible to the entity it belongs, the simulation and to administrators.
-     * All other properties are "public", i.e. visible to everyone.
-     * @param name A property name.
-     * @return
-     */
-    static std::uint32_t flagsForPropertyName(const std::string& name);
+	/**
+	 * Extract the property visibility flags from the name.
+	 * Names that starts with "__" are "private". Only visible to the simulation and to administrators.
+	 * Names that starts with "_" are "protected". Only visible to the entity it belongs, the simulation and to administrators.
+	 * All other properties are "public", i.e. visible to everyone.
+	 * @param name A property name.
+	 * @return
+	 */
+	static std::uint32_t flagsForPropertyName(const std::string& name);
 
-    /**
-     * Checks if the name supplied is a valid property name.
-     *
-     * It should not be more than 32 characters, and can only contain ascii characters or numbers, dollar sign ("$"), underscores ("_") or hyphens ("-").
-     */
-    static bool isValidName(const std::string& name);
+	/**
+	 * Checks if the name supplied is a valid property name.
+	 *
+	 * It should not be more than 32 characters, and can only contain ascii characters or numbers, dollar sign ("$"), underscores ("_") or hyphens ("-").
+	 */
+	static bool isValidName(const std::string& name);
 
-    static std::pair<ModifierType, std::string> parsePropertyModification(const std::string& propertyName);
+	static std::pair<ModifierType, std::string> parsePropertyModification(const std::string& propertyName);
 };
 
 
@@ -79,74 +80,84 @@ struct PropertyUtil {
 /// \ingroup PropertyClasses
 template<typename EntityT>
 class PropertyCore : public OperationsListener {
-  protected:
-    /// \brief Flags indicating how this Property should be handled
-    Flags m_flags;
-    /// \brief Constructor called from classes which inherit from Property
-    /// @param flags default value for the Property flags
-    explicit PropertyCore(std::uint32_t flags = 0);
-    PropertyCore(const PropertyCore &) = default;
-  public:
-    virtual ~PropertyCore() = default;
+protected:
+	/// \brief Flags indicating how this Property should be handled
+	Flags m_flags;
 
-    /// \brief Accessor for Property flags
-    const Flags& flags() const { return m_flags; }
-    /// \brief Accessor for Property flags
-    Flags& flags() { return m_flags; }
+	/// \brief Constructor called from classes which inherit from Property
+	/// @param flags default value for the Property flags
+	explicit PropertyCore(std::uint32_t flags = 0);
 
-    void addFlags(std::uint32_t flags)
-    {
-        m_flags.addFlags(flags);
-    }
+	PropertyCore(const PropertyCore&) = default;
 
-    void removeFlags(std::uint32_t flags)
-    {
-        m_flags.removeFlags(flags);
-    }
+public:
+	virtual ~PropertyCore() = default;
 
-    bool hasFlags(std::uint32_t flags) const
-    {
-        return m_flags.hasFlags(flags);
-    }
+	/// \brief Accessor for Property flags
+	const Flags& flags() const { return m_flags; }
 
-    /// \brief Install this property on an entity
-    ///
-    /// Called whenever an Entity gains this property for the first time
-    virtual void install(EntityT &, const std::string &);
-    /// \brief Install this property on a type
-    ///
-    /// Called whenever a TypeNode gains this property for the first time
-    virtual void install(TypeNode &, const std::string &);
-    /// \brief Remove this property from an entity.
-    ///
-    /// Called whenever the property is removed or the entity is shutting down.
-    virtual void remove(EntityT &, const std::string & name);
-    /// \brief Apply whatever effect this property has on an Entity
-    ///
-    /// Called whenever the value of this property should affect an Entity
-    virtual void apply(EntityT &);
+	/// \brief Accessor for Property flags
+	Flags& flags() { return m_flags; }
+
+	void addFlags(std::uint32_t flags) {
+		m_flags.addFlags(flags);
+	}
+
+	void removeFlags(std::uint32_t flags) {
+		m_flags.removeFlags(flags);
+	}
+
+	bool hasFlags(std::uint32_t flags) const {
+		return m_flags.hasFlags(flags);
+	}
+
+	/// \brief Install this property on an entity
+	///
+	/// Called whenever an Entity gains this property for the first time
+	virtual void install(EntityT&, const std::string&);
+
+	/// \brief Install this property on a type
+	///
+	/// Called whenever a TypeNode gains this property for the first time
+	virtual void install(TypeNode&, const std::string&);
+
+	/// \brief Remove this property from an entity.
+	///
+	/// Called whenever the property is removed or the entity is shutting down.
+	virtual void remove(EntityT&, const std::string& name);
+
+	/// \brief Apply whatever effect this property has on an Entity
+	///
+	/// Called whenever the value of this property should affect an Entity
+	virtual void apply(EntityT&);
 
 
-    /// \brief Copy the value of the property into an Atlas Message
-    virtual int get(Atlas::Message::Element & val) const = 0;
-    /// \brief Read the value of the property from an Atlas Message
-    virtual void set(const Atlas::Message::Element & val) = 0;
-    /// \brief Add the value as an attribute to an Atlas map
-    //TODO: remove this as it's not used
-    virtual void add(const std::string & key, Atlas::Message::MapType & map) const;
-    /// \brief Add the value as an attribute to an Atlas entity
-    virtual void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const;
-    /// \brief Handle an operation
-    HandlerResult operation(LocatedEntity &,
-                                    const Operation &,
-                                    OpVector &) override;
-    /// \brief Create a copy of this instance
-    ///
-    /// The copy should have exactly the same type, and the same value
-    virtual PropertyCore * copy() const = 0;
+	/// \brief Copy the value of the property into an Atlas Message
+	virtual int get(Atlas::Message::Element& val) const = 0;
 
-    bool operator==(const PropertyCore& rhs) const;
-    bool operator!=(const PropertyCore& rhs) const;
+	/// \brief Read the value of the property from an Atlas Message
+	virtual void set(const Atlas::Message::Element& val) = 0;
+
+	/// \brief Add the value as an attribute to an Atlas map
+	//TODO: remove this as it's not used
+	virtual void add(const std::string& key, Atlas::Message::MapType& map) const;
+
+	/// \brief Add the value as an attribute to an Atlas entity
+	virtual void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const;
+
+	/// \brief Handle an operation
+	HandlerResult operation(LocatedEntity&,
+							const Operation&,
+							OpVector&) override;
+
+	/// \brief Create a copy of this instance
+	///
+	/// The copy should have exactly the same type, and the same value
+	virtual PropertyCore* copy() const = 0;
+
+	bool operator==(const PropertyCore& rhs) const;
+
+	bool operator!=(const PropertyCore& rhs) const;
 };
 
 typedef PropertyCore<LocatedEntity> PropertyBase;
@@ -203,57 +214,68 @@ static const std::uint32_t prop_flag_modifiers_not_allowed = 1u << 9u;
 
 /// \brief Entity property template for properties with single data values
 /// \ingroup PropertyClasses
-template <typename T>
+template<typename T>
 class Property : public PropertyBase {
-  protected:
-    /// \brief Reference to variable holding the value of this Property
-    T m_data;
-    Property(const Property<T> &) = default;
-  public:
-    static const std::string property_atlastype;
+protected:
+	/// \brief Reference to variable holding the value of this Property
+	T m_data;
 
-    explicit Property(unsigned int flags = 0);
+	Property(const Property<T>&) = default;
 
-    const T & data() const { return this->m_data; }
-    T & data() { return this->m_data; }
+public:
+	static const std::string property_atlastype;
 
-    int get(Atlas::Message::Element & val) const override;
+	explicit Property(unsigned int flags = 0);
 
-    void set(const Atlas::Message::Element &) override;
+	const T& data() const { return this->m_data; }
 
-    void add(const std::string & key, Atlas::Message::MapType & map) const override;
-    void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const override;
-    Property<T> * copy() const override;
+	T& data() { return this->m_data; }
+
+	int get(Atlas::Message::Element& val) const override;
+
+	void set(const Atlas::Message::Element&) override;
+
+	void add(const std::string& key, Atlas::Message::MapType& map) const override;
+
+	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
+
+	Property<T>* copy() const override;
 };
 
 /// \brief Entity property that can store any Atlas value
 /// \ingroup PropertyClasses
 class SoftProperty : public PropertyBase {
-  protected:
-    Atlas::Message::Element m_data;
-  public:
-    explicit SoftProperty() = default;
-    explicit SoftProperty(Atlas::Message::Element  data);
+protected:
+	Atlas::Message::Element m_data;
+public:
+	explicit SoftProperty() = default;
 
-    int get(Atlas::Message::Element & val) const override ;
-    void set(const Atlas::Message::Element & val) override ;
-    SoftProperty * copy() const override;
+	explicit SoftProperty(Atlas::Message::Element data);
 
-    Atlas::Message::Element& data();
-    const Atlas::Message::Element& data() const;
+	int get(Atlas::Message::Element& val) const override;
+
+	void set(const Atlas::Message::Element& val) override;
+
+	SoftProperty* copy() const override;
+
+	Atlas::Message::Element& data();
+
+	const Atlas::Message::Element& data() const;
 };
 
 class BoolProperty : public PropertyBase {
 public:
-    static constexpr const char* property_atlastype = "int";
+	static constexpr const char* property_atlastype = "int";
 
-    explicit BoolProperty() = default;
+	explicit BoolProperty() = default;
 
-    int get(Atlas::Message::Element & val) const override;
-    void set(const Atlas::Message::Element & val) override;
-    BoolProperty * copy() const override;
+	int get(Atlas::Message::Element& val) const override;
 
-    bool isTrue() const;
+	void set(const Atlas::Message::Element& val) override;
+
+	BoolProperty* copy() const override;
+
+	bool isTrue() const;
 
 };
 

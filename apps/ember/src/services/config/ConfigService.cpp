@@ -279,7 +279,7 @@ bool ConfigService::loadSavedConfig(const std::string& filename, const StringCon
 	return success;
 }
 
-bool ConfigService::saveConfig(const boost::filesystem::path& filename, unsigned int scopeMask) {
+bool ConfigService::saveConfig(const boost::filesystem::path& filename) {
 	//Go through all user config values and save those (as they were defined in the original user config file).
 	//Also save any instance values that aren't present in the user config if they differ from the global value.
 	varconf::Config exportConfig;

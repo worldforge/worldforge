@@ -11,7 +11,7 @@
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 /** Starting point for entity hierarchy
 
@@ -72,6 +72,6 @@ private:
     static void fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity
 
 #endif // ATLAS_OBJECTS_ENTITY_ANONYMOUS_H

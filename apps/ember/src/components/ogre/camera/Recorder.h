@@ -21,9 +21,8 @@
 
 #include <OgreFrameListener.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Camera {
+
+namespace Ember::OgreView::Camera {
 
 class Recorder : public Ogre::FrameListener {
 public:
@@ -44,6 +43,6 @@ private:
 	float mFramesPerSecond;
 };
 }
-}
-}
+
+
 #endif /* RECORDER_H_ */

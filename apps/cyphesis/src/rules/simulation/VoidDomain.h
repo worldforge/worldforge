@@ -23,24 +23,23 @@
 /**
  * @brief An empty domain, in which nothing can move, and nothing can be seen.
  */
-class VoidDomain : public Domain
-{
-    public:
-        explicit VoidDomain(LocatedEntity& entity);
+class VoidDomain : public Domain {
+public:
+	explicit VoidDomain(LocatedEntity& entity);
 
-        ~VoidDomain() override = default;
+	~VoidDomain() override = default;
 
-        bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
+	bool isEntityVisibleFor(const LocatedEntity& observingEntity, const LocatedEntity& observedEntity) const override;
 
-        void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
+	void getVisibleEntitiesFor(const LocatedEntity& observingEntity, std::list<LocatedEntity*>& entityList) const override;
 
-        void addEntity(LocatedEntity& entity) override;
+	void addEntity(LocatedEntity& entity) override;
 
-        void removeEntity(LocatedEntity& entity) override;
+	void removeEntity(LocatedEntity& entity) override;
 
-        bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
+	bool isEntityReachable(const LocatedEntity& reachingEntity, float reach, const LocatedEntity& queriedEntity, const WFMath::Point<3>& positionOnQueriedEntity) const override;
 
-        boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
+	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 
 };
 

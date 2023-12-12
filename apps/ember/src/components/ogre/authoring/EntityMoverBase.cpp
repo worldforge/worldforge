@@ -35,9 +35,9 @@
 #include <OgreSceneManager.h>
 #include <OgreManualObject.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 SnapListener* EntityMoverBase::msSnapListener(nullptr);
 
@@ -136,7 +136,7 @@ void EntityMoverBase::setRotation(int /*axis*/, WFMath::CoordType /*angle*/) {
 }
 
 void EntityMoverBase::yaw(WFMath::CoordType angle) {
-	mNode->yaw(Ogre::Degree((Ogre::Real)angle));
+	mNode->yaw(Ogre::Degree((Ogre::Real) angle));
 	Moved.emit();
 }
 
@@ -205,7 +205,7 @@ boost::optional<float> EntityMoverBase::getOffset() const {
 
 void EntityMoverBase::processPickResults(const std::vector<PickResult>& results) {
 	if (mEntity) {
-		for (auto& result : results) {
+		for (auto& result: results) {
 			if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
 				auto& entityCollisionInfo = boost::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
 				//It's a valid entry if it's not transparent and not the entity which is being moved itself.
@@ -221,5 +221,5 @@ void EntityMoverBase::processPickResults(const std::vector<PickResult>& results)
 
 
 }
-}
-}
+
+

@@ -26,30 +26,31 @@
  * It's normalized, with 0 being no movement, and 1 being full movement.
  * \ingroup PropertyClasses
  */
-class AngularFactorProperty: public PropertyBase
-{
-    protected:
-        AngularFactorProperty(const AngularFactorProperty& rhs) = default;
-        WFMath::Vector<3> m_data;
-    public:
+class AngularFactorProperty : public PropertyBase {
+protected:
+	AngularFactorProperty(const AngularFactorProperty& rhs) = default;
 
-        static constexpr const char* property_name = "angularfactor";
-        static constexpr const char* property_atlastype = "list";
+	WFMath::Vector<3> m_data;
+public:
 
-        AngularFactorProperty() = default;
+	static constexpr const char* property_name = "angularfactor";
+	static constexpr const char* property_atlastype = "list";
 
-        AngularFactorProperty * copy() const override;
+	AngularFactorProperty() = default;
 
-        const WFMath::Vector<3> & data() const { return m_data; }
-        WFMath::Vector<3> & data() { return m_data; }
+	AngularFactorProperty* copy() const override;
 
-        int get(Atlas::Message::Element & val) const override;
+	const WFMath::Vector<3>& data() const { return m_data; }
 
-        void set(const Atlas::Message::Element & val) override;
+	WFMath::Vector<3>& data() { return m_data; }
 
-        void add(const std::string & key, Atlas::Message::MapType & map) const override;
+	int get(Atlas::Message::Element& val) const override;
 
-        void add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const override;
+	void set(const Atlas::Message::Element& val) override;
+
+	void add(const std::string& key, Atlas::Message::MapType& map) const override;
+
+	void add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const override;
 };
 
 #endif // RULESETS_ANGULARFACTOR_PROPERTY_H

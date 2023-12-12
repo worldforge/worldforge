@@ -28,32 +28,31 @@
 #include <components/ogre/BulletCollisionDetector.h>
 #include "PolygonPointUserObject.h"
 
-namespace Ogre
-{
+namespace Ogre {
 class SceneNode;
+
 class Entity;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 class MovementAdapter;
 
-namespace Authoring
-{
+namespace Authoring {
 
 class Polygon;
+
 class PolygonPointMover;
+
 struct IPolygonPositionProvider;
+
 /**
  @brief A graphical representation of one point in a polygon.
  The point is represented by a sphere, which can be manipulated through dragging.
 
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class PolygonPoint
-{
+class PolygonPoint {
 public:
 
 	/**
@@ -165,6 +164,6 @@ protected:
 
 }
 
-}
+
 
 #endif

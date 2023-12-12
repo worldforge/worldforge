@@ -18,10 +18,8 @@
 
 #include "Image.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 Image::Image(std::unique_ptr<ImageBuffer> buffer) :
 		mBuffer(std::move(buffer)) {
@@ -56,5 +54,5 @@ unsigned int Image::getResolution() const {
 
 }
 
-}
-}
+
+

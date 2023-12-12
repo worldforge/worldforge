@@ -125,7 +125,7 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 	mMainWindowId = SDL_GetWindowID(mMainVideoSurface);
 	SDL_GetWindowSize(mMainVideoSurface, &mScreenWidth, &mScreenHeight);
 	SDL_SysWMinfo info;
-	SDL_VERSION(&info.version);
+	SDL_VERSION(&info.version)
 
 	SDL_GetWindowWMInfo(mMainVideoSurface, &info);
 
@@ -330,7 +330,7 @@ void Input::startInteraction() {
 void Input::processInput() {
 
 	auto currentTime = std::chrono::steady_clock::now();
-	mMainLoopController->EventBeforeInputProcessing.emit((currentTime - mLastTimeInputProcessingStart).count() / 1000000000.0f);
+	mMainLoopController->EventBeforeInputProcessing.emit((float) (currentTime - mLastTimeInputProcessingStart).count() / 1000000000.0f);
 	mLastTimeInputProcessingStart = currentTime;
 
 	auto newTick = std::chrono::steady_clock::now();
@@ -343,7 +343,7 @@ void Input::processInput() {
 		mWindowProvider->processInput();
 	}
 	currentTime = std::chrono::steady_clock::now();
-	mMainLoopController->EventAfterInputProcessing.emit((currentTime - mLastTimeInputProcessingEnd).count() / 1000000000.0f);
+	mMainLoopController->EventAfterInputProcessing.emit((float) (currentTime - mLastTimeInputProcessingEnd).count() / 1000000000.0f);
 	mLastTimeInputProcessingEnd = currentTime;
 }
 
@@ -447,7 +447,7 @@ void Input::pollEvents(float secondsSinceLast) {
 
 					} else if (event.button.button == SDL_BUTTON_LEFT) {
 						//left mouse button released
-						for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+						for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 							IInputAdapter* adapter = *I;
 							++I;
 							if (!(adapter)->injectMouseButtonUp(Input::MouseButtonLeft))
@@ -458,7 +458,7 @@ void Input::pollEvents(float secondsSinceLast) {
 
 					} else if (event.button.button == SDL_BUTTON_MIDDLE) {
 						//middle mouse button released
-						for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+						for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 							IInputAdapter* adapter = *I;
 							++I;
 							if (!(adapter)->injectMouseButtonUp(Input::MouseButtonMiddle))
@@ -482,7 +482,7 @@ void Input::pollEvents(float secondsSinceLast) {
 					} else if (event.button.button == SDL_BUTTON_LEFT) {
 						//left mouse button pressed
 
-						for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+						for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 							IInputAdapter* adapter = *I;
 							++I;
 							if (!(adapter)->injectMouseButtonDown(Input::MouseButtonLeft))
@@ -492,7 +492,7 @@ void Input::pollEvents(float secondsSinceLast) {
 						EventMouseButtonPressed.emit(MouseButtonLeft, mCurrentInputMode);
 					} else if (event.button.button == SDL_BUTTON_MIDDLE) {
 						//middle mouse button pressed
-						for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+						for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 							IInputAdapter* adapter = *I;
 							++I;
 							if (!(adapter)->injectMouseButtonDown(Input::MouseButtonMiddle))
@@ -507,7 +507,7 @@ void Input::pollEvents(float secondsSinceLast) {
 			case SDL_MOUSEWHEEL:
 				if (event.wheel.y > 0) {
 					EventMouseButtonPressed.emit(MouseWheelUp, mCurrentInputMode);
-					for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+					for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 						IInputAdapter* adapter = *I;
 						++I;
 						if (!(adapter)->injectMouseButtonDown(Input::MouseWheelUp))
@@ -515,7 +515,7 @@ void Input::pollEvents(float secondsSinceLast) {
 					}
 				} else if (event.wheel.y < 0) {
 					EventMouseButtonPressed.emit(MouseWheelDown, mCurrentInputMode);
-					for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end();) {
+					for (auto I = mAdapters.begin(); I != mAdapters.end();) {
 						IInputAdapter* adapter = *I;
 						++I;
 						if (!(adapter)->injectMouseButtonDown(Input::MouseWheelDown))
@@ -616,7 +616,7 @@ void Input::keyPressed(const SDL_KeyboardEvent& keyEvent) {
 	if (mCurrentInputMode == IM_GUI) {
 		// do event injection
 		// key down
-		for (IInputAdapterStore::const_iterator I = mAdapters.begin(); I != mAdapters.end() && !mSuppressForCurrentEvent;) {
+		for (auto I = mAdapters.begin(); I != mAdapters.end() && !mSuppressForCurrentEvent;) {
 			IInputAdapter* adapter = *I;
 			++I;
 			if (!(adapter)->injectKeyDown(keyEvent.keysym.scancode))

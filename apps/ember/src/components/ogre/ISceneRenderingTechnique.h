@@ -19,11 +19,9 @@
 #ifndef ISCENERENDERINGTECHNIQUE_H_
 #define ISCENERENDERINGTECHNIQUE_H_
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
+namespace OgreView {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -31,12 +29,11 @@ namespace OgreView
  *
  * The main method for rending entities in a scene is as a Model, but for some entities we want to use alternate rending methods (imposters for example).
  */
-struct ISceneRenderingTechnique
-{
+struct ISceneRenderingTechnique {
 	/**
 	 * @brief Dtor.
 	 */
-	virtual ~ISceneRenderingTechnique()	= default;
+	virtual ~ISceneRenderingTechnique() = default;
 
 	/**
 	 * @brief Registers an entity with this rendering technique.

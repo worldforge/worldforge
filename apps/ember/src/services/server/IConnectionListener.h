@@ -21,15 +21,13 @@
 
 #include <Atlas/Objects/ObjectsFwd.h>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Listens for objects sent and received through a Connection.
  */
-struct IConnectionListener
-{
+struct IConnectionListener {
 
 	virtual ~IConnectionListener() = default;
 

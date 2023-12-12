@@ -71,6 +71,7 @@ class ScaleAdapter;
 class EntityRefAdapter;
 
 class NumberRangeAdapter;
+
 /**
 @brief A factory class through which all adapters are created. Instead of creating the adapters yourself, use this to properly instantiate them.
 The factory will take care of loading the gui elements from predefined cegui layout definitions, and setting up all gui elements.
@@ -234,7 +235,8 @@ public:
 	 * @param entity An optional entity to which the adapter is connected. This isn't always needed (since an entity instance is not always available)
 	 * @return A new adapter instance, or null if there either was an error when creating one, or none could be found for the specified type.
 	 */
-	std::unique_ptr<AdapterBase> createAdapterByType(const std::string& type, CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity = nullptr);
+	std::unique_ptr<AdapterBase>
+	createAdapterByType(const std::string& type, CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity = nullptr);
 
 	/**
 	 * @brief Loads the gui elements as specified in the submitted layout-file into the container window, using the supplied prefix.
@@ -248,11 +250,6 @@ public:
 	CEGUI::Window* loadLayoutIntoContainer(CEGUI::Window* container, const std::string& adapterPrefix, const std::string& layoutfile);
 
 protected:
-
-	/**
-	 * @brief Used for auto generating unique CEGUI window names.
-	 */
-	static unsigned long msAutoGenId;
 
 	/**
 	 * @brief The externally specified prefix used as a base for unique CEGUI window names.

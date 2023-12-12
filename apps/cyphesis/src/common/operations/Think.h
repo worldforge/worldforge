@@ -21,7 +21,9 @@
 
 #include <Atlas/Objects/Generic.h>
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 
 extern int THINK_NO;
 
@@ -30,14 +32,15 @@ extern int THINK_NO;
 /// This operation is used to send "thoughts" to an entity's mind.
 /// \see Commune
 /// \ingroup CustomOperations
-class Think : public Generic
-{
-  public:
-        Think() {
-        (*this)->setType("think", THINK_NO);
-    }
+class Think : public Generic {
+public:
+	Think() {
+		(*this)->setType("think", THINK_NO);
+	}
 };
 
-} } }
+}
+}
+}
 
 #endif // COMMON_THINK_H

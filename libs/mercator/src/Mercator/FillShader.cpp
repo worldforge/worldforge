@@ -11,27 +11,24 @@ namespace Mercator {
 
 FillShader::FillShader() = default;
 
-FillShader::FillShader(const Parameters & params)
-{
+FillShader::FillShader(const Parameters&) {
 }
 
 FillShader::~FillShader() = default;
 
-bool FillShader::checkIntersect(const Segment &) const
-{
-    return true;
+bool FillShader::checkIntersect(const Segment&) const {
+	return true;
 }
 
-void FillShader::shade(Surface & s) const
-{
-    unsigned int channels = s.getChannels();
-    ColorT * data = s.getData();
-    unsigned int size = s.getSegment().getSize();
+void FillShader::shade(Surface& s) const {
+	unsigned int channels = s.getChannels();
+	ColorT* data = s.getData();
+	unsigned int size = s.getSegment().getSize();
 
-    unsigned int buflen = size * size * channels;
-    for (unsigned int i = 0; i < buflen; ++i) {
-        data[i] = colorMax;
-    }
+	unsigned int buflen = size * size * channels;
+	for (unsigned int i = 0; i < buflen; ++i) {
+		data[i] = colorMax;
+	}
 }
 
 } // namespace Mercator

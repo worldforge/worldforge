@@ -27,28 +27,30 @@
 #include <OgreIteratorWrapper.h> //Need to include this because of header errors on Ogre 1.10.7
 #include <OgreMeshSerializer.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
 @brief Allows the usage of relative skeleton names.
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class MeshSerializerListener : public Ogre::MeshSerializerListener
-{
+class MeshSerializerListener : public Ogre::MeshSerializerListener {
 public:
 	/**
 	 * @brief Ctor.
 	 * @param requireTangents True if tangents should be created if missing.
 	 */
-    explicit MeshSerializerListener(bool requireTangents);
+	explicit MeshSerializerListener(bool requireTangents);
 
-    ~MeshSerializerListener() override;
-    
-	void processMaterialName(Ogre::Mesh *mesh, Ogre::String *name) override;
-	void processSkeletonName(Ogre::Mesh *mesh, Ogre::String *name) override;
+	~MeshSerializerListener() override;
+
+	void processMaterialName(Ogre::Mesh* mesh, Ogre::String* name) override;
+
+	void processSkeletonName(Ogre::Mesh* mesh, Ogre::String* name) override;
+
 	void processMeshCompleted(Ogre::Mesh*) override;
+
 private:
 
 	/**
@@ -59,6 +61,6 @@ private:
 
 }
 
-}
+
 
 #endif

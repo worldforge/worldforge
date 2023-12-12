@@ -22,25 +22,23 @@
 #include "ICameraMount.h"
 #include "components/ogre/OgreIncludes.h"
 
-namespace WFMath
-{
-template<int> class Vector;
+namespace WFMath {
+template<int>
+class Vector;
+
 class Quaternion;
 }
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 struct ICameraMotionHandler;
 
-namespace Camera
-{
+namespace Camera {
 class MainCamera;
+
 class CameraSettings;
 
-class CameraMountBase : public ICameraMount
-{
+class CameraMountBase : public ICameraMount {
 public:
 
 	explicit CameraMountBase(const CameraSettings& cameraSettings);
@@ -75,7 +73,6 @@ protected:
 };
 
 
-}
 }
 }
 

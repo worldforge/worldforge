@@ -90,6 +90,7 @@ class Model {
 	friend class ModelDefinition;
 
 	friend class ModelFactory;
+
 	friend class SubModelPart;
 
 public:
@@ -312,7 +313,7 @@ protected:
 
 	std::vector<ParticleSystemBinding> mAllParticleSystemBindings;
 	ParticleSystemSet mParticleSystems;
-    std::vector<LightInfo> mLights;
+	std::vector<LightInfo> mLights;
 
 	/**
 	 *    Clears all the submodels
@@ -353,9 +354,9 @@ protected:
 
 	bool loadAssets();
 
-    void addLight(LightInfo lightInfo);
+	void addLight(LightInfo lightInfo);
 
-    Ogre::SceneManager& mManager;
+	Ogre::SceneManager& mManager;
 
 	ModelDefinitionPtr mDefinition;
 

@@ -92,17 +92,17 @@ void GeometryVisualization::updatePositionAndOrientation() {
 void GeometryVisualization::placeSphere(float radius, Ogre::Vector3 offset) {
 	int numberOfRings = 16;
 	int numberOfSegments = 16;
-	float fDeltaRingAngle = (Ogre::Math::PI / (float)numberOfRings);
-	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float)numberOfSegments);
+	float fDeltaRingAngle = (Ogre::Math::PI / (float) numberOfRings);
+	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float) numberOfSegments);
 	size_t wVerticeIndex = static_cast<Ogre::uint32>(mManualObject->getCurrentVertexCount());
 
 	for (int ring = 0; ring <= numberOfRings; ring++) {
-		float r0 = radius * sinf((float)ring * fDeltaRingAngle);
-		float y0 = radius * cosf((float)ring * fDeltaRingAngle) + offset.y;
+		float r0 = radius * sinf((float) ring * fDeltaRingAngle);
+		float y0 = radius * cosf((float) ring * fDeltaRingAngle) + offset.y;
 
 		for (int seg = 0; seg <= numberOfSegments; seg++) {
-			float x0 = r0 * sinf((float)seg * fDeltaSegAngle) + offset.x;
-			float z0 = r0 * cosf((float)seg * fDeltaSegAngle) + offset.z;
+			float x0 = r0 * sinf((float) seg * fDeltaSegAngle) + offset.x;
+			float z0 = r0 * cosf((float) seg * fDeltaSegAngle) + offset.z;
 
 			mManualObject->position(x0, y0, z0);
 
@@ -128,7 +128,7 @@ void GeometryVisualization::placeSphere(float radius, Ogre::Vector3 offset) {
 void GeometryVisualization::placeCylinderX(float radius, float halfHeight, Ogre::Vector3 offset) {
 
 	int numberOfSegments = 32;
-	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float)numberOfSegments);
+	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float) numberOfSegments);
 	size_t vertexIndex = static_cast<Ogre::uint32>(mManualObject->getCurrentVertexCount()) - 1;
 
 	//First do the top circle
@@ -142,8 +142,8 @@ void GeometryVisualization::placeCylinderX(float radius, float halfHeight, Ogre:
 	size_t topCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float y0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.y;
-		float z0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.z;
+		float y0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.y;
+		float z0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.z;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -171,8 +171,8 @@ void GeometryVisualization::placeCylinderX(float radius, float halfHeight, Ogre:
 	size_t bottomCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float y0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.y;
-		float z0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.z;
+		float y0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.y;
+		float z0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.z;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -200,7 +200,7 @@ void GeometryVisualization::placeCylinderY(float radius, float halfHeight, Ogre:
 
 
 	int numberOfSegments = 32;
-	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float)numberOfSegments);
+	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float) numberOfSegments);
 	size_t vertexIndex = static_cast<Ogre::uint32>(mManualObject->getCurrentVertexCount()) - 1;
 
 	//First do the top circle
@@ -214,8 +214,8 @@ void GeometryVisualization::placeCylinderY(float radius, float halfHeight, Ogre:
 	size_t topCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float x0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.x;
-		float z0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.z;
+		float x0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.x;
+		float z0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.z;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -243,8 +243,8 @@ void GeometryVisualization::placeCylinderY(float radius, float halfHeight, Ogre:
 	size_t bottomCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float x0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.x;
-		float z0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.z;
+		float x0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.x;
+		float z0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.z;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -271,7 +271,7 @@ void GeometryVisualization::placeCylinderY(float radius, float halfHeight, Ogre:
 void GeometryVisualization::placeCylinderZ(float radius, float halfHeight, Ogre::Vector3 offset) {
 
 	std::int32_t numberOfSegments = 32;
-	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float)numberOfSegments);
+	float fDeltaSegAngle = (2 * Ogre::Math::PI / (float) numberOfSegments);
 	size_t vertexIndex = static_cast<Ogre::uint32>(mManualObject->getCurrentVertexCount()) - 1;
 
 	//First do the top circle
@@ -285,8 +285,8 @@ void GeometryVisualization::placeCylinderZ(float radius, float halfHeight, Ogre:
 	size_t topCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float y0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.y;
-		float x0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.x;
+		float y0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.y;
+		float x0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.x;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -314,8 +314,8 @@ void GeometryVisualization::placeCylinderZ(float radius, float halfHeight, Ogre:
 	size_t bottomCenterVertexIndex = vertexIndex;
 
 	for (int seg = 0; seg <= numberOfSegments; ++seg) {
-		float y0 = radius * sinf((float)seg * fDeltaSegAngle) + offset.y;
-		float x0 = radius * cosf((float)seg * fDeltaSegAngle) + offset.x;
+		float y0 = radius * sinf((float) seg * fDeltaSegAngle) + offset.y;
+		float x0 = radius * cosf((float) seg * fDeltaSegAngle) + offset.x;
 
 		mManualObject->position(Ogre::Vector3(x0, y0, z0));
 
@@ -360,13 +360,13 @@ void GeometryVisualization::placeBox(Ogre::AxisAlignedBox bbox) {
 	quads.emplace_back(0, 4, 7, 3);
 
 	auto firstVertex = static_cast<Ogre::uint32>(mManualObject->getCurrentVertexCount());
-	for (const auto& vertex : vertices) {
+	for (const auto& vertex: vertices) {
 		mManualObject->position(vertex);
 		auto normalized = vertex.normalisedCopy();
 		mManualObject->colour(normalized.x, normalized.y, normalized.z, 1.0f);
 	}
 
-	for (const auto& quad : quads) {
+	for (const auto& quad: quads) {
 		mManualObject->quad(std::get<0>(quad) + firstVertex, std::get<1>(quad) + firstVertex, std::get<2>(quad) + firstVertex, std::get<3>(quad) + firstVertex);
 	}
 }
@@ -442,7 +442,7 @@ void GeometryVisualization::buildGeometry() {
 						auto meshPtr = Ogre::MeshManager::getSingleton().getByName(path, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 						if (meshPtr) {
 							auto entity = mSceneNode->getCreator()->createEntity(meshPtr);
-							for (auto subentity :                                        entity->getSubEntities()) {
+							for (auto subentity: entity->getSubEntities()) {
 								subentity->setMaterialName("/common/base/authoring/normals", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 							}
 							mOgreEntity = entity;
@@ -460,23 +460,23 @@ void GeometryVisualization::buildGeometry() {
 			} else if (type == "sphere") {
 				mBboxUpdateFn = [this, &geometry, &buildSphereFn]() {
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.x(), std::min(size.y(), size.z())) * 0.5f;
+					float radius = (float) std::min(size.x(), std::min(size.y(), size.z())) * 0.5f;
 
 					auto scalerI = geometry.Map().find("scaler");
 					if (scalerI != geometry.Map().end() && scalerI->second.isString()) {
 						auto scaler = scalerI->second.String();
 						if (scaler == "min") {
-							radius = (float)std::min(size.x(), std::min(size.y(), size.z())) * 0.5f;
+							radius = (float) std::min(size.x(), std::min(size.y(), size.z())) * 0.5f;
 						} else if (scaler == "max") {
-							radius = (float)std::max(size.x(), std::max(size.y(), size.z())) * 0.5f;
+							radius = (float) std::max(size.x(), std::max(size.y(), size.z())) * 0.5f;
 						} else if (scaler == "x") {
-							radius = (float)size.x() * 0.5f;
+							radius = (float) size.x() * 0.5f;
 						} else if (scaler == "y") {
-							radius = (float)size.y() * 0.5f;
+							radius = (float) size.y() * 0.5f;
 						} else if (scaler == "z") {
-							radius = (float)size.z() * 0.5f;
+							radius = (float) size.z() * 0.5f;
 						}
- 					}
+					}
 
 					buildSphereFn(size, radius);
 				};
@@ -486,21 +486,21 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.y(), size.z()) * 0.5f;
+					float radius = (float) std::min(size.y(), size.z()) * 0.5f;
 
 					auto scalerI = geometry.Map().find("scaler");
 					if (scalerI != geometry.Map().end() && scalerI->second.isString()) {
 						auto scaler = scalerI->second.String();
 						if (scaler == "min") {
-							radius = (float)std::min(size.y(), size.z()) * 0.5f;
+							radius = (float) std::min(size.y(), size.z()) * 0.5f;
 						} else if (scaler == "max") {
-							radius = (float)std::max(size.y(), size.z()) * 0.5f;
+							radius = (float) std::max(size.y(), size.z()) * 0.5f;
 						} else if (scaler == "x") {
-							radius = (float)size.x() * 0.5f;
+							radius = (float) size.x() * 0.5f;
 						} else if (scaler == "y") {
-							radius = (float)size.y() * 0.5f;
+							radius = (float) size.y() * 0.5f;
 						} else if (scaler == "z") {
-							radius = (float)size.z() * 0.5f;
+							radius = (float) size.z() * 0.5f;
 						}
 					}
 
@@ -513,7 +513,7 @@ void GeometryVisualization::buildGeometry() {
 					placeSphere(radius, Convert::toOgre(offset));
 
 					offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderX(radius, (float)(size.x() / 2.0f) - radius, Convert::toOgre(offset));
+					placeCylinderX(radius, (float) (size.x() / 2.0f) - radius, Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -523,21 +523,21 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.x(), size.z()) * 0.5f;
+					float radius = (float) std::min(size.x(), size.z()) * 0.5f;
 
 					auto scalerI = geometry.Map().find("scaler");
 					if (scalerI != geometry.Map().end() && scalerI->second.isString()) {
 						auto scaler = scalerI->second.String();
 						if (scaler == "min") {
-							radius = (float)std::min(size.x(), size.z()) * 0.5f;
+							radius = (float) std::min(size.x(), size.z()) * 0.5f;
 						} else if (scaler == "max") {
-							radius = (float)std::max(size.x(), size.z()) * 0.5f;
+							radius = (float) std::max(size.x(), size.z()) * 0.5f;
 						} else if (scaler == "x") {
-							radius = (float)size.x() * 0.5f;
+							radius = (float) size.x() * 0.5f;
 						} else if (scaler == "y") {
-							radius = (float)size.y() * 0.5f;
+							radius = (float) size.y() * 0.5f;
 						} else if (scaler == "z") {
-							radius = (float)size.z() * 0.5f;
+							radius = (float) size.z() * 0.5f;
 						}
 					}
 
@@ -550,7 +550,7 @@ void GeometryVisualization::buildGeometry() {
 					placeSphere(radius, Convert::toOgre(offset));
 
 					offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderY(radius, (float)(size.y() / 2.0f) - radius, Convert::toOgre(offset));
+					placeCylinderY(radius, (float) (size.y() / 2.0f) - radius, Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -560,21 +560,21 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.x(), size.y()) * 0.5f;
+					float radius = (float) std::min(size.x(), size.y()) * 0.5f;
 
 					auto scalerI = geometry.Map().find("scaler");
 					if (scalerI != geometry.Map().end() && scalerI->second.isString()) {
 						auto scaler = scalerI->second.String();
 						if (scaler == "min") {
-							radius = (float)std::min(size.y(), size.x()) * 0.5f;
+							radius = (float) std::min(size.y(), size.x()) * 0.5f;
 						} else if (scaler == "max") {
-							radius = (float)std::max(size.y(), size.x()) * 0.5f;
+							radius = (float) std::max(size.y(), size.x()) * 0.5f;
 						} else if (scaler == "x") {
-							radius = (float)size.x() * 0.5f;
+							radius = (float) size.x() * 0.5f;
 						} else if (scaler == "y") {
-							radius = (float)size.y() * 0.5f;
+							radius = (float) size.y() * 0.5f;
 						} else if (scaler == "z") {
-							radius = (float)size.z() * 0.5f;
+							radius = (float) size.z() * 0.5f;
 						}
 					}
 
@@ -587,7 +587,7 @@ void GeometryVisualization::buildGeometry() {
 					placeSphere(radius, Convert::toOgre(offset));
 
 					offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderZ(radius, (float)(size.z() / 2.0f) - radius, Convert::toOgre(offset));
+					placeCylinderZ(radius, (float) (size.z() / 2.0f) - radius, Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -597,10 +597,10 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.y(), size.z()) * 0.5f;
+					float radius = (float) std::min(size.y(), size.z()) * 0.5f;
 
 					auto offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderX(radius, (float)(size.x() / 2.0f), Convert::toOgre(offset));
+					placeCylinderX(radius, (float) (size.x() / 2.0f), Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -610,10 +610,10 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.x(), size.z()) * 0.5f;
+					float radius = (float) std::min(size.x(), size.z()) * 0.5f;
 
 					auto offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderY(radius, (float)size.y() / 2.0f, Convert::toOgre(offset));
+					placeCylinderY(radius, (float) size.y() / 2.0f, Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -623,10 +623,10 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
-					float radius = (float)std::min(size.x(), size.y()) * 0.5f;
+					float radius = (float) std::min(size.x(), size.y()) * 0.5f;
 
 					auto offset = mEntity.getBBox().lowCorner() + (size / 2.0f);
-					placeCylinderZ(radius, (float)(size.z() / 2.0f), Convert::toOgre(offset));
+					placeCylinderZ(radius, (float) (size.z() / 2.0f), Convert::toOgre(offset));
 
 					mManualObject->end();
 				};
@@ -636,9 +636,9 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
 					AtlasQuery::find<Atlas::Message::ListType>(geometry, "shapes", [this](const Atlas::Message::ListType& shapes) {
-						for (auto& shapeElement : shapes) {
-							AtlasQuery::find<std::string>(shapeElement, "type", [this, &shapeElement](const std::string& type) {
-								if (type == "box") {
+						for (auto& shapeElement: shapes) {
+							AtlasQuery::find<std::string>(shapeElement, "type", [this, &shapeElement](const std::string& shapeType) {
+								if (shapeType == "box") {
 									AtlasQuery::find<Atlas::Message::ListType>(shapeElement, "points", [this](const Atlas::Message::ListType& points) {
 										WFMath::AxisBox<3> bbox(points);
 

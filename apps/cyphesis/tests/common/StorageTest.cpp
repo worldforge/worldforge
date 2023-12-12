@@ -32,188 +32,187 @@
 
 bool test_newid_fail = false;
 
-int main()
-{
-    {
-        DatabaseNull database;
-        Storage a(database);
-    }
+int main() {
+	{
+		DatabaseNull database;
+		Storage a(database);
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = 1;
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = 1;
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = "fred";
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = "fred";
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = "fred";
-        acc["password"] = 1;
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = "fred";
+		acc["password"] = 1;
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = "fred";
-        acc["password"] = "bob";
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = "fred";
+		acc["password"] = "bob";
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = "fred";
-        acc["password"] = "bob";
-        acc["type"] = "admin";
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = "fred";
+		acc["password"] = "bob";
+		acc["type"] = "admin";
+		a->putAccount(acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    test_newid_fail = true;
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	test_newid_fail = true;
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["username"] = "fred";
-        acc["password"] = "bob";
-        a->putAccount(acc);
+		Atlas::Message::MapType acc;
+		acc["username"] = "fred";
+		acc["password"] = "bob";
+		a->putAccount(acc);
 
-        delete a;
-    }
-    test_newid_fail = false;
+		delete a;
+	}
+	test_newid_fail = false;
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["type"] = 1;
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		acc["type"] = 1;
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["type"] = "admin";
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		acc["type"] = "admin";
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["password"] = 1;
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		acc["password"] = 1;
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["password"] = "bill";
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		acc["password"] = "bill";
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+		delete a;
+	}
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        acc["password"] = "bill";
-        acc["type"] = "admin";
-        a->modAccount(acc, "1");
+		Atlas::Message::MapType acc;
+		acc["password"] = "bill";
+		acc["type"] = "admin";
+		a->modAccount(acc, "1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        a->delAccount("1");
+		a->delAccount("1");
 
-        delete a;
-    }
+		delete a;
+	}
 
-    {
-        DatabaseNull database;
-        Storage * a = new Storage(database);
+	{
+		DatabaseNull database;
+		Storage* a = new Storage(database);
 
-        Atlas::Message::MapType acc;
-        a->getAccount("1", acc);
+		Atlas::Message::MapType acc;
+		a->getAccount("1", acc);
 
-        delete a;
-    }
+		delete a;
+	}
 
-    return 0;
+	return 0;
 }
 
 // stubs
@@ -223,25 +222,24 @@ int main()
 #include "../stubs/common/stubglobals.h"
 
 #define STUB_Database_newId
-long Database::newId()
-{
-    if (test_newid_fail) {
-        return -1;
-    }
-    return 1;
+
+long Database::newId() {
+	if (test_newid_fail) {
+		return -1;
+	}
+	return 1;
 }
 
 
 #define STUB_Database_selectSimpleRowBy
-DatabaseResult Database::selectSimpleRowBy(const std::string & name, const std::string & column, const std::string & value)
-{
-    return DatabaseResult(std::unique_ptr<DatabaseNullResultWorker>(new DatabaseNullResultWorker()));
+
+DatabaseResult Database::selectSimpleRowBy(const std::string& name, const std::string& column, const std::string& value) {
+	return DatabaseResult(std::unique_ptr<DatabaseNullResultWorker>(new DatabaseNullResultWorker()));
 }
 
 #include "../stubs/common/stubDatabase.h"
 
 
-void encrypt_password(const std::string & pwd, std::string & hash)
-{
-    hash = pwd;
+void encrypt_password(const std::string& pwd, std::string& hash) {
+	hash = pwd;
 }

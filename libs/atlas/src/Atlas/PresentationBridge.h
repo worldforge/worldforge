@@ -25,37 +25,50 @@
 #include <deque>
 #include "Bridge.h"
 
-namespace Atlas
-{
+namespace Atlas {
 
 /**
  * @brief A bridge which is meant to be used solely for presenting Element data.
  *
  */
-class PresentationBridge: public Atlas::Bridge
-{
+class PresentationBridge : public Atlas::Bridge {
 public:
 	explicit PresentationBridge(std::ostream& stream);
+
 	~PresentationBridge() override = default;
 
 	void streamBegin() override;
+
 	void streamMessage() override;
+
 	void streamEnd() override;
 
 	void mapMapItem(std::string name) override;
+
 	void mapListItem(std::string name) override;
+
 	void mapIntItem(std::string name, std::int64_t) override;
+
 	void mapFloatItem(std::string name, double) override;
+
 	void mapStringItem(std::string name, std::string) override;
-    void mapNoneItem(std::string name) override;
+
+	void mapNoneItem(std::string name) override;
+
 	void mapEnd() override;
 
 	void listMapItem() override;
+
 	void listListItem() override;
+
 	void listIntItem(std::int64_t) override;
+
 	void listFloatItem(double) override;
+
 	void listStringItem(std::string) override;
-    void listNoneItem() override;
+
+	void listNoneItem() override;
+
 	void listEnd() override;
 
 	/**

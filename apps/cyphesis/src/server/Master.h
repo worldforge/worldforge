@@ -28,15 +28,16 @@ class ServerRouting;
 ///
 /// This is designed to be used from a cyphesis process running as an AI slave.
 class Master : public Router {
-  protected:
-    
-  public:
-    ServerRouting & m_server;
+protected:
 
-    Master(ServerRouting & svr, const std::string & id);
-    virtual ~Master();
+public:
+	ServerRouting& m_server;
 
-    virtual void operation(const Operation &, OpVector &);
+	Master(ServerRouting& svr, const std::string& id);
+
+	virtual ~Master();
+
+	virtual void operation(const Operation&, OpVector&);
 };
 
 #endif // SERVER_MASTER_H

@@ -27,9 +27,9 @@
 #include <OgreSceneManager.h>
 
 using namespace Ember;
-namespace Ember {
-namespace OgreView {
-namespace Terrain {
+
+
+namespace Ember::OgreView::Terrain {
 
 TerrainEditor::TerrainEditor(TerrainManager& manager, Camera::MainCamera& camera) :
 		mManager(manager),
@@ -90,5 +90,5 @@ void TerrainEditor::basepointsRecieved(std::map<int, std::map<int, Mercator::Bas
 }
 
 }
-}
-}
+
+

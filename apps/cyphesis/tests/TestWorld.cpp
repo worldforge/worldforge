@@ -17,4 +17,5 @@
  */
 
 #include "TestWorld.h"
+
 TestWorldExtension TestWorld::extension;

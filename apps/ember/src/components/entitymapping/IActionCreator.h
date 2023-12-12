@@ -25,10 +25,10 @@
 
 #include "Definitions/CaseDefinition.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 namespace Cases {
 class CaseBase;
@@ -55,6 +55,6 @@ struct IActionCreator {
 
 }
 
-}
+
 
 #endif

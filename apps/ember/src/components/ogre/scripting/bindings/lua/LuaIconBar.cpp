@@ -22,10 +22,10 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<IconBar>(sol::table& space) {
 	auto iconBar = space.new_usertype<IconBar>("IconBar",
-											 sol::constructors<IconBar(const std::string&)>());
+											   sol::constructors<IconBar(const std::string&)>());
 	iconBar["addIcon"] = &IconBar::addIcon;
 	iconBar["removeIcon"] = &IconBar::removeIcon;
 	iconBar["getWindow"] = &IconBar::getWindow;
@@ -34,8 +34,8 @@ void registerLua<IconBar>(sol::table& space) {
 	iconBar["getAbsoluteWidth"] = &IconBar::getAbsoluteWidth;
 
 	auto iconBase = space.new_usertype<IconBase>("IconBase",
-											   sol::constructors<IconBase(const std::string&, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*),
-													   IconBase(const std::string&, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, CEGUI::USize)>());
+												 sol::constructors<IconBase(const std::string&, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*),
+														 IconBase(const std::string&, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, const CEGUI::Image*, CEGUI::USize)>());
 	iconBase["getContainer"] = &IconBase::getContainer;
 	iconBase["getButton"] = &IconBase::getButton;
 	iconBase["setForeground"] = &IconBase::setForeground;

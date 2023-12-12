@@ -34,10 +34,10 @@
 
 using namespace Ember::OgreView::Terrain;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 Foliage::Foliage(Terrain::TerrainManager& terrainManager) :
 		ReloadFoliage("reloadfoliage", this, ""),
@@ -52,7 +52,7 @@ Foliage::~Foliage() {
 }
 
 void Foliage::initializeLayer(const TerrainLayer& terrainLayer) {
-	for (auto& foliage : terrainLayer.layerDef.mFoliages) {
+	for (auto& foliage: terrainLayer.layerDef.mFoliages) {
 		std::unique_ptr<FoliageBase> foliageBase;
 		try {
 			if (foliage.mRenderTechnique == "grass") {
@@ -85,7 +85,7 @@ void Foliage::runCommand(const std::string& command, const std::string& args) {
 }
 
 void Foliage::reloadAtPosition(const WFMath::Point<2>& worldPosition) {
-	for (auto& foliage : mFoliages) {
+	for (auto& foliage: mFoliages) {
 		foliage->reloadAtPosition(worldPosition);
 	}
 }
@@ -104,18 +104,18 @@ bool Foliage::frameStarted(const Ogre::FrameEvent&) {
 }
 
 void Foliage::setDensity(float newDensity) {
-	for (auto& foliage : mFoliages) {
+	for (auto& foliage: mFoliages) {
 		foliage->setDensity(newDensity);
 	}
 }
 
 void Foliage::setFarDistance(float newFarDistance) {
-	for (auto& foliage : mFoliages) {
+	for (auto& foliage: mFoliages) {
 		foliage->setFarDistance(newFarDistance);
 	}
 }
 
 }
-}
-}
+
+
 

@@ -41,10 +41,10 @@ namespace Eris {
 class Calendar;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 class CaelumSky;
 
@@ -153,8 +153,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

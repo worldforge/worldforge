@@ -22,34 +22,33 @@
 //
 #ifndef EMBEROGRE_CEGUIQUATERNIONADAPTER_H
 #define EMBEROGRE_CEGUIQUATERNIONADAPTER_H
+
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "Vector3Adapter.h"
 #include <OgreQuaternion.h>
 
-namespace CEGUI
-{
-	class Window;
-	class EventArgs;
+namespace CEGUI {
+class Window;
+
+class EventArgs;
 
 }
 
 
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class QuaternionAdapter{
+class QuaternionAdapter {
 public:
-	QuaternionAdapter(CEGUI::Window *degreeWindow, CEGUI::Window *xWindow, CEGUI::Window *yWindow, CEGUI::Window *zWindow, const Ogre::Quaternion& quaternion = Ogre::Quaternion::ZERO);
+	QuaternionAdapter(CEGUI::Window* degreeWindow, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, const Ogre::Quaternion& quaternion = Ogre::Quaternion::ZERO);
 
 	~QuaternionAdapter();
 
 
 	const Ogre::Quaternion& getValue() const;
+
 	const Ogre::Quaternion& getOriginalValue() const;
 
 
@@ -82,7 +81,7 @@ private:
 	/**
 	The window which holds the degree value.
 	*/
-	CEGUI::Window *mDegreeWindow;
+	CEGUI::Window* mDegreeWindow;
 
 	bool window_TextChanged(const CEGUI::EventArgs& e);
 
@@ -93,8 +92,5 @@ private:
 };
 }
 
-}
-
-}
 
 #endif

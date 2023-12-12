@@ -24,58 +24,53 @@ using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
 
-
 HandlerResult Script::operation(const std::string& opname,
-                                const Atlas::Objects::Operation::RootOperation& op,
-                                OpVector& res)
-{
-    return OPERATION_IGNORED;
+								const Atlas::Objects::Operation::RootOperation& op,
+								OpVector& res) {
+	return OPERATION_IGNORED;
 }
 
-void Script::hook(const std::string& function, LocatedEntity* entity, OpVector& res)
-{
+void Script::hook(const std::string& function, LocatedEntity* entity, OpVector& res) {
 }
 
-void Script::attachPropertyCallbacks(LocatedEntity& entity)
-{
+void Script::attachPropertyCallbacks(LocatedEntity& entity) {
 }
 
 
 int Script::getScriptDetails(const Atlas::Message::MapType& script,
-                             const std::string& class_name,
-                             const std::string& context,
-                             std::string& script_package,
-                             std::string& script_class)
-{
-    auto J = script.find("name");
-    auto Jend = script.end();
+							 const std::string& class_name,
+							 const std::string& context,
+							 std::string& script_package,
+							 std::string& script_class) {
+	auto J = script.find("name");
+	auto Jend = script.end();
 
-    if (J == Jend || !J->second.isString()) {
-        spdlog::error("{} \"{}\" script has no name.",
-                           context, class_name);
-        return -1;
-    }
-    const std::string& script_name = J->second.String();
-    J = script.find("language");
-    if (J == Jend || !J->second.isString()) {
-        spdlog::error("{} \"{}\" script has no language.",
-                           context, class_name);
-        return -1;
-    }
-    const std::string& script_language = J->second.String();
-    if (script_language != "python") {
-        spdlog::error(R"({} "{}" script has unknown language "{}".)",
-                           context, class_name, script_language);
-        return -1;
-    }
-    std::string::size_type ptr = script_name.rfind('.');
-    if (ptr == std::string::npos) {
-        spdlog::error(R"({} "{}" python script has bad class name "{}".)",
-                           context, class_name, script_name);
-        return -1;
-    }
-    script_package = script_name.substr(0, ptr);
-    script_class = script_name.substr(ptr + 1);
+	if (J == Jend || !J->second.isString()) {
+		spdlog::error("{} \"{}\" script has no name.",
+					  context, class_name);
+		return -1;
+	}
+	const std::string& script_name = J->second.String();
+	J = script.find("language");
+	if (J == Jend || !J->second.isString()) {
+		spdlog::error("{} \"{}\" script has no language.",
+					  context, class_name);
+		return -1;
+	}
+	const std::string& script_language = J->second.String();
+	if (script_language != "python") {
+		spdlog::error(R"({} "{}" script has unknown language "{}".)",
+					  context, class_name, script_language);
+		return -1;
+	}
+	std::string::size_type ptr = script_name.rfind('.');
+	if (ptr == std::string::npos) {
+		spdlog::error(R"({} "{}" python script has bad class name "{}".)",
+					  context, class_name, script_name);
+		return -1;
+	}
+	script_package = script_name.substr(0, ptr);
+	script_class = script_name.substr(ptr + 1);
 
-    return 0;
+	return 0;
 }

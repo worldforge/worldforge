@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "Water.h"
-#include "services/config/ConfigService.h"
 #include <OgreSceneManager.h>
 #include <OgreRenderTargetListener.h>
 #include <OgreEntity.h>
@@ -30,7 +29,6 @@
 #include <OgreGpuProgramManager.h>
 #include <OgreHardwarePixelBuffer.h>
 #include <OgreCamera.h>
-#include <OgreSceneNode.h>
 #include <OgreRenderTexture.h>
 #include <OgreMaterialManager.h>
 #include <OgreTechnique.h>
@@ -39,10 +37,10 @@
 
 using namespace Ogre;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 class RefractionTextureListener : public RenderTargetListener {
 	Entity* pPlaneEnt{};
@@ -144,9 +142,9 @@ bool Water::isSupported() const {
 	if (!caps->hasCapability(RSC_VERTEX_PROGRAM) || !(caps->hasCapability(RSC_FRAGMENT_PROGRAM))) {
 		return false;
 	} else {
-		if (!GpuProgramManager::getSingleton().isSyntaxSupported("arbfp1") &&
-			!GpuProgramManager::getSingleton().isSyntaxSupported("ps_2_0") &&
-			!GpuProgramManager::getSingleton().isSyntaxSupported("ps_1_4")
+		if (!GpuProgramManager::isSyntaxSupported("arbfp1") &&
+			!GpuProgramManager::isSyntaxSupported("ps_2_0") &&
+			!GpuProgramManager::isSyntaxSupported("ps_1_4")
 				) {
 			return false;
 		}
@@ -248,5 +246,5 @@ Water::~Water() {
 
 }
 
-}
-}
+
+

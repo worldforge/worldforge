@@ -22,18 +22,18 @@
 using namespace Ember::OgreView::Gui;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EntityCreatorTypeHelper>(sol::table& space) {
 	auto entityCreatorTypeHelper = space.new_usertype<EntityCreatorTypeHelper>("EntityCreatorTypeHelper",
-																			 sol::constructors<EntityCreatorTypeHelper(Eris::Avatar&,
-																													   CEGUI::Tree&,
-																													   CEGUI::Editbox&,
-																													   CEGUI::PushButton&,
-																													   CEGUI::Window&,
-																													   CEGUI::Combobox&,
-																													   CEGUI::Window&,
-																													   CEGUI::ToggleButton&,
-																													   CEGUI::Editbox&)>());
+																			   sol::constructors<EntityCreatorTypeHelper(Eris::Avatar&,
+																														 CEGUI::Tree&,
+																														 CEGUI::Editbox&,
+																														 CEGUI::PushButton&,
+																														 CEGUI::Window&,
+																														 CEGUI::Combobox&,
+																														 CEGUI::Window&,
+																														 CEGUI::ToggleButton&,
+																														 CEGUI::Editbox&)>());
 	entityCreatorTypeHelper["EventCreateFromType"] = LuaConnector::make_property(&EntityCreatorTypeHelper::EventCreateFromType);
 
 }

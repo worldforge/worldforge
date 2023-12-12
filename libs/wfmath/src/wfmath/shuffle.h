@@ -39,26 +39,26 @@ namespace WFMath {
 template<class C>
 void Shuffle(std::vector<C>& v) // need vector for random access
 {
-  typedef typename std::vector<C>::size_type size_type;
-  size_type pos = v.size();
+	typedef typename std::vector<C>::size_type size_type;
+	size_type pos = v.size();
 
-  if(!pos) // handle size() == 0 nicely
-    return;
+	if (!pos) // handle size() == 0 nicely
+		return;
 
-  // This swaps each element with one of the ones before
-  // it, starting with the last element. Essentially,
-  // this generates an operation from the permutation
-  // group of size() elements, and applies it to the
-  // vector. Note that the loop only executes size() - 1
-  // times, as element 0 has nothing to swap with.
-  while(--pos) {
-    size_type new_pos = MTRand::instance.randInt(pos); // 0 <= new_pos <= pos
-    if(new_pos == pos)
-      continue;
-    C tmp = v[pos];
-    v[pos] = v[new_pos];
-    v[new_pos] = tmp;
-  }
+	// This swaps each element with one of the ones before
+	// it, starting with the last element. Essentially,
+	// this generates an operation from the permutation
+	// group of size() elements, and applies it to the
+	// vector. Note that the loop only executes size() - 1
+	// times, as element 0 has nothing to swap with.
+	while (--pos) {
+		size_type new_pos = MTRand::instance.randInt(pos); // 0 <= new_pos <= pos
+		if (new_pos == pos)
+			continue;
+		C tmp = v[pos];
+		v[pos] = v[new_pos];
+		v[new_pos] = tmp;
+	}
 }
 
 } // namespace WFMath

@@ -28,37 +28,31 @@ static const bool debug_flag = false;
 using Atlas::Objects::Operation::RootOperation;
 
 ConnectionContext::ConnectionContext(Interactive& i) :
-    ObjectContext(i),
-    m_refNo(0L)
-{
+		ObjectContext(i),
+		m_refNo(0L) {
 }
 
-bool ConnectionContext::accept(const RootOperation& op) const
-{
-    cy_debug_print("Checking connection context to see if it matches"
-    )
-    return m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo;
+bool ConnectionContext::accept(const RootOperation& op) const {
+	cy_debug_print("Checking connection context to see if it matches"
+	)
+	return m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo;
 }
 
-int ConnectionContext::dispatch(const RootOperation& op)
-{
-    cy_debug_print("Dispatching with account context to see if it matches"
-    )
-    assert(m_refNo != 0L);
-    m_refNo = 0L;
-    return 0;
+int ConnectionContext::dispatch(const RootOperation& op) {
+	cy_debug_print("Dispatching with account context to see if it matches"
+	)
+	assert(m_refNo != 0L);
+	m_refNo = 0L;
+	return 0;
 }
 
-std::string ConnectionContext::repr() const
-{
-    return "";
+std::string ConnectionContext::repr() const {
+	return "";
 }
 
-bool ConnectionContext::checkContextCommand(const struct command*)
-{
-    return false;
+bool ConnectionContext::checkContextCommand(const struct command*) {
+	return false;
 }
 
-void ConnectionContext::setFromContext(const RootOperation& op)
-{
+void ConnectionContext::setFromContext(const RootOperation& op) {
 }

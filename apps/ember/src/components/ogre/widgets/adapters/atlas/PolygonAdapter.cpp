@@ -35,14 +35,8 @@
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 EntityPolygonPositionProvider::EntityPolygonPositionProvider(EmberEntity& entity) :
 		mEntity(entity) {
@@ -194,7 +188,7 @@ WFMath::Polygon<2> PolygonAdapter::getShape() {
 	if (element.isMap() || element.isList()) {
 		return WFMath::Polygon<2>(element);
 	}
-	return WFMath::Polygon<2>();
+	return {};
 }
 
 void PolygonAdapter::entityMoved() {
@@ -204,9 +198,9 @@ void PolygonAdapter::entityMoved() {
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

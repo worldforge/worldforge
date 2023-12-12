@@ -24,14 +24,8 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 SizeAdapter::SizeAdapter(const ::Atlas::Message::Element& element, const Widgets& widgets) :
 		AdapterBase(element), mWidgets(widgets) {
@@ -160,9 +154,9 @@ bool SizeAdapter::_hasChanges() {
 }
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

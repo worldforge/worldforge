@@ -30,8 +30,8 @@ class btDefaultCollisionConfiguration;
 
 class btAxisSweep3;
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * Handles the Bullet collision world, as well as keeping a cache of mesh shapes.
@@ -42,6 +42,7 @@ class BulletWorld {
 
 public:
 	BulletWorld();
+
 	~BulletWorld();
 
 	std::shared_ptr<btScaledBvhTriangleMeshShape> createMeshShape(const Ogre::MeshPtr& meshPtr);
@@ -70,6 +71,6 @@ private:
 };
 
 }
-}
+
 
 #endif //EMBER_BULLETWORLD_H

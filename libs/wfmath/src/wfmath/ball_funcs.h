@@ -36,145 +36,140 @@
 namespace WFMath {
 
 template<int dim>
-AxisBox<dim> Ball<dim>::boundingBox() const
-{
-  Point<dim> p_low, p_high;
+AxisBox<dim> Ball<dim>::boundingBox() const {
+	Point<dim> p_low, p_high;
 
-  for(int i = 0; i < dim; ++i) {
-    p_low[i] = m_center[i] - m_radius;
-    p_high[i] = m_center[i] + m_radius;
-  }
+	for (int i = 0; i < dim; ++i) {
+		p_low[i] = m_center[i] - m_radius;
+		p_high[i] = m_center[i] + m_radius;
+	}
 
-  bool valid = m_center.isValid();
+	bool valid = m_center.isValid();
 
-  p_low.setValid(valid);
-  p_high.setValid(valid);
+	p_low.setValid(valid);
+	p_high.setValid(valid);
 
-  return AxisBox<dim>(p_low, p_high, true);
+	return AxisBox<dim>(p_low, p_high, true);
 }
 
 template<int dim, template<class, class> class container>
-Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c)
-{
-  _miniball::Miniball<dim> m;
-  _miniball::Wrapped_array<dim> w;
+Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c) {
+	_miniball::Miniball<dim> m;
+	_miniball::Wrapped_array<dim> w;
 
-  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i, end = c.end();
-  bool valid = true;
+	typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i, end = c.end();
+	bool valid = true;
 
-  for(i = c.begin(); i != end; ++i) {
-    valid = valid && i->isValid();
-    for(int j = 0; j < dim; ++j)
-      w[j] = (*i)[j];
-    m.check_in(w);
-  }
+	for (i = c.begin(); i != end; ++i) {
+		valid = valid && i->isValid();
+		for (int j = 0; j < dim; ++j)
+			w[j] = (*i)[j];
+		m.check_in(w);
+	}
 
-  m.build();
+	m.build();
 
 #ifndef NDEBUG
-  double dummy;
+	double dummy;
 #endif
-  assert("Check that bounding sphere is good to library accuracy" &&
-         m.accuracy(dummy) < numeric_constants<CoordType>::epsilon());
+	assert("Check that bounding sphere is good to library accuracy" &&
+		   m.accuracy(dummy) < numeric_constants<CoordType>::epsilon());
 
-  w = m.center();
-  Point<dim> center;
+	w = m.center();
+	Point<dim> center;
 
-  for(int j = 0; j < dim; ++j)
-    center[j] = w[j];
+	for (int j = 0; j < dim; ++j)
+		center[j] = w[j];
 
-  center.setValid(valid);
+	center.setValid(valid);
 
-  return Ball<dim>(center, std::sqrt(m.squared_radius()));
+	return Ball<dim>(center, std::sqrt(m.squared_radius()));
 }
 
 template<int dim, template<class, class> class container>
-Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c)
-{
-  // This is based on the algorithm given by Jack Ritter
-  // in Volume 2, Number 4 of Ray Tracing News
-  // <http://www.acm.org/tog/resources/RTNews/html/rtnews7b.html>
+Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c) {
+	// This is based on the algorithm given by Jack Ritter
+	// in Volume 2, Number 4 of Ray Tracing News
+	// <http://www.acm.org/tog/resources/RTNews/html/rtnews7b.html>
 
-  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(),
-						end = c.end();
-  if (i == end) {
-    return Ball<dim>();
-  }
+	typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(),
+			end = c.end();
+	if (i == end) {
+		return Ball<dim>();
+	}
 
-  CoordType min[dim], max[dim];
-  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator min_p[dim], max_p[dim];
-  bool valid = i->isValid();
+	CoordType min[dim], max[dim];
+	typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator min_p[dim], max_p[dim];
+	bool valid = i->isValid();
 
-  for(int j = 0; j < dim; ++j) {
-    min[j] = max[j] = (*i)[j];
-    min_p[j] = max_p[j] = i;
-  }
+	for (int j = 0; j < dim; ++j) {
+		min[j] = max[j] = (*i)[j];
+		min_p[j] = max_p[j] = i;
+	}
 
-  while(++i != end) {
-    valid = valid && i->isValid();
-    for(int j = 0; j < dim; ++j) {
-      if(min[j] > (*i)[j]) {
-        min[j] = (*i)[j];
-        min_p[j] = i;
-      }
-      if(max[j] < (*i)[j]) {
-        max[j] = (*i)[j];
-        max_p[j] = i;
-      }
-    }
-  }
+	while (++i != end) {
+		valid = valid && i->isValid();
+		for (int j = 0; j < dim; ++j) {
+			if (min[j] > (*i)[j]) {
+				min[j] = (*i)[j];
+				min_p[j] = i;
+			}
+			if (max[j] < (*i)[j]) {
+				max[j] = (*i)[j];
+				max_p[j] = i;
+			}
+		}
+	}
 
-  CoordType span = -1;
-  int direction = -1;
+	CoordType span = -1;
+	int direction = -1;
 
-  for(int j = 0; j < dim; ++j) {
-    CoordType new_span = max[j] - min[j];
-    if(new_span > span) {
-      span = new_span;
-      direction = j;
-    }
-  }
+	for (int j = 0; j < dim; ++j) {
+		CoordType new_span = max[j] - min[j];
+		if (new_span > span) {
+			span = new_span;
+			direction = j;
+		}
+	}
 
-  assert("Have a direction of maximum size" && direction != -1);
+	assert("Have a direction of maximum size" && direction != -1);
 
-  Point<dim> center = Midpoint(*(min_p[direction]), *(max_p[direction]));
-  CoordType dist = SloppyDistance(*(min_p[direction]), center);
+	Point<dim> center = Midpoint(*(min_p[direction]), *(max_p[direction]));
+	CoordType dist = SloppyDistance(*(min_p[direction]), center);
 
-  for(i = c.begin(); i != end; ++i) {
-    if(i == min_p[direction] || i == max_p[direction])
-      continue; // We already have these
+	for (i = c.begin(); i != end; ++i) {
+		if (i == min_p[direction] || i == max_p[direction])
+			continue; // We already have these
 
-    CoordType new_dist = SloppyDistance(*i, center);
+		CoordType new_dist = SloppyDistance(*i, center);
 
-    if(new_dist > dist) {
-      CoordType delta_dist = (new_dist - dist) / 2;
-      // Even though new_dist may be too large, delta_dist / new_dist
-      // always gives enough of a shift to include the new point.
-      center += (*i - center) * delta_dist / new_dist;
-      dist += delta_dist;
-      assert("Shifted ball contains new point" &&
-             SquaredDistance(*i, center) <= dist * dist);
-    }
-  }
+		if (new_dist > dist) {
+			CoordType delta_dist = (new_dist - dist) / 2;
+			// Even though new_dist may be too large, delta_dist / new_dist
+			// always gives enough of a shift to include the new point.
+			center += (*i - center) * delta_dist / new_dist;
+			dist += delta_dist;
+			assert("Shifted ball contains new point" &&
+				   SquaredDistance(*i, center) <= dist * dist);
+		}
+	}
 
-  center.setValid(valid);
+	center.setValid(valid);
 
-  return Ball<dim>(center, dist);
+	return Ball<dim>(center, dist);
 }
 
 // These two are here, instead of defined in the class, to
 // avoid include order problems
 
 template<int dim>
-inline Ball<dim> Point<dim>::boundingSphere() const
-{
-  return Ball<dim>(*this, 0);
+inline Ball<dim> Point<dim>::boundingSphere() const {
+	return Ball<dim>(*this, 0);
 }
 
 template<int dim>
-inline Ball<dim> Point<dim>::boundingSphereSloppy() const
-{
-  return Ball<dim>(*this, 0);
+inline Ball<dim> Point<dim>::boundingSphereSloppy() const {
+	return Ball<dim>(*this, 0);
 }
 
 } // namespace WFMath

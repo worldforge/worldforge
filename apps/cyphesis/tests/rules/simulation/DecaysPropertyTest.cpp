@@ -27,21 +27,19 @@
 
 #include "rules/simulation/DecaysProperty.h"
 
-int main()
-{
-    DecaysProperty ap;
+int main() {
+	DecaysProperty ap;
 
-    PropertyChecker<DecaysProperty> pc(ap);
+	PropertyChecker<DecaysProperty> pc(ap);
 
-    pc.basicCoverage();
+	pc.basicCoverage();
 
-    return 0;
+	return 0;
 }
 
 #include "../../TestWorld.h"
 
 // stubs
 
-void addToEntity(const Point3D & p, std::vector<double> & vd)
-{
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
 }

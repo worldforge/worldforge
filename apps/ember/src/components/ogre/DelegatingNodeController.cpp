@@ -20,11 +20,8 @@
 
 #include "domain/IEntityControlDelegate.h"
 #include "components/ogre/NodeAttachment.h"
-#include <wfmath/quaternion.h>
-#include <wfmath/const.h>
 
-namespace Ember {
-namespace OgreView {
+namespace Ember::OgreView {
 
 DelegatingNodeController::DelegatingNodeController(NodeAttachment& attachment, IEntityControlDelegate& attachmentControlDelegate)
 		: NodeController(attachment), mAttachmentControlDelegate(attachmentControlDelegate) {
@@ -44,4 +41,4 @@ IEntityControlDelegate* DelegatingNodeController::getControlDelegate() const {
 }
 
 }
-}
+

@@ -25,26 +25,25 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_World : public WrapperBase<BaseWorld*, CyPy_World>
-{
-    public:
-        CyPy_World(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_World : public WrapperBase<BaseWorld*, CyPy_World> {
+public:
+	CyPy_World(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_World(Py::PythonClassInstance* self, BaseWorld* value);
+	CyPy_World(Py::PythonClassInstance* self, BaseWorld* value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object get_time();
+	Py::Object get_time();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_World, get_time);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_World, get_time);
 
-        Py::Object get_entity(const Py::Tuple& args);
+	Py::Object get_entity(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_World, get_entity);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_World, get_entity);
 
-        Py::Object match_entity(const Py::Tuple& args);
+	Py::Object match_entity(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_World, match_entity);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_World, match_entity);
 
 };
 

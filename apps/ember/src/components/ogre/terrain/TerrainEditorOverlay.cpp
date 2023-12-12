@@ -47,10 +47,8 @@
 #include <sigc++/bind.h>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 BasePointUserObject::BasePointUserObject(TerrainPosition terrainPosition, const Mercator::BasePoint& basePoint,
 										 Ogre::SceneNode* basePointMarkerNode, BulletWorld& bulletWorld) :
@@ -219,7 +217,7 @@ void TerrainEditorOverlay::createOverlay(std::map<int, std::map<int, Mercator::B
 	mOverlayNode = worldSceneNode.createChildSceneNode();
 
 	int x, y;
-	for (auto & basePoint : basePoints) {
+	for (auto& basePoint: basePoints) {
 		x = basePoint.first;
 		for (auto entry: basePoint.second) {
 			y = entry.first;
@@ -506,7 +504,7 @@ void TerrainEditorOverlay::sendChangesToServerWithBasePoints(std::map<int, std::
 			s->setTo(terrainEntity->getId());
 
 			connection->send(s);
-			logger->info("Sent updated terrain to server ({} base points updated).",positions.size());
+			logger->info("Sent updated terrain to server ({} base points updated).", positions.size());
 
 			//also reset the marking for the base points
 			for (const auto& entry: mBasePointUserObjects) {
@@ -714,5 +712,5 @@ bool TerrainEditorOverlay::getBasePoint(const std::map<int, std::map<int, Mercat
 
 }
 
-}
-}
+
+

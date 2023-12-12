@@ -40,114 +40,101 @@ using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Operation::Set;
 using Atlas::Message::Element;
 namespace {
-    class ObjectDecoder : public Atlas::Objects::ObjectsDecoder
-    {
-        private:
-            void objectArrived(Atlas::Objects::Root obj) override
-            {
-                m_check = true;
-                m_obj = std::move(obj);
-            }
+class ObjectDecoder : public Atlas::Objects::ObjectsDecoder {
+private:
+	void objectArrived(Atlas::Objects::Root obj) override {
+		m_check = true;
+		m_obj = std::move(obj);
+	}
 
-            bool m_check;
-            Atlas::Objects::Root m_obj;
-        public:
-            ObjectDecoder(const Atlas::Objects::Factories& factories) :
-                    ObjectsDecoder(factories),
-                    m_check(false)
-            {
-            }
+	bool m_check;
+	Atlas::Objects::Root m_obj;
+public:
+	ObjectDecoder(const Atlas::Objects::Factories& factories) :
+			ObjectsDecoder(factories),
+			m_check(false) {
+	}
 
-            bool check() const
-            {
-                return m_check;
-            }
+	bool check() const {
+		return m_check;
+	}
 
-            const Atlas::Objects::Root& get()
-            {
-                m_check = false;
-                return m_obj;
-            }
-    };
+	const Atlas::Objects::Root& get() {
+		m_check = false;
+		return m_obj;
+	}
+};
 }
 
 EntityImporter::EntityImporter(const std::string& accountId,
-                               const std::string& avatarId) :
-    EntityImporterBase(accountId, avatarId)
-{
-    EventCompleted.connect(sigc::mem_fun(*this, &EntityImporter::completed));
+							   const std::string& avatarId) :
+		EntityImporterBase(accountId, avatarId) {
+	EventCompleted.connect(sigc::mem_fun(*this, &EntityImporter::completed));
 }
 
 EntityImporter::~EntityImporter() = default;
 
-void EntityImporter::setup(const std::string& arg, OpVector& ret)
-{
-    mCurrentRes = &ret;
-    start(arg);
+void EntityImporter::setup(const std::string& arg, OpVector& ret) {
+	mCurrentRes = &ret;
+	start(arg);
 
-    mCurrentRes = nullptr;
+	mCurrentRes = nullptr;
 }
 
-void EntityImporter::operation(const Operation& op, OpVector& res)
-{
-    mCurrentRes = &res;
+void EntityImporter::operation(const Operation& op, OpVector& res) {
+	mCurrentRes = &res;
 
 //    std::cout << "Got op ==================" << std::endl;
 //    debug_dump(op, std::cout);
 
-    if (!op->isDefaultRefno()) {
-        auto I = mCallbacks.find(op->getRefno());
-        if (I != mCallbacks.end()) {
-            auto callback = I->second;
-            //Don't erase callbacks, since we can get multiple responses for the same serial number
-            callback(op);
-        }
-    } else {
-        if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
-            std::string message =
-                op->getArgs().front()->getAttr("message").asString();
-            spdlog::error("Got error. Message: {}", message);
-        }
-    }
+	if (!op->isDefaultRefno()) {
+		auto I = mCallbacks.find(op->getRefno());
+		if (I != mCallbacks.end()) {
+			auto callback = I->second;
+			//Don't erase callbacks, since we can get multiple responses for the same serial number
+			callback(op);
+		}
+	} else {
+		if (op->getClassNo() == Atlas::Objects::Operation::ERROR_NO) {
+			std::string message =
+					op->getArgs().front()->getAttr("message").asString();
+			spdlog::error("Got error. Message: {}", message);
+		}
+	}
 
-    mCurrentRes = nullptr;
+	mCurrentRes = nullptr;
 }
 
-void EntityImporter::completed()
-{
-    m_complete = true;
+void EntityImporter::completed() {
+	m_complete = true;
 }
 
-long int EntityImporter::newSerialNumber()
-{
-    return newSerialNo();
+long int EntityImporter::newSerialNumber() {
+	return newSerialNo();
 }
 
-void EntityImporter::send(const Atlas::Objects::Operation::RootOperation& op)
-{
-    if (mCurrentRes) {
-        mCurrentRes->push_back(op);
-    }
+void EntityImporter::send(const Atlas::Objects::Operation::RootOperation& op) {
+	if (mCurrentRes) {
+		mCurrentRes->push_back(op);
+	}
 }
 
 void EntityImporter::sendAndAwaitResponse(
-    const Atlas::Objects::Operation::RootOperation& op,
-    CallbackFunction& callback)
-{
-    if (mCurrentRes) {
-        mCallbacks.emplace(op->getSerialno(), callback);
-        mCurrentRes->push_back(op);
-    }
+		const Atlas::Objects::Operation::RootOperation& op,
+		CallbackFunction& callback) {
+	if (mCurrentRes) {
+		mCallbacks.emplace(op->getSerialno(), callback);
+		mCurrentRes->push_back(op);
+	}
 }
 
-Atlas::Objects::Root EntityImporter::loadFromFile(const std::string& filename)
-{
-    Atlas::Objects::Factories factories;
-    std::fstream fileStream(filename, std::ios::in);
-    ObjectDecoder atlasLoader(factories);
+Atlas::Objects::Root EntityImporter::loadFromFile(const std::string& filename) {
+	Atlas::Objects::Factories factories;
+	std::fstream fileStream(filename, std::ios::in);
+	ObjectDecoder atlasLoader(factories);
 
-    Atlas::Codecs::XML codec(fileStream, fileStream, atlasLoader);
-    codec.poll();
+	Atlas::Codecs::XML codec(fileStream, fileStream, atlasLoader);
+	codec.poll();
 
-    return atlasLoader.get();
+	return atlasLoader.get();
 }

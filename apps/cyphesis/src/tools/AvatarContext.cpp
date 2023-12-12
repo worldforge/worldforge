@@ -28,35 +28,30 @@ static const bool debug_flag = false;
 using Atlas::Objects::Operation::RootOperation;
 
 AvatarContext::AvatarContext(Interactive& i, const std::string& id) :
-        IdContext(i, id)
-{
+		IdContext(i, id) {
 }
 
-bool AvatarContext::accept(const RootOperation& op) const
-{
-    cy_debug_print("Checking avatar context to see if it matches")
-    return m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo;
+bool AvatarContext::accept(const RootOperation& op) const {
+	cy_debug_print("Checking avatar context to see if it matches")
+	return m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo;
 }
 
-int AvatarContext::dispatch(const RootOperation& op)
-{
-    if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
-        std::cout << "Sight(" << std::endl;
-        m_client.output(op->getArgs().front());
-        std::cout << ")" << std::endl;
-    }
-    if (!op->isDefaultRefno() && op->getRefno() == m_refNo) {
-        m_refNo = 0L;
-    }
-    return 0;
+int AvatarContext::dispatch(const RootOperation& op) {
+	if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
+		std::cout << "Sight(" << std::endl;
+		m_client.output(op->getArgs().front());
+		std::cout << ")" << std::endl;
+	}
+	if (!op->isDefaultRefno() && op->getRefno() == m_refNo) {
+		m_refNo = 0L;
+	}
+	return 0;
 }
 
-std::string AvatarContext::repr() const
-{
-    return "avatar";
+std::string AvatarContext::repr() const {
+	return "avatar";
 }
 
-bool AvatarContext::checkContextCommand(const struct command*)
-{
-    return false;
+bool AvatarContext::checkContextCommand(const struct command*) {
+	return false;
 }

@@ -21,22 +21,21 @@
 
 #include "ObjectContext.h"
 
-class ConnectionContext : public ObjectContext
-{
-    protected:
-        long m_refNo;
-    public:
-        explicit ConnectionContext(Interactive&);
+class ConnectionContext : public ObjectContext {
+protected:
+	long m_refNo;
+public:
+	explicit ConnectionContext(Interactive&);
 
-        bool accept(const Atlas::Objects::Operation::RootOperation&) const override;
+	bool accept(const Atlas::Objects::Operation::RootOperation&) const override;
 
-        int dispatch(const Atlas::Objects::Operation::RootOperation&) override;
+	int dispatch(const Atlas::Objects::Operation::RootOperation&) override;
 
-        std::string repr() const override;
+	std::string repr() const override;
 
-        bool checkContextCommand(const struct command*) override;
+	bool checkContextCommand(const struct command*) override;
 
-        void setFromContext(const Atlas::Objects::Operation::RootOperation&) override;
+	void setFromContext(const Atlas::Objects::Operation::RootOperation&) override;
 };
 
 #endif // TOOLS_CONNECTION_CONTEXT_H

@@ -18,6 +18,7 @@
 
 #ifndef WORLDFORGE_NETWORK_H
 #define WORLDFORGE_NETWORK_H
+
 #include <arpa/inet.h>
 
 #include <string>
@@ -25,9 +26,9 @@
 
 inline std::string
 IpNetToAscii(uint32_t address) {
-	  std::array<char, INET_ADDRSTRLEN> chars{};
-	  inet_ntop(AF_INET, &address, chars.data(), INET_ADDRSTRLEN);
-	  return {chars.data()};
+	std::array<char, INET_ADDRSTRLEN> chars{};
+	inet_ntop(AF_INET, &address, chars.data(), INET_ADDRSTRLEN);
+	return {chars.data()};
 }
 
 
@@ -41,21 +42,21 @@ IpNetToAscii(uint32_t address) {
    Integer	16908415
  */
 inline uint32_t
-IpAsciiToNet(const char *buffer) {
+IpAsciiToNet(const char* buffer) {
 
-  uint32_t ret = 0;
-  int shift = 0;  //  fill out the MSB first
-  bool startQuad = true;
-  while ((shift <= 24) && (*buffer)) {
-    if (startQuad) {
-      auto quad = (unsigned char) atoi(buffer);
-      ret |= (((uint32_t)quad) << shift);
-      shift += 8;
-    }
-    startQuad = (*buffer == '.');
-    ++buffer;
-  }
-  return ret;
+	uint32_t ret = 0;
+	int shift = 0;  //  fill out the MSB first
+	bool startQuad = true;
+	while ((shift <= 24) && (*buffer)) {
+		if (startQuad) {
+			auto quad = (unsigned char) atoi(buffer);
+			ret |= (((uint32_t) quad) << shift);
+			shift += 8;
+		}
+		startQuad = (*buffer == '.');
+		++buffer;
+	}
+	return ret;
 }
 
 

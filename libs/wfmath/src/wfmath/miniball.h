@@ -39,104 +39,129 @@
 #include <list>
 #include <wfmath/wrapped_array.h>
 
-namespace WFMath { namespace _miniball {
+namespace WFMath {
+namespace _miniball {
 
-    template <int d> class Miniball;
-    template <int d> class Basis;
+template<int d>
+class Miniball;
 
-    // Miniball
-    // --------
-    
-    template <int d>
-    class Miniball {
-        public:
-            // types
-            typedef Wrapped_array<d>                            Point;
-            typedef typename std::list<Point>::iterator         It;
-            typedef typename std::list<Point>::const_iterator   Cit;
-    
-        private:
-            // data members
-            std::list<Point> L;         // STL list keeping the points
-            Basis<d>    B;              // basis keeping the current ball
-            It          support_end;    // past-the-end iterator of support set
-    
-            // private methods
-            void        mtf_mb (It k);
-            void        pivot_mb (It k);
-            void        move_to_front (It j);
-            double      max_excess (It t, It i, It& pivot) const;
-            double      abs (double r) const {return (r>0)? r: (-r);}
-            double      sqr (double r) const {return r*r;}
-    
-        public:
-            // construction
-            Miniball() : L(), B(), support_end() {}
-            void        check_in (const Point& p);
-            void        build (bool pivoting = true);
-    
-            // access
-            Point       center() const;
-            double      squared_radius () const;
-            int         nr_points () const;
-            Cit         points_begin () const;
-            Cit         points_end () const;
-            int         nr_support_points () const;
-            Cit         support_points_begin () const;
-            Cit         support_points_end () const;
-    
-            // checking
-            double      accuracy (double& slack) const;
-            bool        is_valid (double tolerance = 1e-15) const;
-     };
-    
-    
+template<int d>
+class Basis;
 
-    // Basis
-    // -----
-    
-    template <int d>
-    class Basis {
-        private:
-            // types
-            typedef Wrapped_array<d>            Point;
-    
-            // data members
-            int                 m, s;   // size and number of support points
-            double              q0[d];
-    
-            double              z[d+1];
-            double              f[d+1];
-            double              v[d+1][d];
-            double              a[d+1][d];
-    
-            double              c[d+1][d];
-            double              sqr_r[d+1];
-    
-            double*             current_c;      // points to some c[j]
-            double              current_sqr_r;
-    
-            double              sqr (double r) const {return r*r;}
-    
-        public:
-            Basis();
-    
-            // access
-            const double*       center() const;
-            double              squared_radius() const;
-            int                 size() const;
-            int                 support_size() const;
-            double              excess (const Point& p) const;
-    
-            // modification
-            void                reset(); // generates empty sphere with m=s=0
-            bool                push (const Point& p);
-            void                pop ();
-    
-            // checking
-            double              slack() const;
-    };
-    
-}} // namespace WFMath::_miniball   
+// Miniball
+// --------
+
+template<int d>
+class Miniball {
+public:
+	// types
+	typedef Wrapped_array<d> Point;
+	typedef typename std::list<Point>::iterator It;
+	typedef typename std::list<Point>::const_iterator Cit;
+
+private:
+	// data members
+	std::list<Point> L;         // STL list keeping the points
+	Basis<d> B;              // basis keeping the current ball
+	It support_end;    // past-the-end iterator of support set
+
+	// private methods
+	void mtf_mb(It k);
+
+	void pivot_mb(It k);
+
+	void move_to_front(It j);
+
+	double max_excess(It t, It i, It& pivot) const;
+
+	double abs(double r) const { return (r > 0) ? r : (-r); }
+
+	double sqr(double r) const { return r * r; }
+
+public:
+	// construction
+	Miniball() : L(), B(), support_end() {}
+
+	void check_in(const Point& p);
+
+	void build(bool pivoting = true);
+
+	// access
+	Point center() const;
+
+	double squared_radius() const;
+
+	int nr_points() const;
+
+	Cit points_begin() const;
+
+	Cit points_end() const;
+
+	int nr_support_points() const;
+
+	Cit support_points_begin() const;
+
+	Cit support_points_end() const;
+
+	// checking
+	double accuracy(double& slack) const;
+
+	bool is_valid(double tolerance = 1e-15) const;
+};
+
+
+
+// Basis
+// -----
+
+template<int d>
+class Basis {
+private:
+	// types
+	typedef Wrapped_array<d> Point;
+
+	// data members
+	int m, s;   // size and number of support points
+	double q0[d];
+
+	double z[d + 1];
+	double f[d + 1];
+	double v[d + 1][d];
+	double a[d + 1][d];
+
+	double c[d + 1][d];
+	double sqr_r[d + 1];
+
+	double* current_c;      // points to some c[j]
+	double current_sqr_r;
+
+	double sqr(double r) const { return r * r; }
+
+public:
+	Basis();
+
+	// access
+	const double* center() const;
+
+	double squared_radius() const;
+
+	int size() const;
+
+	int support_size() const;
+
+	double excess(const Point& p) const;
+
+	// modification
+	void reset(); // generates empty sphere with m=s=0
+	bool push(const Point& p);
+
+	void pop();
+
+	// checking
+	double slack() const;
+};
+
+}
+} // namespace WFMath::_miniball
 
 #endif // WFMATH_MINIBALL_H

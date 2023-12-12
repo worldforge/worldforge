@@ -24,10 +24,8 @@
 #include <wfmath/quaternion.h>
 #include <wfmath/vector.h>
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 class Avatar;
 
@@ -37,8 +35,7 @@ class Avatar;
  *
  * This allows an ingame entity (typically the one representing the user) to be controlled by the client.
  */
-class AvatarAttachmentController: public IEntityControlDelegate
-{
+class AvatarAttachmentController : public IEntityControlDelegate {
 public:
 
 	/**
@@ -89,6 +86,6 @@ private:
 
 }
 
-}
+
 
 #endif /* AVATARATTACHMENTCONTROLLER_H_ */

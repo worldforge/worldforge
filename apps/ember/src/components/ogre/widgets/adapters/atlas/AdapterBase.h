@@ -28,26 +28,13 @@
 #include <Atlas/Message/Element.h>
 #include <sigc++/signal.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
-namespace Adapters {
-
-namespace Atlas {
-
-typedef ::Ember::OgreView::Gui::Adapters::AdapterBase< ::Atlas::Message::Element> AdapterBase;
+typedef ::Ember::OgreView::Gui::Adapters::AdapterBase<::Atlas::Message::Element> AdapterBase;
 typedef ::Ember::OgreView::Gui::Adapters::AdapterWrapper<AdapterBase> AdapterWrapper;
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

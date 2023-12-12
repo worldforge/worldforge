@@ -25,13 +25,12 @@
 #include "rules/LocatedEntity.h"
 #include <string>
 
-class ScriptUtils
-{
-    public:
-        static HandlerResult processScriptResult(const std::string& scriptName,
-                                                 const Py::Object& ret,
-                                                 OpVector& res,
-                                                 LocatedEntity& e);
+class ScriptUtils {
+public:
+	static HandlerResult processScriptResult(const std::string& scriptName,
+											 const Py::Object& ret,
+											 OpVector& res,
+											 LocatedEntity& e);
 };
 
 

@@ -24,54 +24,50 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Const : public Py::ExtensionModule<CyPy_Const>
-{
-    public:
-        CyPy_Const();
+class CyPy_Const : public Py::ExtensionModule<CyPy_Const> {
+public:
+	CyPy_Const();
 };
 
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Globals : public Py::ExtensionModule<CyPy_Globals>
-{
-    public:
-        CyPy_Globals();
+class CyPy_Globals : public Py::ExtensionModule<CyPy_Globals> {
+public:
+	CyPy_Globals();
 };
 
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Log : public Py::ExtensionModule<CyPy_Log>
-{
-    public:
-        CyPy_Log();
+class CyPy_Log : public Py::ExtensionModule<CyPy_Log> {
+public:
+	CyPy_Log();
 
-    private:
-        Py::Object debug_(const Py::Tuple& args);
+private:
+	Py::Object debug_(const Py::Tuple& args);
 
-        Py::Object thinking(const Py::Tuple& args);
+	Py::Object thinking(const Py::Tuple& args);
 
 };
 
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Common : public Py::ExtensionModule<CyPy_Common>
-{
-    public:
-        CyPy_Common();
+class CyPy_Common : public Py::ExtensionModule<CyPy_Common> {
+public:
+	CyPy_Common();
 
-        static std::string init();
+	static std::string init();
 
-    private:
-        CyPy_Log m_log;
-        CyPy_Const m_const;
-        CyPy_Globals m_globals;
+private:
+	CyPy_Log m_log;
+	CyPy_Const m_const;
+	CyPy_Globals m_globals;
 
-        Py::Object new_serial_no();
+	Py::Object new_serial_no();
 
 };
 

@@ -20,54 +20,56 @@
 
 #include <iostream>
 
-template <typename T>
-Variable<T>::Variable(const T & variable) : m_variable(variable)
-{
+template<typename T>
+Variable<T>::Variable(const T& variable) : m_variable(variable) {
 }
 
-template <typename T>
+template<typename T>
 Variable<T>::~Variable() = default;
 
-template <typename T>
-void Variable<T>::send(std::ostream & o)
-{
-    o << m_variable;
+template<typename T>
+void Variable<T>::send(std::ostream& o) {
+	o << m_variable;
 }
 
 
-template <>
-bool Variable<int>::isNumeric() const
-{
-    return true;
+template<>
+bool Variable<int>::isNumeric() const {
+	return true;
 }
 
-template <>
-bool Variable<long>::isNumeric() const
-{
-    return true;
+template<>
+bool Variable<long>::isNumeric() const {
+	return true;
 }
 
-template <>
-bool Variable<float>::isNumeric() const
-{
-    return true;
+template<>
+bool Variable<float>::isNumeric() const {
+	return true;
 }
 
-template <>
-bool Variable<std::string>::isNumeric() const
-{
-    return false;
+template<>
+bool Variable<std::string>::isNumeric() const {
+	return false;
 }
 
-template <>
-bool Variable<const char *>::isNumeric() const
-{
-    return false;
+template<>
+bool Variable<const char*>::isNumeric() const {
+	return false;
 }
 
-template class Variable<int>;
-template class Variable<long>;
-template class Variable<float>;
-template class Variable<std::string>;
-template class Variable<const char *>;
+template
+class Variable<int>;
+
+template
+class Variable<long>;
+
+template
+class Variable<float>;
+
+template
+class Variable<std::string>;
+
+template
+class Variable<const char*>;
 

@@ -34,106 +34,101 @@ using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::smart_dynamic_cast;
 
 CreatorClient::CreatorClient(RouterId mindId,
-                             const std::string& entityId,
-                             ClientConnection& c,
-                             TypeStore& typeStore) :
-        CharacterClient(std::move(mindId), entityId, c, typeStore)
-{
+							 const std::string& entityId,
+							 ClientConnection& c,
+							 TypeStore& typeStore) :
+		CharacterClient(std::move(mindId), entityId, c, typeStore) {
 }
 
 LocatedEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
-                                                 double create_time)
-{
-    if (op->getArgs().empty()) {
-        std::cerr << "Arg of reply to make has no args"
-                  << std::endl;
-        return nullptr;
-    }
-    RootEntity created = smart_dynamic_cast<RootEntity>(op->getArgs().front());
-    if (!created.isValid()) {
-        std::cerr << "Created argument is not an entity"
-                  << std::endl;
-        return nullptr;
-    }
-    if (!created->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
-        std::cerr << "Created entity has no id"
-                  << std::endl;
-        return nullptr;
-    }
-    const std::string& created_id = created->getId();
-    if (created->getParent().empty()) {
-        std::cerr << "Created entity " << created_id << " has no type"
-                  << std::endl;
-        return nullptr;
-    }
-    const std::string& created_type = created->getParent();
-    std::cout << "Created: " << created_type << "(" << created_id << ")"
-              << std::endl;
-    return m_map.updateAdd(created, create_time).get();
+												 double create_time) {
+	if (op->getArgs().empty()) {
+		std::cerr << "Arg of reply to make has no args"
+				  << std::endl;
+		return nullptr;
+	}
+	RootEntity created = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+	if (!created.isValid()) {
+		std::cerr << "Created argument is not an entity"
+				  << std::endl;
+		return nullptr;
+	}
+	if (!created->hasAttrFlag(Atlas::Objects::ID_FLAG)) {
+		std::cerr << "Created entity has no id"
+				  << std::endl;
+		return nullptr;
+	}
+	const std::string& created_id = created->getId();
+	if (created->getParent().empty()) {
+		std::cerr << "Created entity " << created_id << " has no type"
+				  << std::endl;
+		return nullptr;
+	}
+	const std::string& created_type = created->getParent();
+	std::cout << "Created: " << created_type << "(" << created_id << ")"
+			  << std::endl;
+	return m_map.updateAdd(created, create_time).get();
 }
 
-Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity)
-{
-    Create op;
-    op->setArgs1(entity);
-    op->setFrom(getId());
-    op->setTo(getId());
-    OpVector result;
-    if (sendAndWaitReply(op, result) != 0) {
-        std::cerr << "No reply to make" << std::endl;
-        return nullptr;
-    }
-    assert(!result.empty());
-    const Operation& res = result.front();
-    if (!res.isValid()) {
-        std::cerr << "nullptr reply to make" << std::endl;
-        return nullptr;
-    }
-    // FIXME Make this more robust against an info response
-    if (res->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
-        if (res->getArgs().empty()) {
-            std::cerr << "Reply to make has no args" << std::endl;
-            return nullptr;
-        }
-        RootOperation arg = smart_dynamic_cast<RootOperation>(res->getArgs().front());
-        if (!arg.isValid()) {
-            std::cerr << "Arg of reply to make is not an operation"
-                      << std::endl;
-            return nullptr;
-        }
-        if (arg->getClassNo() != Atlas::Objects::Operation::CREATE_NO) {
-            std::cerr << "Reply to make isn't sight of create"
-                      << std::endl;
-            return nullptr;
-        }
-        return handleMakeResponse(arg, res->getSeconds());
-    } else if (res->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
-        return handleMakeResponse(res, res->getSeconds());
-    } else {
-        std::cerr << "Reply to make isn't sight or info"
-                  << std::endl;
-        return nullptr;
-    }
+Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity) {
+	Create op;
+	op->setArgs1(entity);
+	op->setFrom(getId());
+	op->setTo(getId());
+	OpVector result;
+	if (sendAndWaitReply(op, result) != 0) {
+		std::cerr << "No reply to make" << std::endl;
+		return nullptr;
+	}
+	assert(!result.empty());
+	const Operation& res = result.front();
+	if (!res.isValid()) {
+		std::cerr << "nullptr reply to make" << std::endl;
+		return nullptr;
+	}
+	// FIXME Make this more robust against an info response
+	if (res->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
+		if (res->getArgs().empty()) {
+			std::cerr << "Reply to make has no args" << std::endl;
+			return nullptr;
+		}
+		RootOperation arg = smart_dynamic_cast<RootOperation>(res->getArgs().front());
+		if (!arg.isValid()) {
+			std::cerr << "Arg of reply to make is not an operation"
+					  << std::endl;
+			return nullptr;
+		}
+		if (arg->getClassNo() != Atlas::Objects::Operation::CREATE_NO) {
+			std::cerr << "Reply to make isn't sight of create"
+					  << std::endl;
+			return nullptr;
+		}
+		return handleMakeResponse(arg, res->getSeconds());
+	} else if (res->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
+		return handleMakeResponse(res, res->getSeconds());
+	} else {
+		std::cerr << "Reply to make isn't sight or info"
+				  << std::endl;
+		return nullptr;
+	}
 }
 
 
 void CreatorClient::sendSet(const std::string& id,
-                            const RootEntity& entity)
-{
-    Set op;
-    op->setArgs1(entity);
-    op->setFrom(getId());
-    op->setTo(id);
-    send(op);
+							const RootEntity& entity) {
+	Set op;
+	op->setArgs1(entity);
+	op->setFrom(getId());
+	op->setTo(id);
+	send(op);
 }
 
-void CreatorClient::del(const std::string& id)
-{
-    Delete op;
-    Anonymous ent;
-    ent->setId(id);
-    op->setArgs1(ent);
-    op->setFrom(getId());
-    op->setTo(id);
-    return send(op);
+void CreatorClient::del(const std::string& id) {
+	Delete op;
+	Anonymous ent;
+	ent->setId(id);
+	op->setArgs1(ent);
+	op->setFrom(getId());
+	op->setTo(id);
+	return send(op);
 }

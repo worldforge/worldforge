@@ -24,22 +24,17 @@
 #include <OgreSceneManager.h>
 #include <OgreSkeleton.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Gui
-{
 
-void MeshInfoProvider::calcUniqueVertexCount(UniqueVertexSet& uniqueVertexSet, const Ogre::VertexData& data)
-{
+namespace Ember::OgreView::Gui {
+
+void MeshInfoProvider::calcUniqueVertexCount(UniqueVertexSet& uniqueVertexSet, const Ogre::VertexData& data) {
 	// Locate position element and the buffer to go with it.
 	const Ogre::VertexElement* posElem = data.vertexDeclaration->findElementBySemantic(Ogre::VES_POSITION);
 	Ogre::HardwareVertexBufferSharedPtr vbuf = data.vertexBufferBinding->getBuffer(posElem->getSource());
 
 	// Lock the buffer for reading.
 	auto pVertex = static_cast<unsigned char*>(
-	    vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
+			vbuf->lock(Ogre::HardwareBuffer::HBL_READ_ONLY));
 	size_t vSize = vbuf->getVertexSize();
 	unsigned char* pEnd = pVertex + (data.vertexCount * vSize);
 
@@ -48,13 +43,12 @@ void MeshInfoProvider::calcUniqueVertexCount(UniqueVertexSet& uniqueVertexSet, c
 		float* pFloat;
 		posElem->baseVertexPointerToElement(pVertex, &pFloat);
 
-		uniqueVertexSet.emplace(Ogre::Vector3(pFloat[0], pFloat[1], pFloat[2]));
+		uniqueVertexSet.emplace(pFloat[0], pFloat[1], pFloat[2]);
 	}
 	vbuf->unlock();
 }
 
-size_t MeshInfoProvider::calcUniqueVertexCount(const Ogre::Mesh* mesh)
-{
+size_t MeshInfoProvider::calcUniqueVertexCount(const Ogre::Mesh* mesh) {
 	static std::string mLastComputedMesh;
 	static size_t mLastUniqueVertexCount;
 
@@ -100,23 +94,22 @@ size_t MeshInfoProvider::calcUniqueVertexCount(const Ogre::Mesh* mesh)
 	return mLastUniqueVertexCount;
 }
 
-size_t MeshInfoProvider::calcUniqueVertexCount(const Ogre::VertexData& data)
-{
+size_t MeshInfoProvider::calcUniqueVertexCount(const Ogre::VertexData& data) {
 	UniqueVertexSet uniqueVertexSet;
 	uniqueVertexSet.rehash(2 * data.vertexCount);
 	calcUniqueVertexCount(uniqueVertexSet, data);
 	return uniqueVertexSet.size();
 }
-size_t MeshInfoProvider::getVertexSize(const Ogre::VertexData* data)
-{
+
+size_t MeshInfoProvider::getVertexSize(const Ogre::VertexData* data) {
 	size_t size = 0;
 	for (unsigned short i = 0; i < data->vertexDeclaration->getMaxSource() + 1; ++i) {
 		size += data->vertexDeclaration->getVertexSize(i);
 	}
 	return size;
 }
-std::string MeshInfoProvider::getInfo(int submeshIndex)
-{
+
+std::string MeshInfoProvider::getInfo(int submeshIndex) {
 	if (!mEntityRenderer->getEntity()) {
 		return "";
 	}
@@ -133,14 +126,13 @@ std::string MeshInfoProvider::getInfo(int submeshIndex)
 	str << "Index count: " << submesh.indexData->indexCount << std::endl;
 	str << "Index size: " << (ibuf->getType() == Ogre::HardwareIndexBuffer::IT_16BIT ? 2 : 4) << std::endl;
 	str << "Shared vertices: " << (submesh.useSharedVertices ? "[colour='FF00AA00']yes" : "[colour='FFFF0000']no") <<
-	"[colour='FF000000']" << std::endl;
+		"[colour='FF000000']" << std::endl;
 	str << "Edge data: " << (submesh.isBuildEdgesEnabled() ? "[colour='FFFF0000']yes" : "[colour='FF00AA00']no") <<
-	"[colour='FF000000']" << std::endl;
+		"[colour='FF000000']" << std::endl;
 	return str.str();
 }
 
-std::string MeshInfoProvider::getPreviewInfo()
-{
+std::string MeshInfoProvider::getPreviewInfo() {
 	std::stringstream str;
 	Ogre::Entity* entity = mEntityRenderer->getEntity();
 	if (!entity) {
@@ -177,8 +169,8 @@ std::string MeshInfoProvider::getPreviewInfo()
 
 	return str.str();
 }
-bool MeshInfoProvider::prequeueEntityMeshLodChanged(Ogre::EntityMeshLodChangedEvent& evt)
-{
+
+bool MeshInfoProvider::prequeueEntityMeshLodChanged(Ogre::EntityMeshLodChangedEvent& evt) {
 	if (evt.entity == mEntityRenderer->getEntity() && mLodIndex != evt.newLodIndex) {
 		mLodIndex = evt.newLodIndex;
 		EventLodChanged.emit();
@@ -186,31 +178,27 @@ bool MeshInfoProvider::prequeueEntityMeshLodChanged(Ogre::EntityMeshLodChangedEv
 	return false;
 }
 
-int MeshInfoProvider::getLodIndex()
-{
+int MeshInfoProvider::getLodIndex() const {
 	return mLodIndex;
 }
 
 MeshInfoProvider::MeshInfoProvider(OgreEntityRenderer* entityRenderer) :
-	mEntityRenderer(entityRenderer),
-	mLodIndex(0)
-{
+		mEntityRenderer(entityRenderer),
+		mLodIndex(0) {
 	mEntityRenderer->getSceneManager()->addLodListener(this);
 }
 
-MeshInfoProvider::~MeshInfoProvider()
-{
+MeshInfoProvider::~MeshInfoProvider() {
 	mEntityRenderer->getSceneManager()->removeLodListener(this);
 }
 
-size_t MeshInfoProvider::UniqueVertexHash::operator() (const Ogre::Vector3& v) const
-{
+size_t MeshInfoProvider::UniqueVertexHash::operator()(const Ogre::Vector3& v) const {
 	boost::hash<Ogre::Real> hasher;
 	return hasher(v.x)
-	       ^ hasher(v.y)
-	       ^ hasher(v.z);
+		   ^ hasher(v.y)
+		   ^ hasher(v.z);
 }
 
 }
-}
-}
+
+

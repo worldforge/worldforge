@@ -31,25 +31,16 @@
 #include <components/ogre/model/ModelDefinition.h>
 #include <framework/AutoCloseConnection.h>
 
-namespace CEGUI
-{
-class GUISheet;
 
-}
+namespace Ember::OgreView {
 
-namespace Ember
-{
-namespace OgreView
-{
-
-namespace Model
-{
+namespace Model {
 class Model;
+
 class ModelMount;
 }
 
-namespace Gui
-{
+namespace Gui {
 
 /**
 
@@ -57,8 +48,7 @@ namespace Gui
 
  @author Erik Ogenvik
  */
-class ModelRenderer: public MovableObjectRenderer
-{
+class ModelRenderer : public MovableObjectRenderer {
 public:
 
 	/**
@@ -135,6 +125,5 @@ protected:
 }
 }
 
-}
 
 #endif

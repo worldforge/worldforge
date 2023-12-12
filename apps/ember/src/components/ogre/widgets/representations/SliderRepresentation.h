@@ -30,12 +30,8 @@
 
 #include <sigc++/trackable.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Representations {
+namespace Ember::OgreView::Gui::Representations {
 
 /**
  * @brief represents given value by a slider (the underlying value has to be float!)
@@ -107,10 +103,5 @@ CEGUI::Window* SliderRepresentation<ValueType>::getGuiRoot() {
 
 }
 
-}
-
-}
-
-}
 
 #endif

@@ -25,84 +25,82 @@
 
 using namespace CEGUI;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 IconBar::IconBar(const std::string& name) :
-        mWindow(WindowManager::getSingleton().createWindow("DefaultWindow", "iconbars/" + name)),
-        mIconPadding(0) {
+		mWindow(WindowManager::getSingleton().createWindow("DefaultWindow", "iconbars/" + name)),
+		mIconPadding(0) {
 
-    mWindow->setUsingAutoRenderingSurface(true);
-    /*	mWindow->setProperty("BackgroundEnabled", "false");
-     mWindow->setProperty("FrameEnabled", "false");*/
+	mWindow->setUsingAutoRenderingSurface(true);
+	/*	mWindow->setProperty("BackgroundEnabled", "false");
+	 mWindow->setProperty("FrameEnabled", "false");*/
 }
 
 IconBar::~IconBar() = default;
 
 void IconBar::addIcon(IconBase* iconBase) {
-    mIconBases.emplace_back(iconBase);
-    mWindow->addChild(iconBase->getContainer());
+	mIconBases.emplace_back(iconBase);
+	mWindow->addChild(iconBase->getContainer());
 
-    repositionIcons();
+	repositionIcons();
 
-    iconBase->getContainer()->subscribeEvent(CEGUI::Window::EventShown, CEGUI::Event::Subscriber(&IconBar::iconVisibilityChanged, this));
-    iconBase->getContainer()->subscribeEvent(CEGUI::Window::EventHidden, CEGUI::Event::Subscriber(&IconBar::iconVisibilityChanged, this));
+	iconBase->getContainer()->subscribeEvent(CEGUI::Window::EventShown, CEGUI::Event::Subscriber(&IconBar::iconVisibilityChanged, this));
+	iconBase->getContainer()->subscribeEvent(CEGUI::Window::EventHidden, CEGUI::Event::Subscriber(&IconBar::iconVisibilityChanged, this));
 }
 
 void IconBar::removeIcon(IconBase* iconBase) {
-    auto I = std::find_if(mIconBases.begin(), mIconBases.end(), [&](const IconBase* entry) {return entry == iconBase;});
-    if (I != mIconBases.end()) {
-        mWindow->removeChild(iconBase->getContainer());
-        mIconBases.erase(I);
-    }
-    repositionIcons();
+	auto I = std::find_if(mIconBases.begin(), mIconBases.end(), [&](const IconBase* entry) { return entry == iconBase; });
+	if (I != mIconBases.end()) {
+		mWindow->removeChild(iconBase->getContainer());
+		mIconBases.erase(I);
+	}
+	repositionIcons();
 }
 
 bool IconBar::iconVisibilityChanged(const CEGUI::EventArgs& e) {
-    repositionIcons();
-    return true;
+	repositionIcons();
+	return true;
 }
 
 CEGUI::Window* IconBar::getWindow() {
-    return mWindow.get();
+	return mWindow.get();
 }
 
 void IconBar::setIconPadding(int iconPadding) {
-    mIconPadding = iconPadding;
+	mIconPadding = iconPadding;
 }
 
 void IconBar::repositionIcons() {
-    float accumulatedWidth(0);
-    float maxHeight(0);
+	float accumulatedWidth(0);
+	float maxHeight(0);
 
-    for (auto& icon : mIconBases) {
-        if (icon->getContainer() && icon->getContainer()->isVisible()) {
-            float absHeight = icon->getContainer()->getPixelSize().d_height;
-            float absWidth = icon->getContainer()->getPixelSize().d_width;
-            maxHeight = std::max<float>(maxHeight, absHeight);
+	for (auto& icon: mIconBases) {
+		if (icon->getContainer() && icon->getContainer()->isVisible()) {
+			float absHeight = icon->getContainer()->getPixelSize().d_height;
+			float absWidth = icon->getContainer()->getPixelSize().d_width;
+			maxHeight = std::max<float>(maxHeight, absHeight);
 
-            icon->getContainer()->setPosition(UVector2(UDim(0, accumulatedWidth), UDim(0, 0)));
+			icon->getContainer()->setPosition(UVector2(UDim(0, accumulatedWidth), UDim(0, 0)));
 
-            accumulatedWidth += absWidth + (float)mIconPadding;
-        }
-    }
-    accumulatedWidth -= (float)mIconPadding;
-    mWindow->setSize(USize(UDim(0, accumulatedWidth), UDim(0, maxHeight)));
-    //We need to call this to guarantee that cegui correctly renders any newly added icons.
-    mWindow->notifyScreenAreaChanged();
+			accumulatedWidth += absWidth + (float) mIconPadding;
+		}
+	}
+	accumulatedWidth -= (float) mIconPadding;
+	mWindow->setSize(USize(UDim(0, accumulatedWidth), UDim(0, maxHeight)));
+	//We need to call this to guarantee that cegui correctly renders any newly added icons.
+	mWindow->notifyScreenAreaChanged();
 }
 
 float IconBar::getAbsoluteHeight() {
-    return mWindow->getPixelSize().d_height;
+	return mWindow->getPixelSize().d_height;
 }
 
 float IconBar::getAbsoluteWidth() {
-    return mWindow->getPixelSize().d_width;
+	return mWindow->getPixelSize().d_width;
 }
 
 }
 
-}
-}
+
+

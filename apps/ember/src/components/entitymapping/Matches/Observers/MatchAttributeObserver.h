@@ -29,12 +29,12 @@
 
 #include <Eris/Entity.h>
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 class AttributeMatch;
 
@@ -51,7 +51,7 @@ public:
 
 	explicit MatchAttributeObserver(AttributeMatch& match);
 
-	MatchAttributeObserver(AttributeDependentMatch& match, const std::string& attributeName);
+	MatchAttributeObserver(AttributeDependentMatch& match, std::string  attributeName);
 
 	/**
 	Sets the entity to observe.
@@ -73,8 +73,8 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 #endif

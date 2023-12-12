@@ -18,9 +18,9 @@
 
 #include "OceanAction.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 OceanAction::OceanAction(std::function<void(bool)> attachmentFunction) :
 		mAttachmentFunction(std::move(attachmentFunction)) {
 }
@@ -34,5 +34,5 @@ void OceanAction::deactivate(EntityMapping::ChangeContext& context) {
 	mAttachmentFunction(false);
 }
 }
-}
-}
+
+

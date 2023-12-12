@@ -27,56 +27,55 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        TeleportState * ts = new TeleportState(std::chrono::steady_clock::now());
+int main() {
+	{
+		TeleportState* ts = new TeleportState(std::chrono::steady_clock::now());
 
-        delete ts;
-    }
+		delete ts;
+	}
 
-    {
-        auto create_time = std::chrono::steady_clock::now() + std::chrono::seconds(23);
+	{
+		auto create_time = std::chrono::steady_clock::now() + std::chrono::seconds(23);
 
-        TeleportState * ts = new TeleportState(create_time);
+		TeleportState* ts = new TeleportState(create_time);
 
-        assert(ts->getCreateTime() == create_time);
+		assert(ts->getCreateTime() == create_time);
 
-        delete ts;
-    }
+		delete ts;
+	}
 
-    {
-        TeleportState * ts = new TeleportState(std::chrono::steady_clock::now());
+	{
+		TeleportState* ts = new TeleportState(std::chrono::steady_clock::now());
 
-        assert(!ts->isCreated());
-        ts->setCreated();
-        assert(ts->isCreated());
+		assert(!ts->isCreated());
+		ts->setCreated();
+		assert(ts->isCreated());
 
-        delete ts;
-    }
+		delete ts;
+	}
 
-    {
-        TeleportState * ts = new TeleportState(std::chrono::steady_clock::now());
+	{
+		TeleportState* ts = new TeleportState(std::chrono::steady_clock::now());
 
-        assert(!ts->isRequested());
-        ts->setRequested();
-        assert(ts->isRequested());
+		assert(!ts->isRequested());
+		ts->setRequested();
+		assert(ts->isRequested());
 
-        delete ts;
-    }
+		delete ts;
+	}
 
-    {
-        TeleportState * ts = new TeleportState(std::chrono::steady_clock::now());
-        std::string test_key_val("whsiehibsfw");
+	{
+		TeleportState* ts = new TeleportState(std::chrono::steady_clock::now());
+		std::string test_key_val("whsiehibsfw");
 
-        assert(ts->getPossessKey().empty());
-        assert(!ts->isMind());
-        ts->setKey(test_key_val);
-        assert(ts->isMind());
-        assert(ts->getPossessKey() == test_key_val);
+		assert(ts->getPossessKey().empty());
+		assert(!ts->isMind());
+		ts->setKey(test_key_val);
+		assert(ts->isMind());
+		assert(ts->getPossessKey() == test_key_val);
 
-        delete ts;
-    }
+		delete ts;
+	}
 
-    return 0;
+	return 0;
 }

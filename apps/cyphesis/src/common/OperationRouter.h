@@ -30,15 +30,15 @@ typedef Atlas::Objects::Operation::RootOperation Operation;
 typedef std::vector<Operation> OpVector;
 
 typedef enum {
-    OPERATION_IGNORED, // Handler has done nothing
-    OPERATION_HANDLED, // Handler has done something, but op should continue
-    OPERATION_BLOCKED, // Handler has determined that op should stop here
+	OPERATION_IGNORED, // Handler has done nothing
+	OPERATION_HANDLED, // Handler has done something, but op should continue
+	OPERATION_BLOCKED, // Handler has determined that op should stop here
 } HandlerResult;
 
 class LocatedEntity;
-struct OperationsListener
-{
-    virtual HandlerResult operation(LocatedEntity &, const Operation&, OpVector & res) = 0;
+
+struct OperationsListener {
+	virtual HandlerResult operation(LocatedEntity&, const Operation&, OpVector& res) = 0;
 };
 
 #endif // COMMON_OPERATION_ROUTER_H

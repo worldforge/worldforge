@@ -29,23 +29,22 @@
 #include <cassert>
 
 
-int main()
-{
-    assert(daemon_flag == false);
+int main() {
+	assert(daemon_flag == false);
 
-    logEvent(START, "Test start event log message");
-    logEvent(STOP, "Test stop event log message");
-    logEvent(CONNECT, "Test connect event log message");
-    logEvent(DISCONNECT, "Test disconnect event log message");
-    logEvent(LOGIN, "Test login event log message");
-    logEvent(LOGOUT, "Test logout event log message");
-    logEvent(TAKE_CHAR, "Test take character event log message");
-    logEvent(DROP_CHAR, "Test drop character event log message");
-    logEvent(EXPORT_ENT, "Test export entity event log message");
-    logEvent(IMPORT_ENT, "Test import entity event log message");
-    logEvent(POSSESS_CHAR, "Test possess character event log message");
-    
-    return 0;
+	logEvent(START, "Test start event log message");
+	logEvent(STOP, "Test stop event log message");
+	logEvent(CONNECT, "Test connect event log message");
+	logEvent(DISCONNECT, "Test disconnect event log message");
+	logEvent(LOGIN, "Test login event log message");
+	logEvent(LOGOUT, "Test logout event log message");
+	logEvent(TAKE_CHAR, "Test take character event log message");
+	logEvent(DROP_CHAR, "Test drop character event log message");
+	logEvent(EXPORT_ENT, "Test export entity event log message");
+	logEvent(IMPORT_ENT, "Test import entity event log message");
+	logEvent(POSSESS_CHAR, "Test possess character event log message");
+
+	return 0;
 }
 
 bool daemon_flag = false;

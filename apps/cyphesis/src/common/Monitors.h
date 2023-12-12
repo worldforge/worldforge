@@ -29,29 +29,31 @@ class VariableBase;
 ///
 /// Any code can insert or update key value pairs here, and subsystems like
 /// the http interface can access it.
-class Monitors : public Singleton<Monitors>
-{
-    protected:
+class Monitors : public Singleton<Monitors> {
+protected:
 
-        Atlas::Message::MapType m_pairs;
-        std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
-    public:
-        Monitors();
+	Atlas::Message::MapType m_pairs;
+	std::map<std::string, std::unique_ptr<VariableBase>> m_variableMonitors;
+public:
+	Monitors();
 
-        ~Monitors() override;
+	~Monitors() override;
 
-        void insert( std::string, const Atlas::Message::Element&);
+	void insert(std::string, const Atlas::Message::Element&);
 
-        void watch(std::string, std::unique_ptr<VariableBase>);
-        void watch(std::string, int& value);
-        void watch(std::string, long& value);
-        void watch(std::string, float& value);
+	void watch(std::string, std::unique_ptr<VariableBase>);
 
-        void send(std::ostream&) const;
+	void watch(std::string, int& value);
 
-        void sendNumerics(std::ostream&) const;
+	void watch(std::string, long& value);
 
-        int readVariable(const std::string& key, std::ostream& out_stream) const;
+	void watch(std::string, float& value);
+
+	void send(std::ostream&) const;
+
+	void sendNumerics(std::ostream&) const;
+
+	int readVariable(const std::string& key, std::ostream& out_stream) const;
 
 };
 

@@ -28,18 +28,16 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-namespace Eris
-{
+namespace Eris {
 class Avatar;
 }
 
-namespace Ember
-{
+namespace Ember {
 class TimeFrame;
-namespace Navigation
-{
+namespace Navigation {
 
 class Awareness;
+
 class Loitering;
 
 /**
@@ -47,10 +45,10 @@ class Loitering;
  *
  * To enable steering, first set the destination through setDestination() and then call startSteering().
  */
-class Steering: public virtual sigc::trackable
-{
+class Steering : public virtual sigc::trackable {
 public:
 	Steering(Awareness& awareness, Eris::Avatar& avatar);
+
 	virtual ~Steering();
 
 	/**

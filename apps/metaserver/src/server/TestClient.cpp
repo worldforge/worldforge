@@ -26,23 +26,22 @@
 namespace {
 std::string
 IpNetToAscii(uint32_t address) {
-	  std::array<char, INET_ADDRSTRLEN> chars{};
-	  inet_ntop(AF_INET, &address, chars.data(), INET_ADDRSTRLEN);
-	  return {chars.data()};
+	std::array<char, INET_ADDRSTRLEN> chars{};
+	inet_ntop(AF_INET, &address, chars.data(), INET_ADDRSTRLEN);
+	return {chars.data()};
 }
 }
 
 
-typedef std::vector <std::string> attribute_list;
+typedef std::vector<std::string> attribute_list;
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 
 	/**
 	 * Argument Wrangling
 	 *
 	 */
-	boost::program_options::options_description desc( "TestClient" );
+	boost::program_options::options_description desc("TestClient");
 	boost::program_options::variables_map vm;
 	boost::asio::io_service io_service;
 	std::array<char, MAX_PACKET_BYTES> recvBuffer{};
@@ -55,28 +54,25 @@ int main(int argc, char** argv)
 	 *       become ignored and are not accessible.
 	 */
 	desc.add_options()
-		( "help,h", "Display help message" )
-		( "server", boost::program_options::value<std::string>()->default_value("localhost"), "MetaServer host. \nDefault:localhost" )
-		( "port", boost::program_options::value<int>()->default_value(8453), "MetaServer port. \nDefault:8453" )
-		( "attribute", boost::program_options::value<attribute_list>(), "Set client attribute.\nDefault: none" )
-		( "filter", boost::program_options::value<attribute_list>(), "Set client filters.\nDefault: none" )
-		( "keepalives", boost::program_options::value<int>()->default_value(3), "Number of Keepalives. \nDefault:3" )
-			;
+			("help,h", "Display help message")
+			("server", boost::program_options::value<std::string>()->default_value("localhost"), "MetaServer host. \nDefault:localhost")
+			("port", boost::program_options::value<int>()->default_value(8453), "MetaServer port. \nDefault:8453")
+			("attribute", boost::program_options::value<attribute_list>(), "Set client attribute.\nDefault: none")
+			("filter", boost::program_options::value<attribute_list>(), "Set client filters.\nDefault: none")
+			("keepalives", boost::program_options::value<int>()->default_value(3), "Number of Keepalives. \nDefault:3");
 
-	try
-	{
+	try {
 
 		boost::program_options::store(
 				boost::program_options::parse_command_line(argc, argv, desc),
 				vm
-				);
+		);
 		boost::program_options::notify(vm);
 
 		/**
 		 * Special case for help
 		 */
-		if ( vm.count("help") )
-		{
+		if (vm.count("help")) {
 			std::cout << desc << std::endl;
 			return 0;
 		}
@@ -86,18 +82,12 @@ int main(int argc, char** argv)
 		std::cout << "Keepalives   : " << vm["keepalives"].as<int>() << std::endl;
 		std::cout << "---------------" << std::endl;
 
-		for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
-		{
-			if ( it->second.value().type() == typeid(int) )
-			{
+		for (boost::program_options::variables_map::iterator it = vm.begin(); it != vm.end(); ++it) {
+			if (it->second.value().type() == typeid(int)) {
 				std::cout << it->first.c_str() << "=" << it->second.as<int>() << std::endl;
-			}
-			else if (it->second.value().type() == typeid(std::string) )
-			{
+			} else if (it->second.value().type() == typeid(std::string)) {
 				std::cout << it->first.c_str() << "=" << it->second.as<std::string>().c_str() << std::endl;
-			}
-			else if (it->second.value().type() == typeid(attribute_list) )
-			{
+			} else if (it->second.value().type() == typeid(attribute_list)) {
 				std::cout << it->first.c_str() << "=Attribute List" << std::endl;
 			}
 		}
@@ -112,7 +102,7 @@ int main(int argc, char** argv)
 
 		boost::asio::ip::udp::socket s(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 		boost::asio::ip::udp::resolver resolver(io_service);
-		boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), vm["server"].as<std::string>(), port_str.str() );
+		boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), vm["server"].as<std::string>(), port_str.str());
 		boost::asio::ip::udp::resolver::iterator iterator = resolver.resolve(query);
 
 		/**
@@ -122,21 +112,20 @@ int main(int argc, char** argv)
 		/**
 		 *    1.1 - send keepalive
 		 */
-		for ( int i=0 ; i < vm["keepalives"].as<int>() ; ++i )
-		{
+		for (int i = 0; i < vm["keepalives"].as<int>(); ++i) {
 			MetaServerPacket keep;
 			keep.setPacketType(NMT_CLIENTKEEPALIVE);
 
 			std::cout << "Sending keepalive ... ";
-			s.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator );
+			s.send_to(boost::asio::buffer(keep.getBuffer(), keep.getSize()), *iterator);
 
 			/**
 			 *    1.2 - receive handshake
 			 */
 
-			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
+			bytes_recvd = s.receive_from(boost::asio::buffer(recvBuffer), sender_endpoint);
 
-			MetaServerPacket shake( recvBuffer, bytes_recvd );
+			MetaServerPacket shake(recvBuffer, bytes_recvd);
 			shake.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
 			shake.setPort(sender_endpoint.port());
 			std::cout << "Got handshake ... ";
@@ -149,8 +138,8 @@ int main(int argc, char** argv)
 			MetaServerPacket clientshake;
 			clientshake.setPacketType(NMT_CLIENTSHAKE);
 			clientshake.addPacketData(shake_key);
-			clientshake.setAddress( shake.getAddress() , shake.getAddressInt());
-			s.send_to(boost::asio::buffer(clientshake.getBuffer(), clientshake.getSize()), *iterator );
+			clientshake.setAddress(shake.getAddress(), shake.getAddressInt());
+			s.send_to(boost::asio::buffer(clientshake.getBuffer(), clientshake.getSize()), *iterator);
 			std::cout << "Sending registration." << std::endl;
 			//std::cout << "Sleeping between keepalives : 2s" << std::endl;
 			//sleep(2);
@@ -159,18 +148,15 @@ int main(int argc, char** argv)
 		/**
 		 *  Step 2 : register attributes if any
 		 */
-		if ( vm.count("attribute") )
-		{
+		if (vm.count("attribute")) {
 			std::cout << "Registering Client Attributes: " << std::endl;
 			attribute_list v = vm["attribute"].as<attribute_list>();
-			while(!v.empty())
-			{
+			while (!v.empty()) {
 				std::string ele = v.back();
 				size_t pos = ele.find_first_of("=");
-				if( pos != std::string::npos )
-				{
-					std::string n = ele.substr(0,pos);
-					std::string v = ele.substr(pos+1);
+				if (pos != std::string::npos) {
+					std::string n = ele.substr(0, pos);
+					std::string v = ele.substr(pos + 1);
 					std::cout << " register: " << n << std::endl;
 					std::cout << "    value: " << v << std::endl;
 					MetaServerPacket a;
@@ -179,10 +165,8 @@ int main(int argc, char** argv)
 					a.addPacketData(v.length());
 					a.addPacketData(n);
 					a.addPacketData(v);
-					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator );
-				}
-				else
-				{
+					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator);
+				} else {
 					std::cout << " Attribute Ignored : " << ele << std::endl;
 				}
 				v.pop_back();
@@ -192,18 +176,15 @@ int main(int argc, char** argv)
 		/**
 		 *  Step 3 : register filters
 		 */
-		if ( vm.count("filter") )
-		{
+		if (vm.count("filter")) {
 			std::cout << "Registering Client Filters: " << std::endl;
 			attribute_list v = vm["filter"].as<attribute_list>();
-			while(!v.empty())
-			{
+			while (!v.empty()) {
 				std::string ele = v.back();
 				size_t pos = ele.find_first_of("=");
-				if( pos != std::string::npos )
-				{
-					std::string n = ele.substr(0,pos);
-					std::string v = ele.substr(pos+1);
+				if (pos != std::string::npos) {
+					std::string n = ele.substr(0, pos);
+					std::string v = ele.substr(pos + 1);
 					std::cout << " register: " << n << std::endl;
 					std::cout << "    value: " << v << std::endl;
 					MetaServerPacket a;
@@ -212,10 +193,8 @@ int main(int argc, char** argv)
 					a.addPacketData(v.length());
 					a.addPacketData(n);
 					a.addPacketData(v);
-					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator );
-				}
-				else
-				{
+					s.send_to(boost::asio::buffer(a.getBuffer(), a.getSize()), *iterator);
+				} else {
 					std::cout << " Filter Ignored : " << ele << std::endl;
 				}
 				v.pop_back();
@@ -225,14 +204,13 @@ int main(int argc, char** argv)
 		/**
 		 *  Step 4 : send listreq
 		 */
-		unsigned int total=1;
-		unsigned int from=0;
-		unsigned int packed=0;
-		unsigned int count=0;
-		while(1)
-		{
+		unsigned int total = 1;
+		unsigned int from = 0;
+		unsigned int packed = 0;
+		unsigned int count = 0;
+		while (1) {
 
-			if ( from > total || total == 0 )
+			if (from > total || total == 0)
 				break;
 
 			std::cout << "List Request: " << std::endl;
@@ -240,27 +218,26 @@ int main(int argc, char** argv)
 
 			req.setPacketType(NMT_LISTREQ);
 			req.addPacketData(from);
-			req.setAddress( sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint() );
-			req.setPort( sender_endpoint.port() );
-			s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator );
+			req.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
+			req.setPort(sender_endpoint.port());
+			s.send_to(boost::asio::buffer(req.getBuffer(), req.getSize()), *iterator);
 
-			bytes_recvd = s.receive_from( boost::asio::buffer(recvBuffer), sender_endpoint );
+			bytes_recvd = s.receive_from(boost::asio::buffer(recvBuffer), sender_endpoint);
 
-			MetaServerPacket resp( recvBuffer, bytes_recvd );
+			MetaServerPacket resp(recvBuffer, bytes_recvd);
 			resp.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
 			resp.setPort(sender_endpoint.port());
 
-			if ( resp.getPacketType() != NMT_LISTRESP || resp.getPacketType() == NMT_PROTO_ERANGE )
+			if (resp.getPacketType() != NMT_LISTRESP || resp.getPacketType() == NMT_PROTO_ERANGE)
 				break;
 
 			std::cout << "Received server list packet";
-			total = resp.getIntData(sizeof(uint32_t)*1); // 4
-			packed = resp.getIntData(sizeof(uint32_t)*2); // 8
+			total = resp.getIntData(sizeof(uint32_t) * 1); // 4
+			packed = resp.getIntData(sizeof(uint32_t) * 2); // 8
 			std::cout << "  Received " << packed << " / " << total << " servers." << std::endl;
 
-			for ( count = 1 ; count <= packed; count++ )
-			{
-				unsigned int offset = (sizeof(uint32_t)*2) + (sizeof(uint32_t)*count);
+			for (count = 1; count <= packed; count++) {
+				unsigned int offset = (sizeof(uint32_t) * 2) + (sizeof(uint32_t) * count);
 				//std::cout << "     " << count << " / " << offset << " == ";
 				uint32_t ip = resp.getIntData(offset);
 				//std::cout << ip << std::endl;
@@ -276,13 +253,12 @@ int main(int argc, char** argv)
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
 		term.addPacketData(0); // increase size of term packet to indicate client
-		term.setAddress( sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint() );
-		term.setPort( sender_endpoint.port() );
-		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
+		term.setAddress(sender_endpoint.address().to_string(), sender_endpoint.address().to_v4().to_uint());
+		term.setPort(sender_endpoint.port());
+		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator);
 
 	}
-	catch (std::exception& e)
-	{
+	catch (std::exception& e) {
 		std::cerr << "Exception: " << e.what() << std::endl;
 	}
 	std::cout << "All Done!" << std::endl;

@@ -21,13 +21,10 @@
 
 #include <string>
 
-namespace Ember
-{
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Model
-{
+
+namespace OgreView::Model {
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Represents a "model fitting", i.e. an attachment of a child entity to a bone on a model.
@@ -35,14 +32,13 @@ namespace Model
  * Note that it's not until attachChild() has been called that there's an entity attached.
  * This is because it's not uncommon for the attribute data which tells that a certain entity should be attached to be available before the actual entity is available.
  */
-struct ModelFitting
-{
+struct ModelFitting {
 	EmberEntity& mParent;
 	std::string mMountPoint;
 	std::string mChildEntityId;
 	EmberEntity* mChild = nullptr;
 };
 }
-}
+
 }
 #endif /* ModelFitting_H_ */

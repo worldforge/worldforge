@@ -125,13 +125,11 @@ class GenerateCC(GenerateObjectFactory, GenerateForward):
 
     # namespace
     def ns_open(self, ns_list):
-        for namespace in ns_list:
-            self.write("namespace " + namespace + " { ")
+        self.write("namespace " + "::".join(ns_list) + " {")
         self.write("\n")
 
     def ns_close(self, ns_list):
-        for i in range(0, len(ns_list)):
-            self.write("} ")
+        self.write("} ")
         self.write("// namespace " + "::".join(ns_list))
         self.write("\n")
 

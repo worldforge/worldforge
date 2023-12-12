@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+#include "config.h"
 #endif
 
 #include "Log.h"
@@ -13,18 +13,16 @@
 
 namespace Atlas {
 namespace Objects {
-std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
-{
-    std::stringstream s;
+std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj) {
+	std::stringstream s;
 	Atlas::PresentationBridge bridge(s);
-    Atlas::Objects::ObjectsEncoder debugEncoder(bridge);
-    debugEncoder.streamObjectsMessage(obj);
-    return os << s.str();
+	Atlas::Objects::ObjectsEncoder debugEncoder(bridge);
+	debugEncoder.streamObjectsMessage(obj);
+	return os << s.str();
 }
 }
 namespace Message {
-std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
-{
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg) {
 	if (msg.isMap()) {
 		std::stringstream s;
 		Atlas::PresentationBridge bridge(s);
@@ -37,5 +35,5 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
 }
 }
 namespace Eris {
-std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("eris");;
+std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("eris");
 }

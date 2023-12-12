@@ -25,12 +25,12 @@
 
 #include "CaseBase.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 
 /**
 	Base class for all Cases that has a parent Match.
@@ -61,8 +61,8 @@ inline void Case<TMatch>::setParentMatch(TMatch* aMatch) {
 
 }
 
-}
 
-}
+
+
 
 #endif

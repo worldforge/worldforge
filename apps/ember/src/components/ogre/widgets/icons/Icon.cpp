@@ -24,12 +24,8 @@
 #include "IconImageStore.h"
 #include <CEGUI/CEGUI.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 Icon::Icon(std::string key, IconImageStoreEntry* imageStoreEntry)
 		: mKey(std::move(key)), mImageStoreEntry(imageStoreEntry) {
@@ -46,7 +42,7 @@ const CEGUI::Image* Icon::getImage() const {
 
 }
 
-}
 
-}
-}
+
+
+

@@ -38,20 +38,19 @@ typedef std::map<long, Ref<LocatedEntity>> EntityRefDict;
 
 /// \brief Class for managing the required database tables for persisting
 /// in-game entities and server accounts
-class Persistence : public Singleton<Persistence>
-{
-    private:
+class Persistence : public Singleton<Persistence> {
+private:
 
-    public:
-        explicit Persistence(Database& database);
+public:
+	explicit Persistence(Database& database);
 
-        Database& m_db;
+	Database& m_db;
 
-        bool findAccount(const std::string&);
+	bool findAccount(const std::string&);
 
-        std::unique_ptr<Account> getAccount(const std::string&);
+	std::unique_ptr<Account> getAccount(const std::string&);
 
-        void putAccount(const Account&);
+	void putAccount(const Account&);
 
 };
 

@@ -22,10 +22,8 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <string>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -47,6 +45,6 @@ public:
 };
 
 }
-}
-}
+
+
 #endif /* ATLASHELPER_H_ */

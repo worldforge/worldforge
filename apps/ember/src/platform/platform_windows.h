@@ -8,6 +8,7 @@
 #ifndef _WIN32_IE
 #define _WIN32_IE 0x0500
 #endif
+
 #include <windows.h>
 #include <tchar.h>
 #include <io.h>

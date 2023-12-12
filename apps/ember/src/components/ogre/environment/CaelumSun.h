@@ -35,11 +35,11 @@ namespace varconf {
 class Variable;
 }
 
-namespace Ember {
-namespace OgreView {
 
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
@@ -88,13 +88,13 @@ private:
 	void Config_SunSpecularMultiplier(const std::string& section, const std::string& key, varconf::Variable& variable);
 
 
-	bool parse(varconf::Variable& variable, Ogre::ColourValue& colour);
+	static bool parse(varconf::Variable& variable, Ogre::ColourValue& colour);
 };
 
 }
 
-}
 
-}
+
+
 
 #endif

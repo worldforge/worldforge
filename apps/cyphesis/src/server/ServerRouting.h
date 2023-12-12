@@ -40,121 +40,109 @@ extern bool restricted_flag;
 ///
 /// This class has one instance which is the core object in the server.
 /// It maintains list of all out-of-game (OOG) objects in the server.
-class ServerRouting
-{
-    private:
-        /// A shaker to generate a salt.
-        Shaker m_shaker;
-        /// A mapping of ID to object of all the OOG objects in the server.
-        /// These are all owned by this instance.
-        std::map<long, std::unique_ptr<ConnectableRouter>> m_routers;
-        /// A mapping of ID to object of all the accounts in the server.
-        /// All of the accounts are aliases for ConnectableRouter base instances that exists in m_objects.
-        std::map<std::string, Account*> m_accounts;
-        /// The text name of the ruleset this server is running.
-        const std::string m_svrRuleset;
-        /// The name of this server.
-        const std::string m_svrName;
-        /// The Lobby management object.
-        std::unique_ptr<Lobby> m_lobby;
+class ServerRouting {
+private:
+	/// A shaker to generate a salt.
+	Shaker m_shaker;
+	/// A mapping of ID to object of all the OOG objects in the server.
+	/// These are all owned by this instance.
+	std::map<long, std::unique_ptr<ConnectableRouter>> m_routers;
+	/// A mapping of ID to object of all the accounts in the server.
+	/// All of the accounts are aliases for ConnectableRouter base instances that exists in m_objects.
+	std::map<std::string, Account*> m_accounts;
+	/// The text name of the ruleset this server is running.
+	const std::string m_svrRuleset;
+	/// The name of this server.
+	const std::string m_svrName;
+	/// The Lobby management object.
+	std::unique_ptr<Lobby> m_lobby;
 
-		std::vector<std::string> m_assets;
-        /// The number of clients currently connected.
-        int m_numClients;
-        //All client connections in the system. These aren't owned by this instance.
-        std::set<Connection*> m_connections;
+	std::vector<std::string> m_assets;
+	/// The number of clients currently connected.
+	int m_numClients;
+	//All client connections in the system. These aren't owned by this instance.
+	std::set<Connection*> m_connections;
 
-        long m_processOpsTotal;
-    public:
-        /// A reference to the World management object.
-        BaseWorld& m_world;
-        Persistence& m_persistence;
+	long m_processOpsTotal;
+public:
+	/// A reference to the World management object.
+	BaseWorld& m_world;
+	Persistence& m_persistence;
 
-        ServerRouting(BaseWorld& wrld,
-                      Persistence& persistence,
-                      std::string ruleset,
-                      std::string name,
-                      RouterId lobbyId);
+	ServerRouting(BaseWorld& wrld,
+				  Persistence& persistence,
+				  std::string ruleset,
+				  std::string name,
+				  RouterId lobbyId);
 
-        ~ServerRouting();
+	~ServerRouting();
 
-        void disconnectAllConnections();
+	void disconnectAllConnections();
 
-        void registerConnection(Connection* connection)
-        {
-            m_connections.insert(connection);
-            m_numClients++;
-        }
+	void registerConnection(Connection* connection) {
+		m_connections.insert(connection);
+		m_numClients++;
+	}
 
-        void deregisterConnection(Connection* connection)
-        {
-            m_connections.erase(connection);
-            m_numClients--;
-        }
+	void deregisterConnection(Connection* connection) {
+		m_connections.erase(connection);
+		m_numClients--;
+	}
 
-        /// Accessor for the number of clients connected to this server.
-        size_t getClients()
-        { return m_connections.size(); }
+	/// Accessor for the number of clients connected to this server.
+	size_t getClients() { return m_connections.size(); }
 
-        Lobby& getLobby()
-        {
-            return *m_lobby;
-        }
+	Lobby& getLobby() {
+		return *m_lobby;
+	}
 
-        const Lobby& getLobby() const
-        {
-            return *m_lobby;
-        }
+	const Lobby& getLobby() const {
+		return *m_lobby;
+	}
 
-        /// Accessor for world manager object.
-        BaseWorld& getWorld()
-        { return m_world; }
+	/// Accessor for world manager object.
+	BaseWorld& getWorld() { return m_world; }
 
-        /// Accesor for Shaker object.
-        Shaker& getShaker()
-        { return m_shaker; }
+	/// Accesor for Shaker object.
+	Shaker& getShaker() { return m_shaker; }
 
-        /// Accessor for OOG objects map.
-        const std::map<long, std::unique_ptr<ConnectableRouter>>& getObjects() const
-        {
-            return m_routers;
-        }
+	/// Accessor for OOG objects map.
+	const std::map<long, std::unique_ptr<ConnectableRouter>>& getObjects() const {
+		return m_routers;
+	}
 
-        const std::map<std::string, Account*>& getAccounts() const
-        {
-            return m_accounts;
-        }
+	const std::map<std::string, Account*>& getAccounts() const {
+		return m_accounts;
+	}
 
-		void setAssets(std::vector<std::string> assets);
+	void setAssets(std::vector<std::string> assets);
 
-		void sendUpdateToClients();
+	void sendUpdateToClients();
 
-        /// Accessor for server ruleset.
-        const std::string& getRuleset() const
-        { return m_svrRuleset; }
+	/// Accessor for server ruleset.
+	const std::string& getRuleset() const { return m_svrRuleset; }
 
-        /// Accessor for server name.
-        const std::string& getName() const
-        { return m_svrName; }
+	/// Accessor for server name.
+	const std::string& getName() const { return m_svrName; }
 
-        void addRouter(std::unique_ptr<ConnectableRouter> obj);
+	void addRouter(std::unique_ptr<ConnectableRouter> obj);
 
-        void addAccount(std::unique_ptr<Account> a);
+	void addAccount(std::unique_ptr<Account> a);
 
-        ConnectableRouter* getObject(const std::string& id) const;
+	ConnectableRouter* getObject(const std::string& id) const;
 
-        Account* getAccountByName(const std::string& username);
+	Account* getAccountByName(const std::string& username);
 
-        void addToMessage(Atlas::Message::MapType&) const;
+	void addToMessage(Atlas::Message::MapType&) const;
 
-        void addToEntity(const Atlas::Objects::Entity::RootEntity&) const;
+	void addToEntity(const Atlas::Objects::Entity::RootEntity&) const;
 
-        /**
-         * Performs dispatch of any queued operations.
-         * @param numberOfOps The max number of operations to dispatch per "actor".
-         * @return The total number of dispatched operations.
-         */
-        size_t dispatch(size_t numberOfOps);
+	/**
+	 * Performs dispatch of any queued operations.
+	 * @param numberOfOps The max number of operations to dispatch per "actor".
+	 * @return The total number of dispatched operations.
+	 */
+	size_t dispatch(size_t numberOfOps);
 };
 
 #endif // SERVER_SERVER_ROUTING_H

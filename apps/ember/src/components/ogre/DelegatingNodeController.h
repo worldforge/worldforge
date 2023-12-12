@@ -21,19 +21,16 @@
 
 #include "components/ogre/NodeController.h"
 
-namespace Ember
-{
+namespace Ember {
 struct IEntityControlDelegate;
-namespace OgreView
-{
+namespace OgreView {
 
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A node controller which uses a delegate to perform the actual controlling.
  */
-class DelegatingNodeController: public NodeController
-{
+class DelegatingNodeController : public NodeController {
 public:
 	/**
 	 * @brief Ctor.

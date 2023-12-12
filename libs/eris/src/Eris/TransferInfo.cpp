@@ -1,7 +1,4 @@
 #include <utility>
-
-#include <utility>
-
 #include "TransferInfo.h"
 
 namespace Eris {

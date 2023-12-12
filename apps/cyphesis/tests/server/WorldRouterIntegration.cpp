@@ -61,181 +61,171 @@ Atlas::Objects::Factories factories;
 
 auto timeProviderFn = [] { return std::chrono::steady_clock::now().time_since_epoch(); };
 
-struct WorldRouterintegration : public Cyphesis::TestBase
-{
+struct WorldRouterintegration : public Cyphesis::TestBase {
 
-    Inheritance* m_inheritance;
-    EntityBuilder* m_eb;
-    DatabaseNull m_database;
+	Inheritance* m_inheritance;
+	EntityBuilder* m_eb;
+	DatabaseNull m_database;
 
-    void setup() override;
+	void setup() override;
 
-    void teardown() override;
+	void teardown() override;
 
-    void test_sequence();
+	void test_sequence();
 
-    void test_creationAndDeletion()
-    {
-        {
-            Ref<LocatedEntity> base = new Entity(0);
-            WorldRouter test_world(base, *m_eb, timeProviderFn);
+	void test_creationAndDeletion() {
+		{
+			Ref<LocatedEntity> base = new Entity(0);
+			WorldRouter test_world(base, *m_eb, timeProviderFn);
 
-            Anonymous ent;
-            ent->setLoc("0");
-            auto ent1 = test_world.addNewEntity("thing", ent);
+			Anonymous ent;
+			ent->setLoc("0");
+			auto ent1 = test_world.addNewEntity("thing", ent);
 
-            ASSERT_EQUAL(2, test_world.m_entityCount);
+			ASSERT_EQUAL(2, test_world.m_entityCount);
 
-            test_world.delEntity(ent1.get());
-            //A single entity when removed should have all references removed too.
-            ASSERT_EQUAL(1, test_world.m_entityCount);
-            ASSERT_EQUAL(1, ent1->checkRef());
-            test_world.shutdown();
-        }
+			test_world.delEntity(ent1.get());
+			//A single entity when removed should have all references removed too.
+			ASSERT_EQUAL(1, test_world.m_entityCount);
+			ASSERT_EQUAL(1, ent1->checkRef());
+			test_world.shutdown();
+		}
 
-        {
-            Ref<LocatedEntity> base = new Entity(0);
-            WorldRouter test_world(base, *m_eb, timeProviderFn);
+		{
+			Ref<LocatedEntity> base = new Entity(0);
+			WorldRouter test_world(base, *m_eb, timeProviderFn);
 
-            Anonymous ent;
-            ent->setLoc("0");
-            auto ent1 = test_world.addNewEntity("thing", ent);
+			Anonymous ent;
+			ent->setLoc("0");
+			auto ent1 = test_world.addNewEntity("thing", ent);
 
-            ASSERT_EQUAL(2, test_world.m_entityCount);
+			ASSERT_EQUAL(2, test_world.m_entityCount);
 
-            Anonymous ent2_arg{};
-            ent2_arg->setLoc(ent1->getId());
-            auto ent2 = test_world.addNewEntity("thing", ent2_arg);
+			Anonymous ent2_arg{};
+			ent2_arg->setLoc(ent1->getId());
+			auto ent2 = test_world.addNewEntity("thing", ent2_arg);
 
-            ASSERT_EQUAL(3, test_world.m_entityCount);
-            //Make sure ent2 is a child of ent1.
-            ASSERT_EQUAL(ent2->m_parent, ent1.get());
+			ASSERT_EQUAL(3, test_world.m_entityCount);
+			//Make sure ent2 is a child of ent1.
+			ASSERT_EQUAL(ent2->m_parent, ent1.get());
 
-            //Make sure that a child when removed has all references removed too.
-            test_world.delEntity(ent2.get());
-            ASSERT_EQUAL(2, test_world.m_entityCount);
-            ASSERT_EQUAL(1, ent2->checkRef());
-            test_world.shutdown();
+			//Make sure that a child when removed has all references removed too.
+			test_world.delEntity(ent2.get());
+			ASSERT_EQUAL(2, test_world.m_entityCount);
+			ASSERT_EQUAL(1, ent2->checkRef());
+			test_world.shutdown();
 
-        }
-    }
+		}
+	}
 
 
-    WorldRouterintegration()
-    {
-        ADD_TEST(WorldRouterintegration::test_sequence);
-        ADD_TEST(WorldRouterintegration::test_creationAndDeletion);
+	WorldRouterintegration() {
+		ADD_TEST(WorldRouterintegration::test_sequence);
+		ADD_TEST(WorldRouterintegration::test_creationAndDeletion);
 
-    }
+	}
 
 };
 
 
-void WorldRouterintegration::setup()
-{
-    m_inheritance = new Inheritance(factories);
-    m_eb = new EntityBuilder();
-    TestPropertyManager propertyManager;
+void WorldRouterintegration::setup() {
+	m_inheritance = new Inheritance(factories);
+	m_eb = new EntityBuilder();
+	TestPropertyManager propertyManager;
 
-    class TestEntityRuleHandler : public EntityRuleHandler
-    {
-        public:
-            explicit TestEntityRuleHandler(EntityBuilder& eb, const PropertyManager& propertyManager) : EntityRuleHandler(eb, propertyManager)
-            {}
+	class TestEntityRuleHandler : public EntityRuleHandler {
+	public:
+		explicit TestEntityRuleHandler(EntityBuilder& eb, const PropertyManager& propertyManager) : EntityRuleHandler(eb, propertyManager) {}
 
-            int test_installEntityClass(const std::string& class_name,
-                                        const std::string& parent,
-                                        const Atlas::Objects::Root& class_desc,
-                                        std::string& dependent,
-                                        std::string& reason,
-                                        std::unique_ptr<EntityFactoryBase> factory)
-            {
-                std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
-                return installEntityClass(class_name, parent, class_desc, dependent, reason, std::move(factory), changes);
-            }
-    };
+		int test_installEntityClass(const std::string& class_name,
+									const std::string& parent,
+									const Atlas::Objects::Root& class_desc,
+									std::string& dependent,
+									std::string& reason,
+									std::unique_ptr<EntityFactoryBase> factory) {
+			std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+			return installEntityClass(class_name, parent, class_desc, dependent, reason, std::move(factory), changes);
+		}
+	};
 
-    TestEntityRuleHandler entityRuleHandler(*m_eb, propertyManager);
+	TestEntityRuleHandler entityRuleHandler(*m_eb, propertyManager);
 
-    auto composeDeclaration = [](std::string class_name, std::string parent, Atlas::Message::MapType rawAttributes) {
+	auto composeDeclaration = [](std::string class_name, std::string parent, Atlas::Message::MapType rawAttributes) {
 
-        Atlas::Objects::Root decl;
-        decl->setObjtype("class");
-        decl->setId(class_name);
-        decl->setParent(parent);
+		Atlas::Objects::Root decl;
+		decl->setObjtype("class");
+		decl->setId(class_name);
+		decl->setParent(parent);
 
-        Atlas::Message::MapType composed;
-        for (const auto& entry : rawAttributes) {
-            composed[entry.first] = Atlas::Message::MapType{
-                    {"default", entry.second}
-            };
-        }
+		Atlas::Message::MapType composed;
+		for (const auto& entry: rawAttributes) {
+			composed[entry.first] = Atlas::Message::MapType{
+					{"default", entry.second}
+			};
+		}
 
-        decl->setAttr("attributes", composed);
-        return decl;
-    };
-    std::string dependent, reason;
-    {
-        auto decl = composeDeclaration("thing", "game_entity", {});
-        entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
-    }
-    {
-        auto decl = composeDeclaration("character", "thing", {});
-        entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
-    }
+		decl->setAttr("attributes", composed);
+		return decl;
+	};
+	std::string dependent, reason;
+	{
+		auto decl = composeDeclaration("thing", "game_entity", {});
+		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
+	}
+	{
+		auto decl = composeDeclaration("character", "thing", {});
+		entityRuleHandler.test_installEntityClass(decl->getId(), decl->getParent(), decl, dependent, reason, std::make_unique<EntityFactory<Thing>>());
+	}
 }
 
-void WorldRouterintegration::teardown()
-{
-    delete m_eb;
-    delete m_inheritance;
+void WorldRouterintegration::teardown() {
+	delete m_eb;
+	delete m_inheritance;
 }
 
-void WorldRouterintegration::test_sequence()
-{
-    Ref<Entity> base = new Entity(0);
-    WorldRouter test_world(base, *m_eb, timeProviderFn);
+void WorldRouterintegration::test_sequence() {
+	Ref<Entity> base = new Entity(0);
+	WorldRouter test_world(base, *m_eb, timeProviderFn);
 
-    auto ent1 = test_world.addNewEntity("__no_such_type__",
-                                         Anonymous());
-    assert(!ent1);
+	auto ent1 = test_world.addNewEntity("__no_such_type__",
+										Anonymous());
+	assert(!ent1);
 
-    Anonymous ent;
-    ent->setLoc("0");
-    ent1 = test_world.addNewEntity("thing", ent);
-    assert(ent1);
+	Anonymous ent;
+	ent->setLoc("0");
+	ent1 = test_world.addNewEntity("thing", ent);
+	assert(ent1);
 
-    auto id = newId();
+	auto id = newId();
 
-    Ref<Entity> ent2 = new Thing(id);
-    assert(ent2 != 0);
-    ent2->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
-    test_world.addEntity(ent2, base);
+	Ref<Entity> ent2 = new Thing(id);
+	assert(ent2 != 0);
+	ent2->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
+	test_world.addEntity(ent2, base);
 
-    Tick tick;
-    tick->setFutureSeconds(0);
-    tick->setTo(ent2->getId());
-    test_world.message(tick, *ent2);
+	Tick tick;
+	tick->setFutureSeconds(0);
+	tick->setTo(ent2->getId());
+	test_world.message(tick, *ent2);
 
 
-    test_world.delEntity(base.get());
+	test_world.delEntity(base.get());
 //    test_world.delEntity(ent4);
 //    ent4 = 0;
 
-    test_world.shutdown();
+	test_world.shutdown();
 }
 
-int main()
-{
-    WorldRouterintegration t;
+int main() {
+	WorldRouterintegration t;
 
-    t.m_database.idGeneratorFn = []() {
-        static long id = 0;
-        return ++id;
-    };
+	t.m_database.idGeneratorFn = []() {
+		static long id = 0;
+		return ++id;
+	};
 
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -263,15 +253,13 @@ int main()
 
 template<>
 PythonScriptFactory<LocatedEntity>::PythonScriptFactory(const std::string& p,
-                                                        const std::string& t) :
-        PythonClass(p, t)
-{
+														const std::string& t) :
+		PythonClass(p, t) {
 }
 
 template<>
-int PythonScriptFactory<LocatedEntity>::setup()
-{
-    return load();
+int PythonScriptFactory<LocatedEntity>::setup() {
+	return load();
 }
 
 #include "../stubs/rules/stubBBoxProperty.h"
@@ -309,9 +297,8 @@ int PythonScriptFactory<LocatedEntity>::setup()
 
 #define STUB_CorePropertyManager_addProperty
 
-std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string& name) const
-{
-    return std::make_unique<Property<float>>();
+std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string& name) const {
+	return std::make_unique<Property<float>>();
 }
 
 #include "../stubs/rules/simulation/stubCorePropertyManager.h"
@@ -319,9 +306,8 @@ std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string
 
 #define STUB_ArchetypeFactory_newEntity
 
-Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes)
-{
-    return new Entity(id);
+Ref<Entity> ArchetypeFactory::newEntity(RouterId id, const Atlas::Objects::Entity::RootEntity& attributes) {
+	return new Entity(id);
 }
 
 #include "../stubs/server/stubArchetypeFactory.h"
@@ -345,9 +331,8 @@ class World;
 
 #define STUB_ExternalMind_linkUp
 
-void ExternalMind::linkUp(Link* c)
-{
-    m_link = c;
+void ExternalMind::linkUp(Link* c) {
+	m_link = c;
 }
 
 #include "../stubs/rules/simulation/stubExternalMind.h"

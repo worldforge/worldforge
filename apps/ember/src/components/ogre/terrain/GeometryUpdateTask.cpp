@@ -27,10 +27,8 @@
 
 #include "framework/tasks/TaskExecutionContext.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 GeometryUpdateTask::GeometryUpdateTask(std::vector<TerrainPageGeometryPtr> geometry,
 									   std::vector<WFMath::AxisBox<2>> areas,
@@ -51,10 +49,10 @@ void GeometryUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecutionConte
 	std::vector<Mercator::Segment*> segments;
 
 	//first populate the geometry for all pages, and then regenerate the shaders
-	for (const auto& geometry : mGeometry) {
+	for (const auto& geometry: mGeometry) {
 		geometry->repopulate();
 		const SegmentVector& segmentVector = geometry->getValidSegments();
-		for (const auto& entry : segmentVector) {
+		for (const auto& entry: segmentVector) {
 			segments.push_back(entry.segment);
 		}
 		GeometryPtrVector geometries;
@@ -77,5 +75,5 @@ bool GeometryUpdateTask::executeTaskInMainThread() {
 }
 }
 
-}
-}
+
+

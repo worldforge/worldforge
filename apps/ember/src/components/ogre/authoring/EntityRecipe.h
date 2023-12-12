@@ -37,9 +37,9 @@ namespace Eris {
 class TypeService;
 }
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 /**
  * @brief Resource that stores entity recipes.
@@ -143,6 +143,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif

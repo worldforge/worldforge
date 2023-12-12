@@ -18,7 +18,6 @@ set(SCRIPT_LIBRARIES
 
 add_library(ember-lua_component STATIC
         LuaScriptingProvider.cpp
-        Connector.cpp
         LuaConsoleObject.cpp
         ${SCRIPT_LIBRARIES}
 )

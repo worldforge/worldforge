@@ -23,10 +23,8 @@
 #include <wfmath/vector.h>
 #include <cassert>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 HeightMapSegment::HeightMapSegment(std::unique_ptr<HeightMapBuffer> buffer) :
 		mBuffer(std::move(buffer)) {
@@ -93,5 +91,5 @@ void HeightMapSegment::getHeightAndNormal(float x, float y, float& h, WFMath::Ve
 
 }
 
-}
-}
+
+

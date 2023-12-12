@@ -25,8 +25,8 @@
 
 #include "MovableObjectRenderer.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 class SkeletonDisplay;
 namespace Gui {
 
@@ -128,6 +128,5 @@ protected:
 }
 }
 
-}
 
 #endif // ifndef EMBEROGREOGREENTITYRENDERER_H

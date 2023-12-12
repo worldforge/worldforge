@@ -12,7 +12,7 @@
 #include <Atlas/Objects/Generic.h>
 
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 /** This is base operator for operations that might have effects.
 
@@ -1989,6 +1989,6 @@ private:
     static void fillDefaultObjectInstance(ChangeData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation
 
 #endif // ATLAS_OBJECTS_OPERATION_OPERATION_H

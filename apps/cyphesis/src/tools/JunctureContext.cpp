@@ -26,39 +26,34 @@
 using Atlas::Objects::Operation::RootOperation;
 static const bool debug_flag = false;
 
-JunctureContext::JunctureContext(Interactive & i,
-                                 const std::string & id) : IdContext(i, id)
-{
+JunctureContext::JunctureContext(Interactive& i,
+								 const std::string& id) : IdContext(i, id) {
 }
 
-bool JunctureContext::accept(const RootOperation& op) const
-{
-    cy_debug_print("Checking juncture context to see if it matches"
-             )
-    if (m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo) {
-        std::cout << "It does!"
-                  << std::endl;
-        return true;
-    }
+bool JunctureContext::accept(const RootOperation& op) const {
+	cy_debug_print("Checking juncture context to see if it matches"
+	)
+	if (m_refNo != 0L && !op->isDefaultRefno() && op->getRefno() == m_refNo) {
+		std::cout << "It does!"
+				  << std::endl;
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
-int JunctureContext::dispatch(const RootOperation & op)
-{
-    cy_debug_print("Juncture dispatch!"
-             )
-    // If we get an info op here, it can mean something succeeded, like
-    // connection or login.
-    return 0;
+int JunctureContext::dispatch(const RootOperation& op) {
+	cy_debug_print("Juncture dispatch!"
+	)
+	// If we get an info op here, it can mean something succeeded, like
+	// connection or login.
+	return 0;
 }
 
-std::string JunctureContext::repr() const
-{
-    return "junc";
+std::string JunctureContext::repr() const {
+	return "junc";
 }
 
-bool JunctureContext::checkContextCommand(const struct command *)
-{
-    return false;
+bool JunctureContext::checkContextCommand(const struct command*) {
+	return false;
 }

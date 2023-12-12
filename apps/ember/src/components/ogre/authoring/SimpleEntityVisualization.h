@@ -22,29 +22,25 @@
 #include <sigc++/trackable.h>
 #include <sigc++/connection.h>
 
-namespace Ogre
-{
+namespace Ogre {
 class OOBBWireBoundingBox;
+
 class SceneNode;
+
 class Entity;
 }
 
-namespace Atlas
-{
-namespace Message
-{
+
+namespace Atlas::Message {
 class Element;
 }
-}
 
 
-namespace Ember
-{
+
+namespace Ember {
 class EmberEntity;
-namespace OgreView
-{
-namespace Authoring
-{
+
+namespace OgreView::Authoring {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -52,8 +48,7 @@ namespace Authoring
  *
  * This is useful when you want to visualize the position, size and orientation of a raw entity. Normally a more complex system using Models and attachments is used for visualization. This however doesn't always represent the actual Eris data, for which this class is very much suited.
  */
-class SimpleEntityVisualization: public virtual sigc::trackable
-{
+class SimpleEntityVisualization : public virtual sigc::trackable {
 public:
 	/**
 	 * @brief Ctor.
@@ -126,7 +121,7 @@ protected:
 };
 
 }
-}
+
 
 }
 

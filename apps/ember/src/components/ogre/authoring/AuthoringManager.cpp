@@ -43,7 +43,7 @@ AuthoringManager::AuthoringManager(World& world) :
 }
 
 AuthoringManager::~AuthoringManager() {
-	for (auto& simpleVisualization : mSimpleVisualizations) {
+	for (auto& simpleVisualization: mSimpleVisualizations) {
 		sigc::connection& conn = simpleVisualization.second.second;
 		conn.disconnect();
 	}

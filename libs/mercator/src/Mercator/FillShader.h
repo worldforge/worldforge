@@ -14,17 +14,20 @@ namespace Mercator {
 /// This shader is typically only used for the lowest possible layer,
 /// which is usually bed rock.
 class FillShader : public Shader {
-  public:
-    /// \brief Constructor
-    explicit FillShader();
-    /// \brief Constructor
-    ///
-    /// @param params a map of parameters for the shader.
-    explicit FillShader(const Parameters & params);
-    ~FillShader() override;
+public:
+	/// \brief Constructor
+	explicit FillShader();
 
-    bool checkIntersect(const Segment &) const override;
-    void shade(Surface &) const override;
+	/// \brief Constructor
+	///
+	/// @param params a map of parameters for the shader.
+	explicit FillShader(const Parameters& params);
+
+	~FillShader() override;
+
+	bool checkIntersect(const Segment&) const override;
+
+	void shade(Surface&) const override;
 };
 
 } // namespace Mercator

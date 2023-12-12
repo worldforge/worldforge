@@ -44,8 +44,6 @@ class StreamedSoundSample;
 
 class SoundInstance;
 
-class SoundGroup;
-
 class BaseSoundSample;
 
 /**

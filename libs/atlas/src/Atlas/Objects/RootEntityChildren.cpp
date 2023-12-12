@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 Allocator<AdminEntityData> AdminEntityData::allocator;
         
@@ -43,13 +43,13 @@ void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -179,13 +179,13 @@ void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::str
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -225,13 +225,13 @@ void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::strin
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -268,13 +268,13 @@ void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string,
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -311,13 +311,13 @@ void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, u
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
@@ -354,16 +354,16 @@ void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<st
 {
         data.attr_objtype = default_objtype;
         data.attr_pos.clear();
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
-        data.attr_pos.push_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
         data.attr_velocity.clear();
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
-        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
         data.attr_stamp_contains = 0.0;
         data.attr_stamp = 0.0;
         data.attr_parent = default_parent;
 }
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity

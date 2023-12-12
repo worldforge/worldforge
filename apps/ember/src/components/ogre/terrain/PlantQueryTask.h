@@ -25,10 +25,8 @@
 
 #include <sigc++/slot.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainPage;
 
@@ -61,8 +59,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* PLANTQUERYTASK_H_ */

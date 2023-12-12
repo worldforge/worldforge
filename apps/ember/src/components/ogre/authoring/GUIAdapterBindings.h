@@ -23,17 +23,13 @@
 #include "tinyxml/tinyxml.h"
 #include <Atlas/Message/Element.h>
 
-namespace Ember
-{
-namespace OgreView
-{
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 /**
  * Contains bindings of one placeholder to many GUI adapters.
  */
-class GUIAdapterBindings
-{
+class GUIAdapterBindings {
 public:
 	/**
 	 * Constructor.
@@ -93,6 +89,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif

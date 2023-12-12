@@ -22,24 +22,24 @@
 #include "AbstractMatch.h"
 #include "AttributeDependentMatch.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 class AttributeCase;
 }
-}
-}
+
+
 
 #include "../Cases/AttributeCase.h"
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 /**
 	A Match that inspects a certain attribute.
@@ -77,9 +77,9 @@ protected:
 
 }
 
-}
 
-}
+
+
 
 
 #endif //EMBER_VIRTUALATTRIBUTEMATCH_H

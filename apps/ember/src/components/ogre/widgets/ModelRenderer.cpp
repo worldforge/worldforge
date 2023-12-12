@@ -35,9 +35,8 @@
 #include <sigc++/bind.h>
 #include <components/ogre/SceneNodeProvider.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 ModelRenderer::ModelRenderer(CEGUI::Window* image, const std::string& name) :
 		MovableObjectRenderer(image, name),
@@ -150,5 +149,5 @@ float ModelRenderer::getMovableBoundingRadius() {
 
 
 }
-}
-}
+
+

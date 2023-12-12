@@ -25,18 +25,21 @@
 
 /// \brief Handle processing and updating of task ruless
 class RuleHandler {
-  public:
-    virtual ~RuleHandler() = default;
-    virtual int check(const Atlas::Objects::Root & desc) = 0;
-    virtual int install(const std::string &,
-                        const std::string &,
-                        const Atlas::Objects::Root & desc,
-                        std::string &,
-                        std::string &,
-                        std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
-    virtual int update(const std::string &,
-                       const Atlas::Objects::Root & desc,
-                       std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
+public:
+	virtual ~RuleHandler() = default;
+
+	virtual int check(const Atlas::Objects::Root& desc) = 0;
+
+	virtual int install(const std::string&,
+						const std::string&,
+						const Atlas::Objects::Root& desc,
+						std::string&,
+						std::string&,
+						std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
+
+	virtual int update(const std::string&,
+					   const Atlas::Objects::Root& desc,
+					   std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes) = 0;
 
 };
 

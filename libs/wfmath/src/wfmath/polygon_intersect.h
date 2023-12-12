@@ -44,39 +44,49 @@ namespace WFMath {
 
 template<>
 bool Intersect(const Polygon<2>& r, const Point<2>& p, bool proper);
+
 template<>
 bool Contains(const Point<2>& p, const Polygon<2>& r, bool proper);
 
 template<>
 bool Intersect(const Polygon<2>& p, const AxisBox<2>& b, bool proper);
+
 template<>
 bool Contains(const Polygon<2>& p, const AxisBox<2>& b, bool proper);
+
 template<>
 bool Contains(const AxisBox<2>& b, const Polygon<2>& p, bool proper);
 
 template<>
 bool Intersect(const Polygon<2>& p, const Ball<2>& b, bool proper);
+
 template<>
 bool Contains(const Polygon<2>& p, const Ball<2>& b, bool proper);
+
 template<>
 bool Contains(const Ball<2>& b, const Polygon<2>& p, bool proper);
 
 template<>
 bool Intersect(const Polygon<2>& p, const Segment<2>& s, bool proper);
+
 template<>
 bool Contains(const Polygon<2>& p, const Segment<2>& s, bool proper);
+
 template<>
 bool Contains(const Segment<2>& s, const Polygon<2>& p, bool proper);
 
 template<>
 bool Intersect(const Polygon<2>& p, const RotBox<2>& r, bool proper);
+
 template<>
 bool Contains(const Polygon<2>& p, const RotBox<2>& r, bool proper);
+
 template<>
 bool Contains(const RotBox<2>& r, const Polygon<2>& p, bool proper);
 
 template<>
 bool Intersect(const Polygon<2>& p1, const Polygon<2>& p2, bool proper);
+
 template<>
 bool Contains(const Polygon<2>& outer, const Polygon<2>& inner, bool proper);
 

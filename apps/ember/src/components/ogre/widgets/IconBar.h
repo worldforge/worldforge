@@ -33,11 +33,8 @@ class Window;
 class EventArgs;
 }
 
-namespace Ember {
-namespace OgreView {
 
-
-namespace Gui {
+namespace Ember::OgreView::Gui {
 class IconBase;
 
 /**
@@ -65,7 +62,7 @@ protected:
 
 	UniqueWindowPtr<CEGUI::Window> mWindow;
 
-    std::vector<IconBase*> mIconBases;
+	std::vector<IconBase*> mIconBases;
 
 	/**
 	Repositions all icons as they are added and removed to the list.
@@ -80,8 +77,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

@@ -22,15 +22,13 @@
 #include <deque>
 #include <string>
 
-namespace Ember
-{
+namespace Ember {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief A simple command history, basically acts as a cursor into a list of previously registered commands.
  */
-class CommandHistory
-{
+class CommandHistory {
 public:
 	/**
 	 * @brief Ctor.
@@ -49,24 +47,24 @@ public:
 	 * The history position 0 is managed in the ConsoleWidget.
 	 * @return The current history string.
 	 **/
-	const std::string & getHistoryString();
+	const std::string& getHistoryString();
 
 	/**
 	 * @brief Changes a command in the history.
 	 * @param stHistoryIndex The index of the command to change.
 	 * @param sCommand The new command.
 	 */
-	void changeHistory(size_t historyIndex, const std::string & command);
+	void changeHistory(size_t historyIndex, const std::string& command);
 
 	/**
 	 * Moves the history iterator backwards (in time).
 	 **/
-	void moveBackwards(void);
+	void moveBackwards();
 
 	/**
 	 * Moves the history iterator forwards (in time).
 	 **/
-	void moveForwards(void);
+	void moveForwards();
 
 	/**
 	 * @brief Adds a new entry to the history.

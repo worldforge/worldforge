@@ -70,7 +70,7 @@ int main() {
 	Eris::EventService event_service(io_service);
 	Eris::Connection connection(io_service, event_service, "", "", 0);
 	Eris::Account account(connection);
-	
+
 	{
 		TestAvatar av(account);
 		Eris::IGRouter ir(av, av.getView());

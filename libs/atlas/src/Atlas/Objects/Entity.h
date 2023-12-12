@@ -12,7 +12,7 @@
 #include <Atlas/Objects/Anonymous.h>
 
 
-namespace Atlas { namespace Objects { namespace Entity { 
+namespace Atlas::Objects::Entity {
 
 /** All classes and objects used for administrative purposes
 
@@ -233,7 +233,7 @@ inline void AccountData::setCharactersAsList(const Atlas::Message::ListType& val
     attr_characters.resize(0);
     for (const auto& entry : val) {
         if(entry.isString()) {
-            attr_characters.push_back(entry.asString());
+            attr_characters.emplace_back(entry.asString());
         }
     }
 }
@@ -288,7 +288,7 @@ inline Atlas::Message::ListType AccountData::getCharactersAsList() const
     const std::vector<std::string>& lst_in = getCharacters();
     Atlas::Message::ListType lst_out;
     for (const auto& entry : lst_in) {
-        lst_out.push_back(std::string(entry));
+        lst_out.emplace_back(std::string(entry));
     }
     return lst_out;
 }
@@ -537,6 +537,6 @@ private:
     static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, uint32_t>& attr_data);
 };
 
-} } } // namespace Atlas::Objects::Entity
+} // namespace Atlas::Objects::Entity
 
 #endif // ATLAS_OBJECTS_ENTITY_ENTITY_H

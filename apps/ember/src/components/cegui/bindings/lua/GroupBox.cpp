@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<GroupBox>(sol::table& space) {
 	space.new_usertype<GroupBox>("GroupBox",
 								 "drawAroundWidget", [](GroupBox* self, const char* name) { return self->drawAroundWidget(name); },

@@ -22,132 +22,110 @@
 #include "ModifierType.h"
 
 
-
-
-
-
 template<>
-void Property<int>::set(const Atlas::Message::Element& e)
-{
-    if (e.isInt()) {
-        this->m_data = static_cast<int>(e.Int());
-    }
+void Property<int>::set(const Atlas::Message::Element& e) {
+	if (e.isInt()) {
+		this->m_data = static_cast<int>(e.Int());
+	}
 }
 
 template<>
-void Property<long>::set(const Atlas::Message::Element& e)
-{
-    if (e.isInt()) {
-        this->m_data = e.Int();
-    }
+void Property<long>::set(const Atlas::Message::Element& e) {
+	if (e.isInt()) {
+		this->m_data = e.Int();
+	}
 }
 
 template<>
-void Property<float>::set(const Atlas::Message::Element& e)
-{
-    if (e.isNum()) {
-        this->m_data = static_cast<float>(e.asNum());
-    }
+void Property<float>::set(const Atlas::Message::Element& e) {
+	if (e.isNum()) {
+		this->m_data = static_cast<float>(e.asNum());
+	}
 }
 
 template<>
-void Property<double>::set(const Atlas::Message::Element& e)
-{
-    if (e.isNum()) {
-        this->m_data = e.asNum();
-    }
+void Property<double>::set(const Atlas::Message::Element& e) {
+	if (e.isNum()) {
+		this->m_data = e.asNum();
+	}
 }
 
 template<>
-void Property<std::string>::set(const Atlas::Message::Element& e)
-{
-    if (e.isString()) {
-        this->m_data = e.String();
-    }
+void Property<std::string>::set(const Atlas::Message::Element& e) {
+	if (e.isString()) {
+		this->m_data = e.String();
+	}
 }
 
 template<>
-void Property<Atlas::Message::ListType>::set(const Atlas::Message::Element& e)
-{
-    if (e.isList()) {
-        this->m_data = e.List();
-    }
+void Property<Atlas::Message::ListType>::set(const Atlas::Message::Element& e) {
+	if (e.isList()) {
+		this->m_data = e.List();
+	}
 }
 
 template<>
-void Property<Atlas::Message::MapType>::set(const Atlas::Message::Element& e)
-{
-    if (e.isMap()) {
-        this->m_data = e.Map();
-    }
+void Property<Atlas::Message::MapType>::set(const Atlas::Message::Element& e) {
+	if (e.isMap()) {
+		this->m_data = e.Map();
+	}
 }
 
 template<>
 void Property<std::string>::add(const std::string& s,
-                                Atlas::Message::MapType& ent) const
-{
-    if (!m_data.empty()) {
-        ent[s] = m_data;
-    }
+								Atlas::Message::MapType& ent) const {
+	if (!m_data.empty()) {
+		ent[s] = m_data;
+	}
 }
 
 SoftProperty::SoftProperty(Atlas::Message::Element data) :
-        PropertyBase(0), m_data(std::move(data))
-{
+		PropertyBase(0), m_data(std::move(data)) {
 }
 
-int SoftProperty::get(Atlas::Message::Element& val) const
-{
-    val = m_data;
-    return 0;
+int SoftProperty::get(Atlas::Message::Element& val) const {
+	val = m_data;
+	return 0;
 }
 
-void SoftProperty::set(const Atlas::Message::Element& val)
-{
-    m_data = val;
+void SoftProperty::set(const Atlas::Message::Element& val) {
+	m_data = val;
 }
 
-SoftProperty* SoftProperty::copy() const
-{
-    return new SoftProperty(*this);
+SoftProperty* SoftProperty::copy() const {
+	return new SoftProperty(*this);
 }
 
-Atlas::Message::Element& SoftProperty::data()
-{
-    return m_data;
+Atlas::Message::Element& SoftProperty::data() {
+	return m_data;
 }
 
-const Atlas::Message::Element& SoftProperty::data() const
-{
-    return m_data;
+const Atlas::Message::Element& SoftProperty::data() const {
+	return m_data;
 }
 
 
-int BoolProperty::get(Atlas::Message::Element& ent) const
-{
-    ent = m_flags.hasFlags(prop_flag_bool) ? 1 : 0;
-    return 0;
+int BoolProperty::get(Atlas::Message::Element& ent) const {
+	ent = m_flags.hasFlags(prop_flag_bool) ? 1 : 0;
+	return 0;
 }
 
-void BoolProperty::set(const Atlas::Message::Element& ent)
-{
-    if (ent.isInt()) {
-        if (ent.Int() == 0) {
-            m_flags.removeFlags(prop_flag_bool);
-        } else {
-            m_flags.addFlags(prop_flag_bool);
-        }
-    }
+void BoolProperty::set(const Atlas::Message::Element& ent) {
+	if (ent.isInt()) {
+		if (ent.Int() == 0) {
+			m_flags.removeFlags(prop_flag_bool);
+		} else {
+			m_flags.addFlags(prop_flag_bool);
+		}
+	}
 }
 
-BoolProperty* BoolProperty::copy() const
-{
-    return new BoolProperty(*this);
+BoolProperty* BoolProperty::copy() const {
+	return new BoolProperty(*this);
 }
 
-bool BoolProperty::isTrue() const
-{
-    return m_flags.hasFlags(prop_flag_bool);
+bool BoolProperty::isTrue() const {
+	return m_flags.hasFlags(prop_flag_bool);
 }
 
 template
@@ -182,54 +160,51 @@ template<> const std::string Property<std::string>::property_atlastype = "string
 template<> const std::string Property<Atlas::Message::ListType>::property_atlastype = "list";
 template<> const std::string Property<Atlas::Message::MapType>::property_atlastype = "map";
 
-std::uint32_t PropertyUtil::flagsForPropertyName(const std::string& name)
-{
-    if (name.size() > 1 && name[0] == '_' && name[1] == '_') {
-        return prop_flag_visibility_private;
-    } else if (!name.empty() && name[0] == '_') {
-        return prop_flag_visibility_protected;
-    }
-    return 0;
+std::uint32_t PropertyUtil::flagsForPropertyName(const std::string& name) {
+	if (name.size() > 1 && name[0] == '_' && name[1] == '_') {
+		return prop_flag_visibility_private;
+	} else if (!name.empty() && name[0] == '_') {
+		return prop_flag_visibility_protected;
+	}
+	return 0;
 }
 
-bool PropertyUtil::isValidName(const std::string& name)
-{
-    if (name.empty() || name.size() > 32) {
-        return false;
-    }
-    for (auto& character : name) {
-        if (std::isalnum(character) || character == '_' || character == '$' || character == '-') {
-            continue;
-        }
-        return false;
-    }
-    return true;
+bool PropertyUtil::isValidName(const std::string& name) {
+	if (name.empty() || name.size() > 32) {
+		return false;
+	}
+	for (auto& character: name) {
+		if (std::isalnum(character) || character == '_' || character == '$' || character == '-') {
+			continue;
+		}
+		return false;
+	}
+	return true;
 }
 
-std::pair<ModifierType, std::string> PropertyUtil::parsePropertyModification(const std::string& propertyName)
-{
-    auto pos = propertyName.find('!');
-    if (pos != std::string::npos) {
-        auto modifier = propertyName.substr(pos + 1);
-        auto cleanName = propertyName.substr(0, pos);
-        ModifierType type;
-        if (modifier == "default") {
-            type = ModifierType::Default;
-        } else if (modifier == "append") {
-            type = ModifierType::Append;
-        } else if (modifier == "prepend") {
-            type = ModifierType::Prepend;
-        } else if (modifier == "subtract") {
-            type = ModifierType::Subtract;
-        } else if (modifier == "add-fraction") {
-            type = ModifierType::AddFraction;
-        } else {
-            spdlog::warn(R"(Could not recognize "{}" modification in property "{}")", modifier, propertyName);
-            return {ModifierType::Default, propertyName};
-        }
-        return {type, cleanName};
-    }
-    return {ModifierType::Default, propertyName};
+std::pair<ModifierType, std::string> PropertyUtil::parsePropertyModification(const std::string& propertyName) {
+	auto pos = propertyName.find('!');
+	if (pos != std::string::npos) {
+		auto modifier = propertyName.substr(pos + 1);
+		auto cleanName = propertyName.substr(0, pos);
+		ModifierType type;
+		if (modifier == "default") {
+			type = ModifierType::Default;
+		} else if (modifier == "append") {
+			type = ModifierType::Append;
+		} else if (modifier == "prepend") {
+			type = ModifierType::Prepend;
+		} else if (modifier == "subtract") {
+			type = ModifierType::Subtract;
+		} else if (modifier == "add-fraction") {
+			type = ModifierType::AddFraction;
+		} else {
+			spdlog::warn(R"(Could not recognize "{}" modification in property "{}")", modifier, propertyName);
+			return {ModifierType::Default, propertyName};
+		}
+		return {type, cleanName};
+	}
+	return {ModifierType::Default, propertyName};
 }
 
 

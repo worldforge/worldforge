@@ -25,46 +25,33 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class StaticAdapter : public AdapterBase
-{
+class StaticAdapter : public AdapterBase {
 public:
-    StaticAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* textWindow);
+	StaticAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* textWindow);
 
-    ~StaticAdapter() override;
-    
+	~StaticAdapter() override;
+
 	/**
 	Updates the gui with new values.
 	*/
 	void updateGui(const ::Atlas::Message::Element& element) override;
-	
+
 protected:
 	CEGUI::Window* mTextWindow;
-	
+
 	void fillElementFromGui() override;
+
 	bool _hasChanges() override;
 
 };
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

@@ -10,7 +10,7 @@
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
-namespace Atlas { namespace Objects { namespace Operation { 
+namespace Atlas::Objects::Operation {
 
 Allocator<ActionData> ActionData::allocator;
         
@@ -240,4 +240,4 @@ void HitData::fillDefaultObjectInstance(HitData& data, std::map<std::string, uin
         data.attr_parent = default_parent;
 }
 
-} } } // namespace Atlas::Objects::Operation
+} // namespace Atlas::Objects::Operation

@@ -35,8 +35,7 @@ class ServerServiceSignals;
  *
  * Each state can have a child state, which represents the next possible connection state (for example going from "connecting" to "connected"). When a state is destroyed it must also destroy its child state.
  */
-struct IState
-{
+struct IState {
 
 	/**
 	 * @brief Dtor.

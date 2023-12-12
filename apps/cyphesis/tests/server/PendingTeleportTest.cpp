@@ -27,95 +27,94 @@
 
 #include <cassert>
 
-int main()
-{
-    {
-        PendingPossession * pt = new PendingPossession("", "");
+int main() {
+	{
+		PendingPossession* pt = new PendingPossession("", "");
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
-        PendingPossession * pt = new PendingPossession(test_id, "");
+	{
+		std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
+		PendingPossession* pt = new PendingPossession(test_id, "");
 
-        const std::string & entity_id = pt->getEntityID();
-        assert(entity_id == test_id);
+		const std::string& entity_id = pt->getEntityID();
+		assert(entity_id == test_id);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
-        PendingPossession * pt = new PendingPossession("", test_key);
+	{
+		std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
+		PendingPossession* pt = new PendingPossession("", test_key);
 
-        const std::string & key = pt->getPossessKey();
-        assert(key == test_key);
+		const std::string& key = pt->getPossessKey();
+		assert(key == test_key);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
-        std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
-        PendingPossession * pt = new PendingPossession(test_id, test_key);
+	{
+		std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
+		std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
+		PendingPossession* pt = new PendingPossession(test_id, test_key);
 
-        bool ret = pt->validate(test_id, test_key);
-        assert(ret);
+		bool ret = pt->validate(test_id, test_key);
+		assert(ret);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
-        std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
-        PendingPossession * pt = new PendingPossession(test_id, test_key);
+	{
+		std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
+		std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
+		PendingPossession* pt = new PendingPossession(test_id, test_key);
 
-        bool ret = pt->validate(test_id, "c0e3b16e-f8c5-11df-9070-00269e5444b3");
-        assert(!ret);
+		bool ret = pt->validate(test_id, "c0e3b16e-f8c5-11df-9070-00269e5444b3");
+		assert(!ret);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
-        std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
-        PendingPossession * pt = new PendingPossession(test_id, test_key);
+	{
+		std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
+		std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
+		PendingPossession* pt = new PendingPossession(test_id, test_key);
 
-        bool ret = pt->validate("c7e27496-f8c5-11df-9103-00269e5444b3", test_key);
-        assert(!ret);
+		bool ret = pt->validate("c7e27496-f8c5-11df-9103-00269e5444b3", test_key);
+		assert(!ret);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
-        std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
-        PendingPossession * pt = new PendingPossession(test_id, test_key);
+	{
+		std::string test_id("de214cec-f8c4-11df-baf7-00269e5444b3");
+		std::string test_key("3bf18e18-f8c5-11df-b0bf-00269e5444b3");
+		PendingPossession* pt = new PendingPossession(test_id, test_key);
 
-        bool ret = pt->validate("d6dd2626-f8c5-11df-853f-00269e5444b3", "e13c51be-f8c5-11df-a97f-00269e5444b3");
-        assert(!ret);
+		bool ret = pt->validate("d6dd2626-f8c5-11df-853f-00269e5444b3", "e13c51be-f8c5-11df-a97f-00269e5444b3");
+		assert(!ret);
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        PendingPossession * pt = new PendingPossession("", "");
+	{
+		PendingPossession* pt = new PendingPossession("", "");
 
-        assert(!pt->isValidated());
+		assert(!pt->isValidated());
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    {
-        PendingPossession * pt = new PendingPossession("", "");
+	{
+		PendingPossession* pt = new PendingPossession("", "");
 
-        assert(!pt->isValidated());
-        pt->setValidated();
-        assert(pt->isValidated());
+		assert(!pt->isValidated());
+		pt->setValidated();
+		assert(pt->isValidated());
 
-        delete pt;
-    }
+		delete pt;
+	}
 
-    return 0;
+	return 0;
 }

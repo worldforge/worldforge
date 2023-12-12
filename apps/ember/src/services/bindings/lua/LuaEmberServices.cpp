@@ -26,7 +26,7 @@
 using namespace Ember;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<EmberServices>(sol::table& space) {
 	auto emberServices = space.new_usertype<EmberServices>("EmberServices", sol::no_constructor);
 	emberServices["getSingleton"] = &EmberServices::getSingleton;

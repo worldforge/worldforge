@@ -60,11 +60,8 @@
 #include <memory>
 #include <utility>
 
-namespace Ember {
 
-namespace OgreView {
-
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class BasePointRetrieveTask : public Tasks::TemplateNamedTask<BasePointRetrieveTask> {
 
@@ -611,6 +608,6 @@ void TerrainHandler::updateArea(const std::string& id, std::unique_ptr<Mercator:
 
 }
 
-}
 
-}
+
+

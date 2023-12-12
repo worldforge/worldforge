@@ -35,7 +35,7 @@ ConfigBoundLogObserver::ConfigBoundLogObserver() {
 			if (loggingLevel == "verbose") {
 				level = spdlog::level::debug;
 			} else if (loggingLevel == "info") {
-				level = spdlog::level::info;;
+				level = spdlog::level::info;
 			} else if (loggingLevel == "warning") {
 				level = spdlog::level::warn;
 			} else if (loggingLevel == "failure") {

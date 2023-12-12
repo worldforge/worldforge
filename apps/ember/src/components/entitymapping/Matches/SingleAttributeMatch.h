@@ -21,24 +21,24 @@
 
 #include "AttributeMatch.h"
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Cases {
+
+
+namespace Ember::EntityMapping::Cases {
 class AttributeCase;
 }
-}
-}
+
+
 
 #include "../Cases/AttributeCase.h"
 
 
-namespace Ember {
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 class SingleAttributeMatch : public AttributeMatch {
 public:
@@ -67,7 +67,7 @@ protected:
 };
 
 }
-}
-}
+
+
 
 #endif //EMBER_SINGLEATTRIBUTEMATCH_H

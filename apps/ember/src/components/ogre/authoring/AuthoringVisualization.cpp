@@ -21,7 +21,6 @@
 #include "components/ogre/Convert.h"
 #include "components/ogre/OgreInfo.h"
 #include "components/ogre/EmberEntityUserObject.h"
-#include "components/ogre/MousePicker.h"
 #include "components/ogre/EmberOgre.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Scene.h"
@@ -34,46 +33,38 @@
 
 #include <memory>
 
-namespace Ember::OgreView::Authoring
-{
+namespace Ember::OgreView::Authoring {
 AuthoringVisualization::AuthoringVisualization(EmberEntity& entity, Ogre::SceneNode* sceneNode) :
-	mEntity(entity),
-	mSceneNode(sceneNode),
-	mGraphicalRepresentation(nullptr),
-	mControlDelegate(nullptr)
-{
+		mEntity(entity),
+		mSceneNode(sceneNode),
+		mGraphicalRepresentation(nullptr),
+		mControlDelegate(nullptr) {
 	createGraphicalRepresentation();
 	mEntity.Moved.connect(sigc::mem_fun(*this, &AuthoringVisualization::entity_Moved));
 	updatePositionAndOrientation();
 }
 
-AuthoringVisualization::~AuthoringVisualization()
-{
+AuthoringVisualization::~AuthoringVisualization() {
 	removeGraphicalRepresentation();
 }
 
-Ogre::SceneNode* AuthoringVisualization::getSceneNode() const
-{
+Ogre::SceneNode* AuthoringVisualization::getSceneNode() const {
 	return mSceneNode;
 }
 
-EmberEntity& AuthoringVisualization::getEntity()
-{
+EmberEntity& AuthoringVisualization::getEntity() {
 	return mEntity;
 }
 
-void AuthoringVisualization::setControlDelegate(const IEntityControlDelegate* controlDelegate)
-{
+void AuthoringVisualization::setControlDelegate(const IEntityControlDelegate* controlDelegate) {
 	mControlDelegate = controlDelegate;
 }
 
-void AuthoringVisualization::entity_Moved()
-{
+void AuthoringVisualization::entity_Moved() {
 	updatePositionAndOrientation();
 }
 
-void AuthoringVisualization::updatePositionAndOrientation()
-{
+void AuthoringVisualization::updatePositionAndOrientation() {
 	if (mControlDelegate) {
 		mSceneNode->setPosition(Convert::toOgre(mControlDelegate->getPosition()));
 		mSceneNode->setOrientation(Convert::toOgre(mControlDelegate->getOrientation()));
@@ -93,8 +84,7 @@ void AuthoringVisualization::updatePositionAndOrientation()
 	}
 }
 
-void AuthoringVisualization::createGraphicalRepresentation()
-{
+void AuthoringVisualization::createGraphicalRepresentation() {
 	try {
 		mGraphicalRepresentation = mSceneNode->getCreator()->createEntity(OgreInfo::createUniqueResourceName("authoring_visualization_" + mEntity.getId()), "common/primitives/model/axes.mesh");
 		if (mGraphicalRepresentation) {
@@ -121,8 +111,7 @@ void AuthoringVisualization::createGraphicalRepresentation()
 	}
 }
 
-void AuthoringVisualization::removeGraphicalRepresentation()
-{
+void AuthoringVisualization::removeGraphicalRepresentation() {
 	mSceneNode->detachAllObjects();
 	if (mGraphicalRepresentation) {
 		mSceneNode->getCreator()->destroyEntity(mGraphicalRepresentation);

@@ -25,21 +25,19 @@
 
 #include <wfmath/const.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
 
-namespace Adapters {
 
-namespace Atlas {
+
+
+
+
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 NumberAdapter::NumberAdapter(const ::Atlas::Message::Element& element, CEGUI::Combobox* textWindow)
-: AdapterBase(element)
-, mTextWindow(textWindow)
-{
+		: AdapterBase(element), mTextWindow(textWindow) {
 	if (textWindow) {
-		addGuiEventConnection(textWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&NumberAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(textWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&NumberAdapter::window_TextChanged, this)));
 	}
 	updateGui(mOriginalValue);
 	mTextWindow->getPushButton()->setVisible(false);
@@ -49,10 +47,9 @@ NumberAdapter::NumberAdapter(const ::Atlas::Message::Element& element, CEGUI::Co
 
 NumberAdapter::~NumberAdapter() = default;
 
-void NumberAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void NumberAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
-	
+
 	if (mTextWindow) {
 		std::stringstream ss;
 		ss << element.asNum();
@@ -60,8 +57,7 @@ void NumberAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-bool NumberAdapter::window_TextChanged(const CEGUI::EventArgs& e)
-{
+bool NumberAdapter::window_TextChanged(const CEGUI::EventArgs& e) {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
@@ -69,9 +65,7 @@ bool NumberAdapter::window_TextChanged(const CEGUI::EventArgs& e)
 }
 
 
-
-void NumberAdapter::fillElementFromGui()
-{
+void NumberAdapter::fillElementFromGui() {
 	if (mOriginalValue.isInt()) {
 		mEditedValue = ::Atlas::Message::Element(std::stoi(mTextWindow->getText().c_str()));
 	} else {
@@ -79,22 +73,20 @@ void NumberAdapter::fillElementFromGui()
 	}
 }
 
-bool NumberAdapter::_hasChanges()
-{
+bool NumberAdapter::_hasChanges() {
 	return !WFMath::Equal(mOriginalValue.asNum(), getValue().asNum());
 }
 
-void NumberAdapter::addSuggestion(const std::string& suggestedValue)
-{
+void NumberAdapter::addSuggestion(const std::string& suggestedValue) {
 	mTextWindow->addItem(new ColouredListItem(suggestedValue));
 	mTextWindow->getPushButton()->setVisible(true);
 }
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

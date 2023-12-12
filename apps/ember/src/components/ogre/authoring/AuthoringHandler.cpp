@@ -29,8 +29,12 @@
 #include <fmt/ostream.h>
 #include <sigc++/bind.h>
 
-template <> struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {};
-template <> struct fmt::formatter<Eris::Entity> : ostream_formatter {};
+template<>
+struct fmt::formatter<Ember::EmberEntity> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<Eris::Entity> : ostream_formatter {
+};
 
 namespace Ember::OgreView::Authoring {
 

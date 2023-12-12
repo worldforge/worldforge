@@ -21,9 +21,9 @@
 
 #include "ModelActionBase.h"
 
-namespace Ember {
 
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 /**
  * A entity mapping action which will look for the value of the "present" attribute and use the corresponding model.
@@ -40,6 +40,6 @@ public:
 };
 
 }
-}
+
 
 #endif //EMBER_PRESENTMODELACTION_H

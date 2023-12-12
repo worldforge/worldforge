@@ -40,97 +40,96 @@ using Atlas::Message::MapType;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 
-static TypeNode * stub_addChild_result = nullptr;
+static TypeNode* stub_addChild_result = nullptr;
 
-int main()
-{
-    EntityBuilder eb;
-    TestPropertyManager propertyManager;
+int main() {
+	EntityBuilder eb;
+	TestPropertyManager propertyManager;
 
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
-        delete rh;
-    }
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
+		delete rh;
+	}
 
-    // check() not a class
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
+	// check() not a class
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
 
-        Anonymous description;
-        description->setParent("foo");
-        int ret = rh->check(description);
+		Anonymous description;
+		description->setParent("foo");
+		int ret = rh->check(description);
 
-        assert(ret == -1);
+		assert(ret == -1);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    // check() stub says it's not a task
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
+	// check() stub says it's not a task
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
 
-        Anonymous description;
-        description->setObjtype("class");
-        description->setParent("foo");
-        int ret = rh->check(description);
+		Anonymous description;
+		description->setObjtype("class");
+		description->setParent("foo");
+		int ret = rh->check(description);
 
-        assert(ret == 0);
+		assert(ret == 0);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        Anonymous description;
-        description->setId("class_name");
-        std::string dependent, reason;
+		Anonymous description;
+		description->setId("class_name");
+		std::string dependent, reason;
 
-        int ret = rh->install("class_name", "parent_name",
-                              description, dependent, reason, changes);
+		int ret = rh->install("class_name", "parent_name",
+							  description, dependent, reason, changes);
 
-        assert(ret == 1);
-        assert(dependent == "parent_name");
+		assert(ret == 1);
+		assert(dependent == "parent_name");
 
-        delete rh;
-    }
+		delete rh;
+	}
 
-    // Install a rule with addChild rigged to give a correct result
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+	// Install a rule with addChild rigged to give a correct result
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        Anonymous description;
-        description->setId("class_name");
-        std::string dependent, reason;
+		Anonymous description;
+		description->setId("class_name");
+		std::string dependent, reason;
 
-        stub_addChild_result = (TypeNode *) malloc(sizeof(TypeNode));
-        int ret = rh->install("class_name", "parent_name",
-                              description, dependent, reason, changes);
+		stub_addChild_result = (TypeNode*) malloc(sizeof(TypeNode));
+		int ret = rh->install("class_name", "parent_name",
+							  description, dependent, reason, changes);
 
-        assert(ret == 1);
-        assert(dependent == "parent_name");
+		assert(ret == 1);
+		assert(dependent == "parent_name");
 
-        free(stub_addChild_result);
-        stub_addChild_result = 0;
+		free(stub_addChild_result);
+		stub_addChild_result = 0;
 
-        delete rh;
-    }
-    {
-        RuleHandler * rh = new EntityRuleHandler(eb, propertyManager);
-        std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
+		delete rh;
+	}
+	{
+		RuleHandler* rh = new EntityRuleHandler(eb, propertyManager);
+		std::map<const TypeNode*, TypeNode::PropertiesUpdate> changes;
 
-        Anonymous description;
-        int ret = rh->update("", description, changes);
+		Anonymous description;
+		int ret = rh->update("", description, changes);
 
-        // FIXME Currently does nothing
-        assert(ret == -1);
+		// FIXME Currently does nothing
+		assert(ret == -1);
 
-        delete rh;
-    }
+		delete rh;
+	}
 
- 
+
 }
 
 // stubs
@@ -146,38 +145,34 @@ int main()
 #include "../stubs/server/stubEntityBuilder.h"
 #include "../stubs/common/stubTypeNode.h"
 
-template <class T>
-PythonScriptFactory<T>::PythonScriptFactory(const std::string & package,
-                                         const std::string & type) :
-                                         PythonClass(package,
-                                                     type)
-{
+template<class T>
+PythonScriptFactory<T>::PythonScriptFactory(const std::string& package,
+											const std::string& type) :
+		PythonClass(package,
+					type) {
 }
 
-template <class T>
-int PythonScriptFactory<T>::setup()
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::setup() {
+	return 0;
 }
 
-template <class T>
-const std::string & PythonScriptFactory<T>::package() const
-{
-    return m_package;
+template<class T>
+const std::string& PythonScriptFactory<T>::package() const {
+	return m_package;
 }
 
-template <class T>
-int PythonScriptFactory<T>::addScript(T& entity) const
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::addScript(T& entity) const {
+	return 0;
 }
 
-template class PythonScriptFactory<LocatedEntity>;
+template
+class PythonScriptFactory<LocatedEntity>;
 
-template <class T>
-int PythonScriptFactory<T>::refreshClass()
-{
-    return 0;
+template<class T>
+int PythonScriptFactory<T>::refreshClass() {
+	return 0;
 }
 
 #include "../stubs/pythonbase/stubPythonClass.h"
@@ -185,27 +180,29 @@ int PythonScriptFactory<T>::refreshClass()
 
 #ifndef STUB_Inheritance_addChild
 #define STUB_Inheritance_addChild
-TypeNode* Inheritance::addChild(const Atlas::Objects::Root & obj)
-{
-    return stub_addChild_result;
+
+TypeNode* Inheritance::addChild(const Atlas::Objects::Root& obj) {
+	return stub_addChild_result;
 }
+
 #endif //STUB_Inheritance_addChild
 
 
 #ifndef STUB_Inheritance_hasClass
 #define STUB_Inheritance_hasClass
-bool Inheritance::hasClass(const std::string & parent)
-{
-    return true;
+
+bool Inheritance::hasClass(const std::string& parent) {
+	return true;
 }
+
 #endif //STUB_Inheritance_hasClass
 
 #include "../stubs/common/stubInheritance.h"
 
-Root atlasOpDefinition(const std::string & name, const std::string & parent)
-{
-    return Root();
+Root atlasOpDefinition(const std::string& name, const std::string& parent) {
+	return Root();
 }
+
 #include "../stubs/common/stublog.h"
 #include "../stubs/server/stubEntityKit.h"
 #include "../stubs/server/stubEntityFactory.h"
@@ -213,20 +210,39 @@ Root atlasOpDefinition(const std::string & name, const std::string & parent)
 #include "../stubs/common/stubPropertyManager.h"
 
 class Thing;
+
 class Character;
+
 class Creator;
+
 class Plant;
+
 class Stackable;
+
 class Entity;
+
 class World;
 
-template class EntityFactory<Entity>;
-template class EntityFactory<Thing>;
-template class EntityFactory<Character>;
-template class EntityFactory<Creator>;
-template class EntityFactory<Plant>;
-template class EntityFactory<Stackable>;
-template class EntityFactory<World>;
+template
+class EntityFactory<Entity>;
+
+template
+class EntityFactory<Thing>;
+
+template
+class EntityFactory<Character>;
+
+template
+class EntityFactory<Creator>;
+
+template
+class EntityFactory<Plant>;
+
+template
+class EntityFactory<Stackable>;
+
+template
+class EntityFactory<World>;
 
 #include "../stubs/common/stubProperty.h"
 #include "../stubs/common/stubPropertyManager.h"

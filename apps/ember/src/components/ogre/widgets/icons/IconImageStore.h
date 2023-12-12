@@ -40,12 +40,8 @@ namespace Ogre {
 class Image;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 class IconImageStore;
 
@@ -107,7 +103,7 @@ public:
 	 * @param imagesetName The name of the imageset to create.
 	 * @param texPtr The texture to use.
 	 */
-	IconImageStore(const std::string& imagesetName, Ogre::TexturePtr texPtr);
+	IconImageStore(const std::string& imagesetName, const Ogre::TexturePtr& texPtr);
 
 	virtual ~IconImageStore();
 
@@ -148,17 +144,12 @@ private:
 	//Ogre::Image mImage;
 	CEGUI::Texture* mCeguiTexture;
 
-	std::vector<std::unique_ptr<IconImageStoreEntry>>  mIconImages;
+	std::vector<std::unique_ptr<IconImageStoreEntry>> mIconImages;
 	IconImageStoreEntryStack mUnclaimedIconImages;
 
 };
 
 }
 
-}
-
-}
-
-}
 
 #endif

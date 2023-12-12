@@ -25,36 +25,29 @@
 
 #include "AdapterBase.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class PositionAdapter : public AdapterBase
-{
+class PositionAdapter : public AdapterBase {
 public:
-    PositionAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::PushButton* moveButton = 0);
+	PositionAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow, CEGUI::Window* zWindow, CEGUI::PushButton* moveButton = nullptr);
 
-    virtual ~PositionAdapter();
-	
+	~PositionAdapter() override;
+
 	/**
 	Updates the gui with new values.
 	*/
-	virtual void updateGui(const ::Atlas::Message::Element& element);
-    
-    
-    /**
-     * @brief Emitted when the move button has been clicked.
-     */
+	void updateGui(const ::Atlas::Message::Element& element) override;
+
+
+	/**
+	 * @brief Emitted when the move button has been clicked.
+	 */
 	sigc::signal<void()> EventMoveClicked;
-    
+
 protected:
 
 	CEGUI::Window* mXWindow;
@@ -62,21 +55,16 @@ protected:
 	CEGUI::Window* mZWindow;
 
 	bool window_TextChanged(const CEGUI::EventArgs& e);
+
 	bool moveButton_Clicked(const CEGUI::EventArgs& e);
 
-	virtual void fillElementFromGui();
-	virtual bool _hasChanges();
+	void fillElementFromGui() override;
+
+	bool _hasChanges() override;
 
 };
 
 }
 
-}
-
-}
-
-}
-
-}
 
 #endif

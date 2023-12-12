@@ -24,12 +24,11 @@
 using namespace Ember::OgreView;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<OgreInfo>(sol::table& space) {
 	auto ogreInfo = space.new_usertype<OgreInfo>("OgreInfo", sol::no_constructor);
 	ogreInfo["isIndirect"] = &OgreInfo::isIndirect;
 	ogreInfo["createUniqueResourceName"] = &OgreInfo::createUniqueResourceName;
-
 
 
 	auto ogreUtils = sol::state_view(space.lua_state()).create_table();

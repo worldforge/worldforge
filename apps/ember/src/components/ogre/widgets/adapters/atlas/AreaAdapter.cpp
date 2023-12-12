@@ -31,14 +31,8 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushButton* showButton, CEGUI::Combobox* layerWindow, EmberEntity* entity) :
 		AdapterBase(element),
@@ -57,8 +51,7 @@ AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushBu
 			mPolygonAdapter = std::make_unique<PolygonAdapter>(getDefaultPolygon().toAtlas(), showButton, entity);
 		}
 		WFMath::Polygon<2> poly;
-		Terrain::TerrainAreaParser parser;
-		parser.parseArea(areaData, poly, mLayer);
+		Ember::OgreView::Terrain::TerrainAreaParser::parseArea(areaData, poly, mLayer);
 	} else {
 		mPolygonAdapter = std::make_unique<PolygonAdapter>(getDefaultPolygon().toAtlas(), showButton, entity);
 	}
@@ -71,7 +64,7 @@ AreaAdapter::AreaAdapter(const ::Atlas::Message::Element& element, CEGUI::PushBu
 }
 
 
-WFMath::Polygon<2> AreaAdapter::getDefaultPolygon() const {
+WFMath::Polygon<2> AreaAdapter::getDefaultPolygon() {
 	WFMath::Polygon<2> poly;
 	poly.addCorner(0, WFMath::Point<2>(-1, -1));
 	poly.addCorner(1, WFMath::Point<2>(-1, 1));
@@ -118,8 +111,7 @@ void AreaAdapter::fillElementFromGui() {
 	if (item) {
 		mLayer = (int) item->getID();
 	}
-	Terrain::TerrainAreaParser parser;
-	mEditedValue = parser.createElement(mPolygonAdapter->getShape(), mLayer);
+	mEditedValue = Terrain::TerrainAreaParser::createElement(mPolygonAdapter->getShape(), mLayer);
 }
 
 bool AreaAdapter::_hasChanges() {
@@ -142,9 +134,9 @@ void AreaAdapter::clearAreaSuggestions() {
 
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

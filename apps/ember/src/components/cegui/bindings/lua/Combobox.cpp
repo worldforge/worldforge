@@ -18,7 +18,8 @@
 #include "LuaFunctor.h"
 
 using namespace CEGUI;
-template <>
+
+template<>
 void registerLua<Combobox>(sol::table& space) {
 	auto combobox = space.new_usertype<Combobox>("Combobox",
 												 sol::base_classes, sol::bases<Window, NamedElement, Element, PropertySet, EventSet>()

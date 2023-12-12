@@ -26,8 +26,8 @@ namespace Ogre {
 class Node;
 }
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 struct INodeProvider;
 
@@ -39,13 +39,13 @@ class NodeController;
 class EmptyNodeAttachment : public NodeAttachment, public virtual sigc::trackable {
 public:
 	EmptyNodeAttachment(EmberEntity& parentEntity,
-			EmberEntity& childEntity,
-			std::unique_ptr<INodeProvider> nodeProvider,
-			std::unique_ptr<IGraphicalRepresentation> graphicalRepresentation);
+						EmberEntity& childEntity,
+						std::unique_ptr<INodeProvider> nodeProvider,
+						std::unique_ptr<IGraphicalRepresentation> graphicalRepresentation);
 
 	void attachEntity(EmberEntity& entity) override;
 
-	void detachEntity(EmberEntity& entity);
+	void detachEntity(EmberEntity& entity) override;
 
 	IGraphicalRepresentation* getGraphicalRepresentation() const override;
 
@@ -55,6 +55,6 @@ protected:
 };
 
 }
-}
+
 
 #endif //EMBER_EMPTYNODEATTACHMENT_H

@@ -27,121 +27,115 @@
 using Atlas::Message::MapType;
 using Atlas::Message::ListType;
 
-struct TestContext
-{
+struct TestContext {
 
 };
 
 
-struct Tested : public Cyphesis::TestBaseWithContext<TestContext>
-{
-    Tested()
-    {
-        ADD_TEST(test_extract_list);
-        ADD_TEST(test_extract_map);
-    }
+struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
+	Tested() {
+		ADD_TEST(test_extract_list);
+		ADD_TEST(test_extract_map);
+	}
 
-    void test_extract_list(TestContext& context)
-    {
-        {
-            ListType typeList{"one", "two", "three"};
-            ListType entityList{"one", "two", "three"};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
+	void test_extract_list(TestContext& context) {
+		{
+			ListType typeList{"one", "two", "three"};
+			ListType entityList{"one", "two", "three"};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
 
-        {
-            ListType typeList{};
-            ListType entityList{};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
+		{
+			ListType typeList{};
+			ListType entityList{};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
 
-        {
-            ListType typeList{"one", "two", "three"};
-            ListType entityList{};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
+		{
+			ListType typeList{"one", "two", "three"};
+			ListType entityList{};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
 
-        {
-            ListType typeList{};
-            ListType entityList{"one", "two", "three"};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
+		{
+			ListType typeList{};
+			ListType entityList{"one", "two", "three"};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
 
 
-        {
-            ListType typeList{"one", "two", "three"};
-            ListType entityList{"zero", "one", "two", "three", "four"};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{"zero"}, result.prepend)
-            ASSERT_EQUAL(ListType{"four"}, result.append)
-        }
-        {
-            ListType typeList{"one", "two", "three"};
-            ListType entityList{"zero", "one", "two", "four"};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
-        {
-            ListType typeList{"one", "two", "three"};
-            ListType entityList{"one", "two"};
-            auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
-            ASSERT_EQUAL(ListType{}, result.prepend)
-            ASSERT_EQUAL(ListType{}, result.append)
-        }
-    }
+		{
+			ListType typeList{"one", "two", "three"};
+			ListType entityList{"zero", "one", "two", "three", "four"};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{"zero"}, result.prepend)
+			ASSERT_EQUAL(ListType{"four"}, result.append)
+		}
+		{
+			ListType typeList{"one", "two", "three"};
+			ListType entityList{"zero", "one", "two", "four"};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
+		{
+			ListType typeList{"one", "two", "three"};
+			ListType entityList{"one", "two"};
+			auto result = EntityExporterBase::extractListPrependAppend(typeList, entityList);
+			ASSERT_EQUAL(ListType{}, result.prepend)
+			ASSERT_EQUAL(ListType{}, result.append)
+		}
+	}
 
-    void test_extract_map(TestContext& context)
-    {
-        {
-            MapType typeMap{{"one",   1},
-                            {"two",   2},
-                            {"three", 3}};
-            MapType entityMap{{"one",   1},
-                              {"two",   2},
-                              {"three", 3}};
-            auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
-            ASSERT_EQUAL(MapType{}, result)
-        }
+	void test_extract_map(TestContext& context) {
+		{
+			MapType typeMap{{"one",   1},
+							{"two",   2},
+							{"three", 3}};
+			MapType entityMap{{"one",   1},
+							  {"two",   2},
+							  {"three", 3}};
+			auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
+			ASSERT_EQUAL(MapType{}, result)
+		}
 
-        {
-            MapType typeMap{{"one",   1},
-                            {"two",   2},
-                            {"three", 3}};
-            MapType entityMap{{"one",   1},
-                              {"two",   2},
-                              {"three", 3},
-                              {"four",  4}};
-            auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
-            MapType expected{{"four", 4}};
-            ASSERT_EQUAL(expected, result)
-        }
-        {
-            MapType typeMap{{"one",   1},
-                            {"two",   2},
-                            {"three", 3}};
-            MapType entityMap{{"one",  1},
-                              {"two",  2},
-                              {"four", 4}};
-            auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
-            MapType expected{};
-            ASSERT_EQUAL(expected, result)
-        }
-    }
+		{
+			MapType typeMap{{"one",   1},
+							{"two",   2},
+							{"three", 3}};
+			MapType entityMap{{"one",   1},
+							  {"two",   2},
+							  {"three", 3},
+							  {"four",  4}};
+			auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
+			MapType expected{{"four", 4}};
+			ASSERT_EQUAL(expected, result)
+		}
+		{
+			MapType typeMap{{"one",   1},
+							{"two",   2},
+							{"three", 3}};
+			MapType entityMap{{"one",  1},
+							  {"two",  2},
+							  {"four", 4}};
+			auto result = EntityExporterBase::extractMapPrepend(typeMap, entityMap);
+			MapType expected{};
+			ASSERT_EQUAL(expected, result)
+		}
+	}
 };
 
 
-int main()
-{
-    Tested t;
+int main() {
+	Tested t;
 
-    return t.run();
+	return t.run();
 }

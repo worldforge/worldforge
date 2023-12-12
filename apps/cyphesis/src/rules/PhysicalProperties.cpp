@@ -19,31 +19,26 @@
 #include "PhysicalProperties.h"
 #include "rules/LocatedEntity.h"
 
-PositionProperty* PositionProperty::copy() const
-{
-    return new PositionProperty(*this);
+PositionProperty* PositionProperty::copy() const {
+	return new PositionProperty(*this);
 }
 
-WFMath::Point<3> PositionProperty::extractPosition(const LocatedEntity& entity)
-{
-    auto posProp = entity.getPropertyClassFixed<PositionProperty>();
-    if (posProp) {
-        return posProp->data();
-    }
-    return {};
+WFMath::Point<3> PositionProperty::extractPosition(const LocatedEntity& entity) {
+	auto posProp = entity.getPropertyClassFixed<PositionProperty>();
+	if (posProp) {
+		return posProp->data();
+	}
+	return {};
 }
 
-VelocityProperty* VelocityProperty::copy() const
-{
-    return new VelocityProperty(*this);
+VelocityProperty* VelocityProperty::copy() const {
+	return new VelocityProperty(*this);
 }
 
-AngularVelocityProperty* AngularVelocityProperty::copy() const
-{
-    return new AngularVelocityProperty(*this);
+AngularVelocityProperty* AngularVelocityProperty::copy() const {
+	return new AngularVelocityProperty(*this);
 }
 
-OrientationProperty* OrientationProperty::copy() const
-{
-    return new OrientationProperty(*this);
+OrientationProperty* OrientationProperty::copy() const {
+	return new OrientationProperty(*this);
 }

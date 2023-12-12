@@ -22,7 +22,6 @@
 #include "../../AdapterFactory.h"
 #include "../../StaticAdapter.h"
 #include "../../AreaAdapter.h"
-#include "../../CustomAdapter.h"
 #include "../../EntityRefAdapter.h"
 #include "../../ListAdapter.h"
 #include "../../NumberAdapter.h"

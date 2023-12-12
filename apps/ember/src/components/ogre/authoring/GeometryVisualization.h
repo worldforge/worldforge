@@ -26,17 +26,17 @@
 #include "components/ogre/OgreIncludes.h"
 
 
-namespace Atlas {
-namespace Message {
+
+namespace Atlas::Message {
 class Element;
 }
-}
+
 
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
-namespace Authoring {
+
+namespace OgreView::Authoring {
 
 /**
  * Shows the collision geometry of the entity, as it's represented on the server.
@@ -112,14 +112,18 @@ protected:
 	void entity_BboxChanged(const Atlas::Message::Element& attributeValue);
 
 	void placeSphere(float radius, Ogre::Vector3 offset);
+
 	void placeCylinderX(float radius, float halfHeight, Ogre::Vector3 offset);
+
 	void placeCylinderY(float radius, float halfHeight, Ogre::Vector3 offset);
+
 	void placeCylinderZ(float radius, float halfHeight, Ogre::Vector3 offset);
+
 	void placeBox(Ogre::AxisAlignedBox box);
 
 };
 }
-}
+
 }
 
 

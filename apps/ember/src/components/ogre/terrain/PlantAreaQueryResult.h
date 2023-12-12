@@ -29,10 +29,8 @@
 #include "PlantAreaQuery.h"
 #include "PlantInstance.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 template<typename>
 class Buffer;
@@ -57,8 +55,5 @@ struct PlantAreaQueryResult {
 
 }
 
-}
-
-}
 
 #endif /* PLANTAREAQUERYRESULT_H_ */

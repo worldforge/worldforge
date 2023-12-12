@@ -39,14 +39,7 @@
 
 #include <OgreTextureManager.h>
 
-#include <utility>
-
-namespace Ember {
-namespace OgreView {
-
-namespace Gui {
-
-namespace Icons {
+namespace Ember::OgreView::Gui::Icons {
 
 class DummyEntity : public Eris::Entity {
 
@@ -177,7 +170,8 @@ void IconManager::render(Icon& icon, Eris::TypeInfo& erisType) {
 		}, [&](const std::string& partName) {
 			//Ignore parts
 		});
-		std::unique_ptr<EntityMapping::EntityMapping> modelMapping(Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(dummyEntity, actionCreator, typeService, &EmberOgre::getSingleton().getWorld()->getView()));
+		std::unique_ptr<EntityMapping::EntityMapping> modelMapping(
+				Mapping::EmberEntityMappingManager::getSingleton().getManager().createMapping(dummyEntity, actionCreator, typeService, &EmberOgre::getSingleton().getWorld()->getView()));
 		if (modelMapping) {
 			modelMapping->initialize();
 		}
@@ -199,7 +193,7 @@ void IconManager::render(Icon& icon, const std::string& modelName) {
 
 }
 
-}
 
-}
-}
+
+
+

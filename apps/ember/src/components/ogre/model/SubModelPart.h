@@ -36,9 +36,7 @@ class SubEntity;
 }
 
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 class SubModel;
 
@@ -64,6 +62,7 @@ public:
 
 
 	void addSubEntity(SubModelPartEntity subModelPartEntity);
+
 	bool addSubEntity(Ogre::SubEntity* subentity, SubEntityDefinition definition, unsigned short subEntityIndex);
 
 	bool removeSubEntity(const Ogre::SubEntity* subentity);
@@ -91,6 +90,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif // SUBMODELPART_H

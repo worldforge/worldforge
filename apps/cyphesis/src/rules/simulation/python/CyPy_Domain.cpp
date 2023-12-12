@@ -24,82 +24,74 @@
 #include "CyPy_Entity.h"
 
 CyPy_Domain::CyPy_Domain(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
-    : WrapperBase(self, args, kwds)
-{
-    throw Py::RuntimeError("Can not create Domain instances.");
+		: WrapperBase(self, args, kwds) {
+	throw Py::RuntimeError("Can not create Domain instances.");
 }
 
 CyPy_Domain::CyPy_Domain(Py::PythonClassInstance* self, Ref<LocatedEntity> value)
-    : WrapperBase(self, std::move(value))
-{
+		: WrapperBase(self, std::move(value)) {
 
 }
 
 CyPy_Domain::~CyPy_Domain() = default;
 
-void CyPy_Domain::init_type()
-{
-    behaviors().name("Domain");
-    behaviors().doc("");
+void CyPy_Domain::init_type() {
+	behaviors().name("Domain");
+	behaviors().doc("");
 
-    PYCXX_ADD_VARARGS_METHOD(query_collisions, query_collisions, "");
+	PYCXX_ADD_VARARGS_METHOD(query_collisions, query_collisions, "");
 
-    behaviors().readyType();
+	behaviors().readyType();
 
-    CyPy_CollisionEntry::init_type();
+	CyPy_CollisionEntry::init_type();
 }
 
-Py::Object CyPy_Domain::query_collisions(const Py::Tuple& args)
-{
-    args.verify_length(1);
-    auto sphere = verifyObject<CyPy_Ball>(args.front());
-    Py::List list;
-    auto domain = m_value->getDomain();
-    if (domain) {
-        auto collisions = domain->queryCollision(sphere);
-        for (auto& collision : collisions) {
-            list.append(CyPy_CollisionEntry::wrap(collision));
-        }
-    }
-    return list;
+Py::Object CyPy_Domain::query_collisions(const Py::Tuple& args) {
+	args.verify_length(1);
+	auto sphere = verifyObject<CyPy_Ball>(args.front());
+	Py::List list;
+	auto domain = m_value->getDomain();
+	if (domain) {
+		auto collisions = domain->queryCollision(sphere);
+		for (auto& collision: collisions) {
+			list.append(CyPy_CollisionEntry::wrap(collision));
+		}
+	}
+	return list;
 }
 
 CyPy_CollisionEntry::CyPy_CollisionEntry(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds)
-    : WrapperBase(self, args, kwds)
-{
-    throw Py::RuntimeError("Can not create Domain instances.");
+		: WrapperBase(self, args, kwds) {
+	throw Py::RuntimeError("Can not create Domain instances.");
 }
 
 
 CyPy_CollisionEntry::CyPy_CollisionEntry(Py::PythonClassInstance* self, Domain::CollisionEntry value)
-    : WrapperBase(self, std::move(value))
-{
+		: WrapperBase(self, std::move(value)) {
 }
 
-void CyPy_CollisionEntry::init_type()
-{
-    behaviors().name("CollisionEntry");
-    behaviors().doc("");
+void CyPy_CollisionEntry::init_type() {
+	behaviors().name("CollisionEntry");
+	behaviors().doc("");
 
-    behaviors().readyType();
+	behaviors().readyType();
 }
 
-Py::Object CyPy_CollisionEntry::getattro(const Py::String& name)
-{
-    auto as_string = name.as_string();
-    if (as_string == "collisionPoint") {
-        return CyPy_Point3D::wrap(m_value.collisionPoint);
-    }
-    if (as_string == "entity") {
-        if (m_value.entity) {
-            return CyPy_Entity::wrap(m_value.entity);
-        }
-        return Py::None();
-    }
-    if (as_string == "distance") {
-        return Py::Float(m_value.distance);
-    }
-    return PythonExtensionBase::getattro(name);
+Py::Object CyPy_CollisionEntry::getattro(const Py::String& name) {
+	auto as_string = name.as_string();
+	if (as_string == "collisionPoint") {
+		return CyPy_Point3D::wrap(m_value.collisionPoint);
+	}
+	if (as_string == "entity") {
+		if (m_value.entity) {
+			return CyPy_Entity::wrap(m_value.entity);
+		}
+		return Py::None();
+	}
+	if (as_string == "distance") {
+		return Py::Float(m_value.distance);
+	}
+	return PythonExtensionBase::getattro(name);
 }
 
 

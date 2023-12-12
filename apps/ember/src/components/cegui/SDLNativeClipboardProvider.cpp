@@ -19,36 +19,36 @@
 #include "SDLNativeClipboardProvider.h"
 #include <SDL.h>
 
-namespace Ember {
-namespace Cegui {
+
+namespace Ember::Cegui {
 
 SDLNativeClipboardProvider::SDLNativeClipboardProvider()
-        : m_buffer(nullptr) {
+		: m_buffer(nullptr) {
 
 }
 
 SDLNativeClipboardProvider::~SDLNativeClipboardProvider() {
-    SDL_free(m_buffer);
+	SDL_free(m_buffer);
 }
 
 void SDLNativeClipboardProvider::sendToClipboard(const CEGUI::String& mimeType, void* buffer, size_t) {
 
-    if (mimeType == "text/plain") {
-        SDL_SetClipboardText((char*) buffer);
-    }
+	if (mimeType == "text/plain") {
+		SDL_SetClipboardText((char*) buffer);
+	}
 }
 
 void SDLNativeClipboardProvider::retrieveFromClipboard(CEGUI::String& mimeType, void*& buffer, size_t& size) {
 
-    if (SDL_HasClipboardText() == SDL_TRUE) {
-        mimeType = "text/plain";
-        SDL_free(m_buffer);
+	if (SDL_HasClipboardText() == SDL_TRUE) {
+		mimeType = "text/plain";
+		SDL_free(m_buffer);
 
-        m_buffer = SDL_GetClipboardText();
-        buffer = m_buffer;
-        size = strnlen(m_buffer, 1000000);
-    }
+		m_buffer = SDL_GetClipboardText();
+		buffer = m_buffer;
+		size = strnlen(m_buffer, 1000000);
+	}
 }
 
 }
-}
+

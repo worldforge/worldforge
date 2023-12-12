@@ -36,123 +36,122 @@ typedef std::vector<Quaternion> OrientationList;
 
 using Atlas::Message::ListType;
 
-int main()
-{
-    {
-        CoordList pointList;
+int main() {
+	{
+		CoordList pointList;
 
-        Atlas::Message::ListType point;
-        point.push_back(1.5);
-        point.push_back(1.5);
-        point.push_back(1.5);
+		Atlas::Message::ListType point;
+		point.push_back(1.5);
+		point.push_back(1.5);
+		point.push_back(1.5);
 
-        Atlas::Message::ListType pointData;
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
+		Atlas::Message::ListType pointData;
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
 
-        assert(point.size() == 3);
+		assert(point.size() == 3);
 
-        assert(pointData.size() == 6);
+		assert(pointData.size() == 6);
 
-        assert(pointList.size() == 0);
+		assert(pointList.size() == 0);
 
-        objectListFromMessage<Point3D>(pointData, pointList);
+		objectListFromMessage<Point3D>(pointData, pointList);
 
-        assert(pointList.size() == 6);
+		assert(pointList.size() == 6);
 
-        CoordList::const_iterator I = pointList.begin();
-        CoordList::const_iterator Iend = pointList.end();
-        for (; I != Iend; ++I) {
-            const Point3D & q = *I;
-            assert(q == Point3D(1.5, 1.5, 1.5));
-        }
-    }
-    {
-        VectorList pointList;
+		CoordList::const_iterator I = pointList.begin();
+		CoordList::const_iterator Iend = pointList.end();
+		for (; I != Iend; ++I) {
+			const Point3D& q = *I;
+			assert(q == Point3D(1.5, 1.5, 1.5));
+		}
+	}
+	{
+		VectorList pointList;
 
-        ListType point;
-        point.push_back(1.5);
-        point.push_back(1.5);
-        point.push_back(1.5);
+		ListType point;
+		point.push_back(1.5);
+		point.push_back(1.5);
+		point.push_back(1.5);
 
-        ListType pointData;
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
+		ListType pointData;
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
 
-        assert(point.size() == 3);
+		assert(point.size() == 3);
 
-        assert(pointData.size() == 6);
+		assert(pointData.size() == 6);
 
-        assert(pointList.size() == 0);
+		assert(pointList.size() == 0);
 
-        objectListFromMessage<Vector3D>(pointData, pointList);
+		objectListFromMessage<Vector3D>(pointData, pointList);
 
-        assert(pointList.size() == 6);
+		assert(pointList.size() == 6);
 
-        VectorList::const_iterator I = pointList.begin();
-        VectorList::const_iterator Iend = pointList.end();
-        for (; I != Iend; ++I) {
-            const Vector3D & q = *I;
-            assert(q == Vector3D(1.5, 1.5, 1.5));
-        }
-    }
-    {
-        OrientationList pointList;
+		VectorList::const_iterator I = pointList.begin();
+		VectorList::const_iterator Iend = pointList.end();
+		for (; I != Iend; ++I) {
+			const Vector3D& q = *I;
+			assert(q == Vector3D(1.5, 1.5, 1.5));
+		}
+	}
+	{
+		OrientationList pointList;
 
-        ListType point;
-        point.push_back(0);
-        point.push_back(0);
-        point.push_back(0);
-        point.push_back(1);
+		ListType point;
+		point.push_back(0);
+		point.push_back(0);
+		point.push_back(0);
+		point.push_back(1);
 
-        ListType pointData;
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
-        pointData.push_back(point);
+		ListType pointData;
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
+		pointData.push_back(point);
 
-        assert(point.size() == 4);
+		assert(point.size() == 4);
 
-        assert(pointData.size() == 6);
+		assert(pointData.size() == 6);
 
-        assert(pointList.size() == 0);
+		assert(pointList.size() == 0);
 
-        objectListFromMessage<Quaternion>(pointData, pointList);
+		objectListFromMessage<Quaternion>(pointData, pointList);
 
-        assert(pointList.size() == 6);
+		assert(pointList.size() == 6);
 
-        OrientationList::const_iterator I = pointList.begin();
-        OrientationList::const_iterator Iend = pointList.end();
-        for (; I != Iend; ++I) {
-            const Quaternion & q = *I;
-            assert(q == Quaternion().identity());
-        }
-    }
-    {
-        ListType list(1, "1");
-        IdList id_list;
+		OrientationList::const_iterator I = pointList.begin();
+		OrientationList::const_iterator Iend = pointList.end();
+		for (; I != Iend; ++I) {
+			const Quaternion& q = *I;
+			assert(q == Quaternion().identity());
+		}
+	}
+	{
+		ListType list(1, "1");
+		IdList id_list;
 
-        int res = idListFromAtlas(list, id_list);
-        assert(res == 0);
-        assert(id_list.size() == list.size());
+		int res = idListFromAtlas(list, id_list);
+		assert(res == 0);
+		assert(id_list.size() == list.size());
 
-        list.clear();
-        idListasObject(id_list, list);
-        assert(id_list.size() == list.size());
+		list.clear();
+		idListasObject(id_list, list);
+		assert(id_list.size() == list.size());
 
-        list = ListType(1, 2.0);
-        res = idListFromAtlas(list, id_list);
-        assert(res == -1);
-        assert(id_list.size() == 0);
-    }
+		list = ListType(1, 2.0);
+		res = idListFromAtlas(list, id_list);
+		assert(res == -1);
+		assert(id_list.size() == 0);
+	}
 }

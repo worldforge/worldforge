@@ -29,110 +29,109 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Operation : public WrapperBase<Atlas::Objects::Operation::RootOperation, CyPy_Operation>
-{
-    public:
-        CyPy_Operation(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Operation : public WrapperBase<Atlas::Objects::Operation::RootOperation, CyPy_Operation> {
+public:
+	CyPy_Operation(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Operation(Py::PythonClassInstance* self, Atlas::Objects::Operation::RootOperation value);
+	CyPy_Operation(Py::PythonClassInstance* self, Atlas::Objects::Operation::RootOperation value);
 
-        static void init_type();
+	static void init_type();
 
-        PyCxx_ssize_t sequence_length() override;
+	PyCxx_ssize_t sequence_length() override;
 
-        Py::Object sequence_item(Py_ssize_t) override;
+	Py::Object sequence_item(Py_ssize_t) override;
 
-        Py::Object number_add(const Py::Object&) override;
+	Py::Object number_add(const Py::Object&) override;
 
-        Py::Object mapping_subscript(const Py::Object&) override;
+	Py::Object mapping_subscript(const Py::Object&) override;
 
-        int sequence_contains(const Py::Object&) override;
+	int sequence_contains(const Py::Object&) override;
 
-        int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
+	int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
 
-        Py::Object getattro(const Py::String& name) override;
+	Py::Object getattro(const Py::String& name) override;
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	int setattro(const Py::String& name, const Py::Object& attr) override;
 
-    protected:
+protected:
 
-        Py::Object setSerialno(const Py::Tuple& args);
+	Py::Object setSerialno(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setSerialno);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setSerialno);
 
-        Py::Object setRefno(const Py::Tuple& args);
+	Py::Object setRefno(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setRefno);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setRefno);
 
-        Py::Object setFrom(const Py::Tuple& args);
+	Py::Object setFrom(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFrom);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFrom);
 
-        Py::Object setTo(const Py::Tuple& args);
+	Py::Object setTo(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setTo);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setTo);
 
-        Py::Object setSeconds(const Py::Tuple& args);
+	Py::Object setSeconds(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setSeconds);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setSeconds);
 
-        Py::Object setFutureSeconds(const Py::Tuple& args);
+	Py::Object setFutureSeconds(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFutureSeconds);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFutureSeconds);
 
-        Py::Object setName(const Py::Tuple& args);
+	Py::Object setName(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setName);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setName);
 
-        Py::Object setArgs(const Py::Tuple& args);
+	Py::Object setArgs(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setArgs);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setArgs);
 
-        Py::Object getSerialno();
+	Py::Object getSerialno();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getSerialno);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getSerialno);
 
-        Py::Object isDefaultSerialno();
+	Py::Object isDefaultSerialno();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, isDefaultSerialno);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, isDefaultSerialno);
 
-        Py::Object getRefno();
+	Py::Object getRefno();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getRefno);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getRefno);
 
-        Py::Object getFrom();
+	Py::Object getFrom();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFrom);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFrom);
 
-        Py::Object getTo();
+	Py::Object getTo();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getTo);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getTo);
 
-        Py::Object getSeconds();
+	Py::Object getSeconds();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getSeconds);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getSeconds);
 
-        Py::Object getFutureSeconds();
+	Py::Object getFutureSeconds();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFutureSeconds);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFutureSeconds);
 
-        Py::Object getName();
+	Py::Object getName();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getName);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getName);
 
-        Py::Object getArgs();
+	Py::Object getArgs();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getArgs);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getArgs);
 
-        Py::Object get_name();
+	Py::Object get_name();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, get_name);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, get_name);
 
-        Py::Object copy();
+	Py::Object copy();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, copy);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, copy);
 
-        void addToArgs(std::vector<Atlas::Objects::Root>& args, const Py::Object& arg);
+	void addToArgs(std::vector<Atlas::Objects::Root>& args, const Py::Object& arg);
 };
 
 

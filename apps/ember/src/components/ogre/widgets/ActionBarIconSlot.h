@@ -35,10 +35,8 @@ class Window;
 class EventArgs;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
 class ActionBarIcon;
 
@@ -115,7 +113,6 @@ public:
 protected:
 
 
-
 	/**
 	 * @brief The CEGUI window representing the slot.
 	 */
@@ -135,8 +132,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif

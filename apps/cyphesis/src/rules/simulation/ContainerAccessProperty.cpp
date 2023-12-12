@@ -28,69 +28,62 @@ using Atlas::Message::FloatType;
 
 
 ContainerAccessProperty::ContainerAccessProperty(ContainerDomain& container) :
-        PropertyBase(prop_flag_persistence_ephem),
-        m_container(container)
-{
+		PropertyBase(prop_flag_persistence_ephem),
+		m_container(container) {
 }
 
-int ContainerAccessProperty::get(Element& ent) const
-{
-    ListType list;
-    for (auto& entity: m_container.getEntries()) {
-        list.emplace_back(entity.first);
-    }
-    ent = list;
+int ContainerAccessProperty::get(Element& ent) const {
+	ListType list;
+	for (auto& entity: m_container.getEntries()) {
+		list.emplace_back(entity.first);
+	}
+	ent = list;
 
-    return 0;
+	return 0;
 }
 
-void ContainerAccessProperty::set(const Element& ent)
-{
+void ContainerAccessProperty::set(const Element& ent) {
 
-    std::vector<std::string> ids;
-    if (ent.isList()) {
-        for (auto entry: ent.List()) {
-            if (entry.isString()) {
-                ids.emplace_back(entry.String());
-            }
-        }
-    }
-    m_container.setObservers(std::move(ids));
+	std::vector<std::string> ids;
+	if (ent.isList()) {
+		for (auto entry: ent.List()) {
+			if (entry.isString()) {
+				ids.emplace_back(entry.String());
+			}
+		}
+	}
+	m_container.setObservers(std::move(ids));
 
 }
 
 
 HandlerResult ContainerAccessProperty::operation(LocatedEntity& e,
-                                                 const Operation& op, OpVector& res)
-{
-    auto& args = op->getArgs();
-    if (!args.empty()) {
-        auto& innerOp = args.front();
-        if (!innerOp->isDefaultParent() && innerOp->getClassNo() == Atlas::Objects::Operation::CLOSE_CONTAINER_NO) {
-            if (!op->isDefaultFrom()) {
-                m_container.removeObserver(op->getFrom());
-                return HandlerResult::OPERATION_HANDLED;
-            }
-        }
-    }
+												 const Operation& op, OpVector& res) {
+	auto& args = op->getArgs();
+	if (!args.empty()) {
+		auto& innerOp = args.front();
+		if (!innerOp->isDefaultParent() && innerOp->getClassNo() == Atlas::Objects::Operation::CLOSE_CONTAINER_NO) {
+			if (!op->isDefaultFrom()) {
+				m_container.removeObserver(op->getFrom());
+				return HandlerResult::OPERATION_HANDLED;
+			}
+		}
+	}
 
-    return OPERATION_IGNORED;
+	return OPERATION_IGNORED;
 }
 
 
-ContainerAccessProperty* ContainerAccessProperty::copy() const
-{
-    return nullptr;
-    //return new ContainerAccessProperty(*this);
+ContainerAccessProperty* ContainerAccessProperty::copy() const {
+	return nullptr;
+	//return new ContainerAccessProperty(*this);
 }
 
-void ContainerAccessProperty::install(LocatedEntity& entity, const std::string& name)
-{
-    entity.installDelegate(Atlas::Objects::Operation::USE_NO, ContainerAccessProperty::property_name);
+void ContainerAccessProperty::install(LocatedEntity& entity, const std::string& name) {
+	entity.installDelegate(Atlas::Objects::Operation::USE_NO, ContainerAccessProperty::property_name);
 }
 
-void ContainerAccessProperty::remove(LocatedEntity& entity, const std::string& name)
-{
-    entity.removeDelegate(Atlas::Objects::Operation::USE_NO, ContainerAccessProperty::property_name);
+void ContainerAccessProperty::remove(LocatedEntity& entity, const std::string& name) {
+	entity.removeDelegate(Atlas::Objects::Operation::USE_NO, ContainerAccessProperty::property_name);
 }
 

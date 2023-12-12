@@ -29,36 +29,35 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_RootEntity : public WrapperBase<Atlas::Objects::Entity::RootEntity, CyPy_RootEntity>
-{
-    public:
-        CyPy_RootEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_RootEntity : public WrapperBase<Atlas::Objects::Entity::RootEntity, CyPy_RootEntity> {
+public:
+	CyPy_RootEntity(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_RootEntity(Py::PythonClassInstance* self, Atlas::Objects::Entity::RootEntity value);
+	CyPy_RootEntity(Py::PythonClassInstance* self, Atlas::Objects::Entity::RootEntity value);
 
-        static void init_type();
+	static void init_type();
 
-        Py::Object mapping_subscript(const Py::Object&) override;
+	Py::Object mapping_subscript(const Py::Object&) override;
 
-        int sequence_contains(const Py::Object&) override;
+	int sequence_contains(const Py::Object&) override;
 
-        int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
+	int mapping_ass_subscript(const Py::Object&, const Py::Object&) override;
 
-        Py::Object get_name();
+	Py::Object get_name();
 
-        PYCXX_NOARGS_METHOD_DECL(CyPy_RootEntity, get_name)
-
-
-    protected:
-
-        void setFromDict(const Py::Dict& dict);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_RootEntity, get_name)
 
 
-        Py::Object getattro(const Py::String& name) override;
+protected:
 
-        int setattro(const Py::String& name, const Py::Object& attr) override;
+	void setFromDict(const Py::Dict& dict);
 
-        static std::vector<double> sequence_asVector(const Py::Object& o);
+
+	Py::Object getattro(const Py::String& name) override;
+
+	int setattro(const Py::String& name, const Py::Object& attr) override;
+
+	static std::vector<double> sequence_asVector(const Py::Object& o);
 
 };
 

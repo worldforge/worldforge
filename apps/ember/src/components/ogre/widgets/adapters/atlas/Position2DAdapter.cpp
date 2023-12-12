@@ -24,23 +24,16 @@
 #include <wfmath/vector.h>
 #include <wfmath/atlasconv.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
-
-namespace Adapters {
-
-namespace Atlas {
+namespace Ember::OgreView::Gui::Adapters::Atlas {
 
 Position2DAdapter::Position2DAdapter(const ::Atlas::Message::Element& element, CEGUI::Window* xWindow, CEGUI::Window* yWindow)
-: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow)
-{
+		: AdapterBase(element), mXWindow(xWindow), mYWindow(yWindow) {
 	if (mXWindow) {
-		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&Position2DAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mXWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&Position2DAdapter::window_TextChanged, this)));
 	}
 	if (mYWindow) {
-		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&Position2DAdapter::window_TextChanged, this))); 
+		addGuiEventConnection(mYWindow->subscribeEvent(CEGUI::Window::EventTextChanged, CEGUI::Event::Subscriber(&Position2DAdapter::window_TextChanged, this)));
 	}
 	updateGui(mOriginalValue);
 }
@@ -48,10 +41,9 @@ Position2DAdapter::Position2DAdapter(const ::Atlas::Message::Element& element, C
 
 Position2DAdapter::~Position2DAdapter() = default;
 
-void Position2DAdapter::updateGui(const ::Atlas::Message::Element& element)
-{
+void Position2DAdapter::updateGui(const ::Atlas::Message::Element& element) {
 	SelfUpdateContext context(*this);
-	
+
 	WFMath::Vector<2> vector(element);
 // 	axisBox.fromAtlas(element.asList());
 	if (mXWindow) {
@@ -62,16 +54,14 @@ void Position2DAdapter::updateGui(const ::Atlas::Message::Element& element)
 	}
 }
 
-bool Position2DAdapter::window_TextChanged(const CEGUI::EventArgs& e)
-{
+bool Position2DAdapter::window_TextChanged(const CEGUI::EventArgs& e) {
 	if (!mSelfUpdate) {
 		EventValueChanged.emit();
 	}
 	return true;
 }
 
-void Position2DAdapter::fillElementFromGui()
-{
+void Position2DAdapter::fillElementFromGui() {
 	WFMath::Vector<2> vector{};
 	if (mXWindow) {
 		vector.x() = std::strtof(mXWindow->getText().c_str(), nullptr);
@@ -82,8 +72,7 @@ void Position2DAdapter::fillElementFromGui()
 	mEditedValue = vector.toAtlas();
 }
 
-bool Position2DAdapter::_hasChanges()
-{
+bool Position2DAdapter::_hasChanges() {
 	WFMath::Vector<2> originalValue;
 	originalValue.fromAtlas(mOriginalValue);
 	WFMath::Vector<2> newValue;
@@ -92,9 +81,9 @@ bool Position2DAdapter::_hasChanges()
 }
 }
 
-}
 
-}
 
-}
-}
+
+
+
+

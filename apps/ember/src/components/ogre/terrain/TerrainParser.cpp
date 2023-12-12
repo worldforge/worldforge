@@ -25,10 +25,8 @@
 
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainDefPointStore TerrainParser::parseTerrain(const Atlas::Message::MapType& points, const WFMath::Point<3>& offset) {
 	Terrain::TerrainDefPointStore pointStore;
@@ -45,12 +43,12 @@ TerrainDefPointStore TerrainParser::parseTerrain(const Atlas::Message::MapType& 
 		defPoint.position = WFMath::Point<2>(static_cast<int>(point[0].asNum() + offset.x()), static_cast<int>(point[1].asNum() + offset.z()));
 		defPoint.height = static_cast<float>(point[2].asNum() + offset.y());
 		if (point.size() > 3) {
-			defPoint.roughness = (float)point[3].asNum();
+			defPoint.roughness = (float) point[3].asNum();
 		} else {
 			defPoint.roughness = Mercator::BasePoint::ROUGHNESS;
 		}
 		if (point.size() > 4) {
-			defPoint.falloff = (float)point[4].asNum();
+			defPoint.falloff = (float) point[4].asNum();
 		} else {
 			defPoint.falloff = Mercator::BasePoint::FALLOFF;
 		}
@@ -75,5 +73,5 @@ TerrainDefPointStore TerrainParser::parseTerrain(const Atlas::Message::MapType& 
 
 }
 
-}
-}
+
+

@@ -35,10 +35,10 @@
 #include "EntityMapping.h"
 
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 class EntityMapping;
 
@@ -87,9 +87,8 @@ protected:
 };
 
 
-
 }
 
-}
+
 
 #endif

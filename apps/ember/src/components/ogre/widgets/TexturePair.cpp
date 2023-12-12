@@ -18,30 +18,22 @@
 
 #include "TexturePair.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Gui
-{
+namespace Ember::OgreView::Gui {
 
 TexturePair::TexturePair(const Ogre::TexturePtr& _ogreTexture, const CEGUI::Image* _textureImage) :
-		ogreTexture(_ogreTexture), textureImage(_textureImage)
-{
+		ogreTexture(_ogreTexture), textureImage(_textureImage) {
 }
 
 TexturePair::TexturePair() :
-		textureImage(nullptr)
-{
+		textureImage(nullptr) {
 }
 
-bool TexturePair::hasData() const
-{
+bool TexturePair::hasData() const {
 	return textureImage != nullptr;
 }
 
 }
 
-}
-}
+
+

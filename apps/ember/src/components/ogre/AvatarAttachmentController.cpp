@@ -20,8 +20,8 @@
 
 #include "components/ogre/Avatar.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 AvatarAttachmentController::AvatarAttachmentController(Avatar& avatar) :
 		mAvatar(avatar) {
@@ -46,4 +46,4 @@ const WFMath::Vector<3>& AvatarAttachmentController::getVelocity() const {
 }
 
 }
-}
+

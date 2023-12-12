@@ -28,10 +28,8 @@
 #include "../OgreIncludes.h"
 #include <wfmath/axisbox.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Model {
+namespace Ember::OgreView::Model {
 
 class Model;
 
@@ -86,15 +84,12 @@ private:
 
 	Atlas::Message::Element composeGeometry(Model* model, const std::string& collisionType) const;
 
-	void copyVertexData(std::vector<Atlas::Message::Element>& vertices, Ogre::VertexData& vertexData) const;
+	static void copyVertexData(std::vector<Atlas::Message::Element>& vertices, Ogre::VertexData& vertexData);
 
 
 };
 
 }
 
-}
-
-}
 
 #endif

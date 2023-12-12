@@ -58,25 +58,24 @@ using Atlas::Message::ListType;
 using Atlas::Message::MapType;
 using Atlas::Objects::Entity::RootEntity;
 
-int main()
-{
-    Ref<Thing> e(new Thing(1));
-    TypeNode type("thing");
-    e->setType(&type);
+int main() {
+	Ref<Thing> e(new Thing(1));
+	TypeNode type("thing");
+	e->setType(&type);
 
-    IGEntityExerciser ee(e);
+	IGEntityExerciser ee(e);
 
-    // Throw an op of every type at the entity
-    ee.runOperations();
+	// Throw an op of every type at the entity
+	ee.runOperations();
 
-    // Subscribe the entity to every class of op
-    std::set<std::string> opNames;
-    ee.addAllOperations(opNames);
+	// Subscribe the entity to every class of op
+	std::set<std::string> opNames;
+	ee.addAllOperations(opNames);
 
-    // Throw an op of every type at the entity again now it is subscribed
-    ee.runOperations();
+	// Throw an op of every type at the entity again now it is subscribed
+	ee.runOperations();
 
-    return 0;
+	return 0;
 }
 
 //stubs
@@ -88,79 +87,78 @@ int main()
 
 
 #define STUB_LocatedEntity_isVisibleForOtherEntity
-bool LocatedEntity::isVisibleForOtherEntity(const LocatedEntity& watcher) const
-{
-    return true;
+
+bool LocatedEntity::isVisibleForOtherEntity(const LocatedEntity& watcher) const {
+	return true;
 }
 
 #define STUB_LocatedEntity_makeContainer
-void LocatedEntity::makeContainer()
-{
-    if (m_contains == 0) {
-        m_contains.reset(new LocatedEntitySet);
-    }
+
+void LocatedEntity::makeContainer() {
+	if (m_contains == 0) {
+		m_contains.reset(new LocatedEntitySet);
+	}
 }
 
 #define STUB_LocatedEntity_changeContainer
-void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc)
-{
-    assert(m_parent != nullptr);
-    assert(m_parent->m_contains != nullptr);
-    m_parent->m_contains->erase(this);
-    if (m_parent->m_contains->empty()) {
-        m_parent->onUpdated();
-    }
-    new_loc->makeContainer();
-    bool was_empty = new_loc->m_contains->empty();
-    new_loc->m_contains->insert(this);
-    if (was_empty) {
-        new_loc->onUpdated();
-    }
-    assert(m_parent->checkRef() > 0);
-    auto oldLoc = m_parent;
-    m_parent = new_loc.get();
-    assert(m_parent->checkRef() > 0);
 
-    onContainered(oldLoc);
+void LocatedEntity::changeContainer(const Ref<LocatedEntity>& new_loc) {
+	assert(m_parent != nullptr);
+	assert(m_parent->m_contains != nullptr);
+	m_parent->m_contains->erase(this);
+	if (m_parent->m_contains->empty()) {
+		m_parent->onUpdated();
+	}
+	new_loc->makeContainer();
+	bool was_empty = new_loc->m_contains->empty();
+	new_loc->m_contains->insert(this);
+	if (was_empty) {
+		new_loc->onUpdated();
+	}
+	assert(m_parent->checkRef() > 0);
+	auto oldLoc = m_parent;
+	m_parent = new_loc.get();
+	assert(m_parent->checkRef() > 0);
+
+	onContainered(oldLoc);
 }
 
 #define STUB_LocatedEntity_broadcast
-void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const
-{
-    auto copy = op.copy();
-    copy->setTo(getId());
-    res.push_back(copy);
+
+void LocatedEntity::broadcast(const Atlas::Objects::Operation::RootOperation& op, OpVector& res, Visibility visibility) const {
+	auto copy = op.copy();
+	copy->setTo(getId());
+	res.push_back(copy);
 }
 
 #include "../stubs/rules/stubLocatedEntity.h"
 
 
-void addToEntity(const Point3D & p, std::vector<double> & vd)
-{
-    vd.resize(3);
-    vd[0] = p[0];
-    vd[1] = p[1];
-    vd[2] = p[2];
+void addToEntity(const Point3D& p, std::vector<double>& vd) {
+	vd.resize(3);
+	vd[0] = p[0];
+	vd[1] = p[1];
+	vd[2] = p[2];
 }
 
 
 #ifndef STUB_BaseWorld_getEntity
 #define STUB_BaseWorld_getEntity
-Ref<LocatedEntity> BaseWorld::getEntity(const std::string & id) const
-{
-    return getEntity(integerId(id));
+
+Ref<LocatedEntity> BaseWorld::getEntity(const std::string& id) const {
+	return getEntity(integerId(id));
 }
 
-Ref<LocatedEntity> BaseWorld::getEntity(long id) const
-{
-    auto I = m_eobjects.find(id);
-    if (I != m_eobjects.end()) {
-        assert(I->second);
-        return I->second;
-    } else {
-        return nullptr;
-    }
+Ref<LocatedEntity> BaseWorld::getEntity(long id) const {
+	auto I = m_eobjects.find(id);
+	if (I != m_eobjects.end()) {
+		assert(I->second);
+		return I->second;
+	} else {
+		return nullptr;
+	}
 }
+
 #endif //STUB_BaseWorld_getEntity
 
 #include "../stubs/rules/simulation/stubBaseWorld.h"
@@ -169,39 +167,38 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const
 #include "../stubs/common/stublog.h"
 #include "../stubs/common/stubid.h"
 
-template <typename FloatT>
-int fromStdVector(Point3D & p, const std::vector<FloatT> & vf)
-{
-    if (vf.size() != 3) {
-        return -1;
-    }
-    p[0] = vf[0];
-    p[1] = vf[1];
-    p[2] = vf[2];
-    p.setValid();
-    return 0;
+template<typename FloatT>
+int fromStdVector(Point3D& p, const std::vector<FloatT>& vf) {
+	if (vf.size() != 3) {
+		return -1;
+	}
+	p[0] = vf[0];
+	p[1] = vf[1];
+	p[2] = vf[2];
+	p.setValid();
+	return 0;
 }
 
-template <typename FloatT>
-int fromStdVector(Vector3D & v, const std::vector<FloatT> & vf)
-{
-    if (vf.size() != 3) {
-        return -1;
-    }
-    v[0] = vf[0];
-    v[1] = vf[1];
-    v[2] = vf[2];
-    v.setValid();
-    return 0;
+template<typename FloatT>
+int fromStdVector(Vector3D& v, const std::vector<FloatT>& vf) {
+	if (vf.size() != 3) {
+		return -1;
+	}
+	v[0] = vf[0];
+	v[1] = vf[1];
+	v[2] = vf[2];
+	v.setValid();
+	return 0;
 }
 
-template int fromStdVector<double>(Point3D & p, const std::vector<double> & vf);
-template int fromStdVector<double>(Vector3D & v, const std::vector<double> & vf);
+template int fromStdVector<double>(Point3D& p, const std::vector<double>& vf);
+
+template int fromStdVector<double>(Vector3D& v, const std::vector<double>& vf);
 
 
-WFMath::CoordType squareDistance(const Point3D & u, const Point3D & v)
-{
-    return 1.0;
+WFMath::CoordType squareDistance(const Point3D& u, const Point3D& v) {
+	return 1.0;
 }
+
 #include "../stubs/rules/stubPhysicalProperties.h"
 

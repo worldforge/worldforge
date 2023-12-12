@@ -24,8 +24,8 @@
 #include "XMLSoundDefParser.h"
 #include "SoundGroupDefinition.h"
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 SoundDefinitionManager::SoundDefinitionManager()
@@ -46,7 +46,7 @@ const Ogre::StringVector& SoundDefinitionManager::getScriptPatterns() const {
 
 void SoundDefinitionManager::parseScript(Ogre::DataStreamPtr& stream, const Ogre::String& groupName) {
 	auto defs = mSoundParser->parseScript(stream);
-	for (auto& entry : defs) {
+	for (auto& entry: defs) {
 		mSoundGroupDefinitions.emplace(entry.first, std::move(entry.second));
 	}
 }
@@ -61,5 +61,5 @@ SoundGroupDefinition* SoundDefinitionManager::getSoundGroupDefinition(const std:
 }
 
 }
-}
+
 

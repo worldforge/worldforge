@@ -26,14 +26,12 @@
 static const bool debug_flag = false;
 
 MemEntity::MemEntity(RouterId id) :
-        LocatedEntity(id),
-        m_lastSeen(0.),
-        m_lastUpdated(0)
-{
+		LocatedEntity(id),
+		m_lastSeen(0.),
+		m_lastUpdated(0) {
 }
 
-std::unique_ptr<PropertyBase> MemEntity::createProperty(const std::string& propertyName) const
-{
+std::unique_ptr<PropertyBase> MemEntity::createProperty(const std::string& propertyName) const {
 //    if (propertyName == ReadPositionProperty::property_name) {
 //        return std::make_unique<ReadPositionProperty>(const_cast<WFMath::Point<3>&>(m_transform.pos));
 //    }
@@ -49,28 +47,25 @@ std::unique_ptr<PropertyBase> MemEntity::createProperty(const std::string& prope
 //    if (propertyName == ReadAngularProperty::property_name) {
 //        return std::make_unique<ReadAngularProperty>(const_cast<MemEntity&>(*this));
 //    }
-    return PropertyManager::instance().addProperty(propertyName);
+	return PropertyManager::instance().addProperty(propertyName);
 }
 
 
-void MemEntity::externalOperation(const Operation& op, Link&)
-{
+void MemEntity::externalOperation(const Operation& op, Link&) {
 }
 
-void MemEntity::operation(const Operation&, OpVector&)
-{
+void MemEntity::operation(const Operation&, OpVector&) {
 }
 
-void MemEntity::destroy()
-{
-    LocatedEntity::destroy();
+void MemEntity::destroy() {
+	LocatedEntity::destroy();
 
-    if (m_contains) {
-        auto containsCopy = *m_contains;
-        for (auto& child_ent : containsCopy) {
-            child_ent->destroy();
-        }
-    }
-    m_flags.addFlags(entity_destroyed);
+	if (m_contains) {
+		auto containsCopy = *m_contains;
+		for (auto& child_ent: containsCopy) {
+			child_ent->destroy();
+		}
+	}
+	m_flags.addFlags(entity_destroyed);
 }
 

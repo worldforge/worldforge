@@ -21,10 +21,8 @@
 #include <Mercator/Terrain.h>
 #include <Mercator/Segment.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainModUpdateTask::TerrainModUpdateTask(Mercator::Terrain& terrain,
 										   std::unique_ptr<Ember::Terrain::TerrainModTranslator> terrainModTranslator,
@@ -45,7 +43,7 @@ void TerrainModUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecutionCon
 	std::unique_ptr<Mercator::TerrainMod> terrainMod;
 	if (mTranslator->isValid()) {
 
-		Mercator::Segment* segment = mTerrain.getSegmentAtPos((float)mPosition.x(), (float)mPosition.z());
+		Mercator::Segment* segment = mTerrain.getSegmentAtPos((float) mPosition.x(), (float) mPosition.z());
 		if (segment) {
 
 			WFMath::Point<3> modPos = mPosition;
@@ -56,13 +54,13 @@ void TerrainModUpdateTask::executeTaskInBackgroundThread(Tasks::TaskExecutionCon
 				if (!segment->isValid()) {
 					segment->populate();
 				}
-				segment->getHeight((float)modPos.x() - (float)(segment->getXRef()), (float)modPos.z() - (float)(segment->getZRef()), height);
+				segment->getHeight((float) modPos.x() - (float) (segment->getXRef()), (float) modPos.z() - (float) (segment->getZRef()), height);
 			} else {
 				Mercator::HeightMap heightMap(segment->getResolution());
 				heightMap.allocate();
 				segment->populateHeightMap(heightMap);
 
-				heightMap.getHeight((float)modPos.x() - (float)(segment->getXRef()), (float)modPos.z() - (float)(segment->getZRef()), height);
+				heightMap.getHeight((float) modPos.x() - (float) (segment->getXRef()), (float) modPos.z() - (float) (segment->getZRef()), height);
 			}
 			modPos.y() = height;
 
@@ -87,5 +85,5 @@ bool TerrainModUpdateTask::executeTaskInMainThread() {
 }
 }
 
-}
-}
+
+

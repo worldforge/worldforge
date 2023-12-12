@@ -21,10 +21,8 @@
 #include "WFImage.h"
 #include <cassert>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 OgreImage::OgreImage(std::unique_ptr<Image::ImageBuffer> buffer) :
 		Image(std::move(buffer)) {
@@ -65,5 +63,5 @@ void OgreImage::blit(const OgreImage& imageToBlit, unsigned int destinationChann
 
 }
 
-}
-}
+
+

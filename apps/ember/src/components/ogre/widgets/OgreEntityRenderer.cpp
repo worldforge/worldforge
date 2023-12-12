@@ -29,15 +29,13 @@
 #include <OgreEntity.h>
 #include <OgrePixelCountLodStrategy.h>
 #include <OgreSkeletonInstance.h>
-#include <OgreCamera.h>
 #include <CEGUI/Image.h>
 #include <CEGUI/Window.h>
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 /**
  * @brief Stops the animation when the observed resource is unloaded.
@@ -212,5 +210,5 @@ void OgreEntityRenderer::setShowSkeleton(bool showSkeleton) {
 
 
 }
-}
-}
+
+

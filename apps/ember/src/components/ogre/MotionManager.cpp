@@ -22,8 +22,8 @@
 #include "IAnimated.h"
 
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
 MotionManager::MotionManager()
@@ -35,13 +35,13 @@ MotionManager::~MotionManager() = default;
 
 
 void MotionManager::doMotionUpdate(Ogre::Real timeSlice) {
-	for (auto I : mMotionSet) {
+	for (auto I: mMotionSet) {
 		I->updateMotion(timeSlice);
 	}
 }
 
 void MotionManager::doAnimationUpdate(Ogre::Real timeSlice) {
-	for (const auto & entry : mAnimatedEntities) {
+	for (const auto& entry: mAnimatedEntities) {
 		entry.second->updateAnimation(timeSlice);
 	}
 }
@@ -78,4 +78,4 @@ void MotionManager::removeAnimated(const std::string& id) {
 }
 
 }
-}
+

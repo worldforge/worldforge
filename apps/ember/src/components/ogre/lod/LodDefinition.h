@@ -31,9 +31,8 @@
 #include <string>
 #include <map>
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
+
+namespace Ember::OgreView::Lod {
 
 
 /**
@@ -248,6 +247,6 @@ inline size_t LodDefinition::getLodDistanceCount() const {
 }
 
 }
-}
-}
+
+
 #endif // ifndef LODDEFINITION_H

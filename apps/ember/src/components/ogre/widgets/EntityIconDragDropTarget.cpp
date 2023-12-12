@@ -26,28 +26,23 @@
 
 using namespace CEGUI;
 
-namespace Ember {
-namespace OgreView {
 
-namespace Gui {
+namespace Ember::OgreView::Gui {
 
-EntityIconDragDropTarget::EntityIconDragDropTarget(CEGUI::Window* container)
-{
-	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemEnters, CEGUI::Event::Subscriber(& EntityIconDragDropTarget::dragContainer_DragEnter, this)));
-	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemLeaves, CEGUI::Event::Subscriber(& EntityIconDragDropTarget::dragContainer_DragLeave, this)));
-	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemDropped, CEGUI::Event::Subscriber(& EntityIconDragDropTarget::dragContainer_DragDropped, this)));
+EntityIconDragDropTarget::EntityIconDragDropTarget(CEGUI::Window* container) {
+	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemEnters, CEGUI::Event::Subscriber(&EntityIconDragDropTarget::dragContainer_DragEnter, this)));
+	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemLeaves, CEGUI::Event::Subscriber(&EntityIconDragDropTarget::dragContainer_DragLeave, this)));
+	mConnections.push_back(container->subscribeEvent(CEGUI::Window::EventDragDropItemDropped, CEGUI::Event::Subscriber(&EntityIconDragDropTarget::dragContainer_DragDropped, this)));
 }
 
-EntityIconDragDropTarget::~EntityIconDragDropTarget()
-{
-	for (auto & connection : mConnections) {
+EntityIconDragDropTarget::~EntityIconDragDropTarget() {
+	for (auto& connection: mConnections) {
 		connection->disconnect();
 	}
 }
 
 
-bool EntityIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs& args)
-{
+bool EntityIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs& args) {
 	EntityIcon* entityIcon = parseIcon(args);
 	if (entityIcon) {
 		return handleDragEnter(args, entityIcon);
@@ -55,8 +50,7 @@ bool EntityIconDragDropTarget::dragContainer_DragEnter(const CEGUI::EventArgs& a
 	return true;
 }
 
-bool EntityIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs& args)
-{
+bool EntityIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs& args) {
 	EntityIcon* entityIcon = parseIcon(args);
 	if (entityIcon) {
 		return handleDragLeave(args, entityIcon);
@@ -64,8 +58,7 @@ bool EntityIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs& a
 	return true;
 }
 
-bool EntityIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs& args)
-{
+bool EntityIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs& args) {
 	EntityIcon* entityIcon = parseIcon(args);
 	if (entityIcon) {
 		return handleDragDropped(args, entityIcon);
@@ -74,25 +67,22 @@ bool EntityIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs&
 }
 
 
-
-bool EntityIconDragDropTarget::handleDragEnter(const CEGUI::EventArgs& args, EntityIcon* icon)
-{
+bool EntityIconDragDropTarget::handleDragEnter(const CEGUI::EventArgs& args, EntityIcon* icon) {
 	EventIconEntered.emit(icon);
 	return true;
 }
-bool EntityIconDragDropTarget::handleDragLeave(const CEGUI::EventArgs& args, EntityIcon* icon)
-{
+
+bool EntityIconDragDropTarget::handleDragLeave(const CEGUI::EventArgs& args, EntityIcon* icon) {
 	EventIconLeaves.emit(icon);
 	return true;
 }
-bool EntityIconDragDropTarget::handleDragDropped(const CEGUI::EventArgs& args, EntityIcon* icon)
-{
+
+bool EntityIconDragDropTarget::handleDragDropped(const CEGUI::EventArgs& args, EntityIcon* icon) {
 	EventIconDropped.emit(icon);
 	return true;
 }
 
-EntityIcon* EntityIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args)
-{
+EntityIcon* EntityIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args) {
 	const auto& ddea = dynamic_cast<const DragDropEventArgs&>(args);
 	DragContainer* container = ddea.dragDropItem;
 	if (container) {
@@ -106,8 +96,7 @@ EntityIcon* EntityIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args)
 }
 
 
-
 }
 
-}
-}
+
+

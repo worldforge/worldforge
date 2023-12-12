@@ -35,10 +35,10 @@
 
 #include <memory>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 SnapToMovement::SnapToMovement(Eris::Entity& entity, Ogre::Node& node, float snapThreshold, Ogre::SceneManager& sceneManager, bool showDebugOverlay) :
 		mEntity(entity),
@@ -62,7 +62,7 @@ SnapToMovement::SnapToMovement(Eris::Entity& entity, Ogre::Node& node, float sna
 }
 
 SnapToMovement::~SnapToMovement() {
-	for (auto node : mDebugNodes) {
+	for (auto node: mDebugNodes) {
 		node->removeAndDestroyAllChildren();
 		mSceneManager.destroySceneNode(node);
 	}
@@ -71,9 +71,9 @@ SnapToMovement::~SnapToMovement() {
 
 bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::Quaternion& orientation, WFMath::Vector<3>& adjustment, EmberEntity** snappedToEntity) {
 	try {
-		for (auto node : mDebugNodes) {
+		for (auto node: mDebugNodes) {
 			node->setVisible(false);
-			auto* sphereEntity = static_cast<Ogre::Entity*>(node->getAttachedObject(0));
+			auto* sphereEntity = dynamic_cast<Ogre::Entity*>(node->getAttachedObject(0));
 			sphereEntity->setMaterialName("/common/base/authoring/point");
 		}
 	} catch (const std::exception& ex) {
@@ -111,7 +111,7 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 	auto parentLocation = mEntity.getLocation();
 	if (parentLocation) {
 		auto entitySphere = mEntity.getBBox().boundingSphere().toParentCoords(position);
-		for (auto& child : parentLocation->getContent()) {
+		for (auto& child: parentLocation->getContent()) {
 			if (child != &mEntity) {
 				if (child->hasBBox()) {
 					WFMath::AxisBox<3> bbox = child->getBBox();
@@ -142,7 +142,7 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 								WFMath::CoordType distance = WFMath::Distance(currentPoint, point);
 								if (distance <= mSnapThreshold) {
 									if (currentNode) {
-										auto* sphereEntity = static_cast<Ogre::Entity*> (currentNode->getAttachedObject(0));
+										auto* sphereEntity = dynamic_cast<Ogre::Entity*> (currentNode->getAttachedObject(0));
 										if (sphereEntity) {
 											try {
 												sphereEntity->setMaterialName("/common/base/authoring/point/moved");
@@ -153,11 +153,11 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 									}
 									if (!closestSnapping) {
 										closestSnapping = std::make_unique<SnapPointCandidate>();
-										closestSnapping->entity = static_cast<EmberEntity*>(child);
+										closestSnapping->entity = dynamic_cast<EmberEntity*>(child);
 										closestSnapping->distance = distance;
 										closestSnapping->adjustment = point - currentPoint;
 									} else if (distance < closestSnapping->distance) {
-										closestSnapping->entity = static_cast<EmberEntity*>(child);
+										closestSnapping->entity = dynamic_cast<EmberEntity*>(child);
 										closestSnapping->distance = distance;
 										closestSnapping->adjustment = point - currentPoint;
 									}
@@ -196,5 +196,5 @@ bool SnapToMovement::testSnapTo(const WFMath::Point<3>& position, const WFMath::
 
 }
 
-}
-}
+
+

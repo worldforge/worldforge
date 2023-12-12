@@ -23,11 +23,10 @@
 #include <rules/LocatedEntity.h>
 #include <string>
 
-struct NullEntityCreator : public EntityCreator
-{
-    Ref<Entity> newEntity(RouterId id, const std::string& type, const Atlas::Objects::Entity::RootEntity& attrs) const override
-    {
-        return {};
-    }
+struct NullEntityCreator : public EntityCreator {
+	Ref<Entity> newEntity(RouterId id, const std::string& type, const Atlas::Objects::Entity::RootEntity& attrs) const override {
+		return {};
+	}
 };
+
 #endif //TESTS_NULL_ENTITY_CREATOR_H

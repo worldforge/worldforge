@@ -38,8 +38,8 @@ class TerrainGroup;
 
 namespace Ember {
 class EmberEntity;
-namespace OgreView {
-namespace Terrain {
+
+namespace OgreView::Terrain {
 
 class OgreTerrainMaterialGeneratorEmber;
 
@@ -144,7 +144,7 @@ private:
 
 };
 
-} /* namespace Terrain */
-} /* namespace OgreView */
+} // namespace OgreView::Terrain
+
 } /* namespace Ember */
 #endif /* OGRETERRAINADAPTER_H_ */

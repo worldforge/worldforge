@@ -25,9 +25,8 @@
 
 #include "AnimationSet.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+
+namespace Ember::OgreView::Model {
 
 /**
 @author Erik Ogenvik
@@ -42,6 +41,6 @@ struct Action {
 
 
 }
-}
-}
+
+
 #endif

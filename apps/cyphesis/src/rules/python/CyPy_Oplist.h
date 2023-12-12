@@ -29,29 +29,28 @@
 /**
  * \ingroup PythonWrappers
  */
-class CyPy_Oplist : public WrapperBase<std::vector<Atlas::Objects::Operation::RootOperation>, CyPy_Oplist>
-{
-    public:
-        CyPy_Oplist(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
+class CyPy_Oplist : public WrapperBase<std::vector<Atlas::Objects::Operation::RootOperation>, CyPy_Oplist> {
+public:
+	CyPy_Oplist(Py::PythonClassInstance* self, Py::Tuple& args, Py::Dict& kwds);
 
-        CyPy_Oplist(Py::PythonClassInstance* self, std::vector<Atlas::Objects::Operation::RootOperation> value);
+	CyPy_Oplist(Py::PythonClassInstance* self, std::vector<Atlas::Objects::Operation::RootOperation> value);
 
-        static void init_type();
+	static void init_type();
 
-    protected:
+protected:
 
-        Py::Object append(const Py::Tuple& args);
+	Py::Object append(const Py::Tuple& args);
 
-        PYCXX_VARARGS_METHOD_DECL(CyPy_Oplist, append);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Oplist, append);
 
 
-        static void appendToList(const Py::Object& op, std::vector<Atlas::Objects::Operation::RootOperation>& list);
+	static void appendToList(const Py::Object& op, std::vector<Atlas::Objects::Operation::RootOperation>& list);
 
-        Py::Object number_add(const Py::Object& other) override;
+	Py::Object number_add(const Py::Object& other) override;
 
-        Py::Object sequence_inplace_concat(const Py::Object& other) override;
+	Py::Object sequence_inplace_concat(const Py::Object& other) override;
 
-        PyCxx_ssize_t sequence_length() override;
+	PyCxx_ssize_t sequence_length() override;
 
 };
 

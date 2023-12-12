@@ -18,10 +18,8 @@
 
 #include "Buffer.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 template<>
 void Buffer<unsigned char>::reset() {
@@ -40,5 +38,5 @@ void Buffer<float>::reset() {
 
 }
 
-}
-}
+
+

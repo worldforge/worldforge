@@ -31,7 +31,6 @@
 #include <OgreRenderTexture.h>
 #include <OgreRoot.h>
 #include <OgreViewport.h>
-#include <sigc++/bind.h>
 
 #include <utility>
 #include <sigc++/connection.h>

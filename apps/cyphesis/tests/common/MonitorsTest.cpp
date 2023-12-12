@@ -31,32 +31,35 @@
 
 #include <cassert>
 
-int main()
-{
-    Monitors m;
+int main() {
+	Monitors m;
 
-    int foo = 7;
-    std::stringstream ss;
+	int foo = 7;
+	std::stringstream ss;
 
-    m.watch("foo", std::make_unique<Variable<int>>(foo));
+	m.watch("foo", std::make_unique<Variable<int>>(foo));
 
-    m.insert("bar", 3);
-    m.insert("mim", 3.f);
-    m.insert("qux", "three");
+	m.insert("bar", 3);
+	m.insert("mim", 3.f);
+	m.insert("qux", "three");
 
-    // positive check
-    assert( m.readVariable("foo",ss) == 0 );
-    assert( ss.str().compare("7") == 0 );
+	// positive check
+	assert(m.readVariable("foo", ss) == 0);
+	assert(ss.str().compare("7") == 0);
 
-    // negative check
-    ss.clear();
-    assert(m.readVariable("nonexistent",ss) != 0);
+	// negative check
+	ss.clear();
+	assert(m.readVariable("nonexistent", ss) != 0);
 
-    m.send(std::cout);
+	m.send(std::cout);
 
-    return 0;
+	return 0;
 }
 
-namespace Atlas { namespace Objects { namespace Operation {
+namespace Atlas {
+namespace Objects {
+namespace Operation {
 int MONITOR_NO = -1;
-} } }
+}
+}
+}

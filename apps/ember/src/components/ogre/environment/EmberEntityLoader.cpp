@@ -22,7 +22,6 @@
 //
 #include "EmberEntityLoader.h"
 
-#include "../model/Model.h"
 #include "../model/SubModel.h"
 #include "components/ogre/Convert.h"
 #include "domain/EmberEntity.h"
@@ -32,10 +31,10 @@
 
 #include <sigc++/bind.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+
+
+namespace Ember::OgreView::Environment {
 
 EmberEntityLoader::EmberEntityLoader(::Forests::PagedGeometry& geom, unsigned int batchSize) :
 		mGeom(geom), mBatchSize(batchSize) {
@@ -53,7 +52,7 @@ EmberEntityLoader::~EmberEntityLoader() {
 		}
 	}
 #else
-	for (auto& entity : mEntities) {
+	for (auto& entity: mEntities) {
 		entity.second.movedConnection.disconnect();
 		entity.second.visibilityChangedConnection.disconnect();
 	}
@@ -175,7 +174,7 @@ void EmberEntityLoader::loadPage(::Forests::PageInfo& page) {
 	EntityMap& entities(mEntities);
 #endif
 
-	for (auto& entity : entities) {
+	for (auto& entity: entities) {
 		ModelRepresentationInstance& instance = entity.second;
 		Model::ModelRepresentation* modelRepresentation = instance.modelRepresentation;
 		auto* nodeProvider = modelRepresentation->getModel().getNodeProvider();
@@ -224,6 +223,6 @@ void EmberEntityLoader::EmberEntity_VisibilityChanged(bool, EmberEntity* entity)
 
 }
 
-}
-}
+
+
 

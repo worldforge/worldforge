@@ -33,9 +33,9 @@
 
 #include <Atlas/Formatter.h>
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 
 EntityRecipe::EntityRecipe(std::vector<std::unique_ptr<TiXmlElement>> entitySpecs) :
 		mEntitySpecs(std::move(entitySpecs)) {
@@ -214,5 +214,5 @@ Atlas::Message::MapType EntityRecipe::createEntity(Eris::TypeService& typeServic
 }
 
 }
-}
-}
+
+

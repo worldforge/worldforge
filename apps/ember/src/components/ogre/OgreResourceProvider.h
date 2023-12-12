@@ -27,19 +27,22 @@
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include <OgreDataStream.h>
 
-namespace Ember {
-namespace OgreView {
+
+namespace Ember::OgreView {
 
 
-class OgreResourceWrapper : public IResourceWrapper
-{
+class OgreResourceWrapper : public IResourceWrapper {
 public:
 	explicit OgreResourceWrapper(const Ogre::DataStreamPtr& dataStream);
+
 	~OgreResourceWrapper() override;
 
 	const char* getDataPtr() override;
+
 	bool hasData() override;
+
 	size_t getSize() override;
+
 private:
 	std::vector<char> mBuffer;
 };
@@ -48,14 +51,14 @@ private:
 /**
 	@author Erik Ogenvik <erik@ogenvik.org>
 */
-class OgreResourceProvider : public IResourceProvider
-{
+class OgreResourceProvider : public IResourceProvider {
 public:
-    explicit OgreResourceProvider(std::string groupName);
+	explicit OgreResourceProvider(std::string groupName);
 
-    ~OgreResourceProvider() override;
+	~OgreResourceProvider() override;
 
 	ResourceWrapper getResource(const std::string& name) override;
+
 private:
 	std::string mGroupName;
 
@@ -63,6 +66,6 @@ private:
 
 }
 
-}
+
 
 #endif

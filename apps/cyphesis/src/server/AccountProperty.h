@@ -23,17 +23,16 @@
 
 class ServerRouting;
 
-class AccountProperty : public Property<std::string>
-{
-    public:
+class AccountProperty : public Property<std::string> {
+public:
 
-        static constexpr const char* property_name = "__account";
+	static constexpr const char* property_name = "__account";
 
-        void apply(LocatedEntity&) override;
+	void apply(LocatedEntity&) override;
 
-        AccountProperty* copy() const override;
+	AccountProperty* copy() const override;
 
-        static ServerRouting* s_serverRouting;
+	static ServerRouting* s_serverRouting;
 
 };
 

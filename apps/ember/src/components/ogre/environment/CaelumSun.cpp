@@ -26,12 +26,9 @@
 
 #include "framework/Tokeniser.h"
 
-#include "services/config/ConfigService.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Environment {
+namespace Ember::OgreView::Environment {
 
 CaelumSun::CaelumSun(CaelumEnvironment& environment, Caelum::BaseSkyLight* sun) :
 		CaelumEnvironmentComponent(environment), mSun(sun) {
@@ -110,5 +107,5 @@ bool CaelumSun::parse(varconf::Variable& variable, Ogre::ColourValue& colour) {
 
 }
 
-}
-}
+
+

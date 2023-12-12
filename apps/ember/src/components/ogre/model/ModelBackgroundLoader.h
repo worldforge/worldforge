@@ -32,22 +32,20 @@
 
 #include <memory>
 
-namespace Eris
-{
+namespace Eris {
 class EventService;
 }
 
-namespace Ember
-{
+namespace Ember {
 class TimeFrame;
-namespace OgreView
-{
 
-namespace Model
-{
+
+namespace OgreView::Model {
 
 class Model;
+
 class ModelBackgroundLoader;
+
 class ModelDefinition;
 
 /**
@@ -56,8 +54,7 @@ class ModelDefinition;
  * It's main purpose is to pass the call to operationCompleted() on to the background loader.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class ModelBackgroundLoaderListener: public Ogre::ResourceBackgroundQueue::Listener
-{
+class ModelBackgroundLoaderListener : public Ogre::ResourceBackgroundQueue::Listener {
 public:
 	/**
 	 * @brief Ctor.
@@ -91,16 +88,15 @@ private:
 
  @author Erik Ogenvik <erik@ogenvik.org>
  */
-class ModelBackgroundLoader
-{
+class ModelBackgroundLoader {
 	friend class ModelBackgroundLoaderListener;
+
 public:
 	/**
 	 * @brief The different loading states of the Model.
 	 * Loading normally progresses through these states in order.
 	 */
-	enum LoadingState
-	{
+	enum LoadingState {
 		/**
 		 * @brief The loading hasn't yet begun.
 		 */
@@ -257,7 +253,6 @@ protected:
 
 }
 
-}
 
 }
 

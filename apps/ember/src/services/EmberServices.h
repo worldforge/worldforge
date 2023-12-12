@@ -23,16 +23,20 @@
 #include <memory>
 #include "framework/Singleton.h"
 
-namespace Ember
-{
+namespace Ember {
 struct Session;
 
 // some forward declarations before we start
 class ConfigService;
+
 class MetaserverService;
+
 class ServerService;
+
 class SoundService;
+
 class ScriptingService;
+
 class ServerSettings;
 
 
@@ -55,8 +59,7 @@ class ServerSettings;
  *
  * @author Hans Häggström
  */
-class EmberServices: public Singleton<EmberServices>
-{
+class EmberServices : public Singleton<EmberServices> {
 public:
 
 	/**

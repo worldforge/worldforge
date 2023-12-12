@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
 	<Window name="AreaAdapter" type="DefaultWindow">
-		<Property name="Position" value="{{0,0},{0,0}}" />
-		<Property name="Size" value="{{0,200},{0,120}}" />
+		<Property name="Position" value="{{0,0},{0,0}}"/>
+		<Property name="Size" value="{{0,200},{0,120}}"/>
 		<Window name="showButton" type="EmberLook/Button">
-			<Property name="Position" value="{{0,0},{0,0}}" />
-			<Property name="Size" value="{{0,100},{0,25}}" />
-			<Property name="Text" value="Show" />
-			<Property name="TooltipText" value="Shows a graphical representation of the terrain mod." />
+			<Property name="Position" value="{{0,0},{0,0}}"/>
+			<Property name="Size" value="{{0,100},{0,25}}"/>
+			<Property name="Text" value="Show"/>
+			<Property name="TooltipText" value="Shows a graphical representation of the terrain mod."/>
 		</Window>
 		<Window name="posTypeText" type="EmberLook/StaticText">
-			<Property name="Position" value="{{0,0},{0,30}}" />
-			<Property name="Size" value="{{0,75},{0,25}}" />
-			<Property name="FrameEnabled" value="false" />
-			<Property name="BackgroundEnabled" value="false" />
-			<Property name="Text" value="Pos. type" />
+			<Property name="Position" value="{{0,0},{0,30}}"/>
+			<Property name="Size" value="{{0,75},{0,25}}"/>
+			<Property name="FrameEnabled" value="false"/>
+			<Property name="BackgroundEnabled" value="false"/>
+			<Property name="Text" value="Pos. type"/>
 		</Window>
 		<Window name="posType" type="EmberLook/Combobox">
-			<Property name="Position" value="{{0,75},{0,30}}" />
-			<Property name="Size" value="{{0,125},{0,125}}" />
-			<Property name="ReadOnly" value="true" />
-			<Property name="TooltipText" value="Positioning type." />
+			<Property name="Position" value="{{0,75},{0,30}}"/>
+			<Property name="Size" value="{{0,125},{0,125}}"/>
+			<Property name="ReadOnly" value="true"/>
+			<Property name="TooltipText" value="Positioning type."/>
 		</Window>
 		<Window name="modTypeText" type="EmberLook/StaticText">
-			<Property name="Position" value="{{0,0},{0,60}}" />
-			<Property name="Size" value="{{0,75},{0,25}}" />
-			<Property name="FrameEnabled" value="false" />
-			<Property name="BackgroundEnabled" value="false" />
-			<Property name="Text" value="Mod type" />
+			<Property name="Position" value="{{0,0},{0,60}}"/>
+			<Property name="Size" value="{{0,75},{0,25}}"/>
+			<Property name="FrameEnabled" value="false"/>
+			<Property name="BackgroundEnabled" value="false"/>
+			<Property name="Text" value="Mod type"/>
 		</Window>
 		<Window name="modType" type="EmberLook/Combobox">
-			<Property name="Position" value="{{0,75},{0,60}}" />
-			<Property name="Size" value="{{0,125},{0,125}}" />
-			<Property name="ReadOnly" value="true" />
-			<Property name="TooltipText" value="Type of terrain modification." />
+			<Property name="Position" value="{{0,75},{0,60}}"/>
+			<Property name="Size" value="{{0,125},{0,125}}"/>
+			<Property name="ReadOnly" value="true"/>
+			<Property name="TooltipText" value="Type of terrain modification."/>
 		</Window>
 		<Window name="heightText" type="EmberLook/StaticText">
-			<Property name="Position" value="{{0,0},{0,90}}" />
-			<Property name="Size" value="{{0,75},{0,25}}" />
-			<Property name="FrameEnabled" value="false" />
-			<Property name="BackgroundEnabled" value="false" />
-			<Property name="Text" value="Height" />
+			<Property name="Position" value="{{0,0},{0,90}}"/>
+			<Property name="Size" value="{{0,75},{0,25}}"/>
+			<Property name="FrameEnabled" value="false"/>
+			<Property name="BackgroundEnabled" value="false"/>
+			<Property name="Text" value="Height"/>
 		</Window>
 		<Window name="height" type="EmberLook/Editbox">
-			<Property name="Position" value="{{0,75},{0,90}}" />
-			<Property name="Size" value="{{0,125},{0,25}}" />
-			<Property name="TooltipText" value="A height value, the value of which depends on the type of mod and positioning." />
+			<Property name="Position" value="{{0,75},{0,90}}"/>
+			<Property name="Size" value="{{0,125},{0,25}}"/>
+			<Property name="TooltipText"
+					  value="A height value, the value of which depends on the type of mod and positioning."/>
 		</Window>
 	</Window>
 </GUILayout>

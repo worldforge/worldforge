@@ -23,41 +23,37 @@
 
 Point3Property::Point3Property(const Point3Property& rhs) = default;
 
-int Point3Property::get(Atlas::Message::Element& val) const
-{
-    if (m_data.isValid()) {
-        val = m_data.toAtlas();
-        return 0;
-    }
-    return 1;
+int Point3Property::get(Atlas::Message::Element& val) const {
+	if (m_data.isValid()) {
+		val = m_data.toAtlas();
+		return 0;
+	}
+	return 1;
 
 }
 
-void Point3Property::set(const Atlas::Message::Element& val)
-{
-    if (val.isList()) {
-        try {
-            m_data.fromAtlas(val.List());
-        } catch (...) {
-            m_data = {};
-            spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
-        }
-    } else if (val.isNone()) {
-        m_data = {};
-    } else {
-        m_data = {};
-        spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
-    }
+void Point3Property::set(const Atlas::Message::Element& val) {
+	if (val.isList()) {
+		try {
+			m_data.fromAtlas(val.List());
+		} catch (...) {
+			m_data = {};
+			spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
+		}
+	} else if (val.isNone()) {
+		m_data = {};
+	} else {
+		m_data = {};
+		spdlog::error("Point3Property::set: Data was not in format which could be parsed into 3d point.");
+	}
 }
 
-Point3Property* Point3Property::copy() const
-{
-    return new Point3Property(*this);
+Point3Property* Point3Property::copy() const {
+	return new Point3Property(*this);
 }
 
-void Point3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
-{
-    if (m_data.isValid()) {
-        PropertyBase::add(key, ent);
-    }
+void Point3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const {
+	if (m_data.isValid()) {
+		PropertyBase::add(key, ent);
+	}
 }

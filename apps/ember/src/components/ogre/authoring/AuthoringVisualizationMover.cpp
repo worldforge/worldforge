@@ -20,31 +20,25 @@
 #include "AuthoringVisualization.h"
 #include "EntityMover.h"
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+
+
+namespace Ember::OgreView::Authoring {
 AuthoringVisualizationMover::AuthoringVisualizationMover(AuthoringVisualization& visualization, EntityMover& mover) :
-	mVisualization(visualization), mMover(mover)
-{
+		mVisualization(visualization), mMover(mover) {
 	mVisualization.setControlDelegate(&mMover.getControlDelegate());
 	mMover.Moved.connect(sigc::mem_fun(*this, &AuthoringVisualizationMover::mover_Moved));
 }
 
-AuthoringVisualizationMover::~AuthoringVisualizationMover()
-{
+AuthoringVisualizationMover::~AuthoringVisualizationMover() {
 	//At deletion time we'll detach ourselves as a control delegate and tell the visualization to update its position.
 	mVisualization.setControlDelegate(nullptr);
 	mVisualization.updatePositionAndOrientation();
 }
 
-void AuthoringVisualizationMover::mover_Moved()
-{
+void AuthoringVisualizationMover::mover_Moved() {
 	mVisualization.updatePositionAndOrientation();
 }
 }
-}
-}
+
+

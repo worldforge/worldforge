@@ -22,7 +22,7 @@
 using namespace Ember::OgreView::Camera;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<MainCamera>(sol::table& space) {
 	auto mainCamera = space.new_usertype<MainCamera>("MainCamera", sol::no_constructor);
 	mainCamera["getCamera"] = &MainCamera::getCamera;

@@ -22,50 +22,41 @@
 #include "rules/LocatedEntity.h"
 #include "common/const.h"
 
-class TestDomain : public Domain
-{
-    public:
+class TestDomain : public Domain {
+public:
 
-        TestDomain(LocatedEntity& entity) :
-                Domain(entity)
-        {
-        }
+	TestDomain(LocatedEntity& entity) :
+			Domain(entity) {
+	}
 
-        ~TestDomain()
-        {
-        }
+	~TestDomain() {
+	}
 
-        void tick(double t, OpVector& res)
-        {
-        }
+	void tick(double t, OpVector& res) {
+	}
 
-        bool isEntityVisibleFor(
-                const LocatedEntity& observingEntity,
-                const LocatedEntity& observedEntity) const
-        {
-            return true;
-        }
+	bool isEntityVisibleFor(
+			const LocatedEntity& observingEntity,
+			const LocatedEntity& observedEntity) const {
+		return true;
+	}
 
-        virtual void getVisibleEntitiesFor(const LocatedEntity& observingEntity,
-                                           std::list<LocatedEntity*>& entityList) const
-        {
+	virtual void getVisibleEntitiesFor(const LocatedEntity& observingEntity,
+									   std::list<LocatedEntity*>& entityList) const {
 
-        }
+	}
 
-        void addEntity(LocatedEntity& entity)
-        {
+	void addEntity(LocatedEntity& entity) {
 
-        }
+	}
 
-        void removeEntity(LocatedEntity& entity)
-        {
+	void removeEntity(LocatedEntity& entity) {
 
-        }
+	}
 
-        boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override
-        {
-            return boost::none;
-        }
+	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override {
+		return boost::none;
+	}
 
 
 };

@@ -19,7 +19,6 @@ target_link_libraries(metaserver
 install(TARGETS metaserver DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 
 
-
 add_executable(ms-testserver
         TestServer.cpp
 )

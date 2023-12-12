@@ -28,10 +28,8 @@ template<int>
 class Vector;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 struct IHeightMapSegment;
 
@@ -144,8 +142,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINHEIGHTMAP_H_ */

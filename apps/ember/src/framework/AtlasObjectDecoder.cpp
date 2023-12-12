@@ -19,23 +19,19 @@
 #include "AtlasObjectDecoder.h"
 #include <Atlas/Objects/Factories.h>
 
-namespace Ember
-{
+namespace Ember {
 
 AtlasObjectDecoder::AtlasObjectDecoder(const Atlas::Objects::Factories& factories)
-: ObjectsDecoder(factories)
-{
+		: ObjectsDecoder(factories) {
 }
 
 AtlasObjectDecoder::~AtlasObjectDecoder() = default;
 
-Atlas::Objects::Root AtlasObjectDecoder::getLastObject()
-{
+Atlas::Objects::Root AtlasObjectDecoder::getLastObject() {
 	return mLastObject;
 }
 
-void AtlasObjectDecoder::objectArrived(Atlas::Objects::Root obj)
-{
+void AtlasObjectDecoder::objectArrived(Atlas::Objects::Root obj) {
 	EventObjectArrived(obj);
 	mLastObject = std::move(obj);
 }

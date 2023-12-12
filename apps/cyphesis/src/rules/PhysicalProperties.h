@@ -23,43 +23,39 @@
 #include "Point3Property.h"
 #include "QuaternionProperty.h"
 
-class PositionProperty : public Point3Property
-{
-    public:
-        static constexpr const char* property_name = "pos";
+class PositionProperty : public Point3Property {
+public:
+	static constexpr const char* property_name = "pos";
 
-        PositionProperty* copy() const override;
+	PositionProperty* copy() const override;
 
-        static WFMath::Point<3> extractPosition(const LocatedEntity& entity);
-
-};
-
-class VelocityProperty : public Vector3Property
-{
-    public:
-        static constexpr const char* property_name = "velocity";
-
-        VelocityProperty* copy() const override;
+	static WFMath::Point<3> extractPosition(const LocatedEntity& entity);
 
 };
 
-class AngularVelocityProperty : public Vector3Property
-{
-    public:
-        static constexpr const char* property_name = "angular";
-        AngularVelocityProperty* copy() const override;
+class VelocityProperty : public Vector3Property {
+public:
+	static constexpr const char* property_name = "velocity";
+
+	VelocityProperty* copy() const override;
 
 };
 
-class OrientationProperty : public QuaternionProperty
-{
-    public:
-        static constexpr const char* property_name = "orientation";
+class AngularVelocityProperty : public Vector3Property {
+public:
+	static constexpr const char* property_name = "angular";
 
-        OrientationProperty* copy() const override;
+	AngularVelocityProperty* copy() const override;
 
 };
 
+class OrientationProperty : public QuaternionProperty {
+public:
+	static constexpr const char* property_name = "orientation";
+
+	OrientationProperty* copy() const override;
+
+};
 
 
 #endif //CYPHESIS_PHYSICALPROPERTIES_H

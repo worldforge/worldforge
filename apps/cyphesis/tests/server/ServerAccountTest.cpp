@@ -47,101 +47,94 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Operation::RootOperation;
 
-class ServerAccounttest : public Cyphesis::TestBase
-{
-  protected:
-    long m_id_counter;
+class ServerAccounttest : public Cyphesis::TestBase {
+protected:
+	long m_id_counter;
 
-    ServerRouting * m_server;
-    Connection * m_connection;
-    ServerAccount * m_account;
-    PossessionAuthenticator* m_possessionAuthenticator;
-    TestWorld* m_world;
-
-
-        static Ref<Entity> TestWorld_addNewEntity_ret_value;
-  public:
-    ServerAccounttest();
-
-    void setup();
-    void teardown();
-
-    void test_getType();
+	ServerRouting* m_server;
+	Connection* m_connection;
+	ServerAccount* m_account;
+	PossessionAuthenticator* m_possessionAuthenticator;
+	TestWorld* m_world;
 
 
-    static Ref<Entity> get_TestWorld_addNewEntity_ret_value();
+	static Ref<Entity> TestWorld_addNewEntity_ret_value;
+public:
+	ServerAccounttest();
+
+	void setup();
+
+	void teardown();
+
+	void test_getType();
+
+
+	static Ref<Entity> get_TestWorld_addNewEntity_ret_value();
 };
 
 Ref<Entity> ServerAccounttest::TestWorld_addNewEntity_ret_value;
 
-Ref<Entity> ServerAccounttest::get_TestWorld_addNewEntity_ret_value()
-{
-    return TestWorld_addNewEntity_ret_value;
+Ref<Entity> ServerAccounttest::get_TestWorld_addNewEntity_ret_value() {
+	return TestWorld_addNewEntity_ret_value;
 }
 
 ServerAccounttest::ServerAccounttest() : m_id_counter(0L),
-                                         m_server(0),
-                                         m_connection(0),
-                                         m_account(0)
-{
-    ADD_TEST(ServerAccounttest::test_getType);
+										 m_server(0),
+										 m_connection(0),
+										 m_account(0) {
+	ADD_TEST(ServerAccounttest::test_getType);
 
 }
 
-void ServerAccounttest::setup()
-{
+void ServerAccounttest::setup() {
 
-    Ref<Entity> gw = new Entity(m_id_counter++);
-    TestWorld::extension.addNewEntityFn = [&, gw](const std::string &,
-                        const Atlas::Objects::Entity::RootEntity &)
-    {
-        auto ne = ServerAccounttest::get_TestWorld_addNewEntity_ret_value();
-        if (ne) {
-            ne->m_parent = gw.get();
-            ne->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0,0,0);
-        }
-        return ne;
-    };
-    m_world = new TestWorld(gw);
+	Ref<Entity> gw = new Entity(m_id_counter++);
+	TestWorld::extension.addNewEntityFn = [&, gw](const std::string&,
+												  const Atlas::Objects::Entity::RootEntity&) {
+		auto ne = ServerAccounttest::get_TestWorld_addNewEntity_ret_value();
+		if (ne) {
+			ne->m_parent = gw.get();
+			ne->requirePropertyClassFixed<PositionProperty>().data() = Point3D(0, 0, 0);
+		}
+		return ne;
+	};
+	m_world = new TestWorld(gw);
 
-    m_server = new ServerRouting(*m_world,
-                                 *(Persistence*)nullptr,
-                                 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
-                                 "bad621d4-616d-4faf-b9e6-471d12b139a9",
-                                 m_id_counter++);
-    m_connection = new Connection(*(CommSocket*)0, *m_server,
-                                  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
-                                  m_id_counter++);
-    m_account = new ServerAccount(m_connection,
-                                  "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
-                                  "fa1a03a2-a745-4033-85cb-bb694e921e62",
-                                  m_id_counter++);
+	m_server = new ServerRouting(*m_world,
+								 *(Persistence*) nullptr,
+								 "5529d7a4-0158-4dc1-b4a5-b5f260cac635",
+								 "bad621d4-616d-4faf-b9e6-471d12b139a9",
+								 m_id_counter++);
+	m_connection = new Connection(*(CommSocket*) 0, *m_server,
+								  "8d18a4e8-f14f-4a46-997e-ada120d5438f",
+								  m_id_counter++);
+	m_account = new ServerAccount(m_connection,
+								  "6c9f3236-5de7-4ba4-8b7a-b0222df0af38",
+								  "fa1a03a2-a745-4033-85cb-bb694e921e62",
+								  m_id_counter++);
 
-    m_possessionAuthenticator = new PossessionAuthenticator();
+	m_possessionAuthenticator = new PossessionAuthenticator();
 }
 
-void ServerAccounttest::teardown()
-{
-    delete m_world;
-    delete m_possessionAuthenticator;
-    delete m_server;
-    delete m_account;
-    delete m_connection;
+void ServerAccounttest::teardown() {
+	delete m_world;
+	delete m_possessionAuthenticator;
+	delete m_server;
+	delete m_account;
+	delete m_connection;
 }
 
-void ServerAccounttest::test_getType()
-{
-    const char * type = m_account->getType();
+void ServerAccounttest::test_getType() {
+	const char* type = m_account->getType();
 
-    ASSERT_EQUAL(std::string("server"), type);
+	ASSERT_EQUAL(std::string("server"), type);
 }
 
 
-int main()
-{
-    ServerAccounttest t;
+int main() {
+	ServerAccounttest t;
 
-    return t.run();
+	return t.run();
 }
 
 // stubs
@@ -171,13 +164,14 @@ int main()
 #include "../stubs/common/stubProperty.h"
 
 #define STUB_Router_error
-void Router::error(const Operation & op,
-                   const std::string & errstring,
-                   OpVector & res,
-                   const std::string & to) const
-{
-    res.push_back(Atlas::Objects::Operation::Error());
+
+void Router::error(const Operation& op,
+				   const std::string& errstring,
+				   OpVector& res,
+				   const std::string& to) const {
+	res.push_back(Atlas::Objects::Operation::Error());
 }
+
 #include "../stubs/common/stubRouter.h"
 #include "../stubs/rules/stubLocation.h"
 #include "../stubs/common/stublog.h"
@@ -187,11 +181,11 @@ bool database_flag = false;
 
 #include <common/Shaker.h>
 #include "rules/simulation/ExternalMind.h"
-Shaker::Shaker()
-{
+
+Shaker::Shaker() {
 }
-std::string Shaker::generateSalt(size_t length)
-{
-    return "";
+
+std::string Shaker::generateSalt(size_t length) {
+	return "";
 }
 

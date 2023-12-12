@@ -51,8 +51,9 @@
 
 namespace {
 
-const Ember::EntityMapping::Definitions::CaseDefinition::ParameterEntry* findCaseParameter(const std::vector<Ember::EntityMapping::Definitions::CaseDefinition::ParameterEntry>& parameters, const std::string& type) {
-	for (auto& entry : parameters) {
+const Ember::EntityMapping::Definitions::CaseDefinition::ParameterEntry*
+findCaseParameter(const std::vector<Ember::EntityMapping::Definitions::CaseDefinition::ParameterEntry>& parameters, const std::string& type) {
+	for (auto& entry: parameters) {
 		if (entry.first == type) {
 			return &(entry);
 		}
@@ -62,10 +63,10 @@ const Ember::EntityMapping::Definitions::CaseDefinition::ParameterEntry* findCas
 
 }
 
-namespace Ember {
 
 
-namespace EntityMapping {
+
+namespace Ember::EntityMapping {
 
 using namespace Definitions;
 using namespace Matches;
@@ -95,7 +96,7 @@ void EntityMappingCreator::createMapping() {
 
 	mActionCreator.createActions(*mEntityMapping, mEntityMapping->getBaseCase(), mDefinition.RootCase);
 
-	for (auto& aMatch : mDefinition.RootCase.Matches) {
+	for (auto& aMatch: mDefinition.RootCase.Matches) {
 		addMatch(mEntityMapping->getBaseCase(), aMatch);
 	}
 
@@ -105,10 +106,10 @@ void EntityMappingCreator::createMapping() {
 
 void EntityMappingCreator::addEntityTypeCases(EntityTypeMatch* entityTypeMatch, MatchDefinition& matchDefinition) {
 
-	for (auto& aCase : matchDefinition.Cases) {
+	for (auto& aCase: matchDefinition.Cases) {
 		auto entityCase = std::make_unique<EntityTypeCase>();
 
-		for (auto& paramEntry : aCase.Parameters) {
+		for (auto& paramEntry: aCase.Parameters) {
 			if (paramEntry.first == "equals") {
 				entityCase->addEntityType(mTypeService.getTypeByName(paramEntry.second));
 			}
@@ -116,7 +117,7 @@ void EntityMappingCreator::addEntityTypeCases(EntityTypeMatch* entityTypeMatch, 
 
 		mActionCreator.createActions(*mEntityMapping, *entityCase, aCase);
 
-		for (auto& aMatch : aCase.Matches) {
+		for (auto& aMatch: aCase.Matches) {
 			addMatch(*entityCase, aMatch);
 		}
 		entityCase->setParentMatch(entityTypeMatch);
@@ -125,17 +126,17 @@ void EntityMappingCreator::addEntityTypeCases(EntityTypeMatch* entityTypeMatch, 
 }
 
 void EntityMappingCreator::addEntityRefCases(EntityRefMatch* match, MatchDefinition& matchDefinition) {
-	for (auto& aCase : matchDefinition.Cases) {
+	for (auto& aCase: matchDefinition.Cases) {
 		auto entityRefCase = std::make_unique<EntityRefCase>();
 
-		for (auto& paramEntry : aCase.Parameters) {
+		for (auto& paramEntry: aCase.Parameters) {
 			if (paramEntry.first == "equals") {
 				entityRefCase->addEntityType(mTypeService.getTypeByName(paramEntry.second));
 			}
 		}
 		mActionCreator.createActions(*mEntityMapping, *entityRefCase, aCase);
 
-		for (auto& aMatch : aCase.Matches) {
+		for (auto& aMatch: aCase.Matches) {
 			addMatch(*entityRefCase, aMatch);
 		}
 		entityRefCase->setParentMatch(match);
@@ -203,14 +204,14 @@ std::unique_ptr<AttributeComparers::NumericComparer> EntityMappingCreator::creat
 
 
 void EntityMappingCreator::addAttributeCases(AttributeMatch* match, MatchDefinition& matchDefinition) {
-	for (auto& aCase : matchDefinition.Cases) {
+	for (auto& aCase: matchDefinition.Cases) {
 		auto wrapper = getAttributeCaseComparer(match, matchDefinition, aCase);
 		if (wrapper) {
 			auto attrCase = std::make_unique<AttributeCase>(std::move(wrapper));
 
 			mActionCreator.createActions(*mEntityMapping, *attrCase, aCase);
 
-			for (auto& aMatch : aCase.Matches) {
+			for (auto& aMatch: aCase.Matches) {
 				addMatch(*attrCase, aMatch);
 			}
 
@@ -286,4 +287,4 @@ void EntityMappingCreator::addEntityRefCase(CaseBase& aCase, MatchDefinition& ma
 
 }
 
-}
+

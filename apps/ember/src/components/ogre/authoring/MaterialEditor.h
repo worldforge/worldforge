@@ -29,9 +29,9 @@
 
 #include "framework/ConsoleCommandWrapper.h"
 
-namespace Ember {
-namespace OgreView {
-namespace Authoring {
+
+
+namespace Ember::OgreView::Authoring {
 /**
  @author Erik Ogenvik <erik@ogenvik.org>
  */
@@ -54,8 +54,8 @@ public:
 };
 
 }
-}
 
-}
+
+
 
 #endif

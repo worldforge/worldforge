@@ -26,9 +26,8 @@
 #include <Ogre.h>
 #include <boost/noncopyable.hpp>
 
-namespace Ember {
-namespace OgreView {
-namespace Gui {
+
+namespace Ember::OgreView::Gui {
 
 /**
  * Responsible for showing hit text indicators whenever an Entity is hit.
@@ -53,7 +52,7 @@ protected:
 	Ogre::Camera& mCamera;
 	Eris::View& mView;
 	Ogre::SceneManager& mSceneManager;
-    UniqueWindowPtr<CEGUI::Window> mBackgroundWindow;
+	UniqueWindowPtr<CEGUI::Window> mBackgroundWindow;
 
 	struct Hit {
 		float time;
@@ -69,6 +68,6 @@ protected:
 };
 
 }
-}
-}
+
+
 #endif //EMBER_HITDISPLAYER_H

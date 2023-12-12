@@ -24,7 +24,9 @@
 #endif
 
 #ifdef HAVE_CONFIG_H
+
 #include "config.h"
+
 #endif
 
 #include "common/globals.h"
@@ -40,99 +42,99 @@
 #include <stdlib.h>
 #include <signal.h>
 
-int main()
-{
+int main() {
 
-    auto res = security_init();
-    assert(res == 0);
+	auto res = security_init();
+	assert(res == 0);
 
-    reduce_priority(1);
-    
-    exit_flag = false;
+	reduce_priority(1);
+
+	exit_flag = false;
 #ifdef HAVE_KILL
-    pid_t pid = getpid();
+	pid_t pid = getpid();
 #endif // HAVE_KILL
-    assert(!exit_flag);
+	assert(!exit_flag);
 
-    // Verify that most of these flag shutdown, except SIGPIPE
-    interactive_signals();
-
-#ifdef HAVE_KILL
-    exit_flag = false;
-    kill(pid, SIGINT);
-    assert(exit_flag);
-
-    exit_flag = false;
-    kill(pid, SIGTERM);
-    assert(exit_flag);
-
-    exit_flag = false;
-    kill(pid, SIGQUIT);
-    assert(exit_flag);
-
-    exit_flag = false;
-    kill(pid, SIGHUP);
-    assert(exit_flag);
-
-    exit_flag = false;
-    kill(pid, SIGPIPE);
-    assert(!exit_flag);
-#endif // HAVE_KILL
-
-    // Verify that most of these are ignored, except SIGTERM
-    daemon_signals();
+	// Verify that most of these flag shutdown, except SIGPIPE
+	interactive_signals();
 
 #ifdef HAVE_KILL
-    exit_flag = false;
-    kill(pid, SIGINT);
-    assert(!exit_flag);
+	exit_flag = false;
+	kill(pid, SIGINT);
+	assert(exit_flag);
 
-    exit_flag = false;
-    kill(pid, SIGTERM);
-    assert(exit_flag);
+	exit_flag = false;
+	kill(pid, SIGTERM);
+	assert(exit_flag);
 
-    exit_flag = false;
-    kill(pid, SIGQUIT);
-    assert(!exit_flag);
+	exit_flag = false;
+	kill(pid, SIGQUIT);
+	assert(exit_flag);
 
-    exit_flag = false;
-    kill(pid, SIGHUP);
-    assert(!exit_flag);
+	exit_flag = false;
+	kill(pid, SIGHUP);
+	assert(exit_flag);
 
-    exit_flag = false;
-    kill(pid, SIGPIPE);
-    assert(!exit_flag);
+	exit_flag = false;
+	kill(pid, SIGPIPE);
+	assert(!exit_flag);
 #endif // HAVE_KILL
 
-    // Check the background mechanism
+	// Verify that most of these are ignored, except SIGTERM
+	daemon_signals();
 
-    daemon_flag = true;
+#ifdef HAVE_KILL
+	exit_flag = false;
+	kill(pid, SIGINT);
+	assert(!exit_flag);
 
-    int child = daemonise();
+	exit_flag = false;
+	kill(pid, SIGTERM);
+	assert(exit_flag);
 
-    assert(child != -1);
+	exit_flag = false;
+	kill(pid, SIGQUIT);
+	assert(!exit_flag);
 
-    if (child == 0) {
-        sleep(1);
-        running();
-        sleep(1);
-        return 0;
-    }
+	exit_flag = false;
+	kill(pid, SIGHUP);
+	assert(!exit_flag);
 
-    const std::string test_password("test_password");
-    std::string test_hash;
+	exit_flag = false;
+	kill(pid, SIGPIPE);
+	assert(!exit_flag);
+#endif // HAVE_KILL
 
-    encrypt_password(test_password, test_hash);
+	// Check the background mechanism
 
-    assert(!test_hash.empty());
-    assert(test_hash != test_password);
+	daemon_flag = true;
 
-    assert(check_password(test_password, test_hash) == 0);
-    assert(check_password(test_password, "61CEE1BB10EF20ED9D7B5D44D7D3CF56") == 0);
-    assert(check_password("zjvspoehrgopes", "247E9405E40979403510799CBBFF88BD") == 0);
-    assert(check_password("foobarbaz", test_hash) != 0);
+	int child = daemonise();
+
+	assert(child != -1);
+
+	if (child == 0) {
+		sleep(1);
+		running();
+		sleep(1);
+		return 0;
+	}
+
+	const std::string test_password("test_password");
+	std::string test_hash;
+
+	encrypt_password(test_password, test_hash);
+
+	assert(!test_hash.empty());
+	assert(test_hash != test_password);
+
+	assert(check_password(test_password, test_hash) == 0);
+	assert(check_password(test_password, "61CEE1BB10EF20ED9D7B5D44D7D3CF56") == 0);
+	assert(check_password("zjvspoehrgopes", "247E9405E40979403510799CBBFF88BD") == 0);
+	assert(check_password("foobarbaz", test_hash) != 0);
 
 }
+
 #include "../stubs/common/stublog.h"
 
 

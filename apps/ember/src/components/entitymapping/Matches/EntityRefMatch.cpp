@@ -19,12 +19,12 @@
 #include <utility>
 #include "Observers/EntityCreationObserver.h"
 
-namespace Ember {
 
 
-namespace EntityMapping {
 
-namespace Matches {
+
+
+namespace Ember::EntityMapping::Matches {
 
 EntityRefMatch::EntityRefMatch(std::string attributeName, Eris::View* view)
 		: mAttributeName(std::move(attributeName)),
@@ -67,7 +67,7 @@ void EntityRefMatch::testEntity(Eris::Entity* entity) {
 
 	AbstractMatch<Cases::EntityRefCase>::setEntity(entity);
 
-	for (auto& aCase : mCases) {
+	for (auto& aCase: mCases) {
 		aCase->testMatch(entity);
 	}
 	evaluateChanges();
@@ -80,6 +80,6 @@ void EntityRefMatch::setMatchAttributeObserver(std::unique_ptr<Observers::MatchA
 
 }
 
-}
 
-}
+
+

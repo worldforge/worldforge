@@ -29,8 +29,7 @@
 #include <OgreFrameListener.h>
 #include <OgreMath.h>
 
-namespace Ogre
-{
+namespace Ogre {
 class Rectangle2D;
 }
 
@@ -38,13 +37,14 @@ namespace CEGUI {
 class Window;
 }
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain
-{
+namespace Ember::OgreView {
+
+namespace Terrain {
 class Map;
+
 class MapView;
+
 struct ITerrainAdapter;
 struct ITerrainObserver;
 }
@@ -53,13 +53,13 @@ namespace Gui {
 
 
 class ICompassImpl;
+
 class Compass;
 
 /**
  * @brief Performs delayed compass rendering, at the end of a frame.
  */
-class DelayedCompassRenderer : public Ogre::FrameListener
-{
+class DelayedCompassRenderer : public Ogre::FrameListener {
 public:
 
 	/**
@@ -102,28 +102,29 @@ protected:
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class Compass
-{
+class Compass {
 public:
-    Compass(ICompassImpl* compassImpl, Ogre::SceneManager& sceneManager, Terrain::ITerrainAdapter& sceneManagerAdapter);
+	Compass(ICompassImpl* compassImpl, Ogre::SceneManager& sceneManager, Terrain::ITerrainAdapter& sceneManagerAdapter);
 
-    virtual ~Compass();
+	virtual ~Compass();
 
-    Terrain::Map& getMap();
+	Terrain::Map& getMap();
 
-    void reposition(float x, float y);
-    void rotate(const Ogre::Degree& degree);
-    void rotate(const Ogre::Radian& radian);
+	void reposition(float x, float y);
 
-    /**
-     * @brief Refreshes the compass rendering.
-     */
-    void refresh();
+	void rotate(const Ogre::Degree& degree);
 
-    /**
-     * @brief Queues a refresh next frame.
-     */
-    void queueRefresh();
+	void rotate(const Ogre::Radian& radian);
+
+	/**
+	 * @brief Refreshes the compass rendering.
+	 */
+	void refresh();
+
+	/**
+	 * @brief Queues a refresh next frame.
+	 */
+	void queueRefresh();
 
 protected:
 
@@ -163,19 +164,22 @@ protected:
 
 };
 
-class ICompassImpl
-{
-friend class Compass;
+class ICompassImpl {
+	friend class Compass;
+
 public:
 	ICompassImpl();
-	virtual ~ICompassImpl() = default;
-    virtual void reposition(float x, float y) = 0;
-    virtual void rotate(const Ogre::Degree& degree) = 0;
 
-    /**
-     * @brief Refreshes the compass rendering.
-     */
-    virtual void refresh() = 0;
+	virtual ~ICompassImpl() = default;
+
+	virtual void reposition(float x, float y) = 0;
+
+	virtual void rotate(const Ogre::Degree& degree) = 0;
+
+	/**
+	 * @brief Refreshes the compass rendering.
+	 */
+	virtual void refresh() = 0;
 
 protected:
 
@@ -196,8 +200,7 @@ This implementation will only provide the rounded map texture. It's up to other 
 Note that we use a separate scene manager, owned by this class, for this.
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class RenderedCompassImpl : public ICompassImpl
-{
+class RenderedCompassImpl : public ICompassImpl {
 public:
 
 	/**
@@ -212,19 +215,19 @@ public:
 	 */
 	~RenderedCompassImpl() override;
 
-    /**
-     * @copydoc ICompassImpl::reposition
-     */
+	/**
+	 * @copydoc ICompassImpl::reposition
+	 */
 	void reposition(float x, float y) override;
 
-    /**
-     * @copydoc ICompassImpl::rotate
-     */
+	/**
+	 * @copydoc ICompassImpl::rotate
+	 */
 	void rotate(const Ogre::Degree& degree) override;
 
-    /**
-     * @brief Refreshes the compass rendering.
-     */
+	/**
+	 * @brief Refreshes the compass rendering.
+	 */
 	void refresh() override;
 
 	/**
@@ -307,11 +310,13 @@ An instance of this class can't be created directly, instead use on of the frien
 @author Erik Ogenvik <erik@ogenvik.org>
 */
 class CompassAnchor
-: public Ogre::FrameListener
-{
-friend class CompassCameraAnchor;
-friend class CompassSceneNodeAnchor;
-friend class CompassThirdPersonCameraAnchor;
+		: public Ogre::FrameListener {
+	friend class CompassCameraAnchor;
+
+	friend class CompassSceneNodeAnchor;
+
+	friend class CompassThirdPersonCameraAnchor;
+
 public:
 
 
@@ -367,8 +372,7 @@ protected:
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class CompassCameraAnchor
-{
+class CompassCameraAnchor {
 public:
 
 	/**
@@ -403,8 +407,7 @@ protected:
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class CompassSceneNodeAnchor
-{
+class CompassSceneNodeAnchor {
 public:
 
 	/**
@@ -439,8 +442,7 @@ The camera will be used for determining the direction of the compass and the sce
 
 @author Erik Ogenvik <erik@ogenvik.org>
 */
-class CompassThirdPersonCameraAnchor
-{
+class CompassThirdPersonCameraAnchor {
 public:
 
 	/**
@@ -474,11 +476,9 @@ protected:
 };
 
 
-
 }
 
 }
 
-}
 
 #endif

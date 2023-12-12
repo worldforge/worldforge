@@ -7,7 +7,7 @@ Console = {}
 function Console:buildWidget()
 	self.tabs = { self.gameTab }
 
-	--console has transitions, if we don't set this to false, every time it gets activated a 
+	--console has transitions, if we don't set this to false, every time it gets activated a
 	--visible "alpha pop" would happen and then the transition would continue
 	self.widget:setIsActiveWindowOpaque(false)
 
@@ -202,7 +202,7 @@ function Console:getChatMessageColour(line, entity, entityTalk)
 			--if the message contains users name, or it's addressed to the player, lets make it stand out
 			propertyName = "ChatMessageContainingSelfColour"
 		elseif addressedToOther then
-			--if the message is addressed to others, mark it 
+			--if the message is addressed to others, mark it
 			propertyName = "ChatMessageAddressedToOther"
 		end
 	end

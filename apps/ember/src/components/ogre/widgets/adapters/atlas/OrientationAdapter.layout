@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GUILayout version="4">
 	<Window name="OrientationAdapter" type="DefaultWindow">
-		<Property name="Position" value="{{0,0},{0,0}}" />
-		<Property name="Size" value="{{0,200},{0,30}}" />
+		<Property name="Position" value="{{0,0},{0,0}}"/>
+		<Property name="Size" value="{{0,200},{0,30}}"/>
 		<Window name="x" type="EmberLook/Editbox">
-			<Property name="Position" value="{{0,0},{0,0}}" />
-			<Property name="Size" value="{{0,45},{0,25}}" />
-			<Property name="TooltipText" value="X value." />
+			<Property name="Position" value="{{0,0},{0,0}}"/>
+			<Property name="Size" value="{{0,45},{0,25}}"/>
+			<Property name="TooltipText" value="X value."/>
 		</Window>
 		<Window name="y" type="EmberLook/Editbox">
-			<Property name="Position" value="{{0,50},{0,0}}" />
-			<Property name="Size" value="{{0,45},{0,25}}" />
-			<Property name="TooltipText" value="Y value." />
+			<Property name="Position" value="{{0,50},{0,0}}"/>
+			<Property name="Size" value="{{0,45},{0,25}}"/>
+			<Property name="TooltipText" value="Y value."/>
 		</Window>
 		<Window name="z" type="EmberLook/Editbox">
-			<Property name="Position" value="{{0,100},{0,0}}" />
-			<Property name="Size" value="{{0,45},{0,25}}" />
-			<Property name="TooltipText" value="Z value." />
+			<Property name="Position" value="{{0,100},{0,0}}"/>
+			<Property name="Size" value="{{0,45},{0,25}}"/>
+			<Property name="TooltipText" value="Z value."/>
 		</Window>
 		<Window name="scalar" type="EmberLook/Editbox">
-			<Property name="Position" value="{{0,150},{0,0}}" />
-			<Property name="Size" value="{{0,45},{0,25}}" />
-			<Property name="TooltipText" value="Scalar value." />
+			<Property name="Position" value="{{0,150},{0,0}}"/>
+			<Property name="Size" value="{{0,45},{0,25}}"/>
+			<Property name="TooltipText" value="Scalar value."/>
 		</Window>
 	</Window>
 </GUILayout>

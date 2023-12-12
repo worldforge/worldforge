@@ -54,7 +54,7 @@ function MainIconBar:buildWidget()
 	self.images.background = Ember.OgreView.Gui.IconBase.loadImageFromImageset("iconset_standard", "background_A")
 	self.images.borderactive = Ember.OgreView.Gui.IconBase.loadImageFromImageset("iconset_standard", "ring_over")
 	self.images.borderinactive = Ember.OgreView.Gui.IconBase.loadImageFromImageset("iconset_standard", "ring")
-	local foreground = nil
+	local foreground
 
 
 	--start with the close icon
@@ -62,7 +62,7 @@ function MainIconBar:buildWidget()
 	self.closeIcon = addIcon("close2", foreground, "Click here to exit Ember.")
 	subscribe(self.connectors, self.closeIcon:getButton(), "Clicked",
 	--show the softquit window when the close button is clicked
-			function(args)
+			function(_)
 				--note that if the cegui system isn't working, the /softquit command knows how to shut down immediately instead
 				console:runCommand("/softquit")
 				return true
@@ -135,7 +135,7 @@ function MainIconBar:buildWidget()
 	self.inventoryIcon:getContainer():setVisible(false)
 	subscribe(self.connectors, self.inventoryIcon:getButton(), "Clicked",
 	--toggle inventory window when clicked
-			function(args)
+			function(_)
 				console:runCommand("/toggleVisibility_inventory")
 				return true
 			end
@@ -145,7 +145,7 @@ function MainIconBar:buildWidget()
 		--Only show the movement and inventory icons when we've actually connected to a server; it makes no sense before that
 		self.movementModeIcon:getContainer():setVisible(true)
 		connect(self.connectors, emberOgre:getWorld():getMovementController().EventMovementModeChanged,
-				function(mode)
+				function(_)
 					--When the movement mode is changed (i.e. walking or running) we need to update the images on the movement mode icon as well as the cursor image
 					if self.currentMode == Ember.Input.IM_MOVEMENT then
 						checkMovementMode()

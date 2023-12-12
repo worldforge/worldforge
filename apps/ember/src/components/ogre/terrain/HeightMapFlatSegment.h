@@ -21,10 +21,8 @@
 
 #include "IHeightMapSegment.h"
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>
@@ -64,8 +62,5 @@ protected:
 
 }
 
-}
-
-}
 
 #endif /* EMBEROGRETERRAINHEIGHTMAPFLATSEGMENT_H_ */

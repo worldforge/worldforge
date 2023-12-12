@@ -33,87 +33,100 @@ which accepts an Atlas stream for encoding and transmission.
 @see Codec
 */
 
-class Bridge
-{
-  public:
-    virtual ~Bridge() = default;
+class Bridge {
+public:
+	virtual ~Bridge() = default;
 
-    // Interface for stream context
+	// Interface for stream context
 
-    /**
-     *  Begin an Atlas stream.
-     */
-    virtual void streamBegin() = 0;
-    /**
-     *  Start a message in an Atlas stream.
-     */
-    virtual void streamMessage() = 0;
-    /**
-     *  Ends the Atlas stream.
-     */
-    virtual void streamEnd() = 0;
-    
-    // Interface for map context
+	/**
+	 *  Begin an Atlas stream.
+	 */
+	virtual void streamBegin() = 0;
 
-    /**
-     *  Starts a map object to the currently streamed map.
-     */
-    virtual void mapMapItem(std::string name) = 0;
-    /**
-     *  Starts a list object to the currently streamed map.
-     */
-    virtual void mapListItem(std::string name) = 0;
-    /**
-     *  Adds an integer to the currently streamed map.
-     */
-    virtual void mapIntItem(std::string name, std::int64_t) = 0;
-    /**
-     *  Adds a float to the currently streamed map.
-     */
-    virtual void mapFloatItem(std::string name, double) = 0;
-    /**
-     *  Adds a string to the currently streamed map.
-     */
-    virtual void mapStringItem(std::string name, std::string) = 0;
-    /**
-     * Adds a none item to the currently streamed map.
-     */
-    virtual void mapNoneItem(std::string name) = 0;
-    /**
-     *  Ends the currently streamed map.
-     */
-    virtual void mapEnd() = 0;
-    
-    // Interface for list context
-    
-    /**
-     *  Starts a map object in the currently streamed list.
-     */
-    virtual void listMapItem() = 0;
-    /**
-     *  Starts a list object in the currently streamed list.
-     */
-    virtual void listListItem() = 0;
-    /**
-     *  Adds an integer to the currently streamed list.
-     */
-    virtual void listIntItem(std::int64_t) = 0;
-    /**
-     *  Adds a float to the currently streamed list.
-     */
-    virtual void listFloatItem(double) = 0;
-    /**
-     *  Adds a string to the currently streamed list.
-     */
-    virtual void listStringItem(std::string) = 0;
-    /**
-     * Adds an empty item to the currently streamed list.
-     */
-    virtual void listNoneItem() = 0;
-    /**
-     *  Ends the currently streamed list.
-     */
-    virtual void listEnd() = 0;
+	/**
+	 *  Start a message in an Atlas stream.
+	 */
+	virtual void streamMessage() = 0;
+
+	/**
+	 *  Ends the Atlas stream.
+	 */
+	virtual void streamEnd() = 0;
+
+	// Interface for map context
+
+	/**
+	 *  Starts a map object to the currently streamed map.
+	 */
+	virtual void mapMapItem(std::string name) = 0;
+
+	/**
+	 *  Starts a list object to the currently streamed map.
+	 */
+	virtual void mapListItem(std::string name) = 0;
+
+	/**
+	 *  Adds an integer to the currently streamed map.
+	 */
+	virtual void mapIntItem(std::string name, std::int64_t) = 0;
+
+	/**
+	 *  Adds a float to the currently streamed map.
+	 */
+	virtual void mapFloatItem(std::string name, double) = 0;
+
+	/**
+	 *  Adds a string to the currently streamed map.
+	 */
+	virtual void mapStringItem(std::string name, std::string) = 0;
+
+	/**
+	 * Adds a none item to the currently streamed map.
+	 */
+	virtual void mapNoneItem(std::string name) = 0;
+
+	/**
+	 *  Ends the currently streamed map.
+	 */
+	virtual void mapEnd() = 0;
+
+	// Interface for list context
+
+	/**
+	 *  Starts a map object in the currently streamed list.
+	 */
+	virtual void listMapItem() = 0;
+
+	/**
+	 *  Starts a list object in the currently streamed list.
+	 */
+	virtual void listListItem() = 0;
+
+	/**
+	 *  Adds an integer to the currently streamed list.
+	 */
+	virtual void listIntItem(std::int64_t) = 0;
+
+	/**
+	 *  Adds a float to the currently streamed list.
+	 */
+	virtual void listFloatItem(double) = 0;
+
+	/**
+	 *  Adds a string to the currently streamed list.
+	 */
+	virtual void listStringItem(std::string) = 0;
+
+	/**
+	 * Adds an empty item to the currently streamed list.
+	 */
+	virtual void listNoneItem() = 0;
+
+	/**
+	 *  Ends the currently streamed list.
+	 */
+	virtual void listEnd() = 0;
 };
 
 } // Atlas namespace

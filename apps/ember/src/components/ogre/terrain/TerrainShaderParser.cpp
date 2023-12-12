@@ -32,10 +32,8 @@
 
 #include <Atlas/Message/Element.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainShaderParser::TerrainShaderParser(TerrainHandler& terrainHandler) :
 		mTerrainHandler(terrainHandler) {
@@ -53,7 +51,7 @@ void TerrainShaderParser::createShaders(const Atlas::Message::ListType& surfaces
 	}
 
 	Terrain::TerrainLayerDefinitionManager& terrainManager = Terrain::TerrainLayerDefinitionManager::getSingleton();
-	for (const auto& surfaceElement : surfaces) {
+	for (const auto& surfaceElement: surfaces) {
 		if (surfaceElement.isMap()) {
 			auto& surfaceMap = surfaceElement.Map();
 
@@ -61,9 +59,9 @@ void TerrainShaderParser::createShaders(const Atlas::Message::ListType& surfaces
 			if (surfaceMap.count("params")) {
 				const Atlas::Message::Element& paramsElem(surfaceMap.find("params")->second);
 				if (paramsElem.isMap()) {
-					for (const auto& param : paramsElem.asMap()) {
+					for (const auto& param: paramsElem.asMap()) {
 						if (param.second.isNum()) {
-							params[param.first] = (float)param.second.asNum();
+							params[param.first] = (float) param.second.asNum();
 						}
 					}
 				}
@@ -96,5 +94,5 @@ void TerrainShaderParser::createShaders(const Atlas::Message::ListType& surfaces
 
 }
 
-}
-}
+
+

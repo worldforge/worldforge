@@ -23,24 +23,16 @@
 
 #include "framework/Log.h"
 
-namespace Ember
-{
-namespace OgreView
-{
+
+namespace Ember::OgreView {
 
 ShaderDetailManager::ShaderDetailManager(GraphicalChangeAdapter& graphicalChangeAdapter, Ember::OgreView::ShaderManager& shaderManager) :
-		mShaderThresholdLevel(8.0f), mGraphicalChangeAdapter(graphicalChangeAdapter), mShaderManager(shaderManager)
-{
-//	mChangeRequiredConnection = mGraphicalChangeAdapter.EventChangeRequired.connect(sigc::mem_fun(*this, &ShaderDetailManager::changeLevel));
+		mShaderThresholdLevel(8.0f), mGraphicalChangeAdapter(graphicalChangeAdapter), mShaderManager(shaderManager) {
 }
 
-ShaderDetailManager::~ShaderDetailManager()
-{
-//	mChangeRequiredConnection.disconnect();
-}
+ShaderDetailManager::~ShaderDetailManager() = default;
 
-bool ShaderDetailManager::stepUpShaderLevel()
-{
+bool ShaderDetailManager::stepUpShaderLevel() {
 	ShaderManager::GraphicsLevel level;
 
 	if (mShaderManager.getGraphicsLevel() == ShaderManager::LEVEL_MEDIUM) {
@@ -55,8 +47,7 @@ bool ShaderDetailManager::stepUpShaderLevel()
 	return true;
 }
 
-bool ShaderDetailManager::stepDownShaderLevel()
-{
+bool ShaderDetailManager::stepDownShaderLevel() {
 	ShaderManager::GraphicsLevel level;
 
 	if (mShaderManager.getGraphicsLevel() == ShaderManager::LEVEL_HIGH) {
@@ -71,18 +62,13 @@ bool ShaderDetailManager::stepDownShaderLevel()
 	return true;
 }
 
-void ShaderDetailManager::pause()
-{
-	mChangeRequiredConnection.block();
+void ShaderDetailManager::pause() {
 }
 
-void ShaderDetailManager::unpause()
-{
-	mChangeRequiredConnection.unblock();
+void ShaderDetailManager::unpause() {
 }
 
-bool ShaderDetailManager::changeLevel(float level)
-{
+bool ShaderDetailManager::changeLevel(float level) {
 	if (std::abs(level) < mShaderThresholdLevel) {
 		return false;
 	} else {
@@ -95,4 +81,4 @@ bool ShaderDetailManager::changeLevel(float level)
 }
 
 }
-}
+

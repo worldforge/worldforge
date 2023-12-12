@@ -139,6 +139,7 @@ public:
 	 * @return True if the objects are identical.
 	 */
 	bool operator==(const ActionBarIcon& value) const { return this == &value; }
+
 	bool operator!=(const ActionBarIcon& value) const { return this != &value; }
 
 	/**

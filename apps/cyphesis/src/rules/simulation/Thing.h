@@ -26,51 +26,50 @@
 ///
 /// It can be used itself to represent any in-game object for which
 /// any special behavior can be described by a script.
-class Thing : public Entity
-{
-    protected:
-        void updateProperties(const Operation& op, OpVector& res);
+class Thing : public Entity {
+protected:
+	void updateProperties(const Operation& op, OpVector& res);
 
-        bool lookAtEntity(const Operation& op,
-                          OpVector& res,
-                          const LocatedEntity& watcher) const;
+	bool lookAtEntity(const Operation& op,
+					  OpVector& res,
+					  const LocatedEntity& watcher) const;
 
-        void generateSightOp(const LocatedEntity& observingEntity,
-                             const Operation& originalLookOp,
-                             OpVector& res) const;
+	void generateSightOp(const LocatedEntity& observingEntity,
+						 const Operation& originalLookOp,
+						 OpVector& res) const;
 
-        void moveToNewLocation(Ref<LocatedEntity>& new_loc,
-                               OpVector& res,
-                               Domain* existingDomain,
-                               const Point3D& newPos,
-                               const Quaternion& newOrientation,
-                               const Vector3D& newImpulseVelocity);
+	void moveToNewLocation(Ref<LocatedEntity>& new_loc,
+						   OpVector& res,
+						   Domain* existingDomain,
+						   const Point3D& newPos,
+						   const Quaternion& newOrientation,
+						   const Vector3D& newImpulseVelocity);
 
-        void moveOurselves(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
+	void moveOurselves(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
 
-        void moveOtherEntity(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
+	void moveOtherEntity(const Operation& op, const Atlas::Objects::Entity::RootEntity& ent, OpVector& res);
 
-    public:
+public:
 
-        explicit Thing(RouterId id);
+	explicit Thing(RouterId id);
 
-        ~Thing() override = default;
+	~Thing() override = default;
 
-        void DeleteOperation(const Operation& op, OpVector&) override;
+	void DeleteOperation(const Operation& op, OpVector&) override;
 
-        void MoveOperation(const Operation& op, OpVector&) override;
+	void MoveOperation(const Operation& op, OpVector&) override;
 
-        void SetOperation(const Operation& op, OpVector&) override;
+	void SetOperation(const Operation& op, OpVector&) override;
 
-        void UpdateOperation(const Operation& op, OpVector&) override;
+	void UpdateOperation(const Operation& op, OpVector&) override;
 
-        void LookOperation(const Operation& op, OpVector&) override;
+	void LookOperation(const Operation& op, OpVector&) override;
 
-        void ImaginaryOperation(const Operation& op, OpVector&) override;
+	void ImaginaryOperation(const Operation& op, OpVector&) override;
 
-        void TalkOperation(const Operation& op, OpVector&) override;
+	void TalkOperation(const Operation& op, OpVector&) override;
 
-        void CreateOperation(const Operation& op, OpVector& res) override;
+	void CreateOperation(const Operation& op, OpVector& res) override;
 };
 
 #endif // RULESETS_THING_H

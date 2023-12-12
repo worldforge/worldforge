@@ -18,24 +18,19 @@
 
 #ifndef IVISITOR_H_
 #define IVISITOR_H_
-namespace Ember
-{
 
-namespace EntityMapping
-{
 
-namespace Actions
-{
+namespace Ember::EntityMapping {
+
+namespace Actions {
 class Action;
 }
 
-namespace Matches
-{
+namespace Matches {
 class MatchBase;
 }
 
-namespace Cases
-{
+namespace Cases {
 class CaseBase;
 }
 
@@ -43,19 +38,20 @@ class CaseBase;
  * @author Erik Ogenvik <erik@ogenvik.org>
  * @brief Interface for visitor classes intended to walk the entity mapping hierarchy.
  */
-struct IVisitor
-{
+struct IVisitor {
 	/**
 	 * @brief Dtor.
 	 */
 	virtual ~IVisitor() = default;
 
 	virtual void visit(Actions::Action& action) = 0;
+
 	virtual void visit(Matches::MatchBase& match) = 0;
+
 	virtual void visit(Cases::CaseBase& caseBase) = 0;
 };
 
 }
-}
+
 
 #endif /* IVISITOR_H_ */

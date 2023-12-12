@@ -22,14 +22,11 @@
 #include "TerrainInfo.h"
 #include "SegmentManager.h"
 #include <Mercator/Terrain.h>
-#include <OgreAxisAlignedBox.h>
 
 #include <utility>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 TerrainUpdateTask::TerrainUpdateTask(Mercator::Terrain& terrain,
 									 TerrainDefPointStore terrainPoints,
@@ -91,5 +88,5 @@ bool TerrainUpdateTask::executeTaskInMainThread() {
 
 }
 
-}
-}
+
+

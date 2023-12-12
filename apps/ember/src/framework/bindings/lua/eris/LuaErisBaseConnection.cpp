@@ -23,7 +23,7 @@
 using namespace Eris;
 using namespace Ember::Lua;
 
-template <>
+template<>
 void registerLua<BaseConnection>(sol::table& space) {
 	auto baseConnection = space.new_usertype<BaseConnection>("BaseConnection", sol::no_constructor);
 	baseConnection["getStatus"] = &BaseConnection::getStatus;

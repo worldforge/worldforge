@@ -23,99 +23,82 @@
 #include "Polygon.h"
 #include "PolygonPoint.h"
 
-#include "../Convert.h"
 #include "../EmberOgre.h"
 #include <OgreSceneNode.h>
 
-namespace Ember
-{
-namespace OgreView
-{
 
-namespace Authoring
-{
+namespace Ember::OgreView::Authoring {
 
 Polygon::Polygon(Ogre::SceneNode* baseNode, IPolygonPositionProvider* positionProvider, bool isClosed) :
 		mBaseNode(baseNode->createChildSceneNode()),
 		mPositionProvider(positionProvider),
 		mRenderer(*baseNode, mPoints, isClosed),
-		mBulletWorld(nullptr)
-{
+		mBulletWorld(nullptr) {
 	mBaseNode->setInheritScale(false);
 	mBaseNode->setScale(1.0f, 1.0f, 1.0f);
 }
 
-Polygon::~Polygon()
-{
+Polygon::~Polygon() {
 	clear();
 	mBaseNode->getParentSceneNode()->removeAndDestroyChild(mBaseNode);
 }
 
-Ogre::SceneNode* Polygon::getBaseNode()
-{
+Ogre::SceneNode* Polygon::getBaseNode() {
 	return mBaseNode;
 }
 
-WFMath::Polygon<2> Polygon::getShape() const
-{
+WFMath::Polygon<2> Polygon::getShape() const {
 	WFMath::Polygon<2> poly;
 	unsigned int i = 0;
-	for (auto& point : mPoints) {
+	for (auto& point: mPoints) {
 		poly.addCorner(i++, point->getLocalPosition());
 	}
 	return poly;
 }
 
-void Polygon::loadFromShape(const WFMath::Polygon<2>& shape)
-{
+void Polygon::loadFromShape(const WFMath::Polygon<2>& shape) {
 	clear();
 	for (size_t i = 0; i < shape.numCorners(); ++i) {
 		const WFMath::Point<2>& position = shape[i];
-		PolygonPoint* point = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25, position);
+		auto* point = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25, position);
 		point->makeInteractive(mBulletWorld);
 		mPoints.push_back(point);
 	}
 	mRenderer.update();
 }
 
-void Polygon::clear()
-{
-	for (auto& point : mPoints) {
+void Polygon::clear() {
+	for (auto& point: mPoints) {
 		delete point;
 	}
 	mPoints.clear();
 	mRenderer.update();
 }
 
-const Polygon::PointStore& Polygon::getPoints() const
-{
+const Polygon::PointStore& Polygon::getPoints() const {
 	return mPoints;
 }
 
-IPolygonPositionProvider* Polygon::getPositionProvider() const
-{
+IPolygonPositionProvider* Polygon::getPositionProvider() const {
 	return mPositionProvider;
 }
 
-void Polygon::updateRender()
-{
+void Polygon::updateRender() {
 	mRenderer.update();
 }
 
-PolygonPoint* Polygon::appendPoint()
-{
-	PolygonPoint* newPoint = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25);
+PolygonPoint* Polygon::appendPoint() {
+	auto* newPoint = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25);
 	newPoint->makeInteractive(mBulletWorld);
 	mPoints.push_back(newPoint);
 	return newPoint;
 }
 
-PolygonPoint* Polygon::insertPointBefore(PolygonPoint& point)
-{
+PolygonPoint* Polygon::insertPointBefore(PolygonPoint& point) {
 	if (!mPoints.empty()) {
 		auto I = std::find(mPoints.begin(), mPoints.end(), &point);
 		if (I != mPoints.end()) {
-			PolygonPoint* newPoint = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25);
+			auto* newPoint = new PolygonPoint(*getBaseNode(), getPositionProvider(), 0.25);
 			newPoint->makeInteractive(mBulletWorld);
 			mPoints.insert(I, newPoint);
 			return newPoint;
@@ -124,8 +107,7 @@ PolygonPoint* Polygon::insertPointBefore(PolygonPoint& point)
 	return nullptr;
 }
 
-bool Polygon::reInsertPointBefore(PolygonPoint& point, PolygonPoint& existingPoint)
-{
+bool Polygon::reInsertPointBefore(PolygonPoint& point, PolygonPoint& existingPoint) {
 	if (!mPoints.empty()) {
 		auto I = std::find(mPoints.begin(), mPoints.end(), &point);
 		if (I != mPoints.end()) {
@@ -136,8 +118,7 @@ bool Polygon::reInsertPointBefore(PolygonPoint& point, PolygonPoint& existingPoi
 	return false;
 }
 
-bool Polygon::reInsertPoint(size_t index, PolygonPoint& point)
-{
+bool Polygon::reInsertPoint(size_t index, PolygonPoint& point) {
 
 	size_t i = 0;
 	auto I = mPoints.begin();
@@ -149,8 +130,7 @@ bool Polygon::reInsertPoint(size_t index, PolygonPoint& point)
 	return true;
 }
 
-PolygonPoint* Polygon::getPointBefore(PolygonPoint& point)
-{
+PolygonPoint* Polygon::getPointBefore(PolygonPoint& point) {
 	if (!mPoints.empty()) {
 		auto I = std::find(mPoints.begin(), mPoints.end(), &point);
 		if (I != mPoints.end()) {
@@ -164,8 +144,7 @@ PolygonPoint* Polygon::getPointBefore(PolygonPoint& point)
 	return nullptr;
 }
 
-PolygonPoint* Polygon::getPointAfter(PolygonPoint& point)
-{
+PolygonPoint* Polygon::getPointAfter(PolygonPoint& point) {
 	if (!mPoints.empty()) {
 		auto I = std::find(mPoints.begin(), mPoints.end(), &point);
 		if (I != mPoints.end()) {
@@ -179,8 +158,7 @@ PolygonPoint* Polygon::getPointAfter(PolygonPoint& point)
 	return nullptr;
 }
 
-bool Polygon::removePoint(PolygonPoint& point)
-{
+bool Polygon::removePoint(PolygonPoint& point) {
 	if (!mPoints.empty()) {
 		auto I = std::find(mPoints.begin(), mPoints.end(), &point);
 		if (I != mPoints.end()) {
@@ -193,12 +171,12 @@ bool Polygon::removePoint(PolygonPoint& point)
 
 void Polygon::makeInteractive(BulletWorld* bulletWorld) {
 	mBulletWorld = bulletWorld;
-	for (auto& point : mPoints) {
+	for (auto& point: mPoints) {
 		point->makeInteractive(bulletWorld);
 	}
 }
 
 }
 
-}
-}
+
+

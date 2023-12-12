@@ -24,10 +24,8 @@
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
 
-namespace Ember {
-namespace OgreView {
 
-namespace Terrain {
+namespace Ember::OgreView::Terrain {
 
 class TerrainHandler;
 
@@ -63,8 +61,5 @@ private:
 
 }
 
-}
-
-}
 
 #endif /* TERRAINPAGECREATIONTASK_H_ */

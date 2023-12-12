@@ -35,126 +35,121 @@ THE SOFTWARE.
 using namespace Ogre;
 
 template<>
-Ember::OgreView::Lod::ScaledPixelCountLodStrategy* Ogre::Singleton<Ember::OgreView::Lod::ScaledPixelCountLodStrategy>::msSingleton = 0;
+Ember::OgreView::Lod::ScaledPixelCountLodStrategy* Ogre::Singleton<Ember::OgreView::Lod::ScaledPixelCountLodStrategy>::msSingleton = nullptr;
 
-namespace Ember {
-namespace OgreView {
-namespace Lod {
-    //-----------------------------------------------------------------------
-    
-    ScaledPixelCountLodStrategy* ScaledPixelCountLodStrategy::getSingletonPtr(void)
-    {
-        return msSingleton;
-    }
-    ScaledPixelCountLodStrategy& ScaledPixelCountLodStrategy::getSingleton(void)
-    {
-        assert( msSingleton );  return ( *msSingleton );
-    }
-    //-----------------------------------------------------------------------
-    ScaledPixelCountLodStrategy::ScaledPixelCountLodStrategy()
-        : LodStrategy("ScaledPixelCount")
-    { }
-    //-----------------------------------------------------------------------
-    Real ScaledPixelCountLodStrategy::getValueImpl(const MovableObject *movableObject, const Ogre::Camera *camera) const
-    {
-        // Get viewport
-        const Viewport *viewport = camera->getViewport();
 
-        // Get viewport area
-        Real viewportArea = static_cast<Real>(viewport->getActualWidth() * viewport->getActualHeight());
+namespace Ember::OgreView::Lod {
+//-----------------------------------------------------------------------
 
-        Ogre::Real boundingRadius = movableObject->getBoundingRadius();
+ScaledPixelCountLodStrategy* ScaledPixelCountLodStrategy::getSingletonPtr() {
+	return msSingleton;
+}
 
-        // Get area of unprojected circle with object bounding radius
-        const Ogre::Vector3 nodeScale = movableObject->getParentNode()->getScale();
+ScaledPixelCountLodStrategy& ScaledPixelCountLodStrategy::getSingleton() {
+	assert(msSingleton);
+	return (*msSingleton);
+}
 
-        if (!nodeScale.isNaN()) {
-            //Get the largest scale of the parent node.
-            //This is a bit inexact, since if the node is scaled with different values for the different axes we won't be using the most optimal one.
-            //However, that would be too expensive (we would need to check with how the bounding box is rotated against the camera and so on.)
-            //And further the vast majority of meshes we use are uniformly scaled.
-            Ogre::Real scale = std::max(nodeScale.x, std::max(nodeScale.y, nodeScale.z));
-            boundingRadius *= scale;
-        }
+//-----------------------------------------------------------------------
+ScaledPixelCountLodStrategy::ScaledPixelCountLodStrategy()
+		: LodStrategy("ScaledPixelCount") {}
 
-        //Increase the bounding area by the scale
-        Real boundingArea = Math::PI * Math::Sqr(boundingRadius);
+//-----------------------------------------------------------------------
+Real ScaledPixelCountLodStrategy::getValueImpl(const MovableObject* movableObject, const Ogre::Camera* camera) const {
+	// Get viewport
+	const Viewport* viewport = camera->getViewport();
 
-        // Base computation on projection type
-        switch (camera->getProjectionType())
-        {
-        case PT_PERSPECTIVE:
-            {
-                // Get camera distance
-                Real distanceSquared = movableObject->getParentNode()->getSquaredViewDepth(camera);
+	// Get viewport area
+	Real viewportArea = static_cast<Real>(viewport->getActualWidth() * viewport->getActualHeight());
 
-                // Check for 0 distance
-                if (distanceSquared <= std::numeric_limits<Real>::epsilon())
-                    return getBaseValue();
+	Ogre::Real boundingRadius = movableObject->getBoundingRadius();
 
-                // Get projection matrix (this is done to avoid computation of tan(fov / 2))
-                const Matrix4& projectionMatrix = camera->getProjectionMatrix();
+	// Get area of unprojected circle with object bounding radius
+	const Ogre::Vector3 nodeScale = movableObject->getParentNode()->getScale();
 
-                // Estimate pixel count
-                return (boundingArea * viewportArea * projectionMatrix[0][0] * projectionMatrix[1][1]) / distanceSquared;
-            }
-        case PT_ORTHOGRAPHIC:
-            {
-                // Compute orthographic area
-                Real orthoArea = camera->getOrthoWindowHeight() * camera->getOrthoWindowWidth();
+	if (!nodeScale.isNaN()) {
+		//Get the largest scale of the parent node.
+		//This is a bit inexact, since if the node is scaled with different values for the different axes we won't be using the most optimal one.
+		//However, that would be too expensive (we would need to check with how the bounding box is rotated against the camera and so on.)
+		//And further the vast majority of meshes we use are uniformly scaled.
+		Ogre::Real scale = std::max(nodeScale.x, std::max(nodeScale.y, nodeScale.z));
+		boundingRadius *= scale;
+	}
 
-                // Check for 0 orthographic area
-                if (orthoArea <= std::numeric_limits<Real>::epsilon())
-                    return getBaseValue();
+	//Increase the bounding area by the scale
+	Real boundingArea = Math::PI * Math::Sqr(boundingRadius);
 
-                // Estimate pixel count
-                return (boundingArea * viewportArea) / orthoArea;
-            }
-        default:
-            {
-                // This case is not covered for obvious reasons
-                assert(0);
-				return 0;
-            }
-        }
-    }
-    //---------------------------------------------------------------------
-    Real ScaledPixelCountLodStrategy::getBaseValue() const
-    {
-        // Use the maximum possible value as base
-        return std::numeric_limits<Real>::max();
-    }
-    //---------------------------------------------------------------------
-    Real ScaledPixelCountLodStrategy::transformBias(Real factor) const
-    {
-        // No transformation required for pixel count strategy
-        return factor;
-    }
-    //---------------------------------------------------------------------
-    ushort ScaledPixelCountLodStrategy::getIndex(Real value, const Mesh::MeshLodUsageList& meshLodUsageList) const
-    {
-        // Values are descending
-        return getIndexDescending(value, meshLodUsageList);
-    }
-    //---------------------------------------------------------------------
-    ushort ScaledPixelCountLodStrategy::getIndex(Real value, const Material::LodValueList& materialLodValueList) const
-    {
-        // Values are descending
-        return getIndexDescending(value, materialLodValueList);
-    }
-    //---------------------------------------------------------------------
-    void ScaledPixelCountLodStrategy::sort(Mesh::MeshLodUsageList& meshLodUsageList) const
-    {
-        // Sort descending
-        sortDescending(meshLodUsageList);
-    }
-    //---------------------------------------------------------------------
-    bool ScaledPixelCountLodStrategy::isSorted(const Mesh::LodValueList& values) const
-    {
-        // Check if values are sorted descending
-        return isSortedDescending(values);
-    }
+	// Base computation on projection type
+	switch (camera->getProjectionType()) {
+		case PT_PERSPECTIVE: {
+			// Get camera distance
+			Real distanceSquared = movableObject->getParentNode()->getSquaredViewDepth(camera);
+
+			// Check for 0 distance
+			if (distanceSquared <= std::numeric_limits<Real>::epsilon())
+				return getBaseValue();
+
+			// Get projection matrix (this is done to avoid computation of tan(fov / 2))
+			const Matrix4& projectionMatrix = camera->getProjectionMatrix();
+
+			// Estimate pixel count
+			return (boundingArea * viewportArea * projectionMatrix[0][0] * projectionMatrix[1][1]) / distanceSquared;
+		}
+		case PT_ORTHOGRAPHIC: {
+			// Compute orthographic area
+			Real orthoArea = camera->getOrthoWindowHeight() * camera->getOrthoWindowWidth();
+
+			// Check for 0 orthographic area
+			if (orthoArea <= std::numeric_limits<Real>::epsilon())
+				return getBaseValue();
+
+			// Estimate pixel count
+			return (boundingArea * viewportArea) / orthoArea;
+		}
+		default: {
+			// This case is not covered for obvious reasons
+			assert(0);
+			return 0;
+		}
+	}
+}
+
+//---------------------------------------------------------------------
+Real ScaledPixelCountLodStrategy::getBaseValue() const {
+	// Use the maximum possible value as base
+	return std::numeric_limits<Real>::max();
+}
+
+//---------------------------------------------------------------------
+Real ScaledPixelCountLodStrategy::transformBias(Real factor) const {
+	// No transformation required for pixel count strategy
+	return factor;
+}
+
+//---------------------------------------------------------------------
+ushort ScaledPixelCountLodStrategy::getIndex(Real value, const Mesh::MeshLodUsageList& meshLodUsageList) const {
+	// Values are descending
+	return getIndexDescending(value, meshLodUsageList);
+}
+
+//---------------------------------------------------------------------
+ushort ScaledPixelCountLodStrategy::getIndex(Real value, const Material::LodValueList& materialLodValueList) const {
+	// Values are descending
+	return getIndexDescending(value, materialLodValueList);
+}
+
+//---------------------------------------------------------------------
+void ScaledPixelCountLodStrategy::sort(Mesh::MeshLodUsageList& meshLodUsageList) const {
+	// Sort descending
+	sortDescending(meshLodUsageList);
+}
+
+//---------------------------------------------------------------------
+bool ScaledPixelCountLodStrategy::isSorted(const Mesh::LodValueList& values) const {
+	// Check if values are sorted descending
+	return isSortedDescending(values);
+}
 
 } // namespace
-} // namespace
-} // namespace
+// namespace
+// namespace
