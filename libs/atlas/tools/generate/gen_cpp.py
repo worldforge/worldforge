@@ -750,7 +750,8 @@ if __name__ == "__main__":
     parseXML = parse_xml.get_decoder()
     parseXML.set_stream_mode()
     atlas_file = sys.argv[1]
-    spec_xml_string = open(atlas_file).read()
+    with open(atlas_file, 'r') as f:
+        spec_xml_string = f.read()
     # convert list into dictionary
     objects = {}
     for obj in parse_xml.parse_stream(spec_xml_string):
