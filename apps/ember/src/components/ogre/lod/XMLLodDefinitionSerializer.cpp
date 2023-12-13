@@ -33,7 +33,6 @@ namespace Ember::OgreView::Lod {
 
 void XMLLodDefinitionSerializer::importLodDefinition(const Ogre::DataStreamPtr& stream, LodDefinition& lodDef) {
 	TiXmlDocument xmlDoc;
-	XMLHelper xmlHelper;
 	if (!Ember::OgreView::XMLHelper::Load(xmlDoc, stream)) {
 		return;
 	}

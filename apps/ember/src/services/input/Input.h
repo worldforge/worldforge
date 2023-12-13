@@ -217,14 +217,6 @@ public:
 							 bool resizable = true,
 							 bool handleOpenGL = false);
 
-	/**
-	 * @brief Initializes the input object. Call this before you want to receive input.
-	 *
-	 * This is the alternative way of handling input. Using this method, the window needs to be created beforehand in an external component.
-	 *
-	 * @param window The target window to attach the input system to.
-	 */
-	void attach(std::unique_ptr<IWindowProvider> windowProvider);
 
 	/**
 	 * @brief This will shut down the interaction.
@@ -564,14 +556,6 @@ private:
 	 * This mainly allows us to request that the application is shut down.
 	 */
 	MainLoopController* mMainLoopController;
-
-	/**
-	 * @brief The Window Provider, which provides the communication interface between the window and the input system.
-	 *
-	 * This is only used if the attach method is used.
-	 *
-	 */
-	std::unique_ptr<IWindowProvider> mWindowProvider;
 
 	/**
 	 @brief The dimensions of the window.

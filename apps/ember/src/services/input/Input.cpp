@@ -22,7 +22,6 @@
 //
 
 #include "Input.h"
-#include "IWindowProvider.h"
 #include "InputCommandMapper.h"
 #include "EmberIcon.h"
 
@@ -175,7 +174,6 @@ std::string Input::createWindow(unsigned int width, unsigned int height, bool fu
 }
 
 void Input::shutdownInteraction() {
-	mWindowProvider.reset();
 
 	if (mMainVideoSurface) {
 		SDL_DestroyWindow(mMainVideoSurface);
@@ -184,10 +182,6 @@ void Input::shutdownInteraction() {
 
 	//Release the mouse for safety's sake.
 	SDL_SetWindowGrab(mMainVideoSurface, SDL_FALSE);
-	logger->info("Shutting down SDL.");
-	SDL_Quit();
-	logger->info("SDL shut down.");
-
 }
 
 void Input::createIcon() {
@@ -212,58 +206,6 @@ void Input::createIcon() {
 		SDL_SetWindowIcon(mMainVideoSurface, mIconSurface);
 	}
 
-}
-
-void Input::attach(std::unique_ptr<IWindowProvider> windowProvider) {
-
-	//TODO: this code probably doesn't work with SDL2.
-	//This should be redesigned to use the new features found in SDL2 which allows SDL to attach to an already created window
-
-	//The windowProvider should not be nullptr.
-	assert(windowProvider);
-	mWindowProvider = std::move(windowProvider);
-
-	char tmp[64];
-	// Set the SDL_WINDOWID environment variable
-	sprintf(tmp, "SDL_WINDOWID=%s", mWindowProvider->getWindowHandle().c_str());
-	putenv(tmp);
-
-	createIcon();
-	unsigned int width, height;
-	mWindowProvider->getWindowSize(width, height);
-	setGeometry((int) width, (int) height);
-
-	SDL_ShowCursor(0);
-
-#ifdef _WIN32
-
-	static SDL_SysWMinfo pInfo;
-	SDL_VERSION(&pInfo.version);
-	SDL_GetWindowWMInfo(mMainVideoSurface, &pInfo);
-
-	// Also, SDL keeps an internal record of the window size
-	//  and position. Because SDL does not own the window, it
-	//  missed the WM_WINDOWPOSCHANGED message and has no record of
-	//  either size or position. It defaults to {0, 0, 0, 0},
-	//  which is then used to trap the mouse "inside the
-	//  window". We have to fake a window-move to allow SDL
-	//  to catch up, after which we can safely grab input.
-	//  Note that the WM_WINDOWPOSCHANGED seems only to be sent if the
-	//  position of the window actually changed. Thus we have to first move
-	//  it one pixel to the right, and then back again.
-	RECT r;
-	GetWindowRect(pInfo.info.win.window, &r);
-	SetWindowPos(pInfo.info.win.window, 0, r.left + 1, r.top, 0, 0, SWP_NOSIZE);
-	SetWindowPos(pInfo.info.win.window, 0, r.left, r.top, 0, 0, SWP_NOSIZE);
-
-	RAWINPUTDEVICE Rid;
-	/* we're telling the window, we want it to report raw input events from mice (needed for SDL-1.3) */
-	Rid.usUsagePage = 0x01;
-	Rid.usUsage = 0x02;
-	Rid.dwFlags = RIDEV_INPUTSINK;
-	Rid.hwndTarget = (HWND)pInfo.info.win.window;
-	RegisterRawInputDevices(&Rid, 1, sizeof(Rid));
-#endif
 }
 
 void Input::setGeometry(int width, int height) {
@@ -306,9 +248,6 @@ InputCommandMapper* Input::getMapperForState(const std::string& state) {
 
 
 bool Input::isApplicationVisible() {
-	if (mWindowProvider) {
-		return mWindowProvider->isWindowVisible();
-	}
 	return SDL_GetWindowFlags(mMainVideoSurface) & SDL_WINDOW_SHOWN;
 }
 
@@ -339,9 +278,7 @@ void Input::processInput() {
 	mLastTick = newTick;
 	pollMouse(secondsSinceLast);
 	pollEvents(secondsSinceLast);
-	if (mWindowProvider) {
-		mWindowProvider->processInput();
-	}
+
 	currentTime = std::chrono::steady_clock::now();
 	mMainLoopController->EventAfterInputProcessing.emit((float) (currentTime - mLastTimeInputProcessingEnd).count() / 1000000000.0f);
 	mLastTimeInputProcessingEnd = currentTime;

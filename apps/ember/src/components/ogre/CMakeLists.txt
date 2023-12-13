@@ -129,7 +129,6 @@ add_library(ember-ogre OBJECT
         OgreLogObserver.cpp
         OgreResourceLoader.cpp
         OgreResourceProvider.cpp
-        OgreWindowProvider.cpp
         OgreSetup.cpp
         OgrePluginLoader.cpp
         NodeAttachment.cpp
