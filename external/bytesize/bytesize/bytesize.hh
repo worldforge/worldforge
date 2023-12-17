@@ -84,7 +84,7 @@ namespace bytesize {
 	/* make bytesize::bytesize known to fmt::format */ \
 	template<> struct fmt::formatter<bytesize::bytesize> { \
 	  template<typename ParseContext> constexpr auto parse(ParseContext &ctx) { return ctx.begin(); } \
-	  template<typename FormatContext> auto format(const bytesize::bytesize &bs, FormatContext &ctx) { return format_to(ctx.out(),"{}",bs.format()); } \
+	  template<typename FormatContext> auto format(const bytesize::bytesize &bs, FormatContext &ctx) { return ::fmt::format_to(ctx.out(),"{}",bs.format()); } \
 	};
 
 
