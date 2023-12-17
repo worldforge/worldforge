@@ -11,7 +11,7 @@ find_package(ZLIB)
 
 
 find_package(Python3 COMPONENTS Interpreter)
-cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "Python3_EXECUTABLE" FALSE)
+cmake_dependent_option(ATLAS_GENERATE_OBJECTS "Generate Atlas Object classes from Atlas defs" TRUE "Python3_EXECUTABLE AND NOT WIN32" FALSE)
 option(ATLAS_DISABLE_BENCHMARKS "Disable benchmarks." FALSE)
 
 
