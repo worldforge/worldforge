@@ -20,6 +20,8 @@
 #include <squall/curl/CurlProvider.h>
 #include <squall/core/AsyncProvider.h>
 #include <algorithm>
+#include <utility>
+#include <fmt/format.h>
 
 namespace Ember {
 
@@ -28,12 +30,13 @@ AssetsUpdater::AssetsUpdater(Squall::Repository&& repository)
 
 }
 
-std::future<UpdateResult> AssetsUpdater::syncSquall(std::string remoteBaseUrl, Squall::Signature signature) {
+std::future<UpdateResult> AssetsUpdater::syncSquall(std::string remoteBaseUrl, Squall::Signature signature, std::string hostname) {
 	auto I = std::find_if(mActiveSessions.begin(), mActiveSessions.end(),
 						  [&remoteBaseUrl, &signature](const UpdateSession& session) { return session.remoteBaseUrl == remoteBaseUrl && session.signature == signature; });
 	if (I == mActiveSessions.end()) {
 		UpdateSession session{.resolver = Squall::Resolver(mRepository, std::make_unique<Squall::AsyncProvider>(std::make_unique<Squall::CurlProvider>(remoteBaseUrl)), signature),
 				.remoteBaseUrl = remoteBaseUrl,
+				.hostname = std::move(hostname),
 				.signature = signature};
 		mActiveSessions.emplace_back(std::move(session));
 		return mActiveSessions.back().callback.get_future();
@@ -49,6 +52,9 @@ size_t AssetsUpdater::poll() {
 		auto& firstSession = mActiveSessions.front();
 		auto resolveResult = firstSession.resolver.poll(10);
 		if (resolveResult.status == Squall::ResolveStatus::COMPLETE) {
+			auto cleanedHostname = firstSession.hostname;
+			std::replace(cleanedHostname.begin(), cleanedHostname.end(), '.', '_');
+			mRepository.storeRoot(fmt::format("ember_{}", cleanedHostname), Squall::Root{.signature =firstSession.signature});
 			auto callback = std::move(firstSession.callback);
 			mActiveSessions.erase(mActiveSessions.begin());
 			callback.set_value(UpdateResult::Success);

@@ -413,10 +413,11 @@ void Application::initializeServices() {
 	auto assetsSyncHandler = [this](AssetsSync assetsSync) {
 		try {
 			if (!assetsSync.assetsPath.empty()) {
-				auto urlResolveResult = resolveSquallUrl(assetsSync.assetsPath, mServices->getServerService().getConnection()->getHost());
+				auto* connection = mServices->getServerService().getConnection();
+				auto urlResolveResult = resolveSquallUrl(assetsSync.assetsPath, connection->getHost());
 				if (urlResolveResult) {
 					logger->info("Resolved squall base url from '{}' to '{}'.", assetsSync.assetsPath, urlResolveResult->baseUrl);
-					auto future = mAssetsUpdater.syncSquall(urlResolveResult->baseUrl, urlResolveResult->signature);
+					auto future = mAssetsUpdater.syncSquall(urlResolveResult->baseUrl, urlResolveResult->signature, connection->getHost());
 					mAssetUpdates.emplace_back(AssetsUpdateBridge{.stage= AssetsUpdateBridge::SyncStage{.pollFuture = std::move(future)},
 							.squallSignature = urlResolveResult->signature.str(),
 							.CompleteSignal = assetsSync.Complete});

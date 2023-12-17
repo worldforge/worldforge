@@ -124,7 +124,7 @@ std::map<std::string, Root> Repository::listRoots() const {
 }
 
 bool Repository::isValidRootName(std::string_view name) {
-	if (name.length() > 32 || name.length() == 0) {
+	if (name.length() > 32 || name.empty()) {
 		return false;
 	}
 	for (auto aChar: name) {

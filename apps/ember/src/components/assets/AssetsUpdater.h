@@ -33,7 +33,7 @@ public:
 
 	explicit AssetsUpdater(Squall::Repository&& repository);
 
-	std::future<UpdateResult> syncSquall(std::string remoteBaseUrl, Squall::Signature signature);
+	std::future<UpdateResult> syncSquall(std::string remoteBaseUrl, Squall::Signature signature, std::string hostname);
 
 	size_t poll();
 
@@ -47,6 +47,7 @@ private:
 	struct UpdateSession {
 		Squall::Resolver resolver;
 		std::string remoteBaseUrl;
+		std::string hostname;
 		Squall::Signature signature;
 
 		std::promise<UpdateResult> callback;
