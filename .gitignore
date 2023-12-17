@@ -11,3 +11,4 @@ cmake-*
 CMakeUserPresets.json
 conan_provider.cmake
 __pycache__
+.vscode
