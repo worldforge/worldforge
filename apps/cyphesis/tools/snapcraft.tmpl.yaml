@@ -4,9 +4,9 @@ version: '@VERSION@'
 title: Cyphesis MMORPG server
 summary: Server for Worldforge MMORPGs
 description: |
-    A server for the Worldforge MMORPG system.
-    Run this to host your own online game. It includes a complete
-    physics based simulation with powerful online editing capabilities.
+  A server for the Worldforge MMORPG system.
+  Run this to host your own online game. It includes a complete
+  physics based simulation with powerful online editing capabilities.
 grade: devel
 confinement: strict
 license: GPL-2.0
@@ -15,79 +15,85 @@ website: https://www.worldforge.org
 contact: erik@ogenvik.org
 
 slots:
-    worldforge:
-        interface: content
-        content: socket-directory
-        source:
-            write:
-                - $SNAP_COMMON/tmp
+  worldforge:
+    interface: content
+    content: socket-directory
+    source:
+      write:
+        - $SNAP_COMMON/tmp
 
 apps:
-    cyphesis:
-        #daemon: simple
-        command: bin/cyphesis
-        environment:
-            WF_cyphesis_confdir: "$SNAP/etc"
-            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
-            WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_bindir: "$SNAP/bin"
-            WF_deeds_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
-            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
-            PYTHONHOME : "$SNAP"
-        #listen-stream: "[::]:6767"
-        plugs:
-            - network
-            - network-bind
+  cyphesis:
+    #daemon: simple
+    command: bin/cyphesis
+    environment:
+      WF_cyphesis_confdir: "$SNAP/etc"
+      WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+      WF_cyphesis_directory: "$SNAP/share"
+      WF_cyphesis_bindir: "$SNAP/bin"
+      WF_deeds_autoimport: "$SNAP/share/worldforge/worlds/deeds/braga/world.xml"
+      WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+      PYTHONHOME: "$SNAP"
+    #listen-stream: "[::]:6767"
+    plugs:
+      - network
+      - network-bind
 
-    cypasswd:
-        command: bin/cypasswd
-        environment:
-            WF_cyphesis_confdir: "$SNAP/etc"
-            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
-            WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_bindir: "$SNAP/bin"
-            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
-            PYTHONHOME : "$SNAP"
-    cycmd:
-        command: bin/cycmd
-        environment:
-            WF_cyphesis_confdir: "$SNAP/etc"
-            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
-            WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_bindir: "$SNAP/bin"
-            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
-            PYTHONHOME : "$SNAP"
-    cydb:
-        command: bin/cydb
-        environment:
-            WF_cyphesis_confdir: "$SNAP/etc"
-            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
-            WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_bindir: "$SNAP/bin"
-            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
-            PYTHONHOME : "$SNAP"
-    cyaiclient:
-        command: bin/cyaiclient
-        environment:
-            WF_cyphesis_confdir: "$SNAP/etc"
-            WF_cyphesis_vardir: "$SNAP_USER_COMMON"
-            WF_cyphesis_directory: "$SNAP/share"
-            WF_cyphesis_bindir: "$SNAP/bin"
-            WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
-            PYTHONHOME : "$SNAP"
+  cypasswd:
+    command: bin/cypasswd
+    environment:
+      WF_cyphesis_confdir: "$SNAP/etc"
+      WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+      WF_cyphesis_directory: "$SNAP/share"
+      WF_cyphesis_bindir: "$SNAP/bin"
+      WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+      PYTHONHOME: "$SNAP"
+  cycmd:
+    command: bin/cycmd
+    environment:
+      WF_cyphesis_confdir: "$SNAP/etc"
+      WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+      WF_cyphesis_directory: "$SNAP/share"
+      WF_cyphesis_bindir: "$SNAP/bin"
+      WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+      PYTHONHOME: "$SNAP"
+  cydb:
+    command: bin/cydb
+    environment:
+      WF_cyphesis_confdir: "$SNAP/etc"
+      WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+      WF_cyphesis_directory: "$SNAP/share"
+      WF_cyphesis_bindir: "$SNAP/bin"
+      WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+      PYTHONHOME: "$SNAP"
+  cyaiclient:
+    command: bin/cyaiclient
+    environment:
+      WF_cyphesis_confdir: "$SNAP/etc"
+      WF_cyphesis_vardir: "$SNAP_USER_COMMON"
+      WF_cyphesis_directory: "$SNAP/share"
+      WF_cyphesis_bindir: "$SNAP/bin"
+      WF_deeds_assetsdir: "$SNAP/share/cyphesis/assets"
+      PYTHONHOME: "$SNAP"
+  squall:
+    command: bin/squall
+    environment:
+      SQUALL_REPOSITORY: "$SNAP_USER_COMMON/lib/cyphesis/squall"
+    plugs:
+      - network
 
 parts:
-    cyphesis:
-        stage-packages:
-            - libgcc1
-        plugin: dump
-        source: .
-        stage:
-            - bin/cy*
-            - bin/squall
-            - etc/cyphesis
-            - lib/python**
-            - share/cyphesis
-            - share/doc/cyphesis
-            - share/man/man1/cy*
-            - share/worldforge/worlds/**
+  cyphesis:
+    stage-packages:
+      - libgcc1
+    plugin: dump
+    source: .
+    stage:
+      - bin/cy*
+      - bin/squall
+      - etc/cyphesis
+      - lib/python**
+      - share/cyphesis
+      - share/doc/cyphesis
+      - share/man/man1/cy*
+      - share/worldforge/worlds/**

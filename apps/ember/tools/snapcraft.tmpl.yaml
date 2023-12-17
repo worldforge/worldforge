@@ -31,6 +31,13 @@ apps:
       - opengl
       - wayland
       - x11
+  squall:
+    command: bin/squall
+    environment:
+      SQUALL_REPOSITORY: "$SNAP_USER_DATA/.local/share/ember/squall"
+    plugs:
+      - network
+
 
 parts:
   ember:
