@@ -18,11 +18,15 @@
 
 #include "SquallHandler.h"
 #include "common/log.h"
+#include "bytesize/bytesize.hh"
+
 #include <filesystem>
 #include <fstream>
 
+BYTESIZE_FMTLIB_FORMATTER
+
 HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDataPath) {
-	return [repositoryDataPath](HttpHandleContext context) -> HttpHandling::HandleResult {
+	return [repositoryDataPath = std::move(repositoryDataPath)](HttpHandleContext context) -> HttpHandling::HandleResult {
 		if (context.path.rfind("/squall/", 0) == 0) {
 			auto squallPathSegment = context.path.substr(8);
 			auto squallPath = repositoryDataPath / squallPathSegment;
@@ -38,12 +42,12 @@ HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDat
 				} else {
 					if (std::ifstream is{absolutePath, std::ios::binary | std::ios::ate}) {
 						auto size = is.tellg();
-						spdlog::debug("Serving up '{}', with size of {} bytes.", absolutePath.generic_string(), std::to_string(size));
+						spdlog::debug("Serving up '{}', with size of {}.", absolutePath.generic_string(), bytesize::bytesize(size));
 						is.seekg(0, std::ios::beg);
 						HttpHandling::sendHeaders(context.io, 200, "application/octet-stream", "OK", {fmt::format("Content-Length: {}", std::to_string(size))});
 
 						//Blocking write here, should be improved
-						std::array<char, 2028> buffer;
+						std::array<char, 2028> buffer{};
 						while (is) {
 							is.read(buffer.data(), buffer.size());
 							auto readSize = is.gcount();

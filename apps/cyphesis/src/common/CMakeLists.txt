@@ -59,6 +59,7 @@ target_link_libraries(cyphesis-common PUBLIC
         spdlog::spdlog
         external-saf
         external-binreloc
+        external-bytesize
 )
 
 
