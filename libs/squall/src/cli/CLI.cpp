@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 	CLI::App app{"Squall is a tool for syncing shared read only data from multiple sources."};
 
 	std::string repositoryPath;
-	app.add_option("-r,--repository", repositoryPath, "Location of the repository.")->required(true);
+	app.add_option("-r,--repository", repositoryPath, "Location of the repository.")->required(true)->envname("SQUALL_REPOSITORY");
 	app.add_flag("-v,--verbose", [](std::int64_t verbose) {
 		spdlog::set_level(spdlog::level::trace);
 		logger->trace("Verbose logging enabled");
