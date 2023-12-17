@@ -45,7 +45,7 @@ TEST_CASE("Generator creates signatures", "[generator]") {
 	//For our test we use an empty directory. However, this can't be stored in Git so we need to instead copy the data to a temporary directory and create the empty directory there.
 	std::filesystem::path tempDir("GeneratorTestDirectoryTemp");
 	std::filesystem::create_directories(tempDir);
-	std::filesystem::copy(TESTDATADIR "/raw", "GeneratorTestDirectoryTemp", std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+	std::filesystem::copy(TESTDATADIR "/raw", tempDir, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
 	std::filesystem::create_directories(tempDir / "empty_directory");
 	Repository repository("GeneratorTestDirectory");
 	Generator generator(repository, tempDir);

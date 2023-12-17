@@ -23,21 +23,25 @@
 #include "squall/curl/CurlProvider.h"
 #include "squall/core/Realizer.h"
 #include "squall/core/Log.h"
+#include "squall/core/Pruner.h"
 
 #include <CLI/App.hpp>
 #include <CLI/Formatter.hpp>
 #include <CLI/Config.hpp>
 #include <spdlog/spdlog.h>
+#include "bytesize/bytesize.hh"
 
+BYTESIZE_FMTLIB_FORMATTER
 
 using namespace Squall;
 
 int main(int argc, char** argv) {
 	setupEncodings();
+	Squall::logger = spdlog::default_logger();
 	CLI::App app{"Squall is a tool for syncing shared read only data from multiple sources."};
 
 	std::string repositoryPath;
-	app.add_option("-r,--repository", repositoryPath, "Location of the repository.");
+	app.add_option("-r,--repository", repositoryPath, "Location of the repository.")->required(true);
 	app.add_flag("-v,--verbose", [](std::int64_t verbose) {
 		spdlog::set_level(spdlog::level::trace);
 		logger->trace("Verbose logging enabled");
@@ -206,6 +210,58 @@ int main(int argc, char** argv) {
 			} else {
 				logger->info("Completed realizing files into '{}'.", *directoryPath);
 			}
+		});
+	}
+
+	{
+		auto directoryPath = std::make_shared<std::string>();
+		auto isDryRun = std::make_shared<bool>(false);
+		auto prune = app.add_subcommand("prune", "Remove data that's not reached by any root.");
+		prune->add_flag("--dry-run", *isDryRun, "Do not perform any deletion, just print result.");
+
+		prune->final_callback([&repositoryPath, directoryPath, isDryRun]() {
+			Repository repository(repositoryPath);
+			auto abandonedFiles = Pruner::findAbandonedFiles(repository);
+			if (*isDryRun) {
+				uintmax_t totalSize = 0;
+				for (auto& entry: abandonedFiles) {
+					logger->info("Will delete {}", entry.generic_string());
+					totalSize += file_size(entry);
+				}
+				logger->info("This would delete {} files, for a total of {} bytes.", abandonedFiles.size(), bytesize::bytesize(totalSize));
+			} else {
+				logger->info("Will now delete {} files.", abandonedFiles.size());
+				uintmax_t totalSize = 0;
+				for (auto& entry: abandonedFiles) {
+					//Since we'll be deleting files we'll make extra sure there's no strangeness. This should under normal cases never happen.
+					auto relative = std::filesystem::relative(entry, repository.getPath());
+					if (relative.empty()) {
+						logger->error("Entry {} is not in a subdirectory of {}, aborting.", entry.generic_string(), repository.getPath().generic_string());
+						std::exit(1);
+					} else {
+
+						totalSize += file_size(entry);
+						std::error_code ec;
+						remove(entry, ec);
+						if (ec) {
+							logger->warn("Error when trying to delete file {}: {}", entry.generic_string(), ec.message());
+						} else {
+							logger->trace("Deleted {}", entry.generic_string());
+							//Check if we also should remove the directory if it's now empty.
+							if (std::filesystem::is_directory(entry.parent_path()) && is_empty(entry.parent_path())) {
+								remove(entry.parent_path(), ec);
+								if (ec) {
+									logger->warn("Error when trying to remove now empty directory {}: {}", entry.parent_path().generic_string(), ec.message());
+								} else {
+									logger->trace("Removed now empty directory {}.", entry.parent_path().generic_string());
+								}
+							}
+						}
+					}
+				}
+				logger->info("Deleted {} files, for a total of {} bytes.", abandonedFiles.size(), bytesize::bytesize(totalSize));
+			}
+
 		});
 	}
 	CLI11_PARSE(app, argc, argv)

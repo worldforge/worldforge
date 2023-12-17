@@ -16,9 +16,19 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "Log.h"
+#ifndef WORLDFORGE_PRUNER_H
+#define WORLDFORGE_PRUNER_H
+
+#include "Repository.h"
 
 namespace Squall {
-std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::logger>("squall");
+
+class Pruner {
+public:
+
+	static std::vector<std::filesystem::path> findAbandonedFiles(Squall::Repository& repository);
+
+};
 }
 
+#endif //WORLDFORGE_PRUNER_H

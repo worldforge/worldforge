@@ -5,6 +5,7 @@ add_executable(squall-bin
 set_target_properties(squall-bin
         PROPERTIES OUTPUT_NAME squall)
 target_link_libraries(squall-bin
+        external-bytesize
         squallcurl
         squallcore
         CLI11::CLI11

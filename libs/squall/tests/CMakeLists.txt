@@ -42,7 +42,12 @@ squall_add_test(DifferenceTest.cpp)
 target_link_libraries(DifferenceTest
         squallcore)
 
+squall_add_test(PrunerTest.cpp)
+target_link_libraries(PrunerTest
+        squallcore)
+
 add_custom_target(check-squall
+        COMMAND PrunerTest
         COMMAND RealizerTest
         COMMAND SignatureTest
         COMMAND GeneratorTest

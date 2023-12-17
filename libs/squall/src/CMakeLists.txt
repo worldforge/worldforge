@@ -10,6 +10,7 @@ set(CORE_SOURCE_FILES
         squall/core/AsyncProvider.cpp
         squall/core/Log.cpp
         squall/core/Difference.cpp
+        squall/core/Pruner.cpp
 )
 
 set(CORE_HEADER_FILES
@@ -25,6 +26,7 @@ set(CORE_HEADER_FILES
         squall/core/AsyncProvider.h
         squall/core/Log.h
         squall/core/Difference.h
+        squall/core/Pruner.h
 )
 
 
