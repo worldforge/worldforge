@@ -44,20 +44,6 @@ SoundService::SoundService(ConfigService& configService)
 		} else {
 
 			mDevice = alcOpenDevice(nullptr);
-			//Seems like alcOpenDevice in some cases alters the locale. We don't want that, so we'll revert back to "C".
-			setlocale(0, "C");
-			setlocale(1, "C");
-			setlocale(2, "C");
-			setlocale(3, "C");
-			setlocale(4, "C");
-			setlocale(5, "C");
-			setlocale(6, "C");
-			setlocale(7, "C");
-			setlocale(8, "C");
-			setlocale(9, "C");
-			setlocale(10, "C");
-			setlocale(11, "C");
-			setlocale(12, "C");
 
 			if (!mDevice) {
 				mEnabled = false;
