@@ -1,3 +1,5 @@
+project(eris)
+
 set(LIBNAME "eris")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
