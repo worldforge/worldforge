@@ -22,6 +22,9 @@ define_property(GLOBAL PROPERTY PLUGIN_LIBS_LIST
         FULL_DOCS "Plugins registered.")
 set_property(GLOBAL PROPERTY PLUGIN_LIBS_LIST "")
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_definitions(WIN32_LEAN_AND_MEAN VC_EXTRALEAN) #speed up builds on Windows
+endif ()
 
 macro(wf_add_plugin _LIB_NAME _SOURCE_FILES)
 

@@ -60,7 +60,7 @@ if (${FORCE_COLORED_OUTPUT})
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_definitions(_WIN32_WINNT=0x0A00 WINVER=0x0A00 WIN32_LEAN_AND_MEAN VC_EXTRALEAN) #target Windows 10
+    add_compile_definitions(_WIN32_WINNT=0x0A00 WINVER=0x0A00) #target Windows 10
     # On Windows there are some headers that define "min" and "max" as preprocessor macros, which messes up compilation. This tells them to stop.
     add_compile_definitions("NOMINMAX")
 endif ()
