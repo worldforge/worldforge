@@ -60,7 +60,9 @@ if (${FORCE_COLORED_OUTPUT})
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_definitions(-D_WIN32_WINNT=0x0A00) #target Windows 10
+    add_compile_definitions(_WIN32_WINNT=0x0A00 WINVER=0x0A00 WIN32_LEAN_AND_MEAN VC_EXTRALEAN) #target Windows 10
+    # On Windows there are some headers that define "min" and "max" as preprocessor macros, which messes up compilation. This tells them to stop.
+    add_compile_definitions("NOMINMAX")
 endif ()
 
 # Set compiler flags, but only if not running in a CI server. CI environments would normally set the environment variable CI.
@@ -89,8 +91,7 @@ option(BUILD_METASERVER_SERVER "Includes the MetaServer server into the build. T
 
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 
-# On Windows there are some headers that define "min" and "max" as preprocessor macros, which messes up compilation. This tells them to stop.
-add_compile_definitions("NOMINMAX")
+
 
 if (APPLE)
     #On Mac we're having trouble with "iconv" not being linked properly, so we'll do it here.
