@@ -42,6 +42,7 @@
 #include <SDL_syswm.h>
 
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 namespace Ember {
 
@@ -79,7 +80,11 @@ Input::Input() :
 	mLastTick = std::chrono::steady_clock::now();
 
 	//this is a failsafe which guarantees that SDL is correctly shut down (returning the screen to correct resolution, releasing mouse etc.) if there's a crash.
-	atexit(SDL_Quit);
+	atexit([]() {
+		//Flush all logs to disk.
+		spdlog::shutdown();
+		SDL_Quit();
+	});
 
 }
 
