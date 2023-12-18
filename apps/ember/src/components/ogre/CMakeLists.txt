@@ -201,6 +201,7 @@ target_link_libraries(ember-ogre PUBLIC
         eris
         mercator
         squallcore
+        Bullet::Bullet
 )
 
 #target_compile_definitions(emberogre PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")

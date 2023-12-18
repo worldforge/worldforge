@@ -80,9 +80,7 @@ endif (UNWIND_FOUND)
 
 
 find_package(SDL2 REQUIRED)
-include_directories(SYSTEM ${SDL2_INCLUDE_DIR})
-link_directories(${SDL2_LIBRARY_DIRS})
-link_libraries(${SDL2_LIBRARIES})
+link_libraries(SDL2::SDL2)
 
 find_package(sigc++-3 3.0 REQUIRED)
 link_libraries(libsigcpp::sigc++)
@@ -181,8 +179,7 @@ link_libraries(OpenGL::GL)
 find_package(spdlog REQUIRED)
 
 find_package(Bullet 2.89 REQUIRED)
-include_directories(SYSTEM ${BULLET_INCLUDE_DIRS})
-link_libraries(${BULLET_LIBRARIES})
+#link_libraries(Bullet::Bullet)
 
 
 if (WF_USE_WIDGET_PLUGINS)
