@@ -1,28 +1,34 @@
+add_library(ember-lua-console STATIC
+        LuaConsoleObject.cpp
+)
+target_link_libraries(ember-lua-console PUBLIC
+        ember-framework
+        ember-external-sol2
+)
+
 add_subdirectory(bindings)
 
-set(SCRIPT_LIBRARIES
-        $<TARGET_OBJECTS:ember-BindingsDomain>
-        $<TARGET_OBJECTS:ember-BindingsServices>
-        $<TARGET_OBJECTS:ember-BindingsCEGUI>
-        $<TARGET_OBJECTS:ember-BindingsAtlasAdapters>
-        $<TARGET_OBJECTS:ember-BindingsRepresentations>
-        $<TARGET_OBJECTS:ember-BindingsFramework>
-        $<TARGET_OBJECTS:ember-BindingsEris>
-        $<TARGET_OBJECTS:ember-BindingsVarconf>
-        $<TARGET_OBJECTS:ember-BindingsAtlas>
-        $<TARGET_OBJECTS:ember-BindingsLua>
-        $<TARGET_OBJECTS:ember-BindingsEmberOgre>
-        $<TARGET_OBJECTS:ember-BindingsOgre>
-        $<TARGET_OBJECTS:ember-BindingsWFMath>
-)
 
 add_library(ember-lua_component STATIC
         LuaScriptingProvider.cpp
-        LuaConsoleObject.cpp
-        ${SCRIPT_LIBRARIES}
 )
 
+
 target_link_libraries(ember-lua_component PUBLIC
+        ember-BindingsDomain
+        ember-BindingsServices
+        ember-BindingsCEGUI
+        ember-BindingsAtlasAdapters
+        ember-BindingsRepresentations
+        ember-BindingsFramework
+        ember-BindingsEris
+        ember-BindingsVarconf
+        ember-BindingsAtlas
+        ember-BindingsLua
+        ember-BindingsEmberOgre
+        ember-BindingsOgre
+        ember-BindingsWFMath
+        ember-lua-console
         ember-framework
         ember-services
         ember-external-sol2

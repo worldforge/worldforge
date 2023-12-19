@@ -7,4 +7,7 @@ target_link_libraries(ember-external-CEGUITinyXMLParser PUBLIC
         external-tinyxml)
 
 target_include_directories(ember-external-CEGUITinyXMLParser PUBLIC .)
+target_link_libraries(ember-external-CEGUITinyXMLParser PUBLIC
+        cegui::cegui
+)
 

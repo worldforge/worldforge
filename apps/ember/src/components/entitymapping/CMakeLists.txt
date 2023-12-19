@@ -1,4 +1,4 @@
-add_library(ember-entitymapping OBJECT
+add_library(ember-entitymapping STATIC
         Actions/Action.cpp
         Actions/DummyAction.cpp
         Cases/AttributeCase.cpp

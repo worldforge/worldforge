@@ -1,4 +1,4 @@
-add_library(ember-cegui OBJECT
+add_library(ember-cegui STATIC
         CEGUILogger.cpp
         ColouredRenderedStringParser.cpp
         RenderedColourStringTextComponent.cpp
@@ -11,17 +11,19 @@ target_link_libraries(ember-cegui PUBLIC
         ember-external-CEGUITinyXMLParser
         ember-external-CEGUIOgreRenderer
         varconf
+        cegui::cegui
 )
 
 file(GLOB CEGUI_FILES bindings/lua/*.cpp)
 
-add_library(ember-BindingsCEGUI OBJECT
+add_library(ember-BindingsCEGUI STATIC
         ${CEGUI_FILES}
 )
 
 target_link_libraries(ember-BindingsCEGUI PUBLIC
         ember-framework
         ember-external-sol2
+        cegui::cegui
 )
 
 target_precompile_headers(ember-BindingsCEGUI

@@ -18,5 +18,7 @@ add_library(ember-external-pagedgeometry OBJECT
 target_include_directories(ember-external-pagedgeometry PUBLIC include)
 
 target_link_libraries(ember-external-pagedgeometry PUBLIC
-        eris)
+        eris
+        OgreMain
+)
 

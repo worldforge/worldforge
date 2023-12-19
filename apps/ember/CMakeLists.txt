@@ -60,129 +60,43 @@ if (WIN32)
     add_compile_definitions("_SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING") #CEGUI has a String iterator that inherits from std::iterator, which shouldn't be done. We don't want to see the warning from MSVC all the time.
 endif ()
 
-add_compile_definitions(AL_LIBTYPE_STATIC)
-
 find_package(Boost
         1.83.0
         REQUIRED
         COMPONENTS system filesystem thread)
 
-link_libraries(Boost::boost)
-link_libraries(Boost::filesystem)
-
-#Check for libunwind, which is optional and if present will allow for the StackChecker feature to be enabled.
-#This allows for a developer to get some insight into why some frames take too long.
-find_package(unwind 1.1)
-if (UNWIND_FOUND)
-    message(STATUS "Found libunwind which allows for the 'slow frame stack print' feature to be enabled.")
-    link_directories(${UNWIND_LIBRARY_DIRS})
-    link_libraries(${UNWIND_LIBRARIES})
-    include_directories(SYSTEM ${UNWIND_INCLUDE_DIR})
-    add_compile_definitions("UNWIND_ENABLED")
-endif (UNWIND_FOUND)
-
-
 find_package(SDL2 REQUIRED)
-link_libraries(SDL2::SDL2)
 
 find_package(sigc++-3 3.0 REQUIRED)
-link_libraries(libsigcpp::sigc++)
 
+find_package(OGRE 13.4.2 REQUIRED)
 
-find_package(OGRE
-        13.4.2
-        REQUIRED)
-if (CONAN_FOUND)
-    #With Conan there will be a hard coded path to Freetype within the Overlay target. Let's remove that and link to
-    # Freetype ourselves.
-    find_package(Freetype CONFIG REQUIRED)
-    set_target_properties(OgreOverlay PROPERTIES
-            INTERFACE_LINK_LIBRARIES "OgreMain;$<LINK_ONLY:Freetype::Freetype>"
-    )
-
-    #If we're building with Conan we're statically linking Ogre, and need to link to the RenderSystem.
-    link_libraries(RenderSystem_GL3Plus)
-endif ()
-
-link_libraries(OgreMain)
-
-if (APPLE)
-    if (NOT OGRE_RenderSystem_GL3Plus_FOUND)
-        MESSAGE(FATAL_ERROR "Could not find Ogre RenderSystem GL3Plus plugin. Make sure you've built Ogre with RenderSystem GL3Plus support.")
-    endif (NOT OGRE_RenderSystem_GL3Plus_FOUND)
-endif (APPLE)
-
-if (NOT OGRE_Terrain_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre Terrain component. Make sure you've built Ogre with Terrain support.")
-endif (NOT OGRE_Terrain_FOUND)
-link_libraries(OgreTerrain)
-
-if (NOT OGRE_Overlay_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre Overlay component. Make sure you've built Ogre with Overlay support.")
-endif (NOT OGRE_Overlay_FOUND)
-link_libraries(OgreOverlay)
-
-if (NOT OGRE_MeshLodGenerator_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre MeshLodGenerator component. Make sure you've built Ogre with MeshLodGenerator support.")
-endif (NOT OGRE_MeshLodGenerator_FOUND)
-link_libraries(OgreMeshLodGenerator)
-
-if (NOT OGRE_RTShaderSystem_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre RTShaderSystem component. Make sure you've built Ogre with RTShaderSystem support.")
-endif (NOT OGRE_RTShaderSystem_FOUND)
-link_libraries(OgreRTShaderSystem)
-
-if (NOT OGRE_Codec_STBI_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre STBI Codec. Make sure you've built Ogre with STBI support.")
-endif (NOT OGRE_Codec_STBI_FOUND)
-link_libraries(Codec_STBI)
-
-if (NOT OGRE_Plugin_ParticleFX_FOUND)
-    MESSAGE(FATAL_ERROR "Could not find Ogre ParticleFX Plugin. Make sure you've built Ogre with ParticleFX support.")
-endif (NOT OGRE_Plugin_ParticleFX_FOUND)
-link_libraries(Plugin_ParticleFX)
+#With Conan there will be a hard coded path to Freetype within the Overlay target. Let's remove that and link to
+# Freetype ourselves.
+find_package(Freetype CONFIG REQUIRED)
+set_target_properties(OgreOverlay PROPERTIES
+        INTERFACE_LINK_LIBRARIES "OgreMain;$<LINK_ONLY:Freetype::Freetype>"
+)
 
 #I just couldn't get Windows to find Lua when provided by Conan, no matter what I tried. As a fallback we'll instead
 # use the auto-generated "findlua.cmake" provided by the Conan "cmake_find_package" generator. Preferably this should
 # instead be handled by CMake and the paths provided by the "cmake_paths" generator. But here we are.
 #Seems also be true for MacOS, so we'll enable this for all platforms if Conan is used.
-if (CONAN_FOUND)
-    message(STATUS "Looking for Lua through Conan.")
-    find_package(lua 5.3.6 EXACT REQUIRED)
-    link_libraries(lua::lua)
-else ()
-    find_package(Lua 5.3 REQUIRED)
-    link_directories(${LUA_LIBRARY_DIRS})
-    link_libraries(${LUA_LIBRARIES})
-    include_directories(SYSTEM ${LUA_INCLUDE_DIR})
-endif ()
-#If we're using Conan we should use the targets as provided by Conan. Otherwise we'll use the legacy FindCEGUI mechanism.
-if (CONAN_FOUND)
-    find_package(CEGUI
-            0.8.7
-            CONFIG
-            REQUIRED)
-    link_libraries(cegui::cegui)
-else ()
-    find_package(CEGUI
-            0.8.7
-            REQUIRED)
-    link_directories(${CEGUI_LIBRARY_DIRS})
-    link_libraries(${CEGUI_LIBRARIES})
-    include_directories(SYSTEM ${CEGUI_INCLUDE_DIRS})
-endif ()
+message(STATUS "Looking for Lua through Conan.")
+find_package(lua 5.3.6 EXACT REQUIRED)
+
+find_package(CEGUI
+        0.8.7
+        CONFIG
+        REQUIRED)
 
 if (NOT WIN32)
     find_package(libxdg-basedir REQUIRED)
 endif ()
 
-find_package(OpenGL)
-link_libraries(OpenGL::GL)
-
 find_package(spdlog REQUIRED)
 
 find_package(Bullet 2.89 REQUIRED)
-#link_libraries(Bullet::Bullet)
 
 
 if (WF_USE_WIDGET_PLUGINS)
@@ -281,7 +195,7 @@ if (DOXYGEN_FOUND)
             DEPENDS ${DOXYGEN_INPUT}
     )
 
-#    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
+    #    add_custom_target(dox DEPENDS ${DOXYGEN_OUTPUT})
 
 endif (DOXYGEN_FOUND)
 

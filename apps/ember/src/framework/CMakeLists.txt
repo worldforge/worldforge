@@ -1,4 +1,4 @@
-add_library(ember-framework OBJECT
+add_library(ember-framework STATIC
         AttributeObserver.cpp
         ConsoleBackend.cpp
         ConsoleCommandWrapper.cpp
@@ -28,6 +28,16 @@ add_library(ember-framework OBJECT
         LogExtensions.cpp
         Log.cpp
 )
+
+#Check for libunwind, which is optional and if present will allow for the StackChecker feature to be enabled.
+#This allows for a developer to get some insight into why some frames take too long.
+find_package(unwind 1.1)
+if (UNWIND_FOUND)
+    message(STATUS "Found libunwind which allows for the 'slow frame stack print' feature to be enabled.")
+    target_link_libraries(ember-framework PUBLIC unwind)
+    target_compile_definitions(ember-framework PRIVATE UNWIND_ENABLED)
+endif (UNWIND_FOUND)
+
 add_subdirectory(bindings)
 
 target_link_libraries(ember-framework PUBLIC
@@ -38,6 +48,8 @@ target_link_libraries(ember-framework PUBLIC
         eris
         varconf
         spdlog::spdlog
+        libsigcpp::sigc++
+        Boost::filesystem
 )
 
 if (NOT WIN32)

@@ -1,4 +1,4 @@
-add_library(ember-services OBJECT
+add_library(ember-services STATIC
         config/ConfigListener.cpp
         config/ConfigListenerContainer.cpp
         config/ConfigService.cpp
@@ -46,7 +46,7 @@ target_link_libraries(ember-services PUBLIC
 
 file(GLOB BINDINGS_FILES bindings/lua/*.cpp)
 
-add_library(ember-BindingsServices OBJECT
+add_library(ember-BindingsServices STATIC
         ${BINDINGS_FILES}
 )
 target_link_libraries(ember-BindingsServices PUBLIC
@@ -55,8 +55,8 @@ target_link_libraries(ember-BindingsServices PUBLIC
 )
 
 target_precompile_headers(ember-BindingsServices
-        REUSE_FROM
-        ember-BindingsLua
+        PUBLIC
+        <sol2/sol.hpp>
 )
 
 if (MSVC)

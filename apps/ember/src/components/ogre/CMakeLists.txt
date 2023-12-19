@@ -1,4 +1,4 @@
-add_library(ember-ogre OBJECT
+add_library(ember-ogre STATIC
         authoring/ConsoleDevTools.cpp
         authoring/DetachedEntity.cpp
         authoring/EntityMoveAdjuster.cpp
@@ -190,6 +190,7 @@ add_library(ember-ogre OBJECT
 target_link_libraries(ember-ogre PUBLIC
         ember-framework
         ember-assets
+        ember-cegui
         ember-external-mojoal
         ember-external-OGRE
         ember-external-pagedgeometry
@@ -202,14 +203,24 @@ target_link_libraries(ember-ogre PUBLIC
         mercator
         squallcore
         Bullet::Bullet
+        #If we're building with Conan we're statically linking Ogre, and need to link to the RenderSystem.
+        RenderSystem_GL3Plus
+        OgreMain
+        OgreTerrain
+        OgreOverlay
+        OgreMeshLodGenerator
+        OgreRTShaderSystem
+        Codec_STBI
+        Plugin_ParticleFX
 )
+
 
 #target_compile_definitions(emberogre PUBLIC PLUGIN_SUFFIX="${CMAKE_SHARED_LIBRARY_SUFFIX}" PLUGIN_PREFIX="${CMAKE_SHARED_LIBRARY_PREFIX}")
 target_precompile_headers(ember-ogre
         PUBLIC
-        "<OGRE/OgreAnyCleaned.h>"
-        "<Ogre.h>"
-        "<CEGUI/CEGUI.h>"
+        <OGRE/OgreAnyCleaned.h>
+        <Ogre.h>
+        <CEGUI/CEGUI.h>
 )
 
 add_subdirectory(scripting)

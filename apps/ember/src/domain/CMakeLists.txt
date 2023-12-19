@@ -9,7 +9,7 @@ target_link_libraries(ember-domain PUBLIC
         AtlasObjects
 )
 
-add_library(ember-BindingsDomain OBJECT
+add_library(ember-BindingsDomain STATIC
         bindings/lua/BindingsDomain.cpp
 )
 

@@ -4,5 +4,6 @@ add_library(ember-assets
 
 target_link_libraries(ember-assets PUBLIC
         squallcore
-        squallcurl)
+        squallcurl
+        libsigcpp::sigc++)
 

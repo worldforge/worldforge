@@ -5,3 +5,7 @@ add_library(ember-external-meshtree OBJECT
 )
 
 target_include_directories(ember-external-meshtree PUBLIC .)
+
+target_link_libraries(ember-external-meshtree PUBLIC
+        OgreMain
+)

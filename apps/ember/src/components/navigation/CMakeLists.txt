@@ -1,4 +1,4 @@
-add_library(ember-navigation OBJECT
+add_library(ember-navigation STATIC
         Awareness.cpp
         fastlz.c
         Steering.cpp

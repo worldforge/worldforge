@@ -1,4 +1,4 @@
-add_library(ember-BindingsVarconf OBJECT
+add_library(ember-BindingsVarconf STATIC
         BindingsVarconf.cpp
 )
 

@@ -27,7 +27,7 @@ if (TARGET cppunit::cppunit)
             $<TARGET_OBJECTS:ember-Recast>)
     target_compile_definitions(TestOgreView PUBLIC -DLOG_TASKS)
     target_link_libraries(TestOgreView cppunit::cppunit
-            ${BULLET_LIBRARIES}
+            Bullet::Bullet
             mojoal)
     add_test(NAME TestOgreView COMMAND TestOgreView)
     add_dependencies(check TestOgreView)

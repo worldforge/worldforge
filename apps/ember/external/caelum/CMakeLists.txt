@@ -26,4 +26,8 @@ add_library(ember-external-caelum OBJECT
 
 target_include_directories(ember-external-caelum PUBLIC include)
 
+target_link_libraries(ember-external-caelum PUBLIC
+        OgreMain
+)
+
 

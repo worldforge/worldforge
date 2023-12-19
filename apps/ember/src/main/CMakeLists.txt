@@ -5,26 +5,28 @@ target_sources(ember PRIVATE
         ConfigBoundLogObserver.cpp
         Ember.cpp
         ConsoleInputBinder.cpp
-        $<TARGET_OBJECTS:ember-ogre>
-        $<TARGET_OBJECTS:ember-widgets>
-        $<TARGET_OBJECTS:ember-ogre_terrain>
-        $<TARGET_OBJECTS:ember-entitymapping>
-        $<TARGET_OBJECTS:ember-cegui>
-        $<TARGET_OBJECTS:ember-navigation>
-        $<TARGET_OBJECTS:ember-services>
-        $<TARGET_OBJECTS:ember-domain>
-        $<TARGET_OBJECTS:ember-framework>
-        $<TARGET_OBJECTS:ember-external-caelum>
-        $<TARGET_OBJECTS:ember-external-CEGUIOgreRenderer>
-        $<TARGET_OBJECTS:ember-external-meshtree>
-        $<TARGET_OBJECTS:ember-external-pagedgeometry>
-        $<TARGET_OBJECTS:external-tinyxml>
-        $<TARGET_OBJECTS:external-binreloc>
-        $<TARGET_OBJECTS:external-DetourTileCache>
-        $<TARGET_OBJECTS:external-DetourCrowd>
-        $<TARGET_OBJECTS:external-Recast>)
+)
 
 target_link_libraries(ember
+        ember-ogre
+        ember-widgets
+        ember-ogre_terrain
+        ember-entitymapping
+        ember-cegui
+        ember-navigation
+        ember-services
+        ember-domain
+        ember-framework
+        ember-external-caelum
+        ember-external-CEGUIOgreRenderer
+        ember-external-meshtree
+        ember-external-pagedgeometry
+        external-tinyxml
+        external-binreloc
+        external-DetourTileCache
+        external-DetourCrowd
+        external-Recast        
+        
         ember-assets
         ember-lua_component
         mercator
@@ -32,7 +34,7 @@ target_link_libraries(ember
         ember-external-CEGUITinyXMLParser
         external-Detour
         Boost::url
-        ${BULLET_LIBRARIES})
+        OgreMain)
 
 install(TARGETS ember DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
 

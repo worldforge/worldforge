@@ -34,7 +34,7 @@ endif (PostgreSQL_FOUND)
 #Just link all libraries here.
 link_libraries(
         cyphesis-external-pycxx
-        ${BULLET_LIBRARIES}
+        Bullet::Bullet
         mercator
         wfmath
         Atlas

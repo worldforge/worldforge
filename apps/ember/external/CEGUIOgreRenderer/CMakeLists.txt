@@ -9,3 +9,7 @@ add_library(ember-external-CEGUIOgreRenderer OBJECT
 )
 
 target_include_directories(ember-external-CEGUIOgreRenderer PUBLIC .)
+target_link_libraries(ember-external-CEGUIOgreRenderer PUBLIC
+        cegui::cegui
+        OgreMain
+)

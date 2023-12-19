@@ -1,4 +1,4 @@
-add_library(ember-BindingsWFMath OBJECT
+add_library(ember-BindingsWFMath STATIC
         BindingsWFMath.cpp)
 target_link_libraries(ember-BindingsWFMath PUBLIC
         ember-framework

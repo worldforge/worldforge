@@ -1,4 +1,4 @@
-add_library(ember-ogre_terrain OBJECT
+add_library(ember-ogre_terrain STATIC
         OgreTerrain/OgreTerrainMaterialGeneratorEmber.cpp
         OgreTerrain/OgreTerrainAdapter.cpp
         OgreTerrain/OgreTerrainObserver.cpp

@@ -3,7 +3,7 @@ add_subdirectory(eris)
 add_subdirectory(varconf)
 add_subdirectory(wfmath)
 
-add_library(ember-BindingsFramework OBJECT
+add_library(ember-BindingsFramework STATIC
         BindingsFramework.cpp
 )
 target_link_libraries(ember-BindingsFramework PUBLIC

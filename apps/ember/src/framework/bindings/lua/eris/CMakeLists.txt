@@ -1,6 +1,6 @@
 file(GLOB BINDINGS_FILES *.cpp)
 
-add_library(ember-BindingsEris OBJECT
+add_library(ember-BindingsEris STATIC
         ${BINDINGS_FILES})
 
 target_link_libraries(ember-BindingsEris PUBLIC

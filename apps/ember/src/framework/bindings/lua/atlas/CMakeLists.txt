@@ -1,4 +1,4 @@
-add_library(ember-BindingsAtlas OBJECT
+add_library(ember-BindingsAtlas STATIC
         BindingsAtlas.cpp
 )
 

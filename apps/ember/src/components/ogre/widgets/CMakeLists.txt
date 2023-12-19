@@ -11,7 +11,7 @@ if (NOT WF_USE_WIDGET_PLUGINS)
 endif ()
 
 
-add_library(ember-widgets OBJECT
+add_library(ember-widgets STATIC
 
         ActionBarInput.cpp
         ActionBarIcon.cpp
@@ -75,8 +75,8 @@ add_library(ember-widgets OBJECT
         adapters/ogre/ResourceListAdapter.cpp
         adapters/ValueTypeHelper.cpp
         adapters/StringListAdapter.cpp
-        representations/LayoutHelper.cpp
-        TexturePair.cpp EntityTooltip.cpp
+        TexturePair.cpp
+        EntityTooltip.cpp
         EntityCreatorCreationInstance.cpp
         HitDisplayer.cpp
         TextNodeRenderer.cpp
@@ -93,7 +93,8 @@ target_precompile_headers(ember-widgets
 
 target_link_libraries(ember-widgets PUBLIC
         ember-framework
-        ember-ogre)
+        ember-ogre
+        ember-cegui)
 
 #wf_add_plugin(ServerWidget
 #        ServerWidget.cpp
@@ -130,13 +131,14 @@ file(GLOB LUA_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.lua")
 install(FILES ${LUA_FILES} DESTINATION ${CMAKE_INSTALL_FULL_DATADIR}/ember/scripting/lua/)
 
 
-add_library(ember-BindingsAtlasAdapters OBJECT
+add_library(ember-BindingsAtlasAdapters STATIC
         adapters/atlas/bindings/lua/BindingsAtlasAdapters.cpp
 )
 
 target_link_libraries(ember-BindingsAtlasAdapters PUBLIC
         ember-framework
         ember-external-sol2
+        ember-cegui
         AtlasObjects
         varconf
 )
@@ -149,13 +151,16 @@ if (MSVC)
     target_compile_options(ember-BindingsAtlasAdapters PRIVATE "/bigobj")
 endif ()
 
-add_library(ember-BindingsRepresentations OBJECT
+add_library(ember-BindingsRepresentations STATIC
+        representations/LayoutHelper.cpp
         representations/bindings/lua/BindingsRepresentations.cpp
 )
 
 target_link_libraries(ember-BindingsRepresentations PUBLIC
         ember-framework
         ember-external-sol2
+        ember-cegui
+        ember-widgets
         AtlasObjects
         varconf
 )
