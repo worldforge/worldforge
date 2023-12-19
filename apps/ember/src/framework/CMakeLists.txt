@@ -50,6 +50,7 @@ target_link_libraries(ember-framework PUBLIC
         spdlog::spdlog
         libsigcpp::sigc++
         Boost::filesystem
+        Boost::headers
 )
 
 if (NOT WIN32)
