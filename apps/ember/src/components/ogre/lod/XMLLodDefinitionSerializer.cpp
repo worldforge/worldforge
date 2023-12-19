@@ -190,25 +190,24 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 					} else {
 						// <method>constant|proportional</method>
 						TiXmlElement methodElem("method");
-						const char* pMethodText;
+						TiXmlText methodText{""};
 						switch (dist.reductionMethod) {
 							case Ogre::LodLevel::VRM_PROPORTIONAL:
-								pMethodText = "proportional";
+								methodText = "proportional";
 								break;
 
 							case Ogre::LodLevel::VRM_CONSTANT:
-								pMethodText = "constant";
+								methodText = "constant";
 								break;
 
 							case Ogre::LodLevel::VRM_COLLAPSE_COST:
-								pMethodText = "collapsecost";
+								methodText = "collapsecost";
 								break;
 
 							default:
 								assert(0);
 								break;
 						}
-						TiXmlText methodText(pMethodText);
 						methodElem.InsertEndChild(methodText);
 
 						// <value>0.5</value>

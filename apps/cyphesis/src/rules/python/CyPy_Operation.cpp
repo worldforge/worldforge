@@ -271,21 +271,19 @@ Py::Object CyPy_Operation::sequence_item(Py_ssize_t item) {
 	if (item < 0 || item >= (Py_ssize_t) args.size()) {
 		throw Py::IndexError("Operation.[]: Not enough op arguments");
 	}
-	const Root& arg = args[item];
-	RootOperation op = Atlas::Objects::smart_dynamic_cast<RootOperation>(arg);
+	const auto& arg = args[item];
+	auto op = Atlas::Objects::smart_dynamic_cast<RootOperation>(arg);
 	if (op) {
 		return CyPy_Operation::wrap(std::move(op));
 	}
-	RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(arg);
+	auto ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(arg);
 	if (ent) {
 		return CyPy_RootEntity::wrap(std::move(ent));
 	}
-	Root root = Atlas::Objects::smart_dynamic_cast<Root>(arg);
-	if (root) {
-		return CyPy_Root::wrap(std::move(root));
+	if (arg) {
+		return CyPy_Root::wrap(arg);
 	}
-	//spdlog::warn("Non operation or entity being returned as arg of operation");
-	return CyPy_ElementMap::wrap(arg->asMessage());
+	return Py::None();
 }
 
 Py::Object CyPy_Operation::number_add(const Py::Object& other) {
