@@ -132,7 +132,7 @@ public:
 
 	virtual void shutdownConnection() = 0;
 
-	virtual DatabaseResult runSimpleSelectQuery(const std::string& query) = 0;
+	virtual DatabaseResult runSimpleSelectQuery(const std::string& query) const = 0;
 
 	virtual int runCommandQuery(const std::string& query) = 0;
 
@@ -200,6 +200,11 @@ public:
 					 const std::string& location_entity_id);
 
 	DatabaseResult selectEntities(const std::string& loc);
+
+	/**
+	 * Returns the number of entities stored in the database.
+	 */
+	long entitiesCount() const;
 
 	int dropEntity(long id);
 

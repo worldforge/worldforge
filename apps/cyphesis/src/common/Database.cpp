@@ -227,6 +227,10 @@ DatabaseResult Database::selectEntities(const std::string& loc) {
 	return runSimpleSelectQuery(query);
 }
 
+long Database::entitiesCount() const {
+	return std::stol(runSimpleSelectQuery("SELECT COUNT(*) FROM entities;").begin().column(0));
+}
+
 int Database::dropEntity(long id) {
 	std::string query = fmt::format("DELETE FROM properties WHERE id = '{}'", id);
 

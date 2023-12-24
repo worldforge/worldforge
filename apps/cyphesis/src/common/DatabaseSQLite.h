@@ -82,7 +82,7 @@ public:
 	int connect(const std::string& context, std::string& error_msg) override;
 
 
-	DatabaseResult runSimpleSelectQuery(const std::string& query) override;
+	DatabaseResult runSimpleSelectQuery(const std::string& query) const override;
 
 	int runCommandQuery(const std::string& query) override;
 

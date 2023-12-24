@@ -367,11 +367,10 @@ size_t StorageManager::restoreChildren(LocatedEntity& parent) {
 	auto Iend = res.end();
 	for (; I != Iend; ++I) {
 		RouterId id(I.column("id"));
-		const std::string type = I.column("type");
+		auto type = I.column("type");
 		//By sending an empty attributes pointer we're telling the builder not to apply any default
 		//attributes. We will instead apply all attributes ourselves when we later on restore attributes.
-		Atlas::Objects::SmartPtr<Atlas::Objects::Entity::RootEntityData> attrs(nullptr);
-		auto child = m_entityBuilder.newEntity(id, type, attrs);
+		auto child = m_entityBuilder.newEntity(id, type, {nullptr});
 		if (!child) {
 			throw std::runtime_error(
 					fmt::format("Could not restore entity with id {} of type '{}'"
@@ -481,21 +480,23 @@ int StorageManager::initWorld(const Ref<LocatedEntity>& ent) {
 }
 
 int StorageManager::restoreWorld(const Ref<LocatedEntity>& ent) {
-	spdlog::info("Starting restoring world from storage.");
 
-	//The order here is important. We want to restore the children before we restore the properties.
-	//The reason for this is that some properties (such as "attached_*") refer to child entities; if
-	//the child isn't present when the property is installed there will be issues.
-	//We do this by first restoring the children, without any properties, and the assigning the properties to
-	//all entities in order.
-	auto childCount = restoreChildren(*ent);
-
-	restorePropertiesRecursively(*ent);
-
-	if (childCount > 0) {
-		spdlog::info("Completed restoring world from storage.");
+	auto entitiesCount = m_db.entitiesCount();
+	if (entitiesCount == 0) {
+		spdlog::info("No existing entities exist, so we won't restore any world.");
 	} else {
-		spdlog::info("No existing world found in storage.");
+		spdlog::info("Starting restoring world from storage, need to restore {} entities.", entitiesCount);
+
+		//The order here is important. We want to restore the children before we restore the properties.
+		//The reason for this is that some properties (such as "attached_*") refer to child entities; if
+		//the child isn't present when the property is installed there will be issues.
+		//We do this by first restoring the children, without any properties, and the assigning the properties to
+		//all entities in order.
+		auto childCount = restoreChildren(*ent);
+
+		restorePropertiesRecursively(*ent);
+
+		spdlog::info("Completed restoring world from storage, {} entities restored.", childCount);
 	}
 	return 0;
 }

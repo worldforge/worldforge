@@ -81,8 +81,12 @@ namespace {
 
 std::unique_ptr<btAxisSweep3> createVisibilityBroadphase(const LocatedEntity& entity, float scalingFactor) {
 	auto bbox = ScaleProperty::scaledBbox(entity);
-	return std::make_unique<btAxisSweep3>(Convert::toBullet(bbox.lowCorner()) * scalingFactor,
-										  Convert::toBullet(bbox.highCorner()) * scalingFactor);
+	if (!bbox.isValid()) {
+		return std::make_unique<btAxisSweep3>(btVector3{0, 0, 0}, btVector3{0, 0, 0});
+	} else {
+		return std::make_unique<btAxisSweep3>(Convert::toBullet(bbox.lowCorner()) * scalingFactor,
+											  Convert::toBullet(bbox.highCorner()) * scalingFactor);
+	}
 }
 
 bool fuzzyEquals(WFMath::CoordType a, WFMath::CoordType b, WFMath::CoordType epsilon) {

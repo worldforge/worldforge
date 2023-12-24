@@ -249,7 +249,7 @@ void DatabasePostgres::reportError() {
 	spdlog::error(msg);
 }
 
-DatabaseResult DatabasePostgres::runSimpleSelectQuery(const std::string& query) {
+DatabaseResult DatabasePostgres::runSimpleSelectQuery(const std::string& query) const {
 	assert(m_connection != nullptr);
 
 	cy_debug_print("QUERY: " << query)

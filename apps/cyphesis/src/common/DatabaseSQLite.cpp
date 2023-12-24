@@ -22,7 +22,6 @@
 
 #include "DatabaseSQLite.h"
 
-#include "id.h"
 #include "log.h"
 #include "debug.h"
 #include "globals.h"
@@ -31,10 +30,9 @@
 
 #include <Atlas/Codecs/Packed.h>
 
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string.hpp>
 #include <sstream>
+#include <filesystem>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
@@ -103,11 +101,12 @@ int DatabaseSQLite::connect(const std::string& context, std::string& error_msg) 
 }
 
 int DatabaseSQLite::initConnection() {
-	boost::filesystem::path db_path = boost::filesystem::path(var_directory) / "lib" / "cyphesis" / "cyphesis.db3";
+	std::filesystem::path db_path = std::filesystem::path(var_directory) / "lib" / "cyphesis" / "cyphesis.db3";
 
 	try {
-		boost::filesystem::create_directories(db_path.parent_path());
+		std::filesystem::create_directories(db_path.parent_path());
 		m_database = std::make_unique<database>(db_path.c_str());
+		spdlog::info("Using SQLite database at {}", db_path.generic_string());
 	} catch (const std::runtime_error& e) {
 		spdlog::warn("Error when opening SQLite database.");
 		return -1;
@@ -176,7 +175,7 @@ void DatabaseSQLite::reportError(const char* errorMsg) {
 	spdlog::error(msg);
 }
 
-DatabaseResult DatabaseSQLite::runSimpleSelectQuery(const std::string& query) {
+DatabaseResult DatabaseSQLite::runSimpleSelectQuery(const std::string& query) const {
 	assert(m_database);
 
 	cy_debug_print("QUERY: " << query)
