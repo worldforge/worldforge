@@ -23,8 +23,6 @@
 #include <filesystem>
 #include <fstream>
 
-BYTESIZE_FMTLIB_FORMATTER
-
 HttpHandling::HttpHandler buildSquallHandler(std::filesystem::path repositoryDataPath) {
 	return [repositoryDataPath = std::move(repositoryDataPath)](HttpHandleContext context) -> HttpHandling::HandleResult {
 		if (context.path.rfind("/squall/", 0) == 0) {

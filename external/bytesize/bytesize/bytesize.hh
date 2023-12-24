@@ -5,16 +5,18 @@
 #include<iomanip>
 #include<sstream>
 
+#include "fmt/format.h"
+
 namespace bytesize {
 	class bytesize{
 		// number of bytes
 		size_t bytes;
 	public:
 		// construct from number
-		bytesize(size_t bytes_): bytes(bytes_){}
+		explicit bytesize(size_t bytes_): bytes(bytes_){}
 		// parse from string
 		static bytesize parse(const std::string& str){
-			const static std::regex rx("\\s*(\\d+|\\d+[.]|\\d?[.]\\d+)\\s*((|ki|Mi|Gi|Ti|Pi|k|M|G|T|P)[Bb]?)\\s*");
+			const static std::regex rx(R"(\s*(\d+|\d+[.]|\d?[.]\d+)\s*((|ki|Mi|Gi|Ti|Pi|k|M|G|T|P)[Bb]?)\s*)");
 			std::smatch m;
 			if(!std::regex_match(str,m,rx)) throw std::runtime_error("Unable to parse '"+str+"' as size.");
 			double d=std::stod(m[1].str());
@@ -80,11 +82,10 @@ namespace bytesize {
 		inline bytesize operator"" _PB(unsigned long long int num){ return bytesize((size_t)(1'000'000'000'000'000LL*num)); }
 	}
 }
-#define BYTESIZE_FMTLIB_FORMATTER \
-	/* make bytesize::bytesize known to fmt::format */ \
-	template<> struct fmt::formatter<bytesize::bytesize> { \
-	  template<typename ParseContext> constexpr auto parse(ParseContext &ctx) { return ctx.begin(); } \
-	  template<typename FormatContext> auto format(const bytesize::bytesize &bs, FormatContext &ctx) { return ::fmt::format_to(ctx.out(),"{}",bs.format()); } \
+	/* make bytesize::bytesize known to fmt::format */
+	template<> struct fmt::formatter<bytesize::bytesize> {
+	  template<typename ParseContext> constexpr auto parse(ParseContext &ctx) { return ctx.begin(); }
+	  template<typename FormatContext> auto format(const bytesize::bytesize &bs, FormatContext &ctx) { return ::fmt::format_to(ctx.out(),"{}",bs.format()); }
 	};
 
 

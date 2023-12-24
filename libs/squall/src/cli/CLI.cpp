@@ -31,8 +31,6 @@
 #include <spdlog/spdlog.h>
 #include "bytesize/bytesize.hh"
 
-BYTESIZE_FMTLIB_FORMATTER
-
 using namespace Squall;
 
 int main(int argc, char** argv) {
