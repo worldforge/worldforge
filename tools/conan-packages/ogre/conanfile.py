@@ -84,7 +84,7 @@ class OgreConan(ConanFile):
         tc.variables['OGRE_BUILD_LIBS_AS_FRAMEWORKS'] = 'OFF'
         tc.variables['OGRE_RESOURCEMANAGER_STRICT'] = 'true'
         tc.variables['OGRE_NODELESS_POSITIONING'] = 'OFF'
-        tc.variables['OGRE_CONFIG_THREADS'] = '2'
+        tc.variables['OGRE_CONFIG_THREADS'] = '3'
         tc.variables['OGRE_STATIC'] = not self.options.shared
 
         if is_msvc(self):
