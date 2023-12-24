@@ -61,8 +61,6 @@ struct Action;
 
 class ModelPart;
 
-class ModelBackgroundLoader;
-
 struct LightInfo {
 	Ogre::Light* light;
 	Ogre::Vector3 position;
@@ -298,11 +296,11 @@ public:
 protected:
 
 	struct AssetCreationContext {
-		size_t mCurrentlyLoadingSubModelIndex = 0;
-		std::vector<std::unique_ptr<SubModel>> mSubmodels;
+		size_t currentlyLoadingSubModelIndex = 0;
+		std::vector<std::unique_ptr<SubModel>> submodels;
 		std::vector<std::string> showPartVector;
-		ModelPartStore mModelParts;
-		PartGroupStore mGroupsToPartMap;
+		ModelPartStore modelParts;
+		PartGroupStore groupsToPartMap;
 	};
 
 	/**
@@ -407,7 +405,7 @@ protected:
 	 * This is only use for performance reasons, to make iteration over the child movable objects faster.
 	 * Since this happens pretty frequently each frame it's important that it's as efficient as possible.
 	 *
-	 * The contents of the list mirrors the sum of mSubmodels and mParticleSystems.
+	 * The contents of the list mirrors the sum of submodels and mParticleSystems.
 	 */
 	std::vector<Ogre::MovableObject*> mMovableObjects;
 

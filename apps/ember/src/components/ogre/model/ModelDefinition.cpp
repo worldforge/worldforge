@@ -24,6 +24,7 @@
 
 #include "framework/MainLoopController.h"
 #include "ModelDefinition.h"
+#include "ModelBackgroundLoader.h"
 
 #include <utility>
 #include "Model.h"
@@ -70,18 +71,20 @@ bool ModelDefinition::requestLoad(Model* model) {
 			}, mActive);
 		}
 		return result;
+	} else {
+		mLoadingListeners.insert(model);
+		//If there's already a background loader, it's already in a "poll" loop, so we don't need to do anything.
+		if (!mBackgroundLoader) {
+			mBackgroundLoader = std::make_unique<ModelBackgroundLoader>(*this);
+			return mBackgroundLoader->poll();
+		}
+		return false;
 	}
-
-	mLoadingListeners.insert(model);
-	//If there's already a background loader, it's already in a "poll" loop, so we don't need to do anything.
-	if (!mBackgroundLoader) {
-		mBackgroundLoader = std::make_unique<ModelBackgroundLoader>(*this);
-		return mBackgroundLoader->poll();
-	}
-	return false;
 }
 
 void ModelDefinition::notifyAssetsLoaded() {
+	//We're done with the loader, release it.
+	mBackgroundLoader.reset();
 	mAssetsLoaded = true;
 	MainLoopController::getSingleton().getEventService().runOnMainThread([this]() {
 		reloadModels();

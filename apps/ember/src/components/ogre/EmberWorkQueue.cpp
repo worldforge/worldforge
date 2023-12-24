@@ -36,6 +36,11 @@ EmberWorkQueue::EmberWorkQueue(Eris::EventService& eventService)
 	}
 }
 
+	void EmberWorkQueue::addMainThreadTask(std::function<void()> task) {
+
+}
+
+
 Ogre::uint16 EmberWorkQueue::getChannel(const Ogre::String& channelName) {
 	auto channelId = Ogre::DefaultWorkQueue::getChannel(channelName);
 	//The Ogre Terrain components rely on its handlers always being executed on the main thread directly when processResponses() is called.

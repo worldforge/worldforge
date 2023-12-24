@@ -88,7 +88,6 @@
 #include <Eris/Account.h>
 
 #include <Overlay/OgreOverlaySystem.h>
-#include <framework/TimedLog.h>
 #include <RTShaderSystem/OgreShaderGenerator.h>
 
 #include <memory>
@@ -135,7 +134,7 @@ EmberOgre::EmberOgre(MainLoopController& mainLoopController,
 		mOgreSetup(std::make_unique<OgreSetup>()),
 		mRoot(mOgreSetup->getRoot()),
 		// Create the scene manager used for the main menu and load screen. Get the most simple one.
-		mSceneManagerOutOfWorld(mRoot->createSceneManager(Ogre::DefaultSceneManagerFactory::FACTORY_TYPE_NAME, "OutOfWorldSceneManager")),
+		mSceneManagerOutOfWorld(mRoot->createSceneManager(Ogre::SMT_DEFAULT, "OutOfWorldSceneManager")),
 		mWindow(nullptr),
 		mScreen(nullptr),
 		mAutomaticGraphicsLevelManager(std::make_unique<AutomaticGraphicsLevelManager>(mainLoopController)),

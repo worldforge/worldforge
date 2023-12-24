@@ -33,7 +33,7 @@ namespace Ember::OgreView {
 
 Scene::Scene() :
 //The default scene manager actually provides better performance in our benchmarks than the Octree SceneManager
-		mSceneManager(Ogre::Root::getSingleton().createSceneManager(Ogre::DefaultSceneManagerFactory::FACTORY_TYPE_NAME, "World")),
+		mSceneManager(Ogre::Root::getSingleton().createSceneManager(Ogre::SMT_DEFAULT, "World")),
 		//create the main camera, we will of course have a couple of different cameras, but this will be the main one
 		mMainCamera(mSceneManager->createCamera("MainCamera")),
 		mBulletWorld(std::make_unique<BulletWorld>()) {

@@ -109,7 +109,7 @@ bool Model::reload() {
 }
 
 bool Model::loadAssets() {
-	if (mAssetCreationContext.mCurrentlyLoadingSubModelIndex == 0) {
+	if (mAssetCreationContext.currentlyLoadingSubModelIndex == 0) {
 		reset();
 	}
 	bool result = createModelAssets();
@@ -126,7 +126,7 @@ bool Model::loadAssets() {
 //void Model::loadingComplete(Ogre::Resource*) {
 //	//This is called when the mesh is reloaded and it has a skeleton; we need to reset the actions since they now refer to invalid animation states
 //
-//	for (auto& subModel : mSubmodels) {
+//	for (auto& subModel : submodels) {
 //		//We need to call _initialise in order for the animation states to get recreated;
 //		//else this will happen lazily the next time the entity is rendered.
 //		subModel->getEntity()->_initialise(true);
@@ -172,12 +172,12 @@ bool Model::loadAssets() {
 bool Model::createModelAssets() {
 	TimedLog timedLog("Model::createActualModel " + mDefinition->getOrigin());
 
-	if (mAssetCreationContext.mCurrentlyLoadingSubModelIndex < mDefinition->getSubModelDefinitions().size()) {
-		auto I = mDefinition->getSubModelDefinitions().begin() + static_cast<ptrdiff_t>(mAssetCreationContext.mCurrentlyLoadingSubModelIndex);
+	if (mAssetCreationContext.currentlyLoadingSubModelIndex < mDefinition->getSubModelDefinitions().size()) {
+		auto I = mDefinition->getSubModelDefinitions().begin() + static_cast<ptrdiff_t>(mAssetCreationContext.currentlyLoadingSubModelIndex);
 		auto& submodelDef = *I;
 		try {
 
-			auto mesh = Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
+			auto mesh = Ogre::MeshManager::getSingleton().getByName(submodelDef.meshName, "world");
 			if (mesh) {
 				mesh->load();
 
@@ -246,7 +246,7 @@ bool Model::createModelAssets() {
 							}
 						}
 						if (!partDef.group.empty()) {
-							mAssetCreationContext.mGroupsToPartMap[partDef.group].push_back(partDef.name);
+							mAssetCreationContext.groupsToPartMap[partDef.group].push_back(partDef.name);
 							//mPartToGroupMap[partDef.getName()] = partDef.getGroup();
 						}
 
@@ -254,7 +254,7 @@ bool Model::createModelAssets() {
 							mAssetCreationContext.showPartVector.push_back(partDef.name);
 						}
 
-						ModelPart& modelPart = mAssetCreationContext.mModelParts[partDef.name];
+						ModelPart& modelPart = mAssetCreationContext.modelParts[partDef.name];
 						modelPart.addSubModelPart(&part);
 						modelPart.setGroupName(partDef.group);
 					}
@@ -267,10 +267,10 @@ bool Model::createModelAssets() {
 						part.addSubEntity({subentity, boost::none, (unsigned short) i});
 					}
 					mAssetCreationContext.showPartVector.push_back(part.getName());
-					ModelPart& modelPart = mAssetCreationContext.mModelParts[part.getName()];
+					ModelPart& modelPart = mAssetCreationContext.modelParts[part.getName()];
 					modelPart.addSubModelPart(&part);
 				}
-				mAssetCreationContext.mSubmodels.emplace_back(std::move(submodel));
+				mAssetCreationContext.submodels.emplace_back(std::move(submodel));
 				timedLog.report("Created submodel.");
 
 			} else {
@@ -281,18 +281,18 @@ bool Model::createModelAssets() {
 		} catch (const std::exception& e) {
 			logger->error("Submodel load error for mesh '{}': {}", submodelDef.meshName, e.what());
 		}
-		mAssetCreationContext.mCurrentlyLoadingSubModelIndex++;
+		mAssetCreationContext.currentlyLoadingSubModelIndex++;
 		return false;
 	}
 
 
 	setRenderingDistance(mDefinition->getRenderingDistance());
 
-	for (auto& submodel: mAssetCreationContext.mSubmodels) {
+	for (auto& submodel: mAssetCreationContext.submodels) {
 		addSubmodel(std::move(submodel));
 	}
-	mModelParts = mAssetCreationContext.mModelParts;
-	mGroupsToPartMap = mAssetCreationContext.mGroupsToPartMap;
+	mModelParts = mAssetCreationContext.modelParts;
+	mGroupsToPartMap = mAssetCreationContext.groupsToPartMap;
 
 	createActions();
 	timedLog.report("Created actions.");
@@ -406,7 +406,7 @@ void Model::createParticles() {
 				Ogre::MaterialPtr materialPtr = Ogre::MaterialManager::getSingleton().getByName(ogreParticleSystem->getMaterialName());
 				if (materialPtr) {
 					if (materialPtr->isTransparent()) {
-						ogreParticleSystem->setRenderQueueGroup(Ogre::RENDER_QUEUE_9);
+						ogreParticleSystem->setRenderQueueGroup(Ogre::RENDER_QUEUE_TRANSPARENTS);
 					}
 				}
 

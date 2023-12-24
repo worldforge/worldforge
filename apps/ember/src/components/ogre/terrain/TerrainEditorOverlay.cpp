@@ -230,7 +230,7 @@ void TerrainEditorOverlay::createOverlay(std::map<int, std::map<int, Mercator::B
 				entity->setMaterialName("/common/base/authoring/point");
 				//The material is made to ignore depth checks, so if we put it in a later queue we're
 				//making sure that the marker is drawn on top of everything else, making it easier to interact with.
-				entity->setRenderQueueGroup(Ogre::RENDER_QUEUE_9);
+				entity->setRenderQueueGroup(Ogre::RENDER_QUEUE_8);
 				entity->setRenderingDistance(300);
 				entity->setQueryFlags(MousePicker::CM_UNDEFINED);
 			} catch (const std::exception& ex) {

@@ -44,7 +44,7 @@ class Worldforge(ConanFile):
     def requirements(self):
 
         self.requires("libsigcpp/3.0.7")
-        self.requires("libcurl/8.4.0")
+        self.requires("libcurl/8.5.0")
         self.requires("spdlog/1.12.0")
         self.requires("cli11/2.3.2")
         self.requires("boost/1.83.0")
@@ -57,7 +57,7 @@ class Worldforge(ConanFile):
 
         if self.options.with_client:
             self.requires("cegui/0.8.7@worldforge")
-            self.requires("ogre/13.4.2@worldforge")
+            self.requires("ogre/14.1.0@worldforge")
             self.requires("sdl/2.28.5")
             self.requires("lua/5.3.6")
             if not is_msvc(self):
@@ -79,7 +79,7 @@ class Worldforge(ConanFile):
         self.requires("libxcrypt/4.4.36", override=True)
 
         self.test_requires("cppunit/1.15.1")
-        self.test_requires("catch2/3.4.0")
+        self.test_requires("catch2/3.5.0")
 
     def generate(self):
         deps = CMakeDeps(self)

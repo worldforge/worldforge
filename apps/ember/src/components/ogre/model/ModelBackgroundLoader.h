@@ -49,40 +49,6 @@ class ModelBackgroundLoader;
 class ModelDefinition;
 
 /**
- * @brief A background loading listener attached to an instance of ModelBackgroundLoader.
- *
- * It's main purpose is to pass the call to operationCompleted() on to the background loader.
- * @author Erik Ogenvik <erik@ogenvik.org>
- */
-class ModelBackgroundLoaderListener : public Ogre::ResourceBackgroundQueue::Listener {
-public:
-	/**
-	 * @brief Ctor.
-	 * @param loader The loader to which this listener is connected.
-	 */
-	explicit ModelBackgroundLoaderListener(ModelBackgroundLoader& loader);
-
-	~ModelBackgroundLoaderListener() override = default;
-
-	/**
-	 * @brief Called in the main thread when the background operation has completed.
-	 * Upon completion, the loader, if such an instance exists, will be notified of this. After this has happened, this instance will delete itself.
-	 * @param ticket The ticket which was completed.
-	 * @param result The result of the background operation.
-	 */
-	void operationCompleted(Ogre::BackgroundProcessTicket ticket, const Ogre::BackgroundProcessResult& result) override;
-
-
-private:
-
-	/**
-	 * @brief The loader to which this listener is attached, or null if it is detached.
-	 */
-	ModelBackgroundLoader& mLoader;
-
-};
-
-/**
  @brief Responsible for loading the resources needed by a Model.
  If thread support is enabled it will be used. You must then call poll() each frame to see if the background thread has finished loading.
 
@@ -146,7 +112,6 @@ public:
 		 */
 		LS_DONE
 	};
-	typedef std::set<Ogre::BackgroundProcessTicket> TicketStore;
 
 	/**
 	 * @brief Ctor.
@@ -188,21 +153,12 @@ protected:
 	ModelDefinition& mModelDefinition;
 
 
-	/**
-	 * @brief The background loading tickets held by this instance.
-	 * As the tickets complete they will be removed from the list.
-	 */
-	TicketStore mTickets;
+	int mResourcesBeingLoadingInBackground;
 
 	/**
 	 * @brief The current loading state of the instance.
 	 */
 	LoadingState mState;
-
-	/**
-	 * @brief A listener.
-	 */
-	ModelBackgroundLoaderListener mListener;
 
 	/**
 	 * @brief Keeps track of the currently processed submodel.
@@ -221,24 +177,12 @@ protected:
 
 	Eris::ActiveMarker mIsActive;
 
-	/**
-	 * @brief Adds a loading ticket.
-	 * @param ticket The ticket.
-	 */
-	void addTicket(Ogre::BackgroundProcessTicket ticket);
 
 	/**
 	 * @brief Checks to see if there are any tickets left.
 	 * @return True if there aren't any tickets left.
 	 */
-	bool areAllTicketsProcessed();
-
-	/**
-	 * @brief Called when a background operation has completed.
-	 * Note that this call will happen in the main thread.
-	 */
-	virtual void operationCompleted(Ogre::BackgroundProcessTicket ticket, const Ogre::BackgroundProcessResult& result);
-
+	bool areAllTicketsProcessed() const;
 
 	/**
 	 * @brief Polls the loading state (which might occur in a background thread).
@@ -248,6 +192,10 @@ protected:
 	bool performLoading();
 
 	void prepareMaterialInBackground(const std::string& materialName);
+
+	void prepareMeshInBackground(const std::string& meshName);
+
+	void prepareTextureInBackground(const std::string& textureName);
 
 };
 

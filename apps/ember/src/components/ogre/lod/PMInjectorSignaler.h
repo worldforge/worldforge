@@ -41,7 +41,7 @@ namespace Ember::OgreView::Lod {
 class PMInjectorSignaler :
 		public Ogre::LodWorkQueueInjectorListener {
 public:
-	sigc::signal<void(Ogre::LodConfig*)> LodInjected;
+	sigc::signal<void()> LodInjected;
 
 	bool shouldInject(Ogre::LodWorkQueueRequest* request) override;
 

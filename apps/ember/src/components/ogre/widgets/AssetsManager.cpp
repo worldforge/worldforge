@@ -42,18 +42,19 @@
 #include <CEGUI/ImageManager.h>
 #include <CEGUI/System.h>
 #include <boost/filesystem/operations.hpp>
-#include <MeshLodGenerator/OgreLodWorkQueueInjector.h>
+#include <MeshLodGenerator/OgreLodWorkQueueInjectorListener.h>
+#include <MeshLodGenerator/OgreMeshLodGenerator.h>
 
 
 namespace Ember::OgreView::Gui {
 
 AssetsManager::AssetsManager() : mPMInjectorSignaler(std::make_unique<Lod::PMInjectorSignaler>()) {
-	Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(mPMInjectorSignaler.get());
+	Ogre::MeshLodGenerator::getSingleton().setInjectorListener(mPMInjectorSignaler.get());
 }
 
 AssetsManager::~AssetsManager() {
-	if (mPMInjectorSignaler.get() == Ogre::LodWorkQueueInjector::getSingleton().getInjectorListener()) {
-		Ogre::LodWorkQueueInjector::getSingleton().setInjectorListener(nullptr);
+	if (mPMInjectorSignaler.get() == Ogre::MeshLodGenerator::getSingleton().getInjectorListener()) {
+		Ogre::MeshLodGenerator::getSingleton().setInjectorListener(nullptr);
 	}
 }
 

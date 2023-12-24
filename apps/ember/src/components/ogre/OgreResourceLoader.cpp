@@ -53,7 +53,7 @@ void refreshShader(const std::filesystem::path& path, const std::string& group) 
 			if (gpuProgram) {
 				if (gpuProgram->getSourceFile() == path.string()) {
 					if (gpuProgram->isReloadable()) {
-						Ember::logger->trace("Reloading GPU program {} since the source file at {} was changed.", gpuProgram->getName(), gpuProgram->getSourceFile());
+						Ember::logger->info("Reloading GPU program {} since the source file at {} was changed.", gpuProgram->getName(), gpuProgram->getSourceFile());
 						gpuProgram->reload();
 						for (const auto& materialEntry: Ogre::MaterialManager::getSingleton().getResourceIterator()) {
 							auto material = dynamic_cast<Ogre::Material* >(materialEntry.second.get());
@@ -67,7 +67,7 @@ void refreshShader(const std::filesystem::path& path, const std::string& group) 
 													auto usedProg = pass->getGpuProgram(programType);
 													if (usedProg) {
 														if (usedProg.get() == gpuProgram) {
-															Ember::logger->trace("Reloading material {} since the GPU program at {} was changed.", material->getName(),
+															Ember::logger->info("Reloading material {} since the GPU program at {} was changed.", material->getName(),
 																				 gpuProgram->getSourceFile());
 															material->reload();
 															break;
@@ -309,7 +309,7 @@ void OgreResourceLoader::loadBootstrap() {
 	addSharedMedia("data/assets", "EmberFileSystem", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 	addSharedMedia("OGRE/Media/Main", "EmberFileSystem", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	addSharedMedia("OGRE/Media/RTShaderLib/GLSL", "EmberFileSystem", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	addSharedMedia("OGRE/Media/RTShaderLib", "EmberFileSystem", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 	addUserMedia("media/assets", "EmberFileSystem", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 }

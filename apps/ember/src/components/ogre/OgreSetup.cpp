@@ -27,6 +27,7 @@
 #include "OgreInfo.h"
 #include "MeshSerializerListener.h"
 #include "lod/ScaledPixelCountLodStrategy.h"
+#include <MeshLodGenerator/OgreMeshLodGenerator.h>
 
 #include "services/EmberServices.h"
 #include "services/config/ConfigService.h"
@@ -36,7 +37,7 @@
 #include "framework/Tokeniser.h"
 #include "framework/ConsoleBackend.h"
 #include "framework/MainLoopController.h"
-#include "EmberWorkQueue.h"
+//#include "EmberWorkQueue.h"
 #include "Version.h"
 #include <OgreBuildSettings.h>
 
@@ -70,7 +71,6 @@
 #include <Ogre.h>
 #include <RTShaderSystem/OgreShaderGenerator.h>
 #include <RTShaderSystem/OgreRTShaderSystem.h>
-#include <MeshLodGenerator/OgreMeshLodGenerator.h>
 #include <boost/filesystem.hpp>
 #include <memory>
 
@@ -123,10 +123,10 @@ OgreSetup::OgreSetup() :
 
 
 	//Ownership of the queue instance is passed to Root.
-	mRoot->setWorkQueue(OGRE_NEW EmberWorkQueue(MainLoopController::getSingleton().getEventService()));
+//mRoot->setWorkQueue(OGRE_NEW EmberWorkQueue(MainLoopController::getSingleton().getEventService()));
 
 #ifdef OGRE_STATIC_LIB
-	mPlugins.emplace_back(std::make_unique<Ogre::STBIPlugin>());
+	Ogre::STBIImageCodec::startup();
 	mPlugins.emplace_back(std::make_unique<Ogre::GL3PlusPlugin>());
 	mPlugins.emplace_back(std::make_unique<Ogre::ParticleFXPlugin>());
 	for (auto& plugin: mPlugins) {
@@ -147,7 +147,6 @@ OgreSetup::OgreSetup() :
 	}
 	mRoot->setRenderSystem(renderSystem);
 
-	mMeshLodGenerator->_initWorkQueue();
 }
 
 OgreSetup::~OgreSetup() {
@@ -181,6 +180,10 @@ OgreSetup::~OgreSetup() {
 
 		//Clean up, else it seems we can get error referencing gpu programs that are destroyed.
 		Ogre::RTShader::ShaderGenerator::destroy();
+#ifdef OGRE_STATIC_LIB
+		Ogre::STBIImageCodec::shutdown();
+#endif
+
 	}
 }
 
@@ -243,6 +246,7 @@ void OgreSetup::configure() {
 		}
 	}, true);
 
+	//Ogre::MeshManager::setBonesUseObjectSpace(false);
 	ConfigService& configService(EmberServices::getSingleton().getConfigService());
 
 	// we start by trying to figure out what kind of resolution the user has selected, and whether full screen should be used or not.

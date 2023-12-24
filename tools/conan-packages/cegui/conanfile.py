@@ -37,7 +37,7 @@ class CeguiConan(ConanFile):
     package_type = "library"
 
     def requirements(self):
-        self.requires("freetype/2.13.0")
+        self.requires("freetype/2.13.2")
         self.requires("pcre/8.45")
 
     def generate(self):

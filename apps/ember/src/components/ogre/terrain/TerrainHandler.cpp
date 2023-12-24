@@ -209,10 +209,12 @@ void TerrainHandler::showTerrain(const WFMath::AxisBox<2>& interactingArea) {
 			}
 		}
 	}
-
-	for (auto& pageIndex: pagesToDestroy) {
-		destroyPage(pageIndex);
-	}
+//The Terrain component is unfortunately inherently non-thread safe, as it allows for both random deletion of Terrain instances while at the same time doing LOD calculations
+//in a background thread. These calculations will access any Terrain isntances whenever they like, which will lead to spurious segfaults as the pages might be deleted.
+//The solution for now is to never remove any pages while in the world, while we look for a better approach to rendering terrain.
+//	for (auto& pageIndex: pagesToDestroy) {
+//		destroyPage(pageIndex);
+//	}
 }
 
 

@@ -44,8 +44,6 @@ namespace OgreView::Model {
 
 class ModelFactory;
 
-class ModelBackgroundLoader;
-
 
 /**
  *

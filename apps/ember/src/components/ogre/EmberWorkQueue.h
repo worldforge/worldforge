@@ -19,7 +19,7 @@
 #ifndef EMBER_EMBERWORKQUEUE_H
 #define EMBER_EMBERWORKQUEUE_H
 
-#include <Threading/OgreDefaultWorkQueueStandard.h>
+#include <OgreDefaultWorkQueue.h>
 #include <Eris/EventService.h>
 
 #include <set>
@@ -42,6 +42,9 @@ public:
 	void processResponses() override;
 
 	Ogre::uint16 getChannel(const Ogre::String& channelName) override;
+
+	void addMainThreadTask(std::function<void()> task) override;
+
 
 private:
 	Eris::EventService& mEventService;

@@ -22,7 +22,8 @@
 
 #include "PMInjectorSignaler.h"
 
-#include <MeshLodGenerator/OgreLodWorkQueueRequest.h>
+#include <MeshLodGenerator/OgreLodWorkQueueInjectorListener.h>
+#include <MeshLodGenerator/OgreLodWorkQueueInjectorListener.h>
 
 
 namespace Ember::OgreView::Lod {
@@ -32,7 +33,7 @@ bool PMInjectorSignaler::shouldInject(Ogre::LodWorkQueueRequest* request) {
 }
 
 void PMInjectorSignaler::injectionCompleted(Ogre::LodWorkQueueRequest* request) {
-	LodInjected.emit(&request->config);
+	LodInjected.emit();
 }
 
 }

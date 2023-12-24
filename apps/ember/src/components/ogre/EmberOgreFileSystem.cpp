@@ -203,7 +203,7 @@ DataStreamPtr FileSystemArchive::open(const String& filename, bool readOnly) con
 //-----------------------------------------------------------------------
 StringVectorPtr FileSystemArchive::list(bool recursive, bool dirs) const {
 	// directory change requires locking due to saved returns
-	StringVectorPtr ret(OGRE_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+	auto ret = std::make_shared<StringVector>();
 
 	findFiles("*", recursive, dirs, ret.get(), nullptr);
 
@@ -212,7 +212,7 @@ StringVectorPtr FileSystemArchive::list(bool recursive, bool dirs) const {
 
 //-----------------------------------------------------------------------
 FileInfoListPtr FileSystemArchive::listFileInfo(bool recursive, bool dirs) const {
-	FileInfoListPtr ret(OGRE_NEW_T(FileInfoList, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+	auto ret = std::make_shared<FileInfoList>();
 
 	findFiles("*", recursive, dirs, nullptr, ret.get());
 
@@ -222,7 +222,7 @@ FileInfoListPtr FileSystemArchive::listFileInfo(bool recursive, bool dirs) const
 //-----------------------------------------------------------------------
 StringVectorPtr FileSystemArchive::find(const String& pattern,
 										bool recursive, bool dirs) const {
-	StringVectorPtr ret(OGRE_NEW_T(StringVector, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+	auto ret = std::make_shared<StringVector>();
 
 	findFiles(pattern, recursive, dirs, ret.get(), nullptr);
 
@@ -233,7 +233,7 @@ StringVectorPtr FileSystemArchive::find(const String& pattern,
 //-----------------------------------------------------------------------
 FileInfoListPtr FileSystemArchive::findFileInfo(const String& pattern,
 												bool recursive, bool dirs) const {
-	FileInfoListPtr ret(OGRE_NEW_T(FileInfoList, MEMCATEGORY_GENERAL)(), SPFM_DELETE_T);
+	auto ret = std::make_shared<FileInfoList>();
 
 	findFiles(pattern, recursive, dirs, nullptr, ret.get());
 

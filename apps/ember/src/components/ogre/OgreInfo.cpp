@@ -21,7 +21,6 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.//
 //
 #include "OgreInfo.h"
-#include <OgreSceneManagerEnumerator.h>
 #include <OgreRoot.h>
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>

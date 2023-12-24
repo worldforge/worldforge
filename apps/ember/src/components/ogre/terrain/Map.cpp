@@ -300,7 +300,7 @@ Ogre::SceneManager& MapCameraLightning::getSceneManager() {
 MapCameraLightningInstance::MapCameraLightningInstance(MapCameraLightning& lightning)
 		: mLightning(lightning) {
 
-	for (auto& entry: lightning.getSceneManager().getMovableObjects(Ogre::LightFactory::FACTORY_TYPE_NAME)) {
+	for (auto& entry: lightning.getSceneManager().getMovableObjects(Ogre::MOT_LIGHT)) {
 		Ogre::MovableObject* light = entry.second;
 		if (light && light != mLightning.getLight()) {
 			if (light->getVisible()) {

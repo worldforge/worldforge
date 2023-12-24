@@ -115,13 +115,12 @@ private:
 	 */
 	sigc::signal<void(const Ogre::TRect<Ogre::Real>&)> mTerrainAreaUpdated;
 
-	Ogre::TerrainMaterialGeneratorPtr mMaterialGenerator;
 	std::unique_ptr<Ogre::TerrainGlobalOptions> mTerrainGlobalOptions;
-
 	std::unique_ptr<Ogre::TerrainGroup> mTerrainGroup;
+	Ogre::TerrainMaterialGeneratorPtr mMaterialGenerator;
+
 
 	IPageDataProvider* mPageDataProvider;
-	std::unique_ptr<Ogre::TerrainMaterialGenerator::Profile> mMaterialProfile;
 	EmberEntity* mEntity;
 
 	Eris::ActiveMarker mActiveMarker;

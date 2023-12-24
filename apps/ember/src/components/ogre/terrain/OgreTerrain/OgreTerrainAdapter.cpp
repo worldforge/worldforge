@@ -95,14 +95,13 @@ OgreTerrainAdapter::OgreTerrainAdapter(Ogre::SceneManager& sceneManager, int ter
 		mLoadRadius(300),
 		mHoldRadius(mLoadRadius * 2),
 		mCamera(nullptr),
-		mMaterialGenerator(std::make_shared<OgreTerrainMaterialGeneratorEmber>()),
 		mTerrainGlobalOptions(std::make_unique<Ogre::TerrainGlobalOptions>()),
-		mTerrainGroup(OGRE_NEW Ogre::TerrainGroup(&sceneManager,
-												  Ogre::Terrain::ALIGN_X_Z,
-												  terrainPageSize + 1,
-												  (Ogre::Real) terrainPageSize)),
+		mTerrainGroup(std::make_unique<Ogre::TerrainGroup>(&sceneManager,
+														   Ogre::Terrain::ALIGN_X_Z,
+														   terrainPageSize + 1,
+														   (Ogre::Real) terrainPageSize)),
+		mMaterialGenerator(nullptr),
 		mPageDataProvider(nullptr),
-		mMaterialProfile(nullptr),
 		mEntity(nullptr) {
 
 	//Set an auto update lod instance just to make the terrain engine not do LOD calculations on the main thread.
@@ -114,7 +113,6 @@ OgreTerrainAdapter::OgreTerrainAdapter(Ogre::SceneManager& sceneManager, int ter
 	mTerrainGlobalOptions->setCastsDynamicShadows(true);
 	mTerrainGlobalOptions->setMaxPixelError(8);
 	mTerrainGlobalOptions->setCompositeMapSize(512);
-	mTerrainGlobalOptions->setDefaultMaterialGenerator(mMaterialGenerator);
 
 	setOgrePageSize(terrainPageSize);
 
@@ -283,7 +281,9 @@ void OgreTerrainAdapter::reloadPageMaterial(const TerrainIndex& index) {
 			//We must tell the page what area needs updating. For now we'll update the whole page.
 			//But we should really look into only updating the area that has changed.
 			page->_dirtyCompositeMapRect(Ogre::Rect(0, 0, (int) page->getWorldSize(), (int) page->getWorldSize()));
-			mMaterialProfile->generate(page);
+			if (mMaterialGenerator) {
+				mMaterialGenerator->generate(page);
+			}
 			page->updateCompositeMap();
 		}
 	}
@@ -308,9 +308,8 @@ std::pair<EmberEntity*, Ogre::Vector3> OgreTerrainAdapter::rayIntersects(const O
 
 void OgreTerrainAdapter::setPageDataProvider(IPageDataProvider* pageDataProvider) {
 	mPageDataProvider = pageDataProvider;
-	auto materialGenerator = mTerrainGlobalOptions->getDefaultMaterialGenerator();
-	mMaterialProfile = std::make_unique<EmberTerrainProfile>(*mPageDataProvider, *mTerrainGroup, materialGenerator.get(), mTerrainShownSignal);
-	materialGenerator->setActiveProfile(mMaterialProfile.get());
+	mMaterialGenerator = std::make_shared<OgreTerrainMaterialGeneratorEmber>(*mPageDataProvider, *mTerrainGroup, mTerrainShownSignal);
+	mTerrainGlobalOptions->setDefaultMaterialGenerator(mMaterialGenerator);
 }
 
 sigc::connection OgreTerrainAdapter::bindTerrainShown(sigc::slot<void(const Ogre::TRect<Ogre::Real>)>& signal) {

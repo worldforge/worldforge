@@ -25,7 +25,6 @@
 #define EMBEROGREMODELDEFINITION_H
 
 #include "components/ogre/EmberOgrePrerequisites.h"
-#include "ModelBackgroundLoader.h"
 #include <OgreQuaternion.h>
 #include <OgreVector.h>
 #include <OgreLight.h>
@@ -40,9 +39,7 @@
 #include <vector>
 #include <unordered_set>
 
-namespace Ember {
-namespace OgreView {
-namespace Model {
+namespace Ember::OgreView::Model {
 
 class Model;
 
@@ -774,6 +771,6 @@ inline const std::string& ModelDefinition::getIconPath() const {
 
 
 }
-}
-}
+
+
 #endif

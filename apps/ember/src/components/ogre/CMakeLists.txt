@@ -158,7 +158,7 @@ add_library(ember-ogre STATIC
         ShapeVisual.cpp
         TerrainEntityManager.cpp
         GraphicalChangeAdapter.cpp
-        EmberWorkQueue.cpp
+        #EmberWorkQueue.cpp
         EmberOgrePrerequisites.h
         EmberOgreSignals.h
         Convert.h
@@ -199,6 +199,7 @@ target_link_libraries(ember-ogre PUBLIC
         ember-external-meshtree
         external-Recast
         external-DetourTileCache
+        external-bytesize
         eris
         mercator
         squallcore

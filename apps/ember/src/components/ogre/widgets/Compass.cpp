@@ -150,7 +150,7 @@ RenderedCompassImpl::RenderedCompassImpl(CEGUI::Window* pointerElement, std::str
 		mPointerElement(pointerElement),
 		mMaterialName(std::move(compassMaterialName)) {
 	//Make sure we create the most simple scene manager.
-	mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::DefaultSceneManagerFactory::FACTORY_TYPE_NAME, "RenderedCompassImpl_sceneManager");
+	mSceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::SMT_DEFAULT, "RenderedCompassImpl_sceneManager");
 	mSceneManager->setFog(Ogre::FOG_EXP2, Ogre::ColourValue(0, 0, 0, 0), 0.0f, 0.0f, 0.0f);
 }
 

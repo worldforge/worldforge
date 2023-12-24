@@ -28,7 +28,7 @@
 
 // render queues
 #define RENDER_QUEUE_OUTLINE_OBJECT        (Ogre::RENDER_QUEUE_MAIN + 1)
-#define RENDER_QUEUE_OUTLINE_BORDER        (Ogre::RENDER_QUEUE_9 + 2)
+#define RENDER_QUEUE_OUTLINE_BORDER        (Ogre::RENDER_QUEUE_8 + 2)
 
 // stencil values
 #define STENCIL_VALUE_FOR_OUTLINE_GLOW 1

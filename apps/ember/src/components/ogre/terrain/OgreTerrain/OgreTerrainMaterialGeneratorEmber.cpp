@@ -35,14 +35,12 @@ Ember::OgreView::IPageDataProvider::OgreIndex calculateTerrainIndex(const Terrai
 
 
 namespace Ember::OgreView::Terrain {
-const std::string EmberTerrainProfile::ERROR_MATERIAL = "/common/primitives/texture/error";
+const std::string OgreTerrainMaterialGeneratorEmber::ERROR_MATERIAL = "/common/primitives/texture/error";
 
 
-EmberTerrainProfile::EmberTerrainProfile(IPageDataProvider& dataProvider,
+OgreTerrainMaterialGeneratorEmber::OgreTerrainMaterialGeneratorEmber(IPageDataProvider& dataProvider,
 										 const TerrainGroup& terrainGroup,
-										 TerrainMaterialGenerator* parent,
 										 sigc::signal<void(const Ogre::TRect<Ogre::Real>&)>& terrainShownSignal) :
-		Ogre::TerrainMaterialGenerator::Profile(parent, "Ember", "Ember specific profile"),
 		mDataProvider(dataProvider),
 		mTerrainGroup(terrainGroup),
 		mTerrainShownSignal(terrainShownSignal) {
@@ -51,7 +49,7 @@ EmberTerrainProfile::EmberTerrainProfile(IPageDataProvider& dataProvider,
 	assert(mErrorMaterialTemplate);
 }
 
-void EmberTerrainProfile::requestOptions(Ogre::Terrain* terrain) {
+void OgreTerrainMaterialGeneratorEmber::requestOptions(Ogre::Terrain* terrain) {
 	terrain->_setMorphRequired(false);
 	terrain->_setNormalMapRequired(true);
 	terrain->_setLightMapRequired(false, false);
@@ -66,7 +64,7 @@ void EmberTerrainProfile::requestOptions(Ogre::Terrain* terrain) {
 	}
 }
 
-Ogre::MaterialPtr EmberTerrainProfile::generate(const Ogre::Terrain* terrain) {
+Ogre::MaterialPtr OgreTerrainMaterialGeneratorEmber::generate(const Ogre::Terrain* terrain) {
 
 	if (!terrain) {
 		//This could happen if the terrain is shutting down.
@@ -119,7 +117,7 @@ Ogre::MaterialPtr EmberTerrainProfile::generate(const Ogre::Terrain* terrain) {
 	return newMaterial;
 }
 
-Ogre::MaterialPtr EmberTerrainProfile::generateForCompositeMap(const Ogre::Terrain* terrain) {
+Ogre::MaterialPtr OgreTerrainMaterialGeneratorEmber::generateForCompositeMap(const Ogre::Terrain* terrain) {
 
 	auto materialName = terrain->getMaterialName() + "_comp";
 	auto index = calculateTerrainIndex(*terrain, mTerrainGroup);
@@ -142,7 +140,7 @@ Ogre::MaterialPtr EmberTerrainProfile::generateForCompositeMap(const Ogre::Terra
 	}
 }
 
-Ogre::MaterialPtr EmberTerrainProfile::getOrCreateMaterialClone(const Ogre::MaterialPtr& templateMaterial, const std::string& materialName) {
+Ogre::MaterialPtr OgreTerrainMaterialGeneratorEmber::getOrCreateMaterialClone(const Ogre::MaterialPtr& templateMaterial, const std::string& materialName) {
 
 	Ogre::MaterialPtr mat = Ogre::MaterialManager::getSingleton().getByName(materialName);
 	if (mat) {
@@ -155,12 +153,12 @@ Ogre::MaterialPtr EmberTerrainProfile::getOrCreateMaterialClone(const Ogre::Mate
 }
 
 
-void OgreTerrainMaterialGeneratorEmber::_renderCompositeMap(size_t size, const Ogre::Rect& rect, const Ogre::MaterialPtr& mat, const Ogre::TexturePtr& destCompositeMap) {
-	//Just perform a sanity check to avoid crashes from divide-by-zero
-	if (rect.width() > 0 && rect.height() > 0) {
-		TerrainMaterialGenerator::_renderCompositeMap(size, rect, mat, destCompositeMap);
-	}
-}
+//void OgreTerrainMaterialGeneratorEmber::_renderCompositeMap(size_t size, const Ogre::Rect& rect, const Ogre::MaterialPtr& mat, const Ogre::TexturePtr& destCompositeMap) {
+//	//Just perform a sanity check to avoid crashes from divide-by-zero
+//	if (rect.width() > 0 && rect.height() > 0) {
+//		TerrainMaterialGenerator::_renderCompositeMap(size, rect, mat, destCompositeMap);
+//	}
+//}
 } // namespace Ember::OgreView::Terrain
 
 
