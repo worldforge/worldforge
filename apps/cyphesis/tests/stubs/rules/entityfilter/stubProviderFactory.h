@@ -27,7 +27,7 @@ namespace EntityFilter {
 
 #ifndef STUB_ProviderFactory_createSimpleGetEntityFunctionProvider
 //#define STUB_ProviderFactory_createSimpleGetEntityFunctionProvider
-  std::shared_ptr<Consumer<QueryContext>> ProviderFactory::createSimpleGetEntityFunctionProvider(std::shared_ptr <Consumer<QueryContext>> entity_provider) const
+  std::shared_ptr<Consumer<QueryContext>> ProviderFactory::createSimpleGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext>> entity_provider) const
   {
     return *static_cast<std::shared_ptr<Consumer<QueryContext>>*>(nullptr);
   }
@@ -35,7 +35,7 @@ namespace EntityFilter {
 
 #ifndef STUB_ProviderFactory_createGetEntityFunctionProvider
 //#define STUB_ProviderFactory_createGetEntityFunctionProvider
-  std::shared_ptr<Consumer<QueryContext>> ProviderFactory::createGetEntityFunctionProvider(std::shared_ptr <Consumer<QueryContext>> entity_provider, SegmentsList segments) const
+  std::shared_ptr<Consumer<QueryContext>> ProviderFactory::createGetEntityFunctionProvider(std::shared_ptr<Consumer<QueryContext>> entity_provider, SegmentsList segments) const
   {
     return *static_cast<std::shared_ptr<Consumer<QueryContext>>*>(nullptr);
   }

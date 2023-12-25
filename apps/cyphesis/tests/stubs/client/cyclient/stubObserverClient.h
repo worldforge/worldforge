@@ -26,7 +26,7 @@
 
 #ifndef STUB_ObserverClient_setup
 //#define STUB_ObserverClient_setup
-  int ObserverClient::setup(const std::string & account , const std::string & password , const std::string & avatar )
+  int ObserverClient::setup(const std::string& account , const std::string& password , const std::string& avatar )
   {
     return 0;
   }

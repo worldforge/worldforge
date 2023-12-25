@@ -45,7 +45,7 @@
 
 #ifndef STUB_Location_Location
 //#define STUB_Location_Location
-   Location::Location(LocatedEntity * rf)
+   Location::Location(LocatedEntity* rf)
     : EntityLocation(rf)
   {
     
@@ -54,7 +54,7 @@
 
 #ifndef STUB_Location_Location
 //#define STUB_Location_Location
-   Location::Location(LocatedEntity * rf, const Point3D& pos)
+   Location::Location(LocatedEntity* rf, const Point3D& pos)
     : EntityLocation(rf, pos)
   {
     
@@ -63,7 +63,7 @@
 
 #ifndef STUB_Location_Location
 //#define STUB_Location_Location
-   Location::Location(LocatedEntity * rf, const Point3D& pos, Vector3D velocity)
+   Location::Location(LocatedEntity* rf, const Point3D& pos, Vector3D velocity)
     : EntityLocation(rf, pos, velocity)
   {
     
@@ -81,7 +81,7 @@
 
 #ifndef STUB_Location_addToMessage
 //#define STUB_Location_addToMessage
-  void Location::addToMessage(Atlas::Message::MapType & ent) const
+  void Location::addToMessage(Atlas::Message::MapType& ent) const
   {
     
   }
@@ -89,7 +89,7 @@
 
 #ifndef STUB_Location_addToEntity
 //#define STUB_Location_addToEntity
-  void Location::addToEntity(const Atlas::Objects::Entity::RootEntity & ent) const
+  void Location::addToEntity(const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }
@@ -97,7 +97,7 @@
 
 #ifndef STUB_Location_readFromMessage
 //#define STUB_Location_readFromMessage
-  bool Location::readFromMessage(const Atlas::Message::MapType & message)
+  bool Location::readFromMessage(const Atlas::Message::MapType& message)
   {
     return false;
   }
@@ -105,7 +105,7 @@
 
 #ifndef STUB_Location_readFromEntity
 //#define STUB_Location_readFromEntity
-  bool Location::readFromEntity(const Atlas::Objects::Entity::RootEntity & ent)
+  bool Location::readFromEntity(const Atlas::Objects::Entity::RootEntity& ent)
   {
     return false;
   }

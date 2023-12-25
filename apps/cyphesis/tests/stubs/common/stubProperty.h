@@ -45,7 +45,7 @@
 #ifndef STUB_PropertyCore_install
 //#define STUB_PropertyCore_install
   template <typename EntityT>
-  void PropertyCore<EntityT>::install(EntityT &, const std::string &)
+  void PropertyCore<EntityT>::install(EntityT&, const std::string&)
   {
     
   }
@@ -54,7 +54,7 @@
 #ifndef STUB_PropertyCore_install
 //#define STUB_PropertyCore_install
   template <typename EntityT>
-  void PropertyCore<EntityT>::install(TypeNode &, const std::string &)
+  void PropertyCore<EntityT>::install(TypeNode&, const std::string&)
   {
     
   }
@@ -63,7 +63,7 @@
 #ifndef STUB_PropertyCore_remove
 //#define STUB_PropertyCore_remove
   template <typename EntityT>
-  void PropertyCore<EntityT>::remove(EntityT &, const std::string & name)
+  void PropertyCore<EntityT>::remove(EntityT&, const std::string& name)
   {
     
   }
@@ -72,7 +72,7 @@
 #ifndef STUB_PropertyCore_apply
 //#define STUB_PropertyCore_apply
   template <typename EntityT>
-  void PropertyCore<EntityT>::apply(EntityT &)
+  void PropertyCore<EntityT>::apply(EntityT&)
   {
     
   }
@@ -81,7 +81,7 @@
 #ifndef STUB_PropertyCore_get
 //#define STUB_PropertyCore_get
   template <typename EntityT>
-  int PropertyCore<EntityT>::get(Atlas::Message::Element & val) const
+  int PropertyCore<EntityT>::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -90,7 +90,7 @@
 #ifndef STUB_PropertyCore_set
 //#define STUB_PropertyCore_set
   template <typename EntityT>
-  void PropertyCore<EntityT>::set(const Atlas::Message::Element & val)
+  void PropertyCore<EntityT>::set(const Atlas::Message::Element& val)
   {
     
   }
@@ -99,7 +99,7 @@
 #ifndef STUB_PropertyCore_add
 //#define STUB_PropertyCore_add
   template <typename EntityT>
-  void PropertyCore<EntityT>::add(const std::string & key, Atlas::Message::MapType & map) const
+  void PropertyCore<EntityT>::add(const std::string& key, Atlas::Message::MapType& map) const
   {
     
   }
@@ -108,7 +108,7 @@
 #ifndef STUB_PropertyCore_add
 //#define STUB_PropertyCore_add
   template <typename EntityT>
-  void PropertyCore<EntityT>::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void PropertyCore<EntityT>::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }
@@ -117,7 +117,7 @@
 #ifndef STUB_PropertyCore_operation
 //#define STUB_PropertyCore_operation
   template <typename EntityT>
-  HandlerResult PropertyCore<EntityT>::operation(LocatedEntity &, const Operation &, OpVector &)
+  HandlerResult PropertyCore<EntityT>::operation(LocatedEntity&, const Operation&, OpVector&)
   {
     return *static_cast<HandlerResult*>(nullptr);
   }
@@ -155,7 +155,7 @@
 #ifndef STUB_Property_get
 //#define STUB_Property_get
   template <typename T>
-  int Property<T>::get(Atlas::Message::Element & val) const
+  int Property<T>::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -164,7 +164,7 @@
 #ifndef STUB_Property_set
 //#define STUB_Property_set
   template <typename T>
-  void Property<T>::set(const Atlas::Message::Element &)
+  void Property<T>::set(const Atlas::Message::Element&)
   {
     
   }
@@ -173,7 +173,7 @@
 #ifndef STUB_Property_add
 //#define STUB_Property_add
   template <typename T>
-  void Property<T>::add(const std::string & key, Atlas::Message::MapType & map) const
+  void Property<T>::add(const std::string& key, Atlas::Message::MapType& map) const
   {
     
   }
@@ -182,7 +182,7 @@
 #ifndef STUB_Property_add
 //#define STUB_Property_add
   template <typename T>
-  void Property<T>::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void Property<T>::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }
@@ -200,7 +200,7 @@
 
 #ifndef STUB_SoftProperty_SoftProperty
 //#define STUB_SoftProperty_SoftProperty
-   SoftProperty::SoftProperty(Atlas::Message::Element  data)
+   SoftProperty::SoftProperty(Atlas::Message::Element data)
     : PropertyBase(data)
   {
     
@@ -209,7 +209,7 @@
 
 #ifndef STUB_SoftProperty_get
 //#define STUB_SoftProperty_get
-  int SoftProperty::get(Atlas::Message::Element & val) const
+  int SoftProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -217,7 +217,7 @@
 
 #ifndef STUB_SoftProperty_set
 //#define STUB_SoftProperty_set
-  void SoftProperty::set(const Atlas::Message::Element & val)
+  void SoftProperty::set(const Atlas::Message::Element& val)
   {
     
   }
@@ -250,7 +250,7 @@
 
 #ifndef STUB_BoolProperty_get
 //#define STUB_BoolProperty_get
-  int BoolProperty::get(Atlas::Message::Element & val) const
+  int BoolProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -258,7 +258,7 @@
 
 #ifndef STUB_BoolProperty_set
 //#define STUB_BoolProperty_set
-  void BoolProperty::set(const Atlas::Message::Element & val)
+  void BoolProperty::set(const Atlas::Message::Element& val)
   {
     
   }

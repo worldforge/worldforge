@@ -65,7 +65,7 @@
 
 #ifndef STUB_CommMetaClient_metaserverAttribute
 //#define STUB_CommMetaClient_metaserverAttribute
-  void CommMetaClient::metaserverAttribute(const std::string & k, const std::string & v)
+  void CommMetaClient::metaserverAttribute(const std::string& k, const std::string& v)
   {
     
   }
@@ -89,7 +89,7 @@
 
 #ifndef STUB_CommMetaClient_setup
 //#define STUB_CommMetaClient_setup
-  int CommMetaClient::setup(const std::string &)
+  int CommMetaClient::setup(const std::string&)
   {
     return 0;
   }

@@ -25,7 +25,7 @@
 
 #ifndef STUB_ClientTask_setup
 //#define STUB_ClientTask_setup
-  void ClientTask::setup(const std::string & arg, OpVector &)
+  void ClientTask::setup(const std::string& arg, OpVector&)
   {
     
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_ClientTask_operation
 //#define STUB_ClientTask_operation
-  void ClientTask::operation(const Operation &, OpVector &)
+  void ClientTask::operation(const Operation&, OpVector&)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_FunctionClientTask_FunctionClientTask
 //#define STUB_FunctionClientTask_FunctionClientTask
-   FunctionClientTask::FunctionClientTask(std::function<bool(const Operation &, OpVector &)> function)
+   FunctionClientTask::FunctionClientTask(std::function<bool(const Operation&, OpVector&)> function)
     : ClientTask(function)
   {
     
@@ -51,7 +51,7 @@
 
 #ifndef STUB_FunctionClientTask_operation
 //#define STUB_FunctionClientTask_operation
-  void FunctionClientTask::operation(const Operation &, OpVector &)
+  void FunctionClientTask::operation(const Operation&, OpVector&)
   {
     
   }

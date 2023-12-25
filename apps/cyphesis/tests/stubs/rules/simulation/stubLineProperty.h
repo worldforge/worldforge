@@ -18,7 +18,7 @@
 
 #ifndef STUB_LineProperty_get
 //#define STUB_LineProperty_get
-  int LineProperty::get(Atlas::Message::Element & val) const
+  int LineProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -26,7 +26,7 @@
 
 #ifndef STUB_LineProperty_set
 //#define STUB_LineProperty_set
-  void LineProperty::set(const Atlas::Message::Element & val)
+  void LineProperty::set(const Atlas::Message::Element& val)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_LineProperty_add
 //#define STUB_LineProperty_add
-  void LineProperty::add(const std::string & key, Atlas::Message::MapType & map) const
+  void LineProperty::add(const std::string& key, Atlas::Message::MapType& map) const
   {
     
   }

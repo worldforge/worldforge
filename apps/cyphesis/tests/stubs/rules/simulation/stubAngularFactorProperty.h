@@ -17,7 +17,7 @@
 
 #ifndef STUB_AngularFactorProperty_get
 //#define STUB_AngularFactorProperty_get
-  int AngularFactorProperty::get(Atlas::Message::Element & val) const
+  int AngularFactorProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_AngularFactorProperty_set
 //#define STUB_AngularFactorProperty_set
-  void AngularFactorProperty::set(const Atlas::Message::Element & val)
+  void AngularFactorProperty::set(const Atlas::Message::Element& val)
   {
     
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_AngularFactorProperty_add
 //#define STUB_AngularFactorProperty_add
-  void AngularFactorProperty::add(const std::string & key, Atlas::Message::MapType & map) const
+  void AngularFactorProperty::add(const std::string& key, Atlas::Message::MapType& map) const
   {
     
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_AngularFactorProperty_add
 //#define STUB_AngularFactorProperty_add
-  void AngularFactorProperty::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void AngularFactorProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }

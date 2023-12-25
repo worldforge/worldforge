@@ -82,7 +82,7 @@
 
 #ifndef STUB_DatabaseSQLite_runSimpleSelectQuery
 //#define STUB_DatabaseSQLite_runSimpleSelectQuery
-  DatabaseResult DatabaseSQLite::runSimpleSelectQuery(const std::string& query)
+  DatabaseResult DatabaseSQLite::runSimpleSelectQuery(const std::string& query) const
   {
     return *static_cast<DatabaseResult*>(nullptr);
   }

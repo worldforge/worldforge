@@ -18,7 +18,7 @@
 
 #ifndef STUB_PropertyManager_installFactory
 //#define STUB_PropertyManager_installFactory
-  void PropertyManager::installFactory(const std::string &, std::unique_ptr<PropertyKit>)
+  void PropertyManager::installFactory(const std::string&, std::unique_ptr<PropertyKit>)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_PropertyManager_addProperty
 //#define STUB_PropertyManager_addProperty
-  std::unique_ptr<PropertyBase> PropertyManager::addProperty(const std::string & name) const
+  std::unique_ptr<PropertyBase> PropertyManager::addProperty(const std::string& name) const
   {
     return *static_cast<std::unique_ptr<PropertyBase>*>(nullptr);
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_PropertyManager_installFactory
 //#define STUB_PropertyManager_installFactory
-  int PropertyManager::installFactory(const std::string & type_name, const Atlas::Objects::Root & type_desc, std::unique_ptr<PropertyKit> factory)
+  int PropertyManager::installFactory(const std::string& type_name, const Atlas::Objects::Root& type_desc, std::unique_ptr<PropertyKit> factory)
   {
     return 0;
   }
@@ -50,7 +50,7 @@
 
 #ifndef STUB_PropertyManager_getPropertyFactory
 //#define STUB_PropertyManager_getPropertyFactory
-  PropertyKit* PropertyManager::getPropertyFactory(const std::string &) const
+  PropertyKit* PropertyManager::getPropertyFactory(const std::string&) const
   {
     return nullptr;
   }

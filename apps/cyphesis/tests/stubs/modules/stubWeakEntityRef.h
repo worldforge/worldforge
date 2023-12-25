@@ -26,7 +26,7 @@
 #ifndef STUB_WeakEntityRef_WeakEntityRef
 //#define STUB_WeakEntityRef_WeakEntityRef
    WeakEntityRef::WeakEntityRef(const Ref<LocatedEntity>&)
-    : m_inner(nullptr),operator(nullptr)
+    : m_inner(nullptr),operator(nullptr),!(nullptr)
   {
     
   }
@@ -35,7 +35,7 @@
 #ifndef STUB_WeakEntityRef_WeakEntityRef
 //#define STUB_WeakEntityRef_WeakEntityRef
    WeakEntityRef::WeakEntityRef(LocatedEntity*)
-    : m_inner(nullptr),operator(nullptr)
+    : m_inner(nullptr),operator(nullptr),!(nullptr)
   {
     
   }
@@ -52,7 +52,7 @@
 #ifndef STUB_WeakEntityRef_WeakEntityRef
 //#define STUB_WeakEntityRef_WeakEntityRef
    WeakEntityRef::WeakEntityRef(const WeakEntityRef& ref)
-    : m_inner(nullptr),operator(nullptr)
+    : m_inner(nullptr),operator(nullptr),!(nullptr)
   {
     
   }

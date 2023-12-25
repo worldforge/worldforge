@@ -17,7 +17,7 @@
 
 #ifndef STUB_Storage_putAccount
 //#define STUB_Storage_putAccount
-  int Storage::putAccount(const Atlas::Message::MapType & o)
+  int Storage::putAccount(const Atlas::Message::MapType& o)
   {
     return 0;
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_Storage_modAccount
 //#define STUB_Storage_modAccount
-  int Storage::modAccount(const Atlas::Message::MapType & o, const std::string & accountId)
+  int Storage::modAccount(const Atlas::Message::MapType& o, const std::string& accountId)
   {
     return 0;
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_Storage_delAccount
 //#define STUB_Storage_delAccount
-  int Storage::delAccount(const std::string & account)
+  int Storage::delAccount(const std::string& account)
   {
     return 0;
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_Storage_getAccount
 //#define STUB_Storage_getAccount
-  int Storage::getAccount(const std::string & username, Atlas::Message::MapType & o)
+  int Storage::getAccount(const std::string& username, Atlas::Message::MapType& o)
   {
     return 0;
   }

@@ -9,7 +9,7 @@
 
 #ifndef STUB_CorePropertyManager_installBaseProperty
 //#define STUB_CorePropertyManager_installBaseProperty
-  PropertyFactory<Property<T>>* CorePropertyManager::installBaseProperty(const std::string & type_name, const std::string & parent)
+  PropertyFactory<Property<T>>* CorePropertyManager::installBaseProperty(const std::string& type_name, const std::string& parent)
   {
     return nullptr;
   }
@@ -17,7 +17,7 @@
 
 #ifndef STUB_CorePropertyManager_installProperty
 //#define STUB_CorePropertyManager_installProperty
-  PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string & type_name, const std::string & parent)
+  PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string& type_name, const std::string& parent)
   {
     return nullptr;
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_CorePropertyManager_installProperty
 //#define STUB_CorePropertyManager_installProperty
-  PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string & type_name)
+  PropertyFactory<PropertyT>* CorePropertyManager::installProperty(const std::string& type_name)
   {
     return nullptr;
   }
@@ -58,7 +58,7 @@
 
 #ifndef STUB_CorePropertyManager_addProperty
 //#define STUB_CorePropertyManager_addProperty
-  std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string & name) const
+  std::unique_ptr<PropertyBase> CorePropertyManager::addProperty(const std::string& name) const
   {
     return *static_cast<std::unique_ptr<PropertyBase>*>(nullptr);
   }

@@ -91,7 +91,7 @@
 
 #ifndef STUB_DatabasePostgres_runSimpleSelectQuery
 //#define STUB_DatabasePostgres_runSimpleSelectQuery
-  DatabaseResult DatabasePostgres::runSimpleSelectQuery(const std::string& query)
+  DatabaseResult DatabasePostgres::runSimpleSelectQuery(const std::string& query) const
   {
     return *static_cast<DatabaseResult*>(nullptr);
   }

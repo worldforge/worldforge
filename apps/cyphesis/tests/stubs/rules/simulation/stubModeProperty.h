@@ -42,7 +42,7 @@
 
 #ifndef STUB_ModeProperty_get
 //#define STUB_ModeProperty_get
-  int ModeProperty::get(Atlas::Message::Element & val) const
+  int ModeProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }

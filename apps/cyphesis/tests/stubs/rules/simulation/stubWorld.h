@@ -26,7 +26,7 @@
 
 #ifndef STUB_World_LookOperation
 //#define STUB_World_LookOperation
-  void World::LookOperation(const Operation &, OpVector &)
+  void World::LookOperation(const Operation&, OpVector&)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_World_DeleteOperation
 //#define STUB_World_DeleteOperation
-  void World::DeleteOperation(const Operation &, OpVector &)
+  void World::DeleteOperation(const Operation&, OpVector&)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_World_MoveOperation
 //#define STUB_World_MoveOperation
-  void World::MoveOperation(const Operation &, OpVector &)
+  void World::MoveOperation(const Operation&, OpVector&)
   {
     
   }
@@ -50,7 +50,7 @@
 
 #ifndef STUB_World_RelayOperation
 //#define STUB_World_RelayOperation
-  void World::RelayOperation(const Operation & op, OpVector & res)
+  void World::RelayOperation(const Operation& op, OpVector& res)
   {
     
   }
@@ -66,7 +66,7 @@
 
 #ifndef STUB_World_clearWorld
 //#define STUB_World_clearWorld
-  void World::clearWorld(OpVector & res)
+  void World::clearWorld(OpVector& res)
   {
     
   }

@@ -10,7 +10,7 @@
 #ifndef STUB_PythonScriptFactory_PythonScriptFactory
 //#define STUB_PythonScriptFactory_PythonScriptFactory
   template <typename T>
-   PythonScriptFactory<T>::PythonScriptFactory(const std::string & package, const std::string & type)
+   PythonScriptFactory<T>::PythonScriptFactory(const std::string& package, const std::string& type)
     : ScriptKit(package, type)
   {
     

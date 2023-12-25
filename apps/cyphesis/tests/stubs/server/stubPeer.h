@@ -9,7 +9,7 @@
 
 #ifndef STUB_Peer_Peer
 //#define STUB_Peer_Peer
-   Peer::Peer(CommSocket & client, ServerRouting & svr, const std::string & addr, int port, RouterId id)
+   Peer::Peer(CommSocket& client, ServerRouting& svr, const std::string& addr, int port, RouterId id)
     : Link(client, svr, addr, port, id)
   {
     
@@ -42,7 +42,7 @@
 
 #ifndef STUB_Peer_externalOperation
 //#define STUB_Peer_externalOperation
-  void Peer::externalOperation(const Operation & op, Link &)
+  void Peer::externalOperation(const Operation& op, Link&)
   {
     
   }
@@ -50,7 +50,7 @@
 
 #ifndef STUB_Peer_operation
 //#define STUB_Peer_operation
-  void Peer::operation(const Operation &, OpVector &)
+  void Peer::operation(const Operation&, OpVector&)
   {
     
   }
@@ -58,7 +58,7 @@
 
 #ifndef STUB_Peer_teleportEntity
 //#define STUB_Peer_teleportEntity
-  int Peer::teleportEntity(const LocatedEntity *)
+  int Peer::teleportEntity(const LocatedEntity*)
   {
     return 0;
   }
@@ -66,7 +66,7 @@
 
 #ifndef STUB_Peer_peerTeleportResponse
 //#define STUB_Peer_peerTeleportResponse
-  void Peer::peerTeleportResponse(const Operation &op, OpVector &res)
+  void Peer::peerTeleportResponse(const Operation& op, OpVector& res)
   {
     
   }

@@ -9,7 +9,7 @@
 
 #ifndef STUB_VariableBase_send
 //#define STUB_VariableBase_send
-  void VariableBase::send(std::ostream &)
+  void VariableBase::send(std::ostream&)
   {
     
   }
@@ -27,7 +27,7 @@
 #ifndef STUB_Variable_Variable
 //#define STUB_Variable_Variable
   template <typename T>
-   Variable<T>::Variable(const T & variable)
+   Variable<T>::Variable(const T& variable)
     : VariableBase(variable)
   {
     
@@ -46,7 +46,7 @@
 #ifndef STUB_Variable_send
 //#define STUB_Variable_send
   template <typename T>
-  void Variable<T>::send(std::ostream &)
+  void Variable<T>::send(std::ostream&)
   {
     
   }

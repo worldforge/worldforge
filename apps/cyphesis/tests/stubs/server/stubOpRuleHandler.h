@@ -9,7 +9,7 @@
 
 #ifndef STUB_OpRuleHandler_installOpDefinition
 //#define STUB_OpRuleHandler_installOpDefinition
-  int OpRuleHandler::installOpDefinition(const std::string & class_name, const std::string & parent, const Atlas::Objects::Root & class_desc, std::string & dependent, std::string & reason)
+  int OpRuleHandler::installOpDefinition(const std::string& class_name, const std::string& parent, const Atlas::Objects::Root& class_desc, std::string& dependent, std::string& reason)
   {
     return 0;
   }
@@ -17,7 +17,7 @@
 
 #ifndef STUB_OpRuleHandler_modifyOpDefinition
 //#define STUB_OpRuleHandler_modifyOpDefinition
-  int OpRuleHandler::modifyOpDefinition(const std::string & class_name, const Atlas::Objects::Root & class_desc)
+  int OpRuleHandler::modifyOpDefinition(const std::string& class_name, const Atlas::Objects::Root& class_desc)
   {
     return 0;
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_OpRuleHandler_check
 //#define STUB_OpRuleHandler_check
-  int OpRuleHandler::check(const Atlas::Objects::Root & desc)
+  int OpRuleHandler::check(const Atlas::Objects::Root& desc)
   {
     return 0;
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_OpRuleHandler_install
 //#define STUB_OpRuleHandler_install
-  int OpRuleHandler::install(const std::string &, const std::string &, const Atlas::Objects::Root & desc, std::string &, std::string &, std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+  int OpRuleHandler::install(const std::string&, const std::string&, const Atlas::Objects::Root& desc, std::string&, std::string&, std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
   {
     return 0;
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_OpRuleHandler_update
 //#define STUB_OpRuleHandler_update
-  int OpRuleHandler::update(const std::string &, const Atlas::Objects::Root & desc, std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
+  int OpRuleHandler::update(const std::string&, const Atlas::Objects::Root& desc, std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes)
   {
     return 0;
   }

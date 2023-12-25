@@ -9,7 +9,7 @@
 
 #ifndef STUB_AreaProperty_AreaProperty
 //#define STUB_AreaProperty_AreaProperty
-   AreaProperty::AreaProperty(const AreaProperty & other)
+   AreaProperty::AreaProperty(const AreaProperty& other)
     : TerrainEffectorProperty(other)
   {
     
@@ -43,7 +43,7 @@
 
 #ifndef STUB_AreaProperty_set
 //#define STUB_AreaProperty_set
-  void AreaProperty::set(const Atlas::Message::Element & val)
+  void AreaProperty::set(const Atlas::Message::Element& val)
   {
     
   }

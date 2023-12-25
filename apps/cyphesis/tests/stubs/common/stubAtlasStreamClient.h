@@ -198,7 +198,7 @@
 
 #ifndef STUB_AtlasStreamClient_operation
 //#define STUB_AtlasStreamClient_operation
-  void AtlasStreamClient::operation(const Atlas::Objects::Operation::RootOperation &)
+  void AtlasStreamClient::operation(const Atlas::Objects::Operation::RootOperation&)
   {
     
   }
@@ -206,7 +206,7 @@
 
 #ifndef STUB_AtlasStreamClient_infoArrived
 //#define STUB_AtlasStreamClient_infoArrived
-  void AtlasStreamClient::infoArrived(const Atlas::Objects::Operation::RootOperation &)
+  void AtlasStreamClient::infoArrived(const Atlas::Objects::Operation::RootOperation&)
   {
     
   }
@@ -214,7 +214,7 @@
 
 #ifndef STUB_AtlasStreamClient_errorArrived
 //#define STUB_AtlasStreamClient_errorArrived
-  void AtlasStreamClient::errorArrived(const Atlas::Objects::Operation::RootOperation &)
+  void AtlasStreamClient::errorArrived(const Atlas::Objects::Operation::RootOperation&)
   {
     
   }
@@ -222,7 +222,7 @@
 
 #ifndef STUB_AtlasStreamClient_appearanceArrived
 //#define STUB_AtlasStreamClient_appearanceArrived
-  void AtlasStreamClient::appearanceArrived(const Operation &)
+  void AtlasStreamClient::appearanceArrived(const Operation&)
   {
     
   }
@@ -230,7 +230,7 @@
 
 #ifndef STUB_AtlasStreamClient_disappearanceArrived
 //#define STUB_AtlasStreamClient_disappearanceArrived
-  void AtlasStreamClient::disappearanceArrived(const Operation &)
+  void AtlasStreamClient::disappearanceArrived(const Operation&)
   {
     
   }
@@ -238,7 +238,7 @@
 
 #ifndef STUB_AtlasStreamClient_sightArrived
 //#define STUB_AtlasStreamClient_sightArrived
-  void AtlasStreamClient::sightArrived(const Operation &)
+  void AtlasStreamClient::sightArrived(const Operation&)
   {
     
   }
@@ -246,7 +246,7 @@
 
 #ifndef STUB_AtlasStreamClient_soundArrived
 //#define STUB_AtlasStreamClient_soundArrived
-  void AtlasStreamClient::soundArrived(const Operation &)
+  void AtlasStreamClient::soundArrived(const Operation&)
   {
     
   }
@@ -254,7 +254,7 @@
 
 #ifndef STUB_AtlasStreamClient_loginSuccess
 //#define STUB_AtlasStreamClient_loginSuccess
-  void AtlasStreamClient::loginSuccess(const Atlas::Objects::Root & arg)
+  void AtlasStreamClient::loginSuccess(const Atlas::Objects::Root& arg)
   {
     
   }
@@ -279,7 +279,7 @@
 
 #ifndef STUB_AtlasStreamClient_send
 //#define STUB_AtlasStreamClient_send
-  void AtlasStreamClient::send(const Atlas::Objects::Operation::RootOperation & op)
+  void AtlasStreamClient::send(const Atlas::Objects::Operation::RootOperation& op)
   {
     
   }
@@ -287,7 +287,7 @@
 
 #ifndef STUB_AtlasStreamClient_connect
 //#define STUB_AtlasStreamClient_connect
-  int AtlasStreamClient::connect(const std::string & host, unsigned short port )
+  int AtlasStreamClient::connect(const std::string& host, unsigned short port )
   {
     return 0;
   }
@@ -295,7 +295,7 @@
 
 #ifndef STUB_AtlasStreamClient_connectLocal
 //#define STUB_AtlasStreamClient_connectLocal
-  int AtlasStreamClient::connectLocal(const std::string & host)
+  int AtlasStreamClient::connectLocal(const std::string& host)
   {
     return 0;
   }
@@ -311,7 +311,7 @@
 
 #ifndef STUB_AtlasStreamClient_login
 //#define STUB_AtlasStreamClient_login
-  int AtlasStreamClient::login(const std::string & username, const std::string & password)
+  int AtlasStreamClient::login(const std::string& username, const std::string& password)
   {
     return 0;
   }
@@ -319,7 +319,7 @@
 
 #ifndef STUB_AtlasStreamClient_create
 //#define STUB_AtlasStreamClient_create
-  int AtlasStreamClient::create(const std::string & type, const std::string & username, const std::string & password)
+  int AtlasStreamClient::create(const std::string& type, const std::string& username, const std::string& password)
   {
     return 0;
   }
@@ -343,7 +343,7 @@
 
 #ifndef STUB_AtlasStreamClient_output
 //#define STUB_AtlasStreamClient_output
-  void AtlasStreamClient::output(const Atlas::Message::Element & item, size_t depth ) const
+  void AtlasStreamClient::output(const Atlas::Message::Element& item, size_t depth ) const
   {
     
   }
@@ -351,7 +351,7 @@
 
 #ifndef STUB_AtlasStreamClient_output
 //#define STUB_AtlasStreamClient_output
-  void AtlasStreamClient::output(const Atlas::Objects::Root & item) const
+  void AtlasStreamClient::output(const Atlas::Objects::Root& item) const
   {
     
   }
@@ -359,7 +359,7 @@
 
 #ifndef STUB_AtlasStreamClient_runTask
 //#define STUB_AtlasStreamClient_runTask
-  int AtlasStreamClient::runTask(std::shared_ptr<ClientTask> task, const std::string & arg)
+  int AtlasStreamClient::runTask(std::shared_ptr<ClientTask> task, const std::string& arg)
   {
     return 0;
   }

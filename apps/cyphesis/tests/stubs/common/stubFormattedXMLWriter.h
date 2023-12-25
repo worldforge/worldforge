@@ -17,7 +17,7 @@
 
 #ifndef STUB_FormattedXMLWriter_outputValue
 //#define STUB_FormattedXMLWriter_outputValue
-  void FormattedXMLWriter::outputValue(const Atlas::Message::Element &)
+  void FormattedXMLWriter::outputValue(const Atlas::Message::Element&)
   {
     
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_FormattedXMLWriter_outputList
 //#define STUB_FormattedXMLWriter_outputList
-  void FormattedXMLWriter::outputList(const Atlas::Message::ListType &)
+  void FormattedXMLWriter::outputList(const Atlas::Message::ListType&)
   {
     
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_FormattedXMLWriter_outputMap
 //#define STUB_FormattedXMLWriter_outputMap
-  void FormattedXMLWriter::outputMap(const Atlas::Message::MapType &)
+  void FormattedXMLWriter::outputMap(const Atlas::Message::MapType&)
   {
     
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_FormattedXMLWriter_FormattedXMLWriter
 //#define STUB_FormattedXMLWriter_FormattedXMLWriter
-   FormattedXMLWriter::FormattedXMLWriter(std::ostream & stream)
+   FormattedXMLWriter::FormattedXMLWriter(std::ostream& stream)
   {
     
   }
@@ -65,7 +65,7 @@
 
 #ifndef STUB_FormattedXMLWriter_outputObject
 //#define STUB_FormattedXMLWriter_outputObject
-  void FormattedXMLWriter::outputObject(const Atlas::Message::MapType & o)
+  void FormattedXMLWriter::outputObject(const Atlas::Message::MapType& o)
   {
     
   }

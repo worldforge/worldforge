@@ -91,7 +91,7 @@
 
 #ifndef STUB_Database_runSimpleSelectQuery
 //#define STUB_Database_runSimpleSelectQuery
-  DatabaseResult Database::runSimpleSelectQuery(const std::string& query)
+  DatabaseResult Database::runSimpleSelectQuery(const std::string& query) const
   {
     return *static_cast<DatabaseResult*>(nullptr);
   }
@@ -224,6 +224,14 @@
     return *static_cast<DatabaseResult*>(nullptr);
   }
 #endif //STUB_Database_selectEntities
+
+#ifndef STUB_Database_entitiesCount
+//#define STUB_Database_entitiesCount
+  long Database::entitiesCount() const
+  {
+    return 0;
+  }
+#endif //STUB_Database_entitiesCount
 
 #ifndef STUB_Database_dropEntity
 //#define STUB_Database_dropEntity

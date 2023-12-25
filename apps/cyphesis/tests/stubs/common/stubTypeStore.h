@@ -25,7 +25,7 @@
 
 #ifndef STUB_TypeStore_addChild
 //#define STUB_TypeStore_addChild
-  TypeNode* TypeStore::addChild(const Atlas::Objects::Root & obj)
+  TypeNode* TypeStore::addChild(const Atlas::Objects::Root& obj)
   {
     return nullptr;
   }

@@ -25,7 +25,7 @@
 
 #ifndef STUB_CommPythonClient_CommPythonClient
 //#define STUB_CommPythonClient_CommPythonClient
-   CommPythonClient::CommPythonClient(const std::string & name, boost::asio::io_context& io_context)
+   CommPythonClient::CommPythonClient(const std::string& name, boost::asio::io_context& io_context)
     : std::enable_shared_from_this(name, io_context)
   {
     

@@ -57,7 +57,7 @@
 
 #ifndef STUB_CommPSQLSocket_CommPSQLSocket
 //#define STUB_CommPSQLSocket_CommPSQLSocket
-   CommPSQLSocket::CommPSQLSocket(boost::asio::io_context& io_context, DatabasePostgres & db)
+   CommPSQLSocket::CommPSQLSocket(boost::asio::io_context& io_context, DatabasePostgres& db)
     : boost::noncopyable(io_context, db)
   {
     

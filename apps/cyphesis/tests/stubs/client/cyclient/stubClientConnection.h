@@ -42,7 +42,7 @@
 
 #ifndef STUB_ClientConnection_sendAndWaitReply
 //#define STUB_ClientConnection_sendAndWaitReply
-  int ClientConnection::sendAndWaitReply(const Operation & op, OpVector & res)
+  int ClientConnection::sendAndWaitReply(const Operation& op, OpVector& res)
   {
     return 0;
   }

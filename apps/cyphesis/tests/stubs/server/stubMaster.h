@@ -9,7 +9,7 @@
 
 #ifndef STUB_Master_Master
 //#define STUB_Master_Master
-   Master::Master(ServerRouting & svr, const std::string & id)
+   Master::Master(ServerRouting& svr, const std::string& id)
     : Router(svr, id)
   {
     
@@ -26,7 +26,7 @@
 
 #ifndef STUB_Master_operation
 //#define STUB_Master_operation
-  void Master::operation(const Operation &, OpVector &)
+  void Master::operation(const Operation&, OpVector&)
   {
     
   }

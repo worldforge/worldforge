@@ -26,7 +26,7 @@
 
 #ifndef STUB_RuleTraversalTask_setup
 //#define STUB_RuleTraversalTask_setup
-  void RuleTraversalTask::setup(const std::string & arg, OpVector &)
+  void RuleTraversalTask::setup(const std::string& arg, OpVector&)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_RuleTraversalTask_operation
 //#define STUB_RuleTraversalTask_operation
-  void RuleTraversalTask::operation(const Operation &, OpVector &)
+  void RuleTraversalTask::operation(const Operation&, OpVector&)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_RuleTraversalTask_getRule
 //#define STUB_RuleTraversalTask_getRule
-  void RuleTraversalTask::getRule(const std::string & id, OpVector & res)
+  void RuleTraversalTask::getRule(const std::string& id, OpVector& res)
   {
     
   }

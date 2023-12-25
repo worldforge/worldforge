@@ -9,7 +9,7 @@
 
 #ifndef STUB_Lobby_Lobby
 //#define STUB_Lobby_Lobby
-   Lobby::Lobby(ServerRouting & serverRouting, RouterId id)
+   Lobby::Lobby(ServerRouting& serverRouting, RouterId id)
     : Router(serverRouting, id)
   {
     
@@ -26,7 +26,7 @@
 
 #ifndef STUB_Lobby_addAccount
 //#define STUB_Lobby_addAccount
-  void Lobby::addAccount(ConnectableRouter * a)
+  void Lobby::addAccount(ConnectableRouter* a)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_Lobby_removeAccount
 //#define STUB_Lobby_removeAccount
-  void Lobby::removeAccount(ConnectableRouter * a)
+  void Lobby::removeAccount(ConnectableRouter* a)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_Lobby_externalOperation
 //#define STUB_Lobby_externalOperation
-  void Lobby::externalOperation(const Operation & op, Link &)
+  void Lobby::externalOperation(const Operation& op, Link&)
   {
     
   }
@@ -50,7 +50,7 @@
 
 #ifndef STUB_Lobby_operation
 //#define STUB_Lobby_operation
-  void Lobby::operation(const Operation &, OpVector &)
+  void Lobby::operation(const Operation&, OpVector&)
   {
     
   }
@@ -58,7 +58,7 @@
 
 #ifndef STUB_Lobby_addToMessage
 //#define STUB_Lobby_addToMessage
-  void Lobby::addToMessage(Atlas::Message::MapType &) const
+  void Lobby::addToMessage(Atlas::Message::MapType&) const
   {
     
   }
@@ -66,7 +66,7 @@
 
 #ifndef STUB_Lobby_addToEntity
 //#define STUB_Lobby_addToEntity
-  void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity &) const
+  void Lobby::addToEntity(const Atlas::Objects::Entity::RootEntity&) const
   {
     
   }

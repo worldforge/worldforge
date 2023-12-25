@@ -9,7 +9,7 @@
 
 #ifndef STUB_Movement_Movement
 //#define STUB_Movement_Movement
-   Movement::Movement(LocatedEntity & body)
+   Movement::Movement(LocatedEntity& body)
   {
     
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_Movement_updateNeeded
 //#define STUB_Movement_updateNeeded
-  bool Movement::updateNeeded(const Location & location) const
+  bool Movement::updateNeeded(const Location& location) const
   {
     return false;
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_Movement_getTickAddition
 //#define STUB_Movement_getTickAddition
-  double Movement::getTickAddition(const Point3D & coordinates, const Vector3D & velocity) const
+  double Movement::getTickAddition(const Point3D& coordinates, const Vector3D& velocity) const
   {
     return 0;
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_Movement_getUpdatedLocation
 //#define STUB_Movement_getUpdatedLocation
-  int Movement::getUpdatedLocation(Location & return_location)
+  int Movement::getUpdatedLocation(Location& return_location)
   {
     return 0;
   }
@@ -49,7 +49,7 @@
 
 #ifndef STUB_Movement_generateMove
 //#define STUB_Movement_generateMove
-  Atlas::Objects::Operation::RootOperation Movement::generateMove(const Location & new_location)
+  Atlas::Objects::Operation::RootOperation Movement::generateMove(const Location& new_location)
   {
     return *static_cast<Atlas::Objects::Operation::RootOperation*>(nullptr);
   }

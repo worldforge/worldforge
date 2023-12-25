@@ -9,7 +9,7 @@
 
 #ifndef STUB_ServerAccount_ServerAccount
 //#define STUB_ServerAccount_ServerAccount
-   ServerAccount::ServerAccount(Connection * conn, const std::string & username, const std::string & passwd, RouterId id)
+   ServerAccount::ServerAccount(Connection* conn, const std::string& username, const std::string& passwd, RouterId id)
     : Account(conn, username, passwd, id)
   {
     

@@ -34,7 +34,7 @@
 
 #ifndef STUB_Juncture_onPeerReplied
 //#define STUB_Juncture_onPeerReplied
-  void Juncture::onPeerReplied(const Operation &)
+  void Juncture::onPeerReplied(const Operation&)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_Juncture_attemptConnect
 //#define STUB_Juncture_attemptConnect
-  int Juncture::attemptConnect(const std::string &, int)
+  int Juncture::attemptConnect(const std::string&, int)
   {
     return 0;
   }
@@ -50,7 +50,7 @@
 
 #ifndef STUB_Juncture_Juncture
 //#define STUB_Juncture_Juncture
-   Juncture::Juncture(Connection *, RouterId id)
+   Juncture::Juncture(Connection*, RouterId id)
     : ConnectableRouter(Connection, id)
     , m_connection(nullptr),m_peer(nullptr)
   {
@@ -68,7 +68,7 @@
 
 #ifndef STUB_Juncture_externalOperation
 //#define STUB_Juncture_externalOperation
-  void Juncture::externalOperation(const Operation & op, Link &)
+  void Juncture::externalOperation(const Operation& op, Link&)
   {
     
   }
@@ -76,7 +76,7 @@
 
 #ifndef STUB_Juncture_operation
 //#define STUB_Juncture_operation
-  void Juncture::operation(const Operation &, OpVector &)
+  void Juncture::operation(const Operation&, OpVector&)
   {
     
   }
@@ -84,7 +84,7 @@
 
 #ifndef STUB_Juncture_addToMessage
 //#define STUB_Juncture_addToMessage
-  void Juncture::addToMessage(Atlas::Message::MapType &) const
+  void Juncture::addToMessage(Atlas::Message::MapType&) const
   {
     
   }
@@ -92,7 +92,7 @@
 
 #ifndef STUB_Juncture_addToEntity
 //#define STUB_Juncture_addToEntity
-  void Juncture::addToEntity(const Atlas::Objects::Entity::RootEntity &) const
+  void Juncture::addToEntity(const Atlas::Objects::Entity::RootEntity&) const
   {
     
   }
@@ -100,7 +100,7 @@
 
 #ifndef STUB_Juncture_LoginOperation
 //#define STUB_Juncture_LoginOperation
-  void Juncture::LoginOperation(const Operation &, OpVector &)
+  void Juncture::LoginOperation(const Operation&, OpVector&)
   {
     
   }
@@ -108,7 +108,7 @@
 
 #ifndef STUB_Juncture_OtherOperation
 //#define STUB_Juncture_OtherOperation
-  void Juncture::OtherOperation(const Operation &, OpVector &)
+  void Juncture::OtherOperation(const Operation&, OpVector&)
   {
     
   }
@@ -116,7 +116,7 @@
 
 #ifndef STUB_Juncture_customConnectOperation
 //#define STUB_Juncture_customConnectOperation
-  void Juncture::customConnectOperation(const Operation &, OpVector &)
+  void Juncture::customConnectOperation(const Operation&, OpVector&)
   {
     
   }
@@ -124,7 +124,7 @@
 
 #ifndef STUB_Juncture_teleportEntity
 //#define STUB_Juncture_teleportEntity
-  int Juncture::teleportEntity(const LocatedEntity *)
+  int Juncture::teleportEntity(const LocatedEntity*)
   {
     return 0;
   }

@@ -17,7 +17,7 @@
 
 #ifndef STUB_TransientProperty_install
 //#define STUB_TransientProperty_install
-  void TransientProperty::install(LocatedEntity&, const std::string &)
+  void TransientProperty::install(LocatedEntity&, const std::string&)
   {
     
   }

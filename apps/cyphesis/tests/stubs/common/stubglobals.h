@@ -9,7 +9,7 @@
 
 #ifndef STUB_int_config_register_int_config_register
 //#define STUB_int_config_register_int_config_register
-   int_config_register::int_config_register(int &, const char *, const char *, const char *)
+   int_config_register::int_config_register(int&, const char*, const char*, const char*)
   {
     
   }
@@ -18,7 +18,7 @@
 
 #ifndef STUB_bool_config_register_bool_config_register
 //#define STUB_bool_config_register_bool_config_register
-   bool_config_register::bool_config_register(bool &, const char *, const char *, const char *)
+   bool_config_register::bool_config_register(bool&, const char*, const char*, const char*)
   {
     
   }
@@ -27,7 +27,7 @@
 
 #ifndef STUB_string_config_register_string_config_register
 //#define STUB_string_config_register_string_config_register
-   string_config_register::string_config_register(std::string &, const char *, const char *, const char *)
+   string_config_register::string_config_register(std::string&, const char*, const char*, const char*)
   {
     
   }
@@ -36,7 +36,7 @@
 
 #ifndef STUB_unixsock_config_register_unixsock_config_register
 //#define STUB_unixsock_config_register_unixsock_config_register
-   unixsock_config_register::unixsock_config_register(std::string &, const char *, const char *, const char *, const char *)
+   unixsock_config_register::unixsock_config_register(std::string&, const char*, const char*, const char*, const char*)
   {
     
   }

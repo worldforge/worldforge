@@ -9,7 +9,7 @@
 
 #ifndef STUB_Link_Link
 //#define STUB_Link_Link
-   Link::Link(CommSocket & commSocket, RouterId id)
+   Link::Link(CommSocket& commSocket, RouterId id)
     : Router(commSocket, id)
     , m_encoder(nullptr)
   {
@@ -27,7 +27,7 @@
 
 #ifndef STUB_Link_send
 //#define STUB_Link_send
-  void Link::send(const Operation & op) const
+  void Link::send(const Operation& op) const
   {
     
   }
@@ -43,7 +43,7 @@
 
 #ifndef STUB_Link_sendError
 //#define STUB_Link_sendError
-  void Link::sendError(const Operation & op, const std::string &, const std::string &) const
+  void Link::sendError(const Operation& op, const std::string&, const std::string&) const
   {
     
   }

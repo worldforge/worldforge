@@ -9,7 +9,7 @@
 
 #ifndef STUB_DomainProperty_install
 //#define STUB_DomainProperty_install
-  void DomainProperty::install(LocatedEntity&, const std::string &)
+  void DomainProperty::install(LocatedEntity&, const std::string&)
   {
     
   }
@@ -17,7 +17,7 @@
 
 #ifndef STUB_DomainProperty_remove
 //#define STUB_DomainProperty_remove
-  void DomainProperty::remove(LocatedEntity&, const std::string &)
+  void DomainProperty::remove(LocatedEntity&, const std::string&)
   {
     
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_DomainProperty_operation
 //#define STUB_DomainProperty_operation
-  HandlerResult DomainProperty::operation(LocatedEntity& e, const Operation & op, OpVector & res)
+  HandlerResult DomainProperty::operation(LocatedEntity& e, const Operation& op, OpVector& res)
   {
     return *static_cast<HandlerResult*>(nullptr);
   }

@@ -34,7 +34,7 @@
 
 #ifndef STUB_Point3Property_add
 //#define STUB_Point3Property_add
-  void Point3Property::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void Point3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }

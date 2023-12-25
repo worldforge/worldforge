@@ -42,7 +42,7 @@ DatabaseResult Database::selectThoughts(const std::string & loc)
 
 #ifndef STUB_Database_runSimpleSelectQuery
 #define STUB_Database_runSimpleSelectQuery
-DatabaseResult Database::runSimpleSelectQuery(const std::string& query)
+DatabaseResult Database::runSimpleSelectQuery(const std::string& query) const
 {
     return DatabaseResult(nullptr);
 }

@@ -26,7 +26,7 @@
 
 #ifndef STUB_CommMaster_connect
 //#define STUB_CommMaster_connect
-  int CommMaster::connect(const std::string &)
+  int CommMaster::connect(const std::string&)
   {
     return 0;
   }

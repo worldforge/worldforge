@@ -18,7 +18,7 @@
 
 #ifndef STUB_QuaternionProperty_get
 //#define STUB_QuaternionProperty_get
-  int QuaternionProperty::get(Atlas::Message::Element & val) const
+  int QuaternionProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -26,7 +26,7 @@
 
 #ifndef STUB_QuaternionProperty_set
 //#define STUB_QuaternionProperty_set
-  void QuaternionProperty::set(const Atlas::Message::Element &)
+  void QuaternionProperty::set(const Atlas::Message::Element&)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_QuaternionProperty_add
 //#define STUB_QuaternionProperty_add
-  void QuaternionProperty::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void QuaternionProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }

@@ -18,7 +18,7 @@
 
 #ifndef STUB_PropelProperty_get
 //#define STUB_PropelProperty_get
-  int PropelProperty::get(Atlas::Message::Element & val) const
+  int PropelProperty::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -26,7 +26,7 @@
 
 #ifndef STUB_PropelProperty_set
 //#define STUB_PropelProperty_set
-  void PropelProperty::set(const Atlas::Message::Element & val)
+  void PropelProperty::set(const Atlas::Message::Element& val)
   {
     
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_PropelProperty_add
 //#define STUB_PropelProperty_add
-  void PropelProperty::add(const std::string & key, Atlas::Message::MapType & map) const
+  void PropelProperty::add(const std::string& key, Atlas::Message::MapType& map) const
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_PropelProperty_add
 //#define STUB_PropelProperty_add
-  void PropelProperty::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void PropelProperty::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }

@@ -18,7 +18,7 @@
 
 #ifndef STUB_Vector3Property_add
 //#define STUB_Vector3Property_add
-  void Vector3Property::add(const std::string & key, const Atlas::Objects::Entity::RootEntity & ent) const
+  void Vector3Property::add(const std::string& key, const Atlas::Objects::Entity::RootEntity& ent) const
   {
     
   }
@@ -26,7 +26,7 @@
 
 #ifndef STUB_Vector3Property_get
 //#define STUB_Vector3Property_get
-  int Vector3Property::get(Atlas::Message::Element & val) const
+  int Vector3Property::get(Atlas::Message::Element& val) const
   {
     return 0;
   }
@@ -34,7 +34,7 @@
 
 #ifndef STUB_Vector3Property_set
 //#define STUB_Vector3Property_set
-  void Vector3Property::set(const Atlas::Message::Element &)
+  void Vector3Property::set(const Atlas::Message::Element&)
   {
     
   }
