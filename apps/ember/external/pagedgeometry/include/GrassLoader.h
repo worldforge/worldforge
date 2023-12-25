@@ -87,8 +87,8 @@ class GrassLoader: public PageLoader
 {
 public:
 	/** \brief Creates a new GrassLoader object. 
-	\param geom The PagedGeometry object that this GrassLoader will be assigned to.*/
-	inline GrassLoader(PagedGeometry *geom);
+	\param geomIn The PagedGeometry object that this GrassLoader will be assigned to.*/
+	inline GrassLoader(PagedGeometry *geomIn);
 	~GrassLoader();
 
 	/** \brief Adds a grass layer to the scene.
@@ -205,8 +205,8 @@ public:
 	In most cases, you may not even need to use the extra "userData" parameter, but it's there in
 	the event that your height function needs extra contextual data.
 	*/
-	void setHeightFunction(Ogre::Real (*heightFunction)(Ogre::Real x, Ogre::Real z, void *userData), void *userData = NULL) {
-		this->heightFunction = heightFunction;
+	void setHeightFunction(Ogre::Real (*heightFunctionIn)(Ogre::Real x, Ogre::Real z, void *userData), void *userData = NULL) {
+		this->heightFunction = heightFunctionIn;
 		heightFunctionUserData = userData;
 	}
 
@@ -473,12 +473,12 @@ class GrassLayer : public GrassLayerBase
 {
 public:
 
-	/** \brief Sets the maximum density (measured in grass quads/billboards per square unit) of grass */
-	void setDensity(float density) { this->density = density; }
+	/** \brief Sets the maximum densityIn (measured in grass quads/billboards per square unit) of grass */
+	void setDensity(float densityIn) { this->density = densityIn; }
 
 	/** \brief Sets a minimum / maximum height where grass may appear
-	\param minHeight Sets the minimum height grass may have. 0 = no minimum
-	\param maxHeight Sets the maximum height grass may have. 0 = no maximum
+	\param minHeightIn Sets the minimum height grass may have. 0 = no minimum
+	\param maxHeightIn Sets the maximum height grass may have. 0 = no maximum
 
 	By default grass appears at all altitudes. You can use this function to restrict grass to a
 	certain height range. For example, if sea level is at 100 units Y, you might restrict this
@@ -488,10 +488,10 @@ public:
 	your density map is extremely low resolution, this function may be the only practical option
 	to prevent grass from growing under water (when used in combination with your density map).
 
-	Setting minHeight to 0 means grass has no minimum height - it can grow as low as necessary.
-	Similarly, setting maxHeight to 0 means grass has no maximum height - it can grow as high
+	Setting minHeightIn to 0 means grass has no minimum height - it can grow as low as necessary.
+	Similarly, setting maxHeightIn to 0 means grass has no maximum height - it can grow as high
 	as necessary. */
-	void setHeightRange(float minHeight, float maxHeight = 0) { minY = minHeight; maxY = maxHeight; }
+	void setHeightRange(float minHeightIn, float maxHeightIn = 0) { minY = minHeightIn; maxY = maxHeightIn; }
 
 	/** \brief Sets the density map used for this grass layer
 	\param mapFile The density map image
@@ -691,9 +691,9 @@ private:
 };
 
 template <class TGrassLayer>
-GrassLoader<TGrassLayer>::GrassLoader(PagedGeometry *geom)
+GrassLoader<TGrassLayer>::GrassLoader(PagedGeometry *geomIn)
 {
-	GrassLoader<TGrassLayer>::geom = geom;
+	GrassLoader<TGrassLayer>::geom = geomIn;
 
 	// generate some random numbers
 	rTable = new RandomTable();
@@ -703,7 +703,7 @@ GrassLoader<TGrassLayer>::GrassLoader(PagedGeometry *geom)
 
 	windDir = Ogre::Vector3::UNIT_X;
 	densityFactor = 1.0f;
-	renderQueue = geom->getRenderQueue();
+	renderQueue = geomIn->getRenderQueue();
 
 	windTimer.reset();
 	lastTime = 0;
@@ -1023,15 +1023,15 @@ Mesh *GrassLoader<TGrassLayer>::generateGrass_QUAD(PageInfo &page, TGrassLayer *
 	uint16* pI = static_cast<uint16*>(subMesh->indexData->indexBuffer->lock(HardwareBuffer::HBL_DISCARD));
 	for (uint16 i = 0; i < quadCount; ++i)
 	{
-		uint16 offset = i * 4;
+		uint16 indexOffset = i * 4;
 
-		*pI++ = 0 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 1 + offset;
+		*pI++ = 0 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 1 + indexOffset;
 
-		*pI++ = 1 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 3 + offset;
+		*pI++ = 1 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 3 + indexOffset;
 	}
 
 	subMesh->indexData->indexBuffer->unlock();
@@ -1277,15 +1277,15 @@ Mesh *GrassLoader<TGrassLayer>::generateGrass_CROSSQUADS(PageInfo &page, TGrassL
 	uint16* pI = static_cast<uint16*>(subMesh->indexData->indexBuffer->lock(HardwareBuffer::HBL_DISCARD));
 	for (uint16 i = 0; i < quadCount; ++i)
 	{
-		uint16 offset = i * 4;
+		uint16 indexOffset = i * 4;
 
-		*pI++ = 0 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 1 + offset;
+		*pI++ = 0 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 1 + indexOffset;
 
-		*pI++ = 1 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 3 + offset;
+		*pI++ = 1 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 3 + indexOffset;
 	}
 
 	subMesh->indexData->indexBuffer->unlock();
@@ -1452,15 +1452,15 @@ Mesh *GrassLoader<TGrassLayer>::generateGrass_SPRITE(PageInfo &page, TGrassLayer
 	uint16* pI = static_cast<uint16*>(subMesh->indexData->indexBuffer->lock(HardwareBuffer::HBL_DISCARD));
 	for (uint16 i = 0; i < quadCount; ++i)
 	{
-		uint16 offset = i * 4;
+		uint16 indexOffset = i * 4;
 
-		*pI++ = 0 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 1 + offset;
+		*pI++ = 0 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 1 + indexOffset;
 
-		*pI++ = 1 + offset;
-		*pI++ = 2 + offset;
-		*pI++ = 3 + offset;
+		*pI++ = 1 + indexOffset;
+		*pI++ = 2 + indexOffset;
+		*pI++ = 3 + indexOffset;
 	}
 
 	subMesh->indexData->indexBuffer->unlock();

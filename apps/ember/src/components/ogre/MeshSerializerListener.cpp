@@ -75,16 +75,15 @@ void MeshSerializerListener::processMeshCompleted(Ogre::Mesh* mesh) {
 	if (mRequireTangents) {
 		//Ḿake sure that the mesh has tangents. This takes time, but is ok during development.
 		unsigned short outSourceCoordSet;
-		unsigned short outIndex;
 		try {
-			if (!mesh->suggestTangentVectorBuildParams(Ogre::VES_TANGENT, outSourceCoordSet, outIndex)) {
+			if (!mesh->suggestTangentVectorBuildParams(outSourceCoordSet)) {
 #ifdef DEBUG
 				logger->debug("No tangents available for {} mesh; generating new ones now.", mesh->getName());
 #else
 				logger->warn("No tangents available for {} mesh; generating new ones now. You should instead make sure that all meshes have tangents pregenerated.", mesh->getName());
 #endif
 				Ember::TimedLog timedLog("Building tangents for " + mesh->getName());
-				mesh->buildTangentVectors(Ogre::VES_TANGENT, outSourceCoordSet, outIndex);
+				mesh->buildTangentVectors(outSourceCoordSet);
 			}
 
 		} catch (const Ogre::Exception&) {

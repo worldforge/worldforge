@@ -36,13 +36,13 @@ using namespace Ember::OgreView::Terrain;
 
 namespace Ember::OgreView::Environment {
 
-FoliageLayer::FoliageLayer(::Forests::PagedGeometry* geom, GrassLoader<FoliageLayer>* ldr) :
+FoliageLayer::FoliageLayer(::Forests::PagedGeometry* geomIn, GrassLoader<FoliageLayer>* ldr) :
 		mTerrainManager(nullptr),
 		mTerrainLayer(nullptr),
 		mFoliageDefinition(nullptr),
 		mDensity(1.0f),
 		mLatestPlantsResult(nullptr) {
-	FoliageLayer::geom = geom;
+	FoliageLayer::geom = geomIn;
 	FoliageLayer::parent = ldr;
 
 	minWidth = 1.0f;

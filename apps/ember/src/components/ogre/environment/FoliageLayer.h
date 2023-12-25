@@ -54,7 +54,7 @@ namespace Environment {
 */
 class FoliageLayer : public Forests::GrassLayerBase, public virtual sigc::trackable {
 public:
-	FoliageLayer(Forests::PagedGeometry* geom, Forests::GrassLoader<FoliageLayer>* ldr);
+	FoliageLayer(Forests::PagedGeometry* geomIn, Forests::GrassLoader<FoliageLayer>* ldr);
 
 	virtual ~FoliageLayer() = default;
 

@@ -151,8 +151,8 @@ void CaelumEnvironment::setupCaelum(::Ogre::SceneManager* sceneMgr, ::Ogre::Rend
 		logger->warn("Error when creating Caelum point star field: {}", ex.what());
 		try {
 			mCaelumSystem->setImageStarfield(new Caelum::ImageStarfield(mSceneMgr, mCaelumSystem->getCaelumCameraNode()));
-		} catch (const Caelum::UnsupportedException& ex) {
-			logger->warn("Error when creating Caelum image star field: {}", ex.what());
+		} catch (const Caelum::UnsupportedException& exInner) {
+			logger->warn("Error when creating Caelum image star field: {}", exInner.what());
 		}
 	}
 

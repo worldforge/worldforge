@@ -101,7 +101,7 @@ public:
 	}
 
 
-	DatabaseResult runSimpleSelectQuery(const std::string& query) override {
+	DatabaseResult runSimpleSelectQuery(const std::string& query) const override {
 		return DatabaseResult(std::make_unique<DatabaseNullResultWorker>());
 	}
 

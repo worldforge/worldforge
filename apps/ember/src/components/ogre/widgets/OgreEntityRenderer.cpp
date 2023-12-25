@@ -44,12 +44,11 @@ namespace Ember::OgreView::Gui {
  */
 class OgreEntityRendererResourceListener : public Ogre::Resource::Listener {
 private:
-	OgreEntityRenderer& mRenderer;
 	Ogre::AnimationState** mActiveAnimation;
 
 public:
-	OgreEntityRendererResourceListener(OgreEntityRenderer& renderer, Ogre::AnimationState** activeAnimation) : mRenderer(renderer), mActiveAnimation(activeAnimation) {
-
+	OgreEntityRendererResourceListener(OgreEntityRenderer& renderer, Ogre::AnimationState** activeAnimation)
+			: mActiveAnimation(activeAnimation) {
 	}
 
 	void unloadingComplete(Ogre::Resource*) override {
@@ -161,14 +160,12 @@ void OgreEntityRenderer::clearForcedLodLevel() {
 
 void OgreEntityRenderer::enableAnimation(const std::string& animationName) {
 	if (mEntity && mEntity->getAllAnimationStates()) {
-		auto I = mEntity->getAllAnimationStates()->getAnimationStateIterator();
-		while (I.hasMoreElements()) {
-			auto state = I.getNext();
-			if (state->getAnimationName() == animationName) {
-				mActiveAnimation = state;
-				state->setEnabled(true);
+		for (const auto& entry: mEntity->getAllAnimationStates()->getAnimationStates()) {
+			if (entry.second->getAnimationName() == animationName) {
+				mActiveAnimation = entry.second;
+				entry.second->setEnabled(true);
 			} else {
-				state->setEnabled(false);
+				entry.second->setEnabled(false);
 			}
 		}
 	}
@@ -178,10 +175,8 @@ std::vector<std::string> OgreEntityRenderer::getEntityAnimationNames() const {
 	std::vector<std::string> names;
 
 	if (mEntity && mEntity->getAllAnimationStates()) {
-		auto I = mEntity->getAllAnimationStates()->getAnimationStateIterator();
-		while (I.hasMoreElements()) {
-			auto state = I.getNext();
-			names.push_back(state->getAnimationName());
+		for (const auto& entry: mEntity->getAllAnimationStates()->getAnimationStates()) {
+			names.emplace_back(entry.second->getAnimationName());
 		}
 	}
 	return names;

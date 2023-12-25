@@ -36,12 +36,12 @@ namespace Caelum
         UnsupportedException
         (
                 int number,
-                const Ogre::String &description,
-                const Ogre::String &source,
-                const char *file,
-                long line
+                const Ogre::String &descriptionIn,
+                const Ogre::String &sourceIn,
+                const char *fileIn,
+                long lineIn
         ):
-                Ogre::Exception (number, description, source, "UnsupportedException", file, line)
+                Ogre::Exception (number, descriptionIn, sourceIn, "UnsupportedException", fileIn, lineIn)
         {
         }
     };

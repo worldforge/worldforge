@@ -180,7 +180,7 @@ namespace Caelum
         } mDomeParams;
 
         struct PassFogParams: public FogParamsBase {
-            PassFogParams(Ogre::GpuProgramParametersSharedPtr fpParams) { setup(fpParams); }
+            PassFogParams(Ogre::GpuProgramParametersSharedPtr fpParamsIn) { setup(fpParamsIn); }
 
             static inline bool lessThanByParams(const PassFogParams& a, const PassFogParams& b) {
                 return a.fpParams.get() <= b.fpParams.get();
