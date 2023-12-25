@@ -33,7 +33,7 @@
 #include "components/ogre/authoring/AuthoringManager.h"
 #include "components/ogre/authoring/AuthoringMoverConnector.h"
 
-#include "components/ogre/lod/LodLevelManager.h"
+#include "LodLevelManager.h"
 
 #include "TerrainEntityManager.h"
 #include "TerrainPageDataProvider.h"

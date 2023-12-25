@@ -36,8 +36,6 @@ add_library(ember-ogre STATIC
         authoring/GeometryVisualization.cpp
         authoring/GeometryVisualization.h
 
-        lod/LodLevelManager.cpp
-
         camera/MainCamera.cpp
         camera/CameraMountBase.cpp
         camera/FirstPersonCameraMount.cpp
@@ -70,13 +68,6 @@ add_library(ember-ogre STATIC
         environment/IEnvironmentProvider.h
         gui/ActiveWidgetHandler.cpp
         gui/CursorWorldListener.cpp
-
-        lod/LodDefinition.cpp
-        lod/LodDefinitionManager.cpp
-        lod/LodManager.cpp
-        lod/XMLLodDefinitionSerializer.cpp
-        lod/PMInjectorSignaler.cpp
-        lod/ScaledPixelCountLodStrategy.cpp
 
         mapping/EmberEntityMappingManager.cpp
         mapping/XMLEntityMappingDefinitionSerializer.cpp
@@ -187,7 +178,11 @@ add_library(ember-ogre STATIC
         SquallArchive.cpp
 )
 
+add_subdirectory(lod)
+
+
 target_link_libraries(ember-ogre PUBLIC
+        ember-ogre-lod
         ember-framework
         ember-assets
         ember-cegui

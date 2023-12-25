@@ -16,10 +16,10 @@
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 #include "RegisterLua.h"
-#include "components/ogre/lod/LodDefinition.h"
-#include "components/ogre/lod/LodDefinitionManager.h"
-#include "components/ogre/lod/LodManager.h"
-#include "components/ogre/lod/PMInjectorSignaler.h"
+#include "LodDefinition.h"
+#include "LodDefinitionManager.h"
+#include "LodManager.h"
+#include "PMInjectorSignaler.h"
 
 using namespace Ember::OgreView::Lod;
 using namespace Ember::Lua;

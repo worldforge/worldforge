@@ -53,8 +53,8 @@
 #include "model/ModelDefinitionManager.h"
 #include "mapping/EmberEntityMappingManager.h"
 
-#include "lod/LodDefinitionManager.h"
-#include "lod/LodManager.h"
+#include "LodDefinitionManager.h"
+#include "LodManager.h"
 
 
 #include "authoring/EntityRecipeManager.h"

@@ -24,10 +24,10 @@
 #define EMBEROGRE_GUIASSETSMANAGER_H
 
 #include "TexturePair.h"
+#include "PMInjectorSignaler.h"
 
 #include <string>
 #include <boost/filesystem/path.hpp>
-#include <components/ogre/lod/PMInjectorSignaler.h>
 
 namespace CEGUI {
 

@@ -26,7 +26,7 @@
 
 #include "OgreInfo.h"
 #include "MeshSerializerListener.h"
-#include "lod/ScaledPixelCountLodStrategy.h"
+#include "ScaledPixelCountLodStrategy.h"
 #include <MeshLodGenerator/OgreMeshLodGenerator.h>
 
 #include "services/EmberServices.h"

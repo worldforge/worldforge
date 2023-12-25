@@ -8,6 +8,7 @@ add_library(ember-BindingsEmberOgre STATIC
 
 target_link_libraries(ember-BindingsEmberOgre PUBLIC
         ember-ogre
+        ember-ogre-lod
         ember-ogre_terrain
         ember-widgets
         ember-external-sol2
