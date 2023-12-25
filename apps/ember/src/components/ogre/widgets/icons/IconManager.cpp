@@ -30,8 +30,8 @@
 #include "components/ogre/model/ModelDefinitionManager.h"
 #include "components/entitymapping/EntityMappingManager.h"
 #include "components/entitymapping/IActionCreator.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
-#include "components/ogre/mapping/ModelActionCreator.h"
+#include "EmberEntityMappingManager.h"
+#include "ModelActionCreator.h"
 #include "services/server/ServerService.h"
 #include "services/EmberServices.h"
 #include <Eris/Connection.h>

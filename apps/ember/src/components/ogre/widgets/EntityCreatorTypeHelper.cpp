@@ -30,7 +30,7 @@
 #include "../model/Model.h"
 #include "domain/EmberEntity.h"
 #include "../World.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 
 #include "services/EmberServices.h"
 #include "services/server/ServerService.h"
@@ -44,7 +44,7 @@
 #include <CEGUI/widgets/PushButton.h>
 #include <CEGUI/widgets/Tree.h>
 #include <CEGUI/widgets/ToggleButton.h>
-#include "components/ogre/mapping/ModelActionCreator.h"
+#include "ModelActionCreator.h"
 
 
 namespace Ember::OgreView::Gui {

@@ -69,11 +69,6 @@ add_library(ember-ogre STATIC
         gui/ActiveWidgetHandler.cpp
         gui/CursorWorldListener.cpp
 
-        mapping/EmberEntityMappingManager.cpp
-        mapping/XMLEntityMappingDefinitionSerializer.cpp
-        mapping/ModelActionCreator.cpp
-        mapping/ModelActionCreator.h
-
         model/AnimationSet.cpp
         model/Model.cpp
         model/ModelBackgroundLoader.cpp
@@ -116,7 +111,6 @@ add_library(ember-ogre STATIC
         GUIManager.cpp
         MeshSerializerListener.cpp
         MotionManager.cpp
-        OgreInfo.cpp
         OgreLogObserver.cpp
         OgreResourceLoader.cpp
         OgreResourceProvider.cpp
@@ -130,7 +124,6 @@ add_library(ember-ogre STATIC
         SimpleRenderContext.cpp
         RenderDistanceManager.cpp
         AutoGraphicsLevelManager.cpp
-        XMLHelper.cpp
         WorldAttachment.cpp
         NodeController.cpp
         DelegatingNodeController.cpp
@@ -178,11 +171,24 @@ add_library(ember-ogre STATIC
         SquallArchive.cpp
 )
 
+add_library(ember-ogre-support STATIC
+        XMLHelper.cpp
+        OgreInfo.cpp
+)
+target_include_directories(ember-ogre-support PUBLIC .)
+target_link_libraries(ember-ogre-support PUBLIC
+        ember-framework
+        OgreMain
+)
+
 add_subdirectory(lod)
+add_subdirectory(mapping)
 
 
 target_link_libraries(ember-ogre PUBLIC
+        ember-ogre-support
         ember-ogre-lod
+        ember-ogre-mapping
         ember-framework
         ember-assets
         ember-cegui

@@ -28,7 +28,7 @@
 #include "components/ogre/model/ModelRepresentation.h"
 #include "components/ogre/model/ModelBoneProvider.h"
 #include "components/ogre/model/ModelFitting.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 #include "components/ogre/EmberEntityActionCreator.h"
 #include "components/ogre/EmberEntityPartAction.h"
 #include "components/ogre/EmberEntityHideModelAction.h"

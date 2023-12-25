@@ -34,8 +34,8 @@
 #include "components/ogre/model/Model.h"
 #include "components/ogre/model/ModelMount.h"
 #include "components/ogre/model/ModelDefinitionManager.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
-#include "components/ogre/mapping/ModelActionCreator.h"
+#include "EmberEntityMappingManager.h"
+#include "ModelActionCreator.h"
 
 #include "domain/EmberEntity.h"
 

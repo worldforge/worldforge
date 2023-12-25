@@ -51,7 +51,7 @@
 #include "environment/Tree.h"
 
 #include "model/ModelDefinitionManager.h"
-#include "mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 
 #include "LodDefinitionManager.h"
 #include "LodManager.h"

@@ -24,7 +24,7 @@
 #include "ModelMount.h"
 #include "ModelPartReactivatorVisitor.h"
 
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 
 #include "components/ogre/sound/SoundEntity.h"
 

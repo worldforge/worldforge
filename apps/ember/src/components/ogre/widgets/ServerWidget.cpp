@@ -27,10 +27,10 @@
 #include "EntityTextureManipulator.h"
 
 #include "components/entitymapping/EntityMappingManager.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 #include "components/ogre/GUIManager.h"
 #include "components/ogre/model/Model.h"
-#include "components/ogre/mapping/ModelActionCreator.h"
+#include "ModelActionCreator.h"
 
 #include "services/server/ServerService.h"
 #include "services/server/ProtocolVersion.h"

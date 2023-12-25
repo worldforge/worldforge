@@ -12,7 +12,6 @@ add_library(ember-ogre-lod STATIC
 
 target_link_libraries(ember-ogre-lod PUBLIC
         ember-framework
-        ember-external-OGRE
         OgreMeshLodGenerator
         OgreMain
 )

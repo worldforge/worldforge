@@ -34,8 +34,8 @@
 
 #include "components/ogre/authoring/DetachedEntity.h"
 
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
-#include "components/ogre/mapping/ModelActionCreator.h"
+#include "EmberEntityMappingManager.h"
+#include "ModelActionCreator.h"
 
 #include <wfmath/atlasconv.h>
 #include <wfmath/MersenneTwister.h>

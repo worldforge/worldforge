@@ -27,9 +27,9 @@
 #include "EntityTextureManipulator.h"
 #include "EntityCreatorMovement.h"
 #include "EntityCreatorMovementBridge.h"
-#include <components/ogre/mapping/ModelActionCreator.h>
-#include <components/ogre/widgets/adapters/atlas/AdapterFactory.h>
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "ModelActionCreator.h"
+#include "components/ogre/widgets/adapters/atlas/AdapterFactory.h"
+#include "EmberEntityMappingManager.h"
 #include "components/ogre/World.h"
 #include "components/ogre/Avatar.h"
 #include "AtlasHelper.h"

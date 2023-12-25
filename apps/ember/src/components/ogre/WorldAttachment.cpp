@@ -22,7 +22,7 @@
 #include "components/ogre/SceneNodeProvider.h"
 #include "components/ogre/model/ModelRepresentation.h"
 #include "components/ogre/model/ModelAttachment.h"
-#include "components/ogre/mapping/EmberEntityMappingManager.h"
+#include "EmberEntityMappingManager.h"
 #include "environment/OceanRepresentation.h"
 #include "OgreInfo.h"
 #include "EmberEntityActionCreator.h"

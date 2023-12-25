@@ -17,7 +17,7 @@
  */
 
 #include <components/ogre/model/ModelDefinitionManager.h>
-#include <components/ogre/mapping/EmberEntityMappingManager.h>
+#include "EmberEntityMappingManager.h"
 #include <boost/algorithm/string.hpp>
 #include "PresentAction.h"
 #include "components/ogre/model/Model.h"
