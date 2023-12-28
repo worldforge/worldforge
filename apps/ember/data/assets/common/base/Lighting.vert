@@ -295,7 +295,7 @@ void main()
 	float len = length(blendDQ[0]);
 	blendDQ /= len;
 
-	vec4 positionEyeSpace = vec4(calculateBlendPosition(vertex.xyz, blendDQ), 1);
+	vec4 positionEyeSpace = worldMatrix * vec4(calculateBlendPosition(vertex.xyz, blendDQ), 1);
 
 	//No need to normalize, the magnitude of the normal is preserved because only rotation is performed
 	vec3 blendNormal = calculateBlendNormal(normal, blendDQ);   // This isn't used further down as it should be. I.e. eyeNormal and the TBN matrix should be
@@ -330,7 +330,7 @@ void main()
 
 	blendNorm = normalize(blendNorm);   // This isn't used further down as it should be. I.e. eyeNormal and the TBN matrix should be
 	                                    //calculated using the adjusted vertex positions.
-	vec4 positionEyeSpace = vec4(blendPos, 1);
+	vec4 positionEyeSpace = worldMatrix * vec4(blendPos, 1);
     mat3 normalMatrix = inverse(transpose(mat3(worldMatrix))); //This does not take the skinned position into account. Should be fixed.
 
 #else
