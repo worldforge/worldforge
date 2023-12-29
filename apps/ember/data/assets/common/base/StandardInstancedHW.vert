@@ -84,7 +84,7 @@ void main(void)
 
     vec3 eyePositionObjectSpace = (eyePosition * inverse(worldMatrix)).xyz;
 
-    vec3 oEyeDir = eyePositionObjectSpace - vertex.xyz;
+    oEyeDir = eyePositionObjectSpace - vertex.xyz;
 
     /*
         vec3 localbinormal = cross(tangent, normal);
