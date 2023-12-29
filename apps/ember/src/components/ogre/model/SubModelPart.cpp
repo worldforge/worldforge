@@ -119,9 +119,9 @@ void SubModelPart::showSubEntities() {
 
 					std::string newMaterialName = materialName + skinningSuffix;
 					auto& materialMgr = Ogre::MaterialManager::getSingleton();
-					if (!materialMgr.resourceExists(newMaterialName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)) {
+					if (!materialMgr.resourceExists(newMaterialName, mSubModel.mEntity.getMesh()->getGroup())) {
 						//Material does not exist; lets create it
-						auto material = materialMgr.getByName(materialName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
+						auto material = materialMgr.getByName(materialName, mSubModel.mEntity.getMesh()->getGroup());
 						if (material) {
 							material->load();
 							auto newMaterial = material->clone(newMaterialName);
@@ -130,7 +130,7 @@ void SubModelPart::showSubEntities() {
 									auto pass = tech->getPass(0);
 									if (pass->hasVertexProgram()) {
 										std::string newVertexProgramName = pass->getVertexProgramName() + skinningSuffix;
-										auto program = Ogre::HighLevelGpuProgramManager::getSingleton().getByName(newVertexProgramName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
+										auto program = Ogre::HighLevelGpuProgramManager::getSingleton().getByName(newVertexProgramName, mSubModel.mEntity.getMesh()->getGroup());
 										if (program) {
 											program->load();
 											if (program->isSupported()) {
@@ -142,7 +142,7 @@ void SubModelPart::showSubEntities() {
 									auto shadowCasterMat = tech->getShadowCasterMaterial();
 									if (shadowCasterMat && !boost::algorithm::ends_with(shadowCasterMat->getName(), skinningSuffix)) {
 										std::string skinningShadowCasterMatName = shadowCasterMat->getName() + skinningSuffix;
-										auto shadowCasterMatSkinning = materialMgr.getByName(skinningShadowCasterMatName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
+										auto shadowCasterMatSkinning = materialMgr.getByName(skinningShadowCasterMatName, mSubModel.mEntity.getMesh()->getGroup());
 										if (!shadowCasterMatSkinning) {
 											shadowCasterMat->load();
 											shadowCasterMatSkinning = shadowCasterMat->clone(skinningShadowCasterMatName);
@@ -151,7 +151,7 @@ void SubModelPart::showSubEntities() {
 												if (shadowCasterPass->hasVertexProgram()) {
 													std::string vertexProgramName = shadowCasterPass->getVertexProgram()->getName() + skinningSuffix;
 													auto program = Ogre::HighLevelGpuProgramManager::getSingleton().getByName(vertexProgramName,
-																															  Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME);
+																															  mSubModel.mEntity.getMesh()->getGroup());
 													if (program) {
 														program->load();
 														if (program->isSupported()) {

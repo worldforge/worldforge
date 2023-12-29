@@ -275,11 +275,13 @@ vec4 splatting_offset_mapping(in vec2 texCoord, in vec2 cameraDirTangentSpace, o
 }
 
 #endif // if OFFSET_MAPPING
-
+#endif // if NUM_LAYERS > 0
 
 vec4 splatting(in vec2 texCoord)
 {
-	vec4 diffuseColour;
+	vec4 diffuseColour = vec4(0, 0, 0, 1);
+
+#if NUM_LAYERS > 0
 	// Temporary variables used by each layer calculation
 	vec2 uv;         // scaled texCoord
 	float blendWeight;
@@ -337,12 +339,10 @@ vec4 splatting(in vec2 texCoord)
 	blendWeight = texture(blendMap2, texCoord).y;         // Need to use unscaled uv here since blend map = unscaled
 	diffuseColour = mix(diffuseColour, texture(diffuseTexture10, uv), blendWeight);
 #endif // if NUM_LAYERS > 10
+#endif // if NUM_LAYERS > 0
 
 	return diffuseColour;
 }
-
-
-#endif // if NUM_LAYERS > 0
 
 
 #if NUM_LIGHTS > 0
@@ -353,14 +353,14 @@ void lighting(in vec4 lightPosition,
 			  in float attenuation,
 			  inout vec4 diffuse)
 {
-	
+
 	//Due to a bug in Ogre which seems to not reset state between scene managers we can't use the "object space light position" auto const.
 	//We instead need to translate the light position into object space for each fragment. 
 
 	// Compute vector from surface to light position
 	vec3 lightDir = normalize((vec4(lightPosition.xyz, 1.0) * worldMatrix).xyz - positionObjSpace * lightPosition.w);
 	float NdotL = max(0.0, dot(normal, lightDir));
-	
+
 	diffuse += lightDiffuse * NdotL * attenuation * shadowing;
 }
 #endif // if NUM_LIGHTS > 0

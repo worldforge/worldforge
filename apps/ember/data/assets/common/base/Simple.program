@@ -36,15 +36,3 @@ fragment_program SimpleNormalLitFp glsl
 	source common/base/SimpleNormalLit.frag
 }
 
-/**
-Derives the texture coords from the world horizontal coords. This is meant only to be used with planar bodies of water.
-*/
-vertex_program SimpleWaterVp glsl
-{
-	source common/base/SimpleWater.vert
-	default_params
-	{
-        param_named_auto worldViewProj worldviewproj_matrix
-        param_named_auto worldMatrix world_matrix
-	}
-}

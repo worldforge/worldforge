@@ -54,27 +54,3 @@ vertex_program StandardVp glsl
 		param_named_auto    eyePosition                 camera_position_object_space
     }
 }
-
-vertex_program StandardVp/Instanced/HW/1 glsl
-{
-	source common/base/StandardInstancedHW.vert
-    preprocessor_defines NUM_UVS=1
-
-	default_params
-    {
-        param_named_auto	viewProjMatrix			viewproj_matrix
-
-		param_named_auto    shadowViewProjectionMatrix0 texture_viewproj_matrix 0
-		param_named_auto    shadowViewProjectionMatrix1 texture_viewproj_matrix 1
-		param_named_auto    shadowViewProjectionMatrix2 texture_viewproj_matrix 2
-		param_named_auto    shadowViewProjectionMatrix3 texture_viewproj_matrix 3
-		param_named_auto    shadowViewProjectionMatrix4 texture_viewproj_matrix 4
-
-		param_named_auto    eyePosition                 camera_position
-    }
-}
-
-vertex_program StandardVp/Instanced/HW/2 glsl : StandardVp/Instanced/HW/1
-{
-    preprocessor_defines NUM_UVS=2
-}

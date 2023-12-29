@@ -37,7 +37,7 @@ CompilerTechniqueProvider::CompilerTechniqueProvider(ShaderManager& shaderManage
 		mOnePixelMaterialGenerator(std::make_unique<OnePixelMaterialGenerator>()) {
 	//Our shaders use the one pixel normal texture whenever there's no existing normal map, so we need to create it.
 	const std::string onePixelMaterialName("dynamic/onepixel");
-	if (Ogre::TextureManager::getSingleton().resourceExists(onePixelMaterialName, Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME)) {
+	if (Ogre::TextureManager::getSingleton().resourceExists(onePixelMaterialName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME)) {
 		logger->warn("Texture '{}' already existed when CompilerTechniqueProvider was created; this should not be the case.", onePixelMaterialName);
 	} else {
 		Ogre::TextureManager::getSingleton().createManual(onePixelMaterialName,
