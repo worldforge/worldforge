@@ -58,9 +58,9 @@ void NodeController::updateMotion(float timeSlice) {
 }
 
 void NodeController::updatePosition() {
-	const WFMath::Point<3>& pos = mAttachment.getAttachedEntity().getPredictedPos();
-	const WFMath::Quaternion& orientation = mAttachment.getAttachedEntity().getPredictedOrientation();
-	const WFMath::Vector<3>& velocity = mAttachment.getAttachedEntity().getVelocity();
+	const auto& pos = mAttachment.getAttachedEntity().getPredictedPos();
+	const auto& orientation = mAttachment.getAttachedEntity().getPredictedOrientation();
+	const auto& velocity = mAttachment.getAttachedEntity().getPredictedState().velocity.value;
 	mAttachment.setPosition(pos.isValid() ? pos : WFMath::Point<3>::ZERO(), orientation.isValid() ? orientation : WFMath::Quaternion::IDENTITY(),
 							velocity.isValid() ? velocity : WFMath::Vector<3>::ZERO());
 }
