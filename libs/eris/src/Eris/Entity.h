@@ -20,14 +20,14 @@
 #include <vector>
 #include <unordered_map>
 #include <boost/optional.hpp>
+#include <chrono>
 
-namespace Atlas {
-namespace Message {
+namespace Atlas::Message {
 class Element;
 
 typedef std::map<std::string, Element> MapType;
 }
-}
+
 
 namespace Eris {
 
@@ -216,13 +216,6 @@ public:
 	const WFMath::Point<3>& getPredictedPos() const;
 
 	/**
-	 * @brief Retrieve the current predicted velocity of an entity.
-	 * If the entity have no acceleration, this is the same as calling getVelocity().
-	 * @return The predicted velocity of the entity.
-	 */
-	const WFMath::Vector<3>& getPredictedVelocity() const;
-
-	/**
 	 * @brief Retrieve the current predicted orientation of an entity.
 	 * @return The predicted orientation of the entity.
 	 */
@@ -400,10 +393,6 @@ protected:
 
 	virtual void onLocationChanged(Entity* oldLoc);
 
-	/** over-rideable hook method when then Entity position, orientation or
-	velocity change. The default implementation emits the Moved signal. */
-	virtual void onMoved(const WFMath::TimeStamp& timeStamp);
-
 	/** over-rideable hook when the actual (computed) visiblity of this
 	entity changed. The default implementation emits the VisiblityChanged
 	signal. */
@@ -560,11 +549,10 @@ protected:
 	class DynamicState {
 	public:
 		WFMath::Point<3> position;
-		WFMath::Vector<3> velocity;
 		WFMath::Quaternion orientation;
 	};
 
-	void updatePredictedState(const WFMath::TimeStamp& t, double simulationSpeed);
+	void updatePredictedState(const std::chrono::steady_clock::time_point& t, double simulationSpeed);
 
 	/**
 	 * @brief Gets an entity with the supplied id from the system.
@@ -593,7 +581,6 @@ protected:
 	WFMath::Point<3> m_position;
 	WFMath::Vector<3> m_velocity;
 	WFMath::Quaternion m_orientation;
-	WFMath::Vector<3> m_acc;
 	/**
 	 * Angular velocity. The magnitude of the vector represents the angle. For performance reasons
 	 * a copy of the magnitude is stored in m_angularMag.
@@ -628,8 +615,8 @@ protected:
 	BBox property are undefined.  */
 	bool m_hasBBox;
 
-	WFMath::TimeStamp m_lastPosTime;
-	WFMath::TimeStamp m_lastOrientationTime;
+	std::chrono::steady_clock::time_point m_lastPosTime;
+	std::chrono::steady_clock::time_point m_lastOrientationTime;
 	bool m_moving; ///< flag recording if this entity is current considered in-motion
 
 	bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)

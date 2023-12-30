@@ -451,7 +451,7 @@ bool Awareness::avoidObstacles(const WFMath::Point<2>& position, const WFMath::V
 			const EntityCollisionEntry& entry = nearestEntities.top();
 			auto entity = entry.entity;
 			float pos[]{static_cast<float>(entry.viewPosition.x()), 0, static_cast<float>(entry.viewPosition.y())};
-			float vel[]{static_cast<float>(entity->getPredictedVelocity().x()), 0, static_cast<float>(entity->getPredictedVelocity().z())};
+			float vel[]{static_cast<float>(entity->getVelocity().x()), 0, static_cast<float>(entity->getVelocity().z())};
 			mObstacleAvoidanceQuery->addCircle(pos, entry.viewRadius.radius(), vel, vel);
 			nearestEntities.pop();
 			++i;

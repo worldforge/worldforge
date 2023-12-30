@@ -216,7 +216,7 @@ private:
 	};
 	std::unordered_map<std::string, EntityEntry> m_contents;
 	Entity* m_topLevel; ///< the top-level visible entity for this view
-	WFMath::TimeStamp m_lastUpdateTime;
+	std::chrono::steady_clock::time_point m_lastUpdateTime;
 
 	/**
 	 * The simulation speed, as determined by the "simulation_speed" property of the top level entity.

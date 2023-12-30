@@ -77,7 +77,7 @@ private:
 	/**
 	Advance the progress of a constant-rate task
 	*/
-	void updatePredictedProgress(const WFMath::TimeDiff& dt);
+	void updatePredictedProgress(double secondsDelta);
 
 	const std::string m_name;
 	Entity& m_owner;

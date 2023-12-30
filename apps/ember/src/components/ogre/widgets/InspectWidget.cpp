@@ -232,7 +232,7 @@ void InspectWidget::showEntityInfo(EmberEntity* entity) {
 	if (entity->getPosition().isValid()) {
 		ss << "Position: " << entity->getPosition() << "\n";
 	}
-	const WFMath::Vector<3>& velocity = entity->getPredictedVelocity();
+	const WFMath::Vector<3>& velocity = entity->getVelocity();
 	if (velocity.isValid()) {
 		ss << "Velocity: " << velocity << ": " << sqrt(velocity.sqrMag()) << "\n";
 	}

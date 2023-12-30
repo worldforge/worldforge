@@ -123,10 +123,10 @@ void Task::progressChanged() {
 	}
 }
 
-void Task::updatePredictedProgress(const WFMath::TimeDiff& dt) {
+void Task::updatePredictedProgress(double secondsDelta) {
 	if (isComplete()) return;
 
-	m_progress += m_progressRate * ((double) (dt.milliseconds()) / 1000.0);
+	m_progress += m_progressRate * secondsDelta;
 	m_progress = std::min(m_progress, 1.0);
 
 	Progressed.emit();

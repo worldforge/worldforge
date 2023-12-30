@@ -47,7 +47,7 @@ WFMath::Point<3> SoundEntity::getPosition() const {
 }
 
 WFMath::Vector<3> SoundEntity::getVelocity() const {
-	return mParentEntity.getPredictedVelocity();
+	return mParentEntity.getVelocity();
 }
 
 const SoundAction* SoundEntity::playAction(const std::string& name) {

@@ -32,6 +32,8 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeService.h>
 
+using namespace std::chrono_literals;
+
 class TestErisEntity : public Eris::Entity
 {
   public:
@@ -48,7 +50,7 @@ class TestErisEntity : public Eris::Entity
 
     void testSetPosition(const WFMath::Point<3>& position) {
         m_position = position;
-        onMoved(m_lastPosTime);
+		m_predicted.position = position;
     }
 
     void testSetVelocity(const WFMath::Vector<3>& velocity) {
@@ -57,13 +59,14 @@ class TestErisEntity : public Eris::Entity
 
     void testSetOrientation(const WFMath::Quaternion& orientation) {
         m_orientation = orientation;
+		m_predicted.orientation = orientation;
     }
 
-    void testUpdatePositionWithDelta(const WFMath::TimeDiff& diff) {
+    void testUpdatePositionWithDelta(std::chrono::steady_clock::duration diff) {
         m_moving = true;
-		m_lastPosTime = WFMath::TimeStamp::epochStart();
-		m_lastOrientationTime = WFMath::TimeStamp::epochStart();
-        updatePredictedState(WFMath::TimeStamp::epochStart() + diff, 1.0f);
+		m_lastPosTime = {};
+		m_lastOrientationTime = {};
+        updatePredictedState(std::chrono::steady_clock::time_point{} + diff, 1.0f);
     }
 };
 
@@ -101,7 +104,7 @@ int main()
         //Test position inheritance
         assert(e2.getPredictedPos() == WFMath::Point<3>(1, 2, 3));
 
-        e4.testUpdatePositionWithDelta(WFMath::TimeDiff(1000));
+        e4.testUpdatePositionWithDelta(1000s);
 
         //Check that the position is updated instantly when onMoved is called.
         WFMath::Point<3> newPos(10, 20, 30);

@@ -89,7 +89,7 @@ ModelRepresentation::ModelRepresentation(EmberEntity& entity, std::unique_ptr<Mo
 
 	mModel->setQueryFlags(MousePicker::CM_ENTITY);
 
-	parseMovementMode(mEntity.getPredictedVelocity());
+	parseMovementMode(mEntity.getVelocity());
 
 	mModel->setUserObject(mUserObject);
 
@@ -230,7 +230,7 @@ void ModelRepresentation::model_Reloaded() {
 ////		createActionForTask(*mEntity.getTasks().begin()->second);
 //	}
 	//Retrigger a movement change so that animations can be stopped and started now that the model has changed.
-	parseMovementMode(mEntity.getPredictedVelocity());
+	parseMovementMode(mEntity.getVelocity());
 	updateCollisionDetection();
 }
 
@@ -372,7 +372,7 @@ void ModelRepresentation::updateAnimation(float timeSlice) {
 	//If not, we should show any available task animation.
 	//And if none of these applies, we should play the current movement action (which should be idle).
 
-	const WFMath::Vector<3>& velocity = mEntity.getPredictedVelocity();
+	const WFMath::Vector<3>& velocity = mEntity.getVelocity();
 	if (mCurrentMovementAction && velocity.isValid() && velocity.mag() > 0.01f) {
 		bool continuePlay = false;
 		mCurrentMovementAction->animations.addTime(timeSlice, continuePlay);

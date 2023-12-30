@@ -93,24 +93,20 @@ void View::update() {
 		issueQueuedLook();
 	}
 
-	WFMath::TimeStamp t(WFMath::TimeStamp::now());
+	auto now = std::chrono::steady_clock::now();
 
 	// run motion prediction for each moving entity
 	for (auto& it: m_moving) {
-		it->updatePredictedState(t, m_simulationSpeed);
+		it->updatePredictedState(now, m_simulationSpeed);
 	}
 
-	// for first call to update, dt will be zero.
-	if (!m_lastUpdateTime.isValid()) {
-		m_lastUpdateTime = t;
-	}
-	WFMath::TimeDiff dt = t - m_lastUpdateTime;
+	m_lastUpdateTime = now;
+
+	auto deltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(now - m_lastUpdateTime).count()) / 1'000'000.0;
 
 	for (auto& m_progressingTask: m_progressingTasks) {
-		m_progressingTask->updatePredictedProgress(dt);
+		m_progressingTask->updatePredictedProgress(deltaTime);
 	}
-
-	m_lastUpdateTime = t;
 
 	if (m_owner.getEntity()) {
 		auto topEntity = m_owner.getEntity()->getTopEntity();
