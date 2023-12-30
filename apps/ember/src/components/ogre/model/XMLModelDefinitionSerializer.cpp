@@ -39,7 +39,7 @@
 #endif
 
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 namespace {
 bool shouldExport(const Ogre::Vector3& vector) {
@@ -82,7 +82,7 @@ ModelDefinitionPtr XMLModelDefinitionSerializer::parseDocument(TiXmlDocument& xm
 	return {};
 }
 
-ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& stream, const boost::filesystem::path& path) {
+ModelDefinitionPtr XMLModelDefinitionSerializer::parseScript(std::istream& stream, const std::filesystem::path& path) {
 	TiXmlDocument xmlDoc;
 	if (XMLHelper::Load(xmlDoc, stream, path)) {
 		return parseDocument(xmlDoc, path.string());
@@ -825,7 +825,7 @@ void XMLModelDefinitionSerializer::readPoses(const ModelDefinitionPtr& modelDef,
 }
 
 
-bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelDef, const boost::filesystem::path& path) {
+bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelDef, const std::filesystem::path& path) {
 	if (path.empty()) {
 		return false;
 	}
@@ -836,9 +836,9 @@ bool XMLModelDefinitionSerializer::exportScript(const ModelDefinitionPtr& modelD
 
 	try {
 
-		if (!boost::filesystem::exists(path.parent_path())) {
+		if (!std::filesystem::exists(path.parent_path())) {
 			logger->info("Creating directory {}", path.parent_path().string());
-			boost::filesystem::create_directories(path.parent_path());
+			std::filesystem::create_directories(path.parent_path());
 		}
 
 		TiXmlElement modelElem("model");

@@ -28,7 +28,7 @@
 
 namespace Ember::OgreView::Lod {
 
-LodDefinitionManager::LodDefinitionManager(const boost::filesystem::path& exportDirectory) :
+LodDefinitionManager::LodDefinitionManager(const std::filesystem::path& exportDirectory) :
 		mLodDefinitionSerializer(exportDirectory) {
 	// MeshManager has a load order of 350, so this should be bigger then that.
 	mLoadOrder = 400.0f;

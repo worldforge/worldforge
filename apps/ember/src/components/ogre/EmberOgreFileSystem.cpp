@@ -37,7 +37,7 @@ using namespace Ogre;
 
 namespace {
 
-boost::filesystem::path concatenate_path(const boost::filesystem::path& base, const boost::filesystem::path& name) {
+std::filesystem::path concatenate_path(const std::filesystem::path& base, const std::filesystem::path& name) {
 	if (base.empty() || name.is_absolute()) {
 		return name;
 	} else {
@@ -109,32 +109,32 @@ void FileSystemArchive::findFiles(String pattern, bool recursive,
 		regex = std::make_unique<std::regex>(patternEscaped);
 	}
 
-	if (boost::filesystem::exists(base_dir)) {
+	if (std::filesystem::exists(base_dir)) {
 		findFiles(base_dir, regex, recursive, dirs, simpleList, detailList);
 	}
 
 }
 
 //-----------------------------------------------------------------------
-void FileSystemArchive::findFiles(const boost::filesystem::path& directory,
+void FileSystemArchive::findFiles(const std::filesystem::path& directory,
 								  const std::unique_ptr<std::regex>& pattern,
 								  bool recursive,
 								  bool dirs, StringVector* simpleList, FileInfoList* detailList) const {
 
 	//if there's a file with the name "norecurse" we shouldn't recurse further
-	if (boost::filesystem::exists(directory / "norecurse")) {
+	if (std::filesystem::exists(directory / "norecurse")) {
 		return;
 	}
 
 	/**
 	 * Make sure to process in order, so it gets deterministic.
 	 */
-	std::vector<boost::filesystem::path> files;
-	std::copy(boost::filesystem::directory_iterator(directory), boost::filesystem::directory_iterator(), std::back_inserter(files));
+	std::vector<std::filesystem::path> files;
+	std::copy(std::filesystem::directory_iterator(directory), std::filesystem::directory_iterator(), std::back_inserter(files));
 	std::sort(files.begin(), files.end());
 
 	for (const auto& path: files) {
-		if (boost::filesystem::is_directory(path)) {
+		if (std::filesystem::is_directory(path)) {
 			if (recursive) {
 				if (path.filename().string() != "source") {
 					findFiles(path, pattern, recursive, dirs, simpleList, detailList);
@@ -143,16 +143,16 @@ void FileSystemArchive::findFiles(const boost::filesystem::path& directory,
 		} else {
 			if (!pattern || std::regex_match(path.filename().string(), *pattern)) {
 				if (simpleList) {
-					simpleList->emplace_back(boost::filesystem::relative(path, mBaseName).generic_string());
+					simpleList->emplace_back(std::filesystem::relative(path, mBaseName).generic_string());
 				} else if (detailList) {
-					auto relativePath = boost::filesystem::relative(path, mBaseName);
+					auto relativePath = std::filesystem::relative(path, mBaseName);
 					auto parentPath = relativePath.parent_path();
 					FileInfo fi;
 					fi.archive = this;
 					fi.filename = relativePath.generic_string();
 					fi.basename = path.filename().generic_string();
 					fi.path = parentPath.empty() ? "" : parentPath.generic_string() + "/";
-					fi.compressedSize = boost::filesystem::file_size(path);
+					fi.compressedSize = std::filesystem::file_size(path);
 					fi.uncompressedSize = fi.compressedSize;
 					detailList->emplace_back(std::move(fi));
 				}
@@ -193,7 +193,7 @@ DataStreamPtr FileSystemArchive::open(const String& filename, bool readOnly) con
 					"FileSystemArchive::open");
 	}
 
-	auto size = boost::filesystem::file_size(full_path);
+	auto size = std::filesystem::file_size(full_path);
 	// Construct return stream, tell it to delete on destroy
 	auto* stream = OGRE_NEW FileStreamDataStream(filename,
 												 origStream, size, true);
@@ -243,12 +243,14 @@ FileInfoListPtr FileSystemArchive::findFileInfo(const String& pattern,
 //-----------------------------------------------------------------------
 bool FileSystemArchive::exists(const String& filename) const {
 	auto full_path = concatenate_path(mBaseName, filename);
-	return boost::filesystem::exists(full_path);
+	return std::filesystem::exists(full_path);
 }
 
 time_t FileSystemArchive::getModifiedTime(const String& filename) const {
 	auto full_path = concatenate_path(mBaseName, filename);
-	return boost::filesystem::last_write_time(full_path);
+	const auto fileTime = std::filesystem::last_write_time(full_path);
+	const auto systemTime = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
+	return std::chrono::system_clock::to_time_t(systemTime);
 }
 
 //-----------------------------------------------------------------------

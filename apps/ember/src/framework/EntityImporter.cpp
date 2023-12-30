@@ -28,7 +28,7 @@
 #include <Eris/Avatar.h>
 
 #include <fstream>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -83,9 +83,9 @@ Atlas::Objects::Root EntityImporter::loadFromFile(const std::string& filename) {
 	return atlasLoader.getLastObject();
 }
 
-std::vector<EntityImporter::ShortInfo> EntityImporter::getInfoFromDirectory(const boost::filesystem::path& directoryPath) {
+std::vector<EntityImporter::ShortInfo> EntityImporter::getInfoFromDirectory(const std::filesystem::path& directoryPath) {
 	std::vector<ShortInfo> infos;
-	for (auto& dir_entry: boost::filesystem::directory_iterator(directoryPath)) {
+	for (auto& dir_entry: std::filesystem::directory_iterator(directoryPath)) {
 		auto& file_path = dir_entry.path();
 		try {
 			ShortInfo info;

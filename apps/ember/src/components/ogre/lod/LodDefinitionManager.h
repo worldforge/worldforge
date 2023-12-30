@@ -31,7 +31,7 @@
 #include <OgreResourceManager.h>
 
 #include <string>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 
 namespace Ember::OgreView::Lod {
@@ -47,7 +47,7 @@ public:
 	 * @brief Ctor.
 	 * @param exportDirectory Specifies the directory, where the changed *.loddef files will be saved.
 	 */
-	explicit LodDefinitionManager(const boost::filesystem::path& exportDirectory);
+	explicit LodDefinitionManager(const std::filesystem::path& exportDirectory);
 
 	/**
 	 * @brief Dtor.

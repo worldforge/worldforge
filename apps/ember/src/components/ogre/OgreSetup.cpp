@@ -71,7 +71,7 @@
 #include <Ogre.h>
 #include <RTShaderSystem/OgreShaderGenerator.h>
 #include <RTShaderSystem/OgreRTShaderSystem.h>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <memory>
 
 namespace Ember::OgreView {

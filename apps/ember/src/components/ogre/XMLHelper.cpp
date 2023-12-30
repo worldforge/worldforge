@@ -51,7 +51,7 @@ bool XMLHelper::Load(TiXmlDocument& xmlDoc, const Ogre::DataStreamPtr& stream) {
 	return false;
 }
 
-bool XMLHelper::Load(TiXmlDocument& xmlDoc, std::istream& stream, const boost::filesystem::path& path) {
+bool XMLHelper::Load(TiXmlDocument& xmlDoc, std::istream& stream, const std::filesystem::path& path) {
 	stream >> xmlDoc;
 
 	if (xmlDoc.Error()) {

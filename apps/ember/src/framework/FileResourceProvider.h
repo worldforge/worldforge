@@ -20,7 +20,8 @@
 #define FILERESOURCEPROVIDER_H_
 
 #include "IResourceProvider.h"
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
+#include <vector>
 #include <boost/noncopyable.hpp>
 
 #include <string>
@@ -54,14 +55,14 @@ public:
 	 * @brief Ctor.
 	 * @param baseDirectory The base directory.
 	 */
-	explicit FileResourceProvider(boost::filesystem::path baseDirectory);
+	explicit FileResourceProvider(std::filesystem::path baseDirectory);
 
 	~FileResourceProvider() override;
 
 	ResourceWrapper getResource(const std::string& name) override;
 
 private:
-	const boost::filesystem::path mBaseDirectory;
+	const std::filesystem::path mBaseDirectory;
 };
 
 }

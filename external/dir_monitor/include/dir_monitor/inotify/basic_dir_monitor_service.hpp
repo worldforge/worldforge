@@ -9,7 +9,7 @@
 #include "dir_monitor_impl.hpp"
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/system/error_code.hpp>
 
 #include <memory>
@@ -65,7 +65,7 @@ public:
 
     void add_directory(implementation_type &impl, const std::string &dirname)
     {
-        if (!boost::filesystem::is_directory(dirname))
+        if (!std::filesystem::is_directory(dirname))
             throw std::invalid_argument("boost::asio::basic_dir_monitor_service::add_directory: " + dirname + " is not a valid directory entry");
 
         impl->add_directory(dirname);

@@ -211,9 +211,9 @@ Application::Application(Input& input,
 	// Change working directory
 	auto dirName = mConfigService.getHomeDirectory(BaseDirType_CONFIG);
 
-	if (!boost::filesystem::is_directory(dirName)) {
+	if (!std::filesystem::is_directory(dirName)) {
 		logger->info("Creating home directory at {}", dirName.string());
-		boost::filesystem::create_directories(dirName);
+		std::filesystem::create_directories(dirName);
 	}
 
 	int result = chdir(mConfigService.getHomeDirectory(BaseDirType_CONFIG).generic_string().c_str());
@@ -227,7 +227,7 @@ Application::Application(Input& input,
 
 	//Check if there's a user specific ember.conf file. If not, create an empty template one.
 	auto userConfigFilePath = mConfigService.getHomeDirectory(BaseDirType_CONFIG) / "ember.conf";
-	if (!boost::filesystem::exists(userConfigFilePath)) {
+	if (!std::filesystem::exists(userConfigFilePath)) {
 		//Create empty template file.
 		std::ofstream outstream(userConfigFilePath.c_str());
 		outstream << "#This is a user specific settings file. Settings here override those found in the application installed ember.conf file." << std::endl;
@@ -478,11 +478,11 @@ void Application::startScripting() {
 	std::list<std::string> luaFiles;
 
 	//load any user defined scripts
-	auto userScriptDirectoryPath = boost::filesystem::path(mServices->getConfigService().getHomeDirectory(BaseDirType_CONFIG)) / "scripts";
+	auto userScriptDirectoryPath = std::filesystem::path(mServices->getConfigService().getHomeDirectory(BaseDirType_CONFIG)) / "scripts";
 
-	if (boost::filesystem::is_directory(userScriptDirectoryPath)) {
+	if (std::filesystem::is_directory(userScriptDirectoryPath)) {
 
-		for (auto& dir_entry: boost::filesystem::recursive_directory_iterator(userScriptDirectoryPath)) {
+		for (auto& dir_entry: std::filesystem::recursive_directory_iterator(userScriptDirectoryPath)) {
 			auto fileName = dir_entry.path().string();
 			std::string lowerCaseFileName = fileName;
 			std::transform(lowerCaseFileName.begin(), lowerCaseFileName.end(), lowerCaseFileName.begin(), ::tolower);
@@ -510,7 +510,7 @@ void Application::startScripting() {
 	} else {
 		try {
 			//Create the script user script directory
-			boost::filesystem::create_directories(userScriptDirectoryPath);
+			std::filesystem::create_directories(userScriptDirectoryPath);
 			std::ofstream readme((userScriptDirectoryPath / "/README").string(), std::ios::out);
 			readme
 					<< "Any script files placed here will be executed as long as they have a supported file suffix.\nScripts are executed in alphabetical order.\nEmber currently supports lua scripts (ending with '.lua').";

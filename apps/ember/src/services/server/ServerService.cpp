@@ -59,7 +59,7 @@ ServerService::ServerService(Session& session) :
 }
 
 ServerService::~ServerService() {
-	auto directory = boost::filesystem::path(mLocalSocketPath).remove_filename().string();
+	auto directory = std::filesystem::path(mLocalSocketPath).remove_filename().string();
 	Ember::FileSystemObserver::getSingleton().remove_directory(directory);
 
 	disconnect();
@@ -114,7 +114,7 @@ bool ServerService::hasLocalSocket() {
 #else
 
 	//check that the socket file is available and that we can connect to it
-	if (!boost::filesystem::exists(mLocalSocketPath)) {
+	if (!std::filesystem::exists(mLocalSocketPath)) {
 		return false;
 	}
 
@@ -147,20 +147,20 @@ void ServerService::setupLocalServerObservation(ConfigService& configService) {
 
 	auto snapDataEnv = std::getenv("SNAP_DATA");
 	if (snapDataEnv) {
-		mLocalSocketPath = boost::filesystem::path(snapDataEnv) / "cyphesis_cyphesis.sock";
+		mLocalSocketPath = std::filesystem::path(snapDataEnv) / "cyphesis_cyphesis.sock";
 		logger->info("Running in Snap detected, setting local socket listener to {}.", mLocalSocketPath.string());
 	}
 
 	if (configService.itemExists("general", "socket")) {
 		auto setting = configService.getValue("general", "socket");
 		if (setting.is_string()) {
-			mLocalSocketPath = boost::filesystem::path(setting.as_string());
+			mLocalSocketPath = std::filesystem::path(setting.as_string());
 		}
 	}
 
-	auto directory = boost::filesystem::path(mLocalSocketPath).remove_filename().string();
+	auto directory = std::filesystem::path(mLocalSocketPath).remove_filename().string();
 
-	if (boost::filesystem::is_directory(directory)) {
+	if (std::filesystem::is_directory(directory)) {
 		try {
 			Ember::FileSystemObserver::getSingleton().add_directory(directory, [this](const Ember::FileSystemObserver::FileSystemEvent& event) {
 				if (event.ev.path == mLocalSocketPath) {

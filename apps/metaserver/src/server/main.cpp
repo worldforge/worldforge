@@ -33,7 +33,7 @@
 #include <signal.h>
 #include <cstdlib> /* getenv() because boost po env parsing sucks */
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/exception/all.hpp>
 #include <spdlog/spdlog.h>
 
@@ -99,8 +99,8 @@ int main(int argc, char** argv) {
 	const char* wfenv = std::getenv("WFHOME");
 	const char* home = std::getenv("HOME");
 	bool config_found = false;
-	boost::filesystem::path config_file_path;
-	boost::filesystem::path home_dot_dir;
+	std::filesystem::path config_file_path;
+	std::filesystem::path home_dot_dir;
 
 	/*
 	 * Create a 'special' directory
@@ -110,13 +110,13 @@ int main(int argc, char** argv) {
 		home_dot_dir = home;
 		home_dot_dir /= "/.metaserver-ng";
 
-		if (!boost::filesystem::exists(home_dot_dir)) {
+		if (!std::filesystem::exists(home_dot_dir)) {
 			/*
 			 * NB: this throws, may need to fix that later.
 			 * We don't care about the result though, either it made it or it
 			 * didn't.  Any process that depends on the directory will check for it.
 			 */
-			boost::filesystem::create_directory(home_dot_dir);
+			std::filesystem::create_directory(home_dot_dir);
 		}
 
 	}
@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
 		config_file_path /= "/.metaserver-ng.conf";
 		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
 
-		if (boost::filesystem::is_regular_file(config_file_path)) {
+		if (std::filesystem::is_regular_file(config_file_path)) {
 			std::cout << " Accepted.";
 			config_found = true;
 		}
@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
 		config_file_path /= "/etc/metaserver-ng.conf";
 		std::cout << "Searching configuration : " << config_file_path.string();
 
-		if (boost::filesystem::is_regular_file(config_file_path)) {
+		if (std::filesystem::is_regular_file(config_file_path)) {
 			std::cout << " Accepted.";
 			config_found = true;
 		}
@@ -163,13 +163,13 @@ int main(int argc, char** argv) {
 	 * Check in the $sysconfdir location (usually prefix/etc)
 	 * This would be the "system" install.
 	 */
-	if (!config_found && boost::filesystem::exists(DEFAULT_CONF)) {
+	if (!config_found && std::filesystem::exists(DEFAULT_CONF)) {
 		std::cout << "SYSTEM: " << DEFAULT_CONF << std::endl;
 
 		config_file_path = DEFAULT_CONF;
 		config_file_path /= "metaserver-ng.conf";
 		std::cout << "Searching configuration : " << config_file_path.string() << " ... ";
-		if (boost::filesystem::is_regular_file(config_file_path)) {
+		if (std::filesystem::is_regular_file(config_file_path)) {
 			std::cout << " Accepted.";
 			config_found = true;
 		}
@@ -182,7 +182,7 @@ int main(int argc, char** argv) {
 	if (!config_found) {
 		config_file_path = "metaserver-ng.conf";
 		std::cout << "Default configuration : " << config_file_path.string() << std::endl;
-		if (boost::filesystem::is_regular_file(config_file_path)) {
+		if (std::filesystem::is_regular_file(config_file_path)) {
 			std::cout << "Using CWD Path: " << config_file_path.string() << std::endl;
 		} else {
 			std::cout << "No configuration file found!  All critical options are required to be passed via the command-line";
@@ -244,7 +244,7 @@ int main(int argc, char** argv) {
 		 *	Create pid file
 		 */
 //		std::cout << "Checking server.pidfile ..." << std::endl;
-		boost::filesystem::path pid_file_path;
+		std::filesystem::path pid_file_path;
 		if (vm.count("server.pidfile")) {
 
 			/*
@@ -254,10 +254,10 @@ int main(int argc, char** argv) {
 			spdlog::info("Pidfile: {}", pid_file_path.string());
 			std::cout << "Pidfile: " << pid_file_path.string() << std::endl;
 
-			if (!boost::filesystem::is_directory(pid_file_path.parent_path().string())) {
+			if (!std::filesystem::is_directory(pid_file_path.parent_path().string())) {
 				spdlog::info("Creating Run Directory : {}", pid_file_path.parent_path().string());
 				std::cout << "Creating Run Directory : " << pid_file_path.parent_path().string() << std::endl;
-				bool pf = boost::filesystem::create_directory(pid_file_path.parent_path());
+				bool pf = std::filesystem::create_directory(pid_file_path.parent_path());
 				if (!pf)
 					throw std::runtime_error("Can not create run directory");
 			}
@@ -265,7 +265,7 @@ int main(int argc, char** argv) {
 			/*
 			 * Drop in pid
 			 */
-			if (boost::filesystem::is_regular_file(pid_file_path)) {
+			if (std::filesystem::is_regular_file(pid_file_path)) {
 				std::cout << "Pidfile Exists: " << pid_file_path.string() << std::endl;
 				spdlog::info("Pidfile Exists: {}", pid_file_path.string());
 
@@ -281,7 +281,7 @@ int main(int argc, char** argv) {
 				if (kill(pid, 0) == -1) {
 					std::cout << "Pidfile is stale, removing." << std::endl;
 					spdlog::info("Pidfile is stale, removing.");
-					boost::filesystem::remove(pid_file_path);
+					std::filesystem::remove(pid_file_path);
 				} else {
 					spdlog::info("Refusing to start!");
 					throw std::runtime_error("Pidfile exists and process is running, refusing to start");
@@ -317,7 +317,7 @@ int main(int argc, char** argv) {
 		 *
 		 * NOTE: must occur AFTER daemon
 		 */
-		if (!boost::filesystem::is_regular_file(pid_file_path)) {
+		if (!std::filesystem::is_regular_file(pid_file_path)) {
 			std::ofstream pidfile;
 			pidfile.open(pid_file_path.c_str());
 			pidfile.clear();

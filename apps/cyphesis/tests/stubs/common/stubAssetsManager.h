@@ -34,7 +34,7 @@
 
 #ifndef STUB_AssetsManager_observeFile
 //#define STUB_AssetsManager_observeFile
-  void AssetsManager::observeFile(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback)
+  void AssetsManager::observeFile(std::filesystem::path path, const std::function<void(const std::filesystem::path& path)>& callback)
   {
     
   }
@@ -42,7 +42,7 @@
 
 #ifndef STUB_AssetsManager_observeDirectory
 //#define STUB_AssetsManager_observeDirectory
-  void AssetsManager::observeDirectory(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback)
+  void AssetsManager::observeDirectory(std::filesystem::path path, const std::function<void(const std::filesystem::path& path)>& callback)
   {
     
   }

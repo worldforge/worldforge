@@ -41,7 +41,7 @@
 
 #include <Atlas/Objects/Anonymous.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include <iostream>
 #include <chrono>
@@ -283,12 +283,12 @@ void Ruleset::waitForRule(const std::string& rulename,
 	m_waitingRules.emplace(dependent, rule);
 }
 
-void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
+void Ruleset::getRulesFromFiles(std::filesystem::path directory,
 								RootDict& rules) {
 
-	if (boost::filesystem::is_directory(directory)) {
+	if (std::filesystem::is_directory(directory)) {
 
-		AssetsManager::instance().observeDirectory(directory, [&](const boost::filesystem::path& path) {
+		AssetsManager::instance().observeDirectory(directory, [&](const std::filesystem::path& path) {
 			m_changedRules.insert(path);
 
 			auto timer = std::make_shared<boost::asio::steady_timer>(m_io_context);
@@ -307,12 +307,12 @@ void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
 
 		});
 
-		boost::filesystem::recursive_directory_iterator dir(directory), end;
+		std::filesystem::recursive_directory_iterator dir(directory), end;
 		spdlog::info("Trying to load rules from directory '{}'", directory.string());
 
 		int count = 0;
 		while (dir != end) {
-			if (boost::filesystem::is_regular_file(dir->status())) {
+			if (std::filesystem::is_regular_file(dir->status())) {
 				auto filename = dir->path().native();
 				AtlasFileLoader f(Inheritance::instance().getFactories(), filename, rules);
 				if (!f.isOpen()) {
@@ -332,8 +332,8 @@ void Ruleset::getRulesFromFiles(boost::filesystem::path directory,
 }
 
 void Ruleset::loadRules(const std::string& ruleset) {
-	boost::filesystem::path shared_rules_directory = boost::filesystem::path(share_directory) / "cyphesis" / "rulesets/" / ruleset / "rules";
-	boost::filesystem::path var_rules_directory = boost::filesystem::path(var_directory) / "lib" / "cyphesis" / "rulesets" / ruleset / "rules";
+	std::filesystem::path shared_rules_directory = std::filesystem::path(share_directory) / "cyphesis" / "rulesets/" / ruleset / "rules";
+	std::filesystem::path var_rules_directory = std::filesystem::path(var_directory) / "lib" / "cyphesis" / "rulesets" / ruleset / "rules";
 
 	//Prefer rules from the "var" directory over the ones from the "etc" directory.
 	RootDict ruleTable;

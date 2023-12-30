@@ -34,7 +34,7 @@
 #include <Ogre.h>
 #include <wfmath/atlasconv.h>
 #include <wfmath/stream.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
@@ -184,17 +184,17 @@ std::string ModelDefinitionAtlasComposer::composeToFile(Model* model, const std:
 	if (model) {
 		try {
 
-			auto cleanedTypename = boost::filesystem::path(typeName).filename().stem();
-			auto cleanedDir = boost::filesystem::path(typeName).remove_filename();
+			auto cleanedTypename = std::filesystem::path(typeName).filename().stem();
+			auto cleanedDir = std::filesystem::path(typeName).remove_filename();
 
 			//make sure the directory exists
 			auto filename = ConfigService::getSingleton().getHomeDirectory(BaseDirType_DATA) / "typeexport" / cleanedDir / (cleanedTypename.string() + ".xml");
 			auto dir = filename;
 			dir.remove_filename();
 
-			if (!boost::filesystem::exists(dir)) {
+			if (!std::filesystem::exists(dir)) {
 				logger->info("Creating directory {}", dir.string());
-				boost::filesystem::create_directories(dir);
+				std::filesystem::create_directories(dir);
 			}
 
 

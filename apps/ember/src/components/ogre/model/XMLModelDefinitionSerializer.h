@@ -26,7 +26,7 @@
 #define XMLModelDefinitionSerializer_
 
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <optional>
 #include "components/ogre/EmberOgrePrerequisites.h"
 
@@ -46,7 +46,7 @@ public :
 
 	ModelDefinitionPtr parseScript(Ogre::DataStreamPtr& stream);
 
-	ModelDefinitionPtr parseScript(std::istream& stream, const boost::filesystem::path& path);
+	ModelDefinitionPtr parseScript(std::istream& stream, const std::filesystem::path& path);
 
 	/**
 	 * @brief Exports the model definition to a file.
@@ -55,7 +55,7 @@ public :
 	 * @param filename The name of the file to which the script will be written.
 	 * @return True if the script was successfully written.
 	 */
-	bool exportScript(const ModelDefinitionPtr& modelDef, const boost::filesystem::path& path);
+	bool exportScript(const ModelDefinitionPtr& modelDef, const std::filesystem::path& path);
 
 private:
 

@@ -9,7 +9,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/bimap.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 
@@ -82,9 +82,9 @@ public:
 
     void check_sub_directory(const std::string &dirname, bool add_sub_directory)
     {
-        boost::filesystem::directory_iterator end;
-        for (boost::filesystem::directory_iterator iter(dirname); iter != end; ++iter) {
-            if (boost::filesystem::is_directory(*iter)) {
+        std::filesystem::directory_iterator end;
+        for (std::filesystem::directory_iterator iter(dirname); iter != end; ++iter) {
+            if (std::filesystem::is_directory(*iter)) {
                 if (add_sub_directory) {
                     try {
                         add_directory((*iter).path().string());
@@ -192,7 +192,7 @@ private:
                         break;
                     }
                 }
-                pushback_event(dir_monitor_event(boost::filesystem::path(get_dirname(iev->wd)) / iev->name, type));
+                pushback_event(dir_monitor_event(std::filesystem::path(get_dirname(iev->wd)) / iev->name, type));
                 pending_read_buffer_.erase(0, sizeof(inotify_event) + iev->len);
             }
 

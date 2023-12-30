@@ -30,7 +30,7 @@
 #include <Atlas/Message/Element.h>
 
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <memory>
 
 namespace Eris {
@@ -162,7 +162,7 @@ private:
 
 	std::unique_ptr<NonConnectedState> mNonConnectedState;
 
-	boost::filesystem::path mLocalSocketPath;
+	std::filesystem::path mLocalSocketPath;
 
 };
 

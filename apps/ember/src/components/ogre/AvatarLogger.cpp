@@ -28,7 +28,7 @@
 #include "framework/TimeHelper.h"
 #include "domain/EntityTalk.h"
 #include <memory>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
@@ -45,8 +45,8 @@ AvatarLogger::AvatarLogger(EmberEntity& avatarEntity)
 		//make sure the directory exists
 
 
-		if (!boost::filesystem::exists(dir)) {
-			boost::filesystem::create_directories(dir);
+		if (!std::filesystem::exists(dir)) {
+			std::filesystem::create_directories(dir);
 		}
 		//perform setup of the stream
 		std::stringstream logFileSS;

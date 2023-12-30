@@ -16,7 +16,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <string>
@@ -74,8 +74,8 @@ public:
 
     void add_directory(implementation_type &impl, const std::string &dirname)
     {
-        boost::filesystem::path dir(boost::filesystem::canonical(dirname));
-        if (!boost::filesystem::is_directory(dir))
+        std::filesystem::path dir(std::filesystem::canonical(dirname));
+        if (!std::filesystem::is_directory(dir))
             throw std::invalid_argument("boost::asio::basic_dir_monitor_service::add_directory: " + dir.native() + " is not a valid directory entry");
 
         impl->add_directory(dir);
@@ -83,7 +83,7 @@ public:
 
     void remove_directory(implementation_type &impl, const std::string &dirname)
     {
-        boost::filesystem::path dir(boost::filesystem::canonical(dirname));
+        std::filesystem::path dir(std::filesystem::canonical(dirname));
         impl->remove_directory(dir);
     }
 

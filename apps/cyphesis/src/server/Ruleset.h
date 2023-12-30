@@ -25,7 +25,7 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 
@@ -73,7 +73,7 @@ protected:
 
 	RuleWaitList m_waitingRules;
 
-	std::set<boost::filesystem::path> m_changedRules;
+	std::set<std::filesystem::path> m_changedRules;
 
 	boost::asio::io_context& m_io_context;
 
@@ -93,7 +93,7 @@ protected:
 						const Atlas::Objects::Root& class_desc,
 						std::map<const TypeNode*, TypeNode::PropertiesUpdate>& changes);
 
-	void getRulesFromFiles(boost::filesystem::path directory,
+	void getRulesFromFiles(std::filesystem::path directory,
 						   std::map<std::string, Atlas::Objects::Root>&);
 
 	void waitForRule(const std::string& class_name,

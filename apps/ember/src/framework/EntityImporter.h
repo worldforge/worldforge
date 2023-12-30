@@ -23,7 +23,7 @@
 
 #include "EntityImporterBase.h"
 #include <Atlas/Objects/RootOperation.h>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 namespace Eris {
 class Account;
@@ -46,7 +46,7 @@ public:
 	 * @param directoryPath The path to the directory.
 	 * @return Information on any entity dumps found.
 	 */
-	static std::vector<ShortInfo> getInfoFromDirectory(const boost::filesystem::path& directoryPath);
+	static std::vector<ShortInfo> getInfoFromDirectory(const std::filesystem::path& directoryPath);
 
 protected:
 	Eris::Account& mAccount;

@@ -35,7 +35,7 @@ Torus Knot Software Ltd.
 #include <OgreArchive.h>
 #include <OgreArchiveFactory.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <regex>
 
 
@@ -50,7 +50,7 @@ namespace Ember::OgreView {
 class FileSystemArchive : public Ogre::Archive {
 protected:
 
-	boost::filesystem::path mBaseName;
+	std::filesystem::path mBaseName;
 
 	/** Utility method to retrieve all files in a directory matching pattern.
 	@param pattern File pattern
@@ -63,7 +63,7 @@ protected:
 	void findFiles(Ogre::String pattern, bool recursive, bool dirs,
 				   Ogre::StringVector* simpleList, Ogre::FileInfoList* detailList) const;
 
-	void findFiles(const boost::filesystem::path& directory, const std::unique_ptr<std::regex>& pattern, bool recursive, bool dirs,
+	void findFiles(const std::filesystem::path& directory, const std::unique_ptr<std::regex>& pattern, bool recursive, bool dirs,
 				   Ogre::StringVector* simpleList, Ogre::FileInfoList* detailList) const;
 
 public:

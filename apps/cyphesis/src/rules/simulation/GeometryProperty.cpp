@@ -38,7 +38,8 @@
 #include <BulletCollision/CollisionShapes/btCompoundShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem/fstream.hpp>
+#include <filesystem>
+#include <iostream>
 #include "rules/LocatedEntity.h"
 
 auto createBoxFn = [](const WFMath::AxisBox<3>& bbox, const WFMath::Vector<3>& size, btVector3& centerOfMassOffset, float)
@@ -57,10 +58,10 @@ void GeometryProperty::set(const Atlas::Message::Element& data) {
 		try {
 			if (boost::algorithm::ends_with(path, ".mesh")) {
 				auto fullpath = AssetsManager::instance().getAssetsPath() / path;
-				AssetsManager::instance().observeFile(boost::filesystem::path{fullpath}, [this, fullpath](const boost::filesystem::path& changedPath) {
+				AssetsManager::instance().observeFile(std::filesystem::path{fullpath}, [this, fullpath](const std::filesystem::path& changedPath) {
 
 					spdlog::debug("Reloading geometry from {}.", fullpath.string());
-					boost::filesystem::ifstream fileStream(boost::filesystem::path{fullpath});
+					std::ifstream fileStream(std::filesystem::path{fullpath});
 					if (fileStream) {
 						auto innerDeserializer = std::make_shared<OgreMeshDeserializer>(fileStream);
 						innerDeserializer->deserialize();
@@ -88,7 +89,7 @@ void GeometryProperty::set(const Atlas::Message::Element& data) {
 				});
 
 
-				boost::filesystem::ifstream fileStream(boost::filesystem::path{fullpath});
+				std::ifstream fileStream(std::filesystem::path{fullpath});
 				if (fileStream) {
 					deserializer.reset(new OgreMeshDeserializer(fileStream));
 					deserializer->deserialize();

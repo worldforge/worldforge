@@ -29,7 +29,7 @@
 #include <OgreConfigFile.h>
 #include <map>
 #include "framework/Session.h"
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <squall/core/Repository.h>
 
 namespace Ember::OgreView {
@@ -141,12 +141,12 @@ private:
 	 * @param onFailure What to do if we fail to find the directory.
 	 * @return True if the path was successfully added.
 	 */
-	bool addResourceDirectory(const boost::filesystem::path& path,
+	bool addResourceDirectory(const std::filesystem::path& path,
 							  const std::string& type,
 							  const std::string& section,
 							  OnFailure onFailure);
 
-	void observeDirectory(const boost::filesystem::path& path, std::string group);
+	void observeDirectory(const std::filesystem::path& path, std::string group);
 
 
 };

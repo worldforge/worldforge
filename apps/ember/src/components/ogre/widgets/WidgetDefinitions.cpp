@@ -116,7 +116,7 @@ void WidgetDefinitions::registerPluginWithName(GUIManager& guiManager, const std
 }
 
 
-void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const boost::filesystem::path& pluginPath) {
+void WidgetDefinitions::registerPlugin(GUIManager& guiManager, const std::filesystem::path& pluginPath) {
 #ifdef WF_USE_WIDGET_PLUGINS
 
 	try {

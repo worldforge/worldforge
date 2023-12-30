@@ -99,7 +99,7 @@ const varconf::sec_map& ServerSettings::getServerSettings(const ServerSettingsCr
 	return mConfig->getSection(getSectionForServerCredentials(credentials));
 }
 
-boost::filesystem::path ServerSettings::getFullConfigFilePath() const {
+std::filesystem::path ServerSettings::getFullConfigFilePath() const {
 	ConfigService& cfgService = ConfigService::getSingleton();
 	// fetch the configuration file
 	if (cfgService.hasItem("general", "serversettings")) {

@@ -29,6 +29,7 @@
 #include <set>
 #include <map>
 #include "WidgetPlugin.h"
+#include <filesystem>
 
 
 namespace Ember::OgreView {
@@ -64,7 +65,7 @@ public:
 	 * @param guiManager
 	 * @param pluginPath
 	 */
-	void registerPlugin(GUIManager& guiManager, const boost::filesystem::path& pluginPath);
+	void registerPlugin(GUIManager& guiManager, const std::filesystem::path& pluginPath);
 
 	/**
 	 * An entry for a loaded plugin.
@@ -80,7 +81,7 @@ public:
 		PluginEntry& operator=(PluginEntry&& rhs) = default;
 
 #ifdef WF_USE_WIDGET_PLUGINS
-		boost::filesystem::path path;
+		std::filesystem::path path;
 		WidgetPluginFunction pluginFn; //We need to hold on to this, since the dynamic library's lifetime is bound to it.
 #endif
 		WidgetPluginCallback pluginCallback; //A deregistering function
@@ -89,9 +90,9 @@ public:
 	static_assert(std::is_move_constructible<PluginEntry>::value, "PluginEntry must be move constructible.");
 
 private:
-	std::map<boost::filesystem::path, PluginEntry> mPlugins;
+	std::map<std::filesystem::path, PluginEntry> mPlugins;
 
-	std::set<boost::filesystem::path> mDirtyPluginPaths;
+	std::set<std::filesystem::path> mDirtyPluginPaths;
 
 };
 }

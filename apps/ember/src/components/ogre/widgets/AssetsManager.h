@@ -27,7 +27,7 @@
 #include "PMInjectorSignaler.h"
 
 #include <string>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 namespace CEGUI {
 
@@ -106,7 +106,7 @@ public:
 	 * @param filePath The path to export to, local on the file system.
 	 * @returns True if the mesh was exported successfully.
 	 */
-	bool exportMesh(const Ogre::MeshPtr& mesh, const boost::filesystem::path& filePath);
+	bool exportMesh(const Ogre::MeshPtr& mesh, const std::filesystem::path& filePath);
 
 	/**
 	 * Creates and exports a model from the mesh.

@@ -34,7 +34,7 @@
 
 
 #include <cassert>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <basedir.h>
 #include <sstream>
 
@@ -127,14 +127,14 @@ static const usage_data usage_options[] = {
 
 static int check_tmp_path(const std::string& dir) {
 	std::string tmp_directory = dir + "/tmp";
-	if (!boost::filesystem::exists(tmp_directory)) {
-		auto createResult = boost::filesystem::create_directories(tmp_directory);
+	if (!std::filesystem::exists(tmp_directory)) {
+		auto createResult = std::filesystem::create_directories(tmp_directory);
 		if (!createResult) {
 			return -1;
 		}
 		spdlog::info("Created tmp directory at {}", tmp_directory);
 	} else {
-		if (!boost::filesystem::is_directory(tmp_directory)) {
+		if (!std::filesystem::is_directory(tmp_directory)) {
 			return -1;
 		}
 		if (::access(tmp_directory.c_str(), W_OK) != 0) {
@@ -486,13 +486,13 @@ int loadConfig(int argc, char** argv, int usage) {
 	Options::instance()->check_config(test_cmdline, usage);
 
 	// See if the user has set the install directory on the command line
-	boost::filesystem::path homeConfigPath{};
+	std::filesystem::path homeConfigPath{};
 	const auto* configHome = xdgConfigHome(nullptr);
 
 	// Read in only the users settings, and the commandline settings.
 	if (configHome) {
-		homeConfigPath = boost::filesystem::path(configHome) / "cyphesis.vconf";
-		if (boost::filesystem::exists(homeConfigPath)) {
+		homeConfigPath = std::filesystem::path(configHome) / "cyphesis.vconf";
+		if (std::filesystem::exists(homeConfigPath)) {
 			spdlog::info("Reading settings from {}", homeConfigPath.string());
 			auto home_dir_config = global_conf->readFromFile(homeConfigPath.string());
 			if (!home_dir_config) {
@@ -555,7 +555,7 @@ int loadConfig(int argc, char** argv, int usage) {
 	}
 
 	//Home config settings should override global settings, so we'll read this file again.
-	if (!homeConfigPath.empty() && boost::filesystem::exists(homeConfigPath)) {
+	if (!homeConfigPath.empty() && std::filesystem::exists(homeConfigPath)) {
 		global_conf->readFromFile(homeConfigPath.string());
 	}
 
@@ -615,10 +615,10 @@ void updateUserConfiguration() {
 	// Write out any changes that have been overridden at user scope. It
 	// may be a good idea to do this at shutdown.
 	if (configHome != nullptr) {
-		boost::filesystem::path configHomePath(configHome);
+		std::filesystem::path configHomePath(configHome);
 		//Make sure directory exists.
 		create_directories(configHomePath);
-		global_conf->writeToFile((boost::filesystem::path(configHome) / "cyphesis.vconf").string(), varconf::USER);
+		global_conf->writeToFile((std::filesystem::path(configHome) / "cyphesis.vconf").string(), varconf::USER);
 	}
 
 }

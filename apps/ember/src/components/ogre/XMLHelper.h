@@ -26,7 +26,7 @@
 #include "EmberOgrePrerequisites.h"
 #include "tinyxml/tinyxml.h"
 #include <OgreDataStream.h>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 
 namespace Ember::OgreView {
@@ -59,7 +59,7 @@ public:
 	static bool Load(TiXmlDocument& xmlDoc, const Ogre::DataStreamPtr& stream);
 
 
-	static bool Load(TiXmlDocument& xmlDoc, std::istream& stream, const boost::filesystem::path& path);
+	static bool Load(TiXmlDocument& xmlDoc, std::istream& stream, const std::filesystem::path& path);
 
 	/**
 	 * @brief Utility method for filling an Ogre Vector3 with data from an xml element.

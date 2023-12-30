@@ -91,7 +91,7 @@
 #include <Atlas/Objects/RootEntity.h>
 
 #include <varconf/config.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 #include <memory>
 #include <thread>
@@ -525,7 +525,7 @@ int run() {
 
 
 		auto& ctx = *io_context;
-		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx, &assetsHandler, &serverRouting](const boost::filesystem::path& path) {
+		assets_manager.observeDirectory(assetsPath.string(), [assetsPath, &ctx, &assetsHandler, &serverRouting](const std::filesystem::path& path) {
 
 			spdlog::debug("Assets have changed; will regenerate Squall repository.");
 			auto promise = saf::promise<std::optional<Squall::Signature>>{ctx};

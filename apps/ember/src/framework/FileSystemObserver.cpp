@@ -46,7 +46,7 @@ void FileSystemObserver::observe() {
 			if (!ec && ev.type != boost::asio::dir_monitor_event::null && *marker) {
 				for (const auto& I: mCallBacks) {
 					if (boost::starts_with(ev.path.string(), I.first.string())) {
-						auto relative = boost::filesystem::relative(ev.path, I.first);
+						auto relative = std::filesystem::relative(ev.path, I.first);
 						FileSystemEvent event{
 								ev,
 								relative
@@ -62,14 +62,14 @@ void FileSystemObserver::observe() {
 	}
 }
 
-void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemObserver::FileSystemEvent&)> callback) {
+void FileSystemObserver::add_directory(const std::filesystem::path& dirname, std::function<void(const FileSystemObserver::FileSystemEvent&)> callback) {
 	if (mDirectoryMonitor) {
 		mCallBacks.insert(std::make_pair(dirname, std::move(callback)));
 		mDirectoryMonitor->add_directory(dirname.string());
 	}
 }
 
-void FileSystemObserver::remove_directory(const boost::filesystem::path& dirname) {
+void FileSystemObserver::remove_directory(const std::filesystem::path& dirname) {
 	if (mDirectoryMonitor) {
 		mCallBacks.erase(dirname);
 		try {

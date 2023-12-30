@@ -31,7 +31,7 @@
  */
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <istream>
 #include <boost/asio/placeholders.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -281,8 +281,8 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //		/*
 //		 * Check for the pidfile, shutdown if it's missing
 //		 */
-//		if ( !boost::filesystem::exists(m_pidFile) ||
-//			 !boost::filesystem::is_regular_file(m_pidFile) )
+//		if ( !std::filesystem::exists(m_pidFile) ||
+//			 !std::filesystem::is_regular_file(m_pidFile) )
 //		{
 //			m_isShutdown = true;
 //			throw std::runtime_error("Pidfile was removed.  Inititating shutdown");
@@ -297,7 +297,7 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //		Json::Value root;
 //		Json::FastWriter fw;
 //
-//		if( ! boost::filesystem::is_directory(m_scoreServer.parent_path().string()) )
+//		if( ! std::filesystem::is_directory(m_scoreServer.parent_path().string()) )
 //		{
 //			/*
 //			 * The parent directory of the specified score file does not exist
@@ -311,7 +311,7 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //			/*
 //			 * Directory is present, we're go for the clobber and fill
 //			 */
-//			boost::filesystem::remove(m_scoreServer);
+//			std::filesystem::remove(m_scoreServer);
 //			clubber.open(m_scoreServer.c_str());
 //			clubber.clear();
 //
@@ -347,7 +347,7 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //		/*
 //		 * Client Sessions
 //		 */
-//		if( ! boost::filesystem::is_directory(m_scoreClient.parent_path().string()) )
+//		if( ! std::filesystem::is_directory(m_scoreClient.parent_path().string()) )
 //		{
 //			/*
 //			 * The parent directory of the specified score file does not exist
@@ -361,7 +361,7 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //			/*
 //			 * Directory is present, we're go for the clobber and fill
 //			 */
-//			boost::filesystem::remove(m_scoreClient);
+//			std::filesystem::remove(m_scoreClient);
 //			clubber.open(m_scoreClient.c_str());
 //			clubber.clear();
 //
@@ -388,13 +388,13 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //		/*
 //		 * Stats Scoreboard
 //		 */
-//		if( ! boost::filesystem::is_directory(m_scoreStats.parent_path().string()) )
+//		if( ! std::filesystem::is_directory(m_scoreStats.parent_path().string()) )
 //		{
 //			spdlog::warn("Parent path of score file does not exist ({})", m_scoreStats.string());
 //		}
 //		else
 //		{
-//			boost::filesystem::remove(m_scoreStats);
+//			std::filesystem::remove(m_scoreStats);
 //			clubber.open(m_scoreStats.c_str());
 //			clubber.clear();
 //
@@ -411,14 +411,14 @@ MetaServer::score_timer(const boost::system::error_code& error) {
 //		/*
 //		 * Cache Scoreboard
 //		 */
-//		if( ! boost::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
+//		if( ! std::filesystem::is_directory(m_scoreCCache.parent_path().string()) )
 //		{
 //			spdlog::warn("Parent path of score file does not exist ({})",m_scoreCCache.string());
 //		}
 //		else
 //		{
 //			std::list<std::string> v;
-//			boost::filesystem::remove(m_scoreCCache);
+//			std::filesystem::remove(m_scoreCCache);
 //			clubber.open(m_scoreCCache.c_str());
 //			clubber.clear();
 //			v.clear();
@@ -1216,7 +1216,7 @@ MetaServer::registerConfig(boost::program_options::variables_map& vm) {
 		m_Logfile = vm["server.logfile"].as<std::string>();
 		std::cout << "Assigning m_Logfile : " << m_Logfile << std::endl;
 		/**
-		 * I tried to use boost::filesystem here, but it is so very stupid
+		 * I tried to use std::filesystem here, but it is so very stupid
 		 * that I have opted for the more brittle way, because at least it works.
 		 *
 		 * TODO: add ifdef WIN32 here if/when metserver needs to run on windows
@@ -1293,15 +1293,15 @@ MetaServer::initLogger() {
 		/*
 		 * Create the log directory if it does not exist
 		 */
-		boost::filesystem::path p = m_Logfile;
+		std::filesystem::path p = m_Logfile;
 		spdlog::info("Log File: {}", p.filename().string());
 		std::cout << "Log File: " << p.filename().string() << std::endl;
 		std::cout << "Log Directory Root Path: " << p.parent_path().string() << std::endl;
 
-		if (!boost::filesystem::is_directory(p.parent_path().string())) {
+		if (!std::filesystem::is_directory(p.parent_path().string())) {
 			spdlog::info("Creating Log Directory : {}", p.parent_path().string());
 			std::cout << "Creating Log Directory : " << p.parent_path().string() << std::endl;
-			boost::filesystem::create_directory(p.parent_path());
+			std::filesystem::create_directory(p.parent_path());
 		}
 
 		/*
@@ -1315,7 +1315,7 @@ MetaServer::initLogger() {
 	}
 //	else
 //	{
-//		boost::filesystem::path p = boost::filesystem::temp_directory_path();
+//		std::filesystem::path p = std::filesystem::temp_directory_path();
 //		p /= "/metaserver.log";
 //		google::SetLogDestination(google::INFO,p.c_str());
 //		spdlog::info("Temporary Logfile: {}" << p;

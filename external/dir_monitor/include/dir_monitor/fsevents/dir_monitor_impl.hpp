@@ -12,7 +12,7 @@
 //
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/unordered_set.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
@@ -40,7 +40,7 @@ public:
         stop_fsevents();
     }
 
-    void add_directory(boost::filesystem::path dirname)
+    void add_directory(std::filesystem::path dirname)
     {
         boost::unique_lock<boost::mutex> lock(dirs_mutex_);
         dirs_.insert(dirname.native());//@todo Store path in dictionary
@@ -48,7 +48,7 @@ public:
         start_fsevents();
     }
 
-    void remove_directory(boost::filesystem::path dirname)
+    void remove_directory(std::filesystem::path dirname)
     {
         boost::unique_lock<boost::mutex> lock(dirs_mutex_);
         dirs_.erase(dirname.native());
@@ -164,7 +164,7 @@ private:
 
         for (i = 0; i < numEvents; ++i)
         {
-            boost::filesystem::path dir(paths[i]);
+            std::filesystem::path dir(paths[i]);
             if (eventFlags[i] & kFSEventStreamEventFlagMustScanSubDirs) {
                 impl->pushback_event(dir_monitor_event(dir, dir_monitor_event::recursive_rescan));
             }
@@ -179,7 +179,7 @@ private:
             }
             if (eventFlags[i] & kFSEventStreamEventFlagItemRenamed)
             {
-                if (!boost::filesystem::exists(dir))
+                if (!std::filesystem::exists(dir))
                 {
                     impl->pushback_event(dir_monitor_event(dir, dir_monitor_event::renamed_old_name));
                 }

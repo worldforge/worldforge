@@ -16,7 +16,7 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/scoped_array.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <string>
@@ -80,7 +80,7 @@ public:
 
     void add_directory(implementation_type &impl, const std::string &dirname)
     {
-        if (!boost::filesystem::is_directory(dirname))
+        if (!std::filesystem::is_directory(dirname))
             throw std::invalid_argument("boost::asio::basic_dir_monitor_service::add_directory: " + dirname + " is not a valid directory entry");
 
         int wd = ::open(dirname.c_str(), O_EVTONLY);

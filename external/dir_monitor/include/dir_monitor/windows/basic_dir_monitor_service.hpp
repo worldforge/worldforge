@@ -10,7 +10,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind/bind.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <memory>
@@ -110,7 +110,7 @@ public:
 
     void add_directory(implementation_type &impl, const std::string &dirname)
     {
-        if (!boost::filesystem::is_directory(dirname))
+        if (!std::filesystem::is_directory(dirname))
             throw std::invalid_argument("boost::asio::basic_dir_monitor_service::add_directory: " + dirname + " is not a valid directory entry");
 
         HANDLE handle = CreateFileA(dirname.c_str(), FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
@@ -303,7 +303,7 @@ private:
                 case FILE_ACTION_RENAMED_OLD_NAME: type = dir_monitor_event::renamed_old_name; break;
                 case FILE_ACTION_RENAMED_NEW_NAME: type = dir_monitor_event::renamed_new_name; break;
                 }
-                impl->pushback_event(dir_monitor_event(boost::filesystem::path(ck_holder->dirname) / helper::to_utf8(fni->FileName, fni->FileNameLength / sizeof(WCHAR)), type));
+                impl->pushback_event(dir_monitor_event(std::filesystem::path(ck_holder->dirname) / helper::to_utf8(fni->FileName, fni->FileNameLength / sizeof(WCHAR)), type));
                 offset += fni->NextEntryOffset;
             } while (fni->NextEntryOffset);
 

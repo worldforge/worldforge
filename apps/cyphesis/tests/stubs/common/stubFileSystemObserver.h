@@ -25,7 +25,7 @@
 
 #ifndef STUB_FileSystemObserver_add_directory
 //#define STUB_FileSystemObserver_add_directory
-  void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback)
+  void FileSystemObserver::add_directory(const std::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback)
   {
     
   }
@@ -33,7 +33,7 @@
 
 #ifndef STUB_FileSystemObserver_remove_directory
 //#define STUB_FileSystemObserver_remove_directory
-  void FileSystemObserver::remove_directory(const boost::filesystem::path& dirname)
+  void FileSystemObserver::remove_directory(const std::filesystem::path& dirname)
   {
     
   }

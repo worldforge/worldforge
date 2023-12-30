@@ -27,7 +27,7 @@
 #include "LodDefinition.h"
 
 #include <string>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 
 namespace Ember::OgreView::Lod {
@@ -42,7 +42,7 @@ public:
 	 * @brief Ctor.
 	 * @param exportDirectory Specifies the directory, where the changed *.loddef files will be saved.
 	 */
-	explicit XMLLodDefinitionSerializer(boost::filesystem::path exportDirectory);
+	explicit XMLLodDefinitionSerializer(std::filesystem::path exportDirectory);
 
 	/**
 	 * @brief Reads the DataStream and configures the passed LodDefinition.
@@ -61,7 +61,7 @@ public:
 	bool exportScript(const LodDefinitionPtr& lodDef, const std::string& fileName) const;
 
 private:
-	const boost::filesystem::path mExportDirectory;
+	const std::filesystem::path mExportDirectory;
 };
 
 }

@@ -22,7 +22,7 @@
 
 #include "framework/Service.h"
 #include <varconf/variable.h>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <string>
 #include <memory>
 #include <map>
@@ -125,7 +125,7 @@ private:
 	 *
 	 * @returns The full path to the config file on the file system.
 	 */
-	boost::filesystem::path getFullConfigFilePath() const;
+	std::filesystem::path getFullConfigFilePath() const;
 
 	/**
 	 * @brief Reads any saved settings from disk into the config instance.

@@ -52,7 +52,7 @@ size_t FileResourceWrapper::getSize() {
 	return mBuffer.size();
 }
 
-FileResourceProvider::FileResourceProvider(boost::filesystem::path baseDirectory) :
+FileResourceProvider::FileResourceProvider(std::filesystem::path baseDirectory) :
 		mBaseDirectory(std::move(baseDirectory)) {
 }
 

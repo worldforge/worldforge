@@ -34,7 +34,7 @@
 
 #include <cassert>
 #include <basedir.h>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 static int install(int argc, char** argv) {
 	if (argc < 2) {
@@ -71,7 +71,7 @@ static int runCommand(int argc, char** argv) {
 int main(int argc, char** argv) {
 	const auto* configHome = xdgConfigHome(nullptr);
 
-	auto homeDirConfig = boost::filesystem::path(configHome) / "cyphesis.vconf";
+	auto homeDirConfig = std::filesystem::path(configHome) / "cyphesis.vconf";
 	auto config_instance = varconf::Config::inst();
 	config_instance->readFromFile(homeDirConfig.string());
 	int optindex = config_instance->getCmdline(argc, argv);

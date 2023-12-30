@@ -41,7 +41,7 @@
 #include <CEGUI/BasicImage.h>
 #include <CEGUI/ImageManager.h>
 #include <CEGUI/System.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <MeshLodGenerator/OgreLodWorkQueueInjectorListener.h>
 #include <MeshLodGenerator/OgreMeshLodGenerator.h>
 
@@ -169,12 +169,12 @@ std::string AssetsManager::resolveFilePathForMesh(const Ogre::MeshPtr& meshPtr) 
 	return "";
 }
 
-bool AssetsManager::exportMesh(const Ogre::MeshPtr& mesh, const boost::filesystem::path& filePath) {
+bool AssetsManager::exportMesh(const Ogre::MeshPtr& mesh, const std::filesystem::path& filePath) {
 	if (!filePath.empty()) {
 		Ogre::MeshSerializer serializer;
 		try {
-			if (!boost::filesystem::exists(filePath.parent_path())) {
-				boost::filesystem::create_directories(filePath.parent_path());
+			if (!std::filesystem::exists(filePath.parent_path())) {
+				std::filesystem::create_directories(filePath.parent_path());
 			}
 			serializer.exportMesh(mesh.get(), filePath.string());
 			logger->info("Exported mesh {}", filePath.string());

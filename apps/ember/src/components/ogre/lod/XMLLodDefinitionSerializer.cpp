@@ -26,7 +26,7 @@
 
 #include <OgreStringConverter.h>
 #include <OgreResourceGroupManager.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 
 namespace Ember::OgreView::Lod {
@@ -142,9 +142,9 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 
 	TiXmlDocument xmlDoc;
 
-	if (!boost::filesystem::exists(mExportDirectory)) {
+	if (!std::filesystem::exists(mExportDirectory)) {
 		logger->info("Creating directory {}", mExportDirectory.string());
-		boost::filesystem::create_directories(mExportDirectory);
+		std::filesystem::create_directories(mExportDirectory);
 	}
 
 	// <lod>...</lod>
@@ -231,7 +231,7 @@ bool XMLLodDefinitionSerializer::exportScript(const LodDefinitionPtr& lodDef, co
 	return xmlDoc.SaveFile((mExportDirectory / fileName).string());
 }
 
-XMLLodDefinitionSerializer::XMLLodDefinitionSerializer(boost::filesystem::path exportDirectory) :
+XMLLodDefinitionSerializer::XMLLodDefinitionSerializer(std::filesystem::path exportDirectory) :
 		mExportDirectory(std::move(exportDirectory)) {
 
 }

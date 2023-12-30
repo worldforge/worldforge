@@ -105,7 +105,7 @@ void parseScript(Ogre::ScriptLoader& scriptLoader, const std::filesystem::path& 
  * Refresh an updated model definition, either by just adding it if it doesn't already exists, or by updating it and reloading all instances.
  * @param fullPath The full path to the definition.
  */
-void refreshModelDefinition(const boost::filesystem::path& relativePath, const std::string& group) {
+void refreshModelDefinition(const std::filesystem::path& relativePath, const std::string& group) {
 	auto stream = Ogre::ResourceGroupManager::getSingleton().openResource(relativePath.generic_string(), group, nullptr, false);
 	if (stream) {
 		auto& modelDefMgr = Ember::OgreView::Model::ModelDefinitionManager::getSingleton();
@@ -262,11 +262,11 @@ bool OgreResourceLoader::addUserMedia(const std::string& path, const std::string
 	return addResourceDirectory(userMediaPath / path, type, section, OnFailure::Ignore);
 }
 
-bool OgreResourceLoader::addResourceDirectory(const boost::filesystem::path& path,
+bool OgreResourceLoader::addResourceDirectory(const std::filesystem::path& path,
 											  const std::string& type,
 											  const std::string& section,
 											  OnFailure onFailure) {
-	if (boost::filesystem::is_directory(path)) {
+	if (std::filesystem::is_directory(path)) {
 		logger->debug("Adding dir {}", path.string());
 		try {
 			Ogre::ResourceGroupManager::getSingleton().addResourceLocation(path.string(), type, section, true);
@@ -359,19 +359,19 @@ void OgreResourceLoader::preloadMedia() {
 	}
 }
 
-void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path, std::string group) {
+void OgreResourceLoader::observeDirectory(const std::filesystem::path& path, std::string group) {
 	try {
 		FileSystemObserver::getSingleton().add_directory(path, [group](const FileSystemObserver::FileSystemEvent& event) {
 			auto& ev = event.ev;
 			//Skip if it's not a file. This also means that we won't catch deletion of files. That's ok for now; but perhaps we need to revisit this.
-			if (!boost::filesystem::is_regular_file(ev.path)) {
+			if (!std::filesystem::is_regular_file(ev.path)) {
 				return;
 			}
 			logger->debug("Resource changed {} {}", ev.path.string(), ev.type_cstr());
 
 			if (ev.type == boost::asio::dir_monitor_event::modified) {
 				try {
-					if (boost::filesystem::file_size(ev.path) == 0) {
+					if (std::filesystem::file_size(ev.path) == 0) {
 						return;
 					}
 				} catch (...) {
@@ -380,7 +380,7 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path, s
 				}
 			}
 
-			auto startsWith = [](const boost::filesystem::path& root, boost::filesystem::path aPath) {
+			auto startsWith = [](const std::filesystem::path& root, std::filesystem::path aPath) {
 				while (!aPath.empty()) {
 					if (aPath == root) {
 						return true;
@@ -392,9 +392,9 @@ void OgreResourceLoader::observeDirectory(const boost::filesystem::path& path, s
 
 			auto locations = Ogre::ResourceGroupManager::getSingleton().listResourceLocations(group);
 			for (auto& location: *locations) {
-				boost::filesystem::path locationDirectory(location);
+				std::filesystem::path locationDirectory(location);
 				if (startsWith(locationDirectory, ev.path)) {
-					auto relative = boost::filesystem::relative(ev.path, locationDirectory);
+					auto relative = std::filesystem::relative(ev.path, locationDirectory);
 
 					processChangedOrNew({relative.string()}, group);
 					break;

@@ -32,7 +32,7 @@
 #endif
 
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #if !defined(__APPLE__) && !defined(_WIN32)
 
@@ -110,7 +110,7 @@ ConfigService::ConfigService(std::string prefix) :
 
 	//use this utility function for removing the file part
 	PathRemoveFileSpec ( cwd );
-	boost::filesystem::path baseDir( cwd );
+	std::filesystem::path baseDir( cwd );
 	mSharedDataDir = baseDir / ".." / "share" / "ember";
 	mEtcDir = baseDir / ".." / "etc" / "ember";
 	mPluginDir = baseDir / ".." / "lib" / "ember" / "widgets";
@@ -132,8 +132,8 @@ ConfigService::ConfigService(std::string prefix) :
 			mEtcDir = mPrefix + "/etc/ember/";
 		}
 		//Get the last directory from the libdir
-		auto libdirectory = *boost::filesystem::path(EMBER_LIBDIR).rbegin();
-		mPluginDir = boost::filesystem::path(mPrefix) / libdirectory / "ember" / "widgets";
+		auto libdirectory = *(--std::filesystem::path(EMBER_LIBDIR).end());
+		mPluginDir = std::filesystem::path(mPrefix) / libdirectory / "ember" / "widgets";
 	}
 	xdgInitHandle(&mBaseDirHandle);
 	logger->info("Setting config directory to '{}'", mEtcDir.string());
@@ -279,7 +279,7 @@ bool ConfigService::loadSavedConfig(const std::string& filename, const StringCon
 	return success;
 }
 
-bool ConfigService::saveConfig(const boost::filesystem::path& filename) {
+bool ConfigService::saveConfig(const std::filesystem::path& filename) {
 	//Go through all user config values and save those (as they were defined in the original user config file).
 	//Also save any instance values that aren't present in the user config if they differ from the global value.
 	varconf::Config exportConfig;
@@ -319,13 +319,13 @@ void ConfigService::configError(const char* error) {
 	logger->error(error);
 }
 
-boost::filesystem::path ConfigService::getHomeDirectory(BaseDirType baseDirType) const {
+std::filesystem::path ConfigService::getHomeDirectory(BaseDirType baseDirType) const {
 	//check if the home directory is set, and if so use the setting. If else, fall back to the default path.
 	if (!mHomeDir.empty()) {
 		return mHomeDir;
 	} else {
 #ifdef _WIN32
-		boost::filesystem::path finalPath;
+		std::filesystem::path finalPath;
 
 		//special folders in windows:
 		//http://msdn.microsoft.com/en-us/library/bb762494%28v=vs.85%29.aspx
@@ -339,29 +339,29 @@ boost::filesystem::path ConfigService::getHomeDirectory(BaseDirType baseDirType)
 		finalPath /= "\\Ember\\";
 		return finalPath;
 #elif defined(__APPLE__)
-		return boost::filesystem::path(getAppSupportDirPath()) / "Ember";
+		return std::filesystem::path(getAppSupportDirPath()) / "Ember";
 #else
-		boost::filesystem::path path;
+		std::filesystem::path path;
 
 		//Determine the directory type requested and ensure that it exists
 		switch (baseDirType) {
 			case BaseDirType_DATA: {
-				path = boost::filesystem::path(xdgDataHome(&mBaseDirHandle)) / "ember";
+				path = std::filesystem::path(xdgDataHome(&mBaseDirHandle)) / "ember";
 				break;
 			}
 			case BaseDirType_CONFIG:
-				path = boost::filesystem::path(xdgConfigHome(&mBaseDirHandle)) / "ember";
+				path = std::filesystem::path(xdgConfigHome(&mBaseDirHandle)) / "ember";
 				break;
 			case BaseDirType_CACHE:
-				path = boost::filesystem::path(xdgCacheHome(&mBaseDirHandle)) / "ember";
+				path = std::filesystem::path(xdgCacheHome(&mBaseDirHandle)) / "ember";
 				break;
 			case BaseDirType_RUNTIME:
-				path = boost::filesystem::path(xdgRuntimeDirectory(&mBaseDirHandle)) / "ember";
+				path = std::filesystem::path(xdgRuntimeDirectory(&mBaseDirHandle)) / "ember";
 				break;
 		}
 
-		if (!boost::filesystem::exists(path)) {
-			boost::filesystem::create_directories(path);
+		if (!std::filesystem::exists(path)) {
+			std::filesystem::create_directories(path);
 		}
 
 		return path;
@@ -369,7 +369,7 @@ boost::filesystem::path ConfigService::getHomeDirectory(BaseDirType baseDirType)
 	}
 }
 
-boost::filesystem::path ConfigService::getSharedDataDirectory() const {
+std::filesystem::path ConfigService::getSharedDataDirectory() const {
 	if (hasItem("paths", "sharedir")) {
 		std::string path = static_cast<std::string> ( getValue("paths", "sharedir")) + "/";
 		return path;
@@ -382,7 +382,7 @@ boost::filesystem::path ConfigService::getSharedDataDirectory() const {
 
 }
 
-boost::filesystem::path ConfigService::getSharedConfigDirectory() const {
+std::filesystem::path ConfigService::getSharedConfigDirectory() const {
 #ifdef __APPLE__
 	return getSharedDataDirectory() / "etc/ember/";
 #else
@@ -390,7 +390,7 @@ boost::filesystem::path ConfigService::getSharedConfigDirectory() const {
 #endif
 }
 
-boost::filesystem::path ConfigService::getEmberDataDirectory() const {
+std::filesystem::path ConfigService::getEmberDataDirectory() const {
 	if (hasItem("paths", "datadir")) {
 		return {static_cast<std::string> ( getValue("paths", "datadir"))};
 	}
@@ -405,11 +405,11 @@ boost::filesystem::path ConfigService::getEmberDataDirectory() const {
 }
 
 
-boost::filesystem::path ConfigService::getUserMediaDirectory() const {
+std::filesystem::path ConfigService::getUserMediaDirectory() const {
 	return getHomeDirectory(BaseDirType_DATA) / "user-media";
 }
 
-boost::filesystem::path ConfigService::getPluginDirectory() const {
+std::filesystem::path ConfigService::getPluginDirectory() const {
 	return mPluginDir;
 }
 

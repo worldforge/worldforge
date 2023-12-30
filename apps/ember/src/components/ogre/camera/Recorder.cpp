@@ -22,7 +22,7 @@
 #include "services/config/ConfigService.h"
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 namespace Ember::OgreView::Camera {
 
@@ -50,8 +50,8 @@ bool Recorder::frameStarted(const Ogre::FrameEvent& event) {
 		try {
 			//make sure the directory exists
 
-			if (!boost::filesystem::exists(dir)) {
-				boost::filesystem::create_directories(dir);
+			if (!std::filesystem::exists(dir)) {
+				std::filesystem::create_directories(dir);
 			}
 		} catch (const std::exception& ex) {
 			logger->error("Error when creating directory for screenshots: ", ex.what());

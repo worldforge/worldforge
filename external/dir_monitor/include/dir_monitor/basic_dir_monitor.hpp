@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/asio.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 
 namespace boost {
@@ -32,7 +32,7 @@ struct dir_monitor_event
     dir_monitor_event()
         : type(null) { }
 
-    dir_monitor_event(const boost::filesystem::path &p, event_type t)
+    dir_monitor_event(const std::filesystem::path &p, event_type t)
         : path(p), type(t) { }
 
     const char* type_cstr() const
@@ -48,7 +48,7 @@ struct dir_monitor_event
         }
     }
 
-    boost::filesystem::path path;
+    std::filesystem::path path;
     event_type type;
 };
 

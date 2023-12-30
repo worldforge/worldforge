@@ -38,7 +38,7 @@
 
 namespace Ember::OgreView::Model {
 
-ModelDefinitionManager::ModelDefinitionManager(boost::filesystem::path exportDirectory, Eris::EventService& eventService)
+ModelDefinitionManager::ModelDefinitionManager(std::filesystem::path exportDirectory, Eris::EventService& eventService)
 		: ShowModels("showmodels", this, "Show or hide models."),
 		  mShowModels(true),
 		  mExportDirectory(std::move(exportDirectory)) {

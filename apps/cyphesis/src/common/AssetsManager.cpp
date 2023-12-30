@@ -23,8 +23,8 @@
 #include "log.h"
 
 namespace {
-auto callback(std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>>& callbacks,
-			  std::map<boost::filesystem::path, std::list<std::function<void(const boost::filesystem::path& path)>>>& directoryCallbacks) {
+auto callback(std::map<std::filesystem::path, std::list<std::function<void(const std::filesystem::path& path)>>>& callbacks,
+			  std::map<std::filesystem::path, std::list<std::function<void(const std::filesystem::path& path)>>>& directoryCallbacks) {
 	auto observerCallback = [&](const FileSystemObserver::FileSystemEvent& event) {
 		auto I = callbacks.find(event.ev.path);
 		if (I != callbacks.end()) {
@@ -37,16 +37,16 @@ auto callback(std::map<boost::filesystem::path, std::list<std::function<void(con
 		for (auto& entry: directoryCallbacks) {
 
 			if (boost::starts_with(event.ev.path.string(), entry.first.string())) {
-				if (!boost::filesystem::is_directory(event.ev.path)) {
+				if (!std::filesystem::is_directory(event.ev.path)) {
 					for (auto& callback: entry.second) {
 						callback(event.ev.path);
 					}
 				} else {
 					//Handle new files and directories being added. It's trickier with stuff being removed though.
 					if (event.ev.type == boost::asio::dir_monitor_event::added) {
-						boost::filesystem::recursive_directory_iterator dir(event.ev.path), end{};
+						std::filesystem::recursive_directory_iterator dir(event.ev.path), end{};
 						while (dir != end) {
-							if (!boost::filesystem::is_directory(dir->status())) {
+							if (!std::filesystem::is_directory(dir->status())) {
 								for (auto& callback: entry.second) {
 									callback(dir->path());
 								}
@@ -68,10 +68,10 @@ AssetsManager::AssetsManager(std::unique_ptr<FileSystemObserver> file_system_obs
 	auto observerCallback = callback(m_callbacks, m_directoryCallbacks);
 
 	//TODO: implement for all asset paths
-	m_file_system_observer->add_directory(boost::filesystem::path(share_directory) / "cyphesis" / "scripts", observerCallback);
-	m_file_system_observer->add_directory(boost::filesystem::path(share_directory) / "cyphesis" / "rulesets", observerCallback);
+	m_file_system_observer->add_directory(std::filesystem::path(share_directory) / "cyphesis" / "scripts", observerCallback);
+	m_file_system_observer->add_directory(std::filesystem::path(share_directory) / "cyphesis" / "rulesets", observerCallback);
 
-	m_file_system_observer->add_directory(boost::filesystem::path(etc_directory) / "cyphesis", observerCallback);
+	m_file_system_observer->add_directory(std::filesystem::path(etc_directory) / "cyphesis", observerCallback);
 }
 
 AssetsManager::~AssetsManager() = default;
@@ -92,16 +92,16 @@ void AssetsManager::observeAssetsDirectory() {
 
 	if (!mAssetsPath.empty()) {
 		auto observerCallback = callback(m_callbacks, m_directoryCallbacks);
-		m_file_system_observer->add_directory(boost::filesystem::path(mAssetsPath), observerCallback);
+		m_file_system_observer->add_directory(std::filesystem::path(mAssetsPath), observerCallback);
 	}
 }
 
 
-void AssetsManager::observeFile(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback) {
+void AssetsManager::observeFile(std::filesystem::path path, const std::function<void(const std::filesystem::path& path)>& callback) {
 	m_callbacks[std::move(path)].push_back(callback);
 }
 
-void AssetsManager::observeDirectory(boost::filesystem::path path, const std::function<void(const boost::filesystem::path& path)>& callback) {
+void AssetsManager::observeDirectory(std::filesystem::path path, const std::function<void(const std::filesystem::path& path)>& callback) {
 	m_directoryCallbacks[std::move(path)].push_back(callback);
 }
 

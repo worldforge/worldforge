@@ -37,7 +37,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/deadline_timer.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include <set>
 
@@ -136,11 +136,11 @@ private:
 	std::string m_Logfile;
 	std::string m_PacketLogfile;
 	bool m_isShutdown;
-	boost::filesystem::path m_pidFile;
-	boost::filesystem::path m_scoreServer;
-	boost::filesystem::path m_scoreClient;
-	boost::filesystem::path m_scoreStats;
-	boost::filesystem::path m_scoreCCache;
+	std::filesystem::path m_pidFile;
+	std::filesystem::path m_scoreServer;
+	std::filesystem::path m_scoreClient;
+	std::filesystem::path m_scoreStats;
+	std::filesystem::path m_scoreCCache;
 	bool m_logPacketAllow;
 	bool m_logPacketDeny;
 	std::string m_Domain;

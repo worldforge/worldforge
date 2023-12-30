@@ -30,7 +30,7 @@
 #include <OgreRenderWindow.h>
 #include <OgreRoot.h>
 #include <OgreViewport.h>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 
 namespace Ember::OgreView {
@@ -118,8 +118,8 @@ std::string Screen::_takeScreenshot() {
 	try {
 		//make sure the directory exists
 
-		if (!boost::filesystem::exists(dir)) {
-			boost::filesystem::create_directories(dir);
+		if (!std::filesystem::exists(dir)) {
+			std::filesystem::create_directories(dir);
 		}
 	} catch (const std::exception& ex) {
 		logger->error("Error when creating directory for screenshots: {}", ex.what());

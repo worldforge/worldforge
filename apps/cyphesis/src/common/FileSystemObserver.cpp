@@ -64,7 +64,7 @@ void FileSystemObserver::observe() {
 	}
 }
 
-void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemObserver::FileSystemEvent&)> callback) {
+void FileSystemObserver::add_directory(const std::filesystem::path& dirname, std::function<void(const FileSystemObserver::FileSystemEvent&)> callback) {
 	if (mDirectoryMonitor) {
 		try {
 			mDirectoryMonitor->add_directory(dirname.string());
@@ -75,7 +75,7 @@ void FileSystemObserver::add_directory(const boost::filesystem::path& dirname, s
 	}
 }
 
-void FileSystemObserver::remove_directory(const boost::filesystem::path& dirname) {
+void FileSystemObserver::remove_directory(const std::filesystem::path& dirname) {
 	mCallBacks.erase(dirname);
 	if (mDirectoryMonitor) {
 		try {

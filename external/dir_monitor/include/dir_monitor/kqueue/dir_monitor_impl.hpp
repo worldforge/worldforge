@@ -34,7 +34,7 @@
 //
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/ptr_container/ptr_unordered_map.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
@@ -75,7 +75,7 @@ class dir_monitor_impl
         int handle_;
     };
 
-    typedef std::map<std::string, boost::filesystem::directory_entry> dir_entry_map;
+    typedef std::map<std::string, std::filesystem::directory_entry> dir_entry_map;
 
 public:
     dir_monitor_impl()
@@ -155,8 +155,8 @@ private:
     void scan(std::string const& dir, dir_entry_map& entries)
     {
         boost::system::error_code ec;
-        boost::filesystem::recursive_directory_iterator it(dir, ec);
-        boost::filesystem::recursive_directory_iterator end;
+        std::filesystem::recursive_directory_iterator it(dir, ec);
+        std::filesystem::recursive_directory_iterator end;
 
         if (ec)
         {
@@ -180,23 +180,23 @@ private:
             dir_entry_map::iterator ito = old_entries.find(itn->first);
             if (ito != old_entries.end())
             {
-                if (!boost::filesystem::equivalent(itn->second.path(), ito->second.path()) or
-                    boost::filesystem::last_write_time(itn->second.path()) != boost::filesystem::last_write_time(ito->second.path()) or
-                    (boost::filesystem::is_regular_file(itn->second.path()) and boost::filesystem::is_regular_file(ito->second.path()) and
-                    boost::filesystem::file_size(itn->second.path()) != boost::filesystem::file_size(ito->second.path())))
+                if (!std::filesystem::equivalent(itn->second.path(), ito->second.path()) or
+                    std::filesystem::last_write_time(itn->second.path()) != std::filesystem::last_write_time(ito->second.path()) or
+                    (std::filesystem::is_regular_file(itn->second.path()) and std::filesystem::is_regular_file(ito->second.path()) and
+                    std::filesystem::file_size(itn->second.path()) != std::filesystem::file_size(ito->second.path())))
                 {
-                    pushback_event(dir_monitor_event(boost::filesystem::path(dir) / itn->second.path().filename(), dir_monitor_event::modified));
+                    pushback_event(dir_monitor_event(std::filesystem::path(dir) / itn->second.path().filename(), dir_monitor_event::modified));
                 }
                 old_entries.erase(ito);
             }
             else
             {
-                pushback_event(dir_monitor_event(boost::filesystem::path(dir) / itn->second.path().filename(), dir_monitor_event::added));
+                pushback_event(dir_monitor_event(std::filesystem::path(dir) / itn->second.path().filename(), dir_monitor_event::added));
             }
         }
         for (dir_entry_map::iterator it = old_entries.begin(); it != old_entries.end(); ++it)
         {
-            pushback_event(dir_monitor_event(boost::filesystem::path(dir) / it->second.path().filename(), dir_monitor_event::removed));
+            pushback_event(dir_monitor_event(std::filesystem::path(dir) / it->second.path().filename(), dir_monitor_event::removed));
         }
     }
 

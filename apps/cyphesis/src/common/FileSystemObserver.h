@@ -22,7 +22,7 @@
 #include "dir_monitor/dir_monitor.hpp"
 
 #include <boost/asio/io_context.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <map>
 
 class FileSystemObserver {
@@ -39,7 +39,7 @@ public:
 		/**
 		 * The path relative to the watched directory.
 		 */
-		const boost::filesystem::path& relativePath;
+		const std::filesystem::path& relativePath;
 	};
 
 	explicit FileSystemObserver(boost::asio::io_context& ioService);
@@ -51,24 +51,24 @@ public:
 	 * @param dirname The path.
 	 * @param callback A callback, called whenever a change is detected.
 	 */
-	void add_directory(const boost::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback);
+	void add_directory(const std::filesystem::path& dirname, std::function<void(const FileSystemEvent&)> callback);
 
 	/**
 	 * Removes a previously watched directory.
 	 * @param dirname
 	 */
-	void remove_directory(const boost::filesystem::path& dirname);
+	void remove_directory(const std::filesystem::path& dirname);
 
 	void stop();
 
 private:
 	std::unique_ptr<boost::asio::dir_monitor> mDirectoryMonitor;
 
-	std::map<boost::filesystem::path, std::function<void(const FileSystemEvent&)>> mCallBacks;
+	std::map<std::filesystem::path, std::function<void(const FileSystemEvent&)>> mCallBacks;
 
 	boost::asio::io_context& m_ioService;
 
-	std::map<boost::filesystem::path, std::pair<std::chrono::steady_clock::time_point, boost::asio::dir_monitor_event>> m_changedPaths;
+	std::map<std::filesystem::path, std::pair<std::chrono::steady_clock::time_point, boost::asio::dir_monitor_event>> m_changedPaths;
 
 	void observe();
 

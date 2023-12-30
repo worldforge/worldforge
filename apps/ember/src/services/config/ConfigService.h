@@ -25,7 +25,7 @@
 #include "framework/Singleton.h"
 #include <varconf/varconf.h>
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 #if !defined(__APPLE__) && !defined(_WIN32)
 
@@ -69,21 +69,21 @@ private:
 	// Class Variables
 	//----------------------------------------------------------------------
 #ifdef _WIN32
-	boost::filesystem::path baseDir;
+	std::filesystem::path baseDir;
 #elif defined(__APPLE__)
 #else
 	//Marked "mutable" due to caching in the xdg-basedir lib.
 	mutable xdgHandle mBaseDirHandle;
 #endif
 
-	boost::filesystem::path mSharedDataDir;
-	boost::filesystem::path mEtcDir;
-	boost::filesystem::path mPluginDir;
+	std::filesystem::path mSharedDataDir;
+	std::filesystem::path mEtcDir;
+	std::filesystem::path mPluginDir;
 
 	/**
 	The home directory. If this is not set, the default one will be used. See getHomeDirectory(const BaseDirType baseDirType)
 	*/
-	boost::filesystem::path mHomeDir;
+	std::filesystem::path mHomeDir;
 
 	/**
 	 * @brief The prefix, i.e. the root directory where Ember is installed.
@@ -232,37 +232,37 @@ public:
 	 * @param filename of file to save to.
 	 * @param scopeMask we will only write out variables which have their scope in this mask
 	 */
-	bool saveConfig(const boost::filesystem::path& filename);
+	bool saveConfig(const std::filesystem::path& filename);
 
 
 	/**
 	* returns the path to the home directory, where all configuration is stored
 	*/
-	boost::filesystem::path getHomeDirectory(BaseDirType baseDirType) const;
+	std::filesystem::path getHomeDirectory(BaseDirType baseDirType) const;
 
 	/**
 	* returns the path to the shared data directory, where common media is
 	*/
-	boost::filesystem::path getSharedDataDirectory() const;
+	std::filesystem::path getSharedDataDirectory() const;
 
 	/**
 	* returns the path to the ember data directory, where ember media is
 	*/
-	boost::filesystem::path getEmberDataDirectory() const;
+	std::filesystem::path getEmberDataDirectory() const;
 
 	/**
 	 *    returns the path to the media directory specific to a user, containing media created by the user, which would normally be ~/.local/share/ember/user-media
 	 * @return
 	 */
-	boost::filesystem::path getUserMediaDirectory() const;
+	std::filesystem::path getUserMediaDirectory() const;
 
 	/**
 	 *    returns the path to the shared config directory where all the original configuration files are stored
 	 * @return
 	 */
-	boost::filesystem::path getSharedConfigDirectory() const;
+	std::filesystem::path getSharedConfigDirectory() const;
 
-	boost::filesystem::path getPluginDirectory() const;
+	std::filesystem::path getPluginDirectory() const;
 
 	/**
 	*	Emitted when a config item is changed.

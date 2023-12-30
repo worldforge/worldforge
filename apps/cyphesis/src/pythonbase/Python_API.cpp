@@ -36,7 +36,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/asio/steady_timer.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include <basedir.h>
 
@@ -190,7 +190,7 @@ sigc::signal<void()> python_reload_scripts;
 
 std::vector<std::string> python_directories;
 
-std::map<boost::filesystem::path, std::string> changedPaths;
+std::map<std::filesystem::path, std::string> changedPaths;
 
 namespace {
     void reloadChangedPaths()
@@ -221,12 +221,12 @@ void observe_python_directories(boost::asio::io_context& io_context, AssetsManag
 {
 
     for (auto& directory: python_directories) {
-        assetsManager.observeDirectory(directory, [=, &io_context](const boost::filesystem::path& path) {
+        assetsManager.observeDirectory(directory, [=, &io_context](const std::filesystem::path& path) {
             //Trim the ".py" extension
             if (boost::ends_with(path.string(), ".py")) {
                 auto relative = path.string().substr(directory.length() + 1);
                 relative = relative.substr(0, relative.size() - 3);
-                static char separator[] = {boost::filesystem::path::preferred_separator, 0};
+                static char separator[] = {std::filesystem::path::preferred_separator, 0};
                 auto package = boost::replace_all_copy(relative, separator, ".");
                 changedPaths[path] = package;
 
@@ -328,7 +328,7 @@ void shutdown_python_api()
 void run_user_scripts(const std::string& prefix)
 {
     xdgHandle baseDirHandle{};
-    boost::filesystem::path path;
+    std::filesystem::path path;
     if (xdgInitHandle(&baseDirHandle)) {
         auto dataHome = xdgDataHome(&baseDirHandle);
         if (dataHome) {
@@ -341,11 +341,11 @@ void run_user_scripts(const std::string& prefix)
         path /= "cyphesis";
         path /= (prefix + ".d");
         spdlog::info("Looking for extra python scripts in {}.", path.string());
-        if (boost::filesystem::is_directory(path)) {
-            boost::filesystem::recursive_directory_iterator dir(path), end{};
+        if (std::filesystem::is_directory(path)) {
+            std::filesystem::recursive_directory_iterator dir(path), end{};
 
             while (dir != end) {
-                if (boost::filesystem::is_regular_file(dir->status()) && dir->path().extension() == ".py") {
+                if (std::filesystem::is_regular_file(dir->status()) && dir->path().extension() == ".py") {
                     auto fileHandle = fopen(dir->path().c_str(), "r");
                     if (fileHandle) {
                         spdlog::info("Running script '{}'.", dir->path().c_str());
