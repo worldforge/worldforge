@@ -30,7 +30,7 @@ NumberRangeAdapter::NumberRangeAdapter(const ::Atlas::Message::Element& element,
 		try {
 			mMax = std::strtod(mWindows.MaxWindow.getText().c_str(), nullptr);
 		} catch (...) {
-			mMax = boost::none;
+			mMax = {};
 		}
 		mWindows.Randomize.setEnabled(mMax && mMin);
 	}));
@@ -38,7 +38,7 @@ NumberRangeAdapter::NumberRangeAdapter(const ::Atlas::Message::Element& element,
 		try {
 			mMin = std::strtod(mWindows.MinWindow.getText().c_str(), nullptr);
 		} catch (...) {
-			mMin = boost::none;
+			mMin = {};
 		}
 		mWindows.Randomize.setEnabled(mMax && mMin);
 	}));

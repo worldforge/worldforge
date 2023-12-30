@@ -29,7 +29,7 @@
 
 #include <set>
 #include <vector>
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace Ogre {
 class SubEntity;
@@ -46,7 +46,7 @@ class ModelDefinition;
 
 struct SubModelPartEntity {
 	Ogre::SubEntity* SubEntity;
-	boost::optional<SubEntityDefinition> Definition;
+	std::optional<SubEntityDefinition> Definition;
 	unsigned short subEntityIndex;
 };
 

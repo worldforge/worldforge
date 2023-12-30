@@ -26,7 +26,7 @@
 #include "../EmberOgrePrerequisites.h"
 #include "components/ogre/IWorldPickListener.h"
 #include <wfmath/quaternion.h>
-#include <boost/optional.hpp>
+#include <optional>
 
 
 
@@ -56,13 +56,13 @@ struct IMovementBridge {
 	 * @brief Sets a vertical offset.
 	 * @param offset An offset.
 	 */
-	virtual void setOffset(boost::optional<float> offset) = 0;
+	virtual void setOffset(std::optional<float> offset) = 0;
 
 	/**
 	 * Gets the current vertical offset.
 	 * @return
 	 */
-	virtual boost::optional<float> getOffset() const = 0;
+	virtual std::optional<float> getOffset() const = 0;
 
 	/**
 	 * @brief Gets the position of the entity, in world space.

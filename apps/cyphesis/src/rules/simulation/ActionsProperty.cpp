@@ -37,7 +37,7 @@ void ActionsProperty::remove(LocatedEntity& entity, const std::string& name) {
 }
 
 HandlerResult ActionsProperty::TickOperation(LocatedEntity& owner, const Operation& op, OpVector& res) {
-	m_tickOutstanding = boost::none;
+	m_tickOutstanding = {};
 
 	//Remove any actions that are at end_time.
 	auto now = op->getSeconds();
@@ -80,7 +80,7 @@ HandlerResult ActionsProperty::operation(LocatedEntity& entity, const Operation&
 }
 
 void ActionsProperty::enqueueTickOp(const LocatedEntity& entity, OpVector& res) {
-	boost::optional<double> nearestExpiry;
+	std::optional<double> nearestExpiry;
 	for (auto& entry: m_data) {
 		if (entry.second.endTime) {
 			if (!nearestExpiry || *nearestExpiry > *entry.second.endTime) {

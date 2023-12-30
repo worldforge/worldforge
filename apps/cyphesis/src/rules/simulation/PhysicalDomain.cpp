@@ -58,7 +58,7 @@
 #include <memory>
 #include <unordered_set>
 #include <chrono>
-#include <boost/optional.hpp>
+#include <optional>
 #include <algorithm>
 #include <fmt/format.h>
 
@@ -683,9 +683,9 @@ HandlerResult PhysicalDomain::tick_handler(LocatedEntity& entity, const Operatio
 }
 
 void PhysicalDomain::buildTerrainPages() {
-	boost::optional<float> friction;
-	boost::optional<float> rollingFriction;
-	boost::optional<float> spinningFriction;
+	std::optional<float> friction;
+	std::optional<float> rollingFriction;
+	std::optional<float> spinningFriction;
 
 	{
 		auto frictionProp = m_entity.getPropertyType<double>("friction");
@@ -2480,17 +2480,17 @@ void PhysicalDomain::processDirtyTerrainAreas() {
 	}
 	m_dirtyTerrainAreas.clear();
 
-	boost::optional<float> friction;
+	std::optional<float> friction;
 	auto frictionProp = m_entity.getPropertyType<double>("friction");
 	if (frictionProp) {
 		friction = (float) frictionProp->data();
 	}
-	boost::optional<float> frictionRolling;
+	std::optional<float> frictionRolling;
 	auto frictionRollingProp = m_entity.getPropertyType<double>("friction_roll");
 	if (frictionRollingProp) {
 		frictionRolling = (float) frictionRollingProp->data();
 	}
-	boost::optional<float> frictionSpinning;
+	std::optional<float> frictionSpinning;
 	auto frictionSpinningProp = m_entity.getPropertyType<double>("friction_spin");
 	if (frictionSpinningProp) {
 		frictionSpinning = (float) frictionSpinningProp->data();
@@ -3316,7 +3316,7 @@ std::vector<Domain::CollisionEntry> PhysicalDomain::queryCollision(const WFMath:
 	return result;
 }
 
-boost::optional<std::function<void()>> PhysicalDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+std::optional<std::function<void()>> PhysicalDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	auto reacherEntryI = m_entries.find(reacher.getIntId());
 	auto targetEntryI = m_entries.find(target.getIntId());
 	if (reacherEntryI != m_entries.end() && targetEntryI != m_entries.end()) {
@@ -3326,13 +3326,13 @@ boost::optional<std::function<void()>> PhysicalDomain::observeCloseness(LocatedE
 		reacherEntry->closenessObservations.insert(obs);
 		targetEntry->closenessObservations.insert(obs);
 		m_closenessObservations.emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
-		return boost::optional<std::function<void()>>([this, reacherEntry, targetEntry, obs]() {
+		return std::optional<std::function<void()>>([this, reacherEntry, targetEntry, obs]() {
 			reacherEntry->closenessObservations.erase(obs);
 			targetEntry->closenessObservations.erase(obs);
 			m_closenessObservations.erase(obs);
 		});
 	}
-	return boost::none;
+	return {};
 }
 
 void PhysicalDomain::removed() {

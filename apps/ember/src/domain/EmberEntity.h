@@ -46,12 +46,12 @@ class EntityTalk;
 struct ActionEntry {
 	ActionEntry(std::string actionName_,
 				double startTime_,
-				boost::optional<double> endTime_)
+				std::optional<double> endTime_)
 			: actionName(std::move(actionName_)), startTime(startTime_), endTime(endTime_) {}
 
 	std::string actionName;
 	double startTime;
-	boost::optional<double> endTime;
+	std::optional<double> endTime;
 };
 
 

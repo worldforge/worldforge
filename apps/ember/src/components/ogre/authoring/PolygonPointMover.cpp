@@ -196,12 +196,12 @@ void PolygonPointMover::switchToDeleteMode() {
 	mPolygon.updateRender();
 }
 
-void PolygonPointMover::setOffset(boost::optional<float>) {
+void PolygonPointMover::setOffset(std::optional<float>) {
 
 }
 
-boost::optional<float> PolygonPointMover::getOffset() const {
-	return boost::none;
+std::optional<float> PolygonPointMover::getOffset() const {
+	return {};
 }
 
 void PolygonPointMover::processPickResults(const std::vector<PickResult>& results) {

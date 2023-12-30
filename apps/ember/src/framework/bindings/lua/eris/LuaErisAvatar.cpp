@@ -41,7 +41,7 @@ void registerLua<Avatar>(sol::table& space) {
 					const WFMath::Quaternion& orientation = WFMath::Quaternion(),
 					float offset = 0,
 					int amount = 1) {
-		boost::optional<float> offsetOptional;
+		std::optional<float> offsetOptional;
 		if (offset != 0) {
 			offsetOptional = offset;
 		}

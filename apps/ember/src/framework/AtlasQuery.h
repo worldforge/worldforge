@@ -59,7 +59,7 @@ public:
 	static R extract(const Atlas::Message::MapType& map, const std::string& name, const std::function<R(const Atlas::Message::MapType&)>& callback);
 
 	template<typename R>
-	static boost::optional<R> extract(const Atlas::Message::Element& element, const std::string& name);
+	static std::optional<R> extract(const Atlas::Message::Element& element, const std::string& name);
 
 	/**
 	 * Checks if the supplied element is of the specified type.
@@ -209,7 +209,7 @@ inline Atlas::Message::IntType AtlasQuery::elementValue(const Atlas::Message::El
 }
 
 template<typename R>
-inline boost::optional<R> AtlasQuery::extract(const Atlas::Message::Element& element, const std::string& name) {
+inline std::optional<R> AtlasQuery::extract(const Atlas::Message::Element& element, const std::string& name) {
 	if (element.isMap()) {
 		auto I = element.Map().find(name);
 		if (I != element.Map().end()) {

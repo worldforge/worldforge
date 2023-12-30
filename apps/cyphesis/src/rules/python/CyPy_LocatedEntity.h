@@ -20,7 +20,7 @@
 #define CYPHESIS_CYPY_LOCATEDENTITY_H
 
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "rules/LocatedEntity.h"
 #include "pythonbase/WrapperBase.h"
 

@@ -16,7 +16,7 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vector>
 
@@ -111,7 +111,7 @@ public:
 			   const Entity* container,
 			   const WFMath::Point<3>& pos = WFMath::Point<3>(),
 			   const WFMath::Quaternion& orientation = WFMath::Quaternion(),
-			   boost::optional<float> offset = boost::none,
+			   std::optional<float> offset = {},
 			   int amount = 1);
 
 

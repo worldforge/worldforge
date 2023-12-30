@@ -36,7 +36,6 @@
 #include <OgreManualObject.h>
 
 
-
 namespace Ember::OgreView::Authoring {
 
 SnapListener* EntityMoverBase::msSnapListener(nullptr);
@@ -109,7 +108,7 @@ void EntityMoverBase::setPosition(const WFMath::Point<3>& position) {
 		}
 
 		if (mOffset) {
-			finalPosition.y() += mOffset.get();
+			finalPosition.y() += *mOffset;
 		}
 
 		//We need to offset into local space.
@@ -180,26 +179,26 @@ void EntityMoverBase::snapListener_SnappingChanged(bool snapTo) {
 	setSnapToEnabled(snapTo);
 }
 
-void EntityMoverBase::setOffset(boost::optional<float> offset) {
+void EntityMoverBase::setOffset(std::optional<float> offset) {
 	auto existingOffset = mOffset;
 	auto position = getPosition();
 	mOffset = offset;
 	if (existingOffset && position.isValid()) {
-		position.y() -= existingOffset.get();
+		position.y() -= *existingOffset;
 	}
 	setPosition(position);
 
 	mOffsetMarker->clear();
-	if (offset && offset.get() > 0) {
+	if (offset && (*offset) > 0) {
 		mOffsetMarker->begin("BaseWhite", Ogre::RenderOperation::OT_LINE_LIST);
 		mOffsetMarker->position(Ogre::Vector3::ZERO);
-		mOffsetMarker->position(0, -offset.get(), 0);
+		mOffsetMarker->position(0, -(*offset), 0);
 		mOffsetMarker->end();
 	}
 
 }
 
-boost::optional<float> EntityMoverBase::getOffset() const {
+std::optional<float> EntityMoverBase::getOffset() const {
 	return mOffset;
 }
 

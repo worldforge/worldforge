@@ -29,7 +29,7 @@
 
 #include <set>
 #include <memory>
-#include <boost/optional.hpp>
+#include <optional>
 
 namespace Mercator {
 class Terrain;
@@ -77,13 +77,13 @@ public:
 
 	bool getHeight(LocatedEntity& entity, float x, float z, float&) const;
 
-	boost::optional<int> getSurface(LocatedEntity& entity, float x, float z) const;
+	std::optional<int> getSurface(LocatedEntity& entity, float x, float z) const;
 
 	/// \brief Find the mods at a given location
 	///
 	/// @param pos the x,y coordinates of a point on the terrain
 	/// @param mods a reference to the list to be returned
-	boost::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) const;
+	std::optional<std::vector<LocatedEntity*>> findMods(LocatedEntity& entity, float x, float z) const;
 
 	Mercator::Terrain& getData(const LocatedEntity& entity);
 

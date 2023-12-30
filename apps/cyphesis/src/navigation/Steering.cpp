@@ -316,13 +316,13 @@ WFMath::Vector<3> Steering::directionTo(double currentTimestamp, const EntityLoc
     return (resolvedDestination.position - currentEntityPos);
 }
 
-boost::optional<double> Steering::distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
+std::optional<double> Steering::distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
 {
     auto currentEntityPos = getCurrentAvatarPosition(currentTimestamp);
     auto resolvedDestination = resolvePosition(currentTimestamp, location);
 
     if (!currentEntityPos.isValid() || !resolvedDestination.position.isValid()) {
-        return boost::none;
+        return {};
     }
 
     auto distance = WFMath::Distance(WFMath::Point<2>(currentEntityPos.x(), currentEntityPos.z()), WFMath::Point<2>(resolvedDestination.position.x(), resolvedDestination.position.z()));

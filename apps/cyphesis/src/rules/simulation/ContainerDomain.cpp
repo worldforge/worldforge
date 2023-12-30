@@ -150,7 +150,7 @@ std::vector<Domain::CollisionEntry> ContainerDomain::queryCollision(const WFMath
 	return entries;
 }
 
-boost::optional<std::function<void()>> ContainerDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+std::optional<std::function<void()>> ContainerDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	if (m_entity.m_contains && hasObserverRegistered(reacher)) {
 		auto observerI = m_reachingEntities.find(reacher.getId());
 		if (observerI != m_reachingEntities.end()) {
@@ -162,7 +162,7 @@ boost::optional<std::function<void()>> ContainerDomain::observeCloseness(Located
 				observerI->second.closenessObservations.insert(obs);
 //                targetEntry->closenessObservations.insert(obs);
 				m_closenessObservations.emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
-				return boost::optional<std::function<void()>>([this, obs]() {
+				return std::optional<std::function<void()>>([this, obs]() {
 					auto J = m_closenessObservations.find(obs);
 					if (J != m_closenessObservations.end()) {
 						auto reacherI = m_reachingEntities.find(J->second->reacherEntityId);
@@ -180,7 +180,7 @@ boost::optional<std::function<void()>> ContainerDomain::observeCloseness(Located
 		}
 
 	}
-	return boost::none;
+	return {};
 }
 
 void ContainerDomain::setObservers(std::vector<std::string> observerIds) {

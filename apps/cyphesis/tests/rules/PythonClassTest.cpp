@@ -68,7 +68,7 @@ class TestPythonClass : public PythonClass
         Py::Module& access_module()
         { return m_module; }
 
-        boost::optional<Py::Callable>& access_class()
+        std::optional<Py::Callable>& access_class()
         { return m_class; }
 };
 

@@ -27,7 +27,8 @@
 #include <string>
 #include <list>
 #include <set>
-#include <boost/optional.hpp>
+#include <optional>
+#include <functional>
 
 namespace WFMath {
 template<int>
@@ -186,7 +187,7 @@ public:
 		return std::vector<CollisionEntry>();
 	}
 
-	virtual boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) = 0;
+	virtual std::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) = 0;
 
 	/**
 	 * Called when the domain is removed from an entity.

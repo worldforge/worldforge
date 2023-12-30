@@ -82,9 +82,9 @@
 
 #ifndef STUB_InventoryDomain_observeCloseness
 //#define STUB_InventoryDomain_observeCloseness
-  boost::optional<std::function<()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback)
+  std::optional<std::function<()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback)
   {
-    return *static_cast<boost::optional<std::function<()>>*>(nullptr);
+    return *static_cast<std::optional<std::function<()>>*>(nullptr);
   }
 #endif //STUB_InventoryDomain_observeCloseness
 

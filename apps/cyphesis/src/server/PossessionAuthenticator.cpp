@@ -79,13 +79,13 @@ void PossessionAuthenticator::removePossession(PendingPossessionsMap::iterator I
     m_possessions.erase(I);
 }
 
-boost::optional<std::string> PossessionAuthenticator::getPossessionKey(const std::string& entity_id)
+std::optional<std::string> PossessionAuthenticator::getPossessionKey(const std::string& entity_id)
 {
     auto result = m_possessions.find(entity_id);
     if (result != m_possessions.end()) {
-        return boost::optional<std::string>(result->second->getPossessKey());
+        return std::optional<std::string>(result->second->getPossessKey());
     }
-    return boost::optional<std::string>();
+    return std::optional<std::string>();
 }
 
 

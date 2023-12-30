@@ -131,9 +131,9 @@
 
 #ifndef STUB_PhysicalDomain_observeCloseness
 //#define STUB_PhysicalDomain_observeCloseness
-  boost::optional<std::function<()>> PhysicalDomain::observeCloseness(LocatedEntity& entity1, LocatedEntity& entity2, double reach, std::function<void()> callback)
+  std::optional<std::function<()>> PhysicalDomain::observeCloseness(LocatedEntity& entity1, LocatedEntity& entity2, double reach, std::function<void()> callback)
   {
-    return *static_cast<boost::optional<std::function<()>>*>(nullptr);
+    return *static_cast<std::optional<std::function<()>>*>(nullptr);
   }
 #endif //STUB_PhysicalDomain_observeCloseness
 

@@ -111,7 +111,7 @@ private:
 
 	std::function<void()> mCreateNewEntityFn;
 
-	boost::optional<std::string> mFixedParentId;
+	std::optional<std::string> mFixedParentId;
 
 	void buildWidget();
 

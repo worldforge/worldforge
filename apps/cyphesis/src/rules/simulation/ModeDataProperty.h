@@ -21,7 +21,7 @@
 
 #include <boost/variant.hpp>
 #include <modules/WeakEntityRef.h>
-#include <boost/optional.hpp>
+#include <optional>
 #include "common/Property.h"
 #include "ModeProperty.h"
 
@@ -45,12 +45,12 @@ public:
 		/**
 		 * The entity on to which this entity is attached.
 		 */
-		boost::optional<long> entityId;
+		std::optional<long> entityId;
 
 		/**
 		 * An optional attachment.
 		 */
-		boost::optional<std::string> attachment;
+		std::optional<std::string> attachment;
 
 		/**
 		 * Returns true if either "entity" or "attachment" is set.

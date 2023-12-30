@@ -295,11 +295,11 @@ Point3D relativePos(const Location& self, const Location& other) {
 	return pos;
 }
 
-boost::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other) {
+std::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other) {
 	Point3D dist;
 	distanceToAncestor(self, other, dist);
 	if (!dist.isValid()) {
-		return boost::none;
+		return {};
 	}
 	return sqrMag(dist);
 }
@@ -314,11 +314,11 @@ WFMath::CoordType squareDistanceWithAncestor(const Location& self, const Locatio
 }
 
 
-boost::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other) {
+std::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other) {
 	Point3D dist;
 	distanceToAncestor(self, other, dist);
 	if (!dist.isValid()) {
-		return boost::none;
+		return {};
 	}
 	dist.y() = 0.f;
 	return sqrMag(dist);

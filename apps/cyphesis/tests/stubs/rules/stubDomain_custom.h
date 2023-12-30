@@ -10,8 +10,8 @@ Domain::Domain(LocatedEntity& entity)
 
 #ifndef STUB_Domain_observeCloseness
 #define STUB_Domain_observeCloseness
-boost::optional<std::function<void()>> Domain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback)
+std::optional<std::function<void()>> Domain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback)
 {
-    return boost::none;
+    return {};
 }
 #endif //STUB_Domain_observeCloseness

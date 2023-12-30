@@ -29,7 +29,7 @@
 
 #include <cassert>
 #include <boost/noncopyable.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 #include "modules/ReferenceCounted.h"
 
 class LocatedEntity;
@@ -83,9 +83,9 @@ public:
 
 	static std::function<Py::Object(const std::map<std::string, std::vector<UsageParameter::UsageArg>>& args)> argsCreator;
 
-	boost::optional<double> m_duration;
+	std::optional<double> m_duration;
 
-	boost::optional<double> m_tick_interval;
+	std::optional<double> m_tick_interval;
 
 	UsageInstance m_usageInstance;
 

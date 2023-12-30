@@ -21,7 +21,7 @@
 
 #include "common/Property.h"
 #include "modules/Ref.h"
-#include <boost/optional.hpp>
+#include <optional>
 
 class ActionsProperty : public PropertyBase {
 public:
@@ -32,7 +32,7 @@ public:
 
 	struct Action {
 		double startTime;
-		boost::optional<double> endTime;
+		std::optional<double> endTime;
 	};
 
 	ActionsProperty();
@@ -59,7 +59,7 @@ protected:
 
 	std::map<std::string, Action> m_data;
 
-	boost::optional<double> m_tickOutstanding;
+	std::optional<double> m_tickOutstanding;
 
 	ActionsProperty(const ActionsProperty& rhs) = default;
 

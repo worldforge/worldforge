@@ -20,7 +20,7 @@
 #define AGENTCREATIONTASK_H_
 
 #include "common/ClientTask.h"
-#include <boost/optional.hpp>
+#include <optional>
 
 /**
  * A client task for creating a new agent in the game world.
@@ -46,9 +46,9 @@ public:
 	/// \brief Handle an operation from the server
 	void operation(const Operation&, OpVector&) override;
 
-	boost::optional<std::string> m_agent_id;
-	boost::optional<std::string> m_account_name;
-	boost::optional<std::string> m_mind_id;
+	std::optional<std::string> m_agent_id;
+	std::optional<std::string> m_account_name;
+	std::optional<std::string> m_mind_id;
 
 protected:
 

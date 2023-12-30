@@ -84,9 +84,9 @@ public:
 
 	const WFMath::Quaternion& getOrientation() const override;
 
-	void setOffset(boost::optional<float> offset) override;
+	void setOffset(std::optional<float> offset) override;
 
-	boost::optional<float> getOffset() const override;
+	std::optional<float> getOffset() const override;
 
 	const WFMath::Point<3>& getPosition() const override;
 

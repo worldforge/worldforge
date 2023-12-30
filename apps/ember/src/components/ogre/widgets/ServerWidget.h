@@ -38,7 +38,7 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Message/Element.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <map>
 #include <vector>
@@ -93,7 +93,7 @@ private:
 	CEGUI::PushButton* mCreateChar;
 	CEGUI::PushButton* mUseCreator;
 
-	boost::optional<AvatarTransferInfo> mAvatarTransferInfo;
+	std::optional<AvatarTransferInfo> mAvatarTransferInfo;
 
 	/**
 	 * @brief Keeps track of the character ids of the characters in the mCharacterList listbox.

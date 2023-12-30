@@ -54,8 +54,8 @@ public:
 
 	}
 
-	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override {
-		return boost::none;
+	std::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override {
+		return {};
 	}
 
 

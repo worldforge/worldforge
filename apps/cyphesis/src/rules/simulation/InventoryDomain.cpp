@@ -158,11 +158,11 @@ std::vector<Domain::CollisionEntry> InventoryDomain::queryCollision(const WFMath
 	return entries;
 }
 
-boost::optional<std::function<void()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+std::optional<std::function<void()>> InventoryDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
 	if (&reacher == &m_entity) {
 		auto obs = new ClosenessObserverEntry{target, callback};
 		m_closenessObservations[target.getId()].emplace(obs, std::unique_ptr<ClosenessObserverEntry>(obs));
-		return boost::optional<std::function<void()>>([this, &target, obs]() {
+		return std::optional<std::function<void()>>([this, &target, obs]() {
 			auto I = m_closenessObservations.find(target.getId());
 			if (I != m_closenessObservations.end()) {
 				auto J = I->second.find(obs);
@@ -175,5 +175,5 @@ boost::optional<std::function<void()>> InventoryDomain::observeCloseness(Located
 			}
 		});
 	}
-	return boost::none;
+	return {};
 }

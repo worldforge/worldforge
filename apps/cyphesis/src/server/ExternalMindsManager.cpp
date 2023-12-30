@@ -127,7 +127,7 @@ int ExternalMindsManager::requestPossessionFromRegisteredClients(const std::stri
 {
     if (!m_connections.empty()) {
         auto result = m_possessionAuthenticator.getPossessionKey(entity_id);
-        if (result.is_initialized()) {
+        if (result) {
             //Use the last one registered.
             //TODO: implement a better way to select the connection to use. Should we rotate the connections?
             //Or do some kind of selection?

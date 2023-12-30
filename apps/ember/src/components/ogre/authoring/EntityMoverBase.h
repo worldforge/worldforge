@@ -31,7 +31,7 @@
 #include <memory>
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
-#include <boost/optional.hpp>
+#include <optional>
 #include <Eris/EntityRef.h>
 
 namespace Ogre {
@@ -132,9 +132,9 @@ public:
 
 	const WFMath::Quaternion& getOrientation() const override;
 
-	void setOffset(boost::optional<float> offset) override;
+	void setOffset(std::optional<float> offset) override;
 
-	boost::optional<float> getOffset() const override;
+	std::optional<float> getOffset() const override;
 
 	const WFMath::Point<3>& getPosition() const override;
 
@@ -176,7 +176,7 @@ protected:
 	/**
 	 * A vertical offset.
 	 */
-	boost::optional<float> mOffset;
+	std::optional<float> mOffset;
 
 	/**
 	 * @brief The scene manager in which to operate.

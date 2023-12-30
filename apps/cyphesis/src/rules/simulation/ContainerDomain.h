@@ -68,7 +68,7 @@ public:
 
 	std::vector<CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
 
-	boost::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
+	std::optional<std::function<void()>> observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) override;
 
 
 	LocatedEntity& getEntity() {

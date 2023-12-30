@@ -242,7 +242,7 @@ bool Model::createModelAssets() {
 							//if no subentities are defined, add all subentities
 							size_t numSubEntities = entity->getNumSubEntities();
 							for (size_t i = 0; i < numSubEntities; ++i) {
-								part.addSubEntity({entity->getSubEntity(i), boost::none, (unsigned short) i});
+								part.addSubEntity({entity->getSubEntity(i), {}, (unsigned short) i});
 							}
 						}
 						if (!partDef.group.empty()) {
@@ -264,7 +264,7 @@ bool Model::createModelAssets() {
 					for (size_t i = 0; i < entity->getNumSubEntities(); ++i) {
 
 						Ogre::SubEntity* subentity = entity->getSubEntity(i);
-						part.addSubEntity({subentity, boost::none, (unsigned short) i});
+						part.addSubEntity({subentity, {}, (unsigned short) i});
 					}
 					mAssetCreationContext.showPartVector.push_back(part.getName());
 					ModelPart& modelPart = mAssetCreationContext.modelParts[part.getName()];

@@ -161,12 +161,12 @@ bool TerrainProperty::getHeight(LocatedEntity& entity, float x, float y, float& 
 /// @param pos the x,z coordinates of the point on the terrain
 /// @param material a reference to the integer to be used to store the
 /// material identifier at this location.
-boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) const {
+std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) const {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto segment = terrain.getSegmentAtPos(x, z);
 	if (segment == nullptr) {
 		cy_debug(std::cerr << "No terrain at this point" << std::endl;);
-		return boost::none;
+		return {};
 	}
 	if (!segment->isValid()) {
 		segment->populate();
@@ -184,7 +184,7 @@ boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x,
 						   std::cout << "The segment has " << surfaces.size());
 	if (surfaces.empty()) {
 		spdlog::error("The terrain has no surface data");
-		return boost::none;
+		return {};
 	}
 	Mercator::Surface& tile_surface = *surfaces.begin()->second;
 	if (!tile_surface.isValid()) {
@@ -193,11 +193,11 @@ boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x,
 	return tile_surface((int) x, (int) z, 0);
 }
 
-boost::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) const {
+std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) const {
 	auto& terrain = *sInstanceState.getState(entity)->terrain;
 	auto seg = terrain.getSegmentAtPos(x, z);
 	if (seg == nullptr) {
-		return boost::none;
+		return {};
 	}
 	std::vector<LocatedEntity*> ret;
 	auto& seg_mods = seg->getMods();

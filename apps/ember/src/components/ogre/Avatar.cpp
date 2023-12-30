@@ -736,7 +736,7 @@ void Avatar::stopCurrentTask() {
 	}
 }
 
-boost::optional<std::string> Avatar::performDefaultUsage() {
+std::optional<std::string> Avatar::performDefaultUsage() {
 	//Check if there's a tool in our primary hand and use if, otherwise check if we have any default usages.
 
 
@@ -785,7 +785,7 @@ boost::optional<std::string> Avatar::performDefaultUsage() {
 		useWithSelectedEntity(mErisAvatarEntity, selfUsages.begin()->second, selfUsages.begin()->first);
 		return op;
 	}
-	return boost::none;
+	return {};
 
 }
 

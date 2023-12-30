@@ -29,7 +29,7 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <rules/Location.h>
 #include "rules/ai/MemEntity.h"
 
@@ -61,7 +61,7 @@ struct SteeringResult
      * Time until the next waypoint is reached.
      * This is used for scheduling the next update tick.
      */
-    boost::optional<double> timeToNextWaypoint;
+    std::optional<double> timeToNextWaypoint;
 };
 
 
@@ -241,7 +241,7 @@ class Steering : public virtual sigc::trackable
 
         bool isAtCurrentDestination(double currentTimestamp) const;
 
-        boost::optional<double> distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const;
+        std::optional<double> distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const;
 
         WFMath::Vector<3> directionTo(double currentTimestamp, const EntityLocation& location) const;
 

@@ -73,17 +73,17 @@
 
 #ifndef STUB_TerrainProperty_getSurface
 //#define STUB_TerrainProperty_getSurface
-  boost::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) const
+  std::optional<int> TerrainProperty::getSurface(LocatedEntity& entity, float x, float z) const
   {
-    return *static_cast<boost::optional<int>*>(nullptr);
+    return *static_cast<std::optional<int>*>(nullptr);
   }
 #endif //STUB_TerrainProperty_getSurface
 
 #ifndef STUB_TerrainProperty_findMods
 //#define STUB_TerrainProperty_findMods
-  boost::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) const
+  std::optional<std::vector<LocatedEntity*>> TerrainProperty::findMods(LocatedEntity& entity, float x, float z) const
   {
-    return *static_cast<boost::optional<std::vector<LocatedEntity*>>*>(nullptr);
+    return *static_cast<std::optional<std::vector<LocatedEntity*>>*>(nullptr);
   }
 #endif //STUB_TerrainProperty_findMods
 

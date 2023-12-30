@@ -3934,7 +3934,7 @@ constexpr in_place_index_t<I> in_place_index {};
 // end of sol/in_place.hpp
 
 #if SOL_IS_ON(SOL_USE_BOOST_I_)
-#include <boost/optional.hpp>
+#include <optional>
 #else
 // beginning of sol/optional_implementation.hpp
 
@@ -6175,9 +6175,9 @@ namespace sol {
 
 #if SOL_IS_ON(SOL_USE_BOOST_I_)
 template <typename T>
-	using optional = boost::optional<T>;
+	using optional = std::optional<T>;
 	using nullopt_t = boost::none_t;
-	const nullopt_t nullopt = boost::none;
+	const nullopt_t nullopt = {};
 #endif // Boost vs. Better optional
 
 namespace meta {
@@ -6196,7 +6196,7 @@ struct associated_nullopt {
 
 #if SOL_IS_ON(SOL_USE_BOOST_I_)
 template <typename T>
-		struct associated_nullopt<boost::optional<T>> {
+		struct associated_nullopt<std::optional<T>> {
 			inline static constexpr std::nullopt_t value = boost::nullopt;
 		};
 #endif // Boost nullopt

@@ -180,9 +180,9 @@
 
 #ifndef STUB_Steering_distanceTo
 //#define STUB_Steering_distanceTo
-  boost::optional<double> Steering::distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
+  std::optional<double> Steering::distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
   {
-    return *static_cast<boost::optional<double>*>(nullptr);
+    return *static_cast<std::optional<double>*>(nullptr);
   }
 #endif //STUB_Steering_distanceTo
 

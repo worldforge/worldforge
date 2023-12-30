@@ -31,7 +31,7 @@
 #include <wfmath/point.h>
 #include <wfmath/quaternion.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <iostream>
 
 class LocatedEntity;
@@ -135,7 +135,7 @@ Vector3D distanceTo(const Location& self, const Location& other);
 
 Point3D relativePos(const Location& self, const Location& other);
 
-boost::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other);
+std::optional<WFMath::CoordType> squareDistance(const Location& self, const Location& other);
 
 /**
  * \brief Gets the squared distance between the two supplied location, if possible, along with the common ancestor.
@@ -153,12 +153,12 @@ boost::optional<WFMath::CoordType> squareDistance(const Location& self, const Lo
  */
 WFMath::CoordType squareDistanceWithAncestor(const Location& self, const Location& other, const Location** ancestor);
 
-boost::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other);
+std::optional<WFMath::CoordType> squareHorizontalDistance(const Location& self, const Location& other);
 
-inline boost::optional<WFMath::CoordType> distance(const Location& self, const Location& other) {
+inline std::optional<WFMath::CoordType> distance(const Location& self, const Location& other) {
 	auto distance = squareDistance(self, other);
 	if (!distance) {
-		return boost::none;
+		return {};
 	}
 	return std::sqrt(*distance);
 }

@@ -283,7 +283,7 @@ public:
 	///
 	/// @param name Name of attribute to be retrieved
 	/// @return An optional containing the value.
-	boost::optional<Atlas::Message::Element> getAttr(const std::string& name) const;
+	std::optional<Atlas::Message::Element> getAttr(const std::string& name) const;
 
 	/// \brief Get the value of an attribute if it is the right type
 	///
@@ -299,7 +299,7 @@ public:
 	///
 	/// @param name Name of attribute to be retrieved
 	/// @return An optional containing the value.
-	boost::optional<Atlas::Message::Element> getAttrType(const std::string& name, int type) const;
+	std::optional<Atlas::Message::Element> getAttrType(const std::string& name, int type) const;
 
 	/// \brief Set the value of an attribute
 	///

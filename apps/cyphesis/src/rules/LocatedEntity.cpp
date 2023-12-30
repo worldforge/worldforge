@@ -124,14 +124,14 @@ int LocatedEntity::getAttr(const std::string& name,
 	return -1;
 }
 
-boost::optional<Atlas::Message::Element> LocatedEntity::getAttr(const std::string& name) const {
-	//The idea here is to gradually move away from the C style method call to a more C++ based one with boost::optional (and even std::optional).
+std::optional<Atlas::Message::Element> LocatedEntity::getAttr(const std::string& name) const {
+	//The idea here is to gradually move away from the C style method call to a more C++ based one with std::optional (and even std::optional).
 	Atlas::Message::Element attr;
 	auto result = getAttr(name, attr);
 	if (result == 0) {
 		return attr;
 	} else {
-		return boost::none;
+		return {};
 	}
 }
 
@@ -152,15 +152,15 @@ int LocatedEntity::getAttrType(const std::string& name,
 	return -1;
 }
 
-boost::optional<Atlas::Message::Element> LocatedEntity::getAttrType(const std::string& name, int type) const {
-	//The idea here is to gradually move away from the C style method call to a more C++ based one with boost::optional (and even std::optional).
+std::optional<Atlas::Message::Element> LocatedEntity::getAttrType(const std::string& name, int type) const {
+	//The idea here is to gradually move away from the C style method call to a more C++ based one with std::optional (and even std::optional).
 
 	Atlas::Message::Element attr;
 	auto result = getAttrType(name, attr, type);
 	if (result == 0) {
 		return attr;
 	} else {
-		return boost::none;
+		return {};
 	}
 }
 

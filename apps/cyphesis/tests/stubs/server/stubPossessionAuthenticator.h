@@ -41,9 +41,9 @@
 
 #ifndef STUB_PossessionAuthenticator_getPossessionKey
 //#define STUB_PossessionAuthenticator_getPossessionKey
-  boost::optional<std::string> PossessionAuthenticator::getPossessionKey(const std::string& entity_id)
+  std::optional<std::string> PossessionAuthenticator::getPossessionKey(const std::string& entity_id)
   {
-    return *static_cast<boost::optional<std::string>*>(nullptr);
+    return *static_cast<std::optional<std::string>*>(nullptr);
   }
 #endif //STUB_PossessionAuthenticator_getPossessionKey
 

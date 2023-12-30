@@ -27,7 +27,7 @@
 
 
 #include <boost/filesystem/path.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 #include "components/ogre/EmberOgrePrerequisites.h"
 
 #include "ModelDefinition.h"
@@ -127,9 +127,9 @@ private:
 	 */
 	static void exportBoneGroups(const ModelDefinitionPtr& modelDef, TiXmlElement& modelElem);
 
-	static boost::optional<ModelDefinition::ParticleSystemSetting> parseParticleSystemSetting(const std::string& setting);
+	static std::optional<ModelDefinition::ParticleSystemSetting> parseParticleSystemSetting(const std::string& setting);
 
-	static boost::optional<std::string> particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting);
+	static std::optional<std::string> particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting);
 
 };
 

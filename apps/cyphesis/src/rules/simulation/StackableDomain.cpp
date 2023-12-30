@@ -296,6 +296,6 @@ bool StackableDomain::stackIfPossible(const LocatedEntity& domainEntity, Located
 	return false;
 }
 
-boost::optional<std::function<void()>> StackableDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
-	return boost::none;
+std::optional<std::function<void()>> StackableDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+	return {};
 }

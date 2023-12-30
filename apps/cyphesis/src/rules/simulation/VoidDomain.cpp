@@ -64,7 +64,7 @@ bool VoidDomain::isEntityReachable(const LocatedEntity& reachingEntity, float re
 	return &reachingEntity == &m_entity;
 }
 
-boost::optional<std::function<void()>> VoidDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
-	return boost::none;
+std::optional<std::function<void()>> VoidDomain::observeCloseness(LocatedEntity& reacher, LocatedEntity& target, double reach, std::function<void()> callback) {
+	return {};
 }
 

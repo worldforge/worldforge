@@ -20,7 +20,7 @@
 #define RULESETS_PYTHON_CLASS_H
 
 #include <string>
-#include <boost/optional.hpp>
+#include <optional>
 #include "pycxx/CXX/Objects.hxx"
 
 /// \brief Factory interface for creating scripts to attach to in game
@@ -38,7 +38,7 @@ class PythonClass
         /// \brief Module object which contains the script class
         Py::Module m_module;
         /// \brief Class object to be instanced when creating scripts
-        boost::optional<Py::Callable> m_class;
+        std::optional<Py::Callable> m_class;
 
         PythonClass(const std::string& package,
                     const std::string& type);

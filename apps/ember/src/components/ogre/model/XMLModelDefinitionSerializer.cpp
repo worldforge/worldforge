@@ -1285,22 +1285,22 @@ void XMLModelDefinitionSerializer::exportBoneGroups(const ModelDefinitionPtr& mo
 	modelElem.InsertEndChild(boneGroupsElem);
 }
 
-boost::optional<ModelDefinition::ParticleSystemSetting> XMLModelDefinitionSerializer::parseParticleSystemSetting(const std::string& setting) {
+std::optional<ModelDefinition::ParticleSystemSetting> XMLModelDefinitionSerializer::parseParticleSystemSetting(const std::string& setting) {
 	if (setting == "emission_rate") {
 		return ModelDefinition::ParticleSystemSetting::EMISSION_RATE;
 	} else if (setting == "time_to_live") {
 		return ModelDefinition::ParticleSystemSetting::TIME_TO_LIVE;
 	}
-	return boost::none;
+	return {};
 }
 
-boost::optional<std::string> XMLModelDefinitionSerializer::particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting) {
+std::optional<std::string> XMLModelDefinitionSerializer::particleSystemSettingToString(ModelDefinition::ParticleSystemSetting setting) {
 	if (setting == ModelDefinition::ParticleSystemSetting::TIME_TO_LIVE) {
 		return std::string("time_to_live");
 	} else if (setting == ModelDefinition::ParticleSystemSetting::EMISSION_RATE) {
 		return std::string("emission_rate");
 	}
-	return boost::none;
+	return {};
 }
 
 } //end namespace

@@ -26,7 +26,7 @@
 #include <string>
 #include <set>
 #include <Atlas/Objects/RootEntity.h>
-#include <boost/optional.hpp>
+#include <optional>
 
 class TypeNode;
 
@@ -35,7 +35,7 @@ public:
 
 	explicit TypeResolver(TypeStore& typeStore);
 
-	boost::optional<std::string> m_typeProviderId;
+	std::optional<std::string> m_typeProviderId;
 
 	std::set<const TypeNode*> InfoOperation(const Operation& op, OpVector& res);
 

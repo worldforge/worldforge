@@ -163,13 +163,13 @@ void EntityCreatorWidget::buildWidget() {
 		auto selectParentSelection = [&]() {
 			if (parentSelectionWidget.getSelectedItem()) {
 				if (parentSelectionWidget.getSelectedItem()->getID() == 0) {
-					mFixedParentId = boost::none;
+					mFixedParentId = {};
 					parentActiveWidget.setEnabled(false);
 					posX.setEnabled(false);
 					posY.setEnabled(false);
 					posZ.setEnabled(false);
 				} else if (parentSelectionWidget.getSelectedItem()->getID() == 1) {
-					mFixedParentId = boost::none;
+					mFixedParentId = {};
 					parentActiveWidget.setEnabled(true);
 					if (mWorld.getView().getAvatar().getEntity()->getLocation()) {
 						parentActiveWidget.setText(mWorld.getView().getAvatar().getEntity()->getLocation()->getId());
@@ -185,7 +185,7 @@ void EntityCreatorWidget::buildWidget() {
 						mFixedParentId = mWorld.getView().getAvatar().getEntity()->getLocation()->getId();
 						parentActiveWidget.setText(mWorld.getView().getAvatar().getEntity()->getLocation()->getId());
 					} else {
-						mFixedParentId = boost::none;
+						mFixedParentId = {};
 						parentActiveWidget.setText("");
 					}
 					posX.setEnabled(false);
@@ -197,7 +197,7 @@ void EntityCreatorWidget::buildWidget() {
 		parentSelectionWidget.subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, selectParentSelection);
 		selectParentSelection();
 
-		auto createEntitiesFn = [this](WFMath::Point<3> pos, WFMath::Quaternion orientation, boost::optional<float> offset, std::string location, std::string mode) {
+		auto createEntitiesFn = [this](WFMath::Point<3> pos, WFMath::Quaternion orientation, std::optional<float> offset, std::string location, std::string mode) {
 			for (auto& entityMap: mEntityMaps) {
 				entityMap["loc"] = location;
 				if (orientation.isValid()) {

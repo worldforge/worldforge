@@ -19,7 +19,7 @@
 #include <map>
 #include <vector>
 #include <unordered_map>
-#include <boost/optional.hpp>
+#include <optional>
 #include <chrono>
 
 namespace Atlas::Message {
@@ -263,7 +263,7 @@ public:
 	 * @param id The string where the id, if found, will be placed.
 	 * @return True if an id could be found.
 	 */
-	static boost::optional<std::string> extractEntityId(const Atlas::Message::Element& element);
+	static std::optional<std::string> extractEntityId(const Atlas::Message::Element& element);
 
 // coordinate transformations
 	template<class C>

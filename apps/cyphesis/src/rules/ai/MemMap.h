@@ -34,7 +34,7 @@
 #include <deque>
 #include <map>
 #include <string>
-#include <boost/optional.hpp>
+#include <optional>
 
 class LocatedEntity;
 

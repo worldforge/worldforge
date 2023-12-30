@@ -219,7 +219,7 @@ public:
 
 	void taskUsage(std::string taskId, const Eris::TaskUsage& usage);
 
-	boost::optional<std::string> performDefaultUsage();
+	std::optional<std::string> performDefaultUsage();
 
 	void stopCurrentTask();
 

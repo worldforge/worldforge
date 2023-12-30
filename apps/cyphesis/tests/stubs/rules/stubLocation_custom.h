@@ -52,7 +52,7 @@ Point3D relativePos(const Location & self, const Location & other)
 
 #ifndef STUB_squareDistance
 #define STUB_squareDistance
-boost::optional<WFMath::CoordType> squareDistance(const Location & self, const Location & other)
+std::optional<WFMath::CoordType> squareDistance(const Location & self, const Location & other)
 {
     return 0.0;
 }
@@ -60,7 +60,7 @@ boost::optional<WFMath::CoordType> squareDistance(const Location & self, const L
 
 #ifndef STUB_squareHorizontalDistance
 #define STUB_squareHorizontalDistance
-boost::optional<WFMath::CoordType> squareHorizontalDistance(const Location & self, const Location & other)
+std::optional<WFMath::CoordType> squareHorizontalDistance(const Location & self, const Location & other)
 {
     return 0.0;
 }

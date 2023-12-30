@@ -734,7 +734,7 @@ void Entity::onVisibilityChanged(bool vis) {
 	VisibilityChanged.emit(vis);
 }
 
-boost::optional<std::string> Entity::extractEntityId(const Atlas::Message::Element& element) {
+std::optional<std::string> Entity::extractEntityId(const Atlas::Message::Element& element) {
 	if (element.isString()) {
 		return element.String();
 	} else if (element.isMap()) {
@@ -743,7 +743,7 @@ boost::optional<std::string> Entity::extractEntityId(const Atlas::Message::Eleme
 			return I->second.String();
 		}
 	}
-	return boost::none;
+	return {};
 
 }
 

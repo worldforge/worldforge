@@ -198,7 +198,7 @@ void Avatar::place(const Entity* entity,
 				   const Entity* container,
 				   const WFMath::Point<3>& pos,
 				   const WFMath::Quaternion& orientation,
-				   boost::optional<float> offset,
+				   std::optional<float> offset,
 				   int amount) {
 	Anonymous what;
 	what->setLoc(container->getId());
@@ -209,7 +209,7 @@ void Avatar::place(const Entity* entity,
 		what->setAttr("orientation", orientation.toAtlas());
 	}
 	if (offset) {
-		what->setAttr("planted-offset", offset.get());
+		what->setAttr("planted-offset", offset.value());
 	}
 	if (amount != 1) {
 		what->setAttr("amount", amount);

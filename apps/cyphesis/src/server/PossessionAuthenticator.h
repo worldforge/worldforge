@@ -21,7 +21,7 @@
 #include "modules/Ref.h"
 #include <string>
 #include <unordered_map>
-#include <boost/optional.hpp>
+#include <optional>
 #include <common/Singleton.h>
 #include "PendingPossession.h"
 
@@ -50,7 +50,7 @@ class PossessionAuthenticator : public Singleton<PossessionAuthenticator>
 
         int removePossession(const std::string&);
 
-        boost::optional<std::string> getPossessionKey(const std::string& entity_id);
+        std::optional<std::string> getPossessionKey(const std::string& entity_id);
 
         Ref<LocatedEntity> authenticatePossession(const std::string&,
                                                   const std::string&);

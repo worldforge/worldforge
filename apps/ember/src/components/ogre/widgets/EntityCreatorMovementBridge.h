@@ -66,7 +66,7 @@ public:
 
 	Eris::EntityRef mCollidedEntity;
 
-	boost::optional<std::string> mFixedParentId;
+	std::optional<std::string> mFixedParentId;
 
 private:
 

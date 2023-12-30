@@ -20,7 +20,7 @@
 #define EMBER_NUMBERRANGEADAPTER_H
 
 
-#include <boost/optional.hpp>
+#include <optional>
 #include "AdapterBase.h"
 
 
@@ -53,8 +53,8 @@ public:
 protected:
 	Windows mWindows;
 
-	boost::optional<float> mMin;
-	boost::optional<float> mMax;
+	std::optional<float> mMin;
+	std::optional<float> mMax;
 
 	void fillElementFromGui() override;
 
