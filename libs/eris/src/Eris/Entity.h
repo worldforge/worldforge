@@ -61,6 +61,19 @@ class Entity : virtual public sigc::trackable {
 	friend class EntityRouter;
 
 public:
+
+	template<typename T>
+	struct PredictedValue {
+		std::chrono::steady_clock::time_point lastUpdated;
+		T value;
+	};
+
+	struct PredictedState {
+		PredictedValue<WFMath::Point<3>> position;
+		PredictedValue<WFMath::Quaternion> orientation;
+		PredictedValue<WFMath::Vector<3>> velocity;
+	};
+
 	typedef std::map<std::string, Atlas::Message::Element> PropertyMap;
 
 	explicit Entity(std::string id, TypeInfo* ty);
@@ -275,6 +288,10 @@ public:
 
 	const std::vector<Entity*>& getContent() const {
 		return m_contents;
+	}
+
+	PredictedState& getPredictedState() {
+		return m_predicted;
 	}
 
 	// A vector (e.g., the distance between two points, or
@@ -546,11 +563,6 @@ protected:
 	appropriate signals. */
 	void updateCalculatedVisibility(bool wasVisible);
 
-	class DynamicState {
-	public:
-		WFMath::Point<3> position;
-		WFMath::Quaternion orientation;
-	};
 
 	void updatePredictedState(const std::chrono::steady_clock::time_point& t, double simulationSpeed);
 
@@ -591,7 +603,7 @@ protected:
 	 */
 	double m_angularMag;
 
-	DynamicState m_predicted;
+	PredictedState m_predicted;
 
 // extra state and state tracking things
 	/** If greater than zero, we are doing a batched update. This suppresses emission
@@ -615,8 +627,6 @@ protected:
 	BBox property are undefined.  */
 	bool m_hasBBox;
 
-	std::chrono::steady_clock::time_point m_lastPosTime;
-	std::chrono::steady_clock::time_point m_lastOrientationTime;
 	bool m_moving; ///< flag recording if this entity is current considered in-motion
 
 	bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)

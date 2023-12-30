@@ -17,9 +17,22 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/BaseObject.h>
 
+#include <fmt/ostream.h>
+
 #include <algorithm>
 #include <set>
 #include <cassert>
+
+
+template<>
+struct fmt::formatter<WFMath::Quaternion> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<WFMath::Vector<3>> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<WFMath::Point<3>> : ostream_formatter {
+};
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -192,11 +205,11 @@ sigc::connection Entity::observe(const std::string& propertyName, const Property
 }
 
 const WFMath::Point<3>& Entity::getPredictedPos() const {
-	return m_predicted.position;
+	return m_predicted.position.value;
 }
 
 const WFMath::Quaternion& Entity::getPredictedOrientation() const {
-	return m_predicted.orientation;
+	return m_predicted.orientation.value;
 }
 
 bool Entity::isMoving() const {
@@ -206,17 +219,15 @@ bool Entity::isMoving() const {
 void Entity::updatePredictedState(const std::chrono::steady_clock::time_point& t, double simulationSpeed) {
 	assert(isMoving());
 
-	if (m_velocity.isValid() && m_velocity != WFMath::Vector<3>::ZERO()) {
-		auto posDeltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(t - m_lastPosTime).count()) / 1'000'000.0;
-		m_predicted.position = m_position + (m_velocity * posDeltaTime * simulationSpeed);
-	} else {
-		m_predicted.position = m_position;
+	if (m_predicted.velocity.value.isValid() && m_predicted.velocity.value != WFMath::Vector<3>::ZERO()) {
+		auto posDeltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(t - m_predicted.position.lastUpdated).count()) / 1'000'000.0;
+		m_predicted.position.value = m_predicted.position.value + (m_predicted.velocity.value * posDeltaTime * simulationSpeed);
+		m_predicted.position.lastUpdated = t;
 	}
 	if (m_angularVelocity.isValid() && m_angularMag != .0) {
-		auto orientationDeltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(t - m_lastOrientationTime).count()) / 1'000'000.0;
-		m_predicted.orientation = m_orientation * WFMath::Quaternion(m_angularVelocity, m_angularMag * orientationDeltaTime * simulationSpeed);
-	} else {
-		m_predicted.orientation = m_orientation;
+		auto orientationDeltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(t - m_predicted.orientation.lastUpdated).count()) / 1'000'000.0;
+		m_predicted.orientation.value = m_predicted.orientation.value * WFMath::Quaternion(m_angularVelocity, m_angularMag * orientationDeltaTime * simulationSpeed);
+		m_predicted.orientation.lastUpdated = t;
 	}
 }
 
@@ -465,20 +476,27 @@ void Entity::endUpdate() {
 	{
 		Changed.emit(m_modifiedProperties);
 
-		if (m_modifiedProperties.find("pos") != m_modifiedProperties.end() ||
-			m_modifiedProperties.find("velocity") != m_modifiedProperties.end() ||
-			m_modifiedProperties.find("orientation") != m_modifiedProperties.end() ||
+		bool posChanged = m_modifiedProperties.find("pos") != m_modifiedProperties.end();
+		bool orientationChanged = m_modifiedProperties.find("orientation") != m_modifiedProperties.end();
+		bool velocityChanged = m_modifiedProperties.find("velocity") != m_modifiedProperties.end();
+
+		if (posChanged ||
+			velocityChanged ||
+			orientationChanged ||
 			m_modifiedProperties.find("angular") != m_modifiedProperties.end()) {
 			auto now = std::chrono::steady_clock::now();
-			if (m_modifiedProperties.find("pos") != m_modifiedProperties.end()) {
-				m_lastPosTime = now;
-				m_predicted.position = m_position;
+			if (orientationChanged) {
+				m_predicted.orientation.lastUpdated = now;
+				m_predicted.orientation.value = m_orientation;
 			}
-			if (m_modifiedProperties.find("orientation") != m_modifiedProperties.end()) {
-				m_lastOrientationTime = now;
-				m_predicted.orientation = m_orientation;
+			if (velocityChanged) {
+				m_predicted.velocity.lastUpdated = now;
+				m_predicted.velocity.value = m_velocity;
 			}
-
+			if (posChanged) {
+					m_predicted.position.lastUpdated = now;
+					m_predicted.position.value = m_position;
+			}
 			const WFMath::Vector<3>& velocity = getVelocity();
 			bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3)) || (m_angularVelocity.isValid() && m_angularVelocity != WFMath::Vector<3>::ZERO());
 			if (nowMoving != m_moving) {
@@ -623,7 +641,7 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
 
 // iterate over new contents
 	for (auto& content: contents) {
-		Entity* child = nullptr;
+		Entity* child;
 
 		auto J = oldContents.find(content);
 		if (J != oldContents.end()) {
@@ -641,7 +659,7 @@ void Entity::setContentsFromAtlas(const std::vector<std::string>& contents) {
 				child->m_waitingForParentBind = false;
 			}
 
-			/* we have found the child, update it's location */
+			/* we have found the child, update its location */
 			child->setLocation(this);
 		}
 
