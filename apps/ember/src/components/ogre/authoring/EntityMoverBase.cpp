@@ -206,7 +206,7 @@ void EntityMoverBase::processPickResults(const std::vector<PickResult>& results)
 	if (mEntity) {
 		for (auto& result: results) {
 			if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
-				auto& entityCollisionInfo = boost::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
+				auto& entityCollisionInfo = std::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
 				//It's a valid entry if it's not transparent and not the entity which is being moved itself.
 				if (!entityCollisionInfo.isTransparent && entityCollisionInfo.entity != mEntity.get()) {
 					setPosition(result.point);

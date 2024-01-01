@@ -54,7 +54,6 @@ target_link_libraries(cyphesis-common PUBLIC
         external-sqlite3pp
         libsigcpp::sigc++
         libgcrypt::libgcrypt
-        Boost::filesystem
         libxdg-basedir::libxdg-basedir
         spdlog::spdlog
         external-saf

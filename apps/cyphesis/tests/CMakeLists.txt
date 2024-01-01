@@ -46,7 +46,6 @@ link_libraries(
         varconf
         libsigcpp::sigc++
         external-remotery
-        Boost::filesystem
         readline::readline
         external-dirmonitor
         external-DetourTileCache

@@ -35,7 +35,7 @@
 
 #include <sigc++/signal.h>
 
-#include <boost/any.hpp>
+#include <any>
 
 #include <set>
 
@@ -215,7 +215,7 @@ public:
 	/// List of entities which use this as ref
 	std::unique_ptr<LocatedEntitySet> m_contains;
 	// A representation of this instance used by the scripting system. This is opaque to this class.
-	boost::any m_scriptEntity;
+	std::any m_scriptEntity;
 
 	explicit LocatedEntity(RouterId id);
 

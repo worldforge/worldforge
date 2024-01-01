@@ -60,7 +60,7 @@ find_package(readline REQUIRED)
 find_package(Boost
         1.83.0
         REQUIRED
-        COMPONENTS filesystem system)
+        COMPONENTS system)
 
 set(MEDIAREPO_DIR ${PROJECT_SOURCE_DIR}/mediarepo)
 add_compile_definitions("CYPHESIS_RAW_ASSETS_DIRECTORY=\"${MEDIAREPO_DIR}/trunk/assets\"")

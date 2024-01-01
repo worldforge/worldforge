@@ -40,7 +40,7 @@ void PolygonPointPickListener::processPickResult(bool& continuePicking, PickResu
 		continuePicking = false;
 		if (mousePickerArgs.pickType == MPT_PRESS) {
 			//TODO: make sure that it's a point which belongs to our polygon
-			mPickedUserObject = boost::any_cast<PolygonPointUserObject*>(result.collisionInfo);
+			mPickedUserObject = std::any_cast<PolygonPointUserObject*>(result.collisionInfo);
 		}
 	}
 }

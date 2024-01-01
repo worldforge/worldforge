@@ -36,7 +36,7 @@ auto callback(std::map<std::filesystem::path, std::list<std::function<void(const
 
 		for (auto& entry: directoryCallbacks) {
 
-			if (boost::starts_with(event.ev.path.string(), entry.first.string())) {
+			if (event.ev.path.string().starts_with(entry.first.string())) {
 				if (!std::filesystem::is_directory(event.ev.path)) {
 					for (auto& callback: entry.second) {
 						callback(event.ev.path);

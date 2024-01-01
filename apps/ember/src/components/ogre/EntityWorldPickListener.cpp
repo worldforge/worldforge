@@ -128,7 +128,7 @@ void EntityWorldPickListener::processPickResult(bool& continuePicking, PickResul
 	}
 
 	if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
-		auto& entityCollisionInfo = boost::any_cast<EntityCollisionInfo&>(result.collisionInfo);
+		auto& entityCollisionInfo = std::any_cast<EntityCollisionInfo&>(result.collisionInfo);
 
 		if (mFilter) {
 			if (!mFilter(*entityCollisionInfo.entity)) {

@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
-// -- Based on boost::any, original copyright information follows --
+// -- Based on std::any, original copyright information follows --
 // Copyright Kevlin Henney, 2000, 2001, 2002. All rights reserved.
 //
 // Distributed under the Boost Software License, Version 1.0. (See

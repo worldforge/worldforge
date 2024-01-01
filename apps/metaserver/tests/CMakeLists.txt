@@ -5,7 +5,7 @@ if (BUILD_METASERVER_SERVER)
     find_package(Boost
             1.83.0
             REQUIRED
-            COMPONENTS program_options filesystem)
+            COMPONENTS program_options)
 
     add_executable(MetaServer_unittest
             MetaServer_unittest.cpp
@@ -15,7 +15,6 @@ if (BUILD_METASERVER_SERVER)
     target_link_libraries(MetaServer_unittest PUBLIC
             cppunit::cppunit
             Boost::program_options
-            Boost::filesystem
             spdlog::spdlog
     )
     add_test(NAME MetaServer_unittest COMMAND MetaServer_unittest)
@@ -28,7 +27,6 @@ if (BUILD_METASERVER_SERVER)
     target_link_libraries(MetaServerPackage_unittest PUBLIC
             cppunit::cppunit
             Boost::program_options
-            Boost::filesystem
             spdlog::spdlog
     )
     add_test(NAME MetaServerPackage_unittest COMMAND MetaServerPackage_unittest)
@@ -41,7 +39,6 @@ if (BUILD_METASERVER_SERVER)
     target_link_libraries(DataObject_unittest PUBLIC
             cppunit::cppunit
             Boost::program_options
-            Boost::filesystem
             spdlog::spdlog
     )
     add_test(NAME DataObject_unittest COMMAND DataObject_unittest)
@@ -55,7 +52,6 @@ if (BUILD_METASERVER_SERVER)
     target_link_libraries(MetaServerHandlerUDP_unittest PUBLIC
             cppunit::cppunit
             Boost::program_options
-            Boost::filesystem
             spdlog::spdlog
     )
     add_test(NAME MetaServerHandlerUDP_unittest COMMAND MetaServerHandlerUDP_unittest)

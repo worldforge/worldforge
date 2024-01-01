@@ -27,7 +27,7 @@
 
 #include <wfmath/point.h>
 #include <OgreSceneQuery.h>
-#include <boost/any.hpp>
+#include <any>
 
 namespace Ogre {
 
@@ -92,7 +92,7 @@ struct MousePickerArgs {
 struct PickResult {
 	/// Distance along the ray
 	float distance;
-	boost::any collisionInfo;
+	std::any collisionInfo;
 
 	WFMath::Point<3> point;
 

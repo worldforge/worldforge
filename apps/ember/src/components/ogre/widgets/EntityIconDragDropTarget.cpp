@@ -86,9 +86,9 @@ EntityIcon* EntityIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args) {
 	const auto& ddea = dynamic_cast<const DragDropEventArgs&>(args);
 	DragContainer* container = ddea.dragDropItem;
 	if (container) {
-		const auto* anyData = static_cast<const boost::any*>(container->getUserData());
+		const auto* anyData = static_cast<const std::any*>(container->getUserData());
 		if (typeid(GenericIconUserData<EntityIcon>) == anyData->type()) {
-			const auto& mUserData = boost::any_cast<const GenericIconUserData<EntityIcon>&>(*anyData);
+			const auto& mUserData = std::any_cast<const GenericIconUserData<EntityIcon>&>(*anyData);
 			return &mUserData.mGenericIcon;
 		}
 	}

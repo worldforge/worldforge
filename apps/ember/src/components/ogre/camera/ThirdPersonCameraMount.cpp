@@ -213,7 +213,7 @@ void ThirdPersonCameraMount::adjustForOcclusion() {
 			auto* collisionObject = callback.m_collisionObjects[i];
 			auto* collisionDetector = static_cast<BulletCollisionDetector*>(collisionObject->getUserPointer());
 			if (collisionDetector->collisionInfo.type() == typeid(EntityCollisionInfo)) {
-				auto& entityCollisionInfo = boost::any_cast<EntityCollisionInfo&>(collisionDetector->collisionInfo);
+				auto& entityCollisionInfo = std::any_cast<EntityCollisionInfo&>(collisionDetector->collisionInfo);
 				//Ignore the avatar entity.
 				if (entityCollisionInfo.entity != entityCollisionInfo.entity->getView()->getAvatar().getEntity()) {
 					float hitDistance = from.distance(callback.m_hitPointWorld[i]);

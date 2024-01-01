@@ -23,8 +23,8 @@ std::vector<LocatedEntityScriptProvider> CyPy_LocatedEntity::entityPythonProvide
 
 Py::Object wrapLocatedEntity(Ref<LocatedEntity> le) {
 	//If there's already a script entity use that (as a cache mechanism)
-	if (!le->m_scriptEntity.empty()) {
-		auto wrapper = boost::any_cast<Py::Object>(le->m_scriptEntity);
+	if (le->m_scriptEntity.has_value()) {
+		auto wrapper = std::any_cast<Py::Object>(le->m_scriptEntity);
 		if (!wrapper.isNone()) {
 			auto object = PyWeakref_GetObject(wrapper.ptr());
 			if (object) {
@@ -40,7 +40,7 @@ Py::Object wrapLocatedEntity(Ref<LocatedEntity> le) {
 		if (!wrapped.isNone()) {
 
 			auto weakPtr = PyWeakref_NewRef(wrapped.ptr(), nullptr);
-			le->m_scriptEntity = boost::any(Py::Object(weakPtr, true));
+			le->m_scriptEntity = std::any(Py::Object(weakPtr, true));
 
 			return wrapped;
 		}

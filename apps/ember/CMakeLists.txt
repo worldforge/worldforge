@@ -63,7 +63,7 @@ endif ()
 find_package(Boost
         1.83.0
         REQUIRED
-        COMPONENTS system filesystem thread)
+        COMPONENTS system thread)
 
 find_package(SDL2 REQUIRED)
 

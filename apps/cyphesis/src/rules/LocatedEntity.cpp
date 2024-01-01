@@ -65,7 +65,7 @@ LocatedEntity::LocatedEntity(RouterId id) :
 }
 
 LocatedEntity::~LocatedEntity() {
-	m_scriptEntity.clear();
+	m_scriptEntity.reset();
 	if (!isDestroyed()) {
 		clearProperties();
 	}
@@ -393,7 +393,7 @@ void LocatedEntity::onUpdated() {
 
 /// \brief Called when the entity needs to be removed from its context
 void LocatedEntity::destroy() {
-	m_scriptEntity.clear();
+	m_scriptEntity.reset();
 	m_scripts.clear();
 
 	if (m_parent) {

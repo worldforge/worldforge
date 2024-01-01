@@ -207,7 +207,7 @@ std::optional<float> PolygonPointMover::getOffset() const {
 void PolygonPointMover::processPickResults(const std::vector<PickResult>& results) {
 	for (auto& result: results) {
 		if (result.collisionInfo.type() == typeid(EntityCollisionInfo)) {
-			auto& entityCollisionInfo = boost::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
+			auto& entityCollisionInfo = std::any_cast<const EntityCollisionInfo&>(result.collisionInfo);
 			//It's a valid entry if it's not transparent and not the entity which is being moved itself.
 			if (!entityCollisionInfo.isTransparent && entityCollisionInfo.entity->hasProperty("terrain")) {
 				setPosition(result.point);

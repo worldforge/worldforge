@@ -49,7 +49,6 @@ target_link_libraries(ember-framework PUBLIC
         varconf
         spdlog::spdlog
         libsigcpp::sigc++
-        Boost::filesystem
         Boost::headers
 )
 

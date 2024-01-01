@@ -57,14 +57,14 @@ bool ActionBarIconDragDropTarget::dragContainer_DragLeave(const CEGUI::EventArgs
 }
 
 bool ActionBarIconDragDropTarget::dragContainer_DragDropped(const CEGUI::EventArgs& args) {
-	const boost::any* anyData = getUserData(args);
+	const std::any* anyData = getUserData(args);
 	if (anyData) {
 		if (typeid(GenericIconUserData<ActionBarIcon>) == anyData->type()) {
-			const auto& mUserData = boost::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
+			const auto& mUserData = std::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
 			return handleDragActionBarIconDropped(args, &mUserData.mGenericIcon);
 		}
 		if (typeid(GenericIconUserData<EntityIcon>) == anyData->type()) {
-			const auto& mUserData = boost::any_cast<const GenericIconUserData<EntityIcon>&>(*anyData);
+			const auto& mUserData = std::any_cast<const GenericIconUserData<EntityIcon>&>(*anyData);
 			return handleDragEntityIconDropped(args, &mUserData.mGenericIcon);
 		}
 	}
@@ -93,21 +93,21 @@ bool ActionBarIconDragDropTarget::handleDragEntityIconDropped(const CEGUI::Event
 }
 
 ActionBarIcon* ActionBarIconDragDropTarget::parseIcon(const CEGUI::EventArgs& args) {
-	const boost::any* anyData = getUserData(args);
+	const std::any* anyData = getUserData(args);
 	if (anyData) {
 		if (typeid(GenericIconUserData<ActionBarIcon>) == anyData->type()) {
-			const auto& mUserData = boost::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
+			const auto& mUserData = std::any_cast<const GenericIconUserData<ActionBarIcon>&>(*anyData);
 			return &mUserData.mGenericIcon;
 		}
 	}
 	return nullptr;
 }
 
-const boost::any* ActionBarIconDragDropTarget::getUserData(const CEGUI::EventArgs& args) const {
+const std::any* ActionBarIconDragDropTarget::getUserData(const CEGUI::EventArgs& args) const {
 	const auto& ddea = dynamic_cast<const DragDropEventArgs&>(args);
 	DragContainer* container = ddea.dragDropItem;
 	if (container) {
-		return static_cast<const boost::any*>(container->getUserData());
+		return static_cast<const std::any*>(container->getUserData());
 	}
 	return nullptr;
 }

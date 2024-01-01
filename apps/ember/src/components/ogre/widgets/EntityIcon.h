@@ -30,7 +30,7 @@
 #include "GenericIconUserData.h"
 #include "CEGUIUtils.h"
 #include <sigc++/trackable.h>
-#include <boost/any.hpp>
+#include <any>
 #include <memory>
 #include <functional>
 #include <framework/AttributeObserver.h>
@@ -204,9 +204,9 @@ protected:
 	/**
 	 * @brief Holds the mUserData and is attached to the CEGUI::DragContainer.
 	 *
-	 * This allows us to better query for type, as the boost::any class stores the type id of the wrapped object.
+	 * This allows us to better query for type, as the std::any class stores the type id of the wrapped object.
 	 */
-	boost::any mUserDataWrapper;
+	std::any mUserDataWrapper;
 
 	/**
 	 * @brief If the icon is attached to any slot it's stored here.

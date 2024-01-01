@@ -24,10 +24,7 @@
 #define EMBEROGRE_GUIACTIONBARICONDRAGDROPTARGET_H
 
 #include <sigc++/signal.h>
-
-namespace boost {
-class any;
-}
+#include <any>
 
 namespace CEGUI {
 class Window;
@@ -146,10 +143,10 @@ private:
 	/**
 	 * @brief Based on the events args, extract the user data
 	 * @param args Event args.
-	 * @returns User data attached to the window in the form of a boost::any class.
-	 * @note boost::any allows us to determine the type of icon dropped
+	 * @returns User data attached to the window in the form of a std::any class.
+	 * @note std::any allows us to determine the type of icon dropped
 	 */
-	const boost::any* getUserData(const CEGUI::EventArgs& args) const;
+	const std::any* getUserData(const CEGUI::EventArgs& args) const;
 
 };
 

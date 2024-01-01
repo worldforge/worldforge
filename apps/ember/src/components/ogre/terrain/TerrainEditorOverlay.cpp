@@ -156,7 +156,7 @@ void BasePointPickListener::processPickResult(bool& continuePicking, PickResult&
 		continuePicking = false;
 		if (mousePickerArgs.pickType == MPT_PRESS) {
 			//TODO: make sure that it's a point which belongs to our polygon
-			mPickedUserObject = boost::any_cast<BasePointUserObject*>(result.collisionInfo);
+			mPickedUserObject = std::any_cast<BasePointUserObject*>(result.collisionInfo);
 		}
 	}
 }

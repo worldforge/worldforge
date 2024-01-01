@@ -20,7 +20,7 @@
 #define EMBER_BULLETCOLLISIONDETECTOR_H
 
 #include <domain/EmberEntity.h>
-#include <boost/any.hpp>
+#include <any>
 #include "BulletWorld.h"
 
 
@@ -57,7 +57,7 @@ public:
 	/**
 	 * Arbitrary collision info to be used by the pick listeners.
 	 */
-	boost::any collisionInfo;
+	std::any collisionInfo;
 
 private:
 
