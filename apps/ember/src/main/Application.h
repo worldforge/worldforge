@@ -17,6 +17,7 @@
 #include "framework/ConsoleObject.h"
 #include "framework/ConsoleBackend.h"
 #include "framework/MainLoopController.h"
+#include "framework/FileSystemObserver.h"
 #include "components/assets/AssetsUpdater.h"
 #include "services/server/ServerServiceSignals.h"
 
@@ -28,7 +29,6 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
-#include <framework/FileSystemObserver.h>
 
 /**
  * @mainpage

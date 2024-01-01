@@ -186,7 +186,7 @@ void EmberEntity::onTalk(const Atlas::Objects::Operation::RootOperation& talkArg
 	EventTalk.emit(entityTalk);
 
 	// Make a sound in OpenAL -- mafm: call doesn't exist
-	//	EmberServices::getSingleton().getSoundService().playTalk(msg,
+	//	SoundService::getSingleton().playTalk(msg,
 	//		getPosition(),getOrientation());
 
 	// Call the method of the base class (since we've overloaded it)

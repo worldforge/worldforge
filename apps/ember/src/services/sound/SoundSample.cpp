@@ -142,12 +142,12 @@ unsigned int StaticSoundSample::getNumberOfBuffers() const {
 // 
 // 		// Ask the Sound Service to register us
 // 		// that we way we keep playing =]
-// 		EmberServices::getSingleton().getSoundService().registerStream(this);
+// 		SoundService::getSingleton().registerStream(this);
 // 	}
 // 
 // 	StreamedSoundSample::~StreamedSoundSample()
 // 	{
-// 		EmberServices::getSingleton().getSoundService().unregisterStream(this);
+// 		SoundService::getSingleton().unregisterStream(this);
 // 
 // 		alSourceStop(mSource);
 // 		checkAlError();

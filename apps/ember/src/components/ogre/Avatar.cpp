@@ -40,7 +40,6 @@
 #include "components/ogre/authoring/EntityMaker.h"
 #include "components/ogre/GUIManager.h"
 
-#include "services/EmberServices.h"
 #include "services/server/ServerService.h"
 
 #include "framework/Tokeniser.h"
@@ -98,7 +97,7 @@ Avatar::Avatar(Eris::Avatar& erisAvatar,
 		mHasChangedLocation(false),
 		mIsMovingServerOnly(false),
 		mScene(scene),
-		mEntityMaker(std::make_unique<Authoring::EntityMaker>(erisAvatar, *EmberServices::getSingleton().getServerService().getConnection())) {
+		mEntityMaker(std::make_unique<Authoring::EntityMaker>(erisAvatar)) {
 
 	MainLoopController::getSingleton().EventAfterInputProcessing.connect(sigc::mem_fun(*this, &Avatar::application_AfterInputProcessing));
 

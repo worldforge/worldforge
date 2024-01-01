@@ -77,7 +77,7 @@ function MerchantTradeConfirmationDialog:giveCoins()
 			if containedEntity:getType():getName() == "coin" then
 				emberOgre:doWithEntity(self.merchantEntity:getId(), function(targetMerchantEntity)
 					--TODO implement using an Offer op or similar. It's not ok to have the protocol just be to add stuff in other entities.
-					--emberServices:getServerService():place(containedEntity, targetMerchantEntity)
+					--Ember.ServerService.getSingleton():place(containedEntity, targetMerchantEntity)
 				end)
 
 				given = given + 1

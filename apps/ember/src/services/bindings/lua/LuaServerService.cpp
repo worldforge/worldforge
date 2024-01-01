@@ -30,6 +30,7 @@ using namespace Ember::Lua;
 template<>
 void registerLua<ServerService>(sol::table& space) {
 	auto serverService = space.new_usertype<ServerService>("ServerService", sol::no_constructor);
+	serverService["getSingleton"] = &ServerService::getSingleton;
 	serverService["getAccount"] = &ServerService::getAccount;
 	serverService["connect"] = sol::overload([](ServerService* self, const std::string& host) { return self->connect(host); },
 											 [](ServerService* self, const std::string& host, short port) { return self->connect(host, port); });

@@ -34,12 +34,11 @@
 
 namespace Ember::OgreView::Authoring {
 
-EntityMaker::EntityMaker(Eris::Avatar& avatar, Eris::Connection& connection) :
+EntityMaker::EntityMaker(Eris::Avatar& avatar) :
 		CreateEntity("createentity", this, "Create an entity."),
 		Make("make", this, "Create an entity."),
 		MakeMe("makeme", this, "Create an entity as a child of the avatar (i.e. in inventory)."),
-		mAvatar(avatar),
-		mConnection(connection) {
+		mAvatar(avatar) {
 }
 
 void EntityMaker::runCommand(const std::string& command, const std::string& args) {
@@ -97,8 +96,9 @@ void EntityMaker::createEntityOfType(const std::string& type, const std::string&
 	}
 	msg["parent"] = type;
 
-	c->setArgsAsList(Atlas::Message::ListType(1, msg), &mConnection.getFactories());
-	mConnection.send(c);
+	auto& connection = mAvatar.getConnection();
+	c->setArgsAsList(Atlas::Message::ListType(1, msg), &connection.getFactories());
+	connection.send(c);
 	std::stringstream ss;
 	ss << pos;
 	logger->info("Trying to create entity of type {} at position {}", type, ss.str());

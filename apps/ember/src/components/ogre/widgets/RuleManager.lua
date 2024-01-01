@@ -138,12 +138,12 @@ function RuleManager:shutdown()
 	guiManager:destroyWidget(self.widget)
 end
 
-RuleManager.gotAvatarConnector = emberServices:getServerService().GotAvatar:connect(function(avatar)
+RuleManager.gotAvatarConnector = Ember.ServerService.getSingleton().GotAvatar:connect(function(avatar)
 	ruleManager = { connectors = {}, codec = "xml", avatar = avatar }
 	setmetatable(ruleManager, { __index = RuleManager })
 
 	ruleManager:buildWidget()
-	connect(ruleManager.connectors, emberServices:getServerService().DestroyedAvatar, function()
+	connect(ruleManager.connectors, Ember.ServerService.getSingleton().DestroyedAvatar, function()
 		ruleManager:shutdown()
 		ruleManager = nil
 		collectgarbage()

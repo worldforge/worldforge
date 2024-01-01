@@ -59,72 +59,20 @@ class ServerSettings;
  *
  * @author Hans Häggström
  */
-class EmberServices : public Singleton<EmberServices> {
-public:
+struct EmberServices {
 
-	/**
-	 * @brief Ctor.
-	 */
+
 	explicit EmberServices(Session& session, ConfigService& configService);
 
-	/**
-	 * @brief Dtor.
-	 */
-	~EmberServices() override;
+	~EmberServices();
 
-	/**
-	 * @brief Returns an instance of the ConfigService.
-	 *
-	 * @return The config service.
-	 */
-	ConfigService& getConfigService();
+	ConfigService& configService;
 
-	/**
-	 * @brief Returns an instance of the MetaserverService.
-	 *
-	 * @return The meta server service.
-	 */
-	MetaserverService& getMetaserverService();
-
-	/**
-	 * @brief Returns an instance of the ServerService
-	 *
-	 * @return The server service.
-	 */
-	ServerService& getServerService();
-
-	/**
-	 * @brief Returns an instance of the SoundService
-	 *
-	 * @return The sound service.
-	 */
-	SoundService& getSoundService();
-
-	/**
-	 * @brief Returns an instance of the ScriptingService
-	 *
-	 * @return The scripting service.
-	 */
-	ScriptingService& getScriptingService();
-
-	/**
-	 * @brief Returns the server settings service.
-	 *
-	 * @return The server settings service.
-	 */
-	ServerSettings& getServerSettingsService();
-
-	//----------------------------------------------------------------------
-	// Setters
-
-private:
-	ConfigService& mConfigService;
-
-	std::unique_ptr<ScriptingService> mScriptingService;
-	std::unique_ptr<SoundService> mSoundService;
-	std::unique_ptr<ServerService> mServerService;
-	std::unique_ptr<MetaserverService> mMetaserverService;
-	std::unique_ptr<ServerSettings> mServerSettingsService;
+	std::unique_ptr<ScriptingService> scriptingService;
+	std::unique_ptr<SoundService> soundService;
+	std::unique_ptr<ServerService> serverService;
+	std::unique_ptr<MetaserverService> metaserverService;
+	std::unique_ptr<ServerSettings> serverSettingsService;
 
 };
 }

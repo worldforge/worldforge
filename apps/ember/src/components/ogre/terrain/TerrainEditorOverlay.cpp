@@ -497,7 +497,7 @@ void TerrainEditorOverlay::sendChangesToServerWithBasePoints(std::map<int, std::
 				}
 			}
 
-			auto connection = EmberServices::getSingleton().getServerService().getConnection();
+			auto connection = ServerService::getSingleton().getConnection();
 			Atlas::Message::ListType sargsList(1, sarg);
 			s->setArgsAsList(sargsList, &connection->getFactories());
 			s->setFrom(EmberOgre::getSingleton().getWorld()->getAvatar()->getErisAvatar().getId());

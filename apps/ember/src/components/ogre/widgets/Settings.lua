@@ -116,7 +116,7 @@ function SettingsWidget:buildWidget()
 	self:hide()
 	self.widget:registerConsoleVisibilityToggleCommand("settings")
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 	local valueChangedCall = function(section, key)
 		self:EventChangedConfigItem(section, key)
 	end
@@ -733,7 +733,7 @@ function SettingsWidget:buildUiFor(category)
 	description:setProperty("HorzFormatting", "WordWrapLeftAligned")
 	vbox:addChild(description)
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 
 	for _, data in ipairs(category.contents) do
 		local value = configService:getValue(data.section, data.key)
@@ -798,7 +798,7 @@ function SettingsWidget:hasChanges()
 	-- Checks whether there are changed values in the settings
 	-- returns: true if there are changes
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 
 	-- go through everything and check whether we have changes
 	for _, category in ipairs(self.settings) do
@@ -816,7 +816,7 @@ function SettingsWidget:applyAllValues()
 	-- Applies all values
 	-- returns: true if the changes required restart of Ember, false otherwise
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 	local requiresRestart = false
 
 	-- go through everything and apply the new values
@@ -850,7 +850,7 @@ end
 function SettingsWidget:discardAllValues()
 	-- Discards all edited values
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 
 	-- go through everything and discard values
 	for _, category in ipairs(self.settings) do
@@ -861,7 +861,7 @@ function SettingsWidget:discardAllValues()
 end
 
 function SettingsWidget:resetAllToDefault()
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 
 	-- goes through representations and for each it puts the default value to it
 	for _, category in ipairs(self.settings) do
@@ -922,7 +922,7 @@ function SettingsWidget:EventChangedConfigItem(section, key)
 		return
 	end
 
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 	local value = configService:getValue(section, key)
 
 	-- If we had changes before the variable was externally changed we save them and reapply them

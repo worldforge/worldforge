@@ -242,8 +242,8 @@ Application::Application(Input& input,
 	mOgreView = std::make_unique<OgreView::EmberOgre>(mMainLoopController,
 													  mSession->m_event_service,
 													  mInput,
-													  mServices->getServerService(),
-													  mServices->getSoundService(),
+													  *mServices->serverService,
+													  *mServices->soundService,
 													  mAssetsUpdater.getRepository());
 
 }
@@ -259,11 +259,11 @@ Application::~Application() {
 
 	if (mServices) {
 		mSession->m_event_service.processAllHandlers();
-		mServices->getServerService().disconnect();
-		mServices->getScriptingService().EventShutdown();
+		mServices->serverService->disconnect();
+		mServices->scriptingService->EventShutdown();
 		//First process all handlers so we clean up stuff.
 		mSession->m_event_service.processAllHandlers();
-		mServices->getScriptingService().stop();
+		mServices->scriptingService->stop();
 	}
 
 	//Process all handlers again before shutting down.
@@ -333,7 +333,7 @@ void Application::mainLoop() {
 				frameActionMask |= MainLoopController::FA_GRAPHICS;
 			}
 
-			mServices->getSoundService().cycle();
+			mServices->soundService->cycle();
 			frameActionMask |= MainLoopController::FA_SOUND;
 
 			//Execute IO handlers for two milliseconds, if there are any.
@@ -408,13 +408,13 @@ void Application::initializeServices() {
 	mInput.setMainLoopController(&mMainLoopController);
 
 
-	mServices->getServerService().GotView.connect(sigc::mem_fun(*this, &Application::Server_GotView));
-	mServices->getServerService().DestroyedView.connect(sigc::mem_fun(*this, &Application::Server_DestroyedView));
+	mServices->serverService->GotView.connect(sigc::mem_fun(*this, &Application::Server_GotView));
+	mServices->serverService->DestroyedView.connect(sigc::mem_fun(*this, &Application::Server_DestroyedView));
 
 	auto assetsSyncHandler = [this](AssetsSync assetsSync) {
 		try {
 			if (!assetsSync.assetsPath.empty()) {
-				auto* connection = mServices->getServerService().getConnection();
+				auto* connection = mServices->serverService->getConnection();
 				auto urlResolveResult = resolveSquallUrl(assetsSync.assetsPath, connection->getHost());
 				if (urlResolveResult) {
 					logger->info("Resolved squall base url from '{}' to '{}'.", assetsSync.assetsPath, urlResolveResult->baseUrl);
@@ -436,19 +436,19 @@ void Application::initializeServices() {
 			assetsSync.Complete(AssetsSync::UpdateResult::Failure);
 		}
 	};
-	mServices->getServerService().AssetsSyncRequest.connect(assetsSyncHandler);
-	mServices->getServerService().AssetsReSyncRequest.connect(assetsSyncHandler);
+	mServices->serverService->AssetsSyncRequest.connect(assetsSyncHandler);
+	mServices->serverService->AssetsReSyncRequest.connect(assetsSyncHandler);
 
-	mServices->getServerService().setupLocalServerObservation(mConfigService);
+	mServices->serverService->setupLocalServerObservation(mConfigService);
 
 	//register the lua scripting provider. The provider will be owned by the scripting service, so we don't need to keep the pointer reference.
 	auto luaProvider = std::make_unique<Lua::LuaScriptingProvider>();
 
 
-	mServices->getScriptingService().registerScriptingProvider(std::move(luaProvider));
+	mServices->scriptingService->registerScriptingProvider(std::move(luaProvider));
 
-	mScriptingResourceProvider = std::make_unique<FileResourceProvider>(mServices->getConfigService().getSharedDataDirectory() / "scripting");
-	mServices->getScriptingService().setResourceProvider(mScriptingResourceProvider.get());
+	mScriptingResourceProvider = std::make_unique<FileResourceProvider>(mServices->configService.getSharedDataDirectory() / "scripting");
+	mServices->scriptingService->setResourceProvider(mScriptingResourceProvider.get());
 
 	oldSignals[SIGSEGV] = signal(SIGSEGV, shutdownHandler);
 	oldSignals[SIGABRT] = signal(SIGABRT, shutdownHandler);
@@ -471,7 +471,7 @@ void Application::startScripting() {
 	//this should be defined in some kind of text file, which should be different depending on what game you're playing (like deeds)
 	try {
 		//load the bootstrap script which will load all other scripts
-		mServices->getScriptingService().loadScript("lua/Bootstrap.lua");
+		mServices->scriptingService->loadScript("lua/Bootstrap.lua");
 	} catch (const std::exception& e) {
 		logger->error("Error when loading bootstrap script: {}", e.what());
 	}
@@ -479,7 +479,7 @@ void Application::startScripting() {
 	std::list<std::string> luaFiles;
 
 	//load any user defined scripts
-	auto userScriptDirectoryPath = std::filesystem::path(mServices->getConfigService().getHomeDirectory(BaseDirType_CONFIG)) / "scripts";
+	auto userScriptDirectoryPath = std::filesystem::path(mServices->configService.getHomeDirectory(BaseDirType_CONFIG)) / "scripts";
 
 	if (std::filesystem::is_directory(userScriptDirectoryPath)) {
 
@@ -505,7 +505,7 @@ void Application::startScripting() {
 				stream.close();
 				//It's important that we inform the user that we're loading a script (in case it provides any confusing behaviour).
 				ConsoleBackend::getSingleton().pushMessage("Loading user Lua script from '" + fileName + "'.", "info");
-				mServices->getScriptingService().executeCode(ss.str(), "LuaScriptingProvider");
+				mServices->scriptingService->executeCode(ss.str(), "LuaScriptingProvider");
 			}
 		}
 	} else {

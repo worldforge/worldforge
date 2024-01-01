@@ -28,6 +28,7 @@
 #include <Eris/ServerInfo.h>
 
 #include <string>
+#include "framework/Singleton.h"
 
 namespace Ember {
 struct Session;
@@ -44,7 +45,8 @@ class ConfigService;
  * @see Ember::ConsoleObject
  */
 class MetaserverService : public Service,
-						  public ConsoleObject {
+						  public ConsoleObject,
+						  public Singleton<MetaserverService> {
 private:
 
 	Session& mSession;

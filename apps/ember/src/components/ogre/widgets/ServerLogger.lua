@@ -23,14 +23,14 @@ function ServerLogger.buildWidget(widget)
 		if checkBox then
 			cleanup()
 			if checkBox:isSelected() then
-				ServerLogger.sendingConnection = emberServices:getServerService().EventSendingObject:connect(function(obj)
+				ServerLogger.sendingConnection = Ember.ServerService.getSingleton().EventSendingObject:connect(function(obj)
 					local newLogMessage = "Sending: \n" .. Ember.OgreView.Gui.AtlasHelper.serialize(obj, "presentation")
 
 					log.info(newLogMessage)
 
 					logTextWidget:appendText(newLogMessage .. "\n")
 				end)
-				ServerLogger.receivedConnection = emberServices:getServerService().EventReceivedObject:connect(function(obj)
+				ServerLogger.receivedConnection = Ember.ServerService.getSingleton().EventReceivedObject:connect(function(obj)
 					local newLogMessage = "Received: \n" .. Ember.OgreView.Gui.AtlasHelper.serialize(obj, "presentation")
 
 					log.info(newLogMessage)

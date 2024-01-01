@@ -22,6 +22,7 @@
 
 #include "framework/Service.h"
 #include "framework/ConsoleObject.h"
+#include "framework/Singleton.h"
 
 
 #include <wfmath/vector.h>
@@ -53,7 +54,7 @@ class BaseSoundSample;
  * @author Romulo Fernandes Machado (nightz)
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
-class SoundService : public Service, public ConsoleObject {
+class SoundService : public Service, public ConsoleObject, public Singleton<SoundService> {
 public:
 	/**
 	 * @brief Ctor.

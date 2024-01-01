@@ -173,7 +173,7 @@ ActionBarCreator.createdAvatarEntityConnector = emberOgre.EventCreatedAvatarEnti
 end
 )
 
-ActionBarCreator.destroyedConnector = emberServices:getServerService().DestroyedAvatar:connect(function()
+ActionBarCreator.destroyedConnector = Ember.ServerService.getSingleton().DestroyedAvatar:connect(function()
 	if ActionBarCreator.instance then
 		ActionBarCreator.instance:shutdown()
 		ActionBarCreator.instance = nil

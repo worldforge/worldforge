@@ -30,6 +30,7 @@ void registerLua<ConfigService>(sol::table& space) {
 	space["BaseDirType_RUNTIME"] = Ember::BaseDirType_RUNTIME;
 
 	auto configService = space.new_usertype<ConfigService>("ConfigService", sol::no_constructor);
+	configService["getSingleton"] = &ConfigService::getSingleton;
 	configService["getValue"] = sol::resolve<varconf::Variable(const std::string&, const std::string&) const>(&ConfigService::getValue);
 	configService["setValue"] = &ConfigService::setValue;
 	configService["isItemSet"] = &ConfigService::isItemSet;

@@ -44,10 +44,8 @@ void registerBindingsServices(sol::state_view& lua) {
 
 	auto Ember = lua["Ember"].get_or_create<sol::table>();
 
-
 	registerLua<ServerService>(Ember);
 	registerLua<ConfigService>(Ember);
-	registerLua<EmberServices>(Ember);
 	registerLua<Input>(Ember);
 	registerLua<MetaserverService>(Ember);
 	registerLua<ScriptingService>(Ember);

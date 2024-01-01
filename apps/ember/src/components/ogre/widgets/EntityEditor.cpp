@@ -261,7 +261,7 @@ Atlas::Message::Element EntityEditor::createPosition2dElement() {
 }
 
 void EntityEditor::addGoal(const std::string& definition) {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Entity::Anonymous thought;
 	thought->setAttr("goal", definition);
@@ -283,7 +283,7 @@ void EntityEditor::addGoal(const std::string& definition) {
 }
 
 void EntityEditor::updateGoal(const std::string& replaceDefinition, const std::string& definition) {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Entity::Anonymous thought;
 	thought->setAttr("goal", definition);
@@ -304,7 +304,7 @@ void EntityEditor::updateGoal(const std::string& replaceDefinition, const std::s
 }
 
 void EntityEditor::removeGoal(const std::string& definition) {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Entity::Anonymous thought;
 	thought->setAttr("id", definition);
@@ -324,7 +324,7 @@ void EntityEditor::removeGoal(const std::string& definition) {
 }
 
 void EntityEditor::addKnowledge(const std::string& predicate, const std::string& subject, const std::string& knowledge) {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Entity::Anonymous thought;
 	thought->setAttr("predicate", predicate);
@@ -360,7 +360,7 @@ void EntityEditor::addMarker(const std::string& entityId, const WFMath::Point<3>
 }
 
 void EntityEditor::getGoals() {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Operation::RootOperation thinkOp;
 	thinkOp->setParent("think");
@@ -392,7 +392,7 @@ void EntityEditor::relayToMind(Atlas::Objects::Operation::RootOperation op, Eris
 	auto mindsAttr = mEntity.ptrOfProperty("_minds");
 	if (mindsAttr && mindsAttr->isList() && !mindsAttr->List().empty()) {
 		if (mindsAttr->List().front().isString()) {
-			Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+			Eris::Account* account = ServerService::getSingleton().getAccount();
 			auto& connection = account->getConnection();
 
 			auto mindId = mindsAttr->List().front().String();
@@ -444,7 +444,7 @@ void EntityEditor::getPath() {
 }
 
 void EntityEditor::getThoughts() {
-	Eris::Account* account = EmberServices::getSingleton().getServerService().getAccount();
+	Eris::Account* account = ServerService::getSingleton().getAccount();
 
 	Atlas::Objects::Operation::RootOperation thinkOp;
 	thinkOp->setParent("think");

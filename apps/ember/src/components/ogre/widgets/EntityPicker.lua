@@ -58,7 +58,7 @@ function EntityPicker:buildWidget(world)
 			local entity = self.world:getEmberEntity(entityId)
 			if entity then
 				self.world:getAvatar():useTool(wieldedEntity, operation, entity, Ember.OgreView.Convert.toWF(self.position))
-				--			emberServices:getServerService():use(wieldedEntity, entity, Ember.OgreView.Convert:toWF_Point3(self.position), operation)
+				--			Ember.ServerService.getSingleton():use(wieldedEntity, entity, Ember.OgreView.Convert:toWF_Point3(self.position), operation)
 				guiManager:EmitEntityAction("use:" .. operation, entity)
 			end
 			removeMenu()
@@ -380,7 +380,7 @@ function EntityPicker:buildWidget(world)
 	self.entityName = self.widget:getWindow("EntityName")
 
 	--Check whether we should show the inspect button even for non admin types.
-	local configService = emberServices:getConfigService()
+	local configService = Ember.ConfigService.getSingleton()
 	local function evaluateShowInspect()
 		if world:getAvatar():isAdmin() then
 			self.showInspect = true

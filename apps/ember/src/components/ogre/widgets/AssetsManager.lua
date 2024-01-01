@@ -1174,8 +1174,8 @@ function AssetsManager:buildWidget()
 
 
 	--See if we automatically should show a certain mesh. This is useful for authoring when one wants to inspect a specific mesh.
-	if emberServices:getConfigService():itemExists("authoring", "loadmesh") then
-		local meshNameVar = emberServices:getConfigService():getValue("authoring", "loadmesh")
+	if Ember.ConfigService.getSingleton():itemExists("authoring", "loadmesh") then
+		local meshNameVar = Ember.ConfigService.getSingleton():getValue("authoring", "loadmesh")
 		local meshName = meshNameVar:as_string()
 		meshName = self.helper:resolveResourceNameFromFilePath(meshName)
 		self.widget:show()

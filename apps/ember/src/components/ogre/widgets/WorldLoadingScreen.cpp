@@ -71,7 +71,7 @@ void WorldLoadingScreen::showScreen() {
 		}
 	});
 
-	auto account = Ember::EmberServices::getSingleton().getServerService().getAccount();
+	auto account = Ember::ServerService::getSingleton().getAccount();
 	if (account) {
 		account->AvatarFailure.connect(sigc::hide(sigc::mem_fun(*this, &Ember::OgreView::Gui::WorldLoadingScreen::hideScreen)));
 	}

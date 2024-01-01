@@ -26,6 +26,7 @@ using namespace Ember::Lua;
 template<>
 void registerLua<ScriptingService>(sol::table& space) {
 	auto scriptingService = space.new_usertype<ScriptingService>("ScriptingService", sol::no_constructor);
+	scriptingService["getSingleton"] = &ScriptingService::getSingleton;
 	scriptingService["loadScript"] = &ScriptingService::loadScript;
 	scriptingService["executeCode"] = sol::overload(&ScriptingService::executeCode,
 													[](ScriptingService* self, const std::string& scriptCode, const std::string& scriptType) { self->executeCode(scriptCode, scriptType); });

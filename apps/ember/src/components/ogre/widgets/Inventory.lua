@@ -266,7 +266,7 @@ Inventory.createdAvatarEntityConnector = emberOgre.EventCreatedAvatarEntity:conn
 end
 )
 
-Inventory.destroyedConnector = emberServices:getServerService().DestroyedAvatar:connect(function()
+Inventory.destroyedConnector = Ember.ServerService.getSingleton().DestroyedAvatar:connect(function()
 	if Inventory.instance then
 		Inventory.instance:shutdown()
 		Inventory.instance = nil

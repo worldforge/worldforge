@@ -1824,7 +1824,7 @@ function EntityEditor:buildWidget()
 				local connectors = {}
 
 				if filename ~= "" then
-					local worldDumper = Ember.EntityExporter.new(emberServices:getServerService():getAccount())
+					local worldDumper = Ember.EntityExporter.new(Ember.ServerService.getSingleton():getAccount())
 					worldDumper:setDescription(self.exportDescriptionWindow:getText())
 					worldDumper:setName(self.exportNameWindow:getText())
 					worldDumper:setExportTransient(includeTransientsWindow:isSelected())
@@ -1861,7 +1861,7 @@ function EntityEditor:buildWidget()
 						connectors = {}
 					end
 					exportsOverlay:setVisible(true)
-					worldDumper:start(emberServices:getConfigService():getHomeDirectory(Ember.BaseDirType_DATA) .. "/entityexport/" .. filename, self.instance.entity:getId())
+					worldDumper:start(Ember.ConfigService.getSingleton():getHomeDirectory(Ember.BaseDirType_DATA) .. "/entityexport/" .. filename, self.instance.entity:getId())
 				end
 				return true
 			end)

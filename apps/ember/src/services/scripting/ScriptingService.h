@@ -23,8 +23,9 @@
 #ifndef EMBERSCRIPTINGSERVICE_H
 #define EMBERSCRIPTINGSERVICE_H
 
-#include <framework/Service.h>
-#include <framework/ConsoleCommandWrapper.h>
+#include "framework/Service.h"
+#include "framework/ConsoleCommandWrapper.h"
+#include "framework/Singleton.h"
 
 #include <sigc++/signal.h>
 #include <map>
@@ -45,7 +46,7 @@ This service provides scripting support.
 In order to use it, an instance implementing IScriptingProvider must be created and registered with the service.
 Scripts are then loaded through call to the method loadScript(...). Scripts can also be loaded through the console command /loadscript <path>
 */
-class ScriptingService : public Service, public ConsoleObject {
+class ScriptingService : public Service, public ConsoleObject, public Singleton<ScriptingService> {
 	friend struct IScriptingProvider;
 
 public:

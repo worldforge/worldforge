@@ -20,11 +20,8 @@ guiManager = Ember.OgreView.GUIManager.getSingleton()
 --The root GUI sheet under which all other CEGUI windows reside.
 root = guiManager:getMainSheet()
 
---All of Ember's services can be accessed from here.
-emberServices = Ember.EmberServices.getSingleton()
-
 --Scripting is handled by a service. This will allow you to load other scripts and perform more advanced scripting functions. See also the method loadScript(...) defined below.
-scriptingService = emberServices:getScriptingService()
+scriptingService = Ember.ScriptingService.getSingleton()
 
 --The console can be used for debug output.
 console = Ember.ConsoleBackend.getSingleton()

@@ -31,37 +31,13 @@ namespace Ember {
 
 EmberServices::~EmberServices() = default;
 
-ConfigService& EmberServices::getConfigService() {
-	return mConfigService;
-}
-
-MetaserverService& EmberServices::getMetaserverService() {
-	return *mMetaserverService;
-}
-
-ServerService& EmberServices::getServerService() {
-	return *mServerService;
-}
-
-SoundService& EmberServices::getSoundService() {
-	return *mSoundService;
-}
-
-ScriptingService& EmberServices::getScriptingService() {
-	return *mScriptingService;
-}
-
-ServerSettings& EmberServices::getServerSettingsService() {
-	return *mServerSettingsService;
-}
-
 EmberServices::EmberServices(Session& session, ConfigService& configService)
-		: mConfigService(configService),
-		  mScriptingService(std::make_unique<ScriptingService>()),
-		  mSoundService(std::make_unique<SoundService>(configService)),
-		  mServerService(std::make_unique<ServerService>(session)),
-		  mMetaserverService(std::make_unique<MetaserverService>(session, configService)),
-		  mServerSettingsService(std::make_unique<ServerSettings>()) {
+		: configService(configService),
+		  scriptingService(std::make_unique<ScriptingService>()),
+		  soundService(std::make_unique<SoundService>(configService)),
+		  serverService(std::make_unique<ServerService>(session)),
+		  metaserverService(std::make_unique<MetaserverService>(session, configService)),
+		  serverSettingsService(std::make_unique<ServerSettings>()) {
 }
 
 }

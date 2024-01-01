@@ -211,7 +211,7 @@ void OgreSetup::saveConfig() {
 }
 
 void OgreSetup::createOgreSystem() {
-	ConfigService& configSrv(EmberServices::getSingleton().getConfigService());
+	auto& configSrv = ConfigService::getSingleton();
 
 //	if (!configSrv.getPrefix().empty()) {
 //		//We need to set the current directory to the prefix before trying to load Ogre.
@@ -247,7 +247,7 @@ void OgreSetup::configure() {
 	}, true);
 
 	//Ogre::MeshManager::setBonesUseObjectSpace(false);
-	ConfigService& configService(EmberServices::getSingleton().getConfigService());
+	auto& configService = ConfigService::getSingleton();
 
 	// we start by trying to figure out what kind of resolution the user has selected, and whether full screen should be used or not.
 	unsigned int height = 720, width = 1280; //default resolution unless user selects other

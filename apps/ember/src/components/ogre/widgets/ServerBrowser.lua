@@ -1,11 +1,11 @@
 ServerBrowser = {}
 
 function ServerBrowser:connectToMetaServer()
-	local metaServer = emberServices:getMetaserverService():getMetaServer()
+	local metaServer = Ember.MetaserverService.getSingleton():getMetaServer()
 
 	connect(self.connectors, metaServer.ReceivedServerInfo, self.MetaServer_ReceivedServerInfo, self)
 	--only refresh if it's enabled in the config
-	if emberServices:getConfigService():isItemSet("metaserver", "enabled", "true") then
+	if Ember.ConfigService.getSingleton():isItemSet("metaserver", "enabled", "true") then
 		metaServer:refresh()
 	end
 end
@@ -34,8 +34,8 @@ function ServerBrowser:buildWidget()
 	wee = self.widget:getWindow("HideOldServers")
 	self.hideOldServersCheckbox = CEGUI.toToggleButton(wee)
 	--Only show the checkbox for filtering old servers if the metaserver:minimumversion value is set in the config
-	if emberServices:getConfigService():itemExists("metaserver", "minimumversion") then
-		local minimumversion = emberServices:getConfigService():getValue("metaserver", "minimumversion")
+	if Ember.ConfigService.getSingleton():itemExists("metaserver", "minimumversion") then
+		local minimumversion = Ember.ConfigService.getSingleton():getValue("metaserver", "minimumversion")
 		if minimumversion then
 			if minimumversion:is_string() then
 				self.minimumVersion = minimumversion:as_string()
@@ -45,8 +45,8 @@ function ServerBrowser:buildWidget()
 			end
 		end
 	end
-	if emberServices:getConfigService():itemExists("metaserver", "minimumentitycount") then
-		local minimumentitycount = emberServices:getConfigService():getValue("metaserver", "minimumentitycount")
+	if Ember.ConfigService.getSingleton():itemExists("metaserver", "minimumentitycount") then
+		local minimumentitycount = Ember.ConfigService.getSingleton():getValue("metaserver", "minimumentitycount")
 		if minimumentitycount then
 			if minimumentitycount:is_int() then
 				self.minumumentitycount = minimumentitycount:as_int()
@@ -54,7 +54,7 @@ function ServerBrowser:buildWidget()
 		end
 	end
 
-	local serverService = emberServices:getServerService()
+	local serverService = Ember.ServerService.getSingleton()
 	connect(self.connectors, serverService.GotConnection, self.Server_GotConnection, self)
 
 	connect(self.connectors, serverService.EventStatusChanged, self.Server_StatusChanged, self)
@@ -67,12 +67,12 @@ function ServerBrowser:buildWidget()
 		self.widget:getMainWindow():activate()
 
 		--If the "autoconnect" value is set, try to connect to the specified server
-		if emberServices:getConfigService():itemExists("metaserver", "autoconnect") then
-			local serverConfAddress = emberServices:getConfigService():getValue("metaserver", "autoconnect")
+		if Ember.ConfigService.getSingleton():itemExists("metaserver", "autoconnect") then
+			local serverConfAddress = Ember.ConfigService.getSingleton():getValue("metaserver", "autoconnect")
 			if serverConfAddress then
 				if serverConfAddress:is_string() then
 					local address = serverConfAddress:as_string()
-					Ember.EmberServices.getSingleton():getServerService():connect(address)
+					Ember.ServerService.getSingleton():connect(address)
 				end
 			end
 		end
@@ -152,7 +152,7 @@ function ServerBrowser:connectWithColumnList()
 			end
 		end
 		if serverName ~= "" then
-			Ember.EmberServices.getSingleton():getServerService():connect(serverName);
+			Ember.ServerService.getSingleton():connect(serverName);
 		end
 	end
 end
@@ -169,9 +169,9 @@ function ServerBrowser:doConnect()
 		if serverName:find(":") then
 			local port = serverName:sub(serverName:find(":") + 1, serverName:len())
 			serverName = serverName:sub(0, serverName:find(":") - 1)
-			Ember.EmberServices.getSingleton():getServerService():connect(serverName, port * 1)
+			Ember.ServerService.getSingleton():connect(serverName, port * 1)
 		else
-			Ember.EmberServices.getSingleton():getServerService():connect(serverName)
+			Ember.ServerService.getSingleton():connect(serverName)
 		end
 	elseif self.serverList:getFirstSelectedItem() then
 		--if ManualServerName is empty we try to connect to the server selected from the list
@@ -211,13 +211,13 @@ function ServerBrowser:Server_StatusChanged(status)
 end
 
 function ServerBrowser:CancelConnection_Click(args)
-	Ember.EmberServices.getSingleton():getServerService():disconnect()
+	Ember.ServerService.getSingleton():disconnect()
 	return true
 end
 
 function ServerBrowser:Refresh_Click(args)
 	self.serverList:resetList()
-	emberServices:getMetaserverService():getMetaServer():refresh()
+	Ember.MetaserverService.getSingleton():getMetaServer():refresh()
 	return true
 end
 
@@ -243,7 +243,7 @@ function ServerBrowser:hideOldServers_SelectStateChanged(args)
 end
 
 function ServerBrowser:refreshServerList()
-	local metaServer = emberServices:getMetaserverService():getMetaServer()
+	local metaServer = Ember.MetaserverService.getSingleton():getMetaServer()
 	self.serverList:resetList()
 	local numberOfServerInfos = metaServer:getGameServerCount()
 
@@ -298,7 +298,7 @@ function ServerBrowser:getSavedAccount(sInfo)
 	-- Essentially we try and fetch the 'hostname_<host>_servername_<server>' section
 	-- get the 'username' key.  If this has a value, there is saved credentials
 	-- We are always expecting a string ... even if it's empty.
-	local serverService = emberServices:getServerSettingsService()
+	local serverService = Ember.ServerSettings.getSingleton()
 	local serverSettingCredentials = Ember.ServerSettingsCredentials.new(sInfo.host, sInfo.name)
 	local savedUser = serverService:getItem(serverSettingCredentials, "username")
 	local retFav = savedUser:as_string()

@@ -73,10 +73,10 @@ WidgetPluginCallback ServerWidget::registerWidget(GUIManager& guiManager) {
 		}));
 
 	};
-	auto con = EmberServices::getSingleton().getServerService().GotAccount.connect(connectFn);
+	auto con = ServerService::getSingleton().GotAccount.connect(connectFn);
 
-	if (EmberServices::getSingleton().getServerService().getAccount()) {
-		connectFn(EmberServices::getSingleton().getServerService().getAccount());
+	if (ServerService::getSingleton().getAccount()) {
+		connectFn(ServerService::getSingleton().getAccount());
 	}
 
 	return [con, state]() mutable {
@@ -98,10 +98,10 @@ ServerWidget::ServerWidget(GUIManager& guiManager, Eris::Account& account) :
 	mConnections.emplace_back(account.getConnection().GotServerInfo.connect([this]() { showServerInfo(mAccount.getConnection()); }));
 	showServerInfo(mAccount.getConnection());
 
-	if (EmberServices::getSingleton().getServerService().getAccount()->isLoggedIn()) {
-		loginSuccess(EmberServices::getSingleton().getServerService().getAccount());
-		if (EmberServices::getSingleton().getServerService().getAvatar()) {
-			gotAvatar(EmberServices::getSingleton().getServerService().getAvatar());
+	if (ServerService::getSingleton().getAccount()->isLoggedIn()) {
+		loginSuccess(ServerService::getSingleton().getAccount());
+		if (ServerService::getSingleton().getAvatar()) {
+			gotAvatar(ServerService::getSingleton().getAvatar());
 		}
 	}
 
@@ -171,14 +171,14 @@ void ServerWidget::buildWidget() {
 
 
 		mWidget->getMainWindow()->getChild("InfoPanel/LoggedInPanel/LogoutButton")->subscribeEvent(CEGUI::PushButton::EventClicked, [=]() {
-			EmberServices::getSingleton().getServerService().logout();
+			ServerService::getSingleton().logout();
 			return true;
 		});
 
 		mWidget->getMainWindow()->getChild("InfoPanel/LoggedInPanel/TeleportInfo/Yes")->subscribeEvent(CEGUI::PushButton::EventClicked, [this]() {
 			mWidget->getWindow("TeleportInfo", true)->setVisible(false);
 			if (mAvatarTransferInfo) {
-				EmberServices::getSingleton().getServerService().takeTransferredCharacter(mAvatarTransferInfo->getTransferInfo());
+				ServerService::getSingleton().takeTransferredCharacter(mAvatarTransferInfo->getTransferInfo());
 			}
 			return true;
 		});
@@ -191,16 +191,16 @@ void ServerWidget::buildWidget() {
 		updateNewCharacter();
 
 		mWidget->getMainWindow()->getChild("InfoPanel/LoginPanel/Disconnect")->subscribeEvent(CEGUI::PushButton::EventClicked, [=]() {
-			EmberServices::getSingleton().getServerService().disconnect();
+			ServerService::getSingleton().disconnect();
 			return true;
 		});
 
 
-		EmberServices::getSingleton().getServerService().LoginSuccess.connect(sigc::mem_fun(*this, &ServerWidget::loginSuccess));
-		EmberServices::getSingleton().getServerService().GotAvatar.connect(sigc::mem_fun(*this, &ServerWidget::gotAvatar));
-		EmberServices::getSingleton().getServerService().GotAllCharacters.connect(sigc::mem_fun(*this, &ServerWidget::gotAllCharacters));
-		EmberServices::getSingleton().getServerService().LoginFailure.connect(sigc::mem_fun(*this, &ServerWidget::showLoginFailure));
-		EmberServices::getSingleton().getServerService().TransferInfoAvailable.connect(sigc::mem_fun(*this, &ServerWidget::server_TransferInfoAvailable));
+		ServerService::getSingleton().LoginSuccess.connect(sigc::mem_fun(*this, &ServerWidget::loginSuccess));
+		ServerService::getSingleton().GotAvatar.connect(sigc::mem_fun(*this, &ServerWidget::gotAvatar));
+		ServerService::getSingleton().GotAllCharacters.connect(sigc::mem_fun(*this, &ServerWidget::gotAllCharacters));
+		ServerService::getSingleton().LoginFailure.connect(sigc::mem_fun(*this, &ServerWidget::showLoginFailure));
+		ServerService::getSingleton().TransferInfoAvailable.connect(sigc::mem_fun(*this, &ServerWidget::server_TransferInfoAvailable));
 
 		mWidget->addTabbableWindow(mWidget->getMainWindow()->getChild("InfoPanel/LoginPanel/NameEdit"));
 		mWidget->addTabbableWindow(mWidget->getMainWindow()->getChild("InfoPanel/LoginPanel/PasswordEdit"));
@@ -272,7 +272,7 @@ bool ServerWidget::fetchCredentials(Eris::Connection& connection, std::string& u
 	connection.getServerInfo(sInfo);
 
 	ServerSettingsCredentials serverCredentials(sInfo);
-	ServerSettings& serverSettings = EmberServices::getSingleton().getServerSettingsService();
+	auto& serverSettings = ServerSettings::getSingleton();
 	if (serverSettings.findItem(serverCredentials, "username")) {
 		user = static_cast<std::string>(serverSettings.getItem(serverCredentials, "username"));
 	}
@@ -300,7 +300,7 @@ bool ServerWidget::saveCredentials() {
 			const CEGUI::String& name = nameBox->getText();
 			const CEGUI::String& password = passwordBox->getText();
 			ServerSettingsCredentials serverCredentials(sInfo);
-			ServerSettings& serverSettings = EmberServices::getSingleton().getServerSettingsService();
+			auto& serverSettings = ServerSettings::getSingleton();
 			serverSettings.setItem(serverCredentials, "username", name.c_str());
 			serverSettings.setItem(serverCredentials, "password", password.c_str());
 			serverSettings.writeToDisk();

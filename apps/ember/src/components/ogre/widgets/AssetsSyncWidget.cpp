@@ -51,7 +51,7 @@ WidgetPluginCallback AssetsSyncWidget::registerWidget(GUIManager& guiManager) {
 		}));
 
 	};
-	auto con = EmberServices::getSingleton().getServerService().AssetsSyncRequest.connect(requestFn);
+	auto con = ServerService::getSingleton().AssetsSyncRequest.connect(requestFn);
 
 
 	return [con, state]() mutable {

@@ -25,6 +25,7 @@ using namespace Ember::Lua;
 template<>
 void registerLua<MetaserverService>(sol::table& space) {
 	auto metaServerService = space.new_usertype<MetaserverService>("MetaserverService", sol::no_constructor);
+	metaServerService["getSingleton"] = &MetaserverService::getSingleton;
 	metaServerService["getMetaServer"] = &MetaserverService::getMetaServer;
 	metaServerService["compareVersions"] = &MetaserverService::compareVersions;
 }

@@ -39,7 +39,7 @@ SoundAction::SoundAction(SoundEntity& soundEntity)
 
 SoundAction::~SoundAction() {
 	if (mInstance) {
-		EmberServices::getSingleton().getSoundService().destroyInstance(mInstance);
+		SoundService::getSingleton().destroyInstance(mInstance);
 	}
 }
 
@@ -73,7 +73,7 @@ SoundGroup* SoundAction::setGroup(const std::string& name) {
 void SoundAction::play() {
 	if (mGroup) {
 		if (!mInstance) {
-			mInstance = EmberServices::getSingleton().getSoundService().createInstance();
+			mInstance = SoundService::getSingleton().createInstance();
 			if (!mInstance) {
 				//The sound system seems to be disabled (could be for a valid reason) so just return without any fuss.
 				return;
@@ -93,7 +93,7 @@ void SoundAction::play() {
 
 void SoundAction::stop() {
 	if (mInstance) {
-		EmberServices::getSingleton().getSoundService().destroyInstance(mInstance);
+		SoundService::getSingleton().destroyInstance(mInstance);
 		mInstance = nullptr;
 	}
 }
@@ -101,7 +101,7 @@ void SoundAction::stop() {
 
 void SoundAction::SoundInstance_PlayComplete() {
 	if (mInstance) {
-		if (EmberServices::getSingleton().getSoundService().destroyInstance(mInstance)) {
+		if (SoundService::getSingleton().destroyInstance(mInstance)) {
 			mInstance = nullptr;
 		}
 	} else {

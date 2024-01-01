@@ -157,7 +157,7 @@ Status.createdAvatarEntityConnector = emberOgre.EventCreatedAvatarEntity:connect
 	status = { connectors = {} }
 	setmetatable(status, { __index = Status })
 	status:buildWidget(avatarEntity)
-	connect(status.connectors, emberServices:getServerService().DestroyedAvatar, function()
+	connect(status.connectors, Ember.ServerService.getSingleton().DestroyedAvatar, function()
 		status:shutdown()
 		status = nil
 		collectgarbage()

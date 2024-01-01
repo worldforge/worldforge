@@ -25,7 +25,7 @@ end
 function DefaultEntityActions:eat(entity)
 	--TODO: initiate the "consume" task
 	print("'eat' not currently implemented in the client code")
-	--mDefaultWearableFunction = emberServices:getServerService():eat(entity)
+	--mDefaultWearableFunction = Ember.ServerService.getSingleton():eat(entity)
 end
 
 function DefaultEntityActions.new()

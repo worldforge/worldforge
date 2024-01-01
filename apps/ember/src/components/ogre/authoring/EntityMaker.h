@@ -50,7 +50,7 @@ public:
 	 * @param avatarEntity The avatar entity.
 	 * @param connection The connection to the server.
 	 */
-	EntityMaker(Eris::Avatar& avatar, Eris::Connection& connection);
+	EntityMaker(Eris::Avatar& avatar);
 
 	/**
 	 * @brief Dtor.
@@ -86,11 +86,6 @@ protected:
 	 * @brief The avatar entity.
 	 */
 	Eris::Avatar& mAvatar;
-
-	/**
-	 * @brief The connection to the server.
-	 */
-	Eris::Connection& mConnection;
 
 	/**
 	 * @brief Creates a new entity of the supplied type, placed in front of the avatar.

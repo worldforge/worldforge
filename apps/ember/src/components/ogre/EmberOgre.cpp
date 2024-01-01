@@ -236,7 +236,7 @@ EmberOgre::~EmberOgre() {
 		mSceneManagerOutOfWorld->removeRenderQueueListener(mOgreSetup->getOverlaySystem());
 	}
 
-	EmberServices::getSingleton().getSoundService().setResourceProvider(nullptr);
+	SoundService::getSingleton().setResourceProvider(nullptr);
 
 	EventGUIManagerBeingDestroyed();
 }
@@ -433,7 +433,7 @@ void EmberOgre::destroyWorld() {
 		mWindow->addViewport(mCameraOutOfWorld);
 	}
 	//This is an excellent place to force garbage collection of all scripting environments.
-	ScriptingService& scriptingService = EmberServices::getSingleton().getScriptingService();
+	auto& scriptingService = ScriptingService::getSingleton();
 	const std::vector<std::string> providerNames = scriptingService.getProviderNames();
 	for (const auto& providerName: providerNames) {
 		scriptingService.getProviderFor(providerName)->forceGC();

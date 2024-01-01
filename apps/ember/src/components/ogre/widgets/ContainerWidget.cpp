@@ -69,10 +69,10 @@ WidgetPluginCallback ContainerWidget::registerWidget(GUIManager& guiManager) {
 		}
 	};
 
-	auto con = EmberServices::getSingleton().getServerService().GotAvatar.connect(connectFn);
+	auto con = ServerService::getSingleton().GotAvatar.connect(connectFn);
 
-	if (EmberServices::getSingleton().getServerService().getAvatar()) {
-		connectFn(EmberServices::getSingleton().getServerService().getAvatar());
+	if (ServerService::getSingleton().getAvatar()) {
+		connectFn(ServerService::getSingleton().getAvatar());
 	}
 
 	//Just hold on to an instance.

@@ -40,7 +40,7 @@ function Console:buildWidget()
 	self.avatarEntity = nil
 	connect(self.connectors, emberOgre.EventCreatedAvatarEntity, function(avatarEntity)
 		self.avatarEntity = avatarEntity
-		self.avatarEntityDeletionConnection = emberServices:getServerService().DestroyedAvatar:connect(function()
+		self.avatarEntityDeletionConnection = Ember.ServerService.getSingleton().DestroyedAvatar:connect(function()
 			self.avatarEntity = nil
 		end)
 	end)

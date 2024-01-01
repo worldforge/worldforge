@@ -73,13 +73,13 @@ function Admin:NetworkLog_Click()
 end
 
 function Admin:VisualizeEntities_Click()
-	if emberServices:getConfigService():itemExists("authoring", "visualizations") then
-		local visualizeVariable = emberServices:getConfigService():getValue("authoring", "visualizations")
+	if Ember.ConfigService.getSingleton():itemExists("authoring", "visualizations") then
+		local visualizeVariable = Ember.ConfigService.getSingleton():getValue("authoring", "visualizations")
 		if visualizeVariable then
 			if visualizeVariable:is_bool() then
 				local visualize = visualizeVariable:as_bool()
 				local new_value = varconf.Variable.new(not visualize)
-				emberServices:getConfigService():setValue("authoring", "visualizations", new_value, varconf.USER)
+				Ember.ConfigService.getSingleton():setValue("authoring", "visualizations", new_value, varconf.USER)
 			end
 		end
 	end
@@ -165,7 +165,7 @@ Admin.createdAvatarConnector = emberOgre.EventCreatedAvatarEntity:connect(
 		end
 )
 
-Admin.destroyedConnector = emberServices:getServerService().DestroyedAvatar:connect(function()
+Admin.destroyedConnector = Ember.ServerService.getSingleton().DestroyedAvatar:connect(function()
 	if Admin.instance then
 		Admin.instance:shutdown()
 		Admin.instance = nil

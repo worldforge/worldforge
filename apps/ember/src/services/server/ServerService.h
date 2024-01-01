@@ -22,6 +22,7 @@
 #include "ServerServiceSignals.h"
 
 #include "framework/Service.h"
+#include "framework/Singleton.h"
 
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
@@ -71,7 +72,7 @@ class NonConnectedState;
  * @see Ember::MetaserverService
  * @see Ember::ConsoleObject
  */
-class ServerService : public Service, public ServerServiceSignals {
+class ServerService : public Service, public ServerServiceSignals, public Singleton<ServerService> {
 public:
 
 	/**

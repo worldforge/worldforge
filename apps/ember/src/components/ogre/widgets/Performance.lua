@@ -19,10 +19,10 @@ function Performance:buildWidget()
 		self.motionManager = nil
 	end)
 
-	connect(self.connectors, emberServices:getServerService().GotView, function(view)
+	connect(self.connectors, Ember.ServerService.getSingleton().GotView, function(view)
 		self.view = view
 	end)
-	connect(self.connectors, emberServices:getServerService().DestroyedView, function()
+	connect(self.connectors, Ember.ServerService.getSingleton().DestroyedView, function()
 		self.view = nil
 	end)
 

@@ -27,6 +27,7 @@ void registerLua<ServerSettings>(sol::table& space) {
 
 
 	auto serverSettings = space.new_usertype<ServerSettings>("ServerSettings", sol::no_constructor);
+	serverSettings["getSingleton"] = &ServerSettings::getSingleton;
 	serverSettings["getItem"] = &ServerSettings::getItem;
 
 	space.new_usertype<ServerSettingsCredentials>("ServerSettingsCredentials",

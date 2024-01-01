@@ -160,7 +160,7 @@ void IconManager::render(Icon& icon, EmberEntity& entity) {
 void IconManager::render(Icon& icon, Eris::TypeInfo& erisType) {
 	//we need to get the model mapping definition for this type
 	//once we have that, we will check for the first action of the first case of the first match (since that's guaranteed to be a show-model action
-	Eris::Connection* conn = EmberServices::getSingleton().getServerService().getConnection();
+	Eris::Connection* conn = ServerService::getSingleton().getConnection();
 	if (conn) {
 		auto& typeService = conn->getTypeService();
 		DummyEntity dummyEntity("-1", &erisType);

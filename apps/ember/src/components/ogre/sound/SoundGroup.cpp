@@ -128,7 +128,7 @@ void SoundGroup::setPlayOrder(const unsigned int playO) {
 // 	}
 
 void SoundGroup::addSound(const SoundDefinition& soundDef) {
-	BaseSoundSample* soundSample = EmberServices::getSingleton().getSoundService().createOrRetrieveSoundSample(soundDef.mFilename);
+	BaseSoundSample* soundSample = SoundService::getSingleton().createOrRetrieveSoundSample(soundDef.mFilename);
 	if (soundSample) {
 		mSamples.push_back(soundSample);
 	}
