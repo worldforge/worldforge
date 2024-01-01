@@ -271,20 +271,19 @@ void Input::startInteraction() {
 																 true);
 }
 
-void Input::processInput() {
+void Input::processInput(const std::chrono::steady_clock::time_point currentTime) {
 
-	auto currentTime = std::chrono::steady_clock::now();
 	mMainLoopController->EventBeforeInputProcessing.emit((float) (currentTime - mLastTimeInputProcessingStart).count() / 1000000000.0f);
 	mLastTimeInputProcessingStart = currentTime;
 
-	auto newTick = std::chrono::steady_clock::now();
+	auto newTick = currentTime;
 	float secondsSinceLast = std::chrono::duration_cast<std::chrono::duration<float>>(newTick - mLastTick).count();
 
 	mLastTick = newTick;
 	pollMouse(secondsSinceLast);
 	pollEvents(secondsSinceLast);
 
-	currentTime = std::chrono::steady_clock::now();
+	//currentTime = std::chrono::steady_clock::now();
 	mMainLoopController->EventAfterInputProcessing.emit((float) (currentTime - mLastTimeInputProcessingEnd).count() / 1000000000.0f);
 	mLastTimeInputProcessingEnd = currentTime;
 }

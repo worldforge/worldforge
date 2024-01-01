@@ -43,10 +43,10 @@ using Atlas::Message::MapType;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
 
-using WFMath::TimeStamp;
-using WFMath::TimeDiff;
-
 namespace Eris {
+
+std::chrono::steady_clock::time_point Entity::currentTime;
+
 
 Entity::Entity(std::string id, TypeInfo* ty) :
 		m_type(ty),
@@ -484,7 +484,7 @@ void Entity::endUpdate() {
 			velocityChanged ||
 			orientationChanged ||
 			m_modifiedProperties.find("angular") != m_modifiedProperties.end()) {
-			auto now = std::chrono::steady_clock::now();
+			auto now = currentTime;
 			if (orientationChanged) {
 				m_predicted.orientation.lastUpdated = now;
 				m_predicted.orientation.value = m_orientation;
@@ -494,8 +494,8 @@ void Entity::endUpdate() {
 				m_predicted.velocity.value = m_velocity;
 			}
 			if (posChanged) {
-					m_predicted.position.lastUpdated = now;
-					m_predicted.position.value = m_position;
+				m_predicted.position.lastUpdated = now;
+				m_predicted.position.value = m_position;
 			}
 			const WFMath::Vector<3>& velocity = getVelocity();
 			bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3)) || (m_angularVelocity.isValid() && m_angularVelocity != WFMath::Vector<3>::ZERO());

@@ -30,14 +30,13 @@ namespace Ember {
  * An instance of this is to be used whenever you want to check whether a certain amount of time has elapsed.
  * The typical situation where it would be useful is when rendering a frame, and you don't want to spend too much time until the next frame.
  */
-class TimeFrame {
-public:
+struct TimeFrame {
 
 	/**
 	 * @brief Ctor.
 	 * @param timeSlice The slice of time for this time frame.
 	 */
-	explicit TimeFrame(std::chrono::steady_clock::duration timeSlice);
+	explicit TimeFrame(std::chrono::steady_clock::duration timeSlice, std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now());
 
 	/**
 	 * @brief Checks whether there's any time left until the threshold has passed.
@@ -56,8 +55,6 @@ public:
 	 * @return The elapsed time.
 	 */
 	std::chrono::nanoseconds getElapsedTime() const;
-
-private:
 
 	/**
 	 * @brief Time when the task started.

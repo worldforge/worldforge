@@ -520,7 +520,7 @@ std::future<void> EmberOgre::loadAssets(Squall::Signature signature) {
 			//Each time a resource is created we check if we should render, with 60 fps.
 			void resourceCreated(const Ogre::ResourcePtr&) override {
 				if (!timeFrame.isTimeLeft()) {
-					parent->mInput.processInput();
+					parent->mInput.processInput(timeFrame.mStartTime);
 					parent->renderOneFrame(timeFrame);
 					timeFrame = TimeFrame{std::chrono::milliseconds{16}};
 				}

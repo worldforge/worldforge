@@ -21,7 +21,7 @@
 
 namespace Ember {
 
-MainLoopController::MainLoopController(bool& shouldQuit, bool& pollEris, Session& session) :
+MainLoopController::MainLoopController(volatile bool& shouldQuit, bool& pollEris, Session& session) :
 		mShouldQuit(shouldQuit), mPollEris(pollEris), mSession(session) {
 }
 

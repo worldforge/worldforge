@@ -20,8 +20,8 @@
 #include "TimeFrame.h"
 
 namespace Ember {
-TimeFrame::TimeFrame(std::chrono::steady_clock::duration timeSlice) :
-		mStartTime(std::chrono::steady_clock::now()),
+TimeFrame::TimeFrame(std::chrono::steady_clock::duration timeSlice, std::chrono::steady_clock::time_point startTime) :
+		mStartTime(startTime),
 		mEndTime(mStartTime + timeSlice) {
 }
 

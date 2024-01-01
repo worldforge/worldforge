@@ -304,18 +304,23 @@ void Application::mainLoop() {
 
 	while (!mShouldQuit) {
 		try {
-			DetailedMessageFormatter::sCurrentFrameStartMilliseconds = std::chrono::steady_clock::now();
+			unsigned int frameActionMask = 0;
+			auto currentTime = std::chrono::steady_clock::now();
 
-			StackChecker::resetCounter();
+			DetailedMessageFormatter::sCurrentFrameStartMilliseconds = currentTime;
+
+			StackChecker::resetCounter(currentTime);
 
 			//Flush log at start of each frame.
 			logger->flush();
 
-			unsigned int frameActionMask = 0;
-			auto timePerFrame = desiredFpsListener.getTimePerFrame();
-			TimeFrame timeFrame(timePerFrame);
+			TimeFrame timeFrame(desiredFpsListener.getTimePerFrame(), currentTime);
 
-			mInput.processInput();
+			if (mWorldView) {
+				mWorldView->update(currentTime);
+			}
+
+			mInput.processInput(currentTime);
 			frameActionMask |= MainLoopController::FA_INPUT;
 
 			//mShouldQuit is sometimes set by IO, so we might exit here already
@@ -342,10 +347,6 @@ void Application::mainLoop() {
 
 			//Then process Eris handlers. These are things that mainly deal with assets being loaded, so it's ok if they are spread out over multiple frames.
 			eventService.processOneHandler();
-
-			if (mWorldView) {
-				mWorldView->update();
-			}
 
 			//If there's time left this frame, poll any outstanding io handlers.
 			if (timeFrame.isTimeLeft()) {
@@ -379,7 +380,7 @@ void Application::mainLoop() {
 			mMainLoopController.EventFrameProcessed(timeFrame, frameActionMask);
 
 			//Check if it took more than 140% of the allotted time (but avoid floats when doing the comparisons).
-			if (updatedRendering && (timeFrame.getElapsedTime().count() * 1000000) > (timePerFrame.count() * 1400000)) {
+			if (updatedRendering && (timeFrame.getElapsedTime().count() * 1'000'000) > (desiredFpsListener.getTimePerFrame().count() * 1'400'000)) {
 				logger->debug("Frame took too long.");
 			}
 

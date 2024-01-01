@@ -27,6 +27,7 @@ namespace Eris {
 View::View(Avatar& av) :
 		m_owner(av),
 		m_topLevel(nullptr),
+		m_lastUpdateTime(std::chrono::steady_clock::now()),
 		m_simulationSpeed(1.0),
 		m_maxPendingCount(10) {
 }
@@ -86,27 +87,29 @@ double View::getSimulationSpeed() const {
 	return m_simulationSpeed;
 }
 
-void View::update() {
+void View::update(const std::chrono::steady_clock::time_point& currentTime) {
 
-	auto pruned = pruneAbandonedPendingEntities();
+	Entity::currentTime = currentTime;
+
+	auto pruned = pruneAbandonedPendingEntities(currentTime);
 	for (size_t i = 0; i < pruned; ++i) {
 		issueQueuedLook();
 	}
 
-	auto now = std::chrono::steady_clock::now();
 
 	// run motion prediction for each moving entity
 	for (auto& it: m_moving) {
-		it->updatePredictedState(now, m_simulationSpeed);
+		it->updatePredictedState(currentTime, m_simulationSpeed);
 	}
 
-	m_lastUpdateTime = now;
 
-	auto deltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(now - m_lastUpdateTime).count()) / 1'000'000.0;
+	auto deltaTime = static_cast<double>(std::chrono::duration_cast<std::chrono::microseconds>(currentTime - m_lastUpdateTime).count()) / 1'000'000.0;
 
 	for (auto& m_progressingTask: m_progressingTasks) {
 		m_progressingTask->updatePredictedProgress(deltaTime);
 	}
+
+	m_lastUpdateTime = currentTime;
 
 	if (m_owner.getEntity()) {
 		auto topEntity = m_owner.getEntity()->getTopEntity();
@@ -352,11 +355,10 @@ void View::getEntityFromServer(const std::string& eid) {
 	sendLookAt(eid);
 }
 
-size_t View::pruneAbandonedPendingEntities() {
+size_t View::pruneAbandonedPendingEntities(const std::chrono::steady_clock::time_point& currentTime) {
 	size_t pruned = 0;
-	auto now = std::chrono::steady_clock::now();
 	for (auto I = m_pending.begin(); I != m_pending.end();) {
-		if (I->second.sightAction != SightAction::QUEUED && (now - I->second.registrationTime) > std::chrono::seconds(20)) {
+		if (I->second.sightAction != SightAction::QUEUED && (currentTime - I->second.registrationTime) > std::chrono::seconds(20)) {
 			logger->warn("Didn't receive any response for entity {} within 20 seconds, will remove it from pending list.", I->first);
 			I = m_pending.erase(I);
 			pruned++;

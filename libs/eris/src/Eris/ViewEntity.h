@@ -65,4 +65,4 @@ inline View* ViewEntity::getView() const {
 }
 }
 
-#endif /* VIEWENTITY_H_ */
+#endif /* ERIS_VIEW_ENTITY_H_ */

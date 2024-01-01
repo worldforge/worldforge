@@ -237,7 +237,7 @@ public:
 	 * Call this once every frame.
 	 * @param evt 
 	 */
-	void processInput();
+	void processInput(const std::chrono::steady_clock::time_point currentTime);
 
 	/**
 	 * @brief Checks whether the application is visible and nor minimized.

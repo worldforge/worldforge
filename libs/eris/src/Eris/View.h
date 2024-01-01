@@ -92,7 +92,7 @@ public:
 	state. This includes motion prediction for moving entities, and confidence
 	levels for disappeared entities.
 	*/
-	void update();
+	void update(const std::chrono::steady_clock::time_point& currentTime);
 
 	/**
 	Register an Entity Factory with this view
@@ -147,7 +147,7 @@ public:
 	*/
 	void sendLookAt(const std::string& eid);
 
-	size_t pruneAbandonedPendingEntities();
+	size_t pruneAbandonedPendingEntities(const std::chrono::steady_clock::time_point& currentTime);
 
 	Connection& getConnection() const;
 

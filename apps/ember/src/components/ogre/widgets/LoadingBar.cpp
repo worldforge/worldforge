@@ -98,7 +98,7 @@ void LoadingBar::setVersionText(const std::string& versionText) {
 void LoadingBar::updateRender(bool forceUpdate) {
 	if (mTimer.getMilliseconds() > (1000 / 60) || forceUpdate) {
 		try {
-			Input::getSingleton().processInput();
+			Input::getSingleton().processInput(std::chrono::steady_clock::now());
 			if (mMainLoopController.shouldQuit() || mGuiSetup.getRenderWindow().isClosed()) {
 				throw ShutdownException("Aborting startup");
 			}

@@ -64,7 +64,17 @@
 #include <OgreTagPoint.h>
 
 #include <wfmath/stream.h>
+#include <fmt/ostream.h>
 
+template<>
+struct fmt::formatter<WFMath::Quaternion> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<WFMath::Vector<3>> : ostream_formatter {
+};
+template<>
+struct fmt::formatter<WFMath::Point<3>> : ostream_formatter {
+};
 namespace Ember::OgreView {
 
 Avatar::Avatar(Eris::Avatar& erisAvatar,
@@ -97,7 +107,6 @@ Avatar::Avatar(Eris::Avatar& erisAvatar,
 
 	mCurrentMovementState.movement = WFMath::Vector<3>::ZERO();
 	mCurrentMovementState.orientation = WFMath::Quaternion().identity();
-	mCurrentMovementState.position = erisAvatarEntity.getPredictedPos();
 
 	mErisAvatarEntity.EventAttachmentChanged.connect(sigc::mem_fun(*this, &Avatar::attachCameraToEntity));
 	mErisAvatarEntity.EventChangedGraphicalRepresentation.connect(sigc::mem_fun(*this, &Avatar::attachCameraToEntity));
@@ -243,7 +252,6 @@ void Avatar::attemptMove() {
 	AvatarMovementState newMovementState;
 	newMovementState.orientation = mClientSideAvatarOrientation;
 	newMovementState.movement = mCurrentMovement;
-	newMovementState.position = mClientSideAvatarPosition;
 
 	bool isMoving = mCurrentMovement.isValid() && mCurrentMovement != WFMath::Vector<3>::ZERO();
 	bool wasMoving = mCurrentMovementState.movement.isValid() && mCurrentMovementState.movement != WFMath::Vector<3>::ZERO();
@@ -271,10 +279,8 @@ void Avatar::attemptMove() {
 	}
 
 	if (sendToServer) {
-		std::stringstream ss;
-		ss << "Sending move op to server, direction: " << newMovementState.movement << ", orientation: " << newMovementState.orientation << ", speed: " << sqrt(newMovementState.movement.sqrMag())
-		   << ".";
-		logger->debug(ss.str());
+
+		logger->debug("Sending move op to server, direction: {}, orientation: {}, speed: {}.", newMovementState.movement, newMovementState.orientation, sqrt(newMovementState.movement.sqrMag()));
 
 		//Save the ten latest orientations sent to the server, so we can later when we receive an update from the server we can recognize that it's our own updates and ignore them.
 		long long currentTime = TimeHelper::currentTimeMillis();
@@ -284,7 +290,16 @@ void Avatar::attemptMove() {
 		}
 
 		mErisAvatar.moveInDirection(newMovementState.movement, newMovementState.orientation);
-
+//		if (newMovementState.movement.isValid()
+//		&& newMovementState.movement == WFMath::Vector<3>::ZERO()
+//		) {
+//			mErisAvatar.getEntity()->getPredictedState().velocity.value = newMovementState.movement;
+//			mErisAvatar.getEntity()->getPredictedState().velocity.lastUpdated = std::chrono::steady_clock::now();
+//		}
+//		if (newMovementState.orientation.isValid()) {
+//			mErisAvatar.getEntity()->getPredictedState().orientation.value = newMovementState.orientation;
+//			mErisAvatar.getEntity()->getPredictedState().orientation.lastUpdated = std::chrono::steady_clock::now();
+//		}
 	}
 
 	mCurrentMovementState = newMovementState;
@@ -531,7 +546,7 @@ WFMath::Point<3> Avatar::getClientSideAvatarPosition() const {
 	//NOTE: for now we've deactivated the client side prediction as it doesn't really work as it should
 	WFMath::Point<3> pos = mErisAvatarEntity.getPredictedPos();
 	return pos.isValid() ? pos : WFMath::Point<3>::ZERO();
-//	//If the avatar entity is moving, we're note moving on the client side, and we haven't sent something to the server lately, we should assume that we're moving as a result of server side actions, and therefore use the server side position
+//	//If the avatar entity is moving, we're not moving on the client side, and we haven't sent something to the server lately, we should assume that we're moving as a result of server side actions, and therefore use the server side position
 //	//	if (mCurrentMovement == WFMath::Vector<3>::ZERO() && mErisAvatarEntity.isMoving()) {
 //	//		bool clientSideMovement = false;
 //	//		if (mLastTransmittedMovements.size()) {
@@ -554,7 +569,7 @@ WFMath::Point<3> Avatar::getClientSideAvatarPosition() const {
 
 WFMath::Quaternion Avatar::getClientSideAvatarOrientation() const {
 	//NOTE: for now we've deactivated the client side prediction as it doesn't really work as it should
-	return mErisAvatarEntity.getOrientation().isValid() ? mErisAvatarEntity.getOrientation() : WFMath::Quaternion().identity();
+	return mErisAvatarEntity.getPredictedState().orientation.value.isValid() ? mErisAvatarEntity.getPredictedState().orientation.value : WFMath::Quaternion().identity();
 //	if (mIsMovingServerOnly) {
 //		return mErisAvatarEntity.getOrientation();
 //	} else {
@@ -564,7 +579,7 @@ WFMath::Quaternion Avatar::getClientSideAvatarOrientation() const {
 
 WFMath::Vector<3> Avatar::getClientSideAvatarVelocity() const {
 	//NOTE: for now we've deactivated the client side prediction as it doesn't really work as it should
-	return mErisAvatarEntity.getVelocity().isValid() ? mErisAvatarEntity.getVelocity() : WFMath::Vector<3>::ZERO();
+	return mErisAvatarEntity.getPredictedState().velocity.value.isValid() ? mErisAvatarEntity.getPredictedState().velocity.value : WFMath::Vector<3>::ZERO();
 //	if (mIsMovingServerOnly) {
 //		return mErisAvatarEntity.getVelocity();
 //	} else {

@@ -189,7 +189,7 @@ private:
 	 * @brief If set to true, Ember should quit before next loop step.
 	 * @see mainLoop()
 	 */
-	bool mShouldQuit;
+	volatile bool mShouldQuit;
 
 	/**
 	 * @brief Controls whether eris should be polled at each frame update.

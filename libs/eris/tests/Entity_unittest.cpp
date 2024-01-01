@@ -50,7 +50,7 @@ class TestErisEntity : public Eris::Entity
 
     void testSetPosition(const WFMath::Point<3>& position) {
         m_position = position;
-		m_predicted.position = position;
+		m_predicted.position.value = position;
     }
 
     void testSetVelocity(const WFMath::Vector<3>& velocity) {
@@ -59,13 +59,13 @@ class TestErisEntity : public Eris::Entity
 
     void testSetOrientation(const WFMath::Quaternion& orientation) {
         m_orientation = orientation;
-		m_predicted.orientation = orientation;
+		m_predicted.orientation.value = orientation;
     }
 
     void testUpdatePositionWithDelta(std::chrono::steady_clock::duration diff) {
         m_moving = true;
-		m_lastPosTime = {};
-		m_lastOrientationTime = {};
+		m_predicted.position.lastUpdated= {};
+		m_predicted.orientation.lastUpdated = {};
         updatePredictedState(std::chrono::steady_clock::time_point{} + diff, 1.0f);
     }
 };

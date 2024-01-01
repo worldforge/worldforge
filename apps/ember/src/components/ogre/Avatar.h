@@ -77,7 +77,6 @@ struct AvatarMovementState {
 public:
 	WFMath::Vector<3> movement;
 	WFMath::Quaternion orientation;
-	WFMath::Point<3> position;
 };
 
 /**

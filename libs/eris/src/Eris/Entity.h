@@ -62,6 +62,9 @@ class Entity : virtual public sigc::trackable {
 
 public:
 
+	//The "current" time, used for doing movement prediction.
+	static std::chrono::steady_clock::time_point currentTime;
+
 	template<typename T>
 	struct PredictedValue {
 		std::chrono::steady_clock::time_point lastUpdated;
