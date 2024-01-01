@@ -111,6 +111,9 @@ debug" and "release" environment.
 conan install -s build_type=Debug . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True --update  && conan install . --build missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True --update
 ```
 
+You might also want to look into the ```.gdbinit``` file to see how you can set it up to ungrab the mouse when
+debugging.
+
 ## Running a server
 
 To get a server running you need to build the project and then start the "cyphesis" artifact.
