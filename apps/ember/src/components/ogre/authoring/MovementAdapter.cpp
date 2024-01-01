@@ -127,12 +127,12 @@ MovementAdapterWorkerHeightOffset::MovementAdapterWorkerHeightOffset(MovementAda
 
 bool MovementAdapterWorkerHeightOffset::injectMouseMove(const MouseMotion& motion, bool& freezeMouse) {
 	auto existingOffset = getBridge()->getOffset();
-	std::optional<float> offset(0);
+	std::optional<float> offset(0.0f);
 
 	if (existingOffset) {
 		offset = existingOffset;
 	}
-	*offset += motion.yRelativeMovement * 10;
+	*offset += motion.yRelativeMovement * 10.0f;
 	getBridge()->setOffset(offset);
 	freezeMouse = true;
 	return false;

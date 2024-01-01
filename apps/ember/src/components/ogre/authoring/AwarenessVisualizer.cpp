@@ -66,8 +66,6 @@
 #include <OgreSceneNode.h>
 
 
-
-
 namespace Ember::OgreView::Authoring {
 
 AwarenessVisualizer::AwarenessVisualizer(Navigation::Awareness& awareness, Ogre::SceneManager& sceneManager) :
@@ -205,17 +203,17 @@ void AwarenessVisualizer::createRecastPolyMesh(const std::string& name, const un
 
 	// Colors for navmesh debug drawing
 	static Ogre::ColourValue m_navmeshNeighbourEdgeCol(0.9f, 0.9f, 0.9f);   // Light Grey
-	static Ogre::ColourValue m_navmeshOuterEdgeCol(0, 0, 0);         // Black
-	static Ogre::ColourValue m_navmeshGroundPolygonCol(0, 0.7f, 0);       // Green
-	static Ogre::ColourValue m_navmeshOtherPolygonCol(0, 0.175f, 0);     // Dark green
-	static Ogre::ColourValue m_pathCol(1, 0, 0);         // Red
+	static Ogre::ColourValue m_navmeshOuterEdgeCol(0.0f, 0.0f, 0.0f);         // Black
+	static Ogre::ColourValue m_navmeshGroundPolygonCol(0.0f, 0.7f, 0.0f);       // Green
+	static Ogre::ColourValue m_navmeshOtherPolygonCol(0.0f, 0.175f, 0.0f);     // Dark green
+	static Ogre::ColourValue m_pathCol(1.0f, 0.0f, 0.0f);         // Red
 
 	// When drawing regions choose different random colors for each region
 	std::vector<Ogre::ColourValue> regionColors;
 	if (colorRegions) {
 		regionColors.reserve(maxpolys);
 		for (int i = 0; i < maxpolys; ++i) {
-			regionColors.emplace_back(Ogre::Math::RangeRandom(0, 1), Ogre::Math::RangeRandom(0, 1), Ogre::Math::RangeRandom(0, 1), 1);
+			regionColors.emplace_back(Ogre::Math::RangeRandom(0.0f, 1.0f), Ogre::Math::RangeRandom(0.0f, 1.0f), Ogre::Math::RangeRandom(0.0f, 1.0f), 1.0f);
 		}
 	}
 

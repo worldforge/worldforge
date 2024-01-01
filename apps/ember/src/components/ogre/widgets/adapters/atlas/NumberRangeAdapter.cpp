@@ -28,7 +28,7 @@ NumberRangeAdapter::NumberRangeAdapter(const ::Atlas::Message::Element& element,
 		  mWindows(windows) {
 	addGuiEventConnection(windows.MaxWindow.subscribeEvent(CEGUI::Editbox::EventTextChanged, [this]() {
 		try {
-			mMax = std::strtod(mWindows.MaxWindow.getText().c_str(), nullptr);
+			mMax = std::strtof(mWindows.MaxWindow.getText().c_str(), nullptr);
 		} catch (...) {
 			mMax = {};
 		}
@@ -36,7 +36,7 @@ NumberRangeAdapter::NumberRangeAdapter(const ::Atlas::Message::Element& element,
 	}));
 	addGuiEventConnection(windows.MinWindow.subscribeEvent(CEGUI::Editbox::EventTextChanged, [this]() {
 		try {
-			mMin = std::strtod(mWindows.MinWindow.getText().c_str(), nullptr);
+			mMin = std::strtof(mWindows.MinWindow.getText().c_str(), nullptr);
 		} catch (...) {
 			mMin = {};
 		}

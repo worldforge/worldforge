@@ -1,6 +1,6 @@
 #Use WIN32 to specify that on Windows it should be a non-console app.
 add_executable(ember WIN32)
-target_sources(ember PRIVATE
+target_sources(ember PUBLIC
         Application.cpp
         ConfigBoundLogObserver.cpp
         Ember.cpp
