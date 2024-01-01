@@ -249,8 +249,7 @@ bool FileSystemArchive::exists(const String& filename) const {
 time_t FileSystemArchive::getModifiedTime(const String& filename) const {
 	auto full_path = concatenate_path(mBaseName, filename);
 	const auto fileTime = std::filesystem::last_write_time(full_path);
-	const auto systemTime = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
-	return std::chrono::system_clock::to_time_t(systemTime);
+	return fileTime.time_since_epoch().count();
 }
 
 //-----------------------------------------------------------------------
