@@ -120,5 +120,5 @@ Ref<LocatedEntity> CharacterClient::sendLook(const Operation& op) {
 	} else {
 		std::cout << "Seen: " << sight_id << std::endl;
 	}
-	return m_map.updateAdd(seen, res->getSeconds());
+	return m_map.updateAdd(seen, std::chrono::milliseconds(res->getStamp()));
 }

@@ -95,7 +95,7 @@ int main() {
 		TestIGRouter ir(av);
 
 		RootOperation op;
-		op->setSeconds(0);
+		op->setStamp(0);
 		Eris::Router::RouterResult r = ir.test_handleOperation(op);
 		assert(r == Eris::Router::IGNORED);
 	}
@@ -493,7 +493,7 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
 		m_mindId(mindId),
 		m_entityId(entId),
 		m_entity(nullptr),
-		m_lastOpTime(0.0),
+		m_lastOpTime(0),
 		m_view(new View(*this)),
 		m_isAdmin(false) {
 }
@@ -516,7 +516,7 @@ void Avatar::logoutRequested(const TransferInfo& transferInfo) {
 	_test_avatar_logoutWithTransferRequested();
 }
 
-void Avatar::updateWorldTime(double seconds) {
+void Avatar::updateWorldTime(std::chrono::milliseconds) {
 }
 
 BaseConnection::BaseConnection(boost::asio::io_service& io_service, std::string cnm,
@@ -656,7 +656,7 @@ bool View::isPending(const std::string& eid) const {
 	return false;
 }
 
-void View::appear(const std::string& eid, double stamp) {
+void View::appear(const std::string&, std::chrono::milliseconds) {
 }
 
 void View::disappear(const std::string& eid) {

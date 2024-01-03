@@ -171,7 +171,7 @@ void Account::sendUpdateToClient() {
 		Anonymous sight_arg;
 		addToEntity(sight_arg);
 		s->setArgs1(sight_arg);
-		s->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+		s->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 		m_connection->send(s);
 	}
 }
@@ -222,7 +222,7 @@ void Account::LogoutOperation(const Operation& op, OpVector& res) {
 				}
 				info->setFrom(getId());
 				info->setTo(getId());
-				info->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+				info->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 				m_connection->send(info);
 
 				return;
@@ -238,7 +238,7 @@ void Account::LogoutOperation(const Operation& op, OpVector& res) {
 		}
 		info->setFrom(getId());
 		info->setTo(getId());
-		info->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+		info->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 		m_connection->send(info);
 		m_connection->disconnect();
 	}
@@ -350,7 +350,7 @@ void Account::externalOperation(const Operation& op, Link& link) {
 					replyOp->setRefno(op->getSerialno());
 				}
 			}
-			replyOp->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+			replyOp->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 		}
 		m_connection->send(res);
 	}
@@ -395,7 +395,7 @@ void Account::processExternalOperation(const Operation& op, OpVector& res) {
 
 void Account::operation(const Operation& op, OpVector& res) {
 	if (m_connection) {
-		op->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+		op->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 		m_connection->send(op);
 	}
 }
@@ -452,7 +452,7 @@ void Account::ImaginaryOperation(const Operation& op, OpVector& res) {
 	if (!op->isDefaultSerialno()) {
 		s->setRefno(op->getSerialno());
 	}
-	RootEntity arg = smart_dynamic_cast<RootEntity>(args.front());
+	auto arg = smart_dynamic_cast<RootEntity>(args.front());
 
 	if (!arg.isValid()) {
 		error(op, "Imaginary arg is malformed", res, getId());
@@ -476,7 +476,7 @@ void Account::TalkOperation(const Operation& op, OpVector& res) {
 		return;
 	}
 
-	RootEntity arg = smart_dynamic_cast<RootEntity>(args.front());
+	auto arg = smart_dynamic_cast<RootEntity>(args.front());
 
 	if (!arg.isValid()) {
 		error(op, "Talk arg is malformed", res, getId());

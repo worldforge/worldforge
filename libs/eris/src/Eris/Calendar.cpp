@@ -79,7 +79,7 @@ DateTime Calendar::now() const {
 	// we don't have valid calendar data yet
 	if (m_daysPerMonth == 0) return n;
 
-	long long world_time = L_ROUND(m_avatar.getWorldTime());
+	auto world_time = m_avatar.getWorldTime().count();
 
 	n.m_seconds = world_time % m_secondsPerMinute;
 	world_time /= m_secondsPerMinute;

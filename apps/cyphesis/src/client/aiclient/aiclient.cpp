@@ -291,8 +291,8 @@ int main(int argc, char** argv) {
 
 			monitors.watch("accounts", PossessionAccount::account_count);
 			monitors.watch("minds", PossessionAccount::mind_count);
-			monitors.watch("operations_in", PossessionClient::operations_in);
-			monitors.watch("operations_out", PossessionClient::operations_out);
+			monitors.watch("operations_in", (long&) PossessionClient::operations_in);
+			monitors.watch("operations_out", (long&) PossessionClient::operations_out);
 
 
 			//Reload the script factory when scripts changes.

@@ -44,9 +44,8 @@ void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -82,9 +81,8 @@ void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -120,9 +118,8 @@ void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -158,9 +155,8 @@ void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -196,9 +192,8 @@ void CommunicateData::fillDefaultObjectInstance(CommunicateData& data, std::map<
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -234,9 +229,8 @@ void TalkData::fillDefaultObjectInstance(TalkData& data, std::map<std::string, u
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 

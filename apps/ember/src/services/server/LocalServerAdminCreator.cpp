@@ -23,10 +23,10 @@
 #include <Eris/Account.h>
 #include <Eris/Connection.h>
 #include <Eris/Response.h>
-#include <Eris/CustomEntities.h>
 #include <Eris/SpawnPoint.h>
 
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 
 #include <wfmath/MersenneTwister.h>
 
@@ -47,7 +47,7 @@ LocalServerAdminCreator::LocalServerAdminCreator(ServerService& serverService) {
 }
 
 void LocalServerAdminCreator::server_GotAccount(Eris::Account* account) {
-	//When connecting to a local socket we should use a "sys" account.
+	//When connecting to a local socket we should use a "system_account" account.
 	//This works very much like an "admin" account, but is not persisted on the server.
 	//Thus we will first create a new account on the server, with a random name and password.
 
@@ -63,7 +63,7 @@ void LocalServerAdminCreator::server_GotAccount(Eris::Account* account) {
 		ss_username << rand.randInt(9);
 	}
 
-	Atlas::Objects::Entity::Sys sysAccountOp;
+	Atlas::Objects::Entity::SystemAccount sysAccountOp;
 
 	sysAccountOp->setAttr("username", ss_username.str());
 	sysAccountOp->setAttr("password", ss_password.str());

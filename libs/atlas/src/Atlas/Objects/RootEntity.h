@@ -82,8 +82,6 @@ public:
     void setContains(std::vector<std::string> val);
     /// Set the "contains" attribute AsList.
     void setContainsAsList(const Atlas::Message::ListType& val);
-    /// Set the "stamp_contains" attribute.
-    void setStampContains(double val);
 
     /// Retrieve the "loc" attribute.
     const std::string& getLoc() const;
@@ -107,10 +105,6 @@ public:
     std::vector<std::string>& modifyContains();
     /// Retrieve the "contains" attribute AsList.
     Atlas::Message::ListType getContainsAsList() const;
-    /// Retrieve the "stamp_contains" attribute.
-    double getStampContains() const;
-    /// Retrieve the "stamp_contains" attribute as a non-const reference.
-    double& modifyStampContains();
 
     /// Is "loc" value default?
     bool isDefaultLoc() const;
@@ -120,8 +114,6 @@ public:
     bool isDefaultVelocity() const;
     /// Is "contains" value default?
     bool isDefaultContains() const;
-    /// Is "stamp_contains" value default?
-    bool isDefaultStampContains() const;
 
 protected:
     /// Find the class which contains the attribute "name".
@@ -136,8 +128,6 @@ protected:
     std::vector<double> attr_velocity;
     /// List of objects that use this object as reference system (usually same as what this object contains).
     std::vector<std::string> attr_contains;
-    /// Last time any object that uses this as reference recursively has been modified
-    double attr_stamp_contains;
 
     /// Send the "loc" attribute to an Atlas::Bridge.
     void sendLoc(Atlas::Bridge&) const;
@@ -147,8 +137,6 @@ protected:
     void sendVelocity(Atlas::Bridge&) const;
     /// Send the "contains" attribute to an Atlas::Bridge.
     void sendContains(Atlas::Bridge&) const;
-    /// Send the "stamp_contains" attribute to an Atlas::Bridge.
-    void sendStampContains(Atlas::Bridge&) const;
 
 public:
     template <typename>
@@ -173,7 +161,6 @@ extern const std::string LOC_ATTR;
 extern const std::string POS_ATTR;
 extern const std::string VELOCITY_ATTR;
 extern const std::string CONTAINS_ATTR;
-extern const std::string STAMP_CONTAINS_ATTR;
 
 //
 // Inlined member functions follow.
@@ -242,14 +229,6 @@ inline void RootEntityData::setContainsAsList(const Atlas::Message::ListType& va
             attr_contains.emplace_back(entry.asString());
         }
     }
-}
-
-const uint32_t STAMP_CONTAINS_FLAG = 1u << 10u;
-
-inline void RootEntityData::setStampContains(double val)
-{
-    attr_stamp_contains = val;
-    m_attrFlags |= STAMP_CONTAINS_FLAG;
 }
 
 inline const std::string& RootEntityData::getLoc() const
@@ -342,21 +321,6 @@ inline Atlas::Message::ListType RootEntityData::getContainsAsList() const
     return lst_out;
 }
 
-inline double RootEntityData::getStampContains() const
-{
-    if(m_attrFlags & STAMP_CONTAINS_FLAG)
-        return attr_stamp_contains;
-    else
-        return ((RootEntityData*)m_defaults)->attr_stamp_contains;
-}
-
-inline double& RootEntityData::modifyStampContains()
-{
-    if(!(m_attrFlags & STAMP_CONTAINS_FLAG))
-        setStampContains(((RootEntityData*)m_defaults)->attr_stamp_contains);
-    return attr_stamp_contains;
-}
-
 inline bool RootEntityData::isDefaultLoc() const
 {
     return (m_attrFlags & LOC_FLAG) == 0;
@@ -375,11 +339,6 @@ inline bool RootEntityData::isDefaultVelocity() const
 inline bool RootEntityData::isDefaultContains() const
 {
     return (m_attrFlags & CONTAINS_FLAG) == 0;
-}
-
-inline bool RootEntityData::isDefaultStampContains() const
-{
-    return (m_attrFlags & STAMP_CONTAINS_FLAG) == 0;
 }
 
 

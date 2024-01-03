@@ -17,7 +17,7 @@
 #include <sigc++/connection.h>
 
 #include <optional>
-
+#include <chrono>
 #include <vector>
 
 namespace Eris {
@@ -64,7 +64,7 @@ public:
 	Account& getAccount() const;
 
 	/** get the current local approximation of world time. */
-	double getWorldTime();
+	std::chrono::milliseconds getWorldTime();
 
 	/// Touch an entity
 	void touch(Entity*, const WFMath::Point<3>& pos);
@@ -191,9 +191,9 @@ protected:
 
 	friend class IGRouter;
 
-	/** called by the IG router for each op it sees with a valid 'seconds'
+	/** called by the IG router for each op it sees with a valid 'stamp'
 	attribute set. We use this to synchronize the local world time up. */
-	void updateWorldTime(double t);
+	void updateWorldTime(std::chrono::milliseconds t);
 
 protected:
 	void onEntityAppear(Entity* ent);
@@ -229,8 +229,8 @@ protected:
 	std::string m_entityId;
 	Entity* m_entity;
 
-	WFMath::TimeStamp m_stampAtLastOp;
-	double m_lastOpTime;
+	std::chrono::steady_clock::time_point m_stampAtLastOp;
+	std::chrono::milliseconds m_lastOpTime;
 
 	std::unique_ptr<View> m_view;
 	std::unique_ptr<IGRouter> m_router;

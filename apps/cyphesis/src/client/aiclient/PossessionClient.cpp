@@ -42,8 +42,8 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Operation::RootOperation;
 
-long PossessionClient::operations_in = 0;
-long PossessionClient::operations_out = 0;
+size_t PossessionClient::operations_in = 0;
+size_t PossessionClient::operations_out = 0;
 
 PossessionClient::PossessionClient(CommSocket& commSocket,
 								   MindKit& mindFactory,
@@ -87,7 +87,7 @@ void PossessionClient::operationFromEntity(const Operation& op, Ref<BaseMind> lo
 
 		OpVector res;
 		//Adjust the time of the operation to fit with the server's time
-		op->setSeconds(op->getSeconds() - m_serverLocalTimeDiff);
+		op->setStamp(op->getStamp() - m_serverLocalTimeDiff.count());
 		processOperation(op, res);
 		operations_out += res.size();
 		send(res);
@@ -97,23 +97,23 @@ void PossessionClient::operationFromEntity(const Operation& op, Ref<BaseMind> lo
 void PossessionClient::operation(const Operation& op, OpVector& res) {
 	rmt_ScopedCPUSample(operation, 0)
 	operations_in++;
-	if (!op->isDefaultSeconds()) {
+	if (!op->isDefaultStamp()) {
 		//Store the difference between server time and local time, so we can properly adjust the time of any locally scheduled ops when they are dispatched.
-		m_serverLocalTimeDiff = std::chrono::duration_cast<std::chrono::duration<float>>(getTime()).count() - op->getSeconds();
+		m_serverLocalTimeDiff = std::chrono::duration_cast<std::chrono::milliseconds>(getTime()) - std::chrono::milliseconds(op->getStamp());
 	}
 	processOperation(op, res);
 	operations_out += res.size();
 }
 
 void PossessionClient::resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op) {
-	if (!op.isDefaultFutureSeconds()) {
+	if (!op.isDefaultFutureMilliseconds()) {
 		auto timeNow = std::chrono::steady_clock::now() - m_startTime;
-		auto timeAsSeconds = std::chrono::duration_cast<std::chrono::duration<float>>(timeNow).count();
-		double t = timeAsSeconds + op.getFutureSeconds();
-		op.setSeconds(t);
-		op.removeAttrFlag(Atlas::Objects::Operation::FUTURE_SECONDS_FLAG);
-	} else if (op.isDefaultSeconds()) {
-		op.setSeconds(std::chrono::duration_cast<std::chrono::duration<float>>(getTime()).count());
+		auto timeAsMilliseSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(timeNow);
+		auto t = timeAsMilliseSeconds + std::chrono::milliseconds(op.getFutureMilliseconds());
+		op.setStamp(t.count());
+		op.removeAttrFlag(Atlas::Objects::Operation::FUTURE_MILLISECONDS_FLAG);
+	} else if (op.isDefaultStamp()) {
+		op.setStamp(std::chrono::duration_cast<std::chrono::milliseconds>(getTime()).count());
 	}
 }
 

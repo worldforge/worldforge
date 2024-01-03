@@ -34,6 +34,7 @@
 #include <array>
 #include <set>
 #include <unordered_set>
+#include <chrono>
 
 namespace Mercator {
 class Segment;
@@ -104,7 +105,7 @@ public:
 
 	HandlerResult operation(LocatedEntity& e, const Operation& op, OpVector& res) override;
 
-	void tick(double t, OpVector& res);
+	void tick(std::chrono::milliseconds t, OpVector& res);
 
 	std::vector<CollisionEntry> queryCollision(const WFMath::Ball<3>& sphere) const override;
 
@@ -451,7 +452,7 @@ protected:
 
 	void sendMoveSight(BulletEntry& bulletEntry, bool posChange, bool velocityChange, bool orientationChange, bool angularChange, bool modeChanged);
 
-	void processMovedEntity(BulletEntry& bulletEntry, double timeSinceLastUpdate);
+	void processMovedEntity(BulletEntry& bulletEntry, std::chrono::milliseconds timeSinceLastUpdate);
 
 	void updateVisibilityOfDirtyEntities(OpVector& res);
 
@@ -467,7 +468,7 @@ protected:
 
 	void processDirtyTerrainAreas();
 
-	void applyDestination(double tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp);
+	void applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp);
 
 	void applyPropel(BulletEntry& entry, btVector3 propel);
 
@@ -479,8 +480,9 @@ protected:
 	void processWaterBodies();
 
 	std::shared_ptr<btCollisionShape> createCollisionShapeForEntry(LocatedEntity& entity,
-																   const WFMath::AxisBox<3>& bbox, float mass,
-																   btVector3& centerOfMassOffse);
+																   const WFMath::AxisBox<3>& bbox,
+																   float mass,
+																   btVector3& centerOfMassOffset);
 
 	/**
 	 * Transform any entities that are resting on the supplied entity.

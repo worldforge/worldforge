@@ -129,13 +129,13 @@
   }
 #endif //STUB_CyPy_Operation_setTo
 
-#ifndef STUB_CyPy_Operation_setSeconds
-//#define STUB_CyPy_Operation_setSeconds
-  Py::Object CyPy_Operation::setSeconds(const Py::Tuple& args)
+#ifndef STUB_CyPy_Operation_setStamp
+//#define STUB_CyPy_Operation_setStamp
+  Py::Object CyPy_Operation::setStamp(const Py::Tuple& args)
   {
     return *static_cast<Py::Object*>(nullptr);
   }
-#endif //STUB_CyPy_Operation_setSeconds
+#endif //STUB_CyPy_Operation_setStamp
 
 #ifndef STUB_CyPy_Operation_setFutureSeconds
 //#define STUB_CyPy_Operation_setFutureSeconds
@@ -144,6 +144,14 @@
     return *static_cast<Py::Object*>(nullptr);
   }
 #endif //STUB_CyPy_Operation_setFutureSeconds
+
+#ifndef STUB_CyPy_Operation_setFutureMilliseconds
+//#define STUB_CyPy_Operation_setFutureMilliseconds
+  Py::Object CyPy_Operation::setFutureMilliseconds(const Py::Tuple& args)
+  {
+    return *static_cast<Py::Object*>(nullptr);
+  }
+#endif //STUB_CyPy_Operation_setFutureMilliseconds
 
 #ifndef STUB_CyPy_Operation_setName
 //#define STUB_CyPy_Operation_setName
@@ -201,13 +209,13 @@
   }
 #endif //STUB_CyPy_Operation_getTo
 
-#ifndef STUB_CyPy_Operation_getSeconds
-//#define STUB_CyPy_Operation_getSeconds
-  Py::Object CyPy_Operation::getSeconds()
+#ifndef STUB_CyPy_Operation_getStamp
+//#define STUB_CyPy_Operation_getStamp
+  Py::Object CyPy_Operation::getStamp()
   {
     return *static_cast<Py::Object*>(nullptr);
   }
-#endif //STUB_CyPy_Operation_getSeconds
+#endif //STUB_CyPy_Operation_getStamp
 
 #ifndef STUB_CyPy_Operation_getFutureSeconds
 //#define STUB_CyPy_Operation_getFutureSeconds
@@ -216,6 +224,14 @@
     return *static_cast<Py::Object*>(nullptr);
   }
 #endif //STUB_CyPy_Operation_getFutureSeconds
+
+#ifndef STUB_CyPy_Operation_getFutureMilliseconds
+//#define STUB_CyPy_Operation_getFutureMilliseconds
+  Py::Object CyPy_Operation::getFutureMilliseconds()
+  {
+    return *static_cast<Py::Object*>(nullptr);
+  }
+#endif //STUB_CyPy_Operation_getFutureMilliseconds
 
 #ifndef STUB_CyPy_Operation_getName
 //#define STUB_CyPy_Operation_getName

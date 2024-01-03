@@ -83,18 +83,18 @@ protected:
 
 	std::deque<Operation> m_typeResolverOps;
 
-	void readEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, double timestamp);
+	void readEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
 
-	void updateEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, double timestamp);
+	void updateEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
 
-	Ref<MemEntity> newEntity(RouterId,
-							 const Atlas::Objects::Entity::RootEntity&, double timestamp);
+	Ref<MemEntity> newEntity(const RouterId&,
+							 const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp);
 
 	void addContents(const Atlas::Objects::Entity::RootEntity&);
 
-	Ref<MemEntity> addId(RouterId id);
+	Ref<MemEntity> addId(const RouterId& id);
 
-	void applyTypePropertiesToEntity(const Ref<MemEntity>& entity);
+	static void applyTypePropertiesToEntity(const Ref<MemEntity>& entity);
 
 public:
 
@@ -124,7 +124,7 @@ public:
 
 	Ref<MemEntity> getAdd(const std::string& id);
 
-	Ref<MemEntity> updateAdd(const Atlas::Objects::Entity::RootEntity&, const double&);
+	Ref<MemEntity> updateAdd(const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds);
 
 	///\brief Add an entity-related memory or update it if it already exists
 	///@param id - the id of entity to which we relate the memory
@@ -152,9 +152,9 @@ public:
 
 	EntityVector findByLocation(const EntityLocation& where,
 								WFMath::CoordType radius,
-								const std::string& what);
+								const std::string& what) const;
 
-	void check(const double&);
+	void check(std::chrono::milliseconds t);
 
 	void flush();
 

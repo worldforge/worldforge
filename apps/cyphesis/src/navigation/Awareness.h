@@ -102,7 +102,7 @@ template<typename T>
 struct TimestampedProperty
 {
     T data;
-    double timestamp = -1.0;
+    std::chrono::milliseconds timestamp = std::chrono::milliseconds {-1};
 };
 
 struct EntityEntry
@@ -247,7 +247,7 @@ class Awareness
                             const WFMath::Point<2>& position,
                             const WFMath::Vector<2>& desiredVelocity,
                             WFMath::Vector<2>& newVelocity,
-                            double currentTimestamp,
+                            std::chrono::milliseconds currentTimestamp,
                             const WFMath::Point<2>* nextWayPoint) const;
 
         /**
@@ -342,9 +342,9 @@ class Awareness
          * @param currentServerTimestamp The current server time stamp, to calculate new positions for moving entities.
          * @return True if entity could be found.
          */
-        bool projectPosition(long entityId, WFMath::Point<3>& pos, double currentServerTimestamp) const;
+        bool projectPosition(long entityId, WFMath::Point<3>& pos, std::chrono::milliseconds currentServerTimestamp) const;
 
-        WFMath::Point<3> projectPosition(long entityId, double currentServerTimestamp) const;
+        WFMath::Point<3> projectPosition(long entityId, std::chrono::milliseconds currentServerTimestamp) const;
 
         const std::unordered_map<long, std::unique_ptr<EntityEntry>>& getObservedEntities() const;
 
@@ -507,7 +507,7 @@ class Awareness
          * @param timestamp
          * @return True if any position or size changed.
          */
-        bool processEntityUpdate(EntityEntry& entry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, double timestamp);
+        bool processEntityUpdate(EntityEntry& entry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, std::chrono::milliseconds timestamp);
 
         /**
          * @brief Rebuild the tile at the specific index.

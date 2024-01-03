@@ -93,7 +93,7 @@
 
 #ifndef STUB_Awareness_avoidObstacles
 //#define STUB_Awareness_avoidObstacles
-  bool Awareness::avoidObstacles(long avatarEntityId, const WFMath::Point<2>& position, const WFMath::Vector<2>& desiredVelocity, WFMath::Vector<2>& newVelocity, double currentTimestamp, const WFMath::Point<2>* nextWayPoint) const
+  bool Awareness::avoidObstacles(long avatarEntityId, const WFMath::Point<2>& position, const WFMath::Vector<2>& desiredVelocity, WFMath::Vector<2>& newVelocity, std::chrono::milliseconds currentTimestamp, const WFMath::Point<2>* nextWayPoint) const
   {
     return false;
   }
@@ -189,7 +189,7 @@
 
 #ifndef STUB_Awareness_projectPosition
 //#define STUB_Awareness_projectPosition
-  bool Awareness::projectPosition(long entityId, WFMath::Point<3>& pos, double currentServerTimestamp) const
+  bool Awareness::projectPosition(long entityId, WFMath::Point<3>& pos, std::chrono::milliseconds currentServerTimestamp) const
   {
     return false;
   }
@@ -197,7 +197,7 @@
 
 #ifndef STUB_Awareness_projectPosition
 //#define STUB_Awareness_projectPosition
-  WFMath::Point<3> Awareness::projectPosition(long entityId, double currentServerTimestamp) const
+  WFMath::Point<3> Awareness::projectPosition(long entityId, std::chrono::milliseconds currentServerTimestamp) const
   {
     return *static_cast<WFMath::Point<3>*>(nullptr);
   }
@@ -213,7 +213,7 @@
 
 #ifndef STUB_Awareness_processEntityUpdate
 //#define STUB_Awareness_processEntityUpdate
-  bool Awareness::processEntityUpdate(EntityEntry& entry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, double timestamp)
+  bool Awareness::processEntityUpdate(EntityEntry& entry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, std::chrono::milliseconds timestamp)
   {
     return false;
   }

@@ -639,9 +639,9 @@ void MindsProperty::mind2body(LocatedEntity& ent, const Operation& op, OpVector&
 		spdlog::error("Operation \"{}\" from mind with TO set. {}", op->getParent(), ent.describeEntity());
 		return;
 	}
-	if (!op->isDefaultFutureSeconds() && op->getClassNo() != Atlas::Objects::Operation::TICK_NO) {
+	if (!op->isDefaultFutureMilliseconds() && op->getClassNo() != Atlas::Objects::Operation::TICK_NO) {
 		spdlog::error("Operation \"{}\" from mind with "
-					  "FUTURE_SECONDS set. {}", op->getParent(), ent.describeEntity());
+					  "FUTURE_MILLISECONDS set. {}", op->getParent(), ent.describeEntity());
 	}
 	auto op_no = op->getClassNo();
 	switch (op_no) {

@@ -177,8 +177,9 @@ Py::Object CyPy_Entity::start_action(const Ref<Entity>& entity, const Py::Tuple&
 	args.verify_length(2);
 
 	auto& actionsProp = entity->requirePropertyClassFixed<ActionsProperty>();
-	auto duration = verifyFloat(args[1]);
-	auto startTime = BaseWorld::instance().getTimeAsSeconds();
+	//Use seconds in the Python code
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<float>(verifyFloat(args[1])));
+	auto startTime = BaseWorld::instance().getTimeAsMilliseconds();
 	actionsProp.addAction(*entity, res, verifyString(args[0]), {startTime, startTime + duration});
 
 	return CyPy_Oplist::wrap(std::move(res));

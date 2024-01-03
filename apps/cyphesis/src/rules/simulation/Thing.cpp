@@ -126,7 +126,7 @@ void Thing::MoveOperation(const Operation& op, OpVector& res) {
 		error(op, "Move has no argument", res, getId());
 		return;
 	}
-	RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
+	auto ent = smart_dynamic_cast<RootEntity>(args.front());
 	if (!ent.isValid() || ent->isDefaultId()) {
 		error(op, "Move op arg is malformed", res, getId());
 		return;
@@ -354,7 +354,7 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 		Set set;
 		set->setTo(getId());
 		set->setFrom(getId());
-		set->setSeconds(op->getSeconds());
+		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg);
 
 		Sight sight;
@@ -368,7 +368,7 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 		Set set;
 		set->setTo(getId());
 		set->setFrom(getId());
-		set->setSeconds(op->getSeconds());
+		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg_protected);
 
 		Sight sight;
@@ -382,7 +382,7 @@ void Thing::updateProperties(const Operation& op, OpVector& res) {
 		Set set;
 		set->setTo(getId());
 		set->setFrom(getId());
-		set->setSeconds(op->getSeconds());
+		set->setStamp(op->getStamp());
 		set->setArgs1(set_arg_private);
 
 		Sight sight;
@@ -606,7 +606,7 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
 		setAttrValue("_propel", attr_propel);
 	}
 
-	double current_time = BaseWorld::instance().getTimeAsSeconds();
+	auto current_time = BaseWorld::instance().getTimeAsMilliseconds();
 
 	//We can only move if there's a domain
 	Domain* domain = nullptr;
@@ -616,7 +616,7 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
 
 	//Send a Sight of the Move to any current observers. Do this before we might alter location.
 	Operation m = op.copy();
-	RootEntity marg = smart_dynamic_cast<RootEntity>(m->getArgs().front());
+	auto marg = smart_dynamic_cast<RootEntity>(m->getArgs().front());
 	assert(marg.isValid());
 //        m_location.addToEntity(marg);
 //        {
@@ -631,8 +631,8 @@ void Thing::moveOurselves(const Operation& op, const RootEntity& ent, OpVector& 
 //            }
 //        }
 
-	if (!m->hasAttrFlag(Atlas::Objects::Operation::SECONDS_FLAG)) {
-		m->setSeconds(current_time);
+	if (!m->hasAttrFlag(Atlas::Objects::STAMP_FLAG)) {
+		m->setStamp(current_time.count());
 	}
 
 	Sight s;

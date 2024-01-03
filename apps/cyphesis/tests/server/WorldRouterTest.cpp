@@ -161,7 +161,7 @@ void WorldRoutertest::test_addEntity_tick() {
 	test_world->addEntity(ent2, m_rootEntity);
 
 	Tick tick;
-	tick->setFutureSeconds(0);
+	tick->setFutureMilliseconds(0);
 	tick->setTo(ent2->getId());
 	test_world->message(tick, *ent2);
 }
@@ -176,7 +176,7 @@ void WorldRoutertest::test_addEntity_tick_get() {
 	test_world->addEntity(ent2, m_rootEntity);
 
 	Tick tick;
-	tick->setFutureSeconds(0);
+	tick->setFutureMilliseconds(0);
 	tick->setTo(ent2->getId());
 	test_world->message(tick, *ent2);
 

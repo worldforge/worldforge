@@ -26,6 +26,7 @@
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 
 #include <iostream>
 
@@ -97,12 +98,11 @@ void BaseClient::externalOperation(const Operation& op, Link& link) {
 /// @param password Password of the new account
 void BaseClient::createSystemAccount(const std::string& usernameSuffix) {
 
-	Anonymous player_ent;
+	Atlas::Objects::Entity::SystemAccount player_ent;
 	m_username = create_session_username() + usernameSuffix;
 	player_ent->setAttr("username", m_username);
 	m_password = fmt::format("{}{}", ::rand(), ::rand());
 	player_ent->setAttr("password", m_password);
-	player_ent->setParent("sys");
 
 	Create createAccountOp;
 	createAccountOp->setArgs1(player_ent);

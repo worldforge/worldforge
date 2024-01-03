@@ -61,7 +61,7 @@ struct OpQueEntry {
 	OpQueEntry(Operation op_, Ref<T> from_, long sequence_)
 			: op(std::move(op_)),
 			  from(std::move(from_)),
-			  time_for_dispatch(std::chrono::milliseconds(static_cast<std::int64_t>(op->getSeconds() * 1000))),
+			  time_for_dispatch(std::chrono::milliseconds(op->getStamp())),
 			  sequence(sequence_) {
 	}
 

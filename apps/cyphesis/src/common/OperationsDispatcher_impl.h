@@ -118,7 +118,7 @@ template<typename T>
 OpQueEntry<T>::OpQueEntry(Operation o, T& f, long sequence_) :
 		op(std::move(o)),
 		from(&f),
-		time_for_dispatch(std::chrono::milliseconds(static_cast<std::int64_t>(op->getSeconds() * 1000))),
+		time_for_dispatch(std::chrono::milliseconds(op->getStamp())),
 		sequence(sequence_) {
 }
 
@@ -126,7 +126,7 @@ template<typename T>
 OpQueEntry<T>::OpQueEntry(const OpQueEntry& o) :
 		op(o.op),
 		from(o.from),
-		time_for_dispatch(std::chrono::milliseconds(static_cast<std::int64_t>(op->getSeconds() * 1000))),
+		time_for_dispatch(std::chrono::milliseconds(op->getStamp())),
 		sequence(o.sequence) {
 }
 
@@ -134,7 +134,7 @@ template<typename T>
 OpQueEntry<T>::OpQueEntry(OpQueEntry&& o) noexcept
 		: op(std::move(o.op)),
 		  from(std::move(o.from)),
-		  time_for_dispatch(std::chrono::milliseconds(static_cast<std::int64_t>(op->getSeconds() * 1000))),
+		  time_for_dispatch(std::chrono::milliseconds(op->getStamp())),
 		  sequence(std::move(o.sequence)) {
 
 }
@@ -162,7 +162,7 @@ void OperationsDispatcher<T>::clearQueues() {
 template<typename T>
 void OperationsDispatcher<T>::addOperationToQueue(Operation op, Ref<T> ent) {
 	assert(op.isValid());
-	assert(!op->isDefaultSeconds());
+	assert(!op->isDefaultStamp());
 
 	//Check the sequence number of the first op at start.
 	long topSequenceNr = 0;

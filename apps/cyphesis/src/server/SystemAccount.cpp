@@ -17,6 +17,7 @@
 
 
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 #include "server/SystemAccount.h"
 #include "Connection.h"
 #include "ServerRouting.h"
@@ -33,7 +34,7 @@ SystemAccount::SystemAccount(Connection* conn,
 SystemAccount::~SystemAccount() = default;
 
 const char* SystemAccount::getType() const {
-	return "sys";
+	return Atlas::Objects::Entity::SystemAccountData::default_parent;
 }
 
 bool SystemAccount::isPersisted() const {

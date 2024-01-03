@@ -172,7 +172,7 @@ public:
 	 * @brief Access the current time-stamp of the entity.
 	 * @return The current time stamp.
 	 */
-	double getStamp() const;
+	std::chrono::milliseconds getStamp() const;
 
 	/**
 	 * @brief Gets the type of this entity.
@@ -586,7 +586,7 @@ protected:
 
 	const std::string m_id;    ///< the Atlas object ID
 	std::string m_name;        ///< a human readable name
-	double m_stamp;        ///< last modification time (in seconds)
+	std::chrono::milliseconds m_stamp;        ///< last modification time
 	bool m_visible;
 	bool m_waitingForParentBind;   ///< waiting for parent bind
 
@@ -653,7 +653,7 @@ inline const std::string& Entity::getName() const {
 	return m_name;
 }
 
-inline double Entity::getStamp() const {
+inline std::chrono::milliseconds Entity::getStamp() const {
 	return m_stamp;
 }
 

@@ -16,8 +16,7 @@ const std::string SERIALNO_ATTR = "serialno";
 const std::string REFNO_ATTR = "refno";
 const std::string FROM_ATTR = "from";
 const std::string TO_ATTR = "to";
-const std::string SECONDS_ATTR = "seconds";
-const std::string FUTURE_SECONDS_ATTR = "future_seconds";
+const std::string FUTURE_MILLISECONDS_ATTR = "future_milliseconds";
 const std::string ARGS_ATTR = "args";
 
 int RootOperationData::getAttrClass(const std::string& name) const
@@ -44,8 +43,7 @@ int RootOperationData::copyAttr(const std::string& name, Element & attr) const
     if (name == REFNO_ATTR) { attr = getRefno(); return 0; }
     if (name == FROM_ATTR) { attr = getFrom(); return 0; }
     if (name == TO_ATTR) { attr = getTo(); return 0; }
-    if (name == SECONDS_ATTR) { attr = getSeconds(); return 0; }
-    if (name == FUTURE_SECONDS_ATTR) { attr = getFutureSeconds(); return 0; }
+    if (name == FUTURE_MILLISECONDS_ATTR) { attr = getFutureMilliseconds(); return 0; }
     if (name == ARGS_ATTR) { attr = getArgsAsList(); return 0; }
     return RootData::copyAttr(name, attr);
 }
@@ -56,8 +54,7 @@ void RootOperationData::setAttr(std::string name, Element attr, const Atlas::Obj
     if (name == REFNO_ATTR) { setRefno(attr.asInt()); return; }
     if (name == FROM_ATTR) { setFrom(attr.moveString()); return; }
     if (name == TO_ATTR) { setTo(attr.moveString()); return; }
-    if (name == SECONDS_ATTR) { setSeconds(attr.asFloat()); return; }
-    if (name == FUTURE_SECONDS_ATTR) { setFutureSeconds(attr.asFloat()); return; }
+    if (name == FUTURE_MILLISECONDS_ATTR) { setFutureMilliseconds(attr.asInt()); return; }
     if (name == ARGS_ATTR) { setArgsAsList(attr.moveList(), factories); return; }
     RootData::setAttr(std::move(name), std::move(attr), factories);
 }
@@ -72,10 +69,8 @@ void RootOperationData::removeAttr(const std::string& name)
         { m_attrFlags &= ~FROM_FLAG; return;}
     if (name == TO_ATTR)
         { m_attrFlags &= ~TO_FLAG; return;}
-    if (name == SECONDS_ATTR)
-        { m_attrFlags &= ~SECONDS_FLAG; return;}
-    if (name == FUTURE_SECONDS_ATTR)
-        { m_attrFlags &= ~FUTURE_SECONDS_FLAG; return;}
+    if (name == FUTURE_MILLISECONDS_ATTR)
+        { m_attrFlags &= ~FUTURE_MILLISECONDS_FLAG; return;}
     if (name == ARGS_ATTR)
         { m_attrFlags &= ~ARGS_FLAG; return;}
     RootData::removeAttr(name);
@@ -109,17 +104,10 @@ inline void RootOperationData::sendTo(Atlas::Bridge & b) const
     }
 }
 
-inline void RootOperationData::sendSeconds(Atlas::Bridge & b) const
+inline void RootOperationData::sendFutureMilliseconds(Atlas::Bridge & b) const
 {
-    if(m_attrFlags & SECONDS_FLAG) {
-        b.mapFloatItem(SECONDS_ATTR, attr_seconds);
-    }
-}
-
-inline void RootOperationData::sendFutureSeconds(Atlas::Bridge & b) const
-{
-    if(m_attrFlags & FUTURE_SECONDS_FLAG) {
-        b.mapFloatItem(FUTURE_SECONDS_ATTR, attr_future_seconds);
+    if(m_attrFlags & FUTURE_MILLISECONDS_FLAG) {
+        b.mapIntItem(FUTURE_MILLISECONDS_ATTR, attr_future_milliseconds);
     }
 }
 
@@ -142,8 +130,7 @@ void RootOperationData::sendContents(Bridge & b) const
     sendRefno(b);
     sendFrom(b);
     sendTo(b);
-    sendSeconds(b);
-    sendFutureSeconds(b);
+    sendFutureMilliseconds(b);
     sendArgs(b);
     RootData::sendContents(b);
 }
@@ -159,10 +146,8 @@ void RootOperationData::addToMessage(MapType & m) const
         m[FROM_ATTR] = attr_from;
     if(m_attrFlags & TO_FLAG)
         m[TO_ATTR] = attr_to;
-    if(m_attrFlags & SECONDS_FLAG)
-        m[SECONDS_ATTR] = attr_seconds;
-    if(m_attrFlags & FUTURE_SECONDS_FLAG)
-        m[FUTURE_SECONDS_ATTR] = attr_future_seconds;
+    if(m_attrFlags & FUTURE_MILLISECONDS_FLAG)
+        m[FUTURE_MILLISECONDS_ATTR] = attr_future_milliseconds;
     if(m_attrFlags & ARGS_FLAG)
         m[ARGS_ATTR] = getArgsAsList();
 }
@@ -200,16 +185,14 @@ void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
     attr_data[SERIALNO_ATTR] = SERIALNO_FLAG;
     attr_data[REFNO_ATTR] = REFNO_FLAG;
     attr_data[FROM_ATTR] = FROM_FLAG;
     attr_data[TO_ATTR] = TO_FLAG;
-    attr_data[SECONDS_ATTR] = SECONDS_FLAG;
-    attr_data[FUTURE_SECONDS_ATTR] = FUTURE_SECONDS_FLAG;
+    attr_data[FUTURE_MILLISECONDS_ATTR] = FUTURE_MILLISECONDS_FLAG;
     attr_data[ARGS_ATTR] = ARGS_FLAG;
 }
 

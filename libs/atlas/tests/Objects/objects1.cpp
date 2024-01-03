@@ -64,14 +64,14 @@ int main(int argc, char** argv) {
 		Atlas::Objects::Operation::Move move;
 		move->setFrom("123456");
 		move->setTo("123456");
-		move->setSeconds(12345678);
+		move->setStamp(12345678);
 		move->setId("123456");
 		move->setArgs1(anon);
 
 		Atlas::Objects::Operation::Sight sight;
 		sight->setFrom("123456");
 		sight->setTo("123456");
-		sight->setSeconds(12345678);
+		sight->setStamp(12345678);
 		sight->setId("123456");
 		sight->setArgs1(move);
 
@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 		assert(map["objtype"].String() == "op");
 		assert(map["from"].String() == "123456");
 		assert(map["to"].String() == "123456");
-		assert(map["seconds"].Float() == 12345678);
+		assert(map["stamp"].Int() == 12345678);
 		assert(map["id"].String() == "123456");
 		assert(map["args"].List().size() == 1);
 

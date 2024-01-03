@@ -44,7 +44,7 @@ protected:
 
 /**
  * @author Erik Ogenvik
- * @brief Handles the flow of creating a "sys" account and logging in the user.
+ * @brief Handles the flow of creating a "system_account" account and logging in the user.
  *
  * This is meant to be used when the connected to a local server through a socket
  * and the user wants to enter the world as a creator entity.

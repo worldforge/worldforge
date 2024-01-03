@@ -365,8 +365,8 @@ void ServerWidget::fillAllowedCharacterTypes(Eris::Account* account) {
 
 	auto& spawnPoints = account->getSpawnPoints();
 
-	//If the account inherits from "admin" we're an admin and can create a creator entity. This also applies if we're a "sys" account.
-	if (account->getParent() == "admin" || account->getParent() == "sys") {
+	//If the account inherits from "admin" we're an admin and can create a creator entity. This also applies if we're a "system_account" account.
+	if (account->getParent() == "admin" || account->getParent() == "system_account") {
 		mUseCreator->setVisible(true);
 		mUseCreator->setEnabled(true);
 	} else {

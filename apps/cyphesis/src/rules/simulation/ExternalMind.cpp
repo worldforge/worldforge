@@ -132,7 +132,7 @@ void ExternalMind::operation(const Operation& op, OpVector& res) {
 	} else {
 		//Only sent ops that inherit from "Info" to the client.
 		if (op->instanceOf(Atlas::Objects::Operation::INFO_NO)) {
-			op->setSeconds(BaseWorld::instance().getTimeAsSeconds());
+			op->setStamp(BaseWorld::instance().getTimeAsMilliseconds().count());
 			m_link->send(op);
 		}
 	}
@@ -222,7 +222,7 @@ void ExternalMind::RelayOperation(const Operation& op, OpVector& res) {
 			pruneOp->setFrom(m_entity->getId());
 			pruneOp->setRefno(serialNo);
 			//5 seconds should be more than enough.
-			pruneOp->setFutureSeconds(5);
+			pruneOp->setFutureMilliseconds(5'000);
 			//Set id to direct it to this mind
 			pruneOp->setId(getId());
 

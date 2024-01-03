@@ -30,15 +30,17 @@ class Operation:
         pass
     def get_from(self):
         pass
+    def get_future_milliseconds(self):
+        pass
     def get_future_seconds(self):
         pass
     def get_name(self):
         pass
     def get_refno(self):
         pass
-    def get_seconds(self):
-        pass
     def get_serialno(self):
+        pass
+    def get_stamp(self):
         pass
     def get_to(self):
         pass
@@ -50,6 +52,8 @@ class Operation:
     def set_from(self, string):
         """Sets from which entity the operation is from."""
         pass
+    def set_future_milliseconds(self):
+        pass
     def set_future_seconds(self):
         pass
     def set_name(self):
@@ -57,10 +61,10 @@ class Operation:
     def set_refno(self, long):
         """Sets the reference number."""
         pass
-    def set_seconds(self):
-        pass
     def set_serialno(self, long):
         """Sets the serial number."""
+        pass
+    def set_stamp(self):
         pass
     def set_to(self, string):
         """Sets to which entity the operation is directed."""

@@ -57,7 +57,6 @@
 
 #include <memory>
 #include <unordered_set>
-#include <chrono>
 #include <optional>
 #include <algorithm>
 #include <fmt/format.h>
@@ -76,8 +75,11 @@ using Atlas::Objects::Operation::Disappearance;
 using Atlas::Objects::Operation::Move;
 
 using Atlas::Objects::smart_dynamic_cast;
-
 namespace {
+
+float to_seconds(std::chrono::milliseconds duration) {
+	return std::chrono::duration_cast<std::chrono::duration<float>>(duration).count();
+}
 
 std::unique_ptr<btAxisSweep3> createVisibilityBroadphase(const LocatedEntity& entity, float scalingFactor) {
 	auto bbox = ScaleProperty::scaledBbox(entity);
@@ -199,7 +201,7 @@ const std::array<double, 10> VISIBILITY_DISTANCE_THRESHOLDS = {10.0, 20, 30, 50,
  * The amount of time between each tick, in seconds.
  * The simulation will happen at 60hz, but the tick size determines how often entities are processed and operations are sent.
  */
-const double TICK_SIZE = 1.0 / 15.0;
+const std::chrono::milliseconds TICK_SIZE(66);
 
 /**
  * The base size of the view sphere for a perceptive entity. Everything within this radius will be visible.
@@ -664,17 +666,17 @@ HandlerResult PhysicalDomain::operation(LocatedEntity& entity, const Operation& 
 
 HandlerResult PhysicalDomain::tick_handler(LocatedEntity& entity, const Operation& op, OpVector& res) {
 	if (!op->getArgs().empty() && !op->getArgs().front()->isDefaultName() && op->getArgs().front()->getName() == "domain") {
-		double timeNow = op->getSeconds();
-		double tickSize = TICK_SIZE;
+		auto timeNow = std::chrono::milliseconds(op->getStamp());
+		auto tickSize = TICK_SIZE;
 		Atlas::Message::Element elem;
-		if (op->copyAttr("lastTick", elem) == 0 && elem.isFloat()) {
-			tickSize = timeNow - elem.Float();
+		if (op->copyAttr("lastTick", elem) == 0 && elem.isInt()) {
+			tickSize = timeNow - std::chrono::milliseconds(elem.Int());
 		}
 
 		tick(tickSize, res);
 		auto tickOp = scheduleTick(entity);
-		tickOp->setSeconds(timeNow + TICK_SIZE);
-		tickOp->setAttr("lastTick", timeNow);
+		tickOp->setStamp((timeNow + TICK_SIZE).count());
+		tickOp->setAttr("lastTick", timeNow.count());
 		res.emplace_back(std::move(tickOp));
 
 		return OPERATION_BLOCKED;
@@ -2175,7 +2177,7 @@ void PhysicalDomain::applyNewPositionForEntity(BulletEntry& entry, const WFMath:
 
 }
 
-void PhysicalDomain::applyDestination(double tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp) {
+void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp) {
 	bool hasDestination = destinationProp.data().isValid();
 	bool hasPropel = propelProp && propelProp->data().isValid() && propelProp->data() != WFMath::Vector<3>::ZERO();
 
@@ -2203,10 +2205,11 @@ void PhysicalDomain::applyDestination(double tickSize, BulletEntry& entry, const
 		if (hasPropel) {
 			propelSpeed = propelProp->data().mag();
 		}
+		auto ticksAsSeconds = to_seconds(tickSize);
 
 		//Check if we should lower our speed to arrive within the next tick.
-		if (propelSpeed * speed * tickSize > distance) {
-			propelSpeed = speed / (distance * tickSize);
+		if (propelSpeed * speed * ticksAsSeconds > distance) {
+			propelSpeed = speed / (distance * ticksAsSeconds);
 		}
 
 		auto direction = btDestination - currentPos;
@@ -2454,7 +2457,7 @@ void PhysicalDomain::applyTransformInternal(BulletEntry& entry,
 				rigidBody->activate();
 			}
 		}
-		processMovedEntity(entry, 0);
+		processMovedEntity(entry, std::chrono::milliseconds{0});
 	}
 }
 
@@ -2613,15 +2616,15 @@ void PhysicalDomain::sendMoveSight(BulletEntry& entry, bool posChange, bool velo
 			setOp->setArgs1(move_arg);
 			setOp->setFrom(entity.getId());
 			setOp->setTo(entity.getId());
-			double seconds = BaseWorld::instance().getTimeAsSeconds();
-			setOp->setSeconds(seconds);
+			auto now = BaseWorld::instance().getTimeAsMilliseconds();
+			setOp->setStamp(now.count());
 
 			for (BulletEntry* observer: entry.observingThis) {
 				Sight s;
 				s->setArgs1(setOp);
 				s->setTo(observer->entity.getId());
 				s->setFrom(entity.getId());
-				s->setSeconds(seconds);
+				s->setStamp(now.count());
 
 				entity.sendWorld(s);
 			}
@@ -2629,7 +2632,7 @@ void PhysicalDomain::sendMoveSight(BulletEntry& entry, bool posChange, bool velo
 	}
 }
 
-void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSinceLastUpdate) {
+void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, std::chrono::milliseconds timeSinceLastUpdate) {
 	auto& pos = bulletEntry.positionProperty.data();
 	auto& orientation = bulletEntry.orientationProperty.data();
 	auto& velocity = bulletEntry.velocityProperty.data();
@@ -2651,7 +2654,7 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSin
 			posChange = true;
 		} else {
 			if (lastSentLocation.velocity.isValid()) {
-				auto projectedPosition = lastSentLocation.pos + (lastSentLocation.velocity * timeSinceLastUpdate);
+				auto projectedPosition = lastSentLocation.pos + (lastSentLocation.velocity * to_seconds(timeSinceLastUpdate));
 				if (WFMath::Distance(pos, projectedPosition) > 0.5) {
 					posChange = true;
 				}
@@ -2746,10 +2749,11 @@ void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSin
 	updateTerrainMod(bulletEntry);
 }
 
-void PhysicalDomain::tick(double tickSize, OpVector& res) {
+void PhysicalDomain::tick(std::chrono::milliseconds tickSize, OpVector& res) {
 //    CProfileManager::Reset();
 //    CProfileManager::Increment_Frame_Counter();
 	rmt_ScopedCPUSample(PhysicalDomain_tick, 0)
+
 
 	auto start = std::chrono::steady_clock::now();
 	/**
@@ -2788,6 +2792,7 @@ void PhysicalDomain::tick(double tickSize, OpVector& res) {
 	if (simulationSpeedProp) {
 		tickSize *= simulationSpeedProp->data();
 	}
+	auto tickSizeInSeconds = to_seconds(tickSize);
 
 	projectileCollisions.clear();
 
@@ -2842,7 +2847,7 @@ void PhysicalDomain::tick(double tickSize, OpVector& res) {
 
 
 	//Step simulations with 60 hz.
-	m_dynamicsWorld->stepSimulation((float) tickSize, static_cast<int>(60 * tickSize));
+	m_dynamicsWorld->stepSimulation(tickSizeInSeconds, static_cast<int>(60 * tickSizeInSeconds));
 	auto interim = std::chrono::steady_clock::now() - start;
 
 	//CProfileManager::dumpAll();
@@ -2949,20 +2954,20 @@ void PhysicalDomain::tick(double tickSize, OpVector& res) {
 	processDirtyTerrainAreas();
 
 	auto duration = std::chrono::steady_clock::now() - start;
-	auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+	auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration);
 	if (debug_flag) {
-		spdlog::log(microseconds > 3000 ? spdlog::level::warn : spdlog::level::info,
+		spdlog::log(microseconds.count() > 3000 ? spdlog::level::warn : spdlog::level::info,
 					"Physics took {} μs (just stepSimulation {} μs, visibility {} μs, tick size {} μs, visibility queue: {}, postTick: {} μs, moving count: {}).",
-					microseconds,
+					microseconds.count(),
 					std::chrono::duration_cast<std::chrono::microseconds>(interim).count(),
 					std::chrono::duration_cast<std::chrono::microseconds>(visDuration).count(),
-					static_cast<long>(tickSize * 1000000),
+					std::chrono::duration_cast<std::chrono::microseconds>(tickSize).count(),
 					m_visibilityRecalculateQueue.size(),
 					std::chrono::duration_cast<std::chrono::microseconds>(postDuration).count(),
 					movingSize
 		);
 	}
-	s_processTimeUs += microseconds;
+	s_processTimeUs += microseconds.count();
 }
 
 void PhysicalDomain::processWaterBodies() {

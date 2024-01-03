@@ -128,6 +128,10 @@ std::chrono::steady_clock::duration BaseWorld::getTime() const {
 	return m_timeProviderFn();
 //    return (std::chrono::steady_clock::now() - m_initTime);
 }
+std::chrono::milliseconds BaseWorld::getTimeAsMilliseconds() const {
+	return duration_cast<std::chrono::milliseconds>(m_timeProviderFn());
+//    return (std::chrono::steady_clock::now() - m_initTime);
+}
 
 float BaseWorld::getTimeAsSeconds() const {
 	return std::chrono::duration_cast<std::chrono::duration<float>>(getTime()).count();

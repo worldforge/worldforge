@@ -9,7 +9,7 @@
 
 #ifndef STUB_MemMap_readEntity
 //#define STUB_MemMap_readEntity
-  void MemMap::readEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, double timestamp)
+  void MemMap::readEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp)
   {
     
   }
@@ -17,7 +17,7 @@
 
 #ifndef STUB_MemMap_updateEntity
 //#define STUB_MemMap_updateEntity
-  void MemMap::updateEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, double timestamp)
+  void MemMap::updateEntity(const Ref<MemEntity>&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp)
   {
     
   }
@@ -25,7 +25,7 @@
 
 #ifndef STUB_MemMap_newEntity
 //#define STUB_MemMap_newEntity
-  Ref<MemEntity> MemMap::newEntity(RouterId, const Atlas::Objects::Entity::RootEntity&, double timestamp)
+  Ref<MemEntity> MemMap::newEntity(const RouterId&, const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds timestamp)
   {
     return *static_cast<Ref<MemEntity>*>(nullptr);
   }
@@ -41,7 +41,7 @@
 
 #ifndef STUB_MemMap_addId
 //#define STUB_MemMap_addId
-  Ref<MemEntity> MemMap::addId(RouterId id)
+  Ref<MemEntity> MemMap::addId(const RouterId& id)
   {
     return *static_cast<Ref<MemEntity>*>(nullptr);
   }
@@ -49,7 +49,7 @@
 
 #ifndef STUB_MemMap_applyTypePropertiesToEntity
 //#define STUB_MemMap_applyTypePropertiesToEntity
-  void MemMap::applyTypePropertiesToEntity(const Ref<MemEntity>& entity)
+   void MemMap::applyTypePropertiesToEntity(const Ref<MemEntity>& entity)
   {
     
   }
@@ -130,7 +130,7 @@
 
 #ifndef STUB_MemMap_updateAdd
 //#define STUB_MemMap_updateAdd
-  Ref<MemEntity> MemMap::updateAdd(const Atlas::Objects::Entity::RootEntity&, const double&)
+  Ref<MemEntity> MemMap::updateAdd(const Atlas::Objects::Entity::RootEntity&, std::chrono::milliseconds)
   {
     return *static_cast<Ref<MemEntity>*>(nullptr);
   }
@@ -178,7 +178,7 @@
 
 #ifndef STUB_MemMap_findByLocation
 //#define STUB_MemMap_findByLocation
-  EntityVector MemMap::findByLocation(const EntityLocation& where, WFMath::CoordType radius, const std::string& what)
+  EntityVector MemMap::findByLocation(const EntityLocation& where, WFMath::CoordType radius, const std::string& what) const
   {
     return *static_cast<EntityVector*>(nullptr);
   }
@@ -186,7 +186,7 @@
 
 #ifndef STUB_MemMap_check
 //#define STUB_MemMap_check
-  void MemMap::check(const double&)
+  void MemMap::check(std::chrono::milliseconds t)
   {
     
   }

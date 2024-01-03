@@ -108,14 +108,14 @@ Py::Object CyPy_MemMap::find_by_type(const Py::Tuple& args) {
 Py::Object CyPy_MemMap::updateAdd(const Py::Tuple& args) {
 	args.verify_length(2);
 
-	double time = verifyNumeric(args[1]);
+	std::chrono::milliseconds time(verifyLong(args[1]));
 	if (args[0].isDict()) {
 		auto element = CyPy_Element::dictAsElement(Py::Dict(args[0]));
 		try {
 
 			Root obj = m_value->getTypeStore().getFactories().createObject(element);
 
-			RootEntity ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(obj);
+			auto ent = Atlas::Objects::smart_dynamic_cast<RootEntity>(obj);
 			if (!ent.isValid()) {
 				throw Py::TypeError("arg is a Message that does not represent an entity");
 			}

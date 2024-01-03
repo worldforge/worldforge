@@ -99,7 +99,7 @@ void SystemAccounttest::teardown() {
 void SystemAccounttest::test_getType() {
 	const char* type = m_account->getType();
 
-	ASSERT_EQUAL(std::string("sys"), type);
+	ASSERT_EQUAL(std::string("system_account"), type);
 }
 
 void SystemAccounttest::test_store() {

@@ -36,9 +36,9 @@ IGRouter::~IGRouter() {
 }
 
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op) {
-	if (!op->isDefaultSeconds()) {
+	if (!op->isDefaultStamp()) {
 		// grab out world time
-		m_avatar.updateWorldTime(op->getSeconds());
+		m_avatar.updateWorldTime(std::chrono::milliseconds(op->getStamp()));
 	}
 
 	const std::vector<Root>& args = op->getArgs();
@@ -78,9 +78,9 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op) {
 
 	if (op->getClassNo() == APPEARANCE_NO) {
 		for (const auto& arg: args) {
-			double stamp = -1;
+			std::chrono::milliseconds stamp(-1);
 			if (!arg->isDefaultStamp()) {
-				stamp = arg->getStamp();
+				stamp = std::chrono::milliseconds(arg->getStamp());
 			}
 
 			if (!arg->isDefaultId()) {

@@ -57,7 +57,7 @@ void AdminMind::externalOperation(const Operation& op, Link& link) {
 	if (op->isDefaultTo()) {
 		cy_debug_print("AdminMind handling op normally");
 		ExternalMind::externalOperation(op, link);
-	} else if (op->getTo() == getId() && op->isDefaultFutureSeconds()) {
+	} else if (op->getTo() == getId() && op->isDefaultFutureMilliseconds()) {
 		//Send directly to the entity, bypassing any normal Thought filtering
 		cy_debug_print("Creator handling op ");
 		OpVector lres;

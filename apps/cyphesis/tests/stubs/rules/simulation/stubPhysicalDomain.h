@@ -115,7 +115,7 @@
 
 #ifndef STUB_PhysicalDomain_tick
 //#define STUB_PhysicalDomain_tick
-  void PhysicalDomain::tick(double t, OpVector& res)
+  void PhysicalDomain::tick(std::chrono::milliseconds t, OpVector& res)
   {
     
   }
@@ -211,7 +211,7 @@
 
 #ifndef STUB_PhysicalDomain_processMovedEntity
 //#define STUB_PhysicalDomain_processMovedEntity
-  void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, double timeSinceLastUpdate)
+  void PhysicalDomain::processMovedEntity(BulletEntry& bulletEntry, std::chrono::milliseconds timeSinceLastUpdate)
   {
     
   }
@@ -275,7 +275,7 @@
 
 #ifndef STUB_PhysicalDomain_applyDestination
 //#define STUB_PhysicalDomain_applyDestination
-  void PhysicalDomain::applyDestination(double tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp)
+  void PhysicalDomain::applyDestination(std::chrono::milliseconds tickSize, BulletEntry& entry, const PropelProperty* propelProp, const Vector3Property& destinationProp)
   {
     
   }
@@ -307,7 +307,7 @@
 
 #ifndef STUB_PhysicalDomain_createCollisionShapeForEntry
 //#define STUB_PhysicalDomain_createCollisionShapeForEntry
-  std::shared_ptr<btCollisionShape> PhysicalDomain::createCollisionShapeForEntry(LocatedEntity& entity, const WFMath::AxisBox<3>& bbox, float mass, btVector3& centerOfMassOffse)
+  std::shared_ptr<btCollisionShape> PhysicalDomain::createCollisionShapeForEntry(LocatedEntity& entity, const WFMath::AxisBox<3>& bbox, float mass, btVector3& centerOfMassOffset)
   {
     return *static_cast<std::shared_ptr<btCollisionShape>*>(nullptr);
   }

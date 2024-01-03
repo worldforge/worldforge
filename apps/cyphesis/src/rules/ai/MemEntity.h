@@ -29,7 +29,7 @@
 /// be cleaned up.
 class MemEntity : public LocatedEntity {
 protected:
-	double m_lastSeen;
+	std::chrono::milliseconds m_lastSeen;
 
 	std::unique_ptr<PropertyBase> createProperty(const std::string& propertyName) const override;
 
@@ -46,11 +46,11 @@ public:
 		}
 	}
 
-	const double& lastSeen() const {
+	std::chrono::milliseconds lastSeen() const {
 		return m_lastSeen;
 	}
 
-	void update(const double& d) {
+	void update(std::chrono::milliseconds d) {
 		if (d >= m_lastSeen) {
 			m_lastSeen = d;
 		}
@@ -65,7 +65,7 @@ public:
 //        TransformData m_transform;
 //        MovementData m_movement;
 	//WFMath::AxisBox<3> m_bbox;
-	double m_lastUpdated;
+	std::chrono::milliseconds m_lastUpdated;
 	//Location m_location;
 
 };

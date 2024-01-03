@@ -173,13 +173,15 @@ Py::Object CyPy_Task::getattro(const Py::String& name) {
 		if (!m_value->m_duration) {
 			return Py::None();
 		}
-		return Py::Float(*m_value->m_duration);
+		//Use seconds in the Python code
+		return Py::Float(std::chrono::duration_cast<std::chrono::duration<float>>(*m_value->m_duration).count());
 	}
 	if (nameStr == "tick_interval") {
 		if (!m_value->m_tick_interval) {
 			return Py::None();
 		}
-		return Py::Float(*m_value->m_tick_interval);
+		//Use seconds in the Python code
+		return Py::Float(std::chrono::duration_cast<std::chrono::duration<float>>(*m_value->m_tick_interval).count());
 	}
 	if (nameStr == "name") {
 		return Py::String(m_value->name());
@@ -249,11 +251,13 @@ int CyPy_Task::setattro(const Py::String& name, const Py::Object& attr) {
 		return 0;
 	}
 	if (nameStr == "duration") {
-		m_value->m_duration = verifyNumeric(attr);
+		//Use seconds in the Python code
+		m_value->m_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<float>(verifyNumeric(attr)));
 		return 0;
 	}
 	if (nameStr == "tick_interval") {
-		m_value->m_tick_interval = verifyNumeric(attr);
+		//Use seconds in the Python code
+		m_value->m_tick_interval = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<float>(verifyNumeric(attr)));
 		return 0;
 	}
 	if (nameStr == "name") {

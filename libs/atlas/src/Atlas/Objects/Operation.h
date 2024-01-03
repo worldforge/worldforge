@@ -18,24 +18,22 @@ namespace Atlas::Objects::Operation {
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ActionData;
 typedef SmartPtr<ActionData> Action;
 
-static const int ACTION_NO = 10;
+static const int ACTION_NO = 11;
 
 /// \brief This is base operator for operations that might have effects..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ActionData : public RootOperationData
 {
@@ -88,7 +86,7 @@ Map editor is main user for this in client side. Server uses this inside "info" 
 class CreateData;
 typedef SmartPtr<CreateData> Create;
 
-static const int CREATE_NO = 11;
+static const int CREATE_NO = 12;
 
 /// \brief Create new things from nothing using this operator..
 ///
@@ -140,24 +138,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class DeleteData;
 typedef SmartPtr<DeleteData> Delete;
 
-static const int DELETE_NO = 12;
+static const int DELETE_NO = 13;
 
 /// \brief Delete something..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class DeleteData : public ActionData
 {
@@ -205,24 +201,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class SetData;
 typedef SmartPtr<SetData> Set;
 
-static const int SET_NO = 13;
+static const int SET_NO = 14;
 
 /// \brief Sets attributes for existing entity..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class SetData : public ActionData
 {
@@ -270,24 +264,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class AffectData;
 typedef SmartPtr<AffectData> Affect;
 
-static const int AFFECT_NO = 14;
+static const int AFFECT_NO = 15;
 
 /// \brief Sets attributes for existing entity..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class AffectData : public SetData
 {
@@ -335,24 +327,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class HitData;
 typedef SmartPtr<HitData> Hit;
 
-static const int HIT_NO = 15;
+static const int HIT_NO = 16;
 
 /// \brief Operation for when one entity hits another..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class HitData : public AffectData
 {
@@ -405,7 +395,7 @@ More about <a href="move.html">movement here</a>
 class MoveData;
 typedef SmartPtr<MoveData> Move;
 
-static const int MOVE_NO = 16;
+static const int MOVE_NO = 17;
 
 /// \brief Change position.
 ///
@@ -457,24 +447,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class WieldData;
 typedef SmartPtr<WieldData> Wield;
 
-static const int WIELD_NO = 17;
+static const int WIELD_NO = 18;
 
 /// \brief Attach a tool to the character entity at a pre-defined location so that the character can use it..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class WieldData : public SetData
 {
@@ -522,24 +510,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class GetData;
 typedef SmartPtr<GetData> Get;
 
-static const int GET_NO = 18;
+static const int GET_NO = 19;
 
 /// \brief Generic operation for getting info about things..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class GetData : public ActionData
 {
@@ -587,24 +573,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class PerceiveData;
 typedef SmartPtr<PerceiveData> Perceive;
 
-static const int PERCEIVE_NO = 19;
+static const int PERCEIVE_NO = 20;
 
 /// \brief Generic base operation for perceiving things by eyes, ears, etc....
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class PerceiveData : public GetData
 {
@@ -652,24 +636,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class LookData;
 typedef SmartPtr<LookData> Look;
 
-static const int LOOK_NO = 20;
+static const int LOOK_NO = 21;
 
 /// \brief Looking at something.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class LookData : public PerceiveData
 {
@@ -717,24 +699,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ListenData;
 typedef SmartPtr<ListenData> Listen;
 
-static const int LISTEN_NO = 21;
+static const int LISTEN_NO = 22;
 
 /// \brief Listen (something).
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ListenData : public PerceiveData
 {
@@ -782,24 +762,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class SniffData;
 typedef SmartPtr<SniffData> Sniff;
 
-static const int SNIFF_NO = 22;
+static const int SNIFF_NO = 23;
 
 /// \brief Sniff something.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class SniffData : public PerceiveData
 {
@@ -847,24 +825,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class TouchData;
 typedef SmartPtr<TouchData> Touch;
 
-static const int TOUCH_NO = 23;
+static const int TOUCH_NO = 24;
 
 /// \brief Touch something.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class TouchData : public PerceiveData
 {
@@ -917,7 +893,7 @@ For more about <a href="login.html">out of game atlas here</a>
 class LoginData;
 typedef SmartPtr<LoginData> Login;
 
-static const int LOGIN_NO = 24;
+static const int LOGIN_NO = 25;
 
 /// \brief Operation for logging into server.
 ///
@@ -974,7 +950,7 @@ For more about <a href="login.html">out of game atlas here</a>
 class LogoutData;
 typedef SmartPtr<LogoutData> Logout;
 
-static const int LOGOUT_NO = 25;
+static const int LOGOUT_NO = 26;
 
 /// \brief Operation for logging out.
 ///
@@ -1026,24 +1002,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class CommunicateData;
 typedef SmartPtr<CommunicateData> Communicate;
 
-static const int COMMUNICATE_NO = 26;
+static const int COMMUNICATE_NO = 27;
 
 /// \brief Base operator for all kind of communication..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class CommunicateData : public ActionData
 {
@@ -1096,7 +1070,7 @@ need to relook at that 'Magic voice that steps on something crunchy and makes ma
 class TalkData;
 typedef SmartPtr<TalkData> Talk;
 
-static const int TALK_NO = 27;
+static const int TALK_NO = 28;
 
 /// \brief used for talking.
 ///
@@ -1148,24 +1122,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ImaginaryData;
 typedef SmartPtr<ImaginaryData> Imaginary;
 
-static const int IMAGINARY_NO = 28;
+static const int IMAGINARY_NO = 29;
 
 /// \brief When something is not yet implemented in server, then character can pretend to do something ;-).
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ImaginaryData : public ActionData
 {
@@ -1213,24 +1185,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class UseData;
 typedef SmartPtr<UseData> Use;
 
-static const int USE_NO = 29;
+static const int USE_NO = 30;
 
 /// \brief Use a currently wielded tool..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class UseData : public ActionData
 {
@@ -1278,24 +1248,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ActivityData;
 typedef SmartPtr<ActivityData> Activity;
 
-static const int ACTIVITY_NO = 30;
+static const int ACTIVITY_NO = 31;
 
 /// \brief Activities performed by entities. This is mainly meant for actions that should be communicated to other entities (like 'digging' or 'twirling').
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ActivityData : public ActionData
 {
@@ -1343,24 +1311,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class InfoData;
 typedef SmartPtr<InfoData> Info;
 
-static const int INFO_NO = 31;
+static const int INFO_NO = 32;
 
 /// \brief This is base operator for operations that tell you info about objects or events..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class InfoData : public RootOperationData
 {
@@ -1413,7 +1379,7 @@ Base operator for all kind of perceptions
 class PerceptionData;
 typedef SmartPtr<PerceptionData> Perception;
 
-static const int PERCEPTION_NO = 32;
+static const int PERCEPTION_NO = 33;
 
 /// \brief Character perceives something..
 ///
@@ -1470,7 +1436,7 @@ Base operator for all kind of perceptions
 class UnseenData;
 typedef SmartPtr<UnseenData> Unseen;
 
-static const int UNSEEN_NO = 33;
+static const int UNSEEN_NO = 34;
 
 /// \brief Character failed to interact with another entity because it does not exist..
 ///
@@ -1527,7 +1493,7 @@ Base operator for all kind of perceptions
 class SightData;
 typedef SmartPtr<SightData> Sight;
 
-static const int SIGHT_NO = 34;
+static const int SIGHT_NO = 35;
 
 /// \brief Character sees something.
 ///
@@ -1584,7 +1550,7 @@ Base operator for all kind of perceptions
 class AppearanceData;
 typedef SmartPtr<AppearanceData> Appearance;
 
-static const int APPEARANCE_NO = 35;
+static const int APPEARANCE_NO = 36;
 
 /// \brief Character sees something appearing: it literally appears or has it come in visible range.
 ///
@@ -1641,7 +1607,7 @@ Base operator for all kind of perceptions
 class DisappearanceData;
 typedef SmartPtr<DisappearanceData> Disappearance;
 
-static const int DISAPPEARANCE_NO = 36;
+static const int DISAPPEARANCE_NO = 37;
 
 /// \brief Character sees something disappearing: it literally disappears or has it gone too far to be visible.
 ///
@@ -1698,7 +1664,7 @@ Base operator for all kind of perceptions
 class SoundData;
 typedef SmartPtr<SoundData> Sound;
 
-static const int SOUND_NO = 37;
+static const int SOUND_NO = 38;
 
 /// \brief Character hears something.
 ///
@@ -1755,7 +1721,7 @@ Base operator for all kind of perceptions
 class SmellData;
 typedef SmartPtr<SmellData> Smell;
 
-static const int SMELL_NO = 38;
+static const int SMELL_NO = 39;
 
 /// \brief Character smells something.
 ///
@@ -1812,7 +1778,7 @@ Base operator for all kind of perceptions
 class FeelData;
 typedef SmartPtr<FeelData> Feel;
 
-static const int FEEL_NO = 39;
+static const int FEEL_NO = 40;
 
 /// \brief Character feels something (with fingers usually).
 ///
@@ -1864,24 +1830,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ErrorData;
 typedef SmartPtr<ErrorData> Error;
 
-static const int ERROR_NO = 40;
+static const int ERROR_NO = 41;
 
 /// \brief Something went wrong.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ErrorData : public InfoData
 {
@@ -1929,24 +1893,22 @@ private:
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class ChangeData;
 typedef SmartPtr<ChangeData> Change;
 
-static const int CHANGE_NO = 41;
+static const int CHANGE_NO = 42;
 
 /// \brief An operation used to signal to clients when things such as types have changed..
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class ChangeData : public InfoData
 {

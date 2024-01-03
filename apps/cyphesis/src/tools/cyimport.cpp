@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 
 	spdlog::debug("Attempting local connection");
 	if (bridge.connectLocal(localSocket) == 0) {
-		if (bridge.create("sys", create_session_username(),
+		if (bridge.create("system_account", create_session_username(),
 						  fmt::format("{}{}", ::rand(), ::rand())) != 0) {
 			spdlog::error("Could not create sys account.");
 			return -1;

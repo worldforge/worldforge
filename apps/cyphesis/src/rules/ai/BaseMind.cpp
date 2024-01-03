@@ -101,7 +101,7 @@ void BaseMind::sightSetOperation(const Operation& op, OpVector& res) {
 		spdlog::error("Got sight(set) of non-entity");
 		return;
 	}
-	m_map.updateAdd(ent, op->getSeconds());
+	m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()));
 }
 
 void BaseMind::SoundOperation(const Operation& op, OpVector& res) {
@@ -130,8 +130,8 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res) {
 	cy_debug_print("BaseMind::SightOperation(Sight)")
 	// Deliver argument to sight things
 	if (!isAwake()) { return; }
-	if (op->isDefaultSeconds()) {
-		spdlog::error("Sight operation had no seconds set, ignoring it.");
+	if (op->isDefaultStamp()) {
+		spdlog::error("Sight operation had no stamp set, ignoring it.");
 		return;
 	}
 
@@ -147,10 +147,10 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res) {
 		std::string event_name("sight_");
 		event_name += op2->getParent();
 
-		//Check that the argument had seconds set; if not the timestamp of the updates will be wrong.
-		if (!op2->hasAttrFlag(Atlas::Objects::Operation::SECONDS_FLAG)) {
+		//Check that the argument had stamp set; if not the timestamp of the updates will be wrong.
+		if (!op2->hasAttrFlag(Atlas::Objects::STAMP_FLAG)) {
 			//Copy from wrapping op to fix this.
-			op2->setSeconds(op->getSeconds());
+			op2->setStamp(op->getStamp());
 		}
 
 		if (!m_script || m_script->operation(event_name, op2, res) != OPERATION_BLOCKED) {
@@ -163,7 +163,7 @@ void BaseMind::SightOperation(const Operation& op, OpVector& res) {
 			return;
 		}
 		cy_debug_print(" arg is an entity!")
-		auto me = m_map.updateAdd(ent, op->getSeconds());
+		auto me = m_map.updateAdd(ent, std::chrono::milliseconds(op->getStamp()));
 		if (me) {
 			me->setVisible();
 		}
@@ -224,7 +224,7 @@ void BaseMind::AppearanceOperation(const Operation& op, OpVector& res) {
 			} else {
 				spdlog::error("BaseMind: Appearance op does not have stamp");
 			}
-			entity->update(op->getSeconds());
+			entity->update(std::chrono::milliseconds(op->getStamp()));
 			entity->setVisible();
 		}
 	}
@@ -383,13 +383,13 @@ void BaseMind::addPropertyScriptCallback(std::string propertyName, std::string s
 }
 
 void BaseMind::updateServerTimeFromOperation(const Atlas::Objects::Operation::RootOperationData& op) {
-	//It's ok if the server sends an op without 'seconds' set.
-	if (!op.isDefaultSeconds()) {
+	//It's ok if the server sends an op without 'stamp' set.
+	if (!op.isDefaultStamp()) {
 		//Alert if there's a too large difference in time.
-		if (op.getSeconds() - mServerTime < -30) {
-			spdlog::warn("Operation '{}' has seconds set ({}) earlier than already recorded seconds ({}).", op.getParent(), op.getSeconds(), mServerTime);
+		if (std::chrono::milliseconds(op.getStamp()) - mServerTime < std::chrono::seconds(-30)) {
+			spdlog::warn("Operation '{}' has stamp set ({}) earlier than already recorded stamp ({}).", op.getParent(), op.getStamp(), mServerTime.count());
 		}
-		mServerTime = op.getSeconds();
+		mServerTime = std::chrono::milliseconds(op.getStamp());
 	}
 }
 
@@ -496,7 +496,7 @@ void BaseMind::processTick(OpVector& res) {
 	//Start by scheduling the next tick op.
 	Atlas::Objects::Operation::Tick tick;
 	//Do one tick every 10ms. (to be revisited)
-	tick->setFutureSeconds(0.01);
+	tick->setFutureMilliseconds(10);
 	tick->setTo(getId());
 	tick->setFrom(getId());
 	res.emplace_back(std::move(tick));

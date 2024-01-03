@@ -140,7 +140,7 @@ void View::taskRateChanged(Task* t) {
 
 // Atlas operation handlers
 
-void View::appear(const std::string& eid, double stamp) {
+void View::appear(const std::string& eid, std::chrono::milliseconds stamp) {
 	auto* ent = getEntity(eid);
 	if (!ent) {
 		getEntityFromServer(eid);
@@ -154,7 +154,7 @@ void View::appear(const std::string& eid, double stamp) {
 
 	if (ent->isVisible()) return;
 
-	if ((stamp == 0) || (stamp > ent->getStamp())) {
+	if ((stamp.count() == 0) || (stamp > ent->getStamp())) {
 		if (isPending(eid)) {
 			m_pending[eid].sightAction = SightAction::APPEAR;
 		} else {

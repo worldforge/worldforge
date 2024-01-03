@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 		spdlog::debug("Attempting local connection");
 		if (bridge.connectLocal(localSocket) == 0) {
 			bridge.setup();
-			if (bridge.create("sys",
+			if (bridge.create("system_account",
 							  create_session_username(),
 							  fmt::format("{}{}", ::rand(), ::rand())) != 0) {
 				bridge.getLogin();

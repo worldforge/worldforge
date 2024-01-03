@@ -45,13 +45,13 @@ class EntityTalk;
 
 struct ActionEntry {
 	ActionEntry(std::string actionName_,
-				double startTime_,
-				std::optional<double> endTime_)
+				std::chrono::milliseconds startTime_,
+				std::optional<std::chrono::milliseconds> endTime_)
 			: actionName(std::move(actionName_)), startTime(startTime_), endTime(endTime_) {}
 
 	std::string actionName;
-	double startTime;
-	std::optional<double> endTime;
+	std::chrono::milliseconds startTime;
+	std::optional<std::chrono::milliseconds> endTime;
 };
 
 

@@ -17,24 +17,22 @@ namespace Atlas::Objects::Operation {
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class GenericData;
 typedef SmartPtr<GenericData> Generic;
 
-static const int GENERIC_NO = 43;
+static const int GENERIC_NO = 44;
 
 /// \brief Base operation for all operators.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class GenericData : public RootOperationData
 {

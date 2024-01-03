@@ -104,6 +104,12 @@ static const int EXPECTED_LAYERS_PER_TILE = 1;
 
 using namespace boost::multi_index;
 
+namespace {
+double to_seconds(std::chrono::milliseconds duration) {
+	return std::chrono::duration_cast<std::chrono::duration<float>>(duration).count();
+}
+}
+
 /**
  * @brief A Most Recently Used list implemented using boost::multi_index.
  *
@@ -453,7 +459,7 @@ void Awareness::removeEntity(const MemEntity& observer, const MemEntity& entity)
     }
 }
 
-bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, double timestamp)
+bool Awareness::processEntityUpdate(EntityEntry& entityEntry, const MemEntity& entity, const Atlas::Objects::Entity::RootEntity& ent, std::chrono::milliseconds timestamp)
 {
     bool hasNewPosition = false;
     bool hasNewBbox = false;
@@ -606,7 +612,7 @@ bool Awareness::avoidObstacles(long avatarEntityId,
                                const WFMath::Point<2>& position,
                                const WFMath::Vector<2>& desiredVelocity,
                                WFMath::Vector<2>& newVelocity,
-                               double currentTimestamp,
+                               std::chrono::milliseconds currentTimestamp,
                                const WFMath::Point<2>* nextWayPoint) const
 {
     struct EntityCollisionEntry
@@ -644,7 +650,7 @@ bool Awareness::avoidObstacles(long avatarEntityId,
         // Update location
         auto pos = entry->pos.data;
         if (entry->velocity.data.isValid()) {
-            double time_diff = currentTimestamp - entry->velocity.timestamp;
+            auto time_diff = to_seconds(currentTimestamp - entry->velocity.timestamp);
             pos += (entry->velocity.data * time_diff);
         }
 
@@ -898,7 +904,7 @@ int Awareness::findPath(const WFMath::Point<3>& start, const WFMath::Point<3>& e
     return nVertCount - 1;
 }
 
-bool Awareness::projectPosition(long entityId, WFMath::Point<3>& pos, double currentServerTimestamp) const
+bool Awareness::projectPosition(long entityId, WFMath::Point<3>& pos, std::chrono::milliseconds currentServerTimestamp) const
 {
     auto entityI = mObservedEntities.find(entityId);
     if (entityI != mObservedEntities.end()) {
@@ -906,14 +912,14 @@ bool Awareness::projectPosition(long entityId, WFMath::Point<3>& pos, double cur
         pos = entityEntry->pos.data;
         auto& velocity = entityEntry->velocity.data;
         if (velocity.isValid() && velocity != WFMath::Vector<3>::ZERO()) {
-            pos += (velocity * (currentServerTimestamp - entityEntry->pos.timestamp));
+            pos += (velocity * to_seconds(currentServerTimestamp - entityEntry->pos.timestamp));
         }
         return true;
     }
     return false;
 }
 
-WFMath::Point<3> Awareness::projectPosition(long entityId, double currentServerTimestamp) const
+WFMath::Point<3> Awareness::projectPosition(long entityId, std::chrono::milliseconds currentServerTimestamp) const
 {
     auto entityI = mObservedEntities.find(entityId);
     if (entityI != mObservedEntities.end()) {
@@ -921,7 +927,7 @@ WFMath::Point<3> Awareness::projectPosition(long entityId, double currentServerT
         auto pos = entityEntry->pos.data;
         auto& velocity = entityEntry->velocity.data;
         if (velocity.isValid() && velocity != WFMath::Vector<3>::ZERO()) {
-            pos += (velocity * (currentServerTimestamp - entityEntry->pos.timestamp));
+            pos += (velocity * to_seconds(currentServerTimestamp - entityEntry->pos.timestamp));
         }
         return pos;
     }

@@ -60,8 +60,7 @@ void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string,
 	data.attr_objtype = "op";
 	data.attr_serialno = 0;
 	data.attr_refno = 0;
-	data.attr_seconds = 0.0;
-	data.attr_future_seconds = 0.0;
+	data.attr_stamp = 0;
 	data.attr_stamp = 0.0;
 	data.attr_parent = "wield";
 }

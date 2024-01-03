@@ -2,8 +2,7 @@
 :map:
     id:"root"
     parent:""
-    stamp:0.0
-    stamp_inherit:0.0
+    stamp:0
     objtype:"meta"
     interface:"base_interface"
     name:""

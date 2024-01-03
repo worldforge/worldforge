@@ -272,6 +272,7 @@ void installStandardObjects(TypeStore& i) {
 	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::AdminData>());
 	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameData>());
 	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::GameEntityData>());
+	i.addChild(atlasObjDefinition<Atlas::Objects::Entity::SystemAccountData>());
 
 	//We should now have just as many types registered as there are standard types in Atlas.
 	auto typeCount = i.getTypeCount();

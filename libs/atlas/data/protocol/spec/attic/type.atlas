@@ -627,6 +627,11 @@ This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
     summary:"Time in seconds to add current time"
 },
 {
+    id:"future_milliseconds",
+    parents:["int"],
+    summary:"Time in milliseconds to add current time"
+},
+{
     id:"time_string",
     parents:["string"],
     objtype:"type",

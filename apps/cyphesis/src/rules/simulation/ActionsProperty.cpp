@@ -40,7 +40,7 @@ HandlerResult ActionsProperty::TickOperation(LocatedEntity& owner, const Operati
 	m_tickOutstanding = {};
 
 	//Remove any actions that are at end_time.
-	auto now = op->getSeconds();
+	auto now = std::chrono::milliseconds(op->getStamp());
 	bool hadChanges = false;
 
 	for (auto I = m_data.begin(); I != m_data.end();) {
@@ -80,7 +80,7 @@ HandlerResult ActionsProperty::operation(LocatedEntity& entity, const Operation&
 }
 
 void ActionsProperty::enqueueTickOp(const LocatedEntity& entity, OpVector& res) {
-	std::optional<double> nearestExpiry;
+	std::optional<std::chrono::milliseconds> nearestExpiry;
 	for (auto& entry: m_data) {
 		if (entry.second.endTime) {
 			if (!nearestExpiry || *nearestExpiry > *entry.second.endTime) {
@@ -98,7 +98,7 @@ void ActionsProperty::enqueueTickOp(const LocatedEntity& entity, OpVector& res) 
 		tick->setArgs1(std::move(anon));
 		tick->setTo(entity.getId());
 		tick->setFrom(entity.getId());
-		tick->setSeconds(*nearestExpiry);
+		tick->setStamp(nearestExpiry->count());
 		res.emplace_back(std::move(tick));
 
 		m_tickOutstanding = nearestExpiry;
@@ -115,9 +115,9 @@ ActionsProperty* ActionsProperty::copy() const {
 int ActionsProperty::get(Atlas::Message::Element& val) const {
 	Atlas::Message::MapType map;
 	for (auto& entry: m_data) {
-		Atlas::Message::MapType mapEntry{{"start_time", entry.second.startTime}};
+		Atlas::Message::MapType mapEntry{{"start_time", entry.second.startTime.count()}};
 		if (entry.second.endTime) {
-			mapEntry.emplace("end_time", *entry.second.endTime);
+			mapEntry.emplace("end_time", entry.second.endTime->count());
 		}
 
 		map.emplace(entry.first, std::move(mapEntry));

@@ -8,13 +8,11 @@
     description:"Base operation for all operators"
     long_description:"""This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'."""
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for."""
     from:""
     to:""
-    seconds:0.0
-    future_seconds:0.0
+    future_milliseconds:0
     time_string:""
     args:[]
 

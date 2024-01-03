@@ -18,7 +18,7 @@
 
 #ifndef STUB_CreatorClient_handleMakeResponse
 //#define STUB_CreatorClient_handleMakeResponse
-  LocatedEntity* CreatorClient::handleMakeResponse(const Atlas::Objects::Operation::RootOperation&, double)
+  LocatedEntity* CreatorClient::handleMakeResponse(const Atlas::Objects::Operation::RootOperation&, std::chrono::milliseconds)
   {
     return nullptr;
   }

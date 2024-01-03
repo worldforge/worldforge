@@ -68,19 +68,19 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		{
 			Operation op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			op->setRefno(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(2.0);
+			op->setStamp(2);
 			op->setRefno(2);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(3.0);
+			op->setStamp(3);
 			op->setRefno(3);
 			dispatcher.addOperationToQueue(op, entity);
 		}
@@ -95,19 +95,19 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Now try with same seconds set.
 		{
 			Operation op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			op->setRefno(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			op->setRefno(2);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			op->setRefno(3);
 			dispatcher.addOperationToQueue(op, entity);
 		}
@@ -123,17 +123,17 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Now try with same seconds set.
 		{
 			Atlas::Objects::Operation::Update op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Atlas::Objects::Operation::Appearance op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Atlas::Objects::Operation::Update op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 
@@ -146,32 +146,32 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		{
 			Operation op;
-			op->setSeconds(2.0);
+			op->setStamp(2);
 			op->setRefno(2);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(3.0);
+			op->setStamp(3);
 			op->setRefno(3);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
-			op->setSeconds(1.0);
+			op->setStamp(1);
 			op->setRefno(1);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
 			op->setRefno(4);
-			op->setSeconds(0);
+			op->setStamp(0);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 		{
 			Operation op;
 			op->setRefno(5);
-			op->setSeconds(0);
+			op->setStamp(0);
 			dispatcher.addOperationToQueue(op, entity);
 		}
 

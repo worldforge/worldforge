@@ -18,6 +18,8 @@
 
 #include <rules/BBoxProperty.h>
 #include <rules/ScaleProperty.h>
+
+#include <utility>
 #include "MemEntity.h"
 #include "rules/SolidProperty.h"
 #include "common/TypeNode.h"
@@ -26,8 +28,8 @@
 static const bool debug_flag = false;
 
 MemEntity::MemEntity(RouterId id) :
-		LocatedEntity(id),
-		m_lastSeen(0.),
+		LocatedEntity(std::move(id)),
+		m_lastSeen(0),
 		m_lastUpdated(0) {
 }
 

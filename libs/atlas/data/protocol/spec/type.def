@@ -159,7 +159,7 @@ For more about URI see
 :map:
     id:"characters"
     parent:"contains"
-    description:"List of characters account can control"
+    description:"List of characters the account can control."
 
 :map:
     id:"args"
@@ -170,33 +170,18 @@ For more about URI see
 :map:
     id:"operations"
     parent:"id_list"
-    description:"List of alloved operations"
+    description:"List of allowed operations"
     long_description:"Content ids can be either another interface or operation ids or both."
 
 :map:
     id:"stamp"
-    parent:"float"
+    parent:"int"
     objtype:"type"
     description:"Last time this object was modified."
-    long_description:"""Value should be reflect when something was
-    changed in this object. Any scheme is ok as long as newer numbers
-    are bigger than older stamps. For example, seconds since Jan 1st,
-    1970 or total game cycles would both be valid."""
-
-:map:
-    id:"stamp_inherit"
-    parent:"stamp"
-    objtype:"type"
-    description:"Last time any object that inherits from this has been modified"
-    long_description:"Value should be reflect when something was changed in some object that inherits from this."
-
-:map:
-    id:"stamp_contains"
-    parent:"stamp"
-    objtype:"type"
-    description:"Last time any object that uses this as reference recursively has been modified"
-    long_description:"Value should be reflect when something was changed in some object that is contained by this object."
-
+    long_description:"""A timestamp in milliseconds for when this object was updated on the server. The time scale used
+    doesn't necessarily need to be using any Epoch, it could instead be based on when the server was started. For
+    Operations this would indicate when it was sent from the server, whereas for Entities it would indicate when
+    properties were last updated."""
 
 :map:
     id:"objtype"
@@ -205,11 +190,6 @@ For more about URI see
     objtype:"type"
     description:"What kind of object this is."
     long_description:"""Examples of values: "op", "class", "type"."""
-
-:map:
-    id:"interface"
-    parent:"id"
-    description:"What kind of operations are legal for this object."
 
 :map:
     id:"specification"
@@ -235,12 +215,6 @@ For more about URI see
     description:"What something has said."
 
 :map:
-    id:"html"
-    parent:"string"
-    objtype:"type"
-    description:"String that is actually html."
-
-:map:
     id:"username"
     parent:"string"
     objtype:"type"
@@ -254,7 +228,7 @@ For more about URI see
 
 :map:
     id:"description"
-    parent:"html"
+    parent:"string"
     description:"This gives short description of object."
 
 :map:
@@ -299,55 +273,18 @@ For more about URI see
     character can only control directly it's body."""
 
 :map:
-    id:"seconds"
-    parent:"float"
-    objtype:"type"
-    description:"Time in seconds"
-
-:map:
-    id:"future_seconds"
-    parent:"seconds"
-    description:"Time in seconds to add current time"
-
-:map:
-    id:"time_string"
-    parent:"string"
-    objtype:"type"
-    description:"Time in string format: YYYY-MM-DD HH:MM:SS.ss"
-    long_description:"There can be variation in length of different fields if using some weird calendar"
+    id:"future_milliseconds"
+    parent:"int"
+    description:"Time in milliseconds to add current time."
+    long_description:"""This is used when you need to schedule something to happen on
+      the server some milliseconds from when the server receives the operation. If you want a more fixed time you can
+      instead set the 'stamp' attribute."""
 
 :map:
     id:"example"
     parent:"list"
     objtype:"type"
     description:"Gives some examples usage"
-
-#attributes for map
-:map:
-    id:"width"
-    parent:"float"
-    objtype:"type"
-    description:"width of something"
-
-:map:
-    id:"grid_data"
-    parent:"list"
-    objtype:"type"
-    description:"grid data"
-
-:map:
-    id:"grid_size"
-    parent:"int_list_length"
-    objtype:"type"
-    list_length:2
-    description:"size of grid area: width and height (and for space depth too) in grid units"
-
-:map:
-    id:"cell_size"
-    parent:"float_list_length"
-    objtype:"type"
-    list_length:2
-    description:"cell size of grid area"
 
 :map:
     id:"height"

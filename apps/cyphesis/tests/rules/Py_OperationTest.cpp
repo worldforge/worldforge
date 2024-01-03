@@ -90,12 +90,12 @@ int main()
         expect_python_error("o.set_to(1)", PyExc_TypeError);
         run_python_string("o.set_from('2')");
         expect_python_error("o.set_from(2)", PyExc_TypeError);
-        run_python_string("o.set_seconds(2)");
-        run_python_string("o.set_seconds(2.0)");
-        expect_python_error("o.set_seconds('2.0')", PyExc_TypeError);
+        run_python_string("o.set_stamp(2)");
+        expect_python_error("o.set_stamp('2.0')", PyExc_TypeError);
         run_python_string("o.set_future_seconds(2)");
-        run_python_string("o.set_future_seconds(2.0)");
         expect_python_error("o.set_future_seconds('2.0')", PyExc_TypeError);
+        run_python_string("o.set_future_milliseconds(2)");
+        expect_python_error("o.set_future_milliseconds('2.0')", PyExc_TypeError);
         expect_python_error("o.set_args()", PyExc_IndexError);
         run_python_string("o.set_args([])");
         expect_python_error("o.set_args(1)", PyExc_TypeError);
@@ -109,8 +109,9 @@ int main()
         run_python_string("assert type(o.get_refno()) == int");
         run_python_string("assert type(o.get_to()) == str");
         run_python_string("assert type(o.get_from()) == str");
-        run_python_string("assert type(o.get_seconds()) == float");
+        run_python_string("assert type(o.get_stamp()) == int");
         run_python_string("assert type(o.get_future_seconds()) == float");
+        run_python_string("assert type(o.get_future_milliseconds()) == int");
         run_python_string("assert type(o.get_args()) == list");
         run_python_string("assert type(o.get_name()) == str");
         run_python_string("assert len(o) == 1");

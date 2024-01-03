@@ -64,7 +64,7 @@ AwareMind::~AwareMind() {
 	}
 }
 
-double AwareMind::getCurrentServerTime() const {
+std::chrono::milliseconds AwareMind::getCurrentServerTime() const {
 	return mServerTime;
 }
 

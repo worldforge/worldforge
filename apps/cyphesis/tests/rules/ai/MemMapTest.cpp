@@ -55,7 +55,7 @@ struct TestMemMap : public MemMap {
 		return addId(id);
 	}
 
-	void _readEntity(const Ref<MemEntity>& ent, const Atlas::Objects::Entity::RootEntity& rootEntity, double timestamp) {
+	void _readEntity(const Ref<MemEntity>& ent, const Atlas::Objects::Entity::RootEntity& rootEntity, std::chrono::milliseconds timestamp) {
 		readEntity(ent, rootEntity, timestamp);
 	}
 
@@ -235,7 +235,7 @@ void MemMaptest::test_readEntity() {
 	Ref<MemEntity> ent = new MemEntity(new_id);
 	ent->setType(m_sampleType);
 
-	tested._readEntity(ent, data, 0);
+	tested._readEntity(ent, data, std::chrono::milliseconds{0});
 }
 
 void MemMaptest::test_readEntity_type() {
@@ -247,7 +247,7 @@ void MemMaptest::test_readEntity_type() {
 
 	Ref<MemEntity> ent = new MemEntity(new_id);
 
-	tested._readEntity(ent, data, 0);
+	tested._readEntity(ent, data, std::chrono::milliseconds{0});
 
 	ASSERT_EQUAL(ent->getType(), m_sampleType);
 }
@@ -261,7 +261,7 @@ void MemMaptest::test_readEntity_type_nonexist() {
 
 	Ref<MemEntity> ent = new MemEntity(new_id);
 
-	tested._readEntity(ent, data, 0);
+	tested._readEntity(ent, data, std::chrono::milliseconds{0});
 
 	ASSERT_NULL(ent->getType());
 }

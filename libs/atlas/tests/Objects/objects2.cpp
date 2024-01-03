@@ -212,12 +212,12 @@ void testDecodeNested(Atlas::Objects::Factories& factories) {
 	auto payload = R"""(<atlas><map>
     <string name="from">30845</string>
     <string name="to">30845</string>
-    <float name="seconds">3950.28</float>
+    <int name="stamp">39502800</int>
     <list name="args">
         <map>
             <string name="from">30845</string>
             <string name="to">30845</string>
-            <float name="seconds">3950.27</float>
+            <int name="stamp">39502700</int>
             <list name="args">
                 <map>
                     <string name="id">30845</string>

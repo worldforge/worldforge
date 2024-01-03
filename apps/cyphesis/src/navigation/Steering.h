@@ -61,7 +61,7 @@ struct SteeringResult
      * Time until the next waypoint is reached.
      * This is used for scheduling the next update tick.
      */
-    std::optional<double> timeToNextWaypoint;
+    std::optional<std::chrono::milliseconds > timeToNextWaypoint;
 };
 
 
@@ -155,22 +155,22 @@ class Steering : public virtual sigc::trackable
 
         void setAwareness(Awareness* awareness);
 
-        int queryDestination(const EntityLocation& destination, double currentServerTimestamp);
+        int queryDestination(const EntityLocation& destination, std::chrono::milliseconds  currentServerTimestamp);
 
-        void setDestination(SteeringDestination destination, double currentServerTimestamp);
+        void setDestination(SteeringDestination destination, std::chrono::milliseconds  currentServerTimestamp);
 
         /**
          * @brief Updates the path.
          * @param currentAvatarPosition The current position of the avatar entity.
          * @return If >= 0, a path was found. If <0 and >= -3 we couldn't find a path currently because we don't have all data yet. If <= -4 we couldn't find a path.
          */
-        int updatePath(double currentTimestamp, const WFMath::Point<3>& currentAvatarPosition);
+        int updatePath(std::chrono::milliseconds  currentTimestamp, const WFMath::Point<3>& currentAvatarPosition);
 
         /**
          * @brief Updates the path.
          * @return If >= 0, a path was found. If <0 and >= -3 we couldn't find a path currently because we don't have all data yet. If <= -4 we couldn't find a path.
          */
-        int updatePath(double currentTimestamp);
+        int updatePath(std::chrono::milliseconds  currentTimestamp);
 
         /**
          * @brief Requests an update of the path.
@@ -229,23 +229,23 @@ class Steering : public virtual sigc::trackable
          *
          * Call this often when steering is enabled.
          */
-        SteeringResult update(double currentTimestamp);
+        SteeringResult update(std::chrono::milliseconds  currentTimestamp);
 
-        WFMath::Point<3> getCurrentAvatarPosition(double currentTimestamp) const;
+        WFMath::Point<3> getCurrentAvatarPosition(std::chrono::milliseconds  currentTimestamp) const;
 
         size_t unawareAreaCount() const;
 
         int getPathResult() const;
 
-        bool isAtDestination(double currentTimestamp, const SteeringDestination& destination) const;
+        bool isAtDestination(std::chrono::milliseconds  currentTimestamp, const SteeringDestination& destination) const;
 
-        bool isAtCurrentDestination(double currentTimestamp) const;
+        bool isAtCurrentDestination(std::chrono::milliseconds  currentTimestamp) const;
 
-        std::optional<double> distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const;
+        std::optional<double> distanceTo(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const;
 
-        WFMath::Vector<3> directionTo(double currentTimestamp, const EntityLocation& location) const;
+        WFMath::Vector<3> directionTo(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location) const;
 
-        Steering::ResolvedPosition resolvePosition(double currentTimestamp, const EntityLocation& location) const;
+        Steering::ResolvedPosition resolvePosition(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location) const;
 
         /**
          * @brief Emitted when the path has been updated.
@@ -332,7 +332,7 @@ class Steering : public virtual sigc::trackable
          *
          * mPadding determines the width of the corridor.
          */
-        void setAwarenessArea(double currentServerTimestamp);
+        void setAwarenessArea(std::chrono::milliseconds  currentServerTimestamp);
 
         /**
          * @brief Listen to tiles being updated, and request updates.
@@ -347,17 +347,17 @@ class Steering : public virtual sigc::trackable
          */
         void moveInDirection(const WFMath::Vector<2>& direction);
 
-        /**
-         * @brief Tells the server to move towards a certain point.
-         *
-         * The server will make sure to stop at the specified point, unless we collide with something.
-         * This should therefore be used to reach our final destination.
-         *
-         * @param point The point to move towards.
-         */
+	/**
+	 * @brief Tells the server to move towards a certain point.
+	 *
+	 * The server will make sure to stop at the specified point, unless we collide with something.
+	 * This should therefore be used to reach our final destination.
+	 *
+	 * @param point The point to move towards.
+	 */
         void moveToPoint(const WFMath::Point<3>& point);
 
-        void updatePosition(double currentServerTimestamp, long entityId, WFMath::Point<3>& pos) const;
+        void updatePosition(std::chrono::milliseconds  currentServerTimestamp, long entityId, WFMath::Point<3>& pos) const;
 
 };
 

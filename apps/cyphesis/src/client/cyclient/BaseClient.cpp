@@ -61,10 +61,9 @@ void BaseClient::send(const Operation& op) {
 /// @param name User name of the new account
 /// @param password Password of the new account
 Root BaseClient::createSystemAccount() {
-	Anonymous player_ent;
+	Atlas::Objects::Entity::SystemAccount player_ent;
 	player_ent->setAttr("username", create_session_username());
 	player_ent->setAttr("password", fmt::format("{}{}", ::rand(), ::rand()));
-	player_ent->setParent("sys");
 
 	Create createAccountOp;
 	createAccountOp->setArgs1(player_ent);

@@ -104,6 +104,8 @@ public:
 	/// \brief Read only accessor for the in-game time.
 	std::chrono::steady_clock::duration getTime() const;
 
+	std::chrono::milliseconds getTimeAsMilliseconds() const;
+
 	float getTimeAsSeconds() const;
 
 	/// \brief Get the time the world has been running since the server started.

@@ -44,7 +44,7 @@ void TransientProperty::apply(LocatedEntity& ent) {
 
 	Delete deleteOp;
 	deleteOp->setTo(ent.getId());
-	deleteOp->setFutureSeconds(m_data);
+	deleteOp->setFutureMilliseconds(static_cast<std::int64_t >(m_data * 1'000.0));
 
 	Anonymous entity_arg;
 	entity_arg->setId(ent.getId());

@@ -326,15 +326,15 @@ std::vector<ActionChange> EmberEntity::processActionsChange(const Atlas::Message
 	if (!v.isMap()) {
 		//Remove all existing actions
 		for (auto& entry: mActionsData) {
-			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0});
+			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, std::chrono::milliseconds(0), std::chrono::milliseconds(0)});
 		}
 		mActionsData.clear();
 	} else if (mActionsData.empty()) {
 		auto& newMap = v.Map();
 		//All new actions
 		for (auto& newEntry: newMap) {
-			AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
-				ActionEntry actionEntry{newEntry.first, startTime, 0};
+			AtlasQuery::find<Atlas::Message::IntType>(newEntry.second, "start_time", [&](const auto& startTime) {
+				ActionEntry actionEntry{newEntry.first, std::chrono::milliseconds(startTime), std::chrono::milliseconds(0)};
 				actionChanges.emplace_back(ActionChange::ChangeType::Added, std::move(actionEntry));
 			});
 		}
@@ -345,20 +345,20 @@ std::vector<ActionChange> EmberEntity::processActionsChange(const Atlas::Message
 		for (auto& newEntry: newMap) {
 			auto existingI = existingMap.find(newEntry.first);
 			if (existingI == existingMap.end()) {
-				AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
-					ActionEntry actionEntry{newEntry.first, startTime, 0};
+				AtlasQuery::find<Atlas::Message::IntType>(newEntry.second, "start_time", [&](const auto& startTime) {
+					ActionEntry actionEntry{newEntry.first, std::chrono::milliseconds(startTime), std::chrono::milliseconds(0)};
 					actionChanges.emplace_back(ActionChange::ChangeType::Added, std::move(actionEntry));
 				});
 			} else {
-				AtlasQuery::find<Atlas::Message::FloatType>(newEntry.second, "start_time", [&](const auto& startTime) {
-					ActionEntry actionEntry{newEntry.first, startTime, 0};
+				AtlasQuery::find<Atlas::Message::IntType>(newEntry.second, "start_time", [&](const auto& startTime) {
+					ActionEntry actionEntry{newEntry.first, std::chrono::milliseconds(startTime), std::chrono::milliseconds(0)};
 					actionChanges.emplace_back(ActionChange::ChangeType::Updated, std::move(actionEntry));
 				});
 				existingMap.erase(existingI);
 			}
 		}
 		for (auto& entry: existingMap) {
-			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, 0, 0});
+			actionChanges.emplace_back(ActionChange::ChangeType::Removed, ActionEntry{entry.first, std::chrono::milliseconds(0), std::chrono::milliseconds(0)});
 		}
 		mActionsData = newMap;
 	}

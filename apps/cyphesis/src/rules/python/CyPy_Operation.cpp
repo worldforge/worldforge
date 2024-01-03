@@ -99,8 +99,9 @@ void CyPy_Operation::init_type() {
 	PYCXX_ADD_VARARGS_METHOD(set_refno, setRefno, PYCXX_SIG_DOC("set_refno(long)", "Sets the reference number."));
 	PYCXX_ADD_VARARGS_METHOD(set_from, setFrom, PYCXX_SIG_DOC("set_from(string)", "Sets from which entity the operation is from."));
 	PYCXX_ADD_VARARGS_METHOD(set_to, setTo, PYCXX_SIG_DOC("set_to(string)", "Sets to which entity the operation is directed."));
-	PYCXX_ADD_VARARGS_METHOD(set_seconds, setSeconds, "");
+	PYCXX_ADD_VARARGS_METHOD(set_stamp, setStamp, "");
 	PYCXX_ADD_VARARGS_METHOD(set_future_seconds, setFutureSeconds, "");
+	PYCXX_ADD_VARARGS_METHOD(set_future_milliseconds, setFutureMilliseconds, "");
 	PYCXX_ADD_VARARGS_METHOD(set_name, setName, "");
 	PYCXX_ADD_VARARGS_METHOD(set_args, setArgs, PYCXX_SIG_DOC("set_args(sequence)", "Sets the argument list. The supplied sequence could be any of Operation|ElementMap|RootEntity|Python Dict."));
 	PYCXX_ADD_NOARGS_METHOD(get_serialno, getSerialno, "");
@@ -108,8 +109,9 @@ void CyPy_Operation::init_type() {
 	PYCXX_ADD_NOARGS_METHOD(get_refno, getRefno, "");
 	PYCXX_ADD_NOARGS_METHOD(get_from, getFrom, "");
 	PYCXX_ADD_NOARGS_METHOD(get_to, getTo, "");
-	PYCXX_ADD_NOARGS_METHOD(get_seconds, getSeconds, "");
+	PYCXX_ADD_NOARGS_METHOD(get_stamp, getStamp, "");
 	PYCXX_ADD_NOARGS_METHOD(get_future_seconds, getFutureSeconds, "");
+	PYCXX_ADD_NOARGS_METHOD(get_future_milliseconds, getFutureMilliseconds, "");
 	PYCXX_ADD_NOARGS_METHOD(get_args, getArgs, "");
 	PYCXX_ADD_NOARGS_METHOD(get_name, get_name, "");
 	PYCXX_ADD_NOARGS_METHOD(copy, copy, "Copies the operation into a new instance.");
@@ -169,15 +171,21 @@ Py::Object CyPy_Operation::setTo(const Py::Tuple& args) {
 	return Py::None();
 }
 
-Py::Object CyPy_Operation::setSeconds(const Py::Tuple& args) {
+Py::Object CyPy_Operation::setStamp(const Py::Tuple& args) {
 	args.verify_length(1);
-	m_value->setSeconds(verifyFloat(args.front()));
+	m_value->setStamp(verifyLong(args.front()));
 	return Py::None();
 }
 
 Py::Object CyPy_Operation::setFutureSeconds(const Py::Tuple& args) {
 	args.verify_length(1);
-	m_value->setFutureSeconds(verifyFloat(args.front()));
+	m_value->setFutureMilliseconds(verifyNumeric(args.front()) * 1000.0);
+	return Py::None();
+}
+
+Py::Object CyPy_Operation::setFutureMilliseconds(const Py::Tuple& args) {
+	args.verify_length(1);
+	m_value->setFutureMilliseconds(verifyLong(args.front()));
 	return Py::None();
 }
 
@@ -234,12 +242,16 @@ Py::Object CyPy_Operation::getTo() {
 	return Py::String(m_value->getTo());
 }
 
-Py::Object CyPy_Operation::getSeconds() {
-	return Py::Float(m_value->getSeconds());
+Py::Object CyPy_Operation::getStamp() {
+	return Py::Long(m_value->getStamp());
 }
 
 Py::Object CyPy_Operation::getFutureSeconds() {
-	return Py::Float(m_value->getFutureSeconds());
+	return Py::Float(m_value->getFutureMilliseconds() / 1000.0);
+}
+
+Py::Object CyPy_Operation::getFutureMilliseconds() {
+	return Py::Long(m_value->getFutureMilliseconds());
 }
 
 Py::Object CyPy_Operation::getName() {
@@ -322,7 +334,9 @@ Py::Object CyPy_Operation::getattro(const Py::String& name) {
 	if (nameStr == "parent") {
 		return Py::String(m_value->getParent());
 	}
-
+	if (nameStr == "future_milliseconds") {
+		return getFutureMilliseconds();
+	}
 	if (nameStr == "future_seconds") {
 		return getFutureSeconds();
 	}
@@ -385,7 +399,11 @@ int CyPy_Operation::setattro(const Py::String& name, const Py::Object& attr) {
 
 	}
 	if (nameStr == "future_seconds") {
-		m_value->setFutureSeconds(verifyFloat(attr));
+		m_value->setFutureMilliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<float>(verifyNumeric(attr))).count());
+		return 0;
+	}
+	if (nameStr == "future_milliseconds") {
+		m_value->setFutureMilliseconds(verifyLong(attr));
 		return 0;
 	}
 	if (nameStr == "name") {

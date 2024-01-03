@@ -22,6 +22,7 @@
 #include "common/Property.h"
 #include "modules/Ref.h"
 #include <optional>
+#include <chrono>
 
 class ActionsProperty : public PropertyBase {
 public:
@@ -31,8 +32,8 @@ public:
 
 
 	struct Action {
-		double startTime;
-		std::optional<double> endTime;
+		std::chrono::milliseconds startTime;
+		std::optional<std::chrono::milliseconds> endTime;
 	};
 
 	ActionsProperty();
@@ -59,7 +60,7 @@ protected:
 
 	std::map<std::string, Action> m_data;
 
-	std::optional<double> m_tickOutstanding;
+	std::optional<std::chrono::milliseconds> m_tickOutstanding;
 
 	ActionsProperty(const ActionsProperty& rhs) = default;
 

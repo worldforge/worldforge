@@ -39,8 +39,8 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 		m_mindId(std::move(mindId)),
 		m_entityId(std::move(entityId)),
 		m_entity(nullptr),
-		m_stampAtLastOp(TimeStamp::now()),
-		m_lastOpTime(0.0),
+		m_stampAtLastOp(std::chrono::steady_clock::now()),
+		m_lastOpTime(0),
 		m_view(new View(*this)),
 		m_router(new IGRouter(*this, *m_view)),
 		m_isAdmin(false),
@@ -312,14 +312,14 @@ Connection& Avatar::getConnection() const {
 	return m_account.getConnection();
 }
 
-double Avatar::getWorldTime() {
-	WFMath::TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
-	return m_lastOpTime + ((double) deltaT.milliseconds() / 1000.0);
+std::chrono::milliseconds Avatar::getWorldTime() {
+	auto deltaT = std::chrono::steady_clock::now() - m_stampAtLastOp;
+	return std::chrono::duration_cast<std::chrono::milliseconds>(m_lastOpTime + deltaT);
 }
 
-void Avatar::updateWorldTime(double seconds) {
-	m_stampAtLastOp = TimeStamp::now();
-	m_lastOpTime = seconds;
+void Avatar::updateWorldTime(std::chrono::milliseconds duration) {
+	m_stampAtLastOp = std::chrono::steady_clock::now();
+	m_lastOpTime = duration;
 }
 
 void Avatar::logoutResponse(const RootOperation& op) {

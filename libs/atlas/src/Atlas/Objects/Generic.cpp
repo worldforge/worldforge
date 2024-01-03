@@ -50,9 +50,8 @@ void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::str
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
 }
 
 } // namespace Atlas::Objects::Operation

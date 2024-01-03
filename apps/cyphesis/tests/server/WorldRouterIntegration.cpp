@@ -204,7 +204,7 @@ void WorldRouterintegration::test_sequence() {
 	test_world.addEntity(ent2, base);
 
 	Tick tick;
-	tick->setFutureSeconds(0);
+	tick->setFutureMilliseconds(0);
 	tick->setTo(ent2->getId());
 	test_world.message(tick, *ent2);
 

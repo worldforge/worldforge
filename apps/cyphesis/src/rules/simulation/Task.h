@@ -61,7 +61,7 @@ protected:
 	/// \brief Rate of progress towards task completion
 	double m_rate;
 
-	double m_start_time;
+	std::chrono::milliseconds m_start_time;
 
 	/// \brief Additional task attributes
 	Atlas::Message::MapType m_attr;
@@ -83,9 +83,9 @@ public:
 
 	static std::function<Py::Object(const std::map<std::string, std::vector<UsageParameter::UsageArg>>& args)> argsCreator;
 
-	std::optional<double> m_duration;
+	std::optional<std::chrono::milliseconds> m_duration;
 
-	std::optional<double> m_tick_interval;
+	std::optional<std::chrono::milliseconds> m_tick_interval;
 
 	UsageInstance m_usageInstance;
 
@@ -94,9 +94,13 @@ public:
 
 	~Task() override;
 
-	void callUsageScriptFunction(const std::string& function, const std::map<std::string, std::vector<UsageParameter::UsageArg>>& args, OpVector& res);
+	void callUsageScriptFunction(const std::string& function,
+								 const std::map<std::string, std::vector<UsageParameter::UsageArg>>& args,
+								 OpVector& res);
 
-	void callScriptFunction(const std::string& function, const Py::Tuple& args, OpVector& res);
+	void callScriptFunction(const std::string& function,
+							const Py::Tuple& args,
+							OpVector& res);
 
 	/// \brief Flag this task as obsolete
 	void irrelevant();

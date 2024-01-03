@@ -28,7 +28,7 @@
 
 #ifndef STUB_Steering_queryDestination
 //#define STUB_Steering_queryDestination
-  int Steering::queryDestination(const EntityLocation& destination, double currentServerTimestamp)
+  int Steering::queryDestination(const EntityLocation& destination, std::chrono::milliseconds  currentServerTimestamp)
   {
     return 0;
   }
@@ -36,7 +36,7 @@
 
 #ifndef STUB_Steering_setDestination
 //#define STUB_Steering_setDestination
-  void Steering::setDestination(SteeringDestination destination, double currentServerTimestamp)
+  void Steering::setDestination(SteeringDestination destination, std::chrono::milliseconds  currentServerTimestamp)
   {
     
   }
@@ -44,7 +44,7 @@
 
 #ifndef STUB_Steering_updatePath
 //#define STUB_Steering_updatePath
-  int Steering::updatePath(double currentTimestamp, const WFMath::Point<3>& currentAvatarPosition)
+  int Steering::updatePath(std::chrono::milliseconds  currentTimestamp, const WFMath::Point<3>& currentAvatarPosition)
   {
     return 0;
   }
@@ -52,7 +52,7 @@
 
 #ifndef STUB_Steering_updatePath
 //#define STUB_Steering_updatePath
-  int Steering::updatePath(double currentTimestamp)
+  int Steering::updatePath(std::chrono::milliseconds  currentTimestamp)
   {
     return 0;
   }
@@ -132,7 +132,7 @@
 
 #ifndef STUB_Steering_update
 //#define STUB_Steering_update
-  SteeringResult Steering::update(double currentTimestamp)
+  SteeringResult Steering::update(std::chrono::milliseconds  currentTimestamp)
   {
     return *static_cast<SteeringResult*>(nullptr);
   }
@@ -140,7 +140,7 @@
 
 #ifndef STUB_Steering_getCurrentAvatarPosition
 //#define STUB_Steering_getCurrentAvatarPosition
-  WFMath::Point<3> Steering::getCurrentAvatarPosition(double currentTimestamp) const
+  WFMath::Point<3> Steering::getCurrentAvatarPosition(std::chrono::milliseconds  currentTimestamp) const
   {
     return *static_cast<WFMath::Point<3>*>(nullptr);
   }
@@ -164,7 +164,7 @@
 
 #ifndef STUB_Steering_isAtDestination
 //#define STUB_Steering_isAtDestination
-  bool Steering::isAtDestination(double currentTimestamp, const SteeringDestination& destination) const
+  bool Steering::isAtDestination(std::chrono::milliseconds  currentTimestamp, const SteeringDestination& destination) const
   {
     return false;
   }
@@ -172,7 +172,7 @@
 
 #ifndef STUB_Steering_isAtCurrentDestination
 //#define STUB_Steering_isAtCurrentDestination
-  bool Steering::isAtCurrentDestination(double currentTimestamp) const
+  bool Steering::isAtCurrentDestination(std::chrono::milliseconds  currentTimestamp) const
   {
     return false;
   }
@@ -180,7 +180,7 @@
 
 #ifndef STUB_Steering_distanceTo
 //#define STUB_Steering_distanceTo
-  std::optional<double> Steering::distanceTo(double currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
+  std::optional<double> Steering::distanceTo(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location, MeasureType fromSelf, MeasureType toDestination) const
   {
     return *static_cast<std::optional<double>*>(nullptr);
   }
@@ -188,7 +188,7 @@
 
 #ifndef STUB_Steering_directionTo
 //#define STUB_Steering_directionTo
-  WFMath::Vector<3> Steering::directionTo(double currentTimestamp, const EntityLocation& location) const
+  WFMath::Vector<3> Steering::directionTo(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location) const
   {
     return *static_cast<WFMath::Vector<3>*>(nullptr);
   }
@@ -196,7 +196,7 @@
 
 #ifndef STUB_Steering_resolvePosition
 //#define STUB_Steering_resolvePosition
-  Steering::ResolvedPosition Steering::resolvePosition(double currentTimestamp, const EntityLocation& location) const
+  Steering::ResolvedPosition Steering::resolvePosition(std::chrono::milliseconds  currentTimestamp, const EntityLocation& location) const
   {
     return *static_cast<Steering::ResolvedPosition*>(nullptr);
   }
@@ -204,7 +204,7 @@
 
 #ifndef STUB_Steering_setAwarenessArea
 //#define STUB_Steering_setAwarenessArea
-  void Steering::setAwarenessArea(double currentServerTimestamp)
+  void Steering::setAwarenessArea(std::chrono::milliseconds  currentServerTimestamp)
   {
     
   }
@@ -236,7 +236,7 @@
 
 #ifndef STUB_Steering_updatePosition
 //#define STUB_Steering_updatePosition
-  void Steering::updatePosition(double currentServerTimestamp, long entityId, WFMath::Point<3>& pos) const
+  void Steering::updatePosition(std::chrono::milliseconds  currentServerTimestamp, long entityId, WFMath::Point<3>& pos) const
   {
     
   }

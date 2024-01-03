@@ -98,7 +98,7 @@ class TestConnection : public Eris::Connection {
 };
 
 
-static double stub_worldtime = 0.;
+static std::chrono::milliseconds stub_worldtime;
 int main()
 {
 
@@ -201,7 +201,7 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = 0;
+        stub_worldtime = std::chrono::milliseconds{0};
 
         Eris::DateTime dt = ec.now();
 
@@ -223,7 +223,7 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = 1LL * MPY * DPM * HPD * MPH * SPM;
+        stub_worldtime = std::chrono::milliseconds{1LL * MPY * DPM * HPD * MPH * SPM};
 
         Eris::DateTime dt = ec.now();
 
@@ -234,7 +234,7 @@ int main()
         assert(dt.minutes() == 0);
         assert(dt.seconds() == 0);
 
-        stub_worldtime = 1000LL * MPY * DPM * HPD * MPH * SPM;
+        stub_worldtime = std::chrono::milliseconds{1000LL * MPY * DPM * HPD * MPH * SPM};
 
         dt = ec.now();
 
@@ -256,7 +256,7 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = std::numeric_limits<unsigned int>::max() + 10LL;
+        stub_worldtime = std::chrono::milliseconds{std::numeric_limits<unsigned int>::max() + 10LL};
 
         Eris::DateTime dt = ec.now();
 
@@ -296,8 +296,8 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_mindId(mindId),
     m_entityId(entId),
     m_entity(nullptr),
-    m_stampAtLastOp(WFMath::TimeStamp::now()),
-    m_lastOpTime(0.0),
+    m_stampAtLastOp(std::chrono::steady_clock::now()),
+    m_lastOpTime(std::chrono::milliseconds(0)),
     m_isAdmin(false)
 {
     m_view = std::make_unique<View>(*this);
@@ -307,7 +307,7 @@ Avatar::~Avatar()
 {
 }
 
-double Avatar::getWorldTime()
+std::chrono::milliseconds Avatar::getWorldTime()
 {
     return stub_worldtime;
 }
@@ -321,7 +321,7 @@ View::View(Avatar& av) :
     m_topLevel(nullptr),
     m_maxPendingCount(10)
 {
-    
+
 }
 
 View::~View()

@@ -55,7 +55,7 @@ int TasksProperty::get(Atlas::Message::Element& val) const {
 			taskMap.emplace("progress", progress);
 		}
 		if (task->m_duration) {
-			taskMap.emplace("rate", 1.0f / *task->m_duration);
+			taskMap.emplace("rate", 1.0f / std::chrono::duration_cast<std::chrono::duration<float>>(*task->m_duration).count());
 		}
 		if (!task->usages().empty()) {
 			ListType usagesList;

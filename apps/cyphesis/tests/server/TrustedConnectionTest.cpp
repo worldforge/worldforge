@@ -128,7 +128,7 @@ int main() {
 	}
 
 	{
-		auto ac = tc.test_newAccount("sys",
+		auto ac = tc.test_newAccount("system_account",
 									 "bob",
 									 "unit_test_hash",
 									 1);

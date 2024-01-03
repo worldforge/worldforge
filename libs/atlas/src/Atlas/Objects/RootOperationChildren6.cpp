@@ -44,9 +44,8 @@ void ErrorData::fillDefaultObjectInstance(ErrorData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -82,9 +81,8 @@ void ChangeData::fillDefaultObjectInstance(ChangeData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 

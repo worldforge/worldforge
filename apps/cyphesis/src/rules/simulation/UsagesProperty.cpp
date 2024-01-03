@@ -148,7 +148,7 @@ HandlerResult UsagesProperty::use_handler(LocatedEntity& e,
 		}
 		rop->setFrom(actor->getId());
 		rop->setTo(e.getId());
-		rop->setSeconds(op->getSeconds());
+		rop->setStamp(op->getStamp());
 
 		if (argOp->getArgs().empty()) {
 			actor->error(op, "Use arg op has no arguments; one expected.", res, actor->getId());

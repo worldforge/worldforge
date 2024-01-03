@@ -18,7 +18,7 @@ class Chase(DynamicGoal):
 
     def event(self, me, original_op, op):
         # FIXME Now that this code is trigger goal, has this update been done?
-        other = me.map.update(op[0], op.get_seconds())
+        other = me.map.update(op[0], op.get_stamp())
         if other.id == me.entity.id:
             return
         # target=op[0].location.copy()

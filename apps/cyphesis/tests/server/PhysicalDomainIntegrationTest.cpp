@@ -54,6 +54,7 @@
 #include <rules/simulation/VisibilityDistanceProperty.h>
 #include "../stubs/common/stubMonitors.h"
 
+using namespace std::chrono_literals;
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
 using Atlas::Message::MapType;
@@ -161,8 +162,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 	void test_scaleBbox(TestContext& context) {
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 
 		OpVector res;
 
@@ -203,7 +204,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		btCollisionWorld::ClosestRayResultCallback callback(from, to);
 		domain->test_getPhysicalWorld()->rayTest(from, to, callback);
-		domain->tick(1.0f, res);
+		domain->tick(1000ms, res);
 
 		ASSERT_TRUE(callback.hasHit());
 		ASSERT_FUZZY_EQUAL(1.0f, callback.m_hitPointWorld.y(), 0.1f);
@@ -220,7 +221,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(freeEntity);
 
-		while (time < 5) {
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -234,7 +235,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->test_childEntityPropertyApplied("bbox", bBoxProperty, plantedEntity.getIntId());
 
-		domain->tick(1.0f, res);
+		domain->tick(1000ms, res);
 
 		callback = btCollisionWorld::ClosestRayResultCallback(from, to);
 		domain->test_getPhysicalWorld()->rayTest(from, to, callback);
@@ -249,8 +250,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(freeEntity);
 
-		time = 0;
-		while (time < 5) {
+		time = 0ms;
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -288,7 +289,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted1);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(rootEntity.getIntId(), *planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 
@@ -301,7 +302,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted2);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(planted1.getIntId(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(1.0f, planted2.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
@@ -315,7 +316,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted3);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(planted2.getIntId(), *planted3.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(2.0f, planted3.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
@@ -329,7 +330,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted4);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(planted3.getIntId(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(3.0f, planted4.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
@@ -337,13 +338,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Now delete planted3, which should place planted4 on top of planted2
 
 		domain->removeEntity(planted3);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(planted2.getIntId(), *planted4.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(2.0f, planted4.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
 
 		domain->removeEntity(planted1);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(rootEntity.getIntId(), *planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
 		ASSERT_FUZZY_EQUAL(0.0f, planted2.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
@@ -436,7 +437,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(fixed1);
 
 		OpVector res;
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_EQUAL(0, fixed1.requirePropertyClassFixed<PositionProperty>().data().y());
 
@@ -450,7 +451,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted1);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		Entity planted2(context.newId());
 		planted2.requirePropertyClassFixed<PositionProperty>().data() = {0, 2, 1};
@@ -461,7 +462,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		domain->addEntity(planted2);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(2.0f, planted2.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1f);
 
@@ -475,7 +476,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(freeEntity);
 
 		ASSERT_FUZZY_EQUAL(4.0f, freeEntity.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1);
-		domain->tick(1, res);
+		domain->tick(1000ms, res);
 
 		ASSERT_FUZZY_EQUAL(4.0f, freeEntity.requirePropertyClassFixed<PositionProperty>().data().y(), 0.1);
 
@@ -489,7 +490,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			ASSERT_FUZZY_EQUAL(WFMath::Point<3>(10, 12, 11), planted2.requirePropertyClassFixed<PositionProperty>().data(), epsilon);
 			ASSERT_TRUE(WFMath::Equal(WFMath::Point<3>(11, 14, 10), freeEntity.requirePropertyClassFixed<PositionProperty>().data(), 0.1));
 		}
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 
 		//Only change orientation
@@ -502,7 +503,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			ASSERT_FUZZY_EQUAL(WFMath::Point<3>(11, 12, 10), planted2.requirePropertyClassFixed<PositionProperty>().data(), epsilon);
 			ASSERT_TRUE(WFMath::Equal(WFMath::Point<3>(10, 14, 9), freeEntity.requirePropertyClassFixed<PositionProperty>().data(), 0.1));
 		}
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		//Move it, and at the same time rotate it 90 degrees around the y axis.
 		{
@@ -515,7 +516,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			ASSERT_FUZZY_EQUAL(WFMath::Point<3>(15, 17, 14), planted2.requirePropertyClassFixed<PositionProperty>().data(), epsilon);
 			ASSERT_TRUE(WFMath::Equal(WFMath::Point<3>(14, 19, 15), freeEntity.requirePropertyClassFixed<PositionProperty>().data(), 0.1));
 		}
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		//Move away the first planted entity, which should also move along the second planted and the free entity, and not affect the fixed entity.
 		{
@@ -586,7 +587,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 				domain.addEntity(planted1);
 
 				OpVector res;
-				domain.tick(0, res);
+				domain.tick(0ms, res);
 
 				ASSERT_TRUE(planted1.getPropertyClassFixed<ModeDataProperty>())
 				ASSERT_TRUE(planted1.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId)
@@ -617,7 +618,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 				domain.addEntity(planted2);
 
-				domain.tick(0, res);
+				domain.tick(0ms, res);
 
 				ASSERT_TRUE(planted2.getPropertyClassFixed<ModeDataProperty>());
 				ASSERT_TRUE(planted2.getPropertyClassFixed<ModeDataProperty>()->getPlantedOnData().entityId);
@@ -722,7 +723,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		OpVector res;
 		std::set<LocatedEntity*> transformedEntities;
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 10.0f, 0.1f);
@@ -740,7 +741,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		}
 		domain->applyTransform(terrainModEntity, Domain::TransformData{WFMath::Quaternion(), WFMath::Point<3>(10, 10, 10), nullptr, {}}, transformedEntities);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 5.0f, 0.1f);
 		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIntId()));
@@ -762,7 +763,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeProperty->apply(terrainModEntity);
 		terrainModEntity.propertyApplied.emit("mode", *modeProperty);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 10.0f, 0.1f);
 		ASSERT_FALSE(terrain.hasMod(terrainModEntity.getIntId()));
@@ -773,7 +774,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		modeProperty->apply(terrainModEntity);
 		terrainModEntity.propertyApplied.emit("mode", *modeProperty);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 
 		ASSERT_FUZZY_EQUAL(terrain.get(10, 10), 5.0f, 0.1f);
 		ASSERT_TRUE(terrain.hasMod(terrainModEntity.getIntId()));
@@ -857,7 +858,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		domain->addEntity(floatingEntity);
 
 		OpVector res;
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Submerged);
 		ASSERT_TRUE(freeEntity2.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 		ASSERT_TRUE(floatingEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Planted);
@@ -879,8 +880,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			}
 		};
 
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 
 		TypeNode rockType("rock");
 		TypeNode lakeType("lake");
@@ -939,8 +940,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		OpVector res;
 		std::set<LocatedEntity*> transformedEntities;
-		domain->tick(0, res);
-		while (time < 5) {
+		domain->tick(0ms, res);
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -956,13 +957,13 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Move outside
 		domain->applyTransform(freeEntity, Domain::TransformData{WFMath::Quaternion::IDENTITY(), WFMath::Point<3>(20, 60, 0), nullptr, {}}, transformedEntities);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_GREATER(freeEntity.requirePropertyClassFixed<PositionProperty>().data().y(), 0);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 
 		//Move back in.
 		domain->applyTransform(freeEntity, Domain::TransformData{WFMath::Quaternion::IDENTITY(), WFMath::Point<3>(20, -10, 0), nullptr, {}}, transformedEntities);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_LESS(freeEntity.requirePropertyClassFixed<PositionProperty>().data().y(), 0);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Submerged);
 		ASSERT_TRUE(freeEntity3.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
@@ -970,7 +971,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Move the lake to where freeEntity3 is
 		domain->applyTransform(lake, Domain::TransformData{WFMath::Quaternion(), freeEntity3.requirePropertyClassFixed<PositionProperty>().data() + WFMath::Vector<3>(0, 5, 0), nullptr, {}},
 							   transformedEntities);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity3.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Submerged);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 
@@ -990,12 +991,12 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		bBoxProperty.apply(lake);
 		lake.test_propertyApplied().emit("bbox", bBoxProperty);
 
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity3.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 
 		domain->removeEntity(lake);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 		ASSERT_TRUE(freeEntity2.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 		ASSERT_TRUE(freeEntity3.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
@@ -1003,8 +1004,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 	}
 
 	void test_ocean(TestContext& context) {
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 
 		TypeNode rockType("rock");
 		TypeNode oceanType("ocean");
@@ -1055,8 +1056,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		OpVector res;
 		std::set<LocatedEntity*> transformedEntities;
-		domain->tick(0, res);
-		while (time < 5) {
+		domain->tick(0ms, res);
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -1069,18 +1070,18 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		//Move outside
 		domain->applyTransform(freeEntity, Domain::TransformData{WFMath::Quaternion::IDENTITY(), WFMath::Point<3>(0, 60, 0), nullptr, {}}, transformedEntities);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity.requirePropertyClassFixed<PositionProperty>().data().y() > 0);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 
 		//Move back in.
 		domain->applyTransform(freeEntity, Domain::TransformData{WFMath::Quaternion::IDENTITY(), WFMath::Point<3>(0, -10, 0), nullptr, {}}, transformedEntities);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity.requirePropertyClassFixed<PositionProperty>().data().y() < 0);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Submerged);
 
 		domain->removeEntity(ocean);
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_TRUE(freeEntity.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 		ASSERT_TRUE(freeEntity2.getPropertyClassFixed<ModeProperty>()->getMode() == ModeProperty::Mode::Free);
 	}
@@ -1226,8 +1227,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_fallToBottom(TestContext& context) {
 
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 
 		Entity rootEntity(context.newId());
 		rootEntity.incRef();
@@ -1262,12 +1263,12 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		OpVector res;
 
 		//First tick should not update anything
-		domain->tick(0, res);
+		domain->tick(0ms, res);
 		ASSERT_EQUAL(freeEntity.requirePropertyClassFixed<PositionProperty>().data(), WFMath::Point<3>::ZERO());
 		ASSERT_EQUAL(fixedEntity.requirePropertyClassFixed<PositionProperty>().data(), WFMath::Point<3>(10, 0, 10));
 
 		//Inject enough ticks to move rock to bottom
-		while (time < 5) {
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -1279,8 +1280,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_standOnFixed(TestContext& context) {
 
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 		Entity rootEntity(context.newId());
 		rootEntity.incRef();
 		rootEntity.requirePropertyClassFixed<PositionProperty>().data() = WFMath::Point<3>::ZERO();
@@ -1314,7 +1315,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		OpVector res;
 
 		//Inject enough ticks to move rock to bottom
-		while (time < 5) {
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -1323,8 +1324,8 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_fallToTerrain(TestContext& context) {
 
-		double tickSize = 1.0 / 15.0;
-		double time = 0;
+		std::chrono::milliseconds tickSize(1000 / 15);
+		std::chrono::milliseconds time(0);
 		Entity rootEntity(context.newId());
 		rootEntity.incRef();
 		TerrainProperty terrainProperty{};
@@ -1370,7 +1371,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		OpVector res;
 
 		//Inject enough ticks to move rock to bottom
-		while (time < 5) {
+		while (time < 5000ms) {
 			time += tickSize;
 			domain->tick(tickSize, res);
 		}
@@ -1391,7 +1392,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 
 	void test_collision(TestContext& context) {
-		double tickSize = 1.0 / 15.0;
+		std::chrono::milliseconds tickSize(1000 / 15);
 
 		Property<double> zeroFrictionProperty{};
 		zeroFrictionProperty.data() = 0;
@@ -1460,7 +1461,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_FUZZY_EQUAL(freeEntity.requirePropertyClassFixed<PositionProperty>().data().z(), 10 + (2.0 / 15.0), 0.1f);
 
 		//Inject ticks for one second
-		domain->tick(14.0 / 15.0, res);
+		domain->tick(14 * tickSize, res);
 
 		//Should have moved 2 meters in y axis
 		ASSERT_FUZZY_EQUAL(freeEntity.requirePropertyClassFixed<PositionProperty>().data().z(), 12, 0.1f);
@@ -1475,7 +1476,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		ASSERT_EQUAL(plantedEntity.requirePropertyClassFixed<PositionProperty>().data(), plantedPos);
 
 		domain->removeEntity(plantedEntity);
-		domain->tick(1.0, res);
+		domain->tick(1000ms, res);
 
 		//Should have moved two more meters as planted entity was removed.
 		ASSERT_FUZZY_EQUAL(freeEntity.requirePropertyClassFixed<PositionProperty>().data().z(), 15, 0.1f);
@@ -1485,7 +1486,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_mode(TestContext& context) {
 
-		double tickSize = 1.0 / 15.0;
+		std::chrono::milliseconds tickSize(1000 / 15);
 
 		ModeProperty modePlantedProperty{};
 		modePlantedProperty.set("planted");
@@ -1567,7 +1568,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 	void test_determinism(TestContext& context) {
 
-		double tickSize = 1.0 / 15.0;
+		std::chrono::milliseconds tickSize(1000 / 15);
 
 		TypeNode rockType("rock");
 
@@ -1762,7 +1763,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 
 		OpVector res;
 		std::set<LocatedEntity*> transformedEntities;
-		domain->tick(0.1, res);
+		domain->tick(100ms, res);
 
 		ASSERT_TRUE(domain->isEntityVisibleFor(observerEntity, observerEntity));
 
@@ -1785,7 +1786,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 		//Now move the observer to "small1"
 		domain->applyTransform(observerEntity, Domain::TransformData{WFMath::Quaternion(), WFMath::Point<3>(30, 0, 30), nullptr, {}}, transformedEntities);
 		//Force visibility updates
-		domain->tick(2, res);
+		domain->tick(2000ms, res);
 		{
 			ASSERT_TRUE(domain->isEntityVisibleFor(observerEntity, smallVisibleEntity));
 			ASSERT_TRUE(domain->isEntityVisibleFor(observerEntity, smallEntity1));
@@ -1869,7 +1870,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			domain->addEntity(*human);
 
 			OpVector res;
-			domain->tick(2, res);
+			domain->tick(2000ms, res);
 
 			ASSERT_FUZZY_EQUAL(-0.5f, human->requirePropertyClassFixed<PositionProperty>().data().z(), 0.1f);
 			domain->removeEntity(*human);
@@ -1889,7 +1890,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			domain->addEntity(*human);
 
 			OpVector res;
-			domain->tick(2, res);
+			domain->tick(2000ms, res);
 
 			ASSERT_FUZZY_EQUAL(0.5, human->requirePropertyClassFixed<PositionProperty>().data().z(), 0.3f);
 			domain->removeEntity(*human);
@@ -1923,7 +1924,7 @@ struct Tested : public Cyphesis::TestBaseWithContext<TestContext> {
 			domain->addEntity(*human);
 
 			OpVector res;
-			domain->tick(2, res);
+			domain->tick(2000ms, res);
 
 			ASSERT_FUZZY_EQUAL(0, human->requirePropertyClassFixed<PositionProperty>().data().y(), 0.01f);
 			ASSERT_FUZZY_EQUAL(-0.4f, human->requirePropertyClassFixed<PositionProperty>().data().z(), 0.1f);

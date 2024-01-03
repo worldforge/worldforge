@@ -13,7 +13,7 @@
 
 namespace Atlas::Objects {
 
-int Factories::enumMax = 44;
+int Factories::enumMax = 45;
 
 void Factories::installStandardTypes()
 {
@@ -29,6 +29,8 @@ void Factories::installStandardTypes()
     addFactory<Entity::PlayerData>("player", Entity::PLAYER_NO);
 
     addFactory<Entity::AdminData>("admin", Entity::ADMIN_NO);
+
+    addFactory<Entity::SystemAccountData>("system_account", Entity::SYSTEM_ACCOUNT_NO);
 
     addFactory<Entity::GameData>("game", Entity::GAME_NO);
 

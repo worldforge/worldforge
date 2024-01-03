@@ -1,40 +1,43 @@
 <atlas>
-    <map>
-        <map name="attributes">
-            <map name="geometry">
-                <map name="default">
-                    <string name="path">dural/items/tools/spade/model/spade.mesh</string>
-                    <string name="type">box</string>
-                </map>
-            </map>
-            <map name="present">
-                <string name="default">dural/items/tools/spade/spade.modeldef</string>
-            </map>
-            <map name="density">
-                <float name="default">2000</float>
-            </map>
-            <map name="cooldown">
-                <float name="default">5</float>
-            </map>
-            <map name="usages">
-                <map name="default">
-                    <map name="dig">
-                        <string name="name">Dig</string>
-                        <map name="params">
-                            <map name="targets">
-                                <string name="type">entity_location</string>
-                                <string name="constraint">entity instance_of types.game_entity &amp;&amp; actor can_reach entity_location with tool</string>
-                            </map>
-                        </map>
-                        <string name="handler">world.objects.tools.GenericTool.use</string>
-                        <string name="constraint">get_entity(actor.attached_hand_primary) = tool</string>
-                        <string name="description">Dig with shovel.</string>
-                    </map>
-                </map>
-            </map>
-        </map>
-        <string name="id">shovel</string>
-        <string name="objtype">class</string>
-        <string name="parent">thing</string>
-    </map>
+	<map>
+		<map name="attributes">
+			<map name="geometry">
+				<map name="default">
+					<string name="path">dural/items/tools/spade/model/spade.mesh</string>
+					<string name="type">box</string>
+				</map>
+			</map>
+			<map name="present">
+				<string name="default">dural/items/tools/spade/spade.modeldef</string>
+			</map>
+			<map name="density">
+				<float name="default">2000</float>
+			</map>
+			<map name="cooldown">
+				<float name="default">5</float>
+			</map>
+			<map name="usages">
+				<map name="default">
+					<map name="dig">
+						<string name="name">Dig</string>
+						<map name="params">
+							<map name="targets">
+								<string name="type">entity_location</string>
+								<string name="constraint">describe("Target needs to be in game.", entity instance_of
+									types.game_entity) &amp;&amp; describe("Can't reach.", actor can_reach
+									entity_location with tool)
+								</string>
+							</map>
+						</map>
+						<string name="handler">world.objects.tools.GenericTool.use</string>
+						<string name="constraint">get_entity(actor.attached_hand_primary) = tool</string>
+						<string name="description">Dig with shovel.</string>
+					</map>
+				</map>
+			</map>
+		</map>
+		<string name="id">shovel</string>
+		<string name="objtype">class</string>
+		<string name="parent">thing</string>
+	</map>
 </atlas>

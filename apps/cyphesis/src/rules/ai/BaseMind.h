@@ -48,7 +48,7 @@ protected:
 	/// \brief Memory map of world entities this mind knows about
 	MemMap m_map;
 	/// \brief World time as far as this mind is aware
-	double mServerTime;
+	std::chrono::milliseconds  mServerTime;
 
 	std::map<std::string, std::vector<Operation>> m_pendingEntitiesOperations;
 	std::deque<Operation> m_pendingOperations;

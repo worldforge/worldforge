@@ -26,9 +26,7 @@
 #include "common/id.h"
 #include "common/debug.h"
 #include "common/TypeNode.h"
-#include "common/Inheritance.h"
 
-#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 #include "rules/AtlasProperties.h"
 #include "rules/PhysicalProperties.h"
@@ -55,7 +53,7 @@ void MemMap::addEntity(const Ref<MemEntity>& entity) {
 	m_checkIterator = m_entities.find(next);
 }
 
-void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, double timestamp)
+void MemMap::readEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std::chrono::milliseconds timestamp)
 // Read the contents of an Atlas message into an entity
 {
 	entity->m_lastUpdated = timestamp;
@@ -129,7 +127,7 @@ void MemMap::applyTypePropertiesToEntity(const Ref<MemEntity>& entity) {
 	}
 }
 
-void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, double timestamp)
+void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, std::chrono::milliseconds timestamp)
 // Update contents of entity an Atlas message.
 {
 	assert(entity != nullptr);
@@ -148,8 +146,8 @@ void MemMap::updateEntity(const Ref<MemEntity>& entity, const RootEntity& ent, d
 
 }
 
-Ref<MemEntity> MemMap::newEntity(RouterId id,
-								 const RootEntity& ent, double timestamp)
+Ref<MemEntity> MemMap::newEntity(const RouterId& id,
+								 const RootEntity& ent, std::chrono::milliseconds timestamp)
 // Create a new entity from an Atlas message.
 {
 	assert(m_entities.find(id.m_intId) == m_entities.end());
@@ -190,7 +188,7 @@ void MemMap::sendLook(OpVector& res) {
 	}
 }
 
-Ref<MemEntity> MemMap::addId(RouterId id)
+Ref<MemEntity> MemMap::addId(const RouterId& id)
 // Queue the ID of an entity we are interested in
 {
 	assert(!id.m_id.empty());
@@ -297,7 +295,7 @@ void MemMap::addContents(const RootEntity& ent)
 	}
 }
 
-Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, const double& d)
+Ref<MemEntity> MemMap::updateAdd(const RootEntity& ent, std::chrono::milliseconds d)
 // Update an entity in our memory, from an Atlas message
 // The mind code relies on this function never sending a Sight to
 // be sure that seeing something created does not imply that the created
@@ -394,7 +392,7 @@ EntityVector MemMap::findByType(const std::string& what)
 
 EntityVector MemMap::findByLocation(const EntityLocation& loc,
 									WFMath::CoordType radius,
-									const std::string& what) {
+									const std::string& what) const {
 	//TODO: move to awareness
 	EntityVector res;
 	auto place = loc.m_parent;
@@ -438,14 +436,14 @@ EntityVector MemMap::findByLocation(const EntityLocation& loc,
 	return res;
 }
 
-void MemMap::check(const double& time) {
+void MemMap::check(std::chrono::milliseconds time) {
 	//Check if the entity hasn't been seen the last 600 seconds, and if so removes it.
 	if (m_checkIterator == m_entities.end()) {
 		m_checkIterator = m_entities.begin();
 	} else {
 		auto me = m_checkIterator->second;
 		assert(me);
-		if (me->getType() && !me->isVisible() && (time - me->lastSeen()) > 600 &&
+		if (me->getType() && !me->isVisible() && (time - me->lastSeen()) > std::chrono::seconds(600) &&
 			(me->m_contains == nullptr || me->m_contains->empty())) {
 			m_checkIterator = m_entities.erase(m_checkIterator);
 

@@ -44,7 +44,7 @@ std::unique_ptr<Account> TrustedConnection::newAccount(const std::string& type,
                                        const std::string& hash,
                                        RouterId id)
 {
-    if (type == "sys") {
+    if (type == "system_account") {
         return std::make_unique<SystemAccount>(this, username, hash, id);
     } else if (type == "admin") {
         return std::make_unique<Admin>(this, username, hash, id);

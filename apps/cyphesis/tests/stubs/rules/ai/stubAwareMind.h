@@ -75,9 +75,9 @@
 
 #ifndef STUB_AwareMind_getCurrentServerTime
 //#define STUB_AwareMind_getCurrentServerTime
-  double AwareMind::getCurrentServerTime() const
+  std::chrono::milliseconds AwareMind::getCurrentServerTime() const
   {
-    return 0;
+    return *static_cast<std::chrono::milliseconds*>(nullptr);
   }
 #endif //STUB_AwareMind_getCurrentServerTime
 

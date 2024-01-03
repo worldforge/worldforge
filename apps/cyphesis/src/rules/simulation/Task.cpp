@@ -47,7 +47,7 @@ Task::Task(UsageInstance usageInstance, Py::Object script) :
 		m_rate(-1),
 		m_start_time(-1),
 		m_script(std::move(script)),
-		m_tick_interval(1.0),
+		m_tick_interval(1'000),
 		m_usageInstance(std::move(usageInstance)) {
 }
 
@@ -80,18 +80,18 @@ Operation Task::nextTick(const std::string& id, const Operation& op) {
 	tick->setArgs1(tick_arg);
 	tick->setTo(m_usageInstance.actor->getId());
 	//Default to once per second.
-	double futureSeconds = 1.0;
+	std::chrono::milliseconds futureMilliseconds{1'000};
 	if (m_tick_interval) {
-		futureSeconds = *m_tick_interval;
+		futureMilliseconds = *m_tick_interval;
 	} else if (m_duration) {
-		futureSeconds = *m_duration;
+		futureMilliseconds = *m_duration;
 	}
 
 	//If there's a duration, adjust the tick interval so it matches the duration end
 	if (m_duration) {
-		futureSeconds = std::min(futureSeconds, *m_duration - (op->getSeconds() - m_start_time));
+		futureMilliseconds = std::min(futureMilliseconds, *m_duration - (std::chrono::milliseconds(op->getStamp()) - m_start_time));
 	}
-	tick->setFutureSeconds(futureSeconds);
+	tick->setFutureMilliseconds(futureMilliseconds.count());
 
 	return tick;
 }
@@ -114,7 +114,7 @@ void Task::setAttr(const std::string& attr,
 }
 
 void Task::initTask(const std::string& id, OpVector& res) {
-	m_start_time = m_usageInstance.op->getSeconds();
+	m_start_time = std::chrono::milliseconds{m_usageInstance.op->getStamp()};
 	if (m_script.isNull()) {
 		spdlog::warn("Task script failed");
 		irrelevant();
@@ -132,8 +132,8 @@ void Task::initTask(const std::string& id, OpVector& res) {
 bool Task::tick(const std::string& id, const Operation& op, OpVector& res) {
 	bool hadChange = false;
 	if (m_duration) {
-		auto elapsed = (op->getSeconds() - m_start_time);
-		auto newProgress = std::min(1.0, elapsed / *m_duration);
+		auto elapsed = (std::chrono::milliseconds(op->getStamp()) - m_start_time);
+		auto newProgress = std::min(1.0, (double) elapsed.count() / (double) m_duration->count());
 		if (newProgress != m_progress) {
 			m_progress = newProgress;
 			hadChange = true;
@@ -201,7 +201,7 @@ void Task::startAction(std::string actionName, OpVector& res) {
 	}
 	m_action = actionName;
 	auto& actionsProp = m_usageInstance.actor->requirePropertyClassFixed<ActionsProperty>();
-	actionsProp.addAction(*m_usageInstance.actor, res, actionName, {BaseWorld::instance().getTimeAsSeconds()});
+	actionsProp.addAction(*m_usageInstance.actor, res, actionName, {BaseWorld::instance().getTimeAsMilliseconds()});
 }
 
 void Task::stopAction(OpVector& res) {

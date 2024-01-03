@@ -45,6 +45,11 @@ namespace Entity {
 }
 
 namespace Entity {
+    class SystemAccountData;
+    typedef SmartPtr<SystemAccountData> SystemAccount;
+}
+
+namespace Entity {
     class GameData;
     typedef SmartPtr<GameData> Game;
 }

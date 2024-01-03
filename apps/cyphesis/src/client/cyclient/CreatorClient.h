@@ -34,7 +34,7 @@ public:
 				  TypeStore& typeStore);
 
 	LocatedEntity* handleMakeResponse(const Atlas::Objects::Operation::RootOperation&,
-									  double);
+									  std::chrono::milliseconds);
 
 	Ref<LocatedEntity> make(const Atlas::Objects::Entity::RootEntity&);
 

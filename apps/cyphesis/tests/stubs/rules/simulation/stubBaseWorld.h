@@ -80,6 +80,14 @@
   }
 #endif //STUB_BaseWorld_getTime
 
+#ifndef STUB_BaseWorld_getTimeAsMilliseconds
+//#define STUB_BaseWorld_getTimeAsMilliseconds
+  std::chrono::milliseconds BaseWorld::getTimeAsMilliseconds() const
+  {
+    return *static_cast<std::chrono::milliseconds*>(nullptr);
+  }
+#endif //STUB_BaseWorld_getTimeAsMilliseconds
+
 #ifndef STUB_BaseWorld_getTimeAsSeconds
 //#define STUB_BaseWorld_getTimeAsSeconds
   float BaseWorld::getTimeAsSeconds() const

@@ -9,6 +9,7 @@ def release_mouse (event):
     gdb.write("GDB/SDL2: Releasing mouse\n")
     try:
         gdb.execute("call SDL_SetRelativeMouseMode(0)")
+        gdb.write("GDB/SDL2: Released mouse\n")
     except gdb.error:
         pass
 

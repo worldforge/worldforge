@@ -44,9 +44,8 @@ void ActionData::fillDefaultObjectInstance(ActionData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -82,9 +81,8 @@ void CreateData::fillDefaultObjectInstance(CreateData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -120,9 +118,8 @@ void DeleteData::fillDefaultObjectInstance(DeleteData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -158,9 +155,8 @@ void SetData::fillDefaultObjectInstance(SetData& data, std::map<std::string, uin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -196,9 +192,8 @@ void AffectData::fillDefaultObjectInstance(AffectData& data, std::map<std::strin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -234,9 +229,8 @@ void HitData::fillDefaultObjectInstance(HitData& data, std::map<std::string, uin
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 

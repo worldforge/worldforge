@@ -71,13 +71,17 @@ protected:
 
 	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setTo);
 
-	Py::Object setSeconds(const Py::Tuple& args);
+	Py::Object setStamp(const Py::Tuple& args);
 
-	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setSeconds);
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setStamp);
 
 	Py::Object setFutureSeconds(const Py::Tuple& args);
 
 	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFutureSeconds);
+
+	Py::Object setFutureMilliseconds(const Py::Tuple& args);
+
+	PYCXX_VARARGS_METHOD_DECL(CyPy_Operation, setFutureMilliseconds);
 
 	Py::Object setName(const Py::Tuple& args);
 
@@ -107,13 +111,17 @@ protected:
 
 	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getTo);
 
-	Py::Object getSeconds();
+	Py::Object getStamp();
 
-	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getSeconds);
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getStamp);
 
 	Py::Object getFutureSeconds();
 
 	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFutureSeconds);
+
+	Py::Object getFutureMilliseconds();
+
+	PYCXX_NOARGS_METHOD_DECL(CyPy_Operation, getFutureMilliseconds);
 
 	Py::Object getName();
 

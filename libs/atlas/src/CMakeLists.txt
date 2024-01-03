@@ -9,6 +9,9 @@ set(CODECS_HEADER_FILES
         Atlas/Codecs/Utility.h
         Atlas/Codecs/XML.h)
 
+file(GLOB OPERATIONS_FILES Atlas/Objects/RootOperationChildren*.cpp)
+file(GLOB ENTITY_FILES Atlas/Objects/RootEntityChildren*.cpp)
+
 set(OBJECTS_SOURCE_FILES
         Atlas/Objects/Anonymous.cpp
         Atlas/Objects/BaseObject.cpp
@@ -18,14 +21,9 @@ set(OBJECTS_SOURCE_FILES
         Atlas/Objects/Factories.cpp
         Atlas/Objects/Root.cpp
         Atlas/Objects/RootEntity.cpp
-        Atlas/Objects/RootEntityChildren.cpp
         Atlas/Objects/RootOperation.cpp
-        Atlas/Objects/RootOperationChildren1.cpp
-        Atlas/Objects/RootOperationChildren2.cpp
-        Atlas/Objects/RootOperationChildren3.cpp
-        Atlas/Objects/RootOperationChildren4.cpp
-        Atlas/Objects/RootOperationChildren5.cpp
-        Atlas/Objects/RootOperationChildren6.cpp
+        ${OPERATIONS_FILES}
+        ${ENTITY_FILES}
 )
 
 set(OBJECTS_HEADER_FILES

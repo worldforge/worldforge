@@ -50,8 +50,7 @@ void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -186,8 +185,7 @@ void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::str
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
     attr_data[USERNAME_ATTR] = USERNAME_FLAG;
     attr_data[PASSWORD_ATTR] = PASSWORD_FLAG;
@@ -232,8 +230,7 @@ void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::strin
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -275,8 +272,49 @@ void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string,
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
+        data.attr_parent = default_parent;
+}
+
+Allocator<SystemAccountData> SystemAccountData::allocator;
+        
+
+
+void SystemAccountData::free()
+{
+    allocator.free(this);
+}
+
+
+
+void SystemAccountData::reset()
+{
+    AccountData::reset();
+}
+
+SystemAccountData * SystemAccountData::copy() const
+{
+    return copyInstance<SystemAccountData>(*this);
+}
+
+bool SystemAccountData::instanceOf(int classNo) const
+{
+    if(SYSTEM_ACCOUNT_NO == classNo) return true;
+    return AccountData::instanceOf(classNo);
+}
+
+void SystemAccountData::fillDefaultObjectInstance(SystemAccountData& data, std::map<std::string, uint32_t>& attr_data)
+{
+        data.attr_objtype = default_objtype;
+        data.attr_pos.clear();
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_pos.emplace_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_velocity.emplace_back(0.0);
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -318,51 +356,7 @@ void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, u
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
-        data.attr_parent = default_parent;
-}
-
-Allocator<GameEntityData> GameEntityData::allocator;
-        
-
-
-void GameEntityData::free()
-{
-    allocator.free(this);
-}
-
-
-
-void GameEntityData::reset()
-{
-    RootEntityData::reset();
-}
-
-GameEntityData * GameEntityData::copy() const
-{
-    return copyInstance<GameEntityData>(*this);
-}
-
-bool GameEntityData::instanceOf(int classNo) const
-{
-    if(GAME_ENTITY_NO == classNo) return true;
-    return RootEntityData::instanceOf(classNo);
-}
-
-void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, uint32_t>& attr_data)
-{
-        data.attr_objtype = default_objtype;
-        data.attr_pos.clear();
-        data.attr_pos.emplace_back(0.0);
-        data.attr_pos.emplace_back(0.0);
-        data.attr_pos.emplace_back(0.0);
-        data.attr_velocity.clear();
-        data.attr_velocity.emplace_back(0.0);
-        data.attr_velocity.emplace_back(0.0);
-        data.attr_velocity.emplace_back(0.0);
-        data.attr_stamp_contains = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 

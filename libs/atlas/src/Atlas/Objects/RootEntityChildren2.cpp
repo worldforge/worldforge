@@ -5,48 +5,43 @@
 // Copyright 2011-2020 Erik Ogenvik.
 // Automatically generated using gen_cpp.py. Don't edit directly.
 
-#include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/Entity.h>
 
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
 namespace Atlas::Objects::Entity {
 
-Allocator<AnonymousData> AnonymousData::allocator;
+Allocator<GameEntityData> GameEntityData::allocator;
         
 
 
-void AnonymousData::free()
+void GameEntityData::free()
 {
     allocator.free(this);
 }
 
 
 
-void AnonymousData::reset()
+void GameEntityData::reset()
 {
     RootEntityData::reset();
 }
 
-void AnonymousData::setType(const std::string & name, int no)
+GameEntityData * GameEntityData::copy() const
 {
-    setParent(name);
-    m_class_no = no;
+    return copyInstance<GameEntityData>(*this);
 }
 
-AnonymousData * AnonymousData::copy() const
+bool GameEntityData::instanceOf(int classNo) const
 {
-    return copyInstance<AnonymousData>(*this);
-}
-
-bool AnonymousData::instanceOf(int classNo) const
-{
-    if(ANONYMOUS_NO == classNo) return true;
+    if(GAME_ENTITY_NO == classNo) return true;
     return RootEntityData::instanceOf(classNo);
 }
 
-void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, uint32_t>& attr_data)
+void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, uint32_t>& attr_data)
 {
+        data.attr_objtype = default_objtype;
         data.attr_pos.clear();
         data.attr_pos.emplace_back(0.0);
         data.attr_pos.emplace_back(0.0);
@@ -56,6 +51,7 @@ void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std:
         data.attr_velocity.emplace_back(0.0);
         data.attr_velocity.emplace_back(0.0);
         data.attr_stamp = 0;
+        data.attr_parent = default_parent;
 }
 
 } // namespace Atlas::Objects::Entity

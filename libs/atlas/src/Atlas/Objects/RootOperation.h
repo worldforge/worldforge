@@ -19,24 +19,22 @@ namespace Atlas::Objects::Operation {
 
 This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
 
 */
 
 class RootOperationData;
 typedef SmartPtr<RootOperationData> RootOperation;
 
-static const int ROOT_OPERATION_NO = 9;
+static const int ROOT_OPERATION_NO = 10;
 
 /// \brief Base operation for all operators.
 ///
 /** This is base operation for all other
     operations and defines basic attributes. You can use this as
-    starting point for browsing whole operation hiearchy. refno refers
-    to operation this is reply for. In examples all attributes that
-    are just as examples (and thus world specific) are started with 'e_'.
+    starting point for browsing whole operation hierarchy. refno refers
+    to the operation that this is a reply for.
  */
 class RootOperationData : public RootData
 {
@@ -86,10 +84,8 @@ public:
     void setFrom(std::string val);
     /// Set the "to" attribute.
     void setTo(std::string val);
-    /// Set the "seconds" attribute.
-    void setSeconds(double val);
-    /// Set the "future_seconds" attribute.
-    void setFutureSeconds(double val);
+    /// Set the "future_milliseconds" attribute.
+    void setFutureMilliseconds(std::int64_t val);
     /// Set the "args" attribute.
     void setArgs(std::vector<Root> val);
     /// Set the "args" attribute AsList.
@@ -116,14 +112,10 @@ public:
     const std::string& getTo() const;
     /// Retrieve the "to" attribute as a non-const reference.
     std::string& modifyTo();
-    /// Retrieve the "seconds" attribute.
-    double getSeconds() const;
-    /// Retrieve the "seconds" attribute as a non-const reference.
-    double& modifySeconds();
-    /// Retrieve the "future_seconds" attribute.
-    double getFutureSeconds() const;
-    /// Retrieve the "future_seconds" attribute as a non-const reference.
-    double& modifyFutureSeconds();
+    /// Retrieve the "future_milliseconds" attribute.
+    std::int64_t getFutureMilliseconds() const;
+    /// Retrieve the "future_milliseconds" attribute as a non-const reference.
+    std::int64_t& modifyFutureMilliseconds();
     /// Retrieve the "args" attribute.
     const std::vector<Root>& getArgs() const;
     /// Retrieve the "args" attribute as a non-const reference.
@@ -139,10 +131,8 @@ public:
     bool isDefaultFrom() const;
     /// Is "to" value default?
     bool isDefaultTo() const;
-    /// Is "seconds" value default?
-    bool isDefaultSeconds() const;
-    /// Is "future_seconds" value default?
-    bool isDefaultFutureSeconds() const;
+    /// Is "future_milliseconds" value default?
+    bool isDefaultFutureMilliseconds() const;
     /// Is "args" value default?
     bool isDefaultArgs() const;
 
@@ -159,10 +149,8 @@ protected:
     std::string attr_from;
     /// Target of message/operation.
     std::string attr_to;
-    /// Time in seconds
-    double attr_seconds;
-    /// Time in seconds to add current time
-    double attr_future_seconds;
+    /// Time in milliseconds to add current time.
+    std::int64_t attr_future_milliseconds;
     /// List of arguments this operation has
     std::vector<Root> attr_args;
 
@@ -174,10 +162,8 @@ protected:
     void sendFrom(Atlas::Bridge&) const;
     /// Send the "to" attribute to an Atlas::Bridge.
     void sendTo(Atlas::Bridge&) const;
-    /// Send the "seconds" attribute to an Atlas::Bridge.
-    void sendSeconds(Atlas::Bridge&) const;
-    /// Send the "future_seconds" attribute to an Atlas::Bridge.
-    void sendFutureSeconds(Atlas::Bridge&) const;
+    /// Send the "future_milliseconds" attribute to an Atlas::Bridge.
+    void sendFutureMilliseconds(Atlas::Bridge&) const;
     /// Send the "args" attribute to an Atlas::Bridge.
     void sendArgs(Atlas::Bridge&) const;
 
@@ -204,15 +190,14 @@ extern const std::string SERIALNO_ATTR;
 extern const std::string REFNO_ATTR;
 extern const std::string FROM_ATTR;
 extern const std::string TO_ATTR;
-extern const std::string SECONDS_ATTR;
-extern const std::string FUTURE_SECONDS_ATTR;
+extern const std::string FUTURE_MILLISECONDS_ATTR;
 extern const std::string ARGS_ATTR;
 
 //
 // Inlined member functions follow.
 //
 
-const uint32_t SERIALNO_FLAG = 1u << 14u;
+const uint32_t SERIALNO_FLAG = 1u << 13u;
 
 inline void RootOperationData::setSerialno(std::int64_t val)
 {
@@ -220,7 +205,7 @@ inline void RootOperationData::setSerialno(std::int64_t val)
     m_attrFlags |= SERIALNO_FLAG;
 }
 
-const uint32_t REFNO_FLAG = 1u << 15u;
+const uint32_t REFNO_FLAG = 1u << 14u;
 
 inline void RootOperationData::setRefno(std::int64_t val)
 {
@@ -228,7 +213,7 @@ inline void RootOperationData::setRefno(std::int64_t val)
     m_attrFlags |= REFNO_FLAG;
 }
 
-const uint32_t FROM_FLAG = 1u << 16u;
+const uint32_t FROM_FLAG = 1u << 15u;
 
 inline void RootOperationData::setFrom(std::string val)
 {
@@ -236,7 +221,7 @@ inline void RootOperationData::setFrom(std::string val)
     m_attrFlags |= FROM_FLAG;
 }
 
-const uint32_t TO_FLAG = 1u << 17u;
+const uint32_t TO_FLAG = 1u << 16u;
 
 inline void RootOperationData::setTo(std::string val)
 {
@@ -244,23 +229,15 @@ inline void RootOperationData::setTo(std::string val)
     m_attrFlags |= TO_FLAG;
 }
 
-const uint32_t SECONDS_FLAG = 1u << 18u;
+const uint32_t FUTURE_MILLISECONDS_FLAG = 1u << 17u;
 
-inline void RootOperationData::setSeconds(double val)
+inline void RootOperationData::setFutureMilliseconds(std::int64_t val)
 {
-    attr_seconds = val;
-    m_attrFlags |= SECONDS_FLAG;
+    attr_future_milliseconds = val;
+    m_attrFlags |= FUTURE_MILLISECONDS_FLAG;
 }
 
-const uint32_t FUTURE_SECONDS_FLAG = 1u << 19u;
-
-inline void RootOperationData::setFutureSeconds(double val)
-{
-    attr_future_seconds = val;
-    m_attrFlags |= FUTURE_SECONDS_FLAG;
-}
-
-const uint32_t ARGS_FLAG = 1u << 20u;
+const uint32_t ARGS_FLAG = 1u << 18u;
 
 inline void RootOperationData::setArgs(std::vector<Root> val)
 {
@@ -354,34 +331,19 @@ inline std::string& RootOperationData::modifyTo()
     return attr_to;
 }
 
-inline double RootOperationData::getSeconds() const
+inline std::int64_t RootOperationData::getFutureMilliseconds() const
 {
-    if(m_attrFlags & SECONDS_FLAG)
-        return attr_seconds;
+    if(m_attrFlags & FUTURE_MILLISECONDS_FLAG)
+        return attr_future_milliseconds;
     else
-        return ((RootOperationData*)m_defaults)->attr_seconds;
+        return ((RootOperationData*)m_defaults)->attr_future_milliseconds;
 }
 
-inline double& RootOperationData::modifySeconds()
+inline std::int64_t& RootOperationData::modifyFutureMilliseconds()
 {
-    if(!(m_attrFlags & SECONDS_FLAG))
-        setSeconds(((RootOperationData*)m_defaults)->attr_seconds);
-    return attr_seconds;
-}
-
-inline double RootOperationData::getFutureSeconds() const
-{
-    if(m_attrFlags & FUTURE_SECONDS_FLAG)
-        return attr_future_seconds;
-    else
-        return ((RootOperationData*)m_defaults)->attr_future_seconds;
-}
-
-inline double& RootOperationData::modifyFutureSeconds()
-{
-    if(!(m_attrFlags & FUTURE_SECONDS_FLAG))
-        setFutureSeconds(((RootOperationData*)m_defaults)->attr_future_seconds);
-    return attr_future_seconds;
+    if(!(m_attrFlags & FUTURE_MILLISECONDS_FLAG))
+        setFutureMilliseconds(((RootOperationData*)m_defaults)->attr_future_milliseconds);
+    return attr_future_milliseconds;
 }
 
 inline const std::vector<Root>& RootOperationData::getArgs() const
@@ -430,14 +392,9 @@ inline bool RootOperationData::isDefaultTo() const
     return (m_attrFlags & TO_FLAG) == 0;
 }
 
-inline bool RootOperationData::isDefaultSeconds() const
+inline bool RootOperationData::isDefaultFutureMilliseconds() const
 {
-    return (m_attrFlags & SECONDS_FLAG) == 0;
-}
-
-inline bool RootOperationData::isDefaultFutureSeconds() const
-{
-    return (m_attrFlags & FUTURE_SECONDS_FLAG) == 0;
+    return (m_attrFlags & FUTURE_MILLISECONDS_FLAG) == 0;
 }
 
 inline bool RootOperationData::isDefaultArgs() const

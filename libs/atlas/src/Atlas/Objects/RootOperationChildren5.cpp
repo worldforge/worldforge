@@ -44,9 +44,8 @@ void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -82,9 +81,8 @@ void AppearanceData::fillDefaultObjectInstance(AppearanceData& data, std::map<st
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -120,9 +118,8 @@ void DisappearanceData::fillDefaultObjectInstance(DisappearanceData& data, std::
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -158,9 +155,8 @@ void SoundData::fillDefaultObjectInstance(SoundData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -196,9 +192,8 @@ void SmellData::fillDefaultObjectInstance(SmellData& data, std::map<std::string,
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 
@@ -234,9 +229,8 @@ void FeelData::fillDefaultObjectInstance(FeelData& data, std::map<std::string, u
         data.attr_objtype = default_objtype;
         data.attr_serialno = 0;
         data.attr_refno = 0;
-        data.attr_seconds = 0.0;
-        data.attr_future_seconds = 0.0;
-        data.attr_stamp = 0.0;
+        data.attr_future_milliseconds = 0;
+        data.attr_stamp = 0;
         data.attr_parent = default_parent;
 }
 

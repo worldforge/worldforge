@@ -76,7 +76,7 @@ public:
     /// Set the "parent" attribute.
     void setParent(std::string val);
     /// Set the "stamp" attribute.
-    void setStamp(double val);
+    void setStamp(std::int64_t val);
     /// Set the "objtype" attribute.
     void setObjtype(std::string val);
     /// Set the "name" attribute.
@@ -91,9 +91,9 @@ public:
     /// Retrieve the "parent" attribute as a non-const reference.
     std::string& modifyParent();
     /// Retrieve the "stamp" attribute.
-    double getStamp() const;
+    std::int64_t getStamp() const;
     /// Retrieve the "stamp" attribute as a non-const reference.
-    double& modifyStamp();
+    std::int64_t& modifyStamp();
     /// Retrieve the "objtype" attribute.
     const std::string& getObjtype() const;
     /// Retrieve the "objtype" attribute as a non-const reference.
@@ -124,7 +124,7 @@ protected:
     /// The object this inherits attributes from.
     std::string attr_parent;
     /// Last time this object was modified.
-    double attr_stamp;
+    std::int64_t attr_stamp;
     /// What kind of object this is.
     std::string attr_objtype;
     /// Name of object.
@@ -188,7 +188,7 @@ inline void RootData::setParent(std::string val)
 
 const uint32_t STAMP_FLAG = 1u << 3u;
 
-inline void RootData::setStamp(double val)
+inline void RootData::setStamp(std::int64_t val)
 {
     attr_stamp = val;
     m_attrFlags |= STAMP_FLAG;
@@ -240,7 +240,7 @@ inline std::string& RootData::modifyParent()
     return attr_parent;
 }
 
-inline double RootData::getStamp() const
+inline std::int64_t RootData::getStamp() const
 {
     if(m_attrFlags & STAMP_FLAG)
         return attr_stamp;
@@ -248,7 +248,7 @@ inline double RootData::getStamp() const
         return ((RootData*)m_defaults)->attr_stamp;
 }
 
-inline double& RootData::modifyStamp()
+inline std::int64_t& RootData::modifyStamp()
 {
     if(!(m_attrFlags & STAMP_FLAG))
         setStamp(((RootData*)m_defaults)->attr_stamp);

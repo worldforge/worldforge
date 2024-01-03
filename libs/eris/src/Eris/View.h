@@ -161,7 +161,7 @@ protected:
 
 	friend class Task;
 
-	void appear(const std::string& eid, double stamp);
+	void appear(const std::string& eid, std::chrono::milliseconds stamp);
 
 	void disappear(const std::string& eid);
 
@@ -205,8 +205,6 @@ private:
 	void issueQueuedLook();
 
 	void eraseFromLookQueue(const std::string& eid);
-
-	typedef std::unordered_map<std::string, std::unique_ptr<ViewEntity>> IdEntityMap;
 
 	Avatar& m_owner;
 

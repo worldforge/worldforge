@@ -480,7 +480,7 @@ int Interactive::select(bool rewrite_prompt) {
 
 void Interactive::updatePrompt() {
 	std::string designation(">");
-	if (m_accountType == "admin" || m_accountType == "sys") {
+	if (m_accountType == "admin" || m_accountType == "system_account") {
 		designation = "#";
 	} else {
 		designation = "$";

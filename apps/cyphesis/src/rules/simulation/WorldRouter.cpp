@@ -182,12 +182,14 @@ void WorldRouter::resumeWorld() {
 }
 
 void WorldRouter::resolveDispatchTimeForOp(Atlas::Objects::Operation::RootOperationData& op) {
-	if (!op.isDefaultFutureSeconds()) {
-		double t = getTimeAsSeconds() + (op.getFutureSeconds() * consts::time_multiplier);
-		op.setSeconds(t);
-		op.removeAttrFlag(Atlas::Objects::Operation::FUTURE_SECONDS_FLAG);
-	} else if (op.isDefaultSeconds()) {
-		op.setSeconds(getTimeAsSeconds());
+	if (!op.isDefaultFutureMilliseconds()) {
+		std::chrono::milliseconds future((int64_t) ((double) op.getFutureMilliseconds() * consts::time_multiplier));
+
+		auto t = getTimeAsMilliseconds() + future;
+		op.setStamp(t.count());
+		op.removeAttrFlag(Atlas::Objects::Operation::FUTURE_MILLISECONDS_FLAG);
+	} else if (op.isDefaultStamp()) {
+		op.setStamp(getTimeAsMilliseconds().count());
 	}
 }
 
@@ -244,13 +246,13 @@ void WorldRouter::deliverTo(const Operation& op, Ref<LocatedEntity> ent) {
 	//(to be resent when the world is resumed) and not process it now.
 	if (m_isSuspended) {
 		if (op->getClassNo() == Atlas::Objects::Operation::TICK_NO) {
-			m_suspendedQueue.push(OpQueEntry<LocatedEntity>(op, std::move(ent), m_suspendedQueue.size()));
+			m_suspendedQueue.emplace(op, std::move(ent), m_suspendedQueue.size());
 			return;
 		}
 	}
 	//Set the time of when this op is dispatched. That way, other components in the system can
 	//always use the seconds set on the op to know the current time.
-	op->setSeconds(std::chrono::duration_cast<std::chrono::duration<double>>(getTime()).count());
+	op->setStamp(getTimeAsMilliseconds().count());
 
 	OpVector res;
 	cy_debug_print("WorldRouter::deliverTo begin {"

@@ -56,7 +56,7 @@ public:
 
 	const std::shared_ptr<Awareness>& getAwareness() const;
 
-	double getCurrentServerTime() const;
+	std::chrono::milliseconds getCurrentServerTime() const;
 
 protected:
 

@@ -50,7 +50,7 @@ void RootData::setAttr(std::string name, Element attr, const Atlas::Objects::Fac
 {
     if (name == ID_ATTR) { setId(attr.moveString()); return; }
     if (name == PARENT_ATTR) { setParent(attr.moveString()); return; }
-    if (name == STAMP_ATTR) { setStamp(attr.asFloat()); return; }
+    if (name == STAMP_ATTR) { setStamp(attr.asInt()); return; }
     if (name == OBJTYPE_ATTR) { setObjtype(attr.moveString()); return; }
     if (name == NAME_ATTR) { setName(attr.moveString()); return; }
     BaseObjectData::setAttr(std::move(name), std::move(attr), factories);
@@ -88,7 +88,7 @@ inline void RootData::sendParent(Atlas::Bridge & b) const
 inline void RootData::sendStamp(Atlas::Bridge & b) const
 {
     if(m_attrFlags & STAMP_FLAG) {
-        b.mapFloatItem(STAMP_ATTR, attr_stamp);
+        b.mapIntItem(STAMP_ATTR, attr_stamp);
     }
 }
 
@@ -161,7 +161,7 @@ bool RootData::instanceOf(int classNo) const
 
 void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, uint32_t>& attr_data)
 {
-        data.attr_stamp = 0.0;
+        data.attr_stamp = 0;
         data.attr_objtype = default_objtype;
         data.attr_parent = default_parent;
     attr_data[ID_ATTR] = ID_FLAG;

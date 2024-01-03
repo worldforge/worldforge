@@ -41,7 +41,7 @@ CreatorClient::CreatorClient(RouterId mindId,
 }
 
 LocatedEntity* CreatorClient::handleMakeResponse(const RootOperation& op,
-												 double create_time) {
+												 std::chrono::milliseconds create_time) {
 	if (op->getArgs().empty()) {
 		std::cerr << "Arg of reply to make has no args"
 				  << std::endl;
@@ -103,9 +103,9 @@ Ref<LocatedEntity> CreatorClient::make(const RootEntity& entity) {
 					  << std::endl;
 			return nullptr;
 		}
-		return handleMakeResponse(arg, res->getSeconds());
+		return handleMakeResponse(arg, std::chrono::milliseconds(res->getStamp()));
 	} else if (res->getClassNo() == Atlas::Objects::Operation::INFO_NO) {
-		return handleMakeResponse(res, res->getSeconds());
+		return handleMakeResponse(res, std::chrono::milliseconds(res->getStamp()));
 	} else {
 		std::cerr << "Reply to make isn't sight or info"
 				  << std::endl;

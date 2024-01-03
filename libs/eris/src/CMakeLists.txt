@@ -4,7 +4,6 @@ set(SOURCE_FILES
         Eris/BaseConnection.cpp
         Eris/Calendar.cpp
         Eris/Connection.cpp
-        Eris/CustomEntities.cpp
         Eris/Entity.cpp
         Eris/EntityRef.cpp
         Eris/EntityRouter.cpp
@@ -37,7 +36,6 @@ set(HEADER_FILES
         Eris/BaseConnection.h
         Eris/Calendar.h
         Eris/Connection.h
-        Eris/CustomEntities.h
         Eris/Entity.h
         Eris/EntityRef.h
         Eris/EntityRouter.h

@@ -254,7 +254,7 @@ void World::sendRelayToEntity(const LocatedEntity& to, const Operation& op, sigc
 	pruneOp->setTo(getId());
 	pruneOp->setFrom(getId());
 	pruneOp->setRefno(serialNo);
-	pruneOp->setFutureSeconds(5);
+	pruneOp->setFutureMilliseconds(5'000);
 	sendWorld(pruneOp);
 }
 

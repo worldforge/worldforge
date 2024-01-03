@@ -9,7 +9,6 @@
     pos:[0.0,0.0,0.0]
     velocity:[0.0,0.0,0.0]
     contains:[]
-    stamp_contains:0.0
 
 :map:
     id:"admin_entity"
@@ -35,6 +34,11 @@
     description:"Privileged accounts"
 
 :map:
+    id:"system_account"
+    parent:"account"
+    description:"Privileged accounts which aren't persisted on the server."
+
+:map:
     id:"game"
     parent:"admin_entity"
     description:"Games this server hosts"
@@ -45,3 +49,5 @@
     specification:"atlas_game"
     interface:"game_interface"
     description:"All In Game classes and objects"
+
+

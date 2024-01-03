@@ -166,7 +166,7 @@ protected:
     std::string attr_username;
     /// Password for account usually
     std::string attr_password;
-    /// List of characters account can control
+    /// List of characters the account can control.
     std::vector<std::string> attr_characters;
 
     /// Send the "username" attribute to an Atlas::Bridge.
@@ -203,7 +203,7 @@ extern const std::string CHARACTERS_ATTR;
 // Inlined member functions follow.
 //
 
-const uint32_t USERNAME_FLAG = 1u << 11u;
+const uint32_t USERNAME_FLAG = 1u << 10u;
 
 inline void AccountData::setUsername(std::string val)
 {
@@ -211,7 +211,7 @@ inline void AccountData::setUsername(std::string val)
     m_attrFlags |= USERNAME_FLAG;
 }
 
-const uint32_t PASSWORD_FLAG = 1u << 12u;
+const uint32_t PASSWORD_FLAG = 1u << 11u;
 
 inline void AccountData::setPassword(std::string val)
 {
@@ -219,7 +219,7 @@ inline void AccountData::setPassword(std::string val)
     m_attrFlags |= PASSWORD_FLAG;
 }
 
-const uint32_t CHARACTERS_FLAG = 1u << 13u;
+const uint32_t CHARACTERS_FLAG = 1u << 12u;
 
 inline void AccountData::setCharacters(std::vector<std::string> val)
 {
@@ -424,6 +424,63 @@ private:
 };
 
 
+/** Privileged accounts which aren't persisted on the server.
+
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+
+*/
+
+class SystemAccountData;
+typedef SmartPtr<SystemAccountData> SystemAccount;
+
+static const int SYSTEM_ACCOUNT_NO = 7;
+
+/// \brief Privileged accounts which aren't persisted on the server..
+///
+/** Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+ */
+class SystemAccountData : public AccountData
+{
+protected:
+    /// Construct a SystemAccountData class definition.
+    explicit SystemAccountData(SystemAccountData *defaults = nullptr) : 
+        AccountData((AccountData*)defaults)
+    {
+        m_class_no = SYSTEM_ACCOUNT_NO;
+    }
+    /// Default destructor.
+    ~SystemAccountData() override = default;
+
+public:
+    // The parent type for this object's superclass
+    static constexpr const char* super_parent = "account";
+    // The default parent type for this object
+    static constexpr const char* default_parent = "system_account";
+    // The default objtype for this object
+    static constexpr const char* default_objtype = "obj";
+    /// Copy this object.
+    SystemAccountData * copy() const override;
+
+    /// Is this instance of some class?
+    bool instanceOf(int classNo) const override;
+
+
+public:
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<SystemAccountData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    void reset() override;
+    void free() override;
+
+private:
+
+    static void fillDefaultObjectInstance(SystemAccountData& data, std::map<std::string, uint32_t>& attr_data);
+};
+
+
 /** Games this server hosts
 
 Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
@@ -433,7 +490,7 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class GameData;
 typedef SmartPtr<GameData> Game;
 
-static const int GAME_NO = 7;
+static const int GAME_NO = 8;
 
 /// \brief Games this server hosts.
 ///
@@ -490,7 +547,7 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class GameEntityData;
 typedef SmartPtr<GameEntityData> GameEntity;
 
-static const int GAME_ENTITY_NO = 8;
+static const int GAME_ENTITY_NO = 9;
 
 /// \brief All In Game classes and objects.
 ///

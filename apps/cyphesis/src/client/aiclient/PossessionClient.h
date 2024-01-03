@@ -48,8 +48,8 @@ public:
 
 	void processResponses(const OpVector& incomingRes, OpVector& outgoingRes);
 
-	static long operations_in;
-	static long operations_out;
+	static size_t operations_in;
+	static size_t operations_out;
 
 protected:
 
@@ -86,7 +86,7 @@ protected:
 	 * This is needed when scheduling operations locally. When they are later dispatched
 	 * their "seconds" needs to match the time it would be on the server.
 	 */
-	double m_serverLocalTimeDiff;
+	std::chrono::milliseconds m_serverLocalTimeDiff;
 
 
 };

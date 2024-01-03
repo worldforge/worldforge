@@ -52,7 +52,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 		m_type(ty),
 		m_location(nullptr),
 		m_id(std::move(id)),
-		m_stamp(-1.0f),
+		m_stamp(-1),
 		m_visible(false),
 		m_waitingForParentBind(false),
 		m_angularMag(0),
@@ -364,7 +364,7 @@ bool Entity::nativePropertyChanged(const std::string& p, const Element& v) {
 		m_name = v.asString();
 		return true;
 	} else if (p == "stamp") {
-		m_stamp = v.asFloat();
+		m_stamp = std::chrono::milliseconds(v.asInt());
 		return true;
 	} else if (p == "pos") {
 		m_position.fromAtlas(v);

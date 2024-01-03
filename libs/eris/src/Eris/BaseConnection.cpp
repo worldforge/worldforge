@@ -15,7 +15,6 @@
 
 #include <sstream>
 #include <Atlas/Objects/Factories.h>
-#include "CustomEntities.h"
 
 using namespace boost::asio;
 
@@ -33,10 +32,6 @@ BaseConnection::BaseConnection(io_service& io_service,
 		_clientName(std::move(clientName)),
 		_bridge(nullptr),
 		_port(0) {
-	if (!_factories->hasFactory("sys")) {
-		Atlas::Objects::Entity::SYS_NO = _factories->addFactory("sys",
-																&Atlas::Objects::factory<Atlas::Objects::Entity::SysData>, &Atlas::Objects::defaultInstance<Atlas::Objects::Entity::SysData>);
-	}
 }
 
 BaseConnection::~BaseConnection() {

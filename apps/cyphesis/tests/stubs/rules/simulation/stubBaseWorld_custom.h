@@ -23,7 +23,15 @@ Ref<LocatedEntity> BaseWorld::getEntity(long id) const
         assert(I->second);
         return I->second;
     } else {
-        return 0;
+        return nullptr;
     }
 }
 #endif //STUB_BaseWorld_getEntity
+
+#ifndef STUB_BaseWorld_getTimeAsMilliseconds
+#define STUB_BaseWorld_getTimeAsMilliseconds
+  std::chrono::milliseconds BaseWorld::getTimeAsMilliseconds() const
+  {
+    return std::chrono::milliseconds();
+  }
+#endif //STUB_BaseWorld_getTimeAsMilliseconds

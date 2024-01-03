@@ -119,7 +119,7 @@ void Flusher::operation(const Operation& op, OpVector& res) {
 		res.push_back(d);
 
 		// Send a tick for a short time in the future so that
-		// we can look again once this entity is definitly gone.
+		// we can look again once this entity is definitely gone.
 		Tick t;
 
 		Anonymous tick_arg;
@@ -127,7 +127,7 @@ void Flusher::operation(const Operation& op, OpVector& res) {
 
 		flush_context->setFromContext(t);
 		t->setTo(t->getFrom());
-		t->setFutureSeconds(0.1);
+		t->setStamp(100);
 		t->setArgs1(tick_arg);
 
 		res.push_back(t);

@@ -174,8 +174,6 @@ to the builder, and the PropertyFactories to the CorePropertyManager. Then
 both those can be made independant of server. It could also handle all the
 really core types being added to Inheritance.
 
-Is PyCreator/PyCharacter still needed in the client side? It seems to have
-been abandoned before being fully introduced.
 
 Add Arithmetic functionality to all scripts. Cos you know.
 Add the concept of the Property script in general and use it to replace the
@@ -189,8 +187,6 @@ Include doxygen docs in http self-served docs.
 Make it possible to forget
 
 Use "name" as the property that is supposed to get an operation
-
-EntityBuilder shouldn't need a permenent reference to the world.
 
 Allow long cut and cross cut with saws. Long cut is along grain, bisecting by longest dimension. cross cut is across both grains
 
@@ -218,10 +214,6 @@ Use SCMS like scheme to ensure no grey goo. entities cannot create other
 entities which can create further persistent entities.
 
 Frontends, backends, routers based architecture
-
-Use 64bit milliseconds everywhere. Merge SECONDS and STAMP into a single
-attribute. Get rid of FUTURE_SECONDS in favor of things being able to set
-STAMP/SECONDS in advance. Use time for STAMP instead of incrementing integer.
 
 Character should inherit from and implement the Agent interface, which
 the server code uses when talking to it. This de-couples server from most
