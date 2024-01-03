@@ -34,7 +34,7 @@ class Variable;
 }
 
 namespace Ember {
-class TimeFrame;
+struct TimeFrame;
 
 class MainLoopController;
 

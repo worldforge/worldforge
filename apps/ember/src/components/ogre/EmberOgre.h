@@ -56,7 +56,7 @@ class Input;
 
 class MainLoopController;
 
-class TimeFrame;
+struct TimeFrame;
 
 class EmberEntity;
 

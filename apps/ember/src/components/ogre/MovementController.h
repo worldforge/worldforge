@@ -43,7 +43,7 @@ struct IHeightProvider;
 
 class ConfigListenerContainer;
 
-class TimeFrame;
+struct TimeFrame;
 namespace Navigation {
 class Awareness;
 

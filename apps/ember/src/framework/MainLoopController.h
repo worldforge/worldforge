@@ -27,7 +27,7 @@
 
 namespace Ember {
 
-class TimeFrame;
+struct TimeFrame;
 
 /**
  * @author Erik Ogenvik <erik@ogenvik.org>

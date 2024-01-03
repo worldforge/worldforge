@@ -18,8 +18,8 @@ env:
     CI: 1 #This will turn off a couple of warnings in the build
 
 jobs:
-    build_unix:
-        name: Build on *NIX
+    build:
+        name: Build on *NIX and Windows
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:

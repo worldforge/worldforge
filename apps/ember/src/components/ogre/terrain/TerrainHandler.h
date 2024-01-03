@@ -52,7 +52,7 @@ class EventService;
 }
 
 namespace Ember {
-class TimeFrame;
+struct TimeFrame;
 
 class EmberEntity;
 namespace Tasks {

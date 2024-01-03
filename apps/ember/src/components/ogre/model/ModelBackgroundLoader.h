@@ -37,7 +37,7 @@ class EventService;
 }
 
 namespace Ember {
-class TimeFrame;
+struct TimeFrame;
 
 
 namespace OgreView::Model {

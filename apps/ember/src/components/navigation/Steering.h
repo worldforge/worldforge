@@ -33,7 +33,7 @@ class Avatar;
 }
 
 namespace Ember {
-class TimeFrame;
+struct TimeFrame;
 namespace Navigation {
 
 class Awareness;

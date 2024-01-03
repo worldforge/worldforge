@@ -44,7 +44,7 @@ class MainLoopController;
 
 class ConfigListenerContainer;
 
-class TimeFrame;
+struct TimeFrame;
 
 namespace OgreView {
 class World;
