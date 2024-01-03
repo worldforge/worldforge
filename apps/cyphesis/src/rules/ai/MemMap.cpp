@@ -454,7 +454,7 @@ void MemMap::check(std::chrono::milliseconds time) {
 
 		} else {
 			cy_debug_print(me->describeEntity() << "|"
-												<< me->lastSeen() << "|" << me->isVisible()
+												<< me->lastSeen().count() << "|" << me->isVisible()
 												<< " is fine")
 			++m_checkIterator;
 		}
