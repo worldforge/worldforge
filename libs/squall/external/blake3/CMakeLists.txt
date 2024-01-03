@@ -33,9 +33,13 @@ add_library(blake3
   blake3_dispatch.c
   blake3_portable.c
 )
-#add_library(BLAKE3::blake3 ALIAS blake3)
+add_library(BLAKE3::blake3 ALIAS blake3)
 
-target_include_directories(blake3 PUBLIC .)
+target_include_directories(blake3
+        PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
 
 # optional SIMD sources
 macro(BLAKE3_DISABLE_SIMD)

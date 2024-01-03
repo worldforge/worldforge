@@ -59,5 +59,9 @@ add_custom_target(check-squall
         COMMAND CurlResolverTest
         COMMAND DifferenceTest
 )
+if (NOT TARGET check)
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+endif ()
+
 add_dependencies(check check-squall)
 

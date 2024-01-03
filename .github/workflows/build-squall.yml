@@ -1,0 +1,105 @@
+name: Build Squall standalone
+#This is an extra build action just to make sure that Squall can be built separately.
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - master
+
+env:
+    CONAN_REVISIONS_ENABLED: 1
+    CONAN_SCM_TO_CONANDATA: 1
+    CONAN_SYSREQUIRES_MODE: enabled
+    CONAN_PASSWORD: ${{ secrets.CONAN_PASSWORD }}
+    CONAN_LOGIN_USERNAME: ${{ secrets.CONAN_LOGIN_USERNAME }}
+    PROFILE_CONAN: conan-release
+    CI: 1 #This will turn off a couple of warnings in the build
+
+defaults:
+    run:
+        shell: bash
+        working-directory: libs/squall
+
+jobs:
+    build:
+        name: Build on *NIX and Windows
+        runs-on: ${{ matrix.os }}
+        working-directory:
+        strategy:
+            matrix:
+                #        os: [ ubuntu-20.04, ubuntu-22.04, macos-12, macos-11 ]
+                os: [ ubuntu-20.04, ubuntu-22.04, windows-2022, macos-12 ]
+
+        steps:
+            -   uses: actions/checkout@v3.3.0
+                with:
+                  fetch-depth: 0 #We need all history to get proper Git versioning for dev builds.
+
+
+            -   name: Workaround preset name difference
+                if: runner.os == 'Windows'
+                run: echo "PROFILE_CONAN=conan-default" >> $GITHUB_ENV
+
+            -   name: Set up GCC
+                uses: egor-tensin/setup-gcc@v1
+                if: ${{ matrix.os == 'ubuntu-20.04' }}
+                with:
+                    version: 11
+
+            -   name: Use ccache
+                uses: hendrikmuhs/ccache-action@v1.2
+                with:
+                    key: ${{ github.job }}-${{ matrix.os }}
+
+            -   name: Setup environment
+                run: |
+                    export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+
+            -   uses: actions/setup-python@v4
+                with:
+                    python-version: '3.9'
+                    cache: 'pip'
+
+            -   name: Install Conan
+                shell: bash
+                run: |
+                    pip install -r ${{github.workspace}}/.github/workflows/requirements.txt
+                    conan profile detect
+                    #Set the default profile to use g++ 17 it it's not detected
+                    sed -i.backup 's/compiler.cppstd=14/compiler.cppstd=17/g' ~/.conan2/profiles/default
+                    conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
+
+            -   name: Alter Conan config for Ubuntu 20.04
+                if: ${{ matrix.os == 'ubuntu-20.04' }}
+                run: |
+                    cp ${{github.workspace}}/.github/settings_user.yml ~/.conan2/
+                    echo "os.libc=glibc" >> ~/.conan2/profiles/default
+                    echo "os.libc.version=2.31" >> ~/.conan2/profiles/default
+
+            -   name: Have Conan install packages
+                run: |
+                    export PATH=~/.local/bin:$PATH
+                    conan install tools/conan -pr default --build=missing
+                    if [[ x"$CONAN_PASSWORD" != "x" && x"$CONAN_LOGIN_USERNAME" != "x" ]]; then
+                      conan remote login worldforge $CONAN_LOGIN_USERNAME -p $CONAN_PASSWORD
+                      conan upload "*" -r worldforge -c
+                    fi
+
+            -   name: Configure CMake
+                run: cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+            -   name: Build
+                run: cmake --build --preset conan-release --parallel 4
+
+            -   name: Test
+                shell: bash
+                run: |
+                    if [[ "$ImageOS" == "win22" ]]; then
+                        ctest --preset conan-release --output-on-failure
+                    else
+                        cmake --build --preset conan-release --parallel 4 --target check
+                    fi
+
+            -   name: Install all
+                run: cmake --build --preset conan-release --target install

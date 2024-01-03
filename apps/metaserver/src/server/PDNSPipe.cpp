@@ -39,7 +39,6 @@ int main(int argc, char** argv) {
 	boost::program_options::variables_map vm;
 	boost::asio::io_service io_service;
 	std::array<char, MAX_PACKET_BYTES> recvBuffer;
-	boost::asio::ip::udp::endpoint sender_endpoint;
 	size_t bytes_recvd;
 	std::string domain, banner;
 

@@ -13,6 +13,7 @@ if (NOT DEFINED NO_LIBS_INSTALL)
     set(NO_LIBS_INSTALL "TRUE")
     message(STATUS "This is a mono repo build, which means that no artifacts from the libs will be installed. You can override this by setting NO_LIBS_INSTALL to 'FALSE', or by invoking cmake at each lib directory.")
 endif ()
+set(MONOREPO_BUILD "TRUE")
 
 include(GNUInstallDirs)
 include(FindPkgConfig)
@@ -90,7 +91,6 @@ option(SKIP_CYPHESIS "Skips building the Cyphesis server." OFF)
 option(BUILD_METASERVER_SERVER "Includes the MetaServer server into the build. This isn't normally needed." OFF)
 
 add_compile_definitions("PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
-
 
 
 if (APPLE)

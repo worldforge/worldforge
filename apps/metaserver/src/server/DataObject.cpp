@@ -572,7 +572,6 @@ DataObject::expireHandshakes(unsigned int expiry) {
 	 * Go over handshake queue ... expire any that are older than m_handshakeExpirySeconds
 	 */
 	std::vector<unsigned int> removedHS;
-	removedHS.empty();
 
 	boost::posix_time::ptime now = this->getNow();
 	boost::posix_time::ptime etime;
@@ -604,7 +603,7 @@ DataObject::expireHandshakes(unsigned int expiry) {
 		 * underlying container because the iterator becomes invalid
 		 */
 		if (now > etime) {
-			std::map<unsigned int, std::map<std::string, std::string> >::iterator itr_copy = itr;
+			auto itr_copy = itr;
 			++itr_copy;
 			removeHandshake(key);
 			itr = itr_copy;

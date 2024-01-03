@@ -20,9 +20,10 @@ level, but there are some flags which can be used to limit the amount of unneces
 directory ("../..") use these commands:
 
 ```bash
-conan remote add worldforge https://artifactory.ogenvik.org/artifactory/api/conan/conan
-conan install . --build missing -o Worldforge/*:with_client=False -o Worldforge/*:with_server=False
-cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release -DNO_LIBS_INSTALL=FALSE
+conan install tools/conan --build missing
+cmake --preset conan-release -DCMAKE_INSTALL_PREFIX=./build/install/release
+cmake --build --preset conan-release -j --target all
+cmake --build --preset conan-release -j --target install
 ```
 
 You can then build and install. This will also enable "library installation" where libsquall.a|so|dll will be

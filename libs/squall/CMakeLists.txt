@@ -20,6 +20,7 @@ math(EXPR SOVERSION ${ABI_CURRENT}-${ABI_AGE})
 set(ABI_VERSION ${SOVERSION}.${ABI_AGE}.${ABI_REVISION})
 
 find_package(Catch2 REQUIRED)
+find_package(spdlog REQUIRED)
 
 # This macro defines a library
 macro(wf_add_library _LIB_NAME _SOURCE_FILES_VAR _HEADER_FILES_VAR)
