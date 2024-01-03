@@ -37,11 +37,8 @@ namespace Ember {
  * life.
  */
 struct Session : boost::noncopyable {
-	Session() : m_event_service(m_io_service) {
-	}
-
 	boost::asio::io_service m_io_service;
-	Eris::EventService m_event_service;
+	Eris::EventService m_event_service = Eris::EventService(m_io_service);
 
 };
 
