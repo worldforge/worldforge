@@ -627,10 +627,15 @@ void Avatar::populateUsageArgs(Atlas::Objects::Entity::RootEntity& entity,
 				Atlas::Objects::Entity::RootEntity entityArg;
 				entityArg->setId(target->getId());
 				if (posInWorld.isValid()) {
-					//pos must be relative to the entity
-					//TODO: walk up and down the entity hierarchy; the current code only works for entities that share location
-					auto localPos = posInWorld.toLocalCoords(target->getPredictedPos(), target->getPredictedOrientation());
-					entityArg->setPosAsList(Atlas::Message::Element(localPos.toAtlas()).List());
+					if (mErisAvatarEntity.getLocation() == target) {
+						//We're picking in our parent location
+						entityArg->setPosAsList(Atlas::Message::Element(posInWorld.toAtlas()).List());
+					} else {
+						//pos must be relative to the entity
+						//TODO: walk up and down the entity hierarchy; the current code only works for entities that share location
+						auto localPos = posInWorld.toLocalCoords(target->getPredictedPos(), target->getPredictedOrientation());
+						entityArg->setPosAsList(Atlas::Message::Element(localPos.toAtlas()).List());
+					}
 				}
 				list.emplace_back(entityArg->asMessage());
 			}
