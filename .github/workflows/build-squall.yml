@@ -19,7 +19,6 @@ env:
 defaults:
     run:
         shell: bash
-        working-directory: libs/squall
 
 jobs:
     build:
@@ -63,7 +62,7 @@ jobs:
             -   name: Install Conan
                 shell: bash
                 run: |
-                    pip install -r ${{github.workspace}}/.github/workflows/requirements.txt
+                    pip install -r .github/workflows/requirements.txt
                     conan profile detect
                     #Set the default profile to use g++ 17 it it's not detected
                     sed -i.backup 's/compiler.cppstd=14/compiler.cppstd=17/g' ~/.conan2/profiles/default
@@ -72,11 +71,12 @@ jobs:
             -   name: Alter Conan config for Ubuntu 20.04
                 if: ${{ matrix.os == 'ubuntu-20.04' }}
                 run: |
-                    cp ${{github.workspace}}/.github/settings_user.yml ~/.conan2/
+                    cp .github/settings_user.yml ~/.conan2/
                     echo "os.libc=glibc" >> ~/.conan2/profiles/default
                     echo "os.libc.version=2.31" >> ~/.conan2/profiles/default
 
             -   name: Have Conan install packages
+                working-directory: libs/squall
                 run: |
                     export PATH=~/.local/bin:$PATH
                     conan install tools/conan -pr default --build=missing
@@ -86,12 +86,15 @@ jobs:
                     fi
 
             -   name: Configure CMake
+                working-directory: libs/squall
                 run: cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
             -   name: Build
+                working-directory: libs/squall
                 run: cmake --build --preset conan-release --parallel 4
 
             -   name: Test
+                working-directory: libs/squall
                 shell: bash
                 run: |
                     if [[ "$ImageOS" == "win22" ]]; then
@@ -101,4 +104,5 @@ jobs:
                     fi
 
             -   name: Install all
+                working-directory: libs/squall
                 run: cmake --build --preset conan-release --target install
