@@ -23,6 +23,10 @@
 
 namespace Squall {
 
+/**
+ * Represents a named signature, stored in the repository.
+ * The Roots are used to keep track of which entries are obsolete and can be removed when we do garbage collection.
+ */
 struct Root {
 	Signature signature;
 };

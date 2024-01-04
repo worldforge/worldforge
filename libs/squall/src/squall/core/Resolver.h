@@ -28,11 +28,31 @@
 namespace Squall {
 
 enum class ResolveStatus {
-	ONGOING, COMPLETE, HAD_ERROR
+	/**
+	 * Resolve process is ongoing and you need to keep on calling poll().
+	 */
+	ONGOING,
+	/**
+	 * Resolve process is complete.
+	 */
+	COMPLETE,
+	/**
+	 * Resolve process had an error from which it couldn't recover. The repository couldn't fully resolve all data.
+	 */
+	HAD_ERROR
 };
 
+/**
+ * Status of the resolution of one entry.
+ */
 enum class ResolveEntryStatus {
+	/**
+	 * The file was copied into the repository.
+	 */
 	COPIED,
+	/**
+	 * The file already existed in the repository (and thus wasn't copied).
+	 */
 	ALREADY_EXISTS
 };
 
@@ -48,6 +68,9 @@ struct ResolveEntry {
 
 struct ResolveResult {
 	ResolveStatus status;
+	/**
+	 * The number of outstanding requests. As long as this is > 0 you need to keep on calling poll.
+	 */
 	size_t pendingRequests;
 	std::vector<ResolveEntry> completedRequests;
 };
@@ -91,7 +114,7 @@ private:
 	std::unique_ptr<Provider> mProvider;
 	Signature mRootSignature;
 
-	iterator mIterator;
+	Iterator mIterator;
 	std::vector<PendingFetch> mPendingFetches;
 	std::optional<Manifest> mRootManifest;
 

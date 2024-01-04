@@ -22,9 +22,12 @@
 #include "Provider.h"
 
 namespace Squall {
+/**
+ * A wrapper provider which performs the actual fetching operation in a background thread provided by std::async.
+ */
 class AsyncProvider : public Provider {
 public:
-	AsyncProvider(std::unique_ptr<Provider> provider);
+	explicit AsyncProvider(std::unique_ptr<Provider> provider);
 
 	std::future<ProviderResult> fetch(Signature signature,
 									  std::filesystem::path destination) override;

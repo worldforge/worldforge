@@ -24,7 +24,7 @@
 namespace Squall {
 Realizer::Realizer(Repository& repository,
 				   std::filesystem::path destination,
-				   iterator iterator,
+				   Iterator iterator,
 				   RealizerConfig config)
 		: mRepository(repository),
 		  mDestination(std::move(destination)),
@@ -34,12 +34,12 @@ Realizer::Realizer(Repository& repository,
 }
 
 RealizeResult Realizer::poll() {
-	if (mIterator == iterator()) {
+	if (mIterator == Iterator()) {
 		return {.status = RealizeStatus::COMPLETE};
 	}
 	if (mIterator) {
 		mIterator++;
-		if (mIterator == iterator()) {
+		if (mIterator == Iterator()) {
 			return {.status = RealizeStatus::COMPLETE};
 		}
 		auto entry = *mIterator;

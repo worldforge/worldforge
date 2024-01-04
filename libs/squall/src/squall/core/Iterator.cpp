@@ -19,9 +19,9 @@
 #include "Iterator.h"
 
 namespace Squall {
-iterator::TraverseEntry iterator::operator*() {
+Iterator::TraverseEntry Iterator::operator*() {
 	if (!mRepository || mManifests.empty()) {
-		throw std::runtime_error("Attempt to dereference detached iterator.");
+		throw std::runtime_error("Attempt to dereference detached Iterator.");
 	}
 	std::filesystem::path path;
 	for (auto& manifestEntry: mManifests) {
@@ -38,7 +38,7 @@ iterator::TraverseEntry iterator::operator*() {
 
 }
 
-Signature iterator::getActiveSignature() const {
+Signature Iterator::getActiveSignature() const {
 	if (mManifests.empty()) {
 		return {};
 	}
@@ -49,11 +49,11 @@ Signature iterator::getActiveSignature() const {
 	return manifestEntry.manifest.entries[manifestEntry.index].signature;
 }
 
-iterator::iterator(const Repository& repository, Manifest manifest, bool recurse) : mRepository(&repository), mRecurse(recurse) {
+Iterator::Iterator(const Repository& repository, Manifest manifest, bool recurse) : mRepository(&repository), mRecurse(recurse) {
 	mManifests.emplace_back(ManifestEntry{.manifest= std::move(manifest), .index = 0});
 }
 
-iterator& iterator::operator++() {
+Iterator& Iterator::operator++() {
 	if (mRepository) {
 		auto& manifestEntry = mManifests.back();
 		auto& fileEntry = manifestEntry.manifest.entries[manifestEntry.index];
@@ -91,9 +91,9 @@ iterator& iterator::operator++() {
 	return *this;
 }
 
-bool iterator::operator==(const iterator& other) const noexcept { return mManifests == other.mManifests; }
+bool Iterator::operator==(const Iterator& other) const noexcept { return mManifests == other.mManifests; }
 
-iterator::operator bool() const {
+Iterator::operator bool() const {
 	if (mRepository && !mManifests.empty()) {
 		auto activeSignature = getActiveSignature();
 		if (activeSignature.isValid()) {
@@ -103,11 +103,11 @@ iterator::operator bool() const {
 	return false;
 }
 
-bool iterator::ManifestEntry::operator==(const iterator::ManifestEntry& rhs) const noexcept {
+bool Iterator::ManifestEntry::operator==(const Iterator::ManifestEntry& rhs) const noexcept {
 	return manifest == rhs.manifest && index == rhs.index;
 }
 
-bool iterator::ManifestEntry::operator!=(const iterator::ManifestEntry& rhs) const noexcept {
+bool Iterator::ManifestEntry::operator!=(const Iterator::ManifestEntry& rhs) const noexcept {
 	return !(*this == rhs);
 }
 }

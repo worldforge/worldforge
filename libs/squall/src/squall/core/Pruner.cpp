@@ -29,8 +29,8 @@ std::vector<std::filesystem::path> Pruner::findAbandonedFiles(Squall::Repository
 		auto manifestResult = repository.fetchManifest(root.second.signature);
 		if (manifestResult.manifest) {
 			existingFiles.emplace(manifestResult.fetchResult.localPath);
-			Squall::iterator i(repository, *manifestResult.manifest);
-			for (; i != Squall::iterator{}; ++i) {
+			Squall::Iterator i(repository, *manifestResult.manifest);
+			for (; i != Squall::Iterator{}; ++i) {
 				if (i) {
 					auto filePath = repository.resolvePathForSignature((*i).fileEntry.signature);
 					existingFiles.emplace(filePath);

@@ -56,7 +56,7 @@ ResolveResult Resolver::pollRootSignature() {
 		auto fetchResult = fetch(mRootSignature);
 		if (fetchResult == FetchResult::EXISTS_IN_REPO_ALREADY) {
 			mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
-			mIterator = iterator(mDestinationRepository, *mRootManifest);
+			mIterator = Iterator(mDestinationRepository, *mRootManifest);
 			return {.status = ResolveStatus::ONGOING, .pendingRequests = mPendingFetches.size(), .completedRequests = {
 					{.signature=mRootSignature, .status=ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied=0}}};
 		}
@@ -69,7 +69,7 @@ ResolveResult Resolver::pollRootSignature() {
 		if (result.status == ProviderResultStatus::SUCCESS) {
 			mDestinationRepository.store(lastPending.expectedSignature, lastPending.temporaryPath);
 			mRootManifest = mDestinationRepository.fetchManifest(mRootSignature).manifest;
-			mIterator = iterator(mDestinationRepository, *mRootManifest);
+			mIterator = Iterator(mDestinationRepository, *mRootManifest);
 			{
 				std::error_code ec;
 				remove(lastPending.temporaryPath, ec);
@@ -156,10 +156,10 @@ ResolveResult Resolver::poll(size_t maxSignatureGenerationIterations) {
 			return pollRootSignature();
 		} else {
 			std::vector<ResolveEntry> completedRequests;
-			if (mIterator == iterator()) {
+			if (mIterator == Iterator()) {
 				return {.status = ResolveStatus::COMPLETE};
 			} else {
-				//Check if the iterator points at an entry that already exists in the local repository.
+				//Check if the Iterator points at an entry that already exists in the local repository.
 				if (mIterator) {
 					completedRequests.emplace_back(
 							ResolveEntry{.signature = (*mIterator).fileEntry.signature, .status = ResolveEntryStatus::ALREADY_EXISTS, .bytesCopied = 0, .path = (*mIterator).path});

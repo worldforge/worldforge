@@ -66,7 +66,7 @@ public:
 
 	explicit Realizer(Repository& repository,
 					  std::filesystem::path destination,
-					  iterator iterator,
+					  Iterator iterator,
 					  RealizerConfig config = RealizerConfig{});
 
 	RealizeResult poll();
@@ -75,7 +75,7 @@ public:
 private:
 	Repository& mRepository;
 	std::filesystem::path mDestination;
-	iterator mIterator;
+	Iterator mIterator;
 	RealizerConfig mConfig;
 };
 

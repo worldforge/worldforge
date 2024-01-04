@@ -27,7 +27,7 @@
 namespace Squall {
 
 /**
- * A signature, which is a SHA256 digest of a file's content.
+ * A signature, which is a Blake3 digest of a file's content.
  * We'll use this instead of std::string to speed things up, since we know that most
  * digests are 64 characters and we want to make it easier for the compiler to allocate memory.
  */
@@ -35,17 +35,35 @@ struct Signature {
 	static constexpr size_t maxDigestLength = 64;
 	static constexpr size_t minDigestLength = 3;
 
+	/**
+	 * The digest characters, not null terminated.
+	 */
 	std::array<char, maxDigestLength> digest;
+	/**
+	 * Actual length of the digest since it might be less than maxDigestLength, and we don't use a null terminator.
+	 */
 	size_t digestLength;
 
 	Signature() = default;
 
 	explicit Signature(std::array<char, maxDigestLength> data, size_t length);
 
+	/**
+	 * Implicit ctor by design.
+	 * @param data A null terminated string. We'll extract everything up to the null character as the digest (max maxDigestLength though).
+	 */
 	Signature(const char* data);
 
+	/**
+	 * Implicit ctor by design.
+	 * @param data A string. We'll copy the content into the digest, up to minDigestLength.
+	 */
 	Signature(const std::string& data);
 
+	/**
+	 * Implicit ctor by design.
+	 * @param data A string view. We'll copy the content into the digest, up to minDigestLength.
+	 */
 	Signature(std::string_view data);
 
 	Signature(const Signature& rhs) = default;
@@ -68,6 +86,10 @@ struct Signature {
 
 	bool operator!=(const Signature& rhs) const noexcept;
 
+	/**
+	 * Checks that the length of the digest fits our requirements.
+	 * @return
+	 */
 	bool isValid() const;
 };
 }

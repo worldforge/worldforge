@@ -27,25 +27,37 @@
 namespace Squall {
 
 struct ChangedEntry {
+	/**
+	 * The path in the virtual file system.
+	 */
 	std::filesystem::path path;
 	Signature signature;
 };
 
+/**
+ * An entry that exists in both manifests, but where the signature is different.
+ */
 struct AlteredEntry {
 	ChangedEntry change;
+	/**
+	 * The signature in the old manifest.
+	 */
 	Signature previousSignature;
 };
 
 struct ChangeSummary {
+	/**
+	 * Entries that exists in the new manifest only.
+	 */
 	std::vector<ChangedEntry> newEntries;
+	/**
+	 * Entries that exists in the old manifest only.
+	 */
 	std::vector<ChangedEntry> removedEntries;
+	/**
+	 * Entries that exists in both manifests, but are different.
+	 */
 	std::vector<AlteredEntry> alteredEntries;
-};
-
-enum class ChangeType {
-	NEW,
-	REMOVED,
-	ALTERED
 };
 
 /**
@@ -56,6 +68,12 @@ struct DifferenceRequest {
 	const Manifest newManifest;
 };
 
+/**
+ * Compare two manifests and report on the difference.
+ * @param repository
+ * @param request
+ * @return
+ */
 ChangeSummary resolveDifferences(const Repository& repository, DifferenceRequest request);
 
 

@@ -27,13 +27,13 @@
 namespace Squall {
 
 /**
- * Iterates recursively over a Manifest entry, as if it was a directory iterator.
+ * Iterates recursively over a Manifest entry, as if it was a directory Iterator.
  *
- * Advancing the iterator will move it either to the next file, or into the next directory.
- * The iterator can be checked against "bool" to see if the next entry exists in the repository.
- * If the iterator is invalid it can not be advanced.
+ * Advancing the Iterator will move it either to the next file, or into the next directory.
+ * The Iterator can be checked against "bool" to see if the next entry exists in the repository.
+ * If the Iterator is invalid it can not be advanced.
  */
-class iterator {
+class Iterator {
 public:
 
 	enum class TraverseEntryType {
@@ -69,20 +69,20 @@ protected:
 
 public:
 
-	iterator() : mRepository(nullptr) {
+	Iterator() : mRepository(nullptr) {
 	}
 
-	iterator(const Repository& repository, Manifest manifest, bool recurse = true);
+	Iterator(const Repository& repository, Manifest manifest, bool recurse = true);
 
-	iterator& operator++();
+	Iterator& operator++();
 
-	iterator operator++(int) {
+	Iterator operator++(int) {
 		return operator++();
 	}
 
-	bool operator==(const iterator& other) const noexcept;
+	bool operator==(const Iterator& other) const noexcept;
 
-	bool operator!=(const iterator& other) const noexcept { return !(*this == other); }
+	bool operator!=(const Iterator& other) const noexcept { return !(*this == other); }
 
 	/**
 	 * Returns true if the entry exists in the local repository.
@@ -91,7 +91,7 @@ public:
 	operator bool() const;
 
 	TraverseEntry operator*();
-	// iterator traits
+	// Iterator traits
 	using difference_type = size_t;
 	using value_type = const TraverseEntry;
 	using pointer = const TraverseEntry*;

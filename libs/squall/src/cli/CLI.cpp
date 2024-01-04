@@ -194,7 +194,7 @@ int main(int argc, char** argv) {
 			}
 			logger->info("Realizing manifest '{}' into '{}'.", signatureInstance.str_view(), *directoryPath);
 
-			Squall::iterator iterator(repository, *manifestResult.manifest);
+			Squall::Iterator iterator(repository, *manifestResult.manifest);
 
 			Realizer realizer(repository, *directoryPath, iterator, *realizeConfig);
 

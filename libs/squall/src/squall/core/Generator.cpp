@@ -277,7 +277,7 @@ std::map<std::filesystem::path, Generator::ExistingEntry> Generator::readExistin
 						},
 								.lastWriteTime=std::filesystem::last_write_time(fetchRootResult.fetchResult.localPath),
 								.repositoryPath=fetchRootResult.fetchResult.localPath});
-		for (Squall::iterator i(repository, *fetchRootResult.manifest); i != Squall::iterator{}; ++i) {
+		for (Squall::Iterator i(repository, *fetchRootResult.manifest); i != Squall::Iterator{}; ++i) {
 			auto entry = *i;
 			auto pathToFileInRepository = repository.resolvePathForSignature(entry.fileEntry.signature);
 			auto lastWriteTime = std::filesystem::last_write_time(pathToFileInRepository);

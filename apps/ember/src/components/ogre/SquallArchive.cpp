@@ -182,8 +182,8 @@ void SquallArchive::findFiles(std::regex* pattern,
 							  bool dirs,
 							  Ogre::StringVector* simpleList,
 							  Ogre::FileInfoList* detailList) const {
-	Squall::iterator it(mRepository, mRootManifest, recursive);
-	for (; it != Squall::iterator(); ++it) {
+	Squall::Iterator it(mRepository, mRootManifest, recursive);
+	for (; it != Squall::Iterator(); ++it) {
 		if (!dirs || (*it).fileEntry.type != Squall::FileEntryType::DIRECTORY) {
 			if (!pattern || std::regex_match((*it).path.filename().string(), *pattern)) {
 				if (simpleList) {

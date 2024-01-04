@@ -26,7 +26,7 @@
 
 using namespace Squall;
 
-TEST_CASE("Iterator allows iteration", "[iterator]") {
+TEST_CASE("Iterator allows iteration", "[Iterator]") {
 	setupEncodings();
 
 	std::filesystem::path repoPath = TESTDATADIR "/repo";
@@ -38,8 +38,8 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
-		iterator it(repository, *fetchManifestResult.manifest);
-		for (; it != iterator(); ++it) {
+		Iterator it(repository, *fetchManifestResult.manifest);
+		for (; it != Iterator(); ++it) {
 			paths.emplace_back((*it).path);
 			REQUIRE(it);
 		}
@@ -63,8 +63,8 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 
 		REQUIRE(fetchManifestResult.fetchResult.status == FetchStatus::SUCCESS);
 		std::vector<std::filesystem::path> paths;
-		iterator it(repository, *fetchManifestResult.manifest, false);
-		for (; it != iterator(); ++it) {
+		Iterator it(repository, *fetchManifestResult.manifest, false);
+		for (; it != Iterator(); ++it) {
 			paths.emplace_back((*it).path);
 			REQUIRE(it);
 		}
@@ -91,7 +91,7 @@ TEST_CASE("Iterator allows iteration", "[iterator]") {
 				.size=10});
 		digest.version = "1";
 
-		iterator it(repository, (digest));
+		Iterator it(repository, (digest));
 		REQUIRE(it == false);
 	}
 

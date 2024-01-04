@@ -42,7 +42,8 @@ Signature::Signature(const char* data)
 		throw std::runtime_error("Signature data must not exceed 64 characters.");
 	}
 
-	std::strncpy(digest.data(), data, maxDigestLength);
+	//We don't store the null terminator in our array, so copy all data up until that.
+	std::memcpy(digest.data(), data, digestLength);
 }
 
 Signature::Signature(const std::string& data)
