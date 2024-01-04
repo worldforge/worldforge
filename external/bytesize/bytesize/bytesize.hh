@@ -33,7 +33,7 @@ namespace bytesize {
 			else if(m[3]=="T") mult=1'000'000'000'000LL;
 			else if(m[3]=="P") mult=1'000'000'000'000'000LL;
 			else throw std::logic_error("Unhandled prefix '"+m[2].str()+"'.");
-			return bytesize(d*mult);
+			return bytesize((size_t)(d*(double)mult));
 		}
 		// represent as string
 		std::string format() const {
