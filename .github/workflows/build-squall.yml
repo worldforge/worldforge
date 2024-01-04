@@ -87,7 +87,7 @@ jobs:
 
             -   name: Configure CMake
                 working-directory: libs/squall
-                run: cmake --preset $PROFILE_CONAN . -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+                run: cmake --preset $PROFILE_CONAN . -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=~/install/usr -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
             -   name: Build
                 working-directory: libs/squall
@@ -97,7 +97,11 @@ jobs:
                 working-directory: libs/squall
                 shell: bash
                 run: |
-                    cmake --build --preset conan-release --parallel 4 --target check -C Release
+                    if [[ "$ImageOS" == "win22" ]]; then
+                        ctest --preset conan-release --output-on-failure
+                    else
+                        cmake --build --preset conan-release --parallel 4 --target check
+                    fi
 
             -   name: Install all
                 working-directory: libs/squall
