@@ -97,11 +97,7 @@ jobs:
                 working-directory: libs/squall
                 shell: bash
                 run: |
-                    if [[ "$ImageOS" == "win22" ]]; then
-                        ctest --preset conan-release --output-on-failure
-                    else
-                        cmake --build --preset conan-release --parallel 4 --target check
-                    fi
+                    cmake --build --preset conan-release --parallel 4 --target check
 
             -   name: Install all
                 working-directory: libs/squall
