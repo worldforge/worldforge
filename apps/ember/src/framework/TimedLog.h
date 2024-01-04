@@ -22,7 +22,7 @@
 #include <string>
 
 #ifndef ENABLE_TIMED_LOG
-#define ENABLE_TIMED_LOG 1
+#define ENABLE_TIMED_LOG 0
 #endif
 
 #if ENABLE_TIMED_LOG == 1

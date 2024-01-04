@@ -62,7 +62,7 @@ void TimedLog::report(const std::string& reportName) {
 }
 
 #else
-TimedLog::TimedLog(const std::string& logName, bool reportStart)
+TimedLog::TimedLog(std::string logName, bool reportStart)
 {
 }
 
