@@ -97,7 +97,7 @@ jobs:
                 working-directory: libs/squall
                 shell: bash
                 run: |
-                    cmake --build --preset conan-release --parallel 4 --target check
+                    cmake --build --preset conan-release --parallel 4 --target check -C Release
 
             -   name: Install all
                 working-directory: libs/squall
