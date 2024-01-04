@@ -40,8 +40,7 @@ StaticSoundSample::StaticSoundSample(const ResourceWrapper& resource, bool plays
 		  mBuffer(0),
 		  mResource(resource) {
 	alGenBuffers(1, &mBuffer);
-	//TODO: get correct frequency, we just assume 8000 for now
-	alBufferData(mBuffer, AL_FORMAT_STEREO16, resource.getDataPtr(), (ALsizei) resource.getSize(), 8000);
+	alBufferData(mBuffer, AL_FORMAT_STEREO16, resource.getDataPtr(), (ALsizei) resource.getSize(), 44100);
 
 
 	if (!SoundGeneral::checkAlError("Generated buffer for static sample.")) {

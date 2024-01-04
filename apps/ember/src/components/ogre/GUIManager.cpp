@@ -40,11 +40,18 @@
 #include "components/cegui/CEGUILogger.h"
 #include "components/cegui/ColouredRenderedStringParser.h"
 #include "components/cegui/SDLNativeClipboardProvider.h"
+#include "components/cegui/CEGUISetup.h"
+#include "components/ogre/widgets/HitDisplayer.h"
 
 
 #include "services/config/ConfigService.h"
 #include "services/server/ServerServiceSignals.h"
+#include "services/sound/SoundService.h"
+#include "services/sound/SoundInstance.h"
+#include "services/sound/SoundSample.h"
+#include "services/sound/SoundSource.h"
 
+#include "framework/IResourceProvider.h"
 
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
@@ -58,8 +65,6 @@
 #include "CEGUIOgreRenderer/ImageCodec.h"
 #include <CEGUI/widgets/MultiLineEditbox.h>
 #include <CEGUI/widgets/Editbox.h>
-#include "components/cegui/CEGUISetup.h"
-#include "components/ogre/widgets/HitDisplayer.h"
 
 #ifdef _WIN32
 #include "platform/platform_windows.h"
@@ -111,6 +116,7 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 
 		mSheet.reset(mWindowManager->createWindow("DefaultWindow", "root_wnd"));
 		mCeguiSetup.getSystem().getDefaultGUIContext().setRootWindow(mSheet.get());
+
 		mSheet->activate();
 		mSheet->moveToBack();
 		mSheet->setDistributesCapturedInputs(false);
@@ -142,6 +148,7 @@ GUIManager::GUIManager(Cegui::CEGUISetup& ceguiSetup, ConfigService& configServi
 
 		Ogre::Root::getSingleton().addFrameListener(this);
 
+		setupUISounds();
 
 	} catch (const CEGUI::Exception& ex) {
 		logger->error("GUIManager - error when creating gui: {}", ex.what());
@@ -405,6 +412,34 @@ Gui::ActionBarIconManager* GUIManager::getActionBarIconManager() const {
 
 CEGUI::Renderer* GUIManager::getGuiRenderer() const {
 	return &mCeguiSetup.getRenderer();
+}
+
+void GUIManager::setupUISounds() {
+
+	//Hardcoded for now. If need arises we'll put it into config.
+	std::map<std::string, std::vector<std::string>> uiSounds = {
+			{"ember/sounds/click/448086__breviceps__normal-click.wav", {"PushButton/Clicked", "TabButton/Clicked", "Combobox/DropListDisplayed"}}};
+
+	for (const auto& entry: uiSounds) {
+		auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(entry.first);
+
+		auto sample = std::make_shared<StaticSoundSample>(resWrapper, false, 1.0f);
+
+		auto clickInstance = SoundService::getSingleton().createInstance();
+		//Make UI sounds a bit quieter.
+		clickInstance->getSource().setGain(0.1f);
+		clickInstance->setIsLooping(false);
+		clickInstance->bind(std::make_unique<StaticSoundBinding>(clickInstance->getSource(), *sample));
+
+		for (const auto& event: entry.second) {
+			logger->debug("Registering UI event '{}' to play sound '{}'.", event, entry.first);
+			CEGUI::GlobalEventSet::getSingleton().subscribeEvent(event, [clickInstance](const EventArgs&) {
+				clickInstance->play();
+				return true;
+			});
+		}
+	}
+
 }
 
 }

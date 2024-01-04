@@ -110,9 +110,11 @@ public:
 
 	/**
 	 * @brief Registers a motion provider for this sound instance.
-	 * Some sounds, for example those that represents world entities, needs to have their position, velocity and orientation updated continously. Those sounds should therefore register an instance of ISoundMotionProvider through this method. The ISoundMotionProvider will be asked every frame for updates.
+	 * Some sounds, for example those that represents world entities, needs to have their position, velocity and orientation updated continously.
+	 * Those sounds should therefore register an instance of ISoundMotionProvider through this method. The ISoundMotionProvider will be asked every frame for updates.
 	 * Other sounds, such as ambient or gui ones, shouldn't need to have their motion updated and don't need to call this.
-	 * The instance registered here won't be owned by this class, and it's therefore up to the calling party to make sure that it's properly destroyed after the SoundInstance has been destroyed and there's no more use for it.
+	 * The instance registered here won't be owned by this class, and it's therefore up to the calling party to make sure
+	 * that it's properly destroyed after the SoundInstance has been destroyed and there's no more use for it.
 	 * @param motionProvider A pointer to a sound motion provider, or null.
 	 */
 	void setMotionProvider(ISoundMotionProvider* motionProvider);

@@ -428,6 +428,11 @@ protected:
 
 	void entity_Emote(const std::string& description, EmberEntity* entity);
 
+	/**
+	 * Setup sounds that the UI make. Which is mostly click sounds.
+	 */
+	void setupUISounds();
+
 };
 
 }

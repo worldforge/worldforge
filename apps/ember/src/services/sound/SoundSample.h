@@ -139,7 +139,10 @@ private:
 
 /**
  * @brief A binding to a "static" sound source, i.e. a sound source which doesn't have to be updated.
- * A "static" sound is one that is small enough to fit into one continous buffer, and thus doesn't need to be dynamically updated as is the case with "streaming" sounds. As a result, this binding is very simple and will just bind the sound data to the source in the constructor, without having to provide any functionality in the update() method.
+ * A "static" sound is one that is small enough to fit into one continous buffer, and thus doesn't need to be dynamically
+ * updated as is the case with "streaming" sounds.
+ * As a result, this binding is very simple and will just bind the sound data to the source in the constructor,
+ * without having to provide any functionality in the update() method.
  * @author Erik Ogenvik <erik@ogenvik.org>
  */
 class StaticSoundBinding : public SoundBinding {

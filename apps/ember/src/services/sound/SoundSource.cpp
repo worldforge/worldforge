@@ -43,12 +43,9 @@ SoundSource::SoundSource()
 
 	alSourcef(mALSource, AL_PITCH, 1.0f);
 	SoundGeneral::checkAlError("Setting sound source pitch.");
-	alSourcef(mALSource, AL_GAIN, 1.0f);
-	SoundGeneral::checkAlError("Setting sound source gain.");
-	alSource3f(mALSource, AL_POSITION, 0, 0, 0);
-	SoundGeneral::checkAlError("Setting sound source position.");
-	alSource3f(mALSource, AL_VELOCITY, 0, 0, 0);
-	SoundGeneral::checkAlError("Setting sound source velocity.");
+	setGain(1.0f);
+	setPosition({0, 0, 0});
+	setVelocity({0, 0, 0});
 	alSourcei(mALSource, AL_LOOPING, true);
 	SoundGeneral::checkAlError("Setting sound source looping.");
 
@@ -59,13 +56,13 @@ SoundSource::~SoundSource() {
 	SoundGeneral::checkAlError("Deleting sound source.");
 }
 
-void SoundSource::setPosition(const WFMath::Point<3>& pos) {
+void SoundSource::setPosition(const WFMath::Point<3>& pos) const {
 	assert(pos.isValid());
 	alSource3f(mALSource, AL_POSITION, (ALfloat) pos.x(), (ALfloat) pos.y(), (ALfloat) pos.z());
 	SoundGeneral::checkAlError("Setting sound source position.");
 }
 
-void SoundSource::setVelocity(const WFMath::Vector<3>& vel) {
+void SoundSource::setVelocity(const WFMath::Vector<3>& vel) const {
 	assert(vel.isValid());
 	alSource3f(mALSource, AL_VELOCITY, (ALfloat) vel.x(), (ALfloat) vel.y(), (ALfloat) vel.z());
 	SoundGeneral::checkAlError("Setting sound source velocity.");
@@ -73,6 +70,11 @@ void SoundSource::setVelocity(const WFMath::Vector<3>& vel) {
 
 void SoundSource::setOrientation(const WFMath::Quaternion& orientation) {
 	//TODO: implement this
+}
+
+void SoundSource::setGain(float gain) const {
+	alSourcef(mALSource, AL_GAIN, gain);
+	SoundGeneral::checkAlError("Setting sound source gain.");
 }
 
 
