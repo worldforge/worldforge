@@ -1,6 +1,7 @@
 # Squall
 
 [![Join us on Gitter!](https://badges.gitter.im/Worldforge.svg)](https://gitter.im/Worldforge/Lobby)
+[![Build Squall standalone](https://github.com/worldforge/worldforge/actions/workflows/build-squall.yml/badge.svg)](https://github.com/worldforge/worldforge/actions/workflows/build-squall.yml)
 
 Squall is a library used for making sure that clients have up to date content. It handles both syncing as well as
 partial updates.
