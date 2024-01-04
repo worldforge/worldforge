@@ -131,8 +131,9 @@ if (ZLIB_FOUND)
 endif (ZLIB_FOUND)
 
 if (NOT NO_LIBS_INSTALL)
+    INCLUDE(CheckIncludeFiles)
 
-    CHECK_INCLUDE_FILE(unistd.h HAS_UNISTD)
+    CHECK_INCLUDE_FILES(unistd.h HAS_UNISTD)
     # The "atlas_convert" tool, only available on systems which provides unistd.h
     if (HAS_UNISTD)
         add_executable(atlas_convert atlas_convert.cpp)
