@@ -31,8 +31,8 @@ namespace Ember {
 
 EmberServices::~EmberServices() = default;
 
-EmberServices::EmberServices(Session& session, ConfigService& configService)
-		: configService(configService),
+EmberServices::EmberServices(Session& session, ConfigService& inConfigService)
+		: configService(inConfigService),
 		  scriptingService(std::make_unique<ScriptingService>()),
 		  soundService(std::make_unique<SoundService>(configService)),
 		  serverService(std::make_unique<ServerService>(session)),
