@@ -36,110 +36,111 @@ Ogre::GpuProgramPtr ShaderPass::fetchOrCreateSplattingFragmentProgram(SplattingF
 	auto& mgr = Ogre::GpuProgramManager::getSingleton();
 	//If there are no valid layers we'll just use a simple white colour. This should normally not happen.
 	if (config.layers == 0) {
-		mgr.getByName("SimpleWhiteFp", Ogre::RGN_DEFAULT);
-	}
-
-	std::stringstream ss;
-
-	ss << "SplatFp/";
-	if (config.offsetMapping) {
-		ss << "OffsetMapping/";
-	}
-	ss << config.layers;
-	if (!config.fog) {
-		ss << "/NoFog";
-	}
-	if (!config.lightning) {
-		ss << "/NoLighting";
-	} else if (!config.shadows) {
-		ss << "/NoShadows";
-	}
-
-	auto programName = ss.str();
-
-	auto prog = mgr.getByName(programName, Ogre::RGN_DEFAULT);
-	if (prog) {
-		return prog;
+		return mgr.getByName("SimpleWhiteFp", Ogre::RGN_DEFAULT);
 	} else {
-		prog = mgr.createProgram(programName, Ogre::RGN_DEFAULT, "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
-		prog->setSourceFile("common/base/Splat.frag");
-		std::stringstream definesSS;
-		definesSS << "BASE_LAYER=0";
-		if (config.lightning) {
-			definesSS << ",NUM_LIGHTS=3";
-		} else {
-			definesSS << ",NUM_LIGHTS=0";
-		}
+
+		std::stringstream ss;
+
+		ss << "SplatFp/";
 		if (config.offsetMapping) {
-			definesSS << ",OFFSET_MAPPING=1";
+			ss << "OffsetMapping/";
+		}
+		ss << config.layers;
+		if (!config.fog) {
+			ss << "/NoFog";
+		}
+		if (!config.lightning) {
+			ss << "/NoLighting";
+		} else if (!config.shadows) {
+			ss << "/NoShadows";
+		}
+
+		auto programName = ss.str();
+
+		auto prog = mgr.getByName(programName, Ogre::RGN_DEFAULT);
+		if (prog) {
+			return prog;
 		} else {
-			definesSS << ",OFFSET_MAPPING=0";
-		}
-		if (config.shadows) {
-			definesSS << ",SHADOW=1";
-		} else {
-			definesSS << ",SHADOW=0";
-		}
-		if (config.fog) {
-			definesSS << ",FOG=1";
-		} else {
-			definesSS << ",FOG=0";
-		}
-		definesSS << ",NUM_LAYERS=" << std::to_string(config.layers);
-		prog->setParameter("preprocessor_defines", definesSS.str());
-
-		auto params = prog->getDefaultParameters();
-
-		int samplerIndex = 0;
-
-		params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
-		params->setNamedAutoConstant("ambientColour", Ogre::GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR);
-		if (config.lightning) {
-			params->setNamedAutoConstant("numberOfActiveLights", Ogre::GpuProgramParameters::ACT_LIGHT_COUNT);
-			params->setNamedAutoConstant("lightPosition", Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY, 3);
-			params->setNamedAutoConstant("lightDiffuse", Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR_ARRAY, 3);
-
-			params->setNamedConstant("normalTexture", samplerIndex++);
-		}
-
-		if (config.shadows) {
-			params->setNamedAutoConstant("inverseShadowMapSize0", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
-			params->setNamedConstant("shadowMap0", samplerIndex++);
-			params->setNamedAutoConstant("inverseShadowMapSize1", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
-			params->setNamedConstant("shadowMap1", samplerIndex++);
-			params->setNamedAutoConstant("inverseShadowMapSize2", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
-			params->setNamedConstant("shadowMap2", samplerIndex++);
-			params->setNamedAutoConstant("inverseShadowMapSize3", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
-			params->setNamedConstant("shadowMap3", samplerIndex++);
-			params->setNamedAutoConstant("inverseShadowMapSize4", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
-			params->setNamedConstant("shadowMap4", samplerIndex++);
-
-			params->setNamedConstant("fixedDepthBias", -0.0001f);
-			params->setNamedConstant("gradientClamp", 0.0098f);
-			params->setNamedConstant("gradientScaleBias", 0.01f);
-		}
-
-		if (config.fog) {
-			params->setNamedAutoConstant("fogColour", Ogre::GpuProgramParameters::ACT_FOG_COLOUR);
-			params->setNamedConstant("disableFogColour", -0.0001f);
-		}
-
-		if (config.offsetMapping) {
-			params->setNamedAutoConstant("cameraPositionObjSpace", Ogre::GpuProgramParameters::ACT_CAMERA_POSITION_OBJECT_SPACE);
-			params->setNamedConstant("scaleBias", Ogre::Vector2(0.01f, -0.00f));
-		}
-
-		for (int layer = 0; layer < config.layers; ++layer) {
-			if (layer % 4 == 0) {
-				int blendLevel = (layer / 4);
-				params->setNamedConstant("blendMap" + std::to_string(blendLevel), samplerIndex++);
+			prog = mgr.createProgram(programName, Ogre::RGN_DEFAULT, "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
+			prog->setSourceFile("common/base/Splat.frag");
+			std::stringstream definesSS;
+			definesSS << "BASE_LAYER=0";
+			if (config.lightning) {
+				definesSS << ",NUM_LIGHTS=3";
+			} else {
+				definesSS << ",NUM_LIGHTS=0";
 			}
-			params->setNamedConstant("diffuseTexture" + std::to_string(layer), samplerIndex++);
 			if (config.offsetMapping) {
-				params->setNamedConstant("normalHeightTexture" + std::to_string(layer), samplerIndex++);
+				definesSS << ",OFFSET_MAPPING=1";
+			} else {
+				definesSS << ",OFFSET_MAPPING=0";
 			}
+			if (config.shadows) {
+				definesSS << ",SHADOW=1";
+			} else {
+				definesSS << ",SHADOW=0";
+			}
+			if (config.fog) {
+				definesSS << ",FOG=1";
+			} else {
+				definesSS << ",FOG=0";
+			}
+			definesSS << ",NUM_LAYERS=" << std::to_string(config.layers);
+			prog->setParameter("preprocessor_defines", definesSS.str());
+
+			auto params = prog->getDefaultParameters();
+
+			int samplerIndex = 0;
+
+			params->setNamedAutoConstant("worldMatrix", Ogre::GpuProgramParameters::ACT_WORLD_MATRIX);
+			params->setNamedAutoConstant("ambientColour", Ogre::GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR);
+			if (config.lightning) {
+				params->setNamedAutoConstant("numberOfActiveLights", Ogre::GpuProgramParameters::ACT_LIGHT_COUNT);
+				params->setNamedAutoConstant("lightPosition", Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY, 3);
+				params->setNamedAutoConstant("lightDiffuse", Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR_ARRAY, 3);
+
+				params->setNamedConstant("normalTexture", samplerIndex++);
+			}
+
+			if (config.shadows) {
+				params->setNamedAutoConstant("inverseShadowMapSize0", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+				params->setNamedConstant("shadowMap0", samplerIndex++);
+				params->setNamedAutoConstant("inverseShadowMapSize1", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+				params->setNamedConstant("shadowMap1", samplerIndex++);
+				params->setNamedAutoConstant("inverseShadowMapSize2", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+				params->setNamedConstant("shadowMap2", samplerIndex++);
+				params->setNamedAutoConstant("inverseShadowMapSize3", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+				params->setNamedConstant("shadowMap3", samplerIndex++);
+				params->setNamedAutoConstant("inverseShadowMapSize4", Ogre::GpuProgramParameters::ACT_INVERSE_TEXTURE_SIZE, samplerIndex);
+				params->setNamedConstant("shadowMap4", samplerIndex++);
+
+				params->setNamedConstant("fixedDepthBias", -0.0001f);
+				params->setNamedConstant("gradientClamp", 0.0098f);
+				params->setNamedConstant("gradientScaleBias", 0.01f);
+			}
+
+			if (config.fog) {
+				params->setNamedAutoConstant("fogColour", Ogre::GpuProgramParameters::ACT_FOG_COLOUR);
+				params->setNamedConstant("disableFogColour", -0.0001f);
+			}
+
+			if (config.offsetMapping) {
+				params->setNamedAutoConstant("cameraPositionObjSpace", Ogre::GpuProgramParameters::ACT_CAMERA_POSITION_OBJECT_SPACE);
+				params->setNamedConstant("scaleBias", Ogre::Vector2(0.01f, -0.00f));
+			}
+
+			for (int layer = 0; layer < config.layers; ++layer) {
+				if (layer % 4 == 0) {
+					int blendLevel = (layer / 4);
+					params->setNamedConstant("blendMap" + std::to_string(blendLevel), samplerIndex++);
+				}
+				params->setNamedConstant("diffuseTexture" + std::to_string(layer), samplerIndex++);
+				if (config.offsetMapping) {
+					params->setNamedConstant("normalHeightTexture" + std::to_string(layer), samplerIndex++);
+				}
+			}
+			return prog;
 		}
-		return prog;
 	}
 }
 
