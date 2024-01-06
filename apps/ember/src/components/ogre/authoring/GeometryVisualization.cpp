@@ -20,7 +20,6 @@
 #include "domain/EmberEntity.h"
 #include "components/ogre/Convert.h"
 
-#include "framework/Log.h"
 #include "framework/AtlasQuery.h"
 #include "components/ogre/model/Model.h"
 
@@ -397,7 +396,7 @@ void GeometryVisualization::buildGeometry() {
 
 	if (mEntity.hasProperty("geometry")) {
 		auto& geometry = mEntity.valueOfProperty("geometry");
-		AtlasQuery::find<Atlas::Message::StringType>(geometry, "type", [this, &geometry, &buildBoxFn, &buildSphereFn](const Atlas::Message::StringType& type) {
+		AtlasQuery::find<Atlas::Message::StringType>(geometry, "type", [this, geometry, buildBoxFn, buildSphereFn](const Atlas::Message::StringType& type) {
 			if (type == "mesh") {
 				if (geometry.asMap().find("indices") != geometry.asMap().end()) {
 					AtlasQuery::find<Atlas::Message::ListType>(geometry, "indices", [this, &geometry](const Atlas::Message::ListType& indices) {
@@ -458,7 +457,7 @@ void GeometryVisualization::buildGeometry() {
 			} else if (type == "box") {
 				mBboxUpdateFn = buildBoxFn;
 			} else if (type == "sphere") {
-				mBboxUpdateFn = [this, &geometry, &buildSphereFn]() {
+				mBboxUpdateFn = [this, geometry, buildSphereFn]() {
 					auto size = mEntity.getBBox().highCorner() - mEntity.getBBox().lowCorner();
 					float radius = (float) std::min(size.x(), std::min(size.y(), size.z())) * 0.5f;
 
@@ -481,7 +480,7 @@ void GeometryVisualization::buildGeometry() {
 					buildSphereFn(size, radius);
 				};
 			} else if (type == "capsule-x") {
-				mBboxUpdateFn = [this, &geometry]() {
+				mBboxUpdateFn = [this, geometry]() {
 					mManualObject->clear();
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
@@ -518,7 +517,7 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->end();
 				};
 			} else if (type == "capsule-y") {
-				mBboxUpdateFn = [this, &geometry]() {
+				mBboxUpdateFn = [this, geometry]() {
 					mManualObject->clear();
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
@@ -555,7 +554,7 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->end();
 				};
 			} else if (type == "capsule-z") {
-				mBboxUpdateFn = [this, &geometry]() {
+				mBboxUpdateFn = [this, geometry]() {
 					mManualObject->clear();
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
@@ -631,7 +630,7 @@ void GeometryVisualization::buildGeometry() {
 					mManualObject->end();
 				};
 			} else if (type == "compound") {
-				mBboxUpdateFn = [this, &geometry]() {
+				mBboxUpdateFn = [this, geometry]() {
 					mManualObject->clear();
 					mManualObject->begin("/common/base/authoring/geometry", Ogre::RenderOperation::OT_TRIANGLE_LIST);
 
