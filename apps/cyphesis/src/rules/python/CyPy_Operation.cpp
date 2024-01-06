@@ -399,7 +399,9 @@ int CyPy_Operation::setattro(const Py::String& name, const Py::Object& attr) {
 
 	}
 	if (nameStr == "future_seconds") {
-		m_value->setFutureMilliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<float>(verifyNumeric(attr))).count());
+		auto seconds = std::chrono::duration<float>(verifyNumeric(attr));
+		auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(seconds);
+		m_value->setFutureMilliseconds(milliseconds.count());
 		return 0;
 	}
 	if (nameStr == "future_milliseconds") {

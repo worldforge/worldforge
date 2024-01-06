@@ -37,6 +37,10 @@ public:
 
 	PYCXX_NOARGS_METHOD_DECL(CyPy_World, get_time);
 
+	Py::Object get_time_as_seconds();
+
+	PYCXX_NOARGS_METHOD_DECL(CyPy_World, get_time_as_seconds);
+
 	Py::Object get_entity(const Py::Tuple& args);
 
 	PYCXX_VARARGS_METHOD_DECL(CyPy_World, get_entity);

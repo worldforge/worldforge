@@ -40,12 +40,17 @@ void CyPy_World::init_type() {
 	PYCXX_ADD_VARARGS_METHOD(get_entity, get_entity, "Gets the entity with the supplied id.");
 	PYCXX_ADD_VARARGS_METHOD(match_entity, match_entity, "Matches a filter against an entity.");
 
-	PYCXX_ADD_NOARGS_METHOD(get_time, get_time, "");
+	PYCXX_ADD_NOARGS_METHOD(get_time, get_time, "Get server time in milliseconds.");
+	PYCXX_ADD_NOARGS_METHOD(get_time_as_seconds, get_time_as_seconds, "");
 
 	behaviors().readyType();
 }
 
 Py::Object CyPy_World::get_time() {
+	return Py::Long(m_value->getTimeAsMilliseconds().count());
+}
+
+Py::Object CyPy_World::get_time_as_seconds() {
 	return Py::Float(m_value->getTimeAsSeconds());
 }
 
