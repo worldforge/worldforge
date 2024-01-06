@@ -8,7 +8,7 @@ from world.utils import Ticks
 class Explosion(server.Thing):
     """An explosion which damages things and then disappears"""
 
-    tick_interval = 1
+    tick_interval = 5
 
     def __init__(self, cpp):
         # At init time not all properties have been applied yet, so we need to send ourselves a "setup"
@@ -17,6 +17,8 @@ class Explosion(server.Thing):
         Ticks.init_ticks(self, self.tick_interval)
 
     def setup_operation(self, op):
+        self.send_world(Operation("sight", Operation("activity", Entity(action="explode"), from_=self.id)))
+
         domain = self.get_parent_domain()
         if domain:
 

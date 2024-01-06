@@ -4,7 +4,7 @@ from atlas import Operation, Entity
 
 
 # Contains helper functions for handling ticks in entity scripts.
-# Typically you would want to call 'init_ticks' in your __init__ method,
+# Typically, you would want to call 'init_ticks' in your __init__ method,
 # and then call 'verify_tick' in 'tick_operation' method.
 
 def init_ticks(self, interval, jitter=0):

@@ -7,6 +7,7 @@ from world.PendingTask import PendingTask
 
 def set_cooldown_on_attached(tool, actor):
     """Updated the "_ready_at_attached" property with a new timestamp obtained from the "cooldown" property of the tool."""
+    # "cooldown" is in seconds, to make it easier for script authors
     cooldown = tool.props.cooldown
     if cooldown and cooldown > 0.0:
 
@@ -19,7 +20,7 @@ def set_cooldown_on_attached(tool, actor):
                 if not ready_at_attached_prop:
                     ready_at_attached_prop = {}
 
-                ready_at_attached_prop[attachment_name] = server.world.get_time() + cooldown
+                ready_at_attached_prop[attachment_name] = server.world.get_time() + (cooldown * 1000.0)
                 actor.send_world(Operation('set',
                                            Entity(actor.id, _ready_at_attached=ready_at_attached_prop), to=actor.id))
     return cooldown
@@ -29,7 +30,7 @@ def set_cooldown_on_tool(tool):
     """Sets the "ready_at" property of the supplied tool to a new value calculated from it's "cooldown" property, if it exists."""
     cooldown = tool.props.cooldown
     if cooldown and cooldown > 0.0:
-        tool.send_world(Operation('set', Entity(tool.id, ready_at=server.world.get_time() + cooldown), to=tool.id))
+        tool.send_world(Operation('set', Entity(tool.id, ready_at=server.world.get_time() + (cooldown * 1000.0)), to=tool.id))
 
 
 def delay_task_if_needed(task):
