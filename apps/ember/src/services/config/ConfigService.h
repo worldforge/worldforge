@@ -88,7 +88,7 @@ private:
 	/**
 	 * @brief The prefix, i.e. the root directory where Ember is installed.
 	 */
-	std::string mPrefix;
+	std::filesystem::path mPrefix;
 
 	/**
 	 * just a facade for the underlying varconf::Config::sigv
@@ -128,7 +128,6 @@ private:
 	varconf::Config mInstanceConfig;
 
 
-protected:
 public:
 	typedef std::map<std::string, varconf::Variable> SectionMap;
 	typedef std::unordered_map<std::string, std::map<std::string, std::string>> StringConfigMap;
@@ -144,7 +143,7 @@ public:
 	 * Ctor for Ember::service::ConfigService.
 	 *
 	 */
-	explicit ConfigService(std::string prefix);
+	explicit ConfigService(std::filesystem::path prefix);
 
 	/**
 	 * Dtor for Ember::service::ConfigService.
@@ -275,7 +274,7 @@ public:
 	 * @brief Gets the prefix, i.e. the root directory where Ember is installed.
 	 * @return The prefix, i.e. the root directory where Ember is installed.
 	 */
-	const std::string& getPrefix() const;
+	const std::filesystem::path& getPrefix() const;
 
 	/**
 	 *    Sets the home directory, i.e. where all configuration and media is stored. If this is not set, a default directory will be user (XDG standard on *NIX systems)

@@ -46,12 +46,12 @@ CEGUI::OgreRenderer& CEGUISetup::createRenderer(Ogre::RenderWindow* renderWindow
 #ifndef _WIN32
 		//The environment variable CEGUI_MODULE_DIR points to where CEGUI can find its modules. Lets check if they are under the prefix,
 		//for relocatable packages. We need to check both "lib64" and "lib".
-		std::string modulePath = configService.getPrefix() + "/lib64/cegui-0.8";
+		std::string modulePath = configService.getPrefix() / "lib64" / "cegui-0.8";
 		if (std::ifstream(modulePath).good()) {
 			setenv("CEGUI_MODULE_DIR", modulePath.c_str(), 1);
 			logger->info("Setting CEGUI_MODULE_DIR to {}", modulePath);
 		} else {
-			modulePath = configService.getPrefix() + "/lib/cegui-0.8";
+			modulePath = configService.getPrefix() / "lib" / "cegui-0.8";
 			if (std::ifstream(modulePath).good()) {
 				setenv("CEGUI_MODULE_DIR", modulePath.c_str(), 1);
 				logger->info("Setting CEGUI_MODULE_DIR to {}", modulePath);
@@ -60,7 +60,7 @@ CEGUI::OgreRenderer& CEGUISetup::createRenderer(Ogre::RenderWindow* renderWindow
 #endif
 		//We need to set the current directory to the prefix before trying to load CEGUI.
 		if (chdir(configService.getPrefix().c_str())) {
-			logger->warn("Failed to change to the prefix directory '{}'. Gui loading might fail.", configService.getPrefix());
+			logger->warn("Failed to change to the prefix directory '{}'. Gui loading might fail.", configService.getPrefix().string());
 		}
 	}
 

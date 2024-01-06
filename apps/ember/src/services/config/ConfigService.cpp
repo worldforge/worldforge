@@ -95,7 +95,7 @@ std::string getAppSupportDirPath()
 
 namespace Ember {
 
-ConfigService::ConfigService(std::string prefix) :
+ConfigService::ConfigService(std::filesystem::path prefix) :
 #if !defined(__APPLE__) && !defined(_WIN32)
 		mBaseDirHandle{},
 #endif
@@ -123,17 +123,17 @@ ConfigService::ConfigService(std::string prefix) :
 		mEtcDir = EMBER_SYSCONFDIR "/ember/";
 		mPluginDir = EMBER_LIBDIR "/ember/widgets";
 	} else {
-		mSharedDataDir = mPrefix + "/share/ember/";
+		mSharedDataDir = mPrefix / "share" / "ember";
 		//CMake handles the install prefix of "/usr" differently, in that it puts config files in "/etc" instead of "/usr/etc".
 		//We need to detect this.
 		if (std::string(PREFIX) == "/usr") {
-			mEtcDir = mPrefix.substr(0, mPrefix.length() - 3) + "/etc/ember/";
+			mEtcDir = mPrefix.parent_path() / "etc" / "ember";
 		} else {
-			mEtcDir = mPrefix + "/etc/ember/";
+			mEtcDir = mPrefix / "etc" / "ember";
 		}
 		//Get the last directory from the libdir
 		auto libdirectory = *(--std::filesystem::path(EMBER_LIBDIR).end());
-		mPluginDir = std::filesystem::path(mPrefix) / libdirectory / "ember" / "widgets";
+		mPluginDir = mPrefix / libdirectory / "ember" / "widgets";
 	}
 	xdgInitHandle(&mBaseDirHandle);
 	logger->info("Setting config directory to '{}'", mEtcDir.string());
@@ -152,7 +152,7 @@ ConfigService::~ConfigService() {
 #endif
 }
 
-const std::string& ConfigService::getPrefix() const {
+const std::filesystem::path& ConfigService::getPrefix() const {
 	return mPrefix;
 }
 
