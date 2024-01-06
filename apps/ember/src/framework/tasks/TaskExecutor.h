@@ -68,7 +68,7 @@ protected:
 	/**
 	 * @brief Whether the executor is active or not.
 	 */
-	bool mActive;
+	volatile bool mActive;
 
 	/**
 	 * @brief The thread which performs the execution.
