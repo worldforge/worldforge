@@ -366,11 +366,6 @@ protected:
 	std::unique_ptr<Lod::LodLevelManager> mLodLevelManager;
 
 	/**
-	 * @brief The page data provider for the terrain rendering system.
-	 */
-	std::unique_ptr<IPageDataProvider> mPageDataProvider;
-
-	/**
 	 * @brief The main environment object. There should only be one in the system, and it's kept here.
 	 */
 	std::unique_ptr<Environment::Environment> mEnvironment;

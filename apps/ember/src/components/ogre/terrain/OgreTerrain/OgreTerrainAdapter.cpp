@@ -306,8 +306,8 @@ std::pair<EmberEntity*, Ogre::Vector3> OgreTerrainAdapter::rayIntersects(const O
 	}
 }
 
-void OgreTerrainAdapter::setPageDataProvider(IPageDataProvider* pageDataProvider) {
-	mPageDataProvider = pageDataProvider;
+void OgreTerrainAdapter::setPageDataProvider(std::unique_ptr<IPageDataProvider> pageDataProvider) {
+	mPageDataProvider = std::move(pageDataProvider);
 	mMaterialGenerator = std::make_shared<OgreTerrainMaterialGeneratorEmber>(*mPageDataProvider, *mTerrainGroup, mTerrainShownSignal);
 	mTerrainGlobalOptions->setDefaultMaterialGenerator(mMaterialGenerator);
 }

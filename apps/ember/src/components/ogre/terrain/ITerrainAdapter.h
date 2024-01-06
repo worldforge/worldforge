@@ -159,7 +159,7 @@ struct ITerrainAdapter {
 	 * Sets the provider used to retrieve terrain page data.
 	 * @param pageDataProvider The page data provider
 	 */
-	virtual void setPageDataProvider(IPageDataProvider* pageDataProvider) = 0;
+	virtual void setPageDataProvider(std::unique_ptr<IPageDataProvider> pageDataProvider) = 0;
 
 	/**
 	 * @brief Binds a slot to be signalled when a new page is shown for the first time.

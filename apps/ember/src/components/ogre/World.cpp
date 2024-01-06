@@ -100,7 +100,6 @@ World::World(Eris::View& view,
 		mAuthoringMoverConnector(std::make_unique<Authoring::AuthoringMoverConnector>(*mAuthoringManager, *mMoveManager)),
 		mTerrainEntityManager(std::make_unique<TerrainEntityManager>(view, mTerrainManager->getHandler(), mScene->getSceneManager())),
 		mLodLevelManager(std::make_unique<Lod::LodLevelManager>(graphicalChangeAdapter, mScene->getMainCamera())),
-		mPageDataProvider(std::make_unique<TerrainPageDataProvider>(mTerrainManager->getHandler())),
 		mEnvironment(std::make_unique<Environment::Environment>(mScene->getSceneManager(),
 																*mTerrainManager,
 																std::make_unique<Environment::CaelumEnvironment>(&mScene->getSceneManager(), &renderWindow, mScene->getMainCamera(), *mCalendar),
@@ -109,8 +108,6 @@ World::World(Eris::View& view,
 		mConfigListenerContainer(std::make_unique<ConfigListenerContainer>()),
 		mTopLevelEntity(nullptr) {
 	mAfterTerrainUpdateConnection = mTerrainManager->getHandler().EventAfterTerrainUpdate.connect(sigc::mem_fun(*this, &World::terrainManager_AfterTerrainUpdate));
-
-	mTerrainManager->getTerrainAdapter()->setPageDataProvider(mPageDataProvider.get());
 
 	signals.EventTerrainManagerCreated.emit(*mTerrainManager);
 

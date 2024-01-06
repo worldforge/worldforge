@@ -88,7 +88,7 @@ public:
 
 	std::pair<EmberEntity*, Ogre::Vector3> rayIntersects(const Ogre::Ray& ray) const override;
 
-	void setPageDataProvider(IPageDataProvider* pageDataProvider) override;
+	void setPageDataProvider(std::unique_ptr<IPageDataProvider> pageDataProvider) override;
 
 	sigc::connection bindTerrainShown(sigc::slot<void(const Ogre::TRect<Ogre::Real>)>& signal) override;
 
@@ -120,7 +120,7 @@ private:
 	Ogre::TerrainMaterialGeneratorPtr mMaterialGenerator;
 
 
-	IPageDataProvider* mPageDataProvider;
+	std::unique_ptr<IPageDataProvider> mPageDataProvider;
 	EmberEntity* mEntity;
 
 	Eris::ActiveMarker mActiveMarker;

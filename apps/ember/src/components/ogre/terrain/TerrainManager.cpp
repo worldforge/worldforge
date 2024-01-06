@@ -23,6 +23,7 @@
 #include "TerrainShader.h"
 #include "TerrainPage.h"
 #include "TerrainPageGeometry.h"
+#include "TerrainPageDataProvider.h"
 
 #include "ITerrainAdapter.h"
 
@@ -76,6 +77,7 @@ TerrainManager::TerrainManager(std::unique_ptr<ITerrainAdapter> adapter,
 		mView(view),
 		mIsInitialized(false),
 		mFoliage(std::make_unique<Environment::Foliage>(*this)) {
+	mTerrainAdapter->setPageDataProvider(std::make_unique<TerrainPageDataProvider>(getHandler()));
 	registerConfigListener("graphics", "foliage", sigc::mem_fun(*this, &TerrainManager::config_Foliage));
 	registerConfigListener("terrain", "preferredtechnique", sigc::mem_fun(*this, &TerrainManager::config_TerrainTechnique), false);
 	registerConfigListener("terrain", "pagesize", sigc::mem_fun(*this, &TerrainManager::config_TerrainPageSize), false);
