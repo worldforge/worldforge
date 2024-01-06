@@ -49,7 +49,6 @@
 #include "services/sound/SoundService.h"
 #include "services/sound/SoundInstance.h"
 #include "services/sound/SoundSample.h"
-#include "services/sound/SoundSource.h"
 
 #include "framework/IResourceProvider.h"
 
@@ -418,25 +417,24 @@ void GUIManager::setupUISounds() {
 
 	//Hardcoded for now. If need arises we'll put it into config.
 	std::map<std::string, std::vector<std::string>> uiSounds = {
-			{"ember/sounds/click/448086__breviceps__normal-click.wav", {"PushButton/Clicked", "TabButton/Clicked", "Combobox/DropListDisplayed"}}};
+			{"ember/sounds/448086__breviceps__normal-click.wav", {"PushButton/Clicked", "TabButton/Clicked", "Combobox/DropListDisplayed"}}};
 
 	for (const auto& entry: uiSounds) {
 		auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(entry.first);
 
-		auto sample = std::make_shared<StaticSoundSample>(resWrapper, false, 1.0f);
+		std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
 
-		auto clickInstance = SoundService::getSingleton().createInstance();
-		//Make UI sounds a bit quieter.
-		clickInstance->getSource().setGain(0.1f);
-		clickInstance->setIsLooping(false);
-		clickInstance->bind(std::make_unique<StaticSoundBinding>(clickInstance->getSource(), *sample));
-
-		for (const auto& event: entry.second) {
-			logger->debug("Registering UI event '{}' to play sound '{}'.", event, entry.first);
-			CEGUI::GlobalEventSet::getSingleton().subscribeEvent(event, [clickInstance](const EventArgs&) {
-				clickInstance->play();
-				return true;
-			});
+		if (sample) {
+			for (const auto& event: entry.second) {
+				logger->debug("Registering UI event '{}' to play sound '{}'.", event, entry.first);
+				CEGUI::GlobalEventSet::getSingleton().subscribeEvent(event, [sample](const EventArgs&) {
+					SoundService::SoundGroup soundGroup{.sounds={SoundService::Sound{.soundSample = sample}}, .repeating=false};
+					SoundService::getSingleton().playSound(soundGroup);
+					return true;
+				});
+			}
+		} else {
+			logger->error("Failed to create sound sample for {}.", entry.first);
 		}
 	}
 
