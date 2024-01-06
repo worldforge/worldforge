@@ -38,7 +38,7 @@
                             </map>
                         </map>
                         <string name="handler">world.objects.tools.Melee.strike</string>
-                        <string name="constraint">get_entity(actor.attached_hand_primary) = tool</string>
+                        <string name="constraint">describe("Need to wield this.", get_entity(actor.attached_hand_primary) = tool)</string>
                         <string name="description">Strike an enemy with a wielded knife.</string>
                     </map>
                 </map>
