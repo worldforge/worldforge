@@ -37,7 +37,7 @@ struct StencilOpQueueListener;
  */
 class OutlineEffect {
 public:
-	explicit OutlineEffect(Scene& scene, EmberEntity& entity);
+	explicit OutlineEffect(Scene& scene, EmberEntityRef entity);
 
 	~OutlineEffect();
 

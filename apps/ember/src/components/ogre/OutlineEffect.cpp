@@ -80,12 +80,12 @@ struct StencilOpQueueListener : public Ogre::RenderQueueListener {
 
 };
 
-OutlineEffect::OutlineEffect(Scene& scene, EmberEntity& entity)
+OutlineEffect::OutlineEffect(Scene& scene, EmberEntityRef entity)
 		: mScene(scene),
-		  mSelectedEntity(&entity),
+		  mSelectedEntity(entity),
 		  mStencilOpQueueListener(std::make_unique<StencilOpQueueListener>()) {
 	scene.getSceneManager().addRenderQueueListener(mStencilOpQueueListener.get());
-	auto* modelRep = dynamic_cast<Model::ModelRepresentation*>(entity.getGraphicalRepresentation());
+	auto* modelRep = dynamic_cast<Model::ModelRepresentation*>(entity->getGraphicalRepresentation());
 	if (modelRep && modelRep->getModel().getNodeProvider()) {
 		if (modelRep->getModel().useInstancing()) {
 			modelRep->getModel().doWithMovables([](Ogre::MovableObject* movable, int index) {

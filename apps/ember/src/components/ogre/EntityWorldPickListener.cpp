@@ -189,7 +189,7 @@ void EntityWorldPickListener::highlightSelectedEntity() {
 	if (!mResult.empty()) {
 		auto selectedEntity = mResult.front().entity;
 		if (!mOutlineEffect || !mOutlineEffect->getEntity() || mOutlineEffect->getEntity() != selectedEntity) {
-			mOutlineEffect = std::make_unique<OutlineEffect>(mScene, *selectedEntity);
+			mOutlineEffect = std::make_unique<OutlineEffect>(mScene, selectedEntity);
 		}
 	} else {
 		mOutlineEffect.reset();

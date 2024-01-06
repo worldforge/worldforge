@@ -257,7 +257,7 @@ void EntityCreatorWidget::buildWidget() {
 
 					if (!mOutlineEffect || !mOutlineEffect->getEntity() || mOutlineEffect->getEntity().get() != parentEmberEntity) {
 						if (parentEmberEntity != mWorld.getAvatar()->getEmberEntity().getEmberLocation()) {
-							mOutlineEffect = std::make_unique<OutlineEffect>(mWorld.getScene(), *parentEmberEntity);
+							mOutlineEffect = std::make_unique<OutlineEffect>(mWorld.getScene(), parentEmberEntity);
 						} else {
 							mOutlineEffect.reset();
 						}
