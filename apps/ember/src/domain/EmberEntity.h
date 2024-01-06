@@ -381,7 +381,7 @@ protected:
 	/**
 	 *    @copydoc Eris::Entity::onHit()
 	 */
-	void onHit(const Atlas::Objects::Operation::Hit& hit, const Eris::TypeInfo& typeInfo) override;
+	void onHit(const Atlas::Objects::Operation::Hit& hit) override;
 
 	/**
 	 *    @copydoc Eris::Entity::onSoundAction()

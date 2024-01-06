@@ -259,7 +259,7 @@ void EmberEntity::onAction(const Atlas::Objects::Operation::RootOperation& act, 
 	Entity::onAction(act, typeInfo);
 }
 
-void EmberEntity::onHit(const Atlas::Objects::Operation::Hit& act, const Eris::TypeInfo& typeInfo) {
+void EmberEntity::onHit(const Atlas::Objects::Operation::Hit& act) {
 
 	std::string message;
 	if (!act->getArgs().empty()) {
@@ -285,7 +285,7 @@ void EmberEntity::onHit(const Atlas::Objects::Operation::Hit& act, const Eris::T
 		}
 	}
 
-	Entity::onHit(act, typeInfo);
+	Entity::onHit(act);
 }
 
 const std::vector<std::string>& EmberEntity::getSuggestedResponses() const {
