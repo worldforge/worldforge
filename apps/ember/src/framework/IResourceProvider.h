@@ -105,7 +105,7 @@ struct IResourceProvider {
 
 inline const char* ResourceWrapper::getDataPtr() const { return mInternalWrapper->getDataPtr(); }
 
-inline bool ResourceWrapper::hasData() const { return mInternalWrapper->hasData(); }
+inline bool ResourceWrapper::hasData() const { return mInternalWrapper && mInternalWrapper->hasData(); }
 
 inline size_t ResourceWrapper::getSize() const { return mInternalWrapper->getSize(); }
 
