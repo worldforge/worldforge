@@ -68,13 +68,14 @@ TerrainManager::TerrainManager(std::unique_ptr<ITerrainAdapter> adapter,
 		mTerrainAdapter(std::move(adapter)),
 		mHandler(std::make_unique<TerrainHandler>(*mTerrainAdapter, mTerrainAdapter->getPageSize(), *mCompilerTechniqueProvider, eventService)),
 		mLoadRadius(512.0),
-		mIsFoliageShown(false),
+		mIsFoliageShown(true),
 		mFoliageBatchSize(32),
 		mVegetation(std::make_unique<Foliage::Vegetation>()),
 		mScene(scene),
 		mGraphicalChangeAdapter(graphicalChangeAdapter),
 		mView(view),
-		mIsInitialized(false) {
+		mIsInitialized(false),
+		mFoliage(std::make_unique<Environment::Foliage>(*this)) {
 	registerConfigListener("graphics", "foliage", sigc::mem_fun(*this, &TerrainManager::config_Foliage));
 	registerConfigListener("terrain", "preferredtechnique", sigc::mem_fun(*this, &TerrainManager::config_TerrainTechnique), false);
 	registerConfigListener("terrain", "pagesize", sigc::mem_fun(*this, &TerrainManager::config_TerrainPageSize), false);
@@ -142,27 +143,41 @@ void TerrainManager::getBasePoints(sigc::slot<void(std::map<int, std::map<int, M
 
 
 void TerrainManager::updateFoliageVisibility() {
-	if (mIsFoliageShown && mIsInitialized) {
-		if (!mFoliage) {
-			//create the foliage
-			mFoliage = std::make_unique<Environment::Foliage>(*this);
-			EventFoliageCreated.emit();
-			mFoliageInitializer = std::make_unique<DelayedFoliageInitializer>([this]() { initializeFoliage(); }, mView, 1000, 15000);
-		}
+	if (mIsInitialized) {
+		EventFoliageCreated.emit();
+		mFoliageInitializer = std::make_unique<DelayedFoliageInitializer>([this]() { initializeFoliage(); }, mView, 1000, 15000);
 	} else {
 		mFoliageDetailManager.reset();
 		mFoliageInitializer.reset();
-		mFoliage.reset();
 	}
 }
 
 void TerrainManager::config_Foliage(const std::string& section, const std::string& key, varconf::Variable& variable) {
+
+	bool newValue;
 	if (variable.is_bool()) {
-		mIsFoliageShown = static_cast<bool> (variable);
+		newValue = static_cast<bool> (variable);
 	} else {
-		mIsFoliageShown = false;
+		newValue = false;
 	}
-	updateFoliageVisibility();
+
+	if (newValue != mIsFoliageShown) {
+		logger->debug("Foliage is being shown again, will regenerate it.");
+		mIsFoliageShown = newValue;
+		if (mIsFoliageShown) {
+
+			auto& shaders = mHandler->getAllShaders();
+			for (auto& entry: shaders) {
+				const auto& layer = entry.second.layer;
+				mFoliage->initializeLayer(layer);
+				for (const auto& foliage: layer.layerDef.mFoliages) {
+					mVegetation->createPopulator(foliage, layer.terrainIndex);
+				}
+			}
+		} else {
+			mFoliage->clearLayers();
+		}
+	}
 }
 
 void TerrainManager::config_TerrainTechnique(const std::string& section, const std::string& key, varconf::Variable& variable) {
@@ -207,7 +222,7 @@ void TerrainManager::terrainHandler_AfterTerrainUpdate(const std::vector<WFMath:
 
 
 void TerrainManager::terrainHandler_ShaderCreated(const TerrainLayer& layer) {
-	if (mFoliage) {
+	if (mIsFoliageShown) {
 		mFoliage->initializeLayer(layer);
 		for (const auto& foliage: layer.layerDef.mFoliages) {
 			mVegetation->createPopulator(foliage, layer.terrainIndex);
@@ -270,9 +285,7 @@ void TerrainManager::adapter_terrainShown(const Ogre::TRect<Ogre::Real>& rect) {
 
 
 void TerrainManager::initializeFoliage() {
-	if (mFoliage) {
-		mFoliageDetailManager = std::make_unique<Environment::FoliageDetailManager>(*mFoliage, mGraphicalChangeAdapter);
-	}
+	mFoliageDetailManager = std::make_unique<Environment::FoliageDetailManager>(*mFoliage, mGraphicalChangeAdapter);
 }
 
 DelayedFoliageInitializer::DelayedFoliageInitializer(std::function<void()> callback, Eris::View& view, unsigned int intervalMs, unsigned int maxTimeMs) :

@@ -25,9 +25,6 @@
 #include "GrassFoliage.h"
 #include "ShrubberyFoliage.h"
 
-#include "../terrain/TerrainLayerDefinition.h"
-#include "../terrain/TerrainLayerDefinitionManager.h"
-
 #include "framework/Tokeniser.h"
 
 #include <wfmath/point.h>
@@ -35,18 +32,26 @@
 using namespace Ember::OgreView::Terrain;
 
 
-
-
 namespace Ember::OgreView::Environment {
 
 Foliage::Foliage(Terrain::TerrainManager& terrainManager) :
-		ReloadFoliage("reloadfoliage", this, ""),
+		ReloadFoliage("reloadfoliage", [this](const std::string& command, const std::string& args) {
+			try {
+				Tokeniser tokeniser(args);
+				auto x = std::stof(tokeniser.nextToken());
+				auto y = std::stof(tokeniser.nextToken());
+
+				reloadAtPosition(WFMath::Point<2>(x, y));
+			} catch (const std::invalid_argument&) {
+				//just ignore
+			}
+		}),
 		mTerrainManager(terrainManager) {
 	Ogre::Root::getSingleton().addFrameListener(this);
 }
 
 Foliage::~Foliage() {
-	logger->info("Shutting down foliage system.");
+	logger->debug("Shutting down foliage system.");
 
 	Ogre::Root::getSingleton().removeFrameListener(this);
 }
@@ -66,20 +71,6 @@ void Foliage::initializeLayer(const TerrainLayer& terrainLayer) {
 			}
 		} catch (const std::exception& ex) {
 			logger->error("Error when creating foliage: {}", ex.what());
-		}
-	}
-}
-
-void Foliage::runCommand(const std::string& command, const std::string& args) {
-	if (ReloadFoliage == command) {
-		try {
-			Tokeniser tokeniser(args);
-			auto x = std::stof(tokeniser.nextToken());
-			auto y = std::stof(tokeniser.nextToken());
-
-			reloadAtPosition(WFMath::Point<2>(x, y));
-		} catch (const std::invalid_argument&) {
-			//just ignore
 		}
 	}
 }
@@ -113,6 +104,10 @@ void Foliage::setFarDistance(float newFarDistance) {
 	for (auto& foliage: mFoliages) {
 		foliage->setFarDistance(newFarDistance);
 	}
+}
+
+void Foliage::clearLayers() {
+	mFoliages.clear();
 }
 
 }

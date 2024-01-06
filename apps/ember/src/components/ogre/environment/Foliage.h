@@ -24,7 +24,6 @@
 #define EMBEROGREFOLIAGE_H
 
 #include "components/ogre/EmberOgrePrerequisites.h"
-#include "framework/Singleton.h"
 #include "framework/ConsoleCommandWrapper.h"
 
 #include <OgreFrameListener.h>
@@ -56,7 +55,7 @@ class FoliageBase;
 /**
 @author Erik Ogenvik
 */
-class Foliage : public Singleton<Foliage>, public Ogre::FrameListener, public ConsoleObject {
+class Foliage : public Ogre::FrameListener {
 
 public:
 
@@ -70,10 +69,11 @@ public:
 
 	void reloadAtPosition(const WFMath::Point<2>& worldPosition);
 
+
 	/**
-	 * @copydoc ConsoleObject::runCommand
+	 * Removes all existing layers.
 	 */
-	void runCommand(const std::string& command, const std::string& args) override;
+	void clearLayers();
 
 	const ConsoleCommandWrapper ReloadFoliage;
 
@@ -103,7 +103,6 @@ protected:
 }
 
 }
-
 
 
 #endif
