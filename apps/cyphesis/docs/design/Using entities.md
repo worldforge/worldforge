@@ -62,23 +62,23 @@ For example, when swinging a sword the actor cannot do anything with the hand th
 But if there’s a magic item in the inventory which can be invoked without being wielded we instead want the cooldown to be specified for the entity itself.
 
 For the first instance the property “_ready_at_attached” is used. This is a map, where the keys define various attach points (hands mainly), and the values define the time when the cooldown is over (
-as float).
+as integer millisecond).
 
 For example:
 
 ```
 _ready_at_attached: {
-	hand_primary: 1435.23,
-	hand_secondary: 1634.32
+	hand_primary: 143523,
+	hand_secondary: 163432
 }
 ```
 
-For the second instance the property “ready_at” is used instead. The value is a float defining the time when cooldown is over.
+For the second instance the property “ready_at” is used instead. The value is a integer milliseconds value defining the time when cooldown is over.
 
 For example:
 
 ```
-ready_at: 453.43
+ready_at: 45343
 ```
 
 The property “cooldown” describes in seconds how long the cooldown period is.
