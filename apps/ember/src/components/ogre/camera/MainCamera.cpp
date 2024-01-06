@@ -29,7 +29,10 @@
 
 #include "components/ogre/terrain/ITerrainAdapter.h"
 
+#include "services/sound/SoundService.h"
+
 #include "framework/Tokeniser.h"
+#include "framework/Singleton.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -319,6 +322,10 @@ bool MainCamera::frameStarted(const Ogre::FrameEvent& event) {
 		}
 		mCameraOrientationChangedThisFrame = false;
 		mCameraMount->update();
+		auto cameraPos = Convert::toWF<WFMath::Point<3>>(mScene.getMainCamera().getDerivedPosition());
+		auto cameraDirection = Convert::toWF<WFMath::Vector<3>>(mScene.getMainCamera().getDerivedDirection());
+		auto cameraUp = Convert::toWF<WFMath::Vector<3>>(mScene.getMainCamera().getDerivedUp());
+		SoundService::getSingleton().updateListenerPosition(cameraPos, cameraDirection, cameraUp);
 	}
 	return true;
 }
