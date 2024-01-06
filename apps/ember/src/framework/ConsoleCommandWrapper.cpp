@@ -64,6 +64,11 @@ ConsoleCommandWrapper::ConsoleCommandWrapper(ConsoleBackend& consoleBackend, std
 	consoleBackend.registerCommand(mCommand, std::move(callback), description, suppressLogging);
 }
 
+ConsoleCommandWrapper::ConsoleCommandWrapper(std::string command, ConsoleCallback callback, const std::string& description, bool suppressLogging)
+		: mCommand(std::move(command)),
+		  mSuppressLogging(suppressLogging) {
+	ConsoleBackend::getSingleton().registerCommand(mCommand, std::move(callback), description, suppressLogging);
+}
 
 ConsoleCommandWrapper::~ConsoleCommandWrapper() {
 	if (ConsoleBackend::hasInstance()) {

@@ -52,6 +52,8 @@ public:
 
 	ConsoleCommandWrapper(ConsoleBackend& consoleBackend, std::string command, ConsoleCallback callback, const std::string& description = "", bool suppressLogging = false);
 
+	ConsoleCommandWrapper(std::string command, ConsoleCallback callback, const std::string& description = "", bool suppressLogging = false);
+
 	/**
 	 * @brief Dtor.
 	 */
