@@ -57,15 +57,18 @@ public:
 
 	/**
 	 * @brief Returns a store of the sound data buffers stored by this sample.
-	 * The buffers will be returned as ALuint which is the internal buffer reference within OpenAL. Any further operation on the buffer must therefore go through OpenAL (i.e. the values returned are _not_ memory pointers).
+	 * The buffers will be returned as ALuint which is the internal buffer reference within OpenAL.
+	 * Any further operation on the buffer must therefore go through OpenAL (i.e. the values returned are _not_ memory pointers).
 	 * @return A store of OpenAL buffer identifiers.
 	 */
 	virtual std::vector<ALuint> getBuffers() const = 0;
 
 	/**
 	 * @brief Creates a new binding to this buffer, to be used together with an instance of SoundInstance.
-	 * If you want the sound held by this buffer to be played, one way would be to call this to create a binding which you then feed to an instance of SoundInstance.
-	 * Note that ownership of the created binding is transferred to the caller, and thus it's the caller's responsibility to make sure it's properly deleted. Under normal circumstances that will be taken care of by SoundInstance however.
+	 * If you want the sound held by this buffer to be played, one way would be to call this to create a
+	 * binding which you then feed to an instance of SoundInstance.
+	 * Note that ownership of the created binding is transferred to the caller, and thus it's the caller's
+	 * responsibility to make sure it's properly deleted. Under normal circumstances that will be taken care of by SoundInstance however.
 	 * @see SoundInstance::bind()
 	 * @param source The sound source to which we should bind this sound sample.
 	 * @return A new sound binding instance.
@@ -91,13 +94,14 @@ protected:
  */
 class StaticSoundSample : public BaseSoundSample {
 public:
+
+
+	static std::unique_ptr<StaticSoundSample> create(const ResourceWrapper& resource);
+
 	/**
 	 * Ctor.
-	 * @param resource Resource associated with this sample
-	 * @param playsLocal ??? (not used)
-	 * @param volume Volume for the sample (not used)
 	 */
-	StaticSoundSample(const ResourceWrapper& resource, bool playsLocal, float volume);
+	explicit StaticSoundSample(ALuint buffer);
 
 	/**
 	 * Dtor.
@@ -130,16 +134,12 @@ private:
 	 */
 	ALuint mBuffer;
 
-	/**
-	 * @brief The resource wrapper instance which holds the actual data.
-	 */
-	ResourceWrapper mResource;
 };
 
 
 /**
  * @brief A binding to a "static" sound source, i.e. a sound source which doesn't have to be updated.
- * A "static" sound is one that is small enough to fit into one continous buffer, and thus doesn't need to be dynamically
+ * A "static" sound is one that is small enough to fit into one continuous buffer, and thus doesn't need to be dynamically
  * updated as is the case with "streaming" sounds.
  * As a result, this binding is very simple and will just bind the sound data to the source in the constructor,
  * without having to provide any functionality in the update() method.
@@ -165,7 +165,7 @@ public:
 protected:
 
 	/**
-	 * @brief The static sound samle used for binding.
+	 * @brief The static sound sample used for binding.
 	 * There's really no need to keep this around here, since the binding will occur in the constructor, but hey, someday we might provide some kind of dynamic unloading/reloading...
 	 */
 	StaticSoundSample& mSample;

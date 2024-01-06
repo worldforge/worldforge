@@ -19,7 +19,8 @@
 #include "SoundSample.h"
 
 #include "SoundSource.h"
-
+#include "framework/Log.h"
+#include <SDL_audio.h>
 
 namespace Ember {
 
@@ -35,17 +36,9 @@ SoundGeneral::SoundSampleType BaseSoundSample::getType() const {
 }
 
 
-StaticSoundSample::StaticSoundSample(const ResourceWrapper& resource, bool playsLocal, float volume)
+StaticSoundSample::StaticSoundSample(ALuint buffer)
 		: BaseSoundSample(SoundGeneral::SAMPLE_WAV),
-		  mBuffer(0),
-		  mResource(resource) {
-	alGenBuffers(1, &mBuffer);
-	alBufferData(mBuffer, AL_FORMAT_STEREO16, resource.getDataPtr(), (ALsizei) resource.getSize(), 44100);
-
-
-	if (!SoundGeneral::checkAlError("Generated buffer for static sample.")) {
-		alDeleteBuffers(1, &mBuffer);
-	}
+		  mBuffer(buffer) {
 }
 
 StaticSoundSample::~StaticSoundSample() {
@@ -72,6 +65,52 @@ std::unique_ptr<SoundBinding> StaticSoundSample::createBinding(SoundSource& sour
 
 unsigned int StaticSoundSample::getNumberOfBuffers() const {
 	return 1;
+}
+
+std::unique_ptr<StaticSoundSample> StaticSoundSample::create(const ResourceWrapper& resource) {
+	SDL_AudioSpec spec{};
+	Uint8* audio_buf = nullptr;
+	Uint32 audio_len = 0;
+	auto resourceSize = resource.getSize();
+	auto sdlRW = SDL_RWFromConstMem((void*) resource.getDataPtr(), (int) resourceSize);
+	auto resultSpec = SDL_LoadWAV_RW(sdlRW, 0, &spec, &audio_buf, &audio_len);
+
+	if (resultSpec) {
+
+
+		ALenum format = 0;
+
+		if (resultSpec->channels == 1 && SDL_AUDIO_BITSIZE(resultSpec->format) == 8) {
+			format = AL_FORMAT_MONO8;
+		} else if (resultSpec->channels == 1 && SDL_AUDIO_BITSIZE(resultSpec->format) == 16) {
+			format = AL_FORMAT_MONO16;
+		} else if (resultSpec->channels == 2 && SDL_AUDIO_BITSIZE(resultSpec->format) == 8) {
+			format = AL_FORMAT_STEREO8;
+		} else if (resultSpec->channels == 2 && SDL_AUDIO_BITSIZE(resultSpec->format) == 16) {
+			format = AL_FORMAT_STEREO16;
+		}
+		if (format != 0) {
+
+			ALuint buffer;
+			alGenBuffers(1, &buffer);
+			alBufferData(buffer, format, (void*) audio_buf, (ALsizei) audio_len, spec.freq);
+
+			SDL_RWclose(sdlRW);
+			SDL_FreeWAV(audio_buf);
+
+			if (!SoundGeneral::checkAlError("Generated buffer for static sample.")) {
+				alDeleteBuffers(1, &buffer);
+			} else {
+				return std::make_unique<StaticSoundSample>(buffer);
+			}
+		} else {
+			logger->warn("Could not recognize format of sound file {}.", resource.getName());
+		}
+	} else {
+		auto errorMessage = SDL_GetError();
+		logger->error("Error when loading sound resource from {}: {}", resource.getName(), errorMessage);
+	}
+
 }
 
 // Streamed (OGG)

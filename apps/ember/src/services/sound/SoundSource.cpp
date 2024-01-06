@@ -41,19 +41,20 @@ SoundSource::SoundSource()
 		throw Exception("Failed to generate a new sound source.");
 	}
 
-	alSourcef(mALSource, AL_PITCH, 1.0f);
-	SoundGeneral::checkAlError("Setting sound source pitch.");
-	setGain(1.0f);
-	setPosition({0, 0, 0});
-	setVelocity({0, 0, 0});
-	alSourcei(mALSource, AL_LOOPING, true);
-	SoundGeneral::checkAlError("Setting sound source looping.");
+
+//	alSourcef(mALSource, AL_PITCH, 1.0f);
+//	SoundGeneral::checkAlError("Setting sound source pitch.");
+//	setGain(1.0f);
+//	setPosition({0, 0, 0});
+//	setVelocity({0, 0, 0});
 
 }
 
 SoundSource::~SoundSource() {
-	alDeleteSources(1, &mALSource);
-	SoundGeneral::checkAlError("Deleting sound source.");
+	if (alIsSource(mALSource)) {
+		alDeleteSources(1, &mALSource);
+		SoundGeneral::checkAlError("Deleting sound source.");
+	}
 }
 
 void SoundSource::setPosition(const WFMath::Point<3>& pos) const {
@@ -68,13 +69,17 @@ void SoundSource::setVelocity(const WFMath::Vector<3>& vel) const {
 	SoundGeneral::checkAlError("Setting sound source velocity.");
 }
 
-void SoundSource::setOrientation(const WFMath::Quaternion& orientation) {
-	//TODO: implement this
-}
-
 void SoundSource::setGain(float gain) const {
 	alSourcef(mALSource, AL_GAIN, gain);
 	SoundGeneral::checkAlError("Setting sound source gain.");
+}
+void SoundSource::setRolloff(float rolloff) const {
+	alSourcef(mALSource, AL_ROLLOFF_FACTOR, rolloff);
+	SoundGeneral::checkAlError("Setting rolloff.");
+}
+void SoundSource::setReference(float reference) const {
+	alSourcef(mALSource, AL_REFERENCE_DISTANCE, reference);
+	SoundGeneral::checkAlError("Setting reference.");
 }
 
 

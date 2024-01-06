@@ -28,10 +28,29 @@ bool SoundGeneral::checkAlError(const std::string& description) {
 	if (error == AL_NO_ERROR) {
 		return true;
 	} else {
+		std::string errorString = std::to_string(error);
+		switch (error) {
+			case AL_INVALID_NAME:
+				errorString = "Invalid name";
+				break;
+			case AL_INVALID_ENUM:
+				errorString = "Invalid enum";
+				break;
+			case AL_INVALID_VALUE  :
+				errorString = "Invalid value";
+				break;
+
+			case AL_INVALID_OPERATION    :
+				errorString = "Invalid operation";
+				break;
+			default:
+				break;
+		}
+
 		if (description.empty()) {
-			logger->error("OpenAl error: {}", error);
+			logger->error("OpenAl error: {}", errorString);
 		} else {
-			logger->error("OpenAl error: {}\nDescription: {}", error, description);
+			logger->error("OpenAl error: {}\nDescription: {}", errorString, description);
 		}
 		return false;
 	}

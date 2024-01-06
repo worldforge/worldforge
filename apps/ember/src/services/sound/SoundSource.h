@@ -48,6 +48,8 @@ public:
 	*/
 	SoundSource();
 
+	SoundSource(SoundSource&& rhs) = default;
+
 	/**
 	 * @brief Dtor.
 	 * When an instance is destroyed the OpenAL sound source will be released as well.
@@ -61,12 +63,6 @@ public:
 	void setPosition(const WFMath::Point<3>& position) const;
 
 	/**
-	 * @brief Sets the orientation of the sound source.
-	 * @param orientation The orientation.
-	 */
-	void setOrientation(const WFMath::Quaternion& orientation);
-
-	/**
 	 * @brief Sets the velocity of the sound source.
 	 * @param velocity The velocity, in world units.
 	 */
@@ -77,6 +73,10 @@ public:
 	 * @param gain
 	 */
 	void setGain(float gain) const;
+
+	void setRolloff(float rolloff) const;
+
+	void setReference(float reference) const;
 
 	/**
 	* @brief Return openAl source within this sample
@@ -97,6 +97,8 @@ protected:
 inline ALuint SoundSource::getALSource() const {
 	return mALSource;
 }
+
+
 
 
 }
