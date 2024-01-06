@@ -20,7 +20,7 @@
                 <int name="default">0</int>
             </map>
             <map name="transient">
-                <int name="default">1</int>
+                <int name="default">5</int>
             </map>
             <map name="present">
                 <string name="default">dural/environment/explosion/explosion.modeldef</string>
