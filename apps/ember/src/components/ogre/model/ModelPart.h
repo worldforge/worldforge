@@ -40,7 +40,6 @@ A typical example of usage of this would be a human model where there's ten diff
 */
 class ModelPart {
 public:
-	typedef std::vector<SubModelPart*> SubModelPartStore;
 
 	/**
 	 * @brief Default ctor.
@@ -96,7 +95,7 @@ protected:
 	/**
 	 * @brief A store of the sub model parts belonging to this part.
 	 */
-	SubModelPartStore mSubModelParts;
+	std::vector<SubModelPart*> mSubModelParts;
 
 	/**
 	 * @brief The name of the group to which this part belongs.

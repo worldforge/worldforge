@@ -41,6 +41,8 @@
 #include <boost/algorithm/string.hpp>
 #include <filesystem>
 
+using namespace std::string_literals;
+
 namespace {
 bool shouldExport(const Ogre::Vector3& vector) {
 	return !vector.isNaN() && vector != Ogre::Vector3::ZERO;
@@ -373,29 +375,43 @@ void XMLModelDefinitionSerializer::readActions(const ModelDefinitionPtr& modelDe
 
 }
 
-void XMLModelDefinitionSerializer::readSounds(TiXmlElement* mAnimationsNode, ActionDefinition* action) {
-	const char* tmp;
+void XMLModelDefinitionSerializer::readSounds(TiXmlElement* node, ActionDefinition* action) {
+	auto& sounds = action->sounds;
 
-	for (TiXmlElement* soundElem = mAnimationsNode->FirstChildElement();
-		 soundElem != nullptr; soundElem = soundElem->NextSiblingElement()) {
-		tmp = soundElem->Attribute("group");
-		if (tmp) {
-			std::string groupName(tmp);
+	if (auto attr = node->Attribute("repeating")) {
+		sounds.repeating = attr == "true"s;
+	}
 
-			SoundDefinition def{groupName};
-			tmp = soundElem->Attribute("playOrder");
-			if (tmp) {
-				std::string playO(tmp);
-				if (playO == "linear")
-					def.playOrder = 0;
-				else if (playO == "inverse")
-					def.playOrder = 1;
-				else if (playO == "random")
-					def.playOrder = 2;
+	if (auto attr = node->Attribute("order")) {
+		if (attr == "sequence"s) {
+			sounds.order = SoundOrder::SEQUENCE;
+		} else if (attr == "random"s) {
+			sounds.order = SoundOrder::RANDOM;
+		}
+	}
+
+	if (auto attr = node->Attribute("gain")) {
+		sounds.gain = std::stof(attr);
+	}
+
+	if (auto attr = node->Attribute("rolloff")) {
+		sounds.rolloff = std::stof(attr);
+	}
+
+	if (auto attr = node->Attribute("reference")) {
+		sounds.reference = std::stof(attr);
+	}
+
+	for (TiXmlElement* child = node->FirstChildElement();
+		 child != nullptr; child = child->NextSiblingElement()) {
+		auto resourceName = child->GetText();
+		if (resourceName) {
+			SoundDefinition sound;
+			sound.resourceName = resourceName;
+			if (auto attr = child->Attribute("repeating")) {
+				sound.repeating = attr == "true"s;
 			}
-
-			action->addSoundDefinition(std::move(def));
-			logger->debug("  Add Sound: {}", groupName);
+			sounds.sounds.emplace_back(sound);
 		}
 	}
 }
@@ -414,13 +430,17 @@ void XMLModelDefinitionSerializer::readActivations(TiXmlElement* activationsNode
 				def.type = ActivationDefinition::MOVEMENT;
 			} else if (typeString == "action") {
 				def.type = ActivationDefinition::ACTION;
+			} else if (typeString == "acted") {
+				def.type = ActivationDefinition::ACTED;
+			} else if (typeString == "lifecycle") {
+				def.type = ActivationDefinition::LIFECYCLE;
 			} else {
 				logger->warn("No recognized activation type: {}", typeString);
 				continue;
 			}
 			def.trigger = activationElem->GetText();
 			logger->debug("  Add activation: {} : {}", typeString, def.trigger);
-			action->getActivationDefinitions().emplace_back(std::move(def));
+			action->activations.emplace_back(std::move(def));
 		}
 	}
 }
@@ -439,7 +459,7 @@ void XMLModelDefinitionSerializer::readAnimations(TiXmlElement* mAnimationsNode,
 		AnimationDefinition def{iterations};
 
 		readAnimationParts(animElem, &def);
-		action->getAnimationDefinitions().emplace_back(std::move(def));
+		action->animations.emplace_back(std::move(def));
 	}
 
 
@@ -996,7 +1016,7 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 
 
 		TiXmlElement activationsElem("activations");
-		for (auto& activationDef: actionDefinition.getActivationDefinitions()) {
+		for (auto& activationDef: actionDefinition.activations) {
 			TiXmlElement activationElem("activation");
 			std::string type;
 			switch (activationDef.type) {
@@ -1006,6 +1026,12 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 				case ActivationDefinition::ACTION:
 					type = "action";
 					break;
+				case ActivationDefinition::ACTED:
+					type = "acted";
+					break;
+				case ActivationDefinition::LIFECYCLE:
+					type = "lifecycle";
+					break;
 			}
 			activationElem.SetAttribute("type", type);
 			activationElem.InsertEndChild(TiXmlText(activationDef.trigger));
@@ -1013,9 +1039,9 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 		}
 		actionElem.InsertEndChild(activationsElem);
 
-		if (!actionDefinition.getAnimationDefinitions().empty()) {
+		if (!actionDefinition.animations.empty()) {
 			TiXmlElement animationsElem("animations");
-			for (const auto& animDef: actionDefinition.getAnimationDefinitions()) {
+			for (const auto& animDef: actionDefinition.animations) {
 				TiXmlElement animationElem("animation");
 				animationElem.SetAttribute("iterations", animDef.iterations);
 
@@ -1039,13 +1065,31 @@ void XMLModelDefinitionSerializer::exportActions(const ModelDefinitionPtr& model
 		}
 
 		//for now, only allow one sound
-		if (!actionDefinition.getSoundDefinitions().empty()) {
+		if (!actionDefinition.sounds.sounds.empty()) {
 			TiXmlElement soundsElem("sounds");
+			if (actionDefinition.sounds.repeating) {
+				soundsElem.SetAttribute("repeating", "true");
+			}
+			if (actionDefinition.sounds.order != SoundOrder::SEQUENCE) {
+				soundsElem.SetAttribute("order", "random");
+			}
 
-			for (auto& soundDefinition: actionDefinition.getSoundDefinitions()) {
+			if (actionDefinition.sounds.rolloff) {
+				soundsElem.SetDoubleAttribute("rolloff", *actionDefinition.sounds.rolloff);
+			}
+			if (actionDefinition.sounds.gain) {
+				soundsElem.SetDoubleAttribute("gain", *actionDefinition.sounds.gain);
+			}
+			if (actionDefinition.sounds.reference) {
+				soundsElem.SetDoubleAttribute("reference", *actionDefinition.sounds.reference);
+			}
+
+			for (auto& sound: actionDefinition.sounds.sounds) {
 				TiXmlElement soundElem("sound");
-				soundElem.SetAttribute("groupName", soundDefinition.groupName);
-				soundElem.SetAttribute("playOrder", (int) soundDefinition.playOrder);
+				if (sound.repeating) {
+					soundElem.SetAttribute("repeating", "true");
+				}
+				soundElem.InsertEndChild(TiXmlText(sound.resourceName));
 				soundsElem.InsertEndChild(soundElem);
 			}
 		}

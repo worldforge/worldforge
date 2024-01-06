@@ -71,12 +71,9 @@ typedef std::unordered_set<Model*> ModelInstanceStore;
 typedef std::vector<SubModelDefinition> SubModelDefinitionsStore;
 typedef std::vector<PartDefinition> PartDefinitionsStore;
 typedef std::vector<SubEntityDefinition> SubEntityDefinitionsStore;
-typedef std::vector<AnimationDefinition> AnimationDefinitionsStore;
 typedef std::vector<AnimationPartDefinition> AnimationPartDefinitionsStore;
-typedef std::vector<SoundDefinition> SoundDefinitionsStore;
 typedef std::vector<ActionDefinition> ActionDefinitionsStore;
 typedef std::vector<AttachPointDefinition> AttachPointDefinitionStore;
-typedef std::vector<ActivationDefinition> ActivationDefinitionStore;
 typedef std::map<std::string, ViewDefinition> ViewDefinitionStore;
 typedef std::map<std::string, PoseDefinition> PoseDefinitionStore;
 typedef std::map<std::string, std::string> StringParamStore;
@@ -284,8 +281,22 @@ struct AnimationDefinition {
  * @brief Definition of a sound to play for a certain action.
  */
 struct SoundDefinition {
-	std::string groupName;
-	unsigned int playOrder;
+	std::string resourceName;
+	bool repeating;
+};
+
+enum class SoundOrder {
+	SEQUENCE,
+	RANDOM
+};
+
+struct SoundsDefinition {
+	std::vector<SoundDefinition> sounds;
+	SoundOrder order;
+	bool repeating;
+	std::optional<float> gain;
+	std::optional<float> rolloff;
+	std::optional<float> reference;
 };
 
 /**
@@ -306,7 +317,18 @@ struct ActivationDefinition {
 		/**
 		 * @brief Activation through an entity action.
 		 */
-		ACTION
+		ACTION,
+
+		/**
+		 * @brief Activation through an entity acting
+		 */
+		ACTED,
+
+		/**
+		 * @brief Activation through an entity acting
+		 */
+		LIFECYCLE
+
 	};
 
 	/**
@@ -331,31 +353,10 @@ struct ActivationDefinition {
  * sound (perhaps grunting and the sound of a shovel digging in the ground).
  */
 struct ActionDefinition {
-
-	void addAnimationDefinition(AnimationDefinition def);
-
-	const AnimationDefinitionsStore& getAnimationDefinitions() const;
-
-	AnimationDefinitionsStore& getAnimationDefinitions();
-
-	void removeAnimationDefinition(size_t index);
-
-	void addSoundDefinition(SoundDefinition def);
-
-	const SoundDefinitionsStore& getSoundDefinitions() const;
-
-	SoundDefinitionsStore& getSoundDefinitions();
-
-	void removeSoundDefinition(size_t index);
-
-	const ActivationDefinitionStore& getActivationDefinitions() const;
-
-	ActivationDefinitionStore& getActivationDefinitions();
-
 	std::string name;
-	AnimationDefinitionsStore animations;
-	SoundDefinitionsStore sounds;
-	ActivationDefinitionStore activations;
+	std::vector<AnimationDefinition> animations;
+	SoundsDefinition sounds;
+	std::vector<ActivationDefinition> activations;
 	Ogre::Real animationSpeed = 1.0f;
 };
 

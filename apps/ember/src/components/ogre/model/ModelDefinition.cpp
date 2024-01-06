@@ -278,49 +278,6 @@ void AnimationDefinition::removeAnimationPartDefinition(size_t index) {
 	animationParts.erase(animationParts.begin() + index);
 }
 
-
-void ActionDefinition::addAnimationDefinition(AnimationDefinition def) {
-	animations.emplace_back(std::move(def));
-}
-
-
-const AnimationDefinitionsStore& ActionDefinition::getAnimationDefinitions() const {
-	return animations;
-}
-
-AnimationDefinitionsStore& ActionDefinition::getAnimationDefinitions() {
-	return animations;
-}
-
-void ActionDefinition::removeAnimationDefinition(size_t index) {
-	animations.erase(animations.begin() + index);
-}
-
-void ActionDefinition::addSoundDefinition(SoundDefinition def) {
-	sounds.emplace_back(std::move(def));
-}
-
-const SoundDefinitionsStore& ActionDefinition::getSoundDefinitions() const {
-	return sounds;
-}
-
-SoundDefinitionsStore& ActionDefinition::getSoundDefinitions() {
-	return sounds;
-}
-
-void ActionDefinition::removeSoundDefinition(size_t index) {
-	sounds.erase(sounds.begin() + index);
-}
-
-const ActivationDefinitionStore& ActionDefinition::getActivationDefinitions() const {
-	return activations;
-}
-
-ActivationDefinitionStore& ActionDefinition::getActivationDefinitions() {
-	return activations;
-}
-
-
 }
 
 

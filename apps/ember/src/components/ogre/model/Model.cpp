@@ -56,7 +56,6 @@ Model::Model(Ogre::SceneManager& manager, const ModelDefinitionPtr& definition, 
 		mName(std::move(name)),
 		mSkeletonOwnerEntity(nullptr),
 		mRotation(Ogre::Quaternion::IDENTITY),
-		mAnimationStateSet(nullptr),
 		mVisible(true),
 		mRenderingDistance(0),
 		mQueryFlags(0),
@@ -71,6 +70,7 @@ Model::~Model() {
 	for (auto& submodel: mSubmodels) {
 		removeMovable(submodel->getEntity());
 	}
+	mSkeletonOwnerEntity = nullptr;
 	mSubmodels.clear();
 
 	//Lights are not parts of mMovableObjects, so we need to destroy them ourselves here.
@@ -83,17 +83,14 @@ Model::~Model() {
 }
 
 void Model::reset() {
-//	logger->debug("Resetting "<< getName());
 	Resetting.emit();
+	mActions.clear();
 	//	resetAnimations();
 	resetSubmodels();
 	resetParticles();
 	resetLights();
 	mRotation = Ogre::Quaternion::IDENTITY;
-	// , mAnimationStateSet(0)
-	mSkeletonOwnerEntity = nullptr;
 	mAttachPoints.reset();
-
 }
 
 const ModelDefinitionPtr& Model::getDefinition() const {
@@ -140,7 +137,7 @@ bool Model::loadAssets() {
 //			action.getAnimations().getAnimations().clear();
 //			action.getAnimations().reset();
 //
-//			for (auto& animationDef : actionDef.getAnimationDefinitions()) {
+//			for (auto& animationDef : actionDef.animations) {
 //				Animation animation(animationDef.getIterations(), getSkeleton()->getNumBones());
 //				for (auto& animationPartDef : animationDef.getAnimationPartDefinitions()) {
 //					if (getAllAnimationStates()->hasAnimationState(animationPartDef.Name)) {
@@ -167,6 +164,7 @@ bool Model::loadAssets() {
 //			}
 //		}
 //	}
+//}
 //}
 
 bool Model::createModelAssets() {
@@ -197,13 +195,10 @@ bool Model::createModelAssets() {
 
 
 				auto submodel = std::make_unique<SubModel>(*entity, *this);
-				//Model::SubModelPartMapping* submodelPartMapping = new Model::SubModelPartMapping();
-
 
 				if (!submodelDef.getPartDefinitions().empty()) {
 					for (auto& partDef: submodelDef.getPartDefinitions()) {
 						SubModelPart& part = submodel->createSubModelPart(partDef.name);
-						//std::string groupName("");
 
 						if (!partDef.getSubEntityDefinitions().empty()) {
 							for (auto& subEntityDef: partDef.getSubEntityDefinitions()) {
@@ -247,7 +242,6 @@ bool Model::createModelAssets() {
 						}
 						if (!partDef.group.empty()) {
 							mAssetCreationContext.groupsToPartMap[partDef.group].push_back(partDef.name);
-							//mPartToGroupMap[partDef.getName()] = partDef.getGroup();
 						}
 
 						if (partDef.show) {
@@ -322,9 +316,10 @@ void Model::createActions() {
 
 	for (auto& actionDef: mDefinition->getActionDefinitions()) {
 		Action action;
-		action.activations = actionDef.getActivationDefinitions();
+		action.activations = actionDef.activations;
 		action.name = actionDef.name;
 		action.animations.setSpeed(actionDef.animationSpeed);
+		action.soundAction = SoundAction{.definition=actionDef.sounds};
 
 		if (getSkeleton() && getAllAnimationStates()) {
 
@@ -333,7 +328,7 @@ void Model::createActions() {
 				getSkeleton()->setBlendMode(Ogre::ANIMBLEND_CUMULATIVE);
 			}
 			if (!mSubmodels.empty()) {
-				for (auto& animationDef: actionDef.getAnimationDefinitions()) {
+				for (auto& animationDef: actionDef.animations) {
 					Animation animation(animationDef.iterations, getSkeleton()->getNumBones());
 					for (auto& animationPartDef: animationDef.getAnimationPartDefinitions()) {
 						if (getAllAnimationStates()->hasAnimationState(animationPartDef.Name)) {
@@ -360,9 +355,6 @@ void Model::createActions() {
 				}
 			}
 		}
-
-		//TODO: add sounds too
-
 		mActions[actionDef.name] = action;
 	}
 }
@@ -473,10 +465,6 @@ const std::vector<ParticleSystemBinding>& Model::getAllParticleSystemBindings() 
 	return mAllParticleSystemBindings;
 }
 
-ParticleSystemSet& Model::getParticleSystems() {
-	return mParticleSystems;
-}
-
 std::vector<LightInfo>& Model::getLights() {
 	return mLights;
 }
@@ -491,7 +479,6 @@ bool Model::addSubmodel(std::unique_ptr<SubModel> submodel) {
 			entity->shareSkeletonInstanceWith(mSkeletonOwnerEntity);
 		} else {
 			mSkeletonOwnerEntity = entity;
-			// 			mAnimationStateSet = submodel->getEntity()->getAllAnimationStates();
 		}
 	}
 	mSubmodels.emplace_back(std::move(submodel));
@@ -506,8 +493,12 @@ bool Model::addSubmodel(std::unique_ptr<SubModel> submodel) {
 bool Model::removeSubmodel(SubModel* submodel) {
 	auto I = std::find_if(mSubmodels.begin(), mSubmodels.end(), [&](const std::unique_ptr<SubModel>& entry) { return entry.get() == submodel; });
 	if (I != mSubmodels.end()) {
+		submodel->getEntity()->getUserObjectBindings().eraseUserAny("model");
 		removeMovable(submodel->getEntity());
 		mSubmodels.erase(I);
+		if (mSkeletonOwnerEntity == submodel->getEntity()) {
+			mSkeletonOwnerEntity = nullptr;
+		}
 	}
 	return true;
 }
@@ -655,6 +646,7 @@ void Model::addMovable(Ogre::MovableObject* movable) {
 }
 
 void Model::removeMovable(Ogre::MovableObject* movable) {
+	detachObject(movable);
 	if (mParentNodeProvider) {
 		mParentNodeProvider->detachObject(movable);
 	}
@@ -672,6 +664,7 @@ void Model::resetSubmodels() {
 	for (auto& submodel: mSubmodels) {
 		removeMovable(submodel->getEntity());
 	}
+	mSkeletonOwnerEntity = nullptr;
 	mSubmodels.clear();
 	mModelParts.clear();
 }
@@ -756,13 +749,14 @@ bool Model::hasAttachPoint(const std::string& attachPoint) const {
 }
 
 void Model::detachObject(Ogre::MovableObject* movable) {
-	if (mSkeletonOwnerEntity) {
-		mSkeletonOwnerEntity->detachObjectFromBone(movable);
-	}
+
 	if (mAttachPoints) {
 		std::vector<AttachPointWrapper>& attachPoints = *mAttachPoints;
 		for (auto I = attachPoints.begin(); I != attachPoints.end(); ++I) {
 			if (I->Movable == movable) {
+				if (mSkeletonOwnerEntity) {
+					mSkeletonOwnerEntity->detachObjectFromBone(movable);
+				}
 				attachPoints.erase(I);
 				break;
 			}
@@ -891,10 +885,6 @@ float Model::getCombinedBoundingRadius() const {
 		}
 	}
 	return radius;
-}
-
-float Model::getBoundingRadius() const {
-	return getCombinedBoundingRadius();
 }
 
 Ogre::AxisAlignedBox Model::getCombinedBoundingBox() const {

@@ -98,10 +98,6 @@ void registerLua<Model>(sol::table& space) {
 	boneGroupDefinition["Name"] = &BoneGroupDefinition::Name;
 	boneGroupDefinition["Bones"] = &BoneGroupDefinition::Bones;
 
-	auto soundDefinition = space.new_usertype<SoundDefinition>("SoundDefinition");
-	soundDefinition["groupName"] = &SoundDefinition::groupName;
-	soundDefinition["playOrder"] = &SoundDefinition::playOrder;
-
 	auto boneGroupRefDefinition = space.new_usertype<BoneGroupRefDefinition>("BoneGroupRefDefinition");
 	boneGroupRefDefinition["Name"] = &BoneGroupRefDefinition::Name;
 	boneGroupRefDefinition["Weight"] = &BoneGroupRefDefinition::Weight;
@@ -113,13 +109,7 @@ void registerLua<Model>(sol::table& space) {
 	animationDefinition["iterations"] = &AnimationDefinition::iterations;
 
 	auto actionDefinition = space.new_usertype<ActionDefinition>("ActionDefinition");
-	actionDefinition["getAnimationDefinitions"] = sol::resolve<const std::vector<AnimationDefinition>&() const>(&ActionDefinition::getAnimationDefinitions);
-	actionDefinition["removeAnimationDefinition"] = &ActionDefinition::removeAnimationDefinition;
-	actionDefinition["addAnimationDefinition"] = &ActionDefinition::addAnimationDefinition;
-	actionDefinition["getSoundDefinitions"] = sol::resolve<const std::vector<SoundDefinition>&() const>(&ActionDefinition::getSoundDefinitions);
-	actionDefinition["removeSoundDefinition"] = &ActionDefinition::removeSoundDefinition;
-	actionDefinition["addSoundDefinition"] = &ActionDefinition::addSoundDefinition;
-	actionDefinition["getActivationDefinitions"] = sol::resolve<const std::vector<ActivationDefinition>&() const>(&ActionDefinition::getActivationDefinitions);
+	actionDefinition["animations"] = &ActionDefinition::animations;
 	actionDefinition["name"] = &ActionDefinition::name;
 	actionDefinition["animationSpeed"] = &ActionDefinition::animationSpeed;
 

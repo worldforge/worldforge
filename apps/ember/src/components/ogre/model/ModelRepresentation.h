@@ -24,6 +24,8 @@
 #include "components/ogre/IAnimated.h"
 #include "domain/IGraphicalRepresentation.h"
 #include "domain/EmberEntity.h"
+#include "services/sound/SoundService.h"
+#include "ModelAction.h"
 #include <OgreMath.h>
 #include <OgreVector.h>
 #include <OgreQuaternion.h>
@@ -252,40 +254,30 @@ protected:
 	 */
 	Action* mCurrentMovementAction;
 
+	std::shared_ptr<SoundService::SoundControl> mCurrentMovementSound;
+
 	/**
 	 All the active actions, except the movement action (since it's stored in mCurrentMovementAction).
 	 These actions will be updated each frame.
 	 NOTE: we currently don't allow for multiple actions playing at the same time
 	 */
-	//std::list<Action*> mActiveActions;
 	Action* mActiveAction;
-
-	/**
-	 * @brief Active action being played as a result of a task being carried out.
-	 */
-	//Action* mTaskAction;
-
-	/**
-	 * @brief The sound entity this entity is connected to.
-	 */
-	std::unique_ptr<SoundEntity> mSoundEntity;
 
 	std::shared_ptr<EmberEntityUserObject> mUserObject;
 
 	std::unique_ptr<BulletCollisionDetector> mBulletCollisionDetector;
 
+
+	/**
+	 * A list of queued up Acted ops to be processed when the Model is loaded. This is mainly to handle the case where
+	 * we receive Acted ops before we've had time to load the Model. We don't want to miss out on any of them.
+	 */
+	std::vector<std::string> mPendingActed;
+
 	/**
 	 * @brief The type name for the class.
 	 */
 	static std::string sTypeName;
-
-	/**
-	 * Tells the entity to retrieve it sound actions from
-	 * the model definition manager
-	 */
-	void setSounds();
-
-	bool needSoundEntity();
 
 	void setClientVisible(bool visible);
 
@@ -314,13 +306,11 @@ protected:
 	 * @param v
 	 */
 	void attrChanged(const std::string& str, const Atlas::Message::Element& v);
-	/**
-	 *    Overridden from Eris::Entity
-	 * @param act
-	 */
-//	void entity_Acted(const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo);
+
+	void entity_Acted(const Atlas::Objects::Operation::RootOperation& act, const Eris::TypeInfo& typeInfo);
 
 	void entity_ActionsChanged(const std::vector<ActionChange>& actionChanges);
+
 
 	/**
 	 * @brief When the Model is reloaded we need to update with the new values.
@@ -350,6 +340,8 @@ protected:
 	 */
 	void resetAnimations();
 
+	void playSoundForMovementAction(Action* action);
+
 	/**
 	 * Gets the suitable action for the supplied movement.
 	 *
@@ -369,6 +361,12 @@ protected:
 	Action* getFirstAvailableAction(ActivationDefinition::Type type, std::initializer_list<const char* const> actions) const;
 
 	void updateCollisionDetection();
+
+	void playSoundForAction(const SoundAction& soundAction);
+
+	void processActed(const std::string& activityName);
+
+	void processAddedAction(const std::string& actionName);
 };
 
 }

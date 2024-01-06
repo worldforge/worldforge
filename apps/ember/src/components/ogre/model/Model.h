@@ -39,13 +39,10 @@ namespace Eris {
 class EventService;
 }
 
-namespace Ember {
-namespace OgreView {
-
 /**
  * @brief Namespace for Models, which is the main aggregate object used for representing entities in the world.
  */
-namespace Model {
+namespace Ember::OgreView::Model {
 
 class SubModel;
 
@@ -70,9 +67,6 @@ struct LightInfo {
 	std::unique_ptr<INodeProvider> nodeProvider;
 };
 
-typedef std::vector<std::unique_ptr<ParticleSystem>> ParticleSystemSet;
-typedef std::vector<ParticleSystemBinding> ParticleSystemBindingsSet;
-
 /**
  * @brief An instance of this represents a complete model, comprised of both multiple meshes, particle systems and lights.
  * A model can be made out of different entities, just as long as they share a skeleton.
@@ -96,8 +90,6 @@ public:
 	typedef std::unordered_map<std::string, Action> ActionStore;
 
 	typedef std::set<std::string> StringSet;
-	typedef std::unordered_map<std::string, StringSet> SubModelPartMapping;
-	typedef std::unordered_map<std::string, ModelPart> ModelPartStore;
 
 	typedef std::unordered_map<std::string, std::vector<std::string>> PartGroupStore;
 
@@ -225,7 +217,7 @@ public:
 
 	const std::vector<ParticleSystemBinding>& getAllParticleSystemBindings() const;
 
-	ParticleSystemSet& getParticleSystems();
+	std::vector<std::unique_ptr<ParticleSystem>>& getParticleSystems();
 
 	bool hasParticles() const;
 
@@ -268,8 +260,6 @@ public:
 
 	float getCombinedBoundingRadius() const;
 
-	float getBoundingRadius() const;
-
 	Ogre::AxisAlignedBox getCombinedBoundingBox() const;
 
 	Ogre::AxisAlignedBox getBoundingBox() const;
@@ -299,7 +289,7 @@ protected:
 		size_t currentlyLoadingSubModelIndex = 0;
 		std::vector<std::unique_ptr<SubModel>> submodels;
 		std::vector<std::string> showPartVector;
-		ModelPartStore modelParts;
+		std::unordered_map<std::string, ModelPart> modelParts;
 		PartGroupStore groupsToPartMap;
 	};
 
@@ -310,7 +300,7 @@ protected:
 	bool createModelAssets();
 
 	std::vector<ParticleSystemBinding> mAllParticleSystemBindings;
-	ParticleSystemSet mParticleSystems;
+	std::vector<std::unique_ptr<ParticleSystem>> mParticleSystems;
 	std::vector<LightInfo> mLights;
 
 	/**
@@ -358,6 +348,10 @@ protected:
 
 	ModelDefinitionPtr mDefinition;
 
+	/**
+	 * This provides the Ogre Nodes to which we can attach our Ogre::MovableObjects.
+	 * This is either a SceneNode or a TagPoint if any of our parents is an entity with a Skeleton.
+	 */
 	INodeProvider* mParentNodeProvider;
 
 
@@ -383,7 +377,7 @@ protected:
 	 */
 	// 	SubModelPartStoreMap mSubModelPartMap;
 
-	ModelPartStore mModelParts;
+	std::unordered_map<std::string, ModelPart> mModelParts;
 
 	PartGroupStore mGroupsToPartMap;
 
@@ -391,11 +385,6 @@ protected:
 	 how much the model should be rotated around the Y-axis from it's initial position
 	 */
 	Ogre::Quaternion mRotation;
-
-	/**
-	 set of all animation states
-	 */
-	Ogre::AnimationStateSet* mAnimationStateSet;
 
 	std::unique_ptr<std::vector<AttachPointWrapper>> mAttachPoints;
 
@@ -429,6 +418,6 @@ inline const std::string& Model::getName() const {
 }
 
 }
-}
-}
+
+
 #endif // MODEL_H

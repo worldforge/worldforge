@@ -432,7 +432,7 @@ function ModelEdit:updateModelContentList()
 		treeItem:setTooltipText("Action '" .. name .. "'")
 		actionsTreeItem:addItem(treeItem)
 
-		local animations = action:getAnimationDefinitions()
+		local animations = action.animations
 		for val_ = 1, animations:size() do
 			local animation = animations[val_]
 			local name = "animation"

@@ -119,6 +119,22 @@ ModelAttachment::ModelAttachment(EmberEntity& parentEntity,
 		mModelMount(std::make_unique<ModelMount>(mModelRepresentation->getModel(), std::move(nodeProvider), mPose)) {
 	mModelMount->reset();
 	setupFittings();
+	mModelRepresentation->getModel().Resetting.connect([this]() {
+		for (auto& fitting: mFittings) {
+			if (fitting.second.mChild && mChildEntity.hasChild(fitting.second.mChildEntityId)) {
+				EmberEntity* entity = fitting.second.mChild;
+				entity->setAttachment(nullptr);
+				detachEntity(*entity);
+			}
+		}
+
+		mMappings.clear();
+		if (mModelMount) {
+			mModelMount->reset();
+		}
+		updateScale();
+
+	});
 	mModelRepresentation->getModel().Reloaded.connect(sigc::mem_fun(*this, &ModelAttachment::model_Reloaded));
 	mModelMount->getModel().setVisible(mChildEntity.isVisible());
 }
@@ -157,10 +173,12 @@ void ModelAttachment::attachEntity(EmberEntity& entity) {
 
 	if (attachPoint.empty()) {
 		//We're not attached, use the contained rules
-		//the creator binds the model mapping and this instance together by creating instance of EmberEntityModelAction and EmberEntityPartAction which in turn calls the setModel(..) and show/hideModelPart(...) methods.
+		//the creator binds the model mapping and this instance together by creating instance of EmberEntityModelAction
+		// and EmberEntityPartAction which in turn calls the setModel(..) and show/hideModelPart(...) methods.
 		creator = std::make_unique<ModelContainedActionCreator>(entity, mModelRepresentation->getScene());
 	} else {
-		//the creator binds the model mapping and this instance together by creating instance of EmberEntityModelAction and EmberEntityPartAction which in turn calls the setModel(..) and show/hideModelPart(...) methods.
+		//the creator binds the model mapping and this instance together by creating instance of EmberEntityModelAction
+		// and EmberEntityPartAction which in turn calls the setModel(..) and show/hideModelPart(...) methods.
 		creator = std::make_unique<ModelAttachedActionCreator>(entity, mModelRepresentation->getScene(), [attachPoint, this, &entity](std::unique_ptr<ModelRepresentation> modelRepresentation) {
 			entity.setAttachment({});
 			if (modelRepresentation && mModelRepresentation->getModel().isLoaded()) {
@@ -201,8 +219,10 @@ void ModelAttachment::detachEntity(EmberEntity& entity) {
 
 void ModelAttachment::setVisible(bool visible) {
 	NodeAttachment::setVisible(visible);
-	//We set the visibility of the Model here too, even though one might think that it would suffice with the call to NodeAttachment (since that will tell the node provider to set the visibility).
-	//However, the issue is that even though the Model has been detached from the scene graph, the light will still be taken into account unless they have their visibility turned off. Therefore the call to Model::setVisible.
+	//We set the visibility of the Model here too, even though one might think that it would suffice with the call to
+	// NodeAttachment (since that will tell the node provider to set the visibility).
+	//However, the issue is that even though the Model has been detached from the scene graph, the light will still be
+	// taken into account unless they have their visibility turned off. Therefore the call to Model::setVisible.
 	if (mModelMount) {
 		mModelMount->getModel().setVisible(visible);
 	}

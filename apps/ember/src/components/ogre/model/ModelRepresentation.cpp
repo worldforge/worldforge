@@ -33,12 +33,15 @@
 #include "components/ogre/Scene.h"
 #include "components/ogre/Convert.h"
 #include "components/ogre/EntityCollisionInfo.h"
+#include "services/sound/SoundService.h"
 
 #include <OgreSceneNode.h>
 #include <OgreSceneManager.h>
 #include <OgreParticleSystem.h>
 
 #include <Eris/Task.h>
+#include "framework/IResourceProvider.h"
+#include "services/sound/SoundSample.h"
 
 
 namespace Ember::OgreView::Model {
@@ -69,13 +72,13 @@ ModelRepresentation::ModelRepresentation(EmberEntity& entity, std::unique_ptr<Mo
 		mMapping(mapping),
 		mCurrentMovementAction(nullptr),
 		mActiveAction(nullptr),
-		mSoundEntity(nullptr),
 		mUserObject(std::make_shared<EmberEntityUserObject>(EmberEntityUserObject{entity})),
 		mBulletCollisionDetector(std::make_unique<BulletCollisionDetector>(scene.getBulletWorld())) {
 	mBulletCollisionDetector->collisionInfo = EntityCollisionInfo{&entity, false};
 	//Only connect if we have actions to act on
 	if (!mModel->getDefinition()->getActionDefinitions().empty()) {
 		mEntity.EventActionsChanged.connect(sigc::mem_fun(*this, &ModelRepresentation::entity_ActionsChanged));
+		mEntity.Acted.connect(sigc::mem_fun(*this, &ModelRepresentation::entity_Acted));
 	}
 	//Only connect if we have particles
 	if (mModel->hasParticles()) {
@@ -110,6 +113,9 @@ ModelRepresentation::~ModelRepresentation() {
 		mScene.deregisterEntityWithTechnique(mEntity, "projectile");
 	}
 
+	if (mCurrentMovementSound) {
+		mCurrentMovementSound->stop();
+	}
 
 	//mModel->_getManager()->destroyMovableObject(&mModel);
 
@@ -146,31 +152,6 @@ void ModelRepresentation::setModelPartShown(const std::string& partName, bool vi
 	}
 }
 
-/**
- * Check if any sound action is defined within
- * the model
- */
-bool ModelRepresentation::needSoundEntity() {
-	for (auto& actionDef: mModel->getDefinition()->getActionDefinitions()) {
-		// Setup All Sound Actions
-		if (!actionDef.getSoundDefinitions().empty()) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void ModelRepresentation::setSounds() {
-	//	if (!mSoundEntity)
-	//	{
-	//		if (needSoundEntity())
-	//		{
-	//			mSoundEntity = new SoundEntity(*this);
-	//		}
-	//	}
-}
-
 void ModelRepresentation::setClientVisible(bool visible) {
 	//It appears that lights aren't disabled even when they're detached from the node tree (which will happen if the visibity is disabled as the lights are attached to the scale node), so we need to disable them ourselves.
 	for (auto& I: mModel->getLights()) {
@@ -193,7 +174,8 @@ void ModelRepresentation::initFromModel() {
 		mScene.registerEntityWithTechnique(mEntity, "projectile");
 	}
 
-	/** If there's an idle animation, we'll randomize the entry value for that so we don't end up with too many similar entities with synchronized animations (such as when you enter the world at origo and have 20 settlers doing the exact same motions. */
+	/** If there's an idle animation, we'll randomize the entry value for that so we don't end up with too many similar
+	 * entities with synchronized animations (such as when you enter the world at origo and have 20 settlers doing the exact same motions. */
 	Action* idleaction = mModel->getAction(ActivationDefinition::MOVEMENT, ACTION_STAND);
 	if (idleaction) {
 		idleaction->animations.addTime(Ogre::Math::RangeRandom(0, 15));
@@ -232,11 +214,23 @@ void ModelRepresentation::model_Reloaded() {
 	//Retrigger a movement change so that animations can be stopped and started now that the model has changed.
 	parseMovementMode(mEntity.getVelocity());
 	updateCollisionDetection();
+	//See if we got any acted ops while we were loading the model.
+	for (const auto& acted: mPendingActed) {
+		processActed(acted);
+	}
+	//And also see if we should activate any actions again.
+	auto actionsProp = mEntity.ptrOfProperty("actions");
+	if (actionsProp && actionsProp->isMap()) {
+		for (const auto& entry: actionsProp->Map()) {
+			processAddedAction(entry.first);
+		}
+	}
+	mPendingActed.clear();
 }
 
 void ModelRepresentation::model_Resetting() {
 	//Resetting will invalidate all actions, so set them to null here.
-	if (mCurrentMovementAction) {
+	if (mCurrentMovementAction || mActiveAction) {
 		MotionManager::getSingleton().removeAnimated(mEntity.getId());
 	}
 	mActiveAction = nullptr;
@@ -334,7 +328,7 @@ Action* ModelRepresentation::getFirstAvailableAction(ActivationDefinition::Type 
 
 void ModelRepresentation::parseMovementMode(const WFMath::Vector<3>& velocity) {
 
-	Action* newAction = getActionForMovement(velocity);
+	auto* newAction = getActionForMovement(velocity);
 
 	if (newAction != mCurrentMovementAction) {
 		//first disable any current action
@@ -345,6 +339,7 @@ void ModelRepresentation::parseMovementMode(const WFMath::Vector<3>& velocity) {
 		mCurrentMovementAction = newAction;
 		if (newAction) {
 			MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
+			playSoundForMovementAction(newAction);
 		} else {
 			MotionManager::getSingleton().removeAnimated(mEntity.getId());
 		}
@@ -387,6 +382,15 @@ void ModelRepresentation::updateAnimation(float timeSlice) {
 		bool continuePlay = false;
 		mCurrentMovementAction->animations.addTime(timeSlice, continuePlay);
 	}
+
+	if (mCurrentMovementSound) {
+		if (mEntity.getPredictedPos().isValid()) {
+			mCurrentMovementSound->setPosition(mEntity.getViewPosition());
+		}
+		if (mEntity.getVelocity().isValid()) {
+			mCurrentMovementSound->setVelocity(mEntity.getVelocity());
+		}
+	}
 }
 
 void ModelRepresentation::resetAnimations() {
@@ -398,43 +402,74 @@ void ModelRepresentation::resetAnimations() {
 	}
 }
 
+void ModelRepresentation::entity_Acted(const Atlas::Objects::Operation::RootOperation& op, const Eris::TypeInfo&) {
+
+	std::string activityName = op->getParent();
+	if (!op->getArgs().empty()) {
+		auto arg = op->getArgs().front();
+		if (arg.isValid() && arg->hasAttr("action")) {
+			auto actionAttr = arg->getAttr("action");
+			if (actionAttr.isString()) {
+				activityName += ":";
+				activityName += actionAttr.String();
+			}
+		}
+	}
+
+	if (!mModel->isLoaded()) {
+		mPendingActed.emplace_back(activityName);
+	} else {
+		processActed(activityName);
+	}
+
+}
+
+void ModelRepresentation::processActed(const std::string& activityName) {
+	Action* newAction = mModel->getAction(ActivationDefinition::ACTED, activityName);
+	if (newAction) {
+		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
+		mActiveAction = newAction;
+		resetAnimations();
+		playSoundForAction(newAction->soundAction);
+	}
+}
+
 void ModelRepresentation::entity_ActionsChanged(const std::vector<ActionChange>& actionChanges) {
-	for (auto& change: actionChanges) {
-		if (change.changeType == ActionChange::ChangeType::Removed) {
-			if (mActiveAction) {
-				mActiveAction->animations.reset();
-				mActiveAction = nullptr;
+	if (mModel->isLoaded()) {
+		for (auto& change: actionChanges) {
+			if (change.changeType == ActionChange::ChangeType::Removed) {
+				if (mActiveAction) {
+					mActiveAction->animations.reset();
+					mActiveAction = nullptr;
+				}
+			}
+		}
+		for (auto& change: actionChanges) {
+			if (change.changeType == ActionChange::ChangeType::Added) {
+				//TODO: handle transitions
+				if (mActiveAction) {
+					continue;
+				}
+				processAddedAction(change.entry.actionName);
 			}
 		}
 	}
-	for (auto& change: actionChanges) {
-		if (change.changeType == ActionChange::ChangeType::Added) {
-			//TODO: handle transitions
-			if (mActiveAction) {
-				continue;
-			}
-			auto& name = change.entry.actionName;
+}
 
-			// If there is a sound entity, ask it to play this action
-			if (mSoundEntity) {
-				mSoundEntity->playAction(name);
-			}
+void ModelRepresentation::processAddedAction(const std::string& actionName) {
+	Action* newAction = mModel->getAction(ActivationDefinition::ACTION, actionName);
 
-			Action* newAction = mModel->getAction(ActivationDefinition::ACTION, name);
-
-			//If there's no action found, try to see if we have a "default action" defined to play instead.
-			if (!newAction) {
-				newAction = mModel->getAction(ActivationDefinition::ACTION, "default_action");
-			}
-
-			if (newAction) {
-				MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
-				mActiveAction = newAction;
-				resetAnimations();
-			}
-		}
+	//If there's no action found, try to see if we have a "default action" defined to play instead.
+	if (!newAction) {
+		newAction = mModel->getAction(ActivationDefinition::ACTION, "default_action");
 	}
 
+	if (newAction) {
+		MotionManager::getSingleton().addAnimated(mEntity.getId(), this);
+		mActiveAction = newAction;
+		resetAnimations();
+		playSoundForAction(newAction->soundAction);
+	}
 }
 
 
@@ -512,6 +547,102 @@ ModelRepresentation* ModelRepresentation::getRepresentationForEntity(EmberEntity
 		return dynamic_cast<ModelRepresentation*>(representation);
 	}
 	return nullptr;
+}
+
+void ModelRepresentation::playSoundForMovementAction(Action* action) {
+
+	if (mCurrentMovementSound) {
+		mCurrentMovementSound->stop();
+		mCurrentMovementSound = nullptr;
+	}
+	if (!action->soundAction.definition.sounds.empty()) {
+		SoundService::SoundGroup soundGroup{.sounds={},
+				.repeating=action->soundAction.definition.repeating,
+				.gain=action->soundAction.definition.gain,
+				.rolloff=action->soundAction.definition.rolloff,
+				.reference=action->soundAction.definition.reference
+		};
+
+		if (action->soundAction.definition.order == SoundOrder::RANDOM) {
+
+			//Get one at random.
+			auto random_value = std::rand() / ((RAND_MAX + 1u) / action->soundAction.definition.sounds.size());
+			auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(action->soundAction.definition.sounds[random_value].resourceName);
+			if (resWrapper.hasData()) {
+				std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+				if (sample) {
+					soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
+				}
+			}
+		} else {
+			for (const auto& soundDef: action->soundAction.definition.sounds) {
+				auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundDef.resourceName);
+				if (resWrapper.hasData()) {
+					std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+					if (sample) {
+						soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
+					}
+				}
+			}
+		}
+		if (!soundGroup.sounds.empty()) {
+			mCurrentMovementSound = SoundService::getSingleton().playSound(soundGroup);
+			if (mEntity.getPredictedPos().isValid()) {
+				mCurrentMovementSound->setPosition(mEntity.getViewPosition());
+			}
+			if (mEntity.getVelocity().isValid()) {
+				mCurrentMovementSound->setVelocity(mEntity.getVelocity());
+			}
+
+		}
+	}
+}
+
+void ModelRepresentation::playSoundForAction(const SoundAction& soundAction) {
+	if (!soundAction.definition.sounds.empty()) {
+		SoundService::SoundGroup soundGroup{
+				.sounds={},
+				.repeating=false, //Action sounds are never repeating
+				.gain = soundAction.definition.gain,
+				.rolloff = soundAction.definition.rolloff,
+				.reference = soundAction.definition.reference
+		};
+
+		if (soundAction.definition.order == SoundOrder::RANDOM) {
+
+			//Get one at random.
+			auto random_value = std::rand() / ((RAND_MAX + 1u) / soundAction.definition.sounds.size());
+			auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundAction.definition.sounds[random_value].resourceName);
+			if (resWrapper.hasData()) {
+				std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+				if (sample) {
+					soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
+				}
+			}
+		} else {
+			for (const auto& soundDef: soundAction.definition.sounds) {
+				auto resWrapper = SoundService::getSingleton().getResourceProvider()->getResource(soundDef.resourceName);
+				if (resWrapper.hasData()) {
+					std::shared_ptr<StaticSoundSample> sample = StaticSoundSample::create(resWrapper);
+					if (sample) {
+						soundGroup.sounds.emplace_back(SoundService::Sound{.soundSample= sample});
+					}
+				}
+			}
+		}
+		if (!soundGroup.sounds.empty()) {
+			mCurrentMovementSound = SoundService::getSingleton().playSound(soundGroup);
+			//We set the position and velocity here, but won't be updating them as this sound is "one off".
+			//It's also detached, so we don't keep a reference to it and rely on the SoundService to remove it once it's done.
+			if (mEntity.getPredictedPos().isValid()) {
+				mCurrentMovementSound->setPosition(mEntity.getViewPosition());
+			}
+			if (mEntity.getVelocity().isValid()) {
+				mCurrentMovementSound->setVelocity(mEntity.getVelocity());
+			}
+
+		}
+	}
 }
 
 }

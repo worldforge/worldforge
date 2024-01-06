@@ -22,7 +22,6 @@
 #include "components/ogre/NodeAttachment.h"
 #include "components/entitymapping/EntityMapping.h"
 #include "ModelFitting.h"
-#include <sigc++/trackable.h>
 #include <unordered_map>
 #include <map>
 #include <vector>
@@ -58,7 +57,7 @@ class ModelRepresentation;
  *
  * Use this attachment when you have a ModelRepresentation you need to attach to an entity.
  */
-class ModelAttachment : public NodeAttachment, public virtual sigc::trackable {
+class ModelAttachment : public NodeAttachment {
 public:
 
 	ModelAttachment(EmberEntity& parentEntity,

@@ -28,6 +28,10 @@
 
 namespace Ember::OgreView::Model {
 
+struct SoundAction {
+	SoundsDefinition definition;
+};
+
 /**
 @author Erik Ogenvik
 */
@@ -36,7 +40,7 @@ struct Action {
 	AnimationSet animations;
 
 	std::vector<ActivationDefinition> activations;
-
+	SoundAction soundAction;
 };
 
 
