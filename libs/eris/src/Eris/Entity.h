@@ -367,7 +367,7 @@ public:
 	/**
 	Emitted when this entity performs is hit by something.
 	*/
-	sigc::signal<void(const Atlas::Objects::Operation::Hit&, const TypeInfo&)> Hit;
+	sigc::signal<void(const Atlas::Objects::Operation::Hit&)> Hit;
 
 	/**
 	Emitted when this entity performs an action which causes a noise. This
@@ -434,7 +434,7 @@ protected:
 	Over-rideable hook when this entity is hit by something.
 	Default implementation emits the Hit signal.
     */
-	virtual void onHit(const Atlas::Objects::Operation::Hit& hit, const TypeInfo& typeInfo);
+	virtual void onHit(const Atlas::Objects::Operation::Hit& hit);
 
 	/**
 	Over-rideable hook when this entity is heard performing an action.

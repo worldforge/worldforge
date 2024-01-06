@@ -28,7 +28,6 @@ IGRouter::IGRouter(Avatar& av, View& view) :
 		m_avatar(av),
 		m_view(view) {
 	m_avatar.getConnection().registerRouterForTo(this, m_avatar.getEntityId());
-	m_actionType = m_avatar.getConnection().getTypeService().getTypeByName("action");
 }
 
 IGRouter::~IGRouter() {
@@ -51,7 +50,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op) {
 
 		for (const auto& arg: args) {
 			if (arg->instanceOf(ROOT_OPERATION_NO)) {
-				handleSightOp(op, smart_dynamic_cast<RootOperation>(arg));
+				m_view.handleSightOp(smart_dynamic_cast<RootOperation>(arg));
 			} else {
 				// initial sight of entities
 				auto gent = smart_dynamic_cast<RootEntity>(arg);
@@ -165,86 +164,6 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op) {
 		}
 
 		return HANDLED;
-	}
-
-	return IGNORED;
-}
-
-Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp, const RootOperation& op) {
-	const auto& args = op->getArgs();
-
-	// because a SET op can potentially (legally) update multiple entities,
-	// we decode it here, not in the entity router
-	if (op->getClassNo() == SET_NO) {
-		for (const auto& arg: args) {
-			if (!arg->isDefaultId()) {
-				auto ent = m_view.getEntity(arg->getId());
-				if (!ent) {
-					if (m_view.isPending(arg->getId())) {
-						/* no-op, we'll get the state later */
-					} else {
-						m_view.sendLookAt(arg->getId());
-					}
-
-					continue; // we don't have it, ignore
-				}
-
-				//If we get a SET op for an entity that's not visible, it means that the entity has moved
-				//within our field of vision without sending an Appear op first. We should treat this as a
-				//regular Appear op and issue a Look op back, to get more info.
-				if (!ent->isVisible()) {
-//					float stamp = -1;
-//					if (!arg->isDefaultStamp()) {
-//						stamp = static_cast<float>(arg->getStamp());
-//					}
-//
-//					m_view.appear(arg->getId(), stamp);
-					m_view.getEntityFromServer(arg->getId());
-				} else {
-					ent->setFromRoot(arg, false);
-				}
-			}
-		}
-		return HANDLED;
-	}
-
-	if (!op->isDefaultParent()) {
-		// we have to handle generic 'actions' late, to avoid trapping interesting
-		// such as create or divide
-		TypeInfo* ty = m_avatar.getConnection().getTypeService().getTypeForAtlas(op);
-		if (!ty->isBound()) {
-			new TypeBoundRedispatch(m_avatar.getConnection(), sightOp, ty);
-			return HANDLED;
-		}
-
-		//For hits we want to check the "to" field rather than the "from" field. We're more interested in
-		//the entity that was hit than the one which did the hitting.
-		//Note that we'll let the op fall through, so that we later on handle the Hit action for the "from" entity.
-		if (op->getClassNo() == HIT_NO) {
-			if (!op->isDefaultTo()) {
-				Entity* ent = m_view.getEntity(op->getTo());
-				if (ent) {
-					ent->onHit(smart_dynamic_cast<Hit>(op), *ty);
-				}
-			} else {
-				logger->warn("received hit with TO unset");
-			}
-		}
-
-
-		if (ty->isA(m_actionType)) {
-			if (op->isDefaultFrom()) {
-				logger->warn("received op {} with FROM unset", ty->getName());
-				return HANDLED;
-			}
-
-			Entity* ent = m_view.getEntity(op->getFrom());
-			if (ent) {
-				ent->onAction(op, *ty);
-			}
-
-			return HANDLED;
-		}
 	}
 
 	return IGNORED;

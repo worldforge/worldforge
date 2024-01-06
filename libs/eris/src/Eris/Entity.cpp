@@ -325,8 +325,8 @@ void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg, const
 	Acted.emit(arg, typeInfo);
 }
 
-void Entity::onHit(const Atlas::Objects::Operation::Hit& arg, const TypeInfo& typeInfo) {
-	Hit.emit(arg, typeInfo);
+void Entity::onHit(const Atlas::Objects::Operation::Hit& arg) {
+	Hit.emit(arg);
 }
 
 void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op, const TypeInfo& typeInfo) {

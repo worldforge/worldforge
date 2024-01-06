@@ -29,7 +29,11 @@ View::View(Avatar& av) :
 		m_topLevel(nullptr),
 		m_lastUpdateTime(std::chrono::steady_clock::now()),
 		m_simulationSpeed(1.0),
-		m_maxPendingCount(10) {
+		m_maxPendingCount(10),
+		m_actionType(getTypeService().getTypeByName("action")) {
+
+	getTypeService().BoundType.connect(sigc::mem_fun(*this, &View::typeBound));
+	getTypeService().BadType.connect(sigc::mem_fun(*this, &View::typeBad));
 }
 
 View::~View() {
@@ -186,8 +190,11 @@ void View::sight(const RootEntity& gent) {
 	std::string eid = gent->getId();
 	auto pending = m_pending.find(eid);
 
+	std::vector<Atlas::Objects::Operation::RootOperation> queuedSights;
+
 // examine the pending map, to see what we should do with this entity
 	if (pending != m_pending.end()) {
+		queuedSights = std::move(pending->second.queuedSights);
 		switch (pending->second.sightAction) {
 			case SightAction::APPEAR:
 				visible = true;
@@ -217,25 +224,29 @@ void View::sight(const RootEntity& gent) {
 // if we got this far, go ahead and build / update it
 	auto* ent = getEntity(eid);
 	if (ent) {
+		ent->setVisible(visible);
 		// existing entity, update in place
 		ent->firstSight(gent);
 	} else {
-		ent = initialSight(gent);
+		ent = initialSight(gent, visible);
 		EntitySeen.emit(ent);
 	}
 
-	ent->setVisible(visible);
+	for (const auto& op: queuedSights) {
+		handleSightOp(op);
+	}
 	issueQueuedLook();
 }
 
-ViewEntity* View::initialSight(const RootEntity& gent) {
+ViewEntity* View::initialSight(const RootEntity& gent, bool isVisible) {
 	assert(m_contents.count(gent->getId()) == 0);
 
 	auto entity = createEntity(gent);
 	auto router = std::make_unique<EntityRouter>(*entity, *this);
+	entity->setVisible(isVisible);
 
 	auto entityPtr = entity.get();
-	//Don't store connection as life time of entity is bound to the view.
+	//Don't store connection as lifetime of entity is bound to the view.
 	entity->Moving.connect([this, entityPtr](bool startedMoving) {
 		if (startedMoving) {
 			addToPrediction(entityPtr);
@@ -406,7 +417,7 @@ void View::sendLookAt(const std::string& eid) {
 			}
 		} else {
 			// no previous entry, default to APPEAR
-			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR, std::chrono::steady_clock::now()});
+			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR, {}, std::chrono::steady_clock::now()});
 		}
 
 		// pending map is in the right state, build up the args now
@@ -467,6 +478,107 @@ void View::eraseFromLookQueue(const std::string& eid) {
 	}
 
 	logger->error("entity {} not present in the look queue", eid);
+}
+
+void View::handleSightOp(const RootOperation& op) {
+	const auto& args = op->getArgs();
+
+	// because a SET op can potentially (legally) update multiple entities,
+	// we decode it here, not in the entity router
+	if (op->getClassNo() == SET_NO) {
+		for (const auto& arg: args) {
+			if (!arg->isDefaultId()) {
+				auto ent = getEntity(arg->getId());
+				if (!ent) {
+					if (isPending(arg->getId())) {
+						/* no-op, we'll get the state later */
+					} else {
+						sendLookAt(arg->getId());
+					}
+
+					continue; // we don't have it, ignore
+				}
+
+				//If we get a SET op for an entity that's not visible, it means that the entity has moved
+				//within our field of vision without sending an Appear op first. We should treat this as a
+				//regular Appear op and issue a Look op back, to get more info.
+				if (!ent->isVisible()) {
+//					float stamp = -1;
+//					if (!arg->isDefaultStamp()) {
+//						stamp = static_cast<float>(arg->getStamp());
+//					}
+//
+//					m_view.appear(arg->getId(), stamp);
+					getEntityFromServer(arg->getId());
+				} else {
+					ent->setFromRoot(arg, false);
+				}
+			}
+		}
+	} else if (op->getClassNo() == HIT_NO) {
+		//For hits we want to check the "to" field rather than the "from" field. We're more interested in
+		//the entity that was hit than the one which did the hitting.
+		//Note that we'll let the op fall through, so that we later on handle the Hit action for the "from" entity.
+		if (!op->isDefaultTo()) {
+			Entity* ent = getEntity(op->getTo());
+			if (ent) {
+				ent->onHit(smart_dynamic_cast<Hit>(op));
+			}
+		} else {
+			logger->warn("received 'hit' with TO unset");
+		}
+
+	} else {
+
+		if (!op->isDefaultParent()) {
+			// we have to handle generic 'actions' late, to avoid trapping interesting
+			// such as create or divide
+			TypeInfo* ty = getTypeService().getTypeForAtlas(op);
+			if (!ty->isBound()) {
+				m_typeDelayedOperations[ty].emplace_back(op);
+			} else {
+
+
+				if (ty->isA(m_actionType)) {
+					if (op->isDefaultFrom()) {
+						logger->warn("received op '{}' with FROM unset", ty->getName());
+					} else {
+
+						Entity* ent = getEntity(op->getFrom());
+						if (ent) {
+							ent->onAction(op, *ty);
+						} else {
+							auto pendingI = m_pending.find(op->getFrom());
+							if (pendingI != m_pending.end()) {
+								pendingI->second.queuedSights.emplace_back(op);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
+void View::typeBound(TypeInfo* type) {
+	auto I = m_typeDelayedOperations.find(type);
+	if (I != m_typeDelayedOperations.end()) {
+		for (const auto& op: I->second) {
+			handleSightOp(op);
+		}
+		m_typeDelayedOperations.erase(I);
+	}
+}
+
+void View::typeBad(TypeInfo* type) {
+	auto I = m_typeDelayedOperations.find(type);
+	if (I != m_typeDelayedOperations.end()) {
+		logger->warn("The type '{}' couldn't be bound and we had to discard {} ops sent to entities of this type.", type->getName(), I->second.size());
+		m_typeDelayedOperations.erase(I);
+	} else {
+		logger->warn("The type '{}' couldn't be bound.", type->getName());
+	}
 }
 
 } // of namespace Eris

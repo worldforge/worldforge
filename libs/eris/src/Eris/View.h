@@ -151,6 +151,8 @@ public:
 
 	Connection& getConnection() const;
 
+	void handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
+
 protected:
 	// the router passes various relevant things to us directly
 	friend class IGRouter;
@@ -187,7 +189,7 @@ protected:
 	void taskRateChanged(Task*);
 
 private:
-	ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
+	ViewEntity* initialSight(const Atlas::Objects::Entity::RootEntity& ge, bool isVisible);
 
 	void getEntityFromServer(const std::string& eid);
 
@@ -205,6 +207,19 @@ private:
 	void issueQueuedLook();
 
 	void eraseFromLookQueue(const std::string& eid);
+
+	/**
+	 * Called when a type has been bound, which means that we should replay any queued ops for that type.
+	 * @param type
+	 */
+	void typeBound(TypeInfo* type);
+
+	/**
+	 * Called when a type couldn't be bound, which means that we should throw away any queued ops for that type.
+	 * This should normally never happen.
+	 * @param type
+	 */
+	void typeBad(TypeInfo* type);
 
 	Avatar& m_owner;
 
@@ -234,10 +249,13 @@ private:
 
 	struct PendingStatus {
 		SightAction sightAction;
+		std::vector<Atlas::Objects::Operation::RootOperation> queuedSights;
 		std::chrono::steady_clock::time_point registrationTime = std::chrono::steady_clock::now();
 	};
 
 	std::map<std::string, PendingStatus> m_pending;
+
+	std::map<TypeInfo*, std::vector<Atlas::Objects::Operation::RootOperation>> m_typeDelayedOperations;
 
 	/**
 	A queue of entities to be looked at, which have not yet be requested
@@ -273,6 +291,8 @@ private:
 	FactoryStore m_factories;
 
 	std::set<Task*> m_progressingTasks;
+	TypeInfo* m_actionType;
+
 };
 
 } // of namespace Eris
