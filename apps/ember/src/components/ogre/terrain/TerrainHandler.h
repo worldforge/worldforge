@@ -104,7 +104,8 @@ class PlantPopulator;
  * This class is responsible for handling the underlying Mercator terrain, performing updates and alterations.
  * It's not bound to Ogre.
  *
- * Most terrain handling functions are implemented as Tasks, which are performed on a Task queue. As much work as possible is done in background threads, and then synced with both Ogre and the Mercator representations in the main thread.
+ * Most terrain handling functions are implemented as Tasks, which are performed on a Task queue.
+ * As much work as possible is done in background threads, and then synced with both Ogre and the Mercator representations in the main thread.
  */
 class TerrainHandler : public virtual sigc::trackable, public Ember::IHeightProvider {
 public:
@@ -218,7 +219,7 @@ public:
 	/**
 	 * @brief Create and registers a new texture shader.
 	 *
-	 * @param layerDef The terrain layer defintiion to use. This will be used to determine what textures and materials to use for rendering the layer defined by the shader.
+	 * @param layerDef The terrain layer definition to use. This will be used to determine what textures and materials to use for rendering the layer defined by the shader.
 	 * @param mercatorShader The Mercator::Shader to use.
 	 * @return
 	 */

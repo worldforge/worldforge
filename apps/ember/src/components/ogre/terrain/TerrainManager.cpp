@@ -321,15 +321,18 @@ TerrainManager::FrameListener::~FrameListener() {
 }
 
 bool TerrainManager::FrameListener::frameStarted(const FrameEvent& evt) {
-	auto cameraPosition = parent.getScene().getMainCamera().getDerivedPosition();
+	//Need to wait with requesting terrain until we actually have a terrain entity.
+	if (parent.mHandler->getTerrainHoldingEntity()) {
+		auto cameraPosition = parent.getScene().getMainCamera().getDerivedPosition();
 
-	WFMath::AxisBox<2> cameraArea({cameraPosition.x - parent.mLoadRadius,
-								   cameraPosition.z - parent.mLoadRadius},
-								  {cameraPosition.x + parent.mLoadRadius,
-								   cameraPosition.z + parent.mLoadRadius});
+		WFMath::AxisBox<2> cameraArea({cameraPosition.x - parent.mLoadRadius,
+									   cameraPosition.z - parent.mLoadRadius},
+									  {cameraPosition.x + parent.mLoadRadius,
+									   cameraPosition.z + parent.mLoadRadius});
 
 
-	parent.mHandler->showTerrain(cameraArea);
+		parent.mHandler->showTerrain(cameraArea);
+	}
 
 	return true;
 }
