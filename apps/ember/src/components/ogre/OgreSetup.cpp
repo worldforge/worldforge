@@ -160,8 +160,8 @@ OgreSetup::~OgreSetup() {
 
 		if (Ogre::GpuProgramManager::getSingletonPtr()) {
 			try {
-				auto cachePath = ConfigService::getSingleton().getHomeDirectory(BaseDirType_CACHE) / ("/gpu-" EMBER_VERSION ".cache");
-				auto cacheStream = Ogre::Root::createFileStream(cachePath.string());
+				auto cachePath = ConfigService::getSingleton().getHomeDirectory(BaseDirType_CACHE) / ("gpu-" EMBER_VERSION ".cache");
+				auto cacheStream = Ogre::Root::createFileStream(cachePath.string(), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, true);
 				if (cacheStream) {
 					Ogre::GpuProgramManager::getSingleton().saveMicrocodeCache(cacheStream);
 				}
@@ -313,7 +313,7 @@ void OgreSetup::configure() {
 	if (mSaveShadersToCache) {
 		Ogre::GpuProgramManager::getSingleton().setSaveMicrocodesToCache(true);
 
-		auto cacheFilePath = configService.getHomeDirectory(BaseDirType_CACHE) / ("/gpu-" EMBER_VERSION ".cache");
+		auto cacheFilePath = configService.getHomeDirectory(BaseDirType_CACHE) / ("gpu-" EMBER_VERSION ".cache");
 		if (std::ifstream(cacheFilePath.string()).good()) {
 			try {
 				auto cacheStream = Ogre::Root::openFileStream(cacheFilePath.string());
