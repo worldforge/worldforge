@@ -55,14 +55,16 @@ OgreResourceProvider::~OgreResourceProvider() = default;
 
 ResourceWrapper OgreResourceProvider::getResource(const std::string& name) {
 	Ogre::DataStreamPtr input =
-			Ogre::ResourceGroupManager::getSingleton().openResource(name, mGroupName);
+			Ogre::ResourceGroupManager::getSingleton().openResource(name, mGroupName, nullptr, false);
 
-	if (!input) {
-		throw Exception("Unable to open resource file '" + name + "' in resource group '" + name + "'.");
+	if (input) {
+		auto wrapper = std::make_shared<OgreResourceWrapper>(input);
+		input->close();
+		return {std::move(wrapper), name};
+	} else {
+		logger->warn("Unable to open resource file '{}' in resource group '{}'.", name, mGroupName);
+		return {{}, name};
 	}
-	auto wrapper = std::make_shared<OgreResourceWrapper>(input);
-	input->close();
-	return {std::move(wrapper), name};
 }
 
 
