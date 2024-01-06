@@ -224,6 +224,12 @@ public:
 	 */
 	bool isMoving() const;
 
+	/** Retrieve this Entity's position in view coordinates. */
+	WFMath::Point<3> getViewPosition() const;
+
+	/** Retrieve this Entity's orientation in view coordinates. */
+	WFMath::Quaternion getViewOrientation() const;
+
 	/**
 	 * @brief Retrieve the predicted position of this entity, based on it's velocity and acceleration.
 	 * If the entity is not moving, this is the same as calling getPosition().

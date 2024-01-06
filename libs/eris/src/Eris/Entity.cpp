@@ -204,6 +204,31 @@ sigc::connection Entity::observe(const std::string& propertyName, const Property
 	return connection;
 }
 
+WFMath::Point<3> Entity::getViewPosition() const {
+	WFMath::Point<3> vpos(0.0, 0.0, 0.0);
+	//If the position is invalid, we will consider it to be (0,0,0) and skip applying it.
+	for (const Entity* e = this; e; e = e->getLocation()) {
+		if (e->getPosition().isValid()) {
+			vpos = e->toLocationCoords(vpos);
+		}
+	}
+
+	return vpos;
+}
+
+WFMath::Quaternion Entity::getViewOrientation() const {
+	WFMath::Quaternion vor;
+
+	vor.identity();
+	for (const Entity* e = this; e; e = e->getLocation()) {
+		if (e->getOrientation().isValid()) {
+			vor *= e->getOrientation();
+		}
+	}
+
+	return vor;
+}
+
 const WFMath::Point<3>& Entity::getPredictedPos() const {
 	return m_predicted.position.value;
 }
