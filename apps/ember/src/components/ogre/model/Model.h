@@ -20,17 +20,18 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "components/ogre/EmberOgrePrerequisites.h"
 #include "ModelDefinition.h"
 #include "ParticleSystem.h"
 #include "ModelAction.h"
 #include "ModelPart.h"
+#include "components/ogre/EmberOgrePrerequisites.h"
+#include "components/ogre/INodeProvider.h"
+#include "components/ogre/EmberEntityUserObject.h"
+
 #include <OgreEntity.h>
 #include <sigc++/signal.h>
 #include <memory>
 #include <unordered_map>
-#include <components/ogre/INodeProvider.h>
-#include <components/ogre/EmberEntityUserObject.h>
 #include <stack>
 #include <map>
 #include <functional>

@@ -628,6 +628,8 @@ Action* Model::getAction(ActivationDefinition::Type type, const std::string& tri
 	return nullptr;
 }
 
+
+
 void Model::addMovable(Ogre::MovableObject* movable) {
 	if (mParentNodeProvider) {
 		mParentNodeProvider->attachObject(movable);
@@ -646,7 +648,6 @@ void Model::addMovable(Ogre::MovableObject* movable) {
 }
 
 void Model::removeMovable(Ogre::MovableObject* movable) {
-	detachObject(movable);
 	if (mParentNodeProvider) {
 		mParentNodeProvider->detachObject(movable);
 	}
