@@ -2,15 +2,15 @@
 # Copyright (C) 1999 Aloril (See the file COPYING for details).
 import types
 
+from mind.Goal import goal_create
+from mind.goals.common.misc_goal import *
+
 import ai
 import entity_filter
 from atlas import Operation, Entity, Oplist
 from common import const
 from physics import Point3D, Vector3D
 from rules import Location, isLocation
-
-from mind.Goal import goal_create
-from mind.goals.common.misc_goal import *
 
 
 class MoveMeBase(Goal):
@@ -62,7 +62,8 @@ class MoveMe(Goal):
         self.vars = ["location", "speed", "radius"]
 
     def get_location_instance(self, me):
-        if isinstance(self.location, types.LambdaType) or isinstance(self.location, types.FunctionType) or isinstance(self.location, types.MethodType):
+        if isinstance(self.location, types.LambdaType) or isinstance(self.location, types.FunctionType) or isinstance(
+                self.location, types.MethodType):
             # print "Lambda location"
             return self.location(me)
         if type(self.location) == str:
@@ -461,7 +462,8 @@ class MoveMeNearFocus(Goal):
             # This can be because we haven't mapped all areas yet; if so one should check with
             # me.unawareTilesCount
             if refresh_result < 0:
-                print("Could not find any path in MoveMeNearFocus, result {}. Destination {}".format(refresh_result, str(thing)))
+                print("Could not find any path in MoveMeNearFocus, result {}. Destination {}".format(refresh_result,
+                                                                                                     str(thing)))
                 return
 
             # Return True to signal that this goal is complete now.

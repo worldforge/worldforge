@@ -9,7 +9,7 @@
                 </map>
             </map>
             <map name="present">
-                <string name="default">dural/items/weapons/short_sword/model/short_sword.mesh</string>
+                <string name="default">dural/items/weapons/short_sword/short_sword.modeldef</string>
             </map>
             <map name="density">
                 <float name="default">7500</float>

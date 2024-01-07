@@ -45,6 +45,14 @@
             </map>
             <map name="_goals">
                 <list name="append">
+					 <map>
+                        <string name="class">mind.goals.common.misc_goal.EmitSoundRandomly</string>
+                        <map name="params">
+                            <float name="seconds_min">5</float>
+                            <float name="seconds_max">10</float>
+							<string name="sound">moo</string>
+                        </map>
+                    </map>
                     <map>
                         <string name="class">mind.goals.common.misc_goal.Graze</string>
                     </map>

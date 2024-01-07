@@ -4,16 +4,15 @@
 
 from random import *
 
-import entity_filter
 import ai
+import entity_filter
 from atlas import Operation, Entity, Oplist
 from common import const
-from physics import Vector3D, Point3D
-from rules import Location
-
 from mind.goals.common.common import *
 from mind.goals.common.move import MoveMePlace, MoveMe, PickUpPossession, MoveMeArea, MoveMeToFocus, PickUpFocus, \
     MoveItOutOfMe, HuntFor, MoveIt, Accompany
+from physics import Vector3D, Point3D
+from rules import Location
 
 
 ######################## MAKE LOTS OF SOMETHING ###############################
@@ -265,7 +264,9 @@ class SpotSomething(Goal):
                     nearest = thing
                     nearest_distance = dist
         if nearest:
-            print("Spotted new thing matching '{}' at distance of {:.2f}m. Thing: {}".format(self.what, nearest_distance, str(nearest)))
+            print(
+                "Spotted new thing matching '{}' at distance of {:.2f}m. Thing: {}".format(self.what, nearest_distance,
+                                                                                           str(nearest)))
             me.add_knowledge('focus', self.what, nearest.id)
             # We should only remember things if we can keep them in memory.
             if self.seconds_until_forgotten > 0:
@@ -506,7 +507,8 @@ class Graze(Feed):
             # stop moving
             me.steering.set_destination()
             return Operation("use", Operation("consume",
-                                              Entity(me.entity.id, targets=[Entity(me.entity.parent.id, pos=me.entity.location.pos)])))
+                                              Entity(me.entity.id, targets=[
+                                                  Entity(me.entity.parent.id, pos=me.entity.location.pos)])))
 
 
 ############################ BROWSE (FIND FOOD, EAT SOME, MOVE ON) ###########
@@ -559,7 +561,8 @@ class PredateSmall(Feed):
     def __init__(self, what, range, max_mass):
         Goal.__init__(self, "predate something",
                       self.am_i_full,
-                      [SpotSomething(what, range, condition=(lambda me, o, m=max_mass: hasattr(o, "mass") and o.mass < m)),
+                      [SpotSomething(what, range,
+                                     condition=(lambda me, o, m=max_mass: hasattr(o, "mass") and o.mass < m)),
                        HuntFor(what, range),
                        self.eat])
         self.what = what
@@ -1035,3 +1038,18 @@ class Iterate(Goal):
         if first_goal.is_fulfilled:
             self.sub_goals.pop(0)
             self.sub_goals.push(first_goal)
+
+
+class EmitSoundRandomly(Goal):
+    """Emit a sound at random intervals."""
+
+    def __init__(self, sound="", seconds_min=2, seconds_max=4):
+        Goal.__init__(self, "Emit a sound", false,
+                      [Delayed(time.time() + uniform(seconds_min, seconds_max), [self.do_emote])])
+        self.sound = sound
+        self.seconds_min = seconds_min
+        self.seconds_max = seconds_max
+
+    def do_emote(self, me):
+        self.sub_goals = [Delayed(time.time() + uniform(self.seconds_min, self.seconds_max), [self.do_emote])]
+        return Operation("talk", Entity(sound=self.sound))

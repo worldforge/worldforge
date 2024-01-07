@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Erik Ogenvik (See the file COPYING for details).
 
 import server
-from atlas import Operation, Entity
+from atlas import Operation, Entity, Oplist
 
 from world.StoppableTask import StoppableTask
 from world.utils import Usage
@@ -32,6 +32,8 @@ class Melee(StoppableTask):
     def do_strike(self):
         # Send sight even if we miss
         self.usage.actor.send_world(Operation("sight", self.usage.op))
+        self.usage.tool.send_world(Operation("sight", Operation("activity", Entity(action="strike"), from_=self.usage.tool.id),
+                             from_=self.usage.tool.id))
         self.start_action("melee/strike")
 
         # If there's a cooldown we need to mark the actor

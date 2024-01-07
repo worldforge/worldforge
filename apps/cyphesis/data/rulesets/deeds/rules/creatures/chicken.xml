@@ -1,70 +1,80 @@
 <atlas>
-    <map>
-        <map name="attributes">
-            <map name="geometry">
-                <map name="default">
-                    <string name="path">dural/creatures/chicken/model/chicken.mesh</string>
-                    <string name="type">sphere</string>
-                    <string name="scaler">y</string>
-                </map>
-            </map>
-            <map name="present">
-                <string name="default">dural/creatures/chicken/chicken.entitymap</string>
-            </map>
-            <map name="plumage">
-                <string name="default">red</string>
-                <list name="values">
-                    <string>red</string>
-                    <string>grey</string>
-                    <string>buzzard</string>
-                </list>
-            </map>
-            <map name="_usages">
-                <map name="default">
-                    <map name="consume">
-                        <string name="name">Graze</string>
-                        <map name="params">
-                            <map name="targets">
-                                <string name="type">entity_location</string>
-                                <string name="constraint">describe('Target must be land.', entity instance_of types.land) &amp;&amp; describe('Too far away.', actor can_reach entity_location)</string>
-                                <int name="min">1</int>
-                                <int name="max">1</int>
-                            </map>
-                        </map>
-                        <string name="handler">world.tasks.Graze.graze</string>
-                    </map>
-                </map>
-            </map>
-            <map name="_relations">
-                <list name="default">
-                    <map>
-                        <!-- By default all other entities are regarded as threats by a chicken. -->
-                        <float name="threat">10</float>
-                    </map>
-                </list>
-            </map>
-            <map name="density">
-                <float name="default">15</float>
-            </map>
-            <map name="_goals">
-                <list name="append">
-                    <map>
-                        <string name="class">mind.goals.common.misc_goal.Graze</string>
-                    </map>
-                    <map>
-                        <string name="class">mind.goals.common.move.Roam</string>
-                        <map name="params">
-                            <float name="radius">10</float>
-                            <list name="locations">
-                                <string>origin</string>
-                            </list>
-                        </map>
-                    </map>
-                </list>
-            </map>
-        </map>
-        <string name="id">chicken</string>
-        <string name="objtype">class</string>
-        <string name="parent">mobile</string>
-    </map>
+	<map>
+		<map name="attributes">
+			<map name="geometry">
+				<map name="default">
+					<string name="path">dural/creatures/chicken/model/chicken.mesh</string>
+					<string name="type">sphere</string>
+					<string name="scaler">y</string>
+				</map>
+			</map>
+			<map name="present">
+				<string name="default">dural/creatures/chicken/chicken.entitymap</string>
+			</map>
+			<map name="plumage">
+				<string name="default">red</string>
+				<list name="values">
+					<string>red</string>
+					<string>grey</string>
+					<string>buzzard</string>
+				</list>
+			</map>
+			<map name="_usages">
+				<map name="default">
+					<map name="consume">
+						<string name="name">Graze</string>
+						<map name="params">
+							<map name="targets">
+								<string name="type">entity_location</string>
+								<string name="constraint">describe('Target must be land.', entity instance_of
+									types.land) &amp;&amp; describe('Too far away.', actor can_reach entity_location)
+								</string>
+								<int name="min">1</int>
+								<int name="max">1</int>
+							</map>
+						</map>
+						<string name="handler">world.tasks.Graze.graze</string>
+					</map>
+				</map>
+			</map>
+			<map name="_relations">
+				<list name="default">
+					<map>
+						<!-- By default all other entities are regarded as threats by a chicken. -->
+						<float name="threat">10</float>
+					</map>
+				</list>
+			</map>
+			<map name="density">
+				<float name="default">15</float>
+			</map>
+			<map name="_goals">
+				<list name="append">
+					<map>
+						<string name="class">mind.goals.common.misc_goal.EmitSoundRandomly</string>
+						<map name="params">
+							<float name="seconds_min">5</float>
+							<float name="seconds_max">10</float>
+							<string name="sound">cluck</string>
+						</map>
+					</map>
+					<map>
+						<string name="class">mind.goals.common.misc_goal.Graze</string>
+					</map>
+					<map>
+						<string name="class">mind.goals.common.move.Roam</string>
+						<map name="params">
+							<float name="radius">10</float>
+							<list name="locations">
+								<string>origin</string>
+							</list>
+						</map>
+					</map>
+				</list>
+			</map>
+		</map>
+		<string name="id">chicken</string>
+		<string name="objtype">class</string>
+		<string name="parent">mobile</string>
+	</map>
 </atlas>
