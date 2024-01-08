@@ -4,6 +4,7 @@
 // WF
 #include "Factory.h"
 #include "ViewEntity.h"
+#include "Router.h"
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <wfmath/timestamp.h>
 
@@ -41,11 +42,13 @@ class EventService;
  as well as those that have recently been seen. It receives visibility-affecting
  ops from the IGRouter, and uses them to update its state and emit signals.
  */
-class View : public sigc::trackable {
+class View : public Router, public sigc::trackable {
 public:
 	explicit View(Avatar& av);
 
-	~View();
+	~View() override;
+
+	RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) override;
 
 	/**
 	Retrieve an entity in the view by id. Returns nullptr if no such entity exists
@@ -93,6 +96,13 @@ public:
 	levels for disappeared entities.
 	*/
 	void update(const std::chrono::steady_clock::time_point& currentTime);
+
+
+	/** get the current local approximation of world time. */
+	std::chrono::milliseconds getWorldTime();
+
+	/** We use this to synchronize the local world time up. */
+	void updateWorldTime(std::chrono::milliseconds t);
 
 	/**
 	Register an Entity Factory with this view
@@ -151,11 +161,7 @@ public:
 
 	Connection& getConnection() const;
 
-	void handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
-
 protected:
-	// the router passes various relevant things to us directly
-	friend class IGRouter;
 
 	friend class ViewEntity;
 
@@ -166,8 +172,6 @@ protected:
 	void appear(const std::string& eid, std::chrono::milliseconds stamp);
 
 	void disappear(const std::string& eid);
-
-	void sight(const Atlas::Objects::Entity::RootEntity& ge);
 
 	void deleteEntity(const std::string& eid);
 
@@ -225,7 +229,6 @@ private:
 
 	struct EntityEntry {
 		std::unique_ptr<ViewEntity> entity;
-		std::unique_ptr<EntityRouter> entityRouter;
 	};
 	std::unordered_map<std::string, EntityEntry> m_contents;
 	Entity* m_topLevel; ///< the top-level visible entity for this view
@@ -236,26 +239,33 @@ private:
 	 */
 	double m_simulationSpeed;
 
-	/** enum describing what action to take when sight of an entity
-	arrives. This allows us to handle intervening disappears or
-	deletes cleanly. */
-	enum class SightAction {
-		INVALID,
-		APPEAR,
-		HIDE,
-		DISCARD,
-		QUEUED
-	};
-
 	struct PendingStatus {
-		SightAction sightAction;
-		std::vector<Atlas::Objects::Operation::RootOperation> queuedSights;
+
+		enum class State {
+			IN_LOOK_QUEUE,
+			WAITING_FOR_RESPONSE_FROM_SERVER
+		};
+
+		State state;
+		/**
+		 * A list of ops that we received as being FROM this entity. We hold on to these and replay them when the complete
+		 * entity info has been sent to us.
+		 */
+		std::vector<Atlas::Objects::Operation::RootOperation> queuedFromOps;
 		std::chrono::steady_clock::time_point registrationTime = std::chrono::steady_clock::now();
 	};
 
 	std::map<std::string, PendingStatus> m_pending;
 
-	std::map<TypeInfo*, std::vector<Atlas::Objects::Operation::RootOperation>> m_typeDelayedOperations;
+	struct TypeDelayedEntry {
+		std::vector<Atlas::Objects::Operation::RootOperation> operations;
+		/**
+		 * This is used for when we get a bad type and need to clean up any pending entity ids.
+		 */
+		std::set<std::string> pendingEntityIds;
+	};
+
+	std::map<TypeInfo*, TypeDelayedEntry> m_typeDelayedOperations;
 
 	/**
 	A queue of entities to be looked at, which have not yet be requested
@@ -267,6 +277,9 @@ private:
 	std::deque<std::string> m_lookQueue;
 
 	sigc::connection m_simulationSpeedConnection;
+
+	std::chrono::steady_clock::time_point m_stampAtLastOp;
+	std::chrono::milliseconds m_lastOpTime;
 
 	unsigned int m_maxPendingCount;
 

@@ -11,6 +11,7 @@
 #include "Exceptions.h"
 #include "Avatar.h"
 #include "Task.h"
+#include "TypeService.h"
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
@@ -58,8 +59,7 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 		m_angularMag(0),
 		m_updateLevel(0),
 		m_hasBBox(false),
-		m_moving(false),
-		m_recentlyCreated(false) {
+		m_moving(false) {
 	assert(!m_id.empty());
 	m_orientation.identity();
 
@@ -71,6 +71,107 @@ Entity::Entity(std::string id, TypeInfo* ty) :
 
 Entity::~Entity() {
 	shutdown();
+}
+
+void Entity::handleOperation(const Atlas::Objects::Operation::RootOperation& op, TypeService& typeService) {
+	OperationFrom.emit(op);
+
+	switch (op->getClassNo()) {
+		case Atlas::Objects::Operation::SIGHT_NO:
+			for (auto& arg: op->getArgs()) {
+				if (arg->instanceOf(Atlas::Objects::Entity::ROOT_ENTITY_NO)) {
+					auto sightEntity = smart_dynamic_cast<RootEntity>(arg);
+					if (sightEntity) {
+						if (sightEntity->isDefaultId()) {
+							logger->error("Got Sight.Entity op without inner id.");
+						} else {
+							if (sightEntity->getId() == getId()) {
+								firstSight(sightEntity);
+							} else {
+								logger->error("Got Sight.Entity op with inner id of {} which doesn't matter the Sight:From value of {}.", sightEntity->getId(), op->getFrom());
+							}
+						}
+					} else {
+						logger->error("Got Sight.Entity without valid Entity as arg.");
+					}
+
+				} else if (arg->getClassNo() == SET_NO) {
+					auto setOp = smart_dynamic_cast<Set>(arg);
+					for (const auto& setArg: setOp->getArgs()) {
+						auto setEntity = smart_dynamic_cast<RootEntity>(setArg);
+						if (setEntity) {
+							if (setEntity->isDefaultId()) {
+								logger->error("Got Sight.Set op without inner id.");
+							} else {
+								if (setEntity->getId() == getId()) {
+									setFromRoot(setEntity);
+								} else {
+									logger->error("Got Sight.Set op with inner id of {} which doesn't matter the Sight:From value of {}.", arg->getId(), op->getFrom());
+								}
+							}
+						} else {
+							logger->error("Got Sight.Set without valid Entity as arg.");
+						}
+					}
+				} else if (arg->getClassNo() == HIT_NO) {
+					//For hits we want to check the "to" field rather than the "from" field. We're more interested in
+					//the entity that was hit than the one which did the hitting.
+					if (!op->isDefaultTo()) {
+						Entity* otherEntity = getEntity(op->getTo());
+						if (otherEntity) {
+							otherEntity->onHit(smart_dynamic_cast<Atlas::Objects::Operation::Hit>(arg));
+						}
+					} else {
+						logger->warn("received 'hit' with TO unset");
+					}
+				} else {
+					if (!arg->isDefaultParent()) {
+						// we have to handle generic 'actions' late, to avoid trapping interesting
+						// such as create or divide
+						TypeInfo* ty = typeService.getTypeForAtlas(arg);
+						if (!ty->isBound()) {
+							m_typeDelayedOperations[ty].emplace_back(op, TypeDelayedOperation::Type::SIGHT);
+						} else {
+							if (ty->isA("action")) {
+								if (op->isDefaultFrom()) {
+									logger->warn("received op '{}' with FROM unset", ty->getName());
+								} else {
+									//We can be pretty sure that the arg is an Operation
+									onAction(smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(arg), *ty);
+								}
+							}
+						}
+					}
+				}
+			}
+			break;
+		case Atlas::Objects::Operation::SOUND_NO:
+			for (auto& arg: op->getArgs()) {
+				if (arg->getClassNo() == TALK_NO) {
+					onTalk(smart_dynamic_cast<Talk>(arg));
+				} else {
+					if (!arg->isDefaultParent()) {
+						// we have to handle generic 'actions' late, to avoid trapping interesting
+						// such as create or divide
+						TypeInfo* ty = typeService.getTypeForAtlas(arg);
+						if (!ty->isBound()) {
+							m_typeDelayedOperations[ty].emplace_back(op, TypeDelayedOperation::Type::SIGHT);
+						} else {
+							if (ty->isA("communicate")) {
+								if (op->isDefaultFrom()) {
+									logger->warn("received op '{}' with FROM unset", ty->getName());
+								} else {
+									//We can be pretty sure that the arg is an Operation
+									onSoundAction(smart_dynamic_cast<Atlas::Objects::Operation::RootOperation>(arg), *ty);
+								}
+							}
+						}
+					}
+				}
+			}
+			break;
+	}
+
 }
 
 void Entity::shutdown() {
@@ -91,10 +192,6 @@ void Entity::shutdown() {
 void Entity::init(const RootEntity& ge, bool fromCreateOp) {
 	// setup initial state
 	firstSight(ge);
-
-	if (fromCreateOp) {
-		m_recentlyCreated = true;
-	}
 }
 
 
@@ -790,5 +887,32 @@ std::optional<std::string> Entity::extractEntityId(const Atlas::Message::Element
 
 }
 
+void Entity::typeBound(TypeInfo* type) {
+	auto I = m_typeDelayedOperations.find(type);
+	if (I != m_typeDelayedOperations.end()) {
+		for (const auto& entry: I->second) {
+			if (entry.type == TypeDelayedOperation::Type::SIGHT) {
+				onAction(entry.operation, *type);
+			} else {
+				onSoundAction(entry.operation, *type);
+			}
+		}
+		m_typeDelayedOperations.erase(I);
+	}
+}
 
-} // of namespace 
+void Entity::typeBad(TypeInfo* type) {
+	auto I = m_typeDelayedOperations.find(type);
+	if (I != m_typeDelayedOperations.end()) {
+		logger->warn("The type '{}' couldn't be bound and we had to discard {} ops sent to the entity {}.",
+					 type->getName(),
+					 I->second.size(),
+					 getId());
+		m_typeDelayedOperations.erase(I);
+	} else {
+		logger->warn("The type '{}' couldn't be bound.", type->getName());
+	}
+}
+
+
+} // of namespace

@@ -12,7 +12,7 @@
 #include "TypeService.h"
 #include "TypeInfo.h"
 #include "Task.h"
-#include "EntityRouter.h"
+#include "TransferInfo.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -21,7 +21,7 @@ using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
-
+using Atlas::Message::Element;
 namespace Eris {
 
 View::View(Avatar& av) :
@@ -29,6 +29,8 @@ View::View(Avatar& av) :
 		m_topLevel(nullptr),
 		m_lastUpdateTime(std::chrono::steady_clock::now()),
 		m_simulationSpeed(1.0),
+		m_stampAtLastOp(std::chrono::steady_clock::now()),
+		m_lastOpTime(0),
 		m_maxPendingCount(10),
 		m_actionType(getTypeService().getTypeByName("action")) {
 
@@ -46,6 +48,136 @@ View::~View() {
 	auto contents = std::move(m_contents);
 	contents.clear();
 }
+
+Router::RouterResult View::handleOperation(const Atlas::Objects::Operation::RootOperation& op) {
+	if (!op->isDefaultStamp()) {
+		// grab out world time
+		updateWorldTime(std::chrono::milliseconds(op->getStamp()));
+	}
+
+	if (op->getClassNo() == LOGOUT_NO) {
+		logger->debug("Received forced logout from server");
+		const auto& args = op->getArgs();
+		if (args.size() >= 2) {
+			bool gotArgs = true;
+			// Teleport logout op. The second attribute is the payload for the teleport host data.
+			const Root& arg = args[1];
+			Element tp_host_attr;
+			Element tp_port_attr;
+			Element pkey_attr;
+			Element pentity_id_attr;
+			if (arg->copyAttr("teleport_host", tp_host_attr) != 0
+				|| !tp_host_attr.isString()) {
+				logger->debug("No teleport host specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
+					   || !tp_port_attr.isInt()) {
+				logger->debug("No teleport port specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("possess_key", pkey_attr) != 0
+					   || !pkey_attr.isString()) {
+				logger->debug("No possess key specified. Doing normal logout.");
+				gotArgs = false;
+			} else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
+					   || !pentity_id_attr.isString()) {
+				logger->debug("No entity ID specified. Doing normal logout.");
+				gotArgs = false;
+			}
+
+			// Extract argument data and request transfer only if we
+			// succeed in extracting them all
+			if (gotArgs) {
+				std::string teleport_host = tp_host_attr.String();
+				int teleport_port = static_cast<int>(tp_port_attr.Int());
+				std::string possess_key = pkey_attr.String();
+				std::string possess_entity_id = pentity_id_attr.String();
+				logger->debug("Server transfer data: Host: {}, Port: {}, Key: {}, ID: {}", teleport_host, teleport_port, possess_key, possess_entity_id);
+				// Now do a transfer request
+				TransferInfo transfer(teleport_host, teleport_port, possess_key, possess_entity_id);
+				getAvatar().logoutRequested(transfer);
+			} else {
+				getAvatar().logoutRequested();
+			}
+
+		} else {
+			// Regular force logout op
+			getAvatar().logoutRequested();
+		}
+
+		return HANDLED;
+	} else if (op->getClassNo() == UNSEEN_NO) {
+		//Handle UNSEEN directly even if we haven't yet got any response from our Sight(Look).
+		//Not much to do, just remove any pending.
+		for (const auto& arg: op->getArgs()) {
+			if (!arg->isDefaultId()) {
+				unseen(arg->getId());
+			}
+		}
+		return HANDLED;
+	} else if (op->getClassNo() == APPEARANCE_NO) {
+		//We basically ignore the "from" entity when we receive APPEARANCE. Only the ids in it matter.
+		//TODO: is this correct per the spec?
+		for (const auto& arg: op->getArgs()) {
+			if (!arg->isDefaultId()) {
+				const auto& eid = arg->getId();
+				auto* ent = getEntity(eid);
+				if (!ent) {
+					getEntityFromServer(eid);
+				}
+			}
+		}
+		return HANDLED;
+	} else {
+		if (!op->isDefaultFrom()) {
+			const auto& from = op->getFrom();
+			auto ent = getEntity(from);
+			if (!ent) {
+				auto pendingI = m_pending.find(from);
+				if (pendingI != m_pending.end()) {
+					//If the op is the Sight we were looking for, handle that now
+					if (op->getClassNo() == SIGHT_NO
+						&& !op->getArgs().empty()
+						&& op->getArgs().front()->instanceOf(Atlas::Objects::Entity::ROOT_ENTITY_NO)) {
+						auto gent = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+						auto type = getTypeService().getTypeByName(gent->getParent());
+						if (type->isBound()) {
+							ent = initialSight(smart_dynamic_cast<RootEntity>(op->getArgs().front()), true);
+							EntitySeen.emit(ent);
+							for (auto& queuedOp: pendingI->second.queuedFromOps) {
+								handleOperation(queuedOp);
+							}
+							m_pending.erase(pendingI);
+						} else {
+							//We don't have the type yet;
+							auto& pendingEntry = m_typeDelayedOperations[type];
+							pendingEntry.operations.emplace_back(op);
+							pendingEntry.pendingEntityIds.insert(from);
+						}
+					} else {
+						pendingI->second.queuedFromOps.emplace_back(op);
+					}
+				} else {
+					//Should we perhaps check if it's a Sight of an Entity, and then create that in place?
+					getEntityFromServer(op->getId());
+				}
+			} else {
+				//Handle DISAPPEAR here.
+				if (op->getClassNo() == DISAPPEARANCE_NO) {
+					for (const auto& arg: op->getArgs()) {
+						if (!arg->isDefaultId()) {
+							disappear(arg->getId());
+						}
+					}
+				} else {
+					ent->handleOperation(op, getTypeService());
+				}
+			}
+			return HANDLED;
+		}
+	}
+	return IGNORED;
+}
+
 
 ViewEntity* View::getEntity(const std::string& eid) const {
 	auto E = m_contents.find(eid);
@@ -95,11 +227,11 @@ void View::update(const std::chrono::steady_clock::time_point& currentTime) {
 
 	Entity::currentTime = currentTime;
 
-	auto pruned = pruneAbandonedPendingEntities(currentTime);
-	for (size_t i = 0; i < pruned; ++i) {
+	pruneAbandonedPendingEntities(currentTime);
+
+	for (int i = 0; i < 10; ++i) {
 		issueQueuedLook();
 	}
-
 
 	// run motion prediction for each moving entity
 	for (auto& it: m_moving) {
@@ -148,101 +280,28 @@ void View::appear(const std::string& eid, std::chrono::milliseconds stamp) {
 	auto* ent = getEntity(eid);
 	if (!ent) {
 		getEntityFromServer(eid);
-		return; // everything else will be done once the SIGHT arrives
-	}
-
-	if (ent->m_recentlyCreated) {
-		EntityCreated.emit(ent);
-		ent->m_recentlyCreated = false;
-	}
-
-	if (ent->isVisible()) return;
-
-	if ((stamp.count() == 0) || (stamp > ent->getStamp())) {
-		if (isPending(eid)) {
-			m_pending[eid].sightAction = SightAction::APPEAR;
-		} else {
+	} else {
+		if (stamp > ent->getStamp()) {
 			// local data is out of data, re-look
 			getEntityFromServer(eid);
+		} else {
+			ent->setVisible(true);
 		}
-	} else {
-		ent->setVisible(true);
 	}
-
 }
 
 void View::disappear(const std::string& eid) {
 	auto* ent = getEntity(eid);
 	if (ent) {
 		deleteEntity(eid);
-	} else {
-		if (isPending(eid)) {
-			//debug() << "got disappearance for pending " << eid;
-			m_pending[eid].sightAction = SightAction::DISCARD;
-		} else {
-			logger->warn("got disappear for unknown entity {}", eid);
-		}
 	}
 }
 
-void View::sight(const RootEntity& gent) {
-	bool visible = true;
-	std::string eid = gent->getId();
-	auto pending = m_pending.find(eid);
-
-	std::vector<Atlas::Objects::Operation::RootOperation> queuedSights;
-
-// examine the pending map, to see what we should do with this entity
-	if (pending != m_pending.end()) {
-		queuedSights = std::move(pending->second.queuedSights);
-		switch (pending->second.sightAction) {
-			case SightAction::APPEAR:
-				visible = true;
-				break;
-
-			case SightAction::DISCARD:
-				m_pending.erase(pending);
-				issueQueuedLook();
-				return;
-
-			case SightAction::HIDE:
-				visible = false;
-				break;
-
-			case SightAction::QUEUED:
-				logger->error("got sight of queued entity {} somehow", eid);
-				eraseFromLookQueue(eid);
-				break;
-
-			default:
-				throw InvalidOperation("got bad pending action for entity");
-		}
-
-		m_pending.erase(pending);
-	}
-
-// if we got this far, go ahead and build / update it
-	auto* ent = getEntity(eid);
-	if (ent) {
-		ent->setVisible(visible);
-		// existing entity, update in place
-		ent->firstSight(gent);
-	} else {
-		ent = initialSight(gent, visible);
-		EntitySeen.emit(ent);
-	}
-
-	for (const auto& op: queuedSights) {
-		handleSightOp(op);
-	}
-	issueQueuedLook();
-}
 
 ViewEntity* View::initialSight(const RootEntity& gent, bool isVisible) {
 	assert(m_contents.count(gent->getId()) == 0);
 
 	auto entity = createEntity(gent);
-	auto router = std::make_unique<EntityRouter>(*entity, *this);
 	entity->setVisible(isVisible);
 
 	auto entityPtr = entity.get();
@@ -255,7 +314,7 @@ ViewEntity* View::initialSight(const RootEntity& gent, bool isVisible) {
 		}
 	});
 
-	auto I = m_contents.emplace(gent->getId(), EntityEntry{std::move(entity), std::move(router)});
+	auto I = m_contents.emplace(gent->getId(), EntityEntry{std::move(entity)});
 	auto& insertedEntry = I.first->second;
 	auto insertedEntity = insertedEntry.entity.get();
 	insertedEntity->init(gent, false);
@@ -311,13 +370,6 @@ void View::deleteEntity(const std::string& eid) {
 			deleteEntity(child->getId());
 		}
 
-	} else {
-		//We might get a delete for an entity which we are awaiting info about; this is normal.
-		if (isPending(eid)) {
-			m_pending[eid].sightAction = SightAction::DISCARD;
-		} else {
-			logger->warn("got delete for unknown entity {}", eid);
-		}
 	}
 }
 
@@ -359,17 +411,20 @@ void View::getEntityFromServer(const std::string& eid) {
 	// don't apply pending queue cap for anonymous LOOKs
 	if (!eid.empty() && (m_pending.size() >= m_maxPendingCount)) {
 		m_lookQueue.push_back(eid);
-		m_pending[eid].sightAction = SightAction::QUEUED;
-		return;
+		m_pending.emplace(eid, PendingStatus{
+				PendingStatus::State::IN_LOOK_QUEUE,
+				{},
+				std::chrono::steady_clock::now()}
+		);
+	} else {
+		sendLookAt(eid);
 	}
-
-	sendLookAt(eid);
 }
 
 size_t View::pruneAbandonedPendingEntities(const std::chrono::steady_clock::time_point& currentTime) {
 	size_t pruned = 0;
 	for (auto I = m_pending.begin(); I != m_pending.end();) {
-		if (I->second.sightAction != SightAction::QUEUED && (currentTime - I->second.registrationTime) > std::chrono::seconds(20)) {
+		if (I->second.state != PendingStatus::State::WAITING_FOR_RESPONSE_FROM_SERVER && (currentTime - I->second.registrationTime) > std::chrono::seconds(20)) {
 			logger->warn("Didn't receive any response for entity {} within 20 seconds, will remove it from pending list.", I->first);
 			I = m_pending.erase(I);
 			pruned++;
@@ -383,41 +438,18 @@ size_t View::pruneAbandonedPendingEntities(const std::chrono::steady_clock::time
 
 void View::sendLookAt(const std::string& eid) {
 	Look look;
+	//If we do an empty look (i.e. initial one at the world) we should just let it through and not add any args.
 	if (!eid.empty()) {
 		auto pending = m_pending.find(eid);
 		if (pending != m_pending.end()) {
-			switch (pending->second.sightAction) {
-				case SightAction::QUEUED:
-					// flip over to default (APPEAR) as normal
-					pending->second.sightAction = SightAction::APPEAR;
-					break;
-
-				case SightAction::DISCARD:
-				case SightAction::HIDE:
-					if (m_notifySights.count(eid) == 0) {
-						// no-one cares, don't bother to look
-						m_pending.erase(pending);
-						issueQueuedLook();
-						return;
-					} // else someone <em>does</em> care, so let's do the look, but
-					// keep SightAction unchanged so it discards / is hidden as
-					// expected.
-					break;
-
-				case SightAction::APPEAR:
-					// this can happen if a queued entity disappears and then
-					// re-appears, all while in the look queue. we can safely fall
-					// through.
-					break;
-
-				default:
-					// broken state handling logic
-					assert(false);
-					break;
-			}
+			pending->second.state = PendingStatus::State::WAITING_FOR_RESPONSE_FROM_SERVER;
 		} else {
-			// no previous entry, default to APPEAR
-			m_pending.emplace(eid, PendingStatus{SightAction::APPEAR, {}, std::chrono::steady_clock::now()});
+			// no previous entry
+			m_pending.emplace(eid, PendingStatus{
+					PendingStatus::State::WAITING_FOR_RESPONSE_FROM_SERVER,
+					{},
+					std::chrono::steady_clock::now()}
+			);
 		}
 
 		// pending map is in the right state, build up the args now
@@ -453,12 +485,11 @@ void View::parseSimulationSpeed(const Atlas::Message::Element& element) {
 }
 
 void View::issueQueuedLook() {
-	if (m_lookQueue.empty()) {
-		return;
+	if (!m_lookQueue.empty()) {
+		std::string eid = std::move(m_lookQueue.front());
+		m_lookQueue.pop_front();
+		sendLookAt(eid);
 	}
-	std::string eid = std::move(m_lookQueue.front());
-	m_lookQueue.pop_front();
-	sendLookAt(eid);
 }
 
 void View::dumpLookQueue() {
@@ -480,92 +511,12 @@ void View::eraseFromLookQueue(const std::string& eid) {
 	logger->error("entity {} not present in the look queue", eid);
 }
 
-void View::handleSightOp(const RootOperation& op) {
-	const auto& args = op->getArgs();
-
-	// because a SET op can potentially (legally) update multiple entities,
-	// we decode it here, not in the entity router
-	if (op->getClassNo() == SET_NO) {
-		for (const auto& arg: args) {
-			if (!arg->isDefaultId()) {
-				auto ent = getEntity(arg->getId());
-				if (!ent) {
-					if (isPending(arg->getId())) {
-						/* no-op, we'll get the state later */
-					} else {
-						sendLookAt(arg->getId());
-					}
-
-					continue; // we don't have it, ignore
-				}
-
-				//If we get a SET op for an entity that's not visible, it means that the entity has moved
-				//within our field of vision without sending an Appear op first. We should treat this as a
-				//regular Appear op and issue a Look op back, to get more info.
-				if (!ent->isVisible()) {
-//					float stamp = -1;
-//					if (!arg->isDefaultStamp()) {
-//						stamp = static_cast<float>(arg->getStamp());
-//					}
-//
-//					m_view.appear(arg->getId(), stamp);
-					getEntityFromServer(arg->getId());
-				} else {
-					ent->setFromRoot(arg, false);
-				}
-			}
-		}
-	} else if (op->getClassNo() == HIT_NO) {
-		//For hits we want to check the "to" field rather than the "from" field. We're more interested in
-		//the entity that was hit than the one which did the hitting.
-		//Note that we'll let the op fall through, so that we later on handle the Hit action for the "from" entity.
-		if (!op->isDefaultTo()) {
-			Entity* ent = getEntity(op->getTo());
-			if (ent) {
-				ent->onHit(smart_dynamic_cast<Hit>(op));
-			}
-		} else {
-			logger->warn("received 'hit' with TO unset");
-		}
-
-	} else {
-
-		if (!op->isDefaultParent()) {
-			// we have to handle generic 'actions' late, to avoid trapping interesting
-			// such as create or divide
-			TypeInfo* ty = getTypeService().getTypeForAtlas(op);
-			if (!ty->isBound()) {
-				m_typeDelayedOperations[ty].emplace_back(op);
-			} else {
-
-
-				if (ty->isA(m_actionType)) {
-					if (op->isDefaultFrom()) {
-						logger->warn("received op '{}' with FROM unset", ty->getName());
-					} else {
-
-						Entity* ent = getEntity(op->getFrom());
-						if (ent) {
-							ent->onAction(op, *ty);
-						} else {
-							auto pendingI = m_pending.find(op->getFrom());
-							if (pendingI != m_pending.end()) {
-								pendingI->second.queuedSights.emplace_back(op);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-}
 
 void View::typeBound(TypeInfo* type) {
 	auto I = m_typeDelayedOperations.find(type);
 	if (I != m_typeDelayedOperations.end()) {
-		for (const auto& op: I->second) {
-			handleSightOp(op);
+		for (const auto& op: I->second.operations) {
+			handleOperation(op);
 		}
 		m_typeDelayedOperations.erase(I);
 	}
@@ -574,11 +525,27 @@ void View::typeBound(TypeInfo* type) {
 void View::typeBad(TypeInfo* type) {
 	auto I = m_typeDelayedOperations.find(type);
 	if (I != m_typeDelayedOperations.end()) {
-		logger->warn("The type '{}' couldn't be bound and we had to discard {} ops sent to entities of this type.", type->getName(), I->second.size());
+		logger->warn("The type '{}' couldn't be bound and we had to discard {} ops sent to entities of this type, as well as {} pending entities.",
+					 type->getName(),
+					 I->second.operations.size(),
+					 I->second.pendingEntityIds.size());
+		for (const auto& entityId: I->second.pendingEntityIds) {
+			deleteEntity(entityId);
+		}
 		m_typeDelayedOperations.erase(I);
 	} else {
 		logger->warn("The type '{}' couldn't be bound.", type->getName());
 	}
+}
+
+std::chrono::milliseconds View::getWorldTime() {
+	auto deltaT = std::chrono::steady_clock::now() - m_stampAtLastOp;
+	return std::chrono::duration_cast<std::chrono::milliseconds>(m_lastOpTime + deltaT);
+}
+
+void View::updateWorldTime(std::chrono::milliseconds duration) {
+	m_stampAtLastOp = std::chrono::steady_clock::now();
+	m_lastOpTime = duration;
 }
 
 } // of namespace Eris

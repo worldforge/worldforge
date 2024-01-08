@@ -25,7 +25,7 @@ class PollData;
 
 class TypeService;
 
-class Router;
+struct Router;
 
 class Redispatch;
 

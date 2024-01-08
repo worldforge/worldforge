@@ -281,16 +281,16 @@ void Connection::dispatchOp(const RootOperation& op) {
 		Router::RouterResult rr = m_responder->handleOp(op);
 		//If any of our routers handled it we shouldn't do anything more.
 		if (rr != Router::HANDLED) {
-			// locate a router based on from
-			if (!op->isDefaultFrom()) {
-				auto R = m_fromRouters.find(op->getFrom());
-				if (R != m_fromRouters.end()) {
-					rr = R->second->handleOperation(op);
-					if (rr == Router::HANDLED) {
-						return;
-					}
-				}
-			}
+//			// locate a router based on from
+//			if (!op->isDefaultFrom()) {
+//				auto R = m_fromRouters.find(op->getFrom());
+//				if (R != m_fromRouters.end()) {
+//					rr = R->second->handleOperation(op);
+//					if (rr == Router::HANDLED) {
+//						return;
+//					}
+//				}
+//			}
 
 			// locate a router based on the op's TO value
 			if (!anonymous) {

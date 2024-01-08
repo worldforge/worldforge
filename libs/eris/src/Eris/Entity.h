@@ -2,8 +2,10 @@
 #define ERIS_ENTITY_H
 
 #include "Types.h"
+#include "Router.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -82,6 +84,9 @@ public:
 	explicit Entity(std::string id, TypeInfo* ty);
 
 	virtual ~Entity();
+
+	void handleOperation(const Atlas::Objects::Operation::RootOperation& op, TypeService& typeService);
+
 
 // hierarchy interface
 	/**
@@ -317,6 +322,11 @@ public:
 	sigc::signal<void(Entity*)> ChildAdded;
 	sigc::signal<void(Entity*)> ChildRemoved;
 
+	/**
+	 * Emitted for any Operation that's from this entity.
+	 */
+	sigc::signal<void(const Atlas::Objects::Operation::RootOperation&)> OperationFrom;
+
 	/// Signal that the entity's container changed
 	/** emitted when our location changes. First argument is the old location.
 	The new location can be found via getLocation.
@@ -474,8 +484,6 @@ protected:
 	 */
 	virtual void onTaskAdded(const std::string& id, Task* task);
 
-	friend class IGRouter;
-
 	friend class View;
 
 	friend class Task;
@@ -581,6 +589,29 @@ protected:
 	 */
 	virtual Entity* getEntity(const std::string& id) = 0;
 
+	/**
+ * Called when a type has been bound, which means that we should replay any queued ops for that type.
+ * @param type
+ */
+	void typeBound(TypeInfo* type);
+
+	/**
+	 * Called when a type couldn't be bound, which means that we should throw away any queued ops for that type.
+	 * This should normally never happen.
+	 * @param type
+	 */
+	void typeBad(TypeInfo* type);
+
+
+	struct TypeDelayedOperation {
+	enum class Type {
+		SIGHT, SOUND
+	};
+		Atlas::Objects::Operation::RootOperation operation;
+		Type type;
+	};
+
+	std::map<TypeInfo*, std::vector<TypeDelayedOperation>> m_typeDelayedOperations;
 
 	PropertyMap m_properties;
 
@@ -637,8 +668,6 @@ protected:
 	bool m_hasBBox;
 
 	bool m_moving; ///< flag recording if this entity is current considered in-motion
-
-	bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
 
 	std::map<std::string, std::unique_ptr<Task>> m_tasks;
 };

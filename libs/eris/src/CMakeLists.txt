@@ -6,10 +6,8 @@ set(SOURCE_FILES
         Eris/Connection.cpp
         Eris/Entity.cpp
         Eris/EntityRef.cpp
-        Eris/EntityRouter.cpp
         Eris/EventService.cpp
         Eris/Factory.cpp
-        Eris/IGRouter.cpp
         Eris/Lobby.cpp
         Eris/Log.cpp
         Eris/MetaQuery.cpp
@@ -18,7 +16,6 @@ set(SOURCE_FILES
         Eris/Redispatch.cpp
         Eris/Response.cpp
         Eris/Room.cpp
-        Eris/Router.cpp
         Eris/ServerInfo.cpp
         Eris/StreamSocket.cpp
         Eris/Task.cpp
@@ -38,11 +35,9 @@ set(HEADER_FILES
         Eris/Connection.h
         Eris/Entity.h
         Eris/EntityRef.h
-        Eris/EntityRouter.h
         Eris/EventService.h
         Eris/Exceptions.h
         Eris/Factory.h
-        Eris/IGRouter.h
         Eris/iround.h
         Eris/Lobby.h
         Eris/Log.h

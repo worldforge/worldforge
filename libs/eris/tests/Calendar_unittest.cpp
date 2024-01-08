@@ -28,12 +28,10 @@
 
 #include <Eris/Calendar.h>
 
-#include "Eris/EntityRouter.h"
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>
 #include <Eris/View.h>
-#include <Eris/IGRouter.h>
 #include <Eris/EventService.h>
 
 #include <Atlas/Objects/SmartPtr.h>
@@ -296,8 +294,6 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entId) :
     m_mindId(mindId),
     m_entityId(entId),
     m_entity(nullptr),
-    m_stampAtLastOp(std::chrono::steady_clock::now()),
-    m_lastOpTime(std::chrono::milliseconds(0)),
     m_isAdmin(false)
 {
     m_view = std::make_unique<View>(*this);
@@ -307,7 +303,7 @@ Avatar::~Avatar()
 {
 }
 
-std::chrono::milliseconds Avatar::getWorldTime()
+std::chrono::milliseconds View::getWorldTime()
 {
     return stub_worldtime;
 }
@@ -342,6 +338,10 @@ const Atlas::Message::Element& Entity::valueOfProperty(const std::string& name) 
 sigc::connection Entity::observe(const std::string& attr, const PropertyChangedSlot& slot, bool)
 {
     return m_observers[attr].connect(slot);
+}
+
+Router::RouterResult View::handleOperation(Atlas::Objects::SmartPtr<Atlas::Objects::Operation::RootOperationData> const&) {
+	return HANDLED;
 }
 
 }

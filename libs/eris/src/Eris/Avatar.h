@@ -25,8 +25,6 @@ namespace Eris {
 // Forward Declerations
 class Account;
 
-class IGRouter;
-
 class View;
 
 class Connection;
@@ -162,6 +160,20 @@ public:
 	const std::map<std::string, std::unique_ptr<EntityRef>>& getActiveContainers() const;
 
 	/**
+ * @brief Called when a logout of the avatar has been requested by the
+ *  server.
+ */
+	void logoutRequested();
+
+	/**
+	 * @brief Called when a logout and server transfer of the avatar has been
+	 *  requested by the server.
+	 * @param transferInfo The transfer info which contains information about
+	 *  the server to transfer to.
+	 */
+	void logoutRequested(const TransferInfo& transferInfo);
+
+	/**
 	Emitted when the character entity of this Avatar is valid (and presumably,
 	visible). This will happen some time after the InGame signal is emitted.
 	A client might wish to show some kind of 'busy' animation, eg an hour-glass,
@@ -184,6 +196,7 @@ public:
 	*/
 	sigc::signal<void(const TransferInfo&)> TransferRequested;
 
+
 protected:
 	friend class Account;
 
@@ -191,11 +204,6 @@ protected:
 
 	friend class IGRouter;
 
-	/** called by the IG router for each op it sees with a valid 'stamp'
-	attribute set. We use this to synchronize the local world time up. */
-	void updateWorldTime(std::chrono::milliseconds t);
-
-protected:
 	void onEntityAppear(Entity* ent);
 
 	/**
@@ -207,19 +215,6 @@ protected:
 
 	void logoutResponse(const Atlas::Objects::Operation::RootOperation&);
 
-	/**
-	 * @brief Called when a logout of the avatar has been requested by the
-	 *  server.
-	 */
-	void logoutRequested();
-
-	/**
-	 * @brief Called when a logout and server transfer of the avatar has been
-	 *  requested by the server.
-	 * @param transferInfo The transfer info which contains information about
-	 *  the server to transfer to.
-	 */
-	void logoutRequested(const TransferInfo& transferInfo);
 
 	void containerActiveChanged(const Atlas::Message::Element& element);
 
@@ -229,11 +224,7 @@ protected:
 	std::string m_entityId;
 	Entity* m_entity;
 
-	std::chrono::steady_clock::time_point m_stampAtLastOp;
-	std::chrono::milliseconds m_lastOpTime;
-
 	std::unique_ptr<View> m_view;
-	std::unique_ptr<IGRouter> m_router;
 
 	sigc::connection m_entityAppearanceCon;
 	sigc::connection m_avatarEntityDeletedConnection;

@@ -7,7 +7,6 @@
 #include "Connection.h"
 #include "Log.h"
 #include "View.h"
-#include "IGRouter.h"
 #include "Account.h"
 #include "Exceptions.h"
 #include "TypeService.h"
@@ -39,24 +38,23 @@ Avatar::Avatar(Account& pl, std::string mindId, std::string entityId) :
 		m_mindId(std::move(mindId)),
 		m_entityId(std::move(entityId)),
 		m_entity(nullptr),
-		m_stampAtLastOp(std::chrono::steady_clock::now()),
-		m_lastOpTime(0),
 		m_view(new View(*this)),
-		m_router(new IGRouter(*this, *m_view)),
 		m_isAdmin(false),
 		m_logoutTimer(nullptr) {
+	m_account.getConnection().registerRouterForTo(m_view.get(), getEntityId());
+
 	m_account.getConnection().getTypeService().setTypeProviderId(m_mindId);
-	m_entityAppearanceCon = m_view->notifyWhenEntitySeen(m_entityId, sigc::mem_fun(*this, &Avatar::onEntityAppear));
 
 	//Start by requesting general entity data from the server.
 	m_view->getEntityFromServer("");
 	//And then our specific entity.
-	m_view->getEntityFromServer(m_entityId);
+	m_entityAppearanceCon = m_view->notifyWhenEntitySeen(m_entityId, sigc::mem_fun(*this, &Avatar::onEntityAppear));
 }
 
 Avatar::~Avatar() {
 	m_entityParentDeletedConnection.disconnect();
 	m_avatarEntityDeletedConnection.disconnect();
+	m_account.getConnection().unregisterRouterForTo(m_view.get(), getEntityId());
 	m_account.getConnection().getTypeService().setTypeProviderId("");
 	for (auto& entry: m_activeContainers) {
 		if (entry.second) {
@@ -310,16 +308,6 @@ void Avatar::onTransferRequested(const TransferInfo& transfer) {
 
 Connection& Avatar::getConnection() const {
 	return m_account.getConnection();
-}
-
-std::chrono::milliseconds Avatar::getWorldTime() {
-	auto deltaT = std::chrono::steady_clock::now() - m_stampAtLastOp;
-	return std::chrono::duration_cast<std::chrono::milliseconds>(m_lastOpTime + deltaT);
-}
-
-void Avatar::updateWorldTime(std::chrono::milliseconds duration) {
-	m_stampAtLastOp = std::chrono::steady_clock::now();
-	m_lastOpTime = duration;
 }
 
 void Avatar::logoutResponse(const RootOperation& op) {

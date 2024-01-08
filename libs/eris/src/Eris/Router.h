@@ -2,24 +2,21 @@
 #define ERIS_ROUTER_H
 
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Objects/Operation.h>
 
 namespace Eris {
 
 /** abstract interface for objects that can route Atlas data. */
-class Router {
-public:
+struct Router {
 	typedef enum {
 		IGNORED = 0,
 		HANDLED
 	} RouterResult;
 
-	virtual ~Router();
+	virtual ~Router() = default;
 
-	virtual RouterResult handleObject(const Atlas::Objects::Root& obj);
+	virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op) = 0;
 
-	virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
-
-	virtual RouterResult handleEntity(const Atlas::Objects::Entity::RootEntity& ent);
 };
 
 } // of namespace Eris

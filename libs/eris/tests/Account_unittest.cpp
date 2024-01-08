@@ -29,7 +29,6 @@
 #include <Eris/Exceptions.h>
 #include <Eris/EventService.h>
 #include <Eris/View.h>
-#include <Eris/IGRouter.h>
 #include <Eris/WaitFreeQueue.h>
 
 

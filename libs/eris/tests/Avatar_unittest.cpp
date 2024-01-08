@@ -80,10 +80,6 @@ public:
 		onEntityAppear(ent);
 	}
 
-	void test_updateWorldTime(std::chrono::milliseconds milliseconds) {
-		updateWorldTime(milliseconds);
-	}
-
 	void test_logoutResponse(const Atlas::Objects::Operation::RootOperation& op) {
 		logoutResponse(op);
 	}
@@ -546,36 +542,6 @@ int main() {
 		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
 
 		assert(&testAvatar.getConnection() == &con);
-	}
-
-	// Test getWorldTime()
-	{
-		boost::asio::io_service io_service;
-		Eris::EventService event_service(io_service);
-		TestConnection con(io_service, event_service, "name",
-						   "localhost", 6767);
-
-		TestAccount acc(con);
-		std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-
-		testAvatar.getWorldTime();
-	}
-
-	// Test updateWorldTime()
-	{
-		boost::asio::io_service io_service;
-		Eris::EventService event_service(io_service);
-		TestConnection con(io_service, event_service, "name",
-						   "localhost", 6767);
-
-		TestAccount acc(con);
-		std::string fake_char_id("1");
-		std::string fake_mind_id("12");
-		TestAvatar testAvatar(acc, fake_mind_id, fake_char_id);
-
-		testAvatar.test_updateWorldTime(std::chrono::milliseconds(100));
 	}
 
 	// Test logoutResponse() with a non-info operation

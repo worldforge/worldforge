@@ -19,8 +19,6 @@ namespace Eris {
  * a new class which inherits Eris::Entity.
  */
 class ViewEntity : public Entity {
-	friend class EntityRouter;
-
 public:
 
 	/**

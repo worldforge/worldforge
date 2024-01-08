@@ -134,9 +134,19 @@ void TypeInfo::onPropertyChanges(const std::string& attributeName,
 {
 }
 
+bool TypeInfo::isA(std::string const&) const
+{
+	return true;
+}
+
 TypeInfo* TypeService::getTypeByName(const std::string &id)
 {
-    return 0;
+    return nullptr;
+}
+
+TypeInfo* TypeService::getTypeForAtlas(Atlas::Objects::SmartPtr<Atlas::Objects::RootData> const&)
+{
+    return nullptr;
 }
 
 Task::Task(Entity& owner, std::string nm) :

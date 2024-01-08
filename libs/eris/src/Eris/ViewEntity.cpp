@@ -1,7 +1,6 @@
 #include "ViewEntity.h"
 
 #include "Connection.h"
-#include "EntityRouter.h"
 #include "View.h"
 #include "Avatar.h"
 #include "Task.h"
